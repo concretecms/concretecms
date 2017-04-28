@@ -4,7 +4,6 @@ namespace Concrete\Core\Http\Middleware;
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Database\Connection\Connection;
-use Concrete\Core\Database\Driver\PDOStatement as ConcretePDOStatement;
 use Concrete\Core\Entity\File\File;
 use Concrete\Core\File\Image\BasicThumbnailer;
 use Concrete\Core\File\Image\Thumbnail\Type\CustomThumbnail;
@@ -13,7 +12,9 @@ use Concrete\Core\File\StorageLocation\StorageLocationInterface;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Doctrine\DBAL\Exception\InvalidFieldNameException;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use InvalidArgumentException;
+use League\Flysystem\FileExistsException;
 use League\Flysystem\Filesystem;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -67,22 +68,19 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
             if ($responseStatusCode === 200 || $responseStatusCode === 404) {
                 $database = $this->tryGetConnection();
                 if ($database !== null) {
-                    try {
-                        if ($responseStatusCode === 404) {
-                            $searchThumbnailPath = $request->getRequestUri();
-                        } else {
-                            $searchThumbnailPath = null;
-                        }
-                        $paths = $this->getThumbnailPathsToGenerate($database, $searchThumbnailPath);
-                        if ($paths !== null) {
-                            if ($this->generateThumbnails($paths, $database, $searchThumbnailPath) === true) {
+                    if ($responseStatusCode === 404) {
+                        $searchThumbnailPath = $request->getRequestUri();
+                    } else {
+                        $searchThumbnailPath = null;
+                    }
+                    $thumbnail = $this->getThumbnailToGenerate($database, $searchThumbnailPath);
+                    if ($thumbnail !== null) {
+                        $this->markThumbnailAsBuilt($database, $thumbnail);
+                        if ($this->generateThumbnail($database, $thumbnail)) {
+                            if ($this->couldBeTheRequestedThumbnail($thumbnail, $searchThumbnailPath)) {
                                 $response = $this->buildRedirectToThumbnailResponse($request);
-                                $searchThumbnailPath = null;
                             }
-                            $paths->closeCursor();
                         }
-                    } catch (InvalidFieldNameException $e) {
-                        // Ignore this, user probably needs to run an upgrade.
                     }
                 }
             }
@@ -110,50 +108,42 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
      * @param Connection $database
      * @param string|null $searchThumbnailPath
      *
-     * @return ConcretePDOStatement|null
+     * @return array|null
      */
-    private function getThumbnailPathsToGenerate(Connection $database, $searchThumbnailPath = null)
+    private function getThumbnailToGenerate(Connection $database, $searchThumbnailPath = null)
     {
-        if ($searchThumbnailPath === null) {
-            $rs = $database->executeQuery('SELECT * FROM FileImageThumbnailPaths WHERE isBuilt = 0 LIMIT 5');
-        } else {
-            $rs = $database->executeQuery('SELECT * FROM FileImageThumbnailPaths WHERE isBuilt = 0 ORDER BY ' . $database->getDatabasePlatform()->getLocateExpression('?', 'path') . ' DESC LIMIT 5', [$searchThumbnailPath]);
-        }
-        if (!$rs->rowCount()) {
-            $rs->closeCursor();
-            $rs = null;
+        try {
+            if ($searchThumbnailPath === null) {
+                $rs = $database->executeQuery('SELECT * FROM FileImageThumbnailPaths WHERE isBuilt = 0 LIMIT 1');
+            } else {
+                $rs = $database->executeQuery('SELECT * FROM FileImageThumbnailPaths WHERE isBuilt = 0 ORDER BY ' . $database->getDatabasePlatform()->getLocateExpression('?', 'path') . ' DESC LIMIT 1', [$searchThumbnailPath]);
+            }
+        } catch (InvalidFieldNameException $e) {
+            // Ignore this, user probably needs to run an upgrade.
+            return null;
         }
 
-        return $rs;
+        return $rs->fetch() ?: null;
     }
 
     /**
-     * Generate thumbnails and and manage db update.
+     * Generate a thumbnail.
      *
-     * @param ConcretePDOStatement $paths
-     * @param \Concrete\Core\Database\Connection\Connection $database
-     * @param string|null $searchThumbnailPath
+     * @param Connection $database
+     * @param array $thumbnail
      *
-     * @return bool returns true if $searchThumbnailPath is set and one of the thumbnails may be for that thumbnail
+     * @return bool Returns true if success, false on failure
      */
-    private function generateThumbnails(ConcretePDOStatement $paths, Connection $database, $searchThumbnailPath)
+    private function generateThumbnail(Connection $database, array $thumbnail)
     {
-        $result = false;
-        $database->transactional(function (Connection $database) use ($paths, $searchThumbnailPath, &$result) {
-            foreach ($paths as $thumbnail) {
-                /** @var File $file */
-                $file = $this->getEntityManager()->find(File::class, $thumbnail['fileID']);
+        $file = $this->getEntityManager()->find(File::class, $thumbnail['fileID']);
 
-                if ($this->attemptBuild($file, $thumbnail)) {
-                    $this->completeBuild($file, $thumbnail);
-                    if ($result === false && $this->maybeTheRequestedThumbnail($thumbnail, $searchThumbnailPath)) {
-                        $result = true;
-                    }
-                } else {
-                    $this->failBuild($file, $thumbnail);
-                }
-            }
-        });
+        if ($this->attemptBuild($file, $thumbnail)) {
+            $result = true;
+        } else {
+            $this->failBuild($file, $thumbnail);
+            $result = false;
+        }
 
         return $result;
     }
@@ -190,7 +180,9 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
                     $fv->generateThumbnail($type);
                 }
             }
-        } catch (\Exception $e) {
+        } catch (FileExistsException $e) {
+            return true;
+        } catch (Exception $e) {
             // Catch any exceptions so we don't break the page and return false
             return false;
         }
@@ -205,7 +197,7 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
      *
      * @return array [ width, height, crop ]
      */
-    private function getDimensions($thumbnail)
+    private function getDimensions(array $thumbnail)
     {
         $matches = null;
         if (preg_match('/ccm_(\d+)x(\d+)(?:_([10]))?/', $thumbnail['thumbnailTypeHandle'], $matches)) {
@@ -219,12 +211,13 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
      *
      * @return bool
      */
-    private function isBuilt(File $file, $thumbnail)
+    private function isBuilt(File $file, array $thumbnail)
     {
         $path = $thumbnail['path'];
-        $location = $this->storageLocation();
 
         if ($path) {
+            $location = $this->storageLocation();
+
             return
                 // If the thumbnailer's storage location has the path
                 ($location && $location->getFileSystemObject()->has($path)) ||
@@ -300,18 +293,18 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
     }
 
     /**
-     * Mark the build complete.
+     * Mark a thumbnail as built or not.
      *
-     * @param $file
-     * @param $thumbnail
+     * @param Connection $connection
+     * @param array $thumbnail
+     * @param bool $built
      */
-    private function completeBuild(File $file, $thumbnail)
+    private function markThumbnailAsBuilt(Connection $connection, array $thumbnail, $built = true)
     {
         $key = $thumbnail;
         unset($key['path']);
         unset($key['isBuilt']);
-        // Update the database to have "1" for isBuilt
-        $this->connection->update('FileImageThumbnailPaths', ['isBuilt' => '1'], $key);
+        $connection->update('FileImageThumbnailPaths', ['isBuilt' => $built ? 1 : 0], $key);
     }
 
     /**
@@ -322,29 +315,20 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
      *
      * @return bool
      */
-    private function maybeTheRequestedThumbnail(array $thumbnail, $searchThumbnailPath)
+    private function couldBeTheRequestedThumbnail(array $thumbnail, $searchThumbnailPath)
     {
-        $result = false;
-        if ($searchThumbnailPath && substr($searchThumbnailPath, -strlen($thumbnail['path'])) === $thumbnail['path']) {
-            $result = true;
-        }
-
-        return $result;
+        return $searchThumbnailPath && substr($searchThumbnailPath, -strlen($thumbnail['path'])) === $thumbnail['path'];
     }
 
     /**
      * Mark the build failed.
      *
      * @param \Concrete\Core\Entity\File\File $file
-     * @param $thumbnail
+     * @param array $thumbnail
      */
-    private function failBuild(File $file, $thumbnail)
+    private function failBuild(File $file, array $thumbnail)
     {
         $this->app->make(LoggerInterface::class)
             ->critical('Failed to generate or locate the thumbnail for file "' . $file->getFileID() . '"');
-
-        // Complete the build anyway.
-        // Cache must be cleared to remove this and attempt rebuild
-        $this->completeBuild($file, $thumbnail);
     }
 }
