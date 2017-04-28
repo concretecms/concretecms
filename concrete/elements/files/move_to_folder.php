@@ -43,7 +43,7 @@ $folders = Node::getNodesOfType('file_folder');
     $(function() {
         $('input[data-field=folder-search]').liveUpdate('ccm-folder-list', 'folder').closest('form').unbind('submit.liveupdate');
         ConcreteEvent.subscribe('FolderUpdateRequestComplete', function() {
-            window.location.reload();
+            // window.location.reload();
         });
     });
 </script>

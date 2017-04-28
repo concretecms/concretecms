@@ -1,6 +1,6 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<form method="post" data-dialog-form="save-folder" action="<?=$controller->action('submit')?>">
+<form method="post" data-dialog-form="move-to-folder" action="<?=$controller->action('submit')?>">
 
     <div class="ccm-ui">
         <?php Loader::element('files/move_to_folder', array(
@@ -34,7 +34,7 @@
     $(function() {
         ConcreteEvent.unsubscribe('AjaxFormSubmitSuccess.updateFolder');
         ConcreteEvent.subscribe('AjaxFormSubmitSuccess.updateFolder', function(e, data) {
-            if (data.form == 'save-folder') {
+            if (data.form == 'move-to-folder') {
                 ConcreteEvent.publish('FolderUpdateRequestComplete', {
                     'folder': data.response.folder
                 });
