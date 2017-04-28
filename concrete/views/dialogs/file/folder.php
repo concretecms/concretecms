@@ -3,24 +3,19 @@
 <form method="post" data-dialog-form="move-to-folder" action="<?=$controller->action('submit')?>">
 
     <div class="ccm-ui">
-        <?php Loader::element('files/move_to_folder', array(
-            'displayFolder' => function ($folder) use ($f) {
-                $fp = \FilePermissions::getGlobal();
-                if (!$fp->canAddFiles() || !$fp->canAddFileType(strtolower($f->getExtension()))) {
-                    return false;
-                } else {
-                    $fileFolderObject = $f->getFileFolderObject();
-                    if (is_object($fileFolderObject) && $fileFolderObject->getTreeNodeID() === $folder->getTreeNodeID()) {
-                        return false;
-                    }
+        <?php Loader::element('files/move_to_folder', $func = array(
+            'isCurrentFolder' => function ($folder) use ($f) {
+                $fileFolderObject = $f->getFileFolderObject();
+                if (is_object($fileFolderObject) && $fileFolderObject->getTreeNodeID() === $folder->getTreeNodeID()) {
                     return true;
                 }
+                return false;
             },
             'getRadioButton' => function ($folder, $checked = false) use ($f) {
                 $radio = id(new HtmlObject\Input('radio', 'folderID', $folder->getTreeNodeID(), array('checked' => $checked)));
                 
                 return $radio;
-            },
+            }
         ));?>
     </div>
 

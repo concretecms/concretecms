@@ -667,6 +667,81 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
         }
     }
 
+    public function populateRecursiveNodesSimple($treeNodeTypeID, $returnNodeObjects = false)
+    {
+        $db = Database::connection();
+        
+        // we have a node (parent)
+        // get all the children
+        // add to the array with index is parent ID
+        // under that add all its children
+        // get next parent
+        // repeat
+        $nodes = $db->fetchAll('select treeNodeID, treeNodeTypeID, treeNodeParentID, treeNodeDisplayOrder from TreeNodes where treeNodeTypeID = ? order by treeNodeParentID asc, treeNodeDisplayOrder asc', [$treeNodeTypeID]);
+
+        $nodesOfType = array();
+        if (count($nodes)) {
+            foreach ($nodes as $nodeRow) {
+                if (!isset($nodesOfType[$nodeRow['treeNodeParentID']])) {
+                    $nodesOfType[$nodeRow['treeNodeParentID']] = array();
+                }
+                if ($returnNodeObects) {
+                    $node = self::getByID($nodeRow['treeNodeID']);
+                    if (is_object($node)) {
+                         $nodesOfType[$nodeRow['treeNodeParentID']][] = $node;
+                    }
+                } else {
+                    $nodesOfType[$nodeRow['treeNodeParentID']][] = $nodeRow;
+                }
+                
+            }
+        }
+        
+        return $nodesOfType;
+    }
+
+    protected function populateRecursiveNodes($treeNodeTypeID, $nodes, $nodeRow, $level, $returnNodeObjects = false, $includeThisNode = true)
+    {
+        $db = Database::connection();
+        $children = $db->fetchAll('select treeNodeID, treeNodeTypeID, treeNodeParentID, treeNodeDisplayOrder from TreeNodes where treeNodeTypeID = ? and treeNodeParentID = ? order by treeNodeDisplayOrder asc', [$treeNodeTypeID, $nodeRow['treeNodeID']]);
+        
+        if ($includeThisNode) {
+            $data = [
+                'treeNodeID' => $nodeRow['treeNodeID'],
+                'treeNodeDisplayOrder' => $nodeRow['treeNodeDisplayOrder'],
+                'treeNodeParentID' => $nodeRow['treeNodeParentID'],
+                'level' => $level,
+                'total' => count($children),
+            ];
+            if ($returnNodeObjects) {
+                $node = self::getByID($nodeRow['treeNodeID']);
+                if (is_object($node)) {
+                        $data['treeNodeObject'] = $node;
+                }
+            }
+
+            $nodes[] = $data;
+        }
+        ++$level;
+        if (count($children) > 0) {
+            foreach ($children as $nodeRow) {
+                $nodes = $this->populateRecursiveNodes($treeNodeTypeID, $nodes, $nodeRow, $level, $returnNodeObjects);
+            }
+        }
+
+        return $nodes;
+    }
+
+    public function getHierarchicalNodesOfType($treeNodeTypeHandle, $level = 1, $returnNodeObjects = false, $includeThisNode = true)
+    {
+        $treeNodeType = TreeNodeType::getByHandle($treeNodeTypeHandle);
+        
+
+        $nodesOfType = $this->populateRecursiveNodes($treeNodeType->getTreeNodeTypeID(), array(), array('treeNodeID' => $this->getTreeNodeID(), 'treeNodeParentID' => $this->getTreeNodeParentID(), 'treeNodeDisplayOrder' => 0), $level, $returnNodeObjects, $includeThisNode);
+        
+        return $nodesOfType;
+    }
+
     public static function getNodesOfType($treeNodeTypeHandle)
     {
         $db = Database::connection();

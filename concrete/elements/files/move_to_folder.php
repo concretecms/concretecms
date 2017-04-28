@@ -1,8 +1,10 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 <?php
 use Concrete\Core\Tree\Node\Node;
-
-$folders = Node::getNodesOfType('file_folder');
+use Concrete\Core\File\Filesystem;
+$filesystem = new Filesystem();
+$rootfolder = $filesystem->getRootFolder();
+$folders = $rootfolder->getHierarchicalNodesOfType('file_folder', 1, true, true);
 ?>
 
 <div class="form-group" id="ccm-folder-search">
@@ -11,32 +13,44 @@ $folders = Node::getNodesOfType('file_folder');
     </form>
 </div>
 
-
 <div class="form-group" id="ccm-folder-list">
-    <?php if (count($folders)) {
-    ?>
-        <?php $i = 0;
-        foreach ($folders as $index => $folder) {
-            
-    if ($displayFolder($folder)) {
-        $checked = $i === 0 ? 'checked' : false;
-        $i++;
-        ?>
-            <div class="radio li">
-                <label>
-                <?php echo $getRadioButton($folder, $checked);
-        ?>
-                <span data-label="folder-name"><?=$folder->getTreeNodeDisplayName()?></span>
-                </label>
-            </div>
-            <?php 
+<?php
+    if (count($folders)) {
+        $added_spaces = 0;
+        $incrementor = '&nbsp;&nbsp;&nbsp;&nbsp;';
+        $previous_level = 0;
+        foreach ($folders as $folder) {
+            echo '<div class="radio li">'; //opens a folder item
+            $folderObject = $folder['treeNodeObject'];
+                    
+            if ($isCurrentFolder($folderObject)) {
+                $checked = 'checked';
+            } else {
+                $checked = false;
+            }
+                        
+            if ($previous_level > $folder['level']) {
+                $added_spaces -= ($previous_level - $folder['level']);
+            }
+?>
+            <label>
+                <?php echo str_repeat($incrementor, $added_spaces); ?>
+                <?php echo $getRadioButton($folderObject, $checked); ?>
+                <span data-label="folder-name"><?=$folderObject->getTreeNodeDisplayName()?></span>
+            </label>
+<?php
+            if ($folder['total'] > 0) {
+                $added_spaces++;
+            } else {
+                if ($folder['level'] < $previous_level) {
+                    $added_spaces = 0;
+                }
+            }
+            echo '</div>'; //closes a folder item
+            $previous_level = $folder['level'];
+        }
     }
-    ?>
-        <?php 
-}
-    ?>
-    <?php 
-} ?>
+?>
 </div>
 
 <script type="text/javascript">
