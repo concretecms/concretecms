@@ -16,9 +16,9 @@ $folders = $rootfolder->getHierarchicalNodesOfType('file_folder', 1, true, true)
 <div class="form-group" id="ccm-folder-list">
 <?php
     if (count($folders)) {
-        $added_spaces = 0;
+        $addesSpaces = 0;
         $incrementor = '&nbsp;&nbsp;&nbsp;&nbsp;';
-        $previous_level = 0;
+        $prevLevel = 0;
         foreach ($folders as $folder) {
             echo '<div class="radio li">'; //opens a folder item
             $folderObject = $folder['treeNodeObject'];
@@ -29,25 +29,25 @@ $folders = $rootfolder->getHierarchicalNodesOfType('file_folder', 1, true, true)
                 $checked = false;
             }
                         
-            if ($previous_level > $folder['level']) {
-                $added_spaces -= ($previous_level - $folder['level']);
+            if ($prevLevel > $folder['level']) {
+                $addesSpaces -= ($prevLevel - $folder['level']);
             }
 ?>
             <label>
-                <?php echo str_repeat($incrementor, $added_spaces); ?>
+                <?php echo str_repeat($incrementor, $addesSpaces); ?>
                 <?php echo $getRadioButton($folderObject, $checked); ?>
                 <span data-label="folder-name"><?=$folderObject->getTreeNodeDisplayName()?></span>
             </label>
 <?php
             if ($folder['total'] > 0) {
-                $added_spaces++;
+                $addesSpaces++;
             } else {
-                if ($folder['level'] < $previous_level) {
-                    $added_spaces = 0;
+                if ($folder['level'] < $prevLevel) {
+                    $addesSpaces = 0;
                 }
             }
             echo '</div>'; //closes a folder item
-            $previous_level = $folder['level'];
+            $prevLevel = $folder['level'];
         }
     }
 ?>
