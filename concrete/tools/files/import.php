@@ -33,7 +33,7 @@ if (!$fp->canAddFiles()) {
 
 $types = $fp->getAllowedFileExtensions();
 $ocID = 0;
-if (Loader::helper('validation/numbers')->integer($_REQUEST['ocID'])) {
+if (isset($_REQUEST['ocID']) && Loader::helper('validation/numbers')->integer($_REQUEST['ocID'])) {
     $ocID = $_REQUEST['ocID'];
 }
 
