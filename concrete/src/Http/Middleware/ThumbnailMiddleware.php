@@ -99,7 +99,7 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
         $redirectTo = (string) $request->getUri();
         $redirectTo .= ((strpos($redirectTo, '?') === false) ? '?' : '&') . mt_rand();
         $responseFactory = $this->app->make(ResponseFactoryInterface::class);
-        $response = $responseFactory->redirect($redirectTo);
+        $response = $responseFactory->redirect($redirectTo, 302);
 
         return $response;
     }
