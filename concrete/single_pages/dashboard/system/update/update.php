@@ -266,11 +266,6 @@ if ($canUpgrade) {
             <h2><?= t('Apply Downloaded Update') ?></h2>
         <?php if (count($updates)) {
     ?>
-            <div class="alert alert-warning">
-                <i class="fa fa-warning"></i> <?= t(
-                    'Make sure you <a href="%s">backup your database</a> before updating.',
-                    $view->url('/dashboard/system/backup/backup')) ?>
-            </div>
             <?php
             $ih = Loader::helper('concrete/ui');
     ?>

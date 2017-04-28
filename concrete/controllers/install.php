@@ -4,6 +4,7 @@ namespace Concrete\Controller;
 use Concrete\Core\Cache\Cache;
 use Concrete\Core\Config\Renderer;
 use Concrete\Core\Error\ErrorList\ErrorList;
+use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Localization\Localization as Localization;
 use Concrete\Core\Localization\Service\TranslationsInstaller;
 use Concrete\Core\Localization\Translation\Remote\ProviderInterface as RemoteTranslationsProvider;
@@ -240,36 +241,65 @@ class Install extends Controller
         }
         $countries = [];
         $ll = $this->app->make('localization/languages');
-        $cl = $this->app->make('lists/countries');
-        $computedSiteLocaleLanguage = Localization::activeLanguage();
-        $computedSiteLocaleCountry = null;
-        $recommendedCountryValues = $cl->getCountriesForLanguage($computedSiteLocaleLanguage);
-        $otherCountries = [];
-        foreach ($cl->getCountries() as $code => $country) {
-            if (!in_array($code, $recommendedCountryValues)) {
-                $otherCountries[$code] = $country;
-            }
-        }
-        $recommendedCountries = [];
-        foreach ($recommendedCountryValues as $country) {
-            if (!$computedSiteLocaleCountry) {
-                $computedSiteLocaleCountry = $country;
-            }
-            $recommendedCountries[$country] = $cl->getCountryName($country);
-        }
-
+        $chunks = explode('_', Localization::activeLocale());
+        $computedSiteLocaleLanguage = $chunks[0];
         $languages = $ll->getLanguageList();
         $this->set('languages', $languages);
+        $countries = $this->getCountriesForLanguage($computedSiteLocaleLanguage);
         $this->set('countries', $countries);
         $this->set('computedSiteLocaleLanguage', $computedSiteLocaleLanguage);
+        if (isset($chunks[1])) {
+            $computedSiteLocaleCountry = $chunks[1];
+        } else {
+            if (is_array(current($countries))) {
+                $computedSiteLocaleCountry = key(current($countries));
+            } else {
+                $computedSiteLocaleCountry = key($countries);
+            }
+        }
         $this->set('computedSiteLocaleCountry', $computedSiteLocaleCountry);
-        $this->set('recommendedCountries', $recommendedCountries);
-        $this->set('otherCountries', $otherCountries);
         $this->set('setInitialState', $this->request->post('SITE') === null);
         $this->set('canonicalUrl', $canonicalUrl);
         $this->set('canonicalUrlChecked', $canonicalUrlChecked);
         $this->set('canonicalSSLUrl', $canonicalSSLUrl);
         $this->set('canonicalSSLUrlChecked', $canonicalSSLUrlChecked);
+    }
+
+    public function get_site_locale_countries($viewLocaleID, $languageID, $preselectedCountryID)
+    {
+        Localization::changeLocale($viewLocaleID);
+        $countries = $this->getCountriesForLanguage($languageID);
+        $form = $this->app->make('helper/form');
+        $rf = $this->app->make(ResponseFactoryInterface::class);
+
+        return $rf->json($form->select('siteLocaleCountry', $countries, $preselectedCountryID));
+    }
+
+    private function getCountriesForLanguage($languageID)
+    {
+        $cl = $this->app->make('lists/countries');
+        $recommendedCountries = [];
+        foreach ($cl->getCountriesForLanguage($languageID) as $countryID) {
+            $recommendedCountries[$countryID] = $cl->getCountryName($countryID);
+        }
+        $otherCountries = [];
+        foreach ($cl->getCountries() as $countryID => $countryName) {
+            if (!isset($recommendedCountries[$countryID])) {
+                $otherCountries[$countryID] = $countryName;
+            }
+        }
+        if (count($recommendedCountries) === 0) {
+            $result = $otherCountries;
+        } elseif (count($otherCountries) === 0) {
+            $result = $recommendedCountries;
+        } else {
+            $result = [
+                t('** Recommended Countries') => $recommendedCountries,
+                t('** Other Countries') => $otherCountries,
+            ];
+        }
+
+        return $result;
     }
 
     public function select_language()
