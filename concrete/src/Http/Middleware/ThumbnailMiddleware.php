@@ -76,7 +76,7 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
                     $thumbnail = $this->getThumbnailToGenerate($database, $searchThumbnailPath);
                     if ($thumbnail !== null) {
                         $this->markThumbnailAsBuilt($database, $thumbnail);
-                        if ($this->generateThumbnail($database, $thumbnail)) {
+                        if ($this->generateThumbnail($thumbnail)) {
                             if ($this->couldBeTheRequestedThumbnail($thumbnail, $searchThumbnailPath)) {
                                 $response = $this->buildRedirectToThumbnailResponse($request);
                             }
@@ -129,12 +129,11 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
     /**
      * Generate a thumbnail.
      *
-     * @param Connection $database
      * @param array $thumbnail
      *
      * @return bool Returns true if success, false on failure
      */
-    private function generateThumbnail(Connection $database, array $thumbnail)
+    private function generateThumbnail(array $thumbnail)
     {
         $file = $this->getEntityManager()->find(File::class, $thumbnail['fileID']);
 
