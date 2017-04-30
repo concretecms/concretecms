@@ -80,11 +80,11 @@ class Group extends TreeNode
     {
         switch ($this->gID) {
             case GUEST_GROUP_ID:
-                throw new Exception(t("The guest users groups can't me boved"));
+                throw new Exception(t("The guest users groups can't be moved."));
             case REGISTERED_GROUP_ID:
-                throw new Exception(t("The registered users group can't be moved"));
+                throw new Exception(t("The registered users group can't be moved."));
             case ADMIN_GROUP_ID:
-                throw new Exception(t("The administrators group can't be moved"));
+                throw new Exception(t("The administrators group can't be moved."));
         }
         parent::move($newParent);
         $g = $this->getTreeNodeGroupObject();
