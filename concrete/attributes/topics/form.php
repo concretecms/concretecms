@@ -1,4 +1,11 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+$chooseNodeInForm = 'multiple';
+$selectMode = 2;
+if (isset($allowMultipleValues) && $allowMultipleValues === false) {
+    $chooseNodeInForm = 'single';
+    $selectMode = 1;
+}
+?>
 <div class="ccm-topic-attribute-wrapper">
 	<script type="text/javascript">
 	$(function() {
@@ -6,10 +13,10 @@
 		treeObj.concreteTree({
 			'treeID': '<?php echo $treeID ?>',
 			'treeNodeParentID': '<?php echo $parentNode ?>',
-			'chooseNodeInForm': 'multiple',
+			'chooseNodeInForm': '<?php echo $chooseNodeInForm ?>',
 			'allowFolderSelection': false,
 			'selectNodesByKey': [<?php echo $valueIDs ?>],
-			'selectMode': '2',
+			'selectMode': <?php echo $selectMode ?>,
 			'minExpandLevel': '1',
 			'checkbox': true,
 			'onSelect' : function(nodes) {

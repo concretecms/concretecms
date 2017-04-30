@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Core\Entity\Attribute\Key\Settings;
 
-use Concrete\Core\Entity\Attribute\Value\Value\TopicsValue;
 use Concrete\Core\Tree\Tree;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -20,6 +19,11 @@ class TopicsSettings extends Settings
      * @ORM\Column(type="integer")
      */
     protected $akTopicTreeID = 0;
+
+    /**
+     * @ORM\Column(type="boolean", options={"default":true})
+     */
+    protected $akTopicAllowMultipleValues = true;
 
     /**
      * @return mixed
@@ -56,5 +60,21 @@ class TopicsSettings extends Settings
     public function getTopicTreeObject()
     {
         return Tree::getByID($this->akTopicTreeID);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAllowMultipleValues()
+    {
+        return $this->akTopicAllowMultipleValues;
+    }
+
+    /**
+     * @param mixed $allowMultipleValues
+     */
+    public function setAllowMultipleValues($allowMultipleValues)
+    {
+        $this->akTopicAllowMultipleValues = $allowMultipleValues;
     }
 }
