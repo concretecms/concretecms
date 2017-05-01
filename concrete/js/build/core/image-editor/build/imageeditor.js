@@ -8,6 +8,7 @@ var ImageEditor = function (settings) {
     };
     im.saveData = settings.saveData || {};
     im.saveUrl = settings.saveUrl;
+    im.token = settings.token;
     im.width = settings.width;
     im.height = settings.height;
     im.strictSize = typeof settings.strictSize !== 'undefined' ? !!settings.strictSize : settings.saveWidth > 0;
