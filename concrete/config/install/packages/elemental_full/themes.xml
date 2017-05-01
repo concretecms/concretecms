@@ -4,8 +4,8 @@
         <theme handle="elemental" package="" activated="1"/>
     </themes>
     <thumbnailtypes>
-        <thumbnailtype name="Small Image" handle="small" width="740"/>
-        <thumbnailtype name="Medium Image" handle="medium" width="940"/>
-        <thumbnailtype name="Large Image" handle="large" width="1140"/>
+        <thumbnailtype name="Small Image" handle="small" sizingMode="proportional" width="740"/>
+        <thumbnailtype name="Medium Image" handle="medium" sizingMode="proportional" width="940"/>
+        <thumbnailtype name="Large Image" handle="large" sizingMode="proportional" width="1140"/>
     </thumbnailtypes>
 </concrete5-cif>

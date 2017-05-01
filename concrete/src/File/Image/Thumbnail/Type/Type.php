@@ -81,4 +81,14 @@ class Type
         return $r;
     }
 
+    public static function getSizingOptions()
+    {
+        return array(
+            \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type::RESIZE_PROPORTIONAL,
+            \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type::RESIZE_EXACT,
+            \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type::RESIZE_CROP_ONLY,
+            \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type::RESIZE_DEFAULT
+        );
+    }
+
 }

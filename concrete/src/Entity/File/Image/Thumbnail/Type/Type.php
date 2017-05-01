@@ -12,6 +12,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Type
 {
+    const RESIZE_PROPORTIONAL = 'proportional';
+    const RESIZE_EXACT = 'exact';
+    const RESIZE_CROP_ONLY = 'croponly';
+    const RESIZE_DEFAULT = self::RESIZE_PROPORTIONAL;
+
     /**
      * @ORM\Column(type="string")
      */
@@ -23,14 +28,19 @@ class Type
     protected $ftTypeName;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
-    protected $ftTypeWidth = 0;
+    protected $ftTypeWidth = null;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
     protected $ftTypeHeight = null;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $ftTypeSizingMode = self::RESIZE_DEFAULT;
 
     /**
      * @ORM\Column(type="boolean")
@@ -99,6 +109,33 @@ class Type
         return $this->ftTypeName;
     }
 
+    /**
+     * @param mixed $sizingMode
+     */
+    public function setSizingMode($ftTypeSizingMode)
+    {
+        $this->ftTypeSizingMode = $ftTypeSizingMode;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSizingMode()
+    {
+        return $this->ftTypeSizingMode ? $this->ftTypeSizingMode : self::RESIZE_DEFAULT;
+    }
+
+    public function getSizingModeDisplay()
+    {
+        $sizingModeDisplayNames = array(
+            self::RESIZE_PROPORTIONAL => t("Proportional"),
+            self::RESIZE_EXACT => t("Exact"),
+            self::RESIZE_CROP_ONLY => t("Cropped"),
+        );
+
+        return $sizingModeDisplayNames[$this->getSizingMode()];
+    }
+
     /** Returns the display name for this thumbnail type (localized and escaped accordingly to $format)
      * @param string $format = 'html'
      *    Escape the result in html format (if $format is 'html').
@@ -123,7 +160,7 @@ class Type
      */
     public function setWidth($ftTypeWidth)
     {
-        $this->ftTypeWidth = $ftTypeWidth;
+        $this->ftTypeWidth = is_numeric($ftTypeWidth) ? $ftTypeWidth : null;
     }
 
     /**
@@ -166,16 +203,21 @@ class Type
 
     public function getBaseVersion()
     {
-        return new Version($this->getHandle(), $this->getHandle(), $this->getName(), $this->getWidth(), $this->getHeight());
+        return new Version($this->getHandle(), $this->getHandle(), $this->getName(), $this->getSizingMode(), $this->getWidth(), $this->getHeight());
     }
 
     public function getDoubledVersion()
     {
+        $width = null;
         $height = null;
+        if ($this->getWidth()) {
+            $width = $this->getWidth() * 2;
+        }
         if ($this->getHeight()) {
             $height = $this->getHeight() * 2;
         }
 
-        return new Version($this->getHandle() . '_2x', $this->getHandle() . '_2x', $this->getName(), $this->getWidth() * 2, $height, true);
+        return new Version($this->getHandle() . '_2x', $this->getHandle() . '_2x', $this->getName(), $this->getSizingMode(), $width, $height, true);
     }
+
 }

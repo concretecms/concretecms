@@ -17,6 +17,7 @@ class ImportFileImportantThumbnailTypesRoutine extends AbstractRoutine
                 $type = new \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type();
                 $type->setName((string) $l['name']);
                 $type->setHandle((string) $l['handle']);
+                $type->setSizingMode((string) $l['sizingMode']);
                 $type->setWidth((string) $l['width']);
                 $type->setHeight((string) $l['height']);
                 $required = (string) $l['required'];
