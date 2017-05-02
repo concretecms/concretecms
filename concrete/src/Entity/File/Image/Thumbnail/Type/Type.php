@@ -14,7 +14,6 @@ class Type
 {
     const RESIZE_PROPORTIONAL = 'proportional';
     const RESIZE_EXACT = 'exact';
-    const RESIZE_CROP_ONLY = 'croponly';
     const RESIZE_DEFAULT = self::RESIZE_PROPORTIONAL;
 
     /**
@@ -125,12 +124,11 @@ class Type
         return $this->ftTypeSizingMode ? $this->ftTypeSizingMode : self::RESIZE_DEFAULT;
     }
 
-    public function getSizingModeDisplay()
+    public function getSizingModeDisplayName()
     {
         $sizingModeDisplayNames = array(
             self::RESIZE_PROPORTIONAL => t("Proportional"),
             self::RESIZE_EXACT => t("Exact"),
-            self::RESIZE_CROP_ONLY => t("Cropped"),
         );
 
         return $sizingModeDisplayNames[$this->getSizingMode()];

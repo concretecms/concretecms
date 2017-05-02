@@ -31,20 +31,20 @@ class Thumbnails extends DashboardPageController
     public function get_sizing_values()
     {
         $sizingModes = array(
-            Type::getSizingOptions()[0] => 'Resize Proportionally',
-            Type::getSizingOptions()[1] => 'Resize and Crop to the Exact Size',
-            Type::getSizingOptions()[2] => 'Crop only',
+            Type::RESIZE_PROPORTIONAL => 'Resize Proportionally',
+            Type::RESIZE_EXACT => 'Resize and Crop to the Exact Size'
         );
         $this->set('sizingModes', $sizingModes);
 
         $sizingModeHelp = array(
-            Type::getSizingOptions()[0] => t("The original image will be scaled down so it is fully contained within the thumbnail dimensions. The specified width and height will be considered maximum limits. Unless the given dimensions are equal to the original image's aspect ratio, one dimension in the resulting thumbnail will be smaller than the given limit."),
-            Type::getSizingOptions()[1] => t("The thumbnail will be scaled so that its smallest side will equal the length of the corresponding side in the original image. Any excess outside of the scaled thumbnail's area will be cropped, and the returned thumbnail will have the exact width and height specified. Both width and height mst be specified."),
-            Type::getSizingOptions()[2] => t("The original image will be cropped without resizing it first. If the width or height specified are greater than the orignal image's, that dimension will be ignored."),
+            Type::RESIZE_PROPORTIONAL => t("The original image will be scaled down so it is fully contained within the thumbnail dimensions. The specified width and height will be considered maximum limits. Unless the given dimensions are equal to the original image's aspect ratio, one dimension in the resulting thumbnail will be smaller than the given limit."),
+            Type::RESIZE_EXACT => t("The thumbnail will be scaled so that its smallest side will equal the length of the corresponding side in the original image. Any excess outside of the scaled thumbnail's area will be cropped, and the returned thumbnail will have the exact width and height specified. Both width and height must be specified.")
         );
         $this->set('sizingModeHelp', $sizingModeHelp);
 
-        $this->set('ftTypeSizingMode', Type::getSizingOptions()[3]);
+        $this->set('ftTypeSizingMode', Type::RESIZE_DEFAULT);
+
+        $this->set('sizingHelpText', $sizingModeHelp[Type::RESIZE_DEFAULT]);
 
     }
 
@@ -80,7 +80,7 @@ class Thumbnails extends DashboardPageController
             $this->error->add(t("Width and height can't both be empty or less than zero."));
         }
 
-        if ($request->request->get('ftTypeSizingMode') === Type::getSizingOptions()[1] && ($width < 1 || $height < 1)) {
+        if ($request->request->get('ftTypeSizingMode') === Type::RESIZE_EXACT && ($width < 1 || $height < 1)) {
             $this->error->add(t("With the 'Exact' sizing mode (with cropping), both width and height must be specified and greater than zero."));
         }
 

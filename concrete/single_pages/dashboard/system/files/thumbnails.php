@@ -9,6 +9,7 @@
 
     <?php
     if (is_object($type)) {
+        $sizingHelpText = $sizingModeHelp[$type->getSizingMode()];
         $ftTypeName = $type->getName();
         $ftTypeSizingMode = $type->getSizingMode();
         $ftTypeHandle = $type->getHandle();
@@ -73,7 +74,7 @@
                 <?=$form->label('ftTypeSizingMode', t('Sizing Mode'))?>
                 <?=$form->select('ftTypeSizingMode', $sizingModes, $ftTypeSizingMode)?>
             </div>
-            <div class="sizingmode-help alert alert-info"><i class="fa fa-question-circle"></i> <span>&nbsp;</span></div>
+            <div class="sizingmode-help alert alert-info"><i class="fa fa-question-circle"></i> <span><?=$sizingHelpText?></span></div>
         </fieldset>
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
@@ -138,7 +139,7 @@
         <td><?=$type->getDisplayName()?></td>
         <td><?=($type->getWidth()) ? $type->getWidth() : '<span class="text-muted">' . t('Automatic') . '</span>' ?></td>
         <td><?=($type->getHeight()) ? $type->getHeight() : '<span class="text-muted">' . t('Automatic') . '</span>' ?></td>
-        <td><?=$type->getSizingModeDisplay()?></td>
+        <td><?=$type->getSizingModeDisplayName()?></td>
         <td><?=($type->isRequired()) ? t('Yes') : t('No')?></td>
     </tr>
     <?php 

@@ -3,9 +3,13 @@ namespace Concrete\Core\File\Image\Thumbnail\Type;
 
 use Database;
 use Doctrine\ORM\Mapping as ORM;
+use \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type as ThumbnailType;
 
 class Type
 {
+    const RESIZE_PROPORTIONAL = ThumbnailType::RESIZE_PROPORTIONAL;
+    const RESIZE_EXACT = ThumbnailType::RESIZE_EXACT;
+    const RESIZE_DEFAULT = ThumbnailType::RESIZE_DEFAULT;
 
     /**
      * @return \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type[]
@@ -84,10 +88,9 @@ class Type
     public static function getSizingOptions()
     {
         return array(
-            \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type::RESIZE_PROPORTIONAL,
-            \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type::RESIZE_EXACT,
-            \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type::RESIZE_CROP_ONLY,
-            \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type::RESIZE_DEFAULT
+            self::RESIZE_PROPORTIONAL,
+            self::RESIZE_EXACT,
+            self::RESIZE_DEFAULT
         );
     }
 
