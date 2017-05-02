@@ -9,6 +9,7 @@ class CustomThumbnail extends ThumbnailVersion
 {
 
     protected $path;
+    protected $cropped;
 
     /**
      * CustomThumbnail constructor.
@@ -23,12 +24,18 @@ class CustomThumbnail extends ThumbnailVersion
         $height = intval($height);
         $cropped = intval($cropped);
         $this->path = $path;
+        $this->cropped = (bool) $cropped;
         parent::__construct(REL_DIR_FILES_CACHE, "ccm_{$width}x{$height}_{$cropped}", 'Custom', $width, $height);
     }
 
     public function getFilePath(FileVersion $fv)
     {
         return $this->path;
+    }
+
+    public function isCropped()
+    {
+        return $this->cropped;
     }
 
 }
