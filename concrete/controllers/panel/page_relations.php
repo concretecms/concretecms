@@ -52,9 +52,13 @@ class PageRelations extends BackendInterfacePageController
 
         }
 
+        /*
+
         if (!$dashboard->inDashboard($this->page) && count($this->page->getPageRelations()) > 0) {
             return true;
         }
+
+        */
 
         return false;
     }
