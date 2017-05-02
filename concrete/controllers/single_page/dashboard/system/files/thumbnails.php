@@ -31,8 +31,8 @@ class Thumbnails extends DashboardPageController
     public function get_sizing_values()
     {
         $sizingModes = array(
-            Type::RESIZE_PROPORTIONAL => 'Resize Proportionally',
-            Type::RESIZE_EXACT => 'Resize and Crop to the Exact Size'
+            Type::RESIZE_PROPORTIONAL => t('Resize Proportionally'),
+            Type::RESIZE_EXACT => t('Resize and Crop to the Exact Size')
         );
         $this->set('sizingModes', $sizingModes);
 

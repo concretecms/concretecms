@@ -1010,7 +1010,6 @@ class Version implements ObjectInterface
      */
     public function rescanThumbnails()
     {
-        // [NOUR Look here and in generateThumbnail()]
         if ($this->fvType != \Concrete\Core\File\Type\Type::T_IMAGE) {
             return false;
         }
