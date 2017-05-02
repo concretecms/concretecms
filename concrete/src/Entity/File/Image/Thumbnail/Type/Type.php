@@ -111,7 +111,7 @@ class Type
     /**
      * @param mixed $sizingMode
      */
-    public function setSizingMode($ftTypeSizingMode)
+    public function setSizingMode($ftTypeSizingMode = self::RESIZE_DEFAULT)
     {
         $this->ftTypeSizingMode = $ftTypeSizingMode;
     }
