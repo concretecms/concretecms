@@ -87,11 +87,11 @@ class Type
 
     public static function getSizingOptions()
     {
-        return array(
+        return [
             self::RESIZE_PROPORTIONAL,
             self::RESIZE_EXACT,
             self::RESIZE_DEFAULT
-        );
+        ];
     }
 
 }
