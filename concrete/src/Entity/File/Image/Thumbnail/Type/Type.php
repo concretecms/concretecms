@@ -201,7 +201,7 @@ class Type
 
     public function getBaseVersion()
     {
-        return new Version($this->getHandle(), $this->getHandle(), $this->getName(), $this->getSizingMode(), $this->getWidth(), $this->getHeight());
+        return new Version($this->getHandle(), $this->getHandle(), $this->getName(), $this->getWidth(), $this->getHeight(), false, $this->getSizingMode());
     }
 
     public function getDoubledVersion()
@@ -215,7 +215,7 @@ class Type
             $height = $this->getHeight() * 2;
         }
 
-        return new Version($this->getHandle() . '_2x', $this->getHandle() . '_2x', $this->getName(), $this->getSizingMode(), $width, $height, true);
+        return new Version($this->getHandle() . '_2x', $this->getHandle() . '_2x', $this->getName(), $this->getSizingMode(), $width, $height, true, $this->getSizingMode());
     }
 
 }

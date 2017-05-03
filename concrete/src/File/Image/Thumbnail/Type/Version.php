@@ -3,6 +3,7 @@ namespace Concrete\Core\File\Image\Thumbnail\Type;
 
 use Concrete\Core\File\Image\Thumbnail\Path\Resolver;
 use Concrete\Core\Entity\File\Version as FileVersion;
+use Concrete\Core\File\Image\Thumbnail\Type\Type as ThumbnailType;
 use Core;
 
 /**
@@ -19,7 +20,7 @@ class Version
     protected $height;
     protected $isDoubledVersion;
 
-    public function __construct($directoryName, $handle, $name, $sizingMode, $width, $height, $isDoubledVersion = false)
+    public function __construct($directoryName, $handle, $name, $width, $height, $isDoubledVersion = false, $sizingMode = ThumbnailType::RESIZE_DEFAULT)
     {
         $this->handle = $handle;
         $this->name = $name;

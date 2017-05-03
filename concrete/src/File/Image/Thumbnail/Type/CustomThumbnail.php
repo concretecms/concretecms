@@ -25,7 +25,7 @@ class CustomThumbnail extends ThumbnailVersion
         $sizingMode = $cropped ? ThumbnailType::RESIZE_EXACT : ThumbnailType::RESIZE_PROPORTIONAL;
         $cropped = intval($cropped);
         $this->path = $path;
-        parent::__construct(REL_DIR_FILES_CACHE, "ccm_{$width}x{$height}_{$cropped}", 'Custom', $sizingMode, $width, $height);
+        parent::__construct(REL_DIR_FILES_CACHE, "ccm_{$width}x{$height}_{$cropped}", 'Custom', $width, $height, false, $sizingMode);
     }
 
     public function getFilePath(FileVersion $fv)

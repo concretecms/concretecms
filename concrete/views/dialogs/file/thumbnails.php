@@ -12,6 +12,7 @@ use Concrete\Core\File\Image\Thumbnail\Type\Version;
     foreach ($types as $type) {
         $width = $type->getWidth();
         $height = $type->getHeight() ? $type->getHeight() : t('Automatic');
+        $sizingMode = $type->getSizingModeDisplayName();
         $thumbnailPath = $type->getFilePath($version);
         $location = $version->getFile()->getFileStorageLocationObject();
         $configuration = $location->getConfigurationObject();
@@ -34,7 +35,7 @@ use Concrete\Core\File\Image\Thumbnail\Type\Version;
                         <div class="ccm-image-thumbnail-display-name">
                             <h4><?php echo $type->getDisplayName(); ?></h4>
                         </div>
-                        <small class="ccm-image-thumbnail-dimensions"><?php echo t('%s x %s dimensions', $width, $height); ?></small>
+                        <small class="ccm-image-thumbnail-dimensions"><?php echo t('%s x %s dimensions (%s)', $width, $height, $sizingMode); ?></small>
                         <?php if ($fp->canEditFileContents() && $hasFile) { ?>
                             <a href="<?php echo $url . '?' . $query; ?>"
                                 dialog-width="90%"
