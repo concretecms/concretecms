@@ -126,10 +126,10 @@ class Type
 
     public function getSizingModeDisplayName()
     {
-        $sizingModeDisplayNames = array(
+        $sizingModeDisplayNames = [
             self::RESIZE_PROPORTIONAL => t("Proportional"),
             self::RESIZE_EXACT => t("Exact"),
-        );
+        ];
 
         return $sizingModeDisplayNames[$this->getSizingMode()];
     }

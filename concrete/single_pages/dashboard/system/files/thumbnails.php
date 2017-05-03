@@ -137,10 +137,10 @@
     <tr>
         <td><a href="<?=$view->action('edit', $type->getID())?>"><?=$type->getHandle()?></a></td>
         <td><?=$type->getDisplayName()?></td>
-        <td><?=($type->getWidth()) ? $type->getWidth() : '<span class="text-muted">' . t('Automatic') . '</span>' ?></td>
-        <td><?=($type->getHeight()) ? $type->getHeight() : '<span class="text-muted">' . t('Automatic') . '</span>' ?></td>
+        <td><?=$type->getWidth() ? $type->getWidth() : '<span class="text-muted">' . t('Automatic') . '</span>' ?></td>
+        <td><?=$type->getHeight() ? $type->getHeight() : '<span class="text-muted">' . t('Automatic') . '</span>' ?></td>
         <td><?=$type->getSizingModeDisplayName()?></td>
-        <td><?=($type->isRequired()) ? t('Yes') : t('No')?></td>
+        <td><?=$type->isRequired() ? t('Yes') : t('No')?></td>
     </tr>
     <?php 
 }

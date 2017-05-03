@@ -72,8 +72,8 @@ class Thumbnails extends DashboardPageController
             $this->error->add(t("Your thumbnail type handle must only contain lowercase letters and underscores."));
         }
 
-        $width = intval($request->request->get('ftTypeWidth'));
-        $height = intval($request->request->get('ftTypeHeight'));
+        $width = (int) $request->request->get('ftTypeWidth');
+        $height = (int) $request->request->get('ftTypeHeight');
         if ($width < 1 && $height < 1) {
             $this->error->add(t("Width and height can't both be empty or less than zero."));
         }
@@ -82,8 +82,8 @@ class Thumbnails extends DashboardPageController
             $this->error->add(t("With the 'Exact' sizing mode (with cropping), both width and height must be specified and greater than zero."));
         }
 
-        if ($valStrings->notempty($request->request->get('ftTypeWidth'))) {
-            if (!$valNumbers->integer($request->request->get('ftTypeWidth'))) {
+        if ($valStrings->notempty($width)) {
+            if (!$valNumbers->integer($width)) {
                 $this->error->add(t("If used, width can only be an integer, with no units."));
             } else {
                 if ($width < 1) {
@@ -92,8 +92,8 @@ class Thumbnails extends DashboardPageController
             }
         }
 
-        if ($valStrings->notempty($request->request->get('ftTypeHeight'))) {
-            if (!$valNumbers->integer($request->request->get('ftTypeHeight'))) {
+        if ($valStrings->notempty($height)) {
+            if (!$valNumbers->integer($height)) {
                 $this->error->add(t("If used, height can only be an integer, with no units."));
             } else {
                 if ($height < 1) {
@@ -145,8 +145,8 @@ class Thumbnails extends DashboardPageController
             $this->error->add(t('Invalid thumbnail type object.'));
         }
         if (!$this->error->has()) {
-            $height = intval($request->request->get('ftTypeHeight'));
-            $width = intval($request->request->get('ftTypeWidth'));
+            $height = (int) $request->request->get('ftTypeHeight');
+            $width = (int) $request->request->get('ftTypeWidth');
             if ($height > 0) {
                 $type->setHeight($height);
             } else {
@@ -179,8 +179,8 @@ class Thumbnails extends DashboardPageController
         }
         if (!$this->error->has()) {
             $type = new \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type();
-            $height = intval($request->request->get('ftTypeHeight'));
-            $width = intval($request->request->get('ftTypeWidth'));
+            $height = (int) $request->request->get('ftTypeHeight');
+            $width = (int) $request->request->get('ftTypeWidth');
             if ($height > 0) {
                 $type->setHeight($height);
             }
