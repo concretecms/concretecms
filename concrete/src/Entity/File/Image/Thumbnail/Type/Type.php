@@ -215,7 +215,7 @@ class Type
             $height = $this->getHeight() * 2;
         }
 
-        return new Version($this->getHandle() . '_2x', $this->getHandle() . '_2x', $this->getName(), $this->getSizingMode(), $width, $height, true, $this->getSizingMode());
+        return new Version($this->getHandle() . '_2x', $this->getHandle() . '_2x', $this->getName(), $width, $height, true, $this->getSizingMode());
     }
 
 }
