@@ -14,11 +14,14 @@ $vWidth = intval($controller->width);
 $vHeight = intval($controller->height);
 
 if ($c->isEditMode()) {
+    $loc = Localization::getInstance();
+    $loc->pushActiveContext(Localization::CONTEXT_UI);
     ?>
 	<div class="ccm-edit-mode-disabled-item" style="width:<?=$vWidth?>px; height:<?=$vHeight?>px;  max-width: 100%; ">
 		<div style="padding:8px 0px; padding-top: <?=round($vHeight / 2) - 10?>px;"><?=t('Content disabled in edit mode.')?></div>
 	</div>
-<?php 
+    <?php
+    $loc->popActiveContext();
 } elseif (!$webmURL && !$oggURL && !$mp4URL) {
     ?>
     <div class="ccm-edit-mode-disabled-item" style="width:<?=$vWidth?>px; height:<?=$vHeight?>px; max-width: 100%; ">
