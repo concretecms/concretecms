@@ -12,7 +12,6 @@ class Thumbnails extends DashboardPageController
     {
         $list = Type::getList();
         $this->set('types', $list);
-
     }
 
     public function edit($ftTypeID = false)
@@ -36,16 +35,15 @@ class Thumbnails extends DashboardPageController
         );
         $this->set('sizingModes', $sizingModes);
 
-        $sizingModeHelp = array(
+        $sizingModeHelp = [
             Type::RESIZE_PROPORTIONAL => t("The original image will be scaled down so it is fully contained within the thumbnail dimensions. The specified width and height will be considered maximum limits. Unless the given dimensions are equal to the original image's aspect ratio, one dimension in the resulting thumbnail will be smaller than the given limit."),
             Type::RESIZE_EXACT => t("The thumbnail will be scaled so that its smallest side will equal the length of the corresponding side in the original image. Any excess outside of the scaled thumbnail's area will be cropped, and the returned thumbnail will have the exact width and height specified. Both width and height must be specified.")
-        );
+        ];
         $this->set('sizingModeHelp', $sizingModeHelp);
 
         $this->set('ftTypeSizingMode', Type::RESIZE_DEFAULT);
 
         $this->set('sizingHelpText', $sizingModeHelp[Type::RESIZE_DEFAULT]);
-
     }
 
     public function thumbnail_type_added()
@@ -92,7 +90,6 @@ class Thumbnails extends DashboardPageController
                     $this->error->add(t("If used, width must be greater than zero."));
                 }
             }
-
         }
 
         if ($valStrings->notempty($request->request->get('ftTypeHeight'))) {
@@ -103,7 +100,6 @@ class Thumbnails extends DashboardPageController
                     $this->error->add(t("If used, height must be greater than zero."));
                 }
             }
-
         }
 
         return $request;
@@ -149,16 +145,15 @@ class Thumbnails extends DashboardPageController
             $this->error->add(t('Invalid thumbnail type object.'));
         }
         if (!$this->error->has()) {
-            
             $height = intval($request->request->get('ftTypeHeight'));
             $width = intval($request->request->get('ftTypeWidth'));
             if ($height > 0) {
-                $type->setHeight($request->request->get('ftTypeHeight'));
+                $type->setHeight($height);
             } else {
                 $type->setHeight(null);
             }
             if ($width > 0) {
-                $type->setWidth($request->request->get('ftTypeWidth'));
+                $type->setWidth($width);
             } else {
                 $type->setWidth(null);
             }
@@ -179,7 +174,7 @@ class Thumbnails extends DashboardPageController
             $this->error->add(Loader::helper('validation/token')->getErrorMessage());
         }
         $thumbtype = Type::getByHandle($request->request->get('ftTypeHandle'));
-        if(is_object($thumbtype)){
+        if (is_object($thumbtype)) {
             $this->error->add(t('That handle is in use.'));
         }
         if (!$this->error->has()) {
@@ -187,10 +182,10 @@ class Thumbnails extends DashboardPageController
             $height = intval($request->request->get('ftTypeHeight'));
             $width = intval($request->request->get('ftTypeWidth'));
             if ($height > 0) {
-                $type->setHeight($request->request->get('ftTypeHeight'));
+                $type->setHeight($height);
             }
             if ($width > 0) {
-                $type->setWidth($request->request->get('ftTypeWidth'));
+                $type->setWidth($width);
             }
             
             $type->setName($request->request->get('ftTypeName'));
