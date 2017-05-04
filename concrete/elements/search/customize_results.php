@@ -11,6 +11,9 @@ $itemsPerPageOptions = $provider->getItemsPerPageOptions();
 $itemsPerPage = $provider->getItemsPerPage();
 $form = Core::make('helper/form');
 
+if (!isset($type)) {
+    $type = null;
+}
 ?>
 
 <section data-section="customize-results">
