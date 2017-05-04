@@ -93,5 +93,4 @@ class Type
             self::RESIZE_DEFAULT
         ];
     }
-
 }

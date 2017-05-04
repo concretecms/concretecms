@@ -1407,6 +1407,11 @@ class Version implements ObjectInterface
             }
         }
 
+        // isCropped only exists on the CustomThumbnail type
+        if (method_exists($type, 'isCropped') && $type->isCropped()) {
+            $thumbnailMode = ImageInterface::THUMBNAIL_OUTBOUND;
+        }
+        
         $thumbnail = $image->thumbnail($size, $thumbnailMode);
         $thumbnailPath = $type->getFilePath($this);
         $thumbnailOptions = [];
