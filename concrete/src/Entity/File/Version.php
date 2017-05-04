@@ -18,6 +18,7 @@ use Concrete\Core\File\Menu;
 use Concrete\Core\File\Type\TypeList as FileTypeList;
 use Concrete\Core\Http\FlysystemFileResponse;
 use Concrete\Core\Support\Facade\Application;
+use Imagine\Gd\Image;
 use League\Flysystem\AdapterInterface;
 use League\Flysystem\FileNotFoundException;
 use Core;
@@ -979,7 +980,7 @@ class Version implements ObjectInterface
     }
 
     /**
-     *
+     * @return bool|Image
      */
     public function getImagineImage()
     {
@@ -1372,12 +1373,22 @@ class Version implements ObjectInterface
             ->getFileSystemObject();
 
         $height = $type->getHeight();
-        if ($height) {
-            $size = new Box($type->getWidth(), $height);
+        $width = $type->getWidth();
+
+        if ($height && $width) {
+            $size = new Box($width, $height);
+            $thumbnailMode = ImageInterface::THUMBNAIL_INSET;
+        } else if($width) {
+            $size = $image->getSize()->widen($width);
             $thumbnailMode = ImageInterface::THUMBNAIL_OUTBOUND;
         } else {
-            $size = $image->getSize()->widen($type->getWidth());
-            $thumbnailMode = ImageInterface::THUMBNAIL_INSET;
+            $size = $image->getSize()->heighten($height);
+            $thumbnailMode = ImageInterface::THUMBNAIL_OUTBOUND;
+        }
+
+        // isCropped only exists on the CustomThumbnail type
+        if (method_exists($type, 'isCropped') && $type->isCropped()) {
+            $thumbnailMode = ImageInterface::THUMBNAIL_OUTBOUND;
         }
         $thumbnail = $image->thumbnail($size, $thumbnailMode);
         $thumbnailPath = $type->getFilePath($this);

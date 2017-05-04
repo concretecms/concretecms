@@ -43,6 +43,7 @@ if (Config::get('concrete.white_label.background_image') !== 'none' && !Config::
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <form method="post" data-form="check-in" action="<?=$approveAction?>">
+            <input type="hidden" name="comments" value="<?= h(t('Welcome page updated')) ?>" />
             <ul class="nav navbar-nav">
                 <li><p class="navbar-text"><?=Core::make('date')->formatDateTime('now', true, true)?></p></li>
                 <li>

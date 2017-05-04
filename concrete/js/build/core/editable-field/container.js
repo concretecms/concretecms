@@ -120,7 +120,7 @@
 		        	my.updateImageField(r, $field);
 		        },
 		        error: function(r) {
-					ConcreteAlert.dialog('Error', r.responseText);
+					ConcreteAlert.dialog(ccmi18n.error, r.responseText);
 		        },
 		        complete: function(r) {
 		        	jQuery.fn.dialog.hideLoader();
