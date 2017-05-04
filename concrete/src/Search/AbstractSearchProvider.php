@@ -84,7 +84,7 @@ abstract class AbstractSearchProvider implements ProviderInterface, SessionQuery
         // @TODO fix this
         $searchRequest = new StickyRequest('file_manager_folder');
         $searchParams = $searchRequest->getSearchRequest();
-        $node = Node::getByID($searchParams['folder']);
+        $node = empty($searchParams['folder']) ? null : Node::getByID($searchParams['folder']);
 
         if ($node instanceof SearchPreset) {
             $searchObj = $node->getSavedSearchObject();
