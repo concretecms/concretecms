@@ -90,17 +90,9 @@ class Controller extends BlockController
         $posterFile = $this->getPosterFileObject();
         $oggFile = $this->getOggFileObject();
 
-        if (is_object($posterFile)) {
-            $this->set('posterURL', $posterFile->getURL());
-        }
-        if (is_object($mp4File)) {
-            $this->set('mp4URL', $mp4File->getURL());
-        }
-        if (is_object($webmFile)) {
-            $this->set('webmURL', $webmFile->getURL());
-        }
-        if (is_object($oggFile)) {
-            $this->set('oggURL', $oggFile->getURL());
-        }
+        $this->set('posterURL', $posterFile === null ? '' : $posterFile->getURL());
+        $this->set('mp4URL', $mp4File === null ? '' : $mp4File->getURL());
+        $this->set('webmURL', $webmFile === null ? '' : $webmFile->getURL());
+        $this->set('oggURL', $oggFile === null ? '' : $oggFile->getURL());
     }
 }
