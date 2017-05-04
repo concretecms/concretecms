@@ -42,6 +42,6 @@ class KeywordsField extends AbstractField
     {
         $form = \Core::make('helper/form');
 
-        return $form->text('keywords', $this->data['keywords']);
+        return $form->text('keywords', isset($this->data['keywords']) ? $this->data['keywords'] : '');
     }
 }
