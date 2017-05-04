@@ -1393,25 +1393,25 @@ class Version implements ObjectInterface
         $width = $type->getWidth();
         $sizingMode = $type->getSizingMode();
 
+        if ($height && $width) {
+            $size = new Box($width, $height);
+        } else if ($width) {
+            $size = $image->getSize()->widen($width);
+        } else {
+            $size = $image->getSize()->heighten($height);
+        }
+
         if ($sizingMode === Type::RESIZE_EXACT) {
              $thumbnailMode = ImageInterface::THUMBNAIL_OUTBOUND;
-              $size = new \Imagine\Image\Box($width, $height);
         } else if ($sizingMode === Type::RESIZE_PROPORTIONAL) {
             $thumbnailMode = ImageInterface::THUMBNAIL_INSET;
-            if ($height < 1) {
-                $size = $image->getSize()->widen($width);
-            } else if ($width < 1) {
-                $size = $image->getSize()->heighten($height);
-            } else {
-                $size = new \Imagine\Image\Box($width, $height);
-            }
         }
 
         // isCropped only exists on the CustomThumbnail type
         if (method_exists($type, 'isCropped') && $type->isCropped()) {
             $thumbnailMode = ImageInterface::THUMBNAIL_OUTBOUND;
         }
-        
+
         $thumbnail = $image->thumbnail($size, $thumbnailMode);
         $thumbnailPath = $type->getFilePath($this);
         $thumbnailOptions = [];
