@@ -667,39 +667,6 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
         }
     }
 
-    public function populateRecursiveNodesSimple($treeNodeTypeID, $returnNodeObjects = false)
-    {
-        $db = Database::connection();
-        
-        // we have a node (parent)
-        // get all the children
-        // add to the array with index is parent ID
-        // under that add all its children
-        // get next parent
-        // repeat
-        $nodes = $db->fetchAll('select treeNodeID, treeNodeTypeID, treeNodeParentID, treeNodeDisplayOrder from TreeNodes where treeNodeTypeID = ? order by treeNodeParentID asc, treeNodeDisplayOrder asc', [$treeNodeTypeID]);
-
-        $nodesOfType = array();
-        if (count($nodes)) {
-            foreach ($nodes as $nodeRow) {
-                if (!isset($nodesOfType[$nodeRow['treeNodeParentID']])) {
-                    $nodesOfType[$nodeRow['treeNodeParentID']] = array();
-                }
-                if ($returnNodeObects) {
-                    $node = self::getByID($nodeRow['treeNodeID']);
-                    if (is_object($node)) {
-                         $nodesOfType[$nodeRow['treeNodeParentID']][] = $node;
-                    }
-                } else {
-                    $nodesOfType[$nodeRow['treeNodeParentID']][] = $nodeRow;
-                }
-                
-            }
-        }
-        
-        return $nodesOfType;
-    }
-
     protected function populateRecursiveNodes($treeNodeTypeID, $nodes, $nodeRow, $level, $returnNodeObjects = false, $includeThisNode = true)
     {
         $db = Database::connection();
