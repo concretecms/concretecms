@@ -84,34 +84,36 @@ class Service
     }
 
     /**
-     * Add attachment to send with an email.
-     *
-     * Sample Code:
-     * $attachment = $mailHelper->addAttachment($fileObject);
-     * $attachment->filename = "CustomFilename";
-     * $mailHelper->send();
+     * Add a File entity as a mail attachment.
      *
      * @param File $fob File to attach
      */
-    public function addAttachment(File $fob)
+    public function addAttachment(File $file)
     {
-        // Get file version.
-        $fv = $fob->getVersion();
+        $fileVersion = $file->getVersion();
+        $resource = $fileVersion->getFileResource();
+        $this->addRawAttachment(
+            $resource->read(),
+            $fileVersion->getFilename(),
+            $fileVersion->getMimeType()
+        );
+    }
 
-        // Get file data.
-        $mimetype = $fv->getMimeType();
-        $filename = $fv->getFilename();
-        $resource = $fob->getFileResource();
-        $content = $resource->read();
-
-        // Create attachment.
+    /**
+     * Add a mail attachment by specifying its raw binary data.
+     *
+     * @param string $content The binary data of the attachemt
+     * @param string $filename The name to give to the attachment
+     * @param string $mimetype The MIME type of the attachment
+     */
+    public function addRawAttachment($content, $filename, $mimetype = 'application/octet-stream')
+    {
         $mp = new MimePart($content);
-        $mp->type = $mimetype;
-        $mp->disposition = Mime::DISPOSITION_ATTACHMENT;
-        $mp->encoding = Mime::ENCODING_BASE64;
-        $mp->filename = $filename;
-
-        // Add mimepart to attachments.
+        $mp
+            ->setType($mimetype)
+            ->setDisposition(Mime::DISPOSITION_ATTACHMENT)
+            ->setEncoding(Mime::ENCODING_BASE64)
+            ->setFileName($filename);
         $this->attachments[] = $mp;
     }
 
