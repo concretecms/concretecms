@@ -86,11 +86,11 @@ $form = Core::make('helper/form');
 
         <div class="form-group">
             <label class="control-label" for="fSearchDefaultSort"><?= t('Default Column') ?></label>
-            <select <?php if (count($all->getSortableColumns()) == 0) { ?> disabled="true"<?php } ?> class="form-control" data-search-select-default-column="<?= $type ?>" id="fSearchDefaultSort" name="fSearchDefaultSort">
+            <select <?php if (count($all->getSortableColumns()) == 0) { ?> disabled="disabled"<?php } ?> class="form-control" data-search-select-default-column="<?= $type ?>" id="fSearchDefaultSort" name="fSearchDefaultSort">
                 <?php
                 foreach ($all->getSortableColumns() as $col) {
                     ?>
-                    <option id="<?= $col->getColumnKey() ?>" value="<?= $col->getColumnKey() ?>" <?php if ($col->getColumnKey() == $ds->getColumnKey()) { ?> selected="true" <?php } ?>><?= $col->getColumnName() ?></option>
+                    <option id="<?= $col->getColumnKey() ?>" value="<?= $col->getColumnKey() ?>" <?php if ($col->getColumnKey() == $ds->getColumnKey()) { ?> selected="selected" <?php } ?>><?= $col->getColumnName() ?></option>
                     <?php
                 }
                 ?>
@@ -99,9 +99,9 @@ $form = Core::make('helper/form');
 
         <div class="form-group">
             <label class="control-label" for="fSearchDefaultSortDirection"><?= t('Direction') ?></label>
-            <select <?php if (count($all->getSortableColumns()) == 0) { ?> disabled="true"<?php } ?> class="form-control" data-search-select-default-column-direction="<?= $type ?>" name="fSearchDefaultSortDirection">
-                <option value="asc" <?php if (is_object($ds) && $ds->getColumnDefaultSortDirection() == 'asc') { ?> selected="true" <?php } ?>><?= t('Ascending') ?></option>
-                <option value="desc" <?php if (is_object($ds) && $ds->getColumnDefaultSortDirection() == 'desc') { ?> selected="true" <?php } ?>><?= t('Descending') ?></option>
+            <select <?php if (count($all->getSortableColumns()) == 0) { ?> disabled="disabled"<?php } ?> class="form-control" data-search-select-default-column-direction="<?= $type ?>" name="fSearchDefaultSortDirection">
+                <option value="asc" <?php if (is_object($ds) && $ds->getColumnDefaultSortDirection() == 'asc') { ?> selected="selected"<?php } ?>><?= t('Ascending') ?></option>
+                <option value="desc" <?php if (is_object($ds) && $ds->getColumnDefaultSortDirection() == 'desc') { ?> selected="selected"<?php } ?>><?= t('Descending') ?></option>
             </select>
         </div>
 
@@ -113,7 +113,7 @@ $form = Core::make('helper/form');
             <?php
             foreach ($itemsPerPageOptions as $option) {
                 ?>
-                <option <?php if ($itemsPerPage == $option) { ?> selected="true"<?php } ?> value="<?= $option ?>">
+                <option <?php if ($itemsPerPage == $option) { ?> selected="selected"<?php } ?> value="<?= $option ?>">
                     <?= $option ?>
                 </option>
                 <?php
