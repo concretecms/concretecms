@@ -72,7 +72,7 @@ abstract class AbstractSearchProvider implements ProviderInterface, SessionQuery
     }
 
     /**
-     * Gets items per page from the current preset or from the session
+     * Gets items per page from the current preset or from the session.
      *
      * @return int
      */
@@ -88,6 +88,7 @@ abstract class AbstractSearchProvider implements ProviderInterface, SessionQuery
 
         if ($node instanceof SearchPreset) {
             $searchObj = $node->getSavedSearchObject();
+
             return $searchObj->getQuery()->getItemsPerPage();
         } else {
             $sessionQuery = $this->getSessionCurrentQuery();
