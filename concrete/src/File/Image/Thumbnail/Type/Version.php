@@ -87,6 +87,16 @@ class Version
         return $this->sizingMode;
     }
 
+    public function getSizingModeDisplayName()
+    {
+        $sizingModeDisplayNames = [
+            ThumbnailType::RESIZE_PROPORTIONAL => t("Proportional"),
+            ThumbnailType::RESIZE_EXACT => t("Exact"),
+        ];
+
+        return $sizingModeDisplayNames[$this->getSizingMode()];
+    }
+
     /** Returns the display name for this thumbnail type version (localized and escaped accordingly to $format)
      * @param string $format = 'html'
      *    Escape the result in html format (if $format is 'html').
