@@ -449,8 +449,8 @@ return [
             'attribute_action',
             ['action' => '.+'],
         ],
-        "/ccm/system/attribute/attribute_sort/set" => ['\Concrete\Controller\Backend\Attributes::sortInSet'],
-        "/ccm/system/attribute/attribute_sort/user" => ['\Concrete\Controller\Backend\Attributes::sortUser'],
+        '/ccm/system/attribute/attribute_sort/set' => ['\Concrete\Controller\Backend\Attributes::sortInSet'],
+        '/ccm/system/attribute/attribute_sort/user' => ['\Concrete\Controller\Backend\Attributes::sortUser'],
 
         /*
          * Trees
@@ -597,6 +597,11 @@ return [
         '/ccm/assets/localization/translator/js' => ['\Concrete\Controller\Frontend\AssetsLocalization::getTranslatorJavascript'],
         '/ccm/assets/localization/dropzone/js' => ['\Concrete\Controller\Frontend\AssetsLocalization::getDropzoneJavascript'],
         '/ccm/assets/localization/conversations/js' => ['\Concrete\Controller\Frontend\AssetsLocalization::getConversationsJavascript'],
+
+        /*
+         * Languages
+         */
+        '/ccm/system/dialogs/language/update/details' => ['\Concrete\Controller\Dialog\Language\Update\Details::view'],
     ],
 
     /*

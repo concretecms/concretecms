@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Controller\Frontend;
 
+use Concrete\Core\Job\QueueableJob;
 use Controller;
 use stdClass;
 use Job;
@@ -95,7 +96,7 @@ class Jobs extends Controller
             }
 
             if (is_object($job)) {
-                if ($job->supportsQueue()) {
+                if ($job instanceof QueueableJob && $job->supportsQueue()) {
                     $q = $job->getQueueObject();
 
                     if ($_POST['process']) {
@@ -103,10 +104,8 @@ class Jobs extends Controller
                         $obj->error = false;
                         try {
                             $messages = $q->receive($job->getJobQueueBatchSize());
-                            foreach ($messages as $key => $p) {
-                                $job->processQueueItem($p);
-                                $q->deleteMessage($p);
-                            }
+                            $job->executeBatch($messages, $q);
+
                             $totalItems = $q->count();
                             $obj->totalItems = $totalItems;
                             if ($q->count() == 0) {
@@ -178,7 +177,7 @@ class Jobs extends Controller
         if (Job::authenticateRequest($_REQUEST['auth'])) {
             $list = Job::getList();
             foreach ($list as $job) {
-                if ($job->supportsQueue()) {
+                if ($job->supportsQueue() && $job instanceof QueueableJob) {
                     $q = $job->getQueueObject();
                     // don't process queues that are empty
                     if ($q->count() < 1) {
@@ -187,14 +186,13 @@ class Jobs extends Controller
                     $obj = new stdClass();
                     try {
                         $messages = $q->receive($job->getJobQueueBatchSize());
-                        foreach ($messages as $key => $p) {
-                            $job->processQueueItem($p);
-                            $q->deleteMessage($p);
-                        }
+                        $job->executeBatch($messages, $q);
+
                         $totalItems = $q->count();
                         $obj->totalItems = $totalItems;
                         $obj->jHandle = $job->getJobHandle();
                         $obj->jID = $job->getJobID();
+
                         if ($q->count() == 0) {
                             $result = $job->finish($q);
                             $obj = $job->markCompleted(0, $result);

@@ -2,6 +2,7 @@
 namespace Concrete\Tests\Core\Site;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Cache\Level\RequestCache;
 use Concrete\Core\Config\FileLoader;
 use Concrete\Core\Config\FileSaver;
 use Concrete\Core\Config\Repository\Repository;
@@ -17,6 +18,9 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Illuminate\Filesystem\Filesystem;
+use Stash\Driver\BlackHole;
+use Stash\Driver\Ephemeral;
+use Stash\Pool;
 
 class SiteTest extends \PHPUnit_Framework_TestCase
 {
@@ -113,6 +117,9 @@ class SiteTest extends \PHPUnit_Framework_TestCase
 
         $type = new Type();
 
+        $cache = $this->getMockBuilder(RequestCache::class)
+            ->getMock();
+
         $type_service = $this
             ->getMockBuilder(\Concrete\Core\Site\Type\Service::class)
             ->disableOriginalConstructor()
@@ -125,10 +132,11 @@ class SiteTest extends \PHPUnit_Framework_TestCase
             ->getMockBuilder(Application::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $app->expects($this->once())
+        $app->expects($this->any())
             ->method('make')
             ->will($this->returnValueMap(array(
-                array('site/type', [], $type_service)
+                array('site/type', [], $type_service),
+                array('cache/request', [], $cache)
             )));
 
         $config = \Core::make('config');
@@ -170,6 +178,9 @@ class SiteTest extends \PHPUnit_Framework_TestCase
         $config = \Core::make('config');
         $factory = new ResolverFactory(\Core::make('app'), new StandardDriver(\Core::make('Concrete\Core\Site\Factory')));
         $service = new Service($entityManager, \Core::make('app'), $config, $factory);
+        $cache = new Pool();
+        $cache->setDriver(new Ephemeral());
+        $service->setCache($cache);
         $retrieved = $service->getSite();
 
         $this->assertEquals($default, $retrieved);

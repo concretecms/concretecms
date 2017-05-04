@@ -58,12 +58,20 @@ class CountryList
      * Return a list of territory codes where a specific language is spoken, sorted by the total number of people speaking that language.
      *
      * @param string $languageCode The language code (eg. 'en')
+     * @param string $languageStatuses The allowed statuses of the languages, whose codes are 'o' (official), 'r' (official regional), 'f' (de facto official), 'm' (official minority), 'u' (unofficial or unknown)
      *
      * @return array Returns a list of country codes
      */
-    public function getCountriesForLanguage($languageCode)
+    public function getCountriesForLanguage($languageCode, $languageStatuses = 'orfm')
     {
-        $territories = \Punic\Territory::getTerritoriesForLanguage($languageCode);
+        $territories = [];
+        foreach (\Punic\Territory::getTerritoriesForLanguage($languageCode) as $territory) {
+            $territoryLanguages = \Punic\Territory::getLanguages($territory, $languageStatuses, true);
+            if (in_array($languageCode, $territoryLanguages)) {
+                $territories[] = $territory;
+            }
+        }
+        
         $validCountryCodes = array_keys($this->getCountries());
         $result = array_intersect($territories, $validCountryCodes);
 

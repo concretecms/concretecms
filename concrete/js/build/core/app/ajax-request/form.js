@@ -14,7 +14,8 @@
             'progressiveOperationElement': '',
             'beforeSubmit': my.before,
             'complete': my.complete,
-            'data': {}
+            'data': {},
+            error: null
         }, options);
         my.$form = $form;
         if (options.progressiveOperation) {

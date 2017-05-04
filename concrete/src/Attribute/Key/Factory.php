@@ -3,6 +3,7 @@ namespace Concrete\Core\Attribute\Key;
 
 use Concrete\Core\Attribute\Category\CategoryService;
 use Concrete\Core\Attribute\Category\CategoryInterface;
+use Concrete\Core\Support\Facade\Facade;
 use Doctrine\ORM\EntityManager;
 use Gettext\Translations;
 
@@ -26,8 +27,16 @@ class Factory
 
     public function getByID($akID)
     {
-        return $this->entityManager->getRepository('Concrete\Core\Entity\Attribute\Key\Key')
-            ->findOneBy(array('akID' => $akID));
+        $cache = Facade::getFacadeApplication()->make("cache/request");
+        $item = $cache->getItem(sprintf('/attribute/id/%s', $akID));
+        if (!$item->isMiss()) {
+            $key = $item->get();
+        } else {
+            $key = $this->entityManager->getRepository('Concrete\Core\Entity\Attribute\Key\Key')
+                ->findOneBy(array('akID' => $akID));
+            $cache->save($item->set($key));
+        }
+        return $key;
     }
 
     public function getAttributeKeyList($category)

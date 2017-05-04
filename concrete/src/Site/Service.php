@@ -21,6 +21,7 @@ class Service
     protected $app;
     protected $config;
     protected $resolverFactory;
+    protected $cache;
 
     /**
      * @param EntityManagerInterface $entityManager
@@ -36,34 +37,67 @@ class Service
         $this->app = $app;
         $this->entityManager = $entityManager;
         $this->config = $configRepository;
+        $this->cache = $this->app->make("cache/request");
         $this->resolverFactory = $resolverFactory;
+    }
+
+    /**
+     * @param mixed $cache
+     */
+    public function setCache($cache)
+    {
+        $this->cache = $cache;
     }
 
     public function getByType(Type $type)
     {
-        return $this->entityManager->getRepository('Concrete\Core\Entity\Site\Site')
+        $sites = $this->entityManager->getRepository('Concrete\Core\Entity\Site\Site')
             ->findByType($type);
+        $return = array();
+        foreach($sites as $site) {
+            $factory = new Factory($this->config);
+            $return[] = $factory->createEntity($site);
+        }
+        return $return;
     }
 
     public function getByHandle($handle)
     {
-        return $this->entityManager->getRepository('Concrete\Core\Entity\Site\Site')
-            ->findOneBy(['siteHandle' => $handle]);
+        $item = $this->cache->getItem(sprintf('/site/handle/%s', $handle));
+        if (!$item->isMiss()) {
+            $site = $item->get();
+        } else {
+            $site = $this->entityManager->getRepository('Concrete\Core\Entity\Site\Site')
+                ->findOneBy(['siteHandle' => $handle]);
+
+            $factory = new Factory($this->config);
+            if (is_object($site)) {
+                $site = $factory->createEntity($site);
+            }
+            $this->cache->save($item->set($site));
+        }
+        return $site;
     }
 
     public function getDefault()
     {
-        $factory = new Factory($this->config);
-        try {
-            $site = $this->entityManager->getRepository('Concrete\Core\Entity\Site\Site')
-                ->findOneBy(array('siteIsDefault' => true));
-        } catch(\Exception $e) {
-            return $factory->createDefaultEntity();
+        $item = $this->cache->getItem(sprintf('/site/default'));
+        if (!$item->isMiss()) {
+            $site = $item->get();
+        } else {
+            $factory = new Factory($this->config);
+            try {
+                $site = $this->entityManager->getRepository('Concrete\Core\Entity\Site\Site')
+                    ->findOneBy(array('siteIsDefault' => true));
+            } catch(\Exception $e) {
+                return $factory->createDefaultEntity();
+            }
+            if (is_object($site)) {
+                $site = $factory->createEntity($site);
+            }
+            $this->cache->save($item->set($site));
         }
-
-        if (is_object($site)) {
-            return $factory->createEntity($site);
-        }
+        return $site;
     }
 
     public function add(Type $type, Theme $theme, $handle, $name, $locale, $default = false)
@@ -194,6 +228,8 @@ class Service
         $this->entityManager->persist($locale);
         $this->entityManager->flush();
 
+        $this->cache->delete('site');
+
         return $site;
     }
 
@@ -202,7 +238,14 @@ class Service
      */
     final public function getSite()
     {
-        return $this->resolverFactory->createResolver($this)->getSite();
+        $item = $this->cache->getItem('site');
+        if (!$item->isMiss()) {
+            $site = $item->get();
+        } else {
+            $site = $this->resolverFactory->createResolver($this)->getSite();
+            $this->cache->save($item->set($site));
+        }
+        return $site;
     }
 
     /**

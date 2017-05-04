@@ -51,7 +51,7 @@
             url: CCM_DISPATCHER_FILENAME + '/ccm/system/express/entry/get_json',
             data: {'exEntryID': exEntryID},
             error: function(r) {
-                ConcreteAlert.dialog('Error', r.responseText);
+                ConcreteAlert.dialog(ccmi18n.error, r.responseText);
             },
             success: function(r) {
                 callback(r);
