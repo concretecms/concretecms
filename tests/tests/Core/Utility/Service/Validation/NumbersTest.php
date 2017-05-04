@@ -28,24 +28,24 @@ class NumbersTest extends PHPUnit_Framework_TestCase
 
     public function integerDataProvider()
     {
-        return array(
-            array(true, '0'),
-            array(true, 0),
-            array(true, '1'),
-            array(true, 1),
-            array(true, '-1456789445'),
-            array(true, -1456789445),
-            array(true, '123'),
-            array(true, 123),
-            array(false, '123,456'),
-            array(false, 'a'),
-            array(false, false),
-            array(false, true),
-            array(false, null),
-            array(false, ''),
-            array(false, '1.25'),
-            array(false, 1.25),
-        );
+        return [
+            [true, '0'],
+            [true, 0],
+            [true, '1'],
+            [true, 1],
+            [true, '-1456789445'],
+            [true, -1456789445],
+            [true, '123'],
+            [true, 123],
+            [false, '123,456'],
+            [false, 'a'],
+            [false, false],
+            [false, true],
+            [false, null],
+            [false, ''],
+            [false, '1.25'],
+            [false, 1.25],
+        ];
     }
 
     /**
