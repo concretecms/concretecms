@@ -11,7 +11,7 @@ class Controller extends BlockController
     protected $btTable = 'btVideo';
     protected $btCacheBlockOutput = true;
     protected $btCacheBlockOutputOnPost = true;
-    protected $btExportFileColumns = array('fID');
+    protected $btExportFileColumns = ['fID'];
     protected $btWrapperClass = 'ccm-ui';
 
     public function getBlockTypeDescription()
@@ -26,53 +26,62 @@ class Controller extends BlockController
 
     public function getMp4FileID()
     {
-        return $this->mp4fID;
+        return isset($this->mp4fID) ? (int) $this->mp4fID : 0;
     }
+
     public function getWebmFileID()
     {
-        return $this->webmfID;
+        return isset($this->webmfID) ? (int) $this->webmfID : 0;
     }
+
     public function getOggFileID()
     {
-        return $this->oggfID;
+        return isset($this->oggfID) ? (int) $this->oggfID : 0;
     }
+
     public function getPosterFileID()
     {
-        return $this->posterfID;
+        return isset($this->posterfID) ? (int) $this->posterfID : 0;
     }
 
     public function getMp4FileObject()
     {
-        return File::getByID($this->mp4fID);
+        return ($id = $this->getMp4FileID()) ? File::getByID($id) : null;
     }
 
     public function getOggFileObject()
     {
-        return File::getByID($this->oggfID);
+        return ($id = $this->getOggFileID()) ? File::getByID($id) : null;
     }
 
     public function getWebmFileObject()
     {
-        return File::getByID($this->webmfID);
+        return ($id = $this->getWebmFileID()) ? File::getByID($id) : null;
     }
 
     public function getPosterFileObject()
     {
-        return File::getByID($this->posterfID);
+        return ($id = $this->getPosterFileID()) ? File::getByID($id) : null;
     }
 
     public function save($data)
     {
-        $args['webmfID'] = intval($data['webmfID'] > 0 ? intval($data['webmfID']) : 0);
-        $args['oggfID'] = intval($data['oggfID'] > 0 ? intval($data['oggfID']) : 0);
-        $args['mp4fID'] = intval($data['mp4fID'] > 0 ? intval($data['mp4fID']) : 0);
-        $args['posterfID'] = intval($data['posterfID'] > 0 ? intval($data['posterfID']) : 0);
-        $args['videoSize'] = intval($data['videoSize'] > 0 ? intval($data['videoSize']) : 0);
-        $args['width'] = intval($data['width']);
-
-        if ($args['videoSize'] === 0 || $args['videoSize'] == 1) {
-            $args['width'] = 0;
-        }
+        $data += [
+            'webmfID' => 0,
+            'oggfID' => 0,
+            'mp4fID' => 0,
+            'posterfID' => 0,
+            'width' => 0,
+            'videoSize' => 0,
+        ];
+        $args = [
+            'webmfID' => max(0, (int) $data['webmfID']),
+            'oggfID' => max(0, (int) $data['oggfID']),
+            'mp4fID' => max(0, (int) $data['mp4fID']),
+            'posterfID' => max(0, (int) $data['posterfID']),
+            'videoSize' => max(0, (int) $data['videoSize']),
+        ];
+        $args['width'] = $args['videoSize'] === 0 || $args['videoSize'] == 1 ? 0 : (int) $data['width'];
 
         parent::save($args);
     }
@@ -84,17 +93,9 @@ class Controller extends BlockController
         $posterFile = $this->getPosterFileObject();
         $oggFile = $this->getOggFileObject();
 
-        if (is_object($posterFile)) {
-            $this->set('posterURL', $posterFile->getURL());
-        }
-        if (is_object($mp4File)) {
-            $this->set('mp4URL', $mp4File->getURL());
-        }
-        if (is_object($webmFile)) {
-            $this->set('webmURL', $webmFile->getURL());
-        }
-        if (is_object($oggFile)) {
-            $this->set('oggURL', $oggFile->getURL());
-        }
+        $this->set('posterURL', $posterFile === null ? '' : $posterFile->getURL());
+        $this->set('mp4URL', $mp4File === null ? '' : $mp4File->getURL());
+        $this->set('webmURL', $webmFile === null ? '' : $webmFile->getURL());
+        $this->set('oggURL', $oggFile === null ? '' : $oggFile->getURL());
     }
 }
