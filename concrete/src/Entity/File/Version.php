@@ -18,6 +18,7 @@ use Concrete\Core\File\Menu;
 use Concrete\Core\File\Type\TypeList as FileTypeList;
 use Concrete\Core\Http\FlysystemFileResponse;
 use Concrete\Core\Support\Facade\Application;
+use Imagine\Gd\Image;
 use League\Flysystem\AdapterInterface;
 use League\Flysystem\FileNotFoundException;
 use Core;
@@ -979,7 +980,7 @@ class Version implements ObjectInterface
     }
 
     /**
-     *
+     * @return bool|Image
      */
     public function getImagineImage()
     {

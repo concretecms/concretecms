@@ -214,6 +214,9 @@ class Controller extends AttributeTypeController
                 }
             }
             $this->set('valueIDs', implode(',', $valueIDs));
+        } else {
+            $valueIDs = null;
+            $this->set('valueIDs', null);
         }
         $this->set('valueIDArray', $valueIDs);
         $ak = $this->getAttributeKey();
@@ -263,7 +266,7 @@ class Controller extends AttributeTypeController
         $sh = Core::make('helper/security');
         $av = new TopicsValue();
         $cleanIDs = array();
-        $topicsArray = $_POST['topics_' . $this->attributeKey->getAttributeKeyID()];
+        $topicsArray = $this->request->request->get('topics_' . $this->attributeKey->getAttributeKeyID());
         if (is_array($topicsArray) && count($topicsArray) > 0) {
             foreach ($topicsArray as $topicID) {
                 $cleanIDs[] = $sh->sanitizeInt($topicID);

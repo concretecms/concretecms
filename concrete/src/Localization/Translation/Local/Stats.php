@@ -68,6 +68,23 @@ class Stats
     }
 
     /**
+     * Get the display name of the translation file.
+     *
+     * @return string
+     */
+    public function getFileDisplayName()
+    {
+        $base = str_replace(DIRECTORY_SEPARATOR, '/', DIR_BASE);
+        if (strpos($this->filename, $base) === 0) {
+            $path = substr($this->filename, strlen($base) + 1);
+        } else {
+            $path = $this->filename;
+        }
+
+        return str_replace('/', DIRECTORY_SEPARATOR, $path);
+    }
+
+    /**
      * Get the version of the translations.
      *
      * @return string

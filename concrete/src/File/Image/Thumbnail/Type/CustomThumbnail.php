@@ -11,6 +11,7 @@ class CustomThumbnail extends ThumbnailVersion
 
     protected $path;
     protected $cropped;
+  
     /**
      * CustomThumbnail constructor.
      * @param int $width

@@ -71,6 +71,14 @@ $someUpdateAvailable = false;
                                     echo $controller->getLocaleRowHtml($localeID, $handle, $rl->getRemoteStats(), $rl->getLocalStats(), '');
                                 }
                             }
+                            if (!empty($details->getOnlyLocal())) {
+                                ?>
+                                <tr><th colspan="5"><?= t('Only local languages') ?></th></tr>
+                                <?php
+                                foreach ($details->getOnlyLocal() as $localeID => $l) {
+                                    echo $controller->getLocaleRowHtml($localeID, $handle, null, $l, '');
+                                }
+                            }
                             ?>
                         </tbody>
                     </table>
