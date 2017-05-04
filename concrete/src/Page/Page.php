@@ -451,14 +451,14 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $q = "select cIsCheckedOut, cCheckedOutDatetimeLastEdit from Pages where cID = '{$this->cID}'";
         $r = $db->executeQuery($q);
 
-        // If cCheckedOutDatetimeLastEdit is present, get the time span in seconds since it's last edit.
-        if (! empty($row['cCheckedOutDatetimeLastEdit'])) {
-            $dh = Core::make('helper/date');
-            $timeSinceCheckout = ($dh->getOverridableNow(true) - strtotime($row['cCheckedOutDatetimeLastEdit']));
-        }
-
         if ($r) {
             $row = $r->fetchRow();
+            // If cCheckedOutDatetimeLastEdit is present, get the time span in seconds since it's last edit.
+            if (! empty($row['cCheckedOutDatetimeLastEdit'])) {
+                $dh = Core::make('helper/date');
+                $timeSinceCheckout = ($dh->getOverridableNow(true) - strtotime($row['cCheckedOutDatetimeLastEdit']));
+            }
+
             if ($row['cIsCheckedOut'] == 0) {
                 return false;
             } else {
