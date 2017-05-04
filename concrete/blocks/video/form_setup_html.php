@@ -3,17 +3,16 @@
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $al = $app->make('helper/concrete/asset_library');
 
-if ($controller->getWebmFileID() > 0) {
-    $webm = $controller->getWebMFileObject();
+$webm = $controller->getWebmFileID() > 0 ? $controller->getWebMFileObject() : null;
+$ogg = $controller->getOggFileID() > 0 ? $controller->getOggFileObject() : null;
+$mp4 = $controller->getMp4FileID() > 0 ? $controller->getMp4FileObject() : null;
+$poster = $controller->getPosterFileID() > 0 ? $controller->getPosterFileObject() : null;
+
+if (!isset($videoSize)) {
+    $videoSize = 0;
 }
-if ($controller->getOggFileID() > 0) {
-    $ogg = $controller->getOggFileObject();
-}
-if ($controller->getMp4FileID() > 0) {
-    $mp4 = $controller->getMp4FileObject();
-}
-if ($controller->getPosterFileID() > 0) {
-    $poster = $controller->getPosterFileObject();
+if (!isset($width)) {
+    $width = null;
 }
 ?>
 
