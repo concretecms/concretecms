@@ -11,7 +11,7 @@ class Controller extends BlockController
     protected $btTable = 'btVideo';
     protected $btCacheBlockOutput = true;
     protected $btCacheBlockOutputOnPost = true;
-    protected $btExportFileColumns = array('fID');
+    protected $btExportFileColumns = ['fID'];
     protected $btWrapperClass = 'ccm-ui';
 
     public function getBlockTypeDescription()
@@ -28,17 +28,20 @@ class Controller extends BlockController
     {
         return isset($this->mp4fID) ? (int) $this->mp4fID : 0;
     }
+
     public function getWebmFileID()
     {
         return isset($this->webmfID) ? (int) $this->webmfID : 0;
     }
+
     public function getOggFileID()
     {
         return isset($this->oggfID) ? (int) $this->oggfID : 0;
     }
+
     public function getPosterFileID()
     {
-        return isset($this->posterfID)? (int) $this->posterfID : 0;
+        return isset($this->posterfID) ? (int) $this->posterfID : 0;
     }
 
     public function getMp4FileObject()
