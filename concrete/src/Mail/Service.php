@@ -4,7 +4,6 @@ namespace Concrete\Core\Mail;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Logging\GroupLogger;
 use Concrete\Core\Support\Facade\Application as ApplicationFacade;
-use Config;
 use Exception;
 use Monolog\Logger;
 use Zend\Mail\Message;
@@ -501,9 +500,9 @@ class Service
             $l = new GroupLogger(LOG_TYPE_EMAILS, Logger::INFO);
             if ($config->get('concrete.email.enabled')) {
                 if ($sent) {
-                    $l->write('**'.t('EMAILS ARE ENABLED. THIS EMAIL HAS BEEN SENT').'**');
+                    $l->write('**' . t('EMAILS ARE ENABLED. THIS EMAIL HAS BEEN SENT') . '**');
                 } else {
-                    $l->write('**'.t('EMAILS ARE ENABLED. THIS EMAIL HAS NOT BEEN SENT').'**');
+                    $l->write('**' . t('EMAILS ARE ENABLED. THIS EMAIL HAS NOT BEEN SENT') . '**');
                 }
             } else {
                 $l->write('**' . t('EMAILS ARE DISABLED. THIS EMAIL WAS LOGGED BUT NOT SENT') . '**');
