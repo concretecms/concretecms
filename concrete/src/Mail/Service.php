@@ -2,10 +2,12 @@
 namespace Concrete\Core\Mail;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Entity\File\File;
 use Concrete\Core\Logging\GroupLogger;
 use Concrete\Core\Support\Facade\Application as ApplicationFacade;
 use Exception;
 use Monolog\Logger;
+use Zend\Mail\Header\MessageId as MessageIdHeader;
 use Zend\Mail\Message;
 use Zend\Mail\Transport\TransportInterface;
 use Zend\Mime\Message as MimeMessage;
@@ -89,13 +91,9 @@ class Service
      * $attachment->filename = "CustomFilename";
      * $mailHelper->send();
      *
-     * @param \Concrete\Core\Entity\File\File $fob File to attach
-     *
-     * @return \StdClass Pointer to the attachment
-     *
-     * @throws \Exception
+     * @param File $fob File to attach
      */
-    public function addAttachment(\Concrete\Core\Entity\File\File $fob)
+    public function addAttachment(File $fob)
     {
         // Get file version.
         $fv = $fob->getVersion();
@@ -368,7 +366,7 @@ class Service
      *
      * @param bool $resetData Whether or not to reset the service to its default values
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @return bool
      */
@@ -423,7 +421,7 @@ class Service
         if ($headers->has('messageid')) {
             $messageIdHeader = $headers->get('messageid');
         } else {
-            $messageIdHeader = new \Zend\Mail\Header\MessageId();
+            $messageIdHeader = new MessageIdHeader();
             $headers->addHeader($messageIdHeader);
         }
 
