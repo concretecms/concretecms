@@ -277,7 +277,7 @@ class UserList extends DatabaseItemList
         $where = null;
         foreach ($groups as $group) {
             if ($group instanceof \Concrete\Core\User\Group\Group) {
-                $uniqueID = $group->getGroupID() . '_' . bin2hex(random_bytes(10));
+                $uniqueID = $group->getGroupID() . '_' . mt_rand();
                 $joinTable = 'ug' . $uniqueID;
                 $groupTable = 'g' . $uniqueID;
                 $path = $group->getGroupPath();
