@@ -72,7 +72,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
 
     /**
      * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\User\User")
-     * @ORM\JoinColumn(name="uID", referencedColumnName="uID")
+     * @ORM\JoinColumn(name="uID", referencedColumnName="uID", onDelete="SET NULL")
      **/
     public $author;
 
@@ -549,23 +549,6 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         $db->Execute('delete from DownloadStatistics where fID = ?', [$this->fID]);
         $db->Execute('delete from FilePermissionAssignments where fID = ?', [$this->fID]);
         $db->Execute('delete from FileImageThumbnailPaths where fileID = ?', [$this->fID]);
-
-        $query = $em->createQuery('select fav from Concrete\Core\Entity\Attribute\Value\Value\ImageFileValue fav inner join fav.file f where f.fID = :fID');
-        $query->setParameter('fID', $this->getFileID());
-        $values = $query->getResult();
-        foreach ($values as $genericValue) {
-            foreach (Category::getList() as $category) {
-                $category = $category->getController();
-                /*
-                 * @var $category AbstractCategory
-                 */
-                $values = $category->getAttributeValueRepository()->findBy(['generic_value' => $genericValue]);
-                foreach ($values as $attributeValue) {
-                    $category->deleteValue($attributeValue);
-                }
-            }
-        }
-
         $db->Execute('delete from Files where fID = ?', [$this->fID]);
     }
 

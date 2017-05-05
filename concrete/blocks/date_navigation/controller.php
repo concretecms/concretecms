@@ -56,7 +56,7 @@ class Controller extends BlockController
 
     public function getDateLabel($dateArray)
     {
-        return \Punic\Calendar::getMonthName($dateArray['month']).' '.$dateArray['year'];
+        return \Punic\Calendar::getMonthName($dateArray['month'], 'wide', '', true).' '.$dateArray['year'];
     }
 
     public function getPassThruActionAndParameters($parameters)

@@ -15,8 +15,10 @@ use Core;
 
 class UserTest extends \UserTestCase
 {
-    protected function setUp()
+    public function __construct($name = null, array $data = array(), $dataName = '')
     {
+        parent::__construct($name, $data, $dataName);
+
         $this->metadatas[] = 'Concrete\Core\Entity\File\StorageLocation\StorageLocation';
         $this->metadatas[] = 'Concrete\Core\Entity\File\StorageLocation\Type\Type';
         $this->metadatas[] = 'Concrete\Core\Entity\Site\Site';
@@ -24,7 +26,12 @@ class UserTest extends \UserTestCase
         $this->metadatas[] = 'Concrete\Core\Entity\Site\Type';
         $this->metadatas[] = 'Concrete\Core\Entity\Site\Tree';
         $this->metadatas[] = 'Concrete\Core\Entity\Site\SiteTree';
-        parent::setUp();
+    }
+
+    public function tearDown()
+    {
+        parent::tearDown();
+        $this->truncateTables();
     }
 
     public function testCreateLegacy()

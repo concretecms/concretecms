@@ -36,7 +36,8 @@ class ExpressTreeNodeResponse extends TreeNodeResponse
 
     public function canDeleteTreeNode()
     {
-        return $this->canAccessEntryLocations();
+        return $this->canAccessEntryLocations()
+            && $this->getPermissionObject()->getTreeNodeParentID() > 0;
     }
 
     public function canAddCategoryTreeNode()

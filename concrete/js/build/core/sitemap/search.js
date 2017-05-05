@@ -126,7 +126,7 @@
             url: CCM_DISPATCHER_FILENAME + '/ccm/system/page/get_json',
             data: {'cID': cID},
             error: function(r) {
-                ConcreteAlert.dialog('Error', r.responseText);
+                ConcreteAlert.dialog(ccmi18n.error, r.responseText);
             },
             success: function(r) {
                 callback(r);
@@ -184,7 +184,7 @@
                 '<li data-sitemap-mode="explore"><a href="' + CCM_DISPATCHER_FILENAME + '/dashboard/sitemap/explore?cNodeID=<%=item.cID%>&task=send_to_bottom">' + ccmi18n_sitemap.sendToBottom + '</a></li>' +
                 '<% if (item.numSubpages > 0) { %>' +
                 '<li class="divider"></li>' +
-                '<li><a href="' + CCM_DISPATCHER_FILENAME + '/dashboard/sitemap/search/?submitSearch=1&field[]=parent&cParentAll=1&cParentIDSearchField=<%=item.cID%>">' + ccmi18n_sitemap.searchPages + '</a></li>' +
+                '<li><a href="' + CCM_DISPATCHER_FILENAME + '/dashboard/sitemap/search/?submitSearch=1&field[]=parent_page&cParentAll=1&cParentIDSearchField=<%=item.cID%>">' + ccmi18n_sitemap.searchPages + '</a></li>' +
                 '<li><a href="' + CCM_DISPATCHER_FILENAME + '/dashboard/sitemap/explore/-/<%=item.cID%>">' + ccmi18n_sitemap.explorePages + '</a></li>' +
                 '<% } %>' +
                 '<% if (item.canAddExternalLinks || item.canAddSubpages) { %>' +

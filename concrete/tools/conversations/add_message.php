@@ -11,6 +11,7 @@ $pageObj = Page::getByID($_POST['cID']);
 $areaObj = Area::get($pageObj, $_POST['blockAreaHandle']);
 $blockObj = Block::getByID($_POST['bID'], $pageObj, $areaObj);
 $cnvMessageSubject = null;
+$canReview = $blockObj->getController()->enableTopCommentReviews && !$_POST['cnvMessageParentID'];
 
 $pk = PermissionKey::getByHandle('add_conversation_message');
 
@@ -54,6 +55,9 @@ if (!is_object($cn)) {
     }
 }
 
+
+
+
 if (!is_object($pageObj)) {
     $ve->add(t('Invalid Page.'));
 }
@@ -75,6 +79,14 @@ if (is_object($blockObj)) {
                 $ve->add(t('You have too many attachments.'));
             }
         }
+    }
+}
+
+if ($review = intval($_POST['review'])) {
+    if (!$canReview) {
+        $ve->add(t('Reviews have not been enabled for this discussion.'));
+    } elseif ($review > 5 || $review < 1) {
+        $ve->add(t('A review must be a rating between 1 and 5.'));
     }
 }
 
@@ -101,6 +113,11 @@ if ($ve->has()) {
     $ax->sendError($ve);
 } else {
     $msg = ConversationMessage::add($cn, $author, $cnvMessageSubject, $_POST['cnvMessageBody'], $parent);
+
+    if ($review) {
+        $msg->setReview($review);
+    }
+
     if (!Loader::helper('validation/antispam')->check($_POST['cnvMessageBody'], 'conversation_comment')) {
         $msg->flag(ConversationFlagType::getByHandle('spam'));
     } else {
@@ -112,5 +129,14 @@ if ($ve->has()) {
     foreach ($attachmentIDs as $attachmentID) {
         $msg->attachFile(File::getByID($attachmentID));
     }
+
+    $event = new \Concrete\Core\Conversation\Message\MessageEvent($msg);
+
+    $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+    $app->make('director')->dispatch('on_conversations_message_add', $event);
+
+    $conversationService = $app->make(\Concrete\Core\Conversation\ConversationService::class);
+    $conversationService->trackReview($msg, $blockObj);
+
     $ax->sendResult($msg);
 }

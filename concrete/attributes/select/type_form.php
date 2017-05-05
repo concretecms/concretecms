@@ -232,6 +232,31 @@ function getAttributeOptionHTML($v)
 
 	$(function() {
 		ccmAttributesHelper.makeSortable();
+        <?php
+        $max_input_vars = (int) @ini_get('max_input_vars');
+        if ($max_input_vars > 0) {
+            ?>
+            var $form = $("#ccm-attribute-key-form");
+            $form.on('submit', function(e) {
+                var numFields = $form.find(':input').length;
+                if (numFields > <?=$max_input_vars?>) {
+                    alert(
+                        <?=json_encode(t(
+<<<'EOT'
+Your current PHP configuration does not allow to save so many tags.
+
+You should increase the value of the %1$s option in your php.ini.
+
+The current value of this option is %2$s, but this form requires at least a value of %3$s.
+EOT
+                        , 'max_input_vars', $max_input_vars, '[[CURRENT_NUMBER_OF_FIELDS]]'))?>.replace('[[CURRENT_NUMBER_OF_FIELDS]]', numFields.toString())
+                    );
+                    e.preventDefault();
+                }
+            });
+            <?php
+        }
+        ?> 
 	});
 
 </script>

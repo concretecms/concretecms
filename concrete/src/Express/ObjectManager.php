@@ -6,6 +6,7 @@ use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Package;
 use Doctrine\ORM\EntityManagerInterface;
 use Concrete\Core\Express\Entry\Manager as EntryManager;
+use Concrete\Core\Express\Controller\Manager as ControllerManager;
 
 class ObjectManager
 {
@@ -95,5 +96,11 @@ class ObjectManager
             ->findOneByHandle($entityHandle);
     }
 
+    public function getEntityController(Entity $entity)
+    {
+        return $this->app->make(ControllerManager::class)->driver(
+            $entity->getHandle()
+        );
+    }
 
 }

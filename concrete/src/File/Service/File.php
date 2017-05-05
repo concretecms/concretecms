@@ -1,11 +1,12 @@
 <?php
 namespace Concrete\Core\File\Service;
 
-use Concrete\Core\File\Exception\RequestTimeoutException;
+use Zend\Http\Client\Adapter\Exception\TimeoutException;
 use Config;
 use Environment;
-use Core;
 use Exception;
+use Core;
+use Concrete\Core\Support\Facade\Application as CoreApplication;
 
 /**
  * File helper.
@@ -34,21 +35,33 @@ class File
      * Returns the contents of a directory.
      *
      *
-     * @param string $dir
-     * @param array $ignoreFilesArray
-     * @param bool $recursive
-     *
-     * @return array
-     *
-     * @see \Concrete\Core\Foundation\Environment::getDirectoryContents()
      */
-    public function getDirectoryContents($dir, $ignoreFilesArray = [], $recursive = false)
+    public function getDirectoryContents($dir, $ignoreFiles = [], $recursive = false)
     {
-        $env = Environment::get();
+        $aDir = [];
+        if (is_dir($dir)) {
+            $handle = opendir($dir);
+            while (($file = readdir($handle)) !== false) {
+                if (substr($file, 0, 1) != '.' && (!in_array($file, $ignoreFiles))) {
+                    if (is_dir($dir . '/' . $file)) {
+                        if ($recursive) {
+                            $aDir = array_merge($aDir, $this->getDirectoryContents($dir . '/' . $file, $ignoreFiles, $recursive));
+                            $file = $dir . '/' . $file;
+                        }
+                        $aDir[] = preg_replace("/\/\//si", '/', $file);
+                    } else {
+                        if ($recursive) {
+                            $file = $dir . '/' . $file;
+                        }
+                        $aDir[] = preg_replace("/\/\//si", '/', $file);
+                    }
+                }
+            }
+            closedir($handle);
+        }
 
-        return $env->getDirectoryContents($dir, $ignoreFilesArray, $recursive);
+        return $aDir;
     }
-
     /**
      * Removes the extension of a filename, uncamelcases it.
      *
@@ -303,7 +316,7 @@ class File
      * @param string $filename
      * @param string $timeout
      *
-     * @throws RequestTimeoutException Request timed out
+     * @throws TimeoutException Request timed out
      *
      * @return string|bool Returns false in case of failure
      */
@@ -311,48 +324,17 @@ class File
     {
         $url = @parse_url($file);
         if (isset($url['scheme']) && isset($url['host'])) {
-            if (function_exists('curl_init')) {
-                $curl_handle = curl_init();
-
-                // Check to see if there are proxy settings
-                if (Config::get('concrete.proxy.host') != null) {
-                    @curl_setopt($curl_handle, CURLOPT_PROXY, Config::get('concrete.proxy.host'));
-                    @curl_setopt($curl_handle, CURLOPT_PROXYPORT, Config::get('concrete.proxy.port'));
-
-                    // Check if there is a username/password to access the proxy
-                    if (Config::get('concrete.proxy.user') != null) {
-                        @curl_setopt(
-                            $curl_handle,
-                            CURLOPT_PROXYUSERPWD,
-                            Config::get('concrete.proxy.user') . ':' . Config::get('concrete.proxy.password'));
-                    }
-                }
-
-                if ($timeout === null) {
-                    $timeout = Config::get('app.curl.connectionTimeout');
-                }
-
-                curl_setopt($curl_handle, CURLOPT_URL, $file);
-                curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, $timeout);
-                curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
-                curl_setopt($curl_handle, CURLOPT_SSL_VERIFYPEER, Config::get('app.curl.verifyPeer'));
-
-                $contents = curl_exec($curl_handle);
-                $error = curl_errno($curl_handle);
-
-                $http_code = curl_getinfo($curl_handle, CURLINFO_HTTP_CODE);
-                curl_close($curl_handle);
-
-                if ($error == 28) {
-                    throw new RequestTimeoutException(t('Request timed out.'));
-                }
-
-                if ($http_code >= 400) {
-                    return false;
-                }
-
-                return $contents;
+            $app = CoreApplication::getFacadeApplication();
+            $client = $app->make('http/client')->setUri($file);
+            try {
+                $response = $client->send();
+            } catch (TimeoutException $x) {
+                throw $x;
+            } catch (Exception $x) {
+                $response = null;
             }
+
+            return $response ? $response->getBody() : false;
         } else {
             $contents = @file_get_contents($file);
             if ($contents !== false) {
@@ -491,10 +473,10 @@ class File
     /**
      * Try to set the executable bit of a file.
      *
-     * @param string $file The full path.
+     * @param string $file The full path
      * @param string $who One of 'user', 'group', 'all'
      *
-     * @throws Exception Throws an exception in case of errors.
+     * @throws Exception Throws an exception in case of errors
      */
     public function makeExecutable($file, $who = 'all')
     {

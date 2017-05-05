@@ -1,4 +1,6 @@
 <?php
+use Concrete\Core\Localization\Localization;
+
 defined('C5_EXECUTE') or die("Access Denied.");
 
 /* @var Concrete\Core\Form\Service\Form $form */
@@ -407,17 +409,22 @@ if (isset($successMessage)) {
 
                                 <div class="form-group">
                                     <label class="control-label" for="sessionHandler"><?=t('Country')?></label>
-                                    <select name="siteLocaleCountry" class="form-control">
-                                        <optgroup label="<?=t('** Recommended Countries')?>"></optgroup>
-                                        <?php foreach($recommendedCountries as $key => $value) { ?>
-                                            <option value="<?=$key?>" <?php if ($computedSiteLocaleCountry == $key || isset($_POST['siteLocaleCountry']) && $_POST['siteLocaleCountry'] == $key) { ?>selected<?php } ?>><?=$value?></option>
-                                        <?php } ?>
-                                        <optgroup label="<?=t('** Other Countries')?>"></optgroup>
-                                        <?php foreach($otherCountries as $key => $value) { ?>
-                                            <option value="<?=$key?>" <?php if ($computedSiteLocaleCountry == $key || isset($_POST['siteLocaleCountry']) && $_POST['siteLocaleCountry'] == $key) { ?>selected<?php } ?>><?=$value?></option>
-                                        <?php } ?>
-                                    </select>
+                                    <?= $form->select('siteLocaleCountry', $countries, $computedSiteLocaleCountry) ?>
                                 </div>
+                                
+                                <script>
+                                $('#siteLocaleLanguage').on('change', function() {
+                                    $.ajax(
+                                        <?= json_encode((string) $view->url('/install', 'get_site_locale_countries')) ?> + '/' + encodeURIComponent(<?= json_encode(Localization::activeLocale()) ?>) + '/' + encodeURIComponent(this.value) + '/' + encodeURIComponent($('#siteLocaleCountry').val()),
+                                        {
+                                            dataType: 'json'
+                                        }
+                                    )
+                                    .done(function (r) {
+                                        $('#siteLocaleCountry').replaceWith(r);
+                                    });
+                                });
+                                </script>
                             </div>
                         </div>
                     </div>
@@ -442,7 +449,7 @@ if (isset($successMessage)) {
 
 
     <?php
-} elseif (isset($locale) || count($locales) == 0) {
+} elseif (isset($locale) || (empty($locales) && empty($onlineLocales))) {
     ?>
 
     <div class="ccm-install-title">
@@ -899,11 +906,11 @@ if (isset($successMessage)) {
                                 if ($memoryTest === -1) {
                                     ?>
                                     <span class="text-danger">
-                        <?= t('concrete5 will not install with less than %1$s of RAM. Your memory limit is currently %2$s. Please increase your memory_limit using ini_set.',
-                            Core::make('helper/number')->formatSize($memoryThresoldMin),
-                            Core::make('helper/number')->formatSize($memoryBytes)
-                        ) ?>
-                    </span>
+                                        <?= t('concrete5 will not install with less than %1$s of RAM. Your memory limit is currently %2$s. Please increase your memory_limit using ini_set.',
+                                            Core::make('helper/number')->formatSize($memoryThresoldMin),
+                                            Core::make('helper/number')->formatSize($memoryBytes)
+                                        ) ?>
+                                    </span>
                                     <?php
                                 }
                                 ?>
@@ -911,11 +918,11 @@ if (isset($successMessage)) {
                                 if ($memoryTest === 0) {
                                     ?>
                                     <span class="text-warning">
-                        <?= t('concrete5 runs best with at least %1$s of RAM. Your memory limit is currently %2$s. You may experience problems uploading and resizing large images, and may have to install concrete5 without sample content.',
-                            Core::make('helper/number')->formatSize($memoryThresold),
-                            Core::make('helper/number')->formatSize($memoryBytes)
-                        ) ?>
-                    </span>
+                                        <?= t('concrete5 runs best with at least %1$s of RAM. Your memory limit is currently %2$s. You may experience problems uploading and resizing large images, and may have to install concrete5 without sample content.',
+                                            Core::make('helper/number')->formatSize($memoryThresold),
+                                            Core::make('helper/number')->formatSize($memoryBytes)
+                                        ) ?>
+                                    </span>
                                     <?php
                                 }
                                 ?>
@@ -923,9 +930,9 @@ if (isset($successMessage)) {
                                 if ($memoryTest === 1) {
                                     ?>
                                     <span class="text-success">
-                        <?= t('Memory limit %s.',
-                            Core::make('helper/number')->formatSize($memoryBytes)) ?>
-                    </span>
+                                        <?= t('Memory limit %s.',
+                                            Core::make('helper/number')->formatSize($memoryBytes)) ?>
+                                    </span>
                                     <?php
                                 }
                                 ?>
@@ -1053,7 +1060,7 @@ if (isset($successMessage)) {
         </div>
     </div>
 
-<?php
+    <?php
 } else {
     ?>
 
@@ -1068,7 +1075,13 @@ if (isset($successMessage)) {
         <form method="post" id="ccm-install-language-form" action="<?= $view->url('/install', 'select_language') ?>">
         <div class="form-group">
             <div class="input-group-lg input-group">
-                <?= $form->select('locale', $locales, 'en_US'); ?>
+                <?php
+                $selectOptions = $locales;
+                if (!empty($onlineLocales)) {
+                    $selectOptions[t('Online Languages')] = $onlineLocales;
+                }
+                ?>
+                <?= $form->select('wantedLocale', $selectOptions, Localization::BASE_LOCALE); ?>
                 <div class="input-group-btn">
                     <button type="submit" class="btn btn-primary">
                         <i class="fa fa-arrow-right"></i>

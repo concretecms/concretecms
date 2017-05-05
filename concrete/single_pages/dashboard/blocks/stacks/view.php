@@ -71,11 +71,11 @@ if (isset($neutralStack)) {
         ?>
         <nav class="navbar navbar-default">
             <div class="container-fluid">
-                <ul class="nav navbar-nav">
+                <ul class="nav navbar-nav small">
                     <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><?=t('Add Block')?></a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><?=t('Add')?> <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a class="dialog-launch" dialog-modal="false" dialog-width="550" dialog-height="380" dialog-title="<?=t('Add Block')?>" href="<?=URL::to('/ccm/system/dialogs/page/add_block_list')?>?cID=<?=$stackToEdit->getCollectionID()?>&arHandle=<?=STACKS_AREA_NAME?>"><?=t('Add Block')?></a></li>
+                            <li><a class="dialog-launch" dialog-modal="false" dialog-width="550" dialog-height="380" dialog-title="<?=t('Add')?>" href="<?=URL::to('/ccm/system/dialogs/page/add_block_list')?>?cID=<?=$stackToEdit->getCollectionID()?>&arHandle=<?=STACKS_AREA_NAME?>"><?=t('Add Block')?></a></li>
                             <li><a class="dialog-launch" dialog-modal="false" dialog-width="550" dialog-height="380" dialog-title="<?=t('Paste From Clipboard')?>" href="<?=URL::to('/ccm/system/dialogs/page/clipboard')?>?cID=<?=$stackToEdit->getCollectionID()?>&arHandle=<?=STACKS_AREA_NAME?>"><?=t('Paste From Clipboard')?></a></li>
                         </ul>
                     </li>
@@ -83,34 +83,36 @@ if (isset($neutralStack)) {
                     <?php if (!$isGlobalArea && $cpc->canEditPageProperties()) { ?>
                         <li><a href="<?=$view->action('rename', $neutralStack->getCollectionID())?>"><?=t('Rename')?></a></li>
                     <?php } ?>
-                    <?php if (!$isGlobalArea && $cpc->canEditPagePermissions() && Config::get('concrete.permissions.model') == 'advanced') { ?>
+                    <?php if ($cpc->canEditPagePermissions() && Config::get('concrete.permissions.model') == 'advanced') { ?>
                         <li><a dialog-width="580" class="dialog-launch" dialog-append-buttons="true" dialog-height="420" dialog-title="<?=t('Stack Permissions')?>" id="stackPermissions" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup?cID=<?=$stackToEdit->getCollectionID()?>&arHandle=<?=STACKS_AREA_NAME?>&atask=groups"><?=t('Permissions')?></a></li>
                     <?php } ?>
                     <?php if (!$isGlobalArea && $cpc->canMoveOrCopyPage()) { ?>
-                        <li><a href="<?=$view->action('duplicate', $neutralStack->getCollectionID())?>" style="margin-right: 4px;"><?=t('Duplicate Stack')?></a></li>
+                        <li><a href="<?=$view->action('duplicate', $neutralStack->getCollectionID())?>" style="margin-right: 4px;"><?=t('Duplicate')?></a></li>
                     <?php } ?>
+                    <?php if (!$isGlobalArea) { ?>
                     <li>
-                        <a dialog-width="640" dialog-height="340" class="dialog-launch" id="stackUsage" dialog-title="<?=t('Stack Usage')?>" href="<?= $view->action('usage', $stackToEdit->getCollectionID()) ?>">
+                        <a dialog-width="640" dialog-height="340" class="dialog-launch" id="stackUsage" dialog-title="<?=t('Usage')?>" href="<?= $view->action('usage', $stackToEdit->getCollectionID()) ?>">
                    <?=t('Stack Usage')?>
                     </a>
                     </li>
+                    <?php } ?>
                     <?php
                     if ($cpc->canDeletePage()) {
                         if ($isGlobalArea) {
                             if ($stackToEdit !== $neutralStack) {
-                                $deleteLabels = ['title' => t('Delete localized version'), 'button' => t('Delete')];
-                                ?><li><a href="javascript:void(0)" data-dialog="delete-stack"><span class="text-danger"><?=t('Delete localized Global Area')?></span></a></li><?php
+                                $deleteLabels = ['title' => t('Delete Localized Version'), 'button' => t('Delete')];
+                                ?><li><a href="javascript:void(0)" data-dialog="delete-stack"><span class="text-danger"><?=t('Clear Global Area')?></span></a></li><?php
                             } else {
-                                $deleteLabels = ['title' => t('Clear Global Area contents'), 'button' => t('Clear area'), 'canUndo' => true];
+                                $deleteLabels = ['title' => t('Clear Global Area Contents'), 'button' => t('Clear area'), 'canUndo' => true];
                                 ?><li><a href="javascript:void(0)" data-dialog="delete-stack"><span class="text-danger"><?=t('Clear Global Area')?></span></a></li><?php
                             }
                         } else {
                             if ($stackToEdit !== $neutralStack) {
-                                $deleteLabels = ['title' => t('Delete localized version'), 'button' => t('Delete')];
-                                ?><li><a href="javascript:void(0)" data-dialog="delete-stack"><span class="text-danger"><?=t('Delete localized Stack')?></span></a></li><?php
+                                $deleteLabels = ['title' => t('Delete Localized Version'), 'button' => t('Delete')];
+                                ?><li><a href="javascript:void(0)" data-dialog="delete-stack"><span class="text-danger"><?=t('Delete')?></span></a></li><?php
                             } else {
                                 $deleteLabels = ['title' => t('Delete Stack'), 'button' => t('Delete')];
-                                ?><li><a href="javascript:void(0)" data-dialog="delete-stack"><span class="text-danger"><?=t('Delete Stack')?></span></a></li><?php
+                                ?><li><a href="javascript:void(0)" data-dialog="delete-stack"><span class="text-danger"><?=t('Delete')?></span></a></li><?php
                             }
                         }
                     }

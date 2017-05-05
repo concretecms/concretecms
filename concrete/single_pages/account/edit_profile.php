@@ -1,6 +1,6 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<h2><?=$c->getCollectionName()?></h2>
+<h2><?=t($c->getCollectionName())?></h2>
 
 <form method="post" action="<?php echo $view->action('save')?>" enctype="multipart/form-data">
 	<?php  $attribs = UserAttributeKey::getEditableInProfileList();
@@ -34,31 +34,37 @@
  } ?>
 	<?php
     if (is_array($attribs) && count($attribs)) {
-        $af = Loader::helper('form/attribute');
-        $af->setAttributeObject($profile);
         foreach ($attribs as $ak) {
-            echo '<div class="ccm-profile-attribute">';
-            echo $af->display($ak, $ak->isAttributeKeyRequiredOnProfile());
-            echo '</div>';
+            echo $profileFormRenderer
+                ->buildView($ak)
+                ->setIsRequired($ak->isAttributeKeyRequiredOnProfile())
+                ->render();
         }
     }
     ?>
 	</fieldset>
 	<?php
-    $ats = AuthenticationType::getList(true, true);
+    $ats = [];
+    foreach (AuthenticationType::getList(true, true) as $at) {
+        /* @var AuthenticationType $at */
+        if ($at->isHooked($profile)) {
+            if ($at->hasHooked()) {
+                $ats[] = [$at, 'renderHooked'];
+            }
+        } else {
+            if ($at->hasHook()) {
+                $ats[] = [$at, 'renderHook'];
+            }
+        }
+    }
 
-    $ats = array_filter($ats, function (AuthenticationType $type) {
-        return $type->hasHook();
-    });
-
-    $count = count($ats);
-    if ($count) {
+    if (!empty($ats)) {
         ?>
 		<fieldset>
 			<legend><?=t('Authentication Types')?></legend>
 			<?php
             foreach ($ats as $at) {
-                $at->renderHook();
+                call_user_func($at);
             }
         ?>
 		</fieldset>

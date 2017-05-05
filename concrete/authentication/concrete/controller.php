@@ -144,6 +144,8 @@ class Controller extends AuthenticationTypeController
     public function required_password_upgrade()
     {
         $email = $this->post('uEmail');
+	    $token = $this->app->make(Token::class);
+	    $this->set('token', $token);
 
         if ($email) {
             $errorValidator = Core::make('helper/validation/error');
@@ -342,7 +344,7 @@ class Controller extends AuthenticationTypeController
                 case USER_INVALID:
                     // Log failed auth
                     $ip_service->logSignupRequest();
-                    if ($ip_service->signupRequestThreshholdReached()) {
+                    if ($ip_service->signupRequestThresholdReached()) {
                         $ip_service->createIPBan();
                         throw new \Exception($ip_service->getErrorMessage());
                     }

@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Http;
 
 use Concrete\Controller\Frontend\PageForbidden;
@@ -14,6 +13,7 @@ use Concrete\Core\Page\Controller\PageController;
 use Concrete\Core\Page\Event;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Relation\Menu\Item\RelationListItem;
+use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Routing\RedirectResponse;
@@ -23,10 +23,10 @@ use Concrete\Core\View\View;
 use Detection\MobileDetect;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Concrete\Core\Http\Service\Ajax;
 
 class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInterface
 {
-
     use ApplicationAwareTrait;
 
     /**
@@ -39,7 +39,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
      */
     protected $request;
     /**
-     * @var \Concrete\Core\Http\Localization
+     * @var \Concrete\Core\Localization\Localization
      */
     private $localization;
     /**
@@ -56,39 +56,34 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function create($content, $code = Response::HTTP_OK, array $headers = array())
+    public function create($content, $code = Response::HTTP_OK, array $headers = [])
     {
-        return \Concrete\Core\Http\Response::create($content, $code, $headers);
+        return Response::create($content, $code, $headers);
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function json($data, $code = Response::HTTP_OK, array $headers = array())
+    public function json($data, $code = Response::HTTP_OK, array $headers = [])
     {
         return JsonResponse::create($data, $code, $headers);
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function notFound($content, $code = Response::HTTP_NOT_FOUND, $headers = array())
+    public function notFound($content, $code = Response::HTTP_NOT_FOUND, $headers = [])
     {
-        if (strcasecmp($this->request->server->get('HTTP_X_REQUESTED_WITH', ''), 'xmlhttprequest') === 0) {
+        if ($this->app->make(Ajax::class)->isAjaxRequest($this->request)) {
             $loc = $this->localization;
-            $changeContext = $this->shouldChangeContext();
-            if ($changeContext) {
-                $loc->pushActiveContext('site');
-            }
+            $loc->pushActiveContext(Localization::CONTEXT_SITE);
             $responseData = [
                 'error' => t('Page not found'),
                 'errors' => [t('Page not found')],
             ];
-            if ($changeContext) {
-                $loc->popActiveContext();
-            }
+            $loc->popActiveContext();
 
             return $this->json($responseData, $code, $headers);
         }
@@ -101,21 +96,22 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         }
 
         $cnt = $this->app->make(PageForbidden::class);
+
         return $this->controller($cnt, $code, $headers);
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function error($content, $code = Response::HTTP_INTERNAL_SERVER_ERROR, $headers = array())
+    public function error($content, $code = Response::HTTP_INTERNAL_SERVER_ERROR, $headers = [])
     {
         return $this->create($content, $code, $headers);
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function forbidden($requestUrl, $code = Response::HTTP_FORBIDDEN, $headers = array())
+    public function forbidden($requestUrl, $code = Response::HTTP_FORBIDDEN, $headers = [])
     {
         // set page for redirection after successful login
         $this->session->set('rUri', $requestUrl);
@@ -125,6 +121,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         $c = Page::getByPath($item);
         if (is_object($c) && !$c->isError()) {
             $this->request->setCurrentPage($c);
+
             return $this->controller($c->getPageController(), $code, $headers);
         }
 
@@ -133,35 +130,29 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function redirect($to, $code = Response::HTTP_MOVED_PERMANENTLY, $headers = array())
+    public function redirect($to, $code = Response::HTTP_MOVED_PERMANENTLY, $headers = [])
     {
         return RedirectResponse::create($to, $code, $headers);
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function view(View $view, $code = Response::HTTP_OK, $headers = array())
+    public function view(View $view, $code = Response::HTTP_OK, $headers = [])
     {
-        $changeContext = $this->shouldChangeContext();
-        if ($changeContext) {
-            $this->localization->pushActiveContext('site');
-        }
+        $this->localization->pushActiveContext(Localization::CONTEXT_SITE);
 
         $contents = $view->render();
-        if ($changeContext) {
-            $this->localization->popActiveContext();
-        }
 
         return $this->create($contents, $code, $headers);
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function controller(Controller $controller, $code = Response::HTTP_OK, $headers = array())
+    public function controller(Controller $controller, $code = Response::HTTP_OK, $headers = [])
     {
         $request = $this->request;
 
@@ -192,7 +183,9 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
             if ($response instanceof \Symfony\Component\HttpFoundation\Response) {
                 return $response;
             }
-
+            if ($controller->isReplaced()) {
+                return $this->controller($controller->getReplacement(), $code, $headers);
+            }
         } else {
             if ($response = $controller->runAction('view')) {
                 return $response;
@@ -205,7 +198,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         if ($this->config->get('concrete.misc.mobile_theme_id') > 0) {
             $md = $this->app->make(MobileDetect::class);
             if ($md->isMobile()) {
-                $mobileTheme = Theme::getByID(Config::get('concrete.misc.mobile_theme_id'));
+                $mobileTheme = Theme::getByID($this->app->config->get('concrete.misc.mobile_theme_id'));
                 if ($mobileTheme instanceof Theme) {
                     $view->setViewTheme($mobileTheme);
                     $controller->setTheme($mobileTheme);
@@ -217,9 +210,9 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function collection(Collection $collection, $code = Response::HTTP_OK, $headers = array())
+    public function collection(Collection $collection, $code = Response::HTTP_OK, $headers = [])
     {
         if (!$this->app) {
             throw new \RuntimeException('Cannot resolve collections without a reference to the application');
@@ -242,6 +235,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
                 $query->modify($request->getQueryString());
 
                 $url = $url->setQuery($query);
+
                 return $this->redirect($url, Response::HTTP_MOVED_PERMANENTLY, $headers);
             }
         }
@@ -322,9 +316,6 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         }
 
         $dl = $cms->make('multilingual/detector');
-        if ($dl->isEnabled()) {
-            $dl->setupSiteInterfaceLocalization($collection);
-        }
 
         if (!$request->getPath()
             && $request->isMethod('GET')
@@ -334,10 +325,14 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
 
             // First, we check to see if we need to redirect to a default multilingual section.
             if ($dl->isEnabled() && $site->getConfigRepository()->get('multilingual.redirect_home_to_default_locale')) {
-                // Let's retrieve the default language
-                $ms = $dl->getPreferredSection();
-                if (is_object($ms)) {
-                    return $this->redirect(\URL::to($ms));
+                // Redirect only if it's the first request, otherwise we can't browse to the root locale
+                $session = $cms->make('session');
+                if (!$session->has('multilingual_default_locale')) {
+                    // Let's retrieve the default language
+                    $ms = $dl->getPreferredSection();
+                    if (is_object($ms) && !$ms->isDefaultMultilingualSection($site)) {
+                        return $this->redirect(\URL::to($ms), Response::HTTP_FOUND);
+                    }
                 }
             }
 
@@ -347,6 +342,8 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
                 return $this->redirect(\URL::to($collection));
             }
         }
+
+        $dl->setupSiteInterfaceLocalization($collection);
 
         $request->setCurrentPage($collection);
         $c = $collection; // process.php needs this
@@ -395,17 +392,4 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
             return $this->notFound('', Response::HTTP_NOT_FOUND, $headers);
         }
     }
-
-    /**
-     * Check to see if we should change the localization context
-     * @return bool
-     */
-    private function shouldChangeContext()
-    {
-        $mlEnabled = $this->app->make('multilingual/detector')->isEnabled();
-        $inDashboard = $this->app->make('helper/concrete/dashboard')->inDashboard();
-
-        return $mlEnabled && !$inDashboard;
-    }
-
 }

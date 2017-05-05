@@ -10,18 +10,14 @@ if (is_object($pagetype) && $pagetype->getPageTypePublishTargetTypeID() == $type
 }
 ?>
 
-<div class="control-group">
+<div class="form-group">
 	<?=$form->label('selectorFormFactorAll', t('Selector Form Factor'))?>
-	<div class="controls">
-		<?=$form->select('selectorFormFactorAll', $factors, $selectorFormFactor)?>
-	</div>
+	<?=$form->select('selectorFormFactorAll', $factors, $selectorFormFactor)?>
 </div>
 
-<div class="control-group" data-all-form-factor-display="sitemap_in_page">
+<div class="form-group" data-all-form-factor-display="sitemap_in_page">
 	<?=$form->label('startingPointPageIDAll', t('Display Pages Beneath Page'))?>
-	<div class="controls">
-		<?=$pageSelector->selectPage('startingPointPageIDAll', $startingPointPageID)?>
-	</div>
+	<?=$pageSelector->selectPage('startingPointPageIDAll', $startingPointPageID)?>
 </div>
 
 <script type="text/javascript">

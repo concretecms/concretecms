@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Localization\Translator;
 
 /**
@@ -10,7 +9,6 @@ namespace Concrete\Core\Localization\Translator;
  */
 interface TranslatorAdapterFactoryInterface
 {
-
     /**
      * Creates a translator adapter for the given locale.
      *
@@ -19,5 +17,4 @@ interface TranslatorAdapterFactoryInterface
      * @return TranslatorAdapterInterface
      */
     public function createTranslatorAdapter($locale);
-
 }

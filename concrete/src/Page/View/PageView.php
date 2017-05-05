@@ -132,12 +132,12 @@ class PageView extends View
                         $this->themePkgHandle));
             } else {
                 $rec = $env->getRecord(
-                    DIRNAME_PAGE_TEMPLATES . '/' . $this->c->getPageTypeHandle() . '.php',
+                    DIRNAME_PAGE_TEMPLATES . '/' . $this->c->getPageTemplateHandle() . '.php',
                     $this->pTemplatePkgHandle);
                 if ($rec->exists()) {
                     $this->setInnerContentFile(
                         $env->getPath(
-                            DIRNAME_PAGE_TEMPLATES . '/' . $this->c->getPageTypeHandle() . '.php',
+                            DIRNAME_PAGE_TEMPLATES . '/' . $this->c->getPageTemplateHandle() . '.php',
                             $this->pTemplatePkgHandle));
                     $this->setViewTemplate(
                         $env->getPath(
@@ -278,7 +278,7 @@ class PageView extends View
         }
     }
 
-    protected function constructView($page)
+    protected function constructView($page = false)
     {
         $this->c = $page;
         parent::constructView($page->getCollectionPath());

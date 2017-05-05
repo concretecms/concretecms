@@ -7,14 +7,10 @@ use Concrete\Core\Database\EntityManagerConfigUpdater;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Foundation\ClassLoader;
 use Concrete\Core\Localization\Localization;
-use Concrete\Core\Package\ItemCategory\ItemInterface;
-use Concrete\Core\Package\ItemCategory\Manager;
-use Concrete\Core\Page\Theme\Theme;
 use Doctrine\ORM\EntityManagerInterface;
 
 class PackageService
 {
-
     protected $entityManager;
     protected $application;
     protected $localization;
@@ -32,15 +28,16 @@ class PackageService
     public function getByHandle($pkgHandle)
     {
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Package');
-        return $r->findOneBy(array('pkgHandle' => $pkgHandle));
+
+        return $r->findOneBy(['pkgHandle' => $pkgHandle]);
     }
 
     public function getByID($pkgID)
     {
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Package');
-        return $r->findOneBy(array('pkgID' => $pkgID));
-    }
 
+        return $r->findOneBy(['pkgID' => $pkgID]);
+    }
 
     /**
      * Returns an array of all installed packages.
@@ -50,13 +47,14 @@ class PackageService
     public function getInstalledList()
     {
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Package');
-        return $r->findBy(array('pkgIsInstalled' => true), array('pkgDateInstalled' => 'asc'));
+
+        return $r->findBy(['pkgIsInstalled' => true], ['pkgDateInstalled' => 'asc']);
     }
 
     /**
      * Returns all available packages.
      *
-     * @param bool $filterInstalled True to only return installed packages
+     * @param bool $filterInstalled True to only return not installed packages
      *
      * @return Package[]
      */
@@ -66,19 +64,11 @@ class PackageService
         $packages = $dh->getDirectoryContents(DIR_PACKAGES);
         if ($filterInstalled) {
             $handles = self::getInstalledHandles();
-
-            // strip out packages we've already installed
-            $packagesTemp = array();
-            foreach ($packages as $p) {
-                if (!in_array($p, $handles)) {
-                    $packagesTemp[] = $p;
-                }
-            }
-            $packages = $packagesTemp;
+            $packages = array_diff($packages, $handles);
         }
 
         if (count($packages) > 0) {
-            $packagesTemp = array();
+            $packagesTemp = [];
             // get package objects from the file system
             foreach ($packages as $p) {
                 if (file_exists(DIR_PACKAGES . '/' . $p . '/' . FILENAME_CONTROLLER)) {
@@ -103,7 +93,7 @@ class PackageService
     public function getLocalUpgradeablePackages()
     {
         $packages = self::getAvailablePackages(false);
-        $upgradeables = array();
+        $upgradeables = [];
         foreach ($packages as $p) {
             $entity = $this->getByHandle($p->getPackageHandle());
             if ($entity) {
@@ -124,13 +114,14 @@ class PackageService
      */
     public function getInstalledHandles()
     {
-        $query = "select p.pkgHandle from \\Concrete\\Core\\Entity\\Package p";
+        $query = 'select p.pkgHandle from \\Concrete\\Core\\Entity\\Package p';
         $r = $this->entityManager->createQuery($query);
         $result = $r->getArrayResult();
-        $handles = array();
+        $handles = [];
         foreach ($result as $r) {
             $handles[] = $r['pkgHandle'];
         }
+
         return $handles;
     }
 
@@ -142,7 +133,7 @@ class PackageService
     public function getRemotelyUpgradeablePackages()
     {
         $packages = self::getInstalledList();
-        $upgradeables = array();
+        $upgradeables = [];
         foreach ($packages as $p) {
             if (version_compare($p->getPackageVersion(), $p->getPackageVersionUpdateAvailable(), '<')) {
                 $upgradeables[] = $p;
@@ -151,7 +142,6 @@ class PackageService
 
         return $upgradeables;
     }
-
 
     public function setupLocalization(LocalizablePackageInterface $package, $locale = null, $translate = 'current')
     {
@@ -187,7 +177,7 @@ class PackageService
 
     public function install(Package $p, $data)
     {
-        $this->localization->pushActiveContext('system');
+        $this->localization->pushActiveContext(Localization::CONTEXT_SYSTEM);
         ClassLoader::getInstance()->registerPackage($p);
 
         if (method_exists($p, 'validate_install')) {
@@ -205,9 +195,9 @@ class PackageService
         $swapper = $p->getContentSwapper();
         if ($u->isSuperUser() && $swapper->allowsFullContentSwap($p) && $data['pkgDoFullContentSwap']) {
             $swapper->swapContent($p, $data);
-        }
-        if (method_exists($p, 'on_after_swap_content')) {
-            $p->on_after_swap_content($data);
+            if (method_exists($p, 'on_after_swap_content')) {
+                $p->on_after_swap_content($data);
+            }
         }
         $this->localization->popActiveContext();
         $pkg = $this->getByHandle($p->getPackageHandle());
@@ -217,7 +207,9 @@ class PackageService
 
     /**
      * Returns a package's class.
+     *
      * @param string $pkgHandle Handle of package
+     *
      * @return Package
      */
     public function getClass($pkgHandle)
@@ -237,14 +229,11 @@ class PackageService
             try {
                 $cl = $app->make($class);
             } catch (\Exception $ex) {
-                $cl = $app->make('Concrete\Core\Package\BrokenPackage', array($pkgHandle));
+                $cl = $app->make('Concrete\Core\Package\BrokenPackage', [$pkgHandle]);
             }
             $cache->save($item->set($cl));
         }
 
         return clone $cl;
     }
-
-
-
 }

@@ -6,12 +6,15 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $r = \Concrete\Core\Http\ResponseAssetGroup::get();
 $r->requireAsset('selectize');
 
-if (Config::get('concrete.misc.user_timezones')) {
-    $user = new User();
-    $userInfo = $user->getUserInfoObject();
-    $timezone = $userInfo->getUserTimezone();
-} else {
-    $timezone = Config::get('app.timezone');
+if (!$timezone) {
+    if (Config::get('concrete.misc.user_timezones')) {
+        $user = new User();
+        $userInfo = $user->getUserInfoObject();
+        $timezone = $userInfo->getUserTimezone();
+    } else {
+        $site = \Core::make('site')->getSite();
+        $timezone = $site->getConfigRepository()->get('timezone');
+    }
 }
 
 $repeats = array(
@@ -34,7 +37,7 @@ for ($i = 1; $i <= 12; ++$i) {
 }
 
 $service = Core::make('helper/date');
-$now = $service->toDateTime('now', 'user');
+$now = $service->toDateTime('now', $timezone);
 
 $pdStartDate = $now->format('Y-m-d');
 
@@ -49,7 +52,7 @@ $pdRepeatPeriodMonthsRepeatBy = 'month';
 $pdEndRepeatDateSpecific = false;
 $pdEndRepeatDate = '';
 
-$now = $service->toDateTime('now', 'user');
+$now = $service->toDateTime('now', $timezone);
 $currentHour = $now->format('g');
 $currentMinutes = $now->format('i');
 $currentAM = $now->format('a');
@@ -64,8 +67,13 @@ $selectedEndTime = null;
 if (is_object($pd)) {
     $pdStartDate = $pd->getStartDate();
     $pdEndDate = $pd->getEndDate();
-    $selectedStartTime = date('g:ia', strtotime($pdStartDate));
-    $selectedEndTime = date('g:ia', strtotime($pdEndDate));
+
+    $selectedStartTime = $service->toDateTime($pdStartDate, $timezone)->format('g:ia');
+    $selectedEndTime = $service->toDateTime($pdEndDate, $timezone)->format('g:ia');
+
+    $pdStartDate = $service->toDateTime($pdStartDate, $timezone)->format('Y-m-d');
+    $pdEndDate = $service->toDateTime($pdEndDate, $timezone)->format('Y-m-d');
+
     $pdRepeats = $pd->repeats();
     $pdStartDateAllDay = $pd->isStartDateAllDay();
     $pdEndDateAllDay = $pd->isEndDateAllDay();
@@ -102,56 +110,20 @@ if (is_object($pd)) {
 $form = Loader::helper('form');
 $dt = Loader::helper('form/date_time');
 
-$values = array(
-    '12:00am',
-    '12:30am',
-    '1:00am',
-    '1:30am',
-    '2:00am',
-    '2:30am',
-    '3:00am',
-    '3:30am',
-    '4:00am',
-    '4:30am',
-    '5:00am',
-    '5:30am',
-    '6:00am',
-    '6:30am',
-    '7:00am',
-    '7:30am',
-    '8:00am',
-    '8:30am',
-    '9:00am',
-    '9:30am',
-    '10:00am',
-    '10:30am',
-    '11:00am',
-    '11:30am',
-    '12:00pm',
-    '12:30pm',
-    '1:00pm',
-    '1:30pm',
-    '2:00pm',
-    '2:30pm',
-    '3:00pm',
-    '3:30pm',
-    '4:00pm',
-    '4:30pm',
-    '5:00pm',
-    '5:30pm',
-    '6:00pm',
-    '6:30pm',
-    '7:00pm',
-    '7:30pm',
-    '8:00pm',
-    '8:30pm',
-    '9:00pm',
-    '9:30pm',
-    '10:00pm',
-    '10:30pm',
-    '11:00pm',
-    '11:30pm',
-);
+$values = array();
+foreach(array(12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11) as $hour){
+    $values[] = $hour . ':00am';
+    $values[] = $hour . ':15am';
+    $values[] = $hour . ':30am';
+    $values[] = $hour . ':45am';
+}
+foreach(array(12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11) as $hour){
+    $values[] = $hour . ':00pm';
+    $values[] = $hour . ':15pm';
+    $values[] = $hour . ':30pm';
+    $values[] = $hour . ':45pm';
+}
+
 
 /*
 $times = array();
@@ -176,7 +148,7 @@ for ($i = 0; $i < count($values); $i++) {
             <div class="col-sm-6 ccm-date-time-date-group">
                 <div class="row">
                     <div class="col-sm-12">
-                        <label class="control-label"><?=t('From')?></label>
+                        <label class="control-label"><?=t('From')?></label> <i class="fa fa-info-circle launch-tooltip" title="<?php echo t('Choose Repeat Event and choose a frequency to make this event recurring.')?>"></i>
                     </div>
                 </div>
                 <div class="row">
@@ -205,7 +177,7 @@ for ($i = 0; $i < count($values); $i++) {
                     <div class="col-sm-6"id="pdEndDate_tw">
                         <select class="form-control" name="pdEndDateSelectTime" data-select="time">
                             <?php foreach($values as $value) { ?>
-                                <option value="<?=$value?>"><?=$value?></option>
+                                <option value="<?=$value?>" <?php if ($selectedEndTime == $value) { ?>selected<?php }?>><?=$value?></option>
                             <?php } ?>
                         </select>
                     </div>

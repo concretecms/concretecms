@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Localization\Translator\Adapter\Plain;
 
 use Concrete\Core\Localization\Translator\TranslatorAdapterFactoryInterface;
@@ -12,9 +11,8 @@ use Concrete\Core\Localization\Translator\TranslatorAdapterFactoryInterface;
  */
 class TranslatorAdapterFactory implements TranslatorAdapterFactoryInterface
 {
-
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function createTranslatorAdapter($locale)
     {
@@ -23,5 +21,4 @@ class TranslatorAdapterFactory implements TranslatorAdapterFactoryInterface
 
         return $adapter;
     }
-
 }

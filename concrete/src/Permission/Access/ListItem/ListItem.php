@@ -3,6 +3,7 @@ namespace Concrete\Core\Permission\Access\ListItem;
 
 use Concrete\Core\Foundation\Object;
 use Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
+use Concrete\Core\Permission\Access\Entity\Entity;
 use Concrete\Core\Permission\Duration;
 
 class ListItem extends Object
@@ -10,7 +11,12 @@ class ListItem extends Object
     /** @var Duration */
     public $duration;
     public $accessType;
+
+    /**
+     * @var $accessEntity Entity
+     */
     public $accessEntity;
+
     public $paID;
 
     public function getPermissionAccessID()

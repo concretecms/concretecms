@@ -46,7 +46,7 @@ class DefaultManager implements IndexManagerInterface, ApplicationAwareInterface
         if ($type !== $all && $includeGlobal) {
             // Yield all indexes registered against ALL types
             if (isset($this->indexes[$all])) {
-                foreach ($this->index[$all] as $key => $index) {
+                foreach ($this->indexes[$all] as $key => $index) {
                     yield $all => $this->inflateIndex($index);
                 }
             }

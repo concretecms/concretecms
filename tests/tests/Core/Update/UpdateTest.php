@@ -1,18 +1,27 @@
 <?php
 
+use Concrete\Core\Entity\File\File;
+use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Support\Facade\Application;
+use Doctrine\DBAL\Types\StringType;
+use Concrete\Core\Entity\Block\BlockType\BlockType;
+use Doctrine\DBAL\Types\TextType;
+use Doctrine\DBAL\Migrations\Version;
+
 class UpdateTest extends ConcreteDatabaseTestCase
 {
     protected $fixtures = array();
     protected $tables = array('Blocks', 'CollectionVersionBlocks', 'Logs', 'SystemDatabaseMigrations', 'Widgets');
 
     protected $metadatas = array(
-        'Concrete\Core\Entity\Block\BlockType\BlockType',
-        'Concrete\Core\Entity\File\File',
+        BlockType::class,
+        File::class,
     );
+
     public function testCurrentMigration()
     {
         \Concrete\Core\Block\BlockType\BlockType::installBlockType('core_scrapbook_display');
-        $directory = dirname(__FILE__) . '/fixtures/';
+        $directory = __DIR__ . '/fixtures/';
         $configuration = new \Concrete\Core\Updater\Migrations\Configuration(false);
         $configuration->setMigrationsDirectory($directory);
         $configuration->registerMigrationsFromDirectory($directory);
@@ -21,24 +30,30 @@ class UpdateTest extends ConcreteDatabaseTestCase
         $this->assertEquals('0', $version);
 
         $version = $configuration->getVersion('20140908071333');
-        $this->assertInstanceOf('\Doctrine\DBAL\Migrations\Version', $version);
+        $this->assertInstanceOf(Version::class, $version);
         $version->markMigrated();
 
         $version = $configuration->getCurrentVersion();
         $this->assertNotEquals('0', $version);
         $this->assertEquals('20140908071333', $version);
         $version = $configuration->getVersion($version);
-        $this->assertInstanceOf('\Doctrine\DBAL\Migrations\Version', $version);
+        $this->assertInstanceOf(Version::class, $version);
         $this->assertEquals('20140908071333', $version->getVersion());
+
+        $version->markNotMigrated();
     }
 
+    /**
+     *
+     */
     public function testUpdate()
     {
-        $db = Database::get();
+        $db = Application::make(Connection::class);
         $this->assertTrue($db->tableExists('Files'));
         $sm = $db->getSchemaManager();
+        $db->exec('truncate BlockTypes');
 
-        $directory = dirname(__FILE__) . '/fixtures/';
+        $directory = __DIR__ . '/fixtures/';
         $configuration = new \Concrete\Core\Updater\Migrations\Configuration(false);
         $configuration->setMigrationsDirectory($directory);
         $configuration->registerMigrationsFromDirectory($directory);
@@ -46,15 +61,15 @@ class UpdateTest extends ConcreteDatabaseTestCase
 
         $originalLogs = $sm->listTableDetails('Logs');
 
-        $this->assertEquals(2, count($migrations));
+        $this->assertCount(2, $migrations);
         $this->assertTrue(array_key_exists('20140908071333', $migrations));
-        $this->assertInstanceOf('\Doctrine\DBAL\Migrations\Version', $migrations['20140908071333']);
+        $this->assertInstanceOf(Version::class, $migrations['20140908071333']);
 
         $migrations = $configuration->getMigrationsToExecute('up', '20140908095447');
-        $this->assertEquals(2, count($migrations));
+        $this->assertCount(2, $migrations);
 
         $migrations = $configuration->getMigrationsToExecute('up', '20140908071333');
-        $this->assertEquals(1, count($migrations));
+        $this->assertCount(1, $migrations);
 
         $migration = $migrations['20140908071333'];
         $migration->execute('up');
@@ -64,13 +79,13 @@ class UpdateTest extends ConcreteDatabaseTestCase
 
         $this->assertFalse($originalLogs->hasColumn('testcolumn'));
         $this->assertTrue($newLogs->hasColumn('testcolumn'));
-        $this->assertInstanceof('\Doctrine\DBAL\Types\TextType', $fPassword->getType());
+        $this->assertInstanceOf(TextType::class, $fPassword->getType());
 
         $migration->execute('down');
 
         $fPassword = $sm->listTableDetails('Files')->getColumn('fPassword');
         $newLogs = $sm->listTableDetails('Logs');
-        $this->assertInstanceof('\Doctrine\DBAL\Types\StringType', $fPassword->getType());
+        $this->assertInstanceOf(StringType::class, $fPassword->getType());
         $this->assertFalse($newLogs->hasColumn('testcolumn'));
 
         $migrations = $configuration->getMigrationsToExecute('up', '20140908095447');
@@ -79,8 +94,8 @@ class UpdateTest extends ConcreteDatabaseTestCase
         }
 
         $this->assertTrue($db->tableExists('Widgets'));
-        $bt = BlockType::getByHandle('file');
-        $this->assertInstanceOf('\Concrete\Core\Entity\Block\BlockType\BlockType', $bt);
+        $bt = \Concrete\Core\Block\BlockType\BlockType::getByHandle('file');
+        $this->assertInstanceOf(BlockType::class, $bt);
         $this->assertEquals(2, $bt->getBlockTypeID()); // because we cleared it out once already.
 
         $ids = $db->GetOne('select count(btID) from BlockTypes');

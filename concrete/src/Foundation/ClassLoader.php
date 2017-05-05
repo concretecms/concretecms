@@ -166,7 +166,6 @@ class ClassLoader
     public function setupCoreSourceAutoloading()
     {
         $loader = new Psr4ClassLoader();
-        $loader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Core', DIR_BASE_CORE . '/' . DIRNAME_CLASSES);
 
         // Handle class core extensions like antispam and captcha with Application\Concrete\MyCaptchaLibrary
         $loader->addPrefix($this->getApplicationNamespace() . '\\Concrete',

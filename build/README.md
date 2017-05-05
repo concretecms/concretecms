@@ -74,19 +74,22 @@ For instance, if your concrete5 installation is at http://www.domain.com/c5subfo
 `config.DIR_REL = '/c5subfolder';`
 
 
-## Downloading translations from Transifex
+## Downloading translations from Community Translation
 
-To download translations from Transifex, and compile them in a format that can be used by concrete5 (creating .mo files), you can use the `translations` task.
+To download translations from a Community Translation server, you can use the `translations` task.
 You have to specify the following parameters:
-- `txUsername` a valid Transifex username
-- `txPassword` the password for the above Transifex account
-- `txResource` the resource identifier that you want to download (for instance: `core`)
-- `txLocales` a comma-separated list of locale identifiers (for instance: `de_DE,it_IT,el_GE`) that you want to download. If this option is specified in the `Gruntfile.parameters.js` file you can also write a Javascript array (for instance: `module.exports.txLocales = ['de_DE' ,'it_IT', 'el_GE'];`). If you don't specify this value then all the available locales will be fetched.
-- `txProgressLimit` the task will retrieve only translations above this limit. For instance, if you specify `90`, then the task will download translations that are at least at 90% (_the default value for this option is 95%_).
+- `ctEntryPoint` the entry point URI of the API of the Community Translation server
+- `ctAPIToken` the API Token to be used to authenticate yourself on the Community Translation server (may not be required)
+- `ctPackage` the handle of the package on the Community Translation server
+- `ctPackageVersion` the version of the package on the Community Translation server
+- `ctLocales` a comma-separated list of locale identifiers (for instance: `de_DE,it_IT,el_GE`) that you want to download. If this option is specified in the `Gruntfile.parameters.js` file you can also write a Javascript array (for instance: `module.exports.ctLocales = ['de_DE' ,'it_IT', 'el_GE'];`). If you don't specify this value then all the available locales will be fetched.
+- `ctProgressLimit` the task will retrieve only translations above this limit. For instance, if you specify `90`, then the task will download translations that are at least at 90% (_the default value for this option is 95%_).
 
-Example:
+Examples:
 ```Shell
-grunt translations --txUsername=myName --txPassword=myPwd --txResource=core-5621 --txLocales=de_DE,it_IT,el_GE --txProgressLimit=0
+grunt translations --ctEntryPoint=https://translate.concrete5.org/api --ctPackage=concrete5 --ctPackageVersion=dev-8 --ctLocales=de_DE,it_IT,el_GR
+
+grunt translations --ctEntryPoint=https://translate.concrete5.org/api --ctPackage=concrete5 --ctPackageVersion=dev-8 --ctProgressLimit=90
 ```
 As stated above, some or all of these options can also be specified in the `Gruntfile.parameters.js` file (but the command-line options take the precedence).
 

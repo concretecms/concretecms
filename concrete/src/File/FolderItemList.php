@@ -14,7 +14,6 @@ use Concrete\Core\Permission\Checker as Permissions;
 class FolderItemList extends ItemList implements PermissionableListItemInterface
 {
     protected $parent;
-    protected $itemsPerPage = 100;
 
     protected $autoSortColumns = [
         'folderItemName',

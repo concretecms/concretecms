@@ -51,6 +51,8 @@ if (isset($modestbranding) && $modestbranding) {
 
 if (isset($rel) && $rel) {
     $params[] = 'rel=1';
+} else {
+    $params[] = 'rel=0';
 }
 
 if (isset($showinfo) && $showinfo) {

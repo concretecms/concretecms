@@ -8,7 +8,8 @@ use Concrete\Core\Entity\Express\Entry\ManyAssociation;
 use Concrete\Core\Entity\Express\Entry\OneAssociation;
 use Concrete\Core\Express\EntryBuilder\AssociationBuilder;
 use Concrete\Core\Express\EntryBuilder\AssociationUpdater;
-use Concrete\Core\Permission\ObjectInterface;
+use Concrete\Core\Permission\ObjectInterface as PermissionObjectInterface;
+use Concrete\Core\Attribute\ObjectInterface as AttributeObjectInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -17,7 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="ExpressEntityEntries")
  * @ORM\EntityListeners({"\Concrete\Core\Express\Entry\Listener"})
  */
-class Entry implements \JsonSerializable, ObjectInterface
+class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeObjectInterface
 {
 
     use ObjectTrait;
@@ -224,20 +225,46 @@ class Entry implements \JsonSerializable, ObjectInterface
         $this->associations = $associations;
     }
 
+
+    /**
+     * @deprecated See \Concrete\Core\Entity\Express\Entry::getEntryAssociation
+     */
     public function getAssociation($handle)
     {
         if ($handle instanceof Association) {
-            $handle = $handle->getTargetPropertyName();
+            return $this->getEntryAssociation($handle);
         }
 
         /**
-         * @var $association EntryAssociation
+         * @var $entryAssociation EntryAssociation
          */
-        foreach($this->associations as $association) {
-            if ($association->getAssociation()->getTargetPropertyName() == $handle) {
-                return $association;
+        foreach ($this->associations as $entryAssociation) {
+            if ($entryAssociation->getAssociation()->getTargetPropertyName() === $handle) {
+                return $entryAssociation;
             }
         }
+    }
+
+    /**
+     * Get the EntryAssociation for a given association
+     *
+     * @param \Concrete\Core\Entity\Express\Association $association
+     * @return \Concrete\Core\Entity\Express\Entry\Association|null
+     */
+    public function getEntryAssociation(Association $association)
+    {
+        $id = $association->getId();
+
+        /**
+         * @var $entryAssociation EntryAssociation
+         */
+        foreach ($this->associations as $entryAssociation) {
+            if ($entryAssociation->getAssociation()->getId() === $id) {
+                return $entryAssociation;
+            }
+        }
+
+        return null;
     }
 
     public function getOwnedByEntry()

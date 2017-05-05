@@ -1,8 +1,8 @@
-<?php
-defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die('Access Denied.');
 
-$ps = Core::make('helper/form/page_selector');
-$al = Core::make('helper/concrete/asset_library');
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+$ps = $app->make('helper/form/page_selector');
+$al = $app->make('helper/concrete/asset_library');
 ?>
 
 <fieldset>
@@ -17,6 +17,7 @@ $al = Core::make('helper/concrete/asset_library');
 
     <div class="form-group">
         <label class="control-label"><?php echo t('Image Hover')?> <small style="color: #999999; font-weight: 200;"><?php echo t('(Optional)'); ?></small></label>
+        <i class="fa fa-question-circle launch-tooltip" title="" data-original-title="<?php echo t('The image hover effect requires constraining the image size.'); ?>"></i>
         <?php
         echo $al->image('ccm-b-image-onstate', 'fOnstateID', t('Choose Image On-State'), $bfo);
         ?>
@@ -55,7 +56,7 @@ $al = Core::make('helper/concrete/asset_library');
 
     <div class="form-group">
         <?php
-        echo $form->label('altText', t('Alt. Text'));
+        echo $form->label('altText', t('Alt Text'));
         echo $form->text('altText', $altText, ['maxlength' => 255]);
         ?>
     </div>
@@ -83,23 +84,38 @@ $al = Core::make('helper/concrete/asset_library');
     </div>
 
     <div data-fields="constrain-image" style="display: none">
-        <div class="form-group">
-            <?php
-            echo $form->label('maxWidth', t('Max Width'));
-            echo $form->number('maxWidth', $maxWidth, ['min' => 0]);
-            ?>
-        </div>
+        <div class="well">
+            <div class="form-group">
+                <div class="checkbox">
+                <label>
+                    <?php
+                    echo $form->checkbox('cropImage', 1, $cropImage);
+                    echo t('Crop Image');
+                    ?>
+                </label>
+                </div>
+            </div>
 
-        <div class="form-group">
-            <?php
-            echo $form->label('maxHeight', t('Max Height'));
-            echo $form->number('maxHeight', $maxHeight, ['min' => 0]);
-            ?>
+            <div class="form-group">
+                <?php echo $form->label('maxWidth', t('Max Width')); ?>
+                <div class="input-group">
+                    <?php echo $form->number('maxWidth', $maxWidth, ['min' => 0]); ?>
+                    <span class="input-group-addon"><?php echo t('px'); ?></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <?php echo $form->label('maxHeight', t('Max Height')); ?>
+                <div class="input-group">
+                    <?php echo $form->number('maxHeight', $maxHeight, ['min' => 0]); ?>
+                    <span class="input-group-addon"><?php echo t('px'); ?></span>
+                </div>
+            </div>
         </div>
     </div>
 </fieldset>
 
-<script type="text/javascript">
+<script>
 refreshImageLinkTypeControls = function() {
     var linkType = $('#linkType').val();
     $('#imageLinkTypePage').toggle(linkType == 1);
@@ -111,6 +127,12 @@ $(document).ready(function() {
 
     $('#constrainImage').on('change', function() {
         $('div[data-fields=constrain-image]').toggle($(this).is(':checked'));
+
+        if (!$(this).is(':checked')) {
+            $('#cropImage').prop('checked', false);
+            $('#maxWidth').val('');
+            $('#maxHeight').val('');
+        }
     }).trigger('change');
 
     refreshImageLinkTypeControls();

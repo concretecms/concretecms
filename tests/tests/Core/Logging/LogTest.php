@@ -9,6 +9,14 @@ class LogTest extends ConcreteDatabaseTestCase
     protected $fixtures = array();
     protected $tables = array('Logs');
 
+    public function setUp()
+    {
+        parent::setUp();
+
+        // Clear log every time
+        $this->truncateTables();
+    }
+
     public function testBasicWrite()
     {
         $l = new Logger('sample-channel');

@@ -445,6 +445,8 @@
         var my = this;
         my.$element.find('a[data-launch-dialog=add-file-manager-folder]').on('click', function() {
             $('div[data-dialog=add-file-manager-folder] input[name=currentFolder]').val(my.currentFolder);
+            $('div[data-dialog=add-file-manager-folder] input[name=folderName]').val('');
+            
             jQuery.fn.dialog.open({
                 element: 'div[data-dialog=add-file-manager-folder]',
                 modal: true,
@@ -452,6 +454,13 @@
                 title: 'Add Folder',
                 height: 'auto'
             });
+
+            $('div[data-dialog=add-file-manager-folder]').on('dialogopen', function(){
+                var $this = $(this);
+                $this.off('dialogopen');
+                $this.find('[autofocus]').focus();
+            });
+
         });
     }
 
@@ -597,7 +606,7 @@
             url: CCM_DISPATCHER_FILENAME + '/ccm/system/file/get_json',
             data: {'fID': fID},
             error: function(r) {
-                ConcreteAlert.dialog('Error', r.responseText);
+                ConcreteAlert.dialog(ccmi18n.error, r.responseText);
             },
             success: function(r) {
                 callback(r);

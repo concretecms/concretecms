@@ -1,6 +1,13 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
 $set = $b->getCustomStyle();
+$btHandle = $b->getBlockTypeHandle();
+if ($btHandle == BLOCK_HANDLE_SCRAPBOOK_PROXY) {
+    $bx = Block::getByID($b->getController()->getOriginalBlockID());
+    if (is_object($bx)) {
+        $btHandle = $bx->getBlockTypeHandle();
+    }
+}
 if (is_object($set)) {
     ?>
     <script type="text/javascript">
@@ -16,8 +23,8 @@ $pt = $c->getCollectionThemeObject();
 
 $blockClasses = $pt->getThemeBlockClasses();
 $customClasses = array();
-if (isset($blockClasses[$b->getBlockTypeHandle()])) {
-    $customClasses = $blockClasses[$b->getBlockTypeHandle()];
+if (isset($blockClasses[$btHandle])) {
+    $customClasses = $blockClasses[$btHandle];
 }
 
 if (isset($blockClasses['*'])) {

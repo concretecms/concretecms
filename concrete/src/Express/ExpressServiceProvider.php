@@ -18,5 +18,6 @@ class ExpressServiceProvider extends ServiceProvider
         $this->app->singleton('express', function() use ($app) {
            return $app->make('Concrete\Core\Express\ObjectManager');
         });
+        $this->app->singleton('Concrete\Core\Express\Controller\Manager');
     }
 }

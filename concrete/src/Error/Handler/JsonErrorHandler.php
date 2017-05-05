@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Error\Handler;
 
+use Concrete\Core\Logging\Logger;
 use Config;
 use Whoops\Exception\Formatter;
 use Whoops\Handler\Handler;
@@ -30,6 +31,25 @@ class JsonErrorHandler extends Handler
                 );
             }
         }
+
+        if (Config::get('concrete.log.errors')) {
+            try {
+                $e = $this->getInspector()->getException();
+                $l = \Core::make('log/exceptions');
+                $l->emergency(
+                    sprintf(
+                        "Exception Occurred: %s:%d %s (%d)\n",
+                        $e->getFile(),
+                        $e->getLine(),
+                        $e->getMessage(),
+                        $e->getCode()
+                    ),
+                    array($e)
+                );
+            } catch (\Exception $e) {
+            }
+        }
+
 
         $response = array(
             'error' => $error,

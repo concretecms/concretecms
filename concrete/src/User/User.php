@@ -3,6 +3,7 @@ namespace Concrete\Core\User;
 
 use Concrete\Core\Foundation\Object;
 use Concrete\Core\Http\Request;
+use Concrete\Core\Permission\Access\Entity\GroupEntity;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\Group\Group;
 use Concrete\Core\Authentication\AuthenticationType;
@@ -93,7 +94,10 @@ class User extends Object
             self::refreshUserGroups();
         }
 
-        $app->make('Concrete\Core\Session\SessionValidatorInterface')->handleSessionValidation($session);
+        $invalidate = $app->make('Concrete\Core\Session\SessionValidatorInterface')->handleSessionValidation($session);
+        if ($invalidate) {
+            $this->loadError(USER_SESSION_EXPIRED);
+        }
 
         if ($session->get('uID') > 0) {
             $db = $app['database']->connection();
@@ -729,8 +733,8 @@ class User extends Object
         $app = Application::getFacadeApplication();
         $db = $app['database']->connection();
 
-        $v = array($this->uID, $g->getGroupID());
-        $cnt = $db->GetOne("select gID from UserGroups where uID = ? and gID = ?", $v);
+        $v = array($this->uID);
+        $cnt = $db->GetOne("select Groups.gID from UserGroups inner join Groups on UserGroups.gID = Groups.gID where uID = ? and gPath like " . $db->quote($g->getGroupPath() . '%'), $v);
 
         return $cnt > 0;
     }

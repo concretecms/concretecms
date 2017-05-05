@@ -9,6 +9,7 @@ namespace Concrete\Tests\Core\File\Service;
 use Concrete\Core\File\StorageLocation\Configuration\LocalConfiguration;
 use Concrete\Tests\Core\File\Service\Fixtures\TestStorageLocation;
 use Core;
+use Concrete\Core\Support\Facade\Application;
 
 class ImageTest extends \PHPUnit_Framework_TestCase
 {
@@ -62,7 +63,11 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         $sl = $this->storageLocation;
         $fsl = $sl->getFileSystemObject();
         $service = new \Concrete\Core\File\Image\BasicThumbnailer($sl);
-
+        $service->setApplication(Application::getFacadeApplication());
+        $service->setJpegCompression(80);
+        $service->setPngCompression(9);
+        $service->setThumbnailsFormat('auto');
+        
         $this->assertFalse($fsl->has($this->output1));
         $service->create(
             $path, $this->output1, $width, $height, $fit

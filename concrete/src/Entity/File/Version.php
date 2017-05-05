@@ -4,6 +4,7 @@ namespace Concrete\Core\Entity\File;
 
 use Carbon\Carbon;
 use Concrete\Core\Attribute\Key\FileKey;
+use Concrete\Core\Attribute\ObjectInterface;
 use Concrete\Core\Attribute\ObjectTrait;
 use Concrete\Core\Entity\Attribute\Value\FileValue;
 use Concrete\Core\Entity\File\StorageLocation\StorageLocation;
@@ -17,6 +18,7 @@ use Concrete\Core\File\Menu;
 use Concrete\Core\File\Type\TypeList as FileTypeList;
 use Concrete\Core\Http\FlysystemFileResponse;
 use Concrete\Core\Support\Facade\Application;
+use Imagine\Gd\Image;
 use League\Flysystem\AdapterInterface;
 use League\Flysystem\FileNotFoundException;
 use Core;
@@ -44,7 +46,7 @@ use Imagine\Image\Box;
  *     }
  * )
  */
-class Version
+class Version implements ObjectInterface
 {
     use ObjectTrait;
 
@@ -978,7 +980,7 @@ class Version
     }
 
     /**
-     *
+     * @return bool|Image
      */
     public function getImagineImage()
     {
@@ -1020,31 +1022,33 @@ class Version
         try {
             $image = $this->getImagineImage();
 
-            /* @var \Imagine\Imagick\Image $image */
-            if (!$imagewidth) {
-                $imagewidth = $image->getSize()->getWidth();
-            }
-            if (!$imageheight) {
-                $imageheight = $image->getSize()->getHeight();
-            }
-
-            foreach ($types as $type) {
-                // delete the file if it exists
-                $this->deleteThumbnail($type);
-
-                // if image is smaller than width, don't create thumbnail
-                if ($imagewidth < $type->getWidth()) {
-                    continue;
+            if ($image) {
+                /* @var \Imagine\Imagick\Image $image */
+                if (!$imagewidth) {
+                    $imagewidth = $image->getSize()->getWidth();
+                }
+                if (!$imageheight) {
+                    $imageheight = $image->getSize()->getHeight();
                 }
 
-                // if image is the same width as thumbnail, and there's no thumbnail height set,
-                // or if a thumbnail height set and the image has a smaller or equal height, don't create thumbnail
-                if ($imagewidth == $type->getWidth() && (!$type->getHeight() || $imageheight <= $type->getHeight())) {
-                    continue;
-                }
+                foreach ($types as $type) {
+                    // delete the file if it exists
+                    $this->deleteThumbnail($type);
 
-                // otherwise file is bigger than thumbnail in some way, proceed to create thumbnail
-                $this->generateThumbnail($type);
+                    // if image is smaller than width, don't create thumbnail
+                    if ($imagewidth < $type->getWidth()) {
+                        continue;
+                    }
+
+                    // if image is the same width as thumbnail, and there's no thumbnail height set,
+                    // or if a thumbnail height set and the image has a smaller or equal height, don't create thumbnail
+                    if ($imagewidth == $type->getWidth() && (!$type->getHeight() || $imageheight <= $type->getHeight())) {
+                        continue;
+                    }
+
+                    // otherwise file is bigger than thumbnail in some way, proceed to create thumbnail
+                    $this->generateThumbnail($type);
+                }
             }
         } catch (\Imagine\Exception\InvalidArgumentException $e) {
             return false;
@@ -1369,12 +1373,22 @@ class Version
             ->getFileSystemObject();
 
         $height = $type->getHeight();
-        if ($height) {
-            $size = new Box($type->getWidth(), $height);
+        $width = $type->getWidth();
+
+        if ($height && $width) {
+            $size = new Box($width, $height);
+            $thumbnailMode = ImageInterface::THUMBNAIL_INSET;
+        } else if($width) {
+            $size = $image->getSize()->widen($width);
             $thumbnailMode = ImageInterface::THUMBNAIL_OUTBOUND;
         } else {
-            $size = $image->getSize()->widen($type->getWidth());
-            $thumbnailMode = ImageInterface::THUMBNAIL_INSET;
+            $size = $image->getSize()->heighten($height);
+            $thumbnailMode = ImageInterface::THUMBNAIL_OUTBOUND;
+        }
+
+        // isCropped only exists on the CustomThumbnail type
+        if (method_exists($type, 'isCropped') && $type->isCropped()) {
+            $thumbnailMode = ImageInterface::THUMBNAIL_OUTBOUND;
         }
         $thumbnail = $image->thumbnail($size, $thumbnailMode);
         $thumbnailPath = $type->getFilePath($this);

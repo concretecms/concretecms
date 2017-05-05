@@ -1,7 +1,7 @@
 <?php
 
-if (version_compare(phpversion(), '5.5.9') < 0) {
-    die("concrete5 requires PHP 5.5.9+ to run.\n");
+if (version_compare(PHP_VERSION, '5.5.9') < 0) {
+    die("concrete5 requires PHP 5.5.9+ to run.\nYou are running PHP " . PHP_VERSION . "\n");
 }
 
 /*
@@ -84,6 +84,7 @@ const DIRNAME_PAGES = 'single_pages';
 const DIRNAME_VIEWS = 'views';
 const DIRNAME_PACKAGES = 'packages';
 const DIRNAME_MODELS = 'models';
+const DIRNAME_ATTRIBUTE = 'attribute';
 const DIRNAME_ATTRIBUTES = 'attributes';
 const DIRNAME_MENU_ITEMS = 'menu_items';
 const DIRNAME_AUTHENTICATION = 'authentication';
@@ -149,6 +150,7 @@ const DIRNAME_FILE_STORAGE_LOCATION_TYPES = 'storage_location_types';
 const DIRNAME_EXPRESS = 'express';
 const DIRNAME_EXPRESS_VIEW_CONTROLS = 'view';
 const DIRNAME_EXPRESS_CONTROL_OPTIONS = 'control';
+const DIRNAME_FORM_CONTROL_WRAPPER_TEMPLATES = 'form';
 const DIRNAME_EXPRESS_FORM_CONTROLS = 'form';
 const DIRNAME_EXPRESS_FORM_CONTROLS_ASSOCIATION = 'association';
 const DIRNAME_METADATA_XML = 'xml';
@@ -164,12 +166,12 @@ define('REL_DIR_METADATA_YAML', DIRNAME_CONFIG . DIRECTORY_SEPARATOR . DIRNAME_M
  * ----------------------------------------------------------------------------
  */
 const CONFIG_ORM_METADATA_BASE = 'database.metadatadriver';
-define('CONFIG_ORM_METADATA_PACKAGES_BASE', CONFIG_ORM_METADATA_BASE.'.packages');
-define('CONFIG_ORM_METADATA_ANNOTATION_LEGACY', CONFIG_ORM_METADATA_PACKAGES_BASE.'.annotation.legacy');
-define('CONFIG_ORM_METADATA_ANNOTATION_DEFAULT', CONFIG_ORM_METADATA_PACKAGES_BASE.'.annotation.default');
-define('CONFIG_ORM_METADATA_XML', CONFIG_ORM_METADATA_PACKAGES_BASE.'.xml');
-define('CONFIG_ORM_METADATA_YAML', CONFIG_ORM_METADATA_PACKAGES_BASE.'.yaml');
-define('CONFIG_ORM_METADATA_APPLICATION', CONFIG_ORM_METADATA_BASE.'.application');
+define('CONFIG_ORM_METADATA_PACKAGES_BASE', CONFIG_ORM_METADATA_BASE . '.packages');
+define('CONFIG_ORM_METADATA_ANNOTATION_LEGACY', CONFIG_ORM_METADATA_PACKAGES_BASE . '.annotation.legacy');
+define('CONFIG_ORM_METADATA_ANNOTATION_DEFAULT', CONFIG_ORM_METADATA_PACKAGES_BASE . '.annotation.default');
+define('CONFIG_ORM_METADATA_XML', CONFIG_ORM_METADATA_PACKAGES_BASE . '.xml');
+define('CONFIG_ORM_METADATA_YAML', CONFIG_ORM_METADATA_PACKAGES_BASE . '.yaml');
+define('CONFIG_ORM_METADATA_APPLICATION', CONFIG_ORM_METADATA_BASE . '.application');
 
 /*
  * ----------------------------------------------------------------------------

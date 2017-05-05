@@ -57,6 +57,16 @@
   }
 }
 
+.ccm-panel-open.ccm-panel-right {
+  .ccm-notification {
+    @media (min-width: @screen-lg-min) {
+      // Push the dashboard hud notifications outside of the sidebar panel
+      // as they are otherwise covered by that element.
+      left: -260px;
+    }
+  }
+}
+
 div.ccm-notification-info {
   background-color: rgba(19, 72, 125, 0.9);
   color: #adeef7;

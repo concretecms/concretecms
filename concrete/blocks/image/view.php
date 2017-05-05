@@ -1,20 +1,20 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die('Access Denied.');
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
 if (is_object($f) && $f->getFileID()) {
     if ($maxWidth > 0 || $maxHeight > 0) {
-        $crop = false;
-
-        $im = Core::make('helper/image');
-        $thumb = $im->getThumbnail($f, $maxWidth, $maxHeight, $crop);
+        $im = $app->make('helper/image');
+        $thumb = $im->getThumbnail($f, $maxWidth, $maxHeight, $cropImage);
 
         $tag = new \HtmlObject\Image();
         $tag->src($thumb->src)->width($thumb->width)->height($thumb->height);
     } else {
-        $image = Core::make('html/image', [$f]);
+        $image = $app->make('html/image', [$f]);
         $tag = $image->getTag();
     }
 
     $tag->addClass('ccm-image-block img-responsive bID-'.$bID);
+
     if ($altText) {
         $tag->alt(h($altText));
     } else {
@@ -34,13 +34,12 @@ if (is_object($f) && $f->getFileID()) {
     if ($linkURL) {
         echo '</a>';
     }
-} elseif ($c->isEditMode()) {
-    ?>
-    <div class="ccm-edit-mode-disabled-item"><?php echo t('Empty Image Block.') ?></div>
-    <?php
+} elseif ($c->isEditMode()) { ?>
+    <div class="ccm-edit-mode-disabled-item"><?php echo t('Empty Image Block.'); ?></div>
+<?php
 }
 
-if (is_object($foS)): ?>
+if (is_object($foS) && ($maxWidth > 0 || $maxHeight > 0)) { ?>
 <script>
 $(function() {
     $('.bID-<?php echo $bID; ?>')
@@ -49,4 +48,4 @@ $(function() {
 });
 </script>
 <?php
-endif;
+}

@@ -3,8 +3,10 @@
 class TextValueTest extends \AttributeValueTestCase
 {
 
-    protected function setUp()
+    public function __construct($name = null, array $data = array(), $dataName = '')
     {
+        parent::__construct($name, $data, $dataName);
+
         $this->tables = array_merge($this->tables, array(
         ));
 
@@ -12,7 +14,6 @@ class TextValueTest extends \AttributeValueTestCase
             'Concrete\Core\Entity\Attribute\Key\Settings\TextSettings',
             'Concrete\Core\Entity\Attribute\Value\Value\TextValue',
         ));
-        parent::setUp();
     }
 
     public function getAttributeKeyHandle()

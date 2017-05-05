@@ -69,14 +69,28 @@ class Controller extends BlockController implements FileTrackableInterface
         $this->set('foS', $foS);
 
         $imgPaths = [];
-        $imgPaths['hover'] = File::getRelativePathFromID($this->fOnstateID);
-        $imgPaths['default'] = File::getRelativePathFromID($this->getFileID());
-        $this->set('imgPaths', $imgPaths);
 
+        if ($this->cropImage && ($this->maxWidth > 0 && $this->maxHeight > 0)) {
+            $im = $this->app->make('helper/image');
+
+            if (is_object($foS)) {
+                $fOnstateThumb = $im->getThumbnail($foS, $this->maxWidth, $this->maxHeight, true);
+                $imgPaths['hover'] = $fOnstateThumb->src;
+            }
+
+            if (is_object($f)) {
+                $fIDThumb = $im->getThumbnail($f, $this->maxWidth, $this->maxHeight, true);
+                $imgPaths['default'] = $fIDThumb->src;
+            }
+        } else {
+            $imgPaths['hover'] = File::getRelativePathFromID($this->fOnstateID);
+            $imgPaths['default'] = File::getRelativePathFromID($this->getFileID());
+        }
+
+        $this->set('imgPaths', $imgPaths);
         $this->set('altText', $this->getAltText());
         $this->set('title', $this->getTitle());
         $this->set('linkURL', $this->getLinkURL());
-
         $this->set('c', Page::getCurrentPage());
     }
 
@@ -84,7 +98,6 @@ class Controller extends BlockController implements FileTrackableInterface
     {
         $this->set('bf', null);
         $this->set('bfo', null);
-
         $this->set('constrainImage', false);
     }
 
@@ -273,6 +286,24 @@ class Controller extends BlockController implements FileTrackableInterface
     }
 
     /**
+     * @return Error
+     */
+    public function validate($args)
+    {
+        $e = $this->app->make('helper/validation/error');
+
+        if (!$args['fID']) {
+            $e->add(t('Please select an image.'));
+        }
+
+        if (isset($args['cropImage']) && (intval($args['maxWidth']) <= 0 || (intval($args['maxHeight']) <= 0))) {
+            $e->add(t('Cropping an image requires setting a max width and max height.'));
+        }
+
+        return $e;
+    }
+
+    /**
      * On delete update the tracker.
      */
     public function delete()
@@ -299,10 +330,12 @@ class Controller extends BlockController implements FileTrackableInterface
 
         $args['fID'] = ($args['fID'] != '') ? $args['fID'] : 0;
         $args['fOnstateID'] = ($args['fOnstateID'] != '') ? $args['fOnstateID'] : 0;
+        $args['cropImage'] = isset($args['cropImage']) ? 1 : 0;
         $args['maxWidth'] = (intval($args['maxWidth']) > 0) ? intval($args['maxWidth']) : 0;
         $args['maxHeight'] = (intval($args['maxHeight']) > 0) ? intval($args['maxHeight']) : 0;
 
         if (!$args['constrainImage']) {
+            $args['cropImage'] = 0;
             $args['maxWidth'] = 0;
             $args['maxHeight'] = 0;
         }

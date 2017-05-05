@@ -285,20 +285,20 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
             $row = $r->fetchRow();
             $cID = $row['cID'];
             $nc = Page::getByID($cID, "ACTIVE");
-
-            return $nc;
+            if (is_object($nc) && !$nc->isError()) {
+                return $nc;
+            }
         }
     }
 
-    /*
-     * Returns a path to where the block type's files are located.
-     * @access public
-     * @return string $path
+    /**
+     * Returns the block identifier (if available)
+     *
+     * @return int|null
      */
-
     public function getBlockID()
     {
-        return $this->bID;
+        return isset($this->bID) ? $this->bID : null;
     }
 
     public function setBlockCachedOutput($content, $lifetime, $area)

@@ -2,6 +2,7 @@
 namespace Concrete\Core\Antispam;
 
 use Concrete\Core\Foundation\Object;
+use Concrete\Core\Support\Facade\Facade;
 use Loader;
 use Package;
 use Concrete\Core\Package\PackageList;

@@ -139,6 +139,20 @@ EOL;
             ckeditor.on('remove', function(){
                 $(this).destroy();
             });
+            if (CKEDITOR.env.ie) {
+                ckeditor.on('ariaWidget', function (e) {
+                    setTimeout(function() {
+                        var \$contents = $(e.editor.ui.contentsElement.$),
+                            \$textarea = \$contents.find('>textarea.cke_source');
+                        if (\$textarea.length === 1) {
+                            \$textarea.css({
+                                width: \$contents.innerWidth() + 'px',
+                                height: \$contents.innerHeight() + 'px'
+                            });
+                        }
+                    }, 50);
+                });
+            }
         }
 EOL;
 

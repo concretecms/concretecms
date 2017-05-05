@@ -5,5 +5,6 @@ interface EntryInterface
 {
 
     function apply($mixed);
+    function remove($mixed);
 
 }

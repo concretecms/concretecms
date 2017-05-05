@@ -10,13 +10,6 @@
                 </attributekey>
             </attributes>
         </page>
-        <page name="Stacks" path="/!stacks" filename="/!stacks/view.php" pagetype="" description="" package="" root="true">
-            <attributes>
-                <attributekey handle="icon_dashboard">
-                    <value>fa fa-th</value>
-                </attributekey>
-            </attributes>
-        </page>
         <page name="Page Not Found" path="/page_not_found" filename="/page_not_found.php" pagetype="" description="" package="" root="true" >
             <area name="Main"/>
         </page>

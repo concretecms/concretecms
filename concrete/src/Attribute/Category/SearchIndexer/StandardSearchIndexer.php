@@ -5,7 +5,6 @@ use Concrete\Core\Attribute\AttributeKeyInterface;
 use Concrete\Core\Attribute\AttributeValueInterface;
 use Concrete\Core\Attribute\Category\CategoryInterface;
 use Concrete\Core\Database\Connection\Connection;
-use Concrete\Core\Entity\Attribute\Value\Value;
 use Doctrine\DBAL\Schema\Schema;
 
 class StandardSearchIndexer implements SearchIndexerInterface
@@ -42,7 +41,6 @@ class StandardSearchIndexer implements SearchIndexerInterface
         }
     }
 
-
     public function createRepository(CategoryInterface $category)
     {
         $schema = new Schema();
@@ -76,6 +74,14 @@ class StandardSearchIndexer implements SearchIndexerInterface
         if ($this->isValid($category)) {
             $attributeIndexer = $key->getSearchIndexer();
             $attributeIndexer->updateSearchIndexKeyColumns($category, $key, $previousHandle);
+        }
+    }
+
+    public function refreshRepositoryColumns(CategoryInterface $category, AttributeKeyInterface $key)
+    {
+        if ($this->isValid($category)) {
+            $attributeIndexer = $key->getSearchIndexer();
+            $attributeIndexer->refreshSearchIndexKeyColumns($category, $key);
         }
     }
 }
