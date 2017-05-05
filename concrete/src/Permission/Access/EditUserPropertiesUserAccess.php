@@ -1,9 +1,9 @@
 <?php
 namespace Concrete\Core\Permission\Access;
 
-use Database;
 use Concrete\Core\Permission\Duration as PermissionDuration;
 use Concrete\Core\Permission\Key\UserKey as UserPermissionKey;
+use Database;
 
 class EditUserPropertiesUserAccess extends UserAccess
 {
@@ -11,9 +11,9 @@ class EditUserPropertiesUserAccess extends UserAccess
     {
         $newPA = parent::duplicate($newPA);
         $db = Database::connection();
-        $r = $db->executeQuery('select * from UserPermissionEditPropertyAccessList where paID = ?', array($this->getPermissionAccessID()));
+        $r = $db->executeQuery('select * from UserPermissionEditPropertyAccessList where paID = ?', [$this->getPermissionAccessID()]);
         while ($row = $r->FetchRow()) {
-            $v = array($newPA->getPermissionAccessID(),
+            $v = [$newPA->getPermissionAccessID(),
             $row['peID'],
             $row['attributePermission'],
             $row['uName'],
@@ -22,24 +22,24 @@ class EditUserPropertiesUserAccess extends UserAccess
             $row['uAvatar'],
             $row['uTimezone'],
             $row['uDefaultLanguage'],
-            );
+            ];
             $db->executeQuery('insert into UserPermissionEditPropertyAccessList (paID, peID, attributePermission, uName, uEmail, uPassword, uAvatar, uTimezone, uDefaultLanguage) values (?, ?, ?, ?, ?, ?, ?, ?, ?)', $v);
         }
-        $r = $db->executeQuery('select * from UserPermissionEditPropertyAttributeAccessListCustom where paID = ?', array($this->getPermissionAccessID()));
+        $r = $db->executeQuery('select * from UserPermissionEditPropertyAttributeAccessListCustom where paID = ?', [$this->getPermissionAccessID()]);
         while ($row = $r->FetchRow()) {
-            $v = array($row['peID'], $newPA->getPermissionAccessID(), $row['akID']);
+            $v = [$row['peID'], $newPA->getPermissionAccessID(), $row['akID']];
             $db->executeQuery('insert into UserPermissionEditPropertyAttributeAccessListCustom (peID, paID, akID) values (?, ?, ?)', $v);
         }
 
         return $newPA;
     }
 
-    public function save($args = array())
+    public function save($args = [])
     {
         parent::save();
         $db = Database::connection();
-        $db->executeQuery('delete from UserPermissionEditPropertyAccessList where paID = ?', array($this->getPermissionAccessID()));
-        $db->executeQuery('delete from UserPermissionEditPropertyAttributeAccessListCustom where paID = ?', array($this->getPermissionAccessID()));
+        $db->executeQuery('delete from UserPermissionEditPropertyAccessList where paID = ?', [$this->getPermissionAccessID()]);
+        $db->executeQuery('delete from UserPermissionEditPropertyAttributeAccessListCustom where paID = ?', [$this->getPermissionAccessID()]);
         if (is_array($args['propertiesIncluded'])) {
             foreach ($args['propertiesIncluded'] as $peID => $attributePermission) {
                 $allowEditUName = 0;
@@ -66,7 +66,7 @@ class EditUserPropertiesUserAccess extends UserAccess
                 if (!empty($args['allowEditUDefaultLanguage'][$peID])) {
                     $allowEditUDefaultLanguage = $args['allowEditUDefaultLanguage'][$peID];
                 }
-                $v = array($this->getPermissionAccessID(), $peID, $attributePermission, $allowEditUName, $allowEditUEmail, $allowEditUPassword, $allowEditUAvatar, $allowEditUTimezone, $allowEditUDefaultLanguage);
+                $v = [$this->getPermissionAccessID(), $peID, $attributePermission, $allowEditUName, $allowEditUEmail, $allowEditUPassword, $allowEditUAvatar, $allowEditUTimezone, $allowEditUDefaultLanguage];
                 $db->executeQuery('insert into UserPermissionEditPropertyAccessList (paID, peID, attributePermission, uName, uEmail, uPassword, uAvatar, uTimezone, uDefaultLanguage) values (?, ?, ?, ?, ?, ?, ?, ?, ?)', $v);
             }
         }
@@ -97,7 +97,7 @@ class EditUserPropertiesUserAccess extends UserAccess
                 if (!empty($args['allowEditUDefaultLanguageExcluded'][$peID])) {
                     $allowEditUDefaultLanguageExcluded = $args['allowEditUDefaultLanguageExcluded'][$peID];
                 }
-                $v = array($this->getPermissionAccessID(), $peID, $attributePermission, $allowEditUNameExcluded, $allowEditUEmailExcluded, $allowEditUPasswordExcluded, $allowEditUAvatarExcluded, $allowEditUTimezoneExcluded, $allowEditUDefaultLanguageExcluded);
+                $v = [$this->getPermissionAccessID(), $peID, $attributePermission, $allowEditUNameExcluded, $allowEditUEmailExcluded, $allowEditUPasswordExcluded, $allowEditUAvatarExcluded, $allowEditUTimezoneExcluded, $allowEditUDefaultLanguageExcluded];
                 $db->executeQuery('insert into UserPermissionEditPropertyAccessList (paID, peID, attributePermission, uName, uEmail, uPassword, uAvatar, uTimezone, uDefaultLanguage) values (?, ?, ?, ?, ?, ?, ?, ?, ?)', $v);
             }
         }
@@ -105,7 +105,7 @@ class EditUserPropertiesUserAccess extends UserAccess
         if (is_array($args['akIDInclude'])) {
             foreach ($args['akIDInclude'] as $peID => $akIDs) {
                 foreach ($akIDs as $akID) {
-                    $v = array($this->getPermissionAccessID(), $peID, $akID);
+                    $v = [$this->getPermissionAccessID(), $peID, $akID];
                     $db->executeQuery('insert into UserPermissionEditPropertyAttributeAccessListCustom (paID, peID, akID) values (?, ?, ?)', $v);
                 }
             }
@@ -114,21 +114,21 @@ class EditUserPropertiesUserAccess extends UserAccess
         if (is_array($args['akIDExclude'])) {
             foreach ($args['akIDExclude'] as $peID => $akIDs) {
                 foreach ($akIDs as $akID) {
-                    $v = array($this->getPermissionAccessID(), $peID, $akID);
+                    $v = [$this->getPermissionAccessID(), $peID, $akID];
                     $db->executeQuery('insert into UserPermissionEditPropertyAttributeAccessListCustom (paID, peID, akID) values (?, ?, ?)', $v);
                 }
             }
         }
     }
 
-    public function getAccessListItems($accessType = UserPermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array(), $checkCache = true)
+    public function getAccessListItems($accessType = UserPermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = [], $checkCache = true)
     {
         $db = Database::connection();
         $list = parent::getAccessListItems($accessType, $filterEntities);
         $list = PermissionDuration::filterByActive($list);
         foreach ($list as $l) {
             $pe = $l->getAccessEntityObject();
-            $prow = $db->fetchAssoc('select attributePermission, uName, uPassword, uEmail, uAvatar, uTimezone, uDefaultLanguage from UserPermissionEditPropertyAccessList where peID = ? and paID = ?', array($pe->getAccessEntityID(), $this->getPermissionAccessID()));
+            $prow = $db->fetchAssoc('select attributePermission, uName, uPassword, uEmail, uAvatar, uTimezone, uDefaultLanguage from UserPermissionEditPropertyAccessList where peID = ? and paID = ?', [$pe->getAccessEntityID(), $this->getPermissionAccessID()]);
             if (is_array($prow) && $prow['attributePermission']) {
                 $l->setAttributesAllowedPermission($prow['attributePermission']);
                 $l->setAllowEditUserName($prow['uName']);
@@ -156,7 +156,7 @@ class EditUserPropertiesUserAccess extends UserAccess
                 $l->setAllowEditDefaultLanguage(0);
             }
             if ($attributePermission == 'C') {
-                $akIDs = $db->GetCol('select akID from UserPermissionEditPropertyAttributeAccessListCustom where peID = ? and paID = ?', array($pe->getAccessEntityID(), $this->getPermissionAccessID()));
+                $akIDs = $db->GetCol('select akID from UserPermissionEditPropertyAttributeAccessListCustom where peID = ? and paID = ?', [$pe->getAccessEntityID(), $this->getPermissionAccessID()]);
                 $l->setAttributesAllowedArray($akIDs);
             }
         }
