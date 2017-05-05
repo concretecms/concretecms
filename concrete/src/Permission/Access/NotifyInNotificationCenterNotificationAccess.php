@@ -75,7 +75,7 @@ class NotifyInNotificationCenterNotificationAccess extends NotificationAccess
              * @var $l NotifyInNotificationCenterNotificationListItem
              */
             $pe = $l->getAccessEntityObject();
-            $prow = $db->GetRow('select permission from NotificationPermissionSubscriptionList where peID = ? and paID = ?', array($pe->getAccessEntityID(), $l->getPermissionAccessID()));
+            $prow = $db->fetchAssoc('select permission from NotificationPermissionSubscriptionList where peID = ? and paID = ?', array($pe->getAccessEntityID(), $l->getPermissionAccessID()));
             if (is_array($prow) && $prow['permission']) {
                 $l->setSubscriptionsAllowedPermission($prow['permission']);
                 $permission = $prow['permission'];
