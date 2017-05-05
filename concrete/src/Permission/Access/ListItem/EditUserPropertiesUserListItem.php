@@ -76,7 +76,7 @@ class EditUserPropertiesUserListItem extends UserListItem
 
     public function allowEditTimezone()
     {
-        return $this->allowEditUTimezone;
+        return isset($this->allowEditUTimezone) ? $this->allowEditUTimezone : null;
     }
 
     public function setAllowEditDefaultLanguage($allow)
@@ -86,6 +86,6 @@ class EditUserPropertiesUserListItem extends UserListItem
 
     public function allowEditDefaultLanguage()
     {
-        return $this->allowEditUDefaultLanguage;
+        return isset($this->allowEditUDefaultLanguage) ? $this->allowEditUDefaultLanguage : null;
     }
 }
