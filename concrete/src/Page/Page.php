@@ -2928,8 +2928,10 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $attributes = CollectionKey::getAttributeValues($mc);
         foreach($attributes as $attribute) {
             $value = $attribute->getValueObject();
-            $value = clone $value;
-            $nc->setAttribute($attribute->getAttributeKey(), $value);
+            if ($value) {
+                $value = clone $value;
+                $nc->setAttribute($attribute->getAttributeKey(), $value);
+            }
         }
     }
 
