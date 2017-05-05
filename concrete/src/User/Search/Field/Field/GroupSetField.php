@@ -9,6 +9,7 @@ use Concrete\Core\Search\ItemList\ItemList;
 use Concrete\Core\User\Group\GroupSet;
 use Concrete\Core\User\Group\GroupSetList;
 use Concrete\Core\User\UserList;
+use Permissions;
 
 class GroupSetField extends AbstractField
 {
@@ -41,27 +42,20 @@ class GroupSetField extends AbstractField
 
     /**
      * @param UserList $list
-     * @param $request
      */
     public function filterList(ItemList $list)
     {
-        $gsID = $this->data['gsID'];
-        $gs = GroupSet::getByID($gsID);
-        $groupsetids = array(-1);
-        if (is_object($gs)) {
-            $groups = $gs->getGroups();
-        }
-        $list->addToQuery('left join UserGroups ugs on u.uID = ugs.uID');
-        $pk = Key::getByHandle('search_users_in_group');
-        foreach ($groups as $g) {
-            if ($pk->validate($g) && (!in_array($g->getGroupID(), $groupsetids))) {
-                $groupsetids[] = $g->getGroupID();
+        $accessibleGroups = [];
+        $groupSetID = isset($this->data['gsID']) ? $this->data['gsID'] : null;
+        $groupSet = $groupSetID ? GroupSet::getByID($groupSetID) : null;
+        if ($groupSet) {
+            foreach ($groupSet->getGroups() as $group) {
+                $groupPermissions = new Permissions($group);
+                if ($groupPermissions->canSearchUsersInGroup()) {
+                    $accessibleGroups[] = $group;
+                }
             }
         }
-        $instr = 'ugs.gID in (' . implode(',', $groupsetids) . ')';
-        $list->filter(false, $instr);
+        $list->filterByInAnyGroup($accessibleGroups);
     }
-
-
-
 }
