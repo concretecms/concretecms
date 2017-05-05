@@ -3,7 +3,7 @@ namespace Concrete\Core\Permission\Access\ListItem;
 
 class EditUserPropertiesUserListItem extends UserListItem
 {
-    protected $customAttributeKeyArray = array();
+    protected $customAttributeKeyArray = [];
     protected $attributesAllowedPermission = 'N';
     protected $allowEditUName = 0;
     protected $allowEditUEmail = 0;
@@ -16,14 +16,17 @@ class EditUserPropertiesUserListItem extends UserListItem
     {
         $this->attributesAllowedPermission = $permission;
     }
+
     public function getAttributesAllowedPermission()
     {
         return $this->attributesAllowedPermission;
     }
+
     public function setAttributesAllowedArray($akIDs)
     {
         $this->customAttributeKeyArray = $akIDs;
     }
+
     public function getAttributesAllowedArray()
     {
         return $this->customAttributeKeyArray;
