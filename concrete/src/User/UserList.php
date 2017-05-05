@@ -143,7 +143,9 @@ class UserList extends DatabaseItemList
     {
         $this->query->select('u.uID')
             ->from('Users', 'u')
-            ->leftJoin('u', 'UserSearchIndexAttributes', 'ua', 'u.uID = ua.uID');
+            ->leftJoin('u', 'UserSearchIndexAttributes', 'ua', 'u.uID = ua.uID')
+            ->groupBy('u.uID')
+        ;
     }
 
     public function finalizeQuery(\Doctrine\DBAL\Query\QueryBuilder $query)
@@ -261,17 +263,46 @@ class UserList extends DatabaseItemList
         if (!($group instanceof \Concrete\Core\User\Group\Group)) {
             $group = \Concrete\Core\User\Group\Group::getByName($group);
         }
-
-        $joinTable = 'ug' . $group->getGroupID();
-        $groupTable = 'g' . $group->getGroupID();
-        $path = $group->getGroupPath();
-        $this->query->leftJoin('u', 'UserGroups', $joinTable, 'u.uID = ' . $joinTable . '.uID');
-        $this->query->leftJoin($joinTable, 'Groups', $groupTable, '(' . $joinTable . '.gID = ' . $groupTable . '.gID and ' . $groupTable . '.gPath like :gPath' . $group->getGroupID() . ')');
-        $this->query->setParameter('gPath' . $group->getGroupID(), $path . '%');
-        if ($inGroup) {
-            $this->query->andWhere($groupTable . '.gID is not null');
+        $this->filterByInAnyGroup([group], $inGroup);
+    }
+        
+    /**
+     * Filters the user list for only users within at least one of the provided groups.
+     *
+     * @param \Concrete\Core\User\Group\Group[]|\Generator $groups
+     * @param bool $inGroups Set to true to search users that are in at least in one of the specified groups, false to search users that aren't in any of the specified groups
+     */
+    public function filterByInAnyGroup($groups, $inGroups = true)
+    {
+        $where = null;
+        foreach ($groups as $group) {
+            if ($group instanceof \Concrete\Core\User\Group\Group) {
+                $uniqueID = $group->getGroupID() . '_' . bin2hex(random_bytes(10));
+                $joinTable = 'ug' . $uniqueID;
+                $groupTable = 'g' . $uniqueID;
+                $path = $group->getGroupPath();
+                $this->query->leftJoin('u', 'UserGroups', $joinTable, 'u.uID = ' . $joinTable . '.uID');
+                $this->query->leftJoin($joinTable, 'Groups', $groupTable, '(' . $joinTable . '.gID = ' . $groupTable . '.gID and ' . $groupTable . '.gPath like :gPath' . $uniqueID . ')');
+                $this->query->setParameter('gPath' . $uniqueID, $path . '%');
+                if ($inGroups) {
+                    if ($where === null) {
+                        $where = $this->query->expr()->orX();
+                    }
+                    $where->add($groupTable . '.gID is not null');
+                } else {
+                    if ($where === null) {
+                        $where = $this->query->expr()->andX();
+                    }
+                    $where->add($groupTable . '.gID is null');
+                }
+            }
+        }
+        if ($where === null) {
+            if ($inGroups) {
+                $this->query->andWhere('1 = 0');
+            }
         } else {
-            $this->query->andWhere($groupTable . '.gID is null');
+            $this->query->andWhere($where);
         }
     }
 
