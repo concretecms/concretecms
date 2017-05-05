@@ -128,7 +128,7 @@ class EditUserPropertiesUserAccess extends UserAccess
         $list = PermissionDuration::filterByActive($list);
         foreach ($list as $l) {
             $pe = $l->getAccessEntityObject();
-            $prow = $db->GetRow('select attributePermission, uName, uPassword, uEmail, uAvatar, uTimezone, uDefaultLanguage from UserPermissionEditPropertyAccessList where peID = ? and paID = ?', array($pe->getAccessEntityID(), $this->getPermissionAccessID()));
+            $prow = $db->fetchAssoc('select attributePermission, uName, uPassword, uEmail, uAvatar, uTimezone, uDefaultLanguage from UserPermissionEditPropertyAccessList where peID = ? and paID = ?', array($pe->getAccessEntityID(), $this->getPermissionAccessID()));
             if (is_array($prow) && $prow['attributePermission']) {
                 $l->setAttributesAllowedPermission($prow['attributePermission']);
                 $l->setAllowEditUserName($prow['uName']);
