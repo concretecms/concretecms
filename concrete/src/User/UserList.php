@@ -265,7 +265,7 @@ class UserList extends DatabaseItemList
         }
         $this->filterByInAnyGroup([group], $inGroup);
     }
-        
+
     /**
      * Filters the user list for only users within at least one of the provided groups.
      *

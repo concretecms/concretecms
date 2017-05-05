@@ -1,10 +1,7 @@
 <?php
 namespace Concrete\Core\User\Search\Field\Field;
 
-use Concrete\Core\File\FileList;
-use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Search\Field\AbstractField;
-use Concrete\Core\Search\Field\FieldInterface;
 use Concrete\Core\Search\ItemList\ItemList;
 use Concrete\Core\User\Group\GroupSet;
 use Concrete\Core\User\Group\GroupSetList;
@@ -13,7 +10,6 @@ use Permissions;
 
 class GroupSetField extends AbstractField
 {
-
     protected $requestVariables = [
         'gsID',
     ];
@@ -32,11 +28,12 @@ class GroupSetField extends AbstractField
     {
         $form = \Core::make('helper/form');
         $gsl = new GroupSetList();
-        $groupsets = array();
+        $groupsets = [];
         foreach ($gsl->get() as $gs) {
             $groupsets[$gs->getGroupSetID()] = $gs->getGroupSetDisplayName();
         }
         $html = $form->select('gsID', $groupsets);
+
         return $html;
     }
 
