@@ -8,7 +8,10 @@ class Version20170505000000 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
-        $this->refreshDatabaseTables(['Stacks']);
+        $stacks = $schema->getTable('Stacks');
+        if ($stacks->hasColumn('siteTreeID')) {
+            $stacks->dropColumn('siteTreeID');
+        }
     }
 
     public function down(Schema $schema)
