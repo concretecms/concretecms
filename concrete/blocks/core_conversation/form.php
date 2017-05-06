@@ -1,5 +1,4 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
-<?php
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 
 $helperFile = Loader::helper('concrete/file');
 if ($controller->getTask() == 'add') {
@@ -9,6 +8,7 @@ if ($controller->getTask() == 'add') {
     $displayMode = 'threaded';
     $enableOrdering = 1;
     $enableCommentRating = 1;
+    $enableTopCommentReviews = 0;
     $displayPostingForm = 'top';
     $addMessageLabel = t('Add Message');
     $attachmentOverridesEnabled = 0;
@@ -80,27 +80,21 @@ if (!$dateFormat) {
         </div>
 	</div>
     <?php
-    if (isset($reviewAttributeKeys)) {
-        ?>
+    if (isset($reviewAttributeKeys)) { ?>
         <div class="form-group" data-unhide="[name=enableTopCommentReviews]">
-            <label class="control-label"><?= t('Aggregate ratings by attribute') ?></label>
-            <div class="checkbox">
-                <label>
-                    <?php
-                    if (count($reviewAttributeKeys) > 0) {
-                        echo $form->select('reviewAggregateAttributeKey', $reviewAttributeKeys, $reviewAggregateAttributeKey);
-                    } else {
-                        ?>
-                        <div class="alert alert-info">
-                            <?= t('Create a page attribute of type "%s" in order to aggregate ratings.', tc('AttributeTypeName', 'Rating')) ?>
-                        </div>
-                        <?php
-                    }
-                    ?>
-                </label>
-            </div>
+            <label class="control-label"><?= t('Aggregate Ratings by Attribute') ?></label>
+            <?php
+            if (count($reviewAttributeKeys) > 0) {
+                echo $form->select('reviewAggregateAttributeKey', $reviewAttributeKeys, $reviewAggregateAttributeKey);
+            } else { ?>
+                <div class="alert alert-info">
+                    <?= t('Create a page attribute of type "%s" in order to aggregate ratings.', tc('AttributeTypeName', 'Rating')) ?>
+                </div>
+            <?php
+            }
+            ?>
         </div>
-        <?php
+    <?php
     }
     ?>
 	<div class="form-group">
@@ -187,7 +181,7 @@ if (!$dateFormat) {
 </fieldset>
 <fieldset>
 	<legend><?=t('File Attachment Management')?></legend>
-	<p class="text-muted"><?php echo t('Note: Entering values here will override global conversations file attachment settings for this block if you enable Attachment Overrides for this Conversation.') ?></p>
+	<p class="help-block"><?php echo t('Note: Entering values here will override global conversations file attachment settings for this block if you enable Attachment Overrides for this Conversation.') ?></p>
     <div class="form-group">
         <div class="checkbox">
             <label class="">
