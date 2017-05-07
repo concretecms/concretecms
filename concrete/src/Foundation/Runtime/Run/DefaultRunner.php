@@ -70,6 +70,11 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
             // Call each step in the line
             // @todo Move these to individual middleware, this is basically a duplicated middleware pipeline
             $response = $this->trySteps([
+                // Set the active language for the site, based either on the site locale, or the
+                // current user record. This can be changed later as well, during runtime.
+                // Start localization library.
+                'setSystemLocale',
+
                 // Set up packages first.
                 // We do this because we don't want the entity manager to be loaded and we
                 // want to give packages an opportunity to replace classes and load new classes
@@ -78,11 +83,6 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
                 // Load site specific timezones. Has to come after packages because it
                 // instantiates the site service, which sometimes packages need to override.
                 'initializeTimezone',
-
-                // Set the active language for the site, based either on the site locale, or the
-                // current user record. This can be changed later as well, during runtime.
-                // Start localization library.
-                'setSystemLocale',
 
                 // Define legacy urls, this may be the first thing that loads the entity manager
                 'initializeLegacyUrlDefinitions',
