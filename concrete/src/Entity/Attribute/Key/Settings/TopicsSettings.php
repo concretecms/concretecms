@@ -64,17 +64,17 @@ class TopicsSettings extends Settings
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
-    public function getAllowMultipleValues()
+    public function allowMultipleValues()
     {
         return $this->akTopicAllowMultipleValues;
     }
 
     /**
-     * @param mixed $allowMultipleValues
+     * @param bool $allowMultipleValues
      */
-    public function setAllowMultipleValues($allowMultipleValues)
+    public function allowMultipleValues($allowMultipleValues)
     {
         $this->akTopicAllowMultipleValues = $allowMultipleValues;
     }
