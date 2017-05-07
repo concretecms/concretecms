@@ -52,7 +52,7 @@ $url = $app->make('url/manager');
             ?>
             <li class="divider"></li>
             <li><a href="<?=$url->resolve(['/'])?>"><i class="fa fa-home"></i> <?=t('Home')?></a></li>
-            <li><a href="<?=$url->resolve(['/login', 'logout', $app->make('token')->generate('logout')])?>"><i class="fa fa-sign-out"></i> <?=t('Sign Out')?></a></li>
+            <li><a href="<?=$url->resolve(['/login', 'do_logout', $app->make('token')->generate('do_logout')])?>"><i class="fa fa-sign-out"></i> <?=t('Sign Out')?></a></li>
         </ul>
     </div>
 </div>

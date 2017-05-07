@@ -70,7 +70,7 @@ class Navigation
             $url = URL::to('/login');
             $label = t('Log in');
         } else {
-            $url = URL::to('/login', 'logout', id(new Token())->generate('logout'));
+            $url = URL::to('/login', 'do_logout', id(new Token())->generate('do_logout'));
             $label = t('Log out');
         }
 

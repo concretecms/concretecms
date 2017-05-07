@@ -57,7 +57,7 @@ $config = $site->getConfigRepository();
         <?php if ($showAccount) {
     ?>
         <li class="pull-right">
-            <a href="<?=URL::to('/login', 'logout', Loader::helper('validation/token')->generate('logout'))?>" title="<?=t('Sign Out')?>"><i class="fa fa-sign-out"></i>
+            <a href="<?=URL::to('/login', 'do_logout', Loader::helper('validation/token')->generate('do_logout'))?>" title="<?=t('Sign Out')?>"><i class="fa fa-sign-out"></i>
             <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-site-settings">
                 <?= tc('toolbar', 'Sign Out') ?>
             </span>

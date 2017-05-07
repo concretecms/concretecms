@@ -379,12 +379,29 @@ class Login extends PageController
         }
     }
 
+    /**
+     * @deprecated
+     */
     public function logout($token = false)
     {
         if ($this->app->make('token')->validate('logout', $token)) {
             $u = new User();
             $u->logout();
             $this->redirect('/');
+        }
+    }
+
+    /**
+     * @param $token
+     * @return RedirectResponse
+     */
+    public function do_logout($token = false)
+    {
+        if ($this->app->make('token')->validate('do_logout', $token)) {
+            $u = new User();
+            $u->logout();
+            $r = Redirect::to('/');
+            return $r;
         }
     }
 
