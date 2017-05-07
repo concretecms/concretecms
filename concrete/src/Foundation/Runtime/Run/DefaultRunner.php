@@ -160,6 +160,8 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
 
     /**
      * Initialize localization.
+     *
+     * @deprecated In a future major version this will be part of HTTP middleware
      */
     protected function setSystemLocale()
     {
