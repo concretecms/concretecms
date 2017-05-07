@@ -125,6 +125,24 @@ ConcretePageComposerDetail = {
             }).submit();
         });
 
+        $('button[data-page-type-composer-form-btn=save]').on('click', function() {
+            my.disableAutosave();
+            var submitSuccess = false;
+            my.$form.concreteAjaxForm({
+                url: '<?=$controller->action('save')?>',
+                success: function(r) {
+                    submitSuccess = true;
+                    window.location.href = r.redirectURL;
+                },
+                complete: function() {
+                    if (!submitSuccess) {
+                        my.enableAutosave();
+                    }
+                    jQuery.fn.dialog.hideLoader();
+                }
+            }).submit();
+        });
+
 		$('button[data-page-type-composer-form-btn=publish]').on('click', function() {
 			var data = my.$form.serializeArray();
 			ConcreteEvent.fire('PanelComposerPublish', {data: data});

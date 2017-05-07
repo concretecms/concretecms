@@ -561,6 +561,7 @@ return [
         '/ccm/system/panels/details/page/composer/discard' => ['\Concrete\Controller\Panel\Detail\Page\Composer::discard'],
         '/ccm/system/panels/details/page/composer/publish' => ['\Concrete\Controller\Panel\Detail\Page\Composer::publish'],
         '/ccm/system/panels/details/page/composer/save_and_exit' => ['\Concrete\Controller\Panel\Detail\Page\Composer::saveAndExit'],
+        '/ccm/system/panels/details/page/composer/save' => ['\Concrete\Controller\Panel\Detail\Page\Composer::justSave'],
         '/ccm/system/panels/details/page/location' => ['\Concrete\Controller\Panel\Detail\Page\Location::view'],
         '/ccm/system/panels/details/page/location/submit' => ['\Concrete\Controller\Panel\Detail\Page\Location::submit'],
         '/ccm/system/panels/details/page/permissions' => ['\Concrete\Controller\Panel\Detail\Page\Permissions::view'],

@@ -60,6 +60,21 @@ class Composer extends BackendInterfacePageController
         }
     }
 
+    public function justSave()
+    {
+        if ($this->validateAction()) {
+            $r = $this->save();
+            $ptr = $r[0];
+            $u = new User();
+            $u->unloadCollectionEdit();
+            $c = $this->page;
+            $ptr->setRedirectURL(Core::make('helper/navigation')->getLinkToCollection($c, true));
+            $ptr->outputJSON();
+        } else {
+            throw new \Exception(t('Access Denied.'));
+        }
+    }
+
     public function publish()
     {
         if ($this->validateAction()) {
