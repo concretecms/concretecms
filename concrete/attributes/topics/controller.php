@@ -19,8 +19,8 @@ use Database;
 
 class Controller extends AttributeTypeController
 {
-    private $akTopicParentNodeID;
-    private $akTopicTreeID;
+    public $akTopicParentNodeID;
+    public $akTopicTreeID;
     private $akTopicAllowMultipleValues = true;
 
     protected $searchIndexFieldDefinition = ['type' => 'text', 'options' => ['default' => null, 'notnull' => false]];
@@ -88,7 +88,7 @@ class Controller extends AttributeTypeController
         if ($akTopicTreeID) {
             $type->setTopicTreeID($akTopicTreeID);
         }
-        $type->setAllowMultipleValues((bool) $akTopicAllowMultipleValues);
+        $type->allowMultipleValues((bool) $akTopicAllowMultipleValues);
 
         return $type;
     }
@@ -103,9 +103,7 @@ class Controller extends AttributeTypeController
 
     public function exportValue(\SimpleXMLElement $akn)
     {
-        /**
-         * @var Xml
-         */
+        /** @var Xml $xml */
         $xml = \Core::make('helper/xml');
         $avn = $akn->addChild('topics');
         $nodes = $this->attributeValue->getValue();
@@ -132,7 +130,7 @@ class Controller extends AttributeTypeController
     public function setNodes($akTopicParentNodeID, $akTopicTreeID)
     {
         /**
-         * @var TopicsSettings
+         * @var TopicsSettings $type
          */
         $type = $this->getAttributeKey()->getAttributeKeySettings();
         $type->setParentNodeID($akTopicParentNodeID);
@@ -146,9 +144,6 @@ class Controller extends AttributeTypeController
         $selected = [];
         $this->load();
         $tree = Tree::getByID($this->akTopicTreeID);
-        if (is_array($nodes) && $this->akTopicAllowMultipleValues == false) {
-            $nodes = $nodes[0];
-        }
         if ($nodes instanceof Topic) {
             $selected[] = $nodes->getTreeNodeID();
         } else {
@@ -198,7 +193,7 @@ class Controller extends AttributeTypeController
         $allowMultipleValues = $key->tree['allow-multiple-values'];
         $type->setTopicTreeID($tree->getTreeID());
         $type->setParentNodeID($node->getTreeNodeID());
-        $type->setAllowMultipleValues(((string) $allowMultipleValues) == '1' ? true : false);
+        $type->allowMultipleValues(((string) $allowMultipleValues) == '1' ? true : false);
 
         return $type;
     }
@@ -366,7 +361,7 @@ class Controller extends AttributeTypeController
         return $this->akTopicTreeID;
     }
 
-    public function getAllowMultipleValues()
+    public function allowMultipleValues()
     {
         $this->load();
 
@@ -385,7 +380,7 @@ class Controller extends AttributeTypeController
         if (is_object($type)) {
             $this->akTopicParentNodeID = $type->getParentNodeID();
             $this->akTopicTreeID = $type->getTopicTreeID();
-            $this->akTopicAllowMultipleValues = $type->getAllowMultipleValues();
+            $this->akTopicAllowMultipleValues = $type->allowMultipleValues();
         }
     }
 
