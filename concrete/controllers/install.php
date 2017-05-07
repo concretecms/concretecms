@@ -223,7 +223,7 @@ class Install extends Controller
         }
         $this->set('passwordAttributes', $passwordAttributes);
         $canonicalUrl = '';
-        $canonicalUrlChecked = false;
+        $canonicalUrlChecked = true;
         $canonicalSSLUrl = '';
         $canonicalSSLUrlChecked = false;
         $uri = $this->request->getUri();
