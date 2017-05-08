@@ -87,10 +87,8 @@ abstract class AbstractRepetition implements RepetitionInterface
 
     public function getStartDateTimestamp()
     {
-        $date = new Date();
-        return $date->toDateTime(
-            $this->getStartDate(), 'system', $this->getTimezone()->getName()
-        )->getTimestamp();
+        $datetime = new \DateTime($this->getStartDate(), $this->getTimezone());
+        return $datetime->getTimestamp();
     }
 
     /**
@@ -146,6 +144,9 @@ abstract class AbstractRepetition implements RepetitionInterface
      */
     public function getTimezone()
     {
+        if (!$this->timezone) {
+            $this->timezone = new \DateTimemZone(date_default_timezone_get());
+        }
         return $this->timezone;
     }
 

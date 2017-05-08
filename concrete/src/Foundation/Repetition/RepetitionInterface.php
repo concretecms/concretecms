@@ -28,6 +28,11 @@ interface RepetitionInterface
     public function getID();
 
     /**
+     * Returns the start date/time as a timestamp
+     */
+    public function getStartDateTimestamp();
+
+    /**
      * Set the start date.
      *
      * @param $start_date

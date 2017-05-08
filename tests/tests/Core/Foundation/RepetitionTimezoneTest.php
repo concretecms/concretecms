@@ -65,7 +65,10 @@ class RepetitionTimezoneTest extends \PHPUnit_Framework_TestCase
 
         $repetition->setStartDate('2017-08-01 09:00:00'); // Since we're defaulting to the site time of America/Los Angeles it's 9am
         $start_time = $this->dateService->toDateTime($repetition->getStartDate())->getTimestamp();
-        $end_time = $this->dateService->toDateTime('2022-04-25')->getTimestamp();
+
+        $end_date_time = new \DateTime('2022-04-25', $repetition->getTimezone());
+        $end_time = $end_date_time->getTimestamp();
+
         $this->assertEquals(1501603200, $start_time);
 
         $initial_occurrence_time = $this->dateService->toDateTime($repetition->getStartDate())->getTimestamp();
@@ -109,7 +112,9 @@ class RepetitionTimezoneTest extends \PHPUnit_Framework_TestCase
         $repetition->setRepeatEveryNum(1);
         $repetition->setRepeatPeriodEnd('2017-04-05');
         $start_time = $repetition->getStartDateTimestamp();
-        $end_time = $this->dateService->toDateTime('2022-04-25')->getTimestamp();
+
+        $end_date_time = new \DateTime('2022-04-25', $repetition->getTimezone());
+        $end_time = $end_date_time->getTimestamp();
 
         $this->assertEquals(1490670000, $repetition->getStartDateTimestamp());
 
@@ -137,7 +142,8 @@ class RepetitionTimezoneTest extends \PHPUnit_Framework_TestCase
         $repetition->setRepeatPeriodEnd('2017-07-07');
 
         $start_time = $repetition->getStartDateTimestamp();
-        $end_time = $this->dateService->toDateTime('2022-04-25')->getTimestamp();
+        $end_date_time = new \DateTime('2022-04-25', $repetition->getTimezone());
+        $end_time = $end_date_time->getTimestamp();
 
         $this->assertEquals(1488603600, $repetition->getStartDateTimestamp());
 
@@ -165,7 +171,8 @@ class RepetitionTimezoneTest extends \PHPUnit_Framework_TestCase
         $repetition->setRepeatEveryNum(2);
 
         $start_time = $repetition->getStartDateTimestamp();
-        $end_time = $this->dateService->toDateTime('2019-05-07')->getTimestamp();
+        $end_date_time = new \DateTime('2019-05-07', $repetition->getTimezone());
+        $end_time = $end_date_time->getTimestamp();
 
         $this->assertEquals(1493618400, $repetition->getStartDateTimestamp());
 
@@ -196,7 +203,8 @@ class RepetitionTimezoneTest extends \PHPUnit_Framework_TestCase
         $repetition->setRepeatEveryNum(1);
 
         $start_time = $repetition->getStartDateTimestamp();
-        $end_time = $this->dateService->toDateTime('2018-05-07')->getTimestamp();
+        $end_date_time = new \DateTime('2018-05-07', $repetition->getTimezone());
+        $end_time = $end_date_time->getTimestamp();
 
         $this->assertEquals(1496878200, $repetition->getStartDateTimestamp());
 
@@ -227,7 +235,9 @@ class RepetitionTimezoneTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(1480035600, $repetition->getStartDateTimestamp());
 
-        $end_time = $this->dateService->toDateTime('2030-05-07')->getTimestamp();
+        $end_date_time = new \DateTime('2030-05-07', $repetition->getTimezone());
+        $end_time = $end_date_time->getTimestamp();
+
         $occurrences = $repetition->activeRangesBetween($start_time, $end_time);
 
 
