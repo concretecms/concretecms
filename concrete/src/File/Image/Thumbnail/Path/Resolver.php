@@ -10,6 +10,7 @@ use Concrete\Core\File\Image\Thumbnail\Type\Version as ThumbnailVersion;
 use Concrete\Core\File\StorageLocation\Configuration\ConfigurationInterface;
 use Concrete\Core\File\StorageLocation\Configuration\DeferredConfigurationInterface;
 use Doctrine\DBAL\Exception\InvalidFieldNameException;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 
 class Resolver
 {
@@ -131,6 +132,8 @@ class Resolver
             ));
         } catch (InvalidFieldNameException $e) {
             // User needs to run the database upgrade routine
+        } catch (UniqueConstraintViolationException $e) {
+            // We tried to generate a thumbnail for something we already generated (race condition)
         }
     }
 
