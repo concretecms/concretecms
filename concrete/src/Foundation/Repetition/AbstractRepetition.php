@@ -779,32 +779,6 @@ abstract class AbstractRepetition implements RepetitionInterface
                                     }
                                 }
 
-
-                                /*
-                                $occurrence_start_date_time = new \DateTime();
-                                $occurrence_start_date_time->setTimestamp($occurrence_start);
-                                $occurrence_start_date_time->setTimezone($this->getTimezone());
-                                $occurrence_start_date_time->modify("+{$wotm} weeks");
-
-
-                                $occurrence_start = strtotime(
-                                    $occurrence_start_date_time->format('Y-m-d ') .
-                                    $repetition_start_datetime->format("H:i:s")
-                                );
-
-                                $occurrence_start_modified = new \DateTime();
-                                $occurrence_start_modified->setTimezone($this->getTimezone());
-                                $occurrence_start_modified->setTimestamp($occurrence_start);
-
-                                if ($occurrence_start >= $start && $occurrence_start <= $end) {
-                                    if ($occurrence_start_modified->format('m') === $current_datetime->format('m')) {
-                                        $occurrences[] = array(
-                                            $occurrence_start,
-                                            $occurrence_start + $repetition_end - $repetition_start,
-                                        );
-                                    }
-                                }*/
-
                                 $last_datetime = clone $current_datetime;
                                 $current_datetime->add($interval);
                             }
@@ -851,22 +825,19 @@ abstract class AbstractRepetition implements RepetitionInterface
                                 $occurrence_start_date_time2 = new \DateTime();
                                 $occurrence_start_date_time2->setTimestamp($occurrence_start);
                                 $occurrence_start_date_time2->setTimezone($this->getTimezone());
-                                $date2 = $occurrence_start_date_time2->format('Last ' . $weekday . ' of ' . $date1);
+                                $occurrence_start_date_time2->modify('Last ' . $weekday . ' of ' . $date1);
 
-                                $occurrence_start_date_time3 = new \DateTime($date2, $this->getTimezone());
+                                $occurrence_start = $occurrence_start_date_time2->format('Y-m-d ') .
+                                    $repetition_start_datetime->format('H:i:s');
 
-                                $occurrence_start = strtotime(
-                                    $occurrence_start_date_time3->format('Y-m-d ') .
-                                    $repetition_start_datetime->format('H:i:s')
-                                );
+                                $occurrence_start = new \DateTime($occurrence_start, $this->getTimezone());
+                                $occurrence_start = $occurrence_start->getTimestamp();
 
                                 if ($occurrence_start >= $start && $occurrence_start <= $end) {
-                                    if ($repetition_start_datetime->format('m') === $current_datetime->format('m')) {
-                                        $occurrences[] = array(
-                                            $occurrence_start,
-                                            $occurrence_start + $repetition_end - $repetition_start,
-                                        );
-                                    }
+                                    $occurrences[] = array(
+                                        $occurrence_start,
+                                        $occurrence_start + $repetition_end - $repetition_start,
+                                    );
                                 }
 
                                 $last_datetime = clone $current_datetime;

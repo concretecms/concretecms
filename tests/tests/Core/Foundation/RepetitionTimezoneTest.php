@@ -65,7 +65,7 @@ class RepetitionTimezoneTest extends \PHPUnit_Framework_TestCase
 
         $repetition->setStartDate('2017-08-01 09:00:00'); // Since we're defaulting to the site time of America/Los Angeles it's 9am
         $start_time = $this->dateService->toDateTime($repetition->getStartDate())->getTimestamp();
-        $end_time = $this->dateService->toDateTime('+5 years')->getTimestamp();
+        $end_time = $this->dateService->toDateTime('2022-04-25')->getTimestamp();
         $this->assertEquals(1501603200, $start_time);
 
         $initial_occurrence_time = $this->dateService->toDateTime($repetition->getStartDate())->getTimestamp();
@@ -109,7 +109,7 @@ class RepetitionTimezoneTest extends \PHPUnit_Framework_TestCase
         $repetition->setRepeatEveryNum(1);
         $repetition->setRepeatPeriodEnd('2017-04-05');
         $start_time = $repetition->getStartDateTimestamp();
-        $end_time = $this->dateService->toDateTime('+5 years')->getTimestamp();
+        $end_time = $this->dateService->toDateTime('2022-04-25')->getTimestamp();
 
         $this->assertEquals(1490670000, $repetition->getStartDateTimestamp());
 
@@ -137,7 +137,7 @@ class RepetitionTimezoneTest extends \PHPUnit_Framework_TestCase
         $repetition->setRepeatPeriodEnd('2017-07-07');
 
         $start_time = $repetition->getStartDateTimestamp();
-        $end_time = $this->dateService->toDateTime('+5 years')->getTimestamp();
+        $end_time = $this->dateService->toDateTime('2022-04-25')->getTimestamp();
 
         $this->assertEquals(1488603600, $repetition->getStartDateTimestamp());
 
@@ -165,7 +165,7 @@ class RepetitionTimezoneTest extends \PHPUnit_Framework_TestCase
         $repetition->setRepeatEveryNum(2);
 
         $start_time = $repetition->getStartDateTimestamp();
-        $end_time = $this->dateService->toDateTime('+2 years')->getTimestamp();
+        $end_time = $this->dateService->toDateTime('2019-05-07')->getTimestamp();
 
         $this->assertEquals(1493618400, $repetition->getStartDateTimestamp());
 
@@ -181,8 +181,6 @@ class RepetitionTimezoneTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(13, count($occurrences));
 
         $this->resetTimezone($old);
-
-
     }
 
     public function testMonthlyFirstByWeek()
@@ -198,7 +196,7 @@ class RepetitionTimezoneTest extends \PHPUnit_Framework_TestCase
         $repetition->setRepeatEveryNum(1);
 
         $start_time = $repetition->getStartDateTimestamp();
-        $end_time = $this->dateService->toDateTime('+1 years')->getTimestamp();
+        $end_time = $this->dateService->toDateTime('2018-05-07')->getTimestamp();
 
         $this->assertEquals(1496878200, $repetition->getStartDateTimestamp());
 
@@ -210,7 +208,41 @@ class RepetitionTimezoneTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(12, count($occurrences));
 
         $this->resetTimezone($old);
+    }
 
+    public function testLastThursday()
+    {
+        $old = $this->setTimezone('GMT');
+
+        $repetition = new TestRepetition('America/Los_Angeles');
+        $repetition->setStartDate('2016-11-24 17:00:00');
+        $repetition->setEndDate('2016-11-24 20:00:00');
+        $repetition->setRepeatMonthLastWeekday(4);
+        $repetition->setRepeatPeriod(TestRepetition::REPEAT_MONTHLY);
+        $repetition->setRepeatMonthBy(TestRepetition::MONTHLY_REPEAT_LAST_WEEKDAY);
+        $repetition->setRepeatEveryNum(1);
+        $repetition->setRepeatPeriodEnd('2018-01-01');
+
+        $start_time = $repetition->getStartDateTimestamp();
+
+        $this->assertEquals(1480035600, $repetition->getStartDateTimestamp());
+
+        $end_time = $this->dateService->toDateTime('2030-05-07')->getTimestamp();
+        $occurrences = $repetition->activeRangesBetween($start_time, $end_time);
+
+
+        $this->assertEquals(1480035600, $occurrences[0][0]);
+        $this->assertEquals(1480046400, $occurrences[0][1]);
+
+        $this->assertEquals(1490918400, $occurrences[4][0]);
+        $this->assertEquals(1490929200, $occurrences[4][1]);
+
+        $this->assertEquals(1514509200, $occurrences[13][0]);
+        $this->assertEquals(1514520000, $occurrences[13][1]);
+
+        $this->assertEquals(14, count($occurrences));
+
+        $this->resetTimezone($old);
 
     }
 
