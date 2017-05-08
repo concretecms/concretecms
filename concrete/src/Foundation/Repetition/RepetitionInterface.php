@@ -20,6 +20,8 @@ interface RepetitionInterface
 
     public function getTimezone();
 
+    public function setTimezone(\DateTimeZone $timezone);
+
     /**
      * The ID of this repetition, null for unsaved.
      *

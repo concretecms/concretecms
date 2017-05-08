@@ -82,6 +82,11 @@ abstract class AbstractRepetition implements RepetitionInterface
                 $timezone = new \DateTimeZone(date_default_timezone_get());
             }
         }
+        $this->setTimezone($timezone);
+    }
+
+    public function setTimezone(\DateTimeZone $timezone)
+    {
         $this->timezone = $timezone;
     }
 
