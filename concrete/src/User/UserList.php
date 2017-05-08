@@ -263,7 +263,7 @@ class UserList extends DatabaseItemList
         if (!($group instanceof \Concrete\Core\User\Group\Group)) {
             $group = \Concrete\Core\User\Group\Group::getByName($group);
         }
-        $this->filterByInAnyGroup([group], $inGroup);
+        $this->filterByInAnyGroup([$group], $inGroup);
     }
 
     /**
