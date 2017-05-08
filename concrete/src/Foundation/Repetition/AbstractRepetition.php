@@ -145,7 +145,7 @@ abstract class AbstractRepetition implements RepetitionInterface
     public function getTimezone()
     {
         if (!$this->timezone) {
-            $this->timezone = new \DateTimemZone(date_default_timezone_get());
+            $this->timezone = new \DateTimeZone(date_default_timezone_get());
         }
         return $this->timezone;
     }
