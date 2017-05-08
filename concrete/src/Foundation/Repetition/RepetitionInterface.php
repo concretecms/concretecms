@@ -18,6 +18,8 @@ interface RepetitionInterface
     const MONTHLY_REPEAT_MONTHLY = 2;
     const MONTHLY_REPEAT_LAST_WEEKDAY = 3;
 
+    public function getTimezone();
+
     /**
      * The ID of this repetition, null for unsaved.
      *

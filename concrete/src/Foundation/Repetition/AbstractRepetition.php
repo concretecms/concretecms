@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Foundation\Repetition;
 
+use Concrete\Core\Localization\Service\Date;
+
 /**
  * Abstract repetition class
  * This class is used to define and match against various time windows.
@@ -60,6 +62,38 @@ abstract class AbstractRepetition implements RepetitionInterface
     protected $repeatPeriodEnd;
 
     /**
+     * @var \DateTimeZone
+     */
+    protected $timezone;
+
+    /**
+     * AbstractRepetition constructor.
+     * @param $timezone string | \DateTimeZone
+     */
+    public function __construct($timezone = null)
+    {
+        if ($timezone) {
+            $timezone = is_object($timezone) ? $timezone : new \DateTimeZone($timezone);
+        } else {
+            $timezone = \Core::make('site')->getSite()->getConfigRepository()->get('timezone'); // use the site's time zone.
+            if ($timezone) {
+                $timezone = new \DateTimeZone($timezone);
+            } else {
+                $timezone = new \DateTimeZone(date_default_timezone_get());
+            }
+        }
+        $this->timezone = $timezone;
+    }
+
+    public function getStartDateTimestamp()
+    {
+        $date = new Date();
+        return $date->toDateTime(
+            $this->getStartDate(), 'system', $this->getTimezone()->getName()
+        )->getTimestamp();
+    }
+
+    /**
      * @return bool
      */
     public function isStartDateAllDay()
@@ -76,6 +110,8 @@ abstract class AbstractRepetition implements RepetitionInterface
     {
         $this->startDateAllDay = $start_date_all_day;
     }
+
+
 
     /**
      * @return bool
@@ -104,6 +140,15 @@ abstract class AbstractRepetition implements RepetitionInterface
     {
         return (bool)$this->getActiveRange($now);
     }
+
+    /**
+     * @return \DateTimeZone
+     */
+    public function getTimezone()
+    {
+        return $this->timezone;
+    }
+
 
     /**
      * @return array|null Returns a list [ start, end ] or null if miss
@@ -570,13 +615,12 @@ abstract class AbstractRepetition implements RepetitionInterface
             $end_date = $this->getStartDate();
         }
 
-        $repetition_start = $dh->toDateTime($start_date)->getTimestamp();
-        $repetition_end = $dh->toDateTime($end_date)->getTimestamp();
+        $repetition_start = (new \DateTime($start_date, $this->getTimezone()))->getTimestamp();
+        $repetition_end = (new \DateTime($end_date, $this->getTimezone()))->getTimestamp();
         $repetition_final = null;
 
-        $period_end = $dh->toDateTime($this->getRepeatPeriodEnd());
-        if (is_object($period_end)) {
-            $repetition_final = $period_end->getTimestamp();
+        if ($this->getRepeatPeriodEnd()) {
+            $repetition_final = (new \DateTime($this->getRepeatPeriodEnd(), $this->getTimezone()))->getTimestamp();
         }
 
         $repetition_num = $this->getRepeatEveryNum();
@@ -598,15 +642,17 @@ abstract class AbstractRepetition implements RepetitionInterface
                 $occurrences[] = array($repetition_start, $repetition_end);
             }
         } else {
-            $today = floor($start / 86400);
-            $repetition_day = floor($repetition_start / 86400);
 
-            if ($repetition_day > $today) {
-                $today = $repetition_day;
-            }
             switch ($this->getRepeatPeriod()) {
 
                 case $this::REPEAT_DAILY:
+                    $today = floor($start / 86400);
+                    $repetition_day = floor($repetition_start / 86400);
+
+                    if ($repetition_day > $today) {
+                        $today = $repetition_day;
+                    }
+
                     if ($repetition_difference = ($today - $repetition_day) % $repetition_num) {
                         $today -= $repetition_difference;
                         $today += $repetition_num;
@@ -623,14 +669,15 @@ abstract class AbstractRepetition implements RepetitionInterface
                     break;
 
                 case $this::REPEAT_WEEKLY:
-                    $begin = $start;
-                    if (date('w', $begin) != '0') {
-                        $begin = strtotime('last sunday', $begin);
+                    $start_time = new \DateTime();
+                    $start_time->setTimezone($this->getTimezone());
+                    $start_time->setTimestamp($start);
+                    if ($start_time->format('w') != 0) {
+                        $start_time->modify('last sunday');
                     }
 
-                    $start_time = new \DateTime();
-                    $start_time->setTimestamp($begin);
                     $repetition_start_time = new \DateTime();
+                    $repetition_start_time->setTimezone($this->getTimezone());
                     $repetition_start_time->setTimestamp($repetition_start);
 
                     $diff = $start_time->diff($repetition_start_time);
@@ -639,8 +686,12 @@ abstract class AbstractRepetition implements RepetitionInterface
                         $start_time->add($interval);
                     }
 
-                    $current_date = strtotime(
-                        date('Y-m-d ', $start_time->getTimestamp()) . date('H:i:s', $repetition_start));
+                    $current_date = new \DateTime(
+                        $start_time->format('Y-m-d') . ' ' . $repetition_start_time->format('H:i:s'),
+                        $this->getTimezone()
+                    );
+                    $current_date = $current_date->getTimestamp();
+
                     while ($current_date < $end) {
                         foreach ($this->getRepeatPeriodWeekDays() as $day) {
                             $day_of_the_week = strtotime("+{$day} days", $current_date);
@@ -658,8 +709,13 @@ abstract class AbstractRepetition implements RepetitionInterface
                     break;
 
                 case $this::REPEAT_MONTHLY:
-                    $start_datetime = new \DateTime(date('Y-m-01 H:i:s', $start));
-                    $repetition_start_datetime = new \DateTime('');
+                    $start_time = new \DateTime();
+                    $start_time->setTimezone($this->getTimezone());
+                    $start_time->setTimestamp($start);
+
+                    $start_datetime = new \DateTime($start_time->format('Y-m-01 H:i:s'), $this->getTimezone());
+                    $repetition_start_datetime = new \DateTime();
+                    $repetition_start_datetime->setTimezone($this->getTimezone());
                     $repetition_start_datetime->setTimestamp($repetition_start);
 
                     $diff = $repetition_start_datetime->diff($start_datetime);
@@ -670,41 +726,84 @@ abstract class AbstractRepetition implements RepetitionInterface
 
                     $interval = \DateInterval::createFromDateString("{$repetition_num} months");
 
-                    $current_datetime = new \DateTime('');
+                    $current_datetime = new \DateTime();
+                    $current_datetime->setTimezone($this->getTimezone());
                     $current_datetime->setTimestamp($start_datetime->getTimestamp());
 
                     switch ($this->getRepeatMonthBy()) {
 
                         case $this::MONTHLY_REPEAT_WEEKLY:
-                            $dotw = date('l', $repetition_start);
+                            $dotw = $repetition_start_datetime->format('l');
                             $wotm = -1;
-                            $month = date('m', $repetition_start_datetime->getTimestamp());
+                            $month = $repetition_start_datetime->format('m');
                             $wotm_step = $repetition_start_datetime->getTimestamp();
 
                             do {
                                 ++$wotm;
                                 $wotm_step = strtotime('-1 week', $wotm_step);
-                            } while (date('m', $wotm_step) === $month);
+                                $tmp = new \DateTime();
+                                $tmp->setTimestamp($wotm_step);
+                                $tmp->setTimezone($this->getTimezone());
+                                $wotm_step_month = $tmp->format('m');
+                            } while ($wotm_step_month === $month);
 
                             $last_datetime = null;
                             while ($current_datetime->getTimestamp() < $end) {
-                                $occurrence_start = $current_datetime->getTimestamp();
-                                if (date('l', $current_datetime->getTimestamp()) != $dotw) {
-                                    $occurrence_start = strtotime("next {$dotw}", $occurrence_start);
+
+                                $occurrence_start_date = clone $current_datetime;
+                                $occurrence_start_date->setTimezone($this->getTimezone());
+                                if ($current_datetime->format('l') != $dotw) {
+                                    $occurrence_start_date->modify("next {$dotw}");
                                 }
 
+                                $occurrence_start_date->modify("+{$wotm} weeks");
+
+                                $occurrence_start_time = new \DateTime();
+                                $occurrence_start_time->setTimestamp($repetition_start);
+                                $occurrence_start_time->setTimezone($this->getTimezone());
+
+                                $occurrence_start = new \DateTime(
+                                    $occurrence_start_date->format('Y-m-d ') .
+                                    $occurrence_start_time->format('H:i:s'),
+                                    $this->getTimezone()
+                                );
+
+                                $occurrence_start_timestamp = $occurrence_start->getTimestamp();
+
+                                if ($occurrence_start_timestamp >= $start && $occurrence_start_timestamp <= $end) {
+                                    if ($occurrence_start->format('m') === $current_datetime->format('m')) {
+                                        $occurrences[] = array(
+                                            $occurrence_start_timestamp,
+                                            $occurrence_start_timestamp + $repetition_end - $repetition_start,
+                                        );
+                                    }
+                                }
+
+
+                                /*
+                                $occurrence_start_date_time = new \DateTime();
+                                $occurrence_start_date_time->setTimestamp($occurrence_start);
+                                $occurrence_start_date_time->setTimezone($this->getTimezone());
+                                $occurrence_start_date_time->modify("+{$wotm} weeks");
+
+
                                 $occurrence_start = strtotime(
-                                    date('Y-m-d ', strtotime("+{$wotm} weeks", $occurrence_start)) .
-                                    date('H:i:s', $repetition_start));
+                                    $occurrence_start_date_time->format('Y-m-d ') .
+                                    $repetition_start_datetime->format("H:i:s")
+                                );
+
+                                $occurrence_start_modified = new \DateTime();
+                                $occurrence_start_modified->setTimezone($this->getTimezone());
+                                $occurrence_start_modified->setTimestamp($occurrence_start);
 
                                 if ($occurrence_start >= $start && $occurrence_start <= $end) {
-                                    if (date('m', $occurrence_start) === date('m', $current_datetime->getTimestamp())) {
+                                    if ($occurrence_start_modified->format('m') === $current_datetime->format('m')) {
                                         $occurrences[] = array(
                                             $occurrence_start,
                                             $occurrence_start + $repetition_end - $repetition_start,
                                         );
                                     }
-                                }
+                                }*/
 
                                 $last_datetime = clone $current_datetime;
                                 $current_datetime->add($interval);
@@ -713,12 +812,19 @@ abstract class AbstractRepetition implements RepetitionInterface
 
                         case $this::MONTHLY_REPEAT_MONTHLY:
                             $current_datetime = clone $start_datetime;
-                            $dotm = date('j', $repetition_start_datetime->getTimestamp());
-                            $time = date('H:i:s', $repetition_start_datetime->getTimestamp());
+                            $dotm = $repetition_start_datetime->format('j');
+                            $time = $repetition_start_datetime->format('H:i:s');
 
                             while ($current_datetime->getTimestamp() < $end) {
-                                $occurrence_start = strtotime(
-                                    date("Y-m-{$dotm} {$time}", $current_datetime->getTimestamp()));
+
+                                $occurrence_start_date_time = new \DateTime();
+                                $occurrence_start_date_time->setTimezone($this->getTimezone());
+                                $occurrence_start_date_time->setTimestamp($current_datetime->getTimestamp());
+                                $occurrence_start = $occurrence_start_date_time->format("Y-m-{$dotm} {$time}");
+
+                                $occurrence_start = new \DateTime($occurrence_start, $this->getTimezone());
+                                $occurrence_start = $occurrence_start->getTimestamp();
+
                                 if ($occurrence_start && $occurrence_start >= $start && $occurrence_start <= $end) {
                                     $occurrences[] = array(
                                         $occurrence_start,
@@ -736,13 +842,26 @@ abstract class AbstractRepetition implements RepetitionInterface
 
                             while ($current_datetime->getTimestamp() < $end) {
                                 $occurrence_start = $current_datetime->getTimestamp();
+
+                                $occurrence_start_date_time1 = new \DateTime();
+                                $occurrence_start_date_time1->setTimestamp($occurrence_start);
+                                $occurrence_start_date_time1->setTimezone($this->getTimezone());
+                                $date1 = $occurrence_start_date_time1->format('F Y');
+
+                                $occurrence_start_date_time2 = new \DateTime();
+                                $occurrence_start_date_time2->setTimestamp($occurrence_start);
+                                $occurrence_start_date_time2->setTimezone($this->getTimezone());
+                                $date2 = $occurrence_start_date_time2->format('Last ' . $weekday . ' of ' . $date1);
+
+                                $occurrence_start_date_time3 = new \DateTime($date2, $this->getTimezone());
+
                                 $occurrence_start = strtotime(
-                                    date('Y-m-d ',
-                                        strtotime('Last ' . $weekday . ' of ' . date('F Y', $occurrence_start))) .
-                                    date('H:i:s', $repetition_start));
+                                    $occurrence_start_date_time3->format('Y-m-d ') .
+                                    $repetition_start_datetime->format('H:i:s')
+                                );
 
                                 if ($occurrence_start >= $start && $occurrence_start <= $end) {
-                                    if (date('m', $occurrence_start) === date('m', $current_datetime->getTimestamp())) {
+                                    if ($repetition_start_datetime->format('m') === $current_datetime->format('m')) {
                                         $occurrences[] = array(
                                             $occurrence_start,
                                             $occurrence_start + $repetition_end - $repetition_start,
