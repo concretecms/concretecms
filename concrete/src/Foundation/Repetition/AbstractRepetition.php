@@ -665,11 +665,21 @@ abstract class AbstractRepetition implements RepetitionInterface
                     }
 
                     $day_difference = $today - $repetition_day;
-                    $current_date = strtotime("+{$day_difference} days", $repetition_start);
 
-                    while ($current_date < $end) {
-                        $occurrences[] = array($current_date, $current_date + $repetition_end - $repetition_start);
-                        $current_date = strtotime("+{$repetition_num} days", $current_date);
+                    $current_date = new \DateTime();
+                    $current_date->setTimezone($this->getTimezone());
+                    $current_date->setTimestamp($repetition_start);
+                    $current_date->modify("+{$day_difference} days");
+                    $current_date_timestamp = $current_date->getTimestamp();
+
+                    while ($current_date_timestamp < $end) {
+                        $occurrences[] = array(
+                            $current_date_timestamp,
+                            $current_date_timestamp + $repetition_end - $repetition_start
+                        );
+
+                        $current_date->modify("+{$repetition_num} days");
+                        $current_date_timestamp = $current_date->getTimestamp();
                     }
 
                     break;

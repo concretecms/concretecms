@@ -129,6 +129,40 @@ class RepetitionTimezoneTest extends \PHPUnit_Framework_TestCase
         $this->resetTimezone($old);
     }
 
+    public function testDailyDST()
+    {
+        $old = $this->setTimezone('GMT');
+
+        $repetition = new TestRepetition('America/Los_Angeles');
+        $repetition->setStartDate('2017-03-09 8:00:00');
+        $repetition->setEndDate('2017-03-09 8:00:00'); // 8 PM - 10 PM
+        $repetition->setRepeatPeriod(TestRepetition::REPEAT_DAILY);
+        $repetition->setRepeatEveryNum(1);
+        $repetition->setRepeatPeriodEnd('2017-03-28');
+        $start_time = $repetition->getStartDateTimestamp();
+
+        $end_date_time = new \DateTime('2022-04-25', $repetition->getTimezone());
+        $end_time = $end_date_time->getTimestamp();
+
+        $this->assertEquals(1489075200, $repetition->getStartDateTimestamp());
+
+        $occurrences = $repetition->activeRangesBetween($start_time, $end_time);
+        $this->assertEquals(20, count($occurrences));
+
+        $this->assertEquals(1489075200, $occurrences[0][0]);
+        $this->assertEquals(1489075200, $occurrences[0][1]);
+        $this->assertEquals(1489161600, $occurrences[1][0]);
+        $this->assertEquals(1489161600, $occurrences[1][1]);
+        $this->assertEquals(1489248000, $occurrences[2][0]);
+        $this->assertEquals(1489248000, $occurrences[2][1]);
+        $this->assertEquals(1489330800, $occurrences[3][0]);
+        $this->assertEquals(1489330800, $occurrences[3][1]);
+        $this->assertEquals(1489417200, $occurrences[4][0]);
+        $this->assertEquals(1489417200, $occurrences[4][1]);
+
+        $this->resetTimezone($old);
+    }
+
     public function testWeekly()
     {
         $old = $this->setTimezone('Europe/Paris');
@@ -235,8 +269,8 @@ class RepetitionTimezoneTest extends \PHPUnit_Framework_TestCase
         $old = $this->setTimezone('GMT');
 
         $repetition = new TestRepetition('America/Chicago');
-        $repetition->setStartDate('2017-06-07 18:30:00'); // every first wednesday
-        $repetition->setEndDate('2017-06-07 20:00:00');
+        $repetition->setStartDate('2017-03-08 18:30:00'); // every second wednesday
+        $repetition->setEndDate('2017-03-08 20:00:00');
         $repetition->setRepeatPeriodWeekDays([3]); // every wednesday
         $repetition->setRepeatPeriod(TestRepetition::REPEAT_MONTHLY);
         $repetition->setRepeatMonthBy(TestRepetition::MONTHLY_REPEAT_WEEKLY); // Boxing every Wednesday
@@ -246,14 +280,16 @@ class RepetitionTimezoneTest extends \PHPUnit_Framework_TestCase
         $end_date_time = new \DateTime('2018-05-07', $repetition->getTimezone());
         $end_time = $end_date_time->getTimestamp();
 
-        $this->assertEquals(1496878200, $repetition->getStartDateTimestamp());
+        $this->assertEquals(1489019400, $repetition->getStartDateTimestamp());
 
         $occurrences = $repetition->activeRangesBetween($start_time, $end_time);
 
-        $this->assertEquals(1496878200, $occurrences[0][0]);
-        $this->assertEquals(1496883600, $occurrences[0][1]);
+        $this->assertEquals(1489019400, $occurrences[0][0]);
+        $this->assertEquals(1489024800, $occurrences[0][1]);
+        $this->assertEquals(1492039800, $occurrences[1][0]);
+        $this->assertEquals(1492045200, $occurrences[1][1]);
 
-        $this->assertEquals(12, count($occurrences));
+        $this->assertEquals(14, count($occurrences));
 
         $this->resetTimezone($old);
     }
