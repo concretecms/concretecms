@@ -149,7 +149,6 @@ class RepetitionTimezoneTest extends \PHPUnit_Framework_TestCase
 
         $occurrences = $repetition->activeRangesBetween($start_time, $end_time);
         $this->assertEquals(19, count($occurrences));
-        $this->resetTimezone($old);
 
         $this->assertEquals(1488603600, $occurrences[0][0]);
         $this->assertEquals(1488621600, $occurrences[0][1]);
@@ -157,6 +156,47 @@ class RepetitionTimezoneTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1491037200, $occurrences[4][1]);
         $this->assertEquals(1499486400, $occurrences[18][0]);
         $this->assertEquals(1499504400, $occurrences[18][1]);
+
+        $this->resetTimezone($old);
+    }
+
+    public function testWeeklyOverDST()
+    {
+        $old = $this->setTimezone('GMT');
+
+        $repetition = new TestRepetition('America/Los_Angeles');
+        $repetition->setStartDate('2016-11-15 16:00:00');
+        $repetition->setEndDate('2016-11-15 13:00:00');
+        $repetition->setRepeatPeriod(TestRepetition::REPEAT_WEEKLY);
+        $repetition->setRepeatEveryNum(1);
+        $repetition->setRepeatPeriodWeekDays([2]);
+        $repetition->setRepeatPeriodEnd('2017-06-06');
+
+        $start_time = $repetition->getStartDateTimestamp();
+        $end_date_time = new \DateTime('2022-04-25', $repetition->getTimezone());
+        $end_time = $end_date_time->getTimestamp();
+
+        $this->assertEquals(1479254400, $repetition->getStartDateTimestamp());
+
+        $occurrences = $repetition->activeRangesBetween($start_time, $end_time);
+
+        $this->assertEquals(1479254400, $occurrences[0][0]);
+        $this->assertEquals(1479243600, $occurrences[0][1]);
+
+        $this->assertEquals(1484092800, $occurrences[8][0]);
+        $this->assertEquals(1484082000, $occurrences[8][1]);
+        $this->assertEquals(1487721600, $occurrences[14][0]);
+        $this->assertEquals(1487710800, $occurrences[14][1]);
+        $this->assertEquals(1488931200, $occurrences[16][0]);
+        $this->assertEquals(1488920400, $occurrences[16][1]);
+        $this->assertEquals(1489532400, $occurrences[17][0]);
+        $this->assertEquals(1489521600, $occurrences[17][1]);
+        $this->assertEquals(1496790000, $occurrences[29][0]);
+        $this->assertEquals(1496779200, $occurrences[29][1]);
+
+        $this->assertEquals(30, count($occurrences));
+        $this->resetTimezone($old);
+
     }
 
     public function testMonthlyFirstByDate()

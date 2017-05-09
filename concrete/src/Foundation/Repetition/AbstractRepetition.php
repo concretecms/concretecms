@@ -696,11 +696,17 @@ abstract class AbstractRepetition implements RepetitionInterface
                         $start_time->format('Y-m-d') . ' ' . $repetition_start_time->format('H:i:s'),
                         $this->getTimezone()
                     );
-                    $current_date = $current_date->getTimestamp();
+                    $current_date_timestamp = $current_date->getTimestamp();
 
-                    while ($current_date < $end) {
+                    while ($current_date_timestamp < $end) {
                         foreach ($this->getRepeatPeriodWeekDays() as $day) {
-                            $day_of_the_week = strtotime("+{$day} days", $current_date);
+
+                            $ts = new \DateTime();
+                            $ts->setTimestamp($current_date_timestamp);
+                            $ts->setTimezone($this->getTimezone());
+                            $ts->modify("+{$day} days");
+                            $day_of_the_week = $ts->getTimestamp();
+
                             if ($day_of_the_week >= $start && $day_of_the_week <= $end) {
                                 $occurrences[] = array(
                                     $day_of_the_week,
@@ -709,7 +715,8 @@ abstract class AbstractRepetition implements RepetitionInterface
                             }
                         }
 
-                        $current_date = strtotime("+{$repetition_num} weeks", $current_date);
+                        $current_date->modify("+{$repetition_num} weeks");
+                        $current_date_timestamp = $current_date->getTimestamp();
                     }
 
                     break;
