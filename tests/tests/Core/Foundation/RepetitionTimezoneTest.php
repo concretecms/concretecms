@@ -55,6 +55,19 @@ class RepetitionTimezoneTest extends \PHPUnit_Framework_TestCase
     }
 
 
+    protected function generateInitialOccurrence($repetition)
+    {
+        $initial_occurrence_time = (new \DateTime($repetition->getStartDate(), $repetition->getTimezone()))
+            ->getTimestamp();
+        if ($repetition->getEndDate()) {
+            $initial_occurrence_time_end = (new \DateTime($repetition->getEndDate(), $repetition->getTimezone()))
+                ->getTimestamp();
+        } else {
+            $initial_occurrence_time_end = $initial_occurrence_time;
+        }
+        return array($initial_occurrence_time, $initial_occurrence_time_end);
+    }
+
     public function testSingleOccurrence()
     {
         $old = $this->setTimezone('America/Los_Angeles');
@@ -71,21 +84,42 @@ class RepetitionTimezoneTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(1501603200, $start_time);
 
-        $initial_occurrence_time = $this->dateService->toDateTime($repetition->getStartDate())->getTimestamp();
-        if ($repetition->getEndDate()) {
-            $initial_occurrence_time_end = $this->dateService->toDateTime($repetition->getEndDate())->getTimestamp();
-        } else {
-            $initial_occurrence_time_end = $initial_occurrence_time;
-        }
+        $initial_occurrence = $this->generateInitialOccurrence($repetition);
 
         $occurrences = $repetition->activeRangesBetween($start_time, $end_time);
 
         $this->assertEquals(1, count($occurrences));
-        $this->assertEquals($occurrences[0][0], $initial_occurrence_time);
-        $this->assertEquals($occurrences[0][1], $initial_occurrence_time_end);
+        $this->assertEquals($occurrences[0][0], $initial_occurrence[0]);
+        $this->assertEquals($occurrences[0][1], $initial_occurrence[1]);
 
         $this->resetTimezone($old);
     }
+
+    public function testSingleOccurrence2()
+    {
+        $old = $this->setTimezone('America/Los_Angeles');
+
+        $repetition = new TestRepetition('America/Chicago');
+        $repetition->setStartDate('2017-05-31 20:00:00');
+        $repetition->setEndDate('2017-05-31 21:00:00');
+        $start = $repetition->getStartDateTimestamp() - 1;
+        $datetime = new \DateTime('2022-05-31', $repetition->getTimezone());
+        $end = $datetime->getTimestamp();
+
+        $initial_occurrence = $this->generateInitialOccurrence($repetition);
+        $occurrences = $repetition->activeRangesBetween($start, $end);
+
+        $this->assertEquals(1, count($occurrences));
+
+        $this->assertEquals(1496278800, $occurrences[0][0]);
+        $this->assertEquals(1496282400, $occurrences[0][1]);
+
+        $this->assertEquals($occurrences[0][0], $initial_occurrence[0]);
+        $this->assertEquals($occurrences[0][1], $initial_occurrence[1]);
+
+        $this->resetTimezone($old);
+    }
+
 
     public function testSingleOccurrenceDifferentZone()
     {
