@@ -1,6 +1,8 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die('Access Denied.');
 
-$helperFile = Loader::helper('concrete/file');
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+$helperFile = $app->make('helper/concrete/file');
+
 if ($controller->getTask() == 'add') {
     $enablePosting = 1;
     $paginate = 1;
@@ -54,14 +56,12 @@ if (!$dateFormat) {
     <div class="form-group">
         <label class="control-label"><?=t('Ordering')?></label>
         <?=$form->select('orderBy', array('date_asc' => t('Earliest First'), 'date_desc' => t('Most Recent First'), 'rating' => t('Highest Rated')), $orderBy)?>
-
         <div class="checkbox">
             <label>
                 <?=$form->checkbox('enableOrdering', 1, $enableOrdering)?>
                 <?=t('Display Ordering Option in Page')?>
             </label>
         </div>
-
     </div>
     <div class="form-group">
         <label class="control-label"><?=t('Rating')?></label>
@@ -160,6 +160,7 @@ if (!$dateFormat) {
         </div>
     </div>
 </fieldset>
+
 <fieldset>
     <div class="form-group">
         <label class="control-label"><?=t('Date Format')?></label>
@@ -187,6 +188,7 @@ if (!$dateFormat) {
         </div>
     </div>
 </fieldset>
+
 <fieldset>
     <legend><?=t('File Attachment Management')?></legend>
     <p class="text-muted"><?php echo t('Note: Entering values here will override global conversations file attachment settings for this block if you enable Attachment Overrides for this Conversation.') ?></p>
@@ -234,8 +236,6 @@ if (!$dateFormat) {
             <?=$form->textarea('fileExtensions', $fileExtensions)?>
         </div>
     </div>
-
-
 </fieldset>
 
 <fieldset>
@@ -249,7 +249,7 @@ if (!$dateFormat) {
     </div>
     <div class="form-group notification-overrides">
         <label class="control-label"><?=t('Users To Receive Conversation Notifications')?></label>
-        <?=Core::make("helper/form/user_selector")->selectMultipleUsers('notificationUsers', $notificationUsers)?>
+        <?=$app->make("helper/form/user_selector")->selectMultipleUsers('notificationUsers', $notificationUsers)?>
     </div>
     <div class="form-group notification-overrides">
         <label class="control-label"><?=t('Subscribe Option')?></label>
@@ -276,6 +276,7 @@ $(function() {
             }
         }).trigger('change');
     });
+
     $('input[name=paginate]').on('change', function() {
         var pg = $('input[name=paginate]:checked');
         if (pg.val() == 1) {
@@ -284,6 +285,7 @@ $(function() {
             $('div[data-row=itemsPerPage]').hide();
         }
     }).trigger('change');
+
     $('input[name=dateFormat]').on('change', function() {
         var dateFormat = $('input[name=dateFormat]:checked');
         if (dateFormat.val() == 'custom') {
@@ -292,6 +294,7 @@ $(function() {
             $('div[data-row=customDateFormat]').hide();
         }
     }).trigger('change');
+
     $('input[name=attachmentOverridesEnabled]').on('change', function() {
         var ao = $('input[name=attachmentOverridesEnabled]:checked');
         if (ao.val() == 1) {
@@ -302,6 +305,7 @@ $(function() {
             $('.attachment-overrides label').addClass('text-muted');
         }
     }).trigger('change');
+
     $('input[name=notificationOverridesEnabled]').on('change', function() {
         var ao = $('input[name=notificationOverridesEnabled]:checked');
         if (ao.val() == 1) {
