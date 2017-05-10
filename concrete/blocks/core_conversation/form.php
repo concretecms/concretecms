@@ -9,6 +9,7 @@ if ($controller->getTask() == 'add') {
     $displayMode = 'threaded';
     $enableOrdering = 1;
     $enableCommentRating = 1;
+    $enableTopCommentReviews = 0;
     $displayPostingForm = 'top';
     $addMessageLabel = t('Add Message');
     $attachmentOverridesEnabled = 0;
@@ -83,7 +84,7 @@ if (!$dateFormat) {
     if (isset($reviewAttributeKeys)) {
         ?>
         <div class="form-group" data-unhide="[name=enableTopCommentReviews]">
-            <label class="control-label"><?= t('Aggregate ratings by attribute') ?></label>
+            <label class="control-label"><?= t('Aggregate Ratings by Attribute') ?></label>
             <div class="checkbox">
                 <label>
                     <?php
