@@ -28,8 +28,6 @@ class CkeditorEditor implements EditorInterface
 
     public function __construct(Repository $config, PluginManager $pluginManager, $styles, $options)
     {
-		//echo '<pre>'.print_r($options,1).'</pre>';
-		//die();
         $this->assets = ResponseAssetGroup::get();
         $this->pluginManager = $pluginManager;
         $this->config = $config;
