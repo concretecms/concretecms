@@ -52,22 +52,22 @@ if (is_object($basePostPage) && $basePostPage->isError()) {
             <label for="baseSearchPathOther">
                 <input type="radio" name="baseSearchPath" id="baseSearchPathOther" value="OTHER" onchange="searchBlock.pathSelector(this)" <?=($searchWithinOther) ? 'checked' : ''?>>
                 <?=t('Beneath Another Page')?>
-                <div id="basePathSelector" style="display:<?=($searchWithinOther) ? 'block' : 'none'?>" >
-                    <?php
-                    $select_page = $app->make('helper/form/page_selector');
-                    if ($searchWithinOther) {
-                        $cpo = Page::getByPath($baseSearchPath);
-                        if (is_object($cpo)) {
-                            echo $select_page->selectPage('searchUnderCID', $cpo->getCollectionID());
-                        } else {
-                            echo $select_page->selectPage('searchUnderCID');
-                        }
-                    } else {
-                        echo $select_page->selectPage('searchUnderCID');
-                    }
-                    ?>
-                </div>
             </label>
+        </div>
+        <div id="basePathSelector" style="display:<?=($searchWithinOther) ? 'block' : 'none'?>" >
+            <?php
+            $select_page = $app->make('helper/form/page_selector');
+            if ($searchWithinOther) {
+                $cpo = Page::getByPath($baseSearchPath);
+                if (is_object($cpo)) {
+                    echo $select_page->selectPage('searchUnderCID', $cpo->getCollectionID());
+                } else {
+                    echo $select_page->selectPage('searchUnderCID');
+                }
+            } else {
+                echo $select_page->selectPage('searchUnderCID');
+            }
+            ?>
         </div>
     </div>
     <div class='form-group'>
