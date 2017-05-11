@@ -447,7 +447,13 @@ class Version extends Object implements PermissionObjectInterface, AttributeObje
         $db->executeQuery($q2, $v2);
 
         // next, we rescan our collection paths for the particular collection, but only if this isn't a generated collection
-        if ((($oldHandle != $newHandle) || $oldHandle == '') && (!$c->isGeneratedCollection())) {
+        $shouldRescanCollectionPath = true;
+        if ($c->isGeneratedCollection()) {
+            $shouldRescanCollectionPath = false;
+        } elseif ($oldHandle == $newHandle) {
+            $shouldRescanCollectionPath = false;
+        }
+        if ($shouldRescanCollectionPath) {
 
             $c->rescanCollectionPath();
 
