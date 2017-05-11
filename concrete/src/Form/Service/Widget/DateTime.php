@@ -89,11 +89,13 @@ class DateTime
      * @param bool $calendarAutoStart Set to false to avoid initializing the Javascript calendar
      * @param string $classes A list of space-separated classes to add to the ui-datepicker-div container
      * @param int $timeResolution The time resolution in seconds (60 means we won't ask seconds)
+     * @param array $datePickerOptions datepicker properties, see jquery-ui datepicker docs
      *
      * @return string
      */
-    public function datetime($field, $value = null, $includeActivation = false, $calendarAutoStart = true, $classes = null, $timeResolution = 60)
+    public function datetime($field, $value = null, $includeActivation = false, $calendarAutoStart = true, $classes = null, $timeResolution = 60, $datePickerOptions = array())
     {
+        $datePickerOptions = array('changeYear' => false, 'defaultDate' => '11/23/71 21:00');
         $app = Application::getFacadeApplication();
         $dh = $app->make('helper/date');
         /* @var \Concrete\Core\Localization\Service\Date $dh */
@@ -177,6 +179,17 @@ class DateTime
         }
         if ($stepHours === 0) {
             $stepHours = 1;
+        }
+
+        // Create datepicker properties
+        $dp_options = '';
+        foreach ($datePickerOptions as $key => $value) {
+            if (is_bool($value)) {
+                $val = ($value) ? ': true,' : ': false,';
+                $dp_options .= $key . $val;
+            } else {
+                $dp_options .= $key . ': ' . '"' . $value . '",';
+            }
         }
 
         // Build HTML
@@ -294,6 +307,7 @@ class DateTime
             $html .= <<<EOT
 <script type="text/javascript">
 $(function() {
+    var gebi = new Date(1971, 11, 23);
   $('#{$id}_dt_pub').datepicker({
     dateFormat: $dateFormat,
     altFormat: 'yy-mm-dd',
@@ -301,6 +315,7 @@ $(function() {
     changeYear: true,
     showAnim: 'fadeIn',
     yearRange: 'c-100:c+10',
+    $dp_options
     $beforeShow
     onClose: function(dateText, inst) {
       if(!dateText) {
@@ -339,8 +354,11 @@ EOT;
      * @param string $field The field name (will be used as $field parameter in the translate method)
      * @param \DateTime|string $value The initial value
      * @param bool $calendarAutoStart Set to false to avoid initializing the Javascript calendar
+     * @param array $datePickerOptions datepicker properties, see jquery-ui datepicker docs
+     *
+     * @return string
      */
-    public function date($field, $value = null, $calendarAutoStart = true)
+    public function date($field, $value = null, $calendarAutoStart = true, $datePickerOptions = array())
     {
         $app = Application::getFacadeApplication();
         $dh = $app->make('helper/date');
@@ -350,6 +368,17 @@ EOT;
 
         // Calculate the field names
         $id = trim(preg_replace('/[^0-9A-Za-z-]+/', '_', $field), '_');
+
+        // Create datepicker properties
+        $dp_options = '';
+        foreach ($datePickerOptions as $key => $value) {
+            if (is_bool($value)) {
+                $val = ($value) ? ': true,' : ': false,';
+                $dp_options .= $key . $val;
+            } else {
+                $dp_options .= $key . ': ' . '"' . $value . '",';
+            }
+        }
 
         // Set the initial date/time value
         $dateTime = null;
@@ -398,6 +427,7 @@ $(function() {
     changeYear: true,
     showAnim: 'fadeIn',
     yearRange: 'c-100:c+10',
+    $dp_options
     onClose: function(dateText, inst) {
       if(!dateText) {
         $(inst.settings.altField).val('');
