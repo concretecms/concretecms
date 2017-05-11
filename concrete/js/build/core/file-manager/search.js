@@ -606,7 +606,7 @@
             url: CCM_DISPATCHER_FILENAME + '/ccm/system/file/get_json',
             data: {'fID': fID},
             error: function(r) {
-                ConcreteAlert.dialog('Error', r.responseText);
+                ConcreteAlert.dialog(ccmi18n.error, r.responseText);
             },
             success: function(r) {
                 callback(r);

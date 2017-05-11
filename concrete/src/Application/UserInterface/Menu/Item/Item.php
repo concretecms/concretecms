@@ -7,7 +7,7 @@ class Item implements ItemInterface
 {
     protected $controller;
 
-    protected $linkAttributes = array();
+    protected $linkAttributes = [];
 
     public function __construct($handle, $pkgHandle = false)
     {
@@ -17,12 +17,12 @@ class Item implements ItemInterface
 
     public function getHandle()
     {
-        return $this->handle;
+        return isset($this->handle) ? $this->handle : null;
     }
 
     public function getLabel()
     {
-        return $this->label;
+        return isset($this->label) ? $this->label : null;
     }
 
     public function setLabel($label)
@@ -32,12 +32,12 @@ class Item implements ItemInterface
 
     public function getPosition()
     {
-        return $this->position;
+        return isset($this->position) ? $this->position : null;
     }
 
     public function getLinkAttributes()
     {
-        return $this->linkAttributes;
+        return isset($this->linkAttributes) ? $this->linkAttributes : null;
     }
 
     public function setLinkAttributes($linkAttributes)
@@ -52,7 +52,7 @@ class Item implements ItemInterface
 
     public function getLink()
     {
-        return $this->href;
+        return isset($this->href) ? $this->href : null;
     }
 
     public function setIcon($icon)
@@ -62,7 +62,7 @@ class Item implements ItemInterface
 
     public function getIcon()
     {
-        return $this->icon;
+        return isset($this->icon) ? $this->icon : null;
     }
 
     public function setPosition($position)
@@ -72,28 +72,27 @@ class Item implements ItemInterface
 
     public function getPackageHandle()
     {
-        return $this->pkgHandle;
+        return isset($this->pkgHandle) ? $this->pkgHandle : null;
     }
 
     public function getPackageObject()
     {
-        return Package::getByHandle($this->pkgHandle);
+        return Package::getByHandle($this->getPackageHandle());
     }
 
     public function getController()
     {
-        if (isset($this->controller)) {
-            return $this->controller;
-        } else {
+        if (!isset($this->controller)) {
+            $handle = $this->getHandle();
             $class = overrideable_core_class(
-                'MenuItem\\' . camelcase($this->handle) . '\\Controller',
-                DIRNAME_MENU_ITEMS . '/' . $this->handle . '/' . FILENAME_CONTROLLER,
+                'MenuItem\\' . camelcase($handle) . '\\Controller',
+                DIRNAME_MENU_ITEMS . '/' . $handle . '/' . FILENAME_CONTROLLER,
                 $this->pkgHandle
             );
-            $this->setController(\Core::make($class, array($this)));
-
-            return $this->controller;
+            $this->setController(\Core::make($class, [$this]));
         }
+
+        return $this->controller;
     }
 
     public function setController(ControllerInterface $controller)

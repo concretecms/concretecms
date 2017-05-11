@@ -103,6 +103,9 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
 
     public function getConfigRepository()
     {
+        if (!$this->siteConfig) {
+            $this->updateSiteConfigRepository(\Core::make('config'), $this);
+        }
         return $this->siteConfig;
     }
 

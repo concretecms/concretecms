@@ -126,6 +126,7 @@ var ImageEditor = function (settings) {
     };
     im.saveData = settings.saveData || {};
     im.saveUrl = settings.saveUrl;
+    im.token = settings.token;
     im.width = settings.width;
     im.height = settings.height;
     im.strictSize = typeof settings.strictSize !== 'undefined' ? !!settings.strictSize : settings.saveWidth > 0;
@@ -442,7 +443,8 @@ im.save = function saveImage() {
 
                     $.post(im.saveUrl, _.extend(im.saveData, {
                         fID: im.fileId,
-                        imgData: url
+                        imgData: url,
+                        ccm_token: im.token
                     }), function (res) {
                         $.fn.dialog.hideLoader();
                         var result = JSON.parse(res);

@@ -6,7 +6,13 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="PagePaths")
+ * @ORM\Table(
+ *     name="PagePaths",
+ *     indexes={
+ *     @ORM\Index(name="ppIsCanonical", columns={"ppIsCanonical"}),
+ *     @ORM\Index(name="cID", columns={"cID"})
+ *     }
+ * )
  */
 class PagePath
 {
