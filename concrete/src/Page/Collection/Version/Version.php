@@ -447,14 +447,11 @@ class Version extends Object implements PermissionObjectInterface, AttributeObje
         $db->executeQuery($q2, $v2);
 
         // next, we rescan our collection paths for the particular collection, but only if this isn't a generated collection
-        // I don't know why but this just isn't reliable. It might be a race condition with the cached page objects?
-        /*
-         * if ((($oldHandle != $newHandle) || $oldHandle == '') && (!$c->isGeneratedCollection())) {
-         */
+        if ((($oldHandle != $newHandle) || $oldHandle == '') && (!$c->isGeneratedCollection())) {
 
-        $c->rescanCollectionPath();
+            $c->rescanCollectionPath();
 
-        // }
+        }
 
         // check for related version edits. This only gets applied when we edit global areas.
         $r = $db->executeQuery('select cRelationID, cvRelationID from CollectionVersionRelatedEdits where cID = ? and cvID = ?', array(
