@@ -93,7 +93,7 @@ class DateTime
      *
      * @return string
      */
-    public function datetime($field, $value = null, $includeActivation = false, $calendarAutoStart = true, $classes = null, $timeResolution = 60, $datePickerOptions = array())
+    public function datetime($field, $value = null, $includeActivation = false, $calendarAutoStart = true, $classes = null, $timeResolution = 60, array $datePickerOptions = array())
     {
         $app = Application::getFacadeApplication();
         $dh = $app->make('helper/date');
@@ -345,7 +345,7 @@ EOT;
      *
      * @return string
      */
-    public function date($field, $value = null, $calendarAutoStart = true, $datePickerOptions = array())
+    public function date($field, $value = null, $calendarAutoStart = true, array $datePickerOptions = array())
     {
         $app = Application::getFacadeApplication();
         $dh = $app->make('helper/date');
