@@ -95,7 +95,6 @@ class DateTime
      */
     public function datetime($field, $value = null, $includeActivation = false, $calendarAutoStart = true, $classes = null, $timeResolution = 60, $datePickerOptions = array())
     {
-        $datePickerOptions = array('changeYear' => false, 'defaultDate' => '11/23/71 21:00');
         $app = Application::getFacadeApplication();
         $dh = $app->make('helper/date');
         /* @var \Concrete\Core\Localization\Service\Date $dh */
@@ -182,13 +181,13 @@ class DateTime
         }
 
         // Create datepicker properties
-        $dp_options = '';
+        $dpOptions = '';
         foreach ($datePickerOptions as $key => $value) {
             if (is_bool($value)) {
                 $val = ($value) ? ': true,' : ': false,';
-                $dp_options .= $key . $val;
+                $dpOptions .= $key . $val;
             } else {
-                $dp_options .= $key . ': ' . '"' . $value . '",';
+                $dpOptions .= $key . ': ' . '"' . $value . '",';
             }
         }
 
@@ -307,7 +306,6 @@ class DateTime
             $html .= <<<EOT
 <script type="text/javascript">
 $(function() {
-    var gebi = new Date(1971, 11, 23);
   $('#{$id}_dt_pub').datepicker({
     dateFormat: $dateFormat,
     altFormat: 'yy-mm-dd',
@@ -315,7 +313,7 @@ $(function() {
     changeYear: true,
     showAnim: 'fadeIn',
     yearRange: 'c-100:c+10',
-    $dp_options
+    $dpOptions
     $beforeShow
     onClose: function(dateText, inst) {
       if(!dateText) {
@@ -370,13 +368,13 @@ EOT;
         $id = trim(preg_replace('/[^0-9A-Za-z-]+/', '_', $field), '_');
 
         // Create datepicker properties
-        $dp_options = '';
+        $dpOptions = '';
         foreach ($datePickerOptions as $key => $value) {
             if (is_bool($value)) {
                 $val = ($value) ? ': true,' : ': false,';
-                $dp_options .= $key . $val;
+                $dpOptions .= $key . $val;
             } else {
-                $dp_options .= $key . ': ' . '"' . $value . '",';
+                $dpOptions .= $key . ': ' . '"' . $value . '",';
             }
         }
 
@@ -427,7 +425,7 @@ $(function() {
     changeYear: true,
     showAnim: 'fadeIn',
     yearRange: 'c-100:c+10',
-    $dp_options
+    $dpOptions
     onClose: function(dateText, inst) {
       if(!dateText) {
         $(inst.settings.altField).val('');
