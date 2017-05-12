@@ -179,16 +179,12 @@ class DateTime
         if ($stepHours === 0) {
             $stepHours = 1;
         }
+        $datePickerOptions = array('defaultDate' => '11/23/1971', 'changeYear' => false);
 
         // Create datepicker properties
         $dpOptions = '';
         foreach ($datePickerOptions as $key => $value) {
-            if (is_bool($value)) {
-                $val = ($value) ? ': true,' : ': false,';
-                $dpOptions .= $key . $val;
-            } else {
-                $dpOptions .= $key . ': ' . '"' . $value . '",';
-            }
+            $dpOptions .= $key . ': ' . \Core::make('helper/json')->encode($value) . ',';
         }
 
         // Build HTML
@@ -370,12 +366,7 @@ EOT;
         // Create datepicker properties
         $dpOptions = '';
         foreach ($datePickerOptions as $key => $value) {
-            if (is_bool($value)) {
-                $val = ($value) ? ': true,' : ': false,';
-                $dpOptions .= $key . $val;
-            } else {
-                $dpOptions .= $key . ': ' . '"' . $value . '",';
-            }
+            $dpOptions .= $key . ': ' . \Core::make('helper/json')->encode($value) . ',';
         }
 
         // Set the initial date/time value
