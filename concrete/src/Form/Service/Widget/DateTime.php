@@ -296,7 +296,7 @@ class DateTime
             $html .= <<<EOT
 <script type="text/javascript">
 $(function() {
-  $('#{$id}_dt_pub').datepicker($.extend({$datePickerOptionsAsJSON}, {
+  $('#{$id}_dt_pub').datepicker($.extend({$datePickerOptionsAsJSON}), {
     dateFormat: $dateFormat,
     altFormat: 'yy-mm-dd',
     altField: '#{$id}_dt',
@@ -397,7 +397,7 @@ EOT;
             $html .= <<<EOT
 <script type="text/javascript">
 $(function() {
-  $('#{$id}_pub').datepicker($.extend({$datePickerOptionsAsJSON}, {
+  $('#{$id}_pub').datepicker($.extend({$datePickerOptionsAsJSON}), {
     dateFormat: $dateFormat,
     altFormat: 'yy-mm-dd',
     altField: '#{$id}',
