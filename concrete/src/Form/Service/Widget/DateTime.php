@@ -179,7 +179,6 @@ class DateTime
         if ($stepHours === 0) {
             $stepHours = 1;
         }
-        $datePickerOptions = array('defaultDate' => '11/23/1971', 'changeYear' => false);
 
         // Create datepicker properties
         $dpOptions = '';
