@@ -180,13 +180,8 @@ class DateTime
             $stepHours = 1;
         }
 
-        // Create datepicker properties
-        $dpOptions = '';
-        foreach ($datePickerOptions as $key => $value) {
-            $dpOptions .= $key . ': ' . \Core::make('helper/json')->encode($value) . ',';
-        }
-
         // Build HTML
+        $datePickerOptionsAsJSON = json_encode($datePickerOptions, JSON_FORCE_OBJECT);
         $shownDateFormat = $dh->getPHPDatePattern();
         $disabled = '';
         $html = '<div class="form-inline">';
@@ -301,14 +296,13 @@ class DateTime
             $html .= <<<EOT
 <script type="text/javascript">
 $(function() {
-  $('#{$id}_dt_pub').datepicker({
+  $('#{$id}_dt_pub').datepicker($.extend({$datePickerOptionsAsJSON}, {
     dateFormat: $dateFormat,
     altFormat: 'yy-mm-dd',
     altField: '#{$id}_dt',
     changeYear: true,
     showAnim: 'fadeIn',
     yearRange: 'c-100:c+10',
-    $dpOptions
     $beforeShow
     onClose: function(dateText, inst) {
       if(!dateText) {
@@ -362,12 +356,6 @@ EOT;
         // Calculate the field names
         $id = trim(preg_replace('/[^0-9A-Za-z-]+/', '_', $field), '_');
 
-        // Create datepicker properties
-        $dpOptions = '';
-        foreach ($datePickerOptions as $key => $value) {
-            $dpOptions .= $key . ': ' . \Core::make('helper/json')->encode($value) . ',';
-        }
-
         // Set the initial date/time value
         $dateTime = null;
         $requestValue = $this->translate($field, null, true);
@@ -385,6 +373,7 @@ EOT;
         }
 
         // Build HTML
+        $datePickerOptionsAsJSON = json_encode($datePickerOptions, JSON_FORCE_OBJECT);
         $shownDateFormat = $dh->getPHPDatePattern();
         $html = '<div class="form-inline">';
         $html .= '<span class="ccm-input-date-wrapper" id="' . $id . '_dw">';
@@ -408,14 +397,13 @@ EOT;
             $html .= <<<EOT
 <script type="text/javascript">
 $(function() {
-  $('#{$id}_pub').datepicker({
+  $('#{$id}_pub').datepicker($.extend({$datePickerOptionsAsJSON}, {
     dateFormat: $dateFormat,
     altFormat: 'yy-mm-dd',
     altField: '#{$id}',
     changeYear: true,
     showAnim: 'fadeIn',
     yearRange: 'c-100:c+10',
-    $dpOptions
     onClose: function(dateText, inst) {
       if(!dateText) {
         $(inst.settings.altField).val('');
