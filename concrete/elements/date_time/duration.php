@@ -68,11 +68,14 @@ if (is_object($pd)) {
     $pdStartDate = $pd->getStartDate();
     $pdEndDate = $pd->getEndDate();
 
-    $selectedStartTime = $service->toDateTime($pdStartDate, $timezone)->format('g:ia');
-    $selectedEndTime = $service->toDateTime($pdEndDate, $timezone)->format('g:ia');
+    $pdStartDateDateTime = new DateTime($pdStartDate, new DateTimeZone($timezone));
+    $pdEndDateDateTime = new DateTime($pdEndDate, new DateTimeZone($timezone));
 
-    $pdStartDate = $service->toDateTime($pdStartDate, $timezone)->format('Y-m-d');
-    $pdEndDate = $service->toDateTime($pdEndDate, $timezone)->format('Y-m-d');
+    $selectedStartTime = $pdStartDateDateTime->format('g:ia');
+    $selectedEndTime = $pdEndDateDateTime->format('g:ia');
+
+    $pdStartDate = $pdStartDateDateTime->format('Y-m-d');
+    $pdEndDate = $pdEndDateDateTime->format('Y-m-d');
 
     $pdRepeats = $pd->repeats();
     $pdStartDateAllDay = $pd->isStartDateAllDay();
