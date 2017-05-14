@@ -2,6 +2,7 @@
 namespace Concrete\Block\Faq;
 
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Editor\LinkAbstractor;
 
 class Controller extends BlockController
 {
@@ -30,7 +31,7 @@ class Controller extends BlockController
         $db = $this->app->make('database')->connection();
         $v = [$this->bID];
         $q = 'SELECT * FROM btFaqEntries WHERE bID = ?';
-        $r = $db->query($q, $v);
+        $r = $db->executeQuery($q, $v);
         foreach ($r as $row) {
             $content .= $row['title'] . ' ' . $row['linkTitle'] . ' ' . $row['description'];
         }
@@ -41,15 +42,22 @@ class Controller extends BlockController
     public function edit()
     {
         $db = $this->app->make('database')->connection();
-        $query = $db->GetAll('SELECT * FROM btFaqEntries WHERE bID = ? ORDER BY sortOrder', [$this->bID]);
+        $query = $db->fetchAll('SELECT * FROM btFaqEntries WHERE bID = ? ORDER BY sortOrder', [$this->bID]);
         $this->set('rows', $query);
     }
 
     public function view()
     {
         $db = $this->app->make('database')->connection();
-        $query = $db->GetAll('SELECT * FROM btFaqEntries WHERE bID = ? ORDER BY sortOrder', [$this->bID]);
-        $this->set('rows', $query);
+        $query = $db->fetchAll('SELECT * FROM btFaqEntries WHERE bID = ? ORDER BY sortOrder', [$this->bID]);
+
+        $rows = [];
+        foreach ($query as $row) {
+            $row['description'] = LinkAbstractor::translateFrom($row['description']);
+            $rows[] = $row;
+        }
+
+        $this->set('rows', $rows);
     }
 
     public function duplicate($newBID)
@@ -57,9 +65,9 @@ class Controller extends BlockController
         $db = $this->app->make('database')->connection();
         $v = [$this->bID];
         $q = 'SELECT * FROM btFaqEntries WHERE bID = ?';
-        $r = $db->query($q, $v);
+        $r = $db->executeQuery($q, $v);
         foreach ($r as $row) {
-            $db->execute(
+            $db->executeQuery(
                 'INSERT INTO btFaqEntries (bID, title, linkTitle, description, sortOrder) VALUES(?,?,?,?,?)',
                 [
                     $newBID,
@@ -75,20 +83,24 @@ class Controller extends BlockController
     public function delete()
     {
         $db = $this->app->make('database')->connection();
-        $db->execute('DELETE FROM btFaqEntries WHERE bID = ?', [$this->bID]);
+        $db->executeQuery('DELETE FROM btFaqEntries WHERE bID = ?', [$this->bID]);
         parent::delete();
     }
 
     public function save($args)
     {
         $db = $this->app->make('database')->connection();
-        $db->execute('DELETE FROM btFaqEntries WHERE bID = ?', [$this->bID]);
+        $db->executeQuery('DELETE FROM btFaqEntries WHERE bID = ?', [$this->bID]);
+        parent::save($args);
         $count = isset($args['sortOrder']) ? count($args['sortOrder']) : 0;
 
         $i = 0;
-        parent::save($args);
         while ($i < $count) {
-            $db->execute(
+            if (isset($args['description'][$i])) {
+                $args['description'][$i] = LinkAbstractor::translateTo($args['description'][$i]);
+            }
+
+            $db->executeQuery(
                 'INSERT INTO btFaqEntries (bID, title, linkTitle, description, sortOrder) VALUES(?,?,?,?,?)',
                 [
                     $this->bID,
