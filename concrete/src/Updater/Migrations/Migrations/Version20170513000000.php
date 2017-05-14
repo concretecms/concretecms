@@ -14,7 +14,7 @@ class Version20170513000000 extends AbstractMigration
         $orphan_files = $this->connection->executeQuery($query);
         while ($fID = $orphan_files->fetchColumn()) {
             $f = File::getByID($fID);
-            if (is_object($f)) {
+            if ($f !== null) {
                 $f->delete();
             }
         }
