@@ -225,7 +225,11 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
      */
     public function getThumbnail($obj, $maxWidth, $maxHeight, $crop = false)
     {
-        $storage = $obj->getFileStorageLocationObject();
+        if ($obj instanceof File) {
+            $storage = $obj->getFileStorageLocationObject();
+        } else {
+            $storage = $this->getStorageLocation();
+        }
         $this->setStorageLocation($storage);
         $filesystem = $storage->getFileSystemObject();
         $configuration = $storage->getConfigurationObject();
@@ -244,7 +248,9 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
             }
         } else {
             $extension = $fh->getExtension($obj);
-            $baseFilename = md5(implode(':', [$obj, $maxWidth, $maxHeight, $crop, filemtime($obj)]));
+            // We hide the warning from filemtime() because it will only throw the warning on remote files, and we
+            // don't care too much about that
+            $baseFilename = md5(implode(':', [$obj, $maxWidth, $maxHeight, $crop, @filemtime($obj)]));
         }
 
         $thumbnailsFormat = $this->getThumbnailsFormat();
