@@ -553,6 +553,14 @@ class StartingPointPackage extends BasePackage
         $register = Page::getByPath('/register', "RECENT");
         $register->assignPermissions($g1, ['view_page']);
 
+        // Page Forbidden
+        $page_forbidden = Page::getByPath('/page_forbidden', "RECENT");
+        $page_forbidden->assignPermissions($g1, ['view_page']);
+
+        // Page Not Found
+        $page_not_found = Page::getByPath('/page_not_found', "RECENT");
+        $page_not_found->assignPermissions($g1, ['view_page']);
+
         // dashboard
         $dashboard = Page::getByPath('/dashboard', "RECENT");
         $dashboard->assignPermissions($g3, ['view_page']);
