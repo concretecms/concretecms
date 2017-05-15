@@ -3,10 +3,11 @@ namespace Concrete\Controller\SinglePage;
 
 use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Authentication\AuthenticationTypeFailureException;
+use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\Desktop\DesktopList;
-use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Routing\RedirectResponse;
 use Concrete\Core\Localization\Localization;
+use Concrete\Core\Validation\CSRF\Token;
 use Page;
 use PageController;
 use User;
@@ -393,16 +394,24 @@ class Login extends PageController
 
     /**
      * @param $token
-     * @return RedirectResponse
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function do_logout($token = false)
     {
-        if ($this->app->make('token')->validate('do_logout', $token)) {
-            $u = new User();
-            $u->logout();
-            $r = Redirect::to('/');
-            return $r;
+        /** @var ResponseFactoryInterface $factory */
+        $factory = $this->app->make(ResponseFactoryInterface::class);
+        /** @var Token $valt */
+        $valt = $this->app->make('token');
+
+        if ($valt->validate('do_logout', $token)) {
+            // Resolve the current logged in user and log them out
+            $u = $this->app->make(User::class)->logout();
+
+            // Return a new redirect to the homepage.
+            return $factory->redirect('/');
         }
+
+        return $factory->error($valt->getErrorMessage());
     }
 
     public function forward($cID = 0)
