@@ -18,6 +18,7 @@ use Concrete\Core\File\Menu;
 use Concrete\Core\File\Type\TypeList as FileTypeList;
 use Concrete\Core\Http\FlysystemFileResponse;
 use Concrete\Core\Support\Facade\Application;
+use Imagine\Exception\NotSupportedException;
 use Imagine\Gd\Image;
 use Imagine\Image\Metadata\ExifMetadataReader;
 use League\Flysystem\AdapterInterface;

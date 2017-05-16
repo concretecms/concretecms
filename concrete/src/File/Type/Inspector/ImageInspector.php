@@ -5,8 +5,6 @@ use Concrete\Core\Entity\File\Version;
 use Image;
 use FileAttributeKey;
 use Core;
-use Imagine\Exception\NotSupportedException;
-use Imagine\Image\Metadata\ExifMetadataReader;
 
 class ImageInspector extends Inspector
 {
