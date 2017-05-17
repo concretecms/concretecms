@@ -897,4 +897,61 @@ abstract class AbstractRepetition implements RepetitionInterface
 
         return $fromUTC->diff($toUTC);
     }
+
+    public function jsonSerialize()
+    {
+        $repeatPeriod = null;
+        $pdRepeatPeriodDaysEvery = 0;
+        $pdRepeatPeriodWeeksEvery = 0;
+        $pdRepeatPeriodMonthsEvery = 0;
+        if ($this->getRepeatPeriod() == self::REPEAT_DAILY) {
+            $repeatPeriod = 'daily';
+            $pdRepeatPeriodDaysEvery = $this->getRepeatEveryNum();
+        } else if ($this->getRepeatPeriod() == self::REPEAT_WEEKLY) {
+            $repeatPeriod = 'weekly';
+            $pdRepeatPeriodWeeksEvery = $this->getRepeatEveryNum();
+        } else if ($this->getRepeatPeriod() == self::REPEAT_MONTHLY) {
+            $repeatPeriod = 'monthly';
+            $pdRepeatPeriodMonthsEvery = $this->getRepeatEveryNum();
+        }
+
+        $pdRepeatPeriodMonthsRepeatBy = null;
+        $rmb = $this->getRepeatMonthBy();
+        if ($rmb) {
+            if ($rmb === self::MONTHLY_REPEAT_MONTHLY) {
+                $pdRepeatPeriodMonthsRepeatBy = 'month';
+            } elseif ($rmb === self::MONTHLY_REPEAT_WEEKLY) {
+                $pdRepeatPeriodMonthsRepeatBy = 'week';
+            } elseif ($rmb === self::MONTHLY_REPEAT_LAST_WEEKDAY) {
+                $pdRepeatPeriodMonthsRepeatBy = 'lastweekday';
+            }
+        }
+
+        $pdEndRepeatDate = null;
+        $pdEndRepeatDateSpecific = $this->getRepeatPeriodEnd();
+        if ($pdEndRepeatDateSpecific) {
+            $pdEndRepeatDate = 'date';
+        }
+        $repetitionID = 0;
+        if ($this->getID()) {
+            $repetitionID = $this->getID();
+        }
+        return [
+            'repetitionID' => $repetitionID,
+            'timezone' => $this->getTimezone(),
+            'pdStartDate' => $this->getStartDate(),
+            'pdEndDate' => $this->getEndDate(),
+            'pdStartDateAllDay' => $this->isStartDateAllDay(),
+            'pdRepeats' => $this->repeats(),
+            'pdRepeatPeriod' => $repeatPeriod,
+            'pdRepeatPeriodDaysEvery' => $pdRepeatPeriodDaysEvery,
+            'pdRepeatPeriodWeeksEvery' => $pdRepeatPeriodWeeksEvery,
+            'pdRepeatPeriodMonthsEvery' => $pdRepeatPeriodMonthsEvery,
+            'pdRepeatPeriodMonthsRepeatBy' => $pdRepeatPeriodMonthsRepeatBy,
+            'pdRepeatPeriodMonthsRepeatLastDay' => $this->getRepeatMonthLastWeekday(),
+            'pdRepeatPeriodWeekDays' => $this->getRepeatPeriodWeekDays(),
+            'pdEndRepeatDate' => $pdEndRepeatDate,
+            'pdEndRepeatDateSpecific' => $pdEndRepeatDateSpecific,
+        ];
+    }
 }
