@@ -890,21 +890,20 @@ class Version implements ObjectInterface
     {
         $cf = Core::make('helper/concrete/file');
         $fsl = $this->getFile()->getFileStorageLocationObject();
+        $url = null;
         if (is_object($fsl)) {
             $configuration = $fsl->getConfigurationObject();
             if ($configuration->hasRelativePath()) {
                 $url = $configuration->getRelativePathToFile($cf->prefix($this->fvPrefix, $this->fvFilename));
             }
-            if (($configuration->hasPublicURL()) && (!$url)) {
+            if ($configuration->hasPublicURL() && !$url) {
                 $url = $configuration->getPublicURLToFile($cf->prefix($this->fvPrefix, $this->fvFilename));
             }
             if (!$url) {
-                return $this->getDownloadURL();
-            } else {
-                return $url;
+                $url =  $this->getDownloadURL();
             }
-
         }
+        return $url;
     }
 
     /**
