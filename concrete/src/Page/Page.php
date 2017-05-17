@@ -2642,7 +2642,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public function generatePagePath()
     {
         $newPath = '';
-        //if ($this->cParentID > 0) {
+        if (!$this->isHomePage()) {
             /**
              * @var Connection
              */
@@ -2675,7 +2675,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                 }
                 ++$suffix;
             }
-        //}
+        }
 
         return $newPath;
     }
