@@ -92,13 +92,14 @@
 
         prepareRepetition: function (repetition) {
             var my = this,
-                startDate = new Date(repetition.pdStartDate);
+                startDate = new Date(repetition.pdStartDateTimestamp * 1000);
+
             repetition.setID = my.setID;
             repetition.pdStartDate = $.datepicker.formatDate('yy-mm-dd', startDate);
             repetition.pdStartDateSelectTime = my.getTimeFromDate(startDate, true);
             repetition.pdEndDateSelectTime = false;
-            if (repetition.pdEndDate) {
-                var endDate = new Date(repetition.pdEndDate);
+            if (repetition.pdEndDateTimestamp) {
+                var endDate = new Date(repetition.pdEndDateTimestamp * 1000);
                 repetition.pdEndDate = $.datepicker.formatDate('yy-mm-dd', endDate);
                 repetition.pdEndDateSelectTime = my.getTimeFromDate(endDate);
             }
@@ -369,8 +370,7 @@
         },
 
         setup: function () {
-
-            return;      var my = this;
+            var my = this;
             my.setupDates();
             my.setupTimes();
             my.setupRepeatOptions();

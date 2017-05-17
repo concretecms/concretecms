@@ -96,6 +96,12 @@ abstract class AbstractRepetition implements RepetitionInterface
         return $datetime->getTimestamp();
     }
 
+    public function getEndDateTimestamp()
+    {
+        $datetime = new \DateTime($this->getEndDate(), $this->getTimezone());
+        return $datetime->getTimestamp();
+    }
+
     /**
      * @return bool
      */
@@ -936,9 +942,20 @@ abstract class AbstractRepetition implements RepetitionInterface
         if ($this->getID()) {
             $repetitionID = $this->getID();
         }
+
+        $startDateTimestamp = null;
+        $endDateTimestamp = null;
+        if ($this->getStartDate()) {
+            $startDateTimestamp = $this->getStartDateTimestamp();
+        }
+        if ($this->getEndDate()) {
+            $endDateTimestamp = $this->getEndDateTimestamp();
+        }
         return [
             'repetitionID' => $repetitionID,
             'timezone' => $this->getTimezone(),
+            'pdStartDateTimestamp' => $startDateTimestamp,
+            'pdEndDateTimestamp' => $endDateTimestamp,
             'pdStartDate' => $this->getStartDate(),
             'pdEndDate' => $this->getEndDate(),
             'pdStartDateAllDay' => $this->isStartDateAllDay(),
