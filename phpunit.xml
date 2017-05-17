@@ -17,4 +17,10 @@
             <directory>tests/tests/Localization/</directory>
         </testsuite>
     </testsuites>
+    <filter>
+        <whitelist>
+            <directory suffix=".php">concrete/controllers/</directory>
+            <directory suffix=".php">concrete/src/</directory>
+        </whitelist>
+    </filter>
 </phpunit>
