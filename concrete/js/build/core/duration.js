@@ -369,7 +369,8 @@
         },
 
         setup: function () {
-            var my = this;
+
+            return;      var my = this;
             my.setupDates();
             my.setupTimes();
             my.setupRepeatOptions();
