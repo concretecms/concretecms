@@ -893,8 +893,17 @@ class Version implements ObjectInterface
         if (is_object($fsl)) {
             $configuration = $fsl->getConfigurationObject();
             if ($configuration->hasRelativePath()) {
-                return $configuration->getRelativePathToFile($cf->prefix($this->fvPrefix, $this->fvFilename));
+                $url = $configuration->getRelativePathToFile($cf->prefix($this->fvPrefix, $this->fvFilename));
             }
+            if (($configuration->hasPublicURL()) && (!$url)) {
+                $url = $configuration->getPublicURLToFile($cf->prefix($this->fvPrefix, $this->fvFilename));
+            }
+            if (!$url) {
+                return $this->getDownloadURL();
+            } else {
+                return $url;
+            }
+
         }
     }
 
