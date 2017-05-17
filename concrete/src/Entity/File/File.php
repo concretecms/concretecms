@@ -516,40 +516,53 @@ class File implements \Concrete\Core\Permission\ObjectInterface
 
     /**
      * Removes a file, including all of its versions.
+     *
+     * @return bool returns false if the on_file_delete event says not to proceed, returns true on success
+     *
+     * @throws \Exception contains the exception type and message of why the deletion fails
      */
     public function delete($removeNode = true)
     {
         // first, we remove all files from the drive
-        $db = Loader::db();
+        $db = Core::make(Connection::class);
         $em = $db->getEntityManager();
-
-        // fire an on_page_delete event
-        $fve = new \Concrete\Core\File\Event\DeleteFile($this);
-        $fve = Events::dispatch('on_file_delete', $fve);
-        if (!$fve->proceed()) {
-            return false;
-        }
-
-        // Delete the tree node for the file.
-        if ($removeNode) {
-            $nodeID = $db->fetchColumn('select treeNodeID from TreeFileNodes where fID = ?', [$this->getFileID()]);
-            if ($nodeID) {
-                $node = Node::getByID($nodeID);
-                $node->delete();
+        $em->beginTransaction();
+        try {
+            // fire an on_page_delete event
+            $fve = new \Concrete\Core\File\Event\DeleteFile($this);
+            $fve = Events::dispatch('on_file_delete', $fve);
+            if (!$fve->proceed()) {
+                return false;
             }
+
+            // Delete the tree node for the file.
+            if ($removeNode) {
+                $nodeID = $db->fetchColumn('select treeNodeID from TreeFileNodes where fID = ?', [$this->getFileID()]);
+                if ($nodeID) {
+                    $node = Node::getByID($nodeID);
+                    $node->delete();
+                }
+            }
+
+            $versions = $this->getVersionList();
+            foreach ($versions as $fv) {
+                $fv->delete(true);
+            }
+
+            $db->Execute('delete from FileSetFiles where fID = ?', [$this->fID]);
+            $db->Execute('delete from FileSearchIndexAttributes where fID = ?', [$this->fID]);
+            $db->Execute('delete from DownloadStatistics where fID = ?', [$this->fID]);
+            $db->Execute('delete from FilePermissionAssignments where fID = ?', [$this->fID]);
+            $db->Execute('delete from FileImageThumbnailPaths where fileID = ?', [$this->fID]);
+            $db->Execute('delete from Files where fID = ?', [$this->fID]);
+
+            $em->commit();
+        } catch (\Exception $e) {
+            $em->rollback();
+            throw $e;
         }
 
-        $versions = $this->getVersionList();
-        foreach ($versions as $fv) {
-            $fv->delete(true);
-        }
-
-        $db->Execute('delete from FileSetFiles where fID = ?', [$this->fID]);
-        $db->Execute('delete from FileSearchIndexAttributes where fID = ?', [$this->fID]);
-        $db->Execute('delete from DownloadStatistics where fID = ?', [$this->fID]);
-        $db->Execute('delete from FilePermissionAssignments where fID = ?', [$this->fID]);
-        $db->Execute('delete from FileImageThumbnailPaths where fileID = ?', [$this->fID]);
-        $db->Execute('delete from Files where fID = ?', [$this->fID]);
+        return true;
     }
 
     /**
