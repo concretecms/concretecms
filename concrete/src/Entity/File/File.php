@@ -1,15 +1,18 @@
 <?php
-
 namespace Concrete\Core\Entity\File;
 
 use Carbon\Carbon;
-use Concrete\Core\Attribute\Category\AbstractCategory;
-use Concrete\Core\Attribute\Key\Category;
+use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\File\Event\FileVersion;
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use Concrete\Core\File\Importer;
+use Concrete\Core\File\Set\Set;
+use Concrete\Core\Support\Facade\Database;
 use Concrete\Core\Tree\Node\Node;
+use Concrete\Core\Tree\Node\NodeType;
 use Concrete\Core\Tree\Node\Type\FileFolder;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManager;
 use FileSet;
 use League\Flysystem\AdapterInterface;
 use Loader;
@@ -120,16 +123,31 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         return 'file';
     }
 
+    /**
+     * Returns the identifier for the object, in this case the File ID.
+     *
+     * @return int
+     */
     public function getPermissionObjectIdentifier()
     {
         return $this->getFileID();
     }
 
+    /**
+     * Password used to protect the file if set.
+     *
+     * @return string
+     */
     public function getPassword()
     {
         return $this->fPassword;
     }
 
+    /**
+     * Returns the FSL ID for the current file.
+     *
+     * @return int
+     */
     public function getStorageLocationID()
     {
         return $this->getFileStorageLocationObject()->getID();
@@ -164,6 +182,9 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         }
     }
 
+    /**
+     * Persist any object changes to the database.
+     */
     protected function save()
     {
         $em = \ORM::entityManager();
@@ -171,11 +192,27 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         $em->flush();
     }
 
+    /**
+     * Set the storage location for the file.
+     * THIS DOES NOT MOVE THE FILE to move the file use `setFileStorageLocation()`
+     * Must call `save()` to persist changes.
+     *
+     * @param StorageLocation\StorageLocation $location
+     */
     public function setStorageLocation(\Concrete\Core\Entity\File\StorageLocation\StorageLocation $location)
     {
         $this->storageLocation = $location;
     }
 
+    /**
+     * Move a file from its current FSL to a new FSL.
+     *
+     * @param StorageLocation\StorageLocation $newLocation
+     *
+     * @return bool false if the storage location is the same
+     *
+     * @throws \Exception
+     */
     public function setFileStorageLocation(\Concrete\Core\Entity\File\StorageLocation\StorageLocation $newLocation)
     {
         $fh = Loader::helper('concrete/file');
@@ -196,7 +233,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
                     'new' => $newFileSystem,
                 ]);
                 $fp = $fh->prefix($fv->getPrefix(), $fv->getFilename());
-                $manager->move('current://'.$fp, 'new://'.$fp);
+                $manager->move('current://' . $fp, 'new://' . $fp);
 
                 $thumbs = Type::getVersionList();
                 foreach ($thumbs as $type) {
@@ -211,6 +248,11 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         $this->save();
     }
 
+    /**
+     * Sets the access password on a file.
+     *
+     * @param $pw string
+     */
     public function setPassword($pw)
     {
         $fe = new \Concrete\Core\File\Event\FileWithPassword($this);
@@ -240,6 +282,9 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         }
     }
 
+    /**
+     * @return bool
+     */
     public function overrideFileFolderPermissions()
     {
         return $this->fOverrideSetPermissions;
@@ -270,12 +315,20 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         return $this->author ? $this->author->getUserID() : null;
     }
 
+    /**
+     * Set the user who authored the file.
+     *
+     * @param \Concrete\Core\Entity\User\User $user
+     */
     public function setUser(\Concrete\Core\Entity\User\User $user)
     {
         $this->author = $user;
         $this->save();
     }
 
+    /**
+     * @return FileSet[]
+     */
     public function getFileSets()
     {
         $db = Loader::db();
@@ -291,6 +344,13 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         return $filesets;
     }
 
+    /**
+     * Tell if a file is starred by a user.
+     *
+     * @param bool|User $u User to check against if they starred a file, If no user is provided we used the current user
+     *
+     * @return bool true if the user starred
+     */
     public function isStarred($u = false)
     {
         if (!$u) {
@@ -305,6 +365,12 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         return $r > 0;
     }
 
+    /**
+     * Set the date a file was added
+     * Must call `save()` to persist.
+     *
+     * @param $fDateAdded
+     */
     public function setDateAdded($fDateAdded)
     {
         $this->fDateAdded = $fDateAdded;
@@ -315,6 +381,13 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         return $this->fDateAdded;
     }
 
+    /**
+     * Create a new version of a file.
+     *
+     * @param bool $copyUnderlyingFile If we should copy the underlying file, or reference the original
+     *
+     * @return Version
+     */
     public function createNewVersion($copyUnderlyingFile = false)
     {
         $fv = $this->getRecentVersion();
@@ -334,6 +407,10 @@ class File implements \Concrete\Core\Permission\ObjectInterface
 
     /**
      * Returns a file version object that is to be written to. Computes whether we can use the current most recent version, OR a new one should be created.
+     *
+     * @param bool $forceCreateNew If we should always create a new version even if we are below the threshold
+     *
+     * @return Version
      */
     public function getVersionToModify($forceCreateNew = false)
     {
@@ -372,14 +449,23 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         }
     }
 
+    /**
+     * File ID of the file.
+     *
+     * @return int
+     */
     public function getFileID()
     {
         return $this->fID;
     }
 
+    /**
+     * Folder to put the file in.
+     *
+     * @param FileFolder $folder
+     */
     public function setFileFolder(FileFolder $folder)
     {
-        $db = Loader::db();
         $em = \ORM::entityManager('core');
 
         $this->folderTreeNodeID = $folder->getTreeNodeID();
@@ -388,11 +474,17 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         $em->flush();
     }
 
+    /**
+     * @return NodeType
+     */
     public function getFileFolderObject()
     {
         return Node::getByID($this->folderTreeNodeID);
     }
 
+    /**
+     * @return NodeType
+     */
     public function getFileNodeObject()
     {
         $db = \Database::connection();
@@ -401,6 +493,12 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         return Node::getByID($treeNodeID);
     }
 
+    /**
+     * Duplicate a file
+     * The new file will have no version history.
+     *
+     * @return File
+     */
     public function duplicate()
     {
         $db = Loader::db();
@@ -489,7 +587,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         // run the query even though we've run it multiple times in the same request. So we're going to
         // step between doctrine this time.
         $cache = \Core::make('cache/request');
-        $item = $cache->getItem('file/version/approved/'.$this->getFileID());
+        $item = $cache->getItem('file/version/approved/' . $this->getFileID());
         if (!$item->isMiss()) {
             return $item->get();
         }
@@ -503,7 +601,14 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         return $fv;
     }
 
-    public function inFileSet($fs)
+    /**
+     * If a file is in a particular file set.
+     *
+     * @param Set $fs
+     *
+     * @return bool true if its in the set
+     */
+    public function inFileSet(Set $fs)
     {
         $db = Loader::db();
         $r = $db->GetOne(
@@ -566,7 +671,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
     }
 
     /**
-     * returns the most recent FileVersion object.
+     * Returns the most recent FileVersion object.
      *
      * @return Version
      */
@@ -603,12 +708,19 @@ class File implements \Concrete\Core\Permission\ObjectInterface
 
     /**
      * Returns an array of all FileVersion objects owned by this file.
+     *
+     * @return Version[]
      */
     public function getVersionList()
     {
         return $this->getFileVersions();
     }
 
+    /**
+     * Total number of downloads for a file.
+     *
+     * @return int
+     */
     public function getTotalDownloads()
     {
         $db = Loader::db();
@@ -616,12 +728,19 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         return $db->GetOne('select count(*) from DownloadStatistics where fID = ?', [$this->getFileID()]);
     }
 
+    /**
+     * Get the download statistics for the current file.
+     *
+     * @param int $limit max number of stats to retrieve
+     *
+     * @return array
+     */
     public function getDownloadStatistics($limit = 20)
     {
         $db = Loader::db();
         $limitString = '';
         if ($limit != false) {
-            $limitString = 'limit '.intval($limit);
+            $limitString = 'limit ' . intval($limit);
         }
 
         if (is_object($this) && $this instanceof self) {
