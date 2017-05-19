@@ -176,6 +176,7 @@ echo Core::make('helper/concrete/ui')->tabs($tabs);
     }
     .ccm-image-slider-entries {
         padding-bottom: 30px;
+        position: relative;
     }
     .ccm-image-slider-block-container .slide-well {
         min-height: 20px;
