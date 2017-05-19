@@ -62,14 +62,14 @@ if (isset($showinfo) && $showinfo) {
 $paramstring = '?' . implode('&', $params);
 
 if (Page::getCurrentPage()->isEditMode()) {
+    $loc = Localization::getInstance();
+    $loc->pushActiveContext(Localization::CONTEXT_UI);
     ?>
-	<div class="ccm-edit-mode-disabled-item youtubeBlock <?php echo $responsiveClass;
-    ?>" <?php echo $sizeDisabled;
-    ?>>
-		<div><?= t('YouTube Video disabled in edit mode.');
-    ?></div>
+	<div class="ccm-edit-mode-disabled-item youtubeBlock <?php echo $responsiveClass; ?>" <?php echo $sizeDisabled; ?>>
+		<div><?= t('YouTube Video disabled in edit mode.'); ?></div>
 	</div>
-<?php
+    <?php
+    $loc->popActiveContext();
 } else {
     ?>
 	<div id="youtube<?= $bID;
