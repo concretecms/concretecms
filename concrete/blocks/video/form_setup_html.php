@@ -40,17 +40,17 @@ if (!isset($width)) {
     <legend><?= t('Video Size'); ?></legend>
     <div class="form-group">
         <div class="radio">
-            <label class="control-label">
+            <label>
                 <input type="radio" name="videoSize" value="0" <?php echo $videoSize > 0 ? '' : 'checked'; ?>><?php echo t('Default Video Dimensions'); ?>
             </label>
         </div>
         <div class="radio">
-            <label class="control-label">
+            <label>
                 <input type="radio" name="videoSize" value="1" <?php echo $videoSize == 1 ? 'checked' : ''; ?>><?php echo t('Full Width'); ?>
             </label>
         </div>
         <div class="radio">
-            <label class="control-label">
+            <label>
                 <input type="radio" name="videoSize" value="2" <?php echo $videoSize == 2 ? 'checked' : ''; ?>><?php echo t('Set Max Width'); ?>
             </label>
         </div>
