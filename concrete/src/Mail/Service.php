@@ -2,11 +2,12 @@
 namespace Concrete\Core\Mail;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Entity\File\File;
 use Concrete\Core\Logging\GroupLogger;
 use Concrete\Core\Support\Facade\Application as ApplicationFacade;
-use Config;
 use Exception;
 use Monolog\Logger;
+use Zend\Mail\Header\MessageId as MessageIdHeader;
 use Zend\Mail\Message;
 use Zend\Mail\Transport\TransportInterface;
 use Zend\Mime\Message as MimeMessage;
@@ -83,38 +84,36 @@ class Service
     }
 
     /**
-     * Add attachment to send with an email.
+     * Add a File entity as a mail attachment.
      *
-     * Sample Code:
-     * $attachment = $mailHelper->addAttachment($fileObject);
-     * $attachment->filename = "CustomFilename";
-     * $mailHelper->send();
-     *
-     * @param \Concrete\Core\Entity\File\File $fob File to attach
-     *
-     * @return \StdClass Pointer to the attachment
-     *
-     * @throws \Exception
+     * @param File $fob File to attach
      */
-    public function addAttachment(\Concrete\Core\Entity\File\File $fob)
+    public function addAttachment(File $file)
     {
-        // Get file version.
-        $fv = $fob->getVersion();
+        $fileVersion = $file->getVersion();
+        $resource = $fileVersion->getFileResource();
+        $this->addRawAttachment(
+            $resource->read(),
+            $fileVersion->getFilename(),
+            $fileVersion->getMimeType()
+        );
+    }
 
-        // Get file data.
-        $mimetype = $fv->getMimeType();
-        $filename = $fv->getFilename();
-        $resource = $fob->getFileResource();
-        $content = $resource->read();
-
-        // Create attachment.
+    /**
+     * Add a mail attachment by specifying its raw binary data.
+     *
+     * @param string $content The binary data of the attachemt
+     * @param string $filename The name to give to the attachment
+     * @param string $mimetype The MIME type of the attachment
+     */
+    public function addRawAttachment($content, $filename, $mimetype = 'application/octet-stream')
+    {
         $mp = new MimePart($content);
-        $mp->type = $mimetype;
-        $mp->disposition = Mime::DISPOSITION_ATTACHMENT;
-        $mp->encoding = Mime::ENCODING_BASE64;
-        $mp->filename = $filename;
-
-        // Add mimepart to attachments.
+        $mp
+            ->setType($mimetype)
+            ->setDisposition(Mime::DISPOSITION_ATTACHMENT)
+            ->setEncoding(Mime::ENCODING_BASE64)
+            ->setFileName($filename);
         $this->attachments[] = $mp;
     }
 
@@ -369,7 +368,7 @@ class Service
      *
      * @param bool $resetData Whether or not to reset the service to its default values
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @return bool
      */
@@ -424,7 +423,7 @@ class Service
         if ($headers->has('messageid')) {
             $messageIdHeader = $headers->get('messageid');
         } else {
-            $messageIdHeader = new \Zend\Mail\Header\MessageId();
+            $messageIdHeader = new MessageIdHeader();
             $headers->addHeader($messageIdHeader);
         }
 
@@ -501,9 +500,9 @@ class Service
             $l = new GroupLogger(LOG_TYPE_EMAILS, Logger::INFO);
             if ($config->get('concrete.email.enabled')) {
                 if ($sent) {
-                    $l->write('**'.t('EMAILS ARE ENABLED. THIS EMAIL HAS BEEN SENT').'**');
+                    $l->write('**' . t('EMAILS ARE ENABLED. THIS EMAIL HAS BEEN SENT') . '**');
                 } else {
-                    $l->write('**'.t('EMAILS ARE ENABLED. THIS EMAIL HAS NOT BEEN SENT').'**');
+                    $l->write('**' . t('EMAILS ARE ENABLED. THIS EMAIL HAS NOT BEEN SENT') . '**');
                 }
             } else {
                 $l->write('**' . t('EMAILS ARE DISABLED. THIS EMAIL WAS LOGGED BUT NOT SENT') . '**');
