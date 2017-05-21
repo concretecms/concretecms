@@ -34,14 +34,14 @@ class Controller extends BlockController implements FileTrackableInterface
         $this->tracker = $tracker;
     }
 
-    public function getBlockTypeDescription()
-    {
-        return t("Adds images and onstates from the library to pages.");
-    }
-
     public function getBlockTypeName()
     {
-        return t("Image");
+        return t('Image');
+    }
+
+    public function getBlockTypeDescription()
+    {
+        return t('Adds images and onstates from the library to pages.');
     }
 
     /**
@@ -184,7 +184,7 @@ class Controller extends BlockController implements FileTrackableInterface
         $db = $this->app->make('database')->connection();
 
         $file = null;
-        $fID = $db->fetchColumn('select fID from btContentImage where bID = ?', [$this->bID], 0);
+        $fID = $db->fetchColumn('SELECT fID FROM btContentImage WHERE bID = ?', [$this->bID], 0);
         if ($fID) {
             $f = File::getByID($fID);
             if (is_object($f) && $f->getFileID()) {
@@ -371,12 +371,12 @@ class Controller extends BlockController implements FileTrackableInterface
             'fileLinkID' => 0,
         ];
 
-        $args['fID'] = ($args['fID'] != '') ? $args['fID'] : 0;
-        $args['fOnstateID'] = ($args['fOnstateID'] != '') ? $args['fOnstateID'] : 0;
+        $args['fID'] = $args['fID'] != '' ? $args['fID'] : 0;
+        $args['fOnstateID'] = $args['fOnstateID'] != '' ? $args['fOnstateID'] : 0;
         $args['fileLinkID'] = $args['fileLinkID'] != '' ? $args['fileLinkID'] : 0;
         $args['cropImage'] = isset($args['cropImage']) ? 1 : 0;
-        $args['maxWidth'] = (intval($args['maxWidth']) > 0) ? intval($args['maxWidth']) : 0;
-        $args['maxHeight'] = (intval($args['maxHeight']) > 0) ? intval($args['maxHeight']) : 0;
+        $args['maxWidth'] = intval($args['maxWidth']) > 0 ? intval($args['maxWidth']) : 0;
+        $args['maxHeight'] = intval($args['maxHeight']) > 0 ? intval($args['maxHeight']) : 0;
 
         if (!$args['constrainImage']) {
             $args['cropImage'] = 0;

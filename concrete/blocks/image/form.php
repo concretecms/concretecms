@@ -6,7 +6,7 @@ $al = $app->make('helper/concrete/asset_library');
 ?>
 
 <fieldset>
-    <legend><?php echo t('Files') ?></legend>
+    <legend><?php echo t('Files'); ?></legend>
 
     <div class="form-group">
         <?php
@@ -25,7 +25,7 @@ $al = $app->make('helper/concrete/asset_library');
 </fieldset>
 
 <fieldset>
-    <legend><?php echo t('HTML') ?></legend>
+    <legend><?php echo t('HTML'); ?></legend>
 
     <div class="form-group">
         <?php
@@ -78,7 +78,7 @@ $al = $app->make('helper/concrete/asset_library');
 </fieldset>
 
 <fieldset>
-    <legend><?php echo t('Resize Image') ?></legend>
+    <legend><?php echo t('Resize Image'); ?></legend>
 
     <div class="form-group">
         <div class="checkbox" data-checkbox-wrapper="constrain-image">
