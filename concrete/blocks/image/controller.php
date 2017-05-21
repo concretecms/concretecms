@@ -19,7 +19,7 @@ class Controller extends BlockController implements FileTrackableInterface
     protected $btCacheBlockOutputOnPost = true;
     protected $btCacheBlockOutputForRegisteredUsers = true;
     protected $btWrapperClass = 'ccm-ui';
-    protected $btExportFileColumns = ['fID', 'fOnstateID'];
+    protected $btExportFileColumns = ['fID', 'fOnstateID', 'fileLinkID'];
     protected $btExportPageColumns = ['internalLinkCID'];
     protected $btFeatures = [
         'image',
@@ -98,6 +98,7 @@ class Controller extends BlockController implements FileTrackableInterface
     {
         $this->set('bf', null);
         $this->set('bfo', null);
+        $this->set('linkFile', null);
         $this->set('constrainImage', false);
     }
 
@@ -117,6 +118,13 @@ class Controller extends BlockController implements FileTrackableInterface
         }
         $this->set('bfo', $bfo);
 
+        // Image Link - File object
+        $linkFile = null;
+        if ($this->getFileLinkID() > 0) {
+            $linkFile = $this->getFileLinkObject();
+        }
+        $this->set('linkFile', $linkFile);
+
         // Constrain dimensions
         $constrainImage = $this->maxWidth > 0 || $this->maxHeight > 0;
         $this->set('constrainImage', $constrainImage);
@@ -133,10 +141,12 @@ class Controller extends BlockController implements FileTrackableInterface
 
         // None, Internal, or External
         $linkType = 0;
-        if (empty($this->externalLink) && !empty($this->internalLinkCID)) {
+        if (empty($this->externalLink) && !empty($this->internalLinkCID) && empty($this->fileLinkID)) {
             $linkType = 1;
-        } elseif (!empty($this->externalLink)) {
+        } elseif (!empty($this->externalLink) && empty($this->internalLinkCID) && empty($this->fileLinkID)) {
             $linkType = 2;
+        } elseif (empty($this->externalLink) && empty($this->internalLinkCID) && !empty($this->fileLinkID)) {
+            $linkType = 3;
         }
         $this->set('linkType', $linkType);
     }
@@ -202,6 +212,14 @@ class Controller extends BlockController implements FileTrackableInterface
     }
 
     /**
+     * @return int
+     */
+    public function getFileLinkID()
+    {
+        return $this->fileLinkID;
+    }
+
+    /**
      * @return \Concrete\Core\Entity\File\File|null
      */
     public function getFileOnstateObject()
@@ -217,6 +235,16 @@ class Controller extends BlockController implements FileTrackableInterface
     public function getFileObject()
     {
         return File::getByID($this->getFileID());
+    }
+
+    /**
+     * @return \Concrete\Core\Entity\File\File|null
+     */
+    public function getFileLinkObject()
+    {
+        if ($this->fileLinkID) {
+            return File::getByID($this->getFileLinkID());
+        }
     }
 
     /**
@@ -264,6 +292,11 @@ class Controller extends BlockController implements FileTrackableInterface
             $linkToC = Page::getByID($this->internalLinkCID);
             if (is_object($linkToC) && !$linkToC->isError()) {
                 $linkUrl = $linkToC->getCollectionLink();
+            }
+        } elseif (!empty($this->fileLinkID)) {
+            $fileLinkObject = $this->getFileLinkObject();
+            if (is_object($fileLinkObject)) {
+                $linkUrl = $fileLinkObject->getRelativePath();
             }
         }
 
@@ -335,10 +368,12 @@ class Controller extends BlockController implements FileTrackableInterface
             'linkType' => 0,
             'externalLink' => '',
             'internalLinkCID' => 0,
+            'fileLinkID' => 0,
         ];
 
         $args['fID'] = ($args['fID'] != '') ? $args['fID'] : 0;
         $args['fOnstateID'] = ($args['fOnstateID'] != '') ? $args['fOnstateID'] : 0;
+        $args['fileLinkID'] = $args['fileLinkID'] != '' ? $args['fileLinkID'] : 0;
         $args['cropImage'] = isset($args['cropImage']) ? 1 : 0;
         $args['maxWidth'] = (intval($args['maxWidth']) > 0) ? intval($args['maxWidth']) : 0;
         $args['maxHeight'] = (intval($args['maxHeight']) > 0) ? intval($args['maxHeight']) : 0;
@@ -352,13 +387,20 @@ class Controller extends BlockController implements FileTrackableInterface
         switch (intval($args['linkType'])) {
             case 1:
                 $args['externalLink'] = '';
+                $args['fileLinkID'] = 0;
                 break;
             case 2:
+                $args['internalLinkCID'] = 0;
+                $args['fileLinkID'] = 0;
+                break;
+            case 3:
+                $args['externalLink'] = '';
                 $args['internalLinkCID'] = 0;
                 break;
             default:
                 $args['externalLink'] = '';
                 $args['internalLinkCID'] = 0;
+                $args['fileLinkID'] = 0;
                 break;
         }
 
