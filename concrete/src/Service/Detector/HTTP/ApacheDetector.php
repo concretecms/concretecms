@@ -41,12 +41,6 @@ class ApacheDetector implements DetectorInterface
                 $result = $version;
             }
         }
-        if (($result === null || $result === '') && defined('apache_get_version')) {
-            $version = $this->detectFromSPL(@apache_get_version());
-            if ($version !== null) {
-                $result = $version;
-            }
-        }
         if ($result === null || $result === '') {
             ob_start();
             phpinfo(INFO_MODULES);
