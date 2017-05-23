@@ -31,6 +31,12 @@ class Element implements LocatableFileInterface
     {
         $this->element = $element;
         $args = func_get_args();
+        $this->populateFromArguments($args);
+        $this->locator = $this->createLocator();
+    }
+
+    public function populateFromArguments($args)
+    {
         if (count($args) > 1) {
             for ($i = 1; $i < count($args); $i++) {
                 $arg = $args[$i];
@@ -48,7 +54,6 @@ class Element implements LocatableFileInterface
                 }
             }
         }
-        $this->locator = $this->createLocator();
     }
 
     protected function getBaseLocator()
