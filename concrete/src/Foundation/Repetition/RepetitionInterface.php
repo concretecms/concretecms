@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Foundation\Repetition;
 
-interface RepetitionInterface
+interface RepetitionInterface extends \JsonSerializable
 {
     /**
      * Repeat constants.

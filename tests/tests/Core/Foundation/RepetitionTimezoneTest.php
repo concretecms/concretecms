@@ -3,24 +3,10 @@ namespace Concrete\Tests\Core\Foundation;
 
 use Concrete\Core\Application\Application as ServiceLocator;
 use Concrete\Core\Foundation\Repetition\AbstractRepetition;
+use Concrete\Core\Foundation\Repetition\BasicRepetition;
 use Concrete\Core\Foundation\Service\ProviderList;
 use Concrete\Core\Localization\Service\Date;
 use Concrete\Core\Support\Facade\Facade;
-
-class TestRepetition extends AbstractRepetition
-{
-
-    public function save()
-    {
-        return false;
-    }
-
-    public function getID()
-    {
-        return false;
-    }
-
-}
 
 class RepetitionTimezoneTest extends \PHPUnit_Framework_TestCase
 {
@@ -72,7 +58,7 @@ class RepetitionTimezoneTest extends \PHPUnit_Framework_TestCase
     {
         $old = $this->setTimezone('America/Los_Angeles');
 
-        $repetition = new TestRepetition();
+        $repetition = new BasicRepetition();
 
         $this->assertEquals('America/Los_Angeles', $repetition->getTimezone()->getName());
 
@@ -99,7 +85,7 @@ class RepetitionTimezoneTest extends \PHPUnit_Framework_TestCase
     {
         $old = $this->setTimezone('America/Los_Angeles');
 
-        $repetition = new TestRepetition('America/Chicago');
+        $repetition = new BasicRepetition('America/Chicago');
         $repetition->setStartDate('2017-05-31 20:00:00');
         $repetition->setEndDate('2017-05-31 21:00:00');
         $start = $repetition->getStartDateTimestamp() - 1;
@@ -125,7 +111,7 @@ class RepetitionTimezoneTest extends \PHPUnit_Framework_TestCase
     {
         $old = $this->setTimezone('GMT');
 
-        $repetition = new TestRepetition('America/Los_Angeles');
+        $repetition = new BasicRepetition('America/Los_Angeles');
 
         $repetition->setStartDate('2017-08-01 16:00:00'); // 8/1/17 4PM Pacific, should be 8/1/17 23:00
         $start_time = $this->dateService->toDateTime($repetition->getStartDate(), 'system', $repetition->getTimezone()->getName())->getTimestamp();
@@ -139,10 +125,10 @@ class RepetitionTimezoneTest extends \PHPUnit_Framework_TestCase
     {
         $old = $this->setTimezone('GMT');
 
-        $repetition = new TestRepetition('America/Los_Angeles');
+        $repetition = new BasicRepetition('America/Los_Angeles');
         $repetition->setStartDate('2017-03-27 20:00:00'); // 8 PM PST
         $repetition->setEndDate('2017-03-27 22:00:00'); // 8 PM - 10 PM
-        $repetition->setRepeatPeriod(TestRepetition::REPEAT_DAILY);
+        $repetition->setRepeatPeriod(BasicRepetition::REPEAT_DAILY);
         $repetition->setRepeatEveryNum(1);
         $repetition->setRepeatPeriodEnd('2017-04-05');
         $start_time = $repetition->getStartDateTimestamp();
@@ -167,10 +153,10 @@ class RepetitionTimezoneTest extends \PHPUnit_Framework_TestCase
     {
         $old = $this->setTimezone('GMT');
 
-        $repetition = new TestRepetition('America/Los_Angeles');
+        $repetition = new BasicRepetition('America/Los_Angeles');
         $repetition->setStartDate('2017-03-09 8:00:00');
         $repetition->setEndDate('2017-03-09 8:00:00'); // 8 PM - 10 PM
-        $repetition->setRepeatPeriod(TestRepetition::REPEAT_DAILY);
+        $repetition->setRepeatPeriod(BasicRepetition::REPEAT_DAILY);
         $repetition->setRepeatEveryNum(1);
         $repetition->setRepeatPeriodEnd('2017-03-28');
         $start_time = $repetition->getStartDateTimestamp();
@@ -201,10 +187,10 @@ class RepetitionTimezoneTest extends \PHPUnit_Framework_TestCase
     {
         $old = $this->setTimezone('Europe/Paris');
 
-        $repetition = new TestRepetition('America/Los_Angeles');
+        $repetition = new BasicRepetition('America/Los_Angeles');
         $repetition->setStartDate('2017-03-03 21:00'); // 9 PM PST
         $repetition->setEndDate('2017-03-04 02:00:00'); // 9-2AM
-        $repetition->setRepeatPeriod(TestRepetition::REPEAT_WEEKLY);
+        $repetition->setRepeatPeriod(BasicRepetition::REPEAT_WEEKLY);
         $repetition->setRepeatEveryNum(1);
         $repetition->setRepeatPeriodWeekDays([5]); // every Friday
         $repetition->setRepeatPeriodEnd('2017-07-07');
@@ -232,10 +218,10 @@ class RepetitionTimezoneTest extends \PHPUnit_Framework_TestCase
     {
         $old = $this->setTimezone('GMT');
 
-        $repetition = new TestRepetition('America/Los_Angeles');
+        $repetition = new BasicRepetition('America/Los_Angeles');
         $repetition->setStartDate('2016-11-15 16:00:00');
         $repetition->setEndDate('2016-11-15 13:00:00');
-        $repetition->setRepeatPeriod(TestRepetition::REPEAT_WEEKLY);
+        $repetition->setRepeatPeriod(BasicRepetition::REPEAT_WEEKLY);
         $repetition->setRepeatEveryNum(1);
         $repetition->setRepeatPeriodWeekDays([2]);
         $repetition->setRepeatPeriodEnd('2017-06-06');
@@ -271,11 +257,11 @@ class RepetitionTimezoneTest extends \PHPUnit_Framework_TestCase
     {
         $old = $this->setTimezone('Pacific/Honolulu');
 
-        $repetition = new TestRepetition('Europe/Paris');
+        $repetition = new BasicRepetition('Europe/Paris');
         $repetition->setStartDate('2017-05-01 8:00:00');
         $repetition->setEndDate('2017-05-01 11:00:00');
-        $repetition->setRepeatPeriod(TestRepetition::REPEAT_MONTHLY);
-        $repetition->setRepeatMonthBy(TestRepetition::MONTHLY_REPEAT_MONTHLY);
+        $repetition->setRepeatPeriod(BasicRepetition::REPEAT_MONTHLY);
+        $repetition->setRepeatMonthBy(BasicRepetition::MONTHLY_REPEAT_MONTHLY);
         $repetition->setRepeatEveryNum(2);
 
         $start_time = $repetition->getStartDateTimestamp();
@@ -302,12 +288,12 @@ class RepetitionTimezoneTest extends \PHPUnit_Framework_TestCase
     {
         $old = $this->setTimezone('GMT');
 
-        $repetition = new TestRepetition('America/Chicago');
+        $repetition = new BasicRepetition('America/Chicago');
         $repetition->setStartDate('2017-03-08 18:30:00'); // every second wednesday
         $repetition->setEndDate('2017-03-08 20:00:00');
         $repetition->setRepeatPeriodWeekDays([3]); // every wednesday
-        $repetition->setRepeatPeriod(TestRepetition::REPEAT_MONTHLY);
-        $repetition->setRepeatMonthBy(TestRepetition::MONTHLY_REPEAT_WEEKLY); // Boxing every Wednesday
+        $repetition->setRepeatPeriod(BasicRepetition::REPEAT_MONTHLY);
+        $repetition->setRepeatMonthBy(BasicRepetition::MONTHLY_REPEAT_WEEKLY); // Boxing every Wednesday
         $repetition->setRepeatEveryNum(1);
 
         $start_time = $repetition->getStartDateTimestamp();
@@ -332,12 +318,12 @@ class RepetitionTimezoneTest extends \PHPUnit_Framework_TestCase
     {
         $old = $this->setTimezone('GMT');
 
-        $repetition = new TestRepetition('America/Los_Angeles');
+        $repetition = new BasicRepetition('America/Los_Angeles');
         $repetition->setStartDate('2016-11-24 17:00:00');
         $repetition->setEndDate('2016-11-24 20:00:00');
         $repetition->setRepeatMonthLastWeekday(4);
-        $repetition->setRepeatPeriod(TestRepetition::REPEAT_MONTHLY);
-        $repetition->setRepeatMonthBy(TestRepetition::MONTHLY_REPEAT_LAST_WEEKDAY);
+        $repetition->setRepeatPeriod(BasicRepetition::REPEAT_MONTHLY);
+        $repetition->setRepeatMonthBy(BasicRepetition::MONTHLY_REPEAT_LAST_WEEKDAY);
         $repetition->setRepeatEveryNum(1);
         $repetition->setRepeatPeriodEnd('2018-01-01');
 
