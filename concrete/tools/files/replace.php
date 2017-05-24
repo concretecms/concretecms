@@ -40,10 +40,18 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
     <div id="ccm-file-add-computer-tab">
         <form method="post" class="form-inline" id="ccm-file-manager-replace-upload" data-dialog-form="replace-file" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/importers/single">
             <h4><?=t('Add From Computer')?></h4>
-            <input type="file" name="Filedata" class="form-control" style="width: 195px" />
-            <?=$valt->output('upload');?>
-            <?= $form->hidden('fID', $f->getFileID()); ?>
-            <button type="submit" class="btn btn-warning btn-sm"><?=t('Upload')?></button>
+            <table style="width: 100%;">
+                <tr>
+                    <td style="width: 100%;">
+                        <input type="file" name="Filedata" class="form-control" style="width: 100%; height: auto;">
+                        <?=$valt->output('upload');?>
+                        <?= $form->hidden('fID', $f->getFileID()); ?>
+                    </td>
+                    <td>
+                        <button type="submit" class="btn btn-warning" style="margin-left: 4px;"><?=t('Upload')?></button>
+                    </td>
+                </tr>
+            </table>
         </form>
     </div>
 
@@ -65,19 +73,22 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
             foreach ($con1 as $con) {
                 $contents[$con['basename']] = $con['basename'];
             }
-            if (count($contents) > 0) {
-                ?>
+            if (count($contents) > 0) { ?>
                 <form method="post" id="ccm-file-manager-replace-incoming" class="form-inline" data-dialog-form="replace-file" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/importers/incoming">
-                    <?= $form->select('send_file', $contents, array('style' => 'width:195px'));
-                ?>
-                    &nbsp;&nbsp;
-                    <button type="submit" class="btn btn-default btn-sm"><?=t('Replace')?></button>
-                    <?= $form->hidden('fID', $f->getFileID());
-                ?>
-                    <?=$valt->output('import_incoming');
-                ?>
+                    <table style="width: 100%;">
+                        <tr>
+                            <td style="width: 100%;">
+                                <?= $form->select('send_file', $contents, array('style' => 'width: 100%;'));?>
+                            </td>
+                            <td>
+                                <button type="submit" class="btn btn-warning" style="margin-left: 4px;"><?=t('Replace')?></button>
+                                <?= $form->hidden('fID', $f->getFileID()); ?>
+                                <?=$valt->output('import_incoming'); ?>
+                            </td>
+                        </tr>
+                    </table>
                 </form>
-            <?php 
+            <?php
             } else {
                 if ($error) {
                     ?>
@@ -85,7 +96,7 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
                         <?php echo $error;
                     ?>
                     </div>
-                <?php 
+                <?php
                 } else {
                     echo t('No files found in %s for the storage location "%s".', REL_DIR_FILES_INCOMING, StorageLocation::getDefault()->getName());
                 }
@@ -94,18 +105,20 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
     </div>
     <div id="ccm-file-add-remote-tab" style="display: none">
         <h4><?=t("Add from Remote URL")?></h4>
-
-
         <form method="post" id="ccm-file-manager-replace-remote" class="form-inline" data-dialog-form="replace-file" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/importers/remote">
-            <?=$valt->output('import_remote');?>
-            <input type="hidden" name="searchInstance" value="<?=$searchInstance?>" />
-            <?= $form->hidden('fID', $f->getFileID()); ?>
-
-            <?=$form->text('url_upload_1', array('style' => 'width:195px'))?>
-
-            <button type="submit" class="btn btn-warning btn-sm"><?=t('Replace')?></button>
-
-
+            <table style="width: 100%;">
+                <tr>
+                    <td style="width: 100%;">
+                        <?=$valt->output('import_remote');?>
+                        <input type="hidden" name="searchInstance" value="<?=$searchInstance?>" />
+                        <?= $form->hidden('fID', $f->getFileID()); ?>
+                        <?=$form->text('url_upload_1', array('style' => 'width: 100%;'))?>
+                    </td>
+                    <td>
+                        <button type="submit" class="btn btn-warning" style="margin-left: 4px;"><?=t('Replace')?></button>
+                    </td>
+                </tr>
+            </table>
         </form>
     </div>
 </div>
