@@ -3,19 +3,21 @@
 use \Concrete\Core\File\EditResponse as FileEditResponse;
 use \Concrete\Core\File\StorageLocation\StorageLocation as FileStorageLocation;
 
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+
 $u = new User();
-$form = Loader::helper('form');
-$ih = Loader::helper('concrete/ui');
+$form = $app->make('helper/form');
+$ih = $app->make('helper/concrete/ui');
+$config = $app->make('config');
 $fileID = $_REQUEST['fID'];
 $f = File::getByID($fileID);
-$token = Core::make('token');
+$token = $app->make('token');
 
 $cp = new Permissions($f);
 if (!$cp->canAdmin()) {
     die(t("Access Denied."));
 }
 
-$form = Loader::helper('form');
 $r = new FileEditResponse();
 $r->setFile($f);
 
@@ -38,7 +40,7 @@ if ($_POST['task'] == 'set_location') {
             $f->setFileStorageLocation($fsl);
         } catch (\Exception $e) {
             $json = new \Concrete\Core\Application\EditResponse();
-            $err = Core::make('error');
+            $err = $app->make('error');
             $err->add($e->getMessage());
             $json->setError($err);
             $json->outputJSON();
@@ -51,11 +53,11 @@ if ($_POST['task'] == 'set_location') {
 
 <div class="ccm-ui" id="ccm-file-permissions-dialog-wrapper">
     <ul class="nav nav-tabs" id="ccm-file-permissions-tabs">
-    	<?php if (Config::get('concrete.permissions.model') != 'simple') { ?>
+    	<?php if ($config->get('concrete.permissions.model') != 'simple') { ?>
     		<li class="active"><a href="javascript:void(0)" id="ccm-file-permissions-advanced"><?=t('Permissions')?></a></li>
     	<?php
         } ?>
-    	<li <?php if (Config::get('concrete.permissions.model') == 'simple') { ?> class="active" <?php } ?>>
+    	<li <?php if ($config->get('concrete.permissions.model') == 'simple') { ?> class="active" <?php } ?>>
             <a href="javascript:void(0)" id="ccm-file-password"><?=t('Protect with Password')?></a>
         </li>
     	<li>
@@ -65,20 +67,20 @@ if ($_POST['task'] == 'set_location') {
 
     <div class="clearfix"></div>
 
-    <?php if (Config::get('concrete.permissions.model') != 'simple') { ?>
+    <?php if ($config->get('concrete.permissions.model') != 'simple') { ?>
         <div id="ccm-file-permissions-advanced-tab">
-        	<?php Loader::element('permission/lists/file', array('f' => $f)); ?>
+        	<?php View::element('permission/lists/file', array('f' => $f)); ?>
         </div>
     <?php
     }
     ?>
 
-    <div id="ccm-file-password-tab" <?php if (Config::get('concrete.permissions.model') != 'simple') { ?> style="display: none" <?php } ?>>
+    <div id="ccm-file-password-tab" <?php if ($config->get('concrete.permissions.model') != 'simple') { ?> style="display: none" <?php } ?>>
         <br/>
         <h4><?=t('Requires Password to Access')?></h4>
         <p><?=t('Leave the following form field blank in order to allow everyone to download this file.')?></p>
 
-        <form method="post" data-dialog-form="file-password" action="<?=Loader::helper('concrete/urls')->getToolsURL('files/permissions')?>">
+        <form method="post" data-dialog-form="file-password" action="<?=$app->make('helper/concrete/urls')->getToolsURL('files/permissions')?>">
         	<?php $token->output('set_password_' . $f->getFileID()); ?>
             <?=$form->hidden('task', 'set_password')?>
             <?=$form->hidden('fID', $f->getFileID())?>
@@ -99,7 +101,7 @@ if ($_POST['task'] == 'set_location') {
         <br/>
         <h4><?=t('Choose File Storage Location')?></h4>
 
-        <form method="post" data-dialog-form="file-storage" action="<?=Loader::helper('concrete/urls')->getToolsURL('files/permissions')?>">
+        <form method="post" data-dialog-form="file-storage" action="<?=$app->make('helper/concrete/urls')->getToolsURL('files/permissions')?>">
             <div class="help-block">
                 <p><?=t('All versions of a file will be moved to the selected location.')?></p>
             </div>
@@ -148,7 +150,7 @@ ccm_filePermissionsSetupButtons = function() {
 var ccm_fpActiveTab;
 
 $(function() {
-<?php if (Config::get('concrete.permissions.model') == 'simple') { ?>
+<?php if ($config->get('concrete.permissions.model') == 'simple') { ?>
 	ccm_fpActiveTab = "ccm-file-password";
 <?php
 } else { ?>
