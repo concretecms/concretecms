@@ -84,7 +84,7 @@ if ($_POST['task'] == 'set_location') {
         	<?php $token->output('set_password_' . $f->getFileID()); ?>
             <?=$form->hidden('task', 'set_password')?>
             <?=$form->hidden('fID', $f->getFileID())?>
-            <?=$form->text('fPassword', $f->getPassword(), array('style' => 'width: 250px'))?>
+            <?=$form->text('fPassword', $f->getPassword())?>
 
             <div id="ccm-file-password-buttons"  style="display: none">
             	<button type="button" onclick="jQuery.fn.dialog.closeTop()" class="btn btn-default pull-left"><?=t('Cancel')?></button>
