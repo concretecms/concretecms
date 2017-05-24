@@ -2,9 +2,10 @@
 
 use Concrete\Core\File\StorageLocation\StorageLocation;
 $u = new User();
-$ch = Loader::helper('concrete/file');
-$valt = Loader::helper('validation/token');
-$form = Loader::helper('form');
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+$ch = $app->make('helper/concrete/file');
+$valt = $app->make('helper/validation/token');
+$form = $app->make('helper/form');
 
 $f = File::getByID($_REQUEST['fID']);
 $fp = new Permissions($f);
@@ -12,7 +13,7 @@ if (!$fp->canEditFileContents()) {
     die(t('Access Denied.'));
 }
 
-$searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
+$searchInstance = $app->make('helper/text')->entities($_REQUEST['searchInstance']);
 ?>
 
 <div class="ccm-ui">
