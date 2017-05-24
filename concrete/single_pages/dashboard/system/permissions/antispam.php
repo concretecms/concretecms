@@ -1,4 +1,8 @@
-<?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
+<?php defined('C5_EXECUTE') or die('Access Denied.');
+
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+$config = $app->make('config');
+?>
 
 <form method="post" id="site-form" action="<?=$view->action('update_library')?>">
     <div class="form-group">
@@ -25,7 +29,7 @@
                 if ($activeLibrary->getPackageID() > 0) {
                     Loader::packageElement('system/antispam/' . $activeLibrary->getSystemAntispamLibraryHandle() . '/form', $activeLibrary->getPackageHandle());
                 } else {
-                    Loader::element('system/antispam/' . $activeLibrary->getSystemAntispamLibraryHandle() . '/form');
+                    View::element('system/antispam/' . $activeLibrary->getSystemAntispamLibraryHandle() . '/form');
                 }
             }
         }
@@ -35,14 +39,14 @@
 				<legend style="margin-bottom: 0"><?=t('Log Settings')?></legend>
 				<div class="checkbox">
 					<div class="checkbox">
-						<label><?=$form->checkbox('ANTISPAM_LOG_SPAM', 1, Config::get('concrete.log.spam'))?> <?=t('Log entries marked as spam.')?></label>
+						<label><?=$form->checkbox('ANTISPAM_LOG_SPAM', 1, $config->get('concrete.log.spam'))?> <?=t('Log entries marked as spam.')?></label>
 					</div>
 					<span class="help-block"><?=t('Logged entries can be found in <a href="%s" style="color: #bfbfbf; text-decoration: underline">Dashboard > Reports > Logs</a>', $view->url('/dashboard/reports/logs'))?></span>
 				</div>
 
 				<div class="form-group">
 					<label><?=t('Email Notification')?> </label>
-					<?=$form->text('ANTISPAM_NOTIFY_EMAIL', Config::get('concrete.spam.notify_email'))?>
+					<?=$form->text('ANTISPAM_NOTIFY_EMAIL', $config->get('concrete.spam.notify_email'))?>
 					<span class="help-block"><?=t('Any email address in this box will be notified when spam is detected.')?></span>
 				</div>
 			</fieldset>
@@ -58,7 +62,7 @@
 
 	<div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-		    <?=Loader::helper('concrete/ui')->submit(t('Save'), 'submit', 'right', 'btn-primary')?>
+		    <?=$app->make('helper/concrete/ui')->submit(t('Save'), 'submit', 'right', 'btn-primary')?>
         </div>
 	</div>
 </form>
