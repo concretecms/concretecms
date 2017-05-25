@@ -892,4 +892,10 @@ return [
             'always_reindex' => false,
         ],
     ],
+    
+    'editor' => [
+        'plugins' => [
+            'selected' => [],
+        ],
+    ],
 ];
