@@ -49,7 +49,7 @@ class LogEntry
                 return '<i class="text-danger fa fa-fire launch-tooltip" title="' . $this->getLevelDisplayName() . '"></i>';
             case Logger::CRITICAL:
             case Logger::ALERT:
-                return '<i class="text-danger fa fa-exclamation-sign launch-tooltip" title="' . $this->getLevelDisplayName() . '"></i>';
+                return '<i class="text-danger fa fa-exclamation-circle launch-tooltip" title="' . $this->getLevelDisplayName() . '"></i>';
             case Logger::ERROR:
             case Logger::WARNING:
                 return '<i class="text-warning fa fa-warning launch-tooltip" title="' . $this->getLevelDisplayName() . '"></i>';
