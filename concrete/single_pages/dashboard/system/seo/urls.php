@@ -35,6 +35,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
             <?=$form->text('canonical_ssl_url', $canonical_ssl_url, ['placeholder' => 'http://domain.com'])?>
 
         </div>
+
+        <div class="alert alert-warning">
+            <?= t('Ensure that your site is viewable at the URL(s) above before you check the checkbox below.
+            If not, doing so may render your site unviewable until you can manually undo this change.') ?>
+        </div>
+
         <div class="form-group">
             <label class="control-label launch-tooltip" title="<?= t('If checked, this site will only be available at the host, port and SSL combination chosen above.') ?>" for="redirect_to_canonical_url"><?= t('URL Redirection') ?></label>
 
@@ -49,10 +55,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 
 
-    <div class="alert alert-warning">
-        <?= t('Ensure that your site is viewable at the URL(s) above before you check the checkbox below.
-        If not, doing so may render your site unviewable until you can manually undo this change.') ?>
-    </div>
+
 
 
     <div class="ccm-dashboard-form-actions-wrapper">
