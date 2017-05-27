@@ -33,7 +33,7 @@
 
         <div class="form-group">
             <label class="control-label" for="canonical_ssl_url"><?= t('Separate SSL URL') ?></label>
-            <?=$form->text('canonical_ssl_url', $canonical_ssl_url, ['placeholder' => 'http://domain.com'])?>
+            <?=$form->text('canonical_ssl_url', $canonical_ssl_url, ['placeholder' => 'https://domain.com'])?>
         </div>
 
         <div class="alert alert-warning">
