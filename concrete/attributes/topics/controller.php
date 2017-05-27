@@ -23,9 +23,9 @@ class Controller extends AttributeTypeController
     public $akTopicTreeID;
     private $akTopicAllowMultipleValues = true;
 
-    protected $searchIndexFieldDefinition = array('type' => 'text', 'options' => array('default' => null, 'notnull' => false));
+    protected $searchIndexFieldDefinition = ['type' => 'text', 'options' => ['default' => null, 'notnull' => false]];
 
-    public $helpers = array('form');
+    public $helpers = ['form'];
 
     public function getIconFormatter()
     {
@@ -42,13 +42,13 @@ class Controller extends AttributeTypeController
         if (is_array($value)) {
             $topics = $value;
         } else {
-            $topics = array($value);
+            $topics = [$value];
         }
 
         $i = 1;
-        $expressions = array();
+        $expressions = [];
         $qb = $list->getQueryObject();
-        foreach($topics as $value) {
+        foreach ($topics as $value) {
             if ($value instanceof TreeNode) {
                 $topic = $value;
             } else {
@@ -61,20 +61,20 @@ class Controller extends AttributeTypeController
                 $expressions[] = $qb->expr()->like($column, ':topicPath' . $i);
                 $qb->setParameter('topicPath' . $i, "%||" . $topic->getTreeNodeDisplayPath() . '%||');
             }
-            $i++;
+            ++$i;
         }
 
         $expr = $qb->expr();
-        $qb->andWhere(call_user_func_array(array($expr, 'orX'), $expressions));
+        $qb->andWhere(call_user_func_array([$expr, 'orX'], $expressions));
     }
 
     public function saveKey($data)
     {
         $type = $this->getAttributeKeySettings();
-        $data += array(
+        $data += [
             'akTopicParentNodeID' => null,
             'akTopicTreeID' => null,
-        );
+        ];
         $akTopicParentNodeID = $data['akTopicParentNodeID'];
         $akTopicTreeID = $data['akTopicTreeID'];
         if (isset($data['akTopicAllowMultipleValues']) && $data['akTopicAllowMultipleValues'] == 1) {
@@ -114,7 +114,7 @@ class Controller extends AttributeTypeController
 
     public function importValue(\SimpleXMLElement $akn)
     {
-        $selected = array();
+        $selected = [];
         if (isset($akn->topics)) {
             foreach ($akn->topics->topic as $topicPath) {
                 $selected[] = (string) $topicPath;
@@ -124,15 +124,12 @@ class Controller extends AttributeTypeController
         }
     }
 
-
     /**
      * @deprecated
      */
     public function setNodes($akTopicParentNodeID, $akTopicTreeID)
     {
-        /**
-         * @var TopicsSettings $type
-         */
+        /** @var TopicsSettings $type */
         $type = $this->getAttributeKey()->getAttributeKeySettings();
         $type->setParentNodeID($akTopicParentNodeID);
         $type->setTopicTreeID($akTopicTreeID);
@@ -142,7 +139,7 @@ class Controller extends AttributeTypeController
 
     public function createAttributeValue($nodes)
     {
-        $selected = array();
+        $selected = [];
         $this->load();
         $tree = Tree::getByID($this->akTopicTreeID);
         if ($nodes instanceof Topic) {
@@ -205,7 +202,7 @@ class Controller extends AttributeTypeController
         $this->requireAsset('core/topics');
         $this->requireAsset('javascript', 'jquery/form');
         if (is_object($this->attributeValue)) {
-            $valueIDs = array();
+            $valueIDs = [];
             foreach ($this->attributeValue->getValueObject()->getSelectedTopics() as $value) {
                 $valueID = $value->getTreeNodeID();
                 $withinParentScope = false;
@@ -240,6 +237,7 @@ class Controller extends AttributeTypeController
     public function searchForm($list)
     {
         $list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), $this->request('treeNodeID'));
+
         return $list;
     }
 
@@ -277,7 +275,7 @@ class Controller extends AttributeTypeController
     {
         $sh = Core::make('helper/security');
         $av = new TopicsValue();
-        $cleanIDs = array();
+        $cleanIDs = [];
         $topicsArray = $this->request->request->get('topics_' . $this->attributeKey->getAttributeKeyID());
         if (is_array($topicsArray) && count($topicsArray) > 0) {
             foreach ($topicsArray as $topicID) {
@@ -307,7 +305,7 @@ class Controller extends AttributeTypeController
             $tree = $defaultTree;
         }
         $this->set('tree', $tree);
-        $trees = array();
+        $trees = [];
         if (is_object($defaultTree)) {
             $trees[] = $defaultTree;
             foreach ($topicTreeList as $ctree) {
@@ -339,6 +337,7 @@ class Controller extends AttributeTypeController
     public function validateValue()
     {
         $val = $this->getAttributeValue()->getValue();
+
         return is_array($val) && count($val) > 0;
     }
 
@@ -392,13 +391,13 @@ class Controller extends AttributeTypeController
         $db = Database::get();
         $db->Replace(
             'atTopicSettings',
-            array(
+            [
                 'akID' => $newAK->getAttributeKeyID(),
                 'akTopicParentNodeID' => $this->akTopicParentNodeID,
                 'akTopicTreeID' => $this->akTopicTreeID,
                 'akTopicAllowMultipleValues' => $this->akTopicAllowMultipleValues,
-            ),
-            array('akID'),
+            ],
+            ['akID'],
             true
         );
     }
@@ -407,5 +406,4 @@ class Controller extends AttributeTypeController
     {
         return TopicsSettings::class;
     }
-
 }
