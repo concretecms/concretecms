@@ -88,7 +88,7 @@ class Controller extends AttributeTypeController
         if ($akTopicTreeID) {
             $type->setTopicTreeID($akTopicTreeID);
         }
-        $type->allowMultipleValues((bool) $akTopicAllowMultipleValues);
+        $type->setAllowMultipleValues((bool) $akTopicAllowMultipleValues);
 
         return $type;
     }
@@ -191,7 +191,7 @@ class Controller extends AttributeTypeController
         $allowMultipleValues = $key->tree['allow-multiple-values'];
         $type->setTopicTreeID($tree->getTreeID());
         $type->setParentNodeID($node->getTreeNodeID());
-        $type->allowMultipleValues(((string) $allowMultipleValues) == '1' ? true : false);
+        $type->setAllowMultipleValues(((string) $allowMultipleValues) == '1' ? true : false);
 
         return $type;
     }

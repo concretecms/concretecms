@@ -74,7 +74,7 @@ class TopicsSettings extends Settings
     /**
      * @param bool $allowMultipleValues
      */
-    public function allowMultipleValues($allowMultipleValues)
+    public function setAllowMultipleValues($allowMultipleValues)
     {
         $this->akTopicAllowMultipleValues = $allowMultipleValues;
     }

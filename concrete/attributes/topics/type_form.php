@@ -70,7 +70,7 @@
         <div class="form-group">
             <div class="checkbox">
                 <label>
-                    <?= $form->checkbox('allowMultipleValues', 1, $allowMultipleValues)?> <span><?=t('Allow multiple nodes to be chosen.') ?></span>
+                    <?= $form->checkbox('akTopicAllowMultipleValues', 1, $allowMultipleValues)?> <span><?=t('Allow multiple nodes to be chosen.') ?></span>
                 </label>
             </div>
         </div>
