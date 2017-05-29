@@ -476,4 +476,29 @@ class PageTest extends PageTestCase
         $about->delete();
         $contact->delete();
     }
+
+    public function testPageUpdate()
+    {
+        /** @var Concrete\Core\Page\Page $page */
+        $page = self::createPage('Awesome Page');
+        $nvc = $page->getVersionToModify();
+        $data = [
+            'cName' => 'Amazing Page',
+            'cDescription' => 'This is amazing page.',
+            'cDatePublic' => '2017-05-11 10:05:00',
+            'cHandle' => 'amazing-page',
+        ];
+        $nvc->update($data);
+        $v = \Concrete\Core\Page\Collection\Version\Version::get($page, "RECENT");
+        $v->approve();
+
+        $page = Page::getByID($page->getCollectionID());
+        $this->assertEquals($data['cName'], $page->getCollectionName());
+        $this->assertEquals($data['cDescription'], $page->getCollectionDescription());
+        $this->assertEquals($data['cDatePublic'], $page->getCollectionDatePublic());
+        $this->assertEquals($data['cHandle'], $page->getCollectionHandle());
+        $this->assertEquals('/amazing-page', $page->getCollectionPath());
+
+        $page->delete();
+    }
 }

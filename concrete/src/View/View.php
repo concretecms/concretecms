@@ -204,26 +204,61 @@ class View extends AbstractView
 
     public function renderViewContents($scopeItems)
     {
-        extract($scopeItems);
+        $contents = '';
+
+        // Render the main view file
         if ($this->innerContentFile) {
-            ob_start();
-            include $this->innerContentFile;
-            $innerContent = ob_get_contents();
-            ob_end_clean();
+            $contents = $this->renderInnerContents($scopeItems);
         }
 
+        // Render the template around it
         if (file_exists($this->template)) {
-            ob_start();
-            $this->onBeforeGetContents();
-            include $this->template;
-            $this->onAfterGetContents();
-            $contents = ob_get_contents();
-            ob_end_clean();
-
-            return $contents;
-        } else {
-            return $innerContent;
+            $contents = $this->renderTemplate($scopeItems, $contents);
         }
+
+        return $contents;
+    }
+
+    /**
+     * Render the file set to $this->innerContentFile
+     * @param $scopeItems
+     * @return string
+     */
+    protected function renderInnerContents($scopeItems)
+    {
+        // Extract the items into the current scope
+        extract($scopeItems);
+
+        ob_start();
+        include $this->innerContentFile;
+        $innerContent = ob_get_contents();
+        ob_end_clean();
+
+        return $innerContent;
+    }
+
+    /**
+     * Render the file set to $this->template
+     * @param $scopeItems
+     * @return string
+     */
+    protected function renderTemplate($scopeItems, $innerContent)
+    {
+        // Extract the items into the current scope
+        extract($scopeItems);
+
+        ob_start();
+
+        // Fire a `before` event
+        $this->onBeforeGetContents();
+        include $this->template;
+
+        // Fire an `after` event
+        $this->onAfterGetContents();
+        $contents = ob_get_contents();
+        ob_end_clean();
+
+        return $contents;
     }
 
     public function finishRender($contents)

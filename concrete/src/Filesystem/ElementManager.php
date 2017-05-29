@@ -15,19 +15,19 @@ class ElementManager
     public function get($element)
     {
         if (isset($this->registry[$element])) {
-            return $this->build($this->registry[$element]);
-        }
-
-        $class = new \ReflectionClass(Element::class);
-        return $class->newInstanceArgs(func_get_args());
-    }
-
-    protected function build($o) {
-        if ($o instanceof \Closure) {
-            return $o();
+            $o = $this->registry[$element];
+            if ($o instanceof \Closure) {
+                $element = $o();
+            } else {
+                $element = $o;
+            }
+            $element->populateFromArguments(func_get_args());
+            return $element;
         } else {
-            return $o;
+            $class = new \ReflectionClass(Element::class);
+            return $class->newInstanceArgs(func_get_args());
         }
+
     }
 
     public function register($element, $object)

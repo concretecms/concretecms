@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Foundation\Repetition;
 
-interface RepetitionInterface
+interface RepetitionInterface extends \JsonSerializable
 {
     /**
      * Repeat constants.
@@ -18,12 +18,21 @@ interface RepetitionInterface
     const MONTHLY_REPEAT_MONTHLY = 2;
     const MONTHLY_REPEAT_LAST_WEEKDAY = 3;
 
+    public function getTimezone();
+
+    public function setTimezone(\DateTimeZone $timezone);
+
     /**
      * The ID of this repetition, null for unsaved.
      *
      * @return int|string|null
      */
     public function getID();
+
+    /**
+     * Returns the start date/time as a timestamp
+     */
+    public function getStartDateTimestamp();
 
     /**
      * Set the start date.

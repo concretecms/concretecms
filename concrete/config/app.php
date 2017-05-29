@@ -780,6 +780,10 @@ return [
             ['css', 'css/image-editor/controls/position.css'],
             ['javascript', 'js/image-editor/controls/position.js'],
         ],
+        'core/duration' => [
+            ['javascript', 'js/duration.js'],
+            ['css', 'css/duration.css'],
+        ],
         'core/imageeditor/control/filter' => [
             ['css', 'css/image-editor/controls/filter.css'],
             ['javascript', 'js/image-editor/controls/filter.js'],
@@ -1168,6 +1172,18 @@ return [
                 ['javascript', 'core/file-manager'],
             ],
         ],
+        'core/duration' => [
+            [
+                ['css', 'selectize'],
+                ['css', 'jquery/ui'],
+                ['css', 'core/duration'],
+                ['javascript', 'selectize'],
+                ['javascript', 'core/duration'],
+                ['javascript', 'jquery/ui'],
+                ['javascript-localized', 'jquery/ui'],
+            ],
+        ],
+
         'core/file-folder-selector' => [
             [
                 ['javascript', 'core/events'],

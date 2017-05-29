@@ -7,11 +7,13 @@ use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Http\Response;
 use Concrete\Core\Http\ServerInterface;
+use Concrete\Core\Localization\Localization;
 use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Routing\RouterInterface;
 use Concrete\Core\Site\Service as SiteService;
 use Concrete\Core\Url\Resolver\CanonicalUrlResolver;
 use Concrete\Core\Url\Resolver\UrlResolverInterface;
+use Concrete\Core\User\User;
 use Exception;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -68,6 +70,11 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
             // Call each step in the line
             // @todo Move these to individual middleware, this is basically a duplicated middleware pipeline
             $response = $this->trySteps([
+                // Set the active language for the site, based either on the site locale, or the
+                // current user record. This can be changed later as well, during runtime.
+                // Start localization library.
+                'setSystemLocale',
+
                 // Set up packages first.
                 // We do this because we don't want the entity manager to be loaded and we
                 // want to give packages an opportunity to replace classes and load new classes
@@ -151,6 +158,18 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
         @date_default_timezone_set($config->get('app.server_timezone'));
     }
 
+    /**
+     * Initialize localization.
+     *
+     * @deprecated In a future major version this will be part of HTTP middleware
+     */
+    protected function setSystemLocale()
+    {
+        $u = new User();
+        $lan = $u->getUserLanguageToDisplay();
+        $loc = Localization::getInstance();
+        $loc->setContextLocale(Localization::CONTEXT_UI, $lan);
+    }
 
     /**
      * Set legacy config values

@@ -324,6 +324,13 @@ module.exports = function(grunt) {
             ]
         },
 
+        ccm_duration: {
+            dest: '<%= DIR_BASE %>/concrete/js/duration.js',
+            src: [
+                '<%= DIR_BASE %>/concrete/js/build/core/duration.js'
+            ]
+        },
+
         ccm_notification: {
             dest: '<%= DIR_BASE %>/concrete/js/notification.js',
             src: [
@@ -437,6 +444,7 @@ module.exports = function(grunt) {
         '<%= DIR_BASE %>/concrete/css/account.css': '<%= DIR_BASE %>/concrete/css/build/core/account.less',
         '<%= DIR_BASE %>/concrete/css/fancytree.css': '<%= DIR_BASE %>/concrete/css/build/vendor/jquery-fancytree/fancytree-bootstrap.less',
         '<%= DIR_BASE %>/concrete/css/sitemap.css': '<%= DIR_BASE %>/concrete/css/build/core/sitemap.less',
+        '<%= DIR_BASE %>/concrete/css/duration.css': '<%= DIR_BASE %>/concrete/css/build/core/date-time-duration.less',
         '<%= DIR_BASE %>/concrete/css/file-manager.css': '<%= DIR_BASE %>/concrete/css/build/core/file-manager.less',
         '<%= DIR_BASE %>/concrete/css/conversations.css': '<%= DIR_BASE %>/concrete/css/build/core/conversations.less',
         '<%= DIR_BASE %>/concrete/css/gathering/display.css': '<%= DIR_BASE %>/concrete/css/build/core/gathering/display.less',

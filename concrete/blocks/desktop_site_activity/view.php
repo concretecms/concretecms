@@ -4,10 +4,11 @@
     <?php
     $c = Page::getCurrentPage();
     if ($c->isEditMode()) {
-    ?>
-    <div class="ccm-edit-mode-disabled-item"><?= t('Site Activity disabled in edit mode.')?></div>
-
-    <?php } else { ?>
+        $loc = Localization::getInstance();
+        $loc->pushActiveContext(Localization::CONTEXT_UI);
+        ?><div class="ccm-edit-mode-disabled-item"><?= t('Site Activity disabled in edit mode.')?></div><?php
+        $loc->popActiveContext();
+    } else { ?>
         <?php if (count($types)) { ?>
             <script type="text/javascript">
                 $(function() {

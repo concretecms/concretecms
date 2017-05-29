@@ -12,7 +12,7 @@ use Concrete\Core\View\AbstractView;
 use Config;
 use Concrete\Core\Page\Stack\StackList;
 use Doctrine\ORM\EntityManagerInterface;
-use Stack;
+use Concrete\Core\Page\Stack\Stack;
 use Page;
 use Permissions;
 use User;
@@ -239,15 +239,16 @@ class Stacks extends DashboardPageController
             'name' => t('Stacks & Global Areas'),
             'url' => \URL::to('/dashboard/blocks/stacks'),
         ]];
-        $nav = $this->app->make('helper/navigation');
-        if ($page === null) {
+        if ($this->getTask() == 'view_global_areas' || ($page instanceof Stack && $page->getStackType() == Stack::ST_TYPE_GLOBAL_AREA)) {
             $breadcrumb[] = [
                 'id' => '',
-                'active' => true,
+                'active' => $this->getTask() == 'view_global_areas',
                 'name' => t('Global Areas'),
                 'url' => \URL::to('/dashboard/blocks/stacks', 'view_global_areas'),
             ];
-        } else {
+        }
+        if ($page !== null) {
+            $nav = $this->app->make('helper/navigation');
             $pages = array_reverse($nav->getTrailToCollection($page));
             $pages[] = $page;
             for ($i = 1; $i < count($pages); ++$i) {
@@ -260,7 +261,6 @@ class Stacks extends DashboardPageController
                 ];
             }
         }
-
         return $breadcrumb;
     }
 

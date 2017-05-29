@@ -6,6 +6,7 @@ use Concrete\Core\Authentication\AuthenticationTypeFailureException;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\Desktop\DesktopList;
 use Concrete\Core\Routing\RedirectResponse;
+use Exception;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Validation\CSRF\Token;
 use Page;
@@ -86,7 +87,7 @@ class Login extends PageController
             $this->view();
             $this->set('authTypeParams', $params);
             $this->set('authTypeElement', $method);
-        } catch (\exception $e) {
+        } catch (Exception $e) {
             if ($e instanceof AuthenticationTypeFailureException) {
                 // Throw again if this is a big`n
                 throw $e;
@@ -113,7 +114,7 @@ class Login extends PageController
                 if ($user && $user->isLoggedIn()) {
                     return $this->finishAuthentication($at);
                 }
-            } catch (\exception $e) {
+            } catch (Exception $e) {
                 $this->error->add($e->getMessage());
             }
         }
@@ -128,7 +129,7 @@ class Login extends PageController
     /**
      * @param AuthenticationType $type Required
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function finishAuthentication(/* AuthenticationType */
         $type = null
@@ -214,6 +215,7 @@ class Login extends PageController
         }
         $languages = [];
         $locales = [];
+
         if ($config->get('concrete.i18n.choose_language_login')) {
             $languages = Localization::getAvailableInterfaceLanguages();
             if (count($languages) > 0) {
@@ -233,72 +235,19 @@ class Login extends PageController
 
     public function chooseRedirect()
     {
-        $config = $this->app->make('config');
-        $session = $this->app->make('session');
-
         if (!$this->error) {
             $this->error = $this->app->make('helper/validation/error');
         }
 
-        $nh = $this->app->make('helper/validation/numbers');
-        $navigation = $this->app->make('helper/navigation');
-        $rUrl = false;
-
         $u = new User(); // added for the required registration attribute change above. We recalc the user and make sure they're still logged in
         if ($u->isRegistered()) {
-            if ($u->config('NEWSFLOW_LAST_VIEWED') == 'FIRSTRUN') {
+            if ($u->config('NEWSFLOW_LAST_VIEWED') === 'FIRSTRUN') {
                 $u->saveConfig('NEWSFLOW_LAST_VIEWED', 0);
             }
-            do {
-                // redirect to original destination
-                if ($session->has('rUri')) {
-                    $rUrl = $session->get('rUri');
-                    $session->remove('rUri');
-                    if ($rUrl) {
-                        break;
-                    }
-                }
-                if ($session->has('rcID')) {
-                    $rcID = $session->get('rcID');
-                    if ($nh->integer($rcID)) {
-                        $rc = Page::getByID($rcID);
-                    } elseif (strlen($rcID)) {
-                        $rcID = trim($rcID, '/');
-                        $rc = Page::getByPath('/' . $rcID);
-                    }
-                    if ($rc instanceof Page && !$rc->isError()) {
-                        $rUrl = $navigation->getLinkToCollection($rc);
-                        break;
-                    }
-                }
 
-                $login_redirect_mode = $config->get('concrete.misc.login_redirect');
-
-                //redirect to custom page
-                $login_redirect_cid = intval($config->get('concrete.misc.login_redirect_cid'));
-                if ($login_redirect_mode == 'CUSTOM' && $login_redirect_cid > 0) {
-                    $rc = Page::getByID($login_redirect_cid);
-                    if ($rc instanceof Page && !$rc->isError()) {
-                        $rUrl = $navigation->getLinkToCollection($rc);
-                        break;
-                    }
-                }
-
-                if ($login_redirect_mode == 'DESKTOP') {
-                    $desktop = DesktopList::getMyDesktop();
-                    if (is_object($desktop)) {
-                        $rUrl = $navigation->getLinkToCollection($desktop);
-                    }
-                }
-
-                break;
-            } while (false);
-
-            if (!$rUrl) {
-                $rUrl = $navigation->getLinkToCollection(Page::getByID(HOME_CID));
-            }
-
-            $response = new RedirectResponse((string) $rUrl);
+            $response = new RedirectResponse(
+                $this->getRedirectUrl()
+            );
 
             // Disable caching for response
             $response = $response->setMaxAge(0)->setSharedMaxAge(0)->setPrivate();
@@ -310,6 +259,78 @@ class Login extends PageController
             $this->error->add(t('User is not registered. Check your authentication controller.'));
             $u->logout();
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function getRedirectUrl()
+    {
+        $config = $this->app->make('config');
+        $login_redirect_mode = (string) $config->get('concrete.misc.login_redirect');
+
+        // Redirect to a page from the session
+        $rUrl = $this->getRedirectUrlFromSession();
+        if ($rUrl) {
+            return $rUrl;
+        }
+
+        // Redirect to custom page
+        $login_redirect_cid = (int) $config->get('concrete.misc.login_redirect_cid');
+        if ($login_redirect_mode === 'CUSTOM' && $login_redirect_cid > 0) {
+            $rc = Page::getByID($login_redirect_cid);
+            if ($rc instanceof Page && !$rc->isError()) {
+                $rUrl = $rc->getCollectionLink();
+                if ($rUrl) {
+                    return $rUrl;
+                }
+            }
+        }
+
+        // Redirect to desktop
+        if ($login_redirect_mode === 'DESKTOP') {
+            $desktop = DesktopList::getMyDesktop();
+            if (is_object($desktop)) {
+                return $desktop->getCollectionLink();
+            }
+        }
+
+        // Return to home page
+        return Page::getByID(HOME_CID)->getCollectionLink();
+    }
+
+    /**
+     * @return string|false
+     */
+    public function getRedirectUrlFromSession()
+    {
+        $nh = $this->app->make('helper/validation/numbers');
+        $session = $this->app->make('session');
+
+        // Redirect to original destination
+        if ($session->has('rUri')) {
+            $rUrl = $session->get('rUri');
+            $session->remove('rUri');
+            if ($rUrl) {
+                return $rUrl;
+            }
+        }
+
+        if ($session->has('rcID')) {
+            $rcID = $session->get('rcID');
+            if ($nh->integer($rcID)) {
+                $rc = Page::getByID($rcID);
+            } elseif (strlen($rcID)) {
+                $rcID = trim($rcID, '/');
+                $rc = Page::getByPath('/' . $rcID);
+            }
+
+            if ($rc instanceof Page && !$rc->isError()) {
+                return $rc->getCollectionLink();
+            }
+        }
+
+        return false;
     }
 
     public function view($type = null, $element = 'form')
@@ -334,7 +355,7 @@ class Login extends PageController
             ) {
                 $session->remove('uRequiredAttributeUser');
                 $session->remove('uRequiredAttributeUserAuthenticationType');
-                throw new \Exception(t('Invalid Request, please attempt login again.'));
+                throw new Exception(t('Invalid Request, please attempt login again.'));
             }
             User::loginByUserID($session->get('uRequiredAttributeUser'));
             $session->remove('uRequiredAttributeUser');
@@ -342,7 +363,7 @@ class Login extends PageController
             $at = AuthenticationType::getByHandle($session->get('uRequiredAttributeUserAuthenticationType'));
             $session->remove('uRequiredAttributeUserAuthenticationType');
             if (!$at) {
-                throw new \Exception(t("Invalid Authentication Type"));
+                throw new Exception(t("Invalid Authentication Type"));
             }
 
             $ui = UserInfo::getByID($u->getUserID());
@@ -376,7 +397,7 @@ class Login extends PageController
             }
 
             return $this->finishAuthentication($at);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->error->add($e->getMessage());
         }
     }

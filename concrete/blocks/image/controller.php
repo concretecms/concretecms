@@ -70,21 +70,21 @@ class Controller extends BlockController implements FileTrackableInterface
 
         $imgPaths = [];
 
-        if ($this->cropImage && ($this->maxWidth > 0 && $this->maxHeight > 0)) {
-            $im = $this->app->make('helper/image');
+        if (is_object($f) && is_object($foS)) {
+            if (!$f->getTypeObject()->isSVG() && !$foS->getTypeObject()->isSVG()) {
+                if ($this->cropImage && ($this->maxWidth > 0 && $this->maxHeight > 0)) {
+                    $im = $this->app->make('helper/image');
 
-            if (is_object($foS)) {
-                $fOnstateThumb = $im->getThumbnail($foS, $this->maxWidth, $this->maxHeight, true);
-                $imgPaths['hover'] = $fOnstateThumb->src;
-            }
+                    $fIDThumb = $im->getThumbnail($f, $this->maxWidth, $this->maxHeight, true);
+                    $imgPaths['default'] = $fIDThumb->src;
 
-            if (is_object($f)) {
-                $fIDThumb = $im->getThumbnail($f, $this->maxWidth, $this->maxHeight, true);
-                $imgPaths['default'] = $fIDThumb->src;
+                    $fOnstateThumb = $im->getThumbnail($foS, $this->maxWidth, $this->maxHeight, true);
+                    $imgPaths['hover'] = $fOnstateThumb->src;
+                } else {
+                    $imgPaths['default'] = File::getRelativePathFromID($this->getFileID());
+                    $imgPaths['hover'] = File::getRelativePathFromID($this->fOnstateID);
+                }
             }
-        } else {
-            $imgPaths['hover'] = File::getRelativePathFromID($this->fOnstateID);
-            $imgPaths['default'] = File::getRelativePathFromID($this->getFileID());
         }
 
         $this->set('imgPaths', $imgPaths);
@@ -291,13 +291,22 @@ class Controller extends BlockController implements FileTrackableInterface
     public function validate($args)
     {
         $e = $this->app->make('helper/validation/error');
+        $f = File::getByID($args['fID']);
+        $svg = false;
+        if (is_object($f)) {
+            $svg = $f->getTypeObject()->isSVG();
+        }
 
         if (!$args['fID']) {
             $e->add(t('Please select an image.'));
         }
 
-        if (isset($args['cropImage']) && (intval($args['maxWidth']) <= 0 || (intval($args['maxHeight']) <= 0))) {
+        if (isset($args['cropImage']) && (intval($args['maxWidth']) <= 0 || (intval($args['maxHeight']) <= 0)) && !$svg) {
             $e->add(t('Cropping an image requires setting a max width and max height.'));
+        }
+
+        if ($svg && isset($args['constrainImage'])) {
+            $e->add(t('SVG images cannot be size constrained.'));
         }
 
         return $e;
