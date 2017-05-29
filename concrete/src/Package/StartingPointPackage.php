@@ -271,10 +271,10 @@ class StartingPointPackage extends BasePackage
 
     protected function import_files()
     {
-        $type = \Concrete\Core\File\StorageLocation\Type\Type::add('default', t('Default'));
-        \Concrete\Core\File\StorageLocation\Type\Type::add('local', t('Local'));
+        $type = \Concrete\Core\File\StorageLocation\Type\Type::add('default', 'Default');
+        \Concrete\Core\File\StorageLocation\Type\Type::add('local', 'Local');
         $configuration = $type->getConfigurationObject();
-        $fsl = \Concrete\Core\File\StorageLocation\StorageLocation::add($configuration, t('Default'), true);
+        $fsl = \Concrete\Core\File\StorageLocation\StorageLocation::add($configuration, 'Default', true);
 
         $filesystem = new Filesystem();
         $tree = $filesystem->create();
@@ -282,7 +282,7 @@ class StartingPointPackage extends BasePackage
 
         $thumbnailType = new \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type();
         $thumbnailType->requireType();
-        $thumbnailType->setName(tc('ThumbnailTypeName', 'File Manager Thumbnails'));
+        $thumbnailType->setName('File Manager Thumbnails');
         $thumbnailType->setHandle(Config::get('concrete.icons.file_manager_listing.handle'));
         $thumbnailType->setWidth(Config::get('concrete.icons.file_manager_listing.width'));
         $thumbnailType->setHeight(Config::get('concrete.icons.file_manager_listing.height'));
@@ -290,7 +290,7 @@ class StartingPointPackage extends BasePackage
 
         $thumbnailType = new \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type();
         $thumbnailType->requireType();
-        $thumbnailType->setName(tc('ThumbnailTypeName', 'File Manager Detail Thumbnails'));
+        $thumbnailType->setName('File Manager Detail Thumbnails');
         $thumbnailType->setHandle(Config::get('concrete.icons.file_manager_detail.handle'));
         $thumbnailType->setWidth(Config::get('concrete.icons.file_manager_detail.width'));
         $thumbnailType->save();
@@ -393,18 +393,18 @@ class StartingPointPackage extends BasePackage
         // create the groups our site users
         // specify the ID's since auto increment may not always be +1
         $g1 = Group::add(
-            tc("GroupName", "Guest"),
-            tc("GroupDescription", "The guest group represents unregistered visitors to your site."),
+            "Guest",
+            "The guest group represents unregistered visitors to your site.",
             false,
             false,
             GUEST_GROUP_ID);
         $g2 = Group::add(
-            tc("GroupName", "Registered Users"),
-            tc("GroupDescription", "The registered users group represents all user accounts."),
+            "Registered Users",
+            "The registered users group represents all user accounts.",
             false,
             false,
             REGISTERED_GROUP_ID);
-        $g3 = Group::add(tc("GroupName", "Administrators"), "", false, false, ADMIN_GROUP_ID);
+        $g3 = Group::add("Administrators", "", false, false, ADMIN_GROUP_ID);
 
         // insert admin user into the user table
         if (defined('INSTALL_USER_PASSWORD')) {
@@ -421,7 +421,7 @@ class StartingPointPackage extends BasePackage
         $u = User::getByUserID(USER_SUPER_ID, true, false);
 
         MailImporter::add(['miHandle' => 'private_message']);
-        UserPointAction::add('won_badge', t('Won a Badge'), 5, false, true);
+        UserPointAction::add('won_badge', 'Won a Badge', 5, false, true);
 
         // Install conversation default email
         \Conversation::setDefaultSubscribedUsers([$superuser]);
