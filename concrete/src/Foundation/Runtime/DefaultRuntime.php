@@ -115,6 +115,7 @@ class DefaultRuntime implements RuntimeInterface, ApplicationAwareInterface
      */
     protected function sendResponse(Response $response)
     {
+        $response->prepare(\Request::getInstance());
         $response->send();
 
         // Set the status to ended
