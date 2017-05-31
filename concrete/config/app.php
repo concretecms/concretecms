@@ -847,6 +847,15 @@ return [
             ['javascript-localized', '/ccm/assets/localization/fancytree/js', ['minify' => false]],
             ['css', 'css/fancytree.css', ['minify' => false]],
         ],
+        'moment' => [
+            ['javascript', 'js/moment.js', ['minify' => false, 'version' => '2.18.1']],
+        ],
+        'moment-timezone' => [
+            ['javascript', 'js/moment-timezone.js', ['minify' => false, 'version' => '0.5.13']],
+        ],
+        'moment-timezone-data' => [
+            ['javascript', 'js/moment-timezone-data.js', ['minify' => false, 'version' => '0.5.13']],
+        ],
         'bootstrap/dropdown' => [
             ['javascript', 'js/bootstrap/dropdown.js'],
             ['css', 'css/app.css', ['minify' => false]],
@@ -1076,6 +1085,12 @@ return [
                 ['css', 'font-awesome'],
             ],
         ],
+        'moment' => [
+            [
+                ['javascript', 'moment'],
+                ['javascript', 'moment-timezone'],
+            ],
+        ],
         'fancytree' => [
             [
                 ['javascript', 'fancytree'],
@@ -1178,6 +1193,9 @@ return [
                 ['css', 'jquery/ui'],
                 ['css', 'core/duration'],
                 ['javascript', 'selectize'],
+                ['javascript', 'moment'],
+                ['javascript', 'moment-timezone'],
+                ['javascript', 'moment-timezone-data'],
                 ['javascript', 'core/duration'],
                 ['javascript', 'jquery/ui'],
                 ['javascript-localized', 'jquery/ui'],
