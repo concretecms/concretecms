@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
+use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 class Version20170512000000 extends AbstractMigration
