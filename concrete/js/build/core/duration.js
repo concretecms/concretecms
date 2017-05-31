@@ -92,16 +92,24 @@
 
         prepareRepetition: function (repetition) {
             var my = this,
-                startDate = new Date(repetition.pdStartDateTimestamp * 1000);
+                momentStartDate = moment(repetition.pdStartDateTimestamp * 1000).tz(
+                    repetition.timezone.timezone
+                ),
+                round = repetition.repetitionID == 0;
+
+            // if this is a new repetition (ID == 0) then we round the starting date.
+            // otherwise we accept what is passed exactly
 
             repetition.setID = my.setID;
-            repetition.pdStartDate = $.datepicker.formatDate('yy-mm-dd', startDate);
-            repetition.pdStartDateSelectTime = my.getTimeFromDate(startDate, true);
+            repetition.pdStartDate = momentStartDate.format('gggg-MM-DD');
+            repetition.pdStartDateSelectTime = my.getTimeFromDate(momentStartDate, round);
             repetition.pdEndDateSelectTime = false;
             if (repetition.pdEndDateTimestamp) {
-                var endDate = new Date(repetition.pdEndDateTimestamp * 1000);
-                repetition.pdEndDate = $.datepicker.formatDate('yy-mm-dd', endDate);
-                repetition.pdEndDateSelectTime = my.getTimeFromDate(endDate);
+                var momentEndDate = moment(repetition.pdEndDateTimestamp * 1000).tz(
+                    repetition.timezone.timezone
+                );
+                repetition.pdEndDate = momentEndDate.format('gggg-MM-DD');
+                repetition.pdEndDateSelectTime = my.getTimeFromDate(momentEndDate);
             }
             return repetition;
         },
@@ -158,22 +166,22 @@
             }
         },
 
-        getTimeFromDate: function (date, round) {
-            var minutes = date.getMinutes();
+        getTimeFromDate: function (momentDate, round) {
+            var minutes = momentDate.minutes();
             var hours, pm;
 
-            if (date.getHours() == 0) {
+            if (momentDate.hours() == 0) {
                 hours = 12;
                 pm = 'am';
-            } else if (date.getHours() > 11) {
+            } else if (momentDate.hours() > 11) {
                 pm = 'pm';
-                if (date.getHours() > 12) {
-                    hours = date.getHours() - 12;
+                if (momentDate.hours() > 12) {
+                    hours = momentDate.hours() - 12;
                 } else {
-                    hours = date.getHours();
+                    hours = momentDate.hours();
                 }
             } else {
-                hours = date.getHours();
+                hours = momentDate.hours();
                 pm = 'am';
             }
 
@@ -204,7 +212,7 @@
             endDate.setTime(startDate.getTime() + (1 * 60 * 60 * 1000)); // one hour
 
             var endDateFormatted = $.datepicker.formatDate(format, endDate),
-                endTime = my.getTimeFromDate(endDate, false);
+                endTime = my.getTimeFromDate(moment(endDate), false);
 
             my.$element.find("input[name=pdEndDate_pub_" + my.getSetID() + "]").datepicker('setDate', endDateFormatted);
 
