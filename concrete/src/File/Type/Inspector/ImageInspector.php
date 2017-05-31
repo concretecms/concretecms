@@ -5,23 +5,12 @@ use Concrete\Core\Entity\File\Version;
 use Image;
 use FileAttributeKey;
 use Core;
-use Imagine\Exception\NotSupportedException;
-use Imagine\Image\Metadata\ExifMetadataReader;
 
 class ImageInspector extends Inspector
 {
     public function inspect(Version $fv)
     {
-        $fr = $fv->getFileResource();
-        $imagine = Core::make(Image::getFacadeAccessor());
-        if (\Config::get('concrete.file_manager.images.use_exif_data_to_rotate_images')) {
-            try {
-                $imagine->setMetadataReader(new ExifMetadataReader());
-            } catch (NotSupportedException $e) {
-            }
-        }
-
-        $image = $imagine->load($fr->read());
+        $image = $fv->getImagineImage();
         $data = $image->getSize();
 
         // sets an attribute - these file attribute keys should be added
