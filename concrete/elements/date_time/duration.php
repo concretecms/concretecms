@@ -119,10 +119,9 @@ $weekDays = \Punic\Calendar::getSortedWeekdays('wide');
 
         </div>
 
-        <hr/>
-
         <div data-wrapper="duration-repeat-selector" style="display: none">
 
+            <br/>
 
             <div class="form-group">
                 <label for="pdRepeatPeriod" class="control-label"><?= t('Repeats') ?></label>
@@ -270,6 +269,8 @@ $weekDays = \Punic\Calendar::getSortedWeekdays('wide');
             </div>
 
         </div>
+
+        <hr/>
 
     </div>
 
