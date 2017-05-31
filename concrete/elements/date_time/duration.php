@@ -166,7 +166,7 @@ $weekDays = \Punic\Calendar::getSortedWeekdays('wide');
                         </div>
                         <div class="radio">
                             <label>
-                                <input type="radio" name="pdRepeatPeriodMonthsRepeatBy_<%setID%>" <% if (pdRepeatPeriodDaysEvery == 'week') { %>checked<% } %> value="week">
+                                <input type="radio" name="pdRepeatPeriodMonthsRepeatBy_<%=setID%>" <% if (pdRepeatPeriodDaysEvery == 'week') { %>checked<% } %> value="week">
                                 <?= t('Day of Week')?>
                             </label>
                         </div>
