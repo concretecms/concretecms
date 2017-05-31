@@ -224,4 +224,30 @@ abstract class ItemList
     {
         return $this->getResults();
     }
+
+    /**
+     * Split a string into words and format them to be used in LIKE queries.
+     *
+     * @param string|mixed $keywords The string to be splitted
+     * @param string $wordSeparators The regular expression pattern that represents potential word delimiters (eg '\s' for any whitespace character)
+     *
+     * @return string[]|null returns null if no word has been found, or an array of words enclosed by '%'
+     *
+     * @example for instance, with 'Hello world!', you'll get ['%Hello$', '%world!$']
+     */
+    protected function splitKeywords($keywords, $wordSeparators = '\s')
+    {
+        $result = null;
+        if (is_string($keywords)) {
+            $keywords = trim(preg_replace('/[' . $wordSeparators . ']+/', ' ', $keywords));
+            if ($keywords !== '') {
+                $result = [];
+                foreach (explode(' ', $keywords) as $keyword) {
+                    $result[] = '%' . addcslashes($keyword, '%_') . '%';
+                }
+            }
+        }
+
+        return $result;
+    }
 }
