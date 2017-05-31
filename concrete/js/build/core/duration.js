@@ -302,27 +302,30 @@
                 $wrapper.show();
             }
             $('input[name=pdStartRepeatDate_' + my.getSetID() + ']').val(my.$element.find("input[name=pdStartDate_pub_" + my.getSetID() + "]").val());
+
+            $wrapper.find('input[type=checkbox]').prop('checked', false);
+
             switch (startDate.getDay()) {
                 case 0:
-                    $wrapper.find("input[value=0]").attr('checked', true);
+                    $wrapper.find("input[value=0]").prop('checked', true);
                     break;
                 case 1:
-                    $wrapper.find("input[value=1]").attr('checked', true);
+                    $wrapper.find("input[value=1]").prop('checked', true);
                     break;
                 case 2:
-                    $wrapper.find("input[value=2]").attr('checked', true);
+                    $wrapper.find("input[value=2]").prop('checked', true);
                     break;
                 case 3:
-                    $wrapper.find("input[value=3]").attr('checked', true);
+                    $wrapper.find("input[value=3]").prop('checked', true);
                     break;
                 case 4:
-                    $wrapper.find("input[value=4]").attr('checked', true);
+                    $wrapper.find("input[value=4]").prop('checked', true);
                     break;
                 case 5:
-                    $wrapper.find("input[value=5]").attr('checked', true);
+                    $wrapper.find("input[value=5]").prop('checked', true);
                     break;
                 case 6:
-                    $wrapper.find("input[value=6]").attr('checked', true);
+                    $wrapper.find("input[value=6]").prop('checked', true);
                     break;
             }
 
