@@ -300,12 +300,24 @@ echo Core::make('helper/concrete/ui')->tabs($tabs);
         </div>
     </div>
     <div class="form-group">
-        <?php echo $form->checkbox($view->field('noAnimate'), 1, $noAnimate); ?>
-        <?php echo $form->label($view->field('noAnimate'), t('Disable Automatic Slideshow')); ?>
+        <div class="checkbox">
+            <label>
+            <?php
+            echo $form->checkbox($view->field('noAnimate'), 1, $noAnimate);
+            echo t('Disable Automatic Slideshow');
+            ?>
+            </label>
+        </div>
     </div>
     <div class="form-group">
-        <?php echo $form->checkbox($view->field('pause'), 1, $pause); ?>
-        <?php echo $form->label($view->field('pause'), t('Pause Slideshow on Hover')); ?>
+        <div class="checkbox">
+            <label>
+            <?php
+            echo $form->checkbox($view->field('pause'), 1, $pause);
+            echo t('Pause Slideshow on Hover');
+            ?>
+            </label>
+        </div>
     </div>
     <div class="form-group">
         <?php echo $form->label($view->field('maxWidth'), t('Maximum Slide Width (0 means no limit)')); ?>
@@ -318,7 +330,7 @@ echo Core::make('helper/concrete/ui')->tabs($tabs);
 <script type="text/template" id="imageTemplate-<?php echo $bID?>">
     <div class="ccm-image-slider-entry ccm-image-slider-entry-<?php echo $bID?> slide-well slide-closed">
         <div class="form-group">
-            <label><?php echo t('Image'); ?></label>
+            <label class="control-label"><?php echo t('Image'); ?></label>
             <div class="ccm-pick-slide-image ccm-pick-slide-image-<?php echo $bID?>">
                 <% if (image_url.length > 0) { %>
                     <img src="<%= image_url %>" />
@@ -329,16 +341,16 @@ echo Core::make('helper/concrete/ui')->tabs($tabs);
             <input type="hidden" name="<?php echo $view->field('fID'); ?>[]" class="image-fID" value="<%=fID%>" />
         </div>
         <div class="form-group" >
-            <label><?php echo t('Title'); ?></label>
-            <input type="text" name="<?php echo $view->field('title'); ?>[]" value="<%=title%>" />
+            <label class="control-label"><?php echo t('Title'); ?></label>
+            <input class="form-control ccm-input-text" type="text" name="<?php echo $view->field('title'); ?>[]" value="<%=title%>" />
         </div>
         <div class="form-group" >
-            <label><?php echo t('Description'); ?></label>
+            <label class="control-label"><?php echo t('Description'); ?></label>
             <div class="editor-edit-content"></div>
             <textarea id="ccm-slide-editor-<%= _.uniqueId() %>" style="display: none" class="editor-content editor-content-<?php echo $bID?>" name="<?php echo $view->field('description'); ?>[]"><%=description%></textarea>
         </div>
         <div class="form-group" >
-           <label><?php echo t('Link'); ?></label>
+            <label class="control-label"><?php echo t('Link'); ?></label>
             <select data-field="entry-link-select" name="<?php echo $view->field('linkType')?>[]" class="form-control" style="width: 60%;">
                 <option value="0" <% if (!link_type) { %>selected<% } %>><?php echo t('None'); ?></option>
                 <option value="1" <% if (link_type == 1) { %>selected<% } %>><?php echo t('Another Page'); ?></option>
@@ -346,11 +358,11 @@ echo Core::make('helper/concrete/ui')->tabs($tabs);
             </select>
         </div>
         <div data-field="entry-link-url" class="form-group hide-slide-link">
-           <label><?php echo t('URL:'); ?></label>
-            <textarea name="<?php echo $view->field('linkURL')?>[]"><%=link_url%></textarea>
+            <label class="control-label"><?php echo t('URL:'); ?></label>
+            <textarea class="form-control" name="<?php echo $view->field('linkURL')?>[]"><%=link_url%></textarea>
         </div>
         <div data-field="entry-link-page-selector" class="form-group hide-slide-link">
-           <label><?php echo t('Choose Page:'); ?></label>
+            <label class="control-label"><?php echo t('Choose Page:'); ?></label>
             <div data-field="entry-link-page-selector-select"></div>
         </div>
         <button type="button" class="btn btn-sm btn-default ccm-edit-slide ccm-edit-slide-<?php echo $bID?>" data-slide-close-text="<?php echo t('Collapse Slide'); ?>" data-slide-edit-text="<?php echo t('Edit Slide'); ?>"><?php echo t('Edit Slide'); ?></button>

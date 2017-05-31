@@ -16,8 +16,8 @@ use Concrete\Core\Tree\Node\Type\Topic;
 class Controller extends BlockController
 {
     protected $btTable = 'btPageList';
-    protected $btInterfaceWidth = "800";
-    protected $btInterfaceHeight = "350";
+    protected $btInterfaceWidth = 700;
+    protected $btInterfaceHeight = 525;
     protected $btExportPageColumns = ['cParentID'];
     protected $btExportPageTypeColumns = ['ptID'];
     protected $btExportPageFeedColumns = ['pfID'];

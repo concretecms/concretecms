@@ -80,27 +80,21 @@ if (!$dateFormat) {
         </div>
     </div>
     <?php
-    if (isset($reviewAttributeKeys)) {
-        ?>
+    if (isset($reviewAttributeKeys)) { ?>
         <div class="form-group" data-unhide="[name=enableTopCommentReviews]">
             <label class="control-label"><?= t('Aggregate Ratings by Attribute') ?></label>
-            <div class="checkbox">
-                <label>
-                    <?php
-                    if (count($reviewAttributeKeys) > 0) {
-                        echo $form->select('reviewAggregateAttributeKey', $reviewAttributeKeys, $reviewAggregateAttributeKey);
-                    } else {
-                        ?>
-                        <div class="alert alert-info">
-                            <?= t('Create a page attribute of type "%s" in order to aggregate ratings.', tc('AttributeTypeName', 'Rating')) ?>
-                        </div>
-                        <?php
-                    }
-                    ?>
-                </label>
-            </div>
+            <?php
+            if (count($reviewAttributeKeys) > 0) {
+                echo $form->select('reviewAggregateAttributeKey', $reviewAttributeKeys, $reviewAggregateAttributeKey);
+            } else { ?>
+                <div class="alert alert-info">
+                    <?= t('Create a page attribute of type "%s" in order to aggregate ratings.', tc('AttributeTypeName', 'Rating')) ?>
+                </div>
+            <?php
+            }
+            ?>
         </div>
-        <?php
+    <?php
     }
     ?>
     <div class="form-group">
@@ -191,8 +185,8 @@ if (!$dateFormat) {
 </fieldset>
 
 <fieldset>
-    <legend><?=t('File Attachment Management')?></legend>
-    <p class="text-muted"><?php echo t('Note: Entering values here will override global conversations file attachment settings for this block if you enable Attachment Overrides for this Conversation.') ?></p>
+	<legend><?=t('File Attachment Management')?></legend>
+	<p class="help-block"><?php echo t('Note: Entering values here will override global conversations file attachment settings for this block if you enable Attachment Overrides for this Conversation.') ?></p>
     <div class="form-group">
         <div class="checkbox">
             <label class="">

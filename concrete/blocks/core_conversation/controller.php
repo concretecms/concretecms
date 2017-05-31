@@ -28,6 +28,8 @@ use Page;
  */
 class Controller extends BlockController implements ConversationFeatureInterface
 {
+    protected $btInterfaceWidth = 450;
+    protected $btInterfaceHeight = 400;
     protected $btCacheBlockRecord = true;
     protected $btTable = 'btCoreConversation';
     protected $conversation;
