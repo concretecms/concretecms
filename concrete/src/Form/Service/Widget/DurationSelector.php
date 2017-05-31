@@ -32,7 +32,7 @@ class DurationSelector
         return $repetition;
     }
 
-    public function selectDuration($repetition = null, $timezone = null)
+    public function selectDuration($namespace, $repetition = null, $timezone = null, $allowRepeat = true, $allowMultiple = true)
     {
         $repetitions = array();
         $baseRepetition = $this->getDefaultRepetition($timezone);
@@ -62,7 +62,10 @@ class DurationSelector
         $args = array(
             'dateFormat' => $format,
             'repetitions' => $repetitions,
-            'baseRepetition' => $baseRepetition
+            'baseRepetition' => $baseRepetition,
+            'allowRepeat' => $allowRepeat,
+            'allowMultiple' => $allowMultiple,
+            'namespace' => $namespace,
         );
 
         $args = json_encode($args);
@@ -73,7 +76,13 @@ class DurationSelector
         {$contents}
         <div data-duration-selector-wrapper="{$identifier}">
             <div data-duration-selector="{$identifier}"></div>
-            <button data-action="add-duration" type="button" class="pull-right btn btn-xs btn-default">{$add}</button>
+EOL;
+
+        if ($allowMultiple) {
+            $html .= '<button data-action="add-duration" type="button" class="pull-right btn btn-xs btn-default">' . $add . '</button>';
+        }
+
+        $html .= <<<EOL
         </div>
         <script type="text/javascript">
         $(function() {

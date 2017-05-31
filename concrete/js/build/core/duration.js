@@ -4,11 +4,13 @@
     function ConcreteDurationSelectorRepetition($element, options) {
         'use strict';
         var my = this;
+
         options = $.extend({
             'setID': '',
             'repetition': '',
             'template': 'script[data-template=duration-wrapper]',
-            'dateFormat': ''
+            'dateFormat': '',
+            'allowRepeat': true
         }, options);
 
         my.options = options;
@@ -19,7 +21,10 @@
 
         my.repetition = repetition;
 
-        var _template = _.template($(options.template).html(), repetition);
+        var _template = _.template($(options.template).html(), {
+            repetition: repetition,
+            options: my.options
+        });
         my.$element.append(_template);
 
         my.setup();
@@ -32,7 +37,10 @@
             'template': 'script[data-template=duration-wrapper]',
             'dateFormat': '',
             'baseRepetition': {},
-            'repetitions': []
+            'repetitions': [],
+            'allowRepeat': true,
+            'allowMultiple': true,
+            'namespace': ''
         }, options);
 
         my.options = options;
@@ -42,9 +50,11 @@
             my.addRepetition(repetition);
         });
 
-        $element.find('button[data-action=add-duration]').on('click', function() {
-            my.addRepetition(my.options.baseRepetition);
-        });
+        if (my.options.allowMultiple) {
+            $element.find('button[data-action=add-duration]').on('click', function() {
+                my.addRepetition(my.options.baseRepetition);
+            });
+        }
     }
 
     ConcreteDurationSelector.prototype = {
@@ -60,7 +70,9 @@
                 'repetition': repetition,
                 'setID': setID,
                 'dateFormat': my.options.dateFormat,
-                'template': my.options.template
+                'template': my.options.template,
+                'allowRepeat': my.options.allowRepeat,
+                'namespace': my.options.namespace
             });
             my.$element.find('div[data-duration-selector]').append(object.getElement());
 
@@ -128,11 +140,11 @@
 
         getSelectedEndDate: function () {
             var my = this;
-            var edf = (my.$element.find("input[name=pdEndDate_pub_" + my.getSetID() + "]").datepicker('option', 'altFormat'));
-            var endDate = my.$element.find("input[name=pdEndDate_" + my.getSetID() + "]").val();
+            var edf = (my.$element.find("input[name=" + my.options.namespace + "_pdEndDate_pub_" + my.getSetID() + "]").datepicker('option', 'altFormat'));
+            var endDate = my.$element.find("input[name=" + my.options.namespace + "_pdEndDate_" + my.getSetID() + "]").val();
             if (endDate) {
                 var edfr = $.datepicker.parseDate(edf, endDate);
-                var endTime = my.$element.find('select[name=pdEndDateSelectTime_' + my.getSetID() + ']').val();
+                var endTime = my.$element.find('select[name=' + my.options.namespace + '_pdEndDateSelectTime_' + my.getSetID() + ']').val();
                 if (endTime) {
                     var eh = endTime.split(/:/gi)[0];
                     var em = endTime.split(/:/gi)[1].replace(/\D/g, '');
@@ -147,11 +159,11 @@
 
         getSelectedStartDate: function () {
             var my = this;
-            var sdf = (my.$element.find("input[name=pdStartDate_pub_" + my.getSetID() + "]").datepicker('option', 'altFormat'));
-            var startDate = my.$element.find("input[name=pdStartDate_" + my.getSetID() + "]").val();
+            var sdf = (my.$element.find("input[name=" + my.options.namespace + "_pdStartDate_pub_" + my.getSetID() + "]").datepicker('option', 'altFormat'));
+            var startDate = my.$element.find("input[name=" + my.options.namespace + "_pdStartDate_" + my.getSetID() + "]").val();
             if (startDate) {
                 var sdfr = $.datepicker.parseDate(sdf, startDate);
-                var startTime = my.$element.find('select[name=pdStartDateSelectTime_' + my.getSetID() + ']').val();
+                var startTime = my.$element.find('select[name=' + my.options.namespace + '_pdStartDateSelectTime_' + my.getSetID() + ']').val();
                 if (startTime) {
                     var sh = startTime.split(/:/gi)[0];
                     var sm = startTime.split(/:/gi)[1].replace(/\D/g, '');
@@ -208,59 +220,59 @@
                 return;
             }
             var endDate = startDate;
-            var format = my.$element.find("input[name=pdStartDate_pub_" + my.getSetID() + "]").datepicker('option', 'dateFormat');
+            var format = my.$element.find("input[name=" + my.options.namespace + "_pdStartDate_pub_" + my.getSetID() + "]").datepicker('option', 'dateFormat');
             endDate.setTime(startDate.getTime() + (1 * 60 * 60 * 1000)); // one hour
 
             var endDateFormatted = $.datepicker.formatDate(format, endDate),
                 endTime = my.getTimeFromDate(moment(endDate), false);
 
-            my.$element.find("input[name=pdEndDate_pub_" + my.getSetID() + "]").datepicker('setDate', endDateFormatted);
+            my.$element.find("input[name=" + my.options.namespace + "_pdEndDate_pub_" + my.getSetID() + "]").datepicker('setDate', endDateFormatted);
 
-            var $selectize = my.$element.find('select[name=pdEndDateSelectTime_' + my.getSetID() + ']').selectize();
+            var $selectize = my.$element.find('select[name=' + my.options.namespace + '_pdEndDateSelectTime_' + my.getSetID() + ']').selectize();
             $selectize[0].selectize.setValue(endTime);
         },
 
         setupDates: function () {
             var my = this;
 
-            my.$element.find('input[name=pdStartDate_pub_' + my.getSetID() + ']').datepicker({
+            my.$element.find('input[name=' + my.options.namespace + '_pdStartDate_pub_' + my.getSetID() + ']').datepicker({
                 dateFormat: my.options.dateFormat,
                 altFormat: 'yy-mm-dd',
-                altField: my.$element.find('input[name=pdStartDate_' + my.getSetID() + ']'),
+                altField: my.$element.find('input[name=' + my.options.namespace + '_pdStartDate_' + my.getSetID() + ']'),
                 changeYear: true,
                 showAnim: 'fadeIn',
                 yearRange: 'c-100:c+10'
             });
 
-            my.$element.find('input[name=pdEndDate_pub_' + my.getSetID() + ']').datepicker({
+            my.$element.find('input[name=' + my.options.namespace + '_pdEndDate_pub_' + my.getSetID() + ']').datepicker({
                 dateFormat: my.options.dateFormat,
                 altFormat: 'yy-mm-dd',
-                altField: my.$element.find('input[name=pdEndDate_' + my.getSetID() + ']'),
+                altField: my.$element.find('input[name=' + my.options.namespace + '_pdEndDate_' + my.getSetID() + ']'),
                 changeYear: true,
                 showAnim: 'fadeIn',
                 yearRange: 'c-100:c+10'
             });
 
-            my.$element.find('input[name=pdEndRepeatDateSpecific_pub_' + my.getSetID() + ']').datepicker({
+            my.$element.find('input[name=' + my.options.namespace + '_pdEndRepeatDateSpecific_pub_' + my.getSetID() + ']').datepicker({
                 dateFormat: my.options.dateFormat,
                 altFormat: 'yy-mm-dd',
-                altField: my.$element.find('input[name=pdEndRepeatDateSpecific_' + my.getSetID() + ']'),
+                altField: my.$element.find('input[name=' + my.options.namespace + '_pdEndRepeatDateSpecific_' + my.getSetID() + ']'),
                 changeYear: true,
                 showAnim: 'fadeIn',
                 yearRange: 'c-100:c+10'
             });
 
-            my.$element.find('input[name=pdStartDate_pub_' + my.getSetID() + ']').datepicker('setDate', my.getSelectedStartDate());
-            my.$element.find('input[name=pdEndDate_pub_' + my.getSetID() + ']').datepicker('setDate', my.getSelectedEndDate());
-            my.$element.find('input[name=pdEndRepeatDateSpecific_pub_' + my.getSetID() + ']').datepicker('setDate', new Date(my.$element.find('input[name=pdEndRepeatDateSpecific_pub_' + my.getSetID() + ']').val()));
+            my.$element.find('input[name=' + my.options.namespace + '_pdStartDate_pub_' + my.getSetID() + ']').datepicker('setDate', my.getSelectedStartDate());
+            my.$element.find('input[name=' + my.options.namespace + '_pdEndDate_pub_' + my.getSetID() + ']').datepicker('setDate', my.getSelectedEndDate());
+            my.$element.find('input[name=' + my.options.namespace + '_pdEndRepeatDateSpecific_pub_' + my.getSetID() + ']').datepicker('setDate', new Date(my.$element.find('input[name=' + my.options.namespace + '_pdEndRepeatDateSpecific_pub_' + my.getSetID() + ']').val()));
 
-            my.$element.find('input[name=pdStartDate_pub_' + my.getSetID() + ']').datepicker({
+            my.$element.find('input[name=' + my.options.namespace + '_pdStartDate_pub_' + my.getSetID() + ']').datepicker({
                 onSelect: function () {
                     $(this).trigger('change');
                 }
             });
-            my.$element.find('input[name=pdStartDate_pub_' + my.getSetID() + ']').on('change', function () {
-                my.$element.find('input[name=pdEndDate_pub_' + my.getSetID() + ']').datepicker('setDate', $(this).val());
+            my.$element.find('input[name=' + my.options.namespace + '_pdStartDate_pub_' + my.getSetID() + ']').on('change', function () {
+                my.$element.find('input[name=' + my.options.namespace + '_pdEndDate_pub_' + my.getSetID() + ']').datepicker('setDate', $(this).val());
             });
         },
 
@@ -270,16 +282,16 @@
                 my.onActivateDates();
             });
 
-            my.$element.find("select[name=pdRepeatPeriod_" + my.getSetID() + "]").change(function () {
+            my.$element.find("select[name=" + my.options.namespace + "_pdRepeatPeriod_" + my.getSetID() + "]").change(function () {
                 my.onRepeatPeriodChange();
             });
 
-            my.$element.find("input[name=pdRepeat_" + my.getSetID() + "]").click(function () {
+            my.$element.find("input[name=" + my.options.namespace + "_pdRepeat_" + my.getSetID() + "]").click(function () {
                 my.checkRepeat();
             });
 
             my.$element.find("div[data-wrapper=duration-repeat-dates] input.ccm-input-date").attr('disabled', true);
-            my.$element.find('input[name=pdEndRepeatDate_' + my.getSetID() + ']').change(function () {
+            my.$element.find('input[name=' + my.options.namespace + '_pdEndRepeatDate_' + my.getSetID() + ']').change(function () {
                 my.calculateRepeatEnd();
             });
 
@@ -295,13 +307,13 @@
             var $wrapper = my.$element.find("div[data-wrapper=duration-repeat-weekly-dow]");
 
             if (difference >= 60 * 60 * 24) {
-                my.$element.find('select[name=pdRepeatPeriod_' + my.getSetID() + '] option[value=daily]').prop('disabled', true);
+                my.$element.find('select[name=' + my.options.namespace + '_pdRepeatPeriod_' + my.getSetID() + '] option[value=daily]').prop('disabled', true);
                 $wrapper.hide();
             } else {
-                my.$element.find('select[name=pdRepeatPeriod_' + my.getSetID() + '] option[value=daily]').prop('disabled', false);
+                my.$element.find('select[name=' + my.options.namespace + '_pdRepeatPeriod_' + my.getSetID() + '] option[value=daily]').prop('disabled', false);
                 $wrapper.show();
             }
-            $('input[name=pdStartRepeatDate_' + my.getSetID() + ']').val(my.$element.find("input[name=pdStartDate_pub_" + my.getSetID() + "]").val());
+            $('input[name=' + my.options.namespace + '_pdStartRepeatDate_' + my.getSetID() + ']').val(my.$element.find("input[name=" + my.options.namespace + "_pdStartDate_pub_" + my.getSetID() + "]").val());
 
             $wrapper.find('input[type=checkbox]').prop('checked', false);
 
@@ -333,7 +345,7 @@
 
         checkRepeat: function () {
             var my = this;
-            if (my.$element.find('input[name=pdRepeat_' + my.getSetID() + ']').is(':checked')) {
+            if (my.$element.find('input[name=' + my.options.namespace + '_pdRepeat_' + my.getSetID() + ']').is(':checked')) {
                 my.$element.find('div[data-wrapper=duration-repeat-selector]').show();
             } else {
                 my.$element.find('div[data-wrapper=duration-repeat-selector]').hide();
@@ -345,9 +357,9 @@
             my.calculateRepeatOptions();
 
             my.$element.find('div[data-wrapper=duration-repeat]').show();
-            my.$element.find('input[name=pdStartDateAllDayActivate_' + my.getSetID() + ']').attr('disabled', false);
+            my.$element.find('input[name=' + my.options.namespace + '_pdStartDateAllDayActivate_' + my.getSetID() + ']').attr('disabled', false);
 
-            if (my.$element.find("input[name=pdStartDateAllDayActivate_" + my.getSetID() + "]").is(':checked')) {
+            if (my.$element.find("input[name=" + my.options.namespace + "_pdStartDateAllDayActivate_" + my.getSetID() + "]").is(':checked')) {
                 my.$element.find('div[data-column=date]').removeClass().addClass('col-sm-12');
                 my.$element.find('select[data-select=start-time]').parent().hide();
                 my.$element.find('select[data-select=end-time]').parent().hide();
@@ -364,7 +376,7 @@
             my.$element.find("div[data-wrapper=duration-dates-repeat-daily]").hide();
             my.$element.find("div[data-wrapper=duration-dates-repeat-weekly]").hide();
             my.$element.find("div[data-wrapper=duration-dates-repeat-monthly]").hide();
-            var repeatPeriod = my.$element.find('select[name=pdRepeatPeriod_' + my.getSetID() + ']').val();
+            var repeatPeriod = my.$element.find('select[name=' + my.options.namespace + '_pdRepeatPeriod_' + my.getSetID() + ']').val();
             if (repeatPeriod != '') {
                 my.$element.find("div[data-wrapper=duration-dates-repeat-" + repeatPeriod + "]").show();
                 my.$element.find("div[data-wrapper=duration-repeat-dates]").show();
@@ -373,10 +385,10 @@
 
         calculateRepeatEnd: function () {
             var my = this;
-            if (my.$element.find('input[name=pdEndRepeatDate_' + my.getSetID() + ']:checked').val() == 'date') {
-                my.$element.find("div[data-wrapper=duration-repeat-dates] input[name=pdEndRepeatDateSpecific_pub_" + my.getSetID() + "]").prop('disabled', false);
+            if (my.$element.find('input[name=' + my.options.namespace + '_pdEndRepeatDate_' + my.getSetID() + ']:checked').val() == 'date') {
+                my.$element.find("div[data-wrapper=duration-repeat-dates] input[name=" + my.options.namespace + "_pdEndRepeatDateSpecific_pub_" + my.getSetID() + "]").prop('disabled', false);
             } else {
-                my.$element.find("div[data-wrapper=duration-repeat-dates] input[name=pdEndRepeatDateSpecific_pub_" + my.getSetID() + "]").prop('disabled', true);
+                my.$element.find("div[data-wrapper=duration-repeat-dates] input[name=" + my.options.namespace + "_pdEndRepeatDateSpecific_pub_" + my.getSetID() + "]").prop('disabled', true);
             }
         },
 
