@@ -2,8 +2,8 @@
 namespace Concrete\Core\Search\ItemList;
 
 use Concrete\Core\Search\StickyRequest;
-use Pagerfanta\Exception\OutOfRangeCurrentPageException;
 use Pagerfanta\Exception\LessThan1CurrentPageException;
+use Pagerfanta\Exception\OutOfRangeCurrentPageException;
 
 abstract class ItemList
 {
@@ -17,19 +17,24 @@ abstract class ItemList
     // we just turn it off to save processing in the attributed item list (so it doesn't have to instantiate
     // all those objects if it's not necessary)
     protected $enableAutomaticSorting = true;
-    protected $autoSortColumns = array();
+    protected $autoSortColumns = [];
 
     protected $itemsPerPage = -1; // determined by the pagination object.
     protected $debug = false;
 
     abstract protected function executeSortBy($field, $direction = 'asc');
+
     protected function executeSanitizedSortBy($field, $direction)
     {
         $this->executeSortBy($field, $direction);
     }
+
     abstract public function executeGetResults();
+
     abstract public function getResult($mixed);
+
     abstract public function debugStart();
+
     abstract public function debugStop();
 
     /**
@@ -64,7 +69,7 @@ abstract class ItemList
     /** Returns a full array of results. */
     public function getResults()
     {
-        $results = array();
+        $results = [];
 
         $this->debugStart();
 
@@ -114,22 +119,22 @@ abstract class ItemList
 
     public function getSortURL($column, $dir = 'asc', $url = false)
     {
-        $uh = \Core::make("helper/url");
+        $uh = \Core::make('helper/url');
         if ($this->isActiveSortColumn($column) && $this->getActiveSortDirection() == $dir) {
             $dir = ($dir == 'asc') ? 'desc' : 'asc';
         }
 
-        $args = array(
+        $args = [
             $this->getQuerySortColumnParameter() => $column,
             $this->getQuerySortDirectionParameter() => $dir,
-        );
+        ];
 
         $url = $uh->setVariable($args, false, $url);
 
         return strip_tags($url);
     }
 
-    /** @var \Concrete\Core\Search\Pagination\Pagination  */
+    /** @var \Concrete\Core\Search\Pagination\Pagination */
     protected $pagination;
 
     public function getActiveSortDirection()
