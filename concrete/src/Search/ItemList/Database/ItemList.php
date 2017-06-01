@@ -32,18 +32,6 @@ abstract class ItemList extends AbstractItemList
     abstract public function createQuery();
 
     /**
-     * Override this method to setup a QueryBuilder instance right before executing it.
-     *
-     * @param QueryBuilder $query a clone of the $query property of the class
-     *
-     * @return QueryBuilder
-     */
-    public function finalizeQuery(QueryBuilder $query)
-    {
-        return $query;
-    }
-
-    /**
      * Initialize this instance.
      *
      * @param StickyRequest $req the (optional) StickyRequest instance to use to get the list state
@@ -53,6 +41,14 @@ abstract class ItemList extends AbstractItemList
         $this->query = Database::get()->createQueryBuilder();
         $this->searchRequest = $req;
         $this->createQuery();
+    }
+
+    /**
+     * Permorm operations right after the instance has been cloned.
+     */
+    public function __clone()
+    {
+        $this->query = clone $this->query;
     }
 
     /**
@@ -81,6 +77,18 @@ abstract class ItemList extends AbstractItemList
     }
 
     /**
+     * Override this method to setup a QueryBuilder instance right before executing it.
+     *
+     * @param QueryBuilder $query a clone of the $query property of the class
+     *
+     * @return QueryBuilder
+     */
+    public function finalizeQuery(QueryBuilder $query)
+    {
+        return $query;
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @see AbstractItemList::executeGetResults()
@@ -88,30 +96,6 @@ abstract class ItemList extends AbstractItemList
     public function executeGetResults()
     {
         return $this->deliverQueryObject()->execute()->fetchAll();
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see AbstractItemList::debugStart()
-     */
-    public function debugStart()
-    {
-        if ($this->isDebugged()) {
-            Database::get()->getConfiguration()->setSQLLogger(new EchoSQLLogger());
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see AbstractItemList::debugStop()
-     */
-    public function debugStop()
-    {
-        if ($this->isDebugged()) {
-            Database::get()->getConfiguration()->setSQLLogger(null);
-        }
     }
 
     /**
@@ -143,6 +127,30 @@ abstract class ItemList extends AbstractItemList
     }
 
     /**
+     * {@inheritdoc}
+     *
+     * @see AbstractItemList::debugStart()
+     */
+    public function debugStart()
+    {
+        if ($this->isDebugged()) {
+            Database::get()->getConfiguration()->setSQLLogger(new EchoSQLLogger());
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see AbstractItemList::debugStop()
+     */
+    public function debugStop()
+    {
+        if ($this->isDebugged()) {
+            Database::get()->getConfiguration()->setSQLLogger(null);
+        }
+    }
+
+    /**
      * @deprecated
      */
     public function filter($field, $value, $comparison = '=')
@@ -151,16 +159,8 @@ abstract class ItemList extends AbstractItemList
             $this->query->andWhere($value); // ugh
         } else {
             $this->query->andWhere(implode(' ', [
-               $field, $comparison, $this->query->createNamedParameter($value),
+                $field, $comparison, $this->query->createNamedParameter($value),
             ]));
         }
-    }
-
-    /**
-     * Permorm operations right after the instance has been cloned.
-     */
-    public function __clone()
-    {
-        $this->query = clone $this->query;
     }
 }
