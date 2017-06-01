@@ -6,6 +6,7 @@ use Concrete\Core\Search\StickyRequest;
 use Database;
 use Doctrine\DBAL\Logging\EchoSQLLogger;
 use Doctrine\DBAL\Query\QueryBuilder;
+use Exception;
 
 /**
  * Base class for all the list-related classes that use the database.
@@ -108,7 +109,7 @@ abstract class ItemList extends AbstractItemList
         if (in_array(strtolower($direction), ['asc', 'desc'])) {
             $this->query->orderBy($column, $direction);
         } else {
-            throw new \Exception(t('Invalid SQL in order by'));
+            throw new Exception(t('Invalid SQL in order by'));
         }
     }
 
@@ -122,7 +123,7 @@ abstract class ItemList extends AbstractItemList
         if (preg_match('/[^0-9a-zA-Z\$\.\_\x{0080}-\x{ffff}]+/u', $column) === 0) {
             $this->executeSortBy($column, $direction);
         } else {
-            throw new \Exception(t('Invalid SQL in order by'));
+            throw new Exception(t('Invalid SQL in order by'));
         }
     }
 
@@ -134,7 +135,7 @@ abstract class ItemList extends AbstractItemList
     public function debugStart()
     {
         if ($this->isDebugged()) {
-            Database::get()->getConfiguration()->setSQLLogger(new EchoSQLLogger());
+            Database::connection()->getConfiguration()->setSQLLogger(new EchoSQLLogger());
         }
     }
 
@@ -146,12 +147,13 @@ abstract class ItemList extends AbstractItemList
     public function debugStop()
     {
         if ($this->isDebugged()) {
-            Database::get()->getConfiguration()->setSQLLogger(null);
+            Database::connection()->getConfiguration()->setSQLLogger(null);
         }
     }
 
     /**
-     * @deprecated
+     * @deprecated Add your criteria to the QueryBuilder by calling getQueryObject
+     * @see ItemList::getQueryObject()
      */
     public function filter($field, $value, $comparison = '=')
     {

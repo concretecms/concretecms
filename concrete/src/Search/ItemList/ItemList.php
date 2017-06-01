@@ -154,6 +154,8 @@ abstract class ItemList
      *
      * @param string $field the column name
      * @param string $direction The sorting direction ('asc' or 'desc')
+     *
+     * @throws \Exception Throws an exception if the column name or the direction are not acceptable
      */
     public function sanitizedSortBy($field, $direction = 'asc')
     {
@@ -168,7 +170,7 @@ abstract class ItemList
      * @param string $field the column name
      * @param string $direction The sorting direction ('asc' or 'desc')
      *
-     * @throws \Exception Throws an exception if the column name is not acceptable
+     * @throws \Exception Throws an exception if the column name or the direction are not acceptable
      */
     protected function executeSanitizedSortBy($field, $direction)
     {
