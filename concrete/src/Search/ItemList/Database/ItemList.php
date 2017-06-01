@@ -5,27 +5,49 @@ use Concrete\Core\Search\ItemList\ItemList as AbstractItemList;
 use Concrete\Core\Search\StickyRequest;
 use Database;
 use Doctrine\DBAL\Logging\EchoSQLLogger;
+use Doctrine\DBAL\Query\QueryBuilder;
 
+/**
+ * Base class for all the list-related classes that use the database.
+ */
 abstract class ItemList extends AbstractItemList
 {
-    /** @var \Doctrine\DBAL\Query\QueryBuilder */
+    /**
+     * The Doctrine QueryBuilder instance.
+     *
+     * @var QueryBuilder
+     */
     protected $query;
 
-    /** @var \Concrete\Core\Search\StickyRequest | null */
+    /**
+     * The (optional) StickyRequest instance to use to get the list state.
+     *
+     * @var StickyRequest|null
+     */
     protected $searchRequest;
 
+    /**
+     * Initialize the QueryBuilder instance stored as $this->query.
+     */
     abstract public function createQuery();
 
     /**
-     * @param \Doctrine\DBAL\Query\QueryBuilder $query
+     * Override this method to setup a QueryBuilder instance right before executing it.
      *
-     * @return \Doctrine\DBAL\Query\QueryBuilder
+     * @param QueryBuilder $query a clone of the $query property of the class
+     *
+     * @return QueryBuilder
      */
-    public function finalizeQuery(\Doctrine\DBAL\Query\QueryBuilder $query)
+    public function finalizeQuery(QueryBuilder $query)
     {
         return $query;
     }
 
+    /**
+     * Initialize this instance.
+     *
+     * @param StickyRequest $req the (optional) StickyRequest instance to use to get the list state
+     */
     public function __construct(StickyRequest $req = null)
     {
         $this->query = Database::get()->createQueryBuilder();
@@ -33,11 +55,21 @@ abstract class ItemList extends AbstractItemList
         $this->createQuery();
     }
 
+    /**
+     * Get the current Doctrine QueryBuilder instance.
+     *
+     * @return QueryBuilder
+     */
     public function getQueryObject()
     {
         return $this->query;
     }
 
+    /**
+     * Setup sorting (inspecting the StickyRequest or the current query string parameters) and builds a finalized clone of the query.
+     *
+     * @return QueryBuilder
+     */
     public function deliverQueryObject()
     {
         // setup the default sorting based on the request.
@@ -48,11 +80,21 @@ abstract class ItemList extends AbstractItemList
         return $query;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see AbstractItemList::executeGetResults()
+     */
     public function executeGetResults()
     {
         return $this->deliverQueryObject()->execute()->fetchAll();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see AbstractItemList::debugStart()
+     */
     public function debugStart()
     {
         if ($this->isDebugged()) {
@@ -60,6 +102,11 @@ abstract class ItemList extends AbstractItemList
         }
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see AbstractItemList::debugStop()
+     */
     public function debugStop()
     {
         if ($this->isDebugged()) {
@@ -67,6 +114,11 @@ abstract class ItemList extends AbstractItemList
         }
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see AbstractItemList::executeSortBy()
+     */
     protected function executeSortBy($column, $direction = 'asc')
     {
         if (in_array(strtolower($direction), ['asc', 'desc'])) {
@@ -76,6 +128,11 @@ abstract class ItemList extends AbstractItemList
         }
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see AbstractItemList::executeSanitizedSortBy()
+     */
     protected function executeSanitizedSortBy($column, $direction = 'asc')
     {
         if (preg_match('/[^0-9a-zA-Z\$\.\_\x{0080}-\x{ffff}]+/u', $column) === 0) {
@@ -99,6 +156,9 @@ abstract class ItemList extends AbstractItemList
         }
     }
 
+    /**
+     * Permorm operations right after the instance has been cloned.
+     */
     public function __clone()
     {
         $this->query = clone $this->query;
