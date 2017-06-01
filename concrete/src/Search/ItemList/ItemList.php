@@ -275,9 +275,6 @@ abstract class ItemList
         return strip_tags($url);
     }
 
-    /** @var \Concrete\Core\Search\Pagination\Pagination */
-    protected $pagination;
-
     /**
      * Get the direction of the currently sorted column ('asc' or 'desc' or null).
      *
