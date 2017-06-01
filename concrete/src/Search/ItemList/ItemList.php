@@ -74,107 +74,16 @@ abstract class ItemList
     protected $debug = false;
 
     /**
-     * Apply the currently sorted column.
+     * Returns the number of total results in this item list.
      *
-     * @param string $field the column name
-     * @param string $direction The sorting direction ('asc' or 'desc')
+     * @return int
      */
-    abstract protected function executeSortBy($field, $direction = 'asc');
+    abstract public function getTotalResults();
 
     /**
-     * Set the currently sorted column (by verifying that the column name is valid).
-     *
-     * @param string $field the column name
-     * @param string $direction The sorting direction ('asc' or 'desc')
-     *
-     * @throws \Exception Throws an exception if the column name is not acceptable
-     */
-    protected function executeSanitizedSortBy($field, $direction)
-    {
-        $this->executeSortBy($field, $direction);
-    }
-
-    /**
-     * Get the list of the resulting raw results (for example the list of item identifiers).
+     * Returns an array of with all the resulting objects.
      *
      * @return mixed[]
-     */
-    abstract public function executeGetResults();
-
-    /**
-     * Build the final result item.
-     *
-     * @param mixed $mixed one of the values returned by the executeGetResults() method
-     *
-     * @return mixed|null Returns null if the item couldn't be found/loaded, or the resulting item otherwise
-     */
-    abstract public function getResult($mixed);
-
-    /**
-     * Method called to start debugging (if the debug is enabled).
-     */
-    abstract public function debugStart();
-
-    /**
-     * Method called to start debugging (if the debug is enabled).
-     */
-    abstract public function debugStop();
-
-    /**
-     * Build the pagination object.
-     *
-     * @return \Concrete\Core\Search\Pagination\Pagination|\Concrete\Core\Search\Pagination\PermissionablePagination
-     */
-    abstract protected function createPaginationObject();
-
-    /**
-     * Enable debugging.
-     */
-    public function debug()
-    {
-        $this->debug = true;
-    }
-
-    /**
-     * Is debugging enabled?
-     *
-     * @return bool
-     */
-    public function isDebugged()
-    {
-        return $this->debug;
-    }
-
-    /**
-     * Set and apply the currently sorted column.
-     *
-     * @param string $field the column name
-     * @param string $direction The sorting direction ('asc' or 'desc')
-     */
-    public function sortBy($field, $direction = 'asc')
-    {
-        $this->sortBy = $field;
-        $this->sortByDirection = $direction;
-        $this->executeSortBy($field, $direction);
-    }
-
-    /**
-     * Set and apply the currently sorted column (by verifying that the column name is valid).
-     *
-     * @param string $field the column name
-     * @param string $direction The sorting direction ('asc' or 'desc')
-     */
-    public function sanitizedSortBy($field, $direction = 'asc')
-    {
-        $this->sortBy = $field;
-        $this->sortByDirection = $direction;
-        $this->executeSanitizedSortBy($field, $direction);
-    }
-
-    /**
-     * Returns a full array of result objects.
-     *
-     * @return mixed[]|null[]
      */
     public function getResults()
     {
@@ -197,6 +106,76 @@ abstract class ItemList
     }
 
     /**
+     * Get the list of the resulting raw results (for example the list of item identifiers).
+     *
+     * @return mixed[]
+     */
+    abstract public function executeGetResults();
+
+    /**
+     * Build the final result item.
+     *
+     * @param mixed $mixed one of the values returned by the executeGetResults() method
+     *
+     * @return mixed|null Returns null if the item couldn't be found/loaded, or the resulting item otherwise
+     */
+    abstract public function getResult($mixed);
+
+    /**
+     * Build the pagination object.
+     *
+     * @return \Concrete\Core\Search\Pagination\Pagination|\Concrete\Core\Search\Pagination\PermissionablePagination
+     */
+    abstract protected function createPaginationObject();
+
+    /**
+     * Set and apply the currently sorted column.
+     *
+     * @param string $field the column name
+     * @param string $direction The sorting direction ('asc' or 'desc')
+     */
+    public function sortBy($field, $direction = 'asc')
+    {
+        $this->sortBy = $field;
+        $this->sortByDirection = $direction;
+        $this->executeSortBy($field, $direction);
+    }
+
+    /**
+     * Apply the currently sorted column.
+     *
+     * @param string $field the column name
+     * @param string $direction The sorting direction ('asc' or 'desc')
+     */
+    abstract protected function executeSortBy($field, $direction = 'asc');
+
+    /**
+     * Set and apply the currently sorted column (by verifying that the column name is valid).
+     *
+     * @param string $field the column name
+     * @param string $direction The sorting direction ('asc' or 'desc')
+     */
+    public function sanitizedSortBy($field, $direction = 'asc')
+    {
+        $this->sortBy = $field;
+        $this->sortByDirection = $direction;
+        $this->executeSanitizedSortBy($field, $direction);
+    }
+
+    /**
+     * Set the currently sorted column (by verifying that the column name is valid).
+     *
+     * @param string $field the column name
+     * @param string $direction The sorting direction ('asc' or 'desc')
+     *
+     * @throws \Exception Throws an exception if the column name is not acceptable
+     */
+    protected function executeSanitizedSortBy($field, $direction)
+    {
+        $this->executeSortBy($field, $direction);
+    }
+
+    /**
      * Get the currently sorted column.
      *
      * @return string
@@ -204,6 +183,16 @@ abstract class ItemList
     public function getActiveSortColumn()
     {
         return $this->sortBy;
+    }
+
+    /**
+     * Get the direction of the currently sorted column ('asc' or 'desc' or null).
+     *
+     * @return string|null
+     */
+    public function getActiveSortDirection()
+    {
+        return $this->sortByDirection;
     }
 
     /**
@@ -216,14 +205,6 @@ abstract class ItemList
     public function isActiveSortColumn($field)
     {
         return $this->sortBy == $field;
-    }
-
-    /**
-     * Disable the sorting set via query string parameters.
-     */
-    public function disableAutomaticSorting()
-    {
-        $this->enableAutomaticSorting = false;
     }
 
     /**
@@ -276,13 +257,38 @@ abstract class ItemList
     }
 
     /**
-     * Get the direction of the currently sorted column ('asc' or 'desc' or null).
-     *
-     * @return string|null
+     * Disable the sorting set via query string parameters.
      */
-    public function getActiveSortDirection()
+    public function disableAutomaticSorting()
     {
-        return $this->sortByDirection;
+        $this->enableAutomaticSorting = false;
+    }
+
+    /**
+     * Initializes the sorting column and direction by inspecting a StickyRequest or the current query string parameters.
+     * If automatic sorting is disabled, this method does not do anything.
+     *
+     * @param StickyRequest $request the StickyRequest to use (if null: we'll use the query string parameters)
+     */
+    public function setupAutomaticSorting(StickyRequest $request = null)
+    {
+        if ($this->enableAutomaticSorting) {
+            if ($request) {
+                $data = $request->getSearchRequest();
+            } else {
+                $data = \Request::getInstance()->query->all();
+            }
+            $direction = 'asc';
+            if (isset($data[$this->getQuerySortDirectionParameter()])) {
+                $direction = $data[$this->getQuerySortDirectionParameter()];
+            }
+            if (isset($data[$this->getQuerySortColumnParameter()])) {
+                $value = $data[$this->getQuerySortColumnParameter()];
+                if (in_array($value, $this->autoSortColumns)) {
+                    $this->sanitizedSortBy($value, $direction);
+                }
+            }
+        }
     }
 
     /**
@@ -326,13 +332,6 @@ abstract class ItemList
     }
 
     /**
-     * Returns the number of total results in this item list.
-     *
-     * @return int
-     */
-    abstract public function getTotalResults();
-
-    /**
      * Create the pagination object and initialize its page size and index.
      *
      * @return \Concrete\Core\Search\Pagination\Pagination|\Concrete\Core\Search\Pagination\PermissionablePagination
@@ -359,31 +358,32 @@ abstract class ItemList
     }
 
     /**
-     * Initializes the sorting column and direction by inspecting a StickyRequest or the current query string parameters.
-     * If automatic sorting is disabled, this method does not do anything.
-     *
-     * @param StickyRequest $request the StickyRequest to use (if null: we'll use the query string parameters)
+     * Enable debugging.
      */
-    public function setupAutomaticSorting(StickyRequest $request = null)
+    public function debug()
     {
-        if ($this->enableAutomaticSorting) {
-            if ($request) {
-                $data = $request->getSearchRequest();
-            } else {
-                $data = \Request::getInstance()->query->all();
-            }
-            $direction = 'asc';
-            if (isset($data[$this->getQuerySortDirectionParameter()])) {
-                $direction = $data[$this->getQuerySortDirectionParameter()];
-            }
-            if (isset($data[$this->getQuerySortColumnParameter()])) {
-                $value = $data[$this->getQuerySortColumnParameter()];
-                if (in_array($value, $this->autoSortColumns)) {
-                    $this->sanitizedSortBy($value, $direction);
-                }
-            }
-        }
+        $this->debug = true;
     }
+
+    /**
+     * Is debugging enabled?
+     *
+     * @return bool
+     */
+    public function isDebugged()
+    {
+        return $this->debug;
+    }
+
+    /**
+     * Method called to start debugging (if the debug is enabled).
+     */
+    abstract public function debugStart();
+
+    /**
+     * Method called to start debugging (if the debug is enabled).
+     */
+    abstract public function debugStop();
 
     /**
      * @deprecated Use the getResults method
