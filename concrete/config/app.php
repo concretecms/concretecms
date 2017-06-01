@@ -360,6 +360,9 @@ return [
         '/ccm/system/dialogs/user/advanced_search/submit' => ['\Concrete\Controller\Dialog\User\AdvancedSearch::submit'],
         '/ccm/system/dialogs/user/advanced_search/save_preset' => ['\Concrete\Controller\Dialog\User\AdvancedSearch::savePreset'],
 
+        "/ccm/system/dialogs/type/update_from_type/{ptID}/{pTemplateID}" => array('\Concrete\Controller\Dialog\Type\UpdateFromType::view'),
+        "/ccm/system/dialogs/type/update_from_type/{ptID}/{pTemplateID}/submit" => array('\Concrete\Controller\Dialog\Type\UpdateFromType::submit'),
+
         /*
          * Conversations
          */
