@@ -3,6 +3,7 @@
 namespace Concrete\Core\Database;
 
 use Concrete\Core\Database\Driver\DriverManager;
+use Concrete\Core\Database\Query\Liker;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 use Concrete\Core\Package\PackageList;
 use Doctrine\ORM\EntityManagerInterface;
@@ -136,6 +137,17 @@ class DatabaseServiceProvider extends ServiceProvider
             $proxyNamespace = "DoctrineProxies";
             \Doctrine\Common\Proxy\Autoloader::register($proxyDir, $proxyNamespace);
         }
+        // Other helpers
+        $this->app->bindIf(Liker::class, function ($app) {
+            $otherWildcards = [];
+            if ($app->bound('Concrete\Core\Database\Connection\Connection')) {
+                $connection = $app->make('Concrete\Core\Database\Connection\Connection');
+                $platform = $connection->getDatabasePlatform();
+                $platformWildcards = $platform->getWildcards();
+                $otherWildcards = array_values(array_diff($platformWildcards, [Liker::DEFAULT_ANYCHARACTER_WILDCARD, Liker::DEFAULT_ONECHARACTER_WILDCARD]));
+            }
+            return $app->build(Liker::class, ['otherWildcards' => $otherWildcards]);
+        });
     }
 
     /**
@@ -157,7 +169,8 @@ class DatabaseServiceProvider extends ServiceProvider
             'Concrete\Core\Database\Connection\Connection',
             'Doctrine\DBAL\Connection',
             'Doctrine\ORM\Configuration',
-            'Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain'
+            'Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain',
+            Liker::class,
         );
     }
 }
