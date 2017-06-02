@@ -27,7 +27,7 @@ abstract class WorkflowKey extends Key
 
         foreach ($excluded as $inc) {
             $pae = $inc->getAccessEntityObject();
-            $usersExcluded = array_merge($usersExcluded, $pae->getAccessEntityUsers());
+            $usersExcluded = array_merge($usersExcluded, $pae->getAccessEntityUsers($paa));
         }
         $users = array_diff($users, $usersExcluded);
 
