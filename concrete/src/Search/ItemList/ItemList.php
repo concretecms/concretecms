@@ -2,69 +2,92 @@
 namespace Concrete\Core\Search\ItemList;
 
 use Concrete\Core\Search\StickyRequest;
-use Pagerfanta\Exception\OutOfRangeCurrentPageException;
 use Pagerfanta\Exception\LessThan1CurrentPageException;
+use Pagerfanta\Exception\OutOfRangeCurrentPageException;
 
+/**
+ * Base class for all the list-related classes.
+ */
 abstract class ItemList
 {
+    /**
+     * The name of the query string parameter to be used to identify the currently sorted column.
+     *
+     * @var string
+     */
     protected $sortColumnParameter = 'ccm_order_by';
-    protected $sortDirectionParameter = 'ccm_order_by_direction';
-    protected $paginationPageParameter = 'ccm_paging_p';
-    protected $sortBy;
-    protected $sortByDirection;
-
-    // This still checks the auto sort columns if set to true –
-    // we just turn it off to save processing in the attributed item list (so it doesn't have to instantiate
-    // all those objects if it's not necessary)
-    protected $enableAutomaticSorting = true;
-    protected $autoSortColumns = array();
-
-    protected $itemsPerPage = -1; // determined by the pagination object.
-    protected $debug = false;
-
-    abstract protected function executeSortBy($field, $direction = 'asc');
-    protected function executeSanitizedSortBy($field, $direction)
-    {
-        $this->executeSortBy($field, $direction);
-    }
-    abstract public function executeGetResults();
-    abstract public function getResult($mixed);
-    abstract public function debugStart();
-    abstract public function debugStop();
 
     /**
-     * @return \Concrete\Core\Search\Pagination\Pagination
+     * The name of the query string parameter to be used to identify the direction of the currently sorted column.
+     *
+     * @var string
      */
-    abstract protected function createPaginationObject();
+    protected $sortDirectionParameter = 'ccm_order_by_direction';
 
-    public function debug()
-    {
-        $this->debug = true;
-    }
+    /**
+     * The name of the query string parameter to be used to identify the current page during paginated results.
+     *
+     * @var string
+     */
+    protected $paginationPageParameter = 'ccm_paging_p';
 
-    public function isDebugged()
-    {
-        return $this->debug;
-    }
+    /**
+     * The currently sorted column.
+     *
+     * @var string|null
+     */
+    protected $sortBy;
 
-    public function sortBy($field, $direction = 'asc')
-    {
-        $this->sortBy = $field;
-        $this->sortByDirection = $direction;
-        $this->executeSortBy($field, $direction);
-    }
+    /**
+     * The direction of the currently sorted column ('asc' or 'desc').
+     *
+     * @var string|null
+     */
+    protected $sortByDirection;
 
-    public function sanitizedSortBy($field, $direction = 'asc')
-    {
-        $this->sortBy = $field;
-        $this->sortByDirection = $direction;
-        $this->executeSanitizedSortBy($field, $direction);
-    }
+    /**
+     * Can the sorting be set via query string parameters?
+     *
+     * @var bool
+     */
+    protected $enableAutomaticSorting = true;
 
-    /** Returns a full array of results. */
+    /**
+     * The list of column names that can be sorted automatically by inspecting the query string parameters.
+     *
+     * @var string[]
+     */
+    protected $autoSortColumns = [];
+
+    /**
+     * The maximum number of items per page (-1 to use the default value set by the pagination object).
+     *
+     * @var int
+     */
+    protected $itemsPerPage = -1;
+
+    /**
+     * Is the debugging enabled?
+     *
+     * @var bool
+     */
+    protected $debug = false;
+
+    /**
+     * Returns the number of total results in this item list.
+     *
+     * @return int
+     */
+    abstract public function getTotalResults();
+
+    /**
+     * Returns an array of with all the resulting objects.
+     *
+     * @return mixed[]
+     */
     public function getResults()
     {
-        $results = array();
+        $results = [];
 
         $this->debugStart();
 
@@ -82,21 +105,117 @@ abstract class ItemList
         return $results;
     }
 
+    /**
+     * Get the list of the resulting raw results (for example the list of item identifiers).
+     *
+     * @return mixed[]
+     */
+    abstract public function executeGetResults();
+
+    /**
+     * Build the final result item.
+     *
+     * @param mixed $mixed one of the values returned by the executeGetResults() method
+     *
+     * @return mixed|null Returns null if the item couldn't be found/loaded, or the resulting item otherwise
+     */
+    abstract public function getResult($mixed);
+
+    /**
+     * Build the pagination object.
+     *
+     * @return \Concrete\Core\Search\Pagination\Pagination|\Concrete\Core\Search\Pagination\PermissionablePagination
+     */
+    abstract protected function createPaginationObject();
+
+    /**
+     * Set and apply the currently sorted column.
+     *
+     * @param string $field the column name
+     * @param string $direction The sorting direction ('asc' or 'desc')
+     */
+    public function sortBy($field, $direction = 'asc')
+    {
+        $this->sortBy = $field;
+        $this->sortByDirection = $direction;
+        $this->executeSortBy($field, $direction);
+    }
+
+    /**
+     * Apply the currently sorted column.
+     *
+     * @param string $field the column name
+     * @param string $direction The sorting direction ('asc' or 'desc')
+     */
+    abstract protected function executeSortBy($field, $direction = 'asc');
+
+    /**
+     * Set and apply the currently sorted column (by verifying that the column name is valid).
+     *
+     * @param string $field the column name
+     * @param string $direction The sorting direction ('asc' or 'desc')
+     *
+     * @throws \Exception Throws an exception if the column name or the direction are not acceptable
+     */
+    public function sanitizedSortBy($field, $direction = 'asc')
+    {
+        $this->sortBy = $field;
+        $this->sortByDirection = $direction;
+        $this->executeSanitizedSortBy($field, $direction);
+    }
+
+    /**
+     * Set the currently sorted column (by verifying that the column name is valid).
+     *
+     * @param string $field the column name
+     * @param string $direction The sorting direction ('asc' or 'desc')
+     *
+     * @throws \Exception Throws an exception if the column name or the direction are not acceptable
+     */
+    protected function executeSanitizedSortBy($field, $direction)
+    {
+        $this->executeSortBy($field, $direction);
+    }
+
+    /**
+     * Get the currently sorted column.
+     *
+     * @return string
+     */
     public function getActiveSortColumn()
     {
         return $this->sortBy;
     }
 
+    /**
+     * Get the direction of the currently sorted column ('asc' or 'desc' or null).
+     *
+     * @return string|null
+     */
+    public function getActiveSortDirection()
+    {
+        return $this->sortByDirection;
+    }
+
+    /**
+     * Check if a column is the one we are currently sorting by.
+     *
+     * @param string $field
+     *
+     * @return bool
+     */
     public function isActiveSortColumn($field)
     {
         return $this->sortBy == $field;
     }
 
-    public function disableAutomaticSorting()
-    {
-        $this->enableAutomaticSorting = false;
-    }
-
+    /**
+     * Get the CSS class for a column, if it's the the one we are currently sorting by.
+     *
+     * @param string $column
+     *
+     * @return string|false return false if the column is not the current one
+     */
     public function getSortClassName($column)
     {
         $class = false;
@@ -112,59 +231,111 @@ abstract class ItemList
         return $class;
     }
 
+    /**
+     * Create a full URL with the query string parameters controlling the sorting.
+     *
+     * @param string $column The column name
+     * @param string $dir The default sorting direction (if $column is the current one, we'll invert the current sort criteria)
+     * @param string $url The URL to which the query string parameter should be added (if falsy, we'll use the current request URL)
+     *
+     * @return string
+     */
     public function getSortURL($column, $dir = 'asc', $url = false)
     {
-        $uh = \Core::make("helper/url");
+        $uh = \Core::make('helper/url');
+        /* @var \Concrete\Core\Utility\Service\Url $uh */
         if ($this->isActiveSortColumn($column) && $this->getActiveSortDirection() == $dir) {
             $dir = ($dir == 'asc') ? 'desc' : 'asc';
         }
 
-        $args = array(
+        $args = [
             $this->getQuerySortColumnParameter() => $column,
             $this->getQuerySortDirectionParameter() => $dir,
-        );
+        ];
 
         $url = $uh->setVariable($args, false, $url);
 
         return strip_tags($url);
     }
 
-    /** @var \Concrete\Core\Search\Pagination\Pagination  */
-    protected $pagination;
-
-    public function getActiveSortDirection()
+    /**
+     * Disable the sorting set via query string parameters.
+     */
+    public function disableAutomaticSorting()
     {
-        return $this->sortByDirection;
+        $this->enableAutomaticSorting = false;
     }
 
+    /**
+     * Initializes the sorting column and direction by inspecting a StickyRequest or the current query string parameters.
+     * If automatic sorting is disabled, this method does not do anything.
+     *
+     * @param StickyRequest $request the StickyRequest to use (if null: we'll use the query string parameters)
+     */
+    public function setupAutomaticSorting(StickyRequest $request = null)
+    {
+        if ($this->enableAutomaticSorting) {
+            if ($request) {
+                $data = $request->getSearchRequest();
+            } else {
+                $data = \Request::getInstance()->query->all();
+            }
+            $direction = 'asc';
+            if (isset($data[$this->getQuerySortDirectionParameter()])) {
+                $direction = $data[$this->getQuerySortDirectionParameter()];
+            }
+            if (isset($data[$this->getQuerySortColumnParameter()])) {
+                $value = $data[$this->getQuerySortColumnParameter()];
+                if (in_array($value, $this->autoSortColumns)) {
+                    $this->sanitizedSortBy($value, $direction);
+                }
+            }
+        }
+    }
+
+    /**
+     * Get the name of the query string parameter to be used to identify the currently sorted column.
+     *
+     * @return string
+     */
     public function getQuerySortColumnParameter()
     {
         return $this->sortColumnParameter;
     }
 
+    /**
+     * Get the name of the query string parameter to be used to identify the current page during paginated results.
+     *
+     * @return string
+     */
     public function getQueryPaginationPageParameter()
     {
         return $this->paginationPageParameter;
     }
 
+    /**
+     * Get the name of the query string parameter to be used to identify the direction of the currently sorted column.
+     *
+     * @return string
+     */
     public function getQuerySortDirectionParameter()
     {
         return $this->sortDirectionParameter;
     }
 
+    /**
+     * Get the maximum number of items per page (-1 to use the default value set by the pagination object).
+     *
+     * @param int $itemsPerPage
+     */
     public function setItemsPerPage($itemsPerPage)
     {
         $this->itemsPerPage = $itemsPerPage;
     }
 
     /**
-     * Returns the total results in this item list.
+     * Create the pagination object and initialize its page size and index.
      *
-     * @return int
-     */
-    abstract public function getTotalResults();
-
-    /**
      * @return \Concrete\Core\Search\Pagination\Pagination|\Concrete\Core\Search\Pagination\PermissionablePagination
      */
     public function getPagination()
@@ -189,31 +360,36 @@ abstract class ItemList
     }
 
     /**
-     * @param StickyRequest $request
+     * Enable debugging.
      */
-    public function setupAutomaticSorting(StickyRequest $request = null)
+    public function debug()
     {
-        if ($this->enableAutomaticSorting) {
-            if ($request) {
-                $data = $request->getSearchRequest();
-            } else {
-                $data = \Request::getInstance()->query->all();
-            }
-            $direction = 'asc';
-            if (isset($data[$this->getQuerySortDirectionParameter()])) {
-                $direction = $data[$this->getQuerySortDirectionParameter()];
-            }
-            if (isset($data[$this->getQuerySortColumnParameter()])) {
-                $value = $data[$this->getQuerySortColumnParameter()];
-                if (in_array($value, $this->autoSortColumns)) {
-                    $this->sanitizedSortBy($value, $direction);
-                }
-            }
-        }
+        $this->debug = true;
     }
 
     /**
-     * @deprecated
+     * Is debugging enabled?
+     *
+     * @return bool
+     */
+    public function isDebugged()
+    {
+        return $this->debug;
+    }
+
+    /**
+     * Method called to start debugging (if the debug is enabled).
+     */
+    abstract public function debugStart();
+
+    /**
+     * Method called to start debugging (if the debug is enabled).
+     */
+    abstract public function debugStop();
+
+    /**
+     * @deprecated Use the getResults method
+     * @see ItemList::getResults()
      */
     public function get()
     {
