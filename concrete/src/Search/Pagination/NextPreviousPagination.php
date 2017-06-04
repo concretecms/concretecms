@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Search\Pagination;
 
+use Concrete\Core\Http\Request;
 use Concrete\Core\Search\ItemList\ItemList;
 use Concrete\Core\Search\ItemList\NextPreviousItemListInterface;
 use Concrete\Core\Search\Pagination\Adapter\NextPreviousAdapter;
@@ -11,15 +12,28 @@ use Pagerfanta\Pagerfanta;
 class NextPreviousPagination extends Pagination
 {
 
-    protected $itemList;
+    protected $list;
     protected $app;
+    protected $request;
 
     public function __construct(NextPreviousItemListInterface $itemList)
     {
         $adapter = new NextPreviousAdapter($itemList);
         $this->list = $itemList;
         $this->app = Facade::getFacadeApplication();
+        $this->request = Request::createFromGlobals();
+        $this->handleQueryOffsets();
         return Pagerfanta::__construct($adapter);
+    }
+
+    private function handleQueryOffsets()
+    {
+        if ($this->list->getSearchRequest()) {
+            $data = $this->list->getSearchQuery()->getSearchRequest();
+        } else {
+            $data = $this->request->query->all();
+        }
+        $this->list->filterQueryByOffset($this->list->getQueryObject(), $data);
     }
 
     public function renderView($driver = 'application', $arguments = array())

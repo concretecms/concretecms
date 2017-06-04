@@ -1,10 +1,12 @@
 <?php
 namespace Concrete\Core\Search\ItemList\Database;
 
+use Concrete\Core\Search\ItemList\NextPreviousItemListInterface;
 use Concrete\Core\Search\StickyRequest;
 use Database;
 use Concrete\Core\Search\ItemList\ItemList as AbstractItemList;
 use Doctrine\DBAL\Logging\EchoSQLLogger;
+use Doctrine\DBAL\Query\QueryBuilder;
 
 abstract class ItemList extends AbstractItemList
 {
@@ -33,6 +35,14 @@ abstract class ItemList extends AbstractItemList
         $this->createQuery();
     }
 
+    /**
+     * @return StickyRequest|null
+     */
+    public function getSearchRequest()
+    {
+        return $this->searchRequest;
+    }
+
     public function getQueryObject()
     {
         return $this->query;
@@ -44,7 +54,6 @@ abstract class ItemList extends AbstractItemList
         $this->setupAutomaticSorting($this->searchRequest);
         $query = clone $this->query;
         $query = $this->finalizeQuery($query);
-
         return $query;
     }
 

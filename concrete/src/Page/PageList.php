@@ -12,6 +12,7 @@ use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Search\Pagination\PermissionablePagination;
 use Concrete\Core\Search\PermissionableListItemInterface;
 use Concrete\Core\Entity\Package;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Page as ConcretePage;
 use Concrete\Core\Entity\Page\Template as TemplateEntity;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
@@ -29,9 +30,13 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     const SITE_TREE_CURRENT = -1;
     const SITE_TREE_ALL = 0;
 
-    public function getQueryOffsetNextPageParameter()
+    public function getQueryOffsetNextPageParameter($column = null)
     {
-        return 'ccm_offset_next';
+        $prefix = 'ccm_offset_next';
+        if ($column) {
+            $prefix .= '_' . str_replace('.', '_', $column);
+        }
+        return $prefix;
     }
 
     protected function getAttributeKeyClassName()
@@ -254,6 +259,15 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
         }
 
         return $query;
+    }
+
+    public function filterQueryByOffset(QueryBuilder $query, $requestData)
+    {
+        if (isset($requestData[$this->getQueryOffsetNextPageParameter('cv.cvDatePublic')])) {
+            $sort = $this->getQuerySortDirectionParameter() == 'asc' ? '>' : '<';
+            $query->andWhere('cv.cvDatePublic ' . $sort . ' :offset');
+            $query->setParameter('offset', $requestData[$this->getQueryOffsetNextPageParameter('cv.cvDatePublic')]);
+        }
     }
 
     public function getTotalResults()

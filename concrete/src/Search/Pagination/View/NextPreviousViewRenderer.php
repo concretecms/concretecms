@@ -27,7 +27,7 @@ class NextPreviousViewRenderer extends ViewRenderer
 
                 $values = $list->getQueryOffsetNextPageValues($this->pagination);
                 foreach($values as $column => $value) {
-                    $args[$list->getQueryOffsetNextPageParameter() . '_' . $column] = urlencode($value);
+                    $args[$list->getQueryOffsetNextPageParameter($column)] = urlencode($value);
                 }
 
                 $url = $urlHelper->setVariable($args);
