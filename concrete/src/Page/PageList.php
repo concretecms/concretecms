@@ -5,6 +5,9 @@ use Concrete\Core\Entity\Block\BlockType\BlockType;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Entity\Site\Tree;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemList;
+use Concrete\Core\Search\ItemList\NextPreviousItemListInterface;
+use Concrete\Core\Search\Pagination\Adapter\NextPreviousAdapter;
+use Concrete\Core\Search\Pagination\NextPreviousPagination;
 use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Search\Pagination\PermissionablePagination;
 use Concrete\Core\Search\PermissionableListItemInterface;
@@ -17,7 +20,7 @@ use Concrete\Core\Site\Tree\TreeInterface;
 /**
  * An object that allows a filtered list of pages to be returned.
  */
-class PageList extends DatabaseItemList implements PermissionableListItemInterface
+class PageList extends DatabaseItemList implements PermissionableListItemInterface, NextPreviousItemListInterface
 {
     const PAGE_VERSION_ACTIVE = 1;
     const PAGE_VERSION_RECENT = 2;
@@ -25,6 +28,11 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
 
     const SITE_TREE_CURRENT = -1;
     const SITE_TREE_ALL = 0;
+
+    public function getQueryOffsetNextPageParameter()
+    {
+        return 'ccm_offset_next';
+    }
 
     protected function getAttributeKeyClassName()
     {
@@ -134,6 +142,27 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     public function createQuery()
     {
         $this->query->select('p.cID');
+    }
+
+    /**
+     * Returns an array with the key equaling the column and the value = the next column values.
+     */
+    public function getQueryOffsetNextPageValues(NextPreviousPagination $pagination)
+    {
+        /**
+         * @var $adapter NextPreviousAdapter
+         */
+        $adapter = $pagination->getAdapter();
+
+        $orderBy = $this->query->getQueryPart('orderBy');
+        $return = array();
+        foreach($orderBy as $column) {
+            if (strpos($column, 'cv.cvDatePublic') !== -1) {
+                $return['cv.cvDatePublic'] = $adapter->getLastResult()->getCollectionDatePublic();
+            }
+        }
+
+        return $return;
     }
 
     public function finalizeQuery(\Doctrine\DBAL\Query\QueryBuilder $query)
@@ -253,7 +282,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
             });
             $pagination = new Pagination($this, $adapter);
         } else {
-            $pagination = new PermissionablePagination($this);
+            $pagination = new NextPreviousPagination($this);
         }
 
         return $pagination;
