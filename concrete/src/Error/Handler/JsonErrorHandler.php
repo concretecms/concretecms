@@ -5,6 +5,7 @@ use Config;
 use Whoops\Exception\Formatter;
 use Whoops\Handler\Handler;
 use Whoops\Util\Misc;
+use Concrete\Core\Error\UserException;
 
 class JsonErrorHandler extends Handler
 {
@@ -14,14 +15,20 @@ class JsonErrorHandler extends Handler
             return Handler::DONE;
         }
 
-        $display = Config::get('concrete.debug.display_errors');
-
-        if (!$display) {
+        $e = $this->getInspector()->getException();
+        $detail = 'message';
+        if ($e instanceof UserException) {
+            $display = true;
+        } else {
+            $display = (bool) Config::get('concrete.debug.display_errors');
+            if ($display === true) {
+                $detail = Config::get('concrete.debug.detail');
+            }
+        }
+        if ($display === false) {
             $error = ['message' => t('An error occurred while processing this request.')];
         } else {
-            $detail = Config::get('concrete.debug.detail', 'message');
             if ($detail !== 'debug') {
-                $e = $this->getInspector()->getException();
                 $error = ['message' => $e->getMessage()];
             } else {
                 $error = Formatter::formatExceptionAsDataArray(
