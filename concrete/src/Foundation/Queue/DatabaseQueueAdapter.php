@@ -56,7 +56,7 @@ class DatabaseQueueAdapter extends \ZendQueue\Adapter\AbstractAdapter
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
 
-        return false;
+        return true;
     }
 
     public function delete($name)
