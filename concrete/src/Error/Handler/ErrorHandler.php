@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Error\Handler;
 
+use Concrete\Core\Error\UserException;
 use Concrete\Core\Support\Facade\Database;
 use Config;
 use Core;
@@ -22,15 +23,21 @@ class ErrorHandler extends PrettyPageHandler
 
         $result = self::QUIT;
 
-        $enabled = Config::get('concrete.debug.display_errors');
-
+        $e = $this->getInspector()->getException();
+        $detail = 'message';
+        if ($e instanceof UserException) {
+            $enabled = true;
+        } else {
+            $enabled = (bool) Config::get('concrete.debug.display_errors');
+            if ($enabled === true) {
+                $detail = Config::get('concrete.debug.detail', 'message');
+            }
+        }
         if ($enabled) {
-            $detail = Config::get('concrete.debug.detail', 'message');
             if ($detail === 'debug') {
                 $this->addDetails();
                 $result = parent::handle();
             } else {
-                $e = $this->getInspector()->getException();
                 Core::make('helper/concrete/ui')->renderError(
                     t('An unexpected error occurred.'),
                     h($e->getMessage())
