@@ -8,14 +8,29 @@ use ZendQueue\Queue as ZendQueue;
 
 class DatabaseQueueAdapter extends \ZendQueue\Adapter\AbstractAdapter
 {
+    /**
+     * The connection to the current database.
+     *
+     * @var \Concrete\Core\Database\Connection\Connection
+     */
     protected $db;
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \ZendQueue\Adapter::__construct()
+     */
     public function __construct($options = [], ZendQueue $queue = null)
     {
         $this->db = $options['connection'];
         parent::__construct($options, $queue);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \ZendQueue\Adapter::isExists()
+     */
     public function isExists($name)
     {
         $id = 0;
@@ -29,6 +44,15 @@ class DatabaseQueueAdapter extends \ZendQueue\Adapter\AbstractAdapter
         return $id > 0;
     }
 
+    /**
+     * Get the identifier of a queue given its name.
+     *
+     * @param string $name The name of a queue
+     *
+     * @throws RuntimeException Throws a RuntimeException if the queue does not exist
+     *
+     * @return int
+     */
     protected function getQueueId($name)
     {
         $r = $this->db->fetchAssoc('select queue_id from Queues where queue_name = ?', [$name]);
@@ -42,6 +66,11 @@ class DatabaseQueueAdapter extends \ZendQueue\Adapter\AbstractAdapter
         return $count;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \ZendQueue\Adapter::create()
+     */
     public function create($name, $timeout = null)
     {
         if ($this->isExists($name)) {
@@ -60,6 +89,11 @@ class DatabaseQueueAdapter extends \ZendQueue\Adapter\AbstractAdapter
         return true;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \ZendQueue\Adapter::delete()
+     */
     public function delete($name)
     {
         $id = $this->getQueueId($name); // get primary key
@@ -78,6 +112,11 @@ class DatabaseQueueAdapter extends \ZendQueue\Adapter\AbstractAdapter
         return true;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \ZendQueue\Adapter::getQueues()
+     */
     public function getQueues()
     {
         $r = $this->db->Execute('select queue_id, queue_name from Queues');
@@ -91,6 +130,11 @@ class DatabaseQueueAdapter extends \ZendQueue\Adapter\AbstractAdapter
         return $list;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \ZendQueue\Adapter::count()
+     */
     public function count(ZendQueue $queue = null)
     {
         if ($queue === null) {
@@ -103,6 +147,11 @@ class DatabaseQueueAdapter extends \ZendQueue\Adapter\AbstractAdapter
         return (int) $count;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \ZendQueue\Adapter::send()
+     */
     public function send($message, ZendQueue $queue = null)
     {
         if ($queue === null) {
@@ -142,6 +191,11 @@ class DatabaseQueueAdapter extends \ZendQueue\Adapter\AbstractAdapter
         return new $classname($options);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \ZendQueue\Adapter::receive()
+     */
     public function receive($maxMessages = null, $timeout = null, ZendQueue $queue = null)
     {
         if ($maxMessages === null) {
@@ -197,6 +251,11 @@ class DatabaseQueueAdapter extends \ZendQueue\Adapter\AbstractAdapter
         return new $classname($options);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \ZendQueue\Adapter::deleteMessage()
+     */
     public function deleteMessage(Message $message)
     {
         if ($this->db->delete('QueueMessages', ['handle' => $message->handle])) {
@@ -206,6 +265,11 @@ class DatabaseQueueAdapter extends \ZendQueue\Adapter\AbstractAdapter
         return false;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \ZendQueue\Adapter::getCapabilities()
+     */
     public function getCapabilities()
     {
         return [
