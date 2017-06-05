@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Core\Error\Handler;
 
-use Concrete\Core\Logging\Logger;
 use Config;
 use Whoops\Exception\Formatter;
 use Whoops\Handler\Handler;
@@ -18,12 +17,12 @@ class JsonErrorHandler extends Handler
         $display = Config::get('concrete.debug.display_errors');
 
         if (!$display) {
-            $error = array('message' => t('An error occurred while processing this request.'));
+            $error = ['message' => t('An error occurred while processing this request.')];
         } else {
             $detail = Config::get('concrete.debug.detail', 'message');
             if ($detail !== 'debug') {
                 $e = $this->getInspector()->getException();
-                $error = array('message' => $e->getMessage());
+                $error = ['message' => $e->getMessage()];
             } else {
                 $error = Formatter::formatExceptionAsDataArray(
                     $this->getInspector(),
@@ -44,17 +43,16 @@ class JsonErrorHandler extends Handler
                         $e->getMessage(),
                         $e->getCode()
                     ),
-                    array($e)
+                    [$e]
                 );
             } catch (\Exception $e) {
             }
         }
 
-
-        $response = array(
+        $response = [
             'error' => $error,
-            'errors' => array($error['message']),
-        );
+            'errors' => [$error['message']],
+        ];
 
         if (Misc::canSendHeaders()) {
             if (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false) {
