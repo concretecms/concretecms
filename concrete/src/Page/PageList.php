@@ -57,7 +57,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
      *
      * @var array
      */
-    protected $autoSortColumns = ['cvName', 'cvDatePublic', 'cDateAdded', 'cDateModified'];
+    protected $autoSortColumns = ['cv.cvName', 'cv.cvDatePublic', 'c.cDateAdded', 'c.cDateModified'];
 
     /**
      * Which version to attempt to retrieve.
@@ -588,7 +588,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
      */
     public function sortByPublicDate()
     {
-        $this->query->orderBy('cvDatePublic', 'asc');
+        $this->query->orderBy('cv.cvDatePublic', 'asc');
     }
 
     /**
@@ -612,7 +612,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
      */
     public function sortByPublicDateDescending()
     {
-        $this->sortBy('cvDatePublic', 'desc');
+        $this->sortBy('cv.cvDatePublic', 'desc');
     }
 
     /**

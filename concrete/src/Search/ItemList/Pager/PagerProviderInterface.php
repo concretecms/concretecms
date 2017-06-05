@@ -14,12 +14,6 @@ interface PagerProviderInterface
     function getPagerManager();
 
     /**
-     * @return Column[]
-     */
-    function getOrderByColumns();
-
-
-    /**
      * @return VariableFactory
      */
     function getPagerVariableFactory();

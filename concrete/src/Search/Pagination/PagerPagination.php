@@ -2,9 +2,12 @@
 namespace Concrete\Core\Search\Pagination;
 
 use Concrete\Core\Search\ItemList\ItemList;
+use Concrete\Core\Search\ItemList\Pager\Manager\PagerManagerInterface;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 use Concrete\Core\Search\Pagination\Adapter\PagerAdapter;
+use Concrete\Core\Search\Pagination\View\PagerManager;
 use Concrete\Core\Search\Pagination\View\PagerViewRenderer;
+use Concrete\Core\Search\Pagination\View\ViewRenderer;
 use Concrete\Core\Support\Facade\Facade;
 use Pagerfanta\Pagerfanta;
 
@@ -24,10 +27,11 @@ class PagerPagination extends Pagination
         $manager = $itemList->getPagerManager();
 
         $factory = $itemList->getPagerVariableFactory();
-        $variables = $factory->getRequestedVariables();
-        foreach($variables as $variable) {
-            $manager->filterByVariable($variable, $itemList);
+        $start = $factory->getCurrentCursor();
+        if ($start) {
+            $manager->displaySegmentAtCursor($start, $itemList);
         }
+
         return Pagerfanta::__construct($adapter);
     }
 
@@ -35,14 +39,53 @@ class PagerPagination extends Pagination
     {
         $manager = $this->app->make('manager/view/pagination/pager');
         $driver = $manager->driver($driver);
-
-        $renderer = new PagerViewRenderer($this, $driver);
+        $renderer = new ViewRenderer($this, $driver);
         return $renderer->render($arguments);
+    }
+
+    public function getRouteCollectionFunction()
+    {
+        $urlHelper = $this->app->make('helper/url');
+        /**
+         * @var $list PagerProviderInterface
+         */
+        $list = $this->getItemListObject();
+        $routeCollectionFunction = function ($page) use ($list, $urlHelper) {
+            $args = array();
+            if ($list->getActiveSortColumn()) {
+                $args[$list->getQuerySortColumnParameter()] = $list->getActiveSortColumn();
+            }
+
+            if ($list->getActiveSortDirection()) {
+                $args[$list->getQuerySortDirectionParameter()] = $list->getActiveSortDirection();
+            }
+
+            /**
+             * @var $manager PagerManagerInterface
+             */
+            $factory = $list->getPagerVariableFactory();
+            if ($page == 2) {
+                // next page
+                $args[$factory->getCursorVariableName()] = $factory->getNextCursorValue($this);
+            } else if ($page == 0) {
+                $args[$factory->getCursorVariableName()] = $factory->getPreviousCursorValue($this);
+            }
+
+            if ($this->baseURL) {
+                $url = $urlHelper->setVariable($args, false, $this->baseURL);
+            } else {
+                $url = $urlHelper->setVariable($args);
+            }
+            return h($url);
+
+        };
+
+        return $routeCollectionFunction;
     }
 
     public function haveToPaginate()
     {
-        return true;
+        return $this->hasNextPage() || $this->hasPreviousPage();
     }
 
     public function hasNextPage()
@@ -52,7 +95,8 @@ class PagerPagination extends Pagination
 
     public function hasPreviousPage()
     {
-        return true;
+        $factory = $this->list->getPagerVariableFactory();
+        return $factory->getCurrentCursor() != '';
     }
 
     public function getCurrentPageResults()

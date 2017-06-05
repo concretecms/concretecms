@@ -3,12 +3,18 @@ namespace Concrete\Core\Search\ItemList\Pager\QueryString;
 
 use Concrete\Core\Http\Request;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
+use Concrete\Core\Search\Pagination\PagerPagination;
 use Concrete\Core\Search\StickyRequest;
 
 class VariableFactory
 {
 
     protected $itemList;
+
+    public function getCursorVariableName()
+    {
+        return 'ccm_cursor';
+    }
 
     /**
      * VariableFactory constructor.
@@ -25,19 +31,34 @@ class VariableFactory
         }
     }
 
-    public function getRequestedVariables()
+    public function getCursorValue()
     {
-        $variables = array();
-        foreach($this->requestData as $key => $value) {
-            if (strpos($key, 'ccm_offset_start_') === 0) {
-                $name = substr($key, 17);
-                $variables[] = new OffsetStartVariable($name, $value);
-            } else if (strpos($key, 'ccm_offset_previous_') === 0) {
-                $name = substr($key, 20);
-                $variables[] = new PreviousOffsetStartVariable($name, $value);
-            }
-        }
-        return $variables;
+        return $this->requestData[$this->getCursorVariableName()];
     }
+
+    public function getCurrentCursor()
+    {
+        $cursor = explode('|', $this->getCursorValue());
+        return end($cursor);
+    }
+
+    public function getNextCursorValue(PagerPagination $pagination)
+    {
+        $currentCursor = $this->getCursorValue();
+        $nextCursor = $this->itemList->getPagerManager()->getNextCursorStart($this->itemList, $pagination);
+        if ($currentCursor) {
+            return sprintf('%s|%s', $currentCursor, $nextCursor);
+        }
+        return $nextCursor;
+    }
+
+    public function getPreviousCursorValue(PagerPagination $pagination)
+    {
+        $cursor = explode('|', $this->getCursorValue());
+        array_pop($cursor);
+        return implode('|', $cursor);
+    }
+
+
 
 }

@@ -617,7 +617,7 @@
 
 	ConcreteAjaxSearch.prototype.setupPagination = function() {
 		var cs = this;
-		this.$element.on('click', 'ul.pagination a', function() {
+		this.$element.on('click', 'div.ccm-search-results-pagination a', function() {
 			cs.ajaxUpdate($(this).attr('href'));
 			return false;
 		});

@@ -32,11 +32,11 @@ class DefaultSet extends Set
     public function __construct()
     {
         $this->addColumn(new Column('pt.ptHandle', t('Type'), 'getPageTypeName', false));
-        $this->addColumn(new Column('cv.cvName', t('Name'), 'getCollectionName'));
-        $this->addColumn(new Column('cv.cvDatePublic', t('Date'), array('\Concrete\Core\Page\Search\ColumnSet\DefaultSet', 'getCollectionDatePublic')));
-        $this->addColumn(new Column('c.cDateModified', t('Last Modified'), array('\Concrete\Core\Page\Search\ColumnSet\DefaultSet', 'getCollectionDateModified')));
+        $this->addColumn(new Column('cvName', t('Name'), 'getCollectionName'));
+        $this->addColumn(new Column('cvDatePublic', t('Date'), array('\Concrete\Core\Page\Search\ColumnSet\DefaultSet', 'getCollectionDatePublic')));
+        $this->addColumn(new Column('cDateModified', t('Last Modified'), array('\Concrete\Core\Page\Search\ColumnSet\DefaultSet', 'getCollectionDateModified')));
         $this->addColumn(new Column('author', t('Author'), array('\Concrete\Core\Page\Search\ColumnSet\DefaultSet', 'getCollectionAuthor'), false));
-        $date = $this->getColumnByKey('c.cDateModified');
+        $date = $this->getColumnByKey('cDateModified');
         $this->setDefaultSortColumn($date, 'desc');
     }
 }

@@ -16,7 +16,9 @@ abstract class AbstractPagerManager implements PagerManagerInterface
 
     protected $itemList;
 
-    abstract public function getNextValue(Column $column, $mixed);
+    abstract public function getCursorStartValue($mixed);
+    abstract public function getCursorObject($cursor);
+    abstract public function filterQueryAtOffset(PagerProviderInterface $itemList, Column $column, $sort, $mixed);
 
     /**
      * AbstractPagerManager constructor.
@@ -27,29 +29,29 @@ abstract class AbstractPagerManager implements PagerManagerInterface
         $this->itemList = $itemList;
     }
 
-    public function getNextPageVariables(PagerProviderInterface $itemList, PagerPagination $pagination)
+    public function getNextCursorStart(PagerProviderInterface $itemList, PagerPagination $pagination)
     {
         /**
          * @var $adapter PagerAdapter
          */
         $adapter = $pagination->getAdapter();
-        $return = array();
-        $orderBy = $itemList->getOrderByColumns();
-        foreach($orderBy as $column) {
-            $variable = new OffsetStartVariable($column->getKey(), $this->getNextValue($column, $adapter->getLastResult()));
-            $return[] = $variable;
+        $result = $adapter->getLastResult();
+        if ($result) {
+            return $this->getCursorStartValue($result);
         }
-
-        return $return;
     }
 
-    public function filterByVariable(VariableInterface $variable, PagerProviderInterface $itemList)
+    public function displaySegmentAtCursor($cursor, PagerProviderInterface $itemList)
     {
-        $sort = $itemList->getQuerySortDirectionParameter() == 'asc' ? '>' : '<';
-        $where = sprintf('%s %s :offset', $variable->getName(), $sort);
-        $query = $itemList->getQueryObject();
-        $query->andWhere($where);
-        $query->setParameter('offset', $variable->getValue());
+        $object = $this->getCursorObject($cursor);
+        if ($object) {
+            // Figure out what we are sorting by
+            $columns = $itemList->getOrderByColumns();
+            foreach($columns as $column) {
+                $sort = $column->getDirection() == 'desc' ? '<' : '>';
+                $this->filterQueryAtOffset($itemList, $column, $sort, $object);
+            }
+        }
     }
 
 

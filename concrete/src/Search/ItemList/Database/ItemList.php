@@ -59,7 +59,8 @@ abstract class ItemList extends AbstractItemList
 
     public function getOrderByColumns()
     {
-        $orderBy = $this->query->getQueryPart('orderBy');
+        $query = $this->deliverQueryObject();
+        $orderBy = $query->getQueryPart('orderBy');
         $return = array();
         foreach ($orderBy as $data) {
             $data  = explode(" ", $data);

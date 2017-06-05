@@ -11,9 +11,8 @@ interface PagerManagerInterface
     /**
      * @param PagerProviderInterface $itemList
      * @param PagerPagination $pagination
-     * @return VariableInterface[]
      */
-    function getNextPageVariables(PagerProviderInterface $itemList, PagerPagination $pagination);
+    function getNextCursorStart(PagerProviderInterface $itemList, PagerPagination $pagination);
 
-    function filterByVariable(VariableInterface $variable, PagerProviderInterface $itemList);
+    function displaySegmentAtCursor($cursor, PagerProviderInterface $itemList);
 }
