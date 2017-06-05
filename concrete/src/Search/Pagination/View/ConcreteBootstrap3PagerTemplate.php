@@ -4,7 +4,7 @@ namespace Concrete\Core\Search\Pagination\View;
 use Pagerfanta\View\Template\Template;
 use Pagerfanta\View\Template\TwitterBootstrap3Template;
 
-class ConcreteBootstrap3NextPreviousTemplate extends Template
+class ConcreteBootstrap3PagerTemplate extends Template
 {
 
     static protected $defaultOptions = array(

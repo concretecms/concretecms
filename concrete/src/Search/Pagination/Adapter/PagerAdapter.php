@@ -6,7 +6,7 @@ use Pagerfanta\Adapter\AdapterInterface;
 use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Pagerfanta;
 
-class NextPreviousAdapter implements AdapterInterface
+class PagerAdapter implements AdapterInterface
 {
 
     protected $itemList;

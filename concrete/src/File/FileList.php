@@ -2,7 +2,7 @@
 namespace Concrete\Core\File;
 
 use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemList;
-use Concrete\Core\Search\Pagination\NextPreviousPagination;
+use Concrete\Core\Search\Pagination\PagerPagination;
 use Concrete\Core\Search\PermissionableListItemInterface;
 use Concrete\Core\Search\Pagination\PermissionablePagination;
 use Concrete\Core\Search\StickyRequest;
@@ -86,7 +86,7 @@ class FileList extends DatabaseItemList implements PermissionableListItemInterfa
             });
             $pagination = new Pagination($this, $adapter);
         } else {
-            $pagination = new NextPreviousPagination($this);
+            $pagination = new PagerPagination($this);
         }
 
         return $pagination;

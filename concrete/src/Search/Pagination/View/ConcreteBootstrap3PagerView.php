@@ -4,11 +4,11 @@ namespace Concrete\Core\Search\Pagination\View;
 use Pagerfanta\View\DefaultView;
 use Pagerfanta\View\TwitterBootstrap3View;
 
-class ConcreteBootstrap3NextPreviousView extends DefaultView implements ViewInterface
+class ConcreteBootstrap3PagerView extends DefaultView implements ViewInterface
 {
     protected function createDefaultTemplate()
     {
-        return new ConcreteBootstrap3NextPreviousTemplate();
+        return new ConcreteBootstrap3PagerTemplate();
     }
 
     public function getName()

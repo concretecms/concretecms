@@ -5,9 +5,10 @@ use Concrete\Core\Entity\Block\BlockType\BlockType;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Entity\Site\Tree;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemList;
-use Concrete\Core\Search\ItemList\NextPreviousItemListInterface;
-use Concrete\Core\Search\Pagination\Adapter\NextPreviousAdapter;
-use Concrete\Core\Search\Pagination\NextPreviousPagination;
+use Concrete\Core\Search\ItemList\Pager\Manager\PageListPagerManager;
+use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
+use Concrete\Core\Search\ItemList\Pager\QueryString\VariableFactory;
+use Concrete\Core\Search\Pagination\PagerPagination;
 use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Search\Pagination\PermissionablePagination;
 use Concrete\Core\Search\PermissionableListItemInterface;
@@ -21,7 +22,7 @@ use Concrete\Core\Site\Tree\TreeInterface;
 /**
  * An object that allows a filtered list of pages to be returned.
  */
-class PageList extends DatabaseItemList implements PermissionableListItemInterface, NextPreviousItemListInterface
+class PageList extends DatabaseItemList implements PermissionableListItemInterface, PagerProviderInterface
 {
     const PAGE_VERSION_ACTIVE = 1;
     const PAGE_VERSION_RECENT = 2;
@@ -30,13 +31,14 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     const SITE_TREE_CURRENT = -1;
     const SITE_TREE_ALL = 0;
 
-    public function getQueryOffsetNextPageParameter($column = null)
+    public function getPagerManager()
     {
-        $prefix = 'ccm_offset_next';
-        if ($column) {
-            $prefix .= '_' . str_replace('.', '_', $column);
-        }
-        return $prefix;
+        return new PageListPagerManager($this);
+    }
+
+    public function getPagerVariableFactory()
+    {
+        return new VariableFactory($this, $this->getSearchRequest());
     }
 
     protected function getAttributeKeyClassName()
@@ -55,7 +57,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
      *
      * @var array
      */
-    protected $autoSortColumns = ['cv.cvName', 'cv.cvDatePublic', 'c.cDateAdded', 'c.cDateModified'];
+    protected $autoSortColumns = ['cvName', 'cvDatePublic', 'cDateAdded', 'cDateModified'];
 
     /**
      * Which version to attempt to retrieve.
@@ -149,27 +151,6 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
         $this->query->select('p.cID');
     }
 
-    /**
-     * Returns an array with the key equaling the column and the value = the next column values.
-     */
-    public function getQueryOffsetNextPageValues(NextPreviousPagination $pagination)
-    {
-        /**
-         * @var $adapter NextPreviousAdapter
-         */
-        $adapter = $pagination->getAdapter();
-
-        $orderBy = $this->query->getQueryPart('orderBy');
-        $return = array();
-        foreach($orderBy as $column) {
-            if (strpos($column, 'cv.cvDatePublic') !== -1) {
-                $return['cv.cvDatePublic'] = $adapter->getLastResult()->getCollectionDatePublic();
-            }
-        }
-
-        return $return;
-    }
-
     public function finalizeQuery(\Doctrine\DBAL\Query\QueryBuilder $query)
     {
         if ($this->includeAliases) {
@@ -261,15 +242,6 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
         return $query;
     }
 
-    public function filterQueryByOffset(QueryBuilder $query, $requestData)
-    {
-        if (isset($requestData[$this->getQueryOffsetNextPageParameter('cv.cvDatePublic')])) {
-            $sort = $this->getQuerySortDirectionParameter() == 'asc' ? '>' : '<';
-            $query->andWhere('cv.cvDatePublic ' . $sort . ' :offset');
-            $query->setParameter('offset', $requestData[$this->getQueryOffsetNextPageParameter('cv.cvDatePublic')]);
-        }
-    }
-
     public function getTotalResults()
     {
         $u = new \User();
@@ -296,7 +268,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
             });
             $pagination = new Pagination($this, $adapter);
         } else {
-            $pagination = new NextPreviousPagination($this);
+            $pagination = new PagerPagination($this);
         }
 
         return $pagination;
@@ -616,7 +588,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
      */
     public function sortByPublicDate()
     {
-        $this->query->orderBy('cv.cvDatePublic', 'asc');
+        $this->query->orderBy('cvDatePublic', 'asc');
     }
 
     /**
@@ -640,7 +612,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
      */
     public function sortByPublicDateDescending()
     {
-        $this->sortBy('cv.cvDatePublic', 'desc');
+        $this->sortBy('cvDatePublic', 'desc');
     }
 
     /**

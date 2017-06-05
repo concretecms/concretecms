@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Search\ItemList\Database;
 
-use Concrete\Core\Search\ItemList\NextPreviousItemListInterface;
+use Concrete\Core\Search\ItemList\Column;
 use Concrete\Core\Search\StickyRequest;
 use Database;
 use Concrete\Core\Search\ItemList\ItemList as AbstractItemList;
@@ -55,6 +55,18 @@ abstract class ItemList extends AbstractItemList
         $query = clone $this->query;
         $query = $this->finalizeQuery($query);
         return $query;
+    }
+
+    public function getOrderByColumns()
+    {
+        $orderBy = $this->query->getQueryPart('orderBy');
+        $return = array();
+        foreach ($orderBy as $data) {
+            $data  = explode(" ", $data);
+            $column = new Column($data[0], $data[1]);
+            $return[] = $column;
+        }
+        return $return;
     }
 
     public function executeGetResults()

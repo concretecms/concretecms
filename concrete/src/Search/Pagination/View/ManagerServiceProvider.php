@@ -11,7 +11,7 @@ class ManagerServiceProvider extends ServiceProvider
             return new Manager($app);
         });
         $this->app['manager/view/pagination/pager'] = $this->app->share(function ($app) {
-            return new NextPreviousManager($app);
+            return new PagerManager($app);
         });
     }
 }

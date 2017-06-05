@@ -286,7 +286,7 @@ class FileListTest extends \FileStorageTestCase
 
         $results = $pagination->getCurrentPageResults();
 
-        $this->assertInstanceOf('\Concrete\Core\Search\Pagination\NextPreviousPagination', $pagination);
+        $this->assertInstanceOf('\Concrete\Core\Search\Pagination\PagerPagination', $pagination);
         $this->assertEquals(4, count($results));
         $this->assertEquals('foobley.png', $results[0]->getFilename());
         $this->assertEquals('image.png', $results[1]->getFilename());
