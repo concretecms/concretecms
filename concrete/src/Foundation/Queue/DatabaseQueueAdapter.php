@@ -33,15 +33,14 @@ class DatabaseQueueAdapter extends \ZendQueue\Adapter\AbstractAdapter
      */
     public function isExists($name)
     {
-        $id = 0;
-
         try {
-            $id = $this->getQueueId($name);
-        } catch (Exception $e) {
-            return false;
+            $this->getQueueId($name);
+            $result = true;
+        } catch (RuntimeException $e) {
+            $result = false;
         }
 
-        return $id > 0;
+        return $result;
     }
 
     /**
@@ -55,13 +54,13 @@ class DatabaseQueueAdapter extends \ZendQueue\Adapter\AbstractAdapter
      */
     protected function getQueueId($name)
     {
-        $r = $this->db->fetchAssoc('select queue_id from Queues where queue_name = ?', [$name]);
+        $r = $this->db->fetchColumn('select queue_id from Queues where queue_name = ? limit 1', [$name]);
 
-        if ($r === null) {
-            throw new RuntimeException('Queue does not exist: ' . $name);
+        if ($r === false) {
+            throw new RuntimeException(t('Queue does not exist: %s', $name));
         }
 
-        $count = (int) $r['queue_id'];
+        $count = (int) $r;
 
         return $count;
     }
@@ -82,7 +81,7 @@ class DatabaseQueueAdapter extends \ZendQueue\Adapter\AbstractAdapter
                 'queue_name' => $name,
                 'timeout' => ($timeout === null) ? self::CREATE_TIMEOUT_DEFAULT : (int) $timeout,
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
 
@@ -96,16 +95,15 @@ class DatabaseQueueAdapter extends \ZendQueue\Adapter\AbstractAdapter
      */
     public function delete($name)
     {
-        $id = $this->getQueueId($name); // get primary key
-
-        // if the queue does not exist then it must already be deleted.
-        $r = $this->db->GetOne('select queue_id from Queues where queue_id = ?', [$id]);
-        if (!$r) {
+        try {
+            $id = $this->getQueueId($name);
+        } catch (RuntimeException $e) {
             return false;
         }
+
         try {
             $this->db->delete('Queues', ['queue_id' => $id]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
 
@@ -119,10 +117,10 @@ class DatabaseQueueAdapter extends \ZendQueue\Adapter\AbstractAdapter
      */
     public function getQueues()
     {
-        $r = $this->db->Execute('select queue_id, queue_name from Queues');
+        $r = $this->db->executeQuery('select queue_id, queue_name from Queues');
         $queues = [];
-        while ($row = $r->FetchRow()) {
-            $queues[$row['queue_name']] = $row['queue_id'];
+        while ($row = $r->fetch()) {
+            $queues[$row['queue_name']] = (int) $row['queue_id'];
         }
 
         $list = array_keys($queues);
@@ -140,9 +138,9 @@ class DatabaseQueueAdapter extends \ZendQueue\Adapter\AbstractAdapter
         if ($queue === null) {
             $queue = $this->_queue;
         }
-        $count = $this->db->GetOne('select count(*) from QueueMessages where queue_id = ?', [
-           $this->getQueueId($queue->getName()),
-        ]);
+        $queueName = $queue->getName();
+        $queueId = $this->getQueueId($queueName);
+        $count = $this->db->fetchColumn('select count(*) from QueueMessages where queue_id = ?', [$queueId]);
 
         return (int) $count;
     }
@@ -165,16 +163,14 @@ class DatabaseQueueAdapter extends \ZendQueue\Adapter\AbstractAdapter
             $message = trim($message);
         }
 
-        if (!$this->isExists($queue->getName())) {
-            throw new RuntimeException('Queue does not exist:' . $queue->getName());
-        }
+        $queueId = $this->getQueueId($queue->getName());
 
-        $msg = [];
-        $msg['queue_id'] = $this->getQueueId($queue->getName());
-        $msg['created'] = time();
-        $msg['body'] = $message;
-        $msg['md5'] = md5($message);
-
+        $msg = [
+            'queue_id' => $queueId,
+            'created' => time(),
+            'body' => $message,
+            'md5' => md5($message),
+        ];
         try {
             $this->db->insert('QueueMessages', $msg);
         } catch (Exception $e) {
@@ -198,25 +194,29 @@ class DatabaseQueueAdapter extends \ZendQueue\Adapter\AbstractAdapter
      */
     public function receive($maxMessages = null, $timeout = null, ZendQueue $queue = null)
     {
-        if ($maxMessages === null) {
-            $maxMessages = 1;
-        }
-        if ($timeout === null) {
-            $timeout = self::RECEIVE_TIMEOUT_DEFAULT;
-        }
+        $maxMessages = $maxMessages === null ? 1 : max(1, (int) $maxMessages);
+        $timeout = (int) ($timeout === null ? self::RECEIVE_TIMEOUT_DEFAULT : $timeout);
         if ($queue === null) {
             $queue = $this->_queue;
         }
+        $queueId = $this->getQueueId($queue->getName());
 
         $msgs = [];
         $microtime = microtime(true); // cache microtime
+        $microtimeInt = (int) $microtime;
 
         // start transaction handling
         try {
             if ($maxMessages > 0) { // ZF-7666 LIMIT 0 clause not included.
                 $this->db->beginTransaction();
-                $statement = $this->db->prepare('select * from QueueMessages where queue_id = ? and handle is null or timeout + ' . (int) $timeout . ' < ' . (int) $microtime . ' limit ' . $maxMessages . ' for update');
-                $statement->bindValue(1, $this->getQueueId($queue->getName()));
+                $statement = $this->db->prepare("
+                    select *
+                    from QueueMessages
+                    where queue_id = ? and handle is null or timeout + {$timeout} < {$microtimeInt}
+                    limit {$maxMessages}
+                    for update
+                ");
+                $statement->bindValue(1, $queueId);
                 $r = $statement->execute();
 
                 foreach ($statement->fetchAll() as $data) {
@@ -224,8 +224,14 @@ class DatabaseQueueAdapter extends \ZendQueue\Adapter\AbstractAdapter
                     $data['handle'] = md5(uniqid(rand(), true));
 
                     // update the database
-                    $count = $this->db->executeUpdate('update QueueMessages set handle = ?, timeout = ? where message_id = ? and (handle is null or timeout + ' . (int) $timeout . ' < ' . (int) $microtime . ')',
-                        [$data['handle'], $microtime, $data['message_id']]);
+                    $count = $this->db->executeUpdate(
+                        "
+                            update QueueMessages
+                            set handle = ?, timeout = ?
+                            where message_id = ? and (handle is null or timeout + {$timeout} < {$microtimeInt})
+                        ",
+                        [$data['handle'], $microtime, $data['message_id']]
+                    );
 
                     // we check count to make sure no other thread has gotten
                     // the rows after our select, but before our update.
@@ -235,7 +241,7 @@ class DatabaseQueueAdapter extends \ZendQueue\Adapter\AbstractAdapter
                 }
                 $this->db->commit();
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->db->rollback();
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
