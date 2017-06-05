@@ -4,6 +4,7 @@ namespace Concrete\Core\Foundation\Queue;
 use ZendQueue\Queue as ZendQueue;
 use ZendQueue\Exception\RuntimeException;
 use ZendQueue\Message;
+use Exception;
 
 class DatabaseQueueAdapter extends \ZendQueue\Adapter\AbstractAdapter
 {
