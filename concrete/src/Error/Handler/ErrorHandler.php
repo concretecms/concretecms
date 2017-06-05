@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Core\Error\Handler;
 
-use Concrete\Core\Logging\Logger;
 use Concrete\Core\Support\Facade\Database;
 use Config;
 use Core;
@@ -58,7 +57,7 @@ class ErrorHandler extends PrettyPageHandler
                             $e->getMessage(),
                             $e->getCode()
                         ),
-                        array($e)
+                        [$e]
                     );
                 }
             } catch (\Exception $e) {
@@ -78,10 +77,10 @@ class ErrorHandler extends PrettyPageHandler
          */
         $this->addDataTable(
             'Concrete5',
-            array(
+            [
                 'Version' => APP_VERSION,
                 'Installed Version' => Config::get('concrete.version_installed'),
-            )
+            ]
         );
 
         /*
@@ -92,7 +91,7 @@ class ErrorHandler extends PrettyPageHandler
 
     protected function flatConfig(array $config, $group)
     {
-        $flat = array();
+        $flat = [];
         foreach ($config as $key => $value) {
             if (is_array($value)) {
                 $flat = array_merge($flat, $this->flatConfig($value, "{$group}.{$key}"));
