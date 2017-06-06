@@ -1,4 +1,4 @@
-!function(global, $) {
+! function(global, $) {
     'use strict';
 
     function ConcreteFileManager($element, options) {
@@ -43,12 +43,13 @@
         var appVersion = navigator.appVersion,
             isAndroid = (/android/gi).test(appVersion),
             isIOS = (/iphone|ipad|ipod/gi).test(appVersion),
-            probablyMobile = (isAndroid || isIOS || /(Opera Mini)|Kindle|webOS|BlackBerry|(Opera Mobi)|(Windows Phone)|IEMobile/i.test(navigator.userAgent) );
+            probablyMobile = (isAndroid || isIOS || /(Opera Mini)|Kindle|webOS|BlackBerry|(Opera Mobi)|(Windows Phone)|IEMobile/i.test(navigator.userAgent));
 
         if (!probablyMobile) {
             my.$element.find('tr[data-file-manager-tree-node-type]').each(function() {
-                var $this = $(this), dragClass;
-                switch($(this).attr('data-file-manager-tree-node-type')) {
+                var $this = $(this),
+                    dragClass;
+                switch ($(this).attr('data-file-manager-tree-node-type')) {
                     case 'file_folder':
                         dragClass = 'ccm-search-results-folder';
                         break;
@@ -107,14 +108,14 @@
 
             my.$element.find('tr[data-file-manager-tree-node-type=file_folder], ol[data-search-navigation=breadcrumb] a[data-file-manager-tree-node]').droppable({
                 hoverClass: 'ccm-search-select-active-droppable',
-                drop: function (event, ui) {
+                drop: function(event, ui) {
 
                     var $sourceItems = ui.helper.data('$selected'),
                         sourceIDs = [],
                         destinationID = $(this).data('file-manager-tree-node'),
                         copyNodes = event.altKey;
 
-                    $sourceItems.each(function () {
+                    $sourceItems.each(function() {
                         var $sourceItem = $(this);
                         var sourceID = $sourceItem.data('file-manager-tree-node');
                         if (sourceID == destinationID) {
@@ -137,7 +138,7 @@
                             sourceTreeNodeIDs: sourceIDs,
                             treeNodeParentID: destinationID
                         },
-                        success: function (r) {
+                        success: function(r) {
                             if (!copyNodes) {
                                 my.reloadFolder();
                             }
@@ -146,7 +147,7 @@
                                 'title': r.title
                             });
                         },
-                        error: function (xhr) {
+                        error: function(xhr) {
                             $sourceItems.show();
                             var msg = xhr.responseText;
                             if (xhr.responseJSON && xhr.responseJSON.errors) {
@@ -212,7 +213,7 @@
             $fileUploader = $('#ccm-file-manager-upload'),
             $maxWidth = $fileUploader.data('image-max-width'),
             $maxHeight = $fileUploader.data('image-max-height'),
-            $imageResize = ($maxWidth > 0 && $maxHeight>0),
+            $imageResize = ($maxWidth > 0 && $maxHeight > 0),
             $quality = $fileUploader.data('image-quality'),
             errors = [],
             files = [],
@@ -225,8 +226,8 @@
                 dataType: 'json',
                 disableImageResize: !$imageResize,
                 imageQuality: ($quality > 0 ? $quality : 85),
-                imageMaxWidth:($maxWidth > 0 ? $maxWidth : 1920),
-                imageMaxHeight:($maxHeight > 0 ? $maxHeight : 1080),
+                imageMaxWidth: ($maxWidth > 0 ? $maxWidth : 1920),
+                imageMaxHeight: ($maxHeight > 0 ? $maxHeight : 1080),
                 error: function(r) {
                     var message = r.responseText,
                         name = this.files[0].name;
@@ -234,19 +235,19 @@
                     try {
                         message = jQuery.parseJSON(message).errors;
                         _(message).each(function(error) {
-                            errors.push({ name:name, error:error });
+                            errors.push({ name: name, error: error });
                         });
                     } catch (e) {
-                        errors.push({name: name, error: message});
+                        errors.push({ name: name, error: message });
                     }
                 },
                 progressall: function(e, data) {
                     var progress = parseInt(data.loaded / data.total * 100, 10);
-                    $('#ccm-file-upload-progress-wrapper').html(my._templateFileProgress({'progress': progress}));
+                    $('#ccm-file-upload-progress-wrapper').html(my._templateFileProgress({ 'progress': progress }));
                 },
                 start: function() {
                     errors = [];
-                    $('<div />', {'id': 'ccm-file-upload-progress-wrapper'}).html(my._templateFileProgress({'progress': 100})).appendTo(document.body);
+                    $('<div />', { 'id': 'ccm-file-upload-progress-wrapper' }).html(my._templateFileProgress({ 'progress': 100 })).appendTo(document.body);
                     $.fn.dialog.open({
                         title: ccmi18n_filemanager.uploadProgress,
                         width: 400,
@@ -258,15 +259,14 @@
                         modal: true
                     });
                 },
-                done: function(e, data)
-                {
+                done: function(e, data) {
                     files.push(data.result[0]);
                 },
                 stop: function() {
                     jQuery.fn.dialog.closeTop();
 
                     if (errors.length) {
-                        ConcreteAlert.dialog(ccmi18n_filemanager.uploadFailed, error_template({errors: errors}));
+                        ConcreteAlert.dialog(ccmi18n_filemanager.uploadFailed, error_template({ errors: errors }));
                     } else {
                         my._launchUploadCompleteDialog(files);
                         files = [];
@@ -276,7 +276,7 @@
 
         $fileUploader.fileupload(args);
 
-        $fileUploader.bind('fileuploadsubmit', function (e, data) {
+        $fileUploader.bind('fileuploadsubmit', function(e, data) {
             data.formData = {
                 currentFolder: my.currentFolder,
                 ccm_token: my.options.upload_token
@@ -330,7 +330,7 @@
     ConcreteFileManager.prototype.setupEvents = function() {
         var my = this;
         ConcreteEvent.subscribe('AjaxFormSubmitSuccess', function(e, data) {
-            if (data.form == 'add-folder') {
+            if (data.form == 'add-folder' || data.form == 'move-to-folder') {
                 my.reloadFolder();
             }
         });
@@ -415,20 +415,21 @@
                 var fileMenu = new ConcreteFileMenu();
                 fileMenu.setupMenuOptions($(this).next('ul'));
 
-                ConcreteEvent.publish('ConcreteMenuShow', {menu: my, menuElement: $(this).parent()});
+                ConcreteEvent.publish('ConcreteMenuShow', { menu: my, menuElement: $(this).parent() });
             }
         });
     }
 
     ConcreteFileManager.prototype.handleSelectedBulkAction = function(value, type, $option, ids) {
-        var my = this, itemIDs = [];
+        var my = this,
+            itemIDs = [];
 
         if (value == 'choose') {
             ConcreteEvent.publish('FileManagerBeforeSelectFile', { fID: ids });
             ConcreteEvent.publish('FileManagerSelectFile', { fID: ids });
         } else if (value == 'download') {
             $.each(ids, function(i, id) {
-                itemIDs.push({'name': 'item[]', 'value': id});
+                itemIDs.push({ 'name': 'item[]', 'value': id });
             });
             my.$downloadTarget.get(0).src = CCM_TOOLS_PATH + '/files/download?' + jQuery.param(itemIDs);
         } else {
@@ -446,7 +447,7 @@
         my.$element.find('a[data-launch-dialog=add-file-manager-folder]').on('click', function() {
             $('div[data-dialog=add-file-manager-folder] input[name=currentFolder]').val(my.currentFolder);
             $('div[data-dialog=add-file-manager-folder] input[name=folderName]').val('');
-            
+
             jQuery.fn.dialog.open({
                 element: 'div[data-dialog=add-file-manager-folder]',
                 modal: true,
@@ -455,7 +456,7 @@
                 height: 'auto'
             });
 
-            $('div[data-dialog=add-file-manager-folder]').on('dialogopen', function(){
+            $('div[data-dialog=add-file-manager-folder]').on('dialogopen', function() {
                 var $this = $(this);
                 $this.off('dialogopen');
                 $this.find('[autofocus]').focus();
@@ -486,8 +487,8 @@
                 $(this).removeClass('ccm-search-select-hover');
             });
             my.$element.unbind('.concreteFileManagerChooseFile').on('click.concreteFileManagerChooseFile', 'tr[data-file-manager-tree-node-type=file]', function(e) {
-                ConcreteEvent.publish('FileManagerBeforeSelectFile', {fID: $(this).attr('data-file-manager-file')});
-                ConcreteEvent.publish('FileManagerSelectFile', {fID: $(this).attr('data-file-manager-file')});
+                ConcreteEvent.publish('FileManagerBeforeSelectFile', { fID: $(this).attr('data-file-manager-file') });
+                ConcreteEvent.publish('FileManagerSelectFile', { fID: $(this).attr('data-file-manager-file') });
                 my.$downloadTarget.remove();
                 return false;
             });
@@ -509,23 +510,23 @@
             // something like the breadcrumb
             my.options.result.baseUrl = url; // probably a nicer way to do this
         }
-        data.push({'name': 'folder', 'value': folderID});
+        data.push({ 'name': 'folder', 'value': folderID });
 
         if (my.options.result.filters) {
             // We are loading a folder with a filter. So we loop through the fields
             // and add them to data.
             $.each(my.options.result.filters, function(i, field) {
                 var fieldData = field.data;
-                data.push({'name': 'field[]', 'value': field.key});
-                for(var key in fieldData) {
-                    data.push({'name': key, 'value': fieldData[key]});
+                data.push({ 'name': 'field[]', 'value': field.key });
+                for (var key in fieldData) {
+                    data.push({ 'name': key, 'value': fieldData[key] });
                 }
             });
         }
 
         if (showRecentFirst) {
-            data.push({'name': 'ccm_order_by', 'value': 'folderItemModified'});
-            data.push({'name': 'ccm_order_by_direction', 'value': 'desc'});
+            data.push({ 'name': 'ccm_order_by', 'value': 'folderItemModified' });
+            data.push({ 'name': 'ccm_order_by_direction', 'value': 'desc' });
         }
 
         my.currentFolder = folderID;
@@ -546,7 +547,7 @@
     /**
      * Static Methods
      */
-    ConcreteFileManager.launchDialog = function(callback, opts ) {
+    ConcreteFileManager.launchDialog = function(callback, opts) {
         var w = $(window).width() - 100;
         var data = {};
         var i;
@@ -558,16 +559,14 @@
 
         $.extend(options, opts);
 
-        if ( options.filters.length > 0 )
-        {
+        if (options.filters.length > 0) {
             data['field\[\]'] = [];
 
-            for ( i = 0; i < options.filters.length; i++ )
-            {
-                var filter = $.extend(true, {}, options.filters[i] ); // clone
+            for (i = 0; i < options.filters.length; i++) {
+                var filter = $.extend(true, {}, options.filters[i]); // clone
                 data['field\[\]'].push(filter.field);
-                delete ( filter.field );
-                $.extend( data, filter); // add all remaining fields to the data
+                delete(filter.field);
+                $.extend(data, filter); // add all remaining fields to the data
             }
         }
 
@@ -581,7 +580,7 @@
             onOpen: function(dialog) {
                 ConcreteEvent.unsubscribe('FileManagerSelectFile');
                 ConcreteEvent.subscribe('FileManagerSelectFile', function(e, data) {
-                    var multipleItemsSelected = (Object.prototype.toString.call( data.fID ) === '[object Array]');
+                    var multipleItemsSelected = (Object.prototype.toString.call(data.fID) === '[object Array]');
                     if (options.multipleSelection && !multipleItemsSelected) {
                         data.fID = [data.fID];
                     } else if (!options.multipleSelection && multipleItemsSelected) {
@@ -604,7 +603,7 @@
             type: 'post',
             dataType: 'json',
             url: CCM_DISPATCHER_FILENAME + '/ccm/system/file/get_json',
-            data: {'fID': fID},
+            data: { 'fID': fID },
             error: function(r) {
                 ConcreteAlert.dialog(ccmi18n.error, r.responseText);
             },
@@ -629,11 +628,11 @@
                 modal: true,
                 data: data,
                 onClose: function() {
-                    var data = {filemanager: my}
+                    var data = { filemanager: my }
                     ConcreteEvent.publish('FileManagerUploadCompleteDialogClose', data);
                 },
                 onOpen: function() {
-                    var data = {filemanager: my}
+                    var data = { filemanager: my }
                     ConcreteEvent.publish('FileManagerUploadCompleteDialogOpen', data);
                 },
                 title: ccmi18n_filemanager.uploadComplete

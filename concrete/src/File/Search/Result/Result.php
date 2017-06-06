@@ -65,6 +65,14 @@ class Result extends SearchResult
             'data-bulk-action-url' => \URL::to('/ccm/system/file/rescan_multiple')
         ]));
 
+        $menu->addItem(new LinkItem('#', t('Move to Folder'), [
+            'data-bulk-action-type' => 'dialog',
+            'data-bulk-action-title' => t('Move to Folder'),
+            'data-bulk-action-url' => \URL::to('/ccm/system/dialogs/file/bulk/folder'),
+            'data-bulk-action-dialog-width' => '500',
+            'data-bulk-action-dialog-height' => '450',
+        ]));
+
         $menu->addItem(new LinkItem('#', t('Storage Location'), [
             'data-bulk-action-type' => 'dialog',
             'data-bulk-action-title' => t('Storage Location'),

@@ -30,6 +30,7 @@ class Search extends DashboardPageController
             $search = new FileFolder();
             $search->search();
             $result = $search->getSearchResultObject();
+            
         }
 
         if (is_object($result)) {
