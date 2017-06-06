@@ -35,7 +35,7 @@ abstract class AbstractPagerManager implements PagerManagerInterface
          * @var $adapter PagerAdapter
          */
         $adapter = $pagination->getAdapter();
-        $result = $adapter->getLastResult();
+        $result = $pagination->getLastResult();
         if ($result) {
             return $this->getCursorStartValue($result);
         }

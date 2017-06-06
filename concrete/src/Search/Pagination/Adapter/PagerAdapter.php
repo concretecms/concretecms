@@ -10,8 +10,6 @@ class PagerAdapter implements AdapterInterface
 {
 
     protected $itemList;
-    protected $firstResult;
-    protected $lastResult;
 
     public function __construct(ItemList $itemList)
     {
@@ -21,22 +19,6 @@ class PagerAdapter implements AdapterInterface
     public function getNbResults()
     {
         return -1; // Unknown
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFirstResult()
-    {
-        return $this->firstResult;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLastResult()
-    {
-        return $this->lastResult;
     }
 
     protected function checkPermissions($checker, $object)
@@ -86,7 +68,6 @@ class PagerAdapter implements AdapterInterface
         }
 
         $this->itemList->setPermissionsChecker($checker);
-        $this->lastResult = end($currentResults);
         return $currentResults;
     }
 

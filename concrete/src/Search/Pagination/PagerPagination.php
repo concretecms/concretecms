@@ -18,6 +18,8 @@ class PagerPagination extends Pagination
     protected $app;
     protected $request;
     protected $cursor;
+    protected $hasNextPage;
+    protected $currentPageResults;
 
     public function __construct(PagerProviderInterface $itemList)
     {
@@ -38,12 +40,23 @@ class PagerPagination extends Pagination
         return Pagerfanta::__construct($adapter);
     }
 
+    public function getLastResult()
+    {
+        return end($this->getCurrentPageResults());
+    }
+    
     public function advanceToNextPage()
     {
+        $results = $this->getCurrentPageResults();
+        $lastResult = end($results);
+
+        unset($this->currentPageResults);
+        unset($this->hasNextPage);
+
         $manager = $this->list->getPagerManager();
         $adapter = $this->getAdapter();
-        $this->cursor = $adapter->getLastResult();
-        $manager->displaySegmentAtCursor($adapter->getLastResult(), $this->list);
+        $this->cursor = $lastResult;
+        $manager->displaySegmentAtCursor($lastResult, $this->list);
     }
 
     public function renderView($driver = 'application', $arguments = array())
@@ -106,7 +119,32 @@ class PagerPagination extends Pagination
 
     public function hasNextPage()
     {
-        return true;
+        if (isset($this->hasNextPage)) {
+            return $this->hasNextPage;
+        }
+
+        if (!isset($this->currentPageResults)) {
+            $this->currentPageResults = $this->getCurrentPageResults();
+        }
+        $manager = $this->list->getPagerManager();
+        $adapter = $this->getAdapter();
+        $lastResult = end($this->currentPageResults);
+
+        if ($lastResult) {
+            $manager->displaySegmentAtCursor($lastResult, $this->list);
+            $next = $this->getAdapter()->getSlice(0, 1);
+
+            // reset the cursor
+            if ($this->cursor) {
+                $manager->displaySegmentAtCursor($this->cursor, $this->list);
+            }
+            if ($next) {
+                $this->hasNextPage = true;
+                return $this->hasNextPage;
+            }
+        }
+        $this->hasNextPage = false;
+        return $this->hasNextPage;
     }
 
     public function hasPreviousPage()
@@ -116,8 +154,11 @@ class PagerPagination extends Pagination
 
     public function getCurrentPageResults()
     {
-        $length = $this->getMaxPerPage();
-        return $this->getAdapter()->getSlice(0, $length);
+        if (!isset($this->currentPageResults)) {
+            $length = $this->getMaxPerPage();
+            $this->currentPageResults = $this->getAdapter()->getSlice(0, $length);
+        }
+        return $this->currentPageResults;
     }
 
 }

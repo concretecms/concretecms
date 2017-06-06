@@ -307,7 +307,7 @@ class FileListTest extends \FileStorageTestCase
         $this->assertEquals(2, count($results));
 
         $this->assertTrue($pagination->hasPreviousPage());
-//        $this->assertFalse($pagination->hasNextPage());
+        $this->assertFalse($pagination->hasNextPage());
     }
 
     public function testFileSearchDefaultColumnSet()
