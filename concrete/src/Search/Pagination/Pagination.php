@@ -12,6 +12,24 @@ class Pagination extends Pagerfanta
     /** @var \Concrete\Core\Search\ItemList\ItemList  */
     protected $list;
 
+    protected $baseURL;
+
+    /**
+     * @return mixed
+     */
+    public function getBaseURL()
+    {
+        return $this->baseURL;
+    }
+
+    /**
+     * @param mixed $baseURL
+     */
+    public function setBaseURL($baseURL)
+    {
+        $this->baseURL = $baseURL;
+    }
+
     public function __construct(AbstractItemList $itemList, AdapterInterface $adapter)
     {
         $this->list = $itemList;
@@ -61,6 +79,29 @@ class Pagination extends Pagerfanta
         $v = Core::make('\Concrete\Core\Search\Pagination\View\ViewRenderer', array($this, $driver));
 
         return $v->render($arguments);
+    }
+
+    public function getRouteCollectionFunction()
+    {
+        $urlHelper = Core::make('helper/url');;
+        $list = $this->getItemListObject();
+        // Note: We had been using the URL library per a pull request by someone, but it
+        // was breaking pagination in the sitemap flat view so that has been reverted.
+        $routeCollectionFunction = function ($page) use ($list, $urlHelper) {
+            $args = array(
+                $list->getQueryPaginationPageParameter() => $page,
+                $list->getQuerySortColumnParameter() => $list->getActiveSortColumn(),
+                $list->getQuerySortDirectionParameter() => $list->getActiveSortDirection(),
+            );
+            if ($this->baseURL) {
+                $url = $urlHelper->setVariable($args, false, $this->baseURL);
+            } else {
+                $url = $urlHelper->setVariable($args);
+            }
+            return h($url);
+        };
+
+        return $routeCollectionFunction;
     }
 
     public function getCurrentPageResults()
