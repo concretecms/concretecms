@@ -5,6 +5,7 @@ use Illuminate\Filesystem\Filesystem;
 use Exception;
 use ZipArchive;
 use DateTime;
+use Concrete\Core\Service\System;
 
 /**
  * Wrapper for ZIP functions.
@@ -16,7 +17,26 @@ class Zip
      *
      * @var Filesystem
      */
-    protected $filesystem = null;
+    protected $filesystem;
+
+    /**
+     * The System instance to use.
+     *
+     * @var System
+     */
+    protected $system;
+
+    /**
+     * Initialize the instance.
+     *
+     * @param Filesystem $filesystem
+     * @param System $system
+     */
+    public function __construct(Filesystem $filesystem, System $system)
+    {
+        $this->filesystem = $filesystem;
+        $this->system = $system;
+    }
 
     /**
      * Set the Filesystem instance to use.
@@ -35,10 +55,6 @@ class Zip
      */
     public function getFilesystem()
     {
-        if ($this->filesystem === null) {
-            $this->filesystem = new Filesystem();
-        }
-
         return $this->filesystem;
     }
 
@@ -100,20 +116,14 @@ class Zip
         }
         if (!isset($this->availableNativeCommands[$command])) {
             $this->availableNativeCommands[$command] = false;
-            $safeMode = @ini_get('safe_mode');
-            if (empty($safeMode)) {
-                if (function_exists('exec')) {
-                    $disabledCommands = array_map('trim', explode(',', strtolower((string) @ini_get('disable_functions'))));
-                    if (!in_array('exec', $disabledCommands, true)) {
-                        $rc = 1;
-                        $output = array();
-                        @exec($command.' -v 2>&1', $output, $rc);
-                        if ($rc === 0) {
-                            $stdOut = implode("\n", $output);
-                            if (stripos($stdOut, 'info-zip') !== false || stripos($stdOut, 'infozip') !== false) {
-                                $this->availableNativeCommands[$command] = true;
-                            }
-                        }
+            if ($this->system->functionAvailable('exec')) {
+                $rc = 1;
+                $output = array();
+                @exec($command.' -v 2>&1', $output, $rc);
+                if ($rc === 0) {
+                    $stdOut = implode("\n", $output);
+                    if (stripos($stdOut, 'info-zip') !== false || stripos($stdOut, 'infozip') !== false) {
+                        $this->availableNativeCommands[$command] = true;
                     }
                 }
             }
