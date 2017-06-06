@@ -39,6 +39,17 @@ class FileAssignment extends TreeNodeAssignment
 
     public function getPermissionAccessObject()
     {
+
+        $cache = \Core::make('cache/request');
+        $identifier = sprintf('permission/assignment/access/%s/%s',
+            $this->pk->getPermissionKeyHandle(),
+            $this->getPermissionObject()->getPermissionObjectIdentifier()
+        );
+        $item = $cache->getItem($identifier);
+        if (!$item->isMiss()) {
+            return $item->get();
+        }
+
         $db = Database::connection();
         $r = null;
         if ($this->permissionObjectToCheck instanceof File) {
@@ -59,9 +70,15 @@ class FileAssignment extends TreeNodeAssignment
                 )
             );
         }
+
+        $pa = null;
         if ($r) {
-            return Access::getByID($r, $this->pk, false);
+            $pa = Access::getByID($r, $this->pk, false);
         }
+
+        $cache->save($item->set($pa));
+        return $pa;
+
     }
 
 

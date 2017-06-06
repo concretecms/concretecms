@@ -10,6 +10,7 @@ use Concrete\Core\Permission\AssignableObjectInterface;
 use Concrete\Core\Permission\AssignableObjectTrait;
 use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Permission\Key\TreeNodeKey;
+use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Tree\Tree;
 use Concrete\Core\User\User;
 use Concrete\Core\User\UserInfo;
@@ -623,18 +624,27 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
 
     public static function getByID($treeNodeID)
     {
+        $app = Facade::getFacadeApplication();
         $db = Database::connection();
-        $row = $db->fetchAssoc('select * from TreeNodes where treeNodeID = ?', [$treeNodeID]);
-        if ($row && $row['treeNodeID']) {
-            $tt = TreeNodeType::getByID($row['treeNodeTypeID']);
-            $node = Core::make($tt->getTreeNodeTypeClass());
-            $row['treeNodeTypeHandle'] = $tt->getTreeNodeTypeHandle();
-            $node->setPropertiesFromArray($row);
-            $node->loadDetails();
-
+        $cache = $app->make('cache/request');
+        $item = $cache->getItem(sprintf('tree/node/%s', $treeNodeID));
+        if (!$item->isMiss()) {
+            return $item->get();
+        } else {
+            $node = null;
+            $row = $db->fetchAssoc('select * from TreeNodes where treeNodeID = ?', [$treeNodeID]);
+            if ($row && $row['treeNodeID']) {
+                $tt = TreeNodeType::getByID($row['treeNodeTypeID']);
+                $node = Core::make($tt->getTreeNodeTypeClass());
+                $row['treeNodeTypeHandle'] = $tt->getTreeNodeTypeHandle();
+                $node->setPropertiesFromArray($row);
+                $node->loadDetails();
+            }
+            $cache->save($item->set($node));
             return $node;
         }
     }
+    
     /**
      * @param Translations $translations
      *
