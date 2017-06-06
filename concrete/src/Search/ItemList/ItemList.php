@@ -164,9 +164,6 @@ abstract class ItemList
      */
     abstract public function getTotalResults();
 
-    /**
-     * @return \Concrete\Core\Search\Pagination\Pagination|\Concrete\Core\Search\Pagination\PermissionablePagination
-     */
     public function getPagination()
     {
         $pagination = $this->createPaginationObject();
