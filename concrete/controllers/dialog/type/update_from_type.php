@@ -24,7 +24,7 @@ class UpdateFromType extends BackendInterfaceController
       $this->template = PageTemplate::getByID($pTemplateID);
 
       if (!$this->template) {
-        throw new \Exception(t('No suchpage template.'));
+        throw new \Exception(t('Invalid request data.'));
       }
     }
 
@@ -185,8 +185,6 @@ class UpdateFromType extends BackendInterfaceController
           foreach ($messages as $key => $message) {
             $record = unserialize($message->body);
             $childPage = \Page::getByID($record['cID'], $record['cvID']);
-
-            var_dump($childPage->getCollectionName());die();
 
             $blocksToUpdate = $record['blocksToUpdate'];
             $blocksToAdd = $record['blocksToAdd'];
