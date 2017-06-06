@@ -57,7 +57,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
      *
      * @var array
      */
-    protected $autoSortColumns = ['cv.cvName', 'cv.cvDatePublic', 'c.cDateAdded', 'c.cDateModified'];
+    protected $autoSortColumns = ['p.cDisplayOrder', 'cv.cvName', 'cv.cvDatePublic', 'c.cDateAdded', 'c.cDateModified'];
 
     /**
      * Which version to attempt to retrieve.

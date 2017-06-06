@@ -2,8 +2,9 @@
 namespace Concrete\Core\Search\ItemList\Pager\Manager;
 
 use Concrete\Core\Http\Request;
-use Concrete\Core\Search\ItemList\Column;
+use Concrete\Core\Search\Column\PagerColumnInterface;
 use Concrete\Core\Search\ItemList\ItemList;
+use Concrete\Core\Search\Column\Column;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 use Concrete\Core\Search\ItemList\Pager\QueryString\OffsetStartVariable;
 use Concrete\Core\Search\ItemList\Pager\QueryString\VariableInterface;
@@ -18,7 +19,6 @@ abstract class AbstractPagerManager implements PagerManagerInterface
 
     abstract public function getCursorStartValue($mixed);
     abstract public function getCursorObject($cursor);
-    abstract public function filterQueryAtOffset(PagerProviderInterface $itemList, Column $column, $sort, $mixed);
 
     /**
      * AbstractPagerManager constructor.
@@ -46,10 +46,11 @@ abstract class AbstractPagerManager implements PagerManagerInterface
         $object = $this->getCursorObject($cursor);
         if ($object) {
             // Figure out what we are sorting by
-            $columns = $itemList->getOrderByColumns();
+            $columns = $itemList->getOrderByColumns($this->getAvailableColumnSet());
             foreach($columns as $column) {
-                $sort = $column->getDirection() == 'desc' ? '<' : '>';
-                $this->filterQueryAtOffset($itemList, $column, $sort, $object);
+                if ($column instanceof PagerColumnInterface) {
+                    $column->filterListAtOffset($itemList, $object);
+                }
             }
         }
     }
