@@ -2,6 +2,9 @@
 namespace Concrete\Core\File;
 
 use Concrete\Core\Search\ItemList\Database\ItemList;
+use Concrete\Core\Search\ItemList\Pager\Manager\FolderItemListPagerManager;
+use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
+use Concrete\Core\Search\ItemList\Pager\QueryString\VariableFactory;
 use Concrete\Core\Search\Pagination\PagerPagination;
 use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Search\Pagination\PermissionablePagination;
@@ -12,7 +15,7 @@ use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use Closure;
 use Concrete\Core\Permission\Checker as Permissions;
 
-class FolderItemList extends ItemList implements PermissionableListItemInterface
+class FolderItemList extends ItemList implements PermissionableListItemInterface, PagerProviderInterface
 {
     protected $parent;
 
@@ -22,6 +25,16 @@ class FolderItemList extends ItemList implements PermissionableListItemInterface
         'folderItemType',
         'folderItemSize',
     ];
+
+    public function getPagerVariableFactory()
+    {
+        return new VariableFactory($this, $this->getSearchRequest());
+    }
+
+    public function getPagerManager()
+    {
+        return new FolderItemListPagerManager($this);
+    }
 
     protected function getAttributeKeyClassName()
     {
