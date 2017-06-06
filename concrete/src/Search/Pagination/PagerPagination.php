@@ -17,6 +17,7 @@ class PagerPagination extends Pagination
     protected $list;
     protected $app;
     protected $request;
+    protected $cursor;
 
     public function __construct(PagerProviderInterface $itemList)
     {
@@ -30,10 +31,19 @@ class PagerPagination extends Pagination
         $factory = $itemList->getPagerVariableFactory();
         $start = $factory->getCurrentCursor();
         if ($start) {
+            $this->cursor = $start;
             $manager->displaySegmentAtCursor($start, $itemList);
         }
 
         return Pagerfanta::__construct($adapter);
+    }
+
+    public function advanceToNextPage()
+    {
+        $manager = $this->list->getPagerManager();
+        $adapter = $this->getAdapter();
+        $this->cursor = $adapter->getLastResult();
+        $manager->displaySegmentAtCursor($adapter->getLastResult(), $this->list);
     }
 
     public function renderView($driver = 'application', $arguments = array())
@@ -42,6 +52,11 @@ class PagerPagination extends Pagination
         $driver = $manager->driver($driver);
         $renderer = new ViewRenderer($this, $driver);
         return $renderer->render($arguments);
+    }
+
+    public function getTotalPages()
+    {
+        return -1;
     }
 
     public function getRouteCollectionFunction()
@@ -96,13 +111,13 @@ class PagerPagination extends Pagination
 
     public function hasPreviousPage()
     {
-        $factory = $this->list->getPagerVariableFactory();
-        return $factory->getCurrentCursor() != '';
+        return $this->cursor != null;
     }
 
     public function getCurrentPageResults()
     {
-        return Pagerfanta::getCurrentPageResults();
+        $length = $this->getMaxPerPage();
+        return $this->getAdapter()->getSlice(0, $length);
     }
 
 }

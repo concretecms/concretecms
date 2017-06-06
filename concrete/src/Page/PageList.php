@@ -36,6 +36,14 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
         return new PageListPagerManager($this);
     }
 
+    /**
+     * @return \Closure|int|null
+     */
+    public function getPermissionsChecker()
+    {
+        return $this->permissionsChecker;
+    }
+
     public function getPagerVariableFactory()
     {
         return new VariableFactory($this, $this->getSearchRequest());
@@ -116,7 +124,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
         $this->includeSystemPages = true;
     }
 
-    public function setPermissionsChecker(\Closure $checker)
+    public function setPermissionsChecker(\Closure $checker = null)
     {
         $this->permissionsChecker = $checker;
     }
@@ -124,6 +132,11 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     public function ignorePermissions()
     {
         $this->permissionsChecker = -1;
+    }
+
+    public function enablePermissions()
+    {
+        unset($this->permissionsChecker);
     }
 
     public function includeAliases()

@@ -43,7 +43,11 @@ abstract class AbstractPagerManager implements PagerManagerInterface
 
     public function displaySegmentAtCursor($cursor, PagerProviderInterface $itemList)
     {
-        $object = $this->getCursorObject($cursor);
+        if (!is_object($cursor)) {
+            $object = $this->getCursorObject($cursor);
+        } else {
+            $object = $cursor;
+        }
         if ($object) {
             // Figure out what we are sorting by
             $columns = $itemList->getOrderByColumns($this->getAvailableColumnSet());

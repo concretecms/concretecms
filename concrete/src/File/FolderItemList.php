@@ -18,6 +18,7 @@ use Concrete\Core\Permission\Checker as Permissions;
 class FolderItemList extends ItemList implements PermissionableListItemInterface, PagerProviderInterface
 {
     protected $parent;
+    protected $permissionsChecker;
 
     protected $autoSortColumns = [
         'folderItemName',
@@ -25,6 +26,14 @@ class FolderItemList extends ItemList implements PermissionableListItemInterface
         'folderItemType',
         'folderItemSize',
     ];
+
+    /**
+     * @return mixed
+     */
+    public function getPermissionsChecker()
+    {
+        return $this->permissionsChecker;
+    }
 
     public function getPagerVariableFactory()
     {
@@ -41,9 +50,14 @@ class FolderItemList extends ItemList implements PermissionableListItemInterface
         return '\\Concrete\\Core\\Attribute\\Key\\FileKey';
     }
 
-    public function setPermissionsChecker(Closure $checker)
+    public function setPermissionsChecker(Closure $checker = null)
     {
         $this->permissionsChecker = $checker;
+    }
+
+    public function enablePermissions()
+    {
+        unset($this->permissionsChecker);
     }
 
     public function ignorePermissions()

@@ -28,6 +28,11 @@ class FileList extends DatabaseItemList implements PermissionableListItemInterfa
         parent::__construct($req);
     }
 
+    public function getPermissionsChecker()
+    {
+        return $this->permissionsChecker;
+    }
+
     /** @var  \Closure | integer | null */
     protected $permissionsChecker;
 
@@ -61,7 +66,7 @@ class FileList extends DatabaseItemList implements PermissionableListItemInterfa
         return '\\Concrete\\Core\\Attribute\\Key\\FileKey';
     }
 
-    public function setPermissionsChecker(\Closure $checker)
+    public function setPermissionsChecker(\Closure $checker = null)
     {
         $this->permissionsChecker = $checker;
     }
@@ -69,6 +74,11 @@ class FileList extends DatabaseItemList implements PermissionableListItemInterfa
     public function ignorePermissions()
     {
         $this->permissionsChecker = -1;
+    }
+
+    public function enablePermissions()
+    {
+        unset($this->permissionsChecker);
     }
 
     public function createQuery()

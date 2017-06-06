@@ -18,4 +18,9 @@ interface PagerProviderInterface
      */
     function getPagerVariableFactory();
 
+
+    function getPermissionsChecker();
+    function ignorePermissions();
+    function enablePermissions();
+
 }

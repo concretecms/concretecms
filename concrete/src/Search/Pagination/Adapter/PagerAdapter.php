@@ -39,15 +39,55 @@ class PagerAdapter implements AdapterInterface
         return $this->lastResult;
     }
 
+    protected function checkPermissions($checker, $object)
+    {
+        if ($checker instanceof \Closure) {
+            return $checker($object);
+        } else {
+
+            $this->itemList->enablePermissions();
+            $valid = $this->itemList->checkPermissions($object);
+            $this->itemList->setPermissionsChecker($checker);
+            return $valid;
+
+        }
+    }
+
     public function getSlice($offset, $length)
     {
+        $checker = $this->itemList->getPermissionsChecker();
+        $manager = $this->itemList->getPagerManager();
+
+        $this->itemList->ignorePermissions();
         $this->itemList
             ->getQueryObject()
             ->setMaxResults($length);
+
+        $currentResults = array();
         $results = $this->itemList->getResults();
-        $this->firstResult = $results[0];
-        $this->lastResult = end($results);
-        return $results;
+
+        while (count($results) != 0 && count($currentResults) < $length) {
+
+            foreach($results as $result) {
+
+                if ($this->checkPermissions($checker, $result)) {
+
+                    if (!isset($this->firstResult)) {
+                        $this->firstResult = $result;
+                    }
+
+                    $currentResults[] = $result;
+                }
+
+            }
+
+            $manager->displaySegmentAtCursor($result, $this->itemList);
+            $results = $this->itemList->getResults();
+        }
+
+        $this->itemList->setPermissionsChecker($checker);
+        $this->lastResult = end($currentResults);
+        return $currentResults;
     }
 
 
