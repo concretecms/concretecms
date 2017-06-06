@@ -14,5 +14,13 @@ interface PagerManagerInterface
      */
     function getNextCursorStart(PagerProviderInterface $itemList, PagerPagination $pagination);
 
+    /**
+     * Adds a secondary sort query to an item list so that items that are sorted by
+     * text criteria will paginate properly.
+     * @param PagerProviderInterface $itemList
+     * @return void
+     */
+    function sortListByCursor(PagerProviderInterface $itemList);
+
     function displaySegmentAtCursor($cursor, PagerProviderInterface $itemList);
 }

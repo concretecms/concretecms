@@ -25,6 +25,7 @@ class PagerPagination extends Pagination
         $this->app = Facade::getFacadeApplication();
 
         $manager = $itemList->getPagerManager();
+        $manager->sortListByCursor($itemList);
 
         $factory = $itemList->getPagerVariableFactory();
         $start = $factory->getCurrentCursor();

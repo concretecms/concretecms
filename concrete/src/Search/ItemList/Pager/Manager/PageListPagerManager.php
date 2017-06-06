@@ -22,29 +22,36 @@ class PageListPagerManager extends AbstractPagerManager
         }
     }
 
+    public function sortListByCursor(PagerProviderInterface $itemList)
+    {
+        $itemList->getQueryObject()->addOrderBy('p.cID', 'asc');
+    }
+
     public function filterQueryAtOffset(PagerProviderInterface $itemList, Column $column, $sort, $mixed)
     {
         $query = $itemList->getQueryObject();
         $where = sprintf('%s %s :offset', $column->getKey(), $sort);
         switch ($column->getKey()) {
-            case 'cvDatePublic':
+            case 'cv.cvDatePublic':
                 $offset = $mixed->getCollectionDatePublic();
                 break;
             case 'p.cDisplayOrder':
                 $offset = $mixed->getCollectionDisplayOrder();
                 break;
-            case 'cDateModified':
+            case 'c.cDateModified':
                 $offset = $mixed->getCollectionDateLastModified();
                 break;
-            case 'cvName':
-                $where = sprintf('WEIGHT_STRING(%s) %s WEIGHT_STRING(:offset)', $column->getKey(), $sort);
-                $offset = $mixed->getCollectionName();
+            case 'cv.cvName':
+                $where = sprintf('(cv.cvName, p.cID) %s (:sortName, :sortID)', $sort);
+                $query->setParameter('sortName', $mixed->getCollectionName());
+                $query->setParameter('sortID', $mixed->getCollectionID());
                 break;
             default:
-                // Attribute
                 $handle = substr($column->getKey(), 3);
-                $offset = (string) $mixed->getAttribute($handle);
-
+                $where = sprintf('(' . $column->getKey() . ', p.cID) %s (:sortName, :sortID)', $sort);
+                $query->setParameter('sortName', (string) $mixed->getAttribute($handle));
+                $query->setParameter('sortID', $mixed->getCollectionID());
+                break;
         }
         $query->andWhere($where);
         $query->setParameter('offset', $offset);
