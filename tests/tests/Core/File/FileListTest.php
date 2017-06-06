@@ -58,7 +58,9 @@ class FileListTest extends \FileStorageTestCase
         FileKey::add($number, array('akHandle' => 'height', 'akName' => 'Height'));
 
         $self = new static();
-        mkdir($self->getStorageDirectory());
+        if (!is_dir($self->getStorageDirectory())) {
+            mkdir($self->getStorageDirectory());
+        }
         $self->getStorageLocation();
 
         $sample = dirname(__FILE__) . '/StorageLocation/fixtures/sample.txt';

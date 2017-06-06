@@ -2,6 +2,9 @@
 namespace Concrete\Core\File;
 
 use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemList;
+use Concrete\Core\Search\ItemList\Pager\Manager\FileListPagerManager;
+use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
+use Concrete\Core\Search\ItemList\Pager\QueryString\VariableFactory;
 use Concrete\Core\Search\Pagination\PagerPagination;
 use Concrete\Core\Search\PermissionableListItemInterface;
 use Concrete\Core\Search\Pagination\PermissionablePagination;
@@ -13,7 +16,7 @@ use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use Concrete\Core\Search\Pagination\Pagination;
 use FileAttributeKey;
 
-class FileList extends DatabaseItemList implements PermissionableListItemInterface
+class FileList extends DatabaseItemList implements PermissionableListItemInterface, PagerProviderInterface
 {
 
     public function __construct(StickyRequest $req = null)
@@ -29,6 +32,16 @@ class FileList extends DatabaseItemList implements PermissionableListItemInterfa
     protected $permissionsChecker;
 
     protected $paginationPageParameter = 'ccm_paging_fl';
+
+    public function getPagerManager()
+    {
+        return new FileListPagerManager($this);
+    }
+
+    public function getPagerVariableFactory()
+    {
+        return new VariableFactory($this, $this->getSearchRequest());
+    }
 
     /**
      * Columns in this array can be sorted via the request.
