@@ -156,7 +156,13 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
     {
         $db = Database::connection();
 
-        return (int) $db->fetchColumn('select count(treeNodeID) from TreeNodes where treeNodeParentID = ?', [$this->treeNodeID]);
+        $data = $this->getTreeObject()->getRequestData();
+        if (isset($data['displayOnly']) && $data['displayOnly']) {
+            return (int) $db->fetchColumn('select count(tn.treeNodeID) from TreeNodes tn inner join TreeNodeTypes tnt on tn.treeNodeTypeID = tnt.treeNodeTypeID where treeNodeParentID = ? and treeNodeTypeHandle = ?', [$this->treeNodeID, $data['displayOnly']]);
+        } else {
+            return (int) $db->fetchColumn('select count(treeNodeID) from TreeNodes where treeNodeParentID = ?', [$this->treeNodeID]);
+        }
+
     }
 
     public function getChildNodesLoaded() 
@@ -575,7 +581,13 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
     {
         if (!$this->childNodesLoaded) {
             $db = Database::connection();
-            $rows = $db->fetchAll('select treeNodeID from TreeNodes where treeNodeParentID = ? order by treeNodeDisplayOrder asc', [$this->treeNodeID]);
+            $data = $this->getTreeObject()->getRequestData();
+            if (isset($data['displayOnly']) && $data['displayOnly']) {
+                $rows = $db->fetchAll('select treeNodeID from TreeNodes tn inner join TreeNodeTypes tnt on tn.treeNodeTypeID = tnt.treeNodeTypeID where treeNodeParentID = ? and treeNodeTypeHandle = ? order by treeNodeDisplayOrder asc', [$this->treeNodeID, $data['displayOnly']]);
+            } else {
+                $rows = $db->fetchAll('select treeNodeID from TreeNodes where treeNodeParentID = ? order by treeNodeDisplayOrder asc', [$this->treeNodeID]);
+            }
+
             foreach ($rows as $row) {
                 $node = self::getByID($row['treeNodeID']);
                 if (isset($this->tree)) {

@@ -38,12 +38,13 @@ class Folder extends BackendInterfaceFileController
         if (is_object($sourceNode)) {
             $dp = new \Permissions($sourceNode);
             if (!$dp->canEditTreeNode()) {
-                $validate = false;
+                throw new \Exception(t('You are not allowed to move files to this folder.'));
+                exit;
             }
         } else {
             $validate = false;
         }
-        
+
         if ($this->validateAction() && $validate) {
             $sourceNode->move($destNode);
         }
