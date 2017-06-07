@@ -96,7 +96,7 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
 
     public function getTreeObject()
     {
-        if (!isset($this->tree)) {
+        if (!isset($this->tree) && !empty($this->treeID)) {
             $this->tree = Tree::getByID($this->treeID);
         }
 
