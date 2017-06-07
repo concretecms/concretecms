@@ -461,7 +461,11 @@ abstract class AbstractRepetition implements RepetitionInterface
      */
     public function getRepeatPeriodEnd()
     {
-        return $this->repeatPeriodEnd;
+        // Note, since this might go in as 2017-08-01 00:00:00 we need to change it to be a date
+        if ($this->repeatPeriodEnd) {
+            $datetime = new \DateTime($this->repeatPeriodEnd);
+            return $datetime->format('Y-m-d');
+        }
     }
 
     /**

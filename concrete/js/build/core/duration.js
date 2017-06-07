@@ -264,7 +264,14 @@
 
             my.$element.find('input[name=' + my.options.namespace + '_pdStartDate_pub_' + my.getSetID() + ']').datepicker('setDate', my.getSelectedStartDate());
             my.$element.find('input[name=' + my.options.namespace + '_pdEndDate_pub_' + my.getSetID() + ']').datepicker('setDate', my.getSelectedEndDate());
-            my.$element.find('input[name=' + my.options.namespace + '_pdEndRepeatDateSpecific_pub_' + my.getSetID() + ']').datepicker('setDate', new Date(my.$element.find('input[name=' + my.options.namespace + '_pdEndRepeatDateSpecific_pub_' + my.getSetID() + ']').val()));
+
+            var endDateSpecific = my.$element.find('input[name=' + my.options.namespace + '_pdEndRepeatDateSpecific_pub_' + my.getSetID() + ']').val();
+            if (endDateSpecific) {
+                var momentEndDateSpecific = moment(endDateSpecific).tz(
+                    my.options.repetition.timezone.timezone
+                );
+                my.$element.find('input[name=' + my.options.namespace + '_pdEndRepeatDateSpecific_pub_' + my.getSetID() + ']').datepicker('setDate', momentEndDateSpecific.toDate());
+            }
 
             my.$element.find('input[name=' + my.options.namespace + '_pdStartDate_pub_' + my.getSetID() + ']').datepicker({
                 onSelect: function () {
