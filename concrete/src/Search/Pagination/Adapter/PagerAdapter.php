@@ -64,6 +64,7 @@ class PagerAdapter implements AdapterInterface
             }
 
             $manager->displaySegmentAtCursor($result, $this->itemList);
+            $this->itemList->ignorePermissions();
             $results = $this->itemList->getResults();
         }
 
