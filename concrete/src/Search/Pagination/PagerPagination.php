@@ -1,19 +1,14 @@
 <?php
 namespace Concrete\Core\Search\Pagination;
 
-use Concrete\Core\Search\ItemList\ItemList;
-use Concrete\Core\Search\ItemList\Pager\Manager\PagerManagerInterface;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 use Concrete\Core\Search\Pagination\Adapter\PagerAdapter;
-use Concrete\Core\Search\Pagination\View\PagerManager;
-use Concrete\Core\Search\Pagination\View\PagerViewRenderer;
 use Concrete\Core\Search\Pagination\View\ViewRenderer;
 use Concrete\Core\Support\Facade\Facade;
 use Pagerfanta\Pagerfanta;
 
 class PagerPagination extends Pagination
 {
-
     protected $list;
     protected $app;
     protected $request;
@@ -42,9 +37,11 @@ class PagerPagination extends Pagination
 
     public function getLastResult()
     {
-        return end($this->getCurrentPageResults());
+        $currentPageResults = $this->getCurrentPageResults();
+
+        return end($currentPageResults);
     }
-    
+
     public function advanceToNextPage()
     {
         $results = $this->getCurrentPageResults();
@@ -59,11 +56,12 @@ class PagerPagination extends Pagination
         $manager->displaySegmentAtCursor($lastResult, $this->list);
     }
 
-    public function renderView($driver = 'application', $arguments = array())
+    public function renderView($driver = 'application', $arguments = [])
     {
         $manager = $this->app->make('manager/view/pagination/pager');
         $driver = $manager->driver($driver);
         $renderer = new ViewRenderer($this, $driver);
+
         return $renderer->render($arguments);
     }
 
@@ -75,12 +73,10 @@ class PagerPagination extends Pagination
     public function getRouteCollectionFunction()
     {
         $urlHelper = $this->app->make('helper/url');
-        /**
-         * @var $list PagerProviderInterface
-         */
         $list = $this->getItemListObject();
+        /* @var PagerProviderInterface $list */
         $routeCollectionFunction = function ($page) use ($list, $urlHelper) {
-            $args = array();
+            $args = [];
             if ($list->getActiveSortColumn()) {
                 $args[$list->getQuerySortColumnParameter()] = $list->getActiveSortColumn();
             }
@@ -89,14 +85,11 @@ class PagerPagination extends Pagination
                 $args[$list->getQuerySortDirectionParameter()] = $list->getActiveSortDirection();
             }
 
-            /**
-             * @var $manager PagerManagerInterface
-             */
             $factory = $list->getPagerVariableFactory();
             if ($page == 2) {
                 // next page
                 $args[$factory->getCursorVariableName()] = $factory->getNextCursorValue($this);
-            } else if ($page == 0) {
+            } elseif ($page == 0) {
                 $args[$factory->getCursorVariableName()] = $factory->getPreviousCursorValue($this);
             }
 
@@ -105,8 +98,8 @@ class PagerPagination extends Pagination
             } else {
                 $url = $urlHelper->setVariable($args);
             }
-            return h($url);
 
+            return h($url);
         };
 
         return $routeCollectionFunction;
@@ -140,10 +133,12 @@ class PagerPagination extends Pagination
             }
             if ($next) {
                 $this->hasNextPage = true;
+
                 return $this->hasNextPage;
             }
         }
         $this->hasNextPage = false;
+
         return $this->hasNextPage;
     }
 
@@ -158,7 +153,7 @@ class PagerPagination extends Pagination
             $length = $this->getMaxPerPage();
             $this->currentPageResults = $this->getAdapter()->getSlice(0, $length);
         }
+
         return $this->currentPageResults;
     }
-
 }
