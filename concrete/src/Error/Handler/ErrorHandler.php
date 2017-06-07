@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Error\Handler;
 
-use Concrete\Core\Error\UserException;
+use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Support\Facade\Database;
 use Config;
 use Core;
@@ -19,19 +19,21 @@ class ErrorHandler extends PrettyPageHandler
      */
     public function handle()
     {
-        $this->setPageTitle("concrete5 has encountered an issue.");
+        $this->setPageTitle('concrete5 has encountered an issue.');
 
         $result = self::QUIT;
 
         $e = $this->getInspector()->getException();
         $detail = 'message';
-        if ($e instanceof UserException) {
+        if ($e instanceof UserMessageException) {
             $enabled = true;
+            $canBeLogged = $e->canBeLogged();
         } else {
             $enabled = (bool) Config::get('concrete.debug.display_errors');
             if ($enabled === true) {
                 $detail = Config::get('concrete.debug.detail', 'message');
             }
+            $canBeLogged = true;
         }
         if ($enabled) {
             if ($detail === 'debug') {
@@ -50,7 +52,7 @@ class ErrorHandler extends PrettyPageHandler
             );
         }
 
-        if (Config::get('concrete.log.errors')) {
+        if ($canBeLogged && Config::get('concrete.log.errors')) {
             try {
                 $e = $this->getInspector()->getException();
                 $db = Database::get();

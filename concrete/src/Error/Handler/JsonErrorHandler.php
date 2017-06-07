@@ -1,11 +1,11 @@
 <?php
 namespace Concrete\Core\Error\Handler;
 
+use Concrete\Core\Error\UserMessageException;
 use Config;
 use Whoops\Exception\Formatter;
 use Whoops\Handler\Handler;
 use Whoops\Util\Misc;
-use Concrete\Core\Error\UserException;
 
 class JsonErrorHandler extends Handler
 {
@@ -17,13 +17,15 @@ class JsonErrorHandler extends Handler
 
         $e = $this->getInspector()->getException();
         $detail = 'message';
-        if ($e instanceof UserException) {
+        if ($e instanceof UserMessageException) {
             $display = true;
+            $canBeLogged = $e->canBeLogged();
         } else {
             $display = (bool) Config::get('concrete.debug.display_errors');
             if ($display === true) {
                 $detail = Config::get('concrete.debug.detail');
             }
+            $canBeLogged = true;
         }
         if ($display === false) {
             $error = ['message' => t('An error occurred while processing this request.')];
@@ -38,7 +40,7 @@ class JsonErrorHandler extends Handler
             }
         }
 
-        if (Config::get('concrete.log.errors')) {
+        if ($canBeLogged && Config::get('concrete.log.errors')) {
             try {
                 $e = $this->getInspector()->getException();
                 $l = \Core::make('log/exceptions');
