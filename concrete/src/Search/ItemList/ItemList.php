@@ -17,19 +17,24 @@ abstract class ItemList
     // we just turn it off to save processing in the attributed item list (so it doesn't have to instantiate
     // all those objects if it's not necessary)
     protected $enableAutomaticSorting = true;
-    protected $autoSortColumns = array();
+    protected $autoSortColumns = [];
 
     protected $itemsPerPage = -1; // determined by the pagination object.
     protected $debug = false;
 
     abstract protected function executeSortBy($field, $direction = 'asc');
+
     protected function executeSanitizedSortBy($field, $direction)
     {
         $this->executeSortBy($field, $direction);
     }
+
     abstract public function executeGetResults();
+
     abstract public function getResult($mixed);
+
     abstract public function debugStart();
+
     abstract public function debugStop();
 
     /**
@@ -64,7 +69,7 @@ abstract class ItemList
     /** Returns a full array of results. */
     public function getResults()
     {
-        $results = array();
+        $results = [];
 
         $this->debugStart();
 
@@ -119,17 +124,17 @@ abstract class ItemList
             $dir = ($dir == 'asc') ? 'desc' : 'asc';
         }
 
-        $args = array(
+        $args = [
             $this->getQuerySortColumnParameter() => $column,
             $this->getQuerySortDirectionParameter() => $dir,
-        );
+        ];
 
         $url = $uh->setVariable($args, false, $url);
 
         return strip_tags($url);
     }
 
-    /** @var \Concrete\Core\Search\Pagination\Pagination  */
+    /** @var \Concrete\Core\Search\Pagination\Pagination */
     protected $pagination;
 
     public function getActiveSortDirection()
@@ -215,5 +220,31 @@ abstract class ItemList
     public function get()
     {
         return $this->getResults();
+    }
+
+    /**
+     * Split a string into words and format them to be used in LIKE queries.
+     *
+     * @param string|mixed $keywords The string to be splitted
+     * @param string $wordSeparators The regular expression pattern that represents potential word delimiters (eg '\s' for any whitespace character)
+     *
+     * @return string[]|null returns null if no word has been found, or an array of words enclosed by '%'
+     *
+     * @example for instance, with 'Hello world!', you'll get ['%Hello$', '%world!$']
+     */
+    protected function splitKeywords($keywords, $wordSeparators = '\s')
+    {
+        $result = null;
+        if (is_string($keywords)) {
+            $keywords = trim(preg_replace('/[' . $wordSeparators . ']+/', ' ', $keywords));
+            if ($keywords !== '') {
+                $result = [];
+                foreach (explode(' ', $keywords) as $keyword) {
+                    $result[] = '%' . addcslashes($keyword, '%_') . '%';
+                }
+            }
+        }
+
+        return $result;
     }
 }
