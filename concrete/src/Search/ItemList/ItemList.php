@@ -122,6 +122,7 @@ abstract class ItemList
         $args = array(
             $this->getQuerySortColumnParameter() => $column,
             $this->getQuerySortDirectionParameter() => $dir,
+            'ccm_cursor' => '',
         );
 
         $url = $uh->setVariable($args, false, $url);

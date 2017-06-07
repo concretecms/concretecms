@@ -478,8 +478,8 @@
             jQuery.fn.dialog.open({
                 width: '560',
                 height: '500',
-                modal: false,
-                title: ccmi18n_sitemap.choosePage,
+                modal: true,
+                title: ccmi18n_filemanager.jumpToFolder,
                 href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/file/jump_to_folder',
             });
         });

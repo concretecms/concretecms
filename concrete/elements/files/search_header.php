@@ -22,7 +22,7 @@
         </div><!-- /input-group -->
         <ul class="ccm-header-search-navigation">
             <li><a data-launch-dialog="navigate-file-manager" href="#">
-                    <i class="fa fa-share"></i> <?=t('Move to Folder')?>
+                    <i class="fa fa-share"></i> <?=t('Jump to Folder')?>
                 </a>
             </li>
             <li><a href="#" data-launch-dialog="add-file-manager-folder"><i class="fa fa-folder-o"></i> <?=t('New Folder')?></a></li>

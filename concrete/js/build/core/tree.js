@@ -114,6 +114,8 @@
 			}
 
 			$(my.$element).fancytree({
+				tabindex: null,
+				titlesTabbable: false,
 				extensions: ["glyph", "dnd"],
 				glyph: {
 					map: {
@@ -191,6 +193,10 @@
 
 					if (data.targetType == 'expander') {
 						return true;
+					}
+
+					if (data.targetType == 'icon') {
+						return false;
 					}
 
 					if (options.onClick) {
