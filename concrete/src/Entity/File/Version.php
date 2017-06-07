@@ -18,7 +18,9 @@ use Concrete\Core\File\Menu;
 use Concrete\Core\File\Type\TypeList as FileTypeList;
 use Concrete\Core\Http\FlysystemFileResponse;
 use Concrete\Core\Support\Facade\Application;
+use Imagine\Exception\NotSupportedException;
 use Imagine\Gd\Image;
+use Imagine\Image\Metadata\ExifMetadataReader;
 use League\Flysystem\AdapterInterface;
 use League\Flysystem\FileNotFoundException;
 use Core;
@@ -137,6 +139,8 @@ class Version implements ObjectInterface
      * @ORM\Column(type="boolean")
      */
     protected $fvHasDetailThumbnail = false;
+
+    private $imagineImage = null;
 
     /**
      * Add a new file version.
@@ -890,12 +894,20 @@ class Version implements ObjectInterface
     {
         $cf = Core::make('helper/concrete/file');
         $fsl = $this->getFile()->getFileStorageLocationObject();
+        $url = null;
         if (is_object($fsl)) {
             $configuration = $fsl->getConfigurationObject();
             if ($configuration->hasRelativePath()) {
-                return $configuration->getRelativePathToFile($cf->prefix($this->fvPrefix, $this->fvFilename));
+                $url = $configuration->getRelativePathToFile($cf->prefix($this->fvPrefix, $this->fvFilename));
+            }
+            if ($configuration->hasPublicURL() && !$url) {
+                $url = $configuration->getPublicURLToFile($cf->prefix($this->fvPrefix, $this->fvFilename));
+            }
+            if (!$url) {
+                $url =  $this->getDownloadURL();
             }
         }
+        return $url;
     }
 
     /**
@@ -984,24 +996,39 @@ class Version implements ObjectInterface
      */
     public function getImagineImage()
     {
-        $resource = $this->getFileResource();
-        $mimetype = $resource->getMimeType();
-        $imageLibrary = \Image::getFacadeRoot();
+        if (null === $this->imagineImage) {
+            $resource = $this->getFileResource();
+            $mimetype = $resource->getMimeType();
+            $imageLibrary = \Image::getFacadeRoot();
 
-        switch ($mimetype) {
-            case 'image/svg+xml':
-            case 'image/svg-xml':
-                if ($imageLibrary instanceof \Imagine\Gd\Imagine) {
+            switch ($mimetype) {
+                case 'image/svg+xml':
+                case 'image/svg-xml':
+                    if ($imageLibrary instanceof \Imagine\Gd\Imagine) {
+                        try {
+                            $app = Facade::getFacadeApplication();
+                            $imageLibrary = $app->make('image/imagick');
+                        } catch (\Exception $x) {
+                            $this->imagineImage = false;
+                        }
+                    }
+                    break;
+            }
+
+            $metadataReader = $imageLibrary->getMetadataReader();
+            if (!$metadataReader instanceof ExifMetadataReader) {
+                if (\Config::get('concrete.file_manager.images.use_exif_data_to_rotate_images')) {
                     try {
-                        $app = Facade::getFacadeApplication();
-                        $imageLibrary = $app->make('image/imagick');
-                    } catch (\Exception $x) {
-                        return false;
+                        $imageLibrary->setMetadataReader(new ExifMetadataReader());
+                    } catch (NotSupportedException $e) {
                     }
                 }
-                break;
+            }
+
+            $this->imagineImage = $imageLibrary->load($resource->read());
         }
-        return  $imageLibrary->load($resource->read());
+
+        return $this->imagineImage;
     }
 
     /**

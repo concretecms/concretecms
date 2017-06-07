@@ -9,8 +9,8 @@ use Core;
 class Controller extends BlockController
 {
     protected $btTable = 'btGoogleMap';
-    protected $btInterfaceWidth = 400;
-    protected $btInterfaceHeight = 460;
+    protected $btInterfaceWidth = 475;
+    protected $btInterfaceHeight = 550;
     protected $btCacheBlockOutput = true;
     protected $btCacheBlockOutputOnPost = true;
 

@@ -31,12 +31,11 @@
     echo $form->select('standardDateFormat', $dateFormats, $standardDateFormat);
     ?>
 </div>
-<?php
-?><div class="form-group"<?php echo ($standardDateFormat === ':custom:') ? '' : ' style="display: none"'; ?>>
-    <?php echo $form->label('customDateFormat', t('Custom date format')); ?>
+<div class="form-group"<?php echo ($standardDateFormat === ':custom:') ? '' : ' style="display: none"'; ?>>
+    <?php echo $form->label('customDateFormat', t('Custom Date Format')); ?>
     <?php echo $form->text('customDateFormat', $customDateFormat); ?>
-    <a href="http://php.net/manual/function.date.php" target="_blank"><?php echo t('See the PHP manual')?></a><?php
-?></div>
+    <div class="help-block"><?php echo sprintf(t('See the formatting options for date at %s.'), '<a href="http://www.php.net/date" target="_blank">php.net/date</a>'); ?></div>
+</div>
 <script>
 $(document).ready(function() {
 	function update() {

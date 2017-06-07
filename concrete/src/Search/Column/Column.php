@@ -3,14 +3,14 @@ namespace Concrete\Core\Search\Column;
 
 use Concrete\Core\Search\Result\Result;
 
-class Column
+class Column implements ColumnInterface
 {
     public function getColumnValue($obj)
     {
-        if (is_array($this->callback)) {
-            return call_user_func($this->callback, $obj);
+        if (is_array($this->getColumnCallback())) {
+            return call_user_func($this->getColumnCallback(), $obj);
         } else {
-            return call_user_func(array($obj, $this->callback));
+            return call_user_func(array($obj, $this->getColumnCallback()));
         }
     }
 
@@ -24,9 +24,12 @@ class Column
         return $this->columnName;
     }
 
+    /**
+     * @deprecated
+     */
     public function getColumnDefaultSortDirection()
     {
-        return $this->defaultSortDirection;
+        return $this->sortDirection;
     }
 
     public function isColumnSortable()
@@ -39,9 +42,12 @@ class Column
         return $this->callback;
     }
 
+    /**
+     * @deprecated
+     */
     public function setColumnDefaultSortDirection($dir)
     {
-        $this->defaultSortDirection = $dir;
+        $this->sortDirection = $dir;
     }
 
     public function getSortClassName(Result $result)
@@ -51,19 +57,29 @@ class Column
         return $il->getSortClassName($this->getColumnKey());
     }
 
+    public function getColumnSortDirection()
+    {
+        return $this->sortDirection;
+    }
+
+    public function setColumnSortDirection($sortDirection)
+    {
+        return $this->sortDirection = $sortDirection;
+    }
+
     public function getSortURL(Result $result)
     {
         $il = $result->getItemListObject();
-        $dir = $this->getColumnDefaultSortDirection();
+        $dir = $this->getColumnSortDirection();
         return $il->getSortURL($this->getColumnKey(), $dir, $result->getBaseURL());
     }
 
-    public function __construct($key, $name, $callback, $isSortable = true, $defaultSort = 'asc')
+    public function __construct($key = null, $name = null, $callback = null, $isSortable = true, $sort = 'asc')
     {
         $this->columnKey = $key;
         $this->columnName = $name;
         $this->isSortable = $isSortable;
         $this->callback = $callback;
-        $this->defaultSortDirection = $defaultSort;
+        $this->sortDirection = $sort;
     }
 }

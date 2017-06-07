@@ -33,8 +33,8 @@ class Controller extends BlockController
     public $ignoreExcludeNav = false;
     protected $homePageID;
     protected $btTable = 'btNavigation';
-    protected $btInterfaceWidth = "800";
-    protected $btInterfaceHeight = "350";
+    protected $btInterfaceWidth = 700;
+    protected $btInterfaceHeight = 525;
     protected $btCacheBlockRecord = true;
     protected $btCacheBlockOutput = true;
     protected $btCacheBlockOutputOnPost = true;
@@ -525,7 +525,7 @@ class Controller extends BlockController
                 }
             }
         }
-        
+
         // increment all items in the nav array with a greater $currentLevel
 
         foreach ($this->navArray as $ni) {

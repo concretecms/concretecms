@@ -139,7 +139,7 @@ class Controller extends BlockController
 
             $result = new Result($set, $list);
             $pagination = $list->getPagination();
-            if ($pagination->getTotalPages() > 1) {
+            if ($pagination->haveToPaginate()) {
                 $pagination = $pagination->renderDefaultView();
                 $this->set('pagination', $pagination);
             }

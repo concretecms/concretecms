@@ -17,4 +17,11 @@ abstract class Provider
      * Registers the services provided by this provider.
      */
     abstract public function register();
+
+    public function provides()
+    {
+        return array();
+    }
+
+
 }

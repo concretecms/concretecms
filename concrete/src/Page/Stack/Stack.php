@@ -506,13 +506,12 @@ class Stack extends Page implements ExportableInterface
         $localizedStackCID = $localizedStackPage->getCollectionID();
         $db = Database::connection();
         $db->executeQuery('
-            insert into Stacks (stName, cID, stType, stMultilingualSection, siteTreeID) values (?, ?, ?, ?, ?)',
+            insert into Stacks (stName, cID, stType, stMultilingualSection) values (?, ?, ?, ?)',
             [
                 $name,
                 $localizedStackCID,
                 $this->getStackType(),
-                $section->getCollectionID(),
-                //$siteTreeID
+                $section->getCollectionID()
             ]
         );
         $localizedStack = static::getByID($localizedStackCID);

@@ -28,6 +28,8 @@ use Page;
  */
 class Controller extends BlockController implements ConversationFeatureInterface
 {
+    protected $btInterfaceWidth = 450;
+    protected $btInterfaceHeight = 400;
     protected $btCacheBlockRecord = true;
     protected $btTable = 'btCoreConversation';
     protected $conversation;
@@ -218,6 +220,7 @@ class Controller extends BlockController implements ConversationFeatureInterface
             'maxFileSizeRegistered' => null,
             'enableOrdering' => null,
             'enableCommentRating' => null,
+            'enableTopCommentReviews' => null,
             'notificationOverridesEnabled' => null,
             'subscriptionEnabled' => null,
             'fileExtensions' => null,
@@ -252,6 +255,9 @@ class Controller extends BlockController implements ConversationFeatureInterface
         }
         if (!$values['enableCommentRating']) {
             $values['enableCommentRating'] = 0;
+        }
+        if (!$values['enableTopCommentReviews']) {
+            $values['enableTopCommentReviews'] = 0;
         }
 
         if ($values['notificationOverridesEnabled']) {

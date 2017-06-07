@@ -21,6 +21,10 @@
               </span>
         </div><!-- /input-group -->
         <ul class="ccm-header-search-navigation">
+            <li><a data-launch-dialog="navigate-file-manager" href="#">
+                    <i class="fa fa-share"></i> <?=t('Move to Folder')?>
+                </a>
+            </li>
             <li><a href="#" data-launch-dialog="add-file-manager-folder"><i class="fa fa-folder-o"></i> <?=t('New Folder')?></a></li>
             <li><a data-dialog="add-files" href="#" id="ccm-file-manager-upload">
                     <i class="fa fa-upload"></i> <?=t('Upload Files')?>

@@ -3,11 +3,15 @@
 <div style="text-align:center; margin-top: 20px; margin-bottom: 20px;">
 <?php
 $c = Page::getCurrentPage();
-if ($c->isEditMode()) { ?>
+if ($c->isEditMode()) {
+    $loc = Localization::getInstance();
+    $loc->pushActiveContext(Localization::CONTEXT_UI);
+    ?>
 	<div class="ccm-edit-mode-disabled-item">
 		<div style="padding: 8px;"><?php echo t('Content disabled in edit mode.'); ?></div>
 	</div>
-<?php
+    <?php
+    $loc->popActiveContext();
 } elseif (!$webmURL && !$oggURL && !$mp4URL) {
 ?>
     <div class="ccm-edit-mode-disabled-item">

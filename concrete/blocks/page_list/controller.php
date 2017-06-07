@@ -16,8 +16,8 @@ use Concrete\Core\Tree\Node\Type\Topic;
 class Controller extends BlockController
 {
     protected $btTable = 'btPageList';
-    protected $btInterfaceWidth = "800";
-    protected $btInterfaceHeight = "350";
+    protected $btInterfaceWidth = 700;
+    protected $btInterfaceHeight = 525;
     protected $btExportPageColumns = ['cParentID'];
     protected $btExportPageTypeColumns = ['ptID'];
     protected $btExportPageFeedColumns = ['pfID'];
@@ -206,7 +206,7 @@ class Controller extends BlockController
             $list->setItemsPerPage($this->num);
             $pagination = $list->getPagination();
             $pages = $pagination->getCurrentPageResults();
-            if ($pagination->getTotalPages() > 1 && $this->paginate) {
+            if ($pagination->haveToPaginate() && $this->paginate) {
                 $showPagination = true;
                 $pagination = $pagination->renderDefaultView();
                 $this->set('pagination', $pagination);

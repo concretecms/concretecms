@@ -9,6 +9,7 @@ use Concrete\Core\User\User;
 use Concrete\Core\View\View;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
+use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
@@ -103,6 +104,7 @@ class DefaultDispatcher implements DispatcherInterface
         $matcher = new UrlMatcher($collection, $context);
         $path = rtrim($request->getPathInfo(), '/') . '/';
 
+        $callDispatcher = false;
         try {
             $request->attributes->add($matcher->match($path));
             $matched = $matcher->match($path);
@@ -111,6 +113,11 @@ class DefaultDispatcher implements DispatcherInterface
             $this->router->setRequest($request);
             $response = $this->router->execute($route, $matched);
         } catch (ResourceNotFoundException $e) {
+            $callDispatcher = true;
+        } catch (MethodNotAllowedException $e) {
+            $callDispatcher = true;
+        }
+        if ($callDispatcher) {
             $callback = $this->app->make(DispatcherRouteCallback::class, ['dispatcher']);
             $response = $callback->execute($request);
         }

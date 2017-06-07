@@ -428,6 +428,19 @@ class Type
     }
 
     /**
+     * Is the file type an SVG.
+     *
+     * @return bool|null Return true if the type is an SVG, null otherwise
+     */
+    public function isSVG()
+    {
+        $typeName = strtoupper($this->getName());
+        if ($typeName == 'SVG') {
+            return true;
+        }
+    }
+
+    /**
      * Get the name of a generic file type.
      *
      * @param int $type Generic category type (one of the \Concrete\Core\File\Type\Type::T_... constants)

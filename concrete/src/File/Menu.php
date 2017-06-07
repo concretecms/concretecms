@@ -59,6 +59,10 @@ class Menu extends \Concrete\Core\Application\UserInterface\ContextMenu\Menu
                     t('Replace'), t('Replace'), '500', '200')
             );
         }
+        $this->addItem(new DialogLinkItem(
+                \URL::to('/ccm/system/dialogs/file/folder?fID=' . $file->getFileID()),
+                t('Move to Folder'), t('Move to Folder'), '500', '450')
+        );
         if ($fp->canCopyFile()) {
             $this->addItem(new LinkItem('#', t('Duplicate'), [
                 'data-file-manager-action' => 'duplicate',

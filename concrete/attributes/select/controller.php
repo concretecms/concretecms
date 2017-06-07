@@ -524,9 +524,11 @@ class Controller extends AttributeTypeController
     public function getSearchIndexValue()
     {
         $str = "\n";
-        $list = $this->attributeValue->getValue()->getSelectedOptions();
-        foreach ($list as $l) {
-            $str .= $l . "\n";
+        if ($this->attributeValue && $this->attributeValue->getValue()) {
+            $list = $this->attributeValue->getValue()->getSelectedOptions();
+            foreach ($list as $l) {
+                $str .= $l . "\n";
+            }
         }
         // remove line break for empty list
         if ($str == "\n") {
@@ -538,7 +540,7 @@ class Controller extends AttributeTypeController
 
     public function getSelectedOptions()
     {
-        if (is_object($this->attributeValue)) {
+        if ($this->attributeValue && $this->attributeValue->getValue()) {
             return $this->attributeValue->getValue()->getSelectedOptions();
         }
         return array();
