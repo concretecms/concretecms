@@ -311,6 +311,7 @@ return [
         '/ccm/system/dialogs/file/properties/save' => ['\Concrete\Controller\Dialog\File\Properties::save'],
         '/ccm/system/dialogs/file/properties/update_attribute' => ['\Concrete\Controller\Dialog\File\Properties::update_attribute'],
         '/ccm/system/dialogs/file/search' => ['\Concrete\Controller\Dialog\File\Search::view'],
+        '/ccm/system/dialogs/file/jump_to_folder' => ['\Concrete\Controller\Dialog\File\JumpToFolder::view'],
         '/ccm/system/dialogs/file/thumbnails' => ['\Concrete\Controller\Dialog\File\Thumbnails::view'],
         '/ccm/system/dialogs/file/thumbnails/edit' => ['\Concrete\Controller\Dialog\File\Thumbnails\Edit::view'],
         '/ccm/system/dialogs/file/usage/{fID}' => ['\Concrete\Controller\Dialog\File\Usage::view'],

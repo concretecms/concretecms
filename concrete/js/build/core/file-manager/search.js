@@ -26,6 +26,7 @@
 
         my.setupEvents();
         my.setupAddFolder();
+        my.setupFolderNavigation();
         my.setupFileUploads();
         my.setupFileDownloads();
 
@@ -349,6 +350,11 @@
             my.reloadFolder();
         });
 
+        ConcreteEvent.unsubscribe('FileManagerJumpToFolder.concreteTree');
+        ConcreteEvent.subscribe('FileManagerJumpToFolder.concreteTree', function(e, r) {
+            my.loadFolder(r.node.key);
+        });
+
         ConcreteEvent.unsubscribe('ConcreteTreeDeleteTreeNode.concreteTree');
         ConcreteEvent.subscribe('ConcreteTreeDeleteTreeNode.concreteTree', function(e, r) {
             my.reloadFolder();
@@ -462,6 +468,20 @@
                 $this.find('[autofocus]').focus();
             });
 
+        });
+    }
+
+    ConcreteFileManager.prototype.setupFolderNavigation = function() {
+        var my = this;
+        my.$element.find('a[data-launch-dialog=navigate-file-manager]').on('click', function(e) {
+            e.preventDefault();
+            jQuery.fn.dialog.open({
+                width: '560',
+                height: '500',
+                modal: false,
+                title: ccmi18n_sitemap.choosePage,
+                href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/file/jump_to_folder',
+            });
         });
     }
 
