@@ -405,7 +405,8 @@ class Login extends PageController
         if ($this->app->make('token')->validate('logout', $token)) {
             $u = new User();
             $u->logout();
-            $this->redirect('/');
+            $r = Redirect::to('/');
+            return $r;
         }
     }
 
