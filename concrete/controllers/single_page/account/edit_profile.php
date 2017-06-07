@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Controller\SinglePage\Account;
 
+use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Page\Controller\AccountPageController;
 use Concrete\Core\Validation\ResponseInterface;
 use Config;
@@ -19,7 +20,7 @@ class EditProfile extends AccountPageController
     {
         $profile = $this->get('profile');
         if (!is_object($profile)) {
-            throw new Exception(t('You must be logged in to access this page.'));
+            throw new UserMessageException(t('You must be logged in to access this page.'));
         }
 
         $locales = array();
@@ -48,11 +49,11 @@ class EditProfile extends AccountPageController
         $at = AuthenticationType::getByHandle($type);
         $this->view();
         if (!method_exists($at->controller, $method)) {
-            throw new exception('Invalid method.');
+            throw new UserMessageException('Invalid method.');
         }
         if ($method != 'callback') {
             if (!is_array($at->controller->apiMethods) || !in_array($method, $at->controller->apiMethods)) {
-                throw new Exception("Invalid method.");
+                throw new UserMessageException("Invalid method.");
             }
         }
         try {
@@ -60,7 +61,7 @@ class EditProfile extends AccountPageController
             if (trim($message)) {
                 $this->set('message', $message);
             }
-        } catch (exception $e) {
+        } catch (Exception $e) {
             if ($e instanceof AuthenticationTypeFailureException) {
                 // Throw again if this is a big`n
                 throw $e;
