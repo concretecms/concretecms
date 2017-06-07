@@ -42,7 +42,9 @@ class PagerPagination extends Pagination
 
     public function getLastResult()
     {
-        return end($this->getCurrentPageResults());
+        $currentPageResults = $this->getCurrentPageResults();
+
+        return end($currentPageResults);
     }
     
     public function advanceToNextPage()
