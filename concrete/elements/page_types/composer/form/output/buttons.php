@@ -38,7 +38,7 @@ $publishDate = $v->getPublishDate();
 <?php 
 } else {
     ?>
-    <button type="button" data-page-type-composer-form-btn="preview" class="btn btn-success pull-right"><?=t('Save')?></button>
+    <button type="button" data-page-type-composer-form-btn="preview" class="btn btn-success pull-right"><?=t('Preview')?></button>
 <?php 
 } ?>
 
