@@ -39,7 +39,7 @@ $searchInstance = $app->make('helper/text')->entities($_REQUEST['searchInstance'
 
     <div id="ccm-file-add-computer-tab">
         <form method="post" class="form-inline" id="ccm-file-manager-replace-upload" data-dialog-form="replace-file" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/importers/single">
-            <h4><?=t('Add From Computer')?></h4>
+            <br/>
             <table style="width: 100%;">
                 <tr>
                     <td style="width: 100%;">
@@ -56,7 +56,8 @@ $searchInstance = $app->make('helper/text')->entities($_REQUEST['searchInstance'
     </div>
 
     <div id="ccm-file-add-incoming-tab" style="display: none">
-        <h4><?=t('Add from Incoming Directory')?></h4>
+
+        <br/>
         <div>
             <?php
             $contents = array();
@@ -103,8 +104,9 @@ $searchInstance = $app->make('helper/text')->entities($_REQUEST['searchInstance'
     </div>
 
     <div id="ccm-file-add-remote-tab" style="display: none">
-        <h4><?=t("Add from Remote URL")?></h4>
+
         <form method="post" id="ccm-file-manager-replace-remote" class="form-inline" data-dialog-form="replace-file" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/importers/remote">
+            <br/>
             <table style="width: 100%;">
                 <tr>
                     <td style="width: 100%;">
