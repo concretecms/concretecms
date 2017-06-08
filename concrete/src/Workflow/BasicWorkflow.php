@@ -14,6 +14,7 @@ use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use PermissionKey;
 use User;
 use UserInfo;
+use Concrete\Core\Localization\Localization;
 
 class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements AssignableObjectInterface
 {
@@ -141,11 +142,10 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
                 $ui = UserInfo::getByID($req->getRequesterUserID());
 
                 // let's get all the people who are set to be notified on entry
-                $message = t(
-                    'On %s, user %s submitted the following request: %s',
-                    Core::make('helper/date')->formatDateTime($wp->getWorkflowProgressDateAdded(), true),
+                $message = [
+                    "start",
                     $ui->getUserName(),
-                    $req->getWorkflowRequestDescriptionObject()->getEmailDescription());
+                    $req];
                 $this->notify($wp, $message, 'notify_on_basic_workflow_entry');
             }
         }
@@ -160,14 +160,24 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
         $nk = PermissionKey::getByHandle($permission);
         $nk->setPermissionObject($this);
         $users = $nk->getCurrentlyActiveUsers($wp);
+        $loc = Localization::getInstance();
+        $loc->pushActiveContext('email');
+        $dt = $wp->getWorkflowProgressDateAdded();
+        $dh = Core::make('helper/date');
 
         foreach ($users as $ui) {
+            // Get user object of the receiver and set locale to their language
+            $user = $ui->getUserObject();
+            $lan = $user->getUserLanguageToDisplay();
+            $loc->setLocale($lan);
             $mh = Core::make('helper/mail');
             $mh->addParameter('uName', $ui->getUserName());
             $mh->to($ui->getUserEmail());
             $adminUser = UserInfo::getByID(USER_SUPER_ID);
             $mh->from($adminUser->getUserEmail(), t('Basic Workflow'));
-            $mh->addParameter('message', $message);
+            $date = $dh->formatDateTime($dt, true); // Call here to translate datetime into users language
+            $translatedMessage = $this->getTranslatedMessage($message, $date);
+            $mh->addParameter('message', $translatedMessage);
             foreach ($parameters as $key => $value) {
                 $mh->addParameter($key, $value);
             }
@@ -176,6 +186,7 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
             $mh->sendMail();
             unset($mh);
         }
+        $loc->popActiveContext();
     }
 
     public function getWorkflowProgressCurrentDescription(WorkflowProgress $wp)
@@ -215,12 +226,11 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
 
             $ux = UserInfo::getByID($bdw->getUserCompletedID());
 
-            $message = t(
-                "On %s, user %s cancelled the following request: \n\n---\n%s\n---\n\n",
-                Core::make('helper/date')->formatDateTime($bdw->getDateCompleted(), true),
+            $message = [
+                "cancel",
                 $ux->getUserName(),
-                $req->getWorkflowRequestDescriptionObject()->getEmailDescription()
-            );
+                $req
+            ];
             $this->notify($wp, $message, 'notify_on_basic_workflow_deny');
 
             $hist = new BasicWorkflowHistoryEntry();
@@ -255,12 +265,11 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
 
             $ux = UserInfo::getByID($bdw->getUserCompletedID());
 
-            $message = t(
-                "On %s, user %s approved the following request: \n\n---\n%s\n---\n\n",
-                Core::make('helper/date')->formatDateTime($bdw->getDateCompleted(), true),
+            $message = [
+                "approve",
                 $ux->getUserName(),
-                $req->getWorkflowRequestDescriptionObject()->getEmailDescription()
-            );
+                $req
+            ];
             $this->notify($wp, $message, 'notify_on_basic_workflow_approve');
 
             $wpr = $req->runTask('approve', $wp);
@@ -301,5 +310,39 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
         }
 
         return $buttons;
+    }
+
+    private function getTranslatedMessage($message = null, $date)
+    {
+
+        if (is_array($message)) {
+            switch ($message[0]) {
+                case 'approve':
+                    $message = t("On %s, user %s approved the following request: \n\n---\n%s\n---\n\n",
+                        $date, // Date
+                        $message[1], // UserName
+                        $message[2]->getWorkflowRequestDescriptionObject()->getEmailDescription() // We get the Description Object here as it gets translated when called
+                    );
+                    break;
+                case 'cancel':
+                    $message = t(
+                        "On %s, user %s cancelled the following request: \n\n---\n%s\n---\n\n",
+                        $date,
+                        $message[1],
+                        $message[2]->getWorkflowRequestDescriptionObject()->getEmailDescription()
+                    );
+                    break;
+                default:
+                    $message = t(
+                        "On %s, user %s submitted the following request: %s",
+                        $date,
+                        $message[1],
+                        $message[2]->getWorkflowRequestDescriptionObject()->getEmailDescription()
+                    );
+
+            }
+        }
+
+        return $message;
     }
 }
