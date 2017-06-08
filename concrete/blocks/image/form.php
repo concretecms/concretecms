@@ -6,7 +6,7 @@ $al = $app->make('helper/concrete/asset_library');
 ?>
 
 <fieldset>
-    <legend><?php echo t('Files') ?></legend>
+    <legend><?php echo t('Files'); ?></legend>
 
     <div class="form-group">
         <?php
@@ -25,14 +25,15 @@ $al = $app->make('helper/concrete/asset_library');
 </fieldset>
 
 <fieldset>
-    <legend><?php echo t('HTML') ?></legend>
+    <legend><?php echo t('HTML'); ?></legend>
 
     <div class="form-group">
         <?php
         $options = [
             0 => t('None'),
-            1 => t('Another Page'),
+            1 => t('Page'),
             2 => t('External URL'),
+            3 => t('File')
         ];
 
         echo $form->label('imageLinkType', t('Image Link'));
@@ -42,15 +43,22 @@ $al = $app->make('helper/concrete/asset_library');
 
     <div id="imageLinkTypePage" style="display: none;" class="form-group">
         <?php
-        echo $form->label('internalLinkCID', t('Choose Page:'));
+        echo $form->label('internalLinkCID', t('Page'));
         echo $ps->selectPage('internalLinkCID', $internalLinkCID);
         ?>
     </div>
 
     <div id="imageLinkTypeExternal" style="display: none;" class="form-group">
         <?php
-        echo $form->label('externalLink', t('URL'));
+        echo $form->label('externalLink', t('External URL'));
         echo $form->text('externalLink', $externalLink);
+        ?>
+    </div>
+
+    <div id="imageLinkTypeFile" style="display: none;" class="form-group">
+        <?php
+        echo $form->label('fileLinkID', t('File'));
+        echo $al->file('ccm-b-file', 'fileLinkID', t('Choose File'), $linkFile);
         ?>
     </div>
 
@@ -70,7 +78,7 @@ $al = $app->make('helper/concrete/asset_library');
 </fieldset>
 
 <fieldset>
-    <legend><?php echo t('Resize Image') ?></legend>
+    <legend><?php echo t('Resize Image'); ?></legend>
 
     <div class="form-group">
         <div class="checkbox" data-checkbox-wrapper="constrain-image">
@@ -120,6 +128,7 @@ refreshImageLinkTypeControls = function() {
     var linkType = $('#linkType').val();
     $('#imageLinkTypePage').toggle(linkType == 1);
     $('#imageLinkTypeExternal').toggle(linkType == 2);
+    $('#imageLinkTypeFile').toggle(linkType == 3);
 };
 
 $(document).ready(function() {
