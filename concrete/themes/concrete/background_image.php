@@ -34,6 +34,9 @@ View::element(
 </div>
 </div>
 
+<?php
+$image = date('Ymd') . '.jpg';
+?>
 
 <script type="text/javascript">
 $(function() {
