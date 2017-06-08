@@ -24,13 +24,15 @@ class CkeditorEditor implements EditorInterface
     protected $allowFileManager;
     protected $allowSitemap;
     protected $styles;
+	protected $options;
 
-    public function __construct(Repository $config, PluginManager $pluginManager, $styles)
+    public function __construct(Repository $config, PluginManager $pluginManager, $styles, $options)
     {
         $this->assets = ResponseAssetGroup::get();
         $this->pluginManager = $pluginManager;
         $this->config = $config;
         $this->styles = $styles;
+		$this->options = $options;
     }
 
     /**
@@ -76,6 +78,7 @@ EOL;
         $plugins = $pluginManager->getSelectedPlugins();
 
         $options = array_merge(
+			$this->options,
             $options,
             [
                 'plugins' => implode(',', $plugins),
@@ -139,20 +142,6 @@ EOL;
             ckeditor.on('remove', function(){
                 $(this).destroy();
             });
-            if (CKEDITOR.env.ie) {
-                ckeditor.on('ariaWidget', function (e) {
-                    setTimeout(function() {
-                        var \$contents = $(e.editor.ui.contentsElement.$),
-                            \$textarea = \$contents.find('>textarea.cke_source');
-                        if (\$textarea.length === 1) {
-                            \$textarea.css({
-                                width: \$contents.innerWidth() + 'px',
-                                height: \$contents.innerHeight() + 'px'
-                            });
-                        }
-                    }, 50);
-                });
-            }
         }
 EOL;
 

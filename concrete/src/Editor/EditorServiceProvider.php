@@ -14,13 +14,15 @@ class EditorServiceProvider extends ServiceProvider
             function ($app) {
                 $config = $app->make('site')->getSite()->getConfigRepository();
                 $styles = $config->get('editor.ckeditor4.styles', array());
+				$options = $config->get('editor.ckeditor4.options', array());
                 $pluginManager = new PluginManager();
                 $pluginManager->selectMultiple(
                     $config->get('editor.ckeditor4.plugins.selected', array())
                 );
                 $this->registerCkeditorPlugins($pluginManager);
                 $this->registerCorePlugins($pluginManager);
-                $editor = new CkeditorEditor($config, $pluginManager, $styles);
+			
+                $editor = new CkeditorEditor($config, $pluginManager, $styles, $options);
                 $editor->setToken($app->make('token')->generate('editor'));
 
 
