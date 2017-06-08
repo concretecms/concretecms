@@ -18,7 +18,7 @@ $folders = $rootfolder->getHierarchicalNodesOfType('file_folder', 1, true, true)
 <div class="form-group" id="ccm-folder-list">
     <?php
     $selector = new \Concrete\Core\Form\Service\Widget\FileFolderSelector();
-    print $selector->selectFileFolder('folderID', $folderID);
+    print $selector->selectFileFolder('folderID', isset($folderID) ? $folderID : null);
     ?>
 </div>
 
