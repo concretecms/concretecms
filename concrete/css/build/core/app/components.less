@@ -123,7 +123,18 @@ span.ccm-group-description {color: #aaa; font-size: 12px; padding-top: 2px; padd
 #ccm-group-search-fields {padding-left: 24px; background: transparent url(../images/icons/search.png) no-repeat scroll left 6px }
 
 /* date controls */
-.ccm-input-time-wrapper select {width: auto ; margin-right: 4px !important;}
+.ccm-input-time-wrapper {
+  select {
+    width: auto;
+    margin-right: 4px !important;
+    &:last-child {
+      margin-right: 0 !important;
+    }
+  }
+  .separator {
+    margin-right: 4px;
+  }
+}
 .ccm-input-date {width: auto ; margin-right: 4px !important;}
 div.popover {
   .ccm-input-date-wrapper {
