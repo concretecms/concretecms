@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Controller\Backend\Page;
 
+use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Collection\Version\Version;
 use Concrete\Core\Page\EditResponse as PageEditResponse;
@@ -42,7 +43,7 @@ class Multilingual extends Page
         $pr = new PageEditResponse();
 
         if ($this->request->request->get('destID') == $this->page->getCollectionID()) {
-            throw new \Exception(t("You cannot assign this page to itself."));
+            throw new UserMessageException(t("You cannot assign this page to itself."));
         }
 
         $destPage = \Page::getByID($_POST['destID']);
@@ -66,7 +67,7 @@ class Multilingual extends Page
             $pr->setMessage(t('Page assigned.'));
             $pr->outputJSON();
         } else {
-            throw new \Exception(t("The destination page doesn't appear to be in a valid multilingual section."));
+            throw new UserMessageException(t("The destination page doesn't appear to be in a valid multilingual section."));
         }
     }
 
@@ -88,7 +89,7 @@ class Multilingual extends Page
             if ($this->page->isPageDraft()) {
                 $ptp = new \Permissions($ct);
                 if (!$ptp->canAddPageType()) {
-                    throw new \Exception(t('You do not have permission to add a page of this type.'));
+                    throw new UserMessageException(t('You do not have permission to add a page of this type.'));
                 }
             }
             $newParent = \Page::getByID($cParentRelatedID);
@@ -120,7 +121,7 @@ class Multilingual extends Page
                     $pr->setAdditionalDataAttribute('icon', $icon);
                 }
             } else {
-                throw new \Exception(t('You do not have permission to add this page to this section of the tree.'));
+                throw new UserMessageException(t('You do not have permission to add this page to this section of the tree.'));
             }
         }
         $pr->outputJSON();
