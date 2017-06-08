@@ -11,15 +11,16 @@ if (!$tp->canAccessGroupSearch()) {
 } else {
     $gl = new GroupSetList();
 ?>
-    <div id="ccm-list-wrapper">
+
+    <ul class="item-select-list" id="ccm-list-wrapper">
     	<?php if ($gl->getTotal() > 0) {
             foreach ($gl->get() as $gs) { ?>
-        		<div class="ccm-group">
-        			<div style="padding: 8px 8px 8px 0;" class="ccm-group-inner-indiv">
-                        <i class="fa fa-cubes"></i>
-        				<a class="ccm-group-inner-atag" id="g<?=$g['gID']?>" href="javascript:void(0)" onclick="ccm_selectGroupSet(<?=$gs->getGroupSetID()?>)"><?=$gs->getGroupSetDisplayName()?></a>
-        			</div>
-        		</div>
+        		<li>
+					<a class="ccm-group-inner-atag" id="g<?=$g['gID']?>" href="javascript:void(0)" onclick="ccm_selectGroupSet(<?=$gs->getGroupSetID()?>)">
+					<i class="fa fa-users"></i>
+					<?=$gs->getGroupSetDisplayName()?>
+					</a>
+        		</li>
         	<?php
             }
         } else { ?>
@@ -27,7 +28,7 @@ if (!$tp->canAccessGroupSearch()) {
     	<?php
         }
         ?>
-    </div>
+    </ul>
 
 	<script>
 	ccm_selectGroupSet = function(gsID) {

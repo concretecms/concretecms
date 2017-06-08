@@ -9,7 +9,7 @@ $form = $app->make('helper/form');
 
 <?php if (count($included) > 0 || count($excluded) > 0) { ?>
     <?php if (count($included) > 0) { ?>
-        <h3><?=t('Who can view what?')?></h3>
+        <h4><?=t('Who can view what?')?></h4>
         <?php foreach ($included as $assignment) {
             $entity = $assignment->getAccessEntityObject();
         ?>

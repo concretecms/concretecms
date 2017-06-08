@@ -17,7 +17,7 @@ $url = $type->getAccessEntityTypeToolsURL();
 <div class="ccm-ui">
 	<form method="post" action="<?=$url?>" id="ccm-permission-access-entity-combination-groups-form">
 		<p><?=t('Only users who are members of ALL selected groups will be eligible for this permission.')?></p>
-		<table id="ccm-permissions-access-entity-combination-groups" class="table table-bordered">
+		<table id="ccm-permissions-access-entity-combination-groups" class="table">
 			<tr>
 				<th><div style="width: 16px"></div></th>
 				<th width="100%"><?=t("Name")?></th>
@@ -42,7 +42,7 @@ ConcreteEvent.subscribe('SelectGroup', function(e, data) {
         jQuery.fn.dialog.closeTop();
 		$("#ccm-permissions-access-entity-combination-groups-none").hide();
 		var tbl = $("#ccm-permissions-access-entity-combination-groups");
-		html = '<tr><td><input type="hidden" class="combogID" name="gID[]" value="' + gID + '"><i class="fa fa-cubes"></i></td><td>' + gName + '</td><?php if (!is_object($pae)) {
+		html = '<tr><td><input type="hidden" class="combogID" name="gID[]" value="' + gID + '"><i class="fa fa-users"></i></td><td>' + gName + '</td><?php if (!is_object($pae)) {
     ?><td><a href="javascript:void(0)" onclick="ccm_removeCombinationGroup(this)"><i class="fa fa-trash-o"></i></a></td><?php } ?>';
 		tbl.append(html);
 	}
