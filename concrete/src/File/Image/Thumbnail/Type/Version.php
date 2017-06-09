@@ -3,6 +3,7 @@ namespace Concrete\Core\File\Image\Thumbnail\Type;
 
 use Concrete\Core\File\Image\Thumbnail\Path\Resolver;
 use Concrete\Core\Entity\File\Version as FileVersion;
+use Concrete\Core\File\Image\Thumbnail\Type\Type as ThumbnailType;
 use Core;
 
 /**
@@ -14,14 +15,16 @@ class Version
     protected $directoryName;
     protected $handle;
     protected $name;
+    protected $sizingMode;
     protected $width;
     protected $height;
     protected $isDoubledVersion;
 
-    public function __construct($directoryName, $handle, $name, $width, $height, $isDoubledVersion = false)
+    public function __construct($directoryName, $handle, $name, $width, $height, $isDoubledVersion = false, $sizingMode = ThumbnailType::RESIZE_DEFAULT)
     {
         $this->handle = $handle;
         $this->name = $name;
+        $this->sizingMode = $sizingMode;
         $this->width = $width;
         $this->height = $height;
         $this->directoryName = $directoryName;
@@ -42,6 +45,14 @@ class Version
     public function setName($name)
     {
         $this->name = $name;
+    }
+
+    /**
+     * @param mixed $sizingMode
+     */
+    public function setSizingMode($sizingMode)
+    {
+        $this->sizingMode = $sizingMode;
     }
 
     /**
@@ -66,6 +77,24 @@ class Version
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSizingMode()
+    {
+        return $this->sizingMode;
+    }
+
+    public function getSizingModeDisplayName()
+    {
+        $sizingModeDisplayNames = [
+            ThumbnailType::RESIZE_PROPORTIONAL => t("Proportional"),
+            ThumbnailType::RESIZE_EXACT => t("Exact"),
+        ];
+
+        return $sizingModeDisplayNames[$this->getSizingMode()];
     }
 
     /** Returns the display name for this thumbnail type version (localized and escaped accordingly to $format)

@@ -284,6 +284,7 @@ class StartingPointPackage extends BasePackage
         $thumbnailType->requireType();
         $thumbnailType->setName(tc('ThumbnailTypeName', 'File Manager Thumbnails'));
         $thumbnailType->setHandle(Config::get('concrete.icons.file_manager_listing.handle'));
+        $thumbnailType->setSizingMode($thumbnailType::RESIZE_EXACT);
         $thumbnailType->setWidth(Config::get('concrete.icons.file_manager_listing.width'));
         $thumbnailType->setHeight(Config::get('concrete.icons.file_manager_listing.height'));
         $thumbnailType->save();
@@ -292,6 +293,7 @@ class StartingPointPackage extends BasePackage
         $thumbnailType->requireType();
         $thumbnailType->setName(tc('ThumbnailTypeName', 'File Manager Detail Thumbnails'));
         $thumbnailType->setHandle(Config::get('concrete.icons.file_manager_detail.handle'));
+        $thumbnailType->setSizingMode($thumbnailType::RESIZE_DEFAULT);
         $thumbnailType->setWidth(Config::get('concrete.icons.file_manager_detail.width'));
         $thumbnailType->save();
 
