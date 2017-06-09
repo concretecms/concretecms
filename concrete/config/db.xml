@@ -3476,28 +3476,29 @@
     </index>
   </table>
 
-  <table name="UserBannedIPs">
-    <field name="id" type="integer" size="11">
+  <table name="LoginControlIpRanges" comment="IP ranges used to control login attempts">
+    <field name="lcirID" type="integer" comment="Record identifier">
       <unsigned/>
       <autoincrement/>
       <key/>
     </field>
-    <field name="ipFrom" type="blob" size="32">
-    </field>
-    <field name="ipTo" type="blob" size="32">
-    </field>
-    <field name="banCode" type="boolean">
-      <default value="1"/>
+    <field name="lcirIpFrom" type="string" size="40" comment="Start of the range">
       <notnull/>
     </field>
-    <field name="expires" type="datetime">
-      <default value="1000-01-01 00:00:00"/>
+    <field name="lcirIpTo" type="string" size="40" comment="End of the range">
       <notnull/>
     </field>
-    <field name="isManual" type="boolean">
-      <default value="0"/>
+    <field name="lcirType" type="smallint" comment="Type of the record">
+      <unsigned/>
       <notnull/>
     </field>
+    <field name="lcirExpires" type="datetime" comment="Record end-of-life timestamp">
+    </field>
+    <index name="IX_LoginControlIpRanges_Search">
+      <col>lcirIpFrom</col>
+      <col>lcirIpTo</col>
+      <col>lcirExpires</col>
+    </index>
   </table>
 
   <table name="UserGroups">
@@ -3666,14 +3667,16 @@
     </index>
   </table>
 
-  <table name="SignupRequests">
-    <field name="id" type="integer" size="11">
+  <table name="FailedLoginAttempts" comment="Records failed login attempts">
+    <field name="lcirID" type="integer" comment="Record identifier">
+      <unsigned/>
       <autoincrement/>
       <key/>
     </field>
-    <field name="ipFrom" type="blob" size="32"/>
-    <field name="date_access" type="timestamp">
-      <deftimestamp/>
+    <field name="flaIp" type="string" size="40" comment="IP address of the failed login attempt">
+      <notnull/>
+    </field>
+    <field name="flaTimestamp" type="timestamp" comment="Timestamp of the failed login attempt">
       <notnull/>
     </field>
   </table>
