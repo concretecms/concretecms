@@ -53,7 +53,7 @@ use PermissionKeyCategory;
 use SinglePage;
 
 /**
- * A package can contains related components that customize concrete5. They can br easily
+ * A package can contains related components that customize concrete5. They can be easily
  * installed and uninstall by a user.
  *
  * @property string $pkgName Installed name of package
