@@ -221,6 +221,22 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
     }
 
     /**
+     * @param string $format
+     * @return string
+     */
+    public function getEntityDisplayDescription($format = 'html')
+    {
+        $value = t($this->getDescription());
+        switch ($format) {
+            case 'html':
+                return h($value);
+            case 'text':
+            default:
+                return $value;
+        }
+    }
+
+    /**
      * @return mixed
      */
     public function getCreatedDate()
