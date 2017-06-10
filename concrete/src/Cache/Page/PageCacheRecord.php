@@ -69,26 +69,21 @@ class PageCacheRecord
 
     public function validate(Request $request)
     {
-        $invalidate = false;
         if ($this->getCanonicalURL()) {
             $url = Url::createFromUrl($this->getCanonicalURL());
-            if ($url->getBaseUrl() != $request->getBaseUrl()) {
-                $invalidate = true;
+            if ($url->getBaseUrl() != $request->getSchemeAndHttpHost()) {
+                return false; // but don't invalidate
             }
         }
 
         $diff = $this->expires - time();
-        if ($diff <= 0) {
+        if ($diff > 0) {
             // it's still valid
-            $invalidate = true;
-        }
-
-        if ($invalidate) {
+            return true;
+        } else {
+            // invalidate and kill this record.
             $cache = PageCache::getLibrary();
             $cache->purgeByRecord($this);
-            return false;
-        } else {
-            return true;
         }
     }
 }
