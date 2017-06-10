@@ -5,18 +5,29 @@ use Concrete\Core\Page\Page;
 
 class PageCacheRecord
 {
-    public function __construct(Page $c, $content, $lifetime)
+    public function __construct(Page $c, $content, $lifetime, $url = null)
     {
         $cache = PageCache::getLibrary();
         $this->setCacheRecordLifetime($lifetime);
         $this->setCacheRecordKey($cache->getCacheKey($c));
         $this->setCacheRecordHeaders($cache->getCacheHeaders($c));
+        $this->setCanonicalURL($url);
         $this->setCacheRecordContent($content);
     }
 
     public function setCacheRecordLifetime($lifetime)
     {
         $this->expires = time() + $lifetime;
+    }
+
+    public function getCanonicalURL()
+    {
+        return $this->url;
+    }
+
+    public function setCanonicalURL($url)
+    {
+        $this->url = $url;
     }
 
     public function getCacheRecordExpiration()
