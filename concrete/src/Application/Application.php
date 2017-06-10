@@ -186,13 +186,7 @@ class Application extends Container
         if ($library->shouldCheckCache($request)) {
             $record = $library->getRecord($request);
             if ($record instanceof PageCacheRecord) {
-                if ($record->validate()) {
-                    if ($record->getCanonicalURL()) {
-                        $url = Url::createFromUrl($record->getCanonicalURL());
-                        if ($url->getBaseUrl() != $request->getBaseUrl()) {
-                            return false;
-                        }
-                    }
+                if ($record->validate($request)) {
                     return $library->deliver($record);
                 }
             }

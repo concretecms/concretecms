@@ -1,7 +1,9 @@
 <?php
 namespace Concrete\Core\Cache\Page;
 
+use Concrete\Core\Http\Request;
 use Concrete\Core\Page\Page;
+use Concrete\Core\Url\Url;
 
 class PageCacheRecord
 {
@@ -65,16 +67,28 @@ class PageCacheRecord
         $this->cacheRecordKey = $cacheRecordKey;
     }
 
-    public function validate()
+    public function validate(Request $request)
     {
+        $invalidate = false;
+        if ($this->getCanonicalURL()) {
+            $url = Url::createFromUrl($this->getCanonicalURL());
+            if ($url->getBaseUrl() != $request->getBaseUrl()) {
+                $invalidate = true;
+            }
+        }
+
         $diff = $this->expires - time();
-        if ($diff > 0) {
+        if ($diff <= 0) {
             // it's still valid
-            return true;
-        } else {
-            // invalidate and kill this record.
+            $invalidate = true;
+        }
+
+        if ($invalidate) {
             $cache = PageCache::getLibrary();
             $cache->purgeByRecord($this);
+            return false;
+        } else {
+            return true;
         }
     }
 }
