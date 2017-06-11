@@ -143,7 +143,7 @@
             <type checked="" checkbox-label="Exclude Page from Navigation"/>
         </attributekey>
         <attributekey handle="exclude_page_list" name="Exclude From Page List" package="" searchable="1" indexed="0" type="boolean" category="collection">
-            <type checked="" checkbox-label="Exclude Page from Page Lists" />
+            <type checked="" checkbox-label="Exclude Page from Page List Blocks" />
         </attributekey>
         <attributekey handle="header_extra_content" name="Header Extra Content" package="" searchable="1" indexed="0" type="textarea" category="collection">
             <type mode=""/>
