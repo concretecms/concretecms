@@ -48,6 +48,14 @@ class Controller extends AttributeTypeController
         return $cnode;
     }
 
+    public function getCheckboxLabel()
+    {
+        if ($this->akCheckboxLabel) {
+            return $this->akCheckboxLabel;
+        }
+        return $this->attributeKey->getAttributeKeyName();
+    }
+
     public function exportKey($akey)
     {
         $this->load();
