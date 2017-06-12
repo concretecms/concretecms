@@ -5,7 +5,10 @@ use Concrete\Core\Package\Routine\AttachModeCompatibleRoutineInterface;
 use Concrete\Core\Support\Facade\Application;
 use Config;
 use Database;
+use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception\ConnectionException;
+use Doctrine\DBAL\DriverManager;
 use Exception;
 use StartingPointPackage;
 use Concrete\Core\Console\Command;
@@ -213,7 +216,7 @@ EOT
             $helper = $this->getHelper('question');
 
             // Get the wizard generator
-            $wizard = $this->getWizard($input);
+            $wizard = $this->getWizard($input, $output);
             $hidden = [];
 
             // Loop over the questions
@@ -246,11 +249,18 @@ EOT
             $table->setHeaders(['Question', 'Value']);
             $table->render();
 
-            $confirm = new ConfirmationQuestion('Would you like to install with these settings? [ y / <options=bold>N</> ]: ',
+            $confirm = new Question('Would you like to install with these settings? [ y / n ]: ',
                 false);
+            $confirm->setValidator(function($given) {
+                if (!$given || !preg_match('/^[yn]/i', $given)) {
+                    throw new \InvalidArgumentException(t('Please answer either Y or N.'));
+                }
+            });
+
+            $answer = $helper->ask($input, $output, $confirm);
 
             // Cancel if they said no
-            if (!$helper->ask($input, $output, $confirm)) {
+            if (stripos('i', $answer) === 0) {
                 $output->writeln('Installation cancelled.');
                 exit;
             }
@@ -318,18 +328,51 @@ EOT
     /**
      * A wizard generator.
      *
-     * @param $input
+     * @param \Symfony\Component\Console\Input\InputInterface $input
      *
-     * @return \Generator|Question[]
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @param null $firstKey
+     *
+     * @return \Generator|\Symfony\Component\Console\Question\Question[]
      */
-    private function getWizard(InputInterface $input)
+    private function getWizard(InputInterface $input, OutputInterface $output, $firstKey = null)
     {
         $questions = $this->wizardSteps();
+        $tryAgain = false;
+        $result = null;
 
         // Loop over the questions, parse them, then yield them out
         foreach ($questions as $question) {
+
+            if (!$firstKey && $question instanceof \Closure) {
+                $result = $question($input, $output, $this);
+
+                if ($result === false || is_string($result)) {
+                    $tryAgain = true;
+                    break;
+                }
+
+                continue;
+            }
+
             $question = (array) $question;
+            if ($firstKey && $question[0] !== $firstKey) {
+                continue;
+            }
+
+            // If we still have a firstKey set, that means we've hit the first key. Unset so that we don't test again
+            if ($firstKey) {
+                $firstKey = null;
+            }
+
             yield $question[0] => $this->getQuestion($question, $input);
+        }
+
+        if ($tryAgain) {
+            // Try again, passing the result as the first next item. This allows us to use this like a goto
+            foreach ($this->getWizard($input, $output, $result) as $key => $value) {
+                yield $key => $value;
+            }
         }
     }
 
@@ -361,6 +404,14 @@ EOT
         return [
             ['db-server', '127.0.0.1'],
             'db-database',
+            function(InputInterface $input, OutputInterface $output) {
+                if (!trim($input->getOption('db-database'))) {
+                    $output->writeln(sprintf('<error>%s</error>', t('A database name is required.')));
+                    return 'db-database';
+                }
+
+                return true;
+            },
             'db-username',
             [
                 'db-password',
@@ -368,6 +419,37 @@ EOT
                     return $question->setHidden(true);
                 },
             ],
+            function(InputInterface $input, OutputInterface $output) {
+                $params = [
+                    'dbname' => $input->getOption('db-database'),
+                    'user' => $input->getOption('db-username'),
+                    'password' => $input->getOption('db-password'),
+                    'host' => $input->getOption('db-server'),
+                    'driver' => 'pdo_mysql'
+                ];
+
+                $config = new Configuration();
+                $connection = DriverManager::getConnection($params, $config);
+                try {
+                    $connection->connect();
+                } catch (ConnectionException $e) {
+                    $e = $e->getMessage();
+                    $connection = false;
+                }
+
+                if (!$connection || !$connection->ping()) {
+                    $output->writeln(sprintf('<error>%s</error>', t('Unable to connect using provided credentials.')));
+                    if (isset($e)) {
+                        $output->writeln(sprintf('<error>%s</error>', $e));
+                    }
+
+                    // Set the option to an empty string so that we don't output the password
+                    $input->setOption('db-password', '');
+                    return false;
+                }
+
+                return true;
+            },
             ['site', 'concrete5'],
             'canonical-url',
             'canonical-ssl-url',
@@ -383,18 +465,27 @@ EOT
             [
                 'admin-password',
                 function (Question $question, InputInterface $input) {
-                    $question->setNormalizer(function ($answer) {
-                        $error = new \ArrayObject();
-                        if (Application::getFacadeApplication()->make('validator/password')->isValid($answer, $error)) {
-                            return $answer;
-                        }
-
-                        throw new \Exception(implode("\n", $error->getArrayCopy()));
-                    });
-
                     return $question->setHidden(true);
                 },
             ],
+            // Test the password
+            function(InputInterface $input, OutputInterface $output) {
+                $answer = $input->getOption('admin-password');
+                $error = new \ArrayObject();
+                Application::getFacadeApplication()->make('validator/password')->isValid($answer, $error);
+
+                if (count($error)) {
+                    foreach ($error->getIterator() as $message) {
+                        $output->writeln(sprintf('<error>%s</error>', $message));
+                    }
+
+                    // Set the option to an empty string so that we don't output the password
+                    $input->setOption('admin-password', '');
+                    return 'admin-password';
+                }
+
+                return true;
+            },
             'demo-username',
             'demo-email',
             [
@@ -408,9 +499,8 @@ EOT
                 'site-locale',
                 function (Question $question, InputInterface $input, InputOption $option) {
                     $newDefault = $input->getOption('language');
-                    $newQuestion = $this->getQuestionString($option, $newDefault);
-
-                    return new Question($newQuestion, $newDefault);
+                    $input->setOption('site-locale', $newDefault);
+                    return $question;
                 },
             ],
             ['config', 'none'],

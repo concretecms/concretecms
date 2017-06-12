@@ -59,8 +59,18 @@ class Controller extends BlockController
              */
             $entity = $this->entityManager->find('Concrete\Core\Entity\Express\Entity', $this->exEntityID);
             if (is_object($entity)) {
-                $searchPropertiesSelected = (array) json_decode($this->searchProperties);
-                $linkedPropertiesSelected = (array) json_decode($this->linkedProperties);
+                if ($this->searchProperties) {
+                    $searchPropertiesSelected = (array) json_decode($this->searchProperties);
+                } else {
+                    $searchPropertiesSelected = array();
+                }
+
+                if ($this->linkedProperties) {
+                    $linkedPropertiesSelected = (array) json_decode($this->linkedProperties);
+                } else {
+                    $linkedPropertiesSelected = array();
+                }
+
                 $searchProperties = $this->getSearchPropertiesJsonArray($entity);
                 $columns = unserialize($this->columns);
                 $provider = \Core::make('Concrete\Core\Express\Search\SearchProvider', array($entity, $entity->getAttributeKeyCategory()));
@@ -124,7 +134,11 @@ class Controller extends BlockController
             }
 
             $tableSearchProperties = array();
-            $searchPropertiesSelected = (array) json_decode($this->searchProperties);
+            if ($this->searchProperties) {
+                $searchPropertiesSelected = (array) json_decode($this->searchProperties);
+            } else {
+                $searchPropertiesSelected = array();
+            }
             foreach($searchPropertiesSelected as $akID) {
                 $ak = $category->getAttributeKeyByID($akID);
                 if (is_object($ak)) {
@@ -162,23 +176,24 @@ class Controller extends BlockController
             } else {
                 $searchProperties = array();
             }
+
             $data['searchProperties'] = json_encode($searchProperties);
-            if (isset($data['linkedProperties']) && is_array($data['linkedProperties'])) {
-                $linkedProperties = $data['linkedProperties'];
-            } else {
-                $linkedProperties = array();
-            }
-            $data['linkedProperties'] = json_encode($linkedProperties);
 
             if (empty($searchProperties) && empty($linkedProperties) && empty($data['enableKeywordSearch'])) {
                 $data['enableSearch'] = 0;
             }
         } else {
             $data['searchProperties'] = array();
-            $data['linkedProperties'] = array();
             $data['enableKeywordSearch'] = 0;
             $data['enableSearch'] = 0;
         }
+
+        if (isset($data['linkedProperties']) && is_array($data['linkedProperties'])) {
+            $linkedProperties = $data['linkedProperties'];
+        } else {
+            $linkedProperties = array();
+        }
+        $data['linkedProperties'] = json_encode($linkedProperties);
 
         if (empty($data['enableKeywordSearch'])) {
             $data['enableKeywordSearch'] = 0;

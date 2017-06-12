@@ -68,7 +68,7 @@ class TextControl extends Control
     public function getControlLabel()
     {
         if ($this->getHeadline()) {
-            $label = $this->getHeadline();
+            $label = h($this->getHeadline());
         } else if ($this->getBody()) {
             $text = \Core::make('helper/text');
             $label = $text->sanitize($this->getBody(), 32);

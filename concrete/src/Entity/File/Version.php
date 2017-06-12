@@ -1061,15 +1061,33 @@ class Version implements ObjectInterface
                 foreach ($types as $type) {
                     // delete the file if it exists
                     $this->deleteThumbnail($type);
+                    
+                    // if image is smaller than size requested, don't create thumbnail
+                    if ($imagewidth < $type->getWidth() && $imageheight < $type->getHeight()) {
+                        continue;
+                    }
 
-                    // if image is smaller than width, don't create thumbnail
-                    if ($imagewidth < $type->getWidth()) {
+                    // This should not happen as it is not allowed when creating thumbnail types and both width and heght
+                    // are required for Exact sizing but it's here just in case
+                    if ($type->getSizingMode() === Type::RESIZE_EXACT && (!$type->getWidth() || !$type->getHeight())) {
+                        continue;
+                    }
+                    
+                    // If requesting an exact size and any of the dimensions requested is larger than the image's
+                    // don't process as we won't get an exact size
+                    if ($type->getSizingMode() === Type::RESIZE_EXACT && ($imagewidth < $type->getWidth() || $imageheight < $type->getHeight())) {
                         continue;
                     }
 
                     // if image is the same width as thumbnail, and there's no thumbnail height set,
                     // or if a thumbnail height set and the image has a smaller or equal height, don't create thumbnail
                     if ($imagewidth == $type->getWidth() && (!$type->getHeight() || $imageheight <= $type->getHeight())) {
+                        continue;
+                    }
+
+                    // if image is the same height as thumbnail, and there's no thumbnail width set,
+                    // or if a thumbnail width set and the image has a smaller or equal width, don't create thumbnail
+                    if ($imageheight == $type->getHeight() && (!$type->getWidth() || $imagewidth <= $type->getWidth())) {
                         continue;
                     }
 
@@ -1398,25 +1416,30 @@ class Version implements ObjectInterface
         $filesystem = $this->getFile()
             ->getFileStorageLocationObject()
             ->getFileSystemObject();
-
+            
         $height = $type->getHeight();
         $width = $type->getWidth();
+        $sizingMode = $type->getSizingMode();
 
         if ($height && $width) {
             $size = new Box($width, $height);
-            $thumbnailMode = ImageInterface::THUMBNAIL_INSET;
-        } else if($width) {
+        } else if ($width) {
             $size = $image->getSize()->widen($width);
-            $thumbnailMode = ImageInterface::THUMBNAIL_OUTBOUND;
         } else {
             $size = $image->getSize()->heighten($height);
-            $thumbnailMode = ImageInterface::THUMBNAIL_OUTBOUND;
+        }
+
+        if ($sizingMode === Type::RESIZE_EXACT) {
+             $thumbnailMode = ImageInterface::THUMBNAIL_OUTBOUND;
+        } else if ($sizingMode === Type::RESIZE_PROPORTIONAL) {
+            $thumbnailMode = ImageInterface::THUMBNAIL_INSET;
         }
 
         // isCropped only exists on the CustomThumbnail type
         if (method_exists($type, 'isCropped') && $type->isCropped()) {
             $thumbnailMode = ImageInterface::THUMBNAIL_OUTBOUND;
         }
+
         $thumbnail = $image->thumbnail($size, $thumbnailMode);
         $thumbnailPath = $type->getFilePath($this);
         $thumbnailOptions = [];

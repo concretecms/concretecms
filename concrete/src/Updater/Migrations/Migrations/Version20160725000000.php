@@ -203,7 +203,9 @@ class Version20160725000000 extends AbstractMigration
         $this->output(t('Preparing problematic entity database tables...'));
         // Remove the weird primary keys from the Files table
         $this->connection->executeQuery('alter table Files drop primary key, add primary key (fID)');
-
+        // Set file authors to null if no corresponding user exists
+        $this->connection->executeQuery('update Files left join Users on Files.uID = Users.uID set Files.uID = null where Users.uID is null');
+        
         $this->connection->executeQuery('update AttributeTypes set pkgID = null where pkgID = 0');
     }
 

@@ -35,7 +35,7 @@ class NewPrivateMessageListView extends StandardListView
     {
         $message = $this->notification->getMessageObject();
         return t('New private message: <a href="%s"><strong>%s</strong></a>.',
-            \URL::to('/account/messages', 'view_message', 'inbox', $message->getMessageID()), $message->getMessageSubject());
+            \URL::to('/account/messages', 'view_message', 'inbox', $message->getMessageID()), $message->getFormattedMessageSubject());
     }
 
     protected function getRequestedByElement()

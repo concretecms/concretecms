@@ -820,6 +820,14 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="IP Range" path="/dashboard/system/permissions/blacklist/range"
+              filename="/dashboard/system/permissions/blacklist/range.php" pagetype="" description="" package="">
+            <attributes>
+				<attributekey handle="exclude_nav">
+                    <value>0</value>
+                </attributekey>
+            </attributes>
+        </page>
         <page name="Captcha Setup" path="/dashboard/system/permissions/captcha"
               filename="/dashboard/system/permissions/captcha.php" pagetype="" description="" package="">
             <attributes>
