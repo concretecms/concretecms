@@ -3,7 +3,7 @@ namespace Concrete\Core\Database\Query;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 
-class Liker
+class LikeBuilder
 {
     /**
      * The default wildcard that matches any number of characters in a LIKE query.

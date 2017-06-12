@@ -3,7 +3,7 @@
 namespace Concrete\Core\Database;
 
 use Concrete\Core\Database\Driver\DriverManager;
-use Concrete\Core\Database\Query\Liker;
+use Concrete\Core\Database\Query\LikeBuilder;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 use Concrete\Core\Package\PackageList;
 use Doctrine\ORM\EntityManagerInterface;
@@ -138,15 +138,15 @@ class DatabaseServiceProvider extends ServiceProvider
             \Doctrine\Common\Proxy\Autoloader::register($proxyDir, $proxyNamespace);
         }
         // Other helpers
-        $this->app->bindIf(Liker::class, function ($app) {
+        $this->app->bindIf(LikeBuilder::class, function ($app) {
             $otherWildcards = [];
             if ($app->bound('Concrete\Core\Database\Connection\Connection')) {
                 $connection = $app->make('Concrete\Core\Database\Connection\Connection');
                 $platform = $connection->getDatabasePlatform();
                 $platformWildcards = $platform->getWildcards();
-                $otherWildcards = array_values(array_diff($platformWildcards, [Liker::DEFAULT_ANYCHARACTER_WILDCARD, Liker::DEFAULT_ONECHARACTER_WILDCARD]));
+                $otherWildcards = array_values(array_diff($platformWildcards, [LikeBuilder::DEFAULT_ANYCHARACTER_WILDCARD, LikeBuilder::DEFAULT_ONECHARACTER_WILDCARD]));
             }
-            return $app->build(Liker::class, ['otherWildcards' => $otherWildcards]);
+            return $app->build(LikeBuilder::class, ['otherWildcards' => $otherWildcards]);
         });
     }
 
@@ -170,7 +170,7 @@ class DatabaseServiceProvider extends ServiceProvider
             'Doctrine\DBAL\Connection',
             'Doctrine\ORM\Configuration',
             'Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain',
-            Liker::class,
+            LikeBuilder::class,
         );
     }
 }

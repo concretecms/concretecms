@@ -1,20 +1,20 @@
 <?php
 namespace Concrete\Tests\Core\Database\Query;
 
-use Concrete\Core\Database\Query\Liker;
+use Concrete\Core\Database\Query\LikeBuilder;
 use PHPUnit_Framework_TestCase;
 
-class LikerTest extends PHPUnit_Framework_TestCase
+class LikeBuilderTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var Liker
+     * @var LikeBuilder
      */
     private static $defaultInstance;
 
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
-        self::$defaultInstance = new Liker();
+        self::$defaultInstance = new LikeBuilder();
     }
 
     public function escapeForLikeProvider()
