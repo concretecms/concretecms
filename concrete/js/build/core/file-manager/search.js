@@ -108,6 +108,7 @@
             });
 
             my.$element.find('tr[data-file-manager-tree-node-type=file_folder], ol[data-search-navigation=breadcrumb] a[data-file-manager-tree-node]').droppable({
+                tolerance: 'pointer',
                 hoverClass: 'ccm-search-select-active-droppable',
                 drop: function(event, ui) {
 
