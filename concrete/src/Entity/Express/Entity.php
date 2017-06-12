@@ -226,7 +226,7 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
      */
     public function getEntityDisplayDescription($format = 'html')
     {
-        $value = t($this->getDescription());
+        $value = $this->getDescription();
         switch ($format) {
             case 'html':
                 return h($value);
