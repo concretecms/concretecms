@@ -344,7 +344,7 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
      */
     public function getEntityDisplayName($format = 'html')
     {
-        $value = t($this->getName());
+        $value = $this->getName();
         switch ($format) {
             case 'html':
                 return h($value);
