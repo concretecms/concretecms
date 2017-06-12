@@ -58,7 +58,7 @@ $uninstallToken = $token->generate('uninstall_job');
     		<th style="width: 250px"><?=t('Name')?></th>
     		<th><?=t('Last Run')?></th>
     		<th style="width: 200px"><?=t('Results of Last Run')?></th>
-    		<th colspan="2"><a href="<?=$view->action('reset', $token->generate('reset_jobs'))?>" class="btn btn-default pull-right btn-xs"><?=t('Reset All Jobs')?></a></th>
+    		<th colspan="3"><a href="<?=$view->action('reset', $token->generate('reset_jobs'))?>" class="btn btn-default pull-right btn-xs"><?=t('Reset All Jobs')?></a></th>
     	</tr>
 	</thead>
 
@@ -102,15 +102,17 @@ $uninstallToken = $token->generate('uninstall_job');
     				<button data-jID="<?=$j->getJobID()?>" data-jSupportsQueue="<?=$j->supportsQueue()?>" data-jName="<?=$j->getJobName()?>" class="btn-run-job btn btn-default btn-xs"><i class="fa fa-play"></i> <?=t('Run')?></button>
     			</td>
 
-    			<td style="width: 50px">
+    			<td style="width: 25px">
     				<a href="javascript:void(0)" class="ccm-automate-job-instructions icon-link launch-tooltip" data-jSupportsQueue="<?=$j->supportsQueue()?>" data-jID="<?=$j->getJobID()?>" title="<?=t('Automate this Job')?>"><i class="fa fa-clock-o"></i></a>
-    				<?php if ($j->canUninstall()) {
-    ?>
-    					<a href="<?=$view->action('uninstall', $j->getJobID(), $uninstallToken)?>" class="icon-link launch-tooltip" title="<?=t('Remove this Job')?>"><i class="fa fa-trash-o"></i></a>
-    				<?php
-}
-    ?>
     			</td>
+                <td style="width: 25px">
+                    <?php if ($j->canUninstall()) {
+                        ?>
+                        <a href="<?=$view->action('uninstall', $j->getJobID(), $uninstallToken)?>" class="icon-link launch-tooltip btn-uninstall-job" title="<?=t('Remove this Job')?>"><i class="fa fa-trash-o"></i></a>
+                        <?php
+                    }
+                    ?>
+                </td>
 
     		</tr>
     	<?php
@@ -614,5 +616,9 @@ $(function() {
 			$(this).parent().parent().siblings('.ccm-jobs-automation-schedule-cron').show();
 		}
 	});
+
+    $('.btn-uninstall-job').on('click', function (e) {
+        return confirm('<?=t("Are you sure you want to uninstall this job?")?>');
+    });
 });
 </script>
