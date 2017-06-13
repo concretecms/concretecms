@@ -28,6 +28,7 @@ use Concrete\Core\Express\Form\Validator\Routine\CaptchaRoutine;
 use Concrete\Core\Express\Form\Validator\ValidatorInterface;
 use Concrete\Core\Express\Generator\EntityHandleGenerator;
 use Concrete\Core\File\FileProviderInterface;
+use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Set\Set;
 use Concrete\Core\Form\Context\ContextFactory;
 use Concrete\Core\Http\ResponseAssetGroup;
@@ -593,6 +594,16 @@ class Controller extends BlockController implements NotificationProviderInterfac
         $this->set('types_select', $select);
         $tree = ExpressEntryResults::get();
         $this->set('tree', $tree);
+        $addFilesToFolder = null;
+        
+        if ($this->addFilesToFolder) {
+            $filesystem = new Filesystem();
+            $addFilesToFolder = $filesystem->getFolder($this->addFilesToFolder);
+            $fp = new \Permissions($addFilesToFolder);
+            if ($fp->canSearchFiles()) {
+                $this->set('addFilesToFolder', $addFilesToFolder);
+            }
+        }
 
         $this->set('entities', Express::getEntities());
     }

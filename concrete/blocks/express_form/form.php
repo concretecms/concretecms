@@ -129,7 +129,7 @@
 
 <div id="ccm-tab-content-form-options" class="ccm-tab-content">
     <fieldset>
-        <legend><?=t('Options')?></legend>
+        <legend><?=t('Basics')?></legend>
         <div class="form-group">
             <?=$form->label('formName', t('Form Name'))?>
             <?=$form->text('formName', $formName)?>
@@ -138,20 +138,6 @@
             <?=$form->label('submitLabel', t('Submit Button Label'))?>
             <?=$form->text('submitLabel', $submitLabel)?>
         </div>
-        <div class="form-group">
-            <?=$form->label('thankyouMsg', t('Message to display when completed'))?>
-            <?=$form->textarea('thankyouMsg', $thankyouMsg, array('rows' => 3))?>
-        </div>
-        <div class="form-group">
-            <?=$form->label('recipientEmail', t('Send form submissions to email addresses'))?>
-            <div class="input-group">
-				<span class="input-group-addon" style="z-index: 2000">
-				<?=$form->checkbox('notifyMeOnSubmission', 1, $notifyMeOnSubmission == 1)?>
-				</span><?=$form->text('recipientEmail', $recipientEmail, array('style' => 'z-index:2000;'))?>
-            </div>
-            <span class="help-block"><?=t('(Seperate multiple emails with a comma)')?></span>
-        </div>
-        <div data-view="form-options-email-reply-to"></div>
         <div class="form-group">
             <label class="control-label"><?=t('Solving a <a href="%s" target="_blank">CAPTCHA</a> Required to Post?', t('http://en.wikipedia.org/wiki/Captcha'))?></label>
             <div class="radio">
@@ -167,6 +153,13 @@
                 </label>
             </div>
         </div>
+    </fieldset>
+    <fieldset>
+        <legend><?=t('Success')?></legend>
+        <div class="form-group">
+            <?=$form->label('thankyouMsg', t('Message to display when completed'))?>
+            <?=$form->textarea('thankyouMsg', $thankyouMsg, array('rows' => 3))?>
+        </div>
         <div class="form-group">
             <label class="control-label" for="ccm-form-redirect"><?=t('Redirect to another page after form submission?')?></label>
             <div id="ccm-form-redirect-page">
@@ -180,6 +173,22 @@
                 ?>
             </div>
         </div>
+    </fieldset>
+    <fieldset>
+        <legend><?=t('Email')?></legend>
+        <div class="form-group">
+            <?=$form->label('recipientEmail', t('Send form submissions to email addresses'))?>
+            <div class="input-group">
+				<span class="input-group-addon" style="z-index: 2000">
+				<?=$form->checkbox('notifyMeOnSubmission', 1, $notifyMeOnSubmission == 1)?>
+				</span><?=$form->text('recipientEmail', $recipientEmail, array('style' => 'z-index:2000;'))?>
+            </div>
+            <span class="help-block"><?=t('(Seperate multiple emails with a comma)')?></span>
+        </div>
+        <div data-view="form-options-email-reply-to"></div>
+    </fieldset>
+    <fieldset>
+        <legend><?=t('Files')?></legend>
         <div class="form-group">
             <label class="control-label" for="ccm-form-fileset"><?=t('Add uploaded files to a set?')?></label>
                 <?php
@@ -192,7 +201,13 @@
                 echo $form->select('addFilesToSet', $sets, $addFilesToSet);
                 ?>
         </div>
-
+        <div class="form-group">
+            <label class="control-label"><?=t('Add uploaded files to folder')?></label>
+            <?php
+            $selector = new \Concrete\Core\Form\Service\Widget\FileFolderSelector();
+            echo $selector->selectFileFolder('addFilesToFolder', $addFilesToFolder);
+            ?>
+        </div>
     </fieldset>
 </div>
 
