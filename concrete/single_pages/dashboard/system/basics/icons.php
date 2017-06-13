@@ -16,7 +16,7 @@
 
     <fieldset>
         <legend><?=t('iPhone Thumbnail')?></legend>
-        <div class="help-block"><?=t('iPhone home screen icons should be 180x180 and be in the .png format.')?></div>
+        <div class="help-block"><?=t('iPhone home screen icons should be %1$dx%2$d and be in the %3$s format.', 180, 180, '.png')?></div>
         <?php
         $iosHomeFID = intval($config->get('misc.iphone_home_screen_thumbnail_fid'));
         $f = File::getByID($iosHomeFID);
@@ -28,7 +28,7 @@
 
     <fieldset>
         <legend><?=t('Android Thumbnail')?></legend>
-        <div class="help-block"><?=t('Android home screen icons should be 192x192 and be in the .png format.')?></div>
+        <div class="help-block"><?=t('Android home screen icons should be %1$dx%2$d and be in the %3$s format.', 192, 192, '.png')?></div>
         <?php
         $androidHomeFID = intval($config->get('misc.android_home_screen_thumbnail_fid'));
         $f = File::getByID($androidHomeFID);
