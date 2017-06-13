@@ -32,11 +32,13 @@ class Icons extends DashboardSitePageController
             $s = Core::make('helper/security');
             $faviconFID = $s->sanitizeInt($this->post('faviconFID'));
             $iosHomeFID = $s->sanitizeInt($this->post('iosHomeFID'));
+            $androidHomeFID = $s->sanitizeInt($this->post('androidHomeFID'));
             $modernThumbFID = $s->sanitizeInt($this->post('modernThumbFID'));
             $modernThumbBG = $s->sanitizeString($this->post('modernThumbBG'));
 
             $config->save('misc.favicon_fid', intval($faviconFID));
             $config->save('misc.iphone_home_screen_thumbnail_fid', intval($iosHomeFID));
+            $config->save('misc.android_home_screen_thumbnail_fid', intval($androidHomeFID));
             $config->save('misc.modern_tile_thumbnail_fid', intval($modernThumbFID));
             $config->save('misc.modern_tile_thumbnail_bgcolor', $modernThumbBG);
 

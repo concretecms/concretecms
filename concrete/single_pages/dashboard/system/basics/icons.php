@@ -16,13 +16,25 @@
 
     <fieldset>
         <legend><?=t('iPhone Thumbnail')?></legend>
-        <div class="help-block"><?=t('iPhone home screen icons should be 57x57 and be in the .png format.')?></div>
+        <div class="help-block"><?=t('iPhone home screen icons should be 180x180 and be in the .png format.')?></div>
         <?php
         $iosHomeFID = intval($config->get('misc.iphone_home_screen_thumbnail_fid'));
         $f = File::getByID($iosHomeFID);
         ?>
         <div class="form-group">
             <?=$concrete_asset_library->file('ccm-iphone-file', 'iosHomeFID', t('Choose File'), $f);?>
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <legend><?=t('Android Thumbnail')?></legend>
+        <div class="help-block"><?=t('Android home screen icons should be 192x192 and be in the .png format.')?></div>
+        <?php
+        $androidHomeFID = intval($config->get('misc.android_home_screen_thumbnail_fid'));
+        $f = File::getByID($androidHomeFID);
+        ?>
+        <div class="form-group">
+            <?=$concrete_asset_library->file('ccm-android-file', 'androidHomeFID', t('Choose File'), $f);?>
         </div>
     </fieldset>
 

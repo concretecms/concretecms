@@ -109,8 +109,27 @@ if (($favIconFID = (int) $config->get('misc.favicon_fid')) && ($favIconFile = Fi
     $linkTags['icon'] = sprintf('<link rel="icon" href="%s" type="image/x-icon"/>', $favIconFileURL);
 }
 if (($appleIconFID = (int) $config->get('misc.iphone_home_screen_thumbnail_fid')) && ($appleIconFile = File::getByID($appleIconFID))) {
-    $linkTags['apple-touch-icon'] = sprintf('<link rel="apple-touch-icon" href="%s"/>', $appleIconFile->getURL());
+    $appleIconHTML = "<link rel=\"apple-touch-icon\" sizes=\"57x57\" href=\"" . Core::make('helper/image')->getThumbnail($appleIconFile, 57, 57, true)->src . "\">\n";
+    $appleIconHTML .= "<link rel=\"apple-touch-icon\" sizes=\"60x60\" href=\"" . Core::make('helper/image')->getThumbnail($appleIconFile, 60, 60, true)->src . "\">\n";
+    $appleIconHTML .= "<link rel=\"apple-touch-icon\" sizes=\"72x72\" href=\"" . Core::make('helper/image')->getThumbnail($appleIconFile, 72, 72, true)->src . "\">\n";
+    $appleIconHTML .= "<link rel=\"apple-touch-icon\" sizes=\"76x76\" href=\"" . Core::make('helper/image')->getThumbnail($appleIconFile, 76, 76, true)->src . "\">\n";
+    $appleIconHTML .= "<link rel=\"apple-touch-icon\" sizes=\"114x114\" href=\"" . Core::make('helper/image')->getThumbnail($appleIconFile, 114, 114, true)->src . "\">\n";
+    $appleIconHTML .= "<link rel=\"apple-touch-icon\" sizes=\"120x120\" href=\"" . Core::make('helper/image')->getThumbnail($appleIconFile, 120, 120, true)->src . "\">\n";
+    $appleIconHTML .= "<link rel=\"apple-touch-icon\" sizes=\"144x144\" href=\"" . Core::make('helper/image')->getThumbnail($appleIconFile, 144, 144, true)->src . "\">\n";
+    $appleIconHTML .= "<link rel=\"apple-touch-icon\" sizes=\"152x152\" href=\"" . Core::make('helper/image')->getThumbnail($appleIconFile, 152, 152, true)->src . "\">\n";
+    $appleIconHTML .= "<link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"" . Core::make('helper/image')->getThumbnail($appleIconFile, 180, 180, true)->src . "\">";
+    
+    $linkTags['apple-touch-icon'] = $appleIconHTML;
 }
+
+if (($androidIconFID = (int) $config->get('misc.android_home_screen_thumbnail_fid')) && ($androidIconFile = File::getByID($androidIconFID))) {
+    $androidIconHTML = "<link rel=\"icon\" type=\"image/" . $androidIconFile->getExtension() . "\" sizes=\"192x192\"  href=\"" . Core::make('helper/image')->getThumbnail($androidIconFile, 192, 192, true)->src . "\">\n";
+    $androidIconHTML .= "<link rel=\"icon\" type=\"image/" . $androidIconFile->getExtension() . "\" sizes=\"32x32\" href=\"" . Core::make('helper/image')->getThumbnail($androidIconFile, 32, 32, true)->src . "\">\n";
+    $androidIconHTML .= "<link rel=\"icon\" type=\"image/" . $androidIconFile->getExtension() . "\" sizes=\"96x96\" href=\"" . Core::make('helper/image')->getThumbnail($androidIconFile, 96, 96, true)->src . "\">";
+    
+    $linkTags['android icon'] = $androidIconHTML;
+}
+
 $alternateHreflangTags = [];
 if ($c !== null && $config->get('multilingual.set_alternate_hreflang') && !$c->isAdminArea() && $app->make('multilingual/detector')->isEnabled()) {
     $multilingualSection = Section::getBySectionOfSite($c);
