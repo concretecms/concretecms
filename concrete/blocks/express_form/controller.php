@@ -169,19 +169,16 @@ class Controller extends BlockController implements NotificationProviderInterfac
                         return $r;
                     }
 
+                    // Handle file based items
+                    $set = null;
+                    $folder = null;
+                    $filesystem = new Filesystem();
+                    $rootFolder = $filesystem->getRootFolder();
                     if ($this->addFilesToSet) {
                         $set = Set::getByID($this->addFilesToSet);
-                        if (is_object($set)) {
-                            foreach($values as $value) {
-                                $value = $value->getValueObject();
-                                if ($value instanceof FileProviderInterface) {
-                                    $files = $value->getFileObjects();
-                                    foreach($files as $file) {
-                                        $set->addFileToSet($file);
-                                    }
-                                }
-                            }
-                        }
+                    }
+                    if ($this->addFilesToFolder) {
+                        $folder = $filesystem->getFolder($this->addFilesToFolder);
                     }
 
                     $entityManager->refresh($entry);
@@ -189,6 +186,24 @@ class Controller extends BlockController implements NotificationProviderInterfac
                     $notifier = $controller->getNotifier($this);
                     $notifications = $notifier->getNotificationList();
                     $notifier->sendNotifications($notifications, $entry, ProcessorInterface::REQUEST_TYPE_ADD);
+
+                    foreach($values as $value) {
+                        $value = $value->getValueObject();
+                        if ($value instanceof FileProviderInterface) {
+                            $files = $value->getFileObjects();
+                            foreach($files as $file) {
+                                if ($set) {
+                                    $set->addFileToSet($file);
+                                }
+                                if ($folder && $folder->getTreeNodeID() != $rootFolder->getTreeNodeID()) {
+                                    $fileNode = $file->getFileNodeObject();
+                                    if ($fileNode) {
+                                        $fileNode->move($folder);
+                                    }
+                                }
+                            }
+                        }
+                    }
 
                     $r = null;
                     if ($this->redirectCID > 0) {
@@ -543,6 +558,23 @@ class Controller extends BlockController implements NotificationProviderInterfac
             $resultsNode->move($folder);
         }
 
+        // File manager folder
+        $addFilesToFolderFromPost = $data['addFilesToFolder'];
+        $existingAddFilesToFolder = $this->addFilesToFolder;
+        unset($data['addFilesToFolder']);
+
+        if ($addFilesToFolderFromPost && $addFilesToFolderFromPost != $existingAddFilesToFolder) {
+            $filesystem = new Filesystem();
+            $addFilesToFolder = $filesystem->getFolder($addFilesToFolderFromPost);
+            $fp = new \Permissions($addFilesToFolder);
+            if ($fp->canSearchFiles()) {
+                $data['addFilesToFolder'] = $addFilesToFolderFromPost;
+            }
+        }
+
+        if (!$data['addFilesToFolder']) {
+            $data['addFilesToFolder'] = $existingAddFilesToFolder;
+        }
 
         $data['exFormID'] = $form->getId();
 
