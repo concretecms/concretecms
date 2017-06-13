@@ -435,7 +435,8 @@ class Feed
             $link = \URL::to('/');
         }
         $pagination = $pl->getPagination();
-        if ($pagination->getTotalResults() > 0) {
+        $results = $pagination->getCurrentPageResults();
+        if (count($results)) {
             $writer = new \Zend\Feed\Writer\Feed();
             $writer->setTitle($this->getTitle());
             $writer->setDescription($this->getDescription());
@@ -452,7 +453,7 @@ class Feed
             }
             $writer->setLink((string) $link);
 
-            foreach ($pagination->getCurrentPageResults() as $p) {
+            foreach ($results as $p) {
                 $entry = $writer->createEntry();
                 $entry->setTitle($p->getCollectionName());
                 $entry->setDateCreated(strtotime($p->getCollectionDatePublic()));
