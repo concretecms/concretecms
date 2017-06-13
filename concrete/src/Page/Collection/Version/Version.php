@@ -97,9 +97,12 @@ class Version extends Object implements PermissionObjectInterface, AttributeObje
              "pTemplateID, cvAuthorUID, cvApproverUID, cvComments, pThemeID, cvPublishDate from CollectionVersions " .
              "where cID = ?";
 
+        $now = new \DateTime();
+
         switch ($cvID) {
             case 'ACTIVE':
-                $q .= ' and cvIsApproved = 1 and cvPublishDate is NULL';
+                $q .= ' and cvIsApproved = 1 and (cvPublishDate is NULL or cvPublishDate <= ?) ';
+                $v[] = $now->format('Y-m-d H:i:s');
                 break;
             case 'SCHEDULED':
                 $q .= ' and cvIsApproved = 1 and cvPublishDate is not NULL';

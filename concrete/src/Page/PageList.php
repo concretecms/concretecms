@@ -199,7 +199,10 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
                 break;
             case self::PAGE_VERSION_ACTIVE:
             default:
+                $now = new \DateTime();
                 $query->andWhere('cvIsApproved = 1');
+                $query->andWhere('(cvPublishDate <= :cvPublishDate or cvPublishDate is null)');
+                $query->setParameter('cvPublishDate', $now->format('Y-m-d H:i:s'));
                 break;
         }
 
