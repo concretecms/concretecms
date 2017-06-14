@@ -349,14 +349,14 @@ class Application extends Container
                 return null;
             }
 
-            // Uh oh, it didn't match. before we redirect to the canonical URL, let's check to see if we have an SSL
+            // Uh oh, it didn't match. before we redirect to the canonical URL, let's check to see if we have an alternative canonical URL
             // URL
-            if ($siteConfig->get('seo.canonical_ssl_url')) {
-                $ssl = UrlImmutable::createFromUrl($siteConfig->get('seo.canonical_ssl_url'));
+            if ($siteConfig->get('seo.canonical_url_alternative')) {
+                $alternative = UrlImmutable::createFromUrl($siteConfig->get('seo.canonical_url_alternative'));
 
-                $new = $url->setScheme($ssl->getScheme()->get());
-                $new = $new->setHost($ssl->getHost()->get());
-                $new = $new->setPort($ssl->getPort()->get());
+                $new = $url->setScheme($alternative->getScheme()->get());
+                $new = $new->setHost($alternative->getHost()->get());
+                $new = $new->setPort($alternative->getPort()->get());
 
                 // Now we have our current url, swapped out with the important parts of the canonical URL.
                 // If it matches, we're good.

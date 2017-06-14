@@ -8,7 +8,7 @@ return [
      */
     'version' => '8.2.0RC1',
     'version_installed' => '8.2.0RC1',
-    'version_db' => '20170613000000', // the key of the latest database migration
+    'version_db' => '20170614000000', // the key of the latest database migration
 
     /*
      * Installation status
@@ -848,7 +848,7 @@ return [
         'url_rewriting_all' => false,
         'redirect_to_canonical_url' => false,
         'canonical_url' => null,
-        'canonical_ssl_url' => null,
+        'canonical_url_alternative' => null,
         'trailing_slash' => false,
         'title_format' => '%2$s :: %1$s',
         'title_segment_separator' => ' :: ',

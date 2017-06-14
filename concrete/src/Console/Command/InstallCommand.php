@@ -37,7 +37,7 @@ class InstallCommand extends Command
             ->addOption('db-database', null, InputOption::VALUE_REQUIRED, 'Database name')
             ->addOption('site', null, InputOption::VALUE_REQUIRED, 'Name of the site', 'concrete5 Site')
             ->addOption('canonical-url', null, InputOption::VALUE_REQUIRED, 'Canonical URL', '')
-            ->addOption('canonical-ssl-url', null, InputOption::VALUE_REQUIRED, 'Canonical URL over SSL', '')
+            ->addOption('canonical-url-alternative', null, InputOption::VALUE_REQUIRED, 'Alternative canonical URL', '')
             ->addOption('starting-point', null, InputOption::VALUE_REQUIRED, 'Starting point to use', 'elemental_blank')
             ->addOption('admin-email', null, InputOption::VALUE_REQUIRED, 'Email of the admin user of the install', 'admin@example.com')
             ->addOption('admin-password', null, InputOption::VALUE_REQUIRED, 'Password of the admin user of the install')
@@ -146,9 +146,9 @@ EOT
                 $_POST['canonicalUrlChecked'] = '1';
                 $_POST['canonicalUrl'] = $options['canonical-url'];
             }
-            if ($options['canonical-ssl-url']) {
-                $_POST['canonicalSSLUrlChecked'] = '1';
-                $_POST['canonicalSSLUrl'] = $options['canonical-ssl-url'];
+            if ($options['canonical-url-alternative']) {
+                $_POST['canonicalUrlAlternativeChecked'] = '1';
+                $_POST['canonicalUrlAlternative'] = $options['canonical-url-alternative'];
             }
             $e = $cnt->configure();
         }
@@ -452,7 +452,7 @@ EOT
             },
             ['site', 'concrete5'],
             'canonical-url',
-            'canonical-ssl-url',
+            'canonical-url-alternative',
             [
                 'starting-point',
                 'elemental_blank',
