@@ -7,6 +7,8 @@ use Concrete\Core\Attribute\Controller as AttributeTypeController;
 
 class Controller extends AttributeTypeController
 {
+    public $helpers = array('form');
+
     protected $searchIndexFieldDefinition = [
         'type' => 'decimal',
         'options' => ['precision' => 14, 'scale' => 4, 'default' => 0, 'notnull' => false],
@@ -57,7 +59,7 @@ class Controller extends AttributeTypeController
         } else {
             $value = null;
         }
-        echo $this->app->make('helper/form')->number($this->field('value'), $value, ['step' => 'any']);
+        $this->set('value', $value);
     }
 
     public function validateForm($p)
