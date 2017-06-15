@@ -277,7 +277,7 @@ class Controller extends AttributeTypeController
     {
         $result = null;
         if ($this->attributeValue) {
-            $valueObject = $this->getAttributeValueObject();
+            $valueObject = $this->getAttributeValue();
             if ($valueObject !== null) {
                 $dateTime = $valueObject->getValue();
                 if ($dateTime instanceof DateTime) {

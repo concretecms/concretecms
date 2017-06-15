@@ -105,7 +105,7 @@ class Factory implements FactoryInterface
      */
     public function getPackageStats(Package $package, $localeID)
     {
-        return $this->getMoFileStats($package->getPackagePath() . DIRNAME_LANGUAGES . '/' . $localeID . '/LC_MESSAGES/messages.mo');
+        return $this->getMoFileStats($package->getPackagePath() . '/' . DIRNAME_LANGUAGES . '/' . $localeID . '/LC_MESSAGES/messages.mo');
     }
 
     /**
