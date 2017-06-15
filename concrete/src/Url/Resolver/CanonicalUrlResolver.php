@@ -87,7 +87,7 @@ class CanonicalUrlResolver implements UrlResolverInterface
 
             $canonicalToUse = $canonical;
 
-            if ($configUrlAlternative = $config->get('seo.canonical_url_alternative')) {
+            if ($configUrlAlternative = $site->getSiteAlternativeCanonicalURL()) {
                 $canonical_alternative = UrlImmutable::createFromUrl($configUrlAlternative, $trailing_slashes);
                 if (
                     strtolower($canonical->getScheme()) !== $requestScheme &&
@@ -99,7 +99,7 @@ class CanonicalUrlResolver implements UrlResolverInterface
 
             $url = $url->setScheme($canonicalToUse->getScheme());
             $url = $url->setHost($canonicalToUse->getHost());
-            if ((int) $canonicalToUse->getPort() > 0) {
+            if ((int) $canonicalToUse->getPort()->get() > 0) {
                 $url = $url->setPort($canonicalToUse->getPort());
             }
         } else {
