@@ -10,6 +10,7 @@ class Version20170412000000 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
+        $this->connection->Execute('set foreign_key_checks = 0');
         $this->refreshEntities([
             'Concrete\Core\Entity\Attribute\Value\Value\AbstractValue',
             'Concrete\Core\Entity\Attribute\Value\Value\AddressValue',
@@ -26,6 +27,7 @@ class Version20170412000000 extends AbstractMigration
             'Concrete\Core\Entity\File\File',
             'Concrete\Core\Entity\Attribute\Key\Key'
         ]);
+        $this->connection->Execute('set foreign_key_checks = 1');
     }
 
     public function down(Schema $schema)
