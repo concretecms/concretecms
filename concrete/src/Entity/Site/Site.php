@@ -253,9 +253,45 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
         return $this->getConfigRepository()->save('name', $name);
     }
 
+    /**
+     * Get the main site canonical URL.
+     *
+     * @return string Empty string if it's not set.
+     */
     public function getSiteCanonicalURL()
     {
-        return $this->getConfigRepository()->get('seo.canonical_url');
+        return (string) $this->getConfigRepository()->get('seo.canonical_url');
+    }
+
+    /**
+     * Get the alternative site canonical URL.
+     *
+     * @return string Empty string if it's not set.
+     */
+    public function getSiteAlternativeCanonicalURL()
+    {
+        return (string) $this->getConfigRepository()->get('seo.canonical_url_alternative');
+    }
+
+    /**
+     * Get the HTTPS site canonical URL (it may be the main or the alternative canonical URL).
+     *
+     * @return string Empty string if it's not set.
+     */
+    public function getSiteSSLCanonicalURL()
+    {
+        $result = '';
+        $url = $this->getSiteCanonicalURL();
+        if (stripos($url, 'https:') === 0) {
+            $result = $url;
+        } else {
+            $url = $this->getSiteAlternativeCanonicalURL();
+            if (stripos($url, 'https:') === 0) {
+                $result = $url;
+            }
+        }
+
+        return $result;
     }
 
     /**
