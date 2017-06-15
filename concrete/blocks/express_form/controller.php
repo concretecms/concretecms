@@ -85,6 +85,10 @@ class Controller extends BlockController implements NotificationProviderInterfac
         $this->set('thankyouMsg', t('Thanks!'));
         $this->edit();
         $this->set('resultsFolder', $this->get('formResultsRootFolderNodeID'));
+
+        $filesystem = new Filesystem();
+        $addFilesToFolder = $filesystem->getRootFolder();
+        $this->set('addFilesToFolder', $addFilesToFolder);
     }
 
     public function getNotifications()
