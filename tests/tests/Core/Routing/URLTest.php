@@ -121,7 +121,7 @@ class URLTest extends PHPUnit_Framework_TestCase
             ->will($this->returnValueMap(array(
                 array('seo.canonical_url', null, 'https://www2.myawesomesite.com:8080'),
                 array('seo.trailing_slash', null, false),
-                array('seo.alternative_canonical_url', null, 'https://www2.myawesomesite.com:8080'),
+                array('seo.canonical_url_alternative', null, 'https://www2.myawesomesite.com:8080'),
             )));
 
         $site->expects($this->once())
@@ -181,7 +181,7 @@ class URLTest extends PHPUnit_Framework_TestCase
             ->method('get')
             ->will($this->returnValueMap(array(
                 array('seo.canonical_url', null, 'http://mysite.com'),
-                array('seo.alternative_canonical_url', null, 'https://secure.mysite.com:8080')
+                array('seo.canonical_url_alternative', null, 'https://secure.mysite.com:8080')
             )));
 
         $site->expects($this->once())
