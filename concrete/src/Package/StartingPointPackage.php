@@ -486,8 +486,8 @@ class StartingPointPackage extends BasePackage
         if (isset($site_install['canonical-url']) && $site_install['canonical-url']) {
             $siteConfig->save('seo.canonical_url', $site_install['canonical-url']);
         }
-        if (isset($site_install['canonical-ssl-url']) && $site_install['canonical-ssl-url']) {
-            $siteConfig->save('seo.canonical_ssl_url', $site_install['canonical-ssl-url']);
+        if (isset($site_install['canonical-url-alternative']) && $site_install['canonical-url-alternative']) {
+            $siteConfig->save('seo.canonical_url_alternative', $site_install['canonical-url-alternative']);
         }
 
         @unlink(DIR_CONFIG_SITE . '/site_install.php');

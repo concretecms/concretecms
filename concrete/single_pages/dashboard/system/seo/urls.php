@@ -32,8 +32,8 @@
         </div>
 
         <div class="form-group">
-            <label class="control-label" for="canonical_ssl_url"><?= t('Separate SSL URL') ?></label>
-            <?=$form->text('canonical_ssl_url', $canonical_ssl_url, ['placeholder' => 'https://domain.com'])?>
+            <label class="control-label" for="canonical_url_alternative"><?= t('Alternative canonical URL') ?></label>
+            <?=$form->text('canonical_url_alternative', $canonical_url_alternative, ['placeholder' => 'https://domain.com'])?>
         </div>
 
         <div class="alert alert-warning">
@@ -80,14 +80,14 @@ $(function () {
             $(document).scrollTop($url.offset().top);
         }
     },{
-        content: <?= json_encode('<p><span class="h5">' . t('SSL URL') . '</span><br/>' . t('Certain add-ons require a secure SSL URL. Enter that URL here.') . '</p>') ?>,
+        content: <?= json_encode('<p><span class="h5">' . t('Alternative URL') . '</span><br/>' . t('Certain add-ons require a secure SSL URL. Enter that URL here.') . '</p>') ?>,
         highlightTarget: false,
         nextButton: true,
-        target: $('input[name=canonical_ssl_url]'),
+        target: $('input[name=canonical_url_alternative]'),
         my: 'bottom center',
         at: 'top center'
     },{
-        content: <?= json_encode('<p><span class="h5">' . t('SSL URL') . '</span><br/>' . t('Ensure that your site ONLY renders at the canonical URL or the canonical SSL URL.') . '</p>') ?>,
+        content: <?= json_encode('<p><span class="h5">' . t('Alternative URL') . '</span><br/>' . t('Ensure that your site ONLY renders at the canonical URL or the alternative URL.') . '</p>') ?>,
         highlightTarget: false,
         nextButton: true,
         target: $('input[name=redirect_to_canonical_url]'),
