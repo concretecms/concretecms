@@ -1,11 +1,9 @@
 <?php
 namespace Concrete\Core\Application;
 
-use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Cache\CacheClearer;
 use Concrete\Core\Cache\Page\PageCache;
 use Concrete\Core\Cache\Page\PageCacheRecord;
-use Concrete\Core\Cache\OpCache;
 use Concrete\Core\Database\EntityManagerConfigUpdater;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Foundation\ClassLoader;
@@ -13,29 +11,28 @@ use Concrete\Core\Foundation\EnvironmentDetector;
 use Concrete\Core\Foundation\Runtime\DefaultRuntime;
 use Concrete\Core\Foundation\Runtime\RuntimeInterface;
 use Concrete\Core\Http\DispatcherInterface;
+use Concrete\Core\Http\Request;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Logging\Query\Logger;
+use Concrete\Core\Package\PackageService;
 use Concrete\Core\Routing\RedirectResponse;
+use Concrete\Core\Support\Facade\Package;
 use Concrete\Core\Updater\Update;
 use Concrete\Core\Url\Url;
 use Concrete\Core\Url\UrlImmutable;
 use Config;
-use Core;
 use Database;
 use Environment;
+use Exception;
 use Illuminate\Container\Container;
 use Job;
 use JobSet;
 use Log;
-use Concrete\Core\Support\Facade\Package;
 use Page;
 use Redirect;
-use Concrete\Core\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
+use Symfony\Component\HttpFoundation\Response;
 use View;
-use Concrete\Core\Package\PackageService;
-use Exception;
 
 class Application extends Container
 {
@@ -121,7 +118,7 @@ class Application extends Container
                 // check for non dashboard page
                 $jobs = Job::getList(true);
                 $auth = Job::generateAuth();
-                $url = "";
+                $url = '';
                 // jobs
                 if (count($jobs)) {
                     foreach ($jobs as $j) {
@@ -359,7 +356,7 @@ class Application extends Container
                     $mainCanonical = $canonical;
                 }
             }
-            
+
             $response = new RedirectResponse($mainCanonical, '301');
 
             return $response;
