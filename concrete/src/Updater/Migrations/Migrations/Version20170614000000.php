@@ -13,7 +13,12 @@ class Version20170614000000 extends AbstractMigration
         $siteConfig = $site->getConfigRepository();
         $url = $siteConfig->get('seo.canonical_ssl_url');
         if ($url) {
-            $siteConfig->save('seo.canonical_url_alternative', $url);
+            if ($siteConfig->get('seo.canonical_url')) {
+                $siteConfig->save('seo.canonical_url_alternative', $url);
+            } else {
+                $siteConfig->save('seo.canonical_url', $url);
+            }
+            $siteConfig->save('seo.canonical_ssl_url', null);
         }
     }
 
