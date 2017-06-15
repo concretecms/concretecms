@@ -59,7 +59,6 @@ class CanonicalUrlResolver implements UrlResolverInterface
             if ($tree instanceof SiteTree && $site = $tree->getSite()) {
                 $config = $site->getConfigRepository();
             }
-
         } elseif ($this->cached) {
             return $this->cached;
         }
@@ -68,6 +67,7 @@ class CanonicalUrlResolver implements UrlResolverInterface
         if ($config === null && $this->app->isInstalled()) {
             $site = $this->app['site']->getSite();
             if (is_object($site)) {
+                /* @var \Concrete\Core\Entity\Site\Site $site */
                 $config = $site->getConfigRepository();
             }
         }
@@ -82,9 +82,9 @@ class CanonicalUrlResolver implements UrlResolverInterface
 
         if ($config && $configUrl = $site->getSiteCanonicalURL()) {
             $requestScheme = strtolower($this->request->getScheme());
-            
+
             $canonical = UrlImmutable::createFromUrl($configUrl, $trailing_slashes);
-            
+
             $canonicalToUse = $canonical;
 
             if ($configUrlAlternative = $config->get('seo.canonical_url_alternative')) {
