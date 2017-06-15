@@ -333,11 +333,11 @@ class Application extends Container
             $mainCanonical = null;
             foreach (['seo.canonical_url', 'seo.canonical_url_alternative'] as $key) {
                 $canonicalUrlString = $siteConfig->get($key);
-                if (!$value) {
+                if (!$canonicalUrlString) {
                     continue;
                 }
                 $canonicalUrl = UrlImmutable::createFromUrl(
-                    $value,
+                    $canonicalUrlString,
                     (bool) $siteConfig->get('seo.trailing_slash')
                 );
                 // Set the parts of the current URL that are specified in the canonical URL, including host,
