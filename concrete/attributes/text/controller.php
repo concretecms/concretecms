@@ -39,6 +39,11 @@ class Controller extends DefaultController
             $value = $this->app->make('helper/text')->entities($this->getAttributeValue()->getValue());
         }
         $this->set('value', $value);
+        $akTextPlaceholder = '';
+        if (isset($this->akTextPlaceholder)) {
+            $akTextPlaceholder = $this->akTextPlaceholder;
+        }
+        $this->set('akTextPlaceholder', $akTextPlaceholder);
     }
 
     public function searchForm($list)

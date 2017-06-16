@@ -4,6 +4,6 @@
         $this->field('value'),
         $value,
         [
-            'placeholder' => $this->akTextPlaceholder
+            'placeholder' => $akTextPlaceholder
         ]
     );
