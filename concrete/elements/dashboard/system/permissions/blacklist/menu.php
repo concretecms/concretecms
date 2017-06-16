@@ -15,8 +15,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
         <ul class="dropdown-menu">
             <li<?= ($type === null) ? ' class="active"' : '' ?>><a href="<?= URL::to('/dashboard/system/permissions/blacklist')?>"><?= t('Options') ?></a></li>
             <li class="divider"></li>
-            <li<?= ($type === IPService::IPRANGETYPE_BLACKLIST_AUTOMATIC) ? ' class="active"' : '' ?>><a href="<?= URL::to('/dashboard/system/permissions/blacklist/range', 'view', IPService::IPRANGETYPE_BLACKLIST_AUTOMATIC) ?>"><?= t('Blackisted IP addresses (automatic)') ?></a></li>
-            <li<?= ($type === IPService::IPRANGETYPE_BLACKLIST_MANUAL) ? ' class="active"' : '' ?>><a href="<?= URL::to('/dashboard/system/permissions/blacklist/range', 'view', IPService::IPRANGETYPE_BLACKLIST_MANUAL) ?>"><?= t('Blackisted IP addresses (manual)') ?></a></li>
+            <li<?= ($type === IPService::IPRANGETYPE_BLACKLIST_AUTOMATIC) ? ' class="active"' : '' ?>><a href="<?= URL::to('/dashboard/system/permissions/blacklist/range', 'view', IPService::IPRANGETYPE_BLACKLIST_AUTOMATIC) ?>"><?= t('Blacklisted IP addresses (automatic)') ?></a></li>
+            <li<?= ($type === IPService::IPRANGETYPE_BLACKLIST_MANUAL) ? ' class="active"' : '' ?>><a href="<?= URL::to('/dashboard/system/permissions/blacklist/range', 'view', IPService::IPRANGETYPE_BLACKLIST_MANUAL) ?>"><?= t('Blacklisted IP addresses (manual)') ?></a></li>
             <li<?= ($type === IPService::IPRANGETYPE_WHITELIST_MANUAL) ? ' class="active"' : '' ?>><a href="<?= URL::to('/dashboard/system/permissions/blacklist/range', 'view', IPService::IPRANGETYPE_WHITELIST_MANUAL) ?>"><?= t('Whitelisted IP addresses') ?></a></li>
             <?php
             if ($type !== null) {
