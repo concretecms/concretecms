@@ -5,13 +5,19 @@ use Concrete\Core\Search\Result\Result;
 
 class Column implements ColumnInterface
 {
+    protected $columnKey;
+    protected $columnName;
+    protected $sortDirection = 'desc';
+    protected $isSortable;
+    protected $callback;
+
     public function getColumnValue($obj)
     {
         if (is_array($this->getColumnCallback())) {
             return call_user_func($this->getColumnCallback(), $obj);
-        } else {
-            return call_user_func(array($obj, $this->getColumnCallback()));
         }
+
+        return call_user_func(array($obj, $this->getColumnCallback()));
     }
 
     public function getColumnKey()
