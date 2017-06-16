@@ -13,6 +13,7 @@ class FileServiceProvider extends ServiceProvider
             'helper/file' => '\Concrete\Core\File\Service\File',
             'helper/concrete/file' => '\Concrete\Core\File\Service\Application',
             'helper/image' => '\Concrete\Core\File\Image\BasicThumbnailer',
+            'helper/icon' => '\Concrete\Core\File\Image\IconGenerator',
             'helper/mime' => '\Concrete\Core\File\Service\Mime',
             'helper/zip' => '\Concrete\Core\File\Service\Zip',
         );

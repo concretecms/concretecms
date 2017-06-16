@@ -1,62 +1,29 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<form method="post" class="form-horizontal" id="favicon-form" action="<?=$view->action('update_icons')?>" >
-    <?=$this->controller->token->output('update_icons')?>
+<form method="post" class="form-horizontal" id="favicon-form" action="<?php echo $view->action('update_icons')?>" >
+    <?php echo $this->controller->token->output('update_icons')?>
     <fieldset>
-        <legend><?=t('Favicon')?></legend>
-            <div class="help-block"><?=t('Your image should be 16x16 pixels, and should be a gif or a png with a .ico file extension.')?></div>
-            <?php
-            $faviconFID = intval($config->get('misc.favicon_fid'));
-            $f = File::getByID($faviconFID);
-            ?>
-            <div class="form-group">
-                <?=$concrete_asset_library->file('ccm-favicon-file', 'faviconFID', t('Choose File'), $f);?>
-            </div>
-    </fieldset>
-
-    <fieldset>
-        <legend><?=t('iPhone Thumbnail')?></legend>
-        <div class="help-block"><?=t('iPhone home screen icons should be %1$dx%2$d and be in the %3$s format.', 180, 180, '.png')?></div>
+        <legend><?php echo t('Icon')?></legend>
+        <div class="help-block"><?php echo t('The master icon should be %1$dx%2$d and be in the %3$s format.  All icons (Favicon, iOS, Android &amp; Metro) will be automatically generated from the master icon.', 512, 512, '.png')?></div>
         <?php
-        $iosHomeFID = intval($config->get('misc.iphone_home_screen_thumbnail_fid'));
-        $f = File::getByID($iosHomeFID);
+            $appIconFID = intval($config->get('misc.app_icon_fid'));
+            $f = File::getByID($appIconFID);
         ?>
         <div class="form-group">
-            <?=$concrete_asset_library->file('ccm-iphone-file', 'iosHomeFID', t('Choose File'), $f);?>
+            <?php echo $concrete_asset_library->file('ccm-appicon-file', 'appIconFID', t('Choose File'), $f);?>
         </div>
     </fieldset>
-
     <fieldset>
-        <legend><?=t('Android Thumbnail')?></legend>
-        <div class="help-block"><?=t('Android home screen icons should be %1$dx%2$d and be in the %3$s format.', 192, 192, '.png')?></div>
-        <?php
-        $androidHomeFID = intval($config->get('misc.android_home_screen_thumbnail_fid'));
-        $f = File::getByID($androidHomeFID);
-        ?>
+        <legend><?php echo t('Additional Options'); ?></legend>
+        <div class="help-block"><?php echo t('For Windows metro tiles you can define also a background color.'); ?></div>
         <div class="form-group">
-            <?=$concrete_asset_library->file('ccm-android-file', 'androidHomeFID', t('Choose File'), $f);?>
-        </div>
-    </fieldset>
-
-    <fieldset>
-        <legend><?php echo t('Windows 8 Thumbnail'); ?></legend>
-        <div class="help-block"><?=t('Windows 8 start screen tiles should be 144x144 and be in the .png format.'); ?></div>
-        <?php
-        $modernThumbFID = intval($config->get('misc.modern_tile_thumbnail_fid'));
-        $f = File::getByID($modernThumbFID);
-        $modernThumbBG = strval($config->get('misc.modern_tile_thumbnail_bgcolor'));
-        ?>
-        <div class="form-group">
-            <label class="control-label"><?=t('File')?></label>
-            <?=$concrete_asset_library->file('ccm-modern-file', 'modernThumbFID', t('Choose File'), $f);?>
-        </div>
-        <div class="form-group">
-            <label class="control-label"><?=t('Background Color')?></label>
+            <label class="control-label"><?php echo t('Background Color')?></label>
             <div>
-            <?php
-            $widget = Core::make('helper/form/color');
-            echo $widget->output('modernThumbBG', $modernThumbBG);
-            ?>
+                <?php
+                    $widget = Core::make('helper/form/color');
+                    $modernThumbBG = $config->get('misc.modern_tile_thumbnail_bgcolor');
+                    echo $widget->output('modernThumbBG', $modernThumbBG);
+                ?>
             </div>
         </div>
 
@@ -64,7 +31,7 @@
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <button class="pull-right btn btn-primary" type="submit" ><?=t('Save')?></button>
+            <button class="pull-right btn btn-primary" type="submit" ><?php echo t('Save')?></button>
         </div>
     </div>
 
