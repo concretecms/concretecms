@@ -5,11 +5,11 @@ use Concrete\Core\Search\Result\Result;
 
 class Column implements ColumnInterface
 {
-    protected $columnKey;
-    protected $columnName;
-    protected $sortDirection = 'desc';
-    protected $isSortable;
-    protected $callback;
+    public $columnKey;
+    public $columnName;
+    public $sortDirection = 'asc';
+    public $isSortable;
+    public $callback;
 
     public function getColumnValue($obj)
     {
