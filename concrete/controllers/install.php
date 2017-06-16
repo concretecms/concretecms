@@ -224,20 +224,22 @@ class Install extends Controller
         $this->set('passwordAttributes', $passwordAttributes);
         $canonicalUrl = '';
         $canonicalUrlChecked = false;
-        $canonicalSSLUrl = '';
-        $canonicalSSLUrlChecked = false;
+        $canonicalUrlAlternative = '';
+        $canonicalUrlAlternativeChecked = false;
         $uri = $this->request->getUri();
         if (preg_match('/^(https?)(:.+?)(?:\/' . preg_quote(DISPATCHER_FILENAME, '%') . ')?\/install(?:$|\/|\?)/i', $uri, $m)) {
-            $canonicalUrl = 'http' . rtrim($m[2], '/');
-            $canonicalSSLUrl = 'https' . rtrim($m[2], '/');
-            /*switch (strtolower($m[1])) {
+            switch (strtolower($m[1])) {
                 case 'http':
-                    $canonicalUrlChecked = true;
+                    $canonicalUrl = 'http' . rtrim($m[2], '/');
+                    $canonicalUrlAlternative = 'https' . rtrim($m[2], '/');
+                    //$canonicalUrlChecked = true;
                     break;
-                case 'http':
-                    $canonicalSSLUrlChecked = true;
+                case 'https':
+                    $canonicalUrl = 'https' . rtrim($m[2], '/');
+                    $canonicalUrlAlternative = 'http' . rtrim($m[2], '/');
+                    //$canonicalUrlChecked = true;
                     break;
-            }*/
+            }
         }
         $countries = [];
         $ll = $this->app->make('localization/languages');
@@ -261,8 +263,8 @@ class Install extends Controller
         $this->set('setInitialState', $this->request->post('SITE') === null);
         $this->set('canonicalUrl', $canonicalUrl);
         $this->set('canonicalUrlChecked', $canonicalUrlChecked);
-        $this->set('canonicalSSLUrl', $canonicalSSLUrl);
-        $this->set('canonicalSSLUrlChecked', $canonicalSSLUrlChecked);
+        $this->set('canonicalUrlAlternative', $canonicalUrlAlternative);
+        $this->set('canonicalUrlAlternativeChecked', $canonicalUrlAlternativeChecked);
     }
 
     public function get_site_locale_countries($viewLocaleID, $languageID, $preselectedCountryID)
@@ -529,8 +531,8 @@ class Install extends Controller
             if ($this->post('canonicalUrlChecked') === '1') {
                 try {
                     $url = UrlImmutable::createFromUrl($this->post('canonicalUrl'));
-                    if (strcasecmp('http', $url->getScheme()) !== 0) {
-                        throw new Exception('The HTTP canonical URL must have the http:// scheme');
+                    if (!preg_match('/^https?/i', $url->getScheme()) !== 0) {
+                        throw new Exception('The canonical URL must have the http:// scheme or the https:// scheme');
                     }
                     $canonicalUrl = (string) $url;
                 } catch (Exception $x) {
@@ -539,14 +541,18 @@ class Install extends Controller
             } else {
                 $canonicalUrl = '';
             }
-            if ($this->post('canonicalSSLUrlChecked') === '1') {
-                $url = UrlImmutable::createFromUrl($this->post('canonicalSSLUrl'));
-                if (strcasecmp('https', $url->getScheme()) !== 0) {
-                    throw new Exception('The SSL canonical URL must have the https:// scheme');
+            if ($this->post('canonicalUrlAlternativeChecked') === '1') {
+                try {
+                    $url = UrlImmutable::createFromUrl($this->post('canonicalUrlAlternative'));
+                    if (!preg_match('/^https?/i', $url->getScheme()) !== 0) {
+                        throw new Exception('The alternative canonical URL must have the http:// scheme or the https:// scheme');
+                    }
+                    $canonicalUrlAlternative = (string) $url;
+                } catch (Exception $x) {
+                    $error->add($x);
                 }
-                $canonicalSSLUrl = (string) $url;
             } else {
-                $canonicalSSLUrl = '';
+                $canonicalUrlAlternative = '';
             }
             if ($val->test() && (!$error->has())) {
                 // write the config file
@@ -569,7 +575,7 @@ class Install extends Controller
                         ],
                     ];
                     $config['canonical-url'] = $canonicalUrl;
-                    $config['canonical-ssl-url'] = $canonicalSSLUrl;
+                    $config['canonical-url-alternative'] = $canonicalUrlAlternative;
                     $config['session-handler'] = isset($_POST['sessionHandler']) ? $_POST['sessionHandler'] : null;
 
                     $renderer = new Renderer($config);

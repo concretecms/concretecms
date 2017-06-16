@@ -59,7 +59,6 @@ class CanonicalUrlResolver implements UrlResolverInterface
             if ($tree instanceof SiteTree && $site = $tree->getSite()) {
                 $config = $site->getConfigRepository();
             }
-
         } elseif ($this->cached) {
             return $this->cached;
         }
@@ -68,6 +67,7 @@ class CanonicalUrlResolver implements UrlResolverInterface
         if ($config === null && $this->app->isInstalled()) {
             $site = $this->app['site']->getSite();
             if (is_object($site)) {
+                /* @var \Concrete\Core\Entity\Site\Site $site */
                 $config = $site->getConfigRepository();
             }
         }
@@ -81,36 +81,26 @@ class CanonicalUrlResolver implements UrlResolverInterface
         $url = $url->setScheme(null);
 
         if ($config && $configUrl = $site->getSiteCanonicalURL()) {
+            $requestScheme = strtolower($this->request->getScheme());
+
             $canonical = UrlImmutable::createFromUrl($configUrl, $trailing_slashes);
 
-            if ($configSslUrl = $config->get('seo.canonical_ssl_url')) {
-                $canonical_ssl = UrlImmutable::createFromUrl($configSslUrl, $trailing_slashes);
-            }
+            $canonicalToUse = $canonical;
 
-            $url = $url->setHost($canonical->getHost());
-            $url = $url->setScheme($canonical->getScheme());
-
-            // If the request is over https
-            if (strtolower($this->request->getScheme()) == 'https') {
-                // If the canonical ssl url is set, respect the canonical ssl url.
-                if (isset($canonical_ssl)) {
-                    $url = $url->setHost($canonical_ssl->getHost());
-                    $url = $url->setScheme($canonical_ssl->getScheme());
-                    if (intval($canonical_ssl->getPort()->get()) > 0) {
-                        $url = $url->setPort($canonical_ssl->getPort());
-                    }
-                } else {
-                    // If the canonical url is http, lets just say https for the canonical url.
-                    if (strtolower($canonical->getScheme()) == 'http') {
-                        $url = $url->setScheme('https');
-                    }
-                    if (intval($canonical->getPort()->get()) > 0) {
-                        $url = $url->setPort($canonical->getPort());
-                    }
+            if ($configUrlAlternative = $site->getSiteAlternativeCanonicalURL()) {
+                $canonical_alternative = UrlImmutable::createFromUrl($configUrlAlternative, $trailing_slashes);
+                if (
+                    strtolower($canonical->getScheme()) !== $requestScheme &&
+                    strtolower($canonical_alternative->getScheme()) === $requestScheme
+                ) {
+                    $canonicalToUse = $canonical_alternative;
                 }
             }
-            elseif (intval($canonical->getPort()->get()) > 0) {
-                $url = $url->setPort($canonical->getPort());
+
+            $url = $url->setScheme($canonicalToUse->getScheme());
+            $url = $url->setHost($canonicalToUse->getHost());
+            if ((int) $canonicalToUse->getPort()->get() > 0) {
+                $url = $url->setPort($canonicalToUse->getPort());
             }
         } else {
             // This fallthrough is dangerous. Make sure that you define your canonical URL so that we don't have to guess!

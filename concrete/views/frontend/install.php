@@ -215,7 +215,7 @@ if (isset($successMessage)) {
             function updateCanonicalURLState() {
                 $.each([
                     [$('#canonicalUrlChecked').is(':checked'), $('#canonicalUrl')],
-                    [$('#canonicalSSLUrlChecked').is(':checked'), $('#canonicalSSLUrl')]
+                    [$('#canonicalUrlAlternativeChecked').is(':checked'), $('#canonicalUrlAlternative')]
                 ], function () {
                     if (this[0]) {
                         this[1].attr('required', 'required');
@@ -227,12 +227,12 @@ if (isset($successMessage)) {
                 });
             }
 
-            $('#canonicalUrlChecked,#canonicalSSLUrlChecked').change(updateCanonicalURLState);
+            $('#canonicalUrlChecked,#canonicalUrlALternativeChecked').change(updateCanonicalURLState);
             <?php
             if ($setInitialState) {
             ?>
             $('#canonicalUrlChecked').prop('checked', <?=$canonicalUrlChecked ? 'true' : 'false'?>);
-            $('#canonicalSSLUrlChecked').prop('checked', <?=$canonicalSSLUrlChecked ? 'true' : 'false'?>);
+            $('#canonicalUrlAlternativeChecked').prop('checked', <?=$canonicalUrlAlternativeChecked ? 'true' : 'false'?>);
             <?php
             }
             ?>
@@ -388,10 +388,10 @@ if (isset($successMessage)) {
 
                                 <div class="form-group">
                                     <label class="control-label">
-                                        <?=$form->checkbox('canonicalSSLUrlChecked', '1')?>
-                                        <?=t('Set canonical URL over SSL')?>:
+                                        <?=$form->checkbox('canonicalUrlAlternativeChecked', '1')?>
+                                        <?=t('Set alternative canonical URL')?>:
                                     </label>
-                                    <?=$form->url('canonicalSSLUrl', h($canonicalSSLUrl), ['pattern' => 'https:.+', 'placeholder' => 'https://'])?>
+                                    <?=$form->url('canonicalUrlAlternative', h($canonicalUrlAlternative), ['pattern' => 'https:.+', 'placeholder' => 'https://'])?>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label" for="sessionHandler"><?=t('Session Handler')?></label>
