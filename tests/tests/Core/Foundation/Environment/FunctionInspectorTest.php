@@ -1,20 +1,20 @@
 <?php
-namespace Concrete\Tests\Core\Service;
+namespace Concrete\Tests\Core\Foundation\Environment;
 
-use Concrete\Core\Service\System;
+use Concrete\Core\Foundation\Environment\FunctionInspector;
 use Concrete\Core\Support\Facade\Application;
 use PHPUnit_Framework_TestCase;
 
-class SystemTest extends PHPUnit_Framework_TestCase
+class FunctionInspectorTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var System
+     * @var FunctionInspector
      */
-    private static $system;
+    private static $functionInspector;
 
     public static function setupBeforeClass()
     {
-        self::$system = Application::getFacadeApplication()->make(System::class);
+        self::$functionInspector = Application::getFacadeApplication()->make(FunctionInspector::class);
     }
 
     public function functionAvailableProvider()
@@ -34,7 +34,7 @@ class SystemTest extends PHPUnit_Framework_TestCase
      */
     public function testFunctionAvailable($disabledFunctions, $functionName, $expected)
     {
-        self::$system->setDisabledFunctions($disabledFunctions);
-        $this->assertSame($expected, self::$system->functionAvailable($functionName));
+        self::$functionInspector->setDisabledFunctions($disabledFunctions);
+        $this->assertSame($expected, self::$functionInspector->functionAvailable($functionName));
     }
 }

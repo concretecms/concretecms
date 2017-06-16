@@ -1,9 +1,9 @@
 <?php
-namespace Concrete\Core\Service;
+namespace Concrete\Core\Foundation\Environment;
 
 use Traversable;
 
-class System
+class FunctionInspector
 {
     /**
      * List of system-level disabled functions.

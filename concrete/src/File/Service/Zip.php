@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\File\Service;
 
-use Concrete\Core\Service\System;
+use Concrete\Core\Foundation\Environment\FunctionInspector;
 use DateTime;
 use Exception;
 use Illuminate\Filesystem\Filesystem;
@@ -20,22 +20,22 @@ class Zip
     protected $filesystem;
 
     /**
-     * The System instance to use.
+     * The FunctionInspector instance to use.
      *
-     * @var System
+     * @var FunctionInspector
      */
-    protected $system;
+    protected $functionInspector;
 
     /**
      * Initialize the instance.
      *
      * @param Filesystem $filesystem
-     * @param System $system
+     * @param FunctionInspector $functionInspector
      */
-    public function __construct(Filesystem $filesystem, System $system)
+    public function __construct(Filesystem $filesystem, FunctionInspector $functionInspector)
     {
         $this->filesystem = $filesystem;
-        $this->system = $system;
+        $this->functionInspector = $functionInspector;
     }
 
     /**
@@ -116,7 +116,7 @@ class Zip
         }
         if (!isset($this->availableNativeCommands[$command])) {
             $this->availableNativeCommands[$command] = false;
-            if ($this->system->functionAvailable('exec')) {
+            if ($this->functionInspector->functionAvailable('exec')) {
                 $rc = 1;
                 $output = [];
                 @exec($command . ' -v 2>&1', $output, $rc);
