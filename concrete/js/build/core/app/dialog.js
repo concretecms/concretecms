@@ -23,6 +23,12 @@ jQuery.fn.dialog = function() {
     // LEGACY SUPPORT
     return $(this).each(function() {
         $(this).unbind('click.make-dialog').bind('click.make-dialog', function(e) {
+            if ($(this).hasClass('ccm-dialog-launching')) {
+                return false;
+            }
+
+            if ($(this).addClass('ccm-dialog-launching'));
+
             var href = $(this).attr('href');
             var width = $(this).attr('dialog-width');
             var height =$(this).attr('dialog-height');
@@ -46,7 +52,8 @@ jQuery.fn.dialog = function() {
                 onDestroy: onDestroy,
                 dialogClass: dialogClass,
                 onClose: onClose,
-                onDirectClose: onDirectClose
+                onDirectClose: onDirectClose,
+                launcher: $(this)
             }
             jQuery.fn.dialog.open(obj);
             return false;
@@ -157,6 +164,9 @@ jQuery.fn.dialog.open = function(options) {
                 }
             }
 
+            if (options.launcher) {
+                options.launcher.removeClass('ccm-dialog-launching');
+            }
 
         },
         'beforeClose': function() {
