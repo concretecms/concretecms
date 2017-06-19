@@ -56,7 +56,7 @@ class ContextText extends PHPUnit_Framework_TestCase
         $av->render(new \Concrete\Core\Attribute\Context\ComposerContext());
         ob_end_clean();
 
-        $this->assertEquals('composer', $av->controller->getAction());
+        $this->assertEquals('form', $av->controller->getAction());
         // form, because it falls back.
         $this->assertEquals(str_replace(DIRECTORY_SEPARATOR, '/', DIR_BASE_CORE . '/attributes/text/form.php'), str_replace(DIRECTORY_SEPARATOR, '/', $av->getViewTemplate()));
 

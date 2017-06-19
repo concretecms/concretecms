@@ -101,7 +101,11 @@
              */
             $.ajax({
                 'type': 'get',
+                /*
                 'async': false,
+                // Note - do we really need this? It introduces massive slowdown when
+                // multiple editors are used at once.
+                */
                 'dataType': 'json',
                 'url': CCM_DISPATCHER_FILENAME + '/ccm/system/backend/editor_data',
                 'data': {
