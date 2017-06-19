@@ -177,7 +177,13 @@ class Service
         $this->entityManager->flush();
     }
 
-    public function getList()
+    /**
+     * Returns a list of sites. If $sort = 'name' then the sites will be sorted by site name. If sort is false it will
+     * not be sorted. Only name is supported for now.
+     * @param string $sort
+     * @return array
+     */
+    public function getList($sort = 'name')
     {
         $sites = $this->entityManager->getRepository('Concrete\Core\Entity\Site\Site')
             ->findAll();
@@ -186,6 +192,15 @@ class Service
         foreach($sites as $site) {
             $list[] = $factory->createEntity($site);
         }
+
+        if (!$sort) {
+            return $list;
+        }
+
+        usort($list, function($siteA, $siteB) {
+            return strcasecmp($siteA->getSiteName(), $siteB->getSiteName());
+        });
+
         return $list;
     }
 
