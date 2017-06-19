@@ -27,6 +27,8 @@ jQuery.fn.dialog = function() {
                 return false;
             }
 
+            $(this).addClass('ccm-dialog-launching');
+
             var href = $(this).attr('href');
             var width = $(this).attr('dialog-width');
             var height =$(this).attr('dialog-height');
