@@ -285,7 +285,8 @@
             }
         });
 
-        $('a[data-dialog=add-files]').on('click', function() {
+        $('a[data-dialog=add-files]').on('click', function(e) {
+            e.preventDefault();
             $.fn.dialog.open({
                 width: 620,
                 height: 500,
@@ -451,7 +452,7 @@
 
     ConcreteFileManager.prototype.setupAddFolder = function() {
         var my = this;
-        my.$element.find('a[data-launch-dialog=add-file-manager-folder]').on('click', function() {
+        $('a[data-launch-dialog=add-file-manager-folder]').on('click', function(e) {
             $('div[data-dialog=add-file-manager-folder] input[name=currentFolder]').val(my.currentFolder);
             $('div[data-dialog=add-file-manager-folder] input[name=folderName]').val('');
 
@@ -468,13 +469,12 @@
                 $this.off('dialogopen');
                 $this.find('[autofocus]').focus();
             });
-
+            e.preventDefault();
         });
     }
 
     ConcreteFileManager.prototype.setupFolderNavigation = function() {
-        var my = this;
-        my.$element.find('a[data-launch-dialog=navigate-file-manager]').on('click', function(e) {
+        $('a[data-launch-dialog=navigate-file-manager]').on('click', function(e) {
             e.preventDefault();
             jQuery.fn.dialog.open({
                 width: '560',
@@ -593,7 +593,7 @@
 
         $.fn.dialog.open({
             width: w,
-            height: '90%',
+            height: '80%',
             href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/file/search',
             modal: true,
             data: data,
