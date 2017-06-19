@@ -16,7 +16,7 @@
                 <input type="text" class="form-control" autocomplete="off" name="fKeywords" placeholder="<?=t('Search')?>">
             </div>
 
-              <span class="input-group-btn">'
+            <span class="input-group-btn">'
                 <button class="btn btn-info" type="submit"><i class="fa fa-search"></i></button>
               </span>
         </div><!-- /input-group -->
@@ -35,6 +35,9 @@
 </div>
 <div class="clearfix"></div>
 <div style="display: none">
+    <div class="dialog-buttons">
+        <button class="btn btn-default pull-left" data-dialog-action="cancel"><?=t('Close')?></button>
+    </div>
     <div data-dialog="add-file-manager-folder" class="ccm-ui">
         <form data-dialog-form="add-folder" method="post" action="<?=$addFolderAction?>">
             <?=$token->output('add_folder')?>
