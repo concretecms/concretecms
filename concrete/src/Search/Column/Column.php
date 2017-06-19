@@ -5,10 +5,17 @@ use Concrete\Core\Search\Result\Result;
 
 class Column implements ColumnInterface
 {
+    /** These properties are to be treated as protected. Use the set and get methods instead */
+    /** @deprecated */
     public $columnKey;
+    /** @deprecated */
     public $columnName;
+    /** @deprecated */
     public $sortDirection = 'asc';
+    /** @deprecated */
     public $isSortable;
+    
+    /** @deprecated */
     public $callback;
 
     public function getColumnValue($obj)
