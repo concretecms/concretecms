@@ -7,13 +7,12 @@ div.ccm-header-search-form + div.ui-dialog-content {
 
 div.ccm-header-search-form {
   position: absolute;
-  top: 0px;
-  right: 0px;
-
-  width: auto;
+  top: 0;
+  right: 0;
 
   div.ccm-header-search-form-input {
-    position: relative;
+    position: absolute;
+    right: 50px;
     input.form-control {
       .border-top-left-radius(4px) !important;
       .border-bottom-left-radius(4px) !important;
@@ -23,20 +22,21 @@ div.ccm-header-search-form {
   }
 
   span.input-group-btn {
-    border-left: 0px;
+    border-left: 0;
   }
 
   input {
-    border-right-width: 0px !important;
+    border-right-width: 0 !important;
   }
 
   form {
     position: relative;
+    width: 100%;
 
     a.ccm-header-reset-search,
     a.ccm-header-launch-advanced-search {
       position: absolute;
-      top: 10px;
+      padding: 7px 0 7px;
       font-size: 14px;
       z-index: @index-level-search-reset;
     }
@@ -81,7 +81,7 @@ ul.ccm-header-search-navigation {
     font-size: 14px;
   }
   list-style: none;
-  text-align: right;
+  text-align: left;
   padding: 4px 0px 10px 0px;
   a {
     color: #777;
@@ -103,7 +103,7 @@ ul.ccm-header-search-navigation {
       position: absolute;
       .opacity(0);
       top:  0px;
-      left: 0px;
+      left: 0;
       width: 100%;
       height: 20px;
       border: 1px solid black;
@@ -117,11 +117,13 @@ ul.ccm-header-search-navigation {
   }
 }
 
+
+
 div.ui-dialog {
   div.ccm-header-search-form {
     float: none;
     position: relative;
-    width: auto;
+    width: 100%;
     box-sizing: content-box;
     height: 34px;
     padding-top: 4px;
@@ -132,14 +134,14 @@ div.ui-dialog {
     ul.ccm-header-search-navigation {
       text-align: left;
       position: absolute;
-      top: 0px;
-      left: -240px;
+      top: 0;
+      width: 100%;
     }
 
     form {
       position: absolute;
       right: 4px;
-      width: 369px;
+      width: 100%;
     }
   }
 
@@ -153,7 +155,7 @@ div.ui-dialog {
     top: 10px;
     left: 10px;
     ol {
-      margin-bottom: 0px;
+      margin-bottom: 0;
       li a, li span {
         position: static;
         font-size: 14px !important;
@@ -177,7 +179,7 @@ div.ccm-search-results-breadcrumb {
 
   ol.breadcrumb {
     background-color: transparent;
-    padding: 0px;
+    padding: 0;
     position: relative;
     margin-bottom: -20px;
 
@@ -211,7 +213,7 @@ div.ccm-search-results-breadcrumb {
       position: relative;
       top: -2px;
       padding-right: 8px;
-      left: 0px;
+      left: 0;
     }
   }
 
@@ -280,4 +282,30 @@ html.ccm-search-results-dragging {
 
 .ccm-search-results-copy {
   cursor: copy !important;
+}
+
+/* Part of the fix for different languages not displaying properly on file manager and search results */
+div.ccm-dashboard-header-menu {
+  div.ccm-header-search-form {
+    div.input-group {
+      input.form-control {
+        float: right;
+      }
+    }
+    ul.ccm-header-search-navigation {
+      float: right;
+    }
+    width: 100vw;
+  }
+}
+
+div.ccm-dashboard-header-buttons {
+  div.ccm-header-search-form {
+    div.input-group {
+      input.form-control {
+        float: right;
+      }
+    }
+    width: 100vw;
+  }
 }
