@@ -8,6 +8,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 /* @var Concrete\Core\Localization\Translation\LocaleStatus[] $data */
 
 $someUpdateAvailable = false;
+$packageUrl = rtrim(Config::get('concrete.i18n.community_translation.package_url'), '/');
 ?>
 <div class="panel-group" id="ccm-packages" role="tablist" aria-multiselectable="true">
     <?php
@@ -32,6 +33,13 @@ $someUpdateAvailable = false;
                         }
                         ?>
                     </a>
+                    <?php
+                    if ($packageUrl) {
+                        ?>
+                        <a target="_blank" class="pull-right" href="<?= h("{$packageUrl}/{$handle}") ?>"><span class="label label-default" style="font-weight: normal"><?= t('more details') ?></span></a>
+                        <?php
+                    }
+                    ?>
                 </h4>
             </div>
             <div id="ccm-package-<?= $handle ?>-body" class="panel-collapse collapse<?= $class ?>" role="tabpanel" aria-labelledby="ccm-package-<?= $handle ?>-header">

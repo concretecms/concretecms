@@ -572,6 +572,8 @@ return [
             'progress_limit' => 60,
             // Lifetime (in seconds) of the cache items associated to downloaded data
             'cache_lifetime' => 3600, // 1 hour
+            // Base URI for package details
+            'package_url' => 'https://translate.concrete5.org/translate/package',
         ],
     ],
     'urls' => [
