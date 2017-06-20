@@ -1,23 +1,20 @@
 <?php
 namespace Concrete\Core\Site;
 
+use Concrete\Core\Application\Application;
 use Concrete\Core\Attribute\Key\SiteKey;
-use Concrete\Core\Entity\Page\Template;
 use Concrete\Core\Entity\Site\Locale;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Entity\Site\SiteTree;
-use Concrete\Core\Entity\Site\Tree;
 use Concrete\Core\Entity\Site\Type;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Site\Resolver\ResolverFactory;
 use Doctrine\ORM\EntityManagerInterface;
-use Concrete\Core\Application\Application;
 use Punic\Comparer;
 
 class Service
 {
-
     protected $entityManager;
     protected $app;
     protected $config;
@@ -38,7 +35,7 @@ class Service
         $this->app = $app;
         $this->entityManager = $entityManager;
         $this->config = $configRepository;
-        $this->cache = $this->app->make("cache/request");
+        $this->cache = $this->app->make('cache/request');
         $this->resolverFactory = $resolverFactory;
     }
 
@@ -54,11 +51,12 @@ class Service
     {
         $sites = $this->entityManager->getRepository('Concrete\Core\Entity\Site\Site')
             ->findByType($type);
-        $return = array();
-        foreach($sites as $site) {
+        $return = [];
+        foreach ($sites as $site) {
             $factory = new Factory($this->config);
             $return[] = $factory->createEntity($site);
         }
+
         return $return;
     }
 
@@ -77,6 +75,7 @@ class Service
             }
             $this->cache->save($item->set($site));
         }
+
         return $site;
     }
 
@@ -89,8 +88,8 @@ class Service
             $factory = new Factory($this->config);
             try {
                 $site = $this->entityManager->getRepository('Concrete\Core\Entity\Site\Site')
-                    ->findOneBy(array('siteIsDefault' => true));
-            } catch(\Exception $e) {
+                    ->findOneBy(['siteIsDefault' => true]);
+            } catch (\Exception $e) {
                 return $factory->createDefaultEntity();
             }
             if (is_object($site)) {
@@ -98,6 +97,7 @@ class Service
             }
             $this->cache->save($item->set($site));
         }
+
         return $site;
     }
 
@@ -150,9 +150,8 @@ class Service
 
     public function delete(Site $site)
     {
-
         $attributes = SiteKey::getAttributeValues($site);
-        foreach($attributes as $av) {
+        foreach ($attributes as $av) {
             $this->entityManager->remove($av);
         }
 
@@ -170,7 +169,7 @@ class Service
         $locales = $site->getLocales();
         $service = new \Concrete\Core\Localization\Locale\Service($this->entityManager);
 
-        foreach($locales as $locale) {
+        foreach ($locales as $locale) {
             $service->delete($locale);
         }
 
@@ -181,16 +180,18 @@ class Service
     /**
      * Returns a list of sites. If $sort = 'name' then the sites will be sorted by site name. If sort is false it will
      * not be sorted. Only name is supported for now.
+     *
      * @param string $sort
+     *
      * @return array
      */
     public function getList($sort = 'name')
     {
         $sites = $this->entityManager->getRepository('Concrete\Core\Entity\Site\Site')
             ->findAll();
-        $list = array();
+        $list = [];
         $factory = new Factory($this->config);
-        foreach($sites as $site) {
+        foreach ($sites as $site) {
             $list[] = $factory->createEntity($site);
         }
 
@@ -262,6 +263,7 @@ class Service
             $site = $this->resolverFactory->createResolver($this)->getSite();
             $this->cache->save($item->set($site));
         }
+
         return $site;
     }
 
@@ -272,5 +274,4 @@ class Service
     {
         return $this->resolverFactory->createResolver($this)->getActiveSiteForEditing();
     }
-
 }
