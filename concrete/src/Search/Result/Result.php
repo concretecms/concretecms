@@ -166,29 +166,11 @@ class Result
         }
         $html = '';
         if ($this->pagination->haveToPaginate()) {
-            $view = new TwitterBootstrap3View();
-            $result = $this;
-            $html = $view->render(
-                $this->pagination,
-                function ($page) use ($result) {
-                    $list = $result->getItemListObject();
-
-                    $uh = \Core::make("helper/url");
-
-                    $args = array(
-                        $list->getQueryPaginationPageParameter() => $page,
-                        $list->getQuerySortColumnParameter() => $list->getActiveSortColumn(),
-                        $list->getQuerySortDirectionParameter() => $list->getActiveSortDirection(),
-                    );
-
-                    return $uh->setVariable($args, false, $result->getBaseURL());
-                },
-                array(
+            $this->pagination->setBaseURL($this->getBaseURL());
+            $html = $this->pagination->renderView('dashboard', [
                     'prev_message' => tc('Pagination', '&larr; Previous'),
                     'next_message' => tc('Pagination', 'Next &rarr;'),
-                    'active_suffix' => '<span class="sr-only">' . tc('Pagination', '(current)') . '</span>',
-                )
-            );
+                    'active_suffix' => '<span class="sr-only">' . tc('Pagination', '(current)') . '</span>']);
         }
         $obj->paginationTemplate = $html;
         $obj->fields = $this->fields;

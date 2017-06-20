@@ -3,10 +3,12 @@ namespace Concrete\Controller\SinglePage;
 
 use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Authentication\AuthenticationTypeFailureException;
+use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\Desktop\DesktopList;
 use Concrete\Core\Routing\RedirectResponse;
 use Exception;
 use Concrete\Core\Localization\Localization;
+use Concrete\Core\Validation\CSRF\Token;
 use Page;
 use PageController;
 use User;
@@ -380,7 +382,7 @@ class Login extends PageController
                 $validator = $controller->getValidator();
                 $response = $validator->validateSaveValueRequest($controller, $this->request);
                 /**
-                 * @var ResponseInterface
+                 * @var ResponseInterface $response
                  */
                 if ($response->isValid()) {
                     $saveAttributes[] = $attribute;
@@ -400,6 +402,9 @@ class Login extends PageController
         }
     }
 
+    /**
+     * @deprecated
+     */
     public function logout($token = false)
     {
         if ($this->app->make('token')->validate('logout', $token)) {
@@ -407,6 +412,29 @@ class Login extends PageController
             $u->logout();
             $this->redirect('/');
         }
+    }
+
+    /**
+     * @param $token
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function do_logout($token = false)
+    {
+        /** @var ResponseFactoryInterface $factory */
+        $factory = $this->app->make(ResponseFactoryInterface::class);
+        /** @var Token $valt */
+        $valt = $this->app->make('token');
+
+        if ($valt->validate('do_logout', $token)) {
+            // Resolve the current logged in user and log them out
+            $u = $this->app->make(User::class)->logout();
+
+            // Return a new redirect to the homepage.
+            return $factory->redirect('/');
+        }
+
+        return $factory->error($valt->getErrorMessage());
     }
 
     public function forward($cID = 0)

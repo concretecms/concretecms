@@ -18,6 +18,7 @@ if ($bp->canWrite()) {
 
     <?php
 
+    $bv->setAreaObject($view->getAreaObject());
     $bv->addScopeItems($view->getScopeItems());
     $bv->render('edit');
 }

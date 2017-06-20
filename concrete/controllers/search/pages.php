@@ -34,11 +34,8 @@ class Pages extends Standard
 
     protected function canAccess()
     {
-        $cp = \FilePermissions::getGlobal();
-        if ($cp->canSearchFiles()) {
-            return true;
-        }
-        return false;
+        $permissions = new \Permissions();
+        return $permissions->canAccessSitemap();
     }
 
 

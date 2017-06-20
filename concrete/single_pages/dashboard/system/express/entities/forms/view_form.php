@@ -84,7 +84,7 @@
                     <li><a href="#" data-dialog="delete-set-<?=$set->getId()?>" data-dialog-title="<?=t('Delete Set')?>"><i class="fa fa-trash-o"></i></a></li>
                 </ul>
 
-                <div><?=$set->getTitle() ? $set->getTitle() : t('(No Title)')?></div>
+                <div><?=$set->getTitle() ? h($set->getTitle()) : t('(No Title)')?></div>
 
             </div>
 

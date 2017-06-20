@@ -14,7 +14,7 @@
                 <a class="ccm-header-launch-advanced-search" href="<?php echo URL::to('/ccm/system/dialogs/page/advanced_search')?>" data-launch-dialog="advanced-search"><?=t('Advanced')?></a>
                 <input type="text" class="form-control" autocomplete="off" name="cKeywords" placeholder="<?=t('Search')?>">
             </div>
-              <span class="input-group-btn">'
+              <span class="input-group-btn">
                 <button class="btn btn-info" type="submit"><i class="fa fa-search"></i></button>
               </span>
         </div>

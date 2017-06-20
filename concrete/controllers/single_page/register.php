@@ -9,12 +9,12 @@ use Concrete\Core\Validation\ResponseInterface;
 use Config;
 use Loader;
 use User;
-use UserInfo;
 use UserAttributeKey;
+use UserInfo;
 
 class Register extends PageController
 {
-    public $helpers = array('form', 'html');
+    public $helpers = ['form', 'html'];
 
     protected $displayUserName = true;
 
@@ -55,23 +55,23 @@ class Register extends PageController
 
             // clean the username
             $username = trim($username);
-            $username = preg_replace("/ +/", " ", $username);
+            $username = preg_replace('/ +/', ' ', $username);
 
-            if ($ip->isBanned()) {
+            if ($ip->isBlacklisted()) {
                 $e->add($ip->getErrorMessage());
             }
 
             if ($config->get('concrete.user.registration.captcha')) {
                 $captcha = $this->app->make('helper/validation/captcha');
                 if (!$captcha->check()) {
-                    $e->add(t("Incorrect image validation code. Please check the image and re-enter the letters or numbers as necessary."));
+                    $e->add(t('Incorrect image validation code. Please check the image and re-enter the letters or numbers as necessary.'));
                 }
             }
 
             if (!$vals->email($_POST['uEmail'])) {
                 $e->add(t('Invalid email address provided.'));
             } elseif (!$valc->isUniqueEmail($_POST['uEmail'])) {
-                $e->add(t("The email address %s is already in use. Please choose another.", $_POST['uEmail']));
+                $e->add(t('The email address %s is already in use. Please choose another.', $_POST['uEmail']));
             }
 
             if ($this->displayUserName) {
@@ -97,7 +97,7 @@ class Register extends PageController
                     }
                 }
                 if (!$valc->isUniqueUsername($username)) {
-                    $e->add(t("The username %s already exists. Please choose another", $username));
+                    $e->add(t('The username %s already exists. Please choose another', $username));
                 }
             }
 
@@ -124,7 +124,7 @@ class Register extends PageController
                     $uak->isAttributeKeyRequiredOnRegister()
                 );
                 /**
-                 * @var $response ResponseInterface
+                 * @var ResponseInterface
                  */
                 if (!$response->isValid()) {
                     $error = $response->getErrorObject();
@@ -162,7 +162,7 @@ class Register extends PageController
                     $mh->addParameter('uName', $process->getUserName());
                     $mh->addParameter('uEmail', $process->getUserEmail());
                     $attribs = UserAttributeKey::getRegistrationList();
-                    $attribValues = array();
+                    $attribValues = [];
                     foreach ($attribs as $ak) {
                         $attribValues[] = $ak->getAttributeKeyDisplayName('text') . ': ' . $process->getAttribute($ak->getAttributeKeyHandle(),
                                 'display');
@@ -264,7 +264,7 @@ class Register extends PageController
 
     public function getRegisterSuccessValidateMsgs()
     {
-        $msgs = array();
+        $msgs = [];
         $msgs[] = t('You are registered but you need to validate your email address. Some or all functionality on this site will be limited until you do so.');
         $msgs[] = t('An email has been sent to your email address. Click on the URL contained in the email to validate your email address.');
 

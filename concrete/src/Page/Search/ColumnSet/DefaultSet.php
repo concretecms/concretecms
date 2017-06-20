@@ -1,6 +1,10 @@
 <?php
 namespace Concrete\Core\Page\Search\ColumnSet;
 
+use Concrete\Core\Page\Search\ColumnSet\Column\CollectionVersion;
+use Concrete\Core\Page\Search\ColumnSet\Column\DateLastModified;
+use Concrete\Core\Page\Search\ColumnSet\Column\DatePublic;
+use Concrete\Core\Search\Column\CollectionAttributeKeyColumn;
 use Concrete\Core\Search\Column\Column;
 use Concrete\Core\Search\Column\Set;
 use UserInfo;
@@ -29,12 +33,19 @@ class DefaultSet extends Set
         }
     }
 
+    public function getAttributeKeyColumn($akHandle)
+    {
+        $ak = call_user_func(array($this->attributeClass, 'getByHandle'), $akHandle);
+        $col = new CollectionAttributeKeyColumn($ak);
+        return $col;
+    }
+
     public function __construct()
     {
         $this->addColumn(new Column('pt.ptHandle', t('Type'), 'getPageTypeName', false));
-        $this->addColumn(new Column('cv.cvName', t('Name'), 'getCollectionName'));
-        $this->addColumn(new Column('cv.cvDatePublic', t('Date'), array('\Concrete\Core\Page\Search\ColumnSet\DefaultSet', 'getCollectionDatePublic')));
-        $this->addColumn(new Column('c.cDateModified', t('Last Modified'), array('\Concrete\Core\Page\Search\ColumnSet\DefaultSet', 'getCollectionDateModified')));
+        $this->addColumn(new CollectionVersion());
+        $this->addColumn(new DatePublic());
+        $this->addColumn(new DateLastModified());
         $this->addColumn(new Column('author', t('Author'), array('\Concrete\Core\Page\Search\ColumnSet\DefaultSet', 'getCollectionAuthor'), false));
         $date = $this->getColumnByKey('c.cDateModified');
         $this->setDefaultSortColumn($date, 'desc');

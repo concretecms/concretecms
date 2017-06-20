@@ -94,7 +94,7 @@ class Set
     public function contains($col)
     {
         foreach ($this->columns as $_col) {
-            if ($col instanceof Column) {
+            if ($col instanceof ColumnInterface) {
                 if ($_col->getColumnKey() == $col->getColumnKey()) {
                     return true;
                 }

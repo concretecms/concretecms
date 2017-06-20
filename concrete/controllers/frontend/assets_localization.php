@@ -229,6 +229,7 @@ var ccmi18n_filemanager = ' . json_encode([
     'uploadErrorChooseFile' => t('You must choose a file.'),
     'addFiles' => t('Add Files'),
     'rescan' => t('Rescan'),
+    'jumpToFolder' => t('Jump to Folder'),
     'pending' => t('Pending'),
     'uploadComplete' => t('Upload Complete'),
     'uploadFailed' => t('Upload Failed'),

@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Error\Handler;
 
-use Concrete\Core\Logging\Logger;
+use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Support\Facade\Database;
 use Config;
 use Core;
@@ -19,19 +19,27 @@ class ErrorHandler extends PrettyPageHandler
      */
     public function handle()
     {
-        $this->setPageTitle("concrete5 has encountered an issue.");
+        $this->setPageTitle('concrete5 has encountered an issue.');
 
         $result = self::QUIT;
 
-        $enabled = Config::get('concrete.debug.display_errors');
-
+        $e = $this->getInspector()->getException();
+        $detail = 'message';
+        if ($e instanceof UserMessageException) {
+            $enabled = true;
+            $canBeLogged = $e->canBeLogged();
+        } else {
+            $enabled = (bool) Config::get('concrete.debug.display_errors');
+            if ($enabled === true) {
+                $detail = Config::get('concrete.debug.detail', 'message');
+            }
+            $canBeLogged = true;
+        }
         if ($enabled) {
-            $detail = Config::get('concrete.debug.detail', 'message');
             if ($detail === 'debug') {
                 $this->addDetails();
                 $result = parent::handle();
             } else {
-                $e = $this->getInspector()->getException();
                 Core::make('helper/concrete/ui')->renderError(
                     t('An unexpected error occurred.'),
                     h($e->getMessage())
@@ -44,7 +52,7 @@ class ErrorHandler extends PrettyPageHandler
             );
         }
 
-        if (Config::get('concrete.log.errors')) {
+        if ($canBeLogged && Config::get('concrete.log.errors')) {
             try {
                 $e = $this->getInspector()->getException();
                 $db = Database::get();
@@ -58,7 +66,7 @@ class ErrorHandler extends PrettyPageHandler
                             $e->getMessage(),
                             $e->getCode()
                         ),
-                        array($e)
+                        [$e]
                     );
                 }
             } catch (\Exception $e) {
@@ -78,10 +86,10 @@ class ErrorHandler extends PrettyPageHandler
          */
         $this->addDataTable(
             'Concrete5',
-            array(
+            [
                 'Version' => APP_VERSION,
                 'Installed Version' => Config::get('concrete.version_installed'),
-            )
+            ]
         );
 
         /*
@@ -92,7 +100,7 @@ class ErrorHandler extends PrettyPageHandler
 
     protected function flatConfig(array $config, $group)
     {
-        $flat = array();
+        $flat = [];
         foreach ($config as $key => $value) {
             if (is_array($value)) {
                 $flat = array_merge($flat, $this->flatConfig($value, "{$group}.{$key}"));

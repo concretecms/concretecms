@@ -63,7 +63,7 @@ $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
                         ?>
                     </li>
                     <li>
-                        <i class="fa fa-sign-out mobile-leading-icon"></i><a href="<?= URL::to('/login', 'logout', $valt->generate('logout')); ?>"><?= t('Sign Out'); ?></a>
+                        <i class="fa fa-sign-out mobile-leading-icon"></i><a href="<?= URL::to('/login', 'do_logout', $valt->generate('do_logout')); ?>"><?= t('Sign Out'); ?></a>
                     </li>
                 </ul>
             </div>

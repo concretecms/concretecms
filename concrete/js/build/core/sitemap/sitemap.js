@@ -49,6 +49,9 @@
 
 		setupSiteTreeSelector: function(tree) {
 			var my = this;
+			if (!tree) {
+				return false;
+			}
 			if (tree.displayMenu && my.options.siteTreeID < 1) {
 				if (!my.$element.find('div.ccm-sitemap-tree-selector-wrapper select').length) {
 					my.$element.find('div.ccm-sitemap-tree-selector-wrapper').append($(my.localesWrapperTemplate));
@@ -451,9 +454,9 @@
 
 
     	setupNodePagination: function($tree) {
+			$tree.find('.ccm-pagination-bound').remove();
     		var pg = $tree.find('div.ccm-pagination-wrapper'),
 				my = this;
-    		$tree.children('.ccm-pagination-bound').remove();
     		if (pg.length) {
     			pg.find('a').unbind('click').on('click', function() {
 					var href = $(this).attr('href');

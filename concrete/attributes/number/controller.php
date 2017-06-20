@@ -57,7 +57,8 @@ class Controller extends AttributeTypeController
         } else {
             $value = null;
         }
-        echo $this->app->make('helper/form')->number($this->field('value'), $value, ['step' => 'any']);
+        $this->set('form', $this->app->make('helper/form'));
+        $this->set('value', $value);
     }
 
     public function validateForm($p)

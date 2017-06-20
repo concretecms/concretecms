@@ -198,6 +198,9 @@ table.ccm-search-results-table {
   -moz-user-select: none;
   -webkit-font-smoothing: antialiased;
 
+  &.selectable {
+    .user-select(auto);
+  }
 
   span.ccm-search-results-checkbox {
     display: block;
@@ -449,7 +452,7 @@ div.ccm-search-results-none {
 }
 
 div.ccm-search-results-pagination {
-  margin-top: 20px;
+  margin: 20px;
   text-align: center;
 }
 

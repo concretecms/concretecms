@@ -7,9 +7,6 @@
             name="<?=$view->field('value')?>"
             <?php if ($checked) { ?> checked <?php } ?>
         >
-        <?php /* ?>
-        <?=$controller->getAttributeKey()->getAttributeKeyDisplayName()?>
- */ ?>
-        <?=t('Yes')?>
+        <?=$controller->getCheckboxLabel()?>
     </label>
 </div>

@@ -48,7 +48,7 @@ $th = Loader::helper('text');
 
 <div class="ccm-dashboard-content-full">
     <div class="table-responsive">
-        <table class="ccm-search-results-table">
+        <table class="ccm-search-results-table selectable">
             <thead>
                 <tr>
                     <th class="<?=$list->getSearchResultsClass('logID')?>"><a href="<?=$list->getSortByURL('logID', 'desc')?>"><?=t('Date/Time')?></a></th>

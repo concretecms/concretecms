@@ -53,7 +53,7 @@ class FileFolder extends AbstractController
         }
 
         if (isset($folder)) {
-
+            
             if ($folder instanceof SearchPreset) {
                 $search = $folder->getSavedSearchObject();
                 $query = $search->getQuery();
@@ -71,10 +71,8 @@ class FileFolder extends AbstractController
             if (!isset($folder)) {
                 $folder = $this->filesystem->getRootFolder();
             }
-
             $u = new \User();
             $list = $folder->getFolderItemList($u, $this->request);
-
             $fields = $this->request->get('field');
             $filters = array();
             if (count($fields)) { // We are passing in something like "filter by images"
@@ -96,6 +94,7 @@ class FileFolder extends AbstractController
             if ($filters) {
                 $ilr->setFilters($filters);
             }
+            
         }
 
         $breadcrumb = [];
@@ -123,9 +122,7 @@ class FileFolder extends AbstractController
 
         }
 
-
         $ilr->setBreadcrumb($breadcrumb);
-
         $this->result = $ilr;
     }
 

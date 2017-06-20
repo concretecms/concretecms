@@ -176,6 +176,22 @@ class Controller extends AttributeTypeController
         return DateTimeValue::class;
     }
 
+    public function exportValue(\SimpleXMLElement $akv)
+    {
+        $value = null;
+        if (isset($this->attributeValue)) {
+            $object = $this->attributeValue->getValueObject();
+            if ($object) {
+                $datetime = $object->getValue();
+                if ($datetime) {
+                    $value = $datetime->format('Y-m-d H:i:s');
+                }
+
+            }
+        }
+        $akv->addChild('value', $value);
+    }
+
     public function createAttributeValue($value)
     {
         if ($value) {
@@ -261,7 +277,7 @@ class Controller extends AttributeTypeController
     {
         $result = null;
         if ($this->attributeValue) {
-            $valueObject = $this->getAttributeValueObject();
+            $valueObject = $this->getAttributeValue();
             if ($valueObject !== null) {
                 $dateTime = $valueObject->getValue();
                 if ($dateTime instanceof DateTime) {

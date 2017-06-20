@@ -23,6 +23,12 @@ jQuery.fn.dialog = function() {
     // LEGACY SUPPORT
     return $(this).each(function() {
         $(this).unbind('click.make-dialog').bind('click.make-dialog', function(e) {
+            if ($(this).hasClass('ccm-dialog-launching')) {
+                return false;
+            }
+
+            $(this).addClass('ccm-dialog-launching');
+
             var href = $(this).attr('href');
             var width = $(this).attr('dialog-width');
             var height =$(this).attr('dialog-height');
@@ -46,7 +52,8 @@ jQuery.fn.dialog = function() {
                 onDestroy: onDestroy,
                 dialogClass: dialogClass,
                 onClose: onClose,
-                onDirectClose: onDirectClose
+                onDirectClose: onDirectClose,
+                launcher: $(this)
             }
             jQuery.fn.dialog.open(obj);
             return false;
@@ -157,6 +164,9 @@ jQuery.fn.dialog.open = function(options) {
                 }
             }
 
+            if (options.launcher) {
+                options.launcher.removeClass('ccm-dialog-launching');
+            }
 
         },
         'beforeClose': function() {
@@ -247,10 +257,13 @@ jQuery.fn.dialog.activateDialogContents = function($dialog) {
     });
 
     if ($dialog.find('.dialog-buttons').length > 0) {
-        $dialog.jqdialog('option', 'buttons', [{}]);
-        $dialog.parent().find(".ui-dialog-buttonset").remove();
-        $dialog.parent().find(".ui-dialog-buttonpane").html('');
-        $dialog.find('.dialog-buttons').eq(0).removeClass().appendTo($dialog.parent().find('.ui-dialog-buttonpane').addClass("ccm-ui"));
+        html = $dialog.find('.dialog-buttons').html();
+        if (html) {
+            $dialog.jqdialog('option', 'buttons', [{}]);
+            $dialog.parent().find(".ui-dialog-buttonset").remove();
+            $dialog.parent().find(".ui-dialog-buttonpane").html('');
+            $dialog.find('.dialog-buttons').eq(0).removeClass().appendTo($dialog.parent().find('.ui-dialog-buttonpane').addClass("ccm-ui"));
+        }
     }
 
 

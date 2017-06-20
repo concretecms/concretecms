@@ -20,7 +20,9 @@
 		my.options = options;
 		my.$element = $element;
 		my.setupTree();
-		ConcreteTree.setupTreeEvents(my);
+		if (!options.chooseNodeInForm && !options.onClick) {
+			ConcreteTree.setupTreeEvents(my);
+		}
 		return my.$element;
 	}
 
@@ -114,6 +116,8 @@
 			}
 
 			$(my.$element).fancytree({
+				tabindex: null,
+				titlesTabbable: false,
 				extensions: ["glyph", "dnd"],
 				glyph: {
 					map: {
@@ -191,6 +195,10 @@
 
 					if (data.targetType == 'expander') {
 						return true;
+					}
+
+					if (data.targetType == 'icon') {
+						return false;
 					}
 
 					if (options.onClick) {
