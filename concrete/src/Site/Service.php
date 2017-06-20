@@ -15,10 +15,29 @@ use Punic\Comparer;
 
 class Service
 {
+    /**
+     * @var EntityManagerInterface
+     */
     protected $entityManager;
+
+    /**
+     * @var Application
+     */
     protected $app;
+
+    /**
+     * @var \Illuminate\Config\Repository
+     */
     protected $config;
+
+    /**
+     * @var ResolverFactory
+     */
     protected $resolverFactory;
+
+    /**
+     * @var \Concrete\Core\Cache\Cache
+     */
     protected $cache;
 
     /**
@@ -29,8 +48,13 @@ class Service
         $this->entityManager = $entityManager;
     }
 
-    public function __construct(EntityManagerInterface $entityManager,
-    Application $app, \Illuminate\Config\Repository $configRepository, ResolverFactory $resolverFactory)
+    /**
+     * @param EntityManagerInterface $entityManager
+     * @param Application $app
+     * @param \Illuminate\Config\Repository $configRepository
+     * @param ResolverFactory $resolverFactory
+     */
+    public function __construct(EntityManagerInterface $entityManager, Application $app, \Illuminate\Config\Repository $configRepository, ResolverFactory $resolverFactory)
     {
         $this->app = $app;
         $this->entityManager = $entityManager;
@@ -47,6 +71,11 @@ class Service
         $this->cache = $cache;
     }
 
+    /**
+     * @param Type $type
+     *
+     * @return Site[]
+     */
     public function getByType(Type $type)
     {
         $sites = $this->entityManager->getRepository('Concrete\Core\Entity\Site\Site')
@@ -60,6 +89,11 @@ class Service
         return $return;
     }
 
+    /**
+     * @param string $handle
+     *
+     * @return Site|null
+     */
     public function getByHandle($handle)
     {
         $item = $this->cache->getItem(sprintf('/site/handle/%s', $handle));
@@ -79,6 +113,9 @@ class Service
         return $site;
     }
 
+    /**
+     * @return Site|null
+     */
     public function getDefault()
     {
         $item = $this->cache->getItem(sprintf('/site/default'));
@@ -101,6 +138,16 @@ class Service
         return $site;
     }
 
+    /**
+     * @param Type $type
+     * @param Theme $theme
+     * @param string $handle
+     * @param string $name
+     * @param string $locale
+     * @param bool $default
+     *
+     * @return Site
+     */
     public function add(Type $type, Theme $theme, $handle, $name, $locale, $default = false)
     {
         $factory = new Factory($this->config);
@@ -132,12 +179,22 @@ class Service
         return $site;
     }
 
+    /**
+     * @param int $siteTreeID
+     *
+     * @return \Concrete\Core\Entity\Site\Tree|null
+     */
     public function getSiteTreeByID($siteTreeID)
     {
         return $this->entityManager->getRepository('Concrete\Core\Entity\Site\Tree')
             ->find($siteTreeID);
     }
 
+    /**
+     * @param int $id
+     *
+     * @return Site|null
+     */
     public function getByID($id)
     {
         $site = $this->entityManager->getRepository('Concrete\Core\Entity\Site\Site')
@@ -148,6 +205,9 @@ class Service
         }
     }
 
+    /**
+     * @param Site $site
+     */
     public function delete(Site $site)
     {
         $attributes = SiteKey::getAttributeValues($site);
@@ -183,7 +243,7 @@ class Service
      *
      * @param string $sort
      *
-     * @return array
+     * @return Site[]
      */
     public function getList($sort = 'name')
     {
@@ -207,6 +267,11 @@ class Service
         return $list;
     }
 
+    /**
+     * @param string|null $locale
+     *
+     * @return Site
+     */
     public function installDefault($locale = null)
     {
         if (!$locale) {
@@ -252,7 +317,7 @@ class Service
     }
 
     /**
-     * @return Site
+     * @return Site|null
      */
     final public function getSite()
     {
@@ -268,7 +333,7 @@ class Service
     }
 
     /**
-     * @return Site
+     * @return Site|null
      */
     final public function getActiveSiteForEditing()
     {
