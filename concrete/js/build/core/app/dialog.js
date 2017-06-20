@@ -257,10 +257,13 @@ jQuery.fn.dialog.activateDialogContents = function($dialog) {
     });
 
     if ($dialog.find('.dialog-buttons').length > 0) {
-        $dialog.jqdialog('option', 'buttons', [{}]);
-        $dialog.parent().find(".ui-dialog-buttonset").remove();
-        $dialog.parent().find(".ui-dialog-buttonpane").html('');
-        $dialog.find('.dialog-buttons').eq(0).removeClass().appendTo($dialog.parent().find('.ui-dialog-buttonpane').addClass("ccm-ui"));
+        html = $dialog.find('.dialog-buttons').html();
+        if (html) {
+            $dialog.jqdialog('option', 'buttons', [{}]);
+            $dialog.parent().find(".ui-dialog-buttonset").remove();
+            $dialog.parent().find(".ui-dialog-buttonpane").html('');
+            $dialog.find('.dialog-buttons').eq(0).removeClass().appendTo($dialog.parent().find('.ui-dialog-buttonpane').addClass("ccm-ui"));
+        }
     }
 
 
