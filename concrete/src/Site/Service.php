@@ -13,6 +13,7 @@ use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Site\Resolver\ResolverFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Concrete\Core\Application\Application;
+use Punic\Comparer;
 
 class Service
 {
@@ -193,13 +194,14 @@ class Service
             $list[] = $factory->createEntity($site);
         }
 
-        if (!$sort) {
-            return $list;
+        switch ($sort) {
+            case 'name':
+                $comparer = new Comparer();
+                usort($list, function ($siteA, $siteB) use ($comparer) {
+                    return $comparer->compare($siteA->getSiteName(), $siteB->getSiteName());
+                });
+                break;
         }
-
-        usort($list, function($siteA, $siteB) {
-            return strcasecmp($siteA->getSiteName(), $siteB->getSiteName());
-        });
 
         return $list;
     }
