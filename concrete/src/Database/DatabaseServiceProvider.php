@@ -138,16 +138,19 @@ class DatabaseServiceProvider extends ServiceProvider
             \Doctrine\Common\Proxy\Autoloader::register($proxyDir, $proxyNamespace);
         }
         // Other helpers
-        $this->app->bindIf(LikeBuilder::class, function ($app) {
-            $otherWildcards = [];
-            if ($app->bound('Concrete\Core\Database\Connection\Connection')) {
-                $connection = $app->make('Concrete\Core\Database\Connection\Connection');
-                $platform = $connection->getDatabasePlatform();
-                $platformWildcards = $platform->getWildcards();
-                $otherWildcards = array_values(array_diff($platformWildcards, [LikeBuilder::DEFAULT_ANYCHARACTER_WILDCARD, LikeBuilder::DEFAULT_ONECHARACTER_WILDCARD]));
-            }
-            return $app->build(LikeBuilder::class, ['otherWildcards' => $otherWildcards]);
-        });
+        $this->app->when(LikeBuilder::class)
+            ->needs('$otherWildcards')
+            ->give(function($app) {
+                $otherWildcards = [];
+                if ($app->bound('Concrete\Core\Database\Connection\Connection')) {
+                    $connection = $app->make('Concrete\Core\Database\Connection\Connection');
+                    $platform = $connection->getDatabasePlatform();
+                    $platformWildcards = $platform->getWildcards();
+                    $otherWildcards = array_values(array_diff($platformWildcards, [LikeBuilder::DEFAULT_ANYCHARACTER_WILDCARD, LikeBuilder::DEFAULT_ONECHARACTER_WILDCARD]));
+                }
+                return $otherWildcards;
+            })
+        ;
     }
 
     /**
