@@ -257,7 +257,7 @@ jQuery.fn.dialog.activateDialogContents = function($dialog) {
     });
 
     if ($dialog.find('.dialog-buttons').length > 0) {
-        html = $dialog.find('.dialog-buttons').html();
+        var html = $dialog.find('.dialog-buttons').html();
         if (html) {
             $dialog.jqdialog('option', 'buttons', [{}]);
             $dialog.parent().find(".ui-dialog-buttonset").remove();
