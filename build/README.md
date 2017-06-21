@@ -21,7 +21,7 @@ Note that you will need to install third party PHP dependencies via Composer if 
 Every task may have its own parameters. These parameters may be specified inline or in a file called `Gruntfile.parameters.js`.
 
 For instance, you may execute this line of code:
-`grunt taskname --nameOfTheOption=valueOfTheOption`
+`grunt taskname --nameOfTheOption=valueOfTheOption`.
 
 Or you can have a  `Gruntfile.parameters.js` like this:
 ```
@@ -29,14 +29,14 @@ module.exports = {
 	nameOfTheOption: 'valueOfTheOption'
 };
 ```
-And you can simply launch `grunt taskname`
+And you can simply launch `grunt taskname`.
 
 ## Building .css files
 
 - For debugging: `grunt css:debug`
-	- The generated .css files are more readable, but they have a slightly bigger size
+	- The generated .css files are more readable, but they have a slightly bigger size.
 - For production: `grunt css:release` (or simply `grunt css`)
-	-  The generated .css files are slightly smaller, but they are harder to read from a human point of view
+	-  The generated .css files are slightly smaller, but they are harder to read from a human point of view.
 
 
 ## Building .js files
@@ -48,22 +48,22 @@ And you can simply launch `grunt taskname`
 
 ## Building with Grunt Watch & Livereload
 
-- Running `grunt watch` from this directory and saving `.less` and `.js` files with trigger the `css:debug` and `js:debug` tasks
-- Install the Livereload plugins for [Firefox](https://addons.mozilla.org/en-US/firefox/addon/livereload/) and [Chrome](https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei) in order to have the browser automatically refresh after build completes
+- Running `grunt watch` from this directory and saving `.less` and `.js` files with trigger the `css:debug` and `js:debug` tasks.
+- Install the Livereload plugins for [Firefox](https://addons.mozilla.org/en-US/firefox/addon/livereload/) and [Chrome](https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei) in order to have the browser automatically refresh after build completes.
 
 ## Building everything
 
 - For debugging: `grunt debug`
-	- it's the same as calling `grunt css:debug` and `grunt js:debug`
+	- it's the same as calling `grunt css:debug` and `grunt js:debug`.
 - For production: `grunt release` (or simply `grunt`)
-	- it's the same as calling `grunt css:release` and `grunt js:release`
+	- it's the same as calling `grunt css:release` and `grunt js:release`.
 
 
 ## Built assets and GIT
 
 Since the CSS and JavaScript assets are under GIT, you may want to tell GIT to temporarily ignore these assets in your working copy of the repository.
-This can be done with this command: `grunt gitskip-on`
-To let GIT reconsider your local assets, simply run `grunt gitskip-off`
+This can be done with this command: `grunt gitskip-on`.
+To let GIT reconsider your local assets, simply run `grunt gitskip-off`.
 
 
 ## Debugging JavaScript with source maps
@@ -78,10 +78,10 @@ For instance, if your concrete5 installation is at http://www.domain.com/c5subfo
 
 To download translations from a Community Translation server, you can use the `translations` task.
 You have to specify the following parameters:
-- `ctEntryPoint` the entry point URI of the API of the Community Translation server
-- `ctAPIToken` the API Token to be used to authenticate yourself on the Community Translation server (may not be required)
-- `ctPackage` the handle of the package on the Community Translation server
-- `ctPackageVersion` the version of the package on the Community Translation server
+- `ctEntryPoint` the entry point URI of the API of the Community Translation server.
+- `ctAPIToken` the API Token to be used to authenticate yourself on the Community Translation server (may not be required).
+- `ctPackage` the handle of the package on the Community Translation server.
+- `ctPackageVersion` the version of the package on the Community Translation server.
 - `ctLocales` a comma-separated list of locale identifiers (for instance: `de_DE,it_IT,el_GE`) that you want to download. If this option is specified in the `Gruntfile.parameters.js` file you can also write a Javascript array (for instance: `module.exports.ctLocales = ['de_DE' ,'it_IT', 'el_GE'];`). If you don't specify this value then all the available locales will be fetched.
 - `ctProgressLimit` the task will retrieve only translations above this limit. For instance, if you specify `90`, then the task will download translations that are at least at 90% (_the default value for this option is 95%_).
 
@@ -99,7 +99,7 @@ As stated above, some or all of these options can also be specified in the `Grun
 You can use the `remove-short-tags` grunt task.
 It accepts the following parameters (in `Gruntfile.parameters.js` or in command line):
 - `package` The package handle you want to work on. If not specified (or if its value is `-`) the task work on the whole concrete5 directory. 
-- `destination` The destination path. If not specified the source files will we overwritten.
+- `destination` The destination path. If not specified the source files will be overwritten.
 - `shortTagRemover` A shell command that will replace short tags with long tags for a specific file. It must accept two syntaxes:
 	- `command filename`: the command should overwrite the specified file
 	- `command sourceFilename destinationFilename`: the command should read from `sourceFilename` and save to `destinationFilename`
