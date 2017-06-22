@@ -294,7 +294,7 @@
                 title: ccmi18n_filemanager.addFiles,
                 href: CCM_DISPATCHER_FILENAME + '/tools/required/files/import?currentFolder=' + my.currentFolder,
                 onClose: function() {
-                    my.reloadFolder();
+                    my.refreshResults();
                 }
             });
         });
