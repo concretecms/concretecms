@@ -86,19 +86,28 @@ class IndexSearch extends IndexSearchAll implements ApplicationAwareInterface
     protected function pagesToQueue()
     {
         $qb = $this->connection->createQueryBuilder();
-        $timeout = $this->app['config']->get('concrete.misc.page_search_index_lifetime');
+        $timeout = intval($this->app['config']->get('concrete.misc.page_search_index_lifetime'));
 
-        //'( or psi.cID is null or psi.cDateLastIndexed is null)'
-        $statement = $qb->select('p.cID')
+        // Find all pages that need indexing
+        $query = $qb
+            ->select('p.cID')
             ->from('Pages', 'p')
+            ->leftJoin('p', 'CollectionSearchIndexAttributes', 'a', 'p.cID = a.cID')
             ->leftJoin('p', 'Collections', 'c', 'p.cID = c.cID')
             ->leftJoin('p', 'PageSearchIndex', 's', 'p.cID = s.cID')
-            ->where('c.cDateModified > s.cDateLastIndexed')
-            ->orWhere('UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(s.cDateLastIndexed) > ' . $timeout)
-            ->orWhere('s.cID is null')
-            ->orWhere('s.cDateLastIndexed is null')->execute();
+            ->where('cIsActive = 1')
+            ->andWhere($qb->expr()->orX(
+                'a.ak_exclude_search_index is null',
+                'a.ak_exclude_search_index = 0'
+            ))
+            ->andWhere($qb->expr()->orX(
+                'cDateModified > s.cDateLastIndexed',
+                "(UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(s.cDateLastIndexed) > {$timeout})",
+                's.cID is null',
+                's.cDateLastIndexed is null'
+            ))->execute();
 
-        while ($id = $statement->fetchColumn()) {
+        while ($id = $query->fetchColumn()) {
             yield $id;
         }
     }
