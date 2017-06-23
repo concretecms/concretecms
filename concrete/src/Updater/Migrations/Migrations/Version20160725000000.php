@@ -890,7 +890,6 @@ class Version20160725000000 extends AbstractMigration
 
         $site = $service->getDefault();
         $this->connection->executeQuery('update Pages set siteTreeID = ? where cIsSystemPage = 0', [$site->getSiteTreeID()]);
-        $this->connection->executeQuery('update Stacks set siteTreeID = ?', [$site->getSiteTreeID()]);
         $this->connection->executeQuery('update PageTypes set siteTypeID = ? where ptIsInternal = 0', [$type->getSiteTypeID()]);
         // migrate social links
         $links = $em->getRepository('Concrete\Core\Entity\Sharing\SocialNetwork\Link')
