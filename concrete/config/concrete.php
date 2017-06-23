@@ -433,6 +433,7 @@ return [
         'enable_progressive_page_reindex' => true,
         'mobile_theme_id' => 0,
         'sitemap_approve_immediately' => true,
+        'sitemap_show_permission' => false,
         'enable_translate_locale_en_us' => false,
         'page_search_index_lifetime' => 259200,
         'enable_trash_can' => true,

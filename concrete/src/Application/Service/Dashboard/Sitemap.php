@@ -171,6 +171,20 @@ class Sitemap
 
         $cvName = ($c->getCollectionName() !== '') ? $c->getCollectionName() : '(No Title)';
         $cvName = ($c->isSystemPage() || $cID == 1) ? t($cvName) : $cvName;
+        if (Config::get('concrete.misc.sitemap_show_permission')){
+            switch ($c->getCollectionInheritance()) {
+                case 'TEMPLATE':
+                    $inheritance = ' <i class="fa fa-object-group" title="'. t("PageType Permission") . ": " . $c->getPageTypeName() .'" aria-hidden="true"></i>';
+                    $cvName = $cvName . $inheritance;
+                    break;
+                case 'OVERRIDE':
+                    $inheritance = ' <i class="fa fa fa-code-fork" title="'. t("Manual Permission") .'" aria-hidden="true"></i>';
+                    $cvName = $cvName . $inheritance;
+                    break;
+                case 'PARENT':
+                    break;
+            }
+        }
 
         $isInTrash = $c->isInTrash();
 
