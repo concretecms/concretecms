@@ -10,10 +10,12 @@ class Version20170407000001 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
+        $this->connection->executeQuery('set foreign_key_checks = 0');
         $this->refreshEntities([
             'Concrete\Core\Entity\File\File',
             'Concrete\Core\Entity\User\User'
         ]);
+        $this->connection->executeQuery('set foreign_key_checks = 1');
     }
 
     public function down(Schema $schema)
