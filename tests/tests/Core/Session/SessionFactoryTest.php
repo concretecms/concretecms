@@ -5,6 +5,8 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Session\SessionFactory;
 use Concrete\Core\Session\SessionFactoryInterface;
+use Concrete\Core\Session\Storage\Handler\NativeFileSessionHandler;
+use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeSessionHandler;
 
 class SessionFactoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -62,12 +64,17 @@ class SessionFactoryTest extends \PHPUnit_Framework_TestCase
         // Make sure database session gives us something other than native file session
         $pdo_handler = $method->invokeArgs($this->factory, array($config));
         $this->assertNotInstanceOf(
-            'Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler', $pdo_handler);
+            \Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler::class, $pdo_handler);
+
+        // Alias a basic class over the one we use by default, this is required because The factory doesn't have OCP
+        // and so we have no other way to swap out the instance. Since some versions of PHP cause a E_DEPRECATED warning
+        // when running tests, we must do this to allow our class to be created when headers have been sent.
+        class_alias(NativeSessionHandler::class, NativeFileSessionHandler::class);
 
         $config['concrete.session.handler'] = 'file';
         // Make sure file session does give us native file session
         /** @var \Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler $native_handler */
         $native_handler = $method->invokeArgs($this->factory, array($config));
-        $this->assertInstanceOf('Concrete\Core\Session\Storage\Handler\NativeFileSessionHandler', $native_handler);
+        $this->assertInstanceOf(NativeFileSessionHandler::class, $native_handler);
     }
 }
