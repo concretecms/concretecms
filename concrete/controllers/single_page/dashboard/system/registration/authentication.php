@@ -66,7 +66,7 @@ class Authentication extends DashboardPageController
             }
 
             $at->enable();
-            $this->set('message', t('The %s authentication type has been enabled.', $at->getAuthenticationDisplayTypeName('text')));
+            $this->set('message', t('The %s authentication type has been enabled.', $at->getAuthenticationTypeDisplayName('text')));
         } catch (Exception $e) {
             $this->error->add($e->getMessage());
         }
@@ -88,7 +88,7 @@ class Authentication extends DashboardPageController
             }
 
             $at->disable();
-            $this->set('message', t('The %s authentication type has been disabled.', $at->getAuthenticationDisplayTypeName('text')));
+            $this->set('message', t('The %s authentication type has been disabled.', $at->getAuthenticationTypeDisplayName('text')));
         } catch (Exception $e) {
             $this->error->add($e->getMessage());
         }
