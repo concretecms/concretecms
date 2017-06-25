@@ -8,3 +8,11 @@ return;
 
 // To translate the value of the VERSION_INITIAL_COMMENT constant
 t('Initial Version');
+
+// To translate the names of the autentication types
+// @see \Concrete\Core\Package\StartingPointPackage::add_users
+t('AuthenticationType', 'Standard');
+t('AuthenticationType', 'concrete5.org');
+t('AuthenticationType', 'Facebook');
+t('AuthenticationType', 'Twitter');
+t('AuthenticationType', 'Google');
