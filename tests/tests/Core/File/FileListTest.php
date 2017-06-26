@@ -233,7 +233,7 @@ class FileListTest extends \FileStorageTestCase
 
         $results = $pagination->getCurrentPageResults();
         $this->assertInstanceOf('\Concrete\Core\Entity\File\File', $results[0]);
-        $this->assertEquals(1, count($results[0]));
+        $this->assertCount(1, $results);
     }
 
     public function testPaginationWithPermissions()
