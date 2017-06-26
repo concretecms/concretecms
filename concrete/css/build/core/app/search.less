@@ -444,7 +444,11 @@ table.ccm-search-results-table {
   &.compact-results {
     thead,
     tbody {
-      th,
+      th {
+        &:first-child {
+          padding-left: 0;
+        }
+      }
       td {
         &:first-child {
           padding-left: 15px;
