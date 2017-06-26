@@ -25,7 +25,7 @@ $form = Loader::helper('form');
             foreach ($activeAuths as $auth) {
                 ?>
 					<li<?=$first ? " class='active'" : ''?>>
-						<a data-authType='<?=$auth->getAuthenticationTypeHandle()?>' href='#<?=$auth->getAuthenticationTypeHandle()?>'><?=$auth->getAuthenticationTypeName()?></a>
+						<a data-authType='<?=$auth->getAuthenticationTypeHandle()?>' href='#<?=$auth->getAuthenticationTypeHandle()?>'><?=$auth->getAuthenticationTypeDisplayName()?></a>
 					</li>
 					<?php
                     $first = false;
