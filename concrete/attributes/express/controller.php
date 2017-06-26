@@ -9,7 +9,7 @@ use Doctrine\ORM\Query\Expr;
 
 class Controller extends AttributeTypeController
 {
-    public $helpers = array('form');
+    public $helpers = ['form'];
 
     protected $searchIndexFieldDefinition = array('type' => 'integer', 'options' => array('notnull' => false));
 
@@ -52,10 +52,12 @@ class Controller extends AttributeTypeController
                 $entry = $value->getSelectedEntries()[0];
             }
         }
-        $form_selector = $this->app->make('form/express/entry_selector');
-        print $form_selector->selectEntry($this->getEntity(), $this->field('value'), $entry);
+        $entrySelector = $this->app->make('form/express/entry_selector');
+        $this->set('entrySelector', $entrySelector);
+        $this->set('entry', $entry);
+        $this->set('entity', $this->getEntity());
     }
-    
+
     public function searchForm($list)
     {
         $list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), '%' . $this->request('value') . '%', 'like');
