@@ -5,6 +5,8 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Session\SessionFactory;
 use Concrete\Core\Session\SessionFactoryInterface;
+use Concrete\Core\Session\Storage\Handler\NativeFileSessionHandler;
+use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeSessionHandler;
 
 class SessionFactoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -51,6 +53,10 @@ class SessionFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function testHandlerConfiguration()
     {
+        if (headers_sent()) {
+            $this->markTestSkipped('Cannot test sessions after headers have been sent.');
+        }
+
         $config = $this->app['config'];
         $config['concrete.session'] = array('handler' => 'database', 'save_path' => '/tmp');
 
@@ -62,12 +68,12 @@ class SessionFactoryTest extends \PHPUnit_Framework_TestCase
         // Make sure database session gives us something other than native file session
         $pdo_handler = $method->invokeArgs($this->factory, array($config));
         $this->assertNotInstanceOf(
-            'Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler', $pdo_handler);
+            \Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler::class, $pdo_handler);
 
         $config['concrete.session.handler'] = 'file';
         // Make sure file session does give us native file session
         /** @var \Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler $native_handler */
         $native_handler = $method->invokeArgs($this->factory, array($config));
-        $this->assertInstanceOf('Concrete\Core\Session\Storage\Handler\NativeFileSessionHandler', $native_handler);
+        $this->assertInstanceOf(NativeFileSessionHandler::class, $native_handler);
     }
 }

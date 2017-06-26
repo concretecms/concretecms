@@ -254,7 +254,7 @@ class ClassLoader
 
         $loader = new Psr4ClassLoader();
         $loaders = $pkg->getPackageAutoloaderRegistries();
-        if (count($loaders) > 0) {
+        if ($loaders && count($loaders) > 0) {
             foreach ($loaders as $path => $prefix) {
                 $loader->addPrefix($prefix, DIR_PACKAGES . '/' . $pkgHandle . '/' . $path);
             }
