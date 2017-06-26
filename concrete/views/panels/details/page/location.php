@@ -4,8 +4,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <section class="ccm-ui">
 	<header><?=t('Location')?></header>
 	<form method="post" action="<?=$controller->action('submit')?>" data-dialog-form="location" data-panel-detail-form="location">
-
-		<?=Loader::helper('concrete/ui/help')->display('panel', '/page/location')?>
         <input type="hidden" name="cParentID" value="<?=$cParentID?>" />
 
         <?php if ($isHome == false && !isset($sitemap) && $sitemap == false) {
@@ -14,11 +12,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 <?php if ($c->isPageDraft()) {
     ?>
                     <label class="control-label"><?=t('Where will this page live on the site?')?></label>
-                <?php 
+                <?php
 } else {
     ?>
                     <label class="control-label"><?=t('Where does this page live on the site?')?></label>
-                <?php 
+                <?php
 }
     ?>
 
@@ -28,7 +26,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
             </div>
 		<hr/>
-        <?php 
+        <?php
 } ?>
 
 	<?php if ($c->isGeneratedCollection() || $c->isPageDraft()) {
@@ -39,16 +37,16 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			<?php if ($c->isPageDraft()) {
     ?>
 				<?=t('None. Pages do not have canonical URLs until they are published.')?>
-			<?php 
+			<?php
 } else {
     ?>
 				<?php echo Loader::helper('navigation')->getLinkToCollection($c, true)?>
-			<?php 
+			<?php
 }
     ?>
 		</div>
 
-	<?php 
+	<?php
 } else {
     ?>
 
@@ -79,13 +77,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 		</div>
 
-	<?php 
+	<?php
 } ?>
 
 	<?php if (isset($sitemap) && $sitemap) {
     ?>
 		<input type="hidden" name="sitemap" value="1" />
-	<?php 
+	<?php
 } ?>
 
 	</form>
@@ -214,7 +212,7 @@ $(function() {
 			row: <?=$i + 1?>
 		})
 	);
-    <?php 
+    <?php
 } ?>
 
 

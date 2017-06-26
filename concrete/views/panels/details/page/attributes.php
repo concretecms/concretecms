@@ -26,7 +26,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 		<span class="ccm-detail-page-attributes-id"><?=t('Page ID: %s', $c->getCollectionID())?></span>
 
-		<?=Loader::helper('concrete/ui/help')->display('panel', '/page/attributes')?>
 		<?php if ($assignment->allowEditName()) {
     ?>
 		<div class="form-group">
