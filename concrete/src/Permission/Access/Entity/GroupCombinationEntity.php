@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Permission\Access\Entity;
 
+use Concrete\Core\User\UserList;
 use Loader;
 use Config;
 use Concrete\Core\Permission\Access\Access as PermissionAccess;
