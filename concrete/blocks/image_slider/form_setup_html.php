@@ -138,7 +138,7 @@ echo Core::make('helper/concrete/ui')->tabs($tabs);
 
         $('.ccm-image-slider-entries-<?php echo $bID?>').on('click','.ccm-edit-slide', function() {
             $(this).closest('.ccm-image-slider-entry-<?php echo $bID?>').toggleClass('slide-closed');
-            var thisEditButton = $(this).closest('.ccm-image-slider-entry-<?php echo $bID?>').find('.btn.ccm-edit-slide');
+            var thisEditButton = $(this);
             if (thisEditButton.data('slideEditText') === thisEditButton.text()) {
                 thisEditButton.text(thisEditButton.data('slideCloseText'));
             } else if (thisEditButton.data('slideCloseText') === thisEditButton.text()) {
