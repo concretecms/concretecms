@@ -166,8 +166,8 @@ class Controller extends AttributeTypeController
     public function validateValue()
     {
         $f = $this->getAttributeValue()->getValue();
+        $e = Core::make('helper/validation/error');
         if (!is_object($f)) {
-            $e = Core::make('helper/validation/error');
             $e->add(t('You must specify a valid file for %s', $this->attributeKey->getAttributeKeyDisplayName()));
         }
 
