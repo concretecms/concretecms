@@ -3,6 +3,7 @@ namespace Concrete\Controller;
 
 use Concrete\Core\Cache\Cache;
 use Concrete\Core\Config\Renderer;
+use Concrete\Core\Database\Connection\Timezone;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Localization\Localization as Localization;
@@ -11,6 +12,7 @@ use Concrete\Core\Localization\Translation\Remote\ProviderInterface as RemoteTra
 use Concrete\Core\Url\UrlImmutable;
 use Controller;
 use Database;
+use DateTimeZone;
 use Exception;
 use Hautelook\Phpass\PasswordHash;
 use Punic\Comparer as PunicComparer;
@@ -18,8 +20,6 @@ use ReflectionObject;
 use StartingPointPackage;
 use stdClass;
 use View;
-use DateTimeZone;
-use Concrete\Core\Database\Connection\Timezone;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
