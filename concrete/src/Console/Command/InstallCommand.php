@@ -2,11 +2,13 @@
 namespace Concrete\Core\Console\Command;
 
 use Concrete\Core\Console\Command;
+use Concrete\Core\Database\Connection\Timezone;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Package\Routine\AttachModeCompatibleRoutineInterface;
 use Concrete\Core\Support\Facade\Application;
 use Config;
 use Database;
+use DateTimeZone;
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
@@ -34,6 +36,7 @@ class InstallCommand extends Command
             ->addOption('db-username', null, InputOption::VALUE_REQUIRED, 'Database username')
             ->addOption('db-password', null, InputOption::VALUE_REQUIRED, 'Database password')
             ->addOption('db-database', null, InputOption::VALUE_REQUIRED, 'Database name')
+            ->addOption('timezone', null, InputOption::VALUE_REQUIRED, 'The system time zone, compatible with the database one', @date_default_timezone_get() ?: 'UTC')
             ->addOption('site', null, InputOption::VALUE_REQUIRED, 'Name of the site', 'concrete5 Site')
             ->addOption('canonical-url', null, InputOption::VALUE_REQUIRED, 'Canonical URL', '')
             ->addOption('canonical-url-alternative', null, InputOption::VALUE_REQUIRED, 'Alternative canonical URL', '')
@@ -87,6 +90,12 @@ EOT
         } else {
             $_POST['siteLocaleLanguage'] = 'en';
             $_POST['siteLocaleCountry'] = 'US';
+        }
+
+        if (isset($options['timezone'])) {
+            $_POST['SERVER_TIMEZONE'] = $options['timezone'];
+        } else {
+            $_POST['SERVER_TIMEZONE'] = @date_default_timezone_get() ?: 'UTC';
         }
 
         if (isset($options['language'])) {
@@ -417,8 +426,28 @@ EOT
                     return $question->setHidden(true);
                 },
             ],
+            'timezone',
+            function (InputInterface $input, OutputInterface $output) {
+                $timezone = trim($input->getOption('timezone'));
+                if ($timezone === '') {
+                    $output->writeln(sprintf('<error>%s</error>', t('A time zone identifier is required.')));
+
+                    return 'timezone';
+                }
+                try {
+                    new DateTimeZone($timezone);
+                } catch (Exception $x) {
+                    $output->writeln(sprintf('<error>%s</error>', t('Invalid time zone identifier.')));
+
+                    return 'timezone';
+                }
+                date_default_timezone_set($timezone);
+
+                return true;
+            },
             function (InputInterface $input, OutputInterface $output) {
                 $params = [
+                    'wrapperClass' => 'Concrete\Core\Database\Connection\Connection',
                     'dbname' => $input->getOption('db-database'),
                     'user' => $input->getOption('db-username'),
                     'password' => $input->getOption('db-password'),
@@ -445,6 +474,21 @@ EOT
                     $input->setOption('db-password', '');
 
                     return false;
+                }
+                $app = Application::getFacadeApplication();
+                $ctz = $app->make(Timezone::class, ['connection' => $connection]);
+                $deltaTimezone = $ctz->getDeltaTimezone($input->getOption('timezone'));
+                if ($deltaTimezone !== null) {
+                    $error = $ctz->describeDeltaTimezone($deltaTimezone);
+                    $suggestTimezones = $ctz->getCompatibleTimezones();
+                    if (!empty($suggestTimezones)) {
+                        $suggestTimezones = array_keys($suggestTimezones);
+                        sort($suggestTimezones);
+                        $error .= "\n" . t('You may want to use one of these time zones:' . "\n" . implode("\n", $suggestTimezones));
+                    }
+                    $output->writeln(sprintf('<error>%s</error>', $error));
+
+                    return 'timezone';
                 }
 
                 return true;
