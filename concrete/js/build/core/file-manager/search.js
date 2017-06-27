@@ -178,7 +178,11 @@
                     if (entry.active) {
                         activeClass = ' class="active"';
                     }
-                    $nav.append('<li' + activeClass + '><a data-file-manager-tree-node="' + entry.folder + '" href="' + entry.url + '">' + entry.name + '</a></li>');
+
+                    var $anchor = $($.parseHTML('<a data-file-manager-tree-node="' + entry.folder + '" href="' + entry.url + '"></a>'));
+                    $anchor.text(entry.name);
+                    $('<li' + activeClass + '><a data-file-manager-tree-node="' + entry.folder + '" href="' + entry.url + '"></a></li>').append($anchor).appendTo($nav);
+
                     $nav.find('li.active a').on('click', function(e) {
                         e.stopPropagation();
                         e.preventDefault();
