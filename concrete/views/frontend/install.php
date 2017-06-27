@@ -411,7 +411,12 @@ if (isset($successMessage)) {
                                     <label class="control-label" for="sessionHandler"><?=t('Country')?></label>
                                     <?= $form->select('siteLocaleCountry', $countries, $computedSiteLocaleCountry) ?>
                                 </div>
-                                
+
+                                <div class="form-group">
+                                    <label class="control-label" for="SERVER_TIMEZONE"><?=t('System Time Zone')?></label>
+                                    <?= $form->select('SERVER_TIMEZONE', $availableTimezones, $SERVER_TIMEZONE, ['required' => 'required']) ?>
+                                </div>
+
                                 <script>
                                 $('#siteLocaleLanguage').on('change', function() {
                                     $.ajax(

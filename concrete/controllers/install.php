@@ -18,6 +18,8 @@ use ReflectionObject;
 use StartingPointPackage;
 use stdClass;
 use View;
+use DateTimeZone;
+use Concrete\Core\Database\Connection\Timezone;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
@@ -116,6 +118,8 @@ class Install extends Controller
             if (defined('APP_INSTALL_LANGUAGE') && APP_INSTALL_LANGUAGE) {
                 Localization::changeLocale(APP_INSTALL_LANGUAGE);
             }
+            $config = $this->app->make('config');
+            $_POST['SERVER_TIMEZONE'] = $config->get('app.server_timezone');
             $e = $this->app->make('helper/validation/error');
             $e = $this->validateDatabase($e);
             if (defined('INSTALL_STARTING_POINT') && INSTALL_STARTING_POINT) {
@@ -148,6 +152,13 @@ class Install extends Controller
         if (!extension_loaded('pdo')) {
             $e->add($this->getDBErrorMsg());
         } else {
+            $SERVER_TIMEZONE = null;
+            if (!empty($_POST['SERVER_TIMEZONE'])) {
+                try {
+                    $SERVER_TIMEZONE = new DateTimeZone($_POST['SERVER_TIMEZONE']);
+                } catch (Exception $x) {
+                }
+            }
             $DB_SERVER = isset($_POST['DB_SERVER']) ? $_POST['DB_SERVER'] : null;
             $DB_DATABASE = isset($_POST['DB_DATABASE']) ? $_POST['DB_DATABASE'] : null;
             $db = Database::getFactory()->createConnection(
@@ -188,6 +199,20 @@ class Install extends Controller
                     } catch (Exception $exception) {
                         // we're going to just proceed and hope for the best.
                     }
+                }
+            }
+            if ($SERVER_TIMEZONE === null) {
+                $e->add(t('Invalid or missing server time zone.'));
+            } else {
+                $ctz = $this->app->make(Timezone::class, ['connection' => $db]);
+                $deltaTimezone = $ctz->getDeltaTimezone($SERVER_TIMEZONE);
+                if ($deltaTimezone !== null) {
+                    $error = $ctz->describeDeltaTimezone($deltaTimezone);
+                    $suggestTimezones = $ctz->getCompatibleTimezones();
+                    if (!empty($suggestTimezones)) {
+                        $error .= ' ' . t('You may want to use one of these time zones in the <u>Advanced Options</u> section:<ul><li>' . implode('</li><li>', $suggestTimezones)) . '</li></ul>';
+                    }
+                    $e->add($error);
                 }
             }
         }
@@ -265,6 +290,8 @@ class Install extends Controller
         $this->set('canonicalUrlChecked', $canonicalUrlChecked);
         $this->set('canonicalUrlAlternative', $canonicalUrlAlternative);
         $this->set('canonicalUrlAlternativeChecked', $canonicalUrlAlternativeChecked);
+        $this->set('SERVER_TIMEZONE', @date_default_timezone_get() ?: 'UTC');
+        $this->set('availableTimezones', $this->app->make('date')->getGroupedTimezones());
     }
 
     public function get_site_locale_countries($viewLocaleID, $languageID, $preselectedCountryID)
@@ -507,6 +534,7 @@ class Install extends Controller
             $val->addRequiredEmail('uEmail', t('Please specify a valid email address'));
             $val->addRequired('DB_DATABASE', t('You must specify a valid database name'));
             $val->addRequired('DB_SERVER', t('You must specify a valid database server'));
+            $val->addRequired('SERVER_TIMEZONE', t('You must specify the system time zone'));
 
             $password = $_POST['uPassword'];
             $passwordConfirm = $_POST['uPasswordConfirm'];
@@ -601,6 +629,7 @@ class Install extends Controller
                     $res = fwrite($this->fpu, $configuration);
                     fclose($this->fpu);
                     chmod(DIR_CONFIG_SITE . '/site_install_user.php', 0700);
+                    $config->save('app.server_timezone', $_POST['SERVER_TIMEZONE']);
                     if (PHP_SAPI != 'cli') {
                         $this->redirect('/');
                     }

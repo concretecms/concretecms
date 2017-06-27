@@ -433,9 +433,11 @@ class StartingPointPackage extends BasePackage
     {
         // Delete generated overrides and doctrine
         $fh = new File();
+        $timeZone = Config::get('app.server_timezone');
         if (is_dir(DIR_CONFIG_SITE . '/generated_overrides')) {
             $fh->removeAll(DIR_CONFIG_SITE . '/generated_overrides');
         }
+        Config::save('app.server_timezone', $timeZone);
         if (is_dir(Config::get('database.proxy_classes'))) {
             $fh->removeAll(Config::get('database.proxy_classes'));
         }
