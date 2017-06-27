@@ -30,7 +30,7 @@ class ConcreteBootstrap3PagerTemplate extends Template
 
     public function previousDisabled()
     {
-        return '<li class="disabled pull-left"><a href="#">' . t('Previous') . '</a></li>';
+        return '<li class="disabled pull-left"><a href="#" disabled="disabled" onclick="return false">' . t('Previous') . '</a></li>';
     }
 
     public function previousEnabled($page)
@@ -41,7 +41,7 @@ class ConcreteBootstrap3PagerTemplate extends Template
 
     public function nextDisabled()
     {
-        return '<li class="disabled pull-right"><a href="#">' . t('Next') . '</a></li> ';
+        return '<li class="disabled pull-right"><a href="#" disabled="disabled" onclick="return false">' . t('Next') . '</a></li> ';
     }
 
     public function nextEnabled($page)
