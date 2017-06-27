@@ -75,6 +75,9 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
                 // Start localization library.
                 'setSystemLocale',
 
+                // Set the system time zone (what should be the same as the database one)
+                'initializeSystemTimezone',
+
                 // Set up packages first.
                 // We do this because we don't want the entity manager to be loaded and we
                 // want to give packages an opportunity to replace classes and load new classes
@@ -82,7 +85,7 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
 
                 // Load site specific timezones. Has to come after packages because it
                 // instantiates the site service, which sometimes packages need to override.
-                'initializeTimezone',
+                'initializeSiteTimezone',
 
                 // Define legacy urls, this may be the first thing that loads the entity manager
                 'initializeLegacyUrlDefinitions',
@@ -102,6 +105,8 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
                 // Handle eventing
                 'handleEventing'
             ]);
+        } else {
+            $this->initializeSystemTimezone();
         }
 
         // Create the request to use
@@ -136,26 +141,31 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
         }
     }
 
-    /**
-     * @param Repository $config
-     */
-    protected function initializeTimezone()
-    {
-        $app = $this->app;
-        $siteConfig = $app->make('site')->getSite()->getConfigRepository();
-        $config = $app->make('config');
-
-        if (!$siteConfig->has('timezone')) {
-            // There is no timezone set.
-            $siteConfig->set('timezone', @date_default_timezone_get());
-        }
-
+    protected function initializeSystemTimezone() {
+        $config = $this->app->make('config');
         if (!$config->has('app.server_timezone')) {
             // There is no server timezone set.
             $config->set('app.server_timezone', @date_default_timezone_get());
         }
-
         @date_default_timezone_set($config->get('app.server_timezone'));
+    }
+
+    protected function initializeSiteTimezone() {
+        $siteConfig = $this->app->make('site')->getSite()->getConfigRepository();
+        
+        if (!$siteConfig->has('timezone')) {
+            // There is no timezone set.
+            $siteConfig->set('timezone', @date_default_timezone_get());
+        }
+    }
+    
+    /**
+     * @deprecated Splitted into initializeSystemTimezone and initializeSiteTimezone
+     */
+    protected function initializeTimezone()
+    {
+        $this->initializeSystemTimezone();
+        $this->initializeSiteTimezone();
     }
 
     /**
