@@ -28,6 +28,8 @@ use Concrete\Core\Tree\TreeType;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
+use Concrete\Core\Attribute\Category\PageCategory;
+use Concrete\Core\Support\Facade\Application;
 
 class Version20160725000000 extends AbstractMigration
 {
@@ -574,6 +576,18 @@ class Version20160725000000 extends AbstractMigration
     protected function addDashboard()
     {
         $this->output(t('Updating Dashboard...'));
+
+        $pageAttributeCategory = Application::getFacadeApplication()->make(PageCategory::class);
+        /* @var PageCategory $pageAttributeCategory */
+        $availableAttributes = [];
+        foreach ([
+            'exclude_nav',
+            'exclude_search_index',
+            'meta_keywords',
+        ] as $akHandle) {
+            $availableAttributes[$akHandle] = $pageAttributeCategory->getAttributeKeyByHandle($akHandle) ? true : false;
+        }
+
         $page = Page::getByPath('/dashboard/express');
         if (!is_object($page) || $page->isError()) {
             $sp = SinglePage::add('/dashboard/express');
