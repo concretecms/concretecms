@@ -98,6 +98,8 @@ EOT
             $_POST['SERVER_TIMEZONE'] = @date_default_timezone_get() ?: 'UTC';
         }
 
+        date_default_timezone_set($_POST['SERVER_TIMEZONE']);
+
         if (isset($options['language'])) {
             $_POST['locale'] = $options['language'];
         }
@@ -441,7 +443,6 @@ EOT
 
                     return 'timezone';
                 }
-                date_default_timezone_set($timezone);
 
                 return true;
             },
