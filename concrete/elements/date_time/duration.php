@@ -162,20 +162,20 @@ $weekDays = \Punic\Calendar::getSortedWeekdays('wide');
                     <div class="">
                         <div class="radio">
                             <label>
-                                <input type="radio" name="<%=options.namespace%>_pdRepeatPeriodMonthsRepeatBy_<%=repetition.setID%>" <% if (repetition.pdRepeatPeriodDaysEvery == 'month') { %>checked<% } %> value="month">
+                                <input type="radio" name="<%=options.namespace%>_pdRepeatPeriodMonthsRepeatBy_<%=repetition.setID%>" <% if (repetition.pdRepeatPeriodMonthsRepeatBy == 'month') { %>checked<% } %> value="month">
                                 <?= t('Day of Month')?>
                             </label>
                         </div>
                         <div class="radio">
                             <label>
-                                <input type="radio" name="<%=options.namespace%>_pdRepeatPeriodMonthsRepeatBy_<%=repetition.setID%>" <% if (repetition.pdRepeatPeriodDaysEvery == 'week') { %>checked<% } %> value="week">
+                                <input type="radio" name="<%=options.namespace%>_pdRepeatPeriodMonthsRepeatBy_<%=repetition.setID%>" <% if (repetition.pdRepeatPeriodMonthsRepeatBy == 'week') { %>checked<% } %> value="week">
                                 <?= t('Day of Week')?>
                             </label>
                         </div>
 
                         <div class="radio">
                             <label>
-                                <input type="radio" name="<%=options.namespace%>_pdRepeatPeriodMonthsRepeatBy_<%=repetition.setID%>" <% if (repetition.pdRepeatPeriodDaysEvery == 'lastweekday') { %>checked<% } %> value="lastweekday">
+                                <input type="radio" name="<%=options.namespace%>_pdRepeatPeriodMonthsRepeatBy_<%=repetition.setID%>" <% if (repetition.pdRepeatPeriodMonthsRepeatBy == 'lastweekday') { %>checked<% } %> value="lastweekday">
                                 <?= t('The last ') ?>
                                 <select name="<%=options.namespace%>_pdRepeatPeriodMonthsRepeatLastDay_<%=repetition.setID%>" class="form-control">
                                     <?php foreach($weekDays as $weekDay) { ?>
