@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Block\SwitchLanguage;
 
 use Concrete\Core\Block\BlockController;
@@ -7,7 +8,7 @@ use Concrete\Core\Routing\Redirect;
 use Cookie;
 use Session;
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
 class Controller extends BlockController
 {
@@ -19,30 +20,33 @@ class Controller extends BlockController
 
     public function getBlockTypeDescription()
     {
-        return t("Adds a front-end language switcher to your website.");
+        return t('Adds a front-end language switcher to your website.');
     }
 
     public function getBlockTypeName()
     {
-        return t("Switch Language");
+        return t('Switch Language');
     }
 
     public function action_switch_language($currentPageID, $sectionID, $bID = false)
     {
-        $lang = Section::getByID(intval($sectionID));
+        $lang = Section::getByID((int) $sectionID);
         if (is_object($lang)) {
-            $page = \Page::getByID(intval($currentPageID));
+            $page = \Page::getByID((int) $currentPageID);
             if (!$page->isError()) {
                 $relatedID = $lang->getTranslatedPageID($page);
                 if ($relatedID) {
                     $pc = \Page::getByID($relatedID);
+
                     return Redirect::page($pc);
                 }
                 if ($page->isGeneratedCollection()) {
                     $this->app->make('session')->set('multilingual_default_locale', $lang->getLocale());
+
                     return Redirect::page($page);
                 }
             }
+
             return Redirect::page($lang);
         }
 
