@@ -4,6 +4,7 @@ namespace Concrete\Controller\Dialog\Type;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Concrete\Core\Page\PageList;
+use Concrete\Core\Http\ResponseFactory;
 use Concrete\Core\Foundation\Queue\Queue;
 use PageTemplate;
 use PageType;
@@ -161,6 +162,8 @@ class UpdateFromType extends BackendInterfaceController
     public function submit($ptID, $pTemplateID)
     {
 
+        $responseFactory = $this->app->make(ResponseFactory::class);
+
         if (!$this->validateAction() || !$this->canAccess()) {
           $this->app->shutdown();
           return;
@@ -256,8 +259,8 @@ class UpdateFromType extends BackendInterfaceController
           }
 
           $obj->message = t('All child child pages updated successfully.');
-          echo json_encode($obj);
-          $this->app->shutdown();
+          return $responseFactory->json($obj);
+          
         } else {
           $queue = $this->queueForPageTypeUpdate($pageTypeDefaultPage, $queue);
         }
