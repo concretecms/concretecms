@@ -77,6 +77,9 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
                 // Set the system time zone (what should be the same as the database one)
                 'initializeSystemTimezone',
 
+                // Handle updating automatically
+                'handleUpdates',
+
                 // Set up packages first.
                 // We do this because we don't want the entity manager to be loaded and we
                 // want to give packages an opportunity to replace classes and load new classes
@@ -88,9 +91,6 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
 
                 // Define legacy urls, this may be the first thing that loads the entity manager
                 'initializeLegacyUrlDefinitions',
-
-                // Handle updating automatically
-                'handleUpdates',
 
                 // Register legacy tools routes
                 'registerLegacyRoutes',
