@@ -3,7 +3,6 @@ namespace Concrete\Attribute\Rating;
 
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
-use Concrete\Core\Entity\Attribute\Value\Value\RatingValue;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 
 class Controller extends AttributeTypeController
