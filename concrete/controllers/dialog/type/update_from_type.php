@@ -117,12 +117,20 @@ class UpdateFromType extends BackendInterfaceController
             $forceChangeOrder = false;
 
             if($asociatedBlock['arHandle'] != $blockPageTypeDefaultPage->getAreaHandle()){
-              $blockToUpdate['actions'][] = array('name' => 'change_arHandle', 'actualArHandle' => $blockPageTypeDefaultPage->getAreaHandle());
+              $blockToUpdate['actions'][] = array(
+                'name' => 'change_arHandle',
+                'actualArHandle' => $blockPageTypeDefaultPage->getAreaHandle()
+              );
+              
               $forceChangeOrder = true;
             }
 
             if($forceChangeOrder || ($asociatedBlock['cbDisplayOrder'] != $blockPageTypeDefaultPage->cbDisplayOrder)){
-              $blockToUpdate['actions'][] = array('name' => 'change_display_order', 'actualDisplayOrder' => $blockPageTypeDefaultPage->cbDisplayOrder);
+              $blockToUpdate['actions'][] = array(
+                'name' => 'change_display_order',
+                'actualDisplayOrder' => $blockPageTypeDefaultPage->cbDisplayOrder,
+                'actualArHandle' => $blockPageTypeDefaultPage->getAreaHandle()
+              );
             }
           }
 
@@ -260,7 +268,7 @@ class UpdateFromType extends BackendInterfaceController
 
           $obj->message = t('All child child pages updated successfully.');
           return $responseFactory->json($obj);
-          
+
         } else {
           $queue = $this->queueForPageTypeUpdate($pageTypeDefaultPage, $queue);
         }
