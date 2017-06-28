@@ -44,7 +44,7 @@ class CLIRunner implements RunInterface, ApplicationAwareInterface
 
         \Events::dispatch('on_before_console_run');
 
-        $console->run();
+        $console->run($input);
 
         \Events::dispatch('on_after_console_run');
     }
