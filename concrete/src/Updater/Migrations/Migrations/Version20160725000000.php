@@ -28,6 +28,8 @@ use Concrete\Core\Tree\TreeType;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
+use Concrete\Core\Attribute\Category\PageCategory;
+use Concrete\Core\Support\Facade\Application;
 
 class Version20160725000000 extends AbstractMigration
 {
@@ -574,6 +576,18 @@ class Version20160725000000 extends AbstractMigration
     protected function addDashboard()
     {
         $this->output(t('Updating Dashboard...'));
+
+        $pageAttributeCategory = Application::getFacadeApplication()->make(PageCategory::class);
+        /* @var PageCategory $pageAttributeCategory */
+        $availableAttributes = [];
+        foreach ([
+            'exclude_nav',
+            'exclude_search_index',
+            'meta_keywords',
+        ] as $akHandle) {
+            $availableAttributes[$akHandle] = $pageAttributeCategory->getAttributeKeyByHandle($akHandle) ? true : false;
+        }
+
         $page = Page::getByPath('/dashboard/express');
         if (!is_object($page) || $page->isError()) {
             $sp = SinglePage::add('/dashboard/express');
@@ -593,27 +607,37 @@ class Version20160725000000 extends AbstractMigration
         if (!is_object($page) || $page->isError()) {
             $sp = SinglePage::add('/dashboard/system/express/entities');
             $sp->update(['cName' => 'Data Objects']);
-            $sp->setAttribute('exclude_nav', true);
+            if ($availableAttributes['exclude_nav']) {
+                $sp->setAttribute('exclude_nav', true);
+            }
         }
         $page = Page::getByPath('/dashboard/system/express/entities/attributes');
         if (!is_object($page) || $page->isError()) {
             $sp = SinglePage::add('/dashboard/system/express/entities/attributes');
-            $sp->setAttribute('exclude_nav', true);
+            if ($availableAttributes['exclude_nav']) {
+                $sp->setAttribute('exclude_nav', true);
+            }
         }
         $page = Page::getByPath('/dashboard/system/express/entities/associations');
         if (!is_object($page) || $page->isError()) {
             $sp = SinglePage::add('/dashboard/system/express/entities/associations');
-            $sp->setAttribute('exclude_nav', true);
+            if ($availableAttributes['exclude_nav']) {
+                $sp->setAttribute('exclude_nav', true);
+            }
         }
         $page = Page::getByPath('/dashboard/system/express/entities/forms');
         if (!is_object($page) || $page->isError()) {
             $sp = SinglePage::add('/dashboard/system/express/entities/forms');
-            $sp->setAttribute('exclude_nav', true);
+            if ($availableAttributes['exclude_nav']) {
+                $sp->setAttribute('exclude_nav', true);
+            }
         }
         $page = Page::getByPath('/dashboard/system/express/entities/customize_search');
         if (!is_object($page) || $page->isError()) {
             $sp = SinglePage::add('/dashboard/system/express/entities/customize_search');
-            $sp->setAttribute('exclude_nav', true);
+            if ($availableAttributes['exclude_nav']) {
+                $sp->setAttribute('exclude_nav', true);
+            }
         }
         $page = Page::getByPath('/dashboard/system/express/entries');
         if (!is_object($page) || $page->isError()) {
@@ -624,8 +648,12 @@ class Version20160725000000 extends AbstractMigration
         if (!is_object($page) || $page->isError()) {
             $sp = SinglePage::add('/dashboard/reports/forms/legacy');
             $sp->update(['cName' => 'Form Results']);
-            $sp->setAttribute('exclude_search_index', true);
-            $sp->setAttribute('exclude_nav', true);
+            if ($availableAttributes['exclude_search_index']) {
+                $sp->setAttribute('exclude_search_index', true);
+            }
+            if ($availableAttributes['exclude_nav']) {
+                $sp->setAttribute('exclude_nav', true);
+            }
         }
         $page = Page::getByPath('/dashboard/system/basics/name');
         if (is_object($page) && !$page->isError()) {
@@ -635,14 +663,20 @@ class Version20160725000000 extends AbstractMigration
         if (!is_object($page) || $page->isError()) {
             $sp = SinglePage::add('/dashboard/system/basics/attributes');
             $sp->update(['cName' => 'Custom Attributes']);
-            $sp->setAttribute('exclude_search_index', true);
-            $sp->setAttribute('exclude_nav', true);
+            if ($availableAttributes['exclude_search_index']) {
+                $sp->setAttribute('exclude_search_index', true);
+            }
+            if ($availableAttributes['exclude_nav']) {
+                $sp->setAttribute('exclude_nav', true);
+            }
         }
         $page = Page::getByPath('/dashboard/system/registration/global_password_reset');
         if (!is_object($page) || $page->isError()) {
             $sp = SinglePage::add('/dashboard/system/registration/global_password_reset');
             $sp->update(['cDescription' => 'Signs out all users, resets all passwords and forces users to choose a new one']);
-            $sp->setAttribute('meta_keywords', 'global, password, reset, change password, force, sign out');
+            if ($availableAttributes['meta_keywords']) {
+                $sp->setAttribute('meta_keywords', 'global, password, reset, change password, force, sign out');
+            }
         }
         $page = Page::getByPath('/dashboard/system/registration/notification');
         if (!is_object($page) || $page->isError()) {
