@@ -2,8 +2,8 @@
 namespace Concrete\Core\Foundation\Runtime\Run;
 
 use Concrete\Core\Application\ApplicationAwareInterface;
-use Concrete\Core\Console\Application as ConsoleApplication;
 use Concrete\Core\Application\ApplicationAwareTrait;
+use Concrete\Core\Console\Application as ConsoleApplication;
 use Symfony\Component\Console\Input\ArgvInput;
 
 class CLIRunner implements RunInterface, ApplicationAwareInterface
