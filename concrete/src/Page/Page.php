@@ -1486,6 +1486,9 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         return $this->vObj->cvDatePublic;
     }
 
+    /**
+     * @return \DateTime|null Returns the \DateTime instance (or null if the current version doesn't have public date)
+     */
     public function getCollectionDatePublicObject()
     {
         return Core::make('date')->toDateTime($this->getCollectionDatePublic());
