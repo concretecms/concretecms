@@ -13,6 +13,15 @@ defined('C5_EXECUTE') or define('C5_EXECUTE', md5(uniqid()));
 
 /*
  * ----------------------------------------------------------------------------
+ * Ensure that we have a currently defined time zone.
+ * This needs to be done very early in order to avoid Whoops quitting with
+ * "It is not safe to rely on the system's timezone settings."
+ * ----------------------------------------------------------------------------
+ */
+@date_default_timezone_set(@date_default_timezone_get() ?: 'UTC');
+
+/*
+ * ----------------------------------------------------------------------------
  * The following constants need to load very early, because they're used
  * if we determine that we have an updated core, and they're also used to
  * determine where we grab our site config file from. So first we load them,
