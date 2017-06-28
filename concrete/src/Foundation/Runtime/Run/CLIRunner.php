@@ -2,8 +2,9 @@
 namespace Concrete\Core\Foundation\Runtime\Run;
 
 use Concrete\Core\Application\ApplicationAwareInterface;
-use Concrete\Core\Console\Application as ConsoleApplication;
 use Concrete\Core\Application\ApplicationAwareTrait;
+use Concrete\Core\Console\Application as ConsoleApplication;
+use Symfony\Component\Console\Input\ArgvInput;
 
 class CLIRunner implements RunInterface, ApplicationAwareInterface
 {
@@ -31,16 +32,19 @@ class CLIRunner implements RunInterface, ApplicationAwareInterface
 
         include DIR_APPLICATION . '/bootstrap/app.php';
 
-        if ($this->app->isInstalled()) {
-            $this->app->setupPackageAutoloaders();
-            $this->app->setupPackages();
+        $input = new ArgvInput();
+        if ($input->getFirstArgument() !== 'c5:update') {
+            if ($this->app->isInstalled()) {
+                $this->app->setupPackageAutoloaders();
+                $this->app->setupPackages();
+            }
         }
 
         $console->setupDefaultCommands();
 
         \Events::dispatch('on_before_console_run');
 
-        $console->run();
+        $console->run($input);
 
         \Events::dispatch('on_after_console_run');
     }
