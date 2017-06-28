@@ -13,6 +13,7 @@ use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Search\Pagination\PermissionablePagination;
 use Concrete\Core\Search\PermissionableListItemInterface;
 use Concrete\Core\Entity\Package;
+use Concrete\Core\Search\StickyRequest;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Page as ConcretePage;
 use Concrete\Core\Entity\Page\Template as TemplateEntity;
@@ -34,6 +35,15 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     public function getPagerManager()
     {
         return new PageListPagerManager($this);
+    }
+
+    public function __construct(StickyRequest $req = null)
+    {
+        $u = new \User();
+        if ($u->isSuperUser()) {
+            $this->ignorePermissions();
+        }
+        parent::__construct($req);
     }
 
     /**
