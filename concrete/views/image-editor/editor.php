@@ -14,6 +14,7 @@ $fp = new Permissions($f);
 if (!$fp->canEditFileContents()) {
     die(t("Access Denied."));
 }
+$token = Core::make('token')->generate();
 
 $req = ResponseAssetGroup::get();
 $req->requireAsset('core/imageeditor');
@@ -113,6 +114,7 @@ foreach ($filters as $filter) {
                         saveUrl: CCM_DISPATCHER_FILENAME + '/tools/required/files/importers/imageeditor',
                         src: '<?=$fv->getURL()?>',
                         fID: <?= $fv->getFileID() ?>,
+                        token: '<?= $token ?>',
                         controlsets: {},
                         filters: {},
                         debug: false,

@@ -101,7 +101,7 @@ if (!strlen($titleText)) {
                 <?php echo $form->label('filterDateFormat', t('Date Year and Month Format')); ?>
                 <?php echo $form->text('filterDateFormat', $filterDateFormat ? $filterDateFormat : t('F Y')); ?>
             </div>
-            <div class="text-muted"><?php echo sprintf(t('See the formatting options for year and month at %s.'), '<a href="http://www.php.net/date" target="_blank">php.net/date</a>'); ?></div>
+            <div class="help-block"><?php echo sprintf(t('See the formatting options for year and month at %s.'), '<a href="http://www.php.net/date" target="_blank">php.net/date</a>'); ?></div>
         </div>
     </div>
 </div>

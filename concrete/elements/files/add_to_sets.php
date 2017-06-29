@@ -6,7 +6,7 @@ $sets = FileSet::getMySets();
 
 <div class="form-group" id="ccm-file-set-search">
 	<form class="form-inline">
-		<input type="search" class="form-control input-sm" data-field="file-set-search" autocomplete="off" placeholder="<?=t('Filter Sets')?>" />
+		<input type="search" class="form-control" data-field="file-set-search" autocomplete="off" placeholder="<?=t('Filter Sets')?>" />
 	</form>
 </div>
 
@@ -24,13 +24,13 @@ $sets = FileSet::getMySets();
 				<span data-label="file-set-name"><?=$fs->getFileSetDisplayName()?></span>
 				</label>
 			</div>
-			<?php 
+			<?php
     }
     ?>
-		<?php 
+		<?php
 }
     ?>
-	<?php 
+	<?php
 } ?>
 </div>
 
@@ -55,7 +55,7 @@ $sets = FileSet::getMySets();
 		});
 		$('#ccm-file-set-list').on('click', 'a', function(e) {
 			e.preventDefault();
-			var $row = $(this).parent();
+			var $row = $(this).parents('.input-group');
 			$row.remove();
 		});
 		$('input[data-field=file-set-search]').liveUpdate('ccm-file-set-list', 'fileset').closest('form').unbind('submit.liveupdate');

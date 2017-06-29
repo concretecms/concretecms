@@ -20,14 +20,16 @@
 		my.options = options;
 		my.$element = $element;
 		my.setupTree();
-		ConcreteTree.setupTreeEvents(my);
+		if (!options.chooseNodeInForm && !options.onClick) {
+			ConcreteTree.setupTreeEvents(my);
+		}
 		return my.$element;
 	}
 
 
 	ConcreteTree.prototype = {
 
-		dragRequest: function(sourceNode, node, hitMode) {
+		dragRequest: function(sourceNode, node, hitMode, onSuccess) {
 			var treeNodeParentID = node.parent.data.treeNodeID;
 			if (hitMode == 'over') {
 				treeNodeParentID = node.data.treeNodeID;
@@ -44,7 +46,12 @@
 
 			$.concreteAjax({
 				data: params,
-				url: CCM_DISPATCHER_FILENAME + '/ccm/system/tree/node/drag_request'
+				url: CCM_DISPATCHER_FILENAME + '/ccm/system/tree/node/drag_request',
+				success: function (r) {
+					if (onSuccess) {
+						onSuccess();
+					}
+				}
 			});
 		},
 
@@ -109,6 +116,8 @@
 			}
 
 			$(my.$element).fancytree({
+				tabindex: null,
+				titlesTabbable: false,
 				extensions: ["glyph", "dnd"],
 				glyph: {
 					map: {
@@ -188,6 +197,10 @@
 						return true;
 					}
 
+					if (data.targetType == 'icon') {
+						return false;
+					}
+
 					if (options.onClick) {
 						return options.onClick(data.node, e);
 					}
@@ -256,8 +269,9 @@
 						return true;
 					},
 					dragDrop: function(targetNode, data) {
-						data.otherNode.moveTo(targetNode, data.hitMode);
-						my.dragRequest(data.otherNode, targetNode, data.hitMode);
+						my.dragRequest(data.otherNode, targetNode, data.hitMode, function() {
+							data.otherNode.moveTo(targetNode, data.hitMode);
+						});
 					}
 				}
 			});

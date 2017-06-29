@@ -20,7 +20,7 @@ if (!isset($editmode)) {
 <?php
 
 if ($editmode) {
-    $pageTitle = t('Edit %s Authentication Type', $at->getAuthenticationTypeName());
+    $pageTitle = t('Edit %s Authentication Type', $at->getAuthenticationTypeDisplayName());
     ?><form class="form-stacked" method="post" action="<?=$view->action('save', $at->getAuthenticationTypeID())?>"><?php
 
     $token = \Core::make('token');
@@ -53,7 +53,7 @@ if (!$editmode) {
                         </td>
                         <td style="width: 100px"><?=$at->getAuthenticationTypeID()?></td>
                         <td><?=$at->getAuthenticationTypeHandle()?></td>
-                        <td><?=$at->getAuthenticationTypeName()?></td>
+                        <td><?=$at->getAuthenticationTypeDisplayName()?></td>
                         <td style="text-align:right"><i style="cursor: move" class="fa fa-arrows"></i></td>
                     </tr><?php
 

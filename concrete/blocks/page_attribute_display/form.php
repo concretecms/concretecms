@@ -9,7 +9,7 @@ echo Core::make('helper/concrete/ui')->tabs(array(
 ?>
 <div class="ccm-tab-content" id="ccm-tab-content-options">
     <div class="form-group">
-        <label class="control-label"><?php  echo t('Display property with formatting')?></label>
+        <label class="control-label"><?php  echo t('Display Property with Formatting')?></label>
         <select name="displayTag" class="form-control">
             <option value=""><?=t('- none -')?></option>
             <option value="h1" <?php echo($this->controller->displayTag == "h1" ? "selected" : "")?>><?=t('H1 (Heading 1)')?></option>
@@ -26,10 +26,10 @@ echo Core::make('helper/concrete/ui')->tabs(array(
     <div class="form-group">
         <label class="control-label"><?php  echo t('Format of Date Properties')?></label>
         <input type="text" class="form-control" name="dateFormat" value="<?php  echo $this->controller->dateFormat ?>"/>
-        <div class="text-muted"><?php echo sprintf(t('See the formatting options at %s.'), '<a href="http://www.php.net/date" target="_blank">php.net/date</a>'); ?></div>
+        <div class="help-block"><?php echo sprintf(t('See the formatting options for date at %s.'), '<a href="http://www.php.net/date" target="_blank">php.net/date</a>'); ?></div>
     </div>
     <div class="form-group">
-        <label class="control-label"><?php  echo t('Delimiter for multiple items')?></label>
+        <label class="control-label"><?php  echo t('Delimiter for Multiple Items')?></label>
         <select name="delimiter" class="form-control">
             <option value=""><?=t('- none -')?></option>
             <option value="comma" <?php echo($this->controller->delimiter == "comma" ? "selected" : "")?>><?=t('Comma (",")')?></option>
@@ -44,18 +44,24 @@ echo Core::make('helper/concrete/ui')->tabs(array(
     <fieldset>
         <legend><?=t('Thumbnail')?></legend>
         <div class="form-group">
-            <label class="control-label" for="thumbnail_width"><?php echo t('Width'); ?></label>
-            <input id="thumbnail_width" class="form-control" type="text" name="thumbnailWidth" value="<?php echo $this->controller->thumbnailWidth; ?>"/>
+            <label class="control-label" for="thumbnail_width"><?php echo t('Max Width'); ?></label>
+            <div class="input-group">
+                <input id="thumbnail_width" class="form-control" type="text" name="thumbnailWidth" value="<?php echo $this->controller->thumbnailWidth; ?>"/>
+                <span class="input-group-addon"><?php echo t('px'); ?></span>
+            </div>
         </div>
         <div class="form-group">
-            <label class="control-label" for="thumbnail_height"><?php echo t('Height'); ?></label>
-            <input id="thumbnail_height" class="form-control" type="text" name="thumbnailHeight" value="<?php echo $this->controller->thumbnailHeight; ?>"/>
+            <label class="control-label" for="thumbnail_height"><?php echo t('Max Height'); ?></label>
+            <div class="input-group">
+                <input id="thumbnail_height" class="form-control" type="text" name="thumbnailHeight" value="<?php echo $this->controller->thumbnailHeight; ?>"/>
+                <span class="input-group-addon"><?php echo t('px'); ?></span>
+            </div>
         </div>
     </fieldset>
 </div>
 <div id="ccm-tab-content-add" class="ccm-tab-content">
     <div class="form-group">
-        <label class="control-label"><?php  echo t('Property to Display:')?></label>
+        <label class="control-label"><?php  echo t('Property to Display')?></label>
 
         <select name="attributeHandle" class="form-control">
         <optgroup label="<?php  echo t('Page Values');?>">

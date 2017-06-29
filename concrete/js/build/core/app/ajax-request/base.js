@@ -72,7 +72,7 @@
 				'response': r
 			});
 
-			ConcreteAlert.dialog('Error', my.errorResponseToString(r));
+			ConcreteAlert.dialog(ccmi18n.error, my.errorResponseToString(r));
 		},
 
 		validateResponse: function(r) {
@@ -80,7 +80,7 @@
 				ConcreteEvent.fire('AjaxRequestError', {
 					'response': r
 				});
-				ConcreteAlert.dialog('Error', '<p class="text-danger">' + r.errors.join("<br/>") + '</p>');
+				ConcreteAlert.dialog(ccmi18n.error, '<p class="text-danger">' + r.errors.join("<br/>") + '</p>');
 				return false;
 			}
 			return true;

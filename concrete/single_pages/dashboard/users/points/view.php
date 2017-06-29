@@ -10,8 +10,8 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 
     <div class="ccm-pane-options">
         <div class="ccm-pane-options-permanent-search">
-            <?=$form->label('uName', t('User'))?>
-            <?php echo $form_user_selector->quickSelect('uName', $_GET['uName'], array('form-control'));?>
+            <?=$form->label('uID', t('User'))?>
+            <?php echo $form_user_selector->quickSelect('uID', $_GET['uID'], array('form-control'));?>
         </div>
     </div>
 

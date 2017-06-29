@@ -39,6 +39,7 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
 
     /**
      * @param \Symfony\Component\HttpFoundation\Session\Session $session
+     * @return bool True if the session invalidated, false otherwise.
      */
     public function handleSessionValidation(SymfonySession $session)
     {
@@ -86,6 +87,8 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
                 $session->set('CLIENT_HTTP_USER_AGENT', $request_agent);
             }
         }
+
+        return $invalidate;
     }
 
     /**

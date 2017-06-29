@@ -3,12 +3,13 @@ namespace Concrete\Attribute\Rating;
 
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
-use Concrete\Core\Entity\Attribute\Value\Value\RatingValue;
-use Loader;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 
 class Controller extends AttributeTypeController
 {
+
+    public $helpers = ['rating'];
+
     protected $searchIndexFieldDefinition = array(
         'type' => 'decimal',
         'options' => array('precision' => 14, 'scale' => 4, 'default' => 0, 'notnull' => false),
@@ -36,8 +37,8 @@ class Controller extends AttributeTypeController
         if (is_object($this->attributeValue)) {
             $caValue = $this->attributeValue->getValue() / 20;
         }
-        $rt = Loader::helper('form/rating');
-        echo $rt->rating($this->field('value'), $caValue);
+        $this->set('value', $caValue);
+
     }
 
     public function searchForm($list)

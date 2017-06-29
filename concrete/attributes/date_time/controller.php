@@ -4,15 +4,13 @@ namespace Concrete\Attribute\DateTime;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Entity\Attribute\Key\Settings\DateTimeSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\DateTimeValue;
-use Loader;
-use Core;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use DateTime;
 use Exception;
 
 class Controller extends AttributeTypeController
 {
-    public $helpers = ['form'];
+    public $helpers = ['form', 'date','form/date_time'];
 
     protected $searchIndexFieldDefinition = ['type' => 'datetime', 'options' => ['notnull' => false]];
 
@@ -78,33 +76,10 @@ class Controller extends AttributeTypeController
         if ($datetime === null && $this->akUseNowIfEmpty) {
             $datetime = new DateTime();
         }
-        switch ($this->akDateDisplayMode) {
-            case 'text':
-                $dh = $this->app->make('helper/date');
-                $format = $dh->getPHPDateTimePattern();
-                if ($datetime === null) {
-                    $value = '';
-                    $placeholder = $dh->formatCustom($format, 'now');
-                } else {
-                    $value = $dh->formatCustom($format, $datetime);
-                    $placeholder = $value;
-                }
-                $form = $this->app->make('helper/form');
-                echo $form->text($this->field('value'), $value, ['placeholder' => $placeholder]);
-                break;
-            case 'date':
-                $this->requireAsset('jquery/ui');
-                $dt = $this->app->make('helper/form/date_time');
-                /* @var \Concrete\Core\Form\Service\Widget\DateTime $dt */
-                echo $dt->date($this->field('value'), $datetime);
-                break;
-            default:
-                $this->requireAsset('jquery/ui');
-                $dt = $this->app->make('helper/form/date_time');
-                /* @var \Concrete\Core\Form\Service\Widget\DateTime $dt */
-                echo $dt->datetime($this->field('value'), $datetime, false, true, null, $this->akTimeResolution);
-                break;
-        }
+        $this->set('value', $datetime);
+        $this->set('displayMode',$this->akDateDisplayMode );
+        $this->set('timeResolution', $this->akTimeResolution);
+
     }
 
     public function exportKey($akey)
@@ -147,7 +122,7 @@ class Controller extends AttributeTypeController
                 if (empty($data['value_dt']) || (!is_numeric($data['value_h'])) || (!is_numeric($data['value_m']))) {
                     return false;
                 }
-                $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
+                $dh = $this->app->make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
                 switch ($dh->getTimeFormat()) {
                     case 12:
                         if (empty($data['value_a'])) {
@@ -164,7 +139,7 @@ class Controller extends AttributeTypeController
 
     public function search()
     {
-        $dt = Loader::helper('form/date_time');
+        $dt = $this->app->make('helper/form/date_time');
         $html = $dt->date($this->field('from'), $this->request('from'), true);
         $html .= ' ' . t('to') . ' ';
         $html .= $dt->date($this->field('to'), $this->request('to'), true);
@@ -174,6 +149,22 @@ class Controller extends AttributeTypeController
     public function getAttributeValueClass()
     {
         return DateTimeValue::class;
+    }
+
+    public function exportValue(\SimpleXMLElement $akv)
+    {
+        $value = null;
+        if (isset($this->attributeValue)) {
+            $object = $this->attributeValue->getValueObject();
+            if ($object) {
+                $datetime = $object->getValue();
+                if ($datetime) {
+                    $value = $datetime->format('Y-m-d H:i:s');
+                }
+
+            }
+        }
+        $akv->addChild('value', $value);
     }
 
     public function createAttributeValue($value)
@@ -207,7 +198,7 @@ class Controller extends AttributeTypeController
                             $dh->getPHPDateTimePattern(),
                             $data['value'],
                             $dh->getTimezone('user')
-                         );
+                        );
                     } catch (Exception $x) {
                     }
                     if ($datetime !== null) {
@@ -261,7 +252,7 @@ class Controller extends AttributeTypeController
     {
         $result = null;
         if ($this->attributeValue) {
-            $valueObject = $this->getAttributeValueObject();
+            $valueObject = $this->getAttributeValue();
             if ($valueObject !== null) {
                 $dateTime = $valueObject->getValue();
                 if ($dateTime instanceof DateTime) {

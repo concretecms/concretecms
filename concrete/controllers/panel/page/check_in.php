@@ -11,6 +11,7 @@ use Loader;
 use Page;
 use Concrete\Core\Workflow\Request\ApprovePageRequest as ApprovePagePageWorkflowRequest;
 use PageEditResponse;
+use Concrete\Core\Http\ResponseFactoryInterface;
 
 class CheckIn extends BackendInterfacePageController
 {
@@ -79,12 +80,13 @@ class CheckIn extends BackendInterfacePageController
             $comments = $this->request->request('comments');
             $comments = is_string($comments) ? trim($comments) : '';
             if ($comments === '' && $this->app->make('config')->get('concrete.misc.require_version_comments')) {
-                return Response::create(t('Please specify the version comments'), 400);
+                $rf = $this->app->make(ResponseFactoryInterface::class);
+                return $rf->create(t('Please specify the version comments'), 400);
             }
             $c = $this->page;
             $u = new User();
             $v = CollectionVersion::get($c, "RECENT");
-            $v->setComment($_REQUEST['comments']);
+            $v->setComment($comments);
             $pr = new PageEditResponse();
             if (($this->request->request->get('action') == 'publish'
                     || $this->request->request->get('action') == 'schedule')

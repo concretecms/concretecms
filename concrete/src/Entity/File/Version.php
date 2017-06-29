@@ -18,6 +18,9 @@ use Concrete\Core\File\Menu;
 use Concrete\Core\File\Type\TypeList as FileTypeList;
 use Concrete\Core\Http\FlysystemFileResponse;
 use Concrete\Core\Support\Facade\Application;
+use Imagine\Exception\NotSupportedException;
+use Imagine\Gd\Image;
+use Imagine\Image\Metadata\ExifMetadataReader;
 use League\Flysystem\AdapterInterface;
 use League\Flysystem\FileNotFoundException;
 use Core;
@@ -136,6 +139,8 @@ class Version implements ObjectInterface
      * @ORM\Column(type="boolean")
      */
     protected $fvHasDetailThumbnail = false;
+
+    private $imagineImage = null;
 
     /**
      * Add a new file version.
@@ -889,12 +894,20 @@ class Version implements ObjectInterface
     {
         $cf = Core::make('helper/concrete/file');
         $fsl = $this->getFile()->getFileStorageLocationObject();
+        $url = null;
         if (is_object($fsl)) {
             $configuration = $fsl->getConfigurationObject();
             if ($configuration->hasRelativePath()) {
-                return $configuration->getRelativePathToFile($cf->prefix($this->fvPrefix, $this->fvFilename));
+                $url = $configuration->getRelativePathToFile($cf->prefix($this->fvPrefix, $this->fvFilename));
+            }
+            if ($configuration->hasPublicURL() && !$url) {
+                $url = $configuration->getPublicURLToFile($cf->prefix($this->fvPrefix, $this->fvFilename));
+            }
+            if (!$url) {
+                $url =  $this->getDownloadURL();
             }
         }
+        return $url;
     }
 
     /**
@@ -979,28 +992,43 @@ class Version implements ObjectInterface
     }
 
     /**
-     *
+     * @return bool|Image
      */
     public function getImagineImage()
     {
-        $resource = $this->getFileResource();
-        $mimetype = $resource->getMimeType();
-        $imageLibrary = \Image::getFacadeRoot();
+        if (null === $this->imagineImage) {
+            $resource = $this->getFileResource();
+            $mimetype = $resource->getMimeType();
+            $imageLibrary = \Image::getFacadeRoot();
 
-        switch ($mimetype) {
-            case 'image/svg+xml':
-            case 'image/svg-xml':
-                if ($imageLibrary instanceof \Imagine\Gd\Imagine) {
+            switch ($mimetype) {
+                case 'image/svg+xml':
+                case 'image/svg-xml':
+                    if ($imageLibrary instanceof \Imagine\Gd\Imagine) {
+                        try {
+                            $app = Facade::getFacadeApplication();
+                            $imageLibrary = $app->make('image/imagick');
+                        } catch (\Exception $x) {
+                            $this->imagineImage = false;
+                        }
+                    }
+                    break;
+            }
+
+            $metadataReader = $imageLibrary->getMetadataReader();
+            if (!$metadataReader instanceof ExifMetadataReader) {
+                if (\Config::get('concrete.file_manager.images.use_exif_data_to_rotate_images')) {
                     try {
-                        $app = Facade::getFacadeApplication();
-                        $imageLibrary = $app->make('image/imagick');
-                    } catch (\Exception $x) {
-                        return false;
+                        $imageLibrary->setMetadataReader(new ExifMetadataReader());
+                    } catch (NotSupportedException $e) {
                     }
                 }
-                break;
+            }
+
+            $this->imagineImage = $imageLibrary->load($resource->read());
         }
-        return  $imageLibrary->load($resource->read());
+
+        return $this->imagineImage;
     }
 
     /**
@@ -1033,15 +1061,33 @@ class Version implements ObjectInterface
                 foreach ($types as $type) {
                     // delete the file if it exists
                     $this->deleteThumbnail($type);
+                    
+                    // if image is smaller than size requested, don't create thumbnail
+                    if ($imagewidth < $type->getWidth() && $imageheight < $type->getHeight()) {
+                        continue;
+                    }
 
-                    // if image is smaller than width, don't create thumbnail
-                    if ($imagewidth < $type->getWidth()) {
+                    // This should not happen as it is not allowed when creating thumbnail types and both width and heght
+                    // are required for Exact sizing but it's here just in case
+                    if ($type->getSizingMode() === Type::RESIZE_EXACT && (!$type->getWidth() || !$type->getHeight())) {
+                        continue;
+                    }
+                    
+                    // If requesting an exact size and any of the dimensions requested is larger than the image's
+                    // don't process as we won't get an exact size
+                    if ($type->getSizingMode() === Type::RESIZE_EXACT && ($imagewidth < $type->getWidth() || $imageheight < $type->getHeight())) {
                         continue;
                     }
 
                     // if image is the same width as thumbnail, and there's no thumbnail height set,
                     // or if a thumbnail height set and the image has a smaller or equal height, don't create thumbnail
                     if ($imagewidth == $type->getWidth() && (!$type->getHeight() || $imageheight <= $type->getHeight())) {
+                        continue;
+                    }
+
+                    // if image is the same height as thumbnail, and there's no thumbnail width set,
+                    // or if a thumbnail width set and the image has a smaller or equal width, don't create thumbnail
+                    if ($imageheight == $type->getHeight() && (!$type->getWidth() || $imagewidth <= $type->getWidth())) {
                         continue;
                     }
 
@@ -1370,15 +1416,30 @@ class Version implements ObjectInterface
         $filesystem = $this->getFile()
             ->getFileStorageLocationObject()
             ->getFileSystemObject();
-
+            
         $height = $type->getHeight();
-        if ($height) {
-            $size = new Box($type->getWidth(), $height);
-            $thumbnailMode = ImageInterface::THUMBNAIL_OUTBOUND;
+        $width = $type->getWidth();
+        $sizingMode = $type->getSizingMode();
+
+        if ($height && $width) {
+            $size = new Box($width, $height);
+        } else if ($width) {
+            $size = $image->getSize()->widen($width);
         } else {
-            $size = $image->getSize()->widen($type->getWidth());
+            $size = $image->getSize()->heighten($height);
+        }
+
+        if ($sizingMode === Type::RESIZE_EXACT) {
+             $thumbnailMode = ImageInterface::THUMBNAIL_OUTBOUND;
+        } else if ($sizingMode === Type::RESIZE_PROPORTIONAL) {
             $thumbnailMode = ImageInterface::THUMBNAIL_INSET;
         }
+
+        // isCropped only exists on the CustomThumbnail type
+        if (method_exists($type, 'isCropped') && $type->isCropped()) {
+            $thumbnailMode = ImageInterface::THUMBNAIL_OUTBOUND;
+        }
+
         $thumbnail = $image->thumbnail($size, $thumbnailMode);
         $thumbnailPath = $type->getFilePath($this);
         $thumbnailOptions = [];

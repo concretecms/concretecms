@@ -2,6 +2,8 @@
 $navigationTypeText = ($navigationType == 0) ? 'arrows' : 'pages';
 $c = Page::getCurrentPage();
 if ($c->isEditMode()) {
+    $loc = Localization::getInstance();
+    $loc->pushActiveContext(Localization::CONTEXT_UI);
     ?>
     <div class="ccm-edit-mode-disabled-item" style="<?php echo isset($width) ? "width: $width;" : '' ?><?php echo isset($height) ? "height: $height;" : '' ?>">
         <i style="font-size:40px; margin-bottom:20px; display:block;" class="fa fa-picture-o" aria-hidden="true"></i>
@@ -17,7 +19,8 @@ if ($c->isEditMode()) {
 			</div>
         </div>
     </div>
-<?php
+    <?php
+    $loc->popActiveContext();
 } else {
     ?>
 <script>

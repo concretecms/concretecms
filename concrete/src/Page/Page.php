@@ -451,14 +451,14 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $q = "select cIsCheckedOut, cCheckedOutDatetimeLastEdit from Pages where cID = '{$this->cID}'";
         $r = $db->executeQuery($q);
 
-        // If cCheckedOutDatetimeLastEdit is present, get the time span in seconds since it's last edit.
-        if (! empty($row['cCheckedOutDatetimeLastEdit'])) {
-            $dh = Core::make('helper/date');
-            $timeSinceCheckout = ($dh->getOverridableNow(true) - strtotime($row['cCheckedOutDatetimeLastEdit']));
-        }
-
         if ($r) {
             $row = $r->fetchRow();
+            // If cCheckedOutDatetimeLastEdit is present, get the time span in seconds since it's last edit.
+            if (! empty($row['cCheckedOutDatetimeLastEdit'])) {
+                $dh = Core::make('helper/date');
+                $timeSinceCheckout = ($dh->getOverridableNow(true) - strtotime($row['cCheckedOutDatetimeLastEdit']));
+            }
+
             if ($row['cIsCheckedOut'] == 0) {
                 return false;
             } else {
@@ -1486,6 +1486,9 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         return $this->vObj->cvDatePublic;
     }
 
+    /**
+     * @return \DateTime|null Returns the \DateTime instance (or null if the current version doesn't have public date)
+     */
     public function getCollectionDatePublicObject()
     {
         return Core::make('date')->toDateTime($this->getCollectionDatePublic());
@@ -2928,8 +2931,10 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $attributes = CollectionKey::getAttributeValues($mc);
         foreach($attributes as $attribute) {
             $value = $attribute->getValueObject();
-            $value = clone $value;
-            $nc->setAttribute($attribute->getAttributeKey(), $value);
+            if ($value) {
+                $value = clone $value;
+                $nc->setAttribute($attribute->getAttributeKey(), $value);
+            }
         }
     }
 

@@ -38,17 +38,12 @@ class Controller extends DefaultController
         if (is_object($this->attributeValue)) {
             $value = $this->app->make('helper/text')->entities($this->getAttributeValue()->getValue());
         }
-        echo $this->app->make('helper/form')->text($this->field('value'), $value, array( 'placeholder' => $this->akTextPlaceholder));
-    }
-
-    public function composer()
-    {
-        $this->load();
-        $value = null;
-        if (is_object($this->attributeValue)) {
-            $value = $this->app->make('helper/text')->entities($this->getAttributeValue()->getValue());
+        $this->set('value', $value);
+        $akTextPlaceholder = '';
+        if (isset($this->akTextPlaceholder)) {
+            $akTextPlaceholder = $this->akTextPlaceholder;
         }
-        echo $this->app->make('helper/form')->text($this->field('value'), $value, array('class' => 'span5', 'placeholder' => $this->akTextPlaceholder));
+        $this->set('akTextPlaceholder', $akTextPlaceholder);
     }
 
     public function searchForm($list)

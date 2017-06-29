@@ -174,9 +174,11 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
      *
      * @see ThumbnailerInterface::create()
      */
-    public function create($mixed, $savePath, $width, $height, $fit = false)
+    public function create($mixed, $savePath, $width, $height, $fit = false, $format = false)
     {
-        $format = $this->getThumbnailsFormat();
+        if ($format === false) {
+            $format = $this->getThumbnailsFormat();
+        }
         if ($format === 'auto') {
             if (preg_match('/\.jpe?g($|\?)/i', $savePath)) {
                 $format = 'jpeg';
@@ -223,7 +225,11 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
      */
     public function getThumbnail($obj, $maxWidth, $maxHeight, $crop = false)
     {
-        $storage = $obj->getFileStorageLocationObject();
+        if ($obj instanceof File) {
+            $storage = $obj->getFileStorageLocationObject();
+        } else {
+            $storage = $this->getStorageLocation();
+        }
         $this->setStorageLocation($storage);
         $filesystem = $storage->getFileSystemObject();
         $configuration = $storage->getConfigurationObject();
@@ -242,7 +248,9 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
             }
         } else {
             $extension = $fh->getExtension($obj);
-            $baseFilename = md5(implode(':', [$obj, $maxWidth, $maxHeight, $crop, filemtime($obj)]));
+            // We hide the warning from filemtime() because it will only throw the warning on remote files, and we
+            // don't care too much about that
+            $baseFilename = md5(implode(':', [$obj, $maxWidth, $maxHeight, $crop, @filemtime($obj)]));
         }
 
         $thumbnailsFormat = $this->getThumbnailsFormat();
@@ -276,7 +284,7 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
         $abspath = '/cache/thumbnails/' . $filename;
 
         if ($obj instanceof File) {
-            $customThumb = new CustomThumbnail($maxWidth, $maxHeight, $abspath, false);
+            $customThumb = new CustomThumbnail($maxWidth, $maxHeight, $abspath, $crop);
 
             $path_resolver = $this->app->make('Concrete\Core\File\Image\Thumbnail\Path\Resolver');
             $path_resolver->getPath($obj->getVersion(), $customThumb);

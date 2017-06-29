@@ -8,11 +8,9 @@ use Concrete\Core\File\Type\TypeList;
 use Concrete\Core\Foundation\ClassAliasList;
 use Concrete\Core\Foundation\Service\ProviderList;
 use Concrete\Core\Http\Request;
-use Concrete\Core\Localization\Localization;
 use Concrete\Core\Routing\RedirectResponse;
 use Concrete\Core\Support\Facade\Route;
 use Concrete\Core\Support\Facade\Facade;
-use Concrete\Core\User\User;
 use Illuminate\Config\Repository;
 use Symfony\Component\HttpFoundation\Response;
 use Concrete\Core\Application\ApplicationAwareTrait;
@@ -168,15 +166,6 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
              * ----------------------------------------------------------------------------.
              */
             require DIR_BASE_CORE . '/bootstrap/preprocess.php';
-
-            /*
-             * ----------------------------------------------------------------------------
-             * Set the active language for the site, based either on the site locale, or the
-             * current user record. This can be changed later as well, during runtime.
-             * Start localization library.
-             * ----------------------------------------------------------------------------
-             */
-            $this->setSystemLocale();
         }
     }
 
@@ -389,16 +378,5 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
     private function initializePackages(Application $app)
     {
         $app->setupPackageAutoloaders();
-    }
-
-    /**
-     * Initialize localization.
-     */
-    private function setSystemLocale()
-    {
-        $u = new User();
-        $lan = $u->getUserLanguageToDisplay();
-        $loc = Localization::getInstance();
-        $loc->setContextLocale(Localization::CONTEXT_UI, $lan);
     }
 }

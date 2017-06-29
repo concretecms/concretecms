@@ -1,16 +1,15 @@
 <?php
 use Concrete\Core\Database\DatabaseStructureManager;
 use Concrete\Core\Database\Schema\Schema;
+use Concrete\Core\Support\Facade\Application;
 use Doctrine\DBAL\Driver\Connection;
 use Doctrine\DBAL\Driver\PDOConnection;
-use Concrete\Core\Support\Facade\Application;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\ORM\EntityManagerInterface;
 use Imagine\Exception\RuntimeException;
 
 class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
 {
-
     /** @var Connection The cached database connection */
     public static $connection = null;
 
@@ -33,9 +32,9 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
     protected $metadatas = [];
 
     /**
-     * Get the connection to use
+     * Get the connection to use.
      *
-     * @return \Doctrine\DBAL\Driver\Connection
+     * @return \Concrete\Core\Database\Connection\Connection
      */
     protected function connection()
     {
@@ -50,6 +49,7 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
      * Returns the test database connection.
      *
      * @return PHPUnit_Extensions_Database_DB_IDatabaseConnection
+     *
      * @throws \Imagine\Exception\RuntimeException
      */
     protected function getConnection()
@@ -76,12 +76,12 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
     }
 
     /**
-     * Set up before any tests run
+     * Set up before any tests run.
      */
     public static function setUpBeforeClass()
     {
         // Make sure tables are imported
-        $testCase = new Static();
+        $testCase = new static();
         $testCase->importTables();
         $testCase->importMetadatas();
 
@@ -90,12 +90,12 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
     }
 
     /**
-     * Tear down after class has completed
+     * Tear down after class has completed.
      */
     public static function tearDownAfterClass()
     {
         // Make sure tables are removed
-        $testCase = new Static();
+        $testCase = new static();
         $testCase->removeTables();
 
         // Call parent teardown
@@ -103,14 +103,14 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
     }
 
     /**
-     * Import tables from $this->tables
+     * Import tables from $this->tables.
      */
     protected function importTables()
     {
         $connection = $this->connection();
 
         // Filter out any tables that have already been imported
-        $tables = array_filter($this->tables, function($table) {
+        $tables = array_filter($this->tables, function ($table) {
             return !isset(static::$existingTables[$table]);
         });
 
@@ -132,7 +132,7 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
     }
 
     /**
-     * Remove all existing tables
+     * Remove all existing tables.
      */
     protected function removeTables()
     {
@@ -159,9 +159,10 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
     }
 
     /**
-     * Extract the table data from the db.xml
+     * Extract the table data from the db.xml.
      *
      * @param array $tables
+     *
      * @return array|null
      */
     protected function extractTableData(array $tables)
@@ -180,14 +181,14 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
 
         // Loop through tables that exist in the document
         foreach ($xml1->table as $table) {
-            $name = (string)$table['name'];
+            $name = (string) $table['name'];
 
             // If this table is being requested
             if (in_array($name, $tables, false)) {
                 $this->appendXML($partial, $table);
 
                 // Remove the table from our list of tables
-                $tables = array_filter($tables, function($name) use ($table) {
+                $tables = array_filter($tables, function ($name) use ($table) {
                     return $name !== $table;
                 });
 
@@ -207,10 +208,11 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
     }
 
     /**
-     * Import needed tables
+     * Import needed tables.
      *
      * @param SimpleXMLElement $xml
      * @param Connection $connection
+     *
      * @internal param $partial
      */
     protected function importTableXML(SimpleXMLElement $xml, Connection $connection)
@@ -243,7 +245,7 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
     }
 
     /**
-     * Import requested metadatas
+     * Import requested metadatas.
      */
     protected function importMetadatas()
     {
@@ -255,7 +257,8 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
     }
 
     /**
-     * Gets the metadatas to import
+     * Gets the metadatas to import.
+     *
      * @return array
      */
     protected function getMetadatas()
@@ -275,7 +278,7 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
                     $metadatas[] = $meta;
 
                     // Remove this from the list of entities to install
-                    $install = array_filter($install, function($name) use ($meta) {
+                    $install = array_filter($install, function ($name) use ($meta) {
                         return $name !== $meta->getName();
                     });
 
@@ -301,7 +304,8 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
     }
 
     /**
-     * Append an xml onto another xml
+     * Append an xml onto another xml.
+     *
      * @param \SimpleXMLElement $root
      * @param \SimpleXMLElement $new
      */
@@ -324,7 +328,8 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
     }
 
     /**
-     * Truncate all known databases
+     * Truncate all known databases.
+     *
      * @param null|array $tables The tables to truncate
      */
     protected function truncateTables($tables = null)
@@ -350,5 +355,4 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
         // Reset foreign key checks on
         $connection->exec('SET FOREIGN_KEY_CHECKS = 1');
     }
-
 }

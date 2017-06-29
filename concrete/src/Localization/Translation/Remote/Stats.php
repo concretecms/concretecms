@@ -96,10 +96,10 @@ class Stats
      */
     public function getProgress($decimals = 0)
     {
-        if ($this->translated === $this->total) {
-            $result = 100;
-        } elseif ($this->translated === 0) {
+        if ($this->translated === 0) {
             $result = 0;
+        } elseif ($this->translated === $this->total) {
+            $result = 100;
         } else {
             $result = ($this->translated * 100.0) / $this->total;
             $decimals = (int) $decimals;

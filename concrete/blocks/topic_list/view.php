@@ -40,7 +40,7 @@
     }
 
     if ($mode == 'P') {
-        if (count($topics)) {
+        if (isset($topics) && count($topics)) {
             ?><ul class="ccm-block-topic-list-page-topics"><?php
             foreach ($topics as $topic) {
                 ?><li><a href="<?php echo $view->controller->getTopicLink($topic); ?>"><?php echo $topic->getTreeNodeDisplayName(); ?></a></li><?php

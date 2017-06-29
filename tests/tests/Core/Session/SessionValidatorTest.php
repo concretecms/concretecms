@@ -22,6 +22,10 @@ class SessionValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        if (headers_sent()) {
+            return $this->markTestSkipped('This test cannot run once headers have been sent.');
+        }
+
         $this->app = clone Application::getFacadeApplication();
         $this->app['config'] = clone $this->app['config'];
 
@@ -63,6 +67,7 @@ class SessionValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testSetsOnFirstCheck()
     {
+
         // Change client ip
         $this->request->server->set('REMOTE_ADDR', '111.112.113.114');
         $this->request->server->set('HTTP_USER_AGENT', 'TESTING');

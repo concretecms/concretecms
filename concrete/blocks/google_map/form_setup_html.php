@@ -23,7 +23,7 @@
             <?php echo $form->text('location', $location);?>
             <?php echo $form->hidden('latitude', $latitude);?>
             <?php echo $form->hidden('longitude', $longitude);?>
-            <div id="block_note" class="note"><?php echo t('Start typing a location (e.g. Apple Store or 235 W 3rd, New York) then click on the correct entry on the list.')?></div>
+            <div id="block_note" class="help-block"><?php echo t('Start typing a location (e.g. Apple Store or 235 W 3rd, New York) then click on the correct entry on the list.')?></div>
             <div id="map-canvas"></div>
         </div>
     </div>
@@ -65,10 +65,14 @@
 
     <div class="col-xs-12">
         <div class="form-group">
-          <label>
-            <?php echo $form->checkbox('scrollwheel', 1, (is_null($scrollwheel) || $scrollwheel)); ?>
-            <?php echo t("Enable Scroll Wheel")?>
-          </label>
+            <div class="checkbox">
+                <label>
+                <?php
+                echo $form->checkbox('scrollwheel', 1, (is_null($scrollwheel) || $scrollwheel));
+                echo t('Enable Scroll Wheel');
+                ?>
+                </label>
+            </div>
         </div>
     </div>
 </div>
@@ -170,7 +174,7 @@ function gm_authFailure() {
                 var place = autocomplete.getPlace();
                 if (!place.geometry) {
                     // Inform the user that the place was not found and return.
-                    input.className = 'notfound';
+                    input.className = 'notfound form-control ccm-input-text';
                     note.innerHTML = 'The place you entered could not be found.';
                     return;
                 } else {

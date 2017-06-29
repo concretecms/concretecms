@@ -7,7 +7,7 @@
     if (count($links) == 0) {
         ?>
         <p><?=t('You have not added any social links.')?></p>
-    <?php 
+    <?php
     }
 
     foreach ($links as $link) {
@@ -18,16 +18,16 @@
                <?php if (is_array($selectedLinks) && in_array($link, $selectedLinks)) {
     ?>
                  checked
-                <?php 
+                <?php
 }
         ?>
             value="<?=$link->getID()?>" />
             <?=$service->getDisplayName()?>
             </label>
 
-            <i class="pull-right fa fa-arrows"></i>
+            <i class="fa fa-arrows"></i>
         </div>
-    <?php 
+    <?php
     } ?>
     </div>
 </div>
@@ -35,23 +35,49 @@
     <?=t('Add social links <a href="%s">in the dashboard</a>', URL::to('/dashboard/system/basics/social'))?>
 </div>
 
-<style type="text/css">
-#ccm-block-social-links-list {
-    -webkit-user-select: none;
-}
-#ccm-block-social-links-list i.fa-arrows {
-    display: none;
-    color: #666;
-    cursor: move;
-}
+<style>
+    #ccm-block-social-links-list {
+        -webkit-user-select: none;
+        position: relative;
+    }
 
-#ccm-block-social-links-list div.checkbox:hover i.fa-arrows {
-    display: block;
-}
+    #ccm-block-social-links-list .checkbox {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+                align-items: center;
+        margin-bottom: 0;
+        padding: 6px;
+    }
+
+    #ccm-block-social-links-list .checkbox:hover {
+        background: #e7e7e7;
+        border-radius: 4px;
+        transition: background-color .1s linear;
+    }
+
+    #ccm-block-social-links-list .checkbox.ui-sortable-helper {
+        background: none;
+    }
+
+    #ccm-block-social-links-list i.fa-arrows {
+        display: none;
+        color: #666;
+        cursor: move;
+        margin-left: auto;
+    }
+
+    #ccm-block-social-links-list div.checkbox:hover i.fa-arrows {
+        display: block;
+    }
 </style>
 
-<script type="text/javascript">
+<script>
 $(function() {
-    $('#ccm-block-social-links-list').sortable();
+    $('#ccm-block-social-links-list').sortable({
+        axis: 'y'
+    });
 });
 </script>

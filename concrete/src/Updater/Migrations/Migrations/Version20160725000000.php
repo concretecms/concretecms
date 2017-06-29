@@ -1,17 +1,20 @@
 <?php
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
+use Concrete\Block\ExpressForm\Controller as ExpressFormBlockController;
 use Concrete\Core\Attribute\Key\Category;
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Attribute\Type;
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Block\BlockType\BlockType;
-use Concrete\Core\Cache\Cache;
 use Concrete\Core\Cache\CacheLocal;
 use Concrete\Core\Entity\Attribute\Key\PageKey;
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Set\Set;
+use Concrete\Core\Localization\Localization;
 use Concrete\Core\Multilingual\Page\Section\Section;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Single as SinglePage;
 use Concrete\Core\Page\Template;
 use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Permission\Access\Entity\GroupEntity;
@@ -23,21 +26,80 @@ use Concrete\Core\Tree\Node\Type\File;
 use Concrete\Core\Tree\Node\Type\FileFolder;
 use Concrete\Core\Tree\TreeType;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
-use Concrete\Core\User\Group\Group;
-use Doctrine\DBAL\Migrations\AbstractMigration;
+use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
-use Concrete\Core\Page\Page;
-use Concrete\Core\Page\Single as SinglePage;
-use Concrete\Block\ExpressForm\Controller as ExpressFormBlockController;
-use Concrete\Core\Support\Facade\Facade;
-use Concrete\Core\Localization\Localization;
+use Concrete\Core\Attribute\Category\PageCategory;
+use Concrete\Core\Support\Facade\Application;
 
 class Version20160725000000 extends AbstractMigration
 {
-
     protected function output($message)
     {
         $this->version->getConfiguration()->getOutputWriter()->write($message);
+    }
+
+    protected function prepareInvalidForeignKeys()
+    {
+        $this->output(t('Removing records with invalid foreign keys...'));
+        // Fix orphans of Packages
+        $this->nullifyInvalidForeignKey('AttributeKeyCategories', 'pkgID', 'Packages', 'pkgID');
+        $this->nullifyInvalidForeignKey('AttributeKeys', 'pkgID', 'Packages', 'pkgID');
+        $this->nullifyInvalidForeignKey('AttributeTypes', 'pkgID', 'Packages', 'pkgID');
+        // Delete orphans of Users
+        $this->deleteInvalidForeignKey('UserAttributeValues', 'uID', 'Users', 'uID');
+        // Delete orphans of Files
+        $this->deleteInvalidForeignKey('FileVersions', 'fID', 'Files', 'fID');
+        // Delete orphans of AttributeTypes
+        $this->deleteInvalidForeignKey('AttributeTypeCategories', 'atID', 'AttributeTypes', 'atID');
+        // Fix orphans of AttributeTypes
+        $this->nullifyInvalidForeignKey('AttributeKeys', 'atID', 'AttributeTypes', 'atID');
+        // Delete orphans of AttributeKeys
+        $this->deleteInvalidForeignKey('atAddressSettings', 'akID', 'AttributeKeys', 'akID'); // NOT NULL DEFAULT '0',
+        $this->deleteInvalidForeignKey('atBooleanSettings', 'akID', 'AttributeKeys', 'akID');
+        $this->deleteInvalidForeignKey('atDateTimeSettings', 'akID', 'AttributeKeys', 'akID');
+        $this->deleteInvalidForeignKey('atSelectSettings', 'akID', 'AttributeKeys', 'akID');
+        $this->deleteInvalidForeignKey('atTextareaSettings', 'akID', 'AttributeKeys', 'akID');
+        $this->deleteInvalidForeignKey('atTopicSettings', 'akID', 'AttributeKeys', 'akID');
+        $this->deleteInvalidForeignKey('AttributeSetKeys', 'akID', 'AttributeKeys', 'akID');
+        $this->deleteInvalidForeignKey('CollectionAttributeValues', 'akID', 'AttributeKeys', 'akID');
+        $this->deleteInvalidForeignKey('FileAttributeValues', 'akID', 'AttributeKeys', 'akID');
+        $this->deleteInvalidForeignKey('UserAttributeKeys', 'akID', 'AttributeKeys', 'akID');
+        $this->deleteInvalidForeignKey('UserAttributeValues', 'akID', 'AttributeKeys', 'akID');
+        // Fix orphans of AttributeKeys
+        $this->nullifyInvalidForeignKey('AttributeValues', 'akID', 'AttributeKeys', 'akID');
+        // Delete orphans of AttributeKeyCategories
+        $this->deleteInvalidForeignKey('AttributeTypeCategories', 'akCategoryID', 'AttributeKeyCategories', 'akCategoryID');
+        // Fix orphans of AttributeKeyCategories
+        $this->nullifyInvalidForeignKey('AttributeKeys', 'akCategoryID', 'AttributeKeyCategories', 'akCategoryID');
+        // Delete orphans of AttributeValues
+        $this->deleteInvalidForeignKey('atAddress', 'avID', 'AttributeValues', 'avID');
+        $this->deleteInvalidForeignKey('atBoolean', 'avID', 'AttributeValues', 'avID');
+        $this->deleteInvalidForeignKey('atDateTime', 'avID', 'AttributeValues', 'avID');
+        $this->deleteInvalidForeignKey('atDefault', 'avID', 'AttributeValues', 'avID');
+        $this->deleteInvalidForeignKey('atFile', 'avID', 'AttributeValues', 'avID');
+        $this->deleteInvalidForeignKey('atNumber', 'avID', 'AttributeValues', 'avID');
+        $this->deleteInvalidForeignKey('atSocialLinks', 'avID', 'AttributeValues', 'avID');
+        // Fix orphans of AttributeValues
+        $this->nullifyInvalidForeignKey('FileAttributeValues', 'avID', 'AttributeValues', 'avID');
+        $this->nullifyInvalidForeignKey('UserAttributeValues', 'avID', 'AttributeValues', 'avID');
+        // Delete orphans of AttributeSets
+        $this->deleteInvalidForeignKey('AttributeSetKeys', 'asID', 'AttributeSets', 'asID');
+    }
+
+    protected function nullifyInvalidForeignKeys()
+    {
+        // We need to perform this action *after* the tables have been migrated because these fields were NOT nullable before
+        $this->output(t('Fixing records with invalid foreign keys...'));
+        // Fix orphans of Packages
+        $this->nullifyInvalidForeignKey('AttributeSets', 'pkgID', 'Packages', 'pkgID');
+        // Fix orphans of Files
+        $this->nullifyInvalidForeignKey('atFile', 'fID', 'Files', 'fID');
+        // Fix orphans of Users
+        $this->nullifyInvalidForeignKey('Files', 'uID', 'Users', 'uID');
+        // Fix orphans of AttributeKeyCategories
+        $this->nullifyInvalidForeignKey('AttributeSets', 'akCategoryID', 'AttributeKeyCategories', 'akCategoryID');
+        // Fix orphans of FileStorageLocations
+        $this->nullifyInvalidForeignKey('Files', 'fslID', 'FileStorageLocations', 'fslID');
     }
 
     protected function renameProblematicTables()
@@ -80,17 +142,17 @@ class Version20160725000000 extends AbstractMigration
     protected function migrateOldPermissions()
     {
         $this->output(t('Migrating old permissions...'));
-        $this->connection->Execute('update PermissionKeys set pkHandle = ? where pkHandle = ?', array(
+        $this->connection->Execute('update PermissionKeys set pkHandle = ? where pkHandle = ?', [
             'view_category_tree_node', 'view_topic_category_tree_node',
-        ));
-        $this->connection->Execute('update PermissionKeyCategories set pkCategoryHandle = ? where pkCategoryHandle = ?', array(
+        ]);
+        $this->connection->Execute('update PermissionKeyCategories set pkCategoryHandle = ? where pkCategoryHandle = ?', [
             'category_tree_node', 'topic_category_tree_node',
-        ));
-        $folderCategoryID = $this->connection->fetchColumn('select pkCategoryID from PermissionKeyCategories where pkCategoryHandle = ?', array('file_folder'));
+        ]);
+        $folderCategoryID = $this->connection->fetchColumn('select pkCategoryID from PermissionKeyCategories where pkCategoryHandle = ?', ['file_folder']);
         if (!$folderCategoryID) {
-            $this->connection->Execute('update PermissionKeys set pkHandle = ? where pkHandle = ?', array(
+            $this->connection->Execute('update PermissionKeys set pkHandle = ? where pkHandle = ?', [
                 '_add_file', 'add_file',
-            ));
+            ]);
         }
         if (!$this->connection->tableExists('FilePermissionFileTypeAccessList') && $this->connection->tableExists('FileSetPermissionFileTypeAccessList')) {
             $this->connection->Execute('alter table FileSetPermissionFileTypeAccessList rename FilePermissionFileTypeAccessList ');
@@ -112,11 +174,11 @@ class Version20160725000000 extends AbstractMigration
         while ($row = $r->fetch()) {
             $folder = FileFolder::getNodeByName($row['fsName']);
             if (!is_object($folder)) {
-               $folder = $filesystem->addFolder($root, $row['fsName']);
+                $folder = $filesystem->addFolder($root, $row['fsName']);
             }
             $this->migrateFileSetManagerPermissions($row['fsID'], $folder);
             // Now we move all the files that were in that set into this folder.
-            $r2 = $this->connection->executeQuery('select fID from FileSetFiles where fsID = ?', array($row['fsID']));
+            $r2 = $this->connection->executeQuery('select fID from FileSetFiles where fsID = ?', [$row['fsID']]);
             while ($row2 = $r2->fetch()) {
                 $f = \File::getByID($row2['fID']);
                 if (is_object($f)) {
@@ -132,33 +194,32 @@ class Version20160725000000 extends AbstractMigration
     protected function migrateFileSetManagerPermissions($fsID, FileFolder $folder)
     {
         $this->output(t('Migrating file set permissions...'));
-        $r = $this->connection->executeQuery('select fpa.*, pk.pkHandle from FileSetPermissionAssignments fpa inner join PermissionKeys pk on fpa.pkID = pk.pkID where fsID = ?', array($fsID));
-        $permissionsMap = array(
+        $r = $this->connection->executeQuery('select fpa.*, pk.pkHandle from FileSetPermissionAssignments fpa inner join PermissionKeys pk on fpa.pkID = pk.pkID where fsID = ?', [$fsID]);
+        $permissionsMap = [
             'view_file_set_file' => 'view_file_folder_file',
             'search_file_set' => 'search_file_folder',
             'edit_file_set_file_properties' => 'edit_file_folder_file_properties',
-            'edit_file_set_file_contents' =>  'edit_file_folder_file_contents',
-            'edit_file_set_permissions' =>  'edit_file_folder_permissions',
-            'copy_file_set_files' =>  'copy_file_folder_files',
-            'delete_file_set' =>  'delete_file_folder',
+            'edit_file_set_file_contents' => 'edit_file_folder_file_contents',
+            'edit_file_set_permissions' => 'edit_file_folder_permissions',
+            'copy_file_set_files' => 'copy_file_folder_files',
+            'delete_file_set' => 'delete_file_folder',
             'delete_file_set_files' => 'delete_file_folder_files',
             '_add_file' => 'add_file',
-        );
+        ];
 
-        $count = $this->connection->fetchColumn('select count(*) from TreeNodePermissionAssignments where treeNodeID = ?', array(
-            $folder->getTreeNodeID()
-        ));
+        $count = $this->connection->fetchColumn('select count(*) from TreeNodePermissionAssignments where treeNodeID = ?', [
+            $folder->getTreeNodeID(),
+        ]);
         if (!$count) {
-
             $folder->setTreeNodePermissionsToOverride();
-            $this->connection->executeQuery('delete from TreeNodePermissionAssignments where treeNodeID = ?', array(
-                $folder->getTreeNodeID()
-            ));
+            $this->connection->executeQuery('delete from TreeNodePermissionAssignments where treeNodeID = ?', [
+                $folder->getTreeNodeID(),
+            ]);
 
             while ($row = $r->fetch()) {
                 $mapped = $permissionsMap[$row['pkHandle']];
-                $newPKID = $this->connection->fetchColumn('select pkID from PermissionKeys where pkHandle = ?', array($mapped));
-                $v = array($folder->getTreeNodeID(), $newPKID, $row['paID']);
+                $newPKID = $this->connection->fetchColumn('select pkID from PermissionKeys where pkHandle = ?', [$mapped]);
+                $v = [$folder->getTreeNodeID(), $newPKID, $row['paID']];
                 $this->connection->executeQuery(
                     'insert into TreeNodePermissionAssignments (treeNodeID, pkID, paID) values (?, ?, ?)', $v
                 );
@@ -182,7 +243,7 @@ class Version20160725000000 extends AbstractMigration
     {
         $this->output(t('Updating tables found in doctrine xml...'));
         // Update tables that still exist in db.xml
-        \Concrete\Core\Database\Schema\Schema::refreshCoreXMLSchema(array(
+        \Concrete\Core\Database\Schema\Schema::refreshCoreXMLSchema([
             'Pages',
             'Stacks',
             'PageTypes',
@@ -195,7 +256,7 @@ class Version20160725000000 extends AbstractMigration
             'TreeFileNodes',
             'UserWorkflowProgress',
             'Users',
-        ));
+        ]);
     }
 
     protected function prepareProblematicEntityTables()
@@ -203,14 +264,11 @@ class Version20160725000000 extends AbstractMigration
         $this->output(t('Preparing problematic entity database tables...'));
         // Remove the weird primary keys from the Files table
         $this->connection->executeQuery('alter table Files drop primary key, add primary key (fID)');
-
-        $this->connection->executeQuery('update AttributeTypes set pkgID = null where pkgID = 0');
     }
-
 
     protected function installOtherEntities()
     {
-        $entities = array();
+        $entities = [];
 
         $entityPath = DIR_BASE_CORE . '/' . DIRNAME_CLASSES . '/Entity';
         $iterator = new \RecursiveIteratorIterator(
@@ -222,7 +280,7 @@ class Version20160725000000 extends AbstractMigration
             if (!$path->isDir()) {
                 $path = $path->__toString();
                 if (substr(basename($path), 0, 1) != '.') {
-                    $path = str_replace(array($entityPath, '.php'), '', $path);
+                    $path = str_replace([$entityPath, '.php'], '', $path);
                     $entityName = 'Concrete\Core\Entity' . str_replace('/', '\\', $path);
                     $entities[] = $entityName;
                 }
@@ -239,9 +297,9 @@ class Version20160725000000 extends AbstractMigration
 
         $em = $this->connection->getEntityManager();
         $cmf = $em->getMetadataFactory();
-        $metadatas = array();
+        $metadatas = [];
         $existingMetadata = $cmf->getAllMetadata();
-        foreach($existingMetadata as $meta) {
+        foreach ($existingMetadata as $meta) {
             if (in_array($meta->getName(), $entities)) {
                 $this->output(t('Installing entity %s...', $meta->getName()));
                 $metadatas[] = $meta;
@@ -279,7 +337,7 @@ class Version20160725000000 extends AbstractMigration
             if ($row['pkgID']) {
                 $pkgID = $row['pkgID'];
             }
-            $data = array(
+            $data = [
                 'akID' => $row['akID'],
                 'akName' => $row['akName'],
                 'akHandle' => $row['akHandle'],
@@ -289,35 +347,35 @@ class Version20160725000000 extends AbstractMigration
                 'akIsInternal' => $row['akIsInternal'],
                 'pkgID' => $pkgID,
                 'akCategory' => $akCategory,
-                'akCategoryID' => $row['akCategoryID']
-            );
-            $keyCount = $this->connection->fetchColumn("select count(*) from AttributeKeys where akID = ?", array($row['akID']));
+                'akCategoryID' => $row['akCategoryID'],
+            ];
+            $keyCount = $this->connection->fetchColumn('select count(*) from AttributeKeys where akID = ?', [$row['akID']]);
             if (!$keyCount) {
                 $this->connection->insert('AttributeKeys', $data);
             }
             if ($table) {
-                $count = $this->connection->fetchColumn("select count(*) from {$table} where akID = ?", array($row['akID']));
+                $count = $this->connection->fetchColumn("select count(*) from {$table} where akID = ?", [$row['akID']]);
                 if (!$count) {
-                    $this->connection->insert($table, array('akID' => $row['akID']));
+                    $this->connection->insert($table, ['akID' => $row['akID']]);
                 }
             }
 
             $this->importAttributeKeySettings($row['atID'], $row['akID']);
             switch ($akCategory) {
                 case 'pagekey':
-                    $rb = $this->connection->executeQuery("select * from CollectionAttributeValues where akID = ?", array($row['akID']));
+                    $rb = $this->connection->executeQuery('select * from CollectionAttributeValues where akID = ?', [$row['akID']]);
                     while ($rowB = $rb->fetch()) {
                         $this->addAttributeValue($row['atID'], $row['akID'], $rowB['avID']);
                     }
                     break;
                 case 'filekey':
-                    $rb = $this->connection->executeQuery("select * from FileAttributeValues where akID = ?", array($row['akID']));
+                    $rb = $this->connection->executeQuery('select * from FileAttributeValues where akID = ?', [$row['akID']]);
                     while ($rowB = $rb->fetch()) {
                         $this->addAttributeValue($row['atID'], $row['akID'], $rowB['avID']);
                     }
                     break;
                 case 'userkey':
-                    $rb = $this->connection->executeQuery("select * from UserAttributeValues where akID = ?", array($row['akID']));
+                    $rb = $this->connection->executeQuery('select * from UserAttributeValues where akID = ?', [$row['akID']]);
                     while ($rowB = $rb->fetch()) {
                         $this->addAttributeValue($row['atID'], $row['akID'], $rowB['avID']);
                     }
@@ -347,29 +405,29 @@ class Version20160725000000 extends AbstractMigration
                 break;
             case 'select':
                 if (!$this->connection->fetchColumn('select count(avID) from atSelect where avID = ?', [$avID])) {
-                    $this->connection->insert('atSelect', array('avID' => $avID));
+                    $this->connection->insert('atSelect', ['avID' => $avID]);
                 }
                 $options = $this->connection->fetchAll('select * from _atSelectOptionsSelected where avID = ?', [$avID]);
                 foreach ($options as $option) {
                     if (!$this->connection->fetchColumn('select count(avSelectOptionID) from atSelectOptionsSelected where avSelectOptionID = ? and avID = ?', [$option['atSelectOptionID'], $avID])) {
-                        $this->connection->insert('atSelectOptionsSelected', array(
+                        $this->connection->insert('atSelectOptionsSelected', [
                             'avSelectOptionID' => $option['atSelectOptionID'],
                             'avID' => $avID,
-                        ));
+                        ]);
                     }
                 }
                 break;
             case 'social_links':
                 if (!$this->connection->fetchColumn('select count(avID) from atSocialLinks where avID = ?', [$avID])) {
-                    $this->connection->insert('atSocialLinks', array('avID' => $avID));
+                    $this->connection->insert('atSocialLinks', ['avID' => $avID]);
                 }
                 $links = $this->connection->fetchAll('select * from _atSocialLinks where avID = ?', [$avID]);
                 foreach ($links as $link) {
-                    $this->connection->insert('atSelectedSocialLinks', array(
+                    $this->connection->insert('atSelectedSocialLinks', [
                         'service' => $link['service'],
                         'serviceInfo' => $link['serviceInfo'],
                         'avID' => $avID,
-                    ));
+                    ]);
                 }
                 break;
             case 'text':
@@ -380,14 +438,14 @@ class Version20160725000000 extends AbstractMigration
                 break;
             case 'topics':
                 if (!$this->connection->fetchColumn('select count(avID) from atTopic where avID = ?', [$avID])) {
-                    $this->connection->insert('atTopic', array('avID' => $avID));
+                    $this->connection->insert('atTopic', ['avID' => $avID]);
                 }
                 $topics = $this->connection->fetchAll('select * from _atSelectedTopics where avID = ?', [$avID]);
                 foreach ($topics as $topic) {
-                    $this->connection->insert('atSelectedTopics', array(
+                    $this->connection->insert('atSelectedTopics', [
                         'treeNodeID' => $topic['TopicNodeID'],
                         'avID' => $avID,
-                    ));
+                    ]);
                 }
                 break;
         }
@@ -397,7 +455,7 @@ class Version20160725000000 extends AbstractMigration
     {
         // Create AttributeValueValue Record.
         // Retrieve type
-        $atHandle = $this->connection->fetchColumn('select atHandle from AttributeTypes where atID = ?', array($atID));
+        $atHandle = $this->connection->fetchColumn('select atHandle from AttributeTypes where atID = ?', [$atID]);
         if ($atHandle) {
             $this->migrateAttributeValue($atHandle, $avID);
 
@@ -413,18 +471,18 @@ class Version20160725000000 extends AbstractMigration
 
     protected function importAttributeKeySettings($atID, $akID)
     {
-        $row = $this->connection->fetchAssoc('select * from AttributeTypes where atID = ?', array($atID));
+        $row = $this->connection->fetchAssoc('select * from AttributeTypes where atID = ?', [$atID]);
         if ($row['atID']) {
             $this->output(t('Importing attribute key settings %s...', $row['atHandle']));
             switch ($row['atHandle']) {
                 case 'address':
-                    $count = $this->connection->fetchColumn('select count(*) from atAddressSettings where akID = ?', array($akID));
+                    $count = $this->connection->fetchColumn('select count(*) from atAddressSettings where akID = ?', [$akID]);
                     if (!$count) {
-                        $rowA = $this->connection->fetchAssoc('select * from _atAddressSettings where akID = ?', array($akID));
+                        $rowA = $this->connection->fetchAssoc('select * from _atAddressSettings where akID = ?', [$akID]);
                         if ($rowA['akID']) {
-                            $countries = $this->connection->fetchAll('select * from _atAddressCustomCountries where akID = ?', array($akID));
+                            $countries = $this->connection->fetchAll('select * from _atAddressCustomCountries where akID = ?', [$akID]);
                             if (!$countries) {
-                                $countries = array();
+                                $countries = [];
                             }
                             $this->connection->insert('atAddressSettings', [
                                 'akHasCustomCountries' => $rowA['akHasCustomCountries'],
@@ -442,9 +500,9 @@ class Version20160725000000 extends AbstractMigration
                     // Nothing to do here.
                     break;
                 case 'select':
-                    $count = $this->connection->fetchColumn('select count(*) from atSelectSettings where akID = ?', array($akID));
+                    $count = $this->connection->fetchColumn('select count(*) from atSelectSettings where akID = ?', [$akID]);
                     if (!$count) {
-                        $rowA = $this->connection->fetchAssoc('select * from _atSelectSettings where akID = ?', array($akID));
+                        $rowA = $this->connection->fetchAssoc('select * from _atSelectSettings where akID = ?', [$akID]);
                         if ($rowA['akID']) {
                             $this->connection->insert('atSelectOptionLists', []);
                             $listID = $this->connection->lastInsertId();
@@ -456,7 +514,7 @@ class Version20160725000000 extends AbstractMigration
                                 'akID' => $akID,
                             ]);
 
-                            $options = $this->connection->fetchAll('select * from _atSelectOptions where akID = ?', array($akID));
+                            $options = $this->connection->fetchAll('select * from _atSelectOptions where akID = ?', [$akID]);
                             foreach ($options as $option) {
                                 $this->connection->insert('atSelectOptions', [
                                     'isEndUserAdded' => $option['isEndUserAdded'],
@@ -496,13 +554,13 @@ class Version20160725000000 extends AbstractMigration
 
     protected function importAttributeTypes()
     {
-        $types = array(
+        $types = [
             'express' => 'Express Entity',
             'email' => 'Email Address',
             'telephone' => 'Telephone',
             'url' => 'URL',
-        );
-        $categories = array('file', 'user', 'collection');
+        ];
+        $categories = ['file', 'user', 'collection'];
         foreach ($types as $handle => $name) {
             $type = Type::getByHandle($handle);
             if (!is_object($type)) {
@@ -518,82 +576,113 @@ class Version20160725000000 extends AbstractMigration
     protected function addDashboard()
     {
         $this->output(t('Updating Dashboard...'));
+
+        $pageAttributeCategory = Application::getFacadeApplication()->make(PageCategory::class);
+        /* @var PageCategory $pageAttributeCategory */
+        $availableAttributes = [];
+        foreach ([
+            'exclude_nav',
+            'exclude_search_index',
+            'meta_keywords',
+        ] as $akHandle) {
+            $availableAttributes[$akHandle] = $pageAttributeCategory->getAttributeKeyByHandle($akHandle) ? true : false;
+        }
+
         $page = Page::getByPath('/dashboard/express');
         if (!is_object($page) || $page->isError()) {
             $sp = SinglePage::add('/dashboard/express');
-            $sp->update(array('cName' => 'Express', 'cDescription' => 'Express Data Objects'));
+            $sp->update(['cName' => 'Express', 'cDescription' => 'Express Data Objects']);
         }
         $page = Page::getByPath('/dashboard/express/entries');
         if (!is_object($page) || $page->isError()) {
             $sp = SinglePage::add('/dashboard/express/entries');
-            $sp->update(array('cName' => 'View Entries'));
+            $sp->update(['cName' => 'View Entries']);
         }
         $page = Page::getByPath('/dashboard/system/express');
         if (!is_object($page) || $page->isError()) {
             $sp = SinglePage::add('/dashboard/system/express');
-            $sp->update(array('cName' => 'Express'));
+            $sp->update(['cName' => 'Express']);
         }
         $page = Page::getByPath('/dashboard/system/express/entities');
         if (!is_object($page) || $page->isError()) {
             $sp = SinglePage::add('/dashboard/system/express/entities');
-            $sp->update(array('cName' => 'Data Objects'));
-            $sp->setAttribute('exclude_nav', true);
+            $sp->update(['cName' => 'Data Objects']);
+            if ($availableAttributes['exclude_nav']) {
+                $sp->setAttribute('exclude_nav', true);
+            }
         }
         $page = Page::getByPath('/dashboard/system/express/entities/attributes');
         if (!is_object($page) || $page->isError()) {
             $sp = SinglePage::add('/dashboard/system/express/entities/attributes');
-            $sp->setAttribute('exclude_nav', true);
+            if ($availableAttributes['exclude_nav']) {
+                $sp->setAttribute('exclude_nav', true);
+            }
         }
         $page = Page::getByPath('/dashboard/system/express/entities/associations');
         if (!is_object($page) || $page->isError()) {
             $sp = SinglePage::add('/dashboard/system/express/entities/associations');
-            $sp->setAttribute('exclude_nav', true);
+            if ($availableAttributes['exclude_nav']) {
+                $sp->setAttribute('exclude_nav', true);
+            }
         }
         $page = Page::getByPath('/dashboard/system/express/entities/forms');
         if (!is_object($page) || $page->isError()) {
             $sp = SinglePage::add('/dashboard/system/express/entities/forms');
-            $sp->setAttribute('exclude_nav', true);
+            if ($availableAttributes['exclude_nav']) {
+                $sp->setAttribute('exclude_nav', true);
+            }
         }
         $page = Page::getByPath('/dashboard/system/express/entities/customize_search');
         if (!is_object($page) || $page->isError()) {
             $sp = SinglePage::add('/dashboard/system/express/entities/customize_search');
-            $sp->setAttribute('exclude_nav', true);
+            if ($availableAttributes['exclude_nav']) {
+                $sp->setAttribute('exclude_nav', true);
+            }
         }
         $page = Page::getByPath('/dashboard/system/express/entries');
         if (!is_object($page) || $page->isError()) {
             $sp = SinglePage::add('/dashboard/system/express/entries');
-            $sp->update(array('cName' => 'Custom Entry Locations'));
+            $sp->update(['cName' => 'Custom Entry Locations']);
         }
         $page = Page::getByPath('/dashboard/reports/forms/legacy');
         if (!is_object($page) || $page->isError()) {
             $sp = SinglePage::add('/dashboard/reports/forms/legacy');
-            $sp->update(array('cName' => 'Form Results'));
-            $sp->setAttribute('exclude_search_index', true);
-            $sp->setAttribute('exclude_nav', true);
+            $sp->update(['cName' => 'Form Results']);
+            if ($availableAttributes['exclude_search_index']) {
+                $sp->setAttribute('exclude_search_index', true);
+            }
+            if ($availableAttributes['exclude_nav']) {
+                $sp->setAttribute('exclude_nav', true);
+            }
         }
         $page = Page::getByPath('/dashboard/system/basics/name');
         if (is_object($page) && !$page->isError()) {
-            $page->update(array('cName' => 'Name & Attributes'));
+            $page->update(['cName' => 'Name & Attributes']);
         }
         $page = Page::getByPath('/dashboard/system/basics/attributes');
         if (!is_object($page) || $page->isError()) {
             $sp = SinglePage::add('/dashboard/system/basics/attributes');
-            $sp->update(array('cName' => 'Custom Attributes'));
-            $sp->setAttribute('exclude_search_index', true);
-            $sp->setAttribute('exclude_nav', true);
+            $sp->update(['cName' => 'Custom Attributes']);
+            if ($availableAttributes['exclude_search_index']) {
+                $sp->setAttribute('exclude_search_index', true);
+            }
+            if ($availableAttributes['exclude_nav']) {
+                $sp->setAttribute('exclude_nav', true);
+            }
         }
         $page = Page::getByPath('/dashboard/system/registration/global_password_reset');
         if (!is_object($page) || $page->isError()) {
             $sp = SinglePage::add('/dashboard/system/registration/global_password_reset');
-            $sp->update(array('cDescription' => 'Signs out all users, resets all passwords and forces users to choose a new one'));
-            $sp->setAttribute('meta_keywords', 'global, password, reset, change password, force, sign out');
+            $sp->update(['cDescription' => 'Signs out all users, resets all passwords and forces users to choose a new one']);
+            if ($availableAttributes['meta_keywords']) {
+                $sp->setAttribute('meta_keywords', 'global, password, reset, change password, force, sign out');
+            }
         }
         $page = Page::getByPath('/dashboard/system/registration/notification');
         if (!is_object($page) || $page->isError()) {
             $sp = SinglePage::add('/dashboard/system/registration/notification');
-            $sp->update(array('cName' => 'Notification Settings'));
+            $sp->update(['cName' => 'Notification Settings']);
         }
-
     }
 
     protected function addBlockTypes()
@@ -660,7 +749,6 @@ class Version20160725000000 extends AbstractMigration
             $bt->delete();
         }
 
-
         $bt = BlockType::getByHandle('desktop_site_activity');
         if (!is_object($bt)) {
             $bt = BlockType::installBlockType('desktop_site_activity');
@@ -674,7 +762,6 @@ class Version20160725000000 extends AbstractMigration
         }
 
         $desktopSet->addBlockType($bt);
-
 
         $bt = BlockType::getByHandle('desktop_featured_theme');
         if (!is_object($bt)) {
@@ -742,15 +829,15 @@ class Version20160725000000 extends AbstractMigration
     protected function addTreeNodeTypes()
     {
         $this->output(t('Adding tree node types...'));
-        $this->connection->Execute('update TreeNodeTypes set treeNodeTypeHandle = ? where treeNodeTypeHandle = ?', array(
+        $this->connection->Execute('update TreeNodeTypes set treeNodeTypeHandle = ? where treeNodeTypeHandle = ?', [
             'category', 'topic_category',
-        ));
-        $this->connection->Execute('update PermissionKeys set pkHandle = ? where pkHandle = ?', array(
+        ]);
+        $this->connection->Execute('update PermissionKeys set pkHandle = ? where pkHandle = ?', [
             'view_category_tree_node', 'view_topic_category_tree_node',
-        ));
-        $this->connection->Execute('update PermissionKeyCategories set pkCategoryHandle = ? where pkCategoryHandle = ?', array(
+        ]);
+        $this->connection->Execute('update PermissionKeyCategories set pkCategoryHandle = ? where pkCategoryHandle = ?', [
             'category_tree_node', 'topic_category_tree_node',
-        ));
+        ]);
         $results = NodeType::getByHandle('express_entry_results');
         if (!is_object($results)) {
             NodeType::add('express_entry_results');
@@ -778,11 +865,11 @@ class Version20160725000000 extends AbstractMigration
         }
         $type = \Concrete\Core\Page\Type\Type::getByHandle('core_desktop');
         if (!is_object($type)) {
-            \Concrete\Core\Page\Type\Type::add(array(
+            \Concrete\Core\Page\Type\Type::add([
                 'handle' => 'core_desktop',
                 'name' => 'Desktop',
-                'internal' => true
-            ));
+                'internal' => true,
+            ]);
         }
 
         $category = Category::getByHandle('collection')->getController();
@@ -813,7 +900,7 @@ class Version20160725000000 extends AbstractMigration
             $desktop->moveToTrash();
         }
 
-        $page = \Page::getByPath("/account/messages");
+        $page = \Page::getByPath('/account/messages');
         if (is_object($page) && !$page->isError()) {
             $page->moveToTrash();
         }
@@ -838,11 +925,11 @@ class Version20160725000000 extends AbstractMigration
     protected function updateWorkflows()
     {
         $this->output(t('Updating Workflows...'));
-        $page = \Page::getByPath("/dashboard/workflow");
+        $page = \Page::getByPath('/dashboard/workflow');
         if (is_object($page) && !$page->isError()) {
             $page->moveToTrash();
         }
-        $page = \Page::getByPath("/dashboard/system/permissions/workflows");
+        $page = \Page::getByPath('/dashboard/system/permissions/workflows');
         if (!is_object($page) || $page->isError()) {
             SinglePage::add('/dashboard/system/permissions/workflows');
         }
@@ -853,7 +940,7 @@ class Version20160725000000 extends AbstractMigration
         $this->output(t('Installing Site object...'));
 
         /**
-         * @var $service Service
+         * @var Service
          */
         $service = \Core::make('site');
         $site = $service->getDefault();
@@ -869,7 +956,7 @@ class Version20160725000000 extends AbstractMigration
             $locale = Localization::BASE_LOCALE;
             if (\Config::get('concrete.multilingual.default_locale')) {
                 $locale = \Config::get('concrete.multilingual.default_locale');
-            } else if (\Config::get('concrete.locale')) { // default app language
+            } elseif (\Config::get('concrete.locale')) { // default app language
                 $locale = \Config::get('concrete.locale');
             }
 
@@ -888,12 +975,11 @@ class Version20160725000000 extends AbstractMigration
 
         $site = $service->getDefault();
         $this->connection->executeQuery('update Pages set siteTreeID = ? where cIsSystemPage = 0', [$site->getSiteTreeID()]);
-        $this->connection->executeQuery('update Stacks set siteTreeID = ?', [$site->getSiteTreeID()]);
         $this->connection->executeQuery('update PageTypes set siteTypeID = ? where ptIsInternal = 0', [$type->getSiteTypeID()]);
         // migrate social links
         $links = $em->getRepository('Concrete\Core\Entity\Sharing\SocialNetwork\Link')
             ->findAll();
-        foreach($links as $link) {
+        foreach ($links as $link) {
             $link->setSite($site);
             $em->persist($link);
         }
@@ -907,7 +993,7 @@ class Version20160725000000 extends AbstractMigration
         }
 
         $types = Type::getList();
-        foreach($types as $type) {
+        foreach ($types as $type) {
             $category->associateAttributeKeyType($type);
         }
 
@@ -1011,7 +1097,7 @@ class Version20160725000000 extends AbstractMigration
     protected function cleanupOldPermissions()
     {
         $this->output(t('Cleaning old permissions...'));
-        $this->connection->Execute('delete from PermissionKeys where pkHandle = ?', array('_add_file'));
+        $this->connection->Execute('delete from PermissionKeys where pkHandle = ?', ['_add_file']);
     }
 
     protected function updateTopics()
@@ -1021,7 +1107,7 @@ class Version20160725000000 extends AbstractMigration
         while ($row = $r->fetch()) {
             $this->connection->executeQuery(
                 'update TreeNodes set treeNodeName = ? where treeNodeID = ? and treeNodeName = \'\'', [
-                    $row['treeNodeTopicName'], $row['treeNodeID']]
+                    $row['treeNodeTopicName'], $row['treeNodeID'], ]
             );
         }
     }
@@ -1071,22 +1157,22 @@ class Version20160725000000 extends AbstractMigration
     {
         $this->output(t('Updating single pages...'));
         $siteTreeID = \Core::make('site')->getSite()->getSiteTreeID();
-        $pages = array(
+        $pages = [
             // global pages
-            array('/dashboard/view.php', 0, 0),
-            array('/!trash/view.php', 0, 0),
-            array('/login/view.php', 0, 0),
-            array('/register/view.php', 0, 0),
-            array('/account/view.php', 0, 0),
-            array('/page_forbidden.php', 0, 0),
-            array('/download_file.php', 0, 0),
+            ['/dashboard/view.php', 0, 0],
+            ['/!trash/view.php', 0, 0],
+            ['/login/view.php', 0, 0],
+            ['/register/view.php', 0, 0],
+            ['/account/view.php', 0, 0],
+            ['/page_forbidden.php', 0, 0],
+            ['/download_file.php', 0, 0],
             // root pages
-            array('/!drafts/view.php', $siteTreeID, 0),
-            array('/!stacks/view.php', $siteTreeID, 0),
-            array('/page_not_found.php', $siteTreeID, 0),
-        );
-        foreach($pages as $record) {
-            $this->connection->executeQuery('update Pages set siteTreeID = ?, cParentID = ? where cFilename = ?', array($record[1], $record[2], $record[0]));
+            ['/!drafts/view.php', $siteTreeID, 0],
+            ['/!stacks/view.php', $siteTreeID, 0],
+            ['/page_not_found.php', $siteTreeID, 0],
+        ];
+        foreach ($pages as $record) {
+            $this->connection->executeQuery('update Pages set siteTreeID = ?, cParentID = ? where cFilename = ?', [$record[1], $record[2], $record[0]]);
         }
 
         // Delete members page if profiles not enabled
@@ -1106,7 +1192,7 @@ class Version20160725000000 extends AbstractMigration
 
         // Loop through all multilingual sections
         $r = $this->connection->executeQuery('select * from MultilingualSections');
-        $sections = array();
+        $sections = [];
         while ($row = $r->fetch()) {
             $sections[] = $row;
         }
@@ -1118,7 +1204,7 @@ class Version20160725000000 extends AbstractMigration
         $redirectToDefaultLocale = \Config::get('concrete.multilingual.redirect_home_to_default_locale');
         $defaultLocale = \Config::get('concrete.multilingual.default_locale');
         $sectionsIncludeHome = false;
-        foreach($sections as $section) {
+        foreach ($sections as $section) {
             if ($section['cID'] == 1) {
                 $sectionsIncludeHome = true;
             }
@@ -1132,8 +1218,7 @@ class Version20160725000000 extends AbstractMigration
             $this->connection->executeQuery('update Pages set siteTreeID = 0 where cID = 1');
         }
 
-        foreach($sections as $section) {
-
+        foreach ($sections as $section) {
             $sectionPage = \Page::getByID($section['cID']);
             $this->output(t('Migrating multilingual section: %s...', $sectionPage->getCollectionName()));
             // Create a locale for this section
@@ -1143,7 +1228,7 @@ class Version20160725000000 extends AbstractMigration
                 $locale = $service->add($site, $section['msLanguage'], $section['msCountry']);
             } else {
                 $locale = $em->getRepository('Concrete\Core\Entity\Site\Locale')->findOneBy([
-                    'msLanguage' => $section['msLanguage'], 'msCountry' => $section['msCountry']
+                    'msLanguage' => $section['msLanguage'], 'msCountry' => $section['msCountry'],
                 ]);
             }
 
@@ -1157,19 +1242,19 @@ class Version20160725000000 extends AbstractMigration
                     // the multilingual section – which is already is automatically.
 
                     // We actually do nothing in this case since this is all already set up automatically earlier.
-                } else{
+                } else {
                     $this->output(t('Setting pages for section %s to site tree %s...', $sectionPage->getCollectionName(), $tree->getSiteTreeID()));
                     $tree->setSiteHomePageID($section['cID']);
                     $em->persist($tree);
                     $em->flush();
                     $this->connection->executeQuery('update Pages set cParentID = 0, siteTreeID = ? where cID = ?', [
-                        $tree->getSiteTreeID(), $section['cID']
+                        $tree->getSiteTreeID(), $section['cID'],
                     ]);
                     // Now we set all pages in this site tree to the new site tree ID.
                     $children = $sectionPage->getCollectionChildrenArray();
-                    foreach($children as $cID) {
+                    foreach ($children as $cID) {
                         $this->connection->executeQuery('update Pages set siteTreeID = ? where cID = ?', [
-                            $tree->getSiteTreeID(), $cID
+                            $tree->getSiteTreeID(), $cID,
                         ]);
                     }
                 }
@@ -1178,17 +1263,16 @@ class Version20160725000000 extends AbstractMigration
 
         // Case 3 - Home page is the default locale.
         // We don't have to do anything to fulfill this since it's already been taken care of by the previous migrations.
-
     }
-
 
     public function up(Schema $schema)
     {
         $this->connection->Execute('set foreign_key_checks = 0');
+        $this->prepareInvalidForeignKeys();
         $this->renameProblematicTables();
         $this->updateDoctrineXmlTables();
         $this->prepareProblematicEntityTables();
-        $this->installEntities(array('Concrete\Core\Entity\File\File', 'Concrete\Core\Entity\File\Version'));
+        $this->installEntities(['Concrete\Core\Entity\File\File', 'Concrete\Core\Entity\File\Version']);
         $this->installOtherEntities();
         $this->installSite();
         $this->importAttributeTypes();
@@ -1209,6 +1293,7 @@ class Version20160725000000 extends AbstractMigration
         $this->splittedTrackingCode();
         $this->cleanupOldPermissions();
         $this->installLocales();
+        $this->nullifyInvalidForeignKeys();
         $this->connection->Execute('set foreign_key_checks = 1');
     }
 

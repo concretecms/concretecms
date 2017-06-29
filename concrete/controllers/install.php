@@ -3,6 +3,7 @@ namespace Concrete\Controller;
 
 use Concrete\Core\Cache\Cache;
 use Concrete\Core\Config\Renderer;
+use Concrete\Core\Database\Connection\Timezone;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Localization\Localization as Localization;
@@ -11,6 +12,7 @@ use Concrete\Core\Localization\Translation\Remote\ProviderInterface as RemoteTra
 use Concrete\Core\Url\UrlImmutable;
 use Controller;
 use Database;
+use DateTimeZone;
 use Exception;
 use Hautelook\Phpass\PasswordHash;
 use Punic\Comparer as PunicComparer;
@@ -116,6 +118,8 @@ class Install extends Controller
             if (defined('APP_INSTALL_LANGUAGE') && APP_INSTALL_LANGUAGE) {
                 Localization::changeLocale(APP_INSTALL_LANGUAGE);
             }
+            $config = $this->app->make('config');
+            $_POST['SERVER_TIMEZONE'] = $config->get('app.server_timezone');
             $e = $this->app->make('helper/validation/error');
             $e = $this->validateDatabase($e);
             if (defined('INSTALL_STARTING_POINT') && INSTALL_STARTING_POINT) {
@@ -148,6 +152,13 @@ class Install extends Controller
         if (!extension_loaded('pdo')) {
             $e->add($this->getDBErrorMsg());
         } else {
+            $SERVER_TIMEZONE = null;
+            if (!empty($_POST['SERVER_TIMEZONE'])) {
+                try {
+                    $SERVER_TIMEZONE = new DateTimeZone($_POST['SERVER_TIMEZONE']);
+                } catch (Exception $x) {
+                }
+            }
             $DB_SERVER = isset($_POST['DB_SERVER']) ? $_POST['DB_SERVER'] : null;
             $DB_DATABASE = isset($_POST['DB_DATABASE']) ? $_POST['DB_DATABASE'] : null;
             $db = Database::getFactory()->createConnection(
@@ -190,6 +201,20 @@ class Install extends Controller
                     }
                 }
             }
+            if ($SERVER_TIMEZONE === null) {
+                $e->add(t('Invalid or missing server time zone.'));
+            } else {
+                $ctz = $this->app->make(Timezone::class, ['connection' => $db]);
+                $deltaTimezone = $ctz->getDeltaTimezone($SERVER_TIMEZONE);
+                if ($deltaTimezone !== null) {
+                    $error = $ctz->describeDeltaTimezone($deltaTimezone);
+                    $suggestTimezones = $ctz->getCompatibleTimezones();
+                    if (!empty($suggestTimezones)) {
+                        $error .= ' ' . t('You may want to use one of these time zones in the <u>Advanced Options</u> section:<ul><li>' . implode('</li><li>', $suggestTimezones)) . '</li></ul>';
+                    }
+                    $e->add($error);
+                }
+            }
         }
 
         return $e;
@@ -224,20 +249,22 @@ class Install extends Controller
         $this->set('passwordAttributes', $passwordAttributes);
         $canonicalUrl = '';
         $canonicalUrlChecked = false;
-        $canonicalSSLUrl = '';
-        $canonicalSSLUrlChecked = false;
+        $canonicalUrlAlternative = '';
+        $canonicalUrlAlternativeChecked = false;
         $uri = $this->request->getUri();
         if (preg_match('/^(https?)(:.+?)(?:\/' . preg_quote(DISPATCHER_FILENAME, '%') . ')?\/install(?:$|\/|\?)/i', $uri, $m)) {
-            $canonicalUrl = 'http' . rtrim($m[2], '/');
-            $canonicalSSLUrl = 'https' . rtrim($m[2], '/');
-            /*switch (strtolower($m[1])) {
+            switch (strtolower($m[1])) {
                 case 'http':
-                    $canonicalUrlChecked = true;
+                    $canonicalUrl = 'http' . rtrim($m[2], '/');
+                    $canonicalUrlAlternative = 'https' . rtrim($m[2], '/');
+                    //$canonicalUrlChecked = true;
                     break;
-                case 'http':
-                    $canonicalSSLUrlChecked = true;
+                case 'https':
+                    $canonicalUrl = 'https' . rtrim($m[2], '/');
+                    $canonicalUrlAlternative = 'http' . rtrim($m[2], '/');
+                    //$canonicalUrlChecked = true;
                     break;
-            }*/
+            }
         }
         $countries = [];
         $ll = $this->app->make('localization/languages');
@@ -261,8 +288,10 @@ class Install extends Controller
         $this->set('setInitialState', $this->request->post('SITE') === null);
         $this->set('canonicalUrl', $canonicalUrl);
         $this->set('canonicalUrlChecked', $canonicalUrlChecked);
-        $this->set('canonicalSSLUrl', $canonicalSSLUrl);
-        $this->set('canonicalSSLUrlChecked', $canonicalSSLUrlChecked);
+        $this->set('canonicalUrlAlternative', $canonicalUrlAlternative);
+        $this->set('canonicalUrlAlternativeChecked', $canonicalUrlAlternativeChecked);
+        $this->set('SERVER_TIMEZONE', @date_default_timezone_get() ?: 'UTC');
+        $this->set('availableTimezones', $this->app->make('date')->getGroupedTimezones());
     }
 
     public function get_site_locale_countries($viewLocaleID, $languageID, $preselectedCountryID)
@@ -505,6 +534,7 @@ class Install extends Controller
             $val->addRequiredEmail('uEmail', t('Please specify a valid email address'));
             $val->addRequired('DB_DATABASE', t('You must specify a valid database name'));
             $val->addRequired('DB_SERVER', t('You must specify a valid database server'));
+            $val->addRequired('SERVER_TIMEZONE', t('You must specify the system time zone'));
 
             $password = $_POST['uPassword'];
             $passwordConfirm = $_POST['uPasswordConfirm'];
@@ -529,8 +559,8 @@ class Install extends Controller
             if ($this->post('canonicalUrlChecked') === '1') {
                 try {
                     $url = UrlImmutable::createFromUrl($this->post('canonicalUrl'));
-                    if (strcasecmp('http', $url->getScheme()) !== 0) {
-                        throw new Exception('The HTTP canonical URL must have the http:// scheme');
+                    if (!preg_match('/^https?/i', $url->getScheme()) !== 0) {
+                        throw new Exception('The canonical URL must have the http:// scheme or the https:// scheme');
                     }
                     $canonicalUrl = (string) $url;
                 } catch (Exception $x) {
@@ -539,14 +569,18 @@ class Install extends Controller
             } else {
                 $canonicalUrl = '';
             }
-            if ($this->post('canonicalSSLUrlChecked') === '1') {
-                $url = UrlImmutable::createFromUrl($this->post('canonicalSSLUrl'));
-                if (strcasecmp('https', $url->getScheme()) !== 0) {
-                    throw new Exception('The SSL canonical URL must have the https:// scheme');
+            if ($this->post('canonicalUrlAlternativeChecked') === '1') {
+                try {
+                    $url = UrlImmutable::createFromUrl($this->post('canonicalUrlAlternative'));
+                    if (!preg_match('/^https?/i', $url->getScheme()) !== 0) {
+                        throw new Exception('The alternative canonical URL must have the http:// scheme or the https:// scheme');
+                    }
+                    $canonicalUrlAlternative = (string) $url;
+                } catch (Exception $x) {
+                    $error->add($x);
                 }
-                $canonicalSSLUrl = (string) $url;
             } else {
-                $canonicalSSLUrl = '';
+                $canonicalUrlAlternative = '';
             }
             if ($val->test() && (!$error->has())) {
                 // write the config file
@@ -569,7 +603,7 @@ class Install extends Controller
                         ],
                     ];
                     $config['canonical-url'] = $canonicalUrl;
-                    $config['canonical-ssl-url'] = $canonicalSSLUrl;
+                    $config['canonical-url-alternative'] = $canonicalUrlAlternative;
                     $config['session-handler'] = isset($_POST['sessionHandler']) ? $_POST['sessionHandler'] : null;
 
                     $renderer = new Renderer($config);
@@ -595,6 +629,7 @@ class Install extends Controller
                     $res = fwrite($this->fpu, $configuration);
                     fclose($this->fpu);
                     chmod(DIR_CONFIG_SITE . '/site_install_user.php', 0700);
+                    $config->save('app.server_timezone', $_POST['SERVER_TIMEZONE']);
                     if (PHP_SAPI != 'cli') {
                         $this->redirect('/');
                     }

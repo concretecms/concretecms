@@ -59,7 +59,7 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
                         foreach ($activeAuths as $auth) {
                             ?>
                             <option value="<?= $auth->getAuthenticationTypeHandle() ?>">
-                                <?= $auth->getAuthenticationTypeName() ?>
+                                <?= $auth->getAuthenticationTypeDisplayName() ?>
                             </option>
                         <?php
 
@@ -94,7 +94,7 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
                             ?>
                             <li data-handle="<?= $auth->getAuthenticationTypeHandle() ?>">
                                 <?= $auth->getAuthenticationTypeIconHTML() ?>
-                                <span><?= $auth->getAuthenticationTypeName() ?></span>
+                                <span><?= $auth->getAuthenticationTypeDisplayName() ?></span>
                             </li>
                         <?php
 

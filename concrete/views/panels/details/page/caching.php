@@ -31,9 +31,6 @@ switch (Config::get('concrete.cache.full_page_lifetime')) {
 <section class="ccm-ui">
 	<header><?=t('Page Caching')?></header>
 	<form method="post" action="<?=$controller->action('submit')?>" data-dialog-form="caching" data-panel-detail-form="caching">
-
-	<?=Loader::helper('concrete/ui/help')->display('panel', '/page/caching')?>
-
 		<label class="control-label"><?=t('Enable Cache')?></label>
 
 		<div class="radio">

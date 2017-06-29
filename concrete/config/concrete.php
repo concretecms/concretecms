@@ -6,9 +6,9 @@ return [
      *
      * @var string
      */
-    'version' => '8.2.0b1',
-    'version_installed' => '8.2.0b1',
-    'version_db' => '20170427000000', // the key of the latest database migration
+    'version' => '8.2.0RC2',
+    'version_installed' => '8.2.0RC2',
+    'version_db' => '20170626000000', // the key of the latest database migration
 
     /*
      * Installation status
@@ -572,6 +572,8 @@ return [
             'progress_limit' => 60,
             // Lifetime (in seconds) of the cache items associated to downloaded data
             'cache_lifetime' => 3600, // 1 hour
+            // Base URI for package details
+            'package_url' => 'https://translate.concrete5.org/translate/package',
         ],
     ],
     'urls' => [
@@ -771,21 +773,13 @@ return [
         ],
         'ban' => [
             'ip' => [
+                // Is the automatic ban system enabled?
                 'enabled' => true,
-
-                /*
-                 * Maximum attempts
-                 */
+                // Maximum number of login attempts before banning the IP address
                 'attempts' => 5,
-
-                /*
-                 * Threshold time
-                 */
+                // Time window (in seconds) for past failed login attempts
                 'time' => 300,
-
-                /*
-                 * Ban length in minutes
-                 */
+                // Ban duration (in minutes) when <attempts> failed logins occurred in the past <time> seconds
                 'length' => 10,
             ],
         ],
@@ -856,7 +850,7 @@ return [
         'url_rewriting_all' => false,
         'redirect_to_canonical_url' => false,
         'canonical_url' => null,
-        'canonical_ssl_url' => null,
+        'canonical_url_alternative' => null,
         'trailing_slash' => false,
         'title_format' => '%2$s :: %1$s',
         'title_segment_separator' => ' :: ',
@@ -890,6 +884,12 @@ return [
         'search' => [
             // Always reindex pages (usually it isn't performed when approving workflows)
             'always_reindex' => false,
+        ],
+    ],
+
+    'editor' => [
+        'plugins' => [
+            'selected' => [],
         ],
     ],
 ];

@@ -4,6 +4,7 @@ namespace Concrete\Core\File;
 use Concrete\Core\File\StorageLocation\StorageLocation;
 use Concrete\Core\File\StorageLocation\StorageLocationInterface;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
+use Concrete\Core\Application\Application;
 
 class FileServiceProvider extends ServiceProvider
 {
@@ -27,6 +28,15 @@ class FileServiceProvider extends ServiceProvider
 
         $this->app->bind(StorageLocationInterface::class, function($app) {
             return StorageLocation::getDefault();
+        });
+
+        $this->app->bindIf(Service\VolatileDirectory::class, function (Application $app) {
+            return $app->build(
+                Service\VolatileDirectory::class,
+                [
+                    'parentDirectory' => $app->make('helper/file')->getTemporaryDirectory(),
+                ]
+            );
         });
     }
 }

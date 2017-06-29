@@ -292,12 +292,16 @@ return [
         '/ccm/system/dialogs/file/bulk/properties' => ['\Concrete\Controller\Dialog\File\Bulk\Properties::view'],
         '/ccm/system/dialogs/file/bulk/sets' => ['\Concrete\Controller\Dialog\File\Bulk\Sets::view'],
         '/ccm/system/dialogs/file/bulk/sets/submit' => ['\Concrete\Controller\Dialog\File\Bulk\Sets::submit'],
+        '/ccm/system/dialogs/file/bulk/folder' => ['\Concrete\Controller\Dialog\File\Bulk\Folder::view'],
+        '/ccm/system/dialogs/file/bulk/folder/submit' => ['\Concrete\Controller\Dialog\File\Bulk\Folder::submit'],
         '/ccm/system/dialogs/file/bulk/properties/clear_attribute' => ['\Concrete\Controller\Dialog\File\Bulk\Properties::clearAttribute'],
         '/ccm/system/dialogs/file/bulk/properties/update_attribute' => ['\Concrete\Controller\Dialog\File\Bulk\Properties::updateAttribute'],
         '/ccm/system/dialogs/file/bulk/storage' => ['\Concrete\Controller\Dialog\File\Bulk\Storage::view'],
         '/ccm/system/dialogs/file/bulk/storage/submit' => ['\Concrete\Controller\Dialog\File\Bulk\Storage::submit'],
         '/ccm/system/dialogs/file/sets' => ['\Concrete\Controller\Dialog\File\Sets::view'],
         '/ccm/system/dialogs/file/sets/submit' => ['\Concrete\Controller\Dialog\File\Sets::submit'],
+        '/ccm/system/dialogs/file/folder' => ['\Concrete\Controller\Dialog\File\Folder::view'],
+        '/ccm/system/dialogs/file/folder/submit' => ['\Concrete\Controller\Dialog\File\Folder::submit'],
         '/ccm/system/dialogs/file/properties' => ['\Concrete\Controller\Dialog\File\Properties::view'],
         '/ccm/system/dialogs/file/advanced_search' => ['\Concrete\Controller\Dialog\File\AdvancedSearch::view'],
         '/ccm/system/dialogs/file/advanced_search/add_field' => ['\Concrete\Controller\Dialog\File\AdvancedSearch::addField'],
@@ -307,6 +311,7 @@ return [
         '/ccm/system/dialogs/file/properties/save' => ['\Concrete\Controller\Dialog\File\Properties::save'],
         '/ccm/system/dialogs/file/properties/update_attribute' => ['\Concrete\Controller\Dialog\File\Properties::update_attribute'],
         '/ccm/system/dialogs/file/search' => ['\Concrete\Controller\Dialog\File\Search::view'],
+        '/ccm/system/dialogs/file/jump_to_folder' => ['\Concrete\Controller\Dialog\File\JumpToFolder::view'],
         '/ccm/system/dialogs/file/thumbnails' => ['\Concrete\Controller\Dialog\File\Thumbnails::view'],
         '/ccm/system/dialogs/file/thumbnails/edit' => ['\Concrete\Controller\Dialog\File\Thumbnails\Edit::view'],
         '/ccm/system/dialogs/file/usage/{fID}' => ['\Concrete\Controller\Dialog\File\Usage::view'],
@@ -449,8 +454,8 @@ return [
             'attribute_action',
             ['action' => '.+'],
         ],
-        "/ccm/system/attribute/attribute_sort/set" => ['\Concrete\Controller\Backend\Attributes::sortInSet'],
-        "/ccm/system/attribute/attribute_sort/user" => ['\Concrete\Controller\Backend\Attributes::sortUser'],
+        '/ccm/system/attribute/attribute_sort/set' => ['\Concrete\Controller\Backend\Attributes::sortInSet'],
+        '/ccm/system/attribute/attribute_sort/user' => ['\Concrete\Controller\Backend\Attributes::sortUser'],
 
         /*
          * Trees
@@ -597,6 +602,11 @@ return [
         '/ccm/assets/localization/translator/js' => ['\Concrete\Controller\Frontend\AssetsLocalization::getTranslatorJavascript'],
         '/ccm/assets/localization/dropzone/js' => ['\Concrete\Controller\Frontend\AssetsLocalization::getDropzoneJavascript'],
         '/ccm/assets/localization/conversations/js' => ['\Concrete\Controller\Frontend\AssetsLocalization::getConversationsJavascript'],
+
+        /*
+         * Languages
+         */
+        '/ccm/system/dialogs/language/update/details' => ['\Concrete\Controller\Dialog\Language\Update\Details::view'],
     ],
 
     /*
@@ -775,6 +785,10 @@ return [
             ['css', 'css/image-editor/controls/position.css'],
             ['javascript', 'js/image-editor/controls/position.js'],
         ],
+        'core/duration' => [
+            ['javascript', 'js/duration.js'],
+            ['css', 'css/duration.css'],
+        ],
         'core/imageeditor/control/filter' => [
             ['css', 'css/image-editor/controls/filter.css'],
             ['javascript', 'js/image-editor/controls/filter.js'],
@@ -837,6 +851,15 @@ return [
             ['javascript', 'js/fancytree.js', ['minify' => false, 'version' => '2.18.0']],
             ['javascript-localized', '/ccm/assets/localization/fancytree/js', ['minify' => false]],
             ['css', 'css/fancytree.css', ['minify' => false]],
+        ],
+        'moment' => [
+            ['javascript', 'js/moment.js', ['minify' => false, 'version' => '2.18.1']],
+        ],
+        'moment-timezone' => [
+            ['javascript', 'js/moment-timezone.js', ['minify' => false, 'version' => '0.5.13']],
+        ],
+        'moment-timezone-data' => [
+            ['javascript', 'js/moment-timezone-data.js', ['minify' => false, 'version' => '0.5.13']],
         ],
         'bootstrap/dropdown' => [
             ['javascript', 'js/bootstrap/dropdown.js'],
@@ -1067,6 +1090,13 @@ return [
                 ['css', 'font-awesome'],
             ],
         ],
+        'moment' => [
+            [
+                ['javascript', 'moment'],
+                ['javascript', 'moment-timezone'],
+                ['javascript', 'moment-timezone-data'],
+            ],
+        ],
         'fancytree' => [
             [
                 ['javascript', 'fancytree'],
@@ -1163,6 +1193,21 @@ return [
                 ['javascript', 'core/file-manager'],
             ],
         ],
+        'core/duration' => [
+            [
+                ['css', 'selectize'],
+                ['css', 'jquery/ui'],
+                ['css', 'core/duration'],
+                ['javascript', 'selectize'],
+                ['javascript', 'moment'],
+                ['javascript', 'moment-timezone'],
+                ['javascript', 'moment-timezone-data'],
+                ['javascript', 'core/duration'],
+                ['javascript', 'jquery/ui'],
+                ['javascript-localized', 'jquery/ui'],
+            ],
+        ],
+
         'core/file-folder-selector' => [
             [
                 ['javascript', 'core/events'],

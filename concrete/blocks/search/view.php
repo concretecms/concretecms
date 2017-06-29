@@ -54,7 +54,7 @@ if (!isset($query) || !is_string($query)) {
                 }
             ?></div><?php
             $pages = $pagination->getCurrentPageResults();
-            if ($pagination->getTotalPages() > 1 && $pagination->haveToPaginate()) {
+            if ($pagination->haveToPaginate()) {
                 $showPagination = true;
                 echo $pagination->renderDefaultView();
             }

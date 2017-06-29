@@ -64,6 +64,27 @@ class StyleSet
     /**
      * @ORM\Column(type="string", nullable=true)
      */
+    protected $customElementAttribute;
+
+    /**
+     * @param mixed $customElementAttribute
+     */
+    public function setCustomElementAttribute($customElementAttribute)
+    {
+        $this->customElementAttribute = $customElementAttribute;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCustomElementAttribute()
+    {
+        return $this->customElementAttribute;
+    }
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
     protected $backgroundColor;
 
     /**
@@ -756,6 +777,7 @@ class StyleSet
         $node->addChild('boxShadowColor', $this->getBoxShadowColor());
         $node->addChild('customClass', $this->getCustomClass());
         $node->addChild('customID', $this->getCustomID());
+        $node->addChild('customElementAttribute', $this->getCustomElementAttribute());
         $node->addChild('hideOnExtraSmallDevice', $this->getHideOnExtraSmallDevice());
         $node->addChild('hideOnSmallDevice', $this->getHideOnSmallDevice());
         $node->addChild('hideOnMediumDevice', $this->getHideOnMediumDevice());

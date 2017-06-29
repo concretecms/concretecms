@@ -42,7 +42,8 @@ ul#ccm-block-type-list li {margin-left: 0px; list-style-type: none; display: non
 ul.item-select-list {padding: 2px 0px 0px 0px; margin: 0px 0px 15px 0px; list-style-type: none !important;}
 ul.item-select-list > li {position: relative; margin-bottom: 2px; padding-bottom: 2px}
 ul.item-select-list > li > a, ul.item-select-list > li > span {color: @text-color; background-repeat: no-repeat; display: block; padding: 8px 8px 8px 8px; text-decoration: none; border: 1px solid transparent}
-ul.item-select-list > li > a:hover {
+ul.item-select-list > li > a:hover,
+ul.item-select-list > li > span:hover {
   .item-select-list-hover();
 }
 ul.item-select-list > li > a:focus {
@@ -123,7 +124,18 @@ span.ccm-group-description {color: #aaa; font-size: 12px; padding-top: 2px; padd
 #ccm-group-search-fields {padding-left: 24px; background: transparent url(../images/icons/search.png) no-repeat scroll left 6px }
 
 /* date controls */
-.ccm-input-time-wrapper select {width: auto ; margin-right: 4px !important;}
+.ccm-input-time-wrapper {
+  select {
+    width: auto;
+    margin-right: 4px !important;
+    &:last-child {
+      margin-right: 0 !important;
+    }
+  }
+  .separator {
+    margin-right: 4px;
+  }
+}
 .ccm-input-date {width: auto ; margin-right: 4px !important;}
 div.popover {
   .ccm-input-date-wrapper {
@@ -146,6 +158,12 @@ div.ccm-stack a:hover {background-color: #d9e7ff; border: 1px solid #94a7c7; tex
 div.ccm-workflow a {background-repeat: no-repeat; background-position: 8px 11px; background-image: url(../images/icons/wrench.png); color: #666; display: block; font-size: 14px; padding: 8px 8px 8px 30px; text-decoration: none; border: 1px solid #fff}
 div.ccm-workflow {position: relative; padding: 0px 0px 2px 0px; border-bottom: 1px solid #dedede; margin-bottom: 2px}
 div.ccm-workflow a:hover {background-color: #d9e7ff; border: 1px solid #94a7c7; text-decoration: none; color: #666}
+
+/* permission details list-item checkboxes */
+#ccm-permission-detail .inputs-list {
+    list-style: none;
+    padding-left: 0;
+}
 
 /* icon coloring */
 a.icon-link i.fa {

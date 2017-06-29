@@ -1,11 +1,9 @@
 <?php
 namespace Concrete\Core\Application;
 
-use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Cache\CacheClearer;
 use Concrete\Core\Cache\Page\PageCache;
 use Concrete\Core\Cache\Page\PageCacheRecord;
-use Concrete\Core\Cache\OpCache;
 use Concrete\Core\Database\EntityManagerConfigUpdater;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Foundation\ClassLoader;
@@ -13,29 +11,28 @@ use Concrete\Core\Foundation\EnvironmentDetector;
 use Concrete\Core\Foundation\Runtime\DefaultRuntime;
 use Concrete\Core\Foundation\Runtime\RuntimeInterface;
 use Concrete\Core\Http\DispatcherInterface;
+use Concrete\Core\Http\Request;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Logging\Query\Logger;
+use Concrete\Core\Package\PackageService;
 use Concrete\Core\Routing\RedirectResponse;
+use Concrete\Core\Support\Facade\Package;
 use Concrete\Core\Updater\Update;
 use Concrete\Core\Url\Url;
 use Concrete\Core\Url\UrlImmutable;
 use Config;
-use Core;
 use Database;
 use Environment;
+use Exception;
 use Illuminate\Container\Container;
 use Job;
 use JobSet;
 use Log;
-use Concrete\Core\Support\Facade\Package;
 use Page;
 use Redirect;
-use Concrete\Core\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
+use Symfony\Component\HttpFoundation\Response;
 use View;
-use Concrete\Core\Package\PackageService;
-use Exception;
 
 class Application extends Container
 {
@@ -121,7 +118,7 @@ class Application extends Container
                 // check for non dashboard page
                 $jobs = Job::getList(true);
                 $auth = Job::generateAuth();
-                $url = "";
+                $url = '';
                 // jobs
                 if (count($jobs)) {
                     foreach ($jobs as $j) {
@@ -186,7 +183,7 @@ class Application extends Container
         if ($library->shouldCheckCache($request)) {
             $record = $library->getRecord($request);
             if ($record instanceof PageCacheRecord) {
-                if ($record->validate()) {
+                if ($record->validate($request)) {
                     return $library->deliver($record);
                 }
             }
@@ -318,7 +315,7 @@ class Application extends Container
     /**
      * If we have redirect to canonical host enabled, we need to honor it here.
      *
-     * @return \Concrete\Core\Routing\RedirectResponse
+     * @return \Concrete\Core\Routing\RedirectResponse|null
      */
     public function handleCanonicalURLRedirection(SymfonyRequest $r, Site $site)
     {
@@ -333,39 +330,34 @@ class Application extends Container
 
             $url = UrlImmutable::createFromUrl($requestUri, $trailingSlash);
 
-            $canonical = UrlImmutable::createFromUrl($siteConfig->get('seo.canonical_url'),
-                (bool) $siteConfig->get('seo.trailing_slash')
-            );
-
-            // Set the parts of the current URL that are specified in the canonical URL, including host,
-            // port, scheme. Set scheme first so that our port can use the magic "set if necessary" method.
-            $new = $url->setScheme($canonical->getScheme()->get());
-            $new = $new->setHost($canonical->getHost()->get());
-            $new = $new->setPort($canonical->getPort()->get());
-
-            // Now we have our current url, swapped out with the important parts of the canonical URL.
-            // If it matches, we're good.
-            if ($new == $url) {
-                return null;
-            }
-
-            // Uh oh, it didn't match. before we redirect to the canonical URL, let's check to see if we have an SSL
-            // URL
-            if ($siteConfig->get('seo.canonical_ssl_url')) {
-                $ssl = UrlImmutable::createFromUrl($siteConfig->get('seo.canonical_ssl_url'));
-
-                $new = $url->setScheme($ssl->getScheme()->get());
-                $new = $new->setHost($ssl->getHost()->get());
-                $new = $new->setPort($ssl->getPort()->get());
-
+            $mainCanonical = null;
+            foreach (['seo.canonical_url', 'seo.canonical_url_alternative'] as $key) {
+                $canonicalUrlString = $siteConfig->get($key);
+                if (!$canonicalUrlString) {
+                    continue;
+                }
+                $canonicalUrl = UrlImmutable::createFromUrl(
+                    $canonicalUrlString,
+                    (bool) $siteConfig->get('seo.trailing_slash')
+                );
+                // Set the parts of the current URL that are specified in the canonical URL, including host,
+                // scheme, port. Set scheme first so that our port can use the magic "set if necessary" method.
+                $canonical = $url
+                    ->setScheme($canonicalUrl->getScheme()->get())
+                    ->setHost($canonicalUrl->getHost()->get())
+                    ->setPort($canonicalUrl->getPort()->get())
+                ;
                 // Now we have our current url, swapped out with the important parts of the canonical URL.
                 // If it matches, we're good.
-                if ($new == $url) {
+                if ($canonical == $url) {
                     return null;
+                }
+                if ($mainCanonical === null) {
+                    $mainCanonical = $canonical;
                 }
             }
 
-            $response = new RedirectResponse($new, '301');
+            $response = new RedirectResponse($mainCanonical, '301');
 
             return $response;
         }

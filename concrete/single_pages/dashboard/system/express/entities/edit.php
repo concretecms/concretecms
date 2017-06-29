@@ -42,7 +42,7 @@
                 </div>
                 <div class="form-group">
                     <label for="name" class="control-label"><?=t('Description')?></label>
-                    <?=$form->textarea('description', $entity->getDescription(), array('rows' => 5))?>
+                    <?=$form->textarea('description', $entity->getEntityDisplayDescription(), array('rows' => 5))?>
                 </div>
             </fieldset>
 

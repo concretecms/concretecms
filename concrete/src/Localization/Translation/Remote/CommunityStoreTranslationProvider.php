@@ -274,11 +274,14 @@ class CommunityStoreTranslationProvider implements ProviderInterface
             $result = $allStats[$localeID];
         } else {
             if (empty($allStats)) {
+                $version = '';
                 $total = 0;
             } else {
-                $total = array_pop($allStats)->getTotal();
+                $sampleStats = array_pop($allStats);
+                $version = $sampleStats->getVersion();
+                $total = $sampleStats->getTotal();
             }
-            $result = new Stats(0, 0);
+            $result = new Stats($version, 0, 0);
         }
 
         return $result;

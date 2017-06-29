@@ -18,7 +18,7 @@ class AuthenticationType extends AbstractCategory
 
     public function getItemName($type)
     {
-        return $type->getAuthenticationTypeName();
+        return $type->getAuthenticationTypeDisplayName();
     }
 
     public function getPackageItems(Package $package)

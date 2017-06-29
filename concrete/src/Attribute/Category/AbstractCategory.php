@@ -78,16 +78,36 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
 
     public function getAttributeKeyByHandle($handle)
     {
-        return $this->getAttributeKeyRepository()->findOneBy(array(
-            'akHandle' => $handle,
-        ));
+        $cache = $this->application->make("cache/request");
+        $class = substr(get_class($this), strrpos(get_class($this), '\\') + 1);
+        $category = strtolower(substr($class, 0, strpos($class, 'Category')));
+        $item = $cache->getItem(sprintf('/attribute/%s/handle/%s', $category, $handle));
+        if (!$item->isMiss()) {
+            $key = $item->get();
+        } else {
+            $key = $this->getAttributeKeyRepository()->findOneBy(array(
+                'akHandle' => $handle,
+            ));
+            $cache->save($item->set($key));
+        }
+        return $key;
     }
 
     public function getAttributeKeyByID($akID)
     {
-        return $this->getAttributeKeyRepository()->findOneBy(array(
-            'akID' => $akID,
-        ));
+        $cache = $this->application->make("cache/request");
+        $class = substr(get_class($this), strrpos(get_class($this), '\\') + 1);
+        $category = strtolower(substr($class, 0, strpos($class, 'Category')));
+        $item = $cache->getItem(sprintf('/attribute/%s/id/%s', $category, $akID));
+        if (!$item->isMiss()) {
+            $key = $item->get();
+        } else {
+            $key = $this->getAttributeKeyRepository()->findOneBy(array(
+                'akID' => $akID,
+            ));
+            $cache->save($item->set($key));
+        }
+        return $key;
     }
 
     public function delete()

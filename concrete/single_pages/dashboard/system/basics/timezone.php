@@ -52,16 +52,22 @@ defined('C5_EXECUTE') or die('Access Denied.');
             ) ?>">
                 <?php echo t('Default Timezone') ?>
             </label>
-            <select class="form-control" name="timezone">
+            <select name="timezone">
                 <?php
                 foreach ($timezones as $areaName => $namedTimezones) {
                     ?>
                     <optgroup label="<?= h($areaName) ?>">
                         <?php
                         foreach ($namedTimezones as $tzID => $tzName) {
+
+                            $zone = new DateTimeZone($tzID);
+                            $zoneName = Punic\Calendar::getTimezoneNameNoLocationSpecific($zone);
+                            if ($zoneName) {
+                                $zoneName = '(' .$zoneName . ')';
+                            }
                             ?>
                             <option value="<?= h($tzID) ?>"<?= strcasecmp($tzID, $timezone) === 0 ? ' selected="selected"' : '' ?>>
-                                <?= h($tzName) ?>
+                                <?= h($tzName) ?> <?=$zoneName?>
                             </option>
                             <?php
                         } ?>
@@ -70,6 +76,11 @@ defined('C5_EXECUTE') or die('Access Denied.');
                 }
                 ?>
             </select>
+            <script type="text/javascript">
+                $(function() {
+                    $('select[name=timezone]').selectize();
+                });
+            </script>
         </div>
         <div class="form-group">
             <label class="control-label">

@@ -1,17 +1,34 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\System\Basics;
 
-use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Database\Connection\Timezone as ConnectionTimezone;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
-use DateTime;
 use DateTimeZone;
 use Exception;
 
 class Timezone extends DashboardSitePageController
 {
+    /**
+     * @var ConnectionTimezone|null
+     */
+    private $connectionTimezone;
+
+    /**
+     * @return ConnectionTimezone
+     */
+    protected function getConnectionTimezone()
+    {
+        if ($this->connectionTimezone === null) {
+            $this->connectionTimezone = $this->app->make(ConnectionTimezone::class);
+        }
+
+        return $this->connectionTimezone;
+    }
+
     public function view()
     {
+        $this->requireAsset('selectize');
         $dh = $this->app->make('date');
         $siteConfig = $this->getSite()->getConfigRepository();
         $config = $this->app->make('config');
@@ -20,35 +37,20 @@ class Timezone extends DashboardSitePageController
         $this->set('timezones', $dh->getGroupedTimezones());
         $phpTimezone = $config->get('app.server_timezone');
         $this->set('serverTimezonePHP', $dh->getTimezoneName($phpTimezone));
+
+        $ctz = $this->getConnectionTimezone();
+
         $db = $this->app->make(Connection::class);
-        $this->set('serverTimezoneDB', $db->fetchColumn('select @@time_zone'));
-        $deltaError = $this->getDeltaTimezone($phpTimezone);
+        $this->set('serverTimezoneDB', $ctz->getDatabaseTimezoneName());
+        $deltaError = $ctz->getDeltaTimezone($phpTimezone);
         if ($deltaError === null) {
             $this->set('dbTimezoneOk', true);
         } else {
-            $interval = $dh->describeInterval(60 * abs($deltaError['maxDeltaMinutes']), true);
-            if ($deltaError['dstProblems']) {
-                $deltaError = t(/*i18n: %s is an interval, like "3 hours and 30 minutes"*/'The way PHP and database handle daylight saving times differs by %s.', $interval);
-            } else {
-                if ($deltaError['maxDeltaMinutes'] > 0) {
-                    $deltaError = t(/*i18n: %s is an interval, like "3 hours and 30 minutes"*/'The database timezone has times greater by %s compared to the PHP timezone.', $interval);
-                } else {
-                    $deltaError = t(/*i18n: %s is an interval, like "3 hours and 30 minutes"*/'The database timezone has times smaller by %s compared to the PHP timezone.', $interval);
-                }
-            }
+            $deltaError = $ctz->describeDeltaTimezone($deltaError);
             $this->set('dbTimezoneOk', false);
             $this->set('dbDeltaDescription', $deltaError);
-            $this->set('compatibleTimezones', $this->getCompatibleTimezones());
+            $this->set('compatibleTimezones', $ctz->getCompatibleTimezones());
         }
-    }
-
-    protected function describeDeltaMinutes($delta)
-    {
-        $negative = ($delta < 0) ? true : false;
-        $dh = $this->app->make('helper/date');
-        $interval = $dh->describeInterval(60 * abs($delta));
-
-        return $interval;
     }
 
     public function update()
@@ -106,103 +108,5 @@ class Timezone extends DashboardSitePageController
             $this->flash('message', t('The system PHP time zone has been updated.'));
             $this->redirect($this->action(''));
         }
-    }
-
-    /**
-     * @return array
-     */
-    protected function getCompatibleTimezones()
-    {
-        $dh = $this->app->make('date');
-        $validTimezones = [];
-        foreach ($dh->getTimezones() as $timezoneID => $timezoneName) {
-            if ($this->getDeltaTimezone($timezoneID) === null) {
-                $validTimezones[$timezoneID] = $timezoneName;
-            }
-        }
-
-        return $validTimezones;
-    }
-
-    /**
-     * Check if a PHP time zone is compatible with the database timezone.
-     *
-     * @param DateTimeZone|string $phpTimezone
-     *
-     * @return null|array If the time zone matches, we'll return null, otherwise an array with the keys 'dstProblems' (boolean) and 'maxDeltaMinutes' (int)
-     */
-    protected function getDeltaTimezone($phpTimezone)
-    {
-        if (!($phpTimezone instanceof DateTimeZone)) {
-            $phpTimezone = new DateTimeZone($phpTimezone);
-        }
-        $data = $this->getTimestamps();
-        extract($data);
-        $sometimesSame = false;
-        $maxDeltaMinutes = 0;
-        foreach ($timestamps as $index => $timestamp) {
-            $databaseValue = new DateTime($databaseDatetimes[$index], $phpTimezone);
-            $phpValue = DateTime::createFromFormat('U', $timestamp, $phpTimezone);
-            $deltaMinutes = (int) floor(($phpValue->getTimestamp() - $databaseValue->getTimestamp()) / 60);
-            if ($deltaMinutes === 0) {
-                $sometimesSame = true;
-            } else {
-                if (abs($deltaMinutes) > abs($maxDeltaMinutes)) {
-                    $maxDeltaMinutes = $deltaMinutes;
-                }
-            }
-        }
-
-        if ($maxDeltaMinutes === 0) {
-            return null;
-        } else {
-            return [
-                'dstProblems' => $sometimesSame,
-                'maxDeltaMinutes' => $maxDeltaMinutes,
-            ];
-        }
-    }
-
-    /**
-     * @return array {
-     *     @var int[] $timestamps
-     *     @var string[] $databaseDatetimes
-     * }
-     */
-    protected function getTimestamps()
-    {
-        $cache = $this->app->make('cache/request')->getItem('ccm/timezone/test-timestamps');
-        if ($cache->isMiss()) {
-            // Let's check the timestamp at solstices,
-            // to be sure we also check potential daylight saving time changes.
-            $timestamps = [
-                mktime(12, 0, 0, 6, 21, date('Y')),
-                mktime(12, 0, 0, 12, 21, date('Y')),
-            ];
-            $db = $this->app->make(Connection::class);
-            $sql = 'SELECT ';
-            foreach ($timestamps as $index => $timestamp) {
-                if ($index > 0) {
-                    $sql .= ', ';
-                }
-                $sql .= "FROM_UNIXTIME($timestamp) as datetime_$index";
-            }
-            $rs = $db->executeQuery($sql);
-            $row = $rs->fetch();
-            $rs->closeCursor();
-            $databaseDatetimes = [];
-            foreach (array_keys($timestamps) as $index) {
-                $databaseDatetimes[$index] = $row["datetime_$index"];
-            }
-            $result = [
-                'timestamps' => $timestamps,
-                'databaseDatetimes' => $databaseDatetimes,
-            ];
-            $cache->set($result)->expiresAfter(60)->save();
-        } else {
-            $result = $cache->get();
-        }
-
-        return $result;
     }
 }

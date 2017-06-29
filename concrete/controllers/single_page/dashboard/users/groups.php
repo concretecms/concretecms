@@ -121,7 +121,9 @@ class Groups extends DashboardPageController
                 throw new Exception($valt->getErrorMessage());
             }
 
-            $group->delete();
+            if ($group->delete() === false) {
+                throw new Exception(t("This group can't be deleted"));
+            }
             $resultMsg = t('Group deleted successfully.');
             $this->set('message', $resultMsg);
         } catch (Exception $e) {

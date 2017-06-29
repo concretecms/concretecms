@@ -53,7 +53,8 @@ im.save = function saveImage() {
 
                     $.post(im.saveUrl, _.extend(im.saveData, {
                         fID: im.fileId,
-                        imgData: url
+                        imgData: url,
+                        ccm_token: im.token
                     }), function (res) {
                         $.fn.dialog.hideLoader();
                         var result = JSON.parse(res);

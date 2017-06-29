@@ -94,7 +94,10 @@ class User extends Object
             self::refreshUserGroups();
         }
 
-        $app->make('Concrete\Core\Session\SessionValidatorInterface')->handleSessionValidation($session);
+        $invalidate = $app->make('Concrete\Core\Session\SessionValidatorInterface')->handleSessionValidation($session);
+        if ($invalidate) {
+            $this->loadError(USER_SESSION_EXPIRED);
+        }
 
         if ($session->get('uID') > 0) {
             $db = $app['database']->connection();
