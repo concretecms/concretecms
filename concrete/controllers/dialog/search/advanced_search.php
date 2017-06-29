@@ -100,6 +100,7 @@ abstract class AdvancedSearch extends BackendInterfaceController
     {
         if ($this->validateAction() && $this->supportsSavedSearch) {
             $query = $this->getQueryFromRequest();
+            $provider = $this->getSearchProvider();
 
             $em = \Database::connection()->getEntityManager();
             $search = $provider->getSavedSearch();
@@ -109,8 +110,7 @@ abstract class AdvancedSearch extends BackendInterfaceController
             $em->flush();
 
             $this->onAfterSavePreset($search);
-
-            $provider = $this->getSearchProvider();
+            
             $result = $provider->getSearchResultFromQuery($query);
             $result->setBaseURL($this->getSavedSearchBaseURL($search));
 
