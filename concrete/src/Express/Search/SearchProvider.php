@@ -80,5 +80,10 @@ class SearchProvider extends AbstractSearchProvider
     {
         return new DefaultSet($this->category);
     }
+    
+    function getSavedSearch()
+    {
+        // TODO: Implement getSavedSearch() method.
+    }
 
 }
