@@ -12,7 +12,7 @@ use Concrete\Core\File\Search\ColumnSet\Available;
 use Concrete\Core\File\Search\ColumnSet\ColumnSet;
 use Concrete\Core\Search\QueryableInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Concrete\Core\Entity\Search\SavedPageSearch;
+use Concrete\Core\Entity\Search\SavedFileSearch;
 
 class SearchProvider extends AbstractSearchProvider implements QueryableInterface
 {
@@ -68,11 +68,6 @@ class SearchProvider extends AbstractSearchProvider implements QueryableInterfac
     function getSavedSearch()
     {
         return new SavedFileSearch();
-    }
-
-    function getSavedSearch()
-    {
-        return new SavedPageSearch();
     }
     
 }
