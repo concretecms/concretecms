@@ -424,10 +424,13 @@ class Login extends PageController
 
         if ($valt->validate('do_logout', $token)) {
             // Resolve the current logged in user and log them out
-            $u = $this->app->make(User::class)->logout();
+            $this->app->make(User::class)->logout();
+
+            // Determine the destination URL
+            $url = $this->app->make('url/manager')->resolve(['/']);
 
             // Return a new redirect to the homepage.
-            return $factory->redirect('/');
+            return $factory->redirect((string) $url, 302);
         }
 
         return $factory->error($valt->getErrorMessage());
