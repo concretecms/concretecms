@@ -1,4 +1,4 @@
-<?php  
+<?php
 defined('C5_EXECUTE') or die(_("Access Denied."));
 ?>
 
@@ -125,7 +125,7 @@ echo Core::make('helper/concrete/ui')->tabs(array(
             </div>
         </div>
 
-        <div class="form-group" data-options="table-striped">
+        <div class="form-group" data-options="table-striped" style="margin-bottom: 150px;">
             <?=$form->label('rowBackgroundColorAlternate', t('Alternate Row Background Color'))?>
             <div>
                 <?=$color->output('rowBackgroundColorAlternate', $rowBackgroundColorAlternate)?>
