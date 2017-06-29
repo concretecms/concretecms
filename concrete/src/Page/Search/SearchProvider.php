@@ -10,6 +10,7 @@ use Concrete\Core\Search\ProviderInterface;
 use Concrete\Core\Page\Search\ColumnSet\Available;
 use Concrete\Core\Page\Search\ColumnSet\ColumnSet;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Concrete\Core\Entity\Search\SavedPageSearch;
 
 class SearchProvider extends AbstractSearchProvider
 {
@@ -61,6 +62,11 @@ class SearchProvider extends AbstractSearchProvider
     public function getDefaultColumnSet()
     {
         return new DefaultSet();
+    }
+    
+    function getSavedSearch()
+    {
+        return new SavedPageSearch();
     }
 
 }
