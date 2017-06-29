@@ -6,7 +6,7 @@ $ih = Core::make('multilingual/interface/flag');
     <?php
     foreach ($languageSections as $ml) {
         ?>
-        <a href="<?= $view->action('switch_language', $cID, $ml->getCollectionID()) ?>" title="<?= $ml->getLanguageText($locale) ?>" class="<?php if ($activeLanguage == $ml->getCollectionID()) { ?>ccm-block-switch-language-active-flag<?php } ?>"><?= $ih->getSectionFlagIcon($ml) ?></a>
+        <a href="<?= $controller->resolve_language_url($cID, $ml->getCollectionID()) ?>" title="<?= $ml->getLanguageText($locale) ?>" class="<?php if ($activeLanguage == $ml->getCollectionID()) { ?>ccm-block-switch-language-active-flag<?php } ?>"><?= $ih->getSectionFlagIcon($ml) ?></a>
         <?php
     }
     ?>
