@@ -64,7 +64,10 @@ class SearchProvider extends AbstractSearchProvider implements QueryableInterfac
         return new Result($columns, $list);
     }
 
-
+    function getSavedSearch()
+    {
+        return new SavedFileSearch();
+    }
 
 
 }
