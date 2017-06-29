@@ -102,7 +102,7 @@ abstract class AdvancedSearch extends BackendInterfaceController
             $query = $this->getQueryFromRequest();
 
             $em = \Database::connection()->getEntityManager();
-            $search = new SavedFileSearch();
+            $search = $provider->getSavedSearch();
             $search->setQuery($query);
             $search->setPresetName($this->request->request->get('presetName'));
             $em->persist($search);
