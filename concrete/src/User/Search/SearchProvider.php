@@ -12,6 +12,7 @@ use Concrete\Core\User\Search\ColumnSet\DefaultSet;
 use Concrete\Core\User\Search\Result\Result;
 use Concrete\Core\User\UserList;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Concrete\Core\Entity\Search\SavedUserSearch;
 
 class SearchProvider extends AbstractSearchProvider
 {
@@ -91,6 +92,11 @@ class SearchProvider extends AbstractSearchProvider
         }
 
         return $result;
+    }
+    
+    function getSavedSearch()
+    {
+        return new SavedUserSearch();
     }
 
 
