@@ -688,6 +688,12 @@ return [
              */
             'email_registration' => false,
 
+
+            /*
+             * Determines whether the username field is displayed when registering
+             */
+            'display_username_field' => true,
+
             /*
              * Validate emails during registration
              *
