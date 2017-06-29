@@ -4,17 +4,15 @@ namespace Concrete\Controller\SinglePage;
 use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Authentication\AuthenticationTypeFailureException;
 use Concrete\Core\Http\ResponseFactoryInterface;
+use Concrete\Core\Localization\Localization;
 use Concrete\Core\Page\Desktop\DesktopList;
 use Concrete\Core\Routing\RedirectResponse;
 use Exception;
-use Concrete\Core\Localization\Localization;
-use Concrete\Core\Validation\CSRF\Token;
 use Page;
 use PageController;
 use User;
 use UserAttributeKey;
 use UserInfo;
-use View;
 
 class Login extends PageController
 {
@@ -203,7 +201,7 @@ class Login extends PageController
         $txt = $this->app->make('helper/text');
         if (isset($_GET['uName']) && strlen($_GET['uName'])
         ) { // pre-populate the username if supplied, if its an email address with special characters the email needs to be urlencoded first,
-            $this->set("uName", trim($txt->email($_GET['uName'])));
+            $this->set('uName', trim($txt->email($_GET['uName'])));
         }
 
         $loc = Localization::getInstance();
@@ -363,7 +361,7 @@ class Login extends PageController
             $at = AuthenticationType::getByHandle($session->get('uRequiredAttributeUserAuthenticationType'));
             $session->remove('uRequiredAttributeUserAuthenticationType');
             if (!$at) {
-                throw new Exception(t("Invalid Authentication Type"));
+                throw new Exception(t('Invalid Authentication Type'));
             }
 
             $ui = UserInfo::getByID($u->getUserID());
@@ -381,9 +379,7 @@ class Login extends PageController
                 $controller = $attribute->getController();
                 $validator = $controller->getValidator();
                 $response = $validator->validateSaveValueRequest($controller, $this->request);
-                /**
-                 * @var ResponseInterface $response
-                 */
+                /* @var \Concrete\Core\Validation\ResponseInterface $response */
                 if ($response->isValid()) {
                     $saveAttributes[] = $attribute;
                 } else {
@@ -421,17 +417,20 @@ class Login extends PageController
      */
     public function do_logout($token = false)
     {
-        /** @var ResponseFactoryInterface $factory */
         $factory = $this->app->make(ResponseFactoryInterface::class);
-        /** @var Token $valt */
+        /* @var ResponseFactoryInterface $factory */
         $valt = $this->app->make('token');
+        /* @var \Concrete\Core\Validation\CSRF\Token $valt */
 
         if ($valt->validate('do_logout', $token)) {
             // Resolve the current logged in user and log them out
-            $u = $this->app->make(User::class)->logout();
+            $this->app->make(User::class)->logout();
+
+            // Determine the destination URL
+            $url = $this->app->make('url/manager')->resolve(['/']);
 
             // Return a new redirect to the homepage.
-            return $factory->redirect('/');
+            return $factory->redirect((string) $url, 302);
         }
 
         return $factory->error($valt->getErrorMessage());
