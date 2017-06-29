@@ -25,8 +25,8 @@ class Pages extends Standard
     protected function getBasicSearchFieldsFromRequest()
     {
         $fields = parent::getBasicSearchFieldsFromRequest();
-        $keywords = htmlentities($this->request->get('cKeywords'), ENT_QUOTES, APP_CHARSET);
-        if ($keywords) {
+        $keywords = $this->request->get('cKeywords');
+        if (is_string($keywords) && $keywords !== '') {
             $fields[] = new KeywordsField($keywords);
         }
         return $fields;
