@@ -210,7 +210,7 @@ class Install extends Controller
                     $error = $ctz->describeDeltaTimezone($deltaTimezone);
                     $suggestTimezones = $ctz->getCompatibleTimezones();
                     if (!empty($suggestTimezones)) {
-                        $error .= ' ' . t('You may want to use one of these time zones in the <u>Advanced Options</u> section:<ul><li>' . implode('</li><li>', $suggestTimezones)) . '</li></ul>';
+                        $error .= ' ' . t('You may want to use one of these time zones in the <u>Advanced Options</u> section:' . '<ul><li>' . implode('</li><li>', $suggestTimezones)) . '</li></ul>';
                     }
                     $e->add($error);
                 }
