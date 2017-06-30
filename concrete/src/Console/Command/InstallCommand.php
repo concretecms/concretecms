@@ -259,8 +259,7 @@ EOT
             $table->setHeaders(['Question', 'Value']);
             $table->render();
 
-            $confirm = new Question('Would you like to install with these settings? [ y / n ]: ',
-                false);
+            $confirm = new Question('Would you like to install with these settings? [ y / n ]: ', false);
             $confirm->setValidator(function ($given) {
                 if (!$given || !preg_match('/^[yn]/i', $given)) {
                     throw new \InvalidArgumentException(t('Please answer either Y or N.'));
@@ -270,7 +269,7 @@ EOT
             $answer = $helper->ask($input, $output, $confirm);
 
             // Cancel if they said no
-            if (stripos('i', $answer) === 0) {
+            if (stripos('n', $answer) === 0) {
                 $output->writeln('Installation cancelled.');
                 exit;
             }
@@ -409,6 +408,27 @@ EOT
      */
     private function wizardSteps()
     {
+        $checkLocale = function ($localeId) {
+            $result = false;
+            $chunks = \Punic\Data::explodeLocale($localeId);
+            // Check that $localeId is well formatted
+            if ($chunks !== null) {
+                $normalizedLocaleId = ($chunks['territory'] === '') ? $chunks['language'] : "{$chunks['language']}_{$chunks['territory']}";
+                // We don't support custom Scripts, check that the separator is "_", check language/territory lower/upper case
+                if ($localeId === $normalizedLocaleId) {
+                    // Check that the language ID is valid
+                    if (\Punic\Language::getName($chunks['language']) !== $chunks['language']) {
+                        // Check that the territory ID is valid (or absent)
+                        if ($chunks['territory'] === '' || \Punic\Territory::getName($chunks['territory']) !== $chunks['territory']) {
+                            $result = true;
+                        }
+                    }
+                }
+            }
+
+            return $result;
+        };
+
         return [
             ['db-server', '127.0.0.1'],
             'db-database',
@@ -540,6 +560,17 @@ EOT
                 },
             ],
             ['language', Localization::BASE_LOCALE],
+            // Test the language
+            function (InputInterface $input, OutputInterface $output) use ($checkLocale) {
+                $code = $input->getOption('language');
+                if ($checkLocale($code) !== true) {
+                    $output->writeln(sprintf('<error>%s</error>', t("The language code '%s' is not valid.", $code)));
+
+                    return 'language';
+                }
+
+                return true;
+            },
             [
                 'site-locale',
                 function (Question $question, InputInterface $input, InputOption $option) {
@@ -549,6 +580,17 @@ EOT
                     return $question;
                 },
             ],
+            // Test the site locale
+            function (InputInterface $input, OutputInterface $output) use ($checkLocale) {
+                $code = $input->getOption('site-locale');
+                if ($checkLocale($code) !== true) {
+                    $output->writeln(sprintf('<error>%s</error>', t("The language code '%s' is not valid.", $code)));
+                    
+                    return 'site-locale';
+                }
+                
+                return true;
+            },
             ['config', 'none'],
         ];
     }
