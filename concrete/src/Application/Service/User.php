@@ -56,4 +56,23 @@ class User
 
         return $tp->canAccessUserSearch();
     }
+
+    /**
+     * @param $email
+     */
+    public function generateUsernameFromEmail($email)
+    {
+        $db = \Database::connection();
+        $prefix = substr($email, 0, strpos($email, '@'));
+        $numberOfUsers = 1;
+        while ($numberOfUsers > 0) {
+            $letters = '123456789abcdefghijklmnopqrstuvwxyz';
+            $letters = str_repeat($letters, 3);
+            $suffix = substr(str_shuffle($letters), 0, 3);
+            $uName = $prefix . $suffix;
+            $numberOfUsers = $db->GetOne('select count(uID) from Users where uName = ?', [$uName]);
+        }
+
+        return $uName;
+    }
 }
