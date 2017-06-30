@@ -1,6 +1,7 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
 
 $c = Page::getCurrentPage();
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
 if ($tableName) { ?>
     <h2><?=$tableName?></h2>
@@ -30,7 +31,7 @@ if ($entity) { ?>
             <?php if (count($tableSearchProperties)) { ?>
                 <div data-express-entry-list-advanced-search-fields="<?=$bID?>" class="ccm-block-express-entry-list-advanced-search-fields">
                     <h3><?=t('Search Entries')?></h3>
-                    <input type="hidden" name="advancedSearchDisplayed" value="<?php echo $_REQUEST['advancedSearchDisplayed'] ? 1 : ''; ?>">
+                    <input type="hidden" name="advancedSearchDisplayed" value="<?php echo $app->request->request('advancedSearchDisplayed') ? 1 : ''; ?>">
                     <?php foreach ($tableSearchProperties as $ak) { ?>
                         <h4><?=$ak->getAttributeKeyDisplayName()?></h4>
                         <div>
@@ -124,7 +125,7 @@ if ($entity) { ?>
             $(function() {
                 $.concreteExpressEntryList({
                     'bID': '<?=$bID?>',
-                    'hideFields': <?php echo !$_REQUEST['advancedSearchDisplayed'] ? 'true' : 'false'; ?>
+                    'hideFields': <?php echo !$app->request->request('advancedSearchDisplayed') ? 'true' : 'false'; ?>
                 });
             });
         </script>
