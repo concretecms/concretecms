@@ -24,12 +24,13 @@ if ($entity) { ?>
                         class="ccm-block-express-entry-list-advanced-search"><?=t('Advanced Search')?></a>
                     <?php } ?>
                 </div>
+                <br>
             <?php } ?>
 
             <?php if (count($tableSearchProperties)) { ?>
                 <div data-express-entry-list-advanced-search-fields="<?=$bID?>" class="ccm-block-express-entry-list-advanced-search-fields">
                     <h3><?=t('Search Entries')?></h3>
-                    <input type="hidden" name="advancedSearchDisplayed" value="">
+                    <input type="hidden" name="advancedSearchDisplayed" value="<?php echo $_REQUEST['advancedSearchDisplayed'] ? 1 : ''; ?>">
                     <?php foreach ($tableSearchProperties as $ak) { ?>
                         <h4><?=$ak->getAttributeKeyDisplayName()?></h4>
                         <div>
@@ -38,7 +39,12 @@ if ($entity) { ?>
                     <?php } ?>
                 </div>
             <?php } ?>
-            <br>
+
+            <?php if (!$enableKeywordSearch) { ?>
+                <div class="form-group clearfix">
+                    <button type="submit" class="btn btn-primary pull-right" name="search"><?=t('Search')?></button>
+                </div>
+            <?php } ?>
         </form>
     <?php }
 
@@ -109,17 +115,18 @@ if ($entity) { ?>
                 }
             <?php } ?>
         </style>
+    <?php } else { ?>
+        <p><?=t('No "%s" entries can be found', $entity->getName())?>
+    <?php } ?>
 
+    <?php if ($enableKeywordSearch) { ?>
         <script>
             $(function() {
                 $.concreteExpressEntryList({
                     'bID': '<?=$bID?>',
-                    'hideFields': <?php $enableKeywordSearch && !$_REQUEST['advancedSearchDisplayed'] ? print 'true' : print 'false'; ?>
+                    'hideFields': <?php echo !$_REQUEST['advancedSearchDisplayed'] ? 'true' : 'false'; ?>
                 });
             });
         </script>
-
-    <?php } else { ?>
-        <p><?=t('No "%s" entries can be found', $entity->getName())?>
     <?php } ?>
 <?php } ?>
