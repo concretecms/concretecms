@@ -149,7 +149,7 @@ class Register extends PageController
             if ($this->displayUserName) {
                 $data['uName'] = $username;
             } else {
-                $userService = new \Concrete\Core\Application\Service\User();
+                $userService = $this->app->make(\Concrete\Core\Application\Service\User::class);
                 $data['uName'] = $userService->generateUsernameFromEmail($_POST['uEmail']);
             }
             $data['uPassword'] = $password;
