@@ -487,7 +487,7 @@ class Version extends Object implements PermissionObjectInterface, AttributeObje
             $pType = PageType::getByID($c->getPageTypeID());
             $masterC = $pType->getPageTypePageTemplateDefaultPageObject();
             $db->executeQuery('update Pages set cInheritPermissionsFromCID = ? where cID = ?', array(
-                $masterC->getCollectionID(),
+                (int) $masterC->getCollectionID(),
                 $c->getCollectioniD(),
             ));
         }
