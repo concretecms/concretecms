@@ -10,6 +10,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 /* @var int $type */
 /* @var Concrete\Core\Permission\IPRange[]|Generator $ranges */
+/* @var IPService $ip */
 
 $view->element('dashboard/system/permissions/blacklist/menu', ['type' => $type]);
 
@@ -27,11 +28,43 @@ if (($type & IPService::IPRANGEFLAG_MANUAL) === IPService::IPRANGEFLAG_MANUAL) {
                 )) ?>"><?= t('IP Range') ?></label>
                 <input type="text" class="form-control" id="ccm-new-range" required="required" />
             </div>
-             <button type="submit" class="btn btn-default"><?= t('Add') ?></button>
+            <button type="submit" class="btn btn-default"><?= t('Add') ?></button>
+            <br />
+            <?php
+            if (($type & IPService::IPRANGEFLAG_WHITELIST) === IPService::IPRANGEFLAG_WHITELIST) {
+                ?>
+                <p class="text-muted"><?= t('Your IP address:') ?> <a href="#" onclick="$('#ccm-new-range').val($(this).text());return false"><?= h((string) $ip->getRequestIPAddress()) ?></a></p>
+                <?php
+            }
+            ?>
         </fieldset>
     </form>
     <script>
     $(document).ready(function() {
+        function submit(range, force) {
+            var send = {
+                ccm_token:<?= json_encode($token->generate('add_range/' . $type)) ?>,
+                range: range
+            };
+            if (force) {
+                send.force = '1';
+            }
+            new ConcreteAjaxRequest({
+                url: <?= json_encode($view->action('add_range', $type)) ?>,
+                data: send,
+                success: function(data) {
+                    if (data.require_force) {
+                        if (window.confirm(data.require_force)) {
+                            submit(range, true);
+                        }
+                        return;
+                    }
+                    $range = $('#ccm-new-range').val('');
+                    $('#ccm-ranges-table>tbody').append(data.row);
+                }
+            });
+               
+        }
         $('#ccm-form-new-range').on('submit', function(e) {
             e.preventDefault();
             var $range = $('#ccm-new-range'), range = $.trim($range.val());
@@ -39,17 +72,7 @@ if (($type & IPService::IPRANGEFLAG_MANUAL) === IPService::IPRANGEFLAG_MANUAL) {
                 $range.focus();
                 return;
             }
-            new ConcreteAjaxRequest({
-                url: <?= json_encode($view->action('add_range', $type)) ?>,
-                data: {
-                    ccm_token:<?= json_encode($token->generate('add_range/' . $type)) ?>,
-                    range: range
-                },
-                success: function(data) {
-                    $('#ccm-ranges-table>tbody').append(data.row);
-                    $range.val('');
-                }
-            });
+            submit(range);
         });
     });
     </script>
@@ -98,6 +121,9 @@ $(document).ready(function() {
                     $tr.hide('fast', function() {
                         $tr.remove();
                     });
+                    if (typeof data === 'string') {
+                        window.alert(data);
+                    }
                 }
             });
         })
