@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Tree\Node;
 
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\Object as ConcreteObject;
 use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Permission\Access\Entity\GroupCombinationEntity;
 use Concrete\Core\Permission\Access\Entity\GroupEntity;
@@ -23,7 +23,7 @@ use stdClass;
 use Gettext\Translations;
 use Concrete\Core\Tree\Node\Exception\MoveException;
 
-abstract class Node extends Object implements \Concrete\Core\Permission\ObjectInterface, AssignableObjectInterface
+abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\ObjectInterface, AssignableObjectInterface
 {
 
     use AssignableObjectTrait;
@@ -166,7 +166,7 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
 
     }
 
-    public function getChildNodesLoaded() 
+    public function getChildNodesLoaded()
     {
         return $this->childNodesLoaded;
     }
@@ -209,7 +209,7 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
      * Recursively searches for a children node and marks it as selected.
      *
      * @param $nodeID - nodeID of the children to be selected
-     * @param $loadMissingChildren - if set to true, it will fetch, as needed, the children 
+     * @param $loadMissingChildren - if set to true, it will fetch, as needed, the children
      * of the current node, that have not been loaded yet
      *
      * @return JsonResponse
@@ -659,7 +659,7 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
             return $node;
         }
     }
-    
+
     /**
      * @param Translations $translations
      *
@@ -696,7 +696,7 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
     {
         $db = Database::connection();
         $children = $db->fetchAll('select treeNodeID, treeNodeTypeID, treeNodeParentID, treeNodeDisplayOrder from TreeNodes where treeNodeTypeID = ? and treeNodeParentID = ? order by treeNodeDisplayOrder asc', [$treeNodeTypeID, $nodeRow['treeNodeID']]);
-        
+
         if ($includeThisNode) {
             $data = [
                 'treeNodeID' => $nodeRow['treeNodeID'],
@@ -727,10 +727,10 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
     public function getHierarchicalNodesOfType($treeNodeTypeHandle, $level = 1, $returnNodeObjects = false, $includeThisNode = true)
     {
         $treeNodeType = TreeNodeType::getByHandle($treeNodeTypeHandle);
-        
+
 
         $nodesOfType = $this->populateRecursiveNodes($treeNodeType->getTreeNodeTypeID(), array(), array('treeNodeID' => $this->getTreeNodeID(), 'treeNodeParentID' => $this->getTreeNodeParentID(), 'treeNodeDisplayOrder' => 0), $level, $returnNodeObjects, $includeThisNode);
-        
+
         return $nodesOfType;
     }
 

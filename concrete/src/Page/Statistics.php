@@ -2,7 +2,7 @@
 namespace Concrete\Core\Page;
 
 use Loader;
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\Object as ConcreteObject;
 
 class Statistics
 {
