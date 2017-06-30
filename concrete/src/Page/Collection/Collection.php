@@ -29,7 +29,7 @@ use Permissions;
 use Stack;
 use User;
 
-class Collection extends Object implements TrackableInterface
+class Collection extends ConcreteObject implements TrackableInterface
 {
     public $cID;
     protected $vObj;
