@@ -19,6 +19,8 @@ matrix:
       env: CODESTYLE="yes"
     - php: 7.1
       env: PREFER_LOWEST="--prefer-lowest"
+  allow_failures:
+    - php: nightly
 
 before_script:
   - if [[ $TRAVIS_PHP_VERSION = hhvm ]]; then cat tests/travis.hhvm.ini >> /etc/hhvm/php.ini; else phpenv config-add tests/travis.php.ini; fi
