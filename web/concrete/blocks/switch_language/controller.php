@@ -5,6 +5,7 @@ use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Routing\Redirect;
 use Cookie;
 use Session;
+use Concrete\Core\Support\Facade\Application;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -27,25 +28,36 @@ class Controller extends BlockController
         return t("Switch Language");
     }
 
-    public function action_switch_language($currentPageID, $sectionID, $bID = false)
+    /**
+     * @param int $currentPageID
+     * @param int $sectionID
+     * @return \Concrete\Core\Url\UrlImmutable
+     */
+    public function resolve_language_url($currentPageID, $sectionID)
     {
-        $lang = Section::getByID(intval($sectionID));
+        $resolve = array('/');
+        $lang = Section::getByID((int) $sectionID);
         if (is_object($lang)) {
-            $page = \Page::getByID(intval($currentPageID));
+            $resolve = array($lang);
+            $page = \Page::getByID((int) $currentPageID);
             if (!$page->isError()) {
                 $relatedID = $lang->getTranslatedPageID($page);
                 if ($relatedID) {
                     $pc = \Page::getByID($relatedID);
-                    Redirect::page($pc)->send();
-                    exit;
+                    $resolve = array($pc);
                 }
             }
-            Redirect::page($lang)->send();
-            exit;
         }
-
-        Redirect::to('/');
-        exit;
+        $app = $this->app;
+        if (!$app) {
+            $app = Application::getFacadeApplication();
+        }
+        return $app->make('url/manager')->resolve($resolve);
+    }
+    public function action_switch_language($currentPageID, $sectionID, $bID = false)
+    {
+        $url = $this->resolve_language_url($currentPageID, $sectionID);
+        return Redirect::url($url);
     }
 
     public function action_set_current_language()
