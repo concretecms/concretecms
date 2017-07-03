@@ -66,11 +66,19 @@ class Set
         return $this->defaultSortColumn;
     }
 
+    /**
+     * @param string $akHandle
+     *
+     * @return AttributeKeyColumn|null
+     */
     public function getAttributeKeyColumn($akHandle)
     {
+        $result = null;
         $ak = call_user_func(array($this->attributeClass, 'getByHandle'), $akHandle);
-        $col = new AttributeKeyColumn($ak);
-        return $col;
+        if ($ak !== null) {
+            $result = new AttributeKeyColumn($ak);
+        }
+        return $result;
     }
 
     public function getColumnByKey($key)
