@@ -2,13 +2,11 @@
 namespace Concrete\Core\Search\Field;
 
 use Concrete\Core\Http\ResponseAssetGroup;
-use Doctrine\Common\Collections\ArrayCollection;
 
 abstract class AbstractField implements FieldInterface
 {
-
-    protected $data = array();
-    protected $requestVariables = array();
+    protected $data = [];
+    protected $requestVariables = [];
 
     public function renderSearchField()
     {
@@ -24,14 +22,13 @@ abstract class AbstractField implements FieldInterface
 
     public function jsonSerialize()
     {
-
         ob_start();
-        print $this->renderSearchField();
+        echo $this->renderSearchField();
         $field = ob_get_contents();
         ob_end_clean();
 
         $ag = ResponseAssetGroup::get();
-        $assetsResponse = array();
+        $assetsResponse = [];
         foreach ($ag->getAssetsToOutput() as $position => $assets) {
             foreach ($assets as $asset) {
                 if (is_object($asset)) {
@@ -45,13 +42,13 @@ abstract class AbstractField implements FieldInterface
             'label' => $this->getDisplayName(),
             'element' => $field,
             'data' => $this->data,
-            'assets' => $assetsResponse
+            'assets' => $assetsResponse,
         ];
     }
 
     public function loadDataFromRequest(array $request)
     {
-        foreach($request as $key => $value) {
+        foreach ($request as $key => $value) {
             if (in_array($key, $this->requestVariables)) {
                 $this->data[$key] = $value;
             }

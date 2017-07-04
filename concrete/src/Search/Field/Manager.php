@@ -1,13 +1,8 @@
 <?php
 namespace Concrete\Core\Search\Field;
 
-use Concrete\Core\Entity\Search\Query;
-use Concrete\Core\Search\ItemList\ItemList;
-use Symfony\Component\HttpFoundation\Request;
-
 class Manager implements ManagerInterface
 {
-
     protected $groups = [];
 
     public function getGroups()
@@ -26,9 +21,9 @@ class Manager implements ManagerInterface
     public function getGroupByName($name)
     {
         /**
-         * @var $group GroupInterface
+         * @var GroupInterface
          */
-        foreach($this->groups as $group) {
+        foreach ($this->groups as $group) {
             if ($group->getName() == $name) {
                 return $group;
             }
@@ -42,8 +37,8 @@ class Manager implements ManagerInterface
 
     public function getFieldByKey($key)
     {
-        foreach($this->groups as $group) {
-            foreach($group->getFields() as $field) {
+        foreach ($this->groups as $group) {
+            foreach ($group->getFields() as $field) {
                 if ($field->getKey() == $key) {
                     return $field;
                 }
@@ -54,10 +49,10 @@ class Manager implements ManagerInterface
     public function getFieldsFromRequest(array $request)
     {
         $keys = isset($request['field']) ? $request['field'] : null;
-        $fields = array();
+        $fields = [];
         if (is_array($keys)) {
-            foreach($this->groups as $group) {
-                foreach($group->getFields() as $field) {
+            foreach ($this->groups as $group) {
+                foreach ($group->getFields() as $field) {
                     if (in_array($field->getKey(), $keys)) {
                         $field->loadDataFromRequest($request);
                         $fields[] = $field;
@@ -65,7 +60,7 @@ class Manager implements ManagerInterface
                 }
             }
         }
+
         return $fields;
     }
-
 }

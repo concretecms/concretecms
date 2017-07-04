@@ -3,7 +3,5 @@ namespace Concrete\Core\Search\Field;
 
 interface GroupInterface
 {
-
-    function getName();
-
+    public function getName();
 }

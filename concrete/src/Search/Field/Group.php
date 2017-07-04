@@ -3,7 +3,6 @@ namespace Concrete\Core\Search\Field;
 
 class Group implements GroupInterface
 {
-
     protected $name;
     protected $fields = [];
 
@@ -43,7 +42,4 @@ class Group implements GroupInterface
     {
         $this->fields[] = $field;
     }
-
-
-
 }

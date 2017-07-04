@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Core\Search\Field;
 
-use Concrete\Core\Attribute\AttributeKeyInterface;
 use Concrete\Core\Attribute\Context\BasicSearchContext;
 use Concrete\Core\Attribute\View;
 use Concrete\Core\Entity\Attribute\Key\Key;
@@ -9,7 +8,6 @@ use Concrete\Core\Search\ItemList\ItemList;
 
 class AttributeKeyField extends AbstractField
 {
-
     protected $attributeKey;
     protected $akID;
 
@@ -42,6 +40,7 @@ class AttributeKeyField extends AbstractField
             $cnt->setAttributeKey($this->attributeKey);
             $view = new View($this->attributeKey);
             $view->controller = $cnt;
+
             return $view->render(new BasicSearchContext());
         }
     }
@@ -69,7 +68,7 @@ class AttributeKeyField extends AbstractField
 
     public function __sleep()
     {
-        return array('data', 'akID');
+        return ['data', 'akID'];
     }
 
     public function __wakeup()
