@@ -374,6 +374,7 @@ class Controller extends BlockController implements FileTrackableInterface
         $args['fID'] = $args['fID'] != '' ? $args['fID'] : 0;
         $args['fOnstateID'] = $args['fOnstateID'] != '' ? $args['fOnstateID'] : 0;
         $args['fileLinkID'] = $args['fileLinkID'] != '' ? $args['fileLinkID'] : 0;
+        $args['centerImage'] = isset($args['centerImage']) ? 1 : 0;
         $args['cropImage'] = isset($args['cropImage']) ? 1 : 0;
         $args['maxWidth'] = intval($args['maxWidth']) > 0 ? intval($args['maxWidth']) : 0;
         $args['maxHeight'] = intval($args['maxHeight']) > 0 ? intval($args['maxHeight']) : 0;

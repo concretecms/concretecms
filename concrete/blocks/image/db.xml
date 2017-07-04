@@ -13,6 +13,10 @@
             <unsigned/>
             <default value="0" />
         </field>
+        <field name="centerImage" type="integer">
+            <unsigned/>
+            <default value="0" />
+        </field>
         <field name="cropImage" type="integer">
             <unsigned/>
             <default value="0" />

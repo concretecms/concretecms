@@ -78,7 +78,18 @@ $al = $app->make('helper/concrete/asset_library');
 </fieldset>
 
 <fieldset>
-    <legend><?php echo t('Resize Image'); ?></legend>
+    <legend><?php echo t('Position & Size'); ?></legend>
+
+    <div class="form-group">
+        <div class="checkbox">
+            <label>
+                <?php
+                echo $form->checkbox('centerImage', 1, $centerImage);
+                echo t('Center Image');
+                ?>
+            </label>
+        </div>
+    </div>
 
     <div class="form-group">
         <div class="checkbox" data-checkbox-wrapper="constrain-image">
