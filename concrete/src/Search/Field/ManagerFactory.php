@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Search\Field;
 
+use Concrete\Core\Support\Facade\Application;
+
 class ManagerFactory
 {
     /**
@@ -12,7 +14,7 @@ class ManagerFactory
      */
     public static function get($manager)
     {
-        $app = \Core::make('app');
+        $app = Application::getFacadeApplication();
 
         return $app->make(sprintf('manager/search_field/%s', $manager));
     }
