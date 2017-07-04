@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Core\Search\Field;
 
-use Concrete\Core\File\Search\Field\Manager;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 
 class ManagerServiceProvider extends ServiceProvider

@@ -5,14 +5,35 @@ use Concrete\Core\Http\ResponseAssetGroup;
 
 abstract class AbstractField implements FieldInterface
 {
+    /**
+     * The current search data.
+     *
+     * @var array
+     */
     protected $data = [];
+
+    /**
+     * The list of all the request variables.
+     *
+     * @var array
+     */
     protected $requestVariables = [];
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see FieldInterface::renderSearchField()
+     */
     public function renderSearchField()
     {
         return '';
     }
 
+    /**
+     * Initialize the instance.
+     *
+     * @param array|mixed $data the current search data
+     */
     public function __construct($data = null)
     {
         if (is_array($data)) {
@@ -20,6 +41,11 @@ abstract class AbstractField implements FieldInterface
         }
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \JsonSerializable::jsonSerialize()
+     */
     public function jsonSerialize()
     {
         ob_start();
@@ -46,6 +72,11 @@ abstract class AbstractField implements FieldInterface
         ];
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see FieldInterface::loadDataFromRequest()
+     */
     public function loadDataFromRequest(array $request)
     {
         foreach ($request as $key => $value) {
