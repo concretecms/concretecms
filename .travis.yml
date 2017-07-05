@@ -19,8 +19,6 @@ matrix:
       env: CODESTYLE="yes"
     - php: 7.1
       env: PREFER_LOWEST="--prefer-lowest"
-    - php: 5.5
-      env: PREFER_LOWEST="--prefer-lowest"
   allow_failures:
     - php: nightly
 

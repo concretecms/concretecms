@@ -227,7 +227,7 @@ if (isset($successMessage)) {
                 });
             }
 
-            $('#canonicalUrlChecked,#canonicalUrlALternativeChecked').change(updateCanonicalURLState);
+            $('#canonicalUrlChecked,#canonicalUrlAlternativeChecked').change(updateCanonicalURLState);
             <?php
             if ($setInitialState) {
             ?>
@@ -381,9 +381,9 @@ if (isset($successMessage)) {
                                 <div class="form-group">
                                     <label class="control-label">
                                         <?=$form->checkbox('canonicalUrlChecked', '1')?>
-                                        <?=t('Set canonical URL for HTTP')?>:
+                                        <?=t('Set main canonical URL')?>:
                                     </label>
-                                    <?=$form->url('canonicalUrl', h($canonicalUrl), ['pattern' => 'http:.+', 'placeholder' => 'http://'])?>
+                                    <?=$form->url('canonicalUrl', h($canonicalUrl), ['pattern' => 'https?:.+', 'placeholder' => t('%s or %s', 'http://...', 'https://...')])?>
                                 </div>
 
                                 <div class="form-group">
@@ -391,7 +391,7 @@ if (isset($successMessage)) {
                                         <?=$form->checkbox('canonicalUrlAlternativeChecked', '1')?>
                                         <?=t('Set alternative canonical URL')?>:
                                     </label>
-                                    <?=$form->url('canonicalUrlAlternative', h($canonicalUrlAlternative), ['pattern' => 'https:.+', 'placeholder' => 'https://'])?>
+                                    <?=$form->url('canonicalUrlAlternative', h($canonicalUrlAlternative), ['pattern' => 'https?:.+', 'placeholder' => t('%s or %s', 'http://...', 'https://...')])?>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label" for="sessionHandler"><?=t('Session Handler')?></label>
@@ -411,7 +411,12 @@ if (isset($successMessage)) {
                                     <label class="control-label" for="sessionHandler"><?=t('Country')?></label>
                                     <?= $form->select('siteLocaleCountry', $countries, $computedSiteLocaleCountry) ?>
                                 </div>
-                                
+
+                                <div class="form-group">
+                                    <label class="control-label" for="SERVER_TIMEZONE"><?=t('System Time Zone')?></label>
+                                    <?= $form->select('SERVER_TIMEZONE', $availableTimezones, $SERVER_TIMEZONE, ['required' => 'required']) ?>
+                                </div>
+
                                 <script>
                                 $('#siteLocaleLanguage').on('change', function() {
                                     $.ajax(

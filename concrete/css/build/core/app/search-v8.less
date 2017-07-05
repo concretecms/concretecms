@@ -6,11 +6,21 @@ div.ccm-header-search-form + div.ui-dialog-content {
 }
 
 div.ccm-header-search-form {
-  position: absolute;
-  top: 0px;
-  right: 0px;
+  float: none;
+  position: relative;
+  height: 68px;
 
-  width: auto;
+  div.input-group {
+    float: right;
+    width: 369px;
+  }
+
+  ul.ccm-header-search-navigation {
+    text-align: right;
+    position: relative;
+    float:right;
+    width: 100%;
+  }
 
   div.ccm-header-search-form-input {
     position: relative;
@@ -31,7 +41,9 @@ div.ccm-header-search-form {
   }
 
   form {
-    position: relative;
+    position: absolute;
+    right: 0.5em;
+    width: 90vw;
 
     a.ccm-header-reset-search,
     a.ccm-header-launch-advanced-search {
@@ -63,7 +75,7 @@ div.ccm-header-search-form {
 
     a.ccm-header-launch-advanced-search +
     input.form-control {
-      width: 310px;
+      width: 312px;
       padding-right: 110px;
     }
 
@@ -119,26 +131,15 @@ ul.ccm-header-search-navigation {
 
 div.ui-dialog {
   div.ccm-header-search-form {
-    float: none;
-    position: relative;
     width: auto;
     box-sizing: content-box;
-    height: 34px;
     padding-top: 4px;
     padding-bottom: 4px;
     background-color: rgba(71, 181, 251, 0.11);
     .border-top-radius(4px);
 
-    ul.ccm-header-search-navigation {
-      text-align: left;
-      position: absolute;
-      top: 0px;
-      left: -240px;
-    }
-
-    form {
-      position: absolute;
-      right: 4px;
+    div.input-group {
+      float: right;
       width: 369px;
     }
   }

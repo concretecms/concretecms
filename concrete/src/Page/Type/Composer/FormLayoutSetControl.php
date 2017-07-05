@@ -184,8 +184,8 @@ class FormLayoutSetControl extends Object
         if ($r && $r['ptComposerFormLayoutSetControlID']) {
             $control = new static();
             $control->setPropertiesFromArray($r);
-            $control->ptComposerControlObject = unserialize($r['ptComposerControlObject']);
-            if (!$control->ptComposerControlObject->objectExists()) {
+            $control->ptComposerControlObject = @unserialize($r['ptComposerControlObject']);
+            if ($control->ptComposerControlObject === false || !$control->ptComposerControlObject->objectExists()) {
                 $control->delete();
 
                 return null;

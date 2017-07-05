@@ -458,7 +458,7 @@
     		var pg = $tree.find('div.ccm-pagination-wrapper'),
 				my = this;
     		if (pg.length) {
-    			pg.find('a').unbind('click').on('click', function() {
+    			pg.find('a:not([disabled])').unbind('click').on('click', function() {
 					var href = $(this).attr('href');
 					var root = my.$sitemap.fancytree('getRootNode');
 					jQuery.fn.dialog.showLoader();

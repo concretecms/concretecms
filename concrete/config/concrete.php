@@ -6,9 +6,9 @@ return [
      *
      * @var string
      */
-    'version' => '8.2.0RC1',
-    'version_installed' => '8.2.0RC1',
-    'version_db' => '20170614000000', // the key of the latest database migration
+    'version' => '8.2.0RC2',
+    'version_installed' => '8.2.0RC2',
+    'version_db' => '20170626000000', // the key of the latest database migration
 
     /*
      * Installation status
@@ -572,6 +572,8 @@ return [
             'progress_limit' => 60,
             // Lifetime (in seconds) of the cache items associated to downloaded data
             'cache_lifetime' => 3600, // 1 hour
+            // Base URI for package details
+            'package_url' => 'https://translate.concrete5.org/translate/package',
         ],
     ],
     'urls' => [
@@ -685,6 +687,12 @@ return [
              * @var bool
              */
             'email_registration' => false,
+
+
+            /*
+             * Determines whether the username field is displayed when registering
+             */
+            'display_username_field' => true,
 
             /*
              * Validate emails during registration

@@ -19,6 +19,7 @@ class Version20170611000000 extends AbstractMigration
             $settings = $ak->getController()->getAttributeKeySettings();
             if ($settings) {
                 $settings->setCheckboxLabel('Exclude Page from Navigation');
+                $settings->setAttributeKey($ak);
                 $em->persist($settings);
             }
         }
@@ -27,6 +28,7 @@ class Version20170611000000 extends AbstractMigration
             $settings = $ak->getController()->getAttributeKeySettings();
             if ($settings) {
                 $settings->setCheckboxLabel('Exclude Page from Page List Blocks');
+                $settings->setAttributeKey($ak);
                 $em->persist($settings);
             }
         }
@@ -35,6 +37,7 @@ class Version20170611000000 extends AbstractMigration
             $settings = $ak->getController()->getAttributeKeySettings();
             if ($settings) {
                 $settings->setCheckboxLabel('Feature this Page');
+                $settings->setAttributeKey($ak);
                 $em->persist($settings);
             }
         }

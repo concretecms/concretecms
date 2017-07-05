@@ -22,7 +22,7 @@ class Model
         foreach ($r as $key => $value) {
             $this->{$key} = $value;
         }
-        if ($r && count(array_keys($r) > 0)) {
+        if ($r && count(array_keys($r)) > 0) {
             return true;
         }
 
@@ -115,7 +115,7 @@ class Model
         $data = array();
 
         foreach ($this as $key => $value) {
-            if (!in_array($key, array('_table'))) {
+            if ('_table' !== $key) {
                 $data[$key] = $value;
             }
         }

@@ -8,7 +8,6 @@ class BasicSearchContext extends Context
     {
         $this->runActionIfAvailable('search');
         $this->includeTemplateIfAvailable('search');
-        $this->includeTemplateIfAvailable('form');
     }
 
 }

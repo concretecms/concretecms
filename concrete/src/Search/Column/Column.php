@@ -5,13 +5,29 @@ use Concrete\Core\Search\Result\Result;
 
 class Column implements ColumnInterface
 {
+    /** These properties are to be treated as protected. Use the set and get methods instead */
+    /** @deprecated */
+    public $columnKey;
+    
+    /** @deprecated */
+    public $columnName;
+    
+    /** @deprecated */
+    public $sortDirection = 'asc';
+    
+    /** @deprecated */
+    public $isSortable;
+    
+    /** @deprecated */
+    public $callback;
+
     public function getColumnValue($obj)
     {
         if (is_array($this->getColumnCallback())) {
             return call_user_func($this->getColumnCallback(), $obj);
-        } else {
-            return call_user_func(array($obj, $this->getColumnCallback()));
         }
+
+        return call_user_func(array($obj, $this->getColumnCallback()));
     }
 
     public function getColumnKey()

@@ -113,14 +113,14 @@
             // otherwise we accept what is passed exactly
 
             repetition.setID = my.setID;
-            repetition.pdStartDate = momentStartDate.format('gggg-MM-DD');
+            repetition.pdStartDate = momentStartDate.format('YYYY-MM-DD');
             repetition.pdStartDateSelectTime = my.getTimeFromDate(momentStartDate, round);
             repetition.pdEndDateSelectTime = false;
             if (repetition.pdEndDateTimestamp) {
                 var momentEndDate = moment(repetition.pdEndDateTimestamp * 1000).tz(
                     repetition.timezone.timezone
                 );
-                repetition.pdEndDate = momentEndDate.format('gggg-MM-DD');
+                repetition.pdEndDate = momentEndDate.format('YYYY-MM-DD');
                 repetition.pdEndDateSelectTime = my.getTimeFromDate(momentEndDate);
             }
             return repetition;

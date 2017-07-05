@@ -44,7 +44,7 @@
         <?php if (is_object($type)) {
     ?>
             <input type="hidden" name="ftTypeID" value="<?=$type->getID()?>" />
-        <?php 
+        <?php
 }
     ?>
         <fieldset>
@@ -64,11 +64,17 @@
             </div>
             <div class="form-group">
                 <?=$form->label('ftTypeWidth', t('Width'))?>
-                <?=$form->text('ftTypeWidth', $ftTypeWidth)?>
+                <div class="input-group">
+                    <?=$form->text('ftTypeWidth', $ftTypeWidth)?>
+                    <span class="input-group-addon"><?php echo t('px'); ?></span>
+                </div>
             </div>
             <div class="form-group">
                 <?=$form->label('ftTypeHeight', t('Height'))?>
-                <?=$form->text('ftTypeHeight', $ftTypeHeight)?>
+                <div class="input-group">
+                    <?=$form->text('ftTypeHeight', $ftTypeHeight)?>
+                    <span class="input-group-addon"><?php echo t('px'); ?></span>
+                </div>
             </div>
             <div class="form-group">
                 <?=$form->label('ftTypeSizingMode', t('Sizing Mode'))?>
@@ -82,11 +88,11 @@
                 <?php if (is_object($type)) {
     ?>
                     <button type="submit" class="btn btn-primary pull-right"><?=t('Save')?></button>
-                <?php 
+                <?php
 } else {
     ?>
                     <button type="submit" class="btn btn-primary pull-right"><?=t('Add')?></button>
-                <?php 
+                <?php
 }
     ?>
             </div>
@@ -111,7 +117,7 @@
         })
     </script>
 
-<?php 
+<?php
 } else {
     ?>
 
@@ -142,10 +148,10 @@
         <td><?=$type->getSizingModeDisplayName()?></td>
         <td><?=$type->isRequired() ? t('Yes') : t('No')?></td>
     </tr>
-    <?php 
+    <?php
 }
     ?>
     </tbody>
     </table>
-<?php 
+<?php
 } ?>

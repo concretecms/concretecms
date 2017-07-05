@@ -1094,6 +1094,7 @@ return [
             [
                 ['javascript', 'moment'],
                 ['javascript', 'moment-timezone'],
+                ['javascript', 'moment-timezone-data'],
             ],
         ],
         'fancytree' => [

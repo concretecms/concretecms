@@ -27,7 +27,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 element: $element,
                 modal: true,
                 width: 320,
-                title: '<?=t('Delete Attribute')?>',
+                title: <?= json_encode(t('Delete Attribute')) ?>,
                 height: 'auto'
             });
         });

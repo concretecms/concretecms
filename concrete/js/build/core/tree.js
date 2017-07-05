@@ -20,7 +20,9 @@
 		my.options = options;
 		my.$element = $element;
 		my.setupTree();
-		ConcreteTree.setupTreeEvents(my);
+		if (!options.chooseNodeInForm && !options.onClick) {
+			ConcreteTree.setupTreeEvents(my);
+		}
 		return my.$element;
 	}
 

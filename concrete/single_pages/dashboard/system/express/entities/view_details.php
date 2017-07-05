@@ -20,7 +20,7 @@
         <p><?=$entity->getHandle()?></p>
 
         <h3><?=t('Description')?></h3>
-        <p><?=$entity->getDescription()?></p>
+        <p><?=$entity->getEntityDisplayDescription()?></p>
 
         <?php if ($owned_by = $entity->getOwnedBy()) { ?>
             <h3><?=t('Owned By')?></h3>

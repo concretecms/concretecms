@@ -129,7 +129,7 @@ function ConcretePanel(options) {
             $(this).removeClass('ccm-panel-menu-item-active');
             return false;
         });
-        $panel.find('[data-panel-navigation=back]').on('click.navigate', function () {
+        $panel.find('[data-panel-navigation=back]').unbind().on('click.navigate', function () {
             obj.goBack();
             return false;
         });

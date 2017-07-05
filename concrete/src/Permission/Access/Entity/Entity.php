@@ -57,7 +57,7 @@ abstract class Entity extends Object
     final public static function getByID($peID)
     {
         $obj = CacheLocal::getEntry('permission_access_entity', $peID);
-        if ($obj instanceof PermissionAccessEntity) {
+        if ($obj instanceof self) {
             return $obj;
         }
         $db = Database::connection();

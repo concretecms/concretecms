@@ -9,6 +9,7 @@ use Concrete\Core\Search\Pagination\PagerPagination;
 use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Search\Pagination\PermissionablePagination;
 use Concrete\Core\Search\PermissionableListItemInterface;
+use Concrete\Core\Search\StickyRequest;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\FileFolder;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
@@ -19,6 +20,15 @@ class FolderItemList extends ItemList implements PermissionableListItemInterface
 {
     protected $parent;
     protected $permissionsChecker;
+
+    public function __construct(StickyRequest $req = null)
+    {
+        $u = new \User();
+        if ($u->isSuperUser()) {
+            $this->ignorePermissions();
+        }
+        parent::__construct($req);
+    }
 
     protected $autoSortColumns = [
         'folderItemName',

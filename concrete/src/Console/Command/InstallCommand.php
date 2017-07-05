@@ -1,26 +1,27 @@
 <?php
 namespace Concrete\Core\Console\Command;
 
+use Concrete\Core\Console\Command;
+use Concrete\Core\Database\Connection\Timezone;
+use Concrete\Core\Localization\Localization;
 use Concrete\Core\Package\Routine\AttachModeCompatibleRoutineInterface;
 use Concrete\Core\Support\Facade\Application;
 use Config;
 use Database;
+use DateTimeZone;
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Exception\ConnectionException;
 use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\Exception\ConnectionException;
 use Exception;
 use StartingPointPackage;
-use Concrete\Core\Console\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
-use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
-use Concrete\Core\Localization\Localization;
 
 class InstallCommand extends Command
 {
@@ -35,6 +36,7 @@ class InstallCommand extends Command
             ->addOption('db-username', null, InputOption::VALUE_REQUIRED, 'Database username')
             ->addOption('db-password', null, InputOption::VALUE_REQUIRED, 'Database password')
             ->addOption('db-database', null, InputOption::VALUE_REQUIRED, 'Database name')
+            ->addOption('timezone', null, InputOption::VALUE_REQUIRED, 'The system time zone, compatible with the database one', @date_default_timezone_get() ?: 'UTC')
             ->addOption('site', null, InputOption::VALUE_REQUIRED, 'Name of the site', 'concrete5 Site')
             ->addOption('canonical-url', null, InputOption::VALUE_REQUIRED, 'Canonical URL', '')
             ->addOption('canonical-url-alternative', null, InputOption::VALUE_REQUIRED, 'Alternative canonical URL', '')
@@ -89,6 +91,14 @@ EOT
             $_POST['siteLocaleLanguage'] = 'en';
             $_POST['siteLocaleCountry'] = 'US';
         }
+
+        if (isset($options['timezone'])) {
+            $_POST['SERVER_TIMEZONE'] = $options['timezone'];
+        } else {
+            $_POST['SERVER_TIMEZONE'] = @date_default_timezone_get() ?: 'UTC';
+        }
+
+        date_default_timezone_set($_POST['SERVER_TIMEZONE']);
 
         if (isset($options['language'])) {
             $_POST['locale'] = $options['language'];
@@ -249,9 +259,8 @@ EOT
             $table->setHeaders(['Question', 'Value']);
             $table->render();
 
-            $confirm = new Question('Would you like to install with these settings? [ y / n ]: ',
-                false);
-            $confirm->setValidator(function($given) {
+            $confirm = new Question('Would you like to install with these settings? [ y / n ]: ', false);
+            $confirm->setValidator(function ($given) {
                 if (!$given || !preg_match('/^[yn]/i', $given)) {
                     throw new \InvalidArgumentException(t('Please answer either Y or N.'));
                 }
@@ -260,7 +269,7 @@ EOT
             $answer = $helper->ask($input, $output, $confirm);
 
             // Cancel if they said no
-            if (stripos('i', $answer) === 0) {
+            if (stripos('n', $answer) === 0) {
                 $output->writeln('Installation cancelled.');
                 exit;
             }
@@ -329,7 +338,6 @@ EOT
      * A wizard generator.
      *
      * @param \Symfony\Component\Console\Input\InputInterface $input
-     *
      * @param \Symfony\Component\Console\Output\OutputInterface $output
      * @param null $firstKey
      *
@@ -343,7 +351,6 @@ EOT
 
         // Loop over the questions, parse them, then yield them out
         foreach ($questions as $question) {
-
             if (!$firstKey && $question instanceof \Closure) {
                 $result = $question($input, $output, $this);
 
@@ -387,10 +394,10 @@ EOT
     private function getQuestionString(InputOption $option, $default)
     {
         if ($default) {
-            return sprintf("%s? [Default: <options=bold>%s</>]: ", $option->getDescription(), $default);
+            return sprintf('%s? [Default: <options=bold>%s</>]: ', $option->getDescription(), $default);
         }
 
-        return sprintf("%s?: ", $option->getDescription());
+        return sprintf('%s?: ', $option->getDescription());
     }
 
     /**
@@ -401,12 +408,34 @@ EOT
      */
     private function wizardSteps()
     {
+        $checkLocale = function ($localeId) {
+            $result = false;
+            $chunks = \Punic\Data::explodeLocale($localeId);
+            // Check that $localeId is well formatted
+            if ($chunks !== null) {
+                $normalizedLocaleId = ($chunks['territory'] === '') ? $chunks['language'] : "{$chunks['language']}_{$chunks['territory']}";
+                // We don't support custom Scripts, check that the separator is "_", check language/territory lower/upper case
+                if ($localeId === $normalizedLocaleId) {
+                    // Check that the language ID is valid
+                    if (\Punic\Language::getName($chunks['language']) !== $chunks['language']) {
+                        // Check that the territory ID is valid (or absent)
+                        if ($chunks['territory'] === '' || \Punic\Territory::getName($chunks['territory']) !== $chunks['territory']) {
+                            $result = true;
+                        }
+                    }
+                }
+            }
+
+            return $result;
+        };
+
         return [
             ['db-server', '127.0.0.1'],
             'db-database',
-            function(InputInterface $input, OutputInterface $output) {
+            function (InputInterface $input, OutputInterface $output) {
                 if (!trim($input->getOption('db-database'))) {
                     $output->writeln(sprintf('<error>%s</error>', t('A database name is required.')));
+
                     return 'db-database';
                 }
 
@@ -419,13 +448,32 @@ EOT
                     return $question->setHidden(true);
                 },
             ],
-            function(InputInterface $input, OutputInterface $output) {
+            'timezone',
+            function (InputInterface $input, OutputInterface $output) {
+                $timezone = trim($input->getOption('timezone'));
+                if ($timezone === '') {
+                    $output->writeln(sprintf('<error>%s</error>', t('A time zone identifier is required.')));
+
+                    return 'timezone';
+                }
+                try {
+                    new DateTimeZone($timezone);
+                } catch (Exception $x) {
+                    $output->writeln(sprintf('<error>%s</error>', t('Invalid time zone identifier.')));
+
+                    return 'timezone';
+                }
+
+                return true;
+            },
+            function (InputInterface $input, OutputInterface $output) {
                 $params = [
+                    'wrapperClass' => 'Concrete\Core\Database\Connection\Connection',
                     'dbname' => $input->getOption('db-database'),
                     'user' => $input->getOption('db-username'),
                     'password' => $input->getOption('db-password'),
                     'host' => $input->getOption('db-server'),
-                    'driver' => 'pdo_mysql'
+                    'driver' => 'pdo_mysql',
                 ];
 
                 $config = new Configuration();
@@ -445,7 +493,23 @@ EOT
 
                     // Set the option to an empty string so that we don't output the password
                     $input->setOption('db-password', '');
+
                     return false;
+                }
+                $app = Application::getFacadeApplication();
+                $ctz = $app->make(Timezone::class, ['connection' => $connection]);
+                $deltaTimezone = $ctz->getDeltaTimezone($input->getOption('timezone'));
+                if ($deltaTimezone !== null) {
+                    $error = $ctz->describeDeltaTimezone($deltaTimezone);
+                    $suggestTimezones = $ctz->getCompatibleTimezones();
+                    if (!empty($suggestTimezones)) {
+                        $suggestTimezones = array_keys($suggestTimezones);
+                        sort($suggestTimezones);
+                        $error .= "\n" . t('You may want to use one of these time zones:' . "\n" . implode("\n", $suggestTimezones));
+                    }
+                    $output->writeln(sprintf('<error>%s</error>', $error));
+
+                    return 'timezone';
                 }
 
                 return true;
@@ -469,7 +533,7 @@ EOT
                 },
             ],
             // Test the password
-            function(InputInterface $input, OutputInterface $output) {
+            function (InputInterface $input, OutputInterface $output) {
                 $answer = $input->getOption('admin-password');
                 $error = new \ArrayObject();
                 Application::getFacadeApplication()->make('validator/password')->isValid($answer, $error);
@@ -481,6 +545,7 @@ EOT
 
                     // Set the option to an empty string so that we don't output the password
                     $input->setOption('admin-password', '');
+
                     return 'admin-password';
                 }
 
@@ -495,14 +560,37 @@ EOT
                 },
             ],
             ['language', Localization::BASE_LOCALE],
+            // Test the language
+            function (InputInterface $input, OutputInterface $output) use ($checkLocale) {
+                $code = $input->getOption('language');
+                if ($checkLocale($code) !== true) {
+                    $output->writeln(sprintf('<error>%s</error>', t("The language code '%s' is not valid.", $code)));
+
+                    return 'language';
+                }
+
+                return true;
+            },
             [
                 'site-locale',
                 function (Question $question, InputInterface $input, InputOption $option) {
                     $newDefault = $input->getOption('language');
                     $input->setOption('site-locale', $newDefault);
+
                     return $question;
                 },
             ],
+            // Test the site locale
+            function (InputInterface $input, OutputInterface $output) use ($checkLocale) {
+                $code = $input->getOption('site-locale');
+                if ($checkLocale($code) !== true) {
+                    $output->writeln(sprintf('<error>%s</error>', t("The language code '%s' is not valid.", $code)));
+                    
+                    return 'site-locale';
+                }
+                
+                return true;
+            },
             ['config', 'none'],
         ];
     }

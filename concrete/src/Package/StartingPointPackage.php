@@ -436,6 +436,7 @@ class StartingPointPackage extends BasePackage
         if (is_dir(DIR_CONFIG_SITE . '/generated_overrides')) {
             $fh->removeAll(DIR_CONFIG_SITE . '/generated_overrides');
         }
+        Config::save('app.server_timezone', date_default_timezone_get());
         if (is_dir(Config::get('database.proxy_classes'))) {
             $fh->removeAll(Config::get('database.proxy_classes'));
         }

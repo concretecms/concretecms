@@ -51,7 +51,7 @@ class EntryList extends DatabaseItemList
      */
     public function filterByUserID($uID)
     {
-        $this->filter('UserPointHistory.upuID', $upaTypeID);
+        $this->filter('UserPointHistory.upuID', (int) $uID);
     }
 
     public function get($items = 0, $offset = 0)
