@@ -891,6 +891,34 @@ if (isset($successMessage)) {
                         <tr>
                             <td>
                                 <?php
+                                if ($tokenizerTest) {
+                                    ?>
+                                    <i class="fa fa-check"></i>
+                                    <?php
+                                } else {
+                                    ?>
+                                    <i class="fa fa-exclamation-circle"></i>
+                                    <?php
+                                }
+                                ?>
+                            </td>
+                            <td style="width: 100%">
+                                <?= t('Tokenizer Extension Enabled') ?>
+                            </td>
+                            <td>
+                                <?php
+                                if (!$tokenizerTest) {
+                                    ?>
+                                    <i class="fa fa-question-circle launch-tooltip"
+                                       title="<?= t('The PHP Tokenizer extension has been disabled intentionally on this server and must be enabled.') ?>"></i>
+                                    <?php
+                                }
+                                ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <?php
                                 if ($memoryTest === -1) {
                                     ?>
                                     <i class="fa fa-exclamation-circle"></i>
