@@ -18,6 +18,23 @@ class CLIRunner implements RunInterface, ApplicationAwareInterface
         $this->console = $console;
     }
 
+    private function loadBootstrap()
+    {
+        $app = $this->app;
+        $console = $this->console;
+        include DIR_APPLICATION . '/bootstrap/app.php';
+    }
+
+    private function initializeSystemTimezone()
+    {
+        $config = $this->app->make('config');
+        if (!$config->has('app.server_timezone')) {
+            // There is no server timezone set.
+            $config->set('app.server_timezone', @date_default_timezone_get());
+        }
+        @date_default_timezone_set($config->get('app.server_timezone'));
+    }
+
     /**
      * Run the runtime.
      *
@@ -28,9 +45,8 @@ class CLIRunner implements RunInterface, ApplicationAwareInterface
         $console = $this->console;
         $this->app->instance('console', $console);
 
-        $app = $this->app; // useful in bootstrap/app.php
-
-        include DIR_APPLICATION . '/bootstrap/app.php';
+        $this->loadBootstrap();
+        $this->initializeSystemTimezone();
 
         $input = new ArgvInput();
         if ($input->getFirstArgument() !== 'c5:update') {
