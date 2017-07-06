@@ -559,7 +559,7 @@ class Install extends Controller
             if ($this->post('canonicalUrlChecked') === '1') {
                 try {
                     $url = UrlImmutable::createFromUrl($this->post('canonicalUrl'));
-                    if (!preg_match('/^https?/i', $url->getScheme()) !== 0) {
+                    if (!preg_match('/^https?/i', $url->getScheme())) {
                         throw new Exception('The canonical URL must have the http:// scheme or the https:// scheme');
                     }
                     $canonicalUrl = (string) $url;
@@ -572,7 +572,7 @@ class Install extends Controller
             if ($this->post('canonicalUrlAlternativeChecked') === '1') {
                 try {
                     $url = UrlImmutable::createFromUrl($this->post('canonicalUrlAlternative'));
-                    if (!preg_match('/^https?/i', $url->getScheme()) !== 0) {
+                    if (!preg_match('/^https?/i', $url->getScheme())) {
                         throw new Exception('The alternative canonical URL must have the http:// scheme or the https:// scheme');
                     }
                     $canonicalUrlAlternative = (string) $url;
