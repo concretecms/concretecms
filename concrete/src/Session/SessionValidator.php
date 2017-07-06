@@ -43,8 +43,7 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
      */
     public function handleSessionValidation(SymfonySession $session)
     {
-        $ip_address = new IPAddress($this->request->getClientIp());
-        $request_ip = $ip_address->getIp(IPAddress::FORMAT_IP_STRING);
+        $request_ip = (string) $this->app->make('ip')->getRequestIPAddress();
 
         $invalidate = false;
 

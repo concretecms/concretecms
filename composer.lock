@@ -2014,16 +2014,16 @@
         },
         {
             "name": "mlocati/ip-lib",
-            "version": "1.2.1",
+            "version": "1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mlocati/ip-lib.git",
-                "reference": "4914eb66963ef35af6d29caea04c822555ccba23"
+                "reference": "5d1a57f5557b3c4b1f572a415a8d3c1dfce7d885"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mlocati/ip-lib/zipball/4914eb66963ef35af6d29caea04c822555ccba23",
-                "reference": "4914eb66963ef35af6d29caea04c822555ccba23",
+                "url": "https://api.github.com/repos/mlocati/ip-lib/zipball/5d1a57f5557b3c4b1f572a415a8d3c1dfce7d885",
+                "reference": "5d1a57f5557b3c4b1f572a415a8d3c1dfce7d885",
                 "shasum": ""
             },
             "require": {
@@ -2061,7 +2061,7 @@
                 "range",
                 "subnet"
             ],
-            "time": "2017-03-14T18:16:16+00:00"
+            "time": "2017-07-06T07:33:40+00:00"
         },
         {
             "name": "mobiledetect/mobiledetectlib",
