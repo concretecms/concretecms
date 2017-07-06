@@ -102,7 +102,7 @@ class User extends Object
         if ($session->get('uID') > 0) {
             $db = $app['database']->connection();
 
-            $row = $db->GetRow("select uID, uIsActive, uLastPasswordChange, uIsPasswordReset from Users where uID = ? and uName = ?", array($session->get('uID'), $session->get('uName')));
+            $row = $db->GetRow("select * from Users where uID = ? and uName = ?", array($session->get('uID'), $session->get('uName')));
             $checkUID = (isset($row['uID'])) ? ($row['uID']) : (false);
 
             if ($checkUID == $session->get('uID')) {
@@ -116,7 +116,7 @@ class User extends Object
                     return false;
                 }
 
-                if ($row['uIsPasswordReset']) {
+                if (!empty($row['uIsPasswordReset'])) {
                     return false;
                 }
 
