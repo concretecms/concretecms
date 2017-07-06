@@ -126,7 +126,8 @@ class Messages extends AccountPageController
     {
         $this->validateUser($uID);
         $profile = $this->get('profile');
-        $this->set('backURL', $profile->getUserPublicProfileURL());
+        $backURL = $profile->getUserPublicProfileURL() ?: 'javascript:history.back()';
+        $this->set('backURL', $backURL);
     }
 
     public function reply($boxID, $msgID)
