@@ -200,19 +200,19 @@ class Install extends Controller
                         // we're going to just proceed and hope for the best.
                     }
                 }
-            }
-            if ($SERVER_TIMEZONE === null) {
-                $e->add(t('Invalid or missing server time zone.'));
-            } else {
-                $ctz = $this->app->make(Timezone::class, ['connection' => $db]);
-                $deltaTimezone = $ctz->getDeltaTimezone($SERVER_TIMEZONE);
-                if ($deltaTimezone !== null) {
-                    $error = $ctz->describeDeltaTimezone($deltaTimezone);
-                    $suggestTimezones = $ctz->getCompatibleTimezones();
-                    if (!empty($suggestTimezones)) {
-                        $error .= ' ' . t('You may want to use one of these time zones in the <u>Advanced Options</u> section:') . '<ul><li>' . implode('</li><li>', $suggestTimezones) . '</li></ul>';
+                if ($SERVER_TIMEZONE === null) {
+                    $e->add(t('Invalid or missing server time zone.'));
+                } elseif (!$e->has()) {
+                    $ctz = $this->app->make(Timezone::class, ['connection' => $db]);
+                    $deltaTimezone = $ctz->getDeltaTimezone($SERVER_TIMEZONE);
+                    if ($deltaTimezone !== null) {
+                        $error = $ctz->describeDeltaTimezone($deltaTimezone);
+                        $suggestTimezones = $ctz->getCompatibleTimezones();
+                        if (!empty($suggestTimezones)) {
+                            $error .= ' ' . t('You may want to use one of these time zones in the <u>Advanced Options</u> section:') . '<ul><li>' . implode('</li><li>', $suggestTimezones) . '</li></ul>';
+                        }
+                        $e->add($error);
                     }
-                    $e->add($error);
                 }
             }
         }
