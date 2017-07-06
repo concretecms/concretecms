@@ -364,7 +364,8 @@ class IPService
      */
     public function getRequestIP()
     {
-        return new IPAddress(Request::getInstance()->getClientIp());
+        $ip = $this->getRequestIPAddress();
+        return new IPAddress($ip === null ? null : (string) $ip);
     }
 
     /**
