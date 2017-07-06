@@ -1,13 +1,16 @@
 <?php
+
 namespace Concrete\Block\SwitchLanguage;
 
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Http\Response;
+use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Multilingual\Page\Section\Section;
-use Concrete\Core\Routing\Redirect;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Cookie;
 use Session;
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
 class Controller extends BlockController
 {
@@ -17,36 +20,55 @@ class Controller extends BlockController
 
     public $helpers = ['form'];
 
+    /**
+     * @var string
+     */
+    public $label;
+
     public function getBlockTypeDescription()
     {
-        return t("Adds a front-end language switcher to your website.");
+        return t('Adds a front-end language switcher to your website.');
     }
 
     public function getBlockTypeName()
     {
-        return t("Switch Language");
+        return t('Switch Language');
     }
 
-    public function action_switch_language($currentPageID, $sectionID, $bID = false)
+    /**
+     * @param int $currentPageID
+     * @param int $sectionID
+     *
+     * @return \League\URL\URLInterface
+     */
+    public function resolve_language_url($currentPageID, $sectionID)
     {
-        $lang = Section::getByID(intval($sectionID));
+        $resolve = ['/'];
+        $lang = Section::getByID((int) $sectionID);
         if (is_object($lang)) {
-            $page = \Page::getByID(intval($currentPageID));
+            $resolve = [$lang];
+            $page = \Page::getByID((int) $currentPageID);
             if (!$page->isError()) {
                 $relatedID = $lang->getTranslatedPageID($page);
                 if ($relatedID) {
                     $pc = \Page::getByID($relatedID);
-                    return Redirect::page($pc);
-                }
-                if ($page->isGeneratedCollection()) {
+                    $resolve = [$pc];
+                } elseif ($page->isGeneratedCollection()) {
                     $this->app->make('session')->set('multilingual_default_locale', $lang->getLocale());
-                    return Redirect::page($page);
+                    $resolve = [$page];
                 }
             }
-            return Redirect::page($lang);
         }
 
-        return Redirect::to('/');
+        return $this->app->make(ResolverManagerInterface::class)->resolve($resolve);
+    }
+
+    public function action_switch_language($currentPageID, $sectionID, $bID = false)
+    {
+        $to = $this->resolve_language_url($currentPageID, $sectionID);
+        $rf = $this->app->make(ResponseFactoryInterface::class);
+
+        return $rf->redirect($to, Response::HTTP_FOUND);
     }
 
     public function action_set_current_language()
