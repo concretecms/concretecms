@@ -400,7 +400,7 @@ class Install extends Controller
         $rf = new ReflectionObject($this);
         $rp = $rf->getProperty('docCommentCanary');
         $this->set('docCommentTest', (bool) $rp->getDocComment());
-
+        $this->set('tokenizerTest', function_exists('token_get_all'));
         $memoryThresoldMin = 24 * 1024 * 1024;
         $memoryThresold = 64 * 1024 * 1024;
         $this->set('memoryThresoldMin', $memoryThresoldMin);
