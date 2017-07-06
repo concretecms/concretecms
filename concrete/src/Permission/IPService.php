@@ -267,7 +267,7 @@ class IPService
      * @param int $type (one of the IPService::IPRANGETYPE_... constants)
      * @param bool $includeExpired Include expired records?
      *
-     * @return IPRange[]|Generator
+     * @return IPRange[]|\Generator
      */
     public function getRanges($type, $includeExpired = false)
     {
