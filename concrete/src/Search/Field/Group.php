@@ -38,9 +38,9 @@ class Group implements GroupInterface
     }
 
     /**
-     * Get the fields belonging to this group.
+     * {@inheritdoc}
      *
-     * @return FieldInterface[]
+     * @see GroupInterface::getFields()
      */
     public function getFields()
     {

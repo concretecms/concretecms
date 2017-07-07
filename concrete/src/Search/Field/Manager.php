@@ -6,14 +6,14 @@ class Manager implements ManagerInterface
     /**
      * The groups of fields.
      *
-     * @var Group[]|GroupInterface[]
+     * @var GroupInterface[]
      */
     protected $groups = [];
 
     /**
      * Get the groups of fields.
      *
-     * @return Group[]|GroupInterface[]
+     * @return GroupInterface[]
      */
     public function getGroups()
     {
@@ -39,7 +39,7 @@ class Manager implements ManagerInterface
      *
      * @param string $name
      *
-     * @return Group|GroupInterface|null
+     * @return GroupInterface|null
      */
     public function getGroupByName($name)
     {

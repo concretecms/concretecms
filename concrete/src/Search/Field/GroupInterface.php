@@ -9,4 +9,11 @@ interface GroupInterface
      * @return string
      */
     public function getName();
+
+    /**
+     * Get the fields belonging to this group.
+     *
+     * @return FieldInterface[]
+     */
+    public function getFields();
 }
