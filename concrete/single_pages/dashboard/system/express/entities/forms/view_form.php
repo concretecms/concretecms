@@ -4,7 +4,11 @@
     <a href="<?=URL::to('/dashboard/system/express/entities/forms', $entity->getID())?>" class="btn btn-default"><?=t("Back to Object")?></a>
     <a href="<?=URL::to('/dashboard/system/express/entities/forms', 'edit', $expressForm->getID())?>" class="btn btn-default"><?=t("Edit Details")?></a>
     <button type="button" class="btn btn-default" data-dialog="add-set"><?= t('Add Field Set') ?></button>
-    <button type="button" class="btn btn-danger" data-dialog="delete-form"><?= t('Delete Form') ?></button>
+    <?php if ($canDeleteForm) { ?>
+        <button type="button" class="btn btn-danger" data-dialog="delete-form"><?= t('Delete Form') ?></button>
+    <?php } else { ?>
+        <button type="button" class="btn btn-danger disabled launch-tooltip" title="<?=t('This form is used as the default view or edit form for its entity. It may not be deleted until another form is selected.')?>"><?= t('Delete Form') ?></button>
+    <?php } ?>
 </div>
 
 <div style="display: none">
