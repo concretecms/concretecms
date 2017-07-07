@@ -11,9 +11,9 @@ class Manager implements ManagerInterface
     protected $groups = [];
 
     /**
-     * Get the groups of fields.
+     * {@inheritdoc}
      *
-     * @return GroupInterface[]
+     * @see ManagerInterface::getGroups()
      */
     public function getGroups()
     {
@@ -35,11 +35,9 @@ class Manager implements ManagerInterface
     }
 
     /**
-     * Get a fields group by name.
+     * {@inheritdoc}
      *
-     * @param string $name
-     *
-     * @return GroupInterface|null
+     * @see ManagerInterface::getGroupByName()
      */
     public function getGroupByName($name)
     {
@@ -61,11 +59,9 @@ class Manager implements ManagerInterface
     }
 
     /**
-     * Search a field across all the groups.
+     * {@inheritdoc}
      *
-     * @param string $key The field key
-     *
-     * @return FieldInterface|null
+     * @see ManagerInterface::getFieldByKey()
      */
     public function getFieldByKey($key)
     {
@@ -79,11 +75,9 @@ class Manager implements ManagerInterface
     }
 
     /**
-     * Get the list of fields whose keys are in the 'field' of an array, and initialize the fields with the data.
+     * {@inheritdoc}
      *
-     * @param array $request
-     *
-     * @return FieldInterface[]
+     * @see ManagerInterface::getFieldsFromRequest()
      */
     public function getFieldsFromRequest(array $request)
     {
