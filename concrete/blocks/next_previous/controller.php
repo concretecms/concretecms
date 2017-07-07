@@ -35,6 +35,7 @@ class Controller extends BlockController
             $nextLinkText = $nextCollection->getCollectionName();
         }
 
+        $this->set('nextCollection', $nextCollection);
         $this->set('nextLinkURL', $nextLinkURL);
         $this->set('nextLinkText', $nextLinkText);
         $this->set('nextLabel', $this->nextLabel);
@@ -49,6 +50,7 @@ class Controller extends BlockController
             $previousLinkText = $previousCollection->getCollectionName();
         }
 
+        $this->set('previousCollection', $previousCollection);
         $this->set('previousLinkURL', $previousLinkURL);
         $this->set('previousLinkText', $previousLinkText);
         $this->set('previousLabel', $this->previousLabel);
@@ -60,6 +62,7 @@ class Controller extends BlockController
             $parentLinkURL = $parentCollection->getCollectionLink();
         }
 
+        $this->set('parentCollection', $parentCollection);
         $this->set('parentLinkURL', $parentLinkURL);
         $this->set('parentLabel', $this->parentLabel);
     }
