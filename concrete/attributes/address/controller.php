@@ -237,18 +237,20 @@ class Controller extends AttributeTypeController
     {
         $avn = $akn->addChild('value');
         $address = $this->getAttributeValue()->getValue();
-        $avn->addAttribute('address1', $address->getAddress1());
-        $avn->addAttribute('address2', $address->getAddress2());
-        $avn->addAttribute('city', $address->getCity());
-        $avn->addAttribute('state-province', $address->getStateProvince());
-        $avn->addAttribute('country', $address->getCountry());
-        $avn->addAttribute('postal-code', $address->getPostalCode());
+        if ($address) {
+            $avn->addAttribute('address1', $address->getAddress1());
+            $avn->addAttribute('address2', $address->getAddress2());
+            $avn->addAttribute('city', $address->getCity());
+            $avn->addAttribute('state-province', $address->getStateProvince());
+            $avn->addAttribute('country', $address->getCountry());
+            $avn->addAttribute('postal-code', $address->getPostalCode());
+        }
     }
 
     public function createAttributeValue($data)
     {
         if ($data instanceof AddressValue) {
-            return $data;
+            return clone $data;
         }
         extract($data);
         $av = new AddressValue();
@@ -342,15 +344,19 @@ class Controller extends AttributeTypeController
     public function form()
     {
         $this->load();
+        $value = null;
         if (is_object($this->attributeValue)) {
             $value = $this->getAttributeValue()->getValue();
-            $this->set('address1', $value->getAddress1());
-            $this->set('address2', $value->getAddress2());
-            $this->set('city', $value->getCity());
-            $this->set('state_province', $value->getStateProvince());
-            $this->set('country', $value->getCountry());
-            $this->set('postal_code', $value->getPostalCode());
-        } else {
+            if ($value) {
+                $this->set('address1', $value->getAddress1());
+                $this->set('address2', $value->getAddress2());
+                $this->set('city', $value->getCity());
+                $this->set('state_province', $value->getStateProvince());
+                $this->set('country', $value->getCountry());
+                $this->set('postal_code', $value->getPostalCode());
+            }
+        }
+        if (!$value) {
             $this->set('address1', '');
             $this->set('address2', '');
             $this->set('city', '');

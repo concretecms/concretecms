@@ -104,6 +104,11 @@ trait ObjectTrait
                  */
                 $value = $controller->createAttributeValue($value);
             }
+        } else {
+            // we have passed in an attribute value – but that's probably not
+            // going to work because it's already attached to something else. So we
+            // need to clone it
+            $value = clone $value;
         }
 
 
