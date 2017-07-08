@@ -6,24 +6,23 @@ $valt = Loader::helper('validation/token');
 
 $type = $workflow->getWorkflowTypeObject();
 
+$valt = Loader::helper('validation/token');
+$ih = Loader::helper('concrete/ui');
+$delConfirmJS = t('Are you sure you want to remove this workflow?');
 ?>
-<div class="ccm-dashboard-header-buttons">
-    <div class="pull-right">
+
+<script type="text/javascript">
+    deleteWorkflow = function() {
+        if (confirm('<?=$delConfirmJS?>')) {
+            location.href = "<?=$view->action('delete', $workflow->getWorkflowID(), $valt->generate('delete_workflow'))?>";
+        }
+    }
+</script>
+
+
+<div class="ccm-dashboard-header-buttons btn-group">
         <?php if (is_object($workflow)) {
     ?>
-
-            <?php
-            $valt = Loader::helper('validation/token');
-    $ih = Loader::helper('concrete/ui');
-    $delConfirmJS = t('Are you sure you want to remove this workflow?');
-    ?>
-            <script type="text/javascript">
-                deleteWorkflow = function() {
-                    if (confirm('<?=$delConfirmJS?>')) {
-                        location.href = "<?=$view->action('delete', $workflow->getWorkflowID(), $valt->generate('delete_workflow'))?>";
-                    }
-                }
-            </script>
 
             <?php echo $ih->button_js(t('Delete Workflow'), "deleteWorkflow()", '', 'btn-danger');
     ?>
@@ -34,7 +33,6 @@ $type = $workflow->getWorkflowTypeObject();
             Loader::packageElement('workflow/types/' . $type->getWorkflowTypeHandle() . '/type_form_buttons', $type->getPackageHandle(), array('type' => $type, 'workflow' => $workflow));
         } ?>
         <a href="<?=$view->action('edit_details', $workflow->getWorkflowID())?>" class="btn btn-primary"><?=t('Edit Details')?></a>
-    </div>
 </div>
 <input type="hidden" name="wfID" value="<?=$workflow->getWorkflowID()?>" />
 
