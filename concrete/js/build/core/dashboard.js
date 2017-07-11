@@ -1,11 +1,11 @@
-/** 
+/**
  * Basic concrete5 toolbar class
  */
 
 var ConcreteDashboard = function() {
 	setupResultMessages = function() {
-		if ($('#ccm-dashboard-result-message').length > 0) { 
-			if ($('.ccm-pane').length > 0) { 
+		if ($('#ccm-dashboard-result-message').length > 0) {
+			if ($('.ccm-pane').length > 0) {
 				var pclass = $('.ccm-pane').parent().attr('class');
 				var gpclass = $('.ccm-pane').parent().parent().attr('class');
 				var html = $('#ccm-dashboard-result-message').html();
@@ -130,7 +130,6 @@ var ConcreteDashboard = function() {
 			}
 		}
 	};
-
 
 	return {
 		start: function(options) {

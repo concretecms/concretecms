@@ -73,8 +73,8 @@ var ConcreteToolbar = function() {
 			var panelID = $this.attr('data-launch-panel');
 			var panel = ConcretePanelManager.getByIdentifier(panelID);
             if ( !panel.willBePinned() ) $this.toggleClass('ccm-launch-panel-loading');
-            
-            if ( panel.isPinable() ) 
+
+            if ( panel.isPinable() )
             {
                 var parent = $($this.parent());
                 if ( panel.willBePinned() || panel.pinned() ) parent.toggleClass("ccm-toolbar-page-edit-mode-pinned ");
@@ -180,7 +180,21 @@ var ConcreteToolbar = function() {
 		}, function() {
 			$(this).removeClass('ccm-intelligent-search-result-selected');
 		});
-	}
+	};
+
+	var buildThumbnails = function() {
+        $.post('/index.php/ccm/system/file/thumbnailer', function(result) {
+            if (result.built === true) {
+                if (result.path) {
+                    $('[src$="' + result.path + '"]').each(function() {
+                    	var me = $(this);
+                    	me.attr('src', me.attr('src'));
+					})
+                }
+                setTimeout(buildThumbnails, 50);
+            }
+        });
+    };
 
 
 	doRemoteSearchCall = function(query) {
@@ -292,7 +306,7 @@ var ConcreteToolbar = function() {
 				setupPageAlerts();
 				setupHelpNotifications();
                 setupMobileNav();
-
+				buildThumbnails();
 			}
 		},
 
