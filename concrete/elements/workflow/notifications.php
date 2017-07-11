@@ -15,23 +15,26 @@ if (is_array($workflowList) && !empty($workflowList)) {
 
         if (!empty($actions)) {
             foreach ($actions as $act) {
-                $parameters = 'class="btn btn-xs ' . $act->getWorkflowProgressActionStyleClass() . '" ';
+
+                $inner = $act->getWorkflowProgressActionStyleInnerButtonLeftHTML() . ' ' . $act->getWorkflowProgressActionLabel() . ' ' . $act->getWorkflowProgressActionStyleInnerButtonRightHTML();
+
+                if ($act->getWorkflowProgressActionURL() != '') {
+                    $button = new \HtmlObject\Link($act->getWorkflowProgressActionURL(), $inner);
+                } else {
+                    $button = new \HtmlObject\Link('#', $inner);
+                    $button->setAttribute('data-workflow-task', $act->getWorkflowProgressActionTask());
+                }
+
                 if (!empty($act->getWorkflowProgressActionExtraButtonParameters())) {
                     foreach ($act->getWorkflowProgressActionExtraButtonParameters() as $key => $value) {
-                        $parameters .= $key . '="' . $value . '" ';
+                        $button->setAttribute($key, $value);
                     }
                 }
 
-                $inner = $act->getWorkflowProgressActionStyleInnerButtonLeftHTML() . ' ' .
-                $act->getWorkflowProgressActionLabel() . ' ' .
-                $act->getWorkflowProgressActionStyleInnerButtonRightHTML();
-
-                if ($act->getWorkflowProgressActionURL() != '') {
-                    $button = '<a href="' . $act->getWorkflowProgressActionURL() . '" ' . $parameters . '>' . $inner . '</a>';
-                } else {
-                    $button = '<button type="submit" name="action_' . $act->getWorkflowProgressActionTask() . '" ' . $parameters . '>' . $inner . '</button>';
+                // sigh. le hack
+                if (strpos($act->getWorkflowProgressActionStyleClass(), 'dialog-launch') > -1) {
+                    $button->addClass('dialog-launch');
                 }
-
                 $buttons[] = $button;
             }
         }

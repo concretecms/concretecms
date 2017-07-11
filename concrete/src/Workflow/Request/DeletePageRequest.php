@@ -45,7 +45,7 @@ class DeletePageRequest extends PageRequest
 
     public function getWorkflowRequestApproveButtonClass()
     {
-        return 'btn-danger';
+        return '';
     }
 
     public function getWorkflowRequestApproveButtonInnerButtonRightHTML()

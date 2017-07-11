@@ -85,7 +85,7 @@ class ApprovePageRequest extends PageRequest
 
     public function getWorkflowRequestApproveButtonClass()
     {
-        return 'btn-success';
+        return '';
     }
 
     public function getWorkflowRequestApproveButtonInnerButtonRightHTML()
@@ -130,9 +130,8 @@ class ApprovePageRequest extends PageRequest
             $button->addWorkflowProgressActionButtonParameter('dialog-height', '70%');
             $button->addWorkflowProgressActionButtonParameter('data-dismiss-alert', 'page-alert');
             $button->addWorkflowProgressActionButtonParameter('dialog-height', '70%');
-            $button->setWorkflowProgressActionStyleInnerButtonLeftHTML('<i class="fa fa-eye"></i>');
             $button->setWorkflowProgressActionURL(REL_DIR_FILES_TOOLS_REQUIRED . '/workflow/dialogs/approve_page_preview?wpID=' . $wp->getWorkflowProgressID());
-            $button->setWorkflowProgressActionStyleClass('btn-default dialog-launch');
+            $button->setWorkflowProgressActionStyleClass('dialog-launch');
             $buttons[] = $button;
         }
 

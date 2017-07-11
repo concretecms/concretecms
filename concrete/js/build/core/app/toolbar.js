@@ -53,6 +53,14 @@ var ConcreteToolbar = function() {
 			}
 		});
 
+		$('a[data-workflow-task]').on('click', function(e) {
+			var action = $(this).attr('data-workflow-task'),
+				$form = $(this).closest('form[data-form=workflow]');
+			$form.append('<input type="hidden" name="action_' + action + '" value="' + action + '">');
+			$form.submit();
+		});
+
+
 	}
 
 	setupTooltips = function() {
