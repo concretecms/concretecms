@@ -636,10 +636,10 @@ class Controller extends AttributeTypeController
                 break;
             case 'alpha_asc':
                 if (isset($like) && strlen($like)) {
-                    $r = $db->Execute('select ID, value, displayOrder from atSelectOptions where akID = ? AND atSelectOptions.value LIKE ? order by value asc',
+                    $r = $db->Execute('select ID, value, displayOrder from atSelectOptions where akID = ? AND atSelectOptions.value LIKE ?',
                         array($this->attributeKey->getAttributeKeyID(), $like));
                 } else {
-                    $r = $db->Execute('select ID, value, displayOrder from atSelectOptions where akID = ? order by value asc',
+                    $r = $db->Execute('select ID, value, displayOrder from atSelectOptions where akID = ?',
                         array($this->attributeKey->getAttributeKeyID()));
                 }
                 break;
@@ -657,6 +657,9 @@ class Controller extends AttributeTypeController
         while ($row = $r->FetchRow()) {
             $opt = new Option($row['ID'], $row['value'], $row['displayOrder']);
             $options->add($opt);
+        }
+        if ($this->akSelectOptionDisplayOrder === 'alpha_asc') {
+            $options->sortByDisplayName();
         }
 
         return $options;

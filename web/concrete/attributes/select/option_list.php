@@ -1,7 +1,8 @@
 <?php
 namespace Concrete\Attribute\Select;
-use Loader;
+use Localization;
 use \Concrete\Core\Foundation\Object;
+use \Punic\Comparer;
 
 class OptionList extends Object implements \Iterator {
 
@@ -61,7 +62,9 @@ class OptionList extends Object implements \Iterator {
 	* @return int
 	*/
 	protected static function displayValueSorter($a, $b) {
-		return strcasecmp($a->getSelectAttributeOptionDisplayValue('text'), $b->getSelectAttributeOptionDisplayValue('text'));
+            $locale = Localization::activeLocale();
+            $comparer = new Comparer($locale);
+            return $comparer->compare($a->getSelectAttributeOptionDisplayValue('text'), $b->getSelectAttributeOptionDisplayValue('text'));
 	}
 
 	public function __toString() {
