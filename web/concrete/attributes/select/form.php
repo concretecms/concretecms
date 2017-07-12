@@ -16,7 +16,7 @@ if ($akSelectAllowMultipleValues && !$akSelectAllowOtherValues) {
 		</div>
 
 
-	<? }
+	<?php }
 
 
 }
@@ -35,7 +35,7 @@ if (!$akSelectAllowMultipleValues && !$akSelectAllowOtherValues) {
 	<?=$form->select($view->field('atSelectOptionValue'), $options, $selectedOptions[0]); ?>
 
 
-<? }
+<?php }
 
 /**
  * Select2
@@ -109,4 +109,4 @@ if ($akSelectAllowOtherValues) {
 		});
 	</script>
 
-<? }
+<?php }
