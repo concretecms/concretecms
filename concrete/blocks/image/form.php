@@ -78,7 +78,36 @@ $al = $app->make('helper/concrete/asset_library');
 </fieldset>
 
 <fieldset>
-    <legend><?php echo t('Resize Image'); ?></legend>
+    <legend><?php echo t('Alignment'); ?></legend>
+
+    <div class="form-group">
+        <div class="radio">
+            <label>
+                <?php
+                echo $form->radio('alignImage', 0, $alignImage);
+                echo t('Left');
+                ?>
+            </label>
+        </div>
+        <div class="radio">
+            <label>
+                <?php
+                echo $form->radio('alignImage', 1, $alignImage);
+                echo t('Center');
+                ?>
+            </label>
+        </div>
+        <div class="radio">
+            <label>
+                <?php
+                echo $form->radio('alignImage', 2, $alignImage);
+                echo t('Right');
+                ?>
+            </label>
+        </div>
+    </div>
+
+    <legend><?php echo t('Size'); ?></legend>
 
     <div class="form-group">
         <div class="checkbox" data-checkbox-wrapper="constrain-image">

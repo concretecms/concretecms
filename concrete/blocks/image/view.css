@@ -1,0 +1,9 @@
+img.ccm-image-center {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+img.ccm-image-right {
+    margin-left: auto;
+    margin-right: 0;
+}
