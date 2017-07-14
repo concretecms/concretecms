@@ -80,9 +80,9 @@ abstract class Editor extends Object
         if (!is_object($this->cnvMessage)) {
             return '';
         }
+        $text = \Core::make('helper/text');
         $cnv = $this->cnvMessage->getConversationObject();
-
-        return $this->cnvMessage->getConversationMessageBody();
+        return $text->entities($this->cnvMessage->getConversationMessageBody());
     }
 
     public function getConversationEditorHandle()
