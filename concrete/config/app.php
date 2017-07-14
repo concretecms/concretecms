@@ -365,6 +365,9 @@ return [
         '/ccm/system/dialogs/user/advanced_search/submit' => ['\Concrete\Controller\Dialog\User\AdvancedSearch::submit'],
         '/ccm/system/dialogs/user/advanced_search/save_preset' => ['\Concrete\Controller\Dialog\User\AdvancedSearch::savePreset'],
 
+        '/ccm/system/dialogs/express/advanced_search/{exEntityID}' => ['\Concrete\Controller\Dialog\Express\AdvancedSearch::view'],
+        '/ccm/system/dialogs/express/advanced_search/add_field/' => ['\Concrete\Controller\Dialog\Express\AdvancedSearch::addField'],
+        '/ccm/system/dialogs/express/advanced_search/submit' => ['\Concrete\Controller\Dialog\Express\AdvancedSearch::submit'],
         /*
          * Conversations
          */
@@ -515,6 +518,10 @@ return [
         '/ccm/system/search/users/current' => ['\Concrete\Controller\Search\Users::searchCurrent'],
         '/ccm/system/search/users/preset/{presetID}' => ['\Concrete\Controller\Search\Users::searchPreset'],
         '/ccm/system/search/users/clear' => ['\Concrete\Controller\Search\Users::clearSearch'],
+
+        '/ccm/system/search/express/basic/{exEntityID}' => ['\Concrete\Controller\Search\Express::searchBasic'],
+        '/ccm/system/search/express/current/{exEntityID}' => ['\Concrete\Controller\Search\Express::searchCurrent'],
+        '/ccm/system/search/express/clear/{exEntityID}' => ['\Concrete\Controller\Search\Express::clearSearch'],
 
         '/ccm/system/search/groups/submit' => ['\Concrete\Controller\Search\Groups::submit'],
 
