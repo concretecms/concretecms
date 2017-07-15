@@ -1,9 +1,11 @@
-img.ccm-image-center {
+.ccm-image-center {
+    display: block;
     margin-left: auto;
     margin-right: auto;
 }
 
-img.ccm-image-right {
+.ccm-image-right {
+    display: block;
     margin-left: auto;
     margin-right: 0;
 }

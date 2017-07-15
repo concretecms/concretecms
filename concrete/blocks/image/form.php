@@ -106,7 +106,9 @@ $al = $app->make('helper/concrete/asset_library');
             </label>
         </div>
     </div>
+</fieldset>
 
+<fieldset>
     <legend><?php echo t('Size'); ?></legend>
 
     <div class="form-group">
