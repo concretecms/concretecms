@@ -9,6 +9,7 @@ use Concrete\Core\File\Image\Thumbnail\ThumbnailerInterface;
 use Concrete\Core\File\Image\Thumbnail\Type\CustomThumbnail;
 use Concrete\Core\File\StorageLocation\Configuration\DefaultConfiguration;
 use Concrete\Core\File\StorageLocation\StorageLocationInterface;
+use Concrete\Core\Http\ResponseAssetGroup;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -236,6 +237,9 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
         $version = null;
 
         $fh = $this->app->make('helper/file');
+        $assetGroup = ResponseAssetGroup::get();
+        $assetGroup->requireAsset('core/frontend/thumbnail-builder');
+
         $baseFilename = '';
         $extension = '';
         if ($obj instanceof File) {

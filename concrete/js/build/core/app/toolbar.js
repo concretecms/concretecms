@@ -190,21 +190,6 @@ var ConcreteToolbar = function() {
 		});
 	};
 
-	var buildThumbnails = function() {
-        $.post('/index.php/ccm/system/file/thumbnailer', function(result) {
-            if (result.built === true) {
-                if (result.path) {
-                    $('[src$="' + result.path + '"]').each(function() {
-                    	var me = $(this);
-                    	me.attr('src', me.attr('src'));
-					})
-                }
-                setTimeout(buildThumbnails, 50);
-            }
-        });
-    };
-
-
 	doRemoteSearchCall = function(query) {
 		query = jQuery.trim(query);
 		if (!query) {
@@ -314,7 +299,6 @@ var ConcreteToolbar = function() {
 				setupPageAlerts();
 				setupHelpNotifications();
                 setupMobileNav();
-				buildThumbnails();
 			}
 		},
 

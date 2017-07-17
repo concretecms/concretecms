@@ -782,6 +782,9 @@ return [
         'core/frontend/parallax-image' => [
             ['javascript', 'js/frontend/parallax-image.js', ['minify' => false]],
         ],
+        'core/frontend/thumbnail-builder' => [
+            ['javascript', 'js/frontend/thumbnail-builder.js'],
+        ],
         'core/imageeditor/control/position' => [
             ['css', 'css/image-editor/controls/position.css'],
             ['javascript', 'js/image-editor/controls/position.js'],
@@ -1050,6 +1053,12 @@ return [
                 ['javascript', 'jquery/awesome-rating'],
                 ['css', 'font-awesome'],
                 ['css', 'jquery/awesome-rating'],
+            ],
+        ],
+        'core/frontend/thumbnail-builder' => [
+            [
+                ['javascript', 'jquery'],
+                ['javascript', 'core/frontend/thumbnail-builder'],
             ],
         ],
         'core/style-customizer' => [

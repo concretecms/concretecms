@@ -91,8 +91,6 @@ class Thumbnailer extends \Concrete\Core\Controller\Controller
                 if ($fv->getTypeObject()->supportsThumbnails()) {
                     $fv->generateThumbnail($type);
                 }
-            } else {
-                dd('test');
             }
         } catch (\Exception $e) {
             // Catch any exceptions so we don't break the page and return false
