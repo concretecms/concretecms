@@ -390,6 +390,7 @@ return [
         '/ccm/system/file/upload' => ['\Concrete\Controller\Backend\File::upload'],
         '/ccm/system/file/folder/add' => ['\Concrete\Controller\Backend\File\Folder::add'],
         '/ccm/system/file/folder/contents' => ['\Concrete\Controller\Search\FileFolder::submit'],
+        '/ccm/system/file/thumbnailer' => ['\Concrete\Controller\Backend\File\Thumbnailer::generate'],
 
         /*
          * Users
@@ -1413,6 +1414,5 @@ return [
         ],
         'core_cookie' => \Concrete\Core\Http\Middleware\CookieMiddleware::class,
         'core_xframeoptions' => \Concrete\Core\Http\Middleware\FrameOptionsMiddleware::class,
-        'core_thumbnails' => \Concrete\Core\Http\Middleware\ThumbnailMiddleware::class,
     ],
 ];
