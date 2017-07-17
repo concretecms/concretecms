@@ -22,9 +22,6 @@ class BasicHistoryEntry extends HistoryEntry
                 $d = t('Denied by %s', $userName);
                 break;
         }
-        if ($this->getWorkflowStepComments()) {
-            $d .= t(' with the comments "%s"', $this->getWorkflowStepComments());
-        }
 
         return $d;
     }

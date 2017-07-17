@@ -70,4 +70,14 @@ abstract class Notification
 
     abstract public function getListView();
 
+    /**
+     * @return mixed
+     */
+    public function getAlerts()
+    {
+        return $this->alerts;
+    }
+
+
+
 }

@@ -64,13 +64,12 @@ class WorkflowProgressListView extends StandardListView
 
     public function getActionDescription()
     {
-        $description = $this->request->getWorkflowRequestDescriptionObject();
-        return $description->getDescription();
+        return $this->workflow->getWorkflowProgressCurrentDescription($this->progress);
     }
 
     public function getInitiatorComment()
     {
-        return $this->request->getRequesterComment();
+        return $this->workflow->getWorkflowProgressCurrentComment($this->progress);
     }
 
     protected function getRequestedByElement()
@@ -88,7 +87,11 @@ class WorkflowProgressListView extends StandardListView
         $menu = new WorkflowProgressListViewMenu();
         foreach($this->actions as $action) {
             if ($action->getWorkflowProgressActionURL() != '') {
-                $parameters = array_merge(array('class' => $action->getWorkflowProgressActionStyleClass()), $action->getWorkflowProgressActionExtraButtonParameters());
+                $class = '';
+                if (strpos($action->getWorkflowProgressActionStyleClass(), 'dialog-launch') > -1) {
+                    $class = 'dialog-launch';
+                }
+                $parameters = array_merge(array('class' => $class), $action->getWorkflowProgressActionExtraButtonParameters());
                 $item = new LinkItem(
                     $action->getWorkflowProgressActionURL() . '&source=dashboard',
                     $action->getWorkflowProgressActionLabel(),
