@@ -5,7 +5,7 @@ namespace Concrete\Core\Cache\Page;
 use Concrete\Core\Cache\FlushableInterface;
 use Concrete\Core\Http\Response;
 use Config;
-use Request;
+use Concrete\Core\Http\Request;
 use Concrete\Core\Page\Page as ConcretePage;
 use \Concrete\Core\Page\View\PageView;
 use Permissions;
@@ -46,6 +46,10 @@ abstract class PageCache implements FlushableInterface
 
     public function shouldCheckCache(Request $req)
     {
+        if ($req->isPost()) {
+            return false;
+        }
+        
         $app = \Core::make('app');
         $config = $app['config'];
         $cookie = $app['cookie'];
