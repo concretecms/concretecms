@@ -11,7 +11,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
         <fieldset>
             <?php if ($fieldSet->getTitle()) { ?>
-                <legend><?= $fieldSet->getTitle() ?></legend>
+                <legend><?= h($fieldSet->getTitle()) ?></legend>
             <?php } ?>
 
             <?php
