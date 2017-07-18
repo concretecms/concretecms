@@ -18,6 +18,7 @@ class PagerPagination extends Pagination
 
     public function __construct(PagerProviderInterface $itemList)
     {
+        $itemList = clone $itemList;
         $adapter = new PagerAdapter($itemList);
         $this->list = $itemList;
         $this->app = Facade::getFacadeApplication();
