@@ -59,7 +59,7 @@
 
 <script type="text/template" data-template="search-field-row">
     <div class="ccm-search-fields-row">
-        <select data-action="<?=$controller->action('add_field')?>" name="field[]" class="ccm-search-choose-field form-control">
+        <select data-action="<?=$controller->getAddFieldBaseURL()?>" name="field[]" class="ccm-search-choose-field form-control">
             <option value=""><?=t('** Select Field')?></option>
             <?php foreach($manager->getGroups() as $group) { ?>
                 <optgroup label="<?=$group->getName()?>">

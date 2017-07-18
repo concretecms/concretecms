@@ -23,6 +23,11 @@ abstract class AdvancedSearch extends BackendInterfaceController
 
     abstract public function getCurrentSearchBaseURL();
 
+    public function getAddFieldBaseURL()
+    {
+        return $this->action('add_field');
+    }
+
     /**
      * @return ProviderInterface
      */

@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Search\Field;
 
+use Concrete\Core\Attribute\SetManagerInterface;
+
 class Manager implements ManagerInterface
 {
     /**
@@ -95,5 +97,28 @@ class Manager implements ManagerInterface
         }
 
         return $fields;
+    }
+
+    protected function populateAttributeGroups(SetManagerInterface $setManager)
+    {
+        $attributeSets = $setManager->getAttributeSets();
+        $unassigned = $setManager->getUnassignedAttributeKeys();
+
+        $attributes = [];
+        foreach($attributeSets as $set) {
+            foreach($set->getAttributeKeys() as $key) {
+                $field = new AttributeKeyField($key);
+                $attributes[] = $field;
+            }
+            $this->addGroup($set->getAttributeSetDisplayName(), $attributes);
+        }
+
+        $attributes = [];
+        foreach($unassigned as $key) {
+            $field = new AttributeKeyField($key);
+            $attributes[] = $field;
+        }
+        $this->addGroup(t('Other Attributes'), $attributes);
+
     }
 }

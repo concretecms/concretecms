@@ -9,7 +9,7 @@
                    data-button-action-url="<?= URL::to('/ccm/system/search/express/clear') ?>"
                    data-button-action="clear-search"><?= t('Reset Search') ?></a>
                 <a class="ccm-header-launch-advanced-search"
-                   href="<?php echo URL::to('/ccm/system/dialogs/express/advanced_search', $entity->getID()) ?>"
+                   href="<?php echo URL::to('/ccm/system/dialogs/express/advanced_search')?>?exEntityID=<?=$entity->getID()?>"
                    data-launch-dialog="advanced-search"><?= t('Advanced') ?></a>
                 <input type="text" class="form-control" autocomplete="off" name="uKeywords"
                        placeholder="<?= t('Search') ?>">
