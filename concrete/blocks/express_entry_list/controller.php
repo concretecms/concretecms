@@ -79,6 +79,8 @@ class Controller extends BlockController
                 }
 
                 $element = new CustomizeResults($provider);
+                $element->setIncludeNumberOfResults(false);
+
                 $this->set('customizeElement', $element);
                 $this->set('linkedPropertiesSelected', $linkedPropertiesSelected);
                 $this->set('searchPropertiesSelected', $searchPropertiesSelected);
@@ -227,6 +229,7 @@ class Controller extends BlockController
             if (is_object($entity)) {
                 $provider = \Core::make('Concrete\Core\Express\Search\SearchProvider', array($entity, $entity->getAttributeKeyCategory()));
                 $element = new CustomizeResults($provider);
+                $element->setIncludeNumberOfResults(false);
                 $r = new \stdClass;
                 ob_start();
                 $element->getViewObject()->render();

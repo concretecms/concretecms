@@ -110,6 +110,8 @@ if (!isset($type)) {
 
     </fieldset>
 
+    <?php if ($includeNumberOfResults) { ?>
+
     <fieldset>
         <legend><?= t('Number of Results') ?></legend>
         <select class="form-control" name="fSearchItemsPerPage">
@@ -124,6 +126,8 @@ if (!isset($type)) {
             ?>
         </select>
     </fieldset>
+
+    <?php } ?>
 
 </section>
 
