@@ -24,7 +24,7 @@
     $button = t('Add');
     if (is_object($feed)) {
         $pfTitle = $feed->getTitle();
-        $pfDescription = $feed->getDescription();
+        $pfDescription = h($feed->getDescription());
         $pfHandle = $feed->getHandle();
         $cParentID = $feed->getParentID();
         $ptID = $feed->getPageTypeID();
