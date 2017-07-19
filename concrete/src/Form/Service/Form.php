@@ -203,7 +203,7 @@ class Form
              $value = $requestValue;
          }
 
-         return '<textarea id="' . $key . '" name="' . $key . '"' . $this->parseMiscFields('form-control', $miscFields) . '>' . $value . '</textarea>';
+         return '<textarea id="' . $key . '" name="' . $key . '"' . $this->parseMiscFields('form-control', $miscFields) . '>' . h($value) . '</textarea>';
      }
 
     /**
