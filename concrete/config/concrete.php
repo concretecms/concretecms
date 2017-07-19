@@ -449,6 +449,10 @@ return [
          * The default thumbnail format: jpeg, png, auto (if auto: we'll create a jpeg if the source image is jpeg, we'll create a png otherwise).
          */
         'default_thumbnail_format' => 'auto',
+        /**
+         * @var string (now|async)
+         */
+        'basic_thumbnailer_generation_strategy' => 'now',
         'help_overlay' => true,
         'require_version_comments' => false,
     ],

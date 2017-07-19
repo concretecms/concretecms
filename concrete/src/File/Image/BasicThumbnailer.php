@@ -220,11 +220,89 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @see ThumbnailerInterface::getThumbnail()
+     * Checks filesystem for thumbnail and if file doesn't exist will create it immediately.
+     * concrete5's default behavior from the beginning up to 8.1.
+     * @deprecated
+     * @param $obj
+     * @param $maxWidth
+     * @param $maxHeight
+     * @param bool $crop
+     * @return \stdClass
      */
-    public function getThumbnail($obj, $maxWidth, $maxHeight, $crop = false)
+    private function checkForThumbnailAndCreateIfNecessary($obj, $maxWidth, $maxHeight, $crop = false)
+    {
+        $storage = $obj->getFileStorageLocationObject();
+        $this->setStorageLocation($storage);
+        $filesystem = $storage->getFileSystemObject();
+        $configuration = $storage->getConfigurationObject();
+        $version = null;
+
+        $fh = \Core::make('helper/file');
+        if ($obj instanceof File) {
+            try {
+                $fr = $obj->getFileResource();
+                $fID = $obj->getFileID();
+                $filename = md5(implode(':', array($fID, $maxWidth, $maxHeight, $crop, $fr->getTimestamp())))
+                    . '.' . $fh->getExtension($fr->getPath());
+            } catch (\Exception $e) {
+                $filename = '';
+            }
+        } else {
+            $filename = md5(implode(':', array($obj, $maxWidth, $maxHeight, $crop, filemtime($obj))))
+                . '.' . $fh->getExtension($obj);
+        }
+
+        $abspath = '/cache/' . $filename;
+
+        $src = $configuration->getPublicURLToFile($abspath);
+
+        /** Attempt to create the image */
+        if (!$filesystem->has($abspath)) {
+            if ($obj instanceof File && $fr->exists()) {
+                $image = \Image::load($fr->read());
+            } else {
+                $image = \Image::open($obj);
+            }
+            // create image there
+            $this->create($image,
+                $abspath,
+                $maxWidth,
+                $maxHeight,
+                $crop);
+        }
+
+        $thumb = new \stdClass();
+        $thumb->src = $src;
+
+        // this is a hack, but we shouldn't go out on the network if we don't have to. We should probably
+        // add a method to the configuration to handle this. The file storage locations should be able to handle
+        // thumbnails.
+        if ($configuration instanceof DefaultConfiguration) {
+            $dimensionsPath = $configuration->getRootPath() . $abspath;
+        } else {
+            $dimensionsPath = $src;
+        }
+
+        try {
+            //try and get it locally, otherwise use http
+            $dimensions = getimagesize($dimensionsPath);
+            $thumb->width = $dimensions[0];
+            $thumb->height = $dimensions[1];
+        } catch (\Exception $e) {
+
+        }
+
+        return $thumb;
+    }
+
+    /**
+     * Checks thumbnail resolver for filename, schedule for creation via ajax if necessary.
+     * @param $obj
+     * @param $maxWidth
+     * @param $maxHeight
+     * @param bool $crop
+     */
+    private function returnThumbnailObjectFromResolver($obj, $maxWidth, $maxHeight, $crop = false)
     {
         if ($obj instanceof File) {
             $storage = $obj->getFileStorageLocationObject();
@@ -335,6 +413,21 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
         $thumb->height = ($dimensions === false) ?: $dimensions[1];
 
         return $thumb;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see ThumbnailerInterface::getThumbnail()
+     */
+    public function getThumbnail($obj, $maxWidth, $maxHeight, $crop = false)
+    {
+        $config = $this->app->make('config');
+        if ($config->get('concrete.misc.basic_thumbnailer_generation_strategy') == 'async') {
+            return $this->returnThumbnailObjectFromResolver($obj, $maxHeight, $maxHeight, $crop);
+        } else {
+            return $this->checkForThumbnailAndCreateIfNecessary($obj, $maxWidth, $maxHeight, $crop);
+        }
     }
 
     /**
