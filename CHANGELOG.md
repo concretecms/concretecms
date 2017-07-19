@@ -1,3 +1,205 @@
+# 8.2.0
+
+## New Features
+ 
+* Major improvements to language support, including the ability to dynamically download translation languages during installation or at any point afterward (thanks mlocati, Remo, ahukkanen)
+* Thumbnail options Dashboard Page: specify whether to keep thumbnails in the PNG format if they are PNG files; provide ability to use Imagick for thumbnailing; better thumbnail functionality behind the scenes (thanks mlocati)
+* Added a crop option to custom file manager thumbnail types: now you can specific a width and a height, but still resize items proportionally (thanks mnakalay)
+* Added new options to the Date/Time attribute for configuring whether the attribute defaults to the current time, specifying time intervals and more (thanks mlocati)
+* Much improved date/time support under the hood (thanks mlocati)
+* Autorotate image on upload based on Exif Metadata if concrete.file\_manager.images.use\_exif_data\_to\_rotate\_images is set to true (thanks HamedDarragi)
+* File, user and page searches now have the ability to set the number of results in the Advanced Search dialog.
+* Multilingual sites now can use a dual sitemap to copy pages from one language tree to another.
+* Completely reworked and updated IP banning functionality, including bug fixes, formatting and display improvements, and support for IPv6 addresses (thanks mlocati)
+* You can now move files (singular and in bulk) to folders using an overlay window rather than just clicking and dragging (thanks mnakalay)
+* Add possibility to see unvalidated users in the user search (thanks simoroshka)
+* Added ability to jump to a particular folder in the file manager.
+* Improvements to user workflows, including the showing of workflow notifications in the Users section of the Dashboard, and user activation workflow (thanks ahukkanen)
+* Users can now be exported as CSV once again.
+* Report entries can be exported as a CSV list.
+* All Express entities can have their entries exported to CSV lists.
+* Added the ability to manually resend validation email to unalidated users (thanks 	simoroshka)
+* Allow selection of default folder for uploads when using form block
+* Added the ability to specify a custom DOM element ID in the custom style panel (thanks MrKarlDilkington)
+* Quick search results are now displayed in the proper locale for the logged-in user (thanks simoroshka)
+* Added the ability to specify whether a topic attribute should allow multiple topics to be selected or just one (thanks hissy)
+* Added more size options to the Video Player block (thanks MrKarlDilkington)
+* Added SVG support to the Image block (Thanks MrKarlDilkington)
+* Added Link to File option to the Image Block (thanks MrKarlDilkington)
+ 
+## Behavioral Improvements
+ 
+* Much improved performance in list views (including the file manager) on large sites.
+* Style improvements to Survey Block edit Dialog (thanks MrKarlDilkington)
+* Style improvements to Surveys Dashboard page (thanks MrKarldilkington)
+* Improved localization support when running concrete5 in multiple languages with editors in multiple languages (thanks mlocati)
+* Improved block edit dialogs (thanks MrKarlDilkington)
+* concrete5 can now load languages without a locale (thanks mlocati)
+* Swapped out specific curl calls to a new generic HTTP Client library (thanks mlocati)
+* Style improvements to miscellaneous settings Dashboard pages (thanks MrKarlDilkington)
+* Added “Sitemap Reverse Order” back to AutoNav block settings.
+* Style improvements to editable attributes (thanks MrKarlDilkington)
+* When adding multiple folders to file manager the value is cleared and the input element gets focus (thanks xtephan)
+* User-focused pages like account, Dashboard pages should use the user’s language if it’s specified (thanks mlocati)
+* Improvements to authentication in profile when using the community authentication type (thanks mlocati)
+* User attributes are now displayed in set order and in the proper set in multiple places (thanks simoroshka)
+Added support for association labels to populate the mask replacement string (thanks aghouseh)
+* File deletion is now wrapped in a transaction for better error protection (thanks Mnkras)
+* Searchable attributes are displayed in their sets and in set order in the advanced search dialog (thanks AnnaKruglaia)
+* Added user specific translations to workflow emails (thanks deek87)
+* Make saving associations work when handles are not unique
+* Remember dashboard scroll position when navigating the dashboard (thanks mlocati)
+* We now Load site interface translation by default (if it exists) (thanks hissy)
+* Fixed localized date formatting issues in certain cases (thanks ahukkanen)
+* Theme::getThemeEditorClasses now supports all the options defined here: http://docs.ckeditor.com/#!/guide/dev_styles (thanks hissy)
+* Fixed broken Express Entry Details block.
+* Improved memory usage when rescanning/importing multiple files (thanks hissy)
+* Fixed: We don't delete search index table after deleting an Express object (thanks Mnkras)
+* Fixed Sitemap flat view problems with multilingual sites
+* Improved display of Facebook authentication type form (thanks mlocati)
+* The underlying file manager storage location API is now cached (thanks mnkras)
+* Miscellaneous formatting improvements (thanks MrKarlDilkington)
+* Tags block - add class to selected tag on tag filtered pages (thanks MrKarlDilkington)
+* Share This Page block - open links in new window (thanks MrKarlDilkington)
+* Fix SVG thumbnails and "Invalid file dimensions, please rescan this file." error (thanks MrKarlDilkington)
+* Improved performance loading translations via javascript (thanks mlocati)
+* Fix: In case users registered with OAuth, we don't have a way to set the default attribute values (thanks mlocati)
+* Fixed error when exporting objects that had a date/time attribute value set.
+* Improved design of private messages account page (thanks mlocati)
+* Page Search: include system pages when parent id is also a system page (thanks hissy)
+* You can now send multiple emails per connection to the SMTP server (thanks mlocati)
+* Made it so you can’t drag the guest, registered users or administrators groups in the Dashboard (thanks mlocati)
+* Switch Language block now works with single pages (thanks Remo and mlocati)
+* Conversation block form - display the Custom Date Format input conditionally (thanks MrKarlDilkington)
+* Evenly space the time picker separator (thanks MrKarlDilkington)
+* Better styles for permission details list items and checkboxes (thanks MrKarlDilkington)
+* If a canonical URL and redirect to canonical URL is set and full page caching is enabled, pages will still be redirected to the canonical URL (which used to not be the case.)
+* Authentication types are now translateable (thanks mlocati)
+* SEO improvements to the Switch Language block (thanks mlocati)
+* Fix Fix - Cancel button event, for who doesn't have public profile (thanks biplobice)
+* Fixed http://www.concrete5.org/developers/bugs/8-1-0/upgrade-from-5.7.5.13-to.-8.1-error/ (thanks mlocati)
+* Full page caching will now be bypassed on POST requests.
+ 
+## Bug Fixes
+ 
+* Fixed bug where creating a multilingual section made it inaccessible until permissions were manually applied to it.
+* Fixed bug where page list only returned pages in the default locale on a multilingual site.
+* Fix an issue where concrete.permissions.forward_to_login didn't work (thanks mnkras)
+* Fixed package translations not loading in some cases (thanks mlocati)
+* Fixed bug where registration approval appeared to be stuck on approve if you ever made it manual and then made it automatic. 
+* Fixed Bug: Calendar pop-up of date attribute edit window of file manager goes behind (thanks mlocati)
+* Fixed problems with global password reset (thanks Mnkras)
+* Fixed bug where users, pages and file searches wouldn’t preserve search as the user paged through the results (thanks AnnaKruglaia)
+* Fixed bugs with hierarchical groups and checking whether users were in a group, getting group members, checking permissions, etc…
+* Minor display fixes in stacks interface.
+* Tons of minor aesthetic and style improvements (thanks MrKarlDilkington)
+* Bug fixes with white labelling background URL (thanks SnefIT )
+* Fixed Copied Blocks Do Not Recognize Custom Page Theme Classes
+* Fixed bug when editing file attributes after upload or in bulk (thanks mlocati)
+* Fix unable to search pages from sitemap (thanks hissy)
+* Fix https://www.concrete5.org/developers/bugs/8-1-0/form-reply-to-not-working (thanks craveitla)
+* Fix wrong message when the session invalidated (thanks hissy)
+* Fixed Youtube block not respecting the related video setting (thanks nmakalay)
+* Fixed https://github.com/concrete5/concrete5/issues/5366
+* Better support for composer editable home pages
+* Fixed error that ocurred when editing page properties if the user didn’t have access to user search
+* Fixed inability to upload files with a multibyte filename through the dropzone area of the file manager (thanks hissy)
+* Fix the URL of the "Reply to private message" page (thanks mlocati)
+* Bug fixes with page templates included in packages (thanks apaccou)
+* Fixes for minor output sanitizing reports from hackerone (thanks Mnkras)
+* SEO panel counter display fix (thanks MrKarlDilkington)
+* Fixed https://www.concrete5.org/developers/bugs/8-1-0/translation-file-missing-concretejsi18nui.datepicker-pt.js/ (thanks mlocati)
+* Prevent errors when SVG images are used with the Image block (thanks MrKarlDilkington)
+* Fixed Format of Date Properties in Page Attribute Display Block not working (thanks magnolia4 and jonkratz)
+* Fixed: Unable to use Group Combination Permission Entity to workflows
+* Fixed https://www.concrete5.org/developers/bugs/8-1-0/js-bug-empty-sidebar-after-customizing-theme/ (thanks bitterdev)
+* Increase regex performance in in HTML block controller method xml\_highlight (thanks mattrice)
+* Bug fixes with saved file search (thanks mlocati)
+* Fix: deleting CONCRETE5\_LOGIN cookie on sign out not works (thanks hissy)
+* Pagination in "core\_conversation" block does not include the selected sorting, he use default sort always.
+* Fix Drag'n'drop message is not clickable in File upload popup
+* Fixed bug where you couldn’t remove files when they were attached to express entities (thanks Mnkras)
+* Fixed https://www.concrete5.org/developers/bugs/8-1-0/urls-and-redirection-and-apache-2.4.10/ (thanks mlocati)
+* Fix Multilingual: Browser language detection doesn't work (thanks mlocati)
+* Fixing bug with the in-page sitemap selector form helper (should fix issues with selecting pages under certain composer situations, third party add-ons.)
+* Fix search users by group set (thanks mlocati)
+* Fixed 404 when adding an additional page path with a trailing slash
+* Fix bug causing selected topics to be removed on subsequent edit (thanks xtephan)
+* Fixed misnamed Image/File attribute type options form (thanks biplobice)
+* Fixed Cannot change "Assign Permission" in Full Sitemap page more than twice (thanks deek87)
+* Fixed Express: Foreign key constraint validation issue when trying to remove entry
+* Resolved https://hackerone.com/reports/238271 (thanks Mnkras)
+* Fixed occasional dashboard panel stickiness problem when accidentally closing and then opening the dashboard panel (thanks mlocati)
+* Random passwords generated when passwords are reset are more secure (thanks Mnkras and hackerone user ‘plazmaz’)
+* Fixes to URLs and Redirection - warning and placeholder (thanks MrKarlDilkington)
+* Fix https://www.concrete5.org/developers/bugs/8-1-0/feature-block-ckeditor-source-view-empty-if-no-resized (thanks mlocati)
+* Fixed Custom sorting isn't being honored in Express Entry Detail Block
+* Bug fixes in Express field set builder API (thanks apaccou)
+* Logs - add icon to critical and alert levels (thanks MrKarlDilkington)
+* Showing the file title instead of original file name in file folder display
+* Fixed some incorrectly set cookies when concrete5 was installed in a subdirectory (thanks Mesuva)
+* Fixed https://www.concrete5.org/community/forums/installation/install-error-call-to-undefined-function-doctrinecommonannotatio/ 
+* Fixed bug in Date/Time attribute when used with the calendar add-on.
+* Fixed https://www.concrete5.org/developers/bugs/5-7-5-8/changing-tags-settings-results-in-deleted-tags (thanks mlocati)
+* Fixed https://github.com/concrete5/concrete5/issues/5515
+* Added some missed t-functions (thanks concrete5russia)
+* Fixed Currently, the "date" widget isn't initialized with the current value: its initial value is always "today” (thanks mlocati, manielsen2002)
+* Fixed basic thumbnailer/image block dying when attempting to thumbnail a file that isn’t an image.
+* Fixed Express form number attribute does not accept floats in Chrome and other browsers
+* Fix default site installed with wrong plural form (thanks hissy)
+* Fixed Can't copy&paste advanced permissions to page type (thanks bafrank)
+* Fixed problems installing concrete5 in certain languages other than English (thanks mlocati, hissy)
+* Fixed error copying and pasting express form 
+* Fixed Advanced users search on Express field throws error due to missing method in Express attribute controller (thanks matthabermehl)
+* Fixed Update dashboard/users/points/assign.php: The controllers save() method calls an non existent UserInfo method: getByUserID() (thanks danielgasser)
+* Fixed Can't delete page attributes in French (thanks mlocati)
+* Fixed inability to assign attribute sets to legacy attribute categories (like Calendar add-on).
+* Fix unable to edit express entity handle (thanks hissy)
+* Fix import of groups without path when using the content importer format (thanks mlocati)
+* Fixed inability to fully delete global areas
+* Fix unable to use mobile theme (thanks hissy)
+* Fix bug when using custom antispam library (thanks Remo)
+* Improvements to custom templates when using the Page Attribute Display block (thanks manielsen2002)
+* Fixed http://www.concrete5.org/developers/bugs/8-1-0/permission-settings-missing-for-global-areas/ 
+* Will no longer try to generate thumbnails based on SVG uploads (thanks MrKarlDilkington)
+* Dashboard page consistency/ordering improvements (thanks mlocati)
+* Better error handling when thumbnails fail to be written (thanks Mnkras)
+* Fixed https://github.com/concrete5/concrete5/issues/5615
+* Fixed Recommended FIX for Windows 10 and 2008+ install error due to IPv6 and inet_pton() bug (thanks mlocati)
+* Fixed: When I'm trying to access Design & Types for pages like login or register, it generates an error (thanks biplobice)
+* Fixed potential XSS error in conversation editor editing (H1 248523)  (thanks bl4de)
+* Fixed potential XSS error in private message reply (H1 247517)  (thanks bl4de)
+* Fixed for H1 247521 (thanks bl4de)
+* Fix for H1 report 248506 (thanks bl4de)
+* Fix for H1 report 248504 (thanks bl4de)
+* Fix for H1 report 248133 (thanks bl4de)
+
+## Developer Updates
+ 
+* Font Awesome has been upgraded to 4.7 (thanks mlocati)
+* Numerous third party components updated to newer minor versions.
+* Upgrade Punic to 1.6.5 (fixes installation in some cases) (thanks mlocati)
+* Added on_ip_ban event with custom event object (thanks mlocati)
+* Miscellaneous code cleanup (thanks mlocati, hissy)
+* Added new abilities to require and obtain an SSL URL (thanks mlocati)
+* Form Validation Service: add field name to errors (thanks hissy)
+* Improvements to the autolink text method (thanks mlocati)
+* Added -env option to multiple console commands (thanks mlocati)
+* Fix detecting if a page is in dashboard #5208 (thanks mlocati)
+* Improvements to the Number Validation Helper (thanks mlocati)
+* Added IPLib, a library to handle IP addresses and ranges (thanks mlocati)
+* Added addRawAttachment to email helper (thanks mlocati)
+* Updated dropzone.js (thanks hissy)
+ 
+## Backward Compatibility Notes
+ 
+* +* Added protected properties to class `Concrete\Core\Application\UserInterface\Menu\Item\Item` in order to avoid accessing undefined properties and optimize memory usage (See: https://github.com/concrete5/concrete5/issues/5307)
+* If you have done any Express Form customizations for custom rendering, you will need to update your customizations – there is a new way of performing these customizations that gives greater flexibility and reduces the need for custom templates and spaghetti code. Please check out the Express Form Documentation: [Express Form Theming](https://documentation.concrete5.org/developers/express/express-forms-controllers/form-theming/overview)
+* If you have a custom form template for the “express_form” block, you will have to remove the line that looks similar to this at the top of the view template:
+    $renderer = Core::make('Concrete\Core\Express\Form\StandardFormRenderer', ['form' => $expressForm]);
+* IMPORTANT: If you use the “Manual Approve” method of handling user activations, this option has changed to use User workflows. Add a workflow to the “Activate User” permission to the “Dashboard > System > Permissions > Users” page. This will force users to go through workflow prior to them being approved after registration. **Registration has been disabled on your site!** Once you’ve setup workflow, re-enable user registration from the Dashboard.
+
+
 # 8.1.0
 
 ## New Features
