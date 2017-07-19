@@ -97,7 +97,7 @@
             <?php foreach($entities as $entity) { ?>
                 <optgroup label="<?=t('Entity: %s', $entity->getName())?>">
                     <?php foreach($entity->getForms() as $entityForm) { ?>
-                        <option value="<?=$entityForm->getID()?>" <?php if ($entityForm->getID() == $exFormID) { ?>selected<?php } ?>><?=$entityForm->getName()?></option>
+                        <option value="<?=$entityForm->getID()?>" <?php if ($entityForm->getID() == $exFormID) { ?>selected<?php } ?>><?=h($entityForm->getName())?></option>
                     <?php } ?>
                 </optgroup>
             <?php } ?>
