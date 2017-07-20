@@ -424,7 +424,7 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
     {
         $config = $this->app->make('config');
         if ($config->get('concrete.misc.basic_thumbnailer_generation_strategy') == 'async') {
-            return $this->returnThumbnailObjectFromResolver($obj, $maxHeight, $maxHeight, $crop);
+            return $this->returnThumbnailObjectFromResolver($obj, $maxWidth, $maxHeight, $crop);
         } else {
             return $this->checkForThumbnailAndCreateIfNecessary($obj, $maxWidth, $maxHeight, $crop);
         }
