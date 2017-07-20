@@ -49,6 +49,15 @@ class History extends Object
         }
     }
 
+    public static function getLatest(Progress $wp)
+    {
+        $db = Loader::db();
+        $wphID = $db->GetOne('select wphID from WorkflowProgressHistory where wpID = ? order by timestamp desc', [$wp->getWorkflowProgressID()]);
+        if ($wphID) {
+            return $wp->getWorkflowProgressHistoryObjectByID($wphID);
+        }
+    }
+
     public static function getList(Progress $wp)
     {
         $db = Loader::db();

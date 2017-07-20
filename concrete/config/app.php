@@ -393,6 +393,7 @@ return [
         '/ccm/system/file/upload' => ['\Concrete\Controller\Backend\File::upload'],
         '/ccm/system/file/folder/add' => ['\Concrete\Controller\Backend\File\Folder::add'],
         '/ccm/system/file/folder/contents' => ['\Concrete\Controller\Search\FileFolder::submit'],
+        '/ccm/system/file/thumbnailer' => ['\Concrete\Controller\Backend\File\Thumbnailer::generate'],
 
         /*
          * Users
@@ -788,6 +789,9 @@ return [
         'core/frontend/parallax-image' => [
             ['javascript', 'js/frontend/parallax-image.js', ['minify' => false]],
         ],
+        'core/frontend/thumbnail-builder' => [
+            ['javascript', 'js/frontend/thumbnail-builder.js'],
+        ],
         'core/imageeditor/control/position' => [
             ['css', 'css/image-editor/controls/position.css'],
             ['javascript', 'js/image-editor/controls/position.js'],
@@ -1056,6 +1060,12 @@ return [
                 ['javascript', 'jquery/awesome-rating'],
                 ['css', 'font-awesome'],
                 ['css', 'jquery/awesome-rating'],
+            ],
+        ],
+        'core/frontend/thumbnail-builder' => [
+            [
+                ['javascript', 'jquery'],
+                ['javascript', 'core/frontend/thumbnail-builder'],
             ],
         ],
         'core/style-customizer' => [
@@ -1420,6 +1430,6 @@ return [
         ],
         'core_cookie' => \Concrete\Core\Http\Middleware\CookieMiddleware::class,
         'core_xframeoptions' => \Concrete\Core\Http\Middleware\FrameOptionsMiddleware::class,
-        'core_thumbnails' => \Concrete\Core\Http\Middleware\ThumbnailMiddleware::class,
+        'core_thumbnails' => '\Concrete\Core\Http\Middleware\ThumbnailMiddleware'
     ],
 ];

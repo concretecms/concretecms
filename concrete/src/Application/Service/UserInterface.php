@@ -3,6 +3,8 @@ namespace Concrete\Core\Application\Service;
 
 use Concrete\Core\Asset\JavascriptInlineAsset;
 use Concrete\Core\Http\ResponseAssetGroup;
+use HtmlObject\Element;
+use HtmlObject\Traits\Tag;
 use PermissionKey;
 use User as ConcreteUser;
 use Loader;
@@ -397,16 +399,19 @@ class UserInterface
         if (count($arguments['buttons']) > 0) {
 
             $text .= '<div class="ccm-notification-inner-buttons">';
-            if (count($arguments['buttons']) > 1) {
-                $text .= '<div class="btn-group">';
+            if (count($arguments['buttons']) == 1) {
+                $singleButton = $arguments['buttons'][0];
+                if ($singleButton instanceof Tag) {
+                    $singleButton->addClass('btn btn-xs btn-default');
+                }
+                $text .= '<div>' . $singleButton . '</div>';
+            } else {
+                $text .= '<div class="btn-group"><button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action <span class="caret"></span></button><ul class="dropdown-menu">';
+                foreach($arguments['buttons'] as $button) {
+                    $text .= '<li>' . $button . '</li>';
+                }
+                $text .= '</ul></div>';
             }
-            foreach ($arguments['buttons'] as $button) {
-                $text .= $button;
-            }
-            if (count($arguments['buttons']) > 1) {
-                $text .= '</div>';
-            }
-
             $text .= '</div>';
         }
 

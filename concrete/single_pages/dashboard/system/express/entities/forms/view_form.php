@@ -40,7 +40,7 @@
 
 </div>
 
-<p class="lead"><?php echo $expressForm->getName(); ?></p>
+<p class="lead"><?php echo h($expressForm->getName()); ?></p>
 
 <?php if (count($fieldSets)) {
     ?>

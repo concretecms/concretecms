@@ -340,7 +340,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
                 }
             }
         }
-        $return .= tc('GroupName', $this->getGroupName());
+        $return .= h(tc('GroupName', $this->getGroupName()));
 
         return $return;
     }

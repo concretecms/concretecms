@@ -35,6 +35,14 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
         return false;
     }
 
+    public function getWorkflowProgressCurrentComment(WorkflowProgress $wp)
+    {
+        $req = $wp->getWorkflowRequestObject();
+        if ($req) {
+            return $req->getRequesterComment();
+        }
+    }
+
     public function getPermissionAssignmentClassName()
     {
         return '\\Concrete\\Core\\Permission\\Assignment\\BasicWorkflowAssignment';

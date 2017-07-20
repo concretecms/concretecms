@@ -4368,6 +4368,8 @@
     <field name="isBuilt" type="boolean">
       <notnull/>
     </field>
+    <field name="lockID" type="string" size="255"/>
+    <field name="lockExpires" type="datetime"/>
 
     <index name="thumbnailPathID">
       <unique/>

@@ -25,6 +25,11 @@ class EmptyWorkflow extends ConcreteWorkflow
         return array();
     }
 
+    public function getWorkflowProgressCurrentComment(WorkflowProgress $wp)
+    {
+        return false;
+    }
+
     public function updateDetails($vars)
     {
     }
