@@ -1,17 +1,17 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <div class="ccm-header-search-form ccm-ui" data-header="express-search">
-    <form method="get" action="<?php echo URL::to('/ccm/system/search/express/basic', $entity->getID()) ?>">
+    <form method="get" action="<?php echo URL::to('/ccm/system/search/express/basic')?>?exEntityID=<?=$entity->getID()?>">
         <div class="input-group">
 
             <div class="ccm-header-search-form-input">
                 <a class="ccm-header-reset-search" href="#"
-                   data-button-action-url="<?= URL::to('/ccm/system/search/express/clear') ?>"
+                   data-button-action-url="<?= URL::to('/ccm/system/search/express/clear') ?>?exEntityID=<?=$entity->getID()?>"
                    data-button-action="clear-search"><?= t('Reset Search') ?></a>
                 <a class="ccm-header-launch-advanced-search"
                    href="<?php echo URL::to('/ccm/system/dialogs/express/advanced_search')?>?exEntityID=<?=$entity->getID()?>"
                    data-launch-dialog="advanced-search"><?= t('Advanced') ?></a>
-                <input type="text" class="form-control" autocomplete="off" name="uKeywords"
+                <input type="text" class="form-control" autocomplete="off" name="eKeywords"
                        placeholder="<?= t('Search') ?>">
             </div>
 

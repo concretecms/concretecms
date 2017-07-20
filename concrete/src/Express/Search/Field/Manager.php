@@ -38,6 +38,15 @@ class Manager extends FieldManager
         return parent::getFieldByKey($key);
     }
 
+    public function getFieldsFromRequest(array $request)
+    {
+        if (!$this->loaded) {
+            $this->populateGroups();
+            $this->loaded = true;
+        }
+        return parent::getFieldsFromRequest($request);
+    }
+
     protected function populateGroups()
     {
         $this->addGroup(t('Core Properties'), [

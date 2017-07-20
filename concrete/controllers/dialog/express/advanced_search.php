@@ -5,6 +5,7 @@ use Concrete\Controller\Dialog\Search\AdvancedSearch as AdvancedSearchController
 use Concrete\Core\Attribute\Category\ExpressCategory;
 use Concrete\Core\Entity\Search\SavedSearch;
 use Concrete\Core\Express\Search\Field\Manager;
+use Concrete\Core\Express\Search\SearchProvider;
 use Concrete\Core\Search\Field\ManagerFactory;
 use Doctrine\ORM\EntityManager;
 use League\Url\Url;
@@ -24,10 +25,11 @@ class AdvancedSearch extends AdvancedSearchController
 
     protected function loadEntity()
     {
-        $entity = \Express::getObjectByID($this->request->query->get('exEntityID'));
-        $this->entity = $entity;
+        if (!isset($this->entity)) {
+            $entity = \Express::getObjectByID($this->request->query->get('exEntityID'));
+            $this->entity = $entity;
+        }
     }
-
 
     protected function canAccess()
     {
@@ -36,18 +38,26 @@ class AdvancedSearch extends AdvancedSearchController
         return $ep->canViewExpressEntries();
     }
 
+    protected function getExpressCategory()
+    {
+        return new ExpressCategory($this->entity, $this->app, $this->app->make(EntityManager::class));
+    }
+
     public function getSearchProvider()
     {
-        return $this->app->make('Concrete\Core\User\Search\SearchProvider');
+        $this->loadEntity();
+        $provider = new SearchProvider($this->entity, $this->getExpressCategory(), $this->app->make('session'));
+        return $provider;
     }
 
     public function getFieldManager()
     {
+        $this->loadEntity();
         $manager = ManagerFactory::get('express');
         /**
          * @var $manager Manager
          */
-        $manager->setExpressCategory(new ExpressCategory($this->entity, $this->app, $this->app->make(EntityManager::class)));
+        $manager->setExpressCategory($this->getExpressCategory());
         return $manager;
     }
 
@@ -58,19 +68,32 @@ class AdvancedSearch extends AdvancedSearchController
 
     public function getCurrentSearchBaseURL()
     {
-        return \URL::to('/ccm/system/search/express/current', $this->entity->getID());
+        $url = \URL::to('/ccm/system/search/express/current');
+        $url->getQuery()->modify(['exEntityID' => $this->entity->getID()]);
+        return (string) $url;
     }
 
     public function getBasicSearchBaseURL()
     {
-        return \URL::to('/ccm/system/search/users/basic', $this->entity->getID());
+        $url = \URL::to('/ccm/system/search/express/basic');
+        $url->getQuery()->modify(['exEntityID' => $this->entity->getID()]);
+        return (string) $url;
     }
 
-    public function getAddFieldBaseURL()
+    public function getAddFieldAction()
     {
         $action = $this->action('add_field');
         $url = Url::createFromUrl($action);
-        $url->getQuery()->set(['exEntityID' => $this->entity->getID()]);
+        $url->getQuery()->modify(['exEntityID' => $this->entity->getID()]);
         return (string) $url;
     }
+
+    public function getSubmitAction()
+    {
+        $action = $this->action('submit');
+        $url = Url::createFromUrl($action);
+        $url->getQuery()->modify(['exEntityID' => $this->entity->getID()]);
+        return (string) $url;
+    }
+
 }
