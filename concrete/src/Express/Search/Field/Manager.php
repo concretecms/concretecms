@@ -9,13 +9,14 @@ use Concrete\Core\Search\Field\Manager as FieldManager;
 
 class Manager extends FieldManager
 {
+    /**
+     * @var ExpressCategory
+     */
     protected $expressCategory;
+
     protected $loaded = false;
 
-    /**
-     * @param mixed $expressCategory
-     */
-    public function setExpressCategory($expressCategory)
+    public function setExpressCategory(ExpressCategory $expressCategory)
     {
         $this->expressCategory = $expressCategory;
     }
@@ -52,6 +53,15 @@ class Manager extends FieldManager
         $this->addGroup(t('Core Properties'), [
             new KeywordsField()
         ]);
+
+        $associations = $this->expressCategory->getExpressEntity()->getAssociations();
+        if (count($associations)) {
+            $group = [];
+            foreach($associations as $association) {
+                $group[] = new AssociationField($association);
+            }
+            $this->addGroup(t('Associations'), $group);
+        }
 
         $setManager = $this->expressCategory->getSetManager();
         $this->populateAttributeGroups($setManager);
