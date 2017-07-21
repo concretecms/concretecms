@@ -89,6 +89,13 @@ class ObjectManager
         }
     }
 
+    public function getObjectByID($entityID)
+    {
+        return $this->entityManager
+            ->getRepository('Concrete\Core\Entity\Express\Entity')
+            ->findOneById($entityID);
+    }
+
     public function getObjectByHandle($entityHandle)
     {
         return $this->entityManager
