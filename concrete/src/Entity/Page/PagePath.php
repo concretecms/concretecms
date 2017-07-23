@@ -50,7 +50,7 @@ class PagePath
 
     public function getPagePath()
     {
-        return preg_replace("/['\"\(\)\{\}\s]/", '', $this->cPath);
+        return $this->cPath;
     }
 
     public function setPagePath($path)
