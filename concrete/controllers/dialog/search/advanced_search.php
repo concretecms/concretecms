@@ -23,6 +23,17 @@ abstract class AdvancedSearch extends BackendInterfaceController
 
     abstract public function getCurrentSearchBaseURL();
 
+    public function getAddFieldAction()
+    {
+        return $this->action('add_field');
+    }
+
+    public function getSubmitAction()
+    {
+        return $this->action('submit');
+    }
+
+
     /**
      * @return ProviderInterface
      */
@@ -53,6 +64,9 @@ abstract class AdvancedSearch extends BackendInterfaceController
 
     public function view()
     {
+
+        $this->requireAsset('selectize');
+        
         $manager = $this->getFieldManager();
         $provider = $this->getSearchProvider();
         $query = $this->getSearchQuery();

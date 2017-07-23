@@ -24,6 +24,13 @@ class Controller extends AttributeTypeController
         return $list;
     }
 
+    public function search()
+    {
+        $f = $this->app->make('helper/form');
+        $checked = $this->request('value') == '1' ? true : false;
+        echo '<div class="checkbox"><label>' . $f->checkbox($this->field('value'), 1, $checked) . ' ' . t('Yes') . '</label></div>';
+    }
+
     public function filterByAttribute(AttributedItemList $list, $boolean, $comparison = '=')
     {
         $qb = $list->getQueryObject();
