@@ -2,7 +2,6 @@
 namespace Concrete\Controller\Panel;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
-use Concrete\Core\Page\Page;
 use Loader;
 use PageType;
 use Page as ConcretePage;
@@ -57,7 +56,7 @@ class Sitemap extends BackendInterfaceController
 
         $siteTreeID = 0;
         if ($this->request->query->has('cID')) {
-            $page = Page::getByID(intval($this->request->query->get('cID')));
+            $page = ConcretePage::getByID(intval($this->request->query->get('cID')));
             if ($page && !$page->isError()) {
                 $siteTreeID = $page->getSiteTreeID();
             }
