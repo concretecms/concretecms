@@ -95,6 +95,7 @@ class EditorServiceProvider extends ServiceProvider
             array('key' => 'tab', 'name' => t('Tab Key Handling')),
             array('key' => 'table', 'name' => t('Table')),
             array('key' => 'tableresize', 'name' => t('Table Resize')),
+            array('key' => 'tableselection', 'name' => t('Table Selection')),
             array('key' => 'tabletools', 'name' => t('Table Tools')),
             array('key' => 'toolbar', 'name' => t('Editor Toolbar')),
             array('key' => 'undo', 'name' => t('Undo')),
