@@ -64,6 +64,9 @@ abstract class AdvancedSearch extends BackendInterfaceController
 
     public function view()
     {
+
+        $this->requireAsset('selectize');
+
         $manager = $this->getFieldManager();
         $provider = $this->getSearchProvider();
         $query = $this->getSearchQuery();

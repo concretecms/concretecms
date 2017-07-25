@@ -586,6 +586,7 @@ $form = Loader::helper('form/page_selector');
                     } else {
                         $('input[name=customTopicTreeNodeID]').val('');
                     }
+                    Concrete.event.publish('pagelist.topictree.select');
                 }
             });
         });

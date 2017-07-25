@@ -30,6 +30,10 @@ class Set
     {
         $i = 0;
         foreach ($this->columns as $col) {
+            if (!$col) {
+                unset($this->columns[$i]); // Somehow a null column was saved in the result set.
+            }
+            
             if ($col instanceof AttributeKeyColumn) {
                 $ak = $this->getAttributeKeyColumn(substr($col->getColumnKey(), 3));
                 if (!is_object($ak)) {

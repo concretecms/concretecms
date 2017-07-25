@@ -73,6 +73,7 @@ return [
                             'tab',
                             'table',
                             'tableresize',
+                            'tableselection',
                             'tabletools',
                             'toolbar',
                             'undo',

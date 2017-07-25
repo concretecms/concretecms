@@ -217,7 +217,7 @@ class Version20160725000000 extends AbstractMigration
             ]);
 
             while ($row = $r->fetch()) {
-                $mapped = $permissionsMap[$row['pkHandle']];
+                $mapped = isset($permissionsMap[$row['pkHandle']]) ? $permissionsMap[$row['pkHandle']] : $row['pkHandle'];
                 $newPKID = $this->connection->fetchColumn('select pkID from PermissionKeys where pkHandle = ?', [$mapped]);
                 $v = [$folder->getTreeNodeID(), $newPKID, $row['paID']];
                 $this->connection->executeQuery(
