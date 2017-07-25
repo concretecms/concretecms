@@ -26,7 +26,7 @@ class WorkflowProgressListViewMenu extends Menu
 
         $item = new LinkItem(
             '#',
-            t('Archive'),
+            tc('Verb', 'Archive'),
             ['data-notification-action' => 'archive']
         );
         $list->appendChild($item->getItemElement());
