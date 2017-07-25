@@ -9,16 +9,12 @@ use HtmlObject\Element;
 
 class WorkflowProgressListViewMenu extends Menu
 {
-
     public function getMenuElement()
     {
         $list = (new Element('ul'))->addClass('dropdown-menu');
 
-
-        /**
-         * @var $item ItemInterface
-         */
-        foreach($this->items as $item) {
+        foreach ($this->items as $item) {
+            /* @var ItemInterface $item */
             $list->appendChild($item->getItemElement());
         }
 
@@ -33,6 +29,4 @@ class WorkflowProgressListViewMenu extends Menu
 
         return $list;
     }
-
-
 }
