@@ -24,6 +24,8 @@ matrix:
     - php: nightly
 
 before_script:
+  - sudo apt-get update
+  - sudo apt-get install mgen
   - if [[ $TRAVIS_PHP_VERSION = hhvm ]]; then cat tests/travis.hhvm.ini >> /etc/hhvm/php.ini; else phpenv config-add tests/travis.php.ini; fi
   - travis_retry composer update --prefer-source $PREFER_LOWEST # Run once to install magento's composer merger
   - travis_retry composer update --prefer-source $PREFER_LOWEST # Run twice to install merged dependencies
