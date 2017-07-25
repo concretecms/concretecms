@@ -185,13 +185,13 @@ class FileLocatorTest extends \PHPUnit_Framework_TestCase
             ->method('exists')
             ->will($this->returnValueMap(array(
                 array(DIR_APPLICATION . '/elements/conversation/display.php', false),
-                array(DIR_PACKAGES . '/brilliant_theme/themes/brilliant/elements/concrete/conversation/display.php', true),
+                array(DIR_PACKAGES . '/brilliant_theme/themes/brilliant/elements/conversation/display.php', true),
             )));
 
         $this->locator->addLocation(new FileLocator\ThemeElementLocation($theme));
         $this->locator->setFilesystem($filesystem);
         $record = $this->locator->getRecord(DIRNAME_ELEMENTS . '/conversation/display.php');
-        $this->assertEquals(DIR_BASE . '/packages/brilliant_theme/themes/brilliant/elements/concrete/conversation/display.php', $record->getFile());
+        $this->assertEquals(DIR_BASE . '/packages/brilliant_theme/themes/brilliant/elements/conversation/display.php', $record->getFile());
         $this->assertTrue($record->exists());
     }
 
