@@ -48,6 +48,7 @@ class Manager extends FieldManager
             $this->populateGroups();
             $this->loaded = true;
         }
+
         return parent::getFieldsFromRequest($request);
     }
 

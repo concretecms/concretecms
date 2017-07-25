@@ -3,6 +3,9 @@ namespace Concrete\Core\Express\Search\Field;
 
 use Concrete\Core\Entity\Express\Association;
 use Concrete\Core\Entity\Express\Control\AssociationControl;
+use Concrete\Core\Entity\Express\Entry;
+use Concrete\Core\Entity\Express\ManyToOneAssociation;
+use Concrete\Core\Express\EntryList;
 use Concrete\Core\Express\Form\Context\DashboardFormContext;
 use Concrete\Core\Form\Context\Registry\ControlRegistry;
 use Concrete\Core\Search\Field\AbstractField;
@@ -49,6 +52,16 @@ class AssociationField extends AbstractField
     {
         $this->association = $association;
         $this->associationID = $association->getId();
+        $this->requestVariables[] = 'express_association_' . $association->getId();
+    }
+
+    protected function getSelectedEntry()
+    {
+        if (isset($this->data['express_association_' . $this->associationID])) {
+            $selected = $this->data['express_association_' . $this->associationID];
+            $objectManager = \Core::make('express');
+            return $objectManager->getEntry($selected);
+        }
     }
 
     /**
@@ -63,7 +76,26 @@ class AssociationField extends AbstractField
             $control = new AssociationControl();
             $control->setAssociation($this->association);
             $control->setId($this->association->getId());
-            $view = $registry->getControlView(new DashboardFormContext(), 'express_control_association', [
+            $context = new DashboardFormContext();
+            // Is there an entity selected?
+            if (isset($this->data['express_association_' . $this->associationID])) {
+                $selected = $this->data['express_association_' . $this->associationID];
+
+                // We have to spoof an entry in order for this to be selected. Kind of lame but oh well.
+                $selectedEntry = new Entry();
+                $selectedEntry->setID($selected);
+
+                $oneAssociation = new Entry\OneAssociation();
+                $oneAssociation->setAssociation($this->association);
+                $oneAssociation->setSelectedEntry($selectedEntry);
+
+                $spoofedEntry = new Entry();
+                $spoofedEntry->getAssociations()->add($oneAssociation);
+
+                $context->setEntry($spoofedEntry);
+            }
+
+            $view = $registry->getControlView($context, 'express_control_association', [
                 $control
             ]);
             $view->setSupportsLabel(false);
@@ -76,17 +108,12 @@ class AssociationField extends AbstractField
      * {@inheritdoc}
      *
      * @see FieldInterface::filterList()
+     * @var $list EntryList
      */
     public function filterList(ItemList $list)
     {
         if ($this->association !== null) {
-            /*
-            $type = $this->attributeKey->getAttributeType();
-            $cnt = $type->getController();
-            $cnt->setRequestArray($this->data);
-            $cnt->setAttributeKey($this->attributeKey);
-            $cnt->searchForm($list);
-            */
+            $list->filterByAssociatedEntry($this->association, $this->getSelectedEntry());
         }
     }
 
