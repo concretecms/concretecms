@@ -521,7 +521,7 @@ EOT
                 'starting-point',
                 'elemental_blank',
                 function (Question $question, InputInterface $input) {
-                    return new ChoiceQuestion($question->getQuestion(), ['elemental_full', 'elemental_blank'],
+                    return new ChoiceQuestion($question->getQuestion(), ['elemental_blank', 'elemental_full'],
                         $question->getDefault());
                 },
             ],
