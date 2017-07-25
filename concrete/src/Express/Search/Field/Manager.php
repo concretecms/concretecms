@@ -3,6 +3,9 @@ namespace Concrete\Core\Express\Search\Field;
 
 use Concrete\Core\Attribute\Category\ExpressCategory;
 use Concrete\Core\Attribute\Category\CategoryService;
+use Concrete\Core\Entity\Express\ManyToManyAssociation;
+use Concrete\Core\Entity\Express\ManyToOneAssociation;
+use Concrete\Core\Entity\Express\OneToManyAssociation;
 use Concrete\Core\Search\Field\AttributeKeyField;
 use Concrete\Core\Search\Field\Field\KeywordsField;
 use Concrete\Core\Search\Field\Manager as FieldManager;
@@ -58,8 +61,13 @@ class Manager extends FieldManager
         if (count($associations)) {
             $group = [];
             foreach($associations as $association) {
-                $group[] = new AssociationField($association);
+                if ($association instanceof ManyToManyAssociation || $association instanceof ManyToOneAssociation) {
+                    $group[] = new AssociationField($association);
+                }
             }
+        }
+
+        if (count($group)) {
             $this->addGroup(t('Associations'), $group);
         }
 
