@@ -24,6 +24,7 @@ use Concrete\Tests\Localization\LocalizationTestsBase;
  * Tests for:
  * Concrete\Core\Localization\Localization.
  *
+ *
  * @author Antti Hukkanen <antti.hukkanen@mainiotech.fi>
  */
 class LocalizationTest extends LocalizationTestsBase
