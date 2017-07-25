@@ -7,7 +7,7 @@ return [
     'connections' => [
         'travis' => [
             'driver' => 'c5_pdo_mysql',
-            'server' => 'localhost',
+            'server' => '127.0.0.1',
             'database' => 'concrete5_tests',
             'username' => 'travis',
             'password' => '',
@@ -15,8 +15,8 @@ return [
         ],
         'travisWithoutDB' => [
             'driver' => 'c5_pdo_mysql',
-            'server' => 'localhost',
-            'username' => 'travis',
+            'server' => '127.0.0.1',
+            'username' => 'root',
             'password' => '',
             'charset' => 'utf8',
         ]

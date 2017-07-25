@@ -24,6 +24,7 @@ use Concrete\Tests\Localization\LocalizationTestsBase;
  * Tests for:
  * Concrete\Core\Localization\Localization.
  *
+ *
  * @author Antti Hukkanen <antti.hukkanen@mainiotech.fi>
  */
 class LocalizationTest extends LocalizationTestsBase
@@ -297,7 +298,7 @@ class LocalizationTest extends LocalizationTestsBase
     public function testStaticGetAvailableInterfaceLanguages()
     {
         $langs = Localization::getAvailableInterfaceLanguages();
-        $this->assertEquals(array('en_GB', 'fi_FI', 'fr_FR'), $langs);
+        $this->assertEquals(array('fi_FI', 'fr_FR', 'en_GB'), $langs);
     }
 
     public function testStaticGetAvailableInterfaceLanguageDescriptions()
