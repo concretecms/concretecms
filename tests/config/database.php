@@ -16,7 +16,7 @@ return [
         'travisWithoutDB' => [
             'driver' => 'c5_pdo_mysql',
             'server' => '127.0.0.1',
-            'username' => 'travis',
+            'username' => 'root',
             'password' => '',
             'charset' => 'utf8',
         ]
