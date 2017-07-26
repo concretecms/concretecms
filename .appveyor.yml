@@ -2,7 +2,7 @@ environment:
   matrix:
     - platform: x86
       PHP_VERSION: '7.1.6'
-      VC_VERSION: VC14
+      VC_VERSION: '14'
       PREFER_LOWEST: 
 
 matrix:
