@@ -1,0 +1,62 @@
+environment:
+  matrix:
+    - platform: x86
+      PHP_VERSION: '7.1.6'
+      VC_VERSION: VC14
+      PREFER_LOWEST: 
+
+matrix:
+  fast_finish: true
+
+init:
+  - set PATH=C:\tools;C:\tools\php-%PHP_VERSION%;C:\Program Files\MySQL\MySQL Server 5.7\bin;%PATH%
+  - set MYSQL_PWD=Password12!
+
+cache:
+  - C:\tools -> appveyor.yml
+  - '%LOCALAPPDATA%\Composer\files'
+
+services:
+  - mysql
+
+install:
+  - if not exist C:\tools mkdir C:\tools
+  - cd /D C:\tools
+  - set PHP_ZIP=php-%PHP_VERSION%-Win32-VC%VC_VERSION%-%PLATFORM%.zip
+  - if not exist %PHP_ZIP% appveyor DownloadFile http://windows.php.net/downloads/releases/archives/%PHP_ZIP%
+  - if not exist %PHP_ZIP% appveyor DownloadFile http://windows.php.net/downloads/releases/%PHP_ZIP%
+  - if not exist %PHP_ZIP% appveyor DownloadFile http://windows.php.net/downloads/releases/qa/%PHP_ZIP%
+  - if not exist php-%PHP_VERSION% mkdir php-%PHP_VERSION%
+  - cd /D C:\tools\php-%PHP_VERSION%
+  - if not exist php-installed.txt 7z x -bd -o. -y -- ..\%PHP_ZIP%
+  - if not exist php-installed.txt copy /Y php.ini-development php.ini
+  - if not exist php-installed.txt echo date.timezone="UTC" >> php.ini
+  - if not exist php-installed.txt echo extension_dir=ext >> php.ini
+  - if not exist php-installed.txt echo extension=php_mbstring.dll >> php.ini
+  - if not exist php-installed.txt echo extension=php_bz2.dll >> php.ini
+  - if not exist php-installed.txt echo extension=php_mysqli.dll >> php.ini
+  - if not exist php-installed.txt echo extension=php_curl.dll >> php.ini
+  - if not exist php-installed.txt echo extension=php_gd2.dll >> php.ini
+  - if not exist php-installed.txt echo extension=php_intl.dll >> php.ini
+  - if not exist php-installed.txt echo extension=php_pdo_mysql.dll >> php.ini
+  - if not exist php-installed.txt echo extension=php_xsl.dll >> php.ini
+  - if not exist php-installed.txt echo extension=php_fileinfo.dll >> php.ini
+  - if not exist php-installed.txt echo zend.assertions=1 >> php.ini
+  - if not exist php-installed.txt echo assert.exception=On >> php.ini
+  - if not exist php-installed.txt type nul > php-installed.txt
+  - cd C:\tools
+  - if not exist composer.phar appveyor DownloadFile https://getcomposer.org/download/1.4.2/composer.phar
+  - if not exist composer.bat echo @php %%~dp0composer.phar %%* > composer.bat
+  - cd /d "%APPVEYOR_BUILD_FOLDER%"
+  - composer install --no-progress --no-suggest --optimize-autoloader --no-ansi --no-interaction %PREFER_LOWEST%
+  - mysql --user=root -e "SET GLOBAL sql_mode = 'STRICT_TRANS_TABLES,STRICT_ALL_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION,ONLY_FULL_GROUP_BY'"
+  - mysql --user=root -e "CREATE USER 'travis'@'localhost' IDENTIFIED BY '';"
+  - mysql --user=root -e "GRANT ALL PRIVILEGES ON *.* TO 'travis'@'localhost' WITH GRANT OPTION; FLUSH PRIVILEGES;"
+
+build: off
+
+test_script:
+  - cd /d "%APPVEYOR_BUILD_FOLDER%"
+  - composer test
+
+deploy: off
