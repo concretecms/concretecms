@@ -9,7 +9,7 @@ matrix:
   fast_finish: true
 
 init:
-  - set PATH=C:\tools;C:\tools\php-%PHP_VERSION%;C:\Program Files\MySQL\MySQL Server 5.7\bin;%PATH%
+  - set PATH=C:\tools;C:\tools\php-%PHP_VERSION%;C:\Program Files\MySQL\MySQL Server 5.7\bin;C:\tools\gettext\bin;%PATH%
   - set MYSQL_PWD=Password12!
 
 clone_depth: 50
@@ -47,9 +47,15 @@ install:
   - if not exist php-installed.txt echo zend.assertions=1 >> php.ini
   - if not exist php-installed.txt echo assert.exception=On >> php.ini
   - if not exist php-installed.txt type nul > php-installed.txt
-  - cd C:\tools
+  - cd /D C:\tools
   - if not exist composer.phar appveyor DownloadFile https://getcomposer.org/download/1.4.2/composer.phar
   - if not exist composer.bat echo @php %%~dp0composer.phar %%* > composer.bat
+  - cd /D C:\tools
+  - set GETTEXT_ZIP=gettext0.19.8.1-iconv1.14-shared-32.zip
+  - if not exist %GETTEXT_ZIP% appveyor DownloadFile https://github.com/mlocati/gettext-iconv-windows/releases/download/v0.19.8.1-v1.14/%GETTEXT_ZIP%
+  - if not exist gettext mkdir gettext
+  - cd /D C:\tools\gettext
+  - if not exist bin\msgen.exe 7z x -bd -o. -y -- ..\%GETTEXT_ZIP%
   - cd /d "%APPVEYOR_BUILD_FOLDER%"
   - composer install --no-progress --no-suggest --optimize-autoloader --no-ansi --no-interaction %PREFER_LOWEST%
 
