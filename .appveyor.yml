@@ -31,6 +31,7 @@ install:
   - if not exist %PHP_ZIP% appveyor DownloadFile http://windows.php.net/downloads/releases/qa/%PHP_ZIP%
   - set GETTEXT_ZIP=gettext0.19.8.1-iconv1.14-shared-32.zip
   - if not exist %GETTEXT_ZIP% appveyor DownloadFile https://github.com/mlocati/gettext-iconv-windows/releases/download/v0.19.8.1-v1.14/%GETTEXT_ZIP%
+  - if not exist composer.phar appveyor DownloadFile https://getcomposer.org/download/1.4.2/composer.phar
   - cd /D C:\tools
   - if not exist php-%PHP_VERSION% mkdir php-%PHP_VERSION%
   - cd /D C:\tools\php-%PHP_VERSION%
@@ -52,8 +53,7 @@ install:
   - if not exist php-installed.txt echo assert.exception=On >> php.ini
   - if not exist php-installed.txt type nul > php-installed.txt
   - cd /D C:\tools
-  - if not exist composer.phar appveyor DownloadFile https://getcomposer.org/download/1.4.2/composer.phar
-  - if not exist composer.bat echo @php %%~dp0composer.phar %%* > composer.bat
+  - if not exist composer.bat echo @php %%~dp0downloads\composer.phar %%* > composer.bat
   - cd /D C:\tools
   - if not exist gettext mkdir gettext
   - cd /D C:\tools\gettext
