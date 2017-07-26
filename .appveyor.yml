@@ -43,6 +43,7 @@ install:
   - if not exist php-installed.txt echo extension=php_pdo_mysql.dll >> php.ini
   - if not exist php-installed.txt echo extension=php_xsl.dll >> php.ini
   - if not exist php-installed.txt echo extension=php_fileinfo.dll >> php.ini
+  - if not exist php-installed.txt echo extension=php_openssl >> php.ini
   - if not exist php-installed.txt echo zend.assertions=1 >> php.ini
   - if not exist php-installed.txt echo assert.exception=On >> php.ini
   - if not exist php-installed.txt type nul > php-installed.txt
