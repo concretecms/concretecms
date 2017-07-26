@@ -12,6 +12,8 @@ init:
   - set PATH=C:\tools;C:\tools\php-%PHP_VERSION%;C:\Program Files\MySQL\MySQL Server 5.7\bin;%PATH%
   - set MYSQL_PWD=Password12!
 
+clone_depth: 50
+
 cache:
   - C:\tools -> appveyor.yml
   - '%LOCALAPPDATA%\Composer\files'
@@ -23,8 +25,8 @@ install:
   - if not exist C:\tools mkdir C:\tools
   - cd /D C:\tools
   - set PHP_ZIP=php-%PHP_VERSION%-Win32-VC%VC_VERSION%-%PLATFORM%.zip
-  - if not exist %PHP_ZIP% appveyor DownloadFile http://windows.php.net/downloads/releases/archives/%PHP_ZIP%
-  - if not exist %PHP_ZIP% appveyor DownloadFile http://windows.php.net/downloads/releases/%PHP_ZIP%
+  - if not exist %PHP_ZIP% (appveyor DownloadFile http://windows.php.net/downloads/releases/archives/%PHP_ZIP% || exit 0)
+  - if not exist %PHP_ZIP% (appveyor DownloadFile http://windows.php.net/downloads/releases/%PHP_ZIP% || exit 0)
   - if not exist %PHP_ZIP% appveyor DownloadFile http://windows.php.net/downloads/releases/qa/%PHP_ZIP%
   - if not exist php-%PHP_VERSION% mkdir php-%PHP_VERSION%
   - cd /D C:\tools\php-%PHP_VERSION%
