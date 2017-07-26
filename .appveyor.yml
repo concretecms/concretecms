@@ -30,7 +30,7 @@ install:
   - if not exist %PHP_ZIP% appveyor DownloadFile http://windows.php.net/downloads/releases/qa/%PHP_ZIP%
   - if not exist php-%PHP_VERSION% mkdir php-%PHP_VERSION%
   - cd /D C:\tools\php-%PHP_VERSION%
-  - if not exist php-installed.txt 7z x -bd -o. -y -- ..\%PHP_ZIP%
+  - if not exist php-installed.txt 7z x -bd -o. -y -- ..\%PHP_ZIP% >NUL
   - if not exist php-installed.txt copy /Y php.ini-development php.ini
   - if not exist php-installed.txt echo date.timezone="UTC" >> php.ini
   - if not exist php-installed.txt echo extension_dir=ext >> php.ini
@@ -55,7 +55,7 @@ install:
   - if not exist %GETTEXT_ZIP% appveyor DownloadFile https://github.com/mlocati/gettext-iconv-windows/releases/download/v0.19.8.1-v1.14/%GETTEXT_ZIP%
   - if not exist gettext mkdir gettext
   - cd /D C:\tools\gettext
-  - if not exist bin\msgen.exe 7z x -bd -o. -y -- ..\%GETTEXT_ZIP%
+  - if not exist bin\msgen.exe 7z x -bd -o. -y -- ..\%GETTEXT_ZIP% >NUL
   - cd /d "%APPVEYOR_BUILD_FOLDER%"
   - composer install --no-progress --no-suggest --optimize-autoloader --no-ansi --no-interaction %PREFER_LOWEST%
 
