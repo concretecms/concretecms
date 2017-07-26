@@ -66,6 +66,7 @@ test_script:
   - mysql --user=root -e "CREATE USER 'travis'@'localhost' IDENTIFIED BY '';" || exit 0
   - mysql --user=root -e "GRANT ALL PRIVILEGES ON *.* TO 'travis'@'localhost' WITH GRANT OPTION; FLUSH PRIVILEGES;"
   - cd /d "%APPVEYOR_BUILD_FOLDER%"
+  - set APPVEYOR_SAVE_CACHE_ON_ERROR=true
   - composer test
 
 deploy: off
