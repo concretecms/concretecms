@@ -15,7 +15,6 @@ init:
 clone_depth: 50
 
 cache:
-  - C:\tools -> appveyor.yml
   - '%LOCALAPPDATA%\Composer\files'
 
 services:
