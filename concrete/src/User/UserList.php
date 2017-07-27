@@ -2,13 +2,66 @@
 namespace Concrete\Core\User;
 
 use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemList;
+use Concrete\Core\Search\ItemList\Pager\Manager\UserListPagerManager;
+use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
+use Concrete\Core\Search\ItemList\Pager\QueryString\VariableFactory;
+use Concrete\Core\Search\Pagination\PagerPagination;
 use Concrete\Core\Search\Pagination\Pagination;
+use Concrete\Core\Search\PermissionableListItemInterface;
+use Concrete\Core\Search\StickyRequest;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\Group\Group;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 
-class UserList extends DatabaseItemList
+class UserList extends DatabaseItemList implements PermissionableListItemInterface, PagerProviderInterface
 {
+
+    public function __construct(StickyRequest $req = null)
+    {
+        $u = new \User();
+        if ($u->isSuperUser()) {
+            $this->ignorePermissions();
+        }
+        parent::__construct($req);
+    }
+
+    /**
+     * @return \Closure|int|null
+     */
+    public function getPermissionsChecker()
+    {
+        return $this->permissionsChecker;
+    }
+
+    public function getPagerVariableFactory()
+    {
+        return new VariableFactory($this, $this->getSearchRequest());
+    }
+
+    public function getPagerManager()
+    {
+        return new UserListPagerManager($this);
+    }
+
+    /** @var  \Closure | integer | null */
+    protected $permissionsChecker;
+
+    public function setPermissionsChecker(\Closure $checker = null)
+    {
+        $this->permissionsChecker = $checker;
+    }
+
+    public function ignorePermissions()
+    {
+        $this->permissionsChecker = -1;
+    }
+
+    public function enablePermissions()
+    {
+        unset($this->permissionsChecker);
+    }
+
+
     protected function getAttributeKeyClassName()
     {
         return '\\Concrete\\Core\\Attribute\\Key\\UserKey';
@@ -56,31 +109,50 @@ class UserList extends DatabaseItemList
         $this->setQuery('SELECT DISTINCT u.uID, u.uName' . $sql . ' FROM Users u ');
     }
 
-    /**
-     * The total results of the query.
-     *
-     * @return int
-     */
     public function getTotalResults()
     {
-        $query = $this->deliverQueryObject();
-
-        return $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct u.uID)')->setMaxResults(1)->execute()->fetchColumn();
+        $u = new \User();
+        if ($this->permissionsChecker === -1) {
+            $query = $this->deliverQueryObject();
+            // We need to reset the potential custom order by here because otherwise, if we've added
+            // items to the select parts, and we're ordering by them, we get a SQL error
+            // when we get total results, because we're resetting the select
+            return $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct u.uID)')->setMaxResults(1)->execute()->fetchColumn();
+        } else {
+            return -1; // unknown
+        }
     }
 
-    /**
-     * Gets the pagination object for the query.
-     *
-     * @return Pagination
-     */
     protected function createPaginationObject()
     {
-        $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
-            $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct u.uID)')->setMaxResults(1);
-        });
-        $pagination = new Pagination($this, $adapter);
+        $u = new \User();
+        if ($this->permissionsChecker === -1) {
+            $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
+                // We need to reset the potential custom order by here because otherwise, if we've added
+                // items to the select parts, and we're ordering by them, we get a SQL error
+                // when we get total results, because we're resetting the select
+                $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct u.uID)')->setMaxResults(1);
+            });
+            $pagination = new Pagination($this, $adapter);
+        } else {
+            $pagination = new PagerPagination($this);
+        }
 
         return $pagination;
+    }
+
+    public function checkPermissions($mixed)
+    {
+        if (isset($this->permissionsChecker)) {
+            if ($this->permissionsChecker === -1) {
+                return true;
+            } else {
+                return call_user_func_array($this->permissionsChecker, [$mixed]);
+            }
+        }
+
+        $cp = new \Permissions($mixed);
+        return $cp->canViewUser();
     }
 
     /**

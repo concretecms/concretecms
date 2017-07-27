@@ -310,6 +310,47 @@ class FileListTest extends \FileStorageTestCase
         $this->assertFalse($pagination->hasNextPage());
     }
 
+    public function testPaginationThatStopsOnTheFirstPage()
+    {
+        // first lets make some more files.
+        $sample = dirname(__FILE__) . '/StorageLocation/fixtures/sample.txt';
+        $image = DIR_BASE . '/concrete/images/logo.png';
+        $fi = new Importer();
+
+        $files = array(
+            'another.txt' => $sample,
+            'funtime.txt' => $sample,
+            'funtime2.txt' => $sample,
+            'awesome-o' => $sample,
+            'image.png' => $image,
+        );
+
+        foreach ($files as $filename => $pointer) {
+            $fi->import($pointer, $filename);
+        }
+
+        $nl = new \Concrete\Core\File\FileList();
+        $nl->setPermissionsChecker(function ($file) {
+            if ($file->getFileID() < 3) {
+                return true;
+            }
+            return false;
+        });
+        $results = $nl->getResults();
+        $pagination = $nl->getPagination();
+        $this->assertEquals(-1, $nl->getTotalResults());
+        $this->assertEquals(-1, $pagination->getTotalResults());
+        $this->assertEquals(2, count($results));
+
+        $results = $pagination->getCurrentPageResults();
+
+        $this->assertEquals('sample1.txt', $results[0]->getFilename());
+        $this->assertEquals('sample2.txt', $results[1]->getFilename());
+        $this->assertFalse($pagination->hasNextPage());
+        $this->assertEquals(2, count($results));
+        $this->assertTrue(!isset($results[2]));
+    }
+
     public function testFileSearchDefaultColumnSet()
     {
         $set = \Concrete\Core\File\Search\ColumnSet\ColumnSet::getCurrent();

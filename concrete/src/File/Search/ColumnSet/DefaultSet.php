@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\File\Search\ColumnSet;
 
+use Concrete\Core\File\Search\ColumnSet\Column\FileID;
 use Concrete\Core\File\Search\ColumnSet\Column\FileVersionDateAdded;
 use Concrete\Core\File\Search\ColumnSet\Column\FileVersionSize;
 use Concrete\Core\File\Search\ColumnSet\Column\FileVersionTitle;
