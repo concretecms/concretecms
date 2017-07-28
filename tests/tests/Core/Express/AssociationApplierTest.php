@@ -371,6 +371,24 @@ class AssociationApplierTest extends ConcreteDatabaseTestCase
         $this->assertEquals(6, $cnt);
     }
 
+    public function testOneToManyCategoryUpdate()
+    {
+        // This test is meant to test the following:
+        // We have a one to many category -> project setup. We save two projects against a category
+        // We save another category against one of those projects. At most each project should only
+        // have ONE category.
+
+        $this->createProjectData();
+
+        $this->addOneToManyAssociationAndTestIt(1, [6, 8, 11], [
+            1 => [6, 8, 11]
+        ]);
+
+        $this->addOneToManyAssociationAndTestIt(2, [6], [
+            1 => [8, 11], 2 => [6]
+        ], true);
+    }
+
     protected function assertNoCategory($projectID)
     {
         $project = Express::getEntry($projectID);
