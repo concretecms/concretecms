@@ -32,9 +32,6 @@ class TemplateLocatorTest extends \PHPUnit_Framework_TestCase
 
     public function testBasic()
     {
-        if (DIRECTORY_SEPARATOR === '\\') {
-            $this->markTestSkipped('@TODO This test needs to be fixed for Windows');
-        }
         $template = new Template('composer');
         $locator = new TemplateLocator($template);
         $locator->addLocation(DIRNAME_ATTRIBUTES.'/'.static::ATTRIBUTE_HANDLE);
@@ -46,9 +43,6 @@ class TemplateLocatorTest extends \PHPUnit_Framework_TestCase
 
     public function testFallback()
     {
-        if (DIRECTORY_SEPARATOR === '\\') {
-            $this->markTestSkipped('@TODO This test needs to be fixed for Windows');
-        }
         $locator = new TemplateLocator();
         $locator->addLocation(DIRNAME_ATTRIBUTES.'/'.static::ATTRIBUTE_HANDLE.'/test.php');
         $locator->addLocation(DIRNAME_ATTRIBUTES.'/'.static::ATTRIBUTE_HANDLE.'/form.php');
@@ -60,9 +54,6 @@ class TemplateLocatorTest extends \PHPUnit_Framework_TestCase
 
     public function testPackagedAttribute()
     {
-        if (DIRECTORY_SEPARATOR === '\\') {
-            $this->markTestSkipped('@TODO This test needs to be fixed for Windows');
-        }
         $locator = new TemplateLocator();
         $locator->addLocation([DIRNAME_ATTRIBUTES.'/'.static::ATTRIBUTE_HANDLE.'/custom_form.php', 'foo_package']);
         $location = $locator->getLocation();
@@ -74,9 +65,6 @@ class TemplateLocatorTest extends \PHPUnit_Framework_TestCase
 
     public function testHigherPriorityLocation()
     {
-        if (DIRECTORY_SEPARATOR === '\\') {
-            $this->markTestSkipped('@TODO This test needs to be fixed for Windows');
-        }
         $locator = new TemplateLocator();
         $locator->addLocation(DIRNAME_ATTRIBUTES.'/'.static::ATTRIBUTE_HANDLE.'/form.php');
         $location = $locator->getLocation();

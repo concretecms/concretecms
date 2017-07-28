@@ -32,9 +32,6 @@ class EntityManagerClassLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testApplicationEntityClasses()
     {
-        if (DIRECTORY_SEPARATOR === '\\') {
-            $this->markTestSkipped('@TODO This test needs to be fixed for Windows');
-        }
         $root = dirname(DIR_BASE_CORE . '../');
         mkdir($root . '/application/src/Entity/Advertisement', 0777, true);
         copy(dirname(__FILE__) . '/fixtures/BannerAd.php', $root . '/application/src/Entity/Advertisement/BannerAd.php');
