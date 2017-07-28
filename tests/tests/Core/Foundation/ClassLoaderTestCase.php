@@ -8,7 +8,7 @@ class ClassLoaderTestCase extends \PHPUnit_Framework_TestCase
 
     protected function putFileIntoPlace($file, $destinationDirectory)
     {
-        $sourceFile =  dirname(__FILE__) . DIRECTORY_SEPARATOR . 'fixtures' .  DIRECTORY_SEPARATOR . $file;
+        $sourceFile =  str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__)) . '/fixtures/' . $file;
         $filesystem = new Filesystem();
         if (!$filesystem->isDirectory($destinationDirectory)) {
             $filesystem->makeDirectory($destinationDirectory, 0755, true);
@@ -19,7 +19,7 @@ class ClassLoaderTestCase extends \PHPUnit_Framework_TestCase
         }
         $filesystem->$method(
             $sourceFile,
-            $destinationDirectory . DIRECTORY_SEPARATOR . basename($file)
+            $destinationDirectory . '/' . basename($file)
         );
     }
 
@@ -28,9 +28,9 @@ class ClassLoaderTestCase extends \PHPUnit_Framework_TestCase
         $filesystem = new Filesystem();
         $destination = explode('/', $destination);
         if ($root == DIR_APPLICATION) {
-            $deleteDirectory = $root . DIRECTORY_SEPARATOR . $destination[0] . DIRECTORY_SEPARATOR . $destination[1];
+            $deleteDirectory = $root . '/' . $destination[0] . '/' . $destination[1];
         } else {
-            $deleteDirectory = $root . DIRECTORY_SEPARATOR . $destination[0];
+            $deleteDirectory = $root . '/' . $destination[0];
         }
         if ($filesystem->isFile($deleteDirectory)) {
             $filesystem->delete($deleteDirectory);

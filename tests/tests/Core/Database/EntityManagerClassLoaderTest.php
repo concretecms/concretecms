@@ -26,7 +26,7 @@ class EntityManagerClassLoaderTest extends \PHPUnit_Framework_TestCase
 
         // Test if the driver contains the default lookup path
         $driverPaths = $defaultAnnotationDriver->getPaths();
-        $this->assertEquals(DIR_BASE_CORE.DIRECTORY_SEPARATOR.DIRNAME_CLASSES.'/'.DIRNAME_ENTITIES,
+        $this->assertEquals(DIR_BASE_CORE . '/' . DIRNAME_CLASSES.'/'.DIRNAME_ENTITIES,
             $driverPaths[0]);
     }
 
@@ -49,7 +49,7 @@ class EntityManagerClassLoaderTest extends \PHPUnit_Framework_TestCase
 
         // Test if the driver contains the default lookup path
         $driverPaths = $defaultAnnotationDriver->getPaths();
-        $this->assertEquals(DIR_APPLICATION.DIRECTORY_SEPARATOR.DIRNAME_CLASSES.'/'.DIRNAME_ENTITIES,
+        $this->assertEquals(DIR_APPLICATION . '/' . DIRNAME_CLASSES.'/'.DIRNAME_ENTITIES,
             $driverPaths[0]);
 
         unlink($root . '/application/src/Entity/Advertisement/BannerAd.php');

@@ -36,7 +36,7 @@ class PackageLocation extends AbstractLocation
     public function getPath()
     {
         $pkgHandle = $this->pkgHandle;
-        return DIR_PACKAGES . DIRECTORY_SEPARATOR . $pkgHandle;
+        return DIR_PACKAGES . '/' . $pkgHandle;
     }
 
     public function getURL()

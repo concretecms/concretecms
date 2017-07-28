@@ -139,58 +139,58 @@ class DefaultPackageProviderTest extends \PHPUnit_Framework_TestCase
 
     private function createPackageFolderOfTestMetadataDriverAdditionalNamespace()
     {
-        $this->filesystem->makeDirectory(DIR_BASE . DIRECTORY_SEPARATOR .
-                DIRNAME_PACKAGES . DIRECTORY_SEPARATOR .
-                'test_metadatadriver_additional_namespace');
-        $this->filesystem->makeDirectory(DIR_BASE . DIRECTORY_SEPARATOR .
-                DIRNAME_PACKAGES . DIRECTORY_SEPARATOR .
-                'test_metadatadriver_additional_namespace' . DIRECTORY_SEPARATOR .
+        $this->filesystem->makeDirectory(DIR_BASE . '/' .
+                DIRNAME_PACKAGES .
+                '/test_metadatadriver_additional_namespace');
+        $this->filesystem->makeDirectory(DIR_BASE . '/' .
+                DIRNAME_PACKAGES .
+                '/test_metadatadriver_additional_namespace/' .
                 DIRNAME_CLASSES);
-        $this->filesystem->makeDirectory(DIR_BASE . DIRECTORY_SEPARATOR .
-                DIRNAME_PACKAGES . DIRECTORY_SEPARATOR .
-                'test_metadatadriver_additional_namespace' . DIRECTORY_SEPARATOR .
-                DIRNAME_CLASSES . DIRECTORY_SEPARATOR .
-                'Concrete');
-        $this->filesystem->makeDirectory(DIR_BASE . DIRECTORY_SEPARATOR .
-                DIRNAME_PACKAGES . DIRECTORY_SEPARATOR .
-                'test_metadatadriver_additional_namespace' . DIRECTORY_SEPARATOR .
-                DIRNAME_CLASSES . DIRECTORY_SEPARATOR .
-                'Concrete' . DIRECTORY_SEPARATOR . DIRNAME_ENTITIES);
+        $this->filesystem->makeDirectory(DIR_BASE . '/' . 
+                DIRNAME_PACKAGES .
+                '/test_metadatadriver_additional_namespace/' .
+                DIRNAME_CLASSES .
+                '/Concrete');
+        $this->filesystem->makeDirectory(DIR_BASE . '/' .
+                DIRNAME_PACKAGES .
+                '/test_metadatadriver_additional_namespace/' .
+                DIRNAME_CLASSES .
+                '/Concrete/' . DIRNAME_ENTITIES);
     }
 
     private function removePackageFolderOfTestMetadataDriverAdditionalNamespace()
     {
-        $this->filesystem->deleteDirectory(DIR_BASE . DIRECTORY_SEPARATOR .
-                DIRNAME_PACKAGES . DIRECTORY_SEPARATOR .
-                'test_metadatadriver_additional_namespace');
+        $this->filesystem->deleteDirectory(DIR_BASE .
+                DIRNAME_PACKAGES .
+                '/test_metadatadriver_additional_namespace');
     }
 
     private function createPackageFolderOfTestMetadatadriverDefault()
     {
-        $this->filesystem->makeDirectory(DIR_BASE . DIRECTORY_SEPARATOR .
-                DIRNAME_PACKAGES . DIRECTORY_SEPARATOR .
-                'test_metadatadriver_default');
-        $this->filesystem->makeDirectory(DIR_BASE . DIRECTORY_SEPARATOR .
-                DIRNAME_PACKAGES . DIRECTORY_SEPARATOR .
-                'test_metadatadriver_default' . DIRECTORY_SEPARATOR .
+        $this->filesystem->makeDirectory(DIR_BASE . '/' .
+                DIRNAME_PACKAGES .
+                '/test_metadatadriver_default');
+        $this->filesystem->makeDirectory(DIR_BASE . '/' .
+                DIRNAME_PACKAGES .
+                '/test_metadatadriver_default/' .
                 DIRNAME_CLASSES);
-        $this->filesystem->makeDirectory(DIR_BASE . DIRECTORY_SEPARATOR .
-                DIRNAME_PACKAGES . DIRECTORY_SEPARATOR .
-                'test_metadatadriver_default' . DIRECTORY_SEPARATOR .
-                DIRNAME_CLASSES . DIRECTORY_SEPARATOR .
-                'Concrete');
-        $this->filesystem->makeDirectory(DIR_BASE . DIRECTORY_SEPARATOR .
-                DIRNAME_PACKAGES . DIRECTORY_SEPARATOR .
-                'test_metadatadriver_default' . DIRECTORY_SEPARATOR .
-                DIRNAME_CLASSES . DIRECTORY_SEPARATOR .
-                'Concrete' . DIRECTORY_SEPARATOR . DIRNAME_ENTITIES);
+        $this->filesystem->makeDirectory(DIR_BASE . '/' .
+                DIRNAME_PACKAGES .
+                '/test_metadatadriver_default/' .
+                DIRNAME_CLASSES .
+                '/Concrete');
+        $this->filesystem->makeDirectory(DIR_BASE . '/' .
+                DIRNAME_PACKAGES .
+                '/test_metadatadriver_default/' .
+                DIRNAME_CLASSES .
+                '/Concrete/' . DIRNAME_ENTITIES);
     }
 
     private function removePackageFolderOfTestMetadataDriverDefault()
     {
-        $packagePath = DIR_BASE . DIRECTORY_SEPARATOR .
-                DIRNAME_PACKAGES . DIRECTORY_SEPARATOR .
-                'test_metadatadriver_default';
+        $packagePath = DIR_BASE . '/' .
+                DIRNAME_PACKAGES .
+                '/test_metadatadriver_default';
 
         if ($this->filesystem->isDirectory($packagePath)) {
             $this->filesystem->deleteDirectory($packagePath);
@@ -199,20 +199,20 @@ class DefaultPackageProviderTest extends \PHPUnit_Framework_TestCase
 
     private function createPackageFolderOfTestMetadataDriverLegacy()
     {
-        $this->filesystem->makeDirectory(DIR_BASE . DIRECTORY_SEPARATOR .
-                DIRNAME_PACKAGES . DIRECTORY_SEPARATOR .
-                'test_metadatadriver_legacy');
-        $this->filesystem->makeDirectory(DIR_BASE . DIRECTORY_SEPARATOR .
-                DIRNAME_PACKAGES . DIRECTORY_SEPARATOR .
-                'test_metadatadriver_legacy' . DIRECTORY_SEPARATOR .
+        $this->filesystem->makeDirectory(DIR_BASE . '/' .
+                DIRNAME_PACKAGES .
+                '/test_metadatadriver_legacy');
+        $this->filesystem->makeDirectory(DIR_BASE . '/' .
+                DIRNAME_PACKAGES .
+                '/test_metadatadriver_legacy/' .
                 DIRNAME_CLASSES);
     }
 
     private function removePackageFolderOfTestMetadataDriverLegacy()
     {
-        $packagePath = DIR_BASE . DIRECTORY_SEPARATOR .
-                DIRNAME_PACKAGES . DIRECTORY_SEPARATOR .
-                'test_metadatadriver_legacy';
+        $packagePath = DIR_BASE . '/' .
+                DIRNAME_PACKAGES .
+                '/test_metadatadriver_legacy';
 
         if ($this->filesystem->isDirectory($packagePath)) {
             $this->filesystem->deleteDirectory($packagePath);
