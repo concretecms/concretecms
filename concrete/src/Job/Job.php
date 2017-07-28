@@ -249,13 +249,15 @@ abstract class Job extends Object
             $path = $jobClassLocation.'/'.$jHandle.'.php';
             if (file_exists($path)) {
                 $className = static::getClassName($jHandle, $pkgHandle);
-                $j = Core::make($className);
-                $j->jHandle = $jHandle;
-                if (intval($jobData['jID']) > 0) {
-                    $j->setPropertiesFromArray($jobData);
+                if (class_exists($className, true)) {
+                    $j = Core::make($className);
+                    $j->jHandle = $jHandle;
+                    if (intval($jobData['jID']) > 0) {
+                        $j->setPropertiesFromArray($jobData);
+                    }
+    
+                    return $j;
                 }
-
-                return $j;
             }
         }
 
