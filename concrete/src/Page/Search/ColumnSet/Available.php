@@ -1,8 +1,8 @@
 <?php
 namespace Concrete\Core\Page\Search\ColumnSet;
 
-use Concrete\Core\Page\Search\ColumnSet\Column\PageID;
-use Concrete\Core\Page\Search\ColumnSet\Column\SitemapDisplayOrder;
+use Concrete\Core\Page\Search\ColumnSet\Column\PageIDColumn;
+use Concrete\Core\Page\Search\ColumnSet\Column\SitemapDisplayOrderColumn;
 use Concrete\Core\Search\Column\Column;
 
 class Available extends DefaultSet
@@ -11,8 +11,8 @@ class Available extends DefaultSet
 
     public function __construct()
     {
-        $this->addColumn(new SitemapDisplayOrder());
-        $this->addColumn(new PageID());
+        $this->addColumn(new SitemapDisplayOrderColumn());
+        $this->addColumn(new PageIDColumn());
         parent::__construct();
     }
 }

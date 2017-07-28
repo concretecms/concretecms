@@ -1,10 +1,9 @@
 <?php
 namespace Concrete\Core\File\Search\ColumnSet;
 
-use Concrete\Core\File\Search\ColumnSet\Column\FileID;
-use Concrete\Core\File\Search\ColumnSet\Column\FileVersionDateAdded;
-use Concrete\Core\File\Search\ColumnSet\Column\FileVersionSize;
-use Concrete\Core\File\Search\ColumnSet\Column\FileVersionTitle;
+use Concrete\Core\File\Search\ColumnSet\Column\FileVersionDateAddedColumn;
+use Concrete\Core\File\Search\ColumnSet\Column\FileVersionSizeColumn;
+use Concrete\Core\File\Search\ColumnSet\Column\FileVersionTitleColumn;
 use Core;
 use Concrete\Core\Search\Column\Column;
 use Concrete\Core\Search\Column\Set;
@@ -27,10 +26,10 @@ class DefaultSet extends Set
 
     public function __construct()
     {
-        $this->addColumn(new FileVersionTitle());
+        $this->addColumn(new FileVersionTitleColumn());
         $this->addColumn(new Column('fv.fvType', t('Type'), 'getType', false));
-        $this->addColumn(new FileVersionDateAdded());
-        $this->addColumn(new FileVersionSize());
+        $this->addColumn(new FileVersionDateAddedColumn());
+        $this->addColumn(new FileVersionSizeColumn());
         $title = $this->getColumnByKey('fv.fvDateAdded');
         $this->setDefaultSortColumn($title, 'desc');
     }
