@@ -23,11 +23,14 @@ class FieldsetBuilder
     {
         $fieldset = new FieldSet();
         $fieldset->setTitle($this->fieldsetName);
+        $position = 0;
         foreach($this->controls as $control) {
             $control = $control->build($builder);
             $control->setId((new UuidGenerator())->generate($builder->getEntityManager(), $control));
             $control->setFieldSet($fieldset);
+            $control->setPosition($position);
             $fieldset->getControls()->add($control);
+            $position++;
         }
         return $fieldset;
     }
@@ -38,6 +41,13 @@ class FieldsetBuilder
         $key = new ExpressKey();
         $key->setAttributeKeyHandle($akHandle);
         $control->setAttributeKey($key);
+        $this->controls[] = $control;
+        return $this;
+    }
+
+    public function addAssociationControl($target_property_name)
+    {
+        $control = new FieldsetBuilderAssociationControl($target_property_name);
         $this->controls[] = $control;
         return $this;
     }
