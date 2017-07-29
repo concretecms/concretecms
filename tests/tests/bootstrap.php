@@ -20,9 +20,9 @@ require_once 'AttributeValueTestCase.php';
 require_once 'FileStorageTestCase.php';
 require_once 'UserTestCase.php';
 
-define('DIR_TESTS', realpath(__DIR__ . "/../"));
-define('DIR_BASE', realpath(DIR_TESTS . '/../'));
-$DIR_BASE_CORE = realpath(DIR_BASE . '/concrete');
+define('DIR_TESTS', str_replace(DIRECTORY_SEPARATOR, '/', realpath(__DIR__ . "/../")));
+define('DIR_BASE', str_replace(DIRECTORY_SEPARATOR, '/', realpath(DIR_TESTS . '/../')));
+$DIR_BASE_CORE = str_replace(DIRECTORY_SEPARATOR, '/', realpath(DIR_BASE . '/concrete'));
 
 require $DIR_BASE_CORE . '/bootstrap/configure.php';
 

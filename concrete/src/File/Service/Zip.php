@@ -162,7 +162,7 @@ class Zip
         if ($normalized === false || !$fs->isFile($normalized)) {
             throw new Exception(t('Unable to find the ZIP file %s', $zipFile));
         }
-        $zipFile = $normalized;
+        $zipFile = str_replace(DIRECTORY_SEPARATOR, '/', $normalized);
         $normalized = @realpath($destinationDirectory);
         if ($normalized === false || !$fs->isDirectory($normalized)) {
             throw new Exception(t('Unable to find the directory %s', $destinationDirectory));
@@ -170,7 +170,7 @@ class Zip
         if (!$fs->isWritable($normalized)) {
             throw new Exception(t('The directory "%s" is not writable', $destinationDirectory));
         }
-        $destinationDirectory = $normalized;
+        $destinationDirectory = str_replace(DIRECTORY_SEPARATOR, '/', $normalized);
         $options += [
             'skipCheck' => false,
         ];
@@ -429,8 +429,8 @@ class Zip
         $cmd = 'unzip';
         $cmd .= ' -o'; // overwrite files WITHOUT prompting
         $cmd .= ' -q'; // quiet mode, to avoid overflow of stdout
-        $cmd .= ' ' . escapeshellarg($zipFile); // file to extract
-        $cmd .= ' -d ' . escapeshellarg($destinationDirectory); // destination directory
+        $cmd .= ' ' . escapeshellarg(str_replace('/', DIRECTORY_SEPARATOR, $zipFile)); // file to extract
+        $cmd .= ' -d ' . escapeshellarg(str_replace('/', DIRECTORY_SEPARATOR, $destinationDirectory)); // destination directory
         $rc = 1;
         $output = [];
         @exec($cmd . ' 2>&1', $output, $rc);

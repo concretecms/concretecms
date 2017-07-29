@@ -181,7 +181,7 @@ function overrideable_core_class($class, $path, $pkgHandle = null)
         // So let's strip DIRNAME_CLASSES off the front, place /Concrete/ between DIRNAME_CLASSES
         // and the rest of the path.
         $newPath = substr($path, strlen(DIRNAME_CLASSES));
-        $newPath = DIRNAME_CLASSES . DIRECTORY_SEPARATOR . 'Concrete' . $newPath;
+        $newPath = DIRNAME_CLASSES . '/Concrete' . $newPath;
         $r = $env->getRecord($newPath);
         if ($r->override) {
             return core_class($class, true);

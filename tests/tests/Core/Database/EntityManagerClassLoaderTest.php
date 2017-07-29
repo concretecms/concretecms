@@ -26,15 +26,12 @@ class EntityManagerClassLoaderTest extends \PHPUnit_Framework_TestCase
 
         // Test if the driver contains the default lookup path
         $driverPaths = $defaultAnnotationDriver->getPaths();
-        $this->assertEquals(DIR_BASE_CORE.DIRECTORY_SEPARATOR.DIRNAME_CLASSES.'/'.DIRNAME_ENTITIES,
+        $this->assertEquals(DIR_BASE_CORE . '/' . DIRNAME_CLASSES.'/'.DIRNAME_ENTITIES,
             $driverPaths[0]);
     }
 
     public function testApplicationEntityClasses()
     {
-        if (DIRECTORY_SEPARATOR === '\\') {
-            $this->markTestSkipped('@TODO This test needs to be fixed for Windows');
-        }
         $root = dirname(DIR_BASE_CORE . '../');
         mkdir($root . '/application/src/Entity/Advertisement', 0777, true);
         copy(dirname(__FILE__) . '/fixtures/BannerAd.php', $root . '/application/src/Entity/Advertisement/BannerAd.php');
@@ -52,7 +49,7 @@ class EntityManagerClassLoaderTest extends \PHPUnit_Framework_TestCase
 
         // Test if the driver contains the default lookup path
         $driverPaths = $defaultAnnotationDriver->getPaths();
-        $this->assertEquals(DIR_APPLICATION.DIRECTORY_SEPARATOR.DIRNAME_CLASSES.'/'.DIRNAME_ENTITIES,
+        $this->assertEquals(DIR_APPLICATION . '/' . DIRNAME_CLASSES.'/'.DIRNAME_ENTITIES,
             $driverPaths[0]);
 
         unlink($root . '/application/src/Entity/Advertisement/BannerAd.php');

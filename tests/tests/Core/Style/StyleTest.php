@@ -19,7 +19,7 @@ class StyleTest extends \PHPUnit_Framework_TestCase
 
     public function testStyles()
     {
-        $definition = dirname(__FILE__) . '/fixtures/styles.xml';
+        $definition = str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__)) . '/fixtures/styles.xml';
         $styleList = \Concrete\Core\StyleCustomizer\StyleList::loadFromXMLFile($definition);
         $sets = $styleList->getSets();
         $styles = $sets[0]->getStyles();
@@ -36,16 +36,13 @@ class StyleTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($styles[0] instanceof \Concrete\Core\StyleCustomizer\Style\ColorStyle);
         $this->assertTrue($styles2[0] instanceof \Concrete\Core\StyleCustomizer\Style\SizeStyle);
 
-        if (DIRECTORY_SEPARATOR === '\\') {
-            $this->markTestSkipped('@TODO This test needs to be fixed for Windows');
-        }
         $this->assertTrue($styles[0]->getFormElementPath() == DIR_FILES_ELEMENTS_CORE . '/' . DIRNAME_STYLE_CUSTOMIZER . '/' . DIRNAME_STYLE_CUSTOMIZER_TYPES . '/color.php', sprintf('Incorrect path: %s', $styles[0]->getFormElementPath()));
         $this->assertTrue($styles2[0]->getFormElementPath() == DIR_FILES_ELEMENTS_CORE . '/' . DIRNAME_STYLE_CUSTOMIZER . '/' . DIRNAME_STYLE_CUSTOMIZER_TYPES . '/size.php', sprintf('Incorrect path: %s', $styles2[0]->getFormElementPath()));
     }
 
     public function testLessVariableColorParsing()
     {
-        $defaults = dirname(__FILE__) . '/fixtures/defaults.less';
+        $defaults = str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__)) . '/fixtures/defaults.less';
         $list = \Concrete\Core\StyleCustomizer\Style\ValueList::loadFromLessFile($defaults);
 
         $cs1 = new \Concrete\Core\StyleCustomizer\Style\ColorStyle();
@@ -70,7 +67,7 @@ class StyleTest extends \PHPUnit_Framework_TestCase
 
     public function testLessVariableSizeParsing()
     {
-        $defaults = dirname(__FILE__) . '/fixtures/defaults.less';
+        $defaults = str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__)) . '/fixtures/defaults.less';
         $list = \Concrete\Core\StyleCustomizer\Style\ValueList::loadFromLessFile($defaults);
 
         $ss1 = new \Concrete\Core\StyleCustomizer\Style\SizeStyle();
@@ -87,7 +84,7 @@ class StyleTest extends \PHPUnit_Framework_TestCase
 
     public function testLessVariableFontFullParsing()
     {
-        $defaults = dirname(__FILE__) . '/fixtures/defaults.less';
+        $defaults = str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__)) . '/fixtures/defaults.less';
         $list = \Concrete\Core\StyleCustomizer\Style\ValueList::loadFromLessFile($defaults);
 
         $fs1 = new \Concrete\Core\StyleCustomizer\Style\TypeStyle();
@@ -116,7 +113,7 @@ class StyleTest extends \PHPUnit_Framework_TestCase
 
     public function testLessVariableFontPartialParsing()
     {
-        $defaults = dirname(__FILE__) . '/fixtures/defaults.less';
+        $defaults = str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__)) . '/fixtures/defaults.less';
         $list = \Concrete\Core\StyleCustomizer\Style\ValueList::loadFromLessFile($defaults);
 
         $ts = new \Concrete\Core\StyleCustomizer\Style\TypeStyle();
@@ -130,7 +127,7 @@ class StyleTest extends \PHPUnit_Framework_TestCase
 
     public function testLessVariableImages()
     {
-        $defaults = dirname(__FILE__) . '/fixtures/defaults.less';
+        $defaults = str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__)) . '/fixtures/defaults.less';
         $list = \Concrete\Core\StyleCustomizer\Style\ValueList::loadFromLessFile($defaults);
 
         $ts = new \Concrete\Core\StyleCustomizer\Style\ImageStyle();
@@ -141,7 +138,7 @@ class StyleTest extends \PHPUnit_Framework_TestCase
 
     public function testCustomizableStyleSheetObjects()
     {
-        $defaults = dirname(__FILE__) . '/fixtures/elemental.less';
+        $defaults = str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__)) . '/fixtures/elemental.less';
         $list = \Concrete\Core\StyleCustomizer\Style\ValueList::loadFromLessFile($defaults);
         $env = Environment::get();
 

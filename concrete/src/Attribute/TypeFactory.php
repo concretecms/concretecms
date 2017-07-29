@@ -46,13 +46,13 @@ class TypeFactory
 
     protected function installDatabase(AttributeType $type)
     {
-        $r = $this->environment->getRecord(DIRNAME_ATTRIBUTES . DIRECTORY_SEPARATOR . $type->getAttributeTypeHandle() . DIRECTORY_SEPARATOR . FILENAME_ATTRIBUTE_DB, $type->getPackageHandle());
+        $r = $this->environment->getRecord(DIRNAME_ATTRIBUTES . '/' . $type->getAttributeTypeHandle() . '/' . FILENAME_ATTRIBUTE_DB, $type->getPackageHandle());
         if ($r->exists()) {
             // db.xml legacy approach
             \Concrete\Core\Package\Package::installDB($r->file);
         }
 
-        if (is_dir(DIR_APPLICATION . DIRECTORY_SEPARATOR . DIRNAME_CLASSES . DIRECTORY_SEPARATOR .
+        if (is_dir(DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/' .
             DIRNAME_ENTITIES)) {
             // Refresh the application entities
             $manager = new DatabaseStructureManager($this->entityManager);

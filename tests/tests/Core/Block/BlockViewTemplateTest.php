@@ -65,9 +65,6 @@ class BlockViewTemplateTest extends \PHPUnit_Framework_TestCase
     // Core block, view.php, no custom template.
     public function testCoreBlockView()
     {
-        if (DIRECTORY_SEPARATOR === '\\') {
-            $this->markTestSkipped('@TODO This test needs to be fixed for Windows');
-        }
         $block = $this->getMockBlock('autonav');
         $packageList = $this->getMockPackageList();
 
@@ -84,9 +81,6 @@ class BlockViewTemplateTest extends \PHPUnit_Framework_TestCase
 
     public function testCoreBlockWithCustomTemplateInCore()
     {
-        if (DIRECTORY_SEPARATOR === '\\') {
-            $this->markTestSkipped('@TODO This test needs to be fixed for Windows');
-        }
         $block = $this->getMockBlock('autonav', 'breadcrumb.php');
         $packageList = $this->getMockPackageList();
         $bv = new BlockViewTemplate($block, $packageList);
@@ -98,9 +92,6 @@ class BlockViewTemplateTest extends \PHPUnit_Framework_TestCase
 
     public function testCoreBlockWithCustomTemplateDirectoryInCore()
     {
-        if (DIRECTORY_SEPARATOR === '\\') {
-            $this->markTestSkipped('@TODO This test needs to be fixed for Windows');
-        }
         $block = $this->getMockBlock('autonav', 'responsive_header_navigation');
         $packageList = $this->getMockPackageList();
         $bv = new BlockViewTemplate($block, $packageList);

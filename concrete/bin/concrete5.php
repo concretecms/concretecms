@@ -60,7 +60,7 @@ if (!defined('DIR_BASE')) {
         // Fall back to the real directory containing this script
         $DIR_BASE = dirname(dirname(__DIR__));
     }
-    define('DIR_BASE', $DIR_BASE);
+    define('DIR_BASE', str_replace(DIRECTORY_SEPARATOR, '/', $DIR_BASE));
     unset($DIR_BASE);
 }
 
