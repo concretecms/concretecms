@@ -659,7 +659,7 @@ return [
         'PHP' => ['php', FileType::T_TEXT],
         'MS Word' => ['doc,docx', FileType::T_DOCUMENT],
         'Stylesheet' => ['css', FileType::T_TEXT],
-        'MP4' => ['mp4', FileType::T_VIDEO],
+        'MP4' => ['mp4', FileType::T_VIDEO, false, 'video'],
         'FLV' => ['flv', FileType::T_VIDEO, 'flv'],
         'MP3' => ['mp3', FileType::T_AUDIO, false, 'audio'],
         'MP4 Audio' => ['m4a', FileType::T_AUDIO, false, 'audio'],
@@ -675,9 +675,9 @@ return [
         'TAR Archive' => ['tar', FileType::T_APPLICATION],
         'Zip Archive' => ['zip', FileType::T_APPLICATION],
         'GZip Archive' => ['gz,gzip', FileType::T_APPLICATION],
-        'OGG' => ['ogg', FileType::T_AUDIO],
-        'OGG Video' => ['ogv', FileType::T_VIDEO],
-        'WebM' => ['webm', FileType::T_VIDEO],
+        'OGG' => ['ogg', FileType::T_AUDIO, false, 'audio'],
+        'OGG Video' => ['ogv', FileType::T_VIDEO, false, 'video'],
+        'WebM' => ['webm', FileType::T_VIDEO, false, 'video'],
     ],
 
     /*
@@ -1066,6 +1066,7 @@ return [
         'core/frontend/thumbnail-builder' => [
             [
                 ['javascript', 'jquery'],
+                ['javascript', 'underscore'],
                 ['javascript', 'core/frontend/thumbnail-builder'],
             ],
         ],

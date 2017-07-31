@@ -31,7 +31,7 @@ class DefaultPackageProvider extends AbstractPackageProvider
         // PackageProvider classes
 
         // Now, we check to see if no src/ directory exists. If none exists, we return no entity manager
-        if (!is_dir($this->pkg->getPackagePath() . DIRECTORY_SEPARATOR . DIRNAME_CLASSES)) {
+        if (!is_dir($this->pkg->getPackagePath() . '/' . DIRNAME_CLASSES)) {
             return array();
         }
 
@@ -39,7 +39,7 @@ class DefaultPackageProvider extends AbstractPackageProvider
 
         if ($this->pkg->shouldEnableLegacyNamespace()) {
             // The legacy of the legacies.
-            $path = $this->pkg->getPackagePath() . DIRECTORY_SEPARATOR . DIRNAME_CLASSES;
+            $path = $this->pkg->getPackagePath() . '/' . DIRNAME_CLASSES;
             if (is_dir($path)) {
                 $driver = new Driver(
                     $this->pkg->getNamespace() . '\Src',
@@ -48,7 +48,7 @@ class DefaultPackageProvider extends AbstractPackageProvider
             }
         } else {
             // We have to add Concrete\Package\Whatever mapping to packages/whatever/src/Concrete
-            $path = $this->pkg->getPackagePath() . DIRECTORY_SEPARATOR . DIRNAME_CLASSES . '/Concrete/' . DIRNAME_ENTITIES;
+            $path = $this->pkg->getPackagePath() . '/' . DIRNAME_CLASSES . '/Concrete/' . DIRNAME_ENTITIES;
             if (is_dir($path)) {
                 $driver = new Driver(
                     $this->pkg->getNamespace() . '\Entity',
@@ -65,7 +65,7 @@ class DefaultPackageProvider extends AbstractPackageProvider
         // Now if there are any autoloader entries, we automatically make those entity locations as well.
         foreach($this->pkg->getPackageAutoloaderRegistries() as $path => $prefix) {
             $drivers[] = new Driver(trim($prefix, '\\'),
-                new AnnotationDriver($reader, $this->pkg->getPackagePath() . DIRECTORY_SEPARATOR . $path)
+                new AnnotationDriver($reader, $this->pkg->getPackagePath() . '/' . $path)
             );
         }
 

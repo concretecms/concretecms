@@ -74,7 +74,7 @@ class ImporterTest extends \FileStorageTestCase
 
     public function testFileInvalidExtension()
     {
-        $file = dirname(__FILE__) . '/test.invalid';
+        $file = str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__)) . '/test.invalid';
         touch($file);
         $fi = new Importer();
         $r = $fi->import($file, 'test.invalid');
@@ -83,7 +83,7 @@ class ImporterTest extends \FileStorageTestCase
 
     public function testFileInvalidStorageLocation()
     {
-        $file = dirname(__FILE__) . '/test.txt';
+        $file = str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__)) . '/test.txt';
         touch($file);
         $fi = new Importer();
         $r = $fi->import($file, 'test.txt');
@@ -96,7 +96,7 @@ class ImporterTest extends \FileStorageTestCase
         mkdir($this->getStorageDirectory());
         $this->getStorageLocation();
 
-        $file = dirname(__FILE__) . '/test.txt';
+        $file = str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__)) . '/test.txt';
         touch($file);
         $fi = new Importer();
         $r = $fi->import($file, 'test.txt');
@@ -122,7 +122,7 @@ class ImporterTest extends \FileStorageTestCase
         mkdir($this->getStorageDirectory());
         $this->getStorageLocation();
 
-        $file = dirname(__FILE__) . '/test.txt';
+        $file = str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__)) . '/test.txt';
         touch($file);
         $fi = new Importer();
         $fi->import($file, 'test.txt');
@@ -213,7 +213,7 @@ class ImporterTest extends \FileStorageTestCase
         mkdir($this->getStorageDirectory());
         $this->getStorageLocation();
 
-        $sample = dirname(__FILE__) . '/StorageLocation/fixtures/sample.txt';
+        $sample = str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__)) . '/StorageLocation/fixtures/sample.txt';
         $fi = new Importer();
         $file = $fi->import($sample, 'sample.txt');
 
@@ -233,11 +233,11 @@ class ImporterTest extends \FileStorageTestCase
         mkdir($this->getStorageDirectory());
         $this->getStorageLocation();
 
-        $sample = dirname(__FILE__) . '/StorageLocation/fixtures/sample.txt';
+        $sample = str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__)) . '/StorageLocation/fixtures/sample.txt';
         $fi = new Importer();
         $fo1 = $fi->import($sample, 'sample.txt');
 
-        $sample = dirname(__FILE__) . '/StorageLocation/fixtures/tiny.png';
+        $sample = str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__)) . '/StorageLocation/fixtures/tiny.png';
         $fi = new Importer();
         $fo2 = $fi->import($sample, 'tiny.png');
 
@@ -250,7 +250,7 @@ class ImporterTest extends \FileStorageTestCase
         mkdir($this->getStorageDirectory());
         $this->getStorageLocation();
 
-        $sample = dirname(__FILE__) . '/StorageLocation/fixtures/sample.txt';
+        $sample = str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__)) . '/StorageLocation/fixtures/sample.txt';
         $fi = new Importer();
         $file = $fi->import($sample, 'sample.txt');
 
@@ -269,7 +269,7 @@ class ImporterTest extends \FileStorageTestCase
         mkdir($this->getStorageDirectory());
         $this->getStorageLocation();
 
-        $sample = dirname(__FILE__) . '/StorageLocation/fixtures/tiny.png';
+        $sample = str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__)) . '/StorageLocation/fixtures/tiny.png';
         $fi = new Importer();
         $f = $fi->import($sample, 'tiny.png');
 
@@ -286,7 +286,7 @@ class ImporterTest extends \FileStorageTestCase
         mkdir($this->getStorageDirectory());
         $this->getStorageLocation();
 
-        $sample = dirname(__FILE__) . '/StorageLocation/fixtures/sample.txt';
+        $sample = str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__)) . '/StorageLocation/fixtures/sample.txt';
         $fi = new Importer();
         $f = $fi->import($sample, 'sample.txt')->getFile();
 
@@ -303,13 +303,13 @@ class ImporterTest extends \FileStorageTestCase
         mkdir($this->getStorageDirectory());
         $this->getStorageLocation();
 
-        $file = dirname(__FILE__) . '/test.txt';
+        $file = str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__)) . '/test.txt';
         touch($file);
         $fi = new Importer();
         $fo = $fi->import($file, 'test.txt');
         $fo = $fo->getFile();
 
-        $sample = dirname(__FILE__) . '/StorageLocation/fixtures/sample.txt';
+        $sample = str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__)) . '/StorageLocation/fixtures/sample.txt';
         $r = $fi->import($sample, 'sample.txt', $fo);
 
         $this->assertInstanceOf('\Concrete\Core\Entity\File\Version', $r);
@@ -327,7 +327,7 @@ class ImporterTest extends \FileStorageTestCase
         mkdir($this->getStorageDirectory());
         $this->getStorageLocation();
 
-        $file = dirname(__FILE__) . '/test.txt';
+        $file = str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__)) . '/test.txt';
         touch($file);
         $fi = new Importer();
         $r = $fi->import($file, 'test.txt');

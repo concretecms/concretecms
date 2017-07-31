@@ -55,7 +55,7 @@ class CoreDriverTest extends \PHPUnit_Framework_TestCase
             'AnnotationReader is not cached. For performance reasons, it should be wrapped in a CachedReader');
         // Test if the driver contains the default lookup path
         $driverPaths = $annotaionDriver->getPaths();
-        $this->assertEquals(DIR_BASE_CORE.DIRECTORY_SEPARATOR.DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES,
+        $this->assertEquals(DIR_BASE_CORE . '/' . DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES,
             $driverPaths[0],
             'CoreDriver doesn\'t contain the correct entity lookup path.');
     }

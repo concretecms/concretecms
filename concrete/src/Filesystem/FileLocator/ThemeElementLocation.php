@@ -12,37 +12,37 @@ class ThemeElementLocation extends ThemeLocation
     {
         if ($this->pkgHandle) {
             return DIR_PACKAGES
-                . DIRECTORY_SEPARATOR
+                . '/'
                 . $this->pkgHandle
-                . DIRECTORY_SEPARATOR
+                . '/'
                 . DIRNAME_THEMES
-                . DIRECTORY_SEPARATOR
+                . '/'
                 . $this->themeHandle;
+
         } else {
             return DIR_APPLICATION
-                . DIRECTORY_SEPARATOR
+                . '/'
                 . DIRNAME_THEMES
-                . DIRECTORY_SEPARATOR
+                . '/'
                 . $this->themeHandle;
         }
     }
-
 
     public function getURL()
     {
         if ($this->pkgHandle) {
             return DIR_REL
-            . DIRECTORY_SEPARATOR
+            . '/'
             . $this->pkgHandle
-            . DIRECTORY_SEPARATOR
+            . '/'
             . DIRNAME_THEMES
-            . DIRECTORY_SEPARATOR
+            . '/'
             . $this->themeHandle;
         } else {
             return DIR_REL
-            . DIRECTORY_SEPARATOR
+            . '/'
             . DIRNAME_THEMES
-            . DIRECTORY_SEPARATOR
+            . '/'
             . $this->themeHandle;
         }
     }

@@ -82,7 +82,6 @@ class FileLocatorTest extends \PHPUnit_Framework_TestCase
 
     public function testCheckAllPackages()
     {
-
         // First, we create the package list we're going to use. It's going to have three mock packages in it
         $packages = [];
         foreach(['calendar', 'thumbnails_pro', 'superfish'] as $pkgHandle) {

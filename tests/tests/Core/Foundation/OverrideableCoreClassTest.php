@@ -228,7 +228,7 @@ class OverrideableCoreClassTest extends ClassLoaderTestCase
         $env = Environment::get();
         $env->clearOverrideCache();
 
-        $destinationDirectory = DIR_APPLICATION . DIRECTORY_SEPARATOR . dirname($path);
+        $destinationDirectory = DIR_APPLICATION . '/' . dirname($path);
         $this->putFileIntoPlace($path, $destinationDirectory);
 
         \Config::save('app.enable_legacy_src_namespace', false);

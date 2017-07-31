@@ -128,9 +128,9 @@ $dh = Core::make('helper/date');
                 var bVal = typeof( bTD.attr('data-sort') ) == 'undefined' ? bTD.text().toUpperCase() : parseInt(bTD.attr('data-sort'));
 
                 if (asc) {
-                    return aVal < bVal ? -1 : 1;
-                } else {
                     return bVal < aVal ? -1 : 1;
+                } else {
+                    return aVal < bVal ? -1 : 1;
                 }
             });
             sortableList.append(listItems);

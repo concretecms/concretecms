@@ -65,7 +65,7 @@ class ContentFileTranslateTest extends FileStorageTestCase
         $this->getStorageLocation();
 
         $fi = new \Concrete\Core\File\Importer();
-        $file = dirname(__FILE__) . '/fixtures/background-slider-blue-sky.png';
+        $file = str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__)) . '/fixtures/background-slider-blue-sky.png';
         $r = $fi->import($file, 'background-slider-blue-sky.png');
         $path = $r->getRelativePath();
 

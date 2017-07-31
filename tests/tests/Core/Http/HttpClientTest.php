@@ -107,8 +107,8 @@ class HttpClientTest extends PHPUnit_Framework_TestCase
             ];
             $result[] = [
                 $adapterClass,
-                __FILE__,
-                __DIR__,
+                str_replace(DIRECTORY_SEPARATOR, '/', __FILE__),
+                str_replace(DIRECTORY_SEPARATOR, '/', __DIR__),
                 false,
             ];
             $certsFolder = self::SKIP_VALID_CERTS;
