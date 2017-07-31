@@ -1066,6 +1066,7 @@ return [
         'core/frontend/thumbnail-builder' => [
             [
                 ['javascript', 'jquery'],
+                ['javascript', 'underscore'],
                 ['javascript', 'core/frontend/thumbnail-builder'],
             ],
         ],
