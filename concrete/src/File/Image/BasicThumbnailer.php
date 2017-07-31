@@ -231,7 +231,11 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
      */
     private function checkForThumbnailAndCreateIfNecessary($obj, $maxWidth, $maxHeight, $crop = false)
     {
-        $storage = $obj->getFileStorageLocationObject();
+        if ($obj instanceof File) {
+            $storage = $obj->getFileStorageLocationObject();
+        } else {
+            $storage = $this->getStorageLocation();
+        }
         $this->setStorageLocation($storage);
         $filesystem = $storage->getFileSystemObject();
         $configuration = $storage->getConfigurationObject();
@@ -248,7 +252,7 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
                 $filename = '';
             }
         } else {
-            $filename = md5(implode(':', array($obj, $maxWidth, $maxHeight, $crop, filemtime($obj))))
+            $filename = md5(implode(':', array($obj, $maxWidth, $maxHeight, $crop, @filemtime($obj))))
                 . '.' . $fh->getExtension($obj);
         }
 
