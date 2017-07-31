@@ -294,7 +294,11 @@ class Service
         $locale->setCountry($data[1]);
 
         $tree = new SiteTree();
-        $tree->setSiteHomePageID(HOME_CID);
+        $cID = $this->entityManager->getConnection()->fetchColumn('select cID from MultilingualSections where msLanguage = ? and msCountry = ?', [$data[0], $data[1]]);
+        if (!$cID) {
+            $cID = HOME_CID;
+        }
+        $tree->setSiteHomePageID($cID);
         $tree->setLocale($locale);
         $locale->setSiteTree($tree);
 
