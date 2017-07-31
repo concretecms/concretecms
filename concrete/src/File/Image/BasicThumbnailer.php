@@ -262,18 +262,30 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
 
         /** Attempt to create the image */
         if (!$filesystem->has($abspath)) {
-            if ($obj instanceof File && $fr->exists()) {
-                $image = \Image::load($fr->read());
-            } else {
-                $image = \Image::open($obj);
+            try {
+                if ($obj instanceof File && $fr->exists()) {
+                    $image = \Image::load($fr->read());
+                } else {
+                    $image = \Image::open($obj);
+                }
+            } catch (\Exception $e) {
+                //If we can't open or load the file
+                $abspath = false;
             }
-            // create image there
-            $this->create($image,
-                $abspath,
-                $maxWidth,
-                $maxHeight,
-                $crop);
+
+            if ($abspath === false) {
+                $src = '';
+            } else {
+                // create image there
+                $this->create($image,
+                    $abspath,
+                    $maxWidth,
+                    $maxHeight,
+                    $crop);
+            }
         }
+
+
 
         $thumb = new \stdClass();
         $thumb->src = $src;
