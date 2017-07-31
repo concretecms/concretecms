@@ -84,6 +84,8 @@ class Version20160725000000 extends AbstractMigration
         $this->nullifyInvalidForeignKey('UserAttributeValues', 'avID', 'AttributeValues', 'avID');
         // Delete orphans of AttributeSets
         $this->deleteInvalidForeignKey('AttributeSetKeys', 'asID', 'AttributeSets', 'asID');
+        // Fix Stack orphans 
+        $this->deleteInvalidForeignKey('Stacks', 'cID', 'Pages', 'cID');
     }
 
     protected function nullifyInvalidForeignKeys()
@@ -1265,6 +1267,50 @@ class Version20160725000000 extends AbstractMigration
         // We don't have to do anything to fulfill this since it's already been taken care of by the previous migrations.
     }
 
+    protected function fixStacks()
+    {
+        $this->output(t('Updating Stacks and Global Areas...'));
+        $this->connection->executeQuery('update Pages inner join Stacks on Pages.cID = Stacks.cID set Pages.siteTreeID = 0');
+        $app = Application::getFacadeApplication();
+        $site = \Site::getSite();
+        if ((int) $this->connection->fetchColumn('select count(*) from SiteLocales where siteID = ?', [$site->getSiteID()]) > 1) {
+            $neutrals = [];
+            foreach ($this->connection->fetchAll('select stName, stType from Stacks where stMultilingualSection = 0') as $row) {
+                $neutrals[$row['stName'] . '@' . $row['stType']] = $row['cID'];
+            }
+            foreach ($this->connection->fetchAll('select * from Stacks where stMultilingualSection <> 0') as $row) {
+                $neutralKey = $row['stName'] . '@' . $row['stType'];
+                $child = \Stack::getByID($row['cID']);
+                if ($child) {
+                    if (isset($neutrals[$neutralKey]) && is_numeric(isset($neutrals[$neutralKey]))) {
+                        if ($row['stType'] == \Stack::ST_TYPE_GLOBAL_AREA) {
+                            $neutrals[$neutralKey] = \Page::getByID($neutrals[$neutralKey]);
+                            if ($neutrals[$neutralKey] && $neutrals[$neutralKey]->isError()) {
+                                $neutrals[$neutralKey] = null;
+                            }
+                        } else {
+                            $neutrals[$neutralKey] = \Stack::getByID($neutrals[$neutralKey]);
+                        }
+                        if (!$neutrals[$neutralKey]) {
+                            unset($neutrals[$neutralKey]);
+                        }
+                    }
+                    if (!isset($neutrals[$neutralKey])) {
+                        if ($row['stType'] == \Stack::ST_TYPE_GLOBAL_AREA) {
+                            $neutrals[$neutralKey] = \Stack::addGlobalArea($row['stName']);
+                        } else {
+                            $neutrals[$neutralKey] = \Stack::addStack($row['stName']);
+                        }
+                    }
+                    $child->move($neutrals[$neutralKey]);
+                }
+            }
+        } else {
+            // Consider all the stacks and global areas as "neutral version"
+            $this->connection->executeQuery('update Stacks set stMultilingualSection = 0');
+        }
+    }
+
     public function up(Schema $schema)
     {
         $this->connection->Execute('set foreign_key_checks = 0');
@@ -1293,6 +1339,7 @@ class Version20160725000000 extends AbstractMigration
         $this->splittedTrackingCode();
         $this->cleanupOldPermissions();
         $this->installLocales();
+        $this->fixStacks();
         $this->nullifyInvalidForeignKeys();
         $this->connection->Execute('set foreign_key_checks = 1');
     }
