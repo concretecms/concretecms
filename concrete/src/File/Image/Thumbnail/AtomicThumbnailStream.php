@@ -83,7 +83,7 @@ class AtomicThumbnailStream implements \IteratorAggregate
         $now = new \DateTime('now');
 
         $qb = clone $nextQuery;
-        $qb->setParameter(':currentTime', $now->format(DATE_ATOM));
+        $qb->setParameter(':currentTime', $now->format('Y-m-d H:i:s'));
 
         return $qb->execute()->fetch();
     }
@@ -105,7 +105,7 @@ class AtomicThumbnailStream implements \IteratorAggregate
 
             if (!$db->update($this->table, [
                 $this->lockColumn => $lockID,
-                $this->lockTimeoutColumn => $date->format(DATE_ATOM)
+                $this->lockTimeoutColumn => $date->format('Y-m-d H:i:s')
             ], $next)
             ) {
                 return false;

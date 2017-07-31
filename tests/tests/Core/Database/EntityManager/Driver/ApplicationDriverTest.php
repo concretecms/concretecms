@@ -53,11 +53,11 @@ class ApplicationDriverTest extends \PHPUnit_Framework_TestCase
     public function testGetDefaultDriver()
     {
         // prepare
-        if (!$this->filesystem->isWritable(DIR_APPLICATION . DIRECTORY_SEPARATOR . DIRNAME_CLASSES)) {
+        if (!$this->filesystem->isWritable(DIR_APPLICATION . '/' . DIRNAME_CLASSES)) {
             throw new \Exception("Cannot write to the application/src directory for the testing purposes. Please check permissions!");
         }
-        if (!$this->filesystem->isDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . DIRNAME_CLASSES . DIRECTORY_SEPARATOR . DIRNAME_ENTITIES)) {
-            $this->filesystem->makeDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . DIRNAME_CLASSES . DIRECTORY_SEPARATOR . DIRNAME_ENTITIES);
+        if (!$this->filesystem->isDirectory(DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES)) {
+            $this->filesystem->makeDirectory(DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES);
         }
 
         // test
@@ -96,7 +96,7 @@ class ApplicationDriverTest extends \PHPUnit_Framework_TestCase
     public function testGetLegacyDriver()
     {
         // prepare
-        if (!$this->filesystem->isWritable(DIR_APPLICATION . DIRECTORY_SEPARATOR . DIRNAME_CLASSES)) {
+        if (!$this->filesystem->isWritable(DIR_APPLICATION . '/' . DIRNAME_CLASSES)) {
             throw new \Exception("Cannot write to the application/src directory for the testing purposes. Please check permissions!");
         }
         $this->configRepository->set('app.enable_legacy_src_namespace', true);
@@ -125,14 +125,14 @@ class ApplicationDriverTest extends \PHPUnit_Framework_TestCase
     public function testGetXMLDriver()
     {
         // prepare
-        if (!$this->filesystem->isWritable(DIR_APPLICATION . DIRECTORY_SEPARATOR . DIRNAME_CONFIG)) {
+        if (!$this->filesystem->isWritable(DIR_APPLICATION . '/' . DIRNAME_CONFIG)) {
             throw new \Exception("Cannot write to the application/config directory for the testing purposes. Please check permissions!");
         }
-        if (!$this->filesystem->isDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . REL_DIR_METADATA_XML)) {
-            $this->filesystem->makeDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . REL_DIR_METADATA_XML);
+        if (!$this->filesystem->isDirectory(DIR_APPLICATION . '/' . REL_DIR_METADATA_XML)) {
+            $this->filesystem->makeDirectory(DIR_APPLICATION . '/' . REL_DIR_METADATA_XML);
         }
-        if (!$this->filesystem->isDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . DIRNAME_CLASSES . DIRECTORY_SEPARATOR . DIRNAME_ENTITIES)) {
-            $this->filesystem->makeDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . DIRNAME_CLASSES . DIRECTORY_SEPARATOR . DIRNAME_ENTITIES);
+        if (!$this->filesystem->isDirectory(DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES)) {
+            $this->filesystem->makeDirectory(DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES);
         }
         $this->configRepository->set(CONFIG_ORM_METADATA_APPLICATION, 'xml');
 
@@ -140,12 +140,12 @@ class ApplicationDriverTest extends \PHPUnit_Framework_TestCase
         $applicationDriver = new ApplicationDriver($this->configRepository, $this->app);
         $driver = $applicationDriver->getDriver();
         $this->assertEquals('xml', $this->configRepository->get(CONFIG_ORM_METADATA_APPLICATION));
-        $this->assertTrue($this->filesystem->isDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . DIRNAME_CLASSES . DIRECTORY_SEPARATOR . DIRNAME_ENTITIES,
+        $this->assertTrue($this->filesystem->isDirectory(DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES,
                 'application/src/Entities doesn\'t exist.'));
         $this->assertInstanceOf('\Doctrine\ORM\Mapping\Driver\XmlDriver', $driver);
         // Test if the driver contains the default lookup path
         $driverPaths = $driver->getLocator()->getPaths();
-        $this->assertEquals(DIR_APPLICATION . DIRECTORY_SEPARATOR . REL_DIR_METADATA_XML, $driverPaths[0]);
+        $this->assertEquals(DIR_APPLICATION . '/' . REL_DIR_METADATA_XML, $driverPaths[0]);
     }
 
     /**
@@ -155,11 +155,11 @@ class ApplicationDriverTest extends \PHPUnit_Framework_TestCase
      */
     public function testFailingGetXMLDriverWithNoConfigXMLDirectory(){
         $this->configRepository->set(CONFIG_ORM_METADATA_APPLICATION, 'xml');
-        if (!$this->filesystem->isDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . DIRNAME_CLASSES . DIRECTORY_SEPARATOR . DIRNAME_ENTITIES)) {
-            $this->filesystem->makeDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . DIRNAME_CLASSES . DIRECTORY_SEPARATOR . DIRNAME_ENTITIES);
+        if (!$this->filesystem->isDirectory(DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES)) {
+            $this->filesystem->makeDirectory(DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES);
         }
 
-        $this->assertFalse($this->filesystem->isDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . REL_DIR_METADATA_XML));
+        $this->assertFalse($this->filesystem->isDirectory(DIR_APPLICATION . '/' . REL_DIR_METADATA_XML));
         $applicationDriver = new ApplicationDriver($this->configRepository, $this->app);
         $driver = $applicationDriver->getDriver();
         // this case doesn't return a driver
@@ -182,14 +182,14 @@ class ApplicationDriverTest extends \PHPUnit_Framework_TestCase
     public function testGetYMLDriver($setting)
     {
                 // prepare
-        if (!$this->filesystem->isWritable(DIR_APPLICATION . DIRECTORY_SEPARATOR . DIRNAME_CONFIG)) {
+        if (!$this->filesystem->isWritable(DIR_APPLICATION . '/' . DIRNAME_CONFIG)) {
             throw new \Exception("Cannot write to the application/config directory for the testing purposes. Please check permissions!");
         }
-        if (!$this->filesystem->isDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . REL_DIR_METADATA_YAML)) {
-            $this->filesystem->makeDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . REL_DIR_METADATA_YAML);
+        if (!$this->filesystem->isDirectory(DIR_APPLICATION . '/' . REL_DIR_METADATA_YAML)) {
+            $this->filesystem->makeDirectory(DIR_APPLICATION . '/' . REL_DIR_METADATA_YAML);
         }
-        if (!$this->filesystem->isDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . DIRNAME_CLASSES . DIRECTORY_SEPARATOR . DIRNAME_ENTITIES)) {
-            $this->filesystem->makeDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . DIRNAME_CLASSES . DIRECTORY_SEPARATOR . DIRNAME_ENTITIES);
+        if (!$this->filesystem->isDirectory(DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES)) {
+            $this->filesystem->makeDirectory(DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES);
         }
         $this->configRepository->set(CONFIG_ORM_METADATA_APPLICATION, $setting);
 
@@ -197,12 +197,12 @@ class ApplicationDriverTest extends \PHPUnit_Framework_TestCase
         $applicationDriver = new ApplicationDriver($this->configRepository, $this->app);
         $driver = $applicationDriver->getDriver();
         $this->assertEquals($setting, $this->configRepository->get(CONFIG_ORM_METADATA_APPLICATION));
-        $this->assertTrue($this->filesystem->isDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . DIRNAME_CLASSES . DIRECTORY_SEPARATOR . DIRNAME_ENTITIES,
+        $this->assertTrue($this->filesystem->isDirectory(DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES,
                 'application/src/Entities doesn\'t exist.'));
         $this->assertInstanceOf('\Doctrine\ORM\Mapping\Driver\YamlDriver', $driver);
         // Test if the driver contains the default lookup path
         $driverPaths = $driver->getLocator()->getPaths();
-        $this->assertEquals(DIR_APPLICATION . DIRECTORY_SEPARATOR . REL_DIR_METADATA_YAML, $driverPaths[0]);
+        $this->assertEquals(DIR_APPLICATION . '/' . REL_DIR_METADATA_YAML, $driverPaths[0]);
     }
 
     /**
@@ -215,11 +215,11 @@ class ApplicationDriverTest extends \PHPUnit_Framework_TestCase
      */
     public function testFailingGetYMLDriverWithNoConfigYamlDirectory($setting){
         $this->configRepository->set(CONFIG_ORM_METADATA_APPLICATION, $setting);
-        if (!$this->filesystem->isDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . DIRNAME_CLASSES . DIRECTORY_SEPARATOR . DIRNAME_ENTITIES)) {
-            $this->filesystem->makeDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . DIRNAME_CLASSES . DIRECTORY_SEPARATOR . DIRNAME_ENTITIES);
+        if (!$this->filesystem->isDirectory(DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES)) {
+            $this->filesystem->makeDirectory(DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES);
         }
 
-        $this->assertFalse($this->filesystem->isDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . REL_DIR_METADATA_YAML));
+        $this->assertFalse($this->filesystem->isDirectory(DIR_APPLICATION . '/' . REL_DIR_METADATA_YAML));
         $applicationDriver = new ApplicationDriver($this->configRepository, $this->app);
         $driver = $applicationDriver->getDriver();
         // this case doesn't return a driver
@@ -296,14 +296,14 @@ class ApplicationDriverTest extends \PHPUnit_Framework_TestCase
      * Clean up altern folder system
      */
     public function cleanupFolderSystem(){
-        if ($this->filesystem->isDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . DIRNAME_CLASSES . DIRECTORY_SEPARATOR . DIRNAME_ENTITIES)) {
-            $this->filesystem->deleteDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . DIRNAME_CLASSES . DIRECTORY_SEPARATOR . DIRNAME_ENTITIES);
+        if ($this->filesystem->isDirectory(DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES)) {
+            $this->filesystem->deleteDirectory(DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES);
         }
-        if ($this->filesystem->isDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . REL_DIR_METADATA_XML)) {
-            $this->filesystem->deleteDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . REL_DIR_METADATA_XML);
+        if ($this->filesystem->isDirectory(DIR_APPLICATION . '/' . REL_DIR_METADATA_XML)) {
+            $this->filesystem->deleteDirectory(DIR_APPLICATION . '/' . REL_DIR_METADATA_XML);
         }
-        if ($this->filesystem->isDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . REL_DIR_METADATA_YAML)) {
-            $this->filesystem->deleteDirectory(DIR_APPLICATION . DIRECTORY_SEPARATOR . REL_DIR_METADATA_YAML);
+        if ($this->filesystem->isDirectory(DIR_APPLICATION . '/' . REL_DIR_METADATA_YAML)) {
+            $this->filesystem->deleteDirectory(DIR_APPLICATION . '/' . REL_DIR_METADATA_YAML);
         }
     }
 

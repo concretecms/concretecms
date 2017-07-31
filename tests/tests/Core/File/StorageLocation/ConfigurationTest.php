@@ -15,7 +15,7 @@ class ConfigurationTest extends \ConcreteDatabaseTestCase
 
     protected function getStorageDirectory()
     {
-        return dirname(__FILE__) . '/files';
+        return str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__)) . '/files';
     }
 
     public function testConfigureType()

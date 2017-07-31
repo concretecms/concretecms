@@ -183,7 +183,7 @@
 				<?=$form->checkbox('notifyMeOnSubmission', 1, $notifyMeOnSubmission == 1)?>
 				</span><?=$form->text('recipientEmail', $recipientEmail, array('style' => 'z-index:2000;'))?>
             </div>
-            <span class="help-block"><?=t('(Seperate multiple emails with a comma)')?></span>
+            <span class="help-block"><?=t('(Separate multiple emails with a comma)')?></span>
         </div>
         <div data-view="form-options-email-reply-to"></div>
     </fieldset>

@@ -279,20 +279,20 @@ class File
         }
 
         if ($temp = getenv('TMP')) {
-            return $temp;
+            return str_replace(DIRECTORY_SEPARATOR, '/', $temp);
         }
         if ($temp = getenv('TEMP')) {
-            return $temp;
+            return str_replace(DIRECTORY_SEPARATOR, '/', $temp);
         }
         if ($temp = getenv('TMPDIR')) {
-            return $temp;
+            return str_replace(DIRECTORY_SEPARATOR, '/', $temp);
         }
 
         $temp = tempnam(__FILE__, '');
         if (file_exists($temp)) {
             unlink($temp);
 
-            return dirname($temp);
+            return str_replace(DIRECTORY_SEPARATOR, '/', dirname($temp));
         }
     }
 

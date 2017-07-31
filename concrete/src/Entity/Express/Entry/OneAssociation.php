@@ -2,6 +2,7 @@
 namespace Concrete\Core\Entity\Express\Entry;
 
 use Concrete\Core\Entity\Express\Entry;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -23,7 +24,13 @@ class OneAssociation extends Association
      */
     public function setSelectedEntry($selected_entry)
     {
-        $this->getSelectedEntries()->add($selected_entry);
+        $this->selectedEntries = new ArrayCollection();
+        $this->selectedEntries->add($selected_entry);
+    }
+
+    public function clearSelectedEntry()
+    {
+        $this->selectedEntries = new ArrayCollection();
     }
 
 
