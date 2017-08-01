@@ -71,7 +71,7 @@ class FileFolder extends Category
                 }
             }
             if (is_array($sort)) {
-                $list->sortBy($sort[0], $sort[1]);
+                $list->sanitizedSortBy($sort[0], $sort[1]);
             }
         }
         if (!is_array($sort)) {
