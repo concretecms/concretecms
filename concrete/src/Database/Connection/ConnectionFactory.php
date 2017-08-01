@@ -30,6 +30,7 @@ class ConnectionFactory
         $params = $config;
         $params['host'] = array_get($params, 'host', array_get($config, 'server'));
         $params['user'] = array_get($params, 'user', array_get($config, 'username'));
+        $params['driverOptions'] = [\PDO::MYSQL_ATTR_MULTI_STATEMENTS => false];
         $params['wrapperClass'] = array_get($config, 'wrapperClass', '\Concrete\Core\Database\Connection\Connection');
         unset($params['driver']);
 
