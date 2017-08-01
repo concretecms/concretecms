@@ -41,5 +41,6 @@ class ImageInspector extends Inspector
                 }
             }
         }
+        $fv->releaseImagineImage();
     }
 }

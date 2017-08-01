@@ -1032,6 +1032,14 @@ class Version implements ObjectInterface
     }
 
     /**
+     * Unload the loaded image.
+     */
+    public function releaseImagineImage()
+    {
+        $this->imagineImage = null;
+    }
+
+    /**
      * Rescan the thumbnails for a file (images only).
      *
      * @return bool False on failure
@@ -1095,9 +1103,15 @@ class Version implements ObjectInterface
                     $this->generateThumbnail($type);
                 }
             }
+            unset($image);
+            $this->releaseImagineImage();
         } catch (\Imagine\Exception\InvalidArgumentException $e) {
+            unset($image);
+            $this->releaseImagineImage();
             return false;
         } catch (\Imagine\Exception\RuntimeException $e) {
+            unset($image);
+            $this->releaseImagineImage();
             return false;
         }
     }
