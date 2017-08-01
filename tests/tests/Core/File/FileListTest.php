@@ -64,7 +64,7 @@ class FileListTest extends \FileStorageTestCase
         }
         $self->getStorageLocation();
 
-        $sample = dirname(__FILE__) . '/StorageLocation/fixtures/sample.txt';
+        $sample = str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__)) . '/StorageLocation/fixtures/sample.txt';
         $image = DIR_BASE . '/concrete/images/logo.png';
         $fi = new Importer();
 
@@ -239,7 +239,7 @@ class FileListTest extends \FileStorageTestCase
     public function testPaginationWithPermissions()
     {
         // first lets make some more files.
-        $sample = dirname(__FILE__) . '/StorageLocation/fixtures/sample.txt';
+        $sample = str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__)) . '/StorageLocation/fixtures/sample.txt';
         $image = DIR_BASE . '/concrete/images/logo.png';
         $fi = new Importer();
 

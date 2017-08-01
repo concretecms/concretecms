@@ -19,11 +19,11 @@ class FormContext extends ViewContext
     {
         $locator = parent::setLocation($locator);
         $locator->prependLocation(DIRNAME_ELEMENTS .
-            DIRECTORY_SEPARATOR .
+            '/' .
             DIRNAME_EXPRESS .
-            DIRECTORY_SEPARATOR .
+            '/' .
             DIRNAME_EXPRESS_FORM_CONTROLS .
-            DIRECTORY_SEPARATOR .
+            '/' .
             DIRNAME_EXPRESS_FORM_CONTROLS // not a typo
         );
         return $locator;

@@ -395,7 +395,7 @@ class Application extends Container
             $pos = $pos - 1;
         }
         $home = substr($r->server->get('SCRIPT_NAME'), 0, $pos);
-        $this['app_relative_path'] = rtrim($home, '/');
+        $this['app_relative_path'] = rtrim(str_replace(DIRECTORY_SEPARATOR, '/', $home), '/');
 
         $args = isset($_SERVER['argv']) ? $_SERVER['argv'] : null;
 

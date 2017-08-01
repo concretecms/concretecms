@@ -75,7 +75,7 @@ class StorageLocationTest extends \FileStorageTestCase
 
     public function testBasicStreamFile()
     {
-        $file = dirname(__FILE__) . '/fixtures/sample.txt';
+        $file = str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__)) . '/fixtures/sample.txt';
         $starterSize = filesize($file);
         mkdir($this->getStorageDirectory());
 

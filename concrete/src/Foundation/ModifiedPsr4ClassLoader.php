@@ -31,7 +31,7 @@ class ModifiedPsr4ClassLoader implements ClassLoaderInterface
     public function addPrefix($prefix, $baseDir)
     {
         $prefix = trim($prefix, '\\').'\\';
-        $baseDir = rtrim($baseDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+        $baseDir = rtrim($baseDir, '/') . '/';
         $this->prefixes[] = array($prefix, $baseDir);
     }
 
@@ -47,7 +47,7 @@ class ModifiedPsr4ClassLoader implements ClassLoaderInterface
             list($currentPrefix, $currentBaseDir) = $current;
             if (0 === strpos($class, $currentPrefix)) {
                 $classWithoutPrefix = substr($class, strlen($currentPrefix));
-                $file = $currentBaseDir . str_replace('\\', DIRECTORY_SEPARATOR, $classWithoutPrefix) . '.php';
+                $file = $currentBaseDir . str_replace('\\', '/', $classWithoutPrefix) . '.php';
                 if (file_exists($file)) {
                     return $file;
                 }
@@ -56,7 +56,7 @@ class ModifiedPsr4ClassLoader implements ClassLoaderInterface
                 $file = '';
                 $segments = explode('\\', $classWithoutPrefix);
                 foreach ($segments as $segment) {
-                    $file .= DIRECTORY_SEPARATOR;
+                    $file .= '/';
                     $segment = lcfirst($segment);
                     $chunks = preg_split('/(?=[A-Z])/', $segment);
                     for ($i = 0; $i < count($chunks); ++$i) {

@@ -39,8 +39,8 @@ class PackageControllerWithgetPackageEntityPath extends Package
     public function getPackageEntityPath()
     {
         // This file path should be ignored by the DefaultPackageProvider
-        return $this->getRelativePath() . DIRECTORY_SEPARATOR . DIRNAME_CLASSES
-                . DIRECTORY_SEPARATOR . 'Entities';
+        return $this->getRelativePath() . '/' . DIRNAME_CLASSES
+                . '/Entities';
     }
 
 }

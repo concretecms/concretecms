@@ -6,9 +6,9 @@ error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
 ini_set('display_errors', 1);
 define('C5_EXECUTE', true);
 if (isset($argv) && is_array($argv) && isset($argv[1])) {
-    define('DIR_BASE', $argv[1]);
+    define('DIR_BASE', str_replace(DIRECTORY_SEPARATOR, '/', $argv[1]));
 } else {
-    define('DIR_BASE', dirname(dirname(dirname(__FILE__))));
+    define('DIR_BASE', str_replace(DIRECTORY_SEPARATOR, '/', dirname(dirname(dirname(__FILE__)))));
 }
 $corePath = DIR_BASE . '/concrete';
 $cms = require_once $corePath . '/dispatcher.php';

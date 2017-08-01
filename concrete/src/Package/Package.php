@@ -120,7 +120,7 @@ abstract class Package implements LocalizablePackageInterface
     public function installContentFile($file)
     {
         $ci = new ContentImporter();
-        $ci->importContentFile($this->getPackagePath() . DIRECTORY_SEPARATOR . $file);
+        $ci->importContentFile($this->getPackagePath() . '/' . $file);
     }
 
     /**
@@ -308,7 +308,7 @@ abstract class Package implements LocalizablePackageInterface
      */
     public function getRelativePathFromInstallFolder()
     {
-        return DIRECTORY_SEPARATOR . DIRNAME_PACKAGES . DIRECTORY_SEPARATOR . $this->getPackageHandle();
+        return '/' . DIRNAME_PACKAGES . '/' . $this->getPackageHandle();
     }
 
     public function getTranslationFile($locale)
@@ -647,7 +647,7 @@ abstract class Package implements LocalizablePackageInterface
             return [$this->getPackageEntityPath()];
         }
         // If we're using a legacy package, we scan the entire src directory
-        return [$this->getPackagePath() . DIRECTORY_SEPARATOR . DIRNAME_CLASSES];
+        return [$this->getPackagePath() . '/' . DIRNAME_CLASSES];
     }
 
     /**

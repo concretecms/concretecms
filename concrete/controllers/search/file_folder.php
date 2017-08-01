@@ -53,7 +53,7 @@ class FileFolder extends AbstractController
         }
 
         if (isset($folder)) {
-            
+
             if ($folder instanceof SearchPreset) {
                 $search = $folder->getSavedSearchObject();
                 $query = $search->getQuery();
@@ -94,7 +94,7 @@ class FileFolder extends AbstractController
             if ($filters) {
                 $ilr->setFilters($filters);
             }
-            
+
         }
 
         $breadcrumb = [];
@@ -131,9 +131,18 @@ class FileFolder extends AbstractController
         return $this->result;
     }
 
+    protected function canAccess()
+    {
+        $fp = \FilePermissions::getGlobal();
+        return $fp->canAccessFileManager();
+    }
+
     public function submit()
     {
-        $this->search();
-        return new JsonResponse($this->result->getJSONObject());
+        if ($this->canAccess()) {
+            $this->search();
+            return new JsonResponse($this->result->getJSONObject());
+        }
+        $this->app->shutdown();
     }
 }

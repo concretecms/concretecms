@@ -39,8 +39,8 @@ class XmlProvider implements ProviderInterface
     {
         if($useDefaultSettings){
             $defaultNamespace = $pkg->getNamespace() . '\Entity';
-            $mappingDataPath = $pkg->getPackagePath() . DIRECTORY_SEPARATOR 
-                    . DIRNAME_CONFIG . DIRECTORY_SEPARATOR . DIRNAME_METADATA_XML;
+            $mappingDataPath = $pkg->getPackagePath() . '/' 
+                    . DIRNAME_CONFIG . '/' . DIRNAME_METADATA_XML;
             
             $this->addDriver($defaultNamespace, $mappingDataPath);
         }

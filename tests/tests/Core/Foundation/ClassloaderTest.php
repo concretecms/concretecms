@@ -202,7 +202,7 @@ class ClassloaderTest extends ClassLoaderTestCase
     public function testApplicationCoreOverrideAutoloader($file, $destination, $class, $exists = true)
     {
         $destination = trim($destination, '/');
-        $destinationDirectory = DIR_APPLICATION . DIRECTORY_SEPARATOR . $destination;
+        $destinationDirectory = DIR_APPLICATION . '/' . $destination;
         $this->putFileIntoPlace($file, $destinationDirectory);
         $classExists = $this->classExists($class);
         $this->cleanUpFile(DIR_APPLICATION, $destination);
@@ -219,7 +219,7 @@ class ClassloaderTest extends ClassLoaderTestCase
     public function testApplicationLegacyAutoloader($file, $destination, $class, $exists = true)
     {
         $destination = trim($destination, '/');
-        $destinationDirectory = DIR_APPLICATION . DIRECTORY_SEPARATOR . $destination;
+        $destinationDirectory = DIR_APPLICATION . '/' . $destination;
         $this->putFileIntoPlace($file, $destinationDirectory);
         $loader = ClassLoader::getInstance();
         $loader->enableLegacyNamespace();
@@ -239,7 +239,7 @@ class ClassloaderTest extends ClassLoaderTestCase
     public function testApplicationLegacyCustomNamespaceAutoloader($namespace, $file, $destination, $class)
     {
         $destination = trim($destination, '/');
-        $destinationDirectory = DIR_APPLICATION . DIRECTORY_SEPARATOR . $destination;
+        $destinationDirectory = DIR_APPLICATION . '/' . $destination;
         $this->putFileIntoPlace($file, $destinationDirectory);
         $loader = ClassLoader::getInstance();
         $loader->enableLegacyNamespace();
@@ -256,7 +256,7 @@ class ClassloaderTest extends ClassLoaderTestCase
     public function testPackageAutoloader($pkgHandle, $file, $destination, $class, $exists = true)
     {
         $destination = trim($destination, '/');
-        $destinationDirectory = DIR_PACKAGES . DIRECTORY_SEPARATOR . $destination;
+        $destinationDirectory = DIR_PACKAGES . '/' . $destination;
         $this->putFileIntoPlace($file, $destinationDirectory);
 
         $loader = ClassLoader::getInstance();
@@ -288,7 +288,7 @@ class ClassloaderTest extends ClassLoaderTestCase
     public function testPackageLegacyAutoloader($pkgHandle, $file, $destination, $class, $exists = true)
     {
         $destination = trim($destination, '/');
-        $destinationDirectory = DIR_PACKAGES . DIRECTORY_SEPARATOR . $destination;
+        $destinationDirectory = DIR_PACKAGES . '/' . $destination;
         $this->putFileIntoPlace($file, $destinationDirectory);
 
         $loader = ClassLoader::getInstance();
@@ -320,7 +320,7 @@ class ClassloaderTest extends ClassLoaderTestCase
     public function testPackageCustomAutoloaders($package, $file, $destination, $classes, $exists = true)
     {
         $destination = trim($destination, '/');
-        $destinationDirectory = DIR_PACKAGES . DIRECTORY_SEPARATOR . $destination;
+        $destinationDirectory = DIR_PACKAGES . '/' . $destination;
         $this->putFileIntoPlace($file, $destinationDirectory);
 
         $loader = ClassLoader::getInstance();

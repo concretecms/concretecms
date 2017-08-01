@@ -2,6 +2,7 @@
 namespace Concrete\Core\Tree\Node\Type;
 
 use Concrete\Core\File\FolderItemList;
+use Concrete\Core\File\Search\ColumnSet\FolderSet;
 use Concrete\Core\Tree\Node\Node as TreeNode;
 use Concrete\Core\Tree\Node\Type\Formatter\CategoryListFormatter;
 use Concrete\Core\Tree\Node\Type\Menu\CategoryMenu;
@@ -62,8 +63,11 @@ class FileFolder extends Category
         $list->filterByParentFolder($this);
         if (is_object($u)) {
             if (($column = $request->get($list->getQuerySortColumnParameter())) && ($direction = $request->get($list->getQuerySortDirectionParameter()))) {
-                $sort = array($column, $direction);
-                $u->saveConfig(sprintf('file_manager.sort.%s', $this->getTreeNodeID()), json_encode($sort));
+                $available = new FolderSet();
+                if (is_object($available->getColumnByKey($column)) && ($direction == 'asc' || $direction == 'desc')) {
+                    $sort = array($column, $direction);
+                    $u->saveConfig(sprintf('file_manager.sort.%s', $this->getTreeNodeID()), json_encode($sort));
+                }
             } else {
                 $sort = $u->config(sprintf('file_manager.sort.%s', $this->getTreeNodeID()));
                 if ($sort) {
@@ -71,7 +75,7 @@ class FileFolder extends Category
                 }
             }
             if (is_array($sort)) {
-                $list->sortBy($sort[0], $sort[1]);
+                $list->sanitizedSortBy($sort[0], $sort[1]);
             }
         }
         if (!is_array($sort)) {

@@ -1,9 +1,9 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?> 
-<?php
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 $path = $fv->getURL();
 ?>
-
-<OBJECT ID="MediaPlayer" WIDTH="80%" HEIGHT="80%">
-<PARAM NAME="FileName" VALUE="<?=$path()?>">
-<EMBED src="<?=$path?>" NAME="MediaPlayer" WIDTH="80%" HEIGHT="80%"  ></EMBED>
-</OBJECT> 
+<video src="<?=$path?>" width="70%" height="70%" preload="auto" controls="controls">
+    <object id="MediaPlayer" width="70%" height="70%">
+        <param name="FileName" value="<?=$path?>">
+        <embed src="<?=$path?>" name="MediaPlayer" width="70%" height="70%"></embed>
+    </object>
+</video>

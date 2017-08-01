@@ -235,10 +235,10 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
         $fixtures = $this->fixtures;
 
         $reflectionClass = new ReflectionClass(get_called_class());
-        $fixturePath = dirname($reflectionClass->getFilename()) . DIRECTORY_SEPARATOR . 'fixtures';
+        $fixturePath = dirname($reflectionClass->getFilename()) . '/fixtures';
 
         foreach ((array) $fixtures as $fixture) {
-            $path = $fixturePath . DIRECTORY_SEPARATOR . "$fixture.xml";
+            $path = $fixturePath . "/$fixture.xml";
             $ds = $this->createMySQLXMLDataSet($path);
             $dataSet->addDataSet($ds);
         }

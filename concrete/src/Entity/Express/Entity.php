@@ -44,6 +44,11 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
     protected $plural_handle;
 
     /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $label_mask;
+
+    /**
      * @ORM\Column(type="boolean")
      */
     protected $supports_custom_display_order = false;
@@ -202,6 +207,22 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
     public function setIncludeInPublicList($include_in_public_list)
     {
         $this->include_in_public_list = $include_in_public_list;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLabelMask()
+    {
+        return $this->label_mask ?: '';
+    }
+
+    /**
+     * @param string $label_mask
+     */
+    public function setLabelMask($label_mask)
+    {
+        $this->label_mask = trim($label_mask);
     }
 
     /**

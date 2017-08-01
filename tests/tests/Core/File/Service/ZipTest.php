@@ -139,7 +139,7 @@ class ZipTest extends \PHPUnit_Framework_TestCase
             $zh->disableNativeCommands();
         }
         $zh->zip($this->workDir.'/source', $this->workDir.'/file.zip', compact('includeDotFiles'));
-        $zh->zip(__DIR__, $this->workDir.'/file.zip', array('append' => true));
+        $zh->zip(str_replace(DIRECTORY_SEPARATOR, '/', __DIR__), $this->workDir.'/file.zip', array('append' => true));
         $contents = $zh->listContents($this->workDir.'/file.zip');
         $zh->unzip($this->workDir.'/file.zip', $this->workDir.'/destination');
         foreach ($this->getDirectories() as $rel => $hidden) {
@@ -173,7 +173,7 @@ class ZipTest extends \PHPUnit_Framework_TestCase
                 $this->assertArrayHasKey('compressedSize', $contents[$rel]);
             }
         }
-        $abs = $this->workDir.'/destination/'.basename(__FILE__);
+        $abs = $this->workDir.'/destination/'.str_replace(DIRECTORY_SEPARATOR, '/', basename(__FILE__));
         $this->assertFileExists($abs);
         $this->assertTrue(is_file($abs));
         $this->assertSame(file_get_contents(__FILE__), file_get_contents($abs));

@@ -75,6 +75,7 @@ EOT
             if ($packageDirectory === false) {
                 throw new Exception("Unable to find the directory '$p'");
             }
+            $packageDirectory = str_replace(DIRECTORY_SEPARATOR, '/', $packageDirectory);
             list($packageHandle, $packageVersion) = $this->guessPackageDetails($packageDirectory);
             if ($packageHandle === null) {
                 $packageHandle = basename($packageDirectory);

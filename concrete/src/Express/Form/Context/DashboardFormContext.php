@@ -18,13 +18,13 @@ class DashboardFormContext extends FormContext
     {
         $locator = parent::setLocation($locator);
         $locator->prependLocation(DIRNAME_ELEMENTS .
-            DIRECTORY_SEPARATOR .
+            '/' .
             DIRNAME_EXPRESS .
-            DIRECTORY_SEPARATOR .
+            '/' .
             DIRNAME_EXPRESS_FORM_CONTROLS .
-            DIRECTORY_SEPARATOR .
+            '/' .
             DIRNAME_EXPRESS_FORM_CONTROLS . // not a typo
-            DIRECTORY_SEPARATOR .
+            '/' .
             DIRNAME_DASHBOARD
         );
         return $locator;
