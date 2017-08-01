@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\User\Search\ColumnSet;
 
+use Concrete\Core\User\Search\ColumnSet\Column\NumberOfLoginsColumn;
 use Concrete\Core\User\Search\ColumnSet\Column\UsernameColumn;
 use Concrete\Core\User\Search\ColumnSet\Column\DateAddedColumn;
 use Concrete\Core\User\Search\ColumnSet\Column\EmailColumn;
@@ -33,9 +34,8 @@ class DefaultSet extends Set
         $this->addColumn(new UsernameColumn());
         $this->addColumn(new EmailColumn());
         $this->addColumn(new DateAddedColumn());
-        /*
-        $this->addColumn(new Column('uStatus', t('Status'), ['Concrete\Core\User\Search\ColumnSet\DefaultSet', 'getUserStatus']));
-        $this->addColumn(new Column('u.uNumLogins', t('# Logins'), 'getNumLogins'));*/
+        $this->addColumn(new Column('uStatus', t('Status'), ['Concrete\Core\User\Search\ColumnSet\DefaultSet', 'getUserStatus'], false));
+        $this->addColumn(new NumberOfLoginsColumn());
         $date = $this->getColumnByKey('u.uDateAdded');
         $this->setDefaultSortColumn($date, 'desc');
     }

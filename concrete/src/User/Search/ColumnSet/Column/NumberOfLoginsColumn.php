@@ -1,36 +1,36 @@
 <?php
-namespace Concrete\Core\Page\Search\ColumnSet\Column;
+namespace Concrete\Core\User\Search\ColumnSet\Column;
 
 use Concrete\Core\Search\Column\Column;
 use Concrete\Core\Search\Column\ColumnInterface;
 use Concrete\Core\Search\Column\PagerColumnInterface;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 
-class SitemapDisplayOrder extends Column implements PagerColumnInterface
+class NumberOfLoginsColumn extends Column implements PagerColumnInterface
 {
 
     public function getColumnKey()
     {
-        return 'p.cDisplayOrder';
+        return 'u.uNumLogins';
     }
 
     public function getColumnName()
     {
-        return t('Display Order');
+        return t('# Logins');
     }
 
     public function getColumnCallback()
     {
-        return 'getCollectionDisplayOrder';
+        return 'getNumLogins';
     }
 
     public function filterListAtOffset(PagerProviderInterface $itemList, $mixed)
     {
         $query = $itemList->getQueryObject();
         $sort = $this->getColumnSortDirection() == 'desc' ? '<' : '>';
-        $where = sprintf('(p.cDisplayOrder, p.cID) %s (:sortOrder, :sortID)', $sort);
-        $query->setParameter('sortOrder', $mixed->getCollectionDisplayOrder());
-        $query->setParameter('sortID', $mixed->getCollectionID());
+        $where = sprintf('(u.uNumLogins, u.uID) %s (:sortOrder, :sortID)', $sort);
+        $query->setParameter('sortOrder', $mixed->getNumLogins());
+        $query->setParameter('sortID', $mixed->getUSerID());
         $query->andWhere($where);
     }
 

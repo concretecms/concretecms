@@ -11,6 +11,7 @@ use Concrete\Core\File\Search\ColumnSet\FolderSet;
 use Concrete\Core\File\Search\Result\Result;
 use Concrete\Core\Search\Field\FieldInterface;
 use Concrete\Core\Search\Field\ManagerFactory;
+use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 use Concrete\Core\Search\StickyRequest;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\SearchPreset;
@@ -90,6 +91,29 @@ class FileFolder extends AbstractController
             }
 
             $columns = new FolderSet();
+
+            $list->disableAutomaticSorting(); // We don't need the automatic sorting found in the item list. it fires too late.
+            $data = $this->request->query->all();
+
+            if (isset($data[$list->getQuerySortColumnParameter()])) {
+                $value = $data[$list->getQuerySortColumnParameter()];
+                $sortColumn = $columns->getColumnByKey($value);
+
+                if (isset($data[$list->getQuerySortDirectionParameter()])) {
+                    $direction = $data[$list->getQuerySortDirectionParameter()];
+                } else{
+                    $direction = $sortColumn->getColumnDefaultSortDirection();
+                }
+
+                $sortColumn->setColumnSortDirection($direction);
+                $list->sortBySearchColumn($sortColumn, $direction);
+            }
+
+            if ($list instanceof PagerProviderInterface) {
+                $manager = $list->getPagerManager();
+                $manager->sortListByCursor($list, $list->getActiveSortDirection());
+            }
+
             $ilr = new Result($columns, $list, \URL::to('/ccm/system/file/folder/contents'));
             if ($filters) {
                 $ilr->setFilters($filters);
