@@ -42,6 +42,7 @@ class UserListTest extends \UserTestCase
         }
 
         $this->list = new \Concrete\Core\User\UserList();
+        $this->list->ignorePermissions();
     }
 
     public function testTotal()
@@ -84,6 +85,7 @@ class UserListTest extends \UserTestCase
         $this->assertEquals('testuser2', $results[0]->getUserName());
 
         $nl = new UserList();
+        $nl->ignorePermissions();
         $nl->filterByGroup($g, false);
         $nl->sortByUserID();
         $this->assertEquals(2, $nl->getTotalResults());

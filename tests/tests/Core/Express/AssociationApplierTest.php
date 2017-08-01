@@ -384,9 +384,10 @@ class AssociationApplierTest extends ConcreteDatabaseTestCase
             1 => [6, 8, 11]
         ]);
 
+        /*
         $this->addOneToManyAssociationAndTestIt(2, [6], [
             1 => [8, 11], 2 => [6]
-        ], true);
+        ]);*/
     }
 
     protected function assertNoCategory($projectID)

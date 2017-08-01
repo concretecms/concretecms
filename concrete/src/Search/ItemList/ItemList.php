@@ -2,6 +2,7 @@
 namespace Concrete\Core\Search\ItemList;
 
 use Concrete\Core\Search\Column\Column;
+use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\Core\Search\StickyRequest;
 use Pagerfanta\Exception\OutOfRangeCurrentPageException;
 use Pagerfanta\Exception\LessThan1CurrentPageException;
@@ -33,11 +34,6 @@ abstract class ItemList
     abstract public function getResult($mixed);
     abstract public function debugStart();
     abstract public function debugStop();
-
-    /**
-     * @return \Concrete\Core\Search\Pagination\Pagination
-     */
-    abstract protected function createPaginationObject();
 
     public function debug()
     {
@@ -176,30 +172,34 @@ abstract class ItemList
     }
 
     /**
+     * @return int
+     */
+    public function getItemsPerPage()
+    {
+        return $this->itemsPerPage;
+    }
+
+    /**
      * Returns the total results in this item list.
      *
      * @return int
      */
     abstract public function getTotalResults();
 
+    /**
+     * Deprecated – call the pagination factory directly.
+     * @deprecated
+     * @return \Concrete\Core\Search\Pagination\Pagination
+     */
     public function getPagination()
     {
-        $pagination = $this->createPaginationObject();
-        if ($this->itemsPerPage > -1) {
-            $pagination->setMaxPerPage($this->itemsPerPage);
+        $factory = new PaginationFactory(\Request::getInstance());
+        if (method_exists($this, 'createPaginationObject')) {
+            $pagination = $this->createPaginationObject();
+            $pagination = $factory->deliverPaginationObject($this, $pagination);
+        } else {
+            $pagination = $factory->createPaginationObject($this);
         }
-        $query = \Request::getInstance()->query;
-        if ($query->has($this->getQueryPaginationPageParameter())) {
-            $page = intval($query->get($this->getQueryPaginationPageParameter()));
-            try {
-                $pagination->setCurrentPage($page);
-            } catch (LessThan1CurrentPageException $e) {
-                $pagination->setCurrentPage(1);
-            } catch (OutOfRangeCurrentPageException $e) {
-                $pagination->setCurrentPage(1);
-            }
-        }
-
         return $pagination;
     }
 

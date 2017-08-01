@@ -7,6 +7,7 @@ use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 use Concrete\Core\Search\ItemList\Pager\QueryString\VariableFactory;
 use Concrete\Core\Search\Pagination\PagerPagination;
 use Concrete\Core\Search\Pagination\Pagination;
+use Concrete\Core\Search\Pagination\PaginationProviderInterface;
 use Concrete\Core\Search\Pagination\PermissionablePagination;
 use Concrete\Core\Search\PermissionableListItemInterface;
 use Concrete\Core\Search\StickyRequest;
@@ -16,7 +17,7 @@ use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use Closure;
 use Concrete\Core\Permission\Checker as Permissions;
 
-class FolderItemList extends ItemList implements PermissionableListItemInterface, PagerProviderInterface
+class FolderItemList extends ItemList implements PagerProviderInterface, PaginationProviderInterface
 {
     protected $parent;
     protected $permissionsChecker;
@@ -99,18 +100,12 @@ class FolderItemList extends ItemList implements PermissionableListItemInterface
         }
     }
 
-    protected function createPaginationObject()
+    public function getPaginationAdapter()
     {
-        if (isset($this->permissionsChecker) && $this->permissionsChecker === -1) {
-            $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
-                $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct n.treeNodeID)')->setMaxResults(1);
-            });
-            $pagination = new Pagination($this, $adapter);
-        } else {
-            $pagination = new PagerPagination($this);
-        }
-
-        return $pagination;
+        $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
+            $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct n.treeNodeID)')->setMaxResults(1);
+        });
+        return $adapter;
     }
 
     public function getResult($queryRow)

@@ -7,13 +7,14 @@ use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 use Concrete\Core\Search\ItemList\Pager\QueryString\VariableFactory;
 use Concrete\Core\Search\Pagination\PagerPagination;
 use Concrete\Core\Search\Pagination\Pagination;
+use Concrete\Core\Search\Pagination\PaginationProviderInterface;
 use Concrete\Core\Search\PermissionableListItemInterface;
 use Concrete\Core\Search\StickyRequest;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\Group\Group;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 
-class UserList extends DatabaseItemList implements PermissionableListItemInterface, PagerProviderInterface
+class UserList extends DatabaseItemList implements PagerProviderInterface, PaginationProviderInterface
 {
 
     public function __construct(StickyRequest $req = null)
@@ -117,28 +118,24 @@ class UserList extends DatabaseItemList implements PermissionableListItemInterfa
             // We need to reset the potential custom order by here because otherwise, if we've added
             // items to the select parts, and we're ordering by them, we get a SQL error
             // when we get total results, because we're resetting the select
-            return $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct u.uID)')->setMaxResults(1)->execute()->fetchColumn();
+            return $query->resetQueryParts([
+                'groupBy',
+                'orderBy'
+            ])->select('count(distinct u.uID)')->setMaxResults(1)->execute()->fetchColumn();
         } else {
             return -1; // unknown
         }
     }
 
-    protected function createPaginationObject()
+    public function getPaginationAdapter()
     {
-        $u = new \User();
-        if ($this->permissionsChecker === -1) {
-            $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
-                // We need to reset the potential custom order by here because otherwise, if we've added
-                // items to the select parts, and we're ordering by them, we get a SQL error
-                // when we get total results, because we're resetting the select
-                $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct u.uID)')->setMaxResults(1);
-            });
-            $pagination = new Pagination($this, $adapter);
-        } else {
-            $pagination = new PagerPagination($this);
-        }
-
-        return $pagination;
+        $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
+            // We need to reset the potential custom order by here because otherwise, if we've added
+            // items to the select parts, and we're ordering by them, we get a SQL error
+            // when we get total results, because we're resetting the select
+            $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct u.uID)')->setMaxResults(1);
+        });
+        return $adapter;
     }
 
     public function checkPermissions($mixed)
@@ -216,8 +213,7 @@ class UserList extends DatabaseItemList implements PermissionableListItemInterfa
         $this->query->select('u.uID')
             ->from('Users', 'u')
             ->leftJoin('u', 'UserSearchIndexAttributes', 'ua', 'u.uID = ua.uID')
-            ->groupBy('u.uID')
-        ;
+            ->groupBy('u.uID');
     }
 
     public function finalizeQuery(\Doctrine\DBAL\Query\QueryBuilder $query)
@@ -354,7 +350,8 @@ class UserList extends DatabaseItemList implements PermissionableListItemInterfa
                 $groupTable = 'g' . $uniqueID;
                 $path = $group->getGroupPath();
                 $this->query->leftJoin('u', 'UserGroups', $joinTable, 'u.uID = ' . $joinTable . '.uID');
-                $this->query->leftJoin($joinTable, 'Groups', $groupTable, '(' . $joinTable . '.gID = ' . $groupTable . '.gID and ' . $groupTable . '.gPath like :gPath' . $uniqueID . ')');
+                $this->query->leftJoin($joinTable, 'Groups', $groupTable,
+                    '(' . $joinTable . '.gID = ' . $groupTable . '.gID and ' . $groupTable . '.gPath like :gPath' . $uniqueID . ')');
                 $this->query->setParameter('gPath' . $uniqueID, $path . '%');
                 if ($inGroups) {
                     if ($where === null) {
@@ -385,7 +382,8 @@ class UserList extends DatabaseItemList implements PermissionableListItemInterfa
      */
     public function filterByDateAdded($date, $comparison = '=')
     {
-        $this->query->andWhere($this->query->expr()->comparison('u.uDateAdded', $comparison, $this->query->createNamedParameter($date)));
+        $this->query->andWhere($this->query->expr()->comparison('u.uDateAdded', $comparison,
+            $this->query->createNamedParameter($date)));
     }
 
     /**

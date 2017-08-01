@@ -10,6 +10,7 @@ use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 use Concrete\Core\Search\ItemList\Pager\QueryString\VariableFactory;
 use Concrete\Core\Search\Pagination\PagerPagination;
 use Concrete\Core\Search\Pagination\Pagination;
+use Concrete\Core\Search\Pagination\PaginationProviderInterface;
 use Concrete\Core\Search\Pagination\PermissionablePagination;
 use Concrete\Core\Search\PermissionableListItemInterface;
 use Concrete\Core\Entity\Package;
@@ -23,7 +24,7 @@ use Concrete\Core\Site\Tree\TreeInterface;
 /**
  * An object that allows a filtered list of pages to be returned.
  */
-class PageList extends DatabaseItemList implements PermissionableListItemInterface, PagerProviderInterface
+class PageList extends DatabaseItemList implements PagerProviderInterface, PaginationProviderInterface
 {
     const PAGE_VERSION_ACTIVE = 1;
     const PAGE_VERSION_RECENT = 2;
@@ -282,22 +283,15 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
         }
     }
 
-    protected function createPaginationObject()
+    public function getPaginationAdapter()
     {
-        $u = new \User();
-        if ($this->permissionsChecker === -1) {
-            $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
-                // We need to reset the potential custom order by here because otherwise, if we've added
-                // items to the select parts, and we're ordering by them, we get a SQL error
-                // when we get total results, because we're resetting the select
-                $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct p.cID)')->setMaxResults(1);
-            });
-            $pagination = new Pagination($this, $adapter);
-        } else {
-            $pagination = new PagerPagination($this);
-        }
-
-        return $pagination;
+        $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
+            // We need to reset the potential custom order by here because otherwise, if we've added
+            // items to the select parts, and we're ordering by them, we get a SQL error
+            // when we get total results, because we're resetting the select
+            $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct p.cID)')->setMaxResults(1);
+        });
+        return $adapter;
     }
 
     /**
