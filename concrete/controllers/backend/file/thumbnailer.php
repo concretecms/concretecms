@@ -83,6 +83,7 @@ class Thumbnailer extends \Concrete\Core\Controller\Controller
                 $fv = $file->getVersion($thumbnail['fileVersionID']);
                 if ($fv->getTypeObject()->supportsThumbnails()) {
                     $fv->generateThumbnail($type);
+                    $fv->releaseImagineImage();
                 }
             } elseif ($type = Version::getByHandle($thumbnail['thumbnailTypeHandle'])) {
                 // This is a predefined thumbnail type, lets just call the version->rescan
@@ -90,6 +91,7 @@ class Thumbnailer extends \Concrete\Core\Controller\Controller
 
                 if ($fv->getTypeObject()->supportsThumbnails()) {
                     $fv->generateThumbnail($type);
+                    $fv->releaseImagineImage();
                 }
             }
         } catch (\Exception $e) {

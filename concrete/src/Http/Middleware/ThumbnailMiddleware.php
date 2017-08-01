@@ -130,6 +130,7 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
                 $fv = $file->getVersion($thumbnail['fileVersionID']);
                 if ($fv->getTypeObject()->supportsThumbnails()) {
                     $fv->generateThumbnail($type);
+                    $fv->releaseImagineImage();
                 }
             } elseif ($type = Version::getByHandle($thumbnail['thumbnailTypeHandle'])) {
                 // This is a predefined thumbnail type, lets just call the version->rescan
@@ -137,6 +138,7 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
 
                 if ($fv->getTypeObject()->supportsThumbnails()) {
                     $fv->generateThumbnail($type);
+                    $fv->releaseImagineImage();
                 }
             }
         } catch (\Exception $e) {
