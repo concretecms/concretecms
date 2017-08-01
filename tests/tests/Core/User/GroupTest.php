@@ -201,13 +201,14 @@ class GroupTest extends \UserTestCase
 
         $list = new UserList();
         $list->filterByGroup($groupB);
-        $this->assertEquals(6, $list->getTotalResults());
+        $this->assertEquals(-1, $list->getTotalResults());
 
         $list->filterByGroup($groupA);
         $results = $list->getResults();
         $this->assertEquals(1, count($results));
 
         $list2 = new UserList();
+        $list2->ignorePermissions();
         $list2->filterByGroup($groupC);
         $this->assertEquals(0, $list2->getTotalResults());
 

@@ -53,6 +53,8 @@ abstract class AbstractPagerManager implements PagerManagerInterface
             $column = $itemList->getSearchByColumn();
             if ($column instanceof PagerColumnInterface) {
                 $column->filterListAtOffset($itemList, $object);
+            } else {
+                throw new \RuntimeException(t('Unable to determine the current sort column. When using PagerPagination you must explicitly sort by a search column.'));
             }
         }
     }

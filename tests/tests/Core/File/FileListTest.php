@@ -6,6 +6,8 @@ use Concrete\Core\File\Importer;
 use Concrete\Core\Attribute\Type as AttributeType;
 use Concrete\Core\Attribute\Key\FileKey;
 use Concrete\Core\Attribute\Key\Category;
+use Concrete\Core\File\Search\ColumnSet\Column\FileVersionFilenameColumn;
+use Concrete\Core\Search\Pagination\PaginationFactory;
 use Doctrine\DBAL\Logging\EchoSQLLogger;
 
 class FileListTest extends \FileStorageTestCase
@@ -236,7 +238,7 @@ class FileListTest extends \FileStorageTestCase
         $this->assertCount(1, $results);
     }
 
-    public function testPaginationWithPermissions()
+    public function testPaginationWithPermissionsAndPager()
     {
         // first lets make some more files.
         $sample = str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__)) . '/StorageLocation/fixtures/sample.txt';
@@ -263,9 +265,10 @@ class FileListTest extends \FileStorageTestCase
                 return false;
             }
         });
-        $nl->sortByFilenameAscending();
+        $nl->sortBySearchColumn(new FileVersionFilenameColumn());
         $results = $nl->getResults();
-        $pagination = $nl->getPagination();
+        $factory = new PaginationFactory(\Request::createFromGlobals());
+        $pagination = $factory->createPaginationObject($nl, PaginationFactory::PERMISSIONED_PAGINATION_STYLE_PAGER);
         $this->assertEquals(-1, $nl->getTotalResults());
         $this->assertEquals(-1, $pagination->getTotalResults());
         $this->assertEquals(6, count($results));
@@ -336,8 +339,10 @@ class FileListTest extends \FileStorageTestCase
             }
             return false;
         });
+        $nl->sortBySearchColumn(new FileVersionFilenameColumn());
         $results = $nl->getResults();
-        $pagination = $nl->getPagination();
+        $factory = new PaginationFactory(\Request::createFromGlobals());
+        $pagination = $factory->createPaginationObject($nl, PaginationFactory::PERMISSIONED_PAGINATION_STYLE_PAGER);
         $this->assertEquals(-1, $nl->getTotalResults());
         $this->assertEquals(-1, $pagination->getTotalResults());
         $this->assertEquals(2, count($results));
