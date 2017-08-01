@@ -37,4 +37,14 @@ class LabelFormatter implements EntryFormatterInterface
         });
     }
 
+    public function getLabel(Entry $entry)
+    {
+        foreach($entry->getEntity()->getAttributes() as $ak) {
+            if ($ak->getAttributeType()->getAttributeTypeHandle() == 'text') {
+                return $entry->getAttribute($ak);
+            }
+        }
+
+    }
+
 }

@@ -16,4 +16,12 @@ interface EntryFormatterInterface
      * @return string|null
      */
     public function format($mask, Entry $entry);
+
+    /**
+     * Given no mask, we inspect the attributes on an entry to retrieve a
+     * display text label for it.
+     * @param Entry $entry
+     * @return mixed
+     */
+    public function getLabel(Entry $entry);
 }
