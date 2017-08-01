@@ -50,11 +50,9 @@ abstract class AbstractPagerManager implements PagerManagerInterface
         }
         if ($object) {
             // Figure out what we are sorting by
-            $columns = $itemList->getOrderByColumns($this->getAvailableColumnSet());
-            foreach($columns as $column) {
-                if ($column instanceof PagerColumnInterface) {
-                    $column->filterListAtOffset($itemList, $object);
-                }
+            $column = $itemList->getSearchByColumn();
+            if ($column instanceof PagerColumnInterface) {
+                $column->filterListAtOffset($itemList, $object);
             }
         }
     }

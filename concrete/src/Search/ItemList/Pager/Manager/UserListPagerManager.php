@@ -31,9 +31,9 @@ class UserListPagerManager extends AbstractPagerManager
         return new Available();
     }
 
-    public function sortListByCursor(PagerProviderInterface $itemList)
+    public function sortListByCursor(PagerProviderInterface $itemList, $direction)
     {
-        $itemList->getQueryObject()->addOrderBy('u.uID', 'asc');
+        $itemList->getQueryObject()->addOrderBy('u.uID', $direction);
     }
 
 

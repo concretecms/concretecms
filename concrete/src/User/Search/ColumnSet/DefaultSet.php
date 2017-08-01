@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\User\Search\ColumnSet;
 
+use Concrete\Core\User\Search\ColumnSet\Column\UsernameColumn;
 use Concrete\Core\User\Search\ColumnSet\Column\DateAddedColumn;
 use Concrete\Core\User\Search\ColumnSet\Column\EmailColumn;
 use Concrete\Core\User\Search\ColumnSet\Column\UserIDColumn;
@@ -29,7 +30,7 @@ class DefaultSet extends Set
 
     public function __construct()
     {
-        $this->addColumn(new UserIDColumn());
+        $this->addColumn(new UsernameColumn());
         $this->addColumn(new EmailColumn());
         $this->addColumn(new DateAddedColumn());
         /*

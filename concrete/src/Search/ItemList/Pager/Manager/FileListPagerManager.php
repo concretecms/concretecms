@@ -27,9 +27,9 @@ class FileListPagerManager extends AbstractPagerManager
         return new Available();
     }
 
-    public function sortListByCursor(PagerProviderInterface $itemList)
+    public function sortListByCursor(PagerProviderInterface $itemList, $direction)
     {
-        $itemList->getQueryObject()->addOrderBy('f.fID', 'asc');
+        $itemList->getQueryObject()->addOrderBy('f.fID', $direction);
     }
 
 

@@ -58,22 +58,6 @@ abstract class ItemList extends AbstractItemList
         return $query;
     }
 
-    public function getOrderByColumns(Set $set)
-    {
-        $query = $this->deliverQueryObject();
-        $orderBy = $query->getQueryPart('orderBy');
-        $return = array();
-        foreach ($orderBy as $data) {
-            $data  = explode(" ", $data);
-            $column = $set->getColumnByKey($data[0]);
-            if ($column) {
-                $column->setColumnSortDirection($data[1]);
-                $return[] = $column;
-            }
-        }
-        return $return;
-    }
-
     public function executeGetResults()
     {
         return $this->deliverQueryObject()->execute()->fetchAll();

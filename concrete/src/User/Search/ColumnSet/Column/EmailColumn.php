@@ -21,7 +21,7 @@ class EmailColumn extends Column implements PagerColumnInterface
 
     public function getColumnCallback()
     {
-        return 'getUserEmail';
+        return ['\Concrete\Core\User\Search\ColumnSet\Available', 'getUserEmail'];
     }
 
     public function filterListAtOffset(PagerProviderInterface $itemList, $mixed)

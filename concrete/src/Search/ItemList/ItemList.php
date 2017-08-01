@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Search\ItemList;
 
+use Concrete\Core\Search\Column\Column;
 use Concrete\Core\Search\StickyRequest;
 use Pagerfanta\Exception\OutOfRangeCurrentPageException;
 use Pagerfanta\Exception\LessThan1CurrentPageException;
@@ -12,6 +13,7 @@ abstract class ItemList
     protected $paginationPageParameter = 'ccm_paging_p';
     protected $sortBy;
     protected $sortByDirection;
+    protected $sortBySearchColumn;
 
     // This still checks the auto sort columns if set to true –
     // we just turn it off to save processing in the attributed item list (so it doesn't have to instantiate
@@ -52,6 +54,21 @@ abstract class ItemList
         $this->sortBy = $field;
         $this->sortByDirection = $direction;
         $this->executeSortBy($field, $direction);
+    }
+
+    public function sortBySearchColumn(Column $column, $direction = null)
+    {
+        if ($direction != 'asc' && $direction != 'desc') {
+            $direction = $column->getColumnSortDirection();
+        }
+        $this->sortByDirection = $direction;
+        $this->sortBySearchColumn = $column;
+        $this->sanitizedSortBy($column->getColumnKey(), $direction);
+    }
+
+    public function getSearchByColumn()
+    {
+        return $this->sortBySearchColumn;
     }
 
     public function sanitizedSortBy($field, $direction = 'asc')

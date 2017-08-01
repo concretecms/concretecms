@@ -28,9 +28,9 @@ class FolderItemListPagerManager extends AbstractPagerManager
         return new FolderSet();
     }
 
-    public function sortListByCursor(PagerProviderInterface $itemList)
+    public function sortListByCursor(PagerProviderInterface $itemList, $direction)
     {
-        $itemList->getQueryObject()->addOrderBy('treeNodeID', 'asc');
+        $itemList->getQueryObject()->addOrderBy('treeNodeID', $direction);
     }
 
 
