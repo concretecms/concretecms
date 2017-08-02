@@ -163,9 +163,11 @@ class EntryList extends DatabaseItemList implements PermissionableListItemInterf
                 $entryAssociation = $entry->getEntryAssociation($targetAssociation);
                 if ($entryAssociation) {
                     $table = 'ase' . $entryAssociation->getID();
-                    $this->query->leftJoin('e', 'ExpressEntityAssociationSelectedEntries', $table, 'e.exEntryID = ' . $table . '.exSelectedEntryID');
+                    $this->query->innerJoin('e', 'ExpressEntityAssociationSelectedEntries', $table, 'e.exEntryID = ' . $table . '.exSelectedEntryID');
                     $this->query->andWhere($table . '.id = :entryAssociationID' . $entryAssociation->getID());
                     $this->query->setParameter('entryAssociationID' . $entryAssociation->getID(), $entryAssociation->getID());
+                } else {
+                    $this->query->andWhere('1 = 0');
                 }
             }
         }

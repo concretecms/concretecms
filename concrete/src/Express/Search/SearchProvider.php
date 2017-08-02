@@ -29,7 +29,7 @@ class SearchProvider extends AbstractSearchProvider
 
     public function getSessionNamespace()
     {
-        return 'express_' . $this->entity->getId();
+        return 'express_' . $this->entity->getHandle();
     }
 
     public function __construct(Entity $entity, ExpressCategory $category, Session $session)
