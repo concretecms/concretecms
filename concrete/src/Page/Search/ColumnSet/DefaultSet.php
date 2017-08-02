@@ -4,13 +4,12 @@ namespace Concrete\Core\Page\Search\ColumnSet;
 use Concrete\Core\Page\Search\ColumnSet\Column\CollectionVersionColumn;
 use Concrete\Core\Page\Search\ColumnSet\Column\DateLastModifiedColumn;
 use Concrete\Core\Page\Search\ColumnSet\Column\DatePublicColumn;
-use Concrete\Core\Search\Column\CollectionAttributeKeyColumn;
 use Concrete\Core\Search\Column\Column;
 use Concrete\Core\Search\Column\Set;
 use UserInfo;
 use Core;
 
-class DefaultSet extends Set
+class DefaultSet extends ColumnSet
 {
     protected $attributeClass = 'CollectionAttributeKey';
 
@@ -31,13 +30,6 @@ class DefaultSet extends Set
         if (is_object($ui)) {
             return $ui->getUserName();
         }
-    }
-
-    public function getAttributeKeyColumn($akHandle)
-    {
-        $ak = call_user_func(array($this->attributeClass, 'getByHandle'), $akHandle);
-        $col = new CollectionAttributeKeyColumn($ak);
-        return $col;
     }
 
     public function __construct()

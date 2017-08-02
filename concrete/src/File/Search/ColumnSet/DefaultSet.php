@@ -8,7 +8,7 @@ use Core;
 use Concrete\Core\Search\Column\Column;
 use Concrete\Core\Search\Column\Set;
 
-class DefaultSet extends Set
+class DefaultSet extends ColumnSet
 {
     protected $attributeClass = 'FileAttributeKey';
 

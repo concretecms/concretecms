@@ -3,18 +3,18 @@ namespace Concrete\Core\Search\Column;
 
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 
-class CollectionAttributeKeyColumn extends AttributeKeyColumn implements PagerColumnInterface
+class UserAttributeKeyColumn extends AttributeKeyColumn implements PagerColumnInterface
 {
 
     public function filterListAtOffset(PagerProviderInterface $itemList, $mixed)
     {
         $db = \Database::connection();
-        $value = $db->GetOne('select ' . $this->getColumnKey() . ' from CollectionSearchIndexAttributes where cID = ?', [$mixed->getCollectionID()]);
+        $value = $db->GetOne('select ' . $this->getColumnKey() . ' from UserSearchIndexAttributes where uID = ?', [$mixed->getUserID()]);
         $query = $itemList->getQueryObject();
         $sort = $this->getColumnSortDirection() == 'desc' ? '<' : '>';
-        $where = sprintf('(' . $this->getColumnKey() . ', p.cID) %s (:sortColumn, :sortID)', $sort);
+        $where = sprintf('(' . $this->getColumnKey() . ', u.uID) %s (:sortColumn, :sortID)', $sort);
         $query->setParameter('sortColumn', $value);
-        $query->setParameter('sortID', $mixed->getCollectionID());
+        $query->setParameter('sortID', $mixed->getUserID());
         $query->andWhere($where);
     }
 }
