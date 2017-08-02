@@ -4,6 +4,18 @@ defined('C5_EXECUTE') or die("Access Denied.");
  * @var $provider \Concrete\Core\User\Search\SearchProvider
  */
 $available = $provider->getAvailableColumnSet();
+$coreProperties = array();
+$associations = array();
+foreach($available->getColumns() as $column) {
+    if (!($column instanceof \Concrete\Core\Search\Column\AttributeKeyColumn)) {
+        if ($column instanceof \Concrete\Core\Express\Search\Column\AssociationColumn) {
+            $associations[] = $column;
+        } else {
+            $coreProperties[] = $column;
+        }
+    }
+}
+
 $current = $provider->getCurrentColumnSet();
 $all = $provider->getAllColumnSet();
 $list = $provider->getCustomAttributeKeys();
@@ -22,13 +34,12 @@ if (!isset($type)) {
         <legend><?= t('Choose Columns') ?></legend>
 
         <?php
-        if (count($available->getColumns())) {
+        if (count($coreProperties)) {
             ?>
             <div class="form-group">
                 <label class="control-label"><?= t('Standard Properties') ?></label>
                 <?php
-                $columns = $available->getColumns();
-                foreach ($columns as $col) {
+                foreach ($coreProperties as $col) {
                     ?>
                     <div class="checkbox"><label><?= $form->checkbox($col->getColumnKey(), 1,
                                 $current->contains($col)) ?> <span><?= $col->getColumnName() ?></span></label></div>
@@ -39,6 +50,25 @@ if (!isset($type)) {
             <?php
         }
         ?>
+
+        <?php
+        if (count($associations)) {
+            ?>
+            <div class="form-group">
+                <label class="control-label"><?= t('Associations') ?></label>
+                <?php
+                foreach ($associations as $col) {
+                    ?>
+                    <div class="checkbox"><label><?= $form->checkbox($col->getColumnKey(), 1,
+                                $current->contains($col)) ?> <span><?= $col->getColumnName() ?></span></label></div>
+                    <?php
+                }
+                ?>
+            </div>
+            <?php
+        }
+        ?>
+
 
         <?php
         if (count($list)) {

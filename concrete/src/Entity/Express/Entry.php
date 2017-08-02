@@ -162,6 +162,14 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
     }
 
     /**
+     * @param mixed $exEntryID
+     */
+    public function setID($exEntryID)
+    {
+        $this->exEntryID = $exEntryID;
+    }
+
+    /**
      * @return mixed
      */
     public function getAttributes()

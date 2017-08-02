@@ -3,19 +3,23 @@ namespace Concrete\Core\Express\Search\Field;
 
 use Concrete\Core\Attribute\Category\ExpressCategory;
 use Concrete\Core\Attribute\Category\CategoryService;
+use Concrete\Core\Entity\Express\ManyToManyAssociation;
+use Concrete\Core\Entity\Express\ManyToOneAssociation;
+use Concrete\Core\Entity\Express\OneToManyAssociation;
 use Concrete\Core\Search\Field\AttributeKeyField;
 use Concrete\Core\Search\Field\Field\KeywordsField;
 use Concrete\Core\Search\Field\Manager as FieldManager;
 
 class Manager extends FieldManager
 {
+    /**
+     * @var ExpressCategory
+     */
     protected $expressCategory;
+
     protected $loaded = false;
 
-    /**
-     * @param mixed $expressCategory
-     */
-    public function setExpressCategory($expressCategory)
+    public function setExpressCategory(ExpressCategory $expressCategory)
     {
         $this->expressCategory = $expressCategory;
     }
@@ -44,6 +48,7 @@ class Manager extends FieldManager
             $this->populateGroups();
             $this->loaded = true;
         }
+
         return parent::getFieldsFromRequest($request);
     }
 
@@ -52,6 +57,20 @@ class Manager extends FieldManager
         $this->addGroup(t('Core Properties'), [
             new KeywordsField()
         ]);
+
+        $associations = $this->expressCategory->getExpressEntity()->getAssociations();
+        if (count($associations)) {
+            $group = [];
+            foreach($associations as $association) {
+                if ($association instanceof ManyToManyAssociation || $association instanceof ManyToOneAssociation) {
+                    $group[] = new AssociationField($association);
+                }
+            }
+        }
+
+        if (count($group)) {
+            $this->addGroup(t('Associations'), $group);
+        }
 
         $setManager = $this->expressCategory->getSetManager();
         $this->populateAttributeGroups($setManager);

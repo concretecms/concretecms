@@ -62,18 +62,23 @@ abstract class AdvancedSearch extends BackendInterfaceController
         return $this->request->request->get('fSearchDefaultSortDirection');
     }
 
+    protected function getCustomizeResultsElement()
+    {
+        $provider = $this->getSearchProvider();
+        $element = new CustomizeResults($provider);
+        return $element;
+    }
+
     public function view()
     {
 
         $this->requireAsset('selectize');
 
         $manager = $this->getFieldManager();
-        $provider = $this->getSearchProvider();
         $query = $this->getSearchQuery();
-        $element = new CustomizeResults($provider);
 
         $this->set('defaultQuery', json_encode($query));
-        $this->set('customizeElement', $element);
+        $this->set('customizeElement', $this->getCustomizeResultsElement());
         $this->set('manager', $manager);
         $this->set('supportsSavedSearch', $this->supportsSavedSearch);
     }
