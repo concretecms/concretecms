@@ -115,28 +115,22 @@ class Applier
             $manyAssociation->setEntry($entry);
         }
 
-        /*
-         * This code isn't working but it's a start
-         * When saving we need to loop through all the associated entries and see if they have an inverse that is already
-         * set. then we remove that inverse (with the idea that we will add it back later.)
-         */
-        /*
         foreach($associatedEntries as $selectedEntry) {
             $inversedAssociation = $this->getInverseAssociation($association);
             $oneAssociation = $selectedEntry->getEntryAssociation($inversedAssociation);
             if ($oneAssociation) {
-                $collection = $oneAssociation->getSelectedEntriesCollection();
-                if ($collection) {
-                    $collection->removeElement($entry);
-                    $oneAssociation->setSelectedEntries(new ArrayCollection($collection->getValues()));
-                    $this->entityManager->persist($oneAssociation);
+                // Let's see if THAT entry relates back to this.
+                $oneEntry = $oneAssociation->getSelectedEntry();
+                $oneEntryAssociation = $oneEntry->getEntryAssociation($association);
+                if ($oneEntryAssociation) {
+                    $oneEntryAssociation->getSelectedEntriesCollection()->removeElement($selectedEntry);
+                    $this->entityManager->persist($oneEntryAssociation);
                 }
+                $this->entityManager->remove($oneAssociation);
             }
         }
 
         $this->entityManager->flush();
-        */
-
 
         $manyAssociation->setSelectedEntries($associatedEntries);
         $this->entityManager->persist($manyAssociation);
