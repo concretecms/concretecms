@@ -23,6 +23,7 @@
 * Fix inability to search pages, users or files in advanced search by boolean attributes
 * Fixed Multilingual: Navigate Sitemap does not reflect language
 * Added permissions to user lists
+* Fixed bug where remote update wasn't able to retrieve information about upcoming releases.
 * Fixed: Prevent infinite loop in Next/Previous block under certain conditions.
 * Fixed bug with page aliases displaying many times in the sitemap.
 * Fixed bug where FileList items repeating in pagination results, pagination doesn't appear
