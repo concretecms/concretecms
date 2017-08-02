@@ -1,3 +1,35 @@
+# 8.2.1
+
+## Feature Improvements
+
+* Added search to the Express Objects Dashboard interface.
+* Added associations to Express Object Listing Interfaces
+* Updated CKEditor to 4.7.1 (thanks MrKarlDilkington)
+* Added the ability to specify multiple attributes in a mask format for listing attributes in associations in Express. (e.g. %first_name% %last_name% to populate the entity dropdown.)
+* Added the ability to open a link in a lightbox once again (thanks mnakalay)
+* Improved viewing of videos in the file manager (thanks deek87)
+* Improved performance and memory usage when importing images (thanks mlocati)
+
+## Bug Fixes
+
+* Fixed: Page List block pagination displays as "Previous" and "Next" when logged out 
+* Stack improvements on upgrade from 5.7 to 8.2 on a multilingual site (thanks mlocati)
+* New asynchronous thumbnail generation was passing height along twice, instead of width and height. This is now fixed. (thanks danklassen)
+* Fixed bug where incorrect primary key definition lead the Express Entry Detail block to not save properly.
+* Fixed: Search block pagination isn't working
+* Fixed bug where Express Entity Selector wasn’t working.
+* Fixed SQL injection in file folder parameter accessible to logged in users (
+* Pagelist update so the topic tree choice affects the preview pane (thanks seanom)
+* Fix inability to search pages, users or files in advanced search by boolean attributes
+* Fixed Multilingual: Navigate Sitemap does not reflect language
+* Added permissions to user lists
+* Fixed: Prevent infinite loop in Next/Previous block under certain conditions.
+* Fixed bug with page aliases displaying many times in the sitemap.
+* Fixed bug where FileList items repeating in pagination results, pagination doesn't appear
+* Fixed miscellaneous permissions errors when updating certain sites from 5.7 to 8.2. (thanks Ruud-Zuiderlicht)
+* Fix: Wrong icons for sort order of files in file sets (thanks deek87)
+* Fixed: New optional asynchronous thumbnail builder does not load underscore JS. (thanks Seanom)
+
 # 8.2.0
 
 ## New Features
