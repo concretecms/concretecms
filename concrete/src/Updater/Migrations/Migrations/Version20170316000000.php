@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
+use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Express\EntryList;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -18,6 +19,10 @@ class Version20170316000000 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
+        $this->refreshEntities([
+            Entity::class
+        ]);
+
         // Get all the entities ALL THE ENTITIES
         $entities = \Core::make('express')->getEntities(true)->findAll();
         foreach ($entities as $entity) {
