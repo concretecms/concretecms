@@ -13,6 +13,8 @@ class Options extends DashboardPageController
     public function view()
     {
         $config = $this->app->make('config');
+        $this->set('thumbnail_generation_strategies', $this->getThumbnailGenerationStrategies());
+        $this->set('thumbnail_generation_strategy', $config->get('concrete.misc.basic_thumbnailer_generation_strategy'));
         $this->set('thumbnail_formats', $this->getThumbnailsFormats());
         $this->set('thumbnail_format', $config->get('concrete.misc.default_thumbnail_format'));
         $this->set('jpeg_compression', $config->get('concrete.misc.default_jpeg_image_compression'));
@@ -25,6 +27,10 @@ class Options extends DashboardPageController
     {
         if ($this->token->validate('thumbnails-options')) {
             $config = $this->app->make('config');
+            $thumbnail_generation_strategy = $this->request->request('thumbnail_generation_strategy', '');
+            if (!array_key_exists($thumbnail_generation_strategy, $this->getThumbnailGenerationStrategies())) {
+                $this->error->add(t('Invalid thumbnail generation strategy'));
+            }
             $thumbnail_format = $this->request->request('thumbnail_format', '');
             if (!array_key_exists($thumbnail_format, $this->getThumbnailsFormats())) {
                 $this->error->add(t('Invalid thumbnail format'));
@@ -42,6 +48,7 @@ class Options extends DashboardPageController
                 $this->error->add(t('Invalid image manipulation library'));
             }
             if (!$this->error->has()) {
+                $config->save('concrete.misc.basic_thumbnailer_generation_strategy', $thumbnail_generation_strategy);
                 $config->save('concrete.misc.default_thumbnail_format', $thumbnail_format);
                 $config->save('concrete.misc.default_jpeg_image_compression', $jpeg_compression);
                 $config->save('concrete.misc.default_png_image_compression', $png_compression);
@@ -53,6 +60,14 @@ class Options extends DashboardPageController
             $this->error->add($this->token->getErrorMessage());
             $this->view();
         }
+    }
+
+    protected function getThumbnailGenerationStrategies()
+    {
+        return [
+            'now' => t('Create the thumbnails synchronously (may fail with out-of-memory errors)'),
+            'async' => t('Create the thumbnails a synchronously (users may not see thumbnails immediatedly)'),
+        ];
     }
 
     protected function getThumbnailsFormats()
