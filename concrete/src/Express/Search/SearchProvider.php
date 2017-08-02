@@ -39,6 +39,14 @@ class SearchProvider extends AbstractSearchProvider
         parent::__construct($session);
     }
 
+    /**
+     * @return Entity
+     */
+    public function getEntity()
+    {
+        return $this->entity;
+    }
+
     public function getCustomAttributeKeys()
     {
         return $this->category->getSearchableList();

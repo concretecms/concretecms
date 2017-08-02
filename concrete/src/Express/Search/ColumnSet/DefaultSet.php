@@ -4,9 +4,10 @@ namespace Concrete\Core\Express\Search\ColumnSet;
 use Concrete\Core\Attribute\Category\ExpressCategory;
 use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Search\Column\AttributeKeyColumn;
+use Concrete\Core\Search\Column\Column;
 use Core;
 
-class DefaultSet extends Available
+class DefaultSet extends ColumnSet
 {
 
     public static function getDateAdded(Entry $entry)
@@ -22,6 +23,14 @@ class DefaultSet extends Available
     public function __construct(ExpressCategory $category)
     {
         parent::__construct($category);
+
+        $this->addColumn(new Column('e.exEntryDateCreated', t('Date Added'), array('\Concrete\Core\Express\Search\ColumnSet\DefaultSet', 'getDateAdded')));
+
+        $entity = $category->getExpressEntity();
+        if ($entity->supportsCustomDisplayOrder()) {
+            $this->addColumn(new Column('e.exEntryDisplayOrder', t('Custom Display Order'), array('\Concrete\Core\Express\Search\ColumnSet\DefaultSet', 'getDisplayOrder')));
+        }
+
         $entity = $category->getExpressEntity();
         if ($entity->supportsCustomDisplayOrder()) {
             $column = $this->getColumnByKey('e.exEntryDisplayOrder');

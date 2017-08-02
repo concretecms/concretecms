@@ -2,6 +2,7 @@
 namespace Concrete\Controller\Dialog\Express;
 
 use Concrete\Controller\Dialog\Search\AdvancedSearch as AdvancedSearchController;
+use Concrete\Controller\Element\Search\Express\CustomizeResults;
 use Concrete\Core\Attribute\Category\ExpressCategory;
 use Concrete\Core\Entity\Search\SavedSearch;
 use Concrete\Core\Express\Search\Field\Manager;
@@ -28,7 +29,17 @@ class AdvancedSearch extends AdvancedSearchController
         if (!isset($this->entity)) {
             $entity = \Express::getObjectByID($this->request->query->get('exEntityID'));
             $this->entity = $entity;
+            if (!$this->entity) {
+                throw new \Exception(t('Access Denied.'));
+            }
         }
+    }
+
+    protected function getCustomizeResultsElement()
+    {
+        $provider = $this->getSearchProvider();
+        $element = new CustomizeResults($provider);
+        return $element;
     }
 
     protected function canAccess()
