@@ -6,30 +6,30 @@ use Concrete\Core\Search\Column\ColumnInterface;
 use Concrete\Core\Search\Column\PagerColumnInterface;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 
-class FileVersionTitle extends Column implements PagerColumnInterface
+class FileVersionDateAddedColumn extends Column implements PagerColumnInterface
 {
 
     public function getColumnKey()
     {
-        return 'fv.fvTitle';
+        return 'fv.fvDateAdded';
     }
 
     public function getColumnName()
     {
-        return t('Name');
+        return t('Modified');
     }
 
     public function getColumnCallback()
     {
-        return 'getTitle';
+        return array('\Concrete\Core\File\Search\ColumnSet\DefaultSet', 'getFileDateActivated');
     }
 
     public function filterListAtOffset(PagerProviderInterface $itemList, $mixed)
     {
         $query = $itemList->getQueryObject();
         $sort = $this->getColumnSortDirection() == 'desc' ? '<' : '>';
-        $where = sprintf('(fv.fvTitle, f.fID) %s (:sortName, :sortID)', $sort);
-        $query->setParameter('sortName', $mixed->getTitle());
+        $where = sprintf('(fv.fvDateAdded, f.fID) %s (:sortDate, :sortID)', $sort);
+        $query->setParameter('sortDate', $mixed->getDateAdded()->format('Y-m-d H:i:s'));
         $query->setParameter('sortID', $mixed->getFileID());
         $query->andWhere($where);
     }

@@ -1,11 +1,11 @@
 <?php
 namespace Concrete\Core\File\Search\ColumnSet;
 
-use Concrete\Core\File\Search\ColumnSet\Column\FolderItemModified;
-use Concrete\Core\File\Search\ColumnSet\Column\FolderItemSize;
-use Concrete\Core\File\Search\ColumnSet\Column\FolderItemType;
+use Concrete\Core\File\Search\ColumnSet\Column\FolderItemModifiedColumn;
+use Concrete\Core\File\Search\ColumnSet\Column\FolderItemSizeColumn;
+use Concrete\Core\File\Search\ColumnSet\Column\FolderItemTypeColumn;
 use Concrete\Core\File\Type\Type;
-use Concrete\Core\File\Search\ColumnSet\Column\FolderItemName;
+use Concrete\Core\File\Search\ColumnSet\Column\FolderItemNameColumn;
 use Concrete\Core\Search\Column\Column;
 use Concrete\Core\Search\Column\Set;
 use Concrete\Core\Support\Facade\Application;
@@ -68,10 +68,10 @@ class FolderSet extends Set
 
     public function __construct()
     {
-        $this->addColumn(new FolderItemName());
-        $this->addColumn(new FolderItemType());
-        $this->addColumn(new FolderItemModified());
-        $this->addColumn(new FolderItemSize());
+        $this->addColumn(new FolderItemNameColumn());
+        $this->addColumn(new FolderItemTypeColumn());
+        $this->addColumn(new FolderItemModifiedColumn());
+        $this->addColumn(new FolderItemSizeColumn());
         $title = $this->getColumnByKey('folderItemName');
         $this->setDefaultSortColumn($title, 'desc');
     }

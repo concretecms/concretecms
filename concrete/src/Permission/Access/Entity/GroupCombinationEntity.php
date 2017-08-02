@@ -85,6 +85,7 @@ class GroupCombinationEntity extends Entity
     public function getAccessEntityUsers(PermissionAccess $pa)
     {
         $gl = new UserList();
+        $gl->ignorePermissions();
         foreach ($this->groups as $g) {
             $gl->filterByGroupID($g->getGroupID());
         }

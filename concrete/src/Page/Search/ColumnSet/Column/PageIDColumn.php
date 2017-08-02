@@ -6,30 +6,29 @@ use Concrete\Core\Search\Column\ColumnInterface;
 use Concrete\Core\Search\Column\PagerColumnInterface;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 
-class DateLastModified extends Column implements PagerColumnInterface
+class PageIDColumn extends Column implements PagerColumnInterface
 {
 
     public function getColumnKey()
     {
-        return 'c.cDateModified';
+        return 'p.cID';
     }
 
     public function getColumnName()
     {
-        return t('Last Modified');
+        return t('ID');
     }
 
     public function getColumnCallback()
     {
-        return array('\Concrete\Core\Page\Search\ColumnSet\DefaultSet', 'getCollectionDateModified');
+        return 'getCollectionID';
     }
 
     public function filterListAtOffset(PagerProviderInterface $itemList, $mixed)
     {
         $query = $itemList->getQueryObject();
         $sort = $this->getColumnSortDirection() == 'desc' ? '<' : '>';
-        $where = sprintf('(c.cDateModified, p.cID) %s (:sortDate, :sortID)', $sort);
-        $query->setParameter('sortDate', $mixed->getCollectionDateLastModified());
+        $where = sprintf('p.cID %s :sortID', $sort);
         $query->setParameter('sortID', $mixed->getCollectionID());
         $query->andWhere($where);
     }

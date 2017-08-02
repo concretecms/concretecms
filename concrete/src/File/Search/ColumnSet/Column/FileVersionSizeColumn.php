@@ -1,36 +1,36 @@
 <?php
-namespace Concrete\Core\Page\Search\ColumnSet\Column;
+namespace Concrete\Core\File\Search\ColumnSet\Column;
 
 use Concrete\Core\Search\Column\Column;
 use Concrete\Core\Search\Column\ColumnInterface;
 use Concrete\Core\Search\Column\PagerColumnInterface;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 
-class SitemapDisplayOrder extends Column implements PagerColumnInterface
+class FileVersionSizeColumn extends Column implements PagerColumnInterface
 {
 
     public function getColumnKey()
     {
-        return 'p.cDisplayOrder';
+        return 'fv.fvSize';
     }
 
     public function getColumnName()
     {
-        return t('Display Order');
+        return t('Size');
     }
 
     public function getColumnCallback()
     {
-        return 'getCollectionDisplayOrder';
+        return 'getSize';
     }
 
     public function filterListAtOffset(PagerProviderInterface $itemList, $mixed)
     {
         $query = $itemList->getQueryObject();
         $sort = $this->getColumnSortDirection() == 'desc' ? '<' : '>';
-        $where = sprintf('(p.cDisplayOrder, p.cID) %s (:sortOrder, :sortID)', $sort);
-        $query->setParameter('sortOrder', $mixed->getCollectionDisplayOrder());
-        $query->setParameter('sortID', $mixed->getCollectionID());
+        $where = sprintf('(fv.fvSize, f.fID) %s (:sortSize, :sortID)', $sort);
+        $query->setParameter('sortSize', $mixed->getFullSize());
+        $query->setParameter('sortID', $mixed->getFileID());
         $query->andWhere($where);
     }
 

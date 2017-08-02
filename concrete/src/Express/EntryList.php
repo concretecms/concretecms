@@ -25,6 +25,7 @@ class EntryList extends DatabaseItemList implements PermissionableListItemInterf
         }
     }
 
+
     protected function getAttributeKeyClassName()
     {
         return $this->category;
@@ -116,6 +117,16 @@ class EntryList extends DatabaseItemList implements PermissionableListItemInterf
     public function setPermissionsChecker(\Closure $checker)
     {
         $this->permissionsChecker = $checker;
+    }
+
+    public function getPermissionsChecker()
+    {
+        return $this->permissionsChecker;
+    }
+
+    public function enablePermissions()
+    {
+        unset($this->permissionsChecker);
     }
 
     public function ignorePermissions()

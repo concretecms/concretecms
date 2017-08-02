@@ -1,36 +1,36 @@
 <?php
-namespace Concrete\Core\Page\Search\ColumnSet\Column;
+namespace Concrete\Core\User\Search\ColumnSet\Column;
 
 use Concrete\Core\Search\Column\Column;
 use Concrete\Core\Search\Column\ColumnInterface;
 use Concrete\Core\Search\Column\PagerColumnInterface;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 
-class DatePublic extends Column implements PagerColumnInterface
+class EmailColumn extends Column implements PagerColumnInterface
 {
 
     public function getColumnKey()
     {
-        return 'cv.cvDatePublic';
+        return 'u.uEmail';
     }
 
     public function getColumnName()
     {
-        return t('Date');
+        return t('Email');
     }
 
     public function getColumnCallback()
     {
-        return array('\Concrete\Core\Page\Search\ColumnSet\DefaultSet', 'getCollectionDatePublic');
+        return ['\Concrete\Core\User\Search\ColumnSet\Available', 'getUserEmail'];
     }
 
     public function filterListAtOffset(PagerProviderInterface $itemList, $mixed)
     {
         $query = $itemList->getQueryObject();
         $sort = $this->getColumnSortDirection() == 'desc' ? '<' : '>';
-        $where = sprintf('(cv.cvDatePublic, p.cID) %s (:sortDate, :sortID)', $sort);
-        $query->setParameter('sortDate', $mixed->getCollectionDatePublic());
-        $query->setParameter('sortID', $mixed->getCollectionID());
+        $where = sprintf('(u.uEmail, u.uID) %s (:sortName, :sortID)', $sort);
+        $query->setParameter('sortName', $mixed->getUserEmail());
+        $query->setParameter('sortID', $mixed->getUserID());
         $query->andWhere($where);
     }
 

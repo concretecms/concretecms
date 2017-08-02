@@ -115,6 +115,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
     public function getGroupMembers()
     {
         $user_list = new UserList();
+        $user_list->ignorePermissions();
         $user_list->filterByGroup($this);
 
         return $user_list->get();
@@ -123,6 +124,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
     public function getGroupMemberIDs()
     {
         $user_list = new UserList();
+        $user_list->ignorePermissions();
         $user_list->filterByGroup($this);
 
         return $user_list->getResultIDs();
@@ -151,6 +153,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
     public function getGroupMembersNum()
     {
         $user_list = new UserList();
+        $user_list->ignorePermissions();
         $user_list->filterByGroup($this);
         return $user_list->getTotalResults();
     }

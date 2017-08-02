@@ -6,7 +6,7 @@ use Concrete\Core\Search\Column\ColumnInterface;
 use Concrete\Core\Search\Column\PagerColumnInterface;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 
-class FolderItemType extends Column implements PagerColumnInterface
+class FolderItemTypeColumn extends Column implements PagerColumnInterface
 {
 
     public function getColumnKey()

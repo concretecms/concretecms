@@ -4,8 +4,9 @@ namespace Concrete\Core\Search\ItemList\Pager;
 use Concrete\Core\Search\ItemList\Column;
 use Concrete\Core\Search\ItemList\Pager\Manager\PagerManagerInterface;
 use Concrete\Core\Search\ItemList\Pager\QueryString\VariableFactory;
+use Concrete\Core\Search\PermissionableListItemInterface;
 
-interface PagerProviderInterface
+interface PagerProviderInterface extends PermissionableListItemInterface
 {
 
     /**
@@ -17,10 +18,5 @@ interface PagerProviderInterface
      * @return VariableFactory
      */
     function getPagerVariableFactory();
-
-
-    function getPermissionsChecker();
-    function ignorePermissions();
-    function enablePermissions();
 
 }

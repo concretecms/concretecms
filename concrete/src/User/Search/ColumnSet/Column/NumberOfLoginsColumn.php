@@ -1,36 +1,36 @@
 <?php
-namespace Concrete\Core\File\Search\ColumnSet\Column;
+namespace Concrete\Core\User\Search\ColumnSet\Column;
 
 use Concrete\Core\Search\Column\Column;
 use Concrete\Core\Search\Column\ColumnInterface;
 use Concrete\Core\Search\Column\PagerColumnInterface;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 
-class FileVersionDateAdded extends Column implements PagerColumnInterface
+class NumberOfLoginsColumn extends Column implements PagerColumnInterface
 {
 
     public function getColumnKey()
     {
-        return 'fv.fvDateAdded';
+        return 'u.uNumLogins';
     }
 
     public function getColumnName()
     {
-        return t('Modified');
+        return t('# Logins');
     }
 
     public function getColumnCallback()
     {
-        return array('\Concrete\Core\File\Search\ColumnSet\DefaultSet', 'getFileDateActivated');
+        return 'getNumLogins';
     }
 
     public function filterListAtOffset(PagerProviderInterface $itemList, $mixed)
     {
         $query = $itemList->getQueryObject();
         $sort = $this->getColumnSortDirection() == 'desc' ? '<' : '>';
-        $where = sprintf('(fv.fvDateAdded, f.fID) %s (:sortDate, :sortID)', $sort);
-        $query->setParameter('sortDate', $mixed->getDateAdded()->format('Y-m-d H:i:s'));
-        $query->setParameter('sortID', $mixed->getFileID());
+        $where = sprintf('(u.uNumLogins, u.uID) %s (:sortOrder, :sortID)', $sort);
+        $query->setParameter('sortOrder', $mixed->getNumLogins());
+        $query->setParameter('sortID', $mixed->getUSerID());
         $query->andWhere($where);
     }
 
