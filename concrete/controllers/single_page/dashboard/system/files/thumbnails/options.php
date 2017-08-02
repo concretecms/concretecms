@@ -66,7 +66,7 @@ class Options extends DashboardPageController
     {
         return [
             'now' => t('Create the thumbnails synchronously (may fail with out-of-memory errors)'),
-            'async' => t('Create the thumbnails a synchronously (users may not see thumbnails immediatedly)'),
+            'async' => t('Create the thumbnails asynchronously (users may not see thumbnails immediatedly)'),
         ];
     }
 
