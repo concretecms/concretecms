@@ -45,26 +45,30 @@ class PaginationFactory
      * @param ItemList $itemList
      * @return Pagerfanta
      */
-    public function createPaginationObject(PaginationProviderInterface $itemList, $permissionedStylePagination = self::PERMISSIONED_PAGINATION_STYLE_FULL)
+    public function createPaginationObject($itemList, $permissionedStylePagination = self::PERMISSIONED_PAGINATION_STYLE_FULL)
     {
-        $canUseSimplePagination = true;
-        if ($itemList instanceof PermissionableListItemInterface) {
-            $canUseSimplePagination = $this->canUseSimplePagination($itemList);
-        }
-
-        if ($canUseSimplePagination) {
-            // Simple pagination is always best, so it isn't an option in the method.
-            $adapter = $itemList->getPaginationAdapter();
-            $pagination = new Pagination($itemList, $adapter);
-        } else {
-            if ($permissionedStylePagination == self::PERMISSIONED_PAGINATION_STYLE_PAGER && $itemList instanceof PagerProviderInterface) {
-                $pagination = new PagerPagination($itemList);
-            } else {
-                $pagination = new PermissionablePagination($itemList);
+        if ($itemList instanceof PaginationProviderInterface) {
+            $canUseSimplePagination = true;
+            if ($itemList instanceof PermissionableListItemInterface) {
+                $canUseSimplePagination = $this->canUseSimplePagination($itemList);
             }
-        }
 
-        return $this->deliverPaginationObject($itemList, $pagination);
+            if ($canUseSimplePagination) {
+                // Simple pagination is always best, so it isn't an option in the method.
+                $adapter = $itemList->getPaginationAdapter();
+                $pagination = new Pagination($itemList, $adapter);
+            } else {
+                if ($permissionedStylePagination == self::PERMISSIONED_PAGINATION_STYLE_PAGER && $itemList instanceof PagerProviderInterface) {
+                    $pagination = new PagerPagination($itemList);
+                } else {
+                    $pagination = new PermissionablePagination($itemList);
+                }
+            }
+
+            return $this->deliverPaginationObject($itemList, $pagination);
+        } else {
+            return $itemList->getPagination();
+        }
     }
 
     /**
