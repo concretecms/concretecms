@@ -9,7 +9,28 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <script type="text/javascript">
     $(function () {
         $('div[data-search=express_entries]').concreteAjaxSearch({
-            result: <?=$result?>
+            result: <?=$result?>,
+            onUpdateResults: function(concreteSearch) {
+                concreteSearch.$element.on('mouseover', 'tr[data-entity-id]', function(e) {
+                    e.stopPropagation();
+                    $(this).addClass('ccm-search-select-hover');
+                });
+                concreteSearch.$element.on('mouseout', 'tr[data-entity-id]', function(e) {
+                    e.stopPropagation();
+                    $(this).removeClass('ccm-search-select-hover');
+                });
+
+                concreteSearch.$element.unbind('click.expressEntries');
+                concreteSearch.$element.on('click.expressEntries', 'tr[data-entity-id]', function(e) {
+                    e.stopPropagation();
+                    ConcreteEvent.publish('SelectExpressEntry', {
+                        exEntryID: $(this).attr('data-entity-id'),
+                        event: e
+                    });
+                    return false;
+                });
+            }
+
         });
     });
 </script>

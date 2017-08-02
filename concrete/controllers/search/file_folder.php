@@ -95,8 +95,10 @@ class FileFolder extends AbstractController
             $list->disableAutomaticSorting(); // We don't need the automatic sorting found in the item list. it fires too late.
             $data = $this->request->query->all();
 
-            $column = $columns->getDefaultSortColumn();
-            $list->sortBySearchColumn($column);
+            if (!$list->getActiveSortColumn()) {
+                $column = $columns->getDefaultSortColumn();
+                $list->sortBySearchColumn($column);
+            }
 
             if (isset($data[$list->getQuerySortColumnParameter()])) {
                 $value = $data[$list->getQuerySortColumnParameter()];

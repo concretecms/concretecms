@@ -58,12 +58,12 @@ class FileFolder extends Category
 
     public function getFolderItemList(User $u = null, Request $request)
     {
+        $available = new FolderSet();
         $sort = false;
         $list = new FolderItemList();
         $list->filterByParentFolder($this);
         if (is_object($u)) {
             if (($column = $request->get($list->getQuerySortColumnParameter())) && ($direction = $request->get($list->getQuerySortDirectionParameter()))) {
-                $available = new FolderSet();
                 if (is_object($available->getColumnByKey($column)) && ($direction == 'asc' || $direction == 'desc')) {
                     $sort = array($column, $direction);
                     $u->saveConfig(sprintf('file_manager.sort.%s', $this->getTreeNodeID()), json_encode($sort));
@@ -75,11 +75,8 @@ class FileFolder extends Category
                 }
             }
             if (is_array($sort)) {
-                $list->sanitizedSortBy($sort[0], $sort[1]);
+                $list->sortBySearchColumn($available->getColumnByKey($sort[0]), $sort[1]);
             }
-        }
-        if (!is_array($sort)) {
-            $list->sortByNodeType();
         }
         return $list;
     }

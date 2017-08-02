@@ -72,7 +72,7 @@ class FolderSet extends Set
         $this->addColumn(new FolderItemTypeColumn());
         $this->addColumn(new FolderItemModifiedColumn());
         $this->addColumn(new FolderItemSizeColumn());
-        $title = $this->getColumnByKey('folderItemName');
-        $this->setDefaultSortColumn($title, 'asc');
+        $type = $this->getColumnByKey('folderItemType');
+        $this->setDefaultSortColumn($type, 'asc');
     }
 }
