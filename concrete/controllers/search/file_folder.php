@@ -110,8 +110,10 @@ class FileFolder extends AbstractController
                     $direction = $sortColumn->getColumnDefaultSortDirection();
                 }
 
-                $sortColumn->setColumnSortDirection($direction);
-                $list->sortBySearchColumn($sortColumn, $direction);
+                if ($sortColumn) {
+                    $sortColumn->setColumnSortDirection($direction);
+                    $list->sortBySearchColumn($sortColumn, $direction);
+                }
             }
 
             if ($list instanceof PagerProviderInterface) {
