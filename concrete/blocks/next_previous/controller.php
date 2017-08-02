@@ -102,19 +102,28 @@ class Controller extends BlockController
         $currentPage = Page::getCurrentPage();
 
         while ($cID > 0) {
+
             switch ($this->orderBy) {
                 case 'chrono_desc':
-                    $cID = $db->GetOne('select Pages.cID from Pages inner join CollectionVersions cv on Pages.cID = cv.cID where cvIsApproved = 1 and cvDatePublic > ? and cParentID = ? order by cvDatePublic asc', [$currentPage->getCollectionDatePublic(), $currentPage->getCollectionParentID()]);
+                    $cID = $db->GetOne(
+                        'select Pages.cID from Pages inner join CollectionVersions cv on Pages.cID = cv.cID where Pages.cID != ? and cvIsApproved = 1 and cvDatePublic > ? and cParentID = ? order by cvDatePublic asc',
+                        [$cID, $currentPage->getCollectionDatePublic(), $currentPage->getCollectionParentID()]);
                     break;
                 case 'chrono_asc':
-                    $cID = $db->GetOne('select Pages.cID from Pages inner join CollectionVersions cv on Pages.cID = cv.cID where cvIsApproved = 1 and cvDatePublic < ? and cParentID = ?  order by cvDatePublic desc', [$currentPage->getCollectionDatePublic(), $currentPage->getCollectionParentID()]);
+                    $cID = $db->GetOne(
+                        'select Pages.cID from Pages inner join CollectionVersions cv on Pages.cID = cv.cID where Pages.cID != ? and cvIsApproved = 1 and cvDatePublic < ? and cParentID = ?  order by cvDatePublic desc',
+                        [$cID, $currentPage->getCollectionDatePublic(), $currentPage->getCollectionParentID()]);
                     break;
                 case 'display_desc':
-                    $cID = $db->GetOne('select cID from Pages where cDisplayOrder < ? and cParentID = ? order by cDisplayOrder desc', [$currentPage->getCollectionDisplayOrder(), $currentPage->getCollectionParentID()]);
+                    $cID = $db->GetOne(
+                        'select cID from Pages where cID != ? and cDisplayOrder < ? and cParentID = ? order by cDisplayOrder desc',
+                        [$cID, $currentPage->getCollectionDisplayOrder(), $currentPage->getCollectionParentID()]);
                     break;
                 case 'display_asc':
                 default:
-                    $cID = $db->GetOne('select cID from Pages where cDisplayOrder > ? and cParentID = ? order by cDisplayOrder asc', [$currentPage->getCollectionDisplayOrder(), $currentPage->getCollectionParentID()]);
+                    $cID = $db->GetOne(
+                        'select cID from Pages where cID != ? and  cDisplayOrder > ? and cParentID = ? order by cDisplayOrder asc',
+                        [$cID, $currentPage->getCollectionDisplayOrder(), $currentPage->getCollectionParentID()]);
                     break;
             }
 
