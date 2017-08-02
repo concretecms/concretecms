@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\User\Search\ColumnSet;
 
+use Concrete\Core\Search\Column\UserAttributeKeyColumn;
 use PermissionKey;
 use User;
 use Concrete\Core\Search\Column\Set;
@@ -9,6 +10,13 @@ use Concrete\Core\Search\Column\AttributeKeyColumn;
 class ColumnSet extends Set
 {
     protected $attributeClass = 'UserAttributeKey';
+
+    public function getAttributeKeyColumn($akHandle)
+    {
+        $ak = call_user_func(array($this->attributeClass, 'getByHandle'), $akHandle);
+        $col = new UserAttributeKeyColumn($ak);
+        return $col;
+    }
 
     public function getColumns()
     {
