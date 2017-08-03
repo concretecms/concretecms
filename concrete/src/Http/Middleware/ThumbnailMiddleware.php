@@ -14,7 +14,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use League\Flysystem\Filesystem;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
-
+use Concrete\Core\Config\Repository\Repository;
 /**
  * Class ThumbnailMiddleware
  * Middleware used to populate thumbnails at the end of each request.
@@ -47,6 +47,17 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
      */
     private $connection;
 
+
+    /**
+     * @var \Concrete\Core\Config\Repository\Repository
+     */
+    private $config;
+
+    public function __construct(Repository $config)
+    {
+        $this->config = $config;
+    }
+
     /**
      * Process the request and return a response.
      *
@@ -59,7 +70,9 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
     {
         $response = $frame->next($request);
 
-        if ($this->app->isInstalled()) {
+        // if the thumbnail generator is async, we do not use the thumbnail middleware.
+
+        if ($this->app->isInstalled() && $this->config->get('concrete.misc.basic_thumbnailer_generation_strategy') == 'now') {
             if ($response->getStatusCode() == 200) {
                 /* @var Connection $database */
                 try {
