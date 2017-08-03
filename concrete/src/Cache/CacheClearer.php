@@ -8,7 +8,6 @@ use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Database\DatabaseManager;
 use Concrete\Core\Foundation\Environment;
 use Concrete\Core\Localization\Localization;
-use Concrete\Core\Logging\Logger;
 use Exception;
 use FilesystemIterator;
 use Illuminate\Filesystem\Filesystem;
@@ -33,7 +32,7 @@ class CacheClearer
     /** @var \Illuminate\Filesystem\Filesystem */
     private $filesystem;
 
-    /** @var Logger */
+    /** @var LoggerInterface */
     private $logger;
 
     /** @var \Concrete\Core\Cache\Level\ObjectCache */
