@@ -53,6 +53,8 @@ class LogEntry
             case Logger::ERROR:
             case Logger::WARNING:
                 return '<i class="text-warning fa fa-warning launch-tooltip" title="' . $this->getLevelDisplayName() . '"></i>';
+            case Logger::NOTICE:
+                return '<i class="fa fa-exclamation launch-tooltip" title="' . $this->getLevelDisplayName() . '"></i>';
             case Logger::INFO:
                 return '<i class="text-info fa fa-info-circle launch-tooltip" title="' . $this->getLevelDisplayName() . '"></i>';
             case Logger::DEBUG:

@@ -39,6 +39,11 @@ class URLTest extends PHPUnit_Framework_TestCase
         $page->siteTree = $siteTree;
         $dashboard->siteTree = $siteTree;
         $this->service = $service;
+
+        $app = Concrete\Core\Support\Facade\Facade::getFacadeApplication();
+        $app->bind('\Psr\Log\LoggerInterface', function() {
+            return new \Psr\Log\NullLogger();
+        });
         Config::set('concrete.seo.url_rewriting', false);
         Config::set('concrete.seo.url_rewriting_all', false);
         $this->oldUrl = Config::get('concrete.seo.canonical_url');
@@ -52,6 +57,9 @@ class URLTest extends PHPUnit_Framework_TestCase
     {
         Config::set('concrete.seo.canonical_url', $this->oldUrl);
         $this->clearCanonicalUrl();
+
+        $app = Concrete\Core\Support\Facade\Facade::getFacadeApplication();
+        $app->bind('\Psr\Log\LoggerInterface', 'Concrete\Core\Logging\Logger');
 
         parent::tearDown();
     }
