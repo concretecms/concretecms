@@ -219,7 +219,7 @@ return [
                     'core_filesystem' => [
                         'class' => \Concrete\Core\Cache\Driver\FileSystemStashDriver::class,
                         'options' => [
-                            'path' => DIR_FILES_UPLOADED_STANDARD . '/cache',
+                            'path' => DIR_FILES_UPLOADED_STANDARD . '/cache/overrides',
                             'dirPermissions' => DIRECTORY_PERMISSIONS_MODE_COMPUTED,
                             'filePermissions' => FILE_PERMISSIONS_MODE_COMPUTED,
                         ],
@@ -236,7 +236,7 @@ return [
                     'core_filesystem' => [
                         'class' => \Concrete\Core\Cache\Driver\FileSystemStashDriver::class,
                         'options' => [
-                            'path' => DIR_FILES_UPLOADED_STANDARD . '/cache',
+                            'path' => DIR_FILES_UPLOADED_STANDARD . '/cache/expensive',
                             'dirPermissions' => DIRECTORY_PERMISSIONS_MODE_COMPUTED,
                             'filePermissions' => FILE_PERMISSIONS_MODE_COMPUTED,
                         ],
