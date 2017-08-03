@@ -12,6 +12,7 @@ use Concrete\Core\Logging\Logger;
 use Exception;
 use FilesystemIterator;
 use Illuminate\Filesystem\Filesystem;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class CacheClearer
@@ -50,7 +51,7 @@ class CacheClearer
         Repository $repository,
         Application $application,
         Filesystem $filesystem,
-        Logger $logger
+        LoggerInterface $logger
     ) {
         $this->dispatcher = $dispatcher;
         $this->application = $application;
