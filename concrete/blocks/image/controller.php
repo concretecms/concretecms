@@ -91,6 +91,7 @@ class Controller extends BlockController implements FileTrackableInterface
         $this->set('altText', $this->getAltText());
         $this->set('title', $this->getTitle());
         $this->set('linkURL', $this->getLinkURL());
+        $this->set('openLinkInNewWindow', $this->shouldLinkOpenInNewWindow());
         $this->set('c', Page::getCurrentPage());
     }
 
@@ -301,6 +302,14 @@ class Controller extends BlockController implements FileTrackableInterface
         }
 
         return $linkUrl;
+    }
+
+    /**
+     * @return bool
+     */
+    public function shouldLinkOpenInNewWindow()
+    {
+        return (bool) $this->openLinkInNewWindow;
     }
 
     /**
