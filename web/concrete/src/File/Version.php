@@ -787,7 +787,8 @@ class Version
                 $height = $type->getHeight();
                 $thumbnailMode = ImageInterface::THUMBNAIL_OUTBOUND;
                 if (!$height) {
-                    $height = $type->getWidth();
+                    $ratio = $this->getAttribute('width') / $this->getAttribute('height');
+                    $height = (int) round($type->getWidth() / $ratio);
                     $thumbnailMode = ImageInterface::THUMBNAIL_INSET;
                 }
                 $thumbnail = $image->thumbnail(new \Imagine\Image\Box($type->getWidth(), $height), $thumbnailMode);
