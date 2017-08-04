@@ -2,7 +2,7 @@
     CKEDITOR.plugins.add('concrete5link', {
         requires: 'link',
         init: function(editor) {
-
+            console.log('init');
             CKEDITOR.on('dialogDefinition', function(ev) {
                 // Take the dialog name and its definition from the event data.
                 var dialogName = ev.data.name;
@@ -22,7 +22,16 @@
                 };
 
                 var getSelectedLink = function() {
-                    return CKEDITOR.plugins.link.getSelectedLink(editor);
+                    // whenever the editor is saved but the page not published and the editor put in edit mode again
+                    // the dialogDefinition event runs twice one after the other.
+                    // the first time the editor parameter of the init() function still references the previous instance
+                    // of the editor and the second time it references the new instance.
+                    // So when running the editor through the function getSelectedLink() it throws an error the first since
+                    // that instance of the editor doesn't exist anymore.
+                    // getting the editor from the event deals with that
+                    // But this whole double event might be a bug with how C5 loads the editor
+
+                    return CKEDITOR.plugins.link.getSelectedLink(ev.editor);
                 };
                 // Check if the definition is from the dialog window you are interested in (the "Link" dialog window).
                 if (dialogName == 'link') {
@@ -59,109 +68,112 @@
                     if (targetTab.get('linkTargetType') !== null) {
                         // add the lightbox option to the target type dropdown
                         var targetSelect = targetTab.get('linkTargetType');
-                        targetSelect.items.splice(3, 0, ["<lightbox>", "lightbox"]);
-                        targetSelect.items.join();
+                        if (targetSelect.items[3][1] != "lightbox") {
+                            targetSelect.items.splice(3, 0, ["<lightbox>", "lightbox"]);
+                            targetSelect.items.join();
+                        }
 
                         // Add the UI that is shown when the user selects our new target type
                         // option from the select box.
-                        targetTab.elements.push({
-                            type: 'vbox',
-                            width: '100%',
-                            align: 'center',
-                            padding: 2,
-                            id: 'lightboxFeatures',
-                            children: [{
-                                type: 'fieldset',
-                                label: 'Lightbox Features',
+                        if (targetTab.get('lightboxFeatures') === null) {
+                            targetTab.elements.push({
+                                type: 'vbox',
+                                width: '100%',
+                                align: 'center',
+                                padding: 2,
+                                id: 'lightboxFeatures',
                                 children: [{
-                                        type: 'hbox',
-                                        children: [{
-                                            type: 'checkbox',
-                                            id: 'imageLightbox',
-                                            label: 'Linking to an image',
-                                            setup: function(data) {
-                                                var link = getSelectedLink();
-                                                if (link !== null) {
-                                                    if (data.target.name == "lightbox" && link.data('concrete5-link-lightbox') == "image") {
-                                                        this.setValue(1);
+                                    type: 'fieldset',
+                                    label: 'Lightbox Features',
+                                    children: [{
+                                            type: 'hbox',
+                                            children: [{
+                                                type: 'checkbox',
+                                                id: 'imageLightbox',
+                                                label: 'Linking to an image',
+                                                setup: function(data) {
+                                                    var link = getSelectedLink();
+                                                    if (link !== null) {
+                                                        if (data.target.name == "lightbox" && link.data('concrete5-link-lightbox') == "image") {
+                                                            this.setValue(1);
+                                                        } else {
+                                                            this.setValue(0);
+                                                        }
+                                                    }
+
+                                                },
+                                                commit: commitLightboxParams,
+                                                onChange: function(data) {
+                                                    if (this.getValue()) {
+                                                        this.getDialog().getContentElement('target', 'lightboxDimensions').getElement().hide();
                                                     } else {
-                                                        this.setValue(0);
+                                                        this.getDialog().getContentElement('target', 'lightboxDimensions').getElement().show();
                                                     }
                                                 }
+                                            }]
+                                        },
+                                        {
+                                            type: 'hbox',
+                                            id: 'lightboxDimensions',
+                                            children: [{
+                                                    type: 'text',
+                                                    widths: ['50%', '50%'],
+                                                    labelLayout: 'horizontal',
+                                                    label: commonLang.width,
+                                                    id: 'lightboxWidth',
+                                                    setup: function(data) {
+                                                        var link = getSelectedLink();
+                                                        if (link !== null) {
+                                                            if (data.target.name == "lightbox" && link.hasAttribute('data-concrete5-link-lightbox-width')) {
+                                                                this.setValue(link.data('concrete5-link-lightbox-width'));
+                                                            } else {
+                                                                this.setValue(null);
+                                                            }
+                                                        }
 
-                                            },
-                                            commit: commitLightboxParams,
-                                            onChange: function(data) {
-                                                if (this.getValue()) {
-                                                    this.getDialog().getContentElement('target', 'lightboxDimensions').getElement().hide();
+                                                    },
+                                                    commit: commitLightboxParams
+                                                },
+                                                {
+                                                    type: 'text',
+                                                    labelLayout: 'horizontal',
+                                                    widths: ['50%', '50%'],
+                                                    label: commonLang.height,
+                                                    id: 'lightboxHeight',
+                                                    setup: function(data) {
+                                                        var link = getSelectedLink();
+                                                        if (link !== null) {
+                                                            if (data.target.name == "lightbox" && link.hasAttribute('data-concrete5-link-lightbox-height')) {
+                                                                this.setValue(link.data('concrete5-link-lightbox-height'));
+                                                            } else {
+                                                                this.setValue(null);
+                                                            }
+                                                        }
+
+                                                    },
+                                                    commit: commitLightboxParams
+                                                }
+                                            ],
+                                            setup: function() {
+                                                if (this.getDialog().getContentElement('target', 'imageLightbox').getValue()) {
+                                                    this.getElement().hide()
                                                 } else {
-                                                    this.getDialog().getContentElement('target', 'lightboxDimensions').getElement().show();
+                                                    this.getElement().show();
                                                 }
                                             }
-                                        }]
-                                    },
-                                    {
-                                        type: 'hbox',
-                                        id: 'lightboxDimensions',
-                                        children: [{
-                                                type: 'text',
-                                                widths: ['50%', '50%'],
-                                                labelLayout: 'horizontal',
-                                                label: commonLang.width,
-                                                id: 'lightboxWidth',
-                                                setup: function(data) {
-                                                    var link = getSelectedLink();
-                                                    if (link !== null) {
-                                                        if (data.target.name == "lightbox" && link.hasAttribute('data-concrete5-link-lightbox-width')) {
-                                                            this.setValue(link.data('concrete5-link-lightbox-width'));
-                                                        } else {
-                                                            this.setValue(null);
-                                                        }
-                                                    }
-
-                                                },
-                                                commit: commitLightboxParams
-                                            },
-                                            {
-                                                type: 'text',
-                                                labelLayout: 'horizontal',
-                                                widths: ['50%', '50%'],
-                                                label: commonLang.height,
-                                                id: 'lightboxHeight',
-                                                setup: function(data) {
-                                                    var link = getSelectedLink();
-                                                    if (link !== null) {
-                                                        if (data.target.name == "lightbox" && link.hasAttribute('data-concrete5-link-lightbox-height')) {
-                                                            this.setValue(link.data('concrete5-link-lightbox-height'));
-                                                        } else {
-                                                            this.setValue(null);
-                                                        }
-                                                    }
-
-                                                },
-                                                commit: commitLightboxParams
-                                            }
-                                        ],
-                                        setup: function() {
-                                            if (this.getDialog().getContentElement('target', 'imageLightbox').getValue()) {
-                                                this.getElement().hide()
-                                            } else {
-                                                this.getElement().show();
-                                            }
-                                        }
-                                    },
-                                ]
-                            }],
-                            setup: function() {
-                                if (!this.getDialog().getContentElement('info', 'linkType')) {
-                                    this.getElement().hide();
+                                        },
+                                    ]
+                                }],
+                                setup: function() {
+                                    if (!this.getDialog().getContentElement('info', 'linkType')) {
+                                        this.getElement().hide();
+                                    }
+                                    if (this.getDialog().getContentElement('target', 'linkTargetType').getValue() != 'lightbox') {
+                                        this.getElement().hide();
+                                    }
                                 }
-                                if (this.getDialog().getContentElement('target', 'linkTargetType').getValue() != 'lightbox') {
-                                    this.getElement().hide();
-                                }
-                            }
-                        });
-
+                            });
+                        }
                         targetSelect.onChange = CKEDITOR.tools.override(targetSelect.onChange, function(original) {
                             return function() {
                                 var dialog = this.getDialog();
@@ -214,7 +226,6 @@
                                 // We can't really customize this code, so we need to make our
                                 // changes afterwards
                                 original.call(this);
-
                                 var link = getSelectedLink();
                                 if (link !== null) {
                                     if (data.target.type == "lightbox") {
