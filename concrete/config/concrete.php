@@ -8,7 +8,7 @@ return [
      */
     'version' => '8.2.2b1',
     'version_installed' => '8.2.2b1',
-    'version_db' => '20170802000000', // the key of the latest database migration
+    'version_db' => '20170804000000', // the key of the latest database migration
 
     /*
      * Installation status
@@ -492,6 +492,7 @@ return [
         'file_manager_detail' => [
             'handle' => 'file_manager_detail',
             'width' => 400,
+            'height' => 400,
         ],
         'user_avatar' => [
             'width' => 80,
