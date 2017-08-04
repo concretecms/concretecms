@@ -2,7 +2,6 @@
     CKEDITOR.plugins.add('concrete5link', {
         requires: 'link',
         init: function(editor) {
-            console.log('init');
             CKEDITOR.on('dialogDefinition', function(ev) {
                 // Take the dialog name and its definition from the event data.
                 var dialogName = ev.data.name;
