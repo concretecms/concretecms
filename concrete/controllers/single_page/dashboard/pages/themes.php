@@ -104,11 +104,6 @@ class Themes extends DashboardPageController
         $this->set('activate_confirm', View::url('/dashboard/pages/themes', 'activate_confirm', $pThemeID, $valt->generate('activate')));
     }
 
-    public function marketplace()
-    {
-        $this->redirect('/dashboard/install/browse', 'themes');
-    }
-
     public function install($pThemeHandle = null)
     {
         $th = PageTheme::getByFileHandle($pThemeHandle);
