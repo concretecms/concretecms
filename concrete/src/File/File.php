@@ -1,28 +1,18 @@
 <?php
 namespace Concrete\Core\File;
 
+use CacheLocal;
 use Carbon\Carbon;
 use Concrete\Core\Entity\File\Version;
-use Concrete\Core\Tree\Node\Node;
+use Concrete\Core\File\StorageLocation\StorageLocation;
 use Concrete\Core\Tree\Node\Type\FileFolder;
 use Concrete\Core\User\UserInfo;
-use Doctrine\Common\Collections\ArrayCollection;
-use FileSet;
-use League\Flysystem\AdapterInterface;
-use Loader;
-use CacheLocal;
-use Core;
-use User;
 use Events;
-use Page;
-use Database;
-use Concrete\Core\File\StorageLocation\StorageLocation;
-use PermissionKey;
-use Doctrine\ORM\Mapping as ORM;
+use Loader;
+use User;
 
 class File
 {
-
     /**
      * returns a file object for the given file ID.
      *
@@ -33,6 +23,7 @@ class File
     public static function getByID($fID)
     {
         $em = \ORM::entityManager();
+
         return $em->find('\Concrete\Core\Entity\File\File', $fID);
     }
 
@@ -56,7 +47,7 @@ class File
         return false;
     }
 
-    public static function add($filename, $prefix, $data = array(), $fsl = false, $folder = false)
+    public static function add($filename, $prefix, $data = [], $fsl = false, $folder = false)
     {
         $db = Loader::db();
         $dh = Loader::helper('date');
@@ -85,7 +76,6 @@ class File
         $f->storageLocation = $fsl;
         $f->fDateAdded = new Carbon($date);
         $f->folderTreeNodeID = $folder->getTreeNodeID();
-
 
         $em = \ORM::entityManager();
         $em->persist($f);
@@ -123,5 +113,4 @@ class File
 
         return $fv;
     }
-
 }
