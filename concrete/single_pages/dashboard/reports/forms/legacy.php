@@ -65,8 +65,7 @@ $db = Loader::db();
     }
 
 </style>
-<?php if (!isset($questionSet)): { ?>
-    <?php echo $h->getDashboardPaneHeaderWrapper(t('Form Results')); ?>
+<?php if (!isset($questionSet)) { ?>
     <?php
     $showTable = false;
     foreach ($surveys as $qsid => $survey) {
@@ -77,9 +76,7 @@ $db = Loader::db();
         }
     }
 
-    if ($showTable) {
-        ?>
-
+    if ($showTable) { ?>
 
         <table class="table table-striped">
             <thead>
@@ -132,7 +129,7 @@ $db = Loader::db();
                                 </button>
                             </div>
                         </form>
-                        <?php if (!$in_use): { ?>
+                        <?php if (!$in_use) { ?>
                             <form method="post" action="" style="display: inline">
                                 <input type="hidden" name="bID" value="<?php echo intval($survey['bID']) ?>"/>
                                 <input type="hidden" name="qsID" value="<?php echo intval($qsid) ?>"/>
@@ -140,23 +137,18 @@ $db = Loader::db();
                                 <?php $valt->output('deleteForm') ?>
                                 <?php echo $ih->submit(t('Delete'), false, 'left', 'small error delete-form') ?>
                             </form>
-                        <?php }endif ?>
+                        <?php } ?>
                     </td>
                 </tr>
-            <?php
-            }
-            ?>
+            <?php } ?>
             </tbody>
         </table>
     <?php
-    }
 
-else {
-        ?>
+} else { ?>
         <p><?php echo t('There are no available forms in your site.') ?></p>
     <?php } ?>
-    <?php echo $h->getDashboardPaneFooterWrapper(); ?>
-<?php } else: {
+<?php } else {
     $bID = $surveys[$questionSet]['bID'];
     $block = Block::getByID($bID);
     $formPage = null;
@@ -170,9 +162,9 @@ else {
         false,
         false); ?>
 <div class="ccm-pane-body <?php if (!$paginator || !strlen($paginator->getPages()) > 0) { ?> ccm-pane-body-footer <?php } ?>">
-    <?php if (count($answerSets) == 0): { ?>
+    <?php if (count($answerSets) == 0) { ?>
         <div><?php echo t('No one has yet submitted this form.') ?></div>
-    <?php } else: { ?>
+    <?php } else { ?>
 
         <div class="ccm-dashboard-header-buttons">
             <a id="ccm-export-results" class="btn btn-success" href="<?php echo $view->action('csv')?>?qsid=<?php echo $questionSet ?>">
@@ -210,7 +202,7 @@ else {
                 </tr>
                 </thead>
                 <tbody>
-                <?php foreach ($answerSets as $answerSetId => $answerSet): { ?>
+                <?php foreach ($answerSets as $answerSetId => $answerSet) { ?>
                     <tr>
                         <td><?php echo date($dh::DB_FORMAT, strtotime($answerSet['created'])) ?></td>
                         <td><?php
@@ -222,7 +214,7 @@ else {
                                 print t('(User ID: %s)', $answerSet['uID']);
                             }
                             ?></td>
-                        <?php foreach ($questions as $questionId => $question): {
+                        <?php foreach ($questions as $questionId => $question) {
                             if ($question['inputType'] == 'fileupload') {
                                 $fID = (int)$answerSet['answers'][$questionId]['answer'];
                                 $file = File::getByID($fID);
@@ -255,8 +247,7 @@ else {
                                 }
                             }
                         }
-
-                        endforeach?>
+                        ?>
                         <td>
                             <form method="post" action="" class='pull-right'>
                                 <input type="hidden" name="qsid" value="<?php echo intval($answerSet['questionSetId']) ?>"/>
@@ -267,7 +258,7 @@ else {
                             </form>
                         </td>
                     </tr>
-                <?php }endforeach ?>
+                <?php } ?>
                 </tbody>
             </table>
         </div>
@@ -284,6 +275,6 @@ else {
                 </ul>
             </div>
         <?php } ?>
-    <?php }endif ?>
+    <?php } ?>
     <?php echo $h->getDashboardPaneFooterWrapper(false); ?>
-<?php }endif ?>
+<?php } ?>
