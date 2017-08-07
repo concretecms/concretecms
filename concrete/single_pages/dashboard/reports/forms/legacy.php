@@ -156,7 +156,14 @@ else {
         <p><?php echo t('There are no available forms in your site.') ?></p>
     <?php } ?>
     <?php echo $h->getDashboardPaneFooterWrapper(); ?>
-<?php } else: { ?>
+<?php } else: {
+    $bID = $surveys[$questionSet]['bID'];
+    $block = Block::getByID($bID);
+    $formPage = null;
+    if ($block) {
+        $formPage = $block->getBlockCollectionObject();}
+
+    ?>
     <?php echo $h->getDashboardPaneHeaderWrapper(
         t('Responses to %s', $surveys[$questionSet]['surveyName']),
         false,
@@ -226,6 +233,18 @@ else {
                                 } else {
                                     echo '<td>' . t('File not found') . '</td>';
                                 }
+                            } else if ($question['inputType'] == 'datetime') {
+
+                                if ($formPage) {
+                                    $site = $formPage->getSite();
+                                    $timezone = $site->getTimezone();
+                                    $date = Core::make('date');
+                                    $datetime = $date->formatDateTime($answerSet['answers'][$questionId]['answer'], false, false, $timezone);
+                                } else {
+                                    $datetime = $answerSet['answers'][$questionId]['answer'];
+                                }
+
+                                echo '<td>' . $datetime . '</td>';
                             } else {
                                 if ($question['inputType'] == 'text') {
                                     echo '<td>' . $text->entities(
