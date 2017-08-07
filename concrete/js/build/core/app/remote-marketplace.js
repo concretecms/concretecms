@@ -57,7 +57,7 @@
                             href:  CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/marketplace/download?mpID=' + mpID,
                             width: 500,
                             appendButtons: true,
-                            modal: false,
+                            modal: true,
                             height: 400
                         });
                     } else {
@@ -66,7 +66,7 @@
                             iframe: true,
                             href:  CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/marketplace/checkout?mpID=' + mpID,
                             width: '560px',
-                            modal: false,
+                            modal: true,
                             height: '400px'
                         });
                     }
