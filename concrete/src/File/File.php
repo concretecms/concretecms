@@ -5,6 +5,7 @@ use CacheLocal;
 use Carbon\Carbon;
 use Concrete\Core\Entity\File\Version;
 use Concrete\Core\File\StorageLocation\StorageLocation;
+use Concrete\Core\Permission\Access\Entity\FileUploaderEntity as FileUploaderPermissionAccessEntity;
 use Concrete\Core\Tree\Node\Type\FileFolder;
 use Concrete\Core\User\UserInfo;
 use Events;
