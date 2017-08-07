@@ -29,6 +29,16 @@ class DefaultSet extends ColumnSet
         return Core::make('helper/date')->formatDateTime($ui->getUserDateAdded());
     }
 
+    public static function getUserDateLastLogin($ui)
+    {
+        $login = $ui->getLastLogin();
+        if ($login) {
+            return Core::make('helper/date')->formatDateTime($login);
+        } else {
+            return '';
+        }
+    }
+
     public function __construct()
     {
         $this->addColumn(new UsernameColumn());
