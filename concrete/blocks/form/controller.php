@@ -361,7 +361,7 @@ class Controller extends BlockController
 
         $token = Core::make('token');
         if (!$token->validate('form_block_submit_qs_' . $qsID)) {
-            throw new Exception(t('Invalid Request'));
+            $errors[] = $token->getErrorMessage();
         }
 
         //get all questions for this question set
