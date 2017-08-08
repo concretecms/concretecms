@@ -1,5 +1,7 @@
-<?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
-<?php $form = Loader::helper('form'); ?>
+<?php defined('C5_EXECUTE') or die('Access Denied.');
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+$form = $app->make('helper/form');
+?>
 <div class="form-group">
     <?=$form->label('cstFilename', t('External Form to Include'))?>
     <select name="filename" id="cstFilename" class="form-control">

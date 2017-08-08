@@ -2,7 +2,6 @@
 namespace Concrete\Block\ExternalForm;
 
 use Concrete\Core\Block\BlockController;
-use Core;
 
 class Controller extends BlockController
 {
@@ -66,7 +65,7 @@ class Controller extends BlockController
 
     public function validate($args)
     {
-        $e = \Core::make('helper/validation/error');
+        $e = $this->app->make('helper/validation/error');
         if (!$args['filename']) {
             $e->add(t('You must specify an external form.'));
         }
@@ -78,7 +77,7 @@ class Controller extends BlockController
     {
         try {
             $class = camelcase(substr($this->filename, 0, strrpos($this->filename, '.php')));
-            $cl = \Core::make(
+            $cl = $this->app->make(
                 overrideable_core_class(
                     'Block\\ExternalForm\\Form\\Controller\\' . $class,
                     DIRNAME_BLOCKS . '/external_form/form/controller/' . $this->filename
@@ -116,7 +115,7 @@ class Controller extends BlockController
     public function getFormList()
     {
         $forms = array();
-        $fh = Core::make('helper/file');
+        $fh = $this->app->make('helper/file');
 
         if (file_exists(DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL)) {
             $forms = array_merge(
