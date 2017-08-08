@@ -40,7 +40,6 @@ script:
   - if [[ $CODESTYLE != "yes" ]]; then composer test; else composer phpcs; fi
 cache:
   directories:
-    - vendor
     - $HOME/.composer/cache/files
 
 notifications:
