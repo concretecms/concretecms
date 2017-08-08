@@ -12,14 +12,19 @@ env:
   global:
     - COMPOSER_DISABLE_XDEBUG_WARN=1
     - PREFER_LOWEST=""
+    - CACHE_NAME=CACHE_DEFAULT
 
 matrix:
   fast_finish: true
   include:
     - php: 7.1
-      env: CODESTYLE="yes"
+      env:
+        - CODESTYLE="yes"
+        - CACHE_NAME=CACHE_CODESTYLE
     - php: 7.1
-      env: PREFER_LOWEST="--prefer-lowest"
+      env:
+        - PREFER_LOWEST="--prefer-lowest"
+        - CACHE_NAME=CACHE_PREFER_LOWEST
   allow_failures:
     - php: nightly
 
@@ -35,8 +40,7 @@ script:
   - if [[ $CODESTYLE != "yes" ]]; then composer test; else composer phpcs; fi
 cache:
   directories:
-    - vendor
-    - $HOME/.composer/cache
+    - $HOME/.composer/cache/files
 
 notifications:
   email: false
