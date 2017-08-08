@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Tree\Node;
 
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Permission\Access\Entity\GroupCombinationEntity;
 use Concrete\Core\Permission\Access\Entity\GroupEntity;
@@ -23,7 +23,7 @@ use stdClass;
 use Gettext\Translations;
 use Concrete\Core\Tree\Node\Exception\MoveException;
 
-abstract class Node extends Object implements \Concrete\Core\Permission\ObjectInterface, AssignableObjectInterface
+abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\ObjectInterface, AssignableObjectInterface
 {
 
     use AssignableObjectTrait;

@@ -16,9 +16,9 @@ use Page;
 use Loader;
 use URL;
 use Sunra\PhpSimple\HtmlDomParser;
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 
-class LinkAbstractor extends Object
+class LinkAbstractor extends ConcreteObject
 {
     /**
      * Takes a chunk of content containing full urls

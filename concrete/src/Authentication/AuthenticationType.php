@@ -2,7 +2,7 @@
 namespace Concrete\Core\Authentication;
 
 use Concrete\Authentication\Concrete\Controller;
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Package\PackageList;
 use Core;
 use Environment;
@@ -10,7 +10,7 @@ use Exception;
 use Loader;
 use Package;
 
-class AuthenticationType extends Object
+class AuthenticationType extends ConcreteObject
 {
     /** @var Controller */
     public $controller;

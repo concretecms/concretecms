@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Tree;
 
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Localization\Localization;
 use Gettext\Translations;
 use SimpleXMLElement;
@@ -9,7 +9,7 @@ use Concrete\Core\Tree\Node\Node as TreeNode;
 use Exception;
 use Concrete\Core\Support\Facade\Application;
 
-abstract class Tree extends Object
+abstract class Tree extends ConcreteObject
 {
     protected $treeNodeSelectedIDs = [];
 

@@ -3,7 +3,7 @@ namespace Concrete\Core\Page\Type\PublishTarget\Type;
 
 use Loader;
 use Concrete\Core\Page\Type\Type as PageType;
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Package\PackageList;
 use Environment;
 use Concrete\Core\Package\Package as Package;
@@ -11,7 +11,7 @@ use Core;
 use Database;
 use Symfony\Component\HttpFoundation\Request;
 
-abstract class Type extends Object
+abstract class Type extends ConcreteObject
 {
     protected $ptPublishTargetTypeID;
     protected $ptPublishTargetTypeHandle;
