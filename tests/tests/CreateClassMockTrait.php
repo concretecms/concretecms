@@ -31,7 +31,7 @@ trait CreateClassMockTrait
             case 1:
                 return $this->getMock($className);
             case 2:
-                if (method_exists([$this, 'createMock'])) {
+                if (method_exists($this, 'createMock')) {
                     return $this->createMock($className);
                 }
                 if (method_exists($this, 'createTestDouble')) {
