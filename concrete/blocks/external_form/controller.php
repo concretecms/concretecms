@@ -5,7 +5,7 @@ use Concrete\Core\Block\BlockController;
 
 class Controller extends BlockController
 {
-    public $helpers = array('file');
+    public $helpers = ['file'];
     protected $btTable = 'btExternalForm';
     protected $btInterfaceWidth = 420;
     protected $btInterfaceHeight = 175;
@@ -17,17 +17,17 @@ class Controller extends BlockController
      */
     public function getBlockTypeDescription()
     {
-        return t("Include external forms in the filesystem and place them on pages.");
+        return t('Include external forms in the filesystem and place them on pages.');
     }
 
     public function getBlockTypeName()
     {
-        return t("External Form");
+        return t('External Form');
     }
 
     public function getJavaScriptStrings()
     {
-        return array('form-required' => t('You must select a form.'));
+        return ['form-required' => t('You must select a form.')];
     }
 
     public function getFilename()
@@ -51,7 +51,7 @@ class Controller extends BlockController
         }
     }
 
-    public function isValidControllerTask($method, $parameters = array())
+    public function isValidControllerTask($method, $parameters = [])
     {
         $controller = $this->getController();
         if ($controller) {
@@ -90,9 +90,9 @@ class Controller extends BlockController
         }
     }
 
-    public function runAction($method, $parameters = array())
+    public function runAction($method, $parameters = [])
     {
-        if (in_array($method, array('add', 'edit'))) {
+        if (in_array($method, ['add', 'edit'])) {
             parent::runAction($method, $parameters);
 
             return;
@@ -114,18 +114,18 @@ class Controller extends BlockController
 
     public function getFormList()
     {
-        $forms = array();
+        $forms = [];
         $fh = $this->app->make('helper/file');
 
         if (file_exists(DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL)) {
             $forms = array_merge(
                 $forms,
-                $fh->getDirectoryContents(DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL, array('controller')));
+                $fh->getDirectoryContents(DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL, ['controller']));
         }
         if (file_exists(DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL_CORE)) {
             $forms = array_merge(
                 $forms,
-                $fh->getDirectoryContents(DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL_CORE, array('controller')));
+                $fh->getDirectoryContents(DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL_CORE, ['controller']));
         }
 
         return $forms;
