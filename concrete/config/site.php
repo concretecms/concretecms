@@ -77,7 +77,7 @@ return [
                             'tabletools',
                             'toolbar',
                             'undo',
-                            'wysiwygarea'
+                            'wysiwygarea',
                         ],
                         'selected_hidden' => [
                             'concrete5filemanager',
@@ -90,8 +90,8 @@ return [
                             'resize',
                             'toolbar',
                             'wysiwygarea',
-                        ]
-                    ]
+                        ],
+                    ],
                 ],
                 'plugins' => [
                     'selected' => [
@@ -109,7 +109,17 @@ return [
                 'default_source_locale' => 'en_US',
             ],
 
+            'seo' => [
+                'canonical_tag' => [
+                    // Add a <meta rel="canonical" href="..."> tag to pages?
+                    'enabled' => false,
+                    // List of querystring parameters to be removed from SEO canonical URLs
+                    'excluded_querystring_parameters' => [
+                        'cID',
+                        'ccm_token',
+                    ],
+                ],
+            ],
         ],
-
     ],
 ];

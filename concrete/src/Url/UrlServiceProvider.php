@@ -42,5 +42,14 @@ class UrlServiceProvider extends Provider
             });
         $this->app->bind('Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface', 'Concrete\Core\Url\Resolver\Manager\ResolverManager');
         $this->app->bind('url/manager', 'Concrete\Core\Url\Resolver\Manager\ResolverManager');
+
+        $this->app
+            ->when(SeoCanonical::class)
+            ->needs('$excludedQuerystringParameters')
+            ->give(function($app) {
+                $site = $app->make('site')->getSite();
+                $config = $site->getConfigRepository();
+                return $config->get('seo.canonical_tag.excluded_querystring_parameters');
+            });
     }
 }
