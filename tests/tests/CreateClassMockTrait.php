@@ -4,7 +4,7 @@ namespace Concrete\Tests;
 trait CreateClassMockTrait
 {
     /**
-     * Flag to remember how we should create mocks. 
+     * Flag to remember how we should create mocks.
      *
      * @var int|null
      */
@@ -31,7 +31,13 @@ trait CreateClassMockTrait
             case 1:
                 return $this->getMock($className);
             case 2:
-                return $this->createMock($className);
+                if (method_exists([$this, 'createMock'])) {
+                    return $this->createMock($className);
+                }
+                if (method_exists($this, 'createTestDouble')) {
+                    return $this->createTestDouble($className);
+                }
+                throw new \RuntimeException('Invalid PHPUnit version, no createMock method found.');
         }
     }
 }
