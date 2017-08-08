@@ -10,7 +10,7 @@ use Concrete\Core\Permission\AssignableObjectInterface;
 use Concrete\Core\Permission\AssignableObjectTrait;
 use Concrete\Core\Permission\Key\Key;
 use Loader;
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use PageTemplate;
 use PermissionKey;
 use Concrete\Core\Permission\Access\Access as PermissionAccess;
@@ -34,7 +34,7 @@ use Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFor
 use Concrete\Core\Page\Collection\Version\VersionList;
 use Concrete\Core\Page\Type\Composer\Control\CorePageProperty\CorePageProperty as CorePagePropertyPageTypeComposerControl;
 
-class Type extends Object implements \Concrete\Core\Permission\ObjectInterface, AssignableObjectInterface
+class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInterface, AssignableObjectInterface
 {
     protected $ptDefaultPageTemplateID = 0;
 

@@ -2,12 +2,12 @@
 namespace Concrete\Core\Conversation\Rating;
 
 use Concrete\Core\Conversation\Message\Message;
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Package\PackageList;
 use Core;
 use Database;
 
-abstract class Type extends Object
+abstract class Type extends ConcreteObject
 {
     abstract public function outputRatingTypeHTML();
     abstract public function adjustConversationMessageRatingTotalScore(Message $message);

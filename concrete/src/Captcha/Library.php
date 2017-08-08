@@ -1,12 +1,12 @@
 <?php
 namespace Concrete\Core\Captcha;
 
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Package\PackageList;
 use Concrete\Core\Support\Facade\Package as PackageService;
 use Concrete\Core\Support\Facade\Facade;
 
-class Library extends Object
+class Library extends ConcreteObject
 {
     /**
      * The library handle.

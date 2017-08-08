@@ -3,7 +3,7 @@ namespace Concrete\Core\User\Group;
 
 use CacheLocal;
 use Concrete\Core\Database\Connection\Connection;
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Package\PackageList;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\User;
@@ -16,7 +16,7 @@ use GroupTree;
 use GroupTreeNode;
 use Concrete\Core\User\UserList;
 
-class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
+class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectInterface
 {
     public $ctID;
     public $permissionSet;

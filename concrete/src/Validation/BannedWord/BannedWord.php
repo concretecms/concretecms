@@ -1,10 +1,10 @@
 <?php
 namespace Concrete\Core\Validation\BannedWord;
 
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Loader;
 
-class BannedWord extends Object
+class BannedWord extends ConcreteObject
 {
     protected $id;
     protected $word;

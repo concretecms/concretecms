@@ -2,7 +2,7 @@
 namespace Concrete\Core\Page\Stack\Pile;
 
 use Concrete\Core\Block\Block;
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Page\Collection\Collection;
 use Concrete\Core\Page\Page;
 use Concrete\Core\User\User;
@@ -17,7 +17,7 @@ use Loader;
  *
  * \@package Concrete\Core\Page\Stack\Pile
  */
-class Pile extends Object
+class Pile extends ConcreteObject
 {
     /**
      * @var int

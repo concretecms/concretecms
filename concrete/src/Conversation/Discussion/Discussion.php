@@ -3,10 +3,10 @@ namespace Concrete\Core\Conversation\Discussion;
 
 use Loader;
 use Core;
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Page;
 
-class Discussion extends Object
+class Discussion extends ConcreteObject
 {
     public static function add(Page $c)
     {

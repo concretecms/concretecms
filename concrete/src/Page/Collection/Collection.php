@@ -10,7 +10,7 @@ use Concrete\Core\Entity\Attribute\Value\PageValue;
 use Concrete\Core\Entity\Attribute\Value\Value\Value;
 use Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVersionFeatureAssignment;
 use Concrete\Core\Feature\Feature;
-use Concrete\Core\Foundation\Object as Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Gathering\Item\Page as PageGatheringItem;
 use Concrete\Core\Page\Collection\Version\Version;
 use Concrete\Core\Page\Collection\Version\VersionList;
@@ -29,7 +29,7 @@ use Permissions;
 use Stack;
 use User;
 
-class Collection extends Object implements TrackableInterface
+class Collection extends ConcreteObject implements TrackableInterface
 {
     public $cID;
     protected $vObj;

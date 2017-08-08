@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\User;
 
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Permission\Access\Entity\GroupEntity;
 use Concrete\Core\Support\Facade\Application;
@@ -13,7 +13,7 @@ use Hautelook\Phpass\PasswordHash;
 use Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
 use Concrete\Core\User\Point\Action\Action as UserPointAction;
 
-class User extends Object
+class User extends ConcreteObject
 {
     public $uID = '';
     public $uName = '';

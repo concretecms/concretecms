@@ -9,7 +9,7 @@ use Concrete\Core\Backup\ContentExporter;
 use Concrete\Core\Block\View\BlockView;
 use Concrete\Core\Feature\Assignment\Assignment as FeatureAssignment;
 use Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVersionFeatureAssignment;
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Foundation\Queue\Queue;
 use Concrete\Core\Package\PackageList;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
@@ -19,7 +19,7 @@ use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Page;
 use Concrete\Core\Support\Facade\Facade;
 
-class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
+class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectInterface
 {
     protected $cID;
     protected $arHandle;

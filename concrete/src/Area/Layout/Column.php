@@ -2,13 +2,13 @@
 namespace Concrete\Core\Area\Layout;
 
 use Database;
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Area\SubArea;
 use Page;
 use Area;
 use RuntimeException;
 
-abstract class Column extends Object implements ColumnInterface
+abstract class Column extends ConcreteObject implements ColumnInterface
 {
     /**
      * @var Layout

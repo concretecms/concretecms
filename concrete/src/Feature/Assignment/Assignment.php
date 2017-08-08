@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Feature\Assignment;
 
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Core;
 use Concrete\Core\Feature\Feature;
 use Concrete\Core\Feature\Category\Category as FeatureCategory;
@@ -9,7 +9,7 @@ use Concrete\Core\Feature\Detail\Detail as FeatureDetail;
 use Database;
 use RuntimeException;
 
-abstract class Assignment extends Object
+abstract class Assignment extends ConcreteObject
 {
     abstract public function loadDetails($mixed);
 

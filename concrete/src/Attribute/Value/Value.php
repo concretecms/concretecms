@@ -6,13 +6,13 @@ namespace Concrete\Core\Attribute\Value;
 use Concrete\Core\Attribute\AttributeValueInterface;
 use Concrete\Core\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Value\LegacyValue;
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Loader;
 
 /*
  * @deprecated
  */
-class Value extends Object implements AttributeValueInterface
+class Value extends ConcreteObject implements AttributeValueInterface
 {
     protected $attributeType;
     protected $attributeKey;
