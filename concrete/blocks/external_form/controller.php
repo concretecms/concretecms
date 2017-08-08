@@ -8,8 +8,8 @@ class Controller extends BlockController
 {
     public $helpers = array('file');
     protected $btTable = 'btExternalForm';
-    protected $btInterfaceWidth = "370";
-    protected $btInterfaceHeight = "175";
+    protected $btInterfaceWidth = 420;
+    protected $btInterfaceHeight = 175;
     protected $btCacheBlockRecord = true;
     protected $btWrapperClass = 'ccm-ui';
 
