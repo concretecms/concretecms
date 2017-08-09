@@ -75,6 +75,7 @@ class Attributes extends BackendInterfacePageController
     public function submit()
     {
         if ($this->validateAction()) {
+            $post = $this->request->request;
             $c = $this->page;
             $cp = $this->permissions;
             $asl = $this->assignment;
@@ -82,10 +83,10 @@ class Attributes extends BackendInterfacePageController
             $nvc = $c->getVersionToModify();
             $data = array();
             if ($asl->allowEditName()) {
-                $data['cName'] = $_POST['cName'];
+                $data['cName'] = $post->get('cName');
             }
             if ($asl->allowEditDescription()) {
-                $data['cDescription'] = $_POST['cDescription'];
+                $data['cDescription'] = $post->get('cDescription');
             }
             if ($asl->allowEditDateTime()) {
                 $dt = Loader::helper('form/date_time');
@@ -93,7 +94,7 @@ class Attributes extends BackendInterfacePageController
                 $data['cDatePublic'] = $dt->translate('cDatePublic');
             }
             if ($asl->allowEditUserID()) {
-                $data['uID'] = $_POST['uID'];
+                $data['uID'] = $post->get('uID');
             }
 
             $nvc->update($data);
@@ -101,11 +102,11 @@ class Attributes extends BackendInterfacePageController
             // First, we check out the attributes we need to clear.
             $setAttribs = $nvc->getSetCollectionAttributes();
             $processedAttributes = array();
-            $selectedAKIDs = $_POST['selectedAKIDs'];
+            $selectedAKIDs = $post->get('selectedAKIDs');
             if (!is_array($selectedAKIDs)) {
                 $selectedAKIDs = array();
             }
-            $selected = is_array($_POST['selectedAKIDs']) ? $_POST['selectedAKIDs'] : array();
+            $selected = is_array($post->get('selectedAKIDs')) ? $post->get('selectedAKIDs') : array();
 
             foreach ($setAttribs as $ak) {
                 // do I have the ability to edit this attribute?
