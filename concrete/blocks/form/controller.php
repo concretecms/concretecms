@@ -515,6 +515,19 @@ class Controller extends BlockController
                     } else {
                         $answerDisplay = t('No file specified');
                     }
+                } else if ($row['inputType'] == 'datetime') {
+
+                    $formPage = $this->getCollectionObject();
+                    $answer = $txt->sanitize($_POST['Question' . $row['msqID']]);
+                    if ($formPage) {
+                        $site = $formPage->getSite();
+                        $timezone = $site->getTimezone();
+                        $date = $this->app->make('date');
+                        $answerDisplay = $date->formatDateTime($txt->sanitize($_POST['Question' . $row['msqID']]), false, false, $timezone);
+                    } else {
+                        $answerDisplay = $txt->sanitize($_POST['Question' . $row['msqID']]);
+                    }
+
                 } elseif ($row['inputType'] == 'url') {
                     $answerLong = '';
                     $answer = $txt->sanitize($_POST['Question' . $row['msqID']]);
