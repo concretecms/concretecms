@@ -1158,8 +1158,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         }
         $db = Loader::db();
         $ptID = $this->getPageTypeID();
-        $site = \Core::make('site')->getSite();
-        $parent = Page::getByPath(Config::get('concrete.paths.drafts'), 'RECENT', $site);
+        $parent = Page::getDraftsParentPage();
         $data = array('cvIsApproved' => 0, 'cIsActive' => false, 'cAcquireComposerOutputControls' => true);
         $p = $parent->add($this, $data, $pt);
 
