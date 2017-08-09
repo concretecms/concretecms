@@ -25,8 +25,6 @@ abstract class Provider
 
     public function provides()
     {
-        return array();
+        return [];
     }
-
-
 }
