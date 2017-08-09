@@ -112,7 +112,7 @@ return [
             'seo' => [
                 'canonical_tag' => [
                     // Add a <meta rel="canonical" href="..."> tag to pages?
-                    'enabled' => false,
+                    'enabled' => true,
                     // List of querystring parameters to be removed from SEO canonical URLs
                     'excluded_querystring_parameters' => [
                         'cID',
