@@ -155,12 +155,6 @@ class PageController extends Controller
         return $this->c;
     }
 
-    public function flash($key, $value, $isHTML = false)
-    {
-        $session = Application::getFacadeApplication()->make('session');
-        $session->getFlashBag()->add('page_message', array($key, $value, $isHTML));
-    }
-
     public function getTheme()
     {
         if ($this->theme === null) {
