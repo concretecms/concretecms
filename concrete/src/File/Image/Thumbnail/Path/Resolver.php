@@ -4,6 +4,7 @@ namespace Concrete\Core\File\Image\Thumbnail\Path;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\File\File;
+use Concrete\Core\File\Type\Type as FileType;
 use Concrete\Core\Entity\File\StorageLocation\StorageLocation;
 use Concrete\Core\Entity\File\Version;
 use Concrete\Core\File\Image\Thumbnail\Type\Version as ThumbnailVersion;
@@ -76,6 +77,9 @@ class Resolver
             }
         }
 
+        // Check if the thumbnail exists on the file system
+        $realPath = $this->checkPathExists($realPath, $file_version, $thumbnail, $storage_location);
+
         return $realPath;
     }
 
@@ -108,6 +112,35 @@ class Resolver
         }
 
         return null;
+    }
+
+    /**
+     * Checks whether or not a thumbnail exists in the file storage location for this file and
+     * returns the passed string if the thumbnail exists or the URL of the file if it does not.
+     *
+     * In the case of non-image files with thumbnails, if the thumbnail file does not exist it returns null.
+     *
+     * @param string $path
+     * @param \Concrete\Core\Entity\File\Version $fileVersion
+     * @param \Concrete\Core\File\Image\Thumbnail\Type\Version $thumbnail
+     * @param \Concrete\Core\Entity\File\StorageLocation\StorageLocation $storageLocation
+     * @return mixed
+     */
+    protected function checkPathExists($path, Version $fileVersion, ThumbnailVersion $thumbnail, StorageLocation $storageLocation)
+    {
+
+        $fileSystem = $storageLocation->getFileSystemObject();
+
+        if (!$fileSystem->has($thumbnail->getFilePath($fileVersion))) {
+
+            if ($fileVersion->getTypeObject()->getGenericType() == FileType::T_IMAGE) {
+                $path = $fileVersion->getURL();
+            } else {
+                $path = null;
+            }
+
+        }
+        return $path;
     }
 
     /**
