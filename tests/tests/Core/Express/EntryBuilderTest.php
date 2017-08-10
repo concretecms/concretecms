@@ -155,19 +155,29 @@ class EntryBuilderTest extends ConcreteDatabaseTestCase
         $entry3->associateEntries()
             ->setTeacher($teacherEntry);
 
+        $entry4 = $builder
+            ->setStudentFirstName('Just')
+            ->setStudentLastName('Kidding')
+            ->setTeacher($teacherEntry)
+            ->save();
+
+
         $teacherEntry = Express::refresh($teacherEntry);
         $entry2 = Express::refresh($entry2);
         $entry3 = Express::refresh($entry3);
+        $entry3 = Express::refresh($entry4);
 
         $students = $teacherEntry->getStudents();
         $this->assertEquals(1, count($students));
 
         $teacher1 = $entry2->getTeacher();
         $teacher2 = $entry3->getTeacher();
+        $teacher3 = $entry4->getTeacher();
 
         $this->assertNull($teacher1);
         $this->assertInstanceOf('Concrete\Core\Entity\Express\Entry', $teacher2);
         $this->assertEquals('Albert', $teacher2->getTeacherFirstName());
+        $this->assertEquals('Albert', $teacher3->getTeacherFirstName());
 
         $teacherEntry->associateEntries()
             ->setStudents([$entry1, $entry2]);

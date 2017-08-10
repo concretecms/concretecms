@@ -5,6 +5,7 @@ use Concrete\Core\Entity\Express\Association;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Express\Association\Applier;
 use Concrete\Core\Express\Entry\Manager as EntryManager;
+use Concrete\Core\Express\EntryBuilder\AssociationUpdater;
 use Concrete\Core\Express\ObjectBuilder\AssociationBuilder;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -14,6 +15,7 @@ class EntryBuilder
     protected $entryManager;
     protected $entity;
     protected $attributes = [];
+    protected $associations = [];
 
     public function __construct(
         EntryManager $entryManager
@@ -43,9 +45,7 @@ class EntryBuilder
 
             $association = $this->getEntity()->getAssociation($identifier);
             if ($association instanceof Association) {
-                $associationBuilder = new \Concrete\Core\Express\EntryBuilder\AssociationBuilder(
-                    new Applier($this->entryManager->getEntityManager())
-                );
+                $this->associations[] = [$identifier, $a[0]];
             } else {
                 $this->attributes[$identifier] = $a[0];
             }
@@ -63,6 +63,15 @@ class EntryBuilder
         }
         $em = $this->entryManager->getEntityManager();
         $em->refresh($entry); // gotta repopulate that $attributes array on the Entry object.
+
+        if (count($this->associations)) {
+            foreach($this->associations as $row) {
+                $associationHandle = $row[0];
+                $subject = $row[1];
+                $updater = new AssociationUpdater(new Applier($this->entryManager->getEntityManager()), $entry);
+                $updater->associate($associationHandle, $subject);
+            }
+        }
         return $entry;
     }
 
