@@ -65,7 +65,6 @@ class Geolocator
     /**
      * The Geolocator handle.
      *
-     * @ORM\Column(type="string", )
      * @ORM\Column(type="string", length=255, nullable=false, unique=true, options={"comment": "Geolocator handle"})
      *
      * @var string
