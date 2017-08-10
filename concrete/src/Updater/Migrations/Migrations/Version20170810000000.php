@@ -9,6 +9,7 @@ class Version20170810000000 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
+        $this->refreshBlockType('external_form');
         $this->refreshBlockType('image');
     }
 
