@@ -96,7 +96,7 @@ class Multilingual extends Page
             $cp = new \Permissions($newParent);
             if ($cp->canAddSubCollection($ct)) {
                 if ($this->page->isPageDraft()) {
-                    $targetParent = \Page::getByPath(\Config::get('concrete.paths.drafts'));
+                    $targetParent = \Page::getDraftsParentPage();
                 } else {
                     $targetParent = $newParent;
                 }
