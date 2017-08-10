@@ -614,6 +614,15 @@
 		}
 	}
 
+    ConcreteSitemap.submitDuplicateRequest = function (origCID) {
+        ccm_triggerProgressiveOperation(
+            CCM_TOOLS_PATH + '/dashboard/sitemap_copy_all', [{'name': 'origCID', 'value': origCID}, {'name': 'task', 'value': 'duplicate'}], ccmi18n_sitemap.copyProgressTitle, function() {
+                $('.ui-dialog-content').dialog('close');
+                window.location.reload();
+            }
+        );
+    }
+
 	// jQuery Plugin
 	$.fn.concreteSitemap = function(options) {
 		return $.each($(this), function(i, obj) {

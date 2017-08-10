@@ -181,6 +181,7 @@ var ccmi18n_sitemap = ' . json_encode([
     'deletePageSuccessMsg' => t('The page has been removed successfully.'),
     'deletePageSuccessDeferredMsg' => t('Delete request saved. You must complete the workflow before the page is fully removed.'),
     'addPage' => t('Add Page'),
+    'duplicatePage' => t('Duplicate Page'),
     'moveCopyPage' => t('Move/Copy'),
     'reorderPage' => t('Change Page Order'),
     'reorderPageMessage' => t('Move or reorder pages by dragging their icons.'),

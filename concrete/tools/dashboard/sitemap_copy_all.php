@@ -99,6 +99,10 @@ if ($_POST['process']) {
     }
 
     $dc = Page::getByID($_REQUEST['destCID']);
+    if (!$_REQUEST['destCID'] && $_REQUEST['task'] = 'duplicate') {
+        $dc = Page::getByID($oc->getCollectionParentID());
+    }
+
     if (count($originalPages) > 0 && is_object($dc) && !$dc->isError()) {
         $u = new User();
         if ($u->isSuperUser() && $oc->canMoveCopyTo($dc)) {
