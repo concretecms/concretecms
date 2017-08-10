@@ -91,6 +91,7 @@ class Controller extends BlockController implements FileTrackableInterface
         $this->set('altText', $this->getAltText());
         $this->set('title', $this->getTitle());
         $this->set('linkURL', $this->getLinkURL());
+        $this->set('openLinkInNewWindow', $this->shouldLinkOpenInNewWindow());
         $this->set('c', Page::getCurrentPage());
     }
 
@@ -304,6 +305,14 @@ class Controller extends BlockController implements FileTrackableInterface
     }
 
     /**
+     * @return bool
+     */
+    public function shouldLinkOpenInNewWindow()
+    {
+        return (bool) $this->openLinkInNewWindow;
+    }
+
+    /**
      * @return Error
      */
     public function validate_composer()
@@ -368,6 +377,7 @@ class Controller extends BlockController implements FileTrackableInterface
             'linkType' => 0,
             'externalLink' => '',
             'internalLinkCID' => 0,
+            'openLinkInNewWindow' => 0,
             'fileLinkID' => 0,
         ];
 
@@ -402,6 +412,10 @@ class Controller extends BlockController implements FileTrackableInterface
                 $args['internalLinkCID'] = 0;
                 $args['fileLinkID'] = 0;
                 break;
+        }
+
+        if ((int) $args['linkType'] > 0) {
+            $args['openLinkInNewWindow'] = isset($args['openLinkInNewWindow']) ? 1 : 0;
         }
 
         // This doesn't get saved to the database. It's only for UI usage.
