@@ -17,6 +17,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
 /* @var Concrete\Core\Page\Page $c */
 /* @var Concrete\Theme\Dashboard\PageTheme $theme */
 
+/* @var array $thumbnail_generation_strategies */
+/* @var string $thumbnail_generation_strategy */
 /* @var array $thumbnail_formats */
 /* @var string $thumbnail_format */
 /* @var int $jpeg_compression */
@@ -28,6 +30,22 @@ defined('C5_EXECUTE') or die('Access Denied.');
 <form method="post" action="<?=$view->action('submit')?>">
 
     <?php $token->output('thumbnails-options') ?>
+
+    <div class="form-group">
+        <?= $form->label('thumbnail_generation_strategy', t('Thumbnail Generation Strategy')) ?>
+        <?php
+        foreach ($thumbnail_generation_strategies as $id => $name) {
+            ?>
+            <div class="radio">
+                <label>
+                    <?= $form->radio('thumbnail_generation_strategy', $id, $id === $thumbnail_generation_strategy, ['required' => 'required']) ?>
+                    <?= h($name) ?>
+                </label>
+            </div>
+            <?php
+        }
+        ?>
+    </div>
 
     <div class="form-group">
         <?= $form->label('thumbnail_format', t('Thumbnails Format')) ?>
