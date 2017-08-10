@@ -128,6 +128,7 @@ return [
         'core_service_manager' => '\Concrete\Core\Service\Manager\ServiceManagerServiceProvider',
         'core_site' => '\Concrete\Core\Site\ServiceProvider',
         'core_search' => \Concrete\Core\Search\SearchServiceProvider::class,
+        'core_geolocator' => 'Concrete\Core\Geolocator\GeolocatorServiceProvider',
 
         // Authentication
         'core_oauth' => '\Concrete\Core\Authentication\Type\OAuth\ServiceProvider',
@@ -180,6 +181,7 @@ return [
         'captcha_library',
         'content_editor_snippet',
         'conversation_rating_type',
+        'geolocator_library',
         'group',
         'group_set',
         'job',
@@ -252,6 +254,7 @@ return [
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportConfigValuesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSystemCaptchaLibrariesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSystemContentEditorSnippetsRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportGeolocatorsRoutine',
     ],
 
     /*

@@ -1055,6 +1055,13 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="Geolocation" path="/dashboard/system/environment/geolocation" filename="/dashboard/system/environment/geolocation.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>geolocation, ip, address, country, nation, place, locate</value>
+                </attributekey>
+            </attributes>
+        </page>
         <page name="Update concrete5" path="/dashboard/system/update" filename="/dashboard/system/update/view.php"
               pagetype="" description="" package="">
         </page>
