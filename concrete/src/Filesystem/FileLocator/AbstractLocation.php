@@ -37,7 +37,7 @@ abstract class AbstractLocation implements LocationInterface
     public function getRecord($file)
     {
         $record = new Record($this->filesystem);
-        $record->setFile($this->getPath() . DIRECTORY_SEPARATOR . $file);
+        $record->setFile($this->getPath() . '/' . $file);
         $record->setUrl($this->getURL() . '/' . $file);
         $record->setIsOverride($this->isOverride());
         $record->setPackageHandle($this->getPackageHandle());
@@ -47,7 +47,7 @@ abstract class AbstractLocation implements LocationInterface
     public function contains($file)
     {
         if ($this->filesystem->exists(
-            $this->getPath() . DIRECTORY_SEPARATOR . $file
+            $this->getPath() . '/' . $file
         )) {
             $record = $this->getRecord($file);
             $record->setExists(true);

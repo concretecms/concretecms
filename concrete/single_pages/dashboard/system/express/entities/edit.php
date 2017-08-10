@@ -41,8 +41,13 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label for="name" class="control-label"><?= t('Name Mask') ?></label>
+                    <?= $form->text('label_mask', $entity->getLabelMask()) ?>
+                    <p class="help-block"><?= t('Example <code>Entry %name%</code> or <code>Complaint %date% at %hotel%</code>') ?></p>
+                </div>
+                <div class="form-group">
                     <label for="name" class="control-label"><?=t('Description')?></label>
-                    <?=$form->textarea('description', $entity->getDescription(), array('rows' => 5))?>
+                    <?=$form->textarea('description', $entity->getEntityDisplayDescription(), array('rows' => 5))?>
                 </div>
             </fieldset>
 

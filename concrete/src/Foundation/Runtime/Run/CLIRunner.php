@@ -2,8 +2,9 @@
 namespace Concrete\Core\Foundation\Runtime\Run;
 
 use Concrete\Core\Application\ApplicationAwareInterface;
-use Concrete\Core\Console\Application as ConsoleApplication;
 use Concrete\Core\Application\ApplicationAwareTrait;
+use Concrete\Core\Console\Application as ConsoleApplication;
+use Symfony\Component\Console\Input\ArgvInput;
 
 class CLIRunner implements RunInterface, ApplicationAwareInterface
 {
@@ -17,6 +18,23 @@ class CLIRunner implements RunInterface, ApplicationAwareInterface
         $this->console = $console;
     }
 
+    private function loadBootstrap()
+    {
+        $app = $this->app;
+        $console = $this->console;
+        include DIR_APPLICATION . '/bootstrap/app.php';
+    }
+
+    private function initializeSystemTimezone()
+    {
+        $config = $this->app->make('config');
+        if (!$config->has('app.server_timezone')) {
+            // There is no server timezone set.
+            $config->set('app.server_timezone', @date_default_timezone_get());
+        }
+        @date_default_timezone_set($config->get('app.server_timezone'));
+    }
+
     /**
      * Run the runtime.
      *
@@ -27,20 +45,22 @@ class CLIRunner implements RunInterface, ApplicationAwareInterface
         $console = $this->console;
         $this->app->instance('console', $console);
 
-        $app = $this->app; // useful in bootstrap/app.php
+        $this->loadBootstrap();
+        $this->initializeSystemTimezone();
 
-        include DIR_APPLICATION . '/bootstrap/app.php';
-
-        if ($this->app->isInstalled()) {
-            $this->app->setupPackageAutoloaders();
-            $this->app->setupPackages();
+        $input = new ArgvInput();
+        if ($input->getFirstArgument() !== 'c5:update') {
+            if ($this->app->isInstalled()) {
+                $this->app->setupPackageAutoloaders();
+                $this->app->setupPackages();
+            }
         }
 
         $console->setupDefaultCommands();
 
         \Events::dispatch('on_before_console_run');
 
-        $console->run();
+        $console->run($input);
 
         \Events::dispatch('on_after_console_run');
     }

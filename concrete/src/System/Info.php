@@ -219,7 +219,7 @@ class Info
         }
     }
 
-    protected function getOverrideList()
+    public function getOverrideList()
     {
         $overrides = [];
         $fh = \Core::make("helper/file");

@@ -44,6 +44,11 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
     protected $plural_handle;
 
     /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $label_mask;
+
+    /**
      * @ORM\Column(type="boolean")
      */
     protected $supports_custom_display_order = false;
@@ -205,6 +210,22 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
     }
 
     /**
+     * @return string
+     */
+    public function getLabelMask()
+    {
+        return $this->label_mask ?: '';
+    }
+
+    /**
+     * @param string $label_mask
+     */
+    public function setLabelMask($label_mask)
+    {
+        $this->label_mask = trim($label_mask);
+    }
+
+    /**
      * @return mixed
      */
     public function getDescription()
@@ -218,6 +239,22 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
     public function setDescription($description)
     {
         $this->description = $description;
+    }
+
+    /**
+     * @param string $format
+     * @return string
+     */
+    public function getEntityDisplayDescription($format = 'html')
+    {
+        $value = $this->getDescription();
+        switch ($format) {
+            case 'html':
+                return h($value);
+            case 'text':
+            default:
+                return $value;
+        }
     }
 
     /**
@@ -328,7 +365,7 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
      */
     public function getEntityDisplayName($format = 'html')
     {
-        $value = t($this->getName());
+        $value = $this->getName();
         switch ($format) {
             case 'html':
                 return h($value);

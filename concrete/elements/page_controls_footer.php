@@ -245,7 +245,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                         ?>
                         <li>
                             <i class="fa fa-sign-out mobile-leading-icon"></i>
-                            <a href="<?= URL::to('/login', 'logout', $valt->generate('logout')); ?>"><?= t('Sign Out'); ?></a>
+                            <a href="<?= URL::to('/login', 'do_logout', $valt->generate('do_logout')); ?>"><?= t('Sign Out'); ?></a>
                         </li>
                     </ul>
                 </div>

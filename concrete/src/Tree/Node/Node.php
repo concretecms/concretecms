@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Tree\Node;
 
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Permission\Access\Entity\GroupCombinationEntity;
 use Concrete\Core\Permission\Access\Entity\GroupEntity;
@@ -10,6 +10,7 @@ use Concrete\Core\Permission\AssignableObjectInterface;
 use Concrete\Core\Permission\AssignableObjectTrait;
 use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Permission\Key\TreeNodeKey;
+use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Tree\Tree;
 use Concrete\Core\User\User;
 use Concrete\Core\User\UserInfo;
@@ -22,7 +23,7 @@ use stdClass;
 use Gettext\Translations;
 use Concrete\Core\Tree\Node\Exception\MoveException;
 
-abstract class Node extends Object implements \Concrete\Core\Permission\ObjectInterface, AssignableObjectInterface
+abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\ObjectInterface, AssignableObjectInterface
 {
 
     use AssignableObjectTrait;
@@ -95,7 +96,7 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
 
     public function getTreeObject()
     {
-        if (!isset($this->tree)) {
+        if (!isset($this->tree) && !empty($this->treeID)) {
             $this->tree = Tree::getByID($this->treeID);
         }
 
@@ -155,7 +156,14 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
     {
         $db = Database::connection();
 
-        return (int) $db->fetchColumn('select count(treeNodeID) from TreeNodes where treeNodeParentID = ?', [$this->treeNodeID]);
+        $tree = $this->getTreeObject();
+        $data = $tree ? $tree->getRequestData() : [];
+        if (isset($data['displayOnly']) && $data['displayOnly']) {
+            return (int) $db->fetchColumn('select count(tn.treeNodeID) from TreeNodes tn inner join TreeNodeTypes tnt on tn.treeNodeTypeID = tnt.treeNodeTypeID where treeNodeParentID = ? and treeNodeTypeHandle = ?', [$this->treeNodeID, $data['displayOnly']]);
+        } else {
+            return (int) $db->fetchColumn('select count(treeNodeID) from TreeNodes where treeNodeParentID = ?', [$this->treeNodeID]);
+        }
+
     }
 
     public function getChildNodesLoaded() 
@@ -234,7 +242,8 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
     public function getTreeNodeJSON()
     {
         $p = new Permissions($this);
-        $data = $this->getTreeObject()->getRequestData();
+        $tree = $this->getTreeObject();
+        $data = $tree ? $tree->getRequestData() : [];
         if (isset($data['displayOnly'])) {
             // filter by node type handle
             if ($this->getTreeNodeTypeHandle() != $data['displayOnly']) {
@@ -574,11 +583,18 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
     {
         if (!$this->childNodesLoaded) {
             $db = Database::connection();
-            $rows = $db->fetchAll('select treeNodeID from TreeNodes where treeNodeParentID = ? order by treeNodeDisplayOrder asc', [$this->treeNodeID]);
+            $tree = $this->getTreeObject();
+            $data = $tree ? $tree->getRequestData() : [];
+            if (isset($data['displayOnly']) && $data['displayOnly']) {
+                $rows = $db->fetchAll('select treeNodeID from TreeNodes tn inner join TreeNodeTypes tnt on tn.treeNodeTypeID = tnt.treeNodeTypeID where treeNodeParentID = ? and treeNodeTypeHandle = ? order by treeNodeDisplayOrder asc', [$this->treeNodeID, $data['displayOnly']]);
+            } else {
+                $rows = $db->fetchAll('select treeNodeID from TreeNodes where treeNodeParentID = ? order by treeNodeDisplayOrder asc', [$this->treeNodeID]);
+            }
+
             foreach ($rows as $row) {
                 $node = self::getByID($row['treeNodeID']);
-                if (isset($this->tree)) {
-                    $node->setTree($this->tree);
+                if ($tree) {
+                    $node->setTree($tree);
                 }
                 if (is_object($node)) {
                     $this->childNodes[] = $node;
@@ -623,18 +639,27 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
 
     public static function getByID($treeNodeID)
     {
+        $app = Facade::getFacadeApplication();
         $db = Database::connection();
-        $row = $db->fetchAssoc('select * from TreeNodes where treeNodeID = ?', [$treeNodeID]);
-        if ($row && $row['treeNodeID']) {
-            $tt = TreeNodeType::getByID($row['treeNodeTypeID']);
-            $node = Core::make($tt->getTreeNodeTypeClass());
-            $row['treeNodeTypeHandle'] = $tt->getTreeNodeTypeHandle();
-            $node->setPropertiesFromArray($row);
-            $node->loadDetails();
-
+        $cache = $app->make('cache/request');
+        $item = $cache->getItem(sprintf('tree/node/%s', $treeNodeID));
+        if (!$item->isMiss()) {
+            return $item->get();
+        } else {
+            $node = null;
+            $row = $db->fetchAssoc('select * from TreeNodes where treeNodeID = ?', [$treeNodeID]);
+            if ($row && $row['treeNodeID']) {
+                $tt = TreeNodeType::getByID($row['treeNodeTypeID']);
+                $node = Core::make($tt->getTreeNodeTypeClass());
+                $row['treeNodeTypeHandle'] = $tt->getTreeNodeTypeHandle();
+                $node->setPropertiesFromArray($row);
+                $node->loadDetails();
+            }
+            $cache->save($item->set($node));
             return $node;
         }
     }
+    
     /**
      * @param Translations $translations
      *
@@ -665,5 +690,69 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
         if ($treeNodeID) {
             return static::getByID($treeNodeID);
         }
+    }
+
+    protected function populateRecursiveNodes($treeNodeTypeID, $nodes, $nodeRow, $level, $returnNodeObjects = false, $includeThisNode = true)
+    {
+        $db = Database::connection();
+        $children = $db->fetchAll('select treeNodeID, treeNodeTypeID, treeNodeParentID, treeNodeDisplayOrder from TreeNodes where treeNodeTypeID = ? and treeNodeParentID = ? order by treeNodeDisplayOrder asc', [$treeNodeTypeID, $nodeRow['treeNodeID']]);
+        
+        if ($includeThisNode) {
+            $data = [
+                'treeNodeID' => $nodeRow['treeNodeID'],
+                'treeNodeDisplayOrder' => $nodeRow['treeNodeDisplayOrder'],
+                'treeNodeParentID' => $nodeRow['treeNodeParentID'],
+                'level' => $level,
+                'total' => count($children),
+            ];
+            if ($returnNodeObjects) {
+                $node = self::getByID($nodeRow['treeNodeID']);
+                if (is_object($node)) {
+                        $data['treeNodeObject'] = $node;
+                }
+            }
+
+            $nodes[] = $data;
+        }
+        ++$level;
+        if (count($children) > 0) {
+            foreach ($children as $nodeRow) {
+                $nodes = $this->populateRecursiveNodes($treeNodeTypeID, $nodes, $nodeRow, $level, $returnNodeObjects);
+            }
+        }
+
+        return $nodes;
+    }
+
+    public function getHierarchicalNodesOfType($treeNodeTypeHandle, $level = 1, $returnNodeObjects = false, $includeThisNode = true)
+    {
+        $treeNodeType = TreeNodeType::getByHandle($treeNodeTypeHandle);
+        
+
+        $nodesOfType = $this->populateRecursiveNodes($treeNodeType->getTreeNodeTypeID(), array(), array('treeNodeID' => $this->getTreeNodeID(), 'treeNodeParentID' => $this->getTreeNodeParentID(), 'treeNodeDisplayOrder' => 0), $level, $returnNodeObjects, $includeThisNode);
+        
+        return $nodesOfType;
+    }
+
+    public static function getNodesOfType($treeNodeTypeHandle)
+    {
+        $db = Database::connection();
+        $type = TreeNodeType::getByHandle($treeNodeTypeHandle);
+        $treeNodes = $db->fetchAll(
+            'select treeNodeID from TreeNodes where treeNodeTypeID = ?',
+            [$type->getTreeNodeTypeID()]
+        );
+
+        $nodeList = [];
+        if (count($treeNodes)) {
+            foreach ($treeNodes as $treeNode) {
+                $node = self::getByID($treeNode['treeNodeID']);
+                if (is_object($node)) {
+                    $nodeList[] = $node;
+                }
+            }
+        }
+
+        return $nodeList;
     }
 }

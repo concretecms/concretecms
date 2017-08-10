@@ -3,7 +3,7 @@ namespace Concrete\Core\User\Group;
 
 use CacheLocal;
 use Concrete\Core\Database\Connection\Connection;
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Package\PackageList;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\User;
@@ -16,7 +16,7 @@ use GroupTree;
 use GroupTreeNode;
 use Concrete\Core\User\UserList;
 
-class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
+class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectInterface
 {
     public $ctID;
     public $permissionSet;
@@ -115,6 +115,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
     public function getGroupMembers()
     {
         $user_list = new UserList();
+        $user_list->ignorePermissions();
         $user_list->filterByGroup($this);
 
         return $user_list->get();
@@ -123,6 +124,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
     public function getGroupMemberIDs()
     {
         $user_list = new UserList();
+        $user_list->ignorePermissions();
         $user_list->filterByGroup($this);
 
         return $user_list->getResultIDs();
@@ -151,6 +153,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
     public function getGroupMembersNum()
     {
         $user_list = new UserList();
+        $user_list->ignorePermissions();
         $user_list->filterByGroup($this);
         return $user_list->getTotalResults();
     }
@@ -340,7 +343,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
                 }
             }
         }
-        $return .= tc('GroupName', $this->getGroupName());
+        $return .= h(tc('GroupName', $this->getGroupName()));
 
         return $return;
     }

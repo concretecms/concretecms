@@ -2,7 +2,9 @@
 namespace Concrete\Core\Express;
 
 use Concrete\Core\Attribute\Category\ExpressCategory;
+use Concrete\Core\Entity\Express\Association;
 use Concrete\Core\Entity\Express\Entity;
+use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemList;
 use Concrete\Core\Search\PermissionableListItemInterface;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
@@ -24,6 +26,7 @@ class EntryList extends DatabaseItemList implements PermissionableListItemInterf
             $this->sortByDisplayOrderAscending();
         }
     }
+
 
     protected function getAttributeKeyClassName()
     {
@@ -118,6 +121,16 @@ class EntryList extends DatabaseItemList implements PermissionableListItemInterf
         $this->permissionsChecker = $checker;
     }
 
+    public function getPermissionsChecker()
+    {
+        return $this->permissionsChecker;
+    }
+
+    public function enablePermissions()
+    {
+        unset($this->permissionsChecker);
+    }
+
     public function ignorePermissions()
     {
         $this->permissionsChecker = -1;
@@ -137,6 +150,27 @@ class EntryList extends DatabaseItemList implements PermissionableListItemInterf
         $query->andWhere('e.exEntryEntityID = :entityID');
         $query->setParameter('entityID', $this->entity->getID());
         return $query;
+    }
+
+    public function filterByAssociatedEntry(Association $association, Entry $entry)
+    {
+        // Find the inverse association to this one.
+        $sourceEntity = $association->getSourceEntity();
+        $targetEntity = $association->getTargetEntity();
+        foreach($targetEntity->getAssociations() as $targetAssociation) {
+            if ($targetAssociation->getTargetEntity() == $sourceEntity) {
+                // we have a match.
+                $entryAssociation = $entry->getEntryAssociation($targetAssociation);
+                if ($entryAssociation) {
+                    $table = 'ase' . $entryAssociation->getID();
+                    $this->query->innerJoin('e', 'ExpressEntityAssociationSelectedEntries', $table, 'e.exEntryID = ' . $table . '.exSelectedEntryID');
+                    $this->query->andWhere($table . '.id = :entryAssociationID' . $entryAssociation->getID());
+                    $this->query->setParameter('entryAssociationID' . $entryAssociation->getID(), $entryAssociation->getID());
+                } else {
+                    $this->query->andWhere('1 = 0');
+                }
+            }
+        }
     }
 
 

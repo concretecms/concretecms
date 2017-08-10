@@ -10,7 +10,7 @@
                 <input type="text" class="form-control" autocomplete="off" name="uKeywords" placeholder="<?=t('Search')?>">
             </div>
 
-              <span class="input-group-btn">'
+              <span class="input-group-btn">
                 <button class="btn btn-info" type="submit"><i class="fa fa-search"></i></button>
               </span>
         </div>

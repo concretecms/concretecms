@@ -17,7 +17,7 @@ class NewFormSubmissionNotification extends Notification
 
     /**
      * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Express\Entry")
-     * @ORM\JoinColumn(name="exEntryID", referencedColumnName="exEntryID")
+     * @ORM\JoinColumn(name="exEntryID", referencedColumnName="exEntryID", onDelete="CASCADE")
      */
     protected $entry;
 

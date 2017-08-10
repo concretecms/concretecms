@@ -3,10 +3,10 @@ namespace Concrete\Core\Page\Type\Composer\Control\Type;
 
 use Loader;
 use Core;
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Package\PackageList;
 
-abstract class Type extends Object
+abstract class Type extends ConcreteObject
 {
     abstract public function getPageTypeComposerControlObjects();
     abstract public function getPageTypeComposerControlByIdentifier($identifier);

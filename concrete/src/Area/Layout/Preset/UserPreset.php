@@ -4,9 +4,9 @@ namespace Concrete\Core\Area\Layout\Preset;
 use Concrete\Core\Area\Layout\Layout;
 use Concrete\Core\Area\Layout\Preset\Formatter\UserFormatter;
 use Loader;
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 
-class UserPreset extends Object
+class UserPreset extends ConcreteObject
 {
     /**
      * @var int

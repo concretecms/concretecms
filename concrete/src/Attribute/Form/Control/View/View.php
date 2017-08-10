@@ -40,7 +40,7 @@ class View extends BaseFormView
     public function createTemplateLocator()
     {
         $locator = new TemplateLocator();
-        $locator->addLocation(DIRNAME_ELEMENTS . DIRECTORY_SEPARATOR . DIRNAME_FORM_CONTROL_WRAPPER_TEMPLATES);
+        $locator->addLocation(DIRNAME_ELEMENTS . '/' . DIRNAME_FORM_CONTROL_WRAPPER_TEMPLATES);
         return $locator;
     }
 

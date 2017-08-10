@@ -1,10 +1,11 @@
 <?php
 namespace Concrete\Core\File\Service;
 
-use Illuminate\Filesystem\Filesystem;
-use Exception;
-use ZipArchive;
+use Concrete\Core\Foundation\Environment\FunctionInspector;
 use DateTime;
+use Exception;
+use Illuminate\Filesystem\Filesystem;
+use ZipArchive;
 
 /**
  * Wrapper for ZIP functions.
@@ -16,7 +17,26 @@ class Zip
      *
      * @var Filesystem
      */
-    protected $filesystem = null;
+    protected $filesystem;
+
+    /**
+     * The FunctionInspector instance to use.
+     *
+     * @var FunctionInspector
+     */
+    protected $functionInspector;
+
+    /**
+     * Initialize the instance.
+     *
+     * @param Filesystem $filesystem
+     * @param FunctionInspector $functionInspector
+     */
+    public function __construct(Filesystem $filesystem, FunctionInspector $functionInspector)
+    {
+        $this->filesystem = $filesystem;
+        $this->functionInspector = $functionInspector;
+    }
 
     /**
      * Set the Filesystem instance to use.
@@ -35,10 +55,6 @@ class Zip
      */
     public function getFilesystem()
     {
-        if ($this->filesystem === null) {
-            $this->filesystem = new Filesystem();
-        }
-
         return $this->filesystem;
     }
 
@@ -80,7 +96,7 @@ class Zip
      *
      * @var array
      */
-    protected $availableNativeCommands = array();
+    protected $availableNativeCommands = [];
 
     /**
      * Check if a native command is available.
@@ -100,20 +116,14 @@ class Zip
         }
         if (!isset($this->availableNativeCommands[$command])) {
             $this->availableNativeCommands[$command] = false;
-            $safeMode = @ini_get('safe_mode');
-            if (empty($safeMode)) {
-                if (function_exists('exec')) {
-                    $disabledCommands = array_map('trim', explode(',', strtolower((string) @ini_get('disable_functions'))));
-                    if (!in_array('exec', $disabledCommands, true)) {
-                        $rc = 1;
-                        $output = array();
-                        @exec($command.' -v 2>&1', $output, $rc);
-                        if ($rc === 0) {
-                            $stdOut = implode("\n", $output);
-                            if (stripos($stdOut, 'info-zip') !== false || stripos($stdOut, 'infozip') !== false) {
-                                $this->availableNativeCommands[$command] = true;
-                            }
-                        }
+            if ($this->functionInspector->functionAvailable('exec')) {
+                $rc = 1;
+                $output = [];
+                @exec($command . ' -v 2>&1', $output, $rc);
+                if ($rc === 0) {
+                    $stdOut = implode("\n", $output);
+                    if (stripos($stdOut, 'info-zip') !== false || stripos($stdOut, 'infozip') !== false) {
+                        $this->availableNativeCommands[$command] = true;
                     }
                 }
             }
@@ -137,22 +147,22 @@ class Zip
     /**
      * Decompress a ZIP archive to a directory.
      *
-     * @param string $zipFile The source ZIP archive.
-     * @param string $destinationDirectory The destination folder.
+     * @param string $zipFile the source ZIP archive
+     * @param string $destinationDirectory the destination folder
      * @param array $options {
      *   @var bool $skipCheck Skip test compressed archive data
      * }
      *
      * @throws Exception
      */
-    public function unzip($zipFile, $destinationDirectory, array $options = array())
+    public function unzip($zipFile, $destinationDirectory, array $options = [])
     {
         $fs = $this->getFilesystem();
         $normalized = @realpath($zipFile);
         if ($normalized === false || !$fs->isFile($normalized)) {
             throw new Exception(t('Unable to find the ZIP file %s', $zipFile));
         }
-        $zipFile = $normalized;
+        $zipFile = str_replace(DIRECTORY_SEPARATOR, '/', $normalized);
         $normalized = @realpath($destinationDirectory);
         if ($normalized === false || !$fs->isDirectory($normalized)) {
             throw new Exception(t('Unable to find the directory %s', $destinationDirectory));
@@ -160,10 +170,10 @@ class Zip
         if (!$fs->isWritable($normalized)) {
             throw new Exception(t('The directory "%s" is not writable', $destinationDirectory));
         }
-        $destinationDirectory = $normalized;
-        $options += array(
+        $destinationDirectory = str_replace(DIRECTORY_SEPARATOR, '/', $normalized);
+        $options += [
             'skipCheck' => false,
-        );
+        ];
         if ($this->mayUseNativeCommand('unzip')) {
             $this->unzipNative($zipFile, $destinationDirectory, $options);
         } else {
@@ -174,8 +184,8 @@ class Zip
     /**
      * Compress the contents of a directory to a ZIP archive.
      *
-     * @param string $sourceDirectory The directory to compress.
-     * @param string $zipFile The ZIP file to create (it will be deleted if already existing, unless the 'append' option is set to true).
+     * @param string $sourceDirectory the directory to compress
+     * @param string $zipFile the ZIP file to create (it will be deleted if already existing, unless the 'append' option is set to true)
      * @param array $options {
      *   @var bool $includeDotFiles Shall the zip file include files and folders whose name starts with a dot?
      *   @var bool $skipCheck Skip test compressed archive data
@@ -185,7 +195,7 @@ class Zip
      *
      * @throws Exception
      */
-    public function zip($sourceDirectory, $zipFile, array $options = array())
+    public function zip($sourceDirectory, $zipFile, array $options = [])
     {
         $fs = $this->getFilesystem();
         $normalized = @realpath($sourceDirectory);
@@ -200,18 +210,18 @@ class Zip
             }
             $options['append'] = isset($options['append']) ? (bool) $options['append'] : false;
             if (!$options['append']) {
-                if (@$fs->delete(array($zipFile)) === false) {
+                if (@$fs->delete([$zipFile]) === false) {
                     throw new Exception(t('Failed to delete file %s', $zipFile));
                 }
             }
         } else {
             $options['append'] = false;
         }
-        $options += array(
+        $options += [
             'includeDotFiles' => false,
             'skipCheck' => false,
             'level' => 9,
-        );
+        ];
         if ($this->mayUseNativeCommand('zip')) {
             $this->zipNative($sourceDirectory, $zipFile, $options);
         } else {
@@ -222,7 +232,7 @@ class Zip
     /**
      * List the contents of a ZIP archive.
      *
-     * @param string $zipFile The ZIP file to inspect.
+     * @param string $zipFile the ZIP file to inspect
      * @param array $options {
      *   @var bool $skipCheck Skip test compressed archive data
      *   @var bool $excludeDirs Don't include directories
@@ -237,18 +247,18 @@ class Zip
      * - int 'originalSize' (only for files) Uncompressed size of the file
      * - int 'compressedSize' (only for files) Compressed size of the file
      */
-    public function listContents($zipFile, array $options = array())
+    public function listContents($zipFile, array $options = [])
     {
         $fs = $this->getFilesystem();
         if (!$fs->isFile($zipFile)) {
             throw new Exception(t('Unable to find the ZIP file %s', $zipFile));
         }
-        $options += array(
+        $options += [
             'skipCheck' => false,
             'excludeDirs' => false,
             'excludeFiles' => false,
-        );
-        $result = array();
+        ];
+        $result = [];
         $zip = new ZipArchive();
         try {
             $flags = 0;
@@ -274,15 +284,15 @@ class Zip
                         continue;
                     }
                 }
-                $item = array(
+                $item = [
                     'type' => $isDir ? 'D' : 'F',
                     'date' => (isset($stat['mtime']) && $stat['mtime']) ? DateTime::createFromFormat('U', $stat['mtime']) : null,
-                );
+                ];
                 if (!$isDir) {
-                    $item += array(
+                    $item += [
                         'originalSize' => isset($stat['size']) ? (int) $stat['size'] : null,
                         'compressedSize' => isset($stat['comp_size']) ? (int) $stat['comp_size'] : null,
-                    );
+                    ];
                 }
                 $result[trim($stat['name'], '/\\')] = $item;
             }
@@ -307,6 +317,8 @@ class Zip
      *
      * @param ZipArchive $zip
      * @param int $errorCode
+     *
+     * @return string
      */
     protected function describeZipArchiveError(ZipArchive $zip, $errorCode)
     {
@@ -392,7 +404,7 @@ class Zip
             if ($result === '') {
                 $result = $status;
             } else {
-                $result .= "\n".$status;
+                $result .= "\n" . $status;
             }
         }
 
@@ -417,11 +429,11 @@ class Zip
         $cmd = 'unzip';
         $cmd .= ' -o'; // overwrite files WITHOUT prompting
         $cmd .= ' -q'; // quiet mode, to avoid overflow of stdout
-        $cmd .= ' '.escapeshellarg($zipFile); // file to extract
-        $cmd .= ' -d '.escapeshellarg($destinationDirectory); // destination directory
+        $cmd .= ' ' . escapeshellarg(str_replace('/', DIRECTORY_SEPARATOR, $zipFile)); // file to extract
+        $cmd .= ' -d ' . escapeshellarg(str_replace('/', DIRECTORY_SEPARATOR, $destinationDirectory)); // destination directory
         $rc = 1;
-        $output = array();
-        @exec($cmd.' 2>&1', $output, $rc);
+        $output = [];
+        @exec($cmd . ' 2>&1', $output, $rc);
         if ($rc !== 0) {
             $error = trim(implode("\n", $output)) ?: t('Unknown error decompressing a ZIP archive');
             throw new Exception($error);
@@ -507,26 +519,26 @@ class Zip
             $cmd = 'zip';
             $level = (isset($options['level']) && is_numeric($options['level'])) ? @intval($options['level']) : null;
             if ($level !== null && $level >= 0 && $level <= 9) {
-                $cmd .= ' -'.$level;
+                $cmd .= ' -' . $level;
             }
             $cmd .= ' -q'; // quiet mode, to avoid overflow of stdout
             $cmd .= ' -r'; // recurse into directories
-            $cmd .= ' '.escapeshellarg($zipFile); // destination ZIP archive
+            $cmd .= ' ' . escapeshellarg($zipFile); // destination ZIP archive
             if ($options['includeDotFiles']) {
                 $cmd .= ' .* *';
             } else {
                 $cmd .= ' * -x \*/.\*';
             }
             $rc = 1;
-            $output = array();
+            $output = [];
             $prevDir = @getcwd();
             if ($prevDir === false) {
                 throw new Exception(t('Failed to determine current directory'));
             }
             if (@chdir($sourceDirectory) === false) {
-                throw new Exception(t('Failed to enter directory '.$sourceDirectory));
+                throw new Exception(t('Failed to enter directory ' . $sourceDirectory));
             }
-            @exec($cmd.' 2>&1', $output, $rc);
+            @exec($cmd . ' 2>&1', $output, $rc);
             @chdir($prevDir);
             if ($rc !== 0) {
                 $error = trim(implode("\n", $output)) ?: t('Unknown error compressing a directory');
@@ -537,14 +549,14 @@ class Zip
                 if ($revertName) {
                     @$fs->move($zipFile, $originalZipFile);
                 } elseif (!$options['append']) {
-                    @$fs->delete(array($zipFile));
+                    @$fs->delete([$zipFile]);
                 }
             }
             throw $x;
         }
         if ($originalZipFile !== $zipFile) {
             if (@$fs->move($zipFile, $originalZipFile) === false) {
-                @$fs->delete(array($zipFile));
+                @$fs->delete([$zipFile]);
                 throw new Exception(t('Failed to move a temporary file.'));
             }
         }
@@ -620,7 +632,7 @@ class Zip
                 }
                 $zip = null;
             }
-            @$this->getFilesystem()->delete(array($zipFile));
+            @$this->getFilesystem()->delete([$zipFile]);
             throw $x;
         }
     }

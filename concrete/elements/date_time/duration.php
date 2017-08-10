@@ -17,15 +17,31 @@ for ($i = 1; $i <= 12; ++$i) {
 $values = array();
 foreach (array(12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11) as $hour) {
     $values[] = $hour . ':00am';
+    $values[] = $hour . ':05am';
+    $values[] = $hour . ':10am';
     $values[] = $hour . ':15am';
+    $values[] = $hour . ':20am';
+    $values[] = $hour . ':25am';
     $values[] = $hour . ':30am';
+    $values[] = $hour . ':35am';
+    $values[] = $hour . ':40am';
     $values[] = $hour . ':45am';
+    $values[] = $hour . ':50am';
+    $values[] = $hour . ':55am';
 }
 foreach (array(12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11) as $hour) {
     $values[] = $hour . ':00pm';
+    $values[] = $hour . ':05pm';
+    $values[] = $hour . ':10pm';
     $values[] = $hour . ':15pm';
+    $values[] = $hour . ':20pm';
+    $values[] = $hour . ':25pm';
     $values[] = $hour . ':30pm';
+    $values[] = $hour . ':35pm';
+    $values[] = $hour . ':40pm';
     $values[] = $hour . ':45pm';
+    $values[] = $hour . ':50pm';
+    $values[] = $hour . ':55pm';
 }
 
 $repeats = array(
@@ -162,20 +178,20 @@ $weekDays = \Punic\Calendar::getSortedWeekdays('wide');
                     <div class="">
                         <div class="radio">
                             <label>
-                                <input type="radio" name="<%=options.namespace%>_pdRepeatPeriodMonthsRepeatBy_<%=repetition.setID%>" <% if (repetition.pdRepeatPeriodDaysEvery == 'month') { %>checked<% } %> value="month">
+                                <input type="radio" name="<%=options.namespace%>_pdRepeatPeriodMonthsRepeatBy_<%=repetition.setID%>" <% if (repetition.pdRepeatPeriodMonthsRepeatBy == 'month') { %>checked<% } %> value="month">
                                 <?= t('Day of Month')?>
                             </label>
                         </div>
                         <div class="radio">
                             <label>
-                                <input type="radio" name="<%=options.namespace%>_pdRepeatPeriodMonthsRepeatBy_<%=repetition.setID%>" <% if (repetition.pdRepeatPeriodDaysEvery == 'week') { %>checked<% } %> value="week">
+                                <input type="radio" name="<%=options.namespace%>_pdRepeatPeriodMonthsRepeatBy_<%=repetition.setID%>" <% if (repetition.pdRepeatPeriodMonthsRepeatBy == 'week') { %>checked<% } %> value="week">
                                 <?= t('Day of Week')?>
                             </label>
                         </div>
 
                         <div class="radio">
                             <label>
-                                <input type="radio" name="<%=options.namespace%>_pdRepeatPeriodMonthsRepeatBy_<%=repetition.setID%>" <% if (repetition.pdRepeatPeriodDaysEvery == 'lastweekday') { %>checked<% } %> value="lastweekday">
+                                <input type="radio" name="<%=options.namespace%>_pdRepeatPeriodMonthsRepeatBy_<%=repetition.setID%>" <% if (repetition.pdRepeatPeriodMonthsRepeatBy == 'lastweekday') { %>checked<% } %> value="lastweekday">
                                 <?= t('The last ') ?>
                                 <select name="<%=options.namespace%>_pdRepeatPeriodMonthsRepeatLastDay_<%=repetition.setID%>" class="form-control">
                                     <?php foreach($weekDays as $weekDay) { ?>

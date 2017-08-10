@@ -6,6 +6,9 @@ use Concrete\Core\File\Importer;
 use Concrete\Core\Attribute\Type as AttributeType;
 use Concrete\Core\Attribute\Key\FileKey;
 use Concrete\Core\Attribute\Key\Category;
+use Concrete\Core\File\Search\ColumnSet\Column\FileVersionFilenameColumn;
+use Concrete\Core\Search\Pagination\PaginationFactory;
+use Doctrine\DBAL\Logging\EchoSQLLogger;
 
 class FileListTest extends \FileStorageTestCase
 {
@@ -58,10 +61,12 @@ class FileListTest extends \FileStorageTestCase
         FileKey::add($number, array('akHandle' => 'height', 'akName' => 'Height'));
 
         $self = new static();
-        mkdir($self->getStorageDirectory());
+        if (!is_dir($self->getStorageDirectory())) {
+            mkdir($self->getStorageDirectory());
+        }
         $self->getStorageLocation();
 
-        $sample = dirname(__FILE__) . '/StorageLocation/fixtures/sample.txt';
+        $sample = str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__)) . '/StorageLocation/fixtures/sample.txt';
         $image = DIR_BASE . '/concrete/images/logo.png';
         $fi = new Importer();
 
@@ -230,13 +235,13 @@ class FileListTest extends \FileStorageTestCase
 
         $results = $pagination->getCurrentPageResults();
         $this->assertInstanceOf('\Concrete\Core\Entity\File\File', $results[0]);
-        $this->assertEquals(1, count($results[0]));
+        $this->assertCount(1, $results);
     }
 
-    public function testPaginationWithPermissions()
+    public function testPaginationWithPermissionsAndPager()
     {
         // first lets make some more files.
-        $sample = dirname(__FILE__) . '/StorageLocation/fixtures/sample.txt';
+        $sample = str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__)) . '/StorageLocation/fixtures/sample.txt';
         $image = DIR_BASE . '/concrete/images/logo.png';
         $fi = new Importer();
 
@@ -260,17 +265,18 @@ class FileListTest extends \FileStorageTestCase
                 return false;
             }
         });
-        $nl->sortByFilenameAscending();
+        $nl->sortBySearchColumn(new FileVersionFilenameColumn());
         $results = $nl->getResults();
-        $pagination = $nl->getPagination();
+        $factory = new PaginationFactory(\Request::createFromGlobals());
+        $pagination = $factory->createPaginationObject($nl, PaginationFactory::PERMISSIONED_PAGINATION_STYLE_PAGER);
         $this->assertEquals(-1, $nl->getTotalResults());
-        $this->assertEquals(6, $pagination->getTotalResults());
+        $this->assertEquals(-1, $pagination->getTotalResults());
         $this->assertEquals(6, count($results));
 
         // so there are six "real" results, and 15 total results without filtering.
         $pagination->setMaxPerPage(4)->setCurrentPage(1);
 
-        $this->assertEquals(2, $pagination->getTotalPages());
+        $this->assertEquals(-1, $pagination->getTotalPages());
 
         $this->assertTrue($pagination->hasNextPage());
         $this->assertFalse($pagination->hasPreviousPage());
@@ -286,14 +292,16 @@ class FileListTest extends \FileStorageTestCase
 
         $results = $pagination->getCurrentPageResults();
 
-        $this->assertInstanceOf('\Concrete\Core\Search\Pagination\PermissionablePagination', $pagination);
+        $this->assertInstanceOf('\Concrete\Core\Search\Pagination\PagerPagination', $pagination);
+
         $this->assertEquals(4, count($results));
+
         $this->assertEquals('foobley.png', $results[0]->getFilename());
         $this->assertEquals('image.png', $results[1]->getFilename());
         $this->assertEquals('logo1.png', $results[2]->getFilename());
         $this->assertEquals('logo2.png', $results[3]->getFilename());
 
-        $pagination->setCurrentPage(2);
+        $pagination->advanceToNextPage();
 
         $results = $pagination->getCurrentPageResults();
 
@@ -303,6 +311,49 @@ class FileListTest extends \FileStorageTestCase
 
         $this->assertTrue($pagination->hasPreviousPage());
         $this->assertFalse($pagination->hasNextPage());
+    }
+
+    public function testPaginationThatStopsOnTheFirstPage()
+    {
+        // first lets make some more files.
+        $sample = dirname(__FILE__) . '/StorageLocation/fixtures/sample.txt';
+        $image = DIR_BASE . '/concrete/images/logo.png';
+        $fi = new Importer();
+
+        $files = array(
+            'another.txt' => $sample,
+            'funtime.txt' => $sample,
+            'funtime2.txt' => $sample,
+            'awesome-o' => $sample,
+            'image.png' => $image,
+        );
+
+        foreach ($files as $filename => $pointer) {
+            $fi->import($pointer, $filename);
+        }
+
+        $nl = new \Concrete\Core\File\FileList();
+        $nl->setPermissionsChecker(function ($file) {
+            if ($file->getFileID() < 3) {
+                return true;
+            }
+            return false;
+        });
+        $nl->sortBySearchColumn(new FileVersionFilenameColumn());
+        $results = $nl->getResults();
+        $factory = new PaginationFactory(\Request::createFromGlobals());
+        $pagination = $factory->createPaginationObject($nl, PaginationFactory::PERMISSIONED_PAGINATION_STYLE_PAGER);
+        $this->assertEquals(-1, $nl->getTotalResults());
+        $this->assertEquals(-1, $pagination->getTotalResults());
+        $this->assertEquals(2, count($results));
+
+        $results = $pagination->getCurrentPageResults();
+
+        $this->assertEquals('sample1.txt', $results[0]->getFilename());
+        $this->assertEquals('sample2.txt', $results[1]->getFilename());
+        $this->assertFalse($pagination->hasNextPage());
+        $this->assertEquals(2, count($results));
+        $this->assertTrue(!isset($results[2]));
     }
 
     public function testFileSearchDefaultColumnSet()

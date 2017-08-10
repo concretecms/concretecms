@@ -2,7 +2,7 @@
 namespace Concrete\Core\Authentication;
 
 use Concrete\Authentication\Concrete\Controller;
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Package\PackageList;
 use Core;
 use Environment;
@@ -10,7 +10,7 @@ use Exception;
 use Loader;
 use Package;
 
-class AuthenticationType extends Object
+class AuthenticationType extends ConcreteObject
 {
     /** @var Controller */
     public $controller;
@@ -214,6 +214,25 @@ class AuthenticationType extends Object
     public function getAuthenticationTypeName()
     {
         return $this->authTypeName;
+    }
+
+    /**
+     * Returns the display name for this instance (localized and escaped accordingly to $format)
+     *
+     * @param string $format = 'html' Escape the result in html format (if $format is 'html'). If $format is 'text' or any other value, the display name won't be escaped.
+     *
+     * @return string
+     */
+    public function getAuthenticationTypeDisplayName($format = 'html')
+    {
+        $value = tc('AuthenticationType', $this->getAuthenticationTypeName());
+        switch ($format) {
+            case 'html':
+                return h($value);
+            case 'text':
+            default:
+                return $value;
+        }
     }
 
     public function getAuthenticationTypeDisplayOrder()

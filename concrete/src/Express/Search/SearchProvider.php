@@ -29,7 +29,7 @@ class SearchProvider extends AbstractSearchProvider
 
     public function getSessionNamespace()
     {
-        return 'express_' . $this->entity->getId();
+        return 'express_' . $this->entity->getHandle();
     }
 
     public function __construct(Entity $entity, ExpressCategory $category, Session $session)
@@ -37,6 +37,14 @@ class SearchProvider extends AbstractSearchProvider
         $this->entity = $entity;
         $this->category = $category;
         parent::__construct($session);
+    }
+
+    /**
+     * @return Entity
+     */
+    public function getEntity()
+    {
+        return $this->entity;
     }
 
     public function getCustomAttributeKeys()
@@ -79,6 +87,11 @@ class SearchProvider extends AbstractSearchProvider
     public function getDefaultColumnSet()
     {
         return new DefaultSet($this->category);
+    }
+    
+    function getSavedSearch()
+    {
+        // TODO: Implement getSavedSearch() method.
     }
 
 }

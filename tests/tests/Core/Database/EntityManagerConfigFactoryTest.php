@@ -55,7 +55,7 @@ class EntityManagerConfigFactoryTest extends \PHPUnit_Framework_TestCase
 //
 //        // Test if the driver contains the default lookup path
 //        $driverPaths = $defaultAnnotationDriver->getPaths();
-//        $this->assertEquals(DIR_BASE_CORE.DIRECTORY_SEPARATOR.DIRNAME_CLASSES.'/'.DIRNAME_ENTITIES,
+//        $this->assertEquals(DIR_BASE_CORE . '/' . DIRNAME_CLASSES.'/'.DIRNAME_ENTITIES,
 //            $driverPaths[0]);
     }
 
@@ -86,7 +86,7 @@ class EntityManagerConfigFactoryTest extends \PHPUnit_Framework_TestCase
 
         // Test if the driver contains the default lookup path
         $driverPaths = $defaultAnnotationDriver->getPaths();
-        $this->assertEquals(DIR_APPLICATION.DIRECTORY_SEPARATOR.DIRNAME_CLASSES.DIRECTORY_SEPARATOR.DIRNAME_ENTITIES,
+        $this->assertEquals(DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES,
             $driverPaths[0]);
 
         rmdir($root . '/application/src/Entity');
@@ -112,7 +112,7 @@ class EntityManagerConfigFactoryTest extends \PHPUnit_Framework_TestCase
 
         // Test if the driver contains the default lookup path
         $driverPaths = $defaultAnnotationDriver->getPaths();
-        $this->assertEquals(DIR_APPLICATION.DIRECTORY_SEPARATOR.DIRNAME_CLASSES,
+        $this->assertEquals(DIR_APPLICATION . '/' . DIRNAME_CLASSES,
             $driverPaths[0]);
 
         \Config::save('app.enable_legacy_src_namespace', false);
@@ -147,7 +147,7 @@ class EntityManagerConfigFactoryTest extends \PHPUnit_Framework_TestCase
 
         // Test if the driver contains the default lookup path
         $driverPaths = $defaultAnnotationDriver->getPaths();
-        $this->assertEquals(DIR_APPLICATION.DIRECTORY_SEPARATOR.DIRNAME_CLASSES.DIRECTORY_SEPARATOR.DIRNAME_ENTITIES,
+        $this->assertEquals(DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES,
             $driverPaths[0]);
     }
 
@@ -185,7 +185,7 @@ class EntityManagerConfigFactoryTest extends \PHPUnit_Framework_TestCase
 
         // Test if the driver contains the default lookup path
         $driverPaths = $defaultAnnotationDriver->getPaths();
-        $this->assertEquals(DIR_APPLICATION.DIRECTORY_SEPARATOR.DIRNAME_CLASSES.DIRECTORY_SEPARATOR.DIRNAME_ENTITIES,
+        $this->assertEquals(DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES,
             $driverPaths[0]);
     }
 

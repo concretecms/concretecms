@@ -4,7 +4,7 @@ namespace Concrete\Core\Page\Collection\Version;
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Attribute\ObjectTrait;
 use Concrete\Core\Entity\Attribute\Value\PageValue;
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Block;
 use Page;
 use PageType;
@@ -15,7 +15,7 @@ use Concrete\Core\Permission\ObjectInterface as PermissionObjectInterface;
 use Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVersionFeatureAssignment;
 use Concrete\Core\Support\Facade\Facade;
 
-class Version extends Object implements PermissionObjectInterface, AttributeObjectInterface
+class Version extends ConcreteObject implements PermissionObjectInterface, AttributeObjectInterface
 {
     use ObjectTrait;
 
@@ -97,9 +97,12 @@ class Version extends Object implements PermissionObjectInterface, AttributeObje
              "pTemplateID, cvAuthorUID, cvApproverUID, cvComments, pThemeID, cvPublishDate from CollectionVersions " .
              "where cID = ?";
 
+        $now = new \DateTime();
+
         switch ($cvID) {
             case 'ACTIVE':
-                $q .= ' and cvIsApproved = 1 and cvPublishDate is NULL';
+                $q .= ' and cvIsApproved = 1 and (cvPublishDate is NULL or cvPublishDate <= ?) ';
+                $v[] = $now->format('Y-m-d H:i:s');
                 break;
             case 'SCHEDULED':
                 $q .= ' and cvIsApproved = 1 and cvPublishDate is not NULL';
@@ -484,7 +487,7 @@ class Version extends Object implements PermissionObjectInterface, AttributeObje
             $pType = PageType::getByID($c->getPageTypeID());
             $masterC = $pType->getPageTypePageTemplateDefaultPageObject();
             $db->executeQuery('update Pages set cInheritPermissionsFromCID = ? where cID = ?', array(
-                $masterC->getCollectionID(),
+                (int) $masterC->getCollectionID(),
                 $c->getCollectioniD(),
             ));
         }

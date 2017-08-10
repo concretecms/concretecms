@@ -1,11 +1,16 @@
 <?php
 namespace Concrete\Core\User\Search\ColumnSet;
 
+use Concrete\Core\User\Search\ColumnSet\Column\NumberOfLoginsColumn;
+use Concrete\Core\User\Search\ColumnSet\Column\UsernameColumn;
+use Concrete\Core\User\Search\ColumnSet\Column\DateAddedColumn;
+use Concrete\Core\User\Search\ColumnSet\Column\EmailColumn;
+use Concrete\Core\User\Search\ColumnSet\Column\UserIDColumn;
 use Concrete\Core\Search\Column\Column;
 use Concrete\Core\Search\Column\Set;
 use Core;
 
-class DefaultSet extends Set
+class DefaultSet extends ColumnSet
 {
     protected $attributeClass = 'UserAttributeKey';
 
@@ -24,13 +29,23 @@ class DefaultSet extends Set
         return Core::make('helper/date')->formatDateTime($ui->getUserDateAdded());
     }
 
+    public static function getUserDateLastLogin($ui)
+    {
+        $login = $ui->getLastLogin();
+        if ($login) {
+            return Core::make('helper/date')->formatDateTime($login);
+        } else {
+            return '';
+        }
+    }
+
     public function __construct()
     {
-        $this->addColumn(new Column('u.uName', t('Username'), ['Concrete\Core\User\Search\ColumnSet\DefaultSet', 'getUserName']));
-        $this->addColumn(new Column('u.uEmail', t('Email'), ['Concrete\Core\User\Search\ColumnSet\DefaultSet', 'getUserEmail']));
-        $this->addColumn(new Column('u.uDateAdded', t('Signup Date'), ['Concrete\Core\User\Search\ColumnSet\DefaultSet', 'getUserDateAdded']));
-        $this->addColumn(new Column('uStatus', t('Status'), ['Concrete\Core\User\Search\ColumnSet\DefaultSet', 'getUserStatus']));
-        $this->addColumn(new Column('u.uNumLogins', t('# Logins'), 'getNumLogins'));
+        $this->addColumn(new UsernameColumn());
+        $this->addColumn(new EmailColumn());
+        $this->addColumn(new DateAddedColumn());
+        $this->addColumn(new Column('uStatus', t('Status'), ['Concrete\Core\User\Search\ColumnSet\DefaultSet', 'getUserStatus'], false));
+        $this->addColumn(new NumberOfLoginsColumn());
         $date = $this->getColumnByKey('u.uDateAdded');
         $this->setDefaultSortColumn($date, 'desc');
     }

@@ -24,6 +24,13 @@ class Controller extends AttributeTypeController
         return $list;
     }
 
+    public function search()
+    {
+        $f = $this->app->make('helper/form');
+        $checked = $this->request('value') == '1' ? true : false;
+        echo '<div class="checkbox"><label>' . $f->checkbox($this->field('value'), 1, $checked) . ' ' . t('Yes') . '</label></div>';
+    }
+
     public function filterByAttribute(AttributedItemList $list, $boolean, $comparison = '=')
     {
         $qb = $list->getQueryObject();
@@ -48,11 +55,20 @@ class Controller extends AttributeTypeController
         return $cnode;
     }
 
+    public function getCheckboxLabel()
+    {
+        if ($this->akCheckboxLabel) {
+            return $this->akCheckboxLabel;
+        }
+        return $this->attributeKey->getAttributeKeyName();
+    }
+
     public function exportKey($akey)
     {
         $this->load();
         $type = $akey->addChild('type');
         $type->addAttribute('checked', $this->akCheckedByDefault);
+        $type->addAttribute('checkbox-label', $this->akCheckboxLabel);
 
         return $akey;
     }
@@ -62,10 +78,15 @@ class Controller extends AttributeTypeController
         $type = $this->getAttributeKeySettings();
         if (isset($akey->type)) {
             $checked = (string) $akey->type['checked'];
+            $label = (string) $akey->type['checkbox-label'];
             if ($checked != '') {
                 $type->setIsCheckedByDefault(true);
             }
+            if ($label != '') {
+                $type->setCheckboxLabel($label);
+            }
         }
+
 
         return $type;
     }
@@ -77,8 +98,14 @@ class Controller extends AttributeTypeController
             return false;
         }
 
-        $this->akCheckedByDefault = $ak
-            ->getAttributeKeySettings()->isCheckedByDefault();
+        $settings = $ak
+            ->getAttributeKeySettings();
+        if ($settings) {
+            $this->akCheckedByDefault = $settings->isCheckedByDefault();
+            $this->akCheckboxLabel = $settings->getCheckboxLabel();
+        }
+
+        $this->set('akCheckboxLabel', $this->akCheckboxLabel);
         $this->set('akCheckedByDefault', $this->akCheckedByDefault);
     }
 
@@ -146,6 +173,7 @@ class Controller extends AttributeTypeController
         }
 
         $type->setIsCheckedByDefault($akCheckedByDefault);
+        $type->setCheckboxLabel($data['akCheckboxLabel']);
 
         return $type;
     }

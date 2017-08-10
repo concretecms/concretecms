@@ -1,12 +1,11 @@
 <?php
 namespace Concrete\Core\Entity\Site;
 
-use Concrete\Core\Application\Application;
-use Concrete\Core\Attribute\ObjectInterface;
-use Concrete\Core\Permission\ObjectInterface as PermissionObjectInterface;
-use Concrete\Core\Attribute\ObjectTrait;
 use Concrete\Core\Attribute\Key\SiteKey;
+use Concrete\Core\Attribute\ObjectInterface;
+use Concrete\Core\Attribute\ObjectTrait;
 use Concrete\Core\Entity\Attribute\Value\SiteValue;
+use Concrete\Core\Permission\ObjectInterface as PermissionObjectInterface;
 use Concrete\Core\Site\Config\Liaison;
 use Concrete\Core\Site\Tree\TreeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -18,7 +17,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
 {
-
     use ObjectTrait;
 
     public function getPermissionObjectIdentifier()
@@ -62,6 +60,7 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
             $attributeValue = new SiteValue();
             $attributeValue->setSite($this);
             $attributeValue->setAttributeKey($ak);
+
             return $attributeValue;
         }
     }
@@ -89,7 +88,6 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
      */
     protected $siteHandle;
 
-
     public function __construct($appConfigRepository)
     {
         $this->updateSiteConfigRepository($appConfigRepository);
@@ -106,6 +104,7 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
         if (!$this->siteConfig) {
             $this->updateSiteConfigRepository(\Core::make('config'), $this);
         }
+
         return $this->siteConfig;
     }
 
@@ -174,7 +173,7 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
 
     public function getDefaultLocale()
     {
-        foreach($this->locales as $locale) {
+        foreach ($this->locales as $locale) {
             if ($locale->getIsDefault()) {
                 return $locale;
             }
@@ -253,9 +252,58 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
         return $this->getConfigRepository()->save('name', $name);
     }
 
+    /**
+     * Get the main site canonical URL.
+     *
+     * @return string empty string if it's not set
+     */
     public function getSiteCanonicalURL()
     {
-        return $this->getConfigRepository()->get('seo.canonical_url');
+        return (string)$this->getConfigRepository()->get('seo.canonical_url');
+    }
+
+    /**
+     * Get the alternative site canonical URL.
+     *
+     * @return string empty string if it's not set
+     */
+    public function getSiteAlternativeCanonicalURL()
+    {
+        return (string)$this->getConfigRepository()->get('seo.canonical_url_alternative');
+    }
+
+    /**
+     * Get the HTTPS site canonical URL (it may be the main or the alternative canonical URL).
+     *
+     * @return string empty string if it's not set
+     */
+    public function getSiteSSLCanonicalURL()
+    {
+        $result = '';
+        $url = $this->getSiteCanonicalURL();
+        if (stripos($url, 'https:') === 0) {
+            $result = $url;
+        } else {
+            $url = $this->getSiteAlternativeCanonicalURL();
+            if (stripos($url, 'https:') === 0) {
+                $result = $url;
+            }
+        }
+
+        return $result;
+    }
+
+    public function getTimezone()
+    {
+        $timezone = null;
+        $config = $this->getConfigRepository();
+        if ($config) {
+            $timezone = $config->get('timezone');
+        }
+        if (!$timezone) {
+            $timezone = date_default_timezone_get();
+        }
+        return $timezone;
     }
 
     /**
@@ -273,8 +321,4 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
     {
         $this->pThemeID = $pThemeID;
     }
-
-
-
-
 }

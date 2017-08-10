@@ -2,14 +2,17 @@
 namespace Concrete\Core\Package;
 
 use AuthenticationType;
+use Concrete\Block\ExpressForm\Controller as ExpressFormBlockController;
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Config\Renderer;
 use Concrete\Core\Database\DatabaseStructureManager;
 use Concrete\Core\Entity\Site\Locale;
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Service\File;
+use Concrete\Core\Localization\Localization;
 use Concrete\Core\Mail\Importer\MailImporter;
 use Concrete\Core\Package\Routine\AttachModeInstallRoutine;
+use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use Concrete\Core\Permission\Access\Entity\ConversationMessageAuthorEntity;
 use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
 use Concrete\Core\Permission\Access\Entity\UserEntity;
@@ -18,24 +21,21 @@ use Concrete\Core\Tree\Node\Type\ExpressEntryCategory;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
 use Concrete\Core\Updater\Migrations\Configuration;
 use Concrete\Core\User\Point\Action\Action as UserPointAction;
-use Concrete\Block\ExpressForm\Controller as ExpressFormBlockController;
 use Config;
 use Core;
 use Database;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
+use Exception;
 use Group;
 use GroupTree;
 use Hautelook\Phpass\PasswordHash;
 use Package as BasePackage;
 use Page;
-use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use PermissionKey;
+use Throwable;
 use User;
 use UserInfo;
-use Concrete\Core\Localization\Localization;
-use Exception;
-use Throwable;
 
 class StartingPointPackage extends BasePackage
 {
@@ -284,6 +284,7 @@ class StartingPointPackage extends BasePackage
         $thumbnailType->requireType();
         $thumbnailType->setName(tc('ThumbnailTypeName', 'File Manager Thumbnails'));
         $thumbnailType->setHandle(Config::get('concrete.icons.file_manager_listing.handle'));
+        $thumbnailType->setSizingMode($thumbnailType::RESIZE_EXACT);
         $thumbnailType->setWidth(Config::get('concrete.icons.file_manager_listing.width'));
         $thumbnailType->setHeight(Config::get('concrete.icons.file_manager_listing.height'));
         $thumbnailType->save();
@@ -292,6 +293,7 @@ class StartingPointPackage extends BasePackage
         $thumbnailType->requireType();
         $thumbnailType->setName(tc('ThumbnailTypeName', 'File Manager Detail Thumbnails'));
         $thumbnailType->setHandle(Config::get('concrete.icons.file_manager_detail.handle'));
+        $thumbnailType->setSizingMode($thumbnailType::RESIZE_EXACT);
         $thumbnailType->setWidth(Config::get('concrete.icons.file_manager_detail.width'));
         $thumbnailType->save();
 
@@ -320,7 +322,7 @@ class StartingPointPackage extends BasePackage
     protected function install_database()
     {
         $db = Database::get();
-        $num = $db->GetCol("show tables");
+        $num = $db->GetCol('show tables');
 
         if (count($num) > 0) {
             throw new \Exception(
@@ -339,7 +341,7 @@ class StartingPointPackage extends BasePackage
             \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('subpackages');
             \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('package');
             // Use default AnnotationReader
-            $driverImpl = $config->newDefaultAnnotationDriver(DIR_BASE_CORE . DIRECTORY_SEPARATOR . DIRNAME_CLASSES . DIRECTORY_SEPARATOR . DIRNAME_ENTITIES, false);
+            $driverImpl = $config->newDefaultAnnotationDriver(DIR_BASE_CORE . '/' . DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES, false);
             $config->setMetadataDriverImpl($driverImpl);
             $em = EntityManager::create(\Database::connection(), $config);
             $dbm = new DatabaseStructureManager($em);
@@ -366,8 +368,6 @@ class StartingPointPackage extends BasePackage
 
         $db->Execute('ALTER TABLE PagePaths ADD INDEX (`cPath` (255))');
         $db->Execute('ALTER TABLE Groups ADD INDEX (`gPath` (255))');
-        $db->Execute('ALTER TABLE SignupRequests ADD INDEX (`ipFrom` (32))');
-        $db->Execute('ALTER TABLE UserBannedIPs ADD UNIQUE INDEX (ipFrom (32), ipTo(32))');
     }
 
     protected function add_users()
@@ -393,18 +393,18 @@ class StartingPointPackage extends BasePackage
         // create the groups our site users
         // specify the ID's since auto increment may not always be +1
         $g1 = Group::add(
-            tc("GroupName", "Guest"),
-            tc("GroupDescription", "The guest group represents unregistered visitors to your site."),
+            tc('GroupName', 'Guest'),
+            tc('GroupDescription', 'The guest group represents unregistered visitors to your site.'),
             false,
             false,
             GUEST_GROUP_ID);
         $g2 = Group::add(
-            tc("GroupName", "Registered Users"),
-            tc("GroupDescription", "The registered users group represents all user accounts."),
+            tc('GroupName', 'Registered Users'),
+            tc('GroupDescription', 'The registered users group represents all user accounts.'),
             false,
             false,
             REGISTERED_GROUP_ID);
-        $g3 = Group::add(tc("GroupName", "Administrators"), "", false, false, ADMIN_GROUP_ID);
+        $g3 = Group::add(tc('GroupName', 'Administrators'), '', false, false, ADMIN_GROUP_ID);
 
         // insert admin user into the user table
         if (defined('INSTALL_USER_PASSWORD')) {
@@ -436,6 +436,7 @@ class StartingPointPackage extends BasePackage
         if (is_dir(DIR_CONFIG_SITE . '/generated_overrides')) {
             $fh->removeAll(DIR_CONFIG_SITE . '/generated_overrides');
         }
+        Config::save('app.server_timezone', date_default_timezone_get());
         if (is_dir(Config::get('database.proxy_classes'))) {
             $fh->removeAll(Config::get('database.proxy_classes'));
         }
@@ -486,8 +487,8 @@ class StartingPointPackage extends BasePackage
         if (isset($site_install['canonical-url']) && $site_install['canonical-url']) {
             $siteConfig->save('seo.canonical_url', $site_install['canonical-url']);
         }
-        if (isset($site_install['canonical-ssl-url']) && $site_install['canonical-ssl-url']) {
-            $siteConfig->save('seo.canonical_ssl_url', $site_install['canonical-ssl-url']);
+        if (isset($site_install['canonical-url-alternative']) && $site_install['canonical-url-alternative']) {
+            $siteConfig->save('seo.canonical_url_alternative', $site_install['canonical-url-alternative']);
         }
 
         @unlink(DIR_CONFIG_SITE . '/site_install.php');
@@ -546,19 +547,27 @@ class StartingPointPackage extends BasePackage
         $u->saveConfig('NEWSFLOW_LAST_VIEWED', 'FIRSTRUN');
 
         // login
-        $login = Page::getByPath('/login', "RECENT");
+        $login = Page::getByPath('/login', 'RECENT');
         $login->assignPermissions($g1, ['view_page']);
 
         // register
-        $register = Page::getByPath('/register', "RECENT");
+        $register = Page::getByPath('/register', 'RECENT');
         $register->assignPermissions($g1, ['view_page']);
 
+        // Page Forbidden
+        $page_forbidden = Page::getByPath('/page_forbidden', "RECENT");
+        $page_forbidden->assignPermissions($g1, ['view_page']);
+
+        // Page Not Found
+        $page_not_found = Page::getByPath('/page_not_found', "RECENT");
+        $page_not_found->assignPermissions($g1, ['view_page']);
+
         // dashboard
-        $dashboard = Page::getByPath('/dashboard', "RECENT");
+        $dashboard = Page::getByPath('/dashboard', 'RECENT');
         $dashboard->assignPermissions($g3, ['view_page']);
 
         // drafts
-        $drafts = Page::getByPath('/!drafts', "RECENT");
+        $drafts = Page::getByPath('/!drafts', 'RECENT');
         $drafts->assignPermissions(
             $g3,
             [
@@ -583,7 +592,7 @@ class StartingPointPackage extends BasePackage
             ]
         );
 
-        $home = Page::getByID(1, "RECENT");
+        $home = Page::getByID(1, 'RECENT');
         $home->assignPermissions($g1, ['view_page']);
         $home->assignPermissions(
             $g3,

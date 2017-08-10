@@ -2,6 +2,11 @@
 namespace Concrete\Core\File;
 
 use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemList;
+use Concrete\Core\Search\ItemList\Pager\Manager\FileListPagerManager;
+use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
+use Concrete\Core\Search\ItemList\Pager\QueryString\VariableFactory;
+use Concrete\Core\Search\Pagination\PagerPagination;
+use Concrete\Core\Search\Pagination\PaginationProviderInterface;
 use Concrete\Core\Search\PermissionableListItemInterface;
 use Concrete\Core\Search\Pagination\PermissionablePagination;
 use Concrete\Core\Search\StickyRequest;
@@ -12,7 +17,7 @@ use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use Concrete\Core\Search\Pagination\Pagination;
 use FileAttributeKey;
 
-class FileList extends DatabaseItemList implements PermissionableListItemInterface
+class FileList extends DatabaseItemList implements PagerProviderInterface, PaginationProviderInterface
 {
 
     public function __construct(StickyRequest $req = null)
@@ -24,10 +29,25 @@ class FileList extends DatabaseItemList implements PermissionableListItemInterfa
         parent::__construct($req);
     }
 
+    public function getPermissionsChecker()
+    {
+        return $this->permissionsChecker;
+    }
+
     /** @var  \Closure | integer | null */
     protected $permissionsChecker;
 
     protected $paginationPageParameter = 'ccm_paging_fl';
+
+    public function getPagerManager()
+    {
+        return new FileListPagerManager($this);
+    }
+
+    public function getPagerVariableFactory()
+    {
+        return new VariableFactory($this, $this->getSearchRequest());
+    }
 
     /**
      * Columns in this array can be sorted via the request.
@@ -47,7 +67,7 @@ class FileList extends DatabaseItemList implements PermissionableListItemInterfa
         return '\\Concrete\\Core\\Attribute\\Key\\FileKey';
     }
 
-    public function setPermissionsChecker(\Closure $checker)
+    public function setPermissionsChecker(\Closure $checker = null)
     {
         $this->permissionsChecker = $checker;
     }
@@ -55,6 +75,11 @@ class FileList extends DatabaseItemList implements PermissionableListItemInterfa
     public function ignorePermissions()
     {
         $this->permissionsChecker = -1;
+    }
+
+    public function enablePermissions()
+    {
+        unset($this->permissionsChecker);
     }
 
     public function createQuery()
@@ -71,24 +96,21 @@ class FileList extends DatabaseItemList implements PermissionableListItemInterfa
         if ($this->permissionsChecker === -1) {
             $query = $this->deliverQueryObject();
 
-            return $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct f.fID)')->setMaxResults(1)->execute()->fetchColumn();
+            return $query->resetQueryParts([
+                'groupBy',
+                'orderBy'
+            ])->select('count(distinct f.fID)')->setMaxResults(1)->execute()->fetchColumn();
         } else {
             return -1; // unknown
         }
     }
 
-    protected function createPaginationObject()
+    public function getPaginationAdapter()
     {
-        if ($this->permissionsChecker === -1) {
-            $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
-                $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct f.fID)')->setMaxResults(1);
-            });
-            $pagination = new Pagination($this, $adapter);
-        } else {
-            $pagination = new PermissionablePagination($this);
-        }
-
-        return $pagination;
+        $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
+            $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct f.fID)')->setMaxResults(1);
+        });
+        return $adapter;
     }
 
     /**
@@ -186,7 +208,8 @@ class FileList extends DatabaseItemList implements PermissionableListItemInterfa
      */
     public function filterByDateAdded($date, $comparison = '=')
     {
-        $this->query->andWhere($this->query->expr()->comparison('f.fDateAdded', $comparison, $this->query->createNamedParameter($date)));
+        $this->query->andWhere($this->query->expr()->comparison('f.fDateAdded', $comparison,
+            $this->query->createNamedParameter($date)));
     }
 
     public function filterByOriginalPageID($ocID)

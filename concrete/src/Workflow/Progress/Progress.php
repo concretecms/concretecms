@@ -2,7 +2,7 @@
 namespace Concrete\Core\Workflow\Progress;
 
 use Concrete\Core\Entity\Notification\WorkflowProgressNotification;
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Notification\Subject\SubjectInterface;
 use Concrete\Core\Workflow\Workflow;
 use Concrete\Core\Workflow\Request\Request as WorkflowRequest;
@@ -19,7 +19,7 @@ use Symfony\Component\EventDispatcher\GenericEvent;
  *
  * @method static Progress add(string $wpCategoryHandle, Workflow $wf, WorkflowRequest $wr) Deprecated method. Use Progress::create instead.
  */
-abstract class Progress extends Object implements SubjectInterface
+abstract class Progress extends ConcreteObject implements SubjectInterface
 {
     protected $wrID = null;
     protected $wpID;

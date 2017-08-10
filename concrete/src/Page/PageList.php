@@ -5,10 +5,17 @@ use Concrete\Core\Entity\Block\BlockType\BlockType;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Entity\Site\Tree;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemList;
+use Concrete\Core\Search\ItemList\Pager\Manager\PageListPagerManager;
+use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
+use Concrete\Core\Search\ItemList\Pager\QueryString\VariableFactory;
+use Concrete\Core\Search\Pagination\PagerPagination;
 use Concrete\Core\Search\Pagination\Pagination;
+use Concrete\Core\Search\Pagination\PaginationProviderInterface;
 use Concrete\Core\Search\Pagination\PermissionablePagination;
 use Concrete\Core\Search\PermissionableListItemInterface;
 use Concrete\Core\Entity\Package;
+use Concrete\Core\Search\StickyRequest;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Page as ConcretePage;
 use Concrete\Core\Entity\Page\Template as TemplateEntity;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
@@ -17,7 +24,7 @@ use Concrete\Core\Site\Tree\TreeInterface;
 /**
  * An object that allows a filtered list of pages to be returned.
  */
-class PageList extends DatabaseItemList implements PermissionableListItemInterface
+class PageList extends DatabaseItemList implements PagerProviderInterface, PaginationProviderInterface
 {
     const PAGE_VERSION_ACTIVE = 1;
     const PAGE_VERSION_RECENT = 2;
@@ -25,6 +32,33 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
 
     const SITE_TREE_CURRENT = -1;
     const SITE_TREE_ALL = 0;
+
+    public function getPagerManager()
+    {
+        return new PageListPagerManager($this);
+    }
+
+    public function __construct(StickyRequest $req = null)
+    {
+        $u = new \User();
+        if ($u->isSuperUser()) {
+            $this->ignorePermissions();
+        }
+        parent::__construct($req);
+    }
+
+    /**
+     * @return \Closure|int|null
+     */
+    public function getPermissionsChecker()
+    {
+        return $this->permissionsChecker;
+    }
+
+    public function getPagerVariableFactory()
+    {
+        return new VariableFactory($this, $this->getSearchRequest());
+    }
 
     protected function getAttributeKeyClassName()
     {
@@ -42,7 +76,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
      *
      * @var array
      */
-    protected $autoSortColumns = ['cv.cvName', 'cv.cvDatePublic', 'c.cDateAdded', 'c.cDateModified'];
+    protected $autoSortColumns = ['p.cDisplayOrder', 'cv.cvName', 'cv.cvDatePublic', 'c.cDateAdded', 'c.cDateModified'];
 
     /**
      * Which version to attempt to retrieve.
@@ -101,7 +135,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
         $this->includeSystemPages = true;
     }
 
-    public function setPermissionsChecker(\Closure $checker)
+    public function setPermissionsChecker(\Closure $checker = null)
     {
         $this->permissionsChecker = $checker;
     }
@@ -109,6 +143,11 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     public function ignorePermissions()
     {
         $this->permissionsChecker = -1;
+    }
+
+    public function enablePermissions()
+    {
+        unset($this->permissionsChecker);
     }
 
     public function includeAliases()
@@ -171,7 +210,10 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
                 break;
             case self::PAGE_VERSION_ACTIVE:
             default:
+                $now = new \DateTime();
                 $query->andWhere('cvIsApproved = 1');
+                $query->andWhere('(cvPublishDate <= :cvPublishDate or cvPublishDate is null)');
+                $query->setParameter('cvPublishDate', $now->format('Y-m-d H:i:s'));
                 break;
         }
 
@@ -241,22 +283,15 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
         }
     }
 
-    protected function createPaginationObject()
+    public function getPaginationAdapter()
     {
-        $u = new \User();
-        if ($this->permissionsChecker === -1) {
-            $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
-                // We need to reset the potential custom order by here because otherwise, if we've added
-                // items to the select parts, and we're ordering by them, we get a SQL error
-                // when we get total results, because we're resetting the select
-                $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct p.cID)')->setMaxResults(1);
-            });
-            $pagination = new Pagination($this, $adapter);
-        } else {
-            $pagination = new PermissionablePagination($this);
-        }
-
-        return $pagination;
+        $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
+            // We need to reset the potential custom order by here because otherwise, if we've added
+            // items to the select parts, and we're ordering by them, we get a SQL error
+            // when we get total results, because we're resetting the select
+            $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct p.cID)')->setMaxResults(1);
+        });
+        return $adapter;
     }
 
     /**

@@ -370,6 +370,11 @@ module.exports = function(grunt) {
             src: '<%= DIR_BASE %>/concrete/js/build/core/frontend/parallax-image.js'
         },
 
+        ccm_frontend_thumbnail_builder: {
+            dest: '<%= DIR_BASE %>/concrete/js/frontend/thumbnail-builder.js',
+            src: '<%= DIR_BASE %>/concrete/js/build/core/frontend/thumbnail-builder.js'
+        },
+
         ccm_gathering: {
             dest: '<%= DIR_BASE %>/concrete/js/gathering.js',
             src: [
@@ -625,7 +630,7 @@ module.exports = function(grunt) {
             'build-release-build',
             'build-release-clean',
             'build-release-remove-short-tags',
-            //'build-release-translations',
+            'build-release-translations',
             'build-release-create-zip',
             'build-release-cleanup'
         ]

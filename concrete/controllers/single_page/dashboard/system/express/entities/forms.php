@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\System\Express\Entities;
 
+use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\FieldSet;
 use Concrete\Core\Entity\Express\Form;
 use Concrete\Core\Page\Controller\DashboardPageController;
@@ -89,6 +90,9 @@ class Forms extends DashboardPageController
         }
         if (!$this->token->validate('delete_form')) {
             $this->error->add($this->token->getErrorMessage());
+        }
+        if (!$this->canDeleteForm($form->getEntity(), $form)) {
+            $this->error->add(t('This form is used as the default view or edit form for its entity. It may not be deleted until another form is selected.'));
         }
         if (!$this->error->has()) {
             $this->entityManager->remove($form);
@@ -316,15 +320,31 @@ class Forms extends DashboardPageController
         }
     }
 
+    protected function canDeleteForm(Entity $entity, Form $form)
+    {
+        $canDeleteForm = true;
+        if (
+            ($entity->getDefaultEditForm() && $entity->getDefaultEditForm()->getID() == $form->getID()) ||
+            ($entity->getDefaultViewForm() && $entity->getDefaultViewForm()->getID() == $form->getID())
+        ) {
+            $canDeleteForm = false;
+        }
+        return $canDeleteForm;
+    }
+
     public function view_form_details($id = null)
     {
         $form = $this->formRepository->findOneById($id);
         if (is_object($form)) {
+            /**
+             * @var $entity Entity
+             */
             $entity = $form->getEntity();
             $this->set('entity', $entity);
             $this->set('fieldSets', $form->getFieldSets());
             $this->set('expressForm', $form);
             $this->set('pageTitle', t('Form Details'));
+            $this->set('canDeleteForm', $this->canDeleteForm($entity, $form));
             $this->render('/dashboard/system/express/entities/forms/view_form');
         } else {
             $this->redirect('/dashboard/system/express/entities');

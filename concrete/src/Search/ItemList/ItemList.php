@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Search\ItemList;
 
+use Concrete\Core\Search\Column\Column;
+use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\Core\Search\StickyRequest;
 use Pagerfanta\Exception\OutOfRangeCurrentPageException;
 use Pagerfanta\Exception\LessThan1CurrentPageException;
@@ -12,6 +14,7 @@ abstract class ItemList
     protected $paginationPageParameter = 'ccm_paging_p';
     protected $sortBy;
     protected $sortByDirection;
+    protected $sortBySearchColumn;
 
     // This still checks the auto sort columns if set to true –
     // we just turn it off to save processing in the attributed item list (so it doesn't have to instantiate
@@ -32,11 +35,6 @@ abstract class ItemList
     abstract public function debugStart();
     abstract public function debugStop();
 
-    /**
-     * @return \Concrete\Core\Search\Pagination\Pagination
-     */
-    abstract protected function createPaginationObject();
-
     public function debug()
     {
         $this->debug = true;
@@ -52,6 +50,21 @@ abstract class ItemList
         $this->sortBy = $field;
         $this->sortByDirection = $direction;
         $this->executeSortBy($field, $direction);
+    }
+
+    public function sortBySearchColumn(Column $column, $direction = null)
+    {
+        if ($direction != 'asc' && $direction != 'desc') {
+            $direction = $column->getColumnSortDirection();
+        }
+        $this->sortByDirection = $direction;
+        $this->sortBySearchColumn = $column;
+        $this->sanitizedSortBy($column->getColumnKey(), $direction);
+    }
+
+    public function getSearchByColumn()
+    {
+        return $this->sortBySearchColumn;
     }
 
     public function sanitizedSortBy($field, $direction = 'asc')
@@ -122,6 +135,7 @@ abstract class ItemList
         $args = array(
             $this->getQuerySortColumnParameter() => $column,
             $this->getQuerySortDirectionParameter() => $dir,
+            'ccm_cursor' => '',
         );
 
         $url = $uh->setVariable($args, false, $url);
@@ -158,6 +172,14 @@ abstract class ItemList
     }
 
     /**
+     * @return int
+     */
+    public function getItemsPerPage()
+    {
+        return $this->itemsPerPage;
+    }
+
+    /**
      * Returns the total results in this item list.
      *
      * @return int
@@ -165,26 +187,19 @@ abstract class ItemList
     abstract public function getTotalResults();
 
     /**
-     * @return \Concrete\Core\Search\Pagination\Pagination|\Concrete\Core\Search\Pagination\PermissionablePagination
+     * Deprecated – call the pagination factory directly.
+     * @deprecated
+     * @return \Concrete\Core\Search\Pagination\Pagination
      */
     public function getPagination()
     {
-        $pagination = $this->createPaginationObject();
-        if ($this->itemsPerPage > -1) {
-            $pagination->setMaxPerPage($this->itemsPerPage);
+        $factory = new PaginationFactory(\Request::getInstance());
+        if (method_exists($this, 'createPaginationObject')) {
+            $pagination = $this->createPaginationObject();
+            $pagination = $factory->deliverPaginationObject($this, $pagination);
+        } else {
+            $pagination = $factory->createPaginationObject($this);
         }
-        $query = \Request::getInstance()->query;
-        if ($query->has($this->getQueryPaginationPageParameter())) {
-            $page = intval($query->get($this->getQueryPaginationPageParameter()));
-            try {
-                $pagination->setCurrentPage($page);
-            } catch (LessThan1CurrentPageException $e) {
-                $pagination->setCurrentPage(1);
-            } catch (OutOfRangeCurrentPageException $e) {
-                $pagination->setCurrentPage(1);
-            }
-        }
-
         return $pagination;
     }
 

@@ -292,12 +292,16 @@ return [
         '/ccm/system/dialogs/file/bulk/properties' => ['\Concrete\Controller\Dialog\File\Bulk\Properties::view'],
         '/ccm/system/dialogs/file/bulk/sets' => ['\Concrete\Controller\Dialog\File\Bulk\Sets::view'],
         '/ccm/system/dialogs/file/bulk/sets/submit' => ['\Concrete\Controller\Dialog\File\Bulk\Sets::submit'],
+        '/ccm/system/dialogs/file/bulk/folder' => ['\Concrete\Controller\Dialog\File\Bulk\Folder::view'],
+        '/ccm/system/dialogs/file/bulk/folder/submit' => ['\Concrete\Controller\Dialog\File\Bulk\Folder::submit'],
         '/ccm/system/dialogs/file/bulk/properties/clear_attribute' => ['\Concrete\Controller\Dialog\File\Bulk\Properties::clearAttribute'],
         '/ccm/system/dialogs/file/bulk/properties/update_attribute' => ['\Concrete\Controller\Dialog\File\Bulk\Properties::updateAttribute'],
         '/ccm/system/dialogs/file/bulk/storage' => ['\Concrete\Controller\Dialog\File\Bulk\Storage::view'],
         '/ccm/system/dialogs/file/bulk/storage/submit' => ['\Concrete\Controller\Dialog\File\Bulk\Storage::submit'],
         '/ccm/system/dialogs/file/sets' => ['\Concrete\Controller\Dialog\File\Sets::view'],
         '/ccm/system/dialogs/file/sets/submit' => ['\Concrete\Controller\Dialog\File\Sets::submit'],
+        '/ccm/system/dialogs/file/folder' => ['\Concrete\Controller\Dialog\File\Folder::view'],
+        '/ccm/system/dialogs/file/folder/submit' => ['\Concrete\Controller\Dialog\File\Folder::submit'],
         '/ccm/system/dialogs/file/properties' => ['\Concrete\Controller\Dialog\File\Properties::view'],
         '/ccm/system/dialogs/file/advanced_search' => ['\Concrete\Controller\Dialog\File\AdvancedSearch::view'],
         '/ccm/system/dialogs/file/advanced_search/add_field' => ['\Concrete\Controller\Dialog\File\AdvancedSearch::addField'],
@@ -307,6 +311,7 @@ return [
         '/ccm/system/dialogs/file/properties/save' => ['\Concrete\Controller\Dialog\File\Properties::save'],
         '/ccm/system/dialogs/file/properties/update_attribute' => ['\Concrete\Controller\Dialog\File\Properties::update_attribute'],
         '/ccm/system/dialogs/file/search' => ['\Concrete\Controller\Dialog\File\Search::view'],
+        '/ccm/system/dialogs/file/jump_to_folder' => ['\Concrete\Controller\Dialog\File\JumpToFolder::view'],
         '/ccm/system/dialogs/file/thumbnails' => ['\Concrete\Controller\Dialog\File\Thumbnails::view'],
         '/ccm/system/dialogs/file/thumbnails/edit' => ['\Concrete\Controller\Dialog\File\Thumbnails\Edit::view'],
         '/ccm/system/dialogs/file/usage/{fID}' => ['\Concrete\Controller\Dialog\File\Usage::view'],
@@ -363,6 +368,10 @@ return [
         "/ccm/system/dialogs/type/update_from_type/{ptID}/{pTemplateID}" => array('\Concrete\Controller\Dialog\Type\UpdateFromType::view'),
         "/ccm/system/dialogs/type/update_from_type/{ptID}/{pTemplateID}/submit" => array('\Concrete\Controller\Dialog\Type\UpdateFromType::submit'),
 
+        '/ccm/system/dialogs/express/advanced_search/' => ['\Concrete\Controller\Dialog\Express\AdvancedSearch::view'],
+        '/ccm/system/dialogs/express/advanced_search/add_field/' => ['\Concrete\Controller\Dialog\Express\AdvancedSearch::addField'],
+        '/ccm/system/dialogs/express/advanced_search/submit' => ['\Concrete\Controller\Dialog\Express\AdvancedSearch::submit'],
+
         /*
          * Conversations
          */
@@ -388,6 +397,7 @@ return [
         '/ccm/system/file/upload' => ['\Concrete\Controller\Backend\File::upload'],
         '/ccm/system/file/folder/add' => ['\Concrete\Controller\Backend\File\Folder::add'],
         '/ccm/system/file/folder/contents' => ['\Concrete\Controller\Search\FileFolder::submit'],
+        '/ccm/system/file/thumbnailer' => ['\Concrete\Controller\Backend\File\Thumbnailer::generate'],
 
         /*
          * Users
@@ -513,6 +523,10 @@ return [
         '/ccm/system/search/users/current' => ['\Concrete\Controller\Search\Users::searchCurrent'],
         '/ccm/system/search/users/preset/{presetID}' => ['\Concrete\Controller\Search\Users::searchPreset'],
         '/ccm/system/search/users/clear' => ['\Concrete\Controller\Search\Users::clearSearch'],
+
+        '/ccm/system/search/express/basic' => ['\Concrete\Controller\Search\Express::searchBasic'],
+        '/ccm/system/search/express/current' => ['\Concrete\Controller\Search\Express::searchCurrent'],
+        '/ccm/system/search/express/clear' => ['\Concrete\Controller\Search\Express::clearSearch'],
 
         '/ccm/system/search/groups/submit' => ['\Concrete\Controller\Search\Groups::submit'],
 
@@ -648,7 +662,7 @@ return [
         'PHP' => ['php', FileType::T_TEXT],
         'MS Word' => ['doc,docx', FileType::T_DOCUMENT],
         'Stylesheet' => ['css', FileType::T_TEXT],
-        'MP4' => ['mp4', FileType::T_VIDEO],
+        'MP4' => ['mp4', FileType::T_VIDEO, false, 'video'],
         'FLV' => ['flv', FileType::T_VIDEO, 'flv'],
         'MP3' => ['mp3', FileType::T_AUDIO, false, 'audio'],
         'MP4 Audio' => ['m4a', FileType::T_AUDIO, false, 'audio'],
@@ -664,9 +678,9 @@ return [
         'TAR Archive' => ['tar', FileType::T_APPLICATION],
         'Zip Archive' => ['zip', FileType::T_APPLICATION],
         'GZip Archive' => ['gz,gzip', FileType::T_APPLICATION],
-        'OGG' => ['ogg', FileType::T_AUDIO],
-        'OGG Video' => ['ogv', FileType::T_VIDEO],
-        'WebM' => ['webm', FileType::T_VIDEO],
+        'OGG' => ['ogg', FileType::T_AUDIO, false, 'audio'],
+        'OGG Video' => ['ogv', FileType::T_VIDEO, false, 'video'],
+        'WebM' => ['webm', FileType::T_VIDEO, false, 'video'],
     ],
 
     /*
@@ -778,6 +792,9 @@ return [
         ],
         'core/frontend/parallax-image' => [
             ['javascript', 'js/frontend/parallax-image.js', ['minify' => false]],
+        ],
+        'core/frontend/thumbnail-builder' => [
+            ['javascript', 'js/frontend/thumbnail-builder.js'],
         ],
         'core/imageeditor/control/position' => [
             ['css', 'css/image-editor/controls/position.css'],
@@ -1049,6 +1066,13 @@ return [
                 ['css', 'jquery/awesome-rating'],
             ],
         ],
+        'core/frontend/thumbnail-builder' => [
+            [
+                ['javascript', 'jquery'],
+                ['javascript', 'underscore'],
+                ['javascript', 'core/frontend/thumbnail-builder'],
+            ],
+        ],
         'core/style-customizer' => [
             [
                 ['javascript', 'jquery'],
@@ -1092,6 +1116,7 @@ return [
             [
                 ['javascript', 'moment'],
                 ['javascript', 'moment-timezone'],
+                ['javascript', 'moment-timezone-data'],
             ],
         ],
         'fancytree' => [
@@ -1410,6 +1435,6 @@ return [
         ],
         'core_cookie' => \Concrete\Core\Http\Middleware\CookieMiddleware::class,
         'core_xframeoptions' => \Concrete\Core\Http\Middleware\FrameOptionsMiddleware::class,
-        'core_thumbnails' => \Concrete\Core\Http\Middleware\ThumbnailMiddleware::class,
+        'core_thumbnails' => '\Concrete\Core\Http\Middleware\ThumbnailMiddleware'
     ],
 ];

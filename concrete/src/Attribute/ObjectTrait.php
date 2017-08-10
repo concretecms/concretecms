@@ -106,7 +106,6 @@ trait ObjectTrait
             }
         }
 
-
         if ($value) {
             $value->setGenericValue($genericValue);
             $orm->persist($value);

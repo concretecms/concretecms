@@ -2,12 +2,12 @@
 namespace Concrete\Core\Page\Type\Composer;
 
 use Loader;
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Entity\Page\Template;
 use Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFormLayoutSetControl;
 use PageType;
 
-class OutputControl extends Object
+class OutputControl extends ConcreteObject
 {
     public function getPageTypeComposerOutputControlID()
     {

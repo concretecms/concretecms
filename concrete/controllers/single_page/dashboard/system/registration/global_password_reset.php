@@ -19,6 +19,7 @@ class GlobalPasswordReset extends DashboardPageController
         \Core::make('config/database')->save(self::PASSWORD_RESET_MESSAGE_KEY, $this->post('resetMessage'));
 
         $users = new UserList();
+        $users->ignorePermissions();
         foreach ($users->getResults() as $userInfo) {
             if ($userInfo instanceof UserInfo) {
                 $userInfo->resetUserPassword();

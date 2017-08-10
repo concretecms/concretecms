@@ -206,7 +206,7 @@ class Controller extends BlockController
             $list->setItemsPerPage($this->num);
             $pagination = $list->getPagination();
             $pages = $pagination->getCurrentPageResults();
-            if ($pagination->getTotalPages() > 1 && $this->paginate) {
+            if ($pagination->haveToPaginate() && $this->paginate) {
                 $showPagination = true;
                 $pagination = $pagination->renderDefaultView();
                 $this->set('pagination', $pagination);

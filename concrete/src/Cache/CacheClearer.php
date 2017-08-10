@@ -11,6 +11,7 @@ use Concrete\Core\Localization\Localization;
 use Exception;
 use FilesystemIterator;
 use Illuminate\Filesystem\Filesystem;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class CacheClearer
@@ -31,6 +32,9 @@ class CacheClearer
     /** @var \Illuminate\Filesystem\Filesystem */
     private $filesystem;
 
+    /** @var LoggerInterface */
+    private $logger;
+
     /** @var \Concrete\Core\Cache\Level\ObjectCache */
     private $caches = [
         'cache' => 'cache',
@@ -45,18 +49,22 @@ class CacheClearer
         DatabaseManager $manager,
         Repository $repository,
         Application $application,
-        Filesystem $filesystem
+        Filesystem $filesystem,
+        LoggerInterface $logger
     ) {
         $this->dispatcher = $dispatcher;
         $this->application = $application;
         $this->manager = $manager;
         $this->repository = $repository;
         $this->filesystem = $filesystem;
+        $this->logger = $logger;
     }
 
     public function flush()
     {
         $this->dispatcher->dispatch('on_cache_flush');
+
+        $this->logger->notice(t('Clearing cache with CacheClearer::flush().'));
 
         // Flush the cache objects
         $this->flushCaches();
@@ -156,6 +164,8 @@ class CacheClearer
 
         if (!$this->repository->get('concrete.cache.clear.thumbnails', true)) {
             $exclude[] = $directory . '/thumbnails';
+        } else {
+            $this->logger->notice(t('Clearing cache thumbnails directory.'));
         }
 
         /** @var \SplFileInfo $item */

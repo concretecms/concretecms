@@ -108,7 +108,7 @@ class Sitemap
                 $nodes[] = $n;
             }
         }
-        if (is_object($pagination) && $pagination->getNbPages() > 1) {
+        if (is_object($pagination) && $pagination->haveToPaginate()) {
             if ($this->displayNodePagination && isset($pagination)) {
                 $n = new stdClass();
                 $n->icon = false;
@@ -126,7 +126,7 @@ class Sitemap
                 $n->active = false;
                 $n->focus = false;
                 $n->unselectable = true;
-                $n->title = ' ' . t('%s more to display. <strong>View all &gt;</strong>', $total - Config::get('concrete.limits.sitemap_pages'));
+                $n->title = ' ' . t('More Pages to Display. <strong>Next Page &gt;</strong>');
                 $n->href = (string) \URL::to('/dashboard/sitemap/explore/', $cID);
                 $nodes[] = $n;
             }

@@ -37,8 +37,8 @@ class YamlProvider implements ProviderInterface
     {
         if($useDefaultSettings){
             $defaultNamespace = $pkg->getNamespace() . '\Entity';
-            $mappingDataPath = $pkg->getPackagePath() . DIRECTORY_SEPARATOR 
-                    . DIRNAME_CONFIG . DIRECTORY_SEPARATOR . DIRNAME_METADATA_YAML;
+            $mappingDataPath = $pkg->getPackagePath() . '/' 
+                    . DIRNAME_CONFIG . '/' . DIRNAME_METADATA_YAML;
             
             $this->addDriver($defaultNamespace, $mappingDataPath);
         }

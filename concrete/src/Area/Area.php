@@ -3,7 +3,7 @@ namespace Concrete\Core\Area;
 
 use Core;
 use Database;
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Block;
 use PermissionKey;
 use View;
@@ -13,7 +13,7 @@ use User;
 use Concrete\Core\Block\View\BlockView;
 use Concrete\Core\Localization\Localization;
 
-class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
+class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInterface
 {
     /**
      * @var int

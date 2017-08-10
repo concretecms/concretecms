@@ -9,7 +9,9 @@
 
     <?php
     if (is_object($type)) {
+        $sizingHelpText = $sizingModeHelp[$type->getSizingMode()];
         $ftTypeName = $type->getName();
+        $ftTypeSizingMode = $type->getSizingMode();
         $ftTypeHandle = $type->getHandle();
         $ftTypeWidth = $type->getWidth();
         $ftTypeHeight = $type->getHeight();
@@ -42,7 +44,7 @@
         <?php if (is_object($type)) {
     ?>
             <input type="hidden" name="ftTypeID" value="<?=$type->getID()?>" />
-        <?php 
+        <?php
 }
     ?>
         <fieldset>
@@ -64,14 +66,21 @@
                 <?=$form->label('ftTypeWidth', t('Width'))?>
                 <div class="input-group">
                     <?=$form->text('ftTypeWidth', $ftTypeWidth)?>
-                    <span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
+                    <span class="input-group-addon"><?php echo t('px'); ?></span>
                 </div>
             </div>
             <div class="form-group">
                 <?=$form->label('ftTypeHeight', t('Height'))?>
-                <?=$form->text('ftTypeHeight', $ftTypeHeight)?>
+                <div class="input-group">
+                    <?=$form->text('ftTypeHeight', $ftTypeHeight)?>
+                    <span class="input-group-addon"><?php echo t('px'); ?></span>
+                </div>
             </div>
-            <div class="alert alert-info"><i class="fa fa-exclamation-circle"></i> <?=t('Only place a value in here if you want this thumbnail to force its dimensions to the width and height.')?></div>
+            <div class="form-group">
+                <?=$form->label('ftTypeSizingMode', t('Sizing Mode'))?>
+                <?=$form->select('ftTypeSizingMode', $sizingModes, $ftTypeSizingMode)?>
+                <p class="sizingmode-help help-block"><span><?=$sizingHelpText?></span></p>
+            </div>
         </fieldset>
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
@@ -79,11 +88,11 @@
                 <?php if (is_object($type)) {
     ?>
                     <button type="submit" class="btn btn-primary pull-right"><?=t('Save')?></button>
-                <?php 
+                <?php
 } else {
     ?>
                     <button type="submit" class="btn btn-primary pull-right"><?=t('Add')?></button>
-                <?php 
+                <?php
 }
     ?>
             </div>
@@ -92,16 +101,23 @@
 
     <script type="text/javascript">
         $(function() {
+            var sizingModeHelp = <?php echo json_encode($sizingModeHelp)?>;
             $('button[data-action=delete-type]').on('click', function(e) {
                 e.preventDefault();
                 if (confirm('<?=t('Delete this thumbnail type?')?>')) {
                     $(this).closest('form').submit();
                 }
             });
+
+            $('#ftTypeSizingMode').on('change', function(e) {
+                $('.sizingmode-help').find('span').html(sizingModeHelp[$(this).val()]);
+            });
+
+            $('#ftTypeSizingMode').trigger('change');
         })
     </script>
 
-<?php 
+<?php
 } else {
     ?>
 
@@ -117,6 +133,7 @@
         <th><?=t('Name')?></th>
         <th><?=t('Width')?></th>
         <th><?=t('Height')?></th>
+        <th><?=t('Sizing')?></th>
         <th><?=t('Required')?></th>
     </tr>
     </thead>
@@ -126,14 +143,15 @@
     <tr>
         <td><a href="<?=$view->action('edit', $type->getID())?>"><?=$type->getHandle()?></a></td>
         <td><?=$type->getDisplayName()?></td>
-        <td><?=$type->getWidth()?></td>
-        <td><?=($type->getHeight()) ? $type->getHeight() : '<span class="text-muted">' . t('Automatic') . '</span>' ?></td>
-        <td><?=($type->isRequired()) ? t('Yes') : t('No')?></td>
+        <td><?=$type->getWidth() ? $type->getWidth() : '<span class="text-muted">' . t('Automatic') . '</span>' ?></td>
+        <td><?=$type->getHeight() ? $type->getHeight() : '<span class="text-muted">' . t('Automatic') . '</span>' ?></td>
+        <td><?=$type->getSizingModeDisplayName()?></td>
+        <td><?=$type->isRequired() ? t('Yes') : t('No')?></td>
     </tr>
-    <?php 
+    <?php
 }
     ?>
     </tbody>
     </table>
-<?php 
+<?php
 } ?>

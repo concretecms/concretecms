@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\System\Express\Entities;
 
-use Concrete\Controller\Element\Search\CustomizeResults;
+use Concrete\Controller\Element\Search\Express\CustomizeResults;
 use Concrete\Core\Express\Search\ColumnSet\ColumnSet;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\User\Search\SearchProvider;

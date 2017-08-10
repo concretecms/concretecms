@@ -6,11 +6,11 @@ use Core;
 use Database;
 use Environment;
 use Concrete\Core\Conversation\Message\Message;
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Package;
 use Concrete\Core\Package\PackageList;
 
-abstract class Editor extends Object
+abstract class Editor extends ConcreteObject
 {
     /** @var string */
     protected $cnvEditorHandle;
@@ -80,9 +80,9 @@ abstract class Editor extends Object
         if (!is_object($this->cnvMessage)) {
             return '';
         }
+        $text = \Core::make('helper/text');
         $cnv = $this->cnvMessage->getConversationObject();
-
-        return $this->cnvMessage->getConversationMessageBody();
+        return $text->entities($this->cnvMessage->getConversationMessageBody());
     }
 
     public function getConversationEditorHandle()

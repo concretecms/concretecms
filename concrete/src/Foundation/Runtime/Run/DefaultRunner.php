@@ -18,13 +18,12 @@ use Exception;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Default HTTP Runner
+ * Default HTTP Runner.
  *
  * @todo Replace pipeline style functionality with middleware
  */
 class DefaultRunner implements RunInterface, ApplicationAwareInterface
 {
-
     use ApplicationAwareTrait;
 
     /** @var Repository */
@@ -47,6 +46,7 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
 
     /**
      * DefaultRunner constructor.
+     *
      * @param ServerInterface $server
      */
     public function __construct(ServerInterface $server)
@@ -66,7 +66,6 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
 
         // Check if we're installed
         if ($this->app->isInstalled()) {
-
             // Call each step in the line
             // @todo Move these to individual middleware, this is basically a duplicated middleware pipeline
             $response = $this->trySteps([
@@ -75,6 +74,12 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
                 // Start localization library.
                 'setSystemLocale',
 
+                // Set the system time zone (what should be the same as the database one)
+                'initializeSystemTimezone',
+
+                // Handle updating automatically
+                'handleUpdates',
+
                 // Set up packages first.
                 // We do this because we don't want the entity manager to be loaded and we
                 // want to give packages an opportunity to replace classes and load new classes
@@ -82,13 +87,10 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
 
                 // Load site specific timezones. Has to come after packages because it
                 // instantiates the site service, which sometimes packages need to override.
-                'initializeTimezone',
+                'initializeSiteTimezone',
 
                 // Define legacy urls, this may be the first thing that loads the entity manager
                 'initializeLegacyUrlDefinitions',
-
-                // Handle updating automatically
-                'handleUpdates',
 
                 // Register legacy tools routes
                 'registerLegacyRoutes',
@@ -100,8 +102,10 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
                 'handlePermissionKeys',
 
                 // Handle eventing
-                'handleEventing'
+                'handleEventing',
             ]);
+        } else {
+            $this->initializeSystemTimezone();
         }
 
         // Create the request to use
@@ -117,9 +121,10 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
 
     /**
      * Define the base url if not defined
-     * This will define `BASE_URL` to whatever is resolved from the resolver
+     * This will define `BASE_URL` to whatever is resolved from the resolver.
      *
      * @deprecated In a future major version this will be part of HTTP middleware
+     *
      * @return Response|void Returns a response if an error occurs
      */
     protected function initializeLegacyURLDefinitions()
@@ -128,7 +133,7 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
             $resolver = $this->getUrlResolver();
 
             try {
-                $url = rtrim((string)$resolver->resolve([]), '/');
+                $url = rtrim((string) $resolver->resolve([]), '/');
                 define('BASE_URL', $url);
             } catch (Exception $x) {
                 return Response::create($x->getMessage(), 500);
@@ -136,26 +141,33 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
         }
     }
 
-    /**
-     * @param Repository $config
-     */
-    protected function initializeTimezone()
+    protected function initializeSystemTimezone()
     {
-        $app = $this->app;
-        $siteConfig = $app->make('site')->getSite()->getConfigRepository();
-        $config = $app->make('config');
+        $config = $this->app->make('config');
+        if (!$config->has('app.server_timezone')) {
+            // There is no server timezone set.
+            $config->set('app.server_timezone', @date_default_timezone_get());
+        }
+        @date_default_timezone_set($config->get('app.server_timezone'));
+    }
+
+    protected function initializeSiteTimezone()
+    {
+        $siteConfig = $this->app->make('site')->getSite()->getConfigRepository();
 
         if (!$siteConfig->has('timezone')) {
             // There is no timezone set.
             $siteConfig->set('timezone', @date_default_timezone_get());
         }
+    }
 
-        if (!$config->has('app.server_timezone')) {
-            // There is no server timezone set.
-            $config->set('app.server_timezone', @date_default_timezone_get());
-        }
-
-        @date_default_timezone_set($config->get('app.server_timezone'));
+    /**
+     * @deprecated Splitted into initializeSystemTimezone and initializeSiteTimezone
+     */
+    protected function initializeTimezone()
+    {
+        $this->initializeSystemTimezone();
+        $this->initializeSiteTimezone();
     }
 
     /**
@@ -173,9 +185,10 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
 
     /**
      * Set legacy config values
-     * This sets `concrete.site` to the current site's sitename
+     * This sets `concrete.site` to the current site's sitename.
      *
      * @deprecated In a future major version this will be part of HTTP middleware
+     *
      * @return Response|void Returns a response if an error occurs
      */
     protected function registerLegacyConfigValues()
@@ -188,9 +201,10 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
 
     /**
      * Register routes that power legacy functionality
-     * This includes `/tools/tool_handle` and `/tools/blocks/block_handle/tool_handle`
+     * This includes `/tools/tool_handle` and `/tools/blocks/block_handle/tool_handle`.
      *
      * @deprecated In a future major version this will be part of HTTP middleware
+     *
      * @return Response|void Returns a response if an error occurs
      */
     protected function registerLegacyRoutes()
@@ -211,7 +225,7 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
     }
 
     /**
-     * Create the request object to use
+     * Create the request object to use.
      */
     protected function createRequest()
     {
@@ -222,9 +236,10 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
     }
 
     /**
-     * Setup concrete5 packages
+     * Setup concrete5 packages.
      *
      * @deprecated In a future major version this will be part of HTTP middleware
+     *
      * @return Response|void Returns a response if an error occurs
      */
     protected function setupPackages()
@@ -233,9 +248,10 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
     }
 
     /**
-     * Load in the `/application/bootstrap/app.php` file
+     * Load in the `/application/bootstrap/app.php` file.
      *
      * @deprecated In a future major version this will be part of HTTP middleware
+     *
      * @return Response|void Returns a response if an error occurs
      */
     protected function loadBootstrap()
@@ -246,9 +262,10 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
     }
 
     /**
-     * Update automatically
+     * Update automatically.
      *
      * @deprecated In a future major version this will be part of HTTP middleware
+     *
      * @return Response|void Returns a response if an error occurs
      */
     protected function handleUpdates()
@@ -257,9 +274,10 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
     }
 
     /**
-     * Fire HTTP events
+     * Fire HTTP events.
      *
      * @deprecated In a future major version this will be part of HTTP middleware
+     *
      * @return Response|void Returns a response if an error occurs
      */
     protected function handleEventing()
@@ -268,20 +286,23 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
     }
 
     /**
-     * Load all permission keys
+     * Load all permission keys.
      *
      * @deprecated In a future major version this will be part of HTTP middleware
+     *
      * @return Response|void Returns a response if an error occurs
      */
     protected function handlePermissionKeys()
     {
-        /** @todo Replace this with a testable service */
+        /* @todo Replace this with a testable service */
         Key::loadAll();
     }
 
     /**
-     * Try a list of steps. If a response is returned, halt progression and return the response;
+     * Try a list of steps. If a response is returned, halt progression and return the response;.
+     *
      * @param string[] $steps
+     *
      * @return Response|null
      */
     protected function trySteps(array $steps)
@@ -297,9 +318,10 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
     }
 
     /**
-     * Get the config repository to use
+     * Get the config repository to use.
      *
      * @deprecated In a future major version this will be part of HTTP middleware
+     *
      * @return Repository
      */
     protected function getConfig()
@@ -312,7 +334,7 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
     }
 
     /**
-     * Get the default config repository to use
+     * Get the default config repository to use.
      *
      * @return Repository
      */
@@ -322,22 +344,26 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
     }
 
     /**
-     * Set the config repository
+     * Set the config repository.
      *
      * @deprecated In a future major version this will be part of HTTP middleware
+     *
      * @param Repository $repository
+     *
      * @return $this
      */
     public function setConfig(Repository $repository)
     {
         $this->config = $repository;
+
         return $this;
     }
 
     /**
-     * Get the router to use
+     * Get the router to use.
      *
      * @deprecated In a future major version this will be part of HTTP middleware
+     *
      * @return RouterInterface
      */
     protected function getRouter()
@@ -350,7 +376,7 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
     }
 
     /**
-     * Get the default router to use
+     * Get the default router to use.
      *
      * @return RouterInterface
      */
@@ -360,22 +386,26 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
     }
 
     /**
-     * Set the router
+     * Set the router.
      *
      * @deprecated In a future major version this will be part of HTTP middleware
+     *
      * @param RouterInterface $router
+     *
      * @return $this
      */
     public function setRouter(RouterInterface $router)
     {
         $this->router = $router;
+
         return $this;
     }
 
     /**
-     * Get the site service to use
+     * Get the site service to use.
      *
      * @deprecated In a future major version this will be part of HTTP middleware
+     *
      * @return SiteService
      */
     protected function getSiteService()
@@ -388,7 +418,7 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
     }
 
     /**
-     * Get the default site service to use
+     * Get the default site service to use.
      *
      * @return SiteService
      */
@@ -398,22 +428,26 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
     }
 
     /**
-     * Set the site service
+     * Set the site service.
      *
      * @deprecated In a future major version this will be part of HTTP middleware
+     *
      * @param SiteService $site
+     *
      * @return $this
      */
     public function setSiteService(SiteService $site)
     {
         $this->siteService = $site;
+
         return $this;
     }
 
     /**
-     * Get the url resolver to use
+     * Get the url resolver to use.
      *
      * @deprecated In a future major version this will be part of HTTP middleware
+     *
      * @return UrlResolverInterface
      */
     protected function getUrlResolver()
@@ -426,9 +460,10 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
     }
 
     /**
-     * Get the default url resolver to use
+     * Get the default url resolver to use.
      *
      * @deprecated In a future major version this will be part of HTTP middleware
+     *
      * @return UrlResolverInterface
      */
     private function getDefaultUrlResolver()
@@ -437,22 +472,26 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
     }
 
     /**
-     * Set the url resolver
+     * Set the url resolver.
      *
      * @deprecated In a future major version this will be part of HTTP middleware
+     *
      * @param UrlResolverInterface $urlResolver
+     *
      * @return $this
      */
     public function setUrlResolver(UrlResolverInterface $urlResolver)
     {
         $this->urlResolver = $urlResolver;
+
         return $this;
     }
 
     /**
-     * Get the url resolver to use
+     * Get the url resolver to use.
      *
      * @deprecated In a future major version this will be part of HTTP middleware
+     *
      * @return EventDispatcherInterface
      */
     protected function getEventDispatcher()
@@ -465,9 +504,10 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
     }
 
     /**
-     * Get the default url resolver to use
+     * Get the default url resolver to use.
      *
      * @deprecated In a future major version this will be part of HTTP middleware
+     *
      * @return EventDispatcherInterface
      */
     private function getDefaultEventDispatcher()
@@ -476,16 +516,18 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
     }
 
     /**
-     * Set the url resolver
+     * Set the url resolver.
      *
      * @deprecated In a future major version this will be part of HTTP middleware
+     *
      * @param EventDispatcherInterface $urlResolver
+     *
      * @return $this
      */
     public function setEventDispatcher(EventDispatcherInterface $urlResolver)
     {
         $this->eventDispatcher = $urlResolver;
+
         return $this;
     }
-
 }

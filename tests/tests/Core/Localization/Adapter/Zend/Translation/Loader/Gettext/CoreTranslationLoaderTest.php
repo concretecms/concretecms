@@ -24,7 +24,7 @@ class CoreTranslationLoaderTest extends LocalizationTestsBase
     {
         parent::setUpBeforeClass();
         $filesystem = new Filesystem();
-        $langDir = __DIR__ . '/fixtures/languages/fi_FI';
+        $langDir = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__) . '/fixtures/languages/fi_FI';
         $appLangDir = parent::getTranslationsFolder()  . '/fi_FI';
         $filesystem->copyDirectory($langDir, $appLangDir);
     }

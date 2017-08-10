@@ -7,7 +7,7 @@
         array('columns', t('Customize Results'))
     ));?>
 
-    <form class="ccm-search-fields ccm-search-fields-none" data-form="advanced-search" method="post" action="<?=$controller->action('submit')?>">
+    <form class="ccm-search-fields ccm-search-fields-none" data-form="advanced-search" method="post" action="<?=$controller->getSubmitAction()?>">
 
     <div class="ccm-tab-content" id="ccm-tab-content-fields">
 
@@ -59,7 +59,7 @@
 
 <script type="text/template" data-template="search-field-row">
     <div class="ccm-search-fields-row">
-        <select data-action="<?=$controller->action('add_field')?>" name="field[]" class="ccm-search-choose-field form-control">
+        <select data-action="<?=$controller->getAddFieldAction()?>" name="field[]" class="ccm-search-choose-field form-control">
             <option value=""><?=t('** Select Field')?></option>
             <?php foreach($manager->getGroups() as $group) { ?>
                 <optgroup label="<?=$group->getName()?>">

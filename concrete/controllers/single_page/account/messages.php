@@ -126,7 +126,8 @@ class Messages extends AccountPageController
     {
         $this->validateUser($uID);
         $profile = $this->get('profile');
-        $this->set('backURL', $profile->getUserPublicProfileURL());
+        $backURL = $profile->getUserPublicProfileURL() ?: 'javascript:history.back()';
+        $this->set('backURL', $backURL);
     }
 
     public function reply($boxID, $msgID)
@@ -144,7 +145,7 @@ class Messages extends AccountPageController
 
         $body = "\n\n\n" . $msg->getMessageDelimiter() . "\n";
         $body .= t("From: %s\nDate Sent: %s\nSubject: %s", $msg->getMessageAuthorName(), $dh->formatDateTime($msg->getMessageDateAdded(), true), $msg->getFormattedMessageSubject());
-        $body .= "\n\n" . $msg->getMessageBody();
+        $body .= "\n\n" . h($msg->getMessageBody());
         $this->set('msgBody', $body);
     }
 

@@ -55,7 +55,7 @@ $addSelected = true;
 				<?=$form->checkbox('notifyMeOnSubmission', 1, $miniSurveyInfo['notifyMeOnSubmission'] == 1, array('onclick' => "$('input[name=recipientEmail]').focus()"))?>
 				</span><?=$form->text('recipientEmail', $miniSurveyInfo['recipientEmail'], array('style' => 'z-index:2000;'))?>
 			</div>
-			<span class="help-block"><?=t('(Seperate multiple emails with a comma)')?></span>
+			<span class="help-block"><?=t('(Separate multiple emails with a comma)')?></span>
 		</div>
 		<div class="form-group">
 			<label class="control-label"><?=t('Solving a <a href="%s" target="_blank">CAPTCHA</a> Required to Post?', t('http://en.wikipedia.org/wiki/Captcha'))?></label>

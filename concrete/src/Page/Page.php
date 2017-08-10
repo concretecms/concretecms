@@ -780,7 +780,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
         $siteTreeID = \Core::make('site')->getSite()->getSiteTreeID();
 
-        $v = [$newCID, $siteTreeID, $cParentID, $uID, $cInheritPermissionsFrom, $cInheritPermissionsFromCID, $cLink, $newWindow];
+        $v = [$newCID, $siteTreeID, $cParentID, $uID, $cInheritPermissionsFrom, (int) $cInheritPermissionsFromCID, $cLink, $newWindow];
         $q = 'insert into Pages (cID, siteTreeID, cParentID, uID, cInheritPermissionsFrom, cInheritPermissionsFromCID, cPointerExternalLink, cPointerExternalLinkNewWindow) values (?, ?, ?, ?, ?, ?, ?, ?)';
         $r = $db->prepare($q);
 
@@ -1486,6 +1486,9 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         return $this->vObj->cvDatePublic;
     }
 
+    /**
+     * @return \DateTime|null Returns the \DateTime instance (or null if the current version doesn't have public date)
+     */
     public function getCollectionDatePublicObject()
     {
         return Core::make('date')->toDateTime($this->getCollectionDatePublic());
@@ -2061,7 +2064,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $db = Database::connection();
         $cpID = $this->getParentPermissionsCollectionID();
         $this->updatePermissionsCollectionID($this->cID, $cpID);
-        $v = ['PARENT', $cpID, $this->cID];
+        $v = ['PARENT', (int) $cpID, $this->cID];
         $q = 'update Pages set cInheritPermissionsFrom = ?, cInheritPermissionsFromCID = ? where cID = ?';
         $db->executeQuery($q, $v);
         $this->cInheritPermissionsFrom = 'PARENT';
@@ -2079,7 +2082,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             if (is_object($master)) {
                 $cpID = $master->getCollectionID();
                 $this->updatePermissionsCollectionID($this->cID, $cpID);
-                $v = ['TEMPLATE', $cpID, $this->cID];
+                $v = ['TEMPLATE', (int) $cpID, $this->cID];
                 $q = 'update Pages set cInheritPermissionsFrom = ?, cInheritPermissionsFromCID = ? where cID = ?';
                 $db->executeQuery($q, $v);
                 $this->cInheritPermissionsFrom = 'TEMPLATE';
@@ -2099,7 +2102,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
             $cpID = $this->cID;
             $this->updatePermissionsCollectionID($this->cID, $cpID);
-            $v = ['OVERRIDE', $cpID, $this->cID];
+            $v = ['OVERRIDE', (int) $cpID, $this->cID];
             $q = 'update Pages set cInheritPermissionsFrom = ?, cInheritPermissionsFromCID = ? where cID = ?';
             $db->executeQuery($q, $v);
             $this->cInheritPermissionsFrom = 'OVERRIDE';
@@ -2288,7 +2291,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                 //as well as all collections beneath it that are set to inherit from this parent
                 // first we do this one
                 $q = 'update Pages set cInheritPermissionsFromCID = ? where cID = ?';
-                $r = $db->executeQuery($q, [$npID, $cID]);
+                $r = $db->executeQuery($q, [(int) $npID, $cID]);
                 $this->updatePermissionsCollectionID($cID, $npID);
             }
         }
@@ -2414,7 +2417,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $siteTreeID = is_object($site) ? $site->getSiteTreeID() : \Core::make('site')->getSite()->getSiteTreeID();
         }
 
-        $v = [$newCID, $siteTreeID, $this->getPageTypeID(), $cParentID, $uID, $this->overrideTemplatePermissions(), $this->getPermissionsCollectionID(), $this->getCollectionInheritance(), $this->cFilename, $this->cPointerID, $this->cPointerExternalLink, $this->cPointerExternalLinkNewWindow, $this->cDisplayOrder, $this->pkgID];
+        $v = [$newCID, $siteTreeID, $this->getPageTypeID(), $cParentID, $uID, $this->overrideTemplatePermissions(), (int) $this->getPermissionsCollectionID(), $this->getCollectionInheritance(), $this->cFilename, $this->cPointerID, $this->cPointerExternalLink, $this->cPointerExternalLinkNewWindow, $this->cDisplayOrder, $this->pkgID];
         $q = 'insert into Pages (cID, siteTreeID, ptID, cParentID, uID, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cInheritPermissionsFrom, cFilename, cPointerID, cPointerExternalLink, cPointerExternalLinkNewWindow, cDisplayOrder, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
         $res = $db->executeQuery($q, $v);
 
@@ -2448,14 +2451,14 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                 $nc2->acquireAreaPermissions($this->getPermissionsCollectionID());
                 // make sure we update the proper permissions pointer to the new page ID
                 $q = 'update Pages set cInheritPermissionsFromCID = ? where cID = ?';
-                $v = [$newCID, $newCID];
+                $v = [(int) $newCID, $newCID];
                 $db->executeQuery($q, $v);
                 $nc2->cInheritPermissionsFromCID = $newCID;
             } elseif ($this->getCollectionInheritance() == 'PARENT') {
                 // we need to clear out any lingering permissions groups (just in case), and set this collection to inherit from the parent
                 $npID = $nc->getPermissionsCollectionID();
                 $q = 'update Pages set cInheritPermissionsFromCID = ? where cID = ?';
-                $db->executeQuery($q, [$npID, $newCID]);
+                $db->executeQuery($q, [(int) $npID, $newCID]);
                 $nc2->cInheritPermissionsFromCID = $npID;
             }
 
@@ -2961,7 +2964,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         }
         $siteTreeID = $siteTree->getSiteTreeID();
 
-        $v = [$cID, $siteTreeID, $cParentID, $uID, 'OVERRIDE', 1, $cID, 0];
+        $v = [$cID, $siteTreeID, $cParentID, $uID, 'OVERRIDE', 1, (int) $cID, 0];
         $q = 'insert into Pages (cID, siteTreeID, cParentID, uID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cDisplayOrder) values (?, ?, ?, ?, ?, ?, ?, ?)';
         $r = $db->prepare($q);
         $r->execute($v);
@@ -3069,7 +3072,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
         $cInheritPermissionsFromCID = ($this->overrideTemplatePermissions()) ? $this->getPermissionsCollectionID() : $masterCID;
         $cInheritPermissionsFrom = ($this->overrideTemplatePermissions()) ? 'PARENT' : 'TEMPLATE';
-        $v = [$cID, $siteTreeID, $ptID, $cParentID, $uID, $cInheritPermissionsFrom, $this->overrideTemplatePermissions(), $cInheritPermissionsFromCID, $cDisplayOrder, $pkgID, $cIsActive];
+        $v = [$cID, $siteTreeID, $ptID, $cParentID, $uID, $cInheritPermissionsFrom, $this->overrideTemplatePermissions(), (int) $cInheritPermissionsFromCID, $cDisplayOrder, $pkgID, $cIsActive];
         $q = 'insert into Pages (cID, siteTreeID, ptID, cParentID, uID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cDisplayOrder, pkgID, cIsActive) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
         $r = $db->prepare($q);
         $res = $r->execute($v);
@@ -3245,7 +3248,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $siteTreeID = $parent->getSiteTreeID();
         }
 
-        $v = [$cID, $siteTreeID, $cFilename, $cParentID, $cInheritPermissionsFrom, $cOverrideTemplatePermissions, $cInheritPermissionsFromCID, $cDisplayOrder, $uID, $pkgID];
+        $v = [$cID, $siteTreeID, $cFilename, $cParentID, $cInheritPermissionsFrom, $cOverrideTemplatePermissions, (int) $cInheritPermissionsFromCID, $cDisplayOrder, $uID, $pkgID];
         $q = 'insert into Pages (cID, siteTreeID, cFilename, cParentID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cDisplayOrder, uID, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
         $r = $db->prepare($q);
         $res = $r->execute($v);

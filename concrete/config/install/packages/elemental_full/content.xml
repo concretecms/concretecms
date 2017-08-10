@@ -1125,7 +1125,7 @@
                                         <data table="btPageList">
                                             <record>
                                                 <num><![CDATA[1]]></num>
-                                                <orderBy><![CDATA[display_asc]]></orderBy>
+                                                <orderBy><![CDATA[chrono_desc]]></orderBy>
                                                 <cParentID/>
                                                 <cThis><![CDATA[0]]></cThis>
                                                 <useButtonForLink><![CDATA[0]]></useButtonForLink>

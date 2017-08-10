@@ -198,6 +198,9 @@ table.ccm-search-results-table {
   -moz-user-select: none;
   -webkit-font-smoothing: antialiased;
 
+  &.selectable {
+    .user-select(auto);
+  }
 
   span.ccm-search-results-checkbox {
     display: block;
@@ -208,7 +211,7 @@ table.ccm-search-results-table {
 
 
     select.ccm-search-bulk-action {
-      font-size: 11px;
+      font-size: 14px;
       display: inline-block;
       width: auto;
       margin-right: 10px;
@@ -269,6 +272,8 @@ table.ccm-search-results-table {
         position: relative;
         top: -6px;
         left: 10px;
+        padding-right: 10px;
+        margin-right: 10px;
       }
 
       &.ccm-results-list-active-sort-asc a:after {
@@ -281,6 +286,13 @@ table.ccm-search-results-table {
         position: relative;
         top: -6px;
         left: 10px;
+        padding-right: 10px;
+        margin-right: 10px;
+      }
+
+      &:last-child a,
+      &:last-child span {
+        padding-right: 10px;
       }
 
       a {
@@ -432,7 +444,11 @@ table.ccm-search-results-table {
   &.compact-results {
     thead,
     tbody {
-      th,
+      th {
+        &:first-child {
+          padding-left: 0;
+        }
+      }
       td {
         &:first-child {
           padding-left: 15px;
@@ -449,7 +465,7 @@ div.ccm-search-results-none {
 }
 
 div.ccm-search-results-pagination {
-  margin-top: 20px;
+  margin: 20px;
   text-align: center;
 }
 

@@ -53,7 +53,7 @@ class ChangePagePermissionsRequest extends PageRequest
 
     public function getWorkflowRequestApproveButtonClass()
     {
-        return 'btn-success';
+        return '';
     }
 
     public function getWorkflowRequestApproveButtonInnerButtonRightHTML()
@@ -77,7 +77,6 @@ class ChangePagePermissionsRequest extends PageRequest
             $button->addWorkflowProgressActionButtonParameter('dialog-title', t('Pending Permissions'));
             $button->addWorkflowProgressActionButtonParameter('dialog-width', '400');
             $button->addWorkflowProgressActionButtonParameter('dialog-height', '360');
-            $button->setWorkflowProgressActionStyleInnerButtonLeftHTML('<i class="icon-eye-open"></i>');
             $button->setWorkflowProgressActionURL(REL_DIR_FILES_TOOLS_REQUIRED . '/workflow/dialogs/change_page_permissions?wpID=' . $wp->getWorkflowProgressID());
             $button->setWorkflowProgressActionStyleClass('dialog-launch');
             $buttons[] = $button;

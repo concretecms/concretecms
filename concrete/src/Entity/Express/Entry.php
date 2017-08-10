@@ -6,10 +6,12 @@ use Concrete\Core\Entity\Attribute\Value\ExpressValue;
 use Concrete\Core\Entity\Express\Entry\Association as EntryAssociation;
 use Concrete\Core\Entity\Express\Entry\ManyAssociation;
 use Concrete\Core\Entity\Express\Entry\OneAssociation;
+use Concrete\Core\Express\Entry\Formatter\EntryFormatterInterface;
 use Concrete\Core\Express\EntryBuilder\AssociationBuilder;
 use Concrete\Core\Express\EntryBuilder\AssociationUpdater;
 use Concrete\Core\Permission\ObjectInterface as PermissionObjectInterface;
 use Concrete\Core\Attribute\ObjectInterface as AttributeObjectInterface;
+use Concrete\Core\Support\Facade\Application;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -22,6 +24,8 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
 {
 
     use ObjectTrait;
+
+    protected $entryFormatter;
 
     /**
      * Returns either an attribute (if passed an attribute handle) or the content
@@ -158,6 +162,14 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
     }
 
     /**
+     * @param mixed $exEntryID
+     */
+    public function setID($exEntryID)
+    {
+        $this->exEntryID = $exEntryID;
+    }
+
+    /**
      * @return mixed
      */
     public function getAttributes()
@@ -285,10 +297,19 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
 
     public function getLabel()
     {
-        $firstAttribute = $this->getEntity()->getAttributes()[0];
-        if (is_object($firstAttribute)) {
-            return $this->getAttribute($firstAttribute);
+        if (!$this->entryFormatter) {
+            $this->entryFormatter = Application::getFacadeApplication()->make(EntryFormatterInterface::class);
         }
+
+        if ($mask = $this->getEntity()->getLabelMask()) {
+            $name = $this->entryFormatter->format($mask, $this);
+        }
+
+        if (!$name) {
+            $name = $this->entryFormatter->getLabel($this);
+        }
+
+        return $name;
     }
 
     public function jsonSerialize()

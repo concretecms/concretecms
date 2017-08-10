@@ -11,10 +11,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	<div class="form-group">
 		<label class="control-label" for="cName"><?=t('Name')?></label>
 		<div>
-			<input type="text" class="form-control" name="cName" id="cName" value="<?php echo $c->getCollectionName()?>">
+			<input type="text" class="form-control" name="cName" id="cName" value="<?php echo h($c->getCollectionName())?>">
     	</div>
 	</div>
-	<?php 
+	<?php
 } ?>
 
 	<?php if ($allowEditPaths && !$c->isGeneratedCollection()) {
@@ -25,7 +25,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			<input type="text" class="form-control" name="cHandle" value="<?php echo $c->getCollectionHandle()?>" id="cHandle"><input type="hidden" name="oldCHandle" id="oldCHandle" value="<?php echo $c->getCollectionHandle()?>">
 		</div>
 	</div>
-	<?php 
+	<?php
 } ?>
 
 	<?php foreach ($attributes as $ak) {
@@ -42,7 +42,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
         <?php if (isset($sitemap) && $sitemap) {
     ?>
             <input type="hidden" name="sitemap" value="1" />
-        <?php 
+        <?php
 } ?>
 
 	</form>

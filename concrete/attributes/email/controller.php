@@ -10,22 +10,15 @@ use Concrete\Core\Error\ErrorList\Field\AttributeField;
 class Controller extends DefaultController
 {
 
+    public $helpers = array('form');
+
     public function form()
     {
         $value = null;
         if (is_object($this->attributeValue)) {
             $value = $this->app->make('helper/text')->entities($this->getAttributeValue()->getValue());
         }
-        echo $this->app->make('helper/form')->email($this->field('value'), $value);
-    }
-
-    public function composer()
-    {
-        $value = null;
-        if (is_object($this->attributeValue)) {
-            $value = $this->app->make('helper/text')->entities($this->getAttributeValue()->getValue());
-        }
-        echo $this->app->make('helper/form')->email($this->field('value'), $value, array('class' => 'span5'));
+        $this->set('value', $value);
     }
 
     public function getIconFormatter()

@@ -25,7 +25,7 @@ class ElementTest extends \PHPUnit_Framework_TestCase
         $element = \Element::get('header_required');
         $this->assertTrue($element->exists());
         $this->assertNull($element->getElementController());
-        $this->assertEquals(DIRNAME_ELEMENTS . DIRECTORY_SEPARATOR . 'header_required.php', $element->getElementPath());
+        $this->assertEquals(DIRNAME_ELEMENTS . '/header_required.php', $element->getElementPath());
 
         $element = \Element::get('workflow/type_form_required');
         $this->assertTrue($element->exists());

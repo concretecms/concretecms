@@ -13,7 +13,7 @@ use Concrete\Core\Entity\Attribute\Value\Value\Value;
 use Concrete\Core\Entity\User\User as UserEntity;
 use Concrete\Core\Export\ExportableInterface;
 use Concrete\Core\File\StorageLocation\StorageLocationFactory;
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Mail\Importer\MailImporter;
 use Concrete\Core\Permission\ObjectInterface as PermissionObjectInterface;
 use Concrete\Core\User\Avatar\AvatarServiceInterface;
@@ -39,7 +39,7 @@ use User as ConcreteUser;
 use View;
 use Concrete\Core\Export\Item\User as UserExporter;
 
-class UserInfo extends Object implements AttributeObjectInterface, PermissionObjectInterface, ExportableInterface
+class UserInfo extends ConcreteObject implements AttributeObjectInterface, PermissionObjectInterface, ExportableInterface
 {
     use ObjectTrait;
 

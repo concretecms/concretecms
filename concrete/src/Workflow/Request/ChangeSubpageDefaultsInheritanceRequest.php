@@ -53,7 +53,7 @@ class ChangeSubpageDefaultsInheritanceRequest extends PageRequest
 
     public function getWorkflowRequestApproveButtonClass()
     {
-        return 'btn-success';
+        return '';
     }
 
     public function getWorkflowRequestApproveButtonInnerButtonRightHTML()

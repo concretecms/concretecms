@@ -1,13 +1,13 @@
 <?php
 namespace Concrete\Core\Workflow\Progress;
 
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Workflow\HistoryEntry\HistoryEntry;
 use Concrete\Core\Workflow\Request\Request;
 use Loader;
 use UserInfo;
 
-class History extends Object
+class History extends ConcreteObject
 {
     public function getWorkflowProgressHistoryTimestamp()
     {
@@ -46,6 +46,15 @@ class History extends Object
             $d = $this->object->getWorkflowProgressHistoryDescription();
 
             return $d;
+        }
+    }
+
+    public static function getLatest(Progress $wp)
+    {
+        $db = Loader::db();
+        $wphID = $db->GetOne('select wphID from WorkflowProgressHistory where wpID = ? order by timestamp desc', [$wp->getWorkflowProgressID()]);
+        if ($wphID) {
+            return $wp->getWorkflowProgressHistoryObjectByID($wphID);
         }
     }
 

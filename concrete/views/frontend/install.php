@@ -215,7 +215,7 @@ if (isset($successMessage)) {
             function updateCanonicalURLState() {
                 $.each([
                     [$('#canonicalUrlChecked').is(':checked'), $('#canonicalUrl')],
-                    [$('#canonicalSSLUrlChecked').is(':checked'), $('#canonicalSSLUrl')]
+                    [$('#canonicalUrlAlternativeChecked').is(':checked'), $('#canonicalUrlAlternative')]
                 ], function () {
                     if (this[0]) {
                         this[1].attr('required', 'required');
@@ -227,12 +227,12 @@ if (isset($successMessage)) {
                 });
             }
 
-            $('#canonicalUrlChecked,#canonicalSSLUrlChecked').change(updateCanonicalURLState);
+            $('#canonicalUrlChecked,#canonicalUrlAlternativeChecked').change(updateCanonicalURLState);
             <?php
             if ($setInitialState) {
             ?>
             $('#canonicalUrlChecked').prop('checked', <?=$canonicalUrlChecked ? 'true' : 'false'?>);
-            $('#canonicalSSLUrlChecked').prop('checked', <?=$canonicalSSLUrlChecked ? 'true' : 'false'?>);
+            $('#canonicalUrlAlternativeChecked').prop('checked', <?=$canonicalUrlAlternativeChecked ? 'true' : 'false'?>);
             <?php
             }
             ?>
@@ -381,17 +381,17 @@ if (isset($successMessage)) {
                                 <div class="form-group">
                                     <label class="control-label">
                                         <?=$form->checkbox('canonicalUrlChecked', '1')?>
-                                        <?=t('Set canonical URL for HTTP')?>:
+                                        <?=t('Set main canonical URL')?>:
                                     </label>
-                                    <?=$form->url('canonicalUrl', h($canonicalUrl), ['pattern' => 'http:.+', 'placeholder' => 'http://'])?>
+                                    <?=$form->url('canonicalUrl', h($canonicalUrl), ['pattern' => 'https?:.+', 'placeholder' => t('%s or %s', 'http://...', 'https://...')])?>
                                 </div>
 
                                 <div class="form-group">
                                     <label class="control-label">
-                                        <?=$form->checkbox('canonicalSSLUrlChecked', '1')?>
-                                        <?=t('Set canonical URL over SSL')?>:
+                                        <?=$form->checkbox('canonicalUrlAlternativeChecked', '1')?>
+                                        <?=t('Set alternative canonical URL')?>:
                                     </label>
-                                    <?=$form->url('canonicalSSLUrl', h($canonicalSSLUrl), ['pattern' => 'https:.+', 'placeholder' => 'https://'])?>
+                                    <?=$form->url('canonicalUrlAlternative', h($canonicalUrlAlternative), ['pattern' => 'https?:.+', 'placeholder' => t('%s or %s', 'http://...', 'https://...')])?>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label" for="sessionHandler"><?=t('Session Handler')?></label>
@@ -411,7 +411,12 @@ if (isset($successMessage)) {
                                     <label class="control-label" for="sessionHandler"><?=t('Country')?></label>
                                     <?= $form->select('siteLocaleCountry', $countries, $computedSiteLocaleCountry) ?>
                                 </div>
-                                
+
+                                <div class="form-group">
+                                    <label class="control-label" for="SERVER_TIMEZONE"><?=t('System Time Zone')?></label>
+                                    <?= $form->select('SERVER_TIMEZONE', $availableTimezones, $SERVER_TIMEZONE, ['required' => 'required']) ?>
+                                </div>
+
                                 <script>
                                 $('#siteLocaleLanguage').on('change', function() {
                                     $.ajax(
@@ -878,6 +883,34 @@ if (isset($successMessage)) {
                                     ?>
                                     <i class="fa fa-question-circle launch-tooltip"
                                        title="<?= t('concrete5 is not compatible with opcode caches that strip PHP comments. Certain configurations of eAccelerator and Zend opcode caching may use this behavior, and it must be disabled.') ?>"></i>
+                                    <?php
+                                }
+                                ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <?php
+                                if ($tokenizerTest) {
+                                    ?>
+                                    <i class="fa fa-check"></i>
+                                    <?php
+                                } else {
+                                    ?>
+                                    <i class="fa fa-exclamation-circle"></i>
+                                    <?php
+                                }
+                                ?>
+                            </td>
+                            <td style="width: 100%">
+                                <?= t('Tokenizer Extension Enabled') ?>
+                            </td>
+                            <td>
+                                <?php
+                                if (!$tokenizerTest) {
+                                    ?>
+                                    <i class="fa fa-question-circle launch-tooltip"
+                                       title="<?= t('The PHP Tokenizer extension has been disabled intentionally on this server and must be enabled.') ?>"></i>
                                     <?php
                                 }
                                 ?>

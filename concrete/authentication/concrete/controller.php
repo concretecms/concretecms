@@ -1,22 +1,21 @@
 <?php
-
 namespace Concrete\Authentication\Concrete;
 
 use Concrete\Core\Authentication\AuthenticationTypeController;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\User\User;
 use Concrete\Core\Validation\CSRF\Token;
 use Config;
-use Exception;
-use Database;
 use Core;
-use Concrete\Core\User\User;
+use Database;
+use Exception;
+use Session;
 use UserInfo;
 use View;
-use Session;
 
 class Controller extends AuthenticationTypeController
 {
-    public $apiMethods = array('forgot_password', 'v', 'change_password', 'password_changed', 'email_validated', 'invalid_token', 'required_password_upgrade');
+    public $apiMethods = ['forgot_password', 'v', 'change_password', 'password_changed', 'email_validated', 'invalid_token', 'required_password_upgrade'];
 
     public function getHandle()
     {
@@ -30,7 +29,7 @@ class Controller extends AuthenticationTypeController
             list($uID, $authType, $hash) = explode(':', $cookie);
             if ($authType == 'concrete') {
                 $db = Database::connection();
-                $db->executeQuery('DELETE FROM authTypeConcreteCookieMap WHERE uID=? AND token=?', array($uID, $hash));
+                $db->executeQuery('DELETE FROM authTypeConcreteCookieMap WHERE uID=? AND token=?', [$uID, $hash]);
             }
         }
     }
@@ -46,14 +45,14 @@ class Controller extends AuthenticationTypeController
         $db = Database::connection();
         $q = $db->fetchColumn(
             'SELECT validThrough FROM authTypeConcreteCookieMap WHERE uID=? AND token=?',
-            array($uID, $hash)
+            [$uID, $hash]
         );
         $bool = time() < $q;
         if (!$bool) {
-            $db->executeQuery('DELETE FROM authTypeConcreteCookieMap WHERE uID=? AND token=?', array($uID, $hash));
+            $db->executeQuery('DELETE FROM authTypeConcreteCookieMap WHERE uID=? AND token=?', [$uID, $hash]);
         } else {
             $newTime = strtotime('+2 weeks');
-            $db->executeQuery('UPDATE authTypeConcreteCookieMap SET validThrough=?', array($newTime));
+            $db->executeQuery('UPDATE authTypeConcreteCookieMap SET validThrough=?', [$newTime]);
         }
 
         return $bool;
@@ -77,7 +76,7 @@ class Controller extends AuthenticationTypeController
         try {
             $db->executeQuery(
                 'INSERT INTO authTypeConcreteCookieMap (token, uID, validThrough) VALUES (?,?,?)',
-                array($token, $u->getUserID(), $validThrough)
+                [$token, $u->getUserID(), $validThrough]
             );
         } catch (\Exception $e) {
             // HOLY CRAP.. SERIOUSLY?
@@ -144,8 +143,8 @@ class Controller extends AuthenticationTypeController
     public function required_password_upgrade()
     {
         $email = $this->post('uEmail');
-	    $token = $this->app->make(Token::class);
-	    $this->set('token', $token);
+        $token = $this->app->make(Token::class);
+        $this->set('token', $token);
 
         if ($email) {
             $errorValidator = Core::make('helper/validation/error');
@@ -253,7 +252,7 @@ class Controller extends AuthenticationTypeController
         $e = Core::make('helper/validation/error');
         $ui = UserInfo::getByValidationHash($uHash);
         if (is_object($ui)) {
-            $hashCreated = $db->fetchColumn('SELECT uDateGenerated FROM UserValidationHashes WHERE uHash=?', array($uHash));
+            $hashCreated = $db->fetchColumn('SELECT uDateGenerated FROM UserValidationHashes WHERE uHash=?', [$uHash]);
             if ($hashCreated < (time() - (USER_CHANGE_PASSWORD_URL_LIFETIME))) {
                 $h->deleteKey('UserValidationHashes', 'uHash', $uHash);
                 throw new \Exception(
@@ -326,7 +325,7 @@ class Controller extends AuthenticationTypeController
 
         /** @var \Concrete\Core\Permission\IPService $ip_service */
         $ip_service = Core::make('ip');
-        if ($ip_service->isBanned()) {
+        if ($ip_service->isBlacklisted()) {
             throw new \Exception($ip_service->getErrorMessage());
         }
 
@@ -343,9 +342,9 @@ class Controller extends AuthenticationTypeController
                     break;
                 case USER_INVALID:
                     // Log failed auth
-                    $ip_service->logSignupRequest();
-                    if ($ip_service->signupRequestThresholdReached()) {
-                        $ip_service->createIPBan();
+                    $ip_service->logFailedLogin();
+                    if ($ip_service->failedLoginsThresholdReached()) {
+                        $ip_service->addToBlacklistForThresholdReached();
                         throw new \Exception($ip_service->getErrorMessage());
                     }
 
@@ -377,7 +376,7 @@ class Controller extends AuthenticationTypeController
         $app = Application::getFacadeApplication();
         $db = $app['database']->connection();
 
-        return $db->GetOne('select uIsPasswordReset from Users where uName = ?', array($this->post('uName')));
+        return $db->GetOne('select uIsPasswordReset from Users where uName = ?', [$this->post('uName')]);
     }
 
     public function v($hash = '')

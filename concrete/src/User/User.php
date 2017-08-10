@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\User;
 
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Permission\Access\Entity\GroupEntity;
 use Concrete\Core\Support\Facade\Application;
@@ -13,7 +13,7 @@ use Hautelook\Phpass\PasswordHash;
 use Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
 use Concrete\Core\User\Point\Action\Action as UserPointAction;
 
-class User extends Object
+class User extends ConcreteObject
 {
     public $uID = '';
     public $uName = '';
@@ -102,7 +102,7 @@ class User extends Object
         if ($session->get('uID') > 0) {
             $db = $app['database']->connection();
 
-            $row = $db->GetRow("select uID, uIsActive, uLastPasswordChange, uIsPasswordReset from Users where uID = ? and uName = ?", array($session->get('uID'), $session->get('uName')));
+            $row = $db->GetRow("select * from Users where uID = ? and uName = ?", array($session->get('uID'), $session->get('uName')));
             $checkUID = (isset($row['uID'])) ? ($row['uID']) : (false);
 
             if ($checkUID == $session->get('uID')) {
@@ -116,7 +116,7 @@ class User extends Object
                     return false;
                 }
 
-                if ($row['uIsPasswordReset']) {
+                if (!empty($row['uIsPasswordReset'])) {
                     return false;
                 }
 
