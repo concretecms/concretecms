@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Controller\Dialog\Type;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
@@ -53,7 +52,7 @@ class UpdateFromType extends BackendInterfaceController
 
     protected function queueForPageTypeUpdate($pageTypeDefaultPage, $queue)
     {
-        $records = array();
+        $records = [];
 
         $pageTypeDefaultPageBlocks = [];
         $pageTypeDefaultPageRelBlocks = [];
@@ -73,22 +72,22 @@ class UpdateFromType extends BackendInterfaceController
         foreach ($pagesPlusCV as $pagePlusCV) {
             $pageTypeDefaultPageBlocksClone = $pageTypeDefaultPageBlocks;
 
-            $asociatedBlocks = $db->fetchAll('select cbDisplayOrder, arHandle, bID, cbRelationID from CollectionVersionBlocks where cID = ? and cvID = ?', array(
-            $pagePlusCV['cID'], $pagePlusCV['cvID']
-        ));
+            $asociatedBlocks = $db->fetchAll('select cbDisplayOrder, arHandle, bID, cbRelationID from CollectionVersionBlocks where cID = ? and cvID = ?', [
+            $pagePlusCV['cID'], $pagePlusCV['cvID'],
+        ]);
 
-            $blocksToUpdate = array();
-            $blocksToAdd = array();
+            $blocksToUpdate = [];
+            $blocksToAdd = [];
 
             foreach ($asociatedBlocks as $asociatedBlock) {
                 $bID = $asociatedBlock['bID'];
                 $cbRelationID = $asociatedBlock['cbRelationID'];
 
-                $blockToUpdate = array(
+                $blockToUpdate = [
             'bID' => $bID,
             'arHandle' => $asociatedBlock['arHandle'],
-            'actions' => array()
-          );
+            'actions' => [],
+          ];
 
                 $blockPageTypeDefaultPage = null;
 
@@ -96,33 +95,33 @@ class UpdateFromType extends BackendInterfaceController
                     $blockPageTypeDefaultPage = $pageTypeDefaultPageBlocks[$bID];
                 } elseif (array_key_exists($cbRelationID, $pageTypeDefaultPageRelBlocks)) {
                     $blockPageTypeDefaultPage = $pageTypeDefaultPageRelBlocks[$cbRelationID];
-                    $blockToUpdate['actions'][] = array(
+                    $blockToUpdate['actions'][] = [
               'name' => 'update_forked',
               'pageTypeBlockID' => $blockPageTypeDefaultPage->getBlockID(),
-              'pageTypeArHandle' => $blockPageTypeDefaultPage->getAreaHandle()
-            );
+              'pageTypeArHandle' => $blockPageTypeDefaultPage->getAreaHandle(),
+            ];
                 } else {
-                    $blockToUpdate['actions'][] = array('name' => 'delete');
+                    $blockToUpdate['actions'][] = ['name' => 'delete'];
                 }
 
                 if ($blockPageTypeDefaultPage) {
                     $forceChangeOrder = false;
 
                     if ($asociatedBlock['arHandle'] != $blockPageTypeDefaultPage->getAreaHandle()) {
-                        $blockToUpdate['actions'][] = array(
+                        $blockToUpdate['actions'][] = [
                 'name' => 'change_arHandle',
-                'actualArHandle' => $blockPageTypeDefaultPage->getAreaHandle()
-              );
+                'actualArHandle' => $blockPageTypeDefaultPage->getAreaHandle(),
+              ];
 
                         $forceChangeOrder = true;
                     }
 
                     if ($forceChangeOrder || ($asociatedBlock['cbDisplayOrder'] != $blockPageTypeDefaultPage->cbDisplayOrder)) {
-                        $blockToUpdate['actions'][] = array(
+                        $blockToUpdate['actions'][] = [
                 'name' => 'change_display_order',
                 'actualDisplayOrder' => $blockPageTypeDefaultPage->cbDisplayOrder,
-                'actualArHandle' => $blockPageTypeDefaultPage->getAreaHandle()
-              );
+                'actualArHandle' => $blockPageTypeDefaultPage->getAreaHandle(),
+              ];
                     }
                 }
 
@@ -135,20 +134,20 @@ class UpdateFromType extends BackendInterfaceController
 
             if (count($pageTypeDefaultPageBlocksClone) > 0) {
                 foreach ($pageTypeDefaultPageBlocksClone as $pageTypeBlock) {
-                    $blocksToAdd[] = array(
+                    $blocksToAdd[] = [
               'bID' => $pageTypeBlock->getBlockID(),
               'actualDisplayOrder' => $pageTypeBlock->cbDisplayOrder,
-              'pageTypeArHandle' => $pageTypeBlock->getAreaHandle()
-            );
+              'pageTypeArHandle' => $pageTypeBlock->getAreaHandle(),
+            ];
                 }
             }
 
-            $records[] = array(
+            $records[] = [
           'blocksToAdd' => $blocksToAdd,
           'blocksToUpdate' => $blocksToUpdate,
           'cID' => $pagePlusCV['cID'],
-          'cvID' => $pagePlusCV['cvID']
-        );
+          'cvID' => $pagePlusCV['cvID'],
+        ];
         }
 
         $queueName = $queue->getName();
@@ -164,7 +163,7 @@ class UpdateFromType extends BackendInterfaceController
 
     private function processBlockUpdateActions($actions, $pageTypeDefaultPage, $page, $pageBlock)
     {
-        $handlesToOrder = array();
+        $handlesToOrder = [];
 
         foreach ($actions as $action) {
             // Update all forked pages by page type
@@ -213,6 +212,7 @@ class UpdateFromType extends BackendInterfaceController
 
         if (!$this->validateAction() || !$this->canAccess()) {
             $this->app->shutdown();
+
             return;
         }
 
@@ -221,6 +221,7 @@ class UpdateFromType extends BackendInterfaceController
 
         if (!$pageTypeDefaultPage->isMasterCollection()) {
             $this->app->shutdown();
+
             return;
         }
 
@@ -238,7 +239,7 @@ class UpdateFromType extends BackendInterfaceController
 
                 $blocksToUpdate = $record['blocksToUpdate'];
                 $blocksToAdd = $record['blocksToAdd'];
-                $handlesToOrder = array();
+                $handlesToOrder = [];
 
                 foreach ($blocksToAdd as $blockToAdd) {
                     $pageTypeBlock = $this->app->make(Block::class)::getByID($blockToAdd['bID'], $pageTypeDefaultPage, $blockToAdd['pageTypeArHandle']);
@@ -276,13 +277,14 @@ class UpdateFromType extends BackendInterfaceController
             }
 
             $obj->message = t('All child pages updated successfully.');
+
             return $responseFactory->json($obj);
         } else {
             $queue = $this->queueForPageTypeUpdate($pageTypeDefaultPage, $queue);
         }
 
         $totalItems = $queue->count();
-        $this->app->make(View::class)::element('progress_bar', array('totalItems' => $totalItems, 'totalItemsSummary' => t2("%d page", "%d pages", $totalItems)));
+        $this->app->make(View::class)::element('progress_bar', ['totalItems' => $totalItems, 'totalItemsSummary' => t2("%d page", "%d pages", $totalItems)]);
     }
 
     protected function canAccess()
