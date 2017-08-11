@@ -87,4 +87,7 @@ $(function() {
         right: -25px;
         top: 10px;
     }
+    [data-preview="icon"] {
+        font-size: 50px;
+    }
 </style>

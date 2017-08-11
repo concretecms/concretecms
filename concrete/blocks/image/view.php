@@ -30,7 +30,7 @@ if (is_object($f) && $f->getFileID()) {
     }
 
     if ($linkURL) {
-        echo '<a href="' . $linkURL . '">';
+        echo '<a href="' . $linkURL . '" '. ($openLinkInNewWindow ? 'target="_blank"' : '') .'>';
     }
 
     echo $tag;
