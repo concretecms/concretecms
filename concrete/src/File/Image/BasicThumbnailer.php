@@ -256,7 +256,7 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
                 . '.' . $fh->getExtension($obj);
         }
 
-        $abspath = '/cache/' . $filename;
+        $abspath = '/cache/thumbnails/' . $filename;
 
         $src = $configuration->getPublicURLToFile($abspath);
 
