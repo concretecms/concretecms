@@ -83,7 +83,7 @@ EOT
             $someOperation = true;
         }
         if ($someOperation === false) {
-            throw new UserMessageException('Please specify at least one of the options --automatic-bans option or --automatic-bans');
+            throw new UserMessageException('Please specify at least one of the options --failed-login-age option or --automatic-bans');
         }
     }
 }
