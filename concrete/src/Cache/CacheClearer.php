@@ -153,6 +153,7 @@ class CacheClearer
      */
     protected function filesToClear($directory)
     {
+        $directory = str_replace('/', DIRECTORY_SEPARATOR, $directory);
         try {
             $iterator = new FilesystemIterator($directory);
         } catch (\UnexpectedValueException $e) {
@@ -163,7 +164,7 @@ class CacheClearer
         $exclude = [];
 
         if (!$this->repository->get('concrete.cache.clear.thumbnails', true)) {
-            $exclude[] = $directory . '/thumbnails';
+            $exclude[] = $directory . DIRECTORY_SEPARATOR . 'thumbnails';
         } else {
             $this->logger->notice(t('Clearing cache thumbnails directory.'));
         }
