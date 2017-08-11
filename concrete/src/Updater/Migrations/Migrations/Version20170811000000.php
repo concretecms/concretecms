@@ -11,7 +11,7 @@ use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
-class Version20170809000000 extends AbstractMigration
+class Version20170811000000 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
