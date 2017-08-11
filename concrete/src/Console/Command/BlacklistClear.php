@@ -14,7 +14,7 @@ class BlacklistClear extends Command
     {
         $errExitCode = static::RETURN_CODE_ON_FAILURE;
         $this
-            ->setName('c5:blacklist-clear')
+            ->setName('c5:blacklist:clear')
             ->setDescription('Clear blacklist-related data')
             ->addEnvOption()
             ->addOption('failed-login-age', 'f', InputOption::VALUE_REQUIRED, 'Clear failed login attempts older that this number of seconds (0 for all)')
