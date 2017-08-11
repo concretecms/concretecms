@@ -46,7 +46,7 @@ class Options extends DashboardPageController
                 $config->save('concrete.misc.default_jpeg_image_compression', $jpeg_compression);
                 $config->save('concrete.misc.default_png_image_compression', $png_compression);
                 $config->save('concrete.file_manager.images.manipulation_library', $manipulation_library);
-                $this->flash('message', t('Thumbnail options have been succesfully saved.'));
+                $this->flash('message', t('Thumbnail options have been successfully saved.'));
                 $this->redirect($this->app->make('url/manager')->resolve(['/dashboard/system/files/thumbnails']));
             }
         } else {
