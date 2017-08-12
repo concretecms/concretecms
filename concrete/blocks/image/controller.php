@@ -415,7 +415,7 @@ class Controller extends BlockController implements FileTrackableInterface
         }
 
         if ((int) $args['linkType'] > 0) {
-            $args['openLinkInNewWindow'] = isset($args['openLinkInNewWindow']) ? 1 : 0;
+            $args['openLinkInNewWindow'] = $args['openLinkInNewWindow'] ? 1 : 0;
         }
 
         // This doesn't get saved to the database. It's only for UI usage.
