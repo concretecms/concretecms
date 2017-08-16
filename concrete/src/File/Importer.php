@@ -62,7 +62,7 @@ class Importer
      *
      * @return string
      */
-    public function getErrorMessage($code)
+    public static function getErrorMessage($code)
     {
         $defaultStorage = StorageLocation::getDefault()->getName();
         $msg = '';

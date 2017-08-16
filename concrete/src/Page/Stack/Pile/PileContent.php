@@ -92,7 +92,7 @@ class PileContent extends ConcreteObject
         }
     }
 
-    public function get($pcID)
+    public static function get($pcID)
     {
         $db = Loader::db();
         $v = array($pcID);

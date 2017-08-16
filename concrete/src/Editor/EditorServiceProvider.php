@@ -62,7 +62,7 @@ class EditorServiceProvider extends ServiceProvider
             array('key' => 'find', 'name' => t('Find / Replace')),
             array('key' => 'flash', 'name' => t('Flash Dialog')),
             array('key' => 'floatingspace', 'name' => t('Floating Space')),
-            array('key' => 'font', 'name' => t('Font Size and Famiy')),
+            array('key' => 'font', 'name' => t('Font Size and Family')),
             array('key' => 'format', 'name' => t('Format')),
             array('key' => 'horizontalrule', 'name' => t('Horizontal Rule')),
             array('key' => 'htmlwriter', 'name' => t('HTML Output Writer')),
