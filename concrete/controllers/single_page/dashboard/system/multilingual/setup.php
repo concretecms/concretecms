@@ -1,26 +1,17 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\System\Multilingual;
 
-use Concrete\Core\Entity\Site\Locale;
-use Concrete\Core\Entity\Site\SiteTree;
 use Concrete\Core\Localization\Locale\Service;
 use Concrete\Core\Multilingual\Service\UserInterface\Flag;
-use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
-use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Template;
 use Concrete\Core\User\User;
-use Core;
-use Concrete\Core\Multilingual\Page\Section\Section;
-use Localization;
-use Loader;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
 class Setup extends DashboardSitePageController
 {
-
     public function view()
     {
         $this->set('locales', $this->site->getLocales());
@@ -28,8 +19,8 @@ class Setup extends DashboardSitePageController
         $cl = $this->app->make('helper/lists/countries');
         $ll = $this->app->make('localization/languages');
         $languages = $ll->getLanguageList();
-        $templates = array('' => t('** Choose a Page Template'));
-        foreach(Template::getList() as $template) {
+        $templates = ['' => t('** Choose a Page Template')];
+        foreach (Template::getList() as $template) {
             $templates[$template->getPageTemplateID()] = $template->getPageTemplateDisplayName();
         }
         $this->set('languages', $languages);
@@ -56,12 +47,13 @@ class Setup extends DashboardSitePageController
     public function get_countries_for_language()
     {
         $cl = $this->app->make('helper/lists/countries');
-        $result = array();
+        $result = [];
         $language = $this->request->query->get('language');
         if (is_string($language) && strlen($language)) {
-            $cl = Core::Make('lists/countries');
+            $cl = $this->app->make('lists/countries');
             $result = $cl->getCountriesForLanguage($language);
         }
+
         return new JsonResponse($result);
     }
 
@@ -73,7 +65,7 @@ class Setup extends DashboardSitePageController
         if ($flag) {
             $html = $flag;
         } else {
-            $html = "<div><strong>" . t('None') . "</strong></div>";
+            $html = '<div><strong>' . t('None') . '</strong></div>';
         }
         echo $html;
         exit;
@@ -103,17 +95,18 @@ class Setup extends DashboardSitePageController
         }
         if ($this->post('msLanguage')) {
             $combination = $this->post('msLanguage') . '_' . $this->post('msCountry');
-            foreach($this->site->getLocales() as $locale) {
+            foreach ($this->site->getLocales() as $locale) {
                 if ($locale->getLocale() == $combination) {
                     $this->error->add(t('This language/region combination already exists.'));
                 }
             }
         }
         if (!$this->error->has()) {
-            $service = new Service($this->entityManager);
+            $service = $this->app->make(Service::class, ['entityManager' => $this->entityManager]);
             $locale = $service->add($this->getSite(), $this->request->request->get('msLanguage'), $this->request->request->get('msCountry'));
             $service->addHomePage($locale, $template, $this->request->request->get('homePageName'), $this->request->request->get('urlSlug'));
             $this->flash('success', t('Locale added successfully.'));
+
             return new JsonResponse($locale);
         } else {
             return new JsonResponse($this->error);
@@ -122,17 +115,15 @@ class Setup extends DashboardSitePageController
 
     public function set_default()
     {
-        if (Loader::helper('validation/token')->validate('set_default')) {
-            $ll = Core::make('localization/languages');
+        if ($this->token->validate('set_default')) {
+            $ll = $this->app->make('localization/languages');
             $languages = $ll->getLanguageList();
-            $cl = Core::Make('lists/countries');
+            $cl = $this->app->make('lists/countries');
             $countries = $cl->getCountries();
-            $service = new Service($this->entityManager);
-            /**
-             * @var $locale Locale
-             */
+            $service = $this->app->make(Service::class, ['entityManager' => $this->entityManager]);
             $locale = $service->getByID($this->post('defaultLocale'));
             if (is_object($locale)) {
+                /* var \Concrete\Core\Entity\Site\Locale $locale */
                 $service->setDefaultLocale($locale);
                 $redirectHomeToDefaultLocale = $this->post('redirectHomeToDefaultLocale') ? true : false;
                 $this->getSite()->getConfigRepository()->save('multilingual.redirect_home_to_default_locale', $redirectHomeToDefaultLocale);
@@ -155,7 +146,7 @@ class Setup extends DashboardSitePageController
                 $this->error->add(t('Invalid Locale'));
             }
         } else {
-            $this->error->add(Loader::helper('validation/token')->getErrorMessage());
+            $this->error->add($this->token->getErrorMessage());
         }
         $this->view();
     }
@@ -168,16 +159,14 @@ class Setup extends DashboardSitePageController
 
         $u = new User();
         if (!$u->isSuperUser()) {
-            $this->error->add(t("Only the super user may remove a multilingual section."));
+            $this->error->add(t('Only the super user may remove a multilingual section.'));
         }
 
-        $service = new Service($this->entityManager);
-        /**
-         * @var $locale Locale
-         */
+        $service = $this->app->make(Service::class, ['entityManager' => $this->entityManager]);
         $locale = $service->getByID($this->post('siteLocaleID'));
+        /* var \Concrete\Core\Entity\Site\Locale $locale */
         if (!is_object($locale)) {
-            $this->error->add(t("Invalid locale object."));
+            $this->error->add(t('Invalid locale object.'));
         }
 
         if (!$this->error->has()) {
@@ -215,7 +204,7 @@ class Setup extends DashboardSitePageController
         if (!$this->error->has()) {
             $combination = $msLanguage . '_' . $msCountry;
             if ($combination !== $editingLocale->getLocale()) {
-                foreach($this->site->getLocales() as $locale) {
+                foreach ($this->site->getLocales() as $locale) {
                     if ($editingLocale !== $locale && $locale->getLocale() === $combination) {
                         $this->error->add(t('This language/region combination already exists.'));
                         break;
@@ -229,7 +218,6 @@ class Setup extends DashboardSitePageController
                 }
             }
         }
-        
         if ($this->error->has()) {
             $this->view();
         } else {
