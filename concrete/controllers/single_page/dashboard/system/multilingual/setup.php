@@ -189,4 +189,52 @@ class Setup extends DashboardSitePageController
         $this->view();
     }
 
+    public function change_locale_section()
+    {
+        if (!$this->token->validate('change_locale_section')) {
+            $this->error->add($this->token->getErrorMessage());
+        }
+        $post = $this->request->request;
+        $localeID = $post->get('siteLocaleID');
+        $service = $this->app->make(Service::class, ['entityManager' => $this->entityManager]);
+        /* @var Service $service */
+        $editingLocale = $localeID ? $service->getById($localeID) : null;
+        if ($editingLocale === null) {
+            $this->error->add(t('Invalid locale object.'));
+        } else {
+            /* @var \Concrete\Core\Entity\Site\Locale $editingLocale */
+            $msLanguage = $post->get('msLanguageChange' . $localeID);
+            if (!$msLanguage) {
+                $this->error->add(t('You must specify a valid language.'));
+            }
+            $msCountry = $post->get('msCountryChange' . $localeID);
+            if (!$msCountry) {
+                $this->error->add(t('You must specify a valid country.'));
+            }
+        }
+        if (!$this->error->has()) {
+            $combination = $msLanguage . '_' . $msCountry;
+            if ($combination !== $editingLocale->getLocale()) {
+                foreach($this->site->getLocales() as $locale) {
+                    if ($editingLocale !== $locale && $locale->getLocale() === $combination) {
+                        $this->error->add(t('This language/region combination already exists.'));
+                        break;
+                    }
+                }
+                if (!$this->error->has()) {
+                    $editingLocale->setLanguage($msLanguage);
+                    $editingLocale->setCountry($msCountry);
+                    $service->updatePluralSettings($editingLocale);
+                    $this->entityManager->flush($editingLocale);
+                }
+            }
+        }
+        
+        if ($this->error->has()) {
+            $this->view();
+        } else {
+            $this->flash('success', t('The locale has been changed.'));
+            $this->redirect($this->action(''));
+        }
+    }
 }

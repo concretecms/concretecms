@@ -13,11 +13,11 @@ $app = Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
 <table class="table table-striped">
     <tr>
-        <th style="width: 1%">&nbsp;</th>
+        <th style="width: 1px">&nbsp;</th>
         <th style="width: auto"><?= t('Home Page') ?></th>
         <th style="width: auto"><?= t('Language') ?></th>
         <th style="width: auto"><?= t('Locale') ?></th>
-        <th style="width: 1%">&nbsp;</th>
+        <th style="width: 1px">&nbsp;</th>
     </tr>
     <?php
     foreach ($locales as $locale) {
@@ -38,12 +38,9 @@ $app = Concrete\Core\Support\Facade\Application::getFacadeApplication();
             </td>
             <td><?= $locale->getLanguageText() ?></td>
             <td><?= $locale->getLocale() ?></td>
-            <td>
-                <?php
-                if (!$locale->getIsDefault()) {
-                    ?><a data-dialog-title="<?= t('Delete Locale') ?>" data-dialog="delete-section-<?= $locale->getLocaleID() ?>" href="#" class="icon-link"><i class="fa fa-trash"></i></a><?php
-                }
-                ?>
+            <td style="white-space: nowrap">
+                <a data-dialog-title="<?= t('Delete Locale') ?>" data-dialog="delete-section-<?= $locale->getLocaleID() ?>" href="#" class="icon-link"><i class="fa fa-trash"></i></a>
+                <a data-dialog-title="<?= t('Change Locale') ?>" data-dialog="change-section-<?= $locale->getLocaleID() ?>" href="#" class="icon-link"><i class="fa fa-edit"></i></a>
             </td>
         </tr>
         <?php
@@ -53,33 +50,57 @@ $app = Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
 <?php
 foreach ($locales as $locale) {
-    if (!$locale->getIsDefault() && $u->isSuperUser()) {
-        ?>
-        <div style="display: none">
-            <div data-dialog-wrapper="delete-section-<?= $locale->getLocaleID() ?>">
-                <?php
-                if ($u->isSuperUser()) {
-                    ?>
-                    <form data-form="delete-locale-<?= $locale->getLocaleID() ?>" method="post" action="<?= $view->action('remove_locale_section') ?>">
-                        <?php $token->output('remove_locale_section') ?>
-                        <input type="hidden" name="siteLocaleID" value="<?= $locale->getLocaleID() ?>">
-                        <p><?= t('Delete this multilingual section? This will remove the entire site tree and its content from your website.') ?></p>
-                        <div class="dialog-buttons">
-                            <button class="btn btn-default" data-dialog-action="cancel"><?= t('Cancel') ?></button>
-                            <button class="btn btn-danger pull-right" onclick="$('form[data-form=delete-locale-<?= $locale->getLocaleID() ?>]').submit()" type="submit"><?= t('Delete') ?></button>
-                        </div>
-                    </form>
-                    <?php
-                } else {
-                    ?>
-                    <p><?= t('Only the super user may remove a multilingual section.') ?></p>
-                    <?php
-                }
+    ?>
+    <div style="display: none">
+        <div data-dialog-wrapper="delete-section-<?= $locale->getLocaleID() ?>">
+            <?php
+            if ($locale->getIsDefault()) {
                 ?>
-            </div>
+                <p><?= t('The default multilingual section can\'t be removed.') ?></p>
+                <?php
+            } elseif (!$u->isSuperUser()) {
+                ?>
+                <p><?= t('Only the super user may remove a multilingual section.') ?></p>
+                <?php
+            } else {
+                ?>
+                <form data-form="delete-locale-<?= $locale->getLocaleID() ?>" method="post" action="<?= $view->action('remove_locale_section') ?>">
+                    <?php $token->output('remove_locale_section') ?>
+                    <input type="hidden" name="siteLocaleID" value="<?= $locale->getLocaleID() ?>">
+                    <p><?= t('Delete this multilingual section? This will remove the entire site tree and its content from your website.') ?></p>
+                    <div class="dialog-buttons">
+                        <button class="btn btn-default" data-dialog-action="cancel"><?= t('Cancel') ?></button>
+                        <button class="btn btn-danger pull-right" onclick="$('form[data-form=delete-locale-<?= $locale->getLocaleID() ?>]').submit()" type="submit"><?= t('Delete') ?></button>
+                    </div>
+                </form>
+                <?php
+            }
+            ?>
         </div>
-        <?php
-    }
+        <div data-dialog-wrapper="change-section-<?= $locale->getLocaleID() ?>">
+            <form data-form="change-locale-<?= $locale->getLocaleID() ?>" method="post" action="<?= $view->action('change_locale_section') ?>">
+                <?php $token->output('change_locale_section') ?>
+                <input type="hidden" name="siteLocaleID" value="<?= $locale->getLocaleID() ?>">
+                <div class="form-group">
+                    <?= $form->label('msLanguageChange' . $locale->getLocaleID(), t('Choose Language')) ?>
+                    <?= $form->select('msLanguageChange' . $locale->getLocaleID(), $languages, $locale->getLanguage()) ?>
+                </div>
+                <div class="form-group">
+                    <?= $form->label('msCountryChange' . $locale->getLocaleID(), t('Choose Country')) ?>
+                    <?= $form->select('msCountryChange' . $locale->getLocaleID(), array_merge(['' => t('** None Selected')], $countries), $locale->getCountry()) ?>
+                </div>
+                <div class="form-group">
+                    <label class="control-label"><?= t('Icon') ?></label>
+                    <div id="ccm-multilingual-language-icon-change<?= $locale->getLocaleID() ?>"><?= t('None') ?></div>
+                </div>
+                <div class="dialog-buttons">
+                    <button class="btn btn-default" data-dialog-action="cancel"><?= t('Cancel') ?></button>
+                    <button class="btn btn-primary pull-right" onclick="$('form[data-form=change-locale-<?= $locale->getLocaleID() ?>]').submit()" type="submit"><?= t('Update') ?></button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <?php
 }
 
 $defaultLocales = [];
@@ -129,11 +150,6 @@ foreach ($locales as $locale) {
             <?= $form->select('defaultSourceLanguage', array_merge(['' => t('*** Unknown or mixed language')], $languages), $defaultSourceLanguage) ?>
             <?= $form->select('defaultSourceCountry', array_merge(['' => t('*** Undetermined country')], $countries), $defaultSourceCountry) ?>
         </div>
-        <script>
-            $(document).ready(function () {
-                new ccmCountryForLanguageLister($('#defaultSourceLanguage'), $('#defaultSourceCountry'));
-            });
-        </script>
     </div>
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
@@ -186,33 +202,36 @@ foreach ($locales as $locale) {
     </div>
 </div>
 <script>
+$(document).ready(function() {
+    'use strict';
+
     var ccmCountryForLanguageLister = (function () {
-        var countryDictionary = <?= json_encode($countries) ?>;
-        var sortedCountries = (function () {
-            var list = [];
-            $.each(countryDictionary, function (id) {
-                list.push(id);
-            });
-            list.sort(function (aCode, bCode) {
-                var aName = countryDictionary[aCode].toLowerCase(), bName = countryDictionary[bCode].toLowerCase();
-                if (aName < bName) {
-                    return -1;
-                }
-                if (aName > bName) {
-                    return 1;
-                }
-                return 0;
-            });
-            return list;
-        })();
-        var cache = {'': []};
+        var countryDictionary = <?= json_encode($countries) ?>,
+            sortedCountries = (function () {
+                var list = [];
+                $.each(countryDictionary, function (id) {
+                    list.push(id);
+                });
+                list.sort(function (aCode, bCode) {
+                    var aName = countryDictionary[aCode].toLowerCase(), bName = countryDictionary[bCode].toLowerCase();
+                    if (aName < bName) {
+                        return -1;
+                    }
+                    if (aName > bName) {
+                        return 1;
+                    }
+                    return 0;
+                });
+                return list;
+            })(),
+            cache = {'': []},
+            iconCache = {};
 
         function appendCountries($parent, countryCodes) {
             $.each(countryCodes, function (_, countryCode) {
                 $parent.append($('<option />').val(countryCode).text(countryDictionary[countryCode]));
             });
         }
-
         function updateCountrySelect($country, preferredCountryCodes) {
             var preferredCountries = [];
             $.each(preferredCountryCodes, function (_, countryCode) {
@@ -241,7 +260,31 @@ foreach ($locales as $locale) {
             $country.val(selectedCountry);
         }
 
-        function CountryForLanguageLister($language, $country) {
+        function populateIcon($icon, country) {
+            $icon.data('country', country || false);
+            if (country) {
+                if (iconCache.hasOwnProperty(country)) {
+                    $icon.html(iconCache[country]);
+                } else {
+                    $icon.text('...');
+                    $.post(
+                        <?= json_encode($view->action('load_icon')) ?>,
+                        {msCountry: country},
+                        function (data) {
+                            iconCache[country] = data ? data : '';
+                            if ($icon.data('country') === country) {
+                                $icon.html(iconCache[country]);
+                            }
+                        },
+                        'html'
+                    );
+                }
+            } else {
+                $icon.text(<?= json_encode(t('None')) ?>);
+            }
+        }
+        
+        function CountryForLanguageLister($language, $country, $icon) {
             var me = this;
             this.$language = $language;
             this.$country = $country;
@@ -249,7 +292,16 @@ foreach ($locales as $locale) {
                 me.updateCountries();
             });
             this.currentLanguage = null;
+            this.$icon = $icon && $icon.length ? $icon : null;
             this.updateCountries();
+            if (this.$icon !== null) {
+                this.$country
+                    .on('change', function() {
+                        populateIcon(me.$icon, this.value);
+                    })
+                    .trigger('change')
+                ;
+            }
         }
 
         CountryForLanguageLister.prototype = {
@@ -284,27 +336,23 @@ foreach ($locales as $locale) {
                 );
             }
         };
+
         return CountryForLanguageLister;
     })();
 
-    $(function () {
-        new ccmCountryForLanguageLister($('#msLanguage'), $('#msCountry'));
-        $("select[name=msCountry]").change(function () {
-            ccm_multilingualPopulateIcons($(this).val());
-        });
-        ccm_multilingualPopulateIcons($("select[name=msCountry]").val());
+    new ccmCountryForLanguageLister($('#msLanguage'), $('#msCountry'), $('#ccm-multilingual-language-icon'));
+    <?php
+    foreach ($locales as $locale) {
+        ?>new ccmCountryForLanguageLister($('#msLanguageChange<?= $locale->getLocaleID() ?>'), $('#msCountryChange<?= $locale->getLocaleID() ?>'), $('#ccm-multilingual-language-icon-change<?= $locale->getLocaleID() ?>'));<?php
+    }
+    ?>
+    new ccmCountryForLanguageLister($('#defaultSourceLanguage'), $('#defaultSourceCountry'));
 
-        ConcreteEvent.subscribe('AjaxFormSubmitSuccess.addLocale', function (e, data) {
-            if (data.form == 'add-locale') {
-                window.location.reload();
-            }
-        });
+    ConcreteEvent.subscribe('AjaxFormSubmitSuccess.addLocale', function (e, data) {
+        if (data.form == 'add-locale') {
+            window.location.reload();
+        }
     });
 
-    ccm_multilingualPopulateIcons = function (country) {
-        if (country && country != '') {
-            $("#ccm-multilingual-language-icon").load('<?= $view->action('load_icon') ?>', {'msCountry': country});
-        }
-    };
-
+});
 </script>
