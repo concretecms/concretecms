@@ -3,7 +3,6 @@ namespace Concrete\Core\Entity\Site;
 
 use Concrete\Core\Entity\LocaleTrait;
 use Concrete\Core\Localization\Locale\LocaleInterface;
-use Concrete\Core\Multilingual\Service\UserInterface\Flag;
 use Concrete\Core\Site\Tree\TreeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -13,7 +12,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Locale implements LocaleInterface, TreeInterface
 {
-
     use LocaleTrait;
 
     /**
