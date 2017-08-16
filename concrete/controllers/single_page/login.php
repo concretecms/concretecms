@@ -336,9 +336,13 @@ class Login extends PageController
         $this->requireAsset('javascript', 'backstretch');
         $this->set('authTypeParams', $this->getSets());
         if (strlen($type)) {
-            $at = AuthenticationType::getByHandle($type);
-            $this->set('authType', $at);
-            $this->set('authTypeElement', $element);
+            try {
+                $at = AuthenticationType::getByHandle($type);
+                $this->set('authType', $at);
+                $this->set('authTypeElement', $element);
+            } catch (\Exception $e) {
+                // Don't fail loudly
+            }
         }
     }
 
