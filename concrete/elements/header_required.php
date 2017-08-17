@@ -117,14 +117,12 @@ if ($c !== null && $config->get('multilingual.set_alternate_hreflang') && !$c->i
     if ($multilingualSection) {
         $urlManager = $app->make('url/manager');
         foreach (Section::getList($site) as $ms) {
-            if ($ms->getCollectionID() != $multilingualSection->getCollectionID()) {
-                $relatedID = $ms->getTranslatedPageID($c);
-                if ($relatedID) {
-                    $relatedPage = Page::getByID($relatedID);
-                    if ($relatedPage && !$relatedPage->isError()) {
-                        $url = $urlManager->resolve([$relatedPage]);
-                        $alternateHreflangTags[] = '<link rel="alternate" hreflang="'.str_replace('_', '-', $ms->getLocale()).'" href="'.$url.'" />';
-                    }
+            $relatedID = $ms->getTranslatedPageID($c);
+            if ($relatedID) {
+                $relatedPage = Page::getByID($relatedID);
+                if ($relatedPage && !$relatedPage->isError()) {
+                    $url = $urlManager->resolve([$relatedPage]);
+                    $alternateHreflangTags[] = '<link rel="alternate" hreflang="'.str_replace('_', '-', $ms->getLocale()).'" href="'.$url.'" />';
                 }
             }
         }
