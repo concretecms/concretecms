@@ -48,7 +48,8 @@ if (is_object($conversation)) {
             maxFiles: '<?=$maxFiles?>',
             attachmentsEnabled: '<?=$attachmentsEnabled?>',
             attachmentOverridesEnabled: '<?=$attachmentOverridesEnabled?>',
-            enableTopCommentReviews: <?= json_encode($enableTopCommentReviews) ?>
+            enableTopCommentReviews: <?= json_encode($enableTopCommentReviews) ?>,
+            displaySocialLinks: <?=$displaySocialLinks?>
         });
     });
     </script>

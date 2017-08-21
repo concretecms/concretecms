@@ -75,7 +75,7 @@ $form = Loader::helper('form');
 	<div class="ccm-conversation-messages">
 
 	<?php foreach ($messages as $m) {
-    Loader::element('conversation/message', array('cID' => $cID, 'message' => $m, 'bID' => $bID, 'page' => $page, 'blockAreaHandle' => $blockAreaHandle, 'enablePosting' => $enablePosting, 'displayMode' => $displayMode, 'enableCommentRating' => $enableCommentRating, 'dateFormat' => $dateFormat, 'customDateFormat' => $customDateFormat));
+    Loader::element('conversation/message', array('cID' => $cID, 'message' => $m, 'bID' => $bID, 'page' => $page, 'blockAreaHandle' => $blockAreaHandle, 'enablePosting' => $enablePosting, 'displayMode' => $displayMode, 'enableCommentRating' => $enableCommentRating, 'displaySocialLinks' => $displaySocialLinks, 'dateFormat' => $dateFormat, 'customDateFormat' => $customDateFormat));
 } ?>
 
 	</div>

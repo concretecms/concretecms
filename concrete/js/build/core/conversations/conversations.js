@@ -79,6 +79,7 @@
       var displayPostingForm = (obj.options.displayPostingForm);
       var enableCommentRating = (obj.options.enableCommentRating);
       var enableTopCommentReviews = (obj.options.enableTopCommentReviews);
+      var displaySocialLinks = (obj.options.displaySocialLinks);
       var commentRatingUserID = (obj.options.commentRatingUserID);
       var commentRatingIP = (obj.options.commentRatingIP);
       var addMessageLabel = (obj.options.addMessageLabel) ? obj.options.addMessageLabel : '';
@@ -106,6 +107,7 @@
           'displayPostingForm':  displayPostingForm,
           'enableCommentRating': enableCommentRating,
           'enableTopCommentReviews': enableTopCommentReviews,
+          'displaySocialLinks':  displaySocialLinks,
           'commentRatingUserID': commentRatingUserID,
           'commentRatingIP':     commentRatingIP,
           'dateFormat':          dateFormat,
@@ -370,6 +372,7 @@
           'displayPostingForm':  obj.options.displayPostingForm,
           'enableCommentRating': obj.options.enableCommentRating,
           'enableTopCommentReviews': obj.options.enableTopCommentReviews,
+          'displaySocialLinks':  obj.options.displaySocialLinks,
           'dateFormat':          obj.options.dateFormat,
           'customDateFormat':    obj.options.customDateFormat,
           'blockAreaHandle':     obj.options.blockAreaHandle,
@@ -412,6 +415,7 @@
           'orderBy':             orderBy,
           'enableCommentRating': obj.options.enableCommentRating,
           'enableTopCommentReviews': obj.options.enableTopCommentReviews,
+          'displaySocialLinks':  obj.options.displaySocialLinks,
           'dateFormat':          obj.options.dateFormat,
           'customDateFormat':    obj.options.customDateFormat,
           'attachmentsEnabled':  obj.options.attachmentsEnabled,

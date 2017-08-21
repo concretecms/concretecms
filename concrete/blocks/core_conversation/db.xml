@@ -41,6 +41,10 @@
       <default value="0"/>
       <notnull/>
     </field>
+    <field name="displaySocialLinks" type="boolean">
+      <default value="1"/>
+      <notnull/>
+    </field>
     <field name="reviewAggregateAttributeKey" type="integer"></field>
     <field name="displayPostingForm" type="string" size="255">
       <default value="top"/>

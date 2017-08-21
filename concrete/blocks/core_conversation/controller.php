@@ -220,6 +220,7 @@ class Controller extends BlockController implements ConversationFeatureInterface
             'maxFileSizeRegistered' => null,
             'enableOrdering' => null,
             'enableCommentRating' => null,
+            'displaySocialLinks' => null,
             'enableTopCommentReviews' => null,
             'notificationOverridesEnabled' => null,
             'subscriptionEnabled' => null,
@@ -258,6 +259,9 @@ class Controller extends BlockController implements ConversationFeatureInterface
         }
         if (!$values['enableTopCommentReviews']) {
             $values['enableTopCommentReviews'] = 0;
+        }
+        if (!$values['displaySocialLinks']) {
+            $values['displaySocialLinks'] = 0;
         }
 
         if ($values['notificationOverridesEnabled']) {

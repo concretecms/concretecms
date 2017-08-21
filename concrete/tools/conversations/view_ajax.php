@@ -86,6 +86,7 @@ if ($cID) {
                 'orderBy' => Request::post('orderBy'),
                 'enableOrdering' => $enableOrdering,
                 'enableTopCommentReviews' => !!Request::post('enableTopCommentReviews'),
+                'displaySocialLinks' => Request::post('displaySocialLinks'),
                 'displayPostingForm' => Request::post('displayPostingForm'),
                 'enableCommentRating' => Request::post('enableCommentRating'),
                 'dateFormat' => Request::post('dateFormat'),

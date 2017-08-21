@@ -11,6 +11,7 @@ if ($controller->getTask() == 'add') {
     $enableOrdering = 1;
     $enableCommentRating = 1;
     $enableTopCommentReviews = 0;
+    $displaySocialLinks = 1;
     $displayPostingForm = 'top';
     $addMessageLabel = t('Add Message');
     $attachmentOverridesEnabled = 0;
@@ -97,6 +98,15 @@ if (!$dateFormat) {
     <?php
     }
     ?>
+    <div class="form-group">
+        <label class="control-label"><?=t('Social Sharing Links')?></label>
+        <div class="checkbox">
+            <label>
+            <?=$form->checkbox('displaySocialLinks', 1, $displaySocialLinks)?>
+            <?=t('Display social sharing links')?>
+            </label>
+        </div>
+    </div>
     <div class="form-group">
         <label class="control-label"><?=t('Paginate Message List')?></label>
         <div class="radio">
