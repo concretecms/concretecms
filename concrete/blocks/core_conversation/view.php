@@ -1,10 +1,13 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die('Access Denied.');
+
 $paginate = ($paginate) ? 'true' : 'false';
 $itemsPerPage = ($paginate) ? $itemsPerPage : -1;
 $blockAreaHandle = $this->block->getAreaHandle();
+
 /** @var \Concrete\Core\Permission\IPService $iph */
 $iph = Core::make('helper/validation/ip');
 $commentRatingIP = $iph->getRequestIP()->getIp();
+
 $u = new User();
 if ($u->isLoggedIn()) {
     $uID = $u->getUserID();
@@ -16,13 +19,12 @@ if ($u->isLoggedIn()) {
     $uID = 0;
 }
 
-if (is_object($conversation)) {
-    ?>
+if (is_object($conversation)) { ?>
     <div class="ccm-conversation-wrapper" data-conversation-id="<?=$conversation->getConversationID()?>">
-    <?=t('Loading Conversation')?> <i class="fa fa-spin fa-circle-o-notch"></i>
+        <?=t('Loading Conversation')?> <i class="fa fa-spin fa-circle-o-notch"></i>
     </div>
 
-    <script type="text/javascript">
+    <script>
     $(function() {
         $('div[data-conversation-id=<?=$conversation->getConversationID()?>]').concreteConversation({
             cnvID: <?=$conversation->getConversationID()?>,
@@ -54,4 +56,4 @@ if (is_object($conversation)) {
     });
     </script>
 <?php
-} ?>
+}
