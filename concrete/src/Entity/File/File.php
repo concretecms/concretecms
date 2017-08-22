@@ -548,15 +548,6 @@ class File implements \Concrete\Core\Permission\ObjectInterface
 
                 $em->flush();
 
-                do {
-                    $prefix = $importer->generatePrefix();
-                    $path = $cf->prefix($prefix, $version->getFilename());
-                } while ($filesystem->has($path));
-                $filesystem->write($path, $version->getFileResource()->read(), [
-                    'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
-                    'mimetype' => Core::make('helper/mime')->mimeFromExtension($fi->getExtension($version->getFilename())),
-                ]);
-                $cloneVersion->updateFile($version->getFilename(), $prefix);
                 $nf->versions->add($cloneVersion);
             }
         }
