@@ -632,6 +632,9 @@
             }, {
                 'name': 'enableCommentRating',
                 'value': obj.options.enableCommentRating
+            }, {
+                'name': 'displaySocialLinks',
+                'value': obj.options.displaySocialLinks
             }];
 
             $.ajax({
@@ -685,6 +688,9 @@
             }, {
                 'name': 'enableCommentRating',
                 'value': obj.options.enableCommentRating
+            }, {
+                'name': 'displaySocialLinks',
+                'value': obj.options.displaySocialLinks
             }];
 
             $.ajax({

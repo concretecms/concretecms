@@ -22,7 +22,7 @@ if (Loader::helper('validation/numbers')->integer($_POST['cnvMessageID']) && $_P
     $message = ConversationMessage::getByID($_POST['cnvMessageID']);
     if (is_object($message)) {
         if ($message->isConversationMessageApproved()) {
-            Loader::element('conversation/message', array('message' => $message, 'displayMode' => $displayMode, 'enablePosting' => $enablePosting, 'enableCommentRating' => $_POST['enableCommentRating']));
+            Loader::element('conversation/message', array('message' => $message, 'displayMode' => $displayMode, 'enablePosting' => $enablePosting, 'enableCommentRating' => $_POST['enableCommentRating'], 'displaySocialLinks' => $_POST['displaySocialLinks']));
         } else {
             // it's a new message, but it's pending
             Loader::element('conversation/message/pending', array('message' => $message));
