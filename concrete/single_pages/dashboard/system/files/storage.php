@@ -1,4 +1,4 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
 
 <?php if ($this->controller->getTask() == 'select_type'
     || $this->controller->getTask() == 'add'
@@ -19,29 +19,24 @@
         <div class="ccm-dashboard-header-buttons">
             <form method="post" action="<?=$this->action('delete')?>">
                 <input type="hidden" name="fslID" value="<?=$location->getID()?>" />
-                <?=Loader::helper('validation/token')->output('delete');
-            ?>
+                <?=Loader::helper('validation/token')->output('delete'); ?>
                 <button type="button" class="btn btn-danger" data-action="delete-location"><?=t('Delete Location')?></button>
             </form>
         </div>
 
         <?php
-
         }
     } else {
         $method = 'add';
-    }
-    ?>
+    } ?>
     <form method="post" action="<?=$view->action($method)?>" id="ccm-attribute-key-form">
-        <?=Loader::helper('validation/token')->output($method);
-    ?>
+        <?=Loader::helper('validation/token')->output($method); ?>
         <input type="hidden" name="fslTypeID" value="<?=$type->getID()?>" />
         <?php if (is_object($location)) {
-    ?>
+        ?>
             <input type="hidden" name="fslID" value="<?=$location->getID()?>" />
-        <?php 
-}
-    ?>
+        <?php
+    } ?>
         <fieldset>
             <legend><?=t('Basics')?></legend>
             <div class="form-group">
@@ -52,11 +47,10 @@
                 </div>
             </div>
             <?php if ($fslIsDefault) {
-    $args = array('disabled' => 'disabled');
-} else {
-    $args = array();
-}
-    ?>
+        $args = ['disabled' => 'disabled'];
+    } else {
+        $args = [];
+    } ?>
             <div class="form-group">
                 <label><?=t('Default')?>
                 <div class="radio">
@@ -73,28 +67,25 @@
 
         </fieldset>
         <?php if ($type->hasOptionsForm()) {
-    ?>
+        ?>
         <fieldset>
             <legend><?=t('Options %s Storage Type', $type->getName())?></legend>
-            <?php $type->includeOptionsForm($location);
-    ?>
+            <?php $type->includeOptionsForm($location); ?>
         </fieldset>
-        <?php 
-}
-    ?>
+        <?php
+    } ?>
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
                 <a href="<?=URL::page($c)?>" class="btn pull-left btn-default"><?=t('Back')?></a>
                 <?php if (is_object($location)) {
-    ?>
+        ?>
                     <button type="submit" class="btn btn-primary pull-right"><?=t('Save')?></button>
-                <?php 
-} else {
-    ?>
+                <?php
+    } else {
+        ?>
                     <button type="submit" class="btn btn-primary pull-right"><?=t('Add')?></button>
-                <?php 
-}
-    ?>
+                <?php
+    } ?>
             </div>
         </div>
     </form>
@@ -109,18 +100,17 @@
         });
     })
     </script>
-<?php 
+<?php
 } else {
-    ?>
+        ?>
 
     <h3><?=t('Storage Locations')?></h3>
     <ul class="item-select-list">
     <?php foreach ($locations as $location) {
-    ?>
+            ?>
         <li><a href="<?=$this->action('edit', $location->getID())?>"><i class="fa fa-hdd-o"></i> <?=$location->getDisplayName()?></a></li>
-    <?php 
-}
-    ?>
+    <?php
+        } ?>
     </ul>
 
     <form method="get" action="<?=$view->action('select_type')?>" id="ccm-file-storage-location-type-form">
@@ -137,5 +127,5 @@
         </fieldset>
     </form>
 
-<?php 
-} ?>
+<?php
+    } ?>

@@ -1,19 +1,19 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\System\Files;
 
-use Concrete\Core\Page\Controller\DashboardPageController;
-use Loader;
 use Concrete\Core\File\StorageLocation\StorageLocation as FileStorageLocation;
 use Concrete\Core\File\StorageLocation\Type\Type;
+use Concrete\Core\Page\Controller\DashboardPageController;
+use Loader;
 
 class Storage extends DashboardPageController
 {
-    public $helpers = array('form', 'concrete/ui', 'validation/token', 'concrete/file');
+    public $helpers = ['form', 'concrete/ui', 'validation/token', 'concrete/file'];
 
     public function view($updated = false)
     {
         $this->set('locations', FileStorageLocation::getList());
-        $types = array();
+        $types = [];
         $storageLocationTypes = Type::getList();
         foreach ($storageLocationTypes as $type) {
             if ($type->getHandle() == 'default') {
@@ -79,7 +79,7 @@ class Storage extends DashboardPageController
             $this->error->add(t('Your file storage location must have a name.'));
         }
 
-        return array($request, $type);
+        return [$request, $type];
     }
 
     public function update()
