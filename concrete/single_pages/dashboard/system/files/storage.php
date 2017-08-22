@@ -1,26 +1,34 @@
 <?php
 defined('C5_EXECUTE') or die('Access Denied.');
 
-switch ($this->controller->getTask()) {
+/* @var Concrete\Controller\SinglePage\Dashboard\System\Files\Storage $controller */
+/* @var Concrete\Core\Form\Service\Form $form */
+/* @var Concrete\Core\Page\Page $c */
+/* @var Concrete\Core\Page\View\PageView $view */
+/* @var Concrete\Core\Validation\CSRF\Token $token */
+
+switch ($controller->getTask()) {
 
     case 'select_type':
     case 'add':
     case 'edit':
     case 'update':
     case 'delete':
+        /* @var Concrete\Core\Entity\File\StorageLocation\Type\Type $type */
         if (!isset($location) || !is_object($location)) {
             $location = null;
         }
         if ($location !== null) {
+            /* @var Concrete\Core\Entity\File\StorageLocation\StorageLocation $location */
             $fslName = $location->getName();
             $fslIsDefault = $location->isDefault();
             $method = 'update';
             if (!$fslIsDefault && $type->getHandle() != 'default') {
                 ?>
                 <div class="ccm-dashboard-header-buttons">
-                    <form method="post" action="<?= $this->action('delete') ?>">
+                    <form method="post" action="<?= $view->action('delete') ?>">
                         <input type="hidden" name="fslID" value="<?= $location->getID() ?>" />
-                        <?= Loader::helper('validation/token')->output('delete') ?>
+                        <?= $token->output('delete') ?>
                         <button type="button" class="btn btn-danger" data-action="delete-location"><?= t('Delete Location') ?></button>
                     </form>
                 </div>
@@ -33,7 +41,7 @@ switch ($this->controller->getTask()) {
         }
         ?>
         <form method="post" action="<?= $view->action($method) ?>" id="ccm-attribute-key-form">
-            <?= Loader::helper('validation/token')->output($method) ?>
+            <?= $token->output($method) ?>
             <input type="hidden" name="fslTypeID" value="<?= $type->getID() ?>" />
             <?php
             if ($location !== null) {
@@ -84,7 +92,7 @@ switch ($this->controller->getTask()) {
             ?>
             <div class="ccm-dashboard-form-actions-wrapper">
                 <div class="ccm-dashboard-form-actions">
-                    <a href="<?= URL::page($c) ?>" class="btn pull-left btn-default"><?= t('Back') ?></a>
+                    <a href="<?= URL::to($c) ?>" class="btn pull-left btn-default"><?= t('Back') ?></a>
                     <?php
                     if ($location !== null) {
                         ?><button type="submit" class="btn btn-primary pull-right"><?= t('Save') ?></button><?php
@@ -114,7 +122,7 @@ switch ($this->controller->getTask()) {
         <ul class="item-select-list">
             <?php
             foreach ($locations as $location) {
-                ?><li><a href="<?= $this->action('edit', $location->getID()) ?>"><i class="fa fa-hdd-o"></i> <?= $location->getDisplayName() ?></a></li><?php
+                ?><li><a href="<?= $view->action('edit', $location->getID()) ?>"><i class="fa fa-hdd-o"></i> <?= $location->getDisplayName() ?></a></li><?php
             }
             ?>
         </ul>
