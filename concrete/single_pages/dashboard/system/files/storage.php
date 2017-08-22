@@ -8,7 +8,6 @@ defined('C5_EXECUTE') or die('Access Denied.');
 /* @var Concrete\Core\Validation\CSRF\Token $token */
 
 switch ($controller->getTask()) {
-
     case 'select_type':
     case 'add':
     case 'edit':
@@ -140,5 +139,4 @@ switch ($controller->getTask()) {
         </form>
         <?php
         break;
-
 }
