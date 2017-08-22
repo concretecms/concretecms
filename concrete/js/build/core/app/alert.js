@@ -57,6 +57,40 @@ PNotify.prototype.options.buttons.closer_hover = false;
             });
         },
 
+        confirm: function(message, onConfirmation, btnClass, btnText) {
+
+            var btnClass = btnClass ? 'btn ' + btnClass : 'btn btn-primary',
+                btnText = btnText ? btnText : ccmi18n.go,
+                $div = $('<div id="ccm-popup-confirmation" class="ccm-ui"><div id="ccm-popup-confirmation-message">' +
+                    message + '</div>');
+
+            $div.dialog({
+                title: ccmi18n.confirm,
+                width: 500,
+                maxHeight: 500,
+                modal: true,
+                dialogClass: 'ccm-ui',
+                close: function() {
+                    $div.remove();
+                },
+                buttons:[{}],
+                'open': function () {
+                    $(this).parent().find('.ui-dialog-buttonpane').addClass("ccm-ui").html('');
+                    $(this).parent().find('.ui-dialog-buttonpane').append(
+                        '<button onclick="jQuery.fn.dialog.closeTop()" class="btn btn-default">' +
+                        ccmi18n.cancel + '</button><button data-dialog-action="submit-confirmation-dialog" ' +
+                        'class="btn ' + btnClass + ' pull-right">' + btnText + '</button></div>');
+                }
+            });
+
+            $div.parent().on('click', 'button[data-dialog-action=submit-confirmation-dialog]', function() {
+                return onConfirmation();
+            });
+
+        },
+
+
+
         info: function(defaults) {
             var options = $.extend({
                 type: 'info',
