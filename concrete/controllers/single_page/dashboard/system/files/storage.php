@@ -140,7 +140,7 @@ class Storage extends DashboardPageController
             $factory = $this->app->make(StorageLocationFactory::class);
             /* @var StorageLocationFactory $factory */
             $location = $factory->create($configuration, $this->request->request->get('fslName'));
-            $location->setIsDefault((bool) $this->request->request->get('fslIsDefault'));
+            $location->setIsDefault($this->request->request->get('fslIsDefault'));
             $location = $factory->persist($location);
             $this->redirect('/dashboard/system/files/storage', 'storage_location_added');
         }
