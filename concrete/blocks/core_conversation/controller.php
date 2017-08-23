@@ -4,8 +4,6 @@ namespace Concrete\Block\CoreConversation;
 use Concrete\Core\Attribute\Category\PageCategory;
 use Concrete\Core\Block\Block;
 use Concrete\Core\Entity\Attribute\Key\PageKey;
-use Core;
-use Database;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Conversation\Conversation;
 use Concrete\Core\Conversation\Message\MessageList;
@@ -76,8 +74,8 @@ class Controller extends BlockController implements ConversationFeatureInterface
         if (!isset($this->conversation)) {
             // i don't know why this->cnvid isn't sticky in some cases, leading us to query
             // every damn time
-            $db = Database::get();
-            $cnvID = $db->GetOne('select cnvID from btCoreConversation where bID = ?', [$this->bID]);
+            $db = $this->app->make('database');
+            $cnvID = $db->fetchColumn('select cnvID from btCoreConversation where bID = ?', [$this->bID]);
             $this->conversation = Conversation::getByID($cnvID);
         }
 
@@ -87,11 +85,11 @@ class Controller extends BlockController implements ConversationFeatureInterface
     public function duplicate_master($newBID, $newPage)
     {
         parent::duplicate($newBID);
-        $db = Database::get();
+        $db = $this->app->make('database');
         $conv = Conversation::add();
         $conv->setConversationPageObject($newPage);
         $this->conversation = $conv;
-        $db->Execute('update btCoreConversation set cnvID = ? where bID = ?', [$conv->getConversationID(), $newBID]);
+        $db->executeQuery('update btCoreConversation set cnvID = ? where bID = ?', [$conv->getConversationID(), $newBID]);
     }
 
     public function edit()
@@ -135,7 +133,7 @@ class Controller extends BlockController implements ConversationFeatureInterface
         if (is_object($conversation)) {
             $this->set('conversation', $conversation);
             if ($this->enablePosting) {
-                $token = Core::make('helper/validation/token')->generate('add_conversation_message');
+                $token = $this->app->make('token')->generate('add_conversation_message');
             } else {
                 $token = '';
             }
@@ -155,7 +153,7 @@ class Controller extends BlockController implements ConversationFeatureInterface
     public function getFileSettings()
     {
         $conversation = $this->getConversationObject();
-        $helperFile = Core::make('helper/concrete/file');
+        $helperFile = $this->app->make('helper/concrete/file');
         $maxFilesGuest = $conversation->getConversationMaxFilesGuest();
         $attachmentOverridesEnabled = $conversation->getConversationAttachmentOverridesEnabled();
         $maxFilesRegistered = $conversation->getConversationMaxFilesRegistered();
@@ -196,9 +194,9 @@ class Controller extends BlockController implements ConversationFeatureInterface
 
     public function save($post)
     {
-        $helperFile = Core::make('helper/concrete/file');
-        $db = Database::get();
-        $cnvID = $db->GetOne('select cnvID from btCoreConversation where bID = ?', [$this->bID]);
+        $helperFile = $this->app->make('helper/concrete/file');
+        $db = $this->app->make('database');
+        $cnvID = $db->fetchColumn('select cnvID from btCoreConversation where bID = ?', [$this->bID]);
         if (!$cnvID) {
             $conversation = Conversation::add();
             $b = $this->getBlockObject();

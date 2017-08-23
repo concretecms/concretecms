@@ -2,36 +2,37 @@
 
 use \Concrete\Core\Conversation\Message\Message as ConversationMessage;
 
-$ax = Loader::helper('ajax');
-$vs = Loader::helper('validation/strings');
-$ve = Loader::helper('validation/error');
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+$ax = $app->make('helper/ajax');
+$vs = $app->make('helper/validation/strings');
+$ve = $app->make('error');
 
-if ($_POST['enablePosting']) {
+if ($app->request->post('enablePosting')) {
     $enablePosting = true;
 } else {
     $enablePosting = false;
 }
 
-if (in_array($_POST['displayMode'], array('flat'))) {
-    $displayMode = $_POST['displayMode'];
+if (in_array($app->request->post('displayMode'), array('flat'))) {
+    $displayMode = $app->request->post('displayMode');
 } else {
     $displayMode = 'threaded';
 }
 
-if (Loader::helper('validation/numbers')->integer($_POST['cnvMessageID']) && $_POST['cnvMessageID'] > 0) {
-    $message = ConversationMessage::getByID($_POST['cnvMessageID']);
+if ($app->make('helper/validation/numbers')->integer($app->request->post('cnvMessageID')) && $app->request->post('cnvMessageID') > 0) {
+    $message = ConversationMessage::getByID($app->request->post('cnvMessageID'));
     if (is_object($message)) {
         if ($message->isConversationMessageApproved()) {
-            Loader::element('conversation/message', array(
+            View::element('conversation/message', array(
                 'message' => $message,
                 'displayMode' => $displayMode,
                 'enablePosting' => $enablePosting,
-                'enableCommentRating' => $_POST['enableCommentRating'],
-                'displaySocialLinks' => $_POST['displaySocialLinks']
+                'enableCommentRating' => $app->request->post('enableCommentRating'),
+                'displaySocialLinks' => $app->request->post('displaySocialLinks')
             ));
         } else {
             // it's a new message, but it's pending
-            Loader::element('conversation/message/pending', array('message' => $message));
+            View::element('conversation/message/pending', array('message' => $message));
         }
     }
 }

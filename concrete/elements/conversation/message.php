@@ -1,6 +1,7 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
 
-$im = Loader::helper('image');
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+$im = $app->make('helper/image');
 
 $mp = new Permissions($message);
 $canDeleteMessage = $mp->canDeleteConversationMessage();

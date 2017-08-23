@@ -1,11 +1,13 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
 
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+
 $paginate = ($paginate) ? 'true' : 'false';
 $itemsPerPage = ($paginate) ? $itemsPerPage : -1;
 $blockAreaHandle = $this->block->getAreaHandle();
 
 /** @var \Concrete\Core\Permission\IPService $iph */
-$iph = Core::make('helper/validation/ip');
+$iph = $app->make('helper/validation/ip');
 $commentRatingIP = $iph->getRequestIP()->getIp();
 
 $u = new User();
@@ -38,7 +40,7 @@ if (is_object($conversation)) { ?>
             orderBy: '<?=$orderBy?>',
             enableOrdering: <?=$enableOrdering?>,
             displayPostingForm: '<?=$displayPostingForm?>',
-            activeUsers: <?=Loader::helper('json')->encode($users)?>,
+            activeUsers: <?=$app->make('helper/json')->encode($users)?>,
             enableCommentRating: <?=$enableCommentRating?>,
             commentRatingUserID: <?=$uID?>,
             commentRatingIP: '<?=$commentRatingIP?>',

@@ -1,5 +1,7 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
 
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+
 if (!is_array($messages)) {
     $messages = array();
 }
@@ -16,11 +18,11 @@ if (is_object($ms)) {
 $editor = \Concrete\Core\Conversation\Editor\Editor::getActive();
 $editor->setConversationObject($args['conversation']);
 
-$val = Loader::helper('validation/token');
-$form = Loader::helper('form');
+$val = $app->make('token');
+$form = $app->make('helper/form');
 ?>
 
-<?php Loader::element('conversation/message/add_form', array(
+<?php View::element('conversation/message/add_form', array(
     'blockAreaHandle' => $blockAreaHandle,
     'cID' => $cID,
     'bID' => $bID,
@@ -52,14 +54,14 @@ $form = Loader::helper('form');
     		</select>
 		<?php } ?>
 
-		<?php Loader::element('conversation/count_header', array('conversation' => $conversation))?>
+		<?php View::element('conversation/count_header', array('conversation' => $conversation))?>
 	</div>
 
 	<div class="ccm-conversation-no-messages well well-small" <?php if (count($messages) > 0) { ?>style="display: none" <?php } ?>><?=t('No messages in this conversation.')?></div>
 
 	<div class="ccm-conversation-messages">
 	<?php foreach ($messages as $m) {
-        Loader::element('conversation/message', array(
+        View::element('conversation/message', array(
             'cID' => $cID,
             'message' => $m,
             'bID' => $bID,
@@ -82,7 +84,7 @@ $form = Loader::helper('form');
 	<?php } ?>
 </div>
 
-<?php Loader::element('conversation/message/add_form', array(
+<?php View::element('conversation/message/add_form', array(
     'blockAreaHandle' => $blockAreaHandle,
     'cID' => $cID,
     'bID' => $bID,

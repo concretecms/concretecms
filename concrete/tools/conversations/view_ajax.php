@@ -3,8 +3,9 @@
 use Concrete\Core\Conversation\Message\MessageList as ConversationMessageList;
 use Concrete\Core\Conversation\Message\ThreadedList as ConversationMessageThreadedList;
 
-$cnv = Conversation::getByID(Request::post('cnvID'));
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
+$cnv = Conversation::getByID(Request::post('cnvID'));
 $cID = intval(Request::post('cID'));
 if ($cID) {
     $page = Page::getByID($cID);
@@ -32,7 +33,7 @@ if ($cID) {
 
             $addMessageLabel = t('Add Message');
             if (Request::post('addMessageLabel')) {
-                $addMessageLabel = Core::make('helper/security')->sanitizeString(Request::post('addMessageLabel'));
+                $addMessageLabel = $app->make('helper/security')->sanitizeString(Request::post('addMessageLabel'));
             }
 
             switch (Request::post('task')) {
@@ -63,7 +64,7 @@ if ($cID) {
                     break;
             }
 
-            if ($paginate && Core::make('helper/validation/numbers')->integer(Request::post('itemsPerPage'))) {
+            if ($paginate && $app->make('helper/validation/numbers')->integer(Request::post('itemsPerPage'))) {
                 $ml->setItemsPerPage(Request::post('itemsPerPage'));
             } else {
                 $ml->setItemsPerPage(-1);
