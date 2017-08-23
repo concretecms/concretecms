@@ -51,9 +51,12 @@ class ThemeLocation extends AbstractLocation
         if ($this->pkgHandle) {
             return DIR_REL
             . '/'
+            . DIRNAME_PACKAGES
+            . '/'
             . $this->pkgHandle
             . '/'
             . DIRNAME_THEMES
+            . '/'
             . $this->themeHandle;
         } else {
             return DIR_REL . '/' . DIRNAME_THEMES . '/' . $this->themeHandle;
