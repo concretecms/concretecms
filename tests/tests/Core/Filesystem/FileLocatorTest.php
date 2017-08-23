@@ -160,6 +160,7 @@ class FileLocatorTest extends \PHPUnit_Framework_TestCase
         $this->locator->setFilesystem($filesystem);
         $record = $this->locator->getRecord(DIRNAME_BLOCKS . '/page_list/templates/fancy_list.php');
         $this->assertEquals(DIR_BASE . '/packages/brilliant_theme/themes/brilliant/blocks/page_list/templates/fancy_list.php', $record->getFile());
+        $this->assertEquals('/path/to/server/packages/brilliant_theme/themes/brilliant/blocks/page_list/templates/fancy_list.php', $record->getUrl());
         $this->assertTrue($record->exists());
 
     }
