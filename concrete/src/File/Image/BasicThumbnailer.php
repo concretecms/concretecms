@@ -7,7 +7,7 @@ use Concrete\Core\Entity\File\File;
 use Concrete\Core\Entity\File\StorageLocation\StorageLocation;
 use Concrete\Core\File\Image\Thumbnail\ThumbnailerInterface;
 use Concrete\Core\File\Image\Thumbnail\Type\CustomThumbnail;
-use Concrete\Core\File\StorageLocation\Configuration\DefaultConfiguration;
+use Concrete\Core\File\StorageLocation\Configuration\LocalConfiguration;
 use Concrete\Core\File\StorageLocation\StorageLocationInterface;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Doctrine\ORM\EntityManager;
@@ -242,18 +242,47 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
         $version = null;
 
         $fh = \Core::make('helper/file');
+        $baseFilename = '';
+        $extension = '';
         if ($obj instanceof File) {
             try {
                 $fr = $obj->getFileResource();
                 $fID = $obj->getFileID();
-                $filename = md5(implode(':', array($fID, $maxWidth, $maxHeight, $crop, $fr->getTimestamp())))
-                    . '.' . $fh->getExtension($fr->getPath());
-            } catch (\Exception $e) {
-                $filename = '';
+                $extension = $fh->getExtension($fr->getPath());
+                $baseFilename = md5(implode(':', array($fID, $maxWidth, $maxHeight, $crop, $fr->getTimestamp())));
+            } catch (Exception $e) {
             }
         } else {
-            $filename = md5(implode(':', array($obj, $maxWidth, $maxHeight, $crop, @filemtime($obj))))
-                . '.' . $fh->getExtension($obj);
+            $extension = $fh->getExtension($obj);
+            $baseFilename = md5(implode(':', array($obj, $maxWidth, $maxHeight, $crop, @filemtime($obj))));
+        }
+
+        $thumbnailsFormat = $this->getThumbnailsFormat();
+        switch ($thumbnailsFormat) {
+            case 'jpeg':
+                $extension = 'jpg';
+                break;
+            case 'png':
+                $extension = 'png';
+                break;
+            case 'auto':
+                switch (strtolower($extension)) {
+                    case 'jpeg':
+                    case 'jpg':
+                    case 'pjpeg':
+                        $extension = 'jpg';
+                        $thumbnailsFormat = 'jpeg';
+                        break;
+                    default:
+                        $extension = 'png';
+                        $thumbnailsFormat = 'png';
+                        break;
+                }
+                break;
+        }
+        $filename = '';
+        if ($baseFilename !== '') {
+            $filename = $baseFilename . '.' . $extension;
         }
 
         $abspath = '/cache/' . $filename;
@@ -293,20 +322,19 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
         // this is a hack, but we shouldn't go out on the network if we don't have to. We should probably
         // add a method to the configuration to handle this. The file storage locations should be able to handle
         // thumbnails.
-        if ($configuration instanceof DefaultConfiguration) {
+        if ($configuration instanceof LocalConfiguration) {
             $dimensionsPath = $configuration->getRootPath() . $abspath;
         } else {
             $dimensionsPath = $src;
         }
 
         try {
-            //try and get it locally, otherwise use http
-            $dimensions = getimagesize($dimensionsPath);
-            $thumb->width = $dimensions[0];
-            $thumb->height = $dimensions[1];
-        } catch (\Exception $e) {
-
+            $dimensions = @getimagesize($dimensionsPath);
+        } catch (Exception $e) {
+            $dimensions = false;
         }
+        $thumb->width = ($dimensions === false) ? null : $dimensions[0];
+        $thumb->height = ($dimensions === false) ? null : $dimensions[1];
 
         return $thumb;
     }
@@ -414,7 +442,7 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
         // this is a hack, but we shouldn't go out on the network if we don't have to. We should probably
         // add a method to the configuration to handle this. The file storage locations should be able to handle
         // thumbnails.
-        if ($configuration instanceof DefaultConfiguration) {
+        if ($configuration instanceof LocalConfiguration) {
             $dimensionsPath = $configuration->getRootPath() . $abspath;
         } else {
             $dimensionsPath = $src;
@@ -426,7 +454,7 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
             $dimensions = false;
         }
         $thumb->width = ($dimensions === false) ? null : $dimensions[0];
-        $thumb->height = ($dimensions === false) ?: $dimensions[1];
+        $thumb->height = ($dimensions === false) ? null : $dimensions[1];
 
         return $thumb;
     }

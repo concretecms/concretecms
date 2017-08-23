@@ -96,7 +96,7 @@ interface ThumbnailerInterface
      * @param int|null $maxHeight The maximum height of the thumbnail (may be empty if $crop is false and $maxWidth is specified)
      * @param bool $crop Fit to bounds?
      *
-     * @return stdClass Object that has the following properties: src (the public URL to the file), width (null if unable to determine it), height (null if unable to determine it)
+     * @return \stdClass Object that has the following properties: src (the public URL to the file), width (null if unable to determine it), height (null if unable to determine it)
      */
     public function getThumbnail($obj, $maxWidth, $maxHeight, $crop = false);
 }
