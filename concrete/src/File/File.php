@@ -1,17 +1,23 @@
 <?php
 namespace Concrete\Core\File;
 
-use CacheLocal;
 use Carbon\Carbon;
-use Concrete\Core\Entity\File\Version;
-use Concrete\Core\File\StorageLocation\StorageLocation;
+use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Entity\File\File as FileEntity;
+use Concrete\Core\Entity\File\Version as FileVersion;
+use Concrete\Core\File\Event\FileVersion as FileVersionEvent;
+use Concrete\Core\File\StorageLocation\StorageLocationFactory;
 use Concrete\Core\Permission\Access\Entity\FileUploaderEntity as FileUploaderPermissionAccessEntity;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Tree\Node\Type\File as FileNode;
 use Concrete\Core\Tree\Node\Type\FileFolder;
-use Concrete\Core\User\UserInfo;
-use Events;
-use Loader;
+use Concrete\Core\User\UserInfoRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use User;
 
+/**
+ * Service class for the File entity
+ */
 class File
 {
     /**
@@ -19,13 +25,11 @@ class File
      *
      * @param int $fID The file identifier
      *
-     * @return \Concrete\Core\Entity\File\File|null
+     * @return FileEntity|null
      */
     public static function getByID($fID)
     {
-        $em = \ORM::entityManager();
-
-        return $em->find('\Concrete\Core\Entity\File\File', $fID);
+        return $fID ? Application::getFacadeApplication()->make(EntityManagerInterface::class)->find(FileEntity::class, $fID) : null;
     }
 
     /**
@@ -37,22 +41,26 @@ class File
      */
     public static function getRelativePathFromID($fID)
     {
-        $path = CacheLocal::getEntry('file_relative_path', $fID);
-        if ($path != false) {
-            return $path;
+        $result = false;
+        if ($fID) {
+            $cache = Application::getFacadeApplication()->make('cache/request');
+            /** @var \Concrete\Core\Cache\Cache $cache */
+            if ($cache->isEnabled()) {
+                $cacheItem = $cache->getItem('file_relative_path/' . $fID);
+                if (!$cacheItem->isMiss()) {
+                    return $cacheItem->get();
+                }
+            }
+            $f = static::getByID($fID);
+            if ($f !== null) {
+                $result = $f->getRelativePath();
+                if (isset($cacheItem)) {
+                    $cacheItem->set($result)->save();
+                }
+            }
         }
 
-        $f = static::getByID($fID);
-
-        if ($f) {
-            $path = $f->getRelativePath();
-
-            CacheLocal::set('file_relative_path', $fID, $path);
-
-            return $path;
-        }
-
-        return false;
+        return $result;
     }
 
     /**
@@ -67,28 +75,30 @@ class File
      *     @var string $fvTags The tags to be associated to the file (separate multiple tags with commas or new lines) (if not specified, we'll assume no tags)
      *     @var bool $fvIsApproved The file title (if not specified, we'll assume an empty string)
      * }
-     * @param \Concrete\Core\Entity\File\StorageLocation\StorageLocation|false $fsl The storage location to be used (we'll use the default one if it's falsy)
-     * @param \Concrete\Core\Tree\Node\Type\FileFolder|false $folder The folder where the file must be added (we'll use the root folder if it's falsy)
      *
-     * @return \Concrete\Core\Entity\File\Version
+     * @param \Concrete\Core\Entity\File\StorageLocation\StorageLocation|false $fsl The storage location to be used (we'll use the default one if it's falsy)
+     * @param FileFolder|false $folder The folder where the file must be added (we'll use the root folder if it's falsy)
+     *
+     * @return FileVersion
      */
     public static function add($filename, $prefix, $data = [], $fsl = false, $folder = false)
     {
-        $db = Loader::db();
-        $dh = Loader::helper('date');
-        $date = $dh->getOverridableNow();
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $date = $app->make('helper/date')->getOverridableNow();
 
-        if (!is_object($fsl)) {
-            $fsl = StorageLocation::getDefault();
+        if (!$fsl) {
+            $fsl = $app->make[StorageLocationFactory::class]->fetchDefault();
         }
 
-        $uID = 0;
         $u = new User();
         if (isset($data['uID'])) {
-            $uID = $data['uID'];
+            $uID = (int) $data['uID'];
         } else {
             if ($u->isRegistered()) {
-                $uID = $u->getUserID();
+                $uID = (int) $u->getUserID();
+            } else {
+                $uID = 0;
             }
         }
 
@@ -97,39 +107,38 @@ class File
             $folder = $filesystem->getRootFolder();
         }
 
-        $f = new \Concrete\Core\Entity\File\File();
+        $f = new FileEntity();
         $f->storageLocation = $fsl;
         $f->fDateAdded = new Carbon($date);
         $f->folderTreeNodeID = $folder->getTreeNodeID();
-
-        $em = \ORM::entityManager();
-        $em->persist($f);
-        $em->flush();
-
         if ($uID > 0) {
-            $ui = UserInfo::getByID($uID);
-            if (is_object($ui)) {
+            $ui = $app->make(UserInfoRepository::class)->getByID($uID);
+            if ($ui !== null) {
                 $ue = $ui->getEntityObject();
-                if (is_object($ue)) {
+                if ($ue) {
                     $f->setUser($ue);
                 }
             }
         }
+        $em = $app->make(EntityManagerInterface::class);
+        $em->persist($f);
+        $em->flush();
 
-        $node = \Concrete\Core\Tree\Node\Type\File::add($f, $folder);
+        $node = FileNode::add($f, $folder);
 
-        $fv = Version::add($f, $filename, $prefix, $data);
+        $fv = FileVersion::add($f, $filename, $prefix, $data);
 
         $f->versions->add($fv);
 
-        $fve = new \Concrete\Core\File\Event\FileVersion($fv);
-        Events::dispatch('on_file_add', $fve);
+        $fve = new FileVersionEvent($fv);
+        $app->make('director')->dispatch('on_file_add', fve);
 
         $entities = $u->getUserAccessEntityObjects();
         $hasUploader = false;
         foreach ($entities as $obj) {
             if ($obj instanceof FileUploaderPermissionAccessEntity) {
                 $hasUploader = true;
+                break;
             }
         }
         if (!$hasUploader) {
