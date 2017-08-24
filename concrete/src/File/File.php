@@ -131,7 +131,7 @@ class File
         $f->versions->add($fv);
 
         $fve = new FileVersionEvent($fv);
-        $app->make('director')->dispatch('on_file_add', fve);
+        $app->make('director')->dispatch('on_file_add', $fve);
 
         $entities = $u->getUserAccessEntityObjects();
         $hasUploader = false;
