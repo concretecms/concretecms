@@ -5,6 +5,7 @@ use Concrete\Core\Attribute\Key\Category;
 use Concrete\Core\Attribute\Key\FileKey;
 use Concrete\Core\Attribute\Type as AttributeType;
 use Concrete\Core\Cache\CacheLocal;
+use Concrete\Core\File\Image\BasicThumbnailer;
 use Concrete\Core\File\Image\Thumbnail\Type\Type as ThumbnailType;
 use Concrete\Core\File\Importer;
 use Config;
@@ -200,7 +201,9 @@ class ImporterTest extends \FileStorageTestCase
                     "Check thumbnail URL with: format={$thumbnailFormat}, strategy={$strategy}"
                 );
 
-                $fsl = $fo->getFile()->getFileStorageLocationObject()->getFileSystemObject();
+                $storageLocation = $fo->getFile()->getFileStorageLocationObject();
+                /* @var \Concrete\Core\Entity\File\StorageLocation\StorageLocation $storageLocation */
+                $fsl = $storageLocation->getFileSystemObject();
                 /* @var \League\Flysystem\Filesystem $fsl */
                 foreach ($humbnailTypes as $thumbnailType) {
                     foreach ([
@@ -213,6 +216,28 @@ class ImporterTest extends \FileStorageTestCase
                         list($width, $height, $type) = getimagesizefromstring($handler->read());
                         $this->assertSame($expectedFileType, $type, "Check thumbnail type with: format={$thumbnailFormat}, strategy={$strategy}");
                     }
+                }
+                $basicThumbnailer = Core::build(BasicThumbnailer::class, ['storageLocation' => $storageLocation]);
+                /* @var BasicThumbnailer $basicThumbnailer */
+                $thumbnail = $basicThumbnailer->getThumbnail($fo->getFile(), 100, 100);
+                $this->assertSame('.' . $expectedExtension, substr($thumbnail->src, -4));
+                $this->assertContains('/application/files/cache/thumbnails/', $thumbnail->src);
+                $pos = strrpos($thumbnail->src, '/cache/thumbnails/');
+                $realPath = $this->getStorageDirectory() . substr($thumbnail->src, $pos);
+                if ($strategy === 'async') {
+                    $this->assertNull($thumbnail->width);
+                    $this->assertNull($thumbnail->height);
+                    $this->assertFileNotExists($realPath);
+                } else {
+                    $this->assertGreaterThan(0, $thumbnail->width);
+                    $this->assertGreaterThan(0, $thumbnail->height);
+                    $this->assertLessThanOrEqual(100, $thumbnail->width);
+                    $this->assertLessThanOrEqual(100, $thumbnail->height);
+                    $this->assertFileExists($realPath);
+                    list($width, $height, $type) = getimagesize($realPath);
+                    $this->assertSame($thumbnail->width, $width);
+                    $this->assertSame($thumbnail->height, $height);
+                    $this->assertSame($expectedFileType, $type);
                 }
             }
         }
