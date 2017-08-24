@@ -1425,7 +1425,6 @@ class Version implements ObjectInterface
     public function generateThumbnail(ThumbnailTypeVersion $type)
     {
         $image = $this->getImagineImage();
-        $mimetype = $this->getMimetype();
 
         $filesystem = $this->getFile()
             ->getFileStorageLocationObject()
@@ -1458,25 +1457,17 @@ class Version implements ObjectInterface
         $thumbnailPath = $type->getFilePath($this);
         $thumbnailOptions = [];
 
-        switch ($mimetype) {
-            case 'image/jpeg':
+        switch(substr($thumbnailPath, 3)) {
+            case 'jpg':
+                $mimetype = 'image/jpeg';
                 $thumbnailType = 'jpeg';
                 $thumbnailOptions = ['jpeg_quality' => \Config::get('concrete.misc.default_jpeg_image_compression')];
                 break;
-            case 'image/png':
-                $thumbnailType = 'png';
-                break;
-            case 'image/gif':
-                $thumbnailType = 'gif';
-                break;
-            case 'image/xbm':
-                $thumbnailType = 'xbm';
-                break;
-            case 'image/vnd.wap.wbmp':
-                $thumbnailType = 'wbmp';
-                break;
+            case 'png':
             default:
+                $mimetype = 'image/png';
                 $thumbnailType = 'png';
+                $thumbnailOptions = ['png_compression_level' => \Config::get('concrete.misc.default_png_image_compression')];
                 break;
         }
 
