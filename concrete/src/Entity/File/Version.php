@@ -1457,7 +1457,7 @@ class Version implements ObjectInterface
         $thumbnailPath = $type->getFilePath($this);
         $thumbnailOptions = [];
 
-        switch(substr($thumbnailPath, 3)) {
+        switch(substr($thumbnailPath, -3)) {
             case 'jpg':
                 $mimetype = 'image/jpeg';
                 $thumbnailType = 'jpeg';
