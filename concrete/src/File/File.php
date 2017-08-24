@@ -88,7 +88,7 @@ class File
         $date = $app->make('helper/date')->getOverridableNow();
 
         if (!$fsl) {
-            $fsl = $app->make[StorageLocationFactory::class]->fetchDefault();
+            $fsl = $app->make(StorageLocationFactory::class)->fetchDefault();
         }
 
         $u = new User();
