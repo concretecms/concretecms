@@ -17,25 +17,28 @@ $view->element('dashboard/system/permissions/blacklist/menu', ['type' => null]);
     <?php $token->output('update_ipblacklist') ?>
     <div class="ccm-pane-body">
         <div class="form-group form-inline">
-            <?= $form->checkbox('banEnabled', 1, $banEnabled) ?> <?= t('Lock IP after') ?>
-            <?= $form->number('allowedAttempts', $allowedAttempts, ['style' => 'width:70px', 'min' => 1]) ?>
-            <?= t(/*i18n: before we have the number of failed logins, after we have a time duration */'failed login attempts in') ?>
-            <?= $form->number('attemptsTimeWindow', $attemptsTimeWindow, ['style' => 'width:90px', 'min' => 1]) ?>
-            <?= t('seconds') ?>
+            <?= $form->checkbox('banEnabled', 1, $banEnabled) ?>
+            <?= t(
+                'Lock IP after %1$s failed login attempts in %2$s seconds',
+                $form->number('allowedAttempts', $allowedAttempts, ['style' => 'width:70px', 'min' => 1]),
+                $form->number('attemptsTimeWindow', $attemptsTimeWindow, ['style' => 'width:90px', 'min' => 1])
+            ) ?>
         </div>
 
-        <div class="form-inline form-group radio">
-            <?= t('Ban IP For') ?>
-            <br />
-            <label class="radio">
-                <?= $form->radio('banDurationUnlimited', 0, $banDuration ? 0 : 1) ?>
-                <?= $form->number('banDuration', $banDuration ?: 300, ['style' => 'width:90px', 'min' => 1]) ?>
-                <?= t('minutes') ?>
-            </label>
-            <br />
-            <label class="radio">
-                <?= $form->radio('banDurationUnlimited', 1, $banDuration ? 0 : 1) ?> <?= t('Forever') ?>
-            </label>
+        <div class="form-group">
+            <?= $form->label('banDurationUnlimited', 'Ban Duration')?>
+            <div class="radio">
+                <label>
+                    <?= $form->radio('banDurationUnlimited', 0, $banDuration ? 0 : 1) ?>
+                    <?= t('Ban IP for %s minutes', $form->number('banDuration', $banDuration ?: 300, ['style' => 'width:90px; display: inline-block', 'min' => 1])) ?>
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <?= $form->radio('banDurationUnlimited', 1, $banDuration ? 0 : 1) ?>
+                    <?= t('Ban Forever') ?>
+                </label>
+            </div>
         </div>
     </div>
 
