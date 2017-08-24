@@ -121,8 +121,8 @@ class Controller extends GeolocatorController
             ->setStateProvinceName(empty($configuration['skipStateProvince']) ? $data['geoplugin_regionName'] : '')
             ->setCountryCode(empty($configuration['skipCountry']) ? $data['geoplugin_countryCode'] : '')
             ->setCountryName(empty($configuration['skipCountry']) ? $data['geoplugin_countryName'] : '')
-            ->setLatitude(empty($configuration['skipLatitudeLongitude']) ? $data['geoplugin_latitude'] : '')
-            ->setLongitude(empty($configuration['skipLatitudeLongitude']) ? $data['geoplugin_longitude'] : '')
+            ->setLatitude(empty($configuration['skipLatitudeLongitude']) ? $data['geoplugin_latitude'] : null)
+            ->setLongitude(empty($configuration['skipLatitudeLongitude']) ? $data['geoplugin_longitude'] : null)
         ;
     }
 }
