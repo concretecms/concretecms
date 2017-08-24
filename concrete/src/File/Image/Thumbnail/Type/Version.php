@@ -5,6 +5,7 @@ use Concrete\Core\File\Image\Thumbnail\Path\Resolver;
 use Concrete\Core\Entity\File\Version as FileVersion;
 use Concrete\Core\File\Image\Thumbnail\Type\Type as ThumbnailType;
 use Core;
+use Concrete\Core\Support\Facade\Application;
 
 /**
  * Handles regular and retina thumbnails. e.g. Each thumbnail type has two versions of itself
@@ -171,21 +172,25 @@ class Version
 
     public function getFilePath(FileVersion $fv)
     {
+        $app = Application::getFacadeApplication();
+        $hi = $app->make('helper/file');
+        $ii = $app->make('helper/concrete/file');
+        $thumbnailFormat = $app->make('config')->get('concrete.misc.default_thumbnail_format');
         $prefix = $fv->getPrefix();
         $filename = $fv->getFileName();
-        $hi = Core::make('helper/file');
-        $ii = Core::make('helper/concrete/file');
-        $f1 = REL_DIR_FILES_THUMBNAILS . '/' . $this->getDirectoryName() . $ii->prefix($prefix, $filename);
-        $f2 = REL_DIR_FILES_THUMBNAILS . '/' . $this->getDirectoryName() . $ii->prefix($prefix,
-                $hi->replaceExtension($filename, 'jpg'));
-        // 5.7.4 keeps extension; older sets it to .jpg
-
-        $filesystem = $fv->getFile()->getFileStorageLocationObject()->getFileSystemObject();
-        if ($filesystem->has($f1)) {
-            return $f1;
+        switch ($thumbnailsFormat) {
+            case 'jpeg':
+                $extension = 'jpg';
+                break;
+            case 'png':
+                $extension = 'png';
+                break;
+            case 'auto':
+            default:
+                $extension = preg_match('/\.p?jpe?g$/i', $filename) ? 'jpg' : 'png';
+                break;
         }
 
-        //fallback
-        return $f2;
+        return REL_DIR_FILES_THUMBNAILS . '/' . $this->getDirectoryName() . $ii->prefix($prefix, $hi->replaceExtension($filename, $extension));
     }
 }
