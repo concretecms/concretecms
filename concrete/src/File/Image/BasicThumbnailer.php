@@ -310,7 +310,9 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
                     $abspath,
                     $maxWidth,
                     $maxHeight,
-                    $crop);
+                    $crop,
+                    $thumbnailsFormat
+                );
             }
         }
 
@@ -424,7 +426,8 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
                         $maxWidth,
                         $maxHeight,
                         $crop,
-                        $thumbnailsFormat);
+                        $thumbnailsFormat
+                    );
                 } catch (\Exception $e) {
                     $abspath = false;
                 }
