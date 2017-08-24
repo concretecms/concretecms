@@ -3,9 +3,9 @@ namespace Concrete\Tests\Core\File;
 
 use Concrete\Core\Attribute\Key\Category;
 use Concrete\Core\Attribute\Key\FileKey;
-use Concrete\Core\File\Image\Thumbnail\Type\Type as ThumbnailType;
 use Concrete\Core\Attribute\Type as AttributeType;
 use Concrete\Core\Cache\CacheLocal;
+use Concrete\Core\File\Image\Thumbnail\Type\Type as ThumbnailType;
 use Concrete\Core\File\Importer;
 use Config;
 use Core;
@@ -40,6 +40,14 @@ class ImporterTest extends \FileStorageTestCase
             'Concrete\Core\Entity\Attribute\Category',
         ]);
         Config::set('concrete.upload.extensions', '*.txt;*.jpg;*.jpeg;*.png');
+    }
+
+    public function setUp()
+    {
+        parent::setUp();
+        $config = \Core::make('config');
+        $config->set('concrete.misc.default_thumbnail_format', 'jpeg');
+        $config->set('concrete.misc.basic_thumbnailer_generation_strategy', 'now');
     }
 
     public static function setUpBeforeClass()
@@ -191,9 +199,9 @@ class ImporterTest extends \FileStorageTestCase
                     $fo->getThumbnailURL('file_manager_detail'),
                     "Check thumbnail URL with: format={$thumbnailFormat}, strategy={$strategy}"
                 );
-                
+
                 $fsl = $fo->getFile()->getFileStorageLocationObject()->getFileSystemObject();
-                /* @var \League\Flysystem\Filesystem $fsl */	
+                /* @var \League\Flysystem\Filesystem $fsl */
                 foreach ($humbnailTypes as $thumbnailType) {
                     foreach ([
                         $thumbnailType->getBaseVersion(),
