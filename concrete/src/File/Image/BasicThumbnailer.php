@@ -10,8 +10,6 @@ use Concrete\Core\File\Image\Thumbnail\Type\CustomThumbnail;
 use Concrete\Core\File\StorageLocation\Configuration\LocalConfiguration;
 use Concrete\Core\File\StorageLocation\StorageLocationInterface;
 use Concrete\Core\Http\ResponseAssetGroup;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Image;
 use Imagine\Image\Box;
@@ -60,8 +58,8 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
     public function getStorageLocation()
     {
         if ($this->storageLocation === null) {
-            /** @var EntityManagerInterface $orm */
             $orm = $this->app['database/orm']->entityManager();
+            /* @var \Doctrine\ORM\EntityManagerInterface $orm */
             $storageLocation = $orm->getRepository(StorageLocation::class)->findOneBy(['fslIsDefault' => true]);
 
             if ($storageLocation) {
@@ -222,7 +220,7 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
     /**
      * Checks thumbnail resolver for filename, schedule for creation via ajax if necessary.
      *
-     * @param File|string $obj File instance of path to a file.
+     * @param File|string $obj file instance of path to a file
      * @param int|null $maxWidth
      * @param int|null $maxHeight
      * @param bool $crop
@@ -233,16 +231,16 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
     {
         return $this->processThumbnail(true, $obj, $maxWidth, $maxHeight, $crop);
     }
-    
-    
+
     /**
      * Checks filesystem for thumbnail and if file doesn't exist will create it immediately.
      * concrete5's default behavior from the beginning up to 8.1.
      *
-     * @param File|string $obj File instance of path to a file.
+     * @param File|string $obj file instance of path to a file
      * @param int|null $maxWidth
      * @param int|null $maxHeight
      * @param bool $crop
+     *
      * @return \stdClass
      */
     private function checkForThumbnailAndCreateIfNecessary($obj, $maxWidth, $maxHeight, $crop = false)
@@ -270,7 +268,7 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
         $filesystem = $storage->getFileSystemObject();
         $configuration = $storage->getConfigurationObject();
         $version = null;
-        
+
         $fh = $this->app->make('helper/file');
         if ($async) {
             $assetGroup = ResponseAssetGroup::get();
@@ -292,7 +290,7 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
             // don't care too much about that
             $baseFilename = md5(implode(':', [$obj, $maxWidth, $maxHeight, $crop, @filemtime($obj)]));
         }
-        
+
         $thumbnailsFormat = $this->getThumbnailsFormat();
         switch ($thumbnailsFormat) {
             case 'jpeg':
@@ -320,12 +318,12 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
         if ($baseFilename !== '') {
             $filename = $baseFilename . '.' . $extension;
         }
-        
+
         $abspath = '/cache/thumbnails/' . $filename;
-        
+
         if ($async && $obj instanceof File) {
             $customThumb = new CustomThumbnail($maxWidth, $maxHeight, $abspath, $crop);
-            
+
             $path_resolver = $this->app->make('Concrete\Core\File\Image\Thumbnail\Path\Resolver');
             $path_resolver->getPath($obj->getVersion(), $customThumb);
         } else {
@@ -333,7 +331,7 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
                 $creaed = false;
                 try {
                     if ($obj instanceof File) {
-                        $image =  $fr->exists() ? \Image::load($fr->read()) : null;
+                        $image = $fr->exists() ? \Image::load($fr->read()) : null;
                     } else {
                         $image = \Image::open($obj);
                     }
@@ -353,14 +351,15 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
                 if ($created === false) {
                     $result = new \stdClass();
                     $result->src = '';
+
                     return $result;
                 }
             }
         }
-        
+
         $thumb = new \stdClass();
         $thumb->src = $configuration->getPublicURLToFile($abspath);
-        
+
         // this is a hack, but we shouldn't go out on the network if we don't have to. We should probably
         // add a method to the configuration to handle this. The file storage locations should be able to handle
         // thumbnails.
@@ -369,7 +368,7 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
         } else {
             $dimensionsPath = $thumb->src;
         }
-        
+
         try {
             $dimensions = @getimagesize($dimensionsPath);
         } catch (Exception $e) {
@@ -377,7 +376,7 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
         }
         $thumb->width = ($dimensions === false) ? null : $dimensions[0];
         $thumb->height = ($dimensions === false) ? null : $dimensions[1];
-        
+
         return $thumb;
     }
 
