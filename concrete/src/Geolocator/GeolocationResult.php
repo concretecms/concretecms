@@ -1,7 +1,9 @@
 <?php
 namespace Concrete\Core\Geolocator;
 
-class GeolocationResult
+use JsonSerializable;
+
+class GeolocationResult implements JsonSerializable
 {
     /**
      * The city name.
@@ -257,5 +259,24 @@ class GeolocationResult
         }
 
         return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see JsonSerializable::jsonSerialize()
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'cityName' => $this->cityName,
+            'stateProvinceCode' => $this->stateProvinceCode,
+            'stateProvinceName' => $this->stateProvinceName,
+            'postalCode' => $this->postalCode,
+            'countryCode' => $this->countryCode,
+            'countryName' => $this->countryName,
+            'latitude' => $this->latitude,
+            'longitude' => $this->longitude,
+        ];
     }
 }
