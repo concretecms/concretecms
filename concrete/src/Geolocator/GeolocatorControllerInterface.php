@@ -2,8 +2,8 @@
 namespace Concrete\Core\Geolocator;
 
 use Concrete\Core\Error\ErrorList\ErrorList;
-use Symfony\Component\HttpFoundation\ParameterBag;
 use IPLib\Address\AddressInterface;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 interface GeolocatorControllerInterface
 {

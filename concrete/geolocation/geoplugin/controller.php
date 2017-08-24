@@ -49,6 +49,10 @@ class Controller extends GeolocatorController
         } else {
             $configuration['url'] = $url;
         }
+        $configuration['skipCity'] = $data->get('geoplugin-trust-city') ? false : true;
+        $configuration['skipStateProvince'] = $data->get('geoplugin-trust-stateprovince') ? false : true;
+        $configuration['skipCountry'] = $data->get('geoplugin-trust-country') ? false : true;
+        $configuration['skipLatitudeLongitude'] = $data->get('geoplugin-trust-latlon') ? false : true;
 
         return $configuration;
     }
@@ -88,7 +92,7 @@ class Controller extends GeolocatorController
                             break;
                         case static::GEOPLUGIN_STATUS_OK:
                         case static::GEOPLUGIN_STATUS_ONLYCOUNTRY:
-                            $result = $this->dataToGeolocationResult($data);
+                            $result = $this->dataToGeolocationResult($data, $configuration);
                             break;
                         default:
                             $result = new GeolocationFailedException($this->geolocator, $address, t('Unknown geoPlugin status code: %s', $data['geoplugin_status']));
@@ -103,21 +107,22 @@ class Controller extends GeolocatorController
 
     /**
      * @param array $data
+     * @param array configuration
      *
      * @return GeolocationResult
      */
-    private function dataToGeolocationResult(array $data)
+    private function dataToGeolocationResult(array $data, array $configuration)
     {
         $result = new GeolocationResult();
 
         return $result
-            ->setCityName($data['geoplugin_city'])
-            ->setStateProvinceCode($data['geoplugin_regionCode'])
-            ->setStateProvinceName($data['geoplugin_regionName'])
-            ->setCountryCode($data['geoplugin_countryCode'])
-            ->setCountryName($data['geoplugin_countryName'])
-            ->setLatitude($data['geoplugin_latitude'])
-            ->setLongitude($data['geoplugin_longitude'])
+            ->setCityName(empty($configuration['skipCity']) ? $data['geoplugin_city'] : '')
+            ->setStateProvinceCode(empty($configuration['skipStateProvince']) ? $data['geoplugin_regionCode'] : '')
+            ->setStateProvinceName(empty($configuration['skipStateProvince']) ? $data['geoplugin_regionName'] : '')
+            ->setCountryCode(empty($configuration['skipCountry']) ? $data['geoplugin_countryCode'] : '')
+            ->setCountryName(empty($configuration['skipCountry']) ? $data['geoplugin_countryName'] : '')
+            ->setLatitude(empty($configuration['skipLatitudeLongitude']) ? $data['geoplugin_latitude'] : '')
+            ->setLongitude(empty($configuration['skipLatitudeLongitude']) ? $data['geoplugin_longitude'] : '')
         ;
     }
 }
