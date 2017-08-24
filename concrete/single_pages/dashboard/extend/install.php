@@ -31,7 +31,7 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
         if ($swapper->allowsFullContentSwap($pkg)) {
             ?>
             <h4><?=t('Clear this Site?')?></h4>
-            <p><?=t('%s can fully clear your website of all existing content and install its own custom content in its place. If you\'re installing a theme for the first time you may want to do this. Clear all site content?', $pkg->getPackageName())?></p>
+            <p><?=t('%s can fully clear your website of all existing content and install its own custom content in its place. If you\'re installing a theme for the first time you may want to do this. Clear all site content?', t($pkg->getPackageName())) ?></p>
             <?php
             $u = new User();
             if ($u->isSuperUser()) {
@@ -57,7 +57,7 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
                 <a href="<?=$this->url('/dashboard/extend/install')?>" class="btn btn-default pull-left"><?=t('Cancel')?></a>
-                <input type="submit" value="<?=t('Install %s', $pkg->getPackageName())?>" class="btn btn-primary pull-right" />
+                <input type="submit" value="<?=t('Install %s', t($pkg->getPackageName()))?>" class="btn btn-primary pull-right" />
             </div>
         </div>
     </form>
@@ -73,7 +73,7 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
             <table class="table table-bordered table-striped">
                 <tr>
                     <td class="ccm-marketplace-list-thumbnail"><img src="<?= $ci->getPackageIconURL($pkg); ?>" /></td>
-                    <td class="ccm-addon-list-description" style="width: 100%"><h3><?= $pkg->getPackageName(); ?> - <?= $pkg->getPackageVersion(); ?></h3><?= $pkg->getPackageDescription(); ?></td>
+                    <td class="ccm-addon-list-description" style="width: 100%"><h3><?= t($pkg->getPackageName()) ?> - <?= $pkg->getPackageVersion(); ?></h3><?= t($pkg->getPackageDescription()); ?></td>
                 </tr>
             </table>
             <?php
@@ -82,7 +82,7 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
             }
             ?>
             <div class="alert alert-danger">
-                <?=t('This will remove all elements associated with the %s package. While you can reinstall the package, this may result in data loss.', $pkg->getPackageName())?>
+                <?=t('This will remove all elements associated with the %s package. While you can reinstall the package, this may result in data loss.', t($pkg->getPackageName())) ?>
             </div>
             <div class="form-group">
                 <label class="control-label"><?= t('Move package to trash directory on server?'); ?></label>
@@ -136,7 +136,7 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
     $thisURL = $view->url('/dashboard/extend/install');
     $sortMe = [];
     foreach ($pkgAvailableArray as $p) {
-        $sortMe[] = ['name' => $p->getPackageName(), 'pkg' => $p];
+        $sortMe[] = ['name' => t($p->getPackageName()), 'pkg' => $p];
     }
     usort($sortMe, function (array $a, array $b) {
         return strcasecmp($a['name'], $b['name']);
@@ -170,7 +170,7 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
         <table class="table table-bordered table-striped">
             <tr>
                 <td class="ccm-marketplace-list-thumbnail"><img src="<?= $ci->getPackageIconURL($pkg); ?>" /></td>
-                <td class="ccm-addon-list-description" style="width: 100%"><h3><?= $pkg->getPackageName(); ?> - <?= $pkg->getPackageVersion(); ?></h3><?= $pkg->getPackageDescription(); ?></td>
+                <td class="ccm-addon-list-description" style="width: 100%"><h3><?= t($pkg->getPackageName()) ?> - <?= $pkg->getPackageVersion(); ?></h3><?= t($pkg->getPackageDescription()) ?></td>
             </tr>
         </table>
         <?php
@@ -249,8 +249,8 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
                     <div class="pull-left"><img style="width: 49px" src="<?= $ci->getPackageIconURL($pkg); ?>" class="media-object" /></div>
                     <div class="media-body">
                         <a href="<?= URL::to('/dashboard/extend/install', 'inspect_package', $pkg->getPackageID()); ?>" class="btn pull-right btn-sm btn-default"><?= t('Details'); ?></a>
-                        <h4 class="media-heading"><?= $pkg->getPackageName(); ?> <span class="badge badge-info" style="margin-right: 10px"><?= tc('AddonVersion', 'v.%s', $pkg->getPackageVersion()); ?></span></h4>
-                        <p><?= $pkg->getPackageDescription(); ?></p>
+                        <h4 class="media-heading"><?= t($pkg->getPackageName()) ?> <span class="badge badge-info" style="margin-right: 10px"><?= tc('AddonVersion', 'v.%s', $pkg->getPackageVersion()); ?></span></h4>
+                        <p><?= t($pkg->getPackageDescription()) ?></p>
                     </div>
                 </div>
                 <?php
@@ -301,8 +301,8 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
                                 <?php
                             }
                             ?>
-                            <h4 class="media-heading"><?= $obj->getPackageName(); ?> <span class="badge badge-info" style="margin-right: 10px"><?= tc('AddonVersion', 'v.%s', $obj->getPackageVersion()); ?></span></h4>
-                            <p><?= $obj->getPackageDescription(); ?></p>
+                            <h4 class="media-heading"><?= t($obj->getPackageName()) ?> <span class="badge badge-info" style="margin-right: 10px"><?= tc('AddonVersion', 'v.%s', $obj->getPackageVersion()); ?></span></h4>
+                            <p><?= t($obj->getPackageDescription()) ?></p>
                         </div>
                     </div>
                     <?php
