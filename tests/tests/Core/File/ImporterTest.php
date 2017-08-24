@@ -1,22 +1,21 @@
 <?php
 namespace Concrete\Tests\Core\File;
 
+use Concrete\Core\Attribute\Key\Category;
+use Concrete\Core\Attribute\Key\FileKey;
+use Concrete\Core\Attribute\Type as AttributeType;
 use Concrete\Core\Cache\CacheLocal;
 use Concrete\Core\File\Importer;
-use Concrete\Core\Attribute\Type as AttributeType;
-use Concrete\Core\Attribute\Key\FileKey;
 use Config;
 use Core;
-use Concrete\Core\Attribute\Key\Category;
 
 class ImporterTest extends \FileStorageTestCase
 {
-
-    public function __construct($name = null, array $data = array(), $dataName = '')
+    public function __construct($name = null, array $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
 
-        $this->tables = array_merge($this->tables, array(
+        $this->tables = array_merge($this->tables, [
             'Users',
             'PermissionAccessEntityTypes',
             'FileImageThumbnailTypes',
@@ -25,8 +24,8 @@ class ImporterTest extends \FileStorageTestCase
             'ConfigStore',
             'Logs',
             'FileVersionLog',
-        ));
-        $this->metadatas = array_merge($this->metadatas, array(
+        ]);
+        $this->metadatas = array_merge($this->metadatas, [
             'Concrete\Core\Entity\Attribute\Key\Settings\NumberSettings',
             'Concrete\Core\Entity\Attribute\Key\Settings\Settings',
             'Concrete\Core\Entity\Attribute\Key\Settings\EmptySettings',
@@ -38,7 +37,7 @@ class ImporterTest extends \FileStorageTestCase
             'Concrete\Core\Entity\Attribute\Value\Value\Value',
             'Concrete\Core\Entity\Attribute\Type',
             'Concrete\Core\Entity\Attribute\Category',
-        ));
+        ]);
         Config::set('concrete.upload.extensions', '*.txt;*.jpg;*.jpeg;*.png');
     }
 
@@ -48,8 +47,8 @@ class ImporterTest extends \FileStorageTestCase
 
         $category = Category::add('file');
         $number = AttributeType::add('number', 'Number');
-        FileKey::add($number, array('akHandle' => 'width', 'akName' => 'Width'));
-        FileKey::add($number, array('akHandle' => 'height', 'akName' => 'Height'));
+        FileKey::add($number, ['akHandle' => 'width', 'akName' => 'Width']);
+        FileKey::add($number, ['akHandle' => 'height', 'akName' => 'Height']);
 
         CacheLocal::flush();
     }
@@ -147,6 +146,7 @@ class ImporterTest extends \FileStorageTestCase
         $this->assertEquals(113, $fo->getAttribute('width'));
         $this->assertEquals(113, $fo->getAttribute('height'));
     }
+
     public function testThumbnailStorageLocation()
     {
         mkdir($this->getStorageDirectory());
@@ -298,7 +298,6 @@ class ImporterTest extends \FileStorageTestCase
 
     public function testFileReplace()
     {
-
         // create the default storage location first.
         mkdir($this->getStorageDirectory());
         $this->getStorageLocation();
@@ -331,7 +330,6 @@ class ImporterTest extends \FileStorageTestCase
         touch($file);
         $fi = new Importer();
         $r = $fi->import($file, 'test.txt');
-
 
         $fv2 = $r->duplicate();
         $fv3 = $r->duplicate();
