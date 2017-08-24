@@ -178,7 +178,7 @@ class Version
         $thumbnailFormat = $app->make('config')->get('concrete.misc.default_thumbnail_format');
         $prefix = $fv->getPrefix();
         $filename = $fv->getFileName();
-        switch ($thumbnailsFormat) {
+        switch ($thumbnailFormat) {
             case 'jpeg':
                 $extension = 'jpg';
                 break;
