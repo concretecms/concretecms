@@ -3,6 +3,7 @@ namespace Concrete\Tests\Core\File;
 
 use Concrete\Core\Attribute\Key\Category;
 use Concrete\Core\Attribute\Key\FileKey;
+use Concrete\Core\File\Image\Thumbnail\Type\Type as ThumbnailType;
 use Concrete\Core\Attribute\Type as AttributeType;
 use Concrete\Core\Cache\CacheLocal;
 use Concrete\Core\File\Importer;
@@ -163,21 +164,50 @@ class ImporterTest extends \FileStorageTestCase
         mkdir($this->getStorageDirectory());
         $this->getStorageLocation();
 
-        $file = DIR_BASE . '/concrete/themes/elemental/images/background-slider-night-road.png';
-        $fi = new Importer();
-        $fo = $fi->import($file, 'background-slider-night-road.png');
-        $type = $fo->getTypeObject();
-        $this->assertEquals(\Concrete\Core\File\Type\Type::T_IMAGE, $type->getGenericType());
-
-        $this->assertTrue((bool) $fo->hasThumbnail(1));
-        $this->assertTrue((bool) $fo->hasThumbnail(2));
-        $this->assertFalse((bool) $fo->hasThumbnail(3));
-
         $cf = Core::make('helper/concrete/file');
         $fh = Core::make('helper/file');
-        $this->assertEquals('/application/files/thumbnails/file_manager_detail'
-            . $cf->prefix($fo->getPrefix(), $fh->replaceExtension($fo->getFilename(), 'jpg'), 2),
-            $fo->getThumbnailURL('file_manager_detail'));
+        $config = Core::make('config');
+        $file = DIR_BASE . '/concrete/themes/elemental/images/background-slider-night-road.png';
+        $humbnailTypes = ThumbnailType::getList();
+        foreach ([
+            'auto' => ['png', IMAGETYPE_PNG],
+            'jpeg' => ['jpg', IMAGETYPE_JPEG],
+            'png' => ['png', IMAGETYPE_PNG],
+        ] as $thumbnailFormat => list($expectedExtension, $expectedFileType)) {
+            $config->set('concrete.misc.default_thumbnail_format', $thumbnailFormat);
+            foreach (['async', 'now'] as $strategy) {
+                $config->set('concrete.misc.basic_thumbnailer_generation_strategy', $strategy);
+                $fi = new Importer();
+                $fo = $fi->import($file, 'background-slider-night-road.png');
+                $type = $fo->getTypeObject();
+                $this->assertEquals(\Concrete\Core\File\Type\Type::T_IMAGE, $type->getGenericType());
+
+                $this->assertTrue((bool) $fo->hasThumbnail(1));
+                $this->assertTrue((bool) $fo->hasThumbnail(2));
+                $this->assertFalse((bool) $fo->hasThumbnail(3));
+
+                $this->assertEquals(
+                    '/application/files/thumbnails/file_manager_detail' . $cf->prefix($fo->getPrefix(), $fh->replaceExtension($fo->getFilename(), $expectedExtension), 2),
+                    $fo->getThumbnailURL('file_manager_detail'),
+                    "Check thumbnail URL with: format={$thumbnailFormat}, strategy={$strategy}"
+                );
+                
+                $fsl = $fo->getFile()->getFileStorageLocationObject()->getFileSystemObject();
+                /* @var \League\Flysystem\Filesystem $fsl */	
+                foreach ($humbnailTypes as $thumbnailType) {
+                    foreach ([
+                        $thumbnailType->getBaseVersion(),
+                        $thumbnailType->getDoubledVersion(),
+                    ] as $thumbnailTypeVersion) {
+                        $thumbnailPath = $thumbnailTypeVersion->getFilePath($fo);
+                        $this->assertTrue($fsl->has($thumbnailPath), "Check thumbnail existence with: format={$thumbnailFormat}, strategy={$strategy}");
+                        $handler = $fsl->get($thumbnailPath);
+                        list($width, $height, $type) = getimagesizefromstring($handler->read());
+                        $this->assertSame($expectedFileType, $type, "Check thumbnail type with: format={$thumbnailFormat}, strategy={$strategy}");
+                    }
+                }
+            }
+        }
     }
 
     public function testImageImportFromIncoming()
