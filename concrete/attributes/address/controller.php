@@ -7,14 +7,17 @@ use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\Form\Control\View\GroupedView;
 use Concrete\Core\Entity\Attribute\Key\Settings\AddressSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\AddressValue;
-use Core;
-use Concrete\Core\Support\Facade\Application;
-use Concrete\Core\Http\ResponseFactoryInterface;
+use Concrete\Core\Entity\Geolocator;
+use Concrete\Core\Form\Context\ContextInterface;
+use Concrete\Core\Geolocator\GeolocationResult;
+use Concrete\Core\Geolocator\GeolocatorService;
 use Concrete\Core\Http\Response;
+use Concrete\Core\Http\ResponseFactoryInterface;
+use Concrete\Core\Support\Facade\Application;
 
 class Controller extends AttributeTypeController
 {
-    public $helpers = ['form'];
+    public $helpers = ['form', 'lists/countries'];
 
     public function getIconFormatter()
     {
@@ -35,7 +38,7 @@ class Controller extends AttributeTypeController
         );
     }
 
-    public function getControlView(\Concrete\Core\Form\Context\ContextInterface $context)
+    public function getControlView(ContextInterface $context)
     {
         return new GroupedView($context, $this->getAttributeKey(), $this->getAttributeValue());
     }
@@ -159,7 +162,7 @@ class Controller extends AttributeTypeController
     public function getDisplayValue()
     {
         $value = $this->getAttributeValue()->getValue();
-        $v = Core::make('helper/text')->entities($value);
+        $v = $this->app->make('helper/text')->entities($value);
         $ret = nl2br($v);
 
         return $ret;
@@ -205,10 +208,10 @@ class Controller extends AttributeTypeController
         if ($akHasCustomCountries && (count($akCustomCountries) == 0)) {
             $e->add(t('You must specify at least one country.'));
         } else {
-            if ($akHasCustomCountries && $data['akDefaultCountry'] != '' && (!in_array(
-                    $data['akDefaultCountry'],
-                    $akCustomCountries
-                ))
+            if (
+                $akHasCustomCountries
+                && $data['akDefaultCountry'] != ''
+                && (!in_array($data['akDefaultCountry'], $akCustomCountries))
             ) {
                 $e->add(t('The default country must be in the list of custom countries.'));
             }
@@ -223,6 +226,7 @@ class Controller extends AttributeTypeController
         $type = $akey->addChild('type');
         $type->addAttribute('custom-countries', $this->akHasCustomCountries);
         $type->addAttribute('default-country', $this->akDefaultCountry);
+        $type->addAttribute('geolocate-country', $this->akGeolocateCountry ? 1 : 0);
         if ($this->akHasCustomCountries) {
             $countries = $type->addChild('countries');
             foreach ($this->akCustomCountries as $country) {
@@ -292,6 +296,7 @@ class Controller extends AttributeTypeController
                 }
                 $type->setCustomCountries($countries);
             }
+            $type->setGeolocateCountry(!empty($akey->type['geolocate-country']));
         }
 
         return $type;
@@ -313,6 +318,7 @@ class Controller extends AttributeTypeController
         $type->setCustomCountries($akCustomCountries);
         $type->setHasCustomCountries($akHasCustomCountries);
         $type->setDefaultCountry($data['akDefaultCountry']);
+        $type->setGeolocateCountry(!empty($data['akGeolocateCountry']));
 
         return $type;
     }
@@ -331,9 +337,11 @@ class Controller extends AttributeTypeController
         $this->akHasCustomCountries = $type->hasCustomCountries();
         $this->akDefaultCountry = $type->getDefaultCountry();
         $this->akCustomCountries = $type->getCustomCountries();
+        $this->akGeolocateCountry = $type->geolocateCountry();
         $this->set('akDefaultCountry', $this->akDefaultCountry);
         $this->set('akHasCustomCountries', $this->akHasCustomCountries);
         $this->set('akCustomCountries', $this->akCustomCountries);
+        $this->set('akGeolocateCountry', $this->akGeolocateCountry);
     }
 
     public function type_form()
@@ -363,12 +371,25 @@ class Controller extends AttributeTypeController
             $this->set('state_province', '');
             $this->set('country', '');
             $this->set('postal_code', '');
+            if ($this->akGeolocateCountry) {
+                $geolocator = $this->app->make(Geolocator::class);
+                if ($geolocator !== null) {
+                    $ip = $this->app->make('ip')->getRequestIPAddress();
+                    $geolocatorController = $this->app->make(GeolocatorService::class)->getController($geolocator);
+                    $geolocated = $geolocatorController->geolocateIPAddress($ip);
+                    if ($geolocated instanceof GeolocationResult) {
+                        $this->set('country', $geolocated->getCountryCode());
+                        $this->set('postal_code', $geolocated->getPostalCode());
+                        $this->set('state_province', $geolocated->getStateProvinceCode());
+                        $this->set('city', $geolocated->getCityName());
+                    }
+                }
+            }
         }
         $this->set('search', false);
-        $this->addFooterItem(Core::make('helper/html')->javascript($this->getView()->action('load_provinces_js')));
-        $this->addFooterItem(
-            Core::make('helper/html')->javascript($this->getAttributeTypeFileURL('country_state.js'))
-        );
+        $hh = $this->app->make('helper/html');
+        $this->addFooterItem($hh->javascript($this->getView()->action('load_provinces_js')));
+        $this->addFooterItem($hh->javascript($this->getAttributeTypeFileURL('country_state.js')));
         $this->set('key', $this->attributeKey);
     }
 
