@@ -28,4 +28,14 @@ class GeolocatorLibrary extends AbstractCategory
 
         return $repo->findBy(['glPackage' => $package]);
     }
+
+    public function removeItem($item)
+    {
+        if ($item instanceof Geolocator && $item->getGeolocatorID() !== null) {
+            $app = Application::getFacadeApplication();
+            $em = $app->make(EntityManagerInterface::class);
+            $em->remove($item);
+            $em->flush($item);
+        }
+    }
 }
