@@ -1964,16 +1964,16 @@
         },
         {
             "name": "mlocati/concrete5-translation-library",
-            "version": "1.5.9",
+            "version": "1.5.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mlocati/concrete5-translation-library.git",
-                "reference": "8e8cbbf67718b9ae12b2a0038ed71df5b18658cf"
+                "reference": "43aa3806c36b095d458fe394feea353013f745dd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mlocati/concrete5-translation-library/zipball/8e8cbbf67718b9ae12b2a0038ed71df5b18658cf",
-                "reference": "8e8cbbf67718b9ae12b2a0038ed71df5b18658cf",
+                "url": "https://api.github.com/repos/mlocati/concrete5-translation-library/zipball/43aa3806c36b095d458fe394feea353013f745dd",
+                "reference": "43aa3806c36b095d458fe394feea353013f745dd",
                 "shasum": ""
             },
             "require": {
@@ -2010,7 +2010,7 @@
                 "translate",
                 "translation"
             ],
-            "time": "2017-06-29T20:54:30+00:00"
+            "time": "2017-08-25T05:44:27+00:00"
         },
         {
             "name": "mlocati/ip-lib",
