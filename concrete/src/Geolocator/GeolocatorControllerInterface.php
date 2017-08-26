@@ -15,7 +15,7 @@ interface GeolocatorControllerInterface
     public function hasConfigurationForm();
 
     /**
-     * Render the configuration form?
+     * Render the configuration form.
      */
     public function renderConfigurationForm();
 
