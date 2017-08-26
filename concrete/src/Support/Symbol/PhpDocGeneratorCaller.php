@@ -1,4 +1,6 @@
 <?php
+defined('C5_EXECUTE') or die('Access Denied.');
+
 /* Include this file to dump the currently defined vars */
 
 $vars = get_defined_vars();
