@@ -80,7 +80,7 @@ class Controller extends GeolocatorController
                     !is_array($data)
                     || empty($data['geoplugin_status'])
                 ) {
-                    $result = new GeolocationFailedException($this->geolocator, $address, t('Malformed data receivedfrom geoPlugin (%s)', $responseBody));
+                    $result = new GeolocationFailedException($this->geolocator, $address, t('Malformed data received from geoPlugin (%s)', $responseBody));
                 } else {
                     switch ($data['geoplugin_status']) {
                         case static::GEOPLUGIN_STATUS_NOTFOUND:
