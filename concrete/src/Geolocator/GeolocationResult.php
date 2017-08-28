@@ -206,7 +206,7 @@ class GeolocationResult
     /**
      * Get the latitude.
      *
-     * @return int|null
+     * @return float|null
      */
     public function getLatitude()
     {
@@ -216,7 +216,7 @@ class GeolocationResult
     /**
      * Set the latitude.
      *
-     * @param int|null $value
+     * @param float|null $value
      *
      * @return $this
      */
@@ -234,7 +234,7 @@ class GeolocationResult
     /**
      * Get the longitude.
      *
-     * @return int|null
+     * @return float|null
      */
     public function getLongitude()
     {
@@ -244,7 +244,7 @@ class GeolocationResult
     /**
      * Set the longitude.
      *
-     * @param int|null $value
+     * @param float|null $value
      *
      * @return $this
      */
