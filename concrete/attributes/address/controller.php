@@ -372,17 +372,12 @@ class Controller extends AttributeTypeController
             $this->set('country', '');
             $this->set('postal_code', '');
             if ($this->akGeolocateCountry) {
-                $geolocator = $this->app->make(Geolocator::class);
-                if ($geolocator !== null) {
-                    $ip = $this->app->make('ip')->getRequestIPAddress();
-                    $geolocatorController = $this->app->make(GeolocatorService::class)->getController($geolocator);
-                    $geolocated = $geolocatorController->geolocateIPAddress($ip);
-                    if ($geolocated instanceof GeolocationResult) {
-                        $this->set('country', $geolocated->getCountryCode());
-                        $this->set('postal_code', $geolocated->getPostalCode());
-                        $this->set('state_province', $geolocated->getStateProvinceCode());
-                        $this->set('city', $geolocated->getCityName());
-                    }
+                $geolocated = $this->app->make(GeolocationResult::class);
+                if ($geolocated instanceof GeolocationResult) {
+                    $this->set('country', $geolocated->getCountryCode());
+                    $this->set('postal_code', $geolocated->getPostalCode());
+                    $this->set('state_province', $geolocated->getStateProvinceCode());
+                    $this->set('city', $geolocated->getCityName());
                 }
             }
         }
