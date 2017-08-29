@@ -2,6 +2,7 @@
 namespace Concrete\Core\Application\Service\Dashboard;
 
 use Concrete\Core\Entity\Site\Tree;
+use Concrete\Core\User\User;
 use Config;
 use PageList;
 use TaskPermission;
@@ -151,6 +152,7 @@ class Sitemap
             $c = $cItem;
         }
 
+        $u = new User();
         $cp = new Permissions($c);
         $canEditPageProperties = $cp->canEditPageProperties();
         $canEditPageSpeedSettings = $cp->canEditPageSpeedSettings();
@@ -160,6 +162,7 @@ class Sitemap
         $canViewPageVersions = $cp->canViewPageVersions();
         $canDeletePage = $cp->canDeletePage();
         $canAddSubpages = $cp->canAddSubpage();
+        $canCopyPages = $u->isSuperUser();
         $canAddExternalLinks = $cp->canAddExternalLink();
 
         $nodeOpen = false;
@@ -253,6 +256,7 @@ class Sitemap
         $node->canViewPageVersions = $canViewPageVersions;
         $node->canDeletePage = $canDeletePage;
         $node->canAddSubpages = $canAddSubpages;
+        $node->canCopyPages = $canCopyPages;
         $node->canAddExternalLinks = $canAddExternalLinks;
 
         if ($includeChildren && ($cID == 1 || $nodeOpen)) {

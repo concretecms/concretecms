@@ -191,6 +191,8 @@
                 	'<li class="divider"></li>' +
                     '<% if (item.canAddSubpages > 0) { %>' +
                         '<li><a class="dialog-launch" dialog-width="350" dialog-modal="false" dialog-height="350" dialog-title="' + ccmi18n_sitemap.addPage + '" dialog-modal="false" href="' + CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/add?cID=<%=item.cID%>">' + ccmi18n_sitemap.addPage + '</a></li>' +
+                    '<% } %>' +
+                    '<% if (item.canCopyPages > 0) { %>' +
                         '<li><a href="javascript:void(0)" onclick="ConcreteSitemap.submitDuplicateRequest(<%=item.cID%>)">' + ccmi18n_sitemap.duplicatePage + '</a></li>' +
                     '<% } %>' +
                     '<% if (item.canAddExternalLinks > 0) { %>' +
