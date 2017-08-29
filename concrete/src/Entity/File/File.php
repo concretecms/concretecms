@@ -517,7 +517,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
 
         $folder = $this->getFileFolderObject();
         $folderNode = \Concrete\Core\Tree\Node\Type\File::add($nf, $folder);
-        $nf->folderTreeNodeID = $folderNode->getTreeNodeID();
+        $nf->folderTreeNodeID = $folder->getTreeNodeID();
 
         $em->persist($nf);
         $em->flush();
