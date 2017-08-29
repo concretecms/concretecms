@@ -46,7 +46,7 @@ class ThemeElementLocation extends ThemeLocation
     public function getURL()
     {
         if ($this->pkgHandle) {
-            return DIR_REL
+            return REL_DIR_PACKAGES
             . '/'
             . $this->pkgHandle
             . '/'
@@ -58,7 +58,7 @@ class ThemeElementLocation extends ThemeLocation
             . '/'
             . 'concrete';
         } else {
-            return DIR_REL
+            return REL_DIR_APPLICATION
             . '/'
             . DIRNAME_THEMES
             . '/'
