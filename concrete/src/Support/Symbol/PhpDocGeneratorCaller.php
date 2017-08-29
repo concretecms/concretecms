@@ -1,4 +1,7 @@
 <?php
+if (defined('DIR_TESTS')) {
+    return;
+}
 defined('C5_EXECUTE') or die('Access Denied.');
 
 /* Include this file to dump the currently defined vars */
