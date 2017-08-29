@@ -369,6 +369,31 @@ class Version implements ObjectInterface
     }
 
     /**
+     * Copy the thumbnails from the original to the copy when duplicating a file.
+     *
+     * @param string          $type
+     * @param Version $source
+     */
+    public function duplicateUnderlyingThumbnailFiles($type, Version $source)
+    {
+        if (!($type instanceof ThumbnailTypeVersion)) {
+            $type = ThumbnailTypeVersion::getByHandle($type);
+        }
+        $new = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
+        $current = $source->getFile()->getFileStorageLocationObject()->getFileSystemObject();
+        $newPath = $type->getFilePath($this);
+        $currentPath = $type->getFilePath($source);
+        $manager = new \League\Flysystem\MountManager([
+            'current' => $current,
+            'new' => $new,
+        ]);
+        try {
+            $manager->copy('current://' . $currentPath, 'new://' . $newPath);
+        } catch (FileNotFoundException $e) {
+        }
+    }
+    
+    /**
      * Move the thumbnails for the current file version to a new storage location.
      *
      * @param string          $type
