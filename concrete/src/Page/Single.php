@@ -36,18 +36,17 @@ class Single
         return $singlePages;
     }
 
+    /**
+     * Take a collection path and returns it without slashes at the beginning and at the end, and no more than 1 intermediate slash in the middle at any point.
+     *
+     * @param string $path
+     *
+     * @return string
+     */
     public static function sanitizePath($path)
     {
-        //takes a damn cpath and returns no first slash, and no more than 1 intermediate slash in
-        // the middle at any point
-        $node = preg_replace("/([\/]+)/", "/", $path);
-        if (substr($node, 0, 1) == "/") {
-            $node = substr($node, 1);
-        }
-        // now do the same for the last node
-        if (substr($node, strlen($node) - 1, 1) == '/') {
-            $node = substr($node, 0, strlen($node) - 1);
-        }
+        $node = preg_replace('/\/{2,}/', '/', $path);
+        $node = trim($node, '/');
 
         return $node;
     }
