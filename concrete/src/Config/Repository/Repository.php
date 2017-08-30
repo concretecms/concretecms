@@ -12,14 +12,14 @@ class Repository extends \Illuminate\Config\Repository
     /**
      * The loader implementation.
      *
-     * @var \Illuminate\Config\LoaderInterface
+     * @var \Concrete\Core\Config\LoaderInterface
      */
     protected $loader;
 
     /**
-     * The loader implementation.
+     * The saver implementation.
      *
-     * @var \Illuminate\Config\LoaderInterface
+     * @var \Concrete\Core\Config\SaverInterface
      */
     protected $saver;
 
@@ -61,9 +61,9 @@ class Repository extends \Illuminate\Config\Repository
     /**
      * Create a new configuration repository.
      *
-     * @param  \Illuminate\Config\LoaderInterface $loader
+     * @param \Concrete\Core\Config\LoaderInterface $loader
      * @param \Concrete\Core\Config\SaverInterface $saver
-     * @param  string $environment
+     * @param string $environment
      */
     public function __construct(LoaderInterface $loader, SaverInterface $saver, $environment)
     {
