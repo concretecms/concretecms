@@ -7,10 +7,8 @@ use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\Form\Control\View\GroupedView;
 use Concrete\Core\Entity\Attribute\Key\Settings\AddressSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\AddressValue;
-use Concrete\Core\Entity\Geolocator;
 use Concrete\Core\Form\Context\ContextInterface;
 use Concrete\Core\Geolocator\GeolocationResult;
-use Concrete\Core\Geolocator\GeolocatorService;
 use Concrete\Core\Http\Response;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Support\Facade\Application;
@@ -372,18 +370,11 @@ class Controller extends AttributeTypeController
             $this->set('country', '');
             $this->set('postal_code', '');
             if ($this->akGeolocateCountry) {
-                $geolocator = $this->app->make(Geolocator::class);
-                if ($geolocator !== null) {
-                    $ip = $this->app->make('ip')->getRequestIPAddress();
-                    $geolocatorController = $this->app->make(GeolocatorService::class)->getController($geolocator);
-                    $geolocated = $geolocatorController->geolocateIPAddress($ip);
-                    if ($geolocated instanceof GeolocationResult) {
-                        $this->set('country', $geolocated->getCountryCode());
-                        $this->set('postal_code', $geolocated->getPostalCode());
-                        $this->set('state_province', $geolocated->getStateProvinceCode());
-                        $this->set('city', $geolocated->getCityName());
-                    }
-                }
+                $geolocated = $this->app->make(GeolocationResult::class);
+                $this->set('country', $geolocated->getCountryCode());
+                $this->set('postal_code', $geolocated->getPostalCode());
+                $this->set('state_province', $geolocated->getStateProvinceCode());
+                $this->set('city', $geolocated->getCityName());
             }
         }
         $this->set('search', false);
