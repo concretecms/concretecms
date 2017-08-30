@@ -4,6 +4,7 @@ namespace Concrete\Core\Application;
 use Concrete\Core\Cache\CacheClearer;
 use Concrete\Core\Cache\Page\PageCache;
 use Concrete\Core\Cache\Page\PageCacheRecord;
+use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Database\EntityManagerConfigUpdater;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Foundation\ClassLoader;
@@ -199,6 +200,33 @@ class Application extends Container
         $core = $config->get('concrete.version_db');
         if ($installed < $core) {
             Update::updateToCurrentVersion();
+        }
+    }
+
+    /**
+     * Define constants that depend on database values
+     */
+    public function setupConstants()
+    {
+        if (!defined('HOME_CID')) {
+            $home_cid = 1;
+            if ($this->isInstalled()) {
+                $site = $this->make('site')->getSite();
+                $treeIDs = [0];
+                foreach($site->getLocales() as $locale) {
+                    $tree = $locale->getSiteTree();
+                    if ($tree !== null) {
+                        $treeIDs[] = $tree->getSiteTreeID();
+                    }
+                }
+                $treeIDs = implode(',', $treeIDs);
+                $db = $this->make(Connection::class);
+                $cID = $db->fetchColumn("select Pages.cID from PagePaths inner join Pages on PagePaths.cID = Pages.cID where (cPath = '' or cPath = '/') and siteTreeID in ({$treeIDs}) limit 1");
+                if ($cID) {
+                    $home_cid = (int) $cID;
+                }
+            }
+            define('HOME_CID', $home_cid);
         }
     }
 
