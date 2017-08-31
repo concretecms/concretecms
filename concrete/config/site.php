@@ -38,6 +38,8 @@ return [
                     'enable_sitemap' => true,
                 ],
                 'ckeditor4' => [
+                    'custom_config_options' => '',
+                    'editor_function_options' => '',
                     'plugins' => [
                         'selected' => [
                             'autogrow',
@@ -91,6 +93,33 @@ return [
                             'toolbar',
                             'wysiwygarea',
                         ]
+                    ],
+                    'toolbar_groups' => [
+                        ['name' => 'mode', 'groups' => ['mode']],
+                        ['name' => 'document', 'groups' => ['document']],
+                        ['name' => 'doctools', 'groups' => ['doctools']],
+                        ['name' => 'clipboard', 'groups' => ['clipboard']],
+                        ['name' => 'undo', 'groups' => ['undo']],
+                        ['name' => 'find', 'groups' => ['find']],
+                        ['name' => 'selection', 'groups' => ['selection']],
+                        ['name' => 'spellchecker', 'groups' => ['spellchecker']],
+                        ['name' => 'editing', 'groups' => ['editing']],
+                        ['name' => 'basicstyles', 'groups' => ['basicstyles']],
+                        ['name' => 'cleanup', 'groups' => ['cleanup']],
+                        ['name' => 'list', 'groups' => ['list']],
+                        ['name' => 'indent', 'groups' => ['indent']],
+                        ['name' => 'blocks', 'groups' => ['blocks']],
+                        ['name' => 'align', 'groups' => ['align']],
+                        ['name' => 'bidi', 'groups' => ['bidi']],
+                        ['name' => 'paragraph', 'groups' => ['paragraph']],
+                        ['name' => 'links', 'groups' => ['links']],
+                        ['name' => 'insert', 'groups' => ['insert']],
+                        ['name' => 'forms', 'groups' => ['forms']],
+                        ['name' => 'styles', 'groups' => ['styles']],
+                        ['name' => 'colors', 'groups' => ['colors']],
+                        ['name' => 'tools', 'groups' => ['tools']],
+                        ['name' => 'others', 'groups' => ['others']],
+                        ['name' => 'about', 'groups' => ['about']],
                     ]
                 ],
                 'plugins' => [
