@@ -1,26 +1,17 @@
 <?php
-
 return [
-
     'default' => 'default',
-
     'sites' => [
-
         'default' => [
-
             'handle' => 'default',
-
             'name' => 'concrete5',
-
             'user' => [
-
                 'profiles_enabled' => false,
                 'gravatar' => [
                     'enabled' => false,
                     'max_level' => 0,
                     'image_set' => 0,
                 ],
-
                 /*
                  * Show the account menu in page footer when users are not logged in.
                  * Can be overridden in site themes by setting $display_account_menu when using the footer_required element.
@@ -28,10 +19,7 @@ return [
                  * @var bool
                  */
                 'display_account_menu' => true,
-
-
             ],
-
             'editor' => [
                 'concrete' => [
                     'enable_filemanager' => true,
@@ -131,14 +119,11 @@ return [
                     ],
                 ],
             ],
-
             'multilingual' => [
                 'redirect_home_to_default_locale' => false,
                 'use_browser_detected_locale' => false,
                 'default_source_locale' => 'en_US',
             ],
-
         ],
-
     ],
 ];
