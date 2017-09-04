@@ -26,7 +26,7 @@ $view->element('dashboard/system/permissions/blacklist/menu', ['type' => null]);
         </div>
 
         <div class="form-group">
-            <?= $form->label('banDurationUnlimited', 'Ban Duration')?>
+            <?= $form->label('banDurationUnlimited', t('Ban Duration'))?>
             <div class="radio">
                 <label>
                     <?= $form->radio('banDurationUnlimited', 0, $banDuration ? 0 : 1) ?>
