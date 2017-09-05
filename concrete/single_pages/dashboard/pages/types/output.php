@@ -9,23 +9,24 @@
 
 
     <tr>
-        <td><a href="<?php echo $view->action('edit_defaults', $pagetype->getPageTypeID(), $pt->getPageTemplateID());
+        <td style="width: 1px"><a href="<?php echo $view->action('edit_defaults', $pagetype->getPageTypeID(), $pt->getPageTemplateID());
     ?>" target="_blank"><?php echo $pt->getPageTemplateIconImage();
     ?></a></td>
-        <td style="width: 100%; vertical-align: middle"><p class="lead" style="margin-bottom: 0px"><?php echo $pt->getPageTemplateDisplayName();
+        <td style="vertical-align: middle"><p class="lead" style="margin-bottom: 0px"><?php echo $pt->getPageTemplateDisplayName();
     ?></p></td>
-        <td style="vertical-align: middle">
-          <a class="btn btn-default dialog-launch" dialog-title="<?php echo t('Update Defaults');?>"
-            dialog-modal="true"
-            dialog-width="500"
-            dialog-height="auto"
-            href="<?php echo URL::to('/ccm/system/dialogs/type/update_from_type/'.$pagetype->getPageTypeID().'/'.$pt->getPageTemplateID()); ?>">
-            <?php echo t('Update Defaults');?>
-          </a>
+        <td style="width: 250px; vertical-align: middle">
+            <div class="btn-group pull-right">
+<a href="<?php echo $view->action('edit_defaults', $pagetype->getPageTypeID(), $pt->getPageTemplateID());
+    ?>" class="btn btn-default btn-sm"><?php echo t('Edit');
+    ?></a>
+                <a class="btn btn-sm btn-default dialog-launch" dialog-title="<?php echo t('Update Defaults');?>"
+                   dialog-modal="true"
+                   dialog-width="500"
+                   dialog-height="auto"
+                   href="<?php echo URL::to('/ccm/system/dialogs/type/update_from_type/'.$pagetype->getPageTypeID().'/'.$pt->getPageTemplateID()); ?>">
+                    <?php echo t('Publish to Child Pages');?>
+                </a></div>
         </td>
-        <td style="vertical-align: middle"><a href="<?php echo $view->action('edit_defaults', $pagetype->getPageTypeID(), $pt->getPageTemplateID());
-    ?>" class="btn btn-default"><?php echo t('Edit Defaults');
-    ?></a></td>
     </tr>
 
 <?php
