@@ -596,6 +596,22 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
     }
 
     /**
+     * Sorts this list by date modified ascending.
+     */
+    public function sortByDateModified()
+    {
+        $this->query->orderBy('c.cDateModified', 'asc');
+    }
+
+    /**
+     * Sorts this list by date modified descending.
+     */
+    public function sortByDateModifiedDescending()
+    {
+        $this->query->orderBy('c.cDateModified', 'desc');
+    }
+
+    /**
      * Sorts by ID in ascending order.
      */
     public function sortByCollectionIDAscending()

@@ -339,6 +339,11 @@ $form = Loader::helper('form/page_selector');
                     } ?>>
                         <?= t('Reverse alphabetical order') ?>
                     </option>
+                    <option value="modified_desc" <?php if ($orderBy == 'modified_desc') {
+                        ?> selected <?php
+                    } ?>>
+                        <?= t('Most recently modified first') ?>
+                    </option>
                     <option value="random" <?php if ($orderBy == 'random') {
                         ?> selected <?php
                     } ?>>
