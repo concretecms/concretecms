@@ -248,7 +248,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
 
         $renderer = new Renderer(
             $context,
-            $entity->getDefaultViewForm()
+            $entity->getDefaultEditForm()
         );
 
         $this->set('renderer', $renderer);
