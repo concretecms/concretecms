@@ -6,7 +6,10 @@ if ($c) {
     if ($pageType) {
         $siteType = $pageType->getSiteTypeObject(); // gotta have this for editing defaults pages.
     } else {
-        $siteType = $c->getSite()->getType();
+        $tree = $c->getSiteTreeObject();
+        if (is_object($tree)) {
+            $siteType = $tree->getSiteType();
+        }
     }
 }
 $form = Loader::helper('form/page_selector');
