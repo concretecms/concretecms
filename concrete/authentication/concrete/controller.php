@@ -286,9 +286,7 @@ class Controller extends AuthenticationTypeController
                 }
             }
         } else {
-            throw new \Exception(
-                t(
-                    'Invalid Key. Please visit the forgot password page again to have a new key generated.'));
+            $this->redirect('/login', $this->getAuthenticationType()->getAuthenticationTypeHandle(), 'invalid_token');
         }
     }
 
