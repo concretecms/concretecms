@@ -343,6 +343,10 @@ return [
             'address' => null,
             'name' => null,
         ],
+        'workflow_notification' => [
+            'address' => null,
+            'name' => null,
+        ],
     ],
 
     /*
