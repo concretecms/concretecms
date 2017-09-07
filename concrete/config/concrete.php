@@ -719,6 +719,20 @@ return [
              * @var bool|string Email to notify
              */
             'notification' => false,
+
+            /*
+             * Notifications email's from address.
+             *
+             * @var string Email from
+             */
+            'notification_email' => null,
+
+            /*
+             * Notifications email's from name.
+             *
+             * @var string Email name
+             */
+            'notification_email_name' => null,
         ],
 
         /*
