@@ -176,16 +176,16 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
 
         if (Config::get('concrete.email.workflow_notification.address')){
             $fromAddress = Config::get('concrete.email.workflow_notification.address');
-            if (Config::get('concrete.email.workflow_notification.name')) {
-                $fromName = Config::get('concrete.email.workflow_notification.name');
-            } else {
-                $fromName = t('Basic Workflow');
-            }
         } else {
             $adminUser = UserInfo::getByID(USER_SUPER_ID);
             $fromAddress = $adminUser->getUserEmail();
+        }
+        if (Config::get('concrete.email.workflow_notification.name')) {
+            $fromName = Config::get('concrete.email.workflow_notification.name');
+        } else {
             $fromName = t('Basic Workflow');
         }
+
         foreach ($users as $ui) {
             // Get user object of the receiver and set locale to their language
             $user = $ui->getUserObject();
