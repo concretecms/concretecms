@@ -20,6 +20,7 @@ use Concrete\Core\Permission\Checker as Permissions;
 class FolderItemList extends ItemList implements PagerProviderInterface, PaginationProviderInterface
 {
     protected $parent;
+    protected $searchSubFolders = false;
     protected $permissionsChecker;
 
     public function __construct(StickyRequest $req = null)
@@ -37,6 +38,11 @@ class FolderItemList extends ItemList implements PagerProviderInterface, Paginat
         'folderItemType',
         'folderItemSize',
     ];
+
+    public function enableSubFolderSearch()
+    {
+        $this->searchSubFolders = true;
+    }
 
     /**
      * @return mixed
@@ -131,6 +137,7 @@ class FolderItemList extends ItemList implements PagerProviderInterface, Paginat
         return $fp->canViewTreeNode();
     }
 
+
     public function filterByParentFolder(FileFolder $folder)
     {
         $this->parent = $folder;
@@ -144,12 +151,27 @@ class FolderItemList extends ItemList implements PagerProviderInterface, Paginat
 
     public function deliverQueryObject()
     {
-        if (!isset($this->parent)) {
+        if (isset($this->parent)) {
+            $parent = $this->parent;
+        } else {
             $filesystem = new Filesystem();
-            $this->parent = $filesystem->getRootFolder();
+            $parent = $filesystem->getRootFolder();
         }
-        $this->query->andWhere('n.treeNodeParentID = :treeNodeParentID');
-        $this->query->setParameter('treeNodeParentID', $this->parent->getTreeNodeID());
+
+        if ($this->searchSubFolders) {
+            // determine how many subfolders are within the parent folder.
+            $subFolders = $parent->getHierarchicalNodesOfType('file_folder', 1, false, true);
+            $subFolderIds = array();
+            foreach($subFolders as $subFolder) {
+                $subFolderIds[] = $subFolder['treeNodeID'];
+            }
+            $this->query->andWhere(
+                $this->query->expr()->in('n.treeNodeParentID', array_map([$this->query->getConnection(), 'quote'], $subFolderIds))
+            );
+        } else {
+            $this->query->andWhere('n.treeNodeParentID = :treeNodeParentID');
+            $this->query->setParameter('treeNodeParentID', $parent->getTreeNodeID());
+        }
 
         return parent::deliverQueryObject();
     }
