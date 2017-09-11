@@ -505,7 +505,8 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         $em = \ORM::entityManager();
 
         $versions = $this->versions;
-
+        $thumbs = Type::getVersionList();
+        
         // duplicate the core file object
         $nf = clone $this;
         $dh = Loader::helper('date');
@@ -558,6 +559,9 @@ class File implements \Concrete\Core\Permission\ObjectInterface
                 ]);
                 $cloneVersion->updateFile($version->getFilename(), $prefix);
                 $nf->versions->add($cloneVersion);
+                foreach ($thumbs as $type) {
+                    $cloneVersion->duplicateUnderlyingThumbnailFiles($type, $version);
+                }
             }
         }
 
