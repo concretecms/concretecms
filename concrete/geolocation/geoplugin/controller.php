@@ -2,13 +2,12 @@
 namespace Concrete\Geolocator\Geoplugin;
 
 use Concrete\Core\Error\ErrorList\ErrorList;
-use Concrete\Core\Geolocator\GeolocationFailedException;
 use Concrete\Core\Geolocator\GeolocationResult;
 use Concrete\Core\Geolocator\GeolocatorController;
 use Concrete\Core\Http\Client\Client as HttpClient;
+use Exception;
 use IPLib\Address\AddressInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
-use Zend\Http\Client\Exception\RuntimeException as HttpClientException;
 
 class Controller extends GeolocatorController
 {
@@ -64,15 +63,15 @@ class Controller extends GeolocatorController
         $uri = str_replace('[[IP]]', rawurlencode((string) $address), $configuration['url']);
         $httpClient = $this->app->make(HttpClient::class);
         $httpClient->setUri($uri);
-        $result = null;
+        $result = new GeolocationResult();
         try {
             $response = $httpClient->send();
-        } catch (HttpClientException $x) {
-            $result = new GeolocationFailedException($this->geolocator, $address, t('Request to geoPlugin failed: %s', $x->getMessage()));
+        } catch (Exception $x) {
+            $result->setError(GeolocationResult::ERR_NETWORK, t('Request to geoPlugin failed: %s', $x->getMessage()), $x);
         }
         if ($result === null) {
-            if ($response->getStatusCode() !== 200) {
-                $result = new GeolocationFailedException($this->geolocator, $address, t('Request to geoPlugin failed with return code %s', sprintf('%s (%s)', $response->getStatusCode(), $response->getReasonPhrase())));
+            if (!$response->isSuccessful()) {
+                $result->setError(GeolocationResult::ERR_NETWORK, t('Request to geoPlugin failed with return code %s', sprintf('%s (%s)', $response->getStatusCode(), $response->getReasonPhrase())));
             } else {
                 $responseBody = $response->getBody();
                 $data = @json_decode($responseBody, true);
@@ -80,18 +79,18 @@ class Controller extends GeolocatorController
                     !is_array($data)
                     || empty($data['geoplugin_status'])
                 ) {
-                    $result = new GeolocationFailedException($this->geolocator, $address, t('Malformed data received from geoPlugin (%s)', $responseBody));
+                    $result = new GeolocationResult();
+                    $result->setError(GeolocationResult::ERR_LIBRARYSPECIFIC, t('Malformed data received from geoPlugin (%s)', $responseBody));
                 } else {
                     switch ($data['geoplugin_status']) {
                         case static::GEOPLUGIN_STATUS_NOTFOUND:
-                            $result = null;
                             break;
                         case static::GEOPLUGIN_STATUS_OK:
                         case static::GEOPLUGIN_STATUS_ONLYCOUNTRY:
-                            $result = $this->dataToGeolocationResult($data);
+                            $this->dataToGeolocationResult($data, $result);
                             break;
                         default:
-                            $result = new GeolocationFailedException($this->geolocator, $address, t('Unknown geoPlugin status code: %s', $data['geoplugin_status']));
+                            $result->setError(GeolocationResult::ERR_LIBRARYSPECIFIC, t('Unknown geoPlugin status code: %s', $data['geoplugin_status']));
                             break;
                     }
                 }
@@ -106,10 +105,8 @@ class Controller extends GeolocatorController
      *
      * @return GeolocationResult
      */
-    private function dataToGeolocationResult(array $data)
+    private function dataToGeolocationResult(array $data, GeolocationResult $result)
     {
-        $result = new GeolocationResult();
-
         return $result
             ->setCityName($data['geoplugin_city'])
             ->setStateProvinceCode($data['geoplugin_regionCode'])
