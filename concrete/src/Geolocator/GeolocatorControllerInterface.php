@@ -2,8 +2,8 @@
 namespace Concrete\Core\Geolocator;
 
 use Concrete\Core\Error\ErrorList\ErrorList;
-use Symfony\Component\HttpFoundation\ParameterBag;
 use IPLib\Address\AddressInterface;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 interface GeolocatorControllerInterface
 {
@@ -35,7 +35,7 @@ interface GeolocatorControllerInterface
      *
      * @param AddressInterface $address
      *
-     * @return GeolocationResult|GeolocationFailedException|null returns NULL if the geolocation is not applicable, a GeolocationFailedException if the geolocation failed, or a GeolocationResult otherwise
+     * @return GeolocationResult
      */
     public function geolocateIPAddress(AddressInterface $address);
 }

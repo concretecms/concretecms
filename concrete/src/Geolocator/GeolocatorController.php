@@ -5,11 +5,12 @@ use Concrete\Core\Entity\Geolocator;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Filesystem\FileLocator;
-use Concrete\Core\Session\Session;
 use Controller;
+use Exception;
 use IPLib\Address\AddressInterface;
 use IPLib\Range\Type as IPRangeType;
 use Symfony\Component\HttpFoundation\ParameterBag;
+use Throwable;
 
 abstract class GeolocatorController extends Controller implements GeolocatorControllerInterface
 {
@@ -123,21 +124,28 @@ abstract class GeolocatorController extends Controller implements GeolocatorCont
      */
     public function geolocateIPAddress(AddressInterface $address)
     {
-        switch ($address->getRangeType()) {
-            case IPRangeType::T_PUBLIC:
-                $addressString = (string) $address;
-                $session = $this->app->make('session');
-                $sessionKey = 'ccm/geolocation/' . $this->geolocator->getGeolocatorHandle() . '/' . $this->geolocator->getGeolocatorID() . '/' . md5(serialize($this->geolocator->getGeolocatorConfiguration())) . '/' . $addressString;
-                if ($session->has($sessionKey)) {
-                    $result = $session->get($sessionKey);
-                } else {
-                    $result = $this->performGeolocation($address);
-                    $session->set($sessionKey, $result);
-                }
-                break;
-            default:
-                $result = null;
-                break;
+        $result = new GeolocationResult();
+        try {
+            switch ($address->getRangeType()) {
+                case IPRangeType::T_PUBLIC:
+                    $addressString = (string) $address;
+                    $session = $this->app->make('session');
+                    $sessionKey = 'ccm/geolocation/' . $this->geolocator->getGeolocatorHandle() . '/' . $this->geolocator->getGeolocatorID() . '/' . md5(serialize($this->geolocator->getGeolocatorConfiguration())) . '/' . $addressString;
+                    if ($session->has($sessionKey)) {
+                        $result = $session->get($sessionKey);
+                    } else {
+                        $result = $this->performGeolocation($address);
+                        $session->set($sessionKey, $result);
+                    }
+                    break;
+                default:
+                    $result->setError(GeolocationResult::ERR_IPNOTPUBLIC);
+                    break;
+            }
+        } catch (Exception $x) {
+            $result->setError(GeolocationResult::ERR_OTHER, '', $x);
+        } catch (Throwable $x) {
+            $result->setError(GeolocationResult::ERR_OTHER, '', new Exception($x->getMessage(), $x->getCode()));
         }
 
         return $result;
@@ -148,7 +156,7 @@ abstract class GeolocatorController extends Controller implements GeolocatorCont
      *
      * @param AddressInterface $address
      *
-     * @return GeolocationResult|GeolocationFailedException|null returns NULL if the geolocation is not applicable, a GeolocationFailedException if the geolocation failed, or a GeolocationResult otherwise
+     * @return GeolocationResult
      */
     abstract protected function performGeolocation(AddressInterface $address);
 }
