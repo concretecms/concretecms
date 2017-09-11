@@ -518,7 +518,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
 
         $folder = $this->getFileFolderObject();
         $folderNode = \Concrete\Core\Tree\Node\Type\File::add($nf, $folder);
-        $nf->folderTreeNodeID = $folderNode->getTreeNodeID();
+        $nf->folderTreeNodeID = $folder->getTreeNodeID();
 
         $em->persist($nf);
         $em->flush();
@@ -549,15 +549,6 @@ class File implements \Concrete\Core\Permission\ObjectInterface
 
                 $em->flush();
 
-                do {
-                    $prefix = $importer->generatePrefix();
-                    $path = $cf->prefix($prefix, $version->getFilename());
-                } while ($filesystem->has($path));
-                $filesystem->write($path, $version->getFileResource()->read(), [
-                    'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
-                    'mimetype' => Core::make('helper/mime')->mimeFromExtension($fi->getExtension($version->getFilename())),
-                ]);
-                $cloneVersion->updateFile($version->getFilename(), $prefix);
                 $nf->versions->add($cloneVersion);
                 foreach ($thumbs as $type) {
                     $cloneVersion->duplicateUnderlyingThumbnailFiles($type, $version);
