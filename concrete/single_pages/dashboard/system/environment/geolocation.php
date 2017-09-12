@@ -98,7 +98,7 @@ if (isset($geolocator)) {
             <?= $form->label('geolocation-test-ip', t('Test this IP address')) ?>
             <?= $form->text('geolocation-test-ip', (string) $ip) ?>
         </div>
-        <div class="alert" style="white-space: pre-wrap"></div>
+        <div class="alert" style="white-space: pre-wrap; overflow: auto;"></div>
         <div class="dialog-buttons">
             <button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?= t('Close') ?></button>
             <button class="btn btn-primary pull-right geolocation-test-go"><?= t('Test') ?></button>
@@ -127,8 +127,8 @@ if (isset($geolocator)) {
             })
             .fail(function (data) {
                 var msg;
-            	if (data.responseJSON && data.responseJSON.errors) {
-                	msg = data.responseJSON.errors.join('\n');
+                if (data.responseJSON && data.responseJSON.errors) {
+                    msg = data.responseJSON.errors.join('\n');
                 } else {
                     msg = data.responseText;
                 }
@@ -145,10 +145,14 @@ if (isset($geolocator)) {
         $('button.geolocator-test-launcher').on('click', function(e) {
             e.stopPropagation();
             var $tr = $(this).closest('tr'),
-            	geolocatorId = $tr.data('geolocator-id'),
-            	$dialog = $('#ccm-geolocation-test-dialog'),
+                geolocatorId = $tr.data('geolocator-id'),
+                $dialog = $('#ccm-geolocation-test-dialog'),
                 $result = $dialog.find('.alert');
-            $result.hide();
+            $result
+                .empty()
+                .css('height', Math.min(Math.max($(window).height() - 350, 100), 300) + 'px')
+                .removeClass('alert-info alert-danger alert-success')
+                .show();
             $dialog.find('.geolocation-test-go')
                 .off('click')
                 .on('click', function() {
@@ -160,12 +164,13 @@ if (isset($geolocator)) {
                     testGeolocator(geolocatorId, ip, $result);
                 });
             jQuery.fn.dialog.open({
-			    element: $dialog,
+                element: $dialog,
                 modal: true,
-			    width: 320,
-			    title: $tr.data('geolocator-name'),
+                resizable: false,
+                width: Math.min(Math.max($(window).width() - 100, 200), 600),
+                title: $tr.data('geolocator-name'),
                 height: 'auto'
-		    });
+            });
         });
     });
     </script>
