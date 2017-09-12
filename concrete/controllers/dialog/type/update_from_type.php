@@ -72,9 +72,10 @@ class UpdateFromType extends BackendInterfaceController
         foreach ($pagesPlusCV as $pagePlusCV) {
             $pageTypeDefaultPageBlocksClone = $pageTypeDefaultPageBlocks;
 
-            $asociatedBlocks = $db->fetchAll('select cbDisplayOrder, arHandle, bID, cbRelationID from CollectionVersionBlocks where cID = ? and cvID = ?', [
-            $pagePlusCV['cID'], $pagePlusCV['cvID'],
-        ]);
+            $asociatedBlocks = $db->fetchAll(
+                'select cbDisplayOrder, arHandle, bID, cbRelationID from CollectionVersionBlocks where cID = ? and cvID = ?',
+                [$pagePlusCV['cID'], $pagePlusCV['cvID']]
+            );
 
             $blocksToUpdate = [];
             $blocksToAdd = [];
@@ -84,10 +85,10 @@ class UpdateFromType extends BackendInterfaceController
                 $cbRelationID = $asociatedBlock['cbRelationID'];
 
                 $blockToUpdate = [
-            'bID' => $bID,
-            'arHandle' => $asociatedBlock['arHandle'],
-            'actions' => [],
-          ];
+                    'bID' => $bID,
+                    'arHandle' => $asociatedBlock['arHandle'],
+                    'actions' => [],
+                ];
 
                 $blockPageTypeDefaultPage = null;
 
@@ -96,10 +97,10 @@ class UpdateFromType extends BackendInterfaceController
                 } elseif (array_key_exists($cbRelationID, $pageTypeDefaultPageRelBlocks)) {
                     $blockPageTypeDefaultPage = $pageTypeDefaultPageRelBlocks[$cbRelationID];
                     $blockToUpdate['actions'][] = [
-              'name' => 'update_forked',
-              'pageTypeBlockID' => $blockPageTypeDefaultPage->getBlockID(),
-              'pageTypeArHandle' => $blockPageTypeDefaultPage->getAreaHandle(),
-            ];
+                        'name' => 'update_forked',
+                        'pageTypeBlockID' => $blockPageTypeDefaultPage->getBlockID(),
+                        'pageTypeArHandle' => $blockPageTypeDefaultPage->getAreaHandle(),
+                    ];
                 } else {
                     $blockToUpdate['actions'][] = ['name' => 'delete'];
                 }
@@ -109,19 +110,19 @@ class UpdateFromType extends BackendInterfaceController
 
                     if ($asociatedBlock['arHandle'] != $blockPageTypeDefaultPage->getAreaHandle()) {
                         $blockToUpdate['actions'][] = [
-                'name' => 'change_arHandle',
-                'actualArHandle' => $blockPageTypeDefaultPage->getAreaHandle(),
-              ];
+                            'name' => 'change_arHandle',
+                            'actualArHandle' => $blockPageTypeDefaultPage->getAreaHandle(),
+                        ];
 
                         $forceChangeOrder = true;
                     }
 
                     if ($forceChangeOrder || ($asociatedBlock['cbDisplayOrder'] != $blockPageTypeDefaultPage->cbDisplayOrder)) {
                         $blockToUpdate['actions'][] = [
-                'name' => 'change_display_order',
-                'actualDisplayOrder' => $blockPageTypeDefaultPage->cbDisplayOrder,
-                'actualArHandle' => $blockPageTypeDefaultPage->getAreaHandle(),
-              ];
+                            'name' => 'change_display_order',
+                            'actualDisplayOrder' => $blockPageTypeDefaultPage->cbDisplayOrder,
+                            'actualArHandle' => $blockPageTypeDefaultPage->getAreaHandle(),
+                        ];
                     }
                 }
 
@@ -135,19 +136,19 @@ class UpdateFromType extends BackendInterfaceController
             if (count($pageTypeDefaultPageBlocksClone) > 0) {
                 foreach ($pageTypeDefaultPageBlocksClone as $pageTypeBlock) {
                     $blocksToAdd[] = [
-              'bID' => $pageTypeBlock->getBlockID(),
-              'actualDisplayOrder' => $pageTypeBlock->cbDisplayOrder,
-              'pageTypeArHandle' => $pageTypeBlock->getAreaHandle(),
-            ];
+                        'bID' => $pageTypeBlock->getBlockID(),
+                        'actualDisplayOrder' => $pageTypeBlock->cbDisplayOrder,
+                        'pageTypeArHandle' => $pageTypeBlock->getAreaHandle(),
+                    ];
                 }
             }
 
             $records[] = [
-          'blocksToAdd' => $blocksToAdd,
-          'blocksToUpdate' => $blocksToUpdate,
-          'cID' => $pagePlusCV['cID'],
-          'cvID' => $pagePlusCV['cvID'],
-        ];
+                'blocksToAdd' => $blocksToAdd,
+                'blocksToUpdate' => $blocksToUpdate,
+                'cID' => $pagePlusCV['cID'],
+                'cvID' => $pagePlusCV['cvID'],
+            ];
         }
 
         $queueName = $queue->getName();
@@ -186,13 +187,13 @@ class UpdateFromType extends BackendInterfaceController
                 $pageVersionID = $page->getVersionID();
 
                 $db->executeQuery(
-        'UPDATE CollectionVersionBlockStyles SET arHandle = ?  WHERE cID = ? and cvID = ? and bID = ?',
-                 [$actualArHandle, $pageCollectionID, $pageVersionID, $pageBlock->getBlockID()]
-    );
+                    'UPDATE CollectionVersionBlockStyles SET arHandle = ?  WHERE cID = ? and cvID = ? and bID = ?',
+                    [$actualArHandle, $pageCollectionID, $pageVersionID, $pageBlock->getBlockID()]
+                );
                 $db->executeQuery(
-        'UPDATE CollectionVersionBlocks SET arHandle = ?  WHERE cID = ? and cvID = ? and bID = ?',
-                 [$actualArHandle, $pageCollectionID, $pageVersionID, $pageBlock->getBlockID()]
-    );
+                    'UPDATE CollectionVersionBlocks SET arHandle = ?  WHERE cID = ? and cvID = ? and bID = ?',
+                    [$actualArHandle, $pageCollectionID, $pageVersionID, $pageBlock->getBlockID()]
+                );
                 // Update display order by page type
             } elseif ($action['name'] == 'change_display_order') {
                 $pageBlock->setAbsoluteBlockDisplayOrder($action['actualDisplayOrder']);
@@ -258,8 +259,8 @@ class UpdateFromType extends BackendInterfaceController
                     }
 
                     array_merge(
-                      $handlesToOrder,
-                      $this->processBlockUpdateActions($blockToUpdate['actions'], $pageTypeDefaultPage, $page, $pageBlock)
+                        $handlesToOrder,
+                        $this->processBlockUpdateActions($blockToUpdate['actions'], $pageTypeDefaultPage, $page, $pageBlock)
                     );
                 }
 
