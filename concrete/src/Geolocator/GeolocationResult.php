@@ -1,10 +1,87 @@
 <?php
 namespace Concrete\Core\Geolocator;
 
+ use Exception;
 use JsonSerializable;
 
-class GeolocationResult implements JsonSerializable
-{
+class GeolocationResult implements JsonSerializable{
+    /**
+     * Error category: no error.
+     *
+     * @var int
+     */
+    const ERR_NONE = 0;
+
+    /**
+     * Error category: other/unknown error category.
+     *
+     * @var int
+     */
+    const ERR_OTHER = -1;
+
+    /**
+     * Error category: no current geolocation library.
+     *
+     * @var int
+     */
+    const ERR_NOCURRENTLIBRARY = 1;
+
+    /**
+     * Error category: the IP address of the current client is not available.
+     *
+     * @var int
+     */
+    const ERR_NOCURRENTIPADDRESS = 2;
+
+    /**
+     * Error category: the IP address is not in the public IP address ranges.
+     *
+     * @var int
+     */
+    const ERR_IPNOTPUBLIC = 3;
+
+    /**
+     * Error category: the geolocation library has a wrong configuration.
+     *
+     * @var int
+     */
+    const ERR_MISCONFIGURED = 4;
+
+    /**
+     * Error category: a network error occurred.
+     *
+     * @var int
+     */
+    const ERR_NETWORK = 5;
+
+    /**
+     * Error category: a library-specific error occurred.
+     *
+     * @var int
+     */
+    const ERR_LIBRARYSPECIFIC = 6;
+
+    /**
+     * The error category (one of the GeolocationResult::ERR_... constants).
+     *
+     * @var int
+     */
+    protected $errorCode = self::ERR_NONE;
+
+    /**
+     * The error message.
+     *
+     * @var string
+     */
+    protected $errorMessage = '';
+
+    /**
+     * The underlying exception causing the error (if available).
+     *
+     * @var Exception|null
+     */
+    protected $innerException = null;
+
     /**
      * The city name.
      *
@@ -60,6 +137,93 @@ class GeolocationResult implements JsonSerializable
      * @var float|null
      */
     protected $longitude = null;
+
+    /**
+     * Set the error state.
+     *
+     * @param int $code one of the GeolocationResult::ERR_... constants
+     * @param string $message the error message
+     * @param Exception|null $innerException the underlying exception causing the error (if available)
+     */
+    public function setError($code, $message = '', Exception $innerException = null)
+    {
+        if ($code == static::ERR_NONE && !$message && $innerException === null) {
+            $this->errorCode = static::ERR_NONE;
+            $this->errorMessage = '';
+            $this->innerException = null;
+        } else {
+            $code = (int) $code;
+            $this->errorCode = $code === static::ERR_NONE ? static::ERR_OTHER : $code;
+            $message = trim((string) $message);
+            if ($message === '') {
+                switch ($this->errorCode) {
+                    case static::ERR_NOCURRENTLIBRARY:
+                        $this->errorMessage = t("There's no current geolocation library");
+                        break;
+                    case static::ERR_NOCURRENTIPADDRESS:
+                        $this->errorMessage = t('The IP address of the current client is not available');
+                        break;
+                    case static::ERR_IPNOTPUBLIC:
+                        $this->errorMessage = t('The IP address is not in the public IP address ranges');
+                        break;
+                    case static::ERR_MISCONFIGURED:
+                        $this->errorMessage = t('The geolocation library is misconfigured');
+                        break;
+                    case static::ERR_NETWORK:
+                        $this->errorMessage = t('A network error occurred during the geolocalization');
+                        break;
+                    case static::ERR_LIBRARYSPECIFIC:
+                        $this->errorMessage = t('An unspecified error occurred in the geolocation library');
+                        break;
+                    default:
+                        $this->errorMessage = t('An unexpected error occurred in the geolocation library');
+                }
+            } else {
+                $this->errorMessage = $message;
+            }
+            $this->innerException = $innerException;
+        }
+    }
+
+    /**
+     * Does an error occurred?
+     *
+     * @return bool
+     */
+    public function hasError()
+    {
+        return $this->errorCode !== static::ERR_NONE;
+    }
+
+    /**
+     * Get the error category (one of the GeolocationResult::ERR_... constants).
+     *
+     * @return int return GeolocationResult::ERR_NONE if and only if there's no error
+     */
+    public function getErrorCode()
+    {
+        return $this->errorCode;
+    }
+
+    /**
+     * Get the error message ().
+     *
+     * @return string return an empty string if and only if there's no error
+     */
+    public function getErrorMessage()
+    {
+        return $this->errorMessage;
+    }
+
+    /**
+     * Get the underlying exception causing the error (if available).
+     *
+     * @return Exception|null
+     */
+    public function getInnerException()
+    {
+        return $this->innerException;
+    }
 
     /**
      * Get the city name.
@@ -208,7 +372,7 @@ class GeolocationResult implements JsonSerializable
     /**
      * Get the latitude.
      *
-     * @return int|null
+     * @return float|null
      */
     public function getLatitude()
     {
@@ -218,7 +382,7 @@ class GeolocationResult implements JsonSerializable
     /**
      * Set the latitude.
      *
-     * @param int|null $value
+     * @param float|null $value
      *
      * @return $this
      */
@@ -236,7 +400,7 @@ class GeolocationResult implements JsonSerializable
     /**
      * Get the longitude.
      *
-     * @return int|null
+     * @return float|null
      */
     public function getLongitude()
     {
@@ -246,7 +410,7 @@ class GeolocationResult implements JsonSerializable
     /**
      * Set the longitude.
      *
-     * @param int|null $value
+     * @param float|null $value
      *
      * @return $this
      */
@@ -261,6 +425,31 @@ class GeolocationResult implements JsonSerializable
         return $this;
     }
 
+    /**
+     * Does this instance contain some geolocalized data?
+     *
+     * @return bool
+     */
+    public function hasData()
+    {
+        return
+            $this->countryCode !== ''
+            ||
+            $this->countryName !== ''
+            ||
+            $this->stateProvinceCode !== ''
+            ||
+            $this->stateProvinceName !== ''
+            ||
+            $this->cityName !== ''
+            ||
+            $this->postalCode !== ''
+            ||
+            $this->latitude !== null
+            ||
+            $this->longitude !== null
+        ;
+    }
     /**
      * {@inheritdoc}
      *
@@ -278,5 +467,4 @@ class GeolocationResult implements JsonSerializable
             'latitude' => $this->latitude,
             'longitude' => $this->longitude,
         ];
-    }
-}
+    }}

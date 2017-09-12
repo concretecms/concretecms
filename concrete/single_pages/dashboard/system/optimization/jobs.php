@@ -40,7 +40,7 @@ $uninstallToken = $token->generate('uninstall_job');
 
 <?=Loader::helper('concrete/ui')->tabs(array(
     array($view->action('view'), t('Jobs'), $jobListSelected),
-    array($view->action('view_sets'), t('Job Sets'), $jobSetsSelected),
+    array($view->action('view_sets'), t('Job Sets'), isset($jobSetsSelected) ? $jobSetsSelected : null),
 ), false);?>
 
 <?php if (in_array($this->controller->getTask(), array('view', 'install', 'uninstall', 'job_installed', 'job_uninstalled', 'reset', 'reset_complete', 'job_scheduled'))) {

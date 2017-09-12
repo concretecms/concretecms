@@ -282,3 +282,27 @@ function var_dump_safe($o, $echo = true, $maxDepth = true)
 {
     return Doctrine\Common\Util\Debug::dump($o, $maxDepth, true, $echo);
 }
+
+/**
+ * Generate the PHPDoc for a set of defined variables.
+ *
+ * @param array $get_defined_vars The result of the get_defined_vars() function
+ * @param object|null $valueOfThis The value of $this
+ * @param bool $return Set to true to return the generated PHPDoc, false to return it
+ *
+ * @example output_vars(get_defined_vars(), isset($this) ? $this : null);
+ */
+function output_vars(array $get_defined_vars, $valueOfThis = null, $return = false)
+{
+    if (!array_key_exists('this', $get_defined_vars) && $valueOfThis && is_object($valueOfThis)) {
+        $get_defined_vars['this'] = $valueOfThis;
+    }
+    $generator = new Concrete\Core\Support\Symbol\PhpDocGenerator();
+    $phpDoc = $generator->describeVars($get_defined_vars);
+    if (!$return) {
+        echo '</script><pre>', $phpDoc;
+        die();
+    }
+
+    return $phpDoc;
+}

@@ -1,15 +1,9 @@
 <?php
 namespace Concrete\Block\CoreConversation;
 
-use Concrete\Core\Attribute\AttributeKeyInterface;
 use Concrete\Core\Attribute\Category\PageCategory;
 use Concrete\Core\Block\Block;
 use Concrete\Core\Entity\Attribute\Key\PageKey;
-use Concrete\Core\Http\ResponseAssetGroup;
-use Concrete\Core\Package\Package;
-use Concrete\Core\Package\PackageService;
-use Core;
-use Database;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Conversation\Conversation;
 use Concrete\Core\Conversation\Message\MessageList;
@@ -35,9 +29,9 @@ class Controller extends BlockController implements ConversationFeatureInterface
     protected $conversation;
     protected $btWrapperClass = 'ccm-ui';
     protected $btCopyWhenPropagate = true;
-    protected $btFeatures = array(
+    protected $btFeatures = [
         'conversation',
-    );
+    ];
 
     public $enableTopCommentReviews;
     public $reviewAggregateAttributeKey;
@@ -80,8 +74,8 @@ class Controller extends BlockController implements ConversationFeatureInterface
         if (!isset($this->conversation)) {
             // i don't know why this->cnvid isn't sticky in some cases, leading us to query
             // every damn time
-            $db = Database::get();
-            $cnvID = $db->GetOne('select cnvID from btCoreConversation where bID = ?', array($this->bID));
+            $db = $this->app->make('database');
+            $cnvID = $db->fetchColumn('select cnvID from btCoreConversation where bID = ?', [$this->bID]);
             $this->conversation = Conversation::getByID($cnvID);
         }
 
@@ -91,11 +85,11 @@ class Controller extends BlockController implements ConversationFeatureInterface
     public function duplicate_master($newBID, $newPage)
     {
         parent::duplicate($newBID);
-        $db = Database::get();
+        $db = $this->app->make('database');
         $conv = Conversation::add();
         $conv->setConversationPageObject($newPage);
         $this->conversation = $conv;
-        $db->Execute('update btCoreConversation set cnvID = ? where bID = ?', array($conv->getConversationID(), $newBID));
+        $db->executeQuery('update btCoreConversation set cnvID = ? where bID = ?', [$conv->getConversationID(), $newBID]);
     }
 
     public function edit()
@@ -127,6 +121,7 @@ class Controller extends BlockController implements ConversationFeatureInterface
             $this->requireAsset('css', 'core/frontend/captcha');
         }
     }
+
     public function view()
     {
         if ($this->enableTopCommentReviews) {
@@ -138,7 +133,7 @@ class Controller extends BlockController implements ConversationFeatureInterface
         if (is_object($conversation)) {
             $this->set('conversation', $conversation);
             if ($this->enablePosting) {
-                $token = Core::make('helper/validation/token')->generate('add_conversation_message');
+                $token = $this->app->make('token')->generate('add_conversation_message');
             } else {
                 $token = '';
             }
@@ -158,7 +153,7 @@ class Controller extends BlockController implements ConversationFeatureInterface
     public function getFileSettings()
     {
         $conversation = $this->getConversationObject();
-        $helperFile = Core::make('helper/concrete/file');
+        $helperFile = $this->app->make('helper/concrete/file');
         $maxFilesGuest = $conversation->getConversationMaxFilesGuest();
         $attachmentOverridesEnabled = $conversation->getConversationAttachmentOverridesEnabled();
         $maxFilesRegistered = $conversation->getConversationMaxFilesRegistered();
@@ -169,7 +164,7 @@ class Controller extends BlockController implements ConversationFeatureInterface
 
         $fileExtensions = implode(',', $helperFile->unserializeUploadFileExtensions($fileExtensions)); //unserialize and implode extensions into comma separated string
 
-        $fileSettings = array();
+        $fileSettings = [];
         $fileSettings['maxFileSizeRegistered'] = $maxFileSizeRegistered;
         $fileSettings['maxFileSizeGuest'] = $maxFileSizeGuest;
         $fileSettings['maxFilesGuest'] = $maxFilesGuest;
@@ -185,7 +180,7 @@ class Controller extends BlockController implements ConversationFeatureInterface
     {
         $cnv = $this->getConversationObject();
         $uobs = $cnv->getConversationMessageUsers();
-        $users = array();
+        $users = [];
         foreach ($uobs as $user) {
             if ($lower) {
                 $users[] = strtolower($user->getUserName());
@@ -199,9 +194,9 @@ class Controller extends BlockController implements ConversationFeatureInterface
 
     public function save($post)
     {
-        $helperFile = Core::make('helper/concrete/file');
-        $db = Database::get();
-        $cnvID = $db->GetOne('select cnvID from btCoreConversation where bID = ?', array($this->bID));
+        $helperFile = $this->app->make('helper/concrete/file');
+        $db = $this->app->make('database');
+        $cnvID = $db->fetchColumn('select cnvID from btCoreConversation where bID = ?', [$this->bID]);
         if (!$cnvID) {
             $conversation = Conversation::add();
             $b = $this->getBlockObject();
@@ -210,7 +205,7 @@ class Controller extends BlockController implements ConversationFeatureInterface
         } else {
             $conversation = Conversation::getByID($cnvID);
         }
-        $values = $post + array(
+        $values = $post + [
             'attachmentOverridesEnabled' => null,
             'attachmentsEnabled' => null,
             'itemsPerPage' => null,
@@ -220,11 +215,12 @@ class Controller extends BlockController implements ConversationFeatureInterface
             'maxFileSizeRegistered' => null,
             'enableOrdering' => null,
             'enableCommentRating' => null,
+            'displaySocialLinks' => null,
             'enableTopCommentReviews' => null,
             'notificationOverridesEnabled' => null,
             'subscriptionEnabled' => null,
             'fileExtensions' => null,
-        );
+        ];
         if ($values['attachmentOverridesEnabled']) {
             $conversation->setConversationAttachmentOverridesEnabled(intval($values['attachmentOverridesEnabled']));
             if ($values['attachmentsEnabled']) {
@@ -259,10 +255,13 @@ class Controller extends BlockController implements ConversationFeatureInterface
         if (!$values['enableTopCommentReviews']) {
             $values['enableTopCommentReviews'] = 0;
         }
+        if (!$values['displaySocialLinks']) {
+            $values['displaySocialLinks'] = 0;
+        }
 
         if ($values['notificationOverridesEnabled']) {
             $conversation->setConversationNotificationOverridesEnabled(true);
-            $users = array();
+            $users = [];
             if (is_array($this->post('notificationUsers'))) {
                 foreach ($this->post('notificationUsers') as $uID) {
                     $ui = \UserInfo::getByID($uID);

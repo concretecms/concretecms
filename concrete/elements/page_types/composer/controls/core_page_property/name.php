@@ -4,7 +4,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 <div class="form-group">
 	<label class="control-label"><?=$label?></label>
-    <?php if ($control->isPageTypeComposerControlRequiredByDefault() || $control->isPageTypeComposerFormControlRequiredOnThisRequest()) : ?>
+    <?php if ($control->isPageTypeComposerFormControlRequiredOnThisRequest()) : ?>
         <span class="label label-info"><?= t('Required') ?></span>
     <?php endif; ?>
 	<?php if ($description): ?>

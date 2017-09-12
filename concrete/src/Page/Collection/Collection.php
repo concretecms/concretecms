@@ -526,6 +526,7 @@ class Collection extends ConcreteObject implements TrackableInterface
 
     public function __destruct()
     {
+        unset($this->attributes);
         unset($this->vObj);
     }
 

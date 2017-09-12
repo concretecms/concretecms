@@ -7,6 +7,11 @@ use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Utility\Service\Identifier;
 use URL;
+use User;
+use Page;
+use stdClass;
+use Core;
+use Permissions;
 
 class CkeditorEditor implements EditorInterface
 {
@@ -56,6 +61,38 @@ EOL;
     }
 
     /**
+     * @return stdClass
+     */
+    private function getEditorSnippetsAndClasses()
+    {
+        $obj = new stdClass();
+        $obj->snippets = [];
+        $u = new User();
+        if ($u->isRegistered()) {
+            $snippets = \Concrete\Core\Editor\Snippet::getActiveList();
+            foreach ($snippets as $sns) {
+                $menu = new stdClass();
+                $menu->scsHandle = $sns->getSystemContentEditorSnippetHandle();
+                $menu->scsName = $sns->getSystemContentEditorSnippetName();
+                $obj->snippets[] = $menu;
+            }
+        }
+        $c = Page::getCurrentPage();
+        $obj->classes = [];
+        if (is_object($c) && !$c->isError()) {
+            $cp = new Permissions($c);
+            if ($cp->canViewPage()) {
+                $pt = $c->getCollectionThemeObject();
+                if (is_object($pt)) {
+                    $obj->classes = $pt->getThemeEditorClasses();
+                }
+            }
+        }
+
+        return $obj;
+    }
+    
+    /**
      * @param array $options
      *
      * @return string
@@ -74,7 +111,8 @@ EOL;
 
         $this->requireEditorAssets();
         $plugins = $pluginManager->getSelectedPlugins();
-
+        $snippetsAndClasses = $this->getEditorSnippetsAndClasses();
+        
         $options = array_merge(
             $options,
             [
@@ -119,6 +157,8 @@ EOL;
                     ['name' => 'others', 'groups' => ['others']],
                     ['name' => 'about', 'groups' => ['about']],
                 ],
+                'snippets' => $snippetsAndClasses->snippets,
+                'classes' => $snippetsAndClasses->classes,
             ]
         );
 

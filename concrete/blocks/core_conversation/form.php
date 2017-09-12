@@ -1,6 +1,7 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
 
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+$config = $app->make('config');
 $helperFile = $app->make('helper/concrete/file');
 
 if ($controller->getTask() == 'add') {
@@ -11,25 +12,26 @@ if ($controller->getTask() == 'add') {
     $enableOrdering = 1;
     $enableCommentRating = 1;
     $enableTopCommentReviews = 0;
+    $displaySocialLinks = 1;
     $displayPostingForm = 'top';
     $addMessageLabel = t('Add Message');
     $attachmentOverridesEnabled = 0;
     $attachmentsEnabled = 1;
-    $fileAccessFileTypes = Config::get('conversations.files.allowed_types');
+    $fileAccessFileTypes = $config->get('conversations.files.allowed_types');
     //is nothing's been defined, display the constant value
     if (!$fileAccessFileTypes) {
-        $fileAccessFileTypes = $helperFile->unserializeUploadFileExtensions(Config::get('concrete.upload.extensions'));
+        $fileAccessFileTypes = $helperFile->unserializeUploadFileExtensions($config->get('concrete.upload.extensions'));
     } else {
         $fileAccessFileTypes = $helperFile->unserializeUploadFileExtensions($fileAccessFileTypes);
     }
-    $maxFileSizeGuest = Config::get('conversations.files.guest.max_size');
-    $maxFileSizeRegistered = Config::get('conversations.files.registered.max_size');
-    $maxFilesGuest = Config::get('conversations.files.guest.max');
-    $maxFilesRegistered = Config::get('conversations.files.registered.max');
+    $maxFileSizeGuest = $config->get('conversations.files.guest.max_size');
+    $maxFileSizeRegistered = $config->get('conversations.files.registered.max_size');
+    $maxFilesGuest = $config->get('conversations.files.guest.max');
+    $maxFilesRegistered = $config->get('conversations.files.registered.max');
     $fileExtensions = implode(',', $fileAccessFileTypes);
-    $attachmentsEnabled = intval(Config::get('conversations.attachments_enabled'));
+    $attachmentsEnabled = intval($config->get('conversations.attachments_enabled'));
     $notificationUsers = Conversation::getDefaultSubscribedUsers();
-    $subscriptionEnabled = intval(Config::get('conversations.subscription_enabled'));
+    $subscriptionEnabled = intval($config->get('conversations.subscription_enabled'));
 }
 
 if (!$dateFormat) {
@@ -97,6 +99,15 @@ if (!$dateFormat) {
     <?php
     }
     ?>
+    <div class="form-group">
+        <label class="control-label"><?=t('Social Sharing Links')?></label>
+        <div class="checkbox">
+            <label>
+            <?=$form->checkbox('displaySocialLinks', 1, $displaySocialLinks)?>
+            <?=t('Display social sharing links')?>
+            </label>
+        </div>
+    </div>
     <div class="form-group">
         <label class="control-label"><?=t('Paginate Message List')?></label>
         <div class="radio">

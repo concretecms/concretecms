@@ -15,7 +15,7 @@ interface GeolocatorControllerInterface
     public function hasConfigurationForm();
 
     /**
-     * Render the configuration form?
+     * Render the configuration form.
      */
     public function renderConfigurationForm();
 
@@ -35,7 +35,7 @@ interface GeolocatorControllerInterface
      *
      * @param AddressInterface $address
      *
-     * @return GeolocationResult|GeolocationFailedException|null returns NULL if the geolocation is not applicable, a GeolocationFailedException if the geolocation failed, or a GeolocationResult otherwise
+     * @return GeolocationResult
      */
     public function geolocateIPAddress(AddressInterface $address);
 }
