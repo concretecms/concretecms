@@ -165,11 +165,12 @@ class UpdateFromType extends BackendInterfaceController
     private function processBlockUpdateActions($actions, $pageTypeDefaultPage, $page, $pageBlock)
     {
         $handlesToOrder = [];
-
+        $blockService = $this->app->make(Block::class);
+        /* @var Block $blockService */
         foreach ($actions as $action) {
             // Update all forked pages by page type
             if ($action['name'] == 'update_forked') {
-                $pageTypeBlock = $this->app->make(Block::class)::getByID($action['pageTypeBlockID'], $pageTypeDefaultPage, $action['pageTypeArHandle']);
+                $pageTypeBlock = $blockService->getByID($action['pageTypeBlockID'], $pageTypeDefaultPage, $action['pageTypeArHandle']);
                 $bt = $pageTypeBlock->getBlockTypeObject();
 
                 $pageBlock->deleteBlock();
@@ -226,9 +227,15 @@ class UpdateFromType extends BackendInterfaceController
             return;
         }
 
+        $queueService = $this->app->make(Queue::class);
+        /* @var Queue $queueService */
         $queueName = sprintf('update_pagetype_defaults_%s', $this->pagetype->getPageTypeID());
-        $queue = $this->app->make(Queue::class)::get($queueName);
+        $queue = $queueService->get($queueName);
 
+        $pageService = $this->app->make(Page::class);
+        /* @var Page $pageService */
+        $blockService = $this->app->make(Block::class);
+        /* @var Block $blockService */
         if ($_POST['process']) {
             $db = $this->app->make(Connection::class);
             $obj = new \stdClass();
@@ -236,21 +243,21 @@ class UpdateFromType extends BackendInterfaceController
 
             foreach ($messages as $key => $message) {
                 $record = unserialize($message->body);
-                $page = $this->app->make(Page::class)::getByID($record['cID'], $record['cvID']);
+                $page = $pageService->getByID($record['cID'], $record['cvID']);
 
                 $blocksToUpdate = $record['blocksToUpdate'];
                 $blocksToAdd = $record['blocksToAdd'];
                 $handlesToOrder = [];
 
                 foreach ($blocksToAdd as $blockToAdd) {
-                    $pageTypeBlock = $this->app->make(Block::class)::getByID($blockToAdd['bID'], $pageTypeDefaultPage, $blockToAdd['pageTypeArHandle']);
+                    $pageTypeBlock = $blockService->getByID($blockToAdd['bID'], $pageTypeDefaultPage, $blockToAdd['pageTypeArHandle']);
                     $pageTypeBlock->alias($page);
-                    $addedChildPageblock = $this->app->make(Block::class)::getByID($pageTypeBlock->getBlockID(), $page, $blockToAdd['pageTypeArHandle']);
+                    $addedChildPageblock = $blockService->getByID($pageTypeBlock->getBlockID(), $page, $blockToAdd['pageTypeArHandle']);
                     $addedChildPageblock->setAbsoluteBlockDisplayOrder($blockToAdd['actualDisplayOrder']);
                 }
 
                 foreach ($blocksToUpdate as $blockToUpdate) {
-                    $pageBlock = $this->app->make(Block::class)::getByID($blockToUpdate['bID'], $page, $blockToUpdate['arHandle']);
+                    $pageBlock = $blockService->getByID($blockToUpdate['bID'], $page, $blockToUpdate['arHandle']);
                     $permissionsClass = $this->app->make(Permissions::class);
                     $pageBlockPerms = new $permissionsClass($pageBlock);
 
@@ -285,7 +292,7 @@ class UpdateFromType extends BackendInterfaceController
         }
 
         $totalItems = $queue->count();
-        $this->app->make(View::class)::element('progress_bar', ['totalItems' => $totalItems, 'totalItemsSummary' => t2('%d page', '%d pages', $totalItems)]);
+        View::element('progress_bar', ['totalItems' => $totalItems, 'totalItemsSummary' => t2('%d page', '%d pages', $totalItems)]);
     }
 
     protected function canAccess()
