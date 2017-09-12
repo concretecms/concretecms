@@ -1,15 +1,15 @@
 <?php
 namespace Concrete\Controller\Dialog\Type;
 
+use Block;
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
-use Concrete\Core\Page\PageList;
-use Concrete\Core\Http\ResponseFactory;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Foundation\Queue\Queue;
+use Concrete\Core\Http\ResponseFactory;
+use Concrete\Core\Page\PageList;
+use Page;
 use PageTemplate;
 use PageType;
-use Page;
-use Block;
 use Permissions;
 use View;
 
@@ -284,7 +284,7 @@ class UpdateFromType extends BackendInterfaceController
         }
 
         $totalItems = $queue->count();
-        $this->app->make(View::class)::element('progress_bar', ['totalItems' => $totalItems, 'totalItemsSummary' => t2("%d page", "%d pages", $totalItems)]);
+        $this->app->make(View::class)::element('progress_bar', ['totalItems' => $totalItems, 'totalItemsSummary' => t2('%d page', '%d pages', $totalItems)]);
     }
 
     protected function canAccess()
