@@ -27,25 +27,26 @@ if (isset($geolocator)) {
     <form method="POST" action="<?= $this->action('configure', $geolocator->getGeolocatorID()) ?>">
         <?php
         $token->output('ccm-geolocator-configure');
-    $description = $geolocator->getGeolocatorDisplayDescription();
-    if ($description !== '') {
-        ?>
+        $description = $geolocator->getGeolocatorDisplayDescription();
+        if ($description !== '') {
+            ?>
             <div class="alert alert-info">
                 <?= $description ?>
             </div>
             <?php
-    } ?>
+        }
+        ?>
         <div class="form-group">
             <?= $form->label('geolocator-enable', t('Usage')) ?>
             <div class="checkbox">
                 <label><?= $form->checkbox('geolocator-active', 1, $geolocator->isActive()) ?> <?= t('Use this geolocator library.') ?></label>
-                </div>
             </div>
         </div>
         <?php
         if ($geolocatorController->hasConfigurationForm()) {
             $geolocatorController->renderConfigurationForm($geolocator);
-        } ?>
+        }
+        ?>
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
                 <a href="<?= $this->action('') ?>" class="btn btn-default pull-left"><?= t('Cancel') ?></a>
@@ -57,7 +58,8 @@ if (isset($geolocator)) {
     </form>
     <?php
 } else {
-            $activeFound = false; ?>
+    $activeFound = false;
+    ?>
     <fieldset>
         <table class="table geolocation-libraries">
             <colgroup>
@@ -175,4 +177,4 @@ if (isset($geolocator)) {
         </div>
         <?php
     }
-        }
+}
