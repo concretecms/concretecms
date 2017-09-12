@@ -1,10 +1,11 @@
 <?php
 namespace Concrete\Core\Geolocator;
 
- use Exception;
+use Exception;
 use JsonSerializable;
 
-class GeolocationResult implements JsonSerializable{
+class GeolocationResult implements JsonSerializable
+{
     /**
      * Error category: no error.
      *
@@ -450,6 +451,7 @@ class GeolocationResult implements JsonSerializable{
             $this->longitude !== null
         ;
     }
+
     /**
      * {@inheritdoc}
      *
@@ -458,6 +460,8 @@ class GeolocationResult implements JsonSerializable{
     public function jsonSerialize()
     {
         return [
+            'error' => $this->hasError() ? ['code' => $this->errorCode, 'message' => $this->errorMessage] : null,
+            'hasData' => $this->hasData(),
             'cityName' => $this->cityName,
             'stateProvinceCode' => $this->stateProvinceCode,
             'stateProvinceName' => $this->stateProvinceName,
@@ -467,4 +471,5 @@ class GeolocationResult implements JsonSerializable{
             'latitude' => $this->latitude,
             'longitude' => $this->longitude,
         ];
-    }}
+    }
+}

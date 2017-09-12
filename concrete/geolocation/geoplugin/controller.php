@@ -73,8 +73,8 @@ class Controller extends GeolocatorController
         } catch (Exception $x) {
             $result->setError(GeolocationResult::ERR_NETWORK, t('Request to geoPlugin failed: %s', $x->getMessage()), $x);
         }
-        if ($result === null) {
-            if (!$response->isSuccessful()) {
+        if ($result->hasError() === false) {
+            if (!$response->isSuccess()) {
                 $result->setError(GeolocationResult::ERR_NETWORK, t('Request to geoPlugin failed with return code %s', sprintf('%s (%s)', $response->getStatusCode(), $response->getReasonPhrase())));
             } else {
                 $responseBody = $response->getBody();
@@ -91,7 +91,8 @@ class Controller extends GeolocatorController
                             break;
                         case static::GEOPLUGIN_STATUS_OK:
                         case static::GEOPLUGIN_STATUS_ONLYCOUNTRY:
-                            $this->dataToGeolocationResult($data, $configuration, $result);                            break;
+                            $this->dataToGeolocationResult($data, $configuration, $result);
+                            break;
                         default:
                             $result->setError(GeolocationResult::ERR_LIBRARYSPECIFIC, t('Unknown geoPlugin status code: %s', $data['geoplugin_status']));
                             break;
@@ -108,7 +109,8 @@ class Controller extends GeolocatorController
      * @param array configuration
      * @param GeolocationResult $result
      */
-    private function dataToGeolocationResult(array $data, array $configuration, GeolocationResult $result)    {
+    private function dataToGeolocationResult(array $data, array $configuration, GeolocationResult $result)
+    {
         $result
             ->setCityName(empty($configuration['skipCity']) ? $data['geoplugin_city'] : '')
             ->setStateProvinceCode(empty($configuration['skipStateProvince']) ? $data['geoplugin_regionCode'] : '')
