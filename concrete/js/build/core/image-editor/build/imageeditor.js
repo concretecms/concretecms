@@ -28,7 +28,6 @@ var ImageEditor = function (settings) {
     im.domContext = im.editorContext.parent();
     im.controlContext = im.domContext.children('div.controls');
     im.controlSetNamespaces = [];
-    debugger;
 
     im.showLoader = $.fn.dialog.showLoader;
     im.hideLoader = $.fn.dialog.hideLoader;

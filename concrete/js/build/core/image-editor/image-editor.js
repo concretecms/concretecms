@@ -146,7 +146,6 @@ var ImageEditor = function (settings) {
     im.domContext = im.editorContext.parent();
     im.controlContext = im.domContext.children('div.controls');
     im.controlSetNamespaces = [];
-    debugger;
 
     im.showLoader = $.fn.dialog.showLoader;
     im.hideLoader = $.fn.dialog.hideLoader;
@@ -720,7 +719,6 @@ im.buildBackground = function() {
   //im.foreground.moveToTop();
   im.saveArea.draw();
   im.coverLayer.draw();
-    debugger;
 };
 
 im.buildBackground();
@@ -827,7 +825,6 @@ if (settings.src) {
                 im.buildBackground();
             }
         }
-        debugger;
         var center = {
             x: Math.floor(im.center.x - (img.width / 2)),
             y: Math.floor(im.center.y - (img.height / 2))
