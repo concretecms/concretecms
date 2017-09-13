@@ -116,6 +116,28 @@ Kinetic.Text.prototype.rasterize = function(e) {
     }
   });
 };
+// Patch the browser drawImage function
+(function() {
+  var contextPrototype, originalFunction;
+  try {
+    contextPrototype = Object.getPrototypeOf(document.createElement('canvas').getContext('2d'));
+    originalFunction = contextPrototype.drawImage;
+  } catch (e) {
+    originalFunction = null; 
+  }
+  if (originalFunction) {
+    contextPrototype.drawImage = function() {
+      if (arguments.length >= 4) {
+        this.imageSmoothingEnabled = true;
+        if (typeof this.imageSmoothingQuality === 'string') {
+          this.imageSmoothingQuality = 'high';
+        }
+      }
+      return originalFunction.apply(this, arguments);
+    };
+  }
+})();
+
 var control_sets = [], components = [], filters = [];
 var ImageEditor = function (settings) {
     "use strict";
