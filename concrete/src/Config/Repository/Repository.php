@@ -1,25 +1,25 @@
 <?php
-
 namespace Concrete\Core\Config\Repository;
 
 use Closure;
 use Concrete\Core\Config\LoaderInterface;
 use Concrete\Core\Config\SaverInterface;
+use Exception;
+use Illuminate\Config\LoaderInterface as IlluminateLoaderInterface;
 
 class Repository extends \Illuminate\Config\Repository
 {
-
     /**
      * The loader implementation.
      *
-     * @var \Concrete\Core\Config\LoaderInterface
+     * @var LoaderInterface
      */
     protected $loader;
 
     /**
      * The saver implementation.
      *
-     * @var \Concrete\Core\Config\SaverInterface
+     * @var SaverInterface
      */
     protected $saver;
 
@@ -35,21 +35,21 @@ class Repository extends \Illuminate\Config\Repository
      *
      * @var array
      */
-    protected $items = array();
+    protected $items = [];
 
     /**
      * All of the registered packages.
      *
      * @var array
      */
-    protected $packages = array();
+    protected $packages = [];
 
     /**
      * The after load callbacks for namespaces.
      *
      * @var array
      */
-    protected $afterLoad = array();
+    protected $afterLoad = [];
 
     /**
      * A cache of the parsed items.
@@ -61,8 +61,8 @@ class Repository extends \Illuminate\Config\Repository
     /**
      * Create a new configuration repository.
      *
-     * @param \Concrete\Core\Config\LoaderInterface $loader
-     * @param \Concrete\Core\Config\SaverInterface $saver
+     * @param LoaderInterface $loader
+     * @param SaverInterface $saver
      * @param string $environment
      */
     public function __construct(LoaderInterface $loader, SaverInterface $saver, $environment)
@@ -75,19 +75,22 @@ class Repository extends \Illuminate\Config\Repository
     /**
      * Determine if the given configuration value exists.
      *
-     * @param  string $key
+     * @param string $key
+     *
      * @return bool
      */
     public function has($key)
     {
         $default = microtime(true);
+
         return $this->get($key, $default) !== $default;
     }
 
     /**
      * Determine if a configuration group exists.
      *
-     * @param  string $key
+     * @param string $key
+     *
      * @return bool
      */
     public function hasGroup($key)
@@ -100,8 +103,9 @@ class Repository extends \Illuminate\Config\Repository
     /**
      * Get the specified configuration value.
      *
-     * @param  string $key
-     * @param  mixed $default
+     * @param string $key
+     * @param mixed $default
+     *
      * @return mixed
      */
     public function get($key, $default = null)
@@ -121,9 +125,8 @@ class Repository extends \Illuminate\Config\Repository
     /**
      * Set a given configuration value.
      *
-     * @param  string $key
-     * @param  mixed $value
-     * @return void
+     * @param string $key
+     * @param mixed $value
      */
     public function set($key, $value = null)
     {
@@ -170,7 +173,6 @@ class Repository extends \Illuminate\Config\Repository
      * Clear specific key.
      *
      * @param string $key
-     * @return void
      */
     public function clear($key)
     {
@@ -178,20 +180,17 @@ class Repository extends \Illuminate\Config\Repository
     }
 
     /**
-     * Clear cached items
-     *
-     * @return void
+     * Clear cached items.
      */
     public function clearCache()
     {
-        $this->items = array();
+        $this->items = [];
     }
 
     /**
-     * Clear a namespace (Note: this deletes items permanently)
+     * Clear a namespace (Note: this deletes items permanently).
      *
      * @param $namespace
-     * @return void
      */
     public function clearNamespace($namespace)
     {
@@ -201,10 +200,9 @@ class Repository extends \Illuminate\Config\Repository
     /**
      * Load the configuration group for the key.
      *
-     * @param  string $group
-     * @param  string $namespace
-     * @param  string $collection
-     * @return void
+     * @param string $group
+     * @param string $namespace
+     * @param string $collection
      */
     protected function load($group, $namespace, $collection)
     {
@@ -232,9 +230,10 @@ class Repository extends \Illuminate\Config\Repository
     /**
      * Call the after load callback for a namespace.
      *
-     * @param  string $namespace
-     * @param  string $group
-     * @param  array $items
+     * @param string $namespace
+     * @param string $group
+     * @param array $items
+     *
      * @return array
      */
     protected function callAfterLoad($namespace, $group, $items)
@@ -247,7 +246,8 @@ class Repository extends \Illuminate\Config\Repository
     /**
      * Parse an array of namespaced segments.
      *
-     * @param  string $key
+     * @param string $key
+     *
      * @return array
      */
     protected function parseNamespacedSegments($key)
@@ -282,15 +282,15 @@ class Repository extends \Illuminate\Config\Repository
 
         $groupAndItem = array_slice($this->parseBasicSegments($itemSegments), 1);
 
-        return array_merge(array($namespace), $groupAndItem);
+        return array_merge([$namespace], $groupAndItem);
     }
 
     /**
      * Register a package for cascading configuration.
      *
-     * @param  string $package
-     * @param  string $hint
-     * @param  string $namespace
+     * @param string $package
+     * @param string $hint
+     * @param string $namespace
      */
     public function package($package, $hint = null, $namespace = null)
     {
@@ -303,22 +303,23 @@ class Repository extends \Illuminate\Config\Repository
     /**
      * Get the configuration namespace for a package.
      *
-     * @param  string|\Concrete\Core\Package\Package $package
-     * @param  string $namespace
+     * @param string|\Concrete\Core\Package\Package $package
+     * @param string $namespace
+     *
      * @return string
      */
     protected function getPackageNamespace($package, $namespace)
     {
         $package = is_object($package) ? $package->getPackageHandle() : $package;
+
         return $namespace ?: $package;
     }
 
     /**
      * Register an after load callback for a given namespace.
      *
-     * @param  string $namespace
-     * @param  \Closure $callback
-     * @return void
+     * @param string $namespace
+     * @param Closure $callback
      */
     public function afterLoading($namespace, Closure $callback)
     {
@@ -328,8 +329,9 @@ class Repository extends \Illuminate\Config\Repository
     /**
      * Get the collection identifier.
      *
-     * @param  string $group
-     * @param  string $namespace
+     * @param string $group
+     * @param string $namespace
+     *
      * @return string
      */
     protected function getCollection($group, $namespace = null)
@@ -342,9 +344,8 @@ class Repository extends \Illuminate\Config\Repository
     /**
      * Add a new namespace to the loader.
      *
-     * @param  string $namespace
-     * @param  string $hint
-     * @return void
+     * @param string $namespace
+     * @param string $hint
      */
     public function addNamespace($namespace, $hint)
     {
@@ -375,16 +376,18 @@ class Repository extends \Illuminate\Config\Repository
     /**
      * Set the loader implementation.
      *
-     * @param  LoaderInterface $loader
-     * @return void
+     * @param LoaderInterface $loader
      */
-    public function setLoader(LoaderInterface $loader)
+    public function setLoader(IlluminateLoaderInterface $loader)
     {
+        if (!$loader instanceof LoaderInterface) {
+            throw new Exception('You should pass a ' . LoaderInterface::class . ' instance to ' . __METHOD__);
+        }
         $this->loader = $loader;
     }
 
     /**
-     * Get the saver implementation
+     * Get the saver implementation.
      *
      * @return SaverInterface
      */
@@ -436,7 +439,8 @@ class Repository extends \Illuminate\Config\Repository
     /**
      * Parse a key into namespace, group, and item.
      *
-     * @param  string  $key
+     * @param string $key
+     *
      * @return array
      */
     public function parseKey($key)
@@ -468,7 +472,8 @@ class Repository extends \Illuminate\Config\Repository
     /**
      * Parse an array of basic segments.
      *
-     * @param  array  $segments
+     * @param array $segments
+     *
      * @return array
      */
     protected function parseBasicSegments(array $segments)
@@ -495,9 +500,8 @@ class Repository extends \Illuminate\Config\Repository
     /**
      * Set the parsed value of a key.
      *
-     * @param  string  $key
-     * @param  array   $parsed
-     * @return void
+     * @param string $key
+     * @param array $parsed
      */
     public function setParsedKey($key, $parsed)
     {
