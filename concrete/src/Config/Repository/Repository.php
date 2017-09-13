@@ -5,6 +5,8 @@ namespace Concrete\Core\Config\Repository;
 use Closure;
 use Concrete\Core\Config\LoaderInterface;
 use Concrete\Core\Config\SaverInterface;
+use Exception;
+use Illuminate\Config\LoaderInterface as IlluminateLoaderInterface;
 
 class Repository extends \Illuminate\Config\Repository
 {
@@ -378,8 +380,11 @@ class Repository extends \Illuminate\Config\Repository
      * @param  LoaderInterface $loader
      * @return void
      */
-    public function setLoader(LoaderInterface $loader)
+    public function setLoader(IlluminateLoaderInterface $loader)
     {
+        if (!$loader instanceof LoaderInterface) {
+            throw new Exception('You should pass a ' . LoaderInterface::class . ' instance to ' . __METHOD__);
+        }
         $this->loader = $loader;
     }
 
