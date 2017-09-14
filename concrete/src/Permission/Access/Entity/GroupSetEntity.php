@@ -5,6 +5,7 @@ use Loader;
 use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use Config;
 use Concrete\Core\User\Group\GroupSet;
+use UserInfo;
 
 class GroupSetEntity extends Entity
 {
