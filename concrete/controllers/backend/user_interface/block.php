@@ -51,6 +51,9 @@ abstract class Block extends Page
             $b->setBlockAreaObject($a); // set the original area object
             $this->set('isGlobalArea', true);
         }
+        if (!$b) {
+            throw new Exception(t('Access Denied'));
+        }
         $this->block = $b;
         $this->permissions = new \Permissions($b);
         $this->set('bp', $this->permissions);
