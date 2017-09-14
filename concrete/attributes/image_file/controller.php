@@ -66,7 +66,8 @@ class Controller extends AttributeTypeController
     {
         $f = $this->getAttributeValue()->getValue();
         if (is_object($f)) {
-            return '<a href="' . $f->getDownloadURL() . '">' . $f->getTitle() . '</a>';
+            $type = strtolower($f->getTypeObject()->getGenericDisplayType());
+            return '<a target="_blank" href="' . $f->getDownloadURL() . '" class="ccm-attribute-image-file ccm-attribute-image-file-' . $type . '">' . $f->getTitle() . '</a>';
         }
     }
 
