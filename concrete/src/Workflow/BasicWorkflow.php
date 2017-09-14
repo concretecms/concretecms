@@ -11,6 +11,7 @@ use Concrete\Core\Workflow\Progress\BasicData as BasicWorkflowProgressData;
 use Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
 use Core;
 use Concrete\Core\Permission\Access\Access as PermissionAccess;
+use Config;
 use PermissionKey;
 use User;
 use UserInfo;
@@ -173,6 +174,18 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
         $dt = $wp->getWorkflowProgressDateAdded();
         $dh = Core::make('helper/date');
 
+        if (Config::get('concrete.email.workflow_notification.address')){
+            $fromAddress = Config::get('concrete.email.workflow_notification.address');
+        } else {
+            $adminUser = UserInfo::getByID(USER_SUPER_ID);
+            $fromAddress = $adminUser->getUserEmail();
+        }
+        if (Config::get('concrete.email.workflow_notification.name')) {
+            $fromName = Config::get('concrete.email.workflow_notification.name');
+        } else {
+            $fromName = t('Basic Workflow');
+        }
+
         foreach ($users as $ui) {
             // Get user object of the receiver and set locale to their language
             $user = $ui->getUserObject();
@@ -181,8 +194,7 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
             $mh = Core::make('helper/mail');
             $mh->addParameter('uName', $ui->getUserName());
             $mh->to($ui->getUserEmail());
-            $adminUser = UserInfo::getByID(USER_SUPER_ID);
-            $mh->from($adminUser->getUserEmail(), t('Basic Workflow'));
+            $mh->from($fromAddress, $fromName);
             $date = $dh->formatDateTime($dt, true); // Call here to translate datetime into users language
             $translatedMessage = $this->getTranslatedMessage($message, $date);
             $mh->addParameter('message', $translatedMessage);
