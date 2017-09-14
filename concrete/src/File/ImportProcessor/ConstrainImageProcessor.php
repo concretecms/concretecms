@@ -75,7 +75,12 @@ class ConstrainImageProcessor implements ProcessorInterface
 
     public function shouldProcess(Version $version)
     {
-        return $version->getTypeObject()->getGenericType() == Type::T_IMAGE;
+        $versionTypeObject = $version->getTypeObject();
+        if ($versionTypeObject->getGenericType() == Type::T_IMAGE && !$versionTypeObject->isSVG()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function process(Version $version)
