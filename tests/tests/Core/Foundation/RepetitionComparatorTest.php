@@ -32,6 +32,7 @@ class RepetitionComparatorTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($comparator->areEqual($repetition, $r2));
 
         $r2 = new BasicRepetition();
+        $r2->setTimezone(new \DateTimeZone('America/Los_Angeles'));
         $r2->setStartDate('2017-08-01 12:00:01');
 
         $this->assertFalse($comparator->areEqual($repetition, $r2));
