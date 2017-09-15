@@ -552,6 +552,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
         $category = new ExpressCategory($entity, \Core::make('app'), $entityManager);
         $indexer = $category->getSearchIndexer();
         foreach($indexKeys as $key) {
+            $entityManager->refresh($key->getAttributeType()); // The key might not be fully initialized and it might be coming from session and might not have all the right info in it. This is to fix a bug where packaged attribute types weren't being seen as being in a package because the package handle property on the object wasn't set.
             $indexer->updateRepositoryColumns($category, $key);
         }
 
