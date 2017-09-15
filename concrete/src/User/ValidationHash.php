@@ -82,4 +82,36 @@ class ValidationHash
             return false;
         }
     }
+
+    /**
+     * Gets the hash type for a given hash.
+     *
+     * @param string $hash
+     *
+     * @return int | false
+     */
+    public static function getType($hash)
+    {
+        $db = Database::connection();
+        $type = $db->fetchColumn("SELECT type FROM UserValidationHashes WHERE uHash = ? ", array($hash));
+        if (is_numeric($type) && $type > 0) {
+            return $type;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Validate the given hash
+     *
+     * @param $hash
+     *
+     * @return bool
+     */
+    public static function isValid($hash)
+    {
+        $type = self::getType($hash);
+        self::removeExpired($type);
+        return (bool) self::getUserID($hash, $type);
+    }
 }
