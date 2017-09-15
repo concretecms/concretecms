@@ -297,7 +297,7 @@ $(function() {
 		e.preventDefault();
 		e.stopPropagation();
 		var $parent = $(this).parent();
-		$parent.find('.ccm-panel-page-versions-more-info').show().addClass('animated fadeInDown');
+		$parent.find('.ccm-panel-page-versions-more-info').slideToggle();
 	});
 
 	$('button[data-version-action=delete]').on('click', function() {

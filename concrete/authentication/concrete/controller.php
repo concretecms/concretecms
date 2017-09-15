@@ -255,9 +255,7 @@ class Controller extends AuthenticationTypeController
             $hashCreated = $db->fetchColumn('SELECT uDateGenerated FROM UserValidationHashes WHERE uHash=?', [$uHash]);
             if ($hashCreated < (time() - (USER_CHANGE_PASSWORD_URL_LIFETIME))) {
                 $h->deleteKey('UserValidationHashes', 'uHash', $uHash);
-                throw new \Exception(
-                    t(
-                        'Key Expired. Please visit the forgot password page again to have a new key generated.'));
+                $this->redirect('/login', $this->getAuthenticationType()->getAuthenticationTypeHandle(), 'invalid_token');
             } else {
                 if (isset($_POST['uPassword']) && strlen($_POST['uPassword'])) {
                     Core::make('validator/password')->isValid($_POST['uPassword'], $e);
@@ -286,9 +284,7 @@ class Controller extends AuthenticationTypeController
                 }
             }
         } else {
-            throw new \Exception(
-                t(
-                    'Invalid Key. Please visit the forgot password page again to have a new key generated.'));
+            $this->redirect('/login', $this->getAuthenticationType()->getAuthenticationTypeHandle(), 'invalid_token');
         }
     }
 

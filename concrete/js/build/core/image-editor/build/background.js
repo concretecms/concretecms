@@ -46,7 +46,6 @@ im.buildBackground = function() {
   //im.foreground.moveToTop();
   im.saveArea.draw();
   im.coverLayer.draw();
-    debugger;
 };
 
 im.buildBackground();

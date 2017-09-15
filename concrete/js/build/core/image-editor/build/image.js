@@ -32,7 +32,6 @@ if (settings.src) {
                 im.buildBackground();
             }
         }
-        debugger;
         var center = {
             x: Math.floor(im.center.x - (img.width / 2)),
             y: Math.floor(im.center.y - (img.height / 2))
