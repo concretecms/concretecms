@@ -248,7 +248,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     public function updateUserAvatar(ImageInterface $image)
     {
         $fsl = $this->application->make(StorageLocationFactory::class)->fetchDefault()->getFileSystemObject();
-        $image = $image->get('jpg');
+        $image = $image->get('jpg', array('jpeg_quality' => \Config::get('concrete.misc.default_jpeg_image_compression')));
         $file = REL_DIR_FILES_AVATARS . '/' . $this->getUserID() . '.jpg';
         if ($fsl->has($file)) {
             $fsl->delete($file);
