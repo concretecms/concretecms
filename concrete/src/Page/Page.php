@@ -3217,7 +3217,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         return $lifetime;
     }
 
-    public static function addStatic($data, TreeInterface $parent = null)
+    public static function addStatic($data, TreeInterface $parent = null, $overrideSiteTreeID = null)
     {
         $db = Database::connection();
         $cParentID = 1;
@@ -3248,9 +3248,10 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         // These get set to parent by default here, but they can be overridden later
         $cInheritPermissionsFrom = 'PARENT';
 
-        $siteTreeID = 0;
-        if (is_object($parent)) {
-            $siteTreeID = $parent->getSiteTreeID();
+        if ($overrideSiteTreeID !== null) {
+            $siteTreeID = (int) $overrideSiteTreeID;
+        } else {
+            $siteTreeID = $parent === null ? 0 : $parent->getSiteTreeID();
         }
 
         $v = [$cID, $siteTreeID, $cFilename, $cParentID, $cInheritPermissionsFrom, $cOverrideTemplatePermissions, (int) $cInheritPermissionsFromCID, $cDisplayOrder, $uID, $pkgID];

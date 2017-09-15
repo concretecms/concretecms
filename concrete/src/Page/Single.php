@@ -3,6 +3,7 @@ namespace Concrete\Core\Page;
 
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Site\Tree\TreeInterface;
+use Core;
 use Page as CorePage;
 use Loader;
 use Environment;
@@ -36,18 +37,17 @@ class Single
         return $singlePages;
     }
 
+    /**
+     * Take a collection path and returns it without slashes at the beginning and at the end, and no more than 1 intermediate slash in the middle at any point.
+     *
+     * @param string $path
+     *
+     * @return string
+     */
     public static function sanitizePath($path)
     {
-        //takes a damn cpath and returns no first slash, and no more than 1 intermediate slash in
-        // the middle at any point
-        $node = preg_replace("/([\/]+)/", "/", $path);
-        if (substr($node, 0, 1) == "/") {
-            $node = substr($node, 1);
-        }
-        // now do the same for the last node
-        if (substr($node, strlen($node) - 1, 1) == '/') {
-            $node = substr($node, 0, strlen($node) - 1);
-        }
+        $node = preg_replace('/\/{2,}/', '/', $path);
+        $node = trim($node, '/');
 
         return $node;
     }
@@ -128,28 +128,34 @@ class Single
      * Adds a single page outside of any site trees. The global=true declaration in content importer XML must come at
      * on the first URL segment, so we don't have to be smart and check to see if the parents already eixst.
      * @param $cPath
-     * @param null $pkg
-     * @return mixed
+     * @param object|null $pkg
+     * @return CorePage|null
      */
     public static function addGlobal($cPath, $pkg = null)
     {
-        $pathToFile = static::getPathToNode($cPath, $pkg);
-        $txt = Loader::helper('text');
-        $c = CorePage::getByPath("/" . $cPath);
+        $cPath = static::sanitizePath($cPath);
+        $c = CorePage::getByPath('/' . $cPath);
         if ($c->isError() && $c->getError() == COLLECTION_NOT_FOUND) {
-            // create the page at that point in the tree
-
-            $data = array();
-            $data['handle'] = trim($cPath, '/');
-            $data['name'] = $txt->unhandle($data['handle']);
-            $data['filename'] = $pathToFile;
-            $data['uID'] = USER_SUPER_ID;
+            $slugs = explode('/', $cPath);
+            $handle = (string) array_pop($slugs);
+            $data = [
+                'handle' => $handle,
+                'name' => Core::make('helper/text')->unhandle($handle),
+                'filename' => static::getPathToNode($cPath, $pkg),
+                'uID' => USER_SUPER_ID,
+            ];
             if ($pkg != null) {
                 $data['pkgID'] = $pkg->getPackageID();
             }
-
-            $c = Page::addStatic($data, null);
-            $c->moveToRoot();
+            $parentPage = null;
+            if (count($slugs) > 0) {
+                $parentPagePath = '/' . implode('/', $slugs);
+                $parentPage = CorePage::getByPath($parentPagePath);
+                if ($parentPage && $parentPage->isError()) {
+                    $parentPage = null;
+                }
+            }
+            $c = Page::addStatic($data, $parentPage, 0);
             return $c;
         }
     }
