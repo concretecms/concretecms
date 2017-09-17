@@ -58,6 +58,17 @@ function getAttributeOptionHTML($v)
     </div>
 </div>
 
+<div class="form-group" data-group="single-value">
+	<label><?=t("Single Value")?></label>
+	<div class="checkbox">
+		<label>
+			<?=$form->checkbox('akDisplayMultipleValuesOnSelect', 1, $akDisplayMultipleValuesOnSelect)?> <span><?=t('Display full option list when selecting.')?></span>
+		</label>
+	</div>
+	<div class="help-block"><?=t('Enabling this will typically display the list with radio buttons.')?></div>
+
+</div>
+
 <div class="form-group">
     <label><?=t("User Submissions")?></label>
     <div class="checkbox">
@@ -231,6 +242,13 @@ function getAttributeOptionHTML($v)
 	}
 
 	$(function() {
+		$('input[name=akSelectAllowMultipleValues]').on('change', function() {
+			if ($(this).is(':checked')) {
+				$('div[data-group=single-value]').hide();
+			} else {
+				$('div[data-group=single-value]').show();
+			}
+		}).trigger('change');
 		ccmAttributesHelper.makeSortable();
         <?php
         $max_input_vars = (int) @ini_get('max_input_vars');

@@ -56,6 +56,11 @@ class SelectSettings extends Settings
     protected $akSelectOptionDisplayOrder = 'display_asc';
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $akDisplayMultipleValuesOnSelect = false;
+
+    /**
      * @return mixed
      */
     public function getAllowMultipleValues()
@@ -101,6 +106,22 @@ class SelectSettings extends Settings
     public function setDisplayOrder($displayOrder)
     {
         $this->akSelectOptionDisplayOrder = $displayOrder;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDisplayMultipleValuesOnSelect()
+    {
+        return $this->akDisplayMultipleValuesOnSelect;
+    }
+
+    /**
+     * @param mixed $displayMultipleValuesOnSelect
+     */
+    public function setDisplayMultipleValuesOnSelect($displayMultipleValuesOnSelect)
+    {
+        $this->akDisplayMultipleValuesOnSelect = $displayMultipleValuesOnSelect;
     }
 
     public function mergeAndPersist(EntityManagerInterface $entityManager)
