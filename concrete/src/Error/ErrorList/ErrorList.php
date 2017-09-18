@@ -184,4 +184,20 @@ class ErrorList implements \ArrayAccess, \JsonSerializable
         return false;
     }
 
+    /**
+     * @param $field
+     * @return string | bool
+     */
+    public function getMessage($field)
+    {
+        $identifier = ($field instanceof FieldInterface) ? $field->getFieldElementName() : $field;
+        foreach($this->getList() as $error) {
+            $field = $error->getField();
+            if (is_object($field) && $field->getFieldElementName() == $identifier) {
+                return $error->getMessage();
+            }
+        }
+        return false;
+    }
+
 }
