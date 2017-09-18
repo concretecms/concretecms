@@ -10,6 +10,7 @@ use Concrete\Core\Package\StartingPointPackage;
 use Concrete\Core\Url\UrlImmutable;
 use DateTimeZone;
 use Exception;
+use Punic\Misc as PunicMisc;
 use Throwable;
 
 class Installer
@@ -72,6 +73,38 @@ class Installer
     }
 
     /**
+     * @return \Concrete\Core\Error\ErrorList\ErrorList
+     */
+    public function checkOptions()
+    {
+        $errors = $this->application->make('error');
+        /* @var \Concrete\Core\Error\ErrorList\ErrorList $errors */
+        try {
+            $serverTimeZone = $this->options->getServerTimeZone(false);
+        } catch (Exception $x) {
+            $errors->add($x);
+            $serverTimeZone = null;
+        }
+        try {
+            $this->checkConnection($serverTimeZone);
+        } catch (Exception $x) {
+            $errors->add($x);
+        }
+        try {
+            $this->getStartingPoint(false);
+        } catch (Exception $x) {
+            $errors->add($x);
+        }
+        try {
+            $this->checkCanonicalUrls();
+        } catch (Exception $x) {
+            $errors->add($x);
+        }
+
+        return $errors;
+    }
+
+    /**
      * @return array|null
      */
     private function getDefaultConnectionConfiguration()
@@ -120,29 +153,15 @@ class Installer
     /**
      * Check if the database connection is correctly configured.
      *
-     * @param string|DateTimeZone
+     * @param DateTimeZone|null $serverTimeZone The PHP time zone that should be compatible with the connection
      *
      * @throws UserMessageException
      */
-    public function checkConnection($serverTimezone)
+    protected function checkConnection(DateTimeZone $serverTimeZone = null)
     {
         $pdoCheck = $this->application->make(PdoMysqlExtension::class)->performCheck();
         if ($pdoCheck->getState() !== PreconditionResult::STATE_PASSED) {
             throw new UserMessageException($pdoCheck->getMessage());
-        }
-        if (!$serverTimezone instanceof DateTimeZone) {
-            if (is_string($serverTimezone) && $serverTimezone !== '') {
-                try {
-                    $serverTimezone = new DateTimeZone($serverTimezone);
-                } catch (Exception $x) {
-                    $serverTimezone = null;
-                }
-            } else {
-                $serverTimezone = null;
-            }
-            if ($serverTimezone === null) {
-                throw new UserMessageException(t('Invalid or missing server time zone.'));
-            }
         }
         $databaseConfiguration = $this->getDefaultConnectionConfiguration();
         if ($databaseConfiguration === null) {
@@ -190,16 +209,18 @@ class Installer
             // we're going to just proceed and hope for the best.
         }
 
-        $ctz = $this->application->make(Timezone::class, ['connection' => $db]);
-        /* @var Timezone $ctz */
-        $deltaTimezone = $ctz->getDeltaTimezone($serverTimezone);
-        if ($deltaTimezone !== null) {
-            $error = $ctz->describeDeltaTimezone($deltaTimezone);
-            $suggestTimezones = $ctz->getCompatibleTimezones();
-            if (!empty($suggestTimezones)) {
-                $error .= ' ' . t('You may want to use one of these time zones in the <u>Advanced Options</u> section:') . '<ul><li>' . implode('</li><li>', $suggestTimezones) . '</li></ul>';
+        if ($serverTimeZone !== null) {
+            $ctz = $this->application->make(Timezone::class, ['connection' => $db]);
+            /* @var Timezone $ctz */
+            $deltaTimezone = $ctz->getDeltaTimezone($serverTimeZone);
+            if ($deltaTimezone !== null) {
+                $error = $ctz->describeDeltaTimezone($deltaTimezone);
+                $suggestTimezones = $ctz->getCompatibleTimezones();
+                if (!empty($suggestTimezones)) {
+                    $error .= ' ' . t('These are the time zones compatible with the database one: %s', PunicMisc::join($suggestTimezones));
+                }
+                throw new UserMessageException($error);
             }
-            throw new UserMessageException($error);
         }
     }
 
@@ -235,7 +256,7 @@ class Installer
      *
      * @throws UserMessageException
      */
-    public function checkCanonicalUrls()
+    protected function checkCanonicalUrls()
     {
         $configuration = $this->getOptions()->getConfiguration();
         foreach ([

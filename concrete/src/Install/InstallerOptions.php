@@ -4,6 +4,8 @@ namespace Concrete\Core\Install;
 use Concrete\Core\Cache\OpCache;
 use Concrete\Core\Config\Renderer;
 use Concrete\Core\Error\UserMessageException;
+use DateTimeZone;
+use Exception;
 use Illuminate\Filesystem\Filesystem;
 
 class InstallerOptions
@@ -70,6 +72,13 @@ class InstallerOptions
      * @var string
      */
     protected $uiLocaleId = '';
+
+    /**
+     * The server time zone identifier.
+     *
+     * @var string
+     */
+    protected $serverTimeZoneId = '';
 
     /**
      * Initializes the instance.
@@ -274,6 +283,60 @@ class InstallerOptions
     }
 
     /**
+     * Get the server time zone identifier.
+     *
+     * @return string
+     */
+    public function getServerTimeZoneId()
+    {
+        return $this->serverTimeZoneId;
+    }
+
+    /**
+     * Set the server time zone identifier.
+     *
+     * @param string $value
+     *
+     * @return $this
+     */
+    public function setServerTimeZoneId($value)
+    {
+        $this->serverTimeZoneId = (string) $value;
+
+        return $this;
+    }
+
+    /**
+     * Get the server time zone instance.
+     *
+     * @param bool $fallbackToDefault Fallback to the default one if the time zone is not defined?
+     *
+     * @throws UserMessageException
+     *
+     * @return DateTimeZone
+     */
+    public function getServerTimeZone($fallbackToDefault)
+    {
+        $timeZoneId = $this->getServerTimeZoneId();
+        if ($timeZoneId === '') {
+            if (!$fallbackToDefault) {
+                throw new UserMessageException(t('The zerver time zone has not been defined.'));
+            }
+            $timeZoneId = @date_default_timezone_get() ?: 'UTC';
+        }
+        try {
+            $result = new DateTimeZone($timeZoneId);
+        } catch (Exception $x) {
+            $result = null;
+        }
+        if ($result === null) {
+            throw new UserMessageException(t('Invalid server time zone: %s', $timeZoneId));
+        }
+
+        return $result;
+    }
+
+    /**
      * Do the configuration files exist?
      *
      * @return bool
@@ -305,6 +368,7 @@ class InstallerOptions
             $siteInstallUser += [
                 'startingPointHandle' => '',
                 'uiLocaleId' => '',
+                'serverTimeZone' => '',
             ];
         } else {
             if (!(
@@ -322,6 +386,7 @@ class InstallerOptions
                 'siteName' => SITE,
                 'siteLocaleId' => SITE_INSTALL_LOCALE,
                 'uiLocaleId' => defined('APP_INSTALL_LANGUAGE') ? APP_INSTALL_LANGUAGE : '',
+                'serverTimeZone' => defined('INSTALL_TIMEZONE') ? INSTALL_TIMEZONE : '',
             ];
         }
         $this
@@ -332,6 +397,7 @@ class InstallerOptions
             ->setSiteName($siteInstallUser['siteName'])
             ->setSiteLocaleId($siteInstallUser['siteLocaleId'])
             ->setUiLocaleId($siteInstallUser['uiLocaleId'])
+            ->setServerTimeZoneId($siteInstallUser['serverTimeZone'])
         ;
     }
 
@@ -351,6 +417,7 @@ class InstallerOptions
             'siteName' => $this->getSiteName(),
             'siteLocaleId' => $this->getSiteLocaleId(),
             'uiLocaleId' => $this->getUiLocaleId(),
+            'serverTimeZone' => $this->getServerTimeZoneId(),
         ]);
         $siteInstallUser = $render->render();
         if (@$this->filesystem->put(DIR_CONFIG_SITE . '/site_install.php', $siteInstall) === false) {

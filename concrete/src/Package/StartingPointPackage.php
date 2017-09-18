@@ -38,6 +38,7 @@ use User;
 use UserInfo;
 use Concrete\Core\Install\InstallerOptions;
 use Concrete\Core\Foundation\Environment\FunctionInspector;
+use Concrete\Core\Application\Application;
 
 class StartingPointPackage extends BasePackage
 {
@@ -53,9 +54,9 @@ class StartingPointPackage extends BasePackage
      */
     protected $installerOptions = null;
 
-    public function __construct()
+    public function __construct(Application $app)
     {
-        $this->installerOptions = $installerOptions;
+        parent::__construct($app);
         $this->routines = [
             new StartingPointInstallRoutine(
                 'make_directories',
@@ -143,7 +144,7 @@ class StartingPointPackage extends BasePackage
             $class = '\\Concrete\\StartingPointPackage\\' . camelcase($pkgHandle) . '\\Controller';
         }
         if (class_exists($class, true)) {
-            $cl = new $class();
+            $cl = Core::build($class);
         } else {
             $cl = null;
         }
@@ -167,12 +168,15 @@ class StartingPointPackage extends BasePackage
      */
     public function executeInstallRoutine($routineName)
     {
-        $localization = Localization::getInstance();
-        $localization->pushActiveContext(Localization::CONTEXT_SYSTEM);
-        $error = null;
         if (!@ini_get('safe_mode') && $this->app->make(FunctionInspector::class)->functionAvailable('set_time_limit')) {
             @set_time_limit(1000);
         }
+        $timezone = $this->installerOptions->getServerTimeZone(true);
+        date_default_timezone_set($timezone->getName());
+        $this->app->make('config')->set('app.server_timezone', $timezone->getName());
+        $localization = Localization::getInstance();
+        $localization->pushActiveContext(Localization::CONTEXT_SYSTEM);
+        $error = null;
         try {
             $this->$routineName();
         } catch (Exception $x) {
@@ -442,7 +446,6 @@ class StartingPointPackage extends BasePackage
         if (is_dir(DIR_CONFIG_SITE . '/generated_overrides')) {
             $fh->removeAll(DIR_CONFIG_SITE . '/generated_overrides');
         }
-        Config::save('app.server_timezone', date_default_timezone_get());
         if (is_dir(Config::get('database.proxy_classes'))) {
             $fh->removeAll(Config::get('database.proxy_classes'));
         }
@@ -465,9 +468,7 @@ class StartingPointPackage extends BasePackage
     protected function finish()
     {
         $config = $this->app->make('config');
-        $installOptions = $this->app->make(InstallerOptions::class);
-        /* @var InstallerOptions $installOptions */
-        $installConfiguration = $installOptions->getConfiguration();
+        $installConfiguration = $this->installerOptions->getConfiguration();
 
         // Extract database config, and save it to database.php
         $database = $installConfiguration['database'];
@@ -496,10 +497,11 @@ class StartingPointPackage extends BasePackage
         $renderer = new Renderer($installConfiguration);
         if (!file_exists(DIR_CONFIG_SITE . '/app.php')) {
             file_put_contents(DIR_CONFIG_SITE . '/app.php', $renderer->render());
-            @chmod(DIR_CONFIG_SITE . '/app.php', Config::get('concrete.filesystem.permissions.file'));
+            @chmod(DIR_CONFIG_SITE . '/app.php', $config->get('concrete.filesystem.permissions.file'));
         }
-        
-        $installOptions->deleteFiles();
+        $config->save('app.server_timezone', $this->installerOptions->getServerTimeZone(true)->getName());
+
+        $this->installerOptions->deleteFiles();
 
         $config->clearCache();
         $this->app->make('cache')->flush();

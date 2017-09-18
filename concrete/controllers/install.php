@@ -142,9 +142,7 @@ class Install extends Controller
             if ($uiLocaleId !== '') {
                 Localization::changeLocale($uiLocaleId);
             }
-            $config = $this->app->make('config');
-            $this->getInstaller()->checkConnection($config->get('app.server_timezone'));
-            $spl = $this->getInstaller()->getStartingPoint(true);
+            $e->add($this->getInstaller()->checkOptions());
         } catch (UserMessageException $x) {
             $e->add($x);
         }
@@ -152,6 +150,7 @@ class Install extends Controller
             $this->set('error', $e);
         } else {
             $this->set('backgroundFade', 0);
+            $spl = $this->getInstaller()->getStartingPoint(true);
             $this->set('installPackage', $spl->getPackageHandle());
             $this->set('installRoutines', $spl->getInstallRoutines());
             $this->set(
@@ -378,28 +377,14 @@ class Install extends Controller
                     ->setSiteName($post->get('SITE'))
                     ->setSiteLocaleId($post->get('siteLocaleLanguage') . '_' . $post->get('siteLocaleCountry'))
                     ->setUiLocaleId($post->get('locale'))
+                    ->setServerTimeZoneId($post->get('SERVER_TIMEZONE'))
                 ;
                 $installer = $this->app->make(Installer::class);
                 /* @var Installer $installer */
                 $installer->setOptions($options);
-                try {
-                    $installer->checkConnection($post->get('SERVER_TIMEZONE'));
-                } catch (Exception $x) {
-                    $error->add($x);
-                }
-                try {
-                    $installer->getStartingPoint(false);
-                } catch (Exception $x) {
-                    $error->add($x);
-                }
-                try {
-                    $installer->checkCanonicalUrls();
-                } catch (Exception $x) {
-                    $error->add($x);
-                }
+                $error->add($installer->checkOptions());
                 if (!$error->has()) {
                     $options->save();
-                    $config->save('app.server_timezone', $post->get('SERVER_TIMEZONE'));
                     $this->redirect('/');
                 }
             }

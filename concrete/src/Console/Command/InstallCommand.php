@@ -111,7 +111,6 @@ EOT
         } else {
             $timezone = @date_default_timezone_get() ?: 'UTC';
         }
-        date_default_timezone_set($timezone);
 
         $force_attach = $input->getOption('force-attach');
         $auto_attach = $force_attach || $input->getOption('attach');
@@ -145,26 +144,13 @@ EOT
             ->setSiteName($options['site'])
             ->setUserEmail($options['admin-email'])
             ->setUserPasswordHash($hasher->HashPassword($options['admin-password']))
+            ->setServerTimeZoneId($timezone)
         ;
-        $e = $app->make('helper/validation/error');
-        try {
-            $installer->checkConnection($timezone);
-        } catch (Exception $x) {
-            $e->add($x);
-        }
-        try {
-            $spl = $installer->getStartingPoint(false);
-        } catch (Exception $x) {
-            $e->add($x);
-        }
-        try {
-            $installer->checkCanonicalUrls();
-        } catch (Exception $x) {
-            $e->add($x);
-        }
+        $e = $installer->checkOptions();
         if ($e->has()) {
             throw new Exception(implode("\n", $e->getList()));
         }
+        $spl = $installer->getStartingPoint(false);
         $installer->getOptions()->save();
         try {
             Database::extend('install', function () use ($options) {
@@ -187,8 +173,6 @@ EOT
                     $attach_mode = true;
                 }
             }
-            $config->set('app.server_timezone', $timezone);
-            $config->save('app.server_timezone', $timezone);
             $routines = $spl->getInstallRoutines();
             foreach ($routines as $r) {
                 // If we're
@@ -198,7 +182,7 @@ EOT
                 }
 
                 $output->writeln($r->getProgress() . '%: ' . $r->getText());
-                $spl->executeInstallRoutine($r->getMethod(), $installer->getOptions());
+                $spl->executeInstallRoutine($r->getMethod());
             }
         } catch (Exception $ex) {
             $installer->getOptions()->deleteFiles();
