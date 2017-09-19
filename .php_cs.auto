@@ -1,0 +1,36 @@
+<?php
+use Concrete\Core\Support\CodingStyle;
+use PhpCsFixer\Console\ConfigurationResolver;
+
+$configurationResolver = null;
+foreach (debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT | DEBUG_BACKTRACE_IGNORE_ARGS, 2) as $backtrace) {
+    if (isset($backtrace['object']) && $backtrace['object'] instanceof ConfigurationResolver) {
+        $configurationResolver = $backtrace['object'];
+        break;
+    }
+}
+
+if ($configurationResolver === null) {
+    fwrite(STDERR, "Unable to find the configuration resolver. Please be sure to use a recent version of php-cs-fixer\n");
+    die(16);
+}
+$path = $configurationResolver->getPath();
+if (!is_array($path) || count($path) !== 1 || !is_file($path[0])) {
+    fwrite(STDERR, "The automatic configuration should be applied to a single file\n");
+    die(16);
+}
+require_once __DIR__ . '/concrete/src/Support/CodingStyle.php';
+$codingStyle = new CodingStyle();
+$flags = $codingStyle->getPathFlags($path[0]);
+if ($flags === null) {
+    fwrite(STDERR, "The automatic configuration can't be applied to {$path[0]}\n");
+    die(16);
+}
+fwrite(STDERR, sprintf("Detected coding style rules: %s\n", $codingStyle->describeFlags($flags)));
+
+return PhpCsFixer\Config::create()
+    ->setCacheFile(__DIR__ . '/.php_cs.cache')
+    ->setRiskyAllowed(true)
+    ->setRules($codingStyle->getRules($flags))
+    ->setFinder([new SplFileInfo($path[0])])
+;
