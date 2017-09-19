@@ -89,7 +89,7 @@ class BlockTypeList extends DatabaseItemList
                             $bt = new BlockTypeEntity();
                             $bt->setBlockTypeHandle($file);
                             $class = $bt->getBlockTypeClass();
-                            $bta = Application::getFacadeRoot()->make($class);
+                            $bta = Application::getFacadeRoot()->build($class);
                             $bt->setBlockTypeName($bta->getBlockTypeName());
                             $bt->setBlockTypeDescription($bta->getBlockTypeDescription());
                             $bt->hasCustomViewTemplate = file_exists(DIR_FILES_BLOCK_TYPES . '/' . $file . '/' . FILENAME_BLOCK_VIEW);
