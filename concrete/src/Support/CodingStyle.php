@@ -116,9 +116,7 @@ class CodingStyle
             // An empty line feed should precede a return statement.
             'blank_line_before_return' => true,
             // The body of each structure MUST be enclosed by braces. Braces should be properly placed. Body of braces should be properly indented.
-            'braces' => [
-                'allow_single_line_closure' => true,
-            ],
+            'braces' => ($flags && static::FLAG_PHPONLY) === static::FLAG_PHPONLY ? ['allow_single_line_closure' => true] : false,
             // A single space should be between cast and variable.
             'cast_spaces' => true,
             // Whitespace around the keywords of a class, trait or interfaces definition should be one space.
