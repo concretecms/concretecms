@@ -535,6 +535,10 @@ class CodingStyle
                 case 1 === preg_match('~^/packages/\w+/vendor/~', $relativePath):
                     $result = null;
                     break;
+                // Application files
+                case 0 === strpos($relativePath, '/application/files/'):
+                    $result = null;
+                    break;
                 // All the other files
                 default:
                     $result = 0;
