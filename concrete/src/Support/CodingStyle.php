@@ -492,8 +492,11 @@ class CodingStyle
                 case 0 === strpos($relativePath, '/concrete/bootstrap/'):
                     $result = static::FLAG_PHPONLY;
                     break;
-                // Configuration files
+                // Runtime configuration files
                 case 0 === strpos($relativePath, '/application/config/'):
+                    $result = null;
+                    break;
+                // Core and package configuration files
                 case 0 === strpos($relativePath, '/concrete/config/'):
                 case 1 === preg_match('~^/packages/\w+/config/~', $relativePath):
                     $result = static::FLAG_PHPONLY;
@@ -515,6 +518,11 @@ class CodingStyle
                 case 0 === strpos($relativePath, '/concrete/jobs/'):
                 case 1 === preg_match('~^/packages/\w+/jobs/~', $relativePath):
                     $result = static::FLAG_PHPONLY;
+                    break;
+                // IDE Symbols
+                case '/concrete/src/Support/.phpstorm.meta.php' === $relativePath:
+                case '/concrete/src/Support/__IDE_SYMBOLS__.php' === $relativePath:
+                    $result = null;
                     break;
                 // Classes
                 case 0 === strpos($relativePath, '/application/src/'):
