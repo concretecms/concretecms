@@ -347,8 +347,6 @@ return [
         '/ccm/system/dialogs/page/edit_external/submit' => ['\Concrete\Controller\Dialog\Page\EditExternal::submit'],
         '/ccm/system/dialogs/page/location' => ['\Concrete\Controller\Dialog\Page\Location::view'],
         '/ccm/system/dialogs/page/search' => ['\Concrete\Controller\Dialog\Page\Search::view'],
-        '/ccm/system/dialogs/page/search/customize' => ['\Concrete\Controller\Dialog\Page\Search\Customize::view'],
-        '/ccm/system/dialogs/page/search/customize/submit' => ['\Concrete\Controller\Dialog\Page\Search\Customize::submit'],
         '/ccm/system/dialogs/page/seo' => ['\Concrete\Controller\Dialog\Page\Seo::view'],
 
         '/ccm/system/dialogs/page/advanced_search' => ['\Concrete\Controller\Dialog\Page\AdvancedSearch::view'],
@@ -360,8 +358,6 @@ return [
         '/ccm/system/dialogs/user/bulk/properties/clear_attribute' => ['\Concrete\Controller\Dialog\User\Bulk\Properties::clearAttribute'],
         '/ccm/system/dialogs/user/bulk/properties/update_attribute' => ['\Concrete\Controller\Dialog\User\Bulk\Properties::updateAttribute'],
         '/ccm/system/dialogs/user/search' => ['\Concrete\Controller\Dialog\User\Search::view'],
-        '/ccm/system/dialogs/user/search/customize' => ['\Concrete\Controller\Dialog\User\Search\Customize::view'],
-        '/ccm/system/dialogs/user/search/customize/submit' => ['\Concrete\Controller\Dialog\User\Search\Customize::submit'],
 
         '/ccm/system/dialogs/user/advanced_search' => ['\Concrete\Controller\Dialog\User\AdvancedSearch::view'],
         '/ccm/system/dialogs/user/advanced_search/add_field' => ['\Concrete\Controller\Dialog\User\AdvancedSearch::addField'],
