@@ -3,7 +3,7 @@ use Concrete\Core\Support\CodingStyle;
 use PhpCsFixer\Console\ConfigurationResolver;
 
 $configurationResolver = null;
-foreach (debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT | DEBUG_BACKTRACE_IGNORE_ARGS, 2) as $backtrace) {
+foreach (debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT | DEBUG_BACKTRACE_IGNORE_ARGS, 4) as $backtrace) {
     if (isset($backtrace['object']) && $backtrace['object'] instanceof ConfigurationResolver) {
         $configurationResolver = $backtrace['object'];
         break;
