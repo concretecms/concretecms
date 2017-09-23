@@ -106,6 +106,10 @@ class File extends Controller
             foreach($messages as $key => $msg) {
                 // delete the page here
                 $file = unserialize($msg->body);
+                if ($file === false) {
+                    $q->deleteMessage($msg);
+                    continue;
+                }
                 $f = \Concrete\Core\File\File::getByID($file['fID']);
                 if (is_object($f)) {
                     $this->doRescan($f);
@@ -114,7 +118,7 @@ class File extends Controller
             }
             $obj->totalItems = $q->count();
             if ($q->count() == 0) {
-                $q->deleteQueue(5);
+                $q->deleteQueue();
             }
             print json_encode($obj);
             exit;
