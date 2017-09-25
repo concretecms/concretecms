@@ -2,6 +2,7 @@
 
 $valt = Loader::helper('validation/token');
 $th = Loader::helper('text');
+$wdt = \Core::make('helper/form/date_time');
 ?>
 
 <div class="ccm-dashboard-header-buttons">
@@ -38,6 +39,23 @@ $th = Loader::helper('text');
         <?=$form->label('level', t('Level'))?>
         <div class="ccm-search-field-content">
             <?=$form->selectMultiple('level', $levels, array_keys($levels))?>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="row">
+            <div class="col-sm-6">
+                <?=$form->label('date_from', t('Date From'))?>
+                <div class="ccm-search-field-content">
+                    <?= $wdt->date('date_from', $date_from); ?>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <?=$form->label('date_to', t('Date To'))?>
+                <div class="ccm-search-field-content">
+                    <?= $wdt->date('date_to', $date_to); ?>
+                </div>
+            </div>
         </div>
     </div>
 

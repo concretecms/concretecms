@@ -55,4 +55,9 @@ class LogList extends DatabaseItemList
             $this->filter(false, "(level in {$lth})");
         }
     }
+
+    public function filterByTime($time, $comparison = '=')
+    {
+        $this->userPostQuery .= ' AND time ' . $comparison . ' ' . $time;
+    }
 }

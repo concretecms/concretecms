@@ -41,10 +41,17 @@ class Logs extends DashboardPageController
         }
 
         $r = Request::getInstance();
+
+        $wdt = \Core::make('helper/form/date_time');
+        $date_from = $wdt->translate('date_from', $r->query->all());
+        $date_to = $wdt->translate('date_to', $r->query->all());
+
         $query = http_build_query(array(
             'channel' => $r->query->get('channel'),
             'keywords' => $r->query->get('keywords'),
             'level' => $r->query->get('level'),
+            'date_from' => $date_from,
+            'date_to' => $date_to,
         ));
 
         $list = $this->getFilteredList();
@@ -55,6 +62,9 @@ class Logs extends DashboardPageController
 
         $this->set('levels', $levels);
         $this->set('channels', $channels);
+
+        $this->set('date_from', $date_from);
+        $this->set('date_to', $date_to);
 
         $this->set('query', $query);
     }
@@ -135,6 +145,17 @@ class Logs extends DashboardPageController
         }
         if ($r->query->has('keywords') && $r->query->get('keywords') != '') {
             $list->filterByKeywords($r->query->get('keywords'));
+        }
+
+        $wdt = \Core::make('helper/form/date_time');
+        $date_from = $wdt->translate('date_from', $r->query->all());
+        $date_to = $wdt->translate('date_to', $r->query->all());
+
+        if ($date_from != '' && \DateTime::createFromFormat('Y-m-d H:i:s', $date_from) !== false) {
+            $list->filterByTime(strtotime($date_from), '>=');
+        }
+        if ($date_to != '' && \DateTime::createFromFormat('Y-m-d H:i:s', $date_to) !== false) {
+            $list->filterByTime(strtotime($date_to), '<=');
         }
 
         return $list;
