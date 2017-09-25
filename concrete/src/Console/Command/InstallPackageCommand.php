@@ -3,6 +3,7 @@ namespace Concrete\Core\Console\Command;
 
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Console\Command;
+use Concrete\Core\Console\ConsoleAwareInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -75,6 +76,14 @@ EOT
         if ($pkg === null) {
             throw new Exception(sprintf("No package with handle '%s' was found", $pkgHandle));
         }
+
+        // Provide the console objects to objects that are aware of the console
+        if ($pkg instanceof ConsoleAwareInterface) {
+            $pkg->setOutput($output);
+            $pkg->setInput($input);
+            $pkg->setConsole($this->getApplication());
+        }
+
         $output->writeln(sprintf('<info>found (%s).</info>', $pkg->getPackageName()));
 
         $output->write('Checking preconditions... ');
