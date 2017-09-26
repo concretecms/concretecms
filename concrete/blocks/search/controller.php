@@ -1,32 +1,49 @@
 <?php
 namespace Concrete\Block\Search;
 
-use Concrete\Core\Attribute\Key\CollectionKey;
-use Database;
 use CollectionAttributeKey;
-use Concrete\Core\Page\PageList;
+use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Block\BlockController;
-use Page;
+use Concrete\Core\Page\PageList;
 use Core;
+use Database;
+use Page;
 use Request;
 
 class Controller extends BlockController
 {
+    public $title = '';
+
+    public $buttonText = '>';
+
+    public $baseSearchPath = '';
+
+    public $resultsURL = '';
+
+    public $postTo_cID = '';
+
+    public $reservedParams = ['page=', 'query=', 'search_paths[]=', 'submit=', 'search_paths%5B%5D='];
+
     protected $btTable = 'btSearch';
-    protected $btInterfaceWidth = "400";
-    protected $btInterfaceHeight = "420";
+
+    protected $btInterfaceWidth = '400';
+
+    protected $btInterfaceHeight = '420';
+
     protected $btWrapperClass = 'ccm-ui';
-    protected $btExportPageColumns = array('postTo_cID');
+
+    protected $btExportPageColumns = ['postTo_cID'];
+
     protected $btCacheBlockRecord = true;
+
     protected $btCacheBlockOutput = null;
 
-    public $title = "";
-    public $buttonText = ">";
-    public $baseSearchPath = "";
-    public $resultsURL = "";
-    public $postTo_cID = "";
-
     protected $hColor = '#EFE795';
+
+    public function __construct($obj = null)
+    {
+        parent::__construct($obj);
+    }
 
     public function highlightedMarkup($fulltext, $highlight)
     {
@@ -36,7 +53,7 @@ class Controller extends BlockController
 
         $this->hText = $fulltext;
         $this->hHighlight = $highlight;
-        $this->hText = @preg_replace('#' . preg_quote($this->hHighlight, '#') . '#ui', '<span style="background-color:'. $this->hColor .';">$0</span>', $this->hText);
+        $this->hText = @preg_replace('#' . preg_quote($this->hHighlight, '#') . '#ui', '<span style="background-color:' . $this->hColor . ';">$0</span>', $this->hText);
 
         return $this->hText;
     }
@@ -45,8 +62,8 @@ class Controller extends BlockController
     {
         $text = @preg_replace("#\n|\r#", ' ', $fulltext);
 
-        $matches = array();
-        $highlight = str_replace(array('"', "'", "&quot;"), '', $highlight); // strip the quotes as they mess the regex
+        $matches = [];
+        $highlight = str_replace(['"', "'", '&quot;'], '', $highlight); // strip the quotes as they mess the regex
 
         if (!$highlight) {
             $text = Core::make('helper/text')->shorten($fulltext, 180);
@@ -57,12 +74,12 @@ class Controller extends BlockController
             return $text;
         }
 
-        $regex = '([[:alnum:]|\'|\.|_|\s]{0,45})'. preg_quote($highlight, '#') .'([[:alnum:]|\.|_|\s]{0,45})';
+        $regex = '([[:alnum:]|\'|\.|_|\s]{0,45})' . preg_quote($highlight, '#') . '([[:alnum:]|\.|_|\s]{0,45})';
         preg_match_all("#$regex#ui", $text, $matches);
 
         if (!empty($matches[0])) {
             $body_length = 0;
-            $body_string = array();
+            $body_string = [];
             foreach ($matches[0] as $line) {
                 $body_length += strlen($line);
 
@@ -75,7 +92,7 @@ class Controller extends BlockController
                 }
             }
             if (!empty($body_string)) {
-                return @implode("&hellip;<wbr>", $body_string);
+                return @implode('&hellip;<wbr>', $body_string);
             }
         }
     }
@@ -90,17 +107,12 @@ class Controller extends BlockController
      */
     public function getBlockTypeDescription()
     {
-        return t("Add a search box to your site.");
+        return t('Add a search box to your site.');
     }
 
     public function getBlockTypeName()
     {
-        return t("Search");
-    }
-
-    public function __construct($obj = null)
-    {
-        parent::__construct($obj);
+        return t('Search');
     }
 
     public function indexExists()
@@ -158,7 +170,7 @@ class Controller extends BlockController
 
     public function save($data)
     {
-        $data += array(
+        $data += [
             'title' => '',
             'buttonText' => '',
             'baseSearchPath' => '',
@@ -166,13 +178,13 @@ class Controller extends BlockController
             'postTo_cID' => 0,
             'externalTarget' => 0,
             'resultsURL' => '',
-        );
-        $args = array();
+        ];
+        $args = [];
         $args['title'] = $data['title'];
         $args['buttonText'] = $data['buttonText'];
         $args['baseSearchPath'] = $data['baseSearchPath'];
-        if ($args['baseSearchPath'] == 'OTHER' && intval($data['searchUnderCID']) > 0) {
-            $customPathC = Page::getByID(intval($data['searchUnderCID']));
+        if ($args['baseSearchPath'] == 'OTHER' && (int) ($data['searchUnderCID']) > 0) {
+            $customPathC = Page::getByID((int) ($data['searchUnderCID']));
             if (!$customPathC) {
                 $args['baseSearchPath'] = '';
             } else {
@@ -183,8 +195,8 @@ class Controller extends BlockController
             $args['baseSearchPath'] = '';
         }
 
-        if (intval($data['postTo_cID']) > 0) {
-            $args['postTo_cID'] = intval($data['postTo_cID']);
+        if ((int) ($data['postTo_cID']) > 0) {
+            $args['postTo_cID'] = (int) ($data['postTo_cID']);
         } else {
             $args['postTo_cID'] = '';
         }
@@ -193,14 +205,12 @@ class Controller extends BlockController
         parent::save($args);
     }
 
-    public $reservedParams = array('page=', 'query=', 'search_paths[]=', 'submit=', 'search_paths%5B%5D=');
-
     public function do_search()
     {
         $request = Request::getInstance();
 
         $query = (string) $request->request('query');
-        
+
         $ipl = new PageList();
         $aksearch = false;
         $akIDs = $request->request('akID');
@@ -218,8 +228,8 @@ class Controller extends BlockController
         }
 
         if ($request->request('month') !== null && $request->request('year') !== null) {
-            $year = @intval($request->request('year'));
-            $month = abs(@intval($request->request('month')));
+            $year = @(int) ($request->request('year'));
+            $month = abs(@(int) ($request->request('month')));
             if (strlen(abs($year)) < 4) {
                 $year = (($year < 0) ? '-' : '') . str_pad(abs($year), 4, '0', STR_PAD_LEFT);
             }

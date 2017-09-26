@@ -7,7 +7,7 @@ $searchWithinOther = ($searchObj->baseSearchPath != Page::getCurrentPage()->getC
  * Post to another page, get page object.
  */
 $basePostPage = null;
-if (isset($searchObj->postTo_cID) && intval($searchObj->postTo_cID) > 0) {
+if (isset($searchObj->postTo_cID) && (int) ($searchObj->postTo_cID) > 0) {
     $basePostPage = Page::getById($searchObj->postTo_cID);
 } elseif ($searchObj->pagePath != Page::getCurrentPage()->getCollectionPath() && strlen($searchObj->pagePath)) {
     $basePostPage = Page::getByPath($searchObj->pagePath);
@@ -28,11 +28,11 @@ if (is_object($basePostPage) && $basePostPage->isError()) {
 <fieldset>
     <div class='form-group'>
         <label for='title' class="control-label"><?=t('Title')?></label>
-        <?=$form->text('title', $searchObj->title);?>
+        <?=$form->text('title', $searchObj->title); ?>
     </div>
     <div class='form-group'>
         <label for='buttonText' class="control-label"><?=t('Button Text')?></label>
-        <?=$form->text('buttonText', $searchObj->buttonText);?>
+        <?=$form->text('buttonText', $searchObj->buttonText); ?>
     </div>
     <div class='form-group'>
         <label for='title'  class="control-label"><?=t('Search for Pages')?></label>
@@ -87,7 +87,7 @@ if (is_object($basePostPage) && $basePostPage->isError()) {
             }
             ?>
             <?=t('OR Path')?>:
-            <?=$form->text('resultsURL', $searchObj->resultsURL);?>
+            <?=$form->text('resultsURL', $searchObj->resultsURL); ?>
         </div>
     </div>
 </fieldset>
