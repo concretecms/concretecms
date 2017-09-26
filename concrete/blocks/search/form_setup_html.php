@@ -1,93 +1,127 @@
-<?php defined('C5_EXECUTE') or die('Access Denied.');
+<?php
+defined('C5_EXECUTE') or die('Access Denied.');
 
-$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
-$searchWithinOther = ($searchObj->baseSearchPath != Page::getCurrentPage()->getCollectionPath() && $searchObj->baseSearchPath != '' && strlen($searchObj->baseSearchPath) > 0) ? true : false;
+/* @var Concrete\Core\Entity\Block\BlockType\BlockType $bt */
+/* @var Concrete\Core\Block\Block $b */
+/* @var Concrete\Core\Page\Page $c */
+/* @var Concrete\Block\Search\Controller $controller */
+/* @var Concrete\Controller\Dialog\Block\Edit $dialogController */
+/* @var Concrete\Core\Form\Service\Form $form */
+/* @var Concrete\Core\Block\View\BlockView $this */
+/* @var Concrete\Core\Block\View\BlockView $view */
+/* @var Concrete\Core\Form\Service\Widget\PageSelector $pageSelector */
 
-/*
- * Post to another page, get page object.
- */
-$basePostPage = null;
-if (isset($searchObj->postTo_cID) && (int) ($searchObj->postTo_cID) > 0) {
-    $basePostPage = Page::getById($searchObj->postTo_cID);
-} elseif ($searchObj->pagePath != Page::getCurrentPage()->getCollectionPath() && strlen($searchObj->pagePath)) {
-    $basePostPage = Page::getByPath($searchObj->pagePath);
-}
-/*
- * Verify object.
- */
-if (is_object($basePostPage) && $basePostPage->isError()) {
-    $basePostPage = null;
+if (!$controller->indexExists()) {
+    ?>
+    <div class="ccm-error"><?= t('The search index does not appear to exist. This block will not function until the reindex job has been run at least once in the dashboard.') ?></div>
+    <?php
 }
 ?>
-
-<?php if (!$controller->indexExists()) { ?>
-    <div class="ccm-error"><?=t('The search index does not appear to exist. This block will not function until the reindex job has been run at least once in the dashboard.')?></div>
-<?php
-} ?>
-
 <fieldset>
-    <div class='form-group'>
-        <label for='title' class="control-label"><?=t('Title')?></label>
-        <?=$form->text('title', $searchObj->title); ?>
+    <div class="form-group">
+        <?= $form->label('title', t('Title')) ?>
+        <?= $form->text('title', $controller->title, ['maxlength' => 255]) ?>
     </div>
-    <div class='form-group'>
-        <label for='buttonText' class="control-label"><?=t('Button Text')?></label>
-        <?=$form->text('buttonText', $searchObj->buttonText); ?>
+    <div class="form-group">
+        <?= $form->label('buttonText', t('Button Text')) ?>
+        <?=$form->text('buttonText', $controller->buttonText, ['maxlength' => 255]) ?>
     </div>
-    <div class='form-group'>
-        <label for='title'  class="control-label"><?=t('Search for Pages')?></label>
-        <div class="radio">
-            <label for="baseSearchPathEverywhere">
-                <input type="radio" name="baseSearchPath" id="baseSearchPathEverywhere" value="" <?=($searchObj->baseSearchPath == '' || !$searchObj->baseSearchPath) ? 'checked' : ''?> onchange="searchBlock.pathSelector(this)" />
-                <?=t('Everywhere')?>
-            </label>
-        </div>
-        <div class="radio">
-            <label for="baseSearchPathThis">
-                <input type="radio" name="baseSearchPath" id="baseSearchPathThis" value="<?=Page::getCurrentPage()->getCollectionPath()?>" <?=($searchObj->baseSearchPath != '' && $searchObj->baseSearchPath == Page::getCurrentPage()->getCollectionPath()) ? 'checked' : ''?> onchange="searchBlock.pathSelector(this)" >
-                <?=t('Beneath this Page')?>
-            </label>
-        </div>
-        <div class="radio">
-            <label for="baseSearchPathOther">
-                <input type="radio" name="baseSearchPath" id="baseSearchPathOther" value="OTHER" onchange="searchBlock.pathSelector(this)" <?=($searchWithinOther) ? 'checked' : ''?>>
-                <?=t('Beneath Another Page')?>
-            </label>
-        </div>
-        <div id="basePathSelector" style="display:<?=($searchWithinOther) ? 'block' : 'none'?>" >
-            <?php
-            $select_page = $app->make('helper/form/page_selector');
-            if ($searchWithinOther) {
-                $cpo = Page::getByPath($baseSearchPath);
-                if (is_object($cpo)) {
-                    echo $select_page->selectPage('searchUnderCID', $cpo->getCollectionID());
+    <div class="form-group">
+        <?php
+        $baseSearchPage = null;
+        $baseSearchPath = 'EVERYWHERE';
+        if ((string) $controller->baseSearchPath !== '') {
+            $baseSearchPage = Page::getByPath($controller->baseSearchPath);
+            if (is_object($baseSearchPage) && !$baseSearchPage->isError()) {
+                if (is_object($c) && $c->getCollectionID() == $baseSearchPage->getCollectionID()) {
+                    $baseSearchPath = 'THIS';
+                    $baseSearchPage = null;
                 } else {
-                    echo $select_page->selectPage('searchUnderCID');
+                    $baseSearchPath = 'OTHER';
                 }
             } else {
-                echo $select_page->selectPage('searchUnderCID');
+                $baseSearchPage = null;
             }
-            ?>
-        </div>
-    </div>
-    <div class='form-group'>
-        <label for='title' class="control-label"><?=t('Results Page')?></label>
-        <div class="checkbox">
-            <label for="ccm-searchBlock-externalTarget">
-                <input id="ccm-searchBlock-externalTarget" name="externalTarget" type="checkbox" value="1" <?=(strlen($searchObj->resultsURL) || $basePostPage !== null) ? 'checked' : ''?> />
-                <?=t('Post Results to a Different Page')?>
+        }
+        ?>
+        <?= $form->label('', t('Search for Pages')) ?>
+        <div class="radio">
+            <label>
+                <?= $form->radio('baseSearchPath', 'EVERYWHERE', $baseSearchPath === 'EVERYWHERE') ?>
+                <?= t('Everywhere') ?>
             </label>
         </div>
-        <div id="ccm-searchBlock-resultsURL-wrap" class="input" style=" <?=(strlen($searchObj->resultsURL) || $basePostPage !== null) ? '' : 'display:none'?>" >
-            <?php
-            if ($basePostPage !== null) {
-                echo $select_page->selectPage('postTo_cID', $basePostPage->getCollectionID());
-            } else {
-                echo $select_page->selectPage('postTo_cID');
-            }
-            ?>
-            <?=t('OR Path')?>:
-            <?=$form->text('resultsURL', $searchObj->resultsURL); ?>
+        <div class="radio">
+            <label>
+                <?= $form->radio('baseSearchPath', 'THIS', $baseSearchPath === 'THIS') ?>
+                <?= t('Beneath the Current Page') ?>
+            </label>
+        </div>
+        <div class="radio">
+            <label>
+                <?= $form->radio('baseSearchPath', 'OTHER', $baseSearchPath === 'OTHER') ?>
+                <?= t('Beneath Another Page') ?>
+            </label>
+        </div>
+        <div class="ccm-searchBlock-baseSearchPath" data-for="OTHER" style="<?= $baseSearchPath === 'OTHER' ? '' : 'display:none;' ?>">
+            <?= $pageSelector->selectPage('searchUnderCID', $baseSearchPath === 'OTHER' ? $baseSearchPage->getCollectionID() : null) ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <?php
+        if ((string) $controller->resultsURL !== '') {
+            $resultsPageKind = 'URL';
+        } elseif ($controller->postTo_cID) {
+            $resultsPageKind = 'CID';
+        } else {
+            $resultsPageKind = 'THIS';
+        }
+        ?>
+        <?= $form->label('resultsPageKind', t('Results Page')) ?>
+        <div class="radio">
+            <label>
+                <?= $form->radio('resultsPageKind', 'THIS', $resultsPageKind === 'THIS') ?>
+                <?= t('Post results to this page') ?>
+            </label>
+        </div>
+        <div class="radio">
+            <label>
+                <?= $form->radio('resultsPageKind', 'CID', $resultsPageKind === 'CID') ?>
+                <?= t('Post results to another page') ?>
+            </label>
+        </div>
+        <div class="radio">
+            <label>
+                <?= $form->radio('resultsPageKind', 'URL', $resultsPageKind === 'URL') ?>
+                <?= t('Post results to another URL') ?>
+            </label>
+        </div>
+        <div class="ccm-searchBlock-resultsPageKind" data-for="CID" style="margin-top: 10px;<?= $resultsPageKind === 'CID' ? '' : 'display:none;' ?>">
+            <?= $pageSelector->selectPage('postTo_cID', $controller->postTo_cID) ?>
+        </div>
+        <div class="ccm-searchBlock-resultsPageKind" data-for="URL" style="margin-top: 10px;<?= $resultsPageKind === 'URL' ? '' : 'display:none;' ?>">
+            <?= $form->text('resultsURL', $controller->resultsURL, ['maxlength' => 255]) ?>
         </div>
     </div>
 </fieldset>
+<script>
+$(function() {
+
+    $('input[name="baseSearchPath"]').on('change', function() {
+        var value = $('input[name="baseSearchPath"]:checked').val();
+        $('div.ccm-searchBlock-baseSearchPath')
+            .hide()
+            .filter('[data-for="' + value + '"]').show()
+        ;
+    }).trigger('change');
+
+    $('input[name="resultsPageKind"]').on('change', function() {
+        var value = $('input[name="resultsPageKind"]:checked').val();
+        $('div.ccm-searchBlock-resultsPageKind')
+            .hide()
+            .filter('[data-for="' + value + '"]').show()
+        ;
+    }).trigger('change');
+
+});
+</script>
