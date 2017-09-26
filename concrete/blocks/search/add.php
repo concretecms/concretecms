@@ -1,6 +1,5 @@
 <?php
 
 defined('C5_EXECUTE') or die('Access Denied.');
-$searchObj = $controller;
 
-$this->inc('form_setup_html.php', ['c' => $c]);
+$this->inc('form_setup_html.php');
