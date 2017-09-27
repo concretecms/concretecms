@@ -2,12 +2,12 @@
 namespace Concrete\Core\Attribute\Category;
 
 use Concrete\Core\Attribute\StandardSetManager;
+use Concrete\Core\Entity\Attribute\Category;
 use Concrete\Core\Entity\Package;
 use Doctrine\ORM\EntityManager;
-use Concrete\Core\Entity\Attribute\Category;
 use Gettext\Translations;
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
 class CategoryService
 {
@@ -29,7 +29,7 @@ class CategoryService
     {
         $r = $this->entityManager->getRepository(Category::class);
 
-        return $r->findOneBy(array('akCategoryHandle' => $akCategoryHandle));
+        return $r->findOneBy(['akCategoryHandle' => $akCategoryHandle]);
     }
 
     /**
@@ -43,7 +43,7 @@ class CategoryService
     {
         $r = $this->entityManager->getRepository(Category::class);
 
-        return $r->findOneBy(array('akCategoryID' => $akCategoryID));
+        return $r->findOneBy(['akCategoryID' => $akCategoryID]);
     }
 
     /**
@@ -72,13 +72,12 @@ class CategoryService
         return $r->findByPackage($pkg);
     }
 
-
     /**
      * Create a new attribute category.
      *
-     * @param string $akCategoryHandle The category handle.
+     * @param string $akCategoryHandle the category handle
      * @param int $allowSets One of the StandardSetManager::ASET_ALLOW_... constants
-     * @param Package|null $pkg The package that is creating this category.
+     * @param Package|null $pkg the package that is creating this category
      *
      * @return CategoryInterface
      */
@@ -109,17 +108,17 @@ class CategoryService
         $translations = new Translations();
         $list = $this->getList();
 
-        $akcNameMap = array(
+        $akcNameMap = [
             'collection' => 'Page attributes',
             'user' => 'User attributes',
             'file' => 'File attributes',
-        );
+        ];
 
         foreach($list as $category) {
             $akcHandle = $category->getAttributeKeyCategoryHandle();
-            $translations->insert('AttributeKeyCategory', isset($akcNameMap[$akcHandle]) ? $akcNameMap[$akcHandle] : ucwords(str_replace(array('_', '-', '/'), ' ', $akcHandle)));
+            $translations->insert('AttributeKeyCategory', isset($akcNameMap[$akcHandle]) ? $akcNameMap[$akcHandle] : ucwords(str_replace(['_', '-', '/'], ' ', $akcHandle)));
         }
+
         return $translations;
     }
-
 }
