@@ -12,7 +12,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
             <?= t('View') ?>
             <span class="caret"></span>
         </button>
-        <ul class="dropdown-menu">
+        <ul class="dropdown-menu dropdown-menu-right">
             <li<?= ($type === null) ? ' class="active"' : '' ?>><a href="<?= URL::to('/dashboard/system/permissions/blacklist')?>"><?= t('Options') ?></a></li>
             <li class="divider"></li>
             <li<?= ($type === IPService::IPRANGETYPE_BLACKLIST_AUTOMATIC) ? ' class="active"' : '' ?>><a href="<?= URL::to('/dashboard/system/permissions/blacklist/range', 'view', IPService::IPRANGETYPE_BLACKLIST_AUTOMATIC) ?>"><?= t('Blacklisted IP addresses (automatic)') ?></a></li>
