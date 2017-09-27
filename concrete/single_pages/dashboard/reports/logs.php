@@ -42,26 +42,30 @@ $wdt = \Core::make('helper/form/date_time');
         </div>
     </div>
 
-    <div class="form-group">
-        <div class="row">
-            <div class="col-sm-6">
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="form-group">
                 <?=$form->label('date_from', t('Date From'))?>
                 <div class="ccm-search-field-content">
                     <?= $wdt->date('date_from', $date_from); ?>
                 </div>
             </div>
-            <div class="col-sm-6">
+        </div>
+        <div class="col-sm-4">
+            <div class="form-group">
                 <?=$form->label('date_to', t('Date To'))?>
                 <div class="ccm-search-field-content">
                     <?= $wdt->date('date_to', $date_to); ?>
                 </div>
             </div>
         </div>
+        <div class="col-sm-4">
+            <div class="ccm-search-fields-submit" style="margin-top: 30px;">
+                <button type="submit" class="btn btn-primary pull-right"><?=t('Search')?></button>
+            </div>
+        </div>
     </div>
 
-    <div class="ccm-search-fields-submit">
-        <button type="submit" class="btn btn-primary pull-right"><?=t('Search')?></button>
-    </div>
 </form>
 
 <div class="ccm-dashboard-content-full">
