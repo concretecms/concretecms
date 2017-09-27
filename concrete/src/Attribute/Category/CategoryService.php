@@ -18,35 +18,70 @@ class CategoryService
         $this->entityManager = $entityManager;
     }
 
+    /**
+     * Get a attribute category given its handle.
+     *
+     * @param string $akCategoryHandle
+     *
+     * @return Category|null
+     */
     public function getByHandle($akCategoryHandle)
     {
-        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Category');
+        $r = $this->entityManager->getRepository(Category::class);
 
         return $r->findOneBy(array('akCategoryHandle' => $akCategoryHandle));
     }
 
+    /**
+     * Get a attribute category given its ID.
+     *
+     * @param int $akCategoryID
+     *
+     * @return Category|null
+     */
     public function getByID($akCategoryID)
     {
-        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Category');
+        $r = $this->entityManager->getRepository(Category::class);
 
         return $r->findOneBy(array('akCategoryID' => $akCategoryID));
     }
 
+    /**
+     * Get all the available attribute categories.
+     *
+     * @return Category[]
+     */
     public function getList()
     {
-        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Category');
+        $r = $this->entityManager->getRepository(Category::class);
 
         return $r->findAll();
     }
 
+    /**
+     * Get all the available attribute categories created by a package.
+     *
+     * @param Package $pkg
+     *
+     * @return Category[]
+     */
     public function getListByPackage(Package $pkg)
     {
-        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Category');
+        $r = $this->entityManager->getRepository(Category::class);
 
         return $r->findByPackage($pkg);
     }
 
 
+    /**
+     * Create a new attribute category.
+     *
+     * @param string $akCategoryHandle The category handle.
+     * @param int $allowSets One of the StandardSetManager::ASET_ALLOW_... constants
+     * @param Package|null $pkg The package that is creating this category.
+     *
+     * @return CategoryInterface
+     */
     public function add($akCategoryHandle, $allowSets = StandardSetManager::ASET_ALLOW_SINGLE, $pkg = null)
     {
         $category = new Category();
