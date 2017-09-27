@@ -97,6 +97,9 @@
 						if (result === '' && typeof json.error === 'string') {
 							result = json.error;
 						}
+						if (result === '' && json.error && typeof json.error.message === 'string') {
+							result = json.error.message;
+						}
 						if (result === '' && json.errors && json.errors.join) {
 							result = json.errors.join('\n');
 						}
