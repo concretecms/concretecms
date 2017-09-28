@@ -108,10 +108,10 @@ EOT
             $output->writeln(sprintf("<info>the package is already up-to-date (v%s)</info>", $pkg->getPackageVersion()));
         } else {
             $test = $pkg->testForInstall(false);
-            if (is_object($test)) {
-                /*
-                 * @var Error $test
-                 */
+            if ($test === true) {
+                $test = $pkg->testForUpgrade();
+            }
+            if ($test !== true) {
                 throw new Exception(implode("\n", $test->getList()));
             }
             $output->writeln('<info>good.</info>');

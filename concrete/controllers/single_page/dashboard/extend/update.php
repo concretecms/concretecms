@@ -23,7 +23,10 @@ class Update extends DashboardPageController
             if ($pkgHandle) {
                 $pkg = \Concrete\Core\Support\Facade\Package::getClass($pkgHandle);
                 $r = $pkg->testForInstall(false);
-                if (is_object($r)) {
+                if ($r === true) {
+                    $r = $pkg->testForUpgrade(false);
+                }
+                if ($r !== true) {
                     $this->error->add($r);
                 } else {
                     $p = Package::getByHandle($pkgHandle);
