@@ -18,6 +18,16 @@ use Gettext\Translations;
 
 abstract class Package implements LocalizablePackageInterface
 {
+    const E_PACKAGE_NOT_FOUND = 1;
+    const E_PACKAGE_INSTALLED = 2;
+    const E_PACKAGE_VERSION = 3;
+    const E_PACKAGE_DOWNLOAD = 4;
+    const E_PACKAGE_SAVE = 5;
+    const E_PACKAGE_UNZIP = 6;
+    const E_PACKAGE_INSTALL = 7;
+    const E_PACKAGE_MIGRATE_BACKUP = 8;
+    const E_PACKAGE_INVALID_APP_VERSION = 20;
+    const E_PACKAGE_THEME_ACTIVE = 21;
     protected $DIR_PACKAGES_CORE = DIR_PACKAGES_CORE;
     protected $DIR_PACKAGES = DIR_PACKAGES;
     protected $REL_DIR_PACKAGES_CORE = REL_DIR_PACKAGES_CORE;
@@ -69,21 +79,15 @@ abstract class Package implements LocalizablePackageInterface
 
     protected $pkgContentProvidesFileThumbnails = false;
 
-    const E_PACKAGE_NOT_FOUND = 1;
-    const E_PACKAGE_INSTALLED = 2;
-    const E_PACKAGE_VERSION = 3;
-    const E_PACKAGE_DOWNLOAD = 4;
-    const E_PACKAGE_SAVE = 5;
-    const E_PACKAGE_UNZIP = 6;
-    const E_PACKAGE_INSTALL = 7;
-    const E_PACKAGE_MIGRATE_BACKUP = 8;
-    const E_PACKAGE_INVALID_APP_VERSION = 20;
-    const E_PACKAGE_THEME_ACTIVE = 21;
-
     /**
      * @var \Concrete\Core\Database\DatabaseStructureManager
      */
     protected $databaseStructureManager;
+
+    public function __construct(Application $app)
+    {
+        $this->app = $app;
+    }
 
     /**
      * @return \Concrete\Core\Entity\Package
@@ -105,11 +109,6 @@ abstract class Package implements LocalizablePackageInterface
     public function getApplication()
     {
         return $this->app;
-    }
-
-    public function __construct(Application $app)
-    {
-        $this->app = $app;
     }
 
     public function getContentSwapper()
@@ -381,6 +380,7 @@ abstract class Package implements LocalizablePackageInterface
 
         \Localization::clearCache();
     }
+
     /**
      * Gets the contents of the package's CHANGELOG file. If no changelog is available an empty string is returned.
      *
@@ -417,6 +417,8 @@ abstract class Package implements LocalizablePackageInterface
 
     /**
      * @deprecated
+     *
+     * @param mixed $pkgHandle
      */
     public static function getByHandle($pkgHandle)
     {
@@ -444,6 +446,8 @@ abstract class Package implements LocalizablePackageInterface
 
     /**
      * @deprecated
+     *
+     * @param mixed $filterInstalled
      */
     public static function getAvailablePackages($filterInstalled = true)
     {
@@ -453,6 +457,8 @@ abstract class Package implements LocalizablePackageInterface
 
     /**
      * @deprecated
+     *
+     * @param mixed $pkgID
      */
     public static function getByID($pkgID)
     {
@@ -462,6 +468,8 @@ abstract class Package implements LocalizablePackageInterface
 
     /**
      * @deprecated
+     *
+     * @param mixed $pkgHandle
      */
     public static function getClass($pkgHandle)
     {
@@ -518,40 +526,6 @@ abstract class Package implements LocalizablePackageInterface
         }
     }
 
-    protected function getErrorText($result)
-    {
-        $errorText = [
-            self::E_PACKAGE_INSTALLED => t("You've already installed that package."),
-            self::E_PACKAGE_NOT_FOUND => t("Invalid Package."),
-            self::E_PACKAGE_VERSION => t("This package requires concrete5 version %s or greater."),
-            self::E_PACKAGE_DOWNLOAD => t("An error occurred while downloading the package."),
-            self::E_PACKAGE_SAVE => t("concrete5 was not able to save the package after download."),
-            self::E_PACKAGE_UNZIP => t('An error occurred while trying to unzip the package.'),
-            self::E_PACKAGE_INSTALL => t('An error occurred while trying to install the package.'),
-            self::E_PACKAGE_MIGRATE_BACKUP => t(
-                'Unable to backup old package directory to %s',
-                \Config::get('concrete.misc.package_backup_directory')
-            ),
-            self::E_PACKAGE_INVALID_APP_VERSION => t(
-                'This package isn\'t currently available for this version of concrete5. Please contact the maintainer of this package for assistance.'
-            ),
-            self::E_PACKAGE_THEME_ACTIVE => t('This package contains the active site theme, please change the theme before uninstalling.'),
-        ];
-
-        $testResultsText = [];
-        if (is_array($result)) {
-            $et = $errorText[$result[0]];
-            array_shift($result);
-            $testResultsText = vsprintf($et, $result);
-        } elseif (is_int($result)) {
-            $testResultsText = $errorText[$result];
-        } elseif (!empty($result)) {
-            $testResultsText = $result;
-        }
-
-        return $testResultsText;
-    }
-
     /**
      * @return bool|int[] true on success, array of error codes on failure
      */
@@ -565,7 +539,7 @@ abstract class Package implements LocalizablePackageInterface
          */
         $driver = $manager->driver('theme');
         $themes = $driver->getItems($this->getPackageEntity());
-/** @var Theme[] $themes */
+        /** @var Theme[] $themes */
 
         // Step 1, check for active themes
         $active_theme = Theme::getSiteTheme();
@@ -680,9 +654,9 @@ abstract class Package implements LocalizablePackageInterface
      *
      * @param string $xmlFile Path to the database XML file
      *
-     * @return bool|\stdClass Returns false if the XML file could not be found
-     *
      * @throws \Doctrine\DBAL\ConnectionException
+     *
+     * @return bool|\stdClass Returns false if the XML file could not be found
      */
     public static function installDB($xmlFile)
     {
@@ -824,28 +798,6 @@ abstract class Package implements LocalizablePackageInterface
     }
 
     /**
-     * Destroys all proxies related to a package.
-     */
-    protected function destroyProxyClasses(\Doctrine\ORM\EntityManagerInterface $em)
-    {
-        $config = $em->getConfiguration();
-        $proxyGenerator = new \Doctrine\Common\Proxy\ProxyGenerator($config->getProxyDir(), $config->getProxyNamespace());
-
-        $classes = $em->getMetadataFactory()->getAllMetadata();
-        foreach ($classes as $class) {
-            // We have to do this check because we include core entities in this list because without it packages that extend
-            // the core will complain.
-            if (strpos($class->getName(), 'Concrete\Core\Entity') === 0) {
-                continue;
-            }
-            $proxyFileName = $proxyGenerator->getProxyFileName($class->getName(), $config->getProxyDir());
-            if (file_exists($proxyFileName)) {
-                @unlink($proxyFileName);
-            }
-        }
-    }
-
-    /**
      * @deprecated
      */
     public function getEntityManager()
@@ -887,5 +839,63 @@ abstract class Package implements LocalizablePackageInterface
      */
     public function getTranslatableStrings(Translations $translations)
     {
+    }
+
+    protected function getErrorText($result)
+    {
+        $errorText = [
+            self::E_PACKAGE_INSTALLED => t("You've already installed that package."),
+            self::E_PACKAGE_NOT_FOUND => t('Invalid Package.'),
+            self::E_PACKAGE_VERSION => t('This package requires concrete5 version %s or greater.'),
+            self::E_PACKAGE_DOWNLOAD => t('An error occurred while downloading the package.'),
+            self::E_PACKAGE_SAVE => t('concrete5 was not able to save the package after download.'),
+            self::E_PACKAGE_UNZIP => t('An error occurred while trying to unzip the package.'),
+            self::E_PACKAGE_INSTALL => t('An error occurred while trying to install the package.'),
+            self::E_PACKAGE_MIGRATE_BACKUP => t(
+                'Unable to backup old package directory to %s',
+                \Config::get('concrete.misc.package_backup_directory')
+            ),
+            self::E_PACKAGE_INVALID_APP_VERSION => t(
+                'This package isn\'t currently available for this version of concrete5. Please contact the maintainer of this package for assistance.'
+            ),
+            self::E_PACKAGE_THEME_ACTIVE => t('This package contains the active site theme, please change the theme before uninstalling.'),
+        ];
+
+        $testResultsText = [];
+        if (is_array($result)) {
+            $et = $errorText[$result[0]];
+            array_shift($result);
+            $testResultsText = vsprintf($et, $result);
+        } elseif (is_int($result)) {
+            $testResultsText = $errorText[$result];
+        } elseif (!empty($result)) {
+            $testResultsText = $result;
+        }
+
+        return $testResultsText;
+    }
+
+    /**
+     * Destroys all proxies related to a package.
+     *
+     * @param \Doctrine\ORM\EntityManagerInterface $em
+     */
+    protected function destroyProxyClasses(\Doctrine\ORM\EntityManagerInterface $em)
+    {
+        $config = $em->getConfiguration();
+        $proxyGenerator = new \Doctrine\Common\Proxy\ProxyGenerator($config->getProxyDir(), $config->getProxyNamespace());
+
+        $classes = $em->getMetadataFactory()->getAllMetadata();
+        foreach ($classes as $class) {
+            // We have to do this check because we include core entities in this list because without it packages that extend
+            // the core will complain.
+            if (strpos($class->getName(), 'Concrete\Core\Entity') === 0) {
+                continue;
+            }
+            $proxyFileName = $proxyGenerator->getProxyFileName($class->getName(), $config->getProxyDir());
+            if (file_exists($proxyFileName)) {
+                @unlink($proxyFileName);
+            }
+        }
     }
 }
