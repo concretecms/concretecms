@@ -770,11 +770,11 @@ abstract class Package implements LocalizablePackageInterface
                         $packageVersion = $packageService->getByHandle($packageHandle)->getPackageVersion();
                         if (is_array($requirements)) {
                             if (version_compare($packageVersion, $requirements[0]) < 0 || version_compare($packageVersion, $requirements[1]) > 0) {
-                                $errors[] = t('This package requires the package with handle %1$s has a version from %2%s to %3$s', $packageHandle, $requirements[0], $requirements[1]);
+                                $errors[] = t('This package requires the package with handle %1$s has a version from %2$s to %3$s', $packageHandle, $requirements[0], $requirements[1]);
                             }
                         } else {
                             if (version_compare($packageVersion, $requirements) < 0) {
-                                $errors[] = t('This package requires the package with handle %1$s has a version %2%s or greater', $packageHandle, $requirements);
+                                $errors[] = t('This package requires the package with handle %1$s has a version %2$s or greater', $packageHandle, $requirements);
                             }
                         }
                     }
@@ -833,7 +833,7 @@ abstract class Package implements LocalizablePackageInterface
             if (isset($packageDependencies[$myPackageHandle])) {
                 $requirements = $packageDependencies[$myPackageHandle];
                 if (is_array($requirements) && version_compare($myPackageVersion, $requirements[1]) > 0) {
-                    $errors[] = t('This package can\'t be upgrade since the package with handle %1$s requires a maximum version of %2%s for it', $packageHandle, $requirements[1]);
+                    $errors[] = t('This package can\'t be upgrade since the package with handle %1$s requires a maximum version of %2$s for it', $packageHandle, $requirements[1]);
                 }
             }
         }
