@@ -4,118 +4,264 @@ namespace Concrete\Core\Package;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Config\Repository\Liaison;
+use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Database\DatabaseStructureManager;
 use Concrete\Core\Database\EntityManager\Driver\CoreDriver;
 use Concrete\Core\Database\EntityManager\Provider\PackageProviderFactory;
 use Concrete\Core\Database\Schema\Schema;
-use Concrete\Core\Package\ItemCategory\ItemInterface;
+use Concrete\Core\Entity\Package as PackageEntity;
 use Concrete\Core\Package\ItemCategory\Manager;
 use Concrete\Core\Page\Theme\Theme;
+use Concrete\Core\Support\Facade\Application as ApplicationFacade;
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
+use Doctrine\Common\Proxy\ProxyGenerator;
+use Doctrine\DBAL\Schema\Comparator as SchemaComparator;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Setup;
 use Gettext\Translations;
+use Localization;
+use stdClass;
 
 abstract class Package implements LocalizablePackageInterface
 {
+    /**
+     * Error code: Invalid Package.
+     *
+     * @var int
+     */
     const E_PACKAGE_NOT_FOUND = 1;
+
+    /**
+     * Error code: You've already installed that package.
+     *
+     * @var int
+     */
     const E_PACKAGE_INSTALLED = 2;
+
+    /**
+     * Error code: This package requires concrete5 version %s or greater.
+     *
+     * @var int
+     */
     const E_PACKAGE_VERSION = 3;
+
+    /**
+     * Error code: An error occurred while downloading the package.
+     *
+     * @var int
+     */
     const E_PACKAGE_DOWNLOAD = 4;
+
+    /**
+     * Error code: concrete5 was not able to save the package after download.
+     *
+     * @var int
+     */
     const E_PACKAGE_SAVE = 5;
+
+    /**
+     * Error code: An error occurred while trying to unzip the package.
+     *
+     * @var int
+     */
     const E_PACKAGE_UNZIP = 6;
+
+    /**
+     * Error code: An error occurred while trying to install the package.
+     *
+     * @var int
+     */
     const E_PACKAGE_INSTALL = 7;
+
+    /**
+     * Error code: Unable to backup old package directory to %s.
+     *
+     * @var int
+     */
     const E_PACKAGE_MIGRATE_BACKUP = 8;
+
+    /**
+     * Error code: This package isn't currently available for this version of concrete5.
+     *
+     * @var int
+     */
     const E_PACKAGE_INVALID_APP_VERSION = 20;
+
+    /**
+     * Error code: This package contains the active site theme, please change the theme before uninstalling.
+     *
+     * @var int
+     */
     const E_PACKAGE_THEME_ACTIVE = 21;
+
+    /**
+     * Absolute path to the /concrete/packages directory.
+     *
+     * @var string
+     */
     protected $DIR_PACKAGES_CORE = DIR_PACKAGES_CORE;
+
+    /**
+     * Absolute path to the /packages directory.
+     *
+     * @var string
+     */
     protected $DIR_PACKAGES = DIR_PACKAGES;
+
+    /**
+     * Path to the /concrete/packages directory relative to the web root.
+     *
+     * @var string
+     */
     protected $REL_DIR_PACKAGES_CORE = REL_DIR_PACKAGES_CORE;
+
+    /**
+     * Path to the /concrete/packages directory relative to the web root.
+     *
+     * @var string
+     */
     protected $REL_DIR_PACKAGES = REL_DIR_PACKAGES;
 
     /**
-     * @var \Concrete\Core\Entity\Package
+     * Associated package entity.
+     *
+     * @var PackageEntity|null
      */
     protected $entity;
 
     /**
+     * The Application instance.
+     *
      * @var Application
      */
     protected $app;
 
     /**
-     * @var \Concrete\Core\Config\Repository\Liaison
+     * The database configuration liaison.
+     *
+     * @var Liaison|null
      */
     protected $config;
 
     /**
-     * @var \Concrete\Core\Config\Repository\Liaison
+     * The file configuration liaison.
+     *
+     * @var Liaison|null
      */
     protected $fileConfig;
 
     /**
      * @deprecated
-     * This will be set to FALSE in 8.1
-     * Additionally, if your package requires 8.0 or greater, it will be set to false automatically
-     * Whether to automatically map core extensions into the packages src/Concrete directory (and map them to Concrete\Package\MyPackage), or map the entire src/
-     * directory to Concrete\Package\MyPackage\Src (and automatically map core extensions
-     * to Concrete\Package\MyPackage\Src)
+     * Whether to automatically map core extensions into the packages src/Concrete directory (and map them to Concrete\Package\MyPackage),
+     * or map the entire src/ directory to Concrete\Package\MyPackage\Src
+     * (and automatically map core extensions to Concrete\Package\MyPackage\Src).
+     * This will be ALWAYS considered as FALSE if your package requires 8.0 or greater or if your package defines the pkgAutoloaderMapCoreExtensions property.
      *
      * @var bool
      */
     protected $pkgEnableLegacyNamespace = true;
 
     /**
-     * Array of location -> namespace autoloader entries for the package. Will automatically
-     * be added to the class loader. (e.g. array('src/PortlandLabs' => \PortlandLabs')).
+     * The custom autoloader prefixes to be automatically added to the class loader.
+     * Array keys are the locations (relative to the package directory).
+     * Array values are the paths (not relative to the package namespace).
      *
      * @var array
+     *
+     * @example ['src/PortlandLabs' => \PortlandLabs']
      */
     protected $pkgAutoloaderRegistries = [];
 
+    /**
+     * The minimum concrete5 version compatible with the package.
+     * Override this value according to the minimum required version for your package.
+     *
+     * @var string
+     */
     protected $appVersionRequired = '5.7.0';
 
+    /**
+     * Override this value setting it to true if your package clear all existing website content when it's being installed.
+     *
+     * @var bool
+     */
     protected $pkgAllowsFullContentSwap = false;
 
+    /**
+     * Override this value setting it to true if your package provide the file thumbnails.
+     * If it's false, the file thumbnails are generated during the install process.
+     *
+     * @var bool
+     */
     protected $pkgContentProvidesFileThumbnails = false;
 
     /**
-     * @var \Concrete\Core\Database\DatabaseStructureManager
+     * The full path of the package directory moved to the trash folder.
+     *
+     * @var string|null
      */
-    protected $databaseStructureManager;
+    protected $backedUpFname;
 
+    /**
+     * Initialize the instance.
+     *
+     * @param Application $app the application instance
+     */
     public function __construct(Application $app)
     {
         $this->app = $app;
     }
 
     /**
-     * @return \Concrete\Core\Entity\Package
+     * Get the associated package entity (if available).
+     *
+     * @return PackageEntity|null May return NULL if the package is invalid and/or if it's not installed
      */
     public function getPackageEntity()
     {
-        if (!isset($this->entity)) {
-            $this->entity = $this->app->make('Concrete\Core\Package\PackageService')->getByHandle($this->getPackageHandle());
+        if ($this->entity === null) {
+            $this->entity = $this->app->make(PackageService::class)->getByHandle($this->getPackageHandle());
         }
 
         return $this->entity;
     }
 
-    public function setPackageEntity(\Concrete\Core\Entity\Package $entity)
+    /**
+     * Set the associated package entity.
+     *
+     * @param PackageEntity $entity
+     */
+    public function setPackageEntity(PackageEntity $entity)
     {
         $this->entity = $entity;
     }
 
+    /**
+     * Get the Application instance.
+     *
+     * @return Application
+     */
     public function getApplication()
     {
         return $this->app;
     }
 
+    /**
+     * Get the content swapper.
+     *
+     * @return \Concrete\Core\Package\ContentSwapperInterface
+     */
     public function getContentSwapper()
     {
         return new ContentSwapper();
     }
 
+    /**
+     * Import a concrete5-cif XML file.
+     *
+     * @param string $file the path to the file, relative to the package directory
+     */
     public function installContentFile($file)
     {
         $ci = new ContentImporter();
@@ -123,7 +269,7 @@ abstract class Package implements LocalizablePackageInterface
     }
 
     /**
-     * Should this pacakge enable legacy namespaces.
+     * Should this pacakge enable legacy namespaces?
      *
      * This returns true IF:
      * 1. $this->pkgAutoloaderMapCoreExtensions is false or unset
@@ -150,9 +296,9 @@ abstract class Package implements LocalizablePackageInterface
     }
 
     /**
-     * Get the standard database config liaison.
+     * Get the default configuration liaison.
      *
-     * @return \Concrete\Core\Config\Repository\Liaison
+     * @return Liaison
      */
     public function getConfig()
     {
@@ -160,9 +306,9 @@ abstract class Package implements LocalizablePackageInterface
     }
 
     /**
-     * Get the standard database config liaison.
+     * Get the database configuration liaison.
      *
-     * @return \Concrete\Core\Config\Repository\Liaison
+     * @return Liaison
      */
     public function getDatabaseConfig()
     {
@@ -174,9 +320,9 @@ abstract class Package implements LocalizablePackageInterface
     }
 
     /**
-     * Get the standard filesystem config liaison.
+     * Get the filesystem configuration liaison.
      *
-     * @return \Concrete\Core\Config\Repository\Liaison
+     * @return Liaison
      */
     public function getFileConfig()
     {
@@ -188,52 +334,61 @@ abstract class Package implements LocalizablePackageInterface
     }
 
     /**
-     * Returns custom autoloader prefixes registered by the class loader.
+     * Get the custom autoloader prefixes to be automatically added to the class loader.
+     * Array keys are the locations (relative to the package directory).
+     * Array values are the paths (not relative to the package namespace).
      *
-     * @return array Keys represent the namespace, not relative to the package's namespace. Values are the path, and are relative to the package directory
+     * @return array
+     *
+     * @example ['src/PortlandLabs' => \PortlandLabs']
      */
     public function getPackageAutoloaderRegistries()
     {
         return $this->pkgAutoloaderRegistries;
     }
 
+    /**
+     * Get the package handle.
+     *
+     * @return string
+     */
     public function getPackageHandle()
     {
-        return $this->pkgHandle;
+        return isset($this->pkgHandle) ? $this->pkgHandle : '';
     }
 
     /**
-     * Returns the translated name of the package.
+     * Get the translated name of the package.
      *
      * @return string
      */
     public function getPackageName()
     {
-        return t($this->pkgName);
+        return isset($this->pkgName) ? t($this->pkgName) : '';
     }
 
     /**
-     * Returns the translated package description.
+     * Get the translated package description.
      *
      * @return string
      */
     public function getPackageDescription()
     {
-        return t($this->pkgDescription);
+        return isset($this->pkgDescription) ? t($this->pkgDescription) : '';
     }
 
     /**
-     * Returns the installed package version.
+     * Get the installed package version.
      *
      * @return string
      */
     public function getPackageVersion()
     {
-        return $this->pkgVersion;
+        return isset($this->pkgVersion) ? $this->pkgVersion : '';
     }
 
     /**
-     * Returns the version of concrete5 required by the package.
+     * Get the minimum concrete5 version compatible with the package.
      *
      * @return string
      */
@@ -243,7 +398,8 @@ abstract class Package implements LocalizablePackageInterface
     }
 
     /**
-     * Returns true if the package has an install options screen.
+     * Should the install options page be shown?
+     * The install options page may be for install notes and/or full contents swap confirmation.
      *
      * @return bool
      */
@@ -252,56 +408,81 @@ abstract class Package implements LocalizablePackageInterface
         return $this->hasInstallNotes() || $this->allowsFullContentSwap();
     }
 
+    /**
+     * Does this package have install notes?
+     *
+     * @return bool
+     */
     public function hasInstallNotes()
     {
         return file_exists($this->getPackagePath() . '/' . DIRNAME_ELEMENTS . '/' . DIRNAME_DASHBOARD . '/install.php');
     }
 
+    /**
+     * Does this package have uninstall notes?
+     *
+     * @return bool
+     */
     public function hasUninstallNotes()
     {
         return file_exists($this->getPackagePath() . '/' . DIRNAME_ELEMENTS . '/' . DIRNAME_DASHBOARD . '/uninstall.php');
     }
 
     /**
-     * Returns true if the package has a post install screen.
+     * Does this package have a post-install page?
      *
      * @return bool
      */
     public function hasInstallPostScreen()
     {
-        return file_exists(
-            $this->getPackagePath() . '/' . DIRNAME_ELEMENTS . '/' . DIRNAME_DASHBOARD . '/install_post.php');
+        return file_exists($this->getPackagePath() . '/' . DIRNAME_ELEMENTS . '/' . DIRNAME_DASHBOARD . '/install_post.php');
     }
 
+    /**
+     * Does this package clear all existing website content when it's being installed?
+     *
+     * @return bool
+     */
     public function allowsFullContentSwap()
     {
         return $this->pkgAllowsFullContentSwap;
     }
 
+    /**
+     * Get the absolute path to the package.
+     *
+     * @return string
+     */
     public function getPackagePath()
     {
-        $dirp = (is_dir(
-            $this->DIR_PACKAGES . '/' . $this->getPackageHandle())) ? $this->DIR_PACKAGES : $this->DIR_PACKAGES_CORE;
-        $path = $dirp . '/' . $this->getPackageHandle();
+        $packageHandle = $this->getPackageHandle();
+        $result = $this->DIR_PACKAGES . '/' . $packageHandle;
+        if (!is_dir($result)) {
+            $result = $this->DIR_PACKAGES_CORE . '/' . $packageHandle;
+        }
 
-        return $path;
+        return $result;
     }
 
     /**
-     * Returns the path to the package's folder, relative to the install path.
+     * Get the path to the package relative to the web root.
      *
      * @return string
      */
     public function getRelativePath()
     {
-        $dirp = (is_dir(
-            $this->DIR_PACKAGES . '/' . $this->getPackageHandle())) ? $this->REL_DIR_PACKAGES : $this->REL_DIR_PACKAGES_CORE;
+        $packageHandle = $this->getPackageHandle();
+        if (is_dir($this->DIR_PACKAGES . '/' . $packageHandle)) {
+            $result = $this->REL_DIR_PACKAGES . '/' . $packageHandle;
+        } else {
+            $result = $this->REL_DIR_PACKAGES_CORE . '/' . $packageHandle;
+        }
 
-        return $dirp . '/' . $this->pkgHandle;
+        return $result;
     }
 
     /**
-     * Returns the path starting from c5 installation folder to the package folder.
+     * Get the path to the package relative to the concrete5 installation folder.
      *
      * @return string
      */
@@ -310,18 +491,21 @@ abstract class Package implements LocalizablePackageInterface
         return '/' . DIRNAME_PACKAGES . '/' . $this->getPackageHandle();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see LocalizablePackageInterface::getTranslationFile()
+     */
     public function getTranslationFile($locale)
     {
-        $path = $this->getPackagePath() . '/' . DIRNAME_LANGUAGES;
-        $languageFile = "$path/$locale/LC_MESSAGES/messages.mo";
-
-        return $languageFile;
+        return $this->getPackagePath() . '/' . DIRNAME_LANGUAGES . "/{$locale}/LC_MESSAGES/messages.mo";
     }
 
     /**
-     * Returns a path to where the packages files are located.
+     * Does this package provide the file thumbnails?
+     * If false, the file thumbnails are generated during the install process.
      *
-     * @return string $path
+     * @return bool
      */
     public function contentProvidesFileThumbnails()
     {
@@ -329,16 +513,16 @@ abstract class Package implements LocalizablePackageInterface
     }
 
     /**
-     * Installs the package info row and installs the database. Packages installing additional content should override this method, call the parent method,
-     * and use the resulting package object for further installs.
+     * Install the package info row and the database (doctrine entities and db.xml).
+     * Packages installing additional content should override this method, call the parent method (`parent::install()`).
      *
-     * @return Package
+     * @return PackageEntity
      */
     public function install()
     {
         PackageList::refreshCache();
-        $em = \Database::connection()->getEntityManager();
-        $package = new \Concrete\Core\Entity\Package();
+        $em = $this->app->make(EntityManagerInterface::class);
+        $package = new PackageEntity();
         $package->setPackageName($this->getPackageName());
         $package->setPackageDescription($this->getPackageDescription());
         $package->setPackageVersion($this->getPackageVersion());
@@ -346,15 +530,21 @@ abstract class Package implements LocalizablePackageInterface
         $em->persist($package);
         $em->flush();
 
+        $this->app->make('cache/overrides')->flush();
+
         $this->installDatabase();
 
-        $env = \Environment::get();
-        $env->clearOverrideCache();
-        \Localization::clearCache();
+        Localization::clearCache();
 
         return $package;
     }
 
+    /**
+     * Uninstall the package:
+     * - delete the installed items associated to the package
+     * - destroy the package proxy classes of entities
+     * - remove the package info row.
+     */
     public function uninstall()
     {
         $manager = new Manager($this->app);
@@ -366,180 +556,176 @@ abstract class Package implements LocalizablePackageInterface
             }
         }
 
-        \Config::clearNamespace($this->getPackageHandle());
+        $this->app->make('config')->clearNamespace($this->getPackageHandle());
         $this->app->make('config/database')->clearNamespace($this->getPackageHandle());
 
         $em = $this->getPackageEntityManager();
-        if (is_object($em)) {
+        if ($em !== null) {
             $this->destroyProxyClasses($em);
         }
 
-        $em = \ORM::entityManager();
+        $em = $this->app->make(EntityManagerInterface::class);
         $em->remove($package);
         $em->flush();
 
-        \Localization::clearCache();
+        Localization::clearCache();
     }
 
     /**
-     * Gets the contents of the package's CHANGELOG file. If no changelog is available an empty string is returned.
+     * Get the contents of the package's CHANGELOG file.
      *
-     * @return string
+     * @return string if no changelog is available an empty string is returned
      */
     public function getChangelogContents()
     {
-        if (file_exists($this->getPackagePath() . '/CHANGELOG')) {
-            $contents = \Core::make('helper/file')->getContents($this->getPackagePath() . '/CHANGELOG');
-
-            return nl2br(\Core::make('helper/text')->entities($contents));
+        $result = '';
+        $file = $this->getPackagePath() . '/CHANGELOG';
+        if (is_file($file)) {
+            $contents = $this->app->make('helper/file')->getContents($file);
+            $result = nl2br(h($contents));
         }
 
-        return '';
+        return $result;
     }
 
     /**
      * @deprecated
+     * Use $app->make('Concrete\Core\Package\PackageService')->getInstalledList()
      */
     public static function getInstalledList()
     {
-        // this should go through the facade instead
-        return \Concrete\Core\Support\Facade\Package::getInstalledList();
+        return $this->app->make(PackageService::class)->getInstalledList();
     }
 
     /**
      * @deprecated
+     * Use $app->make('Concrete\Core\Package\PackageService')->getInstalledHandles()
      */
     public static function getInstalledHandles()
     {
-        // this should go through the facade instead
-        return \Concrete\Core\Support\Facade\Package::getInstalledHandles();
+        return $this->app->make(PackageService::class)->getInstalledHandles();
     }
 
     /**
      * @deprecated
+     * Use $app->make('Concrete\Core\Package\PackageService')->getInstalledHandles()
      *
-     * @param mixed $pkgHandle
+     * @param string $pkgHandle
      */
     public static function getByHandle($pkgHandle)
     {
-        // this should go through the facade instead
-        return \Concrete\Core\Support\Facade\Package::getByHandle($pkgHandle);
+        return $this->app->make(PackageService::class)->getByHandle($pkgHandle);
     }
 
     /**
      * @deprecated
+     * Use $app->make('Concrete\Core\Package\PackageService')->getLocalUpgradeablePackages()
      */
     public static function getLocalUpgradeablePackages()
     {
-        // this should go through the facade instead
-        return \Concrete\Core\Support\Facade\Package::getLocalUpgradeablePackages();
+        return $this->app->make(PackageService::class)->getLocalUpgradeablePackages();
     }
 
     /**
      * @deprecated
+     * Use $app->make('Concrete\Core\Package\PackageService')->getRemotelyUpgradeablePackages()
      */
     public static function getRemotelyUpgradeablePackages()
     {
-        // this should go through the facade instead
-        return \Concrete\Core\Support\Facade\Package::getRemotelyUpgradeablePackages();
+        return $this->app->make(PackageService::class)->getRemotelyUpgradeablePackages();
     }
 
     /**
      * @deprecated
+     * Use $app->make('Concrete\Core\Package\PackageService')->getAvailablePackages($filterInstalled)
      *
-     * @param mixed $filterInstalled
+     * @param bool $filterInstalled
      */
     public static function getAvailablePackages($filterInstalled = true)
     {
-        // this should go through the facade instead
-        return \Concrete\Core\Support\Facade\Package::getAvailablePackages($filterInstalled);
+        return $this->app->make(PackageService::class)->getAvailablePackages($filterInstalled);
     }
 
     /**
      * @deprecated
+     * Use $app->make('Concrete\Core\Package\PackageService')->getByID($pkgID)
      *
-     * @param mixed $pkgID
+     * @param int $pkgID
      */
     public static function getByID($pkgID)
     {
-        // this should go through the facade instead
-        return \Concrete\Core\Support\Facade\Package::getByID($pkgID);
+        return $this->app->make(PackageService::class)->getByID($pkgID);
     }
 
     /**
      * @deprecated
+     * Use $app->make('Concrete\Core\Package\PackageService')->getClass($pkgHandle)
      *
-     * @param mixed $pkgHandle
+     * @param string $pkgHandle
      */
     public static function getClass($pkgHandle)
     {
-        // this should go through the facade instead
-        return \Concrete\Core\Support\Facade\Package::getClass($pkgHandle);
+        return $this->app->make(PackageService::class)->getClass($pkgHandle);
     }
 
     /**
-     * This is the pre-test routine that packages run through before they are installed. Any errors that come here are
-     * to be returned in the form of an array so we can show the user. If it's all good we return true.
+     * Perform tests before this package is installed.
      *
-     * @param string $package Package handle
      * @param bool $testForAlreadyInstalled
      *
-     * @return array|bool Returns an array of errors or true if the package can be installed
+     * @return \Concrete\Core\Error\ErrorList\ErrorList|true return true if the package can be installed, an ErrorList instance otherwise
      */
     public function testForInstall($testForAlreadyInstalled = true)
     {
         $errors = [];
 
         // Step 1 does that package exist ?
-        if ((!is_dir(DIR_PACKAGES . '/' . $this->getPackageHandle()) && (!is_dir(
-                    DIR_PACKAGES_CORE . '/' . $this->getPackageHandle()))) || $this->getPackageHandle() == ''
-        ) {
+        if ($this instanceof BrokenPackage) {
             $errors[] = self::E_PACKAGE_NOT_FOUND;
-        } elseif ($this instanceof BrokenPackage) {
+        } elseif ($this->getPackageHandle() === '' || !is_dir($this->getPackagePath())) {
             $errors[] = self::E_PACKAGE_NOT_FOUND;
         }
 
         // Step 2 - check to see if the user has already installed a package w/this handle
         if ($testForAlreadyInstalled) {
             $entity = $this->getPackageEntity();
-            if (is_object($entity) && $entity->isPackageInstalled()) {
+            if ($entity !== null && $entity->isPackageInstalled()) {
                 $errors[] = self::E_PACKAGE_INSTALLED;
             }
         }
 
-        if (count($errors) == 0) {
-            // test minimum application version requirement
-            if (version_compare(APP_VERSION, $this->getApplicationVersionRequired(), '<')) {
-                $errors[] = [self::E_PACKAGE_VERSION, $this->getApplicationVersionRequired()];
+        // Step 3 - test minimum application version requirement
+        if (empty($errors)) {
+            $applicationVersionRequired = $this->getApplicationVersionRequired();
+            if (version_compare(APP_VERSION, $applicationVersionRequired, '<')) {
+                $errors[] = [self::E_PACKAGE_VERSION, $applicationVersionRequired];
             }
         }
 
-        if (count($errors) > 0) {
-            $e = $this->app->make('error');
-            foreach ($errors as $error) {
-                $e->add($this->getErrorText($error));
-            }
-
-            return $e;
+        if (empty($errors)) {
+            $result = true;
         } else {
-            return true;
+            $result = $this->app->make('error');
+            foreach ($errors as $error) {
+                $result->add($this->getErrorText($error));
+            }
         }
+
+        return $result;
     }
 
     /**
-     * @return bool|int[] true on success, array of error codes on failure
+     * Perform tests before this package is uninstalled.
+     *
+     * @return \Concrete\Core\Error\ErrorList\ErrorList|true return true if the package can be uninstalled, an ErrorList instance otherwise
      */
     public function testForUninstall()
     {
         $errors = [];
         $manager = new Manager($this->app);
 
-        /**
-         * @var ItemInterface
-         */
         $driver = $manager->driver('theme');
         $themes = $driver->getItems($this->getPackageEntity());
-        /** @var Theme[] $themes */
 
         // Step 1, check for active themes
         $active_theme = Theme::getSiteTheme();
@@ -550,56 +736,69 @@ abstract class Package implements LocalizablePackageInterface
             }
         }
 
-        if (count($errors) > 0) {
-            $e = $this->app->make('error');
-            foreach ($errors as $error) {
-                $e->add($this->getErrorText($error));
-            }
-
-            return $e;
+        if (empty($errors)) {
+            $result = true;
         } else {
-            return true;
+            $result = $this->app->make('error');
+            foreach ($errors as $error) {
+                $result->add($this->getErrorText($error));
+            }
         }
+
+        return $result;
     }
 
     /**
-     * Moves the current package's directory to the trash directory renamed with the package handle and a date code.
+     * Move the current package directory to the trash directory, and rename it with the package handle and a date code.
+     *
+     * @return \Concrete\Core\Error\ErrorList\ErrorList|null return NULL if the package has been moved, an ErrorList instance otherwise
      */
     public function backup()
     {
-        // you can only backup root level packages.
-        // Need to figure something else out for core level
-        if ($this->getPackageHandle() != '' && is_dir(DIR_PACKAGES . '/' . $this->getPackageHandle())) {
-            $trash = \Config::get('concrete.misc.package_backup_directory');
+        $packageHandle = $this->getPackageHandle();
+        $errors = $this->app->make('error');
+        if ($packageHandle === '' || !is_dir(DIR_PACKAGES . '/' . $packageHandle)) {
+            $errors->add($this->getErrorText(self::E_PACKAGE_NOT_FOUND));
+        } else {
+            $config = $this->app->make('config');
+            $trash = $config->get('concrete.misc.package_backup_directory');
             if (!is_dir($trash)) {
-                mkdir($trash, \Config::get('concrete.filesystem.permissions.directory'));
+                @mkdir($trash, $config->get('concrete.filesystem.permissions.directory'));
             }
-            $trashName = $trash . '/' . $this->getPackageHandle() . '_' . date('YmdHis');
-            $ret = rename(DIR_PACKAGES . '/' . $this->getPackageHandle(), $trashName);
-            if (!$ret) {
-                $e = \Core::make('error');
-                $e->add($this->getErrorText(self::E_PACKAGE_MIGRATE_BACKUP));
-
-                return $e;
+            if (!is_dir($trash)) {
+                $errors->add($this->getErrorText(self::E_PACKAGE_MIGRATE_BACKUP));
             } else {
-                $this->backedUpFname = $trashName;
+                $trashName = $trash . '/' . $packageHandle . '_' . date('YmdHis');
+                if (!@rename(DIR_PACKAGES . '/' . $this->getPackageHandle(), $trashName)) {
+                    $errors->add($this->getErrorText(self::E_PACKAGE_MIGRATE_BACKUP));
+                } else {
+                    $this->backedUpFname = $trashName;
+                }
             }
         }
 
-        return $this;
+        return $errors->has() ? $errors : null;
     }
 
     /**
-     * If a package was just backed up by this instance of the package object and the packages/package handle directory doesn't exist, this will restore the
-     * package from the trash.
+     * If a package was just backed up by this instance of the package object and the packages/package handle directory doesn't exist,
+     * this will restore the package from the trash.
+     *
+     * @return bool
      */
     public function restore()
     {
-        if (strlen($this->backedUpFname) && is_dir($this->backedUpFname) && !is_dir(DIR_PACKAGES . '/' . $this->getPackageHandle())) {
-            return @rename($this->backedUpFname, DIR_PACKAGES . '/' . $this->pkgHandle);
+        $result = false;
+        if ($this->backedUpFname !== null && is_dir($this->backedUpFname)) {
+            $newPath = DIR_PACKAGES . '/' . $this->getPackageHandle();
+            if (!is_dir($newPath)) {
+                if (@rename($this->backedUpFname, $newPath)) {
+                    $result = true;
+                }
+            }
         }
 
-        return false;
+        return $result;
     }
 
     /**
@@ -627,8 +826,7 @@ abstract class Package implements LocalizablePackageInterface
     }
 
     /**
-     * Installs the packages database through doctrine entities and db.xml
-     * database definitions.
+     * Installs the packages database through doctrine entities and db.xml database definitions.
      */
     public function installDatabase()
     {
@@ -639,7 +837,7 @@ abstract class Package implements LocalizablePackageInterface
     public function installEntitiesDatabase()
     {
         $em = $this->getPackageEntityManager();
-        if (is_object($em)) {
+        if ($em !== null) {
             $structure = new DatabaseStructureManager($em);
             $structure->installDatabase();
 
@@ -650,52 +848,54 @@ abstract class Package implements LocalizablePackageInterface
     }
 
     /**
-     * Installs a package's database from an XML file.
+     * Installs a package database from an XML file.
      *
      * @param string $xmlFile Path to the database XML file
      *
      * @throws \Doctrine\DBAL\ConnectionException
      *
-     * @return bool|\stdClass Returns false if the XML file could not be found
+     * @return bool|stdClass Returns false if the XML file could not be found
      */
     public static function installDB($xmlFile)
     {
-        if (!file_exists($xmlFile)) {
-            return false;
+        if (file_exists($xmlFile)) {
+            $app = ApplicationFacade::getFacadeApplication();
+            $db = $app->make(Connection::class);
+            /* @var Connection $db */
+            $db->beginTransaction();
+
+            $parser = Schema::getSchemaParser(simplexml_load_file($xmlFile));
+            $parser->setIgnoreExistingTables(false);
+            $toSchema = $parser->parse($db);
+
+            $fromSchema = $db->getSchemaManager()->createSchema();
+            $comparator = new SchemaComparator();
+            $schemaDiff = $comparator->compare($fromSchema, $toSchema);
+            $saveQueries = $schemaDiff->toSaveSql($db->getDatabasePlatform());
+
+            foreach ($saveQueries as $query) {
+                $db->query($query);
+            }
+
+            $db->commit();
+
+            $result = new stdClass();
+            $result->result = false;
+        } else {
+            $result = false;
         }
-
-        $db = \Database::connection();
-        $db->beginTransaction();
-
-        $parser = Schema::getSchemaParser(simplexml_load_file($xmlFile));
-        $parser->setIgnoreExistingTables(false);
-        $toSchema = $parser->parse($db);
-
-        $fromSchema = $db->getSchemaManager()->createSchema();
-        $comparator = new \Doctrine\DBAL\Schema\Comparator();
-        $schemaDiff = $comparator->compare($fromSchema, $toSchema);
-        $saveQueries = $schemaDiff->toSaveSql($db->getDatabasePlatform());
-
-        foreach ($saveQueries as $query) {
-            $db->query($query);
-        }
-
-        $db->commit();
-
-        $result = new \stdClass();
-        $result->result = false;
 
         return $result;
     }
 
     /**
-     * Updates a package's name, description, version and ID using the current class properties.
+     * Updates the package entity name, description and version using the current class properties.
      */
     public function upgradeCoreData()
     {
-        $em = \Database::connection()->getEntityManager();
         $entity = $this->getPackageEntity();
-        if (is_object($entity)) {
+        if ($entity !== null) {
+            $em = $this->app->make(EntityManagerInterface::class);
             $entity->setPackageName($this->getPackageName());
             $entity->setPackageDescription($this->getPackageDescription());
             $entity->setPackageVersion($this->getPackageVersion());
@@ -718,7 +918,7 @@ abstract class Package implements LocalizablePackageInterface
             $item->refresh();
         }
 
-        \Localization::clearCache();
+        Localization::clearCache();
     }
 
     /**
@@ -730,7 +930,7 @@ abstract class Package implements LocalizablePackageInterface
     public function upgradeDatabase()
     {
         $em = $this->getPackageEntityManager();
-        if (is_object($em)) {
+        if ($em !== null) {
             $this->destroyProxyClasses($em);
             $this->installEntitiesDatabase();
         }
@@ -746,38 +946,35 @@ abstract class Package implements LocalizablePackageInterface
      */
     public function getNamespace($withLeadingBacksalsh = false)
     {
-        $leadingBkslsh = '';
-        if ($withLeadingBacksalsh) {
-            $leadingBkslsh = '\\';
-        }
+        $leadingBkslsh = $withLeadingBacksalsh ? '\\' : '';
 
         return $leadingBkslsh . 'Concrete\\Package\\' . camelcase($this->getPackageHandle());
     }
 
     /**
-     * Create a entity manager used for the package installation,
-     * update and unistall process.
+     * Create a entity manager used for the package installation, update and unistall process.
      *
-     * @return \Doctrine\ORM\EntityManager
+     * @return EntityManager|null
      */
     public function getPackageEntityManager()
     {
         $providerFactory = new PackageProviderFactory($this->app, $this);
         $provider = $providerFactory->getEntityManagerProvider();
         $drivers = $provider->getDrivers();
-        if (count($drivers)) {
+        if (empty($drivers)) {
+            $result = null;
+        } else {
             $config = Setup::createConfiguration(true, $this->app->make('config')->get('database.proxy_classes'));
             $driverImpl = new MappingDriverChain();
             $coreDriver = new CoreDriver($this->app);
 
-            // Add all the installed packages so that the new package could potentially extend packages that are already
-            // installed
+            // Add all the installed packages so that the new package could potentially extend packages that are already / installed
             $packages = $this->app->make(PackageService::class)->getInstalledList();
             foreach($packages as $package) {
                 $existingProviderFactory = new PackageProviderFactory($this->app, $package->getController());
                 $existingProvider = $existingProviderFactory->getEntityManagerProvider();
                 $existingDrivers = $existingProvider->getDrivers();
-                if (count($existingDrivers)) {
+                if (!empty($existingDrivers)) {
                     foreach($existingDrivers as $existingDriver) {
                         $driverImpl->addDriver($existingDriver->getDriver(), $existingDriver->getNamespace());
                     }
@@ -791,30 +988,35 @@ abstract class Package implements LocalizablePackageInterface
                 $driverImpl->addDriver($driver->getDriver(), $driver->getNamespace());
             }
             $config->setMetadataDriverImpl($driverImpl);
-            $em = EntityManager::create(\Database::connection(), $config);
-
-            return $em;
+            $db = $this->app->make(Connection::class);
+            $result = EntityManager::create($db, $config);
         }
+
+        return $result;
     }
 
     /**
      * @deprecated
+     * Use $app->make('Doctrine\ORM\EntityManagerInterface')
+     *
+     * @return EntityManagerInterface
      */
     public function getEntityManager()
     {
-        return \ORM::entityManager();
+        return $this->app->make(EntityManagerInterface::class);
     }
 
     /**
      * @deprecated
-     * This should be handled by the Concrete\Core\Entity\Package object, not by this object
+     * use the getPackageID method of the package entity
+     *
+     * @return int|null
      */
     public function getPackageID()
     {
-        // If this package is installed, we will query the database for this field.
-        if ($this->getPackageEntity()) {
-            return $this->getPackageEntity()->getPackageID();
-        }
+        $packageEntity = $this->getPackageEntity();
+
+        return $packageEntity === null ? null : $packageEntity->getPackageID();
     }
 
     /**
@@ -841,49 +1043,51 @@ abstract class Package implements LocalizablePackageInterface
     {
     }
 
-    protected function getErrorText($result)
+    /**
+     * Get the error text corresponsing to an errro code.
+     *
+     * @param array|int $errorCode one of the Package::E_PACKAGE_ constants, or an array with the first value is one of the Package::E_PACKAGE_ constants and the other values are used to fill in fields
+     *
+     * @return string
+     */
+    protected function getErrorText($errorCode)
     {
-        $errorText = [
-            self::E_PACKAGE_INSTALLED => t("You've already installed that package."),
-            self::E_PACKAGE_NOT_FOUND => t('Invalid Package.'),
-            self::E_PACKAGE_VERSION => t('This package requires concrete5 version %s or greater.'),
-            self::E_PACKAGE_DOWNLOAD => t('An error occurred while downloading the package.'),
-            self::E_PACKAGE_SAVE => t('concrete5 was not able to save the package after download.'),
-            self::E_PACKAGE_UNZIP => t('An error occurred while trying to unzip the package.'),
-            self::E_PACKAGE_INSTALL => t('An error occurred while trying to install the package.'),
-            self::E_PACKAGE_MIGRATE_BACKUP => t(
-                'Unable to backup old package directory to %s',
-                \Config::get('concrete.misc.package_backup_directory')
-            ),
-            self::E_PACKAGE_INVALID_APP_VERSION => t(
-                'This package isn\'t currently available for this version of concrete5. Please contact the maintainer of this package for assistance.'
-            ),
-            self::E_PACKAGE_THEME_ACTIVE => t('This package contains the active site theme, please change the theme before uninstalling.'),
-        ];
-
-        $testResultsText = [];
-        if (is_array($result)) {
-            $et = $errorText[$result[0]];
-            array_shift($result);
-            $testResultsText = vsprintf($et, $result);
-        } elseif (is_int($result)) {
-            $testResultsText = $errorText[$result];
-        } elseif (!empty($result)) {
-            $testResultsText = $result;
+        if (is_array($errorCode)) {
+            $code = array_shift($errorCode);
+            $result = vsprintf($this->getErrorText($code), $errorCode);
+        } else {
+            $config = $this->app->make('config');
+            $dictionary = [
+                self::E_PACKAGE_INSTALLED => t("You've already installed that package."),
+                self::E_PACKAGE_NOT_FOUND => t('Invalid Package.'),
+                self::E_PACKAGE_VERSION => t('This package requires concrete5 version %s or greater.'),
+                self::E_PACKAGE_DOWNLOAD => t('An error occurred while downloading the package.'),
+                self::E_PACKAGE_SAVE => t('concrete5 was not able to save the package after download.'),
+                self::E_PACKAGE_UNZIP => t('An error occurred while trying to unzip the package.'),
+                self::E_PACKAGE_INSTALL => t('An error occurred while trying to install the package.'),
+                self::E_PACKAGE_MIGRATE_BACKUP => t('Unable to backup old package directory to %s', $config->get('concrete.misc.package_backup_directory')),
+                self::E_PACKAGE_INVALID_APP_VERSION => t('This package isn\'t currently available for this version of concrete5. Please contact the maintainer of this package for assistance.'),
+                self::E_PACKAGE_THEME_ACTIVE => t('This package contains the active site theme, please change the theme before uninstalling.'),
+            ];
+            if (isset($dictionary[$errorCode])) {
+                $result = $dictionary[$errorCode];
+            } else {
+                $result = (string) $errorCode;
+            }
         }
 
-        return $testResultsText;
+        return $result;
     }
 
     /**
      * Destroys all proxies related to a package.
      *
-     * @param \Doctrine\ORM\EntityManagerInterface $em
+     * @param EntityManagerInterface $em
      */
-    protected function destroyProxyClasses(\Doctrine\ORM\EntityManagerInterface $em)
+    protected function destroyProxyClasses(EntityManagerInterface $em)
     {
         $config = $em->getConfiguration();
-        $proxyGenerator = new \Doctrine\Common\Proxy\ProxyGenerator($config->getProxyDir(), $config->getProxyNamespace());
+        $proxyGenerator = new ProxyGenerator($config->getProxyDir(), $config->getProxyNamespace());
 
         $classes = $em->getMetadataFactory()->getAllMetadata();
         foreach ($classes as $class) {
