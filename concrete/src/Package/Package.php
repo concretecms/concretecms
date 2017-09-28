@@ -615,6 +615,8 @@ abstract class Package implements LocalizablePackageInterface
     /**
      * @deprecated
      * Use $app->make('Concrete\Core\Package\PackageService')->getInstalledList()
+     *
+     * @return PackageEntity[]
      */
     public static function getInstalledList()
     {
@@ -624,6 +626,8 @@ abstract class Package implements LocalizablePackageInterface
     /**
      * @deprecated
      * Use $app->make('Concrete\Core\Package\PackageService')->getInstalledHandles()
+     *
+     * @return string[]
      */
     public static function getInstalledHandles()
     {
@@ -635,6 +639,8 @@ abstract class Package implements LocalizablePackageInterface
      * Use $app->make('Concrete\Core\Package\PackageService')->getInstalledHandles()
      *
      * @param string $pkgHandle
+     *
+     * @return PackageEntity|null
      */
     public static function getByHandle($pkgHandle)
     {
@@ -644,6 +650,8 @@ abstract class Package implements LocalizablePackageInterface
     /**
      * @deprecated
      * Use $app->make('Concrete\Core\Package\PackageService')->getLocalUpgradeablePackages()
+     *
+     * @return PackageEntity[]
      */
     public static function getLocalUpgradeablePackages()
     {
@@ -653,6 +661,8 @@ abstract class Package implements LocalizablePackageInterface
     /**
      * @deprecated
      * Use $app->make('Concrete\Core\Package\PackageService')->getRemotelyUpgradeablePackages()
+     *
+     * @return PackageEntity[]
      */
     public static function getRemotelyUpgradeablePackages()
     {
@@ -664,6 +674,8 @@ abstract class Package implements LocalizablePackageInterface
      * Use $app->make('Concrete\Core\Package\PackageService')->getAvailablePackages($filterInstalled)
      *
      * @param bool $filterInstalled
+     *
+     * @return Package[]
      */
     public static function getAvailablePackages($filterInstalled = true)
     {
@@ -675,6 +687,8 @@ abstract class Package implements LocalizablePackageInterface
      * Use $app->make('Concrete\Core\Package\PackageService')->getByID($pkgID)
      *
      * @param int $pkgID
+     *
+     * @return PackageEntity|null
      */
     public static function getByID($pkgID)
     {
@@ -686,6 +700,8 @@ abstract class Package implements LocalizablePackageInterface
      * Use $app->make('Concrete\Core\Package\PackageService')->getClass($pkgHandle)
      *
      * @param string $pkgHandle
+     *
+     * @return Package
      */
     public static function getClass($pkgHandle)
     {
@@ -783,7 +799,7 @@ abstract class Package implements LocalizablePackageInterface
      *
      * @param mixed $testForAlreadyInstalled
      *
-     * @return \Concrete\Core\Error\ErrorList\ErrorList|null return null if the package can be upgraded, an ErrorList instance otherwise
+     * @return \Concrete\Core\Error\ErrorList\ErrorList|true return null if the package can be upgraded, an ErrorList instance otherwise
      */
     public function testForUpgrade($testForAlreadyInstalled = true)
     {
@@ -806,7 +822,7 @@ abstract class Package implements LocalizablePackageInterface
             }
         }
 
-        return $errors->has() ? $errors : null;
+        return $errors->has() ? $errors : true;
     }
 
     /**
