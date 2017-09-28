@@ -620,7 +620,9 @@ abstract class Package implements LocalizablePackageInterface
      */
     public static function getInstalledList()
     {
-        return $this->app->make(PackageService::class)->getInstalledList();
+        $app = ApplicationFacade::getFacadeApplication();
+
+        return $app->make(PackageService::class)->getInstalledList();
     }
 
     /**
@@ -631,7 +633,9 @@ abstract class Package implements LocalizablePackageInterface
      */
     public static function getInstalledHandles()
     {
-        return $this->app->make(PackageService::class)->getInstalledHandles();
+        $app = ApplicationFacade::getFacadeApplication();
+
+        return $app->make(PackageService::class)->getInstalledHandles();
     }
 
     /**
@@ -644,7 +648,9 @@ abstract class Package implements LocalizablePackageInterface
      */
     public static function getByHandle($pkgHandle)
     {
-        return $this->app->make(PackageService::class)->getByHandle($pkgHandle);
+        $app = ApplicationFacade::getFacadeApplication();
+
+        return $app->make(PackageService::class)->getByHandle($pkgHandle);
     }
 
     /**
@@ -655,7 +661,9 @@ abstract class Package implements LocalizablePackageInterface
      */
     public static function getLocalUpgradeablePackages()
     {
-        return $this->app->make(PackageService::class)->getLocalUpgradeablePackages();
+        $app = ApplicationFacade::getFacadeApplication();
+
+        return $app->make(PackageService::class)->getLocalUpgradeablePackages();
     }
 
     /**
@@ -666,7 +674,9 @@ abstract class Package implements LocalizablePackageInterface
      */
     public static function getRemotelyUpgradeablePackages()
     {
-        return $this->app->make(PackageService::class)->getRemotelyUpgradeablePackages();
+        $app = ApplicationFacade::getFacadeApplication();
+
+        return $app->make(PackageService::class)->getRemotelyUpgradeablePackages();
     }
 
     /**
@@ -679,7 +689,9 @@ abstract class Package implements LocalizablePackageInterface
      */
     public static function getAvailablePackages($filterInstalled = true)
     {
-        return $this->app->make(PackageService::class)->getAvailablePackages($filterInstalled);
+        $app = ApplicationFacade::getFacadeApplication();
+
+        return $app->make(PackageService::class)->getAvailablePackages($filterInstalled);
     }
 
     /**
@@ -692,7 +704,9 @@ abstract class Package implements LocalizablePackageInterface
      */
     public static function getByID($pkgID)
     {
-        return $this->app->make(PackageService::class)->getByID($pkgID);
+        $app = ApplicationFacade::getFacadeApplication();
+
+        return $app->make(PackageService::class)->getByID($pkgID);
     }
 
     /**
@@ -705,7 +719,9 @@ abstract class Package implements LocalizablePackageInterface
      */
     public static function getClass($pkgHandle)
     {
-        return $this->app->make(PackageService::class)->getClass($pkgHandle);
+        $app = ApplicationFacade::getFacadeApplication();
+
+        return $app->make(PackageService::class)->getClass($pkgHandle);
     }
 
     /**
