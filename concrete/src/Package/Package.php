@@ -765,7 +765,7 @@ abstract class Package implements LocalizablePackageInterface
             foreach ($myDependencies as $packageHandle => $requirements) {
                 if (in_array($packageHandle, $installedPackageHandles)) {
                     if ($requirements === false) {
-                        $errors[] = t('This package can\'t be installed if the package with handle %s is already installed', $packageHandle);
+                        $errors[] = t('This package can\'t be installed because the package with handle %s is already installed', $packageHandle);
                     } elseif ($requirements !== true) {
                         $packageVersion = $packageService->getByHandle($packageHandle)->getPackageVersion();
                         if (is_array($requirements)) {
@@ -793,7 +793,7 @@ abstract class Package implements LocalizablePackageInterface
                 $packageController = $packageService->getClass($packageHandle);
                 $packageDependencies = $packageController->getPackageDependencies();
                 if (isset($packageDependencies[$myPackageHandle]) && $packageDependencies[$myPackageHandle] === false) {
-                    $errors[] = t('This package can\'t be installed if the package with handle %s is already installed', $packageHandle);
+                    $errors[] = t('This package can\'t be installed because the package with handle %s is already installed', $packageHandle);
                 }
             }
         }
