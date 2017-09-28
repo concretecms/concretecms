@@ -204,6 +204,30 @@ abstract class Package implements LocalizablePackageInterface
     protected $backedUpFname;
 
     /**
+     * An array describing the package dependencies.
+     * Keys are package handles.
+     * Values may be:
+     * - false: this package can't be installed if the other package is already installed.
+     * - true: this package can't be installed of the other package is not installed
+     * - a string: this package can't be installed of the other package is not installed or it's installed with an older version
+     * - an array with two strings, representing the minimum and the maximum version of the other package to be installed.
+     *
+     * @var array
+     *
+     * @example [
+     *     // This package can't be installed if a package with handle other_package_1 is already installed.
+     *     'other_package_1' => false,
+     *     // This package can't be installed if a package with handle other_package_2 is not installed.
+     *     'other_package_2' => true,
+     *     // This package can't be installed if a package with handle other_package_3 is not installed, or it has a version prior to 1.0
+     *     'other_package_3' => '1.0',
+     *     // This package can't be installed if a package with handle other_package_4 is not installed, or it has a version prior to 2.0, or it has a version after 2.9
+     *     'other_package_3' => ['2.0', '2.9'],
+     * ]
+     */
+    protected $packageDependencies = [];
+
+    /**
      * Initialize the instance.
      *
      * @param Application $app the application instance
@@ -694,11 +718,51 @@ abstract class Package implements LocalizablePackageInterface
             }
         }
 
-        // Step 3 - test minimum application version requirement
         if (empty($errors)) {
+            // Step 3 - test minimum application version requirement
             $applicationVersionRequired = $this->getApplicationVersionRequired();
             if (version_compare(APP_VERSION, $applicationVersionRequired, '<')) {
                 $errors[] = [self::E_PACKAGE_VERSION, $applicationVersionRequired];
+            }
+
+            // Step 4 - Check for package dependencies
+            $packageService = $this->app->make(PackageService::class);
+            /* @var PackageService $packageService */
+            $installedPackageHandles = $packageService->getInstalledHandles();
+            $myDependencies = $this->getPackageDependencies();
+            foreach ($myDependencies as $packageHandle => $requirements) {
+                if (in_array($packageHandle, $installedPackageHandles)) {
+                    if ($requirements === false) {
+                        $errors[] = t('This package can\'t be installed if the package with handle %s is already installed', $packageHandle);
+                    } elseif ($requirements !== true) {
+                        $packageVersion = $packageService->getByHandle($packageHandle)->getPackageVersion();
+                        if (is_array($requirements)) {
+                            if (version_compare($packageVersion, $requirements[0]) < 0 || version_compare($packageVersion, $requirements[1]) > 0) {
+                                $errors[] = t('This package requires the package with handle %1$s has a version from %2%s to %3$s', $packageHandle, $requirements[0], $requirements[1]);
+                            }
+                        } else {
+                            if (version_compare($packageVersion, $requirements) < 0) {
+                                $errors[] = t('This package requires the package with handle %1$s has a version %2%s or greater', $packageHandle, $requirements);
+                            }
+                        }
+                    }
+                } else {
+                    if ($requirements === true) {
+                        $errors[] = t('Before installing this package, you need to install the package with handle %s', $packageHandle);
+                    } elseif (is_array($requirements)) {
+                        $errors[] = t('Before installing this package, you need to install the package with handle %1s (version between %2$s and %3$s)', $packageHandle, $requirements[0], $requirements[1]);
+                    } elseif ($requirements !== false) {
+                        $errors[] = t('Before installing this package, you need to install the package with handle %1s, version %2$s or greater', $packageHandle, $requirements);
+                    }
+                }
+            }
+            $myPackageHandle = $this->getPackageHandle();
+            foreach ($installedPackageHandles as $packageHandle) {
+                $packageController = $packageService->getClass($packageHandle);
+                $packageDependencies = $packageController->getPackageDependencies();
+                if (isset($packageDependencies[$myPackageHandle]) && $packageDependencies[$myPackageHandle] === false) {
+                    $errors[] = t('This package can\'t be installed if the package with handle %s is already installed', $packageHandle);
+                }
             }
         }
 
@@ -712,6 +776,37 @@ abstract class Package implements LocalizablePackageInterface
         }
 
         return $result;
+    }
+
+    /**
+     * Perform tests before this package is upgraded.
+     *
+     * @param mixed $testForAlreadyInstalled
+     *
+     * @return \Concrete\Core\Error\ErrorList\ErrorList|null return null if the package can be upgraded, an ErrorList instance otherwise
+     */
+    public function testForUpgrade($testForAlreadyInstalled = true)
+    {
+        $errors = $this->app->make('error');
+
+        // Step 1 - Check for package dependencies
+        $packageService = $this->app->make(PackageService::class);
+        /* @var PackageService $packageService */
+        $installedPackageHandles = $packageService->getInstalledHandles();
+        $myPackageHandle = $this->getPackageHandle();
+        $myPackageVersion = $this->getPackageVersion();
+        foreach ($installedPackageHandles as $packageHandle) {
+            $packageController = $packageService->getClass($packageHandle);
+            $packageDependencies = $packageController->getPackageDependencies();
+            if (isset($packageDependencies[$myPackageHandle])) {
+                $requirements = $packageDependencies[$myPackageHandle];
+                if (is_array($requirements) && version_compare($myPackageVersion, $requirements[1]) > 0) {
+                    $errors[] = t('This package can\'t be upgrade since the package with handle %1$s requires a maximum version of %2%s for it', $packageHandle, $requirements[1]);
+                }
+            }
+        }
+
+        return $errors->has() ? $errors : null;
     }
 
     /**
@@ -733,6 +828,19 @@ abstract class Package implements LocalizablePackageInterface
             if ($active_theme->getThemeID() == $theme->getThemeID()) {
                 $errors[] = self::E_PACKAGE_THEME_ACTIVE;
                 break;
+            }
+        }
+
+        // Step 2, check for package dependencies
+        $packageService = $this->app->make(PackageService::class);
+        /* @var PackageService $packageService */
+        $installedPackageHandles = $packageService->getInstalledHandles();
+        $myPackageHandle = $this->getPackageHandle();
+        foreach ($installedPackageHandles as $packageHandle) {
+            $packageController = $packageService->getClass($packageHandle);
+            $packageDependencies = $packageController->getPackageDependencies();
+            if (isset($packageDependencies[$myPackageHandle]) && $packageDependencies[$myPackageHandle] !== false) {
+                $errors[] = t('This package can\'t be installed since the package with handle %s requires it', $packageHandle);
             }
         }
 
@@ -1041,6 +1149,18 @@ abstract class Package implements LocalizablePackageInterface
      */
     public function getTranslatableStrings(Translations $translations)
     {
+    }
+
+    /**
+     * Return the package dependencies.
+     *
+     * @return array
+     *
+     * @see Package::$packageDependencies
+     */
+    public function getPackageDependencies()
+    {
+        return $this->packageDependencies;
     }
 
     /**
