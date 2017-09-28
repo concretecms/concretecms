@@ -222,7 +222,7 @@ abstract class Package implements LocalizablePackageInterface
      *     // This package can't be installed if a package with handle other_package_3 is not installed, or it has a version prior to 1.0
      *     'other_package_3' => '1.0',
      *     // This package can't be installed if a package with handle other_package_4 is not installed, or it has a version prior to 2.0, or it has a version after 2.9
-     *     'other_package_3' => ['2.0', '2.9'],
+     *     'other_package_4' => ['2.0', '2.9'],
      * ]
      */
     protected $packageDependencies = [];
