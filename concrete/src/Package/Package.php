@@ -182,14 +182,14 @@ abstract class Package implements LocalizablePackageInterface
     protected $appVersionRequired = '5.7.0';
 
     /**
-     * Override this value setting it to true if your package clear all existing website content when it's being installed.
+     * Override this value and set it to true if your package clears all existing website content when it's being installed.
      *
      * @var bool
      */
     protected $pkgAllowsFullContentSwap = false;
 
     /**
-     * Override this value setting it to true if your package provide the file thumbnails.
+     * Override this value and set it to true if your package provides the file thumbnails.
      * If it's false, the file thumbnails are generated during the install process.
      *
      * @var bool
@@ -293,7 +293,7 @@ abstract class Package implements LocalizablePackageInterface
     }
 
     /**
-     * Should this pacakge enable legacy namespaces?
+     * Should this package enable legacy namespaces?
      *
      * This returns true IF:
      * 1. $this->pkgAutoloaderMapCoreExtensions is false or unset
@@ -770,11 +770,11 @@ abstract class Package implements LocalizablePackageInterface
                         $packageVersion = $packageService->getByHandle($packageHandle)->getPackageVersion();
                         if (is_array($requirements)) {
                             if (version_compare($packageVersion, $requirements[0]) < 0 || version_compare($packageVersion, $requirements[1]) > 0) {
-                                $errors[] = t('This package requires the package with handle %1$s has a version from %2$s to %3$s', $packageHandle, $requirements[0], $requirements[1]);
+                                $errors[] = t('This package requires that package with handle %1$s has a version from %2$s to %3$s', $packageHandle, $requirements[0], $requirements[1]);
                             }
                         } else {
                             if (version_compare($packageVersion, $requirements) < 0) {
-                                $errors[] = t('This package requires the package with handle %1$s has a version %2$s or greater', $packageHandle, $requirements);
+                                $errors[] = t('This package requires that package with handle %1$s has a version %2$s or greater', $packageHandle, $requirements);
                             }
                         }
                     }
@@ -833,7 +833,7 @@ abstract class Package implements LocalizablePackageInterface
             if (isset($packageDependencies[$myPackageHandle])) {
                 $requirements = $packageDependencies[$myPackageHandle];
                 if (is_array($requirements) && version_compare($myPackageVersion, $requirements[1]) > 0) {
-                    $errors[] = t('This package can\'t be upgrade since the package with handle %1$s requires a maximum version of %2$s for it', $packageHandle, $requirements[1]);
+                    $errors[] = t('This package can\'t be upgraded since the package with handle %1$s requires a maximum version of %2$s for it', $packageHandle, $requirements[1]);
                 }
             }
         }
@@ -1080,19 +1080,19 @@ abstract class Package implements LocalizablePackageInterface
     /**
      * Get the namespace of the package by the package handle.
      *
-     * @param bool $withLeadingBacksalsh
+     * @param bool $withLeadingBackslash
      *
      * @return string
      */
-    public function getNamespace($withLeadingBacksalsh = false)
+    public function getNamespace($withLeadingBackslash = false)
     {
-        $leadingBkslsh = $withLeadingBacksalsh ? '\\' : '';
+        $leadingBackslash = $withLeadingBackslash ? '\\' : '';
 
-        return $leadingBkslsh . 'Concrete\\Package\\' . camelcase($this->getPackageHandle());
+        return $leadingBackslash . 'Concrete\\Package\\' . camelcase($this->getPackageHandle());
     }
 
     /**
-     * Create a entity manager used for the package installation, update and unistall process.
+     * Create an entity manager used for the package install, upgrade and unistall process.
      *
      * @return EntityManager|null
      */
@@ -1196,7 +1196,7 @@ abstract class Package implements LocalizablePackageInterface
     }
 
     /**
-     * Get the error text corresponsing to an errro code.
+     * Get the error text corresponsing to an error code.
      *
      * @param array|int $errorCode one of the Package::E_PACKAGE_ constants, or an array with the first value is one of the Package::E_PACKAGE_ constants and the other values are used to fill in fields
      *
