@@ -853,7 +853,7 @@ abstract class Package implements LocalizablePackageInterface
             $packageController = $packageService->getClass($packageHandle);
             $packageDependencies = $packageController->getPackageDependencies();
             if (isset($packageDependencies[$myPackageHandle]) && $packageDependencies[$myPackageHandle] !== false) {
-                $errors[] = t('This package can\'t be installed since the package with handle %s requires it', $packageHandle);
+                $errors[] = t('This package can\'t be uninstalled since the package with handle %s requires it', $packageHandle);
             }
         }
 
