@@ -27,6 +27,8 @@ trait ConsoleAwareTrait
      * Set the console object
      *
      * @param \Symfony\Component\Console\Application $console
+     * @param \Symfony\Component\Console\Output\OutputInterface|null $output
+     * @param \Symfony\Component\Console\Input\InputInterface|null $input
      * @return static
      */
     public function setConsole(Application $console, OutputInterface $output = null, InputInterface $input = null)
