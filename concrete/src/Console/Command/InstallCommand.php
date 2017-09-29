@@ -3,19 +3,19 @@ namespace Concrete\Core\Console\Command;
 
 use Concrete\Core\Console\Command;
 use Concrete\Core\Database\Connection\Timezone;
+use Concrete\Core\Install\Installer;
+use Concrete\Core\Install\PreconditionResult;
+use Concrete\Core\Install\PreconditionService;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Package\Routine\AttachModeCompatibleRoutineInterface;
 use Concrete\Core\Support\Facade\Application;
-use Config;
 use Database;
 use DateTimeZone;
 use Doctrine\DBAL\Configuration;
-use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Exception\ConnectionException;
 use Exception;
-use StartingPointPackage;
-use Symfony\Component\Console\Helper\QuestionHelper;
+use Hautelook\Phpass\PasswordHash;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -25,6 +25,25 @@ use Symfony\Component\Console\Question\Question;
 
 class InstallCommand extends Command
 {
+    private $preconditionsPassed = null;
+
+    /**
+     * @var Installer|null
+     */
+    private $installer = null;
+
+    /**
+     * @return Installer
+     */
+    protected function getInstaller()
+    {
+        if ($this->installer === null) {
+            $this->installer = Application::getFacadeApplication()->make(Installer::class);
+        }
+
+        return $this->installer;
+    }
+
     protected function configure()
     {
         $errExitCode = static::RETURN_CODE_ON_FAILURE;
@@ -65,6 +84,9 @@ EOT
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $app = Application::getFacadeApplication();
+        if ($app->isInstalled()) {
+            throw new Exception('concrete5 is already installed.');
+        }
         $options = $input->getOptions();
         if (isset($options['config']) && $options['config'] && strtolower($options['config']) !== 'none') {
             if (!is_file($options['config'])) {
@@ -80,105 +102,77 @@ EOT
                 }
             }
         }
-        if (file_exists(DIR_CONFIG_SITE . '/database.php')) {
-            throw new Exception('concrete5 is already installed.');
-        }
-        if (isset($options['site-locale'])) {
-            $locale = explode('_', $options['site-locale']);
-            $_POST['siteLocaleLanguage'] = $locale[0];
-            $_POST['siteLocaleCountry'] = $locale[1];
-        } else {
-            $_POST['siteLocaleLanguage'] = 'en';
-            $_POST['siteLocaleCountry'] = 'US';
+        if ($this->getPreconditionsPassed($app, $output) !== true) {
+            throw new Exception(t('One or more precondition failed!'));
         }
 
         if (isset($options['timezone'])) {
-            $_POST['SERVER_TIMEZONE'] = $options['timezone'];
+            $timezone = $options['timezone'];
         } else {
-            $_POST['SERVER_TIMEZONE'] = @date_default_timezone_get() ?: 'UTC';
+            $timezone = @date_default_timezone_get() ?: 'UTC';
         }
-
-        date_default_timezone_set($_POST['SERVER_TIMEZONE']);
-
-        if (isset($options['language'])) {
-            $_POST['locale'] = $options['language'];
-        }
-
-        Database::extend('install', function () use ($options) {
-            return Database::getFactory()->createConnection([
-                'host' => $options['db-server'],
-                'user' => $options['db-username'],
-                'password' => $options['db-password'],
-                'database' => $options['db-database'],
-            ]);
-        });
-        Database::setDefaultConnection('install');
-        Config::set('database.connections.install', []);
-
-        $cnt = $app->make(\Concrete\Controller\Install::class);
 
         $force_attach = $input->getOption('force-attach');
         $auto_attach = $force_attach || $input->getOption('attach');
-        $cnt->setAutoAttach($auto_attach);
+        $config = $app->make('config');
+        $hasher = new PasswordHash($config->get('concrete.user.password.hash_cost_log2'), $config->get('concrete.user.password.hash_portable'));
 
-        $cnt->on_start();
-        $fileWriteErrors = clone $cnt->fileWriteErrors;
-        $e = $app->make('helper/validation/error');
-        if (!$cnt->get('imageTest')) {
-            $e->add('GD library must be enabled to install concrete5.');
-        }
-        if (!$cnt->get('mysqlTest')) {
-            $e->add($cnt->getDBErrorMsg());
-        }
-        if (!$cnt->get('xmlTest')) {
-            $e->add('SimpleXML and DOM must be enabled to install concrete5.');
-        }
-        if (!$cnt->get('phpVtest')) {
-            $e->add('concrete5 requires PHP ' . $cnt->getMinimumPhpVersion() . ' or greater.');
-        }
-        if (is_object($fileWriteErrors)) {
-            $e->add($fileWriteErrors);
-        }
-        $spl = StartingPointPackage::getClass($options['starting-point']);
-        if ($spl === null) {
-            $e->add('Invalid starting-point: ' . $options['starting-point']);
-        }
-        if (!$e->has()) {
-            $_POST['DB_SERVER'] = $options['db-server'];
-            $_POST['DB_USERNAME'] = $options['db-username'];
-            $_POST['DB_PASSWORD'] = $options['db-password'];
-            $_POST['DB_DATABASE'] = $options['db-database'];
-            $_POST['SITE'] = $options['site'];
-            $_POST['SAMPLE_CONTENT'] = $options['starting-point'];
-            $_POST['uEmail'] = $options['admin-email'];
-            $_POST['uPasswordConfirm'] = $_POST['uPassword'] = $options['admin-password'];
-            if ($options['canonical-url']) {
-                $_POST['canonicalUrlChecked'] = '1';
-                $_POST['canonicalUrl'] = $options['canonical-url'];
-            }
-            if ($options['canonical-url-alternative']) {
-                $_POST['canonicalUrlAlternativeChecked'] = '1';
-                $_POST['canonicalUrlAlternative'] = $options['canonical-url-alternative'];
-            }
-            $e = $cnt->configure();
-        }
+        $installer = $this->getInstaller();
+
+        $installer->getOptions()
+            ->setConfiguration([
+                'database' => [
+                    'default-connection' => 'concrete',
+                    'connections' => [
+                        'concrete' => [
+                            'driver' => 'c5_pdo_mysql',
+                            'server' => $options['db-server'],
+                            'database' => $options['db-database'],
+                            'username' => $options['db-username'],
+                            'password' => $options['db-password'],
+                            'charset' => 'utf8',
+                        ],
+                    ],
+                ],
+                'canonical-url' => $options['canonical-url'] ?: '',
+                'canonical-url-alternative' => $options['canonical-url-alternative'] ?: '',
+            ])
+            ->setSiteLocaleId(isset($options['site-locale']) ? $options['site-locale'] : Localization::BASE_LOCALE)
+            ->setUiLocaleId(isset($options['language']) ? $options['language'] : Localization::BASE_LOCALE)
+            ->setAutoAttachEnabled($auto_attach)
+            ->setStartingPointHandle($options['starting-point'])
+            ->setSiteName($options['site'])
+            ->setUserEmail($options['admin-email'])
+            ->setUserPasswordHash($hasher->HashPassword($options['admin-password']))
+            ->setServerTimeZoneId($timezone)
+        ;
+        $e = $installer->checkOptions();
         if ($e->has()) {
             throw new Exception(implode("\n", $e->getList()));
         }
+        $spl = $installer->getStartingPoint(false);
+        $installer->getOptions()->save();
         try {
+            Database::extend('install', function () use ($options) {
+                return Database::getFactory()->createConnection([
+                    'host' => $options['db-server'],
+                    'user' => $options['db-username'],
+                    'password' => $options['db-password'],
+                    'database' => $options['db-database'],
+                ]);
+            });
+            Database::setDefaultConnection('install');
+            $config->set('database.connections.install', []);
             $attach_mode = $force_attach;
 
-            if (!$force_attach && $cnt->isAutoAttachEnabled()) {
-                /** @var Connection $db */
+            if (!$force_attach && $auto_attach) {
+                /** @var \Doctrine\DBAL\Connection $db */
                 $db = $app->make('database')->connection();
 
                 if ($db->query('show tables')->rowCount()) {
                     $attach_mode = true;
                 }
             }
-
-            require DIR_CONFIG_SITE . '/site_install.php';
-            require DIR_CONFIG_SITE . '/site_install_user.php';
             $routines = $spl->getInstallRoutines();
             foreach ($routines as $r) {
                 // If we're
@@ -191,7 +185,7 @@ EOT
                 $spl->executeInstallRoutine($r->getMethod());
             }
         } catch (Exception $ex) {
-            $cnt->reset();
+            $installer->getOptions()->deleteFiles();
             throw $ex;
         }
         if (
@@ -220,10 +214,13 @@ EOT
      */
     protected function interact(InputInterface $input, OutputInterface $output)
     {
+        if ($this->getPreconditionsPassed(Application::getFacadeApplication(), $output) !== true) {
+            throw new Exception(t('One or more precondition failed!'));
+        }
         // If we're in interactive mode, fire up the wizard
         if ($input->getOption('interactive')) {
-            /** @var QuestionHelper $helper */
             $helper = $this->getHelper('question');
+            /* @var \Symfony\Component\Console\Helper\QuestionHelper $helper */
 
             // Get the wizard generator
             $wizard = $this->getWizard($input, $output);
@@ -585,13 +582,93 @@ EOT
                 $code = $input->getOption('site-locale');
                 if ($checkLocale($code) !== true) {
                     $output->writeln(sprintf('<error>%s</error>', t("The language code '%s' is not valid.", $code)));
-                    
+
                     return 'site-locale';
                 }
-                
+
                 return true;
             },
             ['config', 'none'],
         ];
+    }
+
+    private function getPreconditionsPassed(\Concrete\Core\Application\Application $app, OutputInterface $output)
+    {
+        if ($this->preconditionsPassed === null) {
+            $this->preconditionsPassed = $this->checkPreconditions($app, $output);
+        }
+
+        return $this->preconditionsPassed;
+    }
+
+    /**
+     * @param \Concrete\Core\Application\Application $app
+     * @param OutputInterface $output
+     *
+     * @return bool
+     */
+    private function checkPreconditions(\Concrete\Core\Application\Application $app, OutputInterface $output)
+    {
+        $result = true;
+        $service = $app->make(PreconditionService::class);
+        /* @var PreconditionService $service */
+        $requiredPreconditions = [];
+        $optionalPreconditions = [];
+        foreach ($service->getPreconditions(false) as $precondition) {
+            if ($precondition->isOptional()) {
+                $optionalPreconditions[] = $precondition;
+            } else {
+                $requiredPreconditions[] = $precondition;
+            }
+        }
+        foreach ([
+            t('Checking required preconditions:') => $requiredPreconditions,
+            t('Checking optional preconditions:') => $optionalPreconditions,
+        ] as $text => $preconditions) {
+            if (empty($preconditions)) {
+                continue;
+            }
+            if ($output->getVerbosity() >= OutputInterface::VERBOSITY_NORMAL) {
+                $output->writeln($text);
+            }
+            foreach ($preconditions as $precondition) {
+                if ($output->getVerbosity() >= OutputInterface::VERBOSITY_NORMAL) {
+                    $output->write(sprintf('- %s... ', $precondition->getName()));
+                } elseif ($precondition->isOptional()) {
+                    continue;
+                }
+                $preconditionResult = $precondition->performCheck();
+                switch ($preconditionResult->getState()) {
+                    case PreconditionResult::STATE_PASSED:
+                        if ($output->getVerbosity() >= OutputInterface::VERBOSITY_NORMAL) {
+                            $message = $preconditionResult->getMessage();
+                            $message = $message ? t('passed (%s).', $message) : t('passed.');
+                            $output->writeln(sprintf('<info>%s</info>', $message));
+                        }
+                        break;
+                    case PreconditionResult::STATE_WARNING:
+                        if ($output->getVerbosity() >= OutputInterface::VERBOSITY_NORMAL) {
+                            $output->writeln(sprintf('<comment>%s</comment>', $preconditionResult->getMessage()));
+                        }
+                        break;
+                    case PreconditionResult::STATE_SKIPPED:
+                        if ($output->getVerbosity() >= OutputInterface::VERBOSITY_NORMAL) {
+                            $output->writeln(sprintf('<comment>%s</comment>', $preconditionResult->getMessage() ?: t('skipped.')));
+                        }
+                        break;
+                    case PreconditionResult::STATE_FAILED:
+                    default:
+                        if ($output->getVerbosity() >= OutputInterface::VERBOSITY_NORMAL) {
+                            $output->writeln(sprintf('<error>%s</error>', $preconditionResult->getMessage()));
+                        }
+                        if (!$precondition->isOptional()) {
+                            $result = false;
+                        }
+                        break;
+                }
+            }
+        }
+
+        return $result;
     }
 }
