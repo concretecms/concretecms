@@ -27,33 +27,43 @@ trait ConsoleAwareTrait
      * Set the console object
      *
      * @param \Symfony\Component\Console\Application $console
-     * @return void
+     * @return static
      */
-    public function setConsole(Application $console)
+    public function setConsole(Application $console, OutputInterface $output = null, InputInterface $input = null)
     {
         $this->traitConsole = $console;
+        if ($output) {
+            $this->setOutput($output);
+        }
+        if ($input) {
+            $this->setInput($input);
+        }
+
+        return $this;
     }
 
     /**
      * Set the output object to use
      *
      * @param \Symfony\Component\Console\Output\OutputInterface $output
-     * @return void
+     * @return static
      */
     public function setOutput(OutputInterface $output)
     {
         $this->traitOutput = $output;
+        return $this;
     }
 
     /**
      * Set the input object to use
      *
      * @param \Symfony\Component\Console\Input\InputInterface $input
-     * @return void
+     * @return static
      */
     public function setInput(InputInterface $input)
     {
         $this->traitInput = $input;
+        return $this;
     }
 
     /**

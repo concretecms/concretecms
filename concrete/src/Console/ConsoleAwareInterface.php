@@ -18,15 +18,17 @@ interface ConsoleAwareInterface
      * Set the console object
      *
      * @param \Symfony\Component\Console\Application $console
-     * @return void
+     * @param \Symfony\Component\Console\Output\OutputInterface|null $output
+     * @param \Symfony\Component\Console\Input\InputInterface|null $input
+     * @return static Returns itself
      */
-    public function setConsole(SymfonyApplication $console);
+    public function setConsole(SymfonyApplication $console, OutputInterface $output = null, InputInterface $input = null);
 
     /**
      * Set the output object to use
      *
      * @param \Symfony\Component\Console\Output\OutputInterface $output
-     * @return void
+     * @return static Returns itself
      */
     public function setOutput(OutputInterface $output);
 
@@ -34,7 +36,7 @@ interface ConsoleAwareInterface
      * Set the input object to use
      *
      * @param \Symfony\Component\Console\Input\InputInterface $input
-     * @return void
+     * @return static Returns itself
      */
     public function setInput(InputInterface $input);
 

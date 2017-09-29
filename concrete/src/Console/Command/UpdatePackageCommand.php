@@ -91,9 +91,7 @@ EOT
 
         // Provide the console objects to objects that are aware of the console
         if ($pkg instanceof ConsoleAwareInterface) {
-            $pkg->setOutput($output);
-            $pkg->setInput($input);
-            $pkg->setConsole($this->getApplication());
+            $pkg->setConsole($this->getApplication(), $output, $input);
         }
 
         $output->writeln(sprintf('<info>found (%s).</info>', $pkg->getPackageName()));

@@ -109,9 +109,7 @@ EOT
                 foreach ($jobs as $job) {
                     // Provide the console objects to objects that are aware of the console
                     if ($job instanceof ConsoleAwareInterface) {
-                        $job->setOutput($output);
-                        $job->setInput($input);
-                        $job->setConsole($this->getApplication());
+                        $job->setConsole($this->getApplication(), $output, $input);
                     }
 
                     $result = $job->executeJob();
