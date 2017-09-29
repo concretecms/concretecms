@@ -2,9 +2,8 @@
 
 namespace Concrete\Core\Console;
 
-use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Application as SymfonyApplication;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -21,7 +20,7 @@ interface ConsoleAwareInterface
      * @param \Symfony\Component\Console\Application $console
      * @return void
      */
-    public function setConsole(Application $console);
+    public function setConsole(SymfonyApplication $console);
 
     /**
      * Set the output object to use
