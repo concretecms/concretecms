@@ -727,7 +727,7 @@ abstract class Package implements LocalizablePackageInterface
     /**
      * Perform tests before this package is installed.
      *
-     * @param bool $testForAlreadyInstalled
+     * @param bool $testForAlreadyInstalled Set to false to skip checking if this package is already installed
      *
      * @return \Concrete\Core\Error\ErrorList\ErrorList|true return true if the package can be installed, an ErrorList instance otherwise
      */
@@ -813,32 +813,13 @@ abstract class Package implements LocalizablePackageInterface
     /**
      * Perform tests before this package is upgraded.
      *
-     * @param mixed $testForAlreadyInstalled
-     *
      * @return \Concrete\Core\Error\ErrorList\ErrorList|true return null if the package can be upgraded, an ErrorList instance otherwise
      */
-    public function testForUpgrade($testForAlreadyInstalled = true)
+    public function testForUpgrade()
     {
-        $errors = $this->app->make('error');
+        $result = $this->testForInstall(false);
 
-        // Step 1 - Check for package dependencies
-        $packageService = $this->app->make(PackageService::class);
-        /* @var PackageService $packageService */
-        $installedPackageHandles = $packageService->getInstalledHandles();
-        $myPackageHandle = $this->getPackageHandle();
-        $myPackageVersion = $this->getPackageVersion();
-        foreach ($installedPackageHandles as $packageHandle) {
-            $packageController = $packageService->getClass($packageHandle);
-            $packageDependencies = $packageController->getPackageDependencies();
-            if (isset($packageDependencies[$myPackageHandle])) {
-                $requirements = $packageDependencies[$myPackageHandle];
-                if (is_array($requirements) && version_compare($myPackageVersion, $requirements[1]) > 0) {
-                    $errors[] = t('This package can\'t be upgraded since the package with handle %1$s requires a maximum version of %2$s for it', $packageHandle, $requirements[1]);
-                }
-            }
-        }
-
-        return $errors->has() ? $errors : true;
+        return $result;
     }
 
     /**
