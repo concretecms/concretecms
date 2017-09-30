@@ -45,6 +45,9 @@ class Importer
             $height = (int) Config::get('concrete.file_manager.restrict_max_height');
             $quality = (int) Config::get('concrete.file_manager.restrict_resize_quality');
             $resizeProcessor = new ConstrainImageProcessor($width, $height);
+            // Do not make a copy before processing as it is not needed on import
+            // and it will save memory
+            $resizeProcessor->setResizeInPlace(true);
             $qualityProcessor = new SetJPEGQualityProcessor($quality);
             $this->addImportProcessor($resizeProcessor);
             $this->addImportProcessor($qualityProcessor);
