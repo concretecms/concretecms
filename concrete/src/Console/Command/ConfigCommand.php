@@ -9,13 +9,9 @@ use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Console\Command;
 use Exception;
 use Illuminate\Filesystem\Filesystem;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 
 class ConfigCommand extends Command
 {
-    const OPERATION_GET = 'get';
-    const OPERATION_SET = 'set';
 
     protected $description = 'Set or get configuration parameters.';
 
@@ -26,17 +22,8 @@ class ConfigCommand extends Command
         {--e|environment : The environment, if none specified the global configuration will be used}
         {--g|generated-overrides : Save to generated overrides}';
 
-    /** @var Repository The main config repository */
-    protected $config;
-
     /** @var Repository */
     protected $repository;
-
-    public function __construct(Repository $config)
-    {
-        $this->config = $config;
-        parent::__construct();
-    }
 
     protected function configure()
     {
@@ -52,51 +39,24 @@ EOT
         );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    public function handle(Repository $config, Filesystem $filesystem)
     {
-        $default_environment = $this->config->getEnvironment();
+        $repository = $this->getRepository($config, $filesystem);
 
-        $environment = $input->getOption('environment') ?: $default_environment;
-
-        $file_system = new Filesystem();
-        $file_loader = new FileLoader($file_system);
-        if ($input->getOption('generated-overrides')) {
-            $file_saver = new FileSaver($file_system, $environment == $default_environment ? null : $environment);
-        } else {
-            $file_saver = new DirectFileSaver($file_system, $environment == $default_environment ? null : $environment);
-        }
-        $this->repository = new Repository($file_loader, $file_saver, $environment);
-
-        $item = $input->getArgument('item');
-        switch ($input->getArgument('action')) {
-            case self::OPERATION_GET:
-                $output->writeln($this->serialize($this->repository->get($item)));
+        $item = $this->argument('item');
+        switch ($this->argument('action')) {
+            case 'get':
+                $this->doGetAction($repository, $item);
                 break;
 
-            case self::OPERATION_SET:
-                $value = $input->getArgument('value');
-                if (!isset($value)) {
-                    throw new Exception('Missing new configuration value');
-                }
-
-                $this->repository->save($item, $this->unserialize($value));
+            case 'set':
+                $this->doSetAction($repository, $item);
                 break;
 
             default:
-                throw new Exception('Invalid action specified. Allowed actions: ' . implode(', ',
-                        $this->getAllowedOperations()));
+                $this->output->error('Invalid action specified, please specify either "set" or "get"');
+                break;
         }
-    }
-
-    /**
-     * @return string[]
-     */
-    protected function getAllowedOperations()
-    {
-        return [
-            self::OPERATION_GET,
-            self::OPERATION_SET,
-        ];
     }
 
     /**
@@ -172,5 +132,53 @@ EOT
         }
 
         return $result;
+    }
+
+    /**
+     * Complete a requested get action
+     *
+     * @param $repository
+     * @param $item
+     */
+    private function doGetAction($repository, $item)
+    {
+        $this->output->writeln($this->serialize($repository->get($item)));
+    }
+
+    /**
+     * Complete a requested set action
+     *
+     * @param Repository $repository
+     * @param string $item
+     */
+    private function doSetAction(Repository $repository, $item)
+    {
+        if (!$this->hasAttribute('value')) {
+            $this->output->error('A value must be provided when using the "set" action.');
+        }
+
+        $value = $this->argument('value');
+        $repository->save($item, $this->unserialize($value));
+    }
+
+    /**
+     * @param \Concrete\Core\Config\Repository\Repository $config
+     * @param \Illuminate\Filesystem\Filesystem $filesystem
+     * @return \Concrete\Core\Config\Repository\Repository
+     */
+    private function getRepository(Repository $config, Filesystem $filesystem)
+    {
+        $default_environment = $config->getEnvironment();
+
+        $environment = $this->option('environment') ?: $default_environment;
+
+        $file_loader = new FileLoader($filesystem);
+        if ($this->option('generated-overrides')) {
+            $file_saver = new FileSaver($filesystem, $environment == $default_environment ? null : $environment);
+        } else {
+            $file_saver = new DirectFileSaver($filesystem, $environment == $default_environment ? null : $environment);
+        }
+
+        return new Repository($file_loader, $file_saver, $environment);
     }
 }
