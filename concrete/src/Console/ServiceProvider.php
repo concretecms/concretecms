@@ -35,7 +35,6 @@ class ServiceProvider extends Provider
         Command\ExecCommand::class,
         Command\ServiceCommand::class,
         Command\ResetCommand::class,
-        \Concrete\Core\Console\Command\ConfigShowCommand::class
     ];
 
     /**
