@@ -6,6 +6,7 @@ use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Foundation\Environment\User;
 use Concrete\Core\Support\Facade\Application as ApplicationFacade;
 use Exception;
+use LogicException;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -318,15 +319,11 @@ abstract class Command extends SymfonyCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        return $this->getApplication()->getConcrete5()->call($this, 'handle');
-    }
+        if (!method_exists($this, 'handle')) {
+            throw new LogicException('You must define the public handle() method in the command implementation.');
+        }
 
-    /**
-     * Handle the command
-     */
-    protected function handle()
-    {
-        throw new \Symfony\Component\Console\Exception\LogicException('You must override the \"handle\" method in your command implementation.');
+        return $this->getApplication()->getConcrete5()->call([$this, 'handle']);
     }
 
     /**
