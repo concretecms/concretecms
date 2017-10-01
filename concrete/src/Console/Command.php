@@ -318,7 +318,7 @@ abstract class Command extends SymfonyCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        return $this->handle();
+        return $this->getApplication()->getConcrete5()->call($this, 'handle');
     }
 
     /**
@@ -508,4 +508,14 @@ abstract class Command extends SymfonyCommand
     {
         $this->output->table($headers, $rows, $tableStyle, $columnStyles);
     }
+
+    /**
+     * @inheritdoc
+     * @return \Symfony\Component\Console\Application|\Concrete\Core\Console\Application
+     */
+    public function getApplication()
+    {
+        return parent::getApplication();
+    }
+
 }

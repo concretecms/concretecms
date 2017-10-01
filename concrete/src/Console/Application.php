@@ -17,4 +17,13 @@ class Application extends SymfonyApplication
         $this->app = $app;
         parent::__construct('concrete5', $this->app->make('config')->get('concrete.version'));
     }
+
+    /**
+     * Get the concrete5 application instance
+     * @return \Concrete\Core\Application\Application
+     */
+    public function getConcrete5()
+    {
+        return $this->app;
+    }
 }
