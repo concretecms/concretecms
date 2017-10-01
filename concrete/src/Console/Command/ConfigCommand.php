@@ -1,53 +1,51 @@
 <?php
+
 namespace Concrete\Core\Console\Command;
 
 use Concrete\Core\Config\DirectFileSaver;
-use Concrete\Core\Config\FileSaver;
 use Concrete\Core\Config\FileLoader;
+use Concrete\Core\Config\FileSaver;
 use Concrete\Core\Config\Repository\Repository;
-use Illuminate\Filesystem\Filesystem;
 use Concrete\Core\Console\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
-use Config;
 use Exception;
+use Illuminate\Filesystem\Filesystem;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class ConfigCommand extends Command
 {
     const OPERATION_GET = 'get';
     const OPERATION_SET = 'set';
 
-    /**
-     * @var Repository
-     */
+    protected $description = 'Set or get configuration parameters.';
+
+    protected $signature = 'c5:config 
+        {action : Either "get" or "set"} 
+        {item : The config item EG: "concrete.debug.detail"} 
+        {value? : The value to set}
+        {--e|environment : The environment, if none specified the global configuration will be used}
+        {--g|generated-overrides : Save to generated overrides}';
+
+    /** @var Repository The main config repository */
+    protected $config;
+
+    /** @var Repository */
     protected $repository;
+
+    public function __construct(Repository $config)
+    {
+        $this->config = $config;
+        parent::__construct();
+    }
 
     protected function configure()
     {
-        $errExitCode = static::RETURN_CODE_ON_FAILURE;
-        $this
-            ->setName('c5:config')
-            ->setDescription('Set or get configuration parameters.')
-            ->addArgument('operation', InputArgument::REQUIRED, 'The operation to accomplish (' . implode('|', $this->getAllowedOperations()) . ')')
-            ->addArgument('item', InputArgument::REQUIRED, 'The configuration item (eg: concrete.debug.display_errors)')
-            ->addArgument('value', InputArgument::OPTIONAL, 'The new value of the configuration item')
-            ->addEnvOption()
-            ->setCanRunAsRoot(false)
-            ->addOption('environment', 'e', InputOption::VALUE_REQUIRED, 'The environment (if not specified, we\'ll work with the configuration item valid for all environments)')
-            ->addOption('generated-overrides', 'g', InputOption::VALUE_NONE, 'Set this option to save configurations to the generated_overrides folder')
-        ;
         $this->setHelp(<<<EOT
 When setting values that may be evaluated as boolean (true/false), null or numbers, but you want to store them as strings, you can enclose those values in single or double quotes.
 For instance, with
 concrete5 %command.name% set concrete.test_item 1
 The new configuration item will have a numeric value of 1. If you want to save the string "1" you have to write
 concrete5 %command.name% set concrete.test_item '1'
-
-Returns codes:
-  0 operation completed successfully
-  $errExitCode errors occurred
 
 More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-config
 EOT
@@ -56,7 +54,7 @@ EOT
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $default_environment = \Config::getEnvironment();
+        $default_environment = $this->config->getEnvironment();
 
         $environment = $input->getOption('environment') ?: $default_environment;
 
@@ -70,7 +68,7 @@ EOT
         $this->repository = new Repository($file_loader, $file_saver, $environment);
 
         $item = $input->getArgument('item');
-        switch ($input->getArgument('operation')) {
+        switch ($input->getArgument('action')) {
             case self::OPERATION_GET:
                 $output->writeln($this->serialize($this->repository->get($item)));
                 break;
@@ -85,7 +83,8 @@ EOT
                 break;
 
             default:
-                throw new Exception('Invalid operation specified. Allowed operations: ' . implode(', ', $this->getAllowedOperations()));
+                throw new Exception('Invalid action specified. Allowed actions: ' . implode(', ',
+                        $this->getAllowedOperations()));
         }
     }
 
@@ -130,7 +129,7 @@ EOT
 
             case 'integer':
             case 'double':
-                $result = (string) $value;
+                $result = (string)$value;
                 break;
 
             case 'string':
@@ -169,7 +168,7 @@ EOT
     {
         $result = json_decode($value, true);
         if (is_null($result) && trim(strtolower($value)) !== 'null') {
-            return (string) $value;
+            return (string)$value;
         }
 
         return $result;

@@ -8,6 +8,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Console\Terminal;
 
 /**
  * concrete5's output style.
@@ -38,12 +39,27 @@ class OutputStyle extends SymfonyStyle
      * @param $question
      * @param array $choices
      * @param null $default
+     * @param null $attempts
+     * @param bool $strict
      * @return string
      */
-    public function askWithCompletion($question, array $choices, $default = null)
+    public function askWithCompletion($question, array $choices, $default = null, $attempts = null, $strict = false)
     {
         $question = new Question($question, $default);
-        $question->setAutocompleterValues($choices);
+        $question->setMaxAttempts($attempts)->setAutocompleterValues($choices);
+
+        if ($strict) {
+            $question->setValidator(function($result) use ($choices) {
+                if (!in_array($result, $choices)) {
+                    throw new \InvalidArgumentException(sprintf(
+                        'The provided answer is ambiguous. Value should be one of %s',
+                        implode(' or ', $choices)));
+                }
+
+                return $result;
+            });
+        }
+
         return $this->askQuestion($question);
     }
 
@@ -105,5 +121,61 @@ class OutputStyle extends SymfonyStyle
         }
 
         $table->render();
+    }
+
+    /**
+     * Output in even width columns
+     *
+     * @param array $values
+     * @param int $width
+     * @param string $tableStyle
+     * @param array $columnStyles
+     */
+    public function columns(array $values, $width = 5, $tableStyle = 'compact', array $columnStyles = [])
+    {
+        $table = new Table($this);
+        $table->setHeaders([])->setRows(iterator_to_array($this->chunk($values, $width)))->setStyle($tableStyle);
+
+        foreach ($columnStyles as $columnIndex => $columnStyle) {
+            $table->setColumnStyle($columnIndex, $columnStyle);
+        }
+
+        $columnWidths = $this->getColumnWidths($width);
+        $table->setColumnWidths($columnWidths);
+
+        $table->render();
+    }
+
+    protected function chunk(array $values, $size)
+    {
+        $chunk = [];
+        foreach ($values as $value) {
+            $chunk[] = $value;
+
+            if (count($chunk) === $size) {
+                yield $chunk;
+                $chunk = [];
+            }
+        }
+        yield $chunk;
+    }
+
+    private function getColumnWidths($width)
+    {
+        $terminal = new Terminal();
+        $totalWidth = $terminal->getWidth();
+        $left = $width;
+        $columns = [];
+
+        while ($left > 1) {
+            $columnSize = ceil($totalWidth / $left);
+            $columns[] = $columnSize;
+            $totalWidth -= $columnSize;
+            $left--;
+        }
+
+        $columns[] = $totalWidth;
+
+        return $columns;
     }
 }

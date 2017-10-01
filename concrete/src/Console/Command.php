@@ -180,7 +180,7 @@ abstract class Command extends SymfonyCommand
         $this->output = new OutputStyle($input, $output);
 
         // Run the command
-        return parent::run($input, $output);
+        return parent::run($this->input, $this->output);
     }
 
     /**
@@ -228,7 +228,7 @@ abstract class Command extends SymfonyCommand
     /**
      * Add the "env" option to the command options.
      *
-     * @return $this
+     * @return Command
      */
     protected function addEnvOption()
     {
@@ -307,6 +307,26 @@ abstract class Command extends SymfonyCommand
                 throw new UserMessageException('Operation aborted.');
             }
         }
+    }
+
+    /**
+     * This method is overridden to pipe execution to the handle method hiding input and output
+     *
+     * @param \Symfony\Component\Console\Input\InputInterface $input
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @return mixed
+     */
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        return $this->handle();
+    }
+
+    /**
+     * Handle the command
+     */
+    protected function handle()
+    {
+        throw new \Symfony\Component\Console\Exception\LogicException('You must override the \"handle\" method in your command implementation.');
     }
 
     /**
@@ -436,14 +456,16 @@ abstract class Command extends SymfonyCommand
     /**
      * Prompt the user for input with auto completion.
      *
-     * @param  string $question
-     * @param  array $choices
-     * @param  string $default
+     * @param string $question
+     * @param array $choices
+     * @param string $default
+     * @param null $attempts
+     * @param null $strict
      * @return string
      */
-    public function askWithCompletion($question, array $choices, $default = null)
+    public function askWithCompletion($question, array $choices, $default = null, $attempts = null, $strict = null)
     {
-        return $this->output->askWithCompletion($question, $choices, $default);
+        return $this->output->askWithCompletion($question, $choices, $default, $attempts, $strict);
     }
 
     /**
