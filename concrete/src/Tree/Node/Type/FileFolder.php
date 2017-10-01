@@ -75,9 +75,10 @@ class FileFolder extends Category
                 }
             }
             if (is_array($sort)) {
-                $sortColumn = $available->getColumnByKey($sort[0]);
-                $sortColumn->setColumnSortDirection($sort[1]);
-                $list->sortBySearchColumn($sortColumn);
+                if ($sortColumn = $available->getColumnByKey($sort[0])) {
+                    $sortColumn->setColumnSortDirection($sort[1]);
+                    $list->sortBySearchColumn($sortColumn);
+                }
             }
         }
         return $list;
