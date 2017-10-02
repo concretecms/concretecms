@@ -102,7 +102,7 @@ if (!$error->has()) {
                 // use mimetype from http response
                 $fextension = $app->make('helper/mime')->mimeToExtension($contentType);
                 if ($fextension === false) {
-                    $error->add(t('Unknown mime-type: %s', $contentType));
+                    $error->add(t('Unknown mime-type: %s', h($contentType)));
                 } else {
                     // make sure we're coming up with a unique filename
                     do {
