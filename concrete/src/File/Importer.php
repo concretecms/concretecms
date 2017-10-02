@@ -177,20 +177,18 @@ class Importer
         if (!($fr instanceof FileEntity)) {
             // we have to create a new file object for this file version
             $fv = File::add($sanitizedFilename, $prefix, array('fvTitle' => $filename), $fsl, $fr);
-
-            foreach ($this->importProcessors as $processor) {
-                if ($processor->shouldProcess($fv)) {
-                    $processor->process($fv);
-                }
-            }
-
-            $fv->refreshAttributes($this->rescanThumbnailsOnImport);
         } else {
             // We get a new version to modify
             $fv = $fr->getVersionToModify(true);
             $fv->updateFile($sanitizedFilename, $prefix);
-            $fv->refreshAttributes($this->rescanThumbnailsOnImport);
         }
+
+        foreach ($this->importProcessors as $processor) {
+            if ($processor->shouldProcess($fv)) {
+                $processor->process($fv);
+            }
+        }
+        $fv->refreshAttributes($this->rescanThumbnailsOnImport);
 
         return $fv;
     }

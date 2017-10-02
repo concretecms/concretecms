@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Console\Command;
 
+use Concrete\Core\Console\ConsoleAwareInterface;
 use Job;
 use JobSet;
 use RuntimeException;
@@ -106,6 +107,11 @@ EOT
 
             if (!empty($jobs)) {
                 foreach ($jobs as $job) {
+                    // Provide the console objects to objects that are aware of the console
+                    if ($job instanceof ConsoleAwareInterface) {
+                        $job->setConsole($this->getApplication(), $output, $input);
+                    }
+
                     $result = $job->executeJob();
                     if ($result->isError()) {
                         $rc = 1;

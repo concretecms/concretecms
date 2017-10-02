@@ -50,11 +50,15 @@ class File extends Controller
         if ($resize) {
             $width = (int) \Config::get('concrete.file_manager.restrict_max_width');
             $height = (int) \Config::get('concrete.file_manager.restrict_max_height');
-            $quality = (int) \Config::get('concrete.file_manager.restrict_resize_quality');
-            $resizeProcessor = new ConstrainImageProcessor($width, $height);
-            $qualityProcessor = new SetJPEGQualityProcessor($quality);
-            $processors[] = $resizeProcessor;
-            $processors[] = $qualityProcessor;
+            $fWidth = (int) $f->getAttribute('width');
+            $fHeight = (int) $f->getAttribute('height');
+            if ($fWidth > $width || $fHeight > $height) {
+                $quality = (int) \Config::get('concrete.file_manager.restrict_resize_quality');
+                $resizeProcessor = new ConstrainImageProcessor($width, $height);
+                $qualityProcessor = new SetJPEGQualityProcessor($quality);
+                $processors[] = $resizeProcessor;
+                $processors[] = $qualityProcessor;
+            }
         }
 
         if (count($processors)) {

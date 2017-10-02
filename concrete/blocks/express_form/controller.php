@@ -158,7 +158,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
                     $antispam = \Core::make('helper/validation/antispam');
                     $submittedData = '';
                     foreach($values as $value) {
-                        $submittedData .= $value->getAttributeKey()->getAttributeKeyDisplayName() . ":\r\n";
+                        $submittedData .= $value->getAttributeKey()->getAttributeKeyDisplayName('text') . ":\r\n";
                         $submittedData .= $value->getPlainTextValue() . "\r\n\r\n";
                     }
 

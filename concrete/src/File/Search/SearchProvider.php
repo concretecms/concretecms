@@ -57,7 +57,12 @@ class SearchProvider extends AbstractSearchProvider implements QueryableInterfac
 
     public function getItemList()
     {
-        return new FileList();
+        $list = new FileList();
+        $list->setPermissionsChecker(function ($file) {
+            $fp = new \Permissions($file);
+            return $fp->canViewFileInFileManager();
+        });
+        return $list;
     }
 
     public function createSearchResultObject($columns, $list)

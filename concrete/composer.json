@@ -42,7 +42,7 @@
     "illuminate/container": "5.2.*",
     "illuminate/config": "5.2.*",
     "patchwork/utf8": "~1.2.3|~1.3",
-    "concrete5/less.php": "v1.7.0.11",
+    "concrete5/less.php": "2.0.0",
     "imagine/imagine": "0.6.*",
     "natxet/cssmin": "3.*",
     "tedivm/jshrink": "1.*",

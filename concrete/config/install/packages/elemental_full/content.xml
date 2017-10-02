@@ -3010,7 +3010,7 @@
 ]]></body></control>
                                 <control id="b3c4ee52-6350-11e6-a245-62e65b165d8e" type="attribute_key" required="" custom-label="">
                                     <attributekey handle="contact_question_subject" name="Subject" package="" searchable="1" indexed="1" type="select" category="">
-                                        <type allow-multiple-values="" display-order="display_asc" allow-other-values="">
+                                        <type allow-multiple-values="" display-multiple-values="1" display-order="display_asc" allow-other-values="">
                                             <options>
                                                 <option value="I love your work" is-end-user-added=""/>
                                                 <option value="Great website" is-end-user-added=""/>
