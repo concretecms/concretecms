@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Console\Command;
 
+use Concrete\Core\Cache\Cache;
 use Concrete\Core\Console\Command;
 use Concrete\Core\Database\Connection\Timezone;
 use Concrete\Core\Install\Installer;
@@ -150,6 +151,7 @@ EOT
         if ($e->has()) {
             throw new Exception(implode("\n", $e->getList()));
         }
+        Cache::disableAll();
         $spl = $installer->getStartingPoint(false);
         $installer->getOptions()->save();
         try {
