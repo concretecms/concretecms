@@ -3,8 +3,11 @@ namespace Concrete\Core\Backup;
 
 use Concrete\Core\Backup\ContentImporter\Importer\Routine\SpecifiableHomePageRoutineInterface;
 use Concrete\Core\File\Importer;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Type\Composer\FormLayoutSetControl;
+use Concrete\Core\Support\Facade\Application;
 use Core;
+use Doctrine\ORM\EntityManagerInterface;
 
 class ContentImporter
 {
@@ -37,10 +40,13 @@ class ContentImporter
 
     protected function import(\SimpleXMLElement $element)
     {
-        $manager = Core::make('import/item/manager');
+        $app = Application::getFacadeApplication();
+
+        $manager = $app->make('import/item/manager');
+        $orm = $app->make(EntityManagerInterface::class);
         foreach ($manager->getImporterRoutines() as $routine) {
             if (isset($this->home) && $routine instanceof SpecifiableHomePageRoutineInterface) {
-                $home = \Page::getByID($this->home->getCollectionID()); // we always need the most recent version.
+                $home = Page::getByID($this->home->getCollectionID()); // we always need the most recent version.
                 $routine->setHomePage($home);
             }
             $routine->import($element);
@@ -48,6 +54,8 @@ class ContentImporter
                 // Unset the home page on each item post import
                 $routine->setHomePage(null);
             }
+
+            $orm->clear();
         }
     }
 
