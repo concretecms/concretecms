@@ -212,6 +212,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
         if (!$ue->proceed()) {
             return false;
         }
+        $this->getDirector()->dispatch('on_user_deleted', new UserInfoEvent($this));
 
         $attributes = $this->attributeCategory->getAttributeValues($this);
         foreach ($attributes as $attribute) {
