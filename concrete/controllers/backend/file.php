@@ -55,6 +55,9 @@ class File extends Controller
             if ($fWidth > $width || $fHeight > $height) {
                 $quality = (int) \Config::get('concrete.file_manager.restrict_resize_quality');
                 $resizeProcessor = new ConstrainImageProcessor($width, $height);
+                // Do not make a copy before processing as it is not needed when rescanning
+                // and it will save some memory
+                $resizeProcessor->setResizeInPlace(true);
                 $qualityProcessor = new SetJPEGQualityProcessor($quality);
                 $processors[] = $resizeProcessor;
                 $processors[] = $qualityProcessor;
