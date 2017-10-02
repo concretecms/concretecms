@@ -70,11 +70,38 @@ if ($cID) {
                 $ml->setItemsPerPage(-1);
             }
 
+            $bID = intval(Request::post('blockID'), 10);
+            $block = \Concrete\Core\Block\Block::getByID($bID);
+            if (!$block || $block->getBlockActionCollectionID() != $cID) {
+                // Our block doesn't seem to be on that page...
+                return;
+            }
+
+            $checker = new Permissions($block->getBlockCollectionObject());
+            if (!$checker->canViewPage()) {
+                // This user isn't allowed to view the block's collection
+                return;
+            }
+
+            if ($block->getBlockTypeHandle() !== 'core_conversation') {
+                // We have the wrong block type, how'd that happen?
+                return;
+            }
+
+            /** @var \Concrete\Block\CoreConversation\Controller $controller */
+            $controller = $block->getController();
+            $blockConversation = $controller->getConversationObject();
+
+            if (!$blockConversation || $blockConversation->getConversationID() != $cnv->getConversationID()) {
+                // Our block doesn't to seem to have the same conversation as was requested
+                return;
+            }
+
             $summary = $ml->getSummary();
             $totalPages = $summary->pages;
             $args = [
                 'cID' => $cID,
-                'bID' => intval(Request::post('blockID')),
+                'bID' => $block->getBlockID(),
                 'conversation' => $cnv,
                 'messages' => $ml->getPage(),
                 'displayMode' => $displayMode,
