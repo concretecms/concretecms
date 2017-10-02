@@ -205,13 +205,16 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
             return false;
         }
 
-        // run any internal event we have for user deletion
-
+        // Dispatch an on_user_delete event, that every subscriber can cancel.
         $ue = new DeleteUserEvent($this);
         $ue = $this->getDirector()->dispatch('on_user_delete', $ue);
         if (!$ue->proceed()) {
             return false;
         }
+        // Dispatch an on_user_deleted event: subscribers can't cancel this event.
+        // This event could be at the end of this method, but let's keep it here so that subscribers
+        // can get all the details of the user being deleted.
+        $this->getDirector()->dispatch('on_user_deleted', new UserInfoEvent($this));
 
         $attributes = $this->attributeCategory->getAttributeValues($this);
         foreach ($attributes as $attribute) {
