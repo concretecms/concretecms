@@ -46,17 +46,9 @@ class PreconditionService
     public function getPreconditions($includeWebPreconditions = true)
     {
         $result = [];
-        $handles = $this->config->get('install.preconditions');
-        foreach ($handles as $handle) {
-            $prefix = false;
-            if (is_array($handle)) {
-                if (isset($handle[1])) {
-                    list($handle, $prefix) = $handle;
-                } else {
-                    $handle = $handle[0];
-                }
-            }
-            $instance = $this->getPreconditionByHandle($handle, $prefix);
+        $list = $this->config->get('install.preconditions');
+        foreach ($list as $className) {
+            $instance = $this->app->make($className);
             if ($includeWebPreconditions || !$instance instanceof WebPreconditionInterface) {
                 $result[] = $instance;
             }
@@ -69,23 +61,19 @@ class PreconditionService
      * Get a precondition given its handle.
      *
      * @param string $handle the precondition handle
-     * @param bool|string $prefix The class prefix
      *
      * @throws Exception
      *
      * @return PreconditionInterface
      */
-    public function getPreconditionByHandle($handle, $prefix = false)
+    public function getPreconditionByHandle($handle)
     {
-        $baseClassName = 'Core\\Install\\Preconditions\\' . camelcase($handle);
-        $className = core_class($baseClassName, $prefix);
-        if (!class_exists($className, true)) {
-            throw new Exception(sprintf('Unable to find the class %s', $className));
+        $list = $this->config->get('install.preconditions');
+        if (!isset($list[$handle])) {
+            throw new Exception(sprintf('Unable to an install precondition with handle %s', $handle));
         }
+        $className = $list[$handle];
         $instance = $this->app->make($className);
-        if (!$instance instanceof PreconditionInterface) {
-            throw new Exception(sprintf('The class %1$s should implement the interface %2$s', get_class($instance), PreconditionInterface::class));
-        }
 
         return $instance;
     }

@@ -82,7 +82,7 @@ class RequestUrls implements WebPreconditionInterface
      */
     public function getHtml()
     {
-        $url = json_encode((string) $this->resolver->resolve(['/install', 'web_precondition', 'request_urls', '-', '20']));
+        $url = json_encode((string) $this->resolver->resolve(['/install', 'web_precondition', 'request_urls', '20']));
         $errorMessage = json_encode(t('concrete5 cannot parse the PATH_INFO or ORIG_PATH_INFO information provided by your server.'));
         $myIdentifier = json_encode($this->getUniqueIdentifier());
 
