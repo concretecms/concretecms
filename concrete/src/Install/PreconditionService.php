@@ -48,6 +48,9 @@ class PreconditionService
         $result = [];
         $list = $this->config->get('install.preconditions');
         foreach ($list as $className) {
+            if (!$className) {
+                continue;
+            }
             $instance = $this->app->make($className);
             if ($includeWebPreconditions || !$instance instanceof WebPreconditionInterface) {
                 $result[] = $instance;
@@ -71,6 +74,9 @@ class PreconditionService
         $list = $this->config->get('install.preconditions');
         if (!isset($list[$handle])) {
             throw new Exception(sprintf('Unable to an install precondition with handle %s', $handle));
+        }
+        if (!$list[$handle]) {
+            throw new Exception(sprintf('The precondition with handle %s is disabled', $handle));
         }
         $className = $list[$handle];
         $instance = $this->app->make($className);
