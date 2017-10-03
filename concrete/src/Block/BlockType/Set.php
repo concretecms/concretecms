@@ -2,13 +2,13 @@
 namespace Concrete\Core\Block\BlockType;
 
 use Concrete\Core\Entity\Block\BlockType\BlockType as BlockTypeEntity;
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Doctrine\DBAL\Connection;
 use Loader;
 use Core;
 use Concrete\Core\Package\PackageList;
 
-class Set extends Object
+class Set extends ConcreteObject
 {
     public static function getByID($btsID)
     {

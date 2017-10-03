@@ -105,6 +105,47 @@ if (($type & IPService::IPRANGEFLAG_MANUAL) === IPService::IPRANGEFLAG_MANUAL) {
         ?>
     </tbody>
 </table>
+
+<?php
+if ($type === IPService::IPRANGETYPE_BLACKLIST_AUTOMATIC) {
+    ?>
+    <div style="display: none" data-dialog="ccm-blacklist-clear-data-dialog" class="ccm-ui">
+        <form data-dialog-form="ccm-blacklist-clear-data-form" method="POST" action="<?= $view->action('clear_data') ?>">
+            <?php $token->output('blacklist-clear-data') ?>
+            <div class="checkbox">
+                <label>
+                    <?= $form->checkbox('delete-failed-login-attempts', 'yes', false) ?>
+                    <?= t('Delete failed login attempts older than %s days',  $form->number('delete-failed-login-attempts-min-age', 1, ['style' => 'width: 90px; display: inline-block', 'min' => '0'])) ?>
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <?= $form->radio('delete-automatic-blacklist', 'yes-keep-current', true) ?>
+                    <?= t('Delete expired automatic bans') ?>
+                </label>
+                <label>
+                    <?= $form->radio('delete-automatic-blacklist', 'yes-all', false) ?>
+                    <?= t('Delete every automatic ban (including the current ones)') ?>
+                </label>
+                <label>
+                    <?= $form->radio('delete-automatic-blacklist', 'nope', false) ?>
+                    <?= t("Don't delete any automatic ban") ?>
+                </label>
+            </div>
+        </form>
+        <div class="dialog-buttons">
+            <button class="btn btn-default pull-left" data-dialog-action="cancel"><?= t('Cancel') ?></button>
+            <button class="btn btn-danger pull-right" data-dialog-action="submit"><?= t('Delete') ?></button>
+        </div>
+    </div>
+    <div class="ccm-dashboard-form-actions-wrapper">
+        <div class="ccm-dashboard-form-actions">
+            <a class="btn btn-danger pull-right" data-launch-dialog="ccm-blacklist-clear-data-dialog"><?= t('Delete') ?></a>
+        </div>
+    </div>
+    <?php
+}
+?>
 <script>
 $(document).ready(function() {
     $('#ccm-ranges-table>tbody')
@@ -145,5 +186,27 @@ $(document).ready(function() {
 
         })
     ;
+    <?php
+    if ($type === IPService::IPRANGETYPE_BLACKLIST_AUTOMATIC) {
+        ?>
+        var $dialog = $('div[data-dialog="ccm-blacklist-clear-data-dialog"]');
+        $('[data-launch-dialog="ccm-blacklist-clear-data-dialog"]').on('click', function(e) {
+            e.preventDefault();
+            jQuery.fn.dialog.open({
+                element: $dialog,
+                modal: true,
+                width: 480,
+                title: <?= json_encode(t('Removal confirmation')) ?>,
+                height: 'auto'
+            });
+        });
+        ConcreteEvent.subscribe('AjaxFormSubmitSuccess', function(e, data) {
+            if (data.form === 'ccm-blacklist-clear-data-form') {
+                window.location.reload();
+            }
+        });
+        <?php
+    }
+    ?>
 });
 </script>

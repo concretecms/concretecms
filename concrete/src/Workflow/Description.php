@@ -1,9 +1,9 @@
 <?php
 namespace Concrete\Core\Workflow;
 
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 
-class Description extends Object
+class Description extends ConcreteObject
 {
     public function getDescription()
     {

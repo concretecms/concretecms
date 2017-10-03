@@ -2,6 +2,8 @@
 namespace Concrete\Job;
 
 use Concrete\Core\Cache\Cache;
+use Concrete\Core\Console\ConsoleAwareInterface;
+use Concrete\Core\Console\ConsoleAwareTrait;
 use Config;
 use Job as AbstractJob;
 use Core;
@@ -15,9 +17,13 @@ use Concrete\Core\Multilingual\Page\Section\Section as MultilingualSection;
 use SimpleXMLElement;
 use Page;
 use Events;
+use Symfony\Component\Console\Helper\ProgressBar;
 
-class GenerateSitemap extends AbstractJob
+class GenerateSitemap extends AbstractJob implements ConsoleAwareInterface
 {
+
+    use ConsoleAwareTrait;
+
     /** The end-of-line terminator.
      * @var string
      */
@@ -46,6 +52,7 @@ class GenerateSitemap extends AbstractJob
      */
     public function run()
     {
+        $output = $this->getOutput();
         Cache::disableAll();
         try {
             $instances = array(
@@ -72,10 +79,18 @@ class GenerateSitemap extends AbstractJob
             $xml .= ' />';
             $xmlDoc = new SimpleXMLElement($xml);
             $rs = Database::get()->query('SELECT cID FROM Pages');
+
+            $count = $rs->rowCount();
+            $progress = new ProgressBar($output, $count);
+            $progress->setMessage('Adding pages to sitemap');
+            $progress->display();
+
             while ($row = $rs->FetchRow()) {
+                $progress->advance();
                 self::addPage($xmlDoc, intval($row['cID']), $instances);
             }
             $rs->Close();
+            $progress->clear();
 
             $event = new \Symfony\Component\EventDispatcher\GenericEvent();
             $event->setArgument('xmlDoc', $xmlDoc);

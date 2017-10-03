@@ -35,13 +35,12 @@ class PackageLocation extends AbstractLocation
 
     public function getPath()
     {
-        $pkgHandle = $this->pkgHandle;
-        return DIR_PACKAGES . '/' . $pkgHandle;
+        return DIR_PACKAGES . '/' . $this->pkgHandle;
     }
 
     public function getURL()
     {
-        return DIR_REL . '/' . DIRNAME_PACKAGES . '/' . $this->pkgHandle;
+        return REL_DIR_PACKAGES . '/' . $this->pkgHandle;
     }
 
     public function contains($file)

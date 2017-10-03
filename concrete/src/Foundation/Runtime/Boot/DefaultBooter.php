@@ -241,6 +241,9 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
 
         // Autoload some aliases to prevent typehinting errors
         class_exists('\Request');
+        if (version_compare(PHP_VERSION, '7.2.0alpha1') < 0) {
+            $list->register('Concrete\Core\Foundation\Object', 'Concrete\Core\Foundation\ConcreteObject');
+        }
 
         return $list;
     }

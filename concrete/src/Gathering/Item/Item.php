@@ -4,7 +4,7 @@ namespace Concrete\Core\Gathering\Item;
 use Core;
 use Database;
 use View;
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Gathering\DataSource\DataSource as GatheringDataSource;
 use RuntimeException;
 
@@ -13,7 +13,7 @@ use RuntimeException;
  *
  * @method static Key[] add(Gathering $ag, GatheringDataSource $ags, string $gaiPublicDateTime, string $gaiTitle, string $gaiKey, int $gaiSlotWidth = 1, int $gaiSlotHeight = 1) Deprecated method. Use Item::create instead.
  */
-abstract class Item extends Object
+abstract class Item extends ConcreteObject
 {
     abstract public function loadDetails();
 

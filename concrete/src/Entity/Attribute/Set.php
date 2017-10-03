@@ -29,7 +29,7 @@ class Set implements ExportableInterface
     protected $keys;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Category", inversedBy="set")
+     * @ORM\ManyToOne(targetEntity="Category", inversedBy="sets")
      * @ORM\JoinColumn(name="akCategoryID", referencedColumnName="akCategoryID")
      */
     protected $category;

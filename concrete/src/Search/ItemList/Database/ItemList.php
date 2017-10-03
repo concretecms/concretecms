@@ -81,8 +81,6 @@ abstract class ItemList extends AbstractItemList
     {
         if (in_array(strtolower($direction), array('asc', 'desc'))) {
             $this->query->orderBy($column, $direction);
-        } else {
-            throw new \Exception(t('Invalid SQL in order by'));
         }
     }
 
@@ -90,8 +88,6 @@ abstract class ItemList extends AbstractItemList
     {
         if (preg_match('/[^0-9a-zA-Z\$\.\_\x{0080}-\x{ffff}]+/u', $column) === 0) {
             $this->executeSortBy($column, $direction);
-        } else {
-            throw new \Exception(t('Invalid SQL in order by'));
         }
     }
 

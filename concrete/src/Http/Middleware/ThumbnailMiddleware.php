@@ -259,6 +259,8 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
      */
     private function completeBuild(File $file, $thumbnail)
     {
+        unset($thumbnail['lockID']);
+        unset($thumbnail['lockExpires']);
         // Update the database to have "1" for isBuilt
         $this->connection->update('FileImageThumbnailPaths', ['isBuilt' => '1'], $thumbnail);
     }

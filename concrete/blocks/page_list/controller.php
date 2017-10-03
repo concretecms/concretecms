@@ -65,6 +65,9 @@ class Controller extends BlockController
             case 'chrono_asc':
                 $this->list->sortByPublicDate();
                 break;
+            case 'modified_desc':
+                $this->list->sortByDateModifiedDescending();
+                break;
             case 'random':
                 $this->list->sortBy('RAND()');
                 break;

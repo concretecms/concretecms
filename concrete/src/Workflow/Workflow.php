@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Workflow;
 
-use \Concrete\Core\Foundation\Object;
+use \Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Package\Package;
 use \Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
 use Loader;
@@ -15,7 +15,7 @@ use Concrete\Core\Workflow\Request\Request as WorkflowRequest;
  * @copyright  Copyright (c) 2003-2012 concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License
  */
-abstract class Workflow extends Object implements \Concrete\Core\Permission\ObjectInterface
+abstract class Workflow extends ConcreteObject implements \Concrete\Core\Permission\ObjectInterface
 {
     protected $wfID = 0;
     protected $allowedTasks = array('cancel', 'approve');

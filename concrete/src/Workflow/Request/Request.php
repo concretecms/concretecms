@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Workflow\Request;
 
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\User\UserInfo;
 use Symfony\Component\EventDispatcher\GenericEvent;
 use Workflow;
@@ -11,7 +11,7 @@ use Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
 use PermissionKey;
 use Events;
 
-abstract class Request extends Object
+abstract class Request extends ConcreteObject
 {
     protected $currentWP;
     protected $uID;

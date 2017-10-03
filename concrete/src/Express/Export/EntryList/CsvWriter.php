@@ -59,6 +59,8 @@ class CsvWriter
      */
     private function projectEntry(Entry $entry)
     {
+        yield $entry->getDateCreated();
+
         $attributes = $entry->getAttributes();
         foreach ($attributes as $attribute) {
             yield $attribute->getPlainTextValue();
@@ -72,6 +74,8 @@ class CsvWriter
      */
     private function getHeaders(Entity $entity)
     {
+        yield 'dateCreated';
+
         $attributes = $entity->getAttributes();
         foreach ($attributes as $attribute) {
             yield $attribute->getAttributeKeyDisplayName();

@@ -16,7 +16,7 @@ use Concrete\Core\Tree\Type\ExpressEntryResults;
 abstract class DashboardExpressEntityPageController extends DashboardExpressEntriesPageController
 {
 
-    protected function getEntity()
+    protected function getEntity(\Concrete\Core\Tree\Node\Type\ExpressEntryResults $parent = null)
     {
         if (!method_exists($this, 'getEntityName')) {
             throw new \RuntimeException(t('Unless you override getEntity() you must define a method named getEntityName'));

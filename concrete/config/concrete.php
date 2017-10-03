@@ -6,9 +6,9 @@ return [
      *
      * @var string
      */
-    'version' => '8.2.2b1',
-    'version_installed' => '8.2.2b1',
-    'version_db' => '20170804000000', // the key of the latest database migration
+    'version' => '8.3.0a1',
+    'version_installed' => '8.3.0a1',
+    'version_db' => '20170915000000', // the key of the latest database migration
 
     /*
      * Installation status
@@ -340,6 +340,10 @@ return [
             'name' => null,
         ],
         'validate_registration' => [
+            'address' => null,
+            'name' => null,
+        ],
+        'workflow_notification' => [
             'address' => null,
             'name' => null,
         ],

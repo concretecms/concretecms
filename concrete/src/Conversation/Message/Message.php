@@ -10,13 +10,13 @@ use Core;
 use Loader;
 use Concrete\Core\Conversation\Conversation;
 use Concrete\Core\Conversation\Editor\Editor as ConversationEditor;
-use \Concrete\Core\Foundation\Object;
+use \Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\User\User;
 use Concrete\Core\User\UserInfo;
 use Concrete\Core\Utility\IPAddress;
 use Events;
 
-class Message extends Object implements \Concrete\Core\Permission\ObjectInterface
+class Message extends ConcreteObject implements \Concrete\Core\Permission\ObjectInterface
 {
     public $cnvMessageID;
     protected $cnvMessageDateCreated;

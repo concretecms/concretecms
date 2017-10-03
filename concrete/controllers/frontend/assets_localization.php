@@ -79,6 +79,8 @@ class AssetsLocalization extends Controller
     'copyBlockToScrapbook' => t('Copy to Clipboard'),
     'changeBlockTemplate' => t('Custom Template'),
     'changeBlockCSS' => t('Design'),
+    'go' => t('Go'),
+    'confirm' => t('Confirm'),
     'errorCustomStylePresetNoName' => t('You must give your custom style preset a name.'),
     'changeBlockBaseStyle' => t('Set Block Styles'),
     'confirmCssReset' => t('Are you sure you want to remove all of these custom styles?'),

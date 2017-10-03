@@ -90,7 +90,7 @@ class Versions extends BackendInterfacePageController
                 $c->loadVersionObject($_REQUEST['cvID']);
                 $nc = $c->cloneVersion(t('New Page Created From Version'));
                 $v = $nc->getVersionObject();
-                $drafts = Page::getByPath(Config::get('concrete.paths.drafts'));
+                $drafts = Page::getDraftsParentPage();
                 $nc = $c->duplicate($drafts);
                 $nc->deactivate();
                 $nc->move($drafts);

@@ -111,12 +111,12 @@ class Controller extends AttributeTypeController
 
     public function form()
     {
+        $this->load();
         $checked = false;
         if (is_object($this->attributeValue)) {
             $value = $this->getAttributeValue()->getValue();
             $checked = $value == 1 ? true : false;
         } else {
-            $this->load();
             if ($this->akCheckedByDefault) {
                 $checked = true;
             }

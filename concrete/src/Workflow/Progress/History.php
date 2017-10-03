@@ -1,13 +1,13 @@
 <?php
 namespace Concrete\Core\Workflow\Progress;
 
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Workflow\HistoryEntry\HistoryEntry;
 use Concrete\Core\Workflow\Request\Request;
 use Loader;
 use UserInfo;
 
-class History extends Object
+class History extends ConcreteObject
 {
     public function getWorkflowProgressHistoryTimestamp()
     {

@@ -92,7 +92,7 @@
                                                 label: 'Linking to an image',
                                                 setup: function(data) {
                                                     var link = getSelectedLink();
-                                                    if (link !== null) {
+                                                    if (link !== null && typeof data.target !== 'undefined') {
                                                         if (data.target.name == "lightbox" && link.data('concrete5-link-lightbox') == "image") {
                                                             this.setValue(1);
                                                         } else {
@@ -122,7 +122,7 @@
                                                     id: 'lightboxWidth',
                                                     setup: function(data) {
                                                         var link = getSelectedLink();
-                                                        if (link !== null) {
+                                                        if (link !== null && typeof data.target !== 'undefined') {
                                                             if (data.target.name == "lightbox" && link.hasAttribute('data-concrete5-link-lightbox-width')) {
                                                                 this.setValue(link.data('concrete5-link-lightbox-width'));
                                                             } else {
@@ -141,7 +141,7 @@
                                                     id: 'lightboxHeight',
                                                     setup: function(data) {
                                                         var link = getSelectedLink();
-                                                        if (link !== null) {
+                                                        if (link !== null && typeof data.target !== 'undefined') {
                                                             if (data.target.name == "lightbox" && link.hasAttribute('data-concrete5-link-lightbox-height')) {
                                                                 this.setValue(link.data('concrete5-link-lightbox-height'));
                                                             } else {

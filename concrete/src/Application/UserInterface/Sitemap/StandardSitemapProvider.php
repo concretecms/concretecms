@@ -132,7 +132,20 @@ class StandardSitemapProvider implements ProviderInterface
         if ($this->request->query->has('siteTreeID') && $this->request->query->get('siteTreeID') > 0) {
             return $this->siteService->getSiteTreeByID($this->request->query->get('siteTreeID'));
         } else {
-            return $this->siteService->getActiveSiteForEditing()->getSiteTreeObject();
+            $site = $this->siteService->getActiveSiteForEditing();
+            $locale = $site->getDefaultLocale();
+            if ($locale && $this->checkPermissions($locale)) {
+                return $locale->getSiteTreeObject();
+            }
+
+            // This means we don't have permission to view the default locale.
+            // So instead we just grab the first we can find that we DO have permission
+            // to view.
+            foreach($site->getLocales() as $locale) {
+                if ($this->checkPermissions($locale)) {
+                    return $locale->getSiteTreeObject();
+                }
+            }
         }
     }
 

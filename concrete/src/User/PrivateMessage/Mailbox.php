@@ -1,12 +1,12 @@
 <?php
 namespace Concrete\Core\User\PrivateMessage;
 
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Loader;
 use UserInfo;
 use Events;
 
-class Mailbox extends Object
+class Mailbox extends ConcreteObject
 {
     const MBTYPE_INBOX = -1;
     const MBTYPE_SENT = -2;

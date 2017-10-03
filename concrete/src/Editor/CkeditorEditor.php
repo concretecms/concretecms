@@ -7,6 +7,11 @@ use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Utility\Service\Identifier;
 use URL;
+use User;
+use Page;
+use stdClass;
+use Core;
+use Permissions;
 
 class CkeditorEditor implements EditorInterface
 {
@@ -56,6 +61,38 @@ EOL;
     }
 
     /**
+     * @return stdClass
+     */
+    private function getEditorSnippetsAndClasses()
+    {
+        $obj = new stdClass();
+        $obj->snippets = [];
+        $u = new User();
+        if ($u->isRegistered()) {
+            $snippets = \Concrete\Core\Editor\Snippet::getActiveList();
+            foreach ($snippets as $sns) {
+                $menu = new stdClass();
+                $menu->scsHandle = $sns->getSystemContentEditorSnippetHandle();
+                $menu->scsName = $sns->getSystemContentEditorSnippetName();
+                $obj->snippets[] = $menu;
+            }
+        }
+        $c = Page::getCurrentPage();
+        $obj->classes = [];
+        if (is_object($c) && !$c->isError()) {
+            $cp = new Permissions($c);
+            if ($cp->canViewPage()) {
+                $pt = $c->getCollectionThemeObject();
+                if (is_object($pt)) {
+                    $obj->classes = $pt->getThemeEditorClasses();
+                }
+            }
+        }
+
+        return $obj;
+    }
+
+    /**
      * @param array $options
      *
      * @return string
@@ -74,6 +111,7 @@ EOL;
 
         $this->requireEditorAssets();
         $plugins = $pluginManager->getSelectedPlugins();
+        $snippetsAndClasses = $this->getEditorSnippetsAndClasses();
 
         $options = array_merge(
             $options,
@@ -92,35 +130,16 @@ EOL;
                     'content-editor-image-center',
                     'content-editor-image-right',
                 ],
-                'toolbarGroups' => [
-                    ['name' => 'mode', 'groups' => ['mode']],
-                    ['name' => 'document', 'groups' => ['document']],
-                    ['name' => 'doctools', 'groups' => ['doctools']],
-                    ['name' => 'clipboard', 'groups' => ['clipboard']],
-                    ['name' => 'undo', 'groups' => ['undo']],
-                    ['name' => 'find', 'groups' => ['find']],
-                    ['name' => 'selection', 'groups' => ['selection']],
-                    ['name' => 'spellchecker', 'groups' => ['spellchecker']],
-                    ['name' => 'editing', 'groups' => ['editing']],
-                    ['name' => 'basicstyles', 'groups' => ['basicstyles']],
-                    ['name' => 'cleanup', 'groups' => ['cleanup']],
-                    ['name' => 'list', 'groups' => ['list']],
-                    ['name' => 'indent', 'groups' => ['indent']],
-                    ['name' => 'blocks', 'groups' => ['blocks']],
-                    ['name' => 'align', 'groups' => ['align']],
-                    ['name' => 'bidi', 'groups' => ['bidi']],
-                    ['name' => 'paragraph', 'groups' => ['paragraph']],
-                    ['name' => 'links', 'groups' => ['links']],
-                    ['name' => 'insert', 'groups' => ['insert']],
-                    ['name' => 'forms', 'groups' => ['forms']],
-                    ['name' => 'styles', 'groups' => ['styles']],
-                    ['name' => 'colors', 'groups' => ['colors']],
-                    ['name' => 'tools', 'groups' => ['tools']],
-                    ['name' => 'others', 'groups' => ['others']],
-                    ['name' => 'about', 'groups' => ['about']],
-                ],
+                'toolbarGroups' => $this->config->get('editor.ckeditor4.toolbar_groups'),
+                'snippets' => $snippetsAndClasses->snippets,
+                'classes' => $snippetsAndClasses->classes,
             ]
         );
+
+        $customConfigOptions = $this->config->get('editor.ckeditor4.custom_config_options');
+        if ($customConfigOptions) {
+            $options = array_merge($customConfigOptions, $options);
+        }
 
         $options = json_encode($options);
         $removeEmptyIcon = '$removeEmpty[\'i\']';
@@ -153,6 +172,7 @@ EOL;
                     }, 50);
                 });
             }
+            {$this->config->get('editor.ckeditor4.editor_function_options')}
         }
 EOL;
 

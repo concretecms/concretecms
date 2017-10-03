@@ -128,6 +128,7 @@ return [
         'core_service_manager' => '\Concrete\Core\Service\Manager\ServiceManagerServiceProvider',
         'core_site' => '\Concrete\Core\Site\ServiceProvider',
         'core_search' => \Concrete\Core\Search\SearchServiceProvider::class,
+        'core_geolocator' => 'Concrete\Core\Geolocator\GeolocatorServiceProvider',
 
         // Authentication
         'core_oauth' => '\Concrete\Core\Authentication\Type\OAuth\ServiceProvider',
@@ -180,13 +181,14 @@ return [
         'captcha_library',
         'content_editor_snippet',
         'conversation_rating_type',
+        'geolocator_library',
         'group',
         'group_set',
         'job',
         'mail_importer',
         'permission_access_entity_type',
-        'permission_key_category',
         'permission_key',
+        'permission_key_category',
         'page_template',
         'site_type',
         'page_type',
@@ -252,6 +254,7 @@ return [
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportConfigValuesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSystemCaptchaLibrariesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSystemContentEditorSnippetsRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportGeolocatorsRoutine',
     ],
 
     /*
@@ -344,8 +347,6 @@ return [
         '/ccm/system/dialogs/page/edit_external/submit' => ['\Concrete\Controller\Dialog\Page\EditExternal::submit'],
         '/ccm/system/dialogs/page/location' => ['\Concrete\Controller\Dialog\Page\Location::view'],
         '/ccm/system/dialogs/page/search' => ['\Concrete\Controller\Dialog\Page\Search::view'],
-        '/ccm/system/dialogs/page/search/customize' => ['\Concrete\Controller\Dialog\Page\Search\Customize::view'],
-        '/ccm/system/dialogs/page/search/customize/submit' => ['\Concrete\Controller\Dialog\Page\Search\Customize::submit'],
         '/ccm/system/dialogs/page/seo' => ['\Concrete\Controller\Dialog\Page\Seo::view'],
 
         '/ccm/system/dialogs/page/advanced_search' => ['\Concrete\Controller\Dialog\Page\AdvancedSearch::view'],
@@ -357,13 +358,14 @@ return [
         '/ccm/system/dialogs/user/bulk/properties/clear_attribute' => ['\Concrete\Controller\Dialog\User\Bulk\Properties::clearAttribute'],
         '/ccm/system/dialogs/user/bulk/properties/update_attribute' => ['\Concrete\Controller\Dialog\User\Bulk\Properties::updateAttribute'],
         '/ccm/system/dialogs/user/search' => ['\Concrete\Controller\Dialog\User\Search::view'],
-        '/ccm/system/dialogs/user/search/customize' => ['\Concrete\Controller\Dialog\User\Search\Customize::view'],
-        '/ccm/system/dialogs/user/search/customize/submit' => ['\Concrete\Controller\Dialog\User\Search\Customize::submit'],
 
         '/ccm/system/dialogs/user/advanced_search' => ['\Concrete\Controller\Dialog\User\AdvancedSearch::view'],
         '/ccm/system/dialogs/user/advanced_search/add_field' => ['\Concrete\Controller\Dialog\User\AdvancedSearch::addField'],
         '/ccm/system/dialogs/user/advanced_search/submit' => ['\Concrete\Controller\Dialog\User\AdvancedSearch::submit'],
         '/ccm/system/dialogs/user/advanced_search/save_preset' => ['\Concrete\Controller\Dialog\User\AdvancedSearch::savePreset'],
+
+        "/ccm/system/dialogs/type/update_from_type/{ptID}/{pTemplateID}" => array('\Concrete\Controller\Dialog\Type\UpdateFromType::view'),
+        "/ccm/system/dialogs/type/update_from_type/{ptID}/{pTemplateID}/submit" => array('\Concrete\Controller\Dialog\Type\UpdateFromType::submit'),
 
         '/ccm/system/dialogs/express/advanced_search/' => ['\Concrete\Controller\Dialog\Express\AdvancedSearch::view'],
         '/ccm/system/dialogs/express/advanced_search/add_field/' => ['\Concrete\Controller\Dialog\Express\AdvancedSearch::addField'],

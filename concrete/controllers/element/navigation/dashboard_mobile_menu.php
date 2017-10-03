@@ -20,6 +20,13 @@ class DashboardMobileMenu extends Menu
         return false;
     }
 
+    protected function getPageList($parent)
+    {
+        $list = parent::getPageList($parent);
+        $list->includeSystemPages();
+        return $list;
+    }
+
     public function getElement()
     {
         return 'dashboard/mobile_menu';

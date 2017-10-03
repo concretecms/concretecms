@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Foundation;
 
-class Object
+class ConcreteObject
 {
     public $error = '';
 

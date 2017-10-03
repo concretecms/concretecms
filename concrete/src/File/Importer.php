@@ -45,6 +45,9 @@ class Importer
             $height = (int) Config::get('concrete.file_manager.restrict_max_height');
             $quality = (int) Config::get('concrete.file_manager.restrict_resize_quality');
             $resizeProcessor = new ConstrainImageProcessor($width, $height);
+            // Do not make a copy before processing as it is not needed on import
+            // and it will save memory
+            $resizeProcessor->setResizeInPlace(true);
             $qualityProcessor = new SetJPEGQualityProcessor($quality);
             $this->addImportProcessor($resizeProcessor);
             $this->addImportProcessor($qualityProcessor);
@@ -62,7 +65,7 @@ class Importer
      *
      * @return string
      */
-    public function getErrorMessage($code)
+    public static function getErrorMessage($code)
     {
         $defaultStorage = StorageLocation::getDefault()->getName();
         $msg = '';
@@ -177,20 +180,18 @@ class Importer
         if (!($fr instanceof FileEntity)) {
             // we have to create a new file object for this file version
             $fv = File::add($sanitizedFilename, $prefix, array('fvTitle' => $filename), $fsl, $fr);
-
-            foreach ($this->importProcessors as $processor) {
-                if ($processor->shouldProcess($fv)) {
-                    $processor->process($fv);
-                }
-            }
-
-            $fv->refreshAttributes($this->rescanThumbnailsOnImport);
         } else {
             // We get a new version to modify
             $fv = $fr->getVersionToModify(true);
             $fv->updateFile($sanitizedFilename, $prefix);
-            $fv->refreshAttributes($this->rescanThumbnailsOnImport);
         }
+
+        foreach ($this->importProcessors as $processor) {
+            if ($processor->shouldProcess($fv)) {
+                $processor->process($fv);
+            }
+        }
+        $fv->refreshAttributes($this->rescanThumbnailsOnImport);
 
         return $fv;
     }
