@@ -51,7 +51,7 @@ class PreconditionService
             if (!$className) {
                 continue;
             }
-            $instance = $this->app->make($className);
+            $instance = $this->getPreconditionByClassName($className);
             if ($includeWebPreconditions || !$instance instanceof WebPreconditionInterface) {
                 $result[] = $instance;
             }
@@ -73,14 +73,36 @@ class PreconditionService
     {
         $list = $this->config->get('install.preconditions');
         if (!isset($list[$handle])) {
-            throw new Exception(sprintf('Unable to an install precondition with handle %s', $handle));
+            throw new Exception(sprintf('Unable to find an install precondition with handle %s', $handle));
         }
         if (!$list[$handle]) {
             throw new Exception(sprintf('The precondition with handle %s is disabled', $handle));
         }
         $className = $list[$handle];
-        $instance = $this->app->make($className);
+        $instance = $this->getPreconditionByClassName($className);
 
         return $instance;
+    }
+
+    /**
+     * Get a precondition given its fully-qualified class name.
+     *
+     * @param string $className the fully-qualified class name of the precondition
+     *
+     * @throws Exception
+     *
+     * @return PreconditionInterface
+     */
+    public function getPreconditionByClassName($className)
+    {
+        if (!class_exists($className, true)) {
+            throw new Exception(sprintf('The precondition class %s does not exist', $className));
+        }
+        $result = $this->app->make($className);
+        if (!$result instanceof PreconditionInterface) {
+            throw new Exception(sprintf('The class %1$s should implement the interface %2$s', $className, PreconditionInterface::class));
+        }
+
+        return $result;
     }
 }
