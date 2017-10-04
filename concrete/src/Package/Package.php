@@ -10,6 +10,7 @@ use Concrete\Core\Database\EntityManager\Driver\CoreDriver;
 use Concrete\Core\Database\EntityManager\Provider\PackageProviderFactory;
 use Concrete\Core\Database\Schema\Schema;
 use Concrete\Core\Entity\Package as PackageEntity;
+use Concrete\Core\Package\Dependency\DependencyChecker;
 use Concrete\Core\Package\ItemCategory\Manager;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Support\Facade\Application as ApplicationFacade;
@@ -758,44 +759,8 @@ abstract class Package implements LocalizablePackageInterface
             }
 
             // Step 4 - Check for package dependencies
-            $packageService = $this->app->make(PackageService::class);
-            /* @var PackageService $packageService */
-            $installedPackageHandles = $packageService->getInstalledHandles();
-            $myDependencies = $this->getPackageDependencies();
-            foreach ($myDependencies as $packageHandle => $requirements) {
-                if (in_array($packageHandle, $installedPackageHandles)) {
-                    if ($requirements === false) {
-                        $errors[] = t('This package can\'t be installed because the package with handle %s is already installed', $packageHandle);
-                    } elseif ($requirements !== true) {
-                        $packageVersion = $packageService->getByHandle($packageHandle)->getPackageVersion();
-                        if (is_array($requirements)) {
-                            if (version_compare($packageVersion, $requirements[0]) < 0 || version_compare($packageVersion, $requirements[1]) > 0) {
-                                $errors[] = t('This package requires that package with handle %1$s has a version from %2$s to %3$s', $packageHandle, $requirements[0], $requirements[1]);
-                            }
-                        } else {
-                            if (version_compare($packageVersion, $requirements) < 0) {
-                                $errors[] = t('This package requires that package with handle %1$s has a version %2$s or greater', $packageHandle, $requirements);
-                            }
-                        }
-                    }
-                } else {
-                    if ($requirements === true) {
-                        $errors[] = t('Before installing this package, you need to install the package with handle %s', $packageHandle);
-                    } elseif (is_array($requirements)) {
-                        $errors[] = t('Before installing this package, you need to install the package with handle %1s (version between %2$s and %3$s)', $packageHandle, $requirements[0], $requirements[1]);
-                    } elseif ($requirements !== false) {
-                        $errors[] = t('Before installing this package, you need to install the package with handle %1s, version %2$s or greater', $packageHandle, $requirements);
-                    }
-                }
-            }
-            $myPackageHandle = $this->getPackageHandle();
-            foreach ($installedPackageHandles as $packageHandle) {
-                $packageController = $packageService->getClass($packageHandle);
-                $packageDependencies = $packageController->getPackageDependencies();
-                if (isset($packageDependencies[$myPackageHandle]) && $packageDependencies[$myPackageHandle] === false) {
-                    $errors[] = t('This package can\'t be installed because the package with handle %s is already installed', $packageHandle);
-                }
-            }
+            $dependencyChecker = $this->app->build(DependencyChecker::class);
+            $errors = array_merge($errors, $dependencyChecker->testForInstall($this)->getList());
         }
 
         if (empty($errors)) {
@@ -845,17 +810,8 @@ abstract class Package implements LocalizablePackageInterface
         }
 
         // Step 2, check for package dependencies
-        $packageService = $this->app->make(PackageService::class);
-        /* @var PackageService $packageService */
-        $installedPackageHandles = $packageService->getInstalledHandles();
-        $myPackageHandle = $this->getPackageHandle();
-        foreach ($installedPackageHandles as $packageHandle) {
-            $packageController = $packageService->getClass($packageHandle);
-            $packageDependencies = $packageController->getPackageDependencies();
-            if (isset($packageDependencies[$myPackageHandle]) && $packageDependencies[$myPackageHandle] !== false) {
-                $errors[] = t('This package can\'t be uninstalled since the package with handle %s requires it', $packageHandle);
-            }
-        }
+        $dependencyChecker = $this->app->build(DependencyChecker::class);
+        $errors = array_merge($errors, $dependencyChecker->testForUninstall($this)->getList());
 
         if (empty($errors)) {
             $result = true;
