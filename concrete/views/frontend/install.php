@@ -13,6 +13,17 @@ if ($install_config) {
     $_POST = $install_config;
 }
 ?>
+    <style>
+        .panel-heading .panel-title a:after {
+            font-family: 'FontAwesome';
+            content: "\f077";
+            float: right;
+            color: #333;
+        }
+        .panel-heading .panel-title a.collapsed:after {
+            content: "\f078";
+        }
+    </style>
     <script type="text/javascript" src="<?= ASSETS_URL_JAVASCRIPT ?>/bootstrap/tooltip.js"></script>
     <script type="text/javascript" src="<?= ASSETS_URL_JAVASCRIPT ?>/jquery-cookie.js"></script>
     <script type="text/javascript">
