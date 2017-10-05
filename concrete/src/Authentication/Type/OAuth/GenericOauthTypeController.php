@@ -263,6 +263,13 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
         }
 
         $email = $this->getEmail();
+
+        // Sometimes we may not receive email address from SNS apps
+        // Lets create a dummy email address if it's because it's already passed all validations
+        if (!$email) {
+            $email = $this->getUniqueId() . '@' . $this->getHandle();
+        }
+
         if (\UserInfo::getByEmail($email)) {
             throw new Exception('Email is already in use.');
         }
