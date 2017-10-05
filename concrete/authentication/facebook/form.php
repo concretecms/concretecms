@@ -16,19 +16,43 @@ $user = new User();
 
 if ($user->isLoggedIn()) {
     ?>
-    <div class="form-group">
+
+    <?php
+    $authenticationType = \Concrete\Core\Authentication\AuthenticationType::getByHandle('facebook');
+    if ($authenticationType->isHooked($user)):
+    ?>
+        <div class="form-group">
         <span>
-            <?= t('Attach a %s account', t('facebook')) ?>
+            <?= t('Detach your %s account', t('facebook')) ?>
         </span>
-        <hr>
-    </div>
-    <div class="form-group">
-        <a href="<?= \URL::to('/ccm/system/authentication/oauth2/facebook/attempt_attach');
-    ?>" class="btn btn-primary btn-facebook btn-block">
-            <i class="fa fa-facebook"></i>
-            <?= t('Attach a %s account', t('facebook')) ?>
-        </a>
-    </div>
+            <hr>
+        </div>
+        <div class="form-group">
+            <a href="<?= \URL::to('/ccm/system/authentication/oauth2/facebook/attempt_detach');
+            ?>" class="btn btn-primary btn-facebook btn-block">
+                <i class="fa fa-facebook"></i>
+                <?= t('Detach your %s account', t('facebook')) ?>
+            </a>
+        </div>
+
+    <?php else: ?>
+
+        <div class="form-group">
+            <span>
+                <?= t('Attach a %s account', t('facebook')) ?>
+            </span>
+            <hr>
+        </div>
+        <div class="form-group">
+            <a href="<?= \URL::to('/ccm/system/authentication/oauth2/facebook/attempt_attach');
+        ?>" class="btn btn-primary btn-facebook btn-block">
+                <i class="fa fa-facebook"></i>
+                <?= t('Attach a %s account', t('facebook')) ?>
+            </a>
+        </div>
+
+    <?php endif; ?>
+
 <?php
 
 } else {
