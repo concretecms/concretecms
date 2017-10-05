@@ -519,4 +519,28 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
     abstract public function handle_attach_attempt();
 
     abstract public function handle_attach_callback();
+
+    public function handle_detach_attempt()
+    {
+        $user = new User();
+        if (!$user->isLoggedIn()) {
+            id(new RedirectResponse(\URL::to('')))->send();
+            exit;
+        }
+
+        $uID = $user->getUserID();
+        $namespace = $this->getHandle();
+        $binding = $this->getUniqueId();
+
+        $db = \Database::connection();
+
+        try {
+            $db->executeQuery('DELETE FROM OauthUserMap WHERE user_id=? AND namespace=? AND binding=?', [$uID, $namespace, $binding]);
+            $this->showSuccess(t('Successfully detached.'));
+            exit;
+        } catch (\Exception $e) {
+            $this->showError(t('Unable to detach account.'));
+            exit;
+        }
+    }
 }
