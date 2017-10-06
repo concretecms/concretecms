@@ -66,7 +66,7 @@ $h = Loader::helper('concrete/ui');
         </div>
     </div>
     <div class="form-group">
-        <label class="control-label"><?php echo t('Username') ?></label>
+        <label class="control-label"><?php echo t('Login form') ?></label>
         <div class="radio">
             <label>
                 <input type="radio" name="email_as_username" value="0"
@@ -86,7 +86,16 @@ $h = Loader::helper('concrete/ui');
             </label>
         </div>
     </div>
-
+    <div class="form-group">
+        <label class="control-label"><?php echo t('Registration form') ?></label>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="display_username_field" value="1"
+                       style="" <?php echo ($display_username_field) ? 'checked' : '' ?> />
+                <span><?php echo t('Ask for Username on registration form') ?></span>
+            </label>
+        </div>
+    </div>
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
             <?= $h->submit(t('Save'), 'registration-type-form', 'right', 'btn-primary'); ?>

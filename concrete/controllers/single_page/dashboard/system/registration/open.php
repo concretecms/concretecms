@@ -21,6 +21,7 @@ class Open extends DashboardPageController
 
             $config->save('concrete.user.registration.type', $this->post('registration_type'));
             $config->save('concrete.user.registration.captcha', ($this->post('enable_registration_captcha')) ? true : false);
+            $config->save('concrete.user.registration.display_username_field', ($this->post('display_username_field')) ? true : false);
             $security = $this->app->make('helper/security');
 
             switch ($this->post('registration_type')) {
@@ -70,5 +71,6 @@ class Open extends DashboardPageController
         $this->set('enable_registration_captcha', $config->get('concrete.user.registration.captcha'));
         $this->set('register_notification', (bool) $config->get('concrete.user.registration.notification'));
         $this->set('register_notification_email', $config->get('concrete.user.registration.notification_email'));
+        $this->set('display_username_field', $config->get('concrete.user.registration.display_username_field'));
     }
 }
