@@ -1,4 +1,9 @@
 <?php
+/* @var $user \Concrete\Core\User\User;
+ * @var $authenticationType \Concrete\Core\Authentication\AuthenticationType
+ */
+
+
 if (isset($error)) {
     ?>
     <div class="alert alert-danger"><?= $error ?></div>
@@ -12,14 +17,11 @@ if (isset($message)) {
 
 }
 
-$user = new User();
 
 if ($user->isLoggedIn()) {
     ?>
 
-    <?php
-    $authenticationType = \Concrete\Core\Authentication\AuthenticationType::getByHandle('facebook');
-    if ($authenticationType->isHooked($user)):
+    <?php if ($authenticationType->isHooked($user)):
     ?>
         <div class="form-group">
         <span>
