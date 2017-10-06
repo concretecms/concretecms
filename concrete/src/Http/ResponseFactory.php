@@ -18,7 +18,7 @@ use Concrete\Core\Permission\Checker;
 use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Routing\RedirectResponse;
 use Concrete\Core\Routing\RouterInterface;
-use Concrete\Core\User\User;
+use User;
 use Concrete\Core\View\View;
 use Detection\MobileDetect;
 use Symfony\Component\HttpFoundation\JsonResponse;
