@@ -59,7 +59,6 @@ if ($registerSuccess) {
                             <?= $form->text('uName') ?>
                         </div>
                         <?php
-
                     }
                     ?>
                     <div class="form-group">
@@ -70,10 +69,12 @@ if ($registerSuccess) {
                         <?= $form->label('uPassword', t('Password')) ?>
                         <?= $form->password('uPassword', array('autocomplete' => 'off')) ?>
                     </div>
-                    <div class="form-group">
-                        <?= $form->label('uPasswordConfirm', t('Confirm Password')) ?>
-                        <?= $form->password('uPasswordConfirm', array('autocomplete' => 'off')) ?>
-                    </div>
+                    <?php if (Config::get('concrete.user.registration.display_confirm_password_field')): ?>
+                        <div class="form-group">
+                            <?= $form->label('uPasswordConfirm', t('Confirm Password')) ?>
+                            <?= $form->password('uPasswordConfirm', array('autocomplete' => 'off')) ?>
+                        </div>
+                    <?php endif; ?>
 
                 </fieldset>
             </div>

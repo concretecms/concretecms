@@ -95,6 +95,13 @@ $h = Loader::helper('concrete/ui');
                 <span><?php echo t('Ask for Username on registration form') ?></span>
             </label>
         </div>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="display_confirm_password_field" value="1"
+                       style="" <?php echo ($display_confirm_password_field) ? 'checked' : '' ?> />
+                <span><?php echo t('Ask to confirm password on registration form') ?></span>
+            </label>
+        </div>
     </div>
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
