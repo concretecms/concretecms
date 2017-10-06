@@ -1,10 +1,10 @@
 <?php
 namespace Concrete\Core\Feature\Detail;
 
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Feature\Assignment\Assignment as FeatureAssignment;
 
-class Detail extends Object
+class Detail extends ConcreteObject
 {
     protected $item;
 

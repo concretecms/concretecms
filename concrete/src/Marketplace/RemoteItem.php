@@ -6,10 +6,10 @@ use Concrete\Core\Package\Package;
 use Concrete\Core\Package\PackageArchive;
 use Loader;
 use Config;
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Exception;
 
-class RemoteItem extends Object
+class RemoteItem extends ConcreteObject
 {
     protected $price = 0.00;
     protected $remoteCID = 0;

@@ -99,7 +99,7 @@ if (!$error) {
                     }
                     break;
                 case "COPY":
-                    if ($_REQUEST['copyAll'] && $u->isSuperUser()) {
+                    if (!empty($_REQUEST['copyAll']) && $u->isSuperUser()) {
                         foreach ($originalPages as $oc) {
                             $nc2 = $oc->duplicateAll($dc); // new collection is passed back
                             if (is_object($nc2)) {

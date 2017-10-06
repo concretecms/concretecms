@@ -4,11 +4,11 @@ namespace Concrete\Tests;
 trait CreateClassMockTrait
 {
     /**
-     * Flag to remember how we should create mocks. 
+     * The method we use to create mocks.
      *
-     * @var int|null
+     * @var string
      */
-    private static $mockCreatorVersion;
+    private static $mockCreateMethod;
 
     /**
      * Returns a mock object for the specified class.
@@ -19,19 +19,21 @@ trait CreateClassMockTrait
      */
     private function createMockFromClass($className)
     {
-        if (!isset(self::$mockCreatorVersion)) {
-            $v = \PHPUnit_Runner_Version::id();
-            if (version_compare($v, '5.4') < 0) {
-                self::$mockCreatorVersion = 1;
-            } else {
-                self::$mockCreatorVersion = 2;
+        if (!isset(self::$mockCreateMethod)) {
+            $methods = ['createMock', 'createTestDouble', 'getMock'];
+
+            foreach ($methods as $method) {
+                if (method_exists($this, $method)) {
+                    static::$mockCreateMethod = $method;
+                    break;
+                }
             }
         }
-        switch (self::$mockCreatorVersion) {
-            case 1:
-                return $this->getMock($className);
-            case 2:
-                return $this->createMock($className);
+
+        if (isset(self::$mockCreateMethod)) {
+            return $this->{self::$mockCreateMethod}($className);
         }
+
+        throw new \RuntimeException('Unable to figure out how to create mock objects.');
     }
 }

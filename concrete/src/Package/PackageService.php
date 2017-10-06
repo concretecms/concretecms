@@ -159,12 +159,16 @@ class PackageService
         }
     }
 
-    public function bootPackageEntityManager(Package $p)
+    public function bootPackageEntityManager(Package $p, $clearCache = false)
     {
         $configUpdater = new EntityManagerConfigUpdater($this->entityManager);
         $providerFactory = new PackageProviderFactory($this->application, $p);
         $provider = $providerFactory->getEntityManagerProvider();
         $configUpdater->addProvider($provider);
+        if ($clearCache) {
+            $cache = $this->entityManager->getConfiguration()->getMetadataCacheImpl();
+            $cache->flushAll();
+        }
     }
 
     public function uninstall(Package $p)
@@ -188,7 +192,7 @@ class PackageService
             return $response;
         }
 
-        $this->bootPackageEntityManager($p);
+        $this->bootPackageEntityManager($p, true);
         $p->install($data);
 
         $u = new \User();

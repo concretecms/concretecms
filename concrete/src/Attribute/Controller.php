@@ -147,6 +147,12 @@ class Controller extends AbstractController implements AttributeInterface
         return $this->field('value');
     }
 
+    public function __destruct()
+    {
+        unset($this->attributeKey);
+        unset($this->attributeValue);
+    }
+
     /**
      * @param \Concrete\Core\Attribute\Type $attributeType
      */

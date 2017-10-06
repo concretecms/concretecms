@@ -3,11 +3,11 @@ namespace Concrete\Core\Gathering\DataSource;
 
 use Loader;
 use Core;
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Gathering\DataSource\Configuration\Configuration as GatheringDataSourceConfiguration;
 use Concrete\Core\Package\PackageList;
 
-abstract class DataSource extends Object
+abstract class DataSource extends ConcreteObject
 {
     abstract public function createConfigurationObject(Gathering $ga, $post);
     abstract public function createGatheringItems(GatheringDataSourceConfiguration $configuration);

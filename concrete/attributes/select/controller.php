@@ -20,6 +20,7 @@ class Controller extends AttributeTypeController
     private $akSelectAllowMultipleValues;
     private $akSelectAllowOtherValues;
     private $akSelectOptionDisplayOrder;
+    private $akDisplayMultipleValuesOnSelect;
 
     protected $searchIndexFieldDefinition = array(
         'type' => 'text',
@@ -71,7 +72,9 @@ class Controller extends AttributeTypeController
             $this->akSelectAllowMultipleValues = $type->getAllowMultipleValues();
             $this->akSelectAllowOtherValues = $type->getAllowOtherValues();
             $this->akSelectOptionDisplayOrder = $type->getDisplayOrder();
+            $this->akDisplayMultipleValuesOnSelect = $type->getDisplayMultipleValuesOnSelect();
 
+            $this->set('akDisplayMultipleValuesOnSelect', $this->akDisplayMultipleValuesOnSelect);
             $this->set('akSelectAllowMultipleValues', $this->akSelectAllowMultipleValues);
             $this->set('akSelectAllowOtherValues', $this->akSelectAllowOtherValues);
             $this->set('akSelectOptionDisplayOrder', $this->akSelectOptionDisplayOrder);
@@ -86,6 +89,7 @@ class Controller extends AttributeTypeController
         $type = $akey->addChild('type');
         $type->addAttribute('allow-multiple-values', $this->akSelectAllowMultipleValues);
         $type->addAttribute('display-order', $this->akSelectOptionDisplayOrder);
+        $type->addAttribute('display-multiple-values', $this->akDisplayMultipleValuesOnSelect);
         $type->addAttribute('allow-other-values', $this->akSelectAllowOtherValues);
         $options = $this->getOptions();
         $node = $type->addChild('options');
@@ -157,14 +161,19 @@ class Controller extends AttributeTypeController
 
     public function importKey(\SimpleXMLElement $akey)
     {
+        /**
+         * @var $type SelectSettings
+         */
         $type = $this->getAttributeKeySettings();
         if (isset($akey->type)) {
             $akSelectAllowMultipleValues = $akey->type['allow-multiple-values'];
+            $akDisplayMultipleValuesOnSelect = $akey->type['display-multiple-values'];
             $akSelectOptionDisplayOrder = $akey->type['display-order'];
             $akSelectAllowOtherValues = $akey->type['allow-other-values'];
             $type->setAllowMultipleValues(((string) $akSelectAllowMultipleValues) == '1' ? true : false);
             $type->setDisplayOrder($akSelectOptionDisplayOrder);
             $type->setAllowOtherValues(((string) $akSelectAllowOtherValues) == '1' ? true : false);
+            $type->setDisplayMultipleValuesOnSelect(((string) $akDisplayMultipleValuesOnSelect) == '1' ? true : false);
             $list = new SelectValueOptionList();
             if (isset($akey->type->options)) {
                 $displayOrder = 0;
@@ -701,6 +710,9 @@ class Controller extends AttributeTypeController
     public function saveKey($data)
     {
 
+        /**
+         * @var $type SelectSettings
+         */
         $type = $this->getAttributeKeySettings();
         $optionList = $type->getOptionList();
 
@@ -716,6 +728,12 @@ class Controller extends AttributeTypeController
         } else {
             $akSelectAllowOtherValues = 0;
         }
+        if (isset($data['akDisplayMultipleValuesOnSelect']) && ($data['akDisplayMultipleValuesOnSelect'] == 1)) {
+            $akDisplayMultipleValuesOnSelect = 1;
+        } else {
+            $akDisplayMultipleValuesOnSelect = 0;
+        }
+
         if (isset($data['akSelectOptionDisplayOrder']) && in_array($data['akSelectOptionDisplayOrder'],
                 array('display_asc', 'alpha_asc', 'popularity_desc'))
         ) {
@@ -727,6 +745,7 @@ class Controller extends AttributeTypeController
         $type->setAllowMultipleValues((bool) $akSelectAllowMultipleValues);
         $type->setDisplayOrder($akSelectOptionDisplayOrder);
         $type->setAllowOtherValues((bool) $akSelectAllowOtherValues);
+        $type->setDisplayMultipleValuesOnSelect((bool) $akDisplayMultipleValuesOnSelect);
 
         $selectedPostValues = $this->getSelectValuesFromPost();
 

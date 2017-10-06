@@ -54,7 +54,7 @@
             </categories>
         </attributetype>
 
-        <attributetype handle="select" name="Select" package="">
+        <attributetype handle="select" name="Option List" package="">
             <categories>
                 <category handle="collection"/>
                 <category handle="user"/>

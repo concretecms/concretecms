@@ -21,6 +21,9 @@ try {
         $n = count($argv);
         for ($i = 1; $i < $n; ++$i) {
             switch (strtolower($argv[$i])) {
+                case '--keep-short-echo':
+                    ShortTagsRemover::$KEEP_SHORT_ECHO = true;
+                    break;
                 case '--list':
                     if (!is_null($sourceFilename)) {
                         throw new Exception('--list parameter can\'t be used togheter with single-file syntax');
@@ -68,6 +71,8 @@ try {
 
 class ShortTagsRemover
 {
+    public static $KEEP_SHORT_ECHO = false;
+
     public static function fromFileList($listFilename, $overwrite = false)
     {
         if (is_dir($listFilename)) {
@@ -142,7 +147,11 @@ class ShortTagsRemover
             if (is_array($token)) {
                 switch ($token[0]) {
                     case T_OPEN_TAG_WITH_ECHO:
-                        $expanded = '<?php echo';
+                        if (static::$KEEP_SHORT_ECHO) {
+                            $result .= $token[1];
+                        } else {
+                            $expanded = '<?php echo';
+                        }
                         break;
                     case T_OPEN_TAG:
                         $expanded = '<?php';

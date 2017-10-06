@@ -7,6 +7,7 @@ php:
   - 5.6
   - 7.0
   - 7.1
+  - 7.2
   - nightly
 env:
   global:
@@ -21,12 +22,13 @@ matrix:
     - php: 7.1
       env: PREFER_LOWEST="--prefer-lowest"
   allow_failures:
+    - php: 7.2
     - php: nightly
 
 before_script:
   - if [[ $TRAVIS_PHP_VERSION = hhvm ]]; then cat tests/travis.hhvm.ini >> /etc/hhvm/php.ini; else phpenv config-add tests/travis.php.ini; fi
-  - travis_retry composer update --prefer-source $PREFER_LOWEST # Run once to install magento's composer merger
-  - travis_retry composer update --prefer-source $PREFER_LOWEST # Run twice to install merged dependencies
+  - travis_retry composer update --no-suggest --no-interaction $PREFER_LOWEST # Run once to install magento's composer merger
+  - travis_retry composer update --no-suggest --no-interaction $PREFER_LOWEST # Run twice to install merged dependencies
   - mysql -e "SET GLOBAL sql_mode = 'STRICT_TRANS_TABLES,STRICT_ALL_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION,ONLY_FULL_GROUP_BY'"
   - phpunit --version
 
@@ -35,7 +37,6 @@ script:
   - if [[ $CODESTYLE != "yes" ]]; then composer test; else composer phpcs; fi
 cache:
   directories:
-    - vendor
     - $HOME/.composer/cache
 
 notifications:

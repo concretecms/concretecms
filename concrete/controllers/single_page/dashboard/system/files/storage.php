@@ -1,19 +1,16 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\System\Files;
 
-use Concrete\Core\Page\Controller\DashboardPageController;
-use Loader;
-use Concrete\Core\File\StorageLocation\StorageLocation as FileStorageLocation;
+use Concrete\Core\File\StorageLocation\StorageLocationFactory;
 use Concrete\Core\File\StorageLocation\Type\Type;
+use Concrete\Core\Page\Controller\DashboardPageController;
 
 class Storage extends DashboardPageController
 {
-    public $helpers = array('form', 'concrete/ui', 'validation/token', 'concrete/file');
-
-    public function view($updated = false)
+    public function view()
     {
-        $this->set('locations', FileStorageLocation::getList());
-        $types = array();
+        $this->set('locations', $this->app->make(StorageLocationFactory::class)->fetchList());
+        $types = [];
         $storageLocationTypes = Type::getList();
         foreach ($storageLocationTypes as $type) {
             if ($type->getHandle() == 'default') {
@@ -51,8 +48,9 @@ class Storage extends DashboardPageController
 
     public function edit($fslID = false)
     {
-        $location = FileStorageLocation::getByID($fslID);
-        if (is_object($location)) {
+        $location = $fslID ? $this->app->make(StorageLocationFactory::class)->fetchByID($fslID) : null;
+        if ($location !== null) {
+            /* @var \Concrete\Core\Entity\File\StorageLocation\StorageLocation $location */
             $this->set('location', $location);
             $this->set('type', $location->getTypeObject());
         } else {
@@ -60,93 +58,92 @@ class Storage extends DashboardPageController
         }
     }
 
+    /**
+     * @return \Concrete\Core\Entity\File\StorageLocation\Type\Type|null
+     */
     protected function validateStorageRequest()
     {
-        $request = \Request::getInstance();
-        $val = Loader::helper('validation/strings');
-        $type = Type::getByID($request->get('fslTypeID'));
-
-        if (!is_object($type)) {
+        $val = $this->app->make('helper/validation/strings');
+        $type = Type::getByID($this->request->get('fslTypeID'));
+        if ($type === null) {
             $this->error->add(t('Invalid type object.'));
         } else {
-            $e = $type->getConfigurationObject()->validateRequest($request);
+            $e = $type->getConfigurationObject()->validateRequest($this->request);
             if (is_object($e)) {
                 $this->error->add($e);
             }
         }
-
-        if (!$val->notempty($request->request->get('fslName'))) {
+        if (!$val->notempty($this->request->request->get('fslName'))) {
             $this->error->add(t('Your file storage location must have a name.'));
         }
 
-        return array($request, $type);
+        return $type;
     }
 
     public function update()
     {
-        list($request, $type) = $this->validateStorageRequest();
+        $type = $this->validateStorageRequest();
+        $post = $this->request->request;
 
-        $fsl = FileStorageLocation::getByID($request->request->get('fslID'));
-        if (!Loader::helper('validation/token')->validate('update')) {
-            $this->error->add(Loader::helper('validation/token')->getErrorMessage());
+        $fslID = $post->get('fslID');
+        $fsl = $fslID ? $this->app->make(StorageLocationFactory::class)->fetchByID($fslID) : null;
+        /* @var \Concrete\Core\Entity\File\StorageLocation\StorageLocation|null $fsl */
+        if (!$this->token->validate('update')) {
+            $this->error->add($this->token->getErrorMessage());
         }
-        if (!is_object($fsl)) {
+        if ($fsl === null) {
             $this->error->add(t('Invalid file storage location object.'));
         }
         if (!$this->error->has()) {
             $configuration = $type->getConfigurationObject();
-            $configuration->loadFromRequest($request);
-            $fsl->setName($request->request->get('fslName'));
+            $configuration->loadFromRequest($this->request);
+            $fsl->setName($post->get('fslName'));
             if (!$fsl->isDefault()) {
-                $fsl->setIsDefault($request->request->get('fslIsDefault'));
+                $fsl->setIsDefault($post->get('fslIsDefault'));
             }
             $fsl->setConfigurationObject($configuration);
             $fsl->save();
             $this->redirect('/dashboard/system/files/storage', 'storage_location_updated');
         }
-
-        $this->edit($request->request->get('fslID'));
+        $this->edit($fslID);
     }
 
     public function delete()
     {
-        $request = \Request::getInstance();
-
-        if (!Loader::helper('validation/token')->validate('delete')) {
-            $this->error->add(Loader::helper('validation/token')->getErrorMessage());
+        if (!$this->token->validate('delete')) {
+            $this->error->add($this->token->getErrorMessage());
         }
-        $fsl = FileStorageLocation::getByID($request->request->get('fslID'));
-        if (!is_object($fsl)) {
+        $fslID = $this->request->request->get('fslID');
+        $fsl = $fslID ? $this->app->make(StorageLocationFactory::class)->fetchByID($fslID) : null;
+        /* @var \Concrete\Core\Entity\File\StorageLocation\StorageLocation|null $fsl */
+        if ($fsl === null) {
             $this->error->add(t('Invalid file storage location object.'));
-        }
-        if ($fsl->isDefault()) {
+        } elseif ($fsl->isDefault()) {
             $this->error->add(t('You may not delete the default file storage location.'));
         }
-
         if (!$this->error->has()) {
             $fsl->delete();
             $this->redirect('/dashboard/system/files/storage', 'storage_location_deleted');
         }
-        $this->edit($request->request->get('fslID'));
+        $this->edit($fslID);
     }
 
     public function add()
     {
-        list($request, $type) = $this->validateStorageRequest();
-        if (!Loader::helper('validation/token')->validate('add')) {
-            $this->error->add(Loader::helper('validation/token')->getErrorMessage());
+        $type = $this->validateStorageRequest();
+        if (!$this->token->validate('add')) {
+            $this->error->add($this->token->getErrorMessage());
         }
         if (!$this->error->has()) {
             $configuration = $type->getConfigurationObject();
-            $configuration->loadFromRequest($request);
-            $fsl = FileStorageLocation::add($configuration,
-                $request->request->get('fslName'),
-                $request->request->get('fslIsDefault')
-            );
-
+            $configuration->loadFromRequest($this->request);
+            $factory = $this->app->make(StorageLocationFactory::class);
+            /* @var StorageLocationFactory $factory */
+            $location = $factory->create($configuration, $this->request->request->get('fslName'));
+            $location->setIsDefault($this->request->request->get('fslIsDefault'));
+            $location = $factory->persist($location);
             $this->redirect('/dashboard/system/files/storage', 'storage_location_added');
         }
-
         $this->set('type', $type);
     }
 }

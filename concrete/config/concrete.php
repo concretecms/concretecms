@@ -6,9 +6,9 @@ return [
      *
      * @var string
      */
-    'version' => '8.2.1',
-    'version_installed' => '8.2.1',
-    'version_db' => '20170802000000', // the key of the latest database migration
+    'version' => '8.3.0a1',
+    'version_installed' => '8.3.0a1',
+    'version_db' => '20170915000000', // the key of the latest database migration
 
     /*
      * Installation status
@@ -219,7 +219,7 @@ return [
                     'core_filesystem' => [
                         'class' => \Concrete\Core\Cache\Driver\FileSystemStashDriver::class,
                         'options' => [
-                            'path' => DIR_FILES_UPLOADED_STANDARD . '/cache',
+                            'path' => DIR_FILES_UPLOADED_STANDARD . '/cache/overrides',
                             'dirPermissions' => DIRECTORY_PERMISSIONS_MODE_COMPUTED,
                             'filePermissions' => FILE_PERMISSIONS_MODE_COMPUTED,
                         ],
@@ -236,7 +236,7 @@ return [
                     'core_filesystem' => [
                         'class' => \Concrete\Core\Cache\Driver\FileSystemStashDriver::class,
                         'options' => [
-                            'path' => DIR_FILES_UPLOADED_STANDARD . '/cache',
+                            'path' => DIR_FILES_UPLOADED_STANDARD . '/cache/expensive',
                             'dirPermissions' => DIRECTORY_PERMISSIONS_MODE_COMPUTED,
                             'filePermissions' => FILE_PERMISSIONS_MODE_COMPUTED,
                         ],
@@ -340,6 +340,10 @@ return [
             'name' => null,
         ],
         'validate_registration' => [
+            'address' => null,
+            'name' => null,
+        ],
+        'workflow_notification' => [
             'address' => null,
             'name' => null,
         ],
@@ -492,6 +496,7 @@ return [
         'file_manager_detail' => [
             'handle' => 'file_manager_detail',
             'width' => 400,
+            'height' => 400,
         ],
         'user_avatar' => [
             'width' => 80,
@@ -602,7 +607,7 @@ return [
                 'connect_success' => '/marketplace/connect/-/connected',
                 'connect_validate' => '/marketplace/connect/-/validate',
                 'connect_new_token' => '/marketplace/connect/-/generate_token',
-                'checkout' => '/cart/-/add/',
+                'checkout' => '/cart/-/add',
                 'purchases' => '/marketplace/connect/-/get_available_licenses',
                 'item_information' => '/marketplace/connect/-/get_item_information',
                 'item_free_license' => '/marketplace/connect/-/enable_free_license',

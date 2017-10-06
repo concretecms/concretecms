@@ -1,12 +1,12 @@
 <?php
 namespace Concrete\Core\Attribute\Value;
 
-use \Concrete\Core\Foundation\Object;
+use \Concrete\Core\Foundation\ConcreteObject;
 
 /**
  * @deprecated
  */
-class ValueList extends Object implements \Iterator
+class ValueList extends ConcreteObject implements \Iterator
 {
 
     private $attributes = array();

@@ -13,4 +13,12 @@
 	<flag_types>
 		<flag_type>spam</flag_type>
 	</flag_types>
+
+	<!-- Geolocators -->
+	<geolocators>
+		<geolocator handle="geoplugin" name="geoPlugin" description="" package="" active="1">
+			<option name="url">http://www.geoplugin.net/json.gp?ip=[[IP]]</option>
+		</geolocator>
+	</geolocators>
+
 </concrete5-cif>

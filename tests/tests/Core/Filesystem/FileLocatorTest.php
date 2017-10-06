@@ -39,6 +39,7 @@ class FileLocatorTest extends \PHPUnit_Framework_TestCase
         $record = $this->locator->getRecord(DIRNAME_BLOCKS . '/rss_displayer/templates/fancy/view.php');
         $this->assertInstanceOf('Concrete\Core\Filesystem\FileLocator\Record', $record);
         $this->assertEquals(DIR_BASE_CORE . '/blocks/rss_displayer/templates/fancy/view.php', $record->getFile());
+        $this->assertEquals('/path/to/server/concrete/blocks/rss_displayer/templates/fancy/view.php', $record->getUrl());
         $this->assertFalse($record->exists());
     }
 
@@ -59,6 +60,7 @@ class FileLocatorTest extends \PHPUnit_Framework_TestCase
         $record = $this->locator->getRecord(DIRNAME_ELEMENTS . '/awesome/thing.php');
         $this->assertTrue($record->exists());
         $this->assertEquals(DIR_PACKAGES . '/awesome/elements/awesome/thing.php', $record->getFile());
+        $this->assertEquals('/path/to/server/packages/awesome/elements/awesome/thing.php', $record->getUrl());
     }
 
     public function testOverride()
@@ -78,6 +80,7 @@ class FileLocatorTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($record->exists());
         $this->assertTrue($record->isOverride());
         $this->assertEquals(DIR_BASE . '/application/blocks/autonav/view.php', $record->getFile());
+        $this->assertEquals('/path/to/server/application/blocks/autonav/view.php', $record->getUrl());
     }
 
     public function testCheckAllPackages()
@@ -113,6 +116,7 @@ class FileLocatorTest extends \PHPUnit_Framework_TestCase
 
         $record = $this->locator->getRecord(DIRNAME_BLOCKS . '/page_list/templates/fancy_thumbnails/view.php');
         $this->assertEquals(DIR_BASE . '/packages/thumbnails_pro/blocks/page_list/templates/fancy_thumbnails/view.php', $record->getFile());
+        $this->assertEquals('/path/to/server/packages/thumbnails_pro/blocks/page_list/templates/fancy_thumbnails/view.php', $record->getUrl());
     }
 
     public function testCurrentThemeElemental()
@@ -131,6 +135,7 @@ class FileLocatorTest extends \PHPUnit_Framework_TestCase
         $this->locator->addLocation(new FileLocator\ThemeLocation($theme));
         $record = $this->locator->getRecord(DIRNAME_ELEMENTS . '/header_required.php');
         $this->assertEquals(DIR_BASE_CORE . '/elements/header_required.php', $record->getFile());
+        $this->assertEquals('/path/to/server/concrete/elements/header_required.php', $record->getUrl());
     }
 
     public function testBlockCustomTemplateInATheme()
@@ -160,6 +165,7 @@ class FileLocatorTest extends \PHPUnit_Framework_TestCase
         $this->locator->setFilesystem($filesystem);
         $record = $this->locator->getRecord(DIRNAME_BLOCKS . '/page_list/templates/fancy_list.php');
         $this->assertEquals(DIR_BASE . '/packages/brilliant_theme/themes/brilliant/blocks/page_list/templates/fancy_list.php', $record->getFile());
+        $this->assertEquals('/path/to/server/packages/brilliant_theme/themes/brilliant/blocks/page_list/templates/fancy_list.php', $record->getUrl());
         $this->assertTrue($record->exists());
 
     }
@@ -191,6 +197,7 @@ class FileLocatorTest extends \PHPUnit_Framework_TestCase
         $this->locator->setFilesystem($filesystem);
         $record = $this->locator->getRecord(DIRNAME_ELEMENTS . '/conversation/display.php');
         $this->assertEquals(DIR_BASE . '/packages/brilliant_theme/themes/brilliant/elements/concrete/conversation/display.php', $record->getFile());
+        $this->assertEquals('/path/to/server/packages/brilliant_theme/themes/brilliant/elements/concrete/conversation/display.php', $record->getUrl());
         $this->assertTrue($record->exists());
     }
 

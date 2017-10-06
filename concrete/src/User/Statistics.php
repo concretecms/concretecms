@@ -1,11 +1,11 @@
 <?php
 namespace Concrete\Core\User;
 
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Loader;
 use UserInfo as ConcreteUserInfo;
 
-class Statistics extends Object
+class Statistics extends ConcreteObject
 {
     protected $ui;
 

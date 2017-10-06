@@ -1,12 +1,12 @@
 <?php
 namespace Concrete\Core\Mail\Importer;
 
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Core;
 use Database;
 use Concrete\Core\Package\PackageList;
 
-class MailImporter extends Object
+class MailImporter extends ConcreteObject
 {
     /**
      * gets the text string that's used to identify the body of the message.

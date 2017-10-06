@@ -10,7 +10,7 @@ use Environment;
 use Core;
 use Concrete\Core\Page\Theme\File as PageThemeFile;
 use Concrete\Core\Package\PackageList;
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use PageTemplate;
 use Concrete\Core\Page\Theme\GridFramework\GridFramework;
 use Concrete\Core\Page\Single as SinglePage;
@@ -22,7 +22,7 @@ use Localization;
  * A page's theme is a pointer to a directory containing templates, CSS files and optionally PHP includes, images and JavaScript files.
  * Themes inherit down the tree when a page is added, but can also be set at the site-wide level (thereby overriding any previous choices.).
  */
-class Theme extends Object
+class Theme extends ConcreteObject
 {
     const E_THEME_INSTALLED = 1;
     const THEME_EXTENSION = '.php';

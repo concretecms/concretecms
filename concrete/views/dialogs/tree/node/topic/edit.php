@@ -19,6 +19,9 @@ $form = Loader::helper('form');
 
 	<script type="text/javascript">
 		$(function() {
+			_.defer(function() {
+				$('input[name=treeNodeTopicName]').focus();
+			});
 			ConcreteEvent.unsubscribe('AjaxFormSubmitSuccess.updateTreeNode');
 			ConcreteEvent.subscribe('AjaxFormSubmitSuccess.updateTreeNode', function(e, data) {
 				if (data.form == 'edit-topic-node') {

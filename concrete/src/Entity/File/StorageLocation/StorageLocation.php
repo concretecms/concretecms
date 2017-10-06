@@ -89,7 +89,7 @@ class StorageLocation implements StorageLocationInterface
      */
     public function setIsDefault($fslIsDefault)
     {
-        $this->fslIsDefault = $fslIsDefault;
+        $this->fslIsDefault = (bool) $fslIsDefault;
     }
 
     /**

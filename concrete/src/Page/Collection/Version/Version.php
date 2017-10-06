@@ -4,7 +4,7 @@ namespace Concrete\Core\Page\Collection\Version;
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Attribute\ObjectTrait;
 use Concrete\Core\Entity\Attribute\Value\PageValue;
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Block;
 use Page;
 use PageType;
@@ -15,7 +15,7 @@ use Concrete\Core\Permission\ObjectInterface as PermissionObjectInterface;
 use Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVersionFeatureAssignment;
 use Concrete\Core\Support\Facade\Facade;
 
-class Version extends Object implements PermissionObjectInterface, AttributeObjectInterface
+class Version extends ConcreteObject implements PermissionObjectInterface, AttributeObjectInterface
 {
     use ObjectTrait;
 

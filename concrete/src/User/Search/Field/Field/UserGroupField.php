@@ -7,12 +7,13 @@ use Concrete\Core\Search\Field\AbstractField;
 use Concrete\Core\Search\Field\FieldInterface;
 use Concrete\Core\Search\ItemList\ItemList;
 use Concrete\Core\User\Group\GroupList;
+use Concrete\Core\User\UserList;
 
 class UserGroupField extends AbstractField
 {
 
     protected $requestVariables = [
-        'gID'
+        'gID', 'uGroupIn'
     ];
 
     public function getKey()
@@ -26,33 +27,35 @@ class UserGroupField extends AbstractField
     }
 
     /**
-     * @param FileList $list
+     * @param UserList $list
      * @param $request
      */
     public function filterList(ItemList $list)
     {
-        $filterGIDs = array();
+        $filterGroups = array();
         if (isset($this->data['gID']) && is_array($this->data['gID'])) {
             foreach ($this->data['gID'] as $gID) {
                 $g = \Group::getByID($gID);
                 if (is_object($g)) {
                     $gp = new \Permissions($g);
                     if ($gp->canSearchUsersInGroup()) {
-                        $filterGIDs[] = $g->getGroupID();
+                        $filterGroups[] = $g;
                     }
                 }
             }
         }
-        foreach ($filterGIDs as $gID) {
-            $list->filterByGroupID($gID);
+        $inGroup = true;
+        if ($this->data['uGroupIn'] == 'not') {
+            $inGroup = false;
         }
+        $list->filterByInAnyGroup($filterGroups, $inGroup);
     }
 
     public function renderSearchField()
     {
         $gl = new GroupList();
         $g1 = $gl->getResults();
-        $html = '<select multiple name="gID[]" class="selectize-select">';
+        $html = '<div class="form-group"><select multiple name="gID[]" class="selectize-select">';
         foreach ($g1 as $g) {
             $gp = new \Permissions($g);
             if ($gp->canSearchUsersInGroup($g)) {
@@ -63,7 +66,13 @@ class UserGroupField extends AbstractField
                 $html .= '>' . $g->getGroupDisplayName() . '</option>';
             }
         }
-        $html .= '</select>';
+        $html .= '</select></div><br/>';
+
+        $html .= '<div class="form-group"><select name="uGroupIn" class="form-control">';
+        $html .= '<option value="in"' . ($this->data['uGroupIn'] == 'in' ? ' selected' : '') . '>' . t('Search for users in group(s)') . '</option>';
+        $html .= '<option value="not"' . ($this->data['uGroupIn'] == 'not' ? ' selected' : '') . '>' . t('Search for users not included in group(s)') . '</option>';
+        $html .= '</select></div>';
+
         return $html;
     }
 

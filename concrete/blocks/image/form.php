@@ -62,6 +62,17 @@ $al = $app->make('helper/concrete/asset_library');
         ?>
     </div>
 
+    <div id="imageLinkOpenInNewWindow" style="display: none;" class="form-group">
+        <div class="checkbox">
+            <label>
+            <?php
+            echo $form->checkbox('openLinkInNewWindow', 'openLinkInNewWindow', $openLinkInNewWindow);
+            echo t('Open link in new window');
+            ?>
+            </label>
+        </div>
+    </div>
+
     <div class="form-group">
         <?php
         echo $form->label('altText', t('Alt Text'));
@@ -129,6 +140,7 @@ refreshImageLinkTypeControls = function() {
     $('#imageLinkTypePage').toggle(linkType == 1);
     $('#imageLinkTypeExternal').toggle(linkType == 2);
     $('#imageLinkTypeFile').toggle(linkType == 3);
+    $('#imageLinkOpenInNewWindow').toggle(linkType > 0);
 };
 
 $(document).ready(function() {

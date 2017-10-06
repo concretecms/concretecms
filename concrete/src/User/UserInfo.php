@@ -13,7 +13,7 @@ use Concrete\Core\Entity\Attribute\Value\Value\Value;
 use Concrete\Core\Entity\User\User as UserEntity;
 use Concrete\Core\Export\ExportableInterface;
 use Concrete\Core\File\StorageLocation\StorageLocationFactory;
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Mail\Importer\MailImporter;
 use Concrete\Core\Permission\ObjectInterface as PermissionObjectInterface;
 use Concrete\Core\User\Avatar\AvatarServiceInterface;
@@ -39,7 +39,7 @@ use User as ConcreteUser;
 use View;
 use Concrete\Core\Export\Item\User as UserExporter;
 
-class UserInfo extends Object implements AttributeObjectInterface, PermissionObjectInterface, ExportableInterface
+class UserInfo extends ConcreteObject implements AttributeObjectInterface, PermissionObjectInterface, ExportableInterface
 {
     use ObjectTrait;
 
@@ -205,13 +205,16 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
             return false;
         }
 
-        // run any internal event we have for user deletion
-
+        // Dispatch an on_user_delete event, that every subscriber can cancel.
         $ue = new DeleteUserEvent($this);
         $ue = $this->getDirector()->dispatch('on_user_delete', $ue);
         if (!$ue->proceed()) {
             return false;
         }
+        // Dispatch an on_user_deleted event: subscribers can't cancel this event.
+        // This event could be at the end of this method, but let's keep it here so that subscribers
+        // can get all the details of the user being deleted.
+        $this->getDirector()->dispatch('on_user_deleted', new UserInfoEvent($this));
 
         $attributes = $this->attributeCategory->getAttributeValues($this);
         foreach ($attributes as $attribute) {
@@ -248,7 +251,10 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
     public function updateUserAvatar(ImageInterface $image)
     {
         $fsl = $this->application->make(StorageLocationFactory::class)->fetchDefault()->getFileSystemObject();
-        $image = $image->get('jpg');
+        $config = $this->application->make('config');
+        $image = $image->get('jpg', [
+            'jpeg_quality' => $config->get('concrete.misc.default_jpeg_image_compression')
+        ]);
         $file = REL_DIR_FILES_AVATARS . '/' . $this->getUserID() . '.jpg';
         if ($fsl->has($file)) {
             $fsl->delete($file);

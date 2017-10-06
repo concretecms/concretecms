@@ -11,7 +11,7 @@
     <div class="form-group">
         <label class="control-label"><?= t("Label") ?></label>
         <?= $form->text('akCheckboxLabel', $akCheckboxLabel) ?>
-        <p class="help-block"><?=t('This will be displayed next to the checkbox. If it is blank, "Yes" will be displayed.')?></p>
+        <p class="help-block"><?=t('This will be displayed next to the checkbox. If it is blank, the name of the attribute will be displayed.')?></p>
     </div>
 
 

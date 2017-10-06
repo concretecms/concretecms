@@ -295,6 +295,7 @@ class StartingPointPackage extends BasePackage
         $thumbnailType->setHandle(Config::get('concrete.icons.file_manager_detail.handle'));
         $thumbnailType->setSizingMode($thumbnailType::RESIZE_EXACT);
         $thumbnailType->setWidth(Config::get('concrete.icons.file_manager_detail.width'));
+        $thumbnailType->setHeight(Config::get('concrete.icons.file_manager_detail.height'));
         $thumbnailType->save();
 
         if (is_dir($this->getPackagePath() . '/files')) {

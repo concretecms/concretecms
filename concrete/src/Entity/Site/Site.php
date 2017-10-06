@@ -259,7 +259,7 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
      */
     public function getSiteCanonicalURL()
     {
-        return (string) $this->getConfigRepository()->get('seo.canonical_url');
+        return (string)$this->getConfigRepository()->get('seo.canonical_url');
     }
 
     /**
@@ -269,7 +269,7 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
      */
     public function getSiteAlternativeCanonicalURL()
     {
-        return (string) $this->getConfigRepository()->get('seo.canonical_url_alternative');
+        return (string)$this->getConfigRepository()->get('seo.canonical_url_alternative');
     }
 
     /**
@@ -291,6 +291,19 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
         }
 
         return $result;
+    }
+
+    public function getTimezone()
+    {
+        $timezone = null;
+        $config = $this->getConfigRepository();
+        if ($config) {
+            $timezone = $config->get('timezone');
+        }
+        if (!$timezone) {
+            $timezone = date_default_timezone_get();
+        }
+        return $timezone;
     }
 
     /**

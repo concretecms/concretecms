@@ -4,9 +4,9 @@ namespace Concrete\Core\Job;
 use Gettext\Translations;
 use Loader;
 use JobSet;
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 
-class Set extends Object
+class Set extends ConcreteObject
 {
     const DEFAULT_JOB_SET_ID = 1;
 

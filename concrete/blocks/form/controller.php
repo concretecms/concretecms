@@ -361,7 +361,7 @@ class Controller extends BlockController
 
         $token = Core::make('token');
         if (!$token->validate('form_block_submit_qs_' . $qsID)) {
-            throw new Exception(t('Invalid Request'));
+            $errors[] = $token->getErrorMessage();
         }
 
         //get all questions for this question set
@@ -515,6 +515,19 @@ class Controller extends BlockController
                     } else {
                         $answerDisplay = t('No file specified');
                     }
+                } else if ($row['inputType'] == 'datetime') {
+
+                    $formPage = $this->getCollectionObject();
+                    $answer = $txt->sanitize($_POST['Question' . $row['msqID']]);
+                    if ($formPage) {
+                        $site = $formPage->getSite();
+                        $timezone = $site->getTimezone();
+                        $date = $this->app->make('date');
+                        $answerDisplay = $date->formatDateTime($txt->sanitize($_POST['Question' . $row['msqID']]), false, false, $timezone);
+                    } else {
+                        $answerDisplay = $txt->sanitize($_POST['Question' . $row['msqID']]);
+                    }
+
                 } elseif ($row['inputType'] == 'url') {
                     $answerLong = '';
                     $answer = $txt->sanitize($_POST['Question' . $row['msqID']]);

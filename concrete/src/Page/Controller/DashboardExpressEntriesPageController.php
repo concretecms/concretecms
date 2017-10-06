@@ -93,7 +93,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
 
         $headers = [
             'Content-Type' => 'text/csv',
-            'Content-Disposition' => 'attachment; filename=' . $entity->getPluralHandle() . '.csv'
+            'Content-Disposition' => 'attachment; filename=' . $entity->getHandle() . '.csv'
         ];
 
         return StreamedResponse::create(function() use ($entity, $me) {
@@ -248,7 +248,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
 
         $renderer = new Renderer(
             $context,
-            $entity->getDefaultViewForm()
+            $entity->getDefaultEditForm()
         );
 
         $this->set('renderer', $renderer);

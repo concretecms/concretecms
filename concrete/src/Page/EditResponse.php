@@ -8,7 +8,11 @@ class EditResponse extends \Concrete\Core\Application\EditResponse
 
     public function setPage(Page $page)
     {
-        $this->cID = $page->getCollectionID();
+        if ($page->isAlias()) {
+            $this->cID = $page->getCollectionPointerOriginalID();
+        } else {
+            $this->cID = $page->getCollectionID();
+        }
     }
 
     public function setPages($pages)

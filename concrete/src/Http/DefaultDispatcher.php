@@ -106,8 +106,8 @@ class DefaultDispatcher implements DispatcherInterface
 
         $callDispatcher = false;
         try {
-            $request->attributes->add($matcher->match($path));
             $matched = $matcher->match($path);
+            $request->attributes->add($matched);
             $route = $collection->get($matched['_route']);
 
             $this->router->setRequest($request);
