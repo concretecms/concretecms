@@ -152,7 +152,6 @@ $h = Loader::helper('concrete/ui');
     });
 
     $("input[name=display_username_field]").click(function (e) {
-        console.log($("input[name=email_as_username]").val());
         if (!$(this).is(':checked') && $("#display_username_on_login").is(":checked")) {
             $.fn.dialog.open({
                 width: 500,
