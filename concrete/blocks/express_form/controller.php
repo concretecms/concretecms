@@ -110,15 +110,18 @@ class Controller extends BlockController implements NotificationProviderInterfac
     public function delete()
     {
         parent::delete();
-        $entity = $this->getFormEntity()->getEntity();
-        $entityManager = \Core::make('database/orm')->entityManager();
-        // Important – are other blocks in the system using this form? If so, we don't want to delete it!
-        $db = $entityManager->getConnection();
-        $r = $db->fetchColumn('select count(bID) from btExpressForm where bID <> ? and exFormID = ?', [$this->bID, $this->exFormID]);
-        if ($r == 0) {
-            $entityManager->remove($entity);
-            $entityManager->flush();
-        }
+	    $form = $this->getFormEntity();
+	    if (is_object($form)) {
+		    $entity = $form->getEntity();
+		    $entityManager = \Core::make('database/orm')->entityManager();
+		    // Important – are other blocks in the system using this form? If so, we don't want to delete it!
+		    $db = $entityManager->getConnection();
+		    $r = $db->fetchColumn('select count(bID) from btExpressForm where bID <> ? and exFormID = ?', [$this->bID, $this->exFormID]);
+		    if ($r == 0) {
+			    $entityManager->remove($entity);
+			    $entityManager->flush();
+		    }
+	    }
     }
 
 
