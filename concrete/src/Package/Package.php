@@ -611,6 +611,8 @@ abstract class Package implements LocalizablePackageInterface
                 $this->backedUpFname = $trashName;
             }
         }
+
+        return $this;
     }
 
     /**
