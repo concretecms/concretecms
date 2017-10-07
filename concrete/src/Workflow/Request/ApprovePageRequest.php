@@ -63,7 +63,7 @@ class ApprovePageRequest extends PageRequest
                     $c->getCollectionName(), $comments, $link));
                 $d->setDescription(t("Version %s of Page <a target=\"_blank\" href=\"%s\">%s</a> submitted for Approval.", $this->cvID, $link,
                     $c->getCollectionName()));
-                $d->setInContextDescription(t("Page %s Version %s Submitted for Approval.",$c->getCollectionName(), $this->cvID));
+                $d->setInContextDescription(t("Page %s Version %s Submitted for Approval.", $c->getCollectionName(), $this->cvID));
                 $d->setShortStatus(t("Pending Approval"));
             } else {
                 // Completely new page.
