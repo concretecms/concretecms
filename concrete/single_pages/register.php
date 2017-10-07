@@ -69,12 +69,16 @@ if ($registerSuccess) {
                         <?= $form->label('uPassword', t('Password')) ?>
                         <?= $form->password('uPassword', array('autocomplete' => 'off')) ?>
                     </div>
-                    <?php if (Config::get('concrete.user.registration.display_confirm_password_field')): ?>
+                    <?php
+                    if (Config::get('concrete.user.registration.display_confirm_password_field')) {
+                        ?>
                         <div class="form-group">
                             <?= $form->label('uPasswordConfirm', t('Confirm Password')) ?>
                             <?= $form->password('uPasswordConfirm', array('autocomplete' => 'off')) ?>
                         </div>
-                    <?php endif; ?>
+                        <?php
+                    }
+                    ?>
 
                 </fieldset>
             </div>
