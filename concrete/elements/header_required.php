@@ -95,22 +95,87 @@ if ($c !== null && $c->getAttribute('exclude_search_index')) {
     $metaTags['robots'] = sprintf('<meta name="robots" content="%s"/>', 'noindex');
 }
 $metaTags['generator'] = sprintf('<meta name="generator" content="%s"/>', 'concrete5' . ($appConfig->get('concrete.misc.app_version_display_in_header') ? ' - ' . APP_VERSION : null));
-if (($modernIconFID = (int) $config->get('misc.modern_tile_thumbnail_fid')) && ($modernIconFile = File::getByID($modernIconFID))) {
-    $metaTags['msapplication-TileImage'] = sprintf('<meta name="msapplication-TileImage" content="%s"/>', $modernIconFile->getURL());
-    $modernIconBGColor = (string) $config->get('misc.modern_tile_thumbnail_bgcolor');
-    if ($modernIconBGColor !== '') {
+$linkTags = [];
+if (($appIconFID = (int) $config->get('misc.app_icon_fid')) && ($appIconFile = File::getByID($appIconFID))) {
+    // Favicons
+    if (($iconFileURL = Core::make("helper/icon")->getRealIconURL($appIconFile)) !== false) {
+        $linkTags['shortcut icon'] = sprintf('<link rel="shortcut icon" href="%s" type="image/x-icon"/>', $iconFileURL);
+        $linkTags['icon'] = sprintf('<link rel="icon" href="%s" type="image/x-icon"/>', $iconFileURL);
+    }
+    
+    $thumbnailer = Core::make("helper/image");
+    
+    // iOS icons
+    $appleIconSizes = array(57, 60, 72, 76, 114, 120, 144, 152, 180);
+    
+    foreach($appleIconSizes as $size) {
+        $thumbnail = $thumbnailer->getThumbnail($appIconFile, $size, $size, true);
+        
+        if (is_object($thumbnail)) {
+            $appleIconHTML .= sprintf(
+                "%s<link rel=\"apple-touch-icon\" sizes=\"%sx%s\" href=\"%s\">",
+                strlen($appleIconHTML) === 0 ? "" : "\n",
+                $size,
+                $size,
+                $thumbnail->src
+            );
+        }
+    }
+    
+    $linkTags['apple-touch-icon'] = $appleIconHTML;
+ 
+    // Android icons
+    $androidIconHTML = "";
+    
+    $androidIconSizes = array(32, 96, 128, 196);
+    
+    foreach($androidIconSizes as $size) {
+        $thumbnail = $thumbnailer->getThumbnail($appIconFile, $size, $size, true);
+        
+        if (is_object($thumbnail)) {
+            $androidIconHTML .= sprintf(
+                "%s<link rel=\"icon\" type=\"image/%s\" sizes=\"%sx%s\"  href=\"%s\">",
+                strlen($androidIconHTML) === 0 ? "" : "\n",
+                $appIconFile->getExtension(),
+                $size,
+                $size,
+                $thumbnail->src
+            );
+        }
+    }
+    
+    $linkTags['android icon'] = $androidIconHTML;   
+    
+    // Windows icons
+    $windowsIconHTML = "";
+    
+    $windowsIconSizes = array(
+        "msapplication-TileImage" => 144,
+        "msapplication-square70x70logo" => 70,
+        "msapplication-square150x150logo" => 150,
+        "msapplication-square310x310logo" => 310
+    );
+    
+    foreach($windowsIconSizes as $iconName => $size) {
+        $thumbnail = $thumbnailer->getThumbnail($appIconFile, $size, $size, true);
+        
+        if (is_object($thumbnail)) {
+            $windowsIconHTML .= sprintf(
+                "%s<meta name=\"%s\" content=\"%s\" />",
+                strlen($windowsIconHTML) === 0 ? "" : "\n",
+                $iconName,
+                $thumbnail->src
+            );
+        }
+    }
+    
+    $metaTags['msapplication-TileImage'] = $windowsIconHTML;
+    
+    if (($modernIconBGColor = (string) $config->get('misc.modern_tile_thumbnail_bgcolor')) !== '') {
         $metaTags['msapplication-TileColor'] = sprintf('<meta name="msapplication-TileColor" content="%s"/>', $modernIconBGColor);
     }
 }
-$linkTags = [];
-if (($favIconFID = (int) $config->get('misc.favicon_fid')) && ($favIconFile = File::getByID($favIconFID))) {
-    $favIconFileURL = $favIconFile->getURL();
-    $linkTags['shortcut icon'] = sprintf('<link rel="shortcut icon" href="%s" type="image/x-icon"/>', $favIconFileURL);
-    $linkTags['icon'] = sprintf('<link rel="icon" href="%s" type="image/x-icon"/>', $favIconFileURL);
-}
-if (($appleIconFID = (int) $config->get('misc.iphone_home_screen_thumbnail_fid')) && ($appleIconFile = File::getByID($appleIconFID))) {
-    $linkTags['apple-touch-icon'] = sprintf('<link rel="apple-touch-icon" href="%s"/>', $appleIconFile->getURL());
-}
+
 $alternateHreflangTags = [];
 if ($c !== null && $config->get('multilingual.set_alternate_hreflang') && !$c->isAdminArea() && $app->make('multilingual/detector')->isEnabled()) {
     $multilingualSection = Section::getBySectionOfSite($c);
