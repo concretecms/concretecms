@@ -476,6 +476,11 @@
                 <category handle="page_type" />
             </categories>
         </permissionaccessentitytype>
+        <permissionaccessentitytype handle="submitter" name="Submitter" package="">
+            <categories>
+                <category handle="basic_workflow" />
+            </categories>
+        </permissionaccessentitytype>
         <permissionaccessentitytype handle="file_uploader" name="File Uploader" package="">
             <categories>
                 <category handle="file_folder" />
