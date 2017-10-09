@@ -18,7 +18,6 @@ use Concrete\Core\Permission\Checker;
 use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Routing\RedirectResponse;
 use Concrete\Core\Routing\RouterInterface;
-use User;
 use Concrete\Core\View\View;
 use Detection\MobileDetect;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -348,7 +347,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         $request->setCurrentPage($collection);
         $c = $collection; // process.php needs this
         require DIR_BASE_CORE . '/bootstrap/process.php';
-        $u = new User();
+        $u = $this->app->make(\User::class);
 
         // On page view event.
         $pe = new Event($collection);
