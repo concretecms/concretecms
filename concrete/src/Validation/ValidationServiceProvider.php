@@ -51,7 +51,10 @@ class ValidationServiceProvider extends ServiceProvider
         $app->bind(CaptchaWithPictureInterface::class, function () use ($app) {
             $controller = $app->make(CaptchaInterface::class);
             if (!$controller instanceof CaptchaWithPictureInterface) {
-                $controller = $app->make(NoCaptchaController::class);
+                // Grant backward compatibility for custom libraries not explicitly implementing the CaptchaWithPictureInterface class
+                if (!method_exists($controller, 'displayCaptchaPicture')) {
+                    $controller = $app->make(NoCaptchaController::class);
+                }
             }
 
             return $controller;
