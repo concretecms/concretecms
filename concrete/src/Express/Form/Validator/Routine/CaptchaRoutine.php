@@ -2,30 +2,33 @@
 
 namespace Concrete\Core\Express\Form\Validator\Routine;
 
+use Concrete\Core\Captcha\CaptchaInterface;
 use Concrete\Core\Entity\Express\Form;
 use Concrete\Core\Error\ErrorList\ErrorList;
-use Concrete\Core\Validation\CSRF\Token;
-use Symfony\Component\HttpFoundation\Request;
-use Concrete\Core\Captcha\Service as CaptchaService;
 
 class CaptchaRoutine implements RoutineInterface
 {
-
+    /**
+     * @var CaptchaInterface
+     */
     protected $captchaValidator;
 
-    public function __construct(CaptchaService $service)
+    public function __construct(CaptchaInterface $service)
     {
         $this->captchaValidator = $service;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function validate(ErrorList $error, Form $form, $requestType)
     {
         if (!$this->captchaValidator->check()) {
             $error->add(t('Incorrect captcha code.'));
+
             return false;
         }
+
         return true;
     }
-
-
 }
