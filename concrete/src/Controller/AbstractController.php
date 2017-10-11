@@ -66,6 +66,10 @@ abstract class AbstractController implements ApplicationAwareInterface
      */
     public function getRequest()
     {
+        if ($this->request === null) {
+            $this->request = Request::getInstance();
+        }
+
         return $this->request;
     }
 
@@ -180,11 +184,7 @@ abstract class AbstractController implements ApplicationAwareInterface
             return $this->sets[$key];
         }
 
-        if (!isset($this->request)) {
-            $this->request = Request::createFromGlobals();
-        }
-
-        $val = $this->request->get($key, $defaultValue);
+        $val = $this->getRequest()->get($key, $defaultValue);
 
         return $val;
     }
