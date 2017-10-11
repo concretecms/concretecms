@@ -70,10 +70,16 @@ if ($cID) {
                 $ml->setItemsPerPage(-1);
             }
 
-            $bID = intval(Request::post('blockID'), 10);
+            $bID = (int) Request::post('blockID');
             $block = \Concrete\Core\Block\Block::getByID($bID);
             if (!$block || $block->getBlockActionCollectionID() != $cID) {
                 // Our block doesn't seem to be on that page...
+                return;
+            }
+
+            $checker = new Permissions($block);
+            if (!$checker->canViewBlock()) {
+                // This user isn't allowed to view the block
                 return;
             }
 
