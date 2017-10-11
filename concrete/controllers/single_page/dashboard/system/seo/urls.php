@@ -22,6 +22,7 @@ class Urls extends DashboardSitePageController
         $this->set('canonical_url_alternative', $siteConfig->get('seo.canonical_url_alternative'));
         $this->set('redirect_to_canonical_url', $globalConfig->get('concrete.seo.redirect_to_canonical_url'));
         $this->set('urlRewriting', $urlRewriting);
+        $this->set('canonical_tag', $siteConfig->get('seo.canonical_tag.enabled'));
 
         $strStatus = (string) $strStatus;
         if ($strStatus === 'saved') {
@@ -141,6 +142,7 @@ class Urls extends DashboardSitePageController
                 $siteConfig->save('seo.canonical_url', $this->post('canonical_url'));
                 $siteConfig->save('seo.canonical_url_alternative', $this->post('canonical_url_alternative'));
                 $globalConfig->save('concrete.seo.redirect_to_canonical_url', $this->post('redirect_to_canonical_url') ? 1 : 0);
+                $siteConfig->save('seo.canonical_tag.enabled', (bool) $this->post('canonical_tag'));
 
                 $urlRewriting = (bool) $this->post('URL_REWRITING');
                 $globalConfig->save('concrete.seo.url_rewriting', $urlRewriting);
