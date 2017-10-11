@@ -153,7 +153,7 @@ EOT
      */
     private function doSetAction(Repository $repository, $item)
     {
-        if (!$this->hasAttribute('value')) {
+        if (!$this->hasArgument('value')) {
             $this->output->error('A value must be provided when using the "set" action.');
         }
 
