@@ -2,20 +2,24 @@
 namespace Concrete\Core\Controller;
 
 use Concrete\Core\Application\ApplicationAwareInterface;
+use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Core;
 use Request;
 use View;
-use Concrete\Core\Application\ApplicationAwareTrait;
 
 abstract class AbstractController implements ApplicationAwareInterface
 {
     use ApplicationAwareTrait;
 
-    protected $helpers = array();
-    protected $sets = array();
+    protected $helpers = [];
+
+    protected $sets = [];
+
     protected $action;
+
     protected $request;
+
     protected $parameters;
 
     public function __construct()
@@ -43,7 +47,7 @@ abstract class AbstractController implements ApplicationAwareInterface
     {
         $args = func_get_args();
         $r = ResponseAssetGroup::get();
-        call_user_func_array(array($r, 'requireAsset'), $args);
+        call_user_func_array([$r, 'requireAsset'], $args);
     }
 
     /**
@@ -86,7 +90,7 @@ abstract class AbstractController implements ApplicationAwareInterface
 
     public function getHelperObjects()
     {
-        $helpers = array();
+        $helpers = [];
         foreach ($this->helpers as $handle) {
             $h = Core::make('helper/' . $handle);
             $helpers[(str_replace('/', '_', $handle))] = $h;
@@ -153,7 +157,7 @@ abstract class AbstractController implements ApplicationAwareInterface
     public function redirect()
     {
         $args = func_get_args();
-        $r = call_user_func_array(array('Redirect', 'to'), $args);
+        $r = call_user_func_array(['Redirect', 'to'], $args);
         $r->send();
         exit;
     }
@@ -163,13 +167,13 @@ abstract class AbstractController implements ApplicationAwareInterface
         $this->runAction($action, $parameters);
     }
 
-    public function runAction($action, $parameters = array())
+    public function runAction($action, $parameters = [])
     {
         $this->action = $action;
         $this->parameters = $parameters;
-        if (is_callable(array($this, $action))) {
+        if (is_callable([$this, $action])) {
             if ($this->shouldRunControllerTask()) {
-                return call_user_func_array(array($this, $action), $parameters);
+                return call_user_func_array([$this, $action], $parameters);
             }
         }
     }
