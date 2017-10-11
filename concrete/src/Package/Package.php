@@ -370,8 +370,7 @@ abstract class Package implements LocalizablePackageInterface
         \Config::clearNamespace($this->getPackageHandle());
         $this->app->make('config/database')->clearNamespace($this->getPackageHandle());
 
-        $em = $this->getPackageEntityManager();
-        if (is_object($em)) {
+        foreach ($this->getAllPackageEntityManagers() as $em) {
             $this->destroyProxyClasses($em);
         }
 
@@ -664,8 +663,7 @@ abstract class Package implements LocalizablePackageInterface
 
     public function installEntitiesDatabase()
     {
-        $em = $this->getPackageEntityManager();
-        if (is_object($em)) {
+        foreach ($this->getAllPackageEntityManagers() as $em) {
             $structure = new DatabaseStructureManager($em);
             $structure->installDatabase();
 
@@ -755,8 +753,7 @@ abstract class Package implements LocalizablePackageInterface
      */
     public function upgradeDatabase()
     {
-        $em = $this->getPackageEntityManager();
-        if (is_object($em)) {
+        foreach ($this->getAllPackageEntityManagers() as $em) {
             $this->destroyProxyClasses($em);
             $this->installEntitiesDatabase();
         }
@@ -781,48 +778,67 @@ abstract class Package implements LocalizablePackageInterface
     }
 
     /**
-     * Create a entity manager used for the package installation,
-     * update and unistall process.
+     * Create a entity manager used for the package installation, update and unistall process.
      *
-     * @return \Doctrine\ORM\EntityManager
+     * @return \Doctrine\ORM\EntityManager|null
      */
     public function getPackageEntityManager()
     {
-        $providerFactory = new PackageProviderFactory($this->app, $this);
-        $provider = $providerFactory->getEntityManagerProvider();
-        $drivers = $provider->getDrivers();
-        if (count($drivers)) {
-            $config = Setup::createConfiguration(true, $this->app->make('config')->get('database.proxy_classes'));
-            $driverImpl = new MappingDriverChain();
-            $coreDriver = new CoreDriver($this->app);
-
-            // Add all the installed packages so that the new package could potentially extend packages that are already
-            // installed
-            $packages = $this->app->make(PackageService::class)->getInstalledList();
-            foreach($packages as $package) {
-                $existingProviderFactory = new PackageProviderFactory($this->app, $package->getController());
-                $existingProvider = $existingProviderFactory->getEntityManagerProvider();
-                $existingDrivers = $existingProvider->getDrivers();
-                if (count($existingDrivers)) {
-                    foreach($existingDrivers as $existingDriver) {
-                        $driverImpl->addDriver($existingDriver->getDriver(), $existingDriver->getNamespace());
+        $result = null;
+        if (!$this instanceof NoDefaultEntityManagerInterface) {
+            $providerFactory = new PackageProviderFactory($this->app, $this);
+            $provider = $providerFactory->getEntityManagerProvider();
+            $drivers = $provider->getDrivers();
+            if (count($drivers)) {
+                $config = Setup::createConfiguration(true, $this->app->make('config')->get('database.proxy_classes'));
+                $driverImpl = new MappingDriverChain();
+                $coreDriver = new CoreDriver($this->app);
+    
+                // Add all the installed packages so that the new package could potentially extend packages that are already
+                // installed
+                $packages = $this->app->make(PackageService::class)->getInstalledList();
+                foreach($packages as $package) {
+                    $existingProviderFactory = new PackageProviderFactory($this->app, $package->getController());
+                    $existingProvider = $existingProviderFactory->getEntityManagerProvider();
+                    $existingDrivers = $existingProvider->getDrivers();
+                    if (count($existingDrivers)) {
+                        foreach($existingDrivers as $existingDriver) {
+                            $driverImpl->addDriver($existingDriver->getDriver(), $existingDriver->getNamespace());
+                        }
                     }
                 }
+    
+                // Add the core driver to it so packages can extend the core and not break.
+                $driverImpl->addDriver($coreDriver->getDriver(), $coreDriver->getNamespace());
+    
+                foreach ($drivers as $driver) {
+                    $driverImpl->addDriver($driver->getDriver(), $driver->getNamespace());
+                }
+                $config->setMetadataDriverImpl($driverImpl);
+                $result = EntityManager::create(\Database::connection(), $config);
             }
-
-            // Add the core driver to it so packages can extend the core and not break.
-            $driverImpl->addDriver($coreDriver->getDriver(), $coreDriver->getNamespace());
-
-            foreach ($drivers as $driver) {
-                $driverImpl->addDriver($driver->getDriver(), $driver->getNamespace());
-            }
-            $config->setMetadataDriverImpl($driverImpl);
-            $em = EntityManager::create(\Database::connection(), $config);
-
-            return $em;
         }
+
+        return $result;
     }
 
+    /**
+     * 
+     * @return \Doctrine\ORM\EntityManagerInterface[]
+     */
+    public final function getAllPackageEntityManagers()
+    {
+        $result = [];
+        $em = $this->getPackageEntityManager();
+        if ($em !== null) {
+            $result[] = $em;
+        }
+        if ($this instanceof CustomEntityManagersInterface) {
+            $result = array_merge($result, $this->getCustomPackageEntityManagers());
+        }
+
+        return $result;
+    }
     /**
      * Destroys all proxies related to a package.
      */
@@ -850,7 +866,7 @@ abstract class Package implements LocalizablePackageInterface
      */
     public function getEntityManager()
     {
-        return \ORM::entityManager();
+        return $this instanceof NoDefaultEntityManagerInterface ? null : \ORM::entityManager();
     }
 
     /**
