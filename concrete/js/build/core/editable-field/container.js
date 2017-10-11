@@ -89,7 +89,26 @@
 		        		return '';
 		        	}
 				},
-				pk: '_x' // we have to include this otherwise xeditable doesn't work.
+				pk: '_x', // we have to include this otherwise xeditable doesn't work.
+				error: function(xhr, newValue) {
+					var result = '';
+					var json = xhr ? xhr.responseJSON : null;
+					if (json) {
+						if (result === '' && typeof json.error === 'string') {
+							result = json.error;
+						}
+						if (result === '' && json.error && typeof json.error.message === 'string') {
+							result = json.error.message;
+						}
+						if (result === '' && json.errors && json.errors.join) {
+							result = json.errors.join('\n');
+						}
+					}
+					if (result === '') {
+						result = typeof xhr === 'string' ? xhr : xhr.responseText || xhr.statusText || 'Unknown error!';
+					}
+					return result;
+				}
 			});
 			$field.on('hidden', function() {
 				var $parent = $field.parent();

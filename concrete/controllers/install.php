@@ -416,14 +416,14 @@ class Install extends Controller
         return [$required, $optional];
     }
 
-    public function web_precondition($handle, $prefix, $argument = '')
+    public function web_precondition($handle, $argument = '')
     {
         if ($prefix === '-') {
             $prefix = false;
         }
         $service = $this->app->make(PreconditionService::class);
         /* @var PreconditionService $service */
-        $precondition = $service->getPreconditionByHandle($handle, $prefix);
+        $precondition = $service->getPreconditionByHandle($handle);
         if (!$precondition instanceof WebPreconditionInterface) {
             throw new Exception(sprintf('%s is not a valid precondition handle', $handle));
         }
