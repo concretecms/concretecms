@@ -161,13 +161,26 @@ class PackageService
 
     public function bootPackageEntityManager(Package $p, $clearCache = false)
     {
-        $configUpdater = new EntityManagerConfigUpdater($this->entityManager);
-        $providerFactory = new PackageProviderFactory($this->application, $p);
-        $provider = $providerFactory->getEntityManagerProvider();
-        $configUpdater->addProvider($provider);
+        $entityManagers = [];
+        if (!$p instanceof NoDefaultEntityManagerInterface) {
+            $configUpdater = new EntityManagerConfigUpdater($this->entityManager);
+            $providerFactory = new PackageProviderFactory($this->application, $p);
+            $provider = $providerFactory->getEntityManagerProvider();
+            $configUpdater->addProvider($provider);
+            $entityManagers[] = $this->entityManager;
+        }
         if ($clearCache) {
-            $cache = $this->entityManager->getConfiguration()->getMetadataCacheImpl();
-            $cache->flushAll();
+            if ($p instanceof CustomEntityManagersInterface) {
+                foreach ($p->getCustomPackageEntityManagers() as $em) {
+                    $entityManagers[] = $em;
+                }
+            }
+            foreach ($entityManagers as $em) {
+                $cache = $this->entityManager->getConfiguration()->getMetadataCacheImpl();
+                if ($cache !== null) {
+                    $cache->flushAll();
+                }
+            }
         }
     }
 
