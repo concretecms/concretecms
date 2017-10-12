@@ -828,7 +828,7 @@ abstract class Package implements LocalizablePackageInterface
     /**
      * Move the current package directory to the trash directory, and rename it with the package handle and a date code.
      *
-     * @return \Concrete\Core\Error\ErrorList\ErrorList|null return NULL if the package has been moved, an ErrorList instance otherwise
+     * @return \Concrete\Core\Error\ErrorList\ErrorList|static return the Package instance if the package has been moved, an ErrorList instance otherwise
      */
     public function backup()
     {
@@ -854,7 +854,7 @@ abstract class Package implements LocalizablePackageInterface
             }
         }
 
-        return $errors->has() ? $errors : null;
+        return $errors->has() ? $errors : $this;
     }
 
     /**
