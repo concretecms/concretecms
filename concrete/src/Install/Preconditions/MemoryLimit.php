@@ -58,7 +58,7 @@ class MemoryLimit implements PreconditionInterface
      */
     public function getUniqueIdentifier()
     {
-        return t('memory_limit');
+        return 'memory_limit';
     }
 
     /**

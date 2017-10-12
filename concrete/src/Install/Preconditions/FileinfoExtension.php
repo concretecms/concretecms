@@ -41,7 +41,7 @@ class FileinfoExtension implements PreconditionInterface
      */
     public function getUniqueIdentifier()
     {
-        return t('fileinfo_extension');
+        return 'fileinfo_extension';
     }
 
     /**

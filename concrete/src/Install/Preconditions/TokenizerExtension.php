@@ -41,7 +41,7 @@ class TokenizerExtension implements PreconditionInterface
      */
     public function getUniqueIdentifier()
     {
-        return t('tokenizer_extension');
+        return 'tokenizer_extension';
     }
 
     /**

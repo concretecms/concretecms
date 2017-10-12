@@ -31,7 +31,7 @@ class PhpCommentsPreserved implements PreconditionInterface
      */
     public function getUniqueIdentifier()
     {
-        return t('php_comments_preserved');
+        return 'php_comments_preserved';
     }
 
     /**

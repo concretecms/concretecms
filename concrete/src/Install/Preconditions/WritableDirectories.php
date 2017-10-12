@@ -41,7 +41,7 @@ class WritableDirectories implements PreconditionInterface
      */
     public function getUniqueIdentifier()
     {
-        return t('writable_directories');
+        return 'writable_directories';
     }
 
     /**

@@ -41,7 +41,7 @@ class XmlSupport implements PreconditionInterface
      */
     public function getUniqueIdentifier()
     {
-        return t('xml_support');
+        return 'xml_support';
     }
 
     /**

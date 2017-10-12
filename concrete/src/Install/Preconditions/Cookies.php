@@ -23,7 +23,7 @@ class Cookies implements WebPreconditionInterface
      */
     public function getUniqueIdentifier()
     {
-        return t('cookies');
+        return 'cookies';
     }
 
     /**
