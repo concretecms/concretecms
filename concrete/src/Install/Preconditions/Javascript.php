@@ -24,7 +24,7 @@ class Javascript implements WebPreconditionInterface
      */
     public function getUniqueIdentifier()
     {
-        return t('javascript');
+        return 'javascript';
     }
 
     /**

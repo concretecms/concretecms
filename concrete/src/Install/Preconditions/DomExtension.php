@@ -23,7 +23,7 @@ class DomExtension implements PreconditionInterface
      */
     public function getUniqueIdentifier()
     {
-        return t('dom_extension');
+        return 'dom_extension';
     }
 
     /**

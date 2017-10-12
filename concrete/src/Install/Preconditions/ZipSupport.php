@@ -23,7 +23,7 @@ class ZipSupport implements PreconditionInterface
      */
     public function getUniqueIdentifier()
     {
-        return t('zip_support');
+        return 'zip_support';
     }
 
     /**

@@ -23,7 +23,7 @@ class NoAspStyleTags implements PreconditionInterface
      */
     public function getUniqueIdentifier()
     {
-        return t('no_asp_style_tags');
+        return 'no_asp_style_tags';
     }
 
     /**

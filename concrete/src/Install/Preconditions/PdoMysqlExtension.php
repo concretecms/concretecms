@@ -23,7 +23,7 @@ class PdoMysqlExtension implements PreconditionInterface
      */
     public function getUniqueIdentifier()
     {
-        return t('pdo_mysql_extension');
+        return 'pdo_mysql_extension';
     }
 
     /**

@@ -41,7 +41,7 @@ class InternationalizationSupport implements PreconditionInterface
      */
     public function getUniqueIdentifier()
     {
-        return t('internationalization_support');
+        return 'internationalization_support';
     }
 
     /**

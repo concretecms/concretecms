@@ -43,7 +43,7 @@ class ImageManipulation implements PreconditionInterface
      */
     public function getUniqueIdentifier()
     {
-        return t('image_manipulation');
+        return 'image_manipulation';
     }
 
     /**

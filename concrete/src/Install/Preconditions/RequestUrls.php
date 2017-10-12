@@ -42,7 +42,7 @@ class RequestUrls implements WebPreconditionInterface
      */
     public function getUniqueIdentifier()
     {
-        return t('request_urls');
+        return 'request_urls';
     }
 
     /**

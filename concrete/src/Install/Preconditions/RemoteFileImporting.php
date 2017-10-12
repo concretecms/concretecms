@@ -41,7 +41,7 @@ class RemoteFileImporting implements PreconditionInterface
      */
     public function getUniqueIdentifier()
     {
-        return t('remote_file_importing');
+        return 'remote_file_importing';
     }
 
     /**

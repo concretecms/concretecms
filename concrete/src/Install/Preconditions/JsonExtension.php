@@ -23,7 +23,7 @@ class JsonExtension implements PreconditionInterface
      */
     public function getUniqueIdentifier()
     {
-        return t('json_extension');
+        return 'json_extension';
     }
 
     /**

@@ -30,7 +30,7 @@ class PhpVersion implements PreconditionInterface
      */
     public function getUniqueIdentifier()
     {
-        return t('php_version');
+        return 'php_version';
     }
 
     /**
