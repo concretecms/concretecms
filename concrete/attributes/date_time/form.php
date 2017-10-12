@@ -4,7 +4,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $app = Facade::getFacadeApplication();
 switch ($displayMode) {
     case 'text':
-        $format = $date->getPHPDateTimePattern();
+    case 'date_text':
+        if ($textCustomFormat !== '') {
+            $format = $textCustomFormat;
+        } elseif ($displayMode === 'date_text') {
+            $format = $date->getPHPDatePattern();
+        } else {
+            $format = $date->getPHPDateTimePattern();
+        }
         if ($value === null) {
             $placeholder = $date->formatCustom($format, 'now');
         } else {
