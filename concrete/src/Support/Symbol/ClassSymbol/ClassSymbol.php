@@ -21,11 +21,25 @@ class ClassSymbol
     protected $facade;
 
     /**
-     * Class alias.
+     * Fully-qualified class alias name.
      *
      * @var string
      */
     protected $alias;
+
+    /**
+     * Namespace of the alias
+     *
+     * @var string
+     */
+    protected $aliasNamespace;
+
+    /**
+     * Base name of the alias (that is, without namespace)
+     *
+     * @var string
+     */
+    protected $aliasBasename;
 
     /**
      * Array of MethodSymbols.
@@ -56,8 +70,16 @@ class ClassSymbol
     public function __construct($alias, $fqn, $facade = null)
     {
         $this->reflectionClass = new ReflectionClass($fqn);
-        $this->fqn = $fqn;
-        $this->alias = $alias;
+        $this->fqn = ltrim($fqn, '\\');
+        $this->alias = ltrim($alias, '/');
+        $p = strrpos($this->alias, '\\');
+        if ($p === false) {
+            $this->aliasNamespace = '';
+            $this->aliasBasename = $this->alias;
+        } else {
+            $this->aliasNamespace = substr($this->alias, 0, $p);
+            $this->aliasBasename = substr($this->alias, $p + 1);
+        }
         $this->comment = $this->reflectionClass->getDocComment();
 
         if (
@@ -134,7 +156,10 @@ class ClassSymbol
                 $rendered .= str_replace($eol . '*', $eol . ' *', implode($eol, array_map('trim', explode("\n", $comment)))) . $eol;
             }
         }
-        $rendered .= 'class ' . $this->alias . ' extends ' . $this->fqn . "{$eol}{{$eol}";
+        if ($this->reflectionClass->isAbstract()) {
+            $rendered .= 'abstract ';
+        }
+        $rendered .= 'class ' . $this->aliasBasename . ' extends \\' . $this->fqn . "{$eol}{{$eol}";
         $firstMethod = true;
         foreach ($this->methods as $method) {
             if (is_callable($methodFilter) && (call_user_func($methodFilter, $this, $method) === false)) {
@@ -155,5 +180,15 @@ class ClassSymbol
         $rendered .= "}{$eol}";
 
         return $rendered;
+    }
+
+    /**
+     * Get the namespace of the alias.
+     *
+     * @return string
+     */
+    public function getAliasNamespace()
+    {
+        return $this->aliasNamespace;
     }
 }
