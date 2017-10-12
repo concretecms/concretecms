@@ -320,7 +320,7 @@ class InstallerOptions
         $timeZoneId = $this->getServerTimeZoneId();
         if ($timeZoneId === '') {
             if (!$fallbackToDefault) {
-                throw new UserMessageException(t('The zerver time zone has not been defined.'));
+                throw new UserMessageException(t('The server time zone has not been defined.'));
             }
             $timeZoneId = @date_default_timezone_get() ?: 'UTC';
         }
