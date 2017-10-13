@@ -72,14 +72,9 @@ class ClassSymbol
         $this->reflectionClass = new ReflectionClass($fqn);
         $this->fqn = ltrim($fqn, '\\');
         $this->alias = ltrim($alias, '/');
-        $p = strrpos($this->alias, '\\');
-        if ($p === false) {
-            $this->aliasNamespace = '';
-            $this->aliasBasename = $this->alias;
-        } else {
-            $this->aliasNamespace = substr($this->alias, 0, $p);
-            $this->aliasBasename = substr($this->alias, $p + 1);
-        }
+        $chunks = explode('\\', $this->alias);
+        $this->aliasBasename = array_pop($chunks);
+        $this->aliasNamespace = implode('\\', $chunks);
         $this->comment = $this->reflectionClass->getDocComment();
 
         if (
