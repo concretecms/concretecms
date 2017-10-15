@@ -16,7 +16,11 @@ class UninstallPackageCommand extends Command
     {
         $errExitCode = static::RETURN_CODE_ON_FAILURE;
         $this
-            ->setName('c5:package-uninstall')
+            ->setName('c5:package:uninstall')
+            ->setAliases([
+                'c5:package-uninstall',
+                'c5:uninstall-package',
+            ])
             ->addEnvOption()
             ->addOption('trash', null, InputOption::VALUE_NONE, 'If this option is specified the package directory will be moved to the trash directory')
             ->addArgument('package', InputArgument::REQUIRED, 'The handle of the package to be uninstalled')

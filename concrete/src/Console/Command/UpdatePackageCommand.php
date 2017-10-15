@@ -16,7 +16,11 @@ class UpdatePackageCommand extends Command
     {
         $errExitCode = static::RETURN_CODE_ON_FAILURE;
         $this
-            ->setName('c5:package-update')
+            ->setName('c5:package:update')
+            ->setAliases([
+                'c5:package-update',
+                'c5:update-package',
+            ])
             ->addEnvOption()
             ->addOption('all', 'a', InputOption::VALUE_NONE, 'Update all the installed packages')
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force update even if the package is already at last version')
