@@ -108,7 +108,7 @@ class DependencyChecker
     {
         if ($this->installedPackages === null) {
             $installedPackages = [];
-            $packageService = $this->app->make(PackageService::class);
+            $packageService = $this->application->make(PackageService::class);
             foreach ($packageService->getInstalledHandles() as $packageHandle) {
                 $installedPackages[$packageHandle] = $packageService->getClass($packageHandle);
             }
