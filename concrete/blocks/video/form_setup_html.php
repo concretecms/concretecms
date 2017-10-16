@@ -58,7 +58,7 @@ if (!isset($width)) {
     <div id="video-width" class="form-group" style="display: none;">
         <?= $form->label('width', t('Max Width')); ?>
         <div class="input-group">
-            <?= $form->hidden('width', $width, array('min' => 1, 'class' => 'form-control')); ?>
+            <?= $form->number('width', $width ?: '', array('min' => 1)); ?>
             <div class="input-group-addon"><?= t('px'); ?></div>
         </div>
     </div>
@@ -73,10 +73,10 @@ $(document).ready(function() {
     $('input[name=videoSize]').on('change', function() {
         if ($(this).val() === '2') {
             $('#video-width').show();
-            $('#width').attr({'min' : 1 , 'type' : 'number'});
+            $('#width').attr('min', 1);
         } else {
             $('#video-width').hide();
-            $('#width').attr({'min' : 0, 'type' : 'hidden'});
+            $('#width').attr('min', 0);
         }
     });
 });
