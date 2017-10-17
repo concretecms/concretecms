@@ -119,6 +119,39 @@ class Controller extends GenericOauth2TypeController
         return base64_decode(strtr($input, '-_', '+/'));
     }
 
+    public function handle_attach_callback()
+    {
+        if (!User::isLoggedIn()) {
+            $response = new RedirectResponse(\URL::to('/login'), 302);
+            $response->send();
+            exit;
+        }
+        $user = new User();
+
+        try {
+            $code = \Request::getInstance()->get('code');
+            $token = $this->getService()->requestAccessToken($code);
+        } catch (TokenResponseException $e) {
+            $this->showError(t('Failed authentication: %s', $e->getMessage()));
+            exit;
+        }
+        if ($token) {
+
+            $extractor = $this->getExtractor();
+            if ($this->getBoundUserID($extractor->getUniqueId())) {
+                $this->showError(t('This account already attached with another user.'));
+                exit;
+            }
+
+            if ($this->bindUser($user, $extractor->getUniqueId())) {
+                $this->showSuccess(t('Successfully attached.'));
+                exit;
+            }
+        }
+        $this->showError(t('Unable to attach user.'));
+        exit;
+    }
+
     public function handle_detach_attempt()
     {
 
