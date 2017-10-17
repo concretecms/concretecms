@@ -103,17 +103,43 @@ class Service
      * Add a mail attachment by specifying its raw binary data.
      *
      * @param string $content The binary data of the attachemt
-     * @param string $filename The name to give to the attachment
-     * @param string $mimetype The MIME type of the attachment
+     * @param string $filename The name to give to the attachment (it will be used as the filename part of the Content-Disposition header)
+     * @param string $mimetype The MIME type of the attachment (it will be the main value of the Content-Type header)
+     * @param array $additionalHeaders Additional headers fo the MIME part. Valid values are:
+     * - encoding: the value of the Content-Transfer-Encoding header (defaults to base64)
+     * - disposition: the main value of the Content-Disposition header (defaults to attachment)
+     * - charset: the charset value of the Content-Type header
+     * - boundary: the boundary value of the Content-Type header
+     * - id: the value of the Content-ID header (without angular brackets)
+     * - description: the value of the Content-Description header
+     * - location: the value of the Content-Location header
+     * - language: the value of the Content-Language header
      */
-    public function addRawAttachment($content, $filename, $mimetype = 'application/octet-stream')
+    public function addRawAttachment($content, $filename, $mimetype = 'application/octet-stream', array $additionalHeaders = [])
     {
+        $headers = $additionalHeaders + [
+            'encoding' => Mime::ENCODING_BASE64,
+            'disposition' => Mime::DISPOSITION_ATTACHMENT,
+            'charset' => '',
+            'boundary' => '',
+            'id' => '',
+            'description' => '',
+            'location' => '',
+            'language' => '',
+        ];
         $mp = new MimePart($content);
         $mp
             ->setType($mimetype)
-            ->setDisposition(Mime::DISPOSITION_ATTACHMENT)
-            ->setEncoding(Mime::ENCODING_BASE64)
-            ->setFileName($filename);
+            ->setDisposition($headers['disposition'])
+            ->setEncoding($headers['encoding'])
+            ->setFileName($filename)
+            ->setCharset($headers['charset'])
+            ->setBoundary($headers['boundary'])
+            ->setId($headers['id'])
+            ->setDescription($headers['description'])
+            ->setLocation($headers['location'])
+            ->setLanguage($headers['language'])
+        ;
         $this->attachments[] = $mp;
     }
 
