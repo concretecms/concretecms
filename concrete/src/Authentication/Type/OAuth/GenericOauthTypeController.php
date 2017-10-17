@@ -263,13 +263,6 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
         }
 
         $email = $this->getEmail();
-
-        // Sometimes we may not receive email address from SNS apps
-        // Lets create a dummy email address if it's because it's already passed all validations
-        if (!$email) {
-            $email = $this->getUniqueId() . '@' . $this->getHandle();
-        }
-
         if (\UserInfo::getByEmail($email)) {
             throw new Exception('Email is already in use.');
         }
@@ -522,23 +515,25 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
 
     public function handle_detach_attempt()
     {
-        $user = new User();
-        if (!$user->isLoggedIn()) {
-            id(new RedirectResponse(\URL::to('')))->send();
+        if (!User::isLoggedIn()) {
+            $response = new RedirectResponse(\URL::to('/login'), 302);
+            $response->send();
             exit;
         }
-
+        $user = new User();
         $uID = $user->getUserID();
         $namespace = $this->getHandle();
-        $binding = $this->getUniqueId();
+        $binding = $this->getBindingForUser($user);
 
-        $db = \Database::connection();
-
+        $this->getService()->request('/' . $binding . '/permissions', 'DELETE');
         try {
-            $db->executeQuery('DELETE FROM OauthUserMap WHERE user_id=? AND namespace=? AND binding=?', [$uID, $namespace, $binding]);
+            /* @var \Concrete\Core\Database\Connection\Connection $database */
+            $database = $this->app->make('database')->connection();
+            $database->delete('OauthUserMap', ['user_id' => $uID, 'namespace' => $namespace, 'binding' => $binding]);
             $this->showSuccess(t('Successfully detached.'));
             exit;
         } catch (\Exception $e) {
+            \Log::error(t('Deattach Error %s', $e->getMessage()));
             $this->showError(t('Unable to detach account.'));
             exit;
         }
