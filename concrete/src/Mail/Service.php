@@ -17,7 +17,7 @@ use Zend\Mime\Part as MimePart;
 class Service
 {
     /**
-     * The application instance
+     * The application instance.
      *
      * @var Application
      */
@@ -38,28 +38,28 @@ class Service
     protected $headers;
 
     /**
-     * List of "To" recipients (every item is an array with at key 0 the email address and at key 1 an optional name)
+     * List of "To" recipients (every item is an array with at key 0 the email address and at key 1 an optional name).
      *
      * @var array[array]
      */
     protected $to;
 
     /**
-     * List of "Reply-To" recipients (every item is an array with at key 0 the email address and at key 1 an optional name)
+     * List of "Reply-To" recipients (every item is an array with at key 0 the email address and at key 1 an optional name).
      *
      * @var array[array]
      */
     protected $replyto;
-    
+
     /**
-     * List of "CC" recipients (every item is an array with at key 0 the email address and at key 1 an optional name)
+     * List of "CC" recipients (every item is an array with at key 0 the email address and at key 1 an optional name).
      *
      * @var array[array]
      */
     protected $cc;
 
     /**
-     * List of "CC" recipients (every item is an array with at key 0 the email address and at key 1 an optional name)
+     * List of "CC" recipients (every item is an array with at key 0 the email address and at key 1 an optional name).
      *
      * @var array[array]
      */
@@ -74,13 +74,13 @@ class Service
 
     /**
      * A dictionary with the parameters to be sent to the template.
-     * 
+     *
      * @var array
      */
     protected $data;
 
     /**
-     * The message subject
+     * The message subject.
      *
      * @var string
      */
@@ -106,7 +106,7 @@ class Service
      * @var string|false
      */
     protected $body;
-    
+
     /**
      * The HTML body.
      *
@@ -124,8 +124,8 @@ class Service
     /**
      * Initialize the instance.
      *
-     * @param Application $app The application instance.
-     * @param TransportInterface $transport The transport to be used to delivery the messages.
+     * @param Application $app the application instance
+     * @param TransportInterface $transport the transport to be used to delivery the messages
      */
     public function __construct(Application $app, TransportInterface $transport)
     {
@@ -157,8 +157,8 @@ class Service
     /**
      * Adds a parameter for the mail template.
      *
-     * @param string $key The name of the parameter.
-     * @param mixed $val The value of the parameter.
+     * @param string $key the name of the parameter
+     * @param mixed $val the value of the parameter
      */
     public function addParameter($key, $val)
     {
@@ -333,31 +333,6 @@ class Service
     }
 
     /**
-     * Convert a list of email addresses to a string.
-     *
-     * @param array $arr
-     *
-     * @return string
-     */
-    protected function generateEmailStrings($arr)
-    {
-        $str = '';
-        for ($i = 0; $i < count($arr); ++$i) {
-            $v = $arr[$i];
-            if (isset($v[1])) {
-                $str .= '"' . $v[1] . '" <' . $v[0] . '>';
-            } elseif (isset($v[0])) {
-                $str .= $v[0];
-            }
-            if (($i + 1) < count($arr)) {
-                $str .= ', ';
-            }
-        }
-
-        return $str;
-    }
-
-    /**
      * Set the from address on the message.
      *
      * @param string $email
@@ -371,7 +346,7 @@ class Service
     /**
      * Add one or more "To" recipients to the message.
      *
-     * @param string $email (separate multiple email addresses with commas) 
+     * @param string $email (separate multiple email addresses with commas)
      * @param string|null $name The name to associate to the email address
      */
     public function to($email, $name = null)
@@ -389,7 +364,7 @@ class Service
     /**
      * Add one or more "CC" recipients to the message.
      *
-     * @param string $email (separate multiple email addresses with commas) 
+     * @param string $email (separate multiple email addresses with commas)
      * @param string|null $name The name to associate to the email address
      */
     public function cc($email, $name = null)
@@ -475,7 +450,7 @@ class Service
      *
      * @param bool $resetData Whether or not to reset the service to its default when this method is done
      *
-     * @throws Exception Throws an exception if the delivery fails and if the service is in "testing" state 
+     * @throws Exception Throws an exception if the delivery fails and if the service is in "testing" state
      *
      * @return bool Returns true upon success, or false if the delivery fails and if the service is not in "testing" state
      */
@@ -638,5 +613,30 @@ class Service
             'mail' => (new Message())->setEncoding(APP_CHARSET),
             'transport' => $app->make(TransportInterface::class),
         ];
+    }
+
+    /**
+     * Convert a list of email addresses to a string.
+     *
+     * @param array $arr
+     *
+     * @return string
+     */
+    protected function generateEmailStrings($arr)
+    {
+        $str = '';
+        for ($i = 0; $i < count($arr); ++$i) {
+            $v = $arr[$i];
+            if (isset($v[1])) {
+                $str .= '"' . $v[1] . '" <' . $v[0] . '>';
+            } elseif (isset($v[0])) {
+                $str .= $v[0];
+            }
+            if (($i + 1) < count($arr)) {
+                $str .= ', ';
+            }
+        }
+
+        return $str;
     }
 }
