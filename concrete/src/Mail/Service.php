@@ -169,15 +169,25 @@ class Service
      * Add a File entity as an attachment of the message.
      *
      * @param File $file The file to attach to the message
+     * @param array $additionalHeaders Additional headers fo the MIME part. Valid values are:
+     * - encoding: the value of the Content-Transfer-Encoding header (defaults to base64)
+     * - disposition: the main value of the Content-Disposition header (defaults to attachment)
+     * - charset: the charset value of the Content-Type header
+     * - boundary: the boundary value of the Content-Type header
+     * - id: the value of the Content-ID header (without angular brackets)
+     * - description: the value of the Content-Description header
+     * - location: the value of the Content-Location header
+     * - language: the value of the Content-Language header
      */
-    public function addAttachment(File $file)
+    public function addAttachment(File $file, array $additionalHeaders = [])
     {
         $fileVersion = $file->getVersion();
         $resource = $fileVersion->getFileResource();
         $this->addRawAttachment(
             $resource->read(),
             $fileVersion->getFilename(),
-            $fileVersion->getMimeType()
+            $fileVersion->getMimeType(),
+            $additionalHeaders
         );
     }
 
