@@ -235,7 +235,6 @@ class Service
     {
         extract($this->data);
 
-        // loads template from mail templates directory
         if (file_exists(DIR_FILES_EMAIL_TEMPLATES . "/{$template}.php")) {
             include DIR_FILES_EMAIL_TEMPLATES . "/{$template}.php";
         } else {
@@ -457,8 +456,7 @@ class Service
     public function sendMail($resetData = true)
     {
         $config = $this->app->make('config');
-        $_from[] = $this->from;
-        $fromStr = $this->generateEmailStrings($_from);
+        $fromStr = $this->generateEmailStrings([$this->from]);
         $toStr = $this->generateEmailStrings($this->to);
         $replyStr = $this->generateEmailStrings($this->replyto);
 
@@ -514,41 +512,36 @@ class Service
         $messageIdHeader->setId();
 
         $body = new MimeMessage();
-        if (($this->body !== false) && ($this->bodyHTML !== false)) {
+        $textPart = $this->buildTextPart();
+        $htmlPart = $this->buildHtmlPart();
+        if ($textPart !== null && $htmlPart !== null) {
             $alternatives = new MimeMessage();
-            $text = new MimePart($this->body);
-            $text->type = Mime::TYPE_TEXT;
-            $text->charset = APP_CHARSET;
-            $alternatives->addPart($text);
-            $html = new MimePart($this->bodyHTML);
-            $html->type = Mime::TYPE_HTML;
-            $html->charset = APP_CHARSET;
-            $alternatives->addPart($html);
-            $alternativesPath = new MimePart($alternatives->generateMessage());
-            $alternativesPath->charset = 'UTF-8';
-            $alternativesPath->type = 'multipart/alternative';
-            $alternativesPath->boundary = $alternatives->getMime()->boundary();
-            $body->addPart($alternativesPath);
-        } elseif ($this->body !== false) {
-            $text = new MimePart($this->body);
-            $text->type = 'text/plain';
-            $text->charset = APP_CHARSET;
-            $body->addPart($text);
-        } elseif ($this->bodyHTML !== false) {
-            $html = new MimePart($this->bodyHTML);
-            $html->type = 'text/html';
-            $html->charset = APP_CHARSET;
-            $body->addPart($html);
+            $alternatives->addPart($textPart);
+            $alternatives->addPart($htmlPart);
+            $alternativesPart = new MimePart($alternatives->generateMessage());
+            $alternativesPart->setType(Mime::MULTIPART_ALTERNATIVE);
+            $alternativesPart->setBoundary($alternatives->getMime()->boundary());
+            $body->addPart($alternativesPart);
+        } else {
+            if ($textPart !== null) {
+                $body->addPart($textPart);
+            }
+            if ($htmlPart !== null) {
+                $body->addPart($htmlPart);
+            }
         }
-        foreach ($this->attachments as $att) {
-            $body->addPart($att);
+        foreach ($this->attachments as $attachment) {
+            if (!$this->isInlineAttachment($attachment)) {
+                $body->addPart($attachment);
+            }
         }
         if (count($body->getParts()) === 0) {
-            $text = new MimePart('');
-            $text->type = 'text/plain';
-            $text->charset = APP_CHARSET;
-            $body->addPart($text);
+            $emptyPart = new MimePart('');
+            $emptyPart->setType(Mime::TYPE_TEXT);
+            $emptyPart->setCharset(APP_CHARSET);
+            $body->addPart($emptyPart);
         }
+
         $mail->setBody($body);
 
         $sent = false;
@@ -638,5 +631,73 @@ class Service
         }
 
         return $str;
+    }
+
+    /**
+     * Get the MIME part for the plain text body (if available).
+     *
+     * @return MimePart|null
+     */
+    private function buildTextPart()
+    {
+        if ($this->body === false) {
+            $result = null;
+        } else {
+            $result = new MimePart($this->body);
+            $result->setType(Mime::TYPE_TEXT);
+            $result->setCharset(APP_CHARSET);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Determine if an attachment should be used as an inline attachment associated to the HTML body.
+     *
+     * @param MimePart $attachment
+     *
+     * @return bool
+     */
+    private function isInlineAttachment(MimePart $attachment) {
+        return $this->bodyHTML !== false
+            && $attachment->getId()
+            && in_array((string) $attachment->getDisposition(), ['', Mime::DISPOSITION_INLINE], true)
+        ;
+    }
+
+    /**
+     * Get the MIME part for the plain text body (if available).
+     *
+     * @return MimePart|null
+     */
+    private function buildHtmlPart()
+    {
+        if ($this->bodyHTML === false) {
+            $result = null;
+        } else {
+            $html = new MimePart($this->bodyHTML);
+            $html->setType(Mime::TYPE_HTML);
+            $html->setCharset(APP_CHARSET);
+            $inlineAttachments = [];
+            foreach ($this->attachments as $attachment) {
+                if ($this->isInlineAttachment($attachment)) {
+                    $inlineAttachments[] = $attachment;
+                }
+            }
+            if (empty($inlineAttachments)) {
+                $result = $html;
+            } else {
+                $related = new MimeMessage();
+                $related->addPart($html);
+                foreach ($inlineAttachments as $inlineAttachment) {
+                    $related->addPart($inlineAttachment);
+                }
+                $result = new MimePart($related->generateMessage());
+                $result->setType(Mime::MULTIPART_RELATED);
+                $result->setBoundary($related->getMime()->boundary());
+            }
+        }
+
+        return $result;
     }
 }
