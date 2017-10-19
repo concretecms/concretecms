@@ -201,7 +201,7 @@ class Service
         } else {
             $filename = $fileVersion->getFilename();
         }
-        if (array_key_exists('mimetype', $headers)) {
+        if (!array_key_exists('mimetype', $headers)) {
             $headers['mimetype'] = $resource->getMimetype();
         }
         $this->addRawAttachmentWithHeaders(
