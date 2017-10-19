@@ -704,6 +704,11 @@ return [
             'display_username_field' => true,
 
             /*
+             * Determines whether the confirm password field is displayed when registering
+             */
+            'display_confirm_password_field' => true,
+
+            /*
              * Validate emails during registration
              *
              * @var bool
