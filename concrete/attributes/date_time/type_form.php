@@ -17,22 +17,19 @@
         $akDateDisplayModeOptions = [
             'date_time' => t('Both Date and Time'),
             'date' => t('Date Only'),
-            'text' => t('Text Input Field'),
+            'date_text' => t('Text Input Field with Date'),
+            'text' => t('Text Input Field with Date and Time'),
         ];
         if (!isset($akDateDisplayMode) || !isset($akDateDisplayModeOptions[$akDateDisplayMode])) {
             $akDateDisplayMode = key($akDateDisplayModeOptions);
         }
         ?>
-        <?=$form->select('akDateDisplayMode', $akDateDisplayModeOptions, $akDateDisplayMode, [
-            'onchange' => <<<'EOT'
-if (this.value === 'date_time') {
-    $('#akTimeResolution').removeAttr('disabled');
-} else {
-    $('#akTimeResolution').attr('disabled', 'disabled');
-}
-EOT
-            ,
-        ])?>
+        <?=$form->select('akDateDisplayMode', $akDateDisplayModeOptions, $akDateDisplayMode) ?>
+    </div>
+
+    <div class="form-group">
+        <?= $form->label('akTextCustomFormat', '<a href="http://php.net/manual/function.date.php" target="_blank">' . t('Custom format') . ' ' . '<i class="fa fa-question-circle"></i></a>', ['class' => 'launch-tooltip', 'data-html' => 'true', 'title' => h(t('Here you can specify an optional custom format for text inputs (click to see the PHP manual for the %s function)', '<code>date</code>'))]) ?>
+        <?= $form->text('akTextCustomFormat', isset($akTextCustomFormat) ? $akTextCustomFormat : '') ?>
     </div>
 
     <div class="form-group">
@@ -76,3 +73,27 @@ EOT
     </div>
 
 </fieldset>
+
+<script>
+$(document).ready(function() {
+    $('#akDateDisplayMode')
+        .on('change', function() {
+            if (this.value === 'date_time') {
+                $('#akTimeResolution').removeAttr('disabled');
+            } else {
+                $('#akTimeResolution').attr('disabled', 'disabled');
+            }
+            switch (this.value) {
+                case 'text':
+                case 'date_text':
+                    $('#akTextCustomFormat').removeAttr('disabled');
+                    break;
+                default:
+                    $('#akTextCustomFormat').attr('disabled', 'disabled');
+                    break;
+            }
+        })
+        .trigger('change')
+    ;
+});
+</script>

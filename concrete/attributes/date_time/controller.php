@@ -16,6 +16,7 @@ class Controller extends AttributeTypeController
 
     protected $akUseNowIfEmpty = null;
     protected $akDateDisplayMode = null;
+    protected $akTextCustomFormat = null;
     protected $akTimeResolution = null;
 
     public function getIconFormatter()
@@ -34,6 +35,7 @@ class Controller extends AttributeTypeController
         $type = $this->getAttributeKeySettings();
         $type->setUseNowIfEmpty($data['akUseNowIfEmpty']);
         $type->setMode($data['akDateDisplayMode']);
+        $type->setTextCustomFormat(isset($data['akTextCustomFormat']) ? $data['akTextCustomFormat'] : '');
         if (isset($data['akTimeResolution'])) {
             $type->setTimeResolution($data['akTimeResolution']);
         }
@@ -78,6 +80,7 @@ class Controller extends AttributeTypeController
         }
         $this->set('value', $datetime);
         $this->set('displayMode',$this->akDateDisplayMode );
+        $this->set('textCustomFormat', $this->akTextCustomFormat);
         $this->set('timeResolution', $this->akTimeResolution);
 
     }
@@ -88,6 +91,7 @@ class Controller extends AttributeTypeController
         $type = $akey->addChild('type');
         $type->addAttribute('use-now-if-empty', $this->akUseNowIfEmpty ? 1 : 0);
         $type->addAttribute('mode', $this->akDateDisplayMode);
+        $type->addAttribute('text-custom-format', $this->akTextCustomFormat);
         $type->addAttribute('time-resolution', $this->akTimeResolution);
 
         return $akey;
@@ -99,6 +103,7 @@ class Controller extends AttributeTypeController
         if (isset($akey->type)) {
             $type->setUseNowIfEmpty($akey->type['use-now-if-empty']);
             $type->setMode($akey->type['mode']);
+            $type->setTextCustomFormat(isset($akey->type['text-custom-format']) ? $akey->type['text-custom-format'] : '');
             $type->setTimeResolution($akey->type['time-resolution']);
         }
 
@@ -191,18 +196,29 @@ class Controller extends AttributeTypeController
         $datetime = null;
         switch ($this->akDateDisplayMode) {
             case 'text':
+            case 'date_text':
                 if (isset($data['value']) && is_string($data['value']) && $data['value'] !== '') {
+                    if ($this->akTextCustomFormat !== '') {
+                        $format = $this->akTextCustomFormat;
+                    } elseif ($this->akDateDisplayMode === 'date_text') {
+                        $format = $dh->getPHPDatePattern();
+                    } else {
+                        $format = $dh->getPHPDateTimePattern();
+                    }
                     $dh = $this->app->make('helper/date');
                     try {
-                        $datetime = DateTime::createFromFormat(
-                            $dh->getPHPDateTimePattern(),
+                        $parsed = DateTime::createFromFormat(
+                            $format,
                             $data['value'],
                             $dh->getTimezone('user')
                         );
+                        if ($parsed) {
+                            if ($this->akDateDisplayMode !== 'date_text') {
+                                $parsed->setTimezone($dh->getTimezone('system'));
+                            }
+                            $datetime = $parsed;
+                        }
                     } catch (Exception $x) {
-                    }
-                    if ($datetime !== null) {
-                        $datetime->setTimezone($dh->getTimezone('system'));
                     }
                 }
                 break;
@@ -234,6 +250,8 @@ class Controller extends AttributeTypeController
         $this->set('akUseNowIfEmpty', $this->akUseNowIfEmpty);
         $this->akDateDisplayMode = (string) $type->getMode();
         $this->set('akDateDisplayMode', $this->akDateDisplayMode);
+        $this->akTextCustomFormat = $type->getTextCustomFormat();
+        $this->set('akTextCustomFormat', $this->akTextCustomFormat);
         $this->akTimeResolution = $type->getTimeResolution();
         $this->set('akTimeResolution', $this->akTimeResolution);
     }
@@ -283,7 +301,20 @@ class Controller extends AttributeTypeController
                 case 'date':
                     $result = $dh->formatDate($datetime, 'short', $datetime->getTimezone());
                     break;
+                case 'date_text':
+                    if ($this->akTextCustomFormat === '') {
+                        $result = $dh->formatDate($datetime, 'short', $datetime->getTimezone());
+                    } else {
+                        $result = $dh->formatCustom($this->akTextCustomFormat, $datetime, $datetime->getTimezone());
+                    }
+                    break;
                 case 'text':
+                    if ($this->akTextCustomFormat === '') {
+                        $result = $dh->formatDateTime($datetime);
+                    } else {
+                        $result = $dh->formatCustom($this->akTextCustomFormat, $datetime);
+                    }
+                    break;
                 case 'date_time':
                 default:
                     $result = $dh->formatDateTime($datetime);

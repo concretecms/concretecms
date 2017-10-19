@@ -20,6 +20,11 @@ class DateTimeSettings extends Settings
     protected $akDateDisplayMode = '';
 
     /**
+     * @ORM\Column(type="text", nullable=false, options={"default": "", "comment": "Custom format for text inputs"})
+     */
+    protected $akTextCustomFormat = '';
+
+    /**
      * @ORM\Column(type="integer", nullable=false, options={"default": 60, "unsigned": true, "comment": "Time resolution (in seconds)"})
      */
     protected $akTimeResolution = 60;
@@ -54,6 +59,22 @@ class DateTimeSettings extends Settings
     public function setMode($mode)
     {
         $this->akDateDisplayMode = (string) $mode;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTextCustomFormat()
+    {
+        return $this->akTextCustomFormat;
+    }
+
+    /**
+     * @param string $textCustomFormat
+     */
+    public function setTextCustomFormat($textCustomFormat)
+    {
+        $this->akTextCustomFormat = (string) $textCustomFormat;
     }
 
     /**
