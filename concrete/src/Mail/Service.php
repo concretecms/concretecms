@@ -563,7 +563,13 @@ class Service
         $body = new MimeMessage();
         $textPart = $this->buildTextPart();
         $htmlPart = $this->buildHtmlPart();
-        if ($textPart !== null && $htmlPart !== null) {
+        if ($textPart === null && $htmlPart === null) {
+            $emptyPart = new MimePart('');
+            $emptyPart->setType(Mime::TYPE_TEXT);
+            $emptyPart->setCharset(APP_CHARSET);
+            $body->addPart($emptyPart);
+        }
+        elseif ($textPart !== null && $htmlPart !== null) {
             $alternatives = new MimeMessage();
             $alternatives->addPart($textPart);
             $alternatives->addPart($htmlPart);
@@ -583,12 +589,6 @@ class Service
             if (!$this->isInlineAttachment($attachment)) {
                 $body->addPart($attachment);
             }
-        }
-        if (count($body->getParts()) === 0) {
-            $emptyPart = new MimePart('');
-            $emptyPart->setType(Mime::TYPE_TEXT);
-            $emptyPart->setCharset(APP_CHARSET);
-            $body->addPart($emptyPart);
         }
 
         $mail->setBody($body);
