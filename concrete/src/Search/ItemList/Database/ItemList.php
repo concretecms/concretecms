@@ -80,6 +80,7 @@ abstract class ItemList extends AbstractItemList
     protected function executeSortBy($column, $direction = 'asc')
     {
         if (in_array(strtolower($direction), array('asc', 'desc'))) {
+            $this->query->addSelect($column);
             $this->query->orderBy($column, $direction);
         }
     }
