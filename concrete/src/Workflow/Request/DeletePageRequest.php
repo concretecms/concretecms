@@ -31,7 +31,7 @@ class DeletePageRequest extends PageRequest
         }
         $link = Loader::helper('navigation')->getLinkToCollection($c, true);
         $d->setEmailDescription(t("\"%s\" has been marked for deletion. View the page here: %s.", $c->getCollectionName(), $link));
-        $d->setInContextDescription(t("This %s has been marked for deletion. ", $item));
+        $d->setInContextDescription(t(/*i18n: %1$s is 'page' or 'stack', %2$s is the page/stack name */'This %1$s %2$s has been marked for deletion. ', $item, $c->getCollectionName()));
         $d->setDescription(t("<a href=\"%s\">%s</a> has been marked for deletion. ", $link, $c->getCollectionName()));
         $d->setShortStatus(t("Pending Delete"));
 
