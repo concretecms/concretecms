@@ -169,9 +169,21 @@ class Service
      * Add a File entity as an attachment of the message.
      *
      * @param File $file The file to attach to the message
-     * @param array $additionalHeaders Additional headers fo the MIME part. Valid values are:
-     * - encoding: the value of the Content-Transfer-Encoding header (defaults to base64)
-     * - disposition: the main value of the Content-Disposition header (defaults to attachment)
+     */
+    public function addAttachment(File $file)
+    {
+        $this->addAttachmentWithHeaders($file, []);
+    }
+
+    /**
+     * Add a File entity as an attachment of the message, specifying the headers of the mail MIME part.
+     *
+     * @param File $file The file to attach to the message
+     * @param array $headers Additional headers fo the MIME part. Valid values are:
+     * - filename: The name to give to the attachment (it will be used as the filename part of the Content-Disposition header) [default: the filename of the File instance]
+     * - mimetype: the main value of the Content-Type header [default: the content type of the file]
+     * - disposition: the main value of the Content-Disposition header [default: attachment]
+     * - encoding: the value of the Content-Transfer-Encoding header [default: base64]
      * - charset: the charset value of the Content-Type header
      * - boundary: the boundary value of the Content-Type header
      * - id: the value of the Content-ID header (without angular brackets)
@@ -179,15 +191,23 @@ class Service
      * - location: the value of the Content-Location header
      * - language: the value of the Content-Language header
      */
-    public function addAttachment(File $file, array $additionalHeaders = [])
+    public function addAttachmentWithHeaders(File $file, array $headers)
     {
         $fileVersion = $file->getVersion();
         $resource = $fileVersion->getFileResource();
-        $this->addRawAttachment(
+        if (array_key_exists('filename', $headers)) {
+            $filename = $headers['filename'];
+            unset($headers['filename']);
+        } else {
+            $filename = $fileVersion->getFilename();
+        }
+        if (array_key_exists('mimetype', $headers)) {
+            $headers['mimetype'] = $resource->getMimetype();
+        }
+        $this->addRawAttachmentWithHeaders(
             $resource->read(),
-            $fileVersion->getFilename(),
-            $fileVersion->getMimeType(),
-            $additionalHeaders
+            $filename,
+            $headers
         );
     }
 
@@ -197,9 +217,27 @@ class Service
      * @param string $content The binary data of the attachemt
      * @param string $filename The name to give to the attachment (it will be used as the filename part of the Content-Disposition header)
      * @param string $mimetype The MIME type of the attachment (it will be the main value of the Content-Type header)
-     * @param array $additionalHeaders Additional headers fo the MIME part. Valid values are:
-     * - encoding: the value of the Content-Transfer-Encoding header (defaults to base64)
-     * - disposition: the main value of the Content-Disposition header (defaults to attachment)
+     */
+    public function addRawAttachment($content, $filename, $mimetype = 'application/octet-stream')
+    {
+        $this->addRawAttachmentWithHeaders(
+            $content,
+            $filename,
+            [
+                'mimetype' => $mimetype,
+            ]
+        );
+    }
+
+    /**
+     * Add a mail attachment by specifying its raw binary data, specifying the headers of the mail MIME part.
+     *
+     * @param string $content The binary data of the attachemt
+     * @param string $filename The name to give to the attachment (it will be used as the filename part of the Content-Disposition header)
+     * @param array $headers Additional headers fo the MIME part. Valid values are:
+     * - mimetype: the main value of the Content-Type header [default: application/octet-stream]
+     * - disposition: the main value of the Content-Disposition header [default: attachment]
+     * - encoding: the value of the Content-Transfer-Encoding header [default: base64]
      * - charset: the charset value of the Content-Type header
      * - boundary: the boundary value of the Content-Type header
      * - id: the value of the Content-ID header (without angular brackets)
@@ -207,11 +245,12 @@ class Service
      * - location: the value of the Content-Location header
      * - language: the value of the Content-Language header
      */
-    public function addRawAttachment($content, $filename, $mimetype = 'application/octet-stream', array $additionalHeaders = [])
+    public function addRawAttachmentWithHeaders($content, $filename, array $headers = [])
     {
-        $headers = $additionalHeaders + [
-            'encoding' => Mime::ENCODING_BASE64,
+        $headers += [
+            'mimetype' => 'application/octet-stream',
             'disposition' => Mime::DISPOSITION_ATTACHMENT,
+            'encoding' => Mime::ENCODING_BASE64,
             'charset' => '',
             'boundary' => '',
             'id' => '',
@@ -221,10 +260,10 @@ class Service
         ];
         $mp = new MimePart($content);
         $mp
-            ->setType($mimetype)
+            ->setFileName($filename)
+            ->setType($headers['mimetype'])
             ->setDisposition($headers['disposition'])
             ->setEncoding($headers['encoding'])
-            ->setFileName($filename)
             ->setCharset($headers['charset'])
             ->setBoundary($headers['boundary'])
             ->setId($headers['id'])
