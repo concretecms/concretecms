@@ -570,12 +570,21 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
 
     public function filterByBlockType(BlockType $bt)
     {
-        $this->query->select('distinct p.cID');
         $btID = $bt->getBlockTypeID();
-        $this->query->innerJoin('cv', 'CollectionVersionBlocks', 'cvb',
-            'cv.cID = cvb.cID and cv.cvID = cvb.cvID');
-        $this->query->innerJoin('cvb', 'Blocks', 'b', 'cvb.bID = b.bID');
-        $this->query->andWhere('b.btID = :btID');
+
+        $query = $this->query->getConnection()->createQueryBuilder();
+        $query->select('distinct p2.cID')
+            ->from('Pages', 'p2')
+            ->innerJoin('p2', 'CollectionVersions', 'cv2', 'cv2.cID = p2.cID')
+            ->innerJoin('cv2', 'CollectionVersionBlocks', 'cvb2',
+                'cv2.cID = cvb2.cID and cv2.cvID = cvb2.cvID')
+            ->innerJoin('cvb2', 'Blocks', 'b', 'cvb2.bID = b.bID')
+            ->andWhere('b.btID = :btID');
+
+
+        $this->query->andWhere(
+            $this->query->expr()->in('p.cID', $query->getSQL())
+        );
         $this->query->setParameter('btID', $btID);
     }
 
