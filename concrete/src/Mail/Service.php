@@ -687,7 +687,7 @@ class Service
      *
      * @return MimePart|null
      */
-    private function buildTextPart()
+    protected function buildTextPart()
     {
         if ($this->body === false) {
             $result = null;
@@ -707,7 +707,7 @@ class Service
      *
      * @return bool
      */
-    private function isInlineAttachment(MimePart $attachment) {
+    protected function isInlineAttachment(MimePart $attachment) {
         return $this->bodyHTML !== false
             && $attachment->getId()
             && in_array((string) $attachment->getDisposition(), ['', Mime::DISPOSITION_INLINE], true)
@@ -719,7 +719,7 @@ class Service
      *
      * @return MimePart|null
      */
-    private function buildHtmlPart()
+    protected function buildHtmlPart()
     {
         if ($this->bodyHTML === false) {
             $result = null;
