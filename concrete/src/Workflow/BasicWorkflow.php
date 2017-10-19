@@ -219,7 +219,7 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
             $userName = t('(Deleted User)');
         }
         $req = $wp->getWorkflowRequestObject();
-        $description = $req->getWorkflowRequestDescriptionObject()->getInContextDescription();
+        $description = $req->getWorkflowRequestDescriptionObject()->getDescription();
 
         return t(
             '%s Submitted by <strong>%s</strong> on %s.',

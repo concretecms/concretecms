@@ -4,6 +4,7 @@ namespace Concrete\Core\Notification\View;
 use Concrete\Controller\Element\Notification\ListDetails;
 use Concrete\Controller\Element\Notification\Menu;
 use Concrete\Core\Entity\Notification\Notification;
+use Concrete\Core\Support\Facade\Facade;
 use HtmlObject\Element;
 use HtmlObject\Link;
 
@@ -84,8 +85,11 @@ abstract class StandardListView implements StandardListViewInterface
     {
 
         $user = $this->getInitiatorUserObject();
+        $element = $this->getRequestedByElement();
+        $date = $this->notification->getNotificationDate();
+        $app = Facade::getFacadeApplication();
+        $service = $app->make('date');
         if (is_object($user)) {
-            $element = $this->getRequestedByElement();
             $inner = new Element('span', null, array('class' => 'ccm-block-desktop-waiting-for-me-author'));
 
             $link = new Link('#', $user->getUserDisplayName());
@@ -93,8 +97,16 @@ abstract class StandardListView implements StandardListViewInterface
             $element->appendChild($inner);
             $inner->appendChild($link);
 
+            $dateElement = new Element('span', tc('date', ' on %s', $service->formatDateTime($date, false, false, $this->notification->getNotificationDateTimeZone())), array('class' => 'ccm-block-desktop-waiting-for-me-date'));
+            $element->appendChild($dateElement);
+
+            return $element;
+        } else {
+            // No requested by element
+            $element = new Element('span', $service->formatDateTime($date, false, false, $this->notification->getNotificationDateTimeZone()), array('class' => 'ccm-block-desktop-waiting-for-me-date'));
             return $element;
         }
+
 
     }
 
