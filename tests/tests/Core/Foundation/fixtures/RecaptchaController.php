@@ -1,20 +1,24 @@
 <?php
 namespace Application\Concrete\Captcha;
 
-class RecaptchaController extends \Concrete\Core\Captcha\Controller
-{
-    public function display()
-    {
+use Concrete\Core\Captcha\CaptchaInterface;
 
+class RecaptchaController implements CaptchaInterface
+{
+    public function display(array $customImageAttributes = [])
+    {
     }
 
-    public function showInput()
+    public function showInput(array $customAttributes = [])
     {
         // TODO: Implement showInput() method.
     }
 
-    public function label()
+    public function label($inputID = 'ccm-captcha-code')
     {
+    }
 
+    public function check($fieldName = 'ccmCaptchaCode')
+    {
     }
 }

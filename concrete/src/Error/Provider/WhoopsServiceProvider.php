@@ -32,5 +32,6 @@ class WhoopsServiceProvider extends Provider
         }
 
         $run->register();
+        $this->app->instance(Run::class, $run);
     }
 }

@@ -89,10 +89,11 @@ class DateTime
      * @param bool $calendarAutoStart Set to false to avoid initializing the Javascript calendar
      * @param string $classes A list of space-separated classes to add to the ui-datepicker-div container
      * @param int $timeResolution The time resolution in seconds (60 means we won't ask seconds)
+     * @param array $datePickerOptions datepicker properties, see jquery-ui datepicker docs
      *
      * @return string
      */
-    public function datetime($field, $value = null, $includeActivation = false, $calendarAutoStart = true, $classes = null, $timeResolution = 60)
+    public function datetime($field, $value = null, $includeActivation = false, $calendarAutoStart = true, $classes = null, $timeResolution = 60, array $datePickerOptions = array())
     {
         $app = Application::getFacadeApplication();
         $dh = $app->make('helper/date');
@@ -180,6 +181,7 @@ class DateTime
         }
 
         // Build HTML
+        $datePickerOptionsAsJSON = json_encode($datePickerOptions, JSON_FORCE_OBJECT);
         $shownDateFormat = $dh->getPHPDatePattern();
         $disabled = '';
         $html = '<div class="form-inline">';
@@ -294,7 +296,7 @@ class DateTime
             $html .= <<<EOT
 <script type="text/javascript">
 $(function() {
-  $('#{$id}_dt_pub').datepicker({
+  $('#{$id}_dt_pub').datepicker($.extend({$datePickerOptionsAsJSON}, {
     dateFormat: $dateFormat,
     altFormat: 'yy-mm-dd',
     altField: '#{$id}_dt',
@@ -307,7 +309,7 @@ $(function() {
         $(inst.settings.altField).val('');
       }
     }
-  }).datepicker('setDate', $defaultDateJs);
+  })).datepicker('setDate', $defaultDateJs);
 })
 </script>
 EOT;
@@ -339,8 +341,11 @@ EOT;
      * @param string $field The field name (will be used as $field parameter in the translate method)
      * @param \DateTime|string $value The initial value
      * @param bool $calendarAutoStart Set to false to avoid initializing the Javascript calendar
+     * @param array $datePickerOptions datepicker properties, see jquery-ui datepicker docs
+     *
+     * @return string
      */
-    public function date($field, $value = null, $calendarAutoStart = true)
+    public function date($field, $value = null, $calendarAutoStart = true, array $datePickerOptions = array())
     {
         $app = Application::getFacadeApplication();
         $dh = $app->make('helper/date');
@@ -368,6 +373,7 @@ EOT;
         }
 
         // Build HTML
+        $datePickerOptionsAsJSON = json_encode($datePickerOptions, JSON_FORCE_OBJECT);
         $shownDateFormat = $dh->getPHPDatePattern();
         $html = '<div class="form-inline">';
         $html .= '<span class="ccm-input-date-wrapper" id="' . $id . '_dw">';
@@ -391,7 +397,7 @@ EOT;
             $html .= <<<EOT
 <script type="text/javascript">
 $(function() {
-  $('#{$id}_pub').datepicker({
+  $('#{$id}_pub').datepicker($.extend({$datePickerOptionsAsJSON}, {
     dateFormat: $dateFormat,
     altFormat: 'yy-mm-dd',
     altField: '#{$id}',
@@ -403,7 +409,7 @@ $(function() {
         $(inst.settings.altField).val('');
       }
     }
-  }).datepicker('setDate', $defaultDateJs);
+  })).datepicker('setDate', $defaultDateJs);
 });
 </script>
 EOT;

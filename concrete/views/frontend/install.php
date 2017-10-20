@@ -1,9 +1,17 @@
 <?php
 use Concrete\Core\Localization\Localization;
+use Concrete\Core\Install\WebPreconditionInterface;
+use Concrete\Core\Install\PreconditionResult;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
+/* @var int $backgroundFade */
+/* @var Concrete\Controller\Install $controller */
 /* @var Concrete\Core\Form\Service\Form $form */
+/* @var Concrete\Core\Html\Service\Html $html */
+/* @var Concrete\Core\View\View $this */
+/* @var Concrete\Core\View\View $view */
+
 $image = date('Ymd') . '.jpg';
 $imagePath = Config::get('concrete.urls.background_feed') . '/' . $image;
 
@@ -13,6 +21,17 @@ if ($install_config) {
     $_POST = $install_config;
 }
 ?>
+    <style>
+        .panel-heading .panel-title a:after {
+            font-family: 'FontAwesome';
+            content: "\f077";
+            float: right;
+            color: #333;
+        }
+        .panel-heading .panel-title a.collapsed:after {
+            content: "\f078";
+        }
+    </style>
     <script type="text/javascript" src="<?= ASSETS_URL_JAVASCRIPT ?>/bootstrap/tooltip.js"></script>
     <script type="text/javascript" src="<?= ASSETS_URL_JAVASCRIPT ?>/jquery-cookie.js"></script>
     <script type="text/javascript">
@@ -201,10 +220,10 @@ if (isset($successMessage)) {
         </button>
     </div>
 
-
     <?php
-} elseif ($this->controller->getTask() == 'setup' || $this->controller->getTask() == 'configure') {
+} elseif ($controller->getTask() == 'setup' || $controller->getTask() == 'configure') {
     ?>
+
     <script type="text/javascript">
         $(function () {
             $("#sample-content-selector td").click(function () {
@@ -452,7 +471,6 @@ if (isset($successMessage)) {
         </div>
     </div>
 
-
     <?php
 } elseif (isset($locale) || (empty($locales) && empty($onlineLocales))) {
     ?>
@@ -463,632 +481,197 @@ if (isset($successMessage)) {
             <li class="active"><?= t('Testing Environment') ?></li>
         </ul>
     </div>
-
-    <script type="text/javascript">
-        $(function () {
-            $("#install-errors").hide();
-        });
-        <?php
-        if ($this->controller->passedRequiredItems()) {
-        ?>
-        var showFormOnTestCompletion = true;
-        <?php
-        } else {
-        ?>
-        var showFormOnTestCompletion = false;
-        <?php
-        }
-        ?>
-        $(function () {
-            $(".ccm-test-js i").hide();
-            $("#ccm-test-js-success").show();
-            if ($.cookie('CONCRETE5_INSTALL_TEST')) {
-                $("#ccm-test-cookies-enabled-loading").attr('class', 'fa fa-check');
-            } else {
-                $("#ccm-test-cookies-enabled-loading").attr('class', 'fa fa-exclamation-circle');
-                $("#ccm-test-cookies-enabled-tooltip").show();
-                $("#install-errors").show();
-                showFormOnTestCompletion = false;
-            }
-            $("#ccm-test-request-loading").ajaxError(function (event, request, settings) {
-                $(this).attr('src', '<?=ASSETS_URL_IMAGES?>/icons/error.png');
-                $("#ccm-test-request-tooltip").show();
-                showFormOnTestCompletion = false;
-            });
-            $.getJSON('<?=$view->url("/install", "test_url", "20", "20")?>', function (json) {
-                // test url takes two numbers and adds them together. Basically we just need to make sure that
-                // our url() syntax works - we do this by sending a test url call to the server when we're certain
-                // of what the output will be
-                if (json.response == 40) {
-                    $("#ccm-test-request-loading").attr('class', 'fa fa-check');
-                    if (showFormOnTestCompletion) {
-                        $("#install-success").show();
-                        $('form[data-form=continue-to-installation]').show();
-                    } else {
-                        $("#install-errors").show();
-                        $('form[data-form=rerun-tests]').show();
-                    }
-                    $("#ccm-test-request-tooltip").hide();
-                } else {
-                    $("#ccm-test-request-loading").attr('class', 'fa fa-exclamation-circle');
-                    $("#ccm-test-request-tooltip").show();
-                    $("#install-errors").show();
-                    $('form[data-form=rerun-tests]').show();
-                }
-            });
-        });
-    </script>
-
+    
     <div class="row">
         <div class="col-sm-10 col-sm-offset-1">
 
-
             <div class="spacer-row-3"></div>
-
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h4 class="panel-title"><?= t('Required Items') ?></h4>
-        </div>
-        <div class="panel-body">
-            <div class="row">
-                <div class="col-sm-6">
-
-                    <table class="table requirements-table">
-                        <tbody>
-                        <tr>
-                            <td class="ccm-test-phpversion">
-                                <?php
-                                if ($phpVtest) {
-                                    ?>
-                                    <i class="fa fa-check"></i>
-                                    <?php
-                                } else {
-                                    ?>
-                                    <i class="fa fa-exclamation-circle"></i>
-                                    <?php
-                                }
+    
+            <?php
+            $showRerunTests = false;
+            $requiredPreconditionFailed = false;
+            $pendingPreconditions = [];
+            list($requiredPreconditions, $optionalPreconditions) = $controller->getPreconditions();
+    
+            foreach ([
+                t('Required Items') => $requiredPreconditions,
+                t('Optional Items') => $optionalPreconditions,
+            ] as $preconditionsTitle => $preconditions) {
+                $numPreconditions = count($preconditions);
+                if ($numPreconditions === 0) {
+                    continue;
+                }
+                $leftRightPreconditions = array_chunk($preconditions, ceil($numPreconditions / 2));
+                ?>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title"><?= $preconditionsTitle ?></h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <?php
+                            foreach ($leftRightPreconditions as $preconditions) {
                                 ?>
-                            </td>
-                            <td style="width: 100%">
-                                <?= t(/*i18n: %s is the php version*/
-                                    'PHP %s', $phpVmin) ?>
-                            </td>
-                            <td>
+                                <div class="col-sm-6">
+                                    <table class="table requirements-table">
+                                        <tbody>
+                                            <?php
+                                            foreach ($preconditions as $precondition) {
+                                                /* @var Concrete\Core\Install\PreconditionInterface $precondition */
+                                                if ($precondition instanceof WebPreconditionInterface) {
+                                                    echo $precondition->getHtml();
+                                                    $preconditionState = $precondition->getInitialState();
+                                                    $preconditionMessage = $precondition->getInitialMessage();
+                                                    $pendingPreconditions[] = $precondition->getUniqueIdentifier();
+                                                } else {
+                                                    $preconditionResult = $precondition->performCheck();
+                                                    $preconditionState = $preconditionResult->getState();
+                                                    $preconditionMessage = $preconditionResult->getMessage();
+                                                }
+                                                ?>
+                                                <tr id="precondition-<?= $precondition->getUniqueIdentifier() ?>">
+                                                    <td>
+                                                        <?php
+                                                        if ($preconditionState === null) {
+                                                            echo '<i class="precondition-state fa fa-spinner fa-spin"></i>';
+                                                        } else {
+                                                            switch ($preconditionState) {
+                                                                case PreconditionResult::STATE_PASSED:
+                                                                    echo '<i class="precondition-state fa fa-check"></i>';
+                                                                    break;
+                                                                case PreconditionResult::STATE_WARNING:
+                                                                    if (!$precondition instanceof WebPreconditionInterface) {
+                                                                        $showRerunTests = true;
+                                                                    }
+                                                                    echo '<i class="precondition-state fa fa-warning"></i>';
+                                                                    break;
+                                                                case PreconditionResult::STATE_SKIPPED:
+                                                                    break;
+                                                                case PreconditionResult::STATE_FAILED:
+                                                                default:
+                                                                    if (!$precondition instanceof WebPreconditionInterface) {
+                                                                        $showRerunTests = true;
+                                                                        if (!$precondition->isOptional()) {
+                                                                            $requiredPreconditionFailed = true;
+                                                                        }
+                                                                    }
+                                                                    echo '<i class="precondition-state fa fa-exclamation-circle"></i>';
+                                                                    break;
+                                                            }
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                    <td style="width: 100%">
+                                                        <?= h($precondition->getName()) ?>
+                                                    </td>
+                                                    <td class="preconditionmessage">
+                                                        <?php
+                                                        if ($preconditionMessage !== '') {
+                                                            ?>
+                                                            <i class="fa fa-question-circle launch-tooltip" title="<?= h($preconditionMessage) ?>"></i>
+                                                            <?php
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                </tr>
+                                                <?php
+                                            }
+                                            ?>
+                                        </tbody>
+                                    </table>
+                                </div>
                                 <?php
-                                if (!$phpVtest) {
-                                    ?>
-                                    <i class="fa fa-question-circle launch-tooltip"
-                                       title="<?= t('concrete5 requires at least PHP %s', $phpVmin) ?>"></i>
-                                    <?php
-                                }
-                                ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="ccm-test-js">
-                                <i id="ccm-test-js-success" class="fa fa-check" style="display: none"></i>
-                                <i class="fa fa-exclamation-circle"></i>
-                            </td>
-                            <td style="width: 100%">
-                                <?= t('JavaScript Enabled') ?>
-                            </td>
-                            <td class="ccm-test-js">
-                                <i class="fa fa-question-circle launch-tooltip"
-                                   title="<?= t('Please enable JavaScript in your browser.') ?>"></i>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <?php
-                                if ($mysqlTest) {
-                                    ?>
-                                    <i class="fa fa-check"></i>
-                                    <?php
-                                } else {
-                                    ?>
-                                    <i class="fa fa-exclamation-circle"></i>
-                                    <?php
-                                }
-                                ?>
-                            </td>
-                            <td style="width: 100%">
-                                <?= t('MySQL PDO Extension Enabled') ?>
-                            </td>
-                            <td>
-                                <?php
-                                if (!$mysqlTest) {
-                                    ?>
-                                    <i class="fa fa-question-circle launch-tooltip"
-                                       title="<?= $this->controller->getDBErrorMsg() ?>"></i>
-                                    <?php
-                                }
-                                ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <i id="ccm-test-request-loading" class="fa fa-spinner fa-spin"></i>
-                            </td>
-                            <td style="width: 100%">
-                                <?= t('Supports concrete5 request URLs') ?>
-                            </td>
-                            <td>
-                                <i id="ccm-test-request-tooltip" class="fa fa-question-circle launch-tooltip"
-                                   title="<?= t('concrete5 cannot parse the PATH_INFO or ORIG_PATH_INFO information provided by your server.') ?>"></i>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <?php
-                                if ($jsonTest) {
-                                    ?>
-                                    <i class="fa fa-check"></i>
-                                    <?php
-                                } else {
-                                    ?>
-                                    <i class="fa fa-exclamation-circle"></i>
-                                    <?php
-                                }
-                                ?>
-                            </td>
-                            <td style="width: 100%">
-                                <?= t('JSON Extension Enabled') ?>
-                            </td>
-                            <td>
-                                <?php
-                                if (!$jsonTest) {
-                                    ?>
-                                    <i class="fa fa-question-circle launch-tooltip"
-                                       title="<?= t('You must enable PHP\'s JSON support. This should be enabled by default in PHP 5.2 and above.') ?>"></i>
-                                    <?php
-                                }
-                                ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <?php
-                                if ($domTest) {
-                                    ?>
-                                    <i class="fa fa-check"></i>
-                                    <?php
-                                } else {
-                                    ?>
-                                    <i class="fa fa-exclamation-circle"></i>
-                                    <?php
-                                }
-                                ?>
-                            </td>
-                            <td style="width: 100%">
-                                <?php echo t('DOM Extension Enabled') ?>
-                            </td>
-                            <td>
-                                <?php
-                                if (!$domTest) {
-                                    ?>
-                                    <i class="fa fa-question-circle launch-tooltip"
-                                       title="<?php echo t('You must enable PHP\'s DOM support.') ?>"></i>
-                                    <?php
-                                }
-                                ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <?php
-                                if ($aspTagsTest) {
-                                    ?>
-                                    <i class="fa fa-check"></i>
-                                    <?php
-                                } else {
-                                    ?>
-                                    <i class="fa fa-exclamation-circle"></i>
-                                    <?php
-                                }
-                                ?>
-                            </td>
-                            <td style="width: 100%">
-                                <?= t('ASP Style Tags Disabled') ?>
-                            </td>
-                            <td>
-                                <?php
-                                if (!$aspTagsTest) {
-                                    ?>
-                                    <i class="fa fa-question-circle launch-tooltip"
-                                       title="<?= t('You must disable PHP\'s ASP Style Tags.') ?>"></i>
-                                    <?php
-                                }
-                                ?></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <?php
-                                if ($finfoTest) {
-                                    ?>
-                                    <i class="fa fa-check"></i>
-                                    <?php
-                                } else {
-                                    ?>
-                                    <i class="fa fa-exclamation-circle"></i>
-                                    <?php
-                                }
-                                ?>
-                            </td>
-                            <td style="width: 100%">
-                                <?= t('Fileinfo Extension Enabled') ?>
-                            </td>
-                            <td>
-                                <?php
-                                if (!$finfoTest) {
-                                    ?>
-                                    <i class="fa fa-question-circle launch-tooltip"
-                                       title="<?= t('You must enable the PHP Fileinfo extension.') ?>"></i>
-                                    <?php
-                                }
-                                ?></td>
-                        </tr>
-
-                        </tbody>
-                    </table>
-
+                            }
+                            ?>
+                        </div>
+                    </div>
                 </div>
+                <?php
+            }
+            ?>
+            <script>
+            (function() {
+                var showRerunTests = <?= json_encode($showRerunTests) ?>,
+                    requiredPreconditionFailed = <?= json_encode($requiredPreconditionFailed) ?>,
+                    pendingPreconditions = <?= json_encode($pendingPreconditions) ?>;
+                function checkDone() {
+                    if (pendingPreconditions.length > 0) {
+                        return;
+                    }
+                    if (showRerunTests) {
+                        $('#rerun-tests').css('visibility', 'visible');
+                    }
+                    if (!requiredPreconditionFailed) {
+                        $('#continue-to-installation').css('visibility', 'visible');
+                    }
+                }
+                window.setWebPreconditionResult = function(id, success, message, isOptional) {
+                    if (!success) {
+                        showRerunTests = true;
+                        if (!isOptional) {
+                            requiredPreconditionFailed = true;
+                        }
+                    }
+                    var index = pendingPreconditions.indexOf(id);
+                    if (index >= 0) {
+                        pendingPreconditions.splice(index, 1);
+                    }
+                    var $tr = $('#precondition-' + id),
+                        $state = $tr.find('.precondition-state'),
+                        $message = $tr.find('.preconditionmessage');
+                    $state
+                        .removeClass('fa-spinner fa-spin fa-check fa-warning fa-exclamation-circle')
+                        .addClass(success ? 'fa-check' : 'fa-exclamation-circle');
+                    $message.empty();
+                    if (message) {
+                        $message.append(
+                            $('<i class="fa fa-question-circle launch-tooltip" />')
+                            .attr('title', message)
+                            .tooltip()
+                        );
+                    }
+                    checkDone();
+                };
+                $(document).ready(function() {
+                    checkDone();
+                });
+            })();
+            </script>
 
-                <div class="col-sm-6">
+            <style>
+                #install-errors { display: none }
+                #rerun-tests { visibility: hidden }
+            </style>
+            <noscript>
+                <style>
+                    #install-errors { display: block }
+                    #rerun-tests { visibility: visible }
+                </style>
+            </noscript>
 
-                    <table class="table requirements-table">
-                        <tbody>
-                        <tr>
-                            <td>
-                                <?php
-                                if ($imageTest) {
-                                    ?>
-                                    <i class="fa fa-check"></i>
-                                    <?php
-                                } else {
-                                    ?>
-                                    <i class="fa fa-exclamation-circle"></i>
-                                    <?php
-                                }
-                                ?>
-                            </td>
-                            <td style="width: 100%">
-                                <?= t('Image Manipulation Available') ?>
-                            </td>
-                            <td>
-                                <?php
-                                if (!$imageTest) {
-                                    ?>
-                                    <i class="fa fa-question-circle launch-tooltip"
-                                       title="<?= t('concrete5 requires GD library 2.0.1 with JPEG, PNG and GIF support. Doublecheck that your installation has support for all these image types.') ?>"></i>
-                                    <?php
-                                }
-                                ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <?php
-                                if ($xmlTest) {
-                                    ?>
-                                    <i class="fa fa-check"></i>
-                                    <?php
-                                } else {
-                                    ?>
-                                    <i class="fa fa-exclamation-circle"></i>
-                                    <?php
-                                }
-                                ?>
-                            </td>
-                            <td style="width: 100%">
-                                <?= t('XML Support') ?>
-                            </td>
-                            <td>
-                                <?php
-                                if (!$xmlTest) {
-                                    ?>
-                                    <i class="fa fa-question-circle launch-tooltip"
-                                       title="<?= t('concrete5 requires PHP XML Parser and SimpleXML extensions') ?>"></i>
-                                    <?php
-                                }
-                                ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <?php
-                                if ($fileWriteTest) {
-                                    ?>
-                                    <i class="fa fa-check"></i>
-                                    <?php
-                                } else {
-                                    ?>
-                                    <i class="fa fa-exclamation-circle"></i>
-                                    <?php
-                                }
-                                ?>
-                            </td>
-                            <td style="width: 100%">
-                                <?= t('Writable Files and Configuration Directories') ?>
-                            </td>
-                            <td>
-                                <?php
-                                if (!$fileWriteTest) {
-                                    ?>
-                                    <i class="fa fa-question-circle launch-tooltip"
-                                       title="<?= t('The packages/, application/config/ and application/files/ directories must be writable by your web server.') ?>"></i>
-                                    <?php
-                                }
-                                ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <i id="ccm-test-cookies-enabled-loading" class="fa fa-spinner fa-spin"></i>
-                            </td>
-                            <td style="width: 100%">
-                                <?= t('Cookies Enabled') ?>
-                            </td>
-                            <td>
-                                <i id="ccm-test-cookies-enabled-tooltip" class="fa fa-question-circle launch-tooltip"
-                                   title="<?= t('Cookies must be enabled in your browser to install concrete5.') ?>"></i>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <?php
-                                if ($i18nTest) {
-                                    ?>
-                                    <i class="fa fa-check"></i>
-                                    <?php
-                                } else {
-                                    ?>
-                                    <i class="fa fa-exclamation-circle"></i>
-                                    <?php
-                                }
-                                ?>
-                            </td>
-                            <td style="width: 100%">
-                                <?= t('Internationalization Support') ?>
-                            </td>
-                            <td>
-                                <?php
-                                if (!$i18nTest) {
-                                    ?>
-                                    <i class="fa fa-question-circle launch-tooltip"
-                                       title="<?= t('You must enable ctype, iconv and multibyte string (mbstring) support in PHP.') ?>"></i>
-                                    <?php
-                                }
-                                ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <?php
-                                if ($docCommentTest) {
-                                    ?>
-                                    <i class="fa fa-check"></i>
-                                    <?php
-                                } else {
-                                    ?>
-                                    <i class="fa fa-exclamation-circle"></i>
-                                    <?php
-                                }
-                                ?>
-                            </td>
-                            <td style="width: 100%">
-                                <?= t('PHP Comments Preserved') ?>
-                            <td>
-                                <?php
-                                if (!$docCommentTest) {
-                                    ?>
-                                    <i class="fa fa-question-circle launch-tooltip"
-                                       title="<?= t('concrete5 is not compatible with opcode caches that strip PHP comments. Certain configurations of eAccelerator and Zend opcode caching may use this behavior, and it must be disabled.') ?>"></i>
-                                    <?php
-                                }
-                                ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <?php
-                                if ($tokenizerTest) {
-                                    ?>
-                                    <i class="fa fa-check"></i>
-                                    <?php
-                                } else {
-                                    ?>
-                                    <i class="fa fa-exclamation-circle"></i>
-                                    <?php
-                                }
-                                ?>
-                            </td>
-                            <td style="width: 100%">
-                                <?= t('Tokenizer Extension Enabled') ?>
-                            </td>
-                            <td>
-                                <?php
-                                if (!$tokenizerTest) {
-                                    ?>
-                                    <i class="fa fa-question-circle launch-tooltip"
-                                       title="<?= t('The PHP Tokenizer extension has been disabled intentionally on this server and must be enabled.') ?>"></i>
-                                    <?php
-                                }
-                                ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <?php
-                                if ($memoryTest === -1) {
-                                    ?>
-                                    <i class="fa fa-exclamation-circle"></i>
-                                    <?php
-                                } elseif ($memoryTest === 1) {
-                                    ?>
-                                    <i class="fa fa-check"></i>
-                                    <?php
-                                } else {
-                                    ?>
-                                    <i class="fa fa-warning"></i>
-                                    <?php
-                                }
-                                ?>
-                            </td>
-                            <td style="width: 100%">
-                                <?php
-                                if ($memoryTest === -1) {
-                                    ?>
-                                    <span class="text-danger">
-                                        <?= t('concrete5 will not install with less than %1$s of RAM. Your memory limit is currently %2$s. Please increase your memory_limit using ini_set.',
-                                            Core::make('helper/number')->formatSize($memoryThresoldMin),
-                                            Core::make('helper/number')->formatSize($memoryBytes)
-                                        ) ?>
-                                    </span>
-                                    <?php
-                                }
-                                ?>
-                                <?php
-                                if ($memoryTest === 0) {
-                                    ?>
-                                    <span class="text-warning">
-                                        <?= t('concrete5 runs best with at least %1$s of RAM. Your memory limit is currently %2$s. You may experience problems uploading and resizing large images, and may have to install concrete5 without sample content.',
-                                            Core::make('helper/number')->formatSize($memoryThresold),
-                                            Core::make('helper/number')->formatSize($memoryBytes)
-                                        ) ?>
-                                    </span>
-                                    <?php
-                                }
-                                ?>
-                                <?php
-                                if ($memoryTest === 1) {
-                                    ?>
-                                    <span class="text-success">
-                                        <?= t('Memory limit %s.',
-                                            Core::make('helper/number')->formatSize($memoryBytes)) ?>
-                                    </span>
-                                    <?php
-                                }
-                                ?>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-
-                </div>
+            <div class="alert alert-danger" id="install-errors">
+                <?= t('There are problems with your installation environment. Please correct them and click the button below to re-run the pre-installation tests.') ?>
+                <?= t('Having trouble? Check the <a href="%s">installation help forums</a>, or <a href="%s">have us host a copy</a> for you.', 'http://www.concrete5.org/community/forums', 'http://www.concrete5.org/services/hosting') ?>
             </div>
 
-        </div>
-    </div>
-
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h4 class="panel-title"><?= t('Optional Items') ?></h4>
-        </div>
-        <div class="panel-body">
-            <div class="row">
-                <div class="col-sm-6">
-
-                    <table class="table requirements-table">
-                        <tbody>
-                        <tr>
-                            <td>
-                                <?php
-                                if ($remoteFileUploadTest) {
-                                    ?>
-                                    <i class="fa fa-check"></i>
-                                    <?php
-                                } else {
-                                    ?>
-                                    <i class="fa fa-warning"></i>
-                                    <?php
-                                }
-                                ?>
-                            </td>
-                            <td style="width: 100%">
-                                <?= t('Remote File Importing Available') ?>
-                            </td>
-                            <td>
-                                <?php
-                                if (!$remoteFileUploadTest) {
-                                    ?>
-                                    <i class="fa fa-question-circle launch-tooltip"
-                                       title="<?= t('Remote file importing through the file manager requires the iconv PHP extension.') ?>"></i>
-                                    <?php
-                                }
-                                ?>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-
-                </div>
-
-                <div class="col-sm-6">
-
-                    <table class="table requirements-table">
-                        <tbody>
-                        <tr>
-                            <td>
-                                <?php
-                                if ($fileZipTest) {
-                                    ?>
-                                    <i class="fa fa-check"></i>
-                                    <?php
-                                } else {
-                                    ?>
-                                    <i class="fa fa-warning"></i>
-                                    <?php
-                                }
-                                ?>
-                            </td>
-                            <td style="width: 100%">
-                                <?= t('Zip Support') ?>
-                            </td>
-                            <td>
-                                <?php
-                                if (!$fileZipTest) {
-                                    ?>
-                                    <i class="fa fa-question-circle launch-tooltip"
-                                       title="<?= t('Downloading zipped files from the file manager, remote updating and marketplace integration requires the Zip extension.') ?>"></i>
-                                    <?php
-                                }
-                                ?>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-
-                </div>
+            <div class="ccm-install-actions">
+                <form method="post" action="<?= $view->url('/install') ?>" id="rerun-tests" class="pull-left">
+                    <input type="hidden" name="locale" value="<?= h($locale) ?>"/>
+                    <button class="btn btn-danger" type="submit">
+                        <?= t('Run Tests Again') ?>
+                        <i class="fa fa-refresh"></i>
+                    </button>
+                </form>
+                <form method="post" action="<?= $view->url('/install', 'setup') ?>" id="continue-to-installation" style="visibility: hidden" class="pull-right">
+                    <input type="hidden" name="locale" value="<?= h($locale) ?>"/>
+                    <a class="btn btn-primary" href="javascript:void(0)" onclick="$(this).parent().submit()">
+                        <?= t('Continue to Installation') ?>
+                        <i class="fa fa-arrow-right fa-white"></i>
+                    </a>
+                </form>
             </div>
-        </div>
-    </div>
-
-    <div class="alert alert-danger" id="install-errors">
-        <?= t('There are problems with your installation environment. Please correct them and click the button below to re-run the pre-installation tests.') ?>
-        <?= t('Having trouble? Check the <a href="%s">installation help forums</a>, or <a href="%s">have us host a copy</a> for you.',
-            'http://www.concrete5.org/community/forums', 'http://www.concrete5.org/services/hosting') ?>
-    </div>
-
-    <div class="ccm-install-actions">
-        <form method="post" action="<?= $view->url('/install', 'setup') ?>" data-form="continue-to-installation"
-              style="display: none">
-            <input type="hidden" name="locale" value="<?= h($locale) ?>"/>
-            <a class="btn btn-primary" href="javascript:void(0)" onclick="$(this).parent().submit()">
-                <?= t('Continue to Installation') ?>
-                <i class="fa fa-arrow-right fa-white"></i>
-            </a>
-        </form>
-        <form method="post" action="<?= $view->url('/install') ?>" data-form="rerun-tests" style="display: none">
-            <input type="hidden" name="locale" value="<?= h($locale) ?>"/>
-            <button class="btn btn-danger" type="submit">
-                <?= t('Run Tests Again') ?>
-                <i class="fa fa-refresh"></i>
-            </button>
-        </form>
-
-    </div>
-
-    <div class="spacer-row-6"></div>
+        
+            <div class="spacer-row-6"></div>
 
         </div>
     </div>
@@ -1126,4 +709,5 @@ if (isset($successMessage)) {
     </div>
 
     <?php
-}?>
+}
+

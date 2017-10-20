@@ -358,7 +358,7 @@
 
         ConcreteEvent.unsubscribe('FileManagerJumpToFolder.concreteTree');
         ConcreteEvent.subscribe('FileManagerJumpToFolder.concreteTree', function(e, r) {
-            my.loadFolder(r.node.key);
+            my.loadFolder(r.folderID);
         });
 
         ConcreteEvent.unsubscribe('ConcreteTreeDeleteTreeNode.concreteTree');

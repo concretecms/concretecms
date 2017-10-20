@@ -8,7 +8,7 @@ return [
      */
     'version' => '8.3.0a1',
     'version_installed' => '8.3.0a1',
-    'version_db' => '20170905000000', // the key of the latest database migration
+    'version_db' => '20171012000000', // the key of the latest database migration
 
     /*
      * Installation status
@@ -340,6 +340,10 @@ return [
             'name' => null,
         ],
         'validate_registration' => [
+            'address' => null,
+            'name' => null,
+        ],
+        'workflow_notification' => [
             'address' => null,
             'name' => null,
         ],
@@ -698,6 +702,11 @@ return [
              * Determines whether the username field is displayed when registering
              */
             'display_username_field' => true,
+
+            /*
+             * Determines whether the confirm password field is displayed when registering
+             */
+            'display_confirm_password_field' => true,
 
             /*
              * Validate emails during registration

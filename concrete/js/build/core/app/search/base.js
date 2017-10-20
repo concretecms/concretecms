@@ -229,30 +229,38 @@
 
 		} else {
 			if (event.which == 3) {
-				// right click
-				// If the current item is not selected, we deselect everything and select it
-				if (!$row.hasClass('ccm-search-select-selected')) {
-					my.$element.find('.ccm-search-select-selected').removeClass();
-					$row.addClass('ccm-search-select-selected');
-				}
-
-				var results = my.getSelectedResults();
-				var $menu = my.getResultMenu(results);
-				if ($menu) {
-					my.showMenu($row, $menu, event);
-				}
-
+				my.handleMenuClick(event, $row);
 			} else {
 				if (!$row.hasClass('ccm-search-select-selected')) {
+					// Select the row
 					$row.addClass('ccm-search-select-selected');
+				} else {
+					// Unselect the row
+					$row.removeClass('ccm-search-select-selected');
 				}
 			}
+
 			ConcreteEvent.publish('SearchSelectItems', {
 				'results': my.getSelectedResults()
 			}, my.$element);
 
 		}
-	}
+	};
+
+    ConcreteAjaxSearch.prototype.handleMenuClick = function(event, $row) {
+        // right click
+        // If the current item is not selected, we deselect everything and select it
+        if (!$row.hasClass('ccm-search-select-selected')) {
+            this.$element.find('.ccm-search-select-selected').removeClass();
+            $row.addClass('ccm-search-select-selected');
+        }
+
+        var results = this.getSelectedResults();
+        var $menu = this.getResultMenu(results);
+        if ($menu) {
+            this.showMenu($row, $menu, event);
+        }
+	};
 
 	ConcreteAjaxSearch.prototype.getResult = function() {
 		return this.result;
@@ -261,7 +269,8 @@
 	ConcreteAjaxSearch.prototype.updateResults = function(result) {
 		var cs = this,
 			options = cs.options,
-			touchTimer = null;
+			touchTimer = null,
+			touchEvent;
 
 		cs.result = result;
 
@@ -282,7 +291,7 @@
 		if (options.selectMode == 'multiple') {
 			// We enable item selection, click to select single, command click for
 			// multiple, shift click for range
-			cs.$element.find('tbody tr').on('contextmenu' +
+			cs.$element.find('tbody tr').on('contextmenu touchstart touchend' +
 				'', function(e) {
 				e.preventDefault();
 				return false;
@@ -302,6 +311,7 @@
 				}
 			}).on('touchstart.concreteSearchResultItem', function(e) {
 				var me = $(this);
+				touchEvent = e;
 				touchTimer = setTimeout(function() {
 					cs.handleSelectClick(e, me);
 					touchTimer = null;
@@ -310,7 +320,9 @@
 				if (touchTimer) {
 					clearTimeout(touchTimer);
 					touchTimer = null;
+                    cs.handleMenuClick(touchEvent, $(this));
 				}
+				touchEvent = null;
 			});
 
 		} else {

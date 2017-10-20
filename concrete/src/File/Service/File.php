@@ -326,6 +326,9 @@ class File
         if (isset($url['scheme']) && isset($url['host'])) {
             $app = CoreApplication::getFacadeApplication();
             $client = $app->make('http/client')->setUri($file);
+            if (!empty($timeout) && $timeout > 0) {
+                $client->setOptions(['timeout' => $timeout]);
+            }
             try {
                 $response = $client->send();
             } catch (TimeoutException $x) {
