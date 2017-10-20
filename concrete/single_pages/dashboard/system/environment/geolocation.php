@@ -98,7 +98,27 @@ if (isset($geolocator)) {
             <?= $form->label('geolocation-test-ip', t('Test this IP address')) ?>
             <?= $form->text('geolocation-test-ip', (string) $ip) ?>
         </div>
-        <div class="alert" style="white-space: pre-wrap; overflow: auto;"></div>
+        <div class="geotest-processing alert alert-info">
+            <?= t('Enter the IP address to be used to test the selected library.') ?>
+        </div>
+        <div class="geotest-error alert alert-danger hide"></div>
+        <div class="geotest-result alert alert-success hide">
+            <table class="table table-condensed">
+                <tbody>
+                    <tr><th><?= t('Has data?') ?></th><td class="georesult-hasData"></td>
+                    <tr><th><?= t('Error') ?></th><td class="georesult-error"></td>
+                    <tr><th><?= t('City') ?></th><td class="georesult-cityName"></td>
+                    <tr><th><?= t('State/Province code') ?></th><td class="georesult-stateProvinceCode"></td>
+                    <tr><th><?= t('State/Province name') ?></th><td class="georesult-stateProvinceName"></td>
+                    <tr><th><?= t('Postal Code') ?></th><td class="georesult-postalCode"></td>
+                    <tr><th><?= t('Country Code') ?></th><td class="georesult-countryCode"></td>
+                    <tr><th><?= t('Country Name (in American English)') ?></th><td class="georesult-countryName"></td>
+                    <tr><th><?= t('Country Name (in current language)') ?></th><td class="georesult-countryNameLocalized"></td>
+                    <tr><th><?= t('Latitude') ?></th><td class="georesult-latitude"></td>
+                    <tr><th><?= t('Longitude') ?></th><td class="georesult-longitude"></td>
+                </tbody>
+            </table>
+        </div>
         <div class="dialog-buttons">
             <button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?= t('Close') ?></button>
             <button class="btn btn-primary pull-right geolocation-test-go"><?= t('Test') ?></button>
@@ -109,12 +129,17 @@ if (isset($geolocator)) {
         $('table.geolocation-libraries tr[data-editurl]').on('click', function() {
             window.location.href = $(this).data('editurl');
         });
-        function testGeolocator(geolocatorId, ip, $result) {
-            $result
-                .removeClass('alert-info alert-danger alert-success')
-                .addClass('alert-info')
-                .text(<?= json_encode('Loading...') ?>)
-                .show();
+        function testGeolocator(geolocatorId, ip, $processing, $error, $result) {
+            if (testGeolocator.busy === true) {
+                ConcreteAlert.error({
+                    message: <?= json_encode(t('The previous request is still waiting for a response.')) ?>
+                });
+                return;
+            }
+            testGeolocator.busy = true;
+            $error.addClass('hide');
+            $result.addClass('hide');
+            $processing.text(<?= json_encode(t('Loading...')) ?>).removeClass('hide');
             $.ajax({
                 type: 'POST',
                 url: <?= json_encode($view->action('test_geolocator')) ?>,
@@ -132,14 +157,41 @@ if (isset($geolocator)) {
                 } else {
                     msg = data.responseText;
                 }
-                $result.toggleClass('alert-info alert-danger').text(msg);
+                $error.empty().text(msg).removeClass('hide');
             })
             .done(function(response) {
-                if (response && response.errors) {
-                    $result.toggleClass('alert-info alert-danger').text(response.errors.join('\n'));
-                    return;
+                var value, $out;
+                for(var field in response) {
+                    value = response[field];
+                    $out = $result.find('.georesult-' + field);
+                    if ($out.length === 0) {
+                        continue;
+                    }
+                    if (value === null || value === '') {
+                        $out.closest('tr').hide();
+                        continue;
+                    }
+                    $out.closest('tr').show();
+                    switch (field) {
+                        case 'hasData':
+                            $out.html(value ? '<i class="fa fa-check"></i>' : '<i class="fa fa-times"></i>');
+                            break;
+                        case 'error':
+                            $out.text(<?= json_encode(t('%s (error code: %d)')) ?>.replace(/%d/, value.code.toString()).replace(/%s/, value.message));
+                            /*
+                            216.58.198.3
+                            */
+                            break;
+                        default:
+                            $out.text(value.toString());
+                            break;
+                    }
                 }
-                $result.toggleClass('alert-info alert-success').text(JSON.stringify(response, null, 3));
+                $result.removeClass('hide');
+            })
+            .always(function() {
+                testGeolocator.busy = false;
+                $processing.addClass('hide');
             });
         }
         $('button.geolocator-test-launcher').on('click', function(e) {
@@ -147,12 +199,11 @@ if (isset($geolocator)) {
             var $tr = $(this).closest('tr'),
                 geolocatorId = $tr.data('geolocator-id'),
                 $dialog = $('#ccm-geolocation-test-dialog'),
-                $result = $dialog.find('.alert');
-            $result
-                .empty()
-                .css('height', Math.min(Math.max($(window).height() - 350, 100), 300) + 'px')
-                .removeClass('alert-info alert-danger alert-success')
-                .show();
+                $processing = $dialog.find('.geotest-processing'),
+                $error = $dialog.find('.geotest-error'),
+                $result = $dialog.find('.geotest-result');
+            $processing.add($error).add($result)
+                .css('min-height', Math.min(Math.max($(window).height() - 350, 100), 300) + 'px')
             $dialog.find('.geolocation-test-go')
                 .off('click')
                 .on('click', function() {
@@ -161,7 +212,7 @@ if (isset($geolocator)) {
                         $('#geolocation-test-ip').focus();
                         return;
                     }
-                    testGeolocator(geolocatorId, ip, $result);
+                    testGeolocator(geolocatorId, ip, $processing, $error, $result);
                 });
             jQuery.fn.dialog.open({
                 element: $dialog,
