@@ -3,6 +3,7 @@ namespace Concrete\Core\Geolocator;
 
 use Exception;
 use JsonSerializable;
+use Punic\Territory;
 
 class GeolocationResult implements JsonSerializable
 {
@@ -349,11 +350,42 @@ class GeolocationResult implements JsonSerializable
     /**
      * Get the name of the country (in American English).
      *
+     * @param bool $resolveFromCodeIfUnavailable If the Country name is not set, should we try to derive it from the Country code?
+     *
      * @return string
      */
-    public function getCountryName()
+    public function getCountryName($resolveFromCodeIfUnavailable = false)
     {
-        return $this->countryName;
+        $result = $this->countryName;
+        if ($result === '' && $resolveFromCodeIfUnavailable && $this->countryCode !== '') {
+            $name = Territory::getName($this->countryCode, 'en_US');
+            if ($name !== $this->countryCode) {
+                $result = $name;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get the name of the country (in the current language).
+     *
+     * @return string
+     */
+    public function getCountryNameLocalized()
+    {
+        $result = '';
+        if ($this->countryCode !== '') {
+            $localized = Territory::getName($this->countryCode);
+            if ($localized !== $this->countryCode) {
+                $result = $localized;
+            }
+        }
+        if ($result === '') {
+            $result = $this->countryName;
+        }
+
+        return $result;
     }
 
     /**
@@ -460,16 +492,17 @@ class GeolocationResult implements JsonSerializable
     public function jsonSerialize()
     {
         return [
-            'error' => $this->hasError() ? ['code' => $this->errorCode, 'message' => $this->errorMessage] : null,
+            'error' => $this->hasError() ? ['code' => $this->getErrorCode(), 'message' => $this->getErrorMessage()] : null,
             'hasData' => $this->hasData(),
-            'cityName' => $this->cityName,
-            'stateProvinceCode' => $this->stateProvinceCode,
-            'stateProvinceName' => $this->stateProvinceName,
-            'postalCode' => $this->postalCode,
-            'countryCode' => $this->countryCode,
-            'countryName' => $this->countryName,
-            'latitude' => $this->latitude,
-            'longitude' => $this->longitude,
+            'cityName' => $this->getCityName(),
+            'stateProvinceCode' => $this->getStateProvinceCode(),
+            'stateProvinceName' => $this->getStateProvinceName(),
+            'postalCode' => $this->getPostalCode(),
+            'countryCode' => $this->getCountryCode(),
+            'countryName' => $this->getCountryName(true),
+            'countryNameLocalized' => $this->getCountryNameLocalized(),
+            'latitude' => $this->getLatitude(),
+            'longitude' => $this->getLongitude(),
         ];
     }
 }
