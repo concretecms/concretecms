@@ -83,7 +83,6 @@ class Controller extends GeolocatorController
                     !is_array($data)
                     || empty($data['geoplugin_status'])
                 ) {
-                    $result = new GeolocationResult();
                     $result->setError(GeolocationResult::ERR_LIBRARYSPECIFIC, t('Malformed data received from geoPlugin (%s)', $responseBody));
                 } else {
                     switch ($data['geoplugin_status']) {

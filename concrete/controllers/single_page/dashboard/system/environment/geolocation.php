@@ -93,12 +93,6 @@ EOT
         }
         $geolocatorController = $service->getController($geolocator);
         $geolocated = $geolocatorController->geolocateIPAddress($ip);
-        if ($geolocated === null) {
-            throw new UserMessageException(t("The geolocation can't be performed for the IP address %s", (string) $ip));
-        }
-        if ($geolocated instanceof Exception) {
-            throw $geolocated;
-        }
         $rf = $this->app->make(ResponseFactoryInterface::class);
 
         return $rf->json($geolocated);
