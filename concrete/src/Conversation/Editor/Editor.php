@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Conversation\Editor;
 
-use Conversation;
+use Concrete\Core\Conversation\Conversation;
 use Core;
 use Database;
 use Environment;
@@ -214,14 +214,8 @@ abstract class Editor extends ConcreteObject
      */
     public function outputConversationEditorAddMessageForm()
     {
-        $env = Environment::get();
-        $path = $env->getPath(
-            DIRNAME_ELEMENTS . '/' . DIRNAME_CONVERSATIONS . '/' . DIRNAME_CONVERSATION_EDITOR . '/' .
-            $this->cnvEditorHandle . '/' . FILENAME_CONVERSATION_EDITOR_FORM_MESSAGE,
-            $this->getPackageHandle()
-        );
-        $editor = $this; //$editor used in the element
-        include $path;
+        \View::element(DIRNAME_CONVERSATIONS . '/' . DIRNAME_CONVERSATION_EDITOR . '/' .
+            $this->cnvEditorHandle . '/message', ['editor' => $this], $this->getPackageHandle());
     }
 
     /**
@@ -229,14 +223,8 @@ abstract class Editor extends ConcreteObject
      */
     public function outputConversationEditorReplyMessageForm()
     {
-        $env = Environment::get();
-        $path = $env->getPath(
-            DIRNAME_ELEMENTS . '/' . DIRNAME_CONVERSATIONS . '/' . DIRNAME_CONVERSATION_EDITOR . '/' .
-            $this->cnvEditorHandle . '/' . FILENAME_CONVERSATION_EDITOR_FORM_REPLY,
-            $this->getPackageHandle()
-        );
-        $editor = $this; //$editor used in the element
-        include $path;
+        \View::element(DIRNAME_CONVERSATIONS . '/' . DIRNAME_CONVERSATION_EDITOR . '/' .
+            $this->cnvEditorHandle . '/reply', ['editor' => $this], $this->getPackageHandle());
     }
 
     /**
