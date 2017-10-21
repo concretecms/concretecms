@@ -120,7 +120,7 @@ class SecurimageController extends AbstractController implements CaptchaWithPict
                         $input->addClass($customAttributeValue);
                         break;
                     default:
-                        $image->setAttribute($customAttributeName, $customAttributeValue);
+                        $input->setAttribute($customAttributeName, $customAttributeValue);
                         break;
                 }
             }
