@@ -123,12 +123,12 @@ ConcretePageAttributesDetail = {
 			},
 			type: 'get',
 			success: function(r) {
-                _.each(r.assets.css, function(css) {
-                    ccm_addHeaderItem(css, 'CSS');
-                });
-                _.each(r.assets.javascript, function(javascript) {
-                    ccm_addHeaderItem(javascript, 'JAVASCRIPT');
-                });
+				_.each(r.assets.css, function(css) {
+					ConcreteAssetLoader.loadCSS(css);
+				});
+				_.each(r.assets.javascript, function(javascript) {
+					ConcreteAssetLoader.loadJavaScript(javascript);
+				});
 
 				var $form = $('form[data-panel-detail-form=attributes]');
 				$form.append(

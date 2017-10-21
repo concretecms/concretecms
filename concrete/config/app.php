@@ -787,6 +787,9 @@ return [
         'core/events' => [
             ['javascript', 'js/events.js', ['minify' => false]],
         ],
+        'core/asset-loader' => [
+            ['javascript', 'js/asset-loader.js', ['minify' => false]],
+        ],
         'core/style-customizer' => [
             ['javascript', 'js/style-customizer.js', ['minify' => false]],
             ['css', 'css/style-customizer.css', ['minify' => false]],
@@ -1082,6 +1085,7 @@ return [
                 ['javascript', 'jquery'],
                 ['javascript', 'jquery/ui'],
                 ['javascript-localized', 'jquery/ui'],
+                ['javascript', 'core/asset-loader'],
                 ['javascript', 'core/events'],
                 ['javascript', 'underscore'],
                 ['javascript', 'backbone'],
@@ -1133,6 +1137,7 @@ return [
         'core/app' => [
             [
                 ['javascript', 'jquery'],
+                ['javascript', 'core/asset-loader'],
                 ['javascript', 'core/events'],
                 ['javascript', 'underscore'],
                 ['javascript', 'backbone'],
@@ -1184,6 +1189,7 @@ return [
                 ['javascript', 'backbone'],
                 ['javascript', 'dashboard'],
                 ['javascript', 'core/events'],
+                ['javascript', 'core/asset-loader'],
                 ['javascript', 'bootstrap/dropdown'],
                 ['javascript', 'bootstrap/tooltip'],
                 ['javascript', 'bootstrap/collapse'],
@@ -1206,6 +1212,7 @@ return [
                 ['css', 'core/file-manager'],
                 ['css', 'selectize'],
                 ['javascript', 'core/events'],
+                ['javascript', 'core/asset-loader'],
                 ['javascript', 'bootstrap/tooltip'],
                 ['javascript', 'underscore'],
                 ['javascript', 'backbone'],
@@ -1237,6 +1244,7 @@ return [
         'core/file-folder-selector' => [
             [
                 ['javascript', 'core/events'],
+                ['javascript', 'core/asset-loader'],
                 ['javascript', 'underscore'],
                 ['javascript', 'jquery/ui'],
                 ['javascript-localized', 'jquery/ui'],
@@ -1250,6 +1258,7 @@ return [
         'core/sitemap' => [
             [
                 ['javascript', 'core/events'],
+                ['javascript', 'core/asset-loader'],
                 ['javascript', 'underscore'],
                 ['javascript', 'backbone'],
                 ['javascript', 'jquery/ui'],
@@ -1268,6 +1277,7 @@ return [
         'core/users' => [
             [
                 ['javascript', 'core/events'],
+                ['javascript', 'core/asset-loader'],
                 ['javascript', 'underscore'],
                 ['javascript', 'core/users'],
             ],
@@ -1277,6 +1287,7 @@ return [
                 ['javascript', 'underscore'],
                 ['javascript', 'backbone'],
                 ['javascript', 'core/events'],
+                ['javascript', 'core/asset-loader'],
                 ['javascript', 'bootstrap/tooltip'],
                 ['javascript', 'jquery/ui'],
                 ['javascript-localized', 'core/localization'],
@@ -1290,6 +1301,7 @@ return [
         'core/topics' => [
             [
                 ['javascript', 'core/events'],
+                ['javascript', 'core/asset-loader'],
                 ['javascript', 'underscore'],
                 ['javascript', 'jquery/ui'],
                 ['javascript-localized', 'jquery/ui'],
@@ -1302,6 +1314,7 @@ return [
         'core/tree' => [
             [
                 ['javascript', 'core/events'],
+                ['javascript', 'core/asset-loader'],
                 ['javascript', 'underscore'],
                 ['javascript', 'jquery/ui'],
                 ['javascript-localized', 'jquery/ui'],
@@ -1314,6 +1327,7 @@ return [
         'core/groups' => [
             [
                 ['javascript', 'core/events'],
+                ['javascript', 'core/asset-loader'],
                 ['javascript', 'underscore'],
                 ['javascript', 'jquery/ui'],
                 ['javascript-localized', 'jquery/ui'],
@@ -1345,6 +1359,7 @@ return [
                 ['javascript-localized', 'dropzone'],
                 ['javascript', 'bootstrap/dropdown'],
                 ['javascript', 'core/events'],
+                ['javascript', 'core/asset-loader'],
                 ['javascript', 'core/conversation'],
                 ['javascript-localized', 'core/conversation'],
                 ['css', 'core/conversation'],

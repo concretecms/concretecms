@@ -17,18 +17,18 @@ if (!isset($btHandle)) {
 $ci = Core::make('helper/concrete/urls');
 $url = (string) $ci->getBlockTypeJavaScriptURL($bt);
 if ($url !== '') {
-    ?>ccm_addHeaderItem(<?= json_encode($url) ?>, 'JAVASCRIPT');<?php 
+    ?>ConcreteAssetLoader.loadJavaScript(<?= json_encode($url) ?>);<?php
 }
 if (isset($headerItems) && is_array($headerItems)) {
     $identifier = 'BLOCK_CONTROLLER_' . strtoupper($btHandle);
     if (isset($headerItems[$identifier]) && is_array($headerItems[$identifier])) {
         foreach ($headerItems[$identifier] as $item) {
-            if ($item instanceof CSSOutputObject) {
-                $type = 'CSS';
-            } else {
-                $type = 'JAVASCRIPT';
-            }
-            ?>ccm_addHeaderItem(<?= json_encode((string) $item->file) ?>, <?= json_encode($type) ?>);<?php
+            if ($item instanceof CSSOutputObject) { ?>
+                ConcreteAssetLoader.loadCSS(<?= json_encode((string) $item->file) ?>);
+            <?php
+            } else { ?>
+                ConcreteAssetLoader.loadJavaScript(<?= json_encode((string) $item->file) ?>);
+            <?php }
         }
     }
 }
