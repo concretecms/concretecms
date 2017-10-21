@@ -7,21 +7,19 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <?php $url = $ci->getBlockTypeJavaScriptURL($blockType);
 if ($url != '') {
     ?>
-	ccm_addHeaderItem("<?=$url?>", 'JAVASCRIPT');
+	ConcreteAssetLoader.loadJavaScript("<?=$url?>");
 <?php 
 }
 $identifier = strtoupper('BLOCK_CONTROLLER_' . $btHandle);
 if (isset($headerItems) && is_array($headerItems[$identifier])) {
     foreach ($headerItems[$identifier] as $item) {
-        if ($item instanceof CSSOutputObject) {
-            $type = 'CSS';
-        } else {
-            $type = 'JAVASCRIPT';
+        if ($item instanceof CSSOutputObject) { ?>
+	        ConcreteAssetLoader.loadCSS("<?=$item->file?>");
+	        <?php
+        } else { ?>
+	        ConcreteAssetLoader.loadJavaScript("<?=$item->file?>");
+	        <?php
         }
-        ?>
-		ccm_addHeaderItem("<?=$item->file?>", '<?=$type?>');
-	<?php
-
     }
 }
 ?>

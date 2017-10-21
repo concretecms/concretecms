@@ -354,10 +354,10 @@
 			if (field) {
 				cs.ajaxUpdate(field, false, function(r) {
 					_.each(r.assets.css, function(css) {
-						ccm_addHeaderItem(css, 'CSS');
+						ConcreteAssetLoader.loadCSS(css);
 					});
 					_.each(r.assets.javascript, function(javascript) {
-						ccm_addHeaderItem(javascript, 'JAVASCRIPT');
+						ConcreteAssetLoader.loadJavaScript(javascript);
 					});
 					$content.html(r.html);
 				});
@@ -434,10 +434,10 @@
 					},
 					success: function(r) {
 						_.each(r.assets.css, function(css) {
-							ccm_addHeaderItem(css, 'CSS');
+							ConcreteAssetLoader.loadCSS(css);
 						});
 						_.each(r.assets.javascript, function(javascript) {
-							ccm_addHeaderItem(javascript, 'JAVASCRIPT');
+							ConcreteAssetLoader.loadJavaScript(javascript);
 						});
 						$content.html(r.element);
 						var selects = $content.find('select.selectize-select');

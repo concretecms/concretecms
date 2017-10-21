@@ -306,6 +306,11 @@ module.exports = function(grunt) {
             src: '<%= DIR_BASE %>/concrete/js/build/core/events.js'
         },
 
+        ccm_asset_loader: {
+            dest: '<%= DIR_BASE %>/concrete/js/asset-loader.js',
+            src: '<%= DIR_BASE %>/concrete/js/build/core/asset-loader.js'
+        },
+
         ccm_sitemap: {
             dest: '<%= DIR_BASE %>/concrete/js/sitemap.js',
             src: [
