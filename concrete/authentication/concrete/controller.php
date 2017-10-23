@@ -251,6 +251,8 @@ class Controller extends AuthenticationTypeController
         $e = Core::make('helper/validation/error');
         if (is_string($uHash)) {
             $ui = UserInfo::getByValidationHash($uHash);
+        } else {
+            $ui = null;
         }
         if (is_object($ui)) {
             $vh = new ValidationHash();
