@@ -2,7 +2,9 @@
 namespace Concrete\Core\Backup\ContentImporter\Importer\Routine;
 
 use Concrete\Core\Attribute\Category\CategoryService;
+use Concrete\Core\Attribute\TypeFactory;
 use Concrete\Core\Support\Facade\Application;
+use Doctrine\ORM\EntityManagerInterface;
 use SimpleXMLElement;
 
 class ImportAttributeCategoriesRoutine extends AbstractRoutine
@@ -19,6 +21,10 @@ class ImportAttributeCategoriesRoutine extends AbstractRoutine
 
             $categoryService = $app->make(CategoryService::class);
             /* @var CategoryService $categoryService */
+            $typeFactory = $app->make(TypeFactory::class);
+            /* @var TypeFactory $typeFactory */
+            $entityManager = $app->make(EntityManagerInterface::class);
+            /* @var EntityManagerInterface $entityManager */
 
             foreach ($xRoot->attributecategories->category as $xCategory) {
                 $acHandle = (string) $xCategory['handle'];
