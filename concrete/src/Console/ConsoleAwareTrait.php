@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Console;
 
-use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Application as SymfonyApplication;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\NullOutput;
@@ -14,7 +14,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 trait ConsoleAwareTrait
 {
 
-    /** @var Application|null */
+    /** @var SymfonyApplication|null */
     protected $traitConsole;
 
     /** @var OutputInterface|null */
@@ -31,7 +31,7 @@ trait ConsoleAwareTrait
      * @param \Symfony\Component\Console\Input\InputInterface|null $input
      * @return static
      */
-    public function setConsole(Application $console, OutputInterface $output = null, InputInterface $input = null)
+    public function setConsole(SymfonyApplication $console, OutputInterface $output = null, InputInterface $input = null)
     {
         $this->traitConsole = $console;
         if ($output) {
