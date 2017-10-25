@@ -22,7 +22,13 @@ class Version20171025000000 extends AbstractMigration
         } else {
             $bt = BlockType::getByHandle('document_library');
             if (!$bt) {
-                BlockType::installBlockType('document_library');
+                $bt = BlockType::installBlockType('document_library');
+
+                $multimediaSet = \Concrete\Core\Block\BlockType\Set::getByHandle('multimedia');
+                if ($multimediaSet) {
+                    $multimediaSet->addBlockType($bt);
+                }
+
             }
         }
     }
