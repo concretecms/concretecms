@@ -249,7 +249,11 @@ class Controller extends AuthenticationTypeController
     {
         $this->set('authType', $this->getAuthenticationType());
         $e = Core::make('helper/validation/error');
-        $ui = UserInfo::getByValidationHash($uHash);
+        if (is_string($uHash)) {
+            $ui = UserInfo::getByValidationHash($uHash);
+        } else {
+            $ui = null;
+        }
         if (is_object($ui)) {
             $vh = new ValidationHash();
             if ($vh->isValid($uHash)) {
