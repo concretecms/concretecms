@@ -48,11 +48,6 @@ class EmptyWorkflow extends ConcreteWorkflow
         return array();
     }
 
-    public function getWorkflowProgressCurrentDescription(WorkflowProgress $wp)
-    {
-        return '';
-    }
-
     public function getWorkflowProgressStatusDescription(WorkflowProgress $wp)
     {
         return '';

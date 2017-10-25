@@ -8,7 +8,11 @@ if (is_array($workflowList) && !empty($workflowList)) {
         $wr = $wl->getWorkflowRequestObject();
         $wf = $wl->getWorkflowObject();
         $form = '<form data-form="workflow" method="post" action="' . $wl->getWorkflowProgressFormAction() . '">';
-        $text = $wf->getWorkflowProgressCurrentDescription($wl);
+        $text = '';
+        $description = $wr->getWorkflowRequestDescriptionObject();
+        if ($description) {
+            $text = $description->getInContextDescription();
+        }
 
         $actions = $wl->getWorkflowProgressActions();
         $buttons = [];
