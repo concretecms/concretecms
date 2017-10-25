@@ -1,10 +1,11 @@
 <?php
 namespace Concrete\Core\Backup\ContentImporter\Importer\Routine;
 
-use Concrete\Core\Attribute\Type;
-use Concrete\Core\Block\BlockType\BlockType;
-use Concrete\Core\Permission\Category;
-use Concrete\Core\Validation\BannedWord\BannedWord;
+use Concrete\Core\Attribute\Category\CategoryService;
+use Concrete\Core\Attribute\TypeFactory;
+use Concrete\Core\Support\Facade\Application;
+use Doctrine\ORM\EntityManagerInterface;
+use SimpleXMLElement;
 
 class ImportAttributeTypesRoutine extends AbstractRoutine
 {
@@ -13,27 +14,42 @@ class ImportAttributeTypesRoutine extends AbstractRoutine
         return 'attribute_types';
     }
 
-    public function import(\SimpleXMLElement $sx)
+    public function import(SimpleXMLElement $xRoot)
     {
-        if (isset($sx->attributetypes)) {
-            foreach ($sx->attributetypes->attributetype as $at) {
-                $pkg = static::getPackageObject($at['package']);
-                $name = (string) $at['name'];
-                if (!$name) {
-                    $name = \Core::make('helper/text')->unhandle($at['handle']);
+        if (isset($xRoot->attributetypes)) {
+            $app = Application::getFacadeApplication();
+
+            $categoryService = $app->make(CategoryService::class);
+            /* @var CategoryService $categoryService */
+            $typeFactory = $app->make(TypeFactory::class);
+            /* @var TypeFactory $typeFactory */
+            $entityManager = $app->make(EntityManagerInterface::class);
+            /* @var EntityManagerInterface $entityManager */
+            $textService = $app->make('helper/text');
+            /* @var \Concrete\Core\Utility\Service\Text $textService */
+
+            foreach ($xRoot->attributetypes->attributetype as $xAttributeType) {
+                $atHandle = (string) $xAttributeType['handle'];
+                $type = $typeFactory->getByHandle($atHandle);
+                if ($type === null) {
+                    $pkg = static::getPackageObject($xAttributeType['package']);
+                    $atName = isset($xAttributeType['name']) ? (string) $xAttributeType['name'] : '';
+                    if ($atName === '') {
+                        $atName = $textService->unhandle($atHandle);
+                    }
+                    $type = $typeFactory->add($atHandle, $atName, $pkg);
                 }
-                $type = Type::getByHandle($at['handle']);
-                if (!is_object($type)) {
-                    $type = Type::add((string) $at['handle'], $name, $pkg);
-                }
-                if (isset($at->categories)) {
-                    foreach ($at->categories->children() as $cat) {
-                        $catobj = \Concrete\Core\Attribute\Key\Category::getByHandle((string) $cat['handle']);
-                        $catobj->getController()->associateAttributeKeyType($type);
+                if (isset($xAttributeType->categories)) {
+                    foreach ($xAttributeType->categories->children() as $xAttributeCategory) {
+                        $category = $categoryService->getByHandle((string) $xAttributeCategory['handle']);
+                        $categoryTypes = $category->getAttributeTypes();
+                        if (!$categoryTypes->contains($type)) {
+                            $categoryTypes->add($type);
+                            $entityManager->flush($category);
+                        }
                     }
                 }
             }
         }
     }
-
 }
