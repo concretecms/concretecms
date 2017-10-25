@@ -20,33 +20,39 @@ echo Core::make('helper/concrete/ui')->tabs(array(
         echo $form->select('folderID', $folders, $folderID ?: 0);
         ?>
     </div>
-    <div class="form-group">
-        <?=$form->label('fileset', t('File Set'))?>
-        <?php foreach($fileSets as $set) { ?>
-            <div class="checkbox"><label>
-                <?=$form->checkbox('fsID[]', $set->getFileSetID(),
-                    in_array($set->getFileSetID(), $selectedSets)
-                )?>
-                <?=$set->getFileSetDisplayName()?>
-            </label></div>
-        <?php } ?>
-    </div>
+    <?php if (count($fileSets)) { ?>
+        <div class="form-group">
+            <?=$form->label('fileset', t('File Set'))?>
+            <?php foreach($fileSets as $set) { ?>
+                <div class="checkbox"><label>
+                    <?=$form->checkbox('fsID[]', $set->getFileSetID(),
+                        in_array($set->getFileSetID(), $selectedSets)
+                    )?>
+                    <?=$set->getFileSetDisplayName()?>
+                </label></div>
+            <?php } ?>
+        </div>
 
-    <div class="form-group">
-        <?=$form->label('setMode', t('Files must be'))?>
-        <div class="radio">
-            <label>
-                <?=$form->radio('setMode', 'all', $setMode)?>
-                <?=t('in all sets')?>
-            </label>
+        <div class="form-group">
+            <?=$form->label('setMode', t('Files must be'))?>
+            <div class="radio">
+                <label>
+                    <?=$form->radio('setMode', 'all', $setMode)?>
+                    <?=t('in all sets')?>
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <?=$form->radio('setMode', 'any', $setMode)?>
+                    <?=t('in any sets')?>
+                </label>
+            </div>
         </div>
-        <div class="radio">
-            <label>
-                <?=$form->radio('setMode', 'any', $setMode)?>
-                <?=t('in any sets')?>
-            </label>
-        </div>
-    </div>
+    <?php } else { ?>
+        <?=$form->label('fileset', t('File Set'))?>
+        <p class="text-muted"><?=t('No file sets have been created.')?></p>
+        <br/>
+    <?php } ?>
 
     <div class="form-group">
         <?=$form->label('tags', t('Filter By Tag (optional)'))?>

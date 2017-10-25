@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\BlockDocumentLibrary;
+namespace Concrete\Block\DocumentLibrary;
 
 use Concrete\Core\Attribute\Category\FileCategory;
 use Concrete\Core\Attribute\Key\FileKey;
@@ -24,7 +24,6 @@ use Concrete\Core\Url\UrlImmutable;
 use Concrete\Core\User\User;
 use Core;
 use FileAttributeKey;
-use PortlandLabs\DocumentLibrary\FilterableList\AttributeFilterableList;
 
 class Controller extends BlockController
 {
@@ -531,12 +530,11 @@ class Controller extends BlockController
                     $ak = FileKey::getByID($akID);
                     if (is_object($ak)) {
                         $this->enableSubFolderSearch($list);
-                        $filterableList = new AttributeFilterableList($list);
                         $type = $ak->getAttributeType();
                         $cnt = $type->getController();
                         $cnt->setRequestArray($_REQUEST);
                         $cnt->setAttributeKey($ak);
-                        $cnt->searchForm($filterableList);
+                        $cnt->searchForm($list);
                     }
                     break;
             }
