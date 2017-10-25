@@ -17,7 +17,11 @@ class InstallPackageCommand extends Command
     {
         $errExitCode = static::RETURN_CODE_ON_FAILURE;
         $this
-            ->setName('c5:package-install')
+            ->setName('c5:package:install')
+            ->setAliases([
+                'c5:package-install',
+                'c5:install-package',
+            ])
             ->addOption('full-content-swap', null, InputOption::VALUE_NONE, 'If this option is specified a full content swap will be performed (if the package supports it)')
             ->setDescription('Install a concrete5 package')
             ->addEnvOption()

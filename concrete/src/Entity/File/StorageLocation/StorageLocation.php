@@ -139,6 +139,16 @@ class StorageLocation implements StorageLocationInterface
         return $filesystem;
     }
 
+    /**
+     * Clear the Flysystem cache.
+     */
+    public function clearCache()
+    {
+        $pool = \Core::make(ExpensiveCache::class)->pool;
+        $cache = new Psr6Cache($pool, 'flysystem-id-' . $this->getID());
+        $cache->flush();
+    }
+
     public function delete()
     {
         $default = \Concrete\Core\File\StorageLocation\StorageLocation::getDefault();

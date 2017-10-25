@@ -386,11 +386,12 @@ class Controller extends BlockController implements NotificationProviderInterfac
         $session = \Core::make('session');
         $sessionControls = $session->get('block.express_form.new');
 
+        $name = $data['formName'] ? $data['formName'] : t('Form');
+
         if (!$this->exFormID) {
 
             // This is a new submission.
             $c = \Page::getCurrentPage();
-            $name = $data['formName'] ? $data['formName'] : t('Form');
 
             // Create a results node
             $node = ExpressEntryCategory::getNodeByName(self::FORM_RESULTS_CATEGORY_NAME);
@@ -430,6 +431,9 @@ class Controller extends BlockController implements NotificationProviderInterfac
              */
             $field_set = $form->getFieldSets()[0];
             $entity = $form->getEntity();
+            $entity->setName($name);
+            $entityManager->persist($entity);
+            $entityManager->flush();
         }
 
         $attributeKeyCategory = $entity->getAttributeKeyCategory();
