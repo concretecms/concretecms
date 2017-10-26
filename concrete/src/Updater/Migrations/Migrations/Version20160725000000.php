@@ -86,6 +86,8 @@ class Version20160725000000 extends AbstractMigration
         $this->deleteInvalidForeignKey('AttributeSetKeys', 'asID', 'AttributeSets', 'asID');
         // Fix Stack orphans 
         $this->deleteInvalidForeignKey('Stacks', 'cID', 'Pages', 'cID');
+        // Delete invalid records from MultilingualPageRelations
+        $this->deleteInvalidForeignKey('MultilingualPageRelations', 'cID', 'Pages', 'cID');
     }
 
     protected function nullifyInvalidForeignKeys()
