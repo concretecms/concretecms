@@ -1,12 +1,12 @@
 <?php
 namespace Concrete\Attribute\Boolean;
 
+use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Entity\Attribute\Key\Settings\BooleanSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\BooleanValue;
-use Core;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
-use Concrete\Core\Attribute\Controller as AttributeTypeController;
+use Core;
 
 class Controller extends AttributeTypeController
 {
@@ -52,6 +52,7 @@ class Controller extends AttributeTypeController
     {
         $val = $this->attributeValue->getValue();
         $cnode = $akv->addChild('value', $val ? '1' : '0');
+
         return $cnode;
     }
 
@@ -60,6 +61,7 @@ class Controller extends AttributeTypeController
         if ($this->akCheckboxLabel) {
             return $this->akCheckboxLabel;
         }
+
         return $this->attributeKey->getAttributeKeyName();
     }
 
@@ -87,26 +89,7 @@ class Controller extends AttributeTypeController
             }
         }
 
-
         return $type;
-    }
-
-    protected function load()
-    {
-        $ak = $this->getAttributeKey();
-        if (!is_object($ak)) {
-            return false;
-        }
-
-        $settings = $ak
-            ->getAttributeKeySettings();
-        if ($settings) {
-            $this->akCheckedByDefault = $settings->isCheckedByDefault();
-            $this->akCheckboxLabel = $settings->getCheckboxLabel();
-        }
-
-        $this->set('akCheckboxLabel', $this->akCheckboxLabel);
-        $this->set('akCheckedByDefault', $this->akCheckedByDefault);
     }
 
     public function form()
@@ -155,6 +138,7 @@ class Controller extends AttributeTypeController
     public function validateValue()
     {
         $v = $this->getAttributeValue()->getValue();
+
         return $v == 1;
     }
 
@@ -182,6 +166,7 @@ class Controller extends AttributeTypeController
     {
         return BooleanValue::class;
     }
+
     public function createAttributeValueFromRequest()
     {
         $data = $this->post();
@@ -200,4 +185,21 @@ class Controller extends AttributeTypeController
         return BooleanSettings::class;
     }
 
+    protected function load()
+    {
+        $ak = $this->getAttributeKey();
+        if (!is_object($ak)) {
+            return false;
+        }
+
+        $settings = $ak
+            ->getAttributeKeySettings();
+        if ($settings) {
+            $this->akCheckedByDefault = $settings->isCheckedByDefault();
+            $this->akCheckboxLabel = $settings->getCheckboxLabel();
+        }
+
+        $this->set('akCheckboxLabel', $this->akCheckboxLabel);
+        $this->set('akCheckedByDefault', $this->akCheckedByDefault);
+    }
 }
