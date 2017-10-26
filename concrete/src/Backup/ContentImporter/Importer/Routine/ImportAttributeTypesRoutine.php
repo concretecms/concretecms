@@ -42,10 +42,12 @@ class ImportAttributeTypesRoutine extends AbstractRoutine
                 if (isset($xAttributeType->categories)) {
                     foreach ($xAttributeType->categories->children() as $xAttributeCategory) {
                         $category = $categoryService->getByHandle((string) $xAttributeCategory['handle']);
-                        $categoryTypes = $category->getAttributeTypes();
-                        if (!$categoryTypes->contains($type)) {
-                            $categoryTypes->add($type);
-                            $entityManager->flush($category);
+                        if ($category !== null) {
+                            $categoryTypes = $category->getAttributeTypes();
+                            if (!$categoryTypes->contains($type)) {
+                                $categoryTypes->add($type);
+                                $entityManager->flush($category);
+                            }
                         }
                     }
                 }
