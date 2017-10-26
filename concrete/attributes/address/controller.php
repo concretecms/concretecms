@@ -7,6 +7,7 @@ use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\Form\Control\View\GroupedView;
 use Concrete\Core\Attribute\MulticolumnTextExportableAttributeInterface;
 use Concrete\Core\Entity\Attribute\Key\Settings\AddressSettings;
+use Concrete\Core\Entity\Attribute\Value\Value\AbstractValue;
 use Concrete\Core\Entity\Attribute\Value\Value\AddressValue;
 use Concrete\Core\Error\ErrorList;
 use Concrete\Core\Form\Context\ContextInterface;
@@ -393,9 +394,11 @@ class Controller extends AttributeTypeController implements MulticolumnTextExpor
      *
      * @see \Concrete\Core\Attribute\MulticolumnTextExportableAttributeInterface::getAttributeValueTextRepresentation()
      */
-    public function getAttributeValueTextRepresentation()
+    public function getAttributeValueTextRepresentation(AbstractValue $value = null)
     {
-        $value = $this->getAttributeValueObject();
+        if (!$value instanceof AddressValue) {
+            $value = null;
+        }
 
         return [
             $value ? (string) $value->getAddress1() : '',

@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Attribute;
 
+use Concrete\Core\Entity\Attribute\Value\Value\AbstractValue;
 use Concrete\Core\Error\ErrorList;
 
 /**
@@ -11,7 +12,9 @@ use Concrete\Core\Error\ErrorList;
 interface SimpleTextExportableAttributeInterface
 {
     /**
-     * Get the text representation of the attribute value.
+     * Get the text representation of an attribute value.
+     *
+     * @param AbstractValue $value the value for which we want the text representation
      *
      * @return string
      *
@@ -20,7 +23,7 @@ interface SimpleTextExportableAttributeInterface
      * - '1' if $value is true
      * - '' if $value is not set.
      */
-    public function getAttributeValueTextRepresentation();
+    public function getAttributeValueTextRepresentation(AbstractValue $value = null);
 
     /**
      * Create an attribute value starting from its text representation.

@@ -5,6 +5,7 @@ use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\SimpleTextExportableAttributeInterface;
 use Concrete\Core\Entity\Attribute\Key\Settings\BooleanSettings;
+use Concrete\Core\Entity\Attribute\Value\Value\AbstractValue;
 use Concrete\Core\Entity\Attribute\Value\Value\BooleanValue;
 use Concrete\Core\Error\ErrorList;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
@@ -192,9 +193,11 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
      *
      * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::getAttributeValueTextRepresentation()
      */
-    public function getAttributeValueTextRepresentation()
+    public function getAttributeValueTextRepresentation(AbstractValue $value = null)
     {
-        $value = $this->getAttributeValueObject();
+        if (!$value instanceof BooleanValue) {
+            $value = null;
+        }
         if ($value === null || $value->getValue() === null) {
             $result = '';
         } else {

@@ -2,12 +2,13 @@
 
 namespace Concrete\Core\Attribute;
 
+use Concrete\Core\Entity\Attribute\Value\Value\AbstractValue;
 use Concrete\Core\Error\ErrorList;
 
 /**
  * Attribute controllers should implement this interface if they support importing/exporting to/from multiple plain text fields.
  *
- * For simple data see MulticolumnTextExportableAttributeInterface
+ * For simple data see SimpleTextExportableAttributeInterface
  */
 interface MulticolumnTextExportableAttributeInterface
 {
@@ -22,13 +23,15 @@ interface MulticolumnTextExportableAttributeInterface
     public function getAttributeTextRepresentationHeaders();
 
     /**
-     * Get the strings containing the text representation of the attribute value.
+     * Get the strings containing the text representation of an attribute value.
+     *
+     * @param AbstractValue $value the value for which we want the text representation
      *
      * @return string[]
      *
      * @example An address attribute could return ['10 Downing Street', 'London', '', 'GB']
      */
-    public function getAttributeValueTextRepresentation();
+    public function getAttributeValueTextRepresentation(AbstractValue $value = null);
 
     /**
      * Create an attribute value starting from its text representation.

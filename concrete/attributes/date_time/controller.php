@@ -5,6 +5,7 @@ use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\SimpleTextExportableAttributeInterface;
 use Concrete\Core\Entity\Attribute\Key\Settings\DateTimeSettings;
+use Concrete\Core\Entity\Attribute\Value\Value\AbstractValue;
 use Concrete\Core\Entity\Attribute\Value\Value\DateTimeValue;
 use Concrete\Core\Error\ErrorList;
 use DateTime;
@@ -287,9 +288,13 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
      *
      * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::getAttributeValueTextRepresentation()
      */
-    public function getAttributeValueTextRepresentation()
+    public function getAttributeValueTextRepresentation(AbstractValue $value = null)
     {
-        $dateTime = $this->getDateTime();
+        if ($value instanceof DateTimeValue) {
+            $dateTime = $value->getValue($value);
+        } else {
+            $dateTime = null;
+        }
         if ($dateTime === null) {
             $result = '';
         } else {
