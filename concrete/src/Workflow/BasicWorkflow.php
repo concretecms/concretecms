@@ -208,27 +208,7 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
         }
         $loc->popActiveContext();
     }
-
-    public function getWorkflowProgressCurrentDescription(WorkflowProgress $wp)
-    {
-        $bdw = new BasicWorkflowProgressData($wp);
-        $ux = UserInfo::getByID($bdw->getUserStartedID());
-        if (is_object($ux)) {
-            $userName = $ux->getUserName();
-        } else {
-            $userName = t('(Deleted User)');
-        }
-        $req = $wp->getWorkflowRequestObject();
-        $description = $req->getWorkflowRequestDescriptionObject()->getInContextDescription();
-
-        return t(
-            '%s Submitted by <strong>%s</strong> on %s.',
-            $description,
-            $userName,
-            Core::make('helper/date')->formatDateTime($wp->getWorkflowProgressDateAdded(), true)
-        );
-    }
-
+    
     public function getWorkflowProgressStatusDescription(WorkflowProgress $wp)
     {
         $req = $wp->getWorkflowRequestObject();
