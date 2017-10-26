@@ -195,7 +195,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     public function getAttributeValueTextRepresentation()
     {
         $value = $this->getAttributeValueObject();
-        if ($value === null) {
+        if ($value === null || $value->getValue() === null) {
             $result = '';
         } else {
             $result = $value->getValue() ? '1' : '0';
