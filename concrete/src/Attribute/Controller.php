@@ -81,7 +81,7 @@ class Controller extends AbstractController implements AttributeInterface
      */
     public function getAttributeType()
     {
-        return $this->attributeType;
+        return isset($this->attributeType) ? $this->attributeType : null;
     }
 
     /**
@@ -185,7 +185,7 @@ class Controller extends AbstractController implements AttributeInterface
         if ($this->attributeKey) {
             $settings = $this->retrieveAttributeKeySettings();
         }
-        if (!is_object($settings)) {
+        if (!$settings) {
             $settings = $this->createAttributeKeySettings();
         }
 
@@ -226,9 +226,13 @@ class Controller extends AbstractController implements AttributeInterface
     public function getAttributeValueObject()
     {
         $class = $this->getAttributeValueClass();
-        if ($class) {
-            return $this->entityManager->find($class, $this->attributeValue->getGenericValue());
+        if ($class && $this->attributeValue) {
+            $result = $this->entityManager->find($class, $this->attributeValue->getGenericValue());
+        } else {
+            $result = null;
         }
+
+        return $result;
     }
 
     /**
@@ -280,18 +284,24 @@ class Controller extends AbstractController implements AttributeInterface
      */
     public function getSearchIndexValue()
     {
-        return $this->attributeValue->getValue();
+        return $this->attributeValue ? $this->attributeValue->getValue() : null;
     }
 
     /**
      * @param mixed $keywords
      * @param \Doctrine\DBAL\Query\QueryBuilder $queryBuilder
      *
-     * @return \Doctrine\DBAL\Query\QueryBuilder
+     * @return string|null
      */
     public function searchKeywords($keywords, $queryBuilder)
     {
-        return $queryBuilder->expr()->like('ak_' . $this->attributeKey->getAttributeKeyHandle(), ':keywords');
+        if ($this->attributeKey) {
+            $result = $queryBuilder->expr()->like('ak_' . $this->attributeKey->getAttributeKeyHandle(), ':keywords');
+        } else {
+            $result = null;
+        }
+
+        return $result;
     }
 
     /**
@@ -301,7 +311,9 @@ class Controller extends AbstractController implements AttributeInterface
      */
     public function filterByAttribute(AttributedItemList $list, $value, $comparison = '=')
     {
-        $list->filter('ak_' . $this->attributeKey->getAttributeKeyHandle(), $value, $comparison);
+        if ($this->attributeKey) {
+            $list->filter('ak_' . $this->attributeKey->getAttributeKeyHandle(), $value, $comparison);
+        }
     }
 
     /**
@@ -340,9 +352,12 @@ class Controller extends AbstractController implements AttributeInterface
      */
     public function exportValue(SimpleXMLElement $akv)
     {
-        $val = $this->attributeValue->getValue();
-        if (is_object($val)) {
-            $val = (string) $val;
+        $val = '';
+        if ($this->attributeValue) {
+            $val = $this->attributeValue->getValue();
+            if (is_object($val)) {
+                $val = (string) $val;
+            }
         }
 
         if (is_array($val)) {
@@ -364,9 +379,7 @@ class Controller extends AbstractController implements AttributeInterface
      */
     public function getDisplayValue()
     {
-        if (is_object($this->attributeValue)) {
-            return (string) $this->attributeValue->getValueObject();
-        }
+        return $this->attributeValue ? (string) $this->attributeValue->getValueObject() : '';
     }
 
     /**
@@ -386,12 +399,12 @@ class Controller extends AbstractController implements AttributeInterface
     {
         if ($this->attributeValue) {
             $av = new AttributeTypeView($this->attributeValue);
+        } elseif ($this->attributeKey) {
+           $av = new AttributeTypeView($this->attributeKey);
+        } elseif (isset($this->attributeType)) {
+            $av = new AttributeTypeView($this->attributeType);
         } else {
-            if ($this->attributeKey) {
-                $av = new AttributeTypeView($this->attributeKey);
-            } else {
-                $av = new AttributeTypeView($this->attributeType);
-            }
+            $av = new AttributeTypeView(null);
         }
 
         return $av;
@@ -456,7 +469,7 @@ class Controller extends AbstractController implements AttributeInterface
     {
         // the only post that matters is the one for this attribute's name space
         $req = ($this->requestArray == false) ? $this->request->request->all() : $this->requestArray;
-        if (is_object($this->attributeKey) && isset($req['akID']) && is_array($req['akID'])) {
+        if ($this->attributeKey && isset($req['akID']) && is_array($req['akID'])) {
             $akID = $this->attributeKey->getAttributeKeyID();
             $p = isset($req['akID'][$akID]) ? $req['akID'][$akID] : null;
             if ($field) {
@@ -478,7 +491,7 @@ class Controller extends AbstractController implements AttributeInterface
     {
         $request = array_merge($this->request->request->all(), $this->request->query->all());
         $req = ($this->requestArray == false) ? $request : $this->requestArray;
-        if (is_object($this->attributeKey) && is_array($req['akID'])) {
+        if ($this->attributeKey && is_array($req['akID'])) {
             $p = $req['akID'][$this->attributeKey->getAttributeKeyID()];
             if ($field) {
                 return $p[$field];
@@ -497,7 +510,7 @@ class Controller extends AbstractController implements AttributeInterface
     {
         $request = array_merge($this->request->request->all(), $this->request->query->all());
         $req = ($this->requestArray == false) ? $request : $this->requestArray;
-        if (is_object($this->attributeKey) && is_array($req['akID'])) {
+        if ($this->attributeKey && is_array($req['akID'])) {
             return true;
         }
 
