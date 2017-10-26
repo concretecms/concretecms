@@ -3,12 +3,14 @@ namespace Concrete\Attribute\Boolean;
 
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
+use Concrete\Core\Attribute\SimpleTextExportableAttributeInterface;
 use Concrete\Core\Entity\Attribute\Key\Settings\BooleanSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\BooleanValue;
+use Concrete\Core\Error\ErrorList;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Core;
 
-class Controller extends AttributeTypeController
+class Controller extends AttributeTypeController implements SimpleTextExportableAttributeInterface
 {
     protected $searchIndexFieldDefinition = ['type' => 'boolean', 'options' => ['default' => 0, 'notnull' => false]];
 
@@ -184,6 +186,50 @@ class Controller extends AttributeTypeController
     {
         return BooleanSettings::class;
     }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::getAttributeValueTextRepresentation()
+     */
+    public function getAttributeValueTextRepresentation()
+    {
+        $value = $this->getAttributeValueObject();
+        if ($value === null) {
+            $result = '';
+        } else {
+            $result = $value->getValue() ? '1' : '0';
+        }
+
+        return $result;
+	}
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::createAttributeValueFromTextRepresentation()
+     */
+    public function createAttributeValueFromTextRepresentation($textRepresentation, ErrorList $warnings)
+    {
+        $result = null;
+        if ($textRepresentation !== '') {
+            switch ($textRepresentation) {
+                case '0':
+                    $result = new BooleanValue();
+                    $result->setValue(false);
+                    break;
+                case '1':
+                    $result = new BooleanValue();
+                    $result->setValue(true);
+                    break;
+                default:
+                    $warnings->add(t('"%1$s" is not a valid boolean value for the attribute with handle %2$s', $this->attributeKey->getAttributeKeyHandle()));
+                    break;
+            }
+        }
+
+        return $result;
+	}
 
     protected function load()
     {
