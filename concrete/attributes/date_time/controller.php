@@ -3,12 +3,14 @@ namespace Concrete\Attribute\DateTime;
 
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
+use Concrete\Core\Attribute\SimpleTextExportableAttributeInterface;
 use Concrete\Core\Entity\Attribute\Key\Settings\DateTimeSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\DateTimeValue;
+use Concrete\Core\Error\ErrorList;
 use DateTime;
 use Exception;
 
-class Controller extends AttributeTypeController
+class Controller extends AttributeTypeController implements SimpleTextExportableAttributeInterface
 {
     public $helpers = ['form', 'date', 'form/date_time'];
 
@@ -280,6 +282,77 @@ class Controller extends AttributeTypeController
         return $result;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::getAttributeValueTextRepresentation()
+     */
+    public function getAttributeValueTextRepresentation()
+    {
+        $dateTime = $this->getDateTime();
+        if ($dateTime === null) {
+            $result = '';
+        } else {
+            if (!isset($this->akDateDisplayMode)) {
+                $this->load();
+            }
+            switch ($this->akDateDisplayMode) {
+                case 'date':
+                case 'date_text':
+                    $result = $dateTime->format('Y-m-d');
+                    break;
+                case 'date_time':
+                case 'text':
+                default:
+                    // Let's convert the date/time from the system timezone to the website default timezone
+                    $toTimezone = $this->app->make('date')->getTimezone('app');
+                    $dateTime = clone $dateTime;
+                    $dateTime->setTimezone($toTimezone);
+                    $result = $dateTime->format('c');
+                    break;
+            }
+        }
+
+        return $result;
+	}
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::createAttributeValueFromTextRepresentation()
+     */
+    public function createAttributeValueFromTextRepresentation($textRepresentation, ErrorList $warnings)
+    {
+        $result = new DateTimeValue();
+        if ($textRepresentation !== '') {
+            if (!isset($this->akDateDisplayMode)) {
+                $this->load();
+            }
+            switch ($this->akDateDisplayMode) {
+                case 'date':
+                case 'date_text':
+                    $dateTime = @DateTime::createFromFormat('Y-m-d', $textRepresentation);
+                    break;
+                case 'date_time':
+                case 'text':
+                default:
+                    $dateTime = @DateTime::createFromFormat('c', $textRepresentation);
+                    if ($dateTime) {
+                        $toTimezone = $this->app->make('date')->getTimezone('system');
+                        $dateTime->setTimezone($toTimezone);
+                    }
+                    break;
+            }
+            if (!$dateTime) {
+                $warnings->add(t('"%1$s" is not a valid date value for the attribute with handle %2$s', $this->attributeKey->getAttributeKeyHandle()));
+            } else {
+                $result->setValue($dateTime);
+            }
+        }
+
+        return $result;
+	}
+
     protected function load()
     {
         $ak = $this->getAttributeKey();
@@ -288,10 +361,7 @@ class Controller extends AttributeTypeController
         }
 
         $type = $ak->getAttributeKeySettings();
-        /*
-         * @var $type DateTimeType
-         */
-
+        /* @var DateTimeType $type */
         $this->akUseNowIfEmpty = $type->getUseNowIfEmpty();
         $this->set('akUseNowIfEmpty', $this->akUseNowIfEmpty);
         $this->akDateDisplayMode = (string) $type->getMode();
