@@ -36,12 +36,10 @@ interface MulticolumnTextExportableAttributeInterface
      * @param string[] $textRepresentation the text representation strings of the attribute value
      * @param ErrorList $warnings An ErrorList instance that the method can add decoding warnings to
      *
-     * @return \Concrete\Core\Entity\Attribute\Value\Value\AbstractValue|null
+     * @return \Concrete\Core\Entity\Attribute\Value\Value\AbstractValue
      *
-     * @example In case of an address attributes, this may return
-     * - NULL if $textRepresentation contains only empty strings
-     * - an address attribute value with its parts extracted from $textRepresentation
-     * - add to the $warnings instance a message if the Country code is not valid
+     * @example In case of an address attributes, this return an address attribute value with its parts extracted from $textRepresentation.
+     * The method could add to the $warnings instance a message if the Country code is not valid
      */
     public function createAttributeValueFromTextRepresentation(array $textRepresentation, ErrorList $warnings);
 }

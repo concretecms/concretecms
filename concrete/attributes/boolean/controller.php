@@ -211,15 +211,13 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
      */
     public function createAttributeValueFromTextRepresentation($textRepresentation, ErrorList $warnings)
     {
-        $result = null;
+        $result = new BooleanValue();
         if ($textRepresentation !== '') {
             switch ($textRepresentation) {
                 case '0':
-                    $result = new BooleanValue();
                     $result->setValue(false);
                     break;
                 case '1':
-                    $result = new BooleanValue();
                     $result->setValue(true);
                     break;
                 default:
