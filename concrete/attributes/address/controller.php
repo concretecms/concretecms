@@ -17,6 +17,30 @@ class Controller extends AttributeTypeController
 {
     public $helpers = ['form', 'lists/countries'];
 
+    protected $searchIndexFieldDefinition = [
+        'address1' => [
+            'type' => 'string',
+            'options' => ['length' => '255', 'default' => '', 'notnull' => false],
+        ],
+        'address2' => [
+            'type' => 'string',
+            'options' => ['length' => '255', 'default' => '', 'notnull' => false],
+        ],
+        'city' => ['type' => 'string', 'options' => ['length' => '255', 'default' => '', 'notnull' => false]],
+        'state_province' => [
+            'type' => 'string',
+            'options' => ['length' => '255', 'default' => '', 'notnull' => false],
+        ],
+        'country' => [
+            'type' => 'string',
+            'options' => ['length' => '255', 'default' => '', 'notnull' => false],
+        ],
+        'postal_code' => [
+            'type' => 'string',
+            'options' => ['length' => '255', 'default' => '', 'notnull' => false],
+        ],
+    ];
+
     public function getIconFormatter()
     {
         return new FontAwesomeIconFormatter('map-marker');
@@ -82,30 +106,6 @@ class Controller extends AttributeTypeController
 
         return $list;
     }
-
-    protected $searchIndexFieldDefinition = [
-        'address1' => [
-            'type' => 'string',
-            'options' => ['length' => '255', 'default' => '', 'notnull' => false],
-        ],
-        'address2' => [
-            'type' => 'string',
-            'options' => ['length' => '255', 'default' => '', 'notnull' => false],
-        ],
-        'city' => ['type' => 'string', 'options' => ['length' => '255', 'default' => '', 'notnull' => false]],
-        'state_province' => [
-            'type' => 'string',
-            'options' => ['length' => '255', 'default' => '', 'notnull' => false],
-        ],
-        'country' => [
-            'type' => 'string',
-            'options' => ['length' => '255', 'default' => '', 'notnull' => false],
-        ],
-        'postal_code' => [
-            'type' => 'string',
-            'options' => ['length' => '255', 'default' => '', 'notnull' => false],
-        ],
-    ];
 
     public function search()
     {
@@ -321,27 +321,6 @@ class Controller extends AttributeTypeController
         return $type;
     }
 
-    protected function load()
-    {
-        $ak = $this->getAttributeKey();
-        if (!is_object($ak)) {
-            return false;
-        }
-
-        $type = $ak->getAttributeKeySettings();
-        /*
-         * @var $type AddressType
-         */
-        $this->akHasCustomCountries = $type->hasCustomCountries();
-        $this->akDefaultCountry = $type->getDefaultCountry();
-        $this->akCustomCountries = $type->getCustomCountries();
-        $this->akGeolocateCountry = $type->geolocateCountry();
-        $this->set('akDefaultCountry', $this->akDefaultCountry);
-        $this->set('akHasCustomCountries', $this->akHasCustomCountries);
-        $this->set('akCustomCountries', $this->akCustomCountries);
-        $this->set('akGeolocateCountry', $this->akGeolocateCountry);
-    }
-
     public function type_form()
     {
         $this->load();
@@ -387,5 +366,26 @@ class Controller extends AttributeTypeController
     public function getAttributeKeySettingsClass()
     {
         return AddressSettings::class;
+    }
+
+    protected function load()
+    {
+        $ak = $this->getAttributeKey();
+        if (!is_object($ak)) {
+            return false;
+        }
+
+        $type = $ak->getAttributeKeySettings();
+        /*
+         * @var $type AddressType
+         */
+        $this->akHasCustomCountries = $type->hasCustomCountries();
+        $this->akDefaultCountry = $type->getDefaultCountry();
+        $this->akCustomCountries = $type->getCustomCountries();
+        $this->akGeolocateCountry = $type->geolocateCountry();
+        $this->set('akDefaultCountry', $this->akDefaultCountry);
+        $this->set('akHasCustomCountries', $this->akHasCustomCountries);
+        $this->set('akCustomCountries', $this->akCustomCountries);
+        $this->set('akGeolocateCountry', $this->akGeolocateCountry);
     }
 }
