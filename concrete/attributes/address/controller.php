@@ -5,15 +5,17 @@ use Concrete\Core\Attribute\Context\BasicFormContext;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\Form\Control\View\GroupedView;
+use Concrete\Core\Attribute\MulticolumnTextExportableAttributeInterface;
 use Concrete\Core\Entity\Attribute\Key\Settings\AddressSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\AddressValue;
+use Concrete\Core\Error\ErrorList;
 use Concrete\Core\Form\Context\ContextInterface;
 use Concrete\Core\Geolocator\GeolocationResult;
 use Concrete\Core\Http\Response;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Support\Facade\Application;
 
-class Controller extends AttributeTypeController
+class Controller extends AttributeTypeController implements MulticolumnTextExportableAttributeInterface
 {
     public $helpers = ['form', 'lists/countries'];
 
@@ -367,6 +369,63 @@ class Controller extends AttributeTypeController
     {
         return AddressSettings::class;
     }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\MulticolumnTextExportableAttributeInterface::getAttributeTextRepresentationHeaders()
+     */
+    public function getAttributeTextRepresentationHeaders()
+    {
+        return [
+            'street1',
+            'street2',
+            'street3',
+            'city',
+            'state_province',
+            'country',
+            'postal_code',
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\MulticolumnTextExportableAttributeInterface::getAttributeValueTextRepresentation()
+     */
+    public function getAttributeValueTextRepresentation()
+    {
+        $value = $this->getAttributeValueObject();
+
+        return [
+            $value ? (string) $value->getAddress1() : '',
+            $value ? (string) $value->getAddress2() : '',
+            $value ? (string) $value->getAddress3() : '',
+            $value ? (string) $value->getCity() : '',
+            $value ? (string) $value->getStateProvince() : '',
+            $value ? (string) $value->getCountry() : '',
+            $value ? (string) $value->getPostalCode() : '',
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\MulticolumnTextExportableAttributeInterface::createAttributeValueFromTextRepresentation()
+     */
+    public function createAttributeValueFromTextRepresentation(array $textRepresentation, ErrorList $warnings)
+    {
+        $result = new AddressValue();
+        $result->setAddress1(array_shift($textRepresentation));
+        $result->setAddress2(array_shift($textRepresentation));
+        $result->setAddress3(array_shift($textRepresentation));
+        $result->setCity(array_shift($textRepresentation));
+        $result->setStateProvince(array_shift($textRepresentation));
+        $result->setCountry(array_shift($textRepresentation));
+        $result->setPostalCode(array_shift($textRepresentation));
+
+        return $result;
+	}
 
     protected function load()
     {
