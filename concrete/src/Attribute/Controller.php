@@ -8,7 +8,6 @@ use Concrete\Core\Controller\AbstractController;
 use Concrete\Core\Entity\Attribute\Key\Settings\EmptySettings;
 use Concrete\Core\Form\Context\ContextInterface;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
-use Core;
 use Doctrine\ORM\EntityManager;
 use SimpleXMLElement;
 
@@ -428,7 +427,7 @@ class Controller extends AbstractController implements AttributeInterface
         } else {
             $text = $customText;
         }
-        $form = Core::make('helper/form');
+        $form = $this->app->make('helper/form');
         echo $form->label($this->getLabelID(), $text);
     }
 
@@ -445,7 +444,7 @@ class Controller extends AbstractController implements AttributeInterface
      */
     public function getValidator()
     {
-        return \Core::make('Concrete\Core\Attribute\StandardValidator');
+        return $this->app->make(StandardValidator::class);
     }
 
     /**
