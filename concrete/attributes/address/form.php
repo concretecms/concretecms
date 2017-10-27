@@ -65,8 +65,6 @@ defined('C5_EXECUTE') or die('Access Denied.');
         }
         if ($akDefaultCountry != '') {
             $country = $akDefaultCountry;
-        } else {
-            $country = 'US';
         }
     }
 
