@@ -1,11 +1,14 @@
 <?php
 namespace Concrete\Attribute\Number;
 
-use Concrete\Core\Attribute\FontAwesomeIconFormatter;
-use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
+use Concrete\Core\Attribute\FontAwesomeIconFormatter;
+use Concrete\Core\Attribute\SimpleTextExportableAttributeInterface;
+use Concrete\Core\Entity\Attribute\Value\Value\AbstractValue;
+use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
+use Concrete\Core\Error\ErrorList;
 
-class Controller extends AttributeTypeController
+class Controller extends AttributeTypeController implements SimpleTextExportableAttributeInterface
 {
     protected $searchIndexFieldDefinition = [
         'type' => 'decimal',
@@ -19,7 +22,7 @@ class Controller extends AttributeTypeController
 
     public function getDisplayValue()
     {
-        return floatval($this->attributeValue->getValue());
+        return (float) ($this->attributeValue->getValue());
     }
 
     public function getAttributeValueClass()
@@ -29,8 +32,8 @@ class Controller extends AttributeTypeController
 
     public function searchForm($list)
     {
-        $numFrom = intval($this->request('from'));
-        $numTo = intval($this->request('to'));
+        $numFrom = (int) ($this->request('from'));
+        $numTo = (int) ($this->request('to'));
         if ($numFrom) {
             $list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), $numFrom, '>=');
         }
@@ -69,6 +72,7 @@ class Controller extends AttributeTypeController
     public function validateValue()
     {
         $val = $this->getAttributeValue()->getValue();
+
         return $val !== null && $val !== false;
     }
 
@@ -90,4 +94,36 @@ class Controller extends AttributeTypeController
         }
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::getAttributeValueTextRepresentation()
+     */
+    public function getAttributeValueTextRepresentation(AbstractValue $value = null)
+    {
+        if ($value instanceof NumberValue) {
+            $result = (string) $value->getValue();
+        } else {
+            $result = '';
+        }
+
+        return $result;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::updateAttributeValueFromTextRepresentation()
+     */
+    public function updateAttributeValueFromTextRepresentation(AbstractValue $value, $textRepresentation, ErrorList $warnings)
+    {
+        /* @var NumberValue $value */
+        if ($textRepresentation === '') {
+            $value->setValue(null);
+        } elseif (is_numeric($textRepresentation)) {
+            $value->setValue($textRepresentation);
+        } else {
+            $warnings->add(t('"%1$s" is not a valid number for the attribute with handle %2$s', $textRepresentation, $this->attributeKey->getAttributeKeyHandle()));
+        }
+    }
 }

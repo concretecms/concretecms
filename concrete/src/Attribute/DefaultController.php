@@ -1,17 +1,19 @@
 <?php
 namespace Concrete\Core\Attribute;
 
-use Concrete\Core\Entity\Attribute\Key\Settings\TextSettings;
-use Concrete\Core\Entity\Attribute\Value\Value\TextValue;
-use Core;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
+use Concrete\Core\Entity\Attribute\Key\Settings\TextSettings;
+use Concrete\Core\Entity\Attribute\Value\Value\AbstractValue;
+use Concrete\Core\Entity\Attribute\Value\Value\TextValue;
+use Concrete\Core\Error\ErrorList;
+use Core;
 
-class DefaultController extends AttributeTypeController
+class DefaultController extends AttributeTypeController implements SimpleTextExportableAttributeInterface
 {
-    protected $searchIndexFieldDefinition = array(
+    protected $searchIndexFieldDefinition = [
         'type' => 'text',
-        'options' => array('default' => null, 'notnull' => false),
-    );
+        'options' => ['default' => null, 'notnull' => false],
+    ];
 
     public function form()
     {
@@ -62,10 +64,11 @@ class DefaultController extends AttributeTypeController
     {
         return TextSettings::class;
     }
-    
+
     public function createAttributeValueFromRequest()
     {
         $data = $this->post();
+
         return $this->createAttributeValue(isset($data['value']) ? $data['value'] : null);
     }
 
@@ -77,5 +80,32 @@ class DefaultController extends AttributeTypeController
     public function validateForm($data)
     {
         return isset($data['value']) && $data['value'] != '';
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::getAttributeValueTextRepresentation()
+     */
+    public function getAttributeValueTextRepresentation(AbstractValue $value = null)
+    {
+        if ($value instanceof TextValue) {
+            $result = (string) $value->getValue();
+        } else {
+            $result = '';
+        }
+
+        return $result;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::updateAttributeValueFromTextRepresentation()
+     */
+    public function updateAttributeValueFromTextRepresentation(AbstractValue $value, $textRepresentation, ErrorList $warnings)
+    {
+        /* @var TextValue $value */
+        $value->setValue($textRepresentation);
     }
 }
