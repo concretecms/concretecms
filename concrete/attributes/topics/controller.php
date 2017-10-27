@@ -1,31 +1,34 @@
 <?php
 namespace Concrete\Attribute\Topics;
 
+use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
+use Concrete\Core\Attribute\SimpleTextExportableAttributeInterface;
 use Concrete\Core\Entity\Attribute\Key\Settings\TopicsSettings;
+use Concrete\Core\Entity\Attribute\Value\Value\AbstractValue;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectedTopic;
 use Concrete\Core\Entity\Attribute\Value\Value\TopicsValue;
+use Concrete\Core\Error\ErrorList;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Concrete\Core\Tree\Node\Node;
+use Concrete\Core\Tree\Node\Node as TreeNode;
 use Concrete\Core\Tree\Node\Type\Category;
 use Concrete\Core\Tree\Node\Type\Topic;
-use Concrete\Core\Tree\Type\Topic as TopicTree;
 use Concrete\Core\Tree\Tree;
-use Concrete\Core\Tree\Node\Node as TreeNode;
-use Concrete\Core\Attribute\Controller as AttributeTypeController;
+use Concrete\Core\Tree\Type\Topic as TopicTree;
 use Concrete\Core\Utility\Service\Xml;
 use Core;
 use Database;
 
-class Controller extends AttributeTypeController
+class Controller extends AttributeTypeController implements SimpleTextExportableAttributeInterface
 {
     public $akTopicParentNodeID;
     public $akTopicTreeID;
-    private $akTopicAllowMultipleValues = true;
-
-    protected $searchIndexFieldDefinition = ['type' => 'text', 'options' => ['default' => null, 'notnull' => false]];
 
     public $helpers = ['form'];
+
+    protected $searchIndexFieldDefinition = ['type' => 'text', 'options' => ['default' => null, 'notnull' => false]];
+    private $akTopicAllowMultipleValues = true;
 
     public function getIconFormatter()
     {
@@ -52,14 +55,14 @@ class Controller extends AttributeTypeController
             if ($value instanceof TreeNode) {
                 $topic = $value;
             } else {
-                $topic = Node::getByID(intval($value));
+                $topic = Node::getByID((int) $value);
             }
             if (is_object($topic) && (
                     $topic instanceof \Concrete\Core\Tree\Node\Type\Topic ||
                     $topic instanceof Category)) {
                 $column = 'ak_' . $this->attributeKey->getAttributeKeyHandle();
                 $expressions[] = $qb->expr()->like($column, ':topicPath' . $i);
-                $qb->setParameter('topicPath' . $i, "%||" . $topic->getTreeNodeDisplayPath() . '%||');
+                $qb->setParameter('topicPath' . $i, '%||' . $topic->getTreeNodeDisplayPath() . '%||');
             }
             ++$i;
         }
@@ -126,6 +129,9 @@ class Controller extends AttributeTypeController
 
     /**
      * @deprecated
+     *
+     * @param mixed $akTopicParentNodeID
+     * @param mixed $akTopicTreeID
      */
     public function setNodes($akTopicParentNodeID, $akTopicTreeID)
     {
@@ -243,10 +249,10 @@ class Controller extends AttributeTypeController
 
     public function getSearchIndexValue()
     {
-        $str = "||";
+        $str = '||';
         $nodeKeys = $this->attributeValue->getValue();
         foreach ($nodeKeys as $nodeObj) {
-            $str .= $nodeObj->getTreeNodeDisplayPath() . "||";
+            $str .= $nodeObj->getTreeNodeDisplayPath() . '||';
         }
 
         // remove line break for empty list
@@ -369,22 +375,6 @@ class Controller extends AttributeTypeController
         return $this->akTopicAllowMultipleValues;
     }
 
-    protected function load()
-    {
-        $ak = $this->getAttributeKey();
-        if (!is_object($ak)) {
-            return false;
-        }
-
-        /** @var TopicsSettings $type */
-        $type = $ak->getAttributeKeySettings();
-        if (is_object($type)) {
-            $this->akTopicParentNodeID = $type->getParentNodeID();
-            $this->akTopicTreeID = $type->getTopicTreeID();
-            $this->akTopicAllowMultipleValues = $type->allowMultipleValues();
-        }
-    }
-
     public function duplicateKey($newAK)
     { // TODO this is going to need some work to function with the child options table...
         $this->load();
@@ -405,5 +395,86 @@ class Controller extends AttributeTypeController
     public function getAttributeKeySettingsClass()
     {
         return TopicsSettings::class;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::getAttributeValueTextRepresentation()
+     */
+    public function getAttributeValueTextRepresentation(AbstractValue $value = null)
+    {
+        $result = '';
+        if ($value instanceof TopicsValue) {
+            $topics = $value->getSelectedTopics();
+            if (!empty($topics)) {
+                $ids = [];
+                foreach ($topics as $topic) {
+                    /* @var \\Concrete\Core\Entity\Attribute\Value\Value\SelectedTopic $topic */
+                    $ids[] = 'tid:' . $topic->getTreeNodeID();
+                }
+                $result = implode('|', $ids);
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::updateAttributeValueFromTextRepresentation()
+     */
+    public function updateAttributeValueFromTextRepresentation(AbstractValue $value, $textRepresentation, ErrorList $warnings)
+    {
+        /* @var TopicsValue $value */
+        if ($textRepresentation === '') {
+            $value->getSelectedTopics()->clear();
+        } elseif (!preg_match('/^tid:\d+(,tid:\d+)*$/', $textRepresentation)) {
+            $warnings->add(t('"%1$s" does not represent a valid value for the Topics attribute with handle %2$s', $textRepresentation, $this->attributeKey->getAttributeKeyHandle()));
+        } else {
+            if (!isset($this->akTopicParentNodeID)) {
+                $this->load();
+            }
+            $value->getSelectedTopics()->clear();
+            preg_match_all('/tid:(\d+)$/', $textRepresentation, $matches);
+            $nodeIDs = array_unique(array_map($matches[1], 'intval'));
+            foreach ($nodeIDs as $nodeID) {
+                $node = TreeNode::getByID($nodeID);
+                if ($node === null) {
+                    $warnings->add(t('"%1$s" is not a valid node identifier for the Topics attribute with handle %2$s', $nodeID, $this->attributeKey->getAttributeKeyHandle()));
+                    continue;
+                }
+                $withinParentScope = false;
+                $parentNodes = $node->getTreeNodeParentArray();
+                foreach ($parentNodes as $parentNode) {
+                    if ($parentNode->getTreeNodeID() == $this->akTopicParentNodeID) {
+                        $withinParentScope = true;
+                        break;
+                    }
+                }
+                if ($withinParentScope === false) {
+                    $warnings->add(t('The Topic node with ID "%1$s" is not a child of the root node of the Topics attribute with handle %2$s', $nodeID, $this->attributeKey->getAttributeKeyHandle()));
+                    continue;
+                }
+                $value->getSelectedTopics()->add($node);
+            }
+        }
+    }
+
+    protected function load()
+    {
+        $ak = $this->getAttributeKey();
+        if (!is_object($ak)) {
+            return false;
+        }
+
+        /** @var TopicsSettings $type */
+        $type = $ak->getAttributeKeySettings();
+        if (is_object($type)) {
+            $this->akTopicParentNodeID = $type->getParentNodeID();
+            $this->akTopicTreeID = $type->getTopicTreeID();
+            $this->akTopicAllowMultipleValues = $type->allowMultipleValues();
+        }
     }
 }
