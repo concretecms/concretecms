@@ -205,17 +205,11 @@ abstract class AbstractExporter
             /* @var \Concrete\Core\Attribute\AttributeKeyInterface $attributeKey */
             /* @var \Concrete\Core\Attribute\Controller $attributeController */
             $value = $object->getAttributeValueObject($attributeKey, false);
-            if ($value) {
-                $attributeController->setAttributeValue($value);
-                $valueObject = $attributeController->getAttributeValueObject();
-            } else {
-                $valueObject = null;
-            }
-
+            $attributeController->setAttributeValue($value);
             if ($attributeController instanceof SimpleTextExportableAttributeInterface) {
-                yield $attributeController->getAttributeValueTextRepresentation($valueObject);
+                yield $attributeController->getAttributeValueTextRepresentation();
             } elseif ($attributeController instanceof MulticolumnTextExportableAttributeInterface) {
-                foreach ($attributeController->getAttributeValueTextRepresentation($valueObject) as $part) {
+                foreach ($attributeController->getAttributeValueTextRepresentation() as $part) {
                     yield $part;
                 }
             }

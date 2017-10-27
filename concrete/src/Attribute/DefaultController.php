@@ -3,7 +3,6 @@ namespace Concrete\Core\Attribute;
 
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Entity\Attribute\Key\Settings\TextSettings;
-use Concrete\Core\Entity\Attribute\Value\Value\AbstractValue;
 use Concrete\Core\Entity\Attribute\Value\Value\TextValue;
 use Concrete\Core\Error\ErrorList;
 use Core;
@@ -87,12 +86,13 @@ class DefaultController extends AttributeTypeController implements SimpleTextExp
      *
      * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::getAttributeValueTextRepresentation()
      */
-    public function getAttributeValueTextRepresentation(AbstractValue $value = null)
+    public function getAttributeValueTextRepresentation()
     {
-        if ($value instanceof TextValue) {
-            $result = (string) $value->getValue();
-        } else {
+        $value = $this->getAttributeValueObject();
+        if ($value === null) {
             $result = '';
+        } else {
+            $result = (string) $value->getValue();
         }
 
         return $result;
@@ -103,9 +103,17 @@ class DefaultController extends AttributeTypeController implements SimpleTextExp
      *
      * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::updateAttributeValueFromTextRepresentation()
      */
-    public function updateAttributeValueFromTextRepresentation(AbstractValue $value, $textRepresentation, ErrorList $warnings)
+    public function updateAttributeValueFromTextRepresentation($textRepresentation, ErrorList $warnings)
     {
-        /* @var TextValue $value */
-        $value->setValue($textRepresentation);
+        $value = $this->getAttributeValueObject();
+        if ($value === null) {
+            if ($textRepresentation !== '') {
+                $value = $this->createAttributeValue($textRepresentation);
+            }
+        } else {
+            $value->setValue($textRepresentation);
+        }
+
+        return $value;
     }
 }

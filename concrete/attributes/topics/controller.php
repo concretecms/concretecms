@@ -402,10 +402,11 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
      *
      * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::getAttributeValueTextRepresentation()
      */
-    public function getAttributeValueTextRepresentation(AbstractValue $value = null)
+    public function getAttributeValueTextRepresentation()
     {
         $result = '';
-        if ($value instanceof TopicsValue) {
+        $value = $this->getAttributeValueObject();
+        if ($value !== null) {
             $topics = $value->getSelectedTopics();
             if (!empty($topics)) {
                 $ids = [];
@@ -425,18 +426,21 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
      *
      * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::updateAttributeValueFromTextRepresentation()
      */
-    public function updateAttributeValueFromTextRepresentation(AbstractValue $value, $textRepresentation, ErrorList $warnings)
+    public function updateAttributeValueFromTextRepresentation($textRepresentation, ErrorList $warnings)
     {
-        /* @var TopicsValue $value */
+        $value = $this->getAttributeValueObject();
+        $textRepresentation = trim($textRepresentation);
         if ($textRepresentation === '') {
-            $value->getSelectedTopics()->clear();
+            if ($value !== null) {
+                $value->getSelectedTopics()->clear();
+            }
         } elseif (!preg_match('/^tid:\d+(,tid:\d+)*$/', $textRepresentation)) {
             $warnings->add(t('"%1$s" does not represent a valid value for the Topics attribute with handle %2$s', $textRepresentation, $this->attributeKey->getAttributeKeyHandle()));
         } else {
             if (!isset($this->akTopicParentNodeID)) {
                 $this->load();
             }
-            $value->getSelectedTopics()->clear();
+            $initialized = false;
             preg_match_all('/tid:(\d+)$/', $textRepresentation, $matches);
             $nodeIDs = array_unique(array_map($matches[1], 'intval'));
             foreach ($nodeIDs as $nodeID) {
@@ -457,9 +461,22 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
                     $warnings->add(t('The Topic node with ID "%1$s" is not a child of the root node of the Topics attribute with handle %2$s', $nodeID, $this->attributeKey->getAttributeKeyHandle()));
                     continue;
                 }
-                $value->getSelectedTopics()->add($node);
+                if ($initialized === false) {
+                    $initialized = true;
+                    if ($value === null) {
+                        $value = new TopicsValue();
+                    } else {
+                        $value->getSelectedTopics()->clear();
+                    }
+                }
+                $topic = new SelectedTopic();
+                $topic->setAttributeValue($value);
+                $topic->setTreeNodeID($nodeID);
+                $value->getSelectedTopics()->add($topic);
             }
         }
+
+        return $value;
     }
 
     protected function load()

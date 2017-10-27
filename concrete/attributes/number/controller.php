@@ -4,7 +4,6 @@ namespace Concrete\Attribute\Number;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\SimpleTextExportableAttributeInterface;
-use Concrete\Core\Entity\Attribute\Value\Value\AbstractValue;
 use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
 use Concrete\Core\Error\ErrorList;
 
@@ -99,12 +98,13 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
      *
      * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::getAttributeValueTextRepresentation()
      */
-    public function getAttributeValueTextRepresentation(AbstractValue $value = null)
+    public function getAttributeValueTextRepresentation()
     {
-        if ($value instanceof NumberValue) {
-            $result = (string) $value->getValue();
-        } else {
+        $value = $this->getAttributeValueObject();
+        if ($value === null) {
             $result = '';
+        } else {
+            $result = (string) $value->getValue();
         }
 
         return $result;
@@ -115,15 +115,24 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
      *
      * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::updateAttributeValueFromTextRepresentation()
      */
-    public function updateAttributeValueFromTextRepresentation(AbstractValue $value, $textRepresentation, ErrorList $warnings)
+    public function updateAttributeValueFromTextRepresentation($textRepresentation, ErrorList $warnings)
     {
-        /* @var NumberValue $value */
+        $value = $this->getAttributeValueObject();
+        $textRepresentation = trim($textRepresentation);
         if ($textRepresentation === '') {
-            $value->setValue(null);
+            if ($value !== null) {
+                $value->setValue(null);
+            }
         } elseif (is_numeric($textRepresentation)) {
-            $value->setValue($textRepresentation);
+            if ($value === null) {
+                $value = $this->createAttributeValue($textRepresentation);
+            } else {
+                $value->setValue($textRepresentation);
+            }
         } else {
             $warnings->add(t('"%1$s" is not a valid number for the attribute with handle %2$s', $textRepresentation, $this->attributeKey->getAttributeKeyHandle()));
         }
+
+        return $value;
     }
 }

@@ -7,7 +7,6 @@ use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\Form\Control\View\GroupedView;
 use Concrete\Core\Attribute\MulticolumnTextExportableAttributeInterface;
 use Concrete\Core\Entity\Attribute\Key\Settings\AddressSettings;
-use Concrete\Core\Entity\Attribute\Value\Value\AbstractValue;
 use Concrete\Core\Entity\Attribute\Value\Value\AddressValue;
 use Concrete\Core\Error\ErrorList;
 use Concrete\Core\Form\Context\ContextInterface;
@@ -396,11 +395,9 @@ class Controller extends AttributeTypeController implements MulticolumnTextExpor
      *
      * @see \Concrete\Core\Attribute\MulticolumnTextExportableAttributeInterface::getAttributeValueTextRepresentation()
      */
-    public function getAttributeValueTextRepresentation(AbstractValue $value = null)
+    public function getAttributeValueTextRepresentation()
     {
-        if (!$value instanceof AddressValue) {
-            $value = null;
-        }
+        $value = $this->getAttributeValueObject();
 
         return [
             $value ? (string) $value->getAddress1() : '',
@@ -418,37 +415,48 @@ class Controller extends AttributeTypeController implements MulticolumnTextExpor
      *
      * @see \Concrete\Core\Attribute\MulticolumnTextExportableAttributeInterface::updateAttributeValueFromTextRepresentation()
      */
-    public function updateAttributeValueFromTextRepresentation(AbstractValue $value, array $textRepresentation, ErrorList $warnings)
+    public function updateAttributeValueFromTextRepresentation(array $textRepresentation, ErrorList $warnings)
     {
-        /* @var AddressValue $value */
-        $value->setAddress1(trim(array_shift($textRepresentation)));
-        $value->setAddress2(trim(array_shift($textRepresentation)));
-        $value->setAddress3(trim(array_shift($textRepresentation)));
-        $value->setCity(trim(array_shift($textRepresentation)));
-        $value->setStateProvince(trim(array_shift($textRepresentation)));
-        $value->setCountry(trim(array_shift($textRepresentation)));
-        $value->setPostalCode(trim(array_shift($textRepresentation)));
+        $textRepresentation = array_map($textRepresentation, 'trim');
+        $value = $this->getAttributeValueObject();
+        if ($value === null) {
+            if (implode('', $textRepresentation) !== '') {
+                $value = new AddressValue();
+            }
+        }
+        if ($value !== null) {
+            /* @var AddressValue $value */
+            $value->setAddress1(trim(array_shift($textRepresentation)));
+            $value->setAddress2(trim(array_shift($textRepresentation)));
+            $value->setAddress3(trim(array_shift($textRepresentation)));
+            $value->setCity(trim(array_shift($textRepresentation)));
+            $value->setStateProvince(trim(array_shift($textRepresentation)));
+            $value->setCountry(trim(array_shift($textRepresentation)));
+            $value->setPostalCode(trim(array_shift($textRepresentation)));
 
-        $countryCode = (string) $value->getCountry();
-        if ($countryCode !== '') {
-            $cl = $this->app->make(CountryList::class);
-            /* @var CountryList $cl */
-            $countries = $cl->getCountries();
-            if (!isset($countries[$countryCode])) {
-                $warnings->add(t('"%1$s" is not a valid Country code for the attribute with handle %2$s', $countryCode, $this->attributeKey->getAttributeKeyHandle()));
-            } else {
-                $countryName = $countries[$countryCode];
-                $stateProvinceCode = $value->getStateProvince();
-                if ($stateProvinceCode !== '') {
-                    $spl = $this->app->make(StatesProvincesList::class);
-                    /* @var StatesProvincesList $spl */
-                    $statesProvinces = $spl->getStateProvinceArray($countryCode);
-                    if ($statesProvinces !== null && !isset($statesProvinces[$stateProvinceCode])) {
-                        $warnings->add(t('"%1$s" is not a valid State/Province code for the Country %2$s (attribute with handle %3$s)', $stateProvinceCode, $countryName, $this->attributeKey->getAttributeKeyHandle()));
+            $countryCode = (string) $value->getCountry();
+            if ($countryCode !== '') {
+                $cl = $this->app->make(CountryList::class);
+                /* @var CountryList $cl */
+                $countries = $cl->getCountries();
+                if (!isset($countries[$countryCode])) {
+                    $warnings->add(t('"%1$s" is not a valid Country code for the attribute with handle %2$s', $countryCode, $this->attributeKey->getAttributeKeyHandle()));
+                } else {
+                    $countryName = $countries[$countryCode];
+                    $stateProvinceCode = $value->getStateProvince();
+                    if ($stateProvinceCode !== '') {
+                        $spl = $this->app->make(StatesProvincesList::class);
+                        /* @var StatesProvincesList $spl */
+                        $statesProvinces = $spl->getStateProvinceArray($countryCode);
+                        if ($statesProvinces !== null && !isset($statesProvinces[$stateProvinceCode])) {
+                            $warnings->add(t('"%1$s" is not a valid State/Province code for the Country %2$s (attribute with handle %3$s)', $stateProvinceCode, $countryName, $this->attributeKey->getAttributeKeyHandle()));
+                        }
                     }
                 }
             }
         }
+
+        return $value;
 	}
 
     protected function load()

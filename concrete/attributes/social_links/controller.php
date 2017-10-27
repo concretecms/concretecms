@@ -1,19 +1,20 @@
 <?php
 namespace Concrete\Attribute\SocialLinks;
 
+use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\Form\Control\View\GroupedView;
+use Concrete\Core\Attribute\SimpleTextExportableAttributeInterface;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectedSocialLink;
 use Concrete\Core\Entity\Attribute\Value\Value\SocialLinksValue;
-use Loader;
-use Environment;
-use Concrete\Core\Sharing\SocialNetwork\ServiceList as ServiceList;
+use Concrete\Core\Error\ErrorList;
 use Concrete\Core\Sharing\SocialNetwork\Service as Service;
-use Concrete\Core\Attribute\Controller as AttributeTypeController;
+use Concrete\Core\Sharing\SocialNetwork\ServiceList as ServiceList;
+use Environment;
+use Loader;
 
-class Controller extends AttributeTypeController
+class Controller extends AttributeTypeController implements SimpleTextExportableAttributeInterface
 {
-
     public function getIconFormatter()
     {
         return new FontAwesomeIconFormatter('share');
@@ -32,16 +33,17 @@ class Controller extends AttributeTypeController
     public function createAttributeValueFromRequest()
     {
         $data = $this->post();
-        $values = array();
+        $values = [];
         if (!is_array($data['service'])) {
-            $data['service'] = array();
+            $data['service'] = [];
         }
         if (!is_array($data['serviceInfo'])) {
-            $data['serviceInfo'] = array();
+            $data['serviceInfo'] = [];
         }
         for ($i = 0; $i < count($data['service']); ++$i) {
             $values[$data['service'][$i]] = $data['serviceInfo'][$i];
         }
+
         return $this->createAttributeValue($values);
     }
 
@@ -64,7 +66,7 @@ class Controller extends AttributeTypeController
 
         return $av;
     }
-    
+
     public function exportValue(\SimpleXMLElement $akn)
     {
         $services = $this->attributeValue->getValue()->getSelectedLinks();
@@ -109,7 +111,7 @@ class Controller extends AttributeTypeController
 
     public function form()
     {
-        $data = array();
+        $data = [];
         if ($this->isPost()) {
             $data['service'] = $this->post('service');
             $data['serviceInfo'] = $this->post('serviceInfo');
@@ -130,4 +132,73 @@ class Controller extends AttributeTypeController
         $this->set('services', ServiceList::get());
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::getAttributeValueTextRepresentation()
+     */
+    public function getAttributeValueTextRepresentation()
+    {
+        $links = [];
+        $value = $this->getAttributeValueObject();
+        if ($value !== null) {
+            foreach ($value->getSelectedLinks() as $socialLink) {
+                $links[] = $socialLink->getService() . ':' . $socialLink->getServiceInfo();
+            }
+        }
+
+        return implode("\n", $links);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::updateAttributeValueFromTextRepresentation()
+     */
+    public function updateAttributeValueFromTextRepresentation($textRepresentation, ErrorList $warnings)
+    {
+        $value = $this->getAttributeValueObject();
+        $value->getSelectedLinks()->clear();
+        $textRepresentation = trim($textRepresentation);
+        if ($textRepresentation === '') {
+            if ($value !== null) {
+                $value->getSelectedLinks()->clear();
+            }
+        } else {
+            $initialized = false;
+            foreach (explode("\n", $textRepresentation) as $serviceAndInfo) {
+                $serviceAndInfo = trim($serviceAndInfo);
+                if ($serviceAndInfo === '') {
+                    continue;
+                }
+                $chunks = explode(':', $serviceAndInfo, 2);
+                if (!isset($chunks[1])) {
+                    $warnings->add(t('"%1$s" is not a valid Social Link value for the attribute with handle %2$s', $serviceAndInfo, $this->attributeKey->getAttributeKeyHandle()));
+                    continue;
+                }
+                $serviceHandle = trim($chunks[0]);
+                $serviceInfo = trim($chunks[1]);
+                $serviceObject = Service::getByHandle($serviceHandle);
+                if ($serviceObject === null) {
+                    $warnings->add(t('"%1$s" is not a valid Social Service handle for the attribute with handle %2$s', $serviceHandle, $this->attributeKey->getAttributeKeyHandle()));
+                    continue;
+                }
+                if ($initialized === false) {
+                    $initialized = true;
+                    if ($value === null) {
+                        $value = $this->createAttributeValue([]);
+                    } else {
+                        $value->getSelectedLinks()->clear();
+                    }
+                }
+                $link = new SelectedSocialLink();
+                $link->setAttributeValue($value);
+                $link->setService($serviceHandle);
+                $link->setServiceInfo($serviceInfo);
+                $value->getSelectedLinks()->add($link);
+            }
+        }
+
+        return $value;
+    }
 }

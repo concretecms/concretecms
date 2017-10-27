@@ -6,7 +6,6 @@ use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\SimpleTextExportableAttributeInterface;
 use Concrete\Core\Backup\ContentExporter;
 use Concrete\Core\Entity\Attribute\Key\Settings\ImageFileSettings;
-use Concrete\Core\Entity\Attribute\Value\Value\AbstractValue;
 use Concrete\Core\Entity\Attribute\Value\Value\ImageFileValue;
 use Concrete\Core\Entity\File\File as FileEntity;
 use Concrete\Core\Error\ErrorList;
@@ -261,10 +260,11 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
      *
      * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::getAttributeValueTextRepresentation()
      */
-    public function getAttributeValueTextRepresentation(AbstractValue $value = null)
+    public function getAttributeValueTextRepresentation()
     {
         $result = '';
-        if ($value instanceof ImageFileValue) {
+        $value = $this->getAttributeValueObject();
+        if ($value !== null) {
             $file = $value->getFileObject();
             if ($file !== null) {
                 $result = 'fid:' . $file->getFileID();
@@ -279,21 +279,29 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
      *
      * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::updateAttributeValueFromTextRepresentation()
      */
-    public function updateAttributeValueFromTextRepresentation(AbstractValue $value, $textRepresentation, ErrorList $warnings)
+    public function updateAttributeValueFromTextRepresentation($textRepresentation, ErrorList $warnings)
     {
-        /* @var ImageFileValue $value */
+        $value = $this->getAttributeValueObject();
         if ($textRepresentation === '') {
-            $value->setFileObject(null);
+            if ($value !== null) {
+                $value->setFileObject(null);
+            }
         } elseif (preg_match('/^fid:(\d+)$/', $textRepresentation, $matches)) {
             $fID = (int) $matches[1];
             $file = $this->entityManager->find(FileEntity::class, $fID);
             if ($file !== null) {
-                $value->setFileObject($file);
+                if ($value === null) {
+                    $value = $this->createAttributeValue($file);
+                } else {
+                    $value->setFileObject($file);
+                }
             } else {
                 $warnings->add(t('The file with ID %1$s has not been found for the attribute with handle %2$s', $file, $this->attributeKey->getAttributeKeyHandle()));
             }
         } else {
             $warnings->add(t('"%1$s" is not a valid representation of a file for the attribute with handle %2$s', $textRepresentation, $this->attributeKey->getAttributeKeyHandle()));
         }
+
+        return $value;
     }
 }

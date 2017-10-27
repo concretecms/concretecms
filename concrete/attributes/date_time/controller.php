@@ -5,7 +5,6 @@ use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\SimpleTextExportableAttributeInterface;
 use Concrete\Core\Entity\Attribute\Key\Settings\DateTimeSettings;
-use Concrete\Core\Entity\Attribute\Value\Value\AbstractValue;
 use Concrete\Core\Entity\Attribute\Value\Value\DateTimeValue;
 use Concrete\Core\Error\ErrorList;
 use DateTime;
@@ -288,13 +287,9 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
      *
      * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::getAttributeValueTextRepresentation()
      */
-    public function getAttributeValueTextRepresentation(AbstractValue $value = null)
+    public function getAttributeValueTextRepresentation()
     {
-        if ($value instanceof DateTimeValue) {
-            $dateTime = $value->getValue($value);
-        } else {
-            $dateTime = null;
-        }
+        $dateTime = $this->getDateTime();
         if ($dateTime === null) {
             $result = '';
         } else {
@@ -326,11 +321,13 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
 	 *
 	 * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::updateAttributeValueFromTextRepresentation()
 	 */
-	public function updateAttributeValueFromTextRepresentation(AbstractValue $value, $textRepresentation, ErrorList $warnings)
+	public function updateAttributeValueFromTextRepresentation($textRepresentation, ErrorList $warnings)
     {
-	    /* @var DateTimeValue $value */
+	    $value = $this->getAttributeValueObject();
         if ($textRepresentation === '') {
-            $value->setValue(null);
+            if ($value !== null) {
+                $value->setValue(null);
+            }
         } else {
             if (!isset($this->akDateDisplayMode)) {
                 $this->load();
@@ -353,9 +350,15 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
             if (!$dateTime) {
                 $warnings->add(t('"%1$s" is not a valid date value for the attribute with handle %2$s', $textRepresentation, $this->attributeKey->getAttributeKeyHandle()));
             } else {
-                $value->setValue($dateTime);
+                if ($value === null) {
+                    $value = $this->createAttributeValue($dateTime);
+                } else {
+                    $value->setValue($dateTime);
+                }
             }
         }
+
+        return $value;
 	}
 
     protected function load()

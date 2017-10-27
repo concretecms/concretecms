@@ -3,7 +3,6 @@ namespace Concrete\Attribute\Email;
 
 use Concrete\Core\Attribute\DefaultController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
-use Concrete\Core\Entity\Attribute\Value\Value\AbstractValue;
 use Concrete\Core\Error\ErrorList;
 use Concrete\Core\Error\ErrorList\Error\Error;
 use Concrete\Core\Error\ErrorList\Error\FieldNotPresentError;
@@ -46,7 +45,7 @@ class Controller extends DefaultController
      *
      * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::updateAttributeValueFromTextRepresentation()
      */
-    public function updateAttributeValueFromTextRepresentation(AbstractValue $value, $textRepresentation, ErrorList $warnings)
+    public function updateAttributeValueFromTextRepresentation($textRepresentation, ErrorList $warnings)
     {
         /* @var TextValue $value */
         $good = true;
@@ -59,7 +58,11 @@ class Controller extends DefaultController
             }
         }
         if ($good) {
-            parent::updateAttributeValueFromTextRepresentation($value, $textRepresentation, $warnings);
+            $value = parent::updateAttributeValueFromTextRepresentation($textRepresentation, $warnings);
+        } else {
+            $value = $this->getAttributeValueObject();
         }
+
+        return $value;
     }
 }
