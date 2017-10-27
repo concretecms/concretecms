@@ -76,7 +76,7 @@ class Controller extends AttributeTypeController implements MulticolumnTextExpor
 
     public function getAttributeValueObject()
     {
-        return $this->entityManager->find(AddressValue::class, $this->attributeValue->getGenericValue());
+        return $this->attributeValue ? $this->entityManager->find(AddressValue::class, $this->attributeValue->getGenericValue()) : null;
     }
 
     public function searchForm($list)
