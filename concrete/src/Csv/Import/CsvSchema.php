@@ -131,7 +131,7 @@ class CsvSchema
                     break;
             }
         }
-        
+
         return $result;
     }
 

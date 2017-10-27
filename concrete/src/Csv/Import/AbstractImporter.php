@@ -36,7 +36,7 @@ abstract class AbstractImporter
      *
      * @var bool
      */
-    private $dryRun = true;
+    private $dryRun = false;
 
     /**
      * The CSV Reader instance.
@@ -106,7 +106,20 @@ abstract class AbstractImporter
         $this->resetErrors();
         $result = true;
         $result = $result && $this->processHeader();
-        $result = $result && $this->processData();
+        if ($this->dryRun !== false) {
+            // Let's start a transaction. It shouldn't be necessary, but it doesn't cost a penny ;)
+            $this->entityManager->getConnection()->beginTransaction();
+        }
+        try {
+            $result = $result && $this->processData();
+        } finally {
+            if ($this->dryRun !== false) {
+                try {
+                    $this->entityManager->getConnection()->rollBack();
+                } catch (Exception $foo) {
+                }
+            }
+        }
 
         return $result;
     }
@@ -262,6 +275,8 @@ abstract class AbstractImporter
                 $result = true;
             }
         }
+
+        return $result;
     }
 
     /**
