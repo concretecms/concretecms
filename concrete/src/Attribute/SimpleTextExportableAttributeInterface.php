@@ -26,18 +26,17 @@ interface SimpleTextExportableAttributeInterface
     public function getAttributeValueTextRepresentation(AbstractValue $value = null);
 
     /**
-     * Create an attribute value starting from its text representation.
+     * Update an attribute value starting from its text representation.
      *
+     * @param AbstractValue $value the value to be updated
      * @param string $textRepresentation the text representation of the attribute value
      * @param ErrorList $warnings An ErrorList instance that the method can add decoding warnings to
      *
-     * @return \Concrete\Core\Entity\Attribute\Value\Value\AbstractValue
-     *
-     * @example In case of booleans attributes, this may return
-     * - an attribute value with false if $textRepresentation is '0'
-     * - an attribute value with true if $textRepresentation is '1'
-     * - an attribute value containing NULL if $textRepresentation is not '0' or '1'
-     * - add to the $warnings instance a message $textRepresentation is not empty and it's not '0' or '1'
+     * @example In case of booleans attributes, this may:
+     * - set the attribute value to false if $textRepresentation is '0'
+     * - set the attribute value to true if $textRepresentation is '1'
+     * - set the attribute value to NULL if $textRepresentation is not '0' or '1'
+     * - add to the $warnings instance a message $textRepresentation is not aempty and it's not '0' or '1'
      */
-    public function createAttributeValueFromTextRepresentation($textRepresentation, ErrorList $warnings);
+    public function updateAttributeValueFromTextRepresentation(AbstractValue $value, $textRepresentation, ErrorList $warnings);
 }

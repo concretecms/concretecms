@@ -34,15 +34,16 @@ interface MulticolumnTextExportableAttributeInterface
     public function getAttributeValueTextRepresentation(AbstractValue $value = null);
 
     /**
-     * Create an attribute value starting from its text representation.
+     * Update an attribute value starting from its text representation.
      *
+     * @param AbstractValue $value the value to be updated
      * @param string[] $textRepresentation the text representation strings of the attribute value
      * @param ErrorList $warnings An ErrorList instance that the method can add decoding warnings to
      *
      * @return \Concrete\Core\Entity\Attribute\Value\Value\AbstractValue
      *
-     * @example In case of an address attributes, this return an address attribute value with its parts extracted from $textRepresentation.
+     * @example In case of an address attribute, this may update an address attribute value with its parts extracted from $textRepresentation.
      * The method could add to the $warnings instance a message if the Country code is not valid
      */
-    public function createAttributeValueFromTextRepresentation(array $textRepresentation, ErrorList $warnings);
+    public function updateAttributeValueFromTextRepresentation(AbstractValue $value, array $textRepresentation, ErrorList $warnings);
 }

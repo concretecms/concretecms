@@ -207,29 +207,28 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         return $result;
 	}
 
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::createAttributeValueFromTextRepresentation()
-     */
-    public function createAttributeValueFromTextRepresentation($textRepresentation, ErrorList $warnings)
+	/**
+	 * {@inheritdoc}
+	 *
+	 * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::updateAttributeValueFromTextRepresentation()
+	 */
+	public function updateAttributeValueFromTextRepresentation(AbstractValue $value, $textRepresentation, ErrorList $warnings)
     {
-        $result = new BooleanValue();
-        if ($textRepresentation !== '') {
-            switch ($textRepresentation) {
-                case '0':
-                    $result->setValue(false);
-                    break;
-                case '1':
-                    $result->setValue(true);
-                    break;
-                default:
-                    $warnings->add(t('"%1$s" is not a valid boolean value for the attribute with handle %2$s', $this->attributeKey->getAttributeKeyHandle()));
-                    break;
-            }
+        /* @var BooleanValue $value */
+        switch (trim($textRepresentation)) {
+            case '':
+                $result->setValue(null);
+                break;
+            case '0':
+                $result->setValue(false);
+                break;
+            case '1':
+                $result->setValue(true);
+                break;
+            default:
+                $warnings->add(t('"%1$s" is not a valid boolean value for the attribute with handle %2$s', $textRepresentation, $this->attributeKey->getAttributeKeyHandle()));
+                break;
         }
-
-        return $result;
 	}
 
     protected function load()

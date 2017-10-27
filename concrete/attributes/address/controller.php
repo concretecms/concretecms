@@ -14,6 +14,8 @@ use Concrete\Core\Form\Context\ContextInterface;
 use Concrete\Core\Geolocator\GeolocationResult;
 use Concrete\Core\Http\Response;
 use Concrete\Core\Http\ResponseFactoryInterface;
+use Concrete\Core\Localization\Service\CountryList;
+use Concrete\Core\Localization\Service\StatesProvincesList;
 use Concrete\Core\Support\Facade\Application;
 
 class Controller extends AttributeTypeController implements MulticolumnTextExportableAttributeInterface
@@ -414,20 +416,39 @@ class Controller extends AttributeTypeController implements MulticolumnTextExpor
     /**
      * {@inheritdoc}
      *
-     * @see \Concrete\Core\Attribute\MulticolumnTextExportableAttributeInterface::createAttributeValueFromTextRepresentation()
+     * @see \Concrete\Core\Attribute\MulticolumnTextExportableAttributeInterface::updateAttributeValueFromTextRepresentation()
      */
-    public function createAttributeValueFromTextRepresentation(array $textRepresentation, ErrorList $warnings)
+    public function updateAttributeValueFromTextRepresentation(AbstractValue $value, array $textRepresentation, ErrorList $warnings)
     {
-        $result = new AddressValue();
-        $result->setAddress1(array_shift($textRepresentation));
-        $result->setAddress2(array_shift($textRepresentation));
-        $result->setAddress3(array_shift($textRepresentation));
-        $result->setCity(array_shift($textRepresentation));
-        $result->setStateProvince(array_shift($textRepresentation));
-        $result->setCountry(array_shift($textRepresentation));
-        $result->setPostalCode(array_shift($textRepresentation));
+        /* @var AddressValue $value */
+        $value->setAddress1(trim(array_shift($textRepresentation)));
+        $value->setAddress2(trim(array_shift($textRepresentation)));
+        $value->setAddress3(trim(array_shift($textRepresentation)));
+        $value->setCity(trim(array_shift($textRepresentation)));
+        $value->setStateProvince(trim(array_shift($textRepresentation)));
+        $value->setCountry(trim(array_shift($textRepresentation)));
+        $value->setPostalCode(trim(array_shift($textRepresentation)));
 
-        return $result;
+        $countryCode = (string) $value->getCountry();
+        if ($countryCode !== '') {
+            $cl = $this->app->make(CountryList::class);
+            /* @var CountryList $cl */
+            $countries = $cl->getCountries();
+            if (!isset($countries[$countryCode])) {
+                $warnings->add(t('"%1$s" is not a valid Country code for the attribute with handle %2$s', $countryCode, $this->attributeKey->getAttributeKeyHandle()));
+            } else {
+                $countryName = $countries[$countryCode];
+                $stateProvinceCode = $value->getStateProvince();
+                if ($stateProvinceCode !== '') {
+                    $spl = $this->app->make(StatesProvincesList::class);
+                    /* @var StatesProvincesList $spl */
+                    $statesProvinces = $spl->getStateProvinceArray($countryCode);
+                    if ($statesProvinces !== null && !isset($statesProvinces[$stateProvinceCode])) {
+                        $warnings->add(t('"%1$s" is not a valid State/Province code for the Country %2$s (attribute with handle %3$s)', $stateProvinceCode, $countryName, $this->attributeKey->getAttributeKeyHandle()));
+                    }
+                }
+            }
+        }
 	}
 
     protected function load()

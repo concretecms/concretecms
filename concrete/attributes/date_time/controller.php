@@ -313,7 +313,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
                     $toTimezone = $this->app->make('date')->getTimezone('app');
                     $dateTime = clone $dateTime;
                     $dateTime->setTimezone($toTimezone);
-                    $result = $dateTime->format('c');
+                    $result = $dateTime->format('Y-m-d H:i:s');
                     break;
             }
         }
@@ -321,15 +321,17 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         return $result;
 	}
 
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::createAttributeValueFromTextRepresentation()
-     */
-    public function createAttributeValueFromTextRepresentation($textRepresentation, ErrorList $warnings)
+	/**
+	 * {@inheritdoc}
+	 *
+	 * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::updateAttributeValueFromTextRepresentation()
+	 */
+	public function updateAttributeValueFromTextRepresentation(AbstractValue $value, $textRepresentation, ErrorList $warnings)
     {
-        $result = new DateTimeValue();
-        if ($textRepresentation !== '') {
+	    /* @var DateTimeValue $value */
+        if ($textRepresentation === '') {
+            $value->setValue(null);
+        } else {
             if (!isset($this->akDateDisplayMode)) {
                 $this->load();
             }
@@ -341,7 +343,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
                 case 'date_time':
                 case 'text':
                 default:
-                    $dateTime = @DateTime::createFromFormat('c', $textRepresentation);
+                    $dateTime = @DateTime::createFromFormat('Y-m-d H:i:s', $textRepresentation);
                     if ($dateTime) {
                         $toTimezone = $this->app->make('date')->getTimezone('system');
                         $dateTime->setTimezone($toTimezone);
@@ -349,13 +351,11 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
                     break;
             }
             if (!$dateTime) {
-                $warnings->add(t('"%1$s" is not a valid date value for the attribute with handle %2$s', $this->attributeKey->getAttributeKeyHandle()));
+                $warnings->add(t('"%1$s" is not a valid date value for the attribute with handle %2$s', $textRepresentation, $this->attributeKey->getAttributeKeyHandle()));
             } else {
-                $result->setValue($dateTime);
+                $value->setValue($dateTime);
             }
         }
-
-        return $result;
 	}
 
     protected function load()
