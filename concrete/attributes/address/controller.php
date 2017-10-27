@@ -8,7 +8,7 @@ use Concrete\Core\Attribute\Form\Control\View\GroupedView;
 use Concrete\Core\Attribute\MulticolumnTextExportableAttributeInterface;
 use Concrete\Core\Entity\Attribute\Key\Settings\AddressSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\AddressValue;
-use Concrete\Core\Error\ErrorList;
+use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Form\Context\ContextInterface;
 use Concrete\Core\Geolocator\GeolocationResult;
 use Concrete\Core\Http\Response;

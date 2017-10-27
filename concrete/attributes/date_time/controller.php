@@ -6,7 +6,7 @@ use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\SimpleTextExportableAttributeInterface;
 use Concrete\Core\Entity\Attribute\Key\Settings\DateTimeSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\DateTimeValue;
-use Concrete\Core\Error\ErrorList;
+use Concrete\Core\Error\ErrorList\ErrorList;
 use DateTime;
 use Exception;
 

@@ -4,7 +4,7 @@ namespace Concrete\Core\Attribute;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Entity\Attribute\Key\Settings\TextSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\TextValue;
-use Concrete\Core\Error\ErrorList;
+use Concrete\Core\Error\ErrorList\ErrorList;
 use Core;
 
 class DefaultController extends AttributeTypeController implements SimpleTextExportableAttributeInterface

@@ -7,7 +7,7 @@ use Concrete\Core\Attribute\Form\Control\View\GroupedView;
 use Concrete\Core\Attribute\SimpleTextExportableAttributeInterface;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectedSocialLink;
 use Concrete\Core\Entity\Attribute\Value\Value\SocialLinksValue;
-use Concrete\Core\Error\ErrorList;
+use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Sharing\SocialNetwork\Service as Service;
 use Concrete\Core\Sharing\SocialNetwork\ServiceList as ServiceList;
 use Environment;

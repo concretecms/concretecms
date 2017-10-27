@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Attribute;
 
-use Concrete\Core\Error\ErrorList;
+use Concrete\Core\Error\ErrorList\ErrorList;
 
 /**
  * Attribute controllers should implement this interface if they support importing/exporting to/from multiple plain text fields.

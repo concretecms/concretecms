@@ -9,7 +9,7 @@ use Concrete\Core\Entity\Attribute\Value\Value\SelectValue;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectValueOptionList;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectValueUsedOption;
-use Concrete\Core\Error\ErrorList;
+use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Core;
 use Database;

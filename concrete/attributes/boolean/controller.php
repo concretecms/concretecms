@@ -6,7 +6,7 @@ use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\SimpleTextExportableAttributeInterface;
 use Concrete\Core\Entity\Attribute\Key\Settings\BooleanSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\BooleanValue;
-use Concrete\Core\Error\ErrorList;
+use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Core;
 
