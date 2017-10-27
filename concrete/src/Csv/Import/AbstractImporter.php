@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use League\Csv\Reader;
 use Punic\Misc;
+use Throwable;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
@@ -199,13 +200,13 @@ abstract class AbstractImporter
      * Add an error message to the errors/warnings list.
      *
      * @param bool $isError Is this a warning (false) or an error (true)?
-     * @param int $lineIndex the 0-index line index
+     * @param int $rowIndex the 0-index line index
      * @param string $problem the problem message
      */
-    protected function addLineProblem($isError, $lineIndex, $problem)
+    protected function addLineProblem($isError, $rowIndex, $problem)
     {
         $list = $isError ? $this->errors : $this->warnings;
-        $list->add(t('Line #%s: %s', $lineIndex + 1, $problem));
+        $list->add(t('Line #%s: %s', $rowIndex + 1, $problem));
     }
 
     /**
@@ -267,7 +268,7 @@ abstract class AbstractImporter
                 }
                 $someData = true;
                 $attributesValues = $this->csvSchema->getAttributesValues($cells);
-                $this->assignCsvAttributes($object, $attributesValues);
+                $this->assignCsvAttributes($object, $attributesValues, $rowIndex);
             });
             if ($someData === false) {
                 $this->errors->add(t('No data row has been processed.'));
@@ -374,9 +375,12 @@ abstract class AbstractImporter
      *
      * @param ObjectInterface $object
      * @param array $csvAttributes
+     * @param int $rowIndex
      */
-    private function assignCsvAttributes(ObjectInterface $object, array $csvAttributes)
+    private function assignCsvAttributes(ObjectInterface $object, array $csvAttributes, $rowIndex)
     {
+        $attributesWarnings = $this->app->build(ErrorList::class);
+        /* @var ErrorList $attributesWarnings */
         $attributeKeysAndControllers = $this->getAttributeKeysAndControllers();
         foreach ($csvAttributes as $attributeIndex => $attributeData) {
             list($attributeKey, $attributeController) = $attributeKeysAndControllers[$attributeIndex];
@@ -384,9 +388,9 @@ abstract class AbstractImporter
             $attributeController->setAttributeValue($value);
             $data = $this->convertCsvDataForAttributeController($attributeController, $attributeData);
             if ($attributeController instanceof SimpleTextExportableAttributeInterface) {
-                $newValueObject = $attributeController->updateAttributeValueFromTextRepresentation($data, $this->warnings);
+                $newValueObject = $attributeController->updateAttributeValueFromTextRepresentation($data, $attributesWarnings);
             } elseif ($attributeController instanceof MulticolumnTextExportableAttributeInterface) {
-                $newValueObject = $attributeController->updateAttributeValueFromTextRepresentation($data, $this->warnings);
+                $newValueObject = $attributeController->updateAttributeValueFromTextRepresentation($data, $attributesWarnings);
             } else {
                 $newValueObject = null;
             }
@@ -395,6 +399,14 @@ abstract class AbstractImporter
             $object->setAttribute($attributeKey, $newValueObject);
             $this->entityManager->persist($newValueObject);
             $this->entityManager->flush();
+        }
+        foreach ($attributesWarnings->getList() as $warning) {
+            if ($warning instanceof Exception || $warning instanceof Throwable) {
+                $warning = $warning->getMessage();
+            } else {
+                $warning = (string) $warning;
+            }
+            $this->addLineProblem(false, $rowIndex, $warning);
         }
     }
 
