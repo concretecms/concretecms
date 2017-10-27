@@ -417,7 +417,7 @@ class Controller extends AttributeTypeController implements MulticolumnTextExpor
      */
     public function updateAttributeValueFromTextRepresentation(array $textRepresentation, ErrorList $warnings)
     {
-        $textRepresentation = array_map($textRepresentation, 'trim');
+        $textRepresentation = array_map('trim', $textRepresentation);
         $value = $this->getAttributeValueObject();
         if ($value === null) {
             if (implode('', $textRepresentation) !== '') {

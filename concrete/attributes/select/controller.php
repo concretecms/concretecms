@@ -748,7 +748,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         $optionTexts =
             array_unique(
                 array_filter(
-                    array_map($optionTexts, 'trim'),
+                    array_map('trim', $optionTexts),
                     function ($optionText) {
                     return $optionText !== '';
                 }

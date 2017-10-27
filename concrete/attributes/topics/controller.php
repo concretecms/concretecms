@@ -442,7 +442,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
             }
             $initialized = false;
             preg_match_all('/tid:(\d+)$/', $textRepresentation, $matches);
-            $nodeIDs = array_unique(array_map($matches[1], 'intval'));
+            $nodeIDs = array_unique(array_map('intval', $matches[1]));
             foreach ($nodeIDs as $nodeID) {
                 $node = TreeNode::getByID($nodeID);
                 if ($node === null) {
