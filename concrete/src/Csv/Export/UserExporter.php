@@ -56,7 +56,7 @@ class UserExporter extends AbstractExporter
         yield $userInfo->getUserEmail();
 
         $dateTime = $userInfo->getUserDateAdded();
-        if ($date) {
+        if ($dateTime) {
             $dateTime = clone $dateTime;
             $dateTime->setTimezone($this->appTimezone);
             yield $dateTime->format('Y-m-d H:i:s');
