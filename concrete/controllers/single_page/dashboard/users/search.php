@@ -5,7 +5,7 @@ use Concrete\Controller\Element\Search\Users\Header;
 use Concrete\Core\Attribute\Category\CategoryService;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Concrete\Core\User\CsvWriter;
+use Concrete\Core\Csv\Export\UserExporter;
 use Concrete\Core\User\EditResponse as UserEditResponse;
 use Concrete\Core\Workflow\Progress\UserProgress as UserWorkflowProgress;
 use Imagine\Image\Box;
@@ -574,12 +574,15 @@ class Search extends DashboardPageController
 
         return StreamedResponse::create(
             function() use ($app, $result) {
-                $writer = $app->make(CsvWriter::class, [
-                    Writer::createFromPath('php://output', 'w')
-                ]);
+                $writer = $app->build(
+                    UserExporter::class,
+                    [
+                        'writer'=> Writer::createFromPath('php://output', 'w')
+                    ]
+                );
 
                 $writer->insertHeaders();
-                $writer->insertUserList($result->getItemListObject());
+                $writer->insertList($result->getItemListObject());
             },
             200,
             $headers);
