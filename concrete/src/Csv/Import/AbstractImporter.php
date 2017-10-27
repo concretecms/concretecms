@@ -3,10 +3,13 @@ namespace Concrete\Core\Csv\Import;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Attribute\Category\CategoryInterface;
+use Concrete\Core\Attribute\Controller as AttributeController;
 use Concrete\Core\Attribute\MulticolumnTextExportableAttributeInterface;
 use Concrete\Core\Attribute\ObjectInterface;
 use Concrete\Core\Attribute\SimpleTextExportableAttributeInterface;
 use Concrete\Core\Error\ErrorList\ErrorList;
+use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use League\Csv\Reader;
 use Punic\Misc;
 
@@ -15,11 +18,25 @@ defined('C5_EXECUTE') or die('Access Denied.');
 abstract class AbstractImporter
 {
     /**
+     * The Application container instance.
+     *
+     * @var Application
+     */
+    protected $app;
+
+    /**
+     * The EntityManager instance.
+     *
+     * @var EntityManagerInterface
+     */
+    protected $entityManager;
+
+    /**
      * Is the import process just a test?
      *
      * @var bool
      */
-    private $dryRun = false;
+    private $dryRun = true;
 
     /**
      * The CSV Reader instance.
@@ -72,10 +89,26 @@ abstract class AbstractImporter
      */
     protected function __construct(Reader $reader, CategoryInterface $category, Application $app)
     {
+        $this->app = $app;
+        $this->entityManager = $app->make(EntityManagerInterface::class);
         $this->setReader($reader);
         $this->setCategory($category);
-        $this->errors = $app->build(ErrorList::class);
-        $this->warnings = $app->build(ErrorList::class);
+        $this->resetErrors();
+    }
+
+    /**
+     * Process the CSV data.
+     *
+     * @return bool returns true on success, false on failure (see the getErrors() method)
+     */
+    public function process()
+    {
+        $this->resetErrors();
+        $result = true;
+        $result = $result && $this->processHeader();
+        $result = $result && $this->processData();
+
+        return $result;
     }
 
     /**
@@ -123,12 +156,53 @@ abstract class AbstractImporter
     }
 
     /**
+     * Get the list of fixed headers.
+     *
+     * @return string[]|\Generator
+     */
+    abstract protected function getStaticHeaders();
+
+    /**
+     * Get or create a ObjectInterface instance starting from its static values.
+     *
+     * @param array $staticValues
+     *
+     * @throws Exception throw an Exception in case of problems
+     *
+     * @return ObjectInterface
+     */
+    abstract protected function getObjectWithStaticValues(array $staticValues);
+
+    /**
+     * Reset the errors/warnings.
+     */
+    protected function resetErrors()
+    {
+        $this->errors = $this->app->build(ErrorList::class);
+        $this->warnings = $this->app->build(ErrorList::class);
+    }
+
+    /**
+     * Add an error message to the errors/warnings list.
+     *
+     * @param bool $isError Is this a warning (false) or an error (true)?
+     * @param int $lineIndex the 0-index line index
+     * @param string $problem the problem message
+     */
+    protected function addLineProblem($isError, $lineIndex, $problem)
+    {
+        $list = $isError ? $this->errors : $this->warnings;
+        $list->add(t('Line #%s: %s', $lineIndex + 1, $problem));
+    }
+
+    /**
      * Read the header row and initialize the CSV schema.
      *
-     * @return $this
+     * @return bool returns true in case of success, false in case of failures (see the getErrors() method)
      */
-    public function readHeader()
+    protected function processHeader()
     {
+        $result = false;
         $this->csvSchema = null;
         $csvSchema = null;
         $this->reader->each(function ($headerCells, $rowIndex) use (&$csvSchema) {
@@ -137,45 +211,58 @@ abstract class AbstractImporter
             return false;
         });
         if ($csvSchema === null) {
-            $this->errors->add(t("There's no row in the CSV"));
+            $this->errors->add(t("There's no row in the CSV."));
         } elseif (!$csvSchema->someHeaderRecognized()) {
-            $this->errors->add(t('None of the CSV columns have been recognized'));
+            $this->addLineProblem(true, $csvSchema->getRowIndex(), t('None of the CSV columns have been recognized.'));
         } else {
             $unrecognizedHeaders = $csvSchema->getUnrecognizedHeaders();
             if (count($unrecognizedHeaders) > 0) {
-                $this->warnings->add(t('Unrecognized CSV headers: %s', Misc::join($unrecognizedHeaders)));
+                $this->addLineProblem(false, $csvSchema->getRowIndex(), t('Unrecognized CSV headers: %s', Misc::join($unrecognizedHeaders)));
             }
             $missingHeaders = $csvSchema->getMissingHeaders();
             if (count($missingHeaders) > 0) {
-                $this->warnings->add(t('Missing CSV headers: %s', Misc::join($missingHeaders)));
+                $this->addLineProblem(false, $csvSchema->getRowIndex(), t('Missing CSV headers: %s', Misc::join($missingHeaders)));
             }
-
             $this->csvSchema = $csvSchema;
+            $result = true;
         }
 
-        return $this;
+        return $result;
     }
 
     /**
-     * Insert a row for a specific object instance.
+     * Read the data rows and process them.
      *
-     * @param ObjectInterface $object
-     *
-     * @return $this
+     * @return bool returns true in case of success, false in case of failures (see the getErrors() method)
      */
-    public function readNextRow(ObjectInterface $object)
+    protected function processData()
     {
-        $this->reader->insertOne(iterator_to_array($this->projectObject($object)));
+        $result = false;
+        if ($this->csvSchema === null) {
+            $this->errors->add(t('The CSV schema has not beed read.'));
+        } else {
+            $this->reader->setOffset($this->csvSchema->getRowIndex() + 1);
+            $someData = false;
+            $this->reader->each(function ($cells, $rowIndex) use (&$someData) {
+                $staticValues = $this->csvSchema->getStaticValues($cells);
+                try {
+                    $object = $this->getObjectWithStaticValues($staticValues);
+                } catch (Exception $x) {
+                    $this->addLineProblem(true, $rowIndex, $x->getMessage());
 
-        return $this;
+                    return true;
+                }
+                $someData = true;
+                $attributesValues = $this->csvSchema->getAttributesValues($cells);
+                $this->assignCsvAttributes($object, $attributesValues);
+            });
+            if ($someData === false) {
+                $this->errors->add(t('No data row has been processed.'));
+            } else {
+                $result = true;
+            }
+        }
     }
-
-    /**
-     * Get the list of fixed headers.
-     *
-     * @return string[]|\Generator
-     */
-    abstract protected function getStaticHeaders();
 
     /**
      * Set the CSV Reader instance.
@@ -265,5 +352,59 @@ abstract class AbstractImporter
         }
 
         return $this->attributeKeysAndControllers;
+    }
+
+    /**
+     * Set/update the object attributes with the data read from the CSV.
+     *
+     * @param ObjectInterface $object
+     * @param array $csvAttributes
+     */
+    private function assignCsvAttributes(ObjectInterface $object, array $csvAttributes)
+    {
+        $attributeKeysAndControllers = $this->getAttributeKeysAndControllers();
+        foreach ($csvAttributes as $attributeIndex => $attributeData) {
+            list($attributeKey, $attributeController) = $attributeKeysAndControllers[$attributeIndex];
+            $value = $object->getAttributeValueObject($attributeKey, false);
+            $attributeController->setAttributeValue($value);
+            $data = $this->convertCsvDataForAttributeController($attributeController, $attributeData);
+            if ($attributeController instanceof SimpleTextExportableAttributeInterface) {
+                $newValueObject = $attributeController->updateAttributeValueFromTextRepresentation($data, $this->warnings);
+            } elseif ($attributeController instanceof MulticolumnTextExportableAttributeInterface) {
+                $newValueObject = $attributeController->updateAttributeValueFromTextRepresentation($data, $this->warnings);
+            } else {
+                $newValueObject = null;
+            }
+        }
+        if ($newValueObject !== null && $this->dryRun === false) {
+            $object->setAttribute($attributeKey, $newValueObject);
+            $this->entityManager->persist($newValueObject);
+            $this->entityManager->flush();
+        }
+    }
+
+    /**
+     * Convert the data read from CSV to be passed to the attribute controller.
+     *
+     * @param AttributeController $controller
+     * @param string|array $csvData
+     * @param AttributeController $attributeController
+     *
+     * @return string|string[]
+     */
+    private function convertCsvDataForAttributeController(AttributeController $attributeController, $csvData)
+    {
+        $result = $csvData;
+        if ($attributeController instanceof MulticolumnTextExportableAttributeInterface) {
+            $attributeHeaders = $attributeController->getAttributeTextRepresentationHeaders();
+            $result = array_pad([], count($attributeHeaders), '');
+            foreach ($attributeHeaders as $attributeHeaderIndex => $attributeHeaderName) {
+                if (isset($csvData[$attributeHeaderName])) {
+                    $result[$attributeHeaderIndex] = $csvData[$attributeHeaderName];
+                }
+            }
+        }
+
+        return $result;
     }
 }

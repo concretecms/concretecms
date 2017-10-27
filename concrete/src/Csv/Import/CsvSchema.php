@@ -82,6 +82,60 @@ class CsvSchema
     }
 
     /**
+     * Get the values of the cells associated to the static headers.
+     *
+     * @param array $cells
+     *
+     * @return array keys are the static field names, values are the field values (strings)
+     */
+    public function getStaticValues(array $cells)
+    {
+        $result = [];
+        foreach ($this->fieldsMap as $cellIndex => $info) {
+            if ($info['kind'] === 'staticHeader') {
+                $fieldName = $info['staticHeaderName'];
+                $result[$fieldName] = isset($cells[$cellIndex]) ? $cells[$cellIndex] : '';
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get the values of the cells associated to the attributes.
+     *
+     * @param array $cells
+     *
+     * @return array keys are the index of the attribute keys, values are the field values.
+     * In case of single-line attributes, values are strings.
+     * In case of multi-column attributes, values are arrays whose keys are the sub-headers and values the strings.
+     */
+    public function getAttributesValues(array $cells)
+    {
+        $result = [];
+        foreach ($this->fieldsMap as $cellIndex => $info) {
+            switch ($info['kind']) {
+                case 'singleAttributeHeader':
+                    $attributeIndex = $info['attributeIndex'];
+                    $result[$attributeIndex] = isset($cells[$cellIndex]) ? $cells[$cellIndex] : '';
+                    break;
+                case 'multipleAttributeHeader':
+                    $attributeIndex = $info['attributeIndex'];
+                    $attributeSubHeader = $info['attributeSubHeader'];
+                    $value = isset($cells[$cellIndex]) ? $cells[$cellIndex] : '';
+                    if (isset($result[$attributeIndex])) {
+                        $result[$attributeIndex][$attributeSubHeader] = $value;
+                    } else {
+                        $result[$attributeIndex] = [$attributeSubHeader => $value];
+                    }
+                    break;
+            }
+        }
+        
+        return $result;
+    }
+
+    /**
      * Get the list of unrecognized headers.
      *
      * @return string[]
@@ -101,7 +155,7 @@ class CsvSchema
             if ($index === false) {
                 $this->missingHeaders[] = $staticHeader;
             } else {
-                $this->fieldsMap[$index] = ['kind' => 'staticHeader', 'staticHeader' => $staticHeader];
+                $this->fieldsMap[$index] = ['kind' => 'staticHeader', 'staticHeaderName' => $staticHeader];
             }
         }
     }
@@ -125,7 +179,7 @@ class CsvSchema
                     if ($index === false) {
                         $this->missingHeaders[] = $attributeHeader;
                     } else {
-                        $this->fieldsMap[$index] = ['kind' => 'multipleAttributeHeader', 'attributeIndex' => $attributeIndex, 'attributeSubPart' => $attributeSubHeader];
+                        $this->fieldsMap[$index] = ['kind' => 'multipleAttributeHeader', 'attributeIndex' => $attributeIndex, 'attributeSubHeader' => $attributeSubHeader];
                     }
                 }
             }
