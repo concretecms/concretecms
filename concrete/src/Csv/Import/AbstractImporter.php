@@ -8,6 +8,7 @@ use Concrete\Core\Attribute\MulticolumnTextExportableAttributeInterface;
 use Concrete\Core\Attribute\ObjectInterface;
 use Concrete\Core\Attribute\SimpleTextExportableAttributeInterface;
 use Concrete\Core\Error\ErrorList\ErrorList;
+use Concrete\Core\Error\UserMessageException;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use League\Csv\Reader;
@@ -61,20 +62,6 @@ abstract class AbstractImporter
     private $attributeKeysAndControllers;
 
     /**
-     * The list of processing errors.
-     *
-     * @var ErrorList
-     */
-    private $errors;
-
-    /**
-     * The list of processing warnings.
-     *
-     * @var ErrorList
-     */
-    private $warnings;
-
-    /**
      * The CSV Schema.
      *
      * @var CsvSchema|null
@@ -94,30 +81,33 @@ abstract class AbstractImporter
         $this->entityManager = $app->make(EntityManagerInterface::class);
         $this->setReader($reader);
         $this->setCategory($category);
-        $this->resetErrors();
     }
 
     /**
      * Process the CSV data.
      *
-     * @return bool returns true on success, false on failure (see the getErrors() method)
+     * @param int|null $firstDataRow the index of the first data row to be processed
+     * $param int|null $maxDataRows the maximum number of data rows to be processed
+     * @param null|mixed $maxDataRows
+     *
+     * @return ImportResult
      */
-    public function process()
+    public function process($firstDataRow = null, $maxDataRows = null)
     {
-        $this->resetErrors();
-        $result = true;
-        $result = $result && $this->processHeader();
-        if ($this->dryRun !== false) {
-            // Let's start a transaction. It shouldn't be necessary, but it doesn't cost a penny ;)
-            $this->entityManager->getConnection()->beginTransaction();
-        }
-        try {
-            $result = $result && $this->processData();
-        } finally {
+        $result = $this->app->make(ImportResult::class);
+        if ($this->processHeader($result)) {
             if ($this->dryRun !== false) {
-                try {
-                    $this->entityManager->getConnection()->rollBack();
-                } catch (Exception $foo) {
+                // Let's start a transaction. It shouldn't be necessary, but it doesn't cost a penny ;)
+                $this->entityManager->getConnection()->beginTransaction();
+            }
+            try {
+                $this->processData($result, $firstDataRow, $maxDataRows);
+            } finally {
+                if ($this->dryRun !== false) {
+                    try {
+                        $this->entityManager->getConnection()->rollBack();
+                    } catch (Exception $foo) {
+                    }
                 }
             }
         }
@@ -150,26 +140,6 @@ abstract class AbstractImporter
     }
 
     /**
-     * Get the list of processing errors.
-     *
-     * @return ErrorList
-     */
-    public function getErrors()
-    {
-        return $this->errors;
-    }
-
-    /**
-     * Get the list of processing warnings.
-     *
-     * @return ErrorList
-     */
-    public function getWarnings()
-    {
-        return $this->warnings;
-    }
-
-    /**
      * Get the list of fixed headers.
      *
      * @return string[]|\Generator
@@ -181,40 +151,20 @@ abstract class AbstractImporter
      *
      * @param array $staticValues
      *
-     * @throws Exception throw an Exception in case of problems
+     * @throws UserMessageException throw an UserMessageException in case of problems
      *
      * @return ObjectInterface
      */
     abstract protected function getObjectWithStaticValues(array $staticValues);
 
     /**
-     * Reset the errors/warnings.
-     */
-    protected function resetErrors()
-    {
-        $this->errors = $this->app->build(ErrorList::class);
-        $this->warnings = $this->app->build(ErrorList::class);
-    }
-
-    /**
-     * Add an error message to the errors/warnings list.
-     *
-     * @param bool $isError Is this a warning (false) or an error (true)?
-     * @param int $rowIndex the 0-index line index
-     * @param string $problem the problem message
-     */
-    protected function addLineProblem($isError, $rowIndex, $problem)
-    {
-        $list = $isError ? $this->errors : $this->warnings;
-        $list->add(t('Line #%s: %s', $rowIndex + 1, $problem));
-    }
-
-    /**
      * Read the header row and initialize the CSV schema.
      *
-     * @return bool returns true in case of success, false in case of failures (see the getErrors() method)
+     * @param ImportResult $importResult
+     *
+     * @return bool returns true in case of success, false in case of failures (see the getErrors() method of the result)
      */
-    protected function processHeader()
+    protected function processHeader(ImportResult $importResult)
     {
         $result = false;
         $this->csvSchema = null;
@@ -225,17 +175,17 @@ abstract class AbstractImporter
             return false;
         });
         if ($csvSchema === null) {
-            $this->errors->add(t("There's no row in the CSV."));
+            $importResult->getErrors()->add(t("There's no row in the CSV."));
         } elseif (!$csvSchema->someHeaderRecognized()) {
-            $this->addLineProblem(true, $csvSchema->getRowIndex(), t('None of the CSV columns have been recognized.'));
+            $importResult->addLineProblem(true, t('None of the CSV columns have been recognized.'), $csvSchema->getRowIndex());
         } else {
             $unrecognizedHeaders = $csvSchema->getUnrecognizedHeaders();
             if (count($unrecognizedHeaders) > 0) {
-                $this->addLineProblem(false, $csvSchema->getRowIndex(), t('Unrecognized CSV headers: %s', Misc::join($unrecognizedHeaders)));
+                $importResult->addLineProblem(false, t('Unrecognized CSV headers: %s', Misc::join($unrecognizedHeaders)), $csvSchema->getRowIndex());
             }
             $missingHeaders = $csvSchema->getMissingHeaders();
             if (count($missingHeaders) > 0) {
-                $this->addLineProblem(false, $csvSchema->getRowIndex(), t('Missing CSV headers: %s', Misc::join($missingHeaders)));
+                $importResult->addLineProblem(false, t('Missing CSV headers: %s', Misc::join($missingHeaders)), $csvSchema->getRowIndex());
             }
             $this->csvSchema = $csvSchema;
             $result = true;
@@ -247,33 +197,42 @@ abstract class AbstractImporter
     /**
      * Read the data rows and process them.
      *
-     * @return bool returns true in case of success, false in case of failures (see the getErrors() method)
+     * @param ImportResult $importResult
+     * @param int|null $firstDataRow the index of the first data row to be processed
+     * $param int|null $maxDataRows the maximum number of data rows to be processed
+     * @param mixed $maxDataRows
      */
-    protected function processData()
+    protected function processData(ImportResult $importResult, $firstDataRow, $maxDataRows)
     {
         $result = false;
         if ($this->csvSchema === null) {
-            $this->errors->add(t('The CSV schema has not beed read.'));
+            $importResult->getErrors()->add(t('The CSV schema has not beed read.'));
         } else {
-            $this->reader->setOffset($this->csvSchema->getRowIndex() + 1);
-            $someData = false;
-            $this->reader->each(function ($cells, $rowIndex) use (&$someData) {
-                $staticValues = $this->csvSchema->getStaticValues($cells);
-                try {
-                    $object = $this->getObjectWithStaticValues($staticValues);
-                } catch (Exception $x) {
-                    $this->addLineProblem(true, $rowIndex, $x->getMessage());
+            if ($maxDataRows !== null) {
+                $maxDataRows = (int) $maxDataRows;
+            }
+            if ($maxDataRows === null || $maxDataRows > 0) {
+                $offset = max(
+                    $this->csvSchema->getRowIndex() + 1,
+                    $firstDataRow ? (int) $firstDataRow : 0
+                );
+                $this->reader->setOffset($offset);
+                $this->reader->each(function ($cells, $rowIndex) use ($importResult, $maxDataRows) {
+                    $importResult->countRowProcessed($rowIndex);
+                    $staticValues = $this->csvSchema->getStaticValues($cells);
+                    try {
+                        $object = $this->getObjectWithStaticValues($staticValues);
+                    } catch (UserMessageException $x) {
+                        $importResult->addLineProblem(true, $x->getMessage());
+                        $object = null;
+                    }
+                    if ($object !== null) {
+                        $attributesValues = $this->csvSchema->getAttributesValues($cells);
+                        $this->assignCsvAttributes($object, $attributesValues, $importResult);
+                    }
 
-                    return true;
-                }
-                $someData = true;
-                $attributesValues = $this->csvSchema->getAttributesValues($cells);
-                $this->assignCsvAttributes($object, $attributesValues, $rowIndex);
-            });
-            if ($someData === false) {
-                $this->errors->add(t('No data row has been processed.'));
-            } else {
-                $result = true;
+                    return $maxDataRows === null || $importResult->getTotalDataRowsProcessed() < $maxDataRows;
+                });
             }
         }
 
@@ -375,9 +334,9 @@ abstract class AbstractImporter
      *
      * @param ObjectInterface $object
      * @param array $csvAttributes
-     * @param int $rowIndex
+     * @param ImportResult $importResult
      */
-    private function assignCsvAttributes(ObjectInterface $object, array $csvAttributes, $rowIndex)
+    private function assignCsvAttributes(ObjectInterface $object, array $csvAttributes, ImportResult $importResult)
     {
         $attributesWarnings = $this->app->build(ErrorList::class);
         /* @var ErrorList $attributesWarnings */
@@ -406,7 +365,7 @@ abstract class AbstractImporter
             } else {
                 $warning = (string) $warning;
             }
-            $this->addLineProblem(false, $rowIndex, $warning);
+            $importResult->addLineProblem(false, $warning);
         }
     }
 
