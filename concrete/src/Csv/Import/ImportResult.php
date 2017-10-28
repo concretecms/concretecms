@@ -2,8 +2,9 @@
 namespace Concrete\Core\Csv\Import;
 
 use Concrete\Core\Error\ErrorList\ErrorList;
+use JsonSerializable;
 
-class ImportResult
+class ImportResult implements JsonSerializable
 {
     /**
      * The list of import errros.
@@ -116,5 +117,24 @@ class ImportResult
 	    $list->add(t('Line #%s: %s', $rowIndex + 1, $problem));
 
 	    return $this;
+	}
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \JsonSerializable::jsonSerialize()
+     */
+    public function jsonSerialize()
+    {
+        $jsonErrors = $this->errors->jsonSerialize();
+        $jsonWarnings = $this->warnings->jsonSerialize();
+
+        return [
+            'errors' => $jsonErrors && !empty($jsonErrors['errors']) ? $jsonErrors['errors'] : [],
+            'warnings' => $jsonWarnings && !empty($jsonWarnings['errors']) ? $jsonWarnings['errors'] : [],
+            'warnings' => empty($jsonWarnings['errors']) ? [] : $jsonWarnings['errors'],
+            'lastDataRowIndex' => $this->lastDataRowIndex,
+            'totalDataRowsProcessed' => $this->totalDataRowsProcessed,
+        ];
 	}
 }
