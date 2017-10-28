@@ -89,81 +89,81 @@ class ImportResult implements JsonSerializable
         ++$this->totalDataRowsProcessed;
     }
 
-	/**
-	 * Get the index of the last processed row (if any).
-	 *
-	 * @return int|null
-	 */
-	public function getLastDataRowIndex()
-	{
-		return $this->lastDataRowIndex;
-	}
+    /**
+     * Get the index of the last processed row (if any).
+     *
+     * @return int|null
+     */
+    public function getLastDataRowIndex()
+    {
+        return $this->lastDataRowIndex;
+    }
 
-	/**
-	 * Get the total number of the data rows processed.
-	 *
-	 * @return int
-	 */
-	public function getTotalDataRowsProcessed()
-	{
-	    return $this->totalDataRowsProcessed;
-	}
+    /**
+     * Get the total number of the data rows processed.
+     *
+     * @return int
+     */
+    public function getTotalDataRowsProcessed()
+    {
+        return $this->totalDataRowsProcessed;
+    }
 
-	/**
-	 * Set the total number successfully imported rows.
-	 *
-	 * @param int $value
-	 *
-	 * @return $this
-	 */
-	public function setImportSuccessCount($value)
-	{
-	    $this->importSuccessCount = (int) $value;
+    /**
+     * Set the total number successfully imported rows.
+     *
+     * @param int $value
+     *
+     * @return $this
+     */
+    public function setImportSuccessCount($value)
+    {
+        $this->importSuccessCount = (int) $value;
 
-	    return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Increase the total number successfully imported rows.
-	 *
-	 * @param int $count
-	 *
-	 * @return $this
-	 */
-	public function increaseImportSuccessCount($count = 1)
-	{
-	    $this->importSuccessCount += (int) $count;
+    /**
+     * Increase the total number successfully imported rows.
+     *
+     * @param int $count
+     *
+     * @return $this
+     */
+    public function increaseImportSuccessCount($count = 1)
+    {
+        $this->importSuccessCount += (int) $count;
 
-	    return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Get the total number successfully imported rows.
-	 *
-	 * @return int
-	 */
-	public function getImportSuccessCount()
-	{
-		return $this->importSuccessCount;
-	}
+    /**
+     * Get the total number successfully imported rows.
+     *
+     * @return int
+     */
+    public function getImportSuccessCount()
+    {
+        return $this->importSuccessCount;
+    }
 
-	/**
-	 * Add an error message to the errors/warnings list.
-	 *
-	 * @param bool $isError Is this a warning (false) or an error (true)?
-	 * @param string $problem the problem message
-	 * @param int|null $rowIndex the 0-index line index (if null: we'll assume the last row index)
-	 *
-	 * @return $this
-	 */
-	public function addLineProblem($isError, $problem, $rowIndex = null)
-	{
-	    $list = $isError ? $this->errors : $this->warnings;
-	    $rowIndex = $rowIndex === null ? $this->lastDataRowIndex : $rowIndex;
-	    $list->add(t('Line #%s: %s', $rowIndex + 1, $problem));
+    /**
+     * Add an error message to the errors/warnings list.
+     *
+     * @param bool $isError Is this a warning (false) or an error (true)?
+     * @param string $problem the problem message
+     * @param int|null $rowIndex the 0-index line index (if null: we'll assume the last row index)
+     *
+     * @return $this
+     */
+    public function addLineProblem($isError, $problem, $rowIndex = null)
+    {
+        $list = $isError ? $this->errors : $this->warnings;
+        $rowIndex = $rowIndex === null ? $this->lastDataRowIndex : $rowIndex;
+        $list->add(t('Line #%s: %s', $rowIndex + 1, $problem));
 
-	    return $this;
-	}
+        return $this;
+    }
 
     /**
      * {@inheritdoc}
@@ -183,5 +183,5 @@ class ImportResult implements JsonSerializable
             'totalDataRowsProcessed' => $this->totalDataRowsProcessed,
             'importSuccessCount' => $this->importSuccessCount,
         ];
-	}
+    }
 }
