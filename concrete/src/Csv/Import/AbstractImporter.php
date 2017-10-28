@@ -344,8 +344,10 @@ abstract class AbstractImporter
         $attributeKeysAndControllers = $this->getAttributeKeysAndControllers();
         foreach ($csvAttributes as $attributeIndex => $attributeData) {
             list($attributeKey, $attributeController) = $attributeKeysAndControllers[$attributeIndex];
-            $value = $object->getAttributeValueObject($attributeKey, false);
-            $attributeController->setAttributeValue($value);
+            /* @var \Concrete\Core\Attribute\AttributeKeyInterface $attributeKey */
+            /* @var \Concrete\Core\Attribute\Controller $attributeController */
+            $initialValueObject = $object->getAttributeValueObject($attributeKey, false);
+            $attributeController->setAttributeValue($initialValueObject);
             $data = $this->convertCsvDataForAttributeController($attributeController, $attributeData);
             if ($attributeController instanceof SimpleTextExportableAttributeInterface) {
                 $newValueObject = $attributeController->updateAttributeValueFromTextRepresentation($data, $attributesWarnings);
@@ -354,11 +356,13 @@ abstract class AbstractImporter
             } else {
                 $newValueObject = null;
             }
-        }
-        if ($newValueObject !== null && $this->dryRun === false) {
-            $object->setAttribute($attributeKey, $newValueObject);
-            $this->entityManager->persist($newValueObject);
-            $this->entityManager->flush();
+            if ($newValueObject !== null && $this->dryRun === false) {
+                if ($newValueObject === $initialValueObject) {
+                    $this->entityManager->flush();
+                } else {
+                    $object->setAttribute($attributeKey, $newValueObject);
+                }
+            }
         }
         foreach ($attributesWarnings->getList() as $warning) {
             if ($warning instanceof Exception || $warning instanceof Throwable) {
