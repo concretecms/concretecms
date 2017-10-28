@@ -127,7 +127,7 @@ class Controller extends BlockController
 
         $orderByOptions = array(
             'title' => t('Title'),
-            'set' => t('Set Order'),
+            'set' => tc('Order of a set', 'Set Order'),
             'date' => t('Date Posted'),
             'filename' => t('Filename')
         );
