@@ -35,6 +35,13 @@ class ImportResult implements JsonSerializable
     protected $totalDataRowsProcessed;
 
     /**
+     * The total number successfully imported rows.
+     *
+     * @var int
+     */
+    protected $importSuccessCount;
+
+    /**
      * Initialize the instance.
      *
      * @param ErrorList $errors
@@ -46,6 +53,7 @@ class ImportResult implements JsonSerializable
         $this->warnings = $warnings;
         $this->lastDataRowIndex = null;
         $this->totalDataRowsProcessed = 0;
+        $this->importSuccessCount = 0;
     }
 
     /**
@@ -102,6 +110,44 @@ class ImportResult implements JsonSerializable
 	}
 
 	/**
+	 * Set the total number successfully imported rows.
+	 *
+	 * @param int $value
+	 *
+	 * @return $this
+	 */
+	public function setImportSuccessCount($value)
+	{
+	    $this->importSuccessCount = (int) $value;
+
+	    return $this;
+	}
+
+	/**
+	 * Increase the total number successfully imported rows.
+	 *
+	 * @param int $count
+	 *
+	 * @return $this
+	 */
+	public function increaseImportSuccessCount($count = 1)
+	{
+	    $this->importSuccessCount += (int) $count;
+
+	    return $this;
+	}
+
+	/**
+	 * Get the total number successfully imported rows.
+	 *
+	 * @return int
+	 */
+	public function getImportSuccessCount()
+	{
+		return $this->importSuccessCount;
+	}
+
+	/**
 	 * Add an error message to the errors/warnings list.
 	 *
 	 * @param bool $isError Is this a warning (false) or an error (true)?
@@ -135,6 +181,7 @@ class ImportResult implements JsonSerializable
             'warnings' => empty($jsonWarnings['errors']) ? [] : $jsonWarnings['errors'],
             'lastDataRowIndex' => $this->lastDataRowIndex,
             'totalDataRowsProcessed' => $this->totalDataRowsProcessed,
+            'importSuccessCount' => $this->importSuccessCount,
         ];
 	}
 }

@@ -229,6 +229,7 @@ abstract class AbstractImporter
                     if ($object !== null) {
                         $attributesValues = $this->csvSchema->getAttributesValues($cells);
                         $this->assignCsvAttributes($object, $attributesValues, $importResult);
+                        $importResult->increaseImportSuccessCount();
                     }
 
                     return $maxDataRows === null || $importResult->getTotalDataRowsProcessed() < $maxDataRows;
