@@ -74,7 +74,7 @@ class WritableDirectories implements PreconditionInterface
         $result = new PreconditionResult();
         $numNotWritableDirectories = count($notWritableDirectories);
         if ($numNotWritableDirectories > 0) {
-            $message = t2('This directory must exist and it must be writable by your web server:', 'These directory must exist and they must be writable by your web server:', $numNotWritableDirectories);
+            $message = t2('This directory must exist and it must be writable by your web server:', 'These directories must exist and they must be writable by your web server:', $numNotWritableDirectories);
             $message .= ' ' . \Punic\Misc::join($notWritableDirectories);
             $result
                 ->setState(PreconditionResult::STATE_FAILED)
