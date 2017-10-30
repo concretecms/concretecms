@@ -99,10 +99,14 @@ class CodingStyle
     {
         $flags = (int) $flags;
 
+        $hasFlag = function ($flag) use ($flags) {
+            return ($flags & $flag) === $flag;
+        };
+
         return [
             // PHP arrays should be declared using the configured syntax
             'array_syntax' => [
-                'syntax' => 0 === ($flags & static::FLAG_OLDPHP) ? 'short' : 'long',
+                'syntax' => $hasFlag(static::FLAG_OLDPHP) ? 'long' : 'short',
             ],
             // Binary operators should be surrounded by at least one space.
             'binary_operator_spaces' => [
@@ -112,11 +116,11 @@ class CodingStyle
             // There MUST be one blank line after the namespace declaration.
             'blank_line_after_namespace' => true,
             // Ensure there is no code on the same line as the PHP open tag and it is followed by a blank line.
-            'blank_line_after_opening_tag' => ($flags && static::FLAG_PHPONLY) === static::FLAG_PHPONLY ? true : false,
+            'blank_line_after_opening_tag' => $hasFlag(static::FLAG_PHPONLY) ? true : false,
             // An empty line feed should precede a return statement.
             'blank_line_before_return' => true,
             // The body of each structure MUST be enclosed by braces. Braces should be properly placed. Body of braces should be properly indented.
-            'braces' => ($flags && static::FLAG_PHPONLY) === static::FLAG_PHPONLY ? ['allow_single_line_closure' => true] : false,
+            'braces' => $hasFlag(static::FLAG_PHPONLY) ? ['allow_single_line_closure' => true] : false,
             // A single space should be between cast and variable.
             'cast_spaces' => true,
             // Whitespace around the keywords of a class, trait or interfaces definition should be one space.
@@ -132,7 +136,7 @@ class CodingStyle
                 'space' => 'single',
             ],
             // Replaces `dirname(__FILE__)` expression with equivalent `__DIR__` constant.
-            'dir_constant' => 0 === ($flags & static::FLAG_OLDPHP) ? true : false,
+            'dir_constant' => $hasFlag(static::FLAG_OLDPHP) ? false : true,
             // The keyword `elseif` should be used instead of `else if` so that all control keywords look like single words.
             'elseif' => true,
             // PHP code MUST use only UTF-8 without BOM (remove BOM).
@@ -152,13 +156,13 @@ class CodingStyle
             // Include/Require and file path should be divided with a single space. File path should not be placed under brackets.
             'include' => true,
             // Code MUST use configured indentation type.
-            'indentation_type' => ($flags && static::FLAG_PHPONLY) === static::FLAG_PHPONLY ? true : false,
+            'indentation_type' => $hasFlag(static::FLAG_PHPONLY) ? true : false,
             // Replaces is_null(parameter) expression with `null === parameter`.
             'is_null' => [
                 'use_yoda_style' => false,
             ],
             // Ensure there is no code on the same line as the PHP open tag.
-            'linebreak_after_opening_tag' => ($flags && static::FLAG_PHPONLY) === static::FLAG_PHPONLY ? true : false,
+            'linebreak_after_opening_tag' => $hasFlag(static::FLAG_PHPONLY) ? true : false,
             // All PHP files must use same line ending.
             'line_ending' => true,
             // Cast should be written in lower case.
@@ -212,7 +216,7 @@ class CodingStyle
             // Short cast `bool` using double exclamation mark should not be used.
             'no_short_bool_cast' => true,
             // Replace short-echo `<?=` with long format `<?php echo` syntax.
-            'no_short_echo_tag' => 0 === ($flags & static::FLAG_OLDPHP) ? false : true,
+            'no_short_echo_tag' => $hasFlag(static::FLAG_OLDPHP) ? true : false,
             // Single-line whitespace before closing semicolon are prohibited.
             'no_singleline_whitespace_before_semicolons' => true,
             // When making a method or function call, there MUST NOT be a space between the method or function name and the opening parenthesis.
@@ -288,7 +292,7 @@ class CodingStyle
             // Pre incrementation/decrementation should be used if possible.
             'pre_increment' => true,
             // Class names should match the file name.
-            'psr4' => ($flags && static::FLAG_PSR4CLASS) === static::FLAG_PSR4CLASS ? true : false,
+            'psr4' => $hasFlag(static::FLAG_PSR4CLASS) ? true : false,
             // Replaces `rand`, `srand`, `getrandmax` functions calls with their `mt_*` analogs.
             'random_api_migration' => true,
             // There should be one or no space before colon, and one space after it in return type declarations, according to configuration.
