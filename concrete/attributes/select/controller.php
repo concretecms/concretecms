@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Attribute\Select;
 
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
@@ -64,7 +65,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         $type->addAttribute('allow-other-values', $this->akSelectAllowOtherValues);
         $options = $this->getOptions();
         $node = $type->addChild('options');
-        foreach($options as $option) {
+        foreach ($options as $option) {
             $opt = $node->addChild('option');
             $opt->addAttribute('value', $option->getSelectAttributeOptionValue());
             $opt->addAttribute('is-end-user-added', $option->isEndUserAdded());
@@ -596,7 +597,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
                 $builder->groupBy('v.avSelectOptionID');
                 $builder->orderBy('total', 'desc');
                 $r = $builder->getQuery()->getResult();
-                foreach($r as $option) {
+                foreach ($r as $option) {
                     $options[] = $option[0];
                 }
                 break;
@@ -745,14 +746,11 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     {
         $value = $this->getAttributeValueObject();
         $optionTexts = explode("\n", $textRepresentation);
-        $optionTexts =
-            array_unique(
-                array_filter(
-                    array_map('trim', $optionTexts),
-                    function ($optionText) {
-                    return $optionText !== '';
-                }
-            )
+        $optionTexts = array_filter(
+            array_map('trim', $optionTexts),
+            function ($optionText) {
+                return $optionText !== '';
+            }
         );
         $numOptions = count($optionTexts);
         if ($numOptions === 0) {
@@ -763,17 +761,20 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
             $settings = $this->getAttributeKeySettings();
             /* @var SelectSettings $settings */
             if ($numOptions > 1 && !$settings->getAllowMultipleValues()) {
-                $warnings->add(t('The Select attribute with handle "%s" does not support multiple options: only the first one will be imported', $this->attributeKey->getAttributeKeyHandle()));
+                $warnings->add(t('The Select Attribute with handle "%s" does not support multiple options: only the first one will be imported', $this->attributeKey->getAttributeKeyHandle()));
                 $firstOptionText = array_shift($optionTexts);
                 $optionTexts = [$firstOptionText];
                 $numOptions = 1;
             }
             $optionList = $settings->getOptionList();
-            /* @var \Concrete\Core\Entity\Attribute\Value\Value\SelectValueOptionList */
+            $firstOption = true;
             foreach ($optionTexts as $optionText) {
                 $selectedOption = null;
+                $deletedOptions = [];
                 foreach ($optionList->getOptions() as $option) {
-                    if ($option->getSelectAttributeOptionValue() === $optionText) {
+                    if ($option->isOptionDeleted()) {
+                        $deletedOptions[$option->getSelectAttributeOptionValue()] = $option;
+                    } elseif ($option->getSelectAttributeOptionValue() === $optionText) {
                         $selectedOption = $option;
                         break;
                     }
@@ -786,13 +787,20 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
                         $selectedOption->setDisplayOrder(count($optionList));
                         $selectedOption->setSelectAttributeOptionValue($optionText);
                         $optionList->getOptions()->add($selectedOption);
+                    } elseif (isset($deletedOptions[$optionText])) {
+                        $selectedOption = $deletedOptions[$optionText];
+                        $warnings->add(t('"%1$s" matches a deleted option the Select Attribute with handle "%2$s"', $optionText, $this->attributeKey->getAttributeKeyHandle()));
                     } else {
-                        $warnings->add(t('"%1$s" is not a valid option for the Select attribute with handle "%2$s"', $optionText, $this->attributeKey->getAttributeKeyHandle()));
+                        $warnings->add(t('"%1$s" is not a valid option for the Select Attribute with handle "%2$s"', $optionText, $this->attributeKey->getAttributeKeyHandle()));
                     }
                 }
                 if ($selectedOption !== null) {
                     if ($value === null) {
                         $value = new SelectValue();
+                    }
+                    if ($firstOption) {
+                        $firstOption = false;
+                        $value->getSelectedOptions()->clear();
                     }
                     $value->getSelectedOptions()->add($selectedOption);
                 }
