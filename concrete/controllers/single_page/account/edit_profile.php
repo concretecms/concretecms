@@ -57,7 +57,7 @@ class EditProfile extends AccountPageController
             }
         }
         try {
-            $message = call_user_method($method, $at->controller);
+            $message = call_user_func([$at->controller, $method]);
             if (trim($message)) {
                 $this->set('message', $message);
             }
