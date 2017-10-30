@@ -51,7 +51,7 @@ class CodingStyle
     protected $webroot = '';
 
     /**
-     * Set the path to the web directory.
+     * Set the absolute path to the web directory.
      *
      * @param string $value
      *
@@ -65,11 +65,28 @@ class CodingStyle
         if ('' === $value) {
             $this->webroot = '';
         } else {
-            $webroot = @realpath($value);
-            if (false === $webroot || !is_dir($webroot)) {
+            if (!is_dir($value)) {
                 throw new Exception(sprintf('Unable to find the directory %s', $value));
             }
-            $this->webroot = str_replace(DIRECTORY_SEPARATOR, '/', $webroot);
+            $webroot = str_replace(DIRECTORY_SEPARATOR, '/', $value);
+            if (DIRECTORY_SEPARATOR === '\\') {
+                if (!preg_match('%^[A-Z]:/%i', $webroot)) {
+                    throw new Exception(sprintf('The web root directory (%s) must be absolute.', $value));
+                }
+                $webroot = rtrim($webroot, '/');
+                if (strlen($webroot) === 2) {
+                    throw new Exception(sprintf('The web root directory (%s) is not valid.', $value));
+                }
+            } else {
+                if ($webroot[0] !== '/') {
+                    throw new Exception(sprintf('The web root directory (%s) must be absolute.', $value));
+                }
+                $webroot = rtrim($webroot, '/');
+                if ($webroot === '') {
+                    throw new Exception(sprintf('The web root directory (%s) is not valid.', $value));
+                }
+            }
+            $this->webroot = $webroot;
         }
 
         return $this;
@@ -344,19 +361,16 @@ class CodingStyle
     /**
      * Returns the coding style flags associated to a file.
      *
-     * @param string $file
+     * @param string $absoluteFilePath
      *
      * @return int|null return NULL if the file should not be parsed, an integer otherwise
      */
-    public function getPathFlags($file)
+    public function getPathFlags($absoluteFilePath)
     {
         $result = null;
-        $fullpath = @realpath($file);
-        if ($fullpath !== false && is_file($fullpath)) {
-            $fullpath = str_replace(DIRECTORY_SEPARATOR, '/', $fullpath);
-            if (strpos($fullpath, $this->getWebroot()) === 0) {
-                $result = $this->getFileFlags(new SplFileInfo($fullpath));
-            }
+        $absoluteFilePath = str_replace(DIRECTORY_SEPARATOR, '/', $absoluteFilePath);
+        if (strpos($absoluteFilePath, $this->getWebroot() . '/') === 0) {
+            $result = $this->getFileFlags(new SplFileInfo($absoluteFilePath));
         }
 
         return $result;
