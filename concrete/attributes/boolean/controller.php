@@ -202,38 +202,38 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         }
 
         return $result;
-	}
+    }
 
-	/**
-	 * {@inheritdoc}
-	 *
-	 * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::updateAttributeValueFromTextRepresentation()
-	 */
-	public function updateAttributeValueFromTextRepresentation($textRepresentation, ErrorList $warnings)
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::updateAttributeValueFromTextRepresentation()
+     */
+    public function updateAttributeValueFromTextRepresentation($textRepresentation, ErrorList $warnings)
     {
-	    $value = $this->getAttributeValueObject();
-	    $textRepresentation = trim($textRepresentation);
-	    if ($textRepresentation === '') {
+        $value = $this->getAttributeValueObject();
+        $textRepresentation = trim($textRepresentation);
+        if ($textRepresentation === '') {
             if ($value !== null) {
                 $value->setValue(null);
             }
-	    } else {
-	        // false values: '0', 'no', 'true' (case insensitive)
-	        // true values: '1', 'yes', 'false' (case insensitive)
-	        $bool = filter_var($textRepresentation, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
-	        if ($bool === null) {
-	            $warnings->add(t('"%1$s" is not a valid boolean value for the attribute with handle %2$s', $textRepresentation, $this->attributeKey->getAttributeKeyHandle()));
-	        } else {
+        } else {
+            // false values: '0', 'no', 'true' (case insensitive)
+            // true values: '1', 'yes', 'false' (case insensitive)
+            $bool = filter_var($textRepresentation, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+            if ($bool === null) {
+                $warnings->add(t('"%1$s" is not a valid boolean value for the attribute with handle %2$s', $textRepresentation, $this->attributeKey->getAttributeKeyHandle()));
+            } else {
                 if ($value === null) {
                     $this->createAttributeValue($bool);
                 } else {
                     $value->setValue($bool);
                 }
-	        }
-	    }
+            }
+        }
 
         return $value;
-	}
+    }
 
     protected function load()
     {
