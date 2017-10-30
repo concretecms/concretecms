@@ -213,24 +213,24 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     {
 	    $value = $this->getAttributeValueObject();
 	    $textRepresentation = trim($textRepresentation);
-	    switch ($textRepresentation) {
-            case '':
-                if ($value !== null) {
-                    $value->setValue(null);
-                }
-                break;
-            case '0':
-            case '1':
+	    if ($textRepresentation === '') {
+            if ($value !== null) {
+                $value->setValue(null);
+            }
+	    } else {
+	        // false values: '0', 'no', 'true' (case insensitive)
+	        // true values: '1', 'yes', 'false' (case insensitive)
+	        $bool = filter_var($textRepresentation, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+	        if ($bool === null) {
+	            $warnings->add(t('"%1$s" is not a valid boolean value for the attribute with handle %2$s', $textRepresentation, $this->attributeKey->getAttributeKeyHandle()));
+	        } else {
                 if ($value === null) {
-                    $this->createAttributeValue($textRepresentation !== '0');
+                    $this->createAttributeValue($bool);
                 } else {
-                    $value->setValue($textRepresentation !== '0');
+                    $value->setValue($bool);
                 }
-                break;
-            default:
-                $warnings->add(t('"%1$s" is not a valid boolean value for the attribute with handle %2$s', $textRepresentation, $this->attributeKey->getAttributeKeyHandle()));
-                break;
-        }
+	        }
+	    }
 
         return $value;
 	}
