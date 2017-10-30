@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Attribute\Rating;
 
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
@@ -108,9 +109,11 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
                 $value->setValue(null);
             }
         } else {
-            $i = is_numeric($textRepresentation) ? (int) $textRepresentation : null;
-            if ($i === null || $i < 0 || $i > 5) {
+            $i = filter_var($textRepresentation, FILTER_VALIDATE_INT);
+            if ($i === null) {
                 $warnings->add(t('"%1$s" is not a rating value the attribute with handle %2$s', $textRepresentation, $this->attributeKey->getAttributeKeyHandle()));
+            } elseif ($i < 0 || $i > 5) {
+                $warnings->add(t('The rating value of the attribute with handle %2$s must range from 0 to 5 (value received: %1$s)', $textRepresentation, $this->attributeKey->getAttributeKeyHandle()));
             } else {
                 $i = $i * 20;
                 if ($value === null) {
