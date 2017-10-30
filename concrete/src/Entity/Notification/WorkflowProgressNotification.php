@@ -6,6 +6,7 @@ use Concrete\Core\Notification\Subject\SubjectInterface;
 use Concrete\Core\Notification\View\UserSignupListView;
 use Concrete\Core\Notification\View\WorkflowProgressListView;
 use Concrete\Core\Workflow\Progress\Progress;
+use Concrete\Core\Workflow\Progress\SiteProgressInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -37,6 +38,17 @@ class WorkflowProgressNotification extends Notification
     public function getListView()
     {
         return new WorkflowProgressListView($this);
+    }
+
+    public function getNotificationDateTimeZone()
+    {
+        $progress = $this->getWorkflowProgressObject();
+        if ($progress instanceof SiteProgressInterface) {
+            $site = $progress->getSite();
+            if ($site) {
+                return $site->getTimezone();
+            }
+        }
     }
 
     public function getWorkflowProgressObject()

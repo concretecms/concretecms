@@ -37,6 +37,7 @@ class UrlServiceProvider extends Provider
                 $manager->addResolver('concrete.path', $app->make('Concrete\Core\Url\Resolver\PathUrlResolver'));
                 $manager->addResolver('concrete.page', $app->make('Concrete\Core\Url\Resolver\PageUrlResolver'));
                 $manager->addResolver('concrete.route', $app->make('Concrete\Core\Url\Resolver\RouterUrlResolver'));
+                $manager->addResolver('concrete.user', $app->make('Concrete\Core\Url\Resolver\UserInfoUrlResolver'));
 
                 return $manager;
             });
