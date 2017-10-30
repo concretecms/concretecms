@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Attribute\Boolean;
 
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
@@ -225,7 +226,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
                 $warnings->add(t('"%1$s" is not a valid boolean value for the attribute with handle %2$s', $textRepresentation, $this->attributeKey->getAttributeKeyHandle()));
             } else {
                 if ($value === null) {
-                    $this->createAttributeValue($bool);
+                    $value = $this->createAttributeValue($bool);
                 } else {
                     $value->setValue($bool);
                 }
