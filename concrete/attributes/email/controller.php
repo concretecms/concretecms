@@ -1,11 +1,12 @@
 <?php
+
 namespace Concrete\Attribute\Email;
 
 use Concrete\Core\Attribute\DefaultController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
-use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Error\ErrorList\Error\Error;
 use Concrete\Core\Error\ErrorList\Error\FieldNotPresentError;
+use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Error\ErrorList\Field\AttributeField;
 
 class Controller extends DefaultController
@@ -47,7 +48,6 @@ class Controller extends DefaultController
      */
     public function updateAttributeValueFromTextRepresentation($textRepresentation, ErrorList $warnings)
     {
-        /* @var TextValue $value */
         $good = true;
         if ($textRepresentation !== '') {
             $vs = $this->app->make('helper/validation/strings');
