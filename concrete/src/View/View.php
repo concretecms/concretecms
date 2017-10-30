@@ -416,6 +416,8 @@ class View extends AbstractView
         $_c = Page::getCurrentPage();
         if (is_object($_c)) {
             $_theme = $_c->getCollectionThemeObject();
+        } else {
+            $_theme = PageTheme::getSiteTheme();
         }
 
         $_app = Facade::getFacadeApplication();
