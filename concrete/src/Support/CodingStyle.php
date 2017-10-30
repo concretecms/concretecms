@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Support;
 
 use Exception;
