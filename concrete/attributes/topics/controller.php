@@ -1,11 +1,11 @@
 <?php
+
 namespace Concrete\Attribute\Topics;
 
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\SimpleTextExportableAttributeInterface;
 use Concrete\Core\Entity\Attribute\Key\Settings\TopicsSettings;
-use Concrete\Core\Entity\Attribute\Value\Value\AbstractValue;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectedTopic;
 use Concrete\Core\Entity\Attribute\Value\Value\TopicsValue;
 use Concrete\Core\Error\ErrorList\ErrorList;

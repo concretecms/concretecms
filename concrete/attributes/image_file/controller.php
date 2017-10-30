@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Attribute\ImageFile;
 
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
@@ -8,9 +9,9 @@ use Concrete\Core\Backup\ContentExporter;
 use Concrete\Core\Entity\Attribute\Key\Settings\ImageFileSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\ImageFileValue;
 use Concrete\Core\Entity\File\File as FileEntity;
-use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Error\ErrorList\Error\Error;
 use Concrete\Core\Error\ErrorList\Error\FieldNotPresentError;
+use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Error\ErrorList\Field\AttributeField;
 use Concrete\Core\File\Importer;
 use Core;

@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Attribute\SocialLinks;
 
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
@@ -118,7 +119,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         } else {
             if (is_object($this->attributeValue)) {
                 $links = $this->attributeValue->getValue()->getSelectedLinks();
-                foreach($links as $link) {
+                foreach ($links as $link) {
                     $data['service'][] = $link->getService();
                     $data['serviceInfo'][] = $link->getServiceInfo();
                 }

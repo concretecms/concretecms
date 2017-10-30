@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Attribute\Address;
 
 use Concrete\Core\Attribute\Context\BasicFormContext;
@@ -457,7 +458,7 @@ class Controller extends AttributeTypeController implements MulticolumnTextExpor
         }
 
         return $value;
-	}
+    }
 
     protected function load()
     {

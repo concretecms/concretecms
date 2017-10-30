@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Attribute\DateTime;
 
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
@@ -314,16 +315,16 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         }
 
         return $result;
-	}
+    }
 
-	/**
-	 * {@inheritdoc}
-	 *
-	 * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::updateAttributeValueFromTextRepresentation()
-	 */
-	public function updateAttributeValueFromTextRepresentation($textRepresentation, ErrorList $warnings)
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::updateAttributeValueFromTextRepresentation()
+     */
+    public function updateAttributeValueFromTextRepresentation($textRepresentation, ErrorList $warnings)
     {
-	    $value = $this->getAttributeValueObject();
+        $value = $this->getAttributeValueObject();
         if ($textRepresentation === '') {
             if ($value !== null) {
                 $value->setValue(null);
@@ -359,7 +360,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         }
 
         return $value;
-	}
+    }
 
     protected function load()
     {
