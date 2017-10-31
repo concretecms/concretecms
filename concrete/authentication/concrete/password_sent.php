@@ -1,7 +1,7 @@
 <?php defined('C5_EXECUTE') or die('Access denied.'); ?>
 
 <div class="forgotPassword">
-	<h4><?= t('Forgot Your Password?') ?></h4>
+	<h4><?= t('Reset Instructions Sent') ?></h4>
 	<div class="ccm-message"><?= isset($intro_msg) ? $intro_msg : '' ?></div>
 	<div class="help-block">
 		<?= t('If there is an account associated with this email, instructions for resetting your password have been sent.') ?>
