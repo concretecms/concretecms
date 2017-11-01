@@ -623,6 +623,13 @@ return [
          * Captcha images
          */
         '/ccm/system/captcha/picture' => ['\Concrete\Core\Captcha\CaptchaWithPictureInterface::displayCaptchaPicture'],
+
+
+        /*
+         * Calendar
+         */
+        '/ccm/calendar/dialogs/event/edit' => ['\Concrete\Core\Controller\Dialog\Event\Edit::edit'],
+
     ],
 
     /*
