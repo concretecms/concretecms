@@ -1,6 +1,4 @@
 <?php
-use Concrete\Core\Validation\CSRF\Token;
-
 defined('C5_EXECUTE') or die('Access Denied');
 if (isset($error)) {
     ?>
@@ -26,16 +24,31 @@ if (isset($show_email) && $show_email) {
                 <button class="btn btn-primary"><?= t('Register') ?></button>
             </span>
         </div>
-        <?= id(new Token())->output('twitter_register');
-    ?>
+        <?=$token->output('twitter_register')?>
     </form>
     <?php
 
 } else {
-    $user = new User();
-
     if ($user->isLoggedIn()) {
         ?>
+
+        <?php if ($authenticationType->isHooked($user)):
+            ?>
+            <div class="form-group">
+        <span>
+            <?= t('Detach your %s account', t('twitter')) ?>
+        </span>
+                <hr>
+            </div>
+            <div class="form-group">
+                <a href="<?= \URL::to('/ccm/system/authentication/oauth2/twitter/attempt_detach');
+                ?>" class="btn btn-primary btn-twitter btn-block">
+                    <i class="fa fa-twitter"></i>
+                    <?= t('Detach your %s account', t('twitter')) ?>
+                </a>
+            </div>
+
+        <?php else: ?>
         <div class="form-group">
             <span>
                 <?= t('Attach a %s account', t('twitter')) ?>
@@ -50,7 +63,12 @@ if (isset($show_email) && $show_email) {
                 <?= t('Attach a %s account', t('twitter')) ?>
             </a>
         </div>
-    <?php
+        <div class="form-group">
+            <a href="<?= \URL::to('/') ?>" class="btn btn-success btn-block">
+            <?= t('Return to Home Page')?>
+            </a>
+        </div>
+    <?php endif;
 
     } else {
         ?>

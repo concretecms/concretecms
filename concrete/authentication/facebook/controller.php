@@ -8,6 +8,7 @@ use Concrete\Core\Authentication\Type\OAuth\OAuth2\GenericOauth2TypeController;
 use Concrete\Core\Routing\RedirectResponse;
 use OAuth\OAuth2\Service\Facebook;
 use Concrete\Core\User\User;
+use Concrete\Core\Database\Connection\Connection;
 
 class Controller extends GenericOauth2TypeController
 {
@@ -15,12 +16,12 @@ class Controller extends GenericOauth2TypeController
 
     public function registrationGroupID()
     {
-        return \Config::get('auth.facebook.registration.group');
+        return $this->app->make('config')->get('auth.facebook.registration.group');
     }
 
     public function supportsRegistration()
     {
-        return \Config::get('auth.facebook.registration.enabled', false);
+        return $this->app->make('config')->get('auth.facebook.registration.enabled', false);
     }
 
     public function getAuthenticationTypeIconHTML()
@@ -49,27 +50,23 @@ class Controller extends GenericOauth2TypeController
 
     public function saveAuthenticationType($args)
     {
-        \Config::save('auth.facebook.appid', $args['apikey']);
-        \Config::save('auth.facebook.secret', $args['apisecret']);
-        \Config::save('auth.facebook.registration.enabled', (bool)$args['registration_enabled']);
-        \Config::save('auth.facebook.registration.group', intval($args['registration_group'], 10));
+        $config = $this->app->make('config');
+        $config->save('auth.facebook.appid', $args['apikey']);
+        $config->save('auth.facebook.secret', $args['apisecret']);
+        $config->save('auth.facebook.registration.enabled', (bool)$args['registration_enabled']);
+        $config->save('auth.facebook.registration.group', intval($args['registration_group'], 10));
     }
 
     public function edit()
     {
+        $config = $this->app->make('config');
         $this->set('form', $this->app->make('helper/form'));
-        $this->set('apikey', \Config::get('auth.facebook.appid', ''));
-        $this->set('apisecret', \Config::get('auth.facebook.secret', ''));
+        $this->set('apikey', $config->get('auth.facebook.appid', ''));
+        $this->set('apisecret', $config->get('auth.facebook.secret', ''));
 
         $list = new \GroupList();
         $list->includeAllGroups();
         $this->set('groups', $list->getResults());
-    }
-
-    public function form()
-    {
-        $this->set('user', new User());
-        $this->set('authenticationType', $this->getAuthenticationType());
     }
 
     public function revoke()
@@ -79,7 +76,7 @@ class Controller extends GenericOauth2TypeController
                 $userID = $data['user_id'];
                 if ($userID !== null && $userID !== '') {
                     /* @var \Concrete\Core\Database\Connection\Connection $database */
-                    $database = $this->app->make('database')->connection();
+                    $database = $this->app->make(Connection::class);
                     try {
                         $database->delete('OauthUserMap', ['namespace' => 'facebook', 'binding' => $userID]);
                     } catch (\Exception $e) {
@@ -98,7 +95,7 @@ class Controller extends GenericOauth2TypeController
     {
         list($encodedSignature, $payload) = explode('.', $signedRequest, 2);
 
-        $secret = \Config::get('auth.facebook.secret', '');
+        $secret = $this->app->make('config')->get('auth.facebook.secret', '');
 
         // decode the data
         $signature = $this->base64_url_decode($encodedSignature);
@@ -119,38 +116,6 @@ class Controller extends GenericOauth2TypeController
         return base64_decode(strtr($input, '-_', '+/'));
     }
 
-    public function handle_attach_callback()
-    {
-        if (!User::isLoggedIn()) {
-            $response = new RedirectResponse(\URL::to('/login'), 302);
-            $response->send();
-            exit;
-        }
-        $user = new User();
-
-        try {
-            $code = \Request::getInstance()->get('code');
-            $token = $this->getService()->requestAccessToken($code);
-        } catch (TokenResponseException $e) {
-            $this->showError(t('Failed authentication: %s', $e->getMessage()));
-            exit;
-        }
-        if ($token) {
-
-            $extractor = $this->getExtractor();
-            if ($this->getBoundUserID($extractor->getUniqueId())) {
-                $this->showError(t('This account already attached with another user.'));
-                exit;
-            }
-
-            if ($this->bindUser($user, $extractor->getUniqueId())) {
-                $this->showSuccess(t('Successfully attached.'));
-                exit;
-            }
-        }
-        $this->showError(t('Unable to attach user.'));
-        exit;
-    }
 
     public function handle_detach_attempt()
     {
@@ -170,7 +135,7 @@ class Controller extends GenericOauth2TypeController
         $this->getService()->request('/' . $binding . '/permissions', 'DELETE');
         try {
             /* @var \Concrete\Core\Database\Connection\Connection $database */
-            $database = $this->app->make('database')->connection();
+            $database = $this->app->make(Connection::class);
             $database->delete('OauthUserMap', ['user_id' => $uID, 'namespace' => $namespace, 'binding' => $binding]);
             $this->showSuccess(t('Successfully detached.'));
             exit;
