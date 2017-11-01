@@ -49,26 +49,21 @@ if (isset($show_email) && $show_email) {
             </div>
 
         <?php else: ?>
-        <div class="form-group">
+            <div class="form-group">
             <span>
                 <?= t('Attach a %s account', t('twitter')) ?>
             </span>
-            <hr>
-        </div>
-        <div class="form-group">
-            <a href="<?= \URL::to('/ccm/system/authentication/oauth2/twitter/attempt_attach');
-        ?>"
-               class="btn btn-primary btn-twitter btn-block">
-                <i class="fa fa-twitter"></i>
-                <?= t('Attach a %s account', t('twitter')) ?>
-            </a>
-        </div>
-        <div class="form-group">
-            <a href="<?= \URL::to('/') ?>" class="btn btn-success btn-block">
-            <?= t('Return to Home Page')?>
-            </a>
-        </div>
-    <?php endif;
+                <hr>
+            </div>
+            <div class="form-group">
+                <a href="<?= \URL::to('/ccm/system/authentication/oauth2/twitter/attempt_attach');
+                ?>"
+                   class="btn btn-primary btn-twitter btn-block">
+                    <i class="fa fa-twitter"></i>
+                    <?= t('Attach a %s account', t('twitter')) ?>
+                </a>
+            </div>
+        <?php endif;
 
     } else {
         ?>
@@ -80,15 +75,24 @@ if (isset($show_email) && $show_email) {
         </div>
         <div class="form-group">
             <a href="<?= \URL::to('/ccm/system/authentication/oauth2/twitter/attempt_auth');
-        ?>"
+            ?>"
                class="btn btn-primary btn-twitter btn-block">
                 <i class="fa fa-twitter"></i>
                 <?= t('Log in with %s', 'twitter') ?>
             </a>
         </div>
-    <?php
+        <?php
 
     }
+
+}
+?>
+    <div class="form-group">
+        <a href="<?= \URL::to('/') ?>" class="btn btn-success btn-block">
+            <?= t('Return to Home Page')?>
+        </a>
+    </div>
+<?php
     ?>
     <style>
         .ccm-ui .btn-twitter {
@@ -100,7 +104,3 @@ if (isset($show_email) && $show_email) {
             margin: 0 6px 0 3px;
         }
     </style>
-<?php
-
-}
-?>

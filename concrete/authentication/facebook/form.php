@@ -76,11 +76,7 @@ if (isset($show_email) && $show_email) {
                     <?= t('Attach a %s account', t('facebook')) ?>
                 </a>
             </div>
-            <div class="form-group">
-                <a href="<?= \URL::to('/') ?>" class="btn btn-success btn-block">
-                    <?= t('Return to Home Page')?>
-                </a>
-            </div>
+
         <?php endif; ?>
 
         <?php
@@ -101,8 +97,14 @@ if (isset($show_email) && $show_email) {
             </a>
         </div>
         <?php
-
     }
+    ?>
+    <div class="form-group">
+        <a href="<?= \URL::to('/') ?>" class="btn btn-success btn-block">
+            <?= t('Return to Home Page')?>
+        </a>
+    </div>
+    <?php
 }
 ?>
 <style>
