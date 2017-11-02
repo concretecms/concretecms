@@ -129,6 +129,7 @@ return [
         'core_site' => '\Concrete\Core\Site\ServiceProvider',
         'core_search' => \Concrete\Core\Search\SearchServiceProvider::class,
         'core_geolocator' => 'Concrete\Core\Geolocator\GeolocatorServiceProvider',
+        'core_calendar' => 'Concrete\Core\Calendar\CalendarServiceProvider',
 
         // Authentication
         'core_oauth' => '\Concrete\Core\Authentication\Type\OAuth\ServiceProvider',
@@ -166,6 +167,10 @@ return [
         'Image' => '\Concrete\Core\Support\Facade\Image',
         'Config' => '\Concrete\Core\Support\Facade\Config',
         'URL' => '\Concrete\Core\Support\Facade\Url',
+    ],
+
+    'entity_namespaces' => [
+        'calendar' => 'Concrete\Core\Entity\Calendar',
     ],
 
     'package_items' => [
@@ -629,12 +634,43 @@ return [
          * Calendar
          */
         '/ccm/calendar/dialogs/event/edit' => ['\Concrete\Core\Controller\Dialog\Event\Edit::edit'],
+        '/ccm/calendar/dialogs/event/add' => ['\Concrete\Core\Controller\Controller\Dialog\Event\Edit::add'],
+        '/ccm/calendar/dialogs/event/add/save' => ['\Concrete\Core\Controller\Controller\Dialog\Event\Edit::addEvent'],
+        '/ccm/calendar/dialogs/event/edit/save' => ['\Concrete\Core\Controller\Controller\Dialog\Event\Edit::updateEvent'],
+        '/ccm/calendar/dialogs/event/delete' => ['\Concrete\Core\Controller\Controller\Dialog\Event\Delete::view'],
+        '/ccm/calendar/dialogs/event/delete_occurrence' => ['\Concrete\Core\Controller\Controller\Dialog\Event\DeleteOccurrence::view'],
+        '/ccm/calendar/dialogs/event/delete/submit' => ['\Concrete\Core\Controller\Controller\Dialog\Event\Delete::submit'],
+        '/ccm/calendar/dialogs/event/delete_occurrence/submit' => ['\Concrete\Core\Controller\Controller\Dialog\Event\DeleteOccurrence::submit'],
+        '/ccm/calendar/dialogs/event/versions' => ['\Concrete\Core\Controller\Controller\Dialog\Event\Versions::view'],
+        '/ccm/calendar/dialogs/event/version/view' => ['\Concrete\Core\Controller\Controller\Dialog\Event\ViewVersion::view'],
+        '/ccm/calendar/event/version/delete' => ['\Concrete\Core\Controller\Controller\EventVersion::delete'],
+        '/ccm/calendar/event/version/approve' => ['\Concrete\Core\Controller\Controller\EventVersion::approve'],
+        '/ccm/calendar/event/version/unapprove_all' => ['\Concrete\Core\Controller\Controller\Event::unapprove'],
+        '/ccm/calendar/event/duplicate' => ['\Concrete\Core\Controller\Controller\Event::duplicate'],
+        '/view_event/{bID}/{occurrence_id}' => [
+            '\Concrete\Core\Controller\Controller\Dialog\Frontend\Event::view',
+            'view_event_occurrence',
+            ['occurrence_id' => '[0-9]+'],
+        ],
+        '/feed/{calendar_id}' => [
+            '\Concrete\Core\Controller\Controller\Dialog\Frontend\Feed::view',
+            'calendar_rss',
+            ['identifier' => '[0-9]+'],
+        ],
+        '/ccm/calendar/dialogs/event/occurrence' => ['\Concrete\Core\Controller\Controller\Dialog\EventOccurrence::view'],
+        '/ccm/calendar/dialogs/choose_event' => ['\Concrete\Core\Controller\Controller\Dialog\ChooseEvent::view'],
+        '/ccm/calendar/dialogs/choose_event/get_events' => ['\Concrete\Core\Controller\Controller\Dialog\ChooseEvent::getEvents'],
+        '/ccm/calendar/event/get_json' => ['\Concrete\Core\Controller\Controller\Event::getJSON'],
+        '/ccm/calendar/dialogs/permissions/{pkCategoryHandle}' => ['\Concrete\Core\Controller\Controller\Dialog\Permissions::view'],
 
+        /* Permissions Tools Hack */
+        '/tools/packages/calendar/permissions/categories/calendar_admin' => ['\Concrete\Core\Controller\Controller\Permissions::process'],
+        '/tools/packages/calendar/permissions/categories/calendar' => ['\Concrete\Core\Controller\Controller\Permissions::processCalendar'],
     ],
 
-    /*
-     * Route themes
-     */
+/*
+ * Route themes
+ */
     'theme_paths' => [
         '/dashboard' => 'dashboard',
         '/dashboard/*' => 'dashboard',
@@ -767,6 +803,17 @@ return [
             ['javascript', 'js/responsive-slides.js', ['minify' => false]],
             ['css', 'css/responsive-slides.css', ['minify' => false]],
         ],
+        'fullcalendar' => [
+            ['javascript', 'js/fullcalendar/fullcalendar.js', ['minify' => false, 'combine' => false]],
+            ['css', 'js/fullcalendar/fullcalendar.css', ['minify' => false]],
+        ],
+        'fullcalendar/localization' => [
+            ['javascript', 'js/fullcalendar/lang-all.js', ['minify' => false, 'combine' => false]],
+        ],
+        'fullcalendar/print' => [
+            ['css', 'js/fullcalendar/fullcalendar.print.css', ['minify' => false]],
+        ],
+
         'html5-shiv' => [
             [
                 'javascript-conditional',
@@ -965,6 +1012,12 @@ return [
         'core/users' => [
             ['javascript', 'js/users.js', ['minify' => false]],
         ],
+        'core/calendar/event-selector' => [
+            ['javascript', 'js/calendar/event-selector.js', ['minify' => false]],
+        ],
+        'core/calendar/admin' => [
+            ['javascript', 'js/calendar/admin.js', ['minify' => false]],
+        ],
         'core/notification' => [
             ['javascript', 'js/notification.js', ['minify' => false]],
         ],
@@ -1033,6 +1086,15 @@ return [
             [
                 ['javascript', 'selectize'],
                 ['css', 'selectize'],
+            ],
+        ],
+        'fullcalendar' => [
+            [
+                ['javascript', 'jquery'],
+                ['javascript', 'moment'],
+                ['javascript', 'fullcalendar'],
+                ['javascript', 'fullcalendar/localization'],
+                ['css', 'fullcalendar']
             ],
         ],
         'dropzone' => [
@@ -1288,6 +1350,34 @@ return [
                 ['javascript', 'underscore'],
                 ['javascript', 'core/users'],
             ],
+        ],
+        'core/calendar/event-selector' => [
+            [
+                ['javascript', 'jquery'],
+                ['javascript', 'jquery/ui'],
+                ['javascript-localized', 'jquery/ui'],
+                ['javascript', 'core/events'],
+                ['javascript', 'underscore'],
+                ['javascript', 'backbone'],
+                ['javascript', 'calendar-event-selector'],
+                ['css', 'core/app'],
+                ['css', 'jquery/ui'],
+            ],
+        ],
+        'core/calendar/admin' => [
+            [
+                ['javascript-localized', 'core/localization'],
+                ['javascript-localized', 'jquery/ui'],
+                ['javascript', 'jquery'],
+                ['javascript', 'jquery/ui'],
+                ['javascript', 'core/events'],
+                ['javascript', 'underscore'],
+                ['javascript', 'backbone'],
+                ['javascript', 'core/app'],
+                ['javascript', 'calendar-admin'],
+                ['css', 'core/app'],
+                ['css', 'jquery/ui'],
+[            ],
         ],
         'core/express' => [
             [

@@ -329,6 +329,20 @@ module.exports = function(grunt) {
             ]
         },
 
+        ccm_calendar_event: {
+            dest: '<%= DIR_BASE %>/concrete/js/calendar/event-selector.js',
+            src: [
+                '<%= DIR_BASE %>/concrete/js/build/core/calendar/event-selector.js'
+            ]
+        },
+
+        ccm_calendar_admin: {
+            dest: '<%= DIR_BASE %>/concrete/js/calendar/admin.js',
+            src: [
+                '<%= DIR_BASE %>/concrete/js/build/core/calendar/admin.js'
+            ]
+        },
+
         ccm_duration: {
             dest: '<%= DIR_BASE %>/concrete/js/duration.js',
             src: [
