@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Package\Calendar\Workflow\Request;
+namespace Concrete\Core\Workflow\Request;
 
 use Concrete\Core\Workflow\Description;
 use Concrete\Core\Workflow\Progress\Progress;

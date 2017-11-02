@@ -1,12 +1,12 @@
 <?php
-namespace Concrete\Package\Calendar\Workflow\Request;
+namespace Concrete\Core\Workflow\Request;
 
 use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Workflow\Description;
 use Concrete\Core\Workflow\Progress\Progress;
 use Concrete\Core\Workflow\Progress\Response;
 use Concrete\Core\Workflow\Workflow;
-use Concrete\Package\Calendar\Workflow\Progress\CalendarEventProgress;
+use Concrete\Core\Workflow\Progress\CalendarEventProgress;
 use HtmlObject\Element;
 use Concrete\Core\Calendar\Event\Event;
 use Concrete\Core\Calendar\Event\EventService;

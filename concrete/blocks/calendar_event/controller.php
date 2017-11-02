@@ -1,9 +1,9 @@
 <?php
-namespace Concrete\Package\Calendar\Block\CalendarEvent;
+namespace Concrete\Block\CalendarEvent;
 
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Block\BlockController;
-use Concrete\Package\Calendar\Attribute\Key\EventKey;
+use Concrete\Core\Attribute\Key\EventKey;
 use Concrete\Core\Calendar\Calendar;
 use Concrete\Core\Calendar\Event\Event;
 use Concrete\Core\Calendar\Event\EventOccurrence;
@@ -36,7 +36,7 @@ class Controller extends BlockController
 
     public function edit()
     {
-        $this->requireAsset('calendar-event-selector');
+        $this->requireAsset('core/calendar/event-selector');
 
         $eventKeys = EventKey::getList();
         $calendars = ['' => t('** Choose a Calendar')];

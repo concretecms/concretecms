@@ -14,9 +14,9 @@ class Colors extends DashboardPageController
             $this->error->add($this->token->getErrorMessage());
         }
         if (!$this->error->has()) {
-            $config = \Package::getByHandle('calendar')->getFileConfig();
-            $config->save('calendar.colors.background', $this->request->request->get('defaultBackgroundColor'));
-            $config->save('calendar.colors.text', $this->request->request->get('defaultTextColor'));
+            $config = $this->app->make('config');
+            $config->save('concrete.calendar.colors.background', $this->request->request->get('defaultBackgroundColor'));
+            $config->save('concrete.calendar.colors.text', $this->request->request->get('defaultTextColor'));
 
             $data = $this->request->request->all();
             $overrides = array();
@@ -31,18 +31,17 @@ class Colors extends DashboardPageController
                     }
                 }
             }
-            $config->save('calendar.colors.categories', $overrides);
+            $config->save('concrete.calendar.colors.categories', $overrides);
             $this->flash('success', t('Colors saved successfully.'));
             $this->redirect('/dashboard/system/calendar/colors');
         }
     }
     public function view()
     {
-        $package = \Package::getByHandle('calendar');
-        $config = $package->getFileConfig();
-        $this->set('defaultBackgroundColor', $config->get('calendar.colors.background'));
-        $this->set('defaultTextColor', $config->get('calendar.colors.text'));
-        $this->set('categories', (array) $config->get('calendar.colors.categories'));
+        $config = $this->app->make('config');
+        $this->set('defaultBackgroundColor', $config->get('concrete.calendar.colors.background'));
+        $this->set('defaultTextColor', $config->get('concrete.calendar.colors.text'));
+        $this->set('categories', (array) $config->get('concrete.calendar.colors.categories'));
 
         $ak = $package->getCalendarTopicsAttributeKey();
         if (is_object($ak)) {

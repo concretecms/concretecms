@@ -4,7 +4,7 @@ namespace Concrete\Core\Controller\Event;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Workflow\Progress\Response;
-use Concrete\Package\Calendar\Workflow\Request\ApproveCalendarEventRequest;
+use Concrete\Core\Workflow\Request\ApproveCalendarEventRequest;
 use Concrete\Core\Calendar\Event\EditResponse;
 use Concrete\Core\Calendar\Event\EventService;
 

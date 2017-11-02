@@ -14,7 +14,7 @@ class EventValue extends AbstractValue
 
     /**
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\CalendarEventVersion")
+     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Calendar\CalendarEventVersion")
      * @ORM\JoinColumn(name="eventVersionID", referencedColumnName="eventVersionID")
      */
     protected $version;

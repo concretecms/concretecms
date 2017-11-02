@@ -43,7 +43,7 @@
     ?>
             <div class="ccm-block-calendar-event-attributes">
                 <?php foreach ($displayEventAttributes as $akID) {
-    $ak = \Concrete\Package\Calendar\Attribute\Key\EventKey::getByID($akID);
+    $ak = \Concrete\Core\Attribute\Key\EventKey::getByID($akID);
     if (is_object($ak)) {
         echo $event->getAttribute($ak->getAttributeKeyHandle(), 'displaySanitized');
     }

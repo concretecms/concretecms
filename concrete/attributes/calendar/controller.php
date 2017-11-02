@@ -4,7 +4,7 @@ namespace Concrete\Core\Calendar\Attribute\Calendar;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
 use Concrete\Core\Calendar\Calendar;
-use Concrete\Core\Calendar\Entity\CalendarEvent;
+use Concrete\Core\Entity\Calendar\CalendarEvent;
 
 class Controller extends \Concrete\Attribute\Number\Controller
 {

@@ -3,7 +3,7 @@ namespace Concrete\Core\Calendar\Event;
 
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Concrete\Core\Search\Pagination\Pagination;
-use Concrete\Package\Calendar\Attribute\Key\EventKey;
+use Concrete\Core\Attribute\Key\EventKey;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use Concrete\Core\Entity\Calendar\Calendar;
 use Concrete\Core\Entity\Calendar\CalendarEvent as EventEntity;

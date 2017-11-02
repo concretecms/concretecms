@@ -114,7 +114,7 @@ class CalendarEvent implements ObjectInterface
     }
 
     /**
-     * @return \PortlandLabs\Calendar\Entity\Calendar
+     * @return Calendar
      */
     public function getCalendar()
     {
@@ -122,7 +122,7 @@ class CalendarEvent implements ObjectInterface
     }
 
     /**
-     * @param \PortlandLabs\Calendar\Entity\Calendar $calendar
+     * @param Calendar $calendar
      */
     public function setCalendar(Calendar $calendar)
     {
@@ -221,7 +221,7 @@ class CalendarEvent implements ObjectInterface
     }
 
     /**
-     * @param string|\Concrete\Package\Calendar\Entity\Attribute\Key\EventKey $ak
+     * @param string|\Concrete\Core\Entity\Attribute\Key\EventKey $ak
      * @param bool $createIfNotExists
      *
      * @return EventValue|null

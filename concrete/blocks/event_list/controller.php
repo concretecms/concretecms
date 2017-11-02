@@ -1,10 +1,10 @@
 <?php
-namespace Concrete\Package\Calendar\Block\EventList;
+namespace Concrete\Block\EventList;
 
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Utility\Service\Validation\Numbers;
-use Concrete\Package\Calendar\Attribute\Key\EventKey;
+use Concrete\Core\Attribute\Key\EventKey;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Calendar\Calendar;
 use Concrete\Core\Calendar\CalendarServiceProvider;

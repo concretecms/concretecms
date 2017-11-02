@@ -2,10 +2,11 @@
 namespace Concrete\C\Attribute\CalendarEvent;
 
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
+use Concrete\Core\Calendar\Event\Formatter\LinkFormatterInterface;
 use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
 use Concrete\Core\Calendar\Calendar;
 use Concrete\Core\Calendar\Event\Event;
-use Concrete\Core\Calendar\Entity\CalendarEvent;
+use Concrete\Core\Entity\Calendar\CalendarEvent;
 
 class Controller extends \Concrete\Attribute\Number\Controller
 {
@@ -37,7 +38,7 @@ class Controller extends \Concrete\Attribute\Number\Controller
     {
         $value = $this->getValue();
         /**
-         * @var $linkFormatter \PortlandLabs\Calendar\Event\Formatter\LinkFormatterInterface
+         * @var $linkFormatter LinkFormatterInterface
          */
         $linkFormatter = \Core::make('calendar/event/formatter/link');
         $event = Event::getByID($value);
@@ -92,7 +93,7 @@ class Controller extends \Concrete\Attribute\Number\Controller
             $this->set('event', $event);
         }
 
-        $this->requireAsset('calendar-event-selector');
+        $this->requireAsset('core/calendar/event-selector');
         $calendars = ['' => t('** Choose a Calendar')];
         foreach (Calendar::getList() as $calendar) {
             $calendars[$calendar->getID()] = $calendar->getName();

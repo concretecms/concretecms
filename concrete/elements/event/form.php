@@ -3,8 +3,7 @@
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-use PortlandLabs\Calendar\Event\EventOccurrence;
-use Concrete\Core\Http\ResponseAssetGroup;
+use Concrete\Core\Calendar\Event\EventOccurrence;
 
 $fp = FilePermissions::getGlobal();
 $tp = new TaskPermission();
@@ -151,7 +150,7 @@ if ($version) {
                 $pdEndDateDateTime->setTimezone(new DateTimeZone($timezone));
                 $pdEndDate = $pdEndDateDateTime->format('Y-m-d H:i:s');
 
-                $singleRepetition = new \PortlandLabs\Calendar\Event\EventRepetition();
+                $singleRepetition = new \Concrete\Core\Calendar\Event\EventRepetition();
                 $singleRepetition->setStartDate($pdStartDate);
                 $singleRepetition->setEndDate($pdEndDate);
                 ?>

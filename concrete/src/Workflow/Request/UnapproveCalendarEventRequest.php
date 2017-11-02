@@ -6,7 +6,7 @@ use Concrete\Core\Workflow\Description;
 use Concrete\Core\Workflow\Progress\Progress;
 use Concrete\Core\Workflow\Progress\Response;
 use Concrete\Core\Workflow\Workflow;
-use Concrete\Package\Calendar\Workflow\Progress\CalendarEventProgress;
+use Concrete\Core\Workflow\Progress\CalendarEventProgress;
 use HtmlObject\Element;
 use Concrete\Core\Calendar\Event\EventService;
 

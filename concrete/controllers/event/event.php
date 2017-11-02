@@ -2,9 +2,9 @@
 namespace Concrete\Core\Controller\Event;
 
 use Concrete\Core\Workflow\Progress\Response;
-use Concrete\Package\Calendar\Workflow\Request\UnapproveCalendarEventRequest;
-use PortlandLabs\Calendar\Event\EditResponse;
-use PortlandLabs\Calendar\Event\EventService;
+use Concrete\Core\Workflow\Request\UnapproveCalendarEventRequest;
+use Concrete\Core\Calendar\Event\EditResponse;
+use Concrete\Core\Calendar\Event\EventService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Concrete\Core\Calendar\Event\Event as CalendarEvent;
 

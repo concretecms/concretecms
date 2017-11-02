@@ -4,7 +4,7 @@ namespace Concrete\Core\Controller\Dialog\Event;
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Workflow\Progress\Response;
-use Concrete\Package\Calendar\Workflow\Request\DeleteCalendarEventRequest;
+use Concrete\Core\Workflow\Request\DeleteCalendarEventRequest;
 use Core;
 use Concrete\Core\Calendar\Calendar;
 use Concrete\Core\Calendar\CalendarServiceProvider;

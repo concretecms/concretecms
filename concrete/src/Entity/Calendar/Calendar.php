@@ -186,7 +186,6 @@ class Calendar implements ObjectInterface
 
     public function getCalendarTopicsAttributeKey()
     {
-        $package = \Package::getByHandle('calendar');
         return $package->getCalendarTopicsAttributeKey(); // eventually this might be overridden at the calendar level.
     }
 

@@ -12,15 +12,15 @@ class Settings extends DashboardPageController
             $this->error->add($this->token->getErrorMessage());
         }
         if (!$this->error->has()) {
-            $config = \Package::getByHandle('calendar')->getFileConfig();
-            $config->save('calendar.topic_attribute', $this->request->request->get('topicAttribute'));
+            $config = $this->app->make('config');
+            $config->save('concrete.calendar.topic_attribute', $this->request->request->get('topicAttribute'));
             $this->flash('success', t('Settings saved successfully.'));
             $this->redirect('/dashboard/system/calendar/settings');
         }
     }
     public function view()
     {
-        $config = \Package::getByHandle('calendar')->getFileConfig();
+        $config = $this->app->make('config');
         $keys = EventKey::getList(array('atHandle' => 'topics'));
         $keys = array_filter($keys, function ($ak) {
             return $ak->getAttributeTypeHandle() == 'topics';
@@ -31,7 +31,7 @@ class Settings extends DashboardPageController
             $topicAttributes[$key->getAttributeKeyHandle()] = $key->getAttributeKeyDisplayName();
         }
 
-        $topicAttribute = $config->get('calendar.topic_attribute');
+        $topicAttribute = $config->get('concrete.calendar.topic_attribute');
         if (!$topicAttribute) {
             $topicAttribute = 'calendar_topics';
         }

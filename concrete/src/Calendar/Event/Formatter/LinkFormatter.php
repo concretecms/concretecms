@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Calendar\Event\Formatter;
 
+use Concrete\Core\Config\Repository\Repository;
 use HtmlObject\Link;
 use Concrete\Core\Entity\Calendar\CalendarEvent;
 use Concrete\Core\Entity\Calendar\CalendarEventVersionOccurrence;
@@ -9,15 +10,14 @@ class LinkFormatter implements LinkFormatterInterface
 {
     protected $config;
 
-    public function __construct()
+    public function __construct(Repository $config)
     {
-        $pkg = \Package::getByHandle('calendar');
-        $this->config = $pkg->getFileConfig();
+        $this->config = $config;
     }
 
     public function getEventOccurrenceBackgroundColor(CalendarEventVersionOccurrence $occurrence)
     {
-        $categories = $this->config->get('calendar.colors.categories');
+        $categories = $this->config->get('concrete.calendar.colors.categories');
         if (is_array($categories) && count($categories)) {
             $topics = $occurrence->getEvent()->getCategories();
             if ($topics) {
@@ -29,7 +29,7 @@ class LinkFormatter implements LinkFormatterInterface
             }
         }
         if (!isset($background)) {
-            $background = $this->config->get('calendar.colors.background');
+            $background = $this->config->get('concrete.calendar.colors.background');
         }
 
         return $background;
@@ -37,7 +37,7 @@ class LinkFormatter implements LinkFormatterInterface
 
     public function getEventOccurrenceTextColor(CalendarEventVersionOccurrence $occurrence)
     {
-        $categories = $this->config->get('calendar.colors.categories');
+        $categories = $this->config->get('concrete.calendar.colors.categories');
         if (is_array($categories) && count($categories)) {
             $topics = $occurrence->getEvent()->getCategories();
             if ($topics) {
@@ -49,7 +49,7 @@ class LinkFormatter implements LinkFormatterInterface
             }
         }
         if (!isset($text)) {
-            $text = $this->config->get('calendar.colors.text');
+            $text = $this->config->get('concrete.calendar.colors.text');
         }
 
         return $text;

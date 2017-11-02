@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\EntityListeners({"\PortlandLabs\Calendar\Event\Version\Listener"})
+ * @ORM\EntityListeners({"\Concrete\Core\Calendar\Event\Version\Listener"})
  * @ORM\Table(name="CalendarEventVersions")
  */
 class CalendarEventVersion implements ObjectInterface, \JsonSerializable
@@ -128,7 +128,7 @@ class CalendarEventVersion implements ObjectInterface, \JsonSerializable
     }
 
     /**
-     * @param string|\Concrete\Package\Calendar\Entity\Attribute\Key\EventKey $ak
+     * @param string|\Concrete\Core\Entity\Attribute\Key\EventKey $ak
      * @param bool $createIfNotExists
      *
      * @return EventValue|null

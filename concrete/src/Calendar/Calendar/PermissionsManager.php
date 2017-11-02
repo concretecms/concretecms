@@ -3,8 +3,8 @@ namespace Concrete\Core\Calendar\Calendar;
 
 use Concrete\Core\Permission\Key\Key;
 use Doctrine\ORM\EntityManagerInterface;
-use PortlandLabs\Calendar\Entity\Calendar as CalendarEntity;
-use PortlandLabs\Calendar\Entity\CalendarPermissionAssignment;
+use Concrete\Core\Entity\Calendar\Calendar as CalendarEntity;
+use Concrete\Core\Entity\Calendar\CalendarPermissionAssignment;
 
 class PermissionsManager
 {

@@ -3,9 +3,9 @@ namespace Concrete\Core\Controller\SinglePage\Dashboard\Calendar;
 
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\Topic;
-use Concrete\Package\Calendar\Page\Controller\DashboardCalendarPageController;
-use PortlandLabs\Calendar\Calendar;
-use PortlandLabs\Calendar\CalendarServiceProvider;
+use Concrete\Core\Page\Controller\DashboardCalendarPageController;
+use Concrete\Core\Calendar\Calendar;
+use Concrete\Core\Calendar\CalendarServiceProvider;
 use URL;
 use Concrete\Core\Calendar\Utility\Preferences;
 
@@ -14,7 +14,7 @@ class Events extends DashboardCalendarPageController
     public function view($caID = null, $year = null, $month = null)
     {
 
-        $this->requireAsset('calendar-admin');
+        $this->requireAsset('core/calendar/admin');
 
         /**
          * @var $preferences Preferences

@@ -2,8 +2,8 @@
 namespace Concrete\Core\Calendar\Calendar;
 
 use Doctrine\ORM\EntityManagerInterface;
-use PortlandLabs\Calendar\Entity\Calendar;
-use PortlandLabs\Calendar\Entity\CalendarRepository;
+use Concrete\Core\Entity\Calendar\Calendar;
+use Concrete\Core\Entity\Calendar\CalendarRepository;
 
 class CalendarService
 {

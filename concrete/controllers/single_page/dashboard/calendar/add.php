@@ -5,7 +5,7 @@ use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Type\Type;
 use Concrete\Core\Page\Controller\DashboardCalendarPageController;
-use Concrete\Core\Calendar\Entity\Calendar as CalendarEntity;
+use Concrete\Core\Entity\Calendar\Calendar as CalendarEntity;
 use Concrete\Core\Calendar\Calendar;
 use Core;
 use Concrete\Core\Calendar\Utility\Preferences;

@@ -1,5 +1,4 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
-/** @var \PortlandLabs\Calendar\Calendar $calendar */
 $preferences = Core::make('Concrete\Core\Calendar\Utility\Preferences');
 
 ?>

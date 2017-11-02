@@ -3,7 +3,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 
 $calendarPermissions = new Permissions($calendar);
-$preferences = Core::make('PortlandLabs\Calendar\Utility\Preferences');
+$preferences = Core::make('Concrete\Core\Calendar\Utility\Preferences');
 ?>
 
 

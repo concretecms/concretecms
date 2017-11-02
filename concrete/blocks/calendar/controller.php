@@ -1,8 +1,8 @@
 <?php
-namespace Concrete\Package\Calendar\Block\Calendar;
+namespace Concrete\Block\Calendar;
 
 use Concrete\Core\Html\Object\HeadLink;
-use Concrete\Package\Calendar\Attribute\Key\EventKey;
+use Concrete\Core\Attribute\Key\EventKey;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Calendar\Calendar;
 use Concrete\Core\Calendar\Event\EventOccurrenceList;

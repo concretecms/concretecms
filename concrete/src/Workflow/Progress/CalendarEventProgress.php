@@ -2,7 +2,7 @@
 namespace Concrete\Core\Workflow\Progress;
 
 use Concrete\Core\Workflow\Workflow;
-use Concrete\Package\Calendar\Workflow\Request\CalendarEventRequest;
+use Concrete\Core\Workflow\Request\CalendarEventRequest;
 use Concrete\Core\Calendar\Event\Event;
 
 class CalendarEventProgress extends Progress implements SiteProgressInterface

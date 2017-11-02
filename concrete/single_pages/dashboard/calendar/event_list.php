@@ -53,7 +53,7 @@ Loader::element('calendar/header', array(
                 </thead>
                 <tbody>
                 <?php foreach($events as $occurrence) {
-                    $menu = new \PortlandLabs\Calendar\Event\Menu\EventOccurrenceMenu($occurrence);
+                    $menu = new \Concrete\Core\Calendar\Event\Menu\EventOccurrenceMenu($occurrence);
                     $event = $occurrence->getEvent();
                     $color = $linkFormatter->getEventOccurrenceBackgroundColor($occurrence);
                     $date = $dateFormatter->getOccurrenceDateString($occurrence);

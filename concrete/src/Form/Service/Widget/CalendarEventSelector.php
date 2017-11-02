@@ -8,7 +8,7 @@ class CalendarEventSelector
     public function selectEvent(Calendar $calendar, $fieldName, $eventID = false)
     {
         $v = \View::getInstance();
-        $v->requireAsset('calendar-event-selector');
+        $v->requireAsset('core/calendar/event-selector');
 
         $selectedEventID = 0;
         if (isset($_REQUEST[$fieldName])) {

@@ -3,7 +3,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $form = Core::make("helper/form");
 
-$calendars = array_filter(\PortlandLabs\Calendar\Calendar::getList(), function ($calendar) {
+$calendars = array_filter(\Concrete\Core\Calendar\Calendar::getList(), function ($calendar) {
     $p = new \Permissions($calendar);
 
     return $p->canViewCalendarInEditInterface();

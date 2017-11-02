@@ -2,14 +2,14 @@
 namespace Concrete\Core\Calendar;
 
 use Concrete\Core\Foundation\Service\Provider;
-use PortlandLabs\Calendar\Event\Formatter\DateFormatter;
-use PortlandLabs\Calendar\Event\Formatter\LinkFormatter;
+use Concrete\Core\Calendar\Event\Formatter\DateFormatter;
+use Concrete\Core\Calendar\Event\Formatter\LinkFormatter;
 
 class CalendarServiceProvider extends Provider
 {
     public function register()
     {
-        $this->app->bind('calendar/event/occurrence/factory', '\\PortlandLabs\\Calendar\\Event\\EventOccurrenceFactory');
+        $this->app->bind('calendar/event/occurrence/factory', '\\Concrete\\Core\\Calendar\\Event\\EventOccurrenceFactory');
         $this->app->singleton('calendar/event/formatter/link', LinkFormatter::class);
         $this->app->singleton('calendar/event/formatter/date', DateFormatter::class);
     }

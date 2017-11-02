@@ -238,7 +238,7 @@ class EventService
     public function generateDefaultOccurrences(CalendarEventVersion $version)
     {
         $repetitions = $version->getRepetitionEntityCollection();
-        $query = $this->entityManager->createQuery('delete from \PortlandLabs\Calendar\Entity\CalendarEventVersionOccurrence o where o.version = :version');
+        $query = $this->entityManager->createQuery('delete from calendar:CalendarEventVersionOccurrence o where o.version = :version');
         $query->setParameter('version', $version);
         $query->execute();
 

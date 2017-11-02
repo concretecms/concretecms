@@ -1377,7 +1377,7 @@ return [
                 ['javascript', 'calendar-admin'],
                 ['css', 'core/app'],
                 ['css', 'jquery/ui'],
-[            ],
+            ],
         ],
         'core/express' => [
             [
