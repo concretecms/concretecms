@@ -18,7 +18,7 @@ class Profile extends PublicProfilePageController
         if ($userID > 0) {
             $profile = UserInfo::getByID($userID);
             if (!is_object($profile)) {
-                throw new Exception('Invalid User ID.');
+                return $this->replace('/page_not_found');
             }
         } elseif ($u->isRegistered()) {
             $profile = UserInfo::getByID($u->getUserID());

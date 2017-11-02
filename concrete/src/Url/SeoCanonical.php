@@ -110,7 +110,7 @@ class SeoCanonical
         $url = $this->getPageCanonicalURL($page, $querystring);
         if ($url !== null) {
             $result = new \HtmlObject\Element(
-                'meta',
+                'link',
                 null,
                 [
                     'rel' => 'canonical',
