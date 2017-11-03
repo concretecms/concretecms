@@ -206,7 +206,7 @@ abstract class AbstractImporter
     {
         $result = false;
         if ($this->csvSchema === null) {
-            $importResult->getErrors()->add(t('The CSV schema has not beed read.'));
+            $importResult->getErrors()->add(t('The CSV schema has not been read.'));
         } else {
             if ($maxDataRows !== null) {
                 $maxDataRows = (int) $maxDataRows;
