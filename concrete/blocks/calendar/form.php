@@ -64,39 +64,18 @@ $color = \Core::make('helper/form/color');
             }
             $('.tree-view-container').append(treeViewTemplate);
 
-            <?php if (compat_is_version_8()) {
-    ?>
-                $('.tree-view-template').concreteTree({
-                    'treeID': chosenTree,
-                    'chooseNodeInForm': true,
-                    'selectNodesByKey': [<?=intval($filterByTopicID)?>],
-                    'onSelect' : function(nodes) {
-                        if (nodes.length) {
-                            $('input[name=filterByTopicID]').val(nodes[0]);
-                        } else {
-                            $('input[name=filterByTopicID]').val('');
-                        }
+            $('.tree-view-template').concreteTree({
+                'treeID': chosenTree,
+                'chooseNodeInForm': true,
+                'selectNodesByKey': [<?=intval($filterByTopicID)?>],
+                'onSelect' : function(nodes) {
+                    if (nodes.length) {
+                        $('input[name=filterByTopicID]').val(nodes[0]);
+                    } else {
+                        $('input[name=filterByTopicID]').val('');
                     }
-                });
-            }).trigger('change');
-        <?php 
-} else {
-    ?>
-        $('.tree-view-template').ccmtopicstree({
-            'treeID': chosenTree,
-            'chooseNodeInForm': true,
-            'selectNodesByKey': [<?=intval($filterByTopicID)?>],
-            'onSelect' : function(select, node) {
-                if (select) {
-                    $('input[name=filterByTopicID]').val(node.data.key);
-                } else {
-                    $('input[name=filterByTopicID]').val('');
                 }
-            }
-        });
-    }).trigger('change');
-        <?php 
-} ?>
-
+            });
+        }).trigger('change');
     });
 </script>

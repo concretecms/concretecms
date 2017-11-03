@@ -32,7 +32,7 @@
             <tree name="Projects" path="/"/>
         </attributekey>
         <attributekey handle="event_categories" name="Event Categories" package="" searchable="1" indexed="1" type="topics"
-                      category="collection">
+                      category="event">
             <tree name="Event Categories" path="/"/>
         </attributekey>
         <attributekey handle="project_client" name="Client" package="" searchable="1" indexed="1" type="text"

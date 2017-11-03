@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\Controller\SinglePage\Dashboard\System;
+namespace Concrete\Controller\SinglePage\Dashboard\System;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
 

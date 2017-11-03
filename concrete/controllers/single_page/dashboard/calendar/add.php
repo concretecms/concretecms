@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\Controller\SinglePage\Dashboard\Calendar;
+namespace Concrete\Controller\SinglePage\Dashboard\Calendar;
 
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Page\Page;
@@ -31,11 +31,7 @@ class Add extends DashboardCalendarPageController
 
         $attributeKeys = array('' => t('** Choose a Calendar Event Attribute'));
         $types = array('' => t('** Choose a Page Type'));
-        if (compat_is_version_8()) {
-            $list = Type::getList(false, $this->site->getType());
-        } else {
-            $list = Type::getList();
-        }
+        $list = Type::getList(false, $this->site->getType());
         foreach ($list as $pt) {
             $types[$pt->getPageTypeID()] = $pt->getPageTypeDisplayName();
         }

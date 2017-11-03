@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\Controller\SinglePage\Dashboard\Calendar;
+namespace Concrete\Controller\SinglePage\Dashboard\Calendar;
 
 use Concrete\Core\Attribute\Key\Category;
 use Concrete\Core\Attribute\Type;

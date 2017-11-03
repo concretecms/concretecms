@@ -160,19 +160,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
             }
             $('#ccm-block-event-list-topic-tree-wrapper').append($('<div id=ccm-block-event-list-topic-tree>'));
 
-            <?php if (compat_is_version_8()) {
-    ?>
 
             $('#ccm-block-event-list-topic-tree').concreteTree({
                 'treeID': chosenTree,
                 'chooseNodeInForm': true,
-                <?php if ($filterByTopicID) {
-    ?>
+                <?php if ($filterByTopicID) { ?>
                 'selectNodesByKey': [<?php echo intval($filterByTopicID) ?>],
-                <?php
-
-}
-    ?>
+                <?php } ?>
                 'onSelect' : function(nodes) {
                     if (nodes.length) {
                         $('input[name=filterByTopicID]').val(nodes[0]);
@@ -181,33 +175,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
                     }
                 }
             });
-
-            <?php 
-} else {
-    ?>
-
-            $('#ccm-block-event-list-topic-tree').ccmtopicstree({
-                'treeID': chosenTree,
-                'chooseNodeInForm': true,
-                <?php if ($filterByTopicID) {
-    ?>
-                'selectNodesByKey': [<?php echo intval($filterByTopicID) ?>],
-                <?php
-
-}
-    ?>
-                'onSelect' : function(select, node) {
-                    if (select) {
-                        $('input[name=filterByTopicID]').val(node.data.key);
-                    } else {
-                        $('input[name=filterByTopicID]').val('');
-                    }
-                }
-            });
-
-        <?php 
-} ?>
-
         }).trigger('change');
     });
 </script>

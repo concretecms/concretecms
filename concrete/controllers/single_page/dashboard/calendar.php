@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\Controller\SinglePage\Dashboard;
+namespace Concrete\Controller\SinglePage\Dashboard;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Calendar\Utility\Preferences;

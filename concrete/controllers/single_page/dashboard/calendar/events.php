@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\Controller\SinglePage\Dashboard\Calendar;
+namespace Concrete\Controller\SinglePage\Dashboard\Calendar;
 
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\Topic;

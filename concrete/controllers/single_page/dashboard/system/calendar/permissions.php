@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\Controller\SinglePage\Dashboard\System\Calendar;
+namespace Concrete\Controller\SinglePage\Dashboard\System\Calendar;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Loader;

@@ -6,26 +6,8 @@ use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\Category;
 use Concrete\Core\Calendar\Calendar;
 
-class DashboardCalendarPageController extends DashboardPageController
+class DashboardCalendarPageController extends DashboardSitePageController
 {
-    /**
-     * @var Site
-     */
-    protected $site;
-
-    protected function getSite()
-    {
-        return $this->site;
-    }
-
-    public function on_start()
-    {
-        parent::on_start();
-        if (compat_is_version_8()) {
-            $this->site = $this->app->make('site')->getActiveSiteForEditing();
-        }
-    }
-
     public function getCalendars($caID)
     {
         $calendars = array_filter(Calendar::getList($this->site), function ($calendar) {

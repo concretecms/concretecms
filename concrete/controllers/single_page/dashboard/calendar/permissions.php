@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\Controller\SinglePage\Dashboard\Calendar;
+namespace Concrete\Controller\SinglePage\Dashboard\Calendar;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Permission\Access\Access;

@@ -20,12 +20,10 @@ foreach ($calendars as $calendar) {
 
 $chooseCalendar = 'all';
 $calendarAttributeKeys = [];
-if (compat_is_version_8()) {
-    $keys = \Concrete\Core\Attribute\Key\SiteKey::getList();
-    foreach ($keys as $ak) {
-        if ($ak->getAttributeTypeHandle() == 'calendar') {
-            $calendarAttributeKeys[] = $ak;
-        }
+$keys = \Concrete\Core\Attribute\Key\SiteKey::getList();
+foreach ($keys as $ak) {
+    if ($ak->getAttributeTypeHandle() == 'calendar') {
+        $calendarAttributeKeys[] = $ak;
     }
 }
 
