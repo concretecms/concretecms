@@ -14,25 +14,53 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ExpressCategory extends AbstractCategory
 {
+    /**
+     * The Express entity owning this attribute category.
+     *
+     * @var \Concrete\Core\Entity\Express\Entity
+     */
     protected $expressEntity;
 
+    /**
+     * Initialize the instance.
+     *
+     * @param \Concrete\Core\Entity\Express\Entity $entity the Express entity owning this attribute category
+     * @param Application $application
+     * @param EntityManager $entityManager
+     */
     public function __construct(Entity $entity, Application $application, EntityManager $entityManager)
     {
         $this->expressEntity = $entity;
         parent::__construct($application, $entityManager);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexerInterface::getIndexedSearchTable()
+     */
     public function getIndexedSearchTable()
     {
-        return camelcase($this->expressEntity->getHandle())
-            . 'ExpressSearchIndexAttributes';
+        return camelcase($this->expressEntity->getHandle()) . 'ExpressSearchIndexAttributes';
     }
 
+    /**
+     * Get the Express entity owning this attribute category.
+     *
+     * @return \Concrete\Core\Entity\Express\Entity
+     */
     public function getExpressEntity()
     {
         return $this->expressEntity;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Category\AbstractCategory::getSearchIndexer()
+     *
+     * @return \Concrete\Core\Attribute\Category\SearchIndexer\ExpressSearchIndexer
+     */
     public function getSearchIndexer()
     {
         $indexer = $this->application->make('Concrete\Core\Attribute\Category\SearchIndexer\ExpressSearchIndexer');
@@ -40,11 +68,25 @@ class ExpressCategory extends AbstractCategory
         return $indexer;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexerInterface::getIndexedSearchPrimaryKeyValue()
+     *
+     * @param \Concrete\Core\Entity\Express\Entry $mixed
+     */
     public function getIndexedSearchPrimaryKeyValue($mixed)
     {
         return $mixed->getID();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Category\AbstractCategory::getSearchableIndexedList()
+     *
+     * @return \Concrete\Core\Entity\Attribute\Key\ExpressKey[]
+     */
     public function getSearchableIndexedList()
     {
         return $this->getAttributeKeyRepository()->findBy([
@@ -53,6 +95,13 @@ class ExpressCategory extends AbstractCategory
         ]);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Category\AbstractCategory::getSearchableList()
+     *
+     * @return \Concrete\Core\Entity\Attribute\Key\ExpressKey[]
+     */
     public function getSearchableList()
     {
         return $this->getAttributeKeyRepository()->findBy([
@@ -61,6 +110,11 @@ class ExpressCategory extends AbstractCategory
         ]);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexerInterface::getSearchIndexFieldDefinition()
+     */
     public function getSearchIndexFieldDefinition()
     {
         return [
@@ -75,6 +129,13 @@ class ExpressCategory extends AbstractCategory
         ];
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Category\AbstractCategory::deleteKey()
+     *
+     * @param \Concrete\Core\Entity\Attribute\Key\ExpressKey $key
+     */
     public function deleteKey(Key $key)
     {
         $controls = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Control\AttributeKeyControl')
@@ -87,6 +148,13 @@ class ExpressCategory extends AbstractCategory
         parent::deleteKey($key);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Category\CategoryInterface::getSetManager()
+     *
+     * @return \Concrete\Core\Attribute\ExpressSetManager
+     */
     public function getSetManager()
     {
         if (!isset($this->setManager)) {
@@ -96,31 +164,65 @@ class ExpressCategory extends AbstractCategory
         return $this->setManager;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Category\AbstractCategory::createAttributeKey()
+     *
+     * @return \Concrete\Core\Entity\Attribute\Key\ExpressKey
+     */
     public function createAttributeKey()
     {
         return new ExpressKey();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Category\AbstractCategory::getAttributeKeyRepository()
+     */
     public function getAttributeKeyRepository()
     {
         return $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Key\ExpressKey');
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Category\AbstractCategory::getAttributeValueRepository()
+     */
     public function getAttributeValueRepository()
     {
         return $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Value\ExpressValue');
     }
 
+    /**
+     * Does this attribute category support attribute sets?
+     *
+     * @return bool
+     */
     public function allowAttributeSets()
     {
         return false;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Category\AbstractCategory::getList()
+     *
+     * @return \Concrete\Core\Entity\Attribute\Key\ExpressKey[]
+     */
     public function getList()
     {
         return $this->getAttributeKeyRepository()->findBy(['entity' => $this->expressEntity]);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Category\CategoryInterface::getAttributeTypes()
+     */
     public function getAttributeTypes()
     {
         return $this->entityManager
@@ -128,6 +230,13 @@ class ExpressCategory extends AbstractCategory
             ->findAll();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Category\AbstractCategory::import()
+     *
+     * @return \Concrete\Core\Entity\Attribute\Key\ExpressKey
+     */
     public function import(Type $type, \SimpleXMLElement $element, Package $package = null)
     {
         $key = parent::import($type, $element, $package);
@@ -136,6 +245,13 @@ class ExpressCategory extends AbstractCategory
         return $key;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Category\AbstractCategory::addFromRequest()
+     *
+     * @return \Concrete\Core\Entity\Attribute\Key\ExpressKey
+     */
     public function addFromRequest(Type $type, Request $request)
     {
         $key = parent::addFromRequest($type, $request);
@@ -147,6 +263,15 @@ class ExpressCategory extends AbstractCategory
         return $key;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Category\CategoryInterface::getAttributeValues()
+     *
+     * @param \Concrete\Core\Entity\Express\Entry $entry
+     *
+     * @return \Concrete\Core\Entity\Attribute\Value\ExpressValue[]
+     */
     public function getAttributeValues($entry)
     {
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Value\ExpressValue');
@@ -157,6 +282,16 @@ class ExpressCategory extends AbstractCategory
         return $values;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Category\CategoryInterface::getAttributeValue()
+     *
+     * @param \Concrete\Core\Entity\Attribute\Key\ExpressKey $key
+     * @param \Concrete\Core\Entity\Express\Entry $entry
+     *
+     * @return \Concrete\Core\Entity\Attribute\Value\ExpressValue|null
+     */
     public function getAttributeValue(Key $key, $entry)
     {
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Value\ExpressValue');
