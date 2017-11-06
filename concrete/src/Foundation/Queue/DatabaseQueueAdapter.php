@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Foundation\Queue;
 
 use Exception;
@@ -41,28 +42,6 @@ class DatabaseQueueAdapter extends \ZendQueue\Adapter\AbstractAdapter
         }
 
         return $result;
-    }
-
-    /**
-     * Get the identifier of a queue given its name.
-     *
-     * @param string $name The name of a queue
-     *
-     * @throws RuntimeException Throws a RuntimeException if the queue does not exist
-     *
-     * @return int
-     */
-    protected function getQueueId($name)
-    {
-        $r = $this->db->fetchColumn('select queue_id from Queues where queue_name = ? limit 1', [$name]);
-
-        if ($r === false) {
-            throw new RuntimeException(t('Queue does not exist: %s', $name));
-        }
-
-        $count = (int) $r;
-
-        return $count;
     }
 
     /**
@@ -288,5 +267,27 @@ class DatabaseQueueAdapter extends \ZendQueue\Adapter\AbstractAdapter
             'count' => true,
             'isExists' => true,
         ];
+    }
+
+    /**
+     * Get the identifier of a queue given its name.
+     *
+     * @param string $name The name of a queue
+     *
+     * @throws RuntimeException Throws a RuntimeException if the queue does not exist
+     *
+     * @return int
+     */
+    protected function getQueueId($name)
+    {
+        $r = $this->db->fetchColumn('select queue_id from Queues where queue_name = ? limit 1', [$name]);
+
+        if ($r === false) {
+            throw new RuntimeException(t('Queue does not exist: %s', $name));
+        }
+
+        $count = (int) $r;
+
+        return $count;
     }
 }
