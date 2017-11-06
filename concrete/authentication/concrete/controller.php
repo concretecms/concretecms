@@ -367,7 +367,11 @@ class Controller extends AuthenticationTypeController
         $app = Application::getFacadeApplication();
         $db = $app['database']->connection();
 
-        return $db->GetOne('select uIsPasswordReset from Users where uName = ?', [$this->post('uName')]);
+        if (Config::get('concrete.user.registration.email_registration')) {
+            return $db->GetOne('select uIsPasswordReset from Users where uEmail = ?', [$this->post('uName')]);
+        } else {
+            return $db->GetOne('select uIsPasswordReset from Users where uName = ?', [$this->post('uName')]);
+        }
     }
 
     public function v($hash = '')

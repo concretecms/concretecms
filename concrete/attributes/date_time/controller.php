@@ -1,16 +1,19 @@
 <?php
+
 namespace Concrete\Attribute\DateTime;
 
+use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
+use Concrete\Core\Attribute\SimpleTextExportableAttributeInterface;
 use Concrete\Core\Entity\Attribute\Key\Settings\DateTimeSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\DateTimeValue;
-use Concrete\Core\Attribute\Controller as AttributeTypeController;
+use Concrete\Core\Error\ErrorList\ErrorList;
 use DateTime;
 use Exception;
 
-class Controller extends AttributeTypeController
+class Controller extends AttributeTypeController implements SimpleTextExportableAttributeInterface
 {
-    public $helpers = ['form', 'date','form/date_time'];
+    public $helpers = ['form', 'date', 'form/date_time'];
 
     protected $searchIndexFieldDefinition = ['type' => 'datetime', 'options' => ['notnull' => false]];
 
@@ -79,10 +82,9 @@ class Controller extends AttributeTypeController
             $datetime = new DateTime();
         }
         $this->set('value', $datetime);
-        $this->set('displayMode',$this->akDateDisplayMode );
+        $this->set('displayMode', $this->akDateDisplayMode);
         $this->set('textCustomFormat', $this->akTextCustomFormat);
         $this->set('timeResolution', $this->akTimeResolution);
-
     }
 
     public function exportKey($akey)
@@ -166,7 +168,6 @@ class Controller extends AttributeTypeController
                 if ($datetime) {
                     $value = $datetime->format('Y-m-d H:i:s');
                 }
-
             }
         }
         $akv->addChild('value', $value);
@@ -234,52 +235,9 @@ class Controller extends AttributeTypeController
         return $this->createAttributeValue($datetime);
     }
 
-    protected function load()
-    {
-        $ak = $this->getAttributeKey();
-        if (!is_object($ak)) {
-            return false;
-        }
-
-        $type = $ak->getAttributeKeySettings();
-        /*
-         * @var $type DateTimeType
-         */
-
-        $this->akUseNowIfEmpty = $type->getUseNowIfEmpty();
-        $this->set('akUseNowIfEmpty', $this->akUseNowIfEmpty);
-        $this->akDateDisplayMode = (string) $type->getMode();
-        $this->set('akDateDisplayMode', $this->akDateDisplayMode);
-        $this->akTextCustomFormat = $type->getTextCustomFormat();
-        $this->set('akTextCustomFormat', $this->akTextCustomFormat);
-        $this->akTimeResolution = $type->getTimeResolution();
-        $this->set('akTimeResolution', $this->akTimeResolution);
-    }
-
     public function getAttributeKeySettingsClass()
     {
         return DateTimeSettings::class;
-    }
-
-    /**
-     * Retrieve the date/time value.
-     *
-     * @return DateTime|null
-     */
-    protected function getDateTime()
-    {
-        $result = null;
-        if ($this->attributeValue) {
-            $valueObject = $this->getAttributeValue();
-            if ($valueObject !== null) {
-                $dateTime = $valueObject->getValue();
-                if ($dateTime instanceof DateTime) {
-                    $result = $dateTime;
-                }
-            }
-        }
-
-        return $result;
     }
 
     /**
@@ -319,6 +277,125 @@ class Controller extends AttributeTypeController
                 default:
                     $result = $dh->formatDateTime($datetime);
                     break;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::getAttributeValueTextRepresentation()
+     */
+    public function getAttributeValueTextRepresentation()
+    {
+        $dateTime = $this->getDateTime();
+        if ($dateTime === null) {
+            $result = '';
+        } else {
+            if (!isset($this->akDateDisplayMode)) {
+                $this->load();
+            }
+            switch ($this->akDateDisplayMode) {
+                case 'date':
+                case 'date_text':
+                    $result = $dateTime->format('Y-m-d');
+                    break;
+                case 'date_time':
+                case 'text':
+                default:
+                    // Let's convert the date/time from the system timezone to the website default timezone
+                    $toTimezone = $this->app->make('date')->getTimezone('app');
+                    $dateTime = clone $dateTime;
+                    $dateTime->setTimezone($toTimezone);
+                    $result = $dateTime->format('Y-m-d H:i:s');
+                    break;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::updateAttributeValueFromTextRepresentation()
+     */
+    public function updateAttributeValueFromTextRepresentation($textRepresentation, ErrorList $warnings)
+    {
+        $value = $this->getAttributeValueObject();
+        if ($textRepresentation === '') {
+            if ($value !== null) {
+                $value->setValue(null);
+            }
+        } else {
+            if (!isset($this->akDateDisplayMode)) {
+                $this->load();
+            }
+            switch ($this->akDateDisplayMode) {
+                case 'date':
+                case 'date_text':
+                    $dateTime = @DateTime::createFromFormat('Y-m-d', $textRepresentation);
+                    break;
+                case 'date_time':
+                case 'text':
+                default:
+                    $dateTime = @DateTime::createFromFormat('Y-m-d H:i:s', $textRepresentation);
+                    if ($dateTime) {
+                        $toTimezone = $this->app->make('date')->getTimezone('system');
+                        $dateTime->setTimezone($toTimezone);
+                    }
+                    break;
+            }
+            if (!$dateTime) {
+                $warnings->add(t('"%1$s" is not a valid date value for the attribute with handle %2$s', $textRepresentation, $this->attributeKey->getAttributeKeyHandle()));
+            } else {
+                if ($value === null) {
+                    $value = $this->createAttributeValue($dateTime);
+                } else {
+                    $value->setValue($dateTime);
+                }
+            }
+        }
+
+        return $value;
+    }
+
+    protected function load()
+    {
+        $ak = $this->getAttributeKey();
+        if (!is_object($ak)) {
+            return false;
+        }
+
+        $type = $ak->getAttributeKeySettings();
+        /* @var DateTimeType $type */
+        $this->akUseNowIfEmpty = $type->getUseNowIfEmpty();
+        $this->set('akUseNowIfEmpty', $this->akUseNowIfEmpty);
+        $this->akDateDisplayMode = (string) $type->getMode();
+        $this->set('akDateDisplayMode', $this->akDateDisplayMode);
+        $this->akTextCustomFormat = $type->getTextCustomFormat();
+        $this->set('akTextCustomFormat', $this->akTextCustomFormat);
+        $this->akTimeResolution = $type->getTimeResolution();
+        $this->set('akTimeResolution', $this->akTimeResolution);
+    }
+
+    /**
+     * Retrieve the date/time value.
+     *
+     * @return DateTime|null
+     */
+    protected function getDateTime()
+    {
+        $result = null;
+        if ($this->attributeValue) {
+            $valueObject = $this->getAttributeValue();
+            if ($valueObject !== null) {
+                $dateTime = $valueObject->getValue();
+                if ($dateTime instanceof DateTime) {
+                    $result = $dateTime;
+                }
             }
         }
 
