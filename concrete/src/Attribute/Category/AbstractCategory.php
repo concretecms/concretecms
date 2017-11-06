@@ -12,16 +12,47 @@ use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Type as AttributeType;
 use Concrete\Core\Entity\Package;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Abstract class to be used by attribute category classes.
+ */
 abstract class AbstractCategory implements CategoryInterface, StandardSearchIndexerInterface
 {
+    /**
+     * The EntityManager instance.
+     *
+     * @var EntityManager
+     */
     protected $entityManager;
+
+    /**
+     * The category entity (if set).
+     *
+     * @var \Concrete\Core\Entity\Attribute\Category|null
+     */
     protected $entity;
+
+    /**
+     * The Application instance.
+     *
+     * @var Application
+     */
     protected $application;
+
+    /**
+     * The instance of the SetManagerInterface (if set).
+     *
+     * @var \Concrete\Core\Attribute\SetManagerInterface|null
+     */
     protected $setManager;
 
+    /**
+     * Initialize the instance.
+     *
+     * @param Application $application the Application instance
+     * @param EntityManager $entityManager the EntityManager instance
+     */
     public function __construct(Application $application, EntityManager $entityManager)
     {
         $this->application = $application;
@@ -29,14 +60,31 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
     }
 
     /**
-     * @return EntityRepository
+     * Get the repository for the attribute keys.
+     *
+     * @return \Doctrine\ORM\EntityRepository
      */
     abstract public function getAttributeKeyRepository();
-    
+
+    /**
+     * Get the repository for the attribute values.
+     *
+     * @return \Doctrine\ORM\EntityRepository
+     */
     abstract public function getAttributeValueRepository();
-    
+
+    /**
+     * Create a new attribute key.
+     *
+     * @return \Concrete\Core\Entity\Attribute\Key\Key
+     */
     abstract public function createAttributeKey();
-    
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Category\CategoryInterface::getSearchIndexer()
+     */
     public function getSearchIndexer()
     {
         $indexer = $this->application->make('Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexer');
@@ -44,16 +92,13 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
         return $indexer;
     }
 
-    public function getByID($akID)
-    {
-        return $this->getAttributeKeyByID($akID);
-    }
-
-    public function getByHandle($akHandle)
-    {
-        return $this->getAttributeKeyByHandle($akHandle);
-    }
-
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Category\CategoryInterface::getList()
+     *
+     * @return \Concrete\Core\Entity\Attribute\Key\Key[]
+     */
     public function getList()
     {
         return $this->getAttributeKeyRepository()->findBy([
@@ -61,6 +106,11 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
         ]);
     }
 
+    /**
+     * Get the list of attribute keys that are searchable.
+     *
+     * @return \Concrete\Core\Entity\Attribute\Key\Key[]
+     */
     public function getSearchableList()
     {
         return $this->getAttributeKeyRepository()->findBy([
@@ -68,6 +118,11 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
         ]);
     }
 
+    /**
+     * Get the list of attribute keys that are searchable and indexed.
+     *
+     * @return \Concrete\Core\Entity\Attribute\Key\Key[]
+     */
     public function getSearchableIndexedList()
     {
         return $this->getAttributeKeyRepository()->findBy([
@@ -75,6 +130,13 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
         ]);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Category\CategoryInterface::getAttributeKeyByHandle()
+     *
+     * @return \Concrete\Core\Entity\Attribute\Key\Key|null
+     */
     public function getAttributeKeyByHandle($handle)
     {
         $cache = $this->application->make('cache/request');
@@ -93,6 +155,13 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
         return $key;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Category\CategoryInterface::getAttributeKeyByID()
+     *
+     * @return \Concrete\Core\Entity\Attribute\Key\Key|null
+     */
     public function getAttributeKeyByID($akID)
     {
         $cache = $this->application->make('cache/request');
@@ -111,6 +180,11 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
         return $key;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Category\CategoryInterface::delete()
+     */
     public function delete()
     {
         $keys = $this->getList();
@@ -120,6 +194,16 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
         $this->entityManager->flush();
     }
 
+    /**
+     * Add a new attribute key.
+     *
+     * @param \Concrete\Core\Entity\Attribute\Type|string $type the attribute type (or its handle)
+     * @param \Concrete\Core\Entity\Attribute\Key\Key|array $key an empty attribute key, or an array with keys 'akHandle' (the attribute key handle), 'akName' (the attribute key name) and optionally 'asID' (the ID of the attribute set)
+     * @param \Concrete\Core\Entity\Attribute\Key\Settings\Settings|null $settings the attribute key settings (if not specified, a new settings instance will be created)
+     * @param \Concrete\Core\Entity\Package|null $pkg the entity of the package that's creating the attribute key
+     *
+     * @return \Concrete\Core\Entity\Attribute\Key\Key
+     */
     public function add($type, $key, $settings = null, $pkg = null)
     {
         if (is_string($type)) {
@@ -186,6 +270,13 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
         return $key;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Category\CategoryInterface::addFromRequest()
+     *
+     * @return \Concrete\Core\Entity\Attribute\Key\Key
+     */
     public function addFromRequest(AttributeType $type, Request $request)
     {
         $key = $this->createAttributeKey();
@@ -206,6 +297,15 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
         return $this->add($type, $key, $settings);
     }
 
+    /**
+     * Import a new attribute key from a SimpleXMLElement instance.
+     *
+     * @param AttributeType $type the type of the attribute key to be created
+     * @param \SimpleXMLElement $element the SimpleXMLElement instance containing the data of the attribute key to be created
+     * @param Package|null $package the entity of the package that's creating the attribute key (if applicable)
+     *
+     * @return \Concrete\Core\Entity\Attribute\Key\Key
+     */
     public function import(AttributeType $type, \SimpleXMLElement $element, Package $package = null)
     {
         $key = $this->createAttributeKey();
@@ -221,7 +321,11 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
         return $this->add($type, $key, $settings, $package);
     }
 
-    // Update
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Category\CategoryInterface::updateFromRequest()
+     */
     public function updateFromRequest(Key $key, Request $request)
     {
         $previousHandle = $key->getAttributeKeyHandle();
@@ -260,6 +364,8 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
     }
 
     /**
+     * Get the EntityManager instance.
+     *
      * @param EntityManager $entityManager
      */
     public function setEntityManager($entityManager)
@@ -267,6 +373,11 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
         $this->entityManager = $entityManager;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Category\CategoryInterface::deleteKey()
+     */
     public function deleteKey(Key $key)
     {
         // Delete any attribute values found attached to this key
@@ -276,6 +387,11 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
         }
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Category\CategoryInterface::deleteValue()
+     */
     public function deleteValue(AttributeValueInterface $attributeValue)
     {
         // Handle legacy attributes with these three lines.
@@ -300,13 +416,47 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
         $this->entityManager->flush();
     }
 
+    /**
+     * Get the object to be used to update attribute keys with the data contained in a Symfony\Component\HttpFoundation\Request instance.
+     *
+     * @return \Concrete\Core\Attribute\Key\RequestLoader\RequestLoaderInterface
+     */
     public function getRequestLoader()
     {
         return new StandardRequestLoader();
     }
 
+    /**
+     * Get the object to be used to update attribute keys with the data contained in a SimpleXMLElement instance.
+     *
+     * @return \Concrete\Core\Attribute\Key\ImportLoader\ImportLoaderInterface
+     */
     public function getImportLoader()
     {
         return new StandardImportLoader();
+    }
+
+    /**
+     * @param int $akID
+     *
+     * @return \Concrete\Core\Entity\Attribute\Key\Key|null
+     *
+     * @deprecated use the getAttributeKeyByID method
+     */
+    public function getByID($akID)
+    {
+        return $this->getAttributeKeyByID($akID);
+    }
+
+    /**
+     * @param string $akHandle
+     *
+     * @return \Concrete\Core\Entity\Attribute\Key\Key|null
+     *
+     * @deprecated use the getAttributeKeyByHandle method
+     */
+    public function getByHandle($akHandle)
+    {
+        return $this->getAttributeKeyByHandle($akHandle);
     }
 }
