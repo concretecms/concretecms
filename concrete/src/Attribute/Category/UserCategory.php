@@ -1,8 +1,7 @@
 <?php
+
 namespace Concrete\Core\Attribute\Category;
 
-use Concrete\Core\Attribute\Category\AttributeType;
-use Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexerInterface;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Key\UserKey;
 use Concrete\Core\Entity\Attribute\Type;
@@ -11,7 +10,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class UserCategory extends AbstractStandardCategory
 {
-
     public function createAttributeKey()
     {
         return new UserKey();
@@ -29,16 +27,16 @@ class UserCategory extends AbstractStandardCategory
 
     public function getSearchIndexFieldDefinition()
     {
-        return array(
-            'columns' => array(
-                array(
+        return [
+            'columns' => [
+                [
                     'name' => 'uID',
                     'type' => 'integer',
-                    'options' => array('unsigned' => true, 'default' => 0, 'notnull' => true),
-                ),
-            ),
-            'primary' => array('uID'),
-        );
+                    'options' => ['unsigned' => true, 'default' => 0, 'notnull' => true],
+                ],
+            ],
+            'primary' => ['uID'],
+        ];
     }
 
     public function getAttributeKeyRepository()
@@ -69,24 +67,6 @@ class UserCategory extends AbstractStandardCategory
     public function getEditableInProfileList()
     {
         return $this->getAttributeKeyRepository()->getEditableInProfileList();
-    }
-
-    /**
-     * @param UserKey $key
-     * @param Request $request
-     *
-     * @return Key
-     */
-    protected function saveFromRequest(Key $key, Request $request)
-    {
-        $key->setAttributeKeyDisplayedOnProfile((string) $request->request->get('uakProfileDisplay') == 1);
-        $key->setAttributeKeyEditableOnProfile((string) $request->request->get('uakProfileEdit') == 1);
-        $key->setAttributeKeyRequiredOnProfile((string) $request->request->get('uakProfileEditRequired') == 1);
-        $key->setAttributeKeyEditableOnRegister((string) $request->request->get('uakRegisterEdit') == 1);
-        $key->setAttributeKeyRequiredOnRegister((string) $request->request->get('uakRegisterEditRequired') == 1);
-        $key->setAttributeKeyDisplayedOnMemberList((string) $request->request->get('uakMemberListDisplay') == 1);
-
-        return $key;
     }
 
     public function addFromRequest(Type $type, Request $request)
@@ -122,9 +102,9 @@ class UserCategory extends AbstractStandardCategory
     public function getAttributeValues($user)
     {
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Value\UserValue');
-        $values = $r->findBy(array(
+        $values = $r->findBy([
             'user' => $user,
-        ));
+        ]);
 
         return $values;
     }
@@ -132,13 +112,29 @@ class UserCategory extends AbstractStandardCategory
     public function getAttributeValue(Key $key, $user)
     {
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Value\UserValue');
-        $value = $r->findOneBy(array(
+        $value = $r->findOneBy([
             'user' => $user,
             'attribute_key' => $key,
-        ));
+        ]);
 
         return $value;
     }
 
+    /**
+     * @param UserKey $key
+     * @param Request $request
+     *
+     * @return Key
+     */
+    protected function saveFromRequest(Key $key, Request $request)
+    {
+        $key->setAttributeKeyDisplayedOnProfile((string) $request->request->get('uakProfileDisplay') == 1);
+        $key->setAttributeKeyEditableOnProfile((string) $request->request->get('uakProfileEdit') == 1);
+        $key->setAttributeKeyRequiredOnProfile((string) $request->request->get('uakProfileEditRequired') == 1);
+        $key->setAttributeKeyEditableOnRegister((string) $request->request->get('uakRegisterEdit') == 1);
+        $key->setAttributeKeyRequiredOnRegister((string) $request->request->get('uakRegisterEditRequired') == 1);
+        $key->setAttributeKeyDisplayedOnMemberList((string) $request->request->get('uakMemberListDisplay') == 1);
 
+        return $key;
+    }
 }
