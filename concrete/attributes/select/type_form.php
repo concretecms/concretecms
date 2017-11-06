@@ -79,6 +79,15 @@ function getAttributeOptionHTML($v)
 </div>
 
 <div class="form-group">
+    <label><?=t("Hide None Option")?></label>
+    <div class="checkbox">
+        <label>
+            <?=$form->checkbox('akHideNoneOption', 1, $akHideNoneOption)?> <span><?=t('Hide the none option from the list.')?></span>
+        </label>
+    </div>
+</div>
+
+<div class="form-group">
 <label for="akSelectOptionDisplayOrder"><?=t("Option Order")?></label>
 	<?php
     $displayOrderOptions = array(

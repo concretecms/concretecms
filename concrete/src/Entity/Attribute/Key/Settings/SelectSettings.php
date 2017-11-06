@@ -51,6 +51,11 @@ class SelectSettings extends Settings
     protected $akSelectAllowOtherValues = false;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $akHideNoneOption = false;
+
+    /**
      * @ORM\Column(type="string")
      */
     protected $akSelectOptionDisplayOrder = 'display_asc';
@@ -82,6 +87,22 @@ class SelectSettings extends Settings
     public function getAllowOtherValues()
     {
         return $this->akSelectAllowOtherValues;
+    }
+
+    /**
+     * @param bool $allowOtherValues
+     */
+    public function setHideNoneOption($akHideNoneOption)
+    {
+        $this->akHideNoneOption = $akHideNoneOption;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHideNoneOption()
+    {
+        return $this->akHideNoneOption;
     }
 
     /**
