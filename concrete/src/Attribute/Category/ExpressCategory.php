@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Attribute\Category;
 
 use Concrete\Core\Application\Application;
@@ -14,6 +15,12 @@ use Symfony\Component\HttpFoundation\Request;
 class ExpressCategory extends AbstractCategory
 {
     protected $expressEntity;
+
+    public function __construct(Entity $entity, Application $application, EntityManager $entityManager)
+    {
+        $this->expressEntity = $entity;
+        parent::__construct($application, $entityManager);
+    }
 
     public function getIndexedSearchTable()
     {
@@ -42,7 +49,7 @@ class ExpressCategory extends AbstractCategory
     {
         return $this->getAttributeKeyRepository()->findBy([
             'entity' => $this->expressEntity,
-            'akIsSearchableIndexed' => true
+            'akIsSearchableIndexed' => true,
         ]);
     }
 
@@ -50,7 +57,7 @@ class ExpressCategory extends AbstractCategory
     {
         return $this->getAttributeKeyRepository()->findBy([
             'entity' => $this->expressEntity,
-            'akIsSearchable' => true
+            'akIsSearchable' => true,
         ]);
     }
 
@@ -72,7 +79,7 @@ class ExpressCategory extends AbstractCategory
     {
         $controls = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Control\AttributeKeyControl')
             ->findBy(['attribute_key' => $key]);
-        foreach($controls as $control) {
+        foreach ($controls as $control) {
             $this->entityManager->remove($control);
         }
         $this->entityManager->flush();
@@ -87,12 +94,6 @@ class ExpressCategory extends AbstractCategory
         }
 
         return $this->setManager;
-    }
-
-    public function __construct(Entity $entity, Application $application, EntityManager $entityManager)
-    {
-        $this->expressEntity = $entity;
-        parent::__construct($application, $entityManager);
     }
 
     public function createAttributeKey()
