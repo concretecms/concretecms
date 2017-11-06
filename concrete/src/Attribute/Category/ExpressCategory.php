@@ -126,6 +126,15 @@ class ExpressCategory extends AbstractCategory
                 ],
             ],
             'primary' => ['exEntryID'],
+            'foreignKeys' => [
+                [
+                    'foreignTable' => 'ExpressEntityEntries',
+                    'localColumns' => ['exEntryID'],
+                    'foreignColumns' => ['exEntryID'],
+                    'onUpdate' => 'CASCADE',
+                    'onDelete' => 'CASCADE',
+                ]
+            ],
         ];
     }
 

@@ -59,6 +59,15 @@ class FileCategory extends AbstractStandardCategory
                 ],
             ],
             'primary' => ['fID'],
+            'foreignKeys' => [
+                [
+                    'foreignTable' => 'Files',
+                    'localColumns' => ['fID'],
+                    'foreignColumns' => ['fID'],
+                    'onUpdate' => 'CASCADE',
+                    'onDelete' => 'CASCADE',
+                ]
+            ],
         ];
     }
 

@@ -59,6 +59,15 @@ class PageCategory extends AbstractStandardCategory
                 ],
             ],
             'primary' => ['cID'],
+            'foreignKeys' => [
+                [
+                    'foreignTable' => 'Collections',
+                    'localColumns' => ['cID'],
+                    'foreignColumns' => ['cID'],
+                    'onUpdate' => 'CASCADE',
+                    'onDelete' => 'CASCADE',
+                ]
+            ],
         ];
     }
 

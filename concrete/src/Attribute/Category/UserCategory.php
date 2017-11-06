@@ -62,6 +62,15 @@ class UserCategory extends AbstractStandardCategory
                 ],
             ],
             'primary' => ['uID'],
+            'foreignKeys' => [
+                [
+                    'foreignTable' => 'Users',
+                    'localColumns' => ['uID'],
+                    'foreignColumns' => ['uID'],
+                    'onUpdate' => 'CASCADE',
+                    'onDelete' => 'CASCADE',
+                ]
+            ],
         ];
     }
 

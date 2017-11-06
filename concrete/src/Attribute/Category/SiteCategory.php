@@ -59,6 +59,15 @@ class SiteCategory extends AbstractStandardCategory
                 ],
             ],
             'primary' => ['siteID'],
+            'foreignKeys' => [
+                [
+                    'foreignTable' => 'Sites',
+                    'localColumns' => ['siteID'],
+                    'foreignColumns' => ['siteID'],
+                    'onUpdate' => 'CASCADE',
+                    'onDelete' => 'CASCADE',
+                ]
+            ],
         ];
     }
 
