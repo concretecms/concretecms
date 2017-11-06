@@ -8,6 +8,7 @@ use Concrete\Core\Error\ErrorList\Field\Field;
 use Concrete\Core\Error\ErrorList\Field\FieldInterface;
 use Concrete\Core\Error\ErrorList\Formatter\JsonFormatter;
 use Concrete\Core\Error\ErrorList\Formatter\StandardFormatter;
+use Concrete\Core\Error\ErrorList\Formatter\TextFormatter;
 
 class ErrorList implements \ArrayAccess, \JsonSerializable
 {
@@ -170,6 +171,13 @@ class ErrorList implements \ArrayAccess, \JsonSerializable
     {
         $formatter = new JsonFormatter($this);
         return $formatter->asArray();
+    }
+
+    public function toText()
+    {
+        $formatter = new TextFormatter($this);
+
+        return $formatter->getText();
     }
 
     public function containsField($field)
