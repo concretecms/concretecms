@@ -6,6 +6,9 @@ use Concrete\Core\Database\DatabaseStructureManager;
 use Doctrine\DBAL\Migrations\AbstractMigration as DoctrineAbstractMigration;
 use Doctrine\ORM\Tools\SchemaTool;
 
+/**
+ * @property \Concrete\Core\Database\Connection\Connection $connection
+ */
 abstract class AbstractMigration extends DoctrineAbstractMigration
 {
     protected function output($message)
