@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Attribute\Category;
 
 use Concrete\Core\Attribute\AttributeValueInterface;
