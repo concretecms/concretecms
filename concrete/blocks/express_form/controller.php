@@ -434,6 +434,10 @@ class Controller extends BlockController implements NotificationProviderInterfac
             $entity->setName($name);
             $entityManager->persist($entity);
             $entityManager->flush();
+
+            $nodeId = $entity->getEntityResultsNodeId();
+            $node = Node::getByID($nodeId);
+            $node->setTreeNodeName($name);
         }
 
         $attributeKeyCategory = $entity->getAttributeKeyCategory();
