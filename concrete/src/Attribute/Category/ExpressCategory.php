@@ -133,7 +133,7 @@ class ExpressCategory extends AbstractCategory
                     'foreignColumns' => ['exEntryID'],
                     'onUpdate' => 'CASCADE',
                     'onDelete' => 'CASCADE',
-                ]
+                ],
             ],
         ];
     }

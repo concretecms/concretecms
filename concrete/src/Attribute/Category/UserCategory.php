@@ -69,7 +69,7 @@ class UserCategory extends AbstractStandardCategory
                     'foreignColumns' => ['uID'],
                     'onUpdate' => 'CASCADE',
                     'onDelete' => 'CASCADE',
-                ]
+                ],
             ],
         ];
     }

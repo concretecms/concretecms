@@ -66,7 +66,7 @@ class PageCategory extends AbstractStandardCategory
                     'foreignColumns' => ['cID'],
                     'onUpdate' => 'CASCADE',
                     'onDelete' => 'CASCADE',
-                ]
+                ],
             ],
         ];
     }

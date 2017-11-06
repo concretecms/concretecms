@@ -66,7 +66,7 @@ class FileCategory extends AbstractStandardCategory
                     'foreignColumns' => ['fID'],
                     'onUpdate' => 'CASCADE',
                     'onDelete' => 'CASCADE',
-                ]
+                ],
             ],
         ];
     }

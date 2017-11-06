@@ -66,7 +66,7 @@ class SiteCategory extends AbstractStandardCategory
                     'foreignColumns' => ['siteID'],
                     'onUpdate' => 'CASCADE',
                     'onDelete' => 'CASCADE',
-                ]
+                ],
             ],
         ];
     }
