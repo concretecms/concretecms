@@ -643,11 +643,11 @@ return [
         '/ccm/calendar/dialogs/event/delete_occurrence/submit' => ['\Concrete\Controller\Dialog\Event\DeleteOccurrence::submit'],
         '/ccm/calendar/dialogs/event/versions' => ['\Concrete\Controller\Dialog\Event\Versions::view'],
         '/ccm/calendar/dialogs/event/version/view' => ['\Concrete\Controller\Dialog\Event\ViewVersion::view'],
-        '/ccm/calendar/event/version/delete' => ['\Concrete\Controller\EventVersion::delete'],
-        '/ccm/calendar/event/version/approve' => ['\Concrete\Controller\EventVersion::approve'],
-        '/ccm/calendar/event/version/unapprove_all' => ['\Concrete\Controller\Event::unapprove'],
-        '/ccm/calendar/event/duplicate' => ['\Concrete\Controller\Event::duplicate'],
-        '/view_event/{bID}/{occurrence_id}' => [
+        '/ccm/calendar/event/version/delete' => ['\Concrete\Controller\Event\EventVersion::delete'],
+        '/ccm/calendar/event/version/approve' => ['\Concrete\Controller\Event\EventVersion::approve'],
+        '/ccm/calendar/event/version/unapprove_all' => ['\Concrete\Controller\Event\Event::unapprove'],
+        '/ccm/calendar/event/duplicate' => ['\Concrete\Controller\Event\Event::duplicate'],
+        '/ccm/calendar/view_event/{bID}/{occurrence_id}' => [
             '\Concrete\Controller\Dialog\Frontend\Event::view',
             'view_event_occurrence',
             ['occurrence_id' => '[0-9]+'],
@@ -660,7 +660,7 @@ return [
         '/ccm/calendar/dialogs/event/occurrence' => ['\Concrete\Controller\Dialog\EventOccurrence::view'],
         '/ccm/calendar/dialogs/choose_event' => ['\Concrete\Controller\Dialog\ChooseEvent::view'],
         '/ccm/calendar/dialogs/choose_event/get_events' => ['\Concrete\Controller\Dialog\ChooseEvent::getEvents'],
-        '/ccm/calendar/event/get_json' => ['\Concrete\Controller\Event::getJSON'],
+        '/ccm/calendar/event/get_json' => ['\Concrete\Controller\Event\Event::getJSON'],
         '/ccm/calendar/dialogs/permissions/{pkCategoryHandle}' => ['\Concrete\Controller\Dialog\Calendar\Permissions::view'],
 
         /* Permissions Tools Hack */
@@ -1359,7 +1359,7 @@ return [
                 ['javascript', 'core/events'],
                 ['javascript', 'underscore'],
                 ['javascript', 'backbone'],
-                ['javascript', 'calendar-event-selector'],
+                ['javascript', 'core/calendar/event-selector'],
                 ['css', 'core/app'],
                 ['css', 'jquery/ui'],
             ],

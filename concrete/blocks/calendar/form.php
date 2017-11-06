@@ -6,7 +6,7 @@ $color = \Core::make('helper/form/color');
 <fieldset>
     <legend><?=t('Data Source')?></legend>
 
-    <?php View::element('calendar/block/data_source', ['caID' => $caID, 'calendarAttributeKeyHandle' => $calendarAttributeKeyHandle], 'calendar') ?>
+    <?php View::element('calendar/block/data_source', ['caID' => $caID, 'calendarAttributeKeyHandle' => $calendarAttributeKeyHandle]) ?>
 
 </fieldset>
 

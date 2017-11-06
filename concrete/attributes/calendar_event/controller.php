@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\C\Attribute\CalendarEvent;
+namespace Concrete\Attribute\CalendarEvent;
 
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Calendar\Event\Formatter\LinkFormatterInterface;

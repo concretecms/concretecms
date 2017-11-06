@@ -14,7 +14,7 @@
         <hr/>
 
         <?php
-        $attributes = \Concrete\Package\Calendar\Attribute\Key\EventKey::getList();
+        $attributes = \Concrete\Core\Attribute\Key\EventKey::getList();
         foreach ($attributes as $ak) {
             $av = $event->getAttributeValueObject($ak);
             if (is_object($av)) { ?>

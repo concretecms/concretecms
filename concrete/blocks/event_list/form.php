@@ -5,7 +5,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <fieldset>
     <legend><?=t('Data Source')?></legend>
 
-    <?php View::element('calendar/block/data_source', ['multiple' => true, 'caID' => $caID, 'calendarAttributeKeyHandle' => $calendarAttributeKeyHandle], 'calendar') ?>
+    <?php View::element('calendar/block/data_source', ['multiple' => true, 'caID' => $caID, 'calendarAttributeKeyHandle' => $calendarAttributeKeyHandle]) ?>
 
 </fieldset>
 

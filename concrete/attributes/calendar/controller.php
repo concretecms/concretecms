@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\Calendar\Attribute\Calendar;
+namespace Concrete\Attribute\Calendar;
 
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;

@@ -6,7 +6,7 @@
 /**
  * @var $event \PortlandLabs\Calendar\Entity\CalendarEvent
  */
-$attributes = \Concrete\Package\Calendar\Attribute\Key\EventKey::getList();
+$attributes = \Concrete\Core\Attribute\Key\EventKey::getList();
 ?>
 
     <?php if (!$version->isApproved()) { ?>

@@ -7,7 +7,7 @@
  * @var $event \PortlandLabs\Calendar\Entity\CalendarEvent
  */
 $event = $occurrence->getEvent();
-$attributes = \Concrete\Package\Calendar\Attribute\Key\EventKey::getList();
+$attributes = \Concrete\Core\Attribute\Key\EventKey::getList();
 ?>
 
     <?php if (!$occurrence->getVersion()->isApproved()) { ?>
