@@ -28,17 +28,19 @@ class Version20171106000000 extends AbstractMigration
     /**
      * @param \Doctrine\DBAL\Schema\Schema $schema
      * @param string $indexTableName
-     * @param string $indexColumn
+     * @param string $indexColumnName
      * @param string $foreignTableName
      * @param string $foreignColumn
      */
-    private function fixAttributeIndexTable(Schema $schema, $indexTableName, $indexColumn, $foreignTableName, $foreignColumn)
+    private function fixAttributeIndexTable(Schema $schema, $indexTableName, $indexColumnName, $foreignTableName, $foreignColumn)
     {
-        $this->deleteInvalidForeignKey($indexTableName, $indexColumn, $foreignTableName, $foreignColumn);
+        $this->deleteInvalidForeignKey($indexTableName, $indexColumnName, $foreignTableName, $foreignColumn);
         $indexTable = $schema->getTable($indexTableName);
+        $indexColumn = $indexTable->getColumn($indexColumnName);
+        $indexColumn->setDefault(null);
         $indexTable->addForeignKeyConstraint(
             $foreignTableName,
-            [$indexColumn],
+            [$indexColumnName],
             [$foreignColumn],
             ['onUpdate' => 'CASCADE', 'onDelete' => 'CASCADE']
         );

@@ -55,7 +55,7 @@ class PageCategory extends AbstractStandardCategory
                 [
                     'name' => 'cID',
                     'type' => 'integer',
-                    'options' => ['unsigned' => true, 'default' => 0, 'notnull' => true],
+                    'options' => ['unsigned' => true, 'notnull' => true],
                 ],
             ],
             'primary' => ['cID'],
