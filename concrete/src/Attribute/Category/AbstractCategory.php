@@ -30,9 +30,7 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
     protected $entityManager;
 
     /**
-     * The category entity (if set).
-     *
-     * @var \Concrete\Core\Entity\Attribute\Category|null
+     * @ignore It seems that this is not used.
      */
     protected $entity;
 
