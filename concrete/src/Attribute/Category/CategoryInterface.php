@@ -14,7 +14,7 @@ interface CategoryInterface
     /**
      * Get an attribute key given its ID.
      *
-     * @param mixed $akID
+     * @param int $akID
      *
      * @return \Concrete\Core\Attribute\AttributeKeyInterface|null
      */
@@ -23,7 +23,7 @@ interface CategoryInterface
     /**
      * Get an attribute key given its handle.
      *
-     * @param mixed $akHandle
+     * @param string $akHandle
      *
      * @return \Concrete\Core\Attribute\AttributeKeyInterface|null
      */
