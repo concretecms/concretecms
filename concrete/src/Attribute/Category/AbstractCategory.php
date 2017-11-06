@@ -4,14 +4,17 @@ namespace Concrete\Core\Attribute\Category;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Attribute\AttributeValueInterface;
+use Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexer;
 use Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexerInterface;
 use Concrete\Core\Attribute\Key\ImportLoader\StandardImportLoader;
 use Concrete\Core\Attribute\Key\RequestLoader\StandardRequestLoader;
 use Concrete\Core\Attribute\SetFactory;
+use Concrete\Core\Attribute\TypeFactory;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Type as AttributeType;
 use Concrete\Core\Entity\Package;
 use Doctrine\ORM\EntityManager;
+use SimpleXMLElement;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -87,7 +90,7 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
      */
     public function getSearchIndexer()
     {
-        $indexer = $this->application->make('Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexer');
+        $indexer = $this->application->make(StandardSearchIndexer::class);
 
         return $indexer;
     }
@@ -207,7 +210,9 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
     public function add($type, $key, $settings = null, $pkg = null)
     {
         if (is_string($type)) {
-            $type = \Concrete\Core\Attribute\Type::getByHandle($type);
+            $typeFactory = $this->application->make(TypeFactory::class);
+            /* @var TypeFactory $typeFactory */
+            $type = $typeFactory->getByHandle($type);
         }
 
         // Legacy array support for $key
@@ -226,7 +231,7 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
         // Legacy support for third parameter which used to be package
         if ($settings instanceof Package || $settings instanceof \Concrete\Core\Package\Package) {
             $pkg = $settings;
-            unset($settings);
+            $settings = null;
         }
 
         if (!$settings) {
@@ -262,7 +267,7 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
             $manager = $this->getSetManager();
             $factory = new SetFactory($this->entityManager);
             $set = $factory->getByID($asID);
-            if (is_object($set)) {
+            if ($set !== null) {
                 $manager->addKey($set, $key);
             }
         }
@@ -301,12 +306,12 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
      * Import a new attribute key from a SimpleXMLElement instance.
      *
      * @param AttributeType $type the type of the attribute key to be created
-     * @param \SimpleXMLElement $element the SimpleXMLElement instance containing the data of the attribute key to be created
+     * @param SimpleXMLElement $element the SimpleXMLElement instance containing the data of the attribute key to be created
      * @param Package|null $package the entity of the package that's creating the attribute key (if applicable)
      *
      * @return \Concrete\Core\Entity\Attribute\Key\Key
      */
-    public function import(AttributeType $type, \SimpleXMLElement $element, Package $package = null)
+    public function import(AttributeType $type, SimpleXMLElement $element, Package $package = null)
     {
         $key = $this->createAttributeKey();
         $loader = $this->getImportLoader();
@@ -394,13 +399,15 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
      */
     public function deleteValue(AttributeValueInterface $attributeValue)
     {
+        /* @var \Concrete\Core\Entity\Attribute\Value\AbstractValue $attributeValue */
+
         // Handle legacy attributes with these three lines.
         $controller = $attributeValue->getAttributeKey()->getController();
         $controller->setAttributeValue($attributeValue);
         $controller->deleteValue();
 
         $genericValue = $attributeValue->getGenericValue();
-        if (is_object($genericValue)) {
+        if ($genericValue !== null) {
             $genericValues = $this->getAttributeValueRepository()->findBy(['generic_value' => $genericValue]);
             if (count($genericValues) == 1) {
                 $value = $attributeValue->getValueObject();
