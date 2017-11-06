@@ -863,7 +863,7 @@ class User extends ConcreteObject
     public function saveConfig($cfKey, $cfValue)
     {
         $app = Application::getFacadeApplication();
-        $app['database']->connection()->Replace('ConfigStore', array('cfKey' => $cfKey, 'cfValue' => $cfValue, 'uID' => $this->getUserID() ?: 0), array('cfKey', 'uID'), true);
+        $app['database']->connection()->Replace('ConfigStore', array('cfKey' => $cfKey, 'cfValue' => $cfValue, 'uID' => $this->getUserID()), array('cfKey', 'uID'), true);
     }
 
     /**
