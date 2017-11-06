@@ -32,12 +32,19 @@ if (isset($headerItems) && is_array($headerItems)) {
         }
     }
 }
+
+if ($b->getBlockTypeHandle() === BLOCK_HANDLE_SCRAPBOOK_PROXY) {
+    $supportsInlineEdit =  Block::getByID($b->getController()->getOriginalBlockID())->getBlockTypeObject()->supportsInlineEdit();
+}
+else {
+    $supportsInlineEdit = $bt->supportsInlineEdit();
+}
 ?>
 $(function() {
 	$('#ccm-block-form').concreteAjaxBlockForm({
 		task: 'edit',
 		bID: <?= is_object($b->getProxyBlock()) ? $b->getProxyBlock()->getBlockID() : $b->getBlockID() ?>,
-        btSupportsInlineEdit: <?= $bt->supportsInlineEdit() ? 'true' : 'false' ?>
+        btSupportsInlineEdit: <?= $supportsInlineEdit ? 'true' : 'false' ?>
 	});
 });
 </script>
@@ -61,13 +68,13 @@ if (!$message && $cont->getBlockTypeHelp()) {
 if (is_object($message) && !$bt->supportsInlineEdit()) {
     ?>
 	<div class="dialog-help" id="ccm-menu-help-content"><?php echo $message->getContent() ?></div>
-<?php 
+<?php
 } ?>
 
 <div <?php if (!$bt->supportsInlineEdit()) {
-    ?>ccm-ui"<?php 
+    ?>ccm-ui"<?php
 } else {
-    ?>data-container="inline-toolbar"<?php 
+    ?>data-container="inline-toolbar"<?php
 }
 ?>>
     <?php
@@ -76,13 +83,13 @@ if (is_object($message) && !$bt->supportsInlineEdit()) {
     <form method="post" id="ccm-block-form" class="validate" action="<?= $dialogController->action($method) ?>" enctype="multipart/form-data">
         <?php
         foreach ($this->controller->getJavaScriptStrings() as $key => $val) {
-            ?><input type="hidden" name="ccm-string-<?= $key ?>" value="<?= h($val) ?>" /><?php 
+            ?><input type="hidden" name="ccm-string-<?= $key ?>" value="<?= h($val) ?>" /><?php
         }
         if ($bt->supportsInlineEdit()) {
             $css = $b->getCustomStyle();
             ?>
             <div<?php if (is_object($css) && $b->getBlockTypeHandle() != BLOCK_HANDLE_LAYOUT_PROXY) {
-                ?> class="<?= $css->getContainerClass() ?>"<?php 
+                ?> class="<?= $css->getContainerClass() ?>"<?php
             }
             ?>><?php
         } else {
