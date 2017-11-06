@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\Controller\Dialog;
+namespace Concrete\Controller\Dialog;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Concrete\Core\Calendar\Event\EventOccurrence as EventOccurrenceObject;

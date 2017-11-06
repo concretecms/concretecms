@@ -1,8 +1,10 @@
 <?php
 namespace Concrete\Core\Entity\Calendar;
 
+use Concrete\Core\Calendar\Utility\Preferences;
 use Concrete\Core\Permission\AssignableObjectTrait;
 use Concrete\Core\Permission\ObjectInterface;
+use Concrete\Core\Support\Facade\Facade;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -186,7 +188,13 @@ class Calendar implements ObjectInterface
 
     public function getCalendarTopicsAttributeKey()
     {
-        return $package->getCalendarTopicsAttributeKey(); // eventually this might be overridden at the calendar level.
+        // eventually this might be overridden at the calendar level.
+        $app = Facade::getFacadeApplication();
+        $preferences = $app->make(Preferences::class);
+        /**
+         * @var $preferences Preferences
+         */
+        return $preferences->getCalendarTopicsAttributeKey();
     }
 
     /**
@@ -228,7 +236,7 @@ class Calendar implements ObjectInterface
 
     public function getPermissionAssignmentClassName()
     {
-        return '\\Concrete\\Package\\Calendar\\Permission\\Assignment\\CalendarAssignment';
+        return '\\Concrete\\Core\\Permission\\Assignment\\CalendarAssignment';
     }
 
     public function getPermissionObjectKeyCategoryHandle()
@@ -238,7 +246,7 @@ class Calendar implements ObjectInterface
 
     public function getPermissionResponseClassName()
     {
-        return '\\Concrete\\Package\\Calendar\\Permission\\Response\\CalendarResponse';
+        return '\\Concrete\\Core\\Permission\\Response\\CalendarResponse';
     }
 
 }

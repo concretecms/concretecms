@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\Controller\Dialog\Event;
+namespace Concrete\Controller\Dialog\Event;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Concrete\Core\Support\Facade\Facade;

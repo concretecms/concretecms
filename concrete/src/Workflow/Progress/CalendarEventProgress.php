@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Workflow\Progress;
 
+use Concrete\Core\Calendar\Event\Workflow\Progress\ProgressList;
 use Concrete\Core\Workflow\Workflow;
 use Concrete\Core\Workflow\Request\CalendarEventRequest;
 use Concrete\Core\Calendar\Event\Event;

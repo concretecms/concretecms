@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\Controller\Dialog;
+namespace Concrete\Controller\Dialog\Calendar;
 
 use Concrete\Core\View\DialogView;
 use Concrete\Core\Calendar\Calendar;
@@ -14,8 +14,6 @@ class Permissions extends \Concrete\Core\Controller\Controller
         }
         $v = new DialogView('/dialogs/permissions/' . $pkCategoryHandle);
         $v->setController($this);
-        $v->setPackageHandle('calendar');
-
         return $v;
     }
 }

@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\Controller\Event;
+namespace Concrete\Controller\Event;
 
 use Concrete\Core\Workflow\Progress\Response;
 use Concrete\Core\Workflow\Request\UnapproveCalendarEventRequest;

@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\Controller\Dialog\Frontend;
+namespace Concrete\Controller\Dialog\Frontend;
 
 use Concrete\Core\Controller\Controller;
 use Concrete\Core\Http\Response;

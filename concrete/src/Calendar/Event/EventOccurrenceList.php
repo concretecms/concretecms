@@ -227,7 +227,7 @@ class EventOccurrenceList extends AttributedItemList
 
     protected function getAttributeKeyClassName()
     {
-        return '\\Concrete\\Package\\Calendar\\Attribute\\Key\\EventKey';
+        return '\\Concrete\\Core\\Attribute\\Key\\EventKey';
     }
 
     /**

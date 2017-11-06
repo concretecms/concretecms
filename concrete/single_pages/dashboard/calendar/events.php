@@ -7,7 +7,7 @@ use Concrete\Core\Calendar\Event\EventOccurrence;
 Loader::element('calendar/header', array(
     'calendar' => $calendar,
     'calendars' => $calendars,
-), 'calendar');
+));
 ?>
 
 <div id="calendar-header">

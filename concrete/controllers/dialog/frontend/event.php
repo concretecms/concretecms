@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\Controller\Dialog\Frontend;
+namespace Concrete\Controller\Dialog\Frontend;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Concrete\Core\Block\Block;

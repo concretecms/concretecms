@@ -5,6 +5,7 @@ use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\Category;
 use Concrete\Core\Tree\Node\Type\Topic;
+use Concrete\Core\Calendar\Utility\Preferences;
 
 class Colors extends DashboardPageController
 {
@@ -43,7 +44,11 @@ class Colors extends DashboardPageController
         $this->set('defaultTextColor', $config->get('concrete.calendar.colors.text'));
         $this->set('categories', (array) $config->get('concrete.calendar.colors.categories'));
 
-        $ak = $package->getCalendarTopicsAttributeKey();
+        /**
+         * @var $preferences Preferences
+         */
+        $preferences = $this->app->make(Preferences::class);
+        $ak = $preferences->getCalendarTopicsAttributeKey();
         if (is_object($ak)) {
             $node = Node::getByID($ak->getController()->getTopicParentNode());
             $topics = array();

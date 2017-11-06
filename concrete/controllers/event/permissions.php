@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\Controller\Event;
+namespace Concrete\Controller\Event;
 
 use Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
 use Concrete\Core\Permission\Duration as PermissionDuration;

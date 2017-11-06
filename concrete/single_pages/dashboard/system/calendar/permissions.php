@@ -12,7 +12,7 @@
     $tp = new TaskPermission();
     if ($tp->canAccessTaskPermissions()) {
         ?>
-        <?php View::element('permission/lists/calendar_admin', [], 'calendar');
+        <?php View::element('permission/lists/calendar_admin');
         ?>
     <?php 
     } else {

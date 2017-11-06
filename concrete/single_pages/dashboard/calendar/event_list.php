@@ -6,7 +6,7 @@ Loader::element('calendar/header', array(
     'calendar' => $calendar,
     'calendars' => $calendars,
     'mode' => 'list',
-), 'calendar');
+));
 ?>
 
 <form method="get" action="<?=$view->action('search')?>">
