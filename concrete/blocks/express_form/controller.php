@@ -46,7 +46,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
 {
     protected $btInterfaceWidth = 640;
     protected $btCacheBlockOutput = false;
-    protected $btInterfaceHeight = 480;
+    protected $btInterfaceHeight = 700;
     protected $btTable = 'btExpressForm';
     protected $entityManager;
 
