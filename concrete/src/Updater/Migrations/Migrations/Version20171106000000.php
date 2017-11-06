@@ -52,9 +52,13 @@ class Version20171106000000 extends AbstractMigration
     {
         $attributeCategory = $expressEntity->getAttributeKeyCategory();
         /* @var \Concrete\Core\Attribute\Category\ExpressCategory $attributeCategory */
+        $indexTableName = $attributeCategory->getIndexedSearchTable();
+        $indexTable = $schema->getTable($indexTableName);
+        $exEntryIDColumn = $indexTable->getColumn('exEntryID');
+        $exEntryIDColumn->setUnsigned(false);
         $this->fixAttributeIndexTable(
             $schema,
-            $attributeCategory->getIndexedSearchTable(), 'exEntryID',
+            $indexTableName, 'exEntryID',
             'ExpressEntityEntries', 'exEntryID'
         );
     }

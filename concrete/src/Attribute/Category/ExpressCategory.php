@@ -122,7 +122,7 @@ class ExpressCategory extends AbstractCategory
                 [
                     'name' => 'exEntryID',
                     'type' => 'integer',
-                    'options' => ['unsigned' => true, 'default' => 0, 'notnull' => true],
+                    'options' => ['unsigned' => false, 'default' => 0, 'notnull' => true],
                 ],
             ],
             'primary' => ['exEntryID'],
