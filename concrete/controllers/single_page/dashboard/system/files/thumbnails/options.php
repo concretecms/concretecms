@@ -20,6 +20,7 @@ class Options extends DashboardPageController
         $this->set('jpeg_compression', $config->get('concrete.misc.default_jpeg_image_compression'));
         $this->set('png_compression', $config->get('concrete.misc.default_png_image_compression'));
         $this->set('manipulation_library', $config->get('concrete.file_manager.images.manipulation_library'));
+        $this->set('retina_thumbnail', $config->get('concrete.file_manager.images.retina_thumbnail'));
         $this->set('manipulation_libraries', $this->getManipulationLibraries());
     }
 
@@ -47,12 +48,14 @@ class Options extends DashboardPageController
             if (!array_key_exists($manipulation_library, $this->getManipulationLibraries())) {
                 $this->error->add(t('Invalid image manipulation library'));
             }
+            $retina_thumbnail = $this->request->request('retina_thumbnail', 0);
             if (!$this->error->has()) {
                 $config->save('concrete.misc.basic_thumbnailer_generation_strategy', $thumbnail_generation_strategy);
                 $config->save('concrete.misc.default_thumbnail_format', $thumbnail_format);
                 $config->save('concrete.misc.default_jpeg_image_compression', $jpeg_compression);
                 $config->save('concrete.misc.default_png_image_compression', $png_compression);
                 $config->save('concrete.file_manager.images.manipulation_library', $manipulation_library);
+                $config->save('concrete.file_manager.images.retina_thumbnail', $retina_thumbnail);
                 $this->flash('message', t('Thumbnail options have been successfully saved.'));
                 $this->redirect($this->app->make('url/manager')->resolve(['/dashboard/system/files/thumbnails']));
             }
