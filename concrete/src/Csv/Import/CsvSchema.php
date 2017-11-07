@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Csv\Import;
 
 class CsvSchema
@@ -16,6 +17,13 @@ class CsvSchema
      * @var string[]
      */
     protected $headerCells;
+
+    /**
+     * The map between the CSV field indexes and the object fields/attributes.
+     *
+     * @var array keys are the CSV field indexes, values are arrays describing the mapped object fields/attributes
+     */
+    protected $fieldsMap;
 
     /**
      * The list of missing headers.
@@ -47,7 +55,6 @@ class CsvSchema
         $this->missingHeaders = [];
         $this->parseStaticHeaders($staticHeaders);
         $this->parseAttributeHeaders($attributesMap);
-        $this->unrecognizedHeaders = [];
         $this->unrecognizedHeaders = array_values(array_diff_key($this->headerCells, $this->fieldsMap));
     }
 
