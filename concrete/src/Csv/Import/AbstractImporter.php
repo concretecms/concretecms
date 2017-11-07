@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Csv\Import;
 
 use Concrete\Core\Application\Application;
@@ -86,13 +87,13 @@ abstract class AbstractImporter
     /**
      * Process the CSV data.
      *
-     * @param int|null $firstDataRow the index of the first data row to be processed
-     * $param int|null $maxDataRows the maximum number of data rows to be processed
-     * @param null|mixed $maxDataRows
+     * @param int $dataRowsToSkip the number of data rows to be skipped
+     * @param int|null $maxDataRows the maximum number of data rows to be processed
+     * @param bool|int $collectData Set to false to not collect the imported data, to true to collect the all the imported data, or a number to limit the data to collect
      *
      * @return ImportResult
      */
-    public function process($firstDataRow = null, $maxDataRows = null)
+    public function process($dataRowsToSkip = 0, $maxDataRows = null, $collectData = false)
     {
         $result = $this->app->make(ImportResult::class);
         if ($this->processHeader($result)) {
@@ -101,7 +102,7 @@ abstract class AbstractImporter
                 $this->entityManager->getConnection()->beginTransaction();
             }
             try {
-                $this->processData($result, $firstDataRow, $maxDataRows);
+                $this->processData($result, $dataRowsToSkip, $maxDataRows, $collectData);
             } finally {
                 if ($this->dryRun !== false) {
                     try {
@@ -198,26 +199,45 @@ abstract class AbstractImporter
      * Read the data rows and process them.
      *
      * @param ImportResult $importResult
-     * @param int|null $firstDataRow the index of the first data row to be processed
-     * $param int|null $maxDataRows the maximum number of data rows to be processed
-     * @param mixed $maxDataRows
+     * @param int $dataRowsToSkip the number of data rows to be skipped
+     * @param int|null $maxDataRows the maximum number of data rows to be processed
+     * @param bool|int $collectData Set to false to not collect the imported data, to true to collect the all the imported data, or a number to limit the data to collect
+     *
+     * @return null|array If $collectData is set to true, the result will be an array with the keys:
+     * - attributeKeys: the list of attribute keys (\Concrete\Core\Attribute\AttributeKeyInterface[])
+     * - attributeControllers: the list of attribute key controllers (\Concrete\Core\Attribute\Controller[])
+     * - data: a list of array, whose keys are:
+     *   - object: the object associated to the CSV data row (\Concrete\Core\Attribute\ObjectInterface)
+     *   - attributeValues: the list of attribute values (array[\Concrete\Core\Entity\Attribute\Value\AbstractValue|null])
      */
-    protected function processData(ImportResult $importResult, $firstDataRow, $maxDataRows)
+    protected function processData(ImportResult $importResult, $dataRowsToSkip, $maxDataRows, $collectData = false)
     {
-        $result = false;
+        if ($collectData !== false) {
+            $dataCollected = [
+                'attributeKeys' => [],
+                'attributeControllers' => [],
+                'data' => [],
+            ];
+        } else {
+            $dataCollected = null;
+        }
         if ($this->csvSchema === null) {
             $importResult->getErrors()->add(t('The CSV schema has not been read.'));
         } else {
+            if ($dataCollected !== null) {
+                $attributeKeysAndControllers = $this->getAttributeKeysAndControllers();
+                foreach ($attributeKeysAndControllers as $attributeIndex => list($attributeKey, $attributeController)) {
+                    $dataCollected['attributeKeys'][$attributeIndex] = $attributeKey;
+                    $dataCollected['attributeControllers'][$attributeIndex] = $attributeController;
+                }
+            }
             if ($maxDataRows !== null) {
                 $maxDataRows = (int) $maxDataRows;
             }
             if ($maxDataRows === null || $maxDataRows > 0) {
-                $offset = max(
-                    $this->csvSchema->getRowIndex() + 1,
-                    $firstDataRow ? (int) $firstDataRow : 0
-                );
-                $this->reader->setOffset($offset);
-                $this->reader->each(function ($cells, $rowIndex) use ($importResult, $maxDataRows) {
+                $dataRowsToSkip = (int) $dataRowsToSkip;
+                $this->reader->setOffset(1 + ($dataRowsToSkip > 0 ? $dataRowsToSkip : 0));
+                $this->reader->each(function ($cells, $rowIndex) use ($importResult, $maxDataRows, &$dataCollected, $collectData) {
                     $importResult->countRowProcessed($rowIndex);
                     $staticValues = $this->csvSchema->getStaticValues($cells);
                     try {
@@ -228,16 +248,25 @@ abstract class AbstractImporter
                     }
                     if ($object !== null) {
                         $attributesValues = $this->csvSchema->getAttributesValues($cells);
-                        $this->assignCsvAttributes($object, $attributesValues, $importResult);
+                        $attributesValueObjects = $this->assignCsvAttributes($object, $attributesValues, $importResult);
                         $importResult->increaseImportSuccessCount();
+                        if ($dataCollected !== null) {
+                            if ($collectData === true || count($dataCollected['data']) < $collectData) {
+                                $dataCollected['data'][] = [
+                                    'object' => $object,
+                                    'attributeValues' => $attributesValueObjects,
+                                ];
+                            }
+                        }
                     }
 
                     return $maxDataRows === null || $importResult->getTotalDataRowsProcessed() < $maxDataRows;
                 });
             }
         }
-
-        return $result;
+        if ($dataCollected !== null) {
+            $importResult->setDataCollected($dataCollected);
+        }
     }
 
     /**
@@ -336,12 +365,15 @@ abstract class AbstractImporter
      * @param ObjectInterface $object
      * @param array $csvAttributes
      * @param ImportResult $importResult
+     *
+     * @return array[\Concrete\Core\Entity\Attribute\Value\AbstractValue|null]
      */
     private function assignCsvAttributes(ObjectInterface $object, array $csvAttributes, ImportResult $importResult)
     {
         $attributesWarnings = $this->app->build(ErrorList::class);
         /* @var ErrorList $attributesWarnings */
         $attributeKeysAndControllers = $this->getAttributeKeysAndControllers();
+        $result = array_fill(0, count($attributeKeysAndControllers), null);
         foreach ($csvAttributes as $attributeIndex => $attributeData) {
             list($attributeKey, $attributeController) = $attributeKeysAndControllers[$attributeIndex];
             /* @var \Concrete\Core\Attribute\AttributeKeyInterface $attributeKey */
@@ -363,6 +395,7 @@ abstract class AbstractImporter
                     $object->setAttribute($attributeKey, $newValueObject);
                 }
             }
+            $result[$attributeIndex] = $newValueObject;
         }
         foreach ($attributesWarnings->getList() as $warning) {
             if ($warning instanceof Exception || $warning instanceof Throwable) {
@@ -372,6 +405,8 @@ abstract class AbstractImporter
             }
             $importResult->addLineProblem(false, $warning);
         }
+
+        return $result;
     }
 
     /**
