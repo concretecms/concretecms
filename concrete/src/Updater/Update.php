@@ -180,6 +180,7 @@ class Update
         }
         try {
             $cms->make('helper/file')->makeExecutable(DIR_BASE_CORE.'/bin/concrete5', 'all');
+            $cms->make('helper/file')->makeExecutable(DIR_BASE_CORE.'/bin/concrete5.php', 'all');
         } catch (\Exception $x) {
         }
         Config::save('concrete.version_installed', Config::get('concrete.version'));

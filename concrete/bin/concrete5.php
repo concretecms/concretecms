@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 
 if (!defined('DIR_BASE')) {
