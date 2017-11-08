@@ -82,7 +82,7 @@ function getAttributeOptionHTML($v)
     <label><?=t("Hide None Option")?></label>
     <div class="checkbox">
         <label>
-            <?=$form->checkbox('akHideNoneOption', 1, $akHideNoneOption)?> <span><?=t('Hide the none option from the list.')?></span>
+            <?=$form->checkbox('akHideNoneOption', 1, $akHideNoneOption)?> <span><?=t('Hide none option from the list.')?></span>
         </label>
     </div>
 </div>

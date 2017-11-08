@@ -857,7 +857,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
             $this->set('akSelectAllowMultipleValues', $this->akSelectAllowMultipleValues);
             $this->set('akSelectAllowOtherValues', $this->akSelectAllowOtherValues);
             $this->set('akSelectOptionDisplayOrder', $this->akSelectOptionDisplayOrder);
-            $this->set('$akHideNoneOption', $this->akHideNoneOption);
+            $this->set('akHideNoneOption', $this->akHideNoneOption);
         }
     }
 
