@@ -90,7 +90,7 @@ class SelectSettings extends Settings
     }
 
     /**
-     * @param bool $allowOtherValues
+     * @param bool $akHideNoneOption
      */
     public function setHideNoneOption($akHideNoneOption)
     {
