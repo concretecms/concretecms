@@ -2,8 +2,12 @@
 
 namespace Concrete\Core\Form\Service;
 
-use Core;
-use View;
+use Concrete\Core\Application\Application;
+use Concrete\Core\Http\ResponseAssetGroup;
+use Concrete\Core\Localization\Service\CountryList;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+use Concrete\Core\Utility\Service\Arrays as ArraysService;
+use Concrete\Core\Utility\Service\Text as TextService;
 
 /**
  * Helpful functions for working with forms. Includes HTML input tags and the like.
@@ -33,26 +37,36 @@ class Form
     protected $selectIndex = 1;
 
     /**
-     * Text helper instance.
+     * The Application instance.
      *
-     * @var \Concrete\Core\Utility\Service\Text
+     * @var Application
+     */
+    protected $app;
+
+    /**
+     * The text service instance.
+     *
+     * @var TextService
      */
     protected $th;
 
     /**
      * Arrays helper instance.
      *
-     * @var \Concrete\Core\Utility\Service\Arrays
+     * @var ArraysService
      */
     protected $ah;
 
     /**
      * Initialize the instance.
+     *
+     * @param Application $app
      */
-    public function __construct()
+    public function __construct(Application $app)
     {
-        $this->th = Core::make('helper/text');
-        $this->ah = Core::make('helper/arrays');
+        $this->app = $app;
+        $this->th = $this->app->make(TextService::class);
+        $this->ah = $this->app->make(ArraysService::class);
     }
 
     /**
@@ -63,7 +77,7 @@ class Form
      */
     public function action($action, $task = null)
     {
-        return View::url($action, $task);
+        return $this->app->make(ResolverManagerInterface::class)->resolve(func_get_args());
     }
 
     /**
@@ -421,6 +435,88 @@ class Form
             }
         }
         $str .= '</select>';
+
+        return $str;
+    }
+
+    /**
+     * Renders a select menu to choose a Country.
+     *
+     * @param string $key The name of the element. If $key denotes an array, the ID will start with $key but will have a progressive unique number added; if $key does not denotes an array, the ID attribute will be $key.
+     * @param string $selectedCountryCode the code of the Country to be initially selected
+     * @param array $configuration Configuration options. Supported keys are:
+     * - 'required': do users must choose a Country?
+     * - 'allowedCountries': an array containing a list of acceptable Country codes. If not set, all the countries will be selectable.
+     * - 'linkStateProvinceField': set to true to look for text fields that have a "data-countryfield" attribute with the same value as this Country field name (updating the Country select will automatically update the State/Province list).
+     * @param array $miscFields Additional fields appended to the element (a hash array of attributes name => value), possibly including 'class'
+     */
+    public function selectCountry($key, $selectedCountryCode = '', array $configuration = [], array $miscFields = [])
+    {
+        $configuration += [
+            'required' => false,
+            'allowedCountries' => null,
+            'linkStateProvinceField' => false,
+        ];
+        $allCountries = $this->app->make(CountryList::class)->getCountries();
+        if (is_array($configuration['allowedCountries'])) {
+            $allCountries = array_intersect_key($allCountries, array_flip($configuration['allowedCountries']));
+        }
+        // Fix the selected Country code specified in the code
+        if ($configuration['required'] && count($allCountries) === 1) {
+            $selectedCountryCode = key($allCountries);
+        } else {
+            $selectedCountryCode = (string) $selectedCountryCode;
+            if ($selectedCountryCode !== '' && !isset($allCountries[$selectedCountryCode])) {
+                $selectedCountryCode = '';
+            }
+        }
+        // Fix the Country code received via the current request
+        $requestValue = $this->getRequestValue($key);
+        if (is_array($requestValue)) {
+            $requestValue = (string) $requestValue[0];
+        } elseif ($requestValue !== false && !is_string($requestValue)) {
+            $requestValue = '';
+        }
+        if ($requestValue !== false && !isset($allCountries[$requestValue])) {
+            $requestValue = '';
+        }
+
+        if ($requestValue !== false) {
+            $selectedOption = $requestValue;
+        } else {
+            $selectedOption = $selectedCountryCode;
+        }
+        if (substr($key, -2) === '[]') {
+            $id = substr($key, 0, -2) . $this->selectIndex;
+            ++$this->selectIndex;
+        } else {
+            $id = $key;
+        }
+        if ($selectedCountryCode === '' || !$configuration['required']) {
+            $optionValues = ['' => ''];
+        } else {
+            $optionValues = [];
+        }
+        $optionValues += $allCountries;
+        if ($selectedCountryCode !== '') {
+            $miscFields['ccm-passed-value'] = $selectedCountryCode;
+        }
+        $str = '<select id="' . $id . '" name="' . $key . '"' . $this->parseMiscFields('form-control', $miscFields) . '>';
+        foreach ($optionValues as $k => $text) {
+            $str .= '<option value="' . h($k) . '"';
+            if ((string) $k === (string) $selectedOption) {
+                $str .= ' selected="selected"';
+            }
+            $str .= '>' . h($text) . '</option>';
+        }
+        $str .= '</select>';
+        if ($configuration['linkStateProvinceField']) {
+            $r = ResponseAssetGroup::get();
+            $r->requireAsset('core/country-stateprovince-link');
+            $str .= '<script>';
+            $str .= '$(document).ready(function() { ccmCountryStateprovinceLink.withCountryField($(' . json_encode('#' . $id) . ')); });';
+            $str .= '</script>';
+        }
 
         return $str;
     }
