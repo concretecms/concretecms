@@ -2,6 +2,10 @@
 
 ;(function($) {
 
+if (window.ccmCountryStateprovinceLink) {
+    return;
+}
+
 var USE_MUTATIONOBSERVER = window.MutationObserver && window.MutationObserver.prototype && window.MutationObserver.prototype.observe ? true : false;
 
 function loadStateprovincesForCountry(countryCode, callback) {
