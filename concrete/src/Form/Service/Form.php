@@ -511,10 +511,11 @@ class Form
         }
         $str .= '</select>';
         if ($configuration['linkStateProvinceField']) {
+            $escapedID = preg_replace('/[!"#$%&\'()*+,.\\/:;<=>?@\\[\\]^`{|}~\\\\]/', '\\\\$0', $id);
             $r = ResponseAssetGroup::get();
             $r->requireAsset('core/country-stateprovince-link');
             $str .= '<script>';
-            $str .= '$(document).ready(function() { ccmCountryStateprovinceLink.withCountryField($(' . json_encode('#' . $id) . ')); });';
+            $str .= '$(document).ready(function() { ccmCountryStateprovinceLink.withCountryField($(' . json_encode('#' . $escapedID) . ')); });';
             $str .= '</script>';
         }
 
