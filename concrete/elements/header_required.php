@@ -1,5 +1,6 @@
 <?php
 use Concrete\Core\Url\SeoCanonical;
+use Concrete\Core\Localization\Localization;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Support\Facade\Application;
 use Symfony\Component\EventDispatcher\GenericEvent;
@@ -169,6 +170,7 @@ if (!empty($alternateHreflangTags)) {
     var CCM_TOOLS_PATH = "<?php echo REL_DIR_FILES_TOOLS_REQUIRED; ?>";
     var CCM_APPLICATION_URL = "<?php echo rtrim((string) $app->make('url/canonical'), '/'); ?>";
     var CCM_REL = "<?php echo $app->make('app_relative_path'); ?>";
+    var CCM_ACTIVE_LOCALE = <?= json_encode(Localization::activeLocale()) ?>;
 </script>
 
 <?php
