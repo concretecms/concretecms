@@ -16,7 +16,7 @@ class Configuration extends DoctrineMigrationConfiguration
         parent::__construct($db);
         $directory = DIR_BASE_CORE . '/' . DIRNAME_CLASSES . '/Updater/Migrations/Migrations';
         $this->setName(t('concrete5 Migrations'));
-        $this->setMigrationsNamespace(('\Concrete\Core\Updater\Migrations\Migrations'));
+        $this->setMigrationsNamespace(('Concrete\Core\Updater\Migrations\Migrations'));
         $this->setMigrationsDirectory($directory);
         if ($registerMigrations) {
             $this->registerMigrationsFromDirectory($directory);
