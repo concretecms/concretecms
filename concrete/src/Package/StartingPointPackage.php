@@ -714,7 +714,6 @@ class StartingPointPackage extends BasePackage
 
         try {
             Core::make('helper/file')->makeExecutable(DIR_BASE_CORE . '/bin/concrete5', 'all');
-            Core::make('helper/file')->makeExecutable(DIR_BASE_CORE . '/bin/concrete5.php', 'all');
         } catch (\Exception $x) {
         }
     }

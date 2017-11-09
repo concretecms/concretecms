@@ -26,7 +26,7 @@
       "Concrete\\Core\\": "src"
     }
   },
-  "bin": [ "bin/concrete5", "bin/concrete5.php" ],
+  "bin": [ "bin/concrete5" ],
   "require": {
     "php": ">=5.5.9",
     "doctrine/dbal": "~2.5",
