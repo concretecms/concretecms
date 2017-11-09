@@ -81,11 +81,11 @@ defined('C5_EXECUTE') or die('Access Denied.');
     </div>
 
     <div class="form-group">
-        <?= $form->label('retina_thumbnail', t('Retina Thumbnail')) ?>
+        <?= $form->label('create_high_dpi_thumbnails', t('Create high DPI thumbnails')) ?>
         <div class="checkbox">
             <label>
-                <?= $form->checkbox('retina_thumbnail', 1, $retina_thumbnail) ?>
-                <?= t('Disable retina thumbnails') ?>
+                <?= $form->checkbox('create_high_dpi_thumbnails', 1, $create_high_dpi_thumbnails) ?>
+                <?= t('Create high DPI thumbnails') ?>
             </label>
         </div>
     </div>

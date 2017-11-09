@@ -35,7 +35,7 @@ class Type
 
         foreach ($types as $type) {
             $versions[] = $type->getBaseVersion();
-            if (!$config->get('concrete.file_manager.images.retina_thumbnail')) {
+            if ($config->get('concrete.file_manager.images.create_high_dpi_thumbnails')) {
                 $versions[] = $type->getDoubledVersion();
             }
         }
