@@ -4,7 +4,7 @@
 
 <?php
 /**
- * @var $event \PortlandLabs\Calendar\Entity\CalendarEvent
+ * @var $event \Concrete\Core\Entity\Calendar\CalendarEvent
  */
 $attributes = \Concrete\Core\Attribute\Key\EventKey::getList();
 ?>
