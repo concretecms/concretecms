@@ -1,0 +1,228 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+    <attributecategories>
+        <category handle="event" allow-sets="1" package=""/>
+    </attributecategories>
+    <attributetypes>
+        <attributetype handle="text" package="">
+            <categories>
+                <category handle="event"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="textarea" package="">
+            <categories>
+                <category handle="event"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="boolean" package="">
+            <categories>
+                <category handle="event"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="date_time" package="">
+            <categories>
+                <category handle="event"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="image_file" package="">
+            <categories>
+                <category handle="event"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="number" package="">
+            <categories>
+                <category handle="event"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="select" package="">
+            <categories>
+                <category handle="event"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="address" package="">
+            <categories>
+                <category handle="event"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="telephone" package="">
+            <categories>
+                <category handle="event"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="url" package="">
+            <categories>
+                <category handle="event"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="email" package="">
+            <categories>
+                <category handle="event"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="topics" package="">
+            <categories>
+                <category handle="event"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="calendar" name="Calendar" package="">
+            <categories>
+                <category handle="collection"/>
+                <category handle="site"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="calendar_event" name="Calendar Event" package="">
+            <categories>
+                <category handle="collection"/>
+            </categories>
+        </attributetype>
+    </attributetypes>
+    <singlepages>
+        <page name="Calendar &amp; Events" path="/dashboard/calendar" filename="/dashboard/calendar/view.php" pagetype="" description="" package="" />
+        <page name="View Calendar" path="/dashboard/calendar/events" filename="/dashboard/calendar/events.php" pagetype="" description="" package="" />
+        <page name="Event List" path="/dashboard/calendar/event_list" filename="/dashboard/calendar/event_list.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+                <attributekey handle="exclude_search_index">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Add Calendar" path="/dashboard/calendar/add" filename="/dashboard/calendar/add.php" pagetype="" description="" package="" />
+        <page name="Permissions" path="/dashboard/calendar/permissions" filename="/dashboard/calendar/permissions.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+                <attributekey handle="exclude_search_index">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Attributes" path="/dashboard/calendar/attributes" filename="/dashboard/calendar/attributes.php" pagetype="" description="" package="">
+        </page>
+
+        <page name="Calendar" path="/dashboard/system/calendar"
+              filename="/dashboard/system/calendar/view.php" pagetype=""
+              description="Manage your calendar settings" package="" />
+        <page name="General Settings" path="/dashboard/system/calendar/settings"
+              filename="/dashboard/system/calendar/settings.php" pagetype=""
+              description="" package="" />
+        <page name="Color Settings" path="/dashboard/system/calendar/colors"
+              filename="/dashboard/system/calendar/colors.php" pagetype=""
+              description="" package="" />
+        <page name="Permissions" path="/dashboard/system/calendar/permissions"
+              filename="/dashboard/system/calendar/permissions.php" pagetype=""
+              description="" package="" />
+
+    </singlepages>
+
+    <blocktypesets>
+        <blocktypeset handle="calendar" name="Calendar &amp; Events" package="">
+            <blocktype handle="calendar"/>
+            <blocktype handle="event_list"/>
+            <blocktype handle="calendar_event"/>
+        </blocktypeset>
+    </blocktypesets>
+
+    <blocktypes>
+        <blocktype handle="calendar" package=""/>
+        <blocktype handle="event_list" package=""/>
+        <blocktype handle="calendar_event" package=""/>
+    </blocktypes>
+
+    <permissioncategories>
+        <category handle="calendar_admin" package=""/>
+        <category handle="calendar" package=""/>
+    </permissioncategories>
+
+    <permissionkeys>
+        <permissionkey handle="add_calendar" name="Add Calendar" description="" package="" category="calendar_admin">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="view_calendars" name="View Calendars" description="" package="" category="calendar_admin">
+            <access>
+                <entity type="group" name="Guest"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="edit_calendars" name="Edit Calendars" description="" package="" category="calendar_admin">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="edit_calendars_permissions" name="Edit Permissions" description="" package="" category="calendar_admin">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="add_calendar_events" name="Add Calendar Events" description="" package="" category="calendar_admin">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="approve_calendar_events" name="Approve Calendar Events" can-trigger-workflow="true" description="" package="" category="calendar_admin">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="delete_calendars" name="Delete Calendars" description="" package="" category="calendar_admin">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="access_calendar_rss_feeds" name="Access RSS Feeds" description="" package="" category="calendar_admin">
+            <access>
+                <entity type="group" name="Guest"/>
+            </access>
+        </permissionkey>
+
+        <permissionkey handle="view_calendar" name="View Calendar" description="" package="" category="calendar"/>
+        <permissionkey handle="view_calendar_in_edit_interface" name="View in Edit Interface" description="" package="" category="calendar"/>
+        <permissionkey handle="edit_calendar_permissions" name="Edit Permissions" description="" package="" category="calendar"/>
+        <permissionkey handle="edit_calendar" name="Edit Calendar" description="" package="" category="calendar"/>
+        <permissionkey handle="add_calendar_event" name="Add Calendar Event" description="" package="" category="calendar"/>
+        <permissionkey handle="approve_calendar_event" name="Approve Calendar Event" can-trigger-workflow="true" description="" package="" category="calendar"/>
+        <permissionkey handle="edit_calendar_event_more_details_location" name="Modify More Details Location" description="" package="" category="calendar"/>
+        <permissionkey handle="edit_calendar_events" name="Edit Calendar Events" description="" package="" category="calendar"/>
+        <permissionkey handle="access_calendar_rss_feed" name="Access RSS Feed" description="" package="" category="calendar"/>
+        <permissionkey handle="delete_calendar" name="Delete Calendar" description="" package="" category="calendar"/>
+
+    </permissionkeys>
+
+    <permissionaccessentitytypes>
+        <permissionaccessentitytype handle="group" package="">
+            <categories>
+                <category handle="calendar_admin" />
+                <category handle="calendar" />
+            </categories>
+        </permissionaccessentitytype>
+        <permissionaccessentitytype handle="user" package="">
+            <categories>
+                <category handle="calendar_admin" />
+                <category handle="calendar" />
+            </categories>
+        </permissionaccessentitytype>
+        <permissionaccessentitytype handle="group_set" package="">
+            <categories>
+                <category handle="calendar_admin" />
+                <category handle="calendar" />
+            </categories>
+        </permissionaccessentitytype>
+        <permissionaccessentitytype handle="group_combination" package="">
+            <categories>
+                <category handle="calendar_admin" />
+                <category handle="calendar" />
+            </categories>
+
+        </permissionaccessentitytype>
+    </permissionaccessentitytypes>
+
+    <workflowprogresscategories>
+        <category handle="calendar_event" package=""/>
+    </workflowprogresscategories>
+
+
+</concrete5-cif>
