@@ -38,19 +38,31 @@ if ($pt->supportsGridFramework() && $b->overrideBlockTypeContainerSettings()) {
 
 $gf = $pt->getThemeGridFrameworkObject();
 
-Loader::element("custom_style", array(
-    'saveAction' => $controller->action('submit'),
-    'resetAction' => $controller->action('reset'),
-    'style' => $b->getCustomStyle(true),
-    'bFilename' => $bFilename,
-    'bName' => $b->getBlockName(),
-    'displayBlockContainerSettings' => $pt->supportsGridFramework(),
-    'enableBlockContainer' => $enableBlockContainer,
-    'gf' => $gf,
-    'templates' => $templates,
-    'customClasses' => $customClasses,
-    'canEditCustomTemplate' => $canEditCustomTemplate,
-));
+if (Config::get('concrete.design.enable_custom')) {
+    Loader::element('custom_style', array(
+        'saveAction' => $controller->action('submit'),
+        'resetAction' => $controller->action('reset'),
+        'style' => $b->getCustomStyle(true),
+        'bFilename' => $bFilename,
+        'bName' => $b->getBlockName(),
+        'displayBlockContainerSettings' => $pt->supportsGridFramework(),
+        'enableBlockContainer' => $enableBlockContainer,
+        'gf' => $gf,
+        'templates' => $templates,
+        'customClasses' => $customClasses,
+        'canEditCustomTemplate' => $canEditCustomTemplate,
+    ));
+}
+else {
+    Loader::element('custom_block_template', array(
+        'saveAction' => $controller->action('submit'),
+        'resetAction' => $controller->action('reset'),
+        'style' => $b->getCustomStyle(true),
+        'bFilename' => $bFilename,
+        'templates' => $templates,
+    ));
+}
+
 
 $pt->registerAssets();
 $bv->render('view');
