@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<schema version="0.3">
+    <table name="btEventList">
+        <field name="bID" type="I">
+            <key/>
+            <unsigned/>
+        </field>
+        <field name="caID" type="X">
+            <notnull />
+            <default value="0" />
+        </field>
+        <field name="calendarAttributeKeyHandle" type="C" size="255">
+        </field>
+        <field name="totalToRetrieve" type="I2">
+            <unsigned />
+            <notnull />
+            <default value="10" />
+        </field>
+        <field name="totalPerPage" type="I2">
+            <unsigned />
+            <notnull />
+            <default value="10" />
+        </field>
+        <field name="filterByTopicAttributeKeyID" type="I" size="10">
+            <unsigned />
+            <notnull />
+            <default value="0" />
+        </field>
+        <field name="filterByTopicID" type="I" size="10">
+            <unsigned />
+            <notnull />
+            <default value="0" />
+        </field>
+        <field name="filterByPageTopicAttributeKeyHandle" type="C" size="255">
+        </field>
+        <field name="filterByFeatured" type="I1" size="1">
+            <notnull />
+            <default value="0" />
+        </field>
+        <field name="eventListTitle" type="C" size="255">
+        </field>
+        <field name="linkToPage" type="I" size="10">
+            <unsigned />
+            <notnull />
+            <default value="0" />
+        </field>
+    </table>
+</schema>

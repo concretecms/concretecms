@@ -8,7 +8,7 @@ return [
      */
     'version' => '8.3.0a3',
     'version_installed' => '8.3.0a3',
-    'version_db' => '20171109065758', // the key of the latest database migration
+    'version_db' => '20171110032423', // the key of the latest database migration
 
     /*
      * Installation status
@@ -779,6 +779,21 @@ return [
          * @var string
          */
         'notify_email' => '',
+    ],
+
+    /*
+     * ------------------------------------------------------------------------
+     * Calendar
+     * ------------------------------------------------------------------------
+     */
+    'calendar' => [
+
+        'colors' => [
+
+            'text' => '#ffffff',
+            'background' => '#3A87AD',
+
+        ],
     ],
 
     /*

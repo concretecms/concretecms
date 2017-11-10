@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<schema version="0.3">
+    <table name="btCalendar">
+        <field name="bID" type="I">
+            <key/>
+            <unsigned/>
+        </field>
+        <field name="caID" type="I" size="10">
+            <unsigned />
+            <notnull />
+            <default value="0" />
+        </field>
+        <field name="calendarAttributeKeyHandle" type="C" size="255">
+        </field>
+        <field name="filterByTopicAttributeKeyID" type="I" size="10">
+            <unsigned />
+            <notnull />
+            <default value="0" />
+        </field>
+        <field name="filterByTopicID" type="I" size="10">
+            <unsigned />
+            <notnull />
+            <default value="0" />
+        </field>
+        <field name="lightboxProperties" type="X2">
+        </field>
+
+    </table>
+</schema>

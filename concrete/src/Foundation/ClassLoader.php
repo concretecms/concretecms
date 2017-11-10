@@ -240,11 +240,13 @@ class ClassLoader
 
     public function registerPackageController($pkgHandle)
     {
-        $loader = new MapClassLoader(array(
-            NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Controller' => DIR_PACKAGES . '/' . $pkgHandle . '/' . FILENAME_PACKAGE_CONTROLLER,
-        ));
-        $this->loaders[] = $loader;
-        $loader->register();
+        if (file_exists(DIR_PACKAGES . '/' . $pkgHandle . '/' . FILENAME_PACKAGE_CONTROLLER)) {
+            $loader = new MapClassLoader(array(
+                NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Controller' => DIR_PACKAGES . '/' . $pkgHandle . '/' . FILENAME_PACKAGE_CONTROLLER,
+            ));
+            $this->loaders[] = $loader;
+            $loader->register();
+        }
     }
 
     public function registerPackageCustomAutoloaders($pkg)

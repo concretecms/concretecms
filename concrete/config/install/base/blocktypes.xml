@@ -54,6 +54,9 @@
         <blocktype handle="tags" package=""/>
         <blocktype handle="video" package=""/>
         <blocktype handle="youtube" package=""/>
+        <blocktype handle="calendar" package=""/>
+        <blocktype handle="event_list" package=""/>
+        <blocktype handle="calendar_event" package=""/>
     </blocktypes>
 
 	<systemcontenteditorsnippets>
@@ -102,6 +105,11 @@
             <blocktype handle="testimonial" />
             <blocktype handle="discussion"/>
             <blocktype handle="share_this_page" />
+        </blocktypeset>
+        <blocktypeset handle="calendar" name="Calendar &amp; Events" package="">
+            <blocktype handle="calendar"/>
+            <blocktype handle="event_list"/>
+            <blocktype handle="calendar_event"/>
         </blocktypeset>
         <blocktypeset handle="multimedia" name="Multimedia" package="">
             <blocktype handle="page_attribute_display"/>
