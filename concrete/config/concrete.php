@@ -509,6 +509,7 @@ return [
         'images' => [
             'use_exif_data_to_rotate_images' => false,
             'manipulation_library' => 'gd',
+            'create_high_dpi_thumbnails' => true,
         ],
         'results' => 10,
     ],
