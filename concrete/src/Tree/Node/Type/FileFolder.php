@@ -8,6 +8,7 @@ use Concrete\Core\Tree\Node\Type\Formatter\CategoryListFormatter;
 use Concrete\Core\Tree\Node\Type\Menu\CategoryMenu;
 use Concrete\Core\Tree\Node\Type\Menu\FileFolderMenu;
 use Concrete\Core\User\User;
+use Gettext\Translations;
 use Loader;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -83,4 +84,10 @@ class FileFolder extends Category
         }
         return $list;
     }
+
+    public function exportTranslations(Translations $translations)
+    {
+        return false;
+    }
+
 }
