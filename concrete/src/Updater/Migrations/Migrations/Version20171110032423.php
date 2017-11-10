@@ -3,6 +3,7 @@
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Backup\ContentImporter;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Support\Facade\Package;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -24,11 +25,18 @@ use Concrete\Core\Entity\Calendar\CalendarRelatedEvent;
  */
 class Version20171110032423 extends AbstractMigration
 {
+    protected function addEarlyCalendarFunctionality()
+    {
+        $this->output(t('Installing calendar attribute category table...'));
+        $this->refreshEntities([
+            EventKey::class
+        ]);
+    }
+
     protected function addCalendarFunctionality()
     {
         $this->output(t('Installing calendar entities...'));
         $this->refreshEntities([
-            EventKey::class,
             EventValue::class,
             Calendar::class,
             CalendarEvent::class,
@@ -73,15 +81,29 @@ class Version20171110032423 extends AbstractMigration
     {
         $this->output('Uninstalling legacy calendar package...');
         $this->output('Removing pages...');
-        $this->connection->executeQuery('delete from Pages where pkgID = ?', [$pkg->getPackageID()]);
+        $r = $this->connection->executeQuery('select cID from Pages where pkgID = ?', [$pkg->getPackageID()]);
+        while ($row = $r->fetch()) {
+            $page = Page::getByID($row['cID']);
+            if ($page && !$page->isError()) {
+                $page->delete();
+            }
+        }
         $this->output('Updating attribute categories...');
         $this->connection->executeQuery('delete from AttributeKeyCategories where pkgID = ?', [$pkg->getPackageID()]);
-        $this->output('Updating attribute keys...');
-        $this->connection->executeQuery('update AttributeKeys set pkgID = null where pkgID = ?', [$pkg->getPackageID()]);
         $this->output('Updating block types...');
-        $this->connection->executeQuery('update BlockTypes set pkgID = 0 where pkgID = ?', [$pkg->getPackageID()]);
+        $this->connection->executeQuery('delete from BlockTypes where pkgID = ?', [$pkg->getPackageID()]);
         $this->output(t('Uninstalling calendar package (ID %s)', $pkg->getPackageID()));
         $this->connection->executeQuery('delete from Packages where pkgID = ?', array($pkg->getPackageID()));
+    }
+
+    protected function updateAttributeKeys($pkg)
+    {
+        $this->output(t('Updating attribute keys from legacy to 8.3.'));
+    }
+
+    protected function migrateCalendars($pkg)
+    {
+        $this->output(t('Migrating calendar content into 8.3 calendar.'));
     }
 
     /**
@@ -89,15 +111,26 @@ class Version20171110032423 extends AbstractMigration
      */
     public function up(Schema $schema)
     {
+        $this->addEarlyCalendarFunctionality();
         // first, let's see whether the concrete5 calendar is installed.
         $pkg = Package::getByHandle('calendar');
         if ($pkg) {
             $this->connection->Execute('set foreign_key_checks = 0');
+
+            // let's uninstall the package.
+            $this->uninstallLegacyCalendar($pkg);
+
             // Now, let's stash all the data from the legacy calendar add-on in somebackup tables.
             $this->backupLegacyCalendar();
 
-            // Next, let's uninstall the package.
-            $this->uninstallLegacyCalendar($pkg);
+            // now add the calendar functionality
+            $this->addCalendarFunctionality();
+
+            // now, take existing calendar attribute keys and turn them into 8.3 keys
+            $this->updateAttributeKeys($pkg);
+
+            // now update the calendars and contenet
+            $this->migrateCalendars($pkg);
 
             // Now, let's migrate the data back.
             $this->connection->Execute('set foreign_key_checks = 1');
