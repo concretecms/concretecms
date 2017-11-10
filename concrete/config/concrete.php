@@ -6,9 +6,9 @@ return [
      *
      * @var string
      */
-    'version' => '8.3.0a2',
-    'version_installed' => '8.3.0a2',
-    'version_db' => '20171025000000', // the key of the latest database migration
+    'version' => '8.3.0a3',
+    'version_installed' => '8.3.0a3',
+    'version_db' => '20171109065758', // the key of the latest database migration
 
     /*
      * Installation status
@@ -509,6 +509,7 @@ return [
         'images' => [
             'use_exif_data_to_rotate_images' => false,
             'manipulation_library' => 'gd',
+            'create_high_dpi_thumbnails' => true,
         ],
         'results' => 10,
     ],

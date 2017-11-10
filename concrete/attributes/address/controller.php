@@ -171,6 +171,9 @@ class Controller extends AttributeTypeController implements MulticolumnTextExpor
         return $ret;
     }
 
+    /**
+     * @deprecated Use $app->make(\Concrete\Core\Form\Service\Form::class')->selectCountry() to link a Country field and a State/Province field
+     */
     public function action_load_provinces_js()
     {
         $app = isset($this->app) ? $this->app : Application::getFacadeApplication();
@@ -362,9 +365,6 @@ class Controller extends AttributeTypeController implements MulticolumnTextExpor
             }
         }
         $this->set('search', false);
-        $hh = $this->app->make('helper/html');
-        $this->addFooterItem($hh->javascript($this->getView()->action('load_provinces_js')));
-        $this->addFooterItem($hh->javascript($this->getAttributeTypeFileURL('country_state.js')));
         $this->set('key', $this->attributeKey);
     }
 

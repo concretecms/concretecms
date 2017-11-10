@@ -452,6 +452,7 @@ return [
         // end removing lines
         '/ccm/system/upgrade/' => ['\Concrete\Controller\Upgrade::view'],
         '/ccm/system/upgrade/submit' => ['\Concrete\Controller\Upgrade::submit'],
+        '/ccm/system/country-stateprovince-link/get_stateprovinces' => ['\Concrete\Controller\Frontend\CountryStateprovinceLink::getStateprovinces'],
 
         /*
          * Notification
@@ -1057,6 +1058,9 @@ return [
             ['javascript-localized', '/ccm/assets/localization/translator/js'],
             ['css', 'css/translator.css', ['minify' => false]],
         ],
+        'core/country-stateprovince-link' => [
+            ['javascript', 'js/country-stateprovince-link.js', ['minify' => false]],
+        ],
     ],
     'asset_groups' => [
         'jquery/ui' => [
@@ -1490,6 +1494,12 @@ return [
                 ['javascript-localized', 'core/translator'],
                 ['css', 'core/translator'],
             ],
+        ],
+        'core/country-stateprovince-link' => [
+            [
+                ['javascript', 'jquery'],
+                ['javascript', 'core/country-stateprovince-link'],
+            ]
         ],
         /* @deprecated keeping this around because certain themes reference it and we don't want to break them. */
         'core/legacy' => [
