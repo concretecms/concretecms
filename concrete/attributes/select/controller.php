@@ -25,6 +25,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     ];
     private $akSelectAllowMultipleValues;
     private $akSelectAllowOtherValues;
+    private $akHideNoneOption;
     private $akSelectOptionDisplayOrder;
     private $akDisplayMultipleValuesOnSelect;
 
@@ -57,12 +58,13 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     public function exportKey($akey)
     {
         $this->load();
-        $db = Database::get();
+
         $type = $akey->addChild('type');
         $type->addAttribute('allow-multiple-values', $this->akSelectAllowMultipleValues);
         $type->addAttribute('display-order', $this->akSelectOptionDisplayOrder);
         $type->addAttribute('display-multiple-values', $this->akDisplayMultipleValuesOnSelect);
         $type->addAttribute('allow-other-values', $this->akSelectAllowOtherValues);
+        $type->addAttribute('hide-none-option', $this->akHideNoneOption);
         $options = $this->getOptions();
         $node = $type->addChild('options');
         foreach ($options as $option) {
@@ -107,6 +109,17 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         $this->entityManager->flush();
     }
 
+    public function setHideNoneOption($allow)
+    {
+        /**
+         * @var SelectSettings
+         */
+        $type = $this->getAttributeKey()->getAttributeKeySettings();
+        $type->setHideNoneOption($allow);
+        $this->entityManager->persist($type);
+        $this->entityManager->flush();
+    }
+
     public function setOptionDisplayOrder($order)
     {
         /**
@@ -142,10 +155,14 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
             $akDisplayMultipleValuesOnSelect = $akey->type['display-multiple-values'];
             $akSelectOptionDisplayOrder = $akey->type['display-order'];
             $akSelectAllowOtherValues = $akey->type['allow-other-values'];
+            $akHideNoneOption = $akey->type['hide-none-option'];
+
             $type->setAllowMultipleValues(((string) $akSelectAllowMultipleValues) == '1' ? true : false);
             $type->setDisplayOrder($akSelectOptionDisplayOrder);
             $type->setAllowOtherValues(((string) $akSelectAllowOtherValues) == '1' ? true : false);
             $type->setDisplayMultipleValuesOnSelect(((string) $akDisplayMultipleValuesOnSelect) == '1' ? true : false);
+            $type->setHideNoneOption(((string) $akHideNoneOption) == '1' ? true : false);
+
             $list = new SelectValueOptionList();
             if (isset($akey->type->options)) {
                 $displayOrder = 0;
@@ -622,8 +639,6 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         $type = $this->getAttributeKeySettings();
         $optionList = $type->getOptionList();
 
-        $orm = $this->entityManager;
-
         if (isset($data['akSelectAllowMultipleValues']) && ($data['akSelectAllowMultipleValues'] == 1)) {
             $akSelectAllowMultipleValues = 1;
         } else {
@@ -648,10 +663,17 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
             $akSelectOptionDisplayOrder = 'display_asc';
         }
 
+        if (isset($data['akHideNoneOption']) && ($data['akHideNoneOption'] == 1)) {
+            $akHideNoneOption = 1;
+        } else {
+            $akHideNoneOption = 0;
+        }
+
         $type->setAllowMultipleValues((bool) $akSelectAllowMultipleValues);
         $type->setDisplayOrder($akSelectOptionDisplayOrder);
         $type->setAllowOtherValues((bool) $akSelectAllowOtherValues);
         $type->setDisplayMultipleValuesOnSelect((bool) $akDisplayMultipleValuesOnSelect);
+        $type->setHideNoneOption((bool) $akHideNoneOption);
 
         $selectedPostValues = $this->getSelectValuesFromPost();
 
@@ -829,11 +851,13 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
             $this->akSelectAllowOtherValues = $type->getAllowOtherValues();
             $this->akSelectOptionDisplayOrder = $type->getDisplayOrder();
             $this->akDisplayMultipleValuesOnSelect = $type->getDisplayMultipleValuesOnSelect();
+            $this->akHideNoneOption = $type->getHideNoneOption();
 
             $this->set('akDisplayMultipleValuesOnSelect', $this->akDisplayMultipleValuesOnSelect);
             $this->set('akSelectAllowMultipleValues', $this->akSelectAllowMultipleValues);
             $this->set('akSelectAllowOtherValues', $this->akSelectAllowOtherValues);
             $this->set('akSelectOptionDisplayOrder', $this->akSelectOptionDisplayOrder);
+            $this->set('akHideNoneOption', $this->akHideNoneOption);
         }
     }
 
