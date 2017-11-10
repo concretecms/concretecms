@@ -31,7 +31,7 @@ class ConnectionFactory
         $params['host'] = array_get($params, 'host', array_get($config, 'server'));
         $params['user'] = array_get($params, 'user', array_get($config, 'username'));
         if (!isset($params['driverOptions'])) {
-            $params['driverOptions'] = array();
+            $params['driverOptions'] = [];
         }
         if (defined('PDO::MYSQL_ATTR_MULTI_STATEMENTS')) {
             $params['driverOptions'][\PDO::MYSQL_ATTR_MULTI_STATEMENTS] = false;
