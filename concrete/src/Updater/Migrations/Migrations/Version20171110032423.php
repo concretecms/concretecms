@@ -2,10 +2,10 @@
 
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
-use Concrete\Core\Attribute\Key\EventKey;
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
+use Concrete\Core\Entity\Attribute\Key\EventKey;
 use Concrete\Core\Entity\Attribute\Value\EventValue;
 use Concrete\Core\Entity\Calendar\Calendar;
 use Concrete\Core\Entity\Calendar\CalendarEvent;
