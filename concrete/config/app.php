@@ -653,8 +653,8 @@ return [
             'view_event_occurrence',
             ['occurrence_id' => '[0-9]+'],
         ],
-        '/feed/{calendar_id}' => [
-            '\Concrete\Controller\Dialog\Frontend\Feed::view',
+        '/ccm/calendar/feed/{calendar_id}' => [
+            '\Concrete\Controller\CalendarFeed::view',
             'calendar_rss',
             ['identifier' => '[0-9]+'],
         ],
