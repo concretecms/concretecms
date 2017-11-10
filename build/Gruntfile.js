@@ -415,6 +415,10 @@ module.exports = function(grunt) {
         jquery_text_counter: {
             dest: '<%= DIR_BASE %>/concrete/js/textcounter.js',
             src: '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-text-counter/textcounter.js'
+        },
+        ccm_country_stateprovince_link: {
+            dest: '<%= DIR_BASE %>/concrete/js/country-stateprovince-link.js',
+            src: '<%= DIR_BASE %>/concrete/js/build/core/country-stateprovince-link.js'
         }
     };
 
