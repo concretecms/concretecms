@@ -87,7 +87,7 @@
             <attributekey handle="project_tasks"/>
             <attributekey handle="project_skills"/>
         </attributeset>
-        <attributeset handle="calendar_categories" name="Categories" package="" locked="0" category="event">
+        <attributeset handle="event_categories" name="Categories" package="" locked="0" category="event">
             <attributekey handle="event_categories"/>
         </attributeset>
 
@@ -3165,5 +3165,10 @@
             </forms>
         </entity>
     </expressentities>
+
+    <config>
+        <option name="concrete.calendar.topic_attribute">event_categories</option>
+    </config>
+
 
 </concrete5-cif>
