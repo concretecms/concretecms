@@ -244,9 +244,9 @@ abstract class Editor extends ConcreteObject
         if (isset($config['htmlawed'])) {
             $default = array('safe' => 1, 'elements' => 'p, br, strong, em, strike, a');
             $conf = array_merge($default, (array) $config['htmlawed']);
-            $lawed = htmLawed($cnvMessageBody, $conf);
+            $result = htmLawed($cnvMessageBody, $conf);
         } else {
-            $lawed = $cnvMessageBody;
+            $result = $cnvMessageBody;
         }
         if ($config['mention'] !== false) {
             $users = $cnv->getConversationMessageUsers();
@@ -257,10 +257,24 @@ abstract class Editor extends ConcreteObject
                 $haystack[] = "<a href='" . $user->getUserPublicProfileURL() . "'>'@" . $user->getUserName() . "</a>";
             }
 
-            return str_ireplace($needle, $haystack, $lawed);
+            $result = str_ireplace($needle, $haystack, $result);
         }
 
-        return $lawed;
+        // Replace any potential XSS
+        $result = $this->removeJavascriptLinks($result);
+        return $result;
+    }
+
+    /**
+     * Replace javascript links with dummy links
+     *
+     * @param $html
+     * @return mixed
+     */
+    protected function removeJavascriptLinks($html)
+    {
+        // Use regex to replace javascript links with javascript:void
+        return preg_replace('/href=(\'|")\s*javascript/i', 'data-blocked=$1/', $html);
     }
 
     /**
