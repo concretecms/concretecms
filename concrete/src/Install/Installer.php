@@ -161,7 +161,7 @@ class Installer
     {
         $pdoCheck = $this->application->make(PdoMysqlExtension::class)->performCheck();
         if ($pdoCheck->getState() !== PreconditionResult::STATE_PASSED) {
-            throw new UserMessageException($pdoCheck->getMessage());
+            throw new UserMessageException(htmlentities($pdoCheck->getMessage(), ENT_QUOTES));
         }
         $databaseConfiguration = $this->getDefaultConnectionConfiguration();
         if ($databaseConfiguration === null) {
@@ -171,11 +171,13 @@ class Installer
         /* @var DatabaseManager $databaseManager */
         try {
             $db = $databaseManager->getFactory()->createConnection($databaseConfiguration);
+            //connection test
+            $db->query('select 1');
             /* @var \Concrete\Core\Database\Connection\Connection $db */
         } catch (Exception $x) {
-            throw new UserMessageException($x->getMessage(), $x->getCode(), $x);
+            throw new UserMessageException(htmlspecialchars($x->getMessage(),ENT_QUOTES), $x->getCode(), $x);
         } catch (Throwable $x) {
-            throw new UserMessageException($x->getMessage(), $x->getCode());
+            throw new UserMessageException(htmlspecialchars($x->getMessage(),ENT_QUOTES), $x->getCode());
         }
         if ($this->getOptions()->isAutoAttachEnabled() === false) {
             $existingTables = [];
