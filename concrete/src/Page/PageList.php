@@ -175,6 +175,14 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
         $this->query->select('p.cID');
     }
 
+    public function filterBySite(Site $site)
+    {
+        $this->siteTree = array();
+        foreach($site->getLocales() as $locale) {
+            $this->siteTree[] = $locale->getSiteTree();
+        }
+    }
+
     public function finalizeQuery(\Doctrine\DBAL\Query\QueryBuilder $query)
     {
         if ($this->includeAliases) {
@@ -231,7 +239,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
             // The code above is set up to make it so that we don't filter by site tree
             // if we have a defined parent.
 
-            if (is_object($this->siteTree)) {
+            if (is_object($this->siteTree) || is_array($this->siteTree)) {
                 $tree = $this->siteTree;
             } else {
                 switch($this->siteTree) {
@@ -250,12 +258,31 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
             }
 
             if (isset($tree)) {
-                // We have either passed in a specific tree or we are looking at the current site.
-                $query->setParameter('siteTreeID', $tree->getSiteTreeID());
-                if ($this->includeSystemPages) {
-                    $query->andWhere('(p.siteTreeID = :siteTreeID or p.siteTreeID = 0)');
+                if (is_array($tree)) {
+                    $treeIDs = array();
+                    foreach($tree as $siteTree) {
+                        $treeIDs[] = $siteTree->getSiteTreeID();
+                    }
+                    if ($this->includeSystemPages) {
+                        $query->andWhere(
+                            $query->expr()->orX()->add(
+                                $query->expr()->in('p.siteTreeID', array_map([$query->getConnection(), 'quote'], $treeIDs))
+                            )->add('p.siteTreeID = 0')
+                        );
+                    } else {
+                        $query->andWhere(
+                            $query->expr()->in('p.siteTreeID', array_map([$query->getConnection(), 'quote'], $treeIDs))
+                        );
+                    }
+
                 } else {
-                    $query->andWhere('p.siteTreeID = :siteTreeID');
+                    // We have either passed in a specific tree or we are looking at the current site.
+                    $query->setParameter('siteTreeID', $tree->getSiteTreeID());
+                    if ($this->includeSystemPages) {
+                        $query->andWhere('(p.siteTreeID = :siteTreeID or p.siteTreeID = 0)');
+                    } else {
+                        $query->andWhere('p.siteTreeID = :siteTreeID');
+                    }
                 }
             }
 
