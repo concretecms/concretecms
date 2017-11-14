@@ -99,11 +99,16 @@ class Section extends Page
 
             $item->lock();
 
+            $returnID = false;
+
             if ($page->isPageDraft()) {
-                $cParentID = $page->getPageDraftTargetParentPageID();
-                if ($cParentID) {
-                    $parent = Page::getByID($cParentID);
-                    $tree = $parent->getSiteTreeObject();
+                $tree = false;
+                if ($page->getPageDraftTargetParentPageID()) {
+                    $cParentID = $page->getPageDraftTargetParentPageID();
+                    if ($cParentID) {
+                        $parent = Page::getByID($cParentID);
+                        $tree = $parent->getSiteTreeObject();
+                    }
                 }
             }
 
@@ -111,7 +116,6 @@ class Section extends Page
                 $tree = $page->getSiteTreeObject();
             }
             
-            $returnID = false;
             if ($tree instanceof SiteTree) {
                 $returnID = $tree->getSiteHomePageID();
             }
