@@ -167,16 +167,36 @@ var ConcreteToolbar = function() {
             $(this).toggleClass('ccm-mobile-close');   // slide out mobile nav
             $('.ccm-mobile-menu-overlay').slideToggle();
         });
-        $('.ccm-mobile-menu-overlay .parent-ul a').click(function(event) {
-            if(!($(this).parent('li').hasClass('last-li'))) {
-                $(this).parent('li').siblings().children('ul').hide();
-                if(!($(this).parent('li').children('ul').is(':visible'))) {
-                    $(this).next('ul').show();
-                    event.preventDefault();
-                }
-            }
+
+		// on page load
+		// - open drop-downs to current page
+        // - from the current page, set parent toggle arrows up
+        var navSelectedParents = $('.ccm-mobile-menu-entries li.nav-selected')
+            .parentsUntil('.ccm-mobile-menu-entries')
+            .show();
+        $(navSelectedParents).last()
+            .find('.drop-down-toggle:first, .nav-path-selected:not(.nav-selected) > .drop-down-toggle')
+            .removeClass('fa-caret-down')
+            .addClass('fa-caret-up');
+
+        $('.ccm-mobile-menu-entries .drop-down-toggle').on('click', function() {
+        	// toggle the arrows and toggle the drop-downs
+            $(this).toggleClass('fa-caret-down fa-caret-up');
+            $(this).next('ul').slideToggle();
+
+            // find the parent's siblings
+            // - close them and their children
+            // - set toggle arrows down on closed drop-downs
+            var toggleParent = $(this).parent('li');
+            $(toggleParent).siblings('li')
+                .find('ul')
+                .slideUp();
+            $(toggleParent).siblings('li')
+                .find('.drop-down-toggle')
+                .removeClass('fa-caret-up')
+                .addClass('fa-caret-down');
         });
-    }
+    };
 
 	activateIntelligentSearchResults = function() {
 		if ($("#ccm-intelligent-search-results div:visible").length == 0) {
