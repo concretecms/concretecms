@@ -4,7 +4,7 @@ namespace Concrete\Controller\Dialog\Type;
 use Block;
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Concrete\Core\Database\Connection\Connection;
-use Concrete\Core\Foundation\Queue\Queue;
+use Concrete\Core\Foundation\Queue\QueueService;
 use Concrete\Core\Http\ResponseFactory;
 use Concrete\Core\Page\PageList;
 use Page;
@@ -153,7 +153,9 @@ class UpdateFromType extends BackendInterfaceController
 
         $queueName = $queue->getName();
         $queue->deleteQueue();
-        $queue = Queue::get($queueName);
+
+        $queueService = $this->app->make(QueueService::class);
+        $queue = $queueService->get($queueName);
 
         foreach ($records as $record) {
             $queue->send(serialize($record));
@@ -227,7 +229,7 @@ class UpdateFromType extends BackendInterfaceController
             return;
         }
 
-        $queueService = $this->app->make(Queue::class);
+        $queueService = $this->app->make(QueueService::class);
         /* @var Queue $queueService */
         $queueName = sprintf('update_pagetype_defaults_%s', $this->pagetype->getPageTypeID());
         $queue = $queueService->get($queueName);
