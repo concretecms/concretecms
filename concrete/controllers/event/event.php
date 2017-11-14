@@ -29,26 +29,6 @@ class Event extends \Concrete\Core\Controller\Controller
         throw new \Exception(t('Access Denied'));
     }
 
-    public function duplicate()
-    {
-        $event = CalendarEvent::getByID($this->request->request->get('eventID'));
-        if ($event) {
-            $calendar = $event->getCalendar();
-            if (is_object($calendar)) {
-                $p = new \Permissions($calendar);
-                if ($p->canCopyCalendarEvents() && $this->app->make('token')->validate("duplicate")) {
-
-                    $service = $this->app->make(EventService::class);
-                    $u = new \User();
-                    $event = $service->duplicate($event, $u);
-                    $this->flash('success', t('Event duplicated. The new event has been saved but has not yet been approved.'));
-                    return new JsonResponse($event);
-                }
-            }
-        }
-        throw new \Exception(t('Access Denied'));
-    }
-
     public function unapprove()
     {
         $event = CalendarEvent::getByID($this->request->request->get('eventID'));

@@ -168,11 +168,13 @@ class EventService
         $this->entityManager->flush();
     }
 
-    public function duplicate(CalendarEvent $event, User $u)
+    public function duplicate(CalendarEvent $event, User $u, Calendar $calendar = null)
     {
         $values = $this->eventCategory->getAttributeValues($event->getRecentVersion());
 
-        $new = new CalendarEvent($event->getCalendar());
+        $calendar = $calendar ? $calendar : $event->getCalendar();
+
+        $new = new CalendarEvent($calendar);
         $version = clone $event->getRecentVersion();
         $version->setDateActivated(null);
         $version->setAuthor($u->getUserInfoObject()->getEntityObject());

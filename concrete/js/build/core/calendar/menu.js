@@ -26,21 +26,10 @@
 			container = my.options.container;
 
 		parent.setupMenuOptions($menu);
-		$menu.find('a[data-calendar-event-action=duplicate]').on('click', function() {
-			var eventID = $(this).attr('data-calendar-event-id'),
-				token = $(this).attr('data-calendar-event-token');
-			$.concreteAjax({
-				url: CCM_DISPATCHER_FILENAME + '/ccm/calendar/event/duplicate',
-				data: {
-					eventID: eventID,
-					ccm_token: token
-				},
-				success: function(r) {
-					window.location.reload();
-				}
-			});
-			return false;
-		});
+
+
+		// We don't need this class any longer, but let's keep it around in case.
+
 	}
 
 	// jQuery Plugin

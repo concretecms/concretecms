@@ -638,6 +638,8 @@ return [
         '/ccm/calendar/dialogs/event/add' => ['\Concrete\Controller\Dialog\Event\Edit::add'],
         '/ccm/calendar/dialogs/event/add/save' => ['\Concrete\Controller\Dialog\Event\Edit::addEvent'],
         '/ccm/calendar/dialogs/event/edit/save' => ['\Concrete\Controller\Dialog\Event\Edit::updateEvent'],
+        '/ccm/calendar/dialogs/event/duplicate' => ['\Concrete\Controller\Dialog\Event\Duplicate::view'],
+        '/ccm/calendar/dialogs/event/duplicate/submit' => ['\Concrete\Controller\Dialog\Event\Duplicate::submit'],
         '/ccm/calendar/dialogs/event/delete' => ['\Concrete\Controller\Dialog\Event\Delete::view'],
         '/ccm/calendar/dialogs/event/delete_occurrence' => ['\Concrete\Controller\Dialog\Event\DeleteOccurrence::view'],
         '/ccm/calendar/dialogs/event/delete/submit' => ['\Concrete\Controller\Dialog\Event\Delete::submit'],
@@ -647,7 +649,6 @@ return [
         '/ccm/calendar/event/version/delete' => ['\Concrete\Controller\Event\EventVersion::delete'],
         '/ccm/calendar/event/version/approve' => ['\Concrete\Controller\Event\EventVersion::approve'],
         '/ccm/calendar/event/version/unapprove_all' => ['\Concrete\Controller\Event\Event::unapprove'],
-        '/ccm/calendar/event/duplicate' => ['\Concrete\Controller\Event\Event::duplicate'],
         '/ccm/calendar/view_event/{bID}/{occurrence_id}' => [
             '\Concrete\Controller\Dialog\Frontend\Event::view',
             'view_event_occurrence',
