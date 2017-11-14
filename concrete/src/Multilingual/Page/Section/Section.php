@@ -96,8 +96,21 @@ class Section extends Page
         if (!$item->isMiss()) {
             $returnID = $item->get();
         } else {
+
             $item->lock();
-            $tree = $page->getSiteTreeObject();
+
+            if ($page->isPageDraft()) {
+                $cParentID = $page->getPageDraftTargetParentPageID();
+                if ($cParentID) {
+                    $parent = Page::getByID($cParentID);
+                    $tree = $parent->getSiteTreeObject();
+                }
+            }
+
+            if (!isset($tree)) {
+                $tree = $page->getSiteTreeObject();
+            }
+            
             $returnID = false;
             if ($tree instanceof SiteTree) {
                 $returnID = $tree->getSiteHomePageID();
