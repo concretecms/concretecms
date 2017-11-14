@@ -352,10 +352,10 @@ class Section extends Page
      *
      * @return Section|false
      */
-    public static function getByLanguage($language, TreeInterface $treeInterface = null)
+    public static function getByLanguage($language, Site $site = null)
     {
-        if (!is_object($treeInterface)) {
-            $treeInterface = \Site::getSite();
+        if (!$site) {
+            $site = \Core::make('site')->getSite();
         }
 
         $em = Database::get()->getEntityManager();
@@ -363,7 +363,7 @@ class Section extends Page
          * @var $section Locale
          */
         $section = $em->getRepository('Concrete\Core\Entity\Site\Locale')
-            ->findOneBy(['tree' => $treeInterface->getSiteTreeObject(), 'msLanguage' => $language]);
+            ->findOneBy(['site' => $site, 'msLanguage' => $language]);
 
         if (is_object($section)) {
             $obj = parent::getByID($section->getSiteTree()->getSiteHomePageID(), 'RECENT');
