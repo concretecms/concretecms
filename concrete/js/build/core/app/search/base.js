@@ -24,6 +24,7 @@
 		this.$menuTemplate = $element.find('script[data-template=search-results-menu]');
 		this.$searchFieldRowTemplate = $element.find('script[data-template=search-field-row]');
 
+		this.$headerSearch = $element.find('div[data-header]');
 		this.$headerSearchInput = $element.find('div[data-header] input');
 		this.$advancedSearchButton = $element.find('a[data-launch-dialog=advanced-search]');
 		this.$resetSearchButton = $element.find('a[data-button-action=clear-search]');
@@ -70,6 +71,7 @@
 		my.$advancedSearchButton.html(advancedSearchText);
 
 		if (result.query && result.folder && result.folder.treeNodeTypeHandle !== 'search_preset') {
+			my.$headerSearch.find('div.btn-group').hide(); // hide any fancy button groups we've added here.
 			my.$headerSearchInput.prop('disabled', true);
 			my.$headerSearchInput.attr('placeholder', '');
 			my.$resetSearchButton.show();
@@ -541,6 +543,7 @@
 				jQuery.fn.dialog.closeTop();
 				cs.$advancedSearchButton.html(ccmi18n_filemanager.edit);
 				cs.$resetSearchButton.show();
+				cs.$headerSearch.find('div.btn-group').hide(); // hide any fancy button groups we've added here.
 				cs.$headerSearchInput.prop('disabled', true).val('');
 				cs.$headerSearchInput.attr('placeholder', '');
 			}
@@ -552,6 +555,7 @@
 				url: $(this).attr('data-button-action-url'),
 				success: function(r) {
 					cs.updateResults(r);
+					cs.$headerSearch.find('div.btn-group').show();
 					cs.$headerSearchInput.prop('disabled', false);
 					cs.$headerSearchInput.attr('placeholder', ccmi18n.search);
 					cs.$advancedSearchButton.html(ccmi18n.advanced).show();

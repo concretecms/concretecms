@@ -18,41 +18,9 @@
         $site = Core::make('site')->getActiveSiteForEditing();
         $locales = $site->getLocales();
         if (count($locales) > 1) {
-            $selectedLocale = $site->getDefaultLocale();
-            ?>
-
-            <input type="hidden" name="siteTreeID" value="<?=$selectedLocale->getSiteTree()->getSiteTreeID()?>">
-
-            <div class="btn-group">
-                <button type="button" class="btn btn-default" data-action="launch-locale-list" data-toggle="dropdown">
-                    <?= \Concrete\Core\Multilingual\Service\UserInterface\Flag::getLocaleFlagIcon($selectedLocale) ?> <?= $selectedLocale->getLanguageText() ?>
-                    <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" role="menu">
-                    <?php foreach ($locales as $locale) { ?>
-                        <li><a href="#" <?php if ($selectedLocale->getLocaleID() == $locale->getLocaleID()) { ?>data-locale="default"<?php } ?> data-select-locale-tree="<?=$locale->getSiteTree()->getSiteTreeID()?>">
-                                <?= \Concrete\Core\Multilingual\Service\UserInterface\Flag::getLocaleFlagIcon($locale) ?>
-                                <?= $locale->getLanguageText() ?>
-                            </a>
-                        </li>
-                    <?php } ?>
-                </ul>
-            </div>
-
-            <script type="text/javascript">
-                $(function() {
-                    $('a[data-select-locale-tree]').on('click', function(e) {
-                        e.preventDefault();
-                        var treeID = $(this).attr('data-select-locale-tree'),
-                            html = $(this).html() + ' <span class="caret"></span>',
-                            $form = $(this).closest('form');
-
-                        $form.find('input[name=siteTreeID]').val(treeID);
-                        $form.find('button[data-action=launch-locale-list]').html(html);
-                    });
-                });
-            </script>
-        <?php } ?>
+            $selector = new \Concrete\Core\Form\Service\Widget\SiteLocaleSelector();
+            print $selector->selectLocale('localeID', $site);
+        } ?>
 
         <button class="btn btn-info" type="submit"><i class="fa fa-search"></i></button>
 

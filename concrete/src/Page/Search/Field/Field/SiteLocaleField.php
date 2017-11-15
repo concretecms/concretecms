@@ -1,23 +1,23 @@
 <?php
 namespace Concrete\Core\Page\Search\Field\Field;
 
+use Concrete\Core\Form\Service\Widget\SiteLocaleSelector;
 use Concrete\Core\Search\Field\AbstractField;
 use Concrete\Core\Search\ItemList\ItemList;
 use Concrete\Core\Support\Facade\Facade;
 use Doctrine\ORM\EntityManager;
 use Concrete\Core\Entity\Site\SiteTree;
+use Concrete\Core\Entity\Site\Locale;
 
-class SiteTreeField extends AbstractField
+class SiteLocaleField extends AbstractField
 {
     /**
      * Initialize the instance.
-     *
-     * @param string|null $keywords the site tree to be searched
      */
-    public function __construct($siteTreeID = null)
+    public function __construct($localeID = null)
     {
-        if ($siteTreeID) {
-            $this->data['siteTreeID'] = $siteTreeID;
+        if ($localeID) {
+            $this->data['localeID'] = $localeID;
         }
     }
 
@@ -27,7 +27,7 @@ class SiteTreeField extends AbstractField
      * @var array
      */
     protected $requestVariables = [
-        'siteTreeID',
+        'localeID',
     ];
 
     /**
@@ -37,7 +37,7 @@ class SiteTreeField extends AbstractField
      */
     public function getKey()
     {
-        return 'site_tree';
+        return 'site_locale';
     }
 
     /**
@@ -47,7 +47,7 @@ class SiteTreeField extends AbstractField
      */
     public function getDisplayName()
     {
-        return false;
+        return t('Locale');
     }
 
     /**
@@ -57,12 +57,12 @@ class SiteTreeField extends AbstractField
      */
     public function filterList(ItemList $list)
     {
-        $siteTreeID = $this->data['siteTreeID'];
+        $localeID = $this->data['localeID'];
         $app = Facade::getFacadeApplication();
-        $em = $app->make(EntityManager::class);
-        $tree = $em->find(SiteTree::class, $siteTreeID);
-        if ($tree) {
-            $list->setSiteTreeObject($tree);
+        if (isset($this->data['localeID']) && $this->data['localeID'] !== '') {
+            $em = $app->make(EntityManager::class);
+            $selectedLocale = $em->find(Locale::class, $this->data['localeID']);
+            $list->setSiteTreeObject($selectedLocale->getSiteTree());
         }
     }
 
@@ -73,6 +73,14 @@ class SiteTreeField extends AbstractField
      */
     public function renderSearchField()
     {
-        return false;
+        $app = Facade::getFacadeApplication();
+        $selectedLocale = null;
+        if (isset($this->data['localeID']) && $this->data['localeID'] !== '') {
+            $em = $app->make(EntityManager::class);
+            $selectedLocale = $em->find(Locale::class, $this->data['localeID']);
+        }
+        $site = $app->make('site')->getActiveSiteForEditing();
+        $selector = new SiteLocaleSelector();
+        print $selector->selectLocale('localeID', $site, $selectedLocale);
     }
 }
