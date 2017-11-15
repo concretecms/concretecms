@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.org/concrete5/concrete5.svg?branch=master)](https://travis-ci.org/concrete5/concrete5-tests)
-
 ## Step 1: Clone this repository.
 
 Or download it.
