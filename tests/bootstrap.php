@@ -1,11 +1,11 @@
 <?php
 
-use Concrete\Core\Http\Request;
-use Illuminate\Filesystem\Filesystem;
-use Concrete\TestHelpers\Config\Fixtures\TestFileSaver;
-use Concrete\TestHelpers\Config\Fixtures\TestFileLoader;
 use Concrete\Core\Config\Repository\Repository;
+use Concrete\Core\Http\Request;
 use Concrete\Core\Support\Facade\Config;
+use Concrete\TestHelpers\Config\Fixtures\TestFileLoader;
+use Concrete\TestHelpers\Config\Fixtures\TestFileSaver;
+use Illuminate\Filesystem\Filesystem;
 
 // Define test constants
 define('DIR_TESTS', str_replace(DIRECTORY_SEPARATOR, '/', __DIR__));
