@@ -1,13 +1,15 @@
 <?php
 
-namespace Concrete\Tests\Core\Html\Service;
+namespace Concrete\Tests\Block;
 
 use Concrete\Core\Block\Block;
 use Concrete\Core\Block\View\BlockViewTemplate;
 use Concrete\Core\Entity\Block\BlockType\BlockType;
+use Concrete\Core\Package\Package;
 use Concrete\Core\Package\PackageList;
+use PHPUnit_Framework_TestCase;
 
-class BlockViewTemplateTest extends \PHPUnit_Framework_TestCase
+class BlockViewTemplateTest extends PHPUnit_Framework_TestCase
 {
     // Core block, view.php, no custom template.
     public function testCoreBlockView()

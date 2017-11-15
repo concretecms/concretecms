@@ -1,15 +1,16 @@
 <?php
 
-use Concrete\Core\Entity\Package;
-use Concrete\Core\Support\Facade\Application;
-use Illuminate\Filesystem\Filesystem;
+namespace Concrete\Tests\Page;
 
-/**
- * Created by PhpStorm.
- * User: andrew
- * Date: 6/10/14
- * Time: 7:47 AM.
- */
+use Concrete\Core\Entity\Package;
+use Concrete\TestHelpers\Page\PageTestCase;
+use Illuminate\Filesystem\Filesystem;
+use Page;
+use PageTemplate;
+use PageType;
+use SinglePage;
+use Site;
+
 class PageControllerTest extends PageTestCase
 {
     public function __construct($name = null, array $data = [], $dataName = '')
@@ -34,7 +35,7 @@ class PageControllerTest extends PageTestCase
     public function testPageTypeController()
     {
         $page = $this->addPage1();
-        require __DIR__ . '/fixtures/concrete/basic.php';
+        require DIR_TESTS . '/assets/Page/concrete/basic.php';
         $controller = $page->getPageController();
         $this->assertEquals('Concrete\Controller\PageType\Basic', get_class($controller));
         $this->assertInstanceOf('Concrete\Core\Page\Controller\PageTypeController', $controller);
@@ -46,7 +47,7 @@ class PageControllerTest extends PageTestCase
 
         $root = realpath(DIR_BASE . '/application');
         @mkdir($root . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES, 0777, true);
-        @copy(__DIR__ . '/fixtures/application/alternate.php',
+        copy(DIR_TESTS . '/assets/Page/application/alternate.php',
             $root . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES . '/alternate.php');
 
         $controller = $page->getPageController();
@@ -72,7 +73,7 @@ class PageControllerTest extends PageTestCase
         if (!is_dir($root . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . '/dashboard/reports')) {
             mkdir($root . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . '/dashboard/reports', 0777, true);
         }
-        copy(__DIR__ . '/fixtures/application/forms.php',
+        copy(DIR_TESTS . '/assets/Page/application/forms.php',
         $root . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . '/dashboard/reports/forms.php');
 
         SinglePage::add('/dashboard/reports/forms');
@@ -93,9 +94,9 @@ class PageControllerTest extends PageTestCase
     {
         $p = new Package();
         $p->setPackageHandle('awesome_package');
-        require_once __DIR__ . '/fixtures/package/awesome_package.php';
+        require_once DIR_TESTS . '/assets/Page/package/awesome_package.php';
 
-        $pkg = new Concrete\Package\AwesomePackage\Controller(\Core::make('app'));
+        $pkg = new \Concrete\Package\AwesomePackage\Controller(\Core::make('app'));
         $pkg->setPackageEntity($p);
 
         $pkg->pkgHandle = 'awesome_package';
@@ -104,10 +105,10 @@ class PageControllerTest extends PageTestCase
 
         $root = realpath(DIR_BASE_CORE . '/../packages');
         @mkdir($root . '/awesome_package/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . '/testerson', 0777, true);
-        @copy(__DIR__ . '/fixtures/package/foo.php',
+        copy(DIR_TESTS . '/assets/Page/package/foo.php',
             $root . '/awesome_package/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . '/testerson/foo.php');
         @mkdir($root . '/awesome_package/' . DIRNAME_PAGES . '/testerson/foo', 0777, true);
-        @copy(__DIR__ . '/fixtures/application/views/foo.php',
+        copy(DIR_TESTS . '/assets/Page/application/views/foo.php',
             $root . '/awesome_package/' . DIRNAME_PAGES . '/testerson/foo/view.php');
 
         $p->setPackageID(1);
@@ -133,10 +134,10 @@ class PageControllerTest extends PageTestCase
 
         $root = realpath(DIR_BASE_CORE . '/../packages');
         @mkdir($root . '/awesome_package/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . '/testerson', 0777, true);
-        @copy(__DIR__ . '/fixtures/package/foo.php',
+        copy(DIR_TESTS . '/assets/Page/package/foo.php',
             $root . '/awesome_package/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . '/testerson/foo.php');
         @mkdir($root . '/awesome_package/' . DIRNAME_PAGES . '/testerson', 0777, true);
-        @copy(__DIR__ . '/fixtures/application/views/foo.php',
+        copy(DIR_TESTS . '/assets/Page/application/views/foo.php',
             $root . '/awesome_package/' . DIRNAME_PAGES . '/testerson/foo.php');
 
         SinglePage::add('/testerson/foo', $pkg);
@@ -156,10 +157,10 @@ class PageControllerTest extends PageTestCase
     {
         $root = realpath(DIR_BASE_CORE . '/../application');
         @mkdir($root . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . '/testerson', 0777, true);
-        @copy(__DIR__ . '/fixtures/application/foo.php',
+        copy(DIR_TESTS . '/assets/Page/application/foo.php',
             $root . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . '/testerson/foo.php');
         @mkdir($root . '/' . DIRNAME_PAGES . '/testerson/foo', 0777, true);
-        @copy(__DIR__ . '/fixtures/application/views/foo.php',
+        copy(DIR_TESTS . '/assets/Page/application/views/foo.php',
             $root . '/' . DIRNAME_PAGES . '/testerson/foo/view.php');
 
         $failed = false;
@@ -187,10 +188,10 @@ class PageControllerTest extends PageTestCase
     {
         $root = realpath(DIR_BASE_CORE . '/../application');
         @mkdir($root . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . '/testerson', 0777, true);
-        @copy(__DIR__ . '/fixtures/application/foo.php',
+        copy(DIR_TESTS . '/assets/Page/application/foo.php',
             $root . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . '/testerson/foo.php');
         @mkdir($root . '/' . DIRNAME_PAGES . '/testerson', 0777, true);
-        @copy(__DIR__ . '/fixtures/application/views/foo.php',
+        copy(DIR_TESTS . '/assets/Page/application/views/foo.php',
             $root . '/' . DIRNAME_PAGES . '/testerson/foo.php');
 
         $failed = false;

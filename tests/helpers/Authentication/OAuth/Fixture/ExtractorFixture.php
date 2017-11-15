@@ -1,8 +1,10 @@
 <?php
 
-namespace Concrete\Tests\Core\Authentication\Fixtures;
+namespace Concrete\TestHelpers\Authentication\OAuth\Fixture;
 
-class ExtractorFixture implements \OAuth\UserData\Extractor\ExtractorInterface
+use OAuth\UserData\Extractor\ExtractorInterface;
+
+class ExtractorFixture implements ExtractorInterface
 {
     /**
      * @param  \OAuth\Common\Service\ServiceInterface $service

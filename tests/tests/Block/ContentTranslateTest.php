@@ -1,6 +1,9 @@
 <?php
 
+namespace Concrete\Tests\Block;
+
 use Concrete\Core\Editor\LinkAbstractor;
+use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 
 class ContentTranslateTest extends ConcreteDatabaseTestCase
 {

@@ -1,10 +1,13 @@
 <?php
 
+namespace Concrete\Tests\Config\Repository;
+
 use Concrete\Core\Config\DatabaseLoader;
 use Concrete\Core\Config\DatabaseSaver;
 use Concrete\Core\Config\Repository\Repository;
+use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 
-class DatabaseRepositoryTest extends \ConcreteDatabaseTestCase
+class DatabaseRepositoryTest extends ConcreteDatabaseTestCase
 {
     /** @var Repository */
     protected $repository;

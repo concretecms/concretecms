@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Tests\Core\Localization\Translator\Adapter\Core;
+namespace Concrete\Tests\Localization\Adapter\Core;
 
 use Concrete\Core\Localization\Translator\Adapter\Core\TranslatorAdapterFactory;
 use Concrete\Core\Localization\Translator\Adapter\Plain\TranslatorAdapterFactory as PlainTranslatorAdapterFactory;

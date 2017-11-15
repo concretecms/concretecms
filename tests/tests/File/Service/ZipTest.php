@@ -1,13 +1,13 @@
 <?php
 
-namespace Concrete\Tests\Core\File\Service;
+namespace Concrete\Tests\File\Service;
 
-use Concrete\Core\File\Service\Zip;
 use Core;
 use Exception;
 use Illuminate\Filesystem\Filesystem;
+use PHPUnit_Framework_TestCase;
 
-class ZipTest extends \PHPUnit_Framework_TestCase
+class ZipTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @var \Concrete\Core\File\Service\Zip

@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Tests\Core\Localization\Translator\Adapter\Zend;
+namespace Concrete\Tests\Localization\Adapter\Zend;
 
 use Concrete\Core\Localization\Translator\Adapter\Zend\TranslatorAdapterFactory;
 use PHPUnit_Framework_TestCase;

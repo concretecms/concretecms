@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Tests\Core\Config\Fixtures;
+namespace Concrete\TestHelpers\Config\Fixtures;
 
 use Concrete\Core\Config\FileSaver;
 

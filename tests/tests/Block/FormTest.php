@@ -1,6 +1,9 @@
 <?php
 
-require_once __DIR__ . '/../BlockTypeTestCase.php';
+namespace Concrete\Tests\Block;
+
+use Concrete\TestHelpers\Block\BlockTypeTestCase;
+use Database;
 
 class FormTest extends BlockTypeTestCase
 {

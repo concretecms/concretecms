@@ -1,5 +1,9 @@
 <?php
 
+namespace Concrete\Tests\Application\UserInterface\ContextMenu;
+
+use PHPUnit_Framework_TestCase;
+
 class ContextMenuTest extends PHPUnit_Framework_TestCase
 {
     public function testBasicMenuDivider()

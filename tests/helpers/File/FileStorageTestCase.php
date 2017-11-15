@@ -1,7 +1,15 @@
 <?php
 
+namespace Concrete\TestHelpers\File;
+
+use Concrete\Core\Entity\File\Image\Thumbnail\Type\Type as ThumbnailType;
+use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\StorageLocation\StorageLocation;
 use Concrete\Core\File\StorageLocation\Type\Type;
+use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
+use Config;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 
 abstract class FileStorageTestCase extends ConcreteDatabaseTestCase
 {
@@ -31,10 +39,10 @@ abstract class FileStorageTestCase extends ConcreteDatabaseTestCase
     {
         parent::setUp();
 
-        $filesystem = new \Concrete\Core\File\Filesystem();
+        $filesystem = new Filesystem();
         $filesystem->create();
 
-        $thumbnailType = new \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type();
+        $thumbnailType = new ThumbnailType();
         $thumbnailType->requireType();
         $thumbnailType->setName(t('File Manager Thumbnails'));
         $thumbnailType->setHandle(Config::get('concrete.icons.file_manager_listing.handle'));
@@ -42,7 +50,7 @@ abstract class FileStorageTestCase extends ConcreteDatabaseTestCase
         $thumbnailType->setHeight(Config::get('concrete.icons.file_manager_listing.height'));
         $thumbnailType->save();
 
-        $thumbnailType = new \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type();
+        $thumbnailType = new ThumbnailType();
         $thumbnailType->requireType();
         $thumbnailType->setName(t('File Manager Detail Thumbnails'));
         $thumbnailType->setHandle(Config::get('concrete.icons.file_manager_detail.handle'));
@@ -66,9 +74,9 @@ abstract class FileStorageTestCase extends ConcreteDatabaseTestCase
     protected function cleanup()
     {
         if (is_dir($this->getStorageDirectory())) {
-            $files = new \RecursiveIteratorIterator(
-                new \RecursiveDirectoryIterator($this->getStorageDirectory(), \RecursiveDirectoryIterator::SKIP_DOTS),
-                \RecursiveIteratorIterator::CHILD_FIRST
+            $files = new RecursiveIteratorIterator(
+                new RecursiveDirectoryIterator($this->getStorageDirectory(), RecursiveDirectoryIterator::SKIP_DOTS),
+                RecursiveIteratorIterator::CHILD_FIRST
             );
 
             foreach ($files as $fileinfo) {

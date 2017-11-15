@@ -1,12 +1,13 @@
 <?php
 
-namespace Concrete\Tests\Core\Html\Service;
+namespace Concrete\Tests\Filesystem;
 
 use Concrete\Core\Filesystem\Template;
 use Concrete\Core\Filesystem\TemplateLocator;
 use Illuminate\Filesystem\Filesystem;
+use PHPUnit_Framework_TestCase;
 
-class TemplateLocatorTest extends \PHPUnit_Framework_TestCase
+class TemplateLocatorTest extends PHPUnit_Framework_TestCase
 {
     const ATTRIBUTE_HANDLE = 'test_attribute';
 

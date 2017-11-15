@@ -1,8 +1,10 @@
 <?php
 
-namespace Concrete\Tests\Core\Service;
+namespace Concrete\Tests\Service;
 
-class ApacheRulesTest extends \PHPUnit_Framework_TestCase
+use PHPUnit_Framework_TestCase;
+
+class ApacheRulesTest extends PHPUnit_Framework_TestCase
 {
     private static $prepared = false;
     /**

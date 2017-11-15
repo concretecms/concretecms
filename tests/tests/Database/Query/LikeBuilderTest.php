@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Tests\Core\Database\Query;
+namespace Concrete\Tests\Database\Query;
 
 use Concrete\Core\Database\Query\LikeBuilder;
 use PHPUnit_Framework_TestCase;

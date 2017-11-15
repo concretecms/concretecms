@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Tests\Core\Statistics\UsageTracker;
+namespace Concrete\Tests\Statistics\UsageTracker;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Config\LoaderInterface;
@@ -11,10 +11,12 @@ use Concrete\Core\Statistics\UsageTracker\ServiceProvider;
 use Concrete\Core\Statistics\UsageTracker\TrackableInterface;
 use Concrete\Core\Statistics\UsageTracker\TrackerInterface;
 use Concrete\Core\Statistics\UsageTracker\TrackerManagerInterface;
+use Concrete\TestHelpers\CreateClassMockTrait;
+use PHPUnit_Framework_TestCase;
 
-class ServiceProviderTest extends \PHPUnit_Framework_TestCase
+class ServiceProviderTest extends PHPUnit_Framework_TestCase
 {
-    use \Concrete\Tests\CreateClassMockTrait;
+    use CreateClassMockTrait;
 
     public function testRegister()
     {

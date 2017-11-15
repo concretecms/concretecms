@@ -1,6 +1,14 @@
 <?php
 
-class FilesParseTest extends \PHPUnit_Framework_TestCase
+namespace Concrete\Tests\File;
+
+use PHPUnit_Framework_TestCase;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+use RecursiveRegexIterator;
+use RegexIterator;
+
+class FilesParseTest extends PHPUnit_Framework_TestCase
 {
     public function testFilesParse()
     {

@@ -1,7 +1,10 @@
 <?php
 
+namespace Concrete\Tests\Config;
+
 use Concrete\Core\Config\Renderer;
 use Concrete\Core\Config\RendererInvalidTypeException;
+use PHPUnit_Framework_TestCase;
 
 class RendererTest extends PHPUnit_Framework_TestCase
 {

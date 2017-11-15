@@ -1,5 +1,13 @@
 <?php
 
+namespace Concrete\TestHelpers\Page;
+
+use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
+use Core;
+use Page;
+use PageTemplate;
+use PageType;
+
 abstract class PageTestCase extends ConcreteDatabaseTestCase
 {
     protected $fixtures = [];
@@ -50,12 +58,12 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
     {
         parent::setUpBeforeClass();
 
-        $service = \Core::make('site/type');
+        $service = Core::make('site/type');
         if (!$service->getDefault()) {
             $service->installDefault();
         }
 
-        $service = \Core::make('site');
+        $service = Core::make('site');
         if (!$service->getDefault()) {
             $service->installDefault();
         }

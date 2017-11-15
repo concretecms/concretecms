@@ -1,18 +1,13 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: andrew
- * Date: 6/28/14
- * Time: 10:30 AM.
- */
 
-namespace Concrete\Tests\Core\User;
+namespace Concrete\Tests\User;
 
 use Concrete\Core\User\Group\Group;
 use Concrete\Core\User\UserInfo;
 use Concrete\Core\User\UserList;
+use Concrete\TestHelpers\User\UserTestCase;
 
-class UserListTest extends \UserTestCase
+class UserListTest extends UserTestCase
 {
     /**
      * @var \Concrete\Core\User\UserList

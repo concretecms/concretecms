@@ -1,11 +1,11 @@
 <?php
 
-namespace Concrete\Tests\Core\Localization\Translator\Adapter\Zend\Translation\Loader\Gettext;
+namespace Concrete\Tests\Localization\Adapter\Zend\Translation\Loader\Gettext;
 
 use Concrete\Core\Localization\Translator\Adapter\Zend\Translation\Loader\Gettext\CoreTranslationLoader;
 use Concrete\Core\Localization\Translator\Adapter\Zend\TranslatorAdapterFactory;
 use Concrete\Core\Support\Facade\Facade;
-use Concrete\Tests\Localization\LocalizationTestsBase;
+use Concrete\TestHelpers\Localization\LocalizationTestsBase;
 use Illuminate\Filesystem\Filesystem;
 
 /**
@@ -24,7 +24,7 @@ class CoreTranslationLoaderTest extends LocalizationTestsBase
     {
         parent::setUpBeforeClass();
         $filesystem = new Filesystem();
-        $langDir = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__) . '/fixtures/languages/fi_FI';
+        $langDir = DIR_TESTS . '/assets/Localization/Adapter/Zend/Translation/Loader/Gettext/languages/fi_FI';
         $appLangDir = parent::getTranslationsFolder() . '/fi_FI';
         $filesystem->copyDirectory($langDir, $appLangDir);
     }

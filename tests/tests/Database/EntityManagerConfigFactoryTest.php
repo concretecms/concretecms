@@ -1,8 +1,9 @@
 <?php
 
-namespace Concrete\Tests\Core\Database;
+namespace Concrete\Tests\Database;
 
 use Concrete\Core\Support\Facade\Application;
+use PHPUnit_Framework_TestCase;
 
 /**
  * EntityManagerConfigFactoryTest.
@@ -10,7 +11,7 @@ use Concrete\Core\Support\Facade\Application;
  * @author Markus Liechti <markus@liechti.io>
  * @group orm_setup
  */
-class EntityManagerConfigFactoryTest extends \PHPUnit_Framework_TestCase
+class EntityManagerConfigFactoryTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @var \Concrete\Core\Application\Application
@@ -23,7 +24,7 @@ class EntityManagerConfigFactoryTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+        $this->app = Application::getFacadeApplication();
     }
 
     /**

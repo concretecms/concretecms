@@ -1,6 +1,12 @@
 <?php
 
-class DatabaseTest extends ConcreteDatabaseTestcase
+namespace Concrete\Tests\Database;
+
+use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
+use Database;
+use PDOException;
+
+class DatabaseTest extends ConcreteDatabaseTestCase
 {
     protected $fixtures = [
         'Users',
@@ -58,19 +64,19 @@ class DatabaseTest extends ConcreteDatabaseTestcase
 
     public function testActiveLazyLoadConnection()
     {
-        $db = Database::get();
+        $db = Database::connection();
         $this->assertTrue($db instanceof \Concrete\Core\Database\Connection\Connection);
     }
 
     public function testLegacyLoaderDb()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $this->assertTrue($db instanceof \Concrete\Core\Database\Connection\Connection);
     }
 
     public function testFetchRowsDoctrineAPI()
     {
-        $db = Database::get();
+        $db = Database::connection();
         $r = $db->query('SELECT * FROM Users');
         $results = [];
         while ($row = $r->fetch()) {
@@ -88,7 +94,7 @@ class DatabaseTest extends ConcreteDatabaseTestcase
 
     public function testTableExists()
     {
-        $db = Loader::db();
+        $db = Database::connection();
         $this->assertTrue($db->tableExists('users'));
         $this->assertTrue($db->tableExists('Users'));
         $this->assertFalse($db->tableExists('DummyTable'));
@@ -96,7 +102,7 @@ class DatabaseTest extends ConcreteDatabaseTestcase
 
     public function testLegacyConcreteApi()
     {
-        $db = Loader::db();
+        $db = Database::connection();
 
         $q = 'SELECT * FROM Users';
         $r = $db->Execute($q);
@@ -147,7 +153,7 @@ class DatabaseTest extends ConcreteDatabaseTestcase
 
     public function testLegacyReplace()
     {
-        $db = Database::get();
+        $db = Database::connection();
         $db->Replace('Users', ['uName' => 'testuser5', 'uEmail' => 'testuser5@concrete5.org'], ['uName']);
         $uID = $db->GetOne('SELECT uID FROM Users WHERE uEmail = ?', ['testuser5@concrete5.org']);
         $this->assertTrue($uID == 3);
@@ -168,7 +174,7 @@ class DatabaseTest extends ConcreteDatabaseTestcase
 
     public function testQuoting()
     {
-        $db = Database::get();
+        $db = Database::connection();
         $db->Replace('Users', ['uName' => "test'der", 'uEmail' => "testuser5'@concrete5.org"], ['uName']);
         $uName = $db->GetOne('SELECT uName FROM Users WHERE uEmail = ?', ["testuser5'@concrete5.org"]);
         $this->assertTrue($uName == "test'der");

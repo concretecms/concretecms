@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Tests\Core\Localization\Translator\Adapter\Plain;
+namespace Concrete\Tests\Localization\Adapter\Plain;
 
 use Concrete\Core\Localization\Translator\Adapter\Plain\TranslatorAdapter;
 use PHPUnit_Framework_TestCase;

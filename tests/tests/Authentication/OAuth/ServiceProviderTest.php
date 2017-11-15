@@ -1,14 +1,16 @@
 <?php
 
-namespace Concrete\Tests\Core\Authentication;
+namespace Concrete\Tests\Authentication\OAuth;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Authentication\Type\OAuth\ServiceProvider;
+use Concrete\TestHelpers\Authentication\OAuth\Fixture\ExtractorFixture;
+use Concrete\TestHelpers\Authentication\OAuth\Fixture\ServiceFixture;
+use OAuth\UserData\Extractor\ExtractorInterface;
+use OAuth\UserData\ExtractorFactoryInterface;
+use PHPUnit_Framework_TestCase;
 
-/** @TODO Set up proper autoloading for tests */
-require_once __DIR__ . '/Fixtures/ServiceFixture.php';
-require_once __DIR__ . '/Fixtures/ExtractorFixture.php';
-class ServiceProviderTest extends \PHPUnit_Framework_TestCase
+class ServiceProviderTest extends PHPUnit_Framework_TestCase
 {
     public function testBindings()
     {
@@ -17,16 +19,17 @@ class ServiceProviderTest extends \PHPUnit_Framework_TestCase
         $provider = new ServiceProvider($app);
         $provider->register();
 
-        $service = new \Concrete\Tests\Core\Authentication\Fixtures\ServiceFixture();
+        $service = new ServiceFixture();
 
         /** @var \OAuth\UserData\ExtractorFactory $extractor_factory */
         $extractor_factory = $app['oauth/factory/extractor'];
-        $this->assertInstanceOf('OAuth\UserData\ExtractorFactoryInterface', $extractor_factory);
+        $this->assertInstanceOf(ExtractorFactoryInterface::class, $extractor_factory);
 
         $extractor_factory->addExtractorMapping(
-            'Concrete\Tests\Core\Authentication\Fixtures\ServiceFixture',
-            'Concrete\Tests\Core\Authentication\Fixtures\ExtractorFixture');
+            ServiceFixture::class,
+            ExtractorFixture::class
+        );
 
-        $this->assertInstanceOf('OAuth\UserData\Extractor\ExtractorInterface', $app->make('oauth_extractor', [$service]));
+        $this->assertInstanceOf(ExtractorInterface::class, $app->make('oauth_extractor', [$service]));
     }
 }

@@ -1,10 +1,11 @@
 <?php
 
-namespace Concrete\Tests\Core\Foundation;
+namespace Concrete\Tests\Foundation;
 
 use Core;
+use PHPUnit_Framework_TestCase;
 
-class ConcreteFacadeTest extends \PHPUnit_Framework_TestCase
+class ConcreteFacadeTest extends PHPUnit_Framework_TestCase
 {
     public function testFacade()
     {

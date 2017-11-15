@@ -1,10 +1,11 @@
 <?php
 
-namespace Concrete\Tests\Core\File\Service;
+namespace Concrete\Tests\File\Service;
 
 use Core;
+use PHPUnit_Framework_TestCase;
 
-class FileTest extends \PHPUnit_Framework_TestCase
+class FileTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @var \Concrete\Core\File\Service\File

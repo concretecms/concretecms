@@ -1,12 +1,28 @@
 <?php
 
+namespace Concrete\TestHelpers\Block;
+
+use BlockType;
 use Concrete\Core\Block\View\BlockView;
+use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
+use Database;
+use DOMDocument;
+use DOMElement;
+use DOMXPath;
+use Environment;
 use Illuminate\Filesystem\Filesystem;
 
 abstract class BlockTypeTestCase extends ConcreteDatabaseTestCase
 {
     protected $fixtures = [];
-    protected $tables = ['BlockTypes', 'Blocks', 'Pages', 'CollectionVersionBlocks', 'Collections', 'Config'];
+    protected $tables = [
+        'BlockTypes',
+        'Blocks',
+        'Pages',
+        'CollectionVersionBlocks',
+        'Collections',
+        'Config',
+    ];
 
     protected $metadatas = [
         'Concrete\Core\Entity\Package',
@@ -47,7 +63,7 @@ abstract class BlockTypeTestCase extends ConcreteDatabaseTestCase
         foreach ($this->requestData as $type => $requestData) {
             $nb = $bt->add($requestData);
             $data = $this->expectedRecordData[$type];
-            $db = Loader::db();
+            $db = Database::connection();
             $r = $db->GetRow('select * from `' . $btc->getBlockTypeDatabaseTable() . '` where bID = ?', [$bID]);
             foreach ($data as $key => $value) {
                 $this->assertTrue($r[$key] == $value, 'Key `' . $key . '` did not equal expected value `' . $value . '` instead equalled `' . $r[$key] . '` (type `' . $type . '`)');
@@ -76,14 +92,14 @@ abstract class BlockTypeTestCase extends ConcreteDatabaseTestCase
         $fs = new Filesystem();
         $dbXmlFile = $r->getFile();
         if ($fs->isFile($dbXmlFile)) {
-            $xDoc = new \DOMDocument();
+            $xDoc = new DOMDocument();
             $xDoc->loadXML($fs->get($dbXmlFile));
-            $xPath = new \DOMXPath($xDoc);
+            $xPath = new DOMXPath($xDoc);
             $xPath->registerNamespace('dx', 'http://www.concrete5.org/doctrine-xml/0.5');
             $xTables = $xPath->query('/dx:schema/dx:table');
             if ($xTables->length > 0) {
                 foreach ($xTables as $xTable) {
-                    /* @var \DOMElement $xTable */
+                    /* @var DOMElement $xTable */
                     $tableName = (string) $xTable->getAttribute('name');
                     $tableColumns[$tableName] = [];
                     foreach ($xPath->query('dx:field', $xTable) as $xField) {

@@ -1,6 +1,10 @@
 <?php
 
+namespace Concrete\Tests\Config;
+
 use Concrete\Core\Config\DatabaseSaver;
+use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
+use Database;
 
 class DatabaseSaverTest extends ConcreteDatabaseTestCase
 {

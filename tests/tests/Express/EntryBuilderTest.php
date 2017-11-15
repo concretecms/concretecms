@@ -1,5 +1,11 @@
 <?php
 
+namespace Concrete\Tests\Express;
+
+use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
+use Core;
+use Express;
+
 class EntryBuilderTest extends ConcreteDatabaseTestCase
 {
     protected $pkg;

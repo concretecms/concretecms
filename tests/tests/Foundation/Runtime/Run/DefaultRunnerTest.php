@@ -1,14 +1,14 @@
 <?php
 
-namespace Concrete\Tests\Core\Foundation\Runtime\Run;
+namespace Concrete\Tests\Foundation\Runtime\Run;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Config\Repository\Liaison;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Foundation\Runtime\Run\DefaultRunner;
 use Concrete\Core\Http\ServerInterface;
-use Concrete\Tests\Core\Config\Fixtures\TestFileLoader;
-use Concrete\Tests\Core\Config\Fixtures\TestFileSaver;
+use Concrete\TestHelpers\Config\Fixtures\TestFileLoader;
+use Concrete\TestHelpers\Config\Fixtures\TestFileSaver;
 use Illuminate\Filesystem\Filesystem;
 use PHPUnit_Framework_TestCase;
 use Symfony\Component\HttpFoundation\Response;

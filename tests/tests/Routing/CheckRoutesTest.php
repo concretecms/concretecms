@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Tests\Core\Routing;
+namespace Concrete\Tests\Routing;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Support\Facade\Application as ApplicationFacade;

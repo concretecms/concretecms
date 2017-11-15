@@ -1,7 +1,13 @@
 <?php
 
+namespace Concrete\Tests\Area;
+
 use Concrete\Core\Area\Layout\Layout;
 use Concrete\Core\Area\Layout\ThemeGridLayout;
+use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
+use Core;
+use Page;
+use Request;
 
 class AreaLayoutTest extends ConcreteDatabaseTestCase
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Tests\Core\Statistics\UsageTracker;
+namespace Concrete\Tests\Statistics\UsageTracker;
 
 use Concrete\Core\Block\Block;
 use Concrete\Core\Block\BlockController;
@@ -8,9 +8,11 @@ use Concrete\Core\Entity\Statistics\UsageTracker\FileUsageRepository;
 use Concrete\Core\File\Tracker\FileTrackableInterface;
 use Concrete\Core\File\Tracker\UsageTracker;
 use Concrete\Core\Page\Collection\Collection;
+use Concrete\TestHelpers\Statistics\UsageTracker\TrackableBlockController;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit_Framework_TestCase;
 
-class FileUsageTrackerTest extends \PHPUnit_Framework_TestCase
+class FileUsageTrackerTest extends PHPUnit_Framework_TestCase
 {
     public function testTrackingCollection()
     {

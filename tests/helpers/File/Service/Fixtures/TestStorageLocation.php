@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Tests\Core\File\Service\Fixtures;
+namespace Concrete\TestHelpers\File\Service\Fixtures;
 
 use Concrete\Core\Entity\File\StorageLocation\StorageLocation;
 

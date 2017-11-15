@@ -1,16 +1,11 @@
 <?php
 
+namespace Concrete\Tests\Backup;
+
 use Concrete\Core\Page\Page;
-
-class CustomPageRoutine extends \Concrete\Core\Backup\ContentImporter\ValueInspector\InspectionRoutine\PageRoutine
-{
-    public function getItem($identifier)
-    {
-        $identifier = '/page-2' . $identifier;
-
-        return new \Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PageItem($identifier);
-    }
-}
+use Concrete\TestHelpers\Backup\CustomPageRoutine;
+use Concrete\TestHelpers\Page\PageTestCase;
+use Core;
 
 class ContentImporterValueInspectorReplacePageTest extends PageTestCase
 {

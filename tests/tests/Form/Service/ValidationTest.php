@@ -1,11 +1,11 @@
 <?php
 
-namespace Concrete\Tests\Core\Form\Service;
+namespace Concrete\Tests\Form\Service;
 
-use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Form\Service\Validation;
+use PHPUnit_Framework_TestCase;
 
-class ValidationTest extends \PHPUnit_Framework_TestCase
+class ValidationTest extends PHPUnit_Framework_TestCase
 {
     public function test()
     {
@@ -27,7 +27,7 @@ class ValidationTest extends \PHPUnit_Framework_TestCase
         $pass = $val->test();
         $this->assertEquals(false, $pass);
 
-        /** @var ErrorList $e */
+        /* @var \Concrete\Core\Error\ErrorList\ErrorList $e */
         $e = $val->getError();
         $this->assertEquals('<ul class="ccm-error"><li>Field "empty" is invalid</li><li>Field "notInteger" is invalid</li><li>Field "notEmail" is invalid</li></ul>', (string) $e);
 

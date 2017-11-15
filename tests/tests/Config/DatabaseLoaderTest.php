@@ -1,6 +1,9 @@
 <?php
 
+namespace Concrete\Tests\Config;
+
 use Concrete\Core\Config\DatabaseLoader;
+use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 
 class DatabaseLoaderTest extends ConcreteDatabaseTestCase
 {

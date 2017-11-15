@@ -1,6 +1,10 @@
 <?php
 
-class NotificationTest extends \PHPUnit_Framework_TestCase
+namespace Concrete\Tests\Notification;
+
+use PHPUnit_Framework_TestCase;
+
+class NotificationTest extends PHPUnit_Framework_TestCase
 {
     public function testCreateNotification()
     {

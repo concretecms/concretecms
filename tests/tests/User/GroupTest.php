@@ -1,21 +1,15 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: andrew
- * Date: 6/28/14
- * Time: 10:30 AM.
- */
 
-namespace Concrete\Tests\Core\User;
+namespace Concrete\Tests\User;
 
 use Concrete\Core\Tree\Node\NodeType as TreeNodeType;
 use Concrete\Core\Tree\TreeType;
 use Concrete\Core\Tree\Type\Group as GroupTreeType;
 use Concrete\Core\User\Group\Group;
-use Concrete\Core\User\User;
 use Concrete\Core\User\UserList;
+use Concrete\TestHelpers\User\UserTestCase;
 
-class GroupTest extends \UserTestCase
+class GroupTest extends UserTestCase
 {
     protected function setUp()
     {
@@ -44,7 +38,7 @@ class GroupTest extends \UserTestCase
 
     public function testAutomatedGroupsBase()
     {
-        require_once __DIR__ . '/fixtures/TestGroup.php';
+        require_once DIR_TESTS . '/assets/User/TestGroup.php';
         $g = Group::add('Test Group', ''); // gonna pull all users with vowels in their names in this group.
         $g->setAutomationOptions(true, false, false);
 

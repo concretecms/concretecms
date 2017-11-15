@@ -1,10 +1,13 @@
 <?php
 
-require_once __DIR__ . '/ResolverTestCase.php';
+namespace Concrete\Tests\Url\Resolver;
+
+use Concrete\TestHelpers\CreateClassMockTrait;
+use Concrete\TestHelpers\Url\Resolver\ResolverTestCase;
 
 class CanonicalUrlResolverTest extends ResolverTestCase
 {
-    use \Concrete\Tests\CreateClassMockTrait;
+    use CreateClassMockTrait;
 
     public function testConfig()
     {

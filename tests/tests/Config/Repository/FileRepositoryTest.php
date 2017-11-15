@@ -1,11 +1,14 @@
 <?php
 
+namespace Concrete\Tests\Config\Repository;
+
 use Concrete\Core\Config\FileLoader;
 use Concrete\Core\Config\FileSaver;
 use Concrete\Core\Config\Repository\Repository;
+use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 use Illuminate\Filesystem\Filesystem;
 
-class FileRepositoryTest extends \ConcreteDatabaseTestCase
+class FileRepositoryTest extends ConcreteDatabaseTestCase
 {
     /** @var Filesystem */
     protected $files;

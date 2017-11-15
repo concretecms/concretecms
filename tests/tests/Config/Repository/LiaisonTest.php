@@ -1,10 +1,13 @@
 <?php
 
-use Concrete\Core\Config\LoaderInterface;
+namespace Concrete\Tests\Config\Repository;
+
 use Concrete\Core\Config\Repository\Liaison;
 use Concrete\Core\Config\Repository\Repository;
-use Concrete\Core\Config\SaverInterface;
+use Concrete\TestHelpers\Config\Repository\LiaisonLoader;
+use Concrete\TestHelpers\Config\Repository\LiaisonSaver;
 use Illuminate\Filesystem\Filesystem;
+use PHPUnit_Framework_TestCase;
 
 class LiaisonTest extends PHPUnit_Framework_TestCase
 {
@@ -51,46 +54,5 @@ class LiaisonTest extends PHPUnit_Framework_TestCase
 
         $this->assertTrue($this->liaison->has('test.has'));
         $this->assertFalse($this->liaison->has('test.hasnt'));
-    }
-}
-
-class LiaisonLoader implements LoaderInterface
-{
-    public function addNamespace($namespace, $hint)
-    {
-    }
-
-    public function cascadePackage($environment, $package, $group, $items)
-    {
-        return $items;
-    }
-
-    public function clearNamespace($namespace)
-    {
-    }
-
-    public function load($environment, $group, $namespace = null)
-    {
-        return [];
-    }
-
-    public function exists($group, $namespace = null)
-    {
-        return true;
-    }
-
-    public function getNamespaces()
-    {
-        return [];
-    }
-}
-
-class LiaisonSaver implements SaverInterface
-{
-    public $saved = false;
-
-    public function save($item, $value, $environment, $group, $namespace = null)
-    {
-        $this->saved = "{$namespace}::{$group}.{$item}";
     }
 }

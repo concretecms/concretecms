@@ -1,16 +1,12 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: andrew
- * Date: 6/10/14
- * Time: 7:47 AM.
- */
-class SomethingCoolPageTypeValidator extends \Concrete\Core\Page\Type\Validator\StandardValidator
-{
-}
+namespace Concrete\Tests\Page;
 
-class PageTypeValidatorTest extends \PHPUnit_Framework_TestCase
+use Concrete\TestHelpers\Page\SomethingCoolPageTypeValidator;
+use Core;
+use PHPUnit_Framework_TestCase;
+
+class PageTypeValidatorTest extends PHPUnit_Framework_TestCase
 {
     public function testPageTypeValidatorManagerLoading()
     {
@@ -23,7 +19,7 @@ class PageTypeValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\Concrete\Core\Page\Type\Validator\StandardValidator', $manager->driver('blog_entry'));
         $this->assertInstanceOf('\Concrete\Core\Page\Type\Validator\StandardValidator', $manager->driver('page'));
 
-        $this->assertInstanceOf('SomethingCoolPageTypeValidator', $manager->driver('something_cool'));
+        $this->assertInstanceOf(SomethingCoolPageTypeValidator::class, $manager->driver('something_cool'));
 
         $this->assertInstanceOf('\Concrete\Core\Page\Type\Validator\StandardValidator', $manager->driver('another'));
         $this->assertInstanceOf('\Concrete\Core\Page\Type\Validator\StandardValidator', $manager->driver());
@@ -33,7 +29,7 @@ class PageTypeValidatorTest extends \PHPUnit_Framework_TestCase
         $type2 = new \Concrete\Core\Page\Type\Type();
         $type2->ptHandle = 'blog_entry';
 
-        $this->assertInstanceOf('SomethingCoolPageTypeValidator', $type1->getPageTypeValidatorObject());
+        $this->assertInstanceOf(SomethingCoolPageTypeValidator::class, $type1->getPageTypeValidatorObject());
         $this->assertInstanceOf('\Concrete\Core\Page\Type\Validator\StandardValidator', $type2->getPageTypeValidatorObject());
         $this->assertInstanceOf('\Concrete\Core\Page\Type\Type', $type2->getPageTypeValidatorObject()->getPageTypeObject());
     }

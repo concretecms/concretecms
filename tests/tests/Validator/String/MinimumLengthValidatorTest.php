@@ -1,8 +1,10 @@
 <?php
 
-namespace Concrete\Core\Tests\Validator\String;
+namespace Concrete\Tests\Validator\String;
 
-class MinimumLengthValidatorTest extends \PHPUnit_Framework_TestCase
+use PHPUnit_Framework_TestCase;
+
+class MinimumLengthValidatorTest extends PHPUnit_Framework_TestCase
 {
     public function testIsValid()
     {

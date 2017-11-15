@@ -1,8 +1,15 @@
 <?php
 
+namespace Concrete\Tests\Page;
+
+use CollectionVersion;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Template;
 use Concrete\Core\Page\Type\Type;
+use Concrete\TestHelpers\Page\PageTestCase;
+use Config;
+use Core;
+use Events;
 
 class PagePathTest extends PageTestCase
 {

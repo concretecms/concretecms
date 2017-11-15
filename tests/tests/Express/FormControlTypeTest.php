@@ -1,5 +1,9 @@
 <?php
 
+namespace Concrete\Tests\Express;
+
+use PHPUnit_Framework_TestCase;
+
 class FormControlTypeTest extends PHPUnit_Framework_TestCase
 {
     public function testList()

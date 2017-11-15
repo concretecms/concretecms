@@ -1,5 +1,11 @@
 <?php
 
+namespace Concrete\Tests\Express;
+
+use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
+use Database;
+use Express;
+
 class AssociationApplierTest extends ConcreteDatabaseTestCase
 {
     protected $tables = [

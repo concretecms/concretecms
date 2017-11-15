@@ -1,5 +1,9 @@
 <?php
 
+namespace Concrete\Tests\Express;
+
+use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
+
 class AttributeKeyHandleGeneratorTest extends ConcreteDatabaseTestCase
 {
     protected $metadatas = [
@@ -12,6 +16,12 @@ class AttributeKeyHandleGeneratorTest extends ConcreteDatabaseTestCase
         'Trees',
         'TreeTypes',
     ];
+
+    public static function setupBeforeClass()
+    {
+        parent::setUpBeforeClass();
+        \Core::make('cache/request')->disable();
+    }
 
     public function testExpressHandleGenerator()
     {

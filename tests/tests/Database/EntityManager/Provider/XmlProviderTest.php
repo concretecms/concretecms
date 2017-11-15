@@ -1,11 +1,12 @@
 <?php
 
-namespace Concrete\Tests\Core\Database\EntityManager\Provider;
+namespace Concrete\Tests\Database\EntityManager\Provider;
 
 use Concrete\Core\Database\EntityManager\Provider\XmlProvider;
 use Concrete\Core\Support\Facade\Application;
-use Concrete\Tests\Core\Database\EntityManager\Provider\Fixtures\PackageControllerXml;
-use Concrete\Tests\Core\Database\Traits\DirectoryHelpers;
+use Concrete\TestHelpers\Database\EntityManager\Provider\Fixtures\PackageControllerXml;
+use Concrete\TestHelpers\Database\Traits\DirectoryHelpers;
+use PHPUnit_Framework_TestCase;
 
 /**
  * XmlProviderTest.
@@ -13,14 +14,14 @@ use Concrete\Tests\Core\Database\Traits\DirectoryHelpers;
  * @author Markus Liechti <markus@liechti.io>
  * @group orm_setup
  */
-class XmlProviderTest extends \PHPUnit_Framework_TestCase
+class XmlProviderTest extends PHPUnit_Framework_TestCase
 {
     use DirectoryHelpers;
 
     /**
      * Stub of a package controller.
      *
-     * @var PackageControllerYaml
+     * @var PackageControllerXml
      */
     private $packageStub;
 

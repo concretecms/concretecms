@@ -1,11 +1,12 @@
 <?php
 
-namespace Concrete\Tests\Core\Foundation;
+namespace Concrete\Tests\Foundation;
 
 use Concrete\Core\Application\Application as ServiceLocator;
 use Concrete\Core\Foundation\Service\ProviderList;
+use PHPUnit_Framework_TestCase;
 
-class ServiceLocatorTest extends \PHPUnit_Framework_TestCase
+class ServiceLocatorTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {

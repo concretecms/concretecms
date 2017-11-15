@@ -1,10 +1,10 @@
 <?php
 
-namespace Concrete\Tests\Core\Permission;
+namespace Concrete\Tests\Permission;
 
 use Concrete\Core\Permission\IPService;
 use Concrete\Core\Support\Facade\Application;
-use ConcreteDatabaseTestCase;
+use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 use DateTime;
 use IPLib\Factory as IPFactory;
 

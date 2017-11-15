@@ -1,13 +1,14 @@
 <?php
 
-namespace Concrete\Tests\Core\Session;
+namespace Concrete\Tests\Session;
 
 use Concrete\Core\Http\Request;
 use Concrete\Core\Session\SessionValidator;
 use Concrete\Core\Support\Facade\Application;
+use PHPUnit_Framework_TestCase;
 use Symfony\Component\HttpFoundation\Session\Session;
 
-class SessionValidatorTest extends \PHPUnit_Framework_TestCase
+class SessionValidatorTest extends PHPUnit_Framework_TestCase
 {
     /** @var \Concrete\Core\Application\Application */
     protected $app;

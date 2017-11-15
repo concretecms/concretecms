@@ -1,8 +1,10 @@
 <?php
 
-namespace Concrete\Tests\Core\Controller;
+namespace Concrete\Tests\Controller;
 
-class ControllerResolverTest extends \PHPUnit_Framework_TestCase
+use PHPUnit_Framework_TestCase;
+
+class ControllerResolverTest extends PHPUnit_Framework_TestCase
 {
     public function testNamespaceCollision()
     {

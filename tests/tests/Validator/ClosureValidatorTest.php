@@ -1,8 +1,10 @@
 <?php
 
-namespace Concrete\Core\Tests\Validator;
+namespace Concrete\Tests\Validator;
 
-class ClosureValidatorTest extends \PHPUnit_Framework_TestCase
+use PHPUnit_Framework_TestCase;
+
+class ClosureValidatorTest extends PHPUnit_Framework_TestCase
 {
     public function testIsValid()
     {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Tests\Core\Database\EntityManager\Provider\Fixtures;
+namespace Concrete\TestHelpers\Database\EntityManager\Provider\Fixtures;
 
 use Concrete\Core\Database\EntityManager\Provider\ProviderInterface;
 use Concrete\Core\Database\EntityManager\Provider\XmlProvider;

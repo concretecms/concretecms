@@ -1,16 +1,12 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: andrew
- * Date: 6/10/14
- * Time: 7:47 AM.
- */
-class SomethingCoolPageTypeSaver extends \Concrete\Core\Page\Type\Saver\StandardSaver
-{
-}
+namespace Concrete\Tests\Page;
 
-class PageTypeSaverTest extends \PHPUnit_Framework_TestCase
+use Concrete\TestHelpers\Page\SomethingCoolPageTypeSaver;
+use Core;
+use PHPUnit_Framework_TestCase;
+
+class PageTypeSaverTest extends PHPUnit_Framework_TestCase
 {
     public function testPageTypeSaverManagerLoading()
     {
@@ -24,7 +20,7 @@ class PageTypeSaverTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\Concrete\Core\Page\Type\Saver\StandardSaver', $manager->driver('page'));
         $this->assertInstanceOf('\Concrete\Core\Page\Type\Saver\SaverInterface', $manager->driver('page'));
 
-        $this->assertInstanceOf('SomethingCoolPageTypeSaver', $manager->driver('something_cool'));
+        $this->assertInstanceOf(SomethingCoolPageTypeSaver::class, $manager->driver('something_cool'));
         $this->assertInstanceOf('\Concrete\Core\Page\Type\Saver\SaverInterface', $manager->driver('something_cool'));
 
         $this->assertInstanceOf('\Concrete\Core\Page\Type\Saver\StandardSaver', $manager->driver('another'));
@@ -35,7 +31,7 @@ class PageTypeSaverTest extends \PHPUnit_Framework_TestCase
         $type2 = new \Concrete\Core\Page\Type\Type();
         $type2->ptHandle = 'blog_entry';
 
-        $this->assertInstanceOf('SomethingCoolPageTypeSaver', $type1->getPageTypeSaverObject());
+        $this->assertInstanceOf(SomethingCoolPageTypeSaver::class, $type1->getPageTypeSaverObject());
         $this->assertInstanceOf('\Concrete\Core\Page\Type\Saver\StandardSaver', $type2->getPageTypeSaverObject());
         $this->assertInstanceOf('\Concrete\Core\Page\Type\Type', $type2->getPageTypeSaverObject()->getPageTypeObject());
     }

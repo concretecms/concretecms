@@ -1,10 +1,11 @@
 <?php
 
-namespace Concrete\Tests\Core\File;
+namespace Concrete\Tests\File;
 
 use Concrete\Core\File\Filesystem;
+use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 
-class FilesystemTest extends \ConcreteDatabaseTestCase
+class FilesystemTest extends ConcreteDatabaseTestCase
 {
     protected $filesystem;
 

@@ -1,14 +1,15 @@
 <?php
 
-namespace Concrete\Tests\Core\Foundation;
+namespace Concrete\TestHelpers\Foundation;
 
 use Illuminate\Filesystem\Filesystem;
+use PHPUnit_Framework_TestCase;
 
-class ClassLoaderTestCase extends \PHPUnit_Framework_TestCase
+abstract class ClassLoaderTestCase extends PHPUnit_Framework_TestCase
 {
     protected function putFileIntoPlace($file, $destinationDirectory)
     {
-        $sourceFile = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__) . '/fixtures/' . $file;
+        $sourceFile = DIR_TESTS . '/assets/Foundation/' . $file;
         $filesystem = new Filesystem();
         if (!$filesystem->isDirectory($destinationDirectory)) {
             $filesystem->makeDirectory($destinationDirectory, 0755, true);

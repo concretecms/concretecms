@@ -1,5 +1,9 @@
 <?php
 
+namespace Concrete\Tests\Block;
+
+use Concrete\TestHelpers\Block\BlockTypeTestCase;
+
 class AutonavTest extends BlockTypeTestCase
 {
     protected $btHandle = 'autonav';

@@ -1,5 +1,9 @@
 <?php
 
+namespace Concrete\Tests\Attribute;
+
+use PHPUnit_Framework_TestCase;
+
 class ValidationTest extends PHPUnit_Framework_TestCase
 {
     public function testAttributeKeyErrorFunctionality()

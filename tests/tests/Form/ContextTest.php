@@ -1,53 +1,21 @@
 <?php
 
-namespace Concrete\Tests\Core\Form;
+namespace Concrete\Tests\Form;
 
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Express\Controller\ControllerInterface;
 use Concrete\Core\Express\Controller\StandardController;
-use Concrete\Core\Express\Entry\Notifier\NotificationProviderInterface;
 use Concrete\Core\Express\Form\Context\DashboardFormContext;
 use Concrete\Core\Express\Form\Context\DashboardViewContext;
 use Concrete\Core\Express\Form\Context\FrontendFormContext;
 use Concrete\Core\Form\Context\ContextFactory;
-use Concrete\Core\Form\Context\Registry\ContextRegistry;
+use Concrete\TestHelpers\Form\TestController;
+use Concrete\TestHelpers\Form\TestDashboardFormContext;
+use Concrete\TestHelpers\Form\TestFrontendFormContext;
+use PHPUnit_Framework_TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
-class TestFrontendFormContext extends FrontendFormContext
-{
-}
-
-class TestDashboardFormContext extends DashboardFormContext
-{
-}
-
-class TestController implements ControllerInterface
-{
-    public function getContextRegistry()
-    {
-        return new ContextRegistry([
-            FrontendFormContext::class => new TestFrontendFormContext(),
-            DashboardFormContext::class => new TestDashboardFormContext(),
-        ]);
-    }
-
-    public function getFormProcessor()
-    {
-        return null;
-    }
-
-    public function getEntryManager(Request $request)
-    {
-        return null;
-    }
-
-    public function getNotifier(NotificationProviderInterface $provider = null)
-    {
-        return null;
-    }
-}
-
-class ContextTest extends \PHPUnit_Framework_TestCase
+class ContextTest extends PHPUnit_Framework_TestCase
 {
     public function testController()
     {

@@ -1,6 +1,10 @@
 <?php
 
+namespace Concrete\TestHelpers\User;
+
 use Concrete\Core\Attribute\Key\Category;
+use Concrete\Core\User\UserInfo;
+use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 
 abstract class UserTestCase extends ConcreteDatabaseTestCase
 {
@@ -39,7 +43,7 @@ abstract class UserTestCase extends ConcreteDatabaseTestCase
     {
         $key = "{$uName}.{$uEmail}";
         if (!isset(static::$users[$key])) {
-            static::$users[$key] = \Concrete\Core\User\UserInfo::add(
+            static::$users[$key] = UserInfo::add(
                 ['uName' => $uName, 'uEmail' => $uEmail]
             );
         }

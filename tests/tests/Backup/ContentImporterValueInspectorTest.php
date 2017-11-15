@@ -1,5 +1,10 @@
 <?php
 
+namespace Concrete\Tests\Backup;
+
+use Concrete\TestHelpers\File\FileStorageTestCase;
+use Core;
+
 class ContentImporterValueInspectorTest extends FileStorageTestCase
 {
     public function __construct($name = null, array $data = [], $dataName = '')
@@ -114,9 +119,9 @@ EOL;
         mkdir($this->getStorageDirectory());
         $this->getStorageLocation();
 
-        $importer = new Concrete\Core\File\Importer();
+        $importer = new \Concrete\Core\File\Importer();
         $prefix = $importer->generatePrefix();
-        Concrete\Core\File\File::add('test.jpg', $prefix);
+        \Concrete\Core\File\File::add('test.jpg', $prefix);
 
         $content = <<<EOL
         <p><concrete-picture alt="Lorem ipsum" file="test.jpg">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>

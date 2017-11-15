@@ -1,6 +1,9 @@
 <?php
 
+namespace Concrete\Tests\Database\Driver;
+
 use Concrete\Core\Database\Driver\DriverManager;
+use PHPUnit_Framework_TestCase;
 
 class DriverManagerTest extends PHPUnit_Framework_TestCase
 {
@@ -16,8 +19,10 @@ class DriverManagerTest extends PHPUnit_Framework_TestCase
     {
         $this->driverManager->configExtensions(
             [
-                'test' => 'DriverManagerTest', ]);
+                'test' => __CLASS__,
+            ]
+        );
 
-        $this->assertInstanceOf('DriverManagerTest', $this->driverManager->driver('test'));
+        $this->assertInstanceOf(__CLASS__, $this->driverManager->driver('test'));
     }
 }

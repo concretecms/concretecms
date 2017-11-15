@@ -1,6 +1,10 @@
 <?php
 
-class ContextText extends PHPUnit_Framework_TestCase
+namespace Concrete\Tests\Attribute;
+
+use PHPUnit_Framework_TestCase;
+
+class ContextTest extends PHPUnit_Framework_TestCase
 {
     public function testCreateAttributePanelContext()
     {

@@ -1,10 +1,26 @@
 <?php
 
+namespace Concrete\TestHelpers\Attribute;
+
 use Concrete\Core\Attribute\Type as AttributeType;
+use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
+use Core;
+use Database;
 
 abstract class AttributeTestCase extends ConcreteDatabaseTestCase
 {
+    /**
+     * {@inheritdoc}
+     *
+     * @see ConcreteDatabaseTestCase::$fixtures
+     */
     protected $fixtures = [];
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see ConcreteDatabaseTestCase::$metadatas
+     */
     protected $metadatas = [
         'Concrete\Core\Entity\Site\Site',
         'Concrete\Core\Entity\Site\Locale',
@@ -29,17 +45,28 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase
         'Concrete\Core\Entity\Attribute\Key\UserKey',
     ];
 
+    /**
+     * @var \Concrete\Core\Attribute\ObjectInterface|null
+     */
     protected $object;
-    protected $keys = [];
-    protected $keyObjects = [];
 
+    /**
+     * @var array
+     */
+    protected $keys = [];
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \PHPUnit_Framework_TestCase::setUp()
+     */
     protected function setUp()
     {
         // Truncate tables
         $this->truncateTables();
 
         parent::setUp();
-        $service = \Core::make('site');
+        $service = Core::make('site');
         if (!$service->getDefault()) {
             $service->installDefault('en_US');
         }
@@ -55,14 +82,22 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase
         }
     }
 
+    /**
+     * Get the test data for the testSetAttribute/testResetAttributes methods.
+     *
+     * @return array
+     */
     abstract public function attributeValues();
 
+    /**
+     * Get the test data for the testUnsetAttributes method.
+     */
     abstract public function attributeHandles();
 
     /**
      *  @dataProvider attributeValues
      *
-     * @param mixed $handle
+     * @param \Concrete\Core\Attribute\AttributeKeyInterface|string $handle
      * @param mixed $first
      * @param mixed $second
      * @param null|mixed $firstStatic
@@ -82,7 +117,7 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase
     /**
      *  @dataProvider attributeValues
      *
-     * @param mixed $handle
+     * @param \Concrete\Core\Attribute\AttributeKeyInterface|string $handle
      * @param mixed $first
      * @param mixed $second
      * @param null|mixed $firstStatic
@@ -108,7 +143,7 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase
     /**
      *  @dataProvider attributeIndexTableValues
      *
-     * @param mixed $handle
+     * @param \Concrete\Core\Attribute\AttributeKeyInterface|string $handle
      * @param mixed $value
      * @param mixed $columns
      */
@@ -131,7 +166,7 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase
     /**
      *  @dataProvider attributeHandles
      *
-     * @param mixed $handle
+     * @param string $handle
      */
     public function testUnsetAttributes($handle)
     {

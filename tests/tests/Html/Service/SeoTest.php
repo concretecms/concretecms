@@ -1,8 +1,10 @@
 <?php
 
-namespace Concrete\Tests\Core\Html\Service;
+namespace Concrete\Tests\Html\Service;
 
-class SeoTest extends \PHPUnit_Framework_TestCase
+use PHPUnit_Framework_TestCase;
+
+class SeoTest extends PHPUnit_Framework_TestCase
 {
     public function testSeoTitle()
     {

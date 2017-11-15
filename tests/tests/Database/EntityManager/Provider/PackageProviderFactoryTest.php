@@ -1,11 +1,12 @@
 <?php
 
-namespace Concrete\Tests\Core\Database\EntityManager\Provider;
+namespace Concrete\Tests\Database\EntityManager\Provider;
 
 use Concrete\Core\Database\EntityManager\Provider\PackageProviderFactory;
 use Concrete\Core\Support\Facade\Application;
-use Concrete\Tests\Core\Database\EntityManager\Provider\Fixtures\PackageControllerDefault;
-use Concrete\Tests\Core\Database\EntityManager\Provider\Fixtures\PackageControllerYaml;
+use Concrete\TestHelpers\Database\EntityManager\Provider\Fixtures\PackageControllerDefault;
+use Concrete\TestHelpers\Database\EntityManager\Provider\Fixtures\PackageControllerYaml;
+use PHPUnit_Framework_TestCase;
 
 /**
  * PackageProviderFactoryTest.
@@ -13,7 +14,7 @@ use Concrete\Tests\Core\Database\EntityManager\Provider\Fixtures\PackageControll
  * @author Markus Liechti <markus@liechti.io>
  * @group orm_setup
  */
-class PackageProviderFactoryTest extends \PHPUnit_Framework_TestCase
+class PackageProviderFactoryTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @var \Concrete\Core\Application\Application

@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Tests\Core\Localization;
+namespace Concrete\Tests\Http;
 
 use Concrete\Core\Http\Client\Client as HttpClient;
 use Concrete\Core\Http\Client\Factory as HttpClientFactory;

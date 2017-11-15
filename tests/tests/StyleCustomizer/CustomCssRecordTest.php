@@ -1,5 +1,9 @@
 <?php
 
+namespace Concrete\Tests\StyleCustomizer;
+
+use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
+
 class CustomCssRecordTest extends ConcreteDatabaseTestCase
 {
     protected $fixtures = [];

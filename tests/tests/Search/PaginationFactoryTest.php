@@ -1,56 +1,19 @@
 <?php
 
-namespace Concrete\Tests\Core\Search;
+namespace Concrete\Tests\Search;
 
 use Concrete\Core\Page\PageList;
-use Concrete\Core\Search\ItemList\ItemList;
 use Concrete\Core\Search\ItemList\Pager\QueryString\VariableFactory;
 use Concrete\Core\Search\Pagination\PagerPagination;
 use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Search\Pagination\PaginationFactory;
-use Concrete\Core\Search\Pagination\PaginationProviderInterface;
 use Concrete\Core\Search\Pagination\PermissionablePagination;
+use Concrete\TestHelpers\Search\TestList;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
+use PHPUnit_Framework_TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
-class TestList extends ItemList implements PaginationProviderInterface
-{
-    public function executeGetResults()
-    {
-        return null;
-    }
-
-    public function getResult($mixed)
-    {
-        return null;
-    }
-
-    public function debugStart()
-    {
-        return null;
-    }
-
-    public function debugStop()
-    {
-        return null;
-    }
-
-    public function executeSortBy($field, $direction = 'asc')
-    {
-        return null;
-    }
-
-    public function getTotalResults()
-    {
-        return null;
-    }
-
-    public function getPaginationAdapter()
-    {
-        return PaginationFactoryTest::getFakeAdapter();
-    }
-}
-class PaginationFactoryTest extends \PHPUnit_Framework_TestCase
+class PaginationFactoryTest extends PHPUnit_Framework_TestCase
 {
     public static function getFakeQuery()
     {

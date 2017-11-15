@@ -1,6 +1,10 @@
 <?php
 
+namespace Concrete\Tests\Asset;
+
+use AssetList;
 use Concrete\Core\Asset\Asset;
+use PHPUnit_Framework_TestCase;
 
 class AssetTest extends PHPUnit_Framework_TestCase
 {

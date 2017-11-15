@@ -1,8 +1,10 @@
 <?php
 
-namespace Concrete\Tests\Core\Database;
+namespace Concrete\Tests\Database;
 
-class EntityManagerClassLoaderTest extends \PHPUnit_Framework_TestCase
+use PHPUnit_Framework_TestCase;
+
+class EntityManagerClassLoaderTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
@@ -33,8 +35,8 @@ class EntityManagerClassLoaderTest extends \PHPUnit_Framework_TestCase
     public function testApplicationEntityClasses()
     {
         $root = dirname(DIR_BASE_CORE . '../');
-        mkdir($root . '/application/src/Entity/Advertisement', 0777, true);
-        copy(__DIR__ . '/fixtures/BannerAd.php', $root . '/application/src/Entity/Advertisement/BannerAd.php');
+        @mkdir($root . '/application/src/Entity/Advertisement', 0777, true);
+        copy(DIR_TESTS . '/assets/Database/BannerAd.php', $root . '/application/src/Entity/Advertisement/BannerAd.php');
 
         $classExists = class_exists('Application\Entity\Advertisement\BannerAd');
 

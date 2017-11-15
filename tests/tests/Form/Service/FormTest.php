@@ -1,10 +1,11 @@
 <?php
 
-namespace Concrete\Tests\Core\Form\Service;
+namespace Concrete\Tests\Form\Service;
 
 use Core;
+use PHPUnit_Framework_TestCase;
 
-class FormTest extends \PHPUnit_Framework_TestCase
+class FormTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @var \Concrete\Core\Form\Service\Form

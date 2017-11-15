@@ -1,5 +1,18 @@
 <?php
 
+namespace Concrete\Tests\Page;
+
+use Concrete\TestHelpers\Page\PageTestCase;
+use Config;
+use Core;
+use Database;
+use Exception;
+use Loader;
+use Page;
+use PageTemplate;
+use PageType;
+use SinglePage;
+
 class PageTest extends PageTestCase
 {
     public function tearDown()

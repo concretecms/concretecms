@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Tests\Core\Package;
+namespace Concrete\Tests\Package;
 
 use Concrete\Core\Package\Dependency\DependencyChecker;
 use Concrete\Core\Package\Dependency\IncompatiblePackagesException;

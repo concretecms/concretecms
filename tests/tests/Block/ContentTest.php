@@ -1,5 +1,9 @@
 <?php
 
+namespace Concrete\Tests\Block;
+
+use Concrete\TestHelpers\Block\BlockTypeTestCase;
+
 class ContentTest extends BlockTypeTestCase
 {
     protected $btHandle = 'content';

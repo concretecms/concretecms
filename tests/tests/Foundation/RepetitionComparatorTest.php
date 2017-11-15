@@ -1,11 +1,12 @@
 <?php
 
-namespace Concrete\Tests\Core\Foundation;
+namespace Concrete\Tests\Foundation;
 
 use Concrete\Core\Foundation\Repetition\BasicRepetition;
 use Concrete\Core\Foundation\Repetition\Comparator;
+use PHPUnit_Framework_TestCase;
 
-class RepetitionComparatorTest extends \PHPUnit_Framework_TestCase
+class RepetitionComparatorTest extends PHPUnit_Framework_TestCase
 {
     public function testNoRepeat()
     {

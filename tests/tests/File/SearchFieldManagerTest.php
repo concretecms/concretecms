@@ -1,11 +1,12 @@
 <?php
 
-namespace Concrete\Tests\Core\File;
+namespace Concrete\Tests\File;
 
 use Concrete\Core\File\Search\Field\Field\SizeField;
 use Concrete\Core\File\Search\Field\Manager;
+use PHPUnit_Framework_TestCase;
 
-class SearchFieldManagerTest extends \PHPUnit_Framework_TestCase
+class SearchFieldManagerTest extends PHPUnit_Framework_TestCase
 {
     public function testGroups()
     {

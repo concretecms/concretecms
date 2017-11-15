@@ -1,7 +1,10 @@
 <?php
 
+namespace Concrete\Tests\StyleCustomizer;
+
 use Concrete\Core\Block\CustomStyle;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
+use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 use Symfony\Component\HttpFoundation\Request;
 
 class InlineStyleSetTest extends ConcreteDatabaseTestCase

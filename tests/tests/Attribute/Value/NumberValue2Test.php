@@ -1,10 +1,10 @@
 <?php
 
-namespace Concrete\Tests\AttributeValue;
+namespace Concrete\Tests\Attribute\Value;
 
 use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
 use Concrete\Core\Entity\Attribute\Value\Value\Value;
-use ConcreteDatabaseTestCase;
+use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 use Database;
 use ORM;
 

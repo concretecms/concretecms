@@ -1,8 +1,12 @@
 <?php
 
-namespace Concrete\Tests;
+namespace Concrete\TestHelpers\Support;
 
-abstract class CodingStyleTestCase extends \PHPUnit_Framework_TestCase
+use PHPUnit_Framework_TestCase;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+
+abstract class CodingStyleTestCase extends PHPUnit_Framework_TestCase
 {
     /**
      * @var string[]|null
@@ -27,8 +31,8 @@ abstract class CodingStyleTestCase extends \PHPUnit_Framework_TestCase
         if (self::$phpFiles === null) {
             $files = [];
             $baseDir = rtrim(str_replace('/', DIRECTORY_SEPARATOR, DIR_BASE_CORE), DIRECTORY_SEPARATOR);
-            $directoryIterator = new \RecursiveDirectoryIterator($baseDir);
-            $iterator = new \RecursiveIteratorIterator($directoryIterator, \RecursiveIteratorIterator::LEAVES_ONLY);
+            $directoryIterator = new RecursiveDirectoryIterator($baseDir);
+            $iterator = new RecursiveIteratorIterator($directoryIterator, RecursiveIteratorIterator::LEAVES_ONLY);
             foreach ($iterator as $f) {
                 /* @var \SplFileInfo $f */
                 if (!$f->isFile()) {

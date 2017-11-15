@@ -1,12 +1,12 @@
 <?php
 
-namespace Concrete\Tests\Core\Localization\Translator\Adapter\Zend\Translation\Loader\Gettext;
+namespace Concrete\Tests\Localization\Adapter\Zend\Translation\Loader\Gettext;
 
 use Concrete\Core\Localization\Translator\Adapter\Zend\Translation\Loader\Gettext\PackagesTranslationLoader;
 use Concrete\Core\Localization\Translator\Adapter\Zend\TranslatorAdapterFactory;
 use Concrete\Core\Package\Package;
 use Concrete\Core\Support\Facade\Facade;
-use ConcreteDatabaseTestCase;
+use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 use Exception;
 use Illuminate\Filesystem\Filesystem;
 
@@ -105,7 +105,7 @@ class PackagesTranslationLoaderTest extends ConcreteDatabaseTestCase
 
     private static function getTestPackages()
     {
-        $pkgSource = __DIR__ . '/fixtures/packages';
+        $pkgSource = DIR_TESTS . '/assets/Localization/Adapter/Zend/Translation/Loader/Gettext/packages';
         $packages = [];
 
         $filesystem = new Filesystem();

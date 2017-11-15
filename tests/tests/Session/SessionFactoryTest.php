@@ -1,14 +1,15 @@
 <?php
 
-namespace Concrete\Tests\Core\Session;
+namespace Concrete\Tests\Session;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Session\SessionFactory;
 use Concrete\Core\Session\SessionFactoryInterface;
 use Concrete\Core\Session\Storage\Handler\NativeFileSessionHandler;
+use PHPUnit_Framework_TestCase;
 
-class SessionFactoryTest extends \PHPUnit_Framework_TestCase
+class SessionFactoryTest extends PHPUnit_Framework_TestCase
 {
     /** @var Application */
     protected $app;

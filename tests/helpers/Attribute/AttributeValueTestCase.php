@@ -1,5 +1,16 @@
 <?php
 
+namespace Concrete\TestHelpers\Attribute;
+
+use Closure;
+use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
+use Concrete\Core\Attribute\Key\CollectionKey;
+use Concrete\Core\Attribute\Type as AttributeType;
+use Concrete\Core\Entity\Attribute\Key\PageKey as PageKeyEntity;
+use Concrete\Core\Entity\Attribute\Value\PageValue as PageAttributeValueEntity;
+use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
+use Core;
+use Page;
 
 abstract class AttributeValueTestCase extends ConcreteDatabaseTestCase
 {
@@ -10,7 +21,6 @@ abstract class AttributeValueTestCase extends ConcreteDatabaseTestCase
         'Concrete\Core\Entity\Site\Locale',
         'Concrete\Core\Entity\Site\Tree',
         'Concrete\Core\Entity\Site\SiteTree',
-        'Concrete\Core\Entity\Site\Type',
         'Concrete\Core\Entity\Attribute\Category',
         'Concrete\Core\Entity\Attribute\Type',
         'Concrete\Core\Entity\Attribute\Key\Key',
@@ -30,25 +40,25 @@ abstract class AttributeValueTestCase extends ConcreteDatabaseTestCase
 
     protected function setUp()
     {
-        $service = \Core::make('site/type');
+        $service = Core::make('site/type');
         if (!$service->getDefault()) {
             $service->installDefault();
         }
 
-        $service = \Core::make('site');
+        $service = Core::make('site');
         if (!$service->getDefault()) {
             $service->installDefault('en_US');
         }
 
-        $this->category = \Concrete\Core\Attribute\Key\Category::add('collection');
+        $this->category = AttributeKeyCategory::add('collection');
         $this->object = Page::addHomePage();
-        $type = \Concrete\Core\Attribute\Type::add($this->getAttributeTypeHandle(), $this->getAttributeTypeName());
+        $type = AttributeType::add($this->getAttributeTypeHandle(), $this->getAttributeTypeName());
 
-        $key = new \Concrete\Core\Entity\Attribute\Key\PageKey();
+        $key = new PageKeyEntity();
         $key->setAttributeKeyName($this->getAttributeKeyName());
         $key->setAttributeKeyHandle($this->getAttributeKeyHandle());
 
-        \Concrete\Core\Attribute\Key\CollectionKey::add($type, $key, $this->createAttributeKeySettings());
+        CollectionKey::add($type, $key, $this->createAttributeKeySettings());
 
         parent::setUp();
     }
@@ -95,7 +105,7 @@ abstract class AttributeValueTestCase extends ConcreteDatabaseTestCase
         $this->assertEquals($expectedBaseValue, $baseValue);
 
         $value = $this->object->getAttributeValueObject($this->getAttributeKeyHandle());
-        $this->assertInstanceOf('Concrete\Core\Entity\Attribute\Value\PageValue', $value);
+        $this->assertInstanceOf(PageAttributeValueEntity::class, $value);
 
         $this->assertInstanceOf($this->getAttributeValueClassName(), $value->getValueObject());
     }

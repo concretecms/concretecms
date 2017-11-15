@@ -1,14 +1,15 @@
 <?php
 
-namespace Concrete\Tests\Core\User;
+namespace Concrete\Tests\User;
 
 use Concrete\Core\User\Group\Group;
 use Concrete\Core\User\Point\Action\Action;
 use Concrete\Core\User\Point\Action\WonBadgeAction;
 use Concrete\Core\User\Point\EntryList;
 use Concrete\Core\User\UserInfo;
+use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 
-class UserPointTest extends \ConcreteDatabaseTestCase
+class UserPointTest extends ConcreteDatabaseTestCase
 {
     protected $tables = ['UserPointActions', 'Groups', 'TreeTypes', 'Trees', 'TreeNodes', 'TreeGroupNodes',
     'UserGroups', 'UserPointHistory', 'PermissionKeys', 'PermissionKeyCategories', ];

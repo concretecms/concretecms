@@ -1,11 +1,12 @@
 <?php
 
-namespace Concrete\Tests\Core\File\StorageLocation;
+namespace Concrete\Tests\File\StorageLocation;
 
 use Concrete\Core\Entity\File\StorageLocation\Type\Type as StorageLocationType;
 use Concrete\Core\File\StorageLocation\Type\Type;
+use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 
-class TypeTest extends \ConcreteDatabaseTestCase
+class TypeTest extends ConcreteDatabaseTestCase
 {
     protected $fixtures = [];
     protected $metadatas = [

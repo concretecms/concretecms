@@ -67,4 +67,7 @@ Expected output is something like
 
 # Write Tests!
 
-Send us tests via pull request.
+Send us tests via pull request:
+- actual test classes must go to the /tests/tests folder (classes must be defined in a namespace starting with Concrete\Tests\...)
+- helper classes must go to the /tests/helpers folder (classes must be defined in a namespace starting with Concrete\TestHelpers\...)
+- other files must go to the /tests/assets filder (images, fake classes, ...)

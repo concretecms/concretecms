@@ -3,11 +3,10 @@
 namespace Concrete\Tests\Core\Localization\Translator;
 
 use Concrete\Core\Localization\Translator\TranslatorAdapterRepository;
-use Concrete\Tests\Core\Localization\Translator\Fixtures\DummyTranslatorAdapter;
-use Concrete\Tests\Core\Localization\Translator\Fixtures\DummyTranslatorAdapterFactory;
+use Concrete\TestHelpers\Localization\Translator\Fixtures\DummyTranslatorAdapter;
+use Concrete\TestHelpers\Localization\Translator\Fixtures\DummyTranslatorAdapterFactory;
 use PHPUnit_Framework_TestCase;
 use ReflectionObject;
-use Symfony\Component\ClassLoader\MapClassLoader;
 
 /**
  * Test for:
@@ -18,15 +17,6 @@ use Symfony\Component\ClassLoader\MapClassLoader;
 class TranslatorAdapterRepositoryTest extends PHPUnit_Framework_TestCase
 {
     protected $repository;
-
-    public static function setUpBeforeClass()
-    {
-        $loader = new MapClassLoader([
-            'Concrete\\Tests\\Core\\Localization\\Translator\\Fixtures\\DummyTranslatorAdapter' => __DIR__ . '/fixtures/DummyTranslatorAdapter.php',
-            'Concrete\\Tests\\Core\\Localization\\Translator\\Fixtures\\DummyTranslatorAdapterFactory' => __DIR__ . '/fixtures/DummyTranslatorAdapterFactory.php',
-        ]);
-        $loader->register();
-    }
 
     protected function setUp()
     {
@@ -53,7 +43,7 @@ class TranslatorAdapterRepositoryTest extends PHPUnit_Framework_TestCase
         $adapter = $this->repository->getTranslatorAdapter('test', 'en_US');
 
         $this->assertTrue($this->repository->hasTranslatorAdapter('test', 'en_US'));
-        $this->assertInstanceOf('Concrete\Tests\Core\Localization\Translator\Fixtures\DummyTranslatorAdapter', $adapter);
+        $this->assertInstanceOf(DummyTranslatorAdapter::class, $adapter);
     }
 
     public function testRemoveTranslatorAdapter()
@@ -98,9 +88,9 @@ class TranslatorAdapterRepositoryTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($this->repository->hasTranslatorAdapter('other', 'en_US'));
         $this->assertEquals(3, count($this->getRegisteredAdapters()));
 
-        $this->assertInstanceOf('Concrete\Tests\Core\Localization\Translator\Fixtures\DummyTranslatorAdapter', $adapter1);
-        $this->assertInstanceOf('Concrete\Tests\Core\Localization\Translator\Fixtures\DummyTranslatorAdapter', $adapter2);
-        $this->assertInstanceOf('Concrete\Tests\Core\Localization\Translator\Fixtures\DummyTranslatorAdapter', $adapter3);
+        $this->assertInstanceOf(DummyTranslatorAdapter::class, $adapter1);
+        $this->assertInstanceOf(DummyTranslatorAdapter::class, $adapter2);
+        $this->assertInstanceOf(DummyTranslatorAdapter::class, $adapter3);
     }
 
     public function testRemoveMultipleTranslatorAdapters()

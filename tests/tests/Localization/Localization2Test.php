@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Tests\Core\Localization;
+namespace Concrete\Tests\Localization;
 
 use Concrete\Core\Cache\CacheServiceProvider;
 use Concrete\Core\Localization\Localization;
@@ -10,15 +10,13 @@ use Concrete\Core\Localization\Translator\Translation\TranslationLoaderRepositor
 use Concrete\Core\Localization\Translator\TranslatorAdapterRepository;
 use Concrete\Core\Support\Facade\Events;
 use Concrete\Core\Support\Facade\Facade;
-use Concrete\Tests\Core\Localization\Fixtures\TestTranslationLoader;
-use Concrete\Tests\Core\Localization\Fixtures\TestUpdatedTranslationLoader;
-use Concrete\Tests\Core\Localization\Translator\Adapter\Zend\Translation\Loader\Gettext\Fixtures\MultilingualDetector;
-use Concrete\Tests\Localization\LocalizationTestsBase;
-use Exception;
+use Concrete\TestHelpers\Localization\Adapter\Zend\Translation\Loader\Gettext\Fixtures\MultilingualDetector;
+use Concrete\TestHelpers\Localization\Fixtures\TestTranslationLoader;
+use Concrete\TestHelpers\Localization\Fixtures\TestUpdatedTranslationLoader;
+use Concrete\TestHelpers\Localization\LocalizationTestsBase;
 use Illuminate\Filesystem\Filesystem;
 use Punic\Language as PunicLanguage;
 use ReflectionClass;
-use Symfony\Component\ClassLoader\MapClassLoader;
 use Zend\I18n\Translator\Translator as ZendTranslator;
 
 /**
@@ -35,16 +33,10 @@ class Localization2Test extends LocalizationTestsBase
     {
         parent::setUpBeforeClass();
         // Move language directories to the application
-        $source = __DIR__ . '/fixtures/languages';
+        $source = DIR_TESTS . '/assets/Localization/languages';
         $target = static::getTranslationsFolder();
         $filesystem = new Filesystem();
         $filesystem->copyDirectory($source, $target);
-
-        $loader = new MapClassLoader([
-            'Concrete\\Tests\\Core\\Localization\\Fixtures\\TestTranslationLoader' => __DIR__ . '/fixtures/TestTranslationLoader.php',
-            'Concrete\\Tests\\Core\\Localization\\Fixtures\\TestUpdatedTranslationLoader' => __DIR__ . '/fixtures/TestUpdatedTranslationLoader.php',
-        ]);
-        $loader->register();
     }
 
     protected function setUp()
@@ -75,7 +67,7 @@ class Localization2Test extends LocalizationTestsBase
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException \Exception
      */
     public function testTranslatorAdapterRepositoryRequired()
     {
@@ -138,7 +130,7 @@ class Localization2Test extends LocalizationTestsBase
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException \Exception
      */
     public function testGetUnexistingContextTranslatorAdapter()
     {
@@ -152,7 +144,7 @@ class Localization2Test extends LocalizationTestsBase
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException \Exception
      */
     public function testGetUnexistingActiveTranslatorAdapter()
     {
@@ -435,10 +427,8 @@ class Localization2Test extends LocalizationTestsBase
     {
         return;
 
-        $siteTranslatorLoaderTestPath = __DIR__ . '/Adapter/Zend/Translation/Loader/Gettext';
-
         // Move translation files
-        $langDir = $siteTranslatorLoaderTestPath . '/fixtures/languages/site';
+        $langDir = DIR_TESTS . '/assets/Localization/Adapter/Zend/Translation/Loader/Gettext/languages/site';
         $appLangDir = static::getTranslationsFolder() . '/site';
 
         $filesystem = new Filesystem();
@@ -446,12 +436,6 @@ class Localization2Test extends LocalizationTestsBase
             static::markTestSkipped('The site languages directory already exists in the application folder. It should not exist for the testing purposes.');
         }
         $filesystem->copyDirectory($langDir, $appLangDir);
-
-        // Make the MultilingualDetector override available
-        $loader = new MapClassLoader([
-            'Concrete\\Tests\\Core\\Localization\\Translator\\Adapter\\Zend\\Translation\\Loader\\Gettext\\Fixtures\\MultilingualDetector' => $siteTranslatorLoaderTestPath . '/fixtures/MultilingualDetector.php',
-        ]);
-        $loader->register();
 
         // Custom Localization instance for these tests
         $loc = new Localization();

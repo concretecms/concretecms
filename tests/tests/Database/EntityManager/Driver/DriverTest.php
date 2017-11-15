@@ -1,9 +1,10 @@
 <?php
 
-namespace Concrete\Tests\Core\Database\EntityManager\Driver;
+namespace Concrete\Tests\Database\EntityManager\Driver;
 
 use Concrete\Core\Database\EntityManager\Driver\Driver;
 use Doctrine\ORM\Mapping\Driver\YamlDriver;
+use PHPUnit_Framework_TestCase;
 
 /**
  * DriverTest.
@@ -11,7 +12,7 @@ use Doctrine\ORM\Mapping\Driver\YamlDriver;
  * @author Markus Liechti <markus@liechti.io>
  * @group orm_setup
  */
-class DriverTest extends \PHPUnit_Framework_TestCase
+class DriverTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {

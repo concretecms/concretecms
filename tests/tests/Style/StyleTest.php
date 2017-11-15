@@ -1,6 +1,12 @@
 <?php
 
-class StyleTest extends \PHPUnit_Framework_TestCase
+namespace Concrete\Tests\Style;
+
+use Environment;
+use PageTheme;
+use PHPUnit_Framework_TestCase;
+
+class StyleTest extends PHPUnit_Framework_TestCase
 {
     /*
     public static function tearDownAfterClass() {
@@ -19,7 +25,7 @@ class StyleTest extends \PHPUnit_Framework_TestCase
 
     public function testStyles()
     {
-        $definition = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__) . '/fixtures/styles.xml';
+        $definition = DIR_TESTS . '/assets/Style/styles.xml';
         $styleList = \Concrete\Core\StyleCustomizer\StyleList::loadFromXMLFile($definition);
         $sets = $styleList->getSets();
         $styles = $sets[0]->getStyles();
@@ -42,7 +48,7 @@ class StyleTest extends \PHPUnit_Framework_TestCase
 
     public function testLessVariableColorParsing()
     {
-        $defaults = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__) . '/fixtures/defaults.less';
+        $defaults = DIR_TESTS . '/assets/Style/defaults.less';
         $list = \Concrete\Core\StyleCustomizer\Style\ValueList::loadFromLessFile($defaults);
 
         $cs1 = new \Concrete\Core\StyleCustomizer\Style\ColorStyle();
@@ -67,7 +73,7 @@ class StyleTest extends \PHPUnit_Framework_TestCase
 
     public function testLessVariableSizeParsing()
     {
-        $defaults = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__) . '/fixtures/defaults.less';
+        $defaults = DIR_TESTS . '/assets/Style/defaults.less';
         $list = \Concrete\Core\StyleCustomizer\Style\ValueList::loadFromLessFile($defaults);
 
         $ss1 = new \Concrete\Core\StyleCustomizer\Style\SizeStyle();
@@ -84,7 +90,7 @@ class StyleTest extends \PHPUnit_Framework_TestCase
 
     public function testLessVariableFontFullParsing()
     {
-        $defaults = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__) . '/fixtures/defaults.less';
+        $defaults = DIR_TESTS . '/assets/Style/defaults.less';
         $list = \Concrete\Core\StyleCustomizer\Style\ValueList::loadFromLessFile($defaults);
 
         $fs1 = new \Concrete\Core\StyleCustomizer\Style\TypeStyle();
@@ -113,7 +119,7 @@ class StyleTest extends \PHPUnit_Framework_TestCase
 
     public function testLessVariableFontPartialParsing()
     {
-        $defaults = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__) . '/fixtures/defaults.less';
+        $defaults = DIR_TESTS . '/assets/Style/defaults.less';
         $list = \Concrete\Core\StyleCustomizer\Style\ValueList::loadFromLessFile($defaults);
 
         $ts = new \Concrete\Core\StyleCustomizer\Style\TypeStyle();
@@ -127,7 +133,7 @@ class StyleTest extends \PHPUnit_Framework_TestCase
 
     public function testLessVariableImages()
     {
-        $defaults = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__) . '/fixtures/defaults.less';
+        $defaults = DIR_TESTS . '/assets/Style/defaults.less';
         $list = \Concrete\Core\StyleCustomizer\Style\ValueList::loadFromLessFile($defaults);
 
         $ts = new \Concrete\Core\StyleCustomizer\Style\ImageStyle();
@@ -138,7 +144,7 @@ class StyleTest extends \PHPUnit_Framework_TestCase
 
     public function testCustomizableStyleSheetObjects()
     {
-        $defaults = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__) . '/fixtures/elemental.less';
+        $defaults = DIR_TESTS . '/assets/Style/elemental.less';
         $list = \Concrete\Core\StyleCustomizer\Style\ValueList::loadFromLessFile($defaults);
         $env = Environment::get();
 

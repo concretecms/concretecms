@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Tests\Core\Localization\Translator\Translation\Fixtures;
+namespace Concrete\TestHelpers\Localization\Translator\Translation\Fixtures;
 
 use Concrete\Core\Localization\Translator\Translation\TranslationLoaderInterface;
 use Concrete\Core\Localization\Translator\TranslatorAdapterInterface;

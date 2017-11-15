@@ -1,6 +1,8 @@
 <?php
 
-namespace Concrete\Tests\Core\Database;
+namespace Concrete\Tests\Database;
+
+use PHPUnit_Framework_TestCase;
 
 /**
  * DatabaseServiceProviderTest.
@@ -8,7 +10,7 @@ namespace Concrete\Tests\Core\Database;
  * @author Markus Liechti <markus@liechti.io>
  * @group orm_setup
  */
-class DatabaseServiceProviderTest extends \PHPUnit_Framework_TestCase
+class DatabaseServiceProviderTest extends PHPUnit_Framework_TestCase
 {
     protected $app;
 

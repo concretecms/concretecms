@@ -1,15 +1,16 @@
 <?php
 
-namespace Concrete\Tests\Core\Database\EntityManager\Provider;
+namespace Concrete\Tests\Database\EntityManager\Provider;
 
 use Concrete\Core\Database\EntityManager\Provider\DefaultPackageProvider;
 use Concrete\Core\Support\Facade\Application;
-use Concrete\Tests\Core\Database\EntityManager\Provider\Fixtures\PackageControllerDefault;
-use Concrete\Tests\Core\Database\EntityManager\Provider\Fixtures\PackageControllerDefaultWithAdditionalNamespaces;
-use Concrete\Tests\Core\Database\EntityManager\Provider\Fixtures\PackageControllerLegacy;
-use Concrete\Tests\Core\Database\EntityManager\Provider\Fixtures\PackageControllerWithgetPackageEntityPath;
-use Concrete\Tests\Core\Database\Traits\DirectoryHelpers;
+use Concrete\TestHelpers\Database\EntityManager\Provider\Fixtures\PackageControllerDefault;
+use Concrete\TestHelpers\Database\EntityManager\Provider\Fixtures\PackageControllerDefaultWithAdditionalNamespaces;
+use Concrete\TestHelpers\Database\EntityManager\Provider\Fixtures\PackageControllerLegacy;
+use Concrete\TestHelpers\Database\EntityManager\Provider\Fixtures\PackageControllerWithgetPackageEntityPath;
+use Concrete\TestHelpers\Database\Traits\DirectoryHelpers;
 use Illuminate\Filesystem\Filesystem;
+use PHPUnit_Framework_TestCase;
 
 /**
  * PackageProviderFactoryTest.
@@ -17,7 +18,7 @@ use Illuminate\Filesystem\Filesystem;
  * @author Markus Liechti <markus@liechti.io>
  * @group orm_setup
  */
-class DefaultPackageProviderTest extends \PHPUnit_Framework_TestCase
+class DefaultPackageProviderTest extends PHPUnit_Framework_TestCase
 {
     use DirectoryHelpers;
 

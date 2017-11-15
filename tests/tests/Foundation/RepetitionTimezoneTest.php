@@ -1,12 +1,13 @@
 <?php
 
-namespace Concrete\Tests\Core\Foundation;
+namespace Concrete\Tests\Foundation;
 
 use Concrete\Core\Foundation\Repetition\BasicRepetition;
 use Concrete\Core\Localization\Service\Date;
 use Concrete\Core\Support\Facade\Facade;
+use PHPUnit_Framework_TestCase;
 
-class RepetitionTimezoneTest extends \PHPUnit_Framework_TestCase
+class RepetitionTimezoneTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @var Date

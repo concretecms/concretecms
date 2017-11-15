@@ -1,5 +1,11 @@
 <?php
 
+namespace Concrete\Tests\Block;
+
+use Block;
+use BlockType;
+use Concrete\TestHelpers\Page\PageTestCase;
+
 class BlockStyleTest extends PageTestCase
 {
     public function __construct($name = null, array $data = [], $dataName = '')

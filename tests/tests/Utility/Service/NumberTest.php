@@ -1,10 +1,11 @@
 <?php
 
-namespace Concrete\Tests\Core\Utility\Service;
+namespace Concrete\Tests\Utility\Service;
 
 use Concrete\Core\Utility\Service\Number;
+use PHPUnit_Framework_Testcase;
 
-class NumberTest extends \PHPUnit_Framework_Testcase
+class NumberTest extends PHPUnit_Framework_Testcase
 {
     public function flexRoundDataProvider()
     {

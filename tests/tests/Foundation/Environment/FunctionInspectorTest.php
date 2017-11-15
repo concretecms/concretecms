@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Tests\Core\Foundation\Environment;
+namespace Concrete\Tests\Foundation\Environment;
 
 use Concrete\Core\Foundation\Environment\FunctionInspector;
 use Concrete\Core\Support\Facade\Application;

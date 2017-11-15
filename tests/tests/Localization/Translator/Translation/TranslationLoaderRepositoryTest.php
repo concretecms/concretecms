@@ -3,9 +3,8 @@
 namespace Concrete\Tests\Core\Localization\Translator\Translation;
 
 use Concrete\Core\Localization\Translator\Translation\TranslationLoaderRepository;
-use Concrete\Tests\Core\Localization\Translator\Translation\Fixtures\DummyTranslationLoader;
+use Concrete\TestHelpers\Localization\Translator\Translation\Fixtures\DummyTranslationLoader;
 use PHPUnit_Framework_TestCase;
-use Symfony\Component\ClassLoader\MapClassLoader;
 
 /**
  * Tests for:
@@ -16,14 +15,6 @@ use Symfony\Component\ClassLoader\MapClassLoader;
 class TranslationLoaderRepositoryTest extends PHPUnit_Framework_TestCase
 {
     protected $repository;
-
-    public static function setUpBeforeClass()
-    {
-        $loader = new MapClassLoader([
-            'Concrete\\Tests\\Core\\Localization\\Translator\\Translation\\Fixtures\\DummyTranslationLoader' => __DIR__ . '/fixtures/DummyTranslationLoader.php',
-        ]);
-        $loader->register();
-    }
 
     protected function setUp()
     {

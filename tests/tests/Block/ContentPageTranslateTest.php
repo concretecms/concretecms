@@ -1,5 +1,9 @@
 <?php
 
+namespace Concrete\Tests\Block;
+
+use Concrete\TestHelpers\Page\PageTestCase;
+
 class ContentPageTranslateTest extends PageTestCase
 {
     protected $fixtures = [];

@@ -1,6 +1,10 @@
 <?php
 
-class AddressValueTest extends \AttributeValueTestCase
+namespace Concrete\Tests\Attribute\Value;
+
+use Concrete\TestHelpers\Attribute\AttributeValueTestCase;
+
+class AddressValueTest extends AttributeValueTestCase
 {
     public function __construct($name = null, array $data = [], $dataName = '')
     {

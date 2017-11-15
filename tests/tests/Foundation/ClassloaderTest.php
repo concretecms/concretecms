@@ -1,11 +1,9 @@
 <?php
 
-namespace Concrete\Tests\Core\Foundation;
+namespace Concrete\Tests\Foundation;
 
-use Concrete\Core\Entity\Package;
 use Concrete\Core\Foundation\ClassLoader;
-
-require_once __DIR__ . '/ClassLoaderTestCase.php';
+use Concrete\TestHelpers\Foundation\ClassLoaderTestCase;
 
 class ClassloaderTest extends ClassLoaderTestCase
 {

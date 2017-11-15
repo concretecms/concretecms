@@ -1,8 +1,11 @@
 <?php
 
-require_once __DIR__ . '/fixtures/RelatedPageController.php';
+namespace Concrete\Tests\Attribute\Value;
 
-class PageValueTest extends \AttributeValueTestCase
+use Concrete\TestHelpers\Attribute\AttributeValueTestCase;
+use Page;
+
+class PageValueTest extends AttributeValueTestCase
 {
     public function __construct($name = null, array $data = [], $dataName = '')
     {
@@ -23,6 +26,12 @@ class PageValueTest extends \AttributeValueTestCase
             'Concrete\Core\Entity\Attribute\Value\Value\NumberValue',
             'Concrete\Core\Entity\Page\Template',
         ]);
+    }
+
+    public static function setUpBeforeClass()
+    {
+        parent::setUpBeforeClass();
+        require_once DIR_TESTS . '/assets/Attribute/Value/RelatedPageController.php';
     }
 
     public function setUp()

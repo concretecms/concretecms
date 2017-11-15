@@ -1,7 +1,8 @@
 <?php
 
-namespace Concrete\Tests\Core\Database\EntityManager\Provider\Fixtures;
+namespace Concrete\TestHelpers\Database\EntityManager\Provider\Fixtures;
 
+use Concrete\Core\Application\Application;
 use Concrete\Core\Database\EntityManager\Provider\ProviderAggregateInterface;
 use Concrete\Core\Package\Package;
 

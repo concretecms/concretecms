@@ -1,10 +1,11 @@
 <?php
 
-namespace Concrete\Tests\Core\Database\EntityManager\Driver;
+namespace Concrete\Tests\Database\EntityManager\Driver;
 
 use Concrete\Core\Database\EntityManager\Driver\ApplicationDriver;
 use Concrete\Core\Support\Facade\Application;
 use Illuminate\Filesystem\Filesystem;
+use PHPUnit_Framework_TestCase;
 
 /**
  * ApplicationDriverTest.
@@ -12,7 +13,7 @@ use Illuminate\Filesystem\Filesystem;
  * @author Markus Liechti <markus@liechti.io>
  * @group orm_setup
  */
-class ApplicationDriverTest extends \PHPUnit_Framework_TestCase
+class ApplicationDriverTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @var \Concrete\Core\Application\Application

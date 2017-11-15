@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Tests\Core\File;
+namespace Concrete\Tests\File;
 
 use Concrete\Core\Attribute\Key\Category;
 use Concrete\Core\Attribute\Key\FileKey;
@@ -9,8 +9,9 @@ use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Importer;
 use Concrete\Core\File\Search\ColumnSet\Column\FileVersionFilenameColumn;
 use Concrete\Core\Search\Pagination\PaginationFactory;
+use Concrete\TestHelpers\File\FileStorageTestCase;
 
-class FileListTest extends \FileStorageTestCase
+class FileListTest extends FileStorageTestCase
 {
     /** @var \Concrete\Core\File\FileList */
     protected $list;
@@ -65,7 +66,7 @@ class FileListTest extends \FileStorageTestCase
         }
         $self->getStorageLocation();
 
-        $sample = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__) . '/StorageLocation/fixtures/sample.txt';
+        $sample = DIR_TESTS . '/assets/File/StorageLocation/sample.txt';
         $image = DIR_BASE . '/concrete/images/logo.png';
         $fi = new Importer();
 
@@ -228,7 +229,7 @@ class FileListTest extends \FileStorageTestCase
     public function testPaginationWithPermissionsAndPager()
     {
         // first lets make some more files.
-        $sample = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__) . '/StorageLocation/fixtures/sample.txt';
+        $sample = DIR_TESTS . '/assets/File/StorageLocation/sample.txt';
         $image = DIR_BASE . '/concrete/images/logo.png';
         $fi = new Importer();
 
@@ -303,7 +304,7 @@ class FileListTest extends \FileStorageTestCase
     public function testPaginationThatStopsOnTheFirstPage()
     {
         // first lets make some more files.
-        $sample = __DIR__ . '/StorageLocation/fixtures/sample.txt';
+        $sample = DIR_TESTS . '/assets/File/StorageLocation/sample.txt';
         $image = DIR_BASE . '/concrete/images/logo.png';
         $fi = new Importer();
 

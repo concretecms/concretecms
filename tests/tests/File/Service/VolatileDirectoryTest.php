@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Tests\Core\File\Service;
+namespace Concrete\Tests\File\Service;
 
 use Concrete\Core\File\Service\VolatileDirectory;
 use Concrete\Core\Support\Facade\Application;

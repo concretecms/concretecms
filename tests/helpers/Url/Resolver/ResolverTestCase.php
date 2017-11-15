@@ -1,5 +1,9 @@
 <?php
 
+namespace Concrete\TestHelpers\Url\Resolver;
+
+use PHPUnit_Framework_TestCase;
+
 abstract class ResolverTestCase extends PHPUnit_Framework_TestCase
 {
     /**

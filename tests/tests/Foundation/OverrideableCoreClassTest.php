@@ -1,11 +1,10 @@
 <?php
 
-namespace Concrete\Tests\Core\Foundation;
+namespace Concrete\Tests\Foundation;
 
 use Concrete\Core\Foundation\Environment;
 use Concrete\Core\Support\Facade\Facade;
-
-require_once __DIR__ . '/ClassLoaderTestCase.php';
+use Concrete\TestHelpers\Foundation\ClassLoaderTestCase;
 
 class OverrideableCoreClassTest extends ClassLoaderTestCase
 {

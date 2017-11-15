@@ -1,9 +1,10 @@
 <?php
 
-namespace Concrete\tests\Core\Statistics\UsageTracker;
+namespace Concrete\TestHelpers\Statistics\UsageTracker;
 
+use Concrete\Core\Block\BlockController;
 use Concrete\Core\File\Tracker\FileTrackableInterface;
 
-abstract class TrackableBlockController extends \Concrete\Core\Block\BlockController implements FileTrackableInterface
+abstract class TrackableBlockController extends BlockController implements FileTrackableInterface
 {
 }

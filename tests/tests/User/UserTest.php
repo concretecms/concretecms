@@ -1,20 +1,15 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: andrew
- * Date: 6/28/14
- * Time: 10:30 AM.
- */
 
-namespace Concrete\Tests\Core\User;
+namespace Concrete\Tests\User;
 
 use Concrete\Core\Conversation\Message\Author;
 use Concrete\Core\Conversation\Message\AuthorFormatter;
 use Concrete\Core\File\StorageLocation\StorageLocation;
 use Concrete\Core\File\StorageLocation\Type\Type;
+use Concrete\TestHelpers\User\UserTestCase;
 use Core;
 
-class UserTest extends \UserTestCase
+class UserTest extends UserTestCase
 {
     public function __construct($name = null, array $data = [], $dataName = '')
     {

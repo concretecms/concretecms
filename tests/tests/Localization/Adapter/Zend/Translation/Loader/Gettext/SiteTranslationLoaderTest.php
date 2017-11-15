@@ -1,14 +1,13 @@
 <?php
 
-namespace Concrete\Tests\Core\Localization\Translator\Adapter\Zend\Translation\Loader\Gettext;
+namespace Concrete\Tests\Localization\Adapter\Zend\Translation\Loader\Gettext;
 
 use Concrete\Core\Localization\Translator\Adapter\Zend\Translation\Loader\Gettext\SiteTranslationLoader;
 use Concrete\Core\Localization\Translator\Adapter\Zend\TranslatorAdapterFactory;
 use Concrete\Core\Support\Facade\Facade;
-use Concrete\Tests\Core\Localization\Translator\Adapter\Zend\Translation\Loader\Gettext\Fixtures\MultilingualDetector;
-use Concrete\Tests\Localization\LocalizationTestsBase;
+use Concrete\TestHelpers\Localization\Adapter\Zend\Translation\Loader\Gettext\Fixtures\MultilingualDetector;
+use Concrete\TestHelpers\Localization\LocalizationTestsBase;
 use Illuminate\Filesystem\Filesystem;
-use Symfony\Component\ClassLoader\MapClassLoader;
 
 /**
  * Tests for:
@@ -21,14 +20,10 @@ class SiteTranslationLoaderTest extends LocalizationTestsBase
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
-        $loader = new MapClassLoader([
-            'Concrete\\Tests\\Core\\Localization\\Translator\\Adapter\\Zend\\Translation\\Loader\\Gettext\\Fixtures\\MultilingualDetector' => __DIR__ . '/fixtures/MultilingualDetector.php',
-        ]);
-        $loader->register();
 
         $filesystem = new Filesystem();
 
-        $langDir = __DIR__ . '/fixtures/languages/site';
+        $langDir = DIR_TESTS . '/assets/Localization/Adapter/Zend/Translation/Loader/Gettext/languages/site';
         $appLangDir = static::getTranslationsFolder() . '/site';
         $filesystem->copyDirectory($langDir, $appLangDir);
     }

@@ -1,8 +1,11 @@
 <?php
 
+namespace Concrete\Tests\Config;
+
 use Concrete\Core\Config\FileLoader;
 use Concrete\Core\Config\Renderer;
 use Illuminate\Filesystem\Filesystem;
+use PHPUnit_Framework_TestCase;
 
 /**
  * Class FileLoaderTest.

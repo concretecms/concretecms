@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Tests\Core\Localization\Translator\Adapter\Zend;
+namespace Concrete\Tests\Localization\Adapter\Zend;
 
 use Concrete\Core\Localization\Translator\Adapter\Zend\TranslatorAdapter;
 use PHPUnit_Framework_TestCase;
@@ -18,7 +18,7 @@ class TranslatorAdapterTest extends PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $translationsFile = __DIR__ . '/fixtures/translations.php';
+        $translationsFile = DIR_TESTS . '/assets/Localization/Adapter/Zend/translations.php';
 
         $translator = new Translator();
         $translator->addTranslationFile('phparray', $translationsFile);

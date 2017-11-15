@@ -1,5 +1,11 @@
 <?php
 
+namespace Concrete\Tests\Page;
+
+use Concrete\TestHelpers\Page\PageTestCase;
+use Group;
+use Page;
+
 class PageListTopicTest extends PageTestCase
 {
     public function __construct($name = null, array $data = [], $dataName = '')

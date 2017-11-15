@@ -1,18 +1,13 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: andrew
- * Date: 6/3/14
- * Time: 7:12 AM.
- */
 
-namespace Concrete\Tests\Core\File\Service;
+namespace Concrete\Tests\File\Service;
 
 use Concrete\Core\File\StorageLocation\Configuration\LocalConfiguration;
 use Concrete\Core\Support\Facade\Application;
-use Concrete\Tests\Core\File\Service\Fixtures\TestStorageLocation;
+use Concrete\TestHelpers\File\Service\Fixtures\TestStorageLocation;
+use PHPUnit_Framework_TestCase;
 
-class ImageTest extends \PHPUnit_Framework_TestCase
+class ImageTest extends PHPUnit_Framework_TestCase
 {
     protected $output1;
 

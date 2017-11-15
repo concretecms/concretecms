@@ -1,9 +1,10 @@
 <?php
 
-namespace Concrete\Tests\Core\Database\EntityManager\Driver;
+namespace Concrete\Tests\Database\EntityManager\Driver;
 
 use Concrete\Core\Database\EntityManager\Driver\CoreDriver;
 use Concrete\Core\Support\Facade\Application;
+use PHPUnit_Framework_TestCase;
 
 /**
  * CoreDriverTest.
@@ -11,7 +12,7 @@ use Concrete\Core\Support\Facade\Application;
  * @author Markus Liechti <markus@liechti.io>
  * @group orm_setup
  */
-class CoreDriverTest extends \PHPUnit_Framework_TestCase
+class CoreDriverTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @var \Concrete\Core\Application\Application

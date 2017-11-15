@@ -1,10 +1,11 @@
 <?php
 
-namespace Concrete\Tests\Localization;
+namespace Concrete\TestHelpers\Localization;
 
 use Illuminate\Filesystem\Filesystem;
+use PHPUnit_Framework_TestCase;
 
-class LocalizationTestsBase extends \PHPUnit_Framework_TestCase
+class LocalizationTestsBase extends PHPUnit_Framework_TestCase
 {
     private static $applicationLanguagesRenamed = false;
     private static $applicationLanguagesCreated = false;

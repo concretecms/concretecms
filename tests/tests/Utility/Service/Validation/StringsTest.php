@@ -1,5 +1,10 @@
 <?php
 
+namespace Concrete\Tests\Utility\Service\Validation;
+
+use PHPUnit_Framework_TestCase;
+use stdClass;
+
 class StringsTest extends PHPUnit_Framework_TestCase
 {
     /**

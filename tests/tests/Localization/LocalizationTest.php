@@ -1,6 +1,9 @@
 <?php
 
-use Concrete\Tests\Localization\LocalizationTestsBase;
+namespace Concrete\Tests\Localization;
+
+use Concrete\TestHelpers\Localization\LocalizationTestsBase;
+use Exception;
 
 class LocalizationTest extends LocalizationTestsBase
 {

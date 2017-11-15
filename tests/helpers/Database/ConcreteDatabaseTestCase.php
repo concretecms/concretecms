@@ -1,35 +1,70 @@
 <?php
 
+namespace Concrete\TestHelpers\Database;
+
+use CacheLocal;
 use Concrete\Core\Database\DatabaseStructureManager;
 use Concrete\Core\Database\Schema\Schema;
-use Concrete\Core\Support\Facade\Application;
+use Core;
 use Doctrine\DBAL\Driver\Connection;
 use Doctrine\DBAL\Driver\PDOConnection;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\ORM\EntityManagerInterface;
-use Imagine\Exception\RuntimeException;
+use ORM;
+use PHPUnit_Extensions_Database_DataSet_CompositeDataSet;
+use PHPUnit_Extensions_Database_TestCase;
+use RuntimeException;
+use SimpleXMLElement;
 
-class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
+abstract class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
 {
-    /** @var Connection The cached database connection */
+    /**
+     * The cached database connection.
+     *
+     * @var Connection
+     */
     public static $connection = null;
 
-    /** @var bool[] Keys are tables that currently exist */
+    /**
+     * Keys are tables that currently exist.
+     *
+     * @var bool[]
+     */
     public static $existingTables = [];
 
-    /** @var bool[] Keys are entites that currently exist */
+    /**
+     * Keys are entites that currently exist.
+     *
+     * @var bool[]
+     */
     public static $existingEntites = [];
 
-    /** @var array[] Table data cache */
+    /**
+     * Table data cache.
+     *
+     * @var array[]
+     */
     public static $tableData = [];
 
-    /** @var string[] The tables to import from /concrete/config/db.xml */
+    /**
+     * The tables to import from /concrete/config/db.xml.
+     *
+     * @var string[]
+     */
     protected $tables = [];
 
-    /** @var string[] The fixtures to import */
+    /**
+     * The fixtures to import.
+     *
+     * @var string[]
+     */
     protected $fixtures = [];
 
-    /** @var string[] The Entities to import */
+    /**
+     * The Entities to import.
+     *
+     * @var string[]
+     */
     protected $metadatas = [];
 
     /**
@@ -62,8 +97,8 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
     public function tearDown()
     {
         parent::tearDown();
-        \ORM::entityManager('core')->clear();
-        \CacheLocal::flush();
+        ORM::entityManager('core')->clear();
+        CacheLocal::flush();
     }
 
     /**
@@ -74,7 +109,7 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
     protected function connection()
     {
         if (!static::$connection) {
-            static::$connection = Application::make('database')->connection('travis');
+            static::$connection = Core::make('database')->connection('travis');
         }
 
         return static::$connection;
@@ -83,9 +118,9 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
     /**
      * Returns the test database connection.
      *
-     * @throws \Imagine\Exception\RuntimeException
+     * @throws \RuntimeException
      *
-     * @return PHPUnit_Extensions_Database_DB_IDatabaseConnection
+     * @return \PHPUnit_Extensions_Database_DB_IDatabaseConnection
      */
     protected function getConnection()
     {
@@ -100,7 +135,7 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
     /**
      * Returns the test dataset.
      *
-     * @return PHPUnit_Extensions_Database_DataSet_IDataSet
+     * @return \PHPUnit_Extensions_Database_DataSet_IDataSet
      */
     protected function getDataSet()
     {
@@ -236,19 +271,23 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
     }
 
     /**
-     * @param \PHPUnit_Extensions_Database_DataSet_CompositeDataSet $dataSet
+     * @param PHPUnit_Extensions_Database_DataSet_CompositeDataSet $dataSet
      */
     protected function importFixtures(PHPUnit_Extensions_Database_DataSet_CompositeDataSet $dataSet)
     {
         $fixtures = $this->fixtures;
-
-        $reflectionClass = new ReflectionClass(get_called_class());
-        $fixturePath = dirname($reflectionClass->getFilename()) . '/fixtures';
-
-        foreach ((array) $fixtures as $fixture) {
-            $path = $fixturePath . "/$fixture.xml";
-            $ds = $this->createMySQLXMLDataSet($path);
-            $dataSet->addDataSet($ds);
+        if (!empty($fixtures)) {
+            $testClass = get_called_class();
+            if (strpos($testClass, 'Concrete\\Tests\\') !== 0) {
+                throw new RuntimeException('Invalid test case class name: ' . $testClass);
+            }
+            $namespaceChunks = explode('\\', $testClass);
+            $fixturePath = DIR_TESTS . '/assets/' . $namespaceChunks[2];
+            foreach ((array) $fixtures as $fixture) {
+                $path = $fixturePath . "/$fixture.xml";
+                $ds = $this->createMySQLXMLDataSet($path);
+                $dataSet->addDataSet($ds);
+            }
         }
     }
 
@@ -257,7 +296,7 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
      */
     protected function importMetadatas()
     {
-        $sm = Application::make(DatabaseStructureManager::class);
+        $sm = Core::make(DatabaseStructureManager::class);
 
         if ($metadatas = $this->getMetadatas()) {
             $sm->installDatabaseFor($metadatas);
@@ -277,7 +316,7 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
         // If there are metadatas to import
         if ($this->metadatas && is_array($this->metadatas)) {
             /** @var EntityManagerInterface $manager */
-            $manager = Application::make(EntityManagerInterface::class);
+            $manager = Core::make(EntityManagerInterface::class);
             $factory = $manager->getMetadataFactory();
 
             // Loop through all metadata
@@ -331,7 +370,7 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
     /**
      * Truncate all known databases.
      *
-     * @param null|array $tables The tables to truncate
+     * @param null|string[] $tables The tables to truncate
      */
     protected function truncateTables($tables = null)
     {

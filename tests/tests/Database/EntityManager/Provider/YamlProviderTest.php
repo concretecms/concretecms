@@ -1,11 +1,12 @@
 <?php
 
-namespace Concrete\Tests\Core\Database\EntityManager\Provider;
+namespace Concrete\Tests\Database\EntityManager\Provider;
 
 use Concrete\Core\Database\EntityManager\Provider\YamlProvider;
 use Concrete\Core\Support\Facade\Application;
-use Concrete\Tests\Core\Database\EntityManager\Provider\Fixtures\PackageControllerYaml;
-use Concrete\Tests\Core\Database\Traits\DirectoryHelpers;
+use Concrete\TestHelpers\Database\EntityManager\Provider\Fixtures\PackageControllerYaml;
+use Concrete\TestHelpers\Database\Traits\DirectoryHelpers;
+use PHPUnit_Framework_TestCase;
 
 /**
  * YamlProviderTest.
@@ -13,7 +14,7 @@ use Concrete\Tests\Core\Database\Traits\DirectoryHelpers;
  * @author Markus Liechti <markus@liechti.io>
  * @group orm_setup
  */
-class YamlProviderTest extends \PHPUnit_Framework_TestCase
+class YamlProviderTest extends PHPUnit_Framework_TestCase
 {
     use DirectoryHelpers;
 

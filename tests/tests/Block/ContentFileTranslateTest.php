@@ -1,9 +1,13 @@
 <?php
 
+namespace Concrete\Tests\Block;
+
 use Concrete\Core\Attribute\Key\Category;
 use Concrete\Core\Attribute\Key\FileKey;
 use Concrete\Core\Attribute\Type as AttributeType;
 use Concrete\Core\Cache\CacheLocal;
+use Concrete\TestHelpers\File\FileStorageTestCase;
+use SimpleXMLElement;
 
 class ContentFileTranslateTest extends FileStorageTestCase
 {
@@ -64,7 +68,7 @@ class ContentFileTranslateTest extends FileStorageTestCase
         $this->getStorageLocation();
 
         $fi = new \Concrete\Core\File\Importer();
-        $file = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__) . '/fixtures/background-slider-blue-sky.png';
+        $file = DIR_TESTS . '/assets/block/background-slider-blue-sky.png';
         $r = $fi->import($file, 'background-slider-blue-sky.png');
         $path = $r->getRelativePath();
 

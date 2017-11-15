@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Tests\Core\Html\Service;
+namespace Concrete\Tests\Filesystem;
 
 use Concrete\Core\Entity\Package;
 use Concrete\Core\Filesystem\FileLocator;
@@ -8,8 +8,9 @@ use Concrete\Core\Package\PackageList;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Support\Facade\Facade;
 use Illuminate\Filesystem\Filesystem;
+use PHPUnit_Framework_TestCase;
 
-class FileLocatorTest extends \PHPUnit_Framework_TestCase
+class FileLocatorTest extends PHPUnit_Framework_TestCase
 {
     protected $app;
 

@@ -1,14 +1,15 @@
 <?php
 
-use Concrete\Core\Page\PageList;
+namespace Concrete\Tests\Page;
 
-/**
- * Created by PhpStorm.
- * User: andrew
- * Date: 6/10/14
- * Time: 7:47 AM.
- */
-class PageListTest extends \PageTestCase
+use Concrete\Core\Page\PageList;
+use Concrete\TestHelpers\Page\PageTestCase;
+use Config;
+use Page;
+use PageTemplate;
+use PageType;
+
+class PageListTest extends PageTestCase
 {
     /** @var \Concrete\Core\Page\PageList */
     protected $list;

@@ -1,6 +1,8 @@
 <?php
 
-require_once __DIR__ . '/ResolverTestCase.php';
+namespace Concrete\Tests\Url\Resolver;
+
+use Concrete\TestHelpers\Url\Resolver\ResolverTestCase;
 
 class PathUrlResolverTest extends ResolverTestCase
 {

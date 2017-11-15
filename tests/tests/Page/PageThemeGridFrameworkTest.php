@@ -1,12 +1,11 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: andrew
- * Date: 6/10/14
- * Time: 7:47 AM.
- */
-class PageThemeGridFrameworkTest extends \PHPUnit_Framework_TestCase
+namespace Concrete\Tests\Page;
+
+use Core;
+use PHPUnit_Framework_TestCase;
+
+class PageThemeGridFrameworkTest extends PHPUnit_Framework_TestCase
 {
     public function testGridFrameworkManagerLoading()
     {

@@ -1,8 +1,13 @@
 <?php
 
+namespace Concrete\Tests\Url\Resolver\Manager;
+
+use Concrete\TestHelpers\CreateClassMockTrait;
+use PHPUnit_Framework_TestCase;
+
 class ResolverManagerTest extends PHPUnit_Framework_TestCase
 {
-    use \Concrete\Tests\CreateClassMockTrait;
+    use CreateClassMockTrait;
 
     /**
      * @var \Concrete\Core\Url\Resolver\Manager\ResolverManager

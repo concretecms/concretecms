@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Tests\Core\Database\Traits;
+namespace Concrete\TestHelpers\Database\Traits;
 
 /**
  * @author Markus Liechti <markus@liechti.io>
@@ -16,8 +16,8 @@ trait DirectoryHelpers
      * will be converted to
      * config/yaml
      *
-     * @param type $folderPath
-     * @param mixed $returnLastFolders
+     * @param string $folderPath
+     * @param int $returnLastFolders
      *
      * @return string
      */

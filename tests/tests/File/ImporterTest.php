@@ -1,16 +1,17 @@
 <?php
 
-namespace Concrete\Tests\Core\File;
+namespace Concrete\Tests\File;
 
 use Concrete\Core\Attribute\Key\Category;
 use Concrete\Core\Attribute\Key\FileKey;
 use Concrete\Core\Attribute\Type as AttributeType;
 use Concrete\Core\Cache\CacheLocal;
 use Concrete\Core\File\Importer;
+use Concrete\TestHelpers\File\FileStorageTestCase;
 use Config;
 use Core;
 
-class ImporterTest extends \FileStorageTestCase
+class ImporterTest extends FileStorageTestCase
 {
     public function __construct($name = null, array $data = [], $dataName = '')
     {
@@ -203,7 +204,7 @@ class ImporterTest extends \FileStorageTestCase
         mkdir($this->getStorageDirectory());
         $this->getStorageLocation();
 
-        $sample = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__) . '/StorageLocation/fixtures/sample.txt';
+        $sample = DIR_TESTS . '/assets/File/StorageLocation/sample.txt';
         $fi = new Importer();
         $file = $fi->import($sample, 'sample.txt');
 
@@ -223,11 +224,11 @@ class ImporterTest extends \FileStorageTestCase
         mkdir($this->getStorageDirectory());
         $this->getStorageLocation();
 
-        $sample = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__) . '/StorageLocation/fixtures/sample.txt';
+        $sample = DIR_TESTS . '/assets/File/StorageLocation/sample.txt';
         $fi = new Importer();
         $fo1 = $fi->import($sample, 'sample.txt');
 
-        $sample = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__) . '/StorageLocation/fixtures/tiny.png';
+        $sample = DIR_TESTS . '/assets/File/StorageLocation/tiny.png';
         $fi = new Importer();
         $fo2 = $fi->import($sample, 'tiny.png');
 
@@ -240,7 +241,7 @@ class ImporterTest extends \FileStorageTestCase
         mkdir($this->getStorageDirectory());
         $this->getStorageLocation();
 
-        $sample = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__) . '/StorageLocation/fixtures/sample.txt';
+        $sample = DIR_TESTS . '/assets/File/StorageLocation/sample.txt';
         $fi = new Importer();
         $file = $fi->import($sample, 'sample.txt');
 
@@ -259,7 +260,7 @@ class ImporterTest extends \FileStorageTestCase
         mkdir($this->getStorageDirectory());
         $this->getStorageLocation();
 
-        $sample = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__) . '/StorageLocation/fixtures/tiny.png';
+        $sample = DIR_TESTS . '/assets/File/StorageLocation/tiny.png';
         $fi = new Importer();
         $f = $fi->import($sample, 'tiny.png');
 
@@ -276,7 +277,7 @@ class ImporterTest extends \FileStorageTestCase
         mkdir($this->getStorageDirectory());
         $this->getStorageLocation();
 
-        $sample = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__) . '/StorageLocation/fixtures/sample.txt';
+        $sample = DIR_TESTS . '/assets/File/StorageLocation/sample.txt';
         $fi = new Importer();
         $f = $fi->import($sample, 'sample.txt')->getFile();
 
@@ -298,7 +299,7 @@ class ImporterTest extends \FileStorageTestCase
         $fo = $fi->import($file, 'test.txt');
         $fo = $fo->getFile();
 
-        $sample = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__) . '/StorageLocation/fixtures/sample.txt';
+        $sample = DIR_TESTS . '/assets/File/StorageLocation/sample.txt';
         $r = $fi->import($sample, 'sample.txt', $fo);
 
         $this->assertInstanceOf('\Concrete\Core\Entity\File\Version', $r);

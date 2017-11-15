@@ -1,9 +1,12 @@
 <?php
 
+namespace Concrete\Tests\Update;
+
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Block\BlockType\BlockType;
 use Concrete\Core\Entity\File\File;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 use Doctrine\DBAL\Migrations\Version;
 use Doctrine\DBAL\Types\StringType;
 use Doctrine\DBAL\Types\TextType;
@@ -21,7 +24,7 @@ class UpdateTest extends ConcreteDatabaseTestCase
     public function testCurrentMigration()
     {
         \Concrete\Core\Block\BlockType\BlockType::installBlockType('core_scrapbook_display');
-        $directory = __DIR__ . '/fixtures/';
+        $directory = DIR_TESTS . '/assets/Update/';
         $configuration = new \Concrete\Core\Updater\Migrations\Configuration(false);
         $configuration->setMigrationsDirectory($directory);
         $configuration->registerMigrationsFromDirectory($directory);
@@ -50,7 +53,7 @@ class UpdateTest extends ConcreteDatabaseTestCase
         $sm = $db->getSchemaManager();
         $db->exec('truncate BlockTypes');
 
-        $directory = __DIR__ . '/fixtures/';
+        $directory = DIR_TESTS . '/assets/Update/';
         $configuration = new \Concrete\Core\Updater\Migrations\Configuration(false);
         $configuration->setMigrationsDirectory($directory);
         $configuration->registerMigrationsFromDirectory($directory);

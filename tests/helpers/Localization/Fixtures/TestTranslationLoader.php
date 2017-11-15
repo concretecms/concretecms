@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Tests\Core\Localization\Fixtures;
+namespace Concrete\TestHelpers\Localization\Fixtures;
 
 use Concrete\Core\Localization\Translator\Translation\Loader\AbstractTranslationLoader;
 use Concrete\Core\Localization\Translator\TranslatorAdapterInterface;
@@ -18,6 +18,6 @@ class TestTranslationLoader extends AbstractTranslationLoader
     public function loadTranslations(TranslatorAdapterInterface $translatorAdapter)
     {
         $translator = $translatorAdapter->getTranslator();
-        $translator->addTranslationFile('phparray', __DIR__ . '/translations.php');
+        $translator->addTranslationFile('phparray', DIR_TESTS . '/assets/Localization/translations.php');
     }
 }

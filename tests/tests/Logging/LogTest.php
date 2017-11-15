@@ -1,8 +1,15 @@
 <?php
 
+namespace Concrete\Tests\Logging;
+
 use Concrete\Core\Logging\GroupLogger;
 use Concrete\Core\Logging\LogEntry;
 use Concrete\Core\Logging\Logger;
+use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
+use Database;
+use Events;
+use Log;
+use stdClass;
 
 class LogTest extends ConcreteDatabaseTestCase
 {

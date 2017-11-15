@@ -1,10 +1,15 @@
 <?php
 
+namespace Concrete\Tests\Error;
+
+use Core;
+use PHPUnit_Framework_TestCase;
+
 class ErrorTest extends PHPUnit_Framework_TestCase
 {
     public function testErrorMethodsBackwardCompatibility()
     {
-        $e = \Core::make('error');
+        $e = Core::make('error');
         $this->assertInstanceOf('JsonSerializable', $e);
         $this->assertInstanceOf('ArrayAccess', $e);
         $this->assertTrue(method_exists($e, 'getList'));
@@ -12,7 +17,7 @@ class ErrorTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(method_exists($e, 'has'));
         $this->assertTrue(method_exists($e, 'output'));
         $this->assertTrue(method_exists($e, 'outputJSON'));
-        $e1 = \Core::make('helper/validation/error');
+        $e1 = Core::make('helper/validation/error');
         $this->assertEquals($e, $e1);
 
         $e = new \Concrete\Core\Error\Error();
@@ -21,7 +26,7 @@ class ErrorTest extends PHPUnit_Framework_TestCase
 
     public function testBasicErrorFunctionality()
     {
-        $e = \Core::make('error');
+        $e = Core::make('error');
         $this->assertEquals(false, $e->has());
         $e->add('This is a test.');
         $this->assertEquals(1, count($e->getList()));
@@ -48,7 +53,7 @@ class ErrorTest extends PHPUnit_Framework_TestCase
 
     public function testShorthandErrorSyntax()
     {
-        $e = \Core::make('error');
+        $e = Core::make('error');
         $e->add('This is a standard error', 'first_name');
         $error = $e->getList()[0];
         $this->assertInstanceOf('Concrete\Core\Error\ErrorList\Error\Error', $error);
@@ -64,7 +69,7 @@ class ErrorTest extends PHPUnit_Framework_TestCase
 
     public function testFullErrorSyntax()
     {
-        $e = \Core::make('error');
+        $e = Core::make('error');
         $field = new \Concrete\Core\Error\ErrorList\Field\Field('last_name', 'Last Name');
         $error = new \Concrete\Core\Error\ErrorList\Error\Error('This is my error', $field);
         $e->add($error);
@@ -79,7 +84,7 @@ class ErrorTest extends PHPUnit_Framework_TestCase
 
     public function testFieldNotFoundError()
     {
-        $e = \Core::make('error');
+        $e = Core::make('error');
         $field = new \Concrete\Core\Error\ErrorList\Field\Field('last_name', 'Last Name');
         $error = new \Concrete\Core\Error\ErrorList\Error\FieldNotPresentError($field);
         $e->add($error);
@@ -89,7 +94,7 @@ class ErrorTest extends PHPUnit_Framework_TestCase
 
     public function testContainsField()
     {
-        $e = \Core::make('error');
+        $e = Core::make('error');
         $e->add('Handle is wrong, dummy!', 'handle');
         $e->add('Name is wrong.', 'name');
         $this->assertTrue($e->containsField('handle'));

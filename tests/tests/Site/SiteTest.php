@@ -1,10 +1,9 @@
 <?php
 
-namespace Concrete\Tests\Core\Site;
+namespace Concrete\Tests\Site;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Cache\Level\RequestCache;
-use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Entity\Site\Type;
 use Concrete\Core\Site\Resolver\ResolverFactory;
@@ -13,10 +12,11 @@ use Concrete\Core\Site\Service;
 use Concrete\Theme\Elemental\PageTheme;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
+use PHPUnit_Framework_TestCase;
 use Stash\Driver\Ephemeral;
 use Stash\Pool;
 
-class SiteTest extends \PHPUnit_Framework_TestCase
+class SiteTest extends PHPUnit_Framework_TestCase
 {
     public function testService()
     {

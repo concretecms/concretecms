@@ -1,10 +1,13 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: andrewembler
- * Date: 1/27/15
- * Time: 6:24 AM.
- */
+
+namespace Concrete\Tests\Routing;
+
+use Config;
+use Core;
+use Page;
+use PHPUnit_Framework_TestCase;
+use URL;
+
 class URLTest extends PHPUnit_Framework_TestCase
 {
     /**
@@ -40,7 +43,7 @@ class URLTest extends PHPUnit_Framework_TestCase
         $dashboard->siteTree = $siteTree;
         $this->service = $service;
 
-        $app = Concrete\Core\Support\Facade\Facade::getFacadeApplication();
+        $app = \Concrete\Core\Support\Facade\Facade::getFacadeApplication();
         $app->bind('\Psr\Log\LoggerInterface', function () {
             return new \Psr\Log\NullLogger();
         });
@@ -58,7 +61,7 @@ class URLTest extends PHPUnit_Framework_TestCase
         Config::set('concrete.seo.canonical_url', $this->oldUrl);
         $this->clearCanonicalUrl();
 
-        $app = Concrete\Core\Support\Facade\Facade::getFacadeApplication();
+        $app = \Concrete\Core\Support\Facade\Facade::getFacadeApplication();
         $app->bind('\Psr\Log\LoggerInterface', 'Concrete\Core\Logging\Logger');
 
         parent::tearDown();
@@ -116,7 +119,7 @@ class URLTest extends PHPUnit_Framework_TestCase
         Config::set('concrete.seo.redirect_to_canonical_url', true);
         $request = \Concrete\Core\Http\Request::create('http://www.awesome.com/path/to/site/index.php/dashboard?bar=1&foo=1');
 
-        $site = $this->getMockBuilder(Concrete\Core\Entity\Site\Site::class)
+        $site = $this->getMockBuilder(\Concrete\Core\Entity\Site\Site::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -145,7 +148,7 @@ class URLTest extends PHPUnit_Framework_TestCase
     {
         $app = Core::make('app');
 
-        $site = $this->getMockBuilder(Concrete\Core\Entity\Site\Site::class)
+        $site = $this->getMockBuilder(\Concrete\Core\Entity\Site\Site::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -177,7 +180,7 @@ class URLTest extends PHPUnit_Framework_TestCase
     {
         $app = Core::make('app');
 
-        $site = $this->getMockBuilder(Concrete\Core\Entity\Site\Site::class)
+        $site = $this->getMockBuilder(\Concrete\Core\Entity\Site\Site::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -208,7 +211,7 @@ class URLTest extends PHPUnit_Framework_TestCase
     {
         $app = Core::make('app');
 
-        $site = $this->getMockBuilder(Concrete\Core\Entity\Site\Site::class)
+        $site = $this->getMockBuilder(\Concrete\Core\Entity\Site\Site::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -256,7 +259,7 @@ class URLTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\Concrete\Core\Routing\RedirectResponse', $response);
         $this->assertEquals('http://www.awesome.com/index.php/about-us/now?bar=1&foo=2', $response->getTargetUrl());
 
-        $site = $this->getMockBuilder(Concrete\Core\Entity\Site\Site::class)
+        $site = $this->getMockBuilder(\Concrete\Core\Entity\Site\Site::class)
             ->disableOriginalConstructor()
             ->getMock();
 

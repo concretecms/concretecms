@@ -1,8 +1,11 @@
 <?php
 
-use Concrete\Core\Entity\Attribute\Value\Value\SelectValue;
+namespace Concrete\Tests\Attribute\Value;
 
-class SelectValueTest extends \AttributeValueTestCase
+use Concrete\Core\Entity\Attribute\Value\Value\SelectValue;
+use Concrete\TestHelpers\Attribute\AttributeValueTestCase;
+
+class SelectValueTest extends AttributeValueTestCase
 {
     public function __construct($name = null, array $data = [], $dataName = '')
     {

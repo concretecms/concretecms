@@ -1,5 +1,9 @@
 <?php
 
+namespace Concrete\Tests\Utility;
+
+use PHPUnit_Framework_TestCase;
+
 class IPAddressTest extends PHPUnit_Framework_TestCase
 {
     /**

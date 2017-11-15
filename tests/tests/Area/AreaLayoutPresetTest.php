@@ -1,136 +1,15 @@
 <?php
 
+namespace Concrete\Tests\Area;
+
 use Concrete\Core\Area\Layout\Preset\Preset;
-
-class HtmlColumn implements \Concrete\Core\Area\Layout\ColumnInterface
-{
-    public function __construct($class)
-    {
-        $this->class = $class;
-    }
-
-    public function getColumnHtmlObject()
-    {
-        $column = new \HtmlObject\Element('div');
-        $column->addClass($this->class);
-
-        return $column;
-    }
-
-    public function getColumnHtmlObjectEditMode()
-    {
-        return $this->getColumnHtmlObject();
-    }
-}
-
-class TestAreaLayoutPresetFormatter implements \Concrete\Core\Area\Layout\Preset\Formatter\FormatterInterface
-{
-    public function getPresetContainerHtmlObject()
-    {
-        $column = new \HtmlObject\Element('div');
-        $column->addClass('foo');
-
-        return $column;
-    }
-}
-
-class TestAreaLayoutPresetProvider implements \Concrete\Core\Area\Layout\Preset\Provider\ProviderInterface
-{
-    public function getPresets()
-    {
-        $formatter = new TestAreaLayoutPresetFormatter();
-        $preset = new \Concrete\Core\Area\Layout\Preset\Preset(
-            'preset-1',
-            'Preset 1',
-            $formatter,
-            [
-                new HtmlColumn('col-sm-4'),
-                new HtmlColumn('col-sm-8'),
-            ]);
-
-        return [$preset];
-    }
-
-    public function getName()
-    {
-        return 'Test';
-    }
-}
-
-class BrokenTestAreaLayoutPresetProvider implements \Concrete\Core\Area\Layout\Preset\Provider\ProviderInterface
-{
-    public function getPresets()
-    {
-        return [1, 2, 3];
-    }
-
-    public function getName()
-    {
-        return 'Test Broken';
-    }
-}
-
-class TestThemeClass implements \Concrete\Core\Area\Layout\Preset\Provider\ThemeProviderInterface
-{
-    public function getThemeHandle()
-    {
-        return 'test_theme';
-    }
-
-    public function getThemeName()
-    {
-        return 'Test Theme';
-    }
-
-    public function getThemeAreaLayoutPresets()
-    {
-        $presets = [
-            [
-                'handle' => 'left_sidebar',
-                'name' => 'Left Sidebar',
-                'container' => '<div class="row"></div>',
-                'columns' => [
-                    '<div class="col-sm-4"></div>',
-                    '<div class="col-sm-8"></div>',
-                ],
-            ],
-            [
-                'handle' => 'exciting',
-                'name' => 'Exciting',
-                'container' => '<div class="row"></div>',
-                'columns' => [
-                    '<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"></div>',
-                    '<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"></div>',
-                    '<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"></div>',
-                    '<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"></div>',
-                    '<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"></div>',
-                    '<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 visible-lg"></div>',
-                ],
-            ],
-            [
-                'handle' => 'three_column',
-                'name' => 'Three Column',
-                'container' => '<div class="row"></div>',
-                'columns' => [
-                    '<div class="col-md-4"></div>',
-                    '<div class="col-md-4"></div>',
-                    '<div class="col-md-4"></div>',
-                ],
-            ],
-            [
-                'handle' => 'test_layout',
-                'name' => 'Test Layout',
-                'container' => '<div class="row" data-testing="top-row"></div>',
-                'columns' => [
-                    '<div data-foo="foo" class="col-md-2 col-sm-3"></div>',
-                    '<div data-bar="bar" class="col-md-10 col-sm-9"></div>',
-                ],
-            ],
-        ];
-
-        return $presets;
-    }
-}
+use Concrete\TestHelpers\Area\BrokenTestAreaLayoutPresetProvider;
+use Concrete\TestHelpers\Area\TestAreaLayoutPresetProvider;
+use Concrete\TestHelpers\Area\TestThemeClass;
+use Concrete\TestHelpers\Page\PageTestCase;
+use Core;
+use Page;
+use Request;
 
 class AreaLayoutPresetTest extends PageTestCase
 {
@@ -148,12 +27,12 @@ class AreaLayoutPresetTest extends PageTestCase
 
     public function setUp()
     {
-        $service = \Core::make('site/type');
+        $service = Core::make('site/type');
         if (!$service->getDefault()) {
             $service->installDefault();
         }
 
-        $service = \Core::make('site');
+        $service = Core::make('site');
         if (!$service->getDefault()) {
             $service->installDefault('en_US');
         }

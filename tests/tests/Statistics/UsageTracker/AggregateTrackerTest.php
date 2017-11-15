@@ -1,18 +1,20 @@
 <?php
 
-namespace Concrete\Tests\Core\Statistics\UsageTracker;
+namespace Concrete\Tests\Statistics\UsageTracker;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Statistics\UsageTracker\AggregateTracker;
 use Concrete\Core\Statistics\UsageTracker\TrackableInterface;
 use Concrete\Core\Statistics\UsageTracker\TrackerInterface;
+use Concrete\TestHelpers\CreateClassMockTrait;
 use InvalidArgumentException;
+use PHPUnit_Framework_TestCase;
 use ReflectionClass;
 use stdClass;
 
-class AggregateTrackerTest extends \PHPUnit_Framework_TestCase
+class AggregateTrackerTest extends PHPUnit_Framework_TestCase
 {
-    use \Concrete\Tests\CreateClassMockTrait;
+    use CreateClassMockTrait;
 
     /** @var Application */
     private $app;

@@ -1,8 +1,12 @@
 <?php
 
-use Concrete\Core\Attribute\Key\Category;
+namespace Concrete\Tests\Attribute;
 
-class CollectionAttributeTest extends \AttributeTestCase
+use Concrete\Core\Attribute\Key\Category;
+use Concrete\TestHelpers\Attribute\AttributeTestCase;
+use Page;
+
+class CollectionAttributeTest extends AttributeTestCase
 {
     protected $fixtures = [];
     protected $category;

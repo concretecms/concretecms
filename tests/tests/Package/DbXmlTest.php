@@ -1,11 +1,12 @@
 <?php
 
-namespace Concrete\Tests\Core\Package;
+namespace Concrete\Tests\Package;
 
 use Database;
 use Package;
+use PHPUnit_Framework_TestCase;
 
-class DbXmlTest extends \PHPUnit_Framework_TestCase
+class DbXmlTest extends PHPUnit_Framework_TestCase
 {
     /**
      * Tests that the table is properly updated according to the updated
@@ -26,7 +27,7 @@ class DbXmlTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($schema->hasTable('TestPackageTable'));
 
         // Create the table initially.
-        Package::installDB(__DIR__ . '/fixtures/db-1.xml');
+        Package::installDB(DIR_TESTS . '/assets/Package/db-1.xml');
 
         // Make sure the table was properly created and it contains the column
         // we are about to remove does NOT contain the column we are about to
@@ -39,7 +40,7 @@ class DbXmlTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($tbl->hasColumn('testColumn'));
 
         // db-2.xml modifies the already existing table.
-        Package::installDB(__DIR__ . '/fixtures/db-2.xml');
+        Package::installDB(DIR_TESTS . '/assets/Package/db-2.xml');
 
         // Make sure the column exists in the updated database that is added in
         // db-2.xml. Also make sure that the column we drop in db-2.xml no

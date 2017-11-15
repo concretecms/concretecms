@@ -1,8 +1,10 @@
 <?php
 
-namespace Concrete\Tests\Core\Authentication\Fixtures;
+namespace Concrete\TestHelpers\Authentication\OAuth\Fixture;
 
-class ServiceFixture implements \OAuth\Common\Service\ServiceInterface
+use OAuth\Common\Service\ServiceInterface;
+
+class ServiceFixture implements ServiceInterface
 {
     public function request($path, $method = 'GET', $body = null, array $extraHeaders = [])
     {

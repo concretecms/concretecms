@@ -1,6 +1,8 @@
 <?php
 
-namespace Concrete\Tests;
+namespace Concrete\TestHelpers;
+
+use RuntimeException;
 
 trait CreateClassMockTrait
 {
@@ -35,6 +37,6 @@ trait CreateClassMockTrait
             return $this->{self::$mockCreateMethod}($className);
         }
 
-        throw new \RuntimeException('Unable to figure out how to create mock objects.');
+        throw new RuntimeException('Unable to figure out how to create mock objects.');
     }
 }
