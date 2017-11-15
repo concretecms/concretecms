@@ -4,6 +4,7 @@ namespace Concrete\Controller\Search;
 use Concrete\Controller\Dialog\Search\AdvancedSearch;
 use Concrete\Core\Entity\Search\SavedSearch;
 use Concrete\Core\Search\Field\Field\KeywordsField;
+use Concrete\Core\Page\Search\Field\Field\SiteTreeField;
 use Concrete\Core\Search\Result\Result;
 use Concrete\Core\Tree\Node\Type\SearchPreset;
 
@@ -26,8 +27,12 @@ class Pages extends Standard
     {
         $fields = parent::getBasicSearchFieldsFromRequest();
         $keywords = $this->request->get('cKeywords');
+        $siteTreeID = $this->request->get('siteTreeID');
         if (is_string($keywords) && $keywords !== '') {
             $fields[] = new KeywordsField($keywords);
+        }
+        if (is_string($siteTreeID) && $siteTreeID !== '') {
+            $fields[] = new SiteTreeField($siteTreeID);
         }
         return $fields;
     }
