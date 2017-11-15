@@ -56,8 +56,8 @@ class ApproveCalendarEventRequest extends CalendarEventRequest
                 $d->setEmailDescription(t("\"%s\" has pending changes and needs to be approved.", $v->getName()));
                 $d->setDescription(t(
                     'Version %1$s of Event %2$s submitted for Approval.',
-                    '<a href="' . $url . '" dialog-title="' . t('View Requested Version') . '" dialog-width="640" dialog-height="500" class="dialog-launch">' . $this->eventVersionID . '</a>,
-                    <strong>' . $v->getName() . '</strong>'
+                    '<a href="' . $url . '" dialog-title="' . t('View Requested Version') . '" dialog-width="640" dialog-height="500" class="dialog-launch">' . $this->eventVersionID . '</a>',
+                    '<strong>' . $v->getName() . '</strong>'
                 ));
                 $d->setInContextDescription(t("Event Version %s Submitted for Approval.", $v->getName()));
                 $d->setShortStatus(t("Pending Approval"));

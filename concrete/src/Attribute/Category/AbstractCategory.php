@@ -399,15 +399,16 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
     {
         /* @var \Concrete\Core\Entity\Attribute\Value\AbstractValue $attributeValue */
 
-        // Handle legacy attributes with these three lines.
-        $controller = $attributeValue->getAttributeKey()->getController();
-        $controller->setAttributeValue($attributeValue);
-        $controller->deleteValue();
-
         $genericValue = $attributeValue->getGenericValue();
         if ($genericValue !== null) {
             $genericValues = $this->getAttributeValueRepository()->findBy(['generic_value' => $genericValue]);
             if (count($genericValues) == 1) {
+
+                // Handle legacy attributes with these three lines.
+                $controller = $attributeValue->getAttributeKey()->getController();
+                $controller->setAttributeValue($attributeValue);
+                $controller->deleteValue();
+
                 $value = $attributeValue->getValueObject();
                 if (is_object($value)) {
                     $this->entityManager->remove($value);
