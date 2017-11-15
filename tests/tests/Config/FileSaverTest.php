@@ -20,15 +20,15 @@ class FileSaverTest extends PHPUnit_Framework_TestCase
     {
         $group = md5(time() . uniqid());
 
-        $this->saver->save('test.array', array(1, 2), 'testing', $group);
-        $this->saver->save('test.array', array(1), 'testing', $group);
+        $this->saver->save('test.array', [1, 2], 'testing', $group);
+        $this->saver->save('test.array', [1], 'testing', $group);
 
         $path = DIR_TESTS . "/config/generated_overrides/{$group}.php";
         $contents = @include_once $path;
 
         $this->files->delete($path);
 
-        $this->assertEquals(array(1), array_get($contents, 'test.array'), "Saver doesn't save correctly");
+        $this->assertEquals([1], array_get($contents, 'test.array'), "Saver doesn't save correctly");
     }
 
     public function testSavingConfig()
@@ -42,7 +42,7 @@ class FileSaverTest extends PHPUnit_Framework_TestCase
         $path = DIR_TESTS . "/config/generated_overrides/{$group}.php";
         $exists = $this->files->exists($path);
 
-        $array = array();
+        $array = [];
         if ($exists) {
             $array = $this->files->getRequire($path);
             $this->files->delete($path);
@@ -64,7 +64,7 @@ class FileSaverTest extends PHPUnit_Framework_TestCase
         $path = DIR_TESTS . "/config/generated_overrides/{$namespace}/{$group}.php";
         $exists = $this->files->exists($path);
 
-        $array = array();
+        $array = [];
         if ($exists) {
             $array = $this->files->getRequire($path);
             $this->files->delete($path);

@@ -1,26 +1,25 @@
 <?php
+
 namespace Concrete\Tests\Core\File;
 
+use Concrete\Core\Attribute\Key\Category;
+use Concrete\Core\Attribute\Key\FileKey;
+use Concrete\Core\Attribute\Type as AttributeType;
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Importer;
-use Concrete\Core\Attribute\Type as AttributeType;
-use Concrete\Core\Attribute\Key\FileKey;
-use Concrete\Core\Attribute\Key\Category;
 use Concrete\Core\File\Search\ColumnSet\Column\FileVersionFilenameColumn;
 use Concrete\Core\Search\Pagination\PaginationFactory;
-use Doctrine\DBAL\Logging\EchoSQLLogger;
 
 class FileListTest extends \FileStorageTestCase
 {
     /** @var \Concrete\Core\File\FileList */
     protected $list;
 
-
-    public function __construct($name = null, array $data = array(), $dataName = '')
+    public function __construct($name = null, array $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
 
-        $this->tables = array_merge($this->tables, array(
+        $this->tables = array_merge($this->tables, [
             'PermissionAccessEntityTypes',
             'FileAttributeValues',
             'FileImageThumbnailTypes',
@@ -28,8 +27,8 @@ class FileListTest extends \FileStorageTestCase
             'FileSets',
             'FileVersionLog',
             'FileSetFiles',
-        ));
-        $this->metadatas = array_merge($this->metadatas, array(
+        ]);
+        $this->metadatas = array_merge($this->metadatas, [
             'Concrete\Core\Entity\Attribute\Key\Settings\NumberSettings',
             'Concrete\Core\Entity\Attribute\Key\Settings\Settings',
             'Concrete\Core\Entity\Attribute\Key\Settings\EmptySettings',
@@ -42,7 +41,7 @@ class FileListTest extends \FileStorageTestCase
             'Concrete\Core\Entity\Attribute\Value\Value\Value',
             'Concrete\Core\Entity\Attribute\Type',
             'Concrete\Core\Entity\Attribute\Category',
-        ));
+        ]);
     }
 
     public static function setUpBeforeClass()
@@ -57,8 +56,8 @@ class FileListTest extends \FileStorageTestCase
         Category::add('file');
         \Concrete\Core\Permission\Access\Entity\Type::add('file_uploader', 'File Uploader');
         $number = AttributeType::add('number', 'Number');
-        FileKey::add($number, array('akHandle' => 'width', 'akName' => 'Width'));
-        FileKey::add($number, array('akHandle' => 'height', 'akName' => 'Height'));
+        FileKey::add($number, ['akHandle' => 'width', 'akName' => 'Width']);
+        FileKey::add($number, ['akHandle' => 'height', 'akName' => 'Height']);
 
         $self = new static();
         if (!is_dir($self->getStorageDirectory())) {
@@ -66,11 +65,11 @@ class FileListTest extends \FileStorageTestCase
         }
         $self->getStorageLocation();
 
-        $sample = str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__)) . '/StorageLocation/fixtures/sample.txt';
+        $sample = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__) . '/StorageLocation/fixtures/sample.txt';
         $image = DIR_BASE . '/concrete/images/logo.png';
         $fi = new Importer();
 
-        $files = array(
+        $files = [
             'sample1.txt' => $sample,
             'sample2.txt' => $sample,
             'sample4.txt' => $sample,
@@ -82,7 +81,7 @@ class FileListTest extends \FileStorageTestCase
             'logo3.png' => $image,
             'foobley.png' => $image,
             'test.png' => $image,
-        );
+        ];
 
         foreach ($files as $filename => $pointer) {
             $fi->import($pointer, $filename);
@@ -95,18 +94,6 @@ class FileListTest extends \FileStorageTestCase
 
         $this->list = new \Concrete\Core\File\FileList();
         $this->list->ignorePermissions();
-    }
-
-    protected function cleanup()
-    {
-        parent::cleanup();
-        if (file_exists(dirname(__FILE__) . '/test.txt')) {
-            unlink(dirname(__FILE__) . '/test.txt');
-        }
-        if (file_exists(dirname(__FILE__) . '/test.invalid')) {
-            unlink(dirname(__FILE__) . '/test.invalid');
-        }
-
     }
 
     public function testGetPaginationObject()
@@ -241,17 +228,17 @@ class FileListTest extends \FileStorageTestCase
     public function testPaginationWithPermissionsAndPager()
     {
         // first lets make some more files.
-        $sample = str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__)) . '/StorageLocation/fixtures/sample.txt';
+        $sample = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__) . '/StorageLocation/fixtures/sample.txt';
         $image = DIR_BASE . '/concrete/images/logo.png';
         $fi = new Importer();
 
-        $files = array(
+        $files = [
             'another.txt' => $sample,
             'funtime.txt' => $sample,
             'funtime2.txt' => $sample,
             'awesome-o' => $sample,
             'image.png' => $image,
-        );
+        ];
 
         foreach ($files as $filename => $pointer) {
             $fi->import($pointer, $filename);
@@ -316,17 +303,17 @@ class FileListTest extends \FileStorageTestCase
     public function testPaginationThatStopsOnTheFirstPage()
     {
         // first lets make some more files.
-        $sample = dirname(__FILE__) . '/StorageLocation/fixtures/sample.txt';
+        $sample = __DIR__ . '/StorageLocation/fixtures/sample.txt';
         $image = DIR_BASE . '/concrete/images/logo.png';
         $fi = new Importer();
 
-        $files = array(
+        $files = [
             'another.txt' => $sample,
             'funtime.txt' => $sample,
             'funtime2.txt' => $sample,
             'awesome-o' => $sample,
             'image.png' => $image,
-        );
+        ];
 
         foreach ($files as $filename => $pointer) {
             $fi->import($pointer, $filename);
@@ -337,6 +324,7 @@ class FileListTest extends \FileStorageTestCase
             if ($file->getFileID() < 3) {
                 return true;
             }
+
             return false;
         });
         $nl->sortBySearchColumn(new FileVersionFilenameColumn());
@@ -365,5 +353,16 @@ class FileListTest extends \FileStorageTestCase
         $columns = $set->getColumns();
 
         $this->assertEquals(4, count($columns));
+    }
+
+    protected function cleanup()
+    {
+        parent::cleanup();
+        if (file_exists(__DIR__ . '/test.txt')) {
+            unlink(__DIR__ . '/test.txt');
+        }
+        if (file_exists(__DIR__ . '/test.invalid')) {
+            unlink(__DIR__ . '/test.invalid');
+        }
     }
 }

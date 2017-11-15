@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Block\BlockType\BlockType;
@@ -19,7 +20,7 @@ class Version20140908071333 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $schema->getTable('Logs')->addColumn('testcolumn', 'string');
-        $schema->getTable('Files')->changeColumn('fPassword', array('type' => \Doctrine\DBAL\Types\Type::getType('text')));
+        $schema->getTable('Files')->changeColumn('fPassword', ['type' => \Doctrine\DBAL\Types\Type::getType('text')]);
         BlockType::installBlockType('file');
     }
 
@@ -27,7 +28,7 @@ class Version20140908071333 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $schema->getTable('Logs')->dropColumn('testcolumn');
-        $schema->getTable('Files')->changeColumn('fPassword', array('type' => \Doctrine\DBAL\Types\Type::getType('string')));
+        $schema->getTable('Files')->changeColumn('fPassword', ['type' => \Doctrine\DBAL\Types\Type::getType('string')]);
         $file = BlockType::getByHandle('file');
         $file->delete();
     }

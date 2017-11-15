@@ -58,7 +58,6 @@ class LiaisonLoader implements LoaderInterface
 {
     public function addNamespace($namespace, $hint)
     {
-        return;
     }
 
     public function cascadePackage($environment, $package, $group, $items)
@@ -68,12 +67,11 @@ class LiaisonLoader implements LoaderInterface
 
     public function clearNamespace($namespace)
     {
-        return;
     }
 
     public function load($environment, $group, $namespace = null)
     {
-        return array();
+        return [];
     }
 
     public function exists($group, $namespace = null)
@@ -83,7 +81,7 @@ class LiaisonLoader implements LoaderInterface
 
     public function getNamespaces()
     {
-        return array();
+        return [];
     }
 }
 

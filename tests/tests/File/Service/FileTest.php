@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Tests\Core\File\Service;
 
 use Core;
@@ -17,21 +18,24 @@ class FileTest extends \PHPUnit_Framework_TestCase
 
     public function splitFilenameDataProvider()
     {
-        return array(
-            array('simple.txt', array('', 'simple', 'txt')),
-            array('.htaccess', array('', '.htaccess', '')),
-            array('/simple.txt', array('/', 'simple', 'txt')),
-            array('\\simple.txt', array('\\', 'simple', 'txt')),
-            array('/path/only/', array('/path/only/', '', '')),
-            array('/path/with.dots/', array('/path/with.dots/', '', '')),
-            array('/path/with.dots/base.ext', array('/path/with.dots/', 'base', 'ext')),
-            array('/path/with.dots/base', array('/path/with.dots/', 'base', '')),
-            array('/path/with.dots/.gitignore', array('/path/with.dots/', '.gitignore', '')),
-        );
+        return [
+            ['simple.txt', ['', 'simple', 'txt']],
+            ['.htaccess', ['', '.htaccess', '']],
+            ['/simple.txt', ['/', 'simple', 'txt']],
+            ['\\simple.txt', ['\\', 'simple', 'txt']],
+            ['/path/only/', ['/path/only/', '', '']],
+            ['/path/with.dots/', ['/path/with.dots/', '', '']],
+            ['/path/with.dots/base.ext', ['/path/with.dots/', 'base', 'ext']],
+            ['/path/with.dots/base', ['/path/with.dots/', 'base', '']],
+            ['/path/with.dots/.gitignore', ['/path/with.dots/', '.gitignore', '']],
+        ];
     }
 
     /**
      * @dataProvider splitFilenameDataProvider
+     *
+     * @param mixed $full
+     * @param mixed $splitted
      */
     public function testSplitFilename($full, $splitted)
     {

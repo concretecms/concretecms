@@ -7,18 +7,18 @@ class RendererTest extends PHPUnit_Framework_TestCase
 {
     public function testRendering()
     {
-        $array = array(
+        $array = [
             'string' => 'string',
-            'array' => array(
+            'array' => [
                 'test1',
                 'test2',
                 'test3',
-            ),
-            'associative array' => array(
+            ],
+            'associative array' => [
                 1 => 'test1',
                 3 => 'test2',
                 2 => 'test3',
-            ),
+            ],
             'special chars' => '!@#$%^&*()_+-={}[]:\'";|<>,./?`~',
             'other chars' => "\n\r\t\v\f",
             'unicode' => 'œ∑´†¥¨ˆπˆ¨†¬˚∆˙©ƒ∂ßåΩ≈ç√∫˜≤≥çæ…“‘¡™£¢∞§¶•ªº–≠',
@@ -26,7 +26,7 @@ class RendererTest extends PHPUnit_Framework_TestCase
             'int' => 1,
             'double' => 1.25,
             'boolean' => true,
-        );
+        ];
 
         $first_level = $array;
         $current_level = &$array;
@@ -80,10 +80,10 @@ class RendererTest extends PHPUnit_Framework_TestCase
     public function testInvalidTypeClosure()
     {
         $renderer = new Renderer(
-            array(
+            [
                 'closure' => function () {
                 },
-            ));
+            ]);
         try {
             $renderer->render();
         } catch (RendererInvalidTypeException $e) {
@@ -95,9 +95,9 @@ class RendererTest extends PHPUnit_Framework_TestCase
     public function testInvalidTypeObject()
     {
         $renderer = new Renderer(
-            array(
+            [
                 'object' => $this,
-            ));
+            ]);
         try {
             $renderer->render();
         } catch (RendererInvalidTypeException $e) {

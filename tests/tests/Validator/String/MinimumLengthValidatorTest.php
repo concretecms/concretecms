@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Tests\Validator\String;
 
 class MinimumLengthValidatorTest extends \PHPUnit_Framework_TestCase

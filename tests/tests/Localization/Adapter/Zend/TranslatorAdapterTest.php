@@ -8,13 +8,12 @@ use Zend\I18n\Translator\Translator;
 
 /**
  * Tests for:
- * Concrete\Core\Localization\Translator\Adapter\Zend\TranslatorAdapter
+ * Concrete\Core\Localization\Translator\Adapter\Zend\TranslatorAdapter.
  *
  * @author Antti Hukkanen <antti.hukkanen@mainiotech.fi>
  */
 class TranslatorAdapterTest extends PHPUnit_Framework_TestCase
 {
-
     protected $adapter;
 
     protected function setUp()
@@ -57,31 +56,31 @@ class TranslatorAdapterTest extends PHPUnit_Framework_TestCase
 
     public function testTranslatePlural()
     {
-        $singular = "Yellow Cat";
-        $plural = "Yellow Cats";
+        $singular = 'Yellow Cat';
+        $plural = 'Yellow Cats';
 
-        $this->assertEquals("X Y", $this->adapter->translatePlural($singular, $plural, 1));
-        $this->assertEquals("X Ys", $this->adapter->translatePlural($singular, $plural, 2));
-        $this->assertEquals("X Ys", $this->adapter->translatePlural($singular, $plural, 10));
-        $this->assertEquals("X Ys", $this->adapter->translatePlural($singular, $plural, 0));
+        $this->assertEquals('X Y', $this->adapter->translatePlural($singular, $plural, 1));
+        $this->assertEquals('X Ys', $this->adapter->translatePlural($singular, $plural, 2));
+        $this->assertEquals('X Ys', $this->adapter->translatePlural($singular, $plural, 10));
+        $this->assertEquals('X Ys', $this->adapter->translatePlural($singular, $plural, 0));
     }
 
     public function testTranslatePluralWithNumber()
     {
-        $singular = "One Yellow Cat";
-        $plural = "%d Yellow Cats";
+        $singular = 'One Yellow Cat';
+        $plural = '%d Yellow Cats';
 
-        $this->assertEquals("D X Y", $this->adapter->translatePlural($singular, $plural, 1));
-        $this->assertEquals("2 X Ys", $this->adapter->translatePlural($singular, $plural, 2));
-        $this->assertEquals("10 X Ys", $this->adapter->translatePlural($singular, $plural, 10));
-        $this->assertEquals("0 X Ys", $this->adapter->translatePlural($singular, $plural, 0));
+        $this->assertEquals('D X Y', $this->adapter->translatePlural($singular, $plural, 1));
+        $this->assertEquals('2 X Ys', $this->adapter->translatePlural($singular, $plural, 2));
+        $this->assertEquals('10 X Ys', $this->adapter->translatePlural($singular, $plural, 10));
+        $this->assertEquals('0 X Ys', $this->adapter->translatePlural($singular, $plural, 0));
     }
 
     public function testFormatTranslatePlural()
     {
-        $singular = "%d Yellow %s";
-        $plural = "%d Yellow %s";
-        $what = "Z";
+        $singular = '%d Yellow %s';
+        $plural = '%d Yellow %s';
+        $what = 'Z';
 
         $this->assertEquals("1 X $what", $this->adapter->translatePlural($singular, $plural, 1, $what));
         $this->assertEquals("2 X $what", $this->adapter->translatePlural($singular, $plural, 2, $what));
@@ -96,9 +95,8 @@ class TranslatorAdapterTest extends PHPUnit_Framework_TestCase
 
     public function testFormatTranslateContext()
     {
-        $who = "Z";
+        $who = 'Z';
 
         $this->assertEquals("E $who!", $this->adapter->translateContext('context', 'Welcome %s!', $who));
     }
-
 }

@@ -1,15 +1,15 @@
 <?php
+
 namespace Concrete\Tests\Core\Localization;
 
-use PHPUnit_Framework_TestCase;
-use Concrete\Core\Support\Facade\Application;
-use Exception;
-use Zend\Http\Client\Adapter\Exception\InitializationException as ZendInitializationException;
 use Concrete\Core\Http\Client\Client as HttpClient;
 use Concrete\Core\Http\Client\Factory as HttpClientFactory;
+use Concrete\Core\Support\Facade\Application;
+use Exception;
+use PHPUnit_Framework_TestCase;
 use Zend\Http\Client\Adapter\Curl as CurlHttpAdapter;
+use Zend\Http\Client\Adapter\Exception\InitializationException as ZendInitializationException;
 use Zend\Http\Client\Adapter\Proxy as SocketHttpAdapter;
-
 
 class HttpClientTest extends PHPUnit_Framework_TestCase
 {
@@ -84,16 +84,6 @@ class HttpClientTest extends PHPUnit_Framework_TestCase
         ];
     }
 
-    private function checkValidAdapter($adapterClass, $forSSL)
-    {
-        if ($adapterClass === CurlHttpAdapter::class && !function_exists('curl_init')) {
-            $this->markTestSkipped('Skipped tests on cURL HTTP Client Adapter since the PHP cURL extension is not enabled');
-        }
-        if ($adapterClass === SocketHttpAdapter::class && $forSSL && !function_exists('stream_socket_enable_crypto')) {
-            $this->markTestSkipped('stream_socket_enable_crypto is not implemented (is this HHVM?)');
-        }
-    }
-
     public function sslOptionsProvider()
     {
         $result = [];
@@ -143,6 +133,11 @@ class HttpClientTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider sslOptionsProvider
+     *
+     * @param mixed $adapterClass
+     * @param mixed $caFile
+     * @param mixed $caPath
+     * @param mixed $shouldBeOK
      */
     public function testSSLOptions($adapterClass, $caFile, $caPath, $shouldBeOK)
     {
@@ -191,6 +186,8 @@ class HttpClientTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider adapterListProvider
+     *
+     * @param mixed $adapterClass
      */
     public function testNormalizingOptions($adapterClass)
     {
@@ -252,7 +249,7 @@ class HttpClientTest extends PHPUnit_Framework_TestCase
                 CURLOPT_SSL_VERIFYPEER => $expectedOptions['sslverifypeer'],
                 CURLOPT_PROXY => $expectedOptions['proxyhost'],
                 CURLOPT_PROXYPORT => $expectedOptions['proxyport'],
-                CURLOPT_PROXYUSERPWD => $expectedOptions['proxyuser'].':'.$expectedOptions['proxypass'],
+                CURLOPT_PROXYUSERPWD => $expectedOptions['proxyuser'] . ':' . $expectedOptions['proxypass'],
             ];
             unset($expectedOptions['sslverifypeer']);
             unset($expectedOptions['proxyhost']);
@@ -263,7 +260,7 @@ class HttpClientTest extends PHPUnit_Framework_TestCase
         } elseif ($adapterClass === SocketHttpAdapter::class) {
             foreach (array_keys($expectedOptions) as $key) {
                 if (preg_match('/^(proxy)(.+)$/', $key, $matches)) {
-                    $expectedOptions[$matches[1].'_'.$matches[2]] = $expectedOptions[$key];
+                    $expectedOptions[$matches[1] . '_' . $matches[2]] = $expectedOptions[$key];
                     unset($expectedOptions[$key]);
                 }
             }
@@ -273,7 +270,17 @@ class HttpClientTest extends PHPUnit_Framework_TestCase
         }
         foreach ($expectedOptions as $key => $value) {
             $this->assertArrayHasKey($key, $adapterOptions);
-            $this->assertSame($value, $adapterOptions[$key], 'Checking key '.$key);
+            $this->assertSame($value, $adapterOptions[$key], 'Checking key ' . $key);
+        }
+    }
+
+    private function checkValidAdapter($adapterClass, $forSSL)
+    {
+        if ($adapterClass === CurlHttpAdapter::class && !function_exists('curl_init')) {
+            $this->markTestSkipped('Skipped tests on cURL HTTP Client Adapter since the PHP cURL extension is not enabled');
+        }
+        if ($adapterClass === SocketHttpAdapter::class && $forSSL && !function_exists('stream_socket_enable_crypto')) {
+            $this->markTestSkipped('stream_socket_enable_crypto is not implemented (is this HHVM?)');
         }
     }
 }

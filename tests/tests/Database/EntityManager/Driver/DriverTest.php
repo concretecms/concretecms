@@ -6,14 +6,13 @@ use Concrete\Core\Database\EntityManager\Driver\Driver;
 use Doctrine\ORM\Mapping\Driver\YamlDriver;
 
 /**
- * DriverTest
+ * DriverTest.
  *
  * @author Markus Liechti <markus@liechti.io>
  * @group orm_setup
  */
 class DriverTest extends \PHPUnit_Framework_TestCase
 {
-
     public function setUp()
     {
         parent::setUp();
@@ -36,5 +35,4 @@ class DriverTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals('Test\Namespace', $this->driver->getNamespace());
     }
-
 }

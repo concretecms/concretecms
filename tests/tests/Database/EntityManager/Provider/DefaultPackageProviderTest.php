@@ -2,24 +2,23 @@
 
 namespace Concrete\Tests\Core\Database\EntityManager\Provider;
 
-use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Database\EntityManager\Provider\DefaultPackageProvider;
-use Concrete\Tests\Core\Database\EntityManager\Provider\Fixtures\PackageControllerWithgetPackageEntityPath;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Tests\Core\Database\EntityManager\Provider\Fixtures\PackageControllerDefault;
-use Concrete\Tests\Core\Database\EntityManager\Provider\Fixtures\PackageControllerLegacy;
 use Concrete\Tests\Core\Database\EntityManager\Provider\Fixtures\PackageControllerDefaultWithAdditionalNamespaces;
-use Illuminate\Filesystem\Filesystem;
+use Concrete\Tests\Core\Database\EntityManager\Provider\Fixtures\PackageControllerLegacy;
+use Concrete\Tests\Core\Database\EntityManager\Provider\Fixtures\PackageControllerWithgetPackageEntityPath;
 use Concrete\Tests\Core\Database\Traits\DirectoryHelpers;
+use Illuminate\Filesystem\Filesystem;
 
 /**
- * PackageProviderFactoryTest
+ * PackageProviderFactoryTest.
  *
  * @author Markus Liechti <markus@liechti.io>
  * @group orm_setup
  */
 class DefaultPackageProviderTest extends \PHPUnit_Framework_TestCase
 {
-
     use DirectoryHelpers;
 
     /**
@@ -28,7 +27,7 @@ class DefaultPackageProviderTest extends \PHPUnit_Framework_TestCase
     protected $app;
 
     /**
-     * Set up
+     * Set up.
      */
     public function setUp()
     {
@@ -38,7 +37,7 @@ class DefaultPackageProviderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test packages with removed getPackageEntityPath() method
+     * Test packages with removed getPackageEntityPath() method.
      *
      * @covers DefaultPackageProvider::getDrivers
      */
@@ -55,7 +54,7 @@ class DefaultPackageProviderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test package with default driver and not existing source directory
+     * Test package with default driver and not existing source directory.
      *
      * @covers DefaultPackageProvider::getDrivers
      */
@@ -69,7 +68,7 @@ class DefaultPackageProviderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Covers real word case of a package with $appVersionRequired < 8.0.0
+     * Covers real word case of a package with $appVersionRequired < 8.0.0.
      *
      * @covers DefaultPackageProvider::getDrivers
      */
@@ -90,7 +89,7 @@ class DefaultPackageProviderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Covers real word case of a package with $appVersionRequired >= 8.0.0
+     * Covers real word case of a package with $appVersionRequired >= 8.0.0.
      *
      * @covers DefaultPackageProvider::getDrivers
      */
@@ -111,7 +110,7 @@ class DefaultPackageProviderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Covers package with additional namespaces and with $appVersionRewuired >= 8.0.0
+     * Covers package with additional namespaces and with $appVersionRewuired >= 8.0.0.
      *
      * @covers DefaultPackageProvider::getDrivers
      */
@@ -137,6 +136,18 @@ class DefaultPackageProviderTest extends \PHPUnit_Framework_TestCase
         $this->removePackageFolderOfTestMetadataDriverAdditionalNamespace();
     }
 
+    /**
+     * Clean up if a Exception is thrown.
+     *
+     * @param \Exception $e
+     */
+    protected function onNotSuccessfulTest(\Exception $e)
+    {
+        $this->removePackageFolderOfTestMetadataDriverDefault();
+        $this->removePackageFolderOfTestMetadataDriverDefault();
+        $this->removePackageFolderOfTestMetadataDriverAdditionalNamespace();
+    }
+
     private function createPackageFolderOfTestMetadataDriverAdditionalNamespace()
     {
         $this->filesystem->makeDirectory(DIR_BASE . '/' .
@@ -146,7 +157,7 @@ class DefaultPackageProviderTest extends \PHPUnit_Framework_TestCase
                 DIRNAME_PACKAGES .
                 '/test_metadatadriver_additional_namespace/' .
                 DIRNAME_CLASSES);
-        $this->filesystem->makeDirectory(DIR_BASE . '/' . 
+        $this->filesystem->makeDirectory(DIR_BASE . '/' .
                 DIRNAME_PACKAGES .
                 '/test_metadatadriver_additional_namespace/' .
                 DIRNAME_CLASSES .
@@ -218,15 +229,4 @@ class DefaultPackageProviderTest extends \PHPUnit_Framework_TestCase
             $this->filesystem->deleteDirectory($packagePath);
         }
     }
-
-    /**
-     * Clean up if a Exception is thrown
-     */
-    protected function onNotSuccessfulTest(\Exception $e)
-    {
-        $this->removePackageFolderOfTestMetadataDriverDefault();
-        $this->removePackageFolderOfTestMetadataDriverDefault();
-        $this->removePackageFolderOfTestMetadataDriverAdditionalNamespace();
-    }
-
 }

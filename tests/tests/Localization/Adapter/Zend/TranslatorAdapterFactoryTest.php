@@ -7,13 +7,12 @@ use PHPUnit_Framework_TestCase;
 
 /**
  * Tests for:
- * Concrete\Core\Localization\Translator\Adapter\Zend\TranslatorAdapterFactory
+ * Concrete\Core\Localization\Translator\Adapter\Zend\TranslatorAdapterFactory.
  *
  * @author Antti Hukkanen <antti.hukkanen@mainiotech.fi>
  */
 class TranslatorAdapterFactoryTest extends PHPUnit_Framework_TestCase
 {
-
     protected $factory;
 
     protected function setUp()
@@ -27,5 +26,4 @@ class TranslatorAdapterFactoryTest extends PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('Concrete\Core\Localization\Translator\Adapter\Zend\TranslatorAdapter', $adapter);
     }
-
 }

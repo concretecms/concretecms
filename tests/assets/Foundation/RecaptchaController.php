@@ -1,4 +1,5 @@
 <?php
+
 namespace Application\Concrete\Captcha;
 
 use Concrete\Core\Captcha\CaptchaInterface;

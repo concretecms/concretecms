@@ -12,18 +12,17 @@ use Illuminate\Filesystem\Filesystem;
 
 /**
  * Tests for:
- * Concrete\Core\Localization\Translator\Adapter\Zend\Translation\Loader\Gettext\PackagesTranslationLoader
+ * Concrete\Core\Localization\Translator\Adapter\Zend\Translation\Loader\Gettext\PackagesTranslationLoader.
  *
  * @author Antti Hukkanen <antti.hukkanen@mainiotech.fi>
  */
 class PackagesTranslationLoaderTest extends ConcreteDatabaseTestCase
 {
+    protected $metadatas = [
+        \Concrete\Core\Entity\Package::class,
+    ];
 
     private static $packagesInstalled = false;
-
-    protected $metadatas = array(
-        \Concrete\Core\Entity\Package::class,
-    );
 
     /**
      * Move a couple of test packages to the packages folder to be used by
@@ -35,7 +34,7 @@ class PackagesTranslationLoaderTest extends ConcreteDatabaseTestCase
 
         $filesystem = new Filesystem();
         if (!$filesystem->isWritable(DIR_PACKAGES)) {
-            throw new Exception("Cannot write to the packages directory for the testing purposes. Please check permissions!");
+            throw new Exception('Cannot write to the packages directory for the testing purposes. Please check permissions!');
         }
 
         $packages = self::getTestPackages();
@@ -70,19 +69,6 @@ class PackagesTranslationLoaderTest extends ConcreteDatabaseTestCase
         parent::tearDownAfterClass();
     }
 
-    private static function getTestPackages()
-    {
-        $pkgSource = __DIR__ . '/fixtures/packages';
-        $packages = array();
-
-        $filesystem = new Filesystem();
-        foreach ($filesystem->directories($pkgSource) as $dir) {
-            $packages[basename($dir)] = $dir;
-        }
-
-        return $packages;
-    }
-
     protected function setUp()
     {
         parent::setUp();
@@ -113,8 +99,20 @@ class PackagesTranslationLoaderTest extends ConcreteDatabaseTestCase
     {
         $this->loader->loadTranslations($this->adapter);
 
-        $this->assertEquals("Tyhjä", $this->adapter->translate("Dummy"));
-        $this->assertEquals("Toinen tyhjä", $this->adapter->translate("Dummy Other"));
+        $this->assertEquals('Tyhjä', $this->adapter->translate('Dummy'));
+        $this->assertEquals('Toinen tyhjä', $this->adapter->translate('Dummy Other'));
     }
 
+    private static function getTestPackages()
+    {
+        $pkgSource = __DIR__ . '/fixtures/packages';
+        $packages = [];
+
+        $filesystem = new Filesystem();
+        foreach ($filesystem->directories($pkgSource) as $dir) {
+            $packages[basename($dir)] = $dir;
+        }
+
+        return $packages;
+    }
 }

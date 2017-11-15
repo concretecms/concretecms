@@ -5,15 +5,15 @@
  * Date: 6/3/14
  * Time: 7:12 AM.
  */
+
 namespace Concrete\Tests\Core\File\Service;
+
 use Concrete\Core\File\StorageLocation\Configuration\LocalConfiguration;
-use Concrete\Tests\Core\File\Service\Fixtures\TestStorageLocation;
-use Core;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Tests\Core\File\Service\Fixtures\TestStorageLocation;
 
 class ImageTest extends \PHPUnit_Framework_TestCase
 {
-
     protected $output1;
 
     /**
@@ -41,25 +41,31 @@ class ImageTest extends \PHPUnit_Framework_TestCase
 
     public function legacyImageCreateDataProvider()
     {
-        return array(
-            array(
+        return [
+            [
                 400, 150, DIR_BASE . '/concrete/themes/elemental/images/background-slider-night-road.png', 400, 300, false,
-            ),
-            array(
+            ],
+            [
                 133, 50, DIR_BASE . '/concrete/themes/elemental/images/background-slider-night-road.png', 310, 50, false,
-            ),
-            array(
+            ],
+            [
                 90, 90, DIR_BASE . '/concrete/themes/elemental/images/background-slider-night-road.png', 90, 90, true,
-            ),
-        );
+            ],
+        ];
     }
 
     /**
      * @dataProvider legacyImageCreateDataProvider
+     *
+     * @param mixed $expectedWidth
+     * @param mixed $expectedHeight
+     * @param mixed $path
+     * @param mixed $width
+     * @param mixed $height
+     * @param mixed $fit
      */
     public function testLegacyImageCreate($expectedWidth, $expectedHeight, $path, $width, $height, $fit = false)
     {
-
         $sl = $this->storageLocation;
         $fsl = $sl->getFileSystemObject();
         $service = new \Concrete\Core\File\Image\BasicThumbnailer($sl);
@@ -67,7 +73,7 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         $service->setJpegCompression(80);
         $service->setPngCompression(9);
         $service->setThumbnailsFormat('auto');
-        
+
         $this->assertFalse($fsl->has($this->output1));
         $service->create(
             $path, $this->output1, $width, $height, $fit

@@ -15,8 +15,8 @@ class DriverManagerTest extends PHPUnit_Framework_TestCase
     public function testConfigLoad()
     {
         $this->driverManager->configExtensions(
-            array(
-                'test' => 'DriverManagerTest', ));
+            [
+                'test' => 'DriverManagerTest', ]);
 
         $this->assertInstanceOf('DriverManagerTest', $this->driverManager->driver('test'));
     }

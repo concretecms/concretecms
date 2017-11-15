@@ -2,21 +2,20 @@
 
 namespace Concrete\Tests\Core\Localization\Translator\Adapter\Core;
 
-use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Localization\Translator\Adapter\Core\TranslatorAdapterFactory;
 use Concrete\Core\Localization\Translator\Adapter\Plain\TranslatorAdapterFactory as PlainTranslatorAdapterFactory;
 use Concrete\Core\Localization\Translator\Adapter\Zend\TranslatorAdapterFactory as ZendTranslatorAdapterFactory;
+use Concrete\Core\Support\Facade\Facade;
 use PHPUnit_Framework_TestCase;
 
 /**
  * Tests for:
- * Concrete\Core\Localization\Translator\Adapter\Core\TranslatorAdapterFactory
+ * Concrete\Core\Localization\Translator\Adapter\Core\TranslatorAdapterFactory.
  *
  * @author Antti Hukkanen <antti.hukkanen@mainiotech.fi>
  */
 class TranslatorAdapterFactoryTest extends PHPUnit_Framework_TestCase
 {
-
     protected $factory;
 
     protected function setUp()
@@ -43,5 +42,4 @@ class TranslatorAdapterFactoryTest extends PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('Concrete\Core\Localization\Translator\Adapter\Zend\TranslatorAdapter', $adapter);
     }
-
 }

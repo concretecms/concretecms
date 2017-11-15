@@ -1,26 +1,27 @@
 <?php
+
 namespace Concrete\Tests\Core\User;
 
 use Concrete\Core\User\Group\Group;
 use Concrete\Core\User\Point\Action\Action;
+use Concrete\Core\User\Point\Action\WonBadgeAction;
 use Concrete\Core\User\Point\EntryList;
 use Concrete\Core\User\UserInfo;
-use Concrete\Core\User\Point\Action\WonBadgeAction;
 
 class UserPointTest extends \ConcreteDatabaseTestCase
 {
-    protected $tables = array('UserPointActions', 'Groups', 'TreeTypes', 'Trees', 'TreeNodes', 'TreeGroupNodes',
-    'UserGroups', 'UserPointHistory', 'PermissionKeys', 'PermissionKeyCategories');
+    protected $tables = ['UserPointActions', 'Groups', 'TreeTypes', 'Trees', 'TreeNodes', 'TreeGroupNodes',
+    'UserGroups', 'UserPointHistory', 'PermissionKeys', 'PermissionKeyCategories', ];
 
-    protected $metadatas = array(
+    protected $metadatas = [
         'Concrete\Core\Entity\Site\Site',
         'Concrete\Core\Entity\Site\Locale',
         'Concrete\Core\Entity\Site\Type',
         'Concrete\Core\Entity\Site\Tree',
         'Concrete\Core\Entity\Site\SiteTree',
         'Concrete\Core\Entity\User\User',
-        'Concrete\Core\Entity\User\UserSignup'
-    );
+        'Concrete\Core\Entity\User\UserSignup',
+    ];
 
     public static function setUpBeforeClass()
     {
@@ -57,7 +58,7 @@ class UserPointTest extends \ConcreteDatabaseTestCase
         $g = Group::getByName('Badge Group');
 
         $user = UserInfo::add(
-            array('uName' => 'testuser', 'uEmail' => 'testuser@concrete5.org')
+            ['uName' => 'testuser', 'uEmail' => 'testuser@concrete5.org']
         );
 
         $uo = $user->getUserObject();
@@ -79,6 +80,7 @@ class UserPointTest extends \ConcreteDatabaseTestCase
         $this->assertInstanceOf('\Concrete\Core\User\Point\Action\WonBadgeAction', $result->getUserPointEntryActionObject());
         $this->assertInstanceOf('\Concrete\Core\User\Point\Action\WonBadgeActionDescription', $result->getUserPointEntryDescriptionObject());
     }
+
     public function testUserPointActionWithNoGroup()
     {
         Action::add('test_action_with_no_group', t('Test Action'), 2, false);
@@ -99,6 +101,4 @@ class UserPointTest extends \ConcreteDatabaseTestCase
         $this->assertEquals(5, $action->getUserPointActionDefaultPoints());
         $this->assertEquals(null, $action->getUserPointActionBadgeGroupObject());
     }
-
-
 }

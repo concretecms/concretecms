@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Tests\Core\Foundation\Environment;
 
 use Concrete\Core\Foundation\Environment\FunctionInspector;
@@ -31,6 +32,10 @@ class FunctionInspectorTest extends PHPUnit_Framework_TestCase
 
     /**
      *  @dataProvider functionAvailableProvider
+     *
+     * @param mixed $disabledFunctions
+     * @param mixed $functionName
+     * @param mixed $expected
      */
     public function testFunctionAvailable($disabledFunctions, $functionName, $expected)
     {

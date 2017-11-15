@@ -11,15 +11,12 @@ use Concrete\Core\Localization\Translator\TranslatorAdapterInterface;
  */
 class DummyTranslatorAdapter implements TranslatorAdapterInterface
 {
-
     /** @var string */
     protected $locale;
 
     /**
      * The dummy translator does not have any translator object attached to it,
      * so null is returned instead.
-     *
-     * @return null
      */
     public function getTranslator()
     {
@@ -27,7 +24,7 @@ class DummyTranslatorAdapter implements TranslatorAdapterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getLocale()
     {
@@ -35,24 +32,23 @@ class DummyTranslatorAdapter implements TranslatorAdapterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setLocale($locale)
     {
         $this->locale = $locale;
     }
 
-
     /**
-     * {@inheritDoc}
-     */    public function translate($text)
+     * {@inheritdoc}
+     */
+    public function translate($text)
     {
         return $text;
     }
 
-
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function translatePlural($singular, $plural, $number)
     {
@@ -60,11 +56,10 @@ class DummyTranslatorAdapter implements TranslatorAdapterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function translateContext($context, $text)
     {
         return $text;
     }
-
 }

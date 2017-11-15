@@ -1,4 +1,5 @@
 <?php
+
 namespace tests\Core\Validator;
 
 class AbstractTranslatableValidatorTest extends \PHPUnit_Framework_TestCase
@@ -23,7 +24,7 @@ class AbstractTranslatableValidatorTest extends \PHPUnit_Framework_TestCase
             return 'CLOSURE';
         });
 
-        $this->assertEquals('CLOSURE', $method->invokeArgs($mock, array(5, $test_string)));
+        $this->assertEquals('CLOSURE', $method->invokeArgs($mock, [5, $test_string]));
     }
 
     public function testStringMessage()
@@ -35,8 +36,8 @@ class AbstractTranslatableValidatorTest extends \PHPUnit_Framework_TestCase
         /* @type \Concrete\Core\Validator\AbstractTranslatableValidator $mock */
         $mock->setErrorString(5, 'ERROR');
 
-        $this->assertEquals('ERROR',  $method->invokeArgs($mock, array(5, '')));
-        $this->assertEquals('default',  $method->invokeArgs($mock, array(1, '', 'default')));
+        $this->assertEquals('ERROR', $method->invokeArgs($mock, [5, '']));
+        $this->assertEquals('default', $method->invokeArgs($mock, [1, '', 'default']));
     }
 
     public function testClosureRequirement()
@@ -53,7 +54,7 @@ class AbstractTranslatableValidatorTest extends \PHPUnit_Framework_TestCase
             return 'REQUIREMENT';
         });
 
-        $this->assertEquals(array(5 => 'REQUIREMENT'), $mock->getRequirementStrings());
+        $this->assertEquals([5 => 'REQUIREMENT'], $mock->getRequirementStrings());
     }
 
     public function testStringRequirement()
@@ -62,7 +63,7 @@ class AbstractTranslatableValidatorTest extends \PHPUnit_Framework_TestCase
 
         /* @type \Concrete\Core\Validator\AbstractTranslatableValidator $mock */
         $mock->setRequirementString(5, 'REQUIREMENT');
-        $this->assertEquals(array(5 => 'REQUIREMENT'), $mock->getRequirementStrings());
+        $this->assertEquals([5 => 'REQUIREMENT'], $mock->getRequirementStrings());
     }
 
     /**

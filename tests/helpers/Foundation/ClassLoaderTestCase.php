@@ -1,14 +1,14 @@
 <?php
+
 namespace Concrete\Tests\Core\Foundation;
 
 use Illuminate\Filesystem\Filesystem;
 
 class ClassLoaderTestCase extends \PHPUnit_Framework_TestCase
 {
-
     protected function putFileIntoPlace($file, $destinationDirectory)
     {
-        $sourceFile =  str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__)) . '/fixtures/' . $file;
+        $sourceFile = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__) . '/fixtures/' . $file;
         $filesystem = new Filesystem();
         if (!$filesystem->isDirectory($destinationDirectory)) {
             $filesystem->makeDirectory($destinationDirectory, 0755, true);
@@ -38,5 +38,4 @@ class ClassLoaderTestCase extends \PHPUnit_Framework_TestCase
             $filesystem->deleteDirectory($deleteDirectory);
         }
     }
-
 }

@@ -3,19 +3,18 @@
 namespace Concrete\Tests\Core\Foundation\Runtime\Run;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Config\Repository\Liaison;
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Foundation\Runtime\Run\DefaultRunner;
 use Concrete\Core\Http\ServerInterface;
-use PHPUnit_Framework_TestCase;
-use Symfony\Component\HttpFoundation\Response;
-use Concrete\Core\Config\Repository\Liaison;
-use Illuminate\Filesystem\Filesystem;
 use Concrete\Tests\Core\Config\Fixtures\TestFileLoader;
 use Concrete\Tests\Core\Config\Fixtures\TestFileSaver;
-use Concrete\Core\Config\Repository\Repository;
+use Illuminate\Filesystem\Filesystem;
+use PHPUnit_Framework_TestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class DefaultRunnerTest extends PHPUnit_Framework_TestCase
 {
-
     public function testReturnsResponseWhenNotInstalled()
     {
         // Setup Response
@@ -32,7 +31,7 @@ class DefaultRunnerTest extends PHPUnit_Framework_TestCase
             new Repository(new TestFileLoader($fs), new TestFileSaver($fs), 'test'),
             'default'
         );
-        
+
         $app = $this->getMock(Application::class);
         $app->method('isInstalled')->willReturn(false);
         $app->method('make')->will(

@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . "/ResolverTestCase.php";
+require_once __DIR__ . '/ResolverTestCase.php';
 
 class CanonicalUrlResolverTest extends ResolverTestCase
 {
@@ -14,7 +14,7 @@ class CanonicalUrlResolverTest extends ResolverTestCase
             \Core::getFacadeApplication(),
             \Core::make('Concrete\Core\Http\Request'));
 
-        $canonical = "http://example.com:1337";
+        $canonical = 'http://example.com:1337';
 
         $old_value = \Config::get('concrete.seo.canonical_url');
         \Config::set('concrete.seo.canonical_url', $canonical);
@@ -40,7 +40,7 @@ class CanonicalUrlResolverTest extends ResolverTestCase
         \Config::set('concrete.seo.canonical_url', null);
 
         $this->assertEquals(
-            (string) \Concrete\Core\Url\Url::createFromUrl("http://somehost")->setPath(\Core::getApplicationRelativePath()),
+            (string) \Concrete\Core\Url\Url::createFromUrl('http://somehost')->setPath(\Core::getApplicationRelativePath()),
             (string) $resolver->resolve([]));
 
         \Config::set('concrete.seo.canonical_url', $old_value);

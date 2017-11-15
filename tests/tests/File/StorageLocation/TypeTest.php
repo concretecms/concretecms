@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Tests\Core\File\StorageLocation;
 
 use Concrete\Core\Entity\File\StorageLocation\Type\Type as StorageLocationType;
@@ -6,10 +7,10 @@ use Concrete\Core\File\StorageLocation\Type\Type;
 
 class TypeTest extends \ConcreteDatabaseTestCase
 {
-    protected $fixtures = array();
-    protected $metadatas = array(
+    protected $fixtures = [];
+    protected $metadatas = [
         StorageLocationType::class,
-    );
+    ];
 
     public function testCreateType()
     {

@@ -1,10 +1,10 @@
 <?php
 
-use \Concrete\Core\Attribute\Type as AttributeType;
+use Concrete\Core\Attribute\Type as AttributeType;
 
 abstract class AttributeTestCase extends ConcreteDatabaseTestCase
 {
-    protected $fixtures = array();
+    protected $fixtures = [];
     protected $metadatas = [
         'Concrete\Core\Entity\Site\Site',
         'Concrete\Core\Entity\Site\Locale',
@@ -30,22 +30,8 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase
     ];
 
     protected $object;
-    protected $keys = array();
-    protected $keyObjects = array();
-    abstract protected function getAttributeKeyClass();
-    abstract public function attributeValues();
-    abstract public function attributeHandles();
-    abstract protected function installAttributeCategoryAndObject();
-
-    protected function getAttributeObjectForSet()
-    {
-        return $this->object;
-    }
-
-    protected function getAttributeObjectForGet()
-    {
-        return $this->object;
-    }
+    protected $keys = [];
+    protected $keyObjects = [];
 
     protected function setUp()
     {
@@ -65,12 +51,22 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase
         foreach ($this->keys as $akHandle => $args) {
             $args['akHandle'] = $akHandle;
             $type = AttributeType::getByHandle($args['type']);
-            $this->keys[] = call_user_func_array(array($this->getAttributeKeyClass(), 'add'), array($type, $args));
+            $this->keys[] = call_user_func_array([$this->getAttributeKeyClass(), 'add'], [$type, $args]);
         }
     }
 
+    abstract public function attributeValues();
+
+    abstract public function attributeHandles();
+
     /**
      *  @dataProvider attributeValues
+     *
+     * @param mixed $handle
+     * @param mixed $first
+     * @param mixed $second
+     * @param null|mixed $firstStatic
+     * @param null|mixed $secondStatic
      */
     public function testSetAttribute($handle, $first, $second, $firstStatic = null, $secondStatic = null)
     {
@@ -85,6 +81,12 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase
 
     /**
      *  @dataProvider attributeValues
+     *
+     * @param mixed $handle
+     * @param mixed $first
+     * @param mixed $second
+     * @param null|mixed $firstStatic
+     * @param null|mixed $secondStatic
      */
     public function testResetAttributes($handle, $first, $second, $firstStatic = null, $secondStatic = null)
     {
@@ -105,6 +107,10 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase
 
     /**
      *  @dataProvider attributeIndexTableValues
+     *
+     * @param mixed $handle
+     * @param mixed $value
+     * @param mixed $columns
      */
     public function testReindexing($handle, $value, $columns)
     {
@@ -124,16 +130,32 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase
 
     /**
      *  @dataProvider attributeHandles
+     *
+     * @param mixed $handle
      */
     public function testUnsetAttributes($handle)
     {
         $object = $this->getAttributeObjectForSet();
-        $ak = call_user_func_array(array($this->getAttributeKeyClass(), 'getByHandle'), array($handle));
+        $ak = call_user_func_array([$this->getAttributeKeyClass(), 'getByHandle'], [$handle]);
         $object->clearAttribute($ak);
         $object = $this->getAttributeObjectForGet();
         $cav = $object->getAttributeValueObject($ak);
         if (is_object($cav)) {
             $this->fail(t("clearAttribute did not delete '%s'.", $handle));
         }
+    }
+
+    abstract protected function getAttributeKeyClass();
+
+    abstract protected function installAttributeCategoryAndObject();
+
+    protected function getAttributeObjectForSet()
+    {
+        return $this->object;
+    }
+
+    protected function getAttributeObjectForGet()
+    {
+        return $this->object;
     }
 }

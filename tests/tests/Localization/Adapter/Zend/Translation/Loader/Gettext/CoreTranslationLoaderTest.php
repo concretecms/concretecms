@@ -1,11 +1,12 @@
 <?php
+
 namespace Concrete\Tests\Core\Localization\Translator\Adapter\Zend\Translation\Loader\Gettext;
 
 use Concrete\Core\Localization\Translator\Adapter\Zend\Translation\Loader\Gettext\CoreTranslationLoader;
 use Concrete\Core\Localization\Translator\Adapter\Zend\TranslatorAdapterFactory;
 use Concrete\Core\Support\Facade\Facade;
-use Illuminate\Filesystem\Filesystem;
 use Concrete\Tests\Localization\LocalizationTestsBase;
+use Illuminate\Filesystem\Filesystem;
 
 /**
  * Tests for:
@@ -15,17 +16,16 @@ use Concrete\Tests\Localization\LocalizationTestsBase;
  */
 class CoreTranslationLoaderTest extends LocalizationTestsBase
 {
-    private static $languagesDirectoryExisted = false;
-
     protected $adapter;
     protected $loader;
+    private static $languagesDirectoryExisted = false;
 
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
         $filesystem = new Filesystem();
         $langDir = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__) . '/fixtures/languages/fi_FI';
-        $appLangDir = parent::getTranslationsFolder()  . '/fi_FI';
+        $appLangDir = parent::getTranslationsFolder() . '/fi_FI';
         $filesystem->copyDirectory($langDir, $appLangDir);
     }
 
@@ -42,6 +42,6 @@ class CoreTranslationLoaderTest extends LocalizationTestsBase
     {
         $this->loader->loadTranslations($this->adapter);
 
-        $this->assertEquals("Tervehdys ytimestä!", $this->adapter->translate("Hello from core!"));
+        $this->assertEquals('Tervehdys ytimestä!', $this->adapter->translate('Hello from core!'));
     }
 }

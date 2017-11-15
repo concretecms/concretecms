@@ -2,7 +2,6 @@
 
 class PageTest extends PageTestCase
 {
-
     public function tearDown()
     {
         parent::tearDown();
@@ -21,11 +20,11 @@ class PageTest extends PageTestCase
         $home = Page::getByID(HOME_CID);
         $pt = PageType::getByID(1);
         $template = PageTemplate::getByID(1);
-        $page = $home->add($pt, array(
+        $page = $home->add($pt, [
             'uID' => 1,
             'cName' => 'Test page',
             'pTemplateID' => $template->getPageTemplateID(),
-        ));
+        ]);
         $this->assertInstanceOf(Page::class, $page);
         $this->assertEquals($page->getCollectionParentID(), 1);
         $this->assertEquals($page->getPageTemplateID(), 1);
@@ -39,11 +38,11 @@ class PageTest extends PageTestCase
     {
         $badPage = Page::getByID(42069);
         try {
-            $page = $badPage->add(null, array(
+            $page = $badPage->add(null, [
                 'uID' => 1,
                 'cName' => 'Stupid Page',
                 'cHandle' => 'stupid-page',
-            ));
+            ]);
         } catch (Exception $e) {
             $caught = true;
         }
@@ -138,11 +137,11 @@ class PageTest extends PageTestCase
         $template = PageTemplate::getByID(1);
 
         $page1 = self::createPage('Awesome Page');
-        $newpage = $page1->add($pt, array(
+        $newpage = $page1->add($pt, [
             'uID' => 1,
             'cName' => 'Test Sub-page',
             'pTemplateID' => $template->getPageTemplateID(),
-        ));
+        ]);
 
         $page1->delete();
         $np1 = Page::getByID($page1->getCollectionID());
@@ -153,6 +152,9 @@ class PageTest extends PageTestCase
 
     /**
      * @dataProvider pageNames
+     *
+     * @param mixed $name
+     * @param mixed $special
      */
     public function testPageNames($name, $special)
     {
@@ -164,7 +166,7 @@ class PageTest extends PageTestCase
             $this->assertSame($page->getCollectionPath(), '/' . $th->urlify($name));
             $this->assertSame($page->getCollectionHandle(), $th->urlify($name));
         } else {
-            $this->assertSame($page->getCollectionPath(), '/' . (string)$page->getCollectionID());
+            $this->assertSame($page->getCollectionPath(), '/' . (string) $page->getCollectionID());
             $this->assertSame($page->getCollectionHandle(), '');
         }
         $page->delete();
@@ -172,12 +174,12 @@ class PageTest extends PageTestCase
 
     public function pageNames()
     {
-        return array(
-            array('normal page', false),
-            array("awesome page's #spring_break98 !!1! SO COOL", false),
-            array('niño borracho', false),
-            array('雷鶏', true),
-        );
+        return [
+            ['normal page', false],
+            ["awesome page's #spring_break98 !!1! SO COOL", false],
+            ['niño borracho', false],
+            ['雷鶏', true],
+        ];
     }
 
     public function testPageDuplicate()
@@ -231,36 +233,6 @@ class PageTest extends PageTestCase
         $page2->delete();
         $page3->delete();
         $page4->delete();
-    }
-
-    /**
-     * @return \Concrete\Core\Page\Page[]
-     */
-    protected function setupAliases()
-    {
-        if (($about = Page::getByPath('/about')) || !$about->getCollectionID()) {
-            $about = self::createPage('About');
-        }
-        if ((!$search = Page::getByPath('/search')) || !$search->getCollectionID()) {
-            $search = self::createPage('Search');
-        }
-        if ((!$contact = Page::getByPath('/about/contact-us')) || !$contact->getCollectionID()) {
-            $contact = self::createPage('Contact Us', $about);
-        }
-        if ((!$another = Page::getByPath('/about/another-page')) || !$another->getCollectionID()) {
-            $another = self::createPage('Another Page', $about);
-        }
-        if ((!$awesome = Page::getByPath('/awesome')) || !$awesome->getCollectionID()) {
-            $awesome = self::createPage('Awesome');
-        }
-
-        return array(
-            'awesome' => $awesome,
-            'about' => $about,
-            'search' => $search,
-            'contact' => $contact,
-            'another' => $another
-        );
     }
 
     public function testPageAlias()
@@ -448,7 +420,7 @@ class PageTest extends PageTestCase
 
         $aliases = $this->setupAliases();
         $about = $aliases['about'];
-        $contact = $aliases['contact'];;
+        $contact = $aliases['contact'];
 
         $contact = Page::getByID($contact->getCollectionID());
         $this->assertEquals('Contact Us', $contact->getCollectionName());
@@ -489,7 +461,7 @@ class PageTest extends PageTestCase
             'cHandle' => 'amazing-page',
         ];
         $nvc->update($data);
-        $v = \Concrete\Core\Page\Collection\Version\Version::get($page, "RECENT");
+        $v = \Concrete\Core\Page\Collection\Version\Version::get($page, 'RECENT');
         $v->approve();
 
         $page = Page::getByID($page->getCollectionID());
@@ -500,5 +472,35 @@ class PageTest extends PageTestCase
         $this->assertEquals('/amazing-page', $page->getCollectionPath());
 
         $page->delete();
+    }
+
+    /**
+     * @return \Concrete\Core\Page\Page[]
+     */
+    protected function setupAliases()
+    {
+        if (($about = Page::getByPath('/about')) || !$about->getCollectionID()) {
+            $about = self::createPage('About');
+        }
+        if ((!$search = Page::getByPath('/search')) || !$search->getCollectionID()) {
+            $search = self::createPage('Search');
+        }
+        if ((!$contact = Page::getByPath('/about/contact-us')) || !$contact->getCollectionID()) {
+            $contact = self::createPage('Contact Us', $about);
+        }
+        if ((!$another = Page::getByPath('/about/another-page')) || !$another->getCollectionID()) {
+            $another = self::createPage('Another Page', $about);
+        }
+        if ((!$awesome = Page::getByPath('/awesome')) || !$awesome->getCollectionID()) {
+            $awesome = self::createPage('Awesome');
+        }
+
+        return [
+            'awesome' => $awesome,
+            'about' => $about,
+            'search' => $search,
+            'contact' => $contact,
+            'another' => $another,
+        ];
     }
 }

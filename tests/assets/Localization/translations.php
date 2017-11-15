@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Translations for the Zend translator for testing purposes
+ * Translations for the Zend translator for testing purposes.
  */
 
-return array(
-    "Hello Translator!" => "Original String!",
-);
+return [
+    'Hello Translator!' => 'Original String!',
+];

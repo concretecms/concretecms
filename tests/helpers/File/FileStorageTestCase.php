@@ -1,12 +1,12 @@
 <?php
 
-use \Concrete\Core\File\StorageLocation\Type\Type;
-use \Concrete\Core\File\StorageLocation\StorageLocation;
+use Concrete\Core\File\StorageLocation\StorageLocation;
+use Concrete\Core\File\StorageLocation\Type\Type;
 
 abstract class FileStorageTestCase extends ConcreteDatabaseTestCase
 {
-    protected $fixtures = array();
-    protected $tables = array(
+    protected $fixtures = [];
+    protected $tables = [
         'FileStorageLocationTypes',
         'FileImageThumbnailTypes',
         'TreeTypes',
@@ -17,50 +17,15 @@ abstract class FileStorageTestCase extends ConcreteDatabaseTestCase
         'PermissionKeys',
         'PermissionKeyCategories',
         'Trees',
-    );
+    ];
 
-    protected $metadatas = array(
+    protected $metadatas = [
         'Concrete\Core\Entity\File\File',
         'Concrete\Core\Entity\File\Version',
         'Concrete\Core\Entity\File\StorageLocation\Type\Type',
         'Concrete\Core\Entity\File\Image\Thumbnail\Type\Type',
-        'Concrete\Core\Entity\File\StorageLocation\StorageLocation'
-    );
-
-    protected function getStorageDirectory()
-    {
-        return str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__)) . '/files';
-    }
-
-    protected function cleanup()
-    {
-        if (is_dir($this->getStorageDirectory())) {
-            $files = new \RecursiveIteratorIterator(
-                new \RecursiveDirectoryIterator($this->getStorageDirectory(), \RecursiveDirectoryIterator::SKIP_DOTS),
-                \RecursiveIteratorIterator::CHILD_FIRST
-            );
-
-            foreach ($files as $fileinfo) {
-                $todo = ($fileinfo->isDir() ? 'rmdir' : 'unlink');
-                $todo($fileinfo->getRealPath());
-            }
-
-            rmdir($this->getStorageDirectory());
-        }
-    }
-
-    /**
-     * @return \Concrete\Core\Entity\File\StorageLocation\StorageLocation
-     */
-    protected function getStorageLocation()
-    {
-        $type = Type::add('local', t('Local Storage'));
-        $configuration = $type->getConfigurationObject();
-        $configuration->setRootPath($this->getStorageDirectory());
-        $configuration->setWebRootRelativePath('/application/files');
-
-        return StorageLocation::add($configuration, 'Default', true);
-    }
+        'Concrete\Core\Entity\File\StorageLocation\StorageLocation',
+    ];
 
     protected function setUp()
     {
@@ -91,5 +56,40 @@ abstract class FileStorageTestCase extends ConcreteDatabaseTestCase
     {
         parent::tearDown();
         $this->cleanup();
+    }
+
+    protected function getStorageDirectory()
+    {
+        return str_replace(DIRECTORY_SEPARATOR, '/', __DIR__) . '/files';
+    }
+
+    protected function cleanup()
+    {
+        if (is_dir($this->getStorageDirectory())) {
+            $files = new \RecursiveIteratorIterator(
+                new \RecursiveDirectoryIterator($this->getStorageDirectory(), \RecursiveDirectoryIterator::SKIP_DOTS),
+                \RecursiveIteratorIterator::CHILD_FIRST
+            );
+
+            foreach ($files as $fileinfo) {
+                $todo = ($fileinfo->isDir() ? 'rmdir' : 'unlink');
+                $todo($fileinfo->getRealPath());
+            }
+
+            rmdir($this->getStorageDirectory());
+        }
+    }
+
+    /**
+     * @return \Concrete\Core\Entity\File\StorageLocation\StorageLocation
+     */
+    protected function getStorageLocation()
+    {
+        $type = Type::add('local', t('Local Storage'));
+        $configuration = $type->getConfigurationObject();
+        $configuration->setRootPath($this->getStorageDirectory());
+        $configuration->setWebRootRelativePath('/application/files');
+
+        return StorageLocation::add($configuration, 'Default', true);
     }
 }

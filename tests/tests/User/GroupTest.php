@@ -5,14 +5,15 @@
  * Date: 6/28/14
  * Time: 10:30 AM.
  */
+
 namespace Concrete\Tests\Core\User;
 
+use Concrete\Core\Tree\Node\NodeType as TreeNodeType;
+use Concrete\Core\Tree\TreeType;
+use Concrete\Core\Tree\Type\Group as GroupTreeType;
 use Concrete\Core\User\Group\Group;
 use Concrete\Core\User\User;
 use Concrete\Core\User\UserList;
-use Concrete\Core\Tree\Type\Group as GroupTreeType;
-use Concrete\Core\Tree\TreeType;
-use Concrete\Core\Tree\Node\NodeType as TreeNodeType;
 
 class GroupTest extends \UserTestCase
 {
@@ -25,40 +26,40 @@ class GroupTest extends \UserTestCase
         TreeType::add('group');
         GroupTreeType::add();
         $g1 = Group::add(
-            tc("GroupName", "Guest"),
-            tc("GroupDescription", "The guest group represents unregistered visitors to your site."),
+            tc('GroupName', 'Guest'),
+            tc('GroupDescription', 'The guest group represents unregistered visitors to your site.'),
             false,
             false,
             GUEST_GROUP_ID
         );
         $g2 = Group::add(
-            tc("GroupName", "Registered Users"),
-            tc("GroupDescription", "The registered users group represents all user accounts."),
+            tc('GroupName', 'Registered Users'),
+            tc('GroupDescription', 'The registered users group represents all user accounts.'),
             false,
             false,
             REGISTERED_GROUP_ID
         );
-        $g3 = Group::add(tc("GroupName", "Administrators"), "", false, false, ADMIN_GROUP_ID);
+        $g3 = Group::add(tc('GroupName', 'Administrators'), '', false, false, ADMIN_GROUP_ID);
     }
 
     public function testAutomatedGroupsBase()
     {
-        require_once dirname(__FILE__) . '/fixtures/TestGroup.php';
+        require_once __DIR__ . '/fixtures/TestGroup.php';
         $g = Group::add('Test Group', ''); // gonna pull all users with vowels in their names in this group.
         $g->setAutomationOptions(true, false, false);
 
         $groupControllers = \Group::getAutomatedOnRegisterGroupControllers();
         $this->assertEquals(1, count($groupControllers));
 
-        $users = array(
-            array('aembler', 'andrew@concrete5.org'),
-            array('ffjdhbn', 'testuser1@concrete5.org'),
-            array('ffbOkj', 'testuser2@concrete5.org'),
-            array('kkytnz', 'testuser3@concrete5.org'),
-            array('zzvnv', 'testuser4@concrete5.org'),
-            array('qqwenz', 'testuser5@concrete5.org'),
-            array('mmnvb', 'testuser6@concrete5.org'),
-        );
+        $users = [
+            ['aembler', 'andrew@concrete5.org'],
+            ['ffjdhbn', 'testuser1@concrete5.org'],
+            ['ffbOkj', 'testuser2@concrete5.org'],
+            ['kkytnz', 'testuser3@concrete5.org'],
+            ['zzvnv', 'testuser4@concrete5.org'],
+            ['qqwenz', 'testuser5@concrete5.org'],
+            ['mmnvb', 'testuser6@concrete5.org'],
+        ];
         foreach ($users as $user) {
             $this->createUser($user[0], $user[1]);
         }
@@ -167,27 +168,27 @@ class GroupTest extends \UserTestCase
         $groupB = Group::add('Group B', 'This is a test group B');
         $groupC = Group::add('Group C', 'This is a test group C');
 
-        $users = array(
-            array('zxcvz1231', 'andrew@concrete5.org'),
-            array('asdfzsdf', 'testuser1@concrete5.org'),
-            array('sdfbzxc', 'testuser2@concrete5.org'),
-            array('zksjdf7', 'testuser3@concrete5.org'),
-            array('kdufiz', 'testuser4@concrete5.org'),
-            array('swrefxzd', 'testuser5@concrete5.org'),
-            array('abbabdf', 'testuser6@concrete5.org'),
-            array('ffdsazs', 'testuser7@concrete5.org'),
-            array('zxsdfer', 'testuser8@concrete5.org'),
-        );
+        $users = [
+            ['zxcvz1231', 'andrew@concrete5.org'],
+            ['asdfzsdf', 'testuser1@concrete5.org'],
+            ['sdfbzxc', 'testuser2@concrete5.org'],
+            ['zksjdf7', 'testuser3@concrete5.org'],
+            ['kdufiz', 'testuser4@concrete5.org'],
+            ['swrefxzd', 'testuser5@concrete5.org'],
+            ['abbabdf', 'testuser6@concrete5.org'],
+            ['ffdsazs', 'testuser7@concrete5.org'],
+            ['zxsdfer', 'testuser8@concrete5.org'],
+        ];
         $i = 0;
         foreach ($users as $user) {
             $ui = $this->createUser($user[0], $user[1]);
             $user = $ui->getUserObject();
-            if (in_array($i, [0,2,3])) {
+            if (in_array($i, [0, 2, 3])) {
                 $user->enterGroup($groupA);
             } else {
                 $user->enterGroup($groupB);
             }
-            $i++;
+            ++$i;
         }
 
         $user = \UserInfo::getByName('zxsdfer');
@@ -216,6 +217,5 @@ class GroupTest extends \UserTestCase
         $list3->filterByGroup($groupB, false);
         $results = $list3->getResults();
         $this->assertEquals(4, count($results));
-
     }
 }

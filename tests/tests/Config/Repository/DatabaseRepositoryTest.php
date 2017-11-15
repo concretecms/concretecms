@@ -9,7 +9,7 @@ class DatabaseRepositoryTest extends \ConcreteDatabaseTestCase
     /** @var Repository */
     protected $repository;
 
-    protected $tables = array('Config');
+    protected $tables = ['Config'];
 
     public function setUp()
     {
@@ -41,7 +41,7 @@ class DatabaseRepositoryTest extends \ConcreteDatabaseTestCase
 
     public function testSaveMultiple()
     {
-        $tests = array(
+        $tests = [
             'namespace::group.test.key',
             'namespace::group2.test.key',
             'namespace2::group.test.key',
@@ -50,8 +50,8 @@ class DatabaseRepositoryTest extends \ConcreteDatabaseTestCase
             'group2.test.key',
             'group.new.key',
             'group2.new.key',
-        );
-        $values = array();
+        ];
+        $values = [];
 
         foreach ($tests as $test) {
             $this->repository->save($test, $values[] = uniqid($test));

@@ -2,8 +2,8 @@
 
 class CustomCssRecordTest extends ConcreteDatabaseTestCase
 {
-    protected $fixtures = array();
-    protected $metadatas = array('Concrete\Core\Entity\StyleCustomizer\CustomCssRecord');
+    protected $fixtures = [];
+    protected $metadatas = ['Concrete\Core\Entity\StyleCustomizer\CustomCssRecord'];
 
     public function testCustomStyleRecord()
     {

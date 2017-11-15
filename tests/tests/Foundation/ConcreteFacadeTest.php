@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Tests\Core\Foundation;
 
 use Core;

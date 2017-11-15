@@ -1,22 +1,22 @@
 <?php
 
-use Concrete\Core\Entity\File\File;
 use Concrete\Core\Database\Connection\Connection;
-use Concrete\Core\Support\Facade\Application;
-use Doctrine\DBAL\Types\StringType;
 use Concrete\Core\Entity\Block\BlockType\BlockType;
-use Doctrine\DBAL\Types\TextType;
+use Concrete\Core\Entity\File\File;
+use Concrete\Core\Support\Facade\Application;
 use Doctrine\DBAL\Migrations\Version;
+use Doctrine\DBAL\Types\StringType;
+use Doctrine\DBAL\Types\TextType;
 
 class UpdateTest extends ConcreteDatabaseTestCase
 {
-    protected $fixtures = array();
-    protected $tables = array('Blocks', 'CollectionVersionBlocks', 'Logs', 'SystemDatabaseMigrations', 'Widgets');
+    protected $fixtures = [];
+    protected $tables = ['Blocks', 'CollectionVersionBlocks', 'Logs', 'SystemDatabaseMigrations', 'Widgets'];
 
-    protected $metadatas = array(
+    protected $metadatas = [
         BlockType::class,
         File::class,
-    );
+    ];
 
     public function testCurrentMigration()
     {
@@ -43,9 +43,6 @@ class UpdateTest extends ConcreteDatabaseTestCase
         $version->markNotMigrated();
     }
 
-    /**
-     *
-     */
     public function testUpdate()
     {
         $db = Application::make(Connection::class);

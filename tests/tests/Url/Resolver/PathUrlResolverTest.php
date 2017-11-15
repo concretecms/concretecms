@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . "/ResolverTestCase.php";
+require_once __DIR__ . '/ResolverTestCase.php';
 
 class PathUrlResolverTest extends ResolverTestCase
 {
@@ -16,7 +16,7 @@ class PathUrlResolverTest extends ResolverTestCase
         $path = '/some/path/to/something';
 
         $url = $this->canonicalUrlWithPath($path);
-        $this->assertEquals($this->urlResolver->resolve(array($path)), (string) $url);
+        $this->assertEquals($this->urlResolver->resolve([$path]), (string) $url);
     }
 
     public function testSkipResolved()
@@ -26,14 +26,14 @@ class PathUrlResolverTest extends ResolverTestCase
         $resolved = uniqid();
         $this->assertEquals(
             $resolved,
-            $this->urlResolver->resolve(array($path), $resolved));
+            $this->urlResolver->resolve([$path], $resolved));
     }
 
     public function testBadArguments()
     {
         $this->assertEquals(
             null,
-            $this->urlResolver->resolve(array()));
+            $this->urlResolver->resolve([]));
     }
 
     public function testObjectPath()
@@ -43,19 +43,19 @@ class PathUrlResolverTest extends ResolverTestCase
         $this->assertEquals(
             (string) $this->canonicalUrlWithPath($path),
             (string) $this->urlResolver->resolve(
-                array(new \Concrete\Core\Url\Components\Path($path))));
+                [new \Concrete\Core\Url\Components\Path($path)]));
     }
 
     public function testUrlWithQuery()
     {
         $this->assertEquals(
             null,
-            $this->urlResolver->resolve(array()));
+            $this->urlResolver->resolve([]));
     }
 
     public function testSegmentedPath()
     {
-        $path = "/some/path/1/to/something";
+        $path = '/some/path/1/to/something';
         $segments = explode('/', trim($path, '/'));
 
         $this->assertEquals(
@@ -65,7 +65,7 @@ class PathUrlResolverTest extends ResolverTestCase
 
     public function testFragmentAndQuery()
     {
-        $url = $this->urlResolver->resolve(array('/path/to/nothing/?query=true#fragment'));
+        $url = $this->urlResolver->resolve(['/path/to/nothing/?query=true#fragment']);
 
         $this->assertEquals('fragment', $url->getFragment());
         $this->assertEquals('query=true', $url->getQuery());
@@ -78,10 +78,10 @@ class PathUrlResolverTest extends ResolverTestCase
 
         $canonical_path = $this->canonicalUrl->getPath();
 
-        $url = $this->urlResolver->resolve(array('test'));
+        $url = $this->urlResolver->resolve(['test']);
         $this->assertNotNull($url);
 
-        if (!is_null($url)) {
+        if ($url !== null) {
             $dispatcher = DISPATCHER_FILENAME;
             $relative_path = $url->getPath()->getRelativePath($canonical_path);
             $this->assertEquals("{$dispatcher}/test", $relative_path);
@@ -92,7 +92,7 @@ class PathUrlResolverTest extends ResolverTestCase
 
     public function testPassedUrl()
     {
-        $url = $this->urlResolver->resolve(array('http://google.com/', 'testing'));
+        $url = $this->urlResolver->resolve(['http://google.com/', 'testing']);
         $this->assertEquals('http://google.com/testing', (string) $url);
     }
 }

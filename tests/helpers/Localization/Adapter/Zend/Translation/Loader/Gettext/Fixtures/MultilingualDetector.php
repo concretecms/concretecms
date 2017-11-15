@@ -11,10 +11,8 @@ namespace Concrete\Tests\Core\Localization\Translator\Adapter\Zend\Translation\L
  */
 class MultilingualDetector
 {
-
     public function isEnabled()
     {
         return true;
     }
-
 }

@@ -12,14 +12,12 @@ use Concrete\Core\Localization\Translator\TranslatorAdapterInterface;
  */
 class TestTranslationLoader extends AbstractTranslationLoader
 {
-
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function loadTranslations(TranslatorAdapterInterface $translatorAdapter)
     {
         $translator = $translatorAdapter->getTranslator();
         $translator->addTranslationFile('phparray', __DIR__ . '/translations.php');
     }
-
 }

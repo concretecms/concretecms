@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
@@ -18,9 +19,9 @@ class Version20140908095447 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $table = $schema->createTable('Widgets');
-        $table->addColumn('id', 'integer', array('unsigned' => true));
-        $table->addColumn('item', 'string', array('null' => false));
-        $table->setPrimaryKey(array("id"));
+        $table->addColumn('id', 'integer', ['unsigned' => true]);
+        $table->addColumn('item', 'string', ['null' => false]);
+        $table->setPrimaryKey(['id']);
     }
 
     public function down(Schema $schema)

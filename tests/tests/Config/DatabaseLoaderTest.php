@@ -7,8 +7,8 @@ class DatabaseLoaderTest extends ConcreteDatabaseTestCase
     /** @var DatabaseLoader */
     protected $loader;
 
-    protected $tables = array('Config');
-    protected $fixtures = array();
+    protected $tables = ['Config'];
+    protected $fixtures = [];
 
     public function setUp()
     {
@@ -29,12 +29,12 @@ class DatabaseLoaderTest extends ConcreteDatabaseTestCase
         \Database::query('ALTER TABLE Config MODIFY COLUMN configNamespace VARCHAR (255)');
         \Database::insert(
             'Config',
-            array(
+            [
                 'configItem' => 'test',
                 'configValue' => $value = uniqid(),
                 'configGroup' => 'testing',
                 'configNamespace' => null,
-            ));
+            ]);
 
         $array = $this->loader->load('test', 'testing');
 
@@ -61,11 +61,11 @@ class DatabaseLoaderTest extends ConcreteDatabaseTestCase
         $db = \Database::getActiveConnection();
         $db->insert(
             'Config',
-            array(
+            [
                 'configItem' => $group,
                 'configValue' => 1,
                 'configGroup' => $group,
-                'configNamespace' => '', ));
+                'configNamespace' => '', ]);
 
         $exists_after = $this->loader->exists($group);
 
@@ -82,11 +82,11 @@ class DatabaseLoaderTest extends ConcreteDatabaseTestCase
         $db = \Database::getActiveConnection();
         $db->insert(
             'Config',
-            array(
+            [
                 'configItem' => $group,
                 'configValue' => 1,
                 'configGroup' => $group,
-                'configNamespace' => $namespace, ));
+                'configNamespace' => $namespace, ]);
 
         $exists_after = $this->loader->exists($group, $namespace);
 
@@ -109,11 +109,11 @@ class DatabaseLoaderTest extends ConcreteDatabaseTestCase
         $db = \Database::getActiveConnection();
         $db->insert(
             'Config',
-            array(
+            [
                 'configItem' => $namespace,
                 'configValue' => 1,
                 'configGroup' => 'test',
-                'configNamespace' => $namespace, ));
+                'configNamespace' => $namespace, ]);
 
         $namespaces_after = $this->loader->getNamespaces();
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Tests\Core\Package;
 
 use Concrete\Core\Package\Dependency\DependencyChecker;
@@ -241,6 +242,6 @@ class DependencyCheckerTest extends PHPUnit_Framework_TestCase
             }
         }
 
-       return $package;
+        return $package;
     }
 }

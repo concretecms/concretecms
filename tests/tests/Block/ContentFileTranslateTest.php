@@ -1,19 +1,19 @@
 <?php
 
+use Concrete\Core\Attribute\Key\Category;
+use Concrete\Core\Attribute\Key\FileKey;
+use Concrete\Core\Attribute\Type as AttributeType;
 use Concrete\Core\Cache\CacheLocal;
-use \Concrete\Core\Attribute\Type as AttributeType;
-use \Concrete\Core\Attribute\Key\FileKey;
-use \Concrete\Core\Attribute\Key\Category;
 
 class ContentFileTranslateTest extends FileStorageTestCase
 {
-    protected $fixtures = array();
+    protected $fixtures = [];
 
-    public function __construct($name = null, array $data = array(), $dataName = '')
+    public function __construct($name = null, array $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
 
-        $this->tables = array_merge($this->tables, array(
+        $this->tables = array_merge($this->tables, [
             'Users',
             'PermissionAccessEntityTypes',
             'FileImageThumbnailTypes',
@@ -24,8 +24,8 @@ class ContentFileTranslateTest extends FileStorageTestCase
             'AttributeValues',
             'atNumber',
             'FileVersionLog',
-        ));
-        $this->metadatas = array_merge($this->metadatas, array(
+        ]);
+        $this->metadatas = array_merge($this->metadatas, [
             'Concrete\Core\Entity\File\File',
             'Concrete\Core\Entity\File\Version',
             'Concrete\Core\Entity\Attribute\Key\Settings\EmptySettings',
@@ -40,8 +40,7 @@ class ContentFileTranslateTest extends FileStorageTestCase
             'Concrete\Core\Entity\Attribute\Key\Settings\Settings',
             'Concrete\Core\Entity\Attribute\Type',
             'Concrete\Core\Entity\Attribute\Category',
-        ));
-
+        ]);
     }
 
     public function setUp()
@@ -51,8 +50,8 @@ class ContentFileTranslateTest extends FileStorageTestCase
 
         Category::add('file');
         $number = AttributeType::add('number', 'Number');
-        FileKey::add($number, array('akHandle' => 'width', 'akName' => 'Width'));
-        FileKey::add($number, array('akHandle' => 'height', 'akName' => 'Height'));
+        FileKey::add($number, ['akHandle' => 'width', 'akName' => 'Width']);
+        FileKey::add($number, ['akHandle' => 'height', 'akName' => 'Height']);
 
         CacheLocal::flush();
     }
@@ -65,7 +64,7 @@ class ContentFileTranslateTest extends FileStorageTestCase
         $this->getStorageLocation();
 
         $fi = new \Concrete\Core\File\Importer();
-        $file = str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__)) . '/fixtures/background-slider-blue-sky.png';
+        $file = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__) . '/fixtures/background-slider-blue-sky.png';
         $r = $fi->import($file, 'background-slider-blue-sky.png');
         $path = $r->getRelativePath();
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Tests\Core\Statistics\UsageTracker;
 
 use Concrete\Core\Application\Application;

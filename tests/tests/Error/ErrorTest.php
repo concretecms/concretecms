@@ -98,9 +98,5 @@ class ErrorTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($e->containsField('handle'));
 
         $this->assertFalse($e->containsField('description'));
-
     }
-
-
-
 }

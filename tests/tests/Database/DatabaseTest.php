@@ -2,9 +2,9 @@
 
 class DatabaseTest extends ConcreteDatabaseTestcase
 {
-    protected $fixtures = array(
+    protected $fixtures = [
         'Users',
-    );
+    ];
 
     public function setUp()
     {
@@ -20,12 +20,12 @@ class DatabaseTest extends ConcreteDatabaseTestcase
     public function testInvalidConnection()
     {
         $connection = Database::getFactory()->createConnection(
-            array(
-                'database' => md5(rand()),
-                'user' => md5(rand()),
-                'password' => md5(rand()),
+            [
+                'database' => md5(mt_rand()),
+                'user' => md5(mt_rand()),
+                'password' => md5(mt_rand()),
                 'host' => 'DB_SERVER',
-            ));
+            ]);
 
         try {
             $errorCode = $connection->errorCode();
@@ -41,12 +41,12 @@ class DatabaseTest extends ConcreteDatabaseTestcase
         $config = \Config::get('database');
         $connection_config = $config['connections'][$config['default-connection']];
         $connection = Database::getFactory()->createConnection(
-            array(
+            [
                 'host' => $connection_config['server'],
                 'user' => $connection_config['username'],
                 'password' => $connection_config['password'],
                 'database' => $connection_config['database'],
-            ));
+            ]);
 
         try {
             $errorCode = $connection->errorCode();
@@ -72,7 +72,7 @@ class DatabaseTest extends ConcreteDatabaseTestcase
     {
         $db = Database::get();
         $r = $db->query('SELECT * FROM Users');
-        $results = array();
+        $results = [];
         while ($row = $r->fetch()) {
             $results[] = $row;
         }
@@ -82,7 +82,7 @@ class DatabaseTest extends ConcreteDatabaseTestcase
         $uID = $db->fetchColumn('SELECT uID FROM Users WHERE uName = \'admin\'');
         $this->assertTrue($uID == 1);
 
-        $uEmail = $db->fetchColumn('SELECT uEmail FROM Users WHERE uName = ?', array('admin'));
+        $uEmail = $db->fetchColumn('SELECT uEmail FROM Users WHERE uName = ?', ['admin']);
         $this->assertTrue($uEmail == 'andrew@concrete5.org');
     }
 
@@ -98,24 +98,24 @@ class DatabaseTest extends ConcreteDatabaseTestcase
     {
         $db = Loader::db();
 
-        $q = "SELECT * FROM Users";
+        $q = 'SELECT * FROM Users';
         $r = $db->Execute($q);
-        $results = array();
+        $results = [];
         while ($row = $r->FetchRow()) {
             $results[] = $row['uName'];
         }
 
         $this->assertTrue($results[0] == 'admin');
 
-        $row = $db->GetRow('SELECT uID, uName FROM Users WHERE uEmail = ?', array('testuser@concrete5.org'));
+        $row = $db->GetRow('SELECT uID, uName FROM Users WHERE uEmail = ?', ['testuser@concrete5.org']);
         $this->assertTrue($row['uID'] == 2 && $row['uName'] == 'testuser');
 
-        $uName = $db->GetOne('SELECT uName FROM Users WHERE uID = ?', array(1));
+        $uName = $db->GetOne('SELECT uName FROM Users WHERE uID = ?', [1]);
         $this->assertTrue($uName == 'admin');
 
-        $email = "testuser2@concrete5.org";
-        $v = array('testuser2', $email);
-        $q = "INSERT INTO Users (uName, uEmail) VALUES (?, ?)";
+        $email = 'testuser2@concrete5.org';
+        $v = ['testuser2', $email];
+        $q = 'INSERT INTO Users (uName, uEmail) VALUES (?, ?)';
         $r = $db->prepare($q);
         $res = $db->execute($r, $v);
         $newUID = $db->Insert_ID();
@@ -123,15 +123,15 @@ class DatabaseTest extends ConcreteDatabaseTestcase
 
         // sql protection
         $uName = 'testtesttest\' or uID = 1';
-        $uID = $db->GetOne('SELECT uID FROM Users WHERE uName = ?', array($uName));
+        $uID = $db->GetOne('SELECT uID FROM Users WHERE uName = ?', [$uName]);
         $this->assertTrue($uID != 1);
 
         //numrows
         $r = $db->query('SELECT * FROM Users');
         $this->assertTrue($r->numRows() == 3);
 
-        $v = array('testuser4', 'testuser4@concrete5.org');
-        $q = "INSERT INTO Users (uName, uEmail) VALUES (?, ?)";
+        $v = ['testuser4', 'testuser4@concrete5.org'];
+        $q = 'INSERT INTO Users (uName, uEmail) VALUES (?, ?)';
         $r = $db->query($q, $v);
         $newUID = $db->Insert_ID();
         $this->assertTrue($newUID == 4);
@@ -148,29 +148,29 @@ class DatabaseTest extends ConcreteDatabaseTestcase
     public function testLegacyReplace()
     {
         $db = Database::get();
-        $db->Replace('Users', array('uName' => 'testuser5', 'uEmail' => 'testuser5@concrete5.org'), array('uName'));
-        $uID = $db->GetOne('SELECT uID FROM Users WHERE uEmail = ?', array('testuser5@concrete5.org'));
+        $db->Replace('Users', ['uName' => 'testuser5', 'uEmail' => 'testuser5@concrete5.org'], ['uName']);
+        $uID = $db->GetOne('SELECT uID FROM Users WHERE uEmail = ?', ['testuser5@concrete5.org']);
         $this->assertTrue($uID == 3);
-        $row = $db->GetRow('SELECT uName, uEmail FROM Users WHERE uID = ?', array(3));
+        $row = $db->GetRow('SELECT uName, uEmail FROM Users WHERE uID = ?', [3]);
         $this->assertTrue($row['uName'] == 'testuser5');
 
         $db->Replace(
             'Users',
-            array('uName' => 'testuser6', 'uEmail' => 'testuser6@concrete5.org'),
-            array('uName', 'uEmail'));
-        $row = $db->GetRow('SELECT uName, uEmail FROM Users WHERE uEmail = ?', array('testuser6@concrete5.org'));
+            ['uName' => 'testuser6', 'uEmail' => 'testuser6@concrete5.org'],
+            ['uName', 'uEmail']);
+        $row = $db->GetRow('SELECT uName, uEmail FROM Users WHERE uEmail = ?', ['testuser6@concrete5.org']);
         $this->assertTrue($row['uName'] == 'testuser6');
 
-        $db->Replace('Users', array('uEmail' => 'andrew@concretecms.com', 'uName' => 'admin'), array('uName'));
-        $row = $db->GetRow('SELECT uName, uID, uEmail FROM Users WHERE uID = ?', array(1));
+        $db->Replace('Users', ['uEmail' => 'andrew@concretecms.com', 'uName' => 'admin'], ['uName']);
+        $row = $db->GetRow('SELECT uName, uID, uEmail FROM Users WHERE uID = ?', [1]);
         $this->assertTrue($row['uID'] == 1 && $row['uName'] == 'admin' && $row['uEmail'] == 'andrew@concretecms.com');
     }
 
     public function testQuoting()
     {
         $db = Database::get();
-        $db->Replace('Users', array('uName' => "test'der", 'uEmail' => "testuser5'@concrete5.org"), array('uName'));
-        $uName = $db->GetOne('SELECT uName FROM Users WHERE uEmail = ?', array("testuser5'@concrete5.org"));
+        $db->Replace('Users', ['uName' => "test'der", 'uEmail' => "testuser5'@concrete5.org"], ['uName']);
+        $uName = $db->GetOne('SELECT uName FROM Users WHERE uEmail = ?', ["testuser5'@concrete5.org"]);
         $this->assertTrue($uName == "test'der");
     }
 }

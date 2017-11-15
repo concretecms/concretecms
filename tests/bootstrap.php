@@ -5,8 +5,6 @@
 
 // testing credentials
 
-use Concrete\Core\Config\Repository\Repository;
-
 // error reporting
 PHPUnit_Framework_Error_Notice::$enabled = false;
 
@@ -20,7 +18,7 @@ require_once 'AttributeValueTestCase.php';
 require_once 'FileStorageTestCase.php';
 require_once 'UserTestCase.php';
 
-define('DIR_TESTS', str_replace(DIRECTORY_SEPARATOR, '/', realpath(__DIR__ . "/../")));
+define('DIR_TESTS', str_replace(DIRECTORY_SEPARATOR, '/', realpath(__DIR__ . '/../')));
 define('DIR_BASE', str_replace(DIRECTORY_SEPARATOR, '/', realpath(DIR_TESTS . '/../')));
 $DIR_BASE_CORE = str_replace(DIRECTORY_SEPARATOR, '/', realpath(DIR_BASE . '/concrete'));
 
@@ -32,19 +30,19 @@ require $DIR_BASE_CORE . '/bootstrap/configure.php';
 require $DIR_BASE_CORE . '/bootstrap/autoload.php';
 
 /**
- * Create PSR4 test namespace
+ * Create PSR4 test namespace.
  */
 $loader = new \Symfony\Component\ClassLoader\Psr4ClassLoader();
-$loader->addPrefix("Concrete\\Tests\\", __DIR__);
+$loader->addPrefix('Concrete\\Tests\\', __DIR__);
 $loader->register();
 
 $r = new \Concrete\Core\Http\Request(
-    array(),
-    array(),
-    array(),
-    array(),
-    array(),
-    array('HTTP_HOST' => 'www.requestdomain.com', 'SCRIPT_NAME' => '/path/to/server/index.php')
+    [],
+    [],
+    [],
+    [],
+    [],
+    ['HTTP_HOST' => 'www.requestdomain.com', 'SCRIPT_NAME' => '/path/to/server/index.php']
 );
 define('BASE_URL', 'http://www.dummyco.com/path/to/server');
 \Concrete\Core\Http\Request::setInstance($r);
@@ -83,7 +81,6 @@ if (!$cn->isConnected()) {
 $cn->query('DROP DATABASE IF EXISTS concrete5_tests');
 $cn->query('CREATE DATABASE concrete5_tests');
 $cn->close();
-
 
 /*
  * Kill this because it plays hell with phpunit.

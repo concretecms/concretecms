@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Tests\Core\Permission;
 
 use Concrete\Core\Permission\IPService;
@@ -63,6 +64,8 @@ class IPServiceTest extends ConcreteDatabaseTestCase
 
     /**
      * @dataProvider automaticBanEnabledProvider
+     *
+     * @param mixed $allowedAttempts
      */
     public function testAutomaticBanEnabled($allowedAttempts)
     {

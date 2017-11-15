@@ -5,19 +5,19 @@ use Concrete\Core\Area\Layout\ThemeGridLayout;
 
 class AreaLayoutTest extends ConcreteDatabaseTestCase
 {
-    protected $tables = array('AreaLayoutPresets', 'AreaLayouts', 'AreaLayoutColumns',
+    protected $tables = ['AreaLayoutPresets', 'AreaLayouts', 'AreaLayoutColumns',
         'AreaLayoutCustomColumns', 'AreaLayoutThemeGridColumns', 'PageThemes', 'Pages', 'Collections',
-        'CollectionVersions', );
-    protected $fixtures = array();
+        'CollectionVersions', ];
+    protected $fixtures = [];
 
-    protected $metadatas = array(
+    protected $metadatas = [
         'Concrete\Core\Entity\Site\Locale',
         'Concrete\Core\Entity\Site\Site',
         'Concrete\Core\Entity\Site\Type',
         'Concrete\Core\Entity\Site\Tree',
         'Concrete\Core\Entity\Site\SiteTree',
         'Concrete\Core\Entity\Page\PagePath',
-    );
+    ];
 
     public function testCustomAreaLayoutContainer()
     {
@@ -36,9 +36,6 @@ class AreaLayoutTest extends ConcreteDatabaseTestCase
         $this->assertEquals('<div class="ccm-layout-column-wrapper" id="ccm-layout-column-wrapper-1"></div>', (string) $formatter->getLayoutContainerHtmlObject());
     }
 
-    /**
-     *
-     */
     public function testThemeGridAreaLayoutContainer()
     {
         $this->truncateTables();

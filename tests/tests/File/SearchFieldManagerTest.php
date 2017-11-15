@@ -2,14 +2,11 @@
 
 namespace Concrete\Tests\Core\File;
 
-use Concrete\Core\Attribute\Category\FileCategory;
 use Concrete\Core\File\Search\Field\Field\SizeField;
 use Concrete\Core\File\Search\Field\Manager;
-use Concrete\Core\Search\Field\ManagerFactory;
 
 class SearchFieldManagerTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testGroups()
     {
         $manager = new \Concrete\Core\Search\Field\Manager();
@@ -19,7 +16,6 @@ class SearchFieldManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(0, count($groups));
 
         $manager->addGroup('Test Group', [
-
         ]);
         $groups = $manager->getGroups();
         $this->assertEquals(1, count($groups));
@@ -31,7 +27,7 @@ class SearchFieldManagerTest extends \PHPUnit_Framework_TestCase
     {
         $manager = new \Concrete\Core\Search\Field\Manager();
         $manager->addGroup('Test Group', [
-            new SizeField()
+            new SizeField(),
         ]);
         $groups = $manager->getGroups();
         $this->assertEquals(1, count($groups[0]->getFields()));
@@ -39,7 +35,6 @@ class SearchFieldManagerTest extends \PHPUnit_Framework_TestCase
         $groups[0]->addField(new SizeField());
         $this->assertEquals(2, count($groups[0]->getFields()));
     }
-
 
     public function testFileSearchFields()
     {
@@ -94,5 +89,4 @@ class SearchFieldManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Is Awesome', $field3->getDisplayName());
         $this->assertEquals('attribute_key_is_awesome', $field3->getKey());
     }
-
 }

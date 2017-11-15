@@ -4,51 +4,27 @@ use Concrete\Core\Page\Page;
 
 class CustomPageRoutine extends \Concrete\Core\Backup\ContentImporter\ValueInspector\InspectionRoutine\PageRoutine
 {
-
     public function getItem($identifier)
     {
         $identifier = '/page-2' . $identifier;
+
         return new \Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PageItem($identifier);
     }
-
 }
 
 class ContentImporterValueInspectorReplacePageTest extends PageTestCase
 {
-
-    public function __construct($name = null, array $data = array(), $dataName = '')
+    public function __construct($name = null, array $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
 
-        $this->metadatas = array_merge($this->metadatas, array(
-            'Concrete\Core\Entity\Page\Feed'
-        ));
-    }
-
-    protected function createData()
-    {
-        $page1 = self::createPage('Page 1');
-        $page2 = self::createPage('Page 2');
-        $page3 = self::createPage('Page 3');
-        $page4 = self::createPage('Page 4');
-
-        $subpageA = self::createPage('Subpage A', $page2);
-        self::createPage('Subpage B', $page2);
-        self::createPage('Subpage C', $page2);
-
-        $feed = new \Concrete\Core\Entity\Page\Feed();
-        $feed->setHandle('blog');
-        $feed->setParentID(1);
-        $feed->setTitle('Title');
-        $feed->setDescription('');
-        \ORM::entityManager('core')->persist($feed);
-        \ORM::entityManager('core')->flush();
-
+        $this->metadatas = array_merge($this->metadatas, [
+            'Concrete\Core\Entity\Page\Feed',
+        ]);
     }
 
     public function testReplaceContent()
     {
-
         $this->createData();
 
         $content = <<<EOL
@@ -89,7 +65,6 @@ EOL;
     {
         $this->createData();
 
-
         $inspector = Core::make('import/value_inspector');
         $content = '{ccm:export:page:/page-3}';
         $result = $inspector->inspect($content);
@@ -106,7 +81,25 @@ EOL;
         $this->assertEquals(1, $o->getContentObject()->getID());
         $this->assertEquals('blog', $o->getContentObject()->getHandle());
         $this->assertEquals(1, $result->getReplacedValue());
-
     }
 
+    protected function createData()
+    {
+        $page1 = self::createPage('Page 1');
+        $page2 = self::createPage('Page 2');
+        $page3 = self::createPage('Page 3');
+        $page4 = self::createPage('Page 4');
+
+        $subpageA = self::createPage('Subpage A', $page2);
+        self::createPage('Subpage B', $page2);
+        self::createPage('Subpage C', $page2);
+
+        $feed = new \Concrete\Core\Entity\Page\Feed();
+        $feed->setHandle('blog');
+        $feed->setParentID(1);
+        $feed->setTitle('Title');
+        $feed->setDescription('');
+        \ORM::entityManager('core')->persist($feed);
+        \ORM::entityManager('core')->flush();
+    }
 }

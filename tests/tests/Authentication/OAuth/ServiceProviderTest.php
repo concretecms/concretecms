@@ -6,11 +6,10 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Authentication\Type\OAuth\ServiceProvider;
 
 /** @TODO Set up proper autoloading for tests */
-require_once(__DIR__ . "/Fixtures/ServiceFixture.php");
-require_once(__DIR__ . "/Fixtures/ExtractorFixture.php");
+require_once __DIR__ . '/Fixtures/ServiceFixture.php';
+require_once __DIR__ . '/Fixtures/ExtractorFixture.php';
 class ServiceProviderTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testBindings()
     {
         $app = new Application();
@@ -18,7 +17,7 @@ class ServiceProviderTest extends \PHPUnit_Framework_TestCase
         $provider = new ServiceProvider($app);
         $provider->register();
 
-        $service = new \Concrete\Tests\Core\Authentication\Fixtures\ServiceFixture;
+        $service = new \Concrete\Tests\Core\Authentication\Fixtures\ServiceFixture();
 
         /** @var \OAuth\UserData\ExtractorFactory $extractor_factory */
         $extractor_factory = $app['oauth/factory/extractor'];
@@ -28,7 +27,6 @@ class ServiceProviderTest extends \PHPUnit_Framework_TestCase
             'Concrete\Tests\Core\Authentication\Fixtures\ServiceFixture',
             'Concrete\Tests\Core\Authentication\Fixtures\ExtractorFixture');
 
-        $this->assertInstanceOf('OAuth\UserData\Extractor\ExtractorInterface', $app->make('oauth_extractor', array($service)));
+        $this->assertInstanceOf('OAuth\UserData\Extractor\ExtractorInterface', $app->make('oauth_extractor', [$service]));
     }
-
 }

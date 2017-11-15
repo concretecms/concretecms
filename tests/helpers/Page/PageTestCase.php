@@ -2,7 +2,7 @@
 
 abstract class PageTestCase extends ConcreteDatabaseTestCase
 {
-    protected $fixtures = array();
+    protected $fixtures = [];
     protected $tables = [
         'Pages',
         'PageThemes',
@@ -27,10 +27,10 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
         'PageTypePublishTargetTypes',
         'AttributeKeyCategories',
         'PageTypeComposerOutputBlocks',
-        'PageTypeComposerFormLayoutSets'
+        'PageTypeComposerFormLayoutSets',
     ]; // so brutal
 
-    protected $metadatas = array(
+    protected $metadatas = [
         'Concrete\Core\Entity\Site\Site',
         'Concrete\Core\Entity\Site\Locale',
         'Concrete\Core\Entity\Site\Type',
@@ -44,7 +44,7 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
         'Concrete\Core\Entity\Attribute\Value\PageValue',
         'Concrete\Core\Entity\Attribute\Value\Value',
         'Concrete\Core\Entity\Attribute\Key\Key',
-    );
+    ];
 
     public static function setUpBeforeClass()
     {
@@ -62,10 +62,10 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
 
         Page::addHomePage();
         PageTemplate::add('full', 'Full');
-        PageType::add(array(
+        PageType::add([
             'handle' => 'basic',
             'name' => 'Basic',
-        ));
+        ]);
     }
 
     public function setUp()
@@ -101,10 +101,10 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
             $template = PageTemplate::getByID($template);
         }
 
-        $page = $parent->add($pt, array(
+        $page = $parent->add($pt, [
             'cName' => $name,
             'pTemplateID' => $template->getPageTemplateID(),
-        ));
+        ]);
 
         return $page;
     }

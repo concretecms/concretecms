@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Tests\Core\Session;
 
 use Concrete\Core\Http\Request;
@@ -32,9 +33,9 @@ class SessionValidatorTest extends \PHPUnit_Framework_TestCase
         $this->request = Request::create('http://url.com/');
         $this->validator = new SessionValidator($this->app, $this->app['config'], $this->request);
 
-        $store = array();
+        $store = [];
         $mock = $this->getMockBuilder('Symfony\Component\HttpFoundation\Session\Session')
-            ->setMethods(array('has', 'get', 'set', 'invalidate', 'all'))
+            ->setMethods(['has', 'get', 'set', 'invalidate', 'all'])
             ->getMock();
 
         $mock->expects($this->any())
@@ -67,7 +68,6 @@ class SessionValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testSetsOnFirstCheck()
     {
-
         // Change client ip
         $this->request->server->set('REMOTE_ADDR', '111.112.113.114');
         $this->request->server->set('HTTP_USER_AGENT', 'TESTING');
@@ -76,14 +76,14 @@ class SessionValidatorTest extends \PHPUnit_Framework_TestCase
         $this->session->expects($this->never())->method('invalidate');
         $this->validator->handleSessionValidation($this->session);
 
-        $this->assertEquals($this->session->all(), array(
+        $this->assertEquals($this->session->all(), [
             'CLIENT_REMOTE_ADDR' => '111.112.113.114',
-            'CLIENT_HTTP_USER_AGENT' => 'TESTING', ));
+            'CLIENT_HTTP_USER_AGENT' => 'TESTING', ]);
     }
 
     public function testInvalidatesOnInvalidIP()
     {
-        $logger = $this->getMockBuilder('Monolog\Logger')->setConstructorArgs(array(''))->enableArgumentCloning()->getMock();
+        $logger = $this->getMockBuilder('Monolog\Logger')->setConstructorArgs([''])->enableArgumentCloning()->getMock();
 
         // Change client ip
         $this->request->server->set('REMOTE_ADDR', '111.112.113.114');
@@ -101,7 +101,7 @@ class SessionValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testInvalidatesOnInvalidUserAgent()
     {
-        $logger = $this->getMockBuilder('Monolog\Logger')->setConstructorArgs(array(''))->enableArgumentCloning()->getMock();
+        $logger = $this->getMockBuilder('Monolog\Logger')->setConstructorArgs([''])->enableArgumentCloning()->getMock();
 
         // Change client agent
         $this->request->server->set('HTTP_USER_AGENT', 'TESTING');

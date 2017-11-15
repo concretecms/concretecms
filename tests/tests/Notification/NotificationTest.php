@@ -2,16 +2,6 @@
 
 class NotificationTest extends \PHPUnit_Framework_TestCase
 {
-
-    protected function getUserSignup()
-    {
-        $user = new \Concrete\Core\Entity\User\User();
-        $user->setUserDateAdded(new \DateTime('2008-12-01 05:00:00'));
-        $user->setUserName('andrew');
-        $signup = new \Concrete\Core\Entity\User\UserSignup($user);
-        return $signup;
-    }
-
     public function testCreateNotification()
     {
         $signup = $this->getUserSignup();
@@ -22,7 +12,6 @@ class NotificationTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Concrete\Core\Entity\Notification\UserSignupNotification', $notification);
         $this->assertEquals($notification->getNotificationDate(), $signup->getNotificationDate());
     }
-
 
     public function testFormatNotificationView()
     {
@@ -49,9 +38,19 @@ class NotificationTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Concrete\Core\Notification\Subscription\Manager', $manager);
 
         /**
-         * @var $manager \Concrete\Core\Notification\Subscription\Manager
+         * @var \Concrete\Core\Notification\Subscription\Manager
          */
         $subscriptions = $manager->getSubscriptions();
         $this->assertEquals(6, count($subscriptions));
+    }
+
+    protected function getUserSignup()
+    {
+        $user = new \Concrete\Core\Entity\User\User();
+        $user->setUserDateAdded(new \DateTime('2008-12-01 05:00:00'));
+        $user->setUserName('andrew');
+        $signup = new \Concrete\Core\Entity\User\UserSignup($user);
+
+        return $signup;
     }
 }

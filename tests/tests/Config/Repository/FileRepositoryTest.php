@@ -13,7 +13,7 @@ class FileRepositoryTest extends \ConcreteDatabaseTestCase
     /** @var Repository */
     protected $repository;
 
-    protected $tables = array('Config');
+    protected $tables = ['Config'];
 
     public function setUp()
     {

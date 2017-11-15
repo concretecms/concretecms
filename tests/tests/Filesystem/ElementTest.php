@@ -1,23 +1,17 @@
 <?php
+
 namespace Concrete\Tests\Core\Filesystem;
 
-use Concrete\Core\Entity\Package;
 use Concrete\Core\Entity\Site\Type;
 use Concrete\Core\Filesystem\Element;
-use Concrete\Core\Foundation\Environment;
-use Concrete\Core\Package\PackageList;
+use Concrete\Core\Filesystem\FileLocator;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Theme\Theme;
-use Concrete\Core\Support\Facade\Facade;
-use Illuminate\Filesystem\Filesystem;
-use Concrete\Core\Filesystem\FileLocator;
 
 class ElementTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testBasicElementAndController()
     {
-
         $element = new Element('header_required');
         $this->assertTrue($element->exists());
         $this->assertNull($element->getElementController());
@@ -82,8 +76,9 @@ class ElementTest extends \PHPUnit_Framework_TestCase
 
     public function testOverriding()
     {
-        \Element::register('header_required', function() {
+        \Element::register('header_required', function () {
             $element = new Element('header_required', 'my_site');
+
             return $element;
         });
 
@@ -93,7 +88,5 @@ class ElementTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(1, $locations);
         $this->assertInstanceOf('\Concrete\Core\Filesystem\FileLocator\PackageLocation', $locations[0]);
         $this->assertEquals('my_site', $locations[0]->getPackageHandle());
-
     }
-
 }

@@ -4,22 +4,22 @@ use Concrete\Core\Attribute\Key\Category;
 
 abstract class UserTestCase extends ConcreteDatabaseTestCase
 {
-    protected $fixtures = array();
-    protected $tables = array(
+    protected $fixtures = [];
+    protected $tables = [
         'UserGroups', 'Groups',
         'TreeTypes', 'TreeNodes', 'TreeNodePermissionAssignments',
         'PermissionKeyCategories', 'PermissionKeys', 'TreeNodeTypes', 'Trees',
         'TreeGroupNodes',
-    ); // so brutal
+    ]; // so brutal
 
-    protected $metadatas = array(
+    protected $metadatas = [
         'Concrete\Core\Entity\User\User',
         'Concrete\Core\Entity\User\UserSignup',
         'Concrete\Core\Entity\Attribute\Category',
         'Concrete\Core\Entity\Attribute\Key\Key',
         'Concrete\Core\Entity\Attribute\Key\UserValue',
         'Concrete\Core\Entity\Attribute\Key\UserKey',
-    );
+    ];
 
     protected static $users = [];
 
@@ -39,9 +39,8 @@ abstract class UserTestCase extends ConcreteDatabaseTestCase
     {
         $key = "{$uName}.{$uEmail}";
         if (!isset(static::$users[$key])) {
-
             static::$users[$key] = \Concrete\Core\User\UserInfo::add(
-                array('uName' => $uName, 'uEmail' => $uEmail)
+                ['uName' => $uName, 'uEmail' => $uEmail]
             );
         }
 

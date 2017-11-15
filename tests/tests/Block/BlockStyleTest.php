@@ -2,20 +2,19 @@
 
 class BlockStyleTest extends PageTestCase
 {
-
-    public function __construct($name = null, array $data = array(), $dataName = '')
+    public function __construct($name = null, array $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
 
         $this->tables = array_merge($this->tables,
-           array('StyleCustomizerInlineStyleSets', 'Blocks', 'AttributeKeyCategories')
+           ['StyleCustomizerInlineStyleSets', 'Blocks', 'AttributeKeyCategories']
         );
         $this->metadatas = array_merge($this->metadatas,
-            array(
+            [
                 'Concrete\Core\Entity\Page\Template',
                 'Concrete\Core\Entity\StyleCustomizer\Inline\StyleSet',
                 'Concrete\Core\Entity\Block\BlockType\BlockType',
-            )
+            ]
         );
     }
 
@@ -39,7 +38,7 @@ class BlockStyleTest extends PageTestCase
 
         $c = $this->createPage('This is my test page');
         $bt = BlockType::installBlockType('content');
-        $b = $c->addBlock($bt, 'Main', array('content' => 'Sample content.'));
+        $b = $c->addBlock($bt, 'Main', ['content' => 'Sample content.']);
         $b->setCustomStyleSet($ps);
         $this->assertEquals($ps->getID(), $b->getCustomStyleSetID());
 

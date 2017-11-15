@@ -12,7 +12,7 @@ class FormControlTypeTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\Concrete\Core\Express\Form\Control\Type\EntityPropertyType', $drivers['entity_property']);
         $this->assertInstanceOf('\Concrete\Core\Express\Form\Control\Type\AttributeKeyType', $drivers['attribute_key']);
         $this->assertInstanceOf('\Concrete\Core\Express\Form\Control\Type\AssociationType', $drivers['association']);
-        $expected = array('entity_property', 'attribute_key', 'association');
+        $expected = ['entity_property', 'attribute_key', 'association'];
         $i = 0;
         foreach ($drivers as $key => $driver) {
             $this->assertEquals($expected[$i], $key);

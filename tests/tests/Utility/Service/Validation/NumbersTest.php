@@ -57,13 +57,17 @@ class NumbersTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider integerDataProvider
+     *
+     * @param mixed $expected
+     * @param mixed $input1
+     * @param null|mixed $min
+     * @param null|mixed $max
      */
     public function testInteger($expected, $input1, $min = null, $max = null)
     {
         $this->assertEquals($expected, $this->object->integer($input1, $min, $max));
     }
-    
-    
+
     public function numberDataProvider()
     {
         return [
@@ -100,9 +104,14 @@ class NumbersTest extends PHPUnit_Framework_TestCase
             [true, .05, 0, 0.1],
         ];
     }
-    
+
     /**
      * @dataProvider numberDataProvider
+     *
+     * @param mixed $expected
+     * @param mixed $input1
+     * @param null|mixed $min
+     * @param null|mixed $max
      */
     public function testNumber($expected, $input1, $min = null, $max = null)
     {

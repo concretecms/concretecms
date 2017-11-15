@@ -2,21 +2,20 @@
 
 namespace Concrete\Tests\Core\Database\EntityManager\Provider\Fixtures;
 
-use Concrete\Core\Database\EntityManager\Provider\YamlProvider;
-use Concrete\Core\Database\EntityManager\Provider\ProviderInterface;
-use Concrete\Core\Package\Package;
 use Concrete\Core\Application\Application;
+use Concrete\Core\Database\EntityManager\Provider\ProviderInterface;
+use Concrete\Core\Database\EntityManager\Provider\YamlProvider;
+use Concrete\Core\Package\Package;
 
-defined('C5_EXECUTE') or die(_("Access Denied."));
+defined('C5_EXECUTE') or die(_('Access Denied.'));
 
 /**
- * Controller test addon - testing yaml metadatadriver
+ * Controller test addon - testing yaml metadatadriver.
  *
  * @author Markus Liechti <markus@liechti.io>
  */
 class PackageControllerYaml extends Package implements ProviderInterface
 {
-
     protected $pkgHandle = 'test_metadatadriver_yaml';
     protected $appVersionRequired = '5.8.0';
     protected $pkgVersion = '0.0.1';
@@ -28,24 +27,24 @@ class PackageControllerYaml extends Package implements ProviderInterface
 
     public function getPackageDescription()
     {
-        return t("Test addon registers entities via the yaml driver");
+        return t('Test addon registers entities via the yaml driver');
     }
 
     public function getPackageName()
     {
-        return t("Test addon - uses yaml driver");
+        return t('Test addon - uses yaml driver');
     }
 
     /**
      * Return customized metadata driver wrapped in a YamlProvider for doctrine orm
-     * Path: {package}/config/yaml
-     * 
+     * Path: {package}/config/yaml.
+     *
      * @return YamlProvider
      */
     public function getDrivers()
     {
         $yamlProvider = new YamlProvider($this);
+
         return $yamlProvider->getDrivers();
     }
-
 }

@@ -28,213 +28,217 @@ class StringsTest extends PHPUnit_Framework_TestCase
 
     public function emailDataProvider()
     {
-        return array(
+        return [
             //no mx record validation
-            array(false, '', false),
-            array(false, 'Mmmmm Cookies', false),
-            array(false, 'example.com', false),
-            array(false, 'notvalid@', false),
-            array(false, 'A@b@c@example.com', false),
-            array(false, 'a"b(c)d,e:f;g<h>i[j\k]l@example.com', false),
-            array(false, 'just"not"right@example.com', false),
-            array(false, 'this is"not\allowed@example.com', false),
-            array(false, 'this\ still\"not\\allowed@example.com', false),
-            array(false, 'notvalid..@example.com', false),
-            array(false, 'notvalid@..example.com', false),
-            array(true, 'is+valid@concrete5.org', false),
-            array(true, 'tld@international', false),
-            array(true, 'tld@international', false),
-            array(true, 'international@international', false),
-            array(true, 'a.little.lengthy.but.fine@dept.example.com', false),
-            array(true, 'other.email-with-dash@example.com', false),
-            array(true, 'test@concrete5.org', false),
+            [false, '', false],
+            [false, 'Mmmmm Cookies', false],
+            [false, 'example.com', false],
+            [false, 'notvalid@', false],
+            [false, 'A@b@c@example.com', false],
+            [false, 'a"b(c)d,e:f;g<h>i[j\k]l@example.com', false],
+            [false, 'just"not"right@example.com', false],
+            [false, 'this is"not\allowed@example.com', false],
+            [false, 'this\ still\"not\\allowed@example.com', false],
+            [false, 'notvalid..@example.com', false],
+            [false, 'notvalid@..example.com', false],
+            [true, 'is+valid@concrete5.org', false],
+            [true, 'tld@international', false],
+            [true, 'tld@international', false],
+            [true, 'international@international', false],
+            [true, 'a.little.lengthy.but.fine@dept.example.com', false],
+            [true, 'other.email-with-dash@example.com', false],
+            [true, 'test@concrete5.org', false],
 
             //mx validation
-            array(true, 'test@concrete5.org', true),
-        );
+            [true, 'test@concrete5.org', true],
+        ];
     }
 
     public function alphanumDataProvider()
     {
-        return array(
-            array(false, null, false, false),
-            array(false, true, false, false),
-            array(false, false, false, false),
-            array(false, 1.254, false, false),
-            array(false, '', false, false),
-            array(false, ' ', false, false),
-            array(false, ' ', true, false),
-            array(false, 'a  b--c', false, true),
-            array(false, 1, false, false),
-            array(false, 0, false, false),
-            array(false, array('testing'), false, false),
-            array(true, 'JustALongerStringForABasicTest', false, false),
-            array(true, 'Just A Longer String For A Basic Test', true, false),
-            array(true, 'Just-A-Longer-String-For-A-Basic-Test', false, true),
-            array(true, 'a ', true, false),
-            array(true, ' -', true, true),
-            array(true, 'a  b--c', true, true),
-            array(true, '1', false, false),
-            array(true, '0', false, false),
-        );
+        return [
+            [false, null, false, false],
+            [false, true, false, false],
+            [false, false, false, false],
+            [false, 1.254, false, false],
+            [false, '', false, false],
+            [false, ' ', false, false],
+            [false, ' ', true, false],
+            [false, 'a  b--c', false, true],
+            [false, 1, false, false],
+            [false, 0, false, false],
+            [false, ['testing'], false, false],
+            [true, 'JustALongerStringForABasicTest', false, false],
+            [true, 'Just A Longer String For A Basic Test', true, false],
+            [true, 'Just-A-Longer-String-For-A-Basic-Test', false, true],
+            [true, 'a ', true, false],
+            [true, ' -', true, true],
+            [true, 'a  b--c', true, true],
+            [true, '1', false, false],
+            [true, '0', false, false],
+        ];
     }
 
     public function handleDataProvider()
     {
-        return array(
-            array(false, null),
-            array(false, true),
-            array(false, false),
-            array(false, 1.254),
-            array(false, ''),
-            array(false, ' '),
-            array(false, 'a  b--c'),
-            array(false, 1),
-            array(false, 0),
-            array(false, 'Just A Longer String For A Basic Test'),
-            array(false, 'Just-A-Longer-String-For-A-Basic-Test'),
-            array(false, array('testing')),
-            array(true, 'JustALongerStringForABasicTest12'),
-            array(true, 'Just_A_Longer_String_For_1_Basic_Test2'),
-            array(true, '_1'),
-            array(true, '___'),
-        );
+        return [
+            [false, null],
+            [false, true],
+            [false, false],
+            [false, 1.254],
+            [false, ''],
+            [false, ' '],
+            [false, 'a  b--c'],
+            [false, 1],
+            [false, 0],
+            [false, 'Just A Longer String For A Basic Test'],
+            [false, 'Just-A-Longer-String-For-A-Basic-Test'],
+            [false, ['testing']],
+            [true, 'JustALongerStringForABasicTest12'],
+            [true, 'Just_A_Longer_String_For_1_Basic_Test2'],
+            [true, '_1'],
+            [true, '___'],
+        ];
     }
 
     public function notEmptyDataProvider()
     {
-        return array(
-            array(false, null),
-            array(false, true),
-            array(false, false),
-            array(false, 1.254),
-            array(false, ''),
-            array(false, ' '),
-            array(false, '     '),
-            array(false, 1),
-            array(false, 0),
-            array(false, array()),
-            array(false, new stdClass()),
-            array(false, array('testing')),
-            array(false, array()),
-            array(true, 'a  b--c'),
-            array(true, ' Just A Longer String For A Basic Test '),
-        );
+        return [
+            [false, null],
+            [false, true],
+            [false, false],
+            [false, 1.254],
+            [false, ''],
+            [false, ' '],
+            [false, '     '],
+            [false, 1],
+            [false, 0],
+            [false, []],
+            [false, new stdClass()],
+            [false, ['testing']],
+            [false, []],
+            [true, 'a  b--c'],
+            [true, ' Just A Longer String For A Basic Test '],
+        ];
     }
 
     public function minDataProvider()
     {
-        return array(
-            array(false, null, 1),
-            array(false, true, 0),
-            array(false, false, 0),
-            array(false, 1.254, 1),
-            array(false, '', 0),
-            array(false, ' ', 0),
-            array(false, '     ', 0),
-            array(false, 't', 2),
-            array(false, ' t e ', 4),
-            array(false, array(), 1),
-            array(false, new stdClass(), 1),
-            array(true, ' super duper ', 11),
-            array(true, 'super duper ', 1),
-        );
+        return [
+            [false, null, 1],
+            [false, true, 0],
+            [false, false, 0],
+            [false, 1.254, 1],
+            [false, '', 0],
+            [false, ' ', 0],
+            [false, '     ', 0],
+            [false, 't', 2],
+            [false, ' t e ', 4],
+            [false, [], 1],
+            [false, new stdClass(), 1],
+            [true, ' super duper ', 11],
+            [true, 'super duper ', 1],
+        ];
     }
 
     public function maxDataProvider()
     {
-        return array(
-            array(false, null, 1),
-            array(false, true, 0),
-            array(false, false, 0),
-            array(false, 1.254, 1),
-            array(false, '', 0),
-            array(false, ' ', 0),
-            array(false, '     ', 0),
-            array(false, 'fail test', 2),
-            array(false, ' t e ', 2),
-            array(false, array(), 1),
-            array(false, new stdClass(), 1),
-            array(false, ' super duper ', 10),
-            array(true, ' super duper ', 11),
-            array(true, 'super duper', 11),
-        );
+        return [
+            [false, null, 1],
+            [false, true, 0],
+            [false, false, 0],
+            [false, 1.254, 1],
+            [false, '', 0],
+            [false, ' ', 0],
+            [false, '     ', 0],
+            [false, 'fail test', 2],
+            [false, ' t e ', 2],
+            [false, [], 1],
+            [false, new stdClass(), 1],
+            [false, ' super duper ', 10],
+            [true, ' super duper ', 11],
+            [true, 'super duper', 11],
+        ];
     }
 
     public function containsNumberDataProvider()
     {
-        return array(
-            array(0, null),
-            array(0, true),
-            array(0, false),
-            array(0, 1.254),
-            array(0, ''),
-            array(0, ' '),
-            array(0, ' t e '),
-            array(0, array()),
-            array(0, new stdClass()),
-            array(1, ' super_duper 1 '),
-            array(2, ' 2super_duper1 '),
-            array(18, '123456789abcdefghijklmnopqrstuvwxyz987654321'),
-        );
+        return [
+            [0, null],
+            [0, true],
+            [0, false],
+            [0, 1.254],
+            [0, ''],
+            [0, ' '],
+            [0, ' t e '],
+            [0, []],
+            [0, new stdClass()],
+            [1, ' super_duper 1 '],
+            [2, ' 2super_duper1 '],
+            [18, '123456789abcdefghijklmnopqrstuvwxyz987654321'],
+        ];
     }
 
     public function containsUpperCaseDataProvider()
     {
-        return array(
-            array(0, null),
-            array(0, true),
-            array(0, false),
-            array(0, 1.254),
-            array(0, ''),
-            array(0, ' '),
-            array(0, ' t e '),
-            array(0, array()),
-            array(0, new stdClass()),
-            array(1, ' Super_duper 1 '),
-            array(2, ' 2Super_Duper1 '),
-            array(13, 'AbCdEfGhIjKlMnOpQrStUvWxYz123'),
-        );
+        return [
+            [0, null],
+            [0, true],
+            [0, false],
+            [0, 1.254],
+            [0, ''],
+            [0, ' '],
+            [0, ' t e '],
+            [0, []],
+            [0, new stdClass()],
+            [1, ' Super_duper 1 '],
+            [2, ' 2Super_Duper1 '],
+            [13, 'AbCdEfGhIjKlMnOpQrStUvWxYz123'],
+        ];
     }
 
     public function containsLowerCaseDataProvider()
     {
-        return array(
-            array(0, null),
-            array(0, true),
-            array(0, false),
-            array(0, 1.254),
-            array(0, ''),
-            array(0, ' '),
-            array(2, ' t e '),
-            array(0, array()),
-            array(0, new stdClass()),
-            array(0, ' SUPER_DUPER 1 '),
-            array(8, ' 2Super_Duper1 '),
-            array(13, 'AbCdEfGhIjKlMnOpQrStUvWxYz123'),
-        );
+        return [
+            [0, null],
+            [0, true],
+            [0, false],
+            [0, 1.254],
+            [0, ''],
+            [0, ' '],
+            [2, ' t e '],
+            [0, []],
+            [0, new stdClass()],
+            [0, ' SUPER_DUPER 1 '],
+            [8, ' 2Super_Duper1 '],
+            [13, 'AbCdEfGhIjKlMnOpQrStUvWxYz123'],
+        ];
     }
 
     public function containsSymbolDataProvider()
     {
-        return array(
-            array(0, null),
-            array(0, true),
-            array(0, false),
-            array(0, 1.254),
-            array(0, ''),
-            array(0, ' '),
-            array(0, ' t e '),
-            array(0, array()),
-            array(0, new stdClass()),
-            array(1, ' SUPER_DUPER 1 '),
-            array(3, ' !2Super Duper1@ '),
-            array(29, '!@#$%^&*()_-+=[]{};:\'"\\|?.,<>'),
-        );
+        return [
+            [0, null],
+            [0, true],
+            [0, false],
+            [0, 1.254],
+            [0, ''],
+            [0, ' '],
+            [0, ' t e '],
+            [0, []],
+            [0, new stdClass()],
+            [1, ' SUPER_DUPER 1 '],
+            [3, ' !2Super Duper1@ '],
+            [29, '!@#$%^&*()_-+=[]{};:\'"\\|?.,<>'],
+        ];
     }
 
     /**
      * @dataProvider emailDataProvider
+     *
+     * @param mixed $expected
+     * @param mixed $email
+     * @param mixed $mxValidation
      */
     public function testEmail($expected, $email, $mxValidation)
     {
@@ -243,6 +247,11 @@ class StringsTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider alphanumDataProvider
+     *
+     * @param mixed $expected
+     * @param mixed $value
+     * @param mixed $allowSpaces
+     * @param mixed $allowDashes
      */
     public function testAlphaNum($expected, $value, $allowSpaces = false, $allowDashes = false)
     {
@@ -251,6 +260,9 @@ class StringsTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider handleDataProvider
+     *
+     * @param mixed $expected
+     * @param mixed $value
      */
     public function testHandle($expected, $value)
     {
@@ -259,6 +271,9 @@ class StringsTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider notEmptyDataProvider
+     *
+     * @param mixed $expected
+     * @param mixed $value
      */
     public function testNotEmpty($expected, $value)
     {
@@ -267,6 +282,10 @@ class StringsTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider minDataProvider
+     *
+     * @param mixed $expected
+     * @param mixed $string
+     * @param mixed $minLength
      */
     public function testMin($expected, $string, $minLength)
     {
@@ -275,6 +294,10 @@ class StringsTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider maxDataProvider
+     *
+     * @param mixed $expected
+     * @param mixed $string
+     * @param mixed $maxLength
      */
     public function testMax($expected, $string, $maxLength)
     {
@@ -283,6 +306,9 @@ class StringsTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider containsNumberDataProvider
+     *
+     * @param mixed $expected
+     * @param mixed $string
      */
     public function testContainsNumber($expected, $string)
     {
@@ -291,6 +317,9 @@ class StringsTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider containsUpperCaseDataProvider
+     *
+     * @param mixed $expected
+     * @param mixed $string
      */
     public function testContainsUpperCase($expected, $string)
     {
@@ -299,6 +328,9 @@ class StringsTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider containsLowerCaseDataProvider
+     *
+     * @param mixed $expected
+     * @param mixed $string
      */
     public function testContainsLowerCase($expected, $string)
     {
@@ -307,6 +339,9 @@ class StringsTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider containsSymbolDataProvider
+     *
+     * @param mixed $expected
+     * @param mixed $string
      */
     public function testContainsSymbol($expected, $string)
     {

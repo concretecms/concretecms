@@ -1,4 +1,5 @@
 <?php
+
 use Concrete\Core\Database\DatabaseStructureManager;
 use Concrete\Core\Database\Schema\Schema;
 use Concrete\Core\Support\Facade\Application;
@@ -32,50 +33,6 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
     protected $metadatas = [];
 
     /**
-     * Get the connection to use.
-     *
-     * @return \Concrete\Core\Database\Connection\Connection
-     */
-    protected function connection()
-    {
-        if (!static::$connection) {
-            static::$connection = Application::make('database')->connection('travis');
-        }
-
-        return static::$connection;
-    }
-
-    /**
-     * Returns the test database connection.
-     *
-     * @return PHPUnit_Extensions_Database_DB_IDatabaseConnection
-     *
-     * @throws \Imagine\Exception\RuntimeException
-     */
-    protected function getConnection()
-    {
-        $connection = $this->connection()->getWrappedConnection();
-        if (!$connection instanceof PDOConnection) {
-            throw new RuntimeException('Invalid connection type.');
-        }
-
-        return $this->createDefaultDBConnection($connection, 'test');
-    }
-
-    /**
-     * Returns the test dataset.
-     *
-     * @return PHPUnit_Extensions_Database_DataSet_IDataSet
-     */
-    protected function getDataSet()
-    {
-        $dataSet = new PHPUnit_Extensions_Database_DataSet_CompositeDataSet();
-        $this->importFixtures($dataSet);
-
-        return $dataSet;
-    }
-
-    /**
      * Set up before any tests run.
      */
     public static function setUpBeforeClass()
@@ -100,6 +57,57 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
 
         // Call parent teardown
         parent::tearDownAfterClass();
+    }
+
+    public function tearDown()
+    {
+        parent::tearDown();
+        \ORM::entityManager('core')->clear();
+        \CacheLocal::flush();
+    }
+
+    /**
+     * Get the connection to use.
+     *
+     * @return \Concrete\Core\Database\Connection\Connection
+     */
+    protected function connection()
+    {
+        if (!static::$connection) {
+            static::$connection = Application::make('database')->connection('travis');
+        }
+
+        return static::$connection;
+    }
+
+    /**
+     * Returns the test database connection.
+     *
+     * @throws \Imagine\Exception\RuntimeException
+     *
+     * @return PHPUnit_Extensions_Database_DB_IDatabaseConnection
+     */
+    protected function getConnection()
+    {
+        $connection = $this->connection()->getWrappedConnection();
+        if (!$connection instanceof PDOConnection) {
+            throw new RuntimeException('Invalid connection type.');
+        }
+
+        return $this->createDefaultDBConnection($connection, 'test');
+    }
+
+    /**
+     * Returns the test dataset.
+     *
+     * @return PHPUnit_Extensions_Database_DataSet_IDataSet
+     */
+    protected function getDataSet()
+    {
+        $dataSet = new PHPUnit_Extensions_Database_DataSet_CompositeDataSet();
+        $this->importFixtures($dataSet);
+
+        return $dataSet;
     }
 
     /**
@@ -294,13 +302,6 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
         }
 
         return $metadatas;
-    }
-
-    public function tearDown()
-    {
-        parent::tearDown();
-        \ORM::entityManager('core')->clear();
-        \CacheLocal::flush();
     }
 
     /**

@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Package\FancySnippet\Editor;
 
 use Concrete\Core\Editor\Snippet;

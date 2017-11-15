@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . "/ResolverTestCase.php";
+require_once __DIR__ . '/ResolverTestCase.php';
 
 class CallableUrlResolverTest extends ResolverTestCase
 {
@@ -22,7 +22,7 @@ class CallableUrlResolverTest extends ResolverTestCase
             return $obj;
         });
 
-        $this->assertEquals($this, $this->urlResolver->resolve(array()));
+        $this->assertEquals($this, $this->urlResolver->resolve([]));
     }
 
     public function testFailSet()

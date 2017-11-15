@@ -1,8 +1,9 @@
 <?php
+
 namespace Concrete\Tests\Core\File\StorageLocation;
 
-use Concrete\Core\File\StorageLocation\Type\Type;
 use Concrete\Core\File\StorageLocation\StorageLocation;
+use Concrete\Core\File\StorageLocation\Type\Type;
 
 class StorageLocationTest extends \FileStorageTestCase
 {
@@ -75,7 +76,7 @@ class StorageLocationTest extends \FileStorageTestCase
 
     public function testBasicStreamFile()
     {
-        $file = str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__)) . '/fixtures/sample.txt';
+        $file = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__) . '/fixtures/sample.txt';
         $starterSize = filesize($file);
         mkdir($this->getStorageDirectory());
 

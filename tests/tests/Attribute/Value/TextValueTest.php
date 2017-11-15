@@ -2,18 +2,17 @@
 
 class TextValueTest extends \AttributeValueTestCase
 {
-
-    public function __construct($name = null, array $data = array(), $dataName = '')
+    public function __construct($name = null, array $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
 
-        $this->tables = array_merge($this->tables, array(
-        ));
+        $this->tables = array_merge($this->tables, [
+        ]);
 
-        $this->metadatas = array_merge($this->metadatas, array(
+        $this->metadatas = array_merge($this->metadatas, [
             'Concrete\Core\Entity\Attribute\Key\Settings\TextSettings',
             'Concrete\Core\Entity\Attribute\Value\Value\TextValue',
-        ));
+        ]);
     }
 
     public function getAttributeKeyHandle()
@@ -48,45 +47,41 @@ class TextValueTest extends \AttributeValueTestCase
 
     public function baseAttributeValues()
     {
-        return array(
-            array(
+        return [
+            [
                 'This is my fun input',
                 'This is my fun input',
-            )
-        );
+            ],
+        ];
     }
 
     public function displayAttributeValues()
     {
-        return array(
-            array(
+        return [
+            [
                 'This is my fun input',
-                'This is my fun input'
-            )
-        );
+                'This is my fun input',
+            ],
+        ];
     }
 
     public function plaintextAttributeValues()
     {
-        return array(
-            array(
+        return [
+            [
                 'This is my fun input',
-                'This is my fun input'
-            )
-        );
+                'This is my fun input',
+            ],
+        ];
     }
 
     public function searchIndexAttributeValues()
     {
-        return array(
-            array(
+        return [
+            [
                 'This is my fun input',
-                'This is my fun input'
-            )
-        );
+                'This is my fun input',
+            ],
+        ];
     }
-
-
-
-
 }

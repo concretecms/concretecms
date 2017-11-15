@@ -1,22 +1,18 @@
 <?php
+
 namespace Concrete\Tests\Core\File\StorageLocation;
 
 use Concrete\Core\Entity\File\StorageLocation\Type\Type as StorageLocationType;
-use Concrete\Core\File\StorageLocation\Type\Type;
 use Concrete\Core\File\StorageLocation\Configuration\LocalConfiguration;
+use Concrete\Core\File\StorageLocation\Type\Type;
 use Concrete\Core\Http\Request;
 
 class ConfigurationTest extends \ConcreteDatabaseTestCase
 {
-    protected $fixtures = array();
-    protected $metadatas = array(
+    protected $fixtures = [];
+    protected $metadatas = [
         StorageLocationType::class,
-    );
-
-    protected function getStorageDirectory()
-    {
-        return str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__)) . '/files';
-    }
+    ];
 
     public function testConfigureType()
     {
@@ -28,11 +24,16 @@ class ConfigurationTest extends \ConcreteDatabaseTestCase
 
         $req = new Request();
         $req->setMethod('POST');
-        $data = array();
+        $data = [];
         $data['path'] = '/foo/bar/path';
         $req->request->set('fslType', $data);
         $configuration->loadFromRequest($req);
 
         $this->assertEquals('/foo/bar/path', $configuration->getRootPath());
+    }
+
+    protected function getStorageDirectory()
+    {
+        return str_replace(DIRECTORY_SEPARATOR, '/', __DIR__) . '/files';
     }
 }

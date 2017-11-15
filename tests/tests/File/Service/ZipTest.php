@@ -1,9 +1,10 @@
 <?php
+
 namespace Concrete\Tests\Core\File\Service;
 
+use Concrete\Core\File\Service\Zip;
 use Core;
 use Exception;
-use Concrete\Core\File\Service\Zip;
 use Illuminate\Filesystem\Filesystem;
 
 class ZipTest extends \PHPUnit_Framework_TestCase
@@ -16,47 +17,6 @@ class ZipTest extends \PHPUnit_Framework_TestCase
     protected $rootDir = null;
 
     protected $fileSystemProblem = null;
-
-    protected function getDirectories()
-    {
-        return array(
-            'dir1' => false,
-            'dir1/empty' => false,
-            'dir1/dir1.1' => false,
-            'dir1/dir1.2' => false,
-            'dir1/dir1.2/dir1.2.1' => false,
-            'dir1/dir1.2/.dir1.2.3' => true,
-            'dir1/dir1.2/.dir1.2.3/dir1.2.4' => true,
-            '.dir2' => true,
-            '.dir2/dir2.1' => true,
-            '.dir2/dir2.2' => true,
-            '.dir2/dir2.2/dir2.2.1' => true,
-            '.dir2/dir2.2/.dir2.2.3' => true,
-            'dir3' => false,
-            'dir4' => false,
-            'dir4/dir41' => false,
-            'dir5' => false,
-            'dir5/.dir51' => true,
-        );
-    }
-
-    protected function getFiles()
-    {
-        return array(
-            'root.txt' => false,
-            'dir1/sub.txt' => false,
-            'dir1/.hidden.txt' => true,
-            'dir1/dir1.2/dir1.2.1/good.txt' => false,
-            'dir1/dir1.2/dir1.2.1/.bad.txt' => true,
-            'dir1/dir1.2/.dir1.2.3/dir1.2.4/hide.txt' => true,
-            '.dir2/hideByBath2.txt' => true,
-            '.dir2/dir2.2/.dir2.2.3/hideByBath2.2.txt' => true,
-            '.dir2/dir2.2/dir2.2.1/hide.txt' => true,
-            'dir4/dir41/ok' => false,
-            'dir4/dir41/.ko' => true,
-            'dir5/.dir51/hidden.txt' => true,
-        );
-    }
 
     protected function setUp()
     {
@@ -73,23 +33,23 @@ class ZipTest extends \PHPUnit_Framework_TestCase
                 throw new Exception('Failed to create a temporary directory');
             }
             $this->workDir = $wd;
-            $source = $wd.'/source';
+            $source = $wd . '/source';
             if (!@mkdir($source)) {
                 throw new Exception('Failed to create a temporary directory');
             }
             foreach ($this->getDirectories() as $rel => $hidden) {
-                $abs = $source.'/'.$rel;
+                $abs = $source . '/' . $rel;
                 if (!@mkdir($abs)) {
                     throw new Exception('Failed to create a temporary directory');
                 }
             }
             foreach ($this->getFiles() as $rel => $hidden) {
-                $abs = $source.'/'.$rel;
+                $abs = $source . '/' . $rel;
                 if (!@file_put_contents($abs, "This is the content of $rel")) {
                     throw new Exception('Failed to create a temporary file');
                 }
             }
-            $destination = $wd.'/destination';
+            $destination = $wd . '/destination';
             if (!@mkdir($destination)) {
                 throw new Exception('Failed to create a temporary directory');
             }
@@ -109,16 +69,19 @@ class ZipTest extends \PHPUnit_Framework_TestCase
 
     public function providerTestZip()
     {
-        return array(
-            array(false, false),
-            array(true, false),
-            array(false, true),
-            array(true, true),
-        );
+        return [
+            [false, false],
+            [true, false],
+            [false, true],
+            [true, true],
+        ];
     }
 
     /**
      * @dataProvider providerTestZip
+     *
+     * @param mixed $useNativeCommands
+     * @param mixed $includeDotFiles
      */
     public function testZip($useNativeCommands, $includeDotFiles)
     {
@@ -138,12 +101,12 @@ class ZipTest extends \PHPUnit_Framework_TestCase
         } else {
             $zh->disableNativeCommands();
         }
-        $zh->zip($this->workDir.'/source', $this->workDir.'/file.zip', compact('includeDotFiles'));
-        $zh->zip(str_replace(DIRECTORY_SEPARATOR, '/', __DIR__), $this->workDir.'/file.zip', array('append' => true));
-        $contents = $zh->listContents($this->workDir.'/file.zip');
-        $zh->unzip($this->workDir.'/file.zip', $this->workDir.'/destination');
+        $zh->zip($this->workDir . '/source', $this->workDir . '/file.zip', compact('includeDotFiles'));
+        $zh->zip(str_replace(DIRECTORY_SEPARATOR, '/', __DIR__), $this->workDir . '/file.zip', ['append' => true]);
+        $contents = $zh->listContents($this->workDir . '/file.zip');
+        $zh->unzip($this->workDir . '/file.zip', $this->workDir . '/destination');
         foreach ($this->getDirectories() as $rel => $hidden) {
-            $abs = $this->workDir.'/destination/'.$rel;
+            $abs = $this->workDir . '/destination/' . $rel;
             if ($hidden && !$includeDotFiles) {
                 $this->assertFileNotExists($abs);
                 $this->assertArrayNotHasKey($rel, $contents);
@@ -158,7 +121,7 @@ class ZipTest extends \PHPUnit_Framework_TestCase
             }
         }
         foreach ($this->getFiles() as $rel => $hidden) {
-            $abs = $this->workDir.'/destination/'.$rel;
+            $abs = $this->workDir . '/destination/' . $rel;
             if ($hidden && !$includeDotFiles) {
                 $this->assertFileNotExists($abs);
                 $this->assertArrayNotHasKey($rel, $contents);
@@ -173,9 +136,50 @@ class ZipTest extends \PHPUnit_Framework_TestCase
                 $this->assertArrayHasKey('compressedSize', $contents[$rel]);
             }
         }
-        $abs = $this->workDir.'/destination/'.str_replace(DIRECTORY_SEPARATOR, '/', basename(__FILE__));
+        $abs = $this->workDir . '/destination/' . str_replace(DIRECTORY_SEPARATOR, '/', basename(__FILE__));
         $this->assertFileExists($abs);
         $this->assertTrue(is_file($abs));
         $this->assertSame(file_get_contents(__FILE__), file_get_contents($abs));
+    }
+
+    protected function getDirectories()
+    {
+        return [
+            'dir1' => false,
+            'dir1/empty' => false,
+            'dir1/dir1.1' => false,
+            'dir1/dir1.2' => false,
+            'dir1/dir1.2/dir1.2.1' => false,
+            'dir1/dir1.2/.dir1.2.3' => true,
+            'dir1/dir1.2/.dir1.2.3/dir1.2.4' => true,
+            '.dir2' => true,
+            '.dir2/dir2.1' => true,
+            '.dir2/dir2.2' => true,
+            '.dir2/dir2.2/dir2.2.1' => true,
+            '.dir2/dir2.2/.dir2.2.3' => true,
+            'dir3' => false,
+            'dir4' => false,
+            'dir4/dir41' => false,
+            'dir5' => false,
+            'dir5/.dir51' => true,
+        ];
+    }
+
+    protected function getFiles()
+    {
+        return [
+            'root.txt' => false,
+            'dir1/sub.txt' => false,
+            'dir1/.hidden.txt' => true,
+            'dir1/dir1.2/dir1.2.1/good.txt' => false,
+            'dir1/dir1.2/dir1.2.1/.bad.txt' => true,
+            'dir1/dir1.2/.dir1.2.3/dir1.2.4/hide.txt' => true,
+            '.dir2/hideByBath2.txt' => true,
+            '.dir2/dir2.2/.dir2.2.3/hideByBath2.2.txt' => true,
+            '.dir2/dir2.2/dir2.2.1/hide.txt' => true,
+            'dir4/dir41/ok' => false,
+            'dir4/dir41/.ko' => true,
+            'dir5/.dir51/hidden.txt' => true,
+        ];
     }
 }

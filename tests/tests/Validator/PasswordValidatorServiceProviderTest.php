@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Tests\Validator;
 
 class PasswordValidatorServiceProviderTest extends \PHPUnit_Framework_TestCase

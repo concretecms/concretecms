@@ -11,23 +11,20 @@ use Symfony\Component\ClassLoader\MapClassLoader;
 
 /**
  * Test for:
- * Concrete\Core\Localization\Translator\TranslatorAdapterRepository
+ * Concrete\Core\Localization\Translator\TranslatorAdapterRepository.
  *
  * @author Antti Hukkanen <antti.hukkanen@mainiotech.fi>
  */
 class TranslatorAdapterRepositoryTest extends PHPUnit_Framework_TestCase
 {
-
     protected $repository;
 
     public static function setUpBeforeClass()
     {
-        $loader = new MapClassLoader(array(
-            'Concrete\\Tests\\Core\\Localization\\Translator\\Fixtures\\DummyTranslatorAdapter'
-                => __DIR__ . '/fixtures/DummyTranslatorAdapter.php',
-            'Concrete\\Tests\\Core\\Localization\\Translator\\Fixtures\\DummyTranslatorAdapterFactory'
-                => __DIR__ . '/fixtures/DummyTranslatorAdapterFactory.php',
-        ));
+        $loader = new MapClassLoader([
+            'Concrete\\Tests\\Core\\Localization\\Translator\\Fixtures\\DummyTranslatorAdapter' => __DIR__ . '/fixtures/DummyTranslatorAdapter.php',
+            'Concrete\\Tests\\Core\\Localization\\Translator\\Fixtures\\DummyTranslatorAdapterFactory' => __DIR__ . '/fixtures/DummyTranslatorAdapterFactory.php',
+        ]);
         $loader->register();
     }
 
@@ -209,5 +206,4 @@ class TranslatorAdapterRepositoryTest extends PHPUnit_Framework_TestCase
 
         return $adapters;
     }
-
 }

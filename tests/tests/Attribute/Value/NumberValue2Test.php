@@ -1,15 +1,15 @@
 <?php
+
 namespace Concrete\Tests\AttributeValue;
 
+use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
 use Concrete\Core\Entity\Attribute\Value\Value\Value;
 use ConcreteDatabaseTestCase;
 use Database;
 use ORM;
-use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
 
-class NumberValueTest extends ConcreteDatabaseTestCase
+class NumberValue2Test extends ConcreteDatabaseTestCase
 {
-
     protected static $lastID = 1;
 
     protected $metadatas = [
@@ -42,6 +42,10 @@ class NumberValueTest extends ConcreteDatabaseTestCase
 
     /**
      * @dataProvider renderProvider
+     *
+     * @param mixed $value
+     * @param mixed $expectedGetValue
+     * @param mixed $expectedToString
      */
     public function testRender($value, $expectedGetValue, $expectedToString)
     {

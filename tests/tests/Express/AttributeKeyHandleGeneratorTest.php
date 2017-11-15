@@ -2,17 +2,16 @@
 
 class AttributeKeyHandleGeneratorTest extends ConcreteDatabaseTestCase
 {
-
     protected $metadatas = [
         'Concrete\Core\Entity\Express\Entity',
         'Concrete\Core\Entity\Attribute\Key\Key',
         'Concrete\Core\Entity\Attribute\Key\ExpressKey',
     ];
 
-    protected $tables = array(
+    protected $tables = [
         'Trees',
         'TreeTypes',
-    );
+    ];
 
     public function testExpressHandleGenerator()
     {
@@ -67,7 +66,6 @@ class AttributeKeyHandleGeneratorTest extends ConcreteDatabaseTestCase
 
         $em->persist($key3);
         $em->flush();
-
 
         $this->assertEquals('attribute_key', $handle1);
         $this->assertEquals('attribute_key_2', $handle2);
@@ -153,6 +151,5 @@ class AttributeKeyHandleGeneratorTest extends ConcreteDatabaseTestCase
 
         $handle = $generator->generate($key);
         $this->assertEquals('yes_i_fully_and_100_and_completely_and_ine', $handle);
-
     }
 }

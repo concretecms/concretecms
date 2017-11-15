@@ -1,4 +1,5 @@
 <?php
+
 use Concrete\Core\Page\PageList;
 
 /**
@@ -12,68 +13,68 @@ class PageListTest extends \PageTestCase
     /** @var \Concrete\Core\Page\PageList */
     protected $list;
 
-    protected $pageData = array(
-        array(
+    protected $pageData = [
+        [
             'Test Page 1', false,
-        ),
-        array(
+        ],
+        [
             'Abracadabra', false,
-        ),
-        array(
+        ],
+        [
             'Brace Yourself', false, 'alternate',
-        ),
-        array(
+        ],
+        [
             'Foobler', '/test-page-1',
-        ),
-        array(
+        ],
+        [
             'Test Page 2', false,
-        ),
-        array(
+        ],
+        [
             'Holy Mackerel', false,
-        ),
-        array(
+        ],
+        [
             'Another Fun Page', false, 'alternate',
-        ),
-        array(
+        ],
+        [
             'Foo Bar', '/test-page-2',
-        ),
-        array(
+        ],
+        [
             'Test Trash', false,
-        ),
-        array(
+        ],
+        [
             'Foo Bar', '/test-trash',
-        ),
-        array(
+        ],
+        [
             'Test Page 3', false,
-        ),
-        array(
+        ],
+        [
             'Another Page', false, 'alternate', 'right_sidebar',
-        ),
-        array(
+        ],
+        [
             'More Testing', false, 'alternate',
-        ),
-        array(
+        ],
+        [
             'Foobler', '/another-fun-page', 'another',
-        ),
-    );
+        ],
+    ];
 
-    public function __construct($name = null, array $data = array(), $dataName = '')
+    public function __construct($name = null, array $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
 
         // Add extra tables
-        $this->tables = array_merge($this->tables, array(
+        $this->tables = array_merge($this->tables, [
             'PermissionAccessList',
             'PageTypeComposerFormLayoutSets',
             'PermissionAccessEntityTypes',
-        ));
+        ]);
 
         // Add extra metadata
-        $this->metadatas = array_merge($this->metadatas, array(
+        $this->metadatas = array_merge($this->metadatas, [
             \Concrete\Core\Entity\Attribute\Type::class,
             \Concrete\Core\Entity\Attribute\Category::class,
             \Concrete\Core\Entity\Page\Feed::class,
-        ));
+        ]);
     }
 
     public static function setUpBeforeClass()
@@ -86,18 +87,18 @@ class PageListTest extends \PageTestCase
         \Concrete\Core\Permission\Key\Key::add('page', 'view_page', 'View Page', '', 0, 0);
         PageTemplate::add('left_sidebar', 'Left Sidebar');
         PageTemplate::add('right_sidebar', 'Right Sidebar');
-        PageType::add(array(
+        PageType::add([
             'handle' => 'alternate',
             'name' => 'Alternate',
-        ));
-        PageType::add(array(
+        ]);
+        PageType::add([
             'handle' => 'another',
             'name' => 'Another',
-        ));
+        ]);
 
         $self = new static();
         foreach ($self->pageData as $data) {
-            $c = call_user_func_array(array($self, 'createPage'), $data);
+            $c = call_user_func_array([$self, 'createPage'], $data);
             $c->reindex();
         }
     }
@@ -134,7 +135,7 @@ class PageListTest extends \PageTestCase
 
     public function testFilterByTypeValid2()
     {
-        $this->list->filterByPageTypeHandle(array('alternate', 'another'));
+        $this->list->filterByPageTypeHandle(['alternate', 'another']);
         $this->assertEquals(5, $this->list->getTotalResults());
     }
 
@@ -226,13 +227,14 @@ class PageListTest extends \PageTestCase
     {
         $this->list->filterByNumberOfChildren(2, '>=');
         $results = $this->list->getResults();
-        $ids = array_map(function($result) {
+        $ids = array_map(function ($result) {
             return $result->getCollectionID();
         }, $results);
 
         // A function to reduce a list of pages into the minimum child count
-        $minimumChild = function($carry, $value) {
+        $minimumChild = function ($carry, $value) {
             $childCount = $value->getNumChildren();
+
             return ($carry === null || $childCount < $carry) ? $childCount : $carry;
         };
 
@@ -255,7 +257,6 @@ class PageListTest extends \PageTestCase
 
     public function testFilterByActiveAndSystem()
     {
-
         \SinglePage::addGlobal(Config::get('concrete.paths.trash'));
 
         $c = Page::getByPath('/test-trash');
@@ -281,7 +282,6 @@ class PageListTest extends \PageTestCase
         $results = $this->list->getResults();
         $this->assertCount(16, $results);
     }
-
 
     public function testAliases()
     {
@@ -322,7 +322,7 @@ class PageListTest extends \PageTestCase
     public function testIndexedSearch()
     {
         $c = Page::getByPath('/another-fun-page');
-        $c->update(array('cDescription' => 'A page of all pages.'));
+        $c->update(['cDescription' => 'A page of all pages.']);
         $c->reindex();
 
         $this->list->filterByFulltextKeywords('Page');
@@ -330,7 +330,7 @@ class PageListTest extends \PageTestCase
         $results = $this->list->getResults();
         $this->assertCount(6, $results);
 
-        $ids = array_map(function($c) { return $c->getCollectionID(); }, $results);
+        $ids = array_map(function ($c) { return $c->getCollectionID(); }, $results);
         $this->assertContains($c->getCollectionID(), $ids);
 
         $this->assertEquals(8, $results[0]->getCollectionID());

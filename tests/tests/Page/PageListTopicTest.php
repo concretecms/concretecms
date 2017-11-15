@@ -2,12 +2,11 @@
 
 class PageListTopicTest extends PageTestCase
 {
-
-    public function __construct($name = null, array $data = array(), $dataName = '')
+    public function __construct($name = null, array $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
 
-        $this->tables = array_merge($this->tables, array(
+        $this->tables = array_merge($this->tables, [
             'TreeTypes',
             'TopicTrees',
             'TreeNodes',
@@ -19,8 +18,8 @@ class PageListTopicTest extends PageTestCase
             'PermissionAccessEntityGroups',
             'Groups',
             'TreeNodePermissionAssignments',
-        ));
-        $this->metadatas = array_merge($this->metadatas, array(
+        ]);
+        $this->metadatas = array_merge($this->metadatas, [
             'Concrete\Core\Entity\Attribute\Type',
             'Concrete\Core\Entity\Attribute\Category',
             'Concrete\Core\Entity\Attribute\Key\Settings\Settings',
@@ -29,8 +28,7 @@ class PageListTopicTest extends PageTestCase
             'Concrete\Core\Entity\Attribute\Value\Value\SelectedTopic',
             'Concrete\Core\Entity\Attribute\Key\Settings\TopicsSettings',
             'Concrete\Core\Entity\Page\Feed',
-        ));
-
+        ]);
     }
 
     public function setUp()
@@ -38,12 +36,11 @@ class PageListTopicTest extends PageTestCase
         parent::setUp();
 
         $g1 = Group::add(
-            tc("GroupName", "Guest"),
-            tc("GroupDescription", "The guest group represents unregistered visitors to your site."),
+            tc('GroupName', 'Guest'),
+            tc('GroupDescription', 'The guest group represents unregistered visitors to your site.'),
             false,
             false,
             GUEST_GROUP_ID);
-
 
         \Concrete\Core\Attribute\Type::add('topics', 'Topic');
         \Concrete\Core\Tree\TreeType::add('topic');
@@ -79,7 +76,7 @@ class PageListTopicTest extends PageTestCase
 
     public function testFilterByTopic()
     {
-        $topic = \Concrete\Core\Tree\Node\Type\Topic::add("Summer");
+        $topic = \Concrete\Core\Tree\Node\Type\Topic::add('Summer');
         $home = Page::getByID(HOME_CID);
 
         $home->setAttribute('topics', $topic);
@@ -92,8 +89,5 @@ class PageListTopicTest extends PageTestCase
 
         $list->filterByTopic($topic);
         $this->assertEquals(1, $list->getTotalResults());
-
     }
-
-
 }

@@ -6,19 +6,16 @@ use Concrete\Core\Localization\Translator\Translation\TranslationLoaderInterface
 use Concrete\Core\Localization\Translator\TranslatorAdapterInterface;
 
 /**
- * Dummy translation loader for the tests
+ * Dummy translation loader for the tests.
  *
  * @author Antti Hukkanen <antti.hukkanen@mainiotech.fi>
  */
 class DummyTranslationLoader implements TranslationLoaderInterface
 {
-
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function loadTranslations(TranslatorAdapterInterface $translatorAdapter)
     {
-        return;
     }
-
 }

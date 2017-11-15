@@ -2,27 +2,26 @@
 
 namespace Concrete\Tests\Core\Database\EntityManager\Provider;
 
-use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Database\EntityManager\Provider\PackageProviderFactory;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Tests\Core\Database\EntityManager\Provider\Fixtures\PackageControllerDefault;
 use Concrete\Tests\Core\Database\EntityManager\Provider\Fixtures\PackageControllerYaml;
 
 /**
- * PackageProviderFactoryTest
+ * PackageProviderFactoryTest.
  *
  * @author Markus Liechti <markus@liechti.io>
  * @group orm_setup
  */
 class PackageProviderFactoryTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
-     * @var \Concrete\Core\Application\Application 
+     * @var \Concrete\Core\Application\Application
      */
     protected $app;
 
     /**
-     * Setup
+     * Setup.
      */
     public function setUp()
     {
@@ -32,8 +31,8 @@ class PackageProviderFactoryTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test PackageProviderFactory if a package controller with no interfaces is passed
-     * This is de default behavior
-     * 
+     * This is de default behavior.
+     *
      * @covers PackageProviderFactory::getEntityManagerProvider
      */
     public function testGetEntityManagerProviderDefaultBehavior()
@@ -44,9 +43,9 @@ class PackageProviderFactoryTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test PackageProviderFactory if a package controller with a 
-     * ProviderInterface interface is passed
-     * 
+     * Test PackageProviderFactory if a package controller with a
+     * ProviderInterface interface is passed.
+     *
      * @covers PackageProviderFactory::getEntityManagerProvider
      */
     public function testGetEntityManagerProviderWithProviderInterface()
@@ -56,15 +55,14 @@ class PackageProviderFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Concrete\Core\Database\EntityManager\Provider\ProviderInterface', $ppf->getEntityManagerProvider());
     }
 
-    /**
+    /*
      * Test PackageProviderFactory if a package controller with a
      * ProviderAggregateInterface is passed
-     * 
+     *
      * @covers PackageProviderFactory::getEntityManagerProvider
      */
 //    public function testGetEntityManagerProviderWithProviderAggregateInterface()
 //    {
 //        // not yeat coverd
 //    }
-
 }

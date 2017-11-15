@@ -7,13 +7,12 @@ use PHPUnit_Framework_TestCase;
 
 /**
  * Tests for:
- * Concrete\Core\Localization\Translator\Adapter\Plain\TranslatorAdapter
+ * Concrete\Core\Localization\Translator\Adapter\Plain\TranslatorAdapter.
  *
  * @author Antti Hukkanen <antti.hukkanen@mainiotech.fi>
  */
 class TranslatorAdapterTest extends PHPUnit_Framework_TestCase
 {
-
     protected $adapter;
 
     protected function setUp()
@@ -49,8 +48,8 @@ class TranslatorAdapterTest extends PHPUnit_Framework_TestCase
 
     public function testTranslatePlural()
     {
-        $singular = "One Thing";
-        $plural = "Many Things";
+        $singular = 'One Thing';
+        $plural = 'Many Things';
 
         $this->assertEquals($singular, $this->adapter->translatePlural($singular, $plural, 1));
         $this->assertEquals($plural, $this->adapter->translatePlural($singular, $plural, 2));
@@ -60,8 +59,8 @@ class TranslatorAdapterTest extends PHPUnit_Framework_TestCase
 
     public function testFormatTranslatePlural()
     {
-        $singular = "Hello Little Minion!";
-        $plural = "Hello %d Little Minions!";
+        $singular = 'Hello Little Minion!';
+        $plural = 'Hello %d Little Minions!';
 
         $this->assertEquals($singular, $this->adapter->translatePlural($singular, $plural, 1));
         $this->assertEquals(sprintf($plural, 2), $this->adapter->translatePlural($singular, $plural, 2));
@@ -76,5 +75,4 @@ class TranslatorAdapterTest extends PHPUnit_Framework_TestCase
     {
         $this->assertEquals('Test String', $this->adapter->translateContext('context', 'Test %s', 'String'));
     }
-
 }

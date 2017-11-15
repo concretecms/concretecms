@@ -73,6 +73,10 @@ class TextTest extends ConcreteDatabaseTestCase
 
     /**
      * @dataProvider asciifyDataProvider
+     *
+     * @param mixed $expected
+     * @param mixed $input1
+     * @param mixed $input2
      */
     public function testAsciify($expected, $input1, $input2)
     {
@@ -81,6 +85,9 @@ class TextTest extends ConcreteDatabaseTestCase
 
     /**
      * @dataProvider urlifyDataProvider
+     *
+     * @param mixed $expected
+     * @param mixed $input
      */
     public function testUrlify($expected, $input)
     {
@@ -100,6 +107,11 @@ class TextTest extends ConcreteDatabaseTestCase
 
     /**
      * @dataProvider shortenDataProvider
+     *
+     * @param mixed $expected
+     * @param mixed $input1
+     * @param mixed $input2
+     * @param mixed $input3
      */
     public function testShortenTextWord($expected, $input1, $input2, $input3)
     {
@@ -108,6 +120,11 @@ class TextTest extends ConcreteDatabaseTestCase
 
     /**
      * @dataProvider shortenDataProvider
+     *
+     * @param mixed $expected
+     * @param mixed $input1
+     * @param mixed $input2
+     * @param mixed $input3
      */
     public function testWordSafeShortText($expected, $input1, $input2, $input3)
     {
@@ -134,6 +151,11 @@ class TextTest extends ConcreteDatabaseTestCase
 
     /**
      * @dataProvider autolinkDataProvider
+     *
+     * @param mixed $expected
+     * @param mixed $input
+     * @param mixed $newWindow
+     * @param mixed $defaultProtocol
      */
     public function testAutolink($expected, $input, $newWindow = false, $defaultProtocol = 'http://')
     {

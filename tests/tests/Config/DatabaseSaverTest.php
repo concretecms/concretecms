@@ -7,7 +7,7 @@ class DatabaseSaverTest extends ConcreteDatabaseTestCase
     /** @var DatabaseSaver */
     protected $saver;
 
-    protected $tables = array('Config');
+    protected $tables = ['Config'];
 
     public function setUp()
     {
@@ -26,12 +26,12 @@ class DatabaseSaverTest extends ConcreteDatabaseTestCase
         $db = Database::getActiveConnection();
         $result = $db->executeQuery(
             'SELECT configValue FROM Config WHERE configItem=? AND configGroup=?',
-            array($item, $group));
+            [$item, $group]);
 
         $array = (array) $result->fetch();
         $saved_value = array_shift($array);
 
-        $this->assertEquals($value, $saved_value, "Failed to save.");
+        $this->assertEquals($value, $saved_value, 'Failed to save.');
     }
 
     public function testSaveNonUnique()
@@ -46,43 +46,43 @@ class DatabaseSaverTest extends ConcreteDatabaseTestCase
         $db = Database::getActiveConnection();
         $result = $db->executeQuery(
             'SELECT configValue FROM Config WHERE configItem=? AND configGroup=?',
-            array($item, $group1));
+            [$item, $group1]);
 
         $array = (array) $result->fetch();
         $saved_value = array_shift($array);
 
-        $this->assertEquals($value1, $saved_value, "Failed to save.");
+        $this->assertEquals($value1, $saved_value, 'Failed to save.');
 
         $result = $db->executeQuery(
             'SELECT configValue FROM Config WHERE configItem=? AND configGroup=?',
-            array($item, $group2));
+            [$item, $group2]);
 
         $array = (array) $result->fetch();
         $saved_value = array_shift($array);
 
-        $this->assertEquals($value2, $saved_value, "Failed to save.");
+        $this->assertEquals($value2, $saved_value, 'Failed to save.');
     }
 
     public function testSavingArray()
     {
-        $array = array(
+        $array = [
             'test' => true,
             'test2' => true,
-        );
+        ];
 
         $this->saver->save('testing', $array, '', 'test');
 
         $db = Database::getActiveConnection();
         $result = $db->executeQuery(
             'SELECT configValue FROM Config WHERE configItem=? AND configGroup=?',
-            array('testing.test', 'test'));
+            ['testing.test', 'test']);
 
         $array = (array) $result->fetch();
         $saved_value1 = array_shift($array);
 
         $result = $db->executeQuery(
             'SELECT configValue FROM Config WHERE configItem=? AND configGroup=?',
-            array('testing.test', 'test'));
+            ['testing.test', 'test']);
 
         $array = (array) $result->fetch();
         $saved_value2 = array_shift($array);
@@ -94,19 +94,19 @@ class DatabaseSaverTest extends ConcreteDatabaseTestCase
     {
         $group = md5(time() . uniqid());
 
-        $this->saver->save('test.array', array(1, 2), 'testing', $group);
-        $this->saver->save('test.array', array(1), 'testing', $group);
+        $this->saver->save('test.array', [1, 2], 'testing', $group);
+        $this->saver->save('test.array', [1], 'testing', $group);
 
         $db = Database::getActiveConnection();
         $result = $db->executeQuery(
             'SELECT configValue FROM Config WHERE configItem LIKE ? AND configGroup=?',
-            array('test.array%', $group));
+            ['test.array%', $group]);
 
         $array = array_map(function ($item) {
             return $item['configValue'];
         }, (array) $result->fetchAll());
 
-        $this->assertEquals(array(1), $array, "Saver doesn't save correctly");
+        $this->assertEquals([1], $array, "Saver doesn't save correctly");
     }
 
     public function testSavingNamespacedConfig()
@@ -121,11 +121,11 @@ class DatabaseSaverTest extends ConcreteDatabaseTestCase
         $db = Database::getActiveConnection();
         $result = $db->executeQuery(
             'SELECT configValue FROM Config WHERE configItem=? AND configGroup=? AND configNamespace=?',
-            array($item, $group, $namespace));
+            [$item, $group, $namespace]);
 
         $array = (array) $result->fetch();
         $saved_value = array_shift($array);
 
-        $this->assertEquals($value, $saved_value, "Failed to save namespaced item.");
+        $this->assertEquals($value, $saved_value, 'Failed to save namespaced item.');
     }
 }

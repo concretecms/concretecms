@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . "/ResolverTestCase.php";
+require_once __DIR__ . '/ResolverTestCase.php';
 
 class PageUrlResolverTest extends ResolverTestCase
 {
@@ -34,7 +34,7 @@ class PageUrlResolverTest extends ResolverTestCase
             ->willReturn(HOME_CID);
 
         $this->assertEquals(
-            (string) $this->canonicalUrlWithPath('/')->setQuery('cID='.HOME_CID),
+            (string) $this->canonicalUrlWithPath('/')->setQuery('cID=' . HOME_CID),
             (string) $this->urlResolver->resolve([$page]));
     }
 

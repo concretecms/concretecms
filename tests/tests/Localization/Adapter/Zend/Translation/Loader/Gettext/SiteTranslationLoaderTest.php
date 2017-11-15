@@ -1,13 +1,14 @@
 <?php
+
 namespace Concrete\Tests\Core\Localization\Translator\Adapter\Zend\Translation\Loader\Gettext;
 
-use Concrete\Tests\Core\Localization\Translator\Adapter\Zend\Translation\Loader\Gettext\Fixtures\MultilingualDetector;
 use Concrete\Core\Localization\Translator\Adapter\Zend\Translation\Loader\Gettext\SiteTranslationLoader;
 use Concrete\Core\Localization\Translator\Adapter\Zend\TranslatorAdapterFactory;
 use Concrete\Core\Support\Facade\Facade;
+use Concrete\Tests\Core\Localization\Translator\Adapter\Zend\Translation\Loader\Gettext\Fixtures\MultilingualDetector;
+use Concrete\Tests\Localization\LocalizationTestsBase;
 use Illuminate\Filesystem\Filesystem;
 use Symfony\Component\ClassLoader\MapClassLoader;
-use Concrete\Tests\Localization\LocalizationTestsBase;
 
 /**
  * Tests for:
@@ -20,9 +21,9 @@ class SiteTranslationLoaderTest extends LocalizationTestsBase
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
-        $loader = new MapClassLoader(array(
+        $loader = new MapClassLoader([
             'Concrete\\Tests\\Core\\Localization\\Translator\\Adapter\\Zend\\Translation\\Loader\\Gettext\\Fixtures\\MultilingualDetector' => __DIR__ . '/fixtures/MultilingualDetector.php',
-        ));
+        ]);
         $loader->register();
 
         $filesystem = new Filesystem();
@@ -58,6 +59,6 @@ class SiteTranslationLoaderTest extends LocalizationTestsBase
     {
         $this->loader->loadTranslations($this->adapter);
 
-        $this->assertEquals("Tervehdys sivustolta!", $this->adapter->translate("Hello from site!"));
+        $this->assertEquals('Tervehdys sivustolta!', $this->adapter->translate('Hello from site!'));
     }
 }

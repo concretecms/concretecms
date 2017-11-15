@@ -1,17 +1,16 @@
 <?php
+
 namespace Concrete\Tests\Core\Html\Service;
 
 use Concrete\Core\Entity\Package;
-use Concrete\Core\Foundation\Environment;
+use Concrete\Core\Filesystem\FileLocator;
 use Concrete\Core\Package\PackageList;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Support\Facade\Facade;
 use Illuminate\Filesystem\Filesystem;
-use Concrete\Core\Filesystem\FileLocator;
 
 class FileLocatorTest extends \PHPUnit_Framework_TestCase
 {
-
     protected $app;
 
     /**
@@ -50,10 +49,10 @@ class FileLocatorTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         $filesystem->expects($this->exactly(2))
             ->method('exists')
-            ->will($this->returnValueMap(array(
-                array(DIR_APPLICATION . '/' . DIRNAME_ELEMENTS . '/awesome/thing.php', false),
-                array(DIR_PACKAGES . '/awesome/' . DIRNAME_ELEMENTS . '/awesome/thing.php', true),
-            )));
+            ->will($this->returnValueMap([
+                [DIR_APPLICATION . '/' . DIRNAME_ELEMENTS . '/awesome/thing.php', false],
+                [DIR_PACKAGES . '/awesome/' . DIRNAME_ELEMENTS . '/awesome/thing.php', true],
+            ]));
 
         $this->locator->setFilesystem($filesystem);
         $this->locator->addPackageLocation('awesome');
@@ -70,9 +69,9 @@ class FileLocatorTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         $filesystem->expects($this->once())
             ->method('exists')
-            ->will($this->returnValueMap(array(
-                array(DIR_APPLICATION . '/blocks/autonav/view.php', true),
-            )));
+            ->will($this->returnValueMap([
+                [DIR_APPLICATION . '/blocks/autonav/view.php', true],
+            ]));
 
         $this->locator->setFilesystem($filesystem);
         $this->locator->addPackageLocation('awesome');
@@ -87,7 +86,7 @@ class FileLocatorTest extends \PHPUnit_Framework_TestCase
     {
         // First, we create the package list we're going to use. It's going to have three mock packages in it
         $packages = [];
-        foreach(['calendar', 'thumbnails_pro', 'superfish'] as $pkgHandle) {
+        foreach (['calendar', 'thumbnails_pro', 'superfish'] as $pkgHandle) {
             $pkg = new Package();
             $pkg->setPackageHandle($pkgHandle);
             $packages[] = $pkg;
@@ -104,12 +103,11 @@ class FileLocatorTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         $filesystem->expects($this->exactly(3))
             ->method('exists')
-            ->will($this->returnValueMap(array(
-                array(DIR_APPLICATION . '/blocks/page_list/templates/fancy_thumbnails/view.php', false),
-                array(DIR_PACKAGES . '/calendar/blocks/page_list/templates/fancy_thumbnails/view.php', false),
-                array(DIR_PACKAGES . '/thumbnails_pro/blocks/page_list/templates/fancy_thumbnails/view.php', true),
-            )));
-
+            ->will($this->returnValueMap([
+                [DIR_APPLICATION . '/blocks/page_list/templates/fancy_thumbnails/view.php', false],
+                [DIR_PACKAGES . '/calendar/blocks/page_list/templates/fancy_thumbnails/view.php', false],
+                [DIR_PACKAGES . '/thumbnails_pro/blocks/page_list/templates/fancy_thumbnails/view.php', true],
+            ]));
 
         $this->locator->setFilesystem($filesystem);
         $this->locator->addLocation(new FileLocator\AllPackagesLocation($packageList, $filesystem));
@@ -156,10 +154,10 @@ class FileLocatorTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         $filesystem->expects($this->exactly(2))
             ->method('exists')
-            ->will($this->returnValueMap(array(
-                array(DIR_APPLICATION . '/blocks/page_list/templates/fancy_list.php', false),
-                array(DIR_PACKAGES . '/brilliant_theme/themes/brilliant/blocks/page_list/templates/fancy_list.php', true),
-            )));
+            ->will($this->returnValueMap([
+                [DIR_APPLICATION . '/blocks/page_list/templates/fancy_list.php', false],
+                [DIR_PACKAGES . '/brilliant_theme/themes/brilliant/blocks/page_list/templates/fancy_list.php', true],
+            ]));
 
         $this->locator->addLocation(new FileLocator\ThemeLocation($theme));
         $this->locator->setFilesystem($filesystem);
@@ -167,7 +165,6 @@ class FileLocatorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(DIR_BASE . '/packages/brilliant_theme/themes/brilliant/blocks/page_list/templates/fancy_list.php', $record->getFile());
         $this->assertEquals('/path/to/server/packages/brilliant_theme/themes/brilliant/blocks/page_list/templates/fancy_list.php', $record->getUrl());
         $this->assertTrue($record->exists());
-
     }
 
     public function testOverridingConversationElementInPackagedTheme()
@@ -188,10 +185,10 @@ class FileLocatorTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         $filesystem->expects($this->exactly(2))
             ->method('exists')
-            ->will($this->returnValueMap(array(
-                array(DIR_APPLICATION . '/elements/conversation/display.php', false),
-                array(DIR_PACKAGES . '/brilliant_theme/themes/brilliant/elements/concrete/conversation/display.php', true),
-            )));
+            ->will($this->returnValueMap([
+                [DIR_APPLICATION . '/elements/conversation/display.php', false],
+                [DIR_PACKAGES . '/brilliant_theme/themes/brilliant/elements/concrete/conversation/display.php', true],
+            ]));
 
         $this->locator->addLocation(new FileLocator\ThemeElementLocation($theme));
         $this->locator->setFilesystem($filesystem);
@@ -200,7 +197,4 @@ class FileLocatorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('/path/to/server/packages/brilliant_theme/themes/brilliant/elements/concrete/conversation/display.php', $record->getUrl());
         $this->assertTrue($record->exists());
     }
-
-
-
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Tests\Core\Database\Query;
 
 use Concrete\Core\Database\Query\LikeBuilder;
@@ -36,6 +37,11 @@ class LikeBuilderTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider escapeForLikeProvider
+     *
+     * @param mixed $input
+     * @param mixed $wildcardAtStart
+     * @param mixed $wildcardAtEnd
+     * @param mixed $expectedOutput
      */
     public function testEscapeForLike($input, $wildcardAtStart, $wildcardAtEnd, $expectedOutput)
     {
@@ -59,6 +65,11 @@ class LikeBuilderTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider splitKeywordsForLikeProvider
+     *
+     * @param mixed $input
+     * @param mixed $wordSeparators
+     * @param mixed $addWildcards
+     * @param mixed $expectedOutput
      */
     public function testSplitKeywordsForLike($input, $wordSeparators, $addWildcards, $expectedOutput)
     {

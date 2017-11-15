@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Tests\Core\Localization;
 
 use Concrete\Core\Cache\CacheServiceProvider;
@@ -7,18 +8,18 @@ use Concrete\Core\Localization\Translator\Adapter\Plain\TranslatorAdapterFactory
 use Concrete\Core\Localization\Translator\Adapter\Zend\TranslatorAdapterFactory as ZendTranslatorAdapterFactory;
 use Concrete\Core\Localization\Translator\Translation\TranslationLoaderRepository;
 use Concrete\Core\Localization\Translator\TranslatorAdapterRepository;
-use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Support\Facade\Events;
+use Concrete\Core\Support\Facade\Facade;
 use Concrete\Tests\Core\Localization\Fixtures\TestTranslationLoader;
 use Concrete\Tests\Core\Localization\Fixtures\TestUpdatedTranslationLoader;
 use Concrete\Tests\Core\Localization\Translator\Adapter\Zend\Translation\Loader\Gettext\Fixtures\MultilingualDetector;
+use Concrete\Tests\Localization\LocalizationTestsBase;
 use Exception;
 use Illuminate\Filesystem\Filesystem;
 use Punic\Language as PunicLanguage;
 use ReflectionClass;
 use Symfony\Component\ClassLoader\MapClassLoader;
 use Zend\I18n\Translator\Translator as ZendTranslator;
-use Concrete\Tests\Localization\LocalizationTestsBase;
 
 /**
  * Tests for:
@@ -26,7 +27,7 @@ use Concrete\Tests\Localization\LocalizationTestsBase;
  *
  * @author Antti Hukkanen <antti.hukkanen@mainiotech.fi>
  */
-class LocalizationTest extends LocalizationTestsBase
+class Localization2Test extends LocalizationTestsBase
 {
     protected $loc;
 
@@ -39,10 +40,10 @@ class LocalizationTest extends LocalizationTestsBase
         $filesystem = new Filesystem();
         $filesystem->copyDirectory($source, $target);
 
-        $loader = new MapClassLoader(array(
+        $loader = new MapClassLoader([
             'Concrete\\Tests\\Core\\Localization\\Fixtures\\TestTranslationLoader' => __DIR__ . '/fixtures/TestTranslationLoader.php',
             'Concrete\\Tests\\Core\\Localization\\Fixtures\\TestUpdatedTranslationLoader' => __DIR__ . '/fixtures/TestUpdatedTranslationLoader.php',
-        ));
+        ]);
         $loader->register();
     }
 
@@ -194,11 +195,11 @@ class LocalizationTest extends LocalizationTestsBase
         $origDirector = $app->make('director');
 
         $director = $this->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcher')
-            ->setMethods(array('dispatch'))
+            ->setMethods(['dispatch'])
             ->getMock();
 
         // Force the events to use the new director to be bound.
-        Events::clearResolvedInstance("director");
+        Events::clearResolvedInstance('director');
 
         // Make the mock object to be used as the events backend through IoC.
         $app->bindShared('director', function () use ($director) {
@@ -223,7 +224,7 @@ class LocalizationTest extends LocalizationTestsBase
         $this->loc->setLocale('tlh_US');
 
         // After the test has run, make sure the original director is being used.
-        Events::clearResolvedInstance("director");
+        Events::clearResolvedInstance('director');
         $app->bindShared('director', function () use ($origDirector) {
             return $origDirector;
         });
@@ -298,18 +299,18 @@ class LocalizationTest extends LocalizationTestsBase
     {
         $langs = Localization::getAvailableInterfaceLanguages();
         sort($langs);
-        $this->assertEquals(array('en_GB', 'fi_FI', 'fr_FR'), $langs);
+        $this->assertEquals(['en_GB', 'fi_FI', 'fr_FR'], $langs);
     }
 
     public function testStaticGetAvailableInterfaceLanguageDescriptions()
     {
         $displayLocale = Localization::BASE_LOCALE;
-        $expected = array(
+        $expected = [
             'en_US' => PunicLanguage::getName('en_US', $displayLocale),
             'en_GB' => PunicLanguage::getName('en_GB', $displayLocale),
             'fi_FI' => PunicLanguage::getName('fi_FI', $displayLocale),
             'fr_FR' => PunicLanguage::getName('fr_FR', $displayLocale),
-        );
+        ];
 
         $langs = Localization::getAvailableInterfaceLanguageDescriptions();
         $this->assertEquals($expected, $langs);
@@ -318,7 +319,7 @@ class LocalizationTest extends LocalizationTestsBase
     public function testStaticGetLanguageDescription()
     {
         $displayLocale = Localization::BASE_LOCALE;
-        foreach (array('en_GB', 'fi_FI', 'fr_FR') as $locale) {
+        foreach (['en_GB', 'fi_FI', 'fr_FR'] as $locale) {
             $expected = PunicLanguage::getName($locale, $displayLocale);
             $this->assertEquals($expected, Localization::getLanguageDescription($locale, $displayLocale));
         }
@@ -353,7 +354,7 @@ class LocalizationTest extends LocalizationTestsBase
         // loader.
         $adapterFactory = new ZendTranslatorAdapterFactory($loaderRep);
         $adapter = $adapterFactory->createTranslatorAdapter('fi_FI');
-        $adapter->translate("Hello Translator!");
+        $adapter->translate('Hello Translator!');
 
         // Initialize localization and test that the cache is working properly
         // and clearing the cache has the expected result.
@@ -374,14 +375,14 @@ class LocalizationTest extends LocalizationTestsBase
         // should still be using the old translation as it should be coming
         // from the cache (with the Zend adapter).
         $adapter = $loc->getTranslatorAdapter('test');
-        $this->assertEquals("Original String!", $adapter->translate('Hello Translator!'));
+        $this->assertEquals('Original String!', $adapter->translate('Hello Translator!'));
 
         Localization::clearCache();
 
         // After the cache has been cleared, the adapter returned by the
         // localization instance should use the updated translations.
         $adapter = $loc->getTranslatorAdapter('test');
-        $this->assertEquals("Updated String!", $adapter->translate('Hello Translator!'));
+        $this->assertEquals('Updated String!', $adapter->translate('Hello Translator!'));
 
         $config->set('concrete.cache.enabled', false);
 
@@ -442,14 +443,14 @@ class LocalizationTest extends LocalizationTestsBase
 
         $filesystem = new Filesystem();
         if ($filesystem->exists($appLangDir)) {
-            static::markTestSkipped("The site languages directory already exists in the application folder. It should not exist for the testing purposes.");
+            static::markTestSkipped('The site languages directory already exists in the application folder. It should not exist for the testing purposes.');
         }
         $filesystem->copyDirectory($langDir, $appLangDir);
 
         // Make the MultilingualDetector override available
-        $loader = new MapClassLoader(array(
+        $loader = new MapClassLoader([
             'Concrete\\Tests\\Core\\Localization\\Translator\\Adapter\\Zend\\Translation\\Loader\\Gettext\\Fixtures\\MultilingualDetector' => $siteTranslatorLoaderTestPath . '/fixtures/MultilingualDetector.php',
-        ));
+        ]);
         $loader->register();
 
         // Custom Localization instance for these tests
@@ -473,13 +474,13 @@ class LocalizationTest extends LocalizationTestsBase
         // Test setting setup site localization for the active translator
         Localization::setupSiteLocalization();
         $translator = $loc->getActiveTranslatorAdapter();
-        $this->assertEquals("Tervehdys sivustolta!", $translator->translate('Hello from site!'));
+        $this->assertEquals('Tervehdys sivustolta!', $translator->translate('Hello from site!'));
 
         // Test setting setup site localization for custom translator
         $translator = new ZendTranslator();
-        $translator->setLocale("fi_FI");
+        $translator->setLocale('fi_FI');
         Localization::setupSiteLocalization($translator);
-        $this->assertEquals("Tervehdys sivustolta!", $translator->translate('Hello from site!'));
+        $this->assertEquals('Tervehdys sivustolta!', $translator->translate('Hello from site!'));
 
         // Remove the added languages directory
         $filesystem->deleteDirectory($appLangDir);

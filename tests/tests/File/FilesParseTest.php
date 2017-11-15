@@ -2,10 +2,9 @@
 
 class FilesParseTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testFilesParse()
     {
-        foreach ($this->getPhpFiles(DIR_BASE_CORE . "/src") as $file) {
+        foreach ($this->getPhpFiles(DIR_BASE_CORE . '/src') as $file) {
             $this->loadFile(array_shift($file));
         }
     }
@@ -42,5 +41,4 @@ class FilesParseTest extends \PHPUnit_Framework_TestCase
 
         return true;
     }
-
 }

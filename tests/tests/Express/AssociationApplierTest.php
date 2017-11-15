@@ -2,8 +2,7 @@
 
 class AssociationApplierTest extends ConcreteDatabaseTestCase
 {
-
-    protected $tables = array(
+    protected $tables = [
         'Trees',
         'TreeNodes',
         'TreeGroupNodes',
@@ -16,7 +15,7 @@ class AssociationApplierTest extends ConcreteDatabaseTestCase
         'PermissionKeys',
         'PermissionKeyCategories',
         'Groups',
-    );
+    ];
 
     protected $metadatas = [
         'Concrete\Core\Entity\Express\Entity',
@@ -60,6 +59,150 @@ class AssociationApplierTest extends ConcreteDatabaseTestCase
         $factory->add('textarea', 'Textarea');
     }
 
+    public function testOneToMany()
+    {
+        $this->createProjectData();
+
+        // Websites
+        $this->addOneToManyAssociationAndTestIt(1, [6, 8, 11], [
+            1 => [6, 8, 11],
+        ]);
+
+        // Mobile
+        $this->addOneToManyAssociationAndTestIt(3, [12], [
+            1 => [6, 8, 11], 3 => [12],
+        ]);
+
+        // Let's change one
+        $this->addOneToManyAssociationAndTestIt(1, [6, 11], [
+            1 => [6, 11], 3 => [12],
+        ]);
+
+        $this->assertNoCategory(8);
+
+        $this->removeOneToManyAssociationAndTestIt(1);
+
+        $this->addOneToManyAssociationAndTestIt(5, [9, 10], [
+            3 => [12], 5 => [9, 10],
+        ]);
+
+        $this->assertNoCategory(8);
+
+        // Test the final amount of rows in the table
+        $db = \Database::connection();
+        $cnt = $db->getOne('select count(*) from ExpressEntityAssociationSelectedEntries');
+        $this->assertEquals(6, $cnt);
+    }
+
+    public function testOneToManyCategoryUpdate()
+    {
+        // This test is meant to test the following:
+        // We have a one to many category -> project setup. We save two projects against a category
+        // We save another category against one of those projects. At most each project should only
+        // have ONE category.
+
+        $this->createProjectData();
+
+        $this->addOneToManyAssociationAndTestIt(1, [6, 8, 11], [
+            1 => [6, 8, 11],
+        ]);
+
+        $this->addOneToManyAssociationAndTestIt(2, [6], [
+            1 => [8, 11], 2 => [6],
+        ]);
+    }
+
+    public function testManyToOneSaveHandler()
+    {
+        $this->createProjectData();
+
+        $this->addManyToOneAssociationAndTestIt(6, 1, [6]);
+        $this->addManyToOneAssociationAndTestIt(8, 1, [6, 8]);
+        $this->addManyToOneAssociationAndTestIt(11, 1, [6, 8, 11]);
+        $this->addManyToOneAssociationAndTestIt(12, 3, [12]);
+        $this->addManyToOneAssociationAndTestIt(9, 5, [9]);
+        $this->addManyToOneAssociationAndTestIt(10, 5, [9, 10]);
+
+        $this->removeManyToOneAssociationAndTestIt(9);
+        $this->removeManyToOneAssociationAndTestIt(10);
+
+        $this->assertNoCategory(9);
+        $this->assertNoProjects(5);
+
+        $this->addManyToOneAssociationAndTestIt(9, 5, [9]);
+
+        $this->removeManyToOneAssociationAndTestIt(6);
+        $this->removeManyToOneAssociationAndTestIt(8);
+
+        $this->addManyToOneAssociationAndTestIt(9, 1, [11, 9]);
+    }
+
+    public function testMixedManyToOneSaveHandler()
+    {
+        $this->createProjectData();
+
+        $this->addOneToManyAssociationAndTestIt(1, [6, 8, 11], [
+            1 => [6, 8, 11],
+        ]);
+
+        $this->addManyToOneAssociationAndTestIt(8, 3, [8]);
+
+        $this->addOneToManyAssociationAndTestIt(5, [9, 10], [
+            1 => [6, 11], 3 => [8], 5 => [9, 10],
+        ]);
+
+        $this->addManyToOneAssociationAndTestIt(7, 3, [8, 7]);
+    }
+
+    public function testManyToManySaveHandler()
+    {
+        $this->createProjectData('ManyToMany');
+        $this->addManyToManyAssociationAndTestIt(1, [6, 8, 11], [
+            1 => [6, 8, 11],
+        ], [
+            6 => [1],
+            8 => [1],
+            11 => [1],
+        ]);
+        $this->addManyToManyAssociationAndTestIt(7, [1, 3], [
+            1 => [6, 8, 11, 7], 3 => [7],
+        ], [
+            6 => [1],
+            7 => [1, 3],
+            8 => [1],
+            11 => [1],
+        ]);
+
+        $this->addManyToManyAssociationAndTestIt(7, [1, 3, 4], [
+            1 => [6, 8, 11, 7], 3 => [7], 4 => [7],
+        ], [
+            6 => [1],
+            7 => [1, 3, 4],
+            8 => [1],
+            11 => [1],
+        ]);
+
+        $this->addManyToManyAssociationAndTestIt(1, [6], [
+            1 => [6], 3 => [7], 4 => [7],
+        ], [
+            6 => [1],
+            7 => [3, 4],
+        ]);
+
+        $this->assertNoCategories(8);
+        $this->assertNoCategories(11);
+    }
+
+    public function testOneToOneSaveHandler()
+    {
+        $this->createProjectData('OneToOne');
+        $this->addOneToOneAssociationAndTestIt(3, 11);
+        $this->addOneToOneAssociationAndTestIt(8, 1);
+        $this->addOneToOneAssociationAndTestIt(6, 1);
+        $this->addOneToOneAssociationAndTestIt(3, 12);
+        $this->addOneToOneAssociationAndTestIt(1, 8);
+    }
+
     protected function createProjectData($association = 'OneToMany')
     {
         $categoryBuilder = Express::buildObject('category', 'categories', 'Category');
@@ -71,7 +214,7 @@ class AssociationApplierTest extends ConcreteDatabaseTestCase
         $project = $projectBuilder->save();
 
         $builder = $categoryBuilder->buildAssociation();
-        switch($association) {
+        switch ($association) {
             case 'OneToOne':
                 $builder->addOneToOne($projectBuilder);
                 break;
@@ -84,16 +227,16 @@ class AssociationApplierTest extends ConcreteDatabaseTestCase
         }
         $builder->save();
 
-        foreach([
-                    'Web', 'Print', 'Mobile', 'Billboard', 'Broadcast'
+        foreach ([
+                    'Web', 'Print', 'Mobile', 'Billboard', 'Broadcast',
                 ] as $name) {
             $builder = Express::buildEntry($category)
                 ->setCategoryName($name);
             $builder->save();
         }
 
-        foreach([
-                    'Website A', 'Banner Ad', 'Website B', 'Narration', 'Voiceover', 'Website C', 'Game'
+        foreach ([
+                    'Website A', 'Banner Ad', 'Website B', 'Narration', 'Voiceover', 'Website C', 'Game',
                 ] as $name) {
             $builder = Express::buildEntry($project)
                 ->setProjectName($name);
@@ -121,17 +264,17 @@ class AssociationApplierTest extends ConcreteDatabaseTestCase
         Express::refresh($category);
         $projects = $category->getProjects();
         $i = 0;
-        foreach($projects as $project) {
+        foreach ($projects as $project) {
             // we have to do a foreach because sometimes the keys get screwed up by doctrine
             $projectID = $results[$i];
             $this->assertEquals($projectID, $project->getID());
-            $i++;
+            ++$i;
         }
 
         // Also, verify that the amount of entries in the associations table for the inverse matches
         // the count we passed in of the $results variable.
 
-        $count = $db->getOne('select count(*) from ExpressEntityEntryAssociations a inner join ExpressEntityAssociationSelectedEntries ae on a.id = ae.id where a.exEntryID = ?', array($category->getID()));
+        $count = $db->getOne('select count(*) from ExpressEntityEntryAssociations a inner join ExpressEntityAssociationSelectedEntries ae on a.id = ae.id where a.exEntryID = ?', [$category->getID()]);
         $this->assertEquals(count($results), $count);
     }
 
@@ -180,10 +323,10 @@ class AssociationApplierTest extends ConcreteDatabaseTestCase
         // Also, verify that the amount of entries in the associations table for the inverse matches
         // the count we passed in of the $results variable.
 
-        $count = $db->getOne('select count(*) from ExpressEntityEntryAssociations a inner join ExpressEntityAssociationSelectedEntries ae on a.id = ae.id where a.exEntryID = ?', array($category->getID()));
+        $count = $db->getOne('select count(*) from ExpressEntityEntryAssociations a inner join ExpressEntityAssociationSelectedEntries ae on a.id = ae.id where a.exEntryID = ?', [$category->getID()]);
         $this->assertEquals(1, $count);
 
-        $count = $db->getOne('select count(*) from ExpressEntityEntryAssociations a inner join ExpressEntityAssociationSelectedEntries ae on a.id = ae.id where a.exEntryID = ?', array($project->getID()));
+        $count = $db->getOne('select count(*) from ExpressEntityEntryAssociations a inner join ExpressEntityAssociationSelectedEntries ae on a.id = ae.id where a.exEntryID = ?', [$project->getID()]);
         $this->assertEquals(1, $count);
     }
 
@@ -195,8 +338,8 @@ class AssociationApplierTest extends ConcreteDatabaseTestCase
         // Empty One-To-Many
         $entry = Express::getEntry($entryID);
 
-        $entries = array();
-        foreach($associationEntryIDs as $associationEntryID) {
+        $entries = [];
+        foreach ($associationEntryIDs as $associationEntryID) {
             $entries[] = Express::getEntry($associationEntryID);
         }
 
@@ -211,27 +354,26 @@ class AssociationApplierTest extends ConcreteDatabaseTestCase
             $this->debugAndExit();
         }
 
-        foreach($results as $entryID => $associationEntryIDs) {
+        foreach ($results as $entryID => $associationEntryIDs) {
             $entry = Express::getEntry($entryID);
             Express::refresh($entry);
             $projects = $entry->getProjects();
             $this->assertEquals(count($associationEntryIDs), count($projects));
             $i = 0;
-            foreach($projects as $project) {
+            foreach ($projects as $project) {
                 $associationEntryID = $associationEntryIDs[$i];
                 $this->assertEquals($associationEntryID, $project->getId());
-                $i++;
+                ++$i;
             }
 
-
-            foreach($projects as $project) {
+            foreach ($projects as $project) {
                 Express::refresh($project);
                 $category = $project->getCategory();
                 $this->assertEquals($entry->getId(), $category->getID());
 
                 // Also, verify that there is only one database row in the entries table matching the entry ID to
                 // the category
-                $count = $db->getOne('select count(*) from ExpressEntityEntryAssociations a inner join ExpressEntityAssociationSelectedEntries ae on a.id = ae.id where a.exEntryID = ?', array($project->getID()));
+                $count = $db->getOne('select count(*) from ExpressEntityEntryAssociations a inner join ExpressEntityAssociationSelectedEntries ae on a.id = ae.id where a.exEntryID = ?', [$project->getID()]);
                 $this->assertEquals(1, $count);
             }
         }
@@ -245,32 +387,30 @@ class AssociationApplierTest extends ConcreteDatabaseTestCase
         $project = Express::getObjectByHandle('project');
         $list = new \Concrete\Core\Express\EntryList($project);
         $list->ignorePermissions();
-        foreach($list->getResults() as $project) {
+        foreach ($list->getResults() as $project) {
             Express::refresh($project);
             fwrite(STDERR, "Project: {$project->getProjectName()} ({$project->getId()})\n");
             $categoryAssociation = $project->getAssociations()[0];
             if ($categoryAssociation) {
                 $entries = $db->GetCol('select exSelectedEntryID from ExpressEntityAssociationSelectedEntries where id = ?', [$categoryAssociation->getId()]);
-                foreach($entries as $entry) {
+                foreach ($entries as $entry) {
                     fwrite(STDERR, "Found Related Category ID: {$entry}\n");
                 }
             }
-
         }
 
         fwrite(STDERR, "-----------------------------------\n");
 
-
         $category = Express::getObjectByHandle('category');
         $list = new \Concrete\Core\Express\EntryList($category);
         $list->ignorePermissions();
-        foreach($list->getResults() as $category) {
+        foreach ($list->getResults() as $category) {
             Express::refresh($category);
             fwrite(STDERR, "Category: {$category->getCategoryName()} ({$category->getId()})\n");
             $projectAssociation = $category->getAssociations()[0];
             if ($projectAssociation) {
                 $entries = $db->GetCol('select exSelectedEntryID from ExpressEntityAssociationSelectedEntries where id = ?', [$projectAssociation->getId()]);
-                foreach($entries as $entry) {
+                foreach ($entries as $entry) {
                     fwrite(STDERR, "Found Related Project ID: {$entry}\n");
                 }
             }
@@ -287,8 +427,8 @@ class AssociationApplierTest extends ConcreteDatabaseTestCase
         // Empty One-To-Many
         $entry = Express::getEntry($entryID);
 
-        $entries = array();
-        foreach($associationEntryIDs as $associationEntryID) {
+        $entries = [];
+        foreach ($associationEntryIDs as $associationEntryID) {
             $entries[] = Express::getEntry($associationEntryID);
         }
 
@@ -308,85 +448,31 @@ class AssociationApplierTest extends ConcreteDatabaseTestCase
 
         // Now lets see if the results are right.
 
-        foreach($entryResults as $entryID => $associationEntryIDs) {
+        foreach ($entryResults as $entryID => $associationEntryIDs) {
             $entry = Express::getEntry($entryID);
             Express::refresh($entry);
             $projects = $entry->getProjects();
             $this->assertEquals(count($associationEntryIDs), count($projects));
             $i = 0;
-            foreach($projects as $project) {
+            foreach ($projects as $project) {
                 $associationEntryID = $associationEntryIDs[$i];
                 $this->assertEquals($associationEntryID, $project->getId());
-                $i++;
+                ++$i;
             }
         }
 
-        foreach($inverseResults as $entryID => $associationEntryIDs) {
+        foreach ($inverseResults as $entryID => $associationEntryIDs) {
             $entry = Express::getEntry($entryID);
             Express::refresh($entry);
             $categories = $entry->getCategories();
             $this->assertEquals(count($associationEntryIDs), count($categories));
             $i = 0;
-            foreach($categories as $category) {
+            foreach ($categories as $category) {
                 $associationEntryID = $associationEntryIDs[$i];
                 $this->assertEquals($associationEntryID, $category->getId());
-                $i++;
+                ++$i;
             }
         }
-    }
-
-    public function testOneToMany()
-    {
-        $this->createProjectData();
-
-        // Websites
-        $this->addOneToManyAssociationAndTestIt(1, [6, 8, 11], [
-            1 => [6, 8, 11]
-        ]);
-
-        // Mobile
-        $this->addOneToManyAssociationAndTestIt(3, [12], [
-            1 => [6, 8, 11], 3 => [12]
-        ]);
-
-
-        // Let's change one
-        $this->addOneToManyAssociationAndTestIt(1, [6, 11], [
-            1 => [6, 11], 3 => [12]
-        ]);
-
-        $this->assertNoCategory(8);
-
-        $this->removeOneToManyAssociationAndTestIt(1);
-
-        $this->addOneToManyAssociationAndTestIt(5, [9, 10], [
-            3 => [12], 5 => [9, 10]
-        ]);
-
-        $this->assertNoCategory(8);
-
-        // Test the final amount of rows in the table
-        $db = \Database::connection();
-        $cnt = $db->getOne('select count(*) from ExpressEntityAssociationSelectedEntries');
-        $this->assertEquals(6, $cnt);
-    }
-
-    public function testOneToManyCategoryUpdate()
-    {
-        // This test is meant to test the following:
-        // We have a one to many category -> project setup. We save two projects against a category
-        // We save another category against one of those projects. At most each project should only
-        // have ONE category.
-
-        $this->createProjectData();
-
-        $this->addOneToManyAssociationAndTestIt(1, [6, 8, 11], [
-            1 => [6, 8, 11]
-        ]);
-
-        $this->addOneToManyAssociationAndTestIt(2, [6], [
-            1 => [8, 11], 2 => [6]
-        ]);
     }
 
     protected function assertNoCategory($projectID)
@@ -394,7 +480,7 @@ class AssociationApplierTest extends ConcreteDatabaseTestCase
         $project = Express::getEntry($projectID);
         Express::refresh($project);
         $category = $project->getCategory();
-        $this->assertTrue(is_null($category));
+        $this->assertTrue($category === null);
     }
 
     protected function assertNoProjects($categoryID)
@@ -404,7 +490,6 @@ class AssociationApplierTest extends ConcreteDatabaseTestCase
         $projects = $category->getProjects();
         $this->assertCount(0, $projects);
     }
-
 
     protected function assertNoCategories($projectID)
     {
@@ -417,7 +502,6 @@ class AssociationApplierTest extends ConcreteDatabaseTestCase
 
     protected function removeManyToOneAssociationAndTestIt($projectID, $debug = false)
     {
-
         $db = \Database::connection();
         $em = $db->getEntityManager();
 
@@ -438,14 +522,13 @@ class AssociationApplierTest extends ConcreteDatabaseTestCase
         }
 
         $projects = $category->getProjects();
-        foreach($projects as $project) {
+        foreach ($projects as $project) {
             $this->assertTrue($project->getId() != $projectID);
         }
     }
 
     protected function removeOneToManyAssociationAndTestIt($categoryID, $debug = false)
     {
-
         $db = \Database::connection();
         $em = $db->getEntityManager();
 
@@ -464,107 +547,9 @@ class AssociationApplierTest extends ConcreteDatabaseTestCase
             $this->debugAndExit();
         }
 
-        foreach($projects as $project) {
+        foreach ($projects as $project) {
             $category = $project->getCategory();
             $this->assertNull($category);
         }
     }
-
-    public function testManyToOneSaveHandler()
-    {
-        $this->createProjectData();
-
-        $this->addManyToOneAssociationAndTestIt(6, 1, [6]);
-        $this->addManyToOneAssociationAndTestIt(8, 1, [6, 8]);
-        $this->addManyToOneAssociationAndTestIt(11, 1, [6, 8, 11]);
-        $this->addManyToOneAssociationAndTestIt(12, 3, [12]);
-        $this->addManyToOneAssociationAndTestIt(9, 5, [9]);
-        $this->addManyToOneAssociationAndTestIt(10, 5, [9, 10]);
-
-        $this->removeManyToOneAssociationAndTestIt(9);
-        $this->removeManyToOneAssociationAndTestIt(10);
-
-        $this->assertNoCategory(9);
-        $this->assertNoProjects(5);
-
-        $this->addManyToOneAssociationAndTestIt(9, 5, [9]);
-
-        $this->removeManyToOneAssociationAndTestIt(6);
-        $this->removeManyToOneAssociationAndTestIt(8);
-
-        $this->addManyToOneAssociationAndTestIt(9, 1, [11, 9]);
-
-
-    }
-
-    public function testMixedManyToOneSaveHandler()
-    {
-
-        $this->createProjectData();
-
-        $this->addOneToManyAssociationAndTestIt(1, [6, 8, 11], [
-            1 => [6, 8, 11]
-        ]);
-
-        $this->addManyToOneAssociationAndTestIt(8, 3, [8]);
-
-        $this->addOneToManyAssociationAndTestIt(5, [9, 10], [
-            1 => [6, 11], 3 => [8], 5 => [9, 10]
-        ]);
-
-        $this->addManyToOneAssociationAndTestIt(7, 3, [8, 7]);
-    }
-
-    public function testManyToManySaveHandler()
-    {
-        $this->createProjectData('ManyToMany');
-        $this->addManyToManyAssociationAndTestIt(1, [6, 8, 11], [
-            1 => [6, 8, 11],
-        ], [
-            6 => [1],
-            8 => [1],
-            11 => [1]
-        ]);
-        $this->addManyToManyAssociationAndTestIt(7, [1, 3], [
-            1 => [6, 8, 11, 7], 3 => [7]
-        ], [
-            6 => [1],
-            7 => [1, 3],
-            8 => [1],
-            11 => [1],
-        ]);
-
-        $this->addManyToManyAssociationAndTestIt(7, [1, 3, 4], [
-            1 => [6, 8, 11, 7], 3 => [7], 4 => [7]
-        ], [
-            6 => [1],
-            7 => [1, 3, 4],
-            8 => [1],
-            11 => [1],
-        ]);
-
-        $this->addManyToManyAssociationAndTestIt(1, [6], [
-            1 => [6], 3 => [7], 4 => [7]
-        ], [
-            6 => [1],
-            7 => [3, 4],
-        ]);
-
-        $this->assertNoCategories(8);
-        $this->assertNoCategories(11);
-    }
-
-    public function testOneToOneSaveHandler()
-    {
-        $this->createProjectData('OneToOne');
-        $this->addOneToOneAssociationAndTestIt(3, 11);
-        $this->addOneToOneAssociationAndTestIt(8, 1);
-        $this->addOneToOneAssociationAndTestIt(6, 1);
-        $this->addOneToOneAssociationAndTestIt(3, 12);
-        $this->addOneToOneAssociationAndTestIt(1, 8);
-
-    }
-
-
 }
-

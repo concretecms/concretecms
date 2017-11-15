@@ -1,7 +1,7 @@
 <?php
+
 namespace Concrete\Tests\Core\Foundation;
 
-use Concrete\Core\Foundation\ClassLoader;
 use Concrete\Core\Foundation\Environment;
 use Concrete\Core\Support\Facade\Facade;
 
@@ -9,7 +9,6 @@ require_once __DIR__ . '/ClassLoaderTestCase.php';
 
 class OverrideableCoreClassTest extends ClassLoaderTestCase
 {
-
     public function coreClassCoreDataProvider()
     {
         return [
@@ -62,9 +61,9 @@ class OverrideableCoreClassTest extends ClassLoaderTestCase
     {
         return [
             ['recaptcha', 'Core\Captcha\RecaptchaController', DIRNAME_CLASSES . '/Captcha/RecaptchaController.php',
-                '\Concrete\Package\Recaptcha\Src\Captcha\RecaptchaController', '\Concrete\Package\Recaptcha\Captcha\RecaptchaController'],
+                '\Concrete\Package\Recaptcha\Src\Captcha\RecaptchaController', '\Concrete\Package\Recaptcha\Captcha\RecaptchaController', ],
             ['clear_cache', 'MenuItem\ClearCache\Controller', DIRNAME_MENU_ITEMS . '/clear_cache/controller.php',
-                '\Concrete\Package\ClearCache\MenuItem\ClearCache\Controller', '\Concrete\Package\ClearCache\MenuItem\ClearCache\Controller'],
+                '\Concrete\Package\ClearCache\MenuItem\ClearCache\Controller', '\Concrete\Package\ClearCache\MenuItem\ClearCache\Controller', ],
             ['varnish', 'Core\Cache\Page\VarnishPageCache', DIRNAME_CLASSES . '/Cache/Page/VarnishPageCache.php', '\Concrete\Package\Varnish\Src\Cache\Page\VarnishPageCache', '\Concrete\Package\Varnish\Cache\Page\VarnishPageCache'],
             ['mail_users', 'Job\MailUsers', DIRNAME_JOBS . '/mail_users.php', '\Concrete\Package\MailUsers\Job\MailUsers', '\Concrete\Package\MailUsers\Job\MailUsers'],
         ];
@@ -80,6 +79,9 @@ class OverrideableCoreClassTest extends ClassLoaderTestCase
 
     /**
      * @dataProvider coreClassCoreDataProvider()
+     *
+     * @param mixed $fragment
+     * @param mixed $class
      */
     public function testCoreClassCore($fragment, $class)
     {
@@ -88,12 +90,17 @@ class OverrideableCoreClassTest extends ClassLoaderTestCase
     }
 
     /**
-     * Tests both legacy and non-legacy class generation
+     * Tests both legacy and non-legacy class generation.
+     *
      * @dataProvider coreClassPackageDataProvider()
+     *
+     * @param mixed $fragment
+     * @param mixed $prefix
+     * @param mixed $legacyClass
+     * @param mixed $class
      */
     public function testCoreClassPackage($fragment, $prefix, $legacyClass, $class)
     {
-
         $legacyPackage = $this->getMockBuilder('Concrete\Core\Package\Package')
             ->disableOriginalConstructor()
             ->getMock();
@@ -108,15 +115,14 @@ class OverrideableCoreClassTest extends ClassLoaderTestCase
             ->method('shouldEnableLegacyNamespace')
             ->will($this->returnValue(false));
 
-
         $legacyService = $this->getMockBuilder('Concrete\Core\Package\PackageService')
             ->disableOriginalConstructor()
             ->getMock();
         $legacyService->expects($this->any())
             ->method('getClass')
-            ->will($this->returnValueMap(array(
-                array($prefix, $legacyPackage)
-            ))
+            ->will($this->returnValueMap([
+                [$prefix, $legacyPackage],
+            ])
         );
 
         $service = $this->getMockBuilder('Concrete\Core\Package\PackageService')
@@ -124,9 +130,9 @@ class OverrideableCoreClassTest extends ClassLoaderTestCase
             ->getMock();
         $service->expects($this->any())
             ->method('getClass')
-            ->will($this->returnValueMap(array(
-                array($prefix, $package)
-            ))
+            ->will($this->returnValueMap([
+                [$prefix, $package],
+            ])
         );
 
         $app = Facade::getFacadeApplication();
@@ -145,6 +151,10 @@ class OverrideableCoreClassTest extends ClassLoaderTestCase
 
     /**
      * @dataProvider coreClassApplicationDataProvider()
+     *
+     * @param mixed $fragment
+     * @param mixed $legacyClass
+     * @param mixed $class
      */
     public function testCoreClassApplication($fragment, $legacyClass, $class)
     {
@@ -157,6 +167,10 @@ class OverrideableCoreClassTest extends ClassLoaderTestCase
 
     /**
      * @dataProvider overrideableCoreClassCoreDataProvider()
+     *
+     * @param mixed $fragment
+     * @param mixed $path
+     * @param mixed $class
      */
     public function testOverrideableCoreClassCore($fragment, $path, $class)
     {
@@ -164,12 +178,18 @@ class OverrideableCoreClassTest extends ClassLoaderTestCase
     }
 
     /**
-     * Tests both legacy and non-legacy class generation
+     * Tests both legacy and non-legacy class generation.
+     *
      * @dataProvider overrideableCoreClassPackageDataProvider()
+     *
+     * @param mixed $pkgHandle
+     * @param mixed $fragment
+     * @param mixed $path
+     * @param mixed $legacyClass
+     * @param mixed $class
      */
     public function testOverrideableCoreClassPackage($pkgHandle, $fragment, $path, $legacyClass, $class)
     {
-
         $legacyPackage = $this->getMockBuilder('Concrete\Core\Package\Package')
             ->disableOriginalConstructor()
             ->getMock();
@@ -184,15 +204,14 @@ class OverrideableCoreClassTest extends ClassLoaderTestCase
             ->method('shouldEnableLegacyNamespace')
             ->will($this->returnValue(false));
 
-
         $legacyService = $this->getMockBuilder('Concrete\Core\Package\PackageService')
             ->disableOriginalConstructor()
             ->getMock();
         $legacyService->expects($this->any())
             ->method('getClass')
-            ->will($this->returnValueMap(array(
-                array($pkgHandle, $legacyPackage)
-            ))
+            ->will($this->returnValueMap([
+                [$pkgHandle, $legacyPackage],
+            ])
             );
 
         $service = $this->getMockBuilder('Concrete\Core\Package\PackageService')
@@ -200,9 +219,9 @@ class OverrideableCoreClassTest extends ClassLoaderTestCase
             ->getMock();
         $service->expects($this->any())
             ->method('getClass')
-            ->will($this->returnValueMap(array(
-                array($pkgHandle, $package)
-            ))
+            ->will($this->returnValueMap([
+                [$pkgHandle, $package],
+            ])
             );
 
         $app = Facade::getFacadeApplication();
@@ -221,6 +240,11 @@ class OverrideableCoreClassTest extends ClassLoaderTestCase
 
     /**
      * @dataProvider overrideableCoreClassApplicationOverrideDataProvider()
+     *
+     * @param mixed $fragment
+     * @param mixed $path
+     * @param mixed $legacyClass
+     * @param mixed $class
      */
     public function testOverrideableCoreClassApplicationOverride($fragment, $path, $legacyClass, $class)
     {
@@ -239,7 +263,4 @@ class OverrideableCoreClassTest extends ClassLoaderTestCase
 
         $this->cleanUpFile(DIR_APPLICATION, $path);
     }
-
-
-
 }

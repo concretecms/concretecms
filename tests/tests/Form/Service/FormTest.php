@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Tests\Core\Form\Service;
 
 use Core;
@@ -19,19 +20,21 @@ class FormTest extends \PHPUnit_Framework_TestCase
     {
         self::$formHelper = Core::make('helper/form');
     }
+
     protected function setUp()
     {
-        $this->initialState = array(
+        $this->initialState = [
             'get' => $_GET,
             'post' => $_POST,
             'request' => $_REQUEST,
             'requestMethod' => isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : null,
-        );
-        $_GET = array();
-        $_POST = array();
-        $_REQUEST = array();
+        ];
+        $_GET = [];
+        $_POST = [];
+        $_REQUEST = [];
         unset($_SERVER['REQUEST_METHOD']);
     }
+
     protected function tearDown()
     {
         $_GET = $this->initialState['get'];
@@ -45,756 +48,761 @@ class FormTest extends \PHPUnit_Framework_TestCase
 
     public function providerTestCreateElements()
     {
-        return array(
+        return [
             // submit
-            array(
+            [
                 'submit',
-                array('Key', 'Value'),
+                ['Key', 'Value'],
                 '<input type="submit" class="btn ccm-input-submit" id="Key" name="Key" value="Value" />',
-            ),
-            array(
+            ],
+            [
                 'submit',
-                array('Key[]', 'Value'),
+                ['Key[]', 'Value'],
                 '<input type="submit" class="btn ccm-input-submit" id="Key[]" name="Key[]" value="Value" />',
-
-            ),
-            array(
+            ],
+            [
                 'submit',
-                array('Key', 'Value', array('class' => 'MY-CLASS')),
+                ['Key', 'Value', ['class' => 'MY-CLASS']],
                 '<input type="submit" class="MY-CLASS btn ccm-input-submit" id="Key" name="Key" value="Value" />',
-            ),
-            array(
+            ],
+            [
                 'submit',
-                array('Key', 'Value', array(), 'MY-CLASS'),
+                ['Key', 'Value', [], 'MY-CLASS'],
                 '<input type="submit" class="btn ccm-input-submit MY-CLASS" id="Key" name="Key" value="Value" />',
-            ),
+            ],
             // button
-            array(
+            [
                 'button',
-                array('Key', 'Value'),
+                ['Key', 'Value'],
                 '<input type="button" class="btn ccm-input-button" id="Key" name="Key" value="Value" />',
-            ),
-            array(
+            ],
+            [
                 'button',
-                array('Key[]', 'Value'),
+                ['Key[]', 'Value'],
                 '<input type="button" class="btn ccm-input-button" id="Key[]" name="Key[]" value="Value" />',
-            ),
-            array(
+            ],
+            [
                 'button',
-                array('Key', 'Value', array('class' => 'MY-CLASS')),
+                ['Key', 'Value', ['class' => 'MY-CLASS']],
                 '<input type="button" class="MY-CLASS btn ccm-input-button" id="Key" name="Key" value="Value" />',
-            ),
-            array(
+            ],
+            [
                 'button',
-                array('Key', 'Value', array(), 'MY-CLASS'),
+                ['Key', 'Value', [], 'MY-CLASS'],
                 '<input type="button" class="btn ccm-input-button MY-CLASS" id="Key" name="Key" value="Value" />',
-            ),
+            ],
             // label
-            array(
+            [
                 'label',
-                array('ForKey', '<b>label</b>'),
+                ['ForKey', '<b>label</b>'],
                 '<label for="ForKey" class="control-label"><b>label</b></label>',
-            ),
-            array(
+            ],
+            [
                 'label',
-                array('ForKey[]', 'text'),
+                ['ForKey[]', 'text'],
                 '<label for="ForKey[]" class="control-label">text</label>',
-            ),
-            array(
+            ],
+            [
                 'label',
-                array('ForKey', 'text', array()),
+                ['ForKey', 'text', []],
                 '<label for="ForKey" class="control-label">text</label>',
-            ),
-            array(
+            ],
+            [
                 'label',
-                array('ForKey', 'text', array('class' => 'MY-CLASS')),
+                ['ForKey', 'text', ['class' => 'MY-CLASS']],
                 '<label for="ForKey" class="MY-CLASS control-label">text</label>',
-            ),
+            ],
             // file
-            array(
+            [
                 'file',
-                array('Key'),
+                ['Key'],
                 '<input type="file" id="Key" name="Key" value="" class="form-control" />',
-            ),
-            array(
+            ],
+            [
                 'file',
-                array('Key[]'),
+                ['Key[]'],
                 '<input type="file" id="Key[]" name="Key[]" value="" class="form-control" />',
-            ),
-            array(
+            ],
+            [
                 'file',
-                array('Key', array()),
+                ['Key', []],
                 '<input type="file" id="Key" name="Key" value="" class="form-control" />',
-            ),
-            array(
+            ],
+            [
                 'file',
-                array('Key', array('class' => 'MY-CLASS')),
+                ['Key', ['class' => 'MY-CLASS']],
                 '<input type="file" id="Key" name="Key" value="" class="MY-CLASS form-control" />',
-            ),
+            ],
             // hidden
-            array(
+            [
                 'hidden',
-                array('Key'),
+                ['Key'],
                 '<input type="hidden" id="Key" name="Key" value="" />',
-            ),
-            array(
+            ],
+            [
                 'hidden',
-                array('Key', null),
+                ['Key', null],
                 '<input type="hidden" id="Key" name="Key" value="" />',
-            ),
-            array(
+            ],
+            [
                 'hidden',
-                array('Key', null, array('class' => 'MY-CLASS')),
+                ['Key', null, ['class' => 'MY-CLASS']],
                 '<input type="hidden" id="Key" name="Key" class="MY-CLASS" value="" />',
-            ),
-            array(
+            ],
+            [
                 'hidden',
-                array('Key', ''),
+                ['Key', ''],
                 '<input type="hidden" id="Key" name="Key" value="" />',
-            ),
-            array(
+            ],
+            [
                 'hidden',
-                array('Key', '', array('class' => 'MY-CLASS')),
+                ['Key', '', ['class' => 'MY-CLASS']],
                 '<input type="hidden" id="Key" name="Key" class="MY-CLASS" value="" />',
-            ),
-            array(
+            ],
+            [
                 'hidden',
-                array('Key', 'Field value'),
+                ['Key', 'Field value'],
                 '<input type="hidden" id="Key" name="Key" value="Field value" />',
-            ),
-            array(
+            ],
+            [
                 'hidden',
-                array('Key', 'Field value', array('class' => 'MY-CLASS', 'data-my-data' => 'My value')),
+                ['Key', 'Field value', ['class' => 'MY-CLASS', 'data-my-data' => 'My value']],
                 '<input type="hidden" id="Key" name="Key" class="MY-CLASS" data-my-data="My value" value="Field value" />',
-            ),
-            array(
+            ],
+            [
                 'hidden',
-                array('Key', false),
+                ['Key', false],
                 '<input type="hidden" id="Key" name="Key" value="" />',
-            ),
-            array(
+            ],
+            [
                 'hidden',
-                array('Key', 1),
+                ['Key', 1],
                 '<input type="hidden" id="Key" name="Key" value="1" />',
-            ),
-            array(
+            ],
+            [
                 'hidden',
-                array('Key', 'Original value'),
+                ['Key', 'Original value'],
                 '<input type="hidden" id="Key" name="Key" value="Original value" />',
-            ),
-            array(
+            ],
+            [
                 'hidden',
-                array('Key', 'Original value'),
+                ['Key', 'Original value'],
                 '<input type="hidden" id="Key" name="Key" value="" />',
-                array('Key' => ''),
-            ),
-            array(
+                ['Key' => ''],
+            ],
+            [
                 'hidden',
-                array('Key[]'),
+                ['Key[]'],
                 '<input type="hidden" id="Key[]" name="Key[]" value="" />',
-            ),
-            array(
+            ],
+            [
                 'hidden',
-                array('Key', 'Original value'),
+                ['Key', 'Original value'],
                 '<input type="hidden" id="Key" name="Key" value="Received value" />',
-                array('Key' => 'Received value'),
-            ),
-            array(
+                ['Key' => 'Received value'],
+            ],
+            [
                 'hidden',
-                array('Key[subkey1][subkey2]', 'Original value'),
+                ['Key[subkey1][subkey2]', 'Original value'],
                 '<input type="hidden" id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2]" value="Original value" />',
-                array('Key' => 'Received value'),
-            ),
-            array(
+                ['Key' => 'Received value'],
+            ],
+            [
                 'hidden',
-                array('Key[subkey1][subkey2]', 'Original value'),
+                ['Key[subkey1][subkey2]', 'Original value'],
                 '<input type="hidden" id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2]" value="Original value" />',
-                array('Key' => array('subkey1' => 'Received value')),
-            ),
-            array(
+                ['Key' => ['subkey1' => 'Received value']],
+            ],
+            [
                 'hidden',
-                array('Key[subkey1][subkey2]', 'Original value'),
+                ['Key[subkey1][subkey2]', 'Original value'],
                 '<input type="hidden" id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2]" value="Received value" />',
-                array('Key' => array('subkey1' => array('subkey2' => 'Received value'))),
-            ),
-            array(
+                ['Key' => ['subkey1' => ['subkey2' => 'Received value']]],
+            ],
+            [
                 'hidden',
-                array('Key[subkey1][subkey2]', 'Original value'),
+                ['Key[subkey1][subkey2]', 'Original value'],
                 '<input type="hidden" id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2]" value="Original value" />',
-                array('Key' => array('subkey1' => array('subkey2' => array('subkey3' => 'Received value')))),
-            ),
+                ['Key' => ['subkey1' => ['subkey2' => ['subkey3' => 'Received value']]]],
+            ],
             // checkbox
-            array(
+            [
                 'checkbox',
-                array('Key', 'Value'),
+                ['Key', 'Value'],
                 '<input type="checkbox" id="Key" name="Key" class="ccm-input-checkbox" value="Value" />',
-            ),
-            array(
+            ],
+            [
                 'checkbox',
-                array('Key', 'Value', false),
+                ['Key', 'Value', false],
                 '<input type="checkbox" id="Key" name="Key" class="ccm-input-checkbox" value="Value" />',
-            ),
-            array(
+            ],
+            [
                 'checkbox',
-                array('Key', 'Value', null),
+                ['Key', 'Value', null],
                 '<input type="checkbox" id="Key" name="Key" class="ccm-input-checkbox" value="Value" />',
-            ),
-            array(
+            ],
+            [
                 'checkbox',
-                array('Key', 'Value', 0),
+                ['Key', 'Value', 0],
                 '<input type="checkbox" id="Key" name="Key" class="ccm-input-checkbox" value="Value" />',
-            ),
-            array(
+            ],
+            [
                 'checkbox',
-                array('Key', 'Value', '0'),
+                ['Key', 'Value', '0'],
                 '<input type="checkbox" id="Key" name="Key" class="ccm-input-checkbox" value="Value" />',
-            ),
-            array(
+            ],
+            [
                 'checkbox',
-                array('Key', 'Value', true),
+                ['Key', 'Value', true],
                 '<input type="checkbox" id="Key" name="Key" class="ccm-input-checkbox" value="Value" checked="checked" />',
-            ),
-            array(
+            ],
+            [
                 'checkbox',
-                array('Key', 'Value', '1'),
+                ['Key', 'Value', '1'],
                 '<input type="checkbox" id="Key" name="Key" class="ccm-input-checkbox" value="Value" checked="checked" />',
-            ),
-            array(
+            ],
+            [
                 'checkbox',
-                array('Key', 'Value', true),
+                ['Key', 'Value', true],
                 '<input type="checkbox" id="Key" name="Key" class="ccm-input-checkbox" value="Value" />',
-                array('OtherField' => 'Other value'),
-            ),
-            array(
+                ['OtherField' => 'Other value'],
+            ],
+            [
                 'checkbox',
-                array('Key', 'Value', false),
+                ['Key', 'Value', false],
                 '<input type="checkbox" id="Key" name="Key" class="ccm-input-checkbox" value="Value" checked="checked" />',
-                array('Key' => 'Value'),
-            ),
-            array(
+                ['Key' => 'Value'],
+            ],
+            [
                 'checkbox',
-                array('Key', 'Value', false),
+                ['Key', 'Value', false],
                 '<input type="checkbox" id="Key" name="Key" class="ccm-input-checkbox" value="Value" />',
-                array('Key' => ''),
-            ),
-            array(
+                ['Key' => ''],
+            ],
+            [
                 'checkbox',
-                array('Key', 'Value', false),
+                ['Key', 'Value', false],
                 '<input type="checkbox" id="Key" name="Key" class="ccm-input-checkbox" value="Value" />',
-                array('Key' => 'Wrong value'),
-            ),
-            array(
+                ['Key' => 'Wrong value'],
+            ],
+            [
                 'checkbox',
-                array('Key[]', 'Value'),
+                ['Key[]', 'Value'],
                 '<input type="checkbox" id="Key_Value" name="Key[]" class="ccm-input-checkbox" value="Value" />',
-            ),
-            array(
+            ],
+            [
                 'checkbox',
-                array('Key[]', 'Value', true),
+                ['Key[]', 'Value', true],
                 '<input type="checkbox" id="Key_Value" name="Key[]" class="ccm-input-checkbox" value="Value" checked="checked" />',
-            ),
-            array(
+            ],
+            [
                 'checkbox',
-                array('Key[]', 'Value', true),
+                ['Key[]', 'Value', true],
                 '<input type="checkbox" id="Key_Value" name="Key[]" class="ccm-input-checkbox" value="Value" />',
-                array('OtherField' => 'Other value'),
-            ),
-            array(
+                ['OtherField' => 'Other value'],
+            ],
+            [
                 'checkbox',
-                array('Key[]', 'Value', false),
+                ['Key[]', 'Value', false],
                 '<input type="checkbox" id="Key_Value" name="Key[]" class="ccm-input-checkbox" value="Value" checked="checked" />',
-                array('Key' => 'Value'),
-            ),
-            array(
+                ['Key' => 'Value'],
+            ],
+            [
                 'checkbox',
-                array('Key[]', 'Value', false),
+                ['Key[]', 'Value', false],
                 '<input type="checkbox" id="Key_Value" name="Key[]" class="ccm-input-checkbox" value="Value" />',
-                array('Key' => 'Other value'),
-            ),
-            array(
+                ['Key' => 'Other value'],
+            ],
+            [
                 'checkbox',
-                array('Key[]', 'Value', false),
+                ['Key[]', 'Value', false],
                 '<input type="checkbox" id="Key_Value" name="Key[]" class="ccm-input-checkbox" value="Value" checked="checked" />',
-                array('Key' => array('Look', 'for', 'Value', 'in', 'this', 'array')),
-            ),
-            array(
+                ['Key' => ['Look', 'for', 'Value', 'in', 'this', 'array']],
+            ],
+            [
                 'checkbox',
-                array('Key[subkey1][subkey2]', 'Value', false),
+                ['Key[subkey1][subkey2]', 'Value', false],
                 '<input type="checkbox" id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2]" class="ccm-input-checkbox" value="Value" />',
-                array('Key' => 'Value'),
-            ),
-            array(
+                ['Key' => 'Value'],
+            ],
+            [
                 'checkbox',
-                array('Key[subkey1][subkey2]', 'Value', false),
+                ['Key[subkey1][subkey2]', 'Value', false],
                 '<input type="checkbox" id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2]" class="ccm-input-checkbox" value="Value" />',
-                array('Key' => array('subkey1' => 'Value')),
-            ),
-            array(
+                ['Key' => ['subkey1' => 'Value']],
+            ],
+            [
                 'checkbox',
-                array('Key[subkey1][subkey2]', 'Value', false),
+                ['Key[subkey1][subkey2]', 'Value', false],
                 '<input type="checkbox" id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2]" class="ccm-input-checkbox" value="Value" checked="checked" />',
-                array('Key' => array('subkey1' => array('subkey2' => 'Value'))),
-            ),
-            array(
+                ['Key' => ['subkey1' => ['subkey2' => 'Value']]],
+            ],
+            [
                 'checkbox',
-                array('Key[subkey1][subkey2]', 'Value', false),
+                ['Key[subkey1][subkey2]', 'Value', false],
                 '<input type="checkbox" id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2]" class="ccm-input-checkbox" value="Value" checked="checked" />',
-                array('Key' => array('subkey1' => array('subkey2' => array('subkey3' => 'Value')))),
-            ),
-            array(
+                ['Key' => ['subkey1' => ['subkey2' => ['subkey3' => 'Value']]]],
+            ],
+            [
                 'checkbox',
-                array('Key[subkey1][subkey2]', 'Value', false),
+                ['Key[subkey1][subkey2]', 'Value', false],
                 '<input type="checkbox" id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2]" class="ccm-input-checkbox" value="Value" />',
-                array('Key' => array('subkey1' => array('subkey2' => array('subkey3' => 'Other value')))),
-            ),
+                ['Key' => ['subkey1' => ['subkey2' => ['subkey3' => 'Other value']]]],
+            ],
             // textarea
-            array(
+            [
                 'textarea',
-                array('Key'),
+                ['Key'],
                 '<textarea id="Key" name="Key" class="form-control"></textarea>',
-            ),
-            array(
+            ],
+            [
                 'textarea',
-                array('Key', 'Value'),
+                ['Key', 'Value'],
                 '<textarea id="Key" name="Key" class="form-control">Value</textarea>',
-            ),
-            array(
+            ],
+            [
                 'textarea',
-                array('Key', array('class' => 'MY-CLASS')),
+                ['Key', ['class' => 'MY-CLASS']],
                 '<textarea id="Key" name="Key" class="MY-CLASS form-control"></textarea>',
-            ),
-            array(
+            ],
+            [
                 'textarea',
-                array('Key', '', array('class' => 'MY-CLASS')),
+                ['Key', '', ['class' => 'MY-CLASS']],
                 '<textarea id="Key" name="Key" class="MY-CLASS form-control"></textarea>',
-            ),
-            array(
+            ],
+            [
                 'textarea',
-                array('Key', 'Value', array('class' => 'MY-CLASS')),
+                ['Key', 'Value', ['class' => 'MY-CLASS']],
                 '<textarea id="Key" name="Key" class="MY-CLASS form-control">Value</textarea>',
-            ),
-            array(
+            ],
+            [
                 'textarea',
-                array('Key', 'Original value'),
+                ['Key', 'Original value'],
                 '<textarea id="Key" name="Key" class="form-control"></textarea>',
-                array('Key' => ''),
-            ),
-            array(
+                ['Key' => ''],
+            ],
+            [
                 'textarea',
-                array('Key', 'Original value'),
+                ['Key', 'Original value'],
                 '<textarea id="Key" name="Key" class="form-control">Received value</textarea>',
-                array('Key' => 'Received value'),
-            ),
-            array(
+                ['Key' => 'Received value'],
+            ],
+            [
                 'textarea',
-                array('Key[subkey1][subkey2]', 'Original value'),
+                ['Key[subkey1][subkey2]', 'Original value'],
                 '<textarea id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2]" class="form-control">Original value</textarea>',
-                array('Key' => 'Received value'),
-            ),
-            array(
+                ['Key' => 'Received value'],
+            ],
+            [
                 'textarea',
-                array('Key[subkey1][subkey2]', 'Original value'),
+                ['Key[subkey1][subkey2]', 'Original value'],
                 '<textarea id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2]" class="form-control">Original value</textarea>',
-                array('Key' => array('subkey1' => 'Received value')),
-            ),
-            array(
+                ['Key' => ['subkey1' => 'Received value']],
+            ],
+            [
                 'textarea',
-                array('Key[subkey1][subkey2]', 'Original value'),
+                ['Key[subkey1][subkey2]', 'Original value'],
                 '<textarea id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2]" class="form-control">Received value</textarea>',
-                array('Key' => array('subkey1' => array('subkey2' => 'Received value'))),
-            ),
-            array(
+                ['Key' => ['subkey1' => ['subkey2' => 'Received value']]],
+            ],
+            [
                 'textarea',
-                array('Key[subkey1][subkey2]', 'Original value'),
+                ['Key[subkey1][subkey2]', 'Original value'],
                 '<textarea id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2]" class="form-control">Original value</textarea>',
-                array('Key' => array('subkey1' => array('subkey2' => array('subkey3' => 'Received value')))),
-            ),
+                ['Key' => ['subkey1' => ['subkey2' => ['subkey3' => 'Received value']]]],
+            ],
             // radio
-            array(
+            [
                 'radio',
-                array('Key', 'Value'),
+                ['Key', 'Value'],
                 '<input type="radio" id="Key**UNIQUENUMBER**" name="Key" value="Value" class="ccm-input-radio" />',
-            ),
-            array(
+            ],
+            [
                 'radio',
-                array('Key', 'Value', 'Incorrect value'),
+                ['Key', 'Value', 'Incorrect value'],
                 '<input type="radio" id="Key**UNIQUENUMBER**" name="Key" value="Value" class="ccm-input-radio" />',
-            ),
-            array(
+            ],
+            [
                 'radio',
-                array('Key', 'Value', 'Value'),
+                ['Key', 'Value', 'Value'],
                 '<input type="radio" id="Key**UNIQUENUMBER**" name="Key" value="Value" class="ccm-input-radio" checked="checked" />',
-            ),
-            array(
+            ],
+            [
                 'radio',
-                array('Key', 'Value', array('class' => 'MY-CLASS', 'data-custom' => 'My custom data')),
+                ['Key', 'Value', ['class' => 'MY-CLASS', 'data-custom' => 'My custom data']],
                 '<input type="radio" id="Key**UNIQUENUMBER**" name="Key" value="Value" class="MY-CLASS ccm-input-radio" data-custom="My custom data" />',
-            ),
-            array(
+            ],
+            [
                 'radio',
-                array('Key', 'Value', 'Value', array('class' => 'MY-CLASS')),
+                ['Key', 'Value', 'Value', ['class' => 'MY-CLASS']],
                 '<input type="radio" id="Key**UNIQUENUMBER**" name="Key" value="Value" class="MY-CLASS ccm-input-radio" checked="checked" />',
-            ),
-            array(
+            ],
+            [
                 'radio',
-                array('Key', 'Value'),
+                ['Key', 'Value'],
                 '<input type="radio" id="Key**UNIQUENUMBER**" name="Key" value="Value" class="ccm-input-radio" />',
-                array('Key' => ''),
-            ),
-            array(
+                ['Key' => ''],
+            ],
+            [
                 'radio',
-                array('Key', 'Value'),
+                ['Key', 'Value'],
                 '<input type="radio" id="Key**UNIQUENUMBER**" name="Key" value="Value" class="ccm-input-radio" />',
-                array('Key' => 'Invalid value'),
-            ),
-            array(
+                ['Key' => 'Invalid value'],
+            ],
+            [
                 'radio',
-                array('Key', 'Value'),
+                ['Key', 'Value'],
                 '<input type="radio" id="Key**UNIQUENUMBER**" name="Key" value="Value" class="ccm-input-radio" checked="checked" />',
-                array('Key' => 'Value'),
-            ),
-            array(
+                ['Key' => 'Value'],
+            ],
+            [
                 'radio',
-                array('Key', 'Value'),
+                ['Key', 'Value'],
                 '<input type="radio" id="Key**UNIQUENUMBER**" name="Key" value="Value" class="ccm-input-radio" />',
-                array('OtherKey' => 'OtherValue'),
-            ),
-            array(
+                ['OtherKey' => 'OtherValue'],
+            ],
+            [
                 'radio',
-                array('Key[subkey1][subkey2]', 'Value'),
+                ['Key[subkey1][subkey2]', 'Value'],
                 '<input type="radio" id="Key[subkey1][subkey2]**UNIQUENUMBER**" name="Key[subkey1][subkey2]" value="Value" class="ccm-input-radio" checked="checked" />',
-                array('Key' => array('subkey1' => array('subkey2' => 'Value'))),
-            ),
+                ['Key' => ['subkey1' => ['subkey2' => 'Value']]],
+            ],
             // inputType (text, number, email, telephone, url, search, password)
-            array(
+            [
                 'text',
-                array('Key'),
+                ['Key'],
                 '<input type="text" id="Key" name="Key" value="" class="form-control ccm-input-text" />',
-            ),
-            array(
+            ],
+            [
                 'number',
-                array('Key'),
+                ['Key'],
                 '<input type="number" id="Key" name="Key" value="" class="form-control ccm-input-number" />',
-            ),
-            array(
+            ],
+            [
                 'email',
-                array('Key'),
+                ['Key'],
                 '<input type="email" id="Key" name="Key" value="" class="form-control ccm-input-email" />',
-            ),
-            array(
+            ],
+            [
                 'telephone',
-                array('Key'),
+                ['Key'],
                 '<input type="tel" id="Key" name="Key" value="" class="form-control ccm-input-tel" />',
-            ),
-            array(
+            ],
+            [
                 'url',
-                array('Key'),
+                ['Key'],
                 '<input type="url" id="Key" name="Key" value="" class="form-control ccm-input-url" />',
-            ),
-            array(
+            ],
+            [
                 'search',
-                array('Key'),
+                ['Key'],
                 '<input type="search" id="Key" name="Key" value="" class="form-control ccm-input-search" />',
-            ),
-            array(
+            ],
+            [
                 'password',
-                array('Key'),
+                ['Key'],
                 '<input type="password" id="Key" name="Key" value="" class="form-control ccm-input-password" />',
-            ),
-            array(
+            ],
+            [
                 'text',
-                array('Key', null),
+                ['Key', null],
                 '<input type="text" id="Key" name="Key" value="" class="form-control ccm-input-text" />',
-            ),
-            array(
+            ],
+            [
                 'text',
-                array('Key', false),
+                ['Key', false],
                 '<input type="text" id="Key" name="Key" value="" class="form-control ccm-input-text" />',
-            ),
-            array(
+            ],
+            [
                 'text',
-                array('Key', 'Value'),
+                ['Key', 'Value'],
                 '<input type="text" id="Key" name="Key" value="Value" class="form-control ccm-input-text" />',
-            ),
-            array(
+            ],
+            [
                 'text',
-                array('Key', array('data-mine' => 'MY DATA', 'class' => 'MY-CLASS')),
+                ['Key', ['data-mine' => 'MY DATA', 'class' => 'MY-CLASS']],
                 '<input type="text" id="Key" name="Key" value="" data-mine="MY DATA" class="MY-CLASS form-control ccm-input-text" />',
-            ),
-            array(
+            ],
+            [
                 'text',
-                array('Key', 'Value', array('class' => 'MY-CLASS')),
+                ['Key', 'Value', ['class' => 'MY-CLASS']],
                 '<input type="text" id="Key" name="Key" value="Value" class="MY-CLASS form-control ccm-input-text" />',
-            ),
-            array(
+            ],
+            [
                 'text',
-                array('Key', 'Value'),
+                ['Key', 'Value'],
                 '<input type="text" id="Key" name="Key" value="Received value" class="form-control ccm-input-text" />',
-                array('Key' => 'Received value'),
-            ),
-            array(
+                ['Key' => 'Received value'],
+            ],
+            [
                 'text',
-                array('Key', 'Value'),
+                ['Key', 'Value'],
                 '<input type="text" id="Key" name="Key" value="Value" class="form-control ccm-input-text" />',
-                array('OtherKey' => 'Other value'),
-            ),
-            array(
+                ['OtherKey' => 'Other value'],
+            ],
+            [
                 'text',
-                array('Key[subkey1][subkey2]', 'Original value'),
+                ['Key[subkey1][subkey2]', 'Original value'],
                 '<input type="text" id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2]" value="Original value" class="form-control ccm-input-text" />',
-            ),
-            array(
+            ],
+            [
                 'text',
-                array('Key[subkey1][subkey2]', 'Original value'),
+                ['Key[subkey1][subkey2]', 'Original value'],
                 '<input type="text" id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2]" value="Original value" class="form-control ccm-input-text" />',
-                array('OtherKey' => 'Other value'),
-            ),
-            array(
+                ['OtherKey' => 'Other value'],
+            ],
+            [
                 'text',
-                array('Key[subkey1][subkey2]', 'Original value'),
+                ['Key[subkey1][subkey2]', 'Original value'],
                 '<input type="text" id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2]" value="Original value" class="form-control ccm-input-text" />',
-                array('Key' => 'Received value'),
-            ),
-            array(
+                ['Key' => 'Received value'],
+            ],
+            [
                 'text',
-                array('Key[subkey1][subkey2]', 'Original value'),
+                ['Key[subkey1][subkey2]', 'Original value'],
                 '<input type="text" id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2]" value="Original value" class="form-control ccm-input-text" />',
-                array('Key' => array('subkey1' => 'Received value')),
-            ),
-            array(
+                ['Key' => ['subkey1' => 'Received value']],
+            ],
+            [
                 'text',
-                array('Key[subkey1][subkey2]', 'Original value'),
+                ['Key[subkey1][subkey2]', 'Original value'],
                 '<input type="text" id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2]" value="Received value" class="form-control ccm-input-text" />',
-                array('Key' => array('subkey1' => array('subkey2' => 'Received value'))),
-            ),
-            array(
+                ['Key' => ['subkey1' => ['subkey2' => 'Received value']]],
+            ],
+            [
                 'text',
-                array('Key[subkey1][subkey2]', 'Original value'),
+                ['Key[subkey1][subkey2]', 'Original value'],
                 '<input type="text" id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2]" value="Original value" class="form-control ccm-input-text" />',
-                array('Key' => array('subkey1' => array('subkey2' => array('subkey3' => 'Received value')))),
-            ),
+                ['Key' => ['subkey1' => ['subkey2' => ['subkey3' => 'Received value']]]],
+            ],
             // select
-            array(
+            [
                 'select',
-                array('Key', null),
+                ['Key', null],
                 '<select id="Key" name="Key" class="form-control"></select>',
-            ),
-            array(
+            ],
+            [
                 'select',
-                array('Key', false),
+                ['Key', false],
                 '<select id="Key" name="Key" class="form-control"></select>',
-            ),
-            array(
+            ],
+            [
                 'select',
-                array('Key', ''),
+                ['Key', ''],
                 '<select id="Key" name="Key" class="form-control"></select>',
-            ),
-            array(
+            ],
+            [
                 'select',
-                array('Key', array()),
+                ['Key', []],
                 '<select id="Key" name="Key" class="form-control"></select>',
-            ),
-            array(
+            ],
+            [
                 'select',
-                array('Key', array('One' => 'First', 'Two' => 'Second')),
+                ['Key', ['One' => 'First', 'Two' => 'Second']],
                 '<select id="Key" name="Key" class="form-control"><option value="One">First</option><option value="Two">Second</option></select>',
-            ),
-            array(
+            ],
+            [
                 'select',
-                array('Key', array('One' => 'First', 'Two' => 'Second'), 'Two'),
+                ['Key', ['One' => 'First', 'Two' => 'Second'], 'Two'],
                 '<select id="Key" name="Key" ccm-passed-value="Two" class="form-control"><option value="One">First</option><option value="Two" selected="selected">Second</option></select>',
-            ),
-            array(
+            ],
+            [
                 'select',
-                array('Key', array('One' => 'First', 'Two' => 'Second'), array('class' => 'MY-CLASS', 'data-mine' => "MY DATA")),
+                ['Key', ['One' => 'First', 'Two' => 'Second'], ['class' => 'MY-CLASS', 'data-mine' => 'MY DATA']],
                 '<select id="Key" name="Key" class="MY-CLASS form-control" data-mine="MY DATA"><option value="One">First</option><option value="Two">Second</option></select>',
-            ),
-            array(
+            ],
+            [
                 'select',
-                array('Key', array('One' => 'First', 'Two' => 'Second'), 'Two', array('class' => 'MY-CLASS', 'data-mine' => "MY DATA")),
+                ['Key', ['One' => 'First', 'Two' => 'Second'], 'Two', ['class' => 'MY-CLASS', 'data-mine' => 'MY DATA']],
                 '<select id="Key" name="Key" class="MY-CLASS form-control" data-mine="MY DATA" ccm-passed-value="Two"><option value="One">First</option><option value="Two" selected="selected">Second</option></select>',
-            ),
-            array(
+            ],
+            [
                 'select',
-                array('Key', array('One' => 'First', 'Two' => 'Second'), 'Invalid'),
+                ['Key', ['One' => 'First', 'Two' => 'Second'], 'Invalid'],
                 '<select id="Key" name="Key" ccm-passed-value="Invalid" class="form-control"><option value="One">First</option><option value="Two">Second</option></select>',
-            ),
-            array(
+            ],
+            [
                 'select',
-                array('Key', array('One' => 'First', 'Two' => 'Second'), 'Two'),
+                ['Key', ['One' => 'First', 'Two' => 'Second'], 'Two'],
                 '<select id="Key" name="Key" ccm-passed-value="Two" class="form-control"><option value="One">First</option><option value="Two" selected="selected">Second</option></select>',
-                array('OtherField' => 'OtherValue'),
-            ),
-            array(
+                ['OtherField' => 'OtherValue'],
+            ],
+            [
                 'select',
-                array('Key', array('One' => 'First', 'Two' => 'Second'), 'Two'),
+                ['Key', ['One' => 'First', 'Two' => 'Second'], 'Two'],
                 '<select id="Key" name="Key" ccm-passed-value="Two" class="form-control"><option value="One">First</option><option value="Two">Second</option></select>',
-                array('Key' => ''),
-            ),
-            array(
+                ['Key' => ''],
+            ],
+            [
                 'select',
-                array('Key', array('One' => 'First', 'Two' => 'Second'), 'Two'),
+                ['Key', ['One' => 'First', 'Two' => 'Second'], 'Two'],
                 '<select id="Key" name="Key" ccm-passed-value="Two" class="form-control"><option value="One" selected="selected">First</option><option value="Two">Second</option></select>',
-                array('Key' => 'One'),
-            ),
-            array(
+                ['Key' => 'One'],
+            ],
+            [
                 'select',
-                array('Key', array('One' => 'First', 'Two' => 'Second'), 'Two'),
+                ['Key', ['One' => 'First', 'Two' => 'Second'], 'Two'],
                 '<select id="Key" name="Key" ccm-passed-value="Two" class="form-control"><option value="One">First</option><option value="Two">Second</option></select>',
-                array('Key' => 'Invalid'),
-            ),
-            array(
+                ['Key' => 'Invalid'],
+            ],
+            [
                 'select',
-                array('Key[subkey1][subkey2]', array('One' => 'First', 'Two' => 'Second'), 'Two'),
+                ['Key[subkey1][subkey2]', ['One' => 'First', 'Two' => 'Second'], 'Two'],
                 '<select id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2]" ccm-passed-value="Two" class="form-control"><option value="One">First</option><option value="Two" selected="selected">Second</option></select>',
-                array('Key' => 'One'),
-            ),
-            array(
+                ['Key' => 'One'],
+            ],
+            [
                 'select',
-                array('Key[subkey1][subkey2]', array('One' => 'First', 'Two' => 'Second'), 'Two'),
+                ['Key[subkey1][subkey2]', ['One' => 'First', 'Two' => 'Second'], 'Two'],
                 '<select id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2]" ccm-passed-value="Two" class="form-control"><option value="One">First</option><option value="Two" selected="selected">Second</option></select>',
-                array('Key' => array('subkey1' => 'One')),
-            ),
-            array(
+                ['Key' => ['subkey1' => 'One']],
+            ],
+            [
                 'select',
-                array('Key[subkey1][subkey2]', array('One' => 'First', 'Two' => 'Second'), 'Two'),
+                ['Key[subkey1][subkey2]', ['One' => 'First', 'Two' => 'Second'], 'Two'],
                 '<select id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2]" ccm-passed-value="Two" class="form-control"><option value="One" selected="selected">First</option><option value="Two">Second</option></select>',
-                array('Key' => array('subkey1' => array('subkey2' => 'One'))),
-            ),
-            array(
+                ['Key' => ['subkey1' => ['subkey2' => 'One']]],
+            ],
+            [
                 'select',
-                array('Key[subkey1][subkey2]', array('One' => 'First', 'Two' => 'Second'), 'Two'),
+                ['Key[subkey1][subkey2]', ['One' => 'First', 'Two' => 'Second'], 'Two'],
                 '<select id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2]" ccm-passed-value="Two" class="form-control"><option value="One">First</option><option value="Two">Second</option></select>',
-                array('Key' => array('subkey1' => array('subkey2' => array('subkey3' => 'One')))),
-            ),
+                ['Key' => ['subkey1' => ['subkey2' => ['subkey3' => 'One']]]],
+            ],
             // selectMultiple
-            array(
+            [
                 'selectMultiple',
-                array('Key', null),
+                ['Key', null],
                 '<select id="Key" name="Key[]" multiple="multiple" class="form-control"></select>',
-            ),
-            array(
+            ],
+            [
                 'selectMultiple',
-                array('Key', array()),
+                ['Key', []],
                 '<select id="Key" name="Key[]" multiple="multiple" class="form-control"></select>',
-            ),
-            array(
+            ],
+            [
                 'selectMultiple',
-                array('Key', array('One' => 'First', 'Two' => 'Second')),
+                ['Key', ['One' => 'First', 'Two' => 'Second']],
                 '<select id="Key" name="Key[]" multiple="multiple" class="form-control"><option value="One">First</option><option value="Two">Second</option></select>',
-            ),
-            array(
+            ],
+            [
                 'selectMultiple',
-                array('Key', array('One' => 'First', 'Two' => 'Second'), false),
+                ['Key', ['One' => 'First', 'Two' => 'Second'], false],
                 '<select id="Key" name="Key[]" multiple="multiple" class="form-control"><option value="One">First</option><option value="Two">Second</option></select>',
-            ),
-            array(
+            ],
+            [
                 'selectMultiple',
-                array('Key', array('One' => 'First', 'Two' => 'Second'), null),
+                ['Key', ['One' => 'First', 'Two' => 'Second'], null],
                 '<select id="Key" name="Key[]" multiple="multiple" class="form-control"><option value="One">First</option><option value="Two">Second</option></select>',
-            ),
-            array(
+            ],
+            [
                 'selectMultiple',
-                array('Key', array('One' => 'First', 'Two' => 'Second'), array()),
+                ['Key', ['One' => 'First', 'Two' => 'Second'], []],
                 '<select id="Key" name="Key[]" multiple="multiple" class="form-control"><option value="One">First</option><option value="Two">Second</option></select>',
-            ),
-            array(
+            ],
+            [
                 'selectMultiple',
-                array('Key', array('One' => 'First', 'Two' => 'Second'), false, array('data-mine' => 'MY DATA', 'class' => 'MY-CLASS')),
+                ['Key', ['One' => 'First', 'Two' => 'Second'], false, ['data-mine' => 'MY DATA', 'class' => 'MY-CLASS']],
                 '<select id="Key" name="Key[]" multiple="multiple" data-mine="MY DATA" class="MY-CLASS form-control"><option value="One">First</option><option value="Two">Second</option></select>',
-            ),
-            array(
+            ],
+            [
                 'selectMultiple',
-                array('Key', array('One' => 'First', 'Two' => 'Second'), 'Two'),
+                ['Key', ['One' => 'First', 'Two' => 'Second'], 'Two'],
                 '<select id="Key" name="Key[]" multiple="multiple" class="form-control"><option value="One">First</option><option value="Two" selected="selected">Second</option></select>',
-            ),
-            array(
+            ],
+            [
                 'selectMultiple',
-                array('Key', array('One' => 'First', 'Two' => 'Second'), array('Two')),
+                ['Key', ['One' => 'First', 'Two' => 'Second'], ['Two']],
                 '<select id="Key" name="Key[]" multiple="multiple" class="form-control"><option value="One">First</option><option value="Two" selected="selected">Second</option></select>',
-            ),
-            array(
+            ],
+            [
                 'selectMultiple',
-                array('Key', array('One' => 'First', 'Two' => 'Second'), array('Invalid')),
+                ['Key', ['One' => 'First', 'Two' => 'Second'], ['Invalid']],
                 '<select id="Key" name="Key[]" multiple="multiple" class="form-control"><option value="One">First</option><option value="Two">Second</option></select>',
-            ),
-            array(
+            ],
+            [
                 'selectMultiple',
-                array('Key', array('One' => 'First', 'Two' => 'Second'), array('Two', 'One')),
+                ['Key', ['One' => 'First', 'Two' => 'Second'], ['Two', 'One']],
                 '<select id="Key" name="Key[]" multiple="multiple" class="form-control"><option value="One" selected="selected">First</option><option value="Two" selected="selected">Second</option></select>',
-            ),
-            array(
+            ],
+            [
                 'selectMultiple',
-                array('Key', array('One' => 'First', 'Two' => 'Second')),
+                ['Key', ['One' => 'First', 'Two' => 'Second']],
                 '<select id="Key" name="Key[]" multiple="multiple" class="form-control"><option value="One" selected="selected">First</option><option value="Two">Second</option></select>',
-                array('Key' => 'One'),
-            ),
-            array(
+                ['Key' => 'One'],
+            ],
+            [
                 'selectMultiple',
-                array('Key', array('One' => 'First', 'Two' => 'Second')),
+                ['Key', ['One' => 'First', 'Two' => 'Second']],
                 '<select id="Key" name="Key[]" multiple="multiple" class="form-control"><option value="One">First</option><option value="Two">Second</option></select>',
-                array('Key' => array()),
-            ),
-            array(
+                ['Key' => []],
+            ],
+            [
                 'selectMultiple',
-                array('Key', array('One' => 'First', 'Two' => 'Second')),
+                ['Key', ['One' => 'First', 'Two' => 'Second']],
                 '<select id="Key" name="Key[]" multiple="multiple" class="form-control"><option value="One" selected="selected">First</option><option value="Two">Second</option></select>',
-                array('Key' => array('One')),
-            ),
-            array(
+                ['Key' => ['One']],
+            ],
+            [
                 'selectMultiple',
-                array('Key', array('One' => 'First', 'Two' => 'Second'), 'Two'),
+                ['Key', ['One' => 'First', 'Two' => 'Second'], 'Two'],
                 '<select id="Key" name="Key[]" multiple="multiple" class="form-control"><option value="One" selected="selected">First</option><option value="Two">Second</option></select>',
-                array('Key' => array('One')),
-            ),
-            array(
+                ['Key' => ['One']],
+            ],
+            [
                 'selectMultiple',
-                array('Key', array('One' => 'First', 'Two' => 'Second')),
+                ['Key', ['One' => 'First', 'Two' => 'Second']],
                 '<select id="Key" name="Key[]" multiple="multiple" class="form-control"><option value="One" selected="selected">First</option><option value="Two" selected="selected">Second</option></select>',
-                array('Key' => array('One', 'Two')),
-            ),
-            array(
+                ['Key' => ['One', 'Two']],
+            ],
+            [
                 'selectMultiple',
-                array('Key', array('One' => 'First', 'Two' => 'Second'), 'Two'),
+                ['Key', ['One' => 'First', 'Two' => 'Second'], 'Two'],
                 '<select id="Key" name="Key[]" multiple="multiple" class="form-control"><option value="One" selected="selected">First</option><option value="Two" selected="selected">Second</option></select>',
-                array('Key' => array('One', 'Two')),
-            ),
-            array(
+                ['Key' => ['One', 'Two']],
+            ],
+            [
                 'selectMultiple',
-                array('Key[subkey1][subkey2]', array('One' => 'First', 'Two' => 'Second'), 'Two'),
+                ['Key[subkey1][subkey2]', ['One' => 'First', 'Two' => 'Second'], 'Two'],
                 '<select id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2][]" multiple="multiple" class="form-control"><option value="One">First</option><option value="Two" selected="selected">Second</option></select>',
-                array('Key' => array('One')),
-            ),
-            array(
+                ['Key' => ['One']],
+            ],
+            [
                 'selectMultiple',
-                array('Key[subkey1][subkey2]', array('One' => 'First', 'Two' => 'Second'), 'Two'),
+                ['Key[subkey1][subkey2]', ['One' => 'First', 'Two' => 'Second'], 'Two'],
                 '<select id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2][]" multiple="multiple" class="form-control"><option value="One">First</option><option value="Two" selected="selected">Second</option></select>',
-                array('Key' => array('subkey1' => array('One'))),
-            ),
-            array(
+                ['Key' => ['subkey1' => ['One']]],
+            ],
+            [
                 'selectMultiple',
-                array('Key[subkey1][subkey2]', array('One' => 'First', 'Two' => 'Second'), 'Two'),
+                ['Key[subkey1][subkey2]', ['One' => 'First', 'Two' => 'Second'], 'Two'],
                 '<select id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2][]" multiple="multiple" class="form-control"><option value="One" selected="selected">First</option><option value="Two">Second</option></select>',
-                array('Key' => array('subkey1' => array('subkey2' => array('One')))),
-            ),
-            array(
+                ['Key' => ['subkey1' => ['subkey2' => ['One']]]],
+            ],
+            [
                 'selectMultiple',
-                array('Key[subkey1][subkey2]', array('One' => 'First', 'Two' => 'Second'), 'Two'),
+                ['Key[subkey1][subkey2]', ['One' => 'First', 'Two' => 'Second'], 'Two'],
                 '<select id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2][]" multiple="multiple" class="form-control"><option value="One" selected="selected">First</option><option value="Two">Second</option></select>',
-                array('Key' => array('subkey1' => array('subkey2' => array('subkey3' => 'One')))),
-            ),
-            array(
+                ['Key' => ['subkey1' => ['subkey2' => ['subkey3' => 'One']]]],
+            ],
+            [
                 'selectMultiple',
-                array('Key[subkey1][subkey2]', array('One' => 'First', 'Two' => 'Second'), 'Two'),
+                ['Key[subkey1][subkey2]', ['One' => 'First', 'Two' => 'Second'], 'Two'],
                 '<select id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2][]" multiple="multiple" class="form-control"><option value="One">First</option><option value="Two">Second</option></select>',
-                array('Key' => array('subkey1' => array('subkey2' => array('subkey3' => array('One'))))),
-            ),
-        );
+                ['Key' => ['subkey1' => ['subkey2' => ['subkey3' => ['One']]]]],
+            ],
+        ];
     }
+
     /**
      * @dataProvider providerTestCreateElements
+     *
+     * @param mixed $method
+     * @param array $args
+     * @param mixed $expected
+     * @param array $post
      */
-    public function testCreateElements($method, array $args, $expected, array $post = array())
+    public function testCreateElements($method, array $args, $expected, array $post = [])
     {
         if (!empty($post)) {
             $_SERVER['REQUEST_METHOD'] = 'POST';
@@ -803,7 +811,7 @@ class FormTest extends \PHPUnit_Framework_TestCase
                 $_POST[$k] = $v;
             }
         }
-        $calculated = call_user_func_array(array(static::$formHelper, $method), $args);
+        $calculated = call_user_func_array([static::$formHelper, $method], $args);
         if (strpos($expected, '**UNIQUENUMBER**') === false) {
             $this->assertSame($expected, $calculated);
         } else {

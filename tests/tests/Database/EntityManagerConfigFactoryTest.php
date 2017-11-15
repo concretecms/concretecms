@@ -3,23 +3,22 @@
 namespace Concrete\Tests\Core\Database;
 
 use Concrete\Core\Support\Facade\Application;
-use Illuminate\Filesystem\Filesystem;
 
 /**
- * EntityManagerConfigFactoryTest
+ * EntityManagerConfigFactoryTest.
  *
  * @author Markus Liechti <markus@liechti.io>
  * @group orm_setup
  */
 class EntityManagerConfigFactoryTest extends \PHPUnit_Framework_TestCase
-{     
+{
     /**
-     * @var \Concrete\Core\Application\Application 
+     * @var \Concrete\Core\Application\Application
      */
     protected $app;
-    
+
     /**
-     * Setup
+     * Setup.
      */
     public function setUp()
     {
@@ -28,17 +27,17 @@ class EntityManagerConfigFactoryTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test the default metadata implementation for the Core classes
+     * Test the default metadata implementation for the Core classes.
      */
     public function testGetConfigurationDefaultSettingsForTheCore()
     {
         $entityManagerConfigFactory = $this->app->make('Concrete\Core\Database\EntityManagerConfigFactory');
-        $driverChain                = $entityManagerConfigFactory->getMetadataDriverImpl();
+        $driverChain = $entityManagerConfigFactory->getMetadataDriverImpl();
         $this->assertInstanceOf('Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain',
             $driverChain, 'Is not a Doctrine ORM MappingDriverChain');
 
         // mitgrated to Database/EntityManager/Driver/CoreDriverTest
-        // 
+        //
 //        $drivers                    = $driverChain->getDrivers();
 //
 //        $this->assertArrayHasKey('Concrete\Core\Entity', $drivers);
@@ -60,19 +59,18 @@ class EntityManagerConfigFactoryTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test the default metadata implementation for the Application classes
+     * Test the default metadata implementation for the Application classes.
      */
     public function testGetConfigurationDefaultSettingsForTheApplication()
     {
-
         $root = dirname(DIR_BASE_CORE . '../');
         mkdir($root . '/application/src/Entity', 0777, true);
 
         $entityManagerConfigFactory = $this->app->make('Concrete\Core\Database\EntityManagerConfigFactory');
-        $driverChain                = $entityManagerConfigFactory->getMetadataDriverImpl();
+        $driverChain = $entityManagerConfigFactory->getMetadataDriverImpl();
         $this->assertInstanceOf('Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain',
             $driverChain, 'Is not a Doctrine ORM MappingDriverChain');
-        $drivers                    = $driverChain->getDrivers();
+        $drivers = $driverChain->getDrivers();
         $this->assertArrayHasKey('Application\Entity', $drivers);
 
         // Test if the correct MetadataDriver and MetadataReader are present
@@ -97,8 +95,8 @@ class EntityManagerConfigFactoryTest extends \PHPUnit_Framework_TestCase
         \Config::save('app.enable_legacy_src_namespace', true);
 
         $entityManagerConfigFactory = $this->app->make('Concrete\Core\Database\EntityManagerConfigFactory');
-        $driverChain                = $entityManagerConfigFactory->getMetadataDriverImpl();
-        $drivers                    = $driverChain->getDrivers();
+        $driverChain = $entityManagerConfigFactory->getMetadataDriverImpl();
+        $drivers = $driverChain->getDrivers();
         $this->assertArrayHasKey('Application\Src', $drivers);
 
         // Test if the correct MetadataDriver and MetadataReader are present
@@ -116,20 +114,18 @@ class EntityManagerConfigFactoryTest extends \PHPUnit_Framework_TestCase
             $driverPaths[0]);
 
         \Config::save('app.enable_legacy_src_namespace', false);
-
     }
 
     /**
      * Test the metadata implementation for entities located under application/src/Entity with YAML driver
-     * In this case the folder application/config/xml is not present so it will fallback to default
+     * In this case the folder application/config/xml is not present so it will fallback to default.
      *
      * @dataProvider dataProviderGetConfigurationWithApplicationYmlDriver
-     * 
-     * @param string|integer $setting
+     *
+     * @param string|int $setting
      */
     public function testGetConfigurationWithApplicationYmlDriverFallbackToDefault($setting)
     {
-
         $entityManagerConfigFactory = $this->getEntityManagerFactoryWithStubConfigRepository($setting);
 
         // Test if the correct MetadataDriver and MetadataReader are present
@@ -144,7 +140,6 @@ class EntityManagerConfigFactoryTest extends \PHPUnit_Framework_TestCase
             $defaultAnnotationReader,
             'AnnotationReader is not cached. For performance reasons, it should be wrapped in a CachedReader');
 
-
         // Test if the driver contains the default lookup path
         $driverPaths = $defaultAnnotationDriver->getPaths();
         $this->assertEquals(DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES,
@@ -153,23 +148,22 @@ class EntityManagerConfigFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function dataProviderGetConfigurationWithApplicationYmlDriver()
     {
-        return array(
-            array('yml'),
-            array('yaml'),
-        );
+        return [
+            ['yml'],
+            ['yaml'],
+        ];
     }
 
     /**
      * Test the metadata implementation for entities located under application/src with Xml driver
-     * In this case the folder application/config/xml is not present so it will fallback to default
+     * In this case the folder application/config/xml is not present so it will fallback to default.
      *
      * @dataProvider dataProviderGetConfigurationWithApplicationXmlDriver
-     * 
-     * @param string|integer $setting
+     *
+     * @param string|int $setting
      */
     public function testGetConfigurationWithApplicationXmlDriverFallbackToDefault($setting)
     {
-
         $entityManagerConfigFactory = $this->getEntityManagerFactoryWithStubConfigRepository($setting);
 
         // Test if the correct MetadataDriver and MetadataReader are present
@@ -191,17 +185,16 @@ class EntityManagerConfigFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function dataProviderGetConfigurationWithApplicationXmlDriver()
     {
-        return array(
-            array('xml'),
-        );
+        return [
+            ['xml'],
+        ];
     }
 
-
     /**
-     * Create the EntityManagerFactory with stub ConfigRepository option
+     * Create the EntityManagerFactory with stub ConfigRepository option.
      *
      * @param array $setting with data from the dataProvider
-     * 
+     *
      * @return \Concrete\Core\Database\EntityManagerConfigFactory
      */
     protected function getEntityManagerFactoryWithStubConfigRepository($setting)
@@ -213,7 +206,7 @@ class EntityManagerConfigFactoryTest extends \PHPUnit_Framework_TestCase
         $configRepoStub->method('get')
             ->will($this->onConsecutiveCalls(
                     false,
-                    array(),
+                    [],
                     false,
                     $setting
                 ));
@@ -221,7 +214,6 @@ class EntityManagerConfigFactoryTest extends \PHPUnit_Framework_TestCase
 
         return $entityManagerConfigFactory;
     }
-
 
     // Test a package with no classes
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\User\Group\AutomatedGroup;
 
 use Concrete\Core\User\Group\GroupAutomationController;

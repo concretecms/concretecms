@@ -1,30 +1,23 @@
 <?php
+
 namespace Concrete\Tests\Core\Site;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Cache\Level\RequestCache;
-use Concrete\Core\Config\FileLoader;
-use Concrete\Core\Config\FileSaver;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Entity\Site\Type;
-use Concrete\Core\Page\Page;
-use Concrete\Core\Site\Resolver\Resolver;
 use Concrete\Core\Site\Resolver\ResolverFactory;
 use Concrete\Core\Site\Resolver\StandardDriver;
 use Concrete\Core\Site\Service;
 use Concrete\Theme\Elemental\PageTheme;
-use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
-use Illuminate\Filesystem\Filesystem;
-use Stash\Driver\BlackHole;
 use Stash\Driver\Ephemeral;
 use Stash\Pool;
 
 class SiteTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testService()
     {
         $service = \Core::make('site');
@@ -71,7 +64,6 @@ class SiteTest extends \PHPUnit_Framework_TestCase
 
     public function testAdd()
     {
-
         // Last, mock the EntityManager to return the mock of the repository
         $entityManager = $this
             ->getMockBuilder(EntityManager::class)
@@ -104,7 +96,6 @@ class SiteTest extends \PHPUnit_Framework_TestCase
 
     public function testInstall()
     {
-
         $entityManager = $this
             ->getMockBuilder(EntityManager::class)
             ->disableOriginalConstructor()
@@ -134,10 +125,10 @@ class SiteTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         $app->expects($this->any())
             ->method('make')
-            ->will($this->returnValueMap(array(
-                array('site/type', [], $type_service),
-                array('cache/request', [], $cache)
-            )));
+            ->will($this->returnValueMap([
+                ['site/type', [], $type_service],
+                ['cache/request', [], $cache],
+            ]));
 
         $config = \Core::make('config');
         $factory = new ResolverFactory($app, new StandardDriver(\Core::make('Concrete\Core\Site\Factory')));
@@ -185,5 +176,4 @@ class SiteTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($default, $retrieved);
     }
-
 }

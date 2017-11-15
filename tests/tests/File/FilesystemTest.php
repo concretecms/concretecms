@@ -1,14 +1,14 @@
 <?php
+
 namespace Concrete\Tests\Core\File;
 
 use Concrete\Core\File\Filesystem;
 
 class FilesystemTest extends \ConcreteDatabaseTestCase
 {
-
     protected $filesystem;
 
-    protected $tables = array(
+    protected $tables = [
         'Trees',
         'TreeTypes',
         'TreeNodeTypes',
@@ -16,7 +16,7 @@ class FilesystemTest extends \ConcreteDatabaseTestCase
         'PermissionKeys',
         'PermissionKeyCategories',
         'TreeNodePermissionAssignments',
-    );
+    ];
 
     public function setUp()
     {
@@ -40,5 +40,4 @@ class FilesystemTest extends \ConcreteDatabaseTestCase
         $this->assertEquals(1, $folder->getTreeNodeParentID());
         $this->assertEquals('Test Sub Folder', $folder->getTreeNodeDisplayName());
     }
-
 }

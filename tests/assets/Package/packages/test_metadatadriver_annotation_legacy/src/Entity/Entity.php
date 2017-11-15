@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Package\TestMetadatadriverAnnotationLegacy\Src\Entity;
 
 /**
@@ -11,7 +12,7 @@ class Entity
      * @Id @Column(type="integer")
      * @GeneratedValue(strategy="AUTO")
      *
-     * @var integer
+     * @var int
      */
     protected $id;
 
@@ -23,9 +24,9 @@ class Entity
     protected $name;
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getID()
     {
@@ -33,7 +34,7 @@ class Entity
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -43,7 +44,7 @@ class Entity
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      */

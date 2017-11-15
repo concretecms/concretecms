@@ -1,18 +1,15 @@
 <?php
+
 namespace Concrete\Tests\Core\Foundation;
 
-use Concrete\Core\Application\Application as ServiceLocator;
-use Concrete\Core\Foundation\Repetition\AbstractRepetition;
 use Concrete\Core\Foundation\Repetition\BasicRepetition;
-use Concrete\Core\Foundation\Service\ProviderList;
 use Concrete\Core\Localization\Service\Date;
 use Concrete\Core\Support\Facade\Facade;
 
 class RepetitionTimezoneTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
-     * @var $dateService Date
+     * @var Date
      */
     protected $dateService;
 
@@ -20,38 +17,6 @@ class RepetitionTimezoneTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
         $this->dateService = new Date();
-    }
-
-    protected function setTimezone($timezone)
-    {
-        $old = date_default_timezone_get();
-        $app = Facade::getFacadeApplication();
-        $config = $app->make('config');
-        $config->set('app.server_timezone', $timezone);
-        date_default_timezone_set($timezone);
-        return $old;
-    }
-
-    protected function resetTimezone($old)
-    {
-        date_default_timezone_set($old);
-        $app = Facade::getFacadeApplication();
-        $config = $app->make('config');
-        $config->set('app.server_timezone', null);
-    }
-
-
-    protected function generateInitialOccurrence($repetition)
-    {
-        $initial_occurrence_time = (new \DateTime($repetition->getStartDate(), $repetition->getTimezone()))
-            ->getTimestamp();
-        if ($repetition->getEndDate()) {
-            $initial_occurrence_time_end = (new \DateTime($repetition->getEndDate(), $repetition->getTimezone()))
-                ->getTimestamp();
-        } else {
-            $initial_occurrence_time_end = $initial_occurrence_time;
-        }
-        return array($initial_occurrence_time, $initial_occurrence_time_end);
     }
 
     public function testSingleOccurrence()
@@ -105,7 +70,6 @@ class RepetitionTimezoneTest extends \PHPUnit_Framework_TestCase
 
         $this->resetTimezone($old);
     }
-
 
     public function testSingleOccurrenceDifferentZone()
     {
@@ -250,7 +214,6 @@ class RepetitionTimezoneTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(30, count($occurrences));
         $this->resetTimezone($old);
-
     }
 
     public function testMonthlyFirstByDate()
@@ -336,7 +299,6 @@ class RepetitionTimezoneTest extends \PHPUnit_Framework_TestCase
 
         $occurrences = $repetition->activeRangesBetween($start_time, $end_time);
 
-
         $this->assertEquals(1480035600, $occurrences[0][0]);
         $this->assertEquals(1480046400, $occurrences[0][1]);
 
@@ -349,8 +311,38 @@ class RepetitionTimezoneTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(14, count($occurrences));
 
         $this->resetTimezone($old);
-
     }
 
+    protected function setTimezone($timezone)
+    {
+        $old = date_default_timezone_get();
+        $app = Facade::getFacadeApplication();
+        $config = $app->make('config');
+        $config->set('app.server_timezone', $timezone);
+        date_default_timezone_set($timezone);
 
+        return $old;
+    }
+
+    protected function resetTimezone($old)
+    {
+        date_default_timezone_set($old);
+        $app = Facade::getFacadeApplication();
+        $config = $app->make('config');
+        $config->set('app.server_timezone', null);
+    }
+
+    protected function generateInitialOccurrence($repetition)
+    {
+        $initial_occurrence_time = (new \DateTime($repetition->getStartDate(), $repetition->getTimezone()))
+            ->getTimestamp();
+        if ($repetition->getEndDate()) {
+            $initial_occurrence_time_end = (new \DateTime($repetition->getEndDate(), $repetition->getTimezone()))
+                ->getTimestamp();
+        } else {
+            $initial_occurrence_time_end = $initial_occurrence_time;
+        }
+
+        return [$initial_occurrence_time, $initial_occurrence_time_end];
+    }
 }

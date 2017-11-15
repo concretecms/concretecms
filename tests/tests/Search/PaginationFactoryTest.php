@@ -6,8 +6,8 @@ use Concrete\Core\Page\PageList;
 use Concrete\Core\Search\ItemList\ItemList;
 use Concrete\Core\Search\ItemList\Pager\QueryString\VariableFactory;
 use Concrete\Core\Search\Pagination\PagerPagination;
-use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\Core\Search\Pagination\Pagination;
+use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\Core\Search\Pagination\PaginationProviderInterface;
 use Concrete\Core\Search\Pagination\PermissionablePagination;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
@@ -15,7 +15,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class TestList extends ItemList implements PaginationProviderInterface
 {
-
     public function executeGetResults()
     {
         return null;
@@ -46,7 +45,6 @@ class TestList extends ItemList implements PaginationProviderInterface
         return null;
     }
 
-
     public function getPaginationAdapter()
     {
         return PaginationFactoryTest::getFakeAdapter();
@@ -54,12 +52,11 @@ class TestList extends ItemList implements PaginationProviderInterface
 }
 class PaginationFactoryTest extends \PHPUnit_Framework_TestCase
 {
-
-
     public static function getFakeQuery()
     {
         $db = \Database::connection();
         $builder = $db->createQueryBuilder();
+
         return $builder;
     }
 
@@ -73,8 +70,10 @@ class PaginationFactoryTest extends \PHPUnit_Framework_TestCase
             // when we get total results, because we're resetting the select
             $query->select('count(foo)')->setMaxResults(1);
         });
+
         return $adapter;
     }
+
     public function testBasicPagination()
     {
         $request = Request::createFromGlobals();
@@ -138,8 +137,4 @@ class PaginationFactoryTest extends \PHPUnit_Framework_TestCase
         $pagination = $factory->createPaginationObject($list, PaginationFactory::PERMISSIONED_PAGINATION_STYLE_PAGER);
         $this->assertInstanceOf(PagerPagination::class, $pagination);
     }
-
-
-
-
 }

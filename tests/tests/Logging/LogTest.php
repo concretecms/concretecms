@@ -1,13 +1,13 @@
 <?php
 
-use \Concrete\Core\Logging\Logger;
-use \Concrete\Core\Logging\LogEntry;
-use \Concrete\Core\Logging\GroupLogger;
+use Concrete\Core\Logging\GroupLogger;
+use Concrete\Core\Logging\LogEntry;
+use Concrete\Core\Logging\Logger;
 
 class LogTest extends ConcreteDatabaseTestCase
 {
-    protected $fixtures = array();
-    protected $tables = array('Logs');
+    protected $fixtures = [];
+    protected $tables = ['Logs'];
 
     public function setUp()
     {
@@ -47,8 +47,8 @@ class LogTest extends ConcreteDatabaseTestCase
      */
     public function testOverridingDefaultLogFunctionalityWithFileHandler()
     {
-        if (file_exists(dirname(__FILE__) . '/test.log')) {
-            unlink(dirname(__FILE__) . '/test.log');
+        if (file_exists(__DIR__ . '/test.log')) {
+            unlink(__DIR__ . '/test.log');
         }
 
         Log::info('This should be in the database.');
@@ -58,10 +58,10 @@ class LogTest extends ConcreteDatabaseTestCase
         $r = new stdClass();
         $r->test = 'test';
 
-        $sh = new \Monolog\Handler\StreamHandler(dirname(__FILE__) . '/test.log', Logger::DEBUG, false);
+        $sh = new \Monolog\Handler\StreamHandler(__DIR__ . '/test.log', Logger::DEBUG, false);
         Log::pushHandler($sh);
         Log::warning('This is a warning!');
-        Log::info('This is an interesting object', array($r));
+        Log::info('This is an interesting object', [$r]);
 
         $db = Database::get();
         $r = $db->GetAll('select * from Logs');
@@ -75,13 +75,13 @@ class LogTest extends ConcreteDatabaseTestCase
         $this->assertEquals(count($r), 1);
 
         $sh->close();
-        $contents = trim(file_get_contents(dirname(__FILE__) . '/test.log'));
+        $contents = trim(file_get_contents(__DIR__ . '/test.log'));
         $entries = explode("\n", $contents);
 
         $this->assertEquals(count($entries), 2);
 
-        if (file_exists(dirname(__FILE__) . '/test.log')) {
-            unlink(dirname(__FILE__) . '/test.log');
+        if (file_exists(__DIR__ . '/test.log')) {
+            unlink(__DIR__ . '/test.log');
         }
     }
 
@@ -91,7 +91,7 @@ class LogTest extends ConcreteDatabaseTestCase
         // should only have a database handler.
         $this->assertEquals(count($log->getHandlers()), 1);
         $this->assertEquals(count(Log::getHandlers()),
-            2);// this should still have the same stream handler from last test.
+            2); // this should still have the same stream handler from last test.
 
         $handler = new \Monolog\Handler\TestHandler(Logger::CRITICAL, false);
         $listener = Events::addListener('on_logger_create', function ($event) use ($handler) {
@@ -111,9 +111,9 @@ class LogTest extends ConcreteDatabaseTestCase
         $log2->info('This is a test.');
         $log2->debug('This is a test.');
         $log3->debug('This is a test.');
-        $log3->critical("oh boy this is big.");
-        $log3->alert("Everything is broken.");
-        $log3->emergency("Get out of bed.");
+        $log3->critical('oh boy this is big.');
+        $log3->alert('Everything is broken.');
+        $log3->emergency('Get out of bed.');
 
         $db = Database::get();
         $r = $db->GetAll('select * from Logs');
@@ -145,7 +145,7 @@ class LogTest extends ConcreteDatabaseTestCase
 
     public function testLegacyLogSupport()
     {
-        Log::addEntry("this is my log entry.");
+        Log::addEntry('this is my log entry.');
         $le = LogEntry::getByID(1);
         $this->assertEquals($le->getLevel(), Logger::DEBUG);
         $this->assertEquals($le->getLevelName(), 'DEBUG');
@@ -174,6 +174,6 @@ class LogTest extends ConcreteDatabaseTestCase
         $this->assertEquals($le2->getLevel(), Logger::CRITICAL);
         $this->assertEquals($le3->getLevel(), Logger::DEBUG);
         $this->assertEquals($le3->getMessage(), "This is line one.\nThis is line two.");
-        $this->assertEquals($le2->getMessage(), "OMG!");
+        $this->assertEquals($le2->getMessage(), 'OMG!');
     }
 }

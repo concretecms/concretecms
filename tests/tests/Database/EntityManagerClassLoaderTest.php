@@ -26,7 +26,7 @@ class EntityManagerClassLoaderTest extends \PHPUnit_Framework_TestCase
 
         // Test if the driver contains the default lookup path
         $driverPaths = $defaultAnnotationDriver->getPaths();
-        $this->assertEquals(DIR_BASE_CORE . '/' . DIRNAME_CLASSES.'/'.DIRNAME_ENTITIES,
+        $this->assertEquals(DIR_BASE_CORE . '/' . DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES,
             $driverPaths[0]);
     }
 
@@ -34,7 +34,7 @@ class EntityManagerClassLoaderTest extends \PHPUnit_Framework_TestCase
     {
         $root = dirname(DIR_BASE_CORE . '../');
         mkdir($root . '/application/src/Entity/Advertisement', 0777, true);
-        copy(dirname(__FILE__) . '/fixtures/BannerAd.php', $root . '/application/src/Entity/Advertisement/BannerAd.php');
+        copy(__DIR__ . '/fixtures/BannerAd.php', $root . '/application/src/Entity/Advertisement/BannerAd.php');
 
         $classExists = class_exists('Application\Entity\Advertisement\BannerAd');
 
@@ -49,7 +49,7 @@ class EntityManagerClassLoaderTest extends \PHPUnit_Framework_TestCase
 
         // Test if the driver contains the default lookup path
         $driverPaths = $defaultAnnotationDriver->getPaths();
-        $this->assertEquals(DIR_APPLICATION . '/' . DIRNAME_CLASSES.'/'.DIRNAME_ENTITIES,
+        $this->assertEquals(DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES,
             $driverPaths[0]);
 
         unlink($root . '/application/src/Entity/Advertisement/BannerAd.php');
@@ -68,26 +68,20 @@ class EntityManagerClassLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testPackageStandardEntityLocation()
     {
-
     }
 
     /**
-     * packages/your_package/src/Something/Something/Entity, maps to \Something\Something\Entity
+     * packages/your_package/src/Something/Something/Entity, maps to \Something\Something\Entity.
      */
     public function testPackageCustomEntityLocation()
     {
-
     }
-
 
     public function testLegacyApplicationSrcLocation()
     {
-
     }
 
     public function testLegacyPackageSrcLocation()
     {
-
     }
-
 }

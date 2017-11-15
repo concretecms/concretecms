@@ -3,25 +3,25 @@
 class AutonavTest extends BlockTypeTestCase
 {
     protected $btHandle = 'autonav';
-    protected $requestData = array(
-        'empty' => array(),
-        'all' => array(
+    protected $requestData = [
+        'empty' => [],
+        'all' => [
             'orderBy' => 'display_asc',
             'displayPages' => 'top',
             'displayPagesCID' => 1,
             'displaySubPages' => 'all',
             'displaySubPageLevels' => 'all',
             'displaySubPageLevels' => 'all',
-        ),
-    );
+        ],
+    ];
 
-    protected $expectedRecordData = array(
-        'empty' => array(
+    protected $expectedRecordData = [
+        'empty' => [
             'orderBy' => 'alpha_asc',
             'bID' => 1,
             'displaySubPages' => 'none',
-        ),
-        'all' => array(
+        ],
+        'all' => [
             'orderBy' => 'display_asc',
             'displayPages' => 'top',
             'displayPagesCID' => 1,
@@ -29,10 +29,10 @@ class AutonavTest extends BlockTypeTestCase
             'displaySubPages' => 'all',
             'displaySubPageLevels' => 'all',
             'displaySubPageLevels' => 'all',
-        ),
-    );
+        ],
+    ];
 
-    protected $expectedOutput = array(
+    protected $expectedOutput = [
         'empty' => '',
-    );
+    ];
 }

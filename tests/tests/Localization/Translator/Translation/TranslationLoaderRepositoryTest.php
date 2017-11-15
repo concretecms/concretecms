@@ -9,21 +9,19 @@ use Symfony\Component\ClassLoader\MapClassLoader;
 
 /**
  * Tests for:
- * Concrete\Core\Localization\Translator\Translation\TranslationLoaderRepository
+ * Concrete\Core\Localization\Translator\Translation\TranslationLoaderRepository.
  *
  * @author Antti Hukkanen <antti.hukkanen@mainiotech.fi>
  */
 class TranslationLoaderRepositoryTest extends PHPUnit_Framework_TestCase
 {
-
     protected $repository;
 
     public static function setUpBeforeClass()
     {
-        $loader = new MapClassLoader(array(
-            'Concrete\\Tests\\Core\\Localization\\Translator\\Translation\\Fixtures\\DummyTranslationLoader'
-                => __DIR__ . '/fixtures/DummyTranslationLoader.php'
-        ));
+        $loader = new MapClassLoader([
+            'Concrete\\Tests\\Core\\Localization\\Translator\\Translation\\Fixtures\\DummyTranslationLoader' => __DIR__ . '/fixtures/DummyTranslationLoader.php',
+        ]);
         $loader->register();
     }
 
@@ -91,5 +89,4 @@ class TranslationLoaderRepositoryTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($this->repository->hasTranslationLoader('other'));
         $this->assertEquals(0, count($this->repository->getTranslationLoaders()));
     }
-
 }

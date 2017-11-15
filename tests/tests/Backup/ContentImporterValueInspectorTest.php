@@ -2,15 +2,14 @@
 
 class ContentImporterValueInspectorTest extends FileStorageTestCase
 {
-
-    public function __construct($name = null, array $data = array(), $dataName = '')
+    public function __construct($name = null, array $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
 
-        $this->tables = array_merge($this->tables, array(
+        $this->tables = array_merge($this->tables, [
             'Users',
             'PermissionAccessEntityTypes',
-        ));
+        ]);
     }
 
     public function testMake()
@@ -34,18 +33,22 @@ class ContentImporterValueInspectorTest extends FileStorageTestCase
 
     public function providerMatchedSimpleValues()
     {
-        return array(
-            array('{ccm:export:page:/ok/here/we-go}', '/ok/here/we-go', '\Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PageItem'),
-            array('{ccm:export:file:house.jpg}', 'house.jpg', '\Concrete\Core\Backup\ContentImporter\ValueInspector\Item\FileItem'),
-            array('{ccm:export:pagetype:blog}', 'blog', '\Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PageTypeItem'),
-            array('{ccm:export:pagefeed:rss}', 'rss', '\Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PageFeedItem'),
-            array('{ccm:export:image:my_cool_pic.jpg}', 'my_cool_pic.jpg', '\Concrete\Core\Backup\ContentImporter\ValueInspector\Item\ImageItem'),
-            array('<concrete-picture file="avatar.jpg"></concrete-picture>', 'avatar.jpg', '\Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PictureItem'),
-        );
+        return [
+            ['{ccm:export:page:/ok/here/we-go}', '/ok/here/we-go', '\Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PageItem'],
+            ['{ccm:export:file:house.jpg}', 'house.jpg', '\Concrete\Core\Backup\ContentImporter\ValueInspector\Item\FileItem'],
+            ['{ccm:export:pagetype:blog}', 'blog', '\Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PageTypeItem'],
+            ['{ccm:export:pagefeed:rss}', 'rss', '\Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PageFeedItem'],
+            ['{ccm:export:image:my_cool_pic.jpg}', 'my_cool_pic.jpg', '\Concrete\Core\Backup\ContentImporter\ValueInspector\Item\ImageItem'],
+            ['<concrete-picture file="avatar.jpg"></concrete-picture>', 'avatar.jpg', '\Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PictureItem'],
+        ];
     }
 
     /**
      * @dataProvider providerMatchedSimpleValues
+     *
+     * @param mixed $content
+     * @param mixed $reference
+     * @param mixed $itemClass
      */
     public function testMatchedSimpleValues($content, $reference, $itemClass)
     {
@@ -111,7 +114,7 @@ EOL;
         mkdir($this->getStorageDirectory());
         $this->getStorageLocation();
 
-        $importer = new Concrete\Core\File\Importer;
+        $importer = new Concrete\Core\File\Importer();
         $prefix = $importer->generatePrefix();
         Concrete\Core\File\File::add('test.jpg', $prefix);
 
@@ -130,5 +133,4 @@ EOL;
 
         $this->assertEquals($expected, $result->getReplacedContent());
     }
-
 }

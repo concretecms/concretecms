@@ -12,9 +12,8 @@ use Concrete\Core\Localization\Translator\TranslatorAdapterFactoryInterface;
  */
 class DummyTranslatorAdapterFactory implements TranslatorAdapterFactoryInterface
 {
-
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function createTranslatorAdapter($locale)
     {
@@ -23,5 +22,4 @@ class DummyTranslatorAdapterFactory implements TranslatorAdapterFactoryInterface
 
         return $adapter;
     }
-
 }

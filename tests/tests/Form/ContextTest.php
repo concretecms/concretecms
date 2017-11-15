@@ -1,28 +1,24 @@
 <?php
+
 namespace Concrete\Tests\Core\Form;
 
 use Concrete\Core\Entity\Express\Entity;
-use Concrete\Core\Entity\Express\Form;
+use Concrete\Core\Express\Controller\ControllerInterface;
+use Concrete\Core\Express\Controller\StandardController;
 use Concrete\Core\Express\Entry\Notifier\NotificationProviderInterface;
 use Concrete\Core\Express\Form\Context\DashboardFormContext;
 use Concrete\Core\Express\Form\Context\DashboardViewContext;
 use Concrete\Core\Express\Form\Context\FrontendFormContext;
-use Concrete\Core\Express\Form\Context\ViewContext;
-use Concrete\Core\Express\Controller\StandardController;
 use Concrete\Core\Form\Context\ContextFactory;
-use Core;
-use Concrete\Core\Express\Controller\ControllerInterface;
 use Concrete\Core\Form\Context\Registry\ContextRegistry;
 use Symfony\Component\HttpFoundation\Request;
 
 class TestFrontendFormContext extends FrontendFormContext
 {
-
 }
 
 class TestDashboardFormContext extends DashboardFormContext
 {
-
 }
 
 class TestController implements ControllerInterface
@@ -31,7 +27,7 @@ class TestController implements ControllerInterface
     {
         return new ContextRegistry([
             FrontendFormContext::class => new TestFrontendFormContext(),
-            DashboardFormContext::class => new TestDashboardFormContext()
+            DashboardFormContext::class => new TestDashboardFormContext(),
         ]);
     }
 
@@ -53,7 +49,6 @@ class TestController implements ControllerInterface
 
 class ContextTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testController()
     {
         $entity = $this->getMockBuilder(Entity::class)

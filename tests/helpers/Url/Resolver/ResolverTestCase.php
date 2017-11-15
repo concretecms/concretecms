@@ -25,13 +25,13 @@ abstract class ResolverTestCase extends PHPUnit_Framework_TestCase
 
     protected function canonicalUrlWithPath($path, $dispatcher = null)
     {
-        if (is_null($dispatcher)) {
+        if ($dispatcher === null) {
             /** @var \Concrete\Core\Site\Service $site */
             $site = \Core::make('site');
             $config = $site->getSite()->getConfigRepository();
             $rewriting = $config->get('seo.url_rewriting');
             $rewrite_all = $config->get('seo.url_rewriting_all');
-            $trailing_slash = !!$config->get('seo.trailing_slash');
+            $trailing_slash = (bool) $config->get('seo.trailing_slash');
 
             $in_dashboard = \Core::make('helper/concrete/dashboard')->inDashboard($path);
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Tests\Core\File\Service;
 
 use Concrete\Core\File\Service\VolatileDirectory;

@@ -41,7 +41,7 @@ class URLTest extends PHPUnit_Framework_TestCase
         $this->service = $service;
 
         $app = Concrete\Core\Support\Facade\Facade::getFacadeApplication();
-        $app->bind('\Psr\Log\LoggerInterface', function() {
+        $app->bind('\Psr\Log\LoggerInterface', function () {
             return new \Psr\Log\NullLogger();
         });
         Config::set('concrete.seo.url_rewriting', false);
@@ -81,7 +81,7 @@ class URLTest extends PHPUnit_Framework_TestCase
 
     public function testNoUrlRewritingNoRelativePath()
     {
-        $app = Core::make("app");
+        $app = Core::make('app');
         $app['app_relative_path'] = '';
         $app->instance('app', $app);
 
@@ -97,7 +97,7 @@ class URLTest extends PHPUnit_Framework_TestCase
 
     public function testUrlRewriting()
     {
-        $app = Core::make("app");
+        $app = Core::make('app');
         $app['app_relative_path'] = '/path/to/server';
         $app->instance('app', $app);
 
@@ -112,7 +112,7 @@ class URLTest extends PHPUnit_Framework_TestCase
 
     public function testCanonicalURLRedirection()
     {
-        $app = Core::make("app");
+        $app = Core::make('app');
         Config::set('concrete.seo.redirect_to_canonical_url', true);
         $request = \Concrete\Core\Http\Request::create('http://www.awesome.com/path/to/site/index.php/dashboard?bar=1&foo=1');
 
@@ -126,11 +126,11 @@ class URLTest extends PHPUnit_Framework_TestCase
 
         $liaison->expects($this->any())
             ->method('get')
-            ->will($this->returnValueMap(array(
-                array('seo.canonical_url', null, 'https://www2.myawesomesite.com:8080'),
-                array('seo.trailing_slash', null, false),
-                array('seo.canonical_url_alternative', null, 'https://www2.myawesomesite.com:8080'),
-            )));
+            ->will($this->returnValueMap([
+                ['seo.canonical_url', null, 'https://www2.myawesomesite.com:8080'],
+                ['seo.trailing_slash', null, false],
+                ['seo.canonical_url_alternative', null, 'https://www2.myawesomesite.com:8080'],
+            ]));
 
         $site->expects($this->once())
             ->method('getConfigRepository')
@@ -143,7 +143,7 @@ class URLTest extends PHPUnit_Framework_TestCase
 
     public function testCanonicalURLRedirectionSameDomain()
     {
-        $app = Core::make("app");
+        $app = Core::make('app');
 
         $site = $this->getMockBuilder(Concrete\Core\Entity\Site\Site::class)
             ->disableOriginalConstructor()
@@ -155,9 +155,9 @@ class URLTest extends PHPUnit_Framework_TestCase
 
         $liaison->expects($this->any())
             ->method('get')
-            ->will($this->returnValueMap(array(
-                array('seo.canonical_url', null, 'http://concrete5.dev')
-            )));
+            ->will($this->returnValueMap([
+                ['seo.canonical_url', null, 'http://concrete5.dev'],
+            ]));
 
         $site->expects($this->any())
             ->method('getConfigRepository')
@@ -175,7 +175,7 @@ class URLTest extends PHPUnit_Framework_TestCase
 
     public function testCanonicalUrlRedirectionSslUrl()
     {
-        $app = Core::make("app");
+        $app = Core::make('app');
 
         $site = $this->getMockBuilder(Concrete\Core\Entity\Site\Site::class)
             ->disableOriginalConstructor()
@@ -187,10 +187,10 @@ class URLTest extends PHPUnit_Framework_TestCase
 
         $liaison->expects($this->any())
             ->method('get')
-            ->will($this->returnValueMap(array(
-                array('seo.canonical_url', null, 'http://mysite.com'),
-                array('seo.canonical_url_alternative', null, 'https://secure.mysite.com:8080')
-            )));
+            ->will($this->returnValueMap([
+                ['seo.canonical_url', null, 'http://mysite.com'],
+                ['seo.canonical_url_alternative', null, 'https://secure.mysite.com:8080'],
+            ]));
 
         $site->expects($this->once())
             ->method('getConfigRepository')
@@ -202,12 +202,11 @@ class URLTest extends PHPUnit_Framework_TestCase
         $response = $app->handleCanonicalURLRedirection($request, $site);
         $this->assertNull($response);
         Config::set('concrete.seo.redirect_to_canonical_url', false);
-
     }
 
     public function testPathSlashesRedirection()
     {
-        $app = Core::make("app");
+        $app = Core::make('app');
 
         $site = $this->getMockBuilder(Concrete\Core\Entity\Site\Site::class)
             ->disableOriginalConstructor()
@@ -219,9 +218,9 @@ class URLTest extends PHPUnit_Framework_TestCase
 
         $liaison->expects($this->any())
             ->method('get')
-            ->will($this->returnValueMap(array(
-                array('seo.trailing_slash', null, false),
-            )));
+            ->will($this->returnValueMap([
+                ['seo.trailing_slash', null, false],
+            ]));
 
         $site->expects($this->any())
             ->method('getConfigRepository')
@@ -267,9 +266,9 @@ class URLTest extends PHPUnit_Framework_TestCase
 
         $liaison->expects($this->any())
             ->method('get')
-            ->will($this->returnValueMap(array(
-                array('seo.trailing_slash', null, true),
-            )));
+            ->will($this->returnValueMap([
+                ['seo.trailing_slash', null, true],
+            ]));
 
         $site->expects($this->any())
             ->method('getConfigRepository')
@@ -282,7 +281,6 @@ class URLTest extends PHPUnit_Framework_TestCase
         $request = \Concrete\Core\Http\Request::create('http://www.awesome.com:8080/index.php/about-us/now?bar=1&foo=2');
         $response = $app->handleURLSlashes($request, $site);
         $this->assertEquals('http://www.awesome.com:8080/index.php/about-us/now/?bar=1&foo=2', $response->getTargetUrl());
-
     }
 
     public function testUrlRewritingAll()
@@ -299,7 +297,7 @@ class URLTest extends PHPUnit_Framework_TestCase
 
     public function testNoUrlRewritingDashboard()
     {
-        $app = Core::make("app");
+        $app = Core::make('app');
         $app['app_relative_path'] = '/path/to/server';
         $this->assertEquals('http://www.dummyco.com/path/to/server/index.php/dashboard/my/awesome/page', (string) $this->dashboard->getCollectionLink());
         $this->assertEquals('http://www.dummyco.com/path/to/server/index.php/dashboard/my/awesome/page',
@@ -323,7 +321,7 @@ class URLTest extends PHPUnit_Framework_TestCase
         $home->siteTree = $siteTree;
 
         $url = \URL::to($home);
-        $this->assertEquals('http://www.dummyco.com/path/to/server/index.php?cID='.$home->cID, (string) $url);
+        $this->assertEquals('http://www.dummyco.com/path/to/server/index.php?cID=' . $home->cID, (string) $url);
 
         $url = \URL::to('/');
         $this->assertEquals('http://www.dummyco.com/path/to/server/index.php', (string) $url);
@@ -410,5 +408,4 @@ class URLTest extends PHPUnit_Framework_TestCase
         $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
         $app->make('Concrete\Core\Url\Resolver\CanonicalUrlResolver')->clearCached();
     }
-
 }

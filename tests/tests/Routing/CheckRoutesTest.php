@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Tests\Core\Routing;
 
 use Concrete\Core\Application\Application;
@@ -38,8 +39,7 @@ class CheckRoutesTest extends PHPUnit_Framework_TestCase
             if ($method === '__construct') {
                 $this->assertTrue(class_exists($m[1], true), "Invalid route for path $path: $callable");
                 $checked = true;
-            }
-            elseif (interface_exists($class, true)) {
+            } elseif (interface_exists($class, true)) {
                 $this->assertTrue(method_exists($class, $method), "Invalid route for path $path: $callable");
                 $this->assertTrue($app->bound($class), "Invalid route for path $path: $callable");
                 $checked = true;

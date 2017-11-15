@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Tests\Validator;
 
 class ClosureValidatorTest extends \PHPUnit_Framework_TestCase
@@ -41,10 +42,10 @@ class ClosureValidatorTest extends \PHPUnit_Framework_TestCase
 
             $ran = true;
 
-            return array('test');
+            return ['test'];
         });
 
-        $this->assertEquals(array('test'), $closure_validator->getRequirementStrings());
+        $this->assertEquals(['test'], $closure_validator->getRequirementStrings());
         $this->assertTrue($ran, 'Requirements Closure didn\'t fire.');
     }
 }

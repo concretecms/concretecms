@@ -2,10 +2,9 @@
 
 class EntryBuilderTest extends ConcreteDatabaseTestCase
 {
-
     protected $pkg;
 
-    protected $tables = array(
+    protected $tables = [
         'Trees',
         'TreeNodes',
         'TreeGroupNodes',
@@ -18,7 +17,7 @@ class EntryBuilderTest extends ConcreteDatabaseTestCase
         'PermissionKeys',
         'PermissionKeyCategories',
         'Groups',
-    );
+    ];
 
     protected $metadatas = [
         'Concrete\Core\Entity\Express\Entity',
@@ -55,23 +54,6 @@ class EntryBuilderTest extends ConcreteDatabaseTestCase
         $factory->add('text', 'Text');
         $factory->add('address', 'Address');
         $factory->add('textarea', 'Textarea');
-    }
-
-    protected function getStudentObjectForCRUD()
-    {
-        $student = Express::buildObject('student', 'students', 'Student');
-        $student->addAttribute('text', 'First Name', 'student_first_name');
-        $student->addAttribute('text', 'Last Name', 'student_last_name');
-        $student->addAttribute('textarea', 'Bio', 'student_bio');
-        $student->addAttribute('address', 'Address', 'student_contact_address');
-        $student->save();
-
-        $teacher = Express::buildObject('teacher', 'teachers', 'Teacher');
-        $teacher->addAttribute('text', 'First Name', 'teacher_first_name');
-        $teacher->addAttribute('text', 'Last Name', 'teacher_last_name');
-        $teacher->save();
-
-        return $student;
     }
 
     public function testGetEntryBuilder()
@@ -161,7 +143,6 @@ class EntryBuilderTest extends ConcreteDatabaseTestCase
             ->setTeacher($teacherEntry)
             ->save();
 
-
         $teacherEntry = Express::refresh($teacherEntry);
         $entry2 = Express::refresh($entry2);
         $entry3 = Express::refresh($entry3);
@@ -227,7 +208,6 @@ class EntryBuilderTest extends ConcreteDatabaseTestCase
 
     public function testDeleteEntry()
     {
-
         $this->getStudentObjectForCRUD();
 
         Express::buildEntry('student')
@@ -252,8 +232,22 @@ class EntryBuilderTest extends ConcreteDatabaseTestCase
 
         $this->assertNull($entry1);
         $this->assertEquals('Jane', $entry2->getStudentFirstName());
-
     }
 
-}
+    protected function getStudentObjectForCRUD()
+    {
+        $student = Express::buildObject('student', 'students', 'Student');
+        $student->addAttribute('text', 'First Name', 'student_first_name');
+        $student->addAttribute('text', 'Last Name', 'student_last_name');
+        $student->addAttribute('textarea', 'Bio', 'student_bio');
+        $student->addAttribute('address', 'Address', 'student_contact_address');
+        $student->save();
 
+        $teacher = Express::buildObject('teacher', 'teachers', 'Teacher');
+        $teacher->addAttribute('text', 'First Name', 'teacher_first_name');
+        $teacher->addAttribute('text', 'Last Name', 'teacher_last_name');
+        $teacher->save();
+
+        return $student;
+    }
+}

@@ -2,10 +2,9 @@
 
 class ObjectBuilderTest extends ConcreteDatabaseTestCase
 {
-
     protected $pkg;
 
-    protected $tables = array(
+    protected $tables = [
         'Trees',
         'TreeNodes',
         'TreeGroupNodes',
@@ -18,7 +17,7 @@ class ObjectBuilderTest extends ConcreteDatabaseTestCase
         'PermissionKeys',
         'PermissionKeyCategories',
         'Groups',
-    );
+    ];
 
     protected $metadatas = [
         'Concrete\Core\Entity\Express\Entity',
@@ -92,7 +91,6 @@ class ObjectBuilderTest extends ConcreteDatabaseTestCase
         $student->addAttribute('text', 'Last Name', 'last_name', $settings);
         $student = $student->save();
 
-
         $category = Core::make('Concrete\Core\Attribute\Category\ExpressCategory',
             ['entity' => $student]);
 
@@ -117,9 +115,9 @@ class ObjectBuilderTest extends ConcreteDatabaseTestCase
     {
         $student = Express::buildObject('student', 'students', 'Student', $this->pkg);
         $settings = new \Concrete\Core\Entity\Attribute\Key\Settings\AddressSettings();
-        $settings->setCustomCountries(array("US","UK"));
+        $settings->setCustomCountries(['US', 'UK']);
         $settings->setHasCustomCountries(true);
-        $settings->setDefaultCountry("CA");
+        $settings->setDefaultCountry('CA');
         $student->addAttribute('address', 'Address', 'address', $settings);
         $student = $student->save();
 
@@ -196,7 +194,7 @@ class ObjectBuilderTest extends ConcreteDatabaseTestCase
         $this->assertEquals(1, count($associations));
 
         $association = $associations[0];
-        /**
+        /*
          * @var $association \Concrete\Core\Entity\Express\ManyToOneAssociation
          */
         $this->assertInstanceOf('Concrete\Core\Entity\Express\ManyToOneAssociation', $association);
@@ -252,6 +250,4 @@ class ObjectBuilderTest extends ConcreteDatabaseTestCase
         $this->assertEquals('skill', $association->getTargetPropertyName());
         $this->assertEquals(\Concrete\Core\Entity\Express\OneToOneAssociation::TYPE_INVERSE, $association->getAssociationType());
     }
-
 }
-

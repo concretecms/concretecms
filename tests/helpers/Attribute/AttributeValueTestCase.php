@@ -1,11 +1,10 @@
 <?php
 
-use \Concrete\Core\Attribute\Type as AttributeType;
 
 abstract class AttributeValueTestCase extends ConcreteDatabaseTestCase
 {
-    protected $fixtures = array();
-    protected $metadatas = array(
+    protected $fixtures = [];
+    protected $metadatas = [
         'Concrete\Core\Entity\Site\Site',
         'Concrete\Core\Entity\Site\Type',
         'Concrete\Core\Entity\Site\Locale',
@@ -20,26 +19,14 @@ abstract class AttributeValueTestCase extends ConcreteDatabaseTestCase
         'Concrete\Core\Entity\Attribute\Value\Value\Value',
         'Concrete\Core\Entity\Attribute\Value\PageValue',
         'Concrete\Core\Entity\Page\PagePath',
-    );
+    ];
 
-    protected $tables = array(
+    protected $tables = [
         'Collections',
         'CollectionVersions',
         'Pages',
-        'PageThemes'
-    );
-
-    abstract public function getAttributeTypeHandle();
-    abstract public function getAttributeTypeName();
-    abstract public function getAttributeKeyHandle();
-    abstract public function getAttributeKeyName();
-    abstract public function createAttributeKeySettings();
-    abstract public function getAttributeValueClassName();
-
-    protected function prepareBaseValueAfterRetrieving($value)
-    {
-        return $value;
-    }
+        'PageThemes',
+    ];
 
     protected function setUp()
     {
@@ -74,8 +61,23 @@ abstract class AttributeValueTestCase extends ConcreteDatabaseTestCase
         parent::tearDown();
     }
 
+    abstract public function getAttributeTypeHandle();
+
+    abstract public function getAttributeTypeName();
+
+    abstract public function getAttributeKeyHandle();
+
+    abstract public function getAttributeKeyName();
+
+    abstract public function createAttributeKeySettings();
+
+    abstract public function getAttributeValueClassName();
+
     /**
      *  @dataProvider baseAttributeValues
+     *
+     * @param mixed $input
+     * @param mixed $expectedBaseValue
      */
     public function testBaseAttributeValueGet($input, $expectedBaseValue)
     {
@@ -96,11 +98,13 @@ abstract class AttributeValueTestCase extends ConcreteDatabaseTestCase
         $this->assertInstanceOf('Concrete\Core\Entity\Attribute\Value\PageValue', $value);
 
         $this->assertInstanceOf($this->getAttributeValueClassName(), $value->getValueObject());
-
     }
 
     /**
      *  @dataProvider displayAttributeValues
+     *
+     * @param mixed $input
+     * @param mixed $expectedDisplayValue
      */
     public function testDisplayAttributeValues($input, $expectedDisplayValue)
     {
@@ -132,6 +136,9 @@ abstract class AttributeValueTestCase extends ConcreteDatabaseTestCase
 
     /**
      *  @dataProvider plaintextAttributeValues
+     *
+     * @param mixed $input
+     * @param mixed $expectedPlainTextOutput
      */
     public function testPlainTextAttributeValues($input, $expectedPlainTextOutput)
     {
@@ -152,6 +159,9 @@ abstract class AttributeValueTestCase extends ConcreteDatabaseTestCase
 
     /**
      *  @dataProvider searchIndexAttributeValues
+     *
+     * @param mixed $input
+     * @param mixed $expectedSearchIndexValue
      */
     public function testSearchIndexAttributeValues($input, $expectedSearchIndexValue)
     {
@@ -170,8 +180,8 @@ abstract class AttributeValueTestCase extends ConcreteDatabaseTestCase
         $this->assertEquals($expectedSearchIndexValue, $searchIndexValue);
     }
 
-
-
-
-
+    protected function prepareBaseValueAfterRetrieving($value)
+    {
+        return $value;
+    }
 }

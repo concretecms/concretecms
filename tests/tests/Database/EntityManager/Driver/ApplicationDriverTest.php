@@ -7,14 +7,13 @@ use Concrete\Core\Support\Facade\Application;
 use Illuminate\Filesystem\Filesystem;
 
 /**
- * ApplicationDriverTest
+ * ApplicationDriverTest.
  *
  * @author Markus Liechti <markus@liechti.io>
  * @group orm_setup
  */
 class ApplicationDriverTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * @var \Concrete\Core\Application\Application
      */
@@ -31,7 +30,7 @@ class ApplicationDriverTest extends \PHPUnit_Framework_TestCase
     protected $filesystem;
 
     /**
-     * Setup
+     * Setup.
      */
     public function setUp()
     {
@@ -43,18 +42,28 @@ class ApplicationDriverTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Clean up after each tests.
+     */
+    public function tearDown()
+    {
+        $this->cleanupFolderSystem();
+        $this->cleanupConfig();
+    }
+
+    /**
      * Test default application driver with
      * - empty CONFIG_ORM_METADATA_APPLICATION config setting
-     * - a present application/src/Entity folder
+     * - a present application/src/Entity folder.
      *
      * @covers ApplicationDriver::getDriver
+     *
      * @throws \Exception
      */
     public function testGetDefaultDriver()
     {
         // prepare
         if (!$this->filesystem->isWritable(DIR_APPLICATION . '/' . DIRNAME_CLASSES)) {
-            throw new \Exception("Cannot write to the application/src directory for the testing purposes. Please check permissions!");
+            throw new \Exception('Cannot write to the application/src directory for the testing purposes. Please check permissions!');
         }
         if (!$this->filesystem->isDirectory(DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES)) {
             $this->filesystem->makeDirectory(DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES);
@@ -72,7 +81,7 @@ class ApplicationDriverTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test default application driver with no folder at application/src/Entity
+     * Test default application driver with no folder at application/src/Entity.
      *
      * @covers ApplicationDriver::getDriver
      */
@@ -88,16 +97,17 @@ class ApplicationDriverTest extends \PHPUnit_Framework_TestCase
      * Test application legacy driver
      * - empty CONFIG_ORM_METADATA_APPLICATION config setting
      * - a present application/src folder
-     * - and config 'app.enable_legacy_src_namespace' = true
+     * - and config 'app.enable_legacy_src_namespace' = true.
      *
      * @covers ApplicationDriver::getDriver
+     *
      * @throws \Exception
      */
     public function testGetLegacyDriver()
     {
         // prepare
         if (!$this->filesystem->isWritable(DIR_APPLICATION . '/' . DIRNAME_CLASSES)) {
-            throw new \Exception("Cannot write to the application/src directory for the testing purposes. Please check permissions!");
+            throw new \Exception('Cannot write to the application/src directory for the testing purposes. Please check permissions!');
         }
         $this->configRepository->set('app.enable_legacy_src_namespace', true);
 
@@ -110,23 +120,23 @@ class ApplicationDriverTest extends \PHPUnit_Framework_TestCase
         // check if it contains the correct reader
         // Doctrine doesn't provied a way of accessing the original reader in the cached reader
         $this->assertEquals($reader, $driver->getReader(), 'The SimpleAnnotationReader is not wrapped with a CachedReader.');
-
     }
 
     /**
      * Test application with xml driver
      * - CONFIG_ORM_METADATA_APPLICATION = xml
      * - a existing application/src/Entity folder
-     * - a existing application/config/xml
+     * - a existing application/config/xml.
      *
      * @covers ApplicationDriver::getDriver
+     *
      * @throws \Exception
      */
     public function testGetXMLDriver()
     {
         // prepare
         if (!$this->filesystem->isWritable(DIR_APPLICATION . '/' . DIRNAME_CONFIG)) {
-            throw new \Exception("Cannot write to the application/config directory for the testing purposes. Please check permissions!");
+            throw new \Exception('Cannot write to the application/config directory for the testing purposes. Please check permissions!');
         }
         if (!$this->filesystem->isDirectory(DIR_APPLICATION . '/' . REL_DIR_METADATA_XML)) {
             $this->filesystem->makeDirectory(DIR_APPLICATION . '/' . REL_DIR_METADATA_XML);
@@ -149,11 +159,12 @@ class ApplicationDriverTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Failing test for XMLDriver with missing application/config/xml directory
+     * Failing test for XMLDriver with missing application/config/xml directory.
      *
      * @covers ApplicationDriver::getDriver
      */
-    public function testFailingGetXMLDriverWithNoConfigXMLDirectory(){
+    public function testFailingGetXMLDriverWithNoConfigXMLDirectory()
+    {
         $this->configRepository->set(CONFIG_ORM_METADATA_APPLICATION, 'xml');
         if (!$this->filesystem->isDirectory(DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES)) {
             $this->filesystem->makeDirectory(DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES);
@@ -170,7 +181,7 @@ class ApplicationDriverTest extends \PHPUnit_Framework_TestCase
      * Test application with xml driver
      * - CONFIG_ORM_METADATA_APPLICATION = yml || yaml
      * - a existing application/src/Entity folder
-     * - a existing application/config/yaml
+     * - a existing application/config/yaml.
      *
      * @dataProvider dataProviderTestGetYMLDriver
      * @covers ApplicationDriver::getDriver
@@ -181,9 +192,9 @@ class ApplicationDriverTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetYMLDriver($setting)
     {
-                // prepare
+        // prepare
         if (!$this->filesystem->isWritable(DIR_APPLICATION . '/' . DIRNAME_CONFIG)) {
-            throw new \Exception("Cannot write to the application/config directory for the testing purposes. Please check permissions!");
+            throw new \Exception('Cannot write to the application/config directory for the testing purposes. Please check permissions!');
         }
         if (!$this->filesystem->isDirectory(DIR_APPLICATION . '/' . REL_DIR_METADATA_YAML)) {
             $this->filesystem->makeDirectory(DIR_APPLICATION . '/' . REL_DIR_METADATA_YAML);
@@ -206,14 +217,15 @@ class ApplicationDriverTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Failing test for XMLDriver with missing application/config/yaml directory
+     * Failing test for XMLDriver with missing application/config/yaml directory.
      *
      * @dataProvider dataProviderTestGetYMLDriver
      * @covers ApplicationDriver::getDriver
      *
      * @param string $setting
      */
-    public function testFailingGetYMLDriverWithNoConfigYamlDirectory($setting){
+    public function testFailingGetYMLDriverWithNoConfigYamlDirectory($setting)
+    {
         $this->configRepository->set(CONFIG_ORM_METADATA_APPLICATION, $setting);
         if (!$this->filesystem->isDirectory(DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES)) {
             $this->filesystem->makeDirectory(DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES);
@@ -227,25 +239,25 @@ class ApplicationDriverTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Data provider
+     * Data provider.
      *
      * @return array
      */
     public function dataProviderTestGetYMLDriver()
     {
-        return array(
-            array('yml'),
-            array('yaml'),
-        );
+        return [
+            ['yml'],
+            ['yaml'],
+        ];
     }
 
     /**
-     * Test namespace
+     * Test namespace.
      *
      * @dataProvider dataProviderGetNamespace
      * @covers ApplicationDriver::getNamespace
      *
-     * @param boolean $isLegacy
+     * @param bool $isLegacy
      * @param string $namespace
      */
     public function testGetNamespace($isLegacy, $namespace)
@@ -263,39 +275,23 @@ class ApplicationDriverTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test the default and the legacy namespaces of application entites
+     * Test the default and the legacy namespaces of application entites.
      *
      * @return array
      */
     public function dataProviderGetNamespace()
     {
-        return array(
-            array('isLegacy' => true, 'namespace' => 'Application\Src'),
-            array('isLegacy' => false, 'namespace' => 'Application\Entity'),
-        );
+        return [
+            ['isLegacy' => true, 'namespace' => 'Application\Src'],
+            ['isLegacy' => false, 'namespace' => 'Application\Entity'],
+        ];
     }
 
     /**
-     * Clean up after each tests
+     * Clean up altern folder system.
      */
-    public function tearDown(){
-        $this->cleanupFolderSystem();
-        $this->cleanupConfig();
-    }
-
-    /**
-     * Clean up if a Exception is thrown
-     */
-    protected function onNotSuccessfulTest(\Exception $e)
+    public function cleanupFolderSystem()
     {
-        $this->cleanupFolderSystem();
-        $this->cleanupConfig();
-    }
-
-    /**
-     * Clean up altern folder system
-     */
-    public function cleanupFolderSystem(){
         if ($this->filesystem->isDirectory(DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES)) {
             $this->filesystem->deleteDirectory(DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES);
         }
@@ -308,14 +304,26 @@ class ApplicationDriverTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Clean up altered config values
+     * Clean up altered config values.
      */
-    public function cleanupConfig(){
+    public function cleanupConfig()
+    {
         $this->configRepository->save('app.enable_legacy_src_namespace', false);
         $this->configRepository->set(CONFIG_ORM_METADATA_APPLICATION, '');
     }
 
     /**
+     * Clean up if a Exception is thrown.
+     *
+     * @param \Exception $e
+     */
+    protected function onNotSuccessfulTest(\Exception $e)
+    {
+        $this->cleanupFolderSystem();
+        $this->cleanupConfig();
+    }
+
+    /*
      * Example of mocking the concrete config repository
      */
     /*protected function getMockConcreteConfigRepository($setting){

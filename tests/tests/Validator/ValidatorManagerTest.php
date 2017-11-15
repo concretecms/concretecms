@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Tests\Validator;
 
 use Concrete\Core\Validator\ValidatorManagerInterface;

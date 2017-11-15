@@ -1,17 +1,12 @@
 <?php
+
 namespace Concrete\Tests\Core\Foundation;
 
-use Concrete\Core\Application\Application as ServiceLocator;
-use Concrete\Core\Foundation\Repetition\AbstractRepetition;
 use Concrete\Core\Foundation\Repetition\BasicRepetition;
 use Concrete\Core\Foundation\Repetition\Comparator;
-use Concrete\Core\Foundation\Service\ProviderList;
-use Concrete\Core\Localization\Service\Date;
-use Concrete\Core\Support\Facade\Facade;
 
 class RepetitionComparatorTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testNoRepeat()
     {
         $repetition = new BasicRepetition();
@@ -84,7 +79,6 @@ class RepetitionComparatorTest extends \PHPUnit_Framework_TestCase
 
         $r1->setRepeatPeriodEnd('2017-10-30');
         $this->assertTrue($comparator->areEqual($r1, $r2));
-
     }
 
     public function testRepeatWeekly()
@@ -112,7 +106,6 @@ class RepetitionComparatorTest extends \PHPUnit_Framework_TestCase
 
         $r1->setRepeatPeriodWeekDays([3, 1]);
         $this->assertTrue($comparator->areEqual($r1, $r2));
-
     }
 
     public function testRepeatMonthly()
@@ -153,6 +146,4 @@ class RepetitionComparatorTest extends \PHPUnit_Framework_TestCase
         $r1->setRepeatMonthBy(BasicRepetition::MONTHLY_REPEAT_WEEKLY);
         $this->assertTrue($comparator->areEqual($r1, $r2));
     }
-
-
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Tests;
 
 abstract class CodingStyleTestCase extends \PHPUnit_Framework_TestCase
@@ -7,6 +8,16 @@ abstract class CodingStyleTestCase extends \PHPUnit_Framework_TestCase
      * @var string[]|null
      */
     private static $phpFiles = null;
+
+    public function phpFilesProvider()
+    {
+        $result = [];
+        foreach (static::getPhpFiles() as $f) {
+            $result[] = [$f];
+        }
+
+        return $result;
+    }
 
     /**
      * @return string[]
@@ -41,15 +52,5 @@ abstract class CodingStyleTestCase extends \PHPUnit_Framework_TestCase
         }
 
         return self::$phpFiles;
-    }
-
-    public function phpFilesProvider()
-    {
-        $result = [];
-        foreach (static::getPhpFiles() as $f) {
-            $result[] = [$f];
-        }
-
-        return $result;
     }
 }

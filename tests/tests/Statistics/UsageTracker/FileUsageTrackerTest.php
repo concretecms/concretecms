@@ -3,16 +3,15 @@
 namespace Concrete\Tests\Core\Statistics\UsageTracker;
 
 use Concrete\Core\Block\Block;
+use Concrete\Core\Block\BlockController;
 use Concrete\Core\Entity\Statistics\UsageTracker\FileUsageRepository;
 use Concrete\Core\File\Tracker\FileTrackableInterface;
 use Concrete\Core\File\Tracker\UsageTracker;
 use Concrete\Core\Page\Collection\Collection;
 use Doctrine\ORM\EntityManagerInterface;
-use Concrete\Core\Block\BlockController;
 
 class FileUsageTrackerTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testTrackingCollection()
     {
         $trackable = $this->getFileTrackableMock([], 1, 5);
@@ -31,13 +30,12 @@ class FileUsageTrackerTest extends \PHPUnit_Framework_TestCase
             'getCollectionObject',
             'getBlockObject',
             'getUsedCollection',
-            'getUsedFiles'
+            'getUsedFiles',
         ]);
         $trackableBlock = $builder->getMockForAbstractClass();
 
         $trackableBlock->method('getUsedCollection')->willReturn($collection);
         $trackableBlock->method('getUsedFiles')->willReturn([10, 5]);
-
 
         $blockBuilder = $this->getMockBuilder(Block::class);
         $blockBuilder->disableProxyingToOriginalMethods();
@@ -58,7 +56,7 @@ class FileUsageTrackerTest extends \PHPUnit_Framework_TestCase
 
         $items = [];
         $manager = $this->getDatabaseMock();
-        $manager->expects($this->exactly(2))->method('merge')->willReturnCallback(function($item) use (&$items) {
+        $manager->expects($this->exactly(2))->method('merge')->willReturnCallback(function ($item) use (&$items) {
             $items[] = $item;
         });
 
@@ -74,14 +72,14 @@ class FileUsageTrackerTest extends \PHPUnit_Framework_TestCase
             $item->getFileID(),
             $item->getCollectionID(),
             $item->getCollectionVersionID(),
-            $item->getBlockID()]);
+            $item->getBlockID(), ]);
 
         $item = array_shift($items);
         $this->assertEquals([5, 1, 5, 55], [
             $item->getFileID(),
             $item->getCollectionID(),
             $item->getCollectionVersionID(),
-            $item->getBlockID()]);
+            $item->getBlockID(), ]);
     }
 
     public function testTrackingBlockController()
@@ -91,17 +89,17 @@ class FileUsageTrackerTest extends \PHPUnit_Framework_TestCase
 
         $blockClass = $this->getMockClass(Block::class, [
             'getBlockID',
-            'getController'
+            'getController',
         ]);
-        $block = new $blockClass;
+        $block = new $blockClass();
         $block->method('getBlockID')->willReturn(105);
 
         $controller = $this->getMockForAbstractClass(TrackableBlockController::class, [], '', false, true, true, [
             'getBlockObject',
-            'getCollectionObject'
+            'getCollectionObject',
         ]);
         $controller->method('getBlockObject')->willReturn($block);
-        $controller->method('getUsedFiles')->willReturn([1234,4321]);
+        $controller->method('getUsedFiles')->willReturn([1234, 4321]);
         $controller->method('getUsedCollection')->willReturn($collection);
         $controller->method('getCollectionObject')->willReturn($collection);
 
@@ -110,7 +108,7 @@ class FileUsageTrackerTest extends \PHPUnit_Framework_TestCase
         $manager = $this->getDatabaseMock();
 
         $items = [];
-        $manager->expects($this->exactly(2))->method('merge')->willReturnCallback(function($item) use (&$items) {
+        $manager->expects($this->exactly(2))->method('merge')->willReturnCallback(function ($item) use (&$items) {
             $items[] = $item;
         });
 
@@ -123,14 +121,14 @@ class FileUsageTrackerTest extends \PHPUnit_Framework_TestCase
             $item->getFileID(),
             $item->getCollectionID(),
             $item->getCollectionVersionID(),
-            $item->getBlockID()]);
+            $item->getBlockID(), ]);
 
         $item = array_shift($items);
         $this->assertEquals([4321, 10, 5, 105], [
             $item->getFileID(),
             $item->getCollectionID(),
             $item->getCollectionVersionID(),
-            $item->getBlockID()]);
+            $item->getBlockID(), ]);
     }
 
     public function testTrackingFileTrackable()
@@ -141,7 +139,7 @@ class FileUsageTrackerTest extends \PHPUnit_Framework_TestCase
         $manager = $this->getDatabaseMock();
         $items = [];
 
-        $manager->expects($this->exactly(7))->method('merge')->willReturnCallback(function($item) use (&$items) {
+        $manager->expects($this->exactly(7))->method('merge')->willReturnCallback(function ($item) use (&$items) {
             $items[] = $item;
         });
 
@@ -164,12 +162,13 @@ class FileUsageTrackerTest extends \PHPUnit_Framework_TestCase
      * @param $usedFiles
      * @param $collectionID
      * @param $collectionVersionID
+     *
      * @return FileTrackableInterface
      */
     private function getFileTrackableMock($usedFiles, $collectionID, $collectionVersionID)
     {
         $collectionClass = $this->getMockClass(Collection::class);
-        $collection = new $collectionClass;
+        $collection = new $collectionClass();
         $collection->method('getCollectionID')->willReturn($collectionID);
         $collection->method('getVersionID')->willReturn($collectionVersionID);
 
@@ -182,7 +181,6 @@ class FileUsageTrackerTest extends \PHPUnit_Framework_TestCase
 
     private function getDatabaseMock()
     {
-
         $builder = $this->getMockBuilder(FileUsageRepository::class);
         $builder->disableOriginalConstructor();
         $builder->disableProxyingToOriginalMethods();
@@ -193,5 +191,4 @@ class FileUsageTrackerTest extends \PHPUnit_Framework_TestCase
 
         return $manager;
     }
-
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Package\TestMetadatadriverAnnotationDefault\Src\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -13,7 +14,7 @@ class Entity
      * @ORM\Id @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      *
-     * @var integer
+     * @var int
      */
     protected $id;
 
@@ -25,9 +26,9 @@ class Entity
     protected $name;
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getID()
     {
@@ -35,7 +36,7 @@ class Entity
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -45,7 +46,7 @@ class Entity
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      */

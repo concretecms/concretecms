@@ -38,7 +38,7 @@ class FileLoaderTest extends PHPUnit_Framework_TestCase
     protected $environment;
 
     /** @var array */
-    protected $to_remove = array();
+    protected $to_remove = [];
 
     public function setUp()
     {
@@ -50,42 +50,42 @@ class FileLoaderTest extends PHPUnit_Framework_TestCase
         $path = DIR_APPLICATION . '/config/';
         $this->loader->addNamespace($this->namespace, $path . $this->namespace);
 
-        $paths = array(
+        $paths = [
             // No Namespace
-            "generated_overrides/{$this->group}.php" => array(
+            "generated_overrides/{$this->group}.php" => [
                 'non-namespaced' => true,
                 'override' => true,
                 'second' => false, // This isn't the second one
-            ),
-            "{$this->group}.php" => array(
+            ],
+            "{$this->group}.php" => [
                 'non-namespaced' => true,
                 'main_group' => true,
                 'second' => true, // This is the second one, nothing after this should override this value
                 'last' => false, // This isn't the last one
-            ),
-            "{$this->environment}.{$this->group}.php" => array(
+            ],
+            "{$this->environment}.{$this->group}.php" => [
                 'non-namespaced' => true,
                 'environment' => true,
                 'last' => true, // This is the last one, nothing should load after this.
-            ),
+            ],
             // Namespace
-            "generated_overrides/{$this->namespace}/{$this->group}.php" => array(
+            "generated_overrides/{$this->namespace}/{$this->group}.php" => [
                 'namespaced' => true,
                 'override' => true,
                 'second' => false, // This isn't the second one
-            ),
-            "{$this->namespace}/{$this->group}.php" => array(
+            ],
+            "{$this->namespace}/{$this->group}.php" => [
                 'namespaced' => true,
                 'main_group' => true,
                 'second' => true, // This is the second one, nothing after this should override this value
                 'last' => false, // This isn't the last one
-            ),
-            "{$this->namespace}/{$this->environment}.{$this->group}.php" => array(
+            ],
+            "{$this->namespace}/{$this->environment}.{$this->group}.php" => [
                 'namespaced' => true,
                 'environment' => true,
                 'last' => true, // This is the last one, nothing should load after this.
-            ),
-        );
+            ],
+        ];
 
         foreach ($paths as $relative_path => $array) {
             $split = explode('/', $relative_path);

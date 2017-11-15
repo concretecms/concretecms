@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Tests\Core\Foundation;
 
 use Concrete\Core\Application\Application as ServiceLocator;
@@ -13,7 +14,7 @@ class ServiceLocatorTest extends \PHPUnit_Framework_TestCase
 
     public function testAllServiceProviders()
     {
-        $groups = array(
+        $groups = [
             '\Concrete\Core\File\FileServiceProvider',
             '\Concrete\Core\Encryption\EncryptionServiceProvider',
             '\Concrete\Core\Validation\ValidationServiceProvider',
@@ -28,7 +29,7 @@ class ServiceLocatorTest extends \PHPUnit_Framework_TestCase
             '\Concrete\Core\Session\SessionServiceProvider',
             '\Concrete\Core\Http\HttpServiceProvider',
             '\Concrete\Core\Events\EventsServiceProvider',
-        );
+        ];
 
         $gr = new ProviderList($this->sl);
         $gr->registerProviders($groups);

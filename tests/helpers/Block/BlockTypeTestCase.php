@@ -1,6 +1,6 @@
 <?php
 
-use \Concrete\Core\Block\View\BlockView;
+use Concrete\Core\Block\View\BlockView;
 use Illuminate\Filesystem\Filesystem;
 
 abstract class BlockTypeTestCase extends ConcreteDatabaseTestCase
@@ -13,6 +13,23 @@ abstract class BlockTypeTestCase extends ConcreteDatabaseTestCase
         'Concrete\Core\Entity\Page\PagePath',
         'Concrete\Core\Entity\Block\BlockType\BlockType',
     ];
+
+    public function tearDown()
+    {
+        $env = Environment::get();
+        $r = $env->getRecord(DIRNAME_BLOCKS . '/' . $this->btHandle . '/' . FILENAME_BLOCK_DB);
+        $dbXml = $r->getFile();
+        $dbXmlOriginal = $dbXml . '-original';
+        $fs = new Filesystem();
+        if ($fs->isFile($dbXmlOriginal)) {
+            if ($fs->isFile($dbXml)) {
+                $fs->delete($dbXml);
+            }
+            $fs->move($dbXmlOriginal, $dbXml);
+        }
+        parent::tearDown();
+    }
+
     public function testInstall()
     {
         $bt = BlockType::installBlockType($this->btHandle);
@@ -87,7 +104,7 @@ abstract class BlockTypeTestCase extends ConcreteDatabaseTestCase
                     $newField->appendChild($attr);
                     $xTable->insertBefore($newField, $xField);
                 }
-                $dbXmlFileOriginal = $dbXmlFile.'-original';
+                $dbXmlFileOriginal = $dbXmlFile . '-original';
                 $fs->move($dbXmlFile, $dbXmlFileOriginal);
                 $fs->put($dbXmlFile, $xDoc->saveXML());
             }
@@ -110,21 +127,5 @@ abstract class BlockTypeTestCase extends ConcreteDatabaseTestCase
             sort($dbColumns);
             $this->assertSame($columnNames, $dbColumns);
         }
-    }
-
-    public function tearDown()
-    {
-        $env = Environment::get();
-        $r = $env->getRecord(DIRNAME_BLOCKS . '/' . $this->btHandle . '/' . FILENAME_BLOCK_DB);
-        $dbXml = $r->getFile();
-        $dbXmlOriginal = $dbXml.'-original';
-        $fs = new Filesystem();
-        if ($fs->isFile($dbXmlOriginal)) {
-            if ($fs->isFile($dbXml)) {
-                $fs->delete($dbXml);
-            }
-            $fs->move($dbXmlOriginal, $dbXml);
-        }
-        parent::tearDown();
     }
 }

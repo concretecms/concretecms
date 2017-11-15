@@ -1,13 +1,14 @@
 <?php
+
 namespace Concrete\Package\TestMetadatadriverYaml\Src\Entity;
 
 /**
- * Test Entity
+ * Test Entity.
  */
 class Entity
 {
     /**
-     * @var integer
+     * @var int
      */
     protected $id;
 
@@ -17,9 +18,9 @@ class Entity
     protected $name;
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getID()
     {
@@ -27,7 +28,7 @@ class Entity
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -37,7 +38,7 @@ class Entity
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      */

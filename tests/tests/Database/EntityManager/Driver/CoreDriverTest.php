@@ -6,7 +6,7 @@ use Concrete\Core\Database\EntityManager\Driver\CoreDriver;
 use Concrete\Core\Support\Facade\Application;
 
 /**
- * CoreDriverTest
+ * CoreDriverTest.
  *
  * @author Markus Liechti <markus@liechti.io>
  * @group orm_setup
@@ -29,7 +29,7 @@ class CoreDriverTest extends \PHPUnit_Framework_TestCase
     protected $dirverChain;
 
     /**
-     * Setup
+     * Setup.
      */
     public function setUp()
     {
@@ -41,12 +41,12 @@ class CoreDriverTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test if getDriver method contains the correct AnnotationDriver, a cached AnnotationReader and the correct entity lookup path
+     * Test if getDriver method contains the correct AnnotationDriver, a cached AnnotationReader and the correct entity lookup path.
      */
-    public function testGetDriver(){
-
+    public function testGetDriver()
+    {
         $annotaionDriver = $this->coreDriver->getDriver();
-        
+
         $this->assertInstanceOf('Doctrine\ORM\Mapping\Driver\AnnotationDriver',
             $annotaionDriver,
             'The core metadata driver musst be an AnnotationDriver');
@@ -61,9 +61,10 @@ class CoreDriverTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test getNamespce method returns the correct core namespace
+     * Test getNamespce method returns the correct core namespace.
      */
-    public function testGetNamespace(){
+    public function testGetNamespace()
+    {
         $this->assertInstanceOf('Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain',
             $this->driverChain, 'Is not a Doctrine ORM MappingDriverChain');
         $drivers = $this->driverChain->getDrivers();

@@ -7,8 +7,8 @@ class IPAddressTest extends PHPUnit_Framework_TestCase
      */
     protected $object;
 
-    protected $fixtures = array();
-    protected $tables = array();
+    protected $fixtures = [];
+    protected $tables = [];
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -31,19 +31,22 @@ class IPAddressTest extends PHPUnit_Framework_TestCase
 
     public function loopbackDataProvider()
     {
-        return array(
-            array('127.0.0.0', true),
-            array('127.0.0.1', true),
-            array('127.255.255.255', true),
-            array('192.168.0.1', false),
-            array('::1', true),
-            array('2001:0db8:85a3:0000:0000:8a2e:0370:7334', false),
-            array('::ffff:127.0.0.1', true),
-        );
+        return [
+            ['127.0.0.0', true],
+            ['127.0.0.1', true],
+            ['127.255.255.255', true],
+            ['192.168.0.1', false],
+            ['::1', true],
+            ['2001:0db8:85a3:0000:0000:8a2e:0370:7334', false],
+            ['::ffff:127.0.0.1', true],
+        ];
     }
 
     /**
      * @dataProvider loopbackDataProvider
+     *
+     * @param mixed $ip
+     * @param mixed $expected
      */
     public function testLoopback($ip, $expected)
     {
@@ -52,29 +55,32 @@ class IPAddressTest extends PHPUnit_Framework_TestCase
 
     public function privateDataProvider()
     {
-        return array(
-            array('192.168.0.1', true),
-            array('172.16.0.1', true),
-            array('172.33.0.1', false),
-            array('10.1.0.1', true),
-            array('127.0.0.1', false),
-            array('127.255.255.255', false),
-            array('8.8.8.8', false),
+        return [
+            ['192.168.0.1', true],
+            ['172.16.0.1', true],
+            ['172.33.0.1', false],
+            ['10.1.0.1', true],
+            ['127.0.0.1', false],
+            ['127.255.255.255', false],
+            ['8.8.8.8', false],
 
-            array('fc00::1', true),
-            array('fcff::1', true),
-            array('fd00:ffff:ffff:ffff:ffff:ffff:ffff:ffff', true),
-            array('::1', false),
-            array('2001:0db8:85a3:0000:0000:8a2e:0370:7334', false),
-            array('::ffff:127.0.0.1', false),
-            array('::ffff:192.168.0.1', true),
-            array('::ffff:172.16.0.1', true),
-            array('::ffff:10.1.0.1', true),
-        );
+            ['fc00::1', true],
+            ['fcff::1', true],
+            ['fd00:ffff:ffff:ffff:ffff:ffff:ffff:ffff', true],
+            ['::1', false],
+            ['2001:0db8:85a3:0000:0000:8a2e:0370:7334', false],
+            ['::ffff:127.0.0.1', false],
+            ['::ffff:192.168.0.1', true],
+            ['::ffff:172.16.0.1', true],
+            ['::ffff:10.1.0.1', true],
+        ];
     }
 
     /**
      * @dataProvider privateDataProvider
+     *
+     * @param mixed $ip
+     * @param mixed $expected
      */
     public function testPrivate($ip, $expected)
     {
@@ -83,25 +89,28 @@ class IPAddressTest extends PHPUnit_Framework_TestCase
 
     public function linkedLocalDataProvider()
     {
-        return array(
-            array('169.254.255.255', true),
-            array('169.255.0.0', false),
-            array('169.253.255.255', false),
+        return [
+            ['169.254.255.255', true],
+            ['169.255.0.0', false],
+            ['169.253.255.255', false],
 
-            array('fe80::1', true),
-            array('fe90::1', true),
-            array('fea0::1', true),
-            array('feb0::1', true),
-            array('fe7f:ffff:ffff:ffff:ffff:ffff:ffff:ffff', false),
-            array('fec0::1', false),
-            array('::ffff:169.254.255.255', true),
-            array('::ffff:169.255.0.0', false),
-            array('::ffff:169.253.255.255', false),
-        );
+            ['fe80::1', true],
+            ['fe90::1', true],
+            ['fea0::1', true],
+            ['feb0::1', true],
+            ['fe7f:ffff:ffff:ffff:ffff:ffff:ffff:ffff', false],
+            ['fec0::1', false],
+            ['::ffff:169.254.255.255', true],
+            ['::ffff:169.255.0.0', false],
+            ['::ffff:169.253.255.255', false],
+        ];
     }
 
     /**
      * @dataProvider linkedLocalDataProvider
+     *
+     * @param mixed $ip
+     * @param mixed $expected
      */
     public function testLinkedLocal($ip, $expected)
     {
@@ -110,25 +119,29 @@ class IPAddressTest extends PHPUnit_Framework_TestCase
 
     public function ipTypeDataProvider()
     {
-        return array(
-            array('169.254.255.255', 4),
-            array('169.254.255.255:2222', 4),
-            array('127.0.0.1', 4),
-            array('10.255.255.255', 4),
+        return [
+            ['169.254.255.255', 4],
+            ['169.254.255.255:2222', 4],
+            ['127.0.0.1', 4],
+            ['10.255.255.255', 4],
 
-            array('fe80::1', 6),
-            array('[fe80::1]:2222', 6),
-            array('::1', 6),
-            array('fe7f:ffff:ffff:ffff:ffff:ffff:ffff:ffff', 6),
-            array('::ffff:169.254.255.255', 6),
-            array('::ffff:127.0.0.1', 6),
-            array('::ffff:10.255.255.255', 6),
-            array('::ffff:10.255.255.255:2222', 6),
-            array('[::ffff:10.255.255.255]:2222', 6),
-        );
+            ['fe80::1', 6],
+            ['[fe80::1]:2222', 6],
+            ['::1', 6],
+            ['fe7f:ffff:ffff:ffff:ffff:ffff:ffff:ffff', 6],
+            ['::ffff:169.254.255.255', 6],
+            ['::ffff:127.0.0.1', 6],
+            ['::ffff:10.255.255.255', 6],
+            ['::ffff:10.255.255.255:2222', 6],
+            ['[::ffff:10.255.255.255]:2222', 6],
+        ];
     }
+
     /**
      * @dataProvider ipTypeDataProvider
+     *
+     * @param mixed $ip
+     * @param mixed $expected
      */
     public function testIpType($ip, $expected)
     {

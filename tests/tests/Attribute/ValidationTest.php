@@ -2,7 +2,6 @@
 
 class ValidationTest extends PHPUnit_Framework_TestCase
 {
-
     public function testAttributeKeyErrorFunctionality()
     {
         $settings = new \Concrete\Core\Entity\Attribute\Key\Settings\TextSettings();
@@ -28,7 +27,7 @@ class ValidationTest extends PHPUnit_Framework_TestCase
 
         $post['akID'][1]['value'] = 'Oh hai!';
 
-        $request = new \Symfony\Component\HttpFoundation\Request(array(), $post);
+        $request = new \Symfony\Component\HttpFoundation\Request([], $post);
         $response = $validator->validateSaveValueRequest($controller, $request);
         $error = $response->getErrorObject();
         $this->assertTrue($response->isValid());
@@ -50,7 +49,7 @@ class ValidationTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\Concrete\Core\Attribute\StandardValidator', $validator);
 
         $post['akID'][1]['value'] = '';
-        $request = new \Symfony\Component\HttpFoundation\Request(array(), $post);
+        $request = new \Symfony\Component\HttpFoundation\Request([], $post);
 
         $response = $validator->validateSaveValueRequest($controller, $request);
         $error = $response->getErrorObject();
@@ -62,7 +61,7 @@ class ValidationTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(1, count($errors));
 
         $post['akID'][1]['value'] = 'foo';
-        $request = new \Symfony\Component\HttpFoundation\Request(array(), $post);
+        $request = new \Symfony\Component\HttpFoundation\Request([], $post);
 
         $response = $validator->validateSaveValueRequest($controller, $request);
         $error = $response->getErrorObject();
@@ -74,7 +73,7 @@ class ValidationTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(1, count($errors));
 
         $post['akID'][1]['value'] = 'test@test.com';
-        $request = new \Symfony\Component\HttpFoundation\Request(array(), $post);
+        $request = new \Symfony\Component\HttpFoundation\Request([], $post);
 
         $response = $validator->validateSaveValueRequest($controller, $request);
         $error = $response->getErrorObject();
@@ -108,7 +107,7 @@ class ValidationTest extends PHPUnit_Framework_TestCase
         $post['akID'][1]['state_province'] = 'OR';
         $post['akID'][1]['country'] = 'US';
         $post['akID'][1]['postal_code'] = '11111';
-        $request = new \Symfony\Component\HttpFoundation\Request(array(), $post);
+        $request = new \Symfony\Component\HttpFoundation\Request([], $post);
 
         $response = $validator->validateSaveValueRequest($controller, $request);
         $error = $response->getErrorObject();
@@ -138,7 +137,7 @@ class ValidationTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(1, count($errors));
 
         $post['akID'][1]['value'] = '1';
-        $request = new \Symfony\Component\HttpFoundation\Request(array(), $post);
+        $request = new \Symfony\Component\HttpFoundation\Request([], $post);
 
         $response = $validator->validateSaveValueRequest($controller, $request);
         $error = $response->getErrorObject();
@@ -168,13 +167,11 @@ class ValidationTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(1, count($errors));
 
         $post['akID'][1]['value'] = '1';
-        $request = new \Symfony\Component\HttpFoundation\Request(array(), $post);
+        $request = new \Symfony\Component\HttpFoundation\Request([], $post);
 
         $response = $validator->validateSaveValueRequest($controller, $request);
         $error = $response->getErrorObject();
         $this->assertTrue($response->isValid());
         $this->assertFalse($error->has());
     }
-
-
 }

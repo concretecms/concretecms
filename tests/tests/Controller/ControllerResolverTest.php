@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Tests\Core\Controller;
 
 class ControllerResolverTest extends \PHPUnit_Framework_TestCase

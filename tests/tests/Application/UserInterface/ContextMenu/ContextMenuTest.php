@@ -2,7 +2,6 @@
 
 class ContextMenuTest extends PHPUnit_Framework_TestCase
 {
-
     public function testBasicMenuDivider()
     {
         $menu = new \Concrete\Core\Application\UserInterface\ContextMenu\Menu();
@@ -74,9 +73,7 @@ class ContextMenuTest extends PHPUnit_Framework_TestCase
         $menu->addItem($item);
         $html = (string) $menu->getMenuElement();
         $this->assertEquals('<div class="popover fade"><div class="arrow"></div><div class="popover-inner"><ul class="dropdown-menu"><li><a href="#" data-tree-action="clone-node" data-tree-node-id="5">Clone Category</a></li></ul></div></div>', $html);
-
     }
-
 
     public function testEditTreeNodeTopic()
     {
@@ -89,7 +86,6 @@ class ContextMenuTest extends PHPUnit_Framework_TestCase
         $html = (string) $menu->getMenuElement();
         $this->assertEquals('<div class="popover fade"><div class="arrow"></div><div class="popover-inner"><ul class="dropdown-menu"><li><a href="#" data-tree-action="edit-node" dialog-title="Edit Topic" data-tree-action-url="http://www.dummyco.com/path/to/server/index.php/ccm/system/dialogs/tree/node/edit/topic?treeNodeID=10">Edit Topic</a></li></ul></div></div>', $html);
     }
-
 
     public function testDeleteTreeNode()
     {
@@ -114,7 +110,4 @@ class ContextMenuTest extends PHPUnit_Framework_TestCase
         $html = (string) $menu->getMenuElement();
         $this->assertEquals('<div class="popover fade"><div class="arrow"></div><div class="popover-inner"><ul class="dropdown-menu"><li><a href="#" data-tree-action="edit-node" dialog-title="Edit Permissions" data-tree-action-url="http://www.dummyco.com/path/to/server/index.php/ccm/system/dialogs/tree/node/permissions?treeNodeID=3">Edit Permissions</a></li></ul></div></div>', $html);
     }
-
-
-
 }

@@ -2,16 +2,15 @@
 
 class ContentPageTranslateTest extends PageTestCase
 {
-    protected $fixtures = array();
+    protected $fixtures = [];
 
-    public function __construct($name = null, array $data = array(), $dataName = '')
+    public function __construct($name = null, array $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
 
-        $this->tables = array_merge($this->tables, array(
+        $this->tables = array_merge($this->tables, [
             'SystemContentEditorSnippets',
-        ));
-
+        ]);
     }
 
     public function setUp()
@@ -24,6 +23,9 @@ class ContentPageTranslateTest extends PageTestCase
      * This is taking data OUT of the database and sending it into the page.
      *
      *  @dataProvider contentsFrom
+     *
+     * @param mixed $from
+     * @param mixed $to
      */
     public function testFrom($from, $to)
     {
@@ -37,10 +39,10 @@ class ContentPageTranslateTest extends PageTestCase
     {
         \Core::forgetInstance('url/canonical');
 
-        return array(
-            array('<a href="{CCM:CID_3}">Super Cool!</a>',
+        return [
+            ['<a href="{CCM:CID_3}">Super Cool!</a>',
                 '<a href="' . \Core::getApplicationURL() . '/' . DISPATCHER_FILENAME . '/awesome/all-right">Super Cool!</a>',
-            ),
-        );
+            ],
+        ];
     }
 }

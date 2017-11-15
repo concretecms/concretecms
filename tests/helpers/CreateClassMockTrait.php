@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Tests;
 
 trait CreateClassMockTrait
