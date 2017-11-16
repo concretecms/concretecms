@@ -1,12 +1,11 @@
 <?php
+
 namespace Concrete\Core\Support\Symbol;
 
-use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Support\Facade\Application;
 
 class MetadataGenerator
 {
-
     public function getAllBindings()
     {
         $bindings = [];
@@ -20,7 +19,6 @@ class MetadataGenerator
                 if (ltrim($name, '\\') != ltrim($className, '\\')) {
                     $bindings[$name] = $className;
                 }
-
             } catch (\Exception $e) {
             }
         }
@@ -32,22 +30,27 @@ class MetadataGenerator
     {
         $output = [
             '<?php',
+            '',
             'namespace PHPSTORM_META;',
-            ''
+            '',
         ];
+
+        // Define $app->build('');
+        $output = array_merge($output, $this->getOverride('\Illuminate\Contracts\Container\Container::build(0)', ['' => "'@'"], '$app->build(SomeClass::class)'));
 
         // Define $app->make('');
         $bindings = $this->getAllBindings();
+        ksort($bindings);
 
         $makeMethod = [
-            "" => "'@'"
+            '' => "'@'",
         ];
 
         foreach ($bindings as $name => $className) {
             $makeMethod[$name] = "\\{$className}::class";
         }
 
-        $output = array_merge($output, $this->getOverride('\Illuminate\Contracts\Container\Container::make(0)', $makeMethod, '$app->make(SomeClass::class)'));
+        $output = array_merge($output, $this->getOverride('\Illuminate\Contracts\Container\Container::make(0)', $makeMethod, '$app->make(\'something\') or $app->make(SomeClass::class)'));
         $output = array_merge($output, $this->getOverride('new \Illuminate\Contracts\Container\Container', $makeMethod, '$app[SomeClass::class]'));
 
         return implode("\n", $output);
@@ -57,17 +60,16 @@ class MetadataGenerator
     {
         $output = [
             "// {$comment}",
-            "override({$string}, map(["
+            "override({$string}, map([",
         ];
 
         foreach ($makeMethod as $name => $className) {
             $output[] = "  '{$name}' => {$className},";
         }
 
-        $output[] = "]));";
-        $output[] = "";
+        $output[] = ']));';
+        $output[] = '';
 
         return $output;
     }
-
 }
