@@ -152,7 +152,7 @@ class EventService
                 $type = Type::getByID($calendar->getEventPageTypeID());
                 if (is_object($type)) {
                     $page = $parent->add($type, array('cName' => $event->getName()));
-                    $page->setAttribute($calendar->getEventPageAttributeKeyHandle(), $this);
+                    $page->setAttribute($calendar->getEventPageAttributeKeyHandle(), $event);
                     $event->setPageID($page->getCollectionID());
                     $event->setRelatedPageRelationType('C');
                     $this->save($event);
