@@ -40,6 +40,7 @@ class MetadataGenerator
 
         // Define $app->make('');
         $bindings = $this->getAllBindings();
+        ksort($bindings);
 
         $makeMethod = [
             '' => "'@'",
