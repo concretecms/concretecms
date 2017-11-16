@@ -1,12 +1,11 @@
 <?php
+
 namespace Concrete\Core\Support\Symbol;
 
-use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Support\Facade\Application;
 
 class MetadataGenerator
 {
-
     public function getAllBindings()
     {
         $bindings = [];
@@ -20,7 +19,6 @@ class MetadataGenerator
                 if (ltrim($name, '\\') != ltrim($className, '\\')) {
                     $bindings[$name] = $className;
                 }
-
             } catch (\Exception $e) {
             }
         }
@@ -33,14 +31,14 @@ class MetadataGenerator
         $output = [
             '<?php',
             'namespace PHPSTORM_META;',
-            ''
+            '',
         ];
 
         // Define $app->make('');
         $bindings = $this->getAllBindings();
 
         $makeMethod = [
-            "" => "'@'"
+            '' => "'@'",
         ];
 
         foreach ($bindings as $name => $className) {
@@ -57,17 +55,16 @@ class MetadataGenerator
     {
         $output = [
             "// {$comment}",
-            "override({$string}, map(["
+            "override({$string}, map([",
         ];
 
         foreach ($makeMethod as $name => $className) {
             $output[] = "  '{$name}' => {$className},";
         }
 
-        $output[] = "]));";
-        $output[] = "";
+        $output[] = ']));';
+        $output[] = '';
 
         return $output;
     }
-
 }
