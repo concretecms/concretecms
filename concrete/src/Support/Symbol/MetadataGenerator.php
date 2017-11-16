@@ -30,9 +30,13 @@ class MetadataGenerator
     {
         $output = [
             '<?php',
+            '',
             'namespace PHPSTORM_META;',
             '',
         ];
+
+        // Define $app->build('');
+        $output = array_merge($output, $this->getOverride('\Illuminate\Contracts\Container\Container::build(0)', ['' => "'@'"], '$app->build(SomeClass::class)'));
 
         // Define $app->make('');
         $bindings = $this->getAllBindings();
@@ -45,7 +49,7 @@ class MetadataGenerator
             $makeMethod[$name] = "\\{$className}::class";
         }
 
-        $output = array_merge($output, $this->getOverride('\Illuminate\Contracts\Container\Container::make(0)', $makeMethod, '$app->make(SomeClass::class)'));
+        $output = array_merge($output, $this->getOverride('\Illuminate\Contracts\Container\Container::make(0)', $makeMethod, '$app->make(\'something\') or $app->make(SomeClass::class)'));
         $output = array_merge($output, $this->getOverride('new \Illuminate\Contracts\Container\Container', $makeMethod, '$app[SomeClass::class]'));
 
         return implode("\n", $output);
