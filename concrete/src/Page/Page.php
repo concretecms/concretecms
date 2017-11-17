@@ -2628,9 +2628,24 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         return $this->getSiteHomePageID() == $this->getCollectionID();
     }
 
+    /**
+     * Get the ID of the homepage for the site tree this page belongs to.
+     *
+     * @return int|null Returns NULL if there's no default locale
+     */
     public function getSiteHomePageID()
     {
         return static::getHomePageID($this);
+    }
+
+    /**
+     * Is this page the homepage of a site tree?
+     *
+     * @return bool
+     */
+    public function isLocaleHomePage()
+    {
+        return $this->getCollectionID() > 0 && $this->getSiteHomePageID() == $this->getCollectionID();
     }
 
     /**
