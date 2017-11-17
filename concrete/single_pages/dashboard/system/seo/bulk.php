@@ -116,6 +116,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
     <?php if (count($pages) > 0) { ?>
         <div class="ccm-search-results-table container-fluid">
         <?php $i = 0;
+        $homeCID = Page::getHomePageID();
         foreach ($pages as $cobj) {
             $cpobj = new Permissions($cobj);
             ++$i;
@@ -168,7 +169,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                         ?>
                     </div>
 
-                    <?php if ($cobj->getCollectionID() != HOME_CID) { ?>
+                    <?php if ($cobj->getCollectionID() != $homeCID) { ?>
                     <div class="form-group">
                         <label class="control-label"><?php echo t('Slug'); ?></label>
                         <?php echo $form->text('collection_handle', $cobj->getCollectionHandle(), array('title' => $cID, 'class' => 'collectionHandle')); ?>
