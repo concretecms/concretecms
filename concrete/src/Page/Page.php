@@ -696,7 +696,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $_cParentID = $c->getCollectionID();
         $q = 'select PagePaths.cPath from PagePaths where cID = ?';
         $v = [$_cParentID];
-        if ($_cParentID > 1) {
+        if ($_cParentID != HOME_CID) {
             $q .= ' and ppIsCanonical = ?';
             $v[] = 1;
         }
@@ -1722,7 +1722,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     {
         $db = Database::connection();
         $cID = $db->fetchColumn("select Pages.cID from Pages inner join CollectionVersions on Pages.cID = CollectionVersions.cID where cvIsApproved = 1 and cParentID = ? order by {$sortColumn}", [$this->cID]);
-        if ($cID > 1) {
+        if ($cID != HOME_CID) {
             return self::getByID($cID, 'ACTIVE');
         }
 
@@ -2507,7 +2507,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             return;
         }
 
-        if ($cID <= 1) {
+        if ($cID < 1 || $cID == HOME_CID) {
             return false;
         }
 
@@ -3224,9 +3224,9 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public static function addStatic($data, TreeInterface $parent = null)
     {
         $db = Database::connection();
-        $cParentID = 1;
+        $cParentID = HOME_CID;
         $cDisplayOrder = 0;
-        $cInheritPermissionsFromCID = 1;
+        $cInheritPermissionsFromCID = HOME_CID;
         $cOverrideTemplatePermissions = 1;
         if ($parent instanceof Page) {
             $cParentID = $parent->getCollectionID();
