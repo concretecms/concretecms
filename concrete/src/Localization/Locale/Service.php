@@ -22,6 +22,16 @@ class Service
         return $this->entityManager->find('Concrete\Core\Entity\Site\Locale', $id);
     }
 
+    /**
+     * Get the default site locale (if set)
+     *
+     * @return Locale|null
+     */
+    public function getDefaultLocale()
+    {
+        return $this->entityManager->getRepository(Locale::class)->findOneBy(['msIsDefault' => true]);
+    }
+
     public function setDefaultLocale(Locale $defaultLocale)
     {
         foreach ($defaultLocale->getSite()->getLocales() as $locale) {
