@@ -78,7 +78,7 @@ class Location extends BackendInterfacePageController
         if ($this->validateAction()) {
             $oc = $this->page;
             if ($oc->getCollectionParentID() != $_POST['cParentID']) {
-                if ($this->page->getCollectionID() == HOME_CID) {
+                if ($this->page->isLocaleHomePage()) {
                     throw new Exception('You cannot move the homepage.');
                 }
                 $dc = Page::getByID($_POST['cParentID'], 'RECENT');
@@ -119,7 +119,7 @@ class Location extends BackendInterfacePageController
             $canonical = $req->request->get('canonical');
             $pathArray = $req->request->get('path');
 
-            if (isset($canonical) && $this->page->getCollectionID() == HOME_CID) {
+            if (isset($canonical) && $this->page->getCollectionID() == Page::getHomePageID()) {
                 throw new Exception('You cannot change the canonical path of the home page.');
             }
 
