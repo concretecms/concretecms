@@ -698,7 +698,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $_cParentID = $c->getCollectionID();
         $q = 'select PagePaths.cPath from PagePaths where cID = ?';
         $v = [$_cParentID];
-        if ($_cParentID != HOME_CID) {
+        if ($_cParentID != static::getHomePageID()) {
             $q .= ' and ppIsCanonical = ?';
             $v[] = 1;
         }
@@ -1729,7 +1729,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     {
         $db = Database::connection();
         $cID = $db->fetchColumn("select Pages.cID from Pages inner join CollectionVersions on Pages.cID = CollectionVersions.cID where cvIsApproved = 1 and cParentID = ? order by {$sortColumn}", [$this->cID]);
-        if ($cID != HOME_CID) {
+        if ($cID && $cID != $this->getSiteHomePageID()) {
             return self::getByID($cID, 'ACTIVE');
         }
 
@@ -2514,7 +2514,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             return;
         }
 
-        if ($cID < 1 || $cID == HOME_CID) {
+        if ($cID < 1 || $cID == static::getHomePageID()) {
             return false;
         }
 
@@ -3254,16 +3254,17 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public static function addStatic($data, TreeInterface $parent = null)
     {
         $db = Database::connection();
-        $cParentID = HOME_CID;
-        $cDisplayOrder = 0;
-        $cInheritPermissionsFromCID = HOME_CID;
-        $cOverrideTemplatePermissions = 1;
         if ($parent instanceof Page) {
             $cParentID = $parent->getCollectionID();
             $parent->rescanChildrenDisplayOrder();
             $cDisplayOrder = $parent->getNextSubPageDisplayOrder();
             $cInheritPermissionsFromCID = $parent->getPermissionsCollectionID();
             $cOverrideTemplatePermissions = $parent->overrideTemplatePermissions();
+        } else {
+            $cParentID = static::getHomePageID();
+            $cDisplayOrder = 0;
+            $cInheritPermissionsFromCID = $cParentID;
+            $cOverrideTemplatePermissions = 1;
         }
 
         if (isset($data['pkgID'])) {
