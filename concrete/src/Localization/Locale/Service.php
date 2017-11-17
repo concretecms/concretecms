@@ -110,7 +110,10 @@ class Service
         $home->rescanCollectionPath();
 
         // Copy the permissions from the canonical home page to this home page.
-        $home->acquirePagePermissions(HOME_CID);
+        $homeCID = Page::getHomePageID();
+        if ($homeCID !== null) {
+            $home->acquirePagePermissions($homeCID);
+        }
 
         return $home;
     }
