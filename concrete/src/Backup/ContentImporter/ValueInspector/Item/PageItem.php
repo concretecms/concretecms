@@ -13,7 +13,7 @@ class PageItem extends AbstractItem
     public function getContentObject()
     {
         if ($this->getReference() == '/' || $this->getReference() == '') {
-            return Page::getByID(HOME_CID, 'ACTIVE');
+            return Page::getByID(Page::getHomePageID(), 'ACTIVE');
         }
 
         $c = Page::getByPath($this->getReference(), 'ACTIVE');
