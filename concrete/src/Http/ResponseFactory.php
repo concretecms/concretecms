@@ -378,7 +378,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
 
         // let's test to see if this is, in fact, the home page,
         // and we're routing arguments onto it (which is screwing up the path.)
-        $home = Page::getByID(HOME_CID);
+        $home = Page::getByID(Page::getHomePageID());
         $request->setCurrentPage($home);
         $homeController = $home->getPageController();
         $homeController->setupRequestActionAndParameters($request);
