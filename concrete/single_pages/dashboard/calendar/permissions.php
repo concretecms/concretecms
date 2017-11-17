@@ -24,7 +24,7 @@ $preferences = Core::make('Concrete\Core\Calendar\Utility\Preferences');
     <?=Core::make('token')->output('save_permissions')?>
     <fieldset>
         <div id="ccm-permission-list-form">
-            <?php Loader::packageElement('permission/lists/calendar', 'calendar', array(
+            <?php View::element('permission/lists/calendar', array(
                 "editPermissions" => $calendar->arePermissionsSetToOverride(), "calendar" => $calendar, )); ?>
         </div>
 
