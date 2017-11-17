@@ -2636,16 +2636,21 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     /**
      * Get the ID of the home page.
      *
-     * @param Page $page The page for which you want the home (if not specified, we'll use the default locale site tree).
+     * @param Page|int $page The page (or its ID) for which you want the home (if not specified, we'll use the default locale site tree).
      *
      * @return int|null Returns NULL if $page is null (or it doesn't have a SiteTree associated) and if there's no default locale.
      */
-    public static function getHomePageID(Page $page = null)
+    public static function getHomePageID($page = null)
     {
-        if ($page !== null) {
-            $siteTree = $page->getSiteTreeObject();
-            if ($siteTree !== null) {
-                return $siteTree->getSiteHomePageID();
+        if ($page) {
+            if (!$page instanceof self) {
+                $page = self::getByID($page);
+            }
+            if ($page instanceof Page) {
+                $siteTree = $page->getSiteTreeObject();
+                if ($siteTree !== null) {
+                    return $siteTree->getSiteHomePageID();
+                }
             }
         }
         $locale = Application::getFacadeApplication()->make(LocaleService::class)->getDefaultLocale();
