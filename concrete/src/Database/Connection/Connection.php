@@ -181,8 +181,16 @@ class Connection extends \Doctrine\DBAL\Connection
     public function Replace($table, $fieldArray, $keyCol, $autoQuote = true)
     {
         $qb = $this->createQueryBuilder();
-        $qb->select('count(*)')->from($table, 't');
-        $where = $qb->expr()->andX();
+
+        $qb->insert($table);
+        if ($autoQuote) {
+            foreach ($fieldArray as $key => $value) {
+                $fieldArray[$key] = $this->quote($value);
+            }
+        }
+        $qb->values($fieldArray);
+        $sql = $qb->getSQL();
+
         $updateKeys = array();
         if (!is_array($keyCol)) {
             $keyCol = array($keyCol);
@@ -194,18 +202,17 @@ class Connection extends \Doctrine\DBAL\Connection
                 $field = null;
             }
             $updateKeys[$key] = $field;
-            if ($autoQuote) {
-                $field = $qb->expr()->literal($field);
-            }
-            $where->add($qb->expr()->eq($key, $field));
         }
-        $qb->where($where);
-        $num = $this->query($qb->getSql())->fetchColumn();
-        if ($num < 1) {
-            $this->insert($table, $fieldArray);
-        } else {
-            $this->update($table, $fieldArray, $updateKeys);
+
+        $on_dupe = ' ON DUPLICATE KEY UPDATE';
+        $dup_keys = [];
+        foreach ($updateKeys as $key => $value) {
+            $dup_keys[] = sprintf(' %s=%s', $key, $value);
         }
+        $on_dupe .= join(',', $dup_keys);
+        $sql .= $on_dupe;
+
+        $this->executeQuery($sql);
     }
 
     /**
