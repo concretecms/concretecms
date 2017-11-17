@@ -3,11 +3,23 @@ namespace Concrete\Core\Updater\Migrations;
 
 use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Database\DatabaseStructureManager;
+use Concrete\Core\Support\Facade\Facade;
 use Doctrine\DBAL\Migrations\AbstractMigration as DoctrineAbstractMigration;
+use Doctrine\DBAL\Migrations\Version;
 use Doctrine\ORM\Tools\SchemaTool;
 
 abstract class AbstractMigration extends DoctrineAbstractMigration
 {
+
+    protected $app;
+
+    public function __construct(Version $version)
+    {
+        parent::__construct($version);
+        $app = Facade::getFacadeApplication();
+        $this->app = $app;
+    }
+
     protected function output($message)
     {
         $this->version->getConfiguration()->getOutputWriter()->write($message);
