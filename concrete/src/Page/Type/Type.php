@@ -614,7 +614,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         // now copy the master pages for defaults and attributes
         $db = \Database::get();
         $r = $db->Execute('select cID from Pages where cIsTemplate = 1 and ptID = ?', array($this->getPageTypeID()));
-        $home = Page::getByID(HOME_CID);
+        $home = Page::getByID(Page::getHomePageID());
         while ($row = $r->FetchRow()) {
             $c = Page::getByID($row['cID']);
             if (is_object($c)) {
