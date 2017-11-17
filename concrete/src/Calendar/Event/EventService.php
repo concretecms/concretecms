@@ -3,6 +3,7 @@ namespace Concrete\Core\Calendar\Event;
 
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Foundation\Repetition\Comparator;
+use Concrete\Core\Calendar\Event\Event\DuplicateEventEvent;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Type\Type;
 use Concrete\Core\User\User;
@@ -12,6 +13,7 @@ use Concrete\Core\Entity\Calendar\Calendar;
 use Concrete\Core\Entity\Calendar\CalendarEvent;
 use Concrete\Core\Entity\Calendar\CalendarEventVersion;
 use Concrete\Core\Entity\Calendar\CalendarRelatedEvent;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class EventService
 {
@@ -19,17 +21,19 @@ class EventService
     protected $config;
     protected $occurrenceFactory;
     protected $eventCategory;
+    protected $dispatcher;
 
     const EVENT_VERSION_RECENT = 1;
     const EVENT_VERSION_APPROVED = 2;
     const INTERVAL_VERSION = 1200; // 20 minutes
 
-    public function __construct(EntityManagerInterface $entityManagerInterface, Repository $config, EventOccurrenceFactory $occurrenceFactory, EventCategory $eventCategory)
+    public function __construct(EntityManagerInterface $entityManagerInterface, Repository $config, EventOccurrenceFactory $occurrenceFactory, EventCategory $eventCategory, EventDispatcher $dispatcher)
     {
         $this->entityManager = $entityManagerInterface;
         $this->config = $config;
         $this->occurrenceFactory = $occurrenceFactory;
         $this->eventCategory = $eventCategory;
+        $this->dispatcher = $dispatcher;
     }
 
     public function getByID($id, $retrieveVersion = self::EVENT_VERSION_APPROVED)
@@ -168,11 +172,13 @@ class EventService
         $this->entityManager->flush();
     }
 
-    public function duplicate(CalendarEvent $event, User $u)
+    public function duplicate(CalendarEvent $event, User $u, Calendar $calendar = null)
     {
         $values = $this->eventCategory->getAttributeValues($event->getRecentVersion());
 
-        $new = new CalendarEvent($event->getCalendar());
+        $calendar = $calendar ? $calendar : $event->getCalendar();
+
+        $new = new CalendarEvent($calendar);
         $version = clone $event->getRecentVersion();
         $version->setDateActivated(null);
         $version->setAuthor($u->getUserInfoObject()->getEntityObject());
@@ -195,7 +201,12 @@ class EventService
         
         $this->generateDefaultOccurrences($version);
 
-        return $event;
+        $duplicateEvent = new DuplicateEventEvent($this);
+        $duplicateEvent->setEntityManager($this->entityManager);
+        $duplicateEvent->setNewEventObject($new);
+        $this->dispatcher->dispatch('on_calendar_event_duplicate', $duplicateEvent);
+
+        return $new;
     }
 
     public function delete(CalendarEvent $event)

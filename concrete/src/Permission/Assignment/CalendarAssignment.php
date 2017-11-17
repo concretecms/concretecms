@@ -3,7 +3,7 @@ namespace Concrete\Core\Permission\Assignment;
 
 use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Permission\Key\Key;
-use Concrete\Core\Entity\Calendar;
+use Concrete\Core\Entity\Calendar\Calendar;
 
 class CalendarAssignment extends Assignment
 {
