@@ -45,6 +45,7 @@ class CLIRunner implements RunInterface, ApplicationAwareInterface
         $console = $this->console;
         $this->app->instance('console', $console);
 
+        $this->app->setupConstants();
         $this->loadBootstrap();
         $this->initializeSystemTimezone();
 

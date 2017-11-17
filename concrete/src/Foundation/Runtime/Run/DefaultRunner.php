@@ -59,6 +59,7 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
      */
     public function run()
     {
+        $this->app->setupConstants();
         // Load in the /application/bootstrap/app.php file
         $this->loadBootstrap();
 
