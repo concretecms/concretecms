@@ -181,16 +181,8 @@ class Connection extends \Doctrine\DBAL\Connection
     public function Replace($table, $fieldArray, $keyCol, $autoQuote = true)
     {
         $qb = $this->createQueryBuilder();
-
-        $qb->insert($table);
-        if ($autoQuote) {
-            foreach ($fieldArray as $key => $value) {
-                $fieldArray[$key] = $this->quote($value);
-            }
-        }
-        $qb->values($fieldArray);
-        $sql = $qb->getSQL();
-
+        $qb->select('count(*)')->from($table, 't');
+        $where = $qb->expr()->andX();
         $updateKeys = array();
         if (!is_array($keyCol)) {
             $keyCol = array($keyCol);
@@ -202,17 +194,76 @@ class Connection extends \Doctrine\DBAL\Connection
                 $field = null;
             }
             $updateKeys[$key] = $field;
+            if ($autoQuote) {
+                $field = $qb->expr()->literal($field);
+            }
+            $where->add($qb->expr()->eq($key, $field));
+        }
+        $qb->where($where);
+        $num = $this->query($qb->getSql())->fetchColumn();
+        if ($num < 1) {
+            $this->replaceInternal($table, $fieldArray);
+        } else {
+            $this->update($table, $fieldArray, $updateKeys);
+        }
+    }
+
+    /**
+     * Inserts a table row with specified data but doesn't fail on key collision by using REPLACE INTO.
+     *
+     * Table expression and columns are not escaped and are not safe for user-input.
+     *
+     * @param string $tableExpression The expression of the table to insert data into, quoted or unquoted.
+     * @param array  $data      An associative array containing column-value pairs.
+     * @param array  $types     Types of the inserted data.
+     *
+     * @return integer The number of affected rows.
+     */
+    private function replaceInternal($tableExpression, array $data, array $types = array())
+    {
+        $this->connect();
+
+        if (empty($data)) {
+            return $this->executeUpdate('REPLACE INTO ' . $tableExpression . ' ()' . ' VALUES ()');
         }
 
-        $on_dupe = ' ON DUPLICATE KEY UPDATE';
-        $dup_keys = [];
-        foreach ($updateKeys as $key => $value) {
-            $dup_keys[] = sprintf(' %s=%s', $key, $value);
-        }
-        $on_dupe .= join(',', $dup_keys);
-        $sql .= $on_dupe;
+        $columnList = array();
+        $paramPlaceholders = array();
+        $paramValues = array();
 
-        $this->executeQuery($sql);
+        foreach ($data as $columnName => $value) {
+            $columnList[] = $columnName;
+            $paramPlaceholders[] = '?';
+            $paramValues[] = $value;
+        }
+
+        return $this->executeUpdate(
+            'REPLACE INTO ' . $tableExpression . ' (' . implode(', ', $columnList) . ')' .
+            ' VALUES (' . implode(', ', $paramPlaceholders) . ')',
+            $paramValues,
+            is_string(key($types)) ? $this->extractTypeValuesInternal($columnList, $types) : $types
+        );
+    }
+
+    /**
+     * Extract ordered type list from an ordered column list and type map.
+     *
+     * @param array $columnList
+     * @param array $types
+     *
+     * @return array
+     */
+    private function extractTypeValuesInternal(array $columnList, array $types)
+    {
+        $typeValues = array();
+
+        foreach ($columnList as $columnIndex => $columnName) {
+            $typeValues[] = isset($types[$columnName])
+                ? $types[$columnName]
+                : \PDO::PARAM_STR;
+        }
+
+        return $typeValues;
     }
 
     /**
