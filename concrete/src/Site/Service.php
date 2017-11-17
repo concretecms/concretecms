@@ -8,6 +8,7 @@ use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Entity\Site\SiteTree;
 use Concrete\Core\Entity\Site\Type;
 use Concrete\Core\Localization\Localization;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Site\Resolver\ResolverFactory;
 use Doctrine\ORM\EntityManagerInterface;
@@ -220,7 +221,7 @@ class Service
         $r = $this->entityManager->getConnection()
             ->executeQuery('select cID from Pages where siteTreeID = ? and cParentID = 0', [$site->getSiteTreeID()]);
         while ($row = $r->fetch()) {
-            $page = \Page::getByID($row['cID']);
+            $page = Page::getByID($row['cID']);
             if (is_object($page) && !$page->isError()) {
                 $page->moveToTrash();
             }
@@ -300,7 +301,7 @@ class Service
             $cID = $connection->fetchColumn('select cID from MultilingualSections where msLanguage = ? and msCountry = ?', [$data[0], $data[1]]);
         }
         if (!$cID) {
-            $cID = HOME_CID;
+            $cID = Page::getHomePageID() ?: 1;
         }
         $tree->setSiteHomePageID($cID);
         $tree->setLocale($locale);
