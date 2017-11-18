@@ -6,6 +6,7 @@ use Concrete\Core\Entity\Site\Locale;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Entity\Site\SiteTree;
 use Concrete\Core\Page\Page;
+use Doctrine\DBAL\Exception\TableNotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
 
 class Service
@@ -23,13 +24,17 @@ class Service
     }
 
     /**
-     * Get the default site locale (if set)
+     * Get the default site locale (if set).
      *
      * @return Locale|null
      */
     public function getDefaultLocale()
     {
-        return $this->entityManager->getRepository(Locale::class)->findOneBy(['msIsDefault' => true]);
+        try {
+            return $this->entityManager->getRepository(Locale::class)->findOneBy(['msIsDefault' => true]);
+        } catch (TableNotFoundException $e) {
+            return null;
+        }
     }
 
     public function setDefaultLocale(Locale $defaultLocale)
