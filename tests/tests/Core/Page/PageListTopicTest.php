@@ -80,7 +80,7 @@ class PageListTopicTest extends PageTestCase
     public function testFilterByTopic()
     {
         $topic = \Concrete\Core\Tree\Node\Type\Topic::add("Summer");
-        $home = Page::getByID(HOME_CID);
+        $home = Page::getByID(Page::getHomePageID());
 
         $home->setAttribute('topics', $topic);
 

@@ -64,7 +64,7 @@ class ContentSwapper implements ContentSwapperInterface
                 $c->delete();
             }
 
-            $home = \Page::getByID(HOME_CID);
+            $home = \Page::getByID(\Page::getHomePageID());
             $blocks = $home->getBlocks();
             foreach ($blocks as $b) {
                 $b->deleteBlock();
@@ -78,7 +78,7 @@ class ContentSwapper implements ContentSwapperInterface
             // Set the page type of the home page to 0, because
             // if it has a type the type will be gone since we just
             // deleted it
-            $home = Page::getByID(HOME_CID);
+            $home = Page::getByID(\Page::getHomePageID());
             $home->setPageType(null);
 
             // now we add in any files that this package has
