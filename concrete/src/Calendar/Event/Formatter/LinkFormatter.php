@@ -86,7 +86,7 @@ class LinkFormatter implements LinkFormatterInterface
     {
         $url = $this->getEventFrontendViewLink($occurrence->getEvent());
         if ($url) {
-            $url .= '?versionOccurrenceID=' . $occurrence->getId();
+            $url .= '?occurrenceID=' . $occurrence->getId();
         }
         return $url;
     }
