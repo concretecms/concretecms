@@ -17,7 +17,7 @@ class Controller extends BlockController implements FileTrackableInterface
     protected $btCacheBlockRecord = true;
     protected $btCacheBlockOutput = true;
     protected $btCacheBlockOutputOnPost = true;
-    protected $btCacheBlockOutputForRegisteredUsers = true;
+    protected $btCacheBlockOutputForRegisteredUsers = false;
     protected $btWrapperClass = 'ccm-ui';
     protected $btExportFileColumns = ['fID', 'fOnstateID', 'fileLinkID'];
     protected $btExportPageColumns = ['internalLinkCID'];
@@ -415,7 +415,7 @@ class Controller extends BlockController implements FileTrackableInterface
         }
 
         if ((int) $args['linkType'] > 0) {
-            $args['openLinkInNewWindow'] = isset($args['openLinkInNewWindow']) ? 1 : 0;
+            $args['openLinkInNewWindow'] = $args['openLinkInNewWindow'] ? 1 : 0;
         }
 
         // This doesn't get saved to the database. It's only for UI usage.

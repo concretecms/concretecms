@@ -227,8 +227,6 @@ abstract class Workflow extends ConcreteObject implements \Concrete\Core\Permiss
 
     abstract public function getWorkflowProgressActions(WorkflowProgress $wp);
 
-    abstract public function getWorkflowProgressCurrentDescription(WorkflowProgress $wp);
-
     abstract public function getWorkflowProgressCurrentComment(WorkflowProgress $wp);
 
     abstract public function getWorkflowProgressStatusDescription(WorkflowProgress $wp);

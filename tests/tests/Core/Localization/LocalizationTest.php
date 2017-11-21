@@ -297,6 +297,7 @@ class LocalizationTest extends LocalizationTestsBase
     public function testStaticGetAvailableInterfaceLanguages()
     {
         $langs = Localization::getAvailableInterfaceLanguages();
+        sort($langs);
         $this->assertEquals(array('en_GB', 'fi_FI', 'fr_FR'), $langs);
     }
 

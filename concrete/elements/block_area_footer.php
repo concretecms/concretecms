@@ -63,7 +63,9 @@ $class = 'ccm-area-footer';
                                 ?>
                                 <li class="divider"></li>
                                 <li><a href="javascript:void(0)" data-container-layout-block-id="<?=$bx->getBlockID()?>" data-menu-action="edit-container-layout" data-area-grid-maximum-columns="<?=$a->getAreaGridMaximumColumns()?>"><?=t("Edit Container Layout")?></a></li>
-                                <li><a href="javascript:void(0)" data-container-layout-block-id="<?=$bx->getBlockID()?>" data-menu-action="edit-container-layout-style"><?=t("Edit Layout Design")?></a></li>
+                                <?php if ($showAreaDesign) { ?>
+                                    <li><a href="javascript:void(0)" data-container-layout-block-id="<?=$bx->getBlockID()?>" data-menu-action="edit-container-layout-style"><?=t("Edit Layout Design")?></a></li>
+                                <?php } ?>
                                 <?php
                                 if ($pk->validate()) {
                                     $btc = $bx->getController();

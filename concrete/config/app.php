@@ -128,6 +128,8 @@ return [
         'core_service_manager' => '\Concrete\Core\Service\Manager\ServiceManagerServiceProvider',
         'core_site' => '\Concrete\Core\Site\ServiceProvider',
         'core_search' => \Concrete\Core\Search\SearchServiceProvider::class,
+        'core_geolocator' => 'Concrete\Core\Geolocator\GeolocatorServiceProvider',
+        'core_calendar' => 'Concrete\Core\Calendar\CalendarServiceProvider',
 
         // Authentication
         'core_oauth' => '\Concrete\Core\Authentication\Type\OAuth\ServiceProvider',
@@ -167,6 +169,10 @@ return [
         'URL' => '\Concrete\Core\Support\Facade\Url',
     ],
 
+    'entity_namespaces' => [
+        'calendar' => 'Concrete\Core\Entity\Calendar',
+    ],
+
     'package_items' => [
         'antispam_library',
         'attribute_key_category',
@@ -180,13 +186,14 @@ return [
         'captcha_library',
         'content_editor_snippet',
         'conversation_rating_type',
+        'geolocator_library',
         'group',
         'group_set',
         'job',
         'mail_importer',
         'permission_access_entity_type',
-        'permission_key_category',
         'permission_key',
+        'permission_key_category',
         'page_template',
         'site_type',
         'page_type',
@@ -252,6 +259,7 @@ return [
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportConfigValuesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSystemCaptchaLibrariesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSystemContentEditorSnippetsRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportGeolocatorsRoutine',
     ],
 
     /*
@@ -344,8 +352,6 @@ return [
         '/ccm/system/dialogs/page/edit_external/submit' => ['\Concrete\Controller\Dialog\Page\EditExternal::submit'],
         '/ccm/system/dialogs/page/location' => ['\Concrete\Controller\Dialog\Page\Location::view'],
         '/ccm/system/dialogs/page/search' => ['\Concrete\Controller\Dialog\Page\Search::view'],
-        '/ccm/system/dialogs/page/search/customize' => ['\Concrete\Controller\Dialog\Page\Search\Customize::view'],
-        '/ccm/system/dialogs/page/search/customize/submit' => ['\Concrete\Controller\Dialog\Page\Search\Customize::submit'],
         '/ccm/system/dialogs/page/seo' => ['\Concrete\Controller\Dialog\Page\Seo::view'],
 
         '/ccm/system/dialogs/page/advanced_search' => ['\Concrete\Controller\Dialog\Page\AdvancedSearch::view'],
@@ -357,13 +363,14 @@ return [
         '/ccm/system/dialogs/user/bulk/properties/clear_attribute' => ['\Concrete\Controller\Dialog\User\Bulk\Properties::clearAttribute'],
         '/ccm/system/dialogs/user/bulk/properties/update_attribute' => ['\Concrete\Controller\Dialog\User\Bulk\Properties::updateAttribute'],
         '/ccm/system/dialogs/user/search' => ['\Concrete\Controller\Dialog\User\Search::view'],
-        '/ccm/system/dialogs/user/search/customize' => ['\Concrete\Controller\Dialog\User\Search\Customize::view'],
-        '/ccm/system/dialogs/user/search/customize/submit' => ['\Concrete\Controller\Dialog\User\Search\Customize::submit'],
 
         '/ccm/system/dialogs/user/advanced_search' => ['\Concrete\Controller\Dialog\User\AdvancedSearch::view'],
         '/ccm/system/dialogs/user/advanced_search/add_field' => ['\Concrete\Controller\Dialog\User\AdvancedSearch::addField'],
         '/ccm/system/dialogs/user/advanced_search/submit' => ['\Concrete\Controller\Dialog\User\AdvancedSearch::submit'],
         '/ccm/system/dialogs/user/advanced_search/save_preset' => ['\Concrete\Controller\Dialog\User\AdvancedSearch::savePreset'],
+
+        '/ccm/system/dialogs/type/update_from_type/{ptID}/{pTemplateID}' => ['\Concrete\Controller\Dialog\Type\UpdateFromType::view'],
+        '/ccm/system/dialogs/type/update_from_type/{ptID}/{pTemplateID}/submit' => ['\Concrete\Controller\Dialog\Type\UpdateFromType::submit'],
 
         '/ccm/system/dialogs/express/advanced_search/' => ['\Concrete\Controller\Dialog\Express\AdvancedSearch::view'],
         '/ccm/system/dialogs/express/advanced_search/add_field/' => ['\Concrete\Controller\Dialog\Express\AdvancedSearch::addField'],
@@ -445,6 +452,7 @@ return [
         // end removing lines
         '/ccm/system/upgrade/' => ['\Concrete\Controller\Upgrade::view'],
         '/ccm/system/upgrade/submit' => ['\Concrete\Controller\Upgrade::submit'],
+        '/ccm/system/country-stateprovince-link/get_stateprovinces' => ['\Concrete\Controller\Frontend\CountryStateprovinceLink::getStateprovinces'],
 
         /*
          * Notification
@@ -470,6 +478,7 @@ return [
         '/ccm/system/tree/node/load_starting' => ['\Concrete\Controller\Backend\Tree\Node::load_starting'],
         '/ccm/system/tree/node/drag_request' => ['\Concrete\Controller\Backend\Tree\Node\DragRequest::execute'],
         '/ccm/system/tree/node/duplicate' => ['\Concrete\Controller\Backend\Tree\Node\Duplicate::execute'],
+        '/ccm/system/tree/node/update_order' => ['\Concrete\Controller\Backend\Tree\Node\DragRequest::updateChildren'],
 
         '/ccm/system/dialogs/tree/node/add/category' => ['\Concrete\Controller\Dialog\Tree\Node\Category\Add::view'],
         '/ccm/system/dialogs/tree/node/add/category/add_category_node' => ['\Concrete\Controller\Dialog\Tree\Node\Category\Add::add_category_node'],
@@ -616,11 +625,55 @@ return [
          * Languages
          */
         '/ccm/system/dialogs/language/update/details' => ['\Concrete\Controller\Dialog\Language\Update\Details::view'],
+
+        /*
+         * Captcha images
+         */
+        '/ccm/system/captcha/picture' => ['\Concrete\Core\Captcha\CaptchaWithPictureInterface::displayCaptchaPicture'],
+
+
+        /*
+         * Calendar
+         */
+        '/ccm/calendar/dialogs/event/edit' => ['\Concrete\Controller\Dialog\Event\Edit::edit'],
+        '/ccm/calendar/dialogs/event/add' => ['\Concrete\Controller\Dialog\Event\Edit::add'],
+        '/ccm/calendar/dialogs/event/add/save' => ['\Concrete\Controller\Dialog\Event\Edit::addEvent'],
+        '/ccm/calendar/dialogs/event/edit/save' => ['\Concrete\Controller\Dialog\Event\Edit::updateEvent'],
+        '/ccm/calendar/dialogs/event/duplicate' => ['\Concrete\Controller\Dialog\Event\Duplicate::view'],
+        '/ccm/calendar/dialogs/event/duplicate/submit' => ['\Concrete\Controller\Dialog\Event\Duplicate::submit'],
+        '/ccm/calendar/dialogs/event/delete' => ['\Concrete\Controller\Dialog\Event\Delete::view'],
+        '/ccm/calendar/dialogs/event/delete_occurrence' => ['\Concrete\Controller\Dialog\Event\DeleteOccurrence::view'],
+        '/ccm/calendar/dialogs/event/delete/submit' => ['\Concrete\Controller\Dialog\Event\Delete::submit'],
+        '/ccm/calendar/dialogs/event/delete_occurrence/submit' => ['\Concrete\Controller\Dialog\Event\DeleteOccurrence::submit'],
+        '/ccm/calendar/dialogs/event/versions' => ['\Concrete\Controller\Dialog\Event\Versions::view'],
+        '/ccm/calendar/dialogs/event/version/view' => ['\Concrete\Controller\Dialog\Event\ViewVersion::view'],
+        '/ccm/calendar/event/version/delete' => ['\Concrete\Controller\Event\EventVersion::delete'],
+        '/ccm/calendar/event/version/approve' => ['\Concrete\Controller\Event\EventVersion::approve'],
+        '/ccm/calendar/event/version/unapprove_all' => ['\Concrete\Controller\Event\Event::unapprove'],
+        '/ccm/calendar/view_event/{bID}/{occurrence_id}' => [
+            '\Concrete\Controller\Dialog\Frontend\Event::view',
+            'view_event_occurrence',
+            ['occurrence_id' => '[0-9]+'],
+        ],
+        '/ccm/calendar/feed/{calendar_id}' => [
+            '\Concrete\Controller\CalendarFeed::view',
+            'calendar_rss',
+            ['identifier' => '[0-9]+'],
+        ],
+        '/ccm/calendar/dialogs/event/occurrence' => ['\Concrete\Controller\Dialog\EventOccurrence::view'],
+        '/ccm/calendar/dialogs/choose_event' => ['\Concrete\Controller\Dialog\ChooseEvent::view'],
+        '/ccm/calendar/dialogs/choose_event/get_events' => ['\Concrete\Controller\Dialog\ChooseEvent::getEvents'],
+        '/ccm/calendar/event/get_json' => ['\Concrete\Controller\Event\Event::getJSON'],
+        '/ccm/calendar/dialogs/permissions/{pkCategoryHandle}' => ['\Concrete\Controller\Dialog\Calendar\Permissions::view'],
+
+        /* Permissions Tools Hack */
+        '/tools/required/permissions/categories/calendar_admin' => ['\Concrete\Controller\Event\Permissions::process'],
+        '/tools/required/permissions/categories/calendar' => ['\Concrete\Controller\Event\Permissions::processCalendar'],
     ],
 
-    /*
-     * Route themes
-     */
+/*
+ * Route themes
+ */
     'theme_paths' => [
         '/dashboard' => 'dashboard',
         '/dashboard/*' => 'dashboard',
@@ -753,6 +806,17 @@ return [
             ['javascript', 'js/responsive-slides.js', ['minify' => false]],
             ['css', 'css/responsive-slides.css', ['minify' => false]],
         ],
+        'fullcalendar' => [
+            ['javascript', 'js/fullcalendar/fullcalendar.js', ['minify' => false, 'combine' => false]],
+            ['css', 'js/fullcalendar/fullcalendar.css', ['minify' => false]],
+        ],
+        'fullcalendar/localization' => [
+            ['javascript', 'js/fullcalendar/lang-all.js', ['minify' => false, 'combine' => false]],
+        ],
+        'fullcalendar/print' => [
+            ['css', 'js/fullcalendar/fullcalendar.print.css', ['minify' => false]],
+        ],
+
         'html5-shiv' => [
             [
                 'javascript-conditional',
@@ -779,6 +843,9 @@ return [
         ],
         'core/events' => [
             ['javascript', 'js/events.js', ['minify' => false]],
+        ],
+        'core/asset-loader' => [
+            ['javascript', 'js/asset-loader.js', ['minify' => false]],
         ],
         'core/style-customizer' => [
             ['javascript', 'js/style-customizer.js', ['minify' => false]],
@@ -948,6 +1015,12 @@ return [
         'core/users' => [
             ['javascript', 'js/users.js', ['minify' => false]],
         ],
+        'core/calendar/event-selector' => [
+            ['javascript', 'js/calendar/event-selector.js', ['minify' => false]],
+        ],
+        'core/calendar/admin' => [
+            ['javascript', 'js/calendar/admin.js', ['minify' => false]],
+        ],
         'core/notification' => [
             ['javascript', 'js/notification.js', ['minify' => false]],
         ],
@@ -987,6 +1060,9 @@ return [
             ['javascript-localized', '/ccm/assets/localization/translator/js'],
             ['css', 'css/translator.css', ['minify' => false]],
         ],
+        'core/country-stateprovince-link' => [
+            ['javascript', 'js/country-stateprovince-link.js', ['minify' => false]],
+        ],
     ],
     'asset_groups' => [
         'jquery/ui' => [
@@ -1016,6 +1092,15 @@ return [
             [
                 ['javascript', 'selectize'],
                 ['css', 'selectize'],
+            ],
+        ],
+        'fullcalendar' => [
+            [
+                ['javascript', 'jquery'],
+                ['javascript', 'moment'],
+                ['javascript', 'fullcalendar'],
+                ['javascript', 'fullcalendar/localization'],
+                ['css', 'fullcalendar']
             ],
         ],
         'dropzone' => [
@@ -1075,6 +1160,7 @@ return [
                 ['javascript', 'jquery'],
                 ['javascript', 'jquery/ui'],
                 ['javascript-localized', 'jquery/ui'],
+                ['javascript', 'core/asset-loader'],
                 ['javascript', 'core/events'],
                 ['javascript', 'underscore'],
                 ['javascript', 'backbone'],
@@ -1126,6 +1212,7 @@ return [
         'core/app' => [
             [
                 ['javascript', 'jquery'],
+                ['javascript', 'core/asset-loader'],
                 ['javascript', 'core/events'],
                 ['javascript', 'underscore'],
                 ['javascript', 'backbone'],
@@ -1177,6 +1264,7 @@ return [
                 ['javascript', 'backbone'],
                 ['javascript', 'dashboard'],
                 ['javascript', 'core/events'],
+                ['javascript', 'core/asset-loader'],
                 ['javascript', 'bootstrap/dropdown'],
                 ['javascript', 'bootstrap/tooltip'],
                 ['javascript', 'bootstrap/collapse'],
@@ -1199,6 +1287,7 @@ return [
                 ['css', 'core/file-manager'],
                 ['css', 'selectize'],
                 ['javascript', 'core/events'],
+                ['javascript', 'core/asset-loader'],
                 ['javascript', 'bootstrap/tooltip'],
                 ['javascript', 'underscore'],
                 ['javascript', 'backbone'],
@@ -1230,6 +1319,7 @@ return [
         'core/file-folder-selector' => [
             [
                 ['javascript', 'core/events'],
+                ['javascript', 'core/asset-loader'],
                 ['javascript', 'underscore'],
                 ['javascript', 'jquery/ui'],
                 ['javascript-localized', 'jquery/ui'],
@@ -1243,6 +1333,7 @@ return [
         'core/sitemap' => [
             [
                 ['javascript', 'core/events'],
+                ['javascript', 'core/asset-loader'],
                 ['javascript', 'underscore'],
                 ['javascript', 'backbone'],
                 ['javascript', 'jquery/ui'],
@@ -1261,8 +1352,37 @@ return [
         'core/users' => [
             [
                 ['javascript', 'core/events'],
+                ['javascript', 'core/asset-loader'],
                 ['javascript', 'underscore'],
                 ['javascript', 'core/users'],
+            ],
+        ],
+        'core/calendar/event-selector' => [
+            [
+                ['javascript', 'jquery'],
+                ['javascript', 'jquery/ui'],
+                ['javascript-localized', 'jquery/ui'],
+                ['javascript', 'core/events'],
+                ['javascript', 'underscore'],
+                ['javascript', 'backbone'],
+                ['javascript', 'core/calendar/event-selector'],
+                ['css', 'core/app'],
+                ['css', 'jquery/ui'],
+            ],
+        ],
+        'core/calendar/admin' => [
+            [
+                ['javascript-localized', 'core/localization'],
+                ['javascript-localized', 'jquery/ui'],
+                ['javascript', 'jquery'],
+                ['javascript', 'jquery/ui'],
+                ['javascript', 'core/events'],
+                ['javascript', 'underscore'],
+                ['javascript', 'backbone'],
+                ['javascript', 'core/app'],
+                ['javascript', 'core/calendar/admin'],
+                ['css', 'core/app'],
+                ['css', 'jquery/ui'],
             ],
         ],
         'core/express' => [
@@ -1270,6 +1390,7 @@ return [
                 ['javascript', 'underscore'],
                 ['javascript', 'backbone'],
                 ['javascript', 'core/events'],
+                ['javascript', 'core/asset-loader'],
                 ['javascript', 'bootstrap/tooltip'],
                 ['javascript', 'jquery/ui'],
                 ['javascript-localized', 'core/localization'],
@@ -1283,6 +1404,7 @@ return [
         'core/topics' => [
             [
                 ['javascript', 'core/events'],
+                ['javascript', 'core/asset-loader'],
                 ['javascript', 'underscore'],
                 ['javascript', 'jquery/ui'],
                 ['javascript-localized', 'jquery/ui'],
@@ -1295,6 +1417,7 @@ return [
         'core/tree' => [
             [
                 ['javascript', 'core/events'],
+                ['javascript', 'core/asset-loader'],
                 ['javascript', 'underscore'],
                 ['javascript', 'jquery/ui'],
                 ['javascript-localized', 'jquery/ui'],
@@ -1307,6 +1430,7 @@ return [
         'core/groups' => [
             [
                 ['javascript', 'core/events'],
+                ['javascript', 'core/asset-loader'],
                 ['javascript', 'underscore'],
                 ['javascript', 'jquery/ui'],
                 ['javascript-localized', 'jquery/ui'],
@@ -1338,6 +1462,7 @@ return [
                 ['javascript-localized', 'dropzone'],
                 ['javascript', 'bootstrap/dropdown'],
                 ['javascript', 'core/events'],
+                ['javascript', 'core/asset-loader'],
                 ['javascript', 'core/conversation'],
                 ['javascript-localized', 'core/conversation'],
                 ['css', 'core/conversation'],
@@ -1371,6 +1496,12 @@ return [
                 ['javascript-localized', 'core/translator'],
                 ['css', 'core/translator'],
             ],
+        ],
+        'core/country-stateprovince-link' => [
+            [
+                ['javascript', 'jquery'],
+                ['javascript', 'core/country-stateprovince-link'],
+            ]
         ],
         /* @deprecated keeping this around because certain themes reference it and we don't want to break them. */
         'core/legacy' => [
@@ -1432,6 +1563,6 @@ return [
         ],
         'core_cookie' => \Concrete\Core\Http\Middleware\CookieMiddleware::class,
         'core_xframeoptions' => \Concrete\Core\Http\Middleware\FrameOptionsMiddleware::class,
-        'core_thumbnails' => '\Concrete\Core\Http\Middleware\ThumbnailMiddleware'
+        'core_thumbnails' => '\Concrete\Core\Http\Middleware\ThumbnailMiddleware',
     ],
 ];

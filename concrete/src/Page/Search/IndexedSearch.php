@@ -61,9 +61,9 @@ class IndexedSearch
             $searchableAreaNamesInitial = $this->getSavedSearchableAreas();
             if ($this->getSearchableAreaAction() == 'blacklist') {
                 $areas = Area::getHandleList();
-                foreach ($areas as $arHandle) {
-                    if (!in_array($arHandle, $searchableAreaNamesInitial)) {
-                        $this->searchableAreaNames[] = $arHandle;
+                foreach ($areas as $blArHandle) {
+                    if (!in_array($blArHandle, $searchableAreaNamesInitial)) {
+                        $this->searchableAreaNames[] = $blArHandle;
                     }
                 }
             } else {

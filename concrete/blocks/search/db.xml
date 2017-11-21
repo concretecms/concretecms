@@ -11,7 +11,9 @@
     <field name="title" type="string" size="255"/>
     <field name="buttonText" type="string" size="128"/>
     <field name="baseSearchPath" type="string" size="255"/>
-    <field name="postTo_cID" type="string" size="255"/>
+    <field name="postTo_cID" type="integer">
+      <unsigned/>
+    </field>
     <field name="resultsURL" type="string" size="255"/>
   </table>
 

@@ -12,7 +12,7 @@ class Url
         if ($url == false) {
             $url = Loader::helper('security')->sanitizeString($_SERVER['REQUEST_URI']);
         } elseif (!strstr($url, '?')) {
-            $url = $url . '?' . Loader::helper('security')->sanitizeString($_SERVER['QUERY_STRING']);
+            $url = $url . '?' . Loader::helper('security')->sanitizeString(isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : '');
         }
 
         $vars = array();

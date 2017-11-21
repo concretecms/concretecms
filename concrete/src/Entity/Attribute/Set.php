@@ -219,4 +219,9 @@ class Set implements ExportableInterface
         $setKey->setDisplayOrder(count($this->keys));
         $this->keys->add($setKey);
     }
+
+    public function __toString()
+    {
+        return (string) $this->getAttributeSetID();
+    }
 }

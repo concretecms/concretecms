@@ -50,6 +50,16 @@
                 </label>
             </div>
         </div>
+
+        <div class="form-group">
+            <label class="control-label" for="canonical_tag"><?= t('Canonical Tag') ?></label>
+            <div class="checkbox">
+                <label>
+                    <?= $fh->checkbox('canonical_tag', 1, $canonical_tag) ?>
+                    <?= t('Add a %s tag to the site pages.', '<code>' . h('<meta rel="canonical" href="...">') . '</code>') ?>
+                </label>
+            </div>
+        </div>
     </fieldset>
 
     <div class="ccm-dashboard-form-actions-wrapper">

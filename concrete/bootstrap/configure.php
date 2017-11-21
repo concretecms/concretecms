@@ -1,9 +1,5 @@
 <?php
 
-if (version_compare(PHP_VERSION, '5.5.9') < 0) {
-    die("concrete5 requires PHP 5.5.9+ to run.\nYou are running PHP " . PHP_VERSION . "\n");
-}
-
 /*
  * ----------------------------------------------------------------------------
  * Ensure that all subsequent procedural pages are running inside concrete5.
@@ -164,6 +160,7 @@ const DIRNAME_EXPRESS_FORM_CONTROLS = 'form';
 const DIRNAME_EXPRESS_FORM_CONTROLS_ASSOCIATION = 'association';
 const DIRNAME_METADATA_XML = 'xml';
 const DIRNAME_METADATA_YAML = 'yaml';
+const DIRNAME_GEOLOCATION = 'geolocation';
 const REL_DIR_FILES_INCOMING = '/incoming';
 const REL_DIR_FILES_THUMBNAILS = '/thumbnails';
 define('REL_DIR_METADATA_XML', DIRNAME_CONFIG . '/' . DIRNAME_METADATA_XML);
@@ -223,8 +220,6 @@ const FILENAME_EXPRESS_CONTROL_OPTIONS = 'options.php';
 const FILENAME_GATHERING_DATA_SOURCE_OPTIONS = 'options.php';
 const FILENAME_GATHERING_ITEM_TEMPLATE_ICON = 'icon.png';
 const FILENAME_CONVERSATION_EDITOR_OPTIONS = 'options.php';
-const FILENAME_CONVERSATION_EDITOR_FORM_MESSAGE = 'message.php';
-const FILENAME_CONVERSATION_EDITOR_FORM_REPLY = 'reply.php';
 const FILENAME_STYLE_CUSTOMIZER_STYLES = 'styles.xml';
 const FILENAME_STYLE_CUSTOMIZER_DEFAULT_PRESET_NAME = 'defaults.less';
 

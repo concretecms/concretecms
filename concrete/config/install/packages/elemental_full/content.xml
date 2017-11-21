@@ -17,18 +17,28 @@
                       category="collection">
             <type mode="text"/>
         </attributekey>
-        <attributekey handle="exclude_subpages_from_nav" name="Exclude Sub-Pages From Nav" package="" searchable="1" indexed="1" type="boolean" category="collection">
+        <attributekey handle="exclude_subpages_from_nav" name="Exclude Sub-Pages From Nav" package="" searchable="1"
+                      indexed="1" type="boolean" category="collection">
             <type checked="0"/>
         </attributekey>
-        <attributekey handle="thumbnail" name="Thumbnail" package="" searchable="1" indexed="1" type="image_file" category="collection"/>
-        <attributekey handle="blog_entry_topics" name="Blog Entry Topics" package="" searchable="1" indexed="1" type="topics" category="collection">
+        <attributekey handle="thumbnail" name="Thumbnail" package="" searchable="1" indexed="1" type="image_file"
+                      category="collection"/>
+        <attributekey handle="blog_entry_topics" name="Blog Entry Topics" package="" searchable="1" indexed="1"
+                      type="topics" category="collection">
             <tree name="Blog Entries" path="/"/>
         </attributekey>
-        <attributekey handle="project_topics" name="Project Topics" package="" searchable="1" indexed="1" type="topics" category="collection">
+        <attributekey handle="project_topics" name="Project Topics" package="" searchable="1" indexed="1" type="topics"
+                      category="collection">
             <tree name="Projects" path="/"/>
         </attributekey>
-        <attributekey handle="project_client" name="Client" package="" searchable="1" indexed="1" type="text" category="collection"/>
-        <attributekey handle="project_tasks" name="Task" package="" searchable="1" indexed="1" type="select" category="collection">
+        <attributekey handle="event_categories" name="Event Categories" package="" searchable="1" indexed="1" type="topics"
+                      category="event">
+            <tree name="Event Categories" path="/"/>
+        </attributekey>
+        <attributekey handle="project_client" name="Client" package="" searchable="1" indexed="1" type="text"
+                      category="collection"/>
+        <attributekey handle="project_tasks" name="Task" package="" searchable="1" indexed="1" type="select"
+                      category="collection">
             <type allow-multiple-values="1" display-order="display_asc" allow-other-values="0">
                 <options>
                     <option value="Architecture" is-end-user-added="0"/>
@@ -40,7 +50,8 @@
                 </options>
             </type>
         </attributekey>
-        <attributekey handle="project_skills" name="Skills" package="" searchable="1" indexed="1" type="select" category="collection">
+        <attributekey handle="project_skills" name="Skills" package="" searchable="1" indexed="1" type="select"
+                      category="collection">
             <type allow-multiple-values="1" display-order="display_asc" allow-other-values="0">
                 <options>
                     <option value="HTML" is-end-user-added="0"/>
@@ -75,6 +86,9 @@
             <attributekey handle="project_client"/>
             <attributekey handle="project_tasks"/>
             <attributekey handle="project_skills"/>
+        </attributeset>
+        <attributeset handle="event_categories" name="Categories" package="" locked="0" category="event">
+            <attributekey handle="event_categories"/>
         </attributeset>
 
     </attributesets>
@@ -124,21 +138,26 @@
                     <set name="Post Details">
                         <control custom-template="" custom-label="Entry Name" type="core_page_property" handle="name"/>
                         <control custom-template="" custom-label="" type="core_page_property" handle="url_slug"/>
-                        <control custom-template="" custom-label="Short Description" type="core_page_property" handle="description"/>
+                        <control custom-template="" custom-label="Short Description" type="core_page_property"
+                                 handle="description"/>
                         <control custom-template="" type="core_page_property" handle="publish_target"/>
-                        <control custom-template="" custom-label="Topics" type="collection_attribute" handle="blog_entry_topics"/>
+                        <control custom-template="" custom-label="Topics" type="collection_attribute"
+                                 handle="blog_entry_topics"/>
                     </set>
                     <set name="Content">
                         <control custom-template="" custom-label="" type="collection_attribute" handle="thumbnail"/>
-                        <control custom-template="" custom-label="" output-control-id="6y4mB58T" type="block" handle="content"/>
+                        <control custom-template="" custom-label="" output-control-id="6y4mB58T" type="block"
+                                 handle="content"/>
                     </set>
                 </formlayout>
                 <output>
                     <pagetemplate handle="right_sidebar">
-                        <page name="" path="" filename="" pagetype="blog_entry" template="right_sidebar" user="admin" description="" package="">
+                        <page name="" path="" filename="" pagetype="blog_entry" template="right_sidebar" user="admin"
+                              description="" package="">
                             <area name="Main">
                                 <blocks>
-                                    <block type="page_title" name="" custom-template="byline.php" mc-block-id="3zXqs3ea">
+                                    <block type="page_title" name="" custom-template="byline.php"
+                                           mc-block-id="3zXqs3ea">
                                         <data table="btPageTitle">
                                             <record>
                                                 <useCustomTitle><![CDATA[0]]></useCustomTitle>
@@ -247,7 +266,8 @@
                                                 <includeDescription><![CDATA[0]]></includeDescription>
                                                 <ptID>{ccm:export:pagetype:blog_entry}</ptID>
                                                 <pageListTitle>Related Posts</pageListTitle>
-                                                <relatedTopicAttributeKeyHandle>blog_entry_topics</relatedTopicAttributeKeyHandle>
+                                                <relatedTopicAttributeKeyHandle>blog_entry_topics
+                                                </relatedTopicAttributeKeyHandle>
                                             </record>
                                         </data>
                                     </block>
@@ -428,7 +448,8 @@
                 </output>
             </composer>
         </pagetype>
-        <pagetype name="Portfolio Project" handle="portfolio_project" is-frequently-added="1" package="" launch-in-composer="1">
+        <pagetype name="Portfolio Project" handle="portfolio_project" is-frequently-added="1" package=""
+                  launch-in-composer="1">
             <pagetemplates type="custom" default="left_sidebar">
                 <pagetemplate handle="left_sidebar"/>
             </pagetemplates>
@@ -436,28 +457,36 @@
             <composer>
                 <formlayout>
                     <set name="Page">
-                        <control custom-template="" custom-label="" type="core_page_property" handle="name" description="Give your portfolio project a name."/>
+                        <control custom-template="" custom-label="" type="core_page_property" handle="name"
+                                 description="Give your portfolio project a name."/>
                         <control custom-template="" custom-label="" type="core_page_property" handle="url_slug"/>
                         <control custom-template="" type="core_page_property" handle="publish_target"/>
                     </set>
                     <set name="Project Data">
-                        <control custom-template="" custom-label="" type="collection_attribute" handle="project_topics"/>
-                        <control custom-template="" custom-label="Date Completed" type="core_page_property" handle="date_time"/>
-                        <control custom-template="" custom-label="" type="collection_attribute" handle="project_client"/>
+                        <control custom-template="" custom-label="" type="collection_attribute"
+                                 handle="project_topics"/>
+                        <control custom-template="" custom-label="Date Completed" type="core_page_property"
+                                 handle="date_time"/>
+                        <control custom-template="" custom-label="" type="collection_attribute"
+                                 handle="project_client"/>
                         <control custom-template="" custom-label="" type="collection_attribute" handle="project_tasks"/>
-                        <control custom-template="" custom-label="" type="collection_attribute" handle="project_skills"/>
+                        <control custom-template="" custom-label="" type="collection_attribute"
+                                 handle="project_skills"/>
                         <control custom-template="" custom-label="" type="collection_attribute" handle="thumbnail"/>
                     </set>
                     <set name="Image Slider">
-                        <control custom-template="" custom-label="" output-control-id="LnwwIyGa" type="block" handle="image_slider"/>
+                        <control custom-template="" custom-label="" output-control-id="LnwwIyGa" type="block"
+                                 handle="image_slider"/>
                     </set>
                     <set name="Body">
-                        <control custom-template="" custom-label="" output-control-id="yXxylvrI" type="block" handle="content"/>
+                        <control custom-template="" custom-label="" output-control-id="yXxylvrI" type="block"
+                                 handle="content"/>
                     </set>
                 </formlayout>
                 <output>
                     <pagetemplate handle="left_sidebar">
-                        <page name="" path="" filename="" pagetype="portfolio_project" template="left_sidebar" user="admin" description="" package="">
+                        <page name="" path="" filename="" pagetype="portfolio_project" template="left_sidebar"
+                              user="admin" description="" package="">
                             <area name="Page Header">
                                 <blocks>
                                     <block type="page_title" name="" mc-block-id="Blj682mK">
@@ -523,20 +552,23 @@
                             <area name="Page Footer">
                                 <blocks>
                                     <block type="horizontal_rule" name="" mc-block-id="z5KRV50f"/>
-                                    <block type="page_list" name="" mc-block-id="DEpG6w2r" custom-template="thumbnail_grid">
+                                    <block type="page_list" name="" mc-block-id="DEpG6w2r"
+                                           custom-template="thumbnail_grid">
                                         <data table="btPageList">
                                             <record>
                                                 <num><![CDATA[3]]></num>
                                                 <orderBy><![CDATA[random]]></orderBy>
-                                                <cParentID />
+                                                <cParentID/>
                                                 <filterByRelated>1</filterByRelated>
                                                 <cThis><![CDATA[0]]></cThis>
                                                 <includeName><![CDATA[1]]></includeName>
                                                 <includeDescription><![CDATA[0]]></includeDescription>
                                                 <ptID>{ccm:export:pagetype:portfolio_project}</ptID>
                                                 <pageListTitle>Related Projects</pageListTitle>
-                                                <noResultsMessage><![CDATA[No related projects found.]]></noResultsMessage>
-                                                <relatedTopicAttributeKeyHandle>project_topics</relatedTopicAttributeKeyHandle>
+                                                <noResultsMessage>
+                                                    <![CDATA[No related projects found.]]></noResultsMessage>
+                                                <relatedTopicAttributeKeyHandle>project_topics
+                                                </relatedTopicAttributeKeyHandle>
                                             </record>
                                         </data>
                                     </block>
@@ -561,10 +593,12 @@
                 </formlayout>
                 <output>
                     <pagetemplate handle="full">
-                        <page name="" path="" filename="" pagetype="" template="full" user="admin" description="" package="">
+                        <page name="" path="" filename="" pagetype="" template="full" user="admin" description=""
+                              package="">
                             <area name="Main">
                                 <blocks>
-                                    <block type="page_title" name="" custom-template="archive.php" mc-block-id="1SrIYV5J">
+                                    <block type="page_title" name="" custom-template="archive.php"
+                                           mc-block-id="1SrIYV5J">
                                         <data table="btPageTitle">
                                             <record>
                                                 <useCustomTitle><![CDATA[0]]></useCustomTitle>
@@ -590,7 +624,8 @@
                                                                 <buttonLinkText><![CDATA[]]></buttonLinkText>
                                                                 <includeName><![CDATA[1]]></includeName>
                                                                 <includeDescription><![CDATA[1]]></includeDescription>
-                                                                <includeAllDescendents><![CDATA[0]]></includeAllDescendents>
+                                                                <includeAllDescendents>
+                                                                    <![CDATA[0]]></includeAllDescendents>
                                                                 <paginate><![CDATA[1]]></paginate>
                                                                 <displayAliases><![CDATA[0]]></displayAliases>
                                                                 <ptID>{ccm:export:pagetype:blog_entry}</ptID>
@@ -599,8 +634,10 @@
                                                                 <displayFeaturedOnly><![CDATA[0]]></displayFeaturedOnly>
                                                                 <displayThumbnail><![CDATA[0]]></displayThumbnail>
                                                                 <truncateChars><![CDATA[0]]></truncateChars>
-                                                                <enableExternalFiltering><![CDATA[1]]></enableExternalFiltering>
-                                                                <noResultsMessage><![CDATA[No posts to this blog.]]></noResultsMessage>
+                                                                <enableExternalFiltering>
+                                                                    <![CDATA[1]]></enableExternalFiltering>
+                                                                <noResultsMessage>
+                                                                    <![CDATA[No posts to this blog.]]></noResultsMessage>
                                                                 <includeDate><![CDATA[1]]></includeDate>
                                                             </record>
                                                         </data>
@@ -615,7 +652,7 @@
                                                             <mode>S</mode>
                                                             <tree>Blog Entries</tree>
                                                             <title>Topics</title>
-                                                            <cParentID />
+                                                            <cParentID/>
                                                         </data>
                                                     </block>
                                                     <block type="date_navigation" name="">
@@ -661,7 +698,8 @@
                 </formlayout>
                 <output>
                     <pagetemplate handle="full">
-                        <page name="" path="" filename="" pagetype="portfolio" template="full" user="admin" description="" package="">
+                        <page name="" path="" filename="" pagetype="portfolio" template="full" user="admin"
+                              description="" package="">
                             <area name="Main">
                                 <blocks>
                                     <block type="page_title" name="" mc-block-id="LSGookBK">
@@ -672,7 +710,8 @@
                                             </record>
                                         </data>
                                     </block>
-                                    <block type="topic_list" name="" custom-template="flat_filter.php" mc-block-id="RCaPR2iR">
+                                    <block type="topic_list" name="" custom-template="flat_filter.php"
+                                           mc-block-id="RCaPR2iR">
                                         <style>
                                             <backgroundColor/>
                                             <backgroundRepeat>no-repeat</backgroundRepeat>
@@ -703,12 +742,13 @@
                                         <data>
                                             <mode>S</mode>
                                             <title/>
-                                            <topicAttributeKeyHandle />
+                                            <topicAttributeKeyHandle/>
                                             <tree>Projects</tree>
                                             <cParentID/>
                                         </data>
                                     </block>
-                                    <block type="page_list" name="" custom-template="thumbnail_grid" mc-block-id="N7fcHauo">
+                                    <block type="page_list" name="" custom-template="thumbnail_grid"
+                                           mc-block-id="N7fcHauo">
                                         <data table="btPageList">
                                             <record>
                                                 <num><![CDATA[0]]></num>
@@ -797,7 +837,8 @@
                     <block type="content" name="">
                         <data table="btContentLocal">
                             <record>
-                                <content><![CDATA[<a href="{ccm:export:page:}" id="footer-site-title">Elemental</a>]]></content>
+                                <content>
+                                    <![CDATA[<a href="{ccm:export:page:}" id="footer-site-title">Elemental</a>]]></content>
                             </record>
                         </data>
                     </block>
@@ -847,6 +888,7 @@
                                 <title><![CDATA[]]></title>
                                 <buttonText><![CDATA[]]></buttonText>
                                 <baseSearchPath><![CDATA[]]></baseSearchPath>
+                                <resultsPageKind><![CDATA[CID]]></resultsPageKind>
                                 <postTo_cID>{ccm:export:page:/search}</postTo_cID>
                                 <resultsURL><![CDATA[]]></resultsURL>
                             </record>
@@ -861,7 +903,8 @@
                     <block type="content" name="">
                         <data table="btContentLocal">
                             <record>
-                                <content><![CDATA[<a href="{ccm:export:page:}" id="header-site-title">Elemental</a>]]></content>
+                                <content>
+                                    <![CDATA[<a href="{ccm:export:page:}" id="header-site-title">Elemental</a>]]></content>
                             </record>
                         </data>
                     </block>
@@ -890,7 +933,8 @@
                                 <fID>{ccm:export:file:slider1.png}</fID>
                                 <linkURL><![CDATA[]]></linkURL>
                                 <title><![CDATA[Stand Out on the Web]]></title>
-                                <description><![CDATA[<p>Share your business with an impressive, yet minimal presentation. Let your customers understand your web presence through elegance and clarity.</p>]]></description>
+                                <description>
+                                    <![CDATA[<p>Share your business with an impressive, yet minimal presentation. Let your customers understand your web presence through elegance and clarity.</p>]]></description>
                                 <sortOrder><![CDATA[0]]></sortOrder>
                             </record>
                             <record>
@@ -898,7 +942,8 @@
                                 <fID>{ccm:export:file:slider2.png}</fID>
                                 <linkURL><![CDATA[]]></linkURL>
                                 <title><![CDATA[A Simple Image Slider]]></title>
-                                <description><![CDATA[<p>This image slider can have any content that you want in it.</p>]]></description>
+                                <description>
+                                    <![CDATA[<p>This image slider can have any content that you want in it.</p>]]></description>
                                 <sortOrder><![CDATA[1]]></sortOrder>
                             </record>
                         </data>
@@ -939,7 +984,8 @@
                                             <record>
                                                 <icon><![CDATA[pencil]]></icon>
                                                 <title><![CDATA[Easy to Edit]]></title>
-                                                <paragraph><![CDATA[Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna.]]></paragraph>
+                                                <paragraph>
+                                                    <![CDATA[Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna.]]></paragraph>
                                             </record>
                                         </data>
                                     </block>
@@ -977,7 +1023,8 @@
                                             <record>
                                                 <icon><![CDATA[eye]]></icon>
                                                 <title><![CDATA[Pixel Perfect]]></title>
-                                                <paragraph><![CDATA[Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna.]]></paragraph>
+                                                <paragraph>
+                                                    <![CDATA[Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna.]]></paragraph>
                                             </record>
                                         </data>
                                     </block>
@@ -1015,7 +1062,8 @@
                                             <record>
                                                 <icon><![CDATA[youtube-play]]></icon>
                                                 <title><![CDATA[Media Rich]]></title>
-                                                <paragraph><![CDATA[Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna.]]></paragraph>
+                                                <paragraph>
+                                                    <![CDATA[Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna.]]></paragraph>
                                             </record>
                                         </data>
                                     </block>
@@ -1030,7 +1078,8 @@
                         </style>
                         <data table="btContentLocal">
                             <record>
-                                <content><![CDATA[<p style="text-align: center"><span class="title-caps-bold">Presenting your Business has never been so easy</span></p><p style="text-align: center;">Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing.</p><p style="text-align: center;">Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. </p>]]></content>
+                                <content>
+                                    <![CDATA[<p style="text-align: center"><span class="title-caps-bold">Presenting your Business has never been so easy</span></p><p style="text-align: center;">Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing.</p><p style="text-align: center;">Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. </p>]]></content>
                             </record>
                         </data>
                     </block>
@@ -1151,7 +1200,8 @@
                                     <block type="content" name="">
                                         <data table="btContentLocal">
                                             <record>
-                                                <content><![CDATA[<p>  <span class="title-thin">We specialize in making your concepts a reality.</span>  </p>  <p>    Sed cursus facilisis dignissim. Aliquam rhoncus enim et pellentesque varius. Nulla sodales nibh lorem, sit amet imperdiet arcu commodo sit amet. Mauris sed scelerisque nisl. Ut auctor ipsum tellus, vel viverra massa elementum sit amet.  </p>  <p>    Sed adipiscing tempus sem eu molestie. Aenean laoreet pretium ante vitae ultrices. Aenean eu gravida magna, vel aliquet magna. In auctor convallis gravida.<br>  </p>  <br/>  <p>  <a href="{ccm:export:page:/contact}"><span class="btn btn-success">Contact Us Today</span></a>  </p>]]></content>
+                                                <content>
+                                                    <![CDATA[<p>  <span class="title-thin">We specialize in making your concepts a reality.</span>  </p>  <p>    Sed cursus facilisis dignissim. Aliquam rhoncus enim et pellentesque varius. Nulla sodales nibh lorem, sit amet imperdiet arcu commodo sit amet. Mauris sed scelerisque nisl. Ut auctor ipsum tellus, vel viverra massa elementum sit amet.  </p>  <p>    Sed adipiscing tempus sem eu molestie. Aenean laoreet pretium ante vitae ultrices. Aenean eu gravida magna, vel aliquet magna. In auctor convallis gravida.<br>  </p>  <br/>  <p>  <a href="{ccm:export:page:/contact}"><span class="btn btn-success">Contact Us Today</span></a>  </p>]]></content>
                                             </record>
                                         </data>
                                     </block>
@@ -1169,14 +1219,16 @@
                     <block type="content" name="">
                         <data table="btContentLocal">
                             <record>
-                                <content><![CDATA[<p style="text-align: center"><span class="title-caps">Customizable footer area with accent class.</span></p>]]></content>
+                                <content>
+                                    <![CDATA[<p style="text-align: center"><span class="title-caps">Customizable footer area with accent class.</span></p>]]></content>
                             </record>
                         </data>
                     </block>
                 </blocks>
             </area>
         </page>
-        <page name="Services" path="/services" filename="" pagetype="page" template="full" user="admin" description="" package="">
+        <page name="Services" path="/services" filename="" pagetype="page" template="full" user="admin" description=""
+              package="">
             <area name="Main">
                 <blocks>
                     <block type="page_title" name="">
@@ -1196,7 +1248,8 @@
                                             <record>
                                                 <icon><![CDATA[star]]></icon>
                                                 <title><![CDATA[Quality]]></title>
-                                                <paragraph><![CDATA[Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sodales non leo id aliquet.]]></paragraph>
+                                                <paragraph>
+                                                    <![CDATA[Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sodales non leo id aliquet.]]></paragraph>
                                             </record>
                                         </data>
                                     </block>
@@ -1207,7 +1260,8 @@
                                             <record>
                                                 <icon><![CDATA[tint]]></icon>
                                                 <title><![CDATA[Design]]></title>
-                                                <paragraph><![CDATA[Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sodales non leo id aliquet.]]></paragraph>
+                                                <paragraph>
+                                                    <![CDATA[Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sodales non leo id aliquet.]]></paragraph>
                                             </record>
                                         </data>
                                     </block>
@@ -1218,7 +1272,8 @@
                                             <record>
                                                 <icon><![CDATA[cog]]></icon>
                                                 <title><![CDATA[Development]]></title>
-                                                <paragraph><![CDATA[Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sodales non leo id aliquet.]]></paragraph>
+                                                <paragraph>
+                                                    <![CDATA[Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sodales non leo id aliquet.]]></paragraph>
                                             </record>
                                         </data>
                                     </block>
@@ -1229,7 +1284,8 @@
                                             <record>
                                                 <icon><![CDATA[lock]]></icon>
                                                 <title><![CDATA[Security]]></title>
-                                                <paragraph><![CDATA[Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sodales non leo id aliquet.]]></paragraph>
+                                                <paragraph>
+                                                    <![CDATA[Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sodales non leo id aliquet.]]></paragraph>
                                             </record>
                                         </data>
                                     </block>
@@ -1245,7 +1301,8 @@
                                     <block type="content" name="">
                                         <data table="btContentLocal">
                                             <record>
-                                                <content><![CDATA[<h3>Awesome Features</h3><p>Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis. Morbi at suscipit risus. Sed consequat eleifend metus, vitae malesuada eros elementum sed. </p><h3>Guide Books</h3><p>Fusce risus felis, viverra et dignissim at, lobortis non est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sit amet consectetur lacus. Vestibulum neque lectus, egestas non cursus vitae, aliquam at magna. Etiam aliquam, justo et varius eleifend, dui lectus egestas nunc, vel malesuada nisl purus nec metus. </p><h3>Admin Accounts</h3><p>Fusce risus felis, viverra et dignissim at, lobortis non est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sit amet consectetur lacus. Vestibulum neque lectus, egestas non cursus vitae, aliquam at magna. Etiam aliquam, justo et varius eleifend, dui lectus egestas nunc, vel malesuada nisl purus nec metus. </p>]]></content>
+                                                <content>
+                                                    <![CDATA[<h3>Awesome Features</h3><p>Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis. Morbi at suscipit risus. Sed consequat eleifend metus, vitae malesuada eros elementum sed. </p><h3>Guide Books</h3><p>Fusce risus felis, viverra et dignissim at, lobortis non est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sit amet consectetur lacus. Vestibulum neque lectus, egestas non cursus vitae, aliquam at magna. Etiam aliquam, justo et varius eleifend, dui lectus egestas nunc, vel malesuada nisl purus nec metus. </p><h3>Admin Accounts</h3><p>Fusce risus felis, viverra et dignissim at, lobortis non est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sit amet consectetur lacus. Vestibulum neque lectus, egestas non cursus vitae, aliquam at magna. Etiam aliquam, justo et varius eleifend, dui lectus egestas nunc, vel malesuada nisl purus nec metus. </p>]]></content>
                                             </record>
                                         </data>
                                     </block>
@@ -1254,7 +1311,8 @@
                                     <block type="content" name="">
                                         <data table="btContentLocal">
                                             <record>
-                                                <content><![CDATA[<h3>Support</h3><p>Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis. Morbi at suscipit risus. Sed consequat eleifend metus, vitae malesuada eros elementum sed. </p><h3>Additional Options</h3><p>Fusce risus felis, viverra et dignissim at, lobortis non est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sit amet consectetur lacus. Vestibulum neque lectus, egestas non cursus vitae, aliquam at magna. </p><p>Etiam aliquam, justo et varius eleifend, dui lectus egestas nunc, vel malesuada nisl purus nec metus. In gravida turpis a pharetra commodo. Donec non turpis vulputate, faucibus metus a, consectetur nunc. Morbi tortor nisi, hendrerit sed laoreet eget, fermentum et justo. Suspendisse potenti.</p>]]></content>
+                                                <content>
+                                                    <![CDATA[<h3>Support</h3><p>Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis. Morbi at suscipit risus. Sed consequat eleifend metus, vitae malesuada eros elementum sed. </p><h3>Additional Options</h3><p>Fusce risus felis, viverra et dignissim at, lobortis non est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sit amet consectetur lacus. Vestibulum neque lectus, egestas non cursus vitae, aliquam at magna. </p><p>Etiam aliquam, justo et varius eleifend, dui lectus egestas nunc, vel malesuada nisl purus nec metus. In gravida turpis a pharetra commodo. Donec non turpis vulputate, faucibus metus a, consectetur nunc. Morbi tortor nisi, hendrerit sed laoreet eget, fermentum et justo. Suspendisse potenti.</p>]]></content>
                                             </record>
                                         </data>
                                     </block>
@@ -1272,7 +1330,8 @@
                     <block type="content" name="">
                         <data table="btContentLocal">
                             <record>
-                                <content><![CDATA[<p style="text-align: center"><span class="title-caps">What Clients Are Saying About Us</span></p>]]></content>
+                                <content>
+                                    <![CDATA[<p style="text-align: center"><span class="title-caps">What Clients Are Saying About Us</span></p>]]></content>
                             </record>
                         </data>
                     </block>
@@ -1288,7 +1347,8 @@
                                                 <position><![CDATA[CEO & Founder]]></position>
                                                 <company><![CDATA[concrete5]]></company>
                                                 <companyURL><![CDATA[http://concrete5.org]]></companyURL>
-                                                <paragraph><![CDATA[Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis. Morbi at suscipit risus.]]></paragraph>
+                                                <paragraph>
+                                                    <![CDATA[Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis. Morbi at suscipit risus.]]></paragraph>
                                             </record>
                                         </data>
                                     </block>
@@ -1300,7 +1360,8 @@
                                                 <position><![CDATA[Marketing Directory]]></position>
                                                 <company><![CDATA[CompanyCo]]></company>
                                                 <companyURL><![CDATA[]]></companyURL>
-                                                <paragraph><![CDATA[Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis. Morbi at suscipit risus.]]></paragraph>
+                                                <paragraph>
+                                                    <![CDATA[Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis. Morbi at suscipit risus.]]></paragraph>
                                             </record>
                                         </data>
                                     </block>
@@ -1314,7 +1375,8 @@
                                                 <position><![CDATA[CTO & Founder]]></position>
                                                 <company><![CDATA[concrete5]]></company>
                                                 <companyURL><![CDATA[http://concrete5.org]]></companyURL>
-                                                <paragraph><![CDATA[Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis. Morbi at suscipit risus.]]></paragraph>
+                                                <paragraph>
+                                                    <![CDATA[Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis. Morbi at suscipit risus.]]></paragraph>
                                             </record>
                                         </data>
                                     </block>
@@ -1326,7 +1388,8 @@
                                                 <position><![CDATA[IT Manager]]></position>
                                                 <company><![CDATA[CompanyCo]]></company>
                                                 <companyURL><![CDATA[]]></companyURL>
-                                                <paragraph><![CDATA[Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis. Morbi at suscipit risus.]]></paragraph>
+                                                <paragraph>
+                                                    <![CDATA[Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis. Morbi at suscipit risus.]]></paragraph>
                                             </record>
                                         </data>
                                     </block>
@@ -1337,7 +1400,8 @@
                 </blocks>
             </area>
         </page>
-        <page name="Portfolio" path="/portfolio" filename="" pagetype="portfolio" template="full" user="admin" description="" package="">
+        <page name="Portfolio" path="/portfolio" filename="" pagetype="portfolio" template="full" user="admin"
+              description="" package="">
             <attributes>
                 <attributekey handle="exclude_subpages_from_nav">
                     <value><![CDATA[1]]></value>
@@ -1354,7 +1418,9 @@
                 <blocks/>
             </area>
         </page>
-        <page name="Project Title" public-date="2014-08-06 15:30:00" path="/portfolio/project-title" filename="" pagetype="portfolio_project" template="left_sidebar" user="admin" description="Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing." package="">
+        <page name="Project Title" public-date="2014-08-06 15:30:00" path="/portfolio/project-title" filename=""
+              pagetype="portfolio_project" template="left_sidebar" user="admin"
+              description="Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing." package="">
             <attributes>
                 <attributekey handle="is_featured">
                     <value><![CDATA[1]]></value>
@@ -1437,7 +1503,8 @@
                     <block type="content" name="">
                         <data table="btContentLocal">
                             <record>
-                                <content><![CDATA[<blockquote>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi tempus nibh a laoreet cursus. Phasellus malesuada vulputate bibendum. Ut vitae justo nisi. Sed consectetur vestibulum tortor, in bibendum diam lacinia vitae. Nullam volutpat risus quis orci consectetur adipiscing. In commodo vulputate arcu sit amet ornare. Vivamus ut iaculis velit.</blockquote><p>Pellentesque euismod lacus sed accumsan luctus. Suspendisse urna felis, lacinia vel tempor id, ultricies rutrum nisl. Nunc ultrices nulla et bibendum molestie. Phasellus porttitor sit amet libero vel fermentum. Sed sapien risus, eleifend vel hendrerit eu, porta vel tellus. Duis faucibus odio et magna varius, quis accumsan tellus vestibulum. Nam nunc nulla, convallis at elementum pharetra, adipiscing quis enim. Donec feugiat porttitor dolor, nec porttitor mi auctor eget. Fusce iaculis varius diam non dictum. Fusce elementum a nunc vel tincidunt. Morbi nec est elementum, vehicula odio nec, lobortis lacus. Nulla ultricies vitae nunc ut lacinia. Proin mattis felis sem, eu consectetur arcu varius et. Duis at lectus eu lorem elementum aliquet nec in elit. Vestibulum non metus ac risus adipiscing pellentesque sed sit amet lorem. Donec viverra, metus in varius pulvinar, augue nunc accumsan eros, a pulvinar est elit vitae nulla.</p><p>Duis non leo in enim laoreet pretium. Nullam vitae neque nec libero pharetra tempor at faucibus lectus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed imperdiet convallis arcu. Nam sollicitudin sollicitudin lacus non dictum. Aliquam erat volutpat. Nulla sapien quam, consequat non dui ut, eleifend sodales orci. Praesent quis lorem accumsan, volutpat lectus a, sollicitudin erat. Donec faucibus mi in sapien volutpat, ac auctor lorem mollis. Proin eget turpis non lacus bibendum porta non ac justo. Aliquam aliquam viverra lorem ac rutrum. In et sapien sit amet diam vestibulum cursus ut tristique tellus.</p><p>Ut in purus mi. Etiam ac aliquet ipsum. Pellentesque faucibus diam dui. Morbi a semper orci. Ut nec malesuada urna. Vestibulum aliquet ante ac lacus dictum, sit amet pulvinar leo laoreet. Maecenas ut est commodo, commodo quam nec, dignissim est. Quisque rutrum molestie nunc, sed mollis nulla volutpat et. Donec dignissim ornare augue eu aliquam. Aliquam in tincidunt velit. In at fermentum mauris, ut accumsan nisl. Interdum et malesuada fames ac ante ipsum primis in faucibus.</p><p>Integer ac nulla at nisi sodales ullamcorper id in justo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam pharetra elit odio, ac mattis turpis consequat ac. Pellentesque tincidunt sed enim nec auctor. Quisque varius, felis a hendrerit faucibus, nunc lorem varius nibh, vel dignissim velit dolor ut elit. Mauris ut vulputate neque. Donec at est vitae massa egestas fringilla. Praesent a tristique nibh. Nunc blandit dui risus, quis rhoncus nisi consectetur vel.</p>]]></content>
+                                <content>
+                                    <![CDATA[<blockquote>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi tempus nibh a laoreet cursus. Phasellus malesuada vulputate bibendum. Ut vitae justo nisi. Sed consectetur vestibulum tortor, in bibendum diam lacinia vitae. Nullam volutpat risus quis orci consectetur adipiscing. In commodo vulputate arcu sit amet ornare. Vivamus ut iaculis velit.</blockquote><p>Pellentesque euismod lacus sed accumsan luctus. Suspendisse urna felis, lacinia vel tempor id, ultricies rutrum nisl. Nunc ultrices nulla et bibendum molestie. Phasellus porttitor sit amet libero vel fermentum. Sed sapien risus, eleifend vel hendrerit eu, porta vel tellus. Duis faucibus odio et magna varius, quis accumsan tellus vestibulum. Nam nunc nulla, convallis at elementum pharetra, adipiscing quis enim. Donec feugiat porttitor dolor, nec porttitor mi auctor eget. Fusce iaculis varius diam non dictum. Fusce elementum a nunc vel tincidunt. Morbi nec est elementum, vehicula odio nec, lobortis lacus. Nulla ultricies vitae nunc ut lacinia. Proin mattis felis sem, eu consectetur arcu varius et. Duis at lectus eu lorem elementum aliquet nec in elit. Vestibulum non metus ac risus adipiscing pellentesque sed sit amet lorem. Donec viverra, metus in varius pulvinar, augue nunc accumsan eros, a pulvinar est elit vitae nulla.</p><p>Duis non leo in enim laoreet pretium. Nullam vitae neque nec libero pharetra tempor at faucibus lectus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed imperdiet convallis arcu. Nam sollicitudin sollicitudin lacus non dictum. Aliquam erat volutpat. Nulla sapien quam, consequat non dui ut, eleifend sodales orci. Praesent quis lorem accumsan, volutpat lectus a, sollicitudin erat. Donec faucibus mi in sapien volutpat, ac auctor lorem mollis. Proin eget turpis non lacus bibendum porta non ac justo. Aliquam aliquam viverra lorem ac rutrum. In et sapien sit amet diam vestibulum cursus ut tristique tellus.</p><p>Ut in purus mi. Etiam ac aliquet ipsum. Pellentesque faucibus diam dui. Morbi a semper orci. Ut nec malesuada urna. Vestibulum aliquet ante ac lacus dictum, sit amet pulvinar leo laoreet. Maecenas ut est commodo, commodo quam nec, dignissim est. Quisque rutrum molestie nunc, sed mollis nulla volutpat et. Donec dignissim ornare augue eu aliquam. Aliquam in tincidunt velit. In at fermentum mauris, ut accumsan nisl. Interdum et malesuada fames ac ante ipsum primis in faucibus.</p><p>Integer ac nulla at nisi sodales ullamcorper id in justo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam pharetra elit odio, ac mattis turpis consequat ac. Pellentesque tincidunt sed enim nec auctor. Quisque varius, felis a hendrerit faucibus, nunc lorem varius nibh, vel dignissim velit dolor ut elit. Mauris ut vulputate neque. Donec at est vitae massa egestas fringilla. Praesent a tristique nibh. Nunc blandit dui risus, quis rhoncus nisi consectetur vel.</p>]]></content>
                             </record>
                         </data>
                     </block>
@@ -1450,7 +1517,9 @@
                 </blocks>
             </area>
         </page>
-        <page name="Project Title 2" public-date="2014-08-06 15:20:00" path="/portfolio/project-title-2" filename="" pagetype="portfolio_project" template="left_sidebar" user="admin" description="Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing." package="">
+        <page name="Project Title 2" public-date="2014-08-06 15:20:00" path="/portfolio/project-title-2" filename=""
+              pagetype="portfolio_project" template="left_sidebar" user="admin"
+              description="Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing." package="">
             <attributes>
                 <attributekey handle="thumbnail">
                     <value>
@@ -1513,19 +1582,21 @@
                         </data>
                     </block>
                 </blocks>
-            </area>            <area name="Sidebar">
-            <blocks>
-                <block mc-block-id="vXzZI1Jv"/>
-                <block mc-block-id="m95mBEXx"/>
-                <block mc-block-id="bq88MXOi"/>
-            </blocks>
-        </area>
+            </area>
+            <area name="Sidebar">
+                <blocks>
+                    <block mc-block-id="vXzZI1Jv"/>
+                    <block mc-block-id="m95mBEXx"/>
+                    <block mc-block-id="bq88MXOi"/>
+                </blocks>
+            </area>
             <area name="Main">
                 <blocks>
                     <block type="content" name="">
                         <data table="btContentLocal">
                             <record>
-                                <content><![CDATA[<blockquote>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi tempus nibh a laoreet cursus. Phasellus malesuada vulputate bibendum. Ut vitae justo nisi. Sed consectetur vestibulum tortor, in bibendum diam lacinia vitae. Nullam volutpat risus quis orci consectetur adipiscing. In commodo vulputate arcu sit amet ornare. Vivamus ut iaculis velit.</blockquote><p>Pellentesque euismod lacus sed accumsan luctus. Suspendisse urna felis, lacinia vel tempor id, ultricies rutrum nisl. Nunc ultrices nulla et bibendum molestie. Phasellus porttitor sit amet libero vel fermentum. Sed sapien risus, eleifend vel hendrerit eu, porta vel tellus. Duis faucibus odio et magna varius, quis accumsan tellus vestibulum. Nam nunc nulla, convallis at elementum pharetra, adipiscing quis enim. Donec feugiat porttitor dolor, nec porttitor mi auctor eget. Fusce iaculis varius diam non dictum. Fusce elementum a nunc vel tincidunt. Morbi nec est elementum, vehicula odio nec, lobortis lacus. Nulla ultricies vitae nunc ut lacinia. Proin mattis felis sem, eu consectetur arcu varius et. Duis at lectus eu lorem elementum aliquet nec in elit. Vestibulum non metus ac risus adipiscing pellentesque sed sit amet lorem. Donec viverra, metus in varius pulvinar, augue nunc accumsan eros, a pulvinar est elit vitae nulla.</p><p>Duis non leo in enim laoreet pretium. Nullam vitae neque nec libero pharetra tempor at faucibus lectus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed imperdiet convallis arcu. Nam sollicitudin sollicitudin lacus non dictum. Aliquam erat volutpat. Nulla sapien quam, consequat non dui ut, eleifend sodales orci. Praesent quis lorem accumsan, volutpat lectus a, sollicitudin erat. Donec faucibus mi in sapien volutpat, ac auctor lorem mollis. Proin eget turpis non lacus bibendum porta non ac justo. Aliquam aliquam viverra lorem ac rutrum. In et sapien sit amet diam vestibulum cursus ut tristique tellus.</p><p>Ut in purus mi. Etiam ac aliquet ipsum. Pellentesque faucibus diam dui. Morbi a semper orci. Ut nec malesuada urna. Vestibulum aliquet ante ac lacus dictum, sit amet pulvinar leo laoreet. Maecenas ut est commodo, commodo quam nec, dignissim est. Quisque rutrum molestie nunc, sed mollis nulla volutpat et. Donec dignissim ornare augue eu aliquam. Aliquam in tincidunt velit. In at fermentum mauris, ut accumsan nisl. Interdum et malesuada fames ac ante ipsum primis in faucibus.</p><p>Integer ac nulla at nisi sodales ullamcorper id in justo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam pharetra elit odio, ac mattis turpis consequat ac. Pellentesque tincidunt sed enim nec auctor. Quisque varius, felis a hendrerit faucibus, nunc lorem varius nibh, vel dignissim velit dolor ut elit. Mauris ut vulputate neque. Donec at est vitae massa egestas fringilla. Praesent a tristique nibh. Nunc blandit dui risus, quis rhoncus nisi consectetur vel.</p>]]></content>
+                                <content>
+                                    <![CDATA[<blockquote>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi tempus nibh a laoreet cursus. Phasellus malesuada vulputate bibendum. Ut vitae justo nisi. Sed consectetur vestibulum tortor, in bibendum diam lacinia vitae. Nullam volutpat risus quis orci consectetur adipiscing. In commodo vulputate arcu sit amet ornare. Vivamus ut iaculis velit.</blockquote><p>Pellentesque euismod lacus sed accumsan luctus. Suspendisse urna felis, lacinia vel tempor id, ultricies rutrum nisl. Nunc ultrices nulla et bibendum molestie. Phasellus porttitor sit amet libero vel fermentum. Sed sapien risus, eleifend vel hendrerit eu, porta vel tellus. Duis faucibus odio et magna varius, quis accumsan tellus vestibulum. Nam nunc nulla, convallis at elementum pharetra, adipiscing quis enim. Donec feugiat porttitor dolor, nec porttitor mi auctor eget. Fusce iaculis varius diam non dictum. Fusce elementum a nunc vel tincidunt. Morbi nec est elementum, vehicula odio nec, lobortis lacus. Nulla ultricies vitae nunc ut lacinia. Proin mattis felis sem, eu consectetur arcu varius et. Duis at lectus eu lorem elementum aliquet nec in elit. Vestibulum non metus ac risus adipiscing pellentesque sed sit amet lorem. Donec viverra, metus in varius pulvinar, augue nunc accumsan eros, a pulvinar est elit vitae nulla.</p><p>Duis non leo in enim laoreet pretium. Nullam vitae neque nec libero pharetra tempor at faucibus lectus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed imperdiet convallis arcu. Nam sollicitudin sollicitudin lacus non dictum. Aliquam erat volutpat. Nulla sapien quam, consequat non dui ut, eleifend sodales orci. Praesent quis lorem accumsan, volutpat lectus a, sollicitudin erat. Donec faucibus mi in sapien volutpat, ac auctor lorem mollis. Proin eget turpis non lacus bibendum porta non ac justo. Aliquam aliquam viverra lorem ac rutrum. In et sapien sit amet diam vestibulum cursus ut tristique tellus.</p><p>Ut in purus mi. Etiam ac aliquet ipsum. Pellentesque faucibus diam dui. Morbi a semper orci. Ut nec malesuada urna. Vestibulum aliquet ante ac lacus dictum, sit amet pulvinar leo laoreet. Maecenas ut est commodo, commodo quam nec, dignissim est. Quisque rutrum molestie nunc, sed mollis nulla volutpat et. Donec dignissim ornare augue eu aliquam. Aliquam in tincidunt velit. In at fermentum mauris, ut accumsan nisl. Interdum et malesuada fames ac ante ipsum primis in faucibus.</p><p>Integer ac nulla at nisi sodales ullamcorper id in justo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam pharetra elit odio, ac mattis turpis consequat ac. Pellentesque tincidunt sed enim nec auctor. Quisque varius, felis a hendrerit faucibus, nunc lorem varius nibh, vel dignissim velit dolor ut elit. Mauris ut vulputate neque. Donec at est vitae massa egestas fringilla. Praesent a tristique nibh. Nunc blandit dui risus, quis rhoncus nisi consectetur vel.</p>]]></content>
                             </record>
                         </data>
                     </block>
@@ -1538,7 +1609,9 @@
                 </blocks>
             </area>
         </page>
-        <page name="Project Title 3" public-date="2014-08-06 15:10:00" path="/portfolio/project-title-3" filename="" pagetype="portfolio_project" template="left_sidebar" user="admin" description="Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing." package="">
+        <page name="Project Title 3" public-date="2014-08-06 15:10:00" path="/portfolio/project-title-3" filename=""
+              pagetype="portfolio_project" template="left_sidebar" user="admin"
+              description="Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing." package="">
             <attributes>
                 <attributekey handle="is_featured">
                     <value><![CDATA[1]]></value>
@@ -1609,19 +1682,21 @@
                         </data>
                     </block>
                 </blocks>
-            </area>            <area name="Sidebar">
-            <blocks>
-                <block mc-block-id="vXzZI1Jv"/>
-                <block mc-block-id="m95mBEXx"/>
-                <block mc-block-id="bq88MXOi"/>
-            </blocks>
-        </area>
+            </area>
+            <area name="Sidebar">
+                <blocks>
+                    <block mc-block-id="vXzZI1Jv"/>
+                    <block mc-block-id="m95mBEXx"/>
+                    <block mc-block-id="bq88MXOi"/>
+                </blocks>
+            </area>
             <area name="Main">
                 <blocks>
                     <block type="content" name="">
                         <data table="btContentLocal">
                             <record>
-                                <content><![CDATA[<blockquote>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi tempus nibh a laoreet cursus. Phasellus malesuada vulputate bibendum. Ut vitae justo nisi. Sed consectetur vestibulum tortor, in bibendum diam lacinia vitae. Nullam volutpat risus quis orci consectetur adipiscing. In commodo vulputate arcu sit amet ornare. Vivamus ut iaculis velit.</blockquote><p>Pellentesque euismod lacus sed accumsan luctus. Suspendisse urna felis, lacinia vel tempor id, ultricies rutrum nisl. Nunc ultrices nulla et bibendum molestie. Phasellus porttitor sit amet libero vel fermentum. Sed sapien risus, eleifend vel hendrerit eu, porta vel tellus. Duis faucibus odio et magna varius, quis accumsan tellus vestibulum. Nam nunc nulla, convallis at elementum pharetra, adipiscing quis enim. Donec feugiat porttitor dolor, nec porttitor mi auctor eget. Fusce iaculis varius diam non dictum. Fusce elementum a nunc vel tincidunt. Morbi nec est elementum, vehicula odio nec, lobortis lacus. Nulla ultricies vitae nunc ut lacinia. Proin mattis felis sem, eu consectetur arcu varius et. Duis at lectus eu lorem elementum aliquet nec in elit. Vestibulum non metus ac risus adipiscing pellentesque sed sit amet lorem. Donec viverra, metus in varius pulvinar, augue nunc accumsan eros, a pulvinar est elit vitae nulla.</p><p>Duis non leo in enim laoreet pretium. Nullam vitae neque nec libero pharetra tempor at faucibus lectus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed imperdiet convallis arcu. Nam sollicitudin sollicitudin lacus non dictum. Aliquam erat volutpat. Nulla sapien quam, consequat non dui ut, eleifend sodales orci. Praesent quis lorem accumsan, volutpat lectus a, sollicitudin erat. Donec faucibus mi in sapien volutpat, ac auctor lorem mollis. Proin eget turpis non lacus bibendum porta non ac justo. Aliquam aliquam viverra lorem ac rutrum. In et sapien sit amet diam vestibulum cursus ut tristique tellus.</p><p>Ut in purus mi. Etiam ac aliquet ipsum. Pellentesque faucibus diam dui. Morbi a semper orci. Ut nec malesuada urna. Vestibulum aliquet ante ac lacus dictum, sit amet pulvinar leo laoreet. Maecenas ut est commodo, commodo quam nec, dignissim est. Quisque rutrum molestie nunc, sed mollis nulla volutpat et. Donec dignissim ornare augue eu aliquam. Aliquam in tincidunt velit. In at fermentum mauris, ut accumsan nisl. Interdum et malesuada fames ac ante ipsum primis in faucibus.</p><p>Integer ac nulla at nisi sodales ullamcorper id in justo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam pharetra elit odio, ac mattis turpis consequat ac. Pellentesque tincidunt sed enim nec auctor. Quisque varius, felis a hendrerit faucibus, nunc lorem varius nibh, vel dignissim velit dolor ut elit. Mauris ut vulputate neque. Donec at est vitae massa egestas fringilla. Praesent a tristique nibh. Nunc blandit dui risus, quis rhoncus nisi consectetur vel.</p>]]></content>
+                                <content>
+                                    <![CDATA[<blockquote>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi tempus nibh a laoreet cursus. Phasellus malesuada vulputate bibendum. Ut vitae justo nisi. Sed consectetur vestibulum tortor, in bibendum diam lacinia vitae. Nullam volutpat risus quis orci consectetur adipiscing. In commodo vulputate arcu sit amet ornare. Vivamus ut iaculis velit.</blockquote><p>Pellentesque euismod lacus sed accumsan luctus. Suspendisse urna felis, lacinia vel tempor id, ultricies rutrum nisl. Nunc ultrices nulla et bibendum molestie. Phasellus porttitor sit amet libero vel fermentum. Sed sapien risus, eleifend vel hendrerit eu, porta vel tellus. Duis faucibus odio et magna varius, quis accumsan tellus vestibulum. Nam nunc nulla, convallis at elementum pharetra, adipiscing quis enim. Donec feugiat porttitor dolor, nec porttitor mi auctor eget. Fusce iaculis varius diam non dictum. Fusce elementum a nunc vel tincidunt. Morbi nec est elementum, vehicula odio nec, lobortis lacus. Nulla ultricies vitae nunc ut lacinia. Proin mattis felis sem, eu consectetur arcu varius et. Duis at lectus eu lorem elementum aliquet nec in elit. Vestibulum non metus ac risus adipiscing pellentesque sed sit amet lorem. Donec viverra, metus in varius pulvinar, augue nunc accumsan eros, a pulvinar est elit vitae nulla.</p><p>Duis non leo in enim laoreet pretium. Nullam vitae neque nec libero pharetra tempor at faucibus lectus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed imperdiet convallis arcu. Nam sollicitudin sollicitudin lacus non dictum. Aliquam erat volutpat. Nulla sapien quam, consequat non dui ut, eleifend sodales orci. Praesent quis lorem accumsan, volutpat lectus a, sollicitudin erat. Donec faucibus mi in sapien volutpat, ac auctor lorem mollis. Proin eget turpis non lacus bibendum porta non ac justo. Aliquam aliquam viverra lorem ac rutrum. In et sapien sit amet diam vestibulum cursus ut tristique tellus.</p><p>Ut in purus mi. Etiam ac aliquet ipsum. Pellentesque faucibus diam dui. Morbi a semper orci. Ut nec malesuada urna. Vestibulum aliquet ante ac lacus dictum, sit amet pulvinar leo laoreet. Maecenas ut est commodo, commodo quam nec, dignissim est. Quisque rutrum molestie nunc, sed mollis nulla volutpat et. Donec dignissim ornare augue eu aliquam. Aliquam in tincidunt velit. In at fermentum mauris, ut accumsan nisl. Interdum et malesuada fames ac ante ipsum primis in faucibus.</p><p>Integer ac nulla at nisi sodales ullamcorper id in justo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam pharetra elit odio, ac mattis turpis consequat ac. Pellentesque tincidunt sed enim nec auctor. Quisque varius, felis a hendrerit faucibus, nunc lorem varius nibh, vel dignissim velit dolor ut elit. Mauris ut vulputate neque. Donec at est vitae massa egestas fringilla. Praesent a tristique nibh. Nunc blandit dui risus, quis rhoncus nisi consectetur vel.</p>]]></content>
                             </record>
                         </data>
                     </block>
@@ -1634,7 +1709,9 @@
                 </blocks>
             </area>
         </page>
-        <page name="Project Title 4" public-date="2014-08-06 15:00:00" path="/portfolio/project-title-4" filename="" pagetype="portfolio_project" template="left_sidebar" user="admin" description="Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing." package="">
+        <page name="Project Title 4" public-date="2014-08-06 15:00:00" path="/portfolio/project-title-4" filename=""
+              pagetype="portfolio_project" template="left_sidebar" user="admin"
+              description="Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing." package="">
             <attributes>
                 <attributekey handle="is_featured">
                     <value><![CDATA[1]]></value>
@@ -1700,19 +1777,21 @@
                         </data>
                     </block>
                 </blocks>
-            </area>            <area name="Sidebar">
-            <blocks>
-                <block mc-block-id="vXzZI1Jv"/>
-                <block mc-block-id="m95mBEXx"/>
-                <block mc-block-id="bq88MXOi"/>
-            </blocks>
-        </area>
+            </area>
+            <area name="Sidebar">
+                <blocks>
+                    <block mc-block-id="vXzZI1Jv"/>
+                    <block mc-block-id="m95mBEXx"/>
+                    <block mc-block-id="bq88MXOi"/>
+                </blocks>
+            </area>
             <area name="Main">
                 <blocks>
                     <block type="content" name="">
                         <data table="btContentLocal">
                             <record>
-                                <content><![CDATA[<blockquote>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi tempus nibh a laoreet cursus. Phasellus malesuada vulputate bibendum. Ut vitae justo nisi. Sed consectetur vestibulum tortor, in bibendum diam lacinia vitae. Nullam volutpat risus quis orci consectetur adipiscing. In commodo vulputate arcu sit amet ornare. Vivamus ut iaculis velit.</blockquote><p>Pellentesque euismod lacus sed accumsan luctus. Suspendisse urna felis, lacinia vel tempor id, ultricies rutrum nisl. Nunc ultrices nulla et bibendum molestie. Phasellus porttitor sit amet libero vel fermentum. Sed sapien risus, eleifend vel hendrerit eu, porta vel tellus. Duis faucibus odio et magna varius, quis accumsan tellus vestibulum. Nam nunc nulla, convallis at elementum pharetra, adipiscing quis enim. Donec feugiat porttitor dolor, nec porttitor mi auctor eget. Fusce iaculis varius diam non dictum. Fusce elementum a nunc vel tincidunt. Morbi nec est elementum, vehicula odio nec, lobortis lacus. Nulla ultricies vitae nunc ut lacinia. Proin mattis felis sem, eu consectetur arcu varius et. Duis at lectus eu lorem elementum aliquet nec in elit. Vestibulum non metus ac risus adipiscing pellentesque sed sit amet lorem. Donec viverra, metus in varius pulvinar, augue nunc accumsan eros, a pulvinar est elit vitae nulla.</p><p>Duis non leo in enim laoreet pretium. Nullam vitae neque nec libero pharetra tempor at faucibus lectus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed imperdiet convallis arcu. Nam sollicitudin sollicitudin lacus non dictum. Aliquam erat volutpat. Nulla sapien quam, consequat non dui ut, eleifend sodales orci. Praesent quis lorem accumsan, volutpat lectus a, sollicitudin erat. Donec faucibus mi in sapien volutpat, ac auctor lorem mollis. Proin eget turpis non lacus bibendum porta non ac justo. Aliquam aliquam viverra lorem ac rutrum. In et sapien sit amet diam vestibulum cursus ut tristique tellus.</p><p>Ut in purus mi. Etiam ac aliquet ipsum. Pellentesque faucibus diam dui. Morbi a semper orci. Ut nec malesuada urna. Vestibulum aliquet ante ac lacus dictum, sit amet pulvinar leo laoreet. Maecenas ut est commodo, commodo quam nec, dignissim est. Quisque rutrum molestie nunc, sed mollis nulla volutpat et. Donec dignissim ornare augue eu aliquam. Aliquam in tincidunt velit. In at fermentum mauris, ut accumsan nisl. Interdum et malesuada fames ac ante ipsum primis in faucibus.</p><p>Integer ac nulla at nisi sodales ullamcorper id in justo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam pharetra elit odio, ac mattis turpis consequat ac. Pellentesque tincidunt sed enim nec auctor. Quisque varius, felis a hendrerit faucibus, nunc lorem varius nibh, vel dignissim velit dolor ut elit. Mauris ut vulputate neque. Donec at est vitae massa egestas fringilla. Praesent a tristique nibh. Nunc blandit dui risus, quis rhoncus nisi consectetur vel.</p>]]></content>
+                                <content>
+                                    <![CDATA[<blockquote>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi tempus nibh a laoreet cursus. Phasellus malesuada vulputate bibendum. Ut vitae justo nisi. Sed consectetur vestibulum tortor, in bibendum diam lacinia vitae. Nullam volutpat risus quis orci consectetur adipiscing. In commodo vulputate arcu sit amet ornare. Vivamus ut iaculis velit.</blockquote><p>Pellentesque euismod lacus sed accumsan luctus. Suspendisse urna felis, lacinia vel tempor id, ultricies rutrum nisl. Nunc ultrices nulla et bibendum molestie. Phasellus porttitor sit amet libero vel fermentum. Sed sapien risus, eleifend vel hendrerit eu, porta vel tellus. Duis faucibus odio et magna varius, quis accumsan tellus vestibulum. Nam nunc nulla, convallis at elementum pharetra, adipiscing quis enim. Donec feugiat porttitor dolor, nec porttitor mi auctor eget. Fusce iaculis varius diam non dictum. Fusce elementum a nunc vel tincidunt. Morbi nec est elementum, vehicula odio nec, lobortis lacus. Nulla ultricies vitae nunc ut lacinia. Proin mattis felis sem, eu consectetur arcu varius et. Duis at lectus eu lorem elementum aliquet nec in elit. Vestibulum non metus ac risus adipiscing pellentesque sed sit amet lorem. Donec viverra, metus in varius pulvinar, augue nunc accumsan eros, a pulvinar est elit vitae nulla.</p><p>Duis non leo in enim laoreet pretium. Nullam vitae neque nec libero pharetra tempor at faucibus lectus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed imperdiet convallis arcu. Nam sollicitudin sollicitudin lacus non dictum. Aliquam erat volutpat. Nulla sapien quam, consequat non dui ut, eleifend sodales orci. Praesent quis lorem accumsan, volutpat lectus a, sollicitudin erat. Donec faucibus mi in sapien volutpat, ac auctor lorem mollis. Proin eget turpis non lacus bibendum porta non ac justo. Aliquam aliquam viverra lorem ac rutrum. In et sapien sit amet diam vestibulum cursus ut tristique tellus.</p><p>Ut in purus mi. Etiam ac aliquet ipsum. Pellentesque faucibus diam dui. Morbi a semper orci. Ut nec malesuada urna. Vestibulum aliquet ante ac lacus dictum, sit amet pulvinar leo laoreet. Maecenas ut est commodo, commodo quam nec, dignissim est. Quisque rutrum molestie nunc, sed mollis nulla volutpat et. Donec dignissim ornare augue eu aliquam. Aliquam in tincidunt velit. In at fermentum mauris, ut accumsan nisl. Interdum et malesuada fames ac ante ipsum primis in faucibus.</p><p>Integer ac nulla at nisi sodales ullamcorper id in justo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam pharetra elit odio, ac mattis turpis consequat ac. Pellentesque tincidunt sed enim nec auctor. Quisque varius, felis a hendrerit faucibus, nunc lorem varius nibh, vel dignissim velit dolor ut elit. Mauris ut vulputate neque. Donec at est vitae massa egestas fringilla. Praesent a tristique nibh. Nunc blandit dui risus, quis rhoncus nisi consectetur vel.</p>]]></content>
                             </record>
                         </data>
                     </block>
@@ -1725,7 +1804,9 @@
                 </blocks>
             </area>
         </page>
-        <page name="Project Title 5" public-date="2014-08-06 14:30:00" path="/portfolio/project-title-5" filename="" pagetype="portfolio_project" template="left_sidebar" user="admin" description="Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing." package="">
+        <page name="Project Title 5" public-date="2014-08-06 14:30:00" path="/portfolio/project-title-5" filename=""
+              pagetype="portfolio_project" template="left_sidebar" user="admin"
+              description="Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing." package="">
             <attributes>
                 <attributekey handle="thumbnail">
                     <value>
@@ -1788,19 +1869,21 @@
                         </data>
                     </block>
                 </blocks>
-            </area>            <area name="Sidebar">
-            <blocks>
-                <block mc-block-id="vXzZI1Jv"/>
-                <block mc-block-id="m95mBEXx"/>
-                <block mc-block-id="bq88MXOi"/>
-            </blocks>
-        </area>
+            </area>
+            <area name="Sidebar">
+                <blocks>
+                    <block mc-block-id="vXzZI1Jv"/>
+                    <block mc-block-id="m95mBEXx"/>
+                    <block mc-block-id="bq88MXOi"/>
+                </blocks>
+            </area>
             <area name="Main">
                 <blocks>
                     <block type="content" name="">
                         <data table="btContentLocal">
                             <record>
-                                <content><![CDATA[<blockquote>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi tempus nibh a laoreet cursus. Phasellus malesuada vulputate bibendum. Ut vitae justo nisi. Sed consectetur vestibulum tortor, in bibendum diam lacinia vitae. Nullam volutpat risus quis orci consectetur adipiscing. In commodo vulputate arcu sit amet ornare. Vivamus ut iaculis velit.</blockquote><p>Pellentesque euismod lacus sed accumsan luctus. Suspendisse urna felis, lacinia vel tempor id, ultricies rutrum nisl. Nunc ultrices nulla et bibendum molestie. Phasellus porttitor sit amet libero vel fermentum. Sed sapien risus, eleifend vel hendrerit eu, porta vel tellus. Duis faucibus odio et magna varius, quis accumsan tellus vestibulum. Nam nunc nulla, convallis at elementum pharetra, adipiscing quis enim. Donec feugiat porttitor dolor, nec porttitor mi auctor eget. Fusce iaculis varius diam non dictum. Fusce elementum a nunc vel tincidunt. Morbi nec est elementum, vehicula odio nec, lobortis lacus. Nulla ultricies vitae nunc ut lacinia. Proin mattis felis sem, eu consectetur arcu varius et. Duis at lectus eu lorem elementum aliquet nec in elit. Vestibulum non metus ac risus adipiscing pellentesque sed sit amet lorem. Donec viverra, metus in varius pulvinar, augue nunc accumsan eros, a pulvinar est elit vitae nulla.</p><p>Duis non leo in enim laoreet pretium. Nullam vitae neque nec libero pharetra tempor at faucibus lectus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed imperdiet convallis arcu. Nam sollicitudin sollicitudin lacus non dictum. Aliquam erat volutpat. Nulla sapien quam, consequat non dui ut, eleifend sodales orci. Praesent quis lorem accumsan, volutpat lectus a, sollicitudin erat. Donec faucibus mi in sapien volutpat, ac auctor lorem mollis. Proin eget turpis non lacus bibendum porta non ac justo. Aliquam aliquam viverra lorem ac rutrum. In et sapien sit amet diam vestibulum cursus ut tristique tellus.</p><p>Ut in purus mi. Etiam ac aliquet ipsum. Pellentesque faucibus diam dui. Morbi a semper orci. Ut nec malesuada urna. Vestibulum aliquet ante ac lacus dictum, sit amet pulvinar leo laoreet. Maecenas ut est commodo, commodo quam nec, dignissim est. Quisque rutrum molestie nunc, sed mollis nulla volutpat et. Donec dignissim ornare augue eu aliquam. Aliquam in tincidunt velit. In at fermentum mauris, ut accumsan nisl. Interdum et malesuada fames ac ante ipsum primis in faucibus.</p><p>Integer ac nulla at nisi sodales ullamcorper id in justo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam pharetra elit odio, ac mattis turpis consequat ac. Pellentesque tincidunt sed enim nec auctor. Quisque varius, felis a hendrerit faucibus, nunc lorem varius nibh, vel dignissim velit dolor ut elit. Mauris ut vulputate neque. Donec at est vitae massa egestas fringilla. Praesent a tristique nibh. Nunc blandit dui risus, quis rhoncus nisi consectetur vel.</p>]]></content>
+                                <content>
+                                    <![CDATA[<blockquote>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi tempus nibh a laoreet cursus. Phasellus malesuada vulputate bibendum. Ut vitae justo nisi. Sed consectetur vestibulum tortor, in bibendum diam lacinia vitae. Nullam volutpat risus quis orci consectetur adipiscing. In commodo vulputate arcu sit amet ornare. Vivamus ut iaculis velit.</blockquote><p>Pellentesque euismod lacus sed accumsan luctus. Suspendisse urna felis, lacinia vel tempor id, ultricies rutrum nisl. Nunc ultrices nulla et bibendum molestie. Phasellus porttitor sit amet libero vel fermentum. Sed sapien risus, eleifend vel hendrerit eu, porta vel tellus. Duis faucibus odio et magna varius, quis accumsan tellus vestibulum. Nam nunc nulla, convallis at elementum pharetra, adipiscing quis enim. Donec feugiat porttitor dolor, nec porttitor mi auctor eget. Fusce iaculis varius diam non dictum. Fusce elementum a nunc vel tincidunt. Morbi nec est elementum, vehicula odio nec, lobortis lacus. Nulla ultricies vitae nunc ut lacinia. Proin mattis felis sem, eu consectetur arcu varius et. Duis at lectus eu lorem elementum aliquet nec in elit. Vestibulum non metus ac risus adipiscing pellentesque sed sit amet lorem. Donec viverra, metus in varius pulvinar, augue nunc accumsan eros, a pulvinar est elit vitae nulla.</p><p>Duis non leo in enim laoreet pretium. Nullam vitae neque nec libero pharetra tempor at faucibus lectus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed imperdiet convallis arcu. Nam sollicitudin sollicitudin lacus non dictum. Aliquam erat volutpat. Nulla sapien quam, consequat non dui ut, eleifend sodales orci. Praesent quis lorem accumsan, volutpat lectus a, sollicitudin erat. Donec faucibus mi in sapien volutpat, ac auctor lorem mollis. Proin eget turpis non lacus bibendum porta non ac justo. Aliquam aliquam viverra lorem ac rutrum. In et sapien sit amet diam vestibulum cursus ut tristique tellus.</p><p>Ut in purus mi. Etiam ac aliquet ipsum. Pellentesque faucibus diam dui. Morbi a semper orci. Ut nec malesuada urna. Vestibulum aliquet ante ac lacus dictum, sit amet pulvinar leo laoreet. Maecenas ut est commodo, commodo quam nec, dignissim est. Quisque rutrum molestie nunc, sed mollis nulla volutpat et. Donec dignissim ornare augue eu aliquam. Aliquam in tincidunt velit. In at fermentum mauris, ut accumsan nisl. Interdum et malesuada fames ac ante ipsum primis in faucibus.</p><p>Integer ac nulla at nisi sodales ullamcorper id in justo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam pharetra elit odio, ac mattis turpis consequat ac. Pellentesque tincidunt sed enim nec auctor. Quisque varius, felis a hendrerit faucibus, nunc lorem varius nibh, vel dignissim velit dolor ut elit. Mauris ut vulputate neque. Donec at est vitae massa egestas fringilla. Praesent a tristique nibh. Nunc blandit dui risus, quis rhoncus nisi consectetur vel.</p>]]></content>
                             </record>
                         </data>
                     </block>
@@ -1813,7 +1896,9 @@
                 </blocks>
             </area>
         </page>
-        <page name="Project Title 6" public-date="2014-08-06 14:20:00" path="/portfolio/project-title-6" filename="" pagetype="portfolio_project" template="left_sidebar" user="admin" description="Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing." package="">
+        <page name="Project Title 6" public-date="2014-08-06 14:20:00" path="/portfolio/project-title-6" filename=""
+              pagetype="portfolio_project" template="left_sidebar" user="admin"
+              description="Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing." package="">
             <attributes>
                 <attributekey handle="thumbnail">
                     <value>
@@ -1889,7 +1974,8 @@
                     <block type="content" name="">
                         <data table="btContentLocal">
                             <record>
-                                <content><![CDATA[<blockquote>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi tempus nibh a laoreet cursus. Phasellus malesuada vulputate bibendum. Ut vitae justo nisi. Sed consectetur vestibulum tortor, in bibendum diam lacinia vitae. Nullam volutpat risus quis orci consectetur adipiscing. In commodo vulputate arcu sit amet ornare. Vivamus ut iaculis velit.</blockquote><p>Pellentesque euismod lacus sed accumsan luctus. Suspendisse urna felis, lacinia vel tempor id, ultricies rutrum nisl. Nunc ultrices nulla et bibendum molestie. Phasellus porttitor sit amet libero vel fermentum. Sed sapien risus, eleifend vel hendrerit eu, porta vel tellus. Duis faucibus odio et magna varius, quis accumsan tellus vestibulum. Nam nunc nulla, convallis at elementum pharetra, adipiscing quis enim. Donec feugiat porttitor dolor, nec porttitor mi auctor eget. Fusce iaculis varius diam non dictum. Fusce elementum a nunc vel tincidunt. Morbi nec est elementum, vehicula odio nec, lobortis lacus. Nulla ultricies vitae nunc ut lacinia. Proin mattis felis sem, eu consectetur arcu varius et. Duis at lectus eu lorem elementum aliquet nec in elit. Vestibulum non metus ac risus adipiscing pellentesque sed sit amet lorem. Donec viverra, metus in varius pulvinar, augue nunc accumsan eros, a pulvinar est elit vitae nulla.</p><p>Duis non leo in enim laoreet pretium. Nullam vitae neque nec libero pharetra tempor at faucibus lectus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed imperdiet convallis arcu. Nam sollicitudin sollicitudin lacus non dictum. Aliquam erat volutpat. Nulla sapien quam, consequat non dui ut, eleifend sodales orci. Praesent quis lorem accumsan, volutpat lectus a, sollicitudin erat. Donec faucibus mi in sapien volutpat, ac auctor lorem mollis. Proin eget turpis non lacus bibendum porta non ac justo. Aliquam aliquam viverra lorem ac rutrum. In et sapien sit amet diam vestibulum cursus ut tristique tellus.</p><p>Ut in purus mi. Etiam ac aliquet ipsum. Pellentesque faucibus diam dui. Morbi a semper orci. Ut nec malesuada urna. Vestibulum aliquet ante ac lacus dictum, sit amet pulvinar leo laoreet. Maecenas ut est commodo, commodo quam nec, dignissim est. Quisque rutrum molestie nunc, sed mollis nulla volutpat et. Donec dignissim ornare augue eu aliquam. Aliquam in tincidunt velit. In at fermentum mauris, ut accumsan nisl. Interdum et malesuada fames ac ante ipsum primis in faucibus.</p><p>Integer ac nulla at nisi sodales ullamcorper id in justo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam pharetra elit odio, ac mattis turpis consequat ac. Pellentesque tincidunt sed enim nec auctor. Quisque varius, felis a hendrerit faucibus, nunc lorem varius nibh, vel dignissim velit dolor ut elit. Mauris ut vulputate neque. Donec at est vitae massa egestas fringilla. Praesent a tristique nibh. Nunc blandit dui risus, quis rhoncus nisi consectetur vel.</p>]]></content>
+                                <content>
+                                    <![CDATA[<blockquote>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi tempus nibh a laoreet cursus. Phasellus malesuada vulputate bibendum. Ut vitae justo nisi. Sed consectetur vestibulum tortor, in bibendum diam lacinia vitae. Nullam volutpat risus quis orci consectetur adipiscing. In commodo vulputate arcu sit amet ornare. Vivamus ut iaculis velit.</blockquote><p>Pellentesque euismod lacus sed accumsan luctus. Suspendisse urna felis, lacinia vel tempor id, ultricies rutrum nisl. Nunc ultrices nulla et bibendum molestie. Phasellus porttitor sit amet libero vel fermentum. Sed sapien risus, eleifend vel hendrerit eu, porta vel tellus. Duis faucibus odio et magna varius, quis accumsan tellus vestibulum. Nam nunc nulla, convallis at elementum pharetra, adipiscing quis enim. Donec feugiat porttitor dolor, nec porttitor mi auctor eget. Fusce iaculis varius diam non dictum. Fusce elementum a nunc vel tincidunt. Morbi nec est elementum, vehicula odio nec, lobortis lacus. Nulla ultricies vitae nunc ut lacinia. Proin mattis felis sem, eu consectetur arcu varius et. Duis at lectus eu lorem elementum aliquet nec in elit. Vestibulum non metus ac risus adipiscing pellentesque sed sit amet lorem. Donec viverra, metus in varius pulvinar, augue nunc accumsan eros, a pulvinar est elit vitae nulla.</p><p>Duis non leo in enim laoreet pretium. Nullam vitae neque nec libero pharetra tempor at faucibus lectus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed imperdiet convallis arcu. Nam sollicitudin sollicitudin lacus non dictum. Aliquam erat volutpat. Nulla sapien quam, consequat non dui ut, eleifend sodales orci. Praesent quis lorem accumsan, volutpat lectus a, sollicitudin erat. Donec faucibus mi in sapien volutpat, ac auctor lorem mollis. Proin eget turpis non lacus bibendum porta non ac justo. Aliquam aliquam viverra lorem ac rutrum. In et sapien sit amet diam vestibulum cursus ut tristique tellus.</p><p>Ut in purus mi. Etiam ac aliquet ipsum. Pellentesque faucibus diam dui. Morbi a semper orci. Ut nec malesuada urna. Vestibulum aliquet ante ac lacus dictum, sit amet pulvinar leo laoreet. Maecenas ut est commodo, commodo quam nec, dignissim est. Quisque rutrum molestie nunc, sed mollis nulla volutpat et. Donec dignissim ornare augue eu aliquam. Aliquam in tincidunt velit. In at fermentum mauris, ut accumsan nisl. Interdum et malesuada fames ac ante ipsum primis in faucibus.</p><p>Integer ac nulla at nisi sodales ullamcorper id in justo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam pharetra elit odio, ac mattis turpis consequat ac. Pellentesque tincidunt sed enim nec auctor. Quisque varius, felis a hendrerit faucibus, nunc lorem varius nibh, vel dignissim velit dolor ut elit. Mauris ut vulputate neque. Donec at est vitae massa egestas fringilla. Praesent a tristique nibh. Nunc blandit dui risus, quis rhoncus nisi consectetur vel.</p>]]></content>
                             </record>
                         </data>
                     </block>
@@ -1902,7 +1988,8 @@
                 </blocks>
             </area>
         </page>
-        <page name="Team" path="/team" filename="" pagetype="page" template="full" user="admin" description="" package="">
+        <page name="Team" path="/team" filename="" pagetype="page" template="full" user="admin" description=""
+              package="">
             <area name="Main">
                 <blocks>
                     <block type="page_title" name="">
@@ -1928,7 +2015,8 @@
                                                 <position><![CDATA[Co-Founder / CEO]]></position>
                                                 <company><![CDATA[]]></company>
                                                 <companyURL><![CDATA[]]></companyURL>
-                                                <paragraph><![CDATA[Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis.]]></paragraph>
+                                                <paragraph>
+                                                    <![CDATA[Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis.]]></paragraph>
                                             </record>
                                         </data>
                                     </block>
@@ -1945,7 +2033,8 @@
                                                 <position><![CDATA[Co-Founder / CTO]]></position>
                                                 <company><![CDATA[]]></company>
                                                 <companyURL><![CDATA[]]></companyURL>
-                                                <paragraph><![CDATA[Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis.]]></paragraph>
+                                                <paragraph>
+                                                    <![CDATA[Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis.]]></paragraph>
                                             </record>
                                         </data>
                                     </block>
@@ -1969,7 +2058,8 @@
                                                 <position><![CDATA[Art Director]]></position>
                                                 <company><![CDATA[]]></company>
                                                 <companyURL><![CDATA[]]></companyURL>
-                                                <paragraph><![CDATA[Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis.]]></paragraph>
+                                                <paragraph>
+                                                    <![CDATA[Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis.]]></paragraph>
                                             </record>
                                         </data>
                                     </block>
@@ -1984,7 +2074,8 @@
                                                 <position><![CDATA[Art Director]]></position>
                                                 <company><![CDATA[]]></company>
                                                 <companyURL><![CDATA[]]></companyURL>
-                                                <paragraph><![CDATA[Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis.]]></paragraph>
+                                                <paragraph>
+                                                    <![CDATA[Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis.]]></paragraph>
                                             </record>
                                         </data>
                                     </block>
@@ -2001,7 +2092,8 @@
                                                 <position><![CDATA[Art Director]]></position>
                                                 <company><![CDATA[]]></company>
                                                 <companyURL><![CDATA[]]></companyURL>
-                                                <paragraph><![CDATA[Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis.]]></paragraph>
+                                                <paragraph>
+                                                    <![CDATA[Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis.]]></paragraph>
                                             </record>
                                         </data>
                                     </block>
@@ -2016,7 +2108,8 @@
                                                 <position><![CDATA[Art Director]]></position>
                                                 <company><![CDATA[]]></company>
                                                 <companyURL><![CDATA[]]></companyURL>
-                                                <paragraph><![CDATA[Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis.]]></paragraph>
+                                                <paragraph>
+                                                    <![CDATA[Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis.]]></paragraph>
                                             </record>
                                         </data>
                                     </block>
@@ -2033,7 +2126,8 @@
                                                 <position><![CDATA[Art Director]]></position>
                                                 <company><![CDATA[]]></company>
                                                 <companyURL><![CDATA[]]></companyURL>
-                                                <paragraph><![CDATA[Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis.]]></paragraph>
+                                                <paragraph>
+                                                    <![CDATA[Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis.]]></paragraph>
                                             </record>
                                         </data>
                                     </block>
@@ -2048,7 +2142,8 @@
                                                 <position><![CDATA[Art Director]]></position>
                                                 <company><![CDATA[]]></company>
                                                 <companyURL><![CDATA[]]></companyURL>
-                                                <paragraph><![CDATA[Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis.]]></paragraph>
+                                                <paragraph>
+                                                    <![CDATA[Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis.]]></paragraph>
                                             </record>
                                         </data>
                                     </block>
@@ -2099,7 +2194,8 @@
                 <blocks/>
             </area>
         </page>
-        <page name="Blog" path="/blog" filename="" pagetype="blog" template="full" user="admin" description="" package="">
+        <page name="Blog" path="/blog" filename="" pagetype="blog" template="full" user="admin" description=""
+              package="">
             <attributes>
                 <attributekey handle="exclude_subpages_from_nav">
                     <value><![CDATA[1]]></value>
@@ -2115,7 +2211,10 @@
                 <blocks/>
             </area>
         </page>
-        <page name="Hello World!" public-date="2014-07-01 12:00:00" path="/blog/hello-world" filename="" pagetype="blog_entry" template="right_sidebar" user="admin" description="Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. Quisque dignissim neque a ipsum sodales, mattis aliquam ante dictum." package="">
+        <page name="Hello World!" public-date="2014-07-01 12:00:00" path="/blog/hello-world" filename=""
+              pagetype="blog_entry" template="right_sidebar" user="admin"
+              description="Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. Quisque dignissim neque a ipsum sodales, mattis aliquam ante dictum."
+              package="">
             <attributes>
                 <attributekey handle="meta_title">
                     <value><![CDATA[]]></value>
@@ -2176,7 +2275,8 @@
                     <block type="content" name="">
                         <data table="btContentLocal">
                             <record>
-                                <content><![CDATA[<blockquote>Fusce volutpat sodales mauris quis dapibus. Maecenas convallis, libero eu ultrices interdum, leo mauris commodo diam, sed cursus sapien ligula nec leo.</blockquote><p>Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis. Morbi at suscipit risus. Sed consequat eleifend metus, vitae malesuada eros elementum sed. Fusce risus felis, viverra et dignissim at, lobortis non est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sit amet consectetur lacus. Vestibulum neque lectus, egestas non cursus vitae, aliquam at magna. Etiam aliquam, justo et varius eleifend, dui lectus egestas nunc, vel malesuada nisl purus nec metus. In gravida turpis a pharetra commodo. Donec non turpis vulputate, faucibus metus a, consectetur nunc. Morbi tortor nisi, hendrerit sed laoreet eget, fermentum et justo. Suspendisse potenti.</p><p><a href="{ccm:export:file:balloon.jpg}" data-concrete5-link-lightbox="image"><concrete-picture alt="" file="balloon.jpg" /></a></p><h2>Heading 2</h2><p>Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis. Morbi at suscipit risus. Sed consequat eleifend metus, vitae malesuada eros elementum sed. Fusce risus felis, viverra et dignissim at, lobortis non est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sit amet consectetur lacus. Vestibulum neque lectus, egestas non cursus vitae, aliquam at magna. Etiam aliquam, justo et varius eleifend, dui lectus egestas nunc, vel malesuada nisl purus nec metus. In gravida turpis a pharetra commodo. Donec non turpis vulputate, faucibus metus a, consectetur nunc. Morbi tortor nisi, hendrerit sed laoreet eget, fermentum et justo. Suspendisse potenti.</p><h3>Heading 3</h3><p>Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. Quisque dignissim neque a ipsum sodales, mattis aliquam ante dictum. Vestibulum elementum pellentesque tortor ac congue. Mauris vel nibh id metus tincidunt eleifend. In interdum gravida ligula, at venenatis odio fermentum at. Donec dapibus enim lectus, quis venenatis tellus volutpat in. Nullam in velit tortor.</p><h3>Heading 3</h3><p>Donec blandit lectus nec neque ullamcorper rhoncus. Sed adipiscing tempus sem eu molestie. Aenean laoreet pretium ante vitae ultrices. Aenean eu gravida magna, vel aliquet magna. In auctor convallis gravida. Phasellus est erat, adipiscing nec lobortis quis, eleifend at sem. Curabitur fringilla viverra dolor, in rutrum ipsum rutrum sit amet. Vestibulum feugiat porttitor ipsum vel condimentum. Suspendisse at tempus libero. Sed eu tempor enim. Etiam convallis eleifend rutrum. Donec porta diam quis tellus feugiat dignissim. Cras posuere, massa eget laoreet laoreet, urna libero lobortis dolor, sed consequat elit urna eget massa. Donec aliquet pellentesque consectetur.</p>]]></content>
+                                <content>
+                                    <![CDATA[<blockquote>Fusce volutpat sodales mauris quis dapibus. Maecenas convallis, libero eu ultrices interdum, leo mauris commodo diam, sed cursus sapien ligula nec leo.</blockquote><p>Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis. Morbi at suscipit risus. Sed consequat eleifend metus, vitae malesuada eros elementum sed. Fusce risus felis, viverra et dignissim at, lobortis non est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sit amet consectetur lacus. Vestibulum neque lectus, egestas non cursus vitae, aliquam at magna. Etiam aliquam, justo et varius eleifend, dui lectus egestas nunc, vel malesuada nisl purus nec metus. In gravida turpis a pharetra commodo. Donec non turpis vulputate, faucibus metus a, consectetur nunc. Morbi tortor nisi, hendrerit sed laoreet eget, fermentum et justo. Suspendisse potenti.</p><p><a href="{ccm:export:file:balloon.jpg}" data-concrete5-link-lightbox="image"><concrete-picture alt="" file="balloon.jpg" /></a></p><h2>Heading 2</h2><p>Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis. Morbi at suscipit risus. Sed consequat eleifend metus, vitae malesuada eros elementum sed. Fusce risus felis, viverra et dignissim at, lobortis non est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sit amet consectetur lacus. Vestibulum neque lectus, egestas non cursus vitae, aliquam at magna. Etiam aliquam, justo et varius eleifend, dui lectus egestas nunc, vel malesuada nisl purus nec metus. In gravida turpis a pharetra commodo. Donec non turpis vulputate, faucibus metus a, consectetur nunc. Morbi tortor nisi, hendrerit sed laoreet eget, fermentum et justo. Suspendisse potenti.</p><h3>Heading 3</h3><p>Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. Quisque dignissim neque a ipsum sodales, mattis aliquam ante dictum. Vestibulum elementum pellentesque tortor ac congue. Mauris vel nibh id metus tincidunt eleifend. In interdum gravida ligula, at venenatis odio fermentum at. Donec dapibus enim lectus, quis venenatis tellus volutpat in. Nullam in velit tortor.</p><h3>Heading 3</h3><p>Donec blandit lectus nec neque ullamcorper rhoncus. Sed adipiscing tempus sem eu molestie. Aenean laoreet pretium ante vitae ultrices. Aenean eu gravida magna, vel aliquet magna. In auctor convallis gravida. Phasellus est erat, adipiscing nec lobortis quis, eleifend at sem. Curabitur fringilla viverra dolor, in rutrum ipsum rutrum sit amet. Vestibulum feugiat porttitor ipsum vel condimentum. Suspendisse at tempus libero. Sed eu tempor enim. Etiam convallis eleifend rutrum. Donec porta diam quis tellus feugiat dignissim. Cras posuere, massa eget laoreet laoreet, urna libero lobortis dolor, sed consequat elit urna eget massa. Donec aliquet pellentesque consectetur.</p>]]></content>
                             </record>
                         </data>
                     </block>
@@ -2197,7 +2297,10 @@
                 <blocks/>
             </area>
         </page>
-        <page name="Another Blog Post" public-date="2014-07-04 15:00:00" path="/blog/another-blog-post" filename="" pagetype="blog_entry" template="right_sidebar" user="admin" description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sit amet consectetur lacus. Vestibulum neque lectus, egestas non cursus vitae, aliquam at magna." package="">
+        <page name="Another Blog Post" public-date="2014-07-04 15:00:00" path="/blog/another-blog-post" filename=""
+              pagetype="blog_entry" template="right_sidebar" user="admin"
+              description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sit amet consectetur lacus. Vestibulum neque lectus, egestas non cursus vitae, aliquam at magna."
+              package="">
             <attributes>
                 <attributekey handle="thumbnail">
                     <value>
@@ -2243,7 +2346,8 @@
                     <block type="content" name="">
                         <data table="btContentLocal">
                             <record>
-                                <content><![CDATA[<p>Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis. Morbi at suscipit risus. Sed consequat eleifend metus, vitae malesuada eros elementum sed. Fusce risus felis, viverra et dignissim at, lobortis non est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. </p><p><span class="title-thin">CMS To the Rescue!</span></p><p>Nullam sit amet consectetur lacus. Vestibulum neque lectus, egestas non cursus vitae, aliquam at magna. Etiam aliquam, justo et varius eleifend, dui lectus egestas nunc, vel malesuada nisl purus nec metus. In gravida turpis a pharetra commodo. Donec non turpis vulputate, faucibus metus a, consectetur nunc. Morbi tortor nisi, hendrerit sed laoreet eget, fermentum et justo. Suspendisse potenti.</p><p><a href="http://www.concrete5.org">Learn more at concrete5.org </a><br></p>]]></content>
+                                <content>
+                                    <![CDATA[<p>Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis. Morbi at suscipit risus. Sed consequat eleifend metus, vitae malesuada eros elementum sed. Fusce risus felis, viverra et dignissim at, lobortis non est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. </p><p><span class="title-thin">CMS To the Rescue!</span></p><p>Nullam sit amet consectetur lacus. Vestibulum neque lectus, egestas non cursus vitae, aliquam at magna. Etiam aliquam, justo et varius eleifend, dui lectus egestas nunc, vel malesuada nisl purus nec metus. In gravida turpis a pharetra commodo. Donec non turpis vulputate, faucibus metus a, consectetur nunc. Morbi tortor nisi, hendrerit sed laoreet eget, fermentum et justo. Suspendisse potenti.</p><p><a href="http://www.concrete5.org">Learn more at concrete5.org </a><br></p>]]></content>
                             </record>
                         </data>
                     </block>
@@ -2264,7 +2368,10 @@
                 <blocks/>
             </area>
         </page>
-        <page name="A Beautiful Site Deserves a Beautiful Blog" public-date="2014-08-01 16:30" path="/blog/a-beautiful-blog" filename="" pagetype="blog_entry" template="right_sidebar" user="admin" description="Donec blandit lectus nec neque ullamcorper rhoncus. Sed adipiscing tempus sem eu molestie. Aenean laoreet pretium ante vitae ultrices. Aenean eu gravida magna, vel aliquet magna. In auctor convallis gravida. Phasellus est erat." package="">
+        <page name="A Beautiful Site Deserves a Beautiful Blog" public-date="2014-08-01 16:30"
+              path="/blog/a-beautiful-blog" filename="" pagetype="blog_entry" template="right_sidebar" user="admin"
+              description="Donec blandit lectus nec neque ullamcorper rhoncus. Sed adipiscing tempus sem eu molestie. Aenean laoreet pretium ante vitae ultrices. Aenean eu gravida magna, vel aliquet magna. In auctor convallis gravida. Phasellus est erat."
+              package="">
             <attributes>
                 <attributekey handle="thumbnail">
                     <value>
@@ -2310,7 +2417,8 @@
                     <block type="content" name="">
                         <data table="btContentLocal">
                             <record>
-                                <content><![CDATA[<p>Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis. Morbi at suscipit risus. Sed consequat eleifend metus, vitae malesuada eros elementum sed. Fusce risus felis, viverra et dignissim at, lobortis non est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sit amet consectetur lacus. Vestibulum neque lectus, egestas non cursus vitae, aliquam at magna. Etiam aliquam, justo et varius eleifend, dui lectus egestas nunc, vel malesuada nisl purus nec metus. In gravida turpis a pharetra commodo. Donec non turpis vulputate, faucibus metus a, consectetur nunc. Morbi tortor nisi, hendrerit sed laoreet eget, fermentum et justo. Suspendisse potenti.</p><p><span class="title-caps-bold">Heading 3</span></p><p>Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. Quisque dignissim neque a ipsum sodales, mattis aliquam ante dictum. Vestibulum elementum pellentesque tortor ac congue. Mauris vel nibh id metus tincidunt eleifend. In interdum gravida ligula, at venenatis odio fermentum at. Donec dapibus enim lectus, quis venenatis tellus volutpat in. Nullam in velit tortor.</p><p><a href="{ccm:export:file:plants.jpg}" data-concrete5-link-lightbox="image"><concrete-picture alt="" file="plants.jpg" /></a></p><p><span class="image-caption">Look at my beautiful image. Don't you to look more?</span></p><p>Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. Quisque dignissim neque a ipsum sodales, mattis aliquam ante dictum. Vestibulum elementum pellentesque tortor ac congue. Mauris vel nibh id metus tincidunt eleifend. In interdum gravida ligula, at venenatis odio fermentum at. Donec dapibus enim lectus, quis venenatis tellus volutpat in. Nullam in velit tortor.</p>]]></content>
+                                <content>
+                                    <![CDATA[<p>Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis. Morbi at suscipit risus. Sed consequat eleifend metus, vitae malesuada eros elementum sed. Fusce risus felis, viverra et dignissim at, lobortis non est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sit amet consectetur lacus. Vestibulum neque lectus, egestas non cursus vitae, aliquam at magna. Etiam aliquam, justo et varius eleifend, dui lectus egestas nunc, vel malesuada nisl purus nec metus. In gravida turpis a pharetra commodo. Donec non turpis vulputate, faucibus metus a, consectetur nunc. Morbi tortor nisi, hendrerit sed laoreet eget, fermentum et justo. Suspendisse potenti.</p><p><span class="title-caps-bold">Heading 3</span></p><p>Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. Quisque dignissim neque a ipsum sodales, mattis aliquam ante dictum. Vestibulum elementum pellentesque tortor ac congue. Mauris vel nibh id metus tincidunt eleifend. In interdum gravida ligula, at venenatis odio fermentum at. Donec dapibus enim lectus, quis venenatis tellus volutpat in. Nullam in velit tortor.</p><p><a href="{ccm:export:file:plants.jpg}" data-concrete5-link-lightbox="image"><concrete-picture alt="" file="plants.jpg" /></a></p><p><span class="image-caption">Look at my beautiful image. Don't you to look more?</span></p><p>Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. Quisque dignissim neque a ipsum sodales, mattis aliquam ante dictum. Vestibulum elementum pellentesque tortor ac congue. Mauris vel nibh id metus tincidunt eleifend. In interdum gravida ligula, at venenatis odio fermentum at. Donec dapibus enim lectus, quis venenatis tellus volutpat in. Nullam in velit tortor.</p>]]></content>
                             </record>
                         </data>
                     </block>
@@ -2464,7 +2572,8 @@
                                                 <recipientEmail></recipientEmail>
                                                 <displayCaptcha>0</displayCaptcha>
                                                 <redirectCID>0</redirectCID>
-                                                <replyToEmailControlID>02181ae2-634d-11e6-a245-62e65b165d8e</replyToEmailControlID>
+                                                <replyToEmailControlID>02181ae2-634d-11e6-a245-62e65b165d8e
+                                                </replyToEmailControlID>
                                                 <addFilesToSet>0</addFilesToSet>
                                             </record>
                                         </data>
@@ -2812,7 +2921,8 @@
                     </value>
                 </attributekey>
                 <attributekey handle="job_location">
-                    <value><![CDATA[Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla massa lacus, vehicula eu interdum convallis, laoreet id lectus. Nunc turpis elit, aliquam sit amet aliquam tincidunt, dapibus vel tellus. ]]></value>
+                    <value>
+                        <![CDATA[Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla massa lacus, vehicula eu interdum convallis, laoreet id lectus. Nunc turpis elit, aliquam sit amet aliquam tincidunt, dapibus vel tellus. ]]></value>
                 </attributekey>
             </attributes>
             <area name="Main">
@@ -2831,7 +2941,7 @@
                             </record>
                         </data>
                     </block>
-                    <block mc-block-id="d8f7ddkN" />
+                    <block mc-block-id="d8f7ddkN"/>
                 </blocks>
             </area>
             <area name="Page Header">
@@ -2874,7 +2984,8 @@
                     </value>
                 </attributekey>
                 <attributekey handle="job_location">
-                    <value><![CDATA[Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla massa lacus, vehicula eu interdum convallis, laoreet id lectus. Nunc turpis elit, aliquam sit amet aliquam tincidunt, dapibus vel tellus. ]]></value>
+                    <value>
+                        <![CDATA[Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla massa lacus, vehicula eu interdum convallis, laoreet id lectus. Nunc turpis elit, aliquam sit amet aliquam tincidunt, dapibus vel tellus. ]]></value>
                 </attributekey>
             </attributes>
             <area name="Main">
@@ -2893,7 +3004,7 @@
                             </record>
                         </data>
                     </block>
-                    <block mc-block-id="d8f7ddkN" />
+                    <block mc-block-id="d8f7ddkN"/>
                 </blocks>
             </area>
             <area name="Page Header">
@@ -2957,23 +3068,29 @@
         <link service="twitter" url="http://twitter.com/concrete5"/>
     </sociallinks>
     <trees>
-    <tree type="topic" name="Blog Entries">
-        <category name="Reviews">
-            <topic name="Gadgets"/>
-            <topic name="Movies"/>
-            <topic name="Books"/>
-            <topic name="Music"/>
-        </category>
-        <topic name="Projects"/>
-        <topic name="Sports"/>
-        <topic name="Humor"/>
-    </tree>
-    <tree type="topic" name="Projects">
-        <topic name="Crafts"/>
-        <topic name="Homework"/>
-        <topic name="Supplies"/>
-        <topic name="Activities"/>
-    </tree>
+        <tree type="topic" name="Blog Entries">
+            <category name="Reviews">
+                <topic name="Gadgets"/>
+                <topic name="Movies"/>
+                <topic name="Books"/>
+                <topic name="Music"/>
+            </category>
+            <topic name="Projects"/>
+            <topic name="Sports"/>
+            <topic name="Humor"/>
+        </tree>
+        <tree type="topic" name="Projects">
+            <topic name="Crafts"/>
+            <topic name="Homework"/>
+            <topic name="Supplies"/>
+            <topic name="Activities"/>
+        </tree>
+        <tree type="topic" name="Event Categories">
+            <topic name="Meetings"/>
+            <topic name="Activities"/>
+            <topic name="Sports"/>
+            <topic name="Holidays"/>
+        </tree>
     </trees>
     <pagefeeds>
         <feed>
@@ -2987,30 +3104,45 @@
     </pagefeeds>
 
     <expressentities>
-        <entity id="83ae65b1-79e8-4ded-bbca-e419bfd19bb6" handle="express_form_170" name="Contact" include_in_public_list="" description="" default_view_form="881b6bde-220f-4482-b8f9-ace40b5d169b" default_edit_form="881b6bde-220f-4482-b8f9-ace40b5d169b" results-folder="/Forms">>
+        <entity id="83ae65b1-79e8-4ded-bbca-e419bfd19bb6" handle="express_form_170" name="Contact"
+                include_in_public_list="" description="" default_view_form="881b6bde-220f-4482-b8f9-ace40b5d169b"
+                default_edit_form="881b6bde-220f-4482-b8f9-ace40b5d169b" results-folder="/Forms">>
             <forms>
                 <form id="881b6bde-220f-4482-b8f9-ace40b5d169b" name="Form">
                     <fieldsets>
                         <fieldset title="" description="">
                             <controls>
-                                <control id="f68175ca-634c-11e6-a245-62e65b165d8e" type="attribute_key" required="1" custom-label="">
-                                    <attributekey handle="contact_question_first_name" name="First Name" package="" searchable="1" indexed="1" type="text" category="">
+                                <control id="f68175ca-634c-11e6-a245-62e65b165d8e" type="attribute_key" required="1"
+                                         custom-label="">
+                                    <attributekey handle="contact_question_first_name" name="First Name" package=""
+                                                  searchable="1" indexed="1" type="text" category="">
                                         <type placeholder=""/>
                                     </attributekey>
                                 </control>
-                                <control id="fbc62d32-634c-11e6-a245-62e65b165d8e" type="attribute_key" required="1" custom-label="">
-                                    <attributekey handle="contact_question_last_name" name="Last Name" package="" searchable="1" indexed="1" type="text" category="">
+                                <control id="fbc62d32-634c-11e6-a245-62e65b165d8e" type="attribute_key" required="1"
+                                         custom-label="">
+                                    <attributekey handle="contact_question_last_name" name="Last Name" package=""
+                                                  searchable="1" indexed="1" type="text" category="">
                                         <type placeholder=""/>
                                     </attributekey>
                                 </control>
-                                <control id="02181ae2-634d-11e6-a245-62e65b165d8e" type="attribute_key" required="1" custom-label="">
-                                    <attributekey handle="contact_question_email_address" name="Email Address" package="" searchable="1" indexed="1" type="email" category=""/>
+                                <control id="02181ae2-634d-11e6-a245-62e65b165d8e" type="attribute_key" required="1"
+                                         custom-label="">
+                                    <attributekey handle="contact_question_email_address" name="Email Address"
+                                                  package="" searchable="1" indexed="1" type="email" category=""/>
                                 </control>
-                                <control id="32a6369e-65a0-11e6-9add-e0995e0a1653" type="entity_property" required="" custom-label="" type-id="text"><headline><![CDATA[]]></headline><body><![CDATA[<div class="alert alert-info">Don&#39;t worry &ndash;&nbsp;we won&#39;t add you to any email list. This is just so we can contact you in case you have questions.</div>
-]]></body></control>
-                                <control id="b3c4ee52-6350-11e6-a245-62e65b165d8e" type="attribute_key" required="" custom-label="">
-                                    <attributekey handle="contact_question_subject" name="Subject" package="" searchable="1" indexed="1" type="select" category="">
-                                        <type allow-multiple-values="" display-order="display_asc" allow-other-values="">
+                                <control id="32a6369e-65a0-11e6-9add-e0995e0a1653" type="entity_property" required=""
+                                         custom-label="" type-id="text">
+                                    <headline><![CDATA[]]></headline>
+                                    <body><![CDATA[<div class="alert alert-info">Don&#39;t worry &ndash;&nbsp;we won&#39;t add you to any email list. This is just so we can contact you in case you have questions.</div>
+]]></body>
+                                </control>
+                                <control id="b3c4ee52-6350-11e6-a245-62e65b165d8e" type="attribute_key" required=""
+                                         custom-label="">
+                                    <attributekey handle="contact_question_subject" name="Subject" package=""
+                                                  searchable="1" indexed="1" type="select" category="">
+                                        <type allow-multiple-values="" display-multiple-values="1"
+                                              display-order="display_asc" allow-other-values="">
                                             <options>
                                                 <option value="I love your work" is-end-user-added=""/>
                                                 <option value="Great website" is-end-user-added=""/>
@@ -3020,8 +3152,10 @@
                                         </type>
                                     </attributekey>
                                 </control>
-                                <control id="bf4cdc08-6350-11e6-a245-62e65b165d8e" type="attribute_key" required="1" custom-label="">
-                                    <attributekey handle="contact_question_message" name="Message" package="" searchable="1" indexed="1" type="textarea" category="">
+                                <control id="bf4cdc08-6350-11e6-a245-62e65b165d8e" type="attribute_key" required="1"
+                                         custom-label="">
+                                    <attributekey handle="contact_question_message" name="Message" package=""
+                                                  searchable="1" indexed="1" type="textarea" category="">
                                         <type mode="text"/>
                                     </attributekey>
                                 </control>
@@ -3032,5 +3166,10 @@
             </forms>
         </entity>
     </expressentities>
+
+    <config>
+        <option name="concrete.calendar.topic_attribute">event_categories</option>
+    </config>
+
 
 </concrete5-cif>

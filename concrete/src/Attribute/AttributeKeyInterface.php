@@ -1,37 +1,50 @@
 <?php
 namespace Concrete\Core\Attribute;
 
-use Concrete\Core\Attribute\Key\SearchIndexer\SearchIndexerInterface;
-
+/**
+ * Interface that any attribute key must implement.
+ */
 interface AttributeKeyInterface
 {
     /**
+     * Get the attribute key identifier.
+     *
      * @return int
      */
     public function getAttributeKeyID();
 
     /**
+     * Get the attribute key handle.
+     *
      * @return string
      */
     public function getAttributeKeyHandle();
 
     /**
+     * Get the attribute key type.
+     *
      * @return \Concrete\Core\Entity\Attribute\Type
      */
     public function getAttributeType();
 
     /**
+     * Is the attribute key searchable?
+     *
      * @return bool
      */
     public function isAttributeKeySearchable();
 
     /**
-     * @return SearchIndexerInterface
+     * Get the search indexer.
+     *
+     * @return \Concrete\Core\Attribute\Key\SearchIndexer\SearchIndexerInterface
      */
     public function getSearchIndexer();
 
     /**
-     * @return Controller
+     * Get the attribute key conteoller.
+     *
+     * @return \Concrete\Core\Attribute\Controller
      */
     public function getController();
 }

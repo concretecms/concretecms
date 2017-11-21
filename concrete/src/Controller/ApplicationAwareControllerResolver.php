@@ -85,7 +85,7 @@ class ApplicationAwareControllerResolver extends SymfonyControllerResolver imple
 
         list($class, $method) = explode('::', $controller, 2);
 
-        if (!class_exists($class)) {
+        if (!class_exists($class) && !$this->app->bound($class)) {
             throw new \InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
         }
 

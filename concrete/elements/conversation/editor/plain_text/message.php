@@ -1,9 +1,9 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 $form = Loader::helper('form');
-echo $form->textarea($editor->getConversationEditorInputName(), $editor->getConversationEditorMessageBody(), array('class' => 'unbound plaintext_conversation_editor_'.$editor->cnvObject->cnvID));
+echo $form->textarea($editor->getConversationEditorInputName(), $editor->getConversationEditorMessageBody(), array('class' => 'unbound plaintext_conversation_editor_'.$editor->getConversationObject()->getConversationID()));
 ?>
 <script type="text/javascript">
-	var me = $('textarea.unbound.plaintext_conversation_editor_<?=$editor->cnvObject->cnvID?>').first().removeClass('unbound');
+	var me = $('textarea.unbound.plaintext_conversation_editor_<?=$editor->getConversationObject()->getConversationID()?>').first().removeClass('unbound');
 	(function($,window,me){
 		var obj = window.obj;
 		ConcreteEvent.bind('ConversationSubmitForm',function(){

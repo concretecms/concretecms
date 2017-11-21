@@ -1,0 +1,17 @@
+div.ccm-block-calendar-event-dialog-details {
+    position: relative;
+    background: #FFF;
+    padding: 20px;
+    width: auto;
+    max-width: 500px;
+    margin: 20px auto;
+}
+
+div.ccm-block-calendar-event-dialog-details h3 {
+    margin-top: 0px;
+}
+
+div.ccm-block-calendar-dialog-event-time {
+    font-weight: bold;
+    margin-bottom: 5px;
+}

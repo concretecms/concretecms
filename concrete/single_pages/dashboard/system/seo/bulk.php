@@ -163,7 +163,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                         if (strlen($cobj->getAttribute('meta_description')) <= 0) {
                             $descInfo['style'] = 'background: whiteSmoke';
                         }
-                        echo $form->textarea('meta_description', $cobj->getAttribute('meta_description') ? $cobj->getAttribute('meta_description') : $autoDesc, $descInfo);
+                        echo $form->textarea('meta_description', h($cobj->getAttribute('meta_description')) ?: $autoDesc, $descInfo);
                         echo $descInfo['style'] ? '<span class="help-inline">' . t('Default value. Click to edit.') . '</span>' : '';
                         ?>
                     </div>

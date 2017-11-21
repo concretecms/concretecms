@@ -1,20 +1,50 @@
 <?php
+
 namespace Concrete\Attribute\Address;
 
 use Concrete\Core\Attribute\Context\BasicFormContext;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\Form\Control\View\GroupedView;
+use Concrete\Core\Attribute\MulticolumnTextExportableAttributeInterface;
 use Concrete\Core\Entity\Attribute\Key\Settings\AddressSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\AddressValue;
-use Core;
-use Concrete\Core\Support\Facade\Application;
-use Concrete\Core\Http\ResponseFactoryInterface;
+use Concrete\Core\Error\ErrorList\ErrorList;
+use Concrete\Core\Form\Context\ContextInterface;
+use Concrete\Core\Geolocator\GeolocationResult;
 use Concrete\Core\Http\Response;
+use Concrete\Core\Http\ResponseFactoryInterface;
+use Concrete\Core\Localization\Service\CountryList;
+use Concrete\Core\Localization\Service\StatesProvincesList;
+use Concrete\Core\Support\Facade\Application;
 
-class Controller extends AttributeTypeController
+class Controller extends AttributeTypeController implements MulticolumnTextExportableAttributeInterface
 {
-    public $helpers = ['form'];
+    public $helpers = ['form', 'lists/countries'];
+
+    protected $searchIndexFieldDefinition = [
+        'address1' => [
+            'type' => 'string',
+            'options' => ['length' => '255', 'default' => '', 'notnull' => false],
+        ],
+        'address2' => [
+            'type' => 'string',
+            'options' => ['length' => '255', 'default' => '', 'notnull' => false],
+        ],
+        'city' => ['type' => 'string', 'options' => ['length' => '255', 'default' => '', 'notnull' => false]],
+        'state_province' => [
+            'type' => 'string',
+            'options' => ['length' => '255', 'default' => '', 'notnull' => false],
+        ],
+        'country' => [
+            'type' => 'string',
+            'options' => ['length' => '255', 'default' => '', 'notnull' => false],
+        ],
+        'postal_code' => [
+            'type' => 'string',
+            'options' => ['length' => '255', 'default' => '', 'notnull' => false],
+        ],
+    ];
 
     public function getIconFormatter()
     {
@@ -35,7 +65,7 @@ class Controller extends AttributeTypeController
         );
     }
 
-    public function getControlView(\Concrete\Core\Form\Context\ContextInterface $context)
+    public function getControlView(ContextInterface $context)
     {
         return new GroupedView($context, $this->getAttributeKey(), $this->getAttributeValue());
     }
@@ -47,7 +77,7 @@ class Controller extends AttributeTypeController
 
     public function getAttributeValueObject()
     {
-        return $this->entityManager->find(AddressValue::class, $this->attributeValue->getGenericValue());
+        return $this->attributeValue ? $this->entityManager->find(AddressValue::class, $this->attributeValue->getGenericValue()) : null;
     }
 
     public function searchForm($list)
@@ -81,30 +111,6 @@ class Controller extends AttributeTypeController
 
         return $list;
     }
-
-    protected $searchIndexFieldDefinition = [
-        'address1' => [
-            'type' => 'string',
-            'options' => ['length' => '255', 'default' => '', 'notnull' => false],
-        ],
-        'address2' => [
-            'type' => 'string',
-            'options' => ['length' => '255', 'default' => '', 'notnull' => false],
-        ],
-        'city' => ['type' => 'string', 'options' => ['length' => '255', 'default' => '', 'notnull' => false]],
-        'state_province' => [
-            'type' => 'string',
-            'options' => ['length' => '255', 'default' => '', 'notnull' => false],
-        ],
-        'country' => [
-            'type' => 'string',
-            'options' => ['length' => '255', 'default' => '', 'notnull' => false],
-        ],
-        'postal_code' => [
-            'type' => 'string',
-            'options' => ['length' => '255', 'default' => '', 'notnull' => false],
-        ],
-    ];
 
     public function search()
     {
@@ -159,12 +165,15 @@ class Controller extends AttributeTypeController
     public function getDisplayValue()
     {
         $value = $this->getAttributeValue()->getValue();
-        $v = Core::make('helper/text')->entities($value);
+        $v = $this->app->make('helper/text')->entities($value);
         $ret = nl2br($v);
 
         return $ret;
     }
 
+    /**
+     * @deprecated Use $app->make(\Concrete\Core\Form\Service\Form::class')->selectCountry() to link a Country field and a State/Province field
+     */
     public function action_load_provinces_js()
     {
         $app = isset($this->app) ? $this->app : Application::getFacadeApplication();
@@ -205,10 +214,10 @@ class Controller extends AttributeTypeController
         if ($akHasCustomCountries && (count($akCustomCountries) == 0)) {
             $e->add(t('You must specify at least one country.'));
         } else {
-            if ($akHasCustomCountries && $data['akDefaultCountry'] != '' && (!in_array(
-                    $data['akDefaultCountry'],
-                    $akCustomCountries
-                ))
+            if (
+                $akHasCustomCountries
+                && $data['akDefaultCountry'] != ''
+                && (!in_array($data['akDefaultCountry'], $akCustomCountries))
             ) {
                 $e->add(t('The default country must be in the list of custom countries.'));
             }
@@ -223,6 +232,7 @@ class Controller extends AttributeTypeController
         $type = $akey->addChild('type');
         $type->addAttribute('custom-countries', $this->akHasCustomCountries);
         $type->addAttribute('default-country', $this->akDefaultCountry);
+        $type->addAttribute('geolocate-country', $this->akGeolocateCountry ? 1 : 0);
         if ($this->akHasCustomCountries) {
             $countries = $type->addChild('countries');
             foreach ($this->akCustomCountries as $country) {
@@ -292,6 +302,7 @@ class Controller extends AttributeTypeController
                 }
                 $type->setCustomCountries($countries);
             }
+            $type->setGeolocateCountry(!empty($akey->type['geolocate-country']));
         }
 
         return $type;
@@ -313,27 +324,9 @@ class Controller extends AttributeTypeController
         $type->setCustomCountries($akCustomCountries);
         $type->setHasCustomCountries($akHasCustomCountries);
         $type->setDefaultCountry($data['akDefaultCountry']);
+        $type->setGeolocateCountry(!empty($data['akGeolocateCountry']));
 
         return $type;
-    }
-
-    protected function load()
-    {
-        $ak = $this->getAttributeKey();
-        if (!is_object($ak)) {
-            return false;
-        }
-
-        $type = $ak->getAttributeKeySettings();
-        /*
-         * @var $type AddressType
-         */
-        $this->akHasCustomCountries = $type->hasCustomCountries();
-        $this->akDefaultCountry = $type->getDefaultCountry();
-        $this->akCustomCountries = $type->getCustomCountries();
-        $this->set('akDefaultCountry', $this->akDefaultCountry);
-        $this->set('akHasCustomCountries', $this->akHasCustomCountries);
-        $this->set('akCustomCountries', $this->akCustomCountries);
     }
 
     public function type_form()
@@ -363,17 +356,128 @@ class Controller extends AttributeTypeController
             $this->set('state_province', '');
             $this->set('country', '');
             $this->set('postal_code', '');
+            if ($this->akGeolocateCountry) {
+                $geolocated = $this->app->make(GeolocationResult::class);
+                $this->set('country', $geolocated->getCountryCode());
+                $this->set('postal_code', $geolocated->getPostalCode());
+                $this->set('state_province', $geolocated->getStateProvinceCode());
+                $this->set('city', $geolocated->getCityName());
+            }
         }
         $this->set('search', false);
-        $this->addFooterItem(Core::make('helper/html')->javascript($this->getView()->action('load_provinces_js')));
-        $this->addFooterItem(
-            Core::make('helper/html')->javascript($this->getAttributeTypeFileURL('country_state.js'))
-        );
         $this->set('key', $this->attributeKey);
     }
 
     public function getAttributeKeySettingsClass()
     {
         return AddressSettings::class;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\MulticolumnTextExportableAttributeInterface::getAttributeTextRepresentationHeaders()
+     */
+    public function getAttributeTextRepresentationHeaders()
+    {
+        return [
+            'street1',
+            'street2',
+            'street3',
+            'city',
+            'state_province',
+            'country',
+            'postal_code',
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\MulticolumnTextExportableAttributeInterface::getAttributeValueTextRepresentation()
+     */
+    public function getAttributeValueTextRepresentation()
+    {
+        $value = $this->getAttributeValueObject();
+
+        return [
+            $value ? (string) $value->getAddress1() : '',
+            $value ? (string) $value->getAddress2() : '',
+            $value ? (string) $value->getAddress3() : '',
+            $value ? (string) $value->getCity() : '',
+            $value ? (string) $value->getStateProvince() : '',
+            $value ? (string) $value->getCountry() : '',
+            $value ? (string) $value->getPostalCode() : '',
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\MulticolumnTextExportableAttributeInterface::updateAttributeValueFromTextRepresentation()
+     */
+    public function updateAttributeValueFromTextRepresentation(array $textRepresentation, ErrorList $warnings)
+    {
+        $textRepresentation = array_map('trim', $textRepresentation);
+        $value = $this->getAttributeValueObject();
+        if ($value === null) {
+            if (implode('', $textRepresentation) !== '') {
+                $value = new AddressValue();
+            }
+        }
+        if ($value !== null) {
+            /* @var AddressValue $value */
+            $value->setAddress1(trim(array_shift($textRepresentation)));
+            $value->setAddress2(trim(array_shift($textRepresentation)));
+            $value->setAddress3(trim(array_shift($textRepresentation)));
+            $value->setCity(trim(array_shift($textRepresentation)));
+            $value->setStateProvince(trim(array_shift($textRepresentation)));
+            $value->setCountry(trim(array_shift($textRepresentation)));
+            $value->setPostalCode(trim(array_shift($textRepresentation)));
+
+            $countryCode = (string) $value->getCountry();
+            if ($countryCode !== '') {
+                $cl = $this->app->make(CountryList::class);
+                /* @var CountryList $cl */
+                $countries = $cl->getCountries();
+                if (!isset($countries[$countryCode])) {
+                    $warnings->add(t('"%1$s" is not a valid Country code for the attribute with handle %2$s', $countryCode, $this->attributeKey->getAttributeKeyHandle()));
+                } else {
+                    $countryName = $countries[$countryCode];
+                    $stateProvinceCode = $value->getStateProvince();
+                    if ($stateProvinceCode !== '') {
+                        $spl = $this->app->make(StatesProvincesList::class);
+                        /* @var StatesProvincesList $spl */
+                        $statesProvinces = $spl->getStateProvinceArray($countryCode);
+                        if ($statesProvinces !== null && !isset($statesProvinces[$stateProvinceCode])) {
+                            $warnings->add(t('"%1$s" is not a valid State/Province code for the Country %2$s (attribute with handle %3$s)', $stateProvinceCode, $countryName, $this->attributeKey->getAttributeKeyHandle()));
+                        }
+                    }
+                }
+            }
+        }
+
+        return $value;
+    }
+
+    protected function load()
+    {
+        $ak = $this->getAttributeKey();
+        if (!is_object($ak)) {
+            return false;
+        }
+
+        $type = $ak->getAttributeKeySettings();
+        /*
+         * @var $type AddressType
+         */
+        $this->akHasCustomCountries = $type->hasCustomCountries();
+        $this->akDefaultCountry = $type->getDefaultCountry();
+        $this->akCustomCountries = $type->getCustomCountries();
+        $this->akGeolocateCountry = $type->geolocateCountry();
+        $this->set('akDefaultCountry', $this->akDefaultCountry);
+        $this->set('akHasCustomCountries', $this->akHasCustomCountries);
+        $this->set('akCustomCountries', $this->akCustomCountries);
+        $this->set('akGeolocateCountry', $this->akGeolocateCountry);
     }
 }

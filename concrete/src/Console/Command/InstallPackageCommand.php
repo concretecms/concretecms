@@ -3,6 +3,7 @@ namespace Concrete\Core\Console\Command;
 
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Console\Command;
+use Concrete\Core\Console\ConsoleAwareInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -16,7 +17,11 @@ class InstallPackageCommand extends Command
     {
         $errExitCode = static::RETURN_CODE_ON_FAILURE;
         $this
-            ->setName('c5:package-install')
+            ->setName('c5:package:install')
+            ->setAliases([
+                'c5:package-install',
+                'c5:install-package',
+            ])
             ->addOption('full-content-swap', null, InputOption::VALUE_NONE, 'If this option is specified a full content swap will be performed (if the package supports it)')
             ->setDescription('Install a concrete5 package')
             ->addEnvOption()
@@ -75,6 +80,12 @@ EOT
         if ($pkg === null) {
             throw new Exception(sprintf("No package with handle '%s' was found", $pkgHandle));
         }
+
+        // Provide the console objects to objects that are aware of the console
+        if ($pkg instanceof ConsoleAwareInterface) {
+            $pkg->setConsole($this->getApplication(), $output, $input);
+        }
+
         $output->writeln(sprintf('<info>found (%s).</info>', $pkg->getPackageName()));
 
         $output->write('Checking preconditions... ');

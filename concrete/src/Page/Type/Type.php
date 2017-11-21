@@ -184,6 +184,8 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
             // so we need to move it, check its permissions, etc...
             Section::registerPage($c);
             $c->move($parent);
+            $db = \Database::connection();
+            $db->executeQuery('update Pages set cIsDraft = 0 where cID = ?', [$c->getCollectionID()]);
             if (!$parent->overrideTemplatePermissions()) {
                 // that means the permissions of pages added beneath here inherit from page type permissions
                 // this is a very poorly named method. Template actually used to mean Type.
@@ -1159,7 +1161,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         $db = Loader::db();
         $ptID = $this->getPageTypeID();
         $parent = Page::getDraftsParentPage();
-        $data = array('cvIsApproved' => 0, 'cIsActive' => false, 'cAcquireComposerOutputControls' => true);
+        $data = array('cvIsApproved' => 0, 'cIsDraft' => 1, 'cIsActive' => false, 'cAcquireComposerOutputControls' => true);
         $p = $parent->add($this, $data, $pt);
 
         // now we setup in the initial configurated page target

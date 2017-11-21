@@ -6,7 +6,10 @@ if ($c) {
     if ($pageType) {
         $siteType = $pageType->getSiteTypeObject(); // gotta have this for editing defaults pages.
     } else {
-        $siteType = $c->getSite()->getType();
+        $tree = $c->getSiteTreeObject();
+        if (is_object($tree)) {
+            $siteType = $tree->getSiteType();
+        }
     }
 }
 $form = Loader::helper('form/page_selector');
@@ -338,6 +341,11 @@ $form = Loader::helper('form/page_selector');
                         ?> selected <?php
                     } ?>>
                         <?= t('Reverse alphabetical order') ?>
+                    </option>
+                    <option value="modified_desc" <?php if ($orderBy == 'modified_desc') {
+                        ?> selected <?php
+                    } ?>>
+                        <?= t('Most recently modified first') ?>
                     </option>
                     <option value="random" <?php if ($orderBy == 'random') {
                         ?> selected <?php

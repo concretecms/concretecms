@@ -115,7 +115,8 @@ class Register extends PageController
 
             \Core::make('validator/password')->isValid($password, $e);
 
-            if ($password) {
+            $displayConfirmPasswordField = $config->get('concrete.user.registration.display_confirm_password_field');
+            if ($password && $displayConfirmPasswordField) {
                 if ($password != $passwordConfirm) {
                     $e->add(t('The two passwords provided do not match.'));
                 }

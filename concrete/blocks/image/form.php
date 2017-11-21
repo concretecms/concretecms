@@ -63,10 +63,14 @@ $al = $app->make('helper/concrete/asset_library');
     </div>
 
     <div id="imageLinkOpenInNewWindow" style="display: none;" class="form-group">
-        <?php
-        echo $form->checkbox('openLinkInNewWindow', 'openLinkInNewWindow', $openLinkInNewWindow);
-        echo $form->label('openLinkInNewWindow', t('Open link in new window'));
-        ?>
+        <div class="checkbox">
+            <label>
+            <?php
+            echo $form->checkbox('openLinkInNewWindow', 'openLinkInNewWindow', $openLinkInNewWindow);
+            echo t('Open link in new window');
+            ?>
+            </label>
+        </div>
     </div>
 
     <div class="form-group">

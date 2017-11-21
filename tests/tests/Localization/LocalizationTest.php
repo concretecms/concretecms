@@ -51,12 +51,22 @@ EOT
         $translations->toPoFile($potFile);
         $this->assertFileExists($potFile);
 
+        // Check if msgen is available
+        $cmd = 'msgen --version 2>&1';
+        $output = array();
+        $rc = -1;
+        @exec($cmd, $output, $rc);
+        if ($rc !== 0) {
+            $this->markTestSkipped('msgen is not available');
+        }
+
         // Create a .po file with translations set to source strings
         $poFile = $translationsFolder.'/messages.po';
         $cmd = 'msgen --lang=en-US --output-file='.escapeshellarg($poFile).' '.escapeshellarg($potFile).' 2>&1';
         $output = array();
+        $rc = -1;
         @exec($cmd, $output, $rc);
-        $this->assertSame(0, $rc, "msgen output:\n" . implode("\n", $output));
+        $this->assertSame(0, $rc, "msgen output:\n" . trim(implode("\n", $output)));
         $this->assertFileExists($poFile);
 
         // Set the plural rules
@@ -64,6 +74,15 @@ EOT
         $translations->setLanguage('en_US');
         $translations->toPoFile($poFile);
         $this->assertSame($translatableStrings, count($translations));
+
+        // Check if msgfmt is available
+        $cmd = 'msgfmt --version 2>&1';
+        $output = array();
+        $rc = -1;
+        @exec($cmd, $output, $rc);
+        if ($rc !== 0) {
+            $this->markTestSkipped('msgfmt is not available');
+        }
 
         // Compile the .po file checking the strings
         $moFile = $translationsFolder.'/messages.mo';
@@ -76,6 +95,7 @@ EOT
         $cmd .= ' '.escapeshellarg($poFile);
         $cmd .= ' 2>&1';
         $output = array();
+        $rc = -1;
         @exec($cmd, $output, $rc);
         $this->assertSame(0, $rc, "msgfmt output:\n" . implode("\n", $output));
         $this->assertFileExists($moFile);

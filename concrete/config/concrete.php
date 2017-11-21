@@ -6,9 +6,9 @@ return [
      *
      * @var string
      */
-    'version' => '8.2.2b2',
-    'version_installed' => '8.2.2b2',
-    'version_db' => '20170818000000', // the key of the latest database migration
+    'version' => '8.3.0RC2',
+    'version_installed' => '8.3.0RC2',
+    'version_db' => '20171117173822', // the key of the latest database migration
 
     /*
      * Installation status
@@ -343,6 +343,10 @@ return [
             'address' => null,
             'name' => null,
         ],
+        'workflow_notification' => [
+            'address' => null,
+            'name' => null,
+        ],
     ],
 
     /*
@@ -505,6 +509,7 @@ return [
         'images' => [
             'use_exif_data_to_rotate_images' => false,
             'manipulation_library' => 'gd',
+            'create_high_dpi_thumbnails' => true,
         ],
         'results' => 10,
     ],
@@ -700,6 +705,11 @@ return [
             'display_username_field' => true,
 
             /*
+             * Determines whether the confirm password field is displayed when registering
+             */
+            'display_confirm_password_field' => true,
+
+            /*
              * Validate emails during registration
              *
              * @var bool
@@ -769,6 +779,21 @@ return [
          * @var string
          */
         'notify_email' => '',
+    ],
+
+    /*
+     * ------------------------------------------------------------------------
+     * Calendar
+     * ------------------------------------------------------------------------
+     */
+    'calendar' => [
+
+        'colors' => [
+
+            'text' => '#ffffff',
+            'background' => '#3A87AD',
+
+        ],
     ],
 
     /*

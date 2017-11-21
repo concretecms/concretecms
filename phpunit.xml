@@ -15,6 +15,7 @@
             <directory>tests/tests/CodingStyle/</directory>
             <directory>tests/tests/Core/</directory>
             <directory>tests/tests/Localization/</directory>
+            <directory>tests/tests/Multilingual/</directory>
         </testsuite>
     </testsuites>
 </phpunit>

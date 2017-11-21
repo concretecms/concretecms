@@ -21,6 +21,7 @@ class InstallLanguageCommand extends Command
         $errExitCode = static::RETURN_CODE_ON_FAILURE;
         $this
         ->setName('c5:language-install')
+        ->setAliases(['c5:install-language'])
         ->setDescription('Install or update concrete5 languages')
         ->addEnvOption()
         ->addOption('--update', 'u', InputOption::VALUE_NONE, 'Update any outdated language files')

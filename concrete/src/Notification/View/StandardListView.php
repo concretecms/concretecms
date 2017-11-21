@@ -4,6 +4,9 @@ namespace Concrete\Core\Notification\View;
 use Concrete\Controller\Element\Notification\ListDetails;
 use Concrete\Controller\Element\Notification\Menu;
 use Concrete\Core\Entity\Notification\Notification;
+use Concrete\Core\Support\Facade\Facade;
+use Concrete\Core\Url\Url;
+use Concrete\Core\User\UserInfo;
 use HtmlObject\Element;
 use HtmlObject\Link;
 
@@ -46,6 +49,9 @@ abstract class StandardListView implements StandardListViewInterface
         return '';
     }
 
+    /**
+     * @return UserInfo
+     */
     public function getInitiatorUserObject()
     {
         return null;
@@ -80,21 +86,51 @@ abstract class StandardListView implements StandardListViewInterface
         }
     }
 
+    protected function getLinkToUser(UserInfo $user)
+    {
+        $app = Facade::getFacadeApplication();
+        return $app->make('url/manager')->resolve([$user]);
+    }
+
+    public function getDateString()
+    {
+        $app = Facade::getFacadeApplication();
+        $date = $this->notification->getNotificationDate();
+        $service = $app->make('date');
+        $user = $this->getInitiatorUserObject();
+        $timezone = null;
+        if ($user) {
+            $timezone = $user->getUserTimezone();
+        }
+        if (!$timezone) {
+            $timezone = $this->notification->getNotificationDateTimeZone();
+        }
+        return $service->formatDateTime($date, false, false, $timezone);
+    }
+
     public function renderInitiatorActionDescription()
     {
 
         $user = $this->getInitiatorUserObject();
+        $element = $this->getRequestedByElement();
         if (is_object($user)) {
-            $element = $this->getRequestedByElement();
             $inner = new Element('span', null, array('class' => 'ccm-block-desktop-waiting-for-me-author'));
 
-            $link = new Link('#', $user->getUserDisplayName());
+            $link = new Link($this->getLinkToUser($user), $user->getUserDisplayName());
 
             $element->appendChild($inner);
             $inner->appendChild($link);
 
+            $dateElement = new Element('span', tc('date', ' on %s', $this->getDateString()), array('class' => 'ccm-block-desktop-waiting-for-me-date'));
+            $element->appendChild($dateElement);
+
+            return $element;
+        } else {
+            // No requested by element
+            $element = new Element('span', $this->getDateString(), array('class' => 'ccm-block-desktop-waiting-for-me-date'));
             return $element;
         }
+
 
     }
 

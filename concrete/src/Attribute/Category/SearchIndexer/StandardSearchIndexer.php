@@ -56,6 +56,18 @@ class StandardSearchIndexer implements SearchIndexerInterface
                         $table->addColumn($column['name'], $column['type'], $column['options']);
                     }
                 }
+                if (isset($details['foreignKeys'])) {
+                    foreach ($details['foreignKeys'] as $foreignKey) {
+                        $options = [];
+                        if (!empty($foreignKey['onUpdate'])) {
+                            $options['onUpdate'] = $foreignKey['onUpdate'];
+                        }
+                        if (!empty($foreignKey['onDelete'])) {
+                            $options['onDelete'] = $foreignKey['onDelete'];
+                        }
+                        $table->addForeignKeyConstraint($foreignKey['foreignTable'], $foreignKey['localColumns'], $foreignKey['foreignColumns'], $options);
+                    }
+                }
 
                 if (isset($details['primary'])) {
                     $table->setPrimaryKey($details['primary']);

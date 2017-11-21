@@ -1,17 +1,18 @@
 <?php
 namespace Concrete\Core\Attribute;
 
+use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Entity\Attribute\Key\Settings\TextSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\TextValue;
+use Concrete\Core\Error\ErrorList\ErrorList;
 use Core;
-use Concrete\Core\Attribute\Controller as AttributeTypeController;
 
-class DefaultController extends AttributeTypeController
+class DefaultController extends AttributeTypeController implements SimpleTextExportableAttributeInterface
 {
-    protected $searchIndexFieldDefinition = array(
+    protected $searchIndexFieldDefinition = [
         'type' => 'text',
-        'options' => array('default' => null, 'notnull' => false),
-    );
+        'options' => ['default' => null, 'notnull' => false],
+    ];
 
     public function form()
     {
@@ -62,10 +63,11 @@ class DefaultController extends AttributeTypeController
     {
         return TextSettings::class;
     }
-    
+
     public function createAttributeValueFromRequest()
     {
         $data = $this->post();
+
         return $this->createAttributeValue(isset($data['value']) ? $data['value'] : null);
     }
 
@@ -77,5 +79,41 @@ class DefaultController extends AttributeTypeController
     public function validateForm($data)
     {
         return isset($data['value']) && $data['value'] != '';
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::getAttributeValueTextRepresentation()
+     */
+    public function getAttributeValueTextRepresentation()
+    {
+        $value = $this->getAttributeValueObject();
+        if ($value === null) {
+            $result = '';
+        } else {
+            $result = (string) $value->getValue();
+        }
+
+        return $result;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\SimpleTextExportableAttributeInterface::updateAttributeValueFromTextRepresentation()
+     */
+    public function updateAttributeValueFromTextRepresentation($textRepresentation, ErrorList $warnings)
+    {
+        $value = $this->getAttributeValueObject();
+        if ($value === null) {
+            if ($textRepresentation !== '') {
+                $value = $this->createAttributeValue($textRepresentation);
+            }
+        } else {
+            $value->setValue($textRepresentation);
+        }
+
+        return $value;
     }
 }

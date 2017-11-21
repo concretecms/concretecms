@@ -175,6 +175,14 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
         $this->query->select('p.cID');
     }
 
+    public function filterBySite(Site $site)
+    {
+        $this->siteTree = array();
+        foreach($site->getLocales() as $locale) {
+            $this->siteTree[] = $locale->getSiteTree();
+        }
+    }
+
     public function finalizeQuery(\Doctrine\DBAL\Query\QueryBuilder $query)
     {
         if ($this->includeAliases) {
@@ -231,7 +239,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
             // The code above is set up to make it so that we don't filter by site tree
             // if we have a defined parent.
 
-            if (is_object($this->siteTree)) {
+            if (is_object($this->siteTree) || is_array($this->siteTree)) {
                 $tree = $this->siteTree;
             } else {
                 switch($this->siteTree) {
@@ -250,12 +258,31 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
             }
 
             if (isset($tree)) {
-                // We have either passed in a specific tree or we are looking at the current site.
-                $query->setParameter('siteTreeID', $tree->getSiteTreeID());
-                if ($this->includeSystemPages) {
-                    $query->andWhere('(p.siteTreeID = :siteTreeID or p.siteTreeID = 0)');
+                if (is_array($tree)) {
+                    $treeIDs = array();
+                    foreach($tree as $siteTree) {
+                        $treeIDs[] = $siteTree->getSiteTreeID();
+                    }
+                    if ($this->includeSystemPages) {
+                        $query->andWhere(
+                            $query->expr()->orX()->add(
+                                $query->expr()->in('p.siteTreeID', array_map([$query->getConnection(), 'quote'], $treeIDs))
+                            )->add('p.siteTreeID = 0')
+                        );
+                    } else {
+                        $query->andWhere(
+                            $query->expr()->in('p.siteTreeID', array_map([$query->getConnection(), 'quote'], $treeIDs))
+                        );
+                    }
+
                 } else {
-                    $query->andWhere('p.siteTreeID = :siteTreeID');
+                    // We have either passed in a specific tree or we are looking at the current site.
+                    $query->setParameter('siteTreeID', $tree->getSiteTreeID());
+                    if ($this->includeSystemPages) {
+                        $query->andWhere('(p.siteTreeID = :siteTreeID or p.siteTreeID = 0)');
+                    } else {
+                        $query->andWhere('p.siteTreeID = :siteTreeID');
+                    }
                 }
             }
 
@@ -566,16 +593,26 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
         $this->query->innerJoin('av', 'atSelectedTopics', 'atst', 'av.avID = atst.avID');
         $this->query->andWhere('atst.treeNodeID = :TopicNodeID');
         $this->query->setParameter('TopicNodeID', $treeNodeID);
+        $this->query->select('distinct p.cID');
     }
 
     public function filterByBlockType(BlockType $bt)
     {
-        $this->query->select('distinct p.cID');
         $btID = $bt->getBlockTypeID();
-        $this->query->innerJoin('cv', 'CollectionVersionBlocks', 'cvb',
-            'cv.cID = cvb.cID and cv.cvID = cvb.cvID');
-        $this->query->innerJoin('cvb', 'Blocks', 'b', 'cvb.bID = b.bID');
-        $this->query->andWhere('b.btID = :btID');
+
+        $query = $this->query->getConnection()->createQueryBuilder();
+        $query->select('distinct p2.cID')
+            ->from('Pages', 'p2')
+            ->innerJoin('p2', 'CollectionVersions', 'cv2', 'cv2.cID = p2.cID')
+            ->innerJoin('cv2', 'CollectionVersionBlocks', 'cvb2',
+                'cv2.cID = cvb2.cID and cv2.cvID = cvb2.cvID')
+            ->innerJoin('cvb2', 'Blocks', 'b', 'cvb2.bID = b.bID')
+            ->andWhere('b.btID = :btID');
+
+
+        $this->query->andWhere(
+            $this->query->expr()->in('p.cID', $query->getSQL())
+        );
         $this->query->setParameter('btID', $btID);
     }
 
@@ -593,6 +630,22 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
     public function sortByDisplayOrderDescending()
     {
         $this->query->orderBy('p.cDisplayOrder', 'desc');
+    }
+
+    /**
+     * Sorts this list by date modified ascending.
+     */
+    public function sortByDateModified()
+    {
+        $this->query->orderBy('c.cDateModified', 'asc');
+    }
+
+    /**
+     * Sorts this list by date modified descending.
+     */
+    public function sortByDateModifiedDescending()
+    {
+        $this->query->orderBy('c.cDateModified', 'desc');
     }
 
     /**

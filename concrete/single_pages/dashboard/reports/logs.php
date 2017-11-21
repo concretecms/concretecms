@@ -27,9 +27,33 @@ $th = Loader::helper('text');
         <div class="ccm-search-field-content">
             <?=$form->select('channel', $channels)?>
             <?php if (isset($selectedChannel)) { ?>
-            <a href="<?=$controller->action('clear', $valt->generate(), $selectedChannel)?>" class="btn btn-default btn-danger pull-right" style="margin-top: 30px;"><?=tc('%s is a channel', 'Clear all in %s', Log::getChannelDisplayName($selectedChannel))?></a>
+            <a href="javascript:void(0)" class="btn btn-default btn-danger pull-right" onclick="clearSelectedChannelLogs()" style="margin-top: 30px;"><?=tc('%s is a channel', 'Clear all in %s', Log::getChannelDisplayName($selectedChannel))?></a>
+            <script>
+                clearSelectedChannelLogs = function() {
+                    ConcreteAlert.confirm(
+                        <?= json_encode(t('Are you sure you want to clear the %s channel logs?', Log::getChannelDisplayName($selectedChannel))); ?>,
+                        function() {
+                            location.href = "<?= $controller->action('clear', $valt->generate(), $selectedChannel); ?>";
+                        },
+                        'btn-danger',
+                        <?= json_encode(t('Delete')); ?>
+                    );
+                };
+            </script>
             <?php } else { ?>
-            <a href="<?=$controller->action('clear', $valt->generate())?>" class="btn btn-default btn-danger pull-right" style="margin-top: 30px;"><?=t('Clear all')?></a>
+            <a href="javascript:void(0)" class="btn btn-default btn-danger pull-right" onclick="clearAllChannelLogs()" style="margin-top: 30px;"><?=t('Clear all')?></a>
+            <script>
+                clearAllChannelLogs = function() {
+                    ConcreteAlert.confirm(
+                        <?= json_encode(t('Are you sure you want to clear all channel logs?')); ?>,
+                        function() {
+                            location.href = "<?= $controller->action('clear', $valt->generate()); ?>";
+                        },
+                        'btn-danger',
+                        <?= json_encode(t('Delete')); ?>
+                    );
+                };
+            </script>
             <?php } ?>
         </div>
     </div>

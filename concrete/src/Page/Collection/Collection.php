@@ -526,15 +526,22 @@ class Collection extends ConcreteObject implements TrackableInterface
 
     public function __destruct()
     {
+        unset($this->attributes);
         unset($this->vObj);
     }
 
     /**
      * Retrieves all custom style rules that should be inserted into the header on a page, whether they are defined in areas
      * or blocks.
+     * @param bool $return
+     * @return string
      */
     public function outputCustomStyleHeaderItems($return = false)
     {
+        if (!Config::get('concrete.design.enable_custom')) {
+            return;
+        }
+
         $db = Loader::db();
         $psss = array();
         $txt = Loader::helper('text');
