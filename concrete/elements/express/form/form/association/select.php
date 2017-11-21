@@ -1,4 +1,4 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+s<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <div class="form-group">
     <?php if ($view->supportsLabel()) { ?>
@@ -7,7 +7,7 @@
 
     <?php
     if (!empty($entities)) {
-        $selectedEntity = $selectedEntities[0];
+        $selectedEntity = $entities[0];
         ?>
         <select class="form-control" name="express_association_<?=$control->getId()?>">
             <option value=""><?=t('** Choose %s', $control->getControlLabel())?></option>
