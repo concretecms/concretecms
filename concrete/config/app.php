@@ -478,6 +478,7 @@ return [
         '/ccm/system/tree/node/load_starting' => ['\Concrete\Controller\Backend\Tree\Node::load_starting'],
         '/ccm/system/tree/node/drag_request' => ['\Concrete\Controller\Backend\Tree\Node\DragRequest::execute'],
         '/ccm/system/tree/node/duplicate' => ['\Concrete\Controller\Backend\Tree\Node\Duplicate::execute'],
+        '/ccm/system/tree/node/update_order' => ['\Concrete\Controller\Backend\Tree\Node\DragRequest::updateChildren'],
 
         '/ccm/system/dialogs/tree/node/add/category' => ['\Concrete\Controller\Dialog\Tree\Node\Category\Add::view'],
         '/ccm/system/dialogs/tree/node/add/category/add_category_node' => ['\Concrete\Controller\Dialog\Tree\Node\Category\Add::add_category_node'],
