@@ -38,7 +38,11 @@ final class PackPackageCommand extends Command
         $keepSources = static::KEEP_SOURCES;
         $errExitCode = static::RETURN_CODE_ON_FAILURE;
         $this
-            ->setName('c5:package-pack')
+            ->setName('c5:package:pack')
+            ->setAliases([
+                'c5:package-pack',
+                'c5:pack-package',
+            ])
             ->setDescription('Process a package (expand PHP short tags, compile icons and translations, create zip archive)')
             ->addArgument('package', InputArgument::REQUIRED, 'The handle of the package to work on (or the path to a directory containing a concrete5 package)')
             ->addEnvOption()

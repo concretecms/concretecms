@@ -227,9 +227,11 @@ class RemoteItem extends ConcreteObject
         }
 
         $r = $pkg->backup();
-        if (is_object($r)) {
+        if (is_object($r) && $r instanceof Error) {
             return $r;
         }
+
+        $pkg = $r;
 
         try {
             $am = new PackageArchive($this->getHandle());

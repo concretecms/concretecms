@@ -10,7 +10,7 @@ class NotificationAlertRepository extends EntityRepository
     public function findMyAlerts(User $user)
     {
         $entity = $user->getUserInfoObject()->getEntityObject();
-        $query = $this->getEntityManager()->createQuery('select na, n from Concrete\Core\Entity\Notification\NotificationAlert na join na.notification n where na.naIsArchived = false and na.user = :user order by n.nDate asc');
+        $query = $this->getEntityManager()->createQuery('select na, n from Concrete\Core\Entity\Notification\NotificationAlert na join na.notification n where na.naIsArchived = false and na.user = :user order by n.nDate desc');
         $query->setParameter('user', $entity);
         $result = $query->getResult();
         return $result;

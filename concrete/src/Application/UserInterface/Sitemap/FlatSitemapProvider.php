@@ -9,6 +9,7 @@ class FlatSitemapProvider extends StandardSitemapProvider
     {
         $dh = $this->getSitemapDataProvider();
         $cParentID = 0;
+        $parent = null;
         if ($this->request->query->has('cParentID')) {
             $cParentID = $this->request->query->get('cParentID');
         }

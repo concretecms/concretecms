@@ -2,6 +2,7 @@
 namespace Concrete\Core\Console\Command;
 
 use Concrete\Core\Console\Command;
+use Concrete\Core\Console\ConsoleAwareInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -15,7 +16,11 @@ class UninstallPackageCommand extends Command
     {
         $errExitCode = static::RETURN_CODE_ON_FAILURE;
         $this
-            ->setName('c5:package-uninstall')
+            ->setName('c5:package:uninstall')
+            ->setAliases([
+                'c5:package-uninstall',
+                'c5:uninstall-package',
+            ])
             ->addEnvOption()
             ->addOption('trash', null, InputOption::VALUE_NONE, 'If this option is specified the package directory will be moved to the trash directory')
             ->addArgument('package', InputArgument::REQUIRED, 'The handle of the package to be uninstalled')
@@ -46,6 +51,12 @@ EOT
         if ($pkg === null) {
             throw new Exception(sprintf("No package with handle '%s' is installed", $pkgHandle));
         }
+
+        // Provide the console objects to objects that are aware of the console
+        if ($pkg instanceof ConsoleAwareInterface) {
+            $pkg->setConsole($this->getApplication(), $output, $input);
+        }
+
         $output->writeln(sprintf('<info>found (%s).</info>', $pkg->getPackageName()));
 
         $output->write('Checking preconditions... ');

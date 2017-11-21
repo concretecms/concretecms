@@ -414,11 +414,13 @@ class View extends AbstractView
         $view = self::getRequestInstance();
 
         $_c = Page::getCurrentPage();
+        $_app = Facade::getFacadeApplication();
         if (is_object($_c)) {
             $_theme = $_c->getCollectionThemeObject();
+        } else if ($_app->isInstalled()) {
+            $_theme = PageTheme::getSiteTheme();
         }
 
-        $_app = Facade::getFacadeApplication();
         $_fs = $_app->make(Filesystem::class);
         $_locator = new FileLocator($_fs, $_app);
         if (isset($_theme) && is_object($_theme)) {

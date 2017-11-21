@@ -264,7 +264,7 @@
             obj.$postbuttons = obj.$element.find('[data-submit=conversation-message]');
             obj.$sortselect = obj.$element.find('select[data-sort=conversation-message-list]');
             obj.$loadmore = obj.$element.find('[data-load-page=conversation-message-list]');
-            obj.$messages = obj.$element.find('div.ccm-conversation-messages');
+            obj.$messages = obj.$element.find('.ccm-conversation-messages');
             obj.$messagerating = obj.$element.find('span.ccm-conversation-message-rating');
 
             obj.$element.on('click.cnv', '[data-submit=conversation-message]', function(e) {
@@ -284,7 +284,7 @@
                         $(this).toggle();
                     }
                 });
-                var $replyform = obj.$replyholder.appendTo($(this).closest('div[data-conversation-message-id]'));
+                var $replyform = obj.$replyholder.appendTo($(this).closest('[data-conversation-message-id]'));
                 $replyform.attr('data-form', 'conversation-reply').show();
                 $replyform.find('[data-submit=conversation-message]').attr('data-post-parent-id', $(this).attr('data-post-parent-id'));
 
@@ -528,7 +528,7 @@
                 data: formArray,
                 url: CCM_TOOLS_PATH + '/conversations/delete_message',
                 success: function(html) {
-                    var $parent = $('div[data-conversation-message-id=' + msgID + ']');
+                    var $parent = $('[data-conversation-message-id=' + msgID + ']');
 
                     if ($parent.length) {
                         $parent.after(html).remove();
@@ -568,7 +568,7 @@
                 data: formArray,
                 url: CCM_TOOLS_PATH + '/conversations/edit_message',
                 success: function(html) {
-                    var $parent = $('div[data-conversation-message-id=' + msgID + ']');
+                    var $parent = $('[data-conversation-message-id=' + msgID + ']');
                     var $previousContents = $parent;
                     $parent.after(html).remove();
                     $('.ccm-conversation-attachment-container').hide();
@@ -602,7 +602,7 @@
                 data: formArray,
                 url: CCM_TOOLS_PATH + '/conversations/flag_message',
                 success: function(html) {
-                    var $parent = $('div[data-conversation-message-id=' + msgID + ']');
+                    var $parent = $('[data-conversation-message-id=' + msgID + ']');
 
                     if ($parent.length) {
                         $parent.after(html).remove();
@@ -642,7 +642,7 @@
                 data: formArray,
                 url: CCM_TOOLS_PATH + '/conversations/message_detail',
                 success: function(html) {
-                    var $parent = $('div[data-conversation-message-id=' + json.cnvMessageParentID + ']');
+                    var $parent = $('[data-conversation-message-id=' + json.cnvMessageParentID + ']');
 
                     if ($parent.length) {
                         $parent.after(html);
@@ -698,7 +698,7 @@
                 data: formArray,
                 url: CCM_TOOLS_PATH + '/conversations/message_detail',
                 success: function(html) {
-                    var $parent = $('div[data-conversation-message-id=' + json.cnvMessageID + ']');
+                    var $parent = $('[data-conversation-message-id=' + json.cnvMessageID + ']');
                     $parent.after(html).remove();
                     $('.dropdown-toggle').dropdown();
                 }

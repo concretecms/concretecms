@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<schema version="0.3">
+	<table name="btDocumentLibrary">
+		<field name="bID" type="I">
+			<key />
+			<unsigned />
+		</field>
+		<field name="setIds" type="C" size="255">
+			<notnull />
+		</field>
+		<field name="folderID" type="I">
+			<default value="0"/>
+			<notnull />
+		</field>
+		<field name="setMode" type="C" size="32">
+		</field>
+		<field name="onlyCurrentUser" type="I">
+			<default value="0"/>
+		</field>
+		<field name="tags" type="C" size="128">
+		</field>
+
+		<field name="viewProperties" type="X2">
+		</field>
+
+		<field name="expandableProperties" type="C" size="255">
+		</field>
+
+		<field name="searchProperties" type="C" size="255">
+		</field>
+
+		<field name="orderBy" type="C" size="64">
+			<default value="title"/>
+		</field>
+
+		<field name="displayLimit" type="i">
+			<default value="20"/>
+		</field>
+
+		<field name="displayOrderDesc" type="I1">
+			<unsigned />
+			<notnull />
+			<default value="0" />
+		</field>
+
+		<field name="addFilesToSetID" type="I">
+			<unsigned />
+			<notnull />
+			<default value="0" />
+		</field>
+
+		<field name="maxThumbWidth" type="i">
+			<default value="100"/>
+		</field>
+
+		<field name="maxThumbHeight" type="i">
+			<default value="150"/>
+		</field>
+
+		<field name="enableSearch" type="i">
+			<default value="0"/>
+		</field>
+
+		<field name="heightMode" type="C" size="32">
+			<default value="auto"/>
+		</field>
+
+		<field name="downloadFileMethod" type="C" size="32">
+			<default value="force"/>
+		</field>
+
+		<field name="fixedHeightSize" type="i">
+			<default value="0"/>
+		</field>
+
+		<field name="headerBackgroundColor" type="C" size="32">
+			<default value=""/>
+		</field>
+
+		<field name="headerBackgroundColorActiveSort" type="C" size="32">
+			<default value=""/>
+		</field>
+
+		<field name="headerTextColor" type="C" size="32">
+			<default value=""/>
+		</field>
+		<field name="allowFileUploading" type="i">
+			<default value="0"/>
+		</field>
+
+		<field name="allowInPageFileManagement" type="i">
+			<default value="0"/>
+		</field>
+
+		<field name="tableName" type="C" size="255">
+			<default value=""/>
+		</field>
+
+		<field name="tableDescription" type="C" size="255">
+			<default value=""/>
+		</field>
+
+		<field name="tableStriped" type="I1" size="1">
+			<default value="0"/>
+		</field>
+
+		<field name="rowBackgroundColorAlternate" type="C" size="32">
+			<default value=""/>
+		</field>
+
+	</table>
+</schema>

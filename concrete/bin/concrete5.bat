@@ -1,1 +1,1 @@
-@php -d short_open_tag=On "%~dpn0.php" %*
+@php -d short_open_tag=On "%~dpn0" %*

@@ -30,7 +30,7 @@ $downloadUrl = $fv->getDownloadURL();
     <div class="col-md-3"><p><?= t('URL to File') ?></p></div>
     <div class="col-md-9">
         <p style="overflow: hidden">
-            <a target="_blank" href="<?= $url ?>">
+            <a target="_blank" class="editable-click" href="<?= $url ?>">
                 <?= $url ?>
             </a>
         </p>
@@ -43,7 +43,7 @@ if ($downloadUrl !== $url) {
         <div class="col-md-3"><p><?= t('Tracked URL') ?></p></div>
         <div class="col-md-9">
             <p style="overflow: hidden">
-                <a target="_blank" href="<?= $downloadUrl ?>">
+                <a target="_blank" class="editable-click" href="<?= $downloadUrl ?>">
                     <?= $downloadUrl ?>
                 </a>
             </p>
@@ -53,8 +53,28 @@ if ($downloadUrl !== $url) {
 }
 ?>
 <?php if ($mode == 'single') {
+    $folder = $f->getFileFolderObject();
+    if ($folder) {
     ?>
+    <div class="row">
+        <div class="col-md-3"><p><?= t('Folder') ?></p></div>
+        <div class="col-md-9">
+            <a href="#" class="editable-click" data-action="jump-to-folder" data-folder-id="<?=$folder->getTreeNodeID()?>">
+            <?php
+            $folders = '';
+            $nodes = array_reverse($folder->getTreeNodeParentArray());
+            foreach($nodes as $n) {
+                $folders .= $n->getTreeNodeName() . ' &gt; ';
+            }
+            $folders .= $folder->getTreeNodeName();
+
+            print trim($folders);
+            ?>
+            </a>
+        </div>
+    </div>
     <?php
+    }
     $oc = $f->getOriginalPageObject();
     if (is_object($oc)) {
         $fileManager = Page::getByPath('/dashboard/files/search');
@@ -197,3 +217,14 @@ if ($downloadUrl !== $url) {
                 data-type="textarea" data-name="fvTags"<?php
 } ?>><?= h($fv->getTags()) ?></span></p></div>
 </div>
+
+<script type="text/javascript">
+    $(function() {
+        $('a[data-action=jump-to-folder]').on('click', function(e) {
+            e.preventDefault();
+            var folderID = $(this).data('folder-id');
+            jQuery.fn.dialog.closeTop();
+            ConcreteEvent.publish('FileManagerJumpToFolder', {'folderID': folderID});
+        });
+    });
+</script>

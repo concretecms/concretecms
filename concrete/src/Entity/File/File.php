@@ -505,7 +505,8 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         $em = \ORM::entityManager();
 
         $versions = $this->versions;
-
+        $thumbs = Type::getVersionList();
+        
         // duplicate the core file object
         $nf = clone $this;
         $dh = Loader::helper('date');
@@ -517,7 +518,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
 
         $folder = $this->getFileFolderObject();
         $folderNode = \Concrete\Core\Tree\Node\Type\File::add($nf, $folder);
-        $nf->folderTreeNodeID = $folderNode->getTreeNodeID();
+        $nf->folderTreeNodeID = $folder->getTreeNodeID();
 
         $em->persist($nf);
         $em->flush();
@@ -548,16 +549,10 @@ class File implements \Concrete\Core\Permission\ObjectInterface
 
                 $em->flush();
 
-                do {
-                    $prefix = $importer->generatePrefix();
-                    $path = $cf->prefix($prefix, $version->getFilename());
-                } while ($filesystem->has($path));
-                $filesystem->write($path, $version->getFileResource()->read(), [
-                    'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
-                    'mimetype' => Core::make('helper/mime')->mimeFromExtension($fi->getExtension($version->getFilename())),
-                ]);
-                $cloneVersion->updateFile($version->getFilename(), $prefix);
                 $nf->versions->add($cloneVersion);
+                foreach ($thumbs as $type) {
+                    $cloneVersion->duplicateUnderlyingThumbnailFiles($type, $version);
+                }
             }
         }
 
@@ -580,6 +575,9 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         return $nf;
     }
 
+    /**
+     * @return \Concrete\Core\Entity\File\Version|null
+     */
     public function getApprovedVersion()
     {
         // Ideally, doctrine's caching would handle this. Unfortunately, something is wrong with the $file

@@ -4,6 +4,7 @@ namespace Concrete\Core\File\Image\Thumbnail\Type;
 use Database;
 use Doctrine\ORM\Mapping as ORM;
 use \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type as ThumbnailType;
+use Concrete\Core\Support\Facade\Application;
 
 class Type
 {
@@ -26,11 +27,17 @@ class Type
      */
     public static function getVersionList()
     {
+        $app = Application::getFacadeApplication();
+        $config = $app->make('config');
+
         $types = static::getList();
         $versions = array();
+
         foreach ($types as $type) {
             $versions[] = $type->getBaseVersion();
-            $versions[] = $type->getDoubledVersion();
+            if ($config->get('concrete.file_manager.images.create_high_dpi_thumbnails')) {
+                $versions[] = $type->getDoubledVersion();
+            }
         }
 
         return $versions;

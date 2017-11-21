@@ -170,7 +170,13 @@ class Menu extends ContextMenu
             if ($canDesign || $canEditCustomTemplate || $canEditName || $canEditCacheSettings) {
                 $this->addItem(new DividerItem());
                 if ($canDesign || $canEditCustomTemplate) {
-                    $this->addItem(new LinkItem('#', t('Design &amp; Custom Template'), [
+                    if ($canDesign) {
+                        $menuItemText = t('Design &amp; Custom Template');
+                    }
+                    else {
+                        $menuItemText = t('Custom Template');
+                    }
+                    $this->addItem(new LinkItem('#', $menuItemText, [
                         'data-menu-action' => 'block_design',
                     ]));
                 }

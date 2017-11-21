@@ -229,10 +229,6 @@ class Single
      */
     public static function add($cPath, $pkg = null, $moveToRoot = false)
     {
-        // Backward compatibility fix
-        if (strpos($cPath, '/dashboard/') === 0) {
-            return static::addGlobal($cPath, $pkg);
-        }
 
         Loader::helper('concrete/ui')->clearInterfaceItemsCache();
 

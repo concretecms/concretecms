@@ -13,12 +13,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
     <?php
     $author = $listView->getInitiatorUserObject();
-    if (is_object($author)) { ?>
-        <div class="ccm-block-desktop-waiting-for-me-about">
+?>
+    <div class="ccm-block-desktop-waiting-for-me-about">
 
-            <?php print $listView->renderInitiatorActionDescription() ?>
+        <?php print $listView->renderInitiatorActionDescription() ?>
 
-            <?php print $listView->renderInitiatorCommentDescription() ?>
+        <?php print $listView->renderInitiatorCommentDescription() ?>
 
-        </div>
-    <?php } ?>
+    </div>

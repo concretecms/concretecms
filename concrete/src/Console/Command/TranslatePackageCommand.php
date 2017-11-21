@@ -19,7 +19,11 @@ class TranslatePackageCommand extends Command
     {
         $errExitCode = static::RETURN_CODE_ON_FAILURE;
         $this
-        ->setName('c5:package-translate')
+            ->setName('c5:package:translate')
+            ->setAliases([
+                'c5:package-translate',
+                'c5:translate-package',
+            ])
         ->addArgument('package', InputArgument::REQUIRED, 'The handle of the package to be translated (or the path to a directory containing a concrete5 package)')
         ->addEnvOption()
         ->addOption('locale', 'l', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'List of locale codes to handle')

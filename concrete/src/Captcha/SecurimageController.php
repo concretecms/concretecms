@@ -1,16 +1,45 @@
 <?php
+
 namespace Concrete\Core\Captcha;
 
-use Loader;
+use Concrete\Core\Controller\AbstractController;
+use Concrete\Core\Form\Service\Form as FormService;
+use Concrete\Core\Http\Request;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+use HtmlObject\Image;
+use HtmlObject\Input;
 use Securimage;
 use Securimage_Color;
 
-class SecurimageController extends Controller
+class SecurimageController extends AbstractController implements CaptchaWithPictureInterface
 {
+    /**
+     * @var ResolverManagerInterface
+     */
+    protected $urlResolver;
+
+    /**
+     * @var FormService
+     */
+    protected $formService;
+
+    /**
+     * @var Securimage
+     */
     protected $securimage;
 
-    public function __construct()
+    /**
+     * Initialize the instance.
+     *
+     * @param ResolverManagerInterface $urlResolver
+     * @param FormService $formService
+     * @param Request $request
+     */
+    public function __construct(ResolverManagerInterface $urlResolver, FormService $formService, Request $request)
     {
+        $this->request = $request;
+        $this->urlResolver = $urlResolver;
+        $this->formService = $formService;
         $this->securimage = new Securimage();
         $this->securimage->image_width = 190;
         $this->securimage->image_height = 60;
@@ -19,61 +48,99 @@ class SecurimageController extends Controller
         $this->securimage->num_lines = 5;
 
         $this->securimage->use_multi_text = true;
-        $this->securimage->multi_text_color = array(
+        $this->securimage->multi_text_color = [
             new Securimage_Color(184, 4, 50),
             new Securimage_Color(12, 67, 157),
             new Securimage_Color(244, 49, 11),
-        );
+        ];
         $this->securimage->text_color = new Securimage_Color(184, 4, 50);
     }
 
     /**
-     * Display the captcha.
+     * {@inheritdoc}
      */
-    public function display()
+    public function display(array $customImageAttributes = [])
     {
-        $ci = Loader::helper('concrete/urls');
-        echo '<div><img src="' . $ci->getToolsURL('captcha') . '?nocache=' .time(). '" alt="' .t('Captcha Code'). '" onclick="this.src = \'' . $ci->getToolsURL('captcha') . '?nocache=\'+(new Date().getTime())" class="ccm-captcha-image" /></div>';
-    }
-
-    public function label()
-    {
-        $form = Loader::helper('form');
-        echo $form->label('ccm-captcha-code', t('Please type the letters and numbers shown in the image. Click the image to see another captcha.'));
+        $image = Image::create(
+            $this->urlResolver->resolve(['/ccm/system/captcha/picture'])->setQuery('nocache=' . round(microtime(true) * 1000)),
+            t('Captcha Code'),
+            [
+                'class' => 'ccm-captcha-image',
+                'onclick' => h('this.src = this.src.replace(/([?&]nocache=)(\d+)/, \'$1\' + ((new Date()).getTime()))'),
+                'width' => $this->securimage->image_width,
+                'height' => $this->securimage->image_height,
+            ]
+        );
+        foreach ($customImageAttributes as $customAttributeName => $customAttributeValue) {
+            if ($customAttributeValue === null) {
+                $image->removeAttribute($customAttributeName);
+            } else {
+                switch ($customAttributeName) {
+                    case 'class':
+                        $image->addClass($customAttributeValue);
+                        break;
+                    default:
+                        $image->setAttribute($customAttributeName, $customAttributeValue);
+                        break;
+                }
+            }
+        }
+        echo '<div>', (string) $image, '</div>';
     }
 
     /**
-     * Print the captcha image. You usually don't have to call this method directly.
-     * It gets called by captcha.php from the tools.
+     * {@inheritdoc}
+     */
+    public function label($inputID = 'ccm-captcha-code')
+    {
+        echo $this->formService->label($inputID, t('Please type the letters and numbers shown in the image. Click the image to see another captcha.'));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function showInput(array $customInputAttributes = [])
+    {
+        $input = Input::create(
+            'text',
+            'ccmCaptchaCode',
+            null,
+            [
+                'id' => 'ccm-captcha-code',
+                'class' => 'form-control ccm-input-captcha',
+                'required' => 'required',
+            ]
+        );
+        foreach ($customInputAttributes as $customAttributeName => $customAttributeValue) {
+            if ($customAttributeValue === null) {
+                $input->removeAttribute($customAttributeName);
+            } else {
+                switch ($customAttributeName) {
+                    case 'class':
+                        $input->addClass($customAttributeValue);
+                        break;
+                    default:
+                        $input->setAttribute($customAttributeName, $customAttributeValue);
+                        break;
+                }
+            }
+        }
+        echo '<div>', (string) $input, '</div><br />';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function check($fieldName = 'ccmCaptchaCode')
+    {
+        return $this->securimage->check($this->request->get($fieldName));
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function displayCaptchaPicture()
     {
         $this->securimage->show();
-    }
-
-    /**
-     * Displays the text input field that must be entered when used with a corresponding image.
-     */
-    public function showInput($args = false)
-    {
-        $attribs = '';
-        if (is_array($args)) {
-            foreach ($args as $key => $value) {
-                $attribs .= $key . '="' . $value . '" ';
-            }
-        }
-        echo '<div><input type="text" name="ccmCaptchaCode" id="ccm-captcha-code" class="form-control ccm-input-captcha" required="required" ' . $attribs . ' /></div><br/>';
-    }
-
-    /**
-     * Checks the captcha code the user has entered.
-     *
-     * @param string $fieldName Optional name of the field that contains the captcha code
-     *
-     * @return bool true if the code was correct, false if not
-     */
-    public function check($fieldName = 'ccmCaptchaCode')
-    {
-        return $this->securimage->check($_REQUEST[$fieldName]);
     }
 }

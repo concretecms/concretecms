@@ -44,45 +44,23 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
     <div class="form-group ccm-attribute-address-line ccm-attribute-address-state-province">
         <?= $form->label($this->field('state_province'), t('State/Province')) ?>
-        <?php
-        $spreq = $form->getRequestValue($this->field('state_province'));
-        if ($spreq != false) {
-            $state_province = $spreq;
-        }
-        $creq = $form->getRequestValue($this->field('country'));
-        if ($creq != false) {
-            $country = $creq;
-        }
-        ?>
-        <?= $form->select($this->field('state_province_select'), ['' => t('Choose State/Province')], $state_province, ['ccm-attribute-address-field-name' => $this->field('state_province')]) ?>
-        <?= $form->text($this->field('state_province_text'), $state_province, ['style' => 'display: none', 'ccm-attribute-address-field-name' => $this->field('state_province')]) ?>
+        <?= $form->text($this->field('state_province'), $state_province, ['data-countryfield' => $this->field('country')]) ?>
     </div>
 
     <?php
     if (!$country && !$search) {
-        if ($akGeolocateCountry) {
-            
-        }
         if ($akDefaultCountry != '') {
             $country = $akDefaultCountry;
-        } else {
-            $country = 'US';
         }
     }
-
-    $countriesTmp = $lists_countries->getCountries();
-    $countries = [];
-    foreach ($countriesTmp as $_key => $_value) {
-        if ((!$akHasCustomCountries) || ($akHasCustomCountries && in_array($_key, $akCustomCountries))) {
-            $countries[$_key] = $_value;
-        }
-    }
-    $countries = array_merge(['' => t('Choose Country')], $countries);
     ?>
 
     <div class="form-group ccm-attribute-address-line ccm-attribute-address-country">
         <?= $form->label($this->field('country'), t('Country')) ?>
-        <?= $form->select($this->field('country'), $countries, $country); ?>
+        <?= $form->selectCountry($this->field('country'), $country, [
+            'allowedCountries' => $akHasCustomCountries ? $akCustomCountries : null,
+            'linkStateProvinceField' => true,
+        ]) ?>
     </div>
 
     <div class="form-group ccm-attribute-address-line">
@@ -91,11 +69,3 @@ defined('C5_EXECUTE') or die('Access Denied.');
     </div>
 
 </div>
-
-<script type="text/javascript">
-//<![CDATA[
-$(function() {
-	ccm_setupAttributeTypeAddressSetupStateProvinceSelector('ccm-attribute-address-<?= $key->getAttributeKeyID() ?>');
-});
-//]]>
-</script>
