@@ -14,6 +14,7 @@ use Exception;
 use Image;
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
+use Concrete\Core\File\Image\Thumbnail\ThumbnailFormatService;
 
 class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterface
 {
@@ -178,12 +179,10 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
         if ($format === false) {
             $format = $this->getThumbnailsFormat();
         }
-        if ($format === 'auto') {
-            if (preg_match('/\.p?jpe?g($|\?)/i', $savePath)) {
-                $format = 'jpeg';
-            } else {
-                $format = 'png';
-            }
+        switch ($format) {
+            case ThumbnailFormatService::FORMAT_AUTO:
+                $format = $this->app->make(ThumbnailFormatService::class)->getAutomaticFormatForFile($savePath);
+                break;
         }
         $thumbnailOptions = [
             'jpeg_quality' => $this->getJpegCompression(),
@@ -283,6 +282,10 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
                 $extension = $fh->getExtension($fr->getPath());
                 $baseFilename = md5(implode(':', [$fID, $maxWidth, $maxHeight, $crop, $fr->getTimestamp()]));
             } catch (Exception $e) {
+                $result = new \stdClass();
+                $result->src = '';
+
+                return $result;
             }
         } else {
             $extension = $fh->getExtension($obj);
@@ -290,34 +293,21 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
             // don't care too much about that
             $baseFilename = md5(implode(':', [$obj, $maxWidth, $maxHeight, $crop, @filemtime($obj)]));
         }
+        $thumbnailFormat = $this->getThumbnailsFormat();
+        if ($thumbnailFormat == ThumbnailFormatService::FORMAT_AUTO) {
+            $thumbnailFormat = $this->app->make(ThumbnailFormatService::class)->getAutomaticFormatForFileExtension($extension);
+        }
+        switch ($thumbnailFormat) {
+            case ThumbnailFormatService::FORMAT_JPEG:
+                $thumbnailExtension = 'jpg';
+                break;
+            case ThumbnailFormatService::FORMAT_PNG:
+            default:
+                $thumbnailExtension = 'png';
+                break;
+        }
 
-        $thumbnailsFormat = $this->getThumbnailsFormat();
-        switch ($thumbnailsFormat) {
-            case 'jpeg':
-                $extension = 'jpg';
-                break;
-            case 'png':
-                $extension = 'png';
-                break;
-            case 'auto':
-                switch (strtolower($extension)) {
-                    case 'jpeg':
-                    case 'jpg':
-                    case 'pjpeg':
-                        $extension = 'jpg';
-                        $thumbnailsFormat = 'jpeg';
-                        break;
-                    default:
-                        $extension = 'png';
-                        $thumbnailsFormat = 'png';
-                        break;
-                }
-                break;
-        }
-        $filename = '';
-        if ($baseFilename !== '') {
-            $filename = $baseFilename . '.' . $extension;
-        }
+        $filename = $baseFilename . '.' . $thumbnailExtension;
 
         $abspath = '/cache/thumbnails/' . $filename;
 
@@ -328,7 +318,7 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
             $path_resolver->getPath($obj->getVersion(), $customThumb);
         } else {
             if (!$filesystem->has($abspath)) {
-                $creaed = false;
+                $created = false;
                 try {
                     if ($obj instanceof File) {
                         $image = !is_callable([$fr, 'exists']) || $fr->exists() ? \Image::load($fr->read()) : null;
@@ -342,7 +332,7 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
                             $maxWidth,
                             $maxHeight,
                             $crop,
-                            $thumbnailsFormat
+                            $thumbnailFormat
                         );
                         $created = true;
                     }

@@ -36,6 +36,7 @@ use View;
 use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Support\Facade\Facade;
 use Imagine\Image\Box;
+use Concrete\Core\File\Image\Thumbnail\ThumbnailFormatService;
 
 /**
  * @ORM\Entity
@@ -1479,26 +1480,25 @@ class Version implements ObjectInterface
         }
 
         $thumbnail = $image->thumbnail($size, $thumbnailMode);
+        $thumbnailFormat = Core::make(ThumbnailFormatService::class)->getFormatForFile($this);
         $thumbnailPath = $type->getFilePath($this);
         $thumbnailOptions = [];
 
-        switch(substr($thumbnailPath, -3)) {
-            case 'jpg':
+        switch($thumbnailFormat) {
+            case ThumbnailFormatService::FORMAT_JPEG:
                 $mimetype = 'image/jpeg';
-                $thumbnailType = 'jpeg';
                 $thumbnailOptions = ['jpeg_quality' => \Config::get('concrete.misc.default_jpeg_image_compression')];
                 break;
-            case 'png':
+            case ThumbnailFormatService::FORMAT_PNG:
             default:
                 $mimetype = 'image/png';
-                $thumbnailType = 'png';
                 $thumbnailOptions = ['png_compression_level' => \Config::get('concrete.misc.default_png_image_compression')];
                 break;
         }
 
         $filesystem->write(
             $thumbnailPath,
-            $thumbnail->get($thumbnailType, $thumbnailOptions),
+            $thumbnail->get($thumbnailFormat, $thumbnailOptions),
             [
                 'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
                 'mimetype' => $mimetype,

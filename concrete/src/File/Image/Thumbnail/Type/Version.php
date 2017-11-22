@@ -6,6 +6,7 @@ use Concrete\Core\Entity\File\Version as FileVersion;
 use Concrete\Core\File\Image\Thumbnail\Type\Type as ThumbnailType;
 use Core;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\File\Image\Thumbnail\ThumbnailFormatService;
 
 /**
  * Handles regular and retina thumbnails. e.g. Each thumbnail type has two versions of itself
@@ -175,19 +176,16 @@ class Version
         $app = Application::getFacadeApplication();
         $hi = $app->make('helper/file');
         $ii = $app->make('helper/concrete/file');
-        $thumbnailFormat = $app->make('config')->get('concrete.misc.default_thumbnail_format');
         $prefix = $fv->getPrefix();
         $filename = $fv->getFileName();
+        $thumbnailFormat = $app->make(ThumbnailFormatService::class)->getFormatForFile($filename);
         switch ($thumbnailFormat) {
-            case 'jpeg':
+            case ThumbnailFormatService::FORMAT_JPEG:
                 $extension = 'jpg';
                 break;
-            case 'png':
-                $extension = 'png';
-                break;
-            case 'auto':
+            case ThumbnailFormatService::FORMAT_PNG:
             default:
-                $extension = preg_match('/\.p?jpe?g$/i', $filename) ? 'jpg' : 'png';
+                $extension = 'png';
                 break;
         }
 

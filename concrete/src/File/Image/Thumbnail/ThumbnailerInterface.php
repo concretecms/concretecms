@@ -63,7 +63,7 @@ interface ThumbnailerInterface
     /**
      * Set the format of the generated thumbnails.
      *
-     * @param string $thumbnailsFormat valid values: 'auto', 'jpeg', 'png'
+     * @param string $thumbnailsFormat one of the \Concrete\Core\File\Image\Thumbnail\ThumbnailFormatService::FORMAT_... constants
      *
      * @return static
      */
@@ -72,7 +72,7 @@ interface ThumbnailerInterface
     /**
      * Get the format of the generated thumbnails.
      *
-     * @return string one of 'auto', 'jpeg', 'png'
+     * @return string one of the \Concrete\Core\File\Image\Thumbnail\ThumbnailFormatService::FORMAT_... constants
      */
     public function getThumbnailsFormat();
 

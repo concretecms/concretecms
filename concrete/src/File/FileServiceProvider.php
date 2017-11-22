@@ -22,6 +22,8 @@ class FileServiceProvider extends ServiceProvider
             $this->app->singleton($key, $value);
         }
 
+        $this->app->singleton(\Concrete\Core\File\Image\Thumbnail\ThumbnailFormatService::class);
+
         $this->app->bind('image/imagick', '\Imagine\Imagick\Imagine');
         $this->app->bind('image/gd', '\Imagine\Gd\Imagine');
         $this->app->bind('image/thumbnailer', '\Concrete\Core\File\Image\BasicThumbnailer');
