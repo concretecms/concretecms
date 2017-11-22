@@ -5,7 +5,11 @@ namespace Concrete\Core\Updater\Migrations\Migrations;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
-class Version20171117173822 extends AbstractMigration
+/*
+ * Important note: This class was actually created in November of 2017, but the migration was backdated so that it would
+ * run at the proper time. Because migrations after this are dependent on it.
+ */
+class Version20170803000000 extends AbstractMigration
 {
     /**
      * @param Schema $schema
