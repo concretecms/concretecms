@@ -7,7 +7,9 @@ use Doctrine\DBAL\Schema\Schema;
 
 /*
  * Important note: This class was actually created in November of 2017, but the migration was backdated so that it would
- * run at the proper time. Because migrations after this are dependent on it.
+ * run at the proper time. Because migrations after this are dependent on it. NOTE: Anyone migrating from 8.3RC1 to later
+ * will find that this hasn't run, and it will cause problems. So they will need to run this migration manually with
+ * concrete/bin/concrete5
  */
 class Version20170803000000 extends AbstractMigration
 {

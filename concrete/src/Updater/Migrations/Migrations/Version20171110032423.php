@@ -111,6 +111,12 @@ class Version20171110032423 extends AbstractMigration
      */
     public function up(Schema $schema)
     {
+        $table = $schema->getTable('CalendarEventVersions');
+        if ($table) {
+            // We already have this functionality installed somehow, so let's return.
+            return;
+        }
+
         $this->addEarlyCalendarFunctionality();
         // first, let's see whether the concrete5 calendar is installed.
         $pkg = Package::getByHandle('calendar');
