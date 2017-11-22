@@ -36,13 +36,6 @@
 			}
 			jQuery.fn.dialog.showLoader();
 			var params = [{'name': 'sourceTreeNodeID', 'value': sourceNode.data.treeNodeID}, {'name': 'treeNodeParentID', 'value': treeNodeParentID}];
-			var childNodes = node.parent.getChildren();
-			if (childNodes) {
-				for (var i = 0; i < childNodes.length; i++) {
-					var childNode = childNodes[i];
-					params.push({'name': 'treeNodeID[]', 'value': childNode.data.treeNodeID});
-				}
-			}
 
 			$.concreteAjax({
 				data: params,
@@ -271,6 +264,22 @@
 					dragDrop: function(targetNode, data) {
 						my.dragRequest(data.otherNode, targetNode, data.hitMode, function() {
 							data.otherNode.moveTo(targetNode, data.hitMode);
+                            var treeNodeParentID = data.otherNode.parent.data.treeNodeID;;
+                            if (data.hitMode == 'over') {
+                                treeNodeParentID = targetNode.data.treeNodeID;
+                            }
+                            var params = [{'name': 'sourceTreeNodeID', 'value': data.otherNode.data.treeNodeID}, {'name': 'treeNodeParentID', 'value': treeNodeParentID}];
+                            var childNodes = targetNode.parent.getChildren();
+                            if (childNodes) {
+                                for (var i = 0; i < childNodes.length; i++) {
+                                    var childNode = childNodes[i];
+                                    params.push({'name': 'treeNodeID[]', 'value': childNode.data.treeNodeID});
+                                }
+                            }
+                            $.concreteAjax({
+                                data: params,
+                                url: CCM_DISPATCHER_FILENAME + '/ccm/system/tree/node/update_order'
+                            });
 						});
 					}
 				}

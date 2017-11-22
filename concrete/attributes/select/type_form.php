@@ -66,7 +66,15 @@ function getAttributeOptionHTML($v)
 		</label>
 	</div>
 	<div class="help-block"><?=t('Enabling this will typically display the list with radio buttons.')?></div>
+</div>
 
+<div class="form-group" data-group="single-value">
+    <label><?=t("Hide None Option")?></label>
+    <div class="checkbox">
+        <label>
+            <?=$form->checkbox('akHideNoneOption', 1, $akHideNoneOption)?> <span><?=t('Hide none option from the list.')?></span>
+        </label>
+    </div>
 </div>
 
 <div class="form-group">

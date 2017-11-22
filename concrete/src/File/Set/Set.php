@@ -471,6 +471,7 @@ class Set
         $db = Database::connection();
         $db->delete('FileSets', array('fsID' => $this->fsID));
         $db->executeQuery('DELETE FROM FileSetSavedSearches WHERE fsID = ?', array($this->fsID));
+        $db->executeQuery('DELETE FROM FileSetFiles WHERE fsID = ?', array($this->fsID));
     }
 
     /*

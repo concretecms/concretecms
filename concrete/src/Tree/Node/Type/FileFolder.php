@@ -8,6 +8,7 @@ use Concrete\Core\Tree\Node\Type\Formatter\CategoryListFormatter;
 use Concrete\Core\Tree\Node\Type\Menu\CategoryMenu;
 use Concrete\Core\Tree\Node\Type\Menu\FileFolderMenu;
 use Concrete\Core\User\User;
+use Gettext\Translations;
 use Loader;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -75,11 +76,18 @@ class FileFolder extends Category
                 }
             }
             if (is_array($sort)) {
-                $sortColumn = $available->getColumnByKey($sort[0]);
-                $sortColumn->setColumnSortDirection($sort[1]);
-                $list->sortBySearchColumn($sortColumn);
+                if ($sortColumn = $available->getColumnByKey($sort[0])) {
+                    $sortColumn->setColumnSortDirection($sort[1]);
+                    $list->sortBySearchColumn($sortColumn);
+                }
             }
         }
         return $list;
     }
+
+    public function exportTranslations(Translations $translations)
+    {
+        return false;
+    }
+
 }

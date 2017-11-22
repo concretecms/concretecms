@@ -14,34 +14,34 @@ if (isset($error) && $error != '') {
 
 	<?php if ($format == 'block' && count($_error) > 0) {
     ?>
-	
+
 	<div class="ccm-system-errors alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert">×</button>
 	<?php foreach ($_error as $e) {
     ?>
-		<div><?php echo $e?></div>
+		<div><?php echo h($e) ?></div>
 	<?php
 }
     ?>
 	</div>
 
-	<?php 
+	<?php
 } elseif (count($_error) > 0) {
     ?>
-	
+
 	<ul class="ccm-system-errors ccm-error">
 	<?php foreach ($_error as $e) {
     ?>
-		<li><?php echo $e?></li>
-	<?php 
+		<li><?php echo h($e) ?></li>
+	<?php
 }
     ?>
 	</ul>
-	<?php 
+	<?php
 }
     ?>
-	
 
-<?php 
+
+<?php
 } ?>
 
 <?php if (isset($message)) {
@@ -49,7 +49,7 @@ if (isset($error) && $error != '') {
 
 	<div class="alert alert-info"><a data-dismiss="alert" href="#" class="close">&times;</a> <?=$message?></div>
 
-<?php 
+<?php
 }
 
 if (isset($success)) {
@@ -57,5 +57,5 @@ if (isset($success)) {
 
 	<div class="alert alert-success"><a data-dismiss="alert" href="#" class="close">&times;</a> <?=$success?></div>
 
-<?php 
+<?php
 } ?>

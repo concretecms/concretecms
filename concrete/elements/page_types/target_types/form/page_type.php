@@ -17,6 +17,7 @@ if (is_object($control->getPageObject())) {
 }
 
 if (is_object($relevantPage) && !$relevantPage->isError()) {
+    $site = $relevantPage->getSite();
     $tree = $relevantPage->getSiteTreeObject();
 }
 
@@ -36,9 +37,7 @@ if (is_object($pagetype) && $pagetype->getPageTypePublishTargetTypeID() == $conf
         $pl->sortByName();
         $pl->filterByPageTypeID($configuredTarget->getPageTypeID());
         $pl->sortByName();
-        if (isset($tree)) {
-            $pl->setSiteTreeObject($tree);
-        }
+        $pl->filterBySite($site);
         $pages = $pl->get();
         if (count($pages) > 1) {
             $navigation = \Core::make('helper/navigation');

@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\File;
 
-use Concrete\Core\Search\ItemList\Database\ItemList;
+use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Concrete\Core\Search\ItemList\Pager\Manager\FolderItemListPagerManager;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 use Concrete\Core\Search\ItemList\Pager\QueryString\VariableFactory;
@@ -17,7 +17,7 @@ use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use Closure;
 use Concrete\Core\Permission\Checker as Permissions;
 
-class FolderItemList extends ItemList implements PagerProviderInterface, PaginationProviderInterface
+class FolderItemList extends AttributedItemList implements PagerProviderInterface, PaginationProviderInterface
 {
     protected $parent;
     protected $searchSubFolders = false;

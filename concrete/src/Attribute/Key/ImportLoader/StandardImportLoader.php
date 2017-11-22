@@ -15,10 +15,6 @@ class StandardImportLoader implements ImportLoaderInterface
         if ($indexed === '1') {
             $key->setIsAttributeKeyContentIndexed(true);
         }
-        if ($indexed === '1') {
-            $key->setIsAttributeKeyContentIndexed(true);
-        }
-
         if ($internal === '1') {
             $key->setIsAttributeKeyInternal(true);
         }

@@ -306,6 +306,11 @@ module.exports = function(grunt) {
             src: '<%= DIR_BASE %>/concrete/js/build/core/events.js'
         },
 
+        ccm_asset_loader: {
+            dest: '<%= DIR_BASE %>/concrete/js/asset-loader.js',
+            src: '<%= DIR_BASE %>/concrete/js/build/core/asset-loader.js'
+        },
+
         ccm_sitemap: {
             dest: '<%= DIR_BASE %>/concrete/js/sitemap.js',
             src: [
@@ -321,6 +326,21 @@ module.exports = function(grunt) {
             dest: '<%= DIR_BASE %>/concrete/js/users.js',
             src: [
                 '<%= DIR_BASE %>/concrete/js/build/core/user/selector.js'
+            ]
+        },
+
+        ccm_calendar_event: {
+            dest: '<%= DIR_BASE %>/concrete/js/calendar/event-selector.js',
+            src: [
+                '<%= DIR_BASE %>/concrete/js/build/core/calendar/event-selector.js',
+            ]
+        },
+
+        ccm_calendar_admin: {
+            dest: '<%= DIR_BASE %>/concrete/js/calendar/admin.js',
+            src: [
+                '<%= DIR_BASE %>/concrete/js/build/core/calendar/admin.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/calendar/menu.js'
             ]
         },
 
@@ -410,6 +430,10 @@ module.exports = function(grunt) {
         jquery_text_counter: {
             dest: '<%= DIR_BASE %>/concrete/js/textcounter.js',
             src: '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-text-counter/textcounter.js'
+        },
+        ccm_country_stateprovince_link: {
+            dest: '<%= DIR_BASE %>/concrete/js/country-stateprovince-link.js',
+            src: '<%= DIR_BASE %>/concrete/js/build/core/country-stateprovince-link.js'
         }
     };
 

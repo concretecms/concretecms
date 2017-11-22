@@ -348,7 +348,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         $request->setCurrentPage($collection);
         $c = $collection; // process.php needs this
         require DIR_BASE_CORE . '/bootstrap/process.php';
-        $u = new User();
+        $u = $this->app->make(User::class);
 
         // On page view event.
         $pe = new Event($collection);

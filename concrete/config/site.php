@@ -67,7 +67,7 @@ return [
                             'tabletools',
                             'toolbar',
                             'undo',
-                            'wysiwygarea'
+                            'wysiwygarea',
                         ],
                         'selected_hidden' => [
                             'concrete5filemanager',
@@ -80,7 +80,7 @@ return [
                             'resize',
                             'toolbar',
                             'wysiwygarea',
-                        ]
+                        ],
                     ],
                     'toolbar_groups' => [
                         ['name' => 'mode', 'groups' => ['mode']],
@@ -108,7 +108,7 @@ return [
                         ['name' => 'tools', 'groups' => ['tools']],
                         ['name' => 'others', 'groups' => ['others']],
                         ['name' => 'about', 'groups' => ['about']],
-                    ]
+                    ],
                 ],
                 'plugins' => [
                     'selected' => [
@@ -123,6 +123,17 @@ return [
                 'redirect_home_to_default_locale' => false,
                 'use_browser_detected_locale' => false,
                 'default_source_locale' => 'en_US',
+            ],
+            'seo' => [
+                'canonical_tag' => [
+                    // Add a <meta rel="canonical" href="..."> tag to pages?
+                    'enabled' => true,
+                    // List of querystring parameters to be removed from SEO canonical URLs
+                    'excluded_querystring_parameters' => [
+                        'cID',
+                        'ccm_token',
+                    ],
+                ],
             ],
         ],
     ],

@@ -249,7 +249,11 @@ class Controller extends AuthenticationTypeController
     {
         $this->set('authType', $this->getAuthenticationType());
         $e = Core::make('helper/validation/error');
-        $ui = UserInfo::getByValidationHash($uHash);
+        if (is_string($uHash)) {
+            $ui = UserInfo::getByValidationHash($uHash);
+        } else {
+            $ui = null;
+        }
         if (is_object($ui)) {
             $vh = new ValidationHash();
             if ($vh->isValid($uHash)) {
@@ -363,7 +367,11 @@ class Controller extends AuthenticationTypeController
         $app = Application::getFacadeApplication();
         $db = $app['database']->connection();
 
-        return $db->GetOne('select uIsPasswordReset from Users where uName = ?', [$this->post('uName')]);
+        if (Config::get('concrete.user.registration.email_registration')) {
+            return $db->GetOne('select uIsPasswordReset from Users where uEmail = ?', [$this->post('uName')]);
+        } else {
+            return $db->GetOne('select uIsPasswordReset from Users where uName = ?', [$this->post('uName')]);
+        }
     }
 
     public function v($hash = '')

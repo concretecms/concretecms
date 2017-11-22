@@ -17,32 +17,115 @@ use Zend\Mime\Part as MimePart;
 class Service
 {
     /**
+     * The application instance.
+     *
      * @var Application
      */
     protected $app;
 
     /**
+     * The transport to be used to delivery the messages.
+     *
      * @var TransportInterface
      */
     protected $transport;
 
+    /**
+     * Additional email message headers.
+     *
+     * @var array
+     */
     protected $headers;
+
+    /**
+     * List of "To" recipients (every item is an array with at key 0 the email address and at key 1 an optional name).
+     *
+     * @var array[array]
+     */
     protected $to;
+
+    /**
+     * List of "Reply-To" recipients (every item is an array with at key 0 the email address and at key 1 an optional name).
+     *
+     * @var array[array]
+     */
     protected $replyto;
+
+    /**
+     * List of "CC" recipients (every item is an array with at key 0 the email address and at key 1 an optional name).
+     *
+     * @var array[array]
+     */
     protected $cc;
+
+    /**
+     * List of "CC" recipients (every item is an array with at key 0 the email address and at key 1 an optional name).
+     *
+     * @var array[array]
+     */
     protected $bcc;
+
+    /**
+     * The sender email address and its name.
+     *
+     * @var string[]
+     */
     protected $from;
+
+    /**
+     * A dictionary with the parameters to be sent to the template.
+     *
+     * @var array
+     */
     protected $data;
+
+    /**
+     * The message subject.
+     *
+     * @var string
+     */
     protected $subject;
+
+    /**
+     * The message attachments.
+     *
+     * @var MimePart[]
+     */
     protected $attachments;
+
+    /**
+     * The last leaded message template file.
+     *
+     * @var string
+     */
     protected $template;
+
+    /**
+     * The plain text body.
+     *
+     * @var string|false
+     */
     protected $body;
+
+    /**
+     * The HTML body.
+     *
+     * @var string|false
+     */
     protected $bodyHTML;
+
+    /**
+     * Are we testing this service?
+     *
+     * @var bool
+     */
     protected $testing;
 
     /**
-     * @param Application $app
-     * @param TransportInterface $transport the mail transport to use to send emails
+     * Initialize the instance.
+     *
+     * @param Application $app the application instance
+     * @param TransportInterface $transport the transport to be used to delivery the messages
      */
     public function __construct(Application $app, TransportInterface $transport)
     {
@@ -52,8 +135,7 @@ class Service
     }
 
     /**
-     * this method is called by the Loader::helper to clean up the instance of this object
-     * resets the class scope variables.
+     * Clean up the instance of this object (reset the class scope variables).
      */
     public function reset()
     {
@@ -73,10 +155,10 @@ class Service
     }
 
     /**
-     * Adds a parameter to a mail template.
+     * Adds a parameter for the mail template.
      *
-     * @param string $key
-     * @param mixed $val
+     * @param string $key the name of the parameter
+     * @param mixed $val the value of the parameter
      */
     public function addParameter($key, $val)
     {
@@ -84,18 +166,48 @@ class Service
     }
 
     /**
-     * Add a File entity as a mail attachment.
+     * Add a File entity as an attachment of the message.
      *
-     * @param File $fob File to attach
+     * @param File $file The file to attach to the message
      */
     public function addAttachment(File $file)
     {
+        $this->addAttachmentWithHeaders($file, []);
+    }
+
+    /**
+     * Add a File entity as an attachment of the message, specifying the headers of the mail MIME part.
+     *
+     * @param File $file The file to attach to the message
+     * @param array $headers Additional headers fo the MIME part. Valid values are:
+     * - filename: The name to give to the attachment (it will be used as the filename part of the Content-Disposition header) [default: the filename of the File instance]
+     * - mimetype: the main value of the Content-Type header [default: the content type of the file]
+     * - disposition: the main value of the Content-Disposition header [default: attachment]
+     * - encoding: the value of the Content-Transfer-Encoding header [default: base64]
+     * - charset: the charset value of the Content-Type header
+     * - boundary: the boundary value of the Content-Type header
+     * - id: the value of the Content-ID header (without angular brackets)
+     * - description: the value of the Content-Description header
+     * - location: the value of the Content-Location header
+     * - language: the value of the Content-Language header
+     */
+    public function addAttachmentWithHeaders(File $file, array $headers)
+    {
         $fileVersion = $file->getVersion();
         $resource = $fileVersion->getFileResource();
-        $this->addRawAttachment(
+        if (array_key_exists('filename', $headers)) {
+            $filename = $headers['filename'];
+            unset($headers['filename']);
+        } else {
+            $filename = $fileVersion->getFilename();
+        }
+        if (!array_key_exists('mimetype', $headers)) {
+            $headers['mimetype'] = $resource->getMimetype();
+        }
+        $this->addRawAttachmentWithHeaders(
             $resource->read(),
-            $fileVersion->getFilename(),
-            $fileVersion->getMimeType()
+            $filename,
+            $headers
         );
     }
 
@@ -103,31 +215,75 @@ class Service
      * Add a mail attachment by specifying its raw binary data.
      *
      * @param string $content The binary data of the attachemt
-     * @param string $filename The name to give to the attachment
-     * @param string $mimetype The MIME type of the attachment
+     * @param string $filename The name to give to the attachment (it will be used as the filename part of the Content-Disposition header)
+     * @param string $mimetype The MIME type of the attachment (it will be the main value of the Content-Type header)
      */
     public function addRawAttachment($content, $filename, $mimetype = 'application/octet-stream')
     {
+        $this->addRawAttachmentWithHeaders(
+            $content,
+            $filename,
+            [
+                'mimetype' => $mimetype,
+            ]
+        );
+    }
+
+    /**
+     * Add a mail attachment by specifying its raw binary data, specifying the headers of the mail MIME part.
+     *
+     * @param string $content The binary data of the attachemt
+     * @param string $filename The name to give to the attachment (it will be used as the filename part of the Content-Disposition header)
+     * @param array $headers Additional headers fo the MIME part. Valid values are:
+     * - mimetype: the main value of the Content-Type header [default: application/octet-stream]
+     * - disposition: the main value of the Content-Disposition header [default: attachment]
+     * - encoding: the value of the Content-Transfer-Encoding header [default: base64]
+     * - charset: the charset value of the Content-Type header
+     * - boundary: the boundary value of the Content-Type header
+     * - id: the value of the Content-ID header (without angular brackets)
+     * - description: the value of the Content-Description header
+     * - location: the value of the Content-Location header
+     * - language: the value of the Content-Language header
+     */
+    public function addRawAttachmentWithHeaders($content, $filename, array $headers = [])
+    {
+        $headers += [
+            'mimetype' => 'application/octet-stream',
+            'disposition' => Mime::DISPOSITION_ATTACHMENT,
+            'encoding' => Mime::ENCODING_BASE64,
+            'charset' => '',
+            'boundary' => '',
+            'id' => '',
+            'description' => '',
+            'location' => '',
+            'language' => '',
+        ];
         $mp = new MimePart($content);
         $mp
-            ->setType($mimetype)
-            ->setDisposition(Mime::DISPOSITION_ATTACHMENT)
-            ->setEncoding(Mime::ENCODING_BASE64)
-            ->setFileName($filename);
+            ->setFileName($filename)
+            ->setType($headers['mimetype'])
+            ->setDisposition($headers['disposition'])
+            ->setEncoding($headers['encoding'])
+            ->setCharset($headers['charset'])
+            ->setBoundary($headers['boundary'])
+            ->setId($headers['id'])
+            ->setDescription($headers['description'])
+            ->setLocation($headers['location'])
+            ->setLanguage($headers['language'])
+        ;
         $this->attachments[] = $mp;
     }
 
     /**
-     * Loads an email template from the /mail/ directory.
+     * Load an email template from the /mail/ directory.
      *
-     * @param string $template
-     * @param string $pkgHandle
+     * @param string $template The template to load
+     * @param string|null $pkgHandle The handle of the package associated to the template
      */
     public function load($template, $pkgHandle = null)
     {
         extract($this->data);
 
-        // loads template from mail templates directory
         if (file_exists(DIR_FILES_EMAIL_TEMPLATES . "/{$template}.php")) {
             include DIR_FILES_EMAIL_TEMPLATES . "/{$template}.php";
         } else {
@@ -152,9 +308,9 @@ class Service
     }
 
     /**
-     * Manually set the text body of a mail message, typically the body is set in the template + load method.
+     * Manually set the plain text body of a mail message (typically the body is set in the template + load method).
      *
-     * @param string|false $body Set the text body (false to not use plain text body)
+     * @param string|false $body Set the text body (false to not use a plain text body)
      */
     public function setBody($body)
     {
@@ -162,7 +318,7 @@ class Service
     }
 
     /**
-     * Manually set the message's subject.
+     * Manually set the message's subject (typically the body is set in the template + load method).
      *
      * @param string $subject
      */
@@ -172,7 +328,7 @@ class Service
     }
 
     /**
-     * Returns the message's subject.
+     * Get the message subject.
      *
      * @return string
      */
@@ -182,7 +338,7 @@ class Service
     }
 
     /**
-     * Returns the message's text body.
+     * Get the plain text body.
      *
      * @return string|false
      */
@@ -192,7 +348,7 @@ class Service
     }
 
     /**
-     * Returns the message's html body.
+     * Get the html body.
      *
      * @return string|false
      */
@@ -202,9 +358,9 @@ class Service
     }
 
     /**
-     * manually set the HTML portion of a MIME encoded message, can also be done by setting $bodyHTML in a mail template.
+     * Manually set the HTML body of a mail message (typically the body is set in the template + load method).
      *
-     * @param string|false $html Set the html body (false to not use html body)
+     * @param string|false $html Set the html body (false to not use an HTML body)
      */
     public function setBodyHTML($html)
     {
@@ -225,35 +381,10 @@ class Service
     }
 
     /**
-     * @param array $arr
-     *
-     * @return string
-     *
-     * @todo documentation
-     */
-    protected function generateEmailStrings($arr)
-    {
-        $str = '';
-        for ($i = 0; $i < count($arr); ++$i) {
-            $v = $arr[$i];
-            if (isset($v[1])) {
-                $str .= '"' . $v[1] . '" <' . $v[0] . '>';
-            } elseif (isset($v[0])) {
-                $str .= $v[0];
-            }
-            if (($i + 1) < count($arr)) {
-                $str .= ', ';
-            }
-        }
-
-        return $str;
-    }
-
-    /**
-     * Sets the from address on the email about to be sent out.
+     * Set the from address on the message.
      *
      * @param string $email
-     * @param string $name
+     * @param string|null $name
      */
     public function from($email, $name = null)
     {
@@ -261,10 +392,10 @@ class Service
     }
 
     /**
-     * Sets to the to email address on the email about to be sent out.
+     * Add one or more "To" recipients to the message.
      *
-     * @param string $email
-     * @param string $name
+     * @param string $email (separate multiple email addresses with commas)
+     * @param string|null $name The name to associate to the email address
      */
     public function to($email, $name = null)
     {
@@ -279,12 +410,10 @@ class Service
     }
 
     /**
-     * Adds an email address to the cc field on the email about to be sent out.
+     * Add one or more "CC" recipients to the message.
      *
-     * @param string $email
-     * @param string $name
-     *
-     * @since 5.5.1
+     * @param string $email (separate multiple email addresses with commas)
+     * @param string|null $name The name to associate to the email address
      */
     public function cc($email, $name = null)
     {
@@ -299,12 +428,10 @@ class Service
     }
 
     /**
-     * Adds an email address to the bcc field on the email about to be sent out.
+     * Add one or more "BCC" recipients to the message.
      *
-     * @param string $email
-     * @param string $name
-     *
-     * @since 5.5.1
+     * @param string $email (separate multiple email addresses with commas)
+     * @param string|null $name The name to associate to the email address
      */
     public function bcc($email, $name = null)
     {
@@ -318,11 +445,11 @@ class Service
         }
     }
 
-    /*
-     * Sets the reply-to address on the email about to be sent out
-     * @param string $email
-     * @param string $name
-     * @return void
+    /**
+     * Sets the Reply-To addresses of the message.
+     *
+     * @param string $email (separate multiple email addresses with commas)
+     * @param string|null $name The name to associate to the email address
      */
     public function replyto($email, $name = null)
     {
@@ -336,7 +463,9 @@ class Service
         }
     }
 
-    /** Set the testing state (if true the email logging never occurs and sending errors will throw an exception)
+    /**
+     * Set the testing state (if true the email logging never occurs and sending errors will throw an exception).
+     *
      * @param bool $testing
      */
     public function setTesting($testing)
@@ -344,7 +473,9 @@ class Service
         $this->testing = $testing ? true : false;
     }
 
-    /** Retrieve the testing state
+    /**
+     * Retrieve the testing state.
+     *
      * @return bool
      */
     public function getTesting()
@@ -353,10 +484,9 @@ class Service
     }
 
     /**
-     * Set additional headers.
+     * Set additional message headers.
      *
      * @param array $headers
-     * @param string $val
      */
     public function setAdditionalHeaders($headers)
     {
@@ -366,17 +496,16 @@ class Service
     /**
      * Sends the email.
      *
-     * @param bool $resetData Whether or not to reset the service to its default values
+     * @param bool $resetData Whether or not to reset the service to its default when this method is done
      *
-     * @throws Exception
+     * @throws Exception Throws an exception if the delivery fails and if the service is in "testing" state
      *
-     * @return bool
+     * @return bool Returns true upon success, or false if the delivery fails and if the service is not in "testing" state
      */
     public function sendMail($resetData = true)
     {
         $config = $this->app->make('config');
-        $_from[] = $this->from;
-        $fromStr = $this->generateEmailStrings($_from);
+        $fromStr = $this->generateEmailStrings([$this->from]);
         $toStr = $this->generateEmailStrings($this->to);
         $replyStr = $this->generateEmailStrings($this->replyto);
 
@@ -432,41 +561,36 @@ class Service
         $messageIdHeader->setId();
 
         $body = new MimeMessage();
-        if (($this->body !== false) && ($this->bodyHTML !== false)) {
+        $textPart = $this->buildTextPart();
+        $htmlPart = $this->buildHtmlPart();
+        if ($textPart === null && $htmlPart === null) {
+            $emptyPart = new MimePart('');
+            $emptyPart->setType(Mime::TYPE_TEXT);
+            $emptyPart->setCharset(APP_CHARSET);
+            $body->addPart($emptyPart);
+        }
+        elseif ($textPart !== null && $htmlPart !== null) {
             $alternatives = new MimeMessage();
-            $text = new MimePart($this->body);
-            $text->type = Mime::TYPE_TEXT;
-            $text->charset = APP_CHARSET;
-            $alternatives->addPart($text);
-            $html = new MimePart($this->bodyHTML);
-            $html->type = Mime::TYPE_HTML;
-            $html->charset = APP_CHARSET;
-            $alternatives->addPart($html);
-            $alternativesPath = new MimePart($alternatives->generateMessage());
-            $alternativesPath->charset = 'UTF-8';
-            $alternativesPath->type = 'multipart/alternative';
-            $alternativesPath->boundary = $alternatives->getMime()->boundary();
-            $body->addPart($alternativesPath);
-        } elseif ($this->body !== false) {
-            $text = new MimePart($this->body);
-            $text->type = 'text/plain';
-            $text->charset = APP_CHARSET;
-            $body->addPart($text);
-        } elseif ($this->bodyHTML !== false) {
-            $html = new MimePart($this->bodyHTML);
-            $html->type = 'text/html';
-            $html->charset = APP_CHARSET;
-            $body->addPart($html);
+            $alternatives->addPart($textPart);
+            $alternatives->addPart($htmlPart);
+            $alternativesPart = new MimePart($alternatives->generateMessage());
+            $alternativesPart->setType(Mime::MULTIPART_ALTERNATIVE);
+            $alternativesPart->setBoundary($alternatives->getMime()->boundary());
+            $body->addPart($alternativesPart);
+        } else {
+            if ($textPart !== null) {
+                $body->addPart($textPart);
+            }
+            if ($htmlPart !== null) {
+                $body->addPart($htmlPart);
+            }
         }
-        foreach ($this->attachments as $att) {
-            $body->addPart($att);
+        foreach ($this->attachments as $attachment) {
+            if (!$this->isInlineAttachment($attachment)) {
+                $body->addPart($attachment);
+            }
         }
-        if (count($body->getParts()) === 0) {
-            $text = new MimePart('');
-            $text->type = 'text/plain';
-            $text->charset = APP_CHARSET;
-            $body->addPart($text);
-        }
+
         $mail->setBody($body);
 
         $sent = false;
@@ -531,5 +655,98 @@ class Service
             'mail' => (new Message())->setEncoding(APP_CHARSET),
             'transport' => $app->make(TransportInterface::class),
         ];
+    }
+
+    /**
+     * Convert a list of email addresses to a string.
+     *
+     * @param array $arr
+     *
+     * @return string
+     */
+    protected function generateEmailStrings($arr)
+    {
+        $str = '';
+        for ($i = 0; $i < count($arr); ++$i) {
+            $v = $arr[$i];
+            if (isset($v[1])) {
+                $str .= '"' . $v[1] . '" <' . $v[0] . '>';
+            } elseif (isset($v[0])) {
+                $str .= $v[0];
+            }
+            if (($i + 1) < count($arr)) {
+                $str .= ', ';
+            }
+        }
+
+        return $str;
+    }
+
+    /**
+     * Get the MIME part for the plain text body (if available).
+     *
+     * @return MimePart|null
+     */
+    protected function buildTextPart()
+    {
+        if ($this->body === false) {
+            $result = null;
+        } else {
+            $result = new MimePart($this->body);
+            $result->setType(Mime::TYPE_TEXT);
+            $result->setCharset(APP_CHARSET);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Determine if an attachment should be used as an inline attachment associated to the HTML body.
+     *
+     * @param MimePart $attachment
+     *
+     * @return bool
+     */
+    protected function isInlineAttachment(MimePart $attachment) {
+        return $this->bodyHTML !== false
+            && $attachment->getId()
+            && in_array((string) $attachment->getDisposition(), ['', Mime::DISPOSITION_INLINE], true)
+        ;
+    }
+
+    /**
+     * Get the MIME part for the plain text body (if available).
+     *
+     * @return MimePart|null
+     */
+    protected function buildHtmlPart()
+    {
+        if ($this->bodyHTML === false) {
+            $result = null;
+        } else {
+            $html = new MimePart($this->bodyHTML);
+            $html->setType(Mime::TYPE_HTML);
+            $html->setCharset(APP_CHARSET);
+            $inlineAttachments = [];
+            foreach ($this->attachments as $attachment) {
+                if ($this->isInlineAttachment($attachment)) {
+                    $inlineAttachments[] = $attachment;
+                }
+            }
+            if (empty($inlineAttachments)) {
+                $result = $html;
+            } else {
+                $related = new MimeMessage();
+                $related->addPart($html);
+                foreach ($inlineAttachments as $inlineAttachment) {
+                    $related->addPart($inlineAttachment);
+                }
+                $result = new MimePart($related->generateMessage());
+                $result->setType(Mime::MULTIPART_RELATED);
+                $result->setBoundary($related->getMime()->boundary());
+            }
+        }
+
+        return $result;
     }
 }

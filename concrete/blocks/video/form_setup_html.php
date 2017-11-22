@@ -58,7 +58,7 @@ if (!isset($width)) {
     <div id="video-width" class="form-group" style="display: none;">
         <?= $form->label('width', t('Max Width')); ?>
         <div class="input-group">
-            <?= $form->number('width', $width, array('min' => 1)); ?>
+            <?= $form->number('width', $width ?: '', array('min' => 1)); ?>
             <div class="input-group-addon"><?= t('px'); ?></div>
         </div>
     </div>

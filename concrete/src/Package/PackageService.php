@@ -167,7 +167,9 @@ class PackageService
         $configUpdater->addProvider($provider);
         if ($clearCache) {
             $cache = $this->entityManager->getConfiguration()->getMetadataCacheImpl();
-            $cache->flushAll();
+            if ($cache) {
+                $cache->flushAll();
+            }
         }
     }
 

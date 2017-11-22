@@ -85,4 +85,20 @@ class DragRequest extends UserInterface
         $message->setAdditionalDataAttribute('destination', $destNode->getTreeNodeJSON());
         return new JsonResponse($message);
     }
+
+    public function updateChildren() {
+
+        $message = new EditResponse();
+        list($sourceNodes, $destNode) = $this->getNodes();
+
+        if (isset($_POST['treeNodeID']) && $this->canAccess()) {
+            $destNode->saveChildOrder($_POST['treeNodeID']);
+            $message->setMessage(t('Order Updated'));
+            return new JsonResponse($message);
+        } else {
+            $message->setMessage(t('Error updating order'));
+            return new JsonResponse($message, 400);
+        }
+
+    }
 }

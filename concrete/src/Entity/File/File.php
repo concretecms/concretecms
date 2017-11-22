@@ -575,6 +575,9 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         return $nf;
     }
 
+    /**
+     * @return \Concrete\Core\Entity\File\Version|null
+     */
     public function getApprovedVersion()
     {
         // Ideally, doctrine's caching would handle this. Unfortunately, something is wrong with the $file

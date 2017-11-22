@@ -24,6 +24,7 @@
 		this.$menuTemplate = $element.find('script[data-template=search-results-menu]');
 		this.$searchFieldRowTemplate = $element.find('script[data-template=search-field-row]');
 
+		this.$headerSearch = $element.find('div[data-header]');
 		this.$headerSearchInput = $element.find('div[data-header] input');
 		this.$advancedSearchButton = $element.find('a[data-launch-dialog=advanced-search]');
 		this.$resetSearchButton = $element.find('a[data-button-action=clear-search]');
@@ -70,6 +71,7 @@
 		my.$advancedSearchButton.html(advancedSearchText);
 
 		if (result.query && result.folder && result.folder.treeNodeTypeHandle !== 'search_preset') {
+			my.$headerSearch.find('div.btn-group').hide(); // hide any fancy button groups we've added here.
 			my.$headerSearchInput.prop('disabled', true);
 			my.$headerSearchInput.attr('placeholder', '');
 			my.$resetSearchButton.show();
@@ -229,30 +231,38 @@
 
 		} else {
 			if (event.which == 3) {
-				// right click
-				// If the current item is not selected, we deselect everything and select it
-				if (!$row.hasClass('ccm-search-select-selected')) {
-					my.$element.find('.ccm-search-select-selected').removeClass();
-					$row.addClass('ccm-search-select-selected');
-				}
-
-				var results = my.getSelectedResults();
-				var $menu = my.getResultMenu(results);
-				if ($menu) {
-					my.showMenu($row, $menu, event);
-				}
-
+				my.handleMenuClick(event, $row);
 			} else {
 				if (!$row.hasClass('ccm-search-select-selected')) {
+					// Select the row
 					$row.addClass('ccm-search-select-selected');
+				} else {
+					// Unselect the row
+					$row.removeClass('ccm-search-select-selected');
 				}
 			}
+
 			ConcreteEvent.publish('SearchSelectItems', {
 				'results': my.getSelectedResults()
 			}, my.$element);
 
 		}
-	}
+	};
+
+    ConcreteAjaxSearch.prototype.handleMenuClick = function(event, $row) {
+        // right click
+        // If the current item is not selected, we deselect everything and select it
+        if (!$row.hasClass('ccm-search-select-selected')) {
+            this.$element.find('.ccm-search-select-selected').removeClass();
+            $row.addClass('ccm-search-select-selected');
+        }
+
+        var results = this.getSelectedResults();
+        var $menu = this.getResultMenu(results);
+        if ($menu) {
+            this.showMenu($row, $menu, event);
+        }
+	};
 
 	ConcreteAjaxSearch.prototype.getResult = function() {
 		return this.result;
@@ -261,7 +271,8 @@
 	ConcreteAjaxSearch.prototype.updateResults = function(result) {
 		var cs = this,
 			options = cs.options,
-			touchTimer = null;
+			touchTimer = null,
+			touchEvent;
 
 		cs.result = result;
 
@@ -282,7 +293,7 @@
 		if (options.selectMode == 'multiple') {
 			// We enable item selection, click to select single, command click for
 			// multiple, shift click for range
-			cs.$element.find('tbody tr').on('contextmenu' +
+			cs.$element.find('tbody tr').on('contextmenu touchstart touchend' +
 				'', function(e) {
 				e.preventDefault();
 				return false;
@@ -302,6 +313,7 @@
 				}
 			}).on('touchstart.concreteSearchResultItem', function(e) {
 				var me = $(this);
+				touchEvent = e;
 				touchTimer = setTimeout(function() {
 					cs.handleSelectClick(e, me);
 					touchTimer = null;
@@ -310,7 +322,9 @@
 				if (touchTimer) {
 					clearTimeout(touchTimer);
 					touchTimer = null;
+                    cs.handleMenuClick(touchEvent, $(this));
 				}
+				touchEvent = null;
 			});
 
 		} else {
@@ -342,10 +356,10 @@
 			if (field) {
 				cs.ajaxUpdate(field, false, function(r) {
 					_.each(r.assets.css, function(css) {
-						ccm_addHeaderItem(css, 'CSS');
+						ConcreteAssetLoader.loadCSS(css);
 					});
 					_.each(r.assets.javascript, function(javascript) {
-						ccm_addHeaderItem(javascript, 'JAVASCRIPT');
+						ConcreteAssetLoader.loadJavaScript(javascript);
 					});
 					$content.html(r.html);
 				});
@@ -422,10 +436,10 @@
 					},
 					success: function(r) {
 						_.each(r.assets.css, function(css) {
-							ccm_addHeaderItem(css, 'CSS');
+							ConcreteAssetLoader.loadCSS(css);
 						});
 						_.each(r.assets.javascript, function(javascript) {
-							ccm_addHeaderItem(javascript, 'JAVASCRIPT');
+							ConcreteAssetLoader.loadJavaScript(javascript);
 						});
 						$content.html(r.element);
 						var selects = $content.find('select.selectize-select');
@@ -529,6 +543,7 @@
 				jQuery.fn.dialog.closeTop();
 				cs.$advancedSearchButton.html(ccmi18n_filemanager.edit);
 				cs.$resetSearchButton.show();
+				cs.$headerSearch.find('div.btn-group').hide(); // hide any fancy button groups we've added here.
 				cs.$headerSearchInput.prop('disabled', true).val('');
 				cs.$headerSearchInput.attr('placeholder', '');
 			}
@@ -540,6 +555,7 @@
 				url: $(this).attr('data-button-action-url'),
 				success: function(r) {
 					cs.updateResults(r);
+					cs.$headerSearch.find('div.btn-group').show();
 					cs.$headerSearchInput.prop('disabled', false);
 					cs.$headerSearchInput.attr('placeholder', ccmi18n.search);
 					cs.$advancedSearchButton.html(ccmi18n.advanced).show();
