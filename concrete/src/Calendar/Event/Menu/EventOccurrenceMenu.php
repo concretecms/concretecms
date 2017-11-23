@@ -36,11 +36,13 @@ class EventOccurrenceMenu extends Menu
                 t('Edit'), 640, 500
             ));
             if ($permissions->canCopyCalendarEvents()) {
-                $this->addItem(new LinkItem('#', t('Duplicate'), [
-                    'data-calendar-event-action' => 'duplicate',
-                    'data-calendar-event-id' => $occurrence->getEvent()->getID(),
-                    'data-calendar-event-token' => \Core::make('token')->generate('duplicate')
-                ]));
+                $year = date('Y', $occurrence->getStart());
+                $month = date('m', $occurrence->getStart());
+                $this->addItem(new DialogLinkItem(
+                    \URL::to('/ccm/calendar/dialogs/event/duplicate') . '?year=' . $year . '&amp;month=' . $month .
+                    '&amp;eventID=' . $occurrence->getEvent()->getID(),  t('Duplicate'),
+                    t('Duplicate'), 400, 300
+                ));
             }
 
             if ($permissions->canApproveCalendarEvent()) {

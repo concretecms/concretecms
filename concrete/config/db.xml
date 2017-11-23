@@ -3272,6 +3272,10 @@
       <default value="0"/>
       <notnull/>
     </field>
+    <field name="cIsDraft" type="boolean">
+      <default value="0"/>
+      <notnull/>
+    </field>
     <field name="cCacheFullPageContent" type="smallint">
       <default value="-1"/>
       <notnull/>

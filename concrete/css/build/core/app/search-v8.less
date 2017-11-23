@@ -22,16 +22,6 @@ div.ccm-header-search-form {
     width: 100%;
   }
 
-  div.ccm-header-search-form-input {
-    position: relative;
-    input.form-control {
-      .border-top-left-radius(4px) !important;
-      .border-bottom-left-radius(4px) !important;
-      .border-top-right-radius(0px) !important;
-      .border-bottom-right-radius(0px) !important;
-    }
-  }
-
   span.input-group-btn {
     border-left: 0px;
   }
@@ -45,45 +35,61 @@ div.ccm-header-search-form {
     right: 0.5em;
     width: 90vw;
 
-    a.ccm-header-reset-search,
-    a.ccm-header-launch-advanced-search {
-      position: absolute;
-      top: 10px;
-      font-size: 14px;
-      z-index: @index-level-search-reset;
-    }
-
-    a.ccm-header-reset-search {
-      left: 10px;
-      &.ccm-header-reset-search-right {
-        right: 10px;
-        left: auto;
-
-      }
-    }
-
-    a.ccm-header-launch-advanced-search {
-      color: #aaa;
-      right: 10px;
-
-    }
-
-    a.ccm-header-reset-search {
-      color: #09f;
-      display: none;
-    }
-
-    a.ccm-header-launch-advanced-search +
     input.form-control {
-      width: 312px;
-      padding-right: 110px;
+      .border-top-left-radius(4px) !important;
+      .border-bottom-left-radius(4px) !important;
+      .border-top-right-radius(0px) !important;
+      .border-bottom-right-radius(0px) !important;
     }
+
 
     input[type=text].form-control {
       width: 200px;
     }
   }
+}
 
+div.ccm-header-search-form-input {
+  position: relative;
+
+  a.ccm-header-reset-search {
+    color: #09f;
+    display: none;
+  }
+
+  a.ccm-header-launch-advanced-search {
+    color: #aaa;
+    right: 10px;
+
+  }
+
+
+  a.ccm-header-launch-advanced-search +
+  input.form-control {
+    width: 312px;
+    padding-right: 110px;
+  }
+
+  a.ccm-header-reset-search,
+  a.ccm-header-launch-advanced-search {
+    position: absolute;
+    top: 10px;
+    font-size: 14px;
+    z-index: @index-level-search-reset;
+  }
+
+  a.ccm-header-reset-search {
+    left: 10px;
+    &.ccm-header-reset-search-right {
+      right: 10px;
+      left: auto;
+
+    }
+  }
+}
+
+form.form-inline div.ccm-header-search-form-input {
+  display: inline-block;
 }
 
 ul.ccm-header-search-navigation {
@@ -168,6 +174,11 @@ div.ui-dialog {
       margin-right: 20px;
     }
   }
+
+  form.form-inline {
+    margin-bottom: 20px;
+  }
+
 }
 
 /**
