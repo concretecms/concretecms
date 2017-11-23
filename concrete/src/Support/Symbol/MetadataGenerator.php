@@ -2,24 +2,30 @@
 
 namespace Concrete\Core\Support\Symbol;
 
-use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Application\Application;
+use Concrete\Core\Support\Facade\Application as ApplicationFacade;
+use Exception;
+use Throwable;
 
 class MetadataGenerator
 {
     public function getAllBindings()
     {
         $bindings = [];
-        $app = Application::getFacadeApplication();
+        $app = ApplicationFacade::getFacadeApplication();
 
         foreach ($app->getBindings() as $name => $binding) {
-            try {
-                $instance = $app->make($name);
-                $className = get_class($instance);
-
-                if (ltrim($name, '\\') != ltrim($className, '\\')) {
-                    $bindings[$name] = $className;
+            $className = $this->resolveAbstractToClassName($app, $name);
+            if ($className !== null) {
+                $bindings[$name] = $className;
+            }
+        }
+        foreach ($app->getRegisteredAliases() as $alias) {
+            if (!isset($bindings[$alias])) {
+                $className = $this->resolveAbstractToClassName($app, $alias);
+                if ($className !== null) {
+                    $bindings[$alias] = $className;
                 }
-            } catch (\Exception $e) {
             }
         }
 
@@ -54,6 +60,30 @@ class MetadataGenerator
         $output = array_merge($output, $this->getOverride('new \Illuminate\Contracts\Container\Container', $makeMethod, '$app[SomeClass::class]'));
 
         return implode("\n", $output);
+    }
+
+    /**
+     * @param Application $app
+     * @param string $abstract
+     *
+     * @return string|null
+     */
+    private function resolveAbstractToClassName(Application $app, $abstract)
+    {
+        $result = null;
+        try {
+            $instance = $app->make($abstract);
+            if (is_object($instance)) {
+                $className = get_class($instance);
+                if (ltrim($abstract, '\\') !== $className) {
+                    $result = $className;
+                }
+            }
+        } catch (Exception $e) {
+        } catch (Throwable $e) {
+        }
+
+        return $result;
     }
 
     private function getOverride($string, $makeMethod, $comment)

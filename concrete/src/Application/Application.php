@@ -447,6 +447,16 @@ class Application extends Container
     }
 
     /**
+     * Get the list of registered aliases.
+     *
+     * @return string[]
+     */
+    public function getRegisteredAliases()
+    {
+        return array_keys($this->aliases);
+    }
+
+    /**
      * @deprecated Use the singleton method
      *
      * @param $abstract
