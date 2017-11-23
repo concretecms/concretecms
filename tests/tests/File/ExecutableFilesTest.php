@@ -25,7 +25,7 @@ class ExecutableFilesTest extends PHPUnit_Framework_TestCase
                 && strpos($file, 'updates/') !== 0
             ;
         });
-        $actual = array_values($actual);
+        sort($actual);
         $expected = [
             'concrete/bin/concrete5',
         ];
