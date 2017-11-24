@@ -93,11 +93,11 @@ class ServiceProvider extends Provider
     public function setupDoctrineCommands()
     {
         if ($this->installed()) {
-            // Add Doctrine ConsoleRunner commands
-            ConsoleRunner::addCommands($this->cli);
-
             // Set the doctrine helperset to the CLI
             $this->cli->setHelperSet($this->app->call([ConsoleRunner::class, 'createHelperSet']));
+
+            // Add Doctrine ConsoleRunner commands
+            ConsoleRunner::addCommands($this->cli);
 
             // Add migration commands
             $migrationsConfiguration = $this->getMigrationConfiguration();
