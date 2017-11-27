@@ -57,7 +57,7 @@ EOL;
 
         $link1 = Page::getByPath('/page-2/subpage-b')->getCollectionID();
         $link2 = Page::getByPath('/page-4')->getCollectionID();
-        $link3 = HOME_CID;
+        $link3 = Page::getHomePageID();
 
         $inspector = Core::make('import/value_inspector');
         $result = $inspector->inspect($content);

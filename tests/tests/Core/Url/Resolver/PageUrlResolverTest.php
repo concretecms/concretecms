@@ -28,13 +28,14 @@ class PageUrlResolverTest extends ResolverTestCase
 
     public function testWithHome()
     {
+        $homePageID = 12345;
         $page = $this->createMockFromClass('\Concrete\Core\Page\Page');
         $page->expects($this->once())
             ->method('getCollectionID')
-            ->willReturn(HOME_CID);
+            ->willReturn($homePageID);
 
         $this->assertEquals(
-            (string) $this->canonicalUrlWithPath('/')->setQuery('cID='.HOME_CID),
+            (string) $this->canonicalUrlWithPath('/')->setQuery('cID='.$homePageID),
             (string) $this->urlResolver->resolve([$page]));
     }
 

@@ -144,8 +144,9 @@ abstract class PageCache implements FlushableInterface
             if ($mixed->getCollectionPath() != '') {
                 return urlencode(trim($mixed->getCollectionPath(), '/'));
             } else {
-                if ($mixed->getCollectionID() == HOME_CID) {
-                    return '!' . HOME_CID;
+                $homeCID = ConcretePage::getHomePageID();
+                if ($mixed->getCollectionID() == $homeCID) {
+                    return '!' . $homeCID;
                 }
             }
         } else {
@@ -153,7 +154,7 @@ abstract class PageCache implements FlushableInterface
                 if ($mixed->getPath() != '') {
                     return urlencode(trim($mixed->getPath(), '/'));
                 } else {
-                    return '!' . HOME_CID;
+                    return '!' . ConcretePage::getHomePageID();
                 }
             } else {
                 if ($mixed instanceof PageCacheRecord) {

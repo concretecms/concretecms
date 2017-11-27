@@ -25,9 +25,10 @@ if (is_object($pagetype) && $pagetype->getPageTypePublishTargetTypeID() == $conf
     $configuredTarget = $pagetype->getPageTypePublishTargetObject();
 
     if ($configuredTarget->getSelectorFormFactor() == 'sitemap_in_page') {
-        $siteMapParentID = HOME_CID;
         if ($configuredTarget->getStartingPointPageID()) {
             $siteMapParentID = $configuredTarget->getStartingPointPageID();
+        } else {
+            $siteMapParentID = Page::getHomePageID($relevantPage);
         }
         $ps = Loader::helper('form/page_selector');
         $args = array('ptID' => $configuredTarget->getPageTypeID());

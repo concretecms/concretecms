@@ -51,7 +51,7 @@ class PagePathTest extends PageTestCase
      */
     public function testCanonicalPagePaths()
     {
-        $home = Page::getByID(HOME_CID);
+        $home = Page::getByID(Page::getHomePageID());
         $pt = Type::getByID(1);
         $template = Template::getByID(1);
         $page = $home->add($pt, array(
@@ -81,7 +81,7 @@ class PagePathTest extends PageTestCase
      */
     public function testSettingCanonicalPagePaths()
     {
-        $home = Page::getByID(HOME_CID);
+        $home = Page::getByID(Page::getHomePageID());
         $pt = Type::getByID(1);
         $template = Template::getByID(1);
         $page = $home->add($pt, array(
@@ -115,7 +115,7 @@ class PagePathTest extends PageTestCase
 
     public function testNonCanonicalPagePaths()
     {
-        $home = Page::getByID(HOME_CID);
+        $home = Page::getByID(Page::getHomePageID());
         $pt = Type::getByID(1);
         $template = Template::getByID(1);
         $page = $home->add($pt, array(
@@ -143,7 +143,7 @@ class PagePathTest extends PageTestCase
 
     public function testPagePathUpdate()
     {
-        $home = Page::getByID(HOME_CID);
+        $home = Page::getByID(Page::getHomePageID());
         $pt = Type::getByID(1);
         $template = Template::getByID(1);
         $page = $home->add($pt, array(
