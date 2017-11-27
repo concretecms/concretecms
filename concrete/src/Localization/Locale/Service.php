@@ -6,6 +6,7 @@ use Concrete\Core\Entity\Site\Locale;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Entity\Site\SiteTree;
 use Concrete\Core\Page\Page;
+use Doctrine\DBAL\Exception\TableNotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
 
 class Service
@@ -20,6 +21,20 @@ class Service
     public function getByID($id)
     {
         return $this->entityManager->find('Concrete\Core\Entity\Site\Locale', $id);
+    }
+
+    /**
+     * Get the default site locale (if set).
+     *
+     * @return Locale|null
+     */
+    public function getDefaultLocale()
+    {
+        try {
+            return $this->entityManager->getRepository(Locale::class)->findOneBy(['msIsDefault' => true]);
+        } catch (TableNotFoundException $e) {
+            return null;
+        }
     }
 
     public function setDefaultLocale(Locale $defaultLocale)
@@ -100,7 +115,10 @@ class Service
         $home->rescanCollectionPath();
 
         // Copy the permissions from the canonical home page to this home page.
-        $home->acquirePagePermissions(HOME_CID);
+        $homeCID = Page::getHomePageID();
+        if ($homeCID !== null) {
+            $home->acquirePagePermissions($homeCID);
+        }
 
         return $home;
     }

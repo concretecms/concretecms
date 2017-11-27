@@ -231,7 +231,7 @@ class Sitemap
         } else {
             $node->icon = $cIcon;
         }
-        if ($cID == HOME_CID) {
+        if ($c->isHomePage()) {
             $node->addClass = 'ccm-page-home';
             $node->expanded = true;
         }

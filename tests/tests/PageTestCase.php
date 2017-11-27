@@ -76,7 +76,7 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
     protected static function createPage($name, $parent = false, $type = false, $template = false)
     {
         if ($parent === false) {
-            $parent = Page::getByID(HOME_CID);
+            $parent = Page::getByID(Page::getHomePageID());
         } elseif (is_string($parent)) {
             $parent = Page::getByPath($parent);
         }

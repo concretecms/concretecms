@@ -970,7 +970,17 @@ class Version20160725000000 extends AbstractMigration
             $site->setSiteName(\Config::get('concrete.site'));
 
             // migrate theme
-            $c = \Page::getByID(HOME_CID);
+            $homeCID = null;
+            try {
+                $homeCID = \Page::getHomePageID();
+            } catch (\Exception $x) {
+            } catch (\Throwable $x) {
+            }
+            if ($homeCID == null) {
+                $homeCID = 1;
+            }
+            
+            $c = \Page::getByID($homeCID);
             $site->setThemeID($c->getCollectionThemeID());
 
             $em->persist($site);
@@ -1191,7 +1201,16 @@ class Version20160725000000 extends AbstractMigration
         $this->output(t('Updating locales and multilingual sections...'));
         // Update home page so it has no handle. This way we won't make links like /home/services unless
         // people really want that.
-        $home = Page::getByID(HOME_CID, 'RECENT');
+        $homeCID = null;
+        try {
+            $homeCID = \Page::getHomePageID();
+        } catch (\Exception $x) {
+        } catch (\Throwable $x) {
+        }
+        if ($homeCID == null) {
+            $homeCID = 1;
+        }
+        $home = Page::getByID($homeCID, 'RECENT');
         $home->update(['cHandle' => '']);
 
         // Loop through all multilingual sections

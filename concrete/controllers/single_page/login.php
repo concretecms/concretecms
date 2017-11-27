@@ -294,7 +294,7 @@ class Login extends PageController
         }
 
         // Return to home page
-        return Page::getByID(HOME_CID)->getCollectionLink();
+        return Page::getByID(Page::getHomePageID())->getCollectionLink();
     }
 
     /**
