@@ -64,9 +64,10 @@ class SeoCanonical
                 $page = Page::getByID($page);
             }
             if ($page instanceof Page && !$page->isError()) {
+                $cID = $page->getCollectionID();
                 $originalCID = $page->getCollectionPointerOriginalID();
-                if (!empty($originalCID) && $originalCID !== $page->getCollectionID()) {
-                    $result = $this->getPageCanonicalURL($originalCID, $querystring);
+                if (!empty($originalCID) && $originalCID != $cID) {
+                    $result = $this->getPageCanonicalURL($cID, $querystring);
                 } else {
                     $result = $this->resolver->resolve([$page]);
                     $query = null;
