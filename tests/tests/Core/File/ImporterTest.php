@@ -1,22 +1,23 @@
 <?php
 namespace Concrete\Tests\Core\File;
 
-use Concrete\Core\Cache\CacheLocal;
-use Concrete\Core\File\Importer;
-use Concrete\Core\Attribute\Type as AttributeType;
+use Concrete\Core\Attribute\Key\Category;
 use Concrete\Core\Attribute\Key\FileKey;
+use Concrete\Core\Attribute\Type as AttributeType;
+use Concrete\Core\Cache\CacheLocal;
+use Concrete\Core\File\Image\BasicThumbnailer;
+use Concrete\Core\File\Image\Thumbnail\Type\Type as ThumbnailType;
+use Concrete\Core\File\Importer;
 use Config;
 use Core;
-use Concrete\Core\Attribute\Key\Category;
 
 class ImporterTest extends \FileStorageTestCase
 {
-
-    public function __construct($name = null, array $data = array(), $dataName = '')
+    public function __construct($name = null, array $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
 
-        $this->tables = array_merge($this->tables, array(
+        $this->tables = array_merge($this->tables, [
             'Users',
             'PermissionAccessEntityTypes',
             'FileImageThumbnailTypes',
@@ -25,8 +26,8 @@ class ImporterTest extends \FileStorageTestCase
             'ConfigStore',
             'Logs',
             'FileVersionLog',
-        ));
-        $this->metadatas = array_merge($this->metadatas, array(
+        ]);
+        $this->metadatas = array_merge($this->metadatas, [
             'Concrete\Core\Entity\Attribute\Key\Settings\NumberSettings',
             'Concrete\Core\Entity\Attribute\Key\Settings\Settings',
             'Concrete\Core\Entity\Attribute\Key\Settings\EmptySettings',
@@ -38,8 +39,16 @@ class ImporterTest extends \FileStorageTestCase
             'Concrete\Core\Entity\Attribute\Value\Value\Value',
             'Concrete\Core\Entity\Attribute\Type',
             'Concrete\Core\Entity\Attribute\Category',
-        ));
+        ]);
         Config::set('concrete.upload.extensions', '*.txt;*.jpg;*.jpeg;*.png');
+    }
+
+    public function setUp()
+    {
+        parent::setUp();
+        $config = \Core::make('config');
+        $config->set('concrete.misc.default_thumbnail_format', 'jpeg');
+        $config->set('concrete.misc.basic_thumbnailer_generation_strategy', 'now');
     }
 
     public static function setUpBeforeClass()
@@ -48,8 +57,8 @@ class ImporterTest extends \FileStorageTestCase
 
         $category = Category::add('file');
         $number = AttributeType::add('number', 'Number');
-        FileKey::add($number, array('akHandle' => 'width', 'akName' => 'Width'));
-        FileKey::add($number, array('akHandle' => 'height', 'akName' => 'Height'));
+        FileKey::add($number, ['akHandle' => 'width', 'akName' => 'Width']);
+        FileKey::add($number, ['akHandle' => 'height', 'akName' => 'Height']);
 
         CacheLocal::flush();
     }
@@ -147,6 +156,7 @@ class ImporterTest extends \FileStorageTestCase
         $this->assertEquals(113, $fo->getAttribute('width'));
         $this->assertEquals(113, $fo->getAttribute('height'));
     }
+
     public function testThumbnailStorageLocation()
     {
         mkdir($this->getStorageDirectory());
@@ -163,21 +173,74 @@ class ImporterTest extends \FileStorageTestCase
         mkdir($this->getStorageDirectory());
         $this->getStorageLocation();
 
-        $file = DIR_BASE . '/concrete/themes/elemental/images/background-slider-night-road.png';
-        $fi = new Importer();
-        $fo = $fi->import($file, 'background-slider-night-road.png');
-        $type = $fo->getTypeObject();
-        $this->assertEquals(\Concrete\Core\File\Type\Type::T_IMAGE, $type->getGenericType());
-
-        $this->assertTrue((bool) $fo->hasThumbnail(1));
-        $this->assertTrue((bool) $fo->hasThumbnail(2));
-        $this->assertFalse((bool) $fo->hasThumbnail(3));
-
         $cf = Core::make('helper/concrete/file');
         $fh = Core::make('helper/file');
-        $this->assertEquals('/application/files/thumbnails/file_manager_detail'
-            . $cf->prefix($fo->getPrefix(), $fh->replaceExtension($fo->getFilename(), 'jpg'), 2),
-            $fo->getThumbnailURL('file_manager_detail'));
+        $config = Core::make('config');
+        $file = DIR_BASE . '/concrete/themes/elemental/images/background-slider-night-road.png';
+        $humbnailTypes = ThumbnailType::getList();
+        foreach ([
+            'auto' => ['png', IMAGETYPE_PNG],
+            'jpeg' => ['jpg', IMAGETYPE_JPEG],
+            'png' => ['png', IMAGETYPE_PNG],
+        ] as $thumbnailFormat => list($expectedExtension, $expectedFileType)) {
+            $config->set('concrete.misc.default_thumbnail_format', $thumbnailFormat);
+            foreach (['async', 'now'] as $strategy) {
+                $config->set('concrete.misc.basic_thumbnailer_generation_strategy', $strategy);
+                $fi = new Importer();
+                $fo = $fi->import($file, 'background-slider-night-road.png');
+                $type = $fo->getTypeObject();
+                $this->assertEquals(\Concrete\Core\File\Type\Type::T_IMAGE, $type->getGenericType());
+
+                $this->assertTrue((bool) $fo->hasThumbnail(1));
+                $this->assertTrue((bool) $fo->hasThumbnail(2));
+                $this->assertFalse((bool) $fo->hasThumbnail(3));
+
+                $this->assertEquals(
+                    '/application/files/thumbnails/file_manager_detail' . $cf->prefix($fo->getPrefix(), $fh->replaceExtension($fo->getFilename(), $expectedExtension), 2),
+                    $fo->getThumbnailURL('file_manager_detail'),
+                    "Check thumbnail URL with: format={$thumbnailFormat}, strategy={$strategy}"
+                );
+
+                $storageLocation = $fo->getFile()->getFileStorageLocationObject();
+                /* @var \Concrete\Core\Entity\File\StorageLocation\StorageLocation $storageLocation */
+                $fsl = $storageLocation->getFileSystemObject();
+                /* @var \League\Flysystem\Filesystem $fsl */
+                foreach ($humbnailTypes as $thumbnailType) {
+                    foreach ([
+                        $thumbnailType->getBaseVersion(),
+                        $thumbnailType->getDoubledVersion(),
+                    ] as $thumbnailTypeVersion) {
+                        $thumbnailPath = $thumbnailTypeVersion->getFilePath($fo);
+                        $this->assertTrue($fsl->has($thumbnailPath), "Check thumbnail existence with: format={$thumbnailFormat}, strategy={$strategy}");
+                        $handler = $fsl->get($thumbnailPath);
+                        list($width, $height, $type) = getimagesizefromstring($handler->read());
+                        $this->assertSame($expectedFileType, $type, "Check thumbnail type with: format={$thumbnailFormat}, strategy={$strategy}");
+                    }
+                }
+                $basicThumbnailer = Core::build(BasicThumbnailer::class, ['storageLocation' => $storageLocation]);
+                /* @var BasicThumbnailer $basicThumbnailer */
+                $thumbnail = $basicThumbnailer->getThumbnail($fo->getFile(), 100, 100);
+                $this->assertSame('.' . $expectedExtension, substr($thumbnail->src, -4));
+                $this->assertContains('/application/files/cache/thumbnails/', $thumbnail->src);
+                $pos = strrpos($thumbnail->src, '/cache/thumbnails/');
+                $realPath = $this->getStorageDirectory() . substr($thumbnail->src, $pos);
+                if ($strategy === 'async') {
+                    $this->assertNull($thumbnail->width);
+                    $this->assertNull($thumbnail->height);
+                    $this->assertFileNotExists($realPath);
+                } else {
+                    $this->assertGreaterThan(0, $thumbnail->width);
+                    $this->assertGreaterThan(0, $thumbnail->height);
+                    $this->assertLessThanOrEqual(100, $thumbnail->width);
+                    $this->assertLessThanOrEqual(100, $thumbnail->height);
+                    $this->assertFileExists($realPath);
+                    list($width, $height, $type) = getimagesize($realPath);
+                    $this->assertSame($thumbnail->width, $width);
+                    $this->assertSame($thumbnail->height, $height);
+                    $this->assertSame($expectedFileType, $type);
+                }
+            }
+        }
     }
 
     public function testImageImportFromIncoming()
@@ -298,7 +361,6 @@ class ImporterTest extends \FileStorageTestCase
 
     public function testFileReplace()
     {
-
         // create the default storage location first.
         mkdir($this->getStorageDirectory());
         $this->getStorageLocation();
@@ -331,7 +393,6 @@ class ImporterTest extends \FileStorageTestCase
         touch($file);
         $fi = new Importer();
         $r = $fi->import($file, 'test.txt');
-
 
         $fv2 = $r->duplicate();
         $fv3 = $r->duplicate();
