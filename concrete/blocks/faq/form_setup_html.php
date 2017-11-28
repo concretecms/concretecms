@@ -75,11 +75,11 @@
 
                 <div class="form-group">
                     <label class="control-label"><?php echo t('Navigation Link Text'); ?></label>
-                    <input class="form-control ccm-input-text" type="text" name="linkTitle[]" value="<?php echo $row['linkTitle']; ?>">
+                    <input class="form-control ccm-input-text" type="text" name="linkTitle[]" value="<?php echo h($row['linkTitle']); ?>">
                 </div>
                 <div class="form-group">
                     <label class="control-label"><?php echo t('Title Text'); ?></label>
-                    <input class="form-control ccm-input-text" type="text" name="title[]" value="<?php echo $row['title']; ?>">
+                    <input class="form-control ccm-input-text" type="text" name="title[]" value="<?php echo h($row['title']); ?>">
                 </div>
                 <div class="form-group">
                     <label class="control-label"><?php echo t('Description'); ?></label>
