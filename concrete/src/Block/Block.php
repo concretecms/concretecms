@@ -22,19 +22,86 @@ use Page;
 
 class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectInterface
 {
+    /**
+     * @deprecated use the getBlockAreaObject() method (what's deprecated is the "public" part, it should be protected)
+     *
+     * @var \Concrete\Core\Area\Area|null
+     */
     public $a;
+
+    /**
+     * The ID of the collection containing the block.
+     *
+     * @var int|null
+     */
     protected $cID;
+
+    /**
+     * The handle of the area containing the block.
+     *
+     * @var string|null
+     */
     protected $arHandle;
+
+    /**
+     * The collection instance containing the block.
+     *
+     * @var \Concrete\Core\Page\Collection\Collection|null
+     */
     protected $c;
+
+    /**
+     * The custom style set ID.
+     *
+     * @var int|null
+     */
     protected $issID;
+
+    /**
+     * The proxy block instance.
+     *
+     * @var \Concrete\Core\Block\Block|false
+     */
     protected $proxyBlock = false;
+
+    /**
+     * The ID of the associated block.
+     *
+     * @var int|null
+     */
     protected $cbRelationID;
+
+    /**
+     * The ID of the collection that's associated to the block actions.
+     *
+     * @var int|null
+     */
     protected $bActionCID;
+
+    /**
+     * The block cache settings.
+     *
+     * @var \Concrete\Core\Block\CacheSettings|null
+     */
     protected $cacheSettings;
+
+    /**
+     * Override cache settings?
+     *
+     * @var int|null 1 for true; 0/null for false
+     */
     protected $cbOverrideBlockTypeCacheSettings;
 
+    /**
+     * The custom template name.
+     *
+     * @var string|null
+     */
     protected $bFilename;
 
+    /**
+     * Destruct the class instance.
+     */
     public function __destruct()
     {
         unset($this->c);
@@ -42,6 +109,15 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         unset($this->instance);
     }
 
+    /**
+     * Initialize the instance by manually specifying the data.
+     *
+     * @param array|\Iterator $blockInfo A set key-value pairs used to initialize the instance
+     * @param \Concrete\Core\Page\Collection\Collection $c The collection containing the block
+     * @param \Concrete\Core\Area\Area|string|null $a the area containing the block (or its handle)
+     *
+     * @return \Concrete\Core\Block\Block
+     */
     public static function populateManually($blockInfo, $c, $a)
     {
         $b = new self();
@@ -63,9 +139,11 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     }
 
     /**
-     * Returns a block.
+     * Get a block instance given its name.
      *
-     * @param mixed $blockName
+     * @param string $blockName
+     *
+     * @return \Concrete\Core\Block\Block|null returns NULL if $blockName is empty; a Block instance otherwise (the getBlockID() method will return NULL if the block was not found)
      */
     public static function getByName($blockName)
     {
@@ -89,6 +167,15 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         }
     }
 
+    /**
+     * Get a block instance given its ID.
+     *
+     * @param int $bID The block ID
+     * @param \Concrete\Core\Page\Collection\Collection|null $c the collection instance containing the block
+     * @param \Concrete\Core\Area\Area|string|null $a the area containing the block (or its handle)
+     *
+     * @return \Concrete\Core\Block\Block|null|false Return NULL if the block wasn't found; false if the block type class wasn't found; a Block instance otherwise
+     */
     public static function getByID($bID, $c = null, $a = null)
     {
         if ($c == null && $a == null) {
@@ -163,54 +250,101 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         }
     }
 
+    /**
+     * Get the ID of the associated block.
+     *
+     * @return int|null
+     */
     public function getBlockRelationID()
     {
         return $this->cbRelationID;
     }
 
+    /**
+     * Get the ID of the block type (if available).
+     *
+     * @return int|null
+     */
     public function getBlockTypeID()
     {
         return $this->btID;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\ObjectInterface::getPermissionObjectIdentifier()
+     */
     public function getPermissionObjectIdentifier()
     {
         return $this->cID . ':' . $this->getAreaHandle() . ':' . $this->bID;
     }
 
+    /**
+     * Get the handle of the area containing the block.
+     *
+     * @return string|null
+     */
     public function getAreaHandle()
     {
         return $this->arHandle;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\ObjectInterface::getPermissionResponseClassName()
+     */
     public function getPermissionResponseClassName()
     {
         return '\\Concrete\\Core\\Permission\\Response\\BlockResponse';
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\ObjectInterface::getPermissionAssignmentClassName()
+     */
     public function getPermissionAssignmentClassName()
     {
         return '\\Concrete\\Core\\Permission\\Assignment\\BlockAssignment';
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\ObjectInterface::getPermissionObjectKeyCategoryHandle()
+     */
     public function getPermissionObjectKeyCategoryHandle()
     {
         return 'block';
     }
 
+    /**
+     * Get the proxy block instance.
+     *
+     * @return \Concrete\Core\Block\Block|false
+     */
     public function getProxyBlock()
     {
         return $this->proxyBlock;
     }
 
-    // if $c is provided, then we check to see if this particular block is aliased
-    // to this particular collection
-
+    /**
+     * Set the proxy block instance.
+     *
+     * @param \Concrete\Core\Block\Block|null $block
+     */
     public function setProxyBlock($block)
     {
         $this->proxyBlock = $block;
     }
 
+    /**
+     * Render the block display.
+     *
+     * @param string $view
+     */
     public function display($view = 'view')
     {
         if ($this->getBlockTypeID() < 1) {
@@ -221,16 +355,33 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $bv->render($view);
     }
 
+    /**
+     * @deprecated no more scrapbooks in the dashboard
+     *
+     * @return bool
+     */
     public function isGlobal()
     {
-        return false; // legacy. no more scrapbooks in the dashboard.
+        return false;
     }
 
+    /**
+     * Get the cached record of the block instance.
+     *
+     * @return string|null
+     */
     public function getBlockCachedRecord()
     {
         return $this->btCachedBlockRecord;
     }
 
+    /**
+     * Get the cached output of the block instance (if available and not expired).
+     *
+     * @param \Concrete\Core\Area\Area|null $area
+     *
+     * @return string|false
+     */
     public function getBlockCachedOutput($area)
     {
         $db = Loader::db();
@@ -264,6 +415,11 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         return $r['btCachedBlockOutput'];
     }
 
+    /**
+     * Is this block inside a stack?
+     *
+     * @return bool
+     */
     public function isBlockInStack()
     {
         $co = $this->getBlockCollectionObject();
@@ -276,6 +432,11 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         return false;
     }
 
+    /**
+     * Get the collection instance containing the block.
+     *
+     * @return \Concrete\Core\Page\Collection\Collection|null
+     */
     public function getBlockCollectionObject()
     {
         if (is_object($this->c)) {
@@ -285,9 +446,13 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         }
     }
 
+    /**
+     * Get the page instance where this block is defined (or the page where the original block is defined if this block is an alias).
+     *
+     * @return \Concrete\Core\Page\Page|null
+     */
     public function getOriginalCollection()
     {
-        // given a block ID, we find the original collection ID (where this bID is marked as isOriginal)
         $db = Loader::db();
         $q = 'select Pages.cID, cIsTemplate from Pages inner join CollectionVersionBlocks on (CollectionVersionBlocks.cID = Pages.cID) where CollectionVersionBlocks.bID = ? and CollectionVersionBlocks.isOriginal = 1';
         $r = $db->query($q, [$this->bID]);
@@ -311,6 +476,13 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         return isset($this->bID) ? $this->bID : null;
     }
 
+    /**
+     * Set the output cache.
+     *
+     * @param string $content the block output to be placed in the cache
+     * @param int|null $lifetime The cache life time (in seconds). If empty we'll assume 5 years.
+     * @param \Concrete\Core\Area\Area|null $area the stack area containing the block
+     */
     public function setBlockCachedOutput($content, $lifetime, $area)
     {
         $db = Loader::db();
@@ -353,6 +525,11 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         }
     }
 
+    /**
+     * Include a file (if it exists).
+     *
+     * @param string $file The file name, relative to the block path (.../blocks/block_handle).
+     */
     public function inc($file)
     {
         $b = $this;
@@ -361,6 +538,11 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         }
     }
 
+    /**
+     * Get the absolute path of the block directory (.../blocks/block_handle).
+     *
+     * @return string
+     */
     public function getBlockPath()
     {
         if ($this->getPackageID() > 0) {
@@ -378,21 +560,39 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         return $dir;
     }
 
+    /**
+     * Get the ID of the package owning this block type.
+     *
+     * @return int|null
+     */
     public function getPackageID()
     {
         return $this->pkgID;
     }
 
+    /**
+     * Get the handle of the package owning this block type.
+     *
+     * @return string|false
+     */
     public function getPackageHandle()
     {
         return PackageList::getHandle($this->pkgID);
     }
 
+    /**
+     * Get the block type handle.
+     *
+     * @return string
+     */
     public function getBlockTypeHandle()
     {
         return $this->btHandle;
     }
 
+    /**
+     * Revert the permission of the object to the one of the area that contains the block.
+     */
     public function revertToAreaPermissions()
     {
         $c = $this->getBlockCollectionObject();
@@ -408,22 +608,42 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         );
     }
 
+    /**
+     * Set the collection instance containing the block.
+     *
+     * @param \Concrete\Core\Page\Collection\Collection|null $c
+     */
     public function loadNewCollection(&$c)
     {
         $this->c = $c;
     }
 
+    /**
+     * Set the area containing the block.
+     *
+     * @param \Concrete\Core\Area\Area $a
+     */
     public function setBlockAreaObject(&$a)
     {
         $this->a = $a;
         $this->arHandle = $a->getAreaHandle();
     }
 
+    /**
+     * Is the block versioning disabled?
+     *
+     * @return int 0 for false, 1 for true
+     */
     public function disableBlockVersioning()
     {
         return $this->cbIncludeAll;
     }
 
+    /**
+     * Get the number of alias of this block.
+     *
+     * @return int
+     */
     public function getNumChildren()
     {
         $db = Loader::db();
@@ -433,11 +653,21 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         return $total;
     }
 
+    /**
+     * @deprecated use the getInstance() method
+     *
+     * @return \Concrete\Core\Block\BlockController
+     */
     public function getController()
     {
         return $this->getInstance();
     }
 
+    /**
+     * Get the block type controller.
+     *
+     * @return \Concrete\Core\Block\BlockController
+     */
     public function getInstance()
     {
         if (
@@ -457,15 +687,23 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         return $this->instance;
     }
 
+    /**
+     * Get the block type instance.
+     *
+     * @return \Concrete\Core\Block\BlockType\BlockType
+     */
     public function getBlockTypeObject()
     {
         return BlockType::getByID($this->btID);
     }
 
+    /**
+     * Gets a list of collections that include this block, along with area name, etc... used in the block_details.php page in the admin control panel.
+     *
+     * @return \Concrete\Core\Page\Page[]
+     */
     public function getCollectionList()
     {
-        // gets a list of collections that include this block, along with area name, etc...
-        // used in the block_details.php page in the admin control panel
         $db = Loader::db();
         $q = 'select DISTINCT Pages.cID from CollectionVersionBlocks inner join Pages on (CollectionVersionBlocks.cID = Pages.cID) inner join CollectionVersions on (CollectionVersions.cID = Pages.cID) where CollectionVersionBlocks.bID = ?';
         $r = $db->query($q, [$this->bID]);
@@ -480,10 +718,13 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         }
     }
 
+    /**
+     * Updates fields common to every block.
+     *
+     * @param array $data the block type-specific data to be saved
+     */
     public function update($data)
     {
-        // this function updates fields common to every block
-
         $db = Loader::db();
         $dh = Loader::helper('date');
         $bDateModified = $dh->getOverridableNow();
@@ -505,6 +746,9 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $bc->save($data);
     }
 
+    /**
+     * Mark the output cache as expired.
+     */
     public function refreshBlockOutputCache()
     {
         $db = Loader::db();
@@ -518,16 +762,29 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         );
     }
 
+    /**
+     * Get the ID of the collection containing the block.
+     *
+     * @return int|null
+     */
     public function getBlockCollectionID()
     {
         return $this->cID;
     }
 
+    /**
+     * Is the block active?
+     *
+     * @return int 0 for false, 1 for true
+     */
     public function isActive()
     {
         return $this->bIsActive;
     }
 
+    /**
+     * Deactivate the block.
+     */
     public function deactivate()
     {
         $db = Loader::db();
@@ -535,6 +792,9 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $db->query($q, [$this->bID]);
     }
 
+    /**
+     * Activate the block.
+     */
     public function activate()
     {
         $db = Loader::db();
@@ -542,6 +802,14 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $db->query($q, [$this->bID]);
     }
 
+    /**
+     * Populate the queue to be used to add/update blocks of the pages of a specific type.
+     *
+     * @param bool $addBlock add this block to the pages where this block does not exist? If false, we'll only update blocks that already exist
+     * @param \ZendQueue\Queue $queue The queue to add the messages too (it will be emptied before adding the new messages)
+     *
+     * @return \ZendQueue\Queue
+     */
     public function queueForDefaultsAliasing($addBlock, $queue)
     {
         $records = [];
@@ -569,7 +837,7 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
                 ]);
 
                 if ($r2['bID'] || (!$r2['bID'] && $addBlock)) {
-                    // Ok, so either this block doesn't appear on the page at al, but addBlock set to true,
+                    // Ok, so either this block doesn't appear on the page at all, but addBlock set to true,
                     // or, the block appears on the page and it is forked. Either way we're going to add it to the page.
 
                     $record = [
@@ -603,6 +871,16 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         return $queue;
     }
 
+    /**
+     * Populate the queue to be used to work on the block and it aliases.
+
+     *
+     * @param mixed $data Custom data to be added to the queue messages
+     * @param \ZendQueue\Queue $queue The queue to add the messages too (it will be emptied before adding the new messages)
+     * @param bool $includeThisBlock Include this block instance in the queue?
+     *
+     * @return \ZendQueue\Queue
+     */
     public function queueForDefaultsUpdate($data, $queue, $includeThisBlock = true)
     {
         $blocks = [];
@@ -641,12 +919,14 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         return $queue;
     }
 
+    /**
+     * Create an alias of the block, attached to this collection, within the CollectionVersionBlocks table.
+     * Additionally, this command grabs the permissions from the original record in the CollectionVersionBlocks table, and attaches them to the new one.
+     *
+     * @param \Concrete\Core\Page\Collection\Collection $c The collection to add the block alias to
+     */
     public function alias($c)
     {
-        // creates an alias of the block, attached to this collection, within the CollectionVersionBlocks table
-        // additionally, this command grabs the permissions from the original record in the
-        // CollectionVersionBlocks table, and attaches them to the new one
-
         $db = Loader::db();
         $bID = $this->bID;
         $newBlockDisplayOrder = $c->getCollectionAreaDisplayOrder($this->getAreaHandle());
@@ -755,6 +1035,11 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         }
     }
 
+    /**
+     * Area permissions are overridden?
+     *
+     * @var int|null 1 for true; 0/null for false
+     */
     public function overrideAreaPermissions()
     {
         if (!$this->cbOverrideAreaPermissions) {
@@ -764,6 +1049,11 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         return $this->cbOverrideAreaPermissions;
     }
 
+    /**
+     * Override cache settings?
+     *
+     * @var int|null 1 for true; 0/null for false
+     */
     public function overrideBlockTypeCacheSettings()
     {
         if (!$this->cbOverrideBlockTypeCacheSettings) {
@@ -773,6 +1063,11 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         return $this->cbOverrideBlockTypeCacheSettings;
     }
 
+    /**
+     * Is the block grid container enabled?
+     *
+     * @return bool
+     */
     public function enableBlockContainer()
     {
         if ($this->cbEnableBlockContainer) {
@@ -782,17 +1077,26 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         }
     }
 
+    /**
+     * Should the view ignore the grid container?
+     *
+     * @return bool
+     */
     public function ignorePageThemeGridFrameworkContainer()
     {
         if ($this->overrideBlockTypeContainerSettings()) {
             return !$this->enableBlockContainer();
         }
-        /** @var \Concrete\Core\Block\BlockController $controller */
         $controller = $this->getInstance();
 
         return $controller->ignorePageThemeGridFrameworkContainer();
     }
 
+    /**
+     * Should this instance override the grid container settings of the block controller?
+     *
+     * @return int 0/false: false, 1/true: true
+     */
     public function overrideBlockTypeContainerSettings()
     {
         if (!$this->cbOverrideBlockTypeContainerSettings) {
@@ -802,6 +1106,11 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         return $this->cbOverrideBlockTypeContainerSettings;
     }
 
+    /**
+     * Get the cache settings instance.
+     *
+     * @return \Concrete\Core\Block\CacheSettings
+     */
     public function getBlockCacheSettingsObject()
     {
         if (!isset($this->cacheSettings)) {
@@ -811,6 +1120,11 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         return $this->cacheSettings;
     }
 
+    /**
+     * Should the block output be cached?
+     *
+     * @return bool
+     */
     public function cacheBlockOutput()
     {
         $settings = $this->getBlockCacheSettingsObject();
@@ -819,8 +1133,8 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     }
 
     /**
-     * Called by the scrapbook proxy block, this disables the original block container for the current request,
-     * because the scrapbook block takes care of rendering the container.
+     * Disable the original block container for the current request.
+     * This is called by the scrapbook proxy block, because the scrapbook block takes care of rendering the container.
      */
     public function disableBlockContainer()
     {
@@ -828,6 +1142,11 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $this->cbEnableBlockContainer = false;
     }
 
+    /**
+     * Should the block output be cached upon POST requests?
+     *
+     * @return bool
+     */
     public function cacheBlockOutputOnPost()
     {
         $settings = $this->getBlockCacheSettingsObject();
@@ -835,6 +1154,11 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         return $settings->cacheBlockOutputOnPost();
     }
 
+    /**
+     * Should the block output be cached when site visitors are registered users?
+     *
+     * @return bool
+     */
     public function cacheBlockOutputForRegisteredUsers()
     {
         $settings = $this->getBlockCacheSettingsObject();
@@ -842,6 +1166,11 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         return $settings->cacheBlockOutputForRegisteredUsers();
     }
 
+    /**
+     * Get the lifetime (in seconds) of the block output cache.
+     *
+     * @return int
+     */
     public function getBlockOutputCacheLifetime()
     {
         $settings = $this->getBlockCacheSettingsObject();
@@ -849,6 +1178,11 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         return $settings->getBlockOutputCacheLifetime();
     }
 
+    /**
+     * Get the ID of the custom style set.
+     *
+     * @return int returns 0 or false if the block does not have custom styles
+     */
     public function getCustomStyleSetID()
     {
         $db = Loader::db();
@@ -882,6 +1216,11 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         return $this->issID;
     }
 
+    /**
+     * Get the the instance of the Area containing the block.
+     *
+     * @return \Concrete\Core\Area\Area|null
+     */
     public function getBlockAreaObject()
     {
         if (is_object($this->a)) {
@@ -890,10 +1229,10 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     }
 
     /**
-     * Move block to a new collection.
+     * Move the block to a new collection and/or area.
      *
-     * @param Collection $collection
-     * @param Area       $area
+     * @param \Concrete\Core\Page\Collection\Collection $collection
+     * @param \Concrete\Core\Area\Area $area
      *
      * @return bool
      */
@@ -924,11 +1263,16 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         );
     }
 
+    /**
+     * Duplicate this block to a new collection.
+     *
+     * @param \Concrete\Core\Page\Collection\Collection $nc The destination collection
+     * @param bool $isCopyFromMasterCollectionPropagation
+     *
+     * @return \Concrete\Core\Block\Block|false returns false if the block type can't be found; the new block instance otherwise
+     */
     public function duplicate($nc, $isCopyFromMasterCollectionPropagation = false)
     {
-        // duplicate takes a new collection as its argument, and duplicates the existing block
-        // to that collection
-
         $db = Loader::db();
         $dh = Loader::helper('date');
 
@@ -1050,6 +1394,13 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         return $nb;
     }
 
+    /**
+     * Get the custom style object associated to this block.
+     *
+     * @param bool $force Do you want a CustomStyle instance even if the block does not have custom styles?
+     *
+     * @return \Concrete\Core\Block\CustomStyle|null
+     */
     public function getCustomStyle($force = false)
     {
         if ($this->getCustomStyleSetID() > 0 || $force) {
@@ -1068,6 +1419,9 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         }
     }
 
+    /**
+     * Reset the settings related to the grid container to the block type default values.
+     */
     public function resetBlockContainerSettings()
     {
         $db = Loader::db();
@@ -1087,6 +1441,11 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         );
     }
 
+    /**
+     * Set the custom settings related to the grid container (overriding the block type default values).
+     *
+     * @param bool $enableBlockContainer Is the block grid container enabled?
+     */
     public function setCustomContainerSettings($enableBlockContainer)
     {
         $db = Loader::db();
@@ -1105,6 +1464,9 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         );
     }
 
+    /**
+     * Reset the cache settings, so that concrete5 will use the values of the block type controller.
+     */
     public function resetCustomCacheSettings()
     {
         $db = Loader::db();
@@ -1131,6 +1493,14 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         );
     }
 
+    /**
+     * Customize the cache settings, overriding the values of the block type controller.
+     *
+     * @param bool $enabled Should the block output be cached?
+     * @param bool $enabledOnPost Should the block output be cached upon POST requests?
+     * @param bool $enabledForRegistered Should the block output be cached when site visitors are registered users?
+     * @param int $lifetime cache lifetime (in seconds); if empty we'll assume 5 years
+     */
     public function setCustomCacheSettings($enabled, $enabledOnPost, $enabledForRegistered, $lifetime)
     {
         $db = Loader::db();
@@ -1174,6 +1544,11 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         );
     }
 
+    /**
+     * Set the block custom styles.
+     *
+     * @param \Concrete\Core\Entity\StyleCustomizer\Inline\StyleSet $set
+     */
     public function setCustomStyleSet(\Concrete\Core\Entity\StyleCustomizer\Inline\StyleSet $set)
     {
         $db = Loader::db();
@@ -1199,6 +1574,9 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $this->issID = $set->getID();
     }
 
+    /**
+     * Remove the block custom styles.
+     */
     public function resetCustomStyle()
     {
         $db = Loader::db();
@@ -1217,7 +1595,7 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     }
 
     /**
-     * Removes a cached version of the block.
+     * @deprecated
      */
     public function refreshCache()
     {
@@ -1257,47 +1635,82 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         */
     }
 
+    /**
+     * Set the collection instance containing the block.
+     *
+     * @param \Concrete\Core\Page\Collection\Collection $c
+     */
     public function setBlockCollectionObject($c)
     {
         $this->c = $c;
         $this->cID = $c->getCollectionID();
     }
 
+    /**
+     * Get the block type name.
+     *
+     * @return string|null
+     */
     public function getBlockTypeName()
     {
         return $this->btName;
     }
 
+    /**
+     * Get the ID of the user that created the block instance.
+     *
+     * @return int|null
+     */
     public function getBlockUserID()
     {
         return $this->uID;
     }
 
     /**
-     * Gets the date the block was added.
+     * Gets the date/time when block was added (in the system time zone).
      *
-     * @return string date formated like: 2009-01-01 00:00:00
+     * @return string|null date/time formated like: 2009-01-01 00:00:00
      */
     public function getBlockDateAdded()
     {
         return $this->bDateAdded;
     }
 
+    /**
+     * Gets the date/time when block was last modified (in the system time zone).
+     *
+     * @return string|null date/time formated like: 2009-01-01 00:00:00
+     */
     public function getBlockDateLastModified()
     {
         return $this->bDateModified;
     }
 
+    /**
+     * Set the ID of the collection that's associated to the block actions.
+     *
+     * @param int|null $bActionCID
+     */
     public function setBlockActionCollectionID($bActionCID)
     {
         $this->bActionCID = $bActionCID;
     }
 
+    /**
+     * Get the URL of the Edit Block action.
+     *
+     * @return string
+     */
     public function getBlockEditAction()
     {
         return $this->_getBlockAction();
     }
 
+    /**
+     * Get the base URL of a block action.
+     *
+     * @return string
+     */
     public function _getBlockAction()
     {
         $cID = $this->getBlockActionCollectionID();
@@ -1312,7 +1725,9 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     }
 
     /**
-     * @return int|false The block action collection id or false if not found
+     * Get the ID of the collection that's associated to the block actions (or false if not found).
+     *
+     * @return int|false
      */
     public function getBlockActionCollectionID()
     {
@@ -1333,6 +1748,11 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         return false;
     }
 
+    /**
+     * Get the URL of the Update Block Information action.
+     *
+     * @return string
+     */
     public function getBlockUpdateInformationAction()
     {
         $str = $this->_getBlockAction();
@@ -1340,6 +1760,11 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         return $str . '&amp;btask=update_information';
     }
 
+    /**
+     * Get the URL of the Update Block CSS action.
+     *
+     * @return string
+     */
     public function getBlockUpdateCssAction()
     {
         $str = $this->_getBlockAction();
@@ -1347,6 +1772,11 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         return $str . '&amp;btask=update_block_css';
     }
 
+    /**
+     * Does this block have an edit user interface?
+     *
+     * @return bool
+     */
     public function isEditable()
     {
         $bv = new BlockView($this);
@@ -1358,11 +1788,23 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         return false;
     }
 
+    /**
+     * @deprecated use the deleteBlock() method
+     *
+     * @param bool $forceDelete
+     */
     public function delete($forceDelete = false)
     {
         $this->deleteBlock($forceDelete);
     }
 
+    /**
+     * Delete this block instance.
+     *
+     * @param bool $forceDelete If this is an alias block, should we delete all the block instances in addition to the alias?
+     *
+     * @return bool|null Returns false if the block is not valid
+     */
     public function deleteBlock($forceDelete = false)
     {
         $db = Loader::db();
@@ -1458,6 +1900,13 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         }
     }
 
+    /**
+     * Check if this block instance is an alias.
+     *
+     * @param \Concrete\Core\Page\Collection\Collection|null $c if specified, check if the block with the ID of this instance is an alias in that page (otherwise the check is done agains this specific block instance)
+     *
+     * @return bool|null return NULL if $c is specified but there's no block with the same ID in that page
+     */
     public function isAlias($c = null)
     {
         if ($c) {
@@ -1475,15 +1924,24 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         }
     }
 
+    /**
+     * Get the original block ID.
+     *
+     * @param int|null $originalBID
+     */
     public function setOriginalBlockID($originalBID)
     {
         $this->originalBID = $originalBID;
     }
 
+    /**
+     * Move this block after another block (in the block page & area).
+     *
+     * @param \Concrete\Core\Block\Block|null $afterBlock set to NULL to move this block at the first position; Set to a Block instance to move this block after that instance
+     */
     public function moveBlockToDisplayOrderPosition($afterBlock)
     {
         // first, we increase the display order of all blocks found after this one.
-
         $db = Loader::db();
         $c = $this->getBlockCollectionObject();
         if ($afterBlock instanceof self) {
@@ -1517,11 +1975,21 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         }
     }
 
+    /**
+     * Get the block display order (if available).
+     *
+     * @return int|null
+     */
     public function getBlockDisplayOrder()
     {
         return $this->cbDisplayOrder;
     }
 
+    /**
+     * Set the absolute position of this block, regardless other blocks in the same page & area.
+     *
+     * @param int $do the new absolute position of the block (starting from 0)
+     */
     public function setAbsoluteBlockDisplayOrder($do)
     {
         $db = Loader::db();
@@ -1537,6 +2005,10 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $r = $db->query($q, [$do, $bID, $cID, $cvID, $arHandle]);
     }
 
+    /**
+     * Mark the block as having permissions that override the ones of the area.
+     * Initial permissions are copied from the page/area.
+     */
     public function doOverrideAreaPermissions()
     {
         $db = Loader::db();
@@ -1556,15 +2028,27 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         }
     }
 
+    /**
+     * Set the name of the custom template.
+     *
+     * @param string $template
+     */
     public function setCustomTemplate($template)
     {
         $data['bFilename'] = $template;
         $this->updateBlockInformation($data);
     }
 
+    /**
+     * Update the block information, like its block filename, and block name.
+     *
+     * @param array $data Valid keys:
+     * - 'bName' to update the block name
+     * - 'bFilename' to update the block custom template
+     */
     public function updateBlockInformation($data)
     {
-        // this is the function that updates a block's information, like its block filename, and block name
+        // this is the function that
         $db = Loader::db();
         $dh = Loader::helper('date');
         $dt = $dh->getOverridableNow();
@@ -1586,12 +2070,20 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $this->refreshBlockOutputCache();
     }
 
+    /**
+     * Set the name of the block.
+     *
+     * @param string $name
+     */
     public function setName($name)
     {
         $data['bName'] = $name;
         $this->updateBlockInformation($data);
     }
 
+    /**
+     * @deprecated
+     */
     public function refreshCacheAll()
     {
         /*
@@ -1606,6 +2098,12 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         */
     }
 
+    /**
+     * Export the data associated to this block to an XML node.
+     *
+     * @param \SimpleXMLElement $node the parent node where we'll append the XML node to
+     * @param string $exportType set to 'full' to export cache and custom style settings too
+     */
     public function export($node, $exportType = 'full')
     {
         if (!$this->isAliasOfMasterCollection() || $this->c->isMasterCollection()) {
@@ -1645,16 +2143,31 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         }
     }
 
+    /**
+     * Check if this block is an alias from a page default.
+     *
+     * @return bool
+     */
     public function isAliasOfMasterCollection()
     {
         return $this->getBlockCollectionObject()->isBlockAliasedFromMasterCollection($this);
     }
 
+    /**
+     * Get the block name.
+     *
+     * @return string|null
+     */
     public function getBlockName()
     {
         return $this->bName;
     }
 
+    /**
+     * Get the name of the custom template.
+     *
+     * @return string|null
+     */
     public function getBlockFilename()
     {
         return $this->bFilename;
