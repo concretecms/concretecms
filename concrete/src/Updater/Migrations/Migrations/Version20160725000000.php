@@ -72,13 +72,7 @@ class Version20160725000000 extends AbstractMigration
         // Fix orphans of AttributeKeyCategories
         $this->nullifyInvalidForeignKey('AttributeKeys', 'akCategoryID', 'AttributeKeyCategories', 'akCategoryID');
         // Delete orphans of AttributeValues
-        $this->deleteInvalidForeignKey('atAddress', 'avID', 'AttributeValues', 'avID');
-        $this->deleteInvalidForeignKey('atBoolean', 'avID', 'AttributeValues', 'avID');
-        $this->deleteInvalidForeignKey('atDateTime', 'avID', 'AttributeValues', 'avID');
-        $this->deleteInvalidForeignKey('atDefault', 'avID', 'AttributeValues', 'avID');
-        $this->deleteInvalidForeignKey('atFile', 'avID', 'AttributeValues', 'avID');
-        $this->deleteInvalidForeignKey('atNumber', 'avID', 'AttributeValues', 'avID');
-        $this->deleteInvalidForeignKey('atSocialLinks', 'avID', 'AttributeValues', 'avID');
+        $this->deleteInvalidAttributeValuesForeignKeys();
         // Fix orphans of AttributeValues
         $this->nullifyInvalidForeignKey('FileAttributeValues', 'avID', 'AttributeValues', 'avID');
         $this->nullifyInvalidForeignKey('UserAttributeValues', 'avID', 'AttributeValues', 'avID');
@@ -88,6 +82,18 @@ class Version20160725000000 extends AbstractMigration
         $this->deleteInvalidForeignKey('Stacks', 'cID', 'Pages', 'cID');
         // Delete invalid records from MultilingualPageRelations
         $this->deleteInvalidForeignKey('MultilingualPageRelations', 'cID', 'Pages', 'cID');
+    }
+
+    protected function deleteInvalidAttributeValuesForeignKeys()
+    {
+        // Delete orphans of AttributeValues
+        $this->deleteInvalidForeignKey('atAddress', 'avID', 'AttributeValues', 'avID');
+        $this->deleteInvalidForeignKey('atBoolean', 'avID', 'AttributeValues', 'avID');
+        $this->deleteInvalidForeignKey('atDateTime', 'avID', 'AttributeValues', 'avID');
+        $this->deleteInvalidForeignKey('atDefault', 'avID', 'AttributeValues', 'avID');
+        $this->deleteInvalidForeignKey('atFile', 'avID', 'AttributeValues', 'avID');
+        $this->deleteInvalidForeignKey('atNumber', 'avID', 'AttributeValues', 'avID');
+        $this->deleteInvalidForeignKey('atSocialLinks', 'avID', 'AttributeValues', 'avID');
     }
 
     protected function nullifyInvalidForeignKeys()
@@ -1346,6 +1352,7 @@ class Version20160725000000 extends AbstractMigration
         $this->migrateOldPermissions();
         $this->addPermissions();
         $this->importAttributeKeys();
+        $this->deleteInvalidAttributeValuesForeignKeys();
         $this->addDashboard();
         $this->updateFileManager();
         $this->migrateFileManagerPermissions();
