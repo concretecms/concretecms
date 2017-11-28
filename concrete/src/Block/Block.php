@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Block;
 
 use Area;
@@ -12,15 +13,16 @@ use Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVe
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Foundation\Queue\Queue;
 use Concrete\Core\Package\PackageList;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
+use Concrete\Core\Support\Facade\Facade;
 use Config;
 use Loader;
-use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Page;
-use Concrete\Core\Support\Facade\Facade;
 
 class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectInterface
 {
+    public $a;
     protected $cID;
     protected $arHandle;
     protected $c;
@@ -30,9 +32,15 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     protected $bActionCID;
     protected $cacheSettings;
     protected $cbOverrideBlockTypeCacheSettings;
-    public $a;
 
     protected $bFilename;
+
+    public function __destruct()
+    {
+        unset($this->c);
+        unset($this->a);
+        unset($this->instance);
+    }
 
     public static function populateManually($blockInfo, $c, $a)
     {
@@ -56,6 +64,8 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
 
     /**
      * Returns a block.
+     *
+     * @param mixed $blockName
      */
     public static function getByName($blockName)
     {
@@ -70,7 +80,7 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
             . ' WHERE b.bName = ? AND cv.cvIsApproved = 1'
             . ' ORDER BY cvb.cvID DESC'
             . ' LIMIT 1';
-        $vals = array($blockName);
+        $vals = [$blockName];
         $row = $db->getRow($sql, $vals);
         if ($row != false && isset($row['bID']) && $row['bID'] > 0) {
             return self::getByID($row['bID'], Page::getByID($row['cID']), $row['arHandle']);
@@ -83,7 +93,7 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     {
         if ($c == null && $a == null) {
             $cID = 0;
-            $arHandle = "";
+            $arHandle = '';
             $cvID = 0;
             $b = CacheLocal::getEntry('block', $bID);
         } else {
@@ -109,9 +119,9 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $b = new self();
         if ($c == null && $a == null) {
             // just grab really specific block stuff
-            $q = "select bID, bIsActive, BlockTypes.btID, Blocks.btCachedBlockRecord, BlockTypes.btHandle, BlockTypes.pkgID, BlockTypes.btName, bName, bDateAdded, bDateModified, bFilename, Blocks.uID from Blocks inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where bID = ?";
+            $q = 'select bID, bIsActive, BlockTypes.btID, Blocks.btCachedBlockRecord, BlockTypes.btHandle, BlockTypes.pkgID, BlockTypes.btName, bName, bDateAdded, bDateModified, bFilename, Blocks.uID from Blocks inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where bID = ?';
             $b->isOriginal = 1;
-            $v = array($bID);
+            $v = [$bID];
         } else {
             $b->arHandle = $arHandle;
             $b->a = $a;
@@ -121,9 +131,9 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
             $vo = $c->getVersionObject();
             $cvID = $vo->getVersionID();
 
-            $v = array($b->arHandle, $cID, $cvID, $bID);
-            $q = "select CollectionVersionBlocks.isOriginal, CollectionVersionBlocks.cbIncludeAll, Blocks.btCachedBlockRecord, BlockTypes.pkgID, CollectionVersionBlocks.cbOverrideAreaPermissions, CollectionVersionBlocks.cbOverrideBlockTypeCacheSettings, CollectionVersionBlocks.cbRelationID,
- CollectionVersionBlocks.cbOverrideBlockTypeContainerSettings, CollectionVersionBlocks.cbEnableBlockContainer, CollectionVersionBlocks.cbDisplayOrder, Blocks.bIsActive, Blocks.bID, Blocks.btID, bName, bDateAdded, bDateModified, bFilename, btHandle, Blocks.uID from CollectionVersionBlocks inner join Blocks on (CollectionVersionBlocks.bID = Blocks.bID) inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where CollectionVersionBlocks.arHandle = ? and CollectionVersionBlocks.cID = ? and (CollectionVersionBlocks.cvID = ? or CollectionVersionBlocks.cbIncludeAll=1) and CollectionVersionBlocks.bID = ?";
+            $v = [$b->arHandle, $cID, $cvID, $bID];
+            $q = 'select CollectionVersionBlocks.isOriginal, CollectionVersionBlocks.cbIncludeAll, Blocks.btCachedBlockRecord, BlockTypes.pkgID, CollectionVersionBlocks.cbOverrideAreaPermissions, CollectionVersionBlocks.cbOverrideBlockTypeCacheSettings, CollectionVersionBlocks.cbRelationID,
+ CollectionVersionBlocks.cbOverrideBlockTypeContainerSettings, CollectionVersionBlocks.cbEnableBlockContainer, CollectionVersionBlocks.cbDisplayOrder, Blocks.bIsActive, Blocks.bID, Blocks.btID, bName, bDateAdded, bDateModified, bFilename, btHandle, Blocks.uID from CollectionVersionBlocks inner join Blocks on (CollectionVersionBlocks.bID = Blocks.bID) inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where CollectionVersionBlocks.arHandle = ? and CollectionVersionBlocks.cID = ? and (CollectionVersionBlocks.cvID = ? or CollectionVersionBlocks.cbIncludeAll=1) and CollectionVersionBlocks.bID = ?';
         }
 
         $r = $db->query($q, $v);
@@ -239,12 +249,12 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
 
         $r = $db->GetRow(
             'select btCachedBlockOutput, btCachedBlockOutputExpires from CollectionVersionBlocksOutputCache where cID = ? and cvID = ? and bID = ? and arHandle = ? ',
-            array(
+            [
                 $cID,
                 $cvID,
                 $this->getBlockID(),
                 $arHandle,
-            )
+            ]
         );
 
         if (array_get($r, 'btCachedBlockOutputExpires') < time()) {
@@ -279,12 +289,12 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     {
         // given a block ID, we find the original collection ID (where this bID is marked as isOriginal)
         $db = Loader::db();
-        $q = "select Pages.cID, cIsTemplate from Pages inner join CollectionVersionBlocks on (CollectionVersionBlocks.cID = Pages.cID) where CollectionVersionBlocks.bID = ? and CollectionVersionBlocks.isOriginal = 1";
-        $r = $db->query($q, array($this->bID));
+        $q = 'select Pages.cID, cIsTemplate from Pages inner join CollectionVersionBlocks on (CollectionVersionBlocks.cID = Pages.cID) where CollectionVersionBlocks.bID = ? and CollectionVersionBlocks.isOriginal = 1';
+        $r = $db->query($q, [$this->bID]);
         if ($r) {
             $row = $r->fetchRow();
             $cID = $row['cID'];
-            $nc = Page::getByID($cID, "ACTIVE");
+            $nc = Page::getByID($cID, 'ACTIVE');
             if (is_object($nc) && !$nc->isError()) {
                 return $nc;
             }
@@ -292,7 +302,7 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     }
 
     /**
-     * Returns the block identifier (if available)
+     * Returns the block identifier (if available).
      *
      * @return int|null
      */
@@ -324,20 +334,20 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         if ($arHandle && $cID && $cvID) {
             $db->Replace(
                'CollectionVersionBlocksOutputCache',
-               array(
+               [
                    'cID' => $cID,
                    'cvID' => $cvID,
                    'bID' => $this->getBlockID(),
                    'arHandle' => $arHandle,
                    'btCachedBlockOutput' => $content,
                    'btCachedBlockOutputExpires' => $btCachedBlockOutputExpires,
-               ),
-               array(
+               ],
+               [
                    'cID',
                    'cvID',
                    'arHandle',
                    'bID',
-               ),
+               ],
                true
             );
         }
@@ -388,12 +398,12 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $c = $this->getBlockCollectionObject();
 
         $db = Loader::db();
-        $v = array($c->getCollectionID(), $c->getVersionID(), $this->bID);
+        $v = [$c->getCollectionID(), $c->getVersionID(), $this->bID];
 
-        $db->query("delete from BlockPermissionAssignments where cID = ? and cvID = ? and bID = ?", $v);
+        $db->query('delete from BlockPermissionAssignments where cID = ? and cvID = ? and bID = ?', $v);
         $v[] = $this->arHandle;
         $db->query(
-           "update CollectionVersionBlocks set cbOverrideAreaPermissions = 0 where cID = ? and (cvID = ? or cbIncludeAll=1) and bID = ? and arHandle = ?",
+           'update CollectionVersionBlocks set cbOverrideAreaPermissions = 0 where cID = ? and (cvID = ? or cbIncludeAll=1) and bID = ? and arHandle = ?',
            $v
         );
     }
@@ -417,8 +427,8 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     public function getNumChildren()
     {
         $db = Loader::db();
-        $q = "select count(*) as total from CollectionVersionBlocks where bID = ? and isOriginal = 0";
-        $total = $db->getOne($q, array($this->bID));
+        $q = 'select count(*) as total from CollectionVersionBlocks where bID = ? and isOriginal = 0';
+        $total = $db->getOne($q, [$this->bID]);
 
         return $total;
     }
@@ -444,7 +454,6 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         }
         $this->instance->setBlockObject($this);
 
-
         return $this->instance;
     }
 
@@ -458,9 +467,9 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         // gets a list of collections that include this block, along with area name, etc...
         // used in the block_details.php page in the admin control panel
         $db = Loader::db();
-        $q = "select DISTINCT Pages.cID from CollectionVersionBlocks inner join Pages on (CollectionVersionBlocks.cID = Pages.cID) inner join CollectionVersions on (CollectionVersions.cID = Pages.cID) where CollectionVersionBlocks.bID = ?";
-        $r = $db->query($q, array($this->bID));
-        $cArray = array();
+        $q = 'select DISTINCT Pages.cID from CollectionVersionBlocks inner join Pages on (CollectionVersionBlocks.cID = Pages.cID) inner join CollectionVersions on (CollectionVersions.cID = Pages.cID) where CollectionVersionBlocks.bID = ?';
+        $r = $db->query($q, [$this->bID]);
+        $cArray = [];
         if ($r) {
             while ($row = $r->fetchRow()) {
                 $cArray[] = Page::getByID($row['cID'], 'RECENT');
@@ -480,8 +489,8 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $bDateModified = $dh->getOverridableNow();
         $bID = $this->bID;
 
-        $v = array($bDateModified, $bID);
-        $q = "update Blocks set bDateModified = ? where bID = ?";
+        $v = [$bDateModified, $bID];
+        $q = 'update Blocks set bDateModified = ? where bID = ?';
 
         $r = $db->prepare($q);
         $res = $db->execute($r, $v);
@@ -502,7 +511,7 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $cID = $this->getBlockCollectionID();
         $bID = $this->getBlockID();
         $c = $this->getBlockCollectionObject();
-        $v = array($c->getCollectionID(), $c->getVersionID(), $this->getAreaHandle(), $bID);
+        $v = [$c->getCollectionID(), $c->getVersionID(), $this->getAreaHandle(), $bID];
         $db->Execute(
            'update CollectionVersionBlocksOutputCache set btCachedBlockOutputExpires = 0 where cID = ? and cvID = ? and arHandle = ? and bID = ?',
            $v
@@ -522,20 +531,20 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     public function deactivate()
     {
         $db = Loader::db();
-        $q = "update Blocks set bIsActive = 0 where bID = ?";
-        $db->query($q, array($this->bID));
+        $q = 'update Blocks set bIsActive = 0 where bID = ?';
+        $db->query($q, [$this->bID]);
     }
 
     public function activate()
     {
         $db = Loader::db();
-        $q = "update Blocks set bIsActive = 1 where bID = ?";
-        $db->query($q, array($this->bID));
+        $q = 'update Blocks set bIsActive = 1 where bID = ?';
+        $db->query($q, [$this->bID]);
     }
 
     public function queueForDefaultsAliasing($addBlock, $queue)
     {
-        $records = array();
+        $records = [];
         $db = \Database::connection();
         $oc = $this->getBlockCollectionObject();
         $site = \Core::make('site')->getSite();
@@ -544,34 +553,30 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $rows = $db->GetAll('select p.cID, max(cvID) as cvID from Pages p inner join CollectionVersions cv on p.cID = cv.cID where ptID = ? and cIsTemplate = 0 and cIsActive = 1 and siteTreeID = ? group by cID order by cID', [$oc->getPageTypeID(), $siteTreeID]);
 
         // now we have a list of all pages of this type in the site.
-        foreach($rows as $row) {
-
+        foreach ($rows as $row) {
             // Ok, first check. Does this block already exist with the SAME block ID on this page? If so, we don't need to do
             // anything, because the block has already been updated, because it's in an unforked state
 
-            $r1 = $db->fetchAssoc('select arHandle, bID from CollectionVersionBlocks where cID = ? and cvID = ? and bID = ?', array(
-                $row['cID'], $row['cvID'], $this->getBlockID()
-            ));
+            $r1 = $db->fetchAssoc('select arHandle, bID from CollectionVersionBlocks where cID = ? and cvID = ? and bID = ?', [
+                $row['cID'], $row['cvID'], $this->getBlockID(),
+            ]);
 
             if (!$r1['bID']) {
                 // Ok, no block found. So let's see if a block with the same relationID exists on the page instead.
 
-                $r2 = $db->fetchAssoc('select arHandle, bID from CollectionVersionBlocks where cID = ? and cvID = ? and cbRelationID = ?', array(
-                    $row['cID'], $row['cvID'], $cbRelationID
-                ));
-
-
+                $r2 = $db->fetchAssoc('select arHandle, bID from CollectionVersionBlocks where cID = ? and cvID = ? and cbRelationID = ?', [
+                    $row['cID'], $row['cvID'], $cbRelationID,
+                ]);
 
                 if ($r2['bID'] || (!$r2['bID'] && $addBlock)) {
-
                     // Ok, so either this block doesn't appear on the page at al, but addBlock set to true,
                     // or, the block appears on the page and it is forked. Either way we're going to add it to the page.
 
-                    $record = array(
+                    $record = [
                         'cID' => $row['cID'],
                         'cvID' => $row['cvID'],
-                        'bID' => $this->getBlockID()
-                    );
+                        'bID' => $this->getBlockID(),
+                    ];
 
                     if ($r2['bID']) {
                         $record['action'] = 'update_forked_alias';
@@ -596,12 +601,11 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         }
 
         return $queue;
-
     }
 
     public function queueForDefaultsUpdate($data, $queue, $includeThisBlock = true)
     {
-        $blocks = array();
+        $blocks = [];
         $db = \Database::connection();
         $rows = $db->GetAll('select cID, max(cvID) as cvID, cbRelationID from CollectionVersionBlocks where cbRelationID = ? group by cID order by cID', [$this->getBlockRelationID()]);
 
@@ -609,20 +613,20 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $ocID = $oc->getCollectionID();
         $ocvID = $oc->getVersionID();
 
-        foreach($rows as $row) {
+        foreach ($rows as $row) {
             $row2 = $db->GetRow('select bID, arHandle from CollectionVersionBlocks where cID = ? and cvID = ? and cbRelationID = ?', [
-                $row['cID'], $row['cvID'], $row['cbRelationID']
+                $row['cID'], $row['cvID'], $row['cbRelationID'],
                 ]);
 
             if ($includeThisBlock || ($row['cID'] != $ocID || $row['cvID'] != $ocvID || $row2['arHandle'] != $this->getAreaHandle() || $row2['bID'] != $this->getBlockID())) {
-                $blocks[] = array(
+                $blocks[] = [
                     'cID' => $row['cID'],
                     'cvID' => $row['cvID'],
                     'cbRelationID' => $row['cbRelationID'],
                     'bID' => $row2['bID'],
                     'arHandle' => $row2['arHandle'],
-                    'data' => $data
-                );
+                    'data' => $data,
+                ];
             }
         }
 
@@ -639,7 +643,6 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
 
     public function alias($c)
     {
-
         // creates an alias of the block, attached to this collection, within the CollectionVersionBlocks table
         // additionally, this command grabs the permissions from the original record in the
         // CollectionVersionBlocks table, and attaches them to the new one
@@ -649,9 +652,9 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $newBlockDisplayOrder = $c->getCollectionAreaDisplayOrder($this->getAreaHandle());
         $cvID = $c->getVersionID();
         $cID = $c->getCollectionID();
-        $v = array($cID, $cvID, $this->bID, $this->getAreaHandle());
+        $v = [$cID, $cvID, $this->bID, $this->getAreaHandle()];
 
-        $q = "select count(bID) from CollectionVersionBlocks where cID = ? and cvID = ? and bID = ? and arHandle = ?";
+        $q = 'select count(bID) from CollectionVersionBlocks where cID = ? and cvID = ? and bID = ? and arHandle = ?';
         $total = $db->getOne($q, $v);
         if ($total == 0) {
             // I don't like this -AE. Let's see what happens when we don't do this.
@@ -666,7 +669,7 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
                 ));
             }*/
             array_push($v, $this->getBlockRelationID(), $newBlockDisplayOrder, 0, $this->overrideAreaPermissions(), $this->overrideBlockTypeCacheSettings(), $this->overrideBlockTypeContainerSettings(), $this->enableBlockContainer() ? 1 : 0);
-            $q = "insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbRelationID, cbDisplayOrder, isOriginal, cbOverrideAreaPermissions, cbOverrideBlockTypeCacheSettings, cbOverrideBlockTypeContainerSettings, cbEnableBlockContainer) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $q = 'insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbRelationID, cbDisplayOrder, isOriginal, cbOverrideAreaPermissions, cbOverrideBlockTypeCacheSettings, cbOverrideBlockTypeContainerSettings, cbEnableBlockContainer) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
             $r = $db->prepare($q);
             $res = $db->execute($r, $v);
 
@@ -675,13 +678,13 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
             if ($issID > 0) {
                 $db->Execute(
                    'insert into CollectionVersionBlockStyles (cID, cvID, bID, arHandle, issID) values (?, ?, ?, ?, ?)',
-                   array(
+                   [
                        $cID,
                        $cvID,
                        $this->bID,
                        $this->getAreaHandle(),
                        $issID,
-                   )
+                   ]
                 );
             }
 
@@ -689,16 +692,16 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
             if ($this->overrideBlockTypeCacheSettings()) {
                 $db->Execute(
                    'insert into CollectionVersionBlocksCacheSettings (cID, cvID, bID, arHandle, btCacheBlockOutput, btCacheBlockOutputOnPost, btCacheBlockOutputForRegisteredUsers, btCacheBlockOutputLifetime) values (?, ?, ?, ?, ?, ?, ?, ?)',
-                   array(
+                   [
                        $cID,
                        $cvID,
                        $this->bID,
                        $this->getAreaHandle(),
-                       intval($this->cacheBlockOutput()),
-                       intval($this->cacheBlockOutputOnPost()),
-                       intval($this->cacheBlockOutputForRegisteredUsers()),
-                       intval($this->getBlockOutputCacheLifetime()),
-                   )
+                       (int) ($this->cacheBlockOutput()),
+                       (int) ($this->cacheBlockOutputOnPost()),
+                       (int) ($this->cacheBlockOutputForRegisteredUsers()),
+                       (int) ($this->getBlockOutputCacheLifetime()),
+                   ]
                 );
             }
             if ($res) {
@@ -707,42 +710,42 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
                 $ocID = $oc->getCollectionID();
                 $ocvID = $oc->getVersionID();
 
-                $qf = "select faID from BlockFeatureAssignments where bID = ? and cID = ? and cvID = ?";
-                $rf = $db->query($qf, array($this->bID, $ocID, $ocvID));
+                $qf = 'select faID from BlockFeatureAssignments where bID = ? and cID = ? and cvID = ?';
+                $rf = $db->query($qf, [$this->bID, $ocID, $ocvID]);
 
                 if ($rf) {
                     while ($rowf = $rf->fetchRow()) {
                         $db->Replace(
                            'BlockFeatureAssignments',
-                           array('cID' => $cID, 'cvID' => $cvID, 'bID' => $this->bID, 'faID' => $rowf['faID']),
-                           array('cID', 'cvID', 'bID', 'faID'),
+                           ['cID' => $cID, 'cvID' => $cvID, 'bID' => $this->bID, 'faID' => $rowf['faID']],
+                           ['cID', 'cvID', 'bID', 'faID'],
                            true
                         );
                     }
                     $rf->free();
                 }
 
-                $qa = "select paID, pkID from BlockPermissionAssignments where bID = ? and cID = ? and cvID = ?";
-                $ra = $db->query($qa, array($this->bID, $ocID, $ocvID));
+                $qa = 'select paID, pkID from BlockPermissionAssignments where bID = ? and cID = ? and cvID = ?';
+                $ra = $db->query($qa, [$this->bID, $ocID, $ocvID]);
 
                 if ($ra) {
                     while ($row_a = $ra->fetchRow()) {
                         $db->Replace(
                            'BlockPermissionAssignments',
-                           array(
+                           [
                                'cID' => $cID,
                                'cvID' => $cvID,
                                'bID' => $this->bID,
                                'paID' => $row_a['paID'],
                                'pkID' => $row_a['pkID'],
-                           ),
-                           array(
+                           ],
+                           [
                                'cID',
                                'cvID',
                                'bID',
                                'paID',
                                'pkID',
-                           ),
+                           ],
                            true
                         );
                     }
@@ -860,12 +863,12 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
                     $arHandle = STACKS_AREA_NAME;
                 }
 
-                $v = array(
+                $v = [
                     $co->getCollectionID(),
                     $co->getVersionID(),
                     $arHandle,
                     $this->bID,
-                );
+                ];
 
                 $this->issID = $db->GetOne(
                     'select issID from CollectionVersionBlockStyles where cID = ? and cvID = ? and arHandle = ? and bID = ?',
@@ -907,17 +910,17 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
 
         return (bool) \Database::connection()->update(
             'CollectionVersionBlocks',
-            array(
+            [
                 'cID' => $new_collection,
                 'cvID' => $new_version,
                 'arHandle' => $new_area_handle,
-            ),
-            array(
+            ],
+            [
                 'cID' => $old_collection,
                 'cvID' => $old_version,
                 'arHandle' => $old_area_handle,
                 'bID' => $this->getBlockID(),
-            )
+            ]
         );
     }
 
@@ -938,8 +941,8 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $bc = $app->build($blockTypeClass, [$this]);
 
         $bDate = $dh->getOverridableNow();
-        $v = array($this->bName, $bDate, $bDate, $this->bFilename, $this->btID, $this->uID);
-        $q = "insert into Blocks (bName, bDateAdded, bDateModified, bFilename, btID, uID) values (?, ?, ?, ?, ?, ?)";
+        $v = [$this->bName, $bDate, $bDate, $this->bFilename, $this->btID, $this->uID];
+        $q = 'insert into Blocks (bName, bDateAdded, bDateModified, bFilename, btID, uID) values (?, ?, ?, ?, ?, ?)';
         $r = $db->prepare($q);
         $res = $db->execute($r, $v);
         $newBID = $db->Insert_ID(); // this is the latest inserted block ID
@@ -955,42 +958,42 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         // Composer specific
         $row = $db->GetRow(
             'select cID, cvID, arHandle, cbDisplayOrder, ptComposerFormLayoutSetControlID from PageTypeComposerOutputBlocks where cID = ? and cvID = ? and bID = ? and arHandle = ?',
-            array($ocID, $ovID, $this->bID, $this->arHandle)
+            [$ocID, $ovID, $this->bID, $this->arHandle]
         );
         if ($row && is_array($row) && $row['cID']) {
             $db->insert(
                 'PageTypeComposerOutputBlocks',
-                array(
+                [
                     'cID' => $ncID,
                     'cvID' => $nvID,
                     'arHandle' => $this->arHandle,
                     'cbDisplayOrder' => $row['cbDisplayOrder'],
                     'ptComposerFormLayoutSetControlID' => $row['ptComposerFormLayoutSetControlID'],
                     'bID' => $newBID,
-                )
+                ]
             );
         }
 
         $q = "select paID, pkID from BlockPermissionAssignments where cID = '$ocID' and bID = ? and cvID = ?";
-        $r = $db->query($q, array($this->bID, $ovID));
+        $r = $db->query($q, [$this->bID, $ovID]);
         if ($r) {
             while ($row = $r->fetchRow()) {
                 $db->Replace(
                    'BlockPermissionAssignments',
-                   array(
+                   [
                        'cID' => $ncID,
                        'cvID' => $nvID,
                        'bID' => $newBID,
                        'paID' => $row['paID'],
                        'pkID' => $row['pkID'],
-                   ),
-                   array(
+                   ],
+                   [
                        'cID',
                        'cvID',
                        'bID',
                        'paID',
                        'pkID',
-                   ),
+                   ],
                    true
                 );
             }
@@ -1011,12 +1014,12 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
                 $fa = CollectionVersionFeatureAssignment::add($fe, $fd, $nc);
                 $db->Execute(
                    'insert into BlockFeatureAssignments (cID, cvID, bID, faID) values (?, ?, ?, ?)',
-                   array(
+                   [
                        $ncID,
                        $nvID,
                        $newBID,
                        $fa->getFeatureAssignmentID(),
-                   )
+                   ]
                 );
             }
         }
@@ -1028,8 +1031,8 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
             $newBlockDisplayOrder = $this->cbDisplayOrder;
         }
         //$v = array($ncID, $nvID, $newBID, $this->areaName, $newBlockDisplayOrder, 1);
-        $v = array($ncID, $nvID, $newBID, $this->arHandle, $this->getBlockRelationID(), $newBlockDisplayOrder, 1, $this->overrideAreaPermissions(), $this->overrideBlockTypeCacheSettings(), $this->overrideBlockTypeContainerSettings(), $this->enableBlockContainer() ? 1 : 0);
-        $q = "insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbRelationID, cbDisplayOrder, isOriginal, cbOverrideAreaPermissions, cbOverrideBlockTypeCacheSettings,cbOverrideBlockTypeContainerSettings, cbEnableBlockContainer) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $v = [$ncID, $nvID, $newBID, $this->arHandle, $this->getBlockRelationID(), $newBlockDisplayOrder, 1, $this->overrideAreaPermissions(), $this->overrideBlockTypeCacheSettings(), $this->overrideBlockTypeContainerSettings(), $this->enableBlockContainer() ? 1 : 0];
+        $q = 'insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbRelationID, cbDisplayOrder, isOriginal, cbOverrideAreaPermissions, cbOverrideBlockTypeCacheSettings,cbOverrideBlockTypeContainerSettings, cbEnableBlockContainer) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
         $r = $db->prepare($q);
         $db->execute($r, $v);
 
@@ -1037,7 +1040,7 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
 
         $issID = $this->getCustomStyleSetID();
         if ($issID > 0) {
-            $v = array($ncID, $nvID, $newBID, $this->arHandle, $issID);
+            $v = [$ncID, $nvID, $newBID, $this->arHandle, $issID];
             $db->Execute(
                 'insert into CollectionVersionBlockStyles (cID, cvID, bID, arHandle, issID) values (?, ?, ?, ?, ?)',
                 $v
@@ -1074,13 +1077,13 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $enableBlockContainer = $bt->ignorePageThemeGridFrameworkContainer() ? 1 : 0;
         $db->update(
             'CollectionVersionBlocks',
-            array('cbOverrideBlockTypeContainerSettings' => 0, 'cbEnableBlockContainer' => $enableBlockContainer),
-            array(
+            ['cbOverrideBlockTypeContainerSettings' => 0, 'cbEnableBlockContainer' => $enableBlockContainer],
+            [
                 'cID' => $this->getBlockCollectionID(),
                 'cvID' => $cvID,
                 'arHandle' => $this->getAreaHandle(),
                 'bID' => $this->bID,
-            )
+            ]
         );
     }
 
@@ -1092,13 +1095,13 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $bt = $this->getBlockTypeObject();
         $db->update(
             'CollectionVersionBlocks',
-            array('cbOverrideBlockTypeContainerSettings' => 1, 'cbEnableBlockContainer' => $enableBlockContainer ? 1 : 0),
-            array(
+            ['cbOverrideBlockTypeContainerSettings' => 1, 'cbEnableBlockContainer' => $enableBlockContainer ? 1 : 0],
+            [
                 'cID' => $this->getBlockCollectionID(),
                 'cvID' => $cvID,
                 'arHandle' => $this->getAreaHandle(),
                 'bID' => $this->bID,
-            )
+            ]
         );
     }
 
@@ -1109,22 +1112,22 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $cvID = $c->getVersionID();
         $db->update(
             'CollectionVersionBlocks',
-            array('cbOverrideBlockTypeCacheSettings' => 0),
-            array(
+            ['cbOverrideBlockTypeCacheSettings' => 0],
+            [
                 'cID' => $this->getBlockCollectionID(),
                 'cvID' => $cvID,
                 'arHandle' => $this->getAreaHandle(),
                 'bID' => $this->bID,
-            )
+            ]
         );
         $db->delete(
             'CollectionVersionBlocksCacheSettings',
-            array(
+            [
                 'cID' => $this->getBlockCollectionID(),
                 'cvID' => $cvID,
                 'arHandle' => $this->getAreaHandle(),
                 'bID' => $this->bID,
-            )
+            ]
         );
     }
 
@@ -1137,37 +1140,37 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $enabled = (bool) $enabled;
         $enabledOnPost = (bool) $enabledOnPost;
         $enabledForRegistered = (bool) $enabledForRegistered;
-        $lifetime = intval($lifetime);
+        $lifetime = (int) $lifetime;
 
         $db->Replace(
             'CollectionVersionBlocksCacheSettings',
-            array(
+            [
                 'cID' => $this->getBlockCollectionID(),
                 'cvID' => $cvID,
                 'arHandle' => $this->getAreaHandle(),
                 'bID' => $this->bID,
-                'btCacheBlockOutput' => intval($enabled),
-                'btCacheBlockOutputOnPost' => intval($enabledOnPost),
-                'btCacheBlockOutputForRegisteredUsers' => intval($enabledForRegistered),
-                'btCacheBlockOutputLifetime' => intval($lifetime),
-            ),
-            array(
+                'btCacheBlockOutput' => (int) $enabled,
+                'btCacheBlockOutputOnPost' => (int) $enabledOnPost,
+                'btCacheBlockOutputForRegisteredUsers' => (int) $enabledForRegistered,
+                'btCacheBlockOutputLifetime' => (int) $lifetime,
+            ],
+            [
                 'cID',
                 'cvID',
                 'bID',
                 'arHandle',
-            ),
+            ],
             true
         );
         $db->update(
             'CollectionVersionBlocks',
-            array('cbOverrideBlockTypeCacheSettings' => 1),
-            array(
+            ['cbOverrideBlockTypeCacheSettings' => 1],
+            [
                 'cID' => $this->getBlockCollectionID(),
                 'cvID' => $cvID,
                 'arHandle' => $this->getAreaHandle(),
                 'bID' => $this->bID,
-            )
+            ]
         );
     }
 
@@ -1178,19 +1181,19 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $cvID = $c->getVersionID();
         $db->Replace(
             'CollectionVersionBlockStyles',
-            array(
+            [
                 'cID' => $this->getBlockCollectionID(),
                 'cvID' => $cvID,
                 'arHandle' => $this->getAreaHandle(),
                 'bID' => $this->bID,
                 'issID' => $set->getID(),
-            ),
-            array(
+            ],
+            [
                 'cID',
                 'cvID',
                 'bID',
                 'arHandle',
-            ),
+            ],
             true
         );
         $this->issID = $set->getID();
@@ -1203,21 +1206,14 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $cvID = $c->getVersionID();
         $db->Execute(
             'delete from CollectionVersionBlockStyles where cID = ? and cvID = ? and arHandle = ? and bID = ?',
-            array(
+            [
                 $this->getBlockCollectionID(),
                 $cvID,
                 $this->getAreaHandle(),
                 $this->bID,
-            )
+            ]
         );
         $this->issID = 0;
-    }
-
-    public function __destruct()
-    {
-        unset($this->c);
-        unset($this->a);
-        unset($this->instance);
     }
 
     /**
@@ -1310,7 +1306,7 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $step = ($_REQUEST['step']) ? '&amp;step=' . $_REQUEST['step'] : '';
         $valt = Loader::helper('validation/token');
         $token = $valt->generate();
-        $str = DIR_REL . "/" . DISPATCHER_FILENAME . "?cID={$cID}&amp;bID={$bID}&amp;arHandle={$arHandle}" . $step . "&amp;ccm_token=" . $token;
+        $str = DIR_REL . '/' . DISPATCHER_FILENAME . "?cID={$cID}&amp;bID={$bID}&amp;arHandle={$arHandle}" . $step . '&amp;ccm_token=' . $token;
 
         return $str;
     }
@@ -1387,40 +1383,40 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
             // forceDelete is used by the administration console
 
             // this is an original. We're deleting it, and everything else having to do with it
-            $q = "delete from CollectionVersionBlocks where bID = ?";
-            $r = $db->query($q, array($bID));
+            $q = 'delete from CollectionVersionBlocks where bID = ?';
+            $r = $db->query($q, [$bID]);
 
-            $q = "delete from BlockPermissionAssignments where bID = ?";
-            $r = $db->query($q, array($bID));
+            $q = 'delete from BlockPermissionAssignments where bID = ?';
+            $r = $db->query($q, [$bID]);
 
-            $q = "delete from CollectionVersionBlockStyles where bID = ?";
-            $r = $db->query($q, array($bID));
+            $q = 'delete from CollectionVersionBlockStyles where bID = ?';
+            $r = $db->query($q, [$bID]);
 
-            $q = "delete from CollectionVersionBlocksCacheSettings where bID = ?";
-            $r = $db->query($q, array($bID));
+            $q = 'delete from CollectionVersionBlocksCacheSettings where bID = ?';
+            $r = $db->query($q, [$bID]);
         } else {
-            $q = "delete from CollectionVersionBlocks where cID = ? and (cvID = ? or cbIncludeAll=1) and bID = ? and arHandle = ?";
-            $r = $db->query($q, array($cID, $cvID, $bID, $arHandle));
+            $q = 'delete from CollectionVersionBlocks where cID = ? and (cvID = ? or cbIncludeAll=1) and bID = ? and arHandle = ?';
+            $r = $db->query($q, [$cID, $cvID, $bID, $arHandle]);
 
             // next, we delete the groups instance of this block
-            $q = "delete from BlockPermissionAssignments where bID = ? and cvID = ? and cID = ?";
-            $r = $db->query($q, array($bID, $cvID, $cID));
+            $q = 'delete from BlockPermissionAssignments where bID = ? and cvID = ? and cID = ?';
+            $r = $db->query($q, [$bID, $cvID, $cID]);
 
-            $q = "delete from CollectionVersionBlockStyles where cID = ? and cvID = ? and bID = ? and arHandle = ?";
-            $r = $db->query($q, array($cID, $cvID, $bID, $arHandle));
+            $q = 'delete from CollectionVersionBlockStyles where cID = ? and cvID = ? and bID = ? and arHandle = ?';
+            $r = $db->query($q, [$cID, $cvID, $bID, $arHandle]);
 
-            $q = "delete from CollectionVersionBlocksCacheSettings where cID = ? and cvID = ? and bID = ? and arHandle = ?";
-            $r = $db->query($q, array($cID, $cvID, $bID, $arHandle));
+            $q = 'delete from CollectionVersionBlocksCacheSettings where cID = ? and cvID = ? and bID = ? and arHandle = ?';
+            $r = $db->query($q, [$cID, $cvID, $bID, $arHandle]);
         }
 
         // delete any feature assignments that have been attached to this block to the collection version
         $faIDs = $db->GetCol(
             'select faID from BlockFeatureAssignments where cID = ? and cvID = ? and bID = ?',
-            array(
+            [
                 $cID,
                 $cvID,
                 $bID,
-            )
+            ]
         );
         foreach ($faIDs as $faID) {
             $fa = FeatureAssignment::getByID($faID, $c);
@@ -1428,13 +1424,13 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         }
 
         //then, we see whether or not this block is aliased to anything else
-        $totalBlocks = $db->GetOne('select count(*) from CollectionVersionBlocks where bID = ?', array($bID));
-        $totalBlocks += $db->GetOne('select count(*) from btCoreScrapbookDisplay where bOriginalID = ?', array($bID));
+        $totalBlocks = $db->GetOne('select count(*) from CollectionVersionBlocks where bID = ?', [$bID]);
+        $totalBlocks += $db->GetOne('select count(*) from btCoreScrapbookDisplay where bOriginalID = ?', [$bID]);
         if ($totalBlocks < 1) {
             // this block is not referenced in the system any longer, so we delete the entry in the blocks table, as well as the entries in the corresponding
             // sub-blocks table
 
-            $v = array($this->bID);
+            $v = [$this->bID];
 
             // so, first we delete the block's sub content
             $bt = BlockType::getByID($this->getBlockTypeID());
@@ -1446,13 +1442,13 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
             }
 
             // now that the block's subcontent delete() method has been run, we delete the block from the Blocks table
-            $q = "delete from Blocks where bID = ?";
+            $q = 'delete from Blocks where bID = ?';
             $r = $db->query($q, $v);
 
             // Aaaand then we delete all scrapbooked blocks to this entry
             $r = $db->Execute(
                 'select cID, cvID, CollectionVersionBlocks.bID, arHandle from CollectionVersionBlocks inner join btCoreScrapbookDisplay on CollectionVersionBlocks.bID = btCoreScrapbookDisplay.bID where bOriginalID = ?',
-                array($bID)
+                [$bID]
             );
             while ($row = $r->FetchRow()) {
                 $c = Page::getByID($row['cID'], $row['cvID']);
@@ -1469,8 +1465,8 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
             $cID = $c->getCollectionID();
             $vo = $c->getVersionObject();
             $cvID = $vo->getVersionID();
-            $q = "select bID from CollectionVersionBlocks where bID = ? and cID=? and isOriginal = 0 and cvID = ?";
-            $r = $db->query($q, array($this->bID, $cID, $cvID));
+            $q = 'select bID from CollectionVersionBlocks where bID = ? and cID=? and isOriginal = 0 and cvID = ?';
+            $r = $db->query($q, [$this->bID, $cID, $cvID]);
             if ($r) {
                 return $r->numRows() > 0;
             }
@@ -1496,27 +1492,27 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
                 $this->getBlockCollectionObject(),
                 $this->getBlockAreaObject()
             );
-            $q = "update CollectionVersionBlocks set cbDisplayOrder = cbDisplayOrder + 1 where cID = ? and (cvID = ? or cbIncludeAll=1) and arHandle = ? and cbDisplayOrder > ?";
-            $v = array($c->getCollectionID(), $c->getVersionID(), $this->arHandle, $block->getBlockDisplayOrder());
+            $q = 'update CollectionVersionBlocks set cbDisplayOrder = cbDisplayOrder + 1 where cID = ? and (cvID = ? or cbIncludeAll=1) and arHandle = ? and cbDisplayOrder > ?';
+            $v = [$c->getCollectionID(), $c->getVersionID(), $this->arHandle, $block->getBlockDisplayOrder()];
             $db->Execute($q, $v);
 
             // now we set this block's display order to 1 + the current block
-            $q = "update CollectionVersionBlocks set cbDisplayOrder = ? where bID = ? and cID = ? and (cvID = ? or cbIncludeAll=1) and arHandle = ?";
-            $v = array(
+            $q = 'update CollectionVersionBlocks set cbDisplayOrder = ? where bID = ? and cID = ? and (cvID = ? or cbIncludeAll=1) and arHandle = ?';
+            $v = [
                 $block->getBlockDisplayOrder() + 1,
                 $this->getBlockID(),
                 $c->getCollectionID(),
                 $c->getVersionID(),
                 $this->arHandle,
-            );
+            ];
             $db->Execute($q, $v);
         } else {
-            $q = "update CollectionVersionBlocks set cbDisplayOrder = cbDisplayOrder + 1 where cID = ? and (cvID = ? or cbIncludeAll=1) and arHandle = ?";
-            $v = array($c->getCollectionID(), $c->getVersionID(), $this->arHandle);
+            $q = 'update CollectionVersionBlocks set cbDisplayOrder = cbDisplayOrder + 1 where cID = ? and (cvID = ? or cbIncludeAll=1) and arHandle = ?';
+            $v = [$c->getCollectionID(), $c->getVersionID(), $this->arHandle];
             $db->Execute($q, $v);
 
-            $q = "update CollectionVersionBlocks set cbDisplayOrder = ? where bID = ? and cID = ? and (cvID = ? or cbIncludeAll=1) and arHandle = ?";
-            $v = array(0, $this->getBlockID(), $c->getCollectionID(), $c->getVersionID(), $this->arHandle);
+            $q = 'update CollectionVersionBlocks set cbDisplayOrder = ? where bID = ? and cID = ? and (cvID = ? or cbIncludeAll=1) and arHandle = ?';
+            $v = [0, $this->getBlockID(), $c->getCollectionID(), $c->getVersionID(), $this->arHandle];
             $db->Execute($q, $v);
         }
     }
@@ -1537,20 +1533,20 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $c = $this->getBlockCollectionObject();
         $cvID = $c->getVersionID();
 
-        $q = "update CollectionVersionBlocks set cbDisplayOrder = ? where bID = ? and cID = ? and (cvID = ? or cbIncludeAll=1) and arHandle = ?";
-        $r = $db->query($q, array($do, $bID, $cID, $cvID, $arHandle));
+        $q = 'update CollectionVersionBlocks set cbDisplayOrder = ? where bID = ? and cID = ? and (cvID = ? or cbIncludeAll=1) and arHandle = ?';
+        $r = $db->query($q, [$do, $bID, $cID, $cvID, $arHandle]);
     }
 
     public function doOverrideAreaPermissions()
     {
         $db = Loader::db();
         $c = $this->getBlockCollectionObject();
-        $v = array($c->getCollectionID(), $c->getVersionID(), $this->bID, $this->arHandle);
+        $v = [$c->getCollectionID(), $c->getVersionID(), $this->bID, $this->arHandle];
         $db->query(
-           "update CollectionVersionBlocks set cbOverrideAreaPermissions = 1 where cID = ? and (cvID = ? or cbIncludeAll = 1) and bID = ? and arHandle = ?",
+           'update CollectionVersionBlocks set cbOverrideAreaPermissions = 1 where cID = ? and (cvID = ? or cbIncludeAll = 1) and bID = ? and arHandle = ?',
            $v);
-        $v = array($c->getCollectionID(), $c->getVersionID(), $this->bID);
-        $db->query("delete from BlockPermissionAssignments where cID = ? and cvID = ? and bID = ?", $v);
+        $v = [$c->getCollectionID(), $c->getVersionID(), $this->bID];
+        $db->query('delete from BlockPermissionAssignments where cID = ? and cvID = ? and bID = ?', $v);
 
         // copy permissions from the page to the area
         $permissions = PermissionKey::getList('block');
@@ -1582,8 +1578,8 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
             $bFilename = $data['bFilename'];
         }
 
-        $v = array($bName, $bFilename, $dt, $this->bID);
-        $q = "update Blocks set bName = ?, bFilename = ?, bDateModified = ? where bID = ?";
+        $v = [$bName, $bFilename, $dt, $this->bID];
+        $q = 'update Blocks set bName = ?, bFilename = ?, bDateModified = ? where bID = ?';
         $r = $db->prepare($q);
         $res = $db->execute($r, $v);
 
