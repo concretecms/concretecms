@@ -228,10 +228,7 @@ $db = Loader::db();
                             } else if ($question['inputType'] == 'datetime') {
 
                                 if ($formPage) {
-                                    $site = $formPage->getSite();
-                                    $timezone = $site->getTimezone();
-                                    $date = Core::make('date');
-                                    $datetime = $date->formatDateTime($answerSet['answers'][$questionId]['answer'], false, false, $timezone);
+                                    $datetime = $dh->formatDateTime($answerSet['answers'][$questionId]['answer'], false, false, 'user');
                                 } else {
                                     $datetime = $answerSet['answers'][$questionId]['answer'];
                                 }
