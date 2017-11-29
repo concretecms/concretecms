@@ -131,7 +131,7 @@ class ThumbnailFormatService
             case static::FORMAT_AUTO:
                 return $format;
             case 'jpg':
-                case static::FORMAT_JPEG:
+                return static::FORMAT_JPEG;
             default:
                 return static::FORMAT_AUTO;
         }
