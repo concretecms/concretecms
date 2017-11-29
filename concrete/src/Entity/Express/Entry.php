@@ -322,7 +322,7 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
     }
 
     /**
-     * @return mixed
+     * @return \DateTime
      */
     public function getDateCreated()
     {
