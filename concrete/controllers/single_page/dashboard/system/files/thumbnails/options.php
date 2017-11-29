@@ -18,7 +18,11 @@ class Options extends DashboardPageController
         $this->set('thumbnail_generation_strategies', $this->getThumbnailGenerationStrategies());
         $this->set('thumbnail_generation_strategy', $config->get('concrete.misc.basic_thumbnailer_generation_strategy'));
         $this->set('thumbnail_formats', $this->getThumbnailsFormats());
-        $this->set('thumbnail_format', $config->get('concrete.misc.default_thumbnail_format'));
+        $thumbnail_format = $config->get('concrete.misc.default_thumbnail_format');
+        if ($thumbnail_format === 'jpg') {
+            $thumbnail_format = ThumbnailFormatService::FORMAT_JPEG;
+        }
+        $this->set('thumbnail_format', $thumbnail_format);
         $this->set('jpeg_compression', $config->get('concrete.misc.default_jpeg_image_compression'));
         $this->set('png_compression', $config->get('concrete.misc.default_png_image_compression'));
         $this->set('manipulation_library', $config->get('concrete.file_manager.images.manipulation_library'));
