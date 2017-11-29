@@ -2,6 +2,7 @@
 namespace Concrete\Core\Area;
 
 use Concrete\Core\Page\Stack\StackList;
+use Concrete\Core\Page\Collection\Version\VersionList;
 use Loader;
 use Page;
 use Permissions;
@@ -172,7 +173,23 @@ class GlobalArea extends Area
         $globalAreaStacks = $stackList->getResults();
 
         foreach ($globalAreaStacks as $stack) {
-            if (count($stack->getBlockIDs()) === 0) {
+            // get list of all available page versions, we only delete areas if they never had any content
+            $versionList = new VersionList($stack);
+            $versions = $versionList->get();
+
+            $hasBlocks = false;
+
+            foreach ($versions as $version) {
+                $pageVersion = Page::getByID($version->getCollectionID(), $version->getVersionID());
+                $totalBlocks = count($pageVersion->getBlockIDs());
+
+                if ($totalBlocks > 0) {
+                    $hasBlocks = true;
+                    break;
+                }
+            }
+
+            if (!$hasBlocks) {
                 $stack->delete();
             }
         }
