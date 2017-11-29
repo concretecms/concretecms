@@ -110,64 +110,6 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     }
 
     /**
-     * Initialize the instance by manually specifying the data.
-     *
-     * @param array|\Iterator $blockInfo A set key-value pairs used to initialize the instance
-     * @param \Concrete\Core\Page\Collection\Collection $c The collection containing the block
-     * @param \Concrete\Core\Area\Area|string|null $a the area containing the block (or its handle)
-     *
-     * @return \Concrete\Core\Block\Block
-     */
-    public static function populateManually($blockInfo, $c, $a)
-    {
-        $b = new self();
-        $b->setPropertiesFromArray($blockInfo);
-
-        if (is_object($a)) {
-            $b->a = $a;
-            $b->arHandle = $a->getAreaHandle();
-        } else {
-            if ($a != null) {
-                $b->arHandle = $a; // passing the area name. We only pass the object when we're adding from the front-end
-            }
-        }
-
-        $b->cID = $c->getCollectionID();
-        $b->c = $c;
-
-        return $b;
-    }
-
-    /**
-     * Get a block instance given its name.
-     *
-     * @param string $blockName
-     *
-     * @return \Concrete\Core\Block\Block|null returns NULL if $blockName is empty; a Block instance otherwise (the getBlockID() method will return NULL if the block was not found)
-     */
-    public static function getByName($blockName)
-    {
-        if (!$blockName) {
-            return;
-        }
-        $db = Loader::db();
-        $sql = 'SELECT b.bID, cvb.arHandle, cvb.cID'
-            . ' FROM Blocks AS b'
-            . ' INNER JOIN CollectionVersionBlocks AS cvb ON b.bID = cvb.bID'
-            . ' INNER JOIN CollectionVersions AS cv ON cvb.cID = cv.cID AND cvb.cvID = cv.cvID'
-            . ' WHERE b.bName = ? AND cv.cvIsApproved = 1'
-            . ' ORDER BY cvb.cvID DESC'
-            . ' LIMIT 1';
-        $vals = [$blockName];
-        $row = $db->getRow($sql, $vals);
-        if ($row != false && isset($row['bID']) && $row['bID'] > 0) {
-            return self::getByID($row['bID'], Page::getByID($row['cID']), $row['arHandle']);
-        } else {
-            return new self();
-        }
-    }
-
-    /**
      * Get a block instance given its ID.
      *
      * @param int $bID The block ID
@@ -251,13 +193,135 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     }
 
     /**
-     * Get the ID of the associated block.
+     * Get a block instance given its name.
+     *
+     * @param string $blockName
+     *
+     * @return \Concrete\Core\Block\Block|null returns NULL if $blockName is empty; a Block instance otherwise (the getBlockID() method will return NULL if the block was not found)
+     */
+    public static function getByName($blockName)
+    {
+        if (!$blockName) {
+            return;
+        }
+        $db = Loader::db();
+        $sql = 'SELECT b.bID, cvb.arHandle, cvb.cID'
+            . ' FROM Blocks AS b'
+                . ' INNER JOIN CollectionVersionBlocks AS cvb ON b.bID = cvb.bID'
+                    . ' INNER JOIN CollectionVersions AS cv ON cvb.cID = cv.cID AND cvb.cvID = cv.cvID'
+                        . ' WHERE b.bName = ? AND cv.cvIsApproved = 1'
+                            . ' ORDER BY cvb.cvID DESC'
+                                . ' LIMIT 1';
+        $vals = [$blockName];
+        $row = $db->getRow($sql, $vals);
+        if ($row != false && isset($row['bID']) && $row['bID'] > 0) {
+            return self::getByID($row['bID'], Page::getByID($row['cID']), $row['arHandle']);
+        } else {
+            return new self();
+        }
+    }
+
+    /**
+     * Initialize the instance by manually specifying the data.
+     *
+     * @param array|\Iterator $blockInfo A set key-value pairs used to initialize the instance
+     * @param \Concrete\Core\Page\Collection\Collection $c The collection containing the block
+     * @param \Concrete\Core\Area\Area|string|null $a the area containing the block (or its handle)
+     *
+     * @return \Concrete\Core\Block\Block
+     */
+    public static function populateManually($blockInfo, $c, $a)
+    {
+        $b = new self();
+        $b->setPropertiesFromArray($blockInfo);
+
+        if (is_object($a)) {
+            $b->a = $a;
+            $b->arHandle = $a->getAreaHandle();
+        } else {
+            if ($a != null) {
+                $b->arHandle = $a; // passing the area name. We only pass the object when we're adding from the front-end
+            }
+        }
+
+        $b->cID = $c->getCollectionID();
+        $b->c = $c;
+
+        return $b;
+    }
+
+    /**
+     * Returns the block identifier (if available).
      *
      * @return int|null
      */
-    public function getBlockRelationID()
+    public function getBlockID()
     {
-        return $this->cbRelationID;
+        return isset($this->bID) ? $this->bID : null;
+    }
+
+    /**
+     * Get the absolute path of the block directory (.../blocks/block_handle).
+     *
+     * @return string
+     */
+    public function getBlockPath()
+    {
+        if ($this->getPackageID() > 0) {
+            $pkgHandle = $this->getPackageHandle();
+            $dirp = (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) ? DIR_PACKAGES : DIR_PACKAGES_CORE;
+            $dir = $dirp . '/' . $pkgHandle . '/' . DIRNAME_BLOCKS . '/' . $this->getBlockTypeHandle();
+        } else {
+            if (is_dir(DIR_FILES_BLOCK_TYPES . '/' . $this->getBlockTypeHandle())) {
+                $dir = DIR_FILES_BLOCK_TYPES . '/' . $this->getBlockTypeHandle();
+            } else {
+                $dir = DIR_FILES_BLOCK_TYPES_CORE . '/' . $this->getBlockTypeHandle();
+            }
+        }
+
+        return $dir;
+    }
+
+    /**
+     * Get the block name.
+     *
+     * @return string|null
+     */
+    public function getBlockName()
+    {
+        return $this->bName;
+    }
+
+    /**
+     * Set the name of the block.
+     *
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $data['bName'] = $name;
+        $this->updateBlockInformation($data);
+    }
+
+    /**
+     * Get the name of the custom template.
+     *
+     * @return string|null
+     */
+    public function getBlockFilename()
+    {
+        return $this->bFilename;
+    }
+
+    /**
+     * Set the name of the custom template.
+     *
+     * @param string $template
+     */
+    public function setCustomTemplate($template)
+    {
+        $data['bFilename'] = $template;
+        $this->updateBlockInformation($data);
     }
 
     /**
@@ -271,165 +335,93 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     }
 
     /**
-     * {@inheritdoc}
+     * Get the block type instance.
      *
-     * @see \Concrete\Core\Permission\ObjectInterface::getPermissionObjectIdentifier()
+     * @return \Concrete\Core\Block\BlockType\BlockType
      */
-    public function getPermissionObjectIdentifier()
+    public function getBlockTypeObject()
     {
-        return $this->cID . ':' . $this->getAreaHandle() . ':' . $this->bID;
+        return BlockType::getByID($this->btID);
     }
 
     /**
-     * Get the handle of the area containing the block.
+     * Get the block type handle.
+     *
+     * @return string
+     */
+    public function getBlockTypeHandle()
+    {
+        return $this->btHandle;
+    }
+
+    /**
+     * Get the block type name.
      *
      * @return string|null
      */
-    public function getAreaHandle()
+    public function getBlockTypeName()
     {
-        return $this->arHandle;
+        return $this->btName;
     }
-
+    
     /**
-     * {@inheritdoc}
+     * Get the ID of the user that created the block instance.
      *
-     * @see \Concrete\Core\Permission\ObjectInterface::getPermissionResponseClassName()
+     * @return int|null
      */
-    public function getPermissionResponseClassName()
+    public function getBlockUserID()
     {
-        return '\\Concrete\\Core\\Permission\\Response\\BlockResponse';
+        return $this->uID;
     }
-
+    
     /**
-     * {@inheritdoc}
+     * Gets the date/time when block was added (in the system time zone).
      *
-     * @see \Concrete\Core\Permission\ObjectInterface::getPermissionAssignmentClassName()
+     * @return string|null date/time formated like: 2009-01-01 00:00:00
      */
-    public function getPermissionAssignmentClassName()
+    public function getBlockDateAdded()
     {
-        return '\\Concrete\\Core\\Permission\\Assignment\\BlockAssignment';
+        return $this->bDateAdded;
     }
-
+    
     /**
-     * {@inheritdoc}
+     * Gets the date/time when block was last modified (in the system time zone).
      *
-     * @see \Concrete\Core\Permission\ObjectInterface::getPermissionObjectKeyCategoryHandle()
+     * @return string|null date/time formated like: 2009-01-01 00:00:00
      */
-    public function getPermissionObjectKeyCategoryHandle()
+    public function getBlockDateLastModified()
     {
-        return 'block';
+        return $this->bDateModified;
     }
 
     /**
-     * Get the proxy block instance.
+     * Get the ID of the package owning this block type.
      *
-     * @return \Concrete\Core\Block\Block|false
+     * @return int|null
      */
-    public function getProxyBlock()
+    public function getPackageID()
     {
-        return $this->proxyBlock;
+        return $this->pkgID;
     }
 
     /**
-     * Set the proxy block instance.
-     *
-     * @param \Concrete\Core\Block\Block|null $block
-     */
-    public function setProxyBlock($block)
-    {
-        $this->proxyBlock = $block;
-    }
-
-    /**
-     * Render the block display.
-     *
-     * @param string $view
-     */
-    public function display($view = 'view')
-    {
-        if ($this->getBlockTypeID() < 1) {
-            return;
-        }
-
-        $bv = new BlockView($this);
-        $bv->render($view);
-    }
-
-    /**
-     * @deprecated no more scrapbooks in the dashboard
-     *
-     * @return bool
-     */
-    public function isGlobal()
-    {
-        return false;
-    }
-
-    /**
-     * Get the cached record of the block instance.
-     *
-     * @return string|null
-     */
-    public function getBlockCachedRecord()
-    {
-        return $this->btCachedBlockRecord;
-    }
-
-    /**
-     * Get the cached output of the block instance (if available and not expired).
-     *
-     * @param \Concrete\Core\Area\Area|null $area
+     * Get the handle of the package owning this block type.
      *
      * @return string|false
      */
-    public function getBlockCachedOutput($area)
+    public function getPackageHandle()
     {
-        $db = Loader::db();
-
-        $arHandle = $this->getAreaHandle();
-        if ($this->isBlockInStack() && is_object($area)) {
-            $arHandle = $area->getAreaHandle();
-            $cx = Page::getCurrentPage();
-            $cID = $cx->getCollectioniD();
-            $cvID = $cx->getVersionID();
-        } else {
-            $c = $this->getBlockCollectionObject();
-            $cID = $c->getCollectionID();
-            $cvID = $c->getVersionID();
-        }
-
-        $r = $db->GetRow(
-            'select btCachedBlockOutput, btCachedBlockOutputExpires from CollectionVersionBlocksOutputCache where cID = ? and cvID = ? and bID = ? and arHandle = ? ',
-            [
-                $cID,
-                $cvID,
-                $this->getBlockID(),
-                $arHandle,
-            ]
-        );
-
-        if (array_get($r, 'btCachedBlockOutputExpires') < time()) {
-            return false;
-        }
-
-        return $r['btCachedBlockOutput'];
+        return PackageList::getHandle($this->pkgID);
     }
 
     /**
-     * Is this block inside a stack?
+     * Get the ID of the collection containing the block.
      *
-     * @return bool
+     * @return int|null
      */
-    public function isBlockInStack()
+    public function getBlockCollectionID()
     {
-        $co = $this->getBlockCollectionObject();
-        if (is_object($co)) {
-            if ($co->getPageTypeHandle() == STACKS_PAGE_TYPE) {
-                return true;
-            }
-        }
-
-        return false;
+        return $this->cID;
     }
 
     /**
@@ -467,13 +459,614 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     }
 
     /**
-     * Returns the block identifier (if available).
+     * Gets a list of collections that include this block, along with area name, etc... used in the block_details.php page in the admin control panel.
+     *
+     * @return \Concrete\Core\Page\Page[]
+     */
+    public function getCollectionList()
+    {
+        $db = Loader::db();
+        $q = 'select DISTINCT Pages.cID from CollectionVersionBlocks inner join Pages on (CollectionVersionBlocks.cID = Pages.cID) inner join CollectionVersions on (CollectionVersions.cID = Pages.cID) where CollectionVersionBlocks.bID = ?';
+        $r = $db->query($q, [$this->bID]);
+        $cArray = [];
+        if ($r) {
+            while ($row = $r->fetchRow()) {
+                $cArray[] = Page::getByID($row['cID'], 'RECENT');
+            }
+            $r->free();
+
+            return $cArray;
+        }
+    }
+
+    /**
+     * Set the collection instance containing the block.
+     *
+     * @param \Concrete\Core\Page\Collection\Collection $c
+     */
+    public function setBlockCollectionObject($c)
+    {
+        $this->c = $c;
+        $this->cID = $c->getCollectionID();
+    }
+
+    /**
+     * Get the handle of the area containing the block.
+     *
+     * @return string|null
+     */
+    public function getAreaHandle()
+    {
+        return $this->arHandle;
+    }
+
+    /**
+     * Get the the instance of the Area containing the block.
+     *
+     * @return \Concrete\Core\Area\Area|null
+     */
+    public function getBlockAreaObject()
+    {
+        if (is_object($this->a)) {
+            return $this->a;
+        }
+    }
+
+    /**
+     * Set the area containing the block.
+     *
+     * @param \Concrete\Core\Area\Area $a
+     */
+    public function setBlockAreaObject(&$a)
+    {
+        $this->a = $a;
+        $this->arHandle = $a->getAreaHandle();
+    }
+
+    /**
+     * Get the block display order (if available).
      *
      * @return int|null
      */
-    public function getBlockID()
+    public function getBlockDisplayOrder()
     {
-        return isset($this->bID) ? $this->bID : null;
+        return $this->cbDisplayOrder;
+    }
+
+    /**
+     * Move this block after another block (in the block page & area).
+     *
+     * @param \Concrete\Core\Block\Block|null $afterBlock set to NULL to move this block at the first position; Set to a Block instance to move this block after that instance
+     */
+    public function moveBlockToDisplayOrderPosition($afterBlock)
+    {
+        // first, we increase the display order of all blocks found after this one.
+        $db = Loader::db();
+        $c = $this->getBlockCollectionObject();
+        if ($afterBlock instanceof self) {
+            $block = self::getByID(
+                $afterBlock->getBlockID(),
+                $this->getBlockCollectionObject(),
+                $this->getBlockAreaObject()
+                );
+            $q = 'update CollectionVersionBlocks set cbDisplayOrder = cbDisplayOrder + 1 where cID = ? and (cvID = ? or cbIncludeAll=1) and arHandle = ? and cbDisplayOrder > ?';
+            $v = [$c->getCollectionID(), $c->getVersionID(), $this->arHandle, $block->getBlockDisplayOrder()];
+            $db->Execute($q, $v);
+
+            // now we set this block's display order to 1 + the current block
+            $q = 'update CollectionVersionBlocks set cbDisplayOrder = ? where bID = ? and cID = ? and (cvID = ? or cbIncludeAll=1) and arHandle = ?';
+            $v = [
+                $block->getBlockDisplayOrder() + 1,
+                $this->getBlockID(),
+                $c->getCollectionID(),
+                $c->getVersionID(),
+                $this->arHandle,
+            ];
+            $db->Execute($q, $v);
+        } else {
+            $q = 'update CollectionVersionBlocks set cbDisplayOrder = cbDisplayOrder + 1 where cID = ? and (cvID = ? or cbIncludeAll=1) and arHandle = ?';
+            $v = [$c->getCollectionID(), $c->getVersionID(), $this->arHandle];
+            $db->Execute($q, $v);
+
+            $q = 'update CollectionVersionBlocks set cbDisplayOrder = ? where bID = ? and cID = ? and (cvID = ? or cbIncludeAll=1) and arHandle = ?';
+            $v = [0, $this->getBlockID(), $c->getCollectionID(), $c->getVersionID(), $this->arHandle];
+            $db->Execute($q, $v);
+        }
+    }
+
+    /**
+     * Set the absolute position of this block, regardless other blocks in the same page & area.
+     *
+     * @param int $do the new absolute position of the block (starting from 0)
+     */
+    public function setAbsoluteBlockDisplayOrder($do)
+    {
+        $db = Loader::db();
+
+        $cID = $this->cID;
+        $bID = $this->bID;
+        $arHandle = $this->arHandle;
+
+        $c = $this->getBlockCollectionObject();
+        $cvID = $c->getVersionID();
+
+        $q = 'update CollectionVersionBlocks set cbDisplayOrder = ? where bID = ? and cID = ? and (cvID = ? or cbIncludeAll=1) and arHandle = ?';
+        $r = $db->query($q, [$do, $bID, $cID, $cvID, $arHandle]);
+    }
+
+    /**
+     * Get the original block ID.
+     *
+     * @param int|null $originalBID
+     */
+    public function setOriginalBlockID($originalBID)
+    {
+        $this->originalBID = $originalBID;
+    }
+
+    /**
+     * Get the proxy block instance.
+     *
+     * @return \Concrete\Core\Block\Block|false
+     */
+    public function getProxyBlock()
+    {
+        return $this->proxyBlock;
+    }
+
+    /**
+     * Set the proxy block instance.
+     *
+     * @param \Concrete\Core\Block\Block|null $block
+     */
+    public function setProxyBlock($block)
+    {
+        $this->proxyBlock = $block;
+    }
+
+    /**
+     * Get the ID of the associated block.
+     *
+     * @return int|null
+     */
+    public function getBlockRelationID()
+    {
+        return $this->cbRelationID;
+    }
+    
+    /**
+     * Get the ID of the collection that's associated to the block actions (or false if not found).
+     *
+     * @return int|false
+     */
+    public function getBlockActionCollectionID()
+    {
+        if ($this->bActionCID > 0) {
+            return $this->bActionCID;
+        }
+        
+        $c = Page::getCurrentPage();
+        if (is_object($c)) {
+            return $c->getCollectionID();
+        }
+        
+        $c = $this->getBlockCollectionObject();
+        if (is_object($c)) {
+            return $c->getCollectionID();
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Set the ID of the collection that's associated to the block actions.
+     *
+     * @param int|null $bActionCID
+     */
+    public function setBlockActionCollectionID($bActionCID)
+    {
+        $this->bActionCID = $bActionCID;
+    }
+
+    /**
+     * Does this block have an edit user interface?
+     *
+     * @return bool
+     */
+    public function isEditable()
+    {
+        $bv = new BlockView($this);
+        $path = $bv->getBlockPath(FILENAME_BLOCK_EDIT);
+        if (file_exists($path . '/' . FILENAME_BLOCK_EDIT)) {
+            return true;
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Is the block active?
+     *
+     * @return int 0 for false, 1 for true
+     */
+    public function isActive()
+    {
+        return $this->bIsActive;
+    }
+
+    /**
+     * Deactivate the block.
+     */
+    public function deactivate()
+    {
+        $db = Loader::db();
+        $q = 'update Blocks set bIsActive = 0 where bID = ?';
+        $db->query($q, [$this->bID]);
+    }
+
+    /**
+     * Activate the block.
+     */
+    public function activate()
+    {
+        $db = Loader::db();
+        $q = 'update Blocks set bIsActive = 1 where bID = ?';
+        $db->query($q, [$this->bID]);
+    }
+
+    /**
+     * Is the block versioning disabled?
+     *
+     * @return int 0 for false, 1 for true
+     */
+    public function disableBlockVersioning()
+    {
+        return $this->cbIncludeAll;
+    }
+
+    /**
+     * Check if this block instance is an alias.
+     *
+     * @param \Concrete\Core\Page\Collection\Collection|null $c if specified, check if the block with the ID of this instance is an alias in that page (otherwise the check is done agains this specific block instance)
+     *
+     * @return bool|null return NULL if $c is specified but there's no block with the same ID in that page
+     */
+    public function isAlias($c = null)
+    {
+        if ($c) {
+            $db = Loader::db();
+            $cID = $c->getCollectionID();
+            $vo = $c->getVersionObject();
+            $cvID = $vo->getVersionID();
+            $q = 'select bID from CollectionVersionBlocks where bID = ? and cID=? and isOriginal = 0 and cvID = ?';
+            $r = $db->query($q, [$this->bID, $cID, $cvID]);
+            if ($r) {
+                return $r->numRows() > 0;
+            }
+        } else {
+            return !$this->isOriginal;
+        }
+    }
+
+    /**
+     * Check if this block is an alias from a page default.
+     *
+     * @return bool
+     */
+    public function isAliasOfMasterCollection()
+    {
+        return $this->getBlockCollectionObject()->isBlockAliasedFromMasterCollection($this);
+    }
+
+    /**
+     * Get the number of alias of this block.
+     *
+     * @return int
+     */
+    public function getNumChildren()
+    {
+        $db = Loader::db();
+        $q = 'select count(*) as total from CollectionVersionBlocks where bID = ? and isOriginal = 0';
+        $total = $db->getOne($q, [$this->bID]);
+
+        return $total;
+    }
+
+    /**
+     * Is this block inside a stack?
+     *
+     * @return bool
+     */
+    public function isBlockInStack()
+    {
+        $co = $this->getBlockCollectionObject();
+        if (is_object($co)) {
+            if ($co->getPageTypeHandle() == STACKS_PAGE_TYPE) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Get the ID of the custom style set.
+     *
+     * @return int returns 0 or false if the block does not have custom styles
+     */
+    public function getCustomStyleSetID()
+    {
+        $db = Loader::db();
+        if (!isset($this->issID)) {
+            $co = $this->getBlockCollectionObject();
+            
+            $arHandle = $this->getAreaHandle();
+            if ($arHandle) {
+                $a = $this->getBlockAreaObject();
+                if ($a->isGlobalArea()) {
+                    // then we need to check against the global area name. We currently have the wrong area handle passed in
+                    $arHandle = STACKS_AREA_NAME;
+                }
+                
+                $v = [
+                    $co->getCollectionID(),
+                    $co->getVersionID(),
+                    $arHandle,
+                    $this->bID,
+                ];
+                
+                $this->issID = $db->GetOne(
+                    'select issID from CollectionVersionBlockStyles where cID = ? and cvID = ? and arHandle = ? and bID = ?',
+                    $v
+                    );
+            } else {
+                $this->issID = 0;
+            }
+        }
+        
+        return $this->issID;
+    }
+    
+    /**
+     * Get the custom style object associated to this block.
+     *
+     * @param bool $force Do you want a CustomStyle instance even if the block does not have custom styles?
+     *
+     * @return \Concrete\Core\Block\CustomStyle|null
+     */
+    public function getCustomStyle($force = false)
+    {
+        if ($this->getCustomStyleSetID() > 0 || $force) {
+            $csr = StyleSet::getByID($this->getCustomStyleSetID());
+            $theme = $this->c->getCollectionThemeObject();
+            switch ($this->getBlockTypeHandle()) {
+                case BLOCK_HANDLE_LAYOUT_PROXY:
+                    $bs = new CoreAreaLayoutCustomStyle($csr, $this, $theme);
+                    break;
+                default:
+                    $bs = new CustomStyle($csr, $this, $theme);
+                    break;
+            }
+            
+            return $bs;
+        }
+    }
+    /**
+     * Set the block custom styles.
+     *
+     * @param \Concrete\Core\Entity\StyleCustomizer\Inline\StyleSet $set
+     */
+    public function setCustomStyleSet(\Concrete\Core\Entity\StyleCustomizer\Inline\StyleSet $set)
+    {
+        $db = Loader::db();
+        $c = $this->getBlockCollectionObject();
+        $cvID = $c->getVersionID();
+        $db->Replace(
+            'CollectionVersionBlockStyles',
+            [
+                'cID' => $this->getBlockCollectionID(),
+                'cvID' => $cvID,
+                'arHandle' => $this->getAreaHandle(),
+                'bID' => $this->bID,
+                'issID' => $set->getID(),
+            ],
+            [
+                'cID',
+                'cvID',
+                'bID',
+                'arHandle',
+            ],
+            true
+            );
+        $this->issID = $set->getID();
+    }
+    
+    /**
+     * Remove the block custom styles.
+     */
+    public function resetCustomStyle()
+    {
+        $db = Loader::db();
+        $c = $this->getBlockCollectionObject();
+        $cvID = $c->getVersionID();
+        $db->Execute(
+            'delete from CollectionVersionBlockStyles where cID = ? and cvID = ? and arHandle = ? and bID = ?',
+            [
+                $this->getBlockCollectionID(),
+                $cvID,
+                $this->getAreaHandle(),
+                $this->bID,
+            ]
+            );
+        $this->issID = 0;
+    }
+
+    /**
+     * Get the cache settings instance.
+     *
+     * @return \Concrete\Core\Block\CacheSettings
+     */
+    public function getBlockCacheSettingsObject()
+    {
+        if (!isset($this->cacheSettings)) {
+            $this->cacheSettings = CacheSettings::get($this);
+        }
+
+        return $this->cacheSettings;
+    }
+    
+    
+    /**
+     * Override cache settings?
+     *
+     * @var int|null 1 for true; 0/null for false
+     */
+    public function overrideBlockTypeCacheSettings()
+    {
+        if (!$this->cbOverrideBlockTypeCacheSettings) {
+            $this->cbOverrideBlockTypeCacheSettings = 0;
+        }
+        
+        return $this->cbOverrideBlockTypeCacheSettings;
+    }
+
+    /**
+     * Customize the cache settings, overriding the values of the block type controller.
+     *
+     * @param bool $enabled Should the block output be cached?
+     * @param bool $enabledOnPost Should the block output be cached upon POST requests?
+     * @param bool $enabledForRegistered Should the block output be cached when site visitors are registered users?
+     * @param int $lifetime cache lifetime (in seconds); if empty we'll assume 5 years
+     */
+    public function setCustomCacheSettings($enabled, $enabledOnPost, $enabledForRegistered, $lifetime)
+    {
+        $db = Loader::db();
+        $c = $this->getBlockCollectionObject();
+        $cvID = $c->getVersionID();
+        
+        $enabled = (bool) $enabled;
+        $enabledOnPost = (bool) $enabledOnPost;
+        $enabledForRegistered = (bool) $enabledForRegistered;
+        $lifetime = (int) $lifetime;
+        
+        $db->Replace(
+            'CollectionVersionBlocksCacheSettings',
+            [
+                'cID' => $this->getBlockCollectionID(),
+                'cvID' => $cvID,
+                'arHandle' => $this->getAreaHandle(),
+                'bID' => $this->bID,
+                'btCacheBlockOutput' => (int) $enabled,
+                'btCacheBlockOutputOnPost' => (int) $enabledOnPost,
+                'btCacheBlockOutputForRegisteredUsers' => (int) $enabledForRegistered,
+                'btCacheBlockOutputLifetime' => (int) $lifetime,
+            ],
+            [
+                'cID',
+                'cvID',
+                'bID',
+                'arHandle',
+            ],
+            true
+            );
+        $db->update(
+            'CollectionVersionBlocks',
+            ['cbOverrideBlockTypeCacheSettings' => 1],
+            [
+                'cID' => $this->getBlockCollectionID(),
+                'cvID' => $cvID,
+                'arHandle' => $this->getAreaHandle(),
+                'bID' => $this->bID,
+            ]
+            );
+    }
+    
+    
+    /**
+     * Reset the cache settings, so that concrete5 will use the values of the block type controller.
+     */
+    public function resetCustomCacheSettings()
+    {
+        $db = Loader::db();
+        $c = $this->getBlockCollectionObject();
+        $cvID = $c->getVersionID();
+        $db->update(
+            'CollectionVersionBlocks',
+            ['cbOverrideBlockTypeCacheSettings' => 0],
+            [
+                'cID' => $this->getBlockCollectionID(),
+                'cvID' => $cvID,
+                'arHandle' => $this->getAreaHandle(),
+                'bID' => $this->bID,
+            ]
+            );
+        $db->delete(
+            'CollectionVersionBlocksCacheSettings',
+            [
+                'cID' => $this->getBlockCollectionID(),
+                'cvID' => $cvID,
+                'arHandle' => $this->getAreaHandle(),
+                'bID' => $this->bID,
+            ]
+            );
+    }
+    
+    /**
+     * Get the cached record of the block instance.
+     *
+     * @return string|null
+     */
+    public function getBlockCachedRecord()
+    {
+        return $this->btCachedBlockRecord;
+    }
+
+    /**
+     * Should the block output be cached?
+     *
+     * @return bool
+     */
+    public function cacheBlockOutput()
+    {
+        $settings = $this->getBlockCacheSettingsObject();
+
+        return $settings->cacheBlockOutput();
+    }
+
+    /**
+     * Should the block output be cached upon POST requests?
+     *
+     * @return bool
+     */
+    public function cacheBlockOutputOnPost()
+    {
+        $settings = $this->getBlockCacheSettingsObject();
+
+        return $settings->cacheBlockOutputOnPost();
+    }
+
+    /**
+     * Should the block output be cached when site visitors are registered users?
+     *
+     * @return bool
+     */
+    public function cacheBlockOutputForRegisteredUsers()
+    {
+        $settings = $this->getBlockCacheSettingsObject();
+
+        return $settings->cacheBlockOutputForRegisteredUsers();
+    }
+
+    /**
+     * Get the lifetime (in seconds) of the block output cache.
+     *
+     * @return int
+     */
+    public function getBlockOutputCacheLifetime()
+    {
+        $settings = $this->getBlockCacheSettingsObject();
+
+        return $settings->getBlockOutputCacheLifetime();
     }
 
     /**
@@ -505,162 +1098,274 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
 
         if ($arHandle && $cID && $cvID) {
             $db->Replace(
-               'CollectionVersionBlocksOutputCache',
-               [
-                   'cID' => $cID,
-                   'cvID' => $cvID,
-                   'bID' => $this->getBlockID(),
-                   'arHandle' => $arHandle,
-                   'btCachedBlockOutput' => $content,
-                   'btCachedBlockOutputExpires' => $btCachedBlockOutputExpires,
-               ],
-               [
-                   'cID',
-                   'cvID',
-                   'arHandle',
-                   'bID',
-               ],
-               true
-            );
+                'CollectionVersionBlocksOutputCache',
+                [
+                    'cID' => $cID,
+                    'cvID' => $cvID,
+                    'bID' => $this->getBlockID(),
+                    'arHandle' => $arHandle,
+                    'btCachedBlockOutput' => $content,
+                    'btCachedBlockOutputExpires' => $btCachedBlockOutputExpires,
+                ],
+                [
+                    'cID',
+                    'cvID',
+                    'arHandle',
+                    'bID',
+                ],
+                true
+                );
         }
     }
 
     /**
-     * Include a file (if it exists).
+     * Get the cached output of the block instance (if available and not expired).
      *
-     * @param string $file The file name, relative to the block path (.../blocks/block_handle).
-     */
-    public function inc($file)
-    {
-        $b = $this;
-        if (file_exists($this->getBlockPath() . '/' . $file)) {
-            include $this->getBlockPath() . '/' . $file;
-        }
-    }
-
-    /**
-     * Get the absolute path of the block directory (.../blocks/block_handle).
-     *
-     * @return string
-     */
-    public function getBlockPath()
-    {
-        if ($this->getPackageID() > 0) {
-            $pkgHandle = $this->getPackageHandle();
-            $dirp = (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) ? DIR_PACKAGES : DIR_PACKAGES_CORE;
-            $dir = $dirp . '/' . $pkgHandle . '/' . DIRNAME_BLOCKS . '/' . $this->getBlockTypeHandle();
-        } else {
-            if (is_dir(DIR_FILES_BLOCK_TYPES . '/' . $this->getBlockTypeHandle())) {
-                $dir = DIR_FILES_BLOCK_TYPES . '/' . $this->getBlockTypeHandle();
-            } else {
-                $dir = DIR_FILES_BLOCK_TYPES_CORE . '/' . $this->getBlockTypeHandle();
-            }
-        }
-
-        return $dir;
-    }
-
-    /**
-     * Get the ID of the package owning this block type.
-     *
-     * @return int|null
-     */
-    public function getPackageID()
-    {
-        return $this->pkgID;
-    }
-
-    /**
-     * Get the handle of the package owning this block type.
+     * @param \Concrete\Core\Area\Area|null $area
      *
      * @return string|false
      */
-    public function getPackageHandle()
+    public function getBlockCachedOutput($area)
     {
-        return PackageList::getHandle($this->pkgID);
+        $db = Loader::db();
+
+        $arHandle = $this->getAreaHandle();
+        if ($this->isBlockInStack() && is_object($area)) {
+            $arHandle = $area->getAreaHandle();
+            $cx = Page::getCurrentPage();
+            $cID = $cx->getCollectioniD();
+            $cvID = $cx->getVersionID();
+        } else {
+            $c = $this->getBlockCollectionObject();
+            $cID = $c->getCollectionID();
+            $cvID = $c->getVersionID();
+        }
+
+        $r = $db->GetRow(
+            'select btCachedBlockOutput, btCachedBlockOutputExpires from CollectionVersionBlocksOutputCache where cID = ? and cvID = ? and bID = ? and arHandle = ? ',
+            [
+                $cID,
+                $cvID,
+                $this->getBlockID(),
+                $arHandle,
+            ]
+            );
+
+        if (array_get($r, 'btCachedBlockOutputExpires') < time()) {
+            return false;
+        }
+
+        return $r['btCachedBlockOutput'];
     }
 
     /**
-     * Get the block type handle.
-     *
-     * @return string
+     * Mark the output cache as expired.
      */
-    public function getBlockTypeHandle()
+    public function refreshBlockOutputCache()
     {
-        return $this->btHandle;
+        $db = Loader::db();
+        $cID = $this->getBlockCollectionID();
+        $bID = $this->getBlockID();
+        $c = $this->getBlockCollectionObject();
+        $v = [$c->getCollectionID(), $c->getVersionID(), $this->getAreaHandle(), $bID];
+        $db->Execute(
+            'update CollectionVersionBlocksOutputCache set btCachedBlockOutputExpires = 0 where cID = ? and cvID = ? and arHandle = ? and bID = ?',
+            $v
+            );
     }
 
+    /**
+     * Area permissions are overridden?
+     *
+     * @var int|null 1 for true; 0/null for false
+     */
+    public function overrideAreaPermissions()
+    {
+        if (!$this->cbOverrideAreaPermissions) {
+            $this->cbOverrideAreaPermissions = 0;
+        }
+        
+        return $this->cbOverrideAreaPermissions;
+    }
+    
+    /**
+     * Mark the block as having permissions that override the ones of the area.
+     * Initial permissions are copied from the page/area.
+     */
+    public function doOverrideAreaPermissions()
+    {
+        $db = Loader::db();
+        $c = $this->getBlockCollectionObject();
+        $v = [$c->getCollectionID(), $c->getVersionID(), $this->bID, $this->arHandle];
+        $db->query(
+            'update CollectionVersionBlocks set cbOverrideAreaPermissions = 1 where cID = ? and (cvID = ? or cbIncludeAll = 1) and bID = ? and arHandle = ?',
+            $v);
+        $v = [$c->getCollectionID(), $c->getVersionID(), $this->bID];
+        $db->query('delete from BlockPermissionAssignments where cID = ? and cvID = ? and bID = ?', $v);
+        
+        // copy permissions from the page to the area
+        $permissions = PermissionKey::getList('block');
+        foreach ($permissions as $pk) {
+            $pk->setPermissionObject($this);
+            $pk->copyFromPageOrAreaToBlock();
+        }
+    }
+    
+    
     /**
      * Revert the permission of the object to the one of the area that contains the block.
      */
     public function revertToAreaPermissions()
     {
         $c = $this->getBlockCollectionObject();
-
+        
         $db = Loader::db();
         $v = [$c->getCollectionID(), $c->getVersionID(), $this->bID];
-
+        
         $db->query('delete from BlockPermissionAssignments where cID = ? and cvID = ? and bID = ?', $v);
         $v[] = $this->arHandle;
         $db->query(
-           'update CollectionVersionBlocks set cbOverrideAreaPermissions = 0 where cID = ? and (cvID = ? or cbIncludeAll=1) and bID = ? and arHandle = ?',
-           $v
-        );
+            'update CollectionVersionBlocks set cbOverrideAreaPermissions = 0 where cID = ? and (cvID = ? or cbIncludeAll=1) and bID = ? and arHandle = ?',
+            $v
+            );
     }
-
+    
     /**
-     * Set the collection instance containing the block.
+     * Is the block grid container enabled?
      *
-     * @param \Concrete\Core\Page\Collection\Collection|null $c
+     * @return bool
      */
-    public function loadNewCollection(&$c)
+    public function enableBlockContainer()
     {
-        $this->c = $c;
+        if ($this->cbEnableBlockContainer) {
+            return true;
+        } else {
+            return false;
+        }
     }
-
+    
     /**
-     * Set the area containing the block.
+     * Should the view ignore the grid container?
      *
-     * @param \Concrete\Core\Area\Area $a
+     * @return bool
      */
-    public function setBlockAreaObject(&$a)
+    public function ignorePageThemeGridFrameworkContainer()
     {
-        $this->a = $a;
-        $this->arHandle = $a->getAreaHandle();
+        if ($this->overrideBlockTypeContainerSettings()) {
+            return !$this->enableBlockContainer();
+        }
+        $controller = $this->getInstance();
+        
+        return $controller->ignorePageThemeGridFrameworkContainer();
     }
 
     /**
-     * Is the block versioning disabled?
+     * Should this instance override the grid container settings of the block controller?
      *
-     * @return int 0 for false, 1 for true
+     * @return int 0/false: false, 1/true: true
      */
-    public function disableBlockVersioning()
+    public function overrideBlockTypeContainerSettings()
     {
-        return $this->cbIncludeAll;
+        if (!$this->cbOverrideBlockTypeContainerSettings) {
+            $this->cbOverrideBlockTypeContainerSettings = 0;
+        }
+        
+        return $this->cbOverrideBlockTypeContainerSettings;
     }
 
     /**
-     * Get the number of alias of this block.
+     * Set the custom settings related to the grid container (overriding the block type default values).
      *
-     * @return int
+     * @param bool $enableBlockContainer Is the block grid container enabled?
      */
-    public function getNumChildren()
+    public function setCustomContainerSettings($enableBlockContainer)
     {
         $db = Loader::db();
-        $q = 'select count(*) as total from CollectionVersionBlocks where bID = ? and isOriginal = 0';
-        $total = $db->getOne($q, [$this->bID]);
-
-        return $total;
+        $c = $this->getBlockCollectionObject();
+        $cvID = $c->getVersionID();
+        $bt = $this->getBlockTypeObject();
+        $db->update(
+            'CollectionVersionBlocks',
+            ['cbOverrideBlockTypeContainerSettings' => 1, 'cbEnableBlockContainer' => $enableBlockContainer ? 1 : 0],
+            [
+                'cID' => $this->getBlockCollectionID(),
+                'cvID' => $cvID,
+                'arHandle' => $this->getAreaHandle(),
+                'bID' => $this->bID,
+            ]
+            );
     }
 
     /**
-     * @deprecated use the getInstance() method
-     *
-     * @return \Concrete\Core\Block\BlockController
+     * Reset the settings related to the grid container to the block type default values.
      */
-    public function getController()
+    public function resetBlockContainerSettings()
     {
-        return $this->getInstance();
+        $db = Loader::db();
+        $c = $this->getBlockCollectionObject();
+        $cvID = $c->getVersionID();
+        $bt = $this->getBlockTypeObject();
+        $enableBlockContainer = $bt->ignorePageThemeGridFrameworkContainer() ? 1 : 0;
+        $db->update(
+            'CollectionVersionBlocks',
+            ['cbOverrideBlockTypeContainerSettings' => 0, 'cbEnableBlockContainer' => $enableBlockContainer],
+            [
+                'cID' => $this->getBlockCollectionID(),
+                'cvID' => $cvID,
+                'arHandle' => $this->getAreaHandle(),
+                'bID' => $this->bID,
+            ]
+            );
+    }
+
+    /**
+     * Disable the original block container for the current request.
+     * This is called by the scrapbook proxy block, because the scrapbook block takes care of rendering the container.
+     */
+    public function disableBlockContainer()
+    {
+        $this->cbOverrideBlockTypeContainerSettings = true;
+        $this->cbEnableBlockContainer = false;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\ObjectInterface::getPermissionObjectIdentifier()
+     */
+    public function getPermissionObjectIdentifier()
+    {
+        return $this->cID . ':' . $this->getAreaHandle() . ':' . $this->bID;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\ObjectInterface::getPermissionResponseClassName()
+     */
+    public function getPermissionResponseClassName()
+    {
+        return '\\Concrete\\Core\\Permission\\Response\\BlockResponse';
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\ObjectInterface::getPermissionAssignmentClassName()
+     */
+    public function getPermissionAssignmentClassName()
+    {
+        return '\\Concrete\\Core\\Permission\\Assignment\\BlockAssignment';
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\ObjectInterface::getPermissionObjectKeyCategoryHandle()
+     */
+    public function getPermissionObjectKeyCategoryHandle()
+    {
+        return 'block';
     }
 
     /**
@@ -674,7 +1379,7 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
             Config::get('concrete.cache.blocks')
             && $this->instance->cacheBlockRecord()
             && is_object($this->instance->getBlockControllerData())
-        ) {
+            ) {
             $this->instance->__construct();
         } else {
             $bt = $this->getBlockTypeObject();
@@ -688,33 +1393,30 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     }
 
     /**
-     * Get the block type instance.
+     * Render the block display.
      *
-     * @return \Concrete\Core\Block\BlockType\BlockType
+     * @param string $view
      */
-    public function getBlockTypeObject()
+    public function display($view = 'view')
     {
-        return BlockType::getByID($this->btID);
+        if ($this->getBlockTypeID() < 1) {
+            return;
+        }
+
+        $bv = new BlockView($this);
+        $bv->render($view);
     }
 
     /**
-     * Gets a list of collections that include this block, along with area name, etc... used in the block_details.php page in the admin control panel.
+     * Include a file (if it exists).
      *
-     * @return \Concrete\Core\Page\Page[]
+     * @param string $file The file name, relative to the block path (.../blocks/block_handle).
      */
-    public function getCollectionList()
+    public function inc($file)
     {
-        $db = Loader::db();
-        $q = 'select DISTINCT Pages.cID from CollectionVersionBlocks inner join Pages on (CollectionVersionBlocks.cID = Pages.cID) inner join CollectionVersions on (CollectionVersions.cID = Pages.cID) where CollectionVersionBlocks.bID = ?';
-        $r = $db->query($q, [$this->bID]);
-        $cArray = [];
-        if ($r) {
-            while ($row = $r->fetchRow()) {
-                $cArray[] = Page::getByID($row['cID'], 'RECENT');
-            }
-            $r->free();
-
-            return $cArray;
+        $b = $this;
+        if (file_exists($this->getBlockPath() . '/' . $file)) {
+            include $this->getBlockPath() . '/' . $file;
         }
     }
 
@@ -747,59 +1449,464 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     }
 
     /**
-     * Mark the output cache as expired.
+     * Update the block information, like its block filename, and block name.
+     *
+     * @param array $data Valid keys:
+     * - 'bName' to update the block name
+     * - 'bFilename' to update the block custom template
      */
-    public function refreshBlockOutputCache()
+    public function updateBlockInformation($data)
+    {
+        // this is the function that
+        $db = Loader::db();
+        $dh = Loader::helper('date');
+        $dt = $dh->getOverridableNow();
+
+        $bName = $this->bName;
+        $bFilename = $this->bFilename;
+        if (isset($data['bName'])) {
+            $bName = $data['bName'];
+        }
+        if (isset($data['bFilename'])) {
+            $bFilename = $data['bFilename'];
+        }
+
+        $v = [$bName, $bFilename, $dt, $this->bID];
+        $q = 'update Blocks set bName = ?, bFilename = ?, bDateModified = ? where bID = ?';
+        $r = $db->prepare($q);
+        $res = $db->execute($r, $v);
+
+        $this->refreshBlockOutputCache();
+    }
+
+    /**
+     * Move the block to a new collection and/or area.
+     *
+     * @param \Concrete\Core\Page\Collection\Collection $collection
+     * @param \Concrete\Core\Area\Area $area
+     *
+     * @return bool
+     */
+    public function move(Collection $collection, Area $area)
+    {
+        $old_collection = $this->getBlockCollectionID();
+        $new_collection = $collection->getCollectionID();
+
+        $old_version = $this->getBlockCollectionObject()->getVersionObject()->getVersionID();
+        $new_version = $collection->getVersionObject()->getVersionID();
+
+        $old_area_handle = $this->getAreaHandle();
+        $new_area_handle = $area->getAreaHandle();
+
+        return (bool) \Database::connection()->update(
+            'CollectionVersionBlocks',
+            [
+                'cID' => $new_collection,
+                'cvID' => $new_version,
+                'arHandle' => $new_area_handle,
+            ],
+            [
+                'cID' => $old_collection,
+                'cvID' => $old_version,
+                'arHandle' => $old_area_handle,
+                'bID' => $this->getBlockID(),
+            ]
+            );
+    }
+
+    /**
+     * Duplicate this block to a new collection.
+     *
+     * @param \Concrete\Core\Page\Collection\Collection $nc The destination collection
+     * @param bool $isCopyFromMasterCollectionPropagation
+     *
+     * @return \Concrete\Core\Block\Block|false returns false if the block type can't be found; the new block instance otherwise
+     */
+    public function duplicate($nc, $isCopyFromMasterCollectionPropagation = false)
     {
         $db = Loader::db();
-        $cID = $this->getBlockCollectionID();
-        $bID = $this->getBlockID();
+        $dh = Loader::helper('date');
+
+        $bt = BlockType::getByID($this->getBlockTypeID());
+        $blockTypeClass = $bt->getBlockTypeClass();
+        if (!$blockTypeClass) {
+            return false;
+        }
+        $app = Facade::getFacadeApplication();
+        $bc = $app->build($blockTypeClass, [$this]);
+
+        $bDate = $dh->getOverridableNow();
+        $v = [$this->bName, $bDate, $bDate, $this->bFilename, $this->btID, $this->uID];
+        $q = 'insert into Blocks (bName, bDateAdded, bDateModified, bFilename, btID, uID) values (?, ?, ?, ?, ?, ?)';
+        $r = $db->prepare($q);
+        $res = $db->execute($r, $v);
+        $newBID = $db->Insert_ID(); // this is the latest inserted block ID
+
+        // now, we duplicate the block-specific permissions
+        $oc = $this->getBlockCollectionObject();
+        $ocID = $oc->getCollectionID();
+        $ovID = $oc->getVersionID();
+
+        $ncID = $nc->getCollectionID();
+        $nvID = $nc->getVersionID();
+
+        // Composer specific
+        $row = $db->GetRow(
+            'select cID, cvID, arHandle, cbDisplayOrder, ptComposerFormLayoutSetControlID from PageTypeComposerOutputBlocks where cID = ? and cvID = ? and bID = ? and arHandle = ?',
+            [$ocID, $ovID, $this->bID, $this->arHandle]
+            );
+        if ($row && is_array($row) && $row['cID']) {
+            $db->insert(
+                'PageTypeComposerOutputBlocks',
+                [
+                    'cID' => $ncID,
+                    'cvID' => $nvID,
+                    'arHandle' => $this->arHandle,
+                    'cbDisplayOrder' => $row['cbDisplayOrder'],
+                    'ptComposerFormLayoutSetControlID' => $row['ptComposerFormLayoutSetControlID'],
+                    'bID' => $newBID,
+                ]
+                );
+        }
+
+        $q = "select paID, pkID from BlockPermissionAssignments where cID = '$ocID' and bID = ? and cvID = ?";
+        $r = $db->query($q, [$this->bID, $ovID]);
+        if ($r) {
+            while ($row = $r->fetchRow()) {
+                $db->Replace(
+                    'BlockPermissionAssignments',
+                    [
+                        'cID' => $ncID,
+                        'cvID' => $nvID,
+                        'bID' => $newBID,
+                        'paID' => $row['paID'],
+                        'pkID' => $row['pkID'],
+                    ],
+                    [
+                        'cID',
+                        'cvID',
+                        'bID',
+                        'paID',
+                        'pkID',
+                    ],
+                    true
+                    );
+            }
+            $r->free();
+        }
+
+        // we duplicate block-specific sub-content
+        if ($isCopyFromMasterCollectionPropagation && method_exists($bc, 'duplicate_master')) {
+            $bc->duplicate_master($newBID, $nc);
+        } else {
+            $bc->duplicate($newBID);
+        }
+
+        $features = $bc->getBlockTypeFeatureObjects();
+        if (count($features) > 0) {
+            foreach ($features as $fe) {
+                $fd = $fe->getFeatureDetailObject($bc);
+                $fa = CollectionVersionFeatureAssignment::add($fe, $fd, $nc);
+                $db->Execute(
+                    'insert into BlockFeatureAssignments (cID, cvID, bID, faID) values (?, ?, ?, ?)',
+                    [
+                        $ncID,
+                        $nvID,
+                        $newBID,
+                        $fa->getFeatureAssignmentID(),
+                    ]
+                    );
+            }
+        }
+
+        // finally, we insert into the CollectionVersionBlocks table
+        if (!is_numeric($this->cbDisplayOrder)) {
+            $newBlockDisplayOrder = $nc->getCollectionAreaDisplayOrder($this->arHandle);
+        } else {
+            $newBlockDisplayOrder = $this->cbDisplayOrder;
+        }
+        //$v = array($ncID, $nvID, $newBID, $this->areaName, $newBlockDisplayOrder, 1);
+        $v = [$ncID, $nvID, $newBID, $this->arHandle, $this->getBlockRelationID(), $newBlockDisplayOrder, 1, $this->overrideAreaPermissions(), $this->overrideBlockTypeCacheSettings(), $this->overrideBlockTypeContainerSettings(), $this->enableBlockContainer() ? 1 : 0];
+        $q = 'insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbRelationID, cbDisplayOrder, isOriginal, cbOverrideAreaPermissions, cbOverrideBlockTypeCacheSettings,cbOverrideBlockTypeContainerSettings, cbEnableBlockContainer) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        $r = $db->prepare($q);
+        $db->execute($r, $v);
+
+        $nb = self::getByID($newBID, $nc, $this->arHandle);
+
+        $issID = $this->getCustomStyleSetID();
+        if ($issID > 0) {
+            $v = [$ncID, $nvID, $newBID, $this->arHandle, $issID];
+            $db->Execute(
+                'insert into CollectionVersionBlockStyles (cID, cvID, bID, arHandle, issID) values (?, ?, ?, ?, ?)',
+                $v
+                );
+        }
+
+        return $nb;
+    }
+
+    /**
+     * Create an alias of the block, attached to this collection, within the CollectionVersionBlocks table.
+     * Additionally, this command grabs the permissions from the original record in the CollectionVersionBlocks table, and attaches them to the new one.
+     *
+     * @param \Concrete\Core\Page\Collection\Collection $c The collection to add the block alias to
+     */
+    public function alias($c)
+    {
+        $db = Loader::db();
+        $bID = $this->bID;
+        $newBlockDisplayOrder = $c->getCollectionAreaDisplayOrder($this->getAreaHandle());
+        $cvID = $c->getVersionID();
+        $cID = $c->getCollectionID();
+        $v = [$cID, $cvID, $this->bID, $this->getAreaHandle()];
+
+        $q = 'select count(bID) from CollectionVersionBlocks where cID = ? and cvID = ? and bID = ? and arHandle = ?';
+        $total = $db->getOne($q, $v);
+        if ($total == 0) {
+            // I don't like this -AE. Let's see what happens when we don't do this.
+            /*
+             if ($this->a && $this->a instanceof SubArea) {
+             // hackish - we do this because if we don't do it now, it'll automatically get created
+             // with no arParentID.
+             $db->Execute('insert into Areas (cID, arHandle, arParentID) values (?, ?, ?)', array(
+             $c->getCollectionID(),
+             $this->a->getAreaHandle(),
+             $this->a->getAreaParentID()
+             ));
+             }*/
+            array_push($v, $this->getBlockRelationID(), $newBlockDisplayOrder, 0, $this->overrideAreaPermissions(), $this->overrideBlockTypeCacheSettings(), $this->overrideBlockTypeContainerSettings(), $this->enableBlockContainer() ? 1 : 0);
+            $q = 'insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbRelationID, cbDisplayOrder, isOriginal, cbOverrideAreaPermissions, cbOverrideBlockTypeCacheSettings, cbOverrideBlockTypeContainerSettings, cbEnableBlockContainer) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+            $r = $db->prepare($q);
+            $res = $db->execute($r, $v);
+
+            // styles
+            $issID = $this->getCustomStyleSetID();
+            if ($issID > 0) {
+                $db->Execute(
+                    'insert into CollectionVersionBlockStyles (cID, cvID, bID, arHandle, issID) values (?, ?, ?, ?, ?)',
+                    [
+                        $cID,
+                        $cvID,
+                        $this->bID,
+                        $this->getAreaHandle(),
+                        $issID,
+                    ]
+                    );
+            }
+
+            // custom cache
+            if ($this->overrideBlockTypeCacheSettings()) {
+                $db->Execute(
+                    'insert into CollectionVersionBlocksCacheSettings (cID, cvID, bID, arHandle, btCacheBlockOutput, btCacheBlockOutputOnPost, btCacheBlockOutputForRegisteredUsers, btCacheBlockOutputLifetime) values (?, ?, ?, ?, ?, ?, ?, ?)',
+                    [
+                        $cID,
+                        $cvID,
+                        $this->bID,
+                        $this->getAreaHandle(),
+                        (int) ($this->cacheBlockOutput()),
+                        (int) ($this->cacheBlockOutputOnPost()),
+                        (int) ($this->cacheBlockOutputForRegisteredUsers()),
+                        (int) ($this->getBlockOutputCacheLifetime()),
+                    ]
+                    );
+            }
+            if ($res) {
+                // now we grab the permissions from the block we're aliasing from
+                $oc = $this->getBlockCollectionObject();
+                $ocID = $oc->getCollectionID();
+                $ocvID = $oc->getVersionID();
+
+                $qf = 'select faID from BlockFeatureAssignments where bID = ? and cID = ? and cvID = ?';
+                $rf = $db->query($qf, [$this->bID, $ocID, $ocvID]);
+
+                if ($rf) {
+                    while ($rowf = $rf->fetchRow()) {
+                        $db->Replace(
+                            'BlockFeatureAssignments',
+                            ['cID' => $cID, 'cvID' => $cvID, 'bID' => $this->bID, 'faID' => $rowf['faID']],
+                            ['cID', 'cvID', 'bID', 'faID'],
+                            true
+                            );
+                    }
+                    $rf->free();
+                }
+
+                $qa = 'select paID, pkID from BlockPermissionAssignments where bID = ? and cID = ? and cvID = ?';
+                $ra = $db->query($qa, [$this->bID, $ocID, $ocvID]);
+
+                if ($ra) {
+                    while ($row_a = $ra->fetchRow()) {
+                        $db->Replace(
+                            'BlockPermissionAssignments',
+                            [
+                                'cID' => $cID,
+                                'cvID' => $cvID,
+                                'bID' => $this->bID,
+                                'paID' => $row_a['paID'],
+                                'pkID' => $row_a['pkID'],
+                            ],
+                            [
+                                'cID',
+                                'cvID',
+                                'bID',
+                                'paID',
+                                'pkID',
+                            ],
+                            true
+                            );
+                    }
+                    $ra->free();
+                }
+            }
+        }
+    }
+
+    
+    /**
+     * Delete this block instance.
+     *
+     * @param bool $forceDelete If this is an alias block, should we delete all the block instances in addition to the alias?
+     *
+     * @return bool|null Returns false if the block is not valid
+     */
+    public function deleteBlock($forceDelete = false)
+    {
+        $db = Loader::db();
+        
+        if ($this->bID < 1) {
+            return false;
+        }
+        
+        $cID = $this->cID;
         $c = $this->getBlockCollectionObject();
-        $v = [$c->getCollectionID(), $c->getVersionID(), $this->getAreaHandle(), $bID];
-        $db->Execute(
-           'update CollectionVersionBlocksOutputCache set btCachedBlockOutputExpires = 0 where cID = ? and cvID = ? and arHandle = ? and bID = ?',
-           $v
-        );
+        $cvID = $c->getVersionID();
+        $bID = $this->bID;
+        $arHandle = $this->arHandle;
+        
+        // if this block is located in a master collection, we're going to delete all the instances of the block,
+        // regardless
+        if (($c instanceof \Concrete\Core\Page\Page && $c->isMasterCollection() && !$this->isAlias()) || $forceDelete) {
+            // forceDelete is used by the administration console
+            
+            // this is an original. We're deleting it, and everything else having to do with it
+            $q = 'delete from CollectionVersionBlocks where bID = ?';
+            $r = $db->query($q, [$bID]);
+            
+            $q = 'delete from BlockPermissionAssignments where bID = ?';
+            $r = $db->query($q, [$bID]);
+            
+            $q = 'delete from CollectionVersionBlockStyles where bID = ?';
+            $r = $db->query($q, [$bID]);
+            
+            $q = 'delete from CollectionVersionBlocksCacheSettings where bID = ?';
+            $r = $db->query($q, [$bID]);
+        } else {
+            $q = 'delete from CollectionVersionBlocks where cID = ? and (cvID = ? or cbIncludeAll=1) and bID = ? and arHandle = ?';
+            $r = $db->query($q, [$cID, $cvID, $bID, $arHandle]);
+            
+            // next, we delete the groups instance of this block
+            $q = 'delete from BlockPermissionAssignments where bID = ? and cvID = ? and cID = ?';
+            $r = $db->query($q, [$bID, $cvID, $cID]);
+            
+            $q = 'delete from CollectionVersionBlockStyles where cID = ? and cvID = ? and bID = ? and arHandle = ?';
+            $r = $db->query($q, [$cID, $cvID, $bID, $arHandle]);
+            
+            $q = 'delete from CollectionVersionBlocksCacheSettings where cID = ? and cvID = ? and bID = ? and arHandle = ?';
+            $r = $db->query($q, [$cID, $cvID, $bID, $arHandle]);
+        }
+        
+        // delete any feature assignments that have been attached to this block to the collection version
+        $faIDs = $db->GetCol(
+            'select faID from BlockFeatureAssignments where cID = ? and cvID = ? and bID = ?',
+            [
+                $cID,
+                $cvID,
+                $bID,
+            ]
+            );
+        foreach ($faIDs as $faID) {
+            $fa = FeatureAssignment::getByID($faID, $c);
+            $fa->delete();
+        }
+        
+        //then, we see whether or not this block is aliased to anything else
+        $totalBlocks = $db->GetOne('select count(*) from CollectionVersionBlocks where bID = ?', [$bID]);
+        $totalBlocks += $db->GetOne('select count(*) from btCoreScrapbookDisplay where bOriginalID = ?', [$bID]);
+        if ($totalBlocks < 1) {
+            // this block is not referenced in the system any longer, so we delete the entry in the blocks table, as well as the entries in the corresponding
+            // sub-blocks table
+            
+            $v = [$this->bID];
+            
+            // so, first we delete the block's sub content
+            $bt = BlockType::getByID($this->getBlockTypeID());
+            if ($bt && method_exists($bt, 'getBlockTypeClass')) {
+                $class = $bt->getBlockTypeClass();
+                $app = Facade::getFacadeApplication();
+                $bc = $app->build($class, [$this]);
+                $bc->delete();
+            }
+            
+            // now that the block's subcontent delete() method has been run, we delete the block from the Blocks table
+            $q = 'delete from Blocks where bID = ?';
+            $r = $db->query($q, $v);
+            
+            // Aaaand then we delete all scrapbooked blocks to this entry
+            $r = $db->Execute(
+                'select cID, cvID, CollectionVersionBlocks.bID, arHandle from CollectionVersionBlocks inner join btCoreScrapbookDisplay on CollectionVersionBlocks.bID = btCoreScrapbookDisplay.bID where bOriginalID = ?',
+                [$bID]
+                );
+            while ($row = $r->FetchRow()) {
+                $c = Page::getByID($row['cID'], $row['cvID']);
+                $b = self::getByID($row['bID'], $c, $row['arHandle']);
+                $b->delete();
+            }
+        }
     }
 
     /**
-     * Get the ID of the collection containing the block.
+     * Export the data associated to this block to an XML node.
      *
-     * @return int|null
+     * @param \SimpleXMLElement $node the parent node where we'll append the XML node to
+     * @param string $exportType set to 'full' to export cache and custom style settings too
      */
-    public function getBlockCollectionID()
+    public function export($node, $exportType = 'full')
     {
-        return $this->cID;
-    }
+        if (!$this->isAliasOfMasterCollection() || $this->c->isMasterCollection()) {
+            // We have the OR up here so that master collections that you have duplicated from other
+            // master collections export properly.
+            $blockNode = $node->addChild('block');
+            $blockNode->addAttribute('type', $this->getBlockTypeHandle());
+            $blockNode->addAttribute('name', $this->getBlockName());
+            if ($this->getBlockFilename() != '') {
+                $blockNode->addAttribute('custom-template', $this->getBlockFilename());
+            }
+            if (is_object($this->c) && $this->c->isMasterCollection()) {
+                $mcBlockID = Loader::helper('validation/identifier')->getString(8);
+                ContentExporter::addMasterCollectionBlockID($this, $mcBlockID);
+                $blockNode->addAttribute('mc-block-id', $mcBlockID);
+            }
 
-    /**
-     * Is the block active?
-     *
-     * @return int 0 for false, 1 for true
-     */
-    public function isActive()
-    {
-        return $this->bIsActive;
-    }
-
-    /**
-     * Deactivate the block.
-     */
-    public function deactivate()
-    {
-        $db = Loader::db();
-        $q = 'update Blocks set bIsActive = 0 where bID = ?';
-        $db->query($q, [$this->bID]);
-    }
-
-    /**
-     * Activate the block.
-     */
-    public function activate()
-    {
-        $db = Loader::db();
-        $q = 'update Blocks set bIsActive = 1 where bID = ?';
-        $db->query($q, [$this->bID]);
+            if ($exportType == 'full') {
+                $style = $this->getCustomStyle();
+                if (is_object($style)) {
+                    $set = $style->getStyleSet();
+                    $set->export($blockNode);
+                }
+                if ($this->overrideBlockTypeCacheSettings()) {
+                    $settings = $this->getBlockCacheSettingsObject();
+                    $blockNode['cache-output'] = $settings->cacheBlockOutput();
+                    $blockNode['cache-output-lifetime'] = $settings->getBlockOutputCacheLifetime();
+                    $blockNode['cache-output-on-post'] = $settings->cacheBlockOutputOnPost();
+                    $blockNode['cache-output-for-registered-users'] = $settings->cacheBlockOutputForRegisteredUsers();
+                }
+                $bc = $this->getInstance();
+                $bc->export($blockNode);
+            }
+        } else {
+            $blockNode = $node->addChild('block');
+            $blockNode->addAttribute('mc-block-id', ContentExporter::getMasterCollectionTemporaryBlockID($this));
+        }
     }
 
     /**
@@ -920,794 +2027,7 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     }
 
     /**
-     * Create an alias of the block, attached to this collection, within the CollectionVersionBlocks table.
-     * Additionally, this command grabs the permissions from the original record in the CollectionVersionBlocks table, and attaches them to the new one.
-     *
-     * @param \Concrete\Core\Page\Collection\Collection $c The collection to add the block alias to
-     */
-    public function alias($c)
-    {
-        $db = Loader::db();
-        $bID = $this->bID;
-        $newBlockDisplayOrder = $c->getCollectionAreaDisplayOrder($this->getAreaHandle());
-        $cvID = $c->getVersionID();
-        $cID = $c->getCollectionID();
-        $v = [$cID, $cvID, $this->bID, $this->getAreaHandle()];
-
-        $q = 'select count(bID) from CollectionVersionBlocks where cID = ? and cvID = ? and bID = ? and arHandle = ?';
-        $total = $db->getOne($q, $v);
-        if ($total == 0) {
-            // I don't like this -AE. Let's see what happens when we don't do this.
-            /*
-            if ($this->a && $this->a instanceof SubArea) {
-                // hackish - we do this because if we don't do it now, it'll automatically get created
-                // with no arParentID.
-                $db->Execute('insert into Areas (cID, arHandle, arParentID) values (?, ?, ?)', array(
-                    $c->getCollectionID(),
-                    $this->a->getAreaHandle(),
-                    $this->a->getAreaParentID()
-                ));
-            }*/
-            array_push($v, $this->getBlockRelationID(), $newBlockDisplayOrder, 0, $this->overrideAreaPermissions(), $this->overrideBlockTypeCacheSettings(), $this->overrideBlockTypeContainerSettings(), $this->enableBlockContainer() ? 1 : 0);
-            $q = 'insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbRelationID, cbDisplayOrder, isOriginal, cbOverrideAreaPermissions, cbOverrideBlockTypeCacheSettings, cbOverrideBlockTypeContainerSettings, cbEnableBlockContainer) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-            $r = $db->prepare($q);
-            $res = $db->execute($r, $v);
-
-            // styles
-            $issID = $this->getCustomStyleSetID();
-            if ($issID > 0) {
-                $db->Execute(
-                   'insert into CollectionVersionBlockStyles (cID, cvID, bID, arHandle, issID) values (?, ?, ?, ?, ?)',
-                   [
-                       $cID,
-                       $cvID,
-                       $this->bID,
-                       $this->getAreaHandle(),
-                       $issID,
-                   ]
-                );
-            }
-
-            // custom cache
-            if ($this->overrideBlockTypeCacheSettings()) {
-                $db->Execute(
-                   'insert into CollectionVersionBlocksCacheSettings (cID, cvID, bID, arHandle, btCacheBlockOutput, btCacheBlockOutputOnPost, btCacheBlockOutputForRegisteredUsers, btCacheBlockOutputLifetime) values (?, ?, ?, ?, ?, ?, ?, ?)',
-                   [
-                       $cID,
-                       $cvID,
-                       $this->bID,
-                       $this->getAreaHandle(),
-                       (int) ($this->cacheBlockOutput()),
-                       (int) ($this->cacheBlockOutputOnPost()),
-                       (int) ($this->cacheBlockOutputForRegisteredUsers()),
-                       (int) ($this->getBlockOutputCacheLifetime()),
-                   ]
-                );
-            }
-            if ($res) {
-                // now we grab the permissions from the block we're aliasing from
-                $oc = $this->getBlockCollectionObject();
-                $ocID = $oc->getCollectionID();
-                $ocvID = $oc->getVersionID();
-
-                $qf = 'select faID from BlockFeatureAssignments where bID = ? and cID = ? and cvID = ?';
-                $rf = $db->query($qf, [$this->bID, $ocID, $ocvID]);
-
-                if ($rf) {
-                    while ($rowf = $rf->fetchRow()) {
-                        $db->Replace(
-                           'BlockFeatureAssignments',
-                           ['cID' => $cID, 'cvID' => $cvID, 'bID' => $this->bID, 'faID' => $rowf['faID']],
-                           ['cID', 'cvID', 'bID', 'faID'],
-                           true
-                        );
-                    }
-                    $rf->free();
-                }
-
-                $qa = 'select paID, pkID from BlockPermissionAssignments where bID = ? and cID = ? and cvID = ?';
-                $ra = $db->query($qa, [$this->bID, $ocID, $ocvID]);
-
-                if ($ra) {
-                    while ($row_a = $ra->fetchRow()) {
-                        $db->Replace(
-                           'BlockPermissionAssignments',
-                           [
-                               'cID' => $cID,
-                               'cvID' => $cvID,
-                               'bID' => $this->bID,
-                               'paID' => $row_a['paID'],
-                               'pkID' => $row_a['pkID'],
-                           ],
-                           [
-                               'cID',
-                               'cvID',
-                               'bID',
-                               'paID',
-                               'pkID',
-                           ],
-                           true
-                        );
-                    }
-                    $ra->free();
-                }
-            }
-        }
-    }
-
-    /**
-     * Area permissions are overridden?
-     *
-     * @var int|null 1 for true; 0/null for false
-     */
-    public function overrideAreaPermissions()
-    {
-        if (!$this->cbOverrideAreaPermissions) {
-            $this->cbOverrideAreaPermissions = 0;
-        }
-
-        return $this->cbOverrideAreaPermissions;
-    }
-
-    /**
-     * Override cache settings?
-     *
-     * @var int|null 1 for true; 0/null for false
-     */
-    public function overrideBlockTypeCacheSettings()
-    {
-        if (!$this->cbOverrideBlockTypeCacheSettings) {
-            $this->cbOverrideBlockTypeCacheSettings = 0;
-        }
-
-        return $this->cbOverrideBlockTypeCacheSettings;
-    }
-
-    /**
-     * Is the block grid container enabled?
-     *
-     * @return bool
-     */
-    public function enableBlockContainer()
-    {
-        if ($this->cbEnableBlockContainer) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Should the view ignore the grid container?
-     *
-     * @return bool
-     */
-    public function ignorePageThemeGridFrameworkContainer()
-    {
-        if ($this->overrideBlockTypeContainerSettings()) {
-            return !$this->enableBlockContainer();
-        }
-        $controller = $this->getInstance();
-
-        return $controller->ignorePageThemeGridFrameworkContainer();
-    }
-
-    /**
-     * Should this instance override the grid container settings of the block controller?
-     *
-     * @return int 0/false: false, 1/true: true
-     */
-    public function overrideBlockTypeContainerSettings()
-    {
-        if (!$this->cbOverrideBlockTypeContainerSettings) {
-            $this->cbOverrideBlockTypeContainerSettings = 0;
-        }
-
-        return $this->cbOverrideBlockTypeContainerSettings;
-    }
-
-    /**
-     * Get the cache settings instance.
-     *
-     * @return \Concrete\Core\Block\CacheSettings
-     */
-    public function getBlockCacheSettingsObject()
-    {
-        if (!isset($this->cacheSettings)) {
-            $this->cacheSettings = CacheSettings::get($this);
-        }
-
-        return $this->cacheSettings;
-    }
-
-    /**
-     * Should the block output be cached?
-     *
-     * @return bool
-     */
-    public function cacheBlockOutput()
-    {
-        $settings = $this->getBlockCacheSettingsObject();
-
-        return $settings->cacheBlockOutput();
-    }
-
-    /**
-     * Disable the original block container for the current request.
-     * This is called by the scrapbook proxy block, because the scrapbook block takes care of rendering the container.
-     */
-    public function disableBlockContainer()
-    {
-        $this->cbOverrideBlockTypeContainerSettings = true;
-        $this->cbEnableBlockContainer = false;
-    }
-
-    /**
-     * Should the block output be cached upon POST requests?
-     *
-     * @return bool
-     */
-    public function cacheBlockOutputOnPost()
-    {
-        $settings = $this->getBlockCacheSettingsObject();
-
-        return $settings->cacheBlockOutputOnPost();
-    }
-
-    /**
-     * Should the block output be cached when site visitors are registered users?
-     *
-     * @return bool
-     */
-    public function cacheBlockOutputForRegisteredUsers()
-    {
-        $settings = $this->getBlockCacheSettingsObject();
-
-        return $settings->cacheBlockOutputForRegisteredUsers();
-    }
-
-    /**
-     * Get the lifetime (in seconds) of the block output cache.
-     *
-     * @return int
-     */
-    public function getBlockOutputCacheLifetime()
-    {
-        $settings = $this->getBlockCacheSettingsObject();
-
-        return $settings->getBlockOutputCacheLifetime();
-    }
-
-    /**
-     * Get the ID of the custom style set.
-     *
-     * @return int returns 0 or false if the block does not have custom styles
-     */
-    public function getCustomStyleSetID()
-    {
-        $db = Loader::db();
-        if (!isset($this->issID)) {
-            $co = $this->getBlockCollectionObject();
-
-            $arHandle = $this->getAreaHandle();
-            if ($arHandle) {
-                $a = $this->getBlockAreaObject();
-                if ($a->isGlobalArea()) {
-                    // then we need to check against the global area name. We currently have the wrong area handle passed in
-                    $arHandle = STACKS_AREA_NAME;
-                }
-
-                $v = [
-                    $co->getCollectionID(),
-                    $co->getVersionID(),
-                    $arHandle,
-                    $this->bID,
-                ];
-
-                $this->issID = $db->GetOne(
-                    'select issID from CollectionVersionBlockStyles where cID = ? and cvID = ? and arHandle = ? and bID = ?',
-                    $v
-                );
-            } else {
-                $this->issID = 0;
-            }
-        }
-
-        return $this->issID;
-    }
-
-    /**
-     * Get the the instance of the Area containing the block.
-     *
-     * @return \Concrete\Core\Area\Area|null
-     */
-    public function getBlockAreaObject()
-    {
-        if (is_object($this->a)) {
-            return $this->a;
-        }
-    }
-
-    /**
-     * Move the block to a new collection and/or area.
-     *
-     * @param \Concrete\Core\Page\Collection\Collection $collection
-     * @param \Concrete\Core\Area\Area $area
-     *
-     * @return bool
-     */
-    public function move(Collection $collection, Area $area)
-    {
-        $old_collection = $this->getBlockCollectionID();
-        $new_collection = $collection->getCollectionID();
-
-        $old_version = $this->getBlockCollectionObject()->getVersionObject()->getVersionID();
-        $new_version = $collection->getVersionObject()->getVersionID();
-
-        $old_area_handle = $this->getAreaHandle();
-        $new_area_handle = $area->getAreaHandle();
-
-        return (bool) \Database::connection()->update(
-            'CollectionVersionBlocks',
-            [
-                'cID' => $new_collection,
-                'cvID' => $new_version,
-                'arHandle' => $new_area_handle,
-            ],
-            [
-                'cID' => $old_collection,
-                'cvID' => $old_version,
-                'arHandle' => $old_area_handle,
-                'bID' => $this->getBlockID(),
-            ]
-        );
-    }
-
-    /**
-     * Duplicate this block to a new collection.
-     *
-     * @param \Concrete\Core\Page\Collection\Collection $nc The destination collection
-     * @param bool $isCopyFromMasterCollectionPropagation
-     *
-     * @return \Concrete\Core\Block\Block|false returns false if the block type can't be found; the new block instance otherwise
-     */
-    public function duplicate($nc, $isCopyFromMasterCollectionPropagation = false)
-    {
-        $db = Loader::db();
-        $dh = Loader::helper('date');
-
-        $bt = BlockType::getByID($this->getBlockTypeID());
-        $blockTypeClass = $bt->getBlockTypeClass();
-        if (!$blockTypeClass) {
-            return false;
-        }
-        $app = Facade::getFacadeApplication();
-        $bc = $app->build($blockTypeClass, [$this]);
-
-        $bDate = $dh->getOverridableNow();
-        $v = [$this->bName, $bDate, $bDate, $this->bFilename, $this->btID, $this->uID];
-        $q = 'insert into Blocks (bName, bDateAdded, bDateModified, bFilename, btID, uID) values (?, ?, ?, ?, ?, ?)';
-        $r = $db->prepare($q);
-        $res = $db->execute($r, $v);
-        $newBID = $db->Insert_ID(); // this is the latest inserted block ID
-
-        // now, we duplicate the block-specific permissions
-        $oc = $this->getBlockCollectionObject();
-        $ocID = $oc->getCollectionID();
-        $ovID = $oc->getVersionID();
-
-        $ncID = $nc->getCollectionID();
-        $nvID = $nc->getVersionID();
-
-        // Composer specific
-        $row = $db->GetRow(
-            'select cID, cvID, arHandle, cbDisplayOrder, ptComposerFormLayoutSetControlID from PageTypeComposerOutputBlocks where cID = ? and cvID = ? and bID = ? and arHandle = ?',
-            [$ocID, $ovID, $this->bID, $this->arHandle]
-        );
-        if ($row && is_array($row) && $row['cID']) {
-            $db->insert(
-                'PageTypeComposerOutputBlocks',
-                [
-                    'cID' => $ncID,
-                    'cvID' => $nvID,
-                    'arHandle' => $this->arHandle,
-                    'cbDisplayOrder' => $row['cbDisplayOrder'],
-                    'ptComposerFormLayoutSetControlID' => $row['ptComposerFormLayoutSetControlID'],
-                    'bID' => $newBID,
-                ]
-            );
-        }
-
-        $q = "select paID, pkID from BlockPermissionAssignments where cID = '$ocID' and bID = ? and cvID = ?";
-        $r = $db->query($q, [$this->bID, $ovID]);
-        if ($r) {
-            while ($row = $r->fetchRow()) {
-                $db->Replace(
-                   'BlockPermissionAssignments',
-                   [
-                       'cID' => $ncID,
-                       'cvID' => $nvID,
-                       'bID' => $newBID,
-                       'paID' => $row['paID'],
-                       'pkID' => $row['pkID'],
-                   ],
-                   [
-                       'cID',
-                       'cvID',
-                       'bID',
-                       'paID',
-                       'pkID',
-                   ],
-                   true
-                );
-            }
-            $r->free();
-        }
-
-        // we duplicate block-specific sub-content
-        if ($isCopyFromMasterCollectionPropagation && method_exists($bc, 'duplicate_master')) {
-            $bc->duplicate_master($newBID, $nc);
-        } else {
-            $bc->duplicate($newBID);
-        }
-
-        $features = $bc->getBlockTypeFeatureObjects();
-        if (count($features) > 0) {
-            foreach ($features as $fe) {
-                $fd = $fe->getFeatureDetailObject($bc);
-                $fa = CollectionVersionFeatureAssignment::add($fe, $fd, $nc);
-                $db->Execute(
-                   'insert into BlockFeatureAssignments (cID, cvID, bID, faID) values (?, ?, ?, ?)',
-                   [
-                       $ncID,
-                       $nvID,
-                       $newBID,
-                       $fa->getFeatureAssignmentID(),
-                   ]
-                );
-            }
-        }
-
-        // finally, we insert into the CollectionVersionBlocks table
-        if (!is_numeric($this->cbDisplayOrder)) {
-            $newBlockDisplayOrder = $nc->getCollectionAreaDisplayOrder($this->arHandle);
-        } else {
-            $newBlockDisplayOrder = $this->cbDisplayOrder;
-        }
-        //$v = array($ncID, $nvID, $newBID, $this->areaName, $newBlockDisplayOrder, 1);
-        $v = [$ncID, $nvID, $newBID, $this->arHandle, $this->getBlockRelationID(), $newBlockDisplayOrder, 1, $this->overrideAreaPermissions(), $this->overrideBlockTypeCacheSettings(), $this->overrideBlockTypeContainerSettings(), $this->enableBlockContainer() ? 1 : 0];
-        $q = 'insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbRelationID, cbDisplayOrder, isOriginal, cbOverrideAreaPermissions, cbOverrideBlockTypeCacheSettings,cbOverrideBlockTypeContainerSettings, cbEnableBlockContainer) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-        $r = $db->prepare($q);
-        $db->execute($r, $v);
-
-        $nb = self::getByID($newBID, $nc, $this->arHandle);
-
-        $issID = $this->getCustomStyleSetID();
-        if ($issID > 0) {
-            $v = [$ncID, $nvID, $newBID, $this->arHandle, $issID];
-            $db->Execute(
-                'insert into CollectionVersionBlockStyles (cID, cvID, bID, arHandle, issID) values (?, ?, ?, ?, ?)',
-                $v
-            );
-        }
-
-        return $nb;
-    }
-
-    /**
-     * Get the custom style object associated to this block.
-     *
-     * @param bool $force Do you want a CustomStyle instance even if the block does not have custom styles?
-     *
-     * @return \Concrete\Core\Block\CustomStyle|null
-     */
-    public function getCustomStyle($force = false)
-    {
-        if ($this->getCustomStyleSetID() > 0 || $force) {
-            $csr = StyleSet::getByID($this->getCustomStyleSetID());
-            $theme = $this->c->getCollectionThemeObject();
-            switch ($this->getBlockTypeHandle()) {
-                case BLOCK_HANDLE_LAYOUT_PROXY:
-                    $bs = new CoreAreaLayoutCustomStyle($csr, $this, $theme);
-                    break;
-                default:
-                    $bs = new CustomStyle($csr, $this, $theme);
-                    break;
-            }
-
-            return $bs;
-        }
-    }
-
-    /**
-     * Reset the settings related to the grid container to the block type default values.
-     */
-    public function resetBlockContainerSettings()
-    {
-        $db = Loader::db();
-        $c = $this->getBlockCollectionObject();
-        $cvID = $c->getVersionID();
-        $bt = $this->getBlockTypeObject();
-        $enableBlockContainer = $bt->ignorePageThemeGridFrameworkContainer() ? 1 : 0;
-        $db->update(
-            'CollectionVersionBlocks',
-            ['cbOverrideBlockTypeContainerSettings' => 0, 'cbEnableBlockContainer' => $enableBlockContainer],
-            [
-                'cID' => $this->getBlockCollectionID(),
-                'cvID' => $cvID,
-                'arHandle' => $this->getAreaHandle(),
-                'bID' => $this->bID,
-            ]
-        );
-    }
-
-    /**
-     * Set the custom settings related to the grid container (overriding the block type default values).
-     *
-     * @param bool $enableBlockContainer Is the block grid container enabled?
-     */
-    public function setCustomContainerSettings($enableBlockContainer)
-    {
-        $db = Loader::db();
-        $c = $this->getBlockCollectionObject();
-        $cvID = $c->getVersionID();
-        $bt = $this->getBlockTypeObject();
-        $db->update(
-            'CollectionVersionBlocks',
-            ['cbOverrideBlockTypeContainerSettings' => 1, 'cbEnableBlockContainer' => $enableBlockContainer ? 1 : 0],
-            [
-                'cID' => $this->getBlockCollectionID(),
-                'cvID' => $cvID,
-                'arHandle' => $this->getAreaHandle(),
-                'bID' => $this->bID,
-            ]
-        );
-    }
-
-    /**
-     * Reset the cache settings, so that concrete5 will use the values of the block type controller.
-     */
-    public function resetCustomCacheSettings()
-    {
-        $db = Loader::db();
-        $c = $this->getBlockCollectionObject();
-        $cvID = $c->getVersionID();
-        $db->update(
-            'CollectionVersionBlocks',
-            ['cbOverrideBlockTypeCacheSettings' => 0],
-            [
-                'cID' => $this->getBlockCollectionID(),
-                'cvID' => $cvID,
-                'arHandle' => $this->getAreaHandle(),
-                'bID' => $this->bID,
-            ]
-        );
-        $db->delete(
-            'CollectionVersionBlocksCacheSettings',
-            [
-                'cID' => $this->getBlockCollectionID(),
-                'cvID' => $cvID,
-                'arHandle' => $this->getAreaHandle(),
-                'bID' => $this->bID,
-            ]
-        );
-    }
-
-    /**
-     * Customize the cache settings, overriding the values of the block type controller.
-     *
-     * @param bool $enabled Should the block output be cached?
-     * @param bool $enabledOnPost Should the block output be cached upon POST requests?
-     * @param bool $enabledForRegistered Should the block output be cached when site visitors are registered users?
-     * @param int $lifetime cache lifetime (in seconds); if empty we'll assume 5 years
-     */
-    public function setCustomCacheSettings($enabled, $enabledOnPost, $enabledForRegistered, $lifetime)
-    {
-        $db = Loader::db();
-        $c = $this->getBlockCollectionObject();
-        $cvID = $c->getVersionID();
-
-        $enabled = (bool) $enabled;
-        $enabledOnPost = (bool) $enabledOnPost;
-        $enabledForRegistered = (bool) $enabledForRegistered;
-        $lifetime = (int) $lifetime;
-
-        $db->Replace(
-            'CollectionVersionBlocksCacheSettings',
-            [
-                'cID' => $this->getBlockCollectionID(),
-                'cvID' => $cvID,
-                'arHandle' => $this->getAreaHandle(),
-                'bID' => $this->bID,
-                'btCacheBlockOutput' => (int) $enabled,
-                'btCacheBlockOutputOnPost' => (int) $enabledOnPost,
-                'btCacheBlockOutputForRegisteredUsers' => (int) $enabledForRegistered,
-                'btCacheBlockOutputLifetime' => (int) $lifetime,
-            ],
-            [
-                'cID',
-                'cvID',
-                'bID',
-                'arHandle',
-            ],
-            true
-        );
-        $db->update(
-            'CollectionVersionBlocks',
-            ['cbOverrideBlockTypeCacheSettings' => 1],
-            [
-                'cID' => $this->getBlockCollectionID(),
-                'cvID' => $cvID,
-                'arHandle' => $this->getAreaHandle(),
-                'bID' => $this->bID,
-            ]
-        );
-    }
-
-    /**
-     * Set the block custom styles.
-     *
-     * @param \Concrete\Core\Entity\StyleCustomizer\Inline\StyleSet $set
-     */
-    public function setCustomStyleSet(\Concrete\Core\Entity\StyleCustomizer\Inline\StyleSet $set)
-    {
-        $db = Loader::db();
-        $c = $this->getBlockCollectionObject();
-        $cvID = $c->getVersionID();
-        $db->Replace(
-            'CollectionVersionBlockStyles',
-            [
-                'cID' => $this->getBlockCollectionID(),
-                'cvID' => $cvID,
-                'arHandle' => $this->getAreaHandle(),
-                'bID' => $this->bID,
-                'issID' => $set->getID(),
-            ],
-            [
-                'cID',
-                'cvID',
-                'bID',
-                'arHandle',
-            ],
-            true
-        );
-        $this->issID = $set->getID();
-    }
-
-    /**
-     * Remove the block custom styles.
-     */
-    public function resetCustomStyle()
-    {
-        $db = Loader::db();
-        $c = $this->getBlockCollectionObject();
-        $cvID = $c->getVersionID();
-        $db->Execute(
-            'delete from CollectionVersionBlockStyles where cID = ? and cvID = ? and arHandle = ? and bID = ?',
-            [
-                $this->getBlockCollectionID(),
-                $cvID,
-                $this->getAreaHandle(),
-                $this->bID,
-            ]
-        );
-        $this->issID = 0;
-    }
-
-    /**
-     * @deprecated
-     */
-    public function refreshCache()
-    {
-        /*
-        // if the block is a global block, we need to delete all cached versions that reference it.
-        if ($this->bIsGlobal) {
-            $this->refreshCacheAll();
-        } else {
-            $c = $this->getBlockCollectionObject();
-            $a = $this->getBlockAreaObject();
-            if (is_object($c) && is_object($a)) {
-                Cache::delete('block', $this->getBlockID() . ':' . $c->getCollectionID() . ':' . $c->getVersionID() . ':' . $a->getAreaHandle());
-                Cache::delete('block_view_output', $c->getCollectionID() . ':' . $this->getBlockID() . ':' . $a->getAreaHandle());
-                Cache::delete('collection_blocks', $c->getCollectionID() . ':' . $c->getVersionID());
-            }
-            Cache::delete('block', $this->getBlockID());
-
-            // now we check the scrapbook display
-            $db = Loader::db();
-
-
-            $rows=$db->getAll('select cID, cvID, arHandle FROM CollectionVersionBlocks cvb inner join btCoreScrapbookDisplay bts on bts.bID = cvb.bID where bts.bOriginalID = ?', array($this->getBlockID()));
-            foreach($rows as $row){
-                Cache::delete('block', $this->getBlockID() . ':' . intval($row['cID']) . ':' . intval($row['cvID']) . ':' . $row['arHandle'] );
-                Cache::delete('block_view_output', $row['cID'] . ':' . $this->getBlockID() . ':' . $row['arHandle']);
-                Cache::delete('block', $this->getBlockID());
-            }
-
-            if ($this->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY && is_object($a)) {
-                $rows=$db->getAll('select cID, cvID, arHandle FROM CollectionVersionBlocks cvb inner join btCoreScrapbookDisplay bts on bts.bOriginalID = cvb.bID where bts.bID = ?', array($this->getBlockID()));
-                foreach($rows as $row){
-                    Cache::delete('block', $row['bID'] . ':' . $c->getCollectionID() . ':' . $c->getVersionID() . ':' . $a->getAreaHandle());
-                    Cache::delete('block_view_output', $c->getCollectionID() . ':' . $row['bID'] . ':' . $a->getAreaHandle());
-                }
-            }
-        }
-        */
-    }
-
-    /**
-     * Set the collection instance containing the block.
-     *
-     * @param \Concrete\Core\Page\Collection\Collection $c
-     */
-    public function setBlockCollectionObject($c)
-    {
-        $this->c = $c;
-        $this->cID = $c->getCollectionID();
-    }
-
-    /**
-     * Get the block type name.
-     *
-     * @return string|null
-     */
-    public function getBlockTypeName()
-    {
-        return $this->btName;
-    }
-
-    /**
-     * Get the ID of the user that created the block instance.
-     *
-     * @return int|null
-     */
-    public function getBlockUserID()
-    {
-        return $this->uID;
-    }
-
-    /**
-     * Gets the date/time when block was added (in the system time zone).
-     *
-     * @return string|null date/time formated like: 2009-01-01 00:00:00
-     */
-    public function getBlockDateAdded()
-    {
-        return $this->bDateAdded;
-    }
-
-    /**
-     * Gets the date/time when block was last modified (in the system time zone).
-     *
-     * @return string|null date/time formated like: 2009-01-01 00:00:00
-     */
-    public function getBlockDateLastModified()
-    {
-        return $this->bDateModified;
-    }
-
-    /**
-     * Set the ID of the collection that's associated to the block actions.
-     *
-     * @param int|null $bActionCID
-     */
-    public function setBlockActionCollectionID($bActionCID)
-    {
-        $this->bActionCID = $bActionCID;
-    }
-
-    /**
-     * Get the URL of the Edit Block action.
-     *
-     * @return string
-     */
-    public function getBlockEditAction()
-    {
-        return $this->_getBlockAction();
-    }
-
-    /**
-     * Get the base URL of a block action.
+     * @deprecated We switched to route-based actions
      *
      * @return string
      */
@@ -1725,31 +2045,27 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     }
 
     /**
-     * Get the ID of the collection that's associated to the block actions (or false if not found).
+     * @deprecated Use the setBlockCollectionObject() method
      *
-     * @return int|false
+     * @param \Concrete\Core\Page\Collection\Collection $c
      */
-    public function getBlockActionCollectionID()
+    public function loadNewCollection(&$c)
     {
-        if ($this->bActionCID > 0) {
-            return $this->bActionCID;
-        }
-
-        $c = Page::getCurrentPage();
-        if (is_object($c)) {
-            return $c->getCollectionID();
-        }
-
-        $c = $this->getBlockCollectionObject();
-        if (is_object($c)) {
-            return $c->getCollectionID();
-        }
-
-        return false;
+        $this->setBlockCollectionObject($c);
     }
 
     /**
-     * Get the URL of the Update Block Information action.
+     * @deprecated We switched to route-based actions
+     *
+     * @return string
+     */
+    public function getBlockEditAction()
+    {
+        return $this->_getBlockAction();
+    }
+
+    /**
+     * @deprecated We switched to route-based actions
      *
      * @return string
      */
@@ -1761,7 +2077,7 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     }
 
     /**
-     * Get the URL of the Update Block CSS action.
+     * @deprecated We switched to route-based actions
      *
      * @return string
      */
@@ -1773,19 +2089,23 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     }
 
     /**
-     * Does this block have an edit user interface?
+     * @deprecated no more scrapbooks in the dashboard
      *
      * @return bool
      */
-    public function isEditable()
+    public function isGlobal()
     {
-        $bv = new BlockView($this);
-        $path = $bv->getBlockPath(FILENAME_BLOCK_EDIT);
-        if (file_exists($path . '/' . FILENAME_BLOCK_EDIT)) {
-            return true;
-        }
-
         return false;
+    }
+
+    /**
+     * @deprecated use the getInstance() method
+     *
+     * @return \Concrete\Core\Block\BlockController
+     */
+    public function getController()
+    {
+        return $this->getInstance();
     }
 
     /**
@@ -1798,291 +2118,49 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $this->deleteBlock($forceDelete);
     }
 
+    
     /**
-     * Delete this block instance.
-     *
-     * @param bool $forceDelete If this is an alias block, should we delete all the block instances in addition to the alias?
-     *
-     * @return bool|null Returns false if the block is not valid
+     * @deprecated This method does nothing
      */
-    public function deleteBlock($forceDelete = false)
+    public function refreshCache()
     {
-        $db = Loader::db();
-
-        if ($this->bID < 1) {
-            return false;
-        }
-
-        $cID = $this->cID;
-        $c = $this->getBlockCollectionObject();
-        $cvID = $c->getVersionID();
-        $bID = $this->bID;
-        $arHandle = $this->arHandle;
-
-        // if this block is located in a master collection, we're going to delete all the instances of the block,
-        // regardless
-        if (($c instanceof \Concrete\Core\Page\Page && $c->isMasterCollection() && !$this->isAlias()) || $forceDelete) {
-            // forceDelete is used by the administration console
-
-            // this is an original. We're deleting it, and everything else having to do with it
-            $q = 'delete from CollectionVersionBlocks where bID = ?';
-            $r = $db->query($q, [$bID]);
-
-            $q = 'delete from BlockPermissionAssignments where bID = ?';
-            $r = $db->query($q, [$bID]);
-
-            $q = 'delete from CollectionVersionBlockStyles where bID = ?';
-            $r = $db->query($q, [$bID]);
-
-            $q = 'delete from CollectionVersionBlocksCacheSettings where bID = ?';
-            $r = $db->query($q, [$bID]);
+        /*
+        // if the block is a global block, we need to delete all cached versions that reference it.
+        if ($this->bIsGlobal) {
+            $this->refreshCacheAll();
         } else {
-            $q = 'delete from CollectionVersionBlocks where cID = ? and (cvID = ? or cbIncludeAll=1) and bID = ? and arHandle = ?';
-            $r = $db->query($q, [$cID, $cvID, $bID, $arHandle]);
-
-            // next, we delete the groups instance of this block
-            $q = 'delete from BlockPermissionAssignments where bID = ? and cvID = ? and cID = ?';
-            $r = $db->query($q, [$bID, $cvID, $cID]);
-
-            $q = 'delete from CollectionVersionBlockStyles where cID = ? and cvID = ? and bID = ? and arHandle = ?';
-            $r = $db->query($q, [$cID, $cvID, $bID, $arHandle]);
-
-            $q = 'delete from CollectionVersionBlocksCacheSettings where cID = ? and cvID = ? and bID = ? and arHandle = ?';
-            $r = $db->query($q, [$cID, $cvID, $bID, $arHandle]);
-        }
-
-        // delete any feature assignments that have been attached to this block to the collection version
-        $faIDs = $db->GetCol(
-            'select faID from BlockFeatureAssignments where cID = ? and cvID = ? and bID = ?',
-            [
-                $cID,
-                $cvID,
-                $bID,
-            ]
-        );
-        foreach ($faIDs as $faID) {
-            $fa = FeatureAssignment::getByID($faID, $c);
-            $fa->delete();
-        }
-
-        //then, we see whether or not this block is aliased to anything else
-        $totalBlocks = $db->GetOne('select count(*) from CollectionVersionBlocks where bID = ?', [$bID]);
-        $totalBlocks += $db->GetOne('select count(*) from btCoreScrapbookDisplay where bOriginalID = ?', [$bID]);
-        if ($totalBlocks < 1) {
-            // this block is not referenced in the system any longer, so we delete the entry in the blocks table, as well as the entries in the corresponding
-            // sub-blocks table
-
-            $v = [$this->bID];
-
-            // so, first we delete the block's sub content
-            $bt = BlockType::getByID($this->getBlockTypeID());
-            if ($bt && method_exists($bt, 'getBlockTypeClass')) {
-                $class = $bt->getBlockTypeClass();
-                $app = Facade::getFacadeApplication();
-                $bc = $app->build($class, [$this]);
-                $bc->delete();
+            $c = $this->getBlockCollectionObject();
+            $a = $this->getBlockAreaObject();
+            if (is_object($c) && is_object($a)) {
+                Cache::delete('block', $this->getBlockID() . ':' . $c->getCollectionID() . ':' . $c->getVersionID() . ':' . $a->getAreaHandle());
+                Cache::delete('block_view_output', $c->getCollectionID() . ':' . $this->getBlockID() . ':' . $a->getAreaHandle());
+                Cache::delete('collection_blocks', $c->getCollectionID() . ':' . $c->getVersionID());
             }
-
-            // now that the block's subcontent delete() method has been run, we delete the block from the Blocks table
-            $q = 'delete from Blocks where bID = ?';
-            $r = $db->query($q, $v);
-
-            // Aaaand then we delete all scrapbooked blocks to this entry
-            $r = $db->Execute(
-                'select cID, cvID, CollectionVersionBlocks.bID, arHandle from CollectionVersionBlocks inner join btCoreScrapbookDisplay on CollectionVersionBlocks.bID = btCoreScrapbookDisplay.bID where bOriginalID = ?',
-                [$bID]
-            );
-            while ($row = $r->FetchRow()) {
-                $c = Page::getByID($row['cID'], $row['cvID']);
-                $b = self::getByID($row['bID'], $c, $row['arHandle']);
-                $b->delete();
-            }
-        }
-    }
-
-    /**
-     * Check if this block instance is an alias.
-     *
-     * @param \Concrete\Core\Page\Collection\Collection|null $c if specified, check if the block with the ID of this instance is an alias in that page (otherwise the check is done agains this specific block instance)
-     *
-     * @return bool|null return NULL if $c is specified but there's no block with the same ID in that page
-     */
-    public function isAlias($c = null)
-    {
-        if ($c) {
+            Cache::delete('block', $this->getBlockID());
+        
+            // now we check the scrapbook display
             $db = Loader::db();
-            $cID = $c->getCollectionID();
-            $vo = $c->getVersionObject();
-            $cvID = $vo->getVersionID();
-            $q = 'select bID from CollectionVersionBlocks where bID = ? and cID=? and isOriginal = 0 and cvID = ?';
-            $r = $db->query($q, [$this->bID, $cID, $cvID]);
-            if ($r) {
-                return $r->numRows() > 0;
+        
+            $rows=$db->getAll('select cID, cvID, arHandle FROM CollectionVersionBlocks cvb inner join btCoreScrapbookDisplay bts on bts.bID = cvb.bID where bts.bOriginalID = ?', array($this->getBlockID()));
+            foreach($rows as $row){
+                Cache::delete('block', $this->getBlockID() . ':' . intval($row['cID']) . ':' . intval($row['cvID']) . ':' . $row['arHandle'] );
+                Cache::delete('block_view_output', $row['cID'] . ':' . $this->getBlockID() . ':' . $row['arHandle']);
+                Cache::delete('block', $this->getBlockID());
             }
-        } else {
-            return !$this->isOriginal;
+        
+            if ($this->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY && is_object($a)) {
+                $rows=$db->getAll('select cID, cvID, arHandle FROM CollectionVersionBlocks cvb inner join btCoreScrapbookDisplay bts on bts.bOriginalID = cvb.bID where bts.bID = ?', array($this->getBlockID()));
+                foreach($rows as $row) {
+                    Cache::delete('block', $row['bID'] . ':' . $c->getCollectionID() . ':' . $c->getVersionID() . ':' . $a->getAreaHandle());
+                    Cache::delete('block_view_output', $c->getCollectionID() . ':' . $row['bID'] . ':' . $a->getAreaHandle());
+                }
+            }
         }
+        */
     }
 
     /**
-     * Get the original block ID.
-     *
-     * @param int|null $originalBID
-     */
-    public function setOriginalBlockID($originalBID)
-    {
-        $this->originalBID = $originalBID;
-    }
-
-    /**
-     * Move this block after another block (in the block page & area).
-     *
-     * @param \Concrete\Core\Block\Block|null $afterBlock set to NULL to move this block at the first position; Set to a Block instance to move this block after that instance
-     */
-    public function moveBlockToDisplayOrderPosition($afterBlock)
-    {
-        // first, we increase the display order of all blocks found after this one.
-        $db = Loader::db();
-        $c = $this->getBlockCollectionObject();
-        if ($afterBlock instanceof self) {
-            $block = self::getByID(
-                $afterBlock->getBlockID(),
-                $this->getBlockCollectionObject(),
-                $this->getBlockAreaObject()
-            );
-            $q = 'update CollectionVersionBlocks set cbDisplayOrder = cbDisplayOrder + 1 where cID = ? and (cvID = ? or cbIncludeAll=1) and arHandle = ? and cbDisplayOrder > ?';
-            $v = [$c->getCollectionID(), $c->getVersionID(), $this->arHandle, $block->getBlockDisplayOrder()];
-            $db->Execute($q, $v);
-
-            // now we set this block's display order to 1 + the current block
-            $q = 'update CollectionVersionBlocks set cbDisplayOrder = ? where bID = ? and cID = ? and (cvID = ? or cbIncludeAll=1) and arHandle = ?';
-            $v = [
-                $block->getBlockDisplayOrder() + 1,
-                $this->getBlockID(),
-                $c->getCollectionID(),
-                $c->getVersionID(),
-                $this->arHandle,
-            ];
-            $db->Execute($q, $v);
-        } else {
-            $q = 'update CollectionVersionBlocks set cbDisplayOrder = cbDisplayOrder + 1 where cID = ? and (cvID = ? or cbIncludeAll=1) and arHandle = ?';
-            $v = [$c->getCollectionID(), $c->getVersionID(), $this->arHandle];
-            $db->Execute($q, $v);
-
-            $q = 'update CollectionVersionBlocks set cbDisplayOrder = ? where bID = ? and cID = ? and (cvID = ? or cbIncludeAll=1) and arHandle = ?';
-            $v = [0, $this->getBlockID(), $c->getCollectionID(), $c->getVersionID(), $this->arHandle];
-            $db->Execute($q, $v);
-        }
-    }
-
-    /**
-     * Get the block display order (if available).
-     *
-     * @return int|null
-     */
-    public function getBlockDisplayOrder()
-    {
-        return $this->cbDisplayOrder;
-    }
-
-    /**
-     * Set the absolute position of this block, regardless other blocks in the same page & area.
-     *
-     * @param int $do the new absolute position of the block (starting from 0)
-     */
-    public function setAbsoluteBlockDisplayOrder($do)
-    {
-        $db = Loader::db();
-
-        $cID = $this->cID;
-        $bID = $this->bID;
-        $arHandle = $this->arHandle;
-
-        $c = $this->getBlockCollectionObject();
-        $cvID = $c->getVersionID();
-
-        $q = 'update CollectionVersionBlocks set cbDisplayOrder = ? where bID = ? and cID = ? and (cvID = ? or cbIncludeAll=1) and arHandle = ?';
-        $r = $db->query($q, [$do, $bID, $cID, $cvID, $arHandle]);
-    }
-
-    /**
-     * Mark the block as having permissions that override the ones of the area.
-     * Initial permissions are copied from the page/area.
-     */
-    public function doOverrideAreaPermissions()
-    {
-        $db = Loader::db();
-        $c = $this->getBlockCollectionObject();
-        $v = [$c->getCollectionID(), $c->getVersionID(), $this->bID, $this->arHandle];
-        $db->query(
-           'update CollectionVersionBlocks set cbOverrideAreaPermissions = 1 where cID = ? and (cvID = ? or cbIncludeAll = 1) and bID = ? and arHandle = ?',
-           $v);
-        $v = [$c->getCollectionID(), $c->getVersionID(), $this->bID];
-        $db->query('delete from BlockPermissionAssignments where cID = ? and cvID = ? and bID = ?', $v);
-
-        // copy permissions from the page to the area
-        $permissions = PermissionKey::getList('block');
-        foreach ($permissions as $pk) {
-            $pk->setPermissionObject($this);
-            $pk->copyFromPageOrAreaToBlock();
-        }
-    }
-
-    /**
-     * Set the name of the custom template.
-     *
-     * @param string $template
-     */
-    public function setCustomTemplate($template)
-    {
-        $data['bFilename'] = $template;
-        $this->updateBlockInformation($data);
-    }
-
-    /**
-     * Update the block information, like its block filename, and block name.
-     *
-     * @param array $data Valid keys:
-     * - 'bName' to update the block name
-     * - 'bFilename' to update the block custom template
-     */
-    public function updateBlockInformation($data)
-    {
-        // this is the function that
-        $db = Loader::db();
-        $dh = Loader::helper('date');
-        $dt = $dh->getOverridableNow();
-
-        $bName = $this->bName;
-        $bFilename = $this->bFilename;
-        if (isset($data['bName'])) {
-            $bName = $data['bName'];
-        }
-        if (isset($data['bFilename'])) {
-            $bFilename = $data['bFilename'];
-        }
-
-        $v = [$bName, $bFilename, $dt, $this->bID];
-        $q = 'update Blocks set bName = ?, bFilename = ?, bDateModified = ? where bID = ?';
-        $r = $db->prepare($q);
-        $res = $db->execute($r, $v);
-
-        $this->refreshBlockOutputCache();
-    }
-
-    /**
-     * Set the name of the block.
-     *
-     * @param string $name
-     */
-    public function setName($name)
-    {
-        $data['bName'] = $name;
-        $this->updateBlockInformation($data);
-    }
-
-    /**
-     * @deprecated
+     * @deprecated This method does nothing
      */
     public function refreshCacheAll()
     {
@@ -2096,80 +2174,5 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
             Cache::delete('block', $this->getBlockID());
         }
         */
-    }
-
-    /**
-     * Export the data associated to this block to an XML node.
-     *
-     * @param \SimpleXMLElement $node the parent node where we'll append the XML node to
-     * @param string $exportType set to 'full' to export cache and custom style settings too
-     */
-    public function export($node, $exportType = 'full')
-    {
-        if (!$this->isAliasOfMasterCollection() || $this->c->isMasterCollection()) {
-            // We have the OR up here so that master collections that you have duplicated from other
-            // master collections export properly.
-            $blockNode = $node->addChild('block');
-            $blockNode->addAttribute('type', $this->getBlockTypeHandle());
-            $blockNode->addAttribute('name', $this->getBlockName());
-            if ($this->getBlockFilename() != '') {
-                $blockNode->addAttribute('custom-template', $this->getBlockFilename());
-            }
-            if (is_object($this->c) && $this->c->isMasterCollection()) {
-                $mcBlockID = Loader::helper('validation/identifier')->getString(8);
-                ContentExporter::addMasterCollectionBlockID($this, $mcBlockID);
-                $blockNode->addAttribute('mc-block-id', $mcBlockID);
-            }
-
-            if ($exportType == 'full') {
-                $style = $this->getCustomStyle();
-                if (is_object($style)) {
-                    $set = $style->getStyleSet();
-                    $set->export($blockNode);
-                }
-                if ($this->overrideBlockTypeCacheSettings()) {
-                    $settings = $this->getBlockCacheSettingsObject();
-                    $blockNode['cache-output'] = $settings->cacheBlockOutput();
-                    $blockNode['cache-output-lifetime'] = $settings->getBlockOutputCacheLifetime();
-                    $blockNode['cache-output-on-post'] = $settings->cacheBlockOutputOnPost();
-                    $blockNode['cache-output-for-registered-users'] = $settings->cacheBlockOutputForRegisteredUsers();
-                }
-                $bc = $this->getInstance();
-                $bc->export($blockNode);
-            }
-        } else {
-            $blockNode = $node->addChild('block');
-            $blockNode->addAttribute('mc-block-id', ContentExporter::getMasterCollectionTemporaryBlockID($this));
-        }
-    }
-
-    /**
-     * Check if this block is an alias from a page default.
-     *
-     * @return bool
-     */
-    public function isAliasOfMasterCollection()
-    {
-        return $this->getBlockCollectionObject()->isBlockAliasedFromMasterCollection($this);
-    }
-
-    /**
-     * Get the block name.
-     *
-     * @return string|null
-     */
-    public function getBlockName()
-    {
-        return $this->bName;
-    }
-
-    /**
-     * Get the name of the custom template.
-     *
-     * @return string|null
-     */
-    public function getBlockFilename()
-    {
-        return $this->bFilename;
     }
 }
