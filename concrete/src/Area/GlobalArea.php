@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Area;
 
+use Concrete\Core\Page\Stack\StackList;
 use Loader;
 use Page;
 use Permissions;
@@ -157,4 +158,24 @@ class GlobalArea extends Area
         $db->Execute('select cID from Areas where arHandle = ? and arIsGlobal = 1', array($arHandle));
         $db->Execute('delete from Areas where arHandle = ? and arIsGlobal = 1', array($arHandle));
     }
+
+    /**
+     * Searches for global areas without any blocks in it and deletes them.
+     * This will have a positive impact on the performance as every global area is rendered for every page.
+     */
+    public static function deleteEmptyAreas()
+    {
+        $stackList = new StackList();
+        $stackList->filterByGlobalAreas();
+
+        /** @var \Concrete\Core\Page\Stack\Stack[] $globalAreaStacks */
+        $globalAreaStacks = $stackList->getResults();
+
+        foreach ($globalAreaStacks as $stack) {
+            if (count($stack->getBlockIDs()) === 0) {
+                $stack->delete();
+            }
+        }
+    }
+
 }
