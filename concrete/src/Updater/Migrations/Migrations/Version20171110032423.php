@@ -111,7 +111,7 @@ class Version20171110032423 extends AbstractMigration
      */
     public function up(Schema $schema)
     {
-        $table = $schema->getTable('CalendarEventVersions');
+        $table = $schema->hasTable('CalendarEventVersions');
         if ($table) {
             // We already have this functionality installed somehow, so let's return.
             return;
