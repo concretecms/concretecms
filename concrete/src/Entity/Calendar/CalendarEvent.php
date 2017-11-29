@@ -52,42 +52,6 @@ class CalendarEvent implements ObjectInterface
      */
     protected $eventID;
 
-    /**
-     * @deprecated
-     * @TODO –remove this once the version update has landed.
-     * @ORM\Column(type="text", nullable=true)
-     */
-    protected $description;
-
-    /**
-     * @deprecated
-     * @TODO –remove this once the version update has landed.
-     * @ORM\Column(type="text", nullable=true)
-     */
-    protected $name;
-
-    /**
-     * @deprecated
-     * @TODO –remove this once the version update has landed.
-     * @ORM\Column(type="boolean", options={"default": 0})
-     */
-    protected $approved = false;
-
-    /**
-     * C = created page, A = associated page, null = don't enable
-     * @deprecated
-     * @TODO –remove this once the version update has landed.
-     * @ORM\Column(type="string", length=1, nullable=true)
-     */
-    protected $relatedPageRelationType;
-
-    /**
-     * @deprecated
-     * @TODO –remove this once the version update has landed.
-     * @ORM\Column(type="integer", options={"unsigned": true, "default": 0})
-     */
-    protected $cID = 0;
-
     public function __construct(Calendar $calendar)
     {
         $this->calendar = $calendar;

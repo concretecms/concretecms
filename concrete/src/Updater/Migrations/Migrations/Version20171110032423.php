@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
+use Concrete\Core\Attribute\Key\Category;
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Support\Facade\Package;
@@ -57,22 +58,22 @@ class Version20171110032423 extends AbstractMigration
     protected function backupLegacyCalendar()
     {
         $this->output(t('Backing up legacy calendar...'));
-        if (!$this->connection->tableExists('CalendarEventAttributeValues')) {
+        if (!$this->connection->tableExists('_CalendarEventAttributeValues')) {
             $this->connection->Execute('alter table CalendarEventAttributeValues rename _CalendarEventAttributeValues');
         }
-        if (!$this->connection->tableExists('CalendarEventOccurrences')) {
+        if (!$this->connection->tableExists('_CalendarEventOccurrences')) {
             $this->connection->Execute('alter table CalendarEventOccurrences rename _CalendarEventOccurrences');
         }
-        if (!$this->connection->tableExists('CalendarEventRepetitions')) {
+        if (!$this->connection->tableExists('_CalendarEventRepetitions')) {
             $this->connection->Execute('alter table CalendarEventRepetitions rename _CalendarEventRepetitions');
         }
-        if (!$this->connection->tableExists('CalendarEventSearchIndexAttributes')) {
+        if (!$this->connection->tableExists('_CalendarEventSearchIndexAttributes')) {
             $this->connection->Execute('alter table CalendarEventSearchIndexAttributes rename _CalendarEventSearchIndexAttributes');
         }
-        if (!$this->connection->tableExists('CalendarEvents')) {
+        if (!$this->connection->tableExists('_CalendarEvents')) {
             $this->connection->Execute('alter table CalendarEvents rename _CalendarEvents');
         }
-        if (!$this->connection->tableExists('Calendars')) {
+        if (!$this->connection->tableExists('_Calendars')) {
             $this->connection->Execute('alter table Calendars rename _Calendars');
         }
     }
@@ -99,17 +100,38 @@ class Version20171110032423 extends AbstractMigration
     protected function updateAttributeKeys($pkg)
     {
         $this->output(t('Updating attribute keys from legacy to 8.3.'));
-    }
+        $category = Category::getByHandle('event');
+        $r = $this->connection->executeQuery('select akID from AttributeKeys ak left join AttributeKeyCategories akc on ak.akCategoryID = akc.akCategoryID where akCategory = "legacykey" and akc.akCategoryID is null');
+        while ($row = $r->fetch()) {
+            $cnt = $this->connection->fetchColumn('select count(akID) from CalendarEventAttributeKeys where akID = ?', [$row['akID']]);
+            if (!$cnt) {
+                $this->connection->executeQuery('delete from LegacyAttributeKeys where akID = ?', [$row['akID']]);
+                $this->connection->executeQuery('update AttributeKeys set pkgID = null, akCategoryID = ?, akCategory = ? where akID = ?',
+                    [$category->getAttributeKeyCategoryID(), 'eventkey', $row['akID']]
+                );
+                $this->connection->insert('CalendarEventAttributeKeys', ['akID' => $row['akID']]);
+            }
+        }
 
-    protected function migrateCalendars($pkg)
-    {
-        $this->output(t('Migrating calendar content into 8.3 calendar.'));
+        $r = $this->connection->executeQuery('select asID from AttributeSets ats left join AttributeKeyCategories akc on ats.akCategoryID = akc.akCategoryID where akc.akCategoryID is null');
+        while ($row = $r->fetch()) {
+            $this->connection->executeQuery('update AttributeSets set pkgID = null, akCategoryID = ? where asID = ?',
+                [$category->getAttributeKeyCategoryID(), $row['asID']]
+            );
+        }
+
+
+
     }
 
     /**
      * @param Schema $schema
      */
     public function up(Schema $schema)
+    {
+    }
+
+    public function postUp(Schema $schema)
     {
         $table = $schema->hasTable('CalendarEventVersions');
         if ($table) {
@@ -135,10 +157,8 @@ class Version20171110032423 extends AbstractMigration
             // now, take existing calendar attribute keys and turn them into 8.3 keys
             $this->updateAttributeKeys($pkg);
 
-            // now update the calendars and contenet
-            $this->migrateCalendars($pkg);
+            // leaving data in backup tables so that we can use the dashboard import to migrate it.
 
-            // Now, let's migrate the data back.
             $this->connection->Execute('set foreign_key_checks = 1');
         } else {
             $this->addCalendarFunctionality();
