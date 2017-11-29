@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\System\Files\Thumbnails;
 
+use Concrete\Core\File\Image\Thumbnail\ThumbnailFormatService;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Http\Response;
@@ -76,9 +77,9 @@ class Options extends DashboardPageController
     protected function getThumbnailsFormats()
     {
         return [
-            'png' => t('Always create PNG thumbnails (slightly bigger file size, transparency is kept)'),
-            'jpg' => t('Always create JPEG thumbnails (slightly smaller file size, transparency is not available)'),
-            'auto' => t('Automatic: create a JPEG thumbnail if the source image is in JPEG format, otherwise create a PNG thumbnail'),
+            ThumbnailFormatService::FORMAT_PNG => t('Always create PNG thumbnails (slightly bigger file size, transparency is kept)'),
+            ThumbnailFormatService::FORMAT_JPEG => t('Always create JPEG thumbnails (slightly smaller file size, transparency is not available)'),
+            ThumbnailFormatService::FORMAT_AUTO => t('Automatic: create a JPEG thumbnail if the source image is in JPEG format, otherwise create a PNG thumbnail'),
         ];
     }
 
