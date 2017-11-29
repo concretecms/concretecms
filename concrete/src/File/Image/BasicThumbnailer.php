@@ -147,10 +147,18 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
     public function setThumbnailsFormat($thumbnailsFormat)
     {
         $thumbnailsFormat = $thumbnailsFormat ? strtolower(trim((string) $thumbnailsFormat)) : '';
-        if ($thumbnailsFormat === 'jpg') {
-            $thumbnailsFormat = 'jpeg';
+        switch ($thumbnailsFormat) {
+            case ThumbnailFormatService::FORMAT_JPEG:
+            case ThumbnailFormatService::FORMAT_PNG:
+            case ThumbnailFormatService::FORMAT_AUTO:
+                $this->thumbnailsFormat = $thumbnailsFormat;
+                break;
+            case 'jpg':
+                $this->thumbnailsFormat = ThumbnailFormatService::FORMAT_JPEG;
+                break;
+            default:
+                $this->thumbnailsFormat = ThumbnailFormatService::FORMAT_JPEG;
         }
-        $this->thumbnailsFormat = in_array($thumbnailsFormat, ['jpeg', 'png', 'auto']) ? $thumbnailsFormat : 'jpeg';
 
         return $this;
     }
