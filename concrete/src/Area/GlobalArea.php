@@ -7,6 +7,9 @@ use Loader;
 use Page;
 use Permissions;
 use Stack;
+use Concrete\Core\Multilingual\Page\Section\Section as MultilingualSection;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Site\Service as SiteService;
 
 class GlobalArea extends Area
 {
@@ -166,6 +169,18 @@ class GlobalArea extends Area
      */
     public static function deleteEmptyAreas()
     {
+        $app = Application::getFacadeApplication();
+        $siteService = $app->make(SiteService::class);
+        $multilingualSectionIDs = [];
+        $sites = $siteService->getList();
+        foreach ($sites as $site) {
+            $multilingualSectionIDs = array_merge(MultilingualSection::getIDList($site));
+        }
+        $multilingualSections = [];
+        foreach (array_unique($multilingualSectionIDs) as $multilingualSectionID) {
+            $multilingualSections[] = MultilingualSection::getByID($multilingualSectionID);
+        }
+
         $stackList = new StackList();
         $stackList->filterByGlobalAreas();
 
@@ -173,24 +188,37 @@ class GlobalArea extends Area
         $globalAreaStacks = $stackList->getResults();
 
         foreach ($globalAreaStacks as $stack) {
-            // get list of all available page versions, we only delete areas if they never had any content
-            $versionList = new VersionList($stack);
-            $versions = $versionList->get();
-
+            $stackAlternatives = [];
+            if ($stack->isNeutralStack()) {
+                $stackAlternatives[] = $stack;
+            } else {
+                $stackAlternatives[] = $stack->getNeutralStack();
+            }
+            foreach ($multilingualSections as $multilingualSection) {
+                $stackAlternative = $stackAlternatives[0]->getLocalizedStack($multilingualSection);
+                if ($stackAlternative !== null) {
+                    $stackAlternatives[] = $stackAlternative;
+                }
+            }
             $hasBlocks = false;
-
-            foreach ($versions as $version) {
-                $pageVersion = Page::getByID($version->getCollectionID(), $version->getVersionID());
-                $totalBlocks = count($pageVersion->getBlockIDs());
-
-                if ($totalBlocks > 0) {
-                    $hasBlocks = true;
-                    break;
+            foreach ($stackAlternatives as $stackAlternative) {
+                // get list of all available page versions, we only delete areas if they never had any content
+                $versionList = new VersionList($stackAlternative);
+                $versions = $versionList->get();
+    
+                foreach ($versions as $version) {
+                    $pageVersion = Page::getByID($version->getCollectionID(), $version->getVersionID());
+                    $totalBlocks = count($pageVersion->getBlockIDs());
+    
+                    if ($totalBlocks > 0) {
+                        $hasBlocks = true;
+                        break 2;
+                    }
                 }
             }
 
             if (!$hasBlocks) {
-                $stack->delete();
+                $stackAlternatives[0]->delete();
             }
         }
     }
