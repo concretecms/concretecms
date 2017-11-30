@@ -116,6 +116,7 @@ class Multilingual extends Page
                     }
                     $ih = Core::make('multilingual/interface/flag');
                     $icon = (string) $ih->getSectionFlagIcon($ms);
+                    $pr->setPage($newPage);
                     $pr->setAdditionalDataAttribute('name', $newPage->getCollectionName());
                     $pr->setAdditionalDataAttribute('link', $newPage->getCollectionLink());
                     $pr->setAdditionalDataAttribute('icon', $icon);
