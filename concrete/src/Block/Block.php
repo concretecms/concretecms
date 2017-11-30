@@ -1258,7 +1258,7 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         if ($this->overrideBlockTypeContainerSettings()) {
             return !$this->enableBlockContainer();
         }
-        $controller = $this->getInstance();
+        $controller = $this->getController();
 
         return $controller->ignorePageThemeGridFrameworkContainer();
     }
@@ -1377,7 +1377,7 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
      *
      * @return \Concrete\Core\Block\BlockController
      */
-    public function getInstance()
+    public function getController()
     {
         if (
             Config::get('concrete.cache.blocks')
@@ -1905,7 +1905,7 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
                     $blockNode['cache-output-on-post'] = $settings->cacheBlockOutputOnPost();
                     $blockNode['cache-output-for-registered-users'] = $settings->cacheBlockOutputForRegisteredUsers();
                 }
-                $bc = $this->getInstance();
+                $bc = $this->getController();
                 $bc->export($blockNode);
             }
         } else {
@@ -2104,13 +2104,13 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     }
 
     /**
-     * @deprecated use the getInstance() method
+     * @deprecated use the getController() method
      *
      * @return \Concrete\Core\Block\BlockController
      */
-    public function getController()
+    public function getInstance()
     {
-        return $this->getInstance();
+        return $this->getController();
     }
 
     /**
