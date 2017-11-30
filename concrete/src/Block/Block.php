@@ -2032,6 +2032,16 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     }
 
     /**
+     * @deprecated Use the setBlockCollectionObject() method
+     *
+     * @param \Concrete\Core\Page\Collection\Collection $c
+     */
+    public function loadNewCollection(&$c)
+    {
+        $this->setBlockCollectionObject($c);
+    }
+
+    /**
      * @deprecated We switched to route-based actions
      *
      * @return string
@@ -2047,16 +2057,6 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $str = DIR_REL . '/' . DISPATCHER_FILENAME . "?cID={$cID}&amp;bID={$bID}&amp;arHandle={$arHandle}" . $step . '&amp;ccm_token=' . $token;
 
         return $str;
-    }
-
-    /**
-     * @deprecated Use the setBlockCollectionObject() method
-     *
-     * @param \Concrete\Core\Page\Collection\Collection $c
-     */
-    public function loadNewCollection(&$c)
-    {
-        $this->setBlockCollectionObject($c);
     }
 
     /**
