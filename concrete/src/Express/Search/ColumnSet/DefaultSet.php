@@ -39,7 +39,7 @@ class DefaultSet extends ColumnSet
             $column = $this->getColumnByKey('e.exEntryDateCreated');
             $this->setDefaultSortColumn($column, 'desc');
         }
-        $this->removeColumnByKey('e.exEntryDisplayOrder'); // It shouldn't be in the set
+
         $i = 0;
         foreach($category->getSearchableList() as $ak) {
             $this->addColumn(new AttributeKeyColumn($ak));
