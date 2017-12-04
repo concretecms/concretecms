@@ -193,9 +193,13 @@ class Controller extends BlockController
             "DELETE FROM btSurveyOptions WHERE optionName NOT IN ('" . implode(
                 "','",
                 $slashedArgs) . "') AND bID = " . intval($this->bID));
+        
+        $max = $db->getOne(
+            "SELECT MAX(displayOrder) AS maxDisplayOrder FROM btSurveyOptions WHERE bID = " . intval($this->bID));
+            
+        $displayOrder = $max ? (int) $max + 1 : 0;
 
         if (is_array($args['pollOption'])) {
-            $displayOrder = 0;
             foreach ($args['pollOption'] as $optionName) {
                 $v1 = array($this->bID, $optionName, $displayOrder);
                 $q1 = "INSERT INTO btSurveyOptions (bID, optionName, displayOrder) VALUES (?, ?, ?)";
