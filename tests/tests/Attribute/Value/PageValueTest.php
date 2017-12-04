@@ -46,7 +46,7 @@ class PageValueTest extends AttributeValueTestCase
             'name' => 'Basic',
         ]);
 
-        $parent = Page::getByID(HOME_CID);
+        $parent = Page::getByID(Page::getHomePageID());
 
         $parent->add($pt, [
             'cName' => 'Test Page 1',

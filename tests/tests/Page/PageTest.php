@@ -22,7 +22,7 @@ class PageTest extends PageTestCase
 
     public function testHomePageExists()
     {
-        $home = Page::getByID(HOME_CID);
+        $home = Page::getByID(Page::getHomePageID());
         $this->assertTrue($home instanceof Page);
         $this->assertEquals(0, $home->getCollectionParentID());
         $this->assertEquals(1, $home->getCollectionID());
@@ -30,7 +30,7 @@ class PageTest extends PageTestCase
 
     public function testBasicCreatePage()
     {
-        $home = Page::getByID(HOME_CID);
+        $home = Page::getByID(Page::getHomePageID());
         $pt = PageType::getByID(1);
         $template = PageTemplate::getByID(1);
         $page = $home->add($pt, [
@@ -73,7 +73,7 @@ class PageTest extends PageTestCase
         $page2 = self::createPage('Awesome Page 2');
 
         $page1->move($page2);
-        $this->assertEquals($page2->getCollectionParentID(), HOME_CID);
+        $this->assertEquals($page2->getCollectionParentID(), Page::getHomePageID());
         $this->assertEquals($page1->getCollectionParentID(), $page2->getCollectionID());
         $this->assertEquals($page2->getCollectionPath(), '/awesome-page-2');
         $this->assertEquals($page1->getCollectionPath(), '/awesome-page-2/awesome-page');
@@ -198,7 +198,7 @@ class PageTest extends PageTestCase
     public function testPageDuplicate()
     {
         $page = self::createPage('double vision');
-        $home = Page::getByID(HOME_CID);
+        $home = Page::getByID(Page::getHomePageID());
 
         $newPage = $page->duplicate($home);
         $realNewPage = Page::getByID($newPage->getCollectionID(), 'ACTIVE');

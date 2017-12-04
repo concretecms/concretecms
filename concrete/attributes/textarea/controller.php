@@ -46,6 +46,9 @@ class Controller extends DefaultController
         if ($this->akTextareaDisplayMode == 'text') {
             return parent::getDisplayValue();
         }
+        if ($this->akTextareaDisplayMode == 'rich_text') {
+          return htmLawed($this->getAttributeValue()->getValue(), array('safe' => 1));
+        }
 
         return htmLawed($this->getAttributeValue()->getValue(), array('safe' => 1, 'deny_attribute' => 'style'));
     }

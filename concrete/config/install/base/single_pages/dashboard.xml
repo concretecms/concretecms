@@ -970,6 +970,9 @@
         <page name="Permissions" path="/dashboard/system/calendar/permissions"
               filename="/dashboard/system/calendar/permissions.php" pagetype=""
               description="" package="" />
+        <page name="Import Calendar Data" path="/dashboard/system/calendar/import"
+              filename="/dashboard/system/calendar/import.php" pagetype=""
+              description="" package="" />
 
         <page name="Conversations" path="/dashboard/system/conversations"
               filename="/dashboard/system/conversations/view.php" pagetype=""

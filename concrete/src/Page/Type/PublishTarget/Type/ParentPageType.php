@@ -21,7 +21,7 @@ class ParentPageType extends Type
         $configuration = new ParentPageConfiguration($this);
         $path = (string) $txml['path'];
         if (!$path) {
-            $c = Page::getByID(HOME_CID);
+            $c = Page::getByID(Page::getHomePageID());
         } else {
             $c = Page::getByPath($path);
         }

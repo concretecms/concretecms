@@ -12,6 +12,7 @@ use Concrete\Core\Express\Form\Renderer;
 use Concrete\Core\Express\EntryList;
 use Concrete\Core\Express\Form\Validator\ValidatorInterface;
 use Concrete\Core\Form\Context\ContextFactory;
+use Concrete\Core\Localization\Service\Date;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
 use Core;
@@ -99,7 +100,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
         return StreamedResponse::create(function() use ($entity, $me) {
             $entryList = new EntryList($entity);
 
-            $writer = new CsvWriter(Writer::createFromPath('php://output', 'w'));
+            $writer = new CsvWriter(Writer::createFromPath('php://output', 'w'), new Date());
             $writer->insertHeaders($entity);
             $writer->insertEntryList($entryList);
         }, 200, $headers);

@@ -44,8 +44,10 @@ class EventList extends \Concrete\Core\Search\ItemList\Database\AttributedItemLi
 
     public function finalizeQuery(\Doctrine\DBAL\Query\QueryBuilder $query)
     {
-        if (!$this->includeInactiveEvents) {
-            $query->andWhere('e.approved = 1');
+        if ($this->includeInactiveEvents) {
+            $query->andWhere('ve.eventVersionID = (select max(eventVersionID) from CalendarEventVersions where eventID = e.eventID)');
+        } else {
+            $query->andWhere('ve.evIsApproved = 1');
         }
 
         return $query;
@@ -66,6 +68,7 @@ class EventList extends \Concrete\Core\Search\ItemList\Database\AttributedItemLi
     public function createQuery()
     {
         $this->query->select('e.eventID')->from('CalendarEvents', 'e')
+            ->innerJoin('e', 'CalendarEventVersions', 've', 'e.eventID = ve.eventID')
             ->leftJoin('e', 'CalendarEventSearchIndexAttributes', 'ea', 'e.eventID = ea.eventID');
     }
 

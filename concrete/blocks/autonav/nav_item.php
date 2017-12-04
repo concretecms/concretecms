@@ -102,7 +102,7 @@ class NavItem
             $link = $this->cPointerExternalLink;
         } elseif ($this->cPath) {
             $link = $this->cPath;
-        } elseif ($this->cID == HOME_CID) {
+        } elseif ($this->cID == Page::getHomePageID()) {
             $link = DIR_REL . '/';
         } else {
             $link = DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $this->cID;

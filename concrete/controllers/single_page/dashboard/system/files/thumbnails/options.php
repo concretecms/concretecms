@@ -1,12 +1,14 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\System\Files\Thumbnails;
 
-use Concrete\Core\Page\Controller\DashboardPageController;
-use Concrete\Core\Http\ResponseFactoryInterface;
+use Concrete\Core\File\Image\Thumbnail\ThumbnailFormatService;
 use Concrete\Core\Http\Response;
+use Concrete\Core\Http\ResponseFactoryInterface;
+use Concrete\Core\Page\Controller\DashboardPageController;
 use Exception;
-use Throwable;
 use Imagine\Image\Box;
+use Throwable;
 
 class Options extends DashboardPageController
 {
@@ -16,7 +18,11 @@ class Options extends DashboardPageController
         $this->set('thumbnail_generation_strategies', $this->getThumbnailGenerationStrategies());
         $this->set('thumbnail_generation_strategy', $config->get('concrete.misc.basic_thumbnailer_generation_strategy'));
         $this->set('thumbnail_formats', $this->getThumbnailsFormats());
-        $this->set('thumbnail_format', $config->get('concrete.misc.default_thumbnail_format'));
+        $thumbnail_format = $config->get('concrete.misc.default_thumbnail_format');
+        if ($thumbnail_format === 'jpg') {
+            $thumbnail_format = ThumbnailFormatService::FORMAT_JPEG;
+        }
+        $this->set('thumbnail_format', $thumbnail_format);
         $this->set('jpeg_compression', $config->get('concrete.misc.default_jpeg_image_compression'));
         $this->set('png_compression', $config->get('concrete.misc.default_png_image_compression'));
         $this->set('manipulation_library', $config->get('concrete.file_manager.images.manipulation_library'));
@@ -65,31 +71,6 @@ class Options extends DashboardPageController
         }
     }
 
-    protected function getThumbnailGenerationStrategies()
-    {
-        return [
-            'now' => t('Create the thumbnails synchronously (may fail with out-of-memory errors)'),
-            'async' => t('Create the thumbnails asynchronously (users may not see thumbnails immediately)'),
-        ];
-    }
-
-    protected function getThumbnailsFormats()
-    {
-        return [
-            'png' => t('Always create PNG thumbnails (slightly bigger file size, transparency is kept)'),
-            'jpg' => t('Always create JPEG thumbnails (slightly smaller file size, transparency is not available)'),
-            'auto' => t('Automatic: create a JPEG thumbnail if the source image is in JPEG format, otherwise create a PNG thumbnail'),
-        ];
-    }
-
-    protected function getManipulationLibraries()
-    {
-        return [
-            'gd' => t('GD Library: faster, available in almost any environment, but less powerful'),
-            'imagick' => t('ImageMagick Library: much more powerful, but often not available or misconfigured'),
-        ];
-    }
-
     public function test_manipulation_library($handle, $token)
     {
         $rf = $this->app->make(ResponseFactoryInterface::class);
@@ -115,5 +96,30 @@ class Options extends DashboardPageController
         }
 
         return $response;
+    }
+
+    protected function getThumbnailGenerationStrategies()
+    {
+        return [
+            'now' => t('Create the thumbnails synchronously (may fail with out-of-memory errors)'),
+            'async' => t('Create the thumbnails asynchronously (users may not see thumbnails immediately)'),
+        ];
+    }
+
+    protected function getThumbnailsFormats()
+    {
+        return [
+            ThumbnailFormatService::FORMAT_PNG => t('Always create PNG thumbnails (slightly bigger file size, transparency is kept)'),
+            ThumbnailFormatService::FORMAT_JPEG => t('Always create JPEG thumbnails (slightly smaller file size, transparency is not available)'),
+            ThumbnailFormatService::FORMAT_AUTO => t('Automatic: create a JPEG thumbnail if the source image is in JPEG format, otherwise create a PNG thumbnail'),
+        ];
+    }
+
+    protected function getManipulationLibraries()
+    {
+        return [
+            'gd' => t('GD Library: faster, available in almost any environment, but less powerful'),
+            'imagick' => t('ImageMagick Library: much more powerful, but often not available or misconfigured'),
+        ];
     }
 }

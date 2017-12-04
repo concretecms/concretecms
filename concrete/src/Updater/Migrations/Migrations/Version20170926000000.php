@@ -8,7 +8,7 @@ class Version20170926000000 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
-        $this->connection->executeQuery('UPDATE btSearch SET postTo_cID = NULL WHERE IFNULL(CAST(postTo_cID AS SIGNED), 0) < 1');
+        $this->connection->executeQuery('UPDATE btSearch SET postTo_cID = NULL WHERE postTo_cID IS NOT NULL AND IFNULL(postTo_cID + 0, 0) < 1');
         $this->refreshBlockType('search');
     }
 

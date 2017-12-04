@@ -4353,17 +4353,25 @@
   <table name="FileImageThumbnailPaths">
     <field name="fileID" type="integer">
       <unsigned/>
+      <key/>
       <notnull/>
     </field>
     <field name="fileVersionID" type="integer">
       <unsigned/>
+      <key/>
       <notnull/>
     </field>
     <field name="thumbnailTypeHandle" type="string" size="255">
+      <key/>
       <notnull/>
     </field>
     <field name="storageLocationID" type="integer">
       <unsigned/>
+      <key/>
+      <notnull/>
+    </field>
+    <field name="thumbnailFormat" type="string" size="5">
+      <key/>
       <notnull/>
     </field>
     <field name="path" type="text">
@@ -4374,14 +4382,6 @@
     </field>
     <field name="lockID" type="string" size="255"/>
     <field name="lockExpires" type="datetime"/>
-
-    <index name="thumbnailPathID">
-      <unique/>
-      <col>fileID</col>
-      <col>fileVersionID</col>
-      <col>thumbnailTypeHandle</col>
-      <col>storageLocationID</col>
-    </index>
   </table>
 
 </schema>
