@@ -9,11 +9,11 @@ use Database;
 
 class Controller extends BlockController
 {
-    public $options = array();
+    public $options = [];
     protected $btTable = 'btSurvey';
     protected $btInterfaceWidth = 500;
     protected $btInterfaceHeight = 500;
-    protected $btExportTables = array('btSurvey', 'btSurveyOptions', 'btSurveyResults');
+    protected $btExportTables = ['btSurvey', 'btSurveyOptions', 'btSurveyResults'];
 
     public function on_start()
     {
@@ -26,10 +26,10 @@ class Controller extends BlockController
         }
         if ($this->bID) {
             $db = Database::connection();
-            $v = array($this->bID);
+            $v = [$this->bID];
             $q = "SELECT optionID, optionName, displayOrder FROM btSurveyOptions WHERE bID = ? ORDER BY displayOrder ASC";
             $r = $db->query($q, $v);
-            $this->options = array();
+            $this->options = [];
             if ($r) {
                 while ($row = $r->fetchRow()) {
                     $opt = new Option();
@@ -69,7 +69,7 @@ class Controller extends BlockController
     public function delete()
     {
         $db = Database::connection();
-        $v = array($this->bID);
+        $v = [$this->bID];
 
         $q = "DELETE FROM btSurveyOptions WHERE bID = ?";
         $db->query($q, $v);
@@ -114,12 +114,12 @@ class Controller extends BlockController
                 $iph = Core::make('helper/validation/ip');
                 $ip = $iph->getRequestIP();
                 $ip = ($ip === false) ? ('') : ($ip->getIp($ip::FORMAT_IP_STRING));
-                $v = array(
+                $v = [
                     $_REQUEST['optionID'],
                     $this->bID,
                     $duID,
                     $ip,
-                    $this->cID, );
+                    $this->cID, ];
                 $q = "INSERT INTO btSurveyResults (optionID, bID, uID, ipAddress, cID) VALUES (?, ?, ?, ?, ?)";
                 $db->query($q, $v);
                 setcookie("ccmPoll" . $this->bID . '-' . $this->cID, "voted", time() + 1296000, DIR_REL . '/');
@@ -138,7 +138,7 @@ class Controller extends BlockController
         $u = new User();
         if ($u->isRegistered()) {
             $db = Database::connection();
-            $v = array($u->getUserID(), $this->bID, $this->cID);
+            $v = [$u->getUserID(), $this->bID, $this->cID];
             $q = "SELECT count(resultID) AS total FROM btSurveyResults WHERE uID = ? AND bID = ? AND cID = ?";
             $result = $db->getOne($q, $v);
             if ($result > 0) {
@@ -156,17 +156,17 @@ class Controller extends BlockController
         $db = Database::connection();
 
         foreach ($this->options as $opt) {
-            $v1 = array($newBID, $opt->getOptionName(), $opt->getOptionDisplayOrder());
+            $v1 = [$newBID, $opt->getOptionName(), $opt->getOptionDisplayOrder()];
             $q1 = "INSERT INTO btSurveyOptions (bID, optionName, displayOrder) VALUES (?, ?, ?)";
             $db->query($q1, $v1);
 
-            $v2 = array($opt->getOptionID());
+            $v2 = [$opt->getOptionID()];
             $newOptionID = $db->Insert_ID();
             $q2 = "SELECT * FROM btSurveyResults WHERE optionID = ?";
             $r2 = $db->query($q2, $v2);
             if ($r2) {
                 while ($row = $r2->fetchRow()) {
-                    $v3 = array($newOptionID, $row['uID'], $row['ipAddress'], $row['timestamp']);
+                    $v3 = [$newOptionID, $row['uID'], $row['ipAddress'], $row['timestamp']];
                     $q3 = "INSERT INTO btSurveyResults (optionID, uID, ipAddress, timestamp) VALUES (?, ?, ?, ?)";
                     $db->query($q3, $v3);
                 }
@@ -182,10 +182,10 @@ class Controller extends BlockController
         $db = Database::connection();
 
         if (!is_array($args['survivingOptionNames'])) {
-            $args['survivingOptionNames'] = array();
+            $args['survivingOptionNames'] = [];
         }
 
-        $slashedArgs = array();
+        $slashedArgs = [];
         foreach ($args['survivingOptionNames'] as $arg) {
             $slashedArgs[] = addslashes($arg);
         }
@@ -193,15 +193,15 @@ class Controller extends BlockController
             "DELETE FROM btSurveyOptions WHERE optionName NOT IN ('" . implode(
                 "','",
                 $slashedArgs) . "') AND bID = " . intval($this->bID));
-        
+
         $max = $db->getOne(
             "SELECT MAX(displayOrder) AS maxDisplayOrder FROM btSurveyOptions WHERE bID = " . intval($this->bID));
-            
+
         $displayOrder = $max ? (int) $max + 1 : 0;
 
         if (is_array($args['pollOption'])) {
             foreach ($args['pollOption'] as $optionName) {
-                $v1 = array($this->bID, $optionName, $displayOrder);
+                $v1 = [$this->bID, $optionName, $displayOrder];
                 $q1 = "INSERT INTO btSurveyOptions (bID, optionName, displayOrder) VALUES (?, ?, ?)";
                 $db->query($q1, $v1);
                 ++$displayOrder;
@@ -215,6 +215,4 @@ class Controller extends BlockController
 			AND bID = {$this->bID} ";
         $db->query($query);
     }
-
-
 }
