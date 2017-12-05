@@ -128,7 +128,6 @@ class UpdateFromType extends BackendInterfaceController
 
                 unset($pageTypeDefaultPageBlocksClone[$cbRelationID]);
 
-
                 if (!empty($blockToUpdate['actions'])) {
                     $blocksToUpdate[] = $blockToUpdate;
                 }
@@ -177,7 +176,7 @@ class UpdateFromType extends BackendInterfaceController
 
                 $bFilename = $pageTypeBlock->getBlockFilename();
                 $defaultStyles = $pageTypeBlock->getCustomStyle();
-                
+
                 if ($bFilename) {
                     $pageBlock->setCustomTemplate($bFilename);
                 }
