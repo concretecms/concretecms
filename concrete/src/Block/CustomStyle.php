@@ -98,7 +98,7 @@ class CustomStyle extends AbstractCustomStyle
             $groups[''][] = '-o-transform: rotate(' . $set->getRotate() . 'deg)';
             $groups[''][] = '-ms-transform: rotate(' . $set->getRotate() . 'deg)';
         }
-        if ($set->getBoxShadowSpread()) {
+        if ($set->getBoxShadowColor() && ($set->getBoxShadowSpread() || $set->getBoxShadowBlur() || $set->getBoxShadowHorizontal() || $set->getBoxShadowVertical())) {
             $groups[''][] = 'box-shadow: ' . $set->getBoxShadowHorizontal() . ' ' . $set->getBoxShadowVertical() . ' ' . $set->getBoxShadowBlur() . ' ' . $set->getBoxShadowSpread() . ' ' . $set->getBoxShadowColor();
         }
 

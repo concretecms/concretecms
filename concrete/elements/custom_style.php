@@ -351,7 +351,7 @@ $form = Core::make('helper/form');
                 <div class="row">
                     <div class="col-sm-12">
                         <?=t('Color')?>
-                        <?=Loader::helper('form/color')->output('boxShadowColor', $boxShadowColor);?>
+                        <?=Loader::helper('form/color')->output('boxShadowColor', $boxShadowColor, ['showAlpha' => true]);?>
                     </div>
                 </div>
                 <hr/>
