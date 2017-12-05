@@ -160,6 +160,8 @@ class MiniSurvey
             } else {
                 $bIDClause .= ' ) ';
             }
+        } else {
+            $bIDClause = '';
         }
 
         return $db->executeQuery('SELECT * FROM btFormQuestions WHERE questionSetId='.intval($qsID).' '.$bIDClause.' ORDER BY position, msqID');
@@ -207,7 +209,7 @@ class MiniSurvey
                 $surveyBlockInfo['submitText'] = 'Submit';
             }
 
-            if ($surveyBlockInfo['displayCaptcha']) {
+            if (!empty($surveyBlockInfo['displayCaptcha'])) {
                 echo '<div class="ccm-edit-mode-disabled-item">' . t('Form Captcha') . '</div><br/>';
             }
 
