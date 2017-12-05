@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Captcha;
 
 /**
@@ -7,33 +8,24 @@ namespace Concrete\Core\Captcha;
 interface CaptchaInterface
 {
     /**
-     * Print out the input where users should enter the captcha code.
-     *
-     * @param array $customInputAttributes Custom attributes for the input element
+     * Print out the label for this captcha library.
      */
-    public function showInput(array $customInputAttributes = []);
+    public function label();
 
     /**
      * Displays the graphical portion of the captcha.
-     *
-     * @param array $customAttributes Custom attributes for the image element
-     * @param array $customImageAttributes
      */
-    public function display(array $customImageAttributes = []);
+    public function display();
 
     /**
-     * Print out the label for this captcha library.
-     *
-     * @param string $inputID the ID of the captcha input
+     * Print out the input where users should enter the captcha code.
      */
-    public function label($inputID = 'ccm-captcha-code');
+    public function showInput();
 
     /**
      * Check if the user input is valid for the captcha.
      *
-     * @param string $fieldName
-     *
      * @return bool
      */
-    public function check($fieldName = 'ccmCaptchaCode');
+    public function check();
 }
