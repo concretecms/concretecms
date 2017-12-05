@@ -70,9 +70,9 @@ class UpdateFromType extends BackendInterfaceController
         $pagesPlusCV = $db->fetchAll('select p.cID, max(cvID) as cvID from Pages p inner join CollectionVersions cv on p.cID = cv.cID where ptID = ? and cIsTemplate = 0 and cIsActive = 1 and siteTreeID = ? group by cID order by cID', [$ptID, $siteTreeID]);
 
         foreach ($pagesPlusCV as $pagePlusCV) {
-            $pageTypeDefaultPageBlocksClone = $pageTypeDefaultPageBlocks;
+            $pageTypeDefaultPageBlocksClone = $pageTypeDefaultPageRelBlocks;
 
-            $asociatedBlocks = $db->fetchAll(
+            $associatedBlocks = $db->fetchAll(
                 'select cbDisplayOrder, arHandle, bID, cbRelationID from CollectionVersionBlocks where cID = ? and cvID = ?',
                 [$pagePlusCV['cID'], $pagePlusCV['cvID']]
             );
@@ -80,13 +80,13 @@ class UpdateFromType extends BackendInterfaceController
             $blocksToUpdate = [];
             $blocksToAdd = [];
 
-            foreach ($asociatedBlocks as $asociatedBlock) {
-                $bID = $asociatedBlock['bID'];
-                $cbRelationID = $asociatedBlock['cbRelationID'];
+            foreach ($associatedBlocks as $associatedBlock) {
+                $bID = $associatedBlock['bID'];
+                $cbRelationID = $associatedBlock['cbRelationID'];
 
                 $blockToUpdate = [
                     'bID' => $bID,
-                    'arHandle' => $asociatedBlock['arHandle'],
+                    'arHandle' => $associatedBlock['arHandle'],
                     'actions' => [],
                 ];
 
@@ -108,7 +108,7 @@ class UpdateFromType extends BackendInterfaceController
                 if ($blockPageTypeDefaultPage) {
                     $forceChangeOrder = false;
 
-                    if ($asociatedBlock['arHandle'] != $blockPageTypeDefaultPage->getAreaHandle()) {
+                    if ($associatedBlock['arHandle'] != $blockPageTypeDefaultPage->getAreaHandle()) {
                         $blockToUpdate['actions'][] = [
                             'name' => 'change_arHandle',
                             'actualArHandle' => $blockPageTypeDefaultPage->getAreaHandle(),
@@ -117,7 +117,7 @@ class UpdateFromType extends BackendInterfaceController
                         $forceChangeOrder = true;
                     }
 
-                    if ($forceChangeOrder || ($asociatedBlock['cbDisplayOrder'] != $blockPageTypeDefaultPage->cbDisplayOrder)) {
+                    if ($forceChangeOrder || ($associatedBlock['cbDisplayOrder'] != $blockPageTypeDefaultPage->cbDisplayOrder)) {
                         $blockToUpdate['actions'][] = [
                             'name' => 'change_display_order',
                             'actualDisplayOrder' => $blockPageTypeDefaultPage->cbDisplayOrder,
@@ -126,7 +126,8 @@ class UpdateFromType extends BackendInterfaceController
                     }
                 }
 
-                unset($pageTypeDefaultPageBlocksClone[$bID]);
+                unset($pageTypeDefaultPageBlocksClone[$cbRelationID]);
+
 
                 if (!empty($blockToUpdate['actions'])) {
                     $blocksToUpdate[] = $blockToUpdate;
@@ -173,15 +174,18 @@ class UpdateFromType extends BackendInterfaceController
             // Update all forked pages by page type
             if ($action['name'] == 'update_forked') {
                 $pageTypeBlock = $blockService->getByID($action['pageTypeBlockID'], $pageTypeDefaultPage, $action['pageTypeArHandle']);
-                $bt = $pageTypeBlock->getBlockTypeObject();
 
-                $pageBlock->deleteBlock();
-
-                if ($bt->isCopiedWhenPropagated()) {
-                    $pageBlock = $pageTypeBlock->duplicate($page, true);
-                } else {
-                    $pageTypeBlock->alias($page);
+                $bFilename = $pageTypeBlock->getBlockFilename();
+                $defaultStyles = $pageTypeBlock->getCustomStyle();
+                
+                if ($bFilename) {
+                    $pageBlock->setCustomTemplate($bFilename);
                 }
+
+                if ($defaultStyles) {
+                    $pageBlock->setCustomStyleSet($defaultStyles->getStyleSet());
+                }
+
                 // Update block area by page type, if changed
             } elseif ($action['name'] == 'change_arHandle') {
                 $db = $this->app->make(Connection::class);

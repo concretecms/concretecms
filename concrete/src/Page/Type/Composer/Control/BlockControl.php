@@ -358,9 +358,11 @@ class BlockControl extends Control
         $blockDisplayOrder = $b->getBlockDisplayOrder();
         $bFilename = $b->getBlockFilename();
         $defaultStyles = $b->getCustomStyle();
+        $cbRelationID = $b->getBlockRelationID();
+
         $b->deleteBlock();
         $ax = Area::getOrCreate($c, $arHandle);
-        $b = $c->addBlock($bt, $ax, $data);
+        $b = $c->addBlock($bt, $ax, $data, $cbRelationID);
         $this->setPageTypeComposerControlBlockObject($b);
         $b->setAbsoluteBlockDisplayOrder($blockDisplayOrder);
         if ($bFilename) {
