@@ -7,7 +7,6 @@ use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
 use Concrete\Core\Calendar\Calendar;
 use Concrete\Core\Calendar\Event\Event;
 use Concrete\Core\Entity\Calendar\CalendarEvent;
-use Concrete\Core\Attribute\Context\BasicFormContext;
 
 class Controller extends \Concrete\Attribute\Number\Controller
 {
