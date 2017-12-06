@@ -195,18 +195,18 @@ class StyleSet
             $return = true;
         }
 
-        $r['boxShadowHorizontal'] = trim($r['boxShadowHorizontal']) ? trim($r['boxShadowHorizontal']) : '0px';
-        $r['boxShadowVertical'] = trim($r['boxShadowVertical']) ? trim($r['boxShadowVertical']) : '0px';
-        $r['boxShadowBlur'] = trim($r['boxShadowBlur']) ? trim($r['boxShadowBlur']) : '0px';
-        $r['boxShadowSpread'] = trim($r['boxShadowSpread']) ? trim($r['boxShadowSpread']) : '0px';
+        $boxShadowHorizontal = isset($r['boxShadowHorizontal']) && trim($r['boxShadowHorizontal']) ? trim($r['boxShadowHorizontal']) : '0px';
+        $boxShadowVertical = isset($r['boxShadowVertical']) && trim($r['boxShadowVertical']) ? trim($r['boxShadowVertical']) : '0px';
+        $boxShadowBlur = isset($r['boxShadowBlur']) && trim($r['boxShadowBlur']) ? trim($r['boxShadowBlur']) : '0px';
+        $boxShadowSpread = isset($r['boxShadowSpread']) && trim($r['boxShadowSpread']) ? trim($r['boxShadowSpread']) : '0px';
 
         if (isset($r['boxShadowColor'])) {
-            if ($r['boxShadowHorizontal'] != '0px' || $r['boxShadowVertical'] != '0px' || $r['boxShadowBlur'] != '0px' || $r['boxShadowSpread'] != '0px') {
-                $set->setBoxShadowBlur($r['boxShadowBlur']);
+            if ($boxShadowHorizontal != '0px' || $boxShadowVertical != '0px' || $boxShadowBlur != '0px' || $boxShadowSpread != '0px') {
                 $set->setBoxShadowColor($r['boxShadowColor']);
-                $set->setBoxShadowHorizontal($r['boxShadowHorizontal']);
-                $set->setBoxShadowVertical($r['boxShadowVertical']);
-                $set->setBoxShadowSpread($r['boxShadowSpread']);
+                $set->setBoxShadowBlur($boxShadowBlur);
+                $set->setBoxShadowHorizontal($boxShadowHorizontal);
+                $set->setBoxShadowVertical($boxShadowVertical);
+                $set->setBoxShadowSpread($boxShadowSpread);
                 $return = true;
             }
         }
