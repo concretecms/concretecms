@@ -14,7 +14,6 @@ use Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVe
 use Concrete\Core\Feature\Feature;
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Gathering\Item\Page as PageGatheringItem;
-use Concrete\Core\Page\Collection\Version\Version;
 use Concrete\Core\Page\Collection\Version\VersionList;
 use Concrete\Core\Page\Search\IndexedSearch;
 use Concrete\Core\Search\Index\IndexManagerInterface;
@@ -31,27 +30,70 @@ use User;
 
 class Collection extends ConcreteObject implements TrackableInterface
 {
+    /**
+     * The collection ID.
+     *
+     * @deprecated Use getCollectionID (what's deprecated is the public part)
+     *
+     * @var int|null
+     */
     public $cID;
+
+    /**
+     * The collection version object.
+     *
+     * @var \Concrete\Core\Page\Collection\Version\Version|null
+     */
     protected $vObj;
+
+    /**
+     * The collection handle.
+     *
+     * @var string|null
+     */
     protected $cHandle;
+
+    /**
+     * The date/time when the collection has been created.
+     *
+     * @var string|null
+     *
+     * @example 2017-12-31 23:59:59
+     */
     protected $cDateAdded;
+
+    /**
+     * The date/time when the collection was last modified.
+     *
+     * @var string|null
+     *
+     * @example 2017-12-31 23:59:59
+     */
     protected $cDateModified;
 
+    /**
+     * @var array
+     */
     protected $attributes = [];
 
+    /**
+     * Destruct the class instance.
+     */
     public function __destruct()
     {
         unset($this->attributes);
         unset($this->vObj);
     }
 
-    /* version specific stuff */
-
+    /**
+     * (Re)Index all the collections that are marked as to be (re)indexed.
+     *
+     * @return int returns the number of reindexed pages
+     */
     public static function reindexPendingPages()
     {
         $app = Application::getFacadeApplication();
 
-        /** @var IndexManagerInterface $indexStack */
         $indexStack = $app->make(IndexManagerInterface::class);
 
         $num = 0;
@@ -65,12 +107,19 @@ class Collection extends ConcreteObject implements TrackableInterface
         return $num;
     }
 
+    /**
+     * Get a Collection by handle (provided that it's not a Page handle).
+     * If there's there's no collection with the specified handle, a new Collection will be created.
+     *
+     * @param string $handle the collection handle
+     *
+     * @return \Concrete\Core\Page\Collection\Collection|null return NULL if $handle is the handle of an existing page
+     */
     public static function getByHandle($handle)
     {
         $db = Loader::db();
 
         // first we ensure that this does NOT appear in the Pages table. This is not a page. It is more basic than that
-
         $r = $db->query(
                 'select Collections.cID, Pages.cID as pcID from Collections left join Pages on Collections.cID = Pages.cID where Collections.cHandle = ?',
                 [$handle]
@@ -95,6 +144,24 @@ class Collection extends ConcreteObject implements TrackableInterface
         }
     }
 
+    /**
+     * Create a new Collection instance, using the same theme as this instance (if it's a Page instance).
+     *
+     * @param array $data {
+     *
+     *     @var int|null $cID The ID of the collection to create (if unspecified or NULL: database autoincrement value)
+     *     @var string $handle The collection handle (default: NULL)
+     *     @var string $name The collection name (default: empty string)
+     *     @var string $cDescription The collection description (default: NULL)
+     *     @var string $cDatePublic The collection publish date/time in format 'YYYY-MM-DD hh:mm:ss' (default: now)
+     *     @var bool $cvIsApproved Is the collection version approved (default: true)
+     *     @var bool $cvIsNew Is the collection to be considered "new"? (default: true if $cvIsApproved is false, false if $cvIsApproved is true)
+     *     @var int|null $pTemplateID The collection template ID (default: NULL)
+     *     @var int|null $uID The ID of the collection author (default: NULL)
+     * }
+     *
+     * @return \Concrete\Core\Page\Collection\Collection
+     */
     public function addCollection($data)
     {
         $data['pThemeID'] = 0;
@@ -105,6 +172,25 @@ class Collection extends ConcreteObject implements TrackableInterface
         return static::createCollection($data);
     }
 
+    /**
+     * Create a new Collection instance.
+     *
+     * @param array $data {
+     *
+     *     @var int|null $cID The ID of the collection to create (if unspecified or NULL: database autoincrement value)
+     *     @var string $handle The collection handle (default: NULL)
+     *     @var string $name The collection name (default: empty string)
+     *     @var string $cDescription The collection description (default: NULL)
+     *     @var string $cDatePublic The collection publish date/time in format 'YYYY-MM-DD hh:mm:ss' (default: now)
+     *     @var bool $cvIsApproved Is the collection version approved (default: true)
+     *     @var bool $cvIsNew Is the collection to be considered "new"? (default: true if $cvIsApproved is false, false if $cvIsApproved is true)
+     *     @var int|null $pThemeID The collection theme ID (default: NULL)
+     *     @var int|null $pTemplateID The collection template ID (default: NULL)
+     *     @var int|null $uID The ID of the collection author (default: NULL)
+     * }
+     *
+     * @return \Concrete\Core\Page\Collection\Collection
+     */
     public static function createCollection($data)
     {
         $db = Loader::db();
@@ -186,10 +272,12 @@ class Collection extends ConcreteObject implements TrackableInterface
     }
 
     /**
-     * @param int   $cID
-     * @param mixed $version 'RECENT'|'ACTIVE'|version id
+     * Get a collection by ID.
      *
-     * @return Collection
+     * @param int $cID The collection ID
+     * @param string|int|false $version the collection version ('RECENT' for the most recent version, 'ACTIVE' for the currently published version, a falsy value to not load the collection version, or an integer to retrieve a specific version ID)
+     *
+     * @return Collection If the collection is not found, you'll get an empty Collection instance
      */
     public static function getByID($cID, $version = 'RECENT')
     {
@@ -208,27 +296,28 @@ class Collection extends ConcreteObject implements TrackableInterface
         return $c;
     }
 
+    /**
+     * Load a specific collection version (you can retrieve it with the getVersionObject() method).
+     *
+     * @param string|int $cvID the collection version ('RECENT' for the most recent version, 'ACTIVE' for the currently published version, or an integer to retrieve a specific version ID)
+     */
     public function loadVersionObject($cvID = 'ACTIVE')
     {
         $this->vObj = CollectionVersion::get($this, $cvID);
     }
 
-    /* attribute stuff */
-
+    /**
+     * Get the Collection instance to be modified (this instance if it's a new or master Collection, a clone otherwise).
+     *
+     * @return $this|\Concrete\Core\Page\Page
+     */
     public function getVersionToModify()
     {
-        // first, we check to see if the version we're modifying has the same
-        // author uID associated with it as we currently have, and if it's inactive
-        // If that's the case, then we just return the current collection + version object.
-
         $u = new User();
         $vObj = $this->getVersionObject();
         if ($this->isMasterCollection() || ($vObj->isNew())) {
             return $this;
         } else {
-            // otherwise, we have to clone this version of the collection entirely,
-            // and return that collection.
-
             $nc = $this->cloneVersion(null);
 
             return $nc;
@@ -236,17 +325,23 @@ class Collection extends ConcreteObject implements TrackableInterface
     }
 
     /**
-     * Get the attached version object.
+     * Get the currently loaded version object.
      *
-     * @return Version|null
+     * @return \Concrete\Core\Page\Collection\Version\Version|null
      */
     public function getVersionObject()
     {
         return $this->vObj;
     }
 
-    // remove the collection attributes for this version of a page
-
+    /**
+     * Clone the currently loaded version and returns a Page instance containing the new version.
+     *
+     * @param string|null $versionComments the comments to be associated to the new Version
+     * @param bool $createEmpty set to true to create a Version without any blocks/area styles, false to clone them too
+     *
+     * @return \Concrete\Core\Page\Page
+     */
     public function cloneVersion($versionComments, $createEmpty = false)
     {
         // first, we run the version object's createNew() command, which returns a new
@@ -298,11 +393,21 @@ class Collection extends ConcreteObject implements TrackableInterface
         return $nc;
     }
 
+    /**
+     * Get the collection ID.
+     *
+     * @return int|null
+     */
     public function getCollectionID()
     {
         return $this->cID;
     }
 
+    /**
+     * Get the automatic comment for the next collection version.
+     *
+     * @return string Example: 'Version 2'
+     */
     public function getNextVersionComments()
     {
         $c = Page::getByID($this->getCollectionID(), 'ACTIVE');
@@ -311,6 +416,11 @@ class Collection extends ConcreteObject implements TrackableInterface
         return t('Version %d', $cvID + 1);
     }
 
+    /**
+     * Get the list of assigned features.
+     *
+     * @return \Concrete\Core\Feature\Assignment\CollectionVersionAssignment[]
+     */
     public function getFeatureAssignments()
     {
         if (is_object($this->vObj)) {
@@ -320,14 +430,24 @@ class Collection extends ConcreteObject implements TrackableInterface
         return [];
     }
 
+    /**
+     * Get the ID of the currently loaded version.
+     *
+     * @return int
+     */
     public function getVersionID()
     {
-        // shortcut
         return $this->vObj->cvID;
     }
 
-    /* area stuff */
-
+    /**
+     * (Re)Index the contents of this collection (or mark the collection as to be reindexed if $actuallyDoReindex is falsy and the concrete.page.search.always_reindex configuration key is falsy).
+     *
+     * @param \Concrete\Core\Page\Search\IndexedSearch|false $index the IndexedSearch instance that indexes the collection content (if falsy: we'll create a new instance of it)
+     * @param bool $actuallyDoReindex Set to true to always reindex the collection immediately (otherwise we'll look at the concrete.page.search.always_reindex configuration key)
+     *
+     * @return bool|null Return false if the collection can't be indexed, NULL otherwise
+     */
     public function reindex($index = false, $actuallyDoReindex = true)
     {
         if ($this->isAlias() && !$this->isExternalLink()) {
@@ -379,34 +499,24 @@ class Collection extends ConcreteObject implements TrackableInterface
     }
 
     /**
-     * Returns the value of the attribute with the handle $ak
-     * of the current object.
+     * Return the value of the attribute with the handle $akHandle of the currently loaded version (if it's loaded).
      *
-     * $displayMode makes it possible to get the correct output
-     * value. When you need the raw attribute value or object, use
-     * this:
+     * @param string|\Concrete\Core\Attribute\Key\CollectionKey $akHandle the attribute key (or its handle)
+     * @param string|false $displayMode makes The format of the attribute value
+     *
+     * @return mixed|null
+     *
+     * @example When you need the raw attribute value or object, use this:
      * <code>
      * $c = Page::getCurrentPage();
      * $attributeValue = $c->getAttribute('attribute_handle');
      * </code>
-     *
-     * But if you need the formatted output supported by some
-     * attribute, use this:
+     * @example If you need the formatted output supported by some attribute, use this:
      * <code>
      * $c = Page::getCurrentPage();
      * $attributeValue = $c->getAttribute('attribute_handle', 'display');
      * </code>
-     *
-     * An attribute type like "date" will then return the date in
-     * the correct format just like other attributes will show
-     * you a nicely formatted output and not just a simple value
-     * or object.
-     *
-     *
-     * @param string|object $akHandle
-     * @param bool       $displayMode
-     *
-     * @return type
+     * @example An attribute type like "date" will then return the date in the correct format just like other attributes will show you a nicely formatted output and not just a simple value or object.
      */
     public function getAttribute($akHandle, $displayMode = false)
     {
@@ -415,6 +525,13 @@ class Collection extends ConcreteObject implements TrackableInterface
         }
     }
 
+    /**
+     * Return the attribute value object with the handle $akHandle of the currently loaded version (if it's loaded).
+     *
+     * @param string|\Concrete\Core\Attribute\Key\CollectionKey $akHandle the attribute key (or its handle)
+     *
+     * @return \Concrete\Core\Entity\Attribute\Value\PageValue|null
+     */
     public function getAttributeValue($akHandle)
     {
         if (is_object($this->vObj)) {
@@ -423,7 +540,7 @@ class Collection extends ConcreteObject implements TrackableInterface
     }
 
     /**
-     * @deprecated
+     * @deprecated use the getAttribute() method
      *
      * @param mixed $akHandle
      */
@@ -432,8 +549,11 @@ class Collection extends ConcreteObject implements TrackableInterface
         return $this->getAttribute($akHandle);
     }
 
-    // get's an array of collection attribute objects that are attached to this collection. Does not get values
-
+    /**
+     * Delete the values of the attributes associated to the currently loaded collection version.
+     *
+     * @param int[] $retainAKIDs a list of attribute key IDs to keep (their values won't be deleted)
+     */
     public function clearCollectionAttributes($retainAKIDs = [])
     {
         $db = Loader::db();
@@ -455,16 +575,25 @@ class Collection extends ConcreteObject implements TrackableInterface
         $this->reindex();
     }
 
+    /**
+     * Delete the value of a specific attribute key associated to the currently loaded collection version.
+     *
+     * @param string|\Concrete\Core\Attribute\Key\CollectionKey $ak the attribute key (or its handle)
+     */
     public function clearAttribute($ak)
     {
         $this->vObj->clearAttribute($ak);
     }
 
+    /**
+     * Get the list of attribute keys for which the currently loaded collection version has values.
+     *
+     * @return \Concrete\Core\Entity\Attribute\Key\PageKey[]
+     */
     public function getSetCollectionAttributes()
     {
         $category = $this->vObj->getObjectAttributeCategory();
         $values = $category->getAttributeValues($this->vObj);
-
         $attribs = [];
         foreach ($values as $value) {
             $attribs[] = $value->getAttributeKey();
@@ -473,21 +602,36 @@ class Collection extends ConcreteObject implements TrackableInterface
         return $attribs;
     }
 
+    /**
+     * Set the attribute value for the currently loaded collection version.
+     *
+     * @param string|\Concrete\Core\Attribute\Key\CollectionKey $ak the attribute key (or its handle)
+     * @param \Concrete\Core\Entity\Attribute\Value\Value\AbstractValue|mixed $value an attribute value object, or the data needed by the attribute controller to create the attribute value object
+     *
+     * @return \Concrete\Core\Entity\Attribute\Value\PageValue
+     */
     public function setAttribute($ak, $value)
     {
         return $this->vObj->setAttribute($ak, $value);
     }
 
     /**
-     * @param string $arHandle
+     * Get an existing area associated to this collection.
      *
-     * @return Area
+     * @param string $arHandle the handle of the area
+     *
+     * @return Area|null
      */
     public function getArea($arHandle)
     {
         return Area::get($this, $arHandle);
     }
 
+    /**
+     * Does this collection contain blocks that are aliased in other pages?
+     *
+     * @return bool
+     */
     public function hasAliasedContent()
     {
         $db = Loader::db();
@@ -515,33 +659,51 @@ class Collection extends ConcreteObject implements TrackableInterface
         return false;
     }
 
+    /**
+     * Get the date/time when the collection was last modified.
+     *
+     * @return string|null
+     *
+     * @example 2017-12-31 23:59:59
+     */
     public function getCollectionDateLastModified()
     {
         return $this->cDateModified;
     }
 
+    /**
+     * Get the collection handle.
+     *
+     * @return string|null
+     */
     public function getCollectionHandle()
     {
         return $this->cHandle;
     }
 
+    /**
+     * Get the date/time when the collection has been created.
+     *
+     * @return string|null
+     *
+     * @example 2017-12-31 23:59:59
+     */
     public function getCollectionDateAdded()
     {
         return $this->cDateAdded;
     }
 
     /**
-     * Retrieves all custom style rules that should be inserted into the header on a page, whether they are defined in areas
-     * or blocks.
+     * Retrieve all custom style rules that should be inserted into the header on a page, whether they are defined in areas or blocks.
      *
-     * @param bool $return
+     * @param bool $return set to true to return the HTML that defines the styles, false to add it to the current View instance
      *
-     * @return string
+     * @return string|null
      */
     public function outputCustomStyleHeaderItems($return = false)
     {
         if (!Config::get('concrete.design.enable_custom')) {
-            return;
+            return '';
         }
 
         $db = Loader::db();
@@ -650,6 +812,14 @@ class Collection extends ConcreteObject implements TrackableInterface
         }
     }
 
+    /**
+     * Get the custom style of an area in the currently loaded collection version.
+     *
+     * @param \Concrete\Core\Area\Area $area the area for which you want the custom styles
+     * @param bool $force Set to true to retrieve a CustomStyle even if the area does not define any custom style
+     *
+     * @return \Concrete\Core\Area\CustomStyle|null return NULL if the area does not have any custom style and $force is false, a CustomStyle instance otherwise
+     */
     public function getAreaCustomStyle($area, $force = false)
     {
         $areac = $area->getAreaCollectionObject();
@@ -669,6 +839,11 @@ class Collection extends ConcreteObject implements TrackableInterface
         return $result;
     }
 
+    /**
+     * Delete all the custom styles of an area of the currently loaded collection version.
+     *
+     * @param \Concrete\Core\Area\Area $area
+     */
     public function resetAreaCustomStyle($area)
     {
         $db = Loader::db();
@@ -682,6 +857,12 @@ class Collection extends ConcreteObject implements TrackableInterface
         );
     }
 
+    /**
+     * Set the custom style of an area in the currently loaded collection version.
+     *
+     * @param \Concrete\Core\Area\Area $area
+     * @param \Concrete\Core\Entity\StyleCustomizer\Inline\StyleSet $set
+     */
     public function setCustomStyleSet($area, $set)
     {
         $db = Loader::db();
@@ -698,6 +879,15 @@ class Collection extends ConcreteObject implements TrackableInterface
         );
     }
 
+    /**
+     * Associate the edits of another collection to this collection.
+     *
+     * @param \Concrete\Core\Page\Collection\Collection $oc the collection that has been modified
+     *
+     * @return null|false return false if the other collection is already associated to this collection, NULL otherwise
+     *
+     * @example If a global area is modified inside this collection, you need to call $page->relateVersionEdits($globalArea)
+     */
     public function relateVersionEdits($oc)
     {
         $db = Loader::db();
@@ -721,27 +911,32 @@ class Collection extends ConcreteObject implements TrackableInterface
         }
     }
 
+    /**
+     * @deprecated use the getPageTypeID() method
+     */
     public function getCollectionTypeID()
     {
         return false;
     }
 
-    /* new cleaned up API below */
-
+    /**
+     * Returns the ID of the page/collection type.
+     *
+     * @return int|false
+     */
     public function getPageTypeID()
     {
         return false;
     }
 
-    /* This function is slightly misnamed: it should be getOrCreateByHandle($handle) but I wanted to keep it brief
-     * @param string $handle
-     * @return Collection
+    /**
+     * Fix the display order properties for all the blocks within the collection/area.
+     *
+     * @param string $arHandle the handle of the area to be processed
      */
-
     public function rescanDisplayOrder($arHandle)
     {
-        // this collection function fixes the display order properties for all the blocks within the collection/area. We select all the items
-        // order by display order, and fix the sequence
+        // this collection function f
 
         $db = Loader::db();
         $cID = $this->cID;
@@ -762,11 +957,19 @@ class Collection extends ConcreteObject implements TrackableInterface
         }
     }
 
+    /**
+     * Empty the collection-related cache.
+     */
     public function refreshCache()
     {
         CacheLocal::flush();
     }
 
+    /**
+     * Get the blocks contained in the all the global areas.
+     *
+     * @return \Concrete\Core\Block\Block[]
+     */
     public function getGlobalBlocks()
     {
         $db = Loader::db();
@@ -792,11 +995,11 @@ class Collection extends ConcreteObject implements TrackableInterface
     }
 
     /**
-     * List the blocks in a collection or area within a collection.
+     * List the blocks in the currently loaded collection version (or in a specific area within it).
      *
-     * @param bool|string $arHandle . If specified, returns just the blocks in an area
+     * @param string|false $arHandle The handle if the area (or falsy to get all the blocks in the collection)
      *
-     * @return array
+     * @return \Concrete\Core\Block\Block[]
      */
     public function getBlocks($arHandle = false)
     {
@@ -816,11 +1019,11 @@ class Collection extends ConcreteObject implements TrackableInterface
     }
 
     /**
-     * List the block IDs in a collection or area within a collection.
+     * List the block IDs and the associated area handles in the currently loaded collection version (or in a specific area within it).
      *
-     * @param bool|string $arHandle . If specified, returns just the blocks in an area
+     * @param string|false $arHandle The handle if the area (or falsy to get all the blocks in the collection version)
      *
-     * @return array
+     * @return array Return a list of arrays, each one is a dictionary like ['bID' => <block ID>, 'arHandle' => <area handle>]
      */
     public function getBlockIDs($arHandle = false)
     {
@@ -862,6 +1065,15 @@ class Collection extends ConcreteObject implements TrackableInterface
         return $result;
     }
 
+    /**
+     * Add a new block to a specific area of the currently loaded collection version.
+     *
+     * @param \Concrete\Core\Entity\Block\BlockType\BlockType $bt the type of block to be added
+     * @param string|\Concrete\Core\Area\Area $a the area instance (or its handle) to which the block should be added to
+     * @param array $data The data of the block. This data depends on the specific block type. Common values are: 'uID' to specify the ID of the author (if not specified: we'll use the current user), 'bName' to specify the block name.
+     *
+     * @return \Concrete\Core\Block\Block
+     */
     public function addBlock($bt, $a, $data)
     {
         $db = Loader::db();
@@ -929,11 +1141,16 @@ class Collection extends ConcreteObject implements TrackableInterface
         return Block::getByID($nb->getBlockID(), $this, $a);
     }
 
+    /**
+     * Get the next value of the display order (to be used when adding new blocks to an area).
+     *
+     * @param string $arHandle The handle of the area
+     * @param bool $ignoreVersions Set to true to ignore the collection version
+     *
+     * @return int
+     */
     public function getCollectionAreaDisplayOrder($arHandle, $ignoreVersions = false)
     {
-        // this function queries CollectionBlocks to grab the highest displayOrder value, then increments it, and returns
-        // this is used to add new blocks to existing Pages/areas
-
         $db = Loader::db();
         $cID = $this->cID;
         $cvID = $this->vObj->cvID;
@@ -963,6 +1180,11 @@ class Collection extends ConcreteObject implements TrackableInterface
         }
     }
 
+    /**
+     * Associate a feature to the currently loaded collection version.
+     *
+     * @param Feature $fe
+     */
     public function addFeature(Feature $fe)
     {
         $db = Loader::db();
@@ -974,6 +1196,9 @@ class Collection extends ConcreteObject implements TrackableInterface
         );
     }
 
+    /**
+     * Update the last edit date/time.
+     */
     public function markModified()
     {
         // marks this collection as newly modified
@@ -987,6 +1212,9 @@ class Collection extends ConcreteObject implements TrackableInterface
         $res = $db->execute($r, $v);
     }
 
+    /**
+     * Delete this collection, and all its versions, contents and attributes.
+     */
     public function delete()
     {
         if ($this->cID > 0) {
@@ -1017,6 +1245,11 @@ class Collection extends ConcreteObject implements TrackableInterface
         }
     }
 
+    /**
+     * Create a clone of this collection, and all its versions, contents and attributes.
+     *
+     * @return \Concrete\Core\Page\Collection\Collection
+     */
     public function duplicateCollection()
     {
         $db = Loader::db();
