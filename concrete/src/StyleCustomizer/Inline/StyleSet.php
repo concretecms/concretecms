@@ -201,7 +201,10 @@ class StyleSet
         $boxShadowSpread = isset($r['boxShadowSpread']) && trim($r['boxShadowSpread']) ? trim($r['boxShadowSpread']) : '0px';
 
         if (isset($r['boxShadowColor'])) {
-            if ($boxShadowHorizontal != '0px' || $boxShadowVertical != '0px' || $boxShadowBlur != '0px' || $boxShadowSpread != '0px') {
+            if ($boxShadowHorizontal != '0px'
+            || $boxShadowVertical != '0px'
+            || $boxShadowBlur != '0px'
+            || $boxShadowSpread != '0px') {
                 $set->setBoxShadowColor($r['boxShadowColor']);
                 $set->setBoxShadowBlur($boxShadowBlur);
                 $set->setBoxShadowHorizontal($boxShadowHorizontal);
