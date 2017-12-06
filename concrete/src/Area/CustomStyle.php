@@ -36,7 +36,7 @@ class CustomStyle extends AbstractCustomStyle
     public function getCSS()
     {
         $set = $this->set;
-        $groups = array();
+        $groups = [];
         if ($set->getBackgroundColor()) {
             $groups[''][] = 'background-color:' . $set->getBackgroundColor();
         }
@@ -104,7 +104,7 @@ class CustomStyle extends AbstractCustomStyle
 
         $css = '';
         foreach ($groups as $suffix => $styles) {
-            $css .= '.' . str_replace(' ', '.', $this->getCustomStyleClass()) . $suffix . '{'.implode(';', $styles).'}';
+            $css .= '.' . str_replace(' ', '.', $this->getCustomStyleClass()) . $suffix . '{' . implode(';', $styles) . '}';
         }
 
         return $css;
@@ -124,7 +124,7 @@ class CustomStyle extends AbstractCustomStyle
      */
     public function getContainerClass()
     {
-        $classes = array($this->getCustomStyleClass());
+        $classes = [$this->getCustomStyleClass()];
 
         if (is_object($this->set)) {
             if ($this->set->getCustomClass()) {

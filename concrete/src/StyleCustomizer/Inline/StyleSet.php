@@ -17,6 +17,7 @@ class StyleSet
     public static function getByID($issID)
     {
         $em = \ORM::entityManager();
+
         return $em->find('\Concrete\Core\Entity\StyleCustomizer\Inline\StyleSet', $issID);
     }
 
@@ -234,7 +235,7 @@ class StyleSet
             $singleQuoteCount = preg_match_all('/([\'])/i', $customElementAttribute);
             $doubleQuoteCount = preg_match_all('/(["])/i', $customElementAttribute);
 
-            if ($singleQuoteCount % 2 == 0 && $doubleQuoteCount % 2 == 0 ) {
+            if ($singleQuoteCount % 2 == 0 && $doubleQuoteCount % 2 == 0) {
                 $set->setCustomElementAttribute(trim($customElementAttribute));
                 $return = true;
             } else {
