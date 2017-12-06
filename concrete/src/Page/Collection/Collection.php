@@ -1,13 +1,15 @@
 <?php
+
 namespace Concrete\Core\Page\Collection;
 
 use Area;
 use Block;
 use CacheLocal;
 use CollectionVersion;
+use Concrete\Core\Area\CustomStyle as AreaCustomStyle;
 use Concrete\Core\Attribute\Key\CollectionKey;
+use Concrete\Core\Block\CustomStyle as BlockCustomStyle;
 use Concrete\Core\Entity\Attribute\Value\PageValue;
-use Concrete\Core\Entity\Attribute\Value\Value\Value;
 use Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVersionFeatureAssignment;
 use Concrete\Core\Feature\Feature;
 use Concrete\Core\Foundation\ConcreteObject;
@@ -18,8 +20,6 @@ use Concrete\Core\Page\Search\IndexedSearch;
 use Concrete\Core\Search\Index\IndexManagerInterface;
 use Concrete\Core\Statistics\UsageTracker\TrackableInterface;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
-use Concrete\Core\Block\CustomStyle as BlockCustomStyle;
-use Concrete\Core\Area\CustomStyle as AreaCustomStyle;
 use Concrete\Core\Support\Facade\Application;
 use Config;
 use Loader;
@@ -37,7 +37,13 @@ class Collection extends ConcreteObject implements TrackableInterface
     protected $cDateAdded;
     protected $cDateModified;
 
-    protected $attributes = array();
+    protected $attributes = [];
+
+    public function __destruct()
+    {
+        unset($this->attributes);
+        unset($this->vObj);
+    }
 
     /* version specific stuff */
 
@@ -67,20 +73,18 @@ class Collection extends ConcreteObject implements TrackableInterface
 
         $r = $db->query(
                 'select Collections.cID, Pages.cID as pcID from Collections left join Pages on Collections.cID = Pages.cID where Collections.cHandle = ?',
-                array($handle)
+                [$handle]
         );
         if ($r->numRows() == 0) {
-
             // there is nothing in the collections table for this page, so we create and grab
 
-            $data = array(
+            $data = [
                 'handle' => $handle,
-            );
+            ];
             $cObj = self::createCollection($data);
         } else {
             $row = $r->fetchRow();
             if ($row['cID'] > 0 && $row['pcID'] == null) {
-
                 // there is a collection, but it is not a page. so we grab it
                 $cObj = self::getByID($row['cID']);
             }
@@ -108,14 +112,14 @@ class Collection extends ConcreteObject implements TrackableInterface
         $cDate = $dh->getOverridableNow();
 
         $data = array_merge(
-            array(
+            [
                 'name' => '',
                 'pTemplateID' => 0,
                 'handle' => null,
                 'uID' => null,
                 'cDatePublic' => $cDate,
                 'cDescription' => null,
-            ),
+            ],
             $data
         );
 
@@ -124,13 +128,13 @@ class Collection extends ConcreteObject implements TrackableInterface
         if (isset($data['cID'])) {
             $res = $db->query(
                       'insert into Collections (cID, cHandle, cDateAdded, cDateModified) values (?, ?, ?, ?)',
-                      array($data['cID'], $data['handle'], $cDate, $cDate)
+                      [$data['cID'], $data['handle'], $cDate, $cDate]
             );
             $newCID = $data['cID'];
         } else {
             $res = $db->query(
                       'insert into Collections (cHandle, cDateAdded, cDateModified) values (?, ?, ?)',
-                      array($data['handle'], $cDate, $cDate)
+                      [$data['handle'], $cDate, $cDate]
             );
             $newCID = $db->Insert_ID();
         }
@@ -156,7 +160,7 @@ class Collection extends ConcreteObject implements TrackableInterface
 
         if ($res) {
             // now we add a pending version to the collectionversions table
-            $v2 = array(
+            $v2 = [
                 $newCID,
                 1,
                 $pTemplateID,
@@ -170,7 +174,7 @@ class Collection extends ConcreteObject implements TrackableInterface
                 $cvIsApproved,
                 $cvIsNew,
                 $pThemeID,
-            );
+            ];
             $q2 = 'insert into CollectionVersions (cID, cvID, pTemplateID, cvName, cvHandle, cvDescription, cvDatePublic, cvDateCreated, cvComments, cvAuthorUID, cvIsApproved, cvIsNew, pThemeID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
             $r2 = $db->prepare($q2);
             $res2 = $db->execute($r2, $v2);
@@ -191,7 +195,7 @@ class Collection extends ConcreteObject implements TrackableInterface
     {
         $db = Loader::db();
         $q = 'select Collections.cDateAdded, Collections.cDateModified, Collections.cID from Collections where cID = ?';
-        $row = $db->getRow($q, array($cID));
+        $row = $db->getRow($q, [$cID]);
 
         $c = new self();
         $c->setPropertiesFromArray($row);
@@ -232,7 +236,8 @@ class Collection extends ConcreteObject implements TrackableInterface
     }
 
     /**
-     * Get the attached version object
+     * Get the attached version object.
+     *
      * @return Version|null
      */
     public function getVersionObject()
@@ -280,15 +285,16 @@ class Collection extends ConcreteObject implements TrackableInterface
             while ($row = $r->FetchRow()) {
                 $db->Execute(
                    'insert into CollectionVersionAreaStyles (cID, cvID, arHandle, issID) values (?, ?, ?, ?)',
-                   array(
+                   [
                        $this->getCollectionID(),
                        $nvObj->getVersionID(),
                        $row['arHandle'],
                        $row['issID'],
-                   )
+                   ]
                 );
             }
         }
+
         return $nc;
     }
 
@@ -311,7 +317,7 @@ class Collection extends ConcreteObject implements TrackableInterface
             return CollectionVersionFeatureAssignment::getList($this);
         }
 
-        return array();
+        return [];
     }
 
     public function getVersionID()
@@ -328,12 +334,11 @@ class Collection extends ConcreteObject implements TrackableInterface
             return false;
         }
         if ($actuallyDoReindex || Config::get('concrete.page.search.always_reindex') == true) {
-
             // Retrieve the attribute values for the current page
             $category = \Core::make('Concrete\Core\Attribute\Category\PageCategory');
             $indexer = $category->getSearchIndexer();
             $values = $category->getAttributeValues($this);
-            foreach($values as $value) {
+            foreach ($values as $value) {
                 $indexer->indexEntry($category, $value, $this);
             }
 
@@ -346,8 +351,8 @@ class Collection extends ConcreteObject implements TrackableInterface
             $db = \Database::connection();
             $db->Replace(
                'PageSearchIndex',
-               array('cID' => $this->getCollectionID(), 'cRequiresReindex' => 0),
-               array('cID'),
+               ['cID' => $this->getCollectionID(), 'cRequiresReindex' => 0],
+               ['cID'],
                false
             );
 
@@ -366,8 +371,8 @@ class Collection extends ConcreteObject implements TrackableInterface
             Config::save('concrete.misc.do_page_reindex_check', true);
             $db->Replace(
                'PageSearchIndex',
-               array('cID' => $this->getCollectionID(), 'cRequiresReindex' => 1),
-               array('cID'),
+               ['cID' => $this->getCollectionID(), 'cRequiresReindex' => 1],
+               ['cID'],
                false
             );
         }
@@ -417,9 +422,10 @@ class Collection extends ConcreteObject implements TrackableInterface
         }
     }
 
-
     /**
      * @deprecated
+     *
+     * @param mixed $akHandle
      */
     public function getCollectionAttributeValue($akHandle)
     {
@@ -428,22 +434,22 @@ class Collection extends ConcreteObject implements TrackableInterface
 
     // get's an array of collection attribute objects that are attached to this collection. Does not get values
 
-    public function clearCollectionAttributes($retainAKIDs = array())
+    public function clearCollectionAttributes($retainAKIDs = [])
     {
         $db = Loader::db();
         if (count($retainAKIDs) > 0) {
-            $cleanAKIDs = array();
+            $cleanAKIDs = [];
             foreach ($retainAKIDs as $akID) {
-                $cleanAKIDs[] = intval($akID);
+                $cleanAKIDs[] = (int) $akID;
             }
             $akIDStr = implode(',', $cleanAKIDs);
-            $v2 = array($this->getCollectionID(), $this->getVersionID());
+            $v2 = [$this->getCollectionID(), $this->getVersionID()];
             $db->query(
                 "delete from CollectionAttributeValues where cID = ? and cvID = ? and akID not in ({$akIDStr})",
                 $v2
             );
         } else {
-            $v2 = array($this->getCollectionID(), $this->getVersionID());
+            $v2 = [$this->getCollectionID(), $this->getVersionID()];
             $db->query('delete from CollectionAttributeValues where cID = ? and cvID = ?', $v2);
         }
         $this->reindex();
@@ -459,7 +465,7 @@ class Collection extends ConcreteObject implements TrackableInterface
         $category = $this->vObj->getObjectAttributeCategory();
         $values = $category->getAttributeValues($this->vObj);
 
-        $attribs = array();
+        $attribs = [];
         foreach ($values as $value) {
             $attribs[] = $value->getAttributeKey();
         }
@@ -487,17 +493,17 @@ class Collection extends ConcreteObject implements TrackableInterface
         $db = Loader::db();
         // aliased content is content on the particular page that is being
         // used elsewhere - but the content on the PAGE is the original version
-        $v = array($this->cID);
+        $v = [$this->cID];
         $q = 'select bID from CollectionVersionBlocks where cID = ? and isOriginal = 1';
         $r = $db->query($q, $v);
-        $bIDArray = array();
+        $bIDArray = [];
         if ($r) {
             while ($row = $r->fetchRow()) {
                 $bIDArray[] = $row['bID'];
             }
             if (count($bIDArray) > 0) {
                 $bIDList = implode(',', $bIDArray);
-                $v2 = array($bIDList, $this->cID);
+                $v2 = [$bIDList, $this->cID];
                 $q2 = 'select cID from CollectionVersionBlocks where bID in (?) and cID <> ? limit 1';
                 $aliasedCID = $db->getOne($q2, $v2);
                 if ($aliasedCID > 0) {
@@ -524,16 +530,12 @@ class Collection extends ConcreteObject implements TrackableInterface
         return $this->cDateAdded;
     }
 
-    public function __destruct()
-    {
-        unset($this->attributes);
-        unset($this->vObj);
-    }
-
     /**
      * Retrieves all custom style rules that should be inserted into the header on a page, whether they are defined in areas
      * or blocks.
+     *
      * @param bool $return
+     *
      * @return string
      */
     public function outputCustomStyleHeaderItems($return = false)
@@ -543,17 +545,17 @@ class Collection extends ConcreteObject implements TrackableInterface
         }
 
         $db = Loader::db();
-        $psss = array();
+        $psss = [];
         $txt = Loader::helper('text');
-        CacheLocal::set('pssCheck', $this->getCollectionID().':'.$this->getVersionID(), true);
+        CacheLocal::set('pssCheck', $this->getCollectionID() . ':' . $this->getVersionID(), true);
 
         $r1 = $db->GetAll(
                  'select bID, arHandle, issID from CollectionVersionBlockStyles where cID = ? and cvID = ? and issID > 0',
-                 array($this->getCollectionID(), $this->getVersionID())
+                 [$this->getCollectionID(), $this->getVersionID()]
         );
         $r2 = $db->GetAll(
                  'select arHandle, issID from CollectionVersionAreaStyles where cID = ? and cvID = ? and issID > 0',
-                 array($this->getCollectionID(), $this->getVersionID())
+                 [$this->getCollectionID(), $this->getVersionID()]
         );
         foreach ($r1 as $r) {
             $issID = $r['issID'];
@@ -569,7 +571,7 @@ class Collection extends ConcreteObject implements TrackableInterface
                 $psss[] = $obj;
                 CacheLocal::set(
                           'pssObject',
-                          $this->getCollectionID().':'.$this->getVersionID().':'.$r['arHandle'].':'.$r['bID'],
+                          $this->getCollectionID() . ':' . $this->getVersionID() . ':' . $r['arHandle'] . ':' . $r['bID'],
                           $obj
                 );
             }
@@ -584,7 +586,7 @@ class Collection extends ConcreteObject implements TrackableInterface
                 $psss[] = $obj;
                 CacheLocal::set(
                           'pssObject',
-                          $this->getCollectionID().':'.$this->getVersionID().':'.$r['arHandle'],
+                          $this->getCollectionID() . ':' . $this->getVersionID() . ':' . $r['arHandle'],
                           $obj
                 );
             }
@@ -593,7 +595,7 @@ class Collection extends ConcreteObject implements TrackableInterface
         // grab all the header block style rules for items in global areas on this page
         $rs = $db->GetCol(
                  'select arHandle from Areas where arIsGlobal = 1 and cID = ?',
-                 array($this->getCollectionID())
+                 [$this->getCollectionID()]
         );
         if (count($rs) > 0) {
             $pcp = new Permissions($this);
@@ -604,10 +606,10 @@ class Collection extends ConcreteObject implements TrackableInterface
                     $s = Stack::getByName($garHandle, 'ACTIVE');
                 }
                 if (is_object($s)) {
-                    CacheLocal::set('pssCheck', $s->getCollectionID().':'.$s->getVersionID(), true);
+                    CacheLocal::set('pssCheck', $s->getCollectionID() . ':' . $s->getVersionID(), true);
                     $rs1 = $db->GetAll(
                               'select bID, issID, arHandle from CollectionVersionBlockStyles where cID = ? and cvID = ? and issID > 0',
-                              array($s->getCollectionID(), $s->getVersionID())
+                              [$s->getCollectionID(), $s->getVersionID()]
                     );
                     foreach ($rs1 as $r) {
                         $issID = $r['issID'];
@@ -621,7 +623,7 @@ class Collection extends ConcreteObject implements TrackableInterface
                             $psss[] = $obj;
                             CacheLocal::set(
                                       'pssObject',
-                                      $s->getCollectionID().':'.$s->getVersionID().':'.$r['arHandle'].':'.$r['bID'],
+                                      $s->getCollectionID() . ':' . $s->getVersionID() . ':' . $r['arHandle'] . ':' . $r['bID'],
                                       $obj
                             );
                         }
@@ -672,11 +674,11 @@ class Collection extends ConcreteObject implements TrackableInterface
         $db = Loader::db();
         $db->Execute(
            'delete from CollectionVersionAreaStyles where cID = ? and cvID = ? and arHandle = ?',
-           array(
+           [
                $this->getCollectionID(),
                $this->getVersionID(),
                $area->getAreaHandle(),
-           )
+           ]
         );
     }
 
@@ -685,13 +687,13 @@ class Collection extends ConcreteObject implements TrackableInterface
         $db = Loader::db();
         $db->Replace(
            'CollectionVersionAreaStyles',
-           array(
+           [
                'cID' => $this->getCollectionID(),
                'cvID' => $this->getVersionID(),
                'arHandle' => $area->getAreaHandle(),
                'issID' => $set->getID(),
-           ),
-           array('cID', 'cvID', 'arHandle'),
+           ],
+           ['cID', 'cvID', 'arHandle'],
            true
         );
     }
@@ -699,12 +701,12 @@ class Collection extends ConcreteObject implements TrackableInterface
     public function relateVersionEdits($oc)
     {
         $db = Loader::db();
-        $v = array(
+        $v = [
             $this->getCollectionID(),
             $this->getVersionID(),
             $oc->getCollectionID(),
             $oc->getVersionID(),
-        );
+        ];
         $r = $db->GetOne(
                 'select count(*) from CollectionVersionRelatedEdits where cID = ? and cvID = ? and cRelationID = ? and cvRelationID = ?',
                 $v
@@ -744,15 +746,15 @@ class Collection extends ConcreteObject implements TrackableInterface
         $db = Loader::db();
         $cID = $this->cID;
         $cvID = $this->vObj->cvID;
-        $args = array($cID, $cvID, $arHandle);
-        $q = "select bID from CollectionVersionBlocks where cID = ? and cvID = ? and arHandle=? order by cbDisplayOrder asc";
+        $args = [$cID, $cvID, $arHandle];
+        $q = 'select bID from CollectionVersionBlocks where cID = ? and cvID = ? and arHandle=? order by cbDisplayOrder asc';
         $r = $db->query($q, $args);
 
         if ($r) {
             $displayOrder = 0;
             while ($row = $r->fetchRow()) {
-                $args = array($displayOrder, $cID, $cvID, $arHandle, $row['bID']);
-                $q = "update CollectionVersionBlocks set cbDisplayOrder = ? where cID = ? and cvID = ? and arHandle = ? and bID = ?";
+                $args = [$displayOrder, $cID, $cvID, $arHandle, $row['bID']];
+                $q = 'update CollectionVersionBlocks set cbDisplayOrder = ? where cID = ? and cvID = ? and arHandle = ? and bID = ?';
                 $db->query($q, $args);
                 ++$displayOrder;
             }
@@ -768,9 +770,9 @@ class Collection extends ConcreteObject implements TrackableInterface
     public function getGlobalBlocks()
     {
         $db = Loader::db();
-        $v = array(Stack::ST_TYPE_GLOBAL_AREA);
+        $v = [Stack::ST_TYPE_GLOBAL_AREA];
         $rs = $db->GetCol('select stName from Stacks where Stacks.stType = ?', $v);
-        $blocks = array();
+        $blocks = [];
         if (count($rs) > 0) {
             $pcp = new Permissions($this);
             foreach ($rs as $garHandle) {
@@ -800,7 +802,7 @@ class Collection extends ConcreteObject implements TrackableInterface
     {
         $blockIDs = $this->getBlockIDs($arHandle);
 
-        $blocks = array();
+        $blocks = [];
         if (is_array($blockIDs)) {
             foreach ($blockIDs as $row) {
                 $ab = Block::getByID($row['bID'], $this, $row['arHandle']);
@@ -824,24 +826,24 @@ class Collection extends ConcreteObject implements TrackableInterface
     {
         $blockIDs = CacheLocal::getEntry(
                               'collection_block_ids',
-                              $this->getCollectionID().':'.$this->getVersionID()
+                              $this->getCollectionID() . ':' . $this->getVersionID()
         );
 
         if (!is_array($blockIDs)) {
-            $v = array($this->getCollectionID(), $this->getVersionID());
+            $v = [$this->getCollectionID(), $this->getVersionID()];
             $db = Loader::db();
             $q = 'select Blocks.bID, CollectionVersionBlocks.arHandle from CollectionVersionBlocks inner join Blocks on (CollectionVersionBlocks.bID = Blocks.bID) inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where CollectionVersionBlocks.cID = ? and (CollectionVersionBlocks.cvID = ? or CollectionVersionBlocks.cbIncludeAll=1) order by CollectionVersionBlocks.cbDisplayOrder asc';
             $r = $db->GetAll($q, $v);
-            $blockIDs = array();
+            $blockIDs = [];
             if (is_array($r)) {
                 foreach ($r as $bl) {
                     $blockIDs[strtolower($bl['arHandle'])][] = $bl;
                 }
             }
-            CacheLocal::set('collection_block_ids', $this->getCollectionID().':'.$this->getVersionID(), $blockIDs);
+            CacheLocal::set('collection_block_ids', $this->getCollectionID() . ':' . $this->getVersionID(), $blockIDs);
         }
 
-        $result = array();
+        $result = [];
         if ($arHandle != false) {
             $key = strtolower($arHandle);
             if (isset($blockIDs[$key])) {
@@ -892,7 +894,7 @@ class Collection extends ConcreteObject implements TrackableInterface
             ++$cbRelationID;
         }
 
-        $v = array(
+        $v = [
             $cID,
             $vObj->getVersionID(),
             $nb->getBlockID(),
@@ -900,8 +902,8 @@ class Collection extends ConcreteObject implements TrackableInterface
             $cbRelationID,
             $newBlockDisplayOrder,
             1,
-            intval($bt->includeAll()),
-        );
+            (int) ($bt->includeAll()),
+        ];
         $q = 'insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbRelationID, cbDisplayOrder, isOriginal, cbIncludeAll) values (?, ?, ?, ?, ?, ?, ?, ?)';
 
         $res = $db->Execute($q, $v);
@@ -914,12 +916,12 @@ class Collection extends ConcreteObject implements TrackableInterface
                 $fa = CollectionVersionFeatureAssignment::add($fe, $fd, $this);
                 $db->Execute(
                    'insert into BlockFeatureAssignments (cID, cvID, bID, faID) values (?, ?, ?, ?)',
-                   array(
+                   [
                        $this->getCollectionID(),
                        $this->getVersionID(),
                        $nb->getBlockID(),
                        $fa->getFeatureAssignmentID(),
-                   )
+                   ]
                 );
             }
         }
@@ -937,10 +939,10 @@ class Collection extends ConcreteObject implements TrackableInterface
         $cvID = $this->vObj->cvID;
         if ($ignoreVersions) {
             $q = 'select max(cbDisplayOrder) as cbdis from CollectionVersionBlocks where cID = ? and arHandle = ?';
-            $v = array($cID, $arHandle);
+            $v = [$cID, $arHandle];
         } else {
             $q = 'select max(cbDisplayOrder) as cbdis from CollectionVersionBlocks where cID = ? and cvID = ? and arHandle = ?';
-            $v = array($cID, $cvID, $arHandle);
+            $v = [$cID, $cvID, $arHandle];
         }
         $r = $db->query($q, $v);
         if ($r) {
@@ -948,7 +950,7 @@ class Collection extends ConcreteObject implements TrackableInterface
                 // then we know we got a value; we increment it and return
                 $res = $r->fetchRow();
                 $displayOrder = $res['cbdis'];
-                if (is_null($displayOrder)) {
+                if ($displayOrder === null) {
                     return 0;
                 }
                 ++$displayOrder;
@@ -966,8 +968,8 @@ class Collection extends ConcreteObject implements TrackableInterface
         $db = Loader::db();
         $db->Replace(
            'CollectionVersionFeatures',
-           array('cID' => $this->getCollectionID(), 'cvID' => $this->getVersionID(), 'feID' => $fe->getFeatureID()),
-           array('cID', 'cvID', 'feID'),
+           ['cID' => $this->getCollectionID(), 'cvID' => $this->getVersionID(), 'feID' => $fe->getFeatureID()],
+           ['cID', 'cvID', 'feID'],
            true
         );
     }
@@ -979,7 +981,7 @@ class Collection extends ConcreteObject implements TrackableInterface
         $dh = Loader::helper('date');
         $cDateModified = $dh->getOverridableNow();
 
-        $v = array($cDateModified, $this->cID);
+        $v = [$cDateModified, $this->cID];
         $q = 'update Collections set cDateModified = ? where cID = ?';
         $r = $db->prepare($q);
         $res = $db->execute($r, $v);
@@ -1021,12 +1023,11 @@ class Collection extends ConcreteObject implements TrackableInterface
         $dh = Loader::helper('date');
         $cDate = $dh->getOverridableNow();
 
-        $v = array($cDate, $cDate, $this->cHandle);
+        $v = [$cDate, $cDate, $this->cHandle];
         $r = $db->query('insert into Collections (cDateAdded, cDateModified, cHandle) values (?, ?, ?)', $v);
         $newCID = $db->Insert_ID();
 
         if ($r) {
-
             // first, we get the creation date of the active version in this collection
             //$q = "select cvDateCreated from CollectionVersions where cvIsApproved = 1 and cID = {$this->cID}";
             //$dcOriginal = $db->getOne($q);
@@ -1036,12 +1037,12 @@ class Collection extends ConcreteObject implements TrackableInterface
 
             // now we grab all of the current versions
             $rv = $db->query($qv);
-            $cvList = array();
+            $cvList = [];
             while ($row = $rv->fetchRow()) {
                 // insert
                 $cvList[] = $row['cvID'];
                 $cDate = date('Y-m-d H:i:s', strtotime($cDate) + 1);
-                $vv = array(
+                $vv = [
                     $newCID,
                     $row['cvID'],
                     $row['cvName'],
@@ -1054,7 +1055,7 @@ class Collection extends ConcreteObject implements TrackableInterface
                     $row['cvIsApproved'],
                     $row['pThemeID'],
                     $row['pTemplateID'],
-                );
+                ];
                 $qv = 'insert into CollectionVersions (cID, cvID, cvName, cvHandle, cvDescription, cvDatePublic, cvDateCreated, cvComments, cvAuthorUID, cvIsApproved, pThemeID, pTemplateID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
                 $db->query($qv, $vv);
             }
@@ -1062,14 +1063,14 @@ class Collection extends ConcreteObject implements TrackableInterface
             $ql = "select * from CollectionVersionBlockStyles where cID = '{$this->cID}'";
             $rl = $db->query($ql);
             while ($row = $rl->fetchRow()) {
-                $vl = array($newCID, $row['cvID'], $row['bID'], $row['arHandle'], $row['issID']);
+                $vl = [$newCID, $row['cvID'], $row['bID'], $row['arHandle'], $row['issID']];
                 $ql = 'insert into CollectionVersionBlockStyles (cID, cvID, bID, arHandle, issID) values (?, ?, ?, ?, ?)';
                 $db->query($ql, $vl);
             }
             $ql = "select * from CollectionVersionAreaStyles where cID = '{$this->cID}'";
             $rl = $db->query($ql);
             while ($row = $rl->fetchRow()) {
-                $vl = array($newCID, $row['cvID'], $row['arHandle'], $row['issID']);
+                $vl = [$newCID, $row['cvID'], $row['arHandle'], $row['issID']];
                 $ql = 'insert into CollectionVersionAreaStyles (cID, cvID, arHandle, issID) values (?, ?, ?, ?)';
                 $db->query($ql, $vl);
             }
@@ -1077,7 +1078,7 @@ class Collection extends ConcreteObject implements TrackableInterface
             $ql = "select * from CollectionVersionThemeCustomStyles where cID = '{$this->cID}'";
             $rl = $db->query($ql);
             while ($row = $rl->fetchRow()) {
-                $vl = array($newCID, $row['cvID'], $row['pThemeID'], $row['scvlID'], $row['preset'], $row['sccRecordID']);
+                $vl = [$newCID, $row['cvID'], $row['pThemeID'], $row['scvlID'], $row['preset'], $row['sccRecordID']];
                 $ql = 'insert into CollectionVersionThemeCustomStyles (cID, cvID, pThemeID, scvlID, preset, sccRecordID) values (?, ?, ?, ?, ?, ?)';
                 $db->query($ql, $vl);
             }
@@ -1087,7 +1088,7 @@ class Collection extends ConcreteObject implements TrackableInterface
             $q = "select bID, cvID, arHandle, cbDisplayOrder, cbOverrideAreaPermissions, cbIncludeAll, cbRelationID from CollectionVersionBlocks where cID = '{$this->cID}' and cvID in ({$cvList})";
             $r = $db->query($q);
             while ($row = $r->fetchRow()) {
-                $v = array(
+                $v = [
                     $newCID,
                     $row['cvID'],
                     $row['bID'],
@@ -1097,7 +1098,7 @@ class Collection extends ConcreteObject implements TrackableInterface
                     0,
                     $row['cbOverrideAreaPermissions'],
                     $row['cbIncludeAll'],
-                );
+                ];
                 $q = 'insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbDisplayOrder, cbRelationID, isOriginal, cbOverrideAreaPermissions, cbIncludeAll) values (?, ?, ?, ?, ?, ?, ?, ?, ?)';
                 $db->query($q, $v);
                 if ($row['cbOverrideAreaPermissions'] != 0) {
@@ -1106,14 +1107,14 @@ class Collection extends ConcreteObject implements TrackableInterface
                     while ($row2 = $r2->fetchRow()) {
                         $db->Replace(
                            'BlockPermissionAssignments',
-                           array(
+                           [
                                'cID' => $newCID,
                                'cvID' => $row['cvID'],
                                'bID' => $row['bID'],
                                'paID' => $row2['paID'],
                                'pkID' => $row2['pkID'],
-                           ),
-                           array('cID', 'cvID', 'bID', 'paID', 'pkID'),
+                           ],
+                           ['cID', 'cvID', 'bID', 'paID', 'pkID'],
                            true
                         );
                     }
@@ -1123,9 +1124,9 @@ class Collection extends ConcreteObject implements TrackableInterface
             // duplicate any attributes belonging to the collection
             $list = CollectionKey::getAttributeValues($this->vObj);
             $em = \Database::connection()->getEntityManager();
-            foreach($list as $av) {
+            foreach ($list as $av) {
                 /**
-                 * @var $av PageValue
+                 * @var PageValue
                  */
                 $cav = new PageValue();
                 $cav->setPageID($newCID);
@@ -1135,7 +1136,6 @@ class Collection extends ConcreteObject implements TrackableInterface
                 $em->persist($cav);
             }
             $em->flush();
-
 
             return self::getByID($newCID);
         }
