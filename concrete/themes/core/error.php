@@ -25,11 +25,9 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-10 col-sm-offset-1">
-            <br/><br/><br/>
-            <?php
-                Loader::element('error_fatal', array('innerContent' => $innerContent, 'titleContent' => $titleContent));
-            ?>
-            <p><a href="<?=Core::getApplicationURL()?>" class="btn btn-default"><?=t('&lt; Back to Home')?></a></p>
+            <br><br><br>
+            <h3><?=$titleContent?></h3>
+            <div class="alert alert-danger"><?php echo $innerContent ?></div>
         </div>
     </div>
 </div>
