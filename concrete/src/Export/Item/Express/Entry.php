@@ -40,6 +40,7 @@ class Entry implements ItemInterface
     {
         $node = $xml->addChild('entry');
         $node->addAttribute('id', $this->convertNumericEntryIdToIdentifier($entry->getId()));
+        $node->addAttribute('label', $entry->getLabel());
         $node->addAttribute('entity', $entry->getEntity()->getHandle());
         $node->addAttribute('display-order', $entry->getEntryDisplayOrder());
         $attribs = $entry->getAttributes();
