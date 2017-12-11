@@ -16,6 +16,8 @@ use View;
 class UpdateFromType extends BackendInterfaceController
 {
     protected $viewPath = '/dialogs/type/update_from_type';
+    protected $pageType = null;
+    protected $template = null;
 
     public function on_start()
     {
@@ -67,11 +69,12 @@ class UpdateFromType extends BackendInterfaceController
         $siteTreeID = $site->getSiteTreeID();
 
         $ptID = $pageTypeDefaultPage->getPageTypeID();
-        $pagesPlusCV = $db->fetchAll('select p.cID, max(cvID) as cvID from Pages p inner join CollectionVersions cv on p.cID = cv.cID where ptID = ? and cIsTemplate = 0 and cIsActive = 1 and siteTreeID = ? group by cID order by cID', [$ptID, $siteTreeID]);
+        
+        $pagesPlusCV = $db->fetchAll('select p.cID, max(cvID) as cvID from Pages p inner join CollectionVersions cv on p.cID = cv.cID where ptID = ? and pTemplateID = ? and cIsTemplate = 0 and cIsActive = 1 and siteTreeID = ? group by cID order by cID', [$ptID, $this->template->getPageTemplateID(), $siteTreeID]);
 
         foreach ($pagesPlusCV as $pagePlusCV) {
             $pageTypeDefaultPageBlocksClone = $pageTypeDefaultPageRelBlocks;
-
+            
             $associatedBlocks = $db->fetchAll(
                 'select cbDisplayOrder, arHandle, bID, cbRelationID from CollectionVersionBlocks where cID = ? and cvID = ?',
                 [$pagePlusCV['cID'], $pagePlusCV['cvID']]
