@@ -35,7 +35,7 @@ class Folder extends AbstractController
             $error->add(t('You do not have permission to add a folder here.'));
         }
         $folderName = $this->request->request->get('folderName');
-        if (empty($folderName)) {
+        if (!is_string($folderName) || trim($folderName) === '') {
             $error->add(t('Folder Name can not be empty.'));
         }
         if (!$error->has()) {
