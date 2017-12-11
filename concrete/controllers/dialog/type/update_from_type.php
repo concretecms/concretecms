@@ -2,11 +2,15 @@
 namespace Concrete\Controller\Dialog\Type;
 
 use Block;
+use Area;
+use BlockType;
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Foundation\Queue\QueueService;
 use Concrete\Core\Http\ResponseFactory;
 use Concrete\Core\Page\PageList;
+use Concrete\Core\Page\Type\Composer\FormLayoutSetControl;
+use Concrete\Core\Page\Type\Composer\Control\BlockControl;
 use Page;
 use PageTemplate;
 use PageType;
@@ -60,7 +64,7 @@ class UpdateFromType extends BackendInterfaceController
         $pageTypeDefaultPageRelBlocks = [];
 
         foreach ($pageTypeDefaultPage->getBlocks() as $b) {
-            $pageTypeDefaultPageBlocks[$b->getBlockID()] = $pageTypeDefaultPageRelBlocks[$b->getBlockRelationID()] = $b;
+            $pageTypeDefaultPageBlocks[$b->getBlockID()] = $pageTypeDefaultPageRelBlocks[$b->getBlockRelationID()] = $b;            
         }
 
         $db = $this->app->make(Connection::class);
@@ -259,9 +263,34 @@ class UpdateFromType extends BackendInterfaceController
 
                 foreach ($blocksToAdd as $blockToAdd) {
                     $pageTypeBlock = $blockService->getByID($blockToAdd['bID'], $pageTypeDefaultPage, $blockToAdd['pageTypeArHandle']);
-                    $pageTypeBlock->alias($page);
-                    $addedChildPageblock = $blockService->getByID($pageTypeBlock->getBlockID(), $page, $blockToAdd['pageTypeArHandle']);
-                    $addedChildPageblock->setAbsoluteBlockDisplayOrder($blockToAdd['actualDisplayOrder']);
+                    
+                    $bi = $pageTypeBlock->getInstance();
+                    $output = $bi->getComposerOutputControlObject();
+                    $control = FormLayoutSetControl::getByID($output->getPageTypeComposerFormLayoutSetControlID());
+                    $object = $control->getPageTypeComposerControlObject();
+                    
+                    if ($object instanceof BlockControl) {
+                        $a = Area::get($page, $blockToAdd['pageTypeArHandle']);
+                        
+                        $bt = $object->getBlockTypeObject();
+                        $b = $page->addBlock($bt, $a, [], $pageTypeBlock->getBlockRelationID());
+                        $object->setPageTypeComposerControlBlockObject($b);
+                        $b->setAbsoluteBlockDisplayOrder($blockToAdd['actualDisplayOrder']);
+
+                        $bFilename = $pageTypeBlock->getBlockFilename();
+                        $defaultStyles = $pageTypeBlock->getCustomStyle();
+
+                        if ($bFilename) {
+                            $b->setCustomTemplate($bFilename);
+                        }
+
+                        if ($defaultStyles) {
+                            $b->setCustomStyleSet($defaultStyles->getStyleSet());
+                        }
+                        
+                        $object->recordPageTypeComposerOutputBlock($b);
+                    }
+                    
                 }
 
                 foreach ($blocksToUpdate as $blockToUpdate) {
