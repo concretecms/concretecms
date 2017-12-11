@@ -34,8 +34,12 @@ class Folder extends AbstractController
         if (!$permissions->canAddTreeSubNode()) {
             $error->add(t('You do not have permission to add a folder here.'));
         }
+        $folderName = $this->request->request->get('folderName');
+        if (empty($folderName)) {
+            $error->add(t('Folder Name can not be empty.'));
+        }
         if (!$error->has()) {
-            $folder = $filesystem->addFolder($folder, $this->request->request->get('folderName'));
+            $folder = $filesystem->addFolder($folder, $folderName);
             $response->setMessage(t('Folder added.'));
             $response->setAdditionalDataAttribute('folder', $folder);
         }
