@@ -22,15 +22,15 @@ $addSelected = true;
 <?php /* these question ids have been deleted, or edited, and so shouldn't be duplicated for block versioning */ ?>
 <input type="hidden" id="ccm-ignoreQuestionIDs" name="ignoreQuestionIDs" value="" />
 <input type="hidden" id="ccm-pendingDeleteIDs" name="pendingDeleteIDs" value="" />
-<input type="hidden" id="qsID" name="qsID" type="text" value="<?php echo intval($miniSurveyInfo['questionSetId'])?>" />
-<input type="hidden" id="oldQsID" name="oldQsID" type="text" value="<?php echo intval($miniSurveyInfo['questionSetId'])?>" />
-<input type="hidden" id="msqID" name="msqID" type="text" value="<?php echo intval($msqID)?>" />
+<input type="hidden" id="qsID" name="qsID" type="text" value="<?= isset($miniSurveyInfo['questionSetId']) ?  intval($miniSurveyInfo['questionSetId']) : 0 ?>" />
+<input type="hidden" id="oldQsID" name="oldQsID" type="text" value="<?= isset($miniSurveyInfo['questionSetId']) ? intval($miniSurveyInfo['questionSetId']) : 0 ?>" />
+<input type="hidden" id="msqID" name="msqID" type="text" value="<?= isset($msqID) ? intval($msqID) : 0 ?>" />
 	
 
 <div class="ccm-tab-content" id="ccm-tab-content-form-options">
 	<?php 
     $c = Page::getCurrentPage();
-    if (strlen($miniSurveyInfo['surveyName']) == 0) {
+    if (!isset($miniSurveyInfo['surveyName']) || strlen($miniSurveyInfo['surveyName']) == 0) {
         $miniSurveyInfo['surveyName'] = $c->getCollectionName();
     }
     ?>
@@ -52,8 +52,8 @@ $addSelected = true;
 			<?=$form->label('recipientEmail', t('Send form submissions to email addresses'))?>
 			<div class="input-group">
 				<span class="input-group-addon" style="z-index: 2000">
-				<?=$form->checkbox('notifyMeOnSubmission', 1, $miniSurveyInfo['notifyMeOnSubmission'] == 1, array('onclick' => "$('input[name=recipientEmail]').focus()"))?>
-				</span><?=$form->text('recipientEmail', $miniSurveyInfo['recipientEmail'], array('style' => 'z-index:2000;'))?>
+				<?=$form->checkbox('notifyMeOnSubmission', 1, isset($miniSurveyInfo['notifyMeOnSubmission']) && $miniSurveyInfo['notifyMeOnSubmission'] == 1, array('onclick' => "$('input[name=recipientEmail]').focus()"))?>
+				</span><?=$form->text('recipientEmail', empty($miniSurveyInfo['recipientEmail']) ? '' : $miniSurveyInfo['recipientEmail'], array('style' => 'z-index:2000;'))?>
 			</div>
 			<span class="help-block"><?=t('(Separate multiple emails with a comma)')?></span>
 		</div>
@@ -61,13 +61,13 @@ $addSelected = true;
 			<label class="control-label"><?=t('Solving a <a href="%s" target="_blank">CAPTCHA</a> Required to Post?', t('http://en.wikipedia.org/wiki/Captcha'))?></label>
 			<div class="radio">
 			<label>
-				<?=$form->radio('displayCaptcha', 1, (int) $miniSurveyInfo['displayCaptcha'])?>
+				<?=$form->radio('displayCaptcha', 1, empty($miniSurveyInfo['displayCaptcha']) ? 0 : (int) $miniSurveyInfo['displayCaptcha'])?>
 				<span><?=t('Yes')?></span>
 			</label>
 			</div>
 			<div class="radio">
 			<label>
-				<?=$form->radio('displayCaptcha', 0, (int) $miniSurveyInfo['displayCaptcha'])?>
+				<?=$form->radio('displayCaptcha', 0, empty($miniSurveyInfo['displayCaptcha']) ? 0 : (int) $miniSurveyInfo['displayCaptcha'])?>
 				<span><?=t('No')?></span>
 			</label>
 			</div>
@@ -77,7 +77,7 @@ $addSelected = true;
 			<div id="ccm-form-redirect-page">
 				<?php
                     $page_selector = Loader::helper('form/page_selector');
-                    if ($miniSurveyInfo['redirectCID']) {
+                    if (!empty($miniSurveyInfo['redirectCID'])) {
                         echo $page_selector->selectPage('redirectCID', $miniSurveyInfo['redirectCID']);
                     } else {
                         echo $page_selector->selectPage('redirectCID');
@@ -96,7 +96,7 @@ $addSelected = true;
                     foreach ($fileSets as $fileSet) {
                         $sets[$fileSet->fsID] = $fileSet->fsName;
                     }
-                    echo $form->select('addFilesToSet', $sets, $miniSurveyInfo['addFilesToSet']);
+                    echo $form->select('addFilesToSet', $sets, isset($miniSurveyInfo['addFilesToSet']) ? $miniSurveyInfo['addFilesToSet'] : null);
                 ?>
 			</div>
 		</div>
@@ -311,7 +311,7 @@ function initFormBlockWhenReady(){
 		miniSurvey.arHandle="<?php echo urlencode($_REQUEST['arHandle'])?>";
 		miniSurvey.bID=thisbID;
 		miniSurvey.btID=thisbtID;
-		miniSurvey.qsID=parseInt(<?php echo $miniSurveyInfo['questionSetId']?>);	
+		miniSurvey.qsID=parseInt(<?= isset($miniSurveyInfo['questionSetId']) ? $miniSurveyInfo['questionSetId'] : null ?>);	
 		miniSurvey.init();
 		miniSurvey.refreshSurvey();
 	}else setTimeout('initFormBlockWhenReady()',100);
