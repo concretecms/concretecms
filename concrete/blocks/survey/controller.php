@@ -15,7 +15,30 @@ class Controller extends BlockController
     protected $btInterfaceHeight = 500;
     protected $btExportTables = array('btSurvey', 'btSurveyOptions', 'btSurveyResults');
 
-    public function on_start()
+    /**
+     * Used for localization. If we want to localize the name/description we have to include this.
+     */
+    public function getBlockTypeDescription()
+    {
+        return t("Provide a simple survey, along with results in a pie chart format.");
+    }
+
+    public function getBlockTypeName()
+    {
+        return t("Survey");
+    }
+
+    public function getQuestion()
+    {
+        return $this->question;
+    }
+
+    public function getPollOptions()
+    {
+        return $this->options;
+    }
+
+    public function setPollOptions()
     {
         $this->cID = null;
 
@@ -43,27 +66,14 @@ class Controller extends BlockController
         }
     }
 
-    /**
-     * Used for localization. If we want to localize the name/description we have to include this.
-     */
-    public function getBlockTypeDescription()
+    public function edit()
     {
-        return t("Provide a simple survey, along with results in a pie chart format.");
+        $this->setPollOptions();
     }
 
-    public function getBlockTypeName()
+    public function view()
     {
-        return t("Survey");
-    }
-
-    public function getQuestion()
-    {
-        return $this->question;
-    }
-
-    public function getPollOptions()
-    {
-        return $this->options;
+        $this->setPollOptions();
     }
 
     public function delete()
@@ -153,6 +163,8 @@ class Controller extends BlockController
 
     public function duplicate($newBID)
     {
+        $this->setPollOptions();
+
         $db = Database::connection();
 
         foreach ($this->options as $opt) {
