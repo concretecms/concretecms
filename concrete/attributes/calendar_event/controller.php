@@ -31,7 +31,10 @@ class Controller extends \Concrete\Attribute\Number\Controller
 
     public function getSearchIndexValue()
     {
-        return '1';
+        $value = $this->getAttributeValue()->getValueObject();
+        if ($value) {
+            return intval($value->getValue());
+        }
     }
 
     public function getPlainTextValue()
@@ -99,5 +102,19 @@ class Controller extends \Concrete\Attribute\Number\Controller
             $calendars[$calendar->getID()] = $calendar->getName();
         }
         $this->set('calendars', $calendars);
+    }
+
+    public function search()
+    {
+        $this->form();
+        $v = $this->getView();
+        $v->render();
+    }
+
+    public function searchForm($list)
+    {
+        $eventID = (int) ($this->request('eventID'));
+        $list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), $eventID, '=');
+        return $list;
     }
 }
