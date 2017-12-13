@@ -16,10 +16,9 @@ class AttributeKeyControl extends Control
     public function export($control, \SimpleXMLElement $xml)
     {
         $node = parent::export($control, $xml);
-        $key = $control->getAttributeKey();
-        if (is_object($key)) {
-            return $key->getExporter()->export($key, $node);
-        }
+        $child = $node->addChild('attributekey');
+        $child->addAttribute('handle', $control->getAttributeKey()->getAttributeKeyHandle());
+        return $node;
     }
 
 }

@@ -17,6 +17,7 @@ class StyleSet
     public static function getByID($issID)
     {
         $em = \ORM::entityManager();
+
         return $em->find('\Concrete\Core\Entity\StyleCustomizer\Inline\StyleSet', $issID);
     }
 
@@ -194,14 +195,21 @@ class StyleSet
             $return = true;
         }
 
-        if (isset($r['boxShadowHorizontal'])) {
-            if ((trim($r['boxShadowHorizontal']) && trim($r['boxShadowHorizontal']) != '0px')
-            || (trim($r['boxShadowVertical']) && trim($r['boxShadowVertical']) != '0px')) {
-                $set->setBoxShadowBlur($r['boxShadowBlur']);
+        $boxShadowHorizontal = isset($r['boxShadowHorizontal']) && trim($r['boxShadowHorizontal']) ? trim($r['boxShadowHorizontal']) : '0px';
+        $boxShadowVertical = isset($r['boxShadowVertical']) && trim($r['boxShadowVertical']) ? trim($r['boxShadowVertical']) : '0px';
+        $boxShadowBlur = isset($r['boxShadowBlur']) && trim($r['boxShadowBlur']) ? trim($r['boxShadowBlur']) : '0px';
+        $boxShadowSpread = isset($r['boxShadowSpread']) && trim($r['boxShadowSpread']) ? trim($r['boxShadowSpread']) : '0px';
+
+        if (isset($r['boxShadowColor'])) {
+            if ($boxShadowHorizontal != '0px'
+            || $boxShadowVertical != '0px'
+            || $boxShadowBlur != '0px'
+            || $boxShadowSpread != '0px') {
                 $set->setBoxShadowColor($r['boxShadowColor']);
-                $set->setBoxShadowHorizontal($r['boxShadowHorizontal']);
-                $set->setBoxShadowVertical($r['boxShadowVertical']);
-                $set->setBoxShadowSpread($r['boxShadowSpread']);
+                $set->setBoxShadowBlur($boxShadowBlur);
+                $set->setBoxShadowHorizontal($boxShadowHorizontal);
+                $set->setBoxShadowVertical($boxShadowVertical);
+                $set->setBoxShadowSpread($boxShadowSpread);
                 $return = true;
             }
         }
@@ -227,7 +235,7 @@ class StyleSet
             $singleQuoteCount = preg_match_all('/([\'])/i', $customElementAttribute);
             $doubleQuoteCount = preg_match_all('/(["])/i', $customElementAttribute);
 
-            if ($singleQuoteCount % 2 == 0 && $doubleQuoteCount % 2 == 0 ) {
+            if ($singleQuoteCount % 2 == 0 && $doubleQuoteCount % 2 == 0) {
                 $set->setCustomElementAttribute(trim($customElementAttribute));
                 $return = true;
             } else {
