@@ -1253,79 +1253,65 @@ class Version implements ObjectInterface
     /**
      * Delete and re-create all the thumbnail types (only applicable to image files).
      *
-     * @return bool|null return false on failure
+     * @return bool return true on success, false on failure (file is not an image, problems during image processing, ...)
      */
     public function rescanThumbnails()
     {
-        if ($this->fvType != \Concrete\Core\File\Type\Type::T_IMAGE) {
-            return false;
-        }
+        $result = false;
+        if ($this->fvType == \Concrete\Core\File\Type\Type::T_IMAGE) {
+            try {
+                $image = $this->getImagineImage();
+                if ($image) {
+                    $imagewidth = $this->getAttribute('width') ?: $image->getSize()->getWidth();
+                    $imageheight = $this->getAttribute('height') ?: $image->getSize()->getHeight();
+                    $types = Type::getVersionList();
+                    foreach ($types as $type) {
+                        // delete the file if it exists
+                        $this->deleteThumbnail($type);
 
-        $imagewidth = $this->getAttribute('width');
-        $imageheight = $this->getAttribute('height');
-        $types = Type::getVersionList();
+                        // if image is smaller than size requested, don't create thumbnail
+                        if ($imagewidth < $type->getWidth() && $imageheight < $type->getHeight()) {
+                            continue;
+                        }
 
-        try {
-            $image = $this->getImagineImage();
+                        // This should not happen as it is not allowed when creating thumbnail types and both width and heght
+                        // are required for Exact sizing but it's here just in case
+                        if ($type->getSizingMode() === Type::RESIZE_EXACT && (!$type->getWidth() || !$type->getHeight())) {
+                            continue;
+                        }
 
-            if ($image) {
-                if (!$imagewidth) {
-                    $imagewidth = $image->getSize()->getWidth();
+                        // If requesting an exact size and any of the dimensions requested is larger than the image's
+                        // don't process as we won't get an exact size
+                        if ($type->getSizingMode() === Type::RESIZE_EXACT && ($imagewidth < $type->getWidth() || $imageheight < $type->getHeight())) {
+                            continue;
+                        }
+
+                        // if image is the same width as thumbnail, and there's no thumbnail height set,
+                        // or if a thumbnail height set and the image has a smaller or equal height, don't create thumbnail
+                        if ($imagewidth == $type->getWidth() && (!$type->getHeight() || $imageheight <= $type->getHeight())) {
+                            continue;
+                        }
+
+                        // if image is the same height as thumbnail, and there's no thumbnail width set,
+                        // or if a thumbnail width set and the image has a smaller or equal width, don't create thumbnail
+                        if ($imageheight == $type->getHeight() && (!$type->getWidth() || $imagewidth <= $type->getWidth())) {
+                            continue;
+                        }
+
+                        // otherwise file is bigger than thumbnail in some way, proceed to create thumbnail
+                        $this->generateThumbnail($type);
+                    }
+                    $result = true;
                 }
-                if (!$imageheight) {
-                    $imageheight = $image->getSize()->getHeight();
-                }
-
-                foreach ($types as $type) {
-                    // delete the file if it exists
-                    $this->deleteThumbnail($type);
-
-                    // if image is smaller than size requested, don't create thumbnail
-                    if ($imagewidth < $type->getWidth() && $imageheight < $type->getHeight()) {
-                        continue;
-                    }
-
-                    // This should not happen as it is not allowed when creating thumbnail types and both width and heght
-                    // are required for Exact sizing but it's here just in case
-                    if ($type->getSizingMode() === Type::RESIZE_EXACT && (!$type->getWidth() || !$type->getHeight())) {
-                        continue;
-                    }
-
-                    // If requesting an exact size and any of the dimensions requested is larger than the image's
-                    // don't process as we won't get an exact size
-                    if ($type->getSizingMode() === Type::RESIZE_EXACT && ($imagewidth < $type->getWidth() || $imageheight < $type->getHeight())) {
-                        continue;
-                    }
-
-                    // if image is the same width as thumbnail, and there's no thumbnail height set,
-                    // or if a thumbnail height set and the image has a smaller or equal height, don't create thumbnail
-                    if ($imagewidth == $type->getWidth() && (!$type->getHeight() || $imageheight <= $type->getHeight())) {
-                        continue;
-                    }
-
-                    // if image is the same height as thumbnail, and there's no thumbnail width set,
-                    // or if a thumbnail width set and the image has a smaller or equal width, don't create thumbnail
-                    if ($imageheight == $type->getHeight() && (!$type->getWidth() || $imagewidth <= $type->getWidth())) {
-                        continue;
-                    }
-
-                    // otherwise file is bigger than thumbnail in some way, proceed to create thumbnail
-                    $this->generateThumbnail($type);
-                }
+            } catch (\Imagine\Exception\InvalidArgumentException $e) {
+            } catch (\Imagine\Exception\RuntimeException $e) {
+            } finally {
+                unset($image);
+                $this->releaseImagineImage();
             }
-            unset($image);
-            $this->releaseImagineImage();
-        } catch (\Imagine\Exception\InvalidArgumentException $e) {
-            unset($image);
-            $this->releaseImagineImage();
-
-            return false;
-        } catch (\Imagine\Exception\RuntimeException $e) {
-            unset($image);
-            $this->releaseImagineImage();
-
-            return false;
         }
+
+        return $result;
     }
 
     /**
