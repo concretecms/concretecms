@@ -610,7 +610,9 @@ class Version implements ObjectInterface
      */
     public function getSize()
     {
-        return Core::make('helper/number')->formatSize($this->fvSize, 'KB');
+        $app = Application::getFacadeApplication();
+
+        return $app->make('helper/number')->formatSize($this->fvSize, 'KB');
     }
 
     /**
