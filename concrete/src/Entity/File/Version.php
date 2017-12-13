@@ -2,8 +2,8 @@
 
 namespace Concrete\Core\Entity\File;
 
+use Concrete\Core\Attribute\AttributeKeyInterface;
 use Concrete\Core\Attribute\Category\FileCategory;
-use Concrete\Core\Attribute\Key\FileKey;
 use Concrete\Core\Attribute\ObjectInterface;
 use Concrete\Core\Attribute\ObjectTrait;
 use Concrete\Core\Database\Connection\Connection;
@@ -1173,26 +1173,21 @@ class Version implements ObjectInterface
      */
     public function getAttributeValueObject($ak, $createIfNotExists = false)
     {
-        if (!is_object($ak)) {
-            $ak = FileKey::getByHandle($ak);
+        if (!($ak instanceof AttributeKeyInterface)) {
+            $ak = $ak ? $this->getObjectAttributeCategory()->getAttributeKeyByHandle((string) $ak) : null;
         }
-        $value = false;
-        if (is_object($ak)) {
-            $value = $this->getObjectAttributeCategory()->getAttributeValue($ak, $this);
-        }
-
-        if ($value) {
-            return $value;
-        } elseif ($createIfNotExists) {
-            if (!is_object($ak)) {
-                $ak = FileKey::getByHandle($ak);
+        if ($ak === null) {
+            $result = null;
+        } else {
+            $result = $this->getObjectAttributeCategory()->getAttributeValue($ak, $this);
+            if ($result === null && $createIfNotExists) {
+                $result = new FileValue();
+                $result->setVersion($this);
+                $result->setAttributeKey($ak);
             }
-            $attributeValue = new FileValue();
-            $attributeValue->setVersion($this);
-            $attributeValue->setAttributeKey($ak);
-
-            return $attributeValue;
         }
+
+        return $result;
     }
 
     /**
