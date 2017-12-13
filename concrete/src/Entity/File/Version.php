@@ -1342,14 +1342,19 @@ class Version implements ObjectInterface
     public function getDetailThumbnailImage()
     {
         if ($this->fvHasDetailThumbnail) {
-            $type = Type::getByHandle(\Config::get('concrete.icons.file_manager_detail.handle'));
-            $baseSrc = $this->getThumbnailURL($type->getBaseVersion());
-            $doubledSrc = $this->getThumbnailURL($type->getDoubledVersion());
-
-            return '<img src="' . $baseSrc . '" data-at2x="' . $doubledSrc . '" />';
+            $app = Application::getFacadeApplication();
+            $config = $app->make('config');
+            $type = Type::getByHandle($config->get('concrete.icons.file_manager_detail.handle'));
+            $result = '<img src="' . $this->getThumbnailURL($type->getBaseVersion()) . '"';
+            if ($config->get('concrete.file_manager.images.create_high_dpi_thumbnails')) {
+                $result .= ' data-at2x="' . $this->getThumbnailURL($type->getDoubledVersion()) . '"';
+            }
+            $result .= ' />';
         } else {
-            return $this->getTypeObject()->getThumbnail();
+            $result = $this->getTypeObject()->getThumbnail();
         }
+
+        return $result;
     }
 
     /**
