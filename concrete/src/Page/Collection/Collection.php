@@ -860,7 +860,7 @@ class Collection extends ConcreteObject implements TrackableInterface
         return $result;
     }
 
-    public function addBlock($bt, $a, $data, $cbRelationID = null)
+    public function addBlock($bt, $a, $data)
     {
         $db = Loader::db();
 
@@ -885,7 +885,9 @@ class Collection extends ConcreteObject implements TrackableInterface
             $newBlockDisplayOrder = $this->getCollectionAreaDisplayOrder($arHandle);
         }
 
-        if (empty($cbRelationID)) {
+        if (isset($data['cbRelationID']) && !empty($data['cbRelationID'])) {
+            $cbRelationID = $data['cbRelationID'];
+        } else {
             $cbRelationID = $db->GetOne('select max(cbRelationID) as cbRelationID from CollectionVersionBlocks');
             if (!$cbRelationID) {
                 $cbRelationID = 1;

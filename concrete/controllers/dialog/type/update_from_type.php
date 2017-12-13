@@ -273,7 +273,7 @@ class UpdateFromType extends BackendInterfaceController
                         $a = Area::get($page, $blockToAdd['pageTypeArHandle']);
                         
                         $bt = $object->getBlockTypeObject();
-                        $b = $page->addBlock($bt, $a, [], $pageTypeBlock->getBlockRelationID());
+                        $b = $page->addBlock($bt, $a, ['cbRelationID' => $pageTypeBlock->getBlockRelationID()]);
                         $object->setPageTypeComposerControlBlockObject($b);
                         $b->setAbsoluteBlockDisplayOrder($blockToAdd['actualDisplayOrder']);
 

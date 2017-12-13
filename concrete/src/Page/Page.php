@@ -2234,9 +2234,9 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         }
     }
 
-    public function addBlock($bt, $a, $data, $cbRelationID = null)
+    public function addBlock($bt, $a, $data)
     {
-        $b = parent::addBlock($bt, $a, $data, $cbRelationID);
+        $b = parent::addBlock($bt, $a, $data);
         $btHandle = $bt->getBlockTypeHandle();
         if ($b->getBlockTypeHandle() == BLOCK_HANDLE_PAGE_TYPE_OUTPUT_PROXY) {
             $bi = $b->getInstance();
