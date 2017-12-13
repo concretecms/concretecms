@@ -945,18 +945,22 @@ class Version implements ObjectInterface
      */
     public function updateContents($contents)
     {
-        $cf = Core::make('helper/concrete/file');
         $storage = $this->getFile()->getFileStorageLocationObject();
-        if (is_object($storage)) {
+        if ($storage !== null) {
+            $app = Application::getFacadeApplication();
+            $cf = $app->make('helper/concrete/file');
             $path = $cf->prefix($this->fvPrefix, $this->fvFilename);
             $filesystem = $storage->getFileSystemObject();
-            if ($filesystem->has($path)) {
-                $filesystem->delete($path);
+            try {
+                if ($filesystem->has($path)) {
+                    $filesystem->delete($path);
+                }
+            } catch (FileNotFoundException $x) {
             }
             $filesystem->write($path, $contents);
             $this->logVersionUpdate(self::UT_CONTENTS);
             $fe = new FileVersionEvent($this);
-            Events::dispatch('on_file_version_update_contents', $fe);
+            $app->make(EventDispatcherInterface::class)->dispatch('on_file_version_update_contents', $fe);
             $this->refreshAttributes();
         }
     }
