@@ -390,64 +390,7 @@ class Collection extends ConcreteObject implements TrackableInterface
         }
     }
 
-    // remove the collection attributes for this version of a page
-
-    public function cloneVersion($versionComments, $createEmpty = false)
-    {
-        // first, we run the version object's createNew() command, which returns a new
-        // version object, which we can combine with our collection object, so we'll have
-        // our original collection object ($this), and a new collection object, consisting
-        // of our collection + the new version
-        $vObj = $this->getVersionObject();
-        $nvObj = $vObj->createNew($versionComments);
-        $nc = Page::getByID($this->getCollectionID());
-        $nc->vObj = $nvObj;
-        // now that we have the original version object and the cloned version object,
-        // we're going to select all the blocks that exist for this page, and we're going
-        // to copy them to the next version
-        // unless btIncludeAll is set -- as that gets included no matter what
-
-        $db = Loader::db();
-        $cID = $this->getCollectionID();
-        $cvID = $vObj->getVersionID();
-        if (!$createEmpty) {
-            $q = "select bID, arHandle from CollectionVersionBlocks where cID = '$cID' and cvID = '$cvID' and cbIncludeAll=0 order by cbDisplayOrder asc";
-            $r = $db->query($q);
-            if ($r) {
-                while ($row = $r->fetchRow()) {
-                    // now we loop through these, create block objects for all of them, and
-                    // duplicate them to our collection object (which is actually the same collection,
-                    // but different version)
-                    $b = Block::getByID($row['bID'], $this, $row['arHandle']);
-                    if (is_object($b)) {
-                        $b->alias($nc);
-                    }
-                }
-            }
-            // duplicate any area styles
-            $q = "select issID, arHandle from CollectionVersionAreaStyles where cID = '$cID' and cvID = '$cvID'";
-            $r = $db->query($q);
-            while ($row = $r->FetchRow()) {
-                $db->Execute(
-                   'insert into CollectionVersionAreaStyles (cID, cvID, arHandle, issID) values (?, ?, ?, ?)',
-                   [
-                       $this->getCollectionID(),
-                       $nvObj->getVersionID(),
-                       $row['arHandle'],
-                       $row['issID'],
-                   ]
-                );
-            }
-        }
-
-        return $nc;
-    }
-
-    public function getCollectionID()
-    {
-        return $this->cID;
-    }
-
+    /*
      * Get the automatic comment for the next collection version.
      *
      * @return string Example: 'Version 2'
@@ -458,21 +401,6 @@ class Collection extends ConcreteObject implements TrackableInterface
         $cvID = $c->getVersionID();
 
         return t('Version %d', $cvID + 1);
-    }
-
-    public function getFeatureAssignments()
-    {
-        if (is_object($this->vObj)) {
-            return CollectionVersionFeatureAssignment::getList($this);
-        }
-
-        return [];
-    }
-
-    public function getVersionID()
-    {
-        // shortcut
-        return $this->vObj->cvID;
     }
 
     /* area stuff */
@@ -586,16 +514,6 @@ class Collection extends ConcreteObject implements TrackableInterface
         if (is_object($this->vObj)) {
             return $this->vObj->getAttributeValue($akHandle);
         }
-    }
-
-    /**
-     * Delete the values of the attributes associated to the currently loaded collection version.
-     *
-     * @param int[] $retainAKIDs a list of attribute key IDs to keep (their values won't be deleted)
-     */
-    public function getCollectionAttributeValue($akHandle)
-    {
-        return $this->getAttribute($akHandle);
     }
 
     // get's an array of collection attribute objects that are attached to this collection. Does not get values
@@ -877,54 +795,6 @@ class Collection extends ConcreteObject implements TrackableInterface
         }
     }
 
-    public function getAreaCustomStyle($area, $force = false)
-    {
-        $areac = $area->getAreaCollectionObject();
-        if ($areac instanceof Stack) {
-            // this fixes the problem of users applying design to the main area on the page, and then that trickling into any
-            // stacks that have been added to other areas of the page.
-            return null;
-        }
-        $result = null;
-        $styles = $this->vObj->getCustomAreaStyles();
-        $areaHandle = $area->getAreaHandle();
-        if ($force || isset($styles[$areaHandle])) {
-            $pss = isset($styles[$areaHandle]) ? StyleSet::getByID($styles[$areaHandle]) : null;
-            $result = new AreaCustomStyle($pss, $area, $this->getCollectionThemeObject());
-        }
-
-        return $result;
-    }
-
-    public function resetAreaCustomStyle($area)
-    {
-        $db = Loader::db();
-        $db->Execute(
-           'delete from CollectionVersionAreaStyles where cID = ? and cvID = ? and arHandle = ?',
-           [
-               $this->getCollectionID(),
-               $this->getVersionID(),
-               $area->getAreaHandle(),
-           ]
-        );
-    }
-
-    public function setCustomStyleSet($area, $set)
-    {
-        $db = Loader::db();
-        $db->Replace(
-           'CollectionVersionAreaStyles',
-           [
-               'cID' => $this->getCollectionID(),
-               'cvID' => $this->getVersionID(),
-               'arHandle' => $area->getAreaHandle(),
-               'issID' => $set->getID(),
-           ],
-           ['cID', 'cvID', 'arHandle'],
-           true
-        );
-    }
-
     /**
      * Associate the edits of another collection to this collection.
      *
@@ -965,33 +835,6 @@ class Collection extends ConcreteObject implements TrackableInterface
     public function getPageTypeID()
     {
         return false;
-    }
-
-    /**
-     * Empty the collection-related cache.
-     */
-    public function rescanDisplayOrder($arHandle)
-    {
-        // this collection function fixes the display order properties for all the blocks within the collection/area. We select all the items
-        // order by display order, and fix the sequence
-
-        $db = Loader::db();
-        $cID = $this->cID;
-        $cvID = $this->vObj->cvID;
-        $args = [$cID, $cvID, $arHandle];
-        $q = "select bID from CollectionVersionBlocks where cID = ? and cvID = ? and arHandle=? order by cbDisplayOrder asc";
-        $r = $db->query($q, $args);
-
-        if ($r) {
-            $displayOrder = 0;
-            while ($row = $r->fetchRow()) {
-                $args = [$displayOrder, $cID, $cvID, $arHandle, $row['bID']];
-                $q = "update CollectionVersionBlocks set cbDisplayOrder = ? where cID = ? and cvID = ? and arHandle = ? and bID = ?";
-                $db->query($q, $args);
-                ++$displayOrder;
-            }
-            $r->free();
-        }
     }
 
     public function refreshCache()
@@ -1225,7 +1068,9 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     public function rescanDisplayOrder($arHandle)
     {
-        // this collection function f
+        // this collection function fixes the display order properties for all the blocks within the collection/area. We select all the items
+        // order by display order, and fix the sequence
+
 
         $db = Loader::db();
         $cID = $this->cID;
