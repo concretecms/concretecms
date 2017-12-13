@@ -1457,10 +1457,12 @@ class Version implements ObjectInterface
      */
     public function getDownloadURL()
     {
+        $app = Application::getFacadeApplication();
+        $urlResolver = $app->make(ResolverManagerInterface::class);
         $c = Page::getCurrentPage();
-        $cID = ($c instanceof Page) ? $c->getCollectionID() : 0;
+        $cID = $c instanceof Page && !$c->isError() ? $c->getCollectionID() : 0;
 
-        return View::url('/download_file', $this->getFileID(), $cID);
+        return $urlResolver->resolve(['/download_file', $this->getFileID(), $cID]);
     }
 
     /**
