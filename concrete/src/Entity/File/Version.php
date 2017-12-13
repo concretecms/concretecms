@@ -3,6 +3,7 @@
 namespace Concrete\Core\Entity\File;
 
 use Carbon\Carbon;
+use Concrete\Core\Attribute\Category\FileCategory;
 use Concrete\Core\Attribute\Key\FileKey;
 use Concrete\Core\Attribute\ObjectInterface;
 use Concrete\Core\Attribute\ObjectTrait;
@@ -19,13 +20,12 @@ use Concrete\Core\File\Menu;
 use Concrete\Core\File\Type\TypeList as FileTypeList;
 use Concrete\Core\Http\FlysystemFileResponse;
 use Concrete\Core\Support\Facade\Application;
-use Concrete\Core\Support\Facade\Facade;
 use Core;
 use Database;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Events;
 use Imagine\Exception\NotSupportedException;
-use Imagine\Gd\Image;
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
 use Imagine\Image\Metadata\ExifMetadataReader;
@@ -39,13 +39,15 @@ use User;
 use View;
 
 /**
+ * Represents a version of a file.
+ *
  * @ORM\Entity
  * @ORM\Table(
  *     name="FileVersions",
  *     indexes={
- *     @ORM\Index(name="fvFilename", columns={"fvFilename"}),
- *     @ORM\Index(name="fvExtension", columns={"fvExtension"}),
- *     @ORM\Index(name="fvType", columns={"fvType"})
+ *         @ORM\Index(name="fvFilename", columns={"fvFilename"}),
+ *         @ORM\Index(name="fvExtension", columns={"fvExtension"}),
+ *         @ORM\Index(name="fvType", columns={"fvType"})
  *     }
  * )
  */
@@ -53,103 +55,241 @@ class Version implements ObjectInterface
 {
     use ObjectTrait;
 
+    /**
+     * Update type: file replaced.
+     *
+     * @var int
+     */
     const UT_REPLACE_FILE = 1;
+
+    /**
+     * Update type: title updated.
+     *
+     * @var int
+     */
     const UT_TITLE = 2;
+
+    /**
+     * Update type: description updated.
+     *
+     * @var int
+     */
     const UT_DESCRIPTION = 3;
+
+    /**
+     * Update type: tags modified.
+     *
+     * @var int
+     */
     const UT_TAGS = 4;
+
+    /**
+     * Update type: extended attributes changed.
+     *
+     * @var int
+     */
     const UT_EXTENDED_ATTRIBUTE = 5;
+
+    /**
+     * Update type: contents changed.
+     *
+     * @var int
+     */
     const UT_CONTENTS = 6;
+
+    /**
+     * Update type: file version renamed.
+     *
+     * @var int
+     */
     const UT_RENAME = 7;
 
     /**
-     * /* @ORM\Id
+     * The associated File instance.
+     *
+     * @ORM\Id
      * @ORM\ManyToOne(targetEntity="File", inversedBy="versions")
      * @ORM\JoinColumn(name="fID", referencedColumnName="fID")
      *
      * @var \Concrete\Core\Entity\File\File
      */
     protected $file;
-    /** @ORM\Id
+
+    /**
+     * The progressive file version identifier.
+     *
+     * @ORM\Id
      * @ORM\Column(type="integer")
+     *
+     * @var int
      */
     protected $fvID = 0;
+
     /**
+     * The name of the file.
+     *
      * @ORM\Column(type="string")
+     *
+     * @var string
      */
     protected $fvFilename = null;
+
     /**
+     * The path prefix used to store the file in the file system.
+     *
      * @ORM\Column(type="string", nullable=true)
+     *
+     * @var string
      */
     protected $fvPrefix;
+
     /**
+     * The date/time when the file version has been added.
+     *
      * @ORM\Column(type="datetime")
+     *
+     * @var DateTime
      */
     protected $fvDateAdded;
+
     /**
+     * The date/time when the file version has been approved.
+     *
      * @ORM\Column(type="datetime")
+     *
+     * @var DateTime
      */
     protected $fvActivateDateTime;
+
     /**
+     * Is this version the approved one for the associated file?
+     *
      * @ORM\Column(type="boolean")
+     *
+     * @var bool
      */
     protected $fvIsApproved = false;
+
     /**
+     * The ID of the user that created the file version.
+     *
      * @ORM\Column(type="integer")
+     *
+     * @var int
      */
     protected $fvAuthorUID = 0;
+
     /**
+     * The size (in bytes) of the file version.
+     *
      * @ORM\Column(type="bigint")
+     *
+     * @var int
      */
     protected $fvSize = 0;
+
     /**
+     * The ID of the user that approved the file version.
+     *
      * @ORM\Column(type="integer")
+     *
+     * @var int
      */
     protected $fvApproverUID = 0;
+
     /**
+     * The title of the file version.
+     *
      * @ORM\Column(type="string", nullable=true)
+     *
+     * @var string|null
      */
     protected $fvTitle = null;
+
     /**
+     * The description of the file version.
+     *
      * @ORM\Column(type="text", nullable=true)
+     *
+     * @var string|null
      */
     protected $fvDescription = null;
+
     /**
+     * The extension of the file version.
+     *
      * @ORM\Column(type="string", nullable=true)
+     *
+     * @var string|null
      */
     protected $fvExtension = null;
 
     /**
+     * The type of the file version.
+     *
      * @ORM\Column(type="integer")
+     *
+     * @var int
      */
     protected $fvType = 0;
+
     /**
+     * The tags assigned to the file version (separated by a newline character - '\n').
+     *
      * @ORM\Column(type="text", nullable=true)
+     *
+     * @var string|null
      */
     protected $fvTags = null;
+
     /**
+     * Does this file version has a thumbnail to be used for file listing?
+     *
      * @ORM\Column(type="boolean")
+     *
+     * @var bool
      */
     protected $fvHasListingThumbnail = false;
+
     /**
+     * Does this file version has a thumbnail to be used used for details?
+     *
      * @ORM\Column(type="boolean")
+     *
+     * @var bool
      */
     protected $fvHasDetailThumbnail = false;
 
+    /**
+     * The currently loaded Image instance.
+     *
+     * @var \Imagine\Image\ImageInterface|false|null null: still not loaded; false: load failed; ImageInterface otherwise
+     */
     private $imagineImage = null;
 
+    /**
+     * Initialize the instance.
+     */
     public function __construct()
     {
-        $this->fvDateAdded = new \DateTime();
-        $this->fvActivateDateTime = new \DateTime();
+        $this->fvDateAdded = new DateTime();
+        $this->fvActivateDateTime = new DateTime();
     }
 
     /**
      * Add a new file version.
      *
-     * @param File   $file
-     * @param string $filename
-     * @param string $prefix
-     * @param array  $data
+     * @param File $file the File instance associated to this version
+     * @param string $filename The name of the file
+     * @param string $prefix the path prefix used to store the file in the file system
+     * @param array $data Valid array keys are {
+     *
+     *     @var int|null $uID the ID of the user that creates the file version (if not specified or empty: we'll assume the currently user logged in user)
+     *     @var string $fvTitle the title of the file version
+     *     @var string $fvDescription the description of the file version
+     *     @var string $fvTags the tags to be assigned to the file version (separated by newlines and/or commas)
+     *     @var bool $fvIsApproved Is this version the approved one for the associated file? (default: true)
+     * }
      *
      * @return static
      */
@@ -195,9 +335,9 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Clean the tags (removing whitespace).
+     * Normalize the tags separator, remove empty tags.
      *
-     * @param $tagsStr string Delimited by '\n'
+     * @param string $tagsStr The list of tags, delimited by '\n', '\r' or ','
      *
      * @return string
      */
@@ -216,7 +356,7 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Set the filename.
+     * Set the name of the file.
      *
      * @param string $filename
      */
@@ -226,7 +366,7 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Path prefix for a file.
+     * Get the path prefix used to store the file in the file system.
      *
      * @return string
      */
@@ -236,7 +376,7 @@ class Version implements ObjectInterface
     }
 
     /**
-     * If the current version is approved.
+     * Is this version the approved one for the associated file?
      *
      * @return bool
      */
@@ -246,7 +386,7 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Get the tags as an array of strings.
+     * Get the the tags assigned to the file version (as a list of strings).
      *
      * @return string[]
      */
@@ -264,7 +404,7 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Get the tags for a file.
+     * Get the the tags assigned to the file version (one tag per line - lines are separated by '\n').
      *
      * @return null|string
      */
@@ -274,9 +414,9 @@ class Version implements ObjectInterface
     }
 
     /**
-     * returns the File object associated with this FileVersion object.
+     * Get the associated File instance.
      *
-     * @return File
+     * @return \Concrete\Core\Entity\File\File
      */
     public function getFile()
     {
@@ -284,9 +424,9 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Set the current file.
+     * Set the associated File instance.
      *
-     * @param File $file
+     * @param \Concrete\Core\Entity\File\File $file
      */
     public function setFile(\Concrete\Core\Entity\File\File $file)
     {
@@ -294,7 +434,7 @@ class Version implements ObjectInterface
     }
 
     /**
-     * File ID.
+     * Get the ID of the associated file instance.
      *
      * @return int
      */
@@ -304,7 +444,7 @@ class Version implements ObjectInterface
     }
 
     /**
-     * File Version ID.
+     * Get the progressive file version identifier.
      *
      * @return int
      */
@@ -314,15 +454,15 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Removes a version of a file. Note, does NOT remove the file because we don't know where the file might elsewhere be used/referenced.
+     * Delete this version of the file.
      *
-     * @param bool $deleteFilesAndThumbnails Whether we should delete all file versions and thumbnails
+     * @param bool $deleteFilesAndThumbnails should we delete the actual file and the thumbnails?
      */
     public function delete($deleteFilesAndThumbnails = false)
     {
         $db = Database::get();
 
-        $category = \Core::make('Concrete\Core\Attribute\Category\FileCategory');
+        $category = $this->getObjectAttributeCategory();
 
         foreach ($this->getAttributes() as $attribute) {
             $category->deleteValue($attribute);
@@ -353,9 +493,9 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Deletes the thumbnail for the particular thumbnail type.
+     * Delete the thumbnail for a specific thumbnail type version.
      *
-     * @param string|ThumbnailTypeVersion $type
+     * @param \Concrete\Core\File\Image\Thumbnail\Type\Version|string $type the thumbnail type version (or its handle)
      */
     public function deleteThumbnail($type)
     {
@@ -370,10 +510,10 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Copy the thumbnails from the original to the copy when duplicating a file.
+     * Copy the thumbnail of a specific thumbnail type version from another file version (useful for instance when duplicating a file).
      *
-     * @param string          $type
-     * @param Version $source
+     * @param \Concrete\Core\File\Image\Thumbnail\Type\Version|string $type the thumbnail type version (or its handle)
+     * @param Version $source The File Version instance to copy the thumbnail from
      */
     public function duplicateUnderlyingThumbnailFiles($type, Version $source)
     {
@@ -395,10 +535,10 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Move the thumbnails for the current file version to a new storage location.
+     * Move the thumbnail of a specific thumbnail type version to a new storage location.
      *
-     * @param string          $type
-     * @param StorageLocation $location
+     * @param \Concrete\Core\File\Image\Thumbnail\Type\Version|string $type the thumbnail type version (or its handle)
+     * @param StorageLocation $location The destination storage location
      */
     public function updateThumbnailStorageLocation($type, StorageLocation $location)
     {
@@ -418,7 +558,7 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Returns an abstracted File object for the resource. NOT a concrete5 file object.
+     * Get an abstract object to work with the actual file resource (note: this is NOT a concrete5 File object).
      *
      * @return \League\Flysystem\File
      */
@@ -434,7 +574,7 @@ class Version implements ObjectInterface
     /**
      * Get the mime type of the file if known.
      *
-     * @return string
+     * @return string|false
      */
     public function getMimeType()
     {
@@ -444,9 +584,11 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Get the formatted filesize of a file e.g. 123KB.
+     * Get the formatted file size.
      *
-     * @return mixed|string
+     * @return string
+     *
+     * @example 123 KB
      */
     public function getSize()
     {
@@ -454,7 +596,7 @@ class Version implements ObjectInterface
     }
 
     /**
-     * File size of the file.
+     * Get the file size of the file (in bytes).
      *
      * @return int
      */
@@ -464,7 +606,7 @@ class Version implements ObjectInterface
     }
 
     /**
-     * The author of the file (or Unknown).
+     * Get the username of the user that created the file version (or "Unknown").
      *
      * @return string
      */
@@ -479,7 +621,7 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Return the uID for the author of the file.
+     * Get the ID of the user that created the file version.
      *
      * @return int
      */
@@ -489,9 +631,11 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Gets the date a file version was added.
+     * Get the date/time when the file version has been added.
      *
-     * @return string date formated like: 2009-01-01 00:00:00
+     * @return string
+     *
+     * @example '2017-31-12 23:59:59'
      */
     public function getDateAdded()
     {
@@ -499,7 +643,7 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Get the file extension for a file.
+     * Get the extension of the file version.
      *
      * @return null|string
      */
@@ -509,7 +653,7 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Set the ID for the file version.
+     * Set the progressive file version identifier.
      *
      * @param int $fvID
      */
@@ -519,7 +663,8 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Takes the current value of the file version and makes a new one with the same values.
+     * Create a new copy of this file version.
+     * The new Version instance will have the current user as the author (if available), and a new version ID.
      *
      * @return Version
      */
@@ -534,7 +679,7 @@ class Version implements ObjectInterface
         $fv = clone $this;
         $fv->fvID = $fvID;
         $fv->fvIsApproved = false;
-        $fv->fvDateAdded = new \DateTime();
+        $fv->fvDateAdded = new DateTime();
         $uID = (int) (new User())->getUserID();
         if ($uID !== 0) {
             $fv->fvAuthorUID = $uID;
@@ -562,7 +707,7 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Deny a file version update.
+     * Mark this file version as not approved.
      */
     public function deny()
     {
@@ -573,7 +718,7 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Get the file type name.
+     * Get the name of the file type.
      *
      * @return string
      */
@@ -585,7 +730,7 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Get the file type display name (localized).
+     * Get the localized name of the file type.
      *
      * @return string
      */
@@ -597,6 +742,8 @@ class Version implements ObjectInterface
     }
 
     /**
+     * Get the type of the file.
+     *
      * @return \Concrete\Core\File\Type\Type
      */
     public function getTypeObject()
@@ -610,7 +757,7 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Returns an array containing human-readable descriptions of everything that happened in this version.
+     * Get an array containing human-readable descriptions of everything that happened to this file version.
      *
      * @return string[]
      */
@@ -664,7 +811,7 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Update the Title for a file.
+     * Update the title of the file.
      *
      * @param string $title
      */
@@ -678,7 +825,7 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Duplicate a file (adds a new version).
+     * Duplicate the underlying file and assign its new position to this instance.
      */
     public function duplicateUnderlyingFile()
     {
@@ -705,8 +852,8 @@ class Version implements ObjectInterface
     /**
      * Log updates to files.
      *
-     * @param int $updateTypeID          Refers to the constants
-     * @param int $updateTypeAttributeID
+     * @param int $updateTypeID One of the Version::UT_... constants
+     * @param int $updateTypeAttributeID the ID of the attribute that has been updated (if any - useful when $updateTypeID is UT_EXTENDED_ATTRIBUTE)
      */
     public function logVersionUpdate($updateTypeID, $updateTypeAttributeID = 0)
     {
@@ -723,9 +870,9 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Update the tags for a file.
+     * Update the tags associated to the file.
      *
-     * @param string $tags
+     * @param string $tags List of tags separated by newlines and/or commas
      */
     public function updateTags($tags)
     {
@@ -738,7 +885,7 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Update the description of a file.
+     * Update the description of the file.
      *
      * @param string $descr
      */
@@ -752,7 +899,7 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Rename a file.
+     * Rename the file.
      *
      * @param string $filename
      */
@@ -778,7 +925,7 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Update the contents of a file.
+     * Update the contents of the file.
      *
      * @param string $contents
      */
@@ -801,10 +948,10 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Update the filename and prefix of a file.
+     * Update the filename and the path prefix of the file.
      *
-     * @param string $filename
-     * @param string $prefix
+     * @param string $filename The new name of file
+     * @param string $prefix The new path prefix
      */
     public function updateFile($filename, $prefix)
     {
@@ -815,7 +962,8 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Approve the change to a file version.
+     * Mark this file version as approved (and disapprove all the other versions of the file).
+     * The currently logged in user (if any) will be stored as the approver.
      */
     public function approve()
     {
@@ -837,27 +985,34 @@ class Version implements ObjectInterface
         $fo = $this->getFile();
         $fo->reindex();
 
-        \Core::make('cache/request')->delete('file/version/approved/' . $this->getFileID());
+        Core::make('cache/request')->delete('file/version/approved/' . $this->getFileID());
     }
 
     /**
-     * Return the contents of a file.
+     * Get the contents of the file.
      *
-     * @return string
+     * @return string|null return NULL if the actual file does not exist or can't be read
      */
     public function getFileContents()
     {
         $cf = Core::make('helper/concrete/file');
         $fsl = $this->getFile()->getFileStorageLocationObject();
         if (is_object($fsl)) {
-            return $fsl->getFileSystemObject()->read($cf->prefix($this->fvPrefix, $this->fvFilename));
+            $result = $fsl->getFileSystemObject()->read($cf->prefix($this->fvPrefix, $this->fvFilename));
+            if ($result === false) {
+                $result = null;
+            }
+        } else {
+            $result = null;
         }
+
+        return $result;
     }
 
     /**
-     * Returns a url that can be used to download a file, will force the download of all file types, even if your browser can display them.
+     * Get an URL that can be used to download the file (it will force the download of all file types, even if the browser can display them).
      *
-     * @return string
+     * @return \League\URL\URLInterface
      */
     public function getForceDownloadURL()
     {
@@ -868,7 +1023,7 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Forces the download of a file.
+     * Send the file to the browser (forcing its download even if the browser can display it), and terminate the execution.
      */
     public function forceDownload()
     {
@@ -883,14 +1038,14 @@ class Version implements ObjectInterface
 
         ob_end_clean();
         $response->send();
-        \Core::shutdown();
+        Core::shutdown();
         exit;
     }
 
     /**
-     * Return the filename for a file if it exists.
+     * Get the name of the file.
      *
-     * @return null|string
+     * @return string
      */
     public function getFileName()
     {
@@ -898,9 +1053,11 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Return the relative path for a file (may not exist).
+     * Get the path to the file relative to the webroot (may not exist).
      *
-     * @return string
+     * @return string|\League\URL\URLInterface|null
+     *
+     * @example /application/files/0000/0000/0000/file.png
      */
     public function getRelativePath()
     {
@@ -924,11 +1081,11 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Get an array of thumbnails.
+     * Get the list of all the thumbnails.
      *
-     * @throws InvalidDimensionException
+     * @throws \Concrete\Core\File\Exception\InvalidDimensionException
      *
-     * @return Thumbnail[]
+     * @return \Concrete\Core\File\Image\Thumbnail\Thumbnail[]
      */
     public function getThumbnails()
     {
@@ -964,21 +1121,23 @@ class Version implements ObjectInterface
     }
 
     /**
-     * @return \Concrete\Core\Attribute\Category\FileCategory|mixed
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\ObjectInterface::getObjectAttributeCategory()
+     *
+     * @return \Concrete\Core\Attribute\Category\FileCategory
      */
     public function getObjectAttributeCategory()
     {
-        return \Core::make('\Concrete\Core\Attribute\Category\FileCategory');
+        return Core::make(FileCategory::class);
     }
 
     /**
-     * Necessary because getAttribute() returns the Value Value object, and this returns the
-     * File Attribute Value object.
+     * {@inheritdoc}
      *
-     * @param string|FileKey $ak
-     * @param bool           $createIfNotExists
+     * @see \Concrete\Core\Attribute\ObjectInterface::getAttributeValueObject()
      *
-     * @return mixed|FileValue
+     * @return \Concrete\Core\Entity\Attribute\Value\FileValue|null
      */
     public function getAttributeValueObject($ak, $createIfNotExists = false)
     {
@@ -1005,7 +1164,9 @@ class Version implements ObjectInterface
     }
 
     /**
-     * @return bool|Image
+     * Get an \Imagine\Image\ImageInterface representing the image.
+     *
+     * @return \Imagine\Image\ImageInterface|false return false if the image coulnd't be read, an ImageInterface otherwise
      */
     public function getImagineImage()
     {
@@ -1019,7 +1180,7 @@ class Version implements ObjectInterface
                 case 'image/svg-xml':
                     if ($imageLibrary instanceof \Imagine\Gd\Imagine) {
                         try {
-                            $app = Facade::getFacadeApplication();
+                            $app = Application::getFacadeApplication();
                             $imageLibrary = $app->make('image/imagick');
                         } catch (\Exception $x) {
                             $this->imagineImage = false;
@@ -1045,7 +1206,7 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Unload the loaded image.
+     * Unload the loaded Image instance.
      */
     public function releaseImagineImage()
     {
@@ -1053,9 +1214,9 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Rescan the thumbnails for a file (images only).
+     * Delete and re-create all the thumbnail types (only applicable to image files).
      *
-     * @return bool False on failure
+     * @return bool|null return false on failure
      */
     public function rescanThumbnails()
     {
@@ -1071,7 +1232,6 @@ class Version implements ObjectInterface
             $image = $this->getImagineImage();
 
             if ($image) {
-                /* @var \Imagine\Imagick\Image $image */
                 if (!$imagewidth) {
                     $imagewidth = $image->getSize()->getWidth();
                 }
@@ -1136,7 +1296,7 @@ class Version implements ObjectInterface
      *
      * @param $level
      *
-     * @return mixed
+     * @return bool
      */
     public function hasThumbnail($level)
     {
@@ -1151,7 +1311,8 @@ class Version implements ObjectInterface
     }
 
     /**
-     *  Return the thumbnail for an image or a generic type icon for a file.
+     * Get the HTML that renders the thumbnail for the details (a generic type icon if the thumbnail does not exist).
+     * Return the thumbnail for an image or a generic type icon for a file.
      *
      * @return string
      */
@@ -1172,9 +1333,11 @@ class Version implements ObjectInterface
      * Resolve a path using the default core path resolver.
      * Avoid using this method when you have access to your a resolver instance.
      *
-     * @param string|ThumbnailTypeVersion $type
+     * @param \Concrete\Core\File\Image\Thumbnail\Type\Version|string $type the thumbnail type version (or its handle)
      *
-     * @return null|string
+     * @return \League\URL\URLInterface|string|null
+     *
+     * @example /application/files/thumbnails/file_manager_listing/0000/0000/0000/file.png
      */
     public function getThumbnailURL($type)
     {
@@ -1184,8 +1347,7 @@ class Version implements ObjectInterface
             $type = ThumbnailTypeVersion::getByHandle($type);
         }
 
-        /** @var Resolver $path_resolver */
-        $path_resolver = $app->make('Concrete\Core\File\Image\Thumbnail\Path\Resolver');
+        $path_resolver = $app->make(Resolver::class);
 
         if ($path = $path_resolver->getPath($this, $type)) {
             return $path;
@@ -1195,11 +1357,10 @@ class Version implements ObjectInterface
     }
 
     /**
-     * When given a thumbnail type versin object and a full path to a file on the server
-     * the file is imported into the system as is as the thumbnail.
+     * Import an existing file as a thumbnail type version.
      *
-     * @param ThumbnailTypeVersion $version
-     * @param string               $path
+     * @param \Concrete\Core\File\Image\Thumbnail\Type\Version $version
+     * @param string $path
      */
     public function importThumbnail(ThumbnailTypeVersion $version, $path)
     {
@@ -1232,9 +1393,9 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Returns a full URL to the file on disk.
+     * Get an URL that points to the file on disk (if not available, you'll get the result of the getDownloadURL method).
      *
-     * @return null|string Url to a file
+     * @return \League\URL\URLInterface|string|null Url to a file
      */
     public function getURL()
     {
@@ -1251,9 +1412,10 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Returns a URL that can be used to download the file. This passes through the download_file single page.
+     * Get an URL that can be used to download the file.
+     * This passes through the download_file single page.
      *
-     * @return string download_file url for a file
+     * @return \League\URL\URLInterface
      */
     public function getDownloadURL()
     {
@@ -1264,7 +1426,9 @@ class Version implements ObjectInterface
     }
 
     /**
-     * @return mixed
+     * Get the list of attributes associated to this file version.
+     *
+     * @return \Concrete\Core\Entity\Attribute\Value\FileValue[]
      */
     public function getAttributes()
     {
@@ -1272,13 +1436,12 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Responsible for taking a particular version of a file and rescanning all its attributes
-     * This will run any type-based import routines, and store those attributes, generate thumbnails,
-     * etc...
+     * Rescan all the attributes of this file version.
+     * This will run any type-based import routines, and store those attributes, generate thumbnails, etc...
      *
-     * @param bool $rescanThumbnails Whether or not we should rescan thumbnails as well
+     * @param bool $rescanThumbnails Should thumbnails be rescanned as well?
      *
-     * @return null|int
+     * @return null|int Return one of the \Concrete\Core\File\Importer::E_... constants in case of errors, NULL otherwise.
      */
     public function refreshAttributes($rescanThumbnails = true)
     {
@@ -1321,7 +1484,7 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Title for the file if one exists.
+     * Get the title of the file version.
      *
      * @return null|string
      */
@@ -1331,9 +1494,9 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Return a representation of the current FileVersion object as something easily serializable.
+     * Get a representation of this Version instance that's easily serializable.
      *
-     * @return string A JSON object with all the information about a file (including permissions)
+     * @return stdClass A \stdClass instance with all the information about a file (including permissions)
      */
     public function getJSONObject()
     {
@@ -1364,7 +1527,7 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Checks current viewers for this type and returns true if there is a viewer for this type, false if not.
+     * Check of there is a viewer for the type of the file.
      *
      * @return bool
      */
@@ -1379,7 +1542,7 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Checks current viewers for this type and returns true if there is a viewer for this type, false if not.
+     * Check of there is an editor for the type of the file.
      *
      * @return bool
      */
@@ -1406,7 +1569,7 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Returns the description for the file if there is one.
+     * Get the description of the file version.
      *
      * @return null|string
      */
@@ -1416,7 +1579,7 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Return the thumbnail for an image or a generic type icon for a file.
+     * Get the HTML that renders the thumbnail for the file listing (a generic type icon if the thumbnail does not exist).
      *
      * @return string
      */
@@ -1434,7 +1597,7 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Generate a thumbnail given a type.
+     * Generate a thumbnail for a specific thumbnail type version.
      *
      * @param \Concrete\Core\File\Image\Thumbnail\Type\Version $type
      */
@@ -1509,9 +1672,9 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Save changes to a file.
+     * Save the instance changes.
      *
-     * @param bool $flush Flush the EM cache
+     * @param bool $flush Flush the EM cache?
      */
     protected function save($flush = true)
     {
