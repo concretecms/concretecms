@@ -11,8 +11,22 @@ use HtmlObject\Input;
 use Securimage;
 use Securimage_Color;
 
-class SecurimageController extends AbstractController implements CaptchaWithPictureInterface
+class SecurimageController extends AbstractController implements CaptchaWithPictureInterface, ConfigurableCaptchaInterface
 {
+    /**
+     * The default ID of the input field.
+     *
+     * @var string
+     */
+    const DEFAULT_INPUT_ID = 'ccm-captcha-code';
+
+    /**
+     * The default name of the input field.
+     *
+     * @var string
+     */
+    const DEFAULT_INPUT_NAME = 'ccmCaptchaCode';
+
     /**
      * @var ResolverManagerInterface
      */
@@ -27,6 +41,21 @@ class SecurimageController extends AbstractController implements CaptchaWithPict
      * @var Securimage
      */
     protected $securimage;
+
+    /**
+     * @var array
+     */
+    protected $labelAttributes = [];
+
+    /**
+     * @var array
+     */
+    protected $pictureAttributes = [];
+
+    /**
+     * @var array
+     */
+    protected $inputAttributes = [];
 
     /**
      * Initialize the instance.
@@ -58,8 +87,71 @@ class SecurimageController extends AbstractController implements CaptchaWithPict
 
     /**
      * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Captcha\ConfigurableCaptchaInterface::getLabelAttributes()
      */
-    public function display(array $customImageAttributes = [])
+    public function getLabelAttributes()
+    {
+        return $this->labelAttributes;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Captcha\ConfigurableCaptchaInterface::setLabelAttributes()
+     */
+    public function setLabelAttributes(array $attributes)
+    {
+        $this->labelAttributes = $attributes;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Captcha\CaptchaInterface::label()
+     */
+    public function label()
+    {
+        $attributes = $this->getLabelAttributes();
+        if (array_key_exists('id', $attributes)) {
+            $inputID = $attributes['id'];
+            unset($attributes['id']);
+        } else {
+            $inputID = static::DEFAULT_INPUT_ID;
+        }
+        echo $this->formService->label($inputID, t('Please type the letters and numbers shown in the image. Click the image to see another captcha.'), $attributes);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Captcha\ConfigurableCaptchaInterface::setPictureAttributes()
+     */
+    public function setPictureAttributes(array $attributes)
+    {
+        $this->pictureAttributes = $attributes;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Captcha\ConfigurableCaptchaInterface::getPictureAttributes()
+     */
+    public function getPictureAttributes()
+    {
+        return $this->pictureAttributes;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Captcha\CaptchaInterface::display()
+     */
+    public function display()
     {
         $image = Image::create(
             $this->urlResolver->resolve(['/ccm/system/captcha/picture'])->setQuery('nocache=' . round(microtime(true) * 1000)),
@@ -71,16 +163,16 @@ class SecurimageController extends AbstractController implements CaptchaWithPict
                 'height' => $this->securimage->image_height,
             ]
         );
-        foreach ($customImageAttributes as $customAttributeName => $customAttributeValue) {
-            if ($customAttributeValue === null) {
-                $image->removeAttribute($customAttributeName);
+        foreach ($this->getPictureAttributes() as $attributeName => $attributeValue) {
+            if ($attributeValue === null) {
+                $image->removeAttribute($attributeName);
             } else {
-                switch ($customAttributeName) {
+                switch ($attributeName) {
                     case 'class':
-                        $image->addClass($customAttributeValue);
+                        $image->addClass($attributeValue);
                         break;
                     default:
-                        $image->setAttribute($customAttributeName, $customAttributeValue);
+                        $image->setAttribute($attributeName, $attributeValue);
                         break;
                 }
             }
@@ -90,37 +182,61 @@ class SecurimageController extends AbstractController implements CaptchaWithPict
 
     /**
      * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Captcha\ConfigurableCaptchaInterface::setInputAttributes()
      */
-    public function label($inputID = 'ccm-captcha-code')
+    public function setInputAttributes(array $attributes)
     {
-        echo $this->formService->label($inputID, t('Please type the letters and numbers shown in the image. Click the image to see another captcha.'));
+        $this->inputAttributes = $attributes;
+
+        return $this;
     }
 
     /**
      * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Captcha\ConfigurableCaptchaInterface::getInputAttributes()
      */
-    public function showInput(array $customInputAttributes = [])
+    public function getInputAttributes()
     {
+        return $this->inputAttributes;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Captcha\CaptchaInterface::showInput()
+     */
+    public function showInput()
+    {
+        $attributes = $this->getInputAttributes();
+
+        if (array_key_exists('name', $attributes)) {
+            $inputName = $attributes['name'];
+            unset($attributes['name']);
+        } else {
+            $inputName = static::DEFAULT_INPUT_NAME;
+        }
         $input = Input::create(
             'text',
-            'ccmCaptchaCode',
+            $inputName,
             null,
             [
-                'id' => 'ccm-captcha-code',
+                'id' => static::DEFAULT_INPUT_ID,
                 'class' => 'form-control ccm-input-captcha',
                 'required' => 'required',
             ]
         );
-        foreach ($customInputAttributes as $customAttributeName => $customAttributeValue) {
-            if ($customAttributeValue === null) {
-                $input->removeAttribute($customAttributeName);
+        foreach ($attributes as $attributeName => $attributeValue) {
+            if ($attributeValue === null) {
+                $input->removeAttribute($attributeName);
             } else {
-                switch ($customAttributeName) {
+                switch ($attributeName) {
                     case 'class':
-                        $input->addClass($customAttributeValue);
+                        $input->addClass($attributeValue);
                         break;
                     default:
-                        $input->setAttribute($customAttributeName, $customAttributeValue);
+                        $input->setAttribute($attributeName, $attributeValue);
                         break;
                 }
             }
@@ -130,14 +246,25 @@ class SecurimageController extends AbstractController implements CaptchaWithPict
 
     /**
      * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Captcha\CaptchaInterface::check()
      */
-    public function check($fieldName = 'ccmCaptchaCode')
+    public function check()
     {
-        return $this->securimage->check($this->request->get($fieldName));
+        $attributes = $this->getInputAttributes();
+        if (array_key_exists('name', $attributes)) {
+            $inputName = $attributes['name'];
+        } else {
+            $inputName = static::DEFAULT_INPUT_NAME;
+        }
+
+        return $this->securimage->check($this->request->get($inputName));
     }
 
     /**
      * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Captcha\CaptchaWithPictureInterface::displayCaptchaPicture()
      */
     public function displayCaptchaPicture()
     {

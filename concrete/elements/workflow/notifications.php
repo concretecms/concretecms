@@ -11,7 +11,12 @@ if (is_array($workflowList) && !empty($workflowList)) {
         $text = '';
         $description = $wr->getWorkflowRequestDescriptionObject();
         if ($description) {
-            $text = $description->getInContextDescription();
+            $text = '<p>' . $description->getInContextDescription() . '</p>';
+        }
+        $requester = $wr->getRequesterUserObject();
+        $dateAdded = $wl->getWorkflowProgressDateAdded();
+        if ($requester && $dateAdded) {
+            $text .= '<p><small>' . t('Submitted by %s on %s', $requester->getUserDisplayName(), $app->make('date')->formatPrettyDateTime($dateAdded)) . '</small></p>';
         }
 
         $actions = $wl->getWorkflowProgressActions();

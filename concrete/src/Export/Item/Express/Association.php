@@ -23,6 +23,7 @@ class Association implements ItemInterface
         $type = uncamelcase(substr($class, 0, strpos($class, 'Association')));
 
         $node->addAttribute('type', $type);
+        $node->addAttribute('id', $association->getID());
         $node->addAttribute('source-entity', $association->getSourceEntity()->getID());
         $node->addAttribute('target-entity', $association->getTargetEntity()->getID());
         $node->addAttribute('target-property-name', $association->getTargetPropertyName());

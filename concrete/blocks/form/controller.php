@@ -358,6 +358,7 @@ class Controller extends BlockController
         if ($qsID == 0) {
             throw new Exception(t("Oops, something is wrong with the form you posted (it doesn't have a question set id)."));
         }
+        $errors = [];
 
         $token = Core::make('token');
         if (!$token->validate('form_block_submit_qs_' . $qsID)) {

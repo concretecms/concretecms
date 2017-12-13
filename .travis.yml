@@ -22,7 +22,6 @@ matrix:
     - php: 7.1
       env: PREFER_LOWEST="--prefer-lowest"
   allow_failures:
-    - php: 7.2
     - php: nightly
 
 before_script:

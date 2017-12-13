@@ -262,7 +262,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         // this is a hack but it's a really good one for performance
         // if the permission access entity for page owner exists in the database, then we return the collection ID. Otherwise, we just return the permission collection id
         // this is because page owner is the ONLY thing that makes it so we can't use getPermissionsCollectionID, and for most sites that will DRAMATICALLY reduce the number of queries.
-        if (\Concrete\Core\Permission\Access\PageAccess::usePermissionCollectionIDForIdentifier()) {
+        // Drafts are exceptions to this rule because some permission keys of these pages are inherited from "Edit Page Type Draft" permission.
+        if (\Concrete\Core\Permission\Access\PageAccess::usePermissionCollectionIDForIdentifier() && !$this->isPageDraft()) {
             return $this->getPermissionsCollectionID();
         } else {
             return $this->getCollectionID();
