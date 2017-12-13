@@ -6,6 +6,7 @@ use Concrete\Core\Attribute\Category\FileCategory;
 use Concrete\Core\Attribute\Key\FileKey;
 use Concrete\Core\Attribute\ObjectInterface;
 use Concrete\Core\Attribute\ObjectTrait;
+use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Attribute\Value\FileValue;
 use Concrete\Core\Entity\File\StorageLocation\StorageLocation;
 use Concrete\Core\File\Event\FileVersion as FileVersionEvent;
@@ -468,24 +469,23 @@ class Version implements ObjectInterface
      */
     public function delete($deleteFilesAndThumbnails = false)
     {
-        $db = Database::get();
-
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $em = $app->make(EntityManagerInterface::class);
         $category = $this->getObjectAttributeCategory();
 
         foreach ($this->getAttributes() as $attribute) {
             $category->deleteValue($attribute);
         }
 
-        $db->Execute('DELETE FROM FileVersionLog WHERE fID = ? AND fvID = ?', [$this->getFileID(), $this->fvID]);
-
-        $types = Type::getVersionList();
+        $db->executeQuery('DELETE FROM FileVersionLog WHERE fID = ? AND fvID = ?', [$this->getFileID(), $this->fvID]);
 
         if ($deleteFilesAndThumbnails) {
+            $types = Type::getVersionList();
+            foreach ($types as $type) {
+                $this->deleteThumbnail($type);
+            }
             try {
-                foreach ($types as $type) {
-                    $this->deleteThumbnail($type);
-                }
-
                 $fsl = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
                 $fre = $this->getFileResource();
                 if ($fsl->has($fre->getPath())) {
@@ -494,8 +494,6 @@ class Version implements ObjectInterface
             } catch (FileNotFoundException $e) {
             }
         }
-
-        $em = \ORM::entityManager();
         $em->remove($this);
         $em->flush();
     }
