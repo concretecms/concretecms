@@ -724,10 +724,11 @@ class Version implements ObjectInterface
      */
     public function deny()
     {
+        $app = Application::getFacadeApplication();
         $this->fvIsApproved = false;
         $this->save();
         $fe = new FileVersionEvent($this);
-        Events::dispatch('on_file_version_deny', $fe);
+        $app->make(EventDispatcherInterface::class)->dispatch('on_file_version_deny', $fe);
     }
 
     /**
