@@ -902,11 +902,12 @@ class Version implements ObjectInterface
      */
     public function updateDescription($descr)
     {
+        $app = Application::getFacadeApplication();
         $this->fvDescription = $descr;
         $this->save();
         $this->logVersionUpdate(self::UT_DESCRIPTION);
         $fe = new FileVersionEvent($this);
-        Events::dispatch('on_file_version_update_description', $fe);
+        $app->make(EventDispatcherInterface::class)->dispatch('on_file_version_update_description', $fe);
     }
 
     /**
