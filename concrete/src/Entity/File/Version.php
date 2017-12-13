@@ -510,8 +510,11 @@ class Version implements ObjectInterface
         }
         $fsl = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
         $path = $type->getFilePath($this);
-        if ($fsl->has($path)) {
-            $fsl->delete($path);
+        try {
+            if ($fsl->has($path)) {
+                $fsl->delete($path);
+            }
+        } catch (FileNotFoundException $e) {
         }
     }
 
