@@ -3,64 +3,117 @@
 namespace Concrete\Core\Entity\File\Image\Thumbnail\Type;
 
 use Concrete\Core\File\Image\Thumbnail\Type\Version;
+use Concrete\Core\Support\Facade\Application;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * Entity representing a thumbnail type.
+ *
  * @ORM\Entity
  * @ORM\Table(name="FileImageThumbnailTypes")
  */
 class Type
 {
+    /**
+     * Thumbnail sizing mode: proportional.
+     *
+     * @var string
+     */
     const RESIZE_PROPORTIONAL = 'proportional';
+
+    /**
+     * Thumbnail sizing mode: exact dimensions.
+     *
+     * @var string
+     */
     const RESIZE_EXACT = 'exact';
+
+    /**
+     * Default thumbnail sizing mode.
+     *
+     * @var string
+     */
     const RESIZE_DEFAULT = self::RESIZE_PROPORTIONAL;
 
     /**
+     * The handle that identifies the thumbnail type.
+     *
      * @ORM\Column(type="string")
+     *
+     * @var string
      */
-    protected $ftTypeHandle;
+    protected $ftTypeHandle = '';
 
     /**
+     * The name of the thumbnail type.
+     *
      * @ORM\Column(type="string")
+     *
+     * @var string
      */
-    protected $ftTypeName;
+    protected $ftTypeName = '';
 
     /**
+     * The width of the thumbnails (or the maximum width in case of proportional sizing).
+     *
      * @ORM\Column(type="integer", nullable=true)
+     *
+     * @var int|null
      */
     protected $ftTypeWidth = null;
 
     /**
+     * The height of the thumbnails (or the maximum height in case of proportional sizing).
+     *
      * @ORM\Column(type="integer", nullable=true)
+     *
+     * @var int|null
      */
     protected $ftTypeHeight = null;
 
     /**
+     * The thumbnail sizing mode (one of the Type::RESIZE_... constants).
+     *
      * @ORM\Column(type="string")
+     *
+     * @var string
      */
     protected $ftTypeSizingMode = self::RESIZE_DEFAULT;
 
     /**
+     * Is this thumbnail type required? If yes, it can't be deleted.
+     *
      * @ORM\Column(type="boolean")
+     *
+     * @var bool
      */
     protected $ftTypeIsRequired = false;
 
     /**
+     * The thumbnail unique identifier.
+     *
      * @ORM\Id @ORM\Column(type="integer")
      * @ORM\GeneratedValue
+     *
+     * @var int|null
      */
-    protected $ftTypeID;
+    protected $ftTypeID = null;
 
     /**
-     * @param mixed $ftTypeHandle
+     * Set the handle that identifies the thumbnail type.
+     *
+     * @param string $ftTypeHandle
      */
     public function setHandle($ftTypeHandle)
     {
-        $this->ftTypeHandle = $ftTypeHandle;
+        $this->ftTypeHandle = (string) $ftTypeHandle;
     }
 
     /**
-     * @return mixed
+     * Get the handle that identifies the thumbnail type.
+     *
+     * @return string
      */
     public function getHandle()
     {
@@ -68,7 +121,9 @@ class Type
     }
 
     /**
-     * @return mixed
+     * Get the thumbnail unique identifier.
+     *
+     * @return int|null
      */
     public function getID()
     {
@@ -76,7 +131,7 @@ class Type
     }
 
     /**
-     * @param mixed $ftTypeIsRequired
+     * Mark this this thumbnail type as required (that is, it can't be deleted).
      */
     public function requireType()
     {
@@ -84,7 +139,9 @@ class Type
     }
 
     /**
-     * @return mixed
+     * Is this thumbnail type required? If yes, it can't be deleted.
+     *
+     * @return bool
      */
     public function isRequired()
     {
@@ -92,15 +149,19 @@ class Type
     }
 
     /**
-     * @param mixed $ftTypeName
+     * Set the name of the thumbnail type.
+     *
+     * @param string $ftTypeName
      */
     public function setName($ftTypeName)
     {
-        $this->ftTypeName = $ftTypeName;
+        $this->ftTypeName = (string) $ftTypeName;
     }
 
     /**
-     * @return mixed
+     * Get the name of the thumbnail type.
+     *
+     * @return string
      */
     public function getName()
     {
@@ -108,22 +169,30 @@ class Type
     }
 
     /**
-     * @param mixed $sizingMode
-     * @param mixed $ftTypeSizingMode
+     * Set the thumbnail sizing mode.
+     *
+     * @param string $ftTypeSizingMode one of the Type::RESIZE_... constants
      */
     public function setSizingMode($ftTypeSizingMode = self::RESIZE_DEFAULT)
     {
-        $this->ftTypeSizingMode = $ftTypeSizingMode;
+        $this->ftTypeSizingMode = (string) $ftTypeSizingMode;
     }
 
     /**
-     * @return string
+     * Get the thumbnail sizing mode.
+     *
+     * @return string One of the Type::RESIZE_... constants.
      */
     public function getSizingMode()
     {
         return $this->ftTypeSizingMode ? $this->ftTypeSizingMode : self::RESIZE_DEFAULT;
     }
 
+    /**
+     * Get the display name of the thumbnail sizing mode.
+     *
+     * @return string
+     */
     public function getSizingModeDisplayName()
     {
         $sizingModeDisplayNames = [
@@ -134,7 +203,9 @@ class Type
         return $sizingModeDisplayNames[$this->getSizingMode()];
     }
 
-    /** Returns the display name for this thumbnail type (localized and escaped accordingly to $format)
+    /**
+     * Get the display name for this thumbnail type (localized and escaped accordingly to $format).
+     *
      * @param string $format = 'html'
      *    Escape the result in html format (if $format is 'html').
      *    If $format is 'text' or any other value, the display name won't be escaped.
@@ -154,23 +225,41 @@ class Type
     }
 
     /**
-     * @param mixed $ftTypeWidth
+     * Set the width of the thumbnails (or the maximum width in case of proportional sizing).
+     *
+     * @param int|null $ftTypeWidth
      */
     public function setWidth($ftTypeWidth)
     {
-        $this->ftTypeWidth = is_numeric($ftTypeWidth) ? $ftTypeWidth : null;
+        $this->ftTypeWidth = null;
+        if (is_numeric($ftTypeWidth)) {
+            $v = (int) $ftTypeWidth;
+            if ($v > 0) {
+                $this->ftTypeWidth = $v;
+            }
+        }
     }
 
     /**
-     * @param mixed $ftTypeHeight
+     * Set the height of the thumbnails (or the maximum height in case of proportional sizing).
+     *
+     * @param int|null $ftTypeHeight
      */
     public function setHeight($ftTypeHeight)
     {
-        $this->ftTypeHeight = is_numeric($ftTypeHeight) ? $ftTypeHeight : null;
+        $this->ftTypeHeight = null;
+        if (is_numeric($ftTypeHeight)) {
+            $v = (int) $ftTypeHeight;
+            if ($v > 0) {
+                $this->ftTypeHeight = $v;
+            }
+        }
     }
 
     /**
-     * @return mixed
+     * Get the width of the thumbnails (or the maximum width in case of proportional sizing).
+     *
+     * @return int|null
      */
     public function getWidth()
     {
@@ -178,41 +267,59 @@ class Type
     }
 
     /**
-     * @return mixed
+     * Get the height of the thumbnails (or the maximum height in case of proportional sizing).
+     *
+     * @return int|null
      */
     public function getHeight()
     {
         return $this->ftTypeHeight;
     }
 
+    /**
+     * Save this instance to the database.
+     */
     public function save()
     {
-        $em = \ORM::entityManager();
+        $em = Application::getFacadeApplication()->make(EntityManagerInterface::class);
         $em->persist($this);
         $em->flush();
     }
 
+    /**
+     * Delete this instance from the database.
+     */
     public function delete()
     {
-        $em = \ORM::entityManager();
+        $em = Application::getFacadeApplication()->make(EntityManagerInterface::class);
         $em->remove($this);
         $em->flush();
     }
 
+    /**
+     * Get a thumbnail type version instance representing this thumbnail type (normal-DPI).
+     *
+     * @return \Concrete\Core\File\Image\Thumbnail\Type\Version
+     */
     public function getBaseVersion()
     {
         return new Version($this->getHandle(), $this->getHandle(), $this->getName(), $this->getWidth(), $this->getHeight(), false, $this->getSizingMode());
     }
 
+    /**
+     * Get a thumbnail type version instance representing this thumbnail type (high-DPI).
+     *
+     * @return \Concrete\Core\File\Image\Thumbnail\Type\Version
+     */
     public function getDoubledVersion()
     {
-        $width = null;
-        $height = null;
-        if ($this->getWidth()) {
-            $width = $this->getWidth() * 2;
+        $width = $this->getWidth();
+        if ($width !== null) {
+            $width *= 2;
         }
-        if ($this->getHeight()) {
-            $height = $this->getHeight() * 2;
+        $height = $this->getHeight();
+        if ($height !== null) {
+            $height *= 2;
         }
 
         return new Version($this->getHandle() . '_2x', $this->getHandle() . '_2x', $this->getName(), $width, $height, true, $this->getSizingMode());
