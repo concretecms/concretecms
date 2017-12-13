@@ -402,8 +402,9 @@ class Version implements ObjectInterface
         $tags = explode("\n", str_replace("\r", "\n", trim($this->getTags())));
         $clean_tags = [];
         foreach ($tags as $tag) {
-            if (strlen(trim($tag))) {
-                $clean_tags[] = trim($tag);
+            $tag = trim($tag);
+            if ($tag !== '') {
+                $clean_tags[] = $tag;
             }
         }
 
@@ -435,7 +436,7 @@ class Version implements ObjectInterface
      *
      * @param \Concrete\Core\Entity\File\File $file
      */
-    public function setFile(\Concrete\Core\Entity\File\File $file)
+    public function setFile(File $file)
     {
         $this->file = $file;
     }
