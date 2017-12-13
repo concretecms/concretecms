@@ -917,10 +917,12 @@ class Version implements ObjectInterface
      */
     public function rename($filename)
     {
-        $cf = Core::make('helper/concrete/file');
         $storage = $this->getFile()->getFileStorageLocationObject();
-        $oldFilename = $this->fvFilename;
-        if (is_object($storage)) {
+        if ($storage !== null) {
+            $filename = (string) $filename;
+            $app = Application::getFacadeApplication();
+            $cf = $app->make('helper/concrete/file');
+            $oldFilename = $this->fvFilename;
             $path = $cf->prefix($this->fvPrefix, $oldFilename);
             $newPath = $cf->prefix($this->fvPrefix, $filename);
             $filesystem = $storage->getFileSystemObject();
