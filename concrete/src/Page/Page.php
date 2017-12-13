@@ -2238,6 +2238,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     {
         $b = parent::addBlock($bt, $a, $data);
         $btHandle = $bt->getBlockTypeHandle();
+
         if ($b->getBlockTypeHandle() == BLOCK_HANDLE_PAGE_TYPE_OUTPUT_PROXY) {
             $bi = $b->getInstance();
             $output = $bi->getComposerOutputControlObject();
@@ -2248,17 +2249,24 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                 $btHandle = $_bt->getBlockTypeHandle();
             }
         }
+
         $theme = $this->getCollectionThemeObject();
+
         if ($btHandle && $theme) {
             $areaTemplates = [];
+
             if (is_object($a)) {
                 $areaTemplates = $a->getAreaCustomTemplates();
             }
+
             $themeTemplates = $theme->getThemeDefaultBlockTemplates();
+
             if (!is_array($themeTemplates)) {
                 $themeTemplates = [];
             }
+
             $templates = array_merge($themeTemplates, $areaTemplates);
+            
             if (count($templates) && isset($templates[$btHandle])) {
                 $template = $templates[$btHandle];
                 $b->updateBlockInformation(['bFilename' => $template]);
