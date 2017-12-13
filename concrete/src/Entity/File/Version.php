@@ -26,7 +26,6 @@ use Core;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping as ORM;
-use Events;
 use Imagine\Exception\NotSupportedException;
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
@@ -987,25 +986,27 @@ class Version implements ObjectInterface
      */
     public function approve()
     {
+        $app = Application::getFacadeApplication();
         foreach ($this->file->getFileVersions() as $fv) {
             $fv->fvIsApproved = false;
             $fv->save(false);
         }
 
         $this->fvIsApproved = true;
-        $uID = (int) (new User())->getUserID();
-        if ($uID !== 0) {
-            $this->fvApproverUID = $uID;
+        if (User::isLoggedIn()) {
+            $uID = (int) (new User())->getUserID();
+            if ($uID > 0) {
+                $this->fvApproverUID = $uID;
+            }
         }
         $this->save();
 
         $fe = new FileVersionEvent($this);
-        Events::dispatch('on_file_version_approve', $fe);
+        $app->make(EventDispatcherInterface::class)->dispatch('on_file_version_approve', $fe);
 
         $fo = $this->getFile();
         $fo->reindex();
-
-        Core::make('cache/request')->delete('file/version/approved/' . $this->getFileID());
+        $app->make('cache/request')->delete('file/version/approved/' . $this->getFileID());
     }
 
     /**
