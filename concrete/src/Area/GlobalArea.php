@@ -1,6 +1,12 @@
 <?php
+
 namespace Concrete\Core\Area;
 
+use Concrete\Core\Multilingual\Page\Section\Section as MultilingualSection;
+use Concrete\Core\Page\Collection\Version\VersionList;
+use Concrete\Core\Page\Stack\StackList;
+use Concrete\Core\Site\Service as SiteService;
+use Concrete\Core\Support\Facade\Application;
 use Loader;
 use Page;
 use Permissions;
@@ -37,7 +43,7 @@ class GlobalArea extends Area
     {
         $db = Loader::db();
         Stack::getOrCreateGlobalArea($arHandle);
-        $db->Replace('Areas', array('cID' => $c->getCollectionID(), 'arHandle' => $arHandle, 'arIsGlobal' => 1), array('arHandle', 'cID'), true);
+        $db->Replace('Areas', ['cID' => $c->getCollectionID(), 'arHandle' => $arHandle, 'arIsGlobal' => 1], ['arHandle', 'cID'], true);
         $this->refreshCache($c);
         $area = self::get($c, $arHandle);
         $area->rescanAreaPermissionsChain();
@@ -70,30 +76,6 @@ class GlobalArea extends Area
     }
 
     /**
-     * @param Page $c
-     *
-     * @return Page
-     */
-    protected function getGlobalAreaStackObject($c = false)
-    {
-        if (!$c) {
-            $c = Page::getCurrentPage();
-        }
-        $cp = new Permissions($c);
-        $contentSource = Stack::MULTILINGUAL_CONTENT_SOURCE_CURRENT;
-        if ($this->ignoreCurrentMultilingualLanguageSection) {
-            $contentSource = Stack::MULTILINGUAL_CONTENT_SOURCE_DEFAULT;
-        }
-        if ($cp->canViewPageVersions()) {
-            $stack = Stack::getByName($this->arHandle, 'RECENT', null, $contentSource);
-        } else {
-            $stack = Stack::getByName($this->arHandle, 'ACTIVE', null, $contentSource);
-        }
-
-        return $stack;
-    }
-
-    /**
      * @return int
      */
     public function getTotalBlocksInAreaEditMode()
@@ -102,8 +84,9 @@ class GlobalArea extends Area
         $ax = Area::get($stack, STACKS_AREA_NAME);
 
         $db = Loader::db();
+
         return (int) $db->GetOne('select count(b.bID) from CollectionVersionBlocks cvb inner join Blocks b on cvb.bID = b.bID inner join BlockTypes bt on b.btID = bt.btID where cID = ? and cvID = ? and arHandle = ?',
-            array($stack->getCollectionID(), $stack->getVersionID(), $ax->getAreaHandle())
+            [$stack->getCollectionID(), $stack->getVersionID(), $ax->getAreaHandle()]
         );
     }
 
@@ -122,13 +105,13 @@ class GlobalArea extends Area
         } else {
             $stack = Stack::getByName($this->arHandle, 'ACTIVE', null, $contentSource);
         }
-        $blocksTmp = array();
+        $blocksTmp = [];
         if (is_object($stack)) {
             $blocksTmp = $stack->getBlocks(STACKS_AREA_NAME);
             $globalArea = self::get($stack, STACKS_AREA_NAME);
         }
 
-        $blocks = array();
+        $blocks = [];
         foreach ($blocksTmp as $ab) {
             $ab->setBlockAreaObject($globalArea);
             $ab->setBlockActionCollectionID($stack->getCollectionID());
@@ -154,7 +137,91 @@ class GlobalArea extends Area
     public static function deleteByName($arHandle)
     {
         $db = Loader::db();
-        $db->Execute('select cID from Areas where arHandle = ? and arIsGlobal = 1', array($arHandle));
-        $db->Execute('delete from Areas where arHandle = ? and arIsGlobal = 1', array($arHandle));
+        $db->Execute('select cID from Areas where arHandle = ? and arIsGlobal = 1', [$arHandle]);
+        $db->Execute('delete from Areas where arHandle = ? and arIsGlobal = 1', [$arHandle]);
+    }
+
+    /**
+     * Searches for global areas without any blocks in it and deletes them.
+     * This will have a positive impact on the performance as every global area is rendered for every page.
+     */
+    public static function deleteEmptyAreas()
+    {
+        $app = Application::getFacadeApplication();
+        $siteService = $app->make(SiteService::class);
+        $multilingualSectionIDs = [];
+        $sites = $siteService->getList();
+        foreach ($sites as $site) {
+            $multilingualSectionIDs = array_merge(MultilingualSection::getIDList($site));
+        }
+        $multilingualSections = [];
+        foreach (array_unique($multilingualSectionIDs) as $multilingualSectionID) {
+            $multilingualSections[] = MultilingualSection::getByID($multilingualSectionID);
+        }
+
+        $stackList = new StackList();
+        $stackList->filterByGlobalAreas();
+
+        /** @var \Concrete\Core\Page\Stack\Stack[] $globalAreaStacks */
+        $globalAreaStacks = $stackList->getResults();
+
+        foreach ($globalAreaStacks as $stack) {
+            $stackAlternatives = [];
+            if ($stack->isNeutralStack()) {
+                $stackAlternatives[] = $stack;
+            } else {
+                $stackAlternatives[] = $stack->getNeutralStack();
+            }
+            foreach ($multilingualSections as $multilingualSection) {
+                $stackAlternative = $stackAlternatives[0]->getLocalizedStack($multilingualSection);
+                if ($stackAlternative !== null) {
+                    $stackAlternatives[] = $stackAlternative;
+                }
+            }
+            $hasBlocks = false;
+            foreach ($stackAlternatives as $stackAlternative) {
+                // get list of all available page versions, we only delete areas if they never had any content
+                $versionList = new VersionList($stackAlternative);
+                $versions = $versionList->get();
+
+                foreach ($versions as $version) {
+                    $pageVersion = Page::getByID($version->getCollectionID(), $version->getVersionID());
+                    $totalBlocks = count($pageVersion->getBlockIDs());
+
+                    if ($totalBlocks > 0) {
+                        $hasBlocks = true;
+                        break 2;
+                    }
+                }
+            }
+
+            if (!$hasBlocks) {
+                $stackAlternatives[0]->delete();
+            }
+        }
+    }
+
+    /**
+     * @param Page $c
+     *
+     * @return Page
+     */
+    protected function getGlobalAreaStackObject($c = false)
+    {
+        if (!$c) {
+            $c = Page::getCurrentPage();
+        }
+        $cp = new Permissions($c);
+        $contentSource = Stack::MULTILINGUAL_CONTENT_SOURCE_CURRENT;
+        if ($this->ignoreCurrentMultilingualLanguageSection) {
+            $contentSource = Stack::MULTILINGUAL_CONTENT_SOURCE_DEFAULT;
+        }
+        if ($cp->canViewPageVersions()) {
+            $stack = Stack::getByName($this->arHandle, 'RECENT', null, $contentSource);
+        } else {
+            $stack = Stack::getByName($this->arHandle, 'ACTIVE', null, $contentSource);
+        }
+
+        return $stack;
     }
 }

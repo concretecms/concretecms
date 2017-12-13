@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Validation;
 
 use Concrete\Core\Captcha\CaptchaInterface;
@@ -22,7 +23,6 @@ class ValidationServiceProvider extends ServiceProvider
             'helper/validation/strings' => '\Concrete\Core\Utility\Service\Validation\Strings',
             'helper/validation/banned_words' => '\Concrete\Core\Validation\BannedWord\Service',
             'helper/security' => '\Concrete\Core\Validation\SanitizeService',
-
             'ip' => '\Concrete\Core\Permission\IPService',
         ];
         $registers = [

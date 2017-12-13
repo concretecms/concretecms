@@ -6,12 +6,15 @@ use Concrete\Core\Entity\Attribute\Value\ExpressValue;
 use Concrete\Core\Entity\Express\Entry\Association as EntryAssociation;
 use Concrete\Core\Entity\Express\Entry\ManyAssociation;
 use Concrete\Core\Entity\Express\Entry\OneAssociation;
+use Concrete\Core\Export\ExportableInterface;
 use Concrete\Core\Express\Entry\Formatter\EntryFormatterInterface;
 use Concrete\Core\Express\EntryBuilder\AssociationBuilder;
+use Concrete\Core\Export\Item\Express\Entry as EntryExporter;
 use Concrete\Core\Express\EntryBuilder\AssociationUpdater;
 use Concrete\Core\Permission\ObjectInterface as PermissionObjectInterface;
 use Concrete\Core\Attribute\ObjectInterface as AttributeObjectInterface;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Utility\Service\Identifier;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -20,7 +23,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="ExpressEntityEntries")
  * @ORM\EntityListeners({"\Concrete\Core\Express\Entry\Listener"})
  */
-class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeObjectInterface
+class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeObjectInterface, ExportableInterface
 {
 
     use ObjectTrait;
@@ -340,6 +343,11 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
     public function associateEntries()
     {
         return \Core::make(AssociationUpdater::class, ['entry' => $this]);
+    }
+
+    public function getExporter()
+    {
+        return new EntryExporter(new Identifier());
     }
 
 }

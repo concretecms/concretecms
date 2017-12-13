@@ -873,7 +873,12 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         $r = $em->getRepository('\Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption');
         $type = $this->attributeKey->getAttributeKeySettings();
 
-        $values = explode(',', $value);
+        if (!is_array($value)) {
+            $values = explode(',', $value);
+        } else {
+            $values = $value;
+        }
+        
         $response = [];
         foreach ($values as $value) {
             $value = trim($value);

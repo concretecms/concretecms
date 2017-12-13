@@ -116,19 +116,19 @@ class Controller extends BlockController
                     break;
                 case 'display_desc':
                     $cID = $db->GetOne(
-                        'select cID from Pages where cID != ? and cDisplayOrder < ? and cParentID = ? order by cDisplayOrder desc',
+                        'select Pages.cID from Pages inner join CollectionVersions cv on Pages.cID = cv.cID where cvIsApproved = 1 and Pages.cID != ? and cDisplayOrder < ? and cParentID = ? order by cDisplayOrder desc',
                         [$cID, $currentPage->getCollectionDisplayOrder(), $currentPage->getCollectionParentID()]);
                     break;
                 case 'display_asc':
                 default:
                     $cID = $db->GetOne(
-                        'select cID from Pages where cID != ? and  cDisplayOrder > ? and cParentID = ? order by cDisplayOrder asc',
+                        'select Pages.cID from Pages inner join CollectionVersions cv on Pages.cID = cv.cID where cvIsApproved = 1 and Pages.cID != ? and  cDisplayOrder > ? and cParentID = ? order by cDisplayOrder asc',
                         [$cID, $currentPage->getCollectionDisplayOrder(), $currentPage->getCollectionParentID()]);
                     break;
             }
 
             if ($cID > 0) {
-                $page = Page::getByID($cID, 'RECENT');
+                $page = Page::getByID($cID, 'ACTIVE');
                 $currentPage = $page;
                 $cp = new Permissions($page);
                 if ($cp->canRead() && $page->getAttribute('exclude_nav') != 1) {
@@ -184,16 +184,16 @@ class Controller extends BlockController
                     $cID = $db->GetOne('select Pages.cID from Pages inner join CollectionVersions cv on Pages.cID = cv.cID where cvIsApproved = 1 and cvDatePublic > ? and cParentID = ?  order by cvDatePublic asc', [$currentPage->getCollectionDatePublic(), $currentPage->getCollectionParentID()]);
                     break;
                 case 'display_desc':
-                    $cID = $db->GetOne('select cID from Pages where cDisplayOrder > ? and cParentID = ? order by cDisplayOrder asc', [$currentPage->getCollectionDisplayOrder(), $currentPage->getCollectionParentID()]);
+                    $cID = $db->GetOne('select Pages.cID from Pages inner join CollectionVersions cv on Pages.cID = cv.cID where cvIsApproved = 1 and cDisplayOrder > ? and cParentID = ? order by cDisplayOrder asc', [$currentPage->getCollectionDisplayOrder(), $currentPage->getCollectionParentID()]);
                     break;
                 case 'display_asc':
                 default:
-                    $cID = $db->GetOne('select cID from Pages where cDisplayOrder < ? and cParentID = ? order by cDisplayOrder desc', [$currentPage->getCollectionDisplayOrder(), $currentPage->getCollectionParentID()]);
+                    $cID = $db->GetOne('select Pages.cID from Pages inner join CollectionVersions cv on Pages.cID = cv.cID where cvIsApproved = 1 and cDisplayOrder < ? and cParentID = ? order by cDisplayOrder desc', [$currentPage->getCollectionDisplayOrder(), $currentPage->getCollectionParentID()]);
                     break;
             }
 
             if ($cID > 0) {
-                $page = Page::getByID($cID, 'RECENT');
+                $page = Page::getByID($cID, 'ACTIVE');
                 $currentPage = $page;
                 $cp = new Permissions($page);
                 if ($cp->canRead() && $page->getAttribute('exclude_nav') != 1) {
