@@ -362,7 +362,7 @@ class BlockControl extends Control
 
         $b->deleteBlock();
         $ax = Area::getOrCreate($c, $arHandle);
-        
+
         $b = $c->addBlock($bt, $ax, $data);
         $this->setPageTypeComposerControlBlockObject($b);
         $b->setAbsoluteBlockDisplayOrder($blockDisplayOrder);

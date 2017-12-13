@@ -64,7 +64,7 @@ class UpdateFromType extends BackendInterfaceController
         $pageTypeDefaultPageRelBlocks = [];
 
         foreach ($pageTypeDefaultPage->getBlocks() as $b) {
-            $pageTypeDefaultPageBlocks[$b->getBlockID()] = $pageTypeDefaultPageRelBlocks[$b->getBlockRelationID()] = $b;            
+            $pageTypeDefaultPageBlocks[$b->getBlockID()] = $pageTypeDefaultPageRelBlocks[$b->getBlockRelationID()] = $b;
         }
 
         $db = $this->app->make(Connection::class);
@@ -73,12 +73,12 @@ class UpdateFromType extends BackendInterfaceController
         $siteTreeID = $site->getSiteTreeID();
 
         $ptID = $pageTypeDefaultPage->getPageTypeID();
-        
+
         $pagesPlusCV = $db->fetchAll('select p.cID, max(cvID) as cvID from Pages p inner join CollectionVersions cv on p.cID = cv.cID where ptID = ? and pTemplateID = ? and cIsTemplate = 0 and cIsActive = 1 and siteTreeID = ? group by cID order by cID', [$ptID, $this->template->getPageTemplateID(), $siteTreeID]);
 
         foreach ($pagesPlusCV as $pagePlusCV) {
             $pageTypeDefaultPageBlocksClone = $pageTypeDefaultPageRelBlocks;
-            
+
             $associatedBlocks = $db->fetchAll(
                 'select cbDisplayOrder, arHandle, bID, cbRelationID from CollectionVersionBlocks where cID = ? and cvID = ?',
                 [$pagePlusCV['cID'], $pagePlusCV['cvID']]
@@ -263,15 +263,15 @@ class UpdateFromType extends BackendInterfaceController
 
                 foreach ($blocksToAdd as $blockToAdd) {
                     $pageTypeBlock = $blockService->getByID($blockToAdd['bID'], $pageTypeDefaultPage, $blockToAdd['pageTypeArHandle']);
-                    
+
                     $bi = $pageTypeBlock->getInstance();
                     $output = $bi->getComposerOutputControlObject();
                     $control = FormLayoutSetControl::getByID($output->getPageTypeComposerFormLayoutSetControlID());
                     $object = $control->getPageTypeComposerControlObject();
-                    
+
                     if ($object instanceof BlockControl) {
                         $a = Area::get($page, $blockToAdd['pageTypeArHandle']);
-                        
+
                         $bt = $object->getBlockTypeObject();
                         $b = $page->addBlock($bt, $a, ['cbRelationID' => $pageTypeBlock->getBlockRelationID()]);
                         $object->setPageTypeComposerControlBlockObject($b);
@@ -287,10 +287,9 @@ class UpdateFromType extends BackendInterfaceController
                         if ($defaultStyles) {
                             $b->setCustomStyleSet($defaultStyles->getStyleSet());
                         }
-                        
+
                         $object->recordPageTypeComposerOutputBlock($b);
                     }
-                    
                 }
 
                 foreach ($blocksToUpdate as $blockToUpdate) {
