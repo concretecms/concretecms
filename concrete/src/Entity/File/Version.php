@@ -1372,7 +1372,7 @@ class Version implements ObjectInterface
      *
      * @param \Concrete\Core\File\Image\Thumbnail\Type\Version|string $type the thumbnail type version (or its handle)
      *
-     * @return \League\URL\URLInterface|string|null
+     * @return string|null
      *
      * @example /application/files/thumbnails/file_manager_listing/0000/0000/0000/file.png
      */
@@ -1386,11 +1386,13 @@ class Version implements ObjectInterface
 
         $path_resolver = $app->make(Resolver::class);
 
-        if ($path = $path_resolver->getPath($this, $type)) {
-            return $path;
+        $path = $path_resolver->getPath($this, $type);
+        if (!$path) {
+            $url = $this->getURL();
+            $path = $url ? (string) $url : null;
         }
 
-        return $this->getURL();
+        return $path;
     }
 
     /**
