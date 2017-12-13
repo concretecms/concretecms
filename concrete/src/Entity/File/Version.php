@@ -935,6 +935,8 @@ class Version implements ObjectInterface
             }
             $this->logVersionUpdate(self::UT_RENAME);
             $this->save();
+            $fe = new FileVersionEvent($this);
+            $app->make(EventDispatcherInterface::class)->dispatch('on_file_version_rename', $fe);
         }
     }
 
