@@ -826,11 +826,12 @@ class Version implements ObjectInterface
      */
     public function updateTitle($title)
     {
+        $app = Application::getFacadeApplication();
         $this->fvTitle = $title;
         $this->save();
         $this->logVersionUpdate(self::UT_TITLE);
         $fe = new FileVersionEvent($this);
-        Events::dispatch('on_file_version_update_title', $fe);
+        $app->make(EventDispatcherInterface::class)->dispatch('on_file_version_update_title', $fe);
     }
 
     /**
