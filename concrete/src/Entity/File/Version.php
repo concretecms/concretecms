@@ -21,6 +21,7 @@ use Concrete\Core\File\Menu;
 use Concrete\Core\File\Type\TypeList as FileTypeList;
 use Concrete\Core\Http\FlysystemFileResponse;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\User\UserInfoRepository;
 use Core;
 use DateTime;
@@ -1040,10 +1041,12 @@ class Version implements ObjectInterface
      */
     public function getForceDownloadURL()
     {
+        $app = Application::getFacadeApplication();
         $c = Page::getCurrentPage();
-        $cID = ($c instanceof Page) ? $c->getCollectionID() : 0;
+        $cID = $c instanceof Page && !$c->isError() ? $c->getCollectionID() : 0;
+        $urlResolver = $app->make(ResolverManagerInterface::class);
 
-        return View::url('/download_file', 'force', $this->getFileID(), $cID);
+        return $urlResolver->resolve(['/download_file', 'force', $this->getFileID(), $cID]);
     }
 
     /**
