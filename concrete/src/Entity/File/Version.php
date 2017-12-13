@@ -28,9 +28,11 @@ use Core;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 use Imagine\Exception\NotSupportedException;
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
+use Imagine\Image\ImagineInterface;
 use Imagine\Image\Metadata\ExifMetadataReader;
 use League\Flysystem\AdapterInterface;
 use League\Flysystem\FileNotFoundException;
@@ -39,6 +41,7 @@ use Permissions;
 use stdClass;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Throwable;
 use User;
 use View;
 
@@ -1193,43 +1196,50 @@ class Version implements ObjectInterface
     /**
      * Get an \Imagine\Image\ImageInterface representing the image.
      *
-     * @return \Imagine\Image\ImageInterface|false return false if the image coulnd't be read, an ImageInterface otherwise
+     * @return \Imagine\Image\ImageInterface|null return NULL if the image coulnd't be read, an ImageInterface otherwise
      */
     public function getImagineImage()
     {
         if (null === $this->imagineImage) {
+            $app = Application::getFacadeApplication();
             $resource = $this->getFileResource();
             $mimetype = $resource->getMimeType();
-            $imageLibrary = \Image::getFacadeRoot();
+            $imageLibrary = $app->make(ImagineInterface::class);
 
             switch ($mimetype) {
                 case 'image/svg+xml':
                 case 'image/svg-xml':
                     if ($imageLibrary instanceof \Imagine\Gd\Imagine) {
                         try {
-                            $app = Application::getFacadeApplication();
                             $imageLibrary = $app->make('image/imagick');
-                        } catch (\Exception $x) {
+                        } catch (Exception $x) {
+                            $this->imagineImage = false;
+                        } catch (Throwable $x) {
                             $this->imagineImage = false;
                         }
                     }
                     break;
             }
 
-            $metadataReader = $imageLibrary->getMetadataReader();
-            if (!$metadataReader instanceof ExifMetadataReader) {
-                if (\Config::get('concrete.file_manager.images.use_exif_data_to_rotate_images')) {
-                    try {
-                        $imageLibrary->setMetadataReader(new ExifMetadataReader());
-                    } catch (NotSupportedException $e) {
+            if (null === $this->imagineImage) {
+                $metadataReader = $imageLibrary->getMetadataReader();
+                if (!$metadataReader instanceof ExifMetadataReader) {
+                    if ($app->make('config')->get('concrete.file_manager.images.use_exif_data_to_rotate_images')) {
+                        try {
+                            $imageLibrary->setMetadataReader(new ExifMetadataReader());
+                        } catch (NotSupportedException $e) {
+                        }
                     }
                 }
+                try {
+                    $this->imagineImage = $imageLibrary->load($resource->read());
+                } catch (FileNotFoundException $e) {
+                    $this->imagineImage = false;
+                }
             }
-
-            $this->imagineImage = $imageLibrary->load($resource->read());
         }
 
-        return $this->imagineImage;
+        return $this->imagineImage ?: null;
     }
 
     /**
