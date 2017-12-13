@@ -1168,7 +1168,9 @@ class Version implements ObjectInterface
      */
     public function getObjectAttributeCategory()
     {
-        return Core::make(FileCategory::class);
+        $app = Application::getFacadeApplication();
+
+        return $app->make(FileCategory::class);
     }
 
     /**
