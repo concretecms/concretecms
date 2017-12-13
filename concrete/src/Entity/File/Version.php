@@ -11,6 +11,7 @@ use Concrete\Core\Entity\File\StorageLocation\StorageLocation;
 use Concrete\Core\File\Exception\InvalidDimensionException;
 use Concrete\Core\File\Image\Thumbnail\Path\Resolver;
 use Concrete\Core\File\Image\Thumbnail\Thumbnail;
+use Concrete\Core\File\Image\Thumbnail\ThumbnailFormatService;
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use Concrete\Core\File\Image\Thumbnail\Type\Version as ThumbnailTypeVersion;
 use Concrete\Core\File\Importer;
@@ -18,25 +19,24 @@ use Concrete\Core\File\Menu;
 use Concrete\Core\File\Type\TypeList as FileTypeList;
 use Concrete\Core\Http\FlysystemFileResponse;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Support\Facade\Facade;
+use Core;
+use Database;
+use Doctrine\ORM\Mapping as ORM;
+use Events;
 use Imagine\Exception\NotSupportedException;
 use Imagine\Gd\Image;
+use Imagine\Image\Box;
+use Imagine\Image\ImageInterface;
 use Imagine\Image\Metadata\ExifMetadataReader;
 use League\Flysystem\AdapterInterface;
 use League\Flysystem\FileNotFoundException;
-use Core;
-use Database;
-use Events;
-use Imagine\Image\ImageInterface;
 use Page;
 use Permissions;
 use stdClass;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use User;
 use View;
-use Doctrine\ORM\Mapping as ORM;
-use Concrete\Core\Support\Facade\Facade;
-use Imagine\Image\Box;
-use Concrete\Core\File\Image\Thumbnail\ThumbnailFormatService;
 
 /**
  * @ORM\Entity
@@ -60,12 +60,6 @@ class Version implements ObjectInterface
     const UT_EXTENDED_ATTRIBUTE = 5;
     const UT_CONTENTS = 6;
     const UT_RENAME = 7;
-
-    public function __construct()
-    {
-        $this->fvDateAdded = new \DateTime();
-        $this->fvActivateDateTime = new \DateTime();
-    }
 
     /**
      * /* @ORM\Id
@@ -143,6 +137,12 @@ class Version implements ObjectInterface
 
     private $imagineImage = null;
 
+    public function __construct()
+    {
+        $this->fvDateAdded = new \DateTime();
+        $this->fvActivateDateTime = new \DateTime();
+    }
+
     /**
      * Add a new file version.
      *
@@ -212,7 +212,7 @@ class Version implements ObjectInterface
             $cleanTags[] = trim($tag);
         }
         //the leading and trailing line break char is for searching: fvTag like %\ntag\n%
-        return "\n".implode("\n", $cleanTags)."\n";
+        return "\n" . implode("\n", $cleanTags) . "\n";
     }
 
     /**
@@ -393,7 +393,7 @@ class Version implements ObjectInterface
         } catch (FileNotFoundException $e) {
         }
     }
-    
+
     /**
      * Move the thumbnails for the current file version to a new storage location.
      *
@@ -412,7 +412,7 @@ class Version implements ObjectInterface
             'new' => $location->getFileSystemObject(),
         ]);
         try {
-            $manager->move('current://'.$path, 'new://'.$path);
+            $manager->move('current://' . $path, 'new://' . $path);
         } catch (FileNotFoundException $e) {
         }
     }
@@ -570,20 +570,6 @@ class Version implements ObjectInterface
         $this->save();
         $fe = new \Concrete\Core\File\Event\FileVersion($this);
         Events::dispatch('on_file_version_deny', $fe);
-    }
-
-    /**
-     * Save changes to a file.
-     *
-     * @param bool $flush Flush the EM cache
-     */
-    protected function save($flush = true)
-    {
-        $em = \ORM::entityManager();
-        $em->persist($this);
-        if ($flush) {
-            $em->flush();
-        }
     }
 
     /**
@@ -851,7 +837,7 @@ class Version implements ObjectInterface
         $fo = $this->getFile();
         $fo->reindex();
 
-        \Core::make('cache/request')->delete('file/version/approved/'.$this->getFileID());
+        \Core::make('cache/request')->delete('file/version/approved/' . $this->getFileID());
     }
 
     /**
@@ -930,18 +916,19 @@ class Version implements ObjectInterface
                 $url = $configuration->getPublicURLToFile($cf->prefix($this->fvPrefix, $this->fvFilename));
             }
             if (!$url) {
-                $url =  $this->getDownloadURL();
+                $url = $this->getDownloadURL();
             }
         }
+
         return $url;
     }
 
     /**
      * Get an array of thumbnails.
      *
-     * @return Thumbnail[]
-     *
      * @throws InvalidDimensionException
+     *
+     * @return Thumbnail[]
      */
     public function getThumbnails()
     {
@@ -1095,7 +1082,7 @@ class Version implements ObjectInterface
                 foreach ($types as $type) {
                     // delete the file if it exists
                     $this->deleteThumbnail($type);
-                    
+
                     // if image is smaller than size requested, don't create thumbnail
                     if ($imagewidth < $type->getWidth() && $imageheight < $type->getHeight()) {
                         continue;
@@ -1106,7 +1093,7 @@ class Version implements ObjectInterface
                     if ($type->getSizingMode() === Type::RESIZE_EXACT && (!$type->getWidth() || !$type->getHeight())) {
                         continue;
                     }
-                    
+
                     // If requesting an exact size and any of the dimensions requested is larger than the image's
                     // don't process as we won't get an exact size
                     if ($type->getSizingMode() === Type::RESIZE_EXACT && ($imagewidth < $type->getWidth() || $imageheight < $type->getHeight())) {
@@ -1134,10 +1121,12 @@ class Version implements ObjectInterface
         } catch (\Imagine\Exception\InvalidArgumentException $e) {
             unset($image);
             $this->releaseImagineImage();
+
             return false;
         } catch (\Imagine\Exception\RuntimeException $e) {
             unset($image);
             $this->releaseImagineImage();
+
             return false;
         }
     }
@@ -1173,7 +1162,7 @@ class Version implements ObjectInterface
             $baseSrc = $this->getThumbnailURL($type->getBaseVersion());
             $doubledSrc = $this->getThumbnailURL($type->getDoubledVersion());
 
-            return '<img src="'.$baseSrc.'" data-at2x="'.$doubledSrc.'" />';
+            return '<img src="' . $baseSrc . '" data-at2x="' . $doubledSrc . '" />';
         } else {
             return $this->getTypeObject()->getThumbnail();
         }
@@ -1445,7 +1434,8 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Generate a thumbnail given a type
+     * Generate a thumbnail given a type.
+     *
      * @param \Concrete\Core\File\Image\Thumbnail\Type\Version $type
      */
     public function generateThumbnail(ThumbnailTypeVersion $type)
@@ -1455,22 +1445,22 @@ class Version implements ObjectInterface
         $filesystem = $this->getFile()
             ->getFileStorageLocationObject()
             ->getFileSystemObject();
-            
+
         $height = $type->getHeight();
         $width = $type->getWidth();
         $sizingMode = $type->getSizingMode();
 
         if ($height && $width) {
             $size = new Box($width, $height);
-        } else if ($width) {
+        } elseif ($width) {
             $size = $image->getSize()->widen($width);
         } else {
             $size = $image->getSize()->heighten($height);
         }
 
         if ($sizingMode === Type::RESIZE_EXACT) {
-             $thumbnailMode = ImageInterface::THUMBNAIL_OUTBOUND;
-        } else if ($sizingMode === Type::RESIZE_PROPORTIONAL) {
+            $thumbnailMode = ImageInterface::THUMBNAIL_OUTBOUND;
+        } elseif ($sizingMode === Type::RESIZE_PROPORTIONAL) {
             $thumbnailMode = ImageInterface::THUMBNAIL_INSET;
         }
 
@@ -1484,7 +1474,7 @@ class Version implements ObjectInterface
         $thumbnailPath = $type->getFilePath($this);
         $thumbnailOptions = [];
 
-        switch($thumbnailFormat) {
+        switch ($thumbnailFormat) {
             case ThumbnailFormatService::FORMAT_JPEG:
                 $mimetype = 'image/jpeg';
                 $thumbnailOptions = ['jpeg_quality' => \Config::get('concrete.misc.default_jpeg_image_compression')];
@@ -1516,5 +1506,19 @@ class Version implements ObjectInterface
         unset($size);
         unset($thumbnail);
         unset($filesystem);
+    }
+
+    /**
+     * Save changes to a file.
+     *
+     * @param bool $flush Flush the EM cache
+     */
+    protected function save($flush = true)
+    {
+        $em = \ORM::entityManager();
+        $em->persist($this);
+        if ($flush) {
+            $em->flush();
+        }
     }
 }
