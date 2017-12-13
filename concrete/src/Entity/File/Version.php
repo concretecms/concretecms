@@ -21,6 +21,7 @@ use Concrete\Core\File\Menu;
 use Concrete\Core\File\Type\TypeList as FileTypeList;
 use Concrete\Core\Http\FlysystemFileResponse;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\User\UserInfoRepository;
 use Core;
 use Database;
 use DateTime;
@@ -623,12 +624,15 @@ class Version implements ObjectInterface
      */
     public function getAuthorName()
     {
-        $ui = \UserInfo::getByID($this->fvAuthorUID);
-        if (is_object($ui)) {
-            return $ui->getUserDisplayName();
+        $ui = null;
+        if ($this->fvAuthorUID) {
+            $app = Application::getFacadeApplication();
+            $ui = $app->make(UserInfoRepository::class)->getByID($this->fvAuthorUID);
+        } else {
+            $ui = null;
         }
 
-        return t('(Unknown)');
+        return $ui === null ? t('(Unknown)') : $ui->getUserDisplayName();
     }
 
     /**
