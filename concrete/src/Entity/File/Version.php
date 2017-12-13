@@ -886,12 +886,13 @@ class Version implements ObjectInterface
      */
     public function updateTags($tags)
     {
+        $app = Application::getFacadeApplication();
         $tags = self::cleanTags($tags);
         $this->fvTags = $tags;
         $this->save();
         $this->logVersionUpdate(self::UT_TAGS);
         $fe = new FileVersionEvent($this);
-        Events::dispatch('on_file_version_update_tags', $fe);
+        $app->make(EventDispatcherInterface::class)->dispatch('on_file_version_update_tags', $fe);
     }
 
     /**
