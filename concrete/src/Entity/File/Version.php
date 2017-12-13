@@ -1016,15 +1016,18 @@ class Version implements ObjectInterface
      */
     public function getFileContents()
     {
-        $cf = Core::make('helper/concrete/file');
+        $result = null;
         $fsl = $this->getFile()->getFileStorageLocationObject();
-        if (is_object($fsl)) {
-            $result = $fsl->getFileSystemObject()->read($cf->prefix($this->fvPrefix, $this->fvFilename));
-            if ($result === false) {
-                $result = null;
+        if ($fsl !== null) {
+            $app = Application::getFacadeApplication();
+            $cf = $app->make('helper/concrete/file');
+            try {
+                $result = $fsl->getFileSystemObject()->read($cf->prefix($this->fvPrefix, $this->fvFilename));
+                if ($result === false) {
+                    $result = null;
+                }
+            } catch (FileNotFoundException $x) {
             }
-        } else {
-            $result = null;
         }
 
         return $result;
