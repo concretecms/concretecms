@@ -648,9 +648,7 @@ class Version implements ObjectInterface
     /**
      * Get the date/time when the file version has been added.
      *
-     * @return string
-     *
-     * @example '2017-31-12 23:59:59'
+     * @return \DateTime
      */
     public function getDateAdded()
     {
