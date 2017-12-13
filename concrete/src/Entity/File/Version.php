@@ -2,13 +2,13 @@
 
 namespace Concrete\Core\Entity\File;
 
-use Carbon\Carbon;
 use Concrete\Core\Attribute\Category\FileCategory;
 use Concrete\Core\Attribute\Key\FileKey;
 use Concrete\Core\Attribute\ObjectInterface;
 use Concrete\Core\Attribute\ObjectTrait;
 use Concrete\Core\Entity\Attribute\Value\FileValue;
 use Concrete\Core\Entity\File\StorageLocation\StorageLocation;
+use Concrete\Core\File\Event\FileVersion as FileVersionEvent;
 use Concrete\Core\File\Exception\InvalidDimensionException;
 use Concrete\Core\File\Image\Thumbnail\Path\Resolver;
 use Concrete\Core\File\Image\Thumbnail\Thumbnail;
@@ -23,6 +23,7 @@ use Concrete\Core\Support\Facade\Application;
 use Core;
 use Database;
 use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Events;
 use Imagine\Exception\NotSupportedException;
@@ -34,6 +35,7 @@ use League\Flysystem\FileNotFoundException;
 use Page;
 use Permissions;
 use stdClass;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use User;
 use View;
@@ -148,7 +150,7 @@ class Version implements ObjectInterface
      *
      * @ORM\Column(type="datetime")
      *
-     * @var DateTime
+     * @var \DateTime
      */
     protected $fvDateAdded;
 
@@ -157,7 +159,7 @@ class Version implements ObjectInterface
      *
      * @ORM\Column(type="datetime")
      *
-     * @var DateTime
+     * @var \DateTime
      */
     protected $fvActivateDateTime;
 
@@ -279,7 +281,7 @@ class Version implements ObjectInterface
     /**
      * Add a new file version.
      *
-     * @param File $file the File instance associated to this version
+     * @param \Concrete\Core\Entity\File\File $file the File instance associated to this version
      * @param string $filename The name of the file
      * @param string $prefix the path prefix used to store the file in the file system
      * @param array $data Valid array keys are {
@@ -293,43 +295,48 @@ class Version implements ObjectInterface
      *
      * @return static
      */
-    public static function add(\Concrete\Core\Entity\File\File $file, $filename, $prefix, $data = [])
+    public static function add(File $file, $filename, $prefix, $data = [])
     {
-        $u = new User();
-        $uID = (isset($data['uID']) && $data['uID'] > 0) ? $data['uID'] : $u->getUserID();
+        $data += [
+            'uID' => 0,
+            'fvTitle' => '',
+            'fvDescription' => '',
+            'fvTags' => '',
+            'fvIsApproved' => true,
+        ];
 
+        $app = Application::getFacadeApplication();
+        $em = $app->make(EntityManagerInterface::class);
+        $dh = $app->make('date');
+
+        $date = new DateTime($dh->getOverridableNow());
+        $uID = (int) $data['uID'];
         if ($uID < 1) {
-            $uID = 0;
+            if (User::isLoggedIn()) {
+                $uID = (int) (new User())->getUserID();
+            } else {
+                $uID = 0;
+            }
         }
 
-        $fvTitle = (isset($data['fvTitle'])) ? $data['fvTitle'] : '';
-        $fvDescription = (isset($data['fvDescription'])) ? $data['fvDescription'] : '';
-        $fvTags = (isset($data['fvTags'])) ? self::cleanTags($data['fvTags']) : '';
-        $fvIsApproved = (isset($data['fvIsApproved'])) ? $data['fvIsApproved'] : '1';
-
-        $dh = Core::make('helper/date');
-        $date = new Carbon($dh->getOverridableNow());
-
         $fv = new static();
-        $fv->fvFilename = $filename;
+        $fv->fvFilename = (string) $filename;
         $fv->fvPrefix = $prefix;
         $fv->fvDateAdded = $date;
-        $fv->fvIsApproved = (bool) $fvIsApproved;
+        $fv->fvIsApproved = (bool) $data['fvIsApproved'];
         $fv->fvApproverUID = $uID;
         $fv->fvAuthorUID = $uID;
         $fv->fvActivateDateTime = $date;
-        $fv->fvTitle = $fvTitle;
-        $fv->fvDescription = $fvDescription;
-        $fv->fvTags = $fvTags;
+        $fv->fvTitle = (string) $data['fvTitle'];
+        $fv->fvDescription = (string) $data['fvDescription'];
+        $fv->fvTags = self::cleanTags((string) $data['fvTags']);
         $fv->file = $file;
         $fv->fvID = 1;
-
-        $em = \ORM::entityManager();
         $em->persist($fv);
         $em->flush();
 
-        $fve = new \Concrete\Core\File\Event\FileVersion($fv);
-        Events::dispatch('on_file_version_add', $fve);
+        $fve = new FileVersionEvent($fv);
+        $app->make(EventDispatcherInterface::class)->dispatch('on_file_version_add', $fve);
 
         return $fv;
     }
@@ -700,7 +707,7 @@ class Version implements ObjectInterface
 
         $em->flush();
 
-        $fe = new \Concrete\Core\File\Event\FileVersion($fv);
+        $fe = new FileVersionEvent($fv);
         Events::dispatch('on_file_version_duplicate', $fe);
 
         return $fv;
@@ -713,7 +720,7 @@ class Version implements ObjectInterface
     {
         $this->fvIsApproved = false;
         $this->save();
-        $fe = new \Concrete\Core\File\Event\FileVersion($this);
+        $fe = new FileVersionEvent($this);
         Events::dispatch('on_file_version_deny', $fe);
     }
 
@@ -800,6 +807,7 @@ class Version implements ObjectInterface
                     break;
             }
         }
+
         return array_values(array_unique($updates));
     }
 
@@ -813,7 +821,7 @@ class Version implements ObjectInterface
         $this->fvTitle = $title;
         $this->save();
         $this->logVersionUpdate(self::UT_TITLE);
-        $fe = new \Concrete\Core\File\Event\FileVersion($this);
+        $fe = new FileVersionEvent($this);
         Events::dispatch('on_file_version_update_title', $fe);
     }
 
@@ -873,7 +881,7 @@ class Version implements ObjectInterface
         $this->fvTags = $tags;
         $this->save();
         $this->logVersionUpdate(self::UT_TAGS);
-        $fe = new \Concrete\Core\File\Event\FileVersion($this);
+        $fe = new FileVersionEvent($this);
         Events::dispatch('on_file_version_update_tags', $fe);
     }
 
@@ -887,7 +895,7 @@ class Version implements ObjectInterface
         $this->fvDescription = $descr;
         $this->save();
         $this->logVersionUpdate(self::UT_DESCRIPTION);
-        $fe = new \Concrete\Core\File\Event\FileVersion($this);
+        $fe = new FileVersionEvent($this);
         Events::dispatch('on_file_version_update_description', $fe);
     }
 
@@ -934,7 +942,7 @@ class Version implements ObjectInterface
             }
             $filesystem->write($path, $contents);
             $this->logVersionUpdate(self::UT_CONTENTS);
-            $fe = new \Concrete\Core\File\Event\FileVersion($this);
+            $fe = new FileVersionEvent($this);
             Events::dispatch('on_file_version_update_contents', $fe);
             $this->refreshAttributes();
         }
@@ -972,7 +980,7 @@ class Version implements ObjectInterface
         }
         $this->save();
 
-        $fe = new \Concrete\Core\File\Event\FileVersion($this);
+        $fe = new FileVersionEvent($this);
         Events::dispatch('on_file_version_approve', $fe);
 
         $fo = $this->getFile();
