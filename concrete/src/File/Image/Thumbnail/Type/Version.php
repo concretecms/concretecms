@@ -35,13 +35,6 @@ class Version
     protected $name;
 
     /**
-     * The thumbnail sizing mode (one of the \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type::RESIZE_... constants).
-     *
-     * @var string
-     */
-    protected $sizingMode;
-
-    /**
      * The width of the thumbnails (or the maximum width in case of proportional sizing).
      *
      * @var int|null
@@ -63,6 +56,13 @@ class Version
     protected $isDoubledVersion;
 
     /**
+     * The thumbnail sizing mode (one of the \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type::RESIZE_... constants).
+     *
+     * @var string
+     */
+    protected $sizingMode;
+
+    /**
      * Initialize the instance.
      *
      * @param string $directoryName the name of the directory that contains the thumbnails
@@ -75,13 +75,50 @@ class Version
      */
     public function __construct($directoryName, $handle, $name, $width, $height, $isDoubledVersion = false, $sizingMode = ThumbnailType::RESIZE_DEFAULT)
     {
+        $this->setDirectoryName($directoryName);
         $this->setHandle($handle);
         $this->setName($name);
-        $this->setSizingMode($sizingMode);
         $this->setWidth($width);
         $this->setHeight($height);
-        $this->setDirectoryName($directoryName);
         $this->isDoubledVersion = (bool) $isDoubledVersion;
+        $this->setSizingMode($sizingMode);
+    }
+
+    /**
+     * Get a thumbnail type version given its handle.
+     *
+     * @param string $handle
+     *
+     * @return \Concrete\Core\File\Image\Thumbnail\Type\Version|null
+     */
+    public static function getByHandle($handle)
+    {
+        $list = Type::getVersionList();
+        foreach ($list as $version) {
+            if ($version->getHandle() == $handle) {
+                return $version;
+            }
+        }
+    }
+
+    /**
+     * Set the name of the directory that contains the thumbnails.
+     *
+     * @param string $directoryName
+     */
+    public function setDirectoryName($directoryName)
+    {
+        $this->directoryName = (string) $directoryName;
+    }
+
+    /**
+     * Get the name of the directory that contains the thumbnails.
+     *
+     * @return string
+     */
+    public function getDirectoryName()
+    {
+        return $this->directoryName;
     }
 
     /**
@@ -95,42 +132,6 @@ class Version
     }
 
     /**
-     * Set the name of the thumbnail type version.
-     *
-     * @param string $name
-     */
-    public function setName($name)
-    {
-        $this->name = (string) $name;
-    }
-
-    /**
-     * Set the thumbnail sizing mode.
-     *
-     * @param string $sizingMode One of the \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type::RESIZE_... constants
-     */
-    public function setSizingMode($sizingMode)
-    {
-        $this->sizingMode = (string) $sizingMode;
-    }
-
-    /**
-     * Set the height of the thumbnails (or the maximum height in case of proportional sizing).
-     *
-     * @param int|null $height
-     */
-    public function setHeight($height)
-    {
-        $this->height = null;
-        if ($height && is_numeric($height)) {
-            $height = (int) $height;
-            if ($height > 0) {
-                $this->height = $height;
-            }
-        }
-    }
-
-    /**
      * Get the handle of the thumbnail type version.
      *
      * @return string
@@ -141,6 +142,16 @@ class Version
     }
 
     /**
+     * Set the name of the thumbnail type version.
+     *
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->name = (string) $name;
+    }
+
+    /**
      * Get the name of the thumbnail type version.
      *
      * @return string
@@ -148,31 +159,6 @@ class Version
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * Get the thumbnail sizing mode.
-     *
-     * @return string One of the \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type::RESIZE_... constants
-     */
-    public function getSizingMode()
-    {
-        return $this->sizingMode;
-    }
-
-    /**
-     * Get the display name of the thumbnail sizing mode.
-     *
-     * @return string
-     */
-    public function getSizingModeDisplayName()
-    {
-        $sizingModeDisplayNames = [
-            ThumbnailType::RESIZE_PROPORTIONAL => t('Proportional'),
-            ThumbnailType::RESIZE_EXACT => t('Exact'),
-        ];
-
-        return $sizingModeDisplayNames[$this->getSizingMode()];
     }
 
     /**
@@ -226,6 +212,22 @@ class Version
     }
 
     /**
+     * Set the height of the thumbnails (or the maximum height in case of proportional sizing).
+     *
+     * @param int|null $height
+     */
+    public function setHeight($height)
+    {
+        $this->height = null;
+        if ($height && is_numeric($height)) {
+            $height = (int) $height;
+            if ($height > 0) {
+                $this->height = $height;
+            }
+        }
+    }
+
+    /**
      * Get the height of the thumbnails (or the maximum height in case of proportional sizing).
      *
      * @return int|null
@@ -236,40 +238,38 @@ class Version
     }
 
     /**
-     * Set the name of the directory that contains the thumbnails.
+     * Set the thumbnail sizing mode.
      *
-     * @param string $directoryName
+     * @param string $sizingMode One of the \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type::RESIZE_... constants
      */
-    public function setDirectoryName($directoryName)
+    public function setSizingMode($sizingMode)
     {
-        $this->directoryName = (string) $directoryName;
+        $this->sizingMode = (string) $sizingMode;
     }
 
     /**
-     * Get the name of the directory that contains the thumbnails.
+     * Get the thumbnail sizing mode.
+     *
+     * @return string One of the \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type::RESIZE_... constants
+     */
+    public function getSizingMode()
+    {
+        return $this->sizingMode;
+    }
+
+    /**
+     * Get the display name of the thumbnail sizing mode.
      *
      * @return string
      */
-    public function getDirectoryName()
+    public function getSizingModeDisplayName()
     {
-        return $this->directoryName;
-    }
+        $sizingModeDisplayNames = [
+            ThumbnailType::RESIZE_PROPORTIONAL => t('Proportional'),
+            ThumbnailType::RESIZE_EXACT => t('Exact'),
+        ];
 
-    /**
-     * Get a thumbnail type version given its handle.
-     *
-     * @param string $handle
-     *
-     * @return \Concrete\Core\File\Image\Thumbnail\Type\Version|null
-     */
-    public static function getByHandle($handle)
-    {
-        $list = Type::getVersionList();
-        foreach ($list as $version) {
-            if ($version->getHandle() == $handle) {
-                return $version;
-            }
-        }
+        return $sizingModeDisplayNames[$this->getSizingMode()];
     }
 
     /**
