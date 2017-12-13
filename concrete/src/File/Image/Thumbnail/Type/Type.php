@@ -2,8 +2,9 @@
 
 namespace Concrete\Core\File\Image\Thumbnail\Type;
 
-use Concrete\Core\Entity\File\Image\Thumbnail\Type\Type as ThumbnailType;
+use Concrete\Core\Entity\File\Image\Thumbnail\Type\Type as ThumbnailTypeEntity;
 use Concrete\Core\Support\Facade\Application;
+use Doctrine\ORM\EntityManagerInterface;
 
 class Type
 {
@@ -12,21 +13,21 @@ class Type
      *
      * @var string
      */
-    const RESIZE_PROPORTIONAL = ThumbnailType::RESIZE_PROPORTIONAL;
+    const RESIZE_PROPORTIONAL = ThumbnailTypeEntity::RESIZE_PROPORTIONAL;
 
     /**
      * Thumbnail sizing mode: exact dimensions.
      *
      * @var string
      */
-    const RESIZE_EXACT = ThumbnailType::RESIZE_EXACT;
+    const RESIZE_EXACT = ThumbnailTypeEntity::RESIZE_EXACT;
 
     /**
      * Default thumbnail sizing mode.
      *
      * @var string
      */
-    const RESIZE_DEFAULT = ThumbnailType::RESIZE_DEFAULT;
+    const RESIZE_DEFAULT = ThumbnailTypeEntity::RESIZE_DEFAULT;
 
     /**
      * Get the list of all the available thumbnail types.
@@ -35,9 +36,10 @@ class Type
      */
     public static function getList()
     {
-        $em = \ORM::entityManager();
+        $app = Application::getFacadeApplication();
+        $em = $app->make(EntityManagerInterface::class);
 
-        return $em->getRepository('\Concrete\Core\Entity\File\Image\Thumbnail\Type\Type')->findBy([], ['ftTypeWidth' => 'asc']);
+        return $em->getRepository(ThumbnailTypeEntity::class)->findBy([], ['ftTypeWidth' => 'asc']);
     }
 
     /**
@@ -49,13 +51,14 @@ class Type
     {
         $app = Application::getFacadeApplication();
         $config = $app->make('config');
+        $createHightDPIVersions = (bool) $config->get('concrete.file_manager.images.create_high_dpi_thumbnails');
 
         $types = static::getList();
         $versions = [];
 
         foreach ($types as $type) {
             $versions[] = $type->getBaseVersion();
-            if ($config->get('concrete.file_manager.images.create_high_dpi_thumbnails')) {
+            if ($createHightDPIVersions) {
                 $versions[] = $type->getDoubledVersion();
             }
         }
@@ -76,7 +79,9 @@ class Type
             $linkNode = $child->addChild('thumbnailtype');
             $linkNode->addAttribute('name', $link->getName());
             $linkNode->addAttribute('handle', $link->getHandle());
-            $linkNode->addAttribute('width', $link->getWidth());
+            if ($link->getWidth()) {
+                $linkNode->addAttribute('width', $link->getWidth());
+            }
             if ($link->getHeight()) {
                 $linkNode->addAttribute('height', $link->getHeight());
             }
@@ -95,10 +100,15 @@ class Type
      */
     public static function getByID($id)
     {
-        $em = \ORM::entityManager();
-        $r = $em->find('\Concrete\Core\Entity\File\Image\Thumbnail\Type\Type', $id);
+        if ($id) {
+            $app = Application::getFacadeApplication();
+            $em = $app->make(EntityManagerInterface::class);
+            $result = $em->find(ThumbnailTypeEntity::class, $id);
+        } else {
+            $result = null;
+        }
 
-        return $r;
+        return $result;
     }
 
     /**
@@ -110,20 +120,20 @@ class Type
      */
     public static function getByHandle($ftTypeHandle)
     {
-        // ugh doctrine doesn't cache when searching by ftTypeHandle
-        $cache = \Core::make('cache/request');
+        $ftTypeHandle = (string) $ftTypeHandle;
+        $app = Application::getFacadeApplication();
+        $cache = $app->make('cache/request');
         $item = $cache->getItem('file/image/thumbnail/' . $ftTypeHandle);
-        if (!$item->isMiss()) {
-            return $item->get();
+        if ($item->isMiss()) {
+            $em = $app->make(EntityManagerInterface::class);
+            $repo = $em->getRepository(ThumbnailTypeEntity::class);
+            $result = $repo->findOneBy(['ftTypeHandle' => $ftTypeHandle]);
+            $cache->save($item->set($result));
+        } else {
+            $result = $item->get();
         }
 
-        $em = \ORM::entityManager();
-        $r = $em->getRepository('\Concrete\Core\Entity\File\Image\Thumbnail\Type\Type')
-            ->findOneBy(['ftTypeHandle' => $ftTypeHandle]);
-
-        $cache->save($item->set($r));
-
-        return $r;
+        return $result;
     }
 
     /**
