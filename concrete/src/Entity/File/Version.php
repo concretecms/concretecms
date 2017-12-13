@@ -839,11 +839,11 @@ class Version implements ObjectInterface
      */
     public function duplicateUnderlyingFile()
     {
+        $app = Application::getFacadeApplication();
         $importer = new Importer();
-        $fi = Core::make('helper/file');
-        $cf = Core::make('helper/concrete/file');
-        $filesystem = $this->getFile()->
-            getFileStorageLocationObject()->getFileSystemObject();
+        $fi = $app->make('helper/file');
+        $cf = $app->make('helper/concrete/file');
+        $filesystem = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
         do {
             $prefix = $importer->generatePrefix();
             $path = $cf->prefix($prefix, $this->getFilename());
@@ -853,7 +853,7 @@ class Version implements ObjectInterface
             $this->getFileResource()->read(),
             [
                 'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
-                'mimetype' => Core::make('helper/mime')->mimeFromExtension($fi->getExtension($this->getFilename())),
+                'mimetype' => $app->make('helper/mime')->mimeFromExtension($fi->getExtension($this->getFilename())),
             ]
         );
         $this->updateFile($this->getFilename(), $prefix);
