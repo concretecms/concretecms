@@ -20,6 +20,7 @@ use Concrete\Core\File\Importer;
 use Concrete\Core\File\Menu;
 use Concrete\Core\File\Type\TypeList as FileTypeList;
 use Concrete\Core\Http\FlysystemFileResponse;
+use Concrete\Core\Http\Request;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\User\UserInfoRepository;
@@ -1054,18 +1055,19 @@ class Version implements ObjectInterface
      */
     public function forceDownload()
     {
-        session_write_close();
+        $app = Application::getFacadeApplication();
         $fre = $this->getFileResource();
 
         $fs = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
         $response = new FlysystemFileResponse($fre->getPath(), $fs);
 
         $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT);
-        $response->prepare(\Request::getInstance());
+        $response->prepare($app->make(Request::class));
 
+        session_write_close();
         ob_end_clean();
         $response->send();
-        Core::shutdown();
+        $app->shutdown();
         exit;
     }
 
