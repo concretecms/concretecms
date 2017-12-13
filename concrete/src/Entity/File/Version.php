@@ -1090,10 +1090,11 @@ class Version implements ObjectInterface
      */
     public function getRelativePath()
     {
-        $cf = Core::make('helper/concrete/file');
-        $fsl = $this->getFile()->getFileStorageLocationObject();
         $url = null;
-        if (is_object($fsl)) {
+        $fsl = $this->getFile()->getFileStorageLocationObject();
+        if ($fsl !== null) {
+            $app = Application::getFacadeApplication();
+            $cf = $app->make('helper/concrete/file');
             $configuration = $fsl->getConfigurationObject();
             if ($configuration->hasRelativePath()) {
                 $url = $configuration->getRelativePathToFile($cf->prefix($this->fvPrefix, $this->fvFilename));
