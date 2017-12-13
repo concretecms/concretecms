@@ -762,9 +762,9 @@ class Version implements ObjectInterface
      */
     public function getTypeObject()
     {
-        $fh = Core::make('helper/file');
+        $app = Application::getFacadeApplication();
+        $fh = $app->make('helper/file');
         $ext = $fh->getExtension($this->fvFilename);
-
         $ftl = FileTypeList::getType($ext);
 
         return $ftl;
