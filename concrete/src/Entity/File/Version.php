@@ -1404,6 +1404,8 @@ class Version implements ObjectInterface
      */
     public function importThumbnail(ThumbnailTypeVersion $version, $path)
     {
+        $app = Application::getFacadeApplication();
+        $config = $app->make('config');
         $thumbnailPath = $version->getFilePath($this);
         $filesystem = $this->getFile()
             ->getFileStorageLocationObject()
@@ -1425,11 +1427,11 @@ class Version implements ObjectInterface
             ]
         );
 
-        if ($version->getHandle() == \Config::get('concrete.icons.file_manager_listing.handle')) {
+        if ($version->getHandle() == $config->get('concrete.icons.file_manager_listing.handle')) {
             $this->fvHasListingThumbnail = true;
         }
 
-        if ($version->getHandle() == \Config::get('concrete.icons.file_manager_detail.handle')) {
+        if ($version->getHandle() == $config->get('concrete.icons.file_manager_detail.handle')) {
             $this->fvHasDetailThumbnail = true;
         }
 
