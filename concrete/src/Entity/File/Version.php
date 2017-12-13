@@ -1398,8 +1398,11 @@ class Version implements ObjectInterface
         $filesystem = $this->getFile()
             ->getFileStorageLocationObject()
             ->getFileSystemObject();
-        if ($filesystem->has($thumbnailPath)) {
-            $filesystem->delete($thumbnailPath);
+        try {
+            if ($filesystem->has($thumbnailPath)) {
+                $filesystem->delete($thumbnailPath);
+            }
+        } catch (FileNotFoundException $e) {
         }
 
         $filesystem->write(
