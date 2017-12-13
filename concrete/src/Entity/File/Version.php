@@ -800,14 +800,7 @@ class Version implements ObjectInterface
                     break;
             }
         }
-        $updates = array_unique($updates);
-        $updates1 = [];
-        foreach ($updates as $val) {
-            // normalize the keys
-            $updates1[] = $val;
-        }
-
-        return $updates1;
+        return array_values(array_unique($updates));
     }
 
     /**
