@@ -1432,18 +1432,19 @@ class Version implements ObjectInterface
     /**
      * Get an URL that points to the file on disk (if not available, you'll get the result of the getDownloadURL method).
      *
-     * @return \League\URL\URLInterface|string|null Url to a file
+     * @return string|null Url to a file
      */
     public function getURL()
     {
-        $cf = Core::make('helper/concrete/file');
         $fsl = $this->getFile()->getFileStorageLocationObject();
-        if (is_object($fsl)) {
+        if ($fsl !== null) {
+            $app = Application::getFacadeApplication();
+            $cf = $app->make('helper/concrete/file');
             $configuration = $fsl->getConfigurationObject();
             if ($configuration->hasPublicURL()) {
                 return $configuration->getPublicURLToFile($cf->prefix($this->fvPrefix, $this->fvFilename));
             } else {
-                return $this->getDownloadURL();
+                return (string) $this->getDownloadURL();
             }
         }
     }
