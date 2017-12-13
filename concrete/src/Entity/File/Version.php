@@ -23,7 +23,6 @@ use Concrete\Core\Http\FlysystemFileResponse;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\UserInfoRepository;
 use Core;
-use Database;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping as ORM;
@@ -867,8 +866,9 @@ class Version implements ObjectInterface
      */
     public function logVersionUpdate($updateTypeID, $updateTypeAttributeID = 0)
     {
-        $db = Database::get();
-        $db->Execute(
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $db->executeQuery(
             'INSERT INTO FileVersionLog (fID, fvID, fvUpdateTypeID, fvUpdateTypeAttributeID) VALUES (?, ?, ?, ?)',
             [
                 $this->getFileID(),
