@@ -33,6 +33,7 @@ use Imagine\Image\ImageInterface;
 use Imagine\Image\Metadata\ExifMetadataReader;
 use League\Flysystem\AdapterInterface;
 use League\Flysystem\FileNotFoundException;
+use League\Flysystem\MountManager;
 use Page;
 use Permissions;
 use stdClass;
@@ -533,7 +534,7 @@ class Version implements ObjectInterface
         $current = $source->getFile()->getFileStorageLocationObject()->getFileSystemObject();
         $newPath = $type->getFilePath($this);
         $currentPath = $type->getFilePath($source);
-        $manager = new \League\Flysystem\MountManager([
+        $manager = new MountManager([
             'current' => $current,
             'new' => $new,
         ]);
@@ -556,7 +557,7 @@ class Version implements ObjectInterface
         }
         $fsl = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
         $path = $type->getFilePath($this);
-        $manager = new \League\Flysystem\MountManager([
+        $manager = new MountManager([
             'current' => $fsl,
             'new' => $location->getFileSystemObject(),
         ]);
@@ -569,11 +570,14 @@ class Version implements ObjectInterface
     /**
      * Get an abstract object to work with the actual file resource (note: this is NOT a concrete5 File object).
      *
+     * @throws \League\Flysystem\FileNotFoundException
+     *
      * @return \League\Flysystem\File
      */
     public function getFileResource()
     {
-        $cf = Core::make('helper/concrete/file');
+        $app = Application::getFacadeApplication();
+        $cf = $app->make('helper/concrete/file');
         $fs = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
         $fo = $fs->get($cf->prefix($this->fvPrefix, $this->fvFilename));
 
