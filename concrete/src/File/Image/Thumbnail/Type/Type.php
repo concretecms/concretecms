@@ -1,41 +1,64 @@
 <?php
+
 namespace Concrete\Core\File\Image\Thumbnail\Type;
 
-use Database;
-use Doctrine\ORM\Mapping as ORM;
-use \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type as ThumbnailType;
+use Concrete\Core\Entity\File\Image\Thumbnail\Type\Type as ThumbnailTypeEntity;
 use Concrete\Core\Support\Facade\Application;
+use Doctrine\ORM\EntityManagerInterface;
 
 class Type
 {
-    const RESIZE_PROPORTIONAL = ThumbnailType::RESIZE_PROPORTIONAL;
-    const RESIZE_EXACT = ThumbnailType::RESIZE_EXACT;
-    const RESIZE_DEFAULT = ThumbnailType::RESIZE_DEFAULT;
+    /**
+     * Thumbnail sizing mode: proportional.
+     *
+     * @var string
+     */
+    const RESIZE_PROPORTIONAL = ThumbnailTypeEntity::RESIZE_PROPORTIONAL;
 
     /**
+     * Thumbnail sizing mode: exact dimensions.
+     *
+     * @var string
+     */
+    const RESIZE_EXACT = ThumbnailTypeEntity::RESIZE_EXACT;
+
+    /**
+     * Default thumbnail sizing mode.
+     *
+     * @var string
+     */
+    const RESIZE_DEFAULT = ThumbnailTypeEntity::RESIZE_DEFAULT;
+
+    /**
+     * Get the list of all the available thumbnail types.
+     *
      * @return \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type[]
      */
     public static function getList()
     {
-        $em = \ORM::entityManager();
+        $app = Application::getFacadeApplication();
+        $em = $app->make(EntityManagerInterface::class);
 
-        return $em->getRepository('\Concrete\Core\Entity\File\Image\Thumbnail\Type\Type')->findBy(array(), array('ftTypeWidth' => 'asc'));
+        return $em->getRepository(ThumbnailTypeEntity::class)->findBy([], ['ftTypeWidth' => 'asc']);
     }
 
     /**
+     * Get the list of all the available thumbnail type versions.
+     *
      * @return \Concrete\Core\File\Image\Thumbnail\Type\Version[]
      */
     public static function getVersionList()
     {
         $app = Application::getFacadeApplication();
         $config = $app->make('config');
+        $createHightDPIVersions = (bool) $config->get('concrete.file_manager.images.create_high_dpi_thumbnails');
 
         $types = static::getList();
-        $versions = array();
+        $versions = [];
 
         foreach ($types as $type) {
             $versions[] = $type->getBaseVersion();
-            if ($config->get('concrete.file_manager.images.create_high_dpi_thumbnails')) {
+            if ($createHightDPIVersions) {
                 $versions[] = $type->getDoubledVersion();
             }
         }
@@ -43,6 +66,11 @@ class Type
         return $versions;
     }
 
+    /**
+     * Export the list of all the thumbnail types.
+     *
+     * @param \SimpleXMLElement $node the parent node to append the thumbnailtypes XML node to
+     */
     public static function exportList($node)
     {
         $child = $node->addChild('thumbnailtypes');
@@ -51,7 +79,9 @@ class Type
             $linkNode = $child->addChild('thumbnailtype');
             $linkNode->addAttribute('name', $link->getName());
             $linkNode->addAttribute('handle', $link->getHandle());
-            $linkNode->addAttribute('width', $link->getWidth());
+            if ($link->getWidth()) {
+                $linkNode->addAttribute('width', $link->getWidth());
+            }
             if ($link->getHeight()) {
                 $linkNode->addAttribute('height', $link->getHeight());
             }
@@ -61,43 +91,62 @@ class Type
         }
     }
 
+    /**
+     * Get a thumbnail type given its id.
+     *
+     * @param int $id
+     *
+     * @return \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type|null
+     */
     public static function getByID($id)
     {
-        $em = \ORM::entityManager();
-        $r = $em->find('\Concrete\Core\Entity\File\Image\Thumbnail\Type\Type', $id);
+        if ($id) {
+            $app = Application::getFacadeApplication();
+            $em = $app->make(EntityManagerInterface::class);
+            $result = $em->find(ThumbnailTypeEntity::class, $id);
+        } else {
+            $result = null;
+        }
 
-        return $r;
+        return $result;
     }
 
     /**
-     * @param $ftTypeHandle
+     * Get a thumbnail type given its handle.
      *
-     * @return \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type
+     * @param string $ftTypeHandle
+     *
+     * @return \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type|null
      */
     public static function getByHandle($ftTypeHandle)
     {
-        // ugh doctrine doesn't cache when searching by ftTypeHandle
-        $cache = \Core::make('cache/request');
+        $ftTypeHandle = (string) $ftTypeHandle;
+        $app = Application::getFacadeApplication();
+        $cache = $app->make('cache/request');
         $item = $cache->getItem('file/image/thumbnail/' . $ftTypeHandle);
-        if (!$item->isMiss()) {
-            return $item->get();
+        if ($item->isMiss()) {
+            $em = $app->make(EntityManagerInterface::class);
+            $repo = $em->getRepository(ThumbnailTypeEntity::class);
+            $result = $repo->findOneBy(['ftTypeHandle' => $ftTypeHandle]);
+            $cache->save($item->set($result));
+        } else {
+            $result = $item->get();
         }
 
-        $em = \ORM::entityManager();
-        $r = $em->getRepository('\Concrete\Core\Entity\File\Image\Thumbnail\Type\Type')
-            ->findOneBy(array('ftTypeHandle' => $ftTypeHandle));
-
-        $cache->save($item->set($r));
-
-        return $r;
+        return $result;
     }
 
+    /**
+     * Get all the available thumbnail sizing options.
+     *
+     * @return string[] The list of all the Type::RESIZE_... constants.
+     */
     public static function getSizingOptions()
     {
         return [
             self::RESIZE_PROPORTIONAL,
             self::RESIZE_EXACT,
-            self::RESIZE_DEFAULT
+            self::RESIZE_DEFAULT,
         ];
     }
 }

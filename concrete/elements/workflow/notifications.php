@@ -16,7 +16,7 @@ if (is_array($workflowList) && !empty($workflowList)) {
         $requester = $wr->getRequesterUserObject();
         $dateAdded = $wl->getWorkflowProgressDateAdded();
         if ($requester && $dateAdded) {
-            $text .= '<p><small>' . t('Submitted by %s on %s', $requester->getUserDisplayName(), $app->make('date')->formatPrettyDateTime($dateAdded)) . '</small></p>';
+            $text .= '<p><small>' . t(/*i18n: %1$s is a user name, %2$s is a date/time*/'Submitted by %1$s on %2$s', $requester->getUserDisplayName(), $app->make('date')->formatPrettyDateTime($dateAdded)) . '</small></p>';
         }
 
         $actions = $wl->getWorkflowProgressActions();
