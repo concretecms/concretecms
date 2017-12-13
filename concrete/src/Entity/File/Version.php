@@ -596,9 +596,14 @@ class Version implements ObjectInterface
      */
     public function getMimeType()
     {
-        $fre = $this->getFileResource();
+        try {
+            $fre = $this->getFileResource();
+            $result = $fre->getMimetype();
+        } catch (FileNotFoundException $x) {
+            $result = false;
+        }
 
-        return $fre->getMimetype();
+        return $result;
     }
 
     /**
