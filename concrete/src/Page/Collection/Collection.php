@@ -390,16 +390,6 @@ class Collection extends ConcreteObject implements TrackableInterface
         }
     }
 
-    /**
-     * Get the attached version object.
-     *
-     * @return Version|null
-     */
-    public function getVersionObject()
-    {
-        return $this->vObj;
-    }
-
     // remove the collection attributes for this version of a page
 
     public function cloneVersion($versionComments, $createEmpty = false)
