@@ -7,11 +7,30 @@ use Concrete\Core\Support\Facade\Application;
 
 class Type
 {
+    /**
+     * Thumbnail sizing mode: proportional.
+     *
+     * @var string
+     */
     const RESIZE_PROPORTIONAL = ThumbnailType::RESIZE_PROPORTIONAL;
+
+    /**
+     * Thumbnail sizing mode: exact dimensions.
+     *
+     * @var string
+     */
     const RESIZE_EXACT = ThumbnailType::RESIZE_EXACT;
+
+    /**
+     * Default thumbnail sizing mode.
+     *
+     * @var string
+     */
     const RESIZE_DEFAULT = ThumbnailType::RESIZE_DEFAULT;
 
     /**
+     * Get the list of all the available thumbnail types.
+     *
      * @return \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type[]
      */
     public static function getList()
@@ -22,6 +41,8 @@ class Type
     }
 
     /**
+     * Get the list of all the available thumbnail type versions.
+     *
      * @return \Concrete\Core\File\Image\Thumbnail\Type\Version[]
      */
     public static function getVersionList()
@@ -42,6 +63,11 @@ class Type
         return $versions;
     }
 
+    /**
+     * Export the list of all the thumbnail types.
+     *
+     * @param \SimpleXMLElement $node the parent node to append the thumbnailtypes XML node to
+     */
     public static function exportList($node)
     {
         $child = $node->addChild('thumbnailtypes');
@@ -60,6 +86,13 @@ class Type
         }
     }
 
+    /**
+     * Get a thumbnail type given its id.
+     *
+     * @param int $id
+     *
+     * @return \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type|null
+     */
     public static function getByID($id)
     {
         $em = \ORM::entityManager();
@@ -69,9 +102,11 @@ class Type
     }
 
     /**
-     * @param $ftTypeHandle
+     * Get a thumbnail type given its handle.
      *
-     * @return \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type
+     * @param string $ftTypeHandle
+     *
+     * @return \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type|null
      */
     public static function getByHandle($ftTypeHandle)
     {
@@ -91,6 +126,11 @@ class Type
         return $r;
     }
 
+    /**
+     * Get all the available thumbnail sizing options.
+     *
+     * @return string[] The list of all the Type::RESIZE_... constants.
+     */
     public static function getSizingOptions()
     {
         return [
