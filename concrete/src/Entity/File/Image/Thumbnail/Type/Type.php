@@ -1,9 +1,8 @@
 <?php
+
 namespace Concrete\Core\Entity\File\Image\Thumbnail\Type;
 
-use Database;
 use Concrete\Core\File\Image\Thumbnail\Type\Version;
-
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -110,6 +109,7 @@ class Type
 
     /**
      * @param mixed $sizingMode
+     * @param mixed $ftTypeSizingMode
      */
     public function setSizingMode($ftTypeSizingMode = self::RESIZE_DEFAULT)
     {
@@ -127,8 +127,8 @@ class Type
     public function getSizingModeDisplayName()
     {
         $sizingModeDisplayNames = [
-            self::RESIZE_PROPORTIONAL => t("Proportional"),
-            self::RESIZE_EXACT => t("Exact"),
+            self::RESIZE_PROPORTIONAL => t('Proportional'),
+            self::RESIZE_EXACT => t('Exact'),
         ];
 
         return $sizingModeDisplayNames[$this->getSizingMode()];
@@ -217,5 +217,4 @@ class Type
 
         return new Version($this->getHandle() . '_2x', $this->getHandle() . '_2x', $this->getName(), $width, $height, true, $this->getSizingMode());
     }
-
 }
