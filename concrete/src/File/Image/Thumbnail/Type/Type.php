@@ -1,9 +1,8 @@
 <?php
+
 namespace Concrete\Core\File\Image\Thumbnail\Type;
 
-use Database;
-use Doctrine\ORM\Mapping as ORM;
-use \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type as ThumbnailType;
+use Concrete\Core\Entity\File\Image\Thumbnail\Type\Type as ThumbnailType;
 use Concrete\Core\Support\Facade\Application;
 
 class Type
@@ -19,7 +18,7 @@ class Type
     {
         $em = \ORM::entityManager();
 
-        return $em->getRepository('\Concrete\Core\Entity\File\Image\Thumbnail\Type\Type')->findBy(array(), array('ftTypeWidth' => 'asc'));
+        return $em->getRepository('\Concrete\Core\Entity\File\Image\Thumbnail\Type\Type')->findBy([], ['ftTypeWidth' => 'asc']);
     }
 
     /**
@@ -31,7 +30,7 @@ class Type
         $config = $app->make('config');
 
         $types = static::getList();
-        $versions = array();
+        $versions = [];
 
         foreach ($types as $type) {
             $versions[] = $type->getBaseVersion();
@@ -85,7 +84,7 @@ class Type
 
         $em = \ORM::entityManager();
         $r = $em->getRepository('\Concrete\Core\Entity\File\Image\Thumbnail\Type\Type')
-            ->findOneBy(array('ftTypeHandle' => $ftTypeHandle));
+            ->findOneBy(['ftTypeHandle' => $ftTypeHandle]);
 
         $cache->save($item->set($r));
 
@@ -97,7 +96,7 @@ class Type
         return [
             self::RESIZE_PROPORTIONAL,
             self::RESIZE_EXACT,
-            self::RESIZE_DEFAULT
+            self::RESIZE_DEFAULT,
         ];
     }
 }
