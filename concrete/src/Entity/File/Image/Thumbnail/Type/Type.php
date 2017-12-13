@@ -37,6 +37,16 @@ class Type
     const RESIZE_DEFAULT = self::RESIZE_PROPORTIONAL;
 
     /**
+     * The thumbnail unique identifier.
+     *
+     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
+     *
+     * @var int|null
+     */
+    protected $ftTypeID = null;
+
+    /**
      * The handle that identifies the thumbnail type.
      *
      * @ORM\Column(type="string")
@@ -73,15 +83,6 @@ class Type
     protected $ftTypeHeight = null;
 
     /**
-     * The thumbnail sizing mode (one of the Type::RESIZE_... constants).
-     *
-     * @ORM\Column(type="string")
-     *
-     * @var string
-     */
-    protected $ftTypeSizingMode = self::RESIZE_DEFAULT;
-
-    /**
      * Is this thumbnail type required? If yes, it can't be deleted.
      *
      * @ORM\Column(type="boolean")
@@ -91,14 +92,23 @@ class Type
     protected $ftTypeIsRequired = false;
 
     /**
-     * The thumbnail unique identifier.
+     * The thumbnail sizing mode (one of the Type::RESIZE_... constants).
      *
-     * @ORM\Id @ORM\Column(type="integer")
-     * @ORM\GeneratedValue
+     * @ORM\Column(type="string")
      *
-     * @var int|null
+     * @var string
      */
-    protected $ftTypeID = null;
+    protected $ftTypeSizingMode = self::RESIZE_DEFAULT;
+
+    /**
+     * Get the thumbnail unique identifier.
+     *
+     * @return int|null
+     */
+    public function getID()
+    {
+        return $this->ftTypeID;
+    }
 
     /**
      * Set the handle that identifies the thumbnail type.
@@ -121,34 +131,6 @@ class Type
     }
 
     /**
-     * Get the thumbnail unique identifier.
-     *
-     * @return int|null
-     */
-    public function getID()
-    {
-        return $this->ftTypeID;
-    }
-
-    /**
-     * Mark this this thumbnail type as required (that is, it can't be deleted).
-     */
-    public function requireType()
-    {
-        $this->ftTypeIsRequired = true;
-    }
-
-    /**
-     * Is this thumbnail type required? If yes, it can't be deleted.
-     *
-     * @return bool
-     */
-    public function isRequired()
-    {
-        return $this->ftTypeIsRequired;
-    }
-
-    /**
      * Set the name of the thumbnail type.
      *
      * @param string $ftTypeName
@@ -166,41 +148,6 @@ class Type
     public function getName()
     {
         return $this->ftTypeName;
-    }
-
-    /**
-     * Set the thumbnail sizing mode.
-     *
-     * @param string $ftTypeSizingMode one of the Type::RESIZE_... constants
-     */
-    public function setSizingMode($ftTypeSizingMode = self::RESIZE_DEFAULT)
-    {
-        $this->ftTypeSizingMode = (string) $ftTypeSizingMode;
-    }
-
-    /**
-     * Get the thumbnail sizing mode.
-     *
-     * @return string One of the Type::RESIZE_... constants.
-     */
-    public function getSizingMode()
-    {
-        return $this->ftTypeSizingMode ? $this->ftTypeSizingMode : self::RESIZE_DEFAULT;
-    }
-
-    /**
-     * Get the display name of the thumbnail sizing mode.
-     *
-     * @return string
-     */
-    public function getSizingModeDisplayName()
-    {
-        $sizingModeDisplayNames = [
-            self::RESIZE_PROPORTIONAL => t('Proportional'),
-            self::RESIZE_EXACT => t('Exact'),
-        ];
-
-        return $sizingModeDisplayNames[$this->getSizingMode()];
     }
 
     /**
@@ -241,6 +188,16 @@ class Type
     }
 
     /**
+     * Get the width of the thumbnails (or the maximum width in case of proportional sizing).
+     *
+     * @return int|null
+     */
+    public function getWidth()
+    {
+        return $this->ftTypeWidth;
+    }
+
+    /**
      * Set the height of the thumbnails (or the maximum height in case of proportional sizing).
      *
      * @param int|null $ftTypeHeight
@@ -257,16 +214,6 @@ class Type
     }
 
     /**
-     * Get the width of the thumbnails (or the maximum width in case of proportional sizing).
-     *
-     * @return int|null
-     */
-    public function getWidth()
-    {
-        return $this->ftTypeWidth;
-    }
-
-    /**
      * Get the height of the thumbnails (or the maximum height in case of proportional sizing).
      *
      * @return int|null
@@ -274,6 +221,59 @@ class Type
     public function getHeight()
     {
         return $this->ftTypeHeight;
+    }
+
+    /**
+     * Mark this this thumbnail type as required (that is, it can't be deleted).
+     */
+    public function requireType()
+    {
+        $this->ftTypeIsRequired = true;
+    }
+
+    /**
+     * Is this thumbnail type required? If yes, it can't be deleted.
+     *
+     * @return bool
+     */
+    public function isRequired()
+    {
+        return $this->ftTypeIsRequired;
+    }
+
+    /**
+     * Set the thumbnail sizing mode.
+     *
+     * @param string $ftTypeSizingMode one of the Type::RESIZE_... constants
+     */
+    public function setSizingMode($ftTypeSizingMode = self::RESIZE_DEFAULT)
+    {
+        $this->ftTypeSizingMode = (string) $ftTypeSizingMode;
+    }
+
+    /**
+     * Get the thumbnail sizing mode.
+     *
+     * @return string One of the Type::RESIZE_... constants.
+     */
+    public function getSizingMode()
+    {
+        return $this->ftTypeSizingMode ? $this->ftTypeSizingMode : self::RESIZE_DEFAULT;
+    }
+
+    /**
+     * Get the display name of the thumbnail sizing mode.
+     *
+     * @return string
+     */
+    public function getSizingModeDisplayName()
+    {
+        $sizingModeDisplayNames = [
+            self::RESIZE_PROPORTIONAL => t('Proportional'),
+            self::RESIZE_EXACT => t('Exact'),
+        ];
+
+        return $sizingModeDisplayNames[$this->getSizingMode()];
     }
 
     /**
