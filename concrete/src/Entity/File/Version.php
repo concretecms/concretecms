@@ -683,7 +683,8 @@ class Version implements ObjectInterface
      */
     public function duplicate()
     {
-        $em = \ORM::entityManager();
+        $app = Application::getFacadeApplication();
+        $em = $app->make(EntityManagerInterface::class);
         $qq = $em->createQuery('SELECT max(v.fvID) FROM \Concrete\Core\Entity\File\Version v where v.file = :file');
         $qq->setParameter('file', $this->file);
         $fvID = $qq->getSingleScalarResult();
@@ -693,9 +694,11 @@ class Version implements ObjectInterface
         $fv->fvID = $fvID;
         $fv->fvIsApproved = false;
         $fv->fvDateAdded = new DateTime();
-        $uID = (int) (new User())->getUserID();
-        if ($uID !== 0) {
-            $fv->fvAuthorUID = $uID;
+        if (User::isLoggedIn()) {
+            $uID = (int) (new User())->getUserID();
+            if ($uID !== 0) {
+                $fv->fvAuthorUID = $uID;
+            }
         }
 
         $em->persist($fv);
@@ -704,9 +707,6 @@ class Version implements ObjectInterface
 
         foreach ($this->getAttributes() as $value) {
             $value = clone $value;
-            /*
-             * @var $value AttributeValue
-             */
             $value->setVersion($fv);
             $em->persist($value);
         }
@@ -714,7 +714,7 @@ class Version implements ObjectInterface
         $em->flush();
 
         $fe = new FileVersionEvent($fv);
-        Events::dispatch('on_file_version_duplicate', $fe);
+        $app->make(EventDispatcherInterface::class)->dispatch('on_file_version_duplicate', $fve);
 
         return $fv;
     }
