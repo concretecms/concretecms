@@ -777,9 +777,10 @@ class Version implements ObjectInterface
      */
     public function getVersionLogComments()
     {
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
         $updates = [];
-        $db = Database::get();
-        $ga = $db->GetAll(
+        $ga = $db->fetchAll(
             'SELECT fvUpdateTypeID, fvUpdateTypeAttributeID FROM FileVersionLog WHERE fID = ? AND fvID = ? ORDER BY fvlID ASC',
             [$this->getFileID(), $this->getFileVersionID()]
         );
@@ -804,11 +805,11 @@ class Version implements ObjectInterface
                     $updates[] = t('File Name');
                     break;
                 case self::UT_EXTENDED_ATTRIBUTE:
-                    $val = $db->GetOne(
+                    $val = $db->fetchColumn(
                         'SELECT akName FROM AttributeKeys WHERE akID = ?',
                         [$a['fvUpdateTypeAttributeID']]
                     );
-                    if ($val != '') {
+                    if ($val !== false) {
                         $updates[] = $val;
                     }
                     break;
