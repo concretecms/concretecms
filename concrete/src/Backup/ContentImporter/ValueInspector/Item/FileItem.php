@@ -38,9 +38,11 @@ class FileItem implements ItemInterface
     public function getContentObject()
     {
         $db = \Database::connection();
+        $fID = null;
         if ($this->prefix) {
             $fID = $db->GetOne('select fID from FileVersions where fvPrefix = ? and fvFilename = ?', [$this->prefix, $this->filename]);
-        } else {
+        }
+        if (!$fID) {
             $fID = $db->GetOne('select fID from FileVersions where fvFilename = ?', [$this->filename]);
         }
 
