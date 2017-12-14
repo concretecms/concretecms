@@ -1648,6 +1648,8 @@ class Version implements ObjectInterface
      */
     public function generateThumbnail(ThumbnailTypeVersion $type)
     {
+        $app = Application::getFacadeApplication();
+        $config = $app->make('config');
         $image = $this->getImagineImage();
 
         $filesystem = $this->getFile()
@@ -1656,8 +1658,6 @@ class Version implements ObjectInterface
 
         $height = $type->getHeight();
         $width = $type->getWidth();
-        $sizingMode = $type->getSizingMode();
-
         if ($height && $width) {
             $size = new Box($width, $height);
         } elseif ($width) {
@@ -1666,31 +1666,34 @@ class Version implements ObjectInterface
             $size = $image->getSize()->heighten($height);
         }
 
-        if ($sizingMode === Type::RESIZE_EXACT) {
-            $thumbnailMode = ImageInterface::THUMBNAIL_OUTBOUND;
-        } elseif ($sizingMode === Type::RESIZE_PROPORTIONAL) {
-            $thumbnailMode = ImageInterface::THUMBNAIL_INSET;
-        }
-
         // isCropped only exists on the CustomThumbnail type
         if (method_exists($type, 'isCropped') && $type->isCropped()) {
             $thumbnailMode = ImageInterface::THUMBNAIL_OUTBOUND;
+        } else {
+            switch ($type->getSizingMode()) {
+                case Type::RESIZE_EXACT:
+                    $thumbnailMode = ImageInterface::THUMBNAIL_OUTBOUND;
+                    break;
+                case Type::RESIZE_PROPORTIONAL:
+                default:
+                    $thumbnailMode = ImageInterface::THUMBNAIL_INSET;
+                    break;
+            }
         }
 
         $thumbnail = $image->thumbnail($size, $thumbnailMode);
-        $thumbnailFormat = Core::make(ThumbnailFormatService::class)->getFormatForFile($this);
         $thumbnailPath = $type->getFilePath($this);
-        $thumbnailOptions = [];
+        $thumbnailFormat = $app->make(ThumbnailFormatService::class)->getFormatForFile($this);
 
         switch ($thumbnailFormat) {
             case ThumbnailFormatService::FORMAT_JPEG:
                 $mimetype = 'image/jpeg';
-                $thumbnailOptions = ['jpeg_quality' => \Config::get('concrete.misc.default_jpeg_image_compression')];
+                $thumbnailOptions = ['jpeg_quality' => $config->get('concrete.misc.default_jpeg_image_compression')];
                 break;
             case ThumbnailFormatService::FORMAT_PNG:
             default:
                 $mimetype = 'image/png';
-                $thumbnailOptions = ['png_compression_level' => \Config::get('concrete.misc.default_png_image_compression')];
+                $thumbnailOptions = ['png_compression_level' => $config->get('concrete.misc.default_png_image_compression')];
                 break;
         }
 
@@ -1703,11 +1706,11 @@ class Version implements ObjectInterface
             ]
         );
 
-        if ($type->getHandle() == \Config::get('concrete.icons.file_manager_listing.handle')) {
+        if ($type->getHandle() == $config->get('concrete.icons.file_manager_listing.handle')) {
             $this->fvHasListingThumbnail = true;
         }
 
-        if ($type->getHandle() == \Config::get('concrete.icons.file_manager_detail.handle')) {
+        if ($type->getHandle() == $config->get('concrete.icons.file_manager_detail.handle')) {
             $this->fvHasDetailThumbnail = true;
         }
 
