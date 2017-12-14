@@ -1592,11 +1592,8 @@ class Version implements ObjectInterface
     public function canEdit()
     {
         $to = $this->getTypeObject();
-        if ($to->getEditor() != '') {
-            return true;
-        }
 
-        return false;
+        return (string) $to->getEditor() !== '';
     }
 
     /**
