@@ -1544,6 +1544,8 @@ class Version implements ObjectInterface
      */
     public function getJSONObject()
     {
+        $app = Application::getFacadeApplication();
+        $urlResolver = $app->make(ResolverManagerInterface::class);
         $r = new stdClass();
         $fp = new Permissions($this->getFile());
         $r->canCopyFile = $fp->canCopyFile();
@@ -1557,8 +1559,8 @@ class Version implements ObjectInterface
         $r->canViewFile = $this->canView();
         $r->canEditFile = $this->canEdit();
         $r->url = $this->getURL();
-        $r->urlInline = (string) View::url('/download_file', 'view_inline', $this->getFileID());
-        $r->urlDownload = (string) View::url('/download_file', 'view', $this->getFileID());
+        $r->urlInline = (string) $urlResolver->resolve(['/download_file', 'view_inline', $this->getFileID()]);
+        $r->urlDownload = (string) $urlResolver->resolve(['/download_file', 'view', $this->getFileID()]);
         $r->title = $this->getTitle();
         $r->genericTypeText = $this->getGenericTypeText();
         $r->description = $this->getDescription();
