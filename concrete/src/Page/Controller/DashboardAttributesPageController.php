@@ -101,7 +101,7 @@ abstract class DashboardAttributesPageController extends DashboardPageController
         if ($category->getSetManager()->allowAttributeSets()) {
             $set = Set::getByID($request->request->get('asID'));
             $setKeys = Set::getByAttributeKey($key);
-            if (in_array($set, $setKeys)) {
+            if (!in_array($set, $setKeys)) {
                 return;
             }
 
