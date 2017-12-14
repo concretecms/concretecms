@@ -1580,7 +1580,7 @@ class Version implements ObjectInterface
     public function canView()
     {
         $to = $this->getTypeObject();
-        
+
         return (string) $to->getView() !== '';
     }
 
@@ -1626,14 +1626,19 @@ class Version implements ObjectInterface
     public function getListingThumbnailImage()
     {
         if ($this->fvHasListingThumbnail) {
-            $type = Type::getByHandle(\Config::get('concrete.icons.file_manager_listing.handle'));
-            $baseSrc = $this->getThumbnailURL($type->getBaseVersion());
-            $doubledSrc = $this->getThumbnailURL($type->getDoubledVersion());
-
-            return sprintf('<img class="ccm-file-manager-list-thumbnail" src="%s" data-at2x="%s">', $baseSrc, $doubledSrc);
+            $app = Application::getFacadeApplication();
+            $config = $app->make('config');
+            $type = Type::getByHandle($config->get('concrete.icons.file_manager_listing.handle'));
+            $result = '<img class="ccm-file-manager-list-thumbnail" src="' . $this->getThumbnailURL($type->getBaseVersion()) . '"';
+            if ($config->get('concrete.file_manager.images.create_high_dpi_thumbnails')) {
+                $result .= '  data-at2x="' . $this->getThumbnailURL($type->getDoubledVersion()) . '"';
+            }
+            $result .= ' />';
         } else {
             return $this->getTypeObject()->getThumbnail();
         }
+
+        return $result;
     }
 
     /**
