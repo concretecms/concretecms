@@ -1580,11 +1580,8 @@ class Version implements ObjectInterface
     public function canView()
     {
         $to = $this->getTypeObject();
-        if ($to->getView() != '') {
-            return true;
-        }
-
-        return false;
+        
+        return (string) $to->getView() !== '';
     }
 
     /**
