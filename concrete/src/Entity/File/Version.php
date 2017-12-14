@@ -1485,22 +1485,26 @@ class Version implements ObjectInterface
      */
     public function refreshAttributes($rescanThumbnails = true)
     {
-        $fh = Core::make('helper/file');
+        $app = Application::getFacadeApplication();
+        $em = $app->make(EntityManagerInterface::class);
+        $fh = $app->make('helper/file');
         $ext = $fh->getExtension($this->fvFilename);
         $ftl = FileTypeList::getType($ext);
 
-        if (is_object($ftl)) {
-            if ($ftl->getCustomImporter() != false) {
-                $this->fvGenericType = $ftl->getGenericType();
-                $cl = $ftl->getCustomInspector();
-                $cl->inspect($this);
-            }
+        $cl = $ftl->getCustomInspector();
+        if ($cl !== null) {
+            $this->fvGenericType = $ftl->getGenericType();
+            $cl->inspect($this);
         }
 
-        \ORM::entityManager()->refresh($this);
+        $em->refresh($this);
 
-        $fsr = $this->getFileResource();
-        if (!$fsr->isFile()) {
+        try {
+            $fsr = $this->getFileResource();
+            if (!$fsr->isFile()) {
+                return Importer::E_FILE_INVALID;
+            }
+        } catch (FileNotFoundException $e) {
             return Importer::E_FILE_INVALID;
         }
 
