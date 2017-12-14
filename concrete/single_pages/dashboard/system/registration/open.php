@@ -82,21 +82,21 @@ $h = Loader::helper('concrete/ui');
             <label>
                 <input type="checkbox" name="display_username_field" value="1"
                        style="" <?php echo ($display_username_field) ? 'checked' : '' ?> />
-                <span><?php echo t('%s required', 'Username') ?></span>
+                <span><?php echo t('Username required') ?></span>
             </label>
         </div>
         <div class="checkbox">
             <label>
                 <input type="checkbox" name="display_confirm_password_field" value="1"
                        style="" <?php echo ($display_confirm_password_field) ? 'checked' : '' ?> />
-                <span><?php echo t('%s required', 'Confirm password') ?></span>
+                <span><?php echo t('Confirm Password required') ?></span>
             </label>
         </div>
         <div class="checkbox">
             <label>
                 <input type="checkbox" name="enable_registration_captcha" value="1"
                        style="" <?php echo ($enable_registration_captcha) ? 'checked' : '' ?> />
-                <span><?php echo t('%s required', 'CAPTCHA') ?></span>
+                <span><?php echo t('CAPTCHA required') ?></span>
             </label>
         </div>
     </div>
