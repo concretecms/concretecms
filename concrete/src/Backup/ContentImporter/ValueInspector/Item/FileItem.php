@@ -30,6 +30,23 @@ class FileItem implements ItemInterface
         return $reference;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getFilename()
+    {
+        return $this->filename;
+    }
+
+    /**
+     * @return null
+     */
+    public function getPrefix()
+    {
+        return $this->prefix;
+    }
+
+
     public function getDisplayName()
     {
         return t('File');
@@ -41,8 +58,7 @@ class FileItem implements ItemInterface
         $fID = null;
         if ($this->prefix) {
             $fID = $db->GetOne('select fID from FileVersions where fvPrefix = ? and fvFilename = ?', [$this->prefix, $this->filename]);
-        }
-        if (!$fID) {
+        } else {
             $fID = $db->GetOne('select fID from FileVersions where fvFilename = ?', [$this->filename]);
         }
 
