@@ -133,7 +133,7 @@ class Importer
      *
      * @return number Error Code | \Concrete\Core\EntiFile\Version
      */
-    public function import($pointer, $filename = false, $fr = false)
+    public function import($pointer, $filename = false, $fr = false, $prefix = null)
     {
         if ($filename == false) {
             // determine filename from $pointer
@@ -165,7 +165,11 @@ class Importer
 
         // store the file in the file storage location.
         $filesystem = $fsl->getFileSystemObject();
-        $prefix = $this->generatePrefix();
+        if (!$prefix) {
+            // note, if you pass in a prefix manually, make sure it conforms to standards
+            // (e.g. it is 12 digits, numeric only)
+            $prefix = $this->generatePrefix();
+        }
 
         try {
             $src = fopen($pointer, 'rb');
