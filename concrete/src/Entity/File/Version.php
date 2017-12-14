@@ -1726,7 +1726,8 @@ class Version implements ObjectInterface
      */
     protected function save($flush = true)
     {
-        $em = \ORM::entityManager();
+        $app = Application::getFacadeApplication();
+        $em = $app->make(EntityManagerInterface::class);
         $em->persist($this);
         if ($flush) {
             $em->flush();
