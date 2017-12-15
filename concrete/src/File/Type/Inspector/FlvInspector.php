@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\File\Type\Inspector;
 
 use Concrete\Core\Entity\File\Version;

@@ -1,10 +1,10 @@
 <?php
+
 namespace Concrete\Core\File\Type\Inspector;
 
 use Concrete\Core\Entity\File\Version;
-use Image;
 use FileAttributeKey;
-use Core;
+use Image;
 
 class ImageInspector extends Inspector
 {
@@ -24,7 +24,7 @@ class ImageInspector extends Inspector
         if (\Config::get('concrete.file_manager.images.use_exif_data_to_rotate_images')) {
             $metadata = $image->metadata();
             if (isset($metadata['ifd0.Orientation'])) {
-                \Log::info('EXIF data found: '. $metadata['ifd0.Orientation']);
+                \Log::info('EXIF data found: ' . $metadata['ifd0.Orientation']);
                 switch ($metadata['ifd0.Orientation']) {
                     case 3:
                         $image->rotate(180);
