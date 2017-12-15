@@ -442,8 +442,8 @@ class Version implements ObjectInterface
             }
             $this->logVersionUpdate(self::UT_RENAME);
             $this->save();
-            $fe = new FileVersionEvent($this);
-            $app->make(EventDispatcherInterface::class)->dispatch('on_file_version_rename', $fe);
+            $fve = new FileVersionEvent($this);
+            $app->make(EventDispatcherInterface::class)->dispatch('on_file_version_rename', $fve);
         }
     }
 
@@ -522,8 +522,8 @@ class Version implements ObjectInterface
         }
         $this->save();
 
-        $fe = new FileVersionEvent($this);
-        $app->make(EventDispatcherInterface::class)->dispatch('on_file_version_approve', $fe);
+        $fve = new FileVersionEvent($this);
+        $app->make(EventDispatcherInterface::class)->dispatch('on_file_version_approve', $fve);
 
         $fo = $this->getFile();
         $fo->reindex();
@@ -538,8 +538,8 @@ class Version implements ObjectInterface
         $app = Application::getFacadeApplication();
         $this->fvIsApproved = false;
         $this->save();
-        $fe = new FileVersionEvent($this);
-        $app->make(EventDispatcherInterface::class)->dispatch('on_file_version_deny', $fe);
+        $fve = new FileVersionEvent($this);
+        $app->make(EventDispatcherInterface::class)->dispatch('on_file_version_deny', $fve);
     }
 
     /**
@@ -615,8 +615,8 @@ class Version implements ObjectInterface
         $this->fvTitle = $title;
         $this->save();
         $this->logVersionUpdate(self::UT_TITLE);
-        $fe = new FileVersionEvent($this);
-        $app->make(EventDispatcherInterface::class)->dispatch('on_file_version_update_title', $fe);
+        $fve = new FileVersionEvent($this);
+        $app->make(EventDispatcherInterface::class)->dispatch('on_file_version_update_title', $fve);
     }
 
     /**
@@ -640,8 +640,8 @@ class Version implements ObjectInterface
         $this->fvDescription = $descr;
         $this->save();
         $this->logVersionUpdate(self::UT_DESCRIPTION);
-        $fe = new FileVersionEvent($this);
-        $app->make(EventDispatcherInterface::class)->dispatch('on_file_version_update_description', $fe);
+        $fve = new FileVersionEvent($this);
+        $app->make(EventDispatcherInterface::class)->dispatch('on_file_version_update_description', $fve);
     }
 
     /**
@@ -676,8 +676,8 @@ class Version implements ObjectInterface
         $this->fvTags = $tags;
         $this->save();
         $this->logVersionUpdate(self::UT_TAGS);
-        $fe = new FileVersionEvent($this);
-        $app->make(EventDispatcherInterface::class)->dispatch('on_file_version_update_tags', $fe);
+        $fve = new FileVersionEvent($this);
+        $app->make(EventDispatcherInterface::class)->dispatch('on_file_version_update_tags', $fve);
     }
 
     /**
@@ -1010,7 +1010,7 @@ class Version implements ObjectInterface
 
         $em->flush();
 
-        $fe = new FileVersionEvent($fv);
+        $fve = new FileVersionEvent($fv);
         $app->make(EventDispatcherInterface::class)->dispatch('on_file_version_duplicate', $fve);
 
         return $fv;
@@ -1115,8 +1115,8 @@ class Version implements ObjectInterface
             }
             $filesystem->write($path, $contents);
             $this->logVersionUpdate(self::UT_CONTENTS);
-            $fe = new FileVersionEvent($this);
-            $app->make(EventDispatcherInterface::class)->dispatch('on_file_version_update_contents', $fe);
+            $fve = new FileVersionEvent($this);
+            $app->make(EventDispatcherInterface::class)->dispatch('on_file_version_update_contents', $fve);
             $this->refreshAttributes();
         }
     }
