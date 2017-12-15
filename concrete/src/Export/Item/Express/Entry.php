@@ -12,24 +12,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class Entry implements ItemInterface
 {
 
-    protected $identifier;
+    protected $store;
 
-    public function __construct(Identifier $identifier)
+    public function __construct(EntryStore $store)
     {
-        $this->identifier = $identifier;
-    }
-
-    static $entryIDs = array();
-
-    protected function convertNumericEntryIdToIdentifier($id)
-    {
-        if (isset(self::$entryIDs[$id])) {
-            return self::$entryIDs[$id];
-        } else {
-            $identifier = $this->identifier->getString(12);
-            self::$entryIDs[$id] = $identifier;
-            return $identifier;
-        }
+        $this->store = $store;
     }
 
     /**
@@ -39,7 +26,7 @@ class Entry implements ItemInterface
     public function export($entry, \SimpleXMLElement $xml)
     {
         $node = $xml->addChild('entry');
-        $node->addAttribute('id', $this->convertNumericEntryIdToIdentifier($entry->getId()));
+        $node->addAttribute('id', $this->store->convertNumericEntryIdToIdentifier($entry->getId()));
         $node->addAttribute('label', $entry->getLabel());
         $node->addAttribute('entity', $entry->getEntity()->getHandle());
         $node->addAttribute('display-order', $entry->getEntryDisplayOrder());
@@ -64,7 +51,7 @@ class Entry implements ItemInterface
                 $child->addAttribute('target', $association->getAssociation()->getComputedTargetPropertyName());
                 $associationEntriesNode = $child->addChild('entries');
                 foreach($association->getSelectedEntries() as $associationEntry) {
-                    $id = $this->convertNumericEntryIdToIdentifier($associationEntry->getId());
+                    $id = $this->store->convertNumericEntryIdToIdentifier($associationEntry->getId());
                     $associationEntryNode = $associationEntriesNode->addChild('entry');
                     $associationEntryNode->addAttribute('entry', $id);
                 }
