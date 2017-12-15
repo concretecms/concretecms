@@ -82,6 +82,7 @@ class ContentFileTranslateTest extends FileStorageTestCase
         $c->export($sx);
 
         $content = (string) $sx->data->record->content;
-        $this->assertEquals('<p>This is really nice.</p><concrete-picture alt="Happy Cat" file="background-slider-blue-sky.png" />', $content);
+        $prefix = $r->getPrefix();
+        $this->assertEquals('<p>This is really nice.</p><concrete-picture alt="Happy Cat" file="' . $prefix . ':background-slider-blue-sky.png" />', $content);
     }
 }
