@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\File;
 
+use Concrete\Core\Permission\Access\Access as PermissionAccess;
+use Concrete\Core\Permission\Access\Entity\FileUploaderEntity;
+use Concrete\Core\Permission\Key\FileFolderKey;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Concrete\Core\Search\ItemList\Pager\Manager\FolderItemListPagerManager;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
@@ -13,6 +16,7 @@ use Concrete\Core\Search\PermissionableListItemInterface;
 use Concrete\Core\Search\StickyRequest;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\FileFolder;
+use Concrete\Core\User\User;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use Closure;
 use Concrete\Core\Permission\Checker as Permissions;
@@ -174,6 +178,40 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
         }
 
         return parent::deliverQueryObject();
+    }
+
+    public function finalizeQuery(\Doctrine\DBAL\Query\QueryBuilder $query)
+    {
+        $u = new User();
+        // Super user can access all files
+        if (!$u->isSuperUser()) {
+            $pk = FileFolderKey::getByHandle('search_file_folder');
+            if (is_object($pk)) {
+                /** @var PermissionAccess $pa */
+                $pa = $pk->getPermissionAccessObject();
+                // Whether or not current user can access the file manager
+                if ($pa->validate()) {
+                    $accessEntities = $u->getUserAccessEntityObjects();
+                    $validateEntities = [];
+                    foreach ($accessEntities as $accessEntity) {
+                        if (! $accessEntity instanceof FileUploaderEntity) {
+                            $validateEntities[] = $accessEntity;
+                        }
+                    }
+                    // Can't access without "File Uploader" entity?
+                    if (!$pa->validateAccessEntities($validateEntities)) {
+                        $query
+                            ->leftJoin('tf', 'Files', 'f', 'tf.fID = f.fID')
+                            ->andWhere('f.uID = :fileUploaderID OR n.treeNodeOverridePermissions = 1')
+                            ->setParameter('fileUploaderID', $u->getUserID());
+                    }
+                } else {
+                    $query->andWhere('n.treeNodeOverridePermissions = 1');
+                }
+            }
+        }
+
+        return $query;
     }
 
     public function sortByNodeName()
