@@ -185,6 +185,8 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
         $u = new User();
         // Super user can access all files
         if (!$u->isSuperUser()) {
+            $query->leftJoin('tf', 'Files', 'f', 'tf.fID = f.fID');
+
             $pk = FileFolderKey::getByHandle('search_file_folder');
             if (is_object($pk)) {
                 /** @var PermissionAccess $pa */
@@ -201,12 +203,11 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
                     // Can't access without "File Uploader" entity?
                     if (!$pa->validateAccessEntities($validateEntities)) {
                         $query
-                            ->leftJoin('tf', 'Files', 'f', 'tf.fID = f.fID')
-                            ->andWhere('f.uID = :fileUploaderID OR n.treeNodeOverridePermissions = 1')
+                            ->andWhere('(f.uID = :fileUploaderID OR f.fOverrideSetPermissions = 1) OR nt.treeNodeTypeHandle != \'file\'')
                             ->setParameter('fileUploaderID', $u->getUserID());
                     }
                 } else {
-                    $query->andWhere('n.treeNodeOverridePermissions = 1');
+                    $query->andWhere('f.fOverrideSetPermissions = 1 OR nt.treeNodeTypeHandle != \'file\'');
                 }
             }
         }
