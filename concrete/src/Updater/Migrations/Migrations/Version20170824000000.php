@@ -26,13 +26,6 @@ class Version20170824000000 extends AbstractMigration
             AddressSettings::class,
         ]);
 
-        $pageAttributeCategory = Application::getFacadeApplication()->make(PageCategory::class);
-        /* @var PageCategory $pageAttributeCategory */
-        $availableAttributes = [];
-        foreach (['meta_keywords'] as $akHandle) {
-            $availableAttributes[$akHandle] = $pageAttributeCategory->getAttributeKeyByHandle($akHandle) ? true : false;
-        }
-
         $glService = $app->make(GeolocatorService::class);
         /* @var GeolocatorService $glService */
         if ($glService->getByHandle('geoplugin') === null) {
@@ -55,6 +48,14 @@ class Version20170824000000 extends AbstractMigration
     public function postUp(Schema $schema)
     {
         $this->migrateDrafts();
+
+        $pageAttributeCategory = Application::getFacadeApplication()->make(PageCategory::class);
+        /* @var PageCategory $pageAttributeCategory */
+        $availableAttributes = [];
+        foreach (['meta_keywords'] as $akHandle) {
+            $availableAttributes[$akHandle] = $pageAttributeCategory->getAttributeKeyByHandle($akHandle) ? true : false;
+        }
+
         $page = Page::getByPath('/dashboard/system/environment/geolocation');
         if (!is_object($page) || $page->isError()) {
             $sp = SinglePage::add('/dashboard/system/environment/geolocation');
