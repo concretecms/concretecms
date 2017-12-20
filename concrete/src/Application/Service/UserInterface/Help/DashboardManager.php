@@ -48,7 +48,7 @@ class DashboardManager extends AbstractManager
             '/dashboard/system/registration/profiles' => t("Display information about your concrete5 site's users, on a public page."),
             '/dashboard/system/registration/postlogin' => t('Determine where users should be redirected to after they login.'),
             '/dashboard/system/environment/storage' => t("Create an alternate file-storage location (in addition to the standard file location) where you'll have the option of putting files after uploading them to the File Manager. "),
-            '/dashboard/system/backup/update' => t('Download the latest version of concrete5 and upgrade your site.'),
+            '/dashboard/system/update/update' => t('Download the latest version of concrete5 and upgrade your site.'),
             '/dashboard/system/permissions/maintenance_mode' => t('Enable or disable maintenance mode, in which your site is only visible to the admin user. Maintenance Mode is useful for developing, testing or temporarily disabling a site.'),
             '/dashboard/system/optimization/jobs' => t('Have concrete5 perform various tasks to help your site running in top condition, process email posts, and update search engine indexing maps. Click the triangle icon next to the job to start it. A success message will be displayed once the job has been completed.'),
             '/dashboard/system/optimization/clearcache' => t("If your site is behaving oddly or displaying out-of-date content, it's a good idea to clear the cache. If you're having to clear the cache a lot, you might want to just turn off caching in Cache & Speed Settings."),
