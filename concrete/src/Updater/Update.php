@@ -10,6 +10,7 @@ use Config;
 use Localization;
 use ORM;
 use Exception;
+use Concrete\Core\Cache\CacheClearer;
 use Concrete\Core\Support\Facade\Application;
 
 class Update
@@ -162,7 +163,12 @@ class Update
     public static function updateToCurrentVersion(Configuration $configuration = null)
     {
         $cms = Core::make('app');
-        $cms->clearCaches();
+        /**
+         * @var $clearer CacheClearer
+         */
+        $clearer = $cms->make(CacheClearer::class);
+        $clearer->setClearGlobalAreas(false);
+        $clearer->flush();
 
         $em = ORM::entityManager();
         $dbm = new DatabaseStructureManager($em);

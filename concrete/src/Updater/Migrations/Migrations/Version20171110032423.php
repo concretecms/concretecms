@@ -135,8 +135,12 @@ class Version20171110032423 extends AbstractMigration
     {
         $table = $schema->hasTable('CalendarEventVersions');
         if ($table) {
-            // We already have this functionality installed somehow, so let's return.
-            return;
+            // We have this table, but it might be because we're updating from 5.7.5.13 and that migration parses
+            // a lot of stuff.
+            $events = $this->connection->fetchColumn('select count(*) from CalendarEventVersions');
+            if ($events) {
+                return;
+            }
         }
 
         $this->addEarlyCalendarFunctionality();

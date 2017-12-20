@@ -27,12 +27,16 @@ use Concrete\Core\Tree\Node\Type\FileFolder;
 use Concrete\Core\Tree\TreeType;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
+use Concrete\Core\Updater\Migrations\Routine\AddPageDraftsBooleanTrait;
 use Doctrine\DBAL\Schema\Schema;
 use Concrete\Core\Attribute\Category\PageCategory;
 use Concrete\Core\Support\Facade\Application;
 
 class Version20160725000000 extends AbstractMigration
 {
+
+    use AddPageDraftsBooleanTrait;
+
     protected function output($message)
     {
         $this->version->getConfiguration()->getOutputWriter()->write($message);
@@ -1370,6 +1374,11 @@ class Version20160725000000 extends AbstractMigration
         $this->fixStacks();
         $this->nullifyInvalidForeignKeys();
         $this->connection->Execute('set foreign_key_checks = 1');
+    }
+
+    public function postUp(Schema $schema)
+    {
+        $this->migrateDrafts();
     }
 
     public function down(Schema $schema)
