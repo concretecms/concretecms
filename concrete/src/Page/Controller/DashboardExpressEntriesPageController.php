@@ -111,7 +111,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
      *
      * @return \Concrete\Core\Entity\Express\Entity
      */
-    private function getEntity(\Concrete\Core\Tree\Node\Type\ExpressEntryResults $parent)
+    protected function getEntity(\Concrete\Core\Tree\Node\Type\ExpressEntryResults $parent)
     {
         return $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entity')
             ->findOneByResultsNode($parent);
@@ -321,7 +321,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
     /**
      * @param $treeNodeParentID
      */
-    private function getParentNode($treeNodeParentID)
+    protected function getParentNode($treeNodeParentID)
     {
         $parent = null;
         if ($treeNodeParentID) {
