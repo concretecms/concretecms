@@ -103,6 +103,7 @@ class MetadataGenerator
             }
             $output = array_merge($output, $this->getOverride('\Doctrine\ORM\EntityManagerInterface::getRepository(0)', $getRepositoryMethod, '$em->getRepository(EntityClass::class)'));
         }
+        $output = array_merge($output, $this->getOverride('\Doctrine\ORM\EntityManagerInterface::find(0)', ['' => "'@'"], '$em->find(EntityClass::class, $id)'));
 
         return implode("\n", $output);
     }
