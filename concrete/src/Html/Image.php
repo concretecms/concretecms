@@ -15,7 +15,11 @@ class Image
     {
         $c = \Page::getCurrentPage();
         if (is_object($c)) {
-            $th = PageTheme::getByHandle($c->getPageController()->getTheme());
+            $pt = $c->getPageController()->getTheme();
+            if (is_object($pt)) {
+                $pt = $pt->getThemeHandle();
+            }
+            $th = PageTheme::getByHandle($pt);
             if (is_object($th)) {
                 $this->theme = $th;
                 $this->usePictureTag = count($th->getThemeResponsiveImageMap()) > 0;
