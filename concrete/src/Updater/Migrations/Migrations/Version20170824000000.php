@@ -19,11 +19,18 @@ class Version20170824000000 extends AbstractMigration
     public function up(Schema $schema)
     {
         $this->addColumnIfMissing($schema);
+        $this->refreshEntities([
+            AddressSettings::class,
+        ]);
+    }
 
+    public function postUp(Schema $schema)
+    {
+        $this->migrateDrafts();
         $app = Application::getFacadeApplication();
+        // I think this has to be in postUp because it's a completely new table that's not in Schema at all? Bleh.
         $this->refreshEntities([
             Geolocator::class,
-            AddressSettings::class,
         ]);
 
         $glService = $app->make(GeolocatorService::class);
@@ -43,13 +50,9 @@ class Version20170824000000 extends AbstractMigration
             $em->persist($geolocator);
             $em->flush($geolocator);
         }
-    }
 
-    public function postUp(Schema $schema)
-    {
-        $this->migrateDrafts();
 
-        $pageAttributeCategory = Application::getFacadeApplication()->make(PageCategory::class);
+        $pageAttributeCategory = $app->make(PageCategory::class);
         /* @var PageCategory $pageAttributeCategory */
         $availableAttributes = [];
         foreach (['meta_keywords'] as $akHandle) {
