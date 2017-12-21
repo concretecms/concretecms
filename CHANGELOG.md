@@ -5,7 +5,6 @@
 * Added support for upgrading from older versions of concrete5. Now you may upgrade from 5.7.5.13 all the way to 8.3.1, and from any version in between.
 * Added the ability to search form results in the Dashboard.
 * Added support for importing and exporting Express entities and their entries to the Migration tool. 
-* Added the ability to completely reset defaults to those specified at the page type level via a new Publish to Child Pages option at the page type level. (thanks trsh, mnakalay, mrkarldilkington)
 * Added the ability to sort by custom display order to the Express Entry List block (thanks gutding)
 
 ## Behavioral Improvements
