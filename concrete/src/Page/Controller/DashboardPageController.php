@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Page\Controller;
 
 use Concrete\Core\Validation\CSRF\Token;
@@ -7,16 +8,15 @@ use Loader;
 
 class DashboardPageController extends PageController
 {
-    protected $error;
-
-    protected $restrictedMethods = array(
-        'enableNativeMobile',
-        'getEntityManager'
-    );
-
     /** @var Token */
     public $token;
-    protected $helpers = array('form');
+    protected $error;
+
+    protected $restrictedMethods = [
+        'enableNativeMobile',
+        'getEntityManager',
+    ];
+    protected $helpers = ['form'];
 
     /**
      * @var EntityManager
@@ -48,7 +48,7 @@ class DashboardPageController extends PageController
         \Core::make('helper/concrete/dashboard');
         $dh = \Concrete\Core\Application\Service\DashboardMenu::getMine();
         if ($dh->contains($this->getPageObject())) {
-            $this->set("_bookmarked", true);
+            $this->set('_bookmarked', true);
         } else {
             $this->set('_bookmarked', false);
         }
