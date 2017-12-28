@@ -67,7 +67,7 @@ class Set extends ConcreteObject
         if (count($excluded)) {
             $r = $db->executeQuery('select btsID from BlockTypeSets where btsHandle not in (?) order by btsDisplayOrder asc',
                 array($excluded),
-                array(Connection::PARAM_INT_ARRAY));
+                array(Connection::PARAM_STR_ARRAY));
         } else {
             $r = $db->executeQuery('select btsID from BlockTypeSets order by btsDisplayOrder asc');
         }
