@@ -25,8 +25,23 @@ class FileServiceProvider extends ServiceProvider
 
         $this->app->singleton(\Concrete\Core\File\Image\Thumbnail\ThumbnailFormatService::class);
 
-        $this->app->bind('image/imagick', '\Imagine\Imagick\Imagine');
-        $this->app->bind('image/gd', '\Imagine\Gd\Imagine');
+        $this->app->bind('image/imagick', \Imagine\Imagick\Imagine::class);
+        $this->app->bind('image/gd', \Imagine\Gd\Imagine::class);
+        $this->app->bind(\Imagine\Image\ImagineInterface::class, function (Application $app) {
+            $config = $app->make('config');
+            $libraryHandle = $config->get('concrete.file_manager.images.manipulation_library');
+            switch ($libraryHandle) {
+                case 'imagick':
+                    $abstract = 'image/imagick';
+                    break;
+                case 'gd':
+                default:
+                    $abstract = 'image/gd';
+                    break;
+            }
+
+            return $app->make($abstract);
+        });
         $this->app->bind('image/thumbnailer', '\Concrete\Core\File\Image\BasicThumbnailer');
 
         $this->app->bind(StorageLocationInterface::class, function ($app) {
