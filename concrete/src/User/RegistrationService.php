@@ -1,11 +1,10 @@
 <?php
+
 namespace Concrete\Core\User;
 
 use Concrete\Core\Application\Application;
-use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\User\User as UserEntity;
 use Concrete\Core\Entity\User\UserSignup;
-use Concrete\Core\Notification\Notifier;
 use Concrete\Core\Notification\Type\UserSignupType;
 use Concrete\Core\User\Event\AddUser;
 use Concrete\Core\User\Event\UserInfoWithPassword;
@@ -116,10 +115,8 @@ class RegistrationService implements RegistrationServiceInterface
             \Events::dispatch('on_user_add', $ue);
 
             // Now we notify any relevant users.
-            /**
-             * @var $type UserSignupType
-             */
             $type = $this->application->make('manager/notification/types')->driver('user_signup');
+            /* @var UserSignupType $type */
             $u = new User();
             $createdBy = null;
             if (is_object($u)) {
