@@ -13,8 +13,19 @@ use Hautelook\Phpass\PasswordHash;
 
 class RegistrationService implements RegistrationServiceInterface
 {
+    /**
+     * @var EntityManagerInterface
+     */
     protected $entityManager;
+
+    /**
+     * @var Application
+     */
     protected $application;
+
+    /**
+     * @var UserInfoRepository
+     */
     protected $userInfoRepository;
 
     public function __construct(Application $application, EntityManagerInterface $entityManager, UserInfoRepository $userInfoRepository)
@@ -151,5 +162,56 @@ class RegistrationService implements RegistrationServiceInterface
         $ui = $this->create($data);
 
         return $ui;
+    }
+
+    /**
+     * Create an unused username starting from user details.
+     *
+     * @param string $email The user's email address
+     * @param string $suggestedUsername A suggestion about the username
+     * @param string $firstName The user's first name
+     * @param string $lastName The user's last name
+     *
+     * @return string
+     */
+    public function getNewUsernameFromUserDetails($email, $suggestedUsername = '', $firstName = '', $lastName = '')
+    {
+        $baseUsername = $this->stringToUsernameChunk($suggestedUsername);
+        if ($baseUsername === '') {
+            $firstName = $this->stringToUsernameChunk($firstName);
+            $lastName = $this->stringToUsernameChunk($lastName);
+            if ($firstName !== '' && $firstName !== '') {
+                $baseUsername = trim($firstName . '_' . $lastName, '_');
+            } else {
+                $mailbox = strstr((string) $email, '@', true);
+                $baseUsername = $this->stringToUsernameChunk($mailbox);
+            }
+            if ($baseUsername === '') {
+                $baseUsername = 'user';
+            }
+        }
+        $username = $baseUsername;
+        $suffix = 1;
+        while ($this->userInfoRepository->getByName($username) !== null) {
+            $username = $baseUsername . '_' . $suffix;
+            ++$suffix;
+        }
+
+        return $username;
+    }
+
+    /**
+     * @param string $string
+     *
+     * @return string
+     */
+    private function stringToUsernameChunk($string)
+    {
+        $string = trim((string) $string);
+        $string = preg_replace('/[^a-z0-9]+/', '_', strtolower($string));
+        $string = preg_replace('/__+/', '_', $string);
+        $string = trim($string, '_');
+
+        return $string;
     }
 }
