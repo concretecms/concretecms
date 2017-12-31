@@ -9,13 +9,17 @@ use UserInfo;
 class UserSelector
 {
     /**
-     * Creates form fields and JavaScript user chooser for choosing a user. For use with inclusion in blocks and addons.
-     * <code>
-     *     $dh->selectUser('userID', '1'); // prints out the admin user and makes it changeable.
-     * </code>.
+     * Build the HTML to be placed in a page to choose a user using a popup dialog.
      *
-     * @param mixed $fieldName
-     * @param int $uID
+     * @param string $fieldName the name of the field
+     * @param int|false $uID the ID of the user to be initially selected
+     *
+     * @return string
+     *
+     * @example
+     * <code>
+     *     $userSelector->selectUser('userID', USER_SUPER_ID); // prints out the admin user and makes it changeable.
+     * </code>.
      */
     public function selectUser($fieldName, $uID = false)
     {
@@ -81,20 +85,34 @@ EOL;
         return $html;
     }
 
-    public function quickSelect($key, $val = false, $args = [])
+    /**
+     * Build the HTML to be placed in a page to choose a user using a select with users pupulated dynamically with ajax requests.
+     *
+     * @param string $fieldName the name of the field
+     * @param int|false $uID the ID of the user to be initially selected
+     * @param array $miscFields additional fields appended to the hidden input element (a hash array of attributes name => value), possibly including 'class'
+     *
+     * @return string
+     *
+     * @example
+     * <code>
+     *     $userSelector->quickSelect('userID', USER_SUPER_ID); // prints out the admin user and makes it changeable.
+     * </code>.
+     */
+    public function quickSelect($fieldName, $uID = false, $miscFields = [])
     {
         $v = \View::getInstance();
         $v->requireAsset('selectize');
         $form = Loader::helper('form');
         $valt = Loader::helper('validation/token');
-        $token = $valt->generate('quick_user_select_' . $key);
+        $token = $valt->generate('quick_user_select_' . $fieldName);
 
         $selectedUID = 0;
-        if (isset($_REQUEST[$key])) {
-            $selectedUID = $_REQUEST[$key];
+        if (isset($_REQUEST[$fieldName])) {
+            $selectedUID = $_REQUEST[$fieldName];
         } else {
-            if ($val > 0) {
-                $selectedUID = $val;
+            if ($uID > 0) {
+                $selectedUID = $uID;
             }
         }
 
@@ -112,7 +130,7 @@ EOL;
                 labelField: 'label',
                 searchField: ['label'],";
 
-        if ($val) {
+        if ($uID) {
             $html .= "options: [{'label': '" . h($uName) . "', 'value': " . (int) $selectedUID . '}],
 				items: [' . (int) $selectedUID . '],';
         }
@@ -121,7 +139,7 @@ EOL;
                 load: function(query, callback) {
                     if (!query.length) return callback();
                     $.ajax({
-                        url: '" . REL_DIR_FILES_TOOLS_REQUIRED . '/users/autocomplete?key=' . $key . '&token=' . $token . "&term=' + encodeURIComponent(query),
+                        url: '" . REL_DIR_FILES_TOOLS_REQUIRED . '/users/autocomplete?key=' . $fieldName . '&token=' . $token . "&term=' + encodeURIComponent(query),
                         type: 'GET',
 						dataType: 'json',
                         error: function() {
@@ -135,11 +153,19 @@ EOL;
 		    });
 		});
 		</script>";
-        $html .= '<span class="ccm-quick-user-selector">' . $form->hidden($key, '', $args) . '</span>';
+        $html .= '<span class="ccm-quick-user-selector">' . $form->hidden($fieldName, '', $miscFields) . '</span>';
 
         return $html;
     }
 
+    /**
+     * Build the HTML to be placed in a page to choose multiple users using a popup dialog.
+     *
+     * @param string $fieldName the name of the field
+     * @param \Concrete\Core\Entity\User\User[]|\Concrete\Core\User\UserInfo[]\Traversable $users The users to be initially selected
+     *
+     * @return string
+     */
     public function selectMultipleUsers($fieldName, $users = [])
     {
         $html = '';
