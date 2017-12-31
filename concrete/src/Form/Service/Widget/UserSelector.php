@@ -2,10 +2,9 @@
 namespace Concrete\Core\Form\Service\Widget;
 
 use Concrete\Core\Permission\Checker;
-use Concrete\Core\User\Avatar\EmptyAvatar;
-use UserInfo;
-use URL;
 use Loader;
+use URL;
+use UserInfo;
 
 class UserSelector
 {
@@ -15,6 +14,7 @@ class UserSelector
      *     $dh->selectUser('userID', '1'); // prints out the admin user and makes it changeable.
      * </code>.
      *
+     * @param mixed $fieldName
      * @param int $uID
      */
     public function selectUser($fieldName, $uID = false)
@@ -25,7 +25,7 @@ class UserSelector
 
         $selectedUID = 0;
         if (isset($_REQUEST[$fieldName])) {
-            $selectedUID = intval($_REQUEST[$fieldName]);
+            $selectedUID = (int) $_REQUEST[$fieldName];
         } else {
             if ($uID > 0) {
                 $selectedUID = $uID;
@@ -42,7 +42,6 @@ class UserSelector
         $identifier = $identifier->getString(32);
 
         if ($permissions->canAccessUserSearch()) {
-
             $html = <<<EOL
             <div data-user-selector="{$identifier}"></div>
             <script type="text/javascript">
@@ -51,9 +50,7 @@ class UserSelector
             });
             </script>
 EOL;
-
         } else {
-
             // Read only
             $ui = false;
             if ($selectedUID) {
@@ -79,15 +76,12 @@ EOL;
            </div>
            </div>
 EOL;
-
         }
-
 
         return $html;
     }
 
-
-    public function quickSelect($key, $val = false, $args = array())
+    public function quickSelect($key, $val = false, $args = [])
     {
         $v = \View::getInstance();
         $v->requireAsset('selectize');
@@ -119,15 +113,15 @@ EOL;
                 searchField: ['label'],";
 
         if ($val) {
-            $html .= "options: [{'label': '" . h($uName) . "', 'value': " . intval($selectedUID) . "}],
-				items: [" . intval($selectedUID) . "],";
+            $html .= "options: [{'label': '" . h($uName) . "', 'value': " . (int) $selectedUID . '}],
+				items: [' . (int) $selectedUID . '],';
         }
 
         $html .= "maxItems: 1,
                 load: function(query, callback) {
                     if (!query.length) return callback();
                     $.ajax({
-                        url: '" . REL_DIR_FILES_TOOLS_REQUIRED . "/users/autocomplete?key=" . $key . "&token=" . $token . "&term=' + encodeURIComponent(query),
+                        url: '" . REL_DIR_FILES_TOOLS_REQUIRED . '/users/autocomplete?key=' . $key . '&token=' . $token . "&term=' + encodeURIComponent(query),
                         type: 'GET',
 						dataType: 'json',
                         error: function() {
@@ -141,19 +135,19 @@ EOL;
 		    });
 		});
 		</script>";
-        $html .= '<span class="ccm-quick-user-selector">'.$form->hidden($key, '', $args).'</span>';
+        $html .= '<span class="ccm-quick-user-selector">' . $form->hidden($key, '', $args) . '</span>';
 
         return $html;
     }
 
-    public function selectMultipleUsers($fieldName, $users = array())
+    public function selectMultipleUsers($fieldName, $users = [])
     {
         $html = '';
         $html .= '<table id="ccmUserSelect' . $fieldName . '" class="table table-condensed" cellspacing="0" cellpadding="0" border="0">';
         $html .= '<tr>';
         $html .= '<th>' . t('Username') . '</th>';
         $html .= '<th>' . t('Email Address') . '</th>';
-        $html .= '<th style="width: 1px"><a class="icon-link ccm-user-select-item dialog-launch" dialog-append-buttons="true" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="' . t('Choose User') . '" href="'. URL::to('/ccm/system/dialogs/user/search') . '"><i class="fa fa-plus-circle" /></a></th>';
+        $html .= '<th style="width: 1px"><a class="icon-link ccm-user-select-item dialog-launch" dialog-append-buttons="true" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="' . t('Choose User') . '" href="' . URL::to('/ccm/system/dialogs/user/search') . '"><i class="fa fa-plus-circle" /></a></th>';
         $html .= '</tr><tbody id="ccmUserSelect' . $fieldName . '_body" >';
         foreach ($users as $ui) {
             $html .= '<tr id="ccmUserSelect' . $fieldName . '_' . $ui->getUserID() . '" class="ccm-list-record">';
