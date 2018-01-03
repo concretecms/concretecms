@@ -18,9 +18,12 @@ class ImportPackagesRoutine extends AbstractRoutine
     {
         if (isset($sx->packages)) {
             foreach ($sx->packages->package as $p) {
-                $pkg = Package::getClass((string) $p['handle']);
-                if (!$pkg->isPackageInstalled()) {
-                    $pkg->install();
+                $pkg = Package::getByHandle((string) $p['handle']);
+                if (!$pkg) {
+                    $pkgClass = Package::getClass((string) $p['handle']);
+                    if ($pkgClass) {
+                        $pkgClass->install();
+                    }
                 }
             }
         }
