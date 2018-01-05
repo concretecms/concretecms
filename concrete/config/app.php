@@ -91,7 +91,7 @@ return [
     'providers' => [
         // Router service provider
         'core_router' => 'Concrete\Core\Routing\RoutingServiceProvider',
-
+        'core_bus' => '\Concrete\Core\Foundation\Bus\BusServiceProvider',
         'core_file' => '\Concrete\Core\File\FileServiceProvider',
         'core_encryption' => '\Concrete\Core\Encryption\EncryptionServiceProvider',
         'core_validation' => '\Concrete\Core\Validation\ValidationServiceProvider',
@@ -1566,4 +1566,8 @@ return [
         'core_xframeoptions' => \Concrete\Core\Http\Middleware\FrameOptionsMiddleware::class,
         'core_thumbnails' => '\Concrete\Core\Http\Middleware\ThumbnailMiddleware',
     ],
+
+    'commands' => [
+    ],
+
 ];
