@@ -57,6 +57,8 @@ if (isset($rel) && $rel) {
 
 if (isset($showinfo) && $showinfo) {
     $params[] = 'showinfo=1';
+} else {
+    $params[] = 'showinfo=0';
 }
 
 $paramstring = '?' . implode('&', $params);
