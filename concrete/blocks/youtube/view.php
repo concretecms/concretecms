@@ -43,6 +43,9 @@ if (isset($iv_load_policy) && $iv_load_policy > 0) {
 
 if (isset($loopEnd) && $loopEnd) {
     $params[] = 'loop=1';
+    if (!isset($playlist) && $videoID !== '') {
+        $params[] = 'playlist='.$videoID;
+    }
 }
 
 if (isset($modestbranding) && $modestbranding) {
