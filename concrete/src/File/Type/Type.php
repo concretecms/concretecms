@@ -317,7 +317,7 @@ class Type
     /**
      * Get the inspector for this file type (if available).
      *
-     * @return \Concrete\Core\File\Type\Inspector|null
+     * @return \Concrete\Core\File\Type\Inspector\Inspector|null
      */
     public function getCustomInspector()
     {

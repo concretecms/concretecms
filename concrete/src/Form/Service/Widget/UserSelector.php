@@ -1,202 +1,309 @@
 <?php
 namespace Concrete\Core\Form\Service\Widget;
 
+use Concrete\Core\Application\Application;
+use Concrete\Core\Http\Request;
 use Concrete\Core\Permission\Checker;
-use Concrete\Core\User\Avatar\EmptyAvatar;
-use UserInfo;
-use URL;
-use Loader;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+use Concrete\Core\User\UserInfoRepository;
+use Concrete\Core\Utility\Service\Identifier;
+use Concrete\Core\Utility\Service\Validation\Numbers;
+use Concrete\Core\View\View;
 
 class UserSelector
 {
     /**
-     * Creates form fields and JavaScript user chooser for choosing a user. For use with inclusion in blocks and addons.
-     * <code>
-     *     $dh->selectUser('userID', '1'); // prints out the admin user and makes it changeable.
-     * </code>.
+     * The application container instance.
      *
-     * @param int $uID
+     * @var \Concrete\Core\Application\Application
+     */
+    protected $app;
+
+    /**
+     * Initialize the instance.
+     *
+     * @param \Concrete\Core\Application\Application $app
+     */
+    public function __construct(Application $app)
+    {
+        $this->app = $app;
+    }
+
+    /**
+     * Build the HTML to be placed in a page to choose a user using a popup dialog.
+     *
+     * @param string $fieldName the name of the field
+     * @param int|false $uID the ID of the user to be initially selected
+     *
+     * @return string
+     *
+     * @example
+     * <code>
+     *     $userSelector->selectUser('userID', USER_SUPER_ID); // prints out the admin user and makes it changeable.
+     * </code>.
      */
     public function selectUser($fieldName, $uID = false)
     {
-        $v = \View::getInstance();
+        $v = View::getRequestInstance();
         $v->requireAsset('core/users');
+
+        $request = $this->app->make(Request::class);
+        if ($request->request->has($fieldName)) {
+            $selectedUID = $request->request->get($fieldName);
+        } elseif ($request->query->has($fieldName)) {
+            $selectedUID = $request->query->get($fieldName);
+        } else {
+            $selectedUID = $uID;
+        }
+        if ($selectedUID && $this->app->make(Numbers::class)->integer($selectedUID, 1)) {
+            $userInfo = $this->app->make(UserInfoRepository::class)->getByID((int) $selectedUID);
+        } else {
+            $userInfo = null;
+        }
+        $selectedUID = $userInfo ? $userInfo->getUserID() : null;
+
         $permissions = new Checker();
-
-        $selectedUID = 0;
-        if (isset($_REQUEST[$fieldName])) {
-            $selectedUID = intval($_REQUEST[$fieldName]);
-        } else {
-            if ($uID > 0) {
-                $selectedUID = $uID;
-            }
-        }
-
-        if ($selectedUID) {
-            $args = "{'inputName': '{$fieldName}', 'uID': {$selectedUID}}";
-        } else {
-            $args = "{'inputName': '{$fieldName}'}";
-        }
-
-        $identifier = new \Concrete\Core\Utility\Service\Identifier();
-        $identifier = $identifier->getString(32);
-
         if ($permissions->canAccessUserSearch()) {
-
-            $html = <<<EOL
-            <div data-user-selector="{$identifier}"></div>
-            <script type="text/javascript">
-            $(function() {
-                $('[data-user-selector={$identifier}]').concreteUserSelector({$args});
-            });
-            </script>
-EOL;
-
-        } else {
-
-            // Read only
-            $ui = false;
-            if ($selectedUID) {
-                $ui = UserInfo::getByID($selectedUID);
+            $identifier = $this->app->make(Identifier::class)->getString(32);
+            $args = ['inputName' => $fieldName];
+            if ($userInfo) {
+                $args['uID'] = $userInfo->getUserID();
             }
-
-            if (is_object($ui)) {
-                $uName = $ui->getUserDisplayName();
-                $uAvatar = $ui->getUserAvatar()->getPath();
+            $args = json_encode($args);
+            $html = <<<EOL
+<div data-user-selector="{$identifier}"></div>
+<script>
+$(function() {
+    $('[data-user-selector={$identifier}]').concreteUserSelector({$args});
+});
+</script>
+EOL;
+        } else {
+            // Read only
+            $uAvatar = null;
+            if ($userInfo) {
+                $uName = $userInfo->getUserDisplayName();
+                $a = $userInfo->getUserAvatar();
+                if ($a) {
+                    $uAvatar = $a->getPath();
+                }
             } else {
                 $uName = t('(None Selected)');
-                $uAvatar = \Config::get('concrete.icons.user_avatar.default');
+            }
+            if (!$uAvatar) {
+                $uAvatar = $this->app->make('config')->get('concrete.icons.user_avatar.default');
             }
 
             $html = <<<EOL
-            <div class="ccm-item-selector">
-            <div class="ccm-item-selector-item-selected">
-                <input type="hidden" name="{$fieldName}" value="{$selectedUID}">
-                <div class="ccm-item-selector-item-selected-thumbnail">
-                   <img src="{$uAvatar}" alt="admin" class="u-avatar">
-               </div>
-               <div class="ccm-item-selector-item-selected-title">{$uName}</div>
-           </div>
-           </div>
+<div class="ccm-item-selector">
+    <div class="ccm-item-selector-item-selected">
+        <input type="hidden" name="{$fieldName}" value="{$selectedUID}">
+        <div class="ccm-item-selector-item-selected-thumbnail">
+            <img src="{$uAvatar}" alt="admin" class="u-avatar">
+        </div>
+        <div class="ccm-item-selector-item-selected-title">{$uName}</div>
+    </div>
+</div>
 EOL;
-
         }
-
 
         return $html;
     }
 
-
-    public function quickSelect($key, $val = false, $args = array())
+    /**
+     * Build the HTML to be placed in a page to choose a user using a select with users pupulated dynamically with ajax requests.
+     *
+     * @param string $fieldName the name of the field
+     * @param int|false $uID the ID of the user to be initially selected
+     * @param array $miscFields additional fields appended to the hidden input element (a hash array of attributes name => value), possibly including 'class'
+     *
+     * @return string
+     *
+     * @example
+     * <code>
+     *     $userSelector->quickSelect('userID', USER_SUPER_ID); // prints out the admin user and makes it changeable.
+     * </code>.
+     */
+    public function quickSelect($fieldName, $uID = false, $miscFields = [])
     {
-        $v = \View::getInstance();
+        $v = View::getRequestInstance();
         $v->requireAsset('selectize');
-        $form = Loader::helper('form');
-        $valt = Loader::helper('validation/token');
-        $token = $valt->generate('quick_user_select_' . $key);
 
-        $selectedUID = 0;
-        if (isset($_REQUEST[$key])) {
-            $selectedUID = $_REQUEST[$key];
+        $request = $this->app->make(Request::class);
+        if ($request->request->has($fieldName)) {
+            $selectedUID = $request->request->get($fieldName);
+        } elseif ($request->query->has($fieldName)) {
+            $selectedUID = $request->query->get($fieldName);
         } else {
-            if ($val > 0) {
-                $selectedUID = $val;
+            $selectedUID = $uID;
+        }
+        if ($selectedUID && $this->app->make(Numbers::class)->integer($selectedUID, 1)) {
+            $userInfo = $this->app->make(UserInfoRepository::class)->getByID((int) $selectedUID);
+        } else {
+            $userInfo = null;
+        }
+        $selectedUID = $userInfo ? $userInfo->getUserID() : null;
+
+        $valt = $this->app->make('token');
+        $token = $valt->generate('quick_user_select_' . $fieldName);
+
+        $identifier = $this->app->make(Identifier::class)->getString(32);
+
+        $selectizeOptions = [
+            'valueField' => 'value',
+            'labelField' => 'label',
+            'searchField' => ['label'],
+            'maxItems' => 1,
+        ];
+        if ($userInfo) {
+            $selectizeOptions += [
+                'options' => [
+                    [
+                        'label' => h($userInfo->getUserDisplayName()),
+                        'value' => $selectedUID,
+                    ],
+                ],
+                'items' => [
+                    $selectedUID,
+                ],
+            ];
+        }
+        $selectizeOptions = json_encode($selectizeOptions);
+        $input = $this->app->make('helper/form')->hidden($fieldName, '', $miscFields);
+        $ajaxUrlBase = json_encode(REL_DIR_FILES_TOOLS_REQUIRED . '/users/autocomplete?key=' . rawurlencode($fieldName) . '&token=' . rawurldecode($token));
+
+        return <<<EOT
+<span id="ccm-quick-user-selector-{$identifier}" class="ccm-quick-user-selector">{$input}</span>
+<script>
+$(function () {
+    var options = {$selectizeOptions};
+    options.load = function(query, callback) {
+        if (!query.length) {
+            return callback();
+        }
+        $.ajax({
+            url: {$ajaxUrlBase} + '&term=' + encodeURIComponent(query),
+            type: 'GET',
+			dataType: 'json',
+            error: function() {
+                callback();
+            },
+            success: function(res) {
+                callback(res);
+            }
+        });
+    };
+    $('#ccm-quick-user-selector-{$identifier} input')
+        .unbind()
+        .selectize(options)
+    ;
+});
+</script>
+EOT
+        ;
+    }
+
+    /**
+     * Build the HTML to be placed in a page to choose multiple users using a popup dialog.
+     *
+     * @param string $fieldName the name of the field
+     * @param \Concrete\Core\Entity\User\User[]|\Concrete\Core\User\UserInfo[]|int[]\Traversable $users The users to be initially selected
+     *
+     * @return string
+     */
+    public function selectMultipleUsers($fieldName, $users = [])
+    {
+        $identifier = $this->app->make(Identifier::class)->getString(32);
+        $i18n = [
+            'username' => t('Username'),
+            'emailAddress' => t('Email Address'),
+            'chooseUser' => t('Choose User'),
+            'noUsers' => t('No users selected.'),
+        ];
+        $searchLink = $this->app->make(ResolverManagerInterface::class)->resolve(['/ccm/system/dialogs/user/search']);
+        $valn = $this->app->make(Numbers::class);
+        $userInfoRepository = $this->app->make(UserInfoRepository::class);
+        $preselectedUsers = '';
+        foreach ($users as $user) {
+            if ($valn->integer($user)) {
+                $user = $userInfoRepository->getById($user);
+            }
+            if (is_object($user)) {
+                $preselectedUsers .= <<<EOT
+<tr data-ccm-user-id="{$user->getUserID()}" class="ccm-list-record">
+    <td><input type="hidden" name="{$fieldName}[]" value="{$user->getUserID()}" />{$user->getUserName()}</td>
+    <td>{$user->getUserEmail()}</td>
+    <td><a href="#" class="ccm-user-list-clear icon-link"><i class="fa fa-minus-circle ccm-user-list-clear-button"></i></a></td>
+</tr>
+EOT
+                ;
             }
         }
+        $noUsersStyle = $preselectedUsers === '' ? '' : ' style="display: none"';
 
-        $uName = '';
-        if ($selectedUID > 0) {
-            $ui = UserInfo::getByID($selectedUID);
-            $uName = $ui->getUserDisplayName();
-        }
-
-        $html = "
-		<script type=\"text/javascript\">
-		$(function () {
-			$('.ccm-quick-user-selector input').unbind().selectize({
-                valueField: 'value',
-                labelField: 'label',
-                searchField: ['label'],";
-
-        if ($val) {
-            $html .= "options: [{'label': '" . h($uName) . "', 'value': " . intval($selectedUID) . "}],
-				items: [" . intval($selectedUID) . "],";
-        }
-
-        $html .= "maxItems: 1,
-                load: function(query, callback) {
-                    if (!query.length) return callback();
-                    $.ajax({
-                        url: '" . REL_DIR_FILES_TOOLS_REQUIRED . "/users/autocomplete?key=" . $key . "&token=" . $token . "&term=' + encodeURIComponent(query),
-                        type: 'GET',
-						dataType: 'json',
-                        error: function() {
-                            callback();
-                        },
-                        success: function(res) {
-                            callback(res);
-                        }
-                    });
-                }
-		    });
-		});
-		</script>";
-        $html .= '<span class="ccm-quick-user-selector">'.$form->hidden($key, '', $args).'</span>';
-
-        return $html;
-    }
-
-    public function selectMultipleUsers($fieldName, $users = array())
-    {
-        $html = '';
-        $html .= '<table id="ccmUserSelect' . $fieldName . '" class="table table-condensed" cellspacing="0" cellpadding="0" border="0">';
-        $html .= '<tr>';
-        $html .= '<th>' . t('Username') . '</th>';
-        $html .= '<th>' . t('Email Address') . '</th>';
-        $html .= '<th style="width: 1px"><a class="icon-link ccm-user-select-item dialog-launch" dialog-append-buttons="true" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="' . t('Choose User') . '" href="'. URL::to('/ccm/system/dialogs/user/search') . '"><i class="fa fa-plus-circle" /></a></th>';
-        $html .= '</tr><tbody id="ccmUserSelect' . $fieldName . '_body" >';
-        foreach ($users as $ui) {
-            $html .= '<tr id="ccmUserSelect' . $fieldName . '_' . $ui->getUserID() . '" class="ccm-list-record">';
-            $html .= '<td><input type="hidden" name="' . $fieldName . '[]" value="' . $ui->getUserID() . '" />' . $ui->getUserName() . '</td>';
-            $html .= '<td>' . $ui->getUserEmail() . '</td>';
-            $html .= '<td><a href="javascript:void(0)" class="ccm-user-list-clear icon-link"><i class="fa fa-minus-circle ccm-user-list-clear-button"></i></a>';
-            $html .= '</tr>';
-        }
-        if (count($users) == 0) {
-            $html .= '<tr class="ccm-user-selected-item-none"><td colspan="3">' . t('No users selected.') . '</td></tr>';
-        }
-        $html .= '</tbody></table><script type="text/javascript">
-		$(function() {
-			$("#ccmUserSelect' . $fieldName . ' .ccm-user-select-item").dialog();
-			$("a.ccm-user-list-clear").click(function() {
-				$(this).parents(\'tr\').remove();
-			});
-
-			$("#ccmUserSelect' . $fieldName . ' .ccm-user-select-item").on(\'click\', function() {
-				ConcreteEvent.subscribe(\'UserSearchDialogSelectUser\', function(e, data) {
-					var uID = data.uID, uName = data.uName, uEmail = data.uEmail;
-					e.stopPropagation();
-					$("tr.ccm-user-selected-item-none").hide();
-					if ($("#ccmUserSelect' . $fieldName . '_" + uID).length < 1) {
-						var html = "";
-						html += "<tr id=\"ccmUserSelect' . $fieldName . '_" + uID + "\" class=\"ccm-list-record\"><td><input type=\"hidden\" name=\"' . $fieldName . '[]\" value=\"" + uID + "\" />" + uName + "</td>";
-						html += "<td>" + uEmail + "</td>";
-						html += "<td><a href=\"javascript:void(0)\" class=\"ccm-user-list-clear icon-link\"><i class=\"fa fa-minus-circle ccm-user-list-clear-button\" /></a>";
-						html += "</tr>";
-						$("#ccmUserSelect' . $fieldName . '_body").append(html);
-					}
-					$("a.ccm-user-list-clear").click(function() {
-						$(this).parents(\'tr\').remove();
-					});
-				});
-				ConcreteEvent.subscribe(\'UserSearchDialogAfterSelectUser\', function(e) {
-					jQuery.fn.dialog.closeTop();
-				});
-			});
-		});
-
-		</script>';
-
-        return $html;
+        return <<<EOT
+<table id="ccmUserSelect-{$identifier}" class="table table-condensed" cellspacing="0" cellpadding="0" border="0">
+    <thead>
+        <tr>
+            <th>{$i18n['username']}</th>
+            <th>{$i18n['emailAddress']}</th>
+            <th style="width: 1px"><a class="icon-link ccm-user-select-item dialog-launch" dialog-append-buttons="true" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="{$i18n['chooseUser']}" href="{$searchLink}"><i class="fa fa-plus-circle" /></a></th>
+        </tr>
+    </thead>
+    <tbody>
+        {$preselectedUsers}
+        <tr class="ccm-user-selected-item-none"{$noUsersStyle}><td colspan="3">{$i18n['noUsers']}</td></tr>
+    </tbody>
+</table>
+<script>
+$(function() {
+    var container = $('#ccmUserSelect-{$identifier}'),
+        noUsersRow = container.find('tr.ccm-user-selected-item-none'),
+        updateNoUsers = function() {
+            if (container.find('tr[data-ccm-user-id]').length === 0) {
+                noUsersRow.show();
+            } else {
+                noUsersRow.hide();
+            }
+        },
+        userSelectCallback = function(e, data) {
+            e.stopPropagation();
+            var uID = data.uID,
+                uName = data.uName,
+                uEmail = data.uEmail;
+            if (container.find('tr[data-ccm-user-id=' + uID + ']').length > 0) {
+                return;
+            }
+            noUsersRow.before($('<tr data-ccm-user-id="' + uID + '" class="ccm-list-record" />')
+                .append($('<td />')
+                    .text(uName)
+                    .prepend($('<input type="hidden" name="{$fieldName}[]" />').val(uID))
+                )
+                .append($('<td />')
+                    .text(uEmail)
+                )
+                .append($('<td><a href="#" class="ccm-user-list-clear icon-link"><i class="fa fa-minus-circle ccm-user-list-clear-button"></i></a></td>'))
+            );
+            updateNoUsers();
+        };
+    container.on('click', 'a.ccm-user-list-clear', function(e) {
+        e.preventDefault();
+        $(this).closest('tr').remove();
+        updateNoUsers();
+    });
+    container.find('.ccm-user-select-item')
+        .dialog()
+        .on('click', function(e) {
+            ConcreteEvent.subscribe('UserSearchDialogSelectUser', userSelectCallback)
+        })
+    ;
+    ConcreteEvent.subscribe('UserSearchDialogAfterSelectUser', function(e) {
+        ConcreteEvent.unsubscribe('UserSearchDialogSelectUser');
+        jQuery.fn.dialog.closeTop();
+    });
+});
+</script>
+EOT
+        ;
     }
 }

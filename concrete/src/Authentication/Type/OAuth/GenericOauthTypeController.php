@@ -287,30 +287,13 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
             $last_name = strrev($reversed_last_name);
         }
 
+        $userRegistration = $this->app->make('user/registration');
+
         $username = null;
         if ($this->supportsUsername()) {
             $username = $this->getUsername();
         }
-
-        if ($username === null) {
-            if ($first_name || $last_name) {
-                $username = preg_replace('/[^a-z0-9\_]/', '_', strtolower($first_name . ' ' . $last_name));
-                $username = trim(preg_replace('/_{2,}/', '_', $username), '_');
-            } else {
-                $username = preg_replace('/[^a-zA-Z0-9\_]/i', '_', strtolower(substr($email, 0, strpos($email, '@'))));
-                $username = trim(preg_replace('/_{2,}/', '_', $username), '_');
-            }
-        }
-
-        $unique_username = $username;
-        $append = 1;
-
-        while (\UserInfo::getByUserName($unique_username)) {
-            // This is a heavy handed way to do this, but it must be done.
-            $unique_username = $username . '_' . $append++;
-        }
-
-        $username = $unique_username;
+        $username = $userRegistration->getNewUsernameFromUserDetails($email, $username, $first_name, $last_name);
 
         $data = [];
         $data['uName'] = $username;
@@ -318,7 +301,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
         $data['uEmail'] = $email;
         $data['uIsValidated'] = 1;
 
-        $user_info = \UserInfo::add($data);
+        $user_info = $userRegistration->create($data);
 
         if (!$user_info) {
             throw new Exception('Unable to create new account.');
