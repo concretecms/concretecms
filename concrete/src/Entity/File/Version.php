@@ -36,6 +36,7 @@ use Imagine\Image\ImagineInterface;
 use Imagine\Image\Metadata\ExifMetadataReader;
 use League\Flysystem\AdapterInterface;
 use League\Flysystem\FileNotFoundException;
+use League\Flysystem\MountManager;
 use League\Flysystem\Util;
 use Page;
 use Permissions;
@@ -538,7 +539,7 @@ class Version implements ObjectInterface
         $current = $source->getFile()->getFileStorageLocationObject()->getFileSystemObject();
         $newPath = $type->getFilePath($this);
         $currentPath = $type->getFilePath($source);
-        $manager = new \League\Flysystem\MountManager([
+        $manager = new MountManager([
             'current' => $current,
             'new' => $new,
         ]);
@@ -561,7 +562,7 @@ class Version implements ObjectInterface
         }
         $fsl = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
         $path = $type->getFilePath($this);
-        $manager = new \League\Flysystem\MountManager([
+        $manager = new MountManager([
             'current' => $fsl,
             'new' => $location->getFileSystemObject(),
         ]);
