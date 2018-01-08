@@ -720,7 +720,7 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Get the the tags assigned to the file version (as a list of strings).
+     * Get the tags assigned to the file version (as a list of strings).
      *
      * @return string[]
      */
@@ -739,7 +739,7 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Get the the tags assigned to the file version (one tag per line - lines are separated by '\n').
+     * Get the tags assigned to the file version (one tag per line - lines are separated by '\n').
      *
      * @return null|string
      */
@@ -993,7 +993,7 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Check of there is a viewer for the type of the file.
+     * Check if there is a viewer for the type of the file.
      *
      * @return bool
      */
@@ -1005,7 +1005,7 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Check of there is an editor for the type of the file.
+     * Check if there is an editor for the type of the file.
      *
      * @return bool
      */
@@ -1239,14 +1239,12 @@ class Version implements ObjectInterface
             return Importer::E_FILE_INVALID;
         }
 
-        $size = $fsr->getSize();
-
         $this->fvExtension = $ext;
         $this->fvType = $ftl->getGenericType();
         if ($this->fvTitle === null) {
             $this->fvTitle = $this->getFileName();
         }
-        $this->fvSize = $size;
+        $this->fvSize = $fsr->getSize();
 
         if ($rescanThumbnails) {
             $this->rescanThumbnails();
@@ -1375,7 +1373,7 @@ class Version implements ObjectInterface
                             continue;
                         }
 
-                        // This should not happen as it is not allowed when creating thumbnail types and both width and heght
+                        // This should not happen as it is not allowed when creating thumbnail types and both width and height
                         // are required for Exact sizing but it's here just in case
                         if ($type->getSizingMode() === Type::RESIZE_EXACT && (!$type->getWidth() || !$type->getHeight())) {
                             continue;
@@ -1537,7 +1535,7 @@ class Version implements ObjectInterface
 
     /**
      * Resolve a path using the default core path resolver.
-     * Avoid using this method when you have access to your a resolver instance.
+     * Avoid using this method when you have access to the resolver instance.
      *
      * @param \Concrete\Core\File\Image\Thumbnail\Type\Version|string $type the thumbnail type version (or its handle)
      *
