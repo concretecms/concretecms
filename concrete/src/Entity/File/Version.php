@@ -569,10 +569,36 @@ class Version implements ObjectInterface
      */
     public function getAuthorName()
     {
-        $ui = null;
         if ($this->fvAuthorUID) {
             $app = Application::getFacadeApplication();
             $ui = $app->make(UserInfoRepository::class)->getByID($this->fvAuthorUID);
+        } else {
+            $ui = null;
+        }
+
+        return $ui === null ? t('(Unknown)') : $ui->getUserDisplayName();
+    }
+
+    /**
+     * Get the ID of the user that approved the file version.
+     *
+     * @return int
+     */
+    public function getApproverUserID()
+    {
+        return $this->fvApproverUID;
+    }
+
+    /**
+     * Get the username of the user that approved the file version (or "Unknown").
+     *
+     * @return string
+     */
+    public function getApproverName()
+    {
+        if ($this->fvApproverUID) {
+            $app = Application::getFacadeApplication();
+            $ui = $app->make(UserInfoRepository::class)->getByID($this->fvApproverUID);
         } else {
             $ui = null;
         }
