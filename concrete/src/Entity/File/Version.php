@@ -187,15 +187,6 @@ class Version implements ObjectInterface
     protected $fvAuthorUID = 0;
 
     /**
-     * The size (in bytes) of the file version.
-     *
-     * @ORM\Column(type="bigint")
-     *
-     * @var int
-     */
-    protected $fvSize = 0;
-
-    /**
      * The ID of the user that approved the file version.
      *
      * @ORM\Column(type="integer")
@@ -203,6 +194,15 @@ class Version implements ObjectInterface
      * @var int
      */
     protected $fvApproverUID = 0;
+
+    /**
+     * The size (in bytes) of the file version.
+     *
+     * @ORM\Column(type="bigint")
+     *
+     * @var int
+     */
+    protected $fvSize = 0;
 
     /**
      * The title of the file version.
