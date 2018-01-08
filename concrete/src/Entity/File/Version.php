@@ -1017,7 +1017,7 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Create a new copy of this file version.
+     * Create a new (unapproved) copy of this file version.
      * The new Version instance will have the current user as the author (if available), and a new version ID.
      *
      * @return Version
