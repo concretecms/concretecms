@@ -975,9 +975,11 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Send the file to the browser (forcing its download even if the browser can display it), and terminate the execution.
+     * Get a Response instance that will force the browser to download the file, even if the browser can display it.
+     *
+     * @return \Concrete\Core\Http\Response
      */
-    public function forceDownload()
+    public function buildForceDownloadResponse()
     {
         $app = Application::getFacadeApplication();
         $fre = $this->getFileResource();
@@ -986,13 +988,8 @@ class Version implements ObjectInterface
         $response = new FlysystemFileResponse($fre->getPath(), $fs);
 
         $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT);
-        $response->prepare($app->make(Request::class));
 
-        session_write_close();
-        ob_end_clean();
-        $response->send();
-        $app->shutdown();
-        exit;
+        return $response;
     }
 
     /**
@@ -1752,6 +1749,22 @@ class Version implements ObjectInterface
         $r->treeNodeMenu = new Menu($this->getfile());
 
         return $r;
+    }
+
+    /**
+     * @deprecated Use buildForceDownloadResponse
+     */
+    public function forceDownload()
+    {
+        $app = Application::getFacadeApplication();
+        $response = $this->buildForceDownloadResponse();
+        $response->prepare($app->make(Request::class));
+
+        session_write_close();
+        ob_end_clean();
+        $response->send();
+        $app->shutdown();
+        exit;
     }
 
     /**
