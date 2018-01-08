@@ -232,15 +232,6 @@ class Version implements ObjectInterface
     protected $fvExtension = null;
 
     /**
-     * The type of the file version.
-     *
-     * @ORM\Column(type="integer")
-     *
-     * @var int
-     */
-    protected $fvType = 0;
-
-    /**
      * The tags assigned to the file version (separated by a newline character - '\n').
      *
      * @ORM\Column(type="text", nullable=true)
@@ -248,6 +239,15 @@ class Version implements ObjectInterface
      * @var string|null
      */
     protected $fvTags = null;
+
+    /**
+     * The type of the file version.
+     *
+     * @ORM\Column(type="integer")
+     *
+     * @var int
+     */
+    protected $fvType = 0;
 
     /**
      * Does this file version has a thumbnail to be used for file listing?
