@@ -834,7 +834,7 @@ class Version implements ObjectInterface
                 $updateTypeID,
                 $updateTypeAttributeID,
             ]
-            );
+        );
     }
 
     /**
@@ -850,7 +850,7 @@ class Version implements ObjectInterface
         $ga = $db->fetchAll(
             'SELECT fvUpdateTypeID, fvUpdateTypeAttributeID FROM FileVersionLog WHERE fID = ? AND fvID = ? ORDER BY fvlID ASC',
             [$this->getFileID(), $this->getFileVersionID()]
-            );
+        );
         foreach ($ga as $a) {
             switch ($a['fvUpdateTypeID']) {
                 case self::UT_REPLACE_FILE:
@@ -873,8 +873,8 @@ class Version implements ObjectInterface
                     break;
                 case self::UT_EXTENDED_ATTRIBUTE:
                     $val = $db->fetchColumn(
-                    'SELECT akName FROM AttributeKeys WHERE akID = ?',
-                    [$a['fvUpdateTypeAttributeID']]
+                        'SELECT akName FROM AttributeKeys WHERE akID = ?',
+                        [$a['fvUpdateTypeAttributeID']]
                     );
                     if ($val !== false) {
                         $updates[] = $val;
