@@ -405,7 +405,7 @@ class Version implements ObjectInterface
      */
     public function setFileVersionID($fvID)
     {
-        $this->fvID = $fvID;
+        $this->fvID = (int) $fvID;
     }
 
     /**
