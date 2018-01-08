@@ -552,6 +552,7 @@ class Version implements ObjectInterface
         $this->save();
         $fve = new FileVersionEvent($this);
         $app->make(EventDispatcherInterface::class)->dispatch('on_file_version_deny', $fve);
+        $app->make('cache/request')->delete('file/version/approved/' . $this->getFileID());
     }
 
     /**
