@@ -36,6 +36,7 @@ use Imagine\Image\ImagineInterface;
 use Imagine\Image\Metadata\ExifMetadataReader;
 use League\Flysystem\AdapterInterface;
 use League\Flysystem\FileNotFoundException;
+use League\Flysystem\Util;
 use Page;
 use Permissions;
 use stdClass;
@@ -1404,13 +1405,14 @@ class Version implements ObjectInterface
             }
         } catch (FileNotFoundException $e) {
         }
-
+        $fileContents = file_get_contents($path);
+        $mimeType = Util::guessMimeType($path, $fileContents);
         $filesystem->write(
             $thumbnailPath,
-            file_get_contents($path),
+            $fileContents,
             [
                 'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
-                'mimetype' => 'image/jpeg',
+                'mimetype' => $mimeType,
             ]
         );
 
