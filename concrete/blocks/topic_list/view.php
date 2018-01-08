@@ -30,7 +30,6 @@
                     if (count($topic->getChildNodes())) {
                         $walk($topic);
                     } ?>
-                    </li>
                     <?php
                 }
                 ?></ul><?php
