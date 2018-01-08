@@ -346,13 +346,13 @@ class Version implements ObjectInterface
         $tagsArray = explode("\n", str_replace(["\r", ','], "\n", $tagsStr));
         $cleanTags = [];
         foreach ($tagsArray as $tag) {
-            if (!strlen(trim($tag))) {
-                continue;
+            $tag = trim($tag);
+            if ($tag !== '') {
+                $cleanTags[] = $tag;
             }
-            $cleanTags[] = trim($tag);
         }
         //the leading and trailing line break char is for searching: fvTag like %\ntag\n%
-        return "\n" . implode("\n", $cleanTags) . "\n";
+        return isset($cleanTags[0]) ? "\n" . implode("\n", $cleanTags) . "\n" : '';
     }
 
     /**
