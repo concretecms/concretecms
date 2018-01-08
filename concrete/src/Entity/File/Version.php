@@ -285,6 +285,7 @@ class Version implements ObjectInterface
 
     /**
      * Add a new file version.
+     * You should call refreshAttributes in order to update the size, extension, type and other attributes.
      *
      * @param \Concrete\Core\Entity\File\File $file the File instance associated to this version
      * @param string $filename The name of the file
@@ -325,18 +326,18 @@ class Version implements ObjectInterface
         }
 
         $fv = new static();
+        $fv->file = $file;
+        $fv->fvID = 1;
         $fv->fvFilename = (string) $filename;
         $fv->fvPrefix = $prefix;
         $fv->fvDateAdded = $date;
-        $fv->fvIsApproved = (bool) $data['fvIsApproved'];
-        $fv->fvApproverUID = $uID;
-        $fv->fvAuthorUID = $uID;
         $fv->fvActivateDateTime = $date;
+        $fv->fvIsApproved = (bool) $data['fvIsApproved'];
+        $fv->fvAuthorUID = $uID;
+        $fv->fvApproverUID = $uID;
         $fv->fvTitle = (string) $data['fvTitle'];
         $fv->fvDescription = (string) $data['fvDescription'];
         $fv->fvTags = self::cleanTags((string) $data['fvTags']);
-        $fv->file = $file;
-        $fv->fvID = 1;
         $em->persist($fv);
         $em->flush();
 
