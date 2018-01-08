@@ -919,22 +919,28 @@ class Version implements ObjectInterface
 
     /**
      * Get an URL that points to the file on disk (if not available, you'll get the result of the getDownloadURL method).
+     * Return NULL if the file storage location is invalid.
+     * If the file is not directly accessible, you'll get the download URL.
      *
-     * @return string|null Url to a file
+     * @return string|null
      */
     public function getURL()
     {
+        $url = null;
         $fsl = $this->getFile()->getFileStorageLocationObject();
         if ($fsl !== null) {
             $app = Application::getFacadeApplication();
             $cf = $app->make('helper/concrete/file');
             $configuration = $fsl->getConfigurationObject();
             if ($configuration->hasPublicURL()) {
-                return $configuration->getPublicURLToFile($cf->prefix($this->fvPrefix, $this->fvFilename));
-            } else {
-                return (string) $this->getDownloadURL();
+                $url = $configuration->getPublicURLToFile($cf->prefix($this->fvPrefix, $this->fvFilename));
+            }
+            if (!$url) {
+                $url = (string) $this->getDownloadURL();
             }
         }
+
+        return $url;
     }
 
     /**
