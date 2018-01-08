@@ -1244,7 +1244,7 @@ class Version implements ObjectInterface
         $this->fvExtension = $ext;
         $this->fvType = $ftl->getGenericType();
         if ($this->fvTitle === null) {
-            $this->fvTitle = $this->getFilename();
+            $this->fvTitle = $this->getFileName();
         }
         $this->fvSize = $size;
 
@@ -1746,7 +1746,7 @@ class Version implements ObjectInterface
         $r->title = $this->getTitle();
         $r->genericTypeText = $this->getGenericTypeText();
         $r->description = $this->getDescription();
-        $r->fileName = $this->getFilename();
+        $r->fileName = $this->getFileName();
         $r->resultsThumbnailImg = $this->getListingThumbnailImage();
         $r->fID = $this->getFileID();
         $r->treeNodeMenu = new Menu($this->getfile());
