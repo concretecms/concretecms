@@ -502,6 +502,16 @@ class Version implements ObjectInterface
     }
 
     /**
+     * Get the date/time when the file version has been activated (or NULL if the file version is not approved).
+     *
+     * @return \DateTime|null
+     */
+    public function getActivateDateTime()
+    {
+        return $this->fvIsApproved ? $this->fvActivateDateTime : null;
+    }
+
+    /**
      * Mark this file version as approved (and disapprove all the other versions of the file).
      * The currently logged in user (if any) will be stored as the approver.
      */
@@ -514,6 +524,7 @@ class Version implements ObjectInterface
         }
 
         $this->fvIsApproved = true;
+        $this->fvActivateDateTime = new DateTime();
         if (User::isLoggedIn()) {
             $uID = (int) (new User())->getUserID();
             if ($uID > 0) {
