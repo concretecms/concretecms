@@ -13,6 +13,7 @@ use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\FieldSet;
 use Concrete\Core\Entity\Express\Form;
 use Concrete\Core\Express\Attribute\AttributeKeyHandleGenerator;
+use Concrete\Core\File\StorageLocation\StorageLocationFactory as FileStorageLocationFactory;
 use Concrete\Core\Express\Entry\Notifier\Notification\FormBlockSubmissionEmailNotification;
 use Concrete\Core\Express\Entry\Notifier\Notification\FormBlockSubmissionNotification;
 use Concrete\Core\Express\Entry\Notifier\NotificationProviderInterface;
@@ -179,7 +180,11 @@ class Controller extends BlockController implements NotificationProviderInterfac
                     if ($this->addFilesToFolder) {
                         $folder = $filesystem->getFolder($this->addFilesToFolder);
                     }
-
+                    if($this->addFilesToStorageLocation) {
+                        $fslFactory = $this->app->make(FileStorageLocationFactory::class);
+                        $fsl = $fslFactory->fetchByID((int) $this->addFilesToStorageLocation);
+                    }
+                    
                     $entityManager->refresh($entry);
 
                     $notifier = $controller->getNotifier($this);
@@ -191,6 +196,9 @@ class Controller extends BlockController implements NotificationProviderInterfac
                         if ($value instanceof FileProviderInterface) {
                             $files = $value->getFileObjects();
                             foreach($files as $file) {
+                                if(is_object($fsl)) {
+                                    $file->setFileStorageLocation($fsl);
+                                }
                                 if ($set) {
                                     $set->addFileToSet($file);
                                 }
@@ -644,7 +652,11 @@ class Controller extends BlockController implements NotificationProviderInterfac
                 $this->set('addFilesToFolder', $addFilesToFolder);
             }
         }
-
+        
+        $fslFactory = $this->app->make(FileStorageLocationFactory::class);
+        $this->set('storageLocations', array_build($fslFactory->fetchList(), function($k, $l){
+            return [$l->getID(), $l->getDisplayName()];
+        }));
         $this->set('entities', Express::getEntities());
     }
 
