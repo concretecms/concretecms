@@ -84,6 +84,7 @@ const NAMESPACE_SEGMENT_VENDOR = 'Concrete';
  * Directory names
  * ----------------------------------------------------------------------------
  */
+const DIRNAME_SRC = 'src';
 const DIRNAME_BLOCKS = 'blocks';
 const DIRNAME_PAGES = 'single_pages';
 const DIRNAME_VIEWS = 'views';
