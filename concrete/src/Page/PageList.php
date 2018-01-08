@@ -587,13 +587,20 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
         } else {
             $treeNodeID = $topic;
         }
-        $this->query->innerJoin('cv', 'CollectionAttributeValues', 'cavTopics',
-            'cv.cID = cavTopics.cID and cv.cvID = cavTopics.cvID');
-        $this->query->innerJoin('cavTopics', 'AttributeValues', 'av', 'cavTopics.avID = av.avID');
-        $this->query->innerJoin('av', 'atSelectedTopics', 'atst', 'av.avID = atst.avID');
-        $this->query->andWhere('atst.treeNodeID = :TopicNodeID');
-        $this->query->setParameter('TopicNodeID', $treeNodeID);
-        $this->query->select('distinct p.cID');
+        $paramName = $this->query->createNamedParameter($treeNodeID, \PDO::PARAM_INT);
+        $query = $this->query->getConnection()->createQueryBuilder();
+        $query
+            ->select('cavTopics.cID', 'cavTopics.cvID')
+            ->from('CollectionAttributeValues', 'cavTopics')
+            ->innerJoin('cavTopics', 'AttributeValues', 'av', 'cavTopics.avID = av.avID')
+            ->innerJoin('av', 'atSelectedTopics', 'atst', 'av.avID = atst.avID')
+            ->where('atst.treeNodeID = ' . $paramName)
+        ;
+        $this->query
+            ->andWhere(
+                $this->query->expr()->in('(cv.cID,cv.cvID)', $query->getSQL())
+            )
+        ;
     }
 
     public function filterByBlockType(BlockType $bt)
