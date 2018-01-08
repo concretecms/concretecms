@@ -18,18 +18,19 @@
                 ?><ul class="ccm-block-topic-list-list"><?php
                 foreach ($node->getChildNodes() as $topic) {
                     if ($topic instanceof \Concrete\Core\Tree\Node\Type\Category) {
-                        ?><li><?php echo $topic->getTreeNodeDisplayName(); ?></li>
+                        ?><li><?php echo $topic->getTreeNodeDisplayName(); ?>
                         <?php
                     } else {
                         ?><li><a href="<?php echo $view->controller->getTopicLink($topic); ?>" <?php
                         if (isset($selectedTopicID) && $selectedTopicID == $topic->getTreeNodeID()) {
                             ?> class="ccm-block-topic-list-topic-selected"<?php
                         }
-                        ?>><?php echo $topic->getTreeNodeDisplayName(); ?></a></li><?php
+                        ?>><?php echo $topic->getTreeNodeDisplayName(); ?></a><?php
                     }
                     if (count($topic->getChildNodes())) {
                         $walk($topic);
                     } ?>
+                    </li>
                     <?php
                 }
                 ?></ul><?php
