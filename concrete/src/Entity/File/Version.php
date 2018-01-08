@@ -575,11 +575,14 @@ class Version implements ObjectInterface
     /**
      * Get an abstract object to work with the actual file resource (note: this is NOT a concrete5 File object).
      *
+     * @throws \League\Flysystem\FileNotFoundException
+     *
      * @return \League\Flysystem\File
      */
     public function getFileResource()
     {
-        $cf = Core::make('helper/concrete/file');
+        $app = Application::getFacadeApplication();
+        $cf = $app->make('helper/concrete/file');
         $fs = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
         $fo = $fs->get($cf->prefix($this->fvPrefix, $this->fvFilename));
 
