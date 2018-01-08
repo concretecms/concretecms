@@ -1505,8 +1505,8 @@ class Version implements ObjectInterface
         $config = $app->make('config');
         $thumbnailPath = $version->getFilePath($this);
         $filesystem = $this->getFile()
-        ->getFileStorageLocationObject()
-        ->getFileSystemObject();
+            ->getFileStorageLocationObject()
+            ->getFileSystemObject();
         try {
             if ($filesystem->has($thumbnailPath)) {
                 $filesystem->delete($thumbnailPath);
@@ -1522,7 +1522,7 @@ class Version implements ObjectInterface
                 'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
                 'mimetype' => $mimeType,
             ]
-            );
+        );
 
         if ($version->getHandle() == $config->get('concrete.icons.file_manager_listing.handle')) {
             $this->fvHasListingThumbnail = true;
