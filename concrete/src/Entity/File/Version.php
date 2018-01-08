@@ -888,8 +888,10 @@ class Version implements ObjectInterface
 
     /**
      * Get the path to the file relative to the webroot (may not exist).
+     * Return NULL if the file storage location is invalid.
+     * If the storage location does not support relative paths, you'll get the URL to the file (or the download URL if the file is not directly accessible).
      *
-     * @return string|\League\URL\URLInterface|null
+     * @return string|null
      *
      * @example /application/files/0000/0000/0000/file.png
      */
@@ -908,7 +910,7 @@ class Version implements ObjectInterface
                 $url = $configuration->getPublicURLToFile($cf->prefix($this->fvPrefix, $this->fvFilename));
             }
             if (!$url) {
-                $url = $this->getDownloadURL();
+                $url = (string) $this->getDownloadURL();
             }
         }
 
