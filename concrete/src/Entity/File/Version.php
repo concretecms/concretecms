@@ -1070,19 +1070,22 @@ class Version implements ObjectInterface
         $fi = $app->make('helper/file');
         $cf = $app->make('helper/concrete/file');
         $filesystem = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
+        $fileName = $this->getFileName();
         do {
             $prefix = $importer->generatePrefix();
-            $path = $cf->prefix($prefix, $this->getFilename());
+            $path = $cf->prefix($prefix, $fileName);
         } while ($filesystem->has($path));
+        $fileContents = $this->getFileResource()->read();
+        $mimeType = Util::guessMimeType($fileName, $fileContents);
         $filesystem->write(
             $path,
-            $this->getFileResource()->read(),
+            $fileContents,
             [
                 'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
-                'mimetype' => $app->make('helper/mime')->mimeFromExtension($fi->getExtension($this->getFilename())),
+                'mimetype' => $mimeType,
             ]
-            );
-        $this->updateFile($this->getFilename(), $prefix);
+        );
+        $this->updateFile($fileName, $prefix);
     }
 
     /**
