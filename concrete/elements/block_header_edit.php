@@ -1,9 +1,9 @@
 <?php
 defined('C5_EXECUTE') or die('Access Denied.');
 
-/* @var $b Concrete\Core\Block\Block */
-/* @var $ci Concrete\Core\Application\Service\Urls */
-/* @var $bth Concrete\Core\Application\Service\UserInterface\Help\BlockTypeManager */
+/* @var Concrete\Core\Block\Block $b */
+/* @var Concrete\Core\Application\Service\Urls $ci */
+/* @var Concrete\Core\Application\Service\UserInterface\Help\BlockTypeManager $bth */
 
 $app = Core::getFacadeApplication();
 
