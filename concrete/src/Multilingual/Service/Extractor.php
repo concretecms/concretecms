@@ -70,7 +70,7 @@ class Extractor
             foreach ($packages as $package) {
                 $fullDirname = DIR_PACKAGES.'/'.$package->getPackageHandle();
                 $phpParser->parseDirectory($fullDirname,
-                    DIRNAME_PACKAGES.'/'.$dirname,
+                    DIRNAME_PACKAGES.'/'.$package->getPackageHandle(),
                     $translations
                 );
                 $packageController = $package->getController();
