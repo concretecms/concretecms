@@ -47,6 +47,7 @@ class Extractor
             DIRNAME_PAGES => [$phpParser],
             DIRNAME_THEMES => [$phpParser, $themesPresetsParser, $blockTemplatesParser],
             DIRNAME_VIEWS => [$phpParser],
+            DIRNAME_CLASSES => [$phpParser]
         ];
         foreach ($processApplication as $dirname => $parsers) {
             if (is_dir(DIR_APPLICATION.'/'.$dirname)) {
