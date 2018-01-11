@@ -147,6 +147,7 @@ return [
 
         // Tracker
         'core_usagetracker' => '\Concrete\Core\Statistics\UsageTracker\ServiceProvider',
+        'core_api' => 'Concrete\Core\API\APIServiceProvider',
     ],
 
     /*
