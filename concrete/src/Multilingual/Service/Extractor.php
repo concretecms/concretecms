@@ -47,6 +47,7 @@ class Extractor
             DIRNAME_PAGES => [$phpParser],
             DIRNAME_THEMES => [$phpParser, $themesPresetsParser, $blockTemplatesParser],
             DIRNAME_VIEWS => [$phpParser],
+            DIRNAME_CLASSES => [$phpParser]
         ];
         foreach ($processApplication as $dirname => $parsers) {
             if (is_dir(DIR_APPLICATION.'/'.$dirname)) {
@@ -69,7 +70,7 @@ class Extractor
             foreach ($packages as $package) {
                 $fullDirname = DIR_PACKAGES.'/'.$package->getPackageHandle();
                 $phpParser->parseDirectory($fullDirname,
-                    DIRNAME_PACKAGES.'/'.$dirname,
+                    DIRNAME_PACKAGES.'/'.$package->getPackageHandle(),
                     $translations
                 );
                 $packageController = $package->getController();
