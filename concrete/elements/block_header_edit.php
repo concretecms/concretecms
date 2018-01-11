@@ -2,11 +2,27 @@
 defined('C5_EXECUTE') or die('Access Denied.');
 
 /* @var Concrete\Core\Block\Block $b */
+/* @var Concrete\Core\Application\Service\Urls $ci */
+/* @var Concrete\Core\Application\Service\UserInterface\Help\BlockTypeManager $bth */
 
-$bt = $b->getBlockTypeObject();
+$app = Core::getFacadeApplication();
+
+$ci = $app->make('helper/concrete/urls');
+$bth = $app->make('help/block_type');
 
 if (!isset($btHandle)) {
     $btHandle = $b->getBlockTypeHandle();
+}
+
+$bt = $b->getBlockTypeObject();
+
+if ($b->getBlockTypeHandle() === BLOCK_HANDLE_SCRAPBOOK_PROXY) {
+    $bx = Block::getByID($b->getController()->getOriginalBlockID());
+    $cont = $bx->getController();
+    $supportsInlineEdit = $bx->getBlockTypeObject()->supportsInlineEdit();
+} else {
+    $cont = $bt->getController();
+    $supportsInlineEdit = $bt->supportsInlineEdit();
 }
 
 ?>
@@ -14,7 +30,7 @@ if (!isset($btHandle)) {
 
 <script type="text/javascript">
 <?php
-$ci = Core::make('helper/concrete/urls');
+
 $url = (string) $ci->getBlockTypeJavaScriptURL($bt);
 if ($url !== '') {
     ?>ConcreteAssetLoader.loadJavaScript(<?= json_encode($url) ?>);<?php
@@ -33,12 +49,6 @@ if (isset($headerItems) && is_array($headerItems)) {
     }
 }
 
-if ($b->getBlockTypeHandle() === BLOCK_HANDLE_SCRAPBOOK_PROXY) {
-    $supportsInlineEdit =  Block::getByID($b->getController()->getOriginalBlockID())->getBlockTypeObject()->supportsInlineEdit();
-}
-else {
-    $supportsInlineEdit = $bt->supportsInlineEdit();
-}
 ?>
 $(function() {
 	$('#ccm-block-form').concreteAjaxBlockForm({
@@ -49,15 +59,8 @@ $(function() {
 });
 </script>
 <?php
-if ($b->getBlockTypeHandle() === BLOCK_HANDLE_SCRAPBOOK_PROXY) {
-    $bx = Block::getByID($b->getController()->getOriginalBlockID());
-    $cont = $bx->getController();
-} else {
-    $cont = $bt->getController();
-}
 
-$hih = Core::make('help/block_type');
-$message = $hih->getMessage($bt->getBlockTypeHandle());
+$message = $bth->getMessage($bt->getBlockTypeHandle());
 
 if (!$message && $cont->getBlockTypeHelp()) {
     $message = new Concrete\Core\Application\Service\UserInterface\Help\Message();
@@ -65,14 +68,13 @@ if (!$message && $cont->getBlockTypeHelp()) {
     $message->setMessageContent($cont->getBlockTypeHelp());
 }
 
-if (is_object($message) && !$bt->supportsInlineEdit()) {
-    ?>
+if (is_object($message) && !$bt->supportsInlineEdit()) { ?>
 	<div class="dialog-help" id="ccm-menu-help-content"><?php echo $message->getContent() ?></div>
 <?php
 } ?>
 
 <div <?php if (!$bt->supportsInlineEdit()) {
-    ?>ccm-ui"<?php
+    ?>class="ccm-ui"<?php
 } else {
     ?>data-container="inline-toolbar"<?php
 }

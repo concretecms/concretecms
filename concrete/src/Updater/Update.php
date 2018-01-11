@@ -81,10 +81,13 @@ class Update
         $r = $cache->getItem('APP_UPDATE_INFO');
         if ($r->isMiss()) {
             $r->lock();
-            $r->set(static::getLatestAvailableUpdate());
+            $result = static::getLatestAvailableUpdate();
+            $r->set($result)->save();
+        } else {
+            $result = $r->get();
         }
 
-        return $r->get();
+        return $result;
     }
 
     /**

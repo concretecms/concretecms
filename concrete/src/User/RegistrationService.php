@@ -180,7 +180,7 @@ class RegistrationService implements RegistrationServiceInterface
         if ($baseUsername === '') {
             $firstName = $this->stringToUsernameChunk($firstName);
             $lastName = $this->stringToUsernameChunk($lastName);
-            if ($firstName !== '' && $firstName !== '') {
+            if ($firstName !== '' || $lastName !== '') {
                 $baseUsername = trim($firstName . '_' . $lastName, '_');
             } else {
                 $mailbox = strstr((string) $email, '@', true);
