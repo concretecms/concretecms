@@ -220,7 +220,7 @@ interface AssetInterface
     /**
      * Register the asset properties.
      *
-     * @param string $filename the position of the asset
+     * @param string $filename the location of the asset
      * @param array $args {
      *
      *     @var bool $local is this asset a locally available file (accessible with the getAssetPath method)?

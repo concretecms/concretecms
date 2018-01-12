@@ -10,93 +10,124 @@ use Symfony\Component\HttpFoundation\Response;
 abstract class Asset implements AssetInterface
 {
     /**
+     * The location of the asset (used to build the path & URL).
+     *
      * @var string
      */
     protected $location;
 
     /**
+     * Does the URL/path have already been resolved (starting from the location) for this (local) assets?
+     *
      * @var bool
      */
     protected $assetHasBeenMapped = false;
 
     /**
+     * The asset version.
+     *
      * @var string
      */
     protected $assetVersion = '0';
 
     /**
+     * The handle of this asset (together with getAssetType, identifies this asset).
+     *
      * @var string
      */
     protected $assetHandle;
 
     /**
+     * Is this asset a locally available file (accessible with the getAssetPath method)?
+     *
      * @var bool
      */
     protected $local = true;
 
     /**
+     * The name of the file of this asset.
+     *
      * @var string
      */
     protected $filename;
 
     /**
+     * The URL of this asset.
+     *
      * @var string
      */
     protected $assetURL;
 
     /**
+     * The path to this asset.
+     *
      * @var string
      */
     protected $assetPath;
 
     /**
+     * Does this asset support minification?
+     *
      * @var bool
      */
     protected $assetSupportsMinification = false;
 
     /**
+     * Can this asset be combined with other assets?
+     *
      * @var bool
      */
     protected $assetSupportsCombination = false;
 
     /**
-     * @var \Package
+     * The package that defines this asset.
+     *
+     * @var \Concrete\Core\Package\Package|\Concrete\Core\Entity\Package|null
      */
     protected $pkg;
 
     /**
+     * The URL of the source files this asset has been built from (useful to understand the origin of this asset).
+     *
      * @var array
      */
     protected $combinedAssetSourceFiles = [];
 
     /**
-     * @param bool|string $assetHandle
+     * Initialize the instance.
+     *
+     * @param string $assetHandle the handle of this asset (together with getAssetType, identifies this asset)
      */
-    public function __construct($assetHandle = false)
+    public function __construct($assetHandle = '')
     {
-        $this->assetHandle = $assetHandle;
+        $this->assetHandle = (string) $assetHandle;
         $this->position = $this->getAssetDefaultPosition();
     }
 
     /**
-     * @param Asset[] $assets
+     * {@inheritdoc}
      *
-     * @return Asset[]
-     *
-     * @abstract
+     * @see \Concrete\Core\Asset\AssetInterface::process()
      */
     public static function process($assets)
     {
         return $assets;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Asset\AssetInterface::getOutputAssetType()
+     */
     public function getOutputAssetType()
     {
         return $this->getAssetType();
     }
 
     /**
-     * @return bool
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Asset\AssetInterface::assetSupportsMinification()
      */
     public function assetSupportsMinification()
     {
@@ -104,7 +135,9 @@ abstract class Asset implements AssetInterface
     }
 
     /**
-     * @return bool
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Asset\AssetInterface::assetSupportsCombination()
      */
     public function assetSupportsCombination()
     {
@@ -112,7 +145,9 @@ abstract class Asset implements AssetInterface
     }
 
     /**
-     * @param mixed $location
+     * Set the location of this asset.
+     *
+     * @param string $location
      */
     public function setAssetLocation($location)
     {
@@ -120,7 +155,9 @@ abstract class Asset implements AssetInterface
     }
 
     /**
-     * @param bool $minify
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Asset\AssetInterface::setAssetSupportsMinification()
      */
     public function setAssetSupportsMinification($minify)
     {
@@ -128,7 +165,9 @@ abstract class Asset implements AssetInterface
     }
 
     /**
-     * @param bool $combine
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Asset\AssetInterface::setAssetSupportsCombination()
      */
     public function setAssetSupportsCombination($combine)
     {
@@ -136,7 +175,9 @@ abstract class Asset implements AssetInterface
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Asset\AssetInterface::getAssetURL()
      */
     public function getAssetURL()
     {
@@ -148,7 +189,9 @@ abstract class Asset implements AssetInterface
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Asset\AssetInterface::getAssetHashKey()
      */
     public function getAssetHashKey()
     {
@@ -173,6 +216,11 @@ abstract class Asset implements AssetInterface
         return $result;
     }
 
+    /**
+     * Get an AssetPointer instance that identifies this asset.
+     *
+     * @return \Concrete\Core\Asset\AssetPointer
+     */
     public function getAssetPointer()
     {
         $pointer = new AssetPointer($this->getAssetType(), $this->getAssetHandle());
@@ -181,7 +229,9 @@ abstract class Asset implements AssetInterface
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Asset\AssetInterface::getAssetPath()
      */
     public function getAssetPath()
     {
@@ -193,7 +243,9 @@ abstract class Asset implements AssetInterface
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Asset\AssetInterface::getAssetHandle()
      */
     public function getAssetHandle()
     {
@@ -201,7 +253,9 @@ abstract class Asset implements AssetInterface
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Asset\AssetInterface::getAssetFilename()
      */
     public function getAssetFilename()
     {
@@ -209,7 +263,9 @@ abstract class Asset implements AssetInterface
     }
 
     /**
-     * @param string $version
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Asset\AssetInterface::setAssetVersion()
      */
     public function setAssetVersion($version)
     {
@@ -217,7 +273,9 @@ abstract class Asset implements AssetInterface
     }
 
     /**
-     * @param array $paths
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Asset\AssetInterface::setCombinedAssetSourceFiles()
      */
     public function setCombinedAssetSourceFiles($paths)
     {
@@ -225,7 +283,9 @@ abstract class Asset implements AssetInterface
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Asset\AssetInterface::getAssetVersion()
      */
     public function getAssetVersion()
     {
@@ -233,7 +293,9 @@ abstract class Asset implements AssetInterface
     }
 
     /**
-     * @param string $position
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Asset\AssetInterface::setAssetPosition()
      */
     public function setAssetPosition($position)
     {
@@ -241,7 +303,9 @@ abstract class Asset implements AssetInterface
     }
 
     /**
-     * @param \Package $pkg
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Asset\AssetInterface::setPackageObject()
      */
     public function setPackageObject($pkg)
     {
@@ -249,7 +313,9 @@ abstract class Asset implements AssetInterface
     }
 
     /**
-     * @param string $url
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Asset\AssetInterface::setAssetURL()
      */
     public function setAssetURL($url)
     {
@@ -258,7 +324,9 @@ abstract class Asset implements AssetInterface
     }
 
     /**
-     * @param string $path
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Asset\AssetInterface::setAssetPath()
      */
     public function setAssetPath($path)
     {
@@ -272,7 +340,9 @@ abstract class Asset implements AssetInterface
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Asset\AssetInterface::getAssetURLPath()
      */
     public function getAssetURLPath()
     {
@@ -280,7 +350,9 @@ abstract class Asset implements AssetInterface
     }
 
     /**
-     * @return bool
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Asset\AssetInterface::isAssetLocal()
      */
     public function isAssetLocal()
     {
@@ -288,7 +360,9 @@ abstract class Asset implements AssetInterface
     }
 
     /**
-     * @param bool $isLocal
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Asset\AssetInterface::setAssetIsLocal()
      */
     public function setAssetIsLocal($isLocal)
     {
@@ -296,7 +370,9 @@ abstract class Asset implements AssetInterface
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Asset\AssetInterface::getAssetPosition()
      */
     public function getAssetPosition()
     {
@@ -304,7 +380,9 @@ abstract class Asset implements AssetInterface
     }
 
     /**
-     * @param string $path
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Asset\AssetInterface::mapAssetLocation()
      */
     public function mapAssetLocation($path)
     {
@@ -323,7 +401,9 @@ abstract class Asset implements AssetInterface
     }
 
     /**
-     * @return string|null
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Asset\AssetInterface::getAssetContents()
      */
     public function getAssetContents()
     {
@@ -332,6 +412,11 @@ abstract class Asset implements AssetInterface
         return ($result === false) ? null : $result;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Asset\AssetInterface::register()
+     */
     public function register($filename, $args, $pkg = false)
     {
         if ($pkg != false) {
@@ -357,6 +442,8 @@ abstract class Asset implements AssetInterface
     }
 
     /**
+     * Get the contents of an asset given its route.
+     *
      * @param string $route
      *
      * @return string|null
