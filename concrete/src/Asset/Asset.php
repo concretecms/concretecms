@@ -9,10 +9,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 abstract class Asset implements AssetInterface
 {
-    const ASSET_POSITION_HEADER = 'H';
-
-    const ASSET_POSITION_FOOTER = 'F';
-
     /**
      * @var string
      */
