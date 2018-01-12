@@ -594,6 +594,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
         $this->query->andWhere('atst.treeNodeID = :TopicNodeID');
         $this->query->setParameter('TopicNodeID', $treeNodeID);
         $this->query->select('distinct p.cID');
+        $this->query->addSelect('p.cDisplayOrder');
     }
 
     public function filterByBlockType(BlockType $bt)
