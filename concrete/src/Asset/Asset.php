@@ -2,10 +2,16 @@
 
 namespace Concrete\Core\Asset;
 
+use Concrete\Core\Filesystem\FileLocator;
+use Concrete\Core\Http\Request;
 use Concrete\Core\Package\Package;
+use Concrete\Core\Package\PackageService;
+use Concrete\Core\Routing\RouterInterface;
 use Concrete\Core\Support\Facade\Application;
-use Environment;
+use Exception;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Matcher\UrlMatcher;
+use Symfony\Component\Routing\RequestContext;
 
 abstract class Asset implements AssetInterface
 {
@@ -279,12 +285,12 @@ abstract class Asset implements AssetInterface
     public function mapAssetLocation($path)
     {
         if ($this->isAssetLocal()) {
-            $env = Environment::get();
-            $pkgHandle = false;
-            if (is_object($this->pkg)) {
-                $pkgHandle = $this->pkg->getPackageHandle();
+            $app = Application::getFacadeApplication();
+            $locator = $app->make(FileLocator::class);
+            if ($this->pkg) {
+                $locator->addLocation(new FileLocator\PackageLocation($this->pkg->getPackageHandle()));
             }
-            $r = $env->getRecord($path, $pkgHandle);
+            $r = $locator->getRecord($path);
             $this->setAssetPath($r->file);
             $this->setAssetURL($r->url);
         } else {
@@ -333,7 +339,15 @@ abstract class Asset implements AssetInterface
         if ($this->isAssetLocal()) {
             $filename = $this->getAssetPath();
             if (is_file($filename)) {
-                if (is_readable($filename) && \Config::get('concrete.cache.full_contents_assets_hash')) {
+                $useFileContents = false;
+                if (is_readable($filename)) {
+                    $app = Application::getFacadeApplication();
+                    $config = $app->make('config');
+                    if ($config->get('concrete.cache.full_contents_assets_hash')) {
+                        $useFileContents = true;
+                    }
+                }
+                if ($useFileContents) {
                     $sha1 = @sha1_file($filename);
                     if ($sha1 !== false) {
                         $result = $sha1;
@@ -409,11 +423,19 @@ abstract class Asset implements AssetInterface
      */
     public function register($filename, $args, $pkg = false)
     {
-        if ($pkg != false) {
-            if ($pkg !== false && is_string($pkg)) {
-                $pkg = Package::getByHandle($pkg);
+        $args += [
+            'local' => false,
+            'minify' => null,
+            'combine' => null,
+            'version' => null,
+            'position' => null,
+        ];
+        if ($pkg) {
+            if (is_string($pkg)) {
+                $app = Application::getFacadeApplication();
+                $pkg = $app->make(PackageService::class)->getByHandle($pkg);
             }
-            $this->setPackageObject($pkg);
+            $this->setPackageObject($pkg ?: null);
         }
         $this->setAssetIsLocal($args['local']);
         $this->setAssetLocation($filename);
@@ -464,22 +486,22 @@ abstract class Asset implements AssetInterface
     {
         $result = null;
         try {
-            $routes = \Route::getList();
-            /* @var $routes \Symfony\Component\Routing\RouteCollection */
-            $context = new \Symfony\Component\Routing\RequestContext();
-            $request = \Request::getInstance();
+            $app = Application::getFacadeApplication();
+            $router = $app->make(RouterInterface::class);
+            $routes = $router->getList();
+            $context = new RequestContext();
+            $request = $app->make(Request::class);
             $context->fromRequest($request);
-            $matcher = new \Symfony\Component\Routing\Matcher\UrlMatcher($routes, $context);
+            $matcher = new UrlMatcher($routes, $context);
             $matched = null;
             try {
                 $matched = $matcher->match($route);
-            } catch (\Exception $x) {
-                $m = null;
+            } catch (Exception $x) {
                 // Route matcher requires that paths ends with a slash
                 if (preg_match('/^(.*[^\/])($|\?.*)$/', $route, $m)) {
                     try {
                         $matched = $matcher->match($m[1] . '/' . (isset($m[2]) ? $m[2] : ''));
-                    } catch (\Exception $x) {
+                    } catch (Exception $x) {
                     }
                 }
             }
@@ -490,14 +512,14 @@ abstract class Asset implements AssetInterface
                     $chunks = explode('::', $controller, 2);
                     if (count($chunks) === 2) {
                         if (class_exists($chunks[0])) {
-                            $array = [Application::getFacadeApplication()->make($chunks[0]), $chunks[1]];
+                            $array = [$app->make($chunks[0]), $chunks[1]];
                             if (is_callable($array)) {
                                 $callable = $array;
                             }
                         }
                     } else {
                         if (class_exists($controller) && method_exists($controller, '__invoke')) {
-                            $callable = Application::getFacadeApplication()->make($controller);
+                            $callable = $app->make($controller);
                         }
                     }
                 } elseif (is_callable($controller)) {
@@ -514,7 +536,7 @@ abstract class Asset implements AssetInterface
                     ob_end_clean();
                 }
             }
-        } catch (\Exception $x) {
+        } catch (Exception $x) {
         }
 
         return $result;
