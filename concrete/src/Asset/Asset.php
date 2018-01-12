@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Asset;
 
 use Concrete\Core\Package\Package;
@@ -8,6 +9,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 abstract class Asset implements AssetInterface
 {
+    const ASSET_POSITION_HEADER = 'H';
+
+    const ASSET_POSITION_FOOTER = 'F';
+
     /**
      * @var string
      */
@@ -68,12 +73,13 @@ abstract class Asset implements AssetInterface
      */
     protected $combinedAssetSourceFiles = [];
 
-    const ASSET_POSITION_HEADER = 'H';
-    const ASSET_POSITION_FOOTER = 'F';
-
-    public function getOutputAssetType()
+    /**
+     * @param bool|string $assetHandle
+     */
+    public function __construct($assetHandle = false)
     {
-        return $this->getAssetType();
+        $this->assetHandle = $assetHandle;
+        $this->position = $this->getAssetDefaultPosition();
     }
 
     /**
@@ -86,6 +92,11 @@ abstract class Asset implements AssetInterface
     public static function process($assets)
     {
         return $assets;
+    }
+
+    public function getOutputAssetType()
+    {
+        return $this->getAssetType();
     }
 
     /**
@@ -191,15 +202,6 @@ abstract class Asset implements AssetInterface
     public function getAssetHandle()
     {
         return $this->assetHandle;
-    }
-
-    /**
-     * @param bool|string $assetHandle
-     */
-    public function __construct($assetHandle = false)
-    {
-        $this->assetHandle = $assetHandle;
-        $this->position = $this->getAssetDefaultPosition();
     }
 
     /**
@@ -334,6 +336,30 @@ abstract class Asset implements AssetInterface
         return ($result === false) ? null : $result;
     }
 
+    public function register($filename, $args, $pkg = false)
+    {
+        if ($pkg != false) {
+            if ($pkg !== false && is_string($pkg)) {
+                $pkg = Package::getByHandle($pkg);
+            }
+            $this->setPackageObject($pkg);
+        }
+        $this->setAssetIsLocal($args['local']);
+        $this->setAssetLocation($filename);
+        if ($args['minify'] === true || $args['minify'] === false) {
+            $this->setAssetSupportsMinification($args['minify']);
+        }
+        if ($args['combine'] === true || $args['combine'] === false) {
+            $this->setAssetSupportsCombination($args['combine']);
+        }
+        if ($args['version']) {
+            $this->setAssetVersion($args['version']);
+        }
+        if ($args['position']) {
+            $this->setAssetPosition($args['position']);
+        }
+    }
+
     /**
      * @param string $route
      *
@@ -397,29 +423,5 @@ abstract class Asset implements AssetInterface
         }
 
         return $result;
-    }
-
-    public function register($filename, $args, $pkg = false)
-    {
-        if ($pkg != false) {
-            if ($pkg !== false && is_string($pkg)) {
-                $pkg = Package::getByHandle($pkg);
-            }
-            $this->setPackageObject($pkg);
-        }
-        $this->setAssetIsLocal($args['local']);
-        $this->setAssetLocation($filename);
-        if ($args['minify'] === true || $args['minify'] === false) {
-            $this->setAssetSupportsMinification($args['minify']);
-        }
-        if ($args['combine'] === true || $args['combine'] === false) {
-            $this->setAssetSupportsCombination($args['combine']);
-        }
-        if ($args['version']) {
-            $this->setAssetVersion($args['version']);
-        }
-        if ($args['position']) {
-            $this->setAssetPosition($args['position']);
-        }
     }
 }

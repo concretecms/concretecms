@@ -1,14 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Korvin
- * Date: 7/25/15
- * Time: 8:35 AM.
- */
+
 namespace Concrete\Core\Asset;
 
 interface AssetInterface
 {
+    public function __toString();
+
     public function getAssetDefaultPosition();
 
     public function getAssetType();
@@ -135,6 +132,4 @@ interface AssetInterface
     public function getAssetContents();
 
     public function register($filename, $args, $pkg = false);
-
-    public function __toString();
 }
