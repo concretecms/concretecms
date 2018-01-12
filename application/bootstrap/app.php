@@ -10,7 +10,8 @@
  *
  * ## Set a theme by route:
  *
- * Route::setThemeByRoute('/login', 'greek_yogurt');
+ * $app->make('\Concrete\Core\Page\Theme\ThemeRouteCollection')
+ * ->setThemeByRoute('/login', 'greek_yogurt');
  *
  *
  * ## Register a class override.

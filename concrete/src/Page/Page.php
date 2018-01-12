@@ -8,6 +8,7 @@ use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Entity\Site\SiteTree;
 use Concrete\Core\Page\Stack\Stack;
 use Concrete\Core\Page\Theme\Theme;
+use Concrete\Core\Page\Theme\ThemeRouteCollection;
 use Concrete\Core\Permission\AssignableObjectTrait;
 use Concrete\Core\Site\SiteAggregateInterface;
 use Concrete\Core\Site\Tree\TreeInterface;
@@ -17,6 +18,7 @@ use Concrete\Core\Page\Type\Composer\FormLayoutSetControl;
 use Concrete\Core\Page\Type\Type;
 use Concrete\Core\Permission\AssignableObjectInterface;
 use Concrete\Core\Permission\Key\Key;
+use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Support\Facade\Route;
 use Concrete\Core\Permission\Access\Entity\PageOwnerEntity;
 use Database;
@@ -1382,7 +1384,9 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public function getCollectionThemeObject()
     {
         if (!isset($this->themeObject)) {
-            $tmpTheme = Route::getThemeByRoute($this->getCollectionPath());
+            $app = Facade::getFacadeApplication();
+            $tmpTheme = $app->make(ThemeRouteCollection::class)
+                ->getThemeByRoute($this->getCollectionPath());
             if (isset($tmpTheme[0])) {
                 switch ($tmpTheme[0]) {
                     case VIEW_CORE_THEME:

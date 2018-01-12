@@ -50,7 +50,7 @@ return [
          *
          * @var string (message|debug)
          */
-        'detail' => 'message',
+        'detail' => 'debug',
     ],
 
     /*

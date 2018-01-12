@@ -2,8 +2,8 @@
 namespace Concrete\Core\Http;
 
 use Concrete\Core\Application\Application;
-use Concrete\Core\Routing\DispatcherRouteCallback;
 use Concrete\Core\Routing\Redirect;
+use Concrete\Core\Routing\Router;
 use Concrete\Core\Routing\RouterInterface;
 use Concrete\Core\User\User;
 use Concrete\Core\View\View;
@@ -22,11 +22,11 @@ class DefaultDispatcher implements DispatcherInterface
     private $app;
 
     /**
-     * @var \Concrete\Core\Routing\RouterInterface
+     * @var \Concrete\Core\Routing\Router
      */
     private $router;
 
-    public function __construct(Application $app, RouterInterface $router)
+    public function __construct(Application $app, Router $router)
     {
         $this->app = $app;
         $this->router = $router;
@@ -98,7 +98,7 @@ class DefaultDispatcher implements DispatcherInterface
 
     private function handleDispatch($request)
     {
-        $collection = $this->router->getList();
+        $collection = $this->router->getRoutes();
         $context = new RequestContext();
         $context->fromRequest($request);
         $matcher = new UrlMatcher($collection, $context);
@@ -109,17 +109,16 @@ class DefaultDispatcher implements DispatcherInterface
             $matched = $matcher->match($path);
             $request->attributes->add($matched);
             $route = $collection->get($matched['_route']);
-
-            $this->router->setRequest($request);
-            $response = $this->router->execute($route, $matched);
+            $action = $this->router->getAction($route);
+            $response = $action->execute($request, $route, []);
         } catch (ResourceNotFoundException $e) {
             $callDispatcher = true;
         } catch (MethodNotAllowedException $e) {
             $callDispatcher = true;
         }
         if ($callDispatcher) {
-            $callback = $this->app->make(DispatcherRouteCallback::class, ['dispatcher']);
-            $response = $callback->execute($request);
+            $c = \Page::getFromRequest($request);
+            $response = $this->app->make(ResponseFactoryInterface::class)->collection($c);
         }
 
         return $response;

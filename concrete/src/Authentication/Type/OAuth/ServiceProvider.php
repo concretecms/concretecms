@@ -33,13 +33,14 @@ class ServiceProvider extends Provider
             return $extractor_factory->get($service);
         });
 
+        /*
+
         \Route::register(
             '/ccm/system/authentication/oauth2/{type}/{action}',
             function ($type, $action) {
                 try {
                     $type = \AuthenticationType::getByHandle($type);
                     if ($type && is_object($type) && !$type->isError()) {
-                        /** @var GenericOauthTypeController $controller */
                         $controller = $type->getController();
                         if ($controller instanceof GenericOauthTypeController) {
                             switch ($action) {
@@ -62,5 +63,6 @@ class ServiceProvider extends Provider
                     \Log::addNotice('OAUTH ERROR: ' . $e->getMessage());
                 }
             });
+        */
     }
 }

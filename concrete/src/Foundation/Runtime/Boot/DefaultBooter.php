@@ -14,6 +14,7 @@ use Concrete\Core\Support\Facade\Facade;
 use Illuminate\Config\Repository;
 use Symfony\Component\HttpFoundation\Response;
 use Concrete\Core\Application\ApplicationAwareTrait;
+use Concrete\Core\Page\Theme\ThemeRouteCollection;
 
 class DefaultBooter implements BootInterface, ApplicationAwareInterface
 {
@@ -292,7 +293,8 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
     private function initializeRoutes(Repository $config)
     {
         Route::registerMultiple($config->get('app.routes'));
-        Route::setThemesByRoutes($config->get('app.theme_paths', array()));
+        $this->app->make(ThemeRouteCollection::class)
+            ->setThemesByRoutes($config->get('app.theme_paths', array()));
     }
 
     /**
