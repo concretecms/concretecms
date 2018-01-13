@@ -98,29 +98,8 @@ class DefaultDispatcher implements DispatcherInterface
 
     private function handleDispatch($request)
     {
-        $collection = $this->router->getRoutes();
-        $context = new RequestContext();
-        $context->fromRequest($request);
-        $matcher = new UrlMatcher($collection, $context);
-        $path = rtrim($request->getPathInfo(), '/') . '/';
-
-        $callDispatcher = false;
-        try {
-            $matched = $matcher->match($path);
-            $request->attributes->add($matched);
-            $route = $collection->get($matched['_route']);
-            $action = $this->router->getAction($route);
-            $response = $action->execute($request, $route, []);
-        } catch (ResourceNotFoundException $e) {
-            $callDispatcher = true;
-        } catch (MethodNotAllowedException $e) {
-            $callDispatcher = true;
-        }
-        if ($callDispatcher) {
-            $c = \Page::getFromRequest($request);
-            $response = $this->app->make(ResponseFactoryInterface::class)->collection($c);
-        }
-
+        $c = \Page::getFromRequest($request);
+        $response = $this->app->make(ResponseFactoryInterface::class)->collection($c);
         return $response;
     }
 }

@@ -6,6 +6,7 @@ use Concrete\Core\Http\Middleware\MiddlewareInterface;
 class RouteMiddleware
 {
 
+
     /**
      * @var MiddlewareInterface
      */

@@ -34,7 +34,7 @@ class ProviderList
      */
     protected function createInstance($class)
     {
-        return new $class($this->app);
+        return $this->app->make($class);
     }
 
     /**

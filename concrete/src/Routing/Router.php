@@ -1,6 +1,11 @@
 <?php
 namespace Concrete\Core\Routing;
 
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\MethodNotAllowedException;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Routing\Matcher\UrlMatcher;
+use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
 
 class Router
@@ -112,6 +117,23 @@ class Router
     public function addRoute(Route $route)
     {
         $this->routes->add($route->getName(), $route);
+    }
+
+    /**
+     * @param Request $request
+     * @return Route|\Symfony\Component\Routing\Route|ResourceNotFoundException|MethodNotAllowedException
+     */
+    public function matchRoute(Request $request)
+    {
+        $matcher = new UrlMatcher(
+            $this->getRoutes(),
+            id(new RequestContext())->fromRequest($request)
+        );
+        $path = $this->normalizePath($request->getPathInfo());
+        $matched = $matcher->match($path);
+        if (isset($matched['_route'])) {
+            return $this->routes->get($matched['_route']);
+        }
     }
 
     /**

@@ -13,7 +13,7 @@ use Concrete\Core\Routing\ClosureRouteAction;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
-
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 class TestController
 {
 
@@ -132,15 +132,20 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $context = new RequestContext();
         $context->fromRequest($request);
 
-        $matcher = new UrlMatcher($collection, $context);
-
-        $path = rtrim($request->getPathInfo(), '/') . '/';
-        $matched = $matcher->match($path);
-        $this->assertEquals('something_hello_world', $matched['_route']);
-        $route = $collection->get($matched['_route']);
+        $route = $router->matchRoute($request);
+        $this->assertInstanceOf(Route::class, $route);
+        $this->assertEquals('something_hello_world', $route->getName());
         $action = $router->getAction($route);
         $response = $action->execute($request, $route, []);
         $this->assertEquals('oh hai', $response->getContent());
+    }
+
+    public function testInvalidRoute()
+    {
+        $this->setExpectedException(ResourceNotFoundException::class);
+        $request = Request::create('http://www.awesome.com/something/uh/oh/something_else');
+        $router = new Router(new RouteCollection(), new RouteActionFactory());
+        $route = $router->matchRoute($request);
     }
 
     public function testGrouping()
@@ -192,9 +197,6 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $controller = $action->getAction();
 
         $this->assertEquals('Concrete\Controller\Backend\User::removeGroup', $controller);
-
-
-
     }
 
 }
