@@ -19,6 +19,11 @@ class APIServiceProvider extends ServiceProvider
 
     public function register()
     {
+
+        $this->app->singleton('api', function ($app) {
+            return $app->make('Concrete\Core\API\ClientFactory');
+        });
+
         $this->router->buildGroup()
             ->setPrefix('/ccm/api/v1')
             ->addMiddleware(OauthMiddleware::class)

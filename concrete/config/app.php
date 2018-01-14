@@ -167,6 +167,7 @@ return [
         'UserInfo' => '\Concrete\Core\Support\Facade\UserInfo',
         'Element' => '\Concrete\Core\Support\Facade\Element',
         'Log' => '\Concrete\Core\Support\Facade\Log',
+        'API' => '\Concrete\Core\Support\Facade\API',
         'Image' => '\Concrete\Core\Support\Facade\Image',
         'Config' => '\Concrete\Core\Support\Facade\Config',
         'URL' => '\Concrete\Core\Support\Facade\Url',
