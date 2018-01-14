@@ -121,7 +121,7 @@ class Router
 
     /**
      * @param Request $request
-     * @return Route|\Symfony\Component\Routing\Route|ResourceNotFoundException|MethodNotAllowedException
+     * @return null|MatchedRoute|ResourceNotFoundException|MethodNotAllowedException
      */
     public function matchRoute(Request $request)
     {
@@ -130,9 +130,11 @@ class Router
             id(new RequestContext())->fromRequest($request)
         );
         $path = $this->normalizePath($request->getPathInfo());
+        $request->attributes->add($matcher->match($path));
         $matched = $matcher->match($path);
         if (isset($matched['_route'])) {
-            return $this->routes->get($matched['_route']);
+            $route = $this->routes->get($matched['_route']);
+            return new MatchedRoute($route, $matched);
         }
     }
 

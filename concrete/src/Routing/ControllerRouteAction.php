@@ -15,7 +15,8 @@ class ControllerRouteAction implements RouteActionInterface
     protected $action;
 
     /**
-     * $action is something like \My\Controller::myAction
+     * ControllerRouteCallback constructor. $action is something like
+     * \My\Controller::myAction
      * @param string $action
      */
     public function __construct($action)
@@ -30,6 +31,8 @@ class ControllerRouteAction implements RouteActionInterface
     {
         return $this->action;
     }
+
+
 
     /**
      * @param Request $request

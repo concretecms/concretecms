@@ -14,6 +14,7 @@ use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Concrete\Core\Routing\MatchedRoute;
 class TestController
 {
 
@@ -133,6 +134,8 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $context->fromRequest($request);
 
         $route = $router->matchRoute($request);
+        $this->assertInstanceOf(MatchedRoute::class, $route);
+        $route = $route->getRoute();
         $this->assertInstanceOf(Route::class, $route);
         $this->assertEquals('something_hello_world', $route->getName());
         $action = $router->getAction($route);
@@ -197,6 +200,22 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $controller = $action->getAction();
 
         $this->assertEquals('Concrete\Controller\Backend\User::removeGroup', $controller);
+    }
+
+    public function testInstallRoute()
+    {
+        $router = new Router(new RouteCollection(), new RouteActionFactory());
+        $router->register('/install/web_precondition/{handle}/{argument}', '\Concrete\Controller\Install::web_precondition');
+
+        $request = Request::create('http://www.awesome.com/install/web_precondition/request_urls/20');
+        $route = $router->matchRoute($request);
+        $this->assertInstanceOf(MatchedRoute::class, $route);
+
+        $action = $router->getAction($route->getRoute());
+        $response = $action->execute($request, $route->getRoute(), []);
+
+        $r = json_decode($response->getContent());
+        $this->assertEquals(400, $r->response);
     }
 
 }

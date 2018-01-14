@@ -6,6 +6,7 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Http\ResponseFactory;
 use Concrete\Core\User\UserInfoRepository;
 use Symfony\Component\HttpFoundation\Request;
+use Concrete\Core\Authentication\OAuth2\Request as OAuth2Request;
 
 class OAuthMiddleware implements MiddlewareInterface
 {
@@ -19,6 +20,7 @@ class OAuthMiddleware implements MiddlewareInterface
     {
         $this->app = $app;
         $this->factory = $factory;
+        $this->oauth = $this->app->make('oauth2/server');
         $this->repository = $repository;
     }
 
@@ -30,21 +32,9 @@ class OAuthMiddleware implements MiddlewareInterface
      */
     public function process(Request $request, DelegateInterface $frame)
     {
-/*
-        $wrappedRequest = new WrappedRequest($request);
+
+        $wrappedRequest = new OAuth2Request($request);
         $scope = null;
-
-        // Early return if a route has disabled oauth
-        if ($route = $request->attributes->get('route')) {
-            if ($route->getOption('oauth') === false) {
-                return $frame->next($request);
-            }
-
-            if ($routeScope = $route->getOption('oauth_scope')) {
-                $scope = $routeScope;
-            }
-        }
-
 
         if (!$this->oauth->verifyResourceRequest($wrappedRequest, $response = new \OAuth2\Response, $scope)) {
             $body = $response->getParameters();
@@ -61,7 +51,6 @@ class OAuthMiddleware implements MiddlewareInterface
         if ($id = array_get($token, 'user_id')) {
             $request->attributes->set('user', $this->repository->getByName($id));
         }
-*/
 
         return $frame->next($request);
 

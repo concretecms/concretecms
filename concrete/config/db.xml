@@ -4384,4 +4384,143 @@
     <field name="lockExpires" type="datetime"/>
   </table>
 
+  <table name="OAuthServerClients">
+    <field name="client_id" type="string" size="80">
+      <key/>
+      <notnull/>
+    </field>
+    <field name="client_secret" type="string" size="80">
+      <notnull/>
+    </field>
+    <field name="redirect_uri" type="string" size="2000">
+    </field>
+    <field name="grant_types" type="string" size="80">
+    </field>
+    <field name="scope" type="string" size="4000">
+    </field>
+    <field name="user_id" type="string" size="80">
+    </field>
+  </table>
+
+  <table name="OAuthServerAccessTokens">
+    <field name="access_token" type="string" size="40">
+      <key/>
+      <notnull/>
+    </field>
+    <field name="client_id" type="string" size="80">
+      <notnull/>
+    </field>
+    <field name="user_id" type="string" size="80">
+    </field>
+    <field name="expires" type="timestamp">
+      <notnull/>
+    </field>
+    <field name="scope" type="string" size="4000">
+    </field>
+  </table>
+
+  <table name="OAuthServerAuthorizationCodes">
+    <field name="access_token" type="string" size="40">
+      <key/>
+      <notnull/>
+    </field>
+    <field name="client_id" type="string" size="80">
+      <notnull/>
+    </field>
+    <field name="user_id" type="string" size="80">
+    </field>
+    <field name="redirect_uri" type="string" size="2000">
+    </field>
+    <field name="expires" type="timestamp">
+      <notnull/>
+    </field>
+    <field name="scope" type="string" size="4000">
+    </field>
+    <field name="id_token" type="string" size="1000">
+    </field>
+  </table>
+
+  <table name="OAuthServerRefreshTokens">
+    <field name="refresh_token" type="string" size="40">
+      <key/>
+      <notnull/>
+    </field>
+    <field name="client_id" type="string" size="80">
+      <notnull/>
+    </field>
+    <field name="user_id" type="string" size="80">
+    </field>
+    <field name="expires" type="timestamp">
+      <notnull/>
+    </field>
+    <field name="scope" type="string" size="4000">
+    </field>
+  </table>
+
+  <table name="OAuthServerUsers">
+    <field name="username" type="string" size="80">
+    </field>
+    <field name="password" type="string" size="80">
+    </field>
+    <field name="first_name" type="string" size="80">
+    </field>
+    <field name="last_name" type="string" size="80">
+    </field>
+    <field name="email" type="string" size="80">
+    </field>
+    <field name="email_verified" type="boolean">
+    </field>
+    <field name="scope" type="string" size="4000">
+    </field>
+  </table>
+
+  <table name="OAuthServerScopes">
+    <field name="scope" type="string" size="80">
+      <key/>
+      <notnull/>
+    </field>
+    <field name="is_default" type="boolean">
+    </field>
+  </table>
+
+  <table name="OAuthServerJwt">
+    <field name="client_id" type="string" size="80">
+      <notnull/>
+    </field>
+    <field name="subject" type="string" size="80">
+    </field>
+    <field name="public_key" type="string" size="2000">
+      <notnull/>
+    </field>
+  </table>
+
+  <table name="OAuthServerJti">
+    <field name="issuer" type="string" size="80">
+      <notnull/>
+    </field>
+    <field name="subject" type="string" size="80">
+    </field>
+    <field name="audiance" type="string" size="80">
+    </field>
+    <field name="expires" type="timestamp">
+      <notnull/>
+    </field>
+    <field name="jti" type="string" size="2000">
+      <notnull/>
+    </field>
+  </table>
+
+  <table name="OAuthServerPublicKeys">
+    <field name="client_id" type="string" size="80">
+      <notnull/>
+    </field>
+    <field name="public_key" type="string" size="2000">
+    </field>
+    <field name="private_key" type="string" size="2000">
+    </field>
+    <field name="encryption_algorithm" type="string" size="100">
+      <default value="RS256"/>
+    </field>
+  </table>
+
 </schema>

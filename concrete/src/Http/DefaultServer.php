@@ -89,7 +89,7 @@ class DefaultServer implements ServerInterface, ApplicationAwareInterface
     public function handleRequest(SymfonyRequest $request)
     {
         try {
-            $route = $this->router->matchRoute($request);
+            $route = $this->router->matchRoute($request)->getRoute();
             foreach($route->getMiddlewares() as $middleware) {
                 $this->addMiddleware(
                     $this->app->make($middleware->getMiddleware()),
