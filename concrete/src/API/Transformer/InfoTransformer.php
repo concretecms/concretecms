@@ -10,7 +10,9 @@ class InfoTransformer extends TransformerAbstract
     public function transform(Info $info)
     {
         return [
-            'version' => $info->getCoreVersions(),
+            'version' => $info->getVersionInstalled(),
+            'code_version' => $info->getCodeVersion(),
+            'db_version' => $info->getDbVersion(),
             'packages' => $info->getPackages(),
             'overrides' => $info->getOverrides(),
             'cache' => $info->getCache(),

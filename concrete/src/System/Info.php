@@ -58,6 +58,22 @@ class Info
      */
     protected $phpVersion;
 
+    /**
+     * @var string
+     */
+    protected $versionInstalled;
+
+    /**
+     * @var string
+     */
+    protected $codeVersion;
+
+    /**
+     * @var string
+     */
+    protected $dbVersion;
+
+
     public function __construct()
     {
         $loc = Localization::getInstance();
@@ -74,12 +90,17 @@ class Info
 
             $this->coreRootDirectory = DIR_BASE_CORE;
 
-            $versions = ['Core Version - '.$config->get('concrete.version')];
+            $this->codeVersion = $config->get('concrete.version');
+            $this->dbVersion = $config->get('concrete.version_db');
+            $this->versionInstalled = $config->get('concrete.version_installed');
+
+            $versions = ['Core Version - '. $this->codeVersion];
             if ($this->installed) {
-                $versions[] = 'Version Installed - '.$config->get('concrete.version_installed');
+                $versions[] = 'Version Installed - ' . $this->versionInstalled;
             }
-            $versions[] = 'Database Version - '.$config->get('concrete.version_db');
+            $versions[] = 'Database Version - ' . $this->dbVersion;
             $this->coreVersions = implode("\n", $versions);
+
 
             $packages = [];
             if ($this->installed) {
@@ -375,5 +396,31 @@ class Info
         $o->coreVersions = $this->coreVersions;
         return $o;
     }
+
+    /**
+     * @return string
+     */
+    public function getVersionInstalled()
+    {
+        return $this->versionInstalled;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCodeVersion()
+    {
+        return $this->codeVersion;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDbVersion()
+    {
+        return $this->dbVersion;
+    }
+
+
 
 }
