@@ -84,6 +84,10 @@ class ControllerRouteAction implements RouteActionInterface
             $content = $response;
         }
 
+        if (is_object($content)) {
+            return $content;
+        }
+
         $response = new Response();
         $response->setContent($content);
         return $response;

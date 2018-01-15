@@ -30,12 +30,13 @@ class ClosureRouteAction implements RouteActionInterface
         $arguments = $resolver->getArguments($request, $this->callback);
         $response = call_user_func_array($this->callback, $arguments);
 
-        if ($response instanceof Response) {
+        if (is_string($response)) {
+            $r = new Response();
+            $r->setContent($response);
+            return $r;
+        } else {
             return $response;
         }
 
-        $r = new Response();
-        $r->setContent($response);
-        return $r;
     }
 }

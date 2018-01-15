@@ -49,8 +49,7 @@ class OAuthMiddleware implements MiddlewareInterface
 
         $token = $this->oauth->getAccessTokenData($wrappedRequest);
         if ($id = array_get($token, 'user_id')) {
-            print $id;exit;
-            $request->attributes->set('user', $this->repository->getByName($id));
+            $request->attributes->set('user', $this->repository->getByID($id));
         }
 
         return $frame->next($request);

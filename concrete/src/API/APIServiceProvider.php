@@ -1,11 +1,14 @@
 <?php
 namespace Concrete\Core\API;
 
+use Concrete\Core\API\Transformer\InfoTransformer;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 use Concrete\Core\Routing\Router;
 use Concrete\Core\Http\Middleware\OAuthMiddleware;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Concrete\Core\System\Info;
+use Concrete\Core\Http\Middleware\ProjectorMiddleware;
+use League\Fractal\Resource\Item;
 
 class APIServiceProvider extends ServiceProvider
 {
@@ -29,13 +32,9 @@ class APIServiceProvider extends ServiceProvider
             ->setPrefix('/ccm/api/v1')
             ->addMiddleware(OauthMiddleware::class)
             ->routes(function(Router $groupRouter) {
-                $groupRouter->get('/hello', function() {
-                    $hello = [
-                        'response' => t('Hello')
-                    ];
-
-                    $r = new JsonResponse($hello);
-                    return $r;
+                $groupRouter->get('/system/info', function() {
+                    $info = $this->app->make(Info::class);
+                    return new Item($info, new InfoTransformer());
                 });
             });
     }

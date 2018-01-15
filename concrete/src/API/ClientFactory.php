@@ -18,9 +18,14 @@ class ClientFactory
         return $baseUri . '/ccm/api/v1/';
     }
 
+    protected function normalizeUri($baseUri)
+    {
+        return trim($baseUri, '/') . '/index.php';
+    }
+
     public function createClient($baseUri, $clientId, $clientSecret)
     {
-        $baseUri = trim($baseUri, '/');
+        $baseUri = $this->normalizeUri($baseUri);
         $client = new Oauth2Client([
             'base_uri' => $baseUri,
             'auth' => 'oauth2',
@@ -39,27 +44,24 @@ class ClientFactory
         $token = new ClientCredentials($config);
         $client->setGrantType($token);
 
-//        $refreshToken = new RefreshToken($config);
-  //      $client->setRefreshTokenGrantType($refreshToken);
+        $refreshToken = new RefreshToken($config);
+        $client->setRefreshTokenGrantType($refreshToken);
 
         $description = new Description([
             'baseUrl' => $this->getEndpoint($baseUri),
             'operations' => [
-                'helloWorld' => [
+                'getSystemInformation' => [
                     'httpMethod' => 'GET',
-                    'uri' => 'hello',
-                    'responseModel' => 'helloResponse',
+                    'uri' => 'system/info',
+                    'responseModel' => 'infoReponse',
                     'parameters' => []
                     ]
                 ],
             'models' => [
-                'helloResponse' => [
+                'infoReponse' => [
                     'type' => 'object',
-                    'properties' => [
-                        'response' => [
-                            'location' => 'json',
-                            'type' => 'string'
-                        ]
+                    'additionalProperties' => [
+                        'location' => 'json'
                     ]
                 ]
             ]

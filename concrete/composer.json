@@ -83,7 +83,8 @@
     "bshaffer/oauth2-server-php": "^1.10",
     "guzzlehttp/guzzle": "^6.3",
     "guzzlehttp/guzzle-services": "^1.1",
-    "frankkessler/guzzle-oauth2-middleware": "^0.1.1"
+    "frankkessler/guzzle-oauth2-middleware": "^0.1.1",
+    "league/fractal": "^0.17.0"
   },
   "extra": {
     "branch-alias": {
