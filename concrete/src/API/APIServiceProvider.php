@@ -5,6 +5,7 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 use Concrete\Core\Routing\Router;
 use Concrete\Core\Http\Middleware\OAuthMiddleware;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class APIServiceProvider extends ServiceProvider
 {
@@ -29,7 +30,12 @@ class APIServiceProvider extends ServiceProvider
             ->addMiddleware(OauthMiddleware::class)
             ->routes(function(Router $groupRouter) {
                 $groupRouter->get('/hello', function() {
-                    return json_encode(['hello' => t('Hello')]);
+                    $hello = [
+                        'response' => t('Hello')
+                    ];
+
+                    $r = new JsonResponse($hello);
+                    return $r;
                 });
             });
     }

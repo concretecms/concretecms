@@ -33,8 +33,6 @@ class ServiceProvider extends Provider
             return $extractor_factory->get($service);
         });
 
-        /*
-
         \Route::register(
             '/ccm/system/authentication/oauth2/{type}/{action}',
             function ($type, $action) {
@@ -63,6 +61,5 @@ class ServiceProvider extends Provider
                     \Log::addNotice('OAUTH ERROR: ' . $e->getMessage());
                 }
             });
-        */
     }
 }

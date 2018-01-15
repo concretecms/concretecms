@@ -1,6 +1,11 @@
 <?php
 namespace Concrete\Core\API;
 
+use Concrete\Core\Config\Repository\Repository;
+use Concrete\Core\Url\Resolver\CanonicalUrlResolver;
+use Frankkessler\Guzzle\Oauth2\GrantType\ClientCredentials;
+use Frankkessler\Guzzle\Oauth2\GrantType\RefreshToken;
+use Frankkessler\Guzzle\Oauth2\Oauth2Client;
 use GuzzleHttp\Client;
 use GuzzleHttp\Command\Guzzle\Description;
 use GuzzleHttp\Command\Guzzle\GuzzleClient;
@@ -8,43 +13,60 @@ use GuzzleHttp\Command\Guzzle\GuzzleClient;
 class ClientFactory
 {
 
-    public function createClient()
+    protected function getEndpoint($baseUri)
     {
-        $client = new Client();
+        return $baseUri . '/ccm/api/v1/';
+    }
+
+    public function createClient($baseUri, $clientId, $clientSecret)
+    {
+        $baseUri = trim($baseUri, '/');
+        $client = new Oauth2Client([
+            'base_uri' => $baseUri,
+            'auth' => 'oauth2',
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
+            ]
+        ]);
+
+        $config = [
+            'client_id' => $clientId,
+            'client_secret' => $clientSecret,
+            'token_url' => $baseUri . '/oauth/2.0/token'
+        ];
+
+        $token = new ClientCredentials($config);
+        $client->setGrantType($token);
+
+//        $refreshToken = new RefreshToken($config);
+  //      $client->setRefreshTokenGrantType($refreshToken);
+
         $description = new Description([
-            'baseUri' => 'http://httpbin.org/',
+            'baseUrl' => $this->getEndpoint($baseUri),
             'operations' => [
-                'testing' => [
+                'helloWorld' => [
                     'httpMethod' => 'GET',
-                    'uri' => '/get{?foo}',
-                    'responseModel' => 'getResponse',
-                    'parameters' => [
-                        'foo' => [
-                            'type' => 'string',
-                            'location' => 'uri'
-                        ],
-                        'bar' => [
-                            'type' => 'string',
-                            'location' => 'query'
-                        ]
+                    'uri' => 'hello',
+                    'responseModel' => 'helloResponse',
+                    'parameters' => []
                     ]
-                ]
-            ],
+                ],
             'models' => [
-                'getResponse' => [
+                'helloResponse' => [
                     'type' => 'object',
-                    'additionalProperties' => [
-                        'location' => 'json'
+                    'properties' => [
+                        'response' => [
+                            'location' => 'json',
+                            'type' => 'string'
+                        ]
                     ]
                 ]
             ]
         ]);
 
         $guzzleClient = new GuzzleClient($client, $description);
-
-        $result = $guzzleClient->testing(['foo' => 'bar']);
-        echo $result['args']['foo'];
-
+        return $guzzleClient;
     }
 
 

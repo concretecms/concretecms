@@ -46,7 +46,8 @@ class OAuth2ServiceProvider extends Provider
                 'jti_table' => 'OAuthServerJti'
             ));
             $server = new \OAuth2\Server($storage);
-            $server->addGrantType(new \OAuth2\GrantType\UserCredentials($storage));
+            //$server->addGrantType(new \OAuth2\GrantType\UserCredentials($storage));
+            $server->addGrantType(new \OAuth2\GrantType\ClientCredentials($storage));
             return $server;
         });
 

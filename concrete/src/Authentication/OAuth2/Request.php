@@ -14,7 +14,7 @@ class Request implements RequestInterface
     /**
      * @var \Symfony\Component\HttpFoundation\Request
      */
-    private $request;
+    public $request;
 
     public function __construct(SymfonyRequest $request)
     {
