@@ -209,6 +209,9 @@ class GenerateSitemap extends AbstractJob implements ConsoleAwareInterface
         if ($page->isExternalLink()) {
             return false;
         }
+        if ($page->isMasterCollection()) {
+            return false;
+        }
         if ($instances['dashboard']->inDashboard($page)) {
             return false;
         }
