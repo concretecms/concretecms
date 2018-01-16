@@ -12,8 +12,7 @@ if ($c->isEditMode()) {
     $loc->popActiveContext();
 } else { ?>
 	<?php  if( strlen($title)>0) { ?><h3><?=$title?></h3><?php  } ?>
-	<div id="googleMapCanvas<?=$unique_identifier?>"
-         class="googleMapCanvas"
+	<div class="googleMapCanvas"
          style="width: <?=$width?>; height: <?=$height?>"
          data-zoom="<?=$zoom?>"
          data-latitude="<?=$latitude?>"
