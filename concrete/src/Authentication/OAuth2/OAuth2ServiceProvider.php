@@ -29,8 +29,6 @@ class OAuth2ServiceProvider extends Provider
             ->setNamespace('Concrete\Controller')
             ->routes(function(Router $groupRouter) {
                 $groupRouter->all('token', 'Oauth2::token');
-                $groupRouter->all('authorize', 'Oauth2::authorize');
-                $groupRouter->all('user', 'Oauth2::userInfo');
             });
 
         $this->app->bindShared('oauth2/server', function() {
