@@ -5,11 +5,10 @@ use Concrete\Core\API\Transformer\InfoTransformer;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 use Concrete\Core\Routing\Router;
-use Concrete\Core\Http\Middleware\OAuthMiddleware;
 use Concrete\Core\System\Info;
 use Concrete\Core\Http\Middleware\ProjectorMiddleware;
 use League\Fractal\Resource\Item;
-
+use Concrete\Core\Http\Middleware\APIAuthenticatorMiddleware;
 class APIServiceProvider extends ServiceProvider
 {
 
@@ -30,7 +29,7 @@ class APIServiceProvider extends ServiceProvider
 
         $this->router->buildGroup()
             ->setPrefix('/ccm/api/v1')
-            ->addMiddleware(OauthMiddleware::class)
+            ->addMiddleware(APIAuthenticatorMiddleware::class)
             ->routes(function(Router $groupRouter) {
                 $groupRouter->get('/system/info', function() {
                     $info = $this->app->make(Info::class);

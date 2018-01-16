@@ -5,23 +5,27 @@ namespace Concrete\Core\Http\Middleware;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Http\ResponseFactory;
 use Concrete\Core\User\UserInfoRepository;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Concrete\Core\Http\Request as ConcreteRequest;
 use Concrete\Core\Authentication\OAuth2\Request as OAuth2Request;
 
-class OAuthMiddleware implements MiddlewareInterface
+class APIAuthenticatorMiddleware implements MiddlewareInterface
 {
 
     protected $app;
     protected $oauth;
     protected $factory;
     private $repository;
+    protected $logger;
 
-    public function __construct(Application $app, ResponseFactory $factory, UserInfoRepository $repository)
+    public function __construct(Application $app, ResponseFactory $factory, UserInfoRepository $repository, LoggerInterface $logger)
     {
         $this->app = $app;
         $this->factory = $factory;
         $this->oauth = $this->app->make('oauth2/server');
         $this->repository = $repository;
+        $this->logger = $logger;
     }
 
     /**
@@ -42,6 +46,7 @@ class OAuthMiddleware implements MiddlewareInterface
                 $body = [
                     'Not Authenticated'
                 ];
+                $this->logger->warning(t('Access to API not allowed.'));
             }
             return $this->factory->json($body, $response->getStatusCode(),
                 $response->getHttpHeaders());
@@ -49,8 +54,12 @@ class OAuthMiddleware implements MiddlewareInterface
 
         $token = $this->oauth->getAccessTokenData($wrappedRequest);
         if ($id = array_get($token, 'user_id')) {
-            $request->attributes->set('user', $this->repository->getByID($id));
+            $req = ConcreteRequest::getInstance();
+            $req->setCustomRequestUser($this->repository->getByID($id)); // we need this for permissions.
         }
+
+
+        $this->logger->info(t('Running API method: %s', $wrappedRequest->request->getPathInfo()));
 
         return $frame->next($request);
 
