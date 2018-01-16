@@ -1,7 +1,9 @@
 <?php
 namespace Concrete\Core\Routing;
 
+use Concrete\Core\Support\Facade\Facade;
 use Symfony\Component\Routing\RouteCollection;
+use Concrete\Core\Filesystem\FileLocator;
 
 class RouteGroupBuilder
 {
@@ -124,13 +126,27 @@ class RouteGroupBuilder
         }
     }
 
-    public function routes(callable $routes)
+    public function routes($routes)
     {
         // First, create a new, empty router for use with the routes passed in the callable.
         $router = new Router(new RouteCollection(), $this->router->getActionFactory());
-        // Run the callable with our empty router.
-        $routes($router);
-        // Grab the routes from the router, and pass them to our route group builder.
+        if (is_callable($routes)) {
+            // Run the callable with our empty router.
+            $routes($router);
+            // Grab the routes from the router, and pass them to our route group builder.
+        } else if (is_string($routes)) {
+            $app = Facade::getFacadeApplication();
+            /**
+             * @var $locator FileLocator
+             */
+            $locator = $app->make(FileLocator::class);
+            $file = $locator->getRecord(DIRNAME_ROUTES . DIRECTORY_SEPARATOR . $routes);
+            if ($file->exists()) {
+                require $file->getFile();
+            }
+        } else {
+            throw new \RuntimeException(t('Invalid input passed to RouteGroupBuilder::routes'));
+        }
         $this->sendFromGroupToRouter($router->getRoutes(), $this->router);
     }
 

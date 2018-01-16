@@ -138,6 +138,11 @@ class Router
         }
     }
 
+    public function loadRouteList(RouteListInterface $list)
+    {
+        $list->loadRoutes($this);
+    }
+
     /**
      * @deprecated. Use the verb methods instead.
      * @param $path

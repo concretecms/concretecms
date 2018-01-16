@@ -541,40 +541,6 @@ return [
         '/ccm/system/search/groups/submit' => ['\Concrete\Controller\Search\Groups::submit'],
 
         /*
-         * Panels - top level
-         */
-        '/ccm/system/panels/add' => ['\Concrete\Controller\Panel\Add::view'],
-        '/ccm/system/panels/dashboard' => ['\Concrete\Controller\Panel\Dashboard::view'],
-        '/ccm/system/panels/dashboard/add_favorite' => ['\Concrete\Controller\Panel\Dashboard::addFavorite'],
-        '/ccm/system/panels/dashboard/remove_favorite' => ['\Concrete\Controller\Panel\Dashboard::removeFavorite'],
-        '/ccm/system/panels/page/relations' => ['\Concrete\Controller\Panel\PageRelations::view'],
-        '/ccm/system/panels/page' => ['\Concrete\Controller\Panel\Page::view'],
-        '/ccm/system/panels/page/attributes' => ['\Concrete\Controller\Panel\Page\Attributes::view'],
-        '/ccm/system/panels/page/check_in' => ['\Concrete\Controller\Panel\Page\CheckIn::__construct'],
-        '/ccm/system/panels/page/check_in/submit' => ['\Concrete\Controller\Panel\Page\CheckIn::submit'],
-        '/ccm/system/panels/page/design' => ['\Concrete\Controller\Panel\Page\Design::view'],
-        '/ccm/system/panels/page/design/customize/reset_page_customizations' => ['\Concrete\Controller\Panel\Page\Design\Customize::reset_page_customizations'],
-        '/ccm/system/panels/page/design/customize/apply_to_page/{pThemeID}' => ['\Concrete\Controller\Panel\Page\Design\Customize::apply_to_page'],
-        '/ccm/system/panels/page/design/customize/apply_to_site/{pThemeID}' => ['\Concrete\Controller\Panel\Page\Design\Customize::apply_to_site'],
-        '/ccm/system/panels/page/design/customize/preview/{pThemeID}' => ['\Concrete\Controller\Panel\Page\Design\Customize::preview'],
-        '/ccm/system/panels/page/design/customize/reset_site_customizations/{pThemeID}' => ['\Concrete\Controller\Panel\Page\Design\Customize::reset_site_customizations'],
-        '/ccm/system/panels/page/design/customize/{pThemeID}' => ['\Concrete\Controller\Panel\Page\Design\Customize::view'],
-        '/ccm/system/panels/page/design/preview_contents' => ['\Concrete\Controller\Panel\Page\Design::preview_contents'],
-        '/ccm/system/panels/page/design/submit' => ['\Concrete\Controller\Panel\Page\Design::submit'],
-        '/ccm/system/panels/page/preview_as_user' => ['\Concrete\Controller\Panel\Page\PreviewAsUser::view'],
-        '/ccm/system/panels/page/preview_as_user/preview' => ['\Concrete\Controller\Panel\Page\PreviewAsUser::frame_page'],
-        '/ccm/system/panels/page/preview_as_user/render' => ['\Concrete\Controller\Panel\Page\PreviewAsUser::preview_page'],
-        '/ccm/system/panels/page/versions' => ['\Concrete\Controller\Panel\Page\Versions::view'],
-        '/ccm/system/panels/page/versions/get_json' => ['\Concrete\Controller\Panel\Page\Versions::get_json'],
-        '/ccm/system/panels/page/versions/duplicate' => ['\Concrete\Controller\Panel\Page\Versions::duplicate'],
-        '/ccm/system/panels/page/versions/new_page' => ['\Concrete\Controller\Panel\Page\Versions::new_page'],
-        '/ccm/system/panels/page/versions/delete' => ['\Concrete\Controller\Panel\Page\Versions::delete'],
-        '/ccm/system/panels/page/versions/approve' => ['\Concrete\Controller\Panel\Page\Versions::approve'],
-        '/ccm/system/panels/page/devices' => ['\Concrete\Controller\Panel\Page\Devices::view'],
-        '/ccm/system/panels/page/devices/preview' => ['\Concrete\Controller\Panel\Page\Devices::preview'],
-        '/ccm/system/panels/sitemap' => ['\Concrete\Controller\Panel\Sitemap::view'],
-
-        /*
          * Panel Details
          */
         '/ccm/system/panels/details/page/attributes' => ['\Concrete\Controller\Panel\Detail\Page\Attributes::view'],
