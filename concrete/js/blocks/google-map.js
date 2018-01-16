@@ -4,8 +4,8 @@ concreteGoogleMapInit = function () {
       var latitude = $(this).data('latitude');
       var longitude = $(this).data('longitude');
       var zoom = $(this).data('zoom');
-      var scrollwheel = $(this).data('scrollwheel') === 'true';
-      var draggable = $(this).data('draggable') === 'true';
+      var scrollwheel = $(this).data('scrollwheel');
+      var draggable = $(this).data('draggable');
 
       var latlng = new google.maps.LatLng(latitude, longitude);
 
