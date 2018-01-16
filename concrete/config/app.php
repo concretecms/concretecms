@@ -1064,6 +1064,9 @@ return [
         'core/country-stateprovince-link' => [
             ['javascript', 'js/country-stateprovince-link.js', ['minify' => false]],
         ],
+        'core/blocks/google-map' => [
+            ['javascript', 'js/blocks/google-map.js']
+        ],
     ],
     'asset_groups' => [
         'jquery/ui' => [

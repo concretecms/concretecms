@@ -52,16 +52,17 @@ class Controller extends BlockController
         $c = Page::getCurrentPage();
         if (!$c->isEditMode()) {
             $this->addFooterItem(
-                '<script defer src="https://maps.googleapis.com/maps/api/js?key='
+                '<script defer src="https://maps.googleapis.com/maps/api/js?callback=concreteGoogleMapInit&key='
                 . Config::get('app.api_keys.google.maps')
                 .'"></script>'
             );
+
+            $this->requireAsset('javascript', 'core/blocks/google-map');
         }
     }
 
     public function view()
     {
-        $this->set('unique_identifier', Core::make('helper/validation/identifier')->getString(18));
     }
 
     public function save($data)
