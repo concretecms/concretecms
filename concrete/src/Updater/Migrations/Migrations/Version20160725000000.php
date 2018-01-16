@@ -530,6 +530,8 @@ class Version20160725000000 extends AbstractMigration
                                 'akSelectAllowOtherValues' => $rowA['akSelectAllowOtherValues'],
                                 'avSelectOptionListID' => $listID,
                                 'akID' => $akID,
+                                'akHideNoneOption' => 0,
+                                'akDisplayMultipleValuesOnSelect' => 0,
                             ]);
 
                             $options = $this->connection->fetchAll('select * from _atSelectOptions where akID = ?', [$akID]);
