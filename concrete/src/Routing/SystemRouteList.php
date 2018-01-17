@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Routing;
 
+use Concrete\Core\Http\Middleware\APIAuthenticatorMiddleware;
+use Concrete\Core\Http\Middleware\ProjectorMiddleware;
+
 class SystemRouteList implements RouteListInterface
 {
 
@@ -72,6 +75,11 @@ class SystemRouteList implements RouteListInterface
 
         $router->buildGroup()->routes('calendar.php');
 
+        $router->buildGroup()
+            ->setPrefix('/ccm/api/v1')
+            ->addMiddleware(ProjectorMiddleware::class)
+            ->addMiddleware(APIAuthenticatorMiddleware::class)
+            ->routes('api.php');
     }
 
 
