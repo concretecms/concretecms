@@ -56,13 +56,7 @@ class Controller extends BlockController
                 . Config::get('app.api_keys.google.maps')
                 .'"></script>'
             );
-
-            $this->requireAsset('javascript', 'core/blocks/google-map');
         }
-    }
-
-    public function view()
-    {
     }
 
     public function save($data)
