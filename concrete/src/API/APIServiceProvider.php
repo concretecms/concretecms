@@ -29,6 +29,7 @@ class APIServiceProvider extends ServiceProvider
 
         $this->router->buildGroup()
             ->setPrefix('/ccm/api/v1')
+            ->addMiddleware(ProjectorMiddleware::class)
             ->addMiddleware(APIAuthenticatorMiddleware::class)
             ->routes(function(Router $groupRouter) {
                 $groupRouter->get('/system/info', function() {

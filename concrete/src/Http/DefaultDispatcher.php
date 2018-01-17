@@ -2,6 +2,8 @@
 namespace Concrete\Core\Http;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Http\Middleware\DispatcherDelegate;
+use Concrete\Core\Http\Middleware\MiddlewareStack;
 use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Routing\Router;
 use Concrete\Core\Routing\RouterInterface;
@@ -98,8 +100,31 @@ class DefaultDispatcher implements DispatcherInterface
 
     private function handleDispatch($request)
     {
-        $c = \Page::getFromRequest($request);
-        $response = $this->app->make(ResponseFactoryInterface::class)->collection($c);
+        $callDispatcher = false;
+        try {
+            $route = $this->router->matchRoute($request)->getRoute();
+            $dispatcher = new RouteActionDispatcher($this->router, $route);
+            $stack = new MiddlewareStack(
+                new DispatcherDelegate($dispatcher)
+            );
+            $stack->setApplication($this->app);
+            foreach($route->getMiddlewares() as $middleware) {
+                $stack = $stack->withMiddleware(
+                    $this->app->make($middleware->getMiddleware()),
+                    $middleware->getPriority()
+                );
+            }
+            return $stack->process($request);
+        } catch (ResourceNotFoundException $e) {
+            $callDispatcher = true;
+        } catch (MethodNotAllowedException $e) {
+            $callDispatcher = true;
+        }
+        if ($callDispatcher) {
+            $c = \Page::getFromRequest($request);
+            $response = $this->app->make(ResponseFactoryInterface::class)->collection($c);
+        }
+
         return $response;
     }
 }
