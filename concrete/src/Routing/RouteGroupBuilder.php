@@ -31,6 +31,11 @@ class RouteGroupBuilder
     protected $middlewares = [];
 
     /**
+     * Regular expressions that lock down URL parameters to certain conditions.
+     */
+    protected $requirements = [];
+
+    /**
      * RouteBuilder constructor.
      * @param Router $router
      * @param Route $route
@@ -89,6 +94,15 @@ class RouteGroupBuilder
         return $this;
     }
 
+    /**
+     * @param array $requirements
+     */
+    public function setRequirements($requirements)
+    {
+        $this->requirements = $requirements;
+        return $this;
+    }
+
     protected function processPrefix(Route $route)
     {
         if ($this->prefix) {
@@ -98,12 +112,20 @@ class RouteGroupBuilder
         }
     }
 
+    protected function processRequirements(Route $route)
+    {
+        if ($this->requirements) {
+            $route->setRequirements($this->requirements);
+        }
+    }
+
+
     protected function processNamespace(Route $route)
     {
         if ($this->namespace) {
             $action = $this->router->getAction($route);
             if ($action instanceof ControllerRouteAction) {
-                $controller = [$this->namespace, $route->getAction()];
+                $controller = [$this->namespace, trim($route->getAction(), '\\')];
                 $route->setAction(implode('\\', $controller));
             }
         }
@@ -119,6 +141,7 @@ class RouteGroupBuilder
     protected function sendFromGroupToRouter(RouteCollection $routeCollection, Router $router)
     {
         foreach($routeCollection->getIterator() as $name => $route) {
+            $this->processRequirements($route);
             $this->processPrefix($route);
             $this->processMiddlewares($route);
             $this->processNamespace($route);

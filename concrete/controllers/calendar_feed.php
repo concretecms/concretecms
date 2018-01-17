@@ -11,9 +11,9 @@ use Concrete\Core\Calendar\CalendarServiceProvider;
 
 class CalendarFeed extends Controller
 {
-    public function view($calendar_id)
+    public function view($identifier)
     {
-        $calendar = Calendar::getByID($calendar_id);
+        $calendar = Calendar::getByID($identifier);
         if (is_object($calendar)) {
             $cp = new \Permissions($calendar);
             if ($cp->canAccessCalendarRssFeed()) {

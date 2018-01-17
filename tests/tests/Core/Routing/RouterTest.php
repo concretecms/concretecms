@@ -99,9 +99,9 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('/rss/{identifier}/', $route->getPath());
         $methods = $route->getMethods();
-        $requirements = $route->getRequirements();
         $this->assertCount(1, $methods);
         $this->assertEquals('GET', $methods[0]);
+        $requirements = $route->getRequirements();
         $this->assertCount(1, $requirements);
         $this->assertEquals('[A-Za-z0-9_/.]+', $requirements['identifier']);
     }
@@ -179,6 +179,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $router->buildGroup()
             ->setPrefix('/ccm/system/user/')
             ->setNamespace('Concrete\Controller\Backend')
+            ->setRequirements(['identifier' => '[A-Za-z0-9_/.]+'])
             ->addMiddleware('Concrete\Tests\Core\Routing\TestMiddleware')
             ->addMiddleware('Concrete\Tests\Core\Routing\AnotherMiddleware')
             ->routes(function($groupRouter) {
@@ -195,27 +196,14 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(Route::class, $route);
         $methods = $route->getMethods();
         $this->assertEquals('POST', $methods[0]);
+        $requirements = $route->getRequirements();
+        $this->assertCount(1, $requirements);
+        $this->assertEquals('[A-Za-z0-9_/.]+', $requirements['identifier']);
         $action = $router->getAction($route);
         $this->assertInstanceOf(ControllerRouteAction::class, $action);
         $controller = $action->getAction();
 
         $this->assertEquals('Concrete\Controller\Backend\User::removeGroup', $controller);
-    }
-
-    public function testInstallRoute()
-    {
-        $router = new Router(new RouteCollection(), new RouteActionFactory());
-        $router->register('/install/web_precondition/{handle}/{argument}', '\Concrete\Controller\Install::web_precondition');
-
-        $request = Request::create('http://www.awesome.com/install/web_precondition/request_urls/20');
-        $route = $router->matchRoute($request);
-        $this->assertInstanceOf(MatchedRoute::class, $route);
-
-        $action = $router->getAction($route->getRoute());
-        $response = $action->execute($request, $route->getRoute(), []);
-
-        $r = json_decode($response->getContent());
-        $this->assertEquals(400, $r->response);
     }
 
 }
