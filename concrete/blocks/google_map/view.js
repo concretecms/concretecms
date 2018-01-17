@@ -26,7 +26,7 @@ concreteGoogleMapInit = function () {
         map: map
       });
     } catch (e) {
-      $(this).replaceWith("<p>Unable to display map: " + e.message + "</p>")
+      $(this).replaceWith($('<p />').text(e.message));
     }
   });
 };
