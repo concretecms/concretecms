@@ -20,6 +20,7 @@ class Version20180118000000 extends AbstractMigration implements DirectSchemaUpg
         ]);
         $this->refreshDatabaseTables([
             'Groups',
+            'Workflows',
         ]);
     }
 }
