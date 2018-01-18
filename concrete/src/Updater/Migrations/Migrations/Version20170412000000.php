@@ -1,10 +1,9 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
-use Concrete\Core\Database\DatabaseStructureManager;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
-use ORM;
 
 class Version20170412000000 extends AbstractMigration
 {
@@ -25,7 +24,7 @@ class Version20170412000000 extends AbstractMigration
             'Concrete\Core\Entity\Attribute\Value\Value\TopicsValue',
             'Concrete\Core\Entity\Attribute\Value\Value\Value',
             'Concrete\Core\Entity\File\File',
-            'Concrete\Core\Entity\Attribute\Key\Key'
+            'Concrete\Core\Entity\Attribute\Key\Key',
         ]);
         $this->connection->Execute('set foreign_key_checks = 1');
     }

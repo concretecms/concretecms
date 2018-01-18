@@ -1,6 +1,8 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
+use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Permission\Access\Entity\GroupEntity;
 use Concrete\Core\Permission\Access\Entity\Type;
@@ -10,7 +12,6 @@ use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\User\Group\Group;
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
-use Concrete\Core\Block\BlockType\BlockType;
 
 class Version20150504000000 extends AbstractMigration
 {
@@ -24,19 +25,18 @@ class Version20150504000000 extends AbstractMigration
 
     public function up(Schema $schema)
     {
-        \Concrete\Core\Database\Schema\Schema::refreshCoreXMLSchema(array(
+        \Concrete\Core\Database\Schema\Schema::refreshCoreXMLSchema([
             'ConversationPermissionAddMessageAccessList',
             'ConversationSubscriptions',
             'Conversations',
-
-        ));
+        ]);
 
         // Subscribe admin to conversations by default, if we have no subscriptions
         $users = \Conversation::getDefaultSubscribedUsers();
         if (count($users) == 0) {
             $admin = \UserInfo::getByID(USER_SUPER_ID);
             if (is_object($admin)) {
-                $users = array($admin);
+                $users = [$admin];
                 \Conversation::setDefaultSubscribedUsers($users);
             }
         }
@@ -67,13 +67,13 @@ class Version20150504000000 extends AbstractMigration
 
         $c = \Page::getByPath('/dashboard/system/seo/urls');
         if (is_object($c) && !$c->isError()) {
-            $c->update(array('cName' => 'URLs and Redirection'));
+            $c->update(['cName' => 'URLs and Redirection']);
         }
 
         $sp = \Page::getByPath('/dashboard/system/environment/entities');
         if (!is_object($sp) || $sp->isError()) {
             $sp = \SinglePage::add('/dashboard/system/environment/entities');
-            $sp->update(array('cName' => 'Database Entities'));
+            $sp->update(['cName' => 'Database Entities']);
             $sp->setAttribute('meta_keywords', 'database, entities, doctrine, orm');
         }
 
@@ -85,40 +85,40 @@ class Version20150504000000 extends AbstractMigration
         $pkx->associateAccessEntityType(Type::getByHandle('user'));
         $pkx->associateAccessEntityType(Type::getByHandle('group_combination'));
 
-        $db->Execute("alter table QueueMessages modify column body longtext not null");
+        $db->Execute('alter table QueueMessages modify column body longtext not null');
 
         $ms = $schema->getTable('MultilingualSections');
         if (!$ms->hasColumn('msNumPlurals')) {
-            $ms->addColumn('msNumPlurals', 'integer', array('notnull' => true, 'unsigned' => true, 'default' => 2));
+            $ms->addColumn('msNumPlurals', 'integer', ['notnull' => true, 'unsigned' => true, 'default' => 2]);
             $this->updateSectionPlurals = true;
         }
         if (!$ms->hasColumn('msPluralRule')) {
-            $ms->addColumn('msPluralRule', 'string', array('notnull' => true, 'length' => 400, 'default' => '(n != 1)'));
+            $ms->addColumn('msPluralRule', 'string', ['notnull' => true, 'length' => 400, 'default' => '(n != 1)']);
             $this->updateSectionPlurals = true;
         }
         if (!$ms->hasColumn('msPluralCases')) {
-            $ms->addColumn('msPluralCases', 'string', array('notnull' => true, 'length' => 1000, 'default' => "one@1\nother@0, 2~16, 100, 1000, 10000, 100000, 1000000, …"));
+            $ms->addColumn('msPluralCases', 'string', ['notnull' => true, 'length' => 1000, 'default' => "one@1\nother@0, 2~16, 100, 1000, 10000, 100000, 1000000, …"]);
             $this->updateSectionPlurals = true;
         }
         $mt = $schema->getTable('MultilingualTranslations');
         if (!$mt->hasColumn('msgidPlural')) {
-            $mt->addColumn('msgidPlural', 'text', array('notnull' => false));
+            $mt->addColumn('msgidPlural', 'text', ['notnull' => false]);
             $this->updateMultilingualTranslations = true;
         }
         if (!$mt->hasColumn('msgstrPlurals')) {
-            $mt->addColumn('msgstrPlurals', 'text', array('notnull' => false));
+            $mt->addColumn('msgstrPlurals', 'text', ['notnull' => false]);
             $this->updateMultilingualTranslations = true;
         }
 
         $cms = $schema->getTable('ConversationMessages');
         if (!$cms->hasColumn('cnvMessageAuthorName')) {
-            $cms->addColumn('cnvMessageAuthorName', 'string', array('notnull' => false, 'length' => 255));
+            $cms->addColumn('cnvMessageAuthorName', 'string', ['notnull' => false, 'length' => 255]);
         }
         if (!$cms->hasColumn('cnvMessageAuthorEmail')) {
-            $cms->addColumn('cnvMessageAuthorEmail', 'string', array('notnull' => false, 'length' => 255));
+            $cms->addColumn('cnvMessageAuthorEmail', 'string', ['notnull' => false, 'length' => 255]);
         }
         if (!$cms->hasColumn('cnvMessageAuthorWebsite')) {
-            $cms->addColumn('cnvMessageAuthorWebsite', 'string', array('notnull' => false, 'length' => 255));
+            $cms->addColumn('cnvMessageAuthorWebsite', 'string', ['notnull' => false, 'length' => 255]);
         }
 
         $this->updatePermissionDurationObjects();
@@ -148,6 +148,43 @@ class Version20150504000000 extends AbstractMigration
                 $pt->assignPermissionAccess($pa);
             }
         }
+    }
+
+    public function postUp(Schema $schema)
+    {
+        $db = \Database::get();
+        if ($this->updateSectionPlurals) {
+            $rs = $db->Execute('select cID, msLanguage, msCountry from MultilingualSections');
+            while ($row = $rs->FetchRow()) {
+                $locale = $row['msLanguage'];
+                if ($row['msCountry']) {
+                    $locale .= '_' . $row['msCountry'];
+                }
+                $localeInfo = \Gettext\Languages\Language::getById($locale);
+                if ($localeInfo) {
+                    $pluralCases = [];
+                    foreach ($localeInfo->categories as $category) {
+                        $pluralCases[] = $category->id . '@' . $category->examples;
+                    }
+                    $db->update(
+                        'MultilingualSections',
+                        [
+                            'msNumPlurals' => count($localeInfo->categories),
+                            'msPluralRule' => $localeInfo->formula,
+                            'msPluralCases' => implode("\n", $pluralCases),
+                        ],
+                        ['cID' => $row['cID']]
+                    );
+                }
+            }
+        }
+        if ($this->updateMultilingualTranslations) {
+            $db->Execute("UPDATE MultilingualTranslations SET comments = REPLACE(comments, ':', '\\n') WHERE comments IS NOT NULL");
+        }
+    }
+
+    public function down(Schema $schema)
+    {
     }
 
     protected function updatePermissionDurationObjects()
@@ -200,42 +237,5 @@ class Version20150504000000 extends AbstractMigration
                 $pd->save();
             }
         }
-    }
-
-    public function postUp(Schema $schema)
-    {
-        $db = \Database::get();
-        if ($this->updateSectionPlurals) {
-            $rs = $db->Execute('select cID, msLanguage, msCountry from MultilingualSections');
-            while ($row = $rs->FetchRow()) {
-                $locale = $row['msLanguage'];
-                if ($row['msCountry']) {
-                    $locale .= '_' . $row['msCountry'];
-                }
-                $localeInfo = \Gettext\Languages\Language::getById($locale);
-                if ($localeInfo) {
-                    $pluralCases = array();
-                    foreach ($localeInfo->categories as $category) {
-                        $pluralCases[] = $category->id.'@'.$category->examples;
-                    }
-                    $db->update(
-                        'MultilingualSections',
-                        array(
-                            'msNumPlurals' => count($localeInfo->categories),
-                            'msPluralRule' => $localeInfo->formula,
-                            'msPluralCases' => implode("\n", $pluralCases),
-                        ),
-                        array('cID' => $row['cID'])
-                    );
-                }
-            }
-        }
-        if ($this->updateMultilingualTranslations) {
-            $db->Execute("UPDATE MultilingualTranslations SET comments = REPLACE(comments, ':', '\\n') WHERE comments IS NOT NULL");
-        }
-    }
-
-    public function down(Schema $schema)
-    {
     }
 }

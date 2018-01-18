@@ -21,7 +21,6 @@ class Version20171129190607 extends AbstractMigration
             $sp = Single::add('/dashboard/system/calendar/import');
             $sp->update(['cName' => 'Import Calendar Data']);
         }
-
     }
 
     /**
@@ -30,6 +29,5 @@ class Version20171129190607 extends AbstractMigration
     public function down(Schema $schema)
     {
         // this down() migration is auto-generated, please modify it to your needs
-
     }
 }

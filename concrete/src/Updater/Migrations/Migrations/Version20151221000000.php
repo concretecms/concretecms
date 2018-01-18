@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Page\Page;
@@ -13,13 +14,13 @@ class Version20151221000000 extends AbstractMigration
         $sp = Page::getByPath('/dashboard/system/files/image_uploading');
         if (!is_object($sp) || $sp->isError()) {
             $sp = \Concrete\Core\Page\Single::add('/dashboard/system/files/image_uploading');
-            $sp->update(array('cName' => 'Image Uploading'));
+            $sp->update(['cName' => 'Image Uploading']);
         }
 
         // background size/position
-        \Concrete\Core\Database\Schema\Schema::refreshCoreXMLSchema(array(
+        \Concrete\Core\Database\Schema\Schema::refreshCoreXMLSchema([
             'StyleCustomizerInlineStyleSets',
-        ));
+        ]);
 
         $bt = \BlockType::getByHandle('image_slider');
         if (is_object($bt)) {

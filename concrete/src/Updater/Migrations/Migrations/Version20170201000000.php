@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Config\Repository\Repository;
@@ -44,6 +45,7 @@ class Version20170201000000 extends AbstractMigration
     protected function getConfig()
     {
         $app = Application::getFacadeApplication();
+
         return $app->make(Repository::class);
     }
 }

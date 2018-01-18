@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
@@ -8,9 +9,9 @@ class Version20150622000000 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
-        \Concrete\Core\Database\Schema\Schema::refreshCoreXMLSchema(array(
+        \Concrete\Core\Database\Schema\Schema::refreshCoreXMLSchema([
             'CollectionVersionBlocks',
-        ));
+        ]);
     }
 
     public function down(Schema $schema)

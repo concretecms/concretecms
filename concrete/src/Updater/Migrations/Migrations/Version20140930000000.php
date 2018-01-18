@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
@@ -21,7 +22,7 @@ class Version20140930000000 extends AbstractMigration
         $db = \Database::get();
         $platform = $db->getDatabasePlatform();
         $config->dropPrimaryKey();
-        $config->setPrimaryKey(array('configNamespace', 'configGroup', 'configItem'));
+        $config->setPrimaryKey(['configNamespace', 'configGroup', 'configItem']);
         $comparator = new Comparator();
         $diff = $comparator->diffTable($fromConfig, $config);
         $sql = $platform->getAlterTableSQL($diff);

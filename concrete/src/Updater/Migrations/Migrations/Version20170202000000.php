@@ -2,18 +2,17 @@
 
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
+use Concrete\Core\Attribute\Category\PageCategory;
+use Concrete\Core\Entity\Attribute\Key\Settings\DateTimeSettings;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\Routine\AddPageDraftsBooleanTrait;
 use Doctrine\DBAL\Schema\Schema;
-use Concrete\Core\Entity\Attribute\Key\Settings\DateTimeSettings;
-use Concrete\Core\Page\Page;
 use SinglePage;
-use Concrete\Core\Support\Facade\Application;
-use Concrete\Core\Attribute\Category\PageCategory;
 
 class Version20170202000000 extends AbstractMigration
 {
-
     use AddPageDraftsBooleanTrait;
 
     public function up(Schema $schema)

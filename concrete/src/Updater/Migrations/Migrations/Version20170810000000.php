@@ -1,7 +1,7 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
-use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 

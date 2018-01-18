@@ -1,12 +1,13 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
+use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Page\Page;
+use Database;
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 use SinglePage;
-use Database;
-use Concrete\Core\Block\BlockType\BlockType;
 
 class Version20141113000000 extends AbstractMigration
 {
@@ -17,7 +18,6 @@ class Version20141113000000 extends AbstractMigration
 
     public function up(Schema $schema)
     {
-
         /* delete customize page themes dashboard single page */
         $customize = Page::getByPath('/dashboard/pages/themes/customize');
         if (is_object($customize) && !$customize->isError()) {
@@ -63,7 +63,7 @@ class Version20141113000000 extends AbstractMigration
         // Clean up File stupidity
         $r = $db->Execute('select Files.fID from Files left join FileVersions on (Files.fID = FileVersions.fID) where FileVersions.fID is null');
         while ($row = $r->FetchRow()) {
-            $db->Execute('delete from Files where fID = ?', array($row['fID']));
+            $db->Execute('delete from Files where fID = ?', [$row['fID']]);
         }
     }
 

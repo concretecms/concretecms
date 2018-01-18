@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
@@ -9,14 +10,13 @@ class Version20170609000000 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
-
         $this->refreshEntities([
             'Concrete\Core\Entity\File\Image\Thumbnail\Type\Type',
         ]);
         $config = \Core::make('config');
         $type = Type::getByHandle($config->get('concrete.icons.file_manager_listing.handle'));
         /**
-         * @var $type \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type
+         * @var \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type
          */
         if ($type) {
             $type->setSizingMode($type::RESIZE_EXACT);
@@ -24,7 +24,7 @@ class Version20170609000000 extends AbstractMigration
         }
         $type = Type::getByHandle($config->get('concrete.icons.file_manager_detail.handle'));
         /**
-         * @var $type \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type
+         * @var \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type
          */
         if ($type) {
             $type->setSizingMode($type::RESIZE_EXACT);

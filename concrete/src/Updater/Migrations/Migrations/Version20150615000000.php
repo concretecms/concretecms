@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Page\Type\Type;
@@ -11,11 +12,11 @@ class Version20150615000000 extends AbstractMigration
     {
         $type = Type::getByHandle(STACK_CATEGORY_PAGE_TYPE);
         if (!is_object($type)) {
-            Type::add(array(
+            Type::add([
                 'internal' => true,
                 'name' => 'Stack Category',
                 'handle' => STACK_CATEGORY_PAGE_TYPE,
-            ));
+            ]);
         }
     }
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations;
 
 use Concrete\Core\Block\BlockType\BlockType;
@@ -10,7 +11,6 @@ use Doctrine\ORM\Tools\SchemaTool;
 
 abstract class AbstractMigration extends DoctrineAbstractMigration
 {
-
     protected $app;
 
     public function __construct(Version $version)

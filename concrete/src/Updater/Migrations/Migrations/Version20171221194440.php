@@ -15,7 +15,6 @@ class Version20171221194440 extends AbstractMigration
      */
     public function up(Schema $schema)
     {
-
     }
 
     public function postUp(Schema $schema)
@@ -51,6 +50,5 @@ class Version20171221194440 extends AbstractMigration
      */
     public function down(Schema $schema)
     {
-
     }
 }

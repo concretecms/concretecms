@@ -1,12 +1,20 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
-use Concrete\Core\Block\BlockType\BlockType;
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 class Version20170118000000 extends AbstractMigration
 {
+    public function up(Schema $schema)
+    {
+        $this->addVersionIdToPageTypeOutputBlocks();
+    }
+
+    public function down(Schema $schema)
+    {
+    }
 
     protected function output($message)
     {
@@ -17,9 +25,9 @@ class Version20170118000000 extends AbstractMigration
     {
         $this->output(t('Adding cvID to PageTypeComposerOutputBlocks...'));
         // Update tables that still exist in db.xml
-        \Concrete\Core\Database\Schema\Schema::refreshCoreXMLSchema(array(
+        \Concrete\Core\Database\Schema\Schema::refreshCoreXMLSchema([
             'PageTypeComposerOutputBlocks',
-        ));
+        ]);
 
         $db = $this->connection;
         $r = $db->executeQuery('select cID, bID, arHandle from PageTypeComposerOutputBlocks');
@@ -34,14 +42,5 @@ class Version20170118000000 extends AbstractMigration
                 [$cvID, $row['cID'], $row['bID'], $row['arHandle']]
             );
         }
-    }
-
-    public function up(Schema $schema)
-    {
-        $this->addVersionIdToPageTypeOutputBlocks();
-    }
-
-    public function down(Schema $schema)
-    {
     }
 }

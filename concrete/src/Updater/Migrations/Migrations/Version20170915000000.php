@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Attribute\Type;
@@ -12,7 +13,7 @@ class Version20170915000000 extends AbstractMigration
         $type = Type::getByHandle('select');
         $em = $this->connection->getEntityManager();
         if ($type) {
-            /**
+            /*
              * @var $type \Concrete\Core\Entity\Attribute\Type
              */
             $type->setAttributeTypeName('Option List');
@@ -23,7 +24,6 @@ class Version20170915000000 extends AbstractMigration
         $this->refreshEntities([
             'Concrete\Core\Entity\Attribute\Key\Settings\SelectSettings',
         ]);
-
     }
 
     public function down(Schema $schema)

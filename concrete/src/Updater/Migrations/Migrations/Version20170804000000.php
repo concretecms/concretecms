@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
@@ -13,7 +14,8 @@ class Version20170804000000 extends AbstractMigration
         if ($type) {
             /**
              * Fix issue where file manager detail thumbnails were being added without a height.
-             * @var $type \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type
+             *
+             * @var \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type
              */
             if (!$type->getHeight()) {
                 $type->setHeight($type->getWidth());

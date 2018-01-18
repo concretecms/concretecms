@@ -13,7 +13,7 @@ class Version20170711151953 extends AbstractMigration
     public function up(Schema $schema)
     {
         $this->refreshDatabaseTables([
-            'FileImageThumbnailPaths'
+            'FileImageThumbnailPaths',
         ]);
     }
 

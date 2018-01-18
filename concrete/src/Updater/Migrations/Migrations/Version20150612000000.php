@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Page\Page;
@@ -12,7 +13,7 @@ class Version20150612000000 extends AbstractMigration
         $sp = Page::getByPath('/dashboard/system/multilingual/copy');
         if (!is_object($sp) || $sp->isError()) {
             $sp = \Concrete\Core\Page\Single::add('/dashboard/system/multilingual/copy');
-            $sp->update(array('cName' => 'Copy Languages'));
+            $sp->update(['cName' => 'Copy Languages']);
         }
     }
 

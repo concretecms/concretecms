@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Entity\Express\Entity;
@@ -7,7 +8,8 @@ use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
- * Class Version20170316000000
+ * Class Version20170316000000.
+ *
  * @package Concrete\Core\Updater\Migrations\Migrations
  *
  * This migration is to find all entity search columns and refresh the database schema due to core changes that allows
@@ -20,7 +22,7 @@ class Version20170316000000 extends AbstractMigration
     public function up(Schema $schema)
     {
         $this->refreshEntities([
-            Entity::class
+            Entity::class,
         ]);
 
         // Get all the entities ALL THE ENTITIES
@@ -34,12 +36,13 @@ class Version20170316000000 extends AbstractMigration
                 // (we don't require this method in the interface yet)
                 try {
                     $category->getSearchIndexer()->refreshRepositoryColumns($category, $key);
-                } catch (\Exception $e) {}
+                } catch (\Exception $e) {
+                }
             }
             // Get a list of the entities
             $list = new EntryList($entity);
             $entries = $list->getResults();
-            foreach($entries as $entry) {
+            foreach ($entries as $entry) {
                 // Get the values for the entities
                 $values = $category->getAttributeValues($entry);
                 foreach ($values as $value) {

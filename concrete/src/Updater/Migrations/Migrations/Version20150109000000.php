@@ -1,9 +1,10 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
+use Concrete\Core\Block\BlockType\BlockType;
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
-use Concrete\Core\Block\BlockType\BlockType;
 
 class Version20150109000000 extends AbstractMigration
 {

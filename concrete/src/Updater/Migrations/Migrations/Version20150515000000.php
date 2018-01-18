@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
@@ -13,9 +14,9 @@ class Version20150515000000 extends AbstractMigration
 
     public function up(Schema $schema)
     {
-        \Concrete\Core\Database\Schema\Schema::refreshCoreXMLSchema(array(
+        \Concrete\Core\Database\Schema\Schema::refreshCoreXMLSchema([
             'PageFeeds',
-        ));
+        ]);
 
         // I can't seem to get the doctrine cache to clear any other way.
         $cms = \Core::make('app');
@@ -39,7 +40,7 @@ class Version20150515000000 extends AbstractMigration
                 inner join Blocks b on b.bID = btCSD.bOriginalID
                 left join BlockTypes bt on b.btID = bt.btID
             where bt.btID IS NULL',
-            array()
+            []
         );
         foreach ($orphanedCollectionVersionBlocks as $row) {
             $nc = \Page::getByID($row['cID'], $row['cvID']);

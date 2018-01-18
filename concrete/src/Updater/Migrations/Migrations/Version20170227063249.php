@@ -2,12 +2,11 @@
 
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
-use Concrete\Core\Package\Package;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
- * Conversations Ratings Page Review Migration
+ * Conversations Ratings Page Review Migration.
  */
 class Version20170227063249 extends AbstractMigration
 {

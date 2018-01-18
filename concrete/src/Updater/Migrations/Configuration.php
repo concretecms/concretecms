@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations;
 
 use Doctrine\DBAL\Migrations\Configuration\Configuration as DoctrineMigrationConfiguration;
@@ -8,7 +9,7 @@ class Configuration extends DoctrineMigrationConfiguration
     /**
      * Construct a migration configuration object.
      *
-     * @param bool $registerMigrations Set to true to load the currently available migrations.
+     * @param bool $registerMigrations set to true to load the currently available migrations
      */
     public function __construct($registerMigrations = true)
     {

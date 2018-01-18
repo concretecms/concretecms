@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Attribute\Category\PageCategory;
@@ -50,7 +51,6 @@ class Version20170824000000 extends AbstractMigration
             $em->persist($geolocator);
             $em->flush($geolocator);
         }
-
 
         $pageAttributeCategory = $app->make(PageCategory::class);
         /* @var PageCategory $pageAttributeCategory */
