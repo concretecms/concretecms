@@ -2796,6 +2796,9 @@
       <default value="0"/>
       <notnull/>
     </field>
+    <index name="gPath">
+      <col>gPath</col>
+    </index>
     <index name="gName">
       <col>gName</col>
     </index>
