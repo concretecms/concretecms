@@ -3684,6 +3684,7 @@
       <notnull/>
     </field>
     <field name="flaTimestamp" type="timestamp" comment="Timestamp of the failed login attempt">
+      <deftimestamp/>
       <notnull/>
     </field>
   </table>
