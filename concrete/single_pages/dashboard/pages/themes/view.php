@@ -58,7 +58,7 @@ if (isset($activate_confirm)) {
                             }
                 echo $bt->button(t('Page Templates'), $view->url('/dashboard/pages/themes/inspect', $t->getThemeID()), 'left');
                 if ($siteThemeID == $t->getThemeID()) {
-                    echo $bt->button(t('Remove'), $view->url('/dashboard/pages/themes', 'remove', $t->getThemeID(), $valt->generate('remove')), 'right', 'btn-danger', array('disabled' => 'disabled'));
+                    echo $bt->button(t('Remove'), '', 'right', 'btn-danger', array('disabled' => 'disabled'));
                 } else {
                     echo $bt->button(t('Remove'), $view->url('/dashboard/pages/themes', 'remove', $t->getThemeID(), $valt->generate('remove')), 'right', 'btn-danger');
                 }
