@@ -377,9 +377,13 @@ class Version20160725000000 extends AbstractMigration
             $this->importAttributeKeySettings($row['atID'], $row['akID']);
             switch ($akCategory) {
                 case 'pagekey':
-                    $rb = $this->connection->executeQuery('select * from CollectionAttributeValues where akID = ? group by avID', [$row['akID']]);
+                    $avIDDone = [];
+                    $rb = $this->connection->executeQuery('select * from CollectionAttributeValues where akID = ?', [$row['akID']]);
                     while ($rowB = $rb->fetch()) {
-                        $this->addAttributeValue($row['atID'], $row['akID'], $rowB['avID']);
+                        if (!in_array($rowB['avID'], $avIDDone, true)) {
+                            $this->addAttributeValue($row['atID'], $row['akID'], $rowB['avID']);
+                            $avIDDone[] = $rowB['avID'];
+                        }
                     }
                     break;
                 case 'filekey':
