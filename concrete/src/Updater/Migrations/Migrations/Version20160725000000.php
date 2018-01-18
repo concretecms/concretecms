@@ -12,9 +12,7 @@ use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Cache\CacheLocal;
 use Concrete\Core\Entity\Attribute\Key\PageKey;
 use Concrete\Core\File\Filesystem;
-use Concrete\Core\File\Set\Set;
 use Concrete\Core\Localization\Localization;
-use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Single as SinglePage;
 use Concrete\Core\Page\Template;
@@ -22,7 +20,6 @@ use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Permission\Access\Entity\GroupEntity;
 use Concrete\Core\Permission\Access\Entity\UserEntity;
 use Concrete\Core\Permission\Key\Key;
-use Concrete\Core\Site\Service;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Tree\Node\NodeType;
 use Concrete\Core\Tree\Node\Type\File;
@@ -30,10 +27,10 @@ use Concrete\Core\Tree\Node\Type\FileFolder;
 use Concrete\Core\Tree\TreeType;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
+use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
 use Concrete\Core\Updater\Migrations\Routine\AddPageDraftsBooleanTrait;
-use Doctrine\DBAL\Schema\Schema;
 
-class Version20160725000000 extends AbstractMigration
+class Version20160725000000 extends AbstractMigration implements DirectSchemaUpgraderInterface
 {
     use AddPageDraftsBooleanTrait;
 
@@ -50,7 +47,12 @@ class Version20160725000000 extends AbstractMigration
         $pt->assignPermissionAccess($pa);
     }
 
-    public function up(Schema $schema)
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface::upgradeDatabase()
+     */
+    public function upgradeDatabase()
     {
         $this->connection->Execute('set foreign_key_checks = 0');
         $this->prepareInvalidForeignKeys();
@@ -82,15 +84,7 @@ class Version20160725000000 extends AbstractMigration
         $this->fixStacks();
         $this->nullifyInvalidForeignKeys();
         $this->connection->Execute('set foreign_key_checks = 1');
-    }
-
-    public function postUp(Schema $schema)
-    {
         $this->migrateDrafts();
-    }
-
-    public function down(Schema $schema)
-    {
     }
 
     protected function output($message)
@@ -1015,9 +1009,6 @@ class Version20160725000000 extends AbstractMigration
     {
         $this->output(t('Installing Site object...'));
 
-        /**
-         * @var Service
-         */
         $service = \Core::make('site');
         $site = $service->getDefault();
         $em = $this->connection->getEntityManager();

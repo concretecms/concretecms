@@ -9,21 +9,99 @@ use Concrete\Core\Permission\Access\Entity\Type;
 use Concrete\Core\Permission\Category;
 use Concrete\Core\Permission\Duration;
 use Concrete\Core\Permission\Key\Key;
+use Concrete\Core\Updater\Migrations\AbstractMigration;
+use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
+use Concrete\Core\Updater\Migrations\ManagedSchemaUpgraderInterface;
 use Concrete\Core\User\Group\Group;
-use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
-class Version20150504000000 extends AbstractMigration
+class Version20150504000000 extends AbstractMigration implements ManagedSchemaUpgraderInterface, DirectSchemaUpgraderInterface
 {
     private $updateSectionPlurals = false;
     private $updateMultilingualTranslations = false;
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Doctrine\DBAL\Migrations\AbstractMigration::getDescription()
+     */
     public function getDescription()
     {
         return '5.7.4';
     }
 
-    public function up(Schema $schema)
+    public function installMaintenanceModePermission()
+    {
+        $pk = Key::getByHandle('view_in_maintenance_mode');
+        if (!$pk instanceof Key) {
+            $pk = Key::add('admin', 'view_in_maintenance_mode', 'View Site in Maintenance Mode', 'Controls whether a user can access the website when its under maintenance.', false, false);
+            $pa = $pk->getPermissionAccessObject();
+            if (!is_object($pa)) {
+                $pa = Access::create($pk);
+            }
+            $adminGroup = Group::getByID(ADMIN_GROUP_ID);
+            if ($adminGroup) {
+                $adminGroupEntity = GroupEntity::getOrCreate($adminGroup);
+                $pa->addListItem($adminGroupEntity);
+                $pt = $pk->getPermissionAssignmentObject();
+                $pt->assignPermissionAccess($pa);
+            }
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Updater\Migrations\ManagedSchemaUpgraderInterface::upgradeSchema()
+     */
+    public function upgradeSchema(Schema $schema)
+    {
+        $pp = $schema->getTable('PagePaths');
+        if (!$pp->hasColumn('ppGeneratedFromURLSlugs')) {
+            $pp->addColumn('ppGeneratedFromURLSlugs', 'boolean', ['notnull' => true, 'unsigned' => true, 'default' => 0]);
+        }
+
+        $ms = $schema->getTable('MultilingualSections');
+        if (!$ms->hasColumn('msNumPlurals')) {
+            $ms->addColumn('msNumPlurals', 'integer', ['notnull' => true, 'unsigned' => true, 'default' => 2]);
+            $this->updateSectionPlurals = true;
+        }
+        if (!$ms->hasColumn('msPluralRule')) {
+            $ms->addColumn('msPluralRule', 'string', ['notnull' => true, 'length' => 400, 'default' => '(n != 1)']);
+            $this->updateSectionPlurals = true;
+        }
+        if (!$ms->hasColumn('msPluralCases')) {
+            $ms->addColumn('msPluralCases', 'string', ['notnull' => true, 'length' => 1000, 'default' => "one@1\nother@0, 2~16, 100, 1000, 10000, 100000, 1000000, …"]);
+            $this->updateSectionPlurals = true;
+        }
+        $mt = $schema->getTable('MultilingualTranslations');
+        if (!$mt->hasColumn('msgidPlural')) {
+            $mt->addColumn('msgidPlural', 'text', ['notnull' => false]);
+            $this->updateMultilingualTranslations = true;
+        }
+        if (!$mt->hasColumn('msgstrPlurals')) {
+            $mt->addColumn('msgstrPlurals', 'text', ['notnull' => false]);
+            $this->updateMultilingualTranslations = true;
+        }
+
+        $cms = $schema->getTable('ConversationMessages');
+        if (!$cms->hasColumn('cnvMessageAuthorName')) {
+            $cms->addColumn('cnvMessageAuthorName', 'string', ['notnull' => false, 'length' => 255]);
+        }
+        if (!$cms->hasColumn('cnvMessageAuthorEmail')) {
+            $cms->addColumn('cnvMessageAuthorEmail', 'string', ['notnull' => false, 'length' => 255]);
+        }
+        if (!$cms->hasColumn('cnvMessageAuthorWebsite')) {
+            $cms->addColumn('cnvMessageAuthorWebsite', 'string', ['notnull' => false, 'length' => 255]);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface::upgradeDatabase()
+     */
+    public function upgradeDatabase()
     {
         \Concrete\Core\Database\Schema\Schema::refreshCoreXMLSchema([
             'ConversationPermissionAddMessageAccessList',
@@ -43,12 +121,6 @@ class Version20150504000000 extends AbstractMigration
 
         $db = \Database::get();
         $db->Execute('DROP TABLE IF EXISTS PageStatistics');
-
-        $pp = $schema->getTable('PagePaths');
-        if (!$pp->hasColumn('ppGeneratedFromURLSlugs')) {
-            $db->Execute('alter table PagePaths add column ppGeneratedFromURLSlugs tinyint(1) unsigned not null default 0');
-            // we have to do this directly because the page path calls below will die otherwise.
-        }
 
         $bt = BlockType::getByHandle('page_list');
         if (is_object($bt)) {
@@ -87,40 +159,6 @@ class Version20150504000000 extends AbstractMigration
 
         $db->Execute('alter table QueueMessages modify column body longtext not null');
 
-        $ms = $schema->getTable('MultilingualSections');
-        if (!$ms->hasColumn('msNumPlurals')) {
-            $ms->addColumn('msNumPlurals', 'integer', ['notnull' => true, 'unsigned' => true, 'default' => 2]);
-            $this->updateSectionPlurals = true;
-        }
-        if (!$ms->hasColumn('msPluralRule')) {
-            $ms->addColumn('msPluralRule', 'string', ['notnull' => true, 'length' => 400, 'default' => '(n != 1)']);
-            $this->updateSectionPlurals = true;
-        }
-        if (!$ms->hasColumn('msPluralCases')) {
-            $ms->addColumn('msPluralCases', 'string', ['notnull' => true, 'length' => 1000, 'default' => "one@1\nother@0, 2~16, 100, 1000, 10000, 100000, 1000000, …"]);
-            $this->updateSectionPlurals = true;
-        }
-        $mt = $schema->getTable('MultilingualTranslations');
-        if (!$mt->hasColumn('msgidPlural')) {
-            $mt->addColumn('msgidPlural', 'text', ['notnull' => false]);
-            $this->updateMultilingualTranslations = true;
-        }
-        if (!$mt->hasColumn('msgstrPlurals')) {
-            $mt->addColumn('msgstrPlurals', 'text', ['notnull' => false]);
-            $this->updateMultilingualTranslations = true;
-        }
-
-        $cms = $schema->getTable('ConversationMessages');
-        if (!$cms->hasColumn('cnvMessageAuthorName')) {
-            $cms->addColumn('cnvMessageAuthorName', 'string', ['notnull' => false, 'length' => 255]);
-        }
-        if (!$cms->hasColumn('cnvMessageAuthorEmail')) {
-            $cms->addColumn('cnvMessageAuthorEmail', 'string', ['notnull' => false, 'length' => 255]);
-        }
-        if (!$cms->hasColumn('cnvMessageAuthorWebsite')) {
-            $cms->addColumn('cnvMessageAuthorWebsite', 'string', ['notnull' => false, 'length' => 255]);
-        }
-
         $this->updatePermissionDurationObjects();
 
         $key = Key::getByHandle('add_conversation_message');
@@ -129,29 +167,7 @@ class Version20150504000000 extends AbstractMigration
         }
 
         $this->installMaintenanceModePermission();
-    }
 
-    public function installMaintenanceModePermission()
-    {
-        $pk = Key::getByHandle('view_in_maintenance_mode');
-        if (!$pk instanceof Key) {
-            $pk = Key::add('admin', 'view_in_maintenance_mode', 'View Site in Maintenance Mode', 'Controls whether a user can access the website when its under maintenance.', false, false);
-            $pa = $pk->getPermissionAccessObject();
-            if (!is_object($pa)) {
-                $pa = Access::create($pk);
-            }
-            $adminGroup = Group::getByID(ADMIN_GROUP_ID);
-            if ($adminGroup) {
-                $adminGroupEntity = GroupEntity::getOrCreate($adminGroup);
-                $pa->addListItem($adminGroupEntity);
-                $pt = $pk->getPermissionAssignmentObject();
-                $pt->assignPermissionAccess($pa);
-            }
-        }
-    }
-
-    public function postUp(Schema $schema)
-    {
         $db = \Database::get();
         if ($this->updateSectionPlurals) {
             $rs = $db->Execute('select cID, msLanguage, msCountry from MultilingualSections');
@@ -174,17 +190,13 @@ class Version20150504000000 extends AbstractMigration
                             'msPluralCases' => implode("\n", $pluralCases),
                         ],
                         ['cID' => $row['cID']]
-                    );
+                        );
                 }
             }
         }
         if ($this->updateMultilingualTranslations) {
             $db->Execute("UPDATE MultilingualTranslations SET comments = REPLACE(comments, ':', '\\n') WHERE comments IS NOT NULL");
         }
-    }
-
-    public function down(Schema $schema)
-    {
     }
 
     protected function updatePermissionDurationObjects()

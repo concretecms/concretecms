@@ -5,7 +5,7 @@ namespace Concrete\Core\Updater\Migrations\Migrations;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Express\EntryList;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
-use Doctrine\DBAL\Schema\Schema;
+use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
 
 /**
  * Class Version20170316000000.
@@ -17,9 +17,14 @@ use Doctrine\DBAL\Schema\Schema;
  * After refreshing all columns we go though all entities and re-fill the search indexes so that any values that are
  * longer than 255 chars will now be indexed properly.
  */
-class Version20170316000000 extends AbstractMigration
+class Version20170316000000 extends AbstractMigration implements DirectSchemaUpgraderInterface
 {
-    public function up(Schema $schema)
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface::upgradeDatabase()
+     */
+    public function upgradeDatabase()
     {
         $this->refreshEntities([
             Entity::class,
@@ -51,9 +56,5 @@ class Version20170316000000 extends AbstractMigration
                 }
             }
         }
-    }
-
-    public function down(Schema $schema)
-    {
     }
 }

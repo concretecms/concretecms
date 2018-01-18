@@ -3,20 +3,21 @@
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Block\BlockType\BlockType;
-use Doctrine\DBAL\Migrations\AbstractMigration;
-use Doctrine\DBAL\Schema\Schema;
+use Concrete\Core\Updater\Migrations\AbstractMigration;
+use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
 
-class Version20161208000000 extends AbstractMigration
+class Version20161208000000 extends AbstractMigration implements DirectSchemaUpgraderInterface
 {
-    public function up(Schema $schema)
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface::upgradeDatabase()
+     */
+    public function upgradeDatabase()
     {
         $this->updateBlocks();
         $this->updateEmptyFileAttributes();
         $this->updateDoctrineXmlTables();
-    }
-
-    public function down(Schema $schema)
-    {
     }
 
     protected function output($message)

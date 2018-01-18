@@ -2,18 +2,28 @@
 
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
+use Concrete\Core\Updater\Migrations\AbstractMigration;
+use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
 use Doctrine\DBAL\Schema\Comparator;
-use Doctrine\DBAL\Schema\Schema;
 
-class Version20140930000000 extends AbstractMigration
+class Version20140930000000 extends AbstractMigration implements DirectSchemaUpgraderInterface
 {
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Doctrine\DBAL\Migrations\AbstractMigration::getDescription()
+     */
     public function getDescription()
     {
         return '5.7.0.4';
     }
 
-    public function up(Schema $schema)
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface::upgradeDatabase()
+     */
+    public function upgradeDatabase()
     {
         \Database::query('UPDATE Config SET configNamespace="" WHERE configNamespace IS NULL');
 
@@ -31,9 +41,5 @@ class Version20140930000000 extends AbstractMigration
                 $db->query($q);
             }
         }
-    }
-
-    public function down(Schema $schema)
-    {
     }
 }

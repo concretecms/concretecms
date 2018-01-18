@@ -8,20 +8,70 @@ use Concrete\Core\Conversation\FlagType\FlagType;
 use Concrete\Core\Permission\Access\Entity\Type;
 use Concrete\Core\Permission\Category;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
-use Doctrine\DBAL\Migrations\AbstractMigration;
+use Concrete\Core\Updater\Migrations\AbstractMigration;
+use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
+use Concrete\Core\Updater\Migrations\ManagedSchemaUpgraderInterface;
 use Doctrine\DBAL\Schema\Schema;
 use Exception;
 use Page;
 use SinglePage;
 
-class Version20141219000000 extends AbstractMigration
+class Version20141219000000 extends AbstractMigration implements ManagedSchemaUpgraderInterface, DirectSchemaUpgraderInterface
 {
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Doctrine\DBAL\Migrations\AbstractMigration::getDescription()
+     */
     public function getDescription()
     {
         return '5.7.3';
     }
 
-    public function up(Schema $schema)
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Updater\Migrations\ManagedSchemaUpgraderInterface::upgradeSchema()
+     */
+    public function upgradeSchema(Schema $schema)
+    {
+        // add new multilingual tables.
+        if (!$schema->hasTable('MultilingualPageRelations')) {
+            $mpr = $schema->createTable('MultilingualPageRelations');
+            $mpr->addColumn('mpRelationID', 'integer', ['notnull' => true, 'unsigned' => true, 'default' => 0]);
+            $mpr->addColumn('cID', 'integer', ['notnull' => true, 'unsigned' => true, 'default' => 0]);
+            $mpr->addColumn('mpLanguage', 'string', ['notnull' => true, 'default' => '']);
+            $mpr->addColumn('mpLocale', 'string', ['notnull' => true]);
+            $mpr->setPrimaryKey(['mpRelationID', 'cID', 'mpLocale']);
+        }
+        if (!$schema->hasTable('MultilingualSections')) {
+            $mus = $schema->createTable('MultilingualSections');
+            $mus->addColumn('cID', 'integer', ['notnull' => true, 'unsigned' => true, 'default' => 0]);
+            $mus->addColumn('msLanguage', 'string', ['notnull' => true, 'default' => '']);
+            $mus->addColumn('msCountry', 'string', ['notnull' => true, 'default' => '']);
+            $mus->setPrimaryKey(['cID']);
+        }
+        if (!$schema->hasTable('MultilingualTranslations')) {
+            $mts = $schema->createTable('MultilingualTranslations');
+            $mts->addColumn('mtID', 'integer', ['autoincrement' => true, 'unsigned' => true]);
+            $mts->addColumn('mtSectionID', 'integer', ['unsigned' => true, 'notnull' => true, 'default' => 0]);
+            $mts->addColumn('msgid', 'text', ['notnull' => false]);
+            $mts->addColumn('msgstr', 'text', ['notnull' => false]);
+            $mts->addColumn('context', 'text', ['notnull' => false]);
+            $mts->addColumn('comments', 'text', ['notnull' => false]);
+            $mts->addColumn('reference', 'text', ['notnull' => false]);
+            $mts->addColumn('flags', 'text', ['notnull' => false]);
+            $mts->addColumn('updated', 'datetime', ['notnull' => false]);
+            $mts->setPrimaryKey(['mtID']);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface::upgradeDatabase()
+     */
+    public function upgradeDatabase()
     {
         $ft = FlagType::getByhandle('spam');
         if (!is_object($ft)) {
@@ -119,38 +169,6 @@ class Version20141219000000 extends AbstractMigration
             }
         }
 
-        // add new multilingual tables.
-        $sm = $db->getSchemaManager();
-        $schemaTables = $sm->listTableNames();
-        if (!in_array('MultilingualPageRelations', $schemaTables)) {
-            $mpr = $schema->createTable('MultilingualPageRelations');
-            $mpr->addColumn('mpRelationID', 'integer', ['notnull' => true, 'unsigned' => true, 'default' => 0]);
-            $mpr->addColumn('cID', 'integer', ['notnull' => true, 'unsigned' => true, 'default' => 0]);
-            $mpr->addColumn('mpLanguage', 'string', ['notnull' => true, 'default' => '']);
-            $mpr->addColumn('mpLocale', 'string', ['notnull' => true]);
-            $mpr->setPrimaryKey(['mpRelationID', 'cID', 'mpLocale']);
-        }
-        if (!in_array('MultilingualSections', $schemaTables)) {
-            $mus = $schema->createTable('MultilingualSections');
-            $mus->addColumn('cID', 'integer', ['notnull' => true, 'unsigned' => true, 'default' => 0]);
-            $mus->addColumn('msLanguage', 'string', ['notnull' => true, 'default' => '']);
-            $mus->addColumn('msCountry', 'string', ['notnull' => true, 'default' => '']);
-            $mus->setPrimaryKey(['cID']);
-        }
-        if (!in_array('MultilingualTranslations', $schemaTables)) {
-            $mts = $schema->createTable('MultilingualTranslations');
-            $mts->addColumn('mtID', 'integer', ['autoincrement' => true, 'unsigned' => true]);
-            $mts->addColumn('mtSectionID', 'integer', ['unsigned' => true, 'notnull' => true, 'default' => 0]);
-            $mts->addColumn('msgid', 'text', ['notnull' => false]);
-            $mts->addColumn('msgstr', 'text', ['notnull' => false]);
-            $mts->addColumn('context', 'text', ['notnull' => false]);
-            $mts->addColumn('comments', 'text', ['notnull' => false]);
-            $mts->addColumn('reference', 'text', ['notnull' => false]);
-            $mts->addColumn('flags', 'text', ['notnull' => false]);
-            $mts->addColumn('updated', 'datetime', ['notnull' => false]);
-            $mts->setPrimaryKey(['mtID']);
-        }
-
         // block type
         $bt = BlockType::getByHandle('switch_language');
         if (!is_object($bt)) {
@@ -184,9 +202,5 @@ class Version20141219000000 extends AbstractMigration
             $sp = SinglePage::add('/dashboard/pages/types/attributes');
             $sp->update(['cName' => 'Page Type Attributes']);
         }
-    }
-
-    public function down(Schema $schema)
-    {
     }
 }

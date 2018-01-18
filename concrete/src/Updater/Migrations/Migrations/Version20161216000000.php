@@ -4,19 +4,20 @@ namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Block\ExpressForm\Controller as ExpressFormBlockController;
 use Concrete\Core\Tree\Node\Type\ExpressEntryCategory;
+use Concrete\Core\Updater\Migrations\AbstractMigration;
+use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
 use Concrete\Core\User\Group\Group;
-use Doctrine\DBAL\Migrations\AbstractMigration;
-use Doctrine\DBAL\Schema\Schema;
 
-class Version20161216000000 extends AbstractMigration
+class Version20161216000000 extends AbstractMigration implements DirectSchemaUpgraderInterface
 {
-    public function up(Schema $schema)
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface::upgradeDatabase()
+     */
+    public function upgradeDatabase()
     {
         $this->updateExpressFormPermissions();
-    }
-
-    public function down(Schema $schema)
-    {
     }
 
     protected function output($message)

@@ -3,11 +3,16 @@
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Updater\Migrations\AbstractMigration;
-use Doctrine\DBAL\Schema\Schema;
+use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
 
-class Version20170802000000 extends AbstractMigration
+class Version20170802000000 extends AbstractMigration implements DirectSchemaUpgraderInterface
 {
-    public function up(Schema $schema)
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface::upgradeDatabase()
+     */
+    public function upgradeDatabase()
     {
         // First, we prune out all duplicates. We get the
         // Listing from the table as it comes out of the database
@@ -36,9 +41,5 @@ class Version20170802000000 extends AbstractMigration
         // Now that we have removed problematic duplicate rows, rescan the table and remove the primary keys.
 
         $this->refreshBlockType('express_entry_detail');
-    }
-
-    public function down(Schema $schema)
-    {
     }
 }

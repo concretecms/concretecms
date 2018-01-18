@@ -2,17 +2,27 @@
 
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
-use Doctrine\DBAL\Schema\Schema;
+use Concrete\Core\Updater\Migrations\AbstractMigration;
+use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
 
-class Version20150515000000 extends AbstractMigration
+class Version20150515000000 extends AbstractMigration implements DirectSchemaUpgraderInterface
 {
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Doctrine\DBAL\Migrations\AbstractMigration::getDescription()
+     */
     public function getDescription()
     {
         return '5.7.5a1';
     }
 
-    public function up(Schema $schema)
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface::upgradeDatabase()
+     */
+    public function upgradeDatabase()
     {
         \Concrete\Core\Database\Schema\Schema::refreshCoreXMLSchema([
             'PageFeeds',
@@ -23,10 +33,6 @@ class Version20150515000000 extends AbstractMigration
         $cms->clearCaches();
 
         $this->purgeOrphanedScrapbooksBlocks();
-    }
-
-    public function down(Schema $schema)
-    {
     }
 
     protected function purgeOrphanedScrapbooksBlocks()

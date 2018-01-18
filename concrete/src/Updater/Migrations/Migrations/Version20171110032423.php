@@ -19,32 +19,30 @@ use Concrete\Core\Entity\Calendar\CalendarRelatedEvent;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Support\Facade\Package;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
+use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
 use Doctrine\DBAL\Schema\Schema;
 
-/**
- * Auto-generated Migration: Please modify to your needs!
- */
-class Version20171110032423 extends AbstractMigration
+class Version20171110032423 extends AbstractMigration implements DirectSchemaUpgraderInterface
 {
     /**
-     * @param Schema $schema
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface::upgradeDatabase()
      */
-    public function up(Schema $schema)
+    public function upgradeDatabase()
     {
+        if ($this->connection->getSchemaManager()->tablesExist('CalendarEventVersions')) {
+            $events = (int) $this->connection->fetchColumn('select count(*) from CalendarEventVersions');
+        } else {
+            $events = null;
+        }
+        if ($events === null || $events === 0) {
+            $this->migrateCalendar();
+        }
     }
 
-    public function postUp(Schema $schema)
+    protected function migrateCalendar()
     {
-        $table = $schema->hasTable('CalendarEventVersions');
-        if ($table) {
-            // We have this table, but it might be because we're updating from 5.7.5.13 and that migration parses
-            // a lot of stuff.
-            $events = $this->connection->fetchColumn('select count(*) from CalendarEventVersions');
-            if ($events) {
-                return;
-            }
-        }
-
         $this->addEarlyCalendarFunctionality();
         // first, let's see whether the concrete5 calendar is installed.
         $pkg = Package::getByHandle('calendar');
@@ -69,14 +67,6 @@ class Version20171110032423 extends AbstractMigration
         } else {
             $this->addCalendarFunctionality();
         }
-    }
-
-    /**
-     * @param Schema $schema
-     */
-    public function down(Schema $schema)
-    {
-        // this down() migration is auto-generated, please modify it to your needs
     }
 
     protected function addEarlyCalendarFunctionality()
