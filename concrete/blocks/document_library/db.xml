@@ -38,9 +38,8 @@
 		</field>
 
 		<field name="displayOrderDesc" type="I1">
-			<unsigned />
-			<notnull />
-			<default value="0" />
+			<default value="0"/>
+			<notnull/>
 		</field>
 
 		<field name="addFilesToSetID" type="I">

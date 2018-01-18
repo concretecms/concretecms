@@ -35,8 +35,8 @@
             <default value="0" />
         </field>
         <field name="openLinkInNewWindow" type="boolean">
-            <unsigned/>
-            <default value="0" />
+            <default value="0"/>
+            <notnull/>
         </field>
         <field name="altText" type="string" size="255" />
         <field name="title" type="string" size="255" />
