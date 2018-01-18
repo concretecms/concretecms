@@ -93,6 +93,7 @@ class Versions extends BackendInterfacePageController
                 $drafts = Page::getDraftsParentPage();
                 $nc = $c->duplicate($drafts);
                 $nc->deactivate();
+                $nc->setPageToDraft();
                 $nc->move($drafts);
                 // now we delete all but the new version
                 $vls = new VersionList($nc);

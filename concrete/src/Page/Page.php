@@ -2920,6 +2920,13 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $db->executeQuery('update Pages set cIsActive = 0 where cID = ?', [$this->getCollectionID()]);
     }
 
+    public function setPageToDraft()
+    {
+        $db = Database::connection();
+        $db->executeQuery('update Pages set cIsDraft = 1 where cID = ?', [$this->getCollectionID()]);
+        $this->cIsDraft = true;
+    }
+
     public function activate()
     {
         $db = Database::connection();
