@@ -208,6 +208,10 @@
             echo $selector->selectFileFolder('addFilesToFolder', $addFilesToFolder);
             ?>
         </div>
+        <div class="form-group">
+            <label class="control-label"><?= t('Add uploaded files to storage location')?></label>
+            <?= $form->select('addFilesToStorageLocation', $storageLocations, $addFilesToStorageLocation); ?>
+        </div>
     </fieldset>
 </div>
 

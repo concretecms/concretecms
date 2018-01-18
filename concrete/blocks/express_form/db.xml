@@ -33,6 +33,9 @@
     <field name="addFilesToFolder" type="integer">
       <default value="0"/>
     </field>
+    <field name="addFilesToStorageLocation" type="integer">
+      <default value="0"/>
+    </field>
   </table>
 
 </schema>
