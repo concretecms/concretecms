@@ -1,20 +1,18 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Routine;
 
-use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Support\Facade\Facade;
-use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 trait AddPageDraftsBooleanTrait
 {
-
     public function addColumnIfMissing(Schema $schema)
     {
         if (!$schema->getTable('Pages')->hasColumn('cIsDraft')) {
-            $schema->getTable('Pages')->addColumn('cIsDraft', 'boolean', array(
-                'notnull' => true, 'default' => 0
-            ));
+            $schema->getTable('Pages')->addColumn('cIsDraft', 'boolean', [
+                'notnull' => true, 'default' => 0,
+            ]);
         }
     }
 

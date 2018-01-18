@@ -1,13 +1,15 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Express\EntryList;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
-use Doctrine\DBAL\Schema\Schema;
+use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
 
 /**
- * Class Version20170316000000
+ * Class Version20170316000000.
+ *
  * @package Concrete\Core\Updater\Migrations\Migrations
  *
  * This migration is to find all entity search columns and refresh the database schema due to core changes that allows
@@ -15,12 +17,17 @@ use Doctrine\DBAL\Schema\Schema;
  * After refreshing all columns we go though all entities and re-fill the search indexes so that any values that are
  * longer than 255 chars will now be indexed properly.
  */
-class Version20170316000000 extends AbstractMigration
+class Version20170316000000 extends AbstractMigration implements DirectSchemaUpgraderInterface
 {
-    public function up(Schema $schema)
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface::upgradeDatabase()
+     */
+    public function upgradeDatabase()
     {
         $this->refreshEntities([
-            Entity::class
+            Entity::class,
         ]);
 
         // Get all the entities ALL THE ENTITIES
@@ -34,12 +41,13 @@ class Version20170316000000 extends AbstractMigration
                 // (we don't require this method in the interface yet)
                 try {
                     $category->getSearchIndexer()->refreshRepositoryColumns($category, $key);
-                } catch (\Exception $e) {}
+                } catch (\Exception $e) {
+                }
             }
             // Get a list of the entities
             $list = new EntryList($entity);
             $entries = $list->getResults();
-            foreach($entries as $entry) {
+            foreach ($entries as $entry) {
                 // Get the values for the entities
                 $values = $category->getAttributeValues($entry);
                 foreach ($values as $value) {
@@ -48,9 +56,5 @@ class Version20170316000000 extends AbstractMigration
                 }
             }
         }
-    }
-
-    public function down(Schema $schema)
-    {
     }
 }

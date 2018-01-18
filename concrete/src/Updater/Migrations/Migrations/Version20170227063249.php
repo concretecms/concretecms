@@ -2,30 +2,23 @@
 
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
-use Concrete\Core\Package\Package;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
-use Doctrine\DBAL\Schema\Schema;
+use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
 
 /**
- * Conversations Ratings Page Review Migration
+ * Conversations Ratings Page Review Migration.
  */
-class Version20170227063249 extends AbstractMigration
+class Version20170227063249 extends AbstractMigration implements DirectSchemaUpgraderInterface
 {
     /**
-     * @param Schema $schema
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface::upgradeDatabase()
      */
-    public function up(Schema $schema)
+    public function upgradeDatabase()
     {
         // Install the core_conversations db_xml
         $this->refreshBlockType('core_conversation');
         $this->refreshDatabaseTables(['ConversationMessages']);
-    }
-
-    /**
-     * @param Schema $schema
-     */
-    public function down(Schema $schema)
-    {
-        // This migration doesn't migrate down
     }
 }

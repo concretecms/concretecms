@@ -1,21 +1,23 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
-use Doctrine\DBAL\Schema\Schema;
+use Concrete\Core\Updater\Migrations\AbstractMigration;
+use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
 
-class Version20160213000000 extends AbstractMigration
+class Version20160213000000 extends AbstractMigration implements DirectSchemaUpgraderInterface
 {
-    public function up(Schema $schema)
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface::upgradeDatabase()
+     */
+    public function upgradeDatabase()
     {
         // added new delimiter settings.
         $bt = \BlockType::getByHandle('page_attribute_display');
         if (is_object($bt)) {
             $bt->refresh();
         }
-    }
-
-    public function down(Schema $schema)
-    {
     }
 }

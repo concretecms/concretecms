@@ -1,18 +1,20 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
-use Doctrine\DBAL\Schema\Schema;
+use Concrete\Core\Updater\Migrations\AbstractMigration;
+use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
 
-class Version20150713000000 extends AbstractMigration
+class Version20150713000000 extends AbstractMigration implements DirectSchemaUpgraderInterface
 {
-    public function up(Schema $schema)
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface::upgradeDatabase()
+     */
+    public function upgradeDatabase()
     {
         $db = \Database::connection();
         $db->Execute("update UserPointActions set upaHasCustomClass = 1 where upaHandle = 'won_badge'");
-    }
-
-    public function down(Schema $schema)
-    {
     }
 }

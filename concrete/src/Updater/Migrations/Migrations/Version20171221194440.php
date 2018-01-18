@@ -6,19 +6,16 @@ use Concrete\Core\Entity\Geolocator;
 use Concrete\Core\Geolocator\GeolocatorService;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
-use Doctrine\DBAL\Schema\Schema;
+use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
 
-class Version20171221194440 extends AbstractMigration
+class Version20171221194440 extends AbstractMigration implements DirectSchemaUpgraderInterface
 {
     /**
-     * @param Schema $schema
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface::upgradeDatabase()
      */
-    public function up(Schema $schema)
-    {
-
-    }
-
-    public function postUp(Schema $schema)
+    public function upgradeDatabase()
     {
         // Cut and pasting code from an earlier migration to ensure that it runs
         $app = Facade::getFacadeApplication();
@@ -44,13 +41,5 @@ class Version20171221194440 extends AbstractMigration
             $em->persist($geolocator);
             $em->flush($geolocator);
         }
-    }
-
-    /**
-     * @param Schema $schema
-     */
-    public function down(Schema $schema)
-    {
-
     }
 }
