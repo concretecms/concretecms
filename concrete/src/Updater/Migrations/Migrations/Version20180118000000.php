@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
+use Concrete\Core\Entity\Calendar\CalendarEventVersion;
 use Concrete\Core\Entity\Page\PagePath;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
@@ -17,6 +18,7 @@ class Version20180118000000 extends AbstractMigration implements DirectSchemaUpg
     {
         $this->refreshEntities([
             PagePath::class,
+            CalendarEventVersion::class,
         ]);
         $this->refreshDatabaseTables([
             'Groups',
