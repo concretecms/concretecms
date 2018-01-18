@@ -597,7 +597,11 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
     public function isPageDraft()
     {
-        return $this->cIsDraft;
+        if (isset($this->cIsDraft) && $this->cIsDraft) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private static function translatePermissionsXMLToKeys($node)
