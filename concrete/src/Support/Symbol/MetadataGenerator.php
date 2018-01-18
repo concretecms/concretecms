@@ -74,6 +74,8 @@ class MetadataGenerator
             '',
             'namespace PHPSTORM_META;',
             '',
+            "die('Access Denied.');",
+            '',
         ];
 
         // Define $app->build('');

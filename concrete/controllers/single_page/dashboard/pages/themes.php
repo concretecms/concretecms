@@ -58,21 +58,29 @@ class Themes extends DashboardPageController
 
     public function remove($pThemeID, $token = '')
     {
-        $v = Loader::helper('validation/error');
+
         try {
             $valt = Loader::helper('validation/token');
             if (!$valt->validate('remove', $token)) {
                 throw new Exception($valt->getErrorMessage());
             }
+            /** @var \Concrete\Core\Page\Theme\Theme $pl */
             $pl = PageTheme::getByID($pThemeID);
             if (!is_object($pl)) {
                 throw new Exception(t('Invalid theme.'));
             }
-            /*
-            if ($pl->getPackageID() > 0) {
-                throw new Exception('You may not uninstall a packaged theme.');
+
+            if (!$pl->isUninstallable()) {
+                throw new Exception(t('You can not uninstall a core theme'));
             }
-            */
+            $obj = PageTheme::getSiteTheme();
+            if (is_object($obj)) {
+                $siteThemeID = $obj->getThemeID();
+            }
+            if ($siteThemeID === $pl->getThemeID()) {
+                 throw new Exception(t('You can not uninstall an active theme'));
+            }
+
 
             $localUninstall = true;
             if ($pl->getPackageID() > 0) {
@@ -92,8 +100,7 @@ class Themes extends DashboardPageController
             }
             $this->set('message', t('Theme uninstalled.'));
         } catch (Exception $e) {
-            $v->add($e);
-            $this->set('error', $v);
+            $this->error->add($e);
         }
         $this->view();
     }

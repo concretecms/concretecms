@@ -33,6 +33,15 @@ if (is_object($f) && $f->getFileID()) {
         echo '<a href="' . $linkURL . '" '. ($openLinkInNewWindow ? 'target="_blank"' : '') .'>';
     }
 
+    // add data attributes for hover effect
+    if (is_object($f) && is_object($foS)) {
+        if (($maxWidth > 0 || $maxHeight > 0) && !$f->getTypeObject()->isSVG() && !$foS->getTypeObject()->isSVG()) {
+            $tag->addClass('ccm-image-block-hover');
+            $tag->setAttribute('data-default-src', $imgPaths['default']);
+            $tag->setAttribute('data-hover-src', $imgPaths['hover']);
+        }
+    }
+
     echo $tag;
 
     if ($linkURL) {
@@ -41,17 +50,4 @@ if (is_object($f) && $f->getFileID()) {
 } elseif ($c->isEditMode()) { ?>
     <div class="ccm-edit-mode-disabled-item"><?php echo t('Empty Image Block.'); ?></div>
 <?php
-}
-
-if (is_object($f) && is_object($foS)) {
-    if (($maxWidth > 0 || $maxHeight > 0) && !$f->getTypeObject()->isSVG() && !$foS->getTypeObject()->isSVG()) { ?>
-    <script>
-    $(function() {
-        $('.bID-<?php echo $bID; ?>')
-            .mouseover(function(){$(this).attr("src", '<?php echo $imgPaths["hover"]; ?>');})
-            .mouseout(function(){$(this).attr("src", '<?php echo $imgPaths["default"]; ?>');});
-    });
-    </script>
-    <?php
-    }
 }

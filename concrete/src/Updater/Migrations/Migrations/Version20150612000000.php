@@ -1,22 +1,24 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Page\Page;
-use Doctrine\DBAL\Migrations\AbstractMigration;
-use Doctrine\DBAL\Schema\Schema;
+use Concrete\Core\Updater\Migrations\AbstractMigration;
+use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
 
-class Version20150612000000 extends AbstractMigration
+class Version20150612000000 extends AbstractMigration implements DirectSchemaUpgraderInterface
 {
-    public function up(Schema $schema)
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface::upgradeDatabase()
+     */
+    public function upgradeDatabase()
     {
         $sp = Page::getByPath('/dashboard/system/multilingual/copy');
         if (!is_object($sp) || $sp->isError()) {
             $sp = \Concrete\Core\Page\Single::add('/dashboard/system/multilingual/copy');
-            $sp->update(array('cName' => 'Copy Languages'));
+            $sp->update(['cName' => 'Copy Languages']);
         }
-    }
-
-    public function down(Schema $schema)
-    {
     }
 }

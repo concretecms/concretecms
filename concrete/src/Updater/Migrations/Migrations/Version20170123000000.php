@@ -1,19 +1,19 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
-use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
-use Doctrine\DBAL\Schema\Schema;
+use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
 
-class Version20170123000000 extends AbstractMigration
+class Version20170123000000 extends AbstractMigration implements DirectSchemaUpgraderInterface
 {
-
-    public function up(Schema $schema)
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface::upgradeDatabase()
+     */
+    public function upgradeDatabase()
     {
         $this->refreshDatabaseTables(['FileImageThumbnailPaths']);
-    }
-
-    public function down(Schema $schema)
-    {
     }
 }

@@ -1,7 +1,9 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Block\ExpressForm\Controller as ExpressFormBlockController;
+use Concrete\Core\Attribute\Category\PageCategory;
 use Concrete\Core\Attribute\Key\Category;
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Attribute\Type;
@@ -10,9 +12,7 @@ use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Cache\CacheLocal;
 use Concrete\Core\Entity\Attribute\Key\PageKey;
 use Concrete\Core\File\Filesystem;
-use Concrete\Core\File\Set\Set;
 use Concrete\Core\Localization\Localization;
-use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Single as SinglePage;
 use Concrete\Core\Page\Template;
@@ -20,22 +20,72 @@ use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Permission\Access\Entity\GroupEntity;
 use Concrete\Core\Permission\Access\Entity\UserEntity;
 use Concrete\Core\Permission\Key\Key;
-use Concrete\Core\Site\Service;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Tree\Node\NodeType;
 use Concrete\Core\Tree\Node\Type\File;
 use Concrete\Core\Tree\Node\Type\FileFolder;
 use Concrete\Core\Tree\TreeType;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
+use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
 use Concrete\Core\Updater\Migrations\Routine\AddPageDraftsBooleanTrait;
-use Doctrine\DBAL\Schema\Schema;
-use Concrete\Core\Attribute\Category\PageCategory;
-use Concrete\Core\Support\Facade\Application;
 
-class Version20160725000000 extends AbstractMigration
+class Version20160725000000 extends AbstractMigration implements DirectSchemaUpgraderInterface
 {
-
     use AddPageDraftsBooleanTrait;
+
+    public function addNotifications()
+    {
+        $this->output(t('Adding notifications...'));
+        $adminGroupEntity = GroupEntity::getOrCreate(\Group::getByID(ADMIN_GROUP_ID));
+        $adminUserEntity = UserEntity::getOrCreate(\UserInfo::getByID(USER_SUPER_ID));
+        $pk = Key::getByHandle('notify_in_notification_center');
+        $pa = Access::create($pk);
+        $pa->addListItem($adminUserEntity);
+        $pa->addListItem($adminGroupEntity);
+        $pt = $pk->getPermissionAssignmentObject();
+        $pt->assignPermissionAccess($pa);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface::upgradeDatabase()
+     */
+    public function upgradeDatabase()
+    {
+        $this->connection->Execute('set foreign_key_checks = 0');
+        $this->prepareInvalidForeignKeys();
+        $this->renameProblematicTables();
+        $this->updateDoctrineXmlTables();
+        $this->prepareProblematicEntityTables();
+        $this->installEntities(['Concrete\Core\Entity\File\File', 'Concrete\Core\Entity\File\Version']);
+        $this->installOtherEntities();
+        $this->installSite();
+        $this->importAttributeTypes();
+        $this->migrateOldPermissions();
+        $this->addPermissions();
+        $this->importAttributeKeys();
+        $this->deleteInvalidAttributeValuesForeignKeys();
+        $this->addDashboard();
+        $this->updateFileManager();
+        $this->migrateFileManagerPermissions();
+        $this->addBlockTypes();
+        $this->updateTopics();
+        $this->updateWorkflows();
+        $this->addTreeNodeTypes();
+        $this->installDesktops();
+        $this->updateJobs();
+        $this->setupSinglePages();
+        $this->addNotifications();
+        $this->splittedTrackingCode();
+        $this->cleanupOldPermissions();
+        $this->installLocales();
+        $this->fixStacks();
+        $this->nullifyInvalidForeignKeys();
+        $this->connection->Execute('set foreign_key_checks = 1');
+        $this->migrateDrafts();
+    }
 
     protected function output($message)
     {
@@ -82,7 +132,7 @@ class Version20160725000000 extends AbstractMigration
         $this->nullifyInvalidForeignKey('UserAttributeValues', 'avID', 'AttributeValues', 'avID');
         // Delete orphans of AttributeSets
         $this->deleteInvalidForeignKey('AttributeSetKeys', 'asID', 'AttributeSets', 'asID');
-        // Fix Stack orphans 
+        // Fix Stack orphans
         $this->deleteInvalidForeignKey('Stacks', 'cID', 'Pages', 'cID');
         // Delete invalid records from MultilingualPageRelations
         $this->deleteInvalidForeignKey('MultilingualPageRelations', 'cID', 'Pages', 'cID');
@@ -377,9 +427,13 @@ class Version20160725000000 extends AbstractMigration
             $this->importAttributeKeySettings($row['atID'], $row['akID']);
             switch ($akCategory) {
                 case 'pagekey':
-                    $rb = $this->connection->executeQuery('select * from CollectionAttributeValues where akID = ? group by avID', [$row['akID']]);
+                    $avIDDone = [];
+                    $rb = $this->connection->executeQuery('select * from CollectionAttributeValues where akID = ?', [$row['akID']]);
                     while ($rowB = $rb->fetch()) {
-                        $this->addAttributeValue($row['atID'], $row['akID'], $rowB['avID']);
+                        if (!in_array($rowB['avID'], $avIDDone, true)) {
+                            $this->addAttributeValue($row['atID'], $row['akID'], $rowB['avID']);
+                            $avIDDone[] = $rowB['avID'];
+                        }
                     }
                     break;
                 case 'filekey':
@@ -526,6 +580,8 @@ class Version20160725000000 extends AbstractMigration
                                 'akSelectAllowOtherValues' => $rowA['akSelectAllowOtherValues'],
                                 'avSelectOptionListID' => $listID,
                                 'akID' => $akID,
+                                'akHideNoneOption' => 0,
+                                'akDisplayMultipleValuesOnSelect' => 0,
                             ]);
 
                             $options = $this->connection->fetchAll('select * from _atSelectOptions where akID = ?', [$akID]);
@@ -953,9 +1009,6 @@ class Version20160725000000 extends AbstractMigration
     {
         $this->output(t('Installing Site object...'));
 
-        /**
-         * @var Service
-         */
         $service = \Core::make('site');
         $site = $service->getDefault();
         $em = $this->connection->getEntityManager();
@@ -989,7 +1042,7 @@ class Version20160725000000 extends AbstractMigration
             if ($homeCID == null) {
                 $homeCID = 1;
             }
-            
+
             $c = \Page::getByID($homeCID);
             $site->setThemeID($c->getCollectionThemeID());
 
@@ -1154,19 +1207,6 @@ class Version20160725000000 extends AbstractMigration
                 File::add($f, $folder);
             }
         }
-    }
-
-    public function addNotifications()
-    {
-        $this->output(t('Adding notifications...'));
-        $adminGroupEntity = GroupEntity::getOrCreate(\Group::getByID(ADMIN_GROUP_ID));
-        $adminUserEntity = UserEntity::getOrCreate(\UserInfo::getByID(USER_SUPER_ID));
-        $pk = Key::getByHandle('notify_in_notification_center');
-        $pa = Access::create($pk);
-        $pa->addListItem($adminUserEntity);
-        $pa->addListItem($adminGroupEntity);
-        $pt = $pk->getPermissionAssignmentObject();
-        $pt->assignPermissionAccess($pa);
     }
 
     protected function updateJobs()
@@ -1340,48 +1380,5 @@ class Version20160725000000 extends AbstractMigration
             // Consider all the stacks and global areas as "neutral version"
             $this->connection->executeQuery('update Stacks set stMultilingualSection = 0');
         }
-    }
-
-    public function up(Schema $schema)
-    {
-        $this->connection->Execute('set foreign_key_checks = 0');
-        $this->prepareInvalidForeignKeys();
-        $this->renameProblematicTables();
-        $this->updateDoctrineXmlTables();
-        $this->prepareProblematicEntityTables();
-        $this->installEntities(['Concrete\Core\Entity\File\File', 'Concrete\Core\Entity\File\Version']);
-        $this->installOtherEntities();
-        $this->installSite();
-        $this->importAttributeTypes();
-        $this->migrateOldPermissions();
-        $this->addPermissions();
-        $this->importAttributeKeys();
-        $this->deleteInvalidAttributeValuesForeignKeys();
-        $this->addDashboard();
-        $this->updateFileManager();
-        $this->migrateFileManagerPermissions();
-        $this->addBlockTypes();
-        $this->updateTopics();
-        $this->updateWorkflows();
-        $this->addTreeNodeTypes();
-        $this->installDesktops();
-        $this->updateJobs();
-        $this->setupSinglePages();
-        $this->addNotifications();
-        $this->splittedTrackingCode();
-        $this->cleanupOldPermissions();
-        $this->installLocales();
-        $this->fixStacks();
-        $this->nullifyInvalidForeignKeys();
-        $this->connection->Execute('set foreign_key_checks = 1');
-    }
-
-    public function postUp(Schema $schema)
-    {
-        $this->migrateDrafts();
-    }
-
-    public function down(Schema $schema)
-    {
     }
 }

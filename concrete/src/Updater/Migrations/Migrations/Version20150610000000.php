@@ -1,12 +1,18 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
-use Doctrine\DBAL\Schema\Schema;
+use Concrete\Core\Updater\Migrations\AbstractMigration;
+use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
 
-class Version20150610000000 extends AbstractMigration
+class Version20150610000000 extends AbstractMigration implements DirectSchemaUpgraderInterface
 {
-    public function up(Schema $schema)
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface::upgradeDatabase()
+     */
+    public function upgradeDatabase()
     {
         $bt = \BlockType::getByHandle('file');
         if (is_object($bt)) {
@@ -15,9 +21,5 @@ class Version20150610000000 extends AbstractMigration
         if (\Config::get('conversation.banned_words')) {
             \Config::set('conversations.banned_words', true);
         }
-    }
-
-    public function down(Schema $schema)
-    {
     }
 }

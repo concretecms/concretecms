@@ -387,8 +387,8 @@ class StartingPointPackage extends BasePackage
     {
         $db = Database::get();
 
-        $db->Execute('ALTER TABLE PagePaths ADD INDEX (`cPath` (255))');
-        $db->Execute('ALTER TABLE Groups ADD INDEX (`gPath` (255))');
+        $textIndexes = $this->app->make('config')->get('database.text_indexes');
+        $db->createTextIndexes($textIndexes);
     }
 
     protected function add_users()

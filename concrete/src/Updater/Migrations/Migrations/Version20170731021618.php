@@ -3,30 +3,20 @@
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Entity\Express\Entity;
-use Doctrine\DBAL\Schema\Schema;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
+use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
 
-/**
- * Auto-generated Migration: Please modify to your needs!
- */
-class Version20170731021618 extends AbstractMigration
+class Version20170731021618 extends AbstractMigration implements DirectSchemaUpgraderInterface
 {
     /**
-     * @param Schema $schema
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface::upgradeDatabase()
      */
-    public function up(Schema $schema)
+    public function upgradeDatabase()
     {
         $this->refreshEntities([
-            Entity::class
+            Entity::class,
         ]);
-    }
-
-    /**
-     * @param Schema $schema
-     */
-    public function down(Schema $schema)
-    {
-        // this down() migration is auto-generated, please modify it to your needs
-
     }
 }
