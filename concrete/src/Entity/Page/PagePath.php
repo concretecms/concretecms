@@ -9,9 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(
  *     name="PagePaths",
  *     indexes={
- *         @ORM\Index(name="ppIsCanonical", columns={"ppIsCanonical"}),
- *         @ORM\Index(name="cID", columns={"cID"}),
- *         @ORM\Index(name="cPath", columns={"cPath"})
+ *     @ORM\Index(name="ppIsCanonical", columns={"ppIsCanonical"}),
+ *     @ORM\Index(name="cID", columns={"cID"})
  *     }
  * )
  */

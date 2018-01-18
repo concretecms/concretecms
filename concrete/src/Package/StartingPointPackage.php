@@ -385,6 +385,10 @@ class StartingPointPackage extends BasePackage
 
     protected function indexAdditionalDatabaseFields()
     {
+        $db = Database::get();
+
+        $db->Execute('ALTER TABLE PagePaths ADD INDEX `cPath` (`cPath` (255))');
+        $db->Execute('ALTER TABLE Groups ADD INDEX `gPath` (`gPath` (255))');
     }
 
     protected function add_users()
