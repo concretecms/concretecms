@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Controller;
 
 use Concrete\Core\Cache\Cache;
@@ -11,13 +12,11 @@ use Concrete\Core\Install\WebPreconditionInterface;
 use Concrete\Core\Localization\Localization as Localization;
 use Concrete\Core\Localization\Service\TranslationsInstaller;
 use Concrete\Core\Localization\Translation\Remote\ProviderInterface as RemoteTranslationsProvider;
-use Concrete\Core\Url\UrlImmutable;
 use Controller;
 use Database;
 use Exception;
 use Hautelook\Phpass\PasswordHash;
 use Punic\Comparer as PunicComparer;
-use StartingPointPackage;
 use stdClass;
 use View;
 
@@ -27,141 +26,12 @@ class Install extends Controller
 {
     public $helpers = ['form', 'html'];
 
-    public function getViewObject()
-    {
-        $v = new View('/frontend/install');
-        $v->setViewTheme('concrete');
-
-        return $v;
-    }
-
     /**
      * The installer instance.
      *
      * @var Installer|null
      */
     private $installer = null;
-
-    /**
-     * Get the installer instance.
-     *
-     * @return Installer
-     */
-    protected function getInstaller()
-    {
-        if ($this->installer === null) {
-            $this->installer = $this->app->make(Installer::class);
-        }
-
-        return $this->installer;
-    }
-
-    /**
-     * Get the options used by the installer.
-     *
-     * @return \Concrete\Core\Install\InstallerOptions
-     */
-    protected function getInstallerOptions()
-    {
-        return $this->getInstaller()->getOptions();
-    }
-
-    public function view()
-    {
-        $this->set('backgroundFade', 500);
-        if ($this->getInstallerOptions()->hasConfigurationFiles()) {
-            $this->testAndRunInstall();
-        } else {
-            list($locales, $onlineLocales) = $this->getLocales();
-            $this->set('locales', $locales);
-            $this->set('onlineLocales', $onlineLocales);
-        }
-    }
-
-    public function select_language()
-    {
-        $localeID = $this->request->request->get('wantedLocale');
-        if ($localeID) {
-            if ($localeID !== Localization::BASE_LOCALE) {
-                $localLocales = Localization::getAvailableInterfaceLanguageDescriptions(null);
-                if (!isset($localLocales[$localeID])) {
-                    $ti = $this->app->make(TranslationsInstaller::class);
-                    /* @var TranslationsInstaller $ti */
-                    try {
-                        $ti->installCoreTranslations($localeID);
-                    } catch (Exception $x) {
-                        $this->set('error', $x);
-                        $this->view();
-
-                        return;
-                    }
-                }
-            }
-            $this->set('locale', $localeID);
-            Localization::changeLocale($localeID);
-        }
-    }
-
-    protected function getLocales()
-    {
-        $localLocales = Localization::getAvailableInterfaceLanguageDescriptions(null);
-
-        $coreVersion = $this->app->make('config')->get('concrete.version_installed');
-        $rtp = $this->app->make(RemoteTranslationsProvider::class);
-        /* @var RemoteTranslationsProvider $rtp */
-        // We may be offline, so let's ignore connection issues
-        try {
-            $remoteLocaleStats = $rtp->getAvailableCoreStats($coreVersion);
-        } catch (Exception $x) {
-            $remoteLocaleStats = [];
-        }
-        $remoteLocales = [];
-        foreach (array_keys($remoteLocaleStats) as $remoteLocaleID) {
-            if (!isset($localLocales[$remoteLocaleID])) {
-                $remoteLocales[$remoteLocaleID] = Localization::getLanguageDescription($remoteLocaleID, null);
-            }
-        }
-        $comparer = new PunicComparer();
-        $comparer->sort($remoteLocales, true);
-        if (empty($localLocales) && !empty($remoteLocales)) {
-            $localLocales = [
-                Localization::BASE_LOCALE => Localization::getLanguageDescription(Localization::BASE_LOCALE, null),
-            ];
-        }
-
-        return [$localLocales, $remoteLocales];
-    }
-
-    protected function testAndRunInstall()
-    {
-        $e = $this->app->make('helper/validation/error');
-        try {
-            $installerOptions = $this->getInstallerOptions();
-            $installerOptions->load();
-            $uiLocaleId = $installerOptions->getUiLocaleId();
-            if ($uiLocaleId !== '') {
-                Localization::changeLocale($uiLocaleId);
-            }
-            $e->add($this->getInstaller()->checkOptions());
-        } catch (UserMessageException $x) {
-            $e->add($x);
-        }
-        if ($e->has()) {
-            $this->set('error', $e);
-        } else {
-            $this->set('backgroundFade', 0);
-            $spl = $this->getInstaller()->getStartingPoint(true);
-            $this->set('installPackage', $spl->getPackageHandle());
-            $this->set('installRoutines', $spl->getInstallRoutines());
-            $this->set(
-                'successMessage',
-                t(
-                    'concrete5 has been installed. You have been logged in as <b>%s</b> with the password you chose. If you wish to change this password, you may do so from the users area of the dashboard.',
-                    USER_SUPER
-                )
-            );
-        }
-    }
 
     public function setup()
     {
@@ -232,6 +102,50 @@ class Install extends Controller
         $this->set('availableTimezones', $this->app->make('date')->getGroupedTimezones());
     }
 
+    public function getViewObject()
+    {
+        $v = new View('/frontend/install');
+        $v->setViewTheme('concrete');
+
+        return $v;
+    }
+
+    public function view()
+    {
+        $this->set('backgroundFade', 500);
+        if ($this->getInstallerOptions()->hasConfigurationFiles()) {
+            $this->testAndRunInstall();
+        } else {
+            list($locales, $onlineLocales) = $this->getLocales();
+            $this->set('locales', $locales);
+            $this->set('onlineLocales', $onlineLocales);
+        }
+    }
+
+    public function select_language()
+    {
+        $localeID = $this->request->request->get('wantedLocale');
+        if ($localeID) {
+            if ($localeID !== Localization::BASE_LOCALE) {
+                $localLocales = Localization::getAvailableInterfaceLanguageDescriptions(null);
+                if (!isset($localLocales[$localeID])) {
+                    $ti = $this->app->make(TranslationsInstaller::class);
+                    /* @var TranslationsInstaller $ti */
+                    try {
+                        $ti->installCoreTranslations($localeID);
+                    } catch (Exception $x) {
+                        $this->set('error', $x);
+                        $this->view();
+
+                        return;
+                    }
+                }
+            }
+            $this->set('locale', $localeID);
+            Localization::changeLocale($localeID);
+        }
+    }
+
     public function get_site_locale_countries($viewLocaleID, $languageID, $preselectedCountryID)
     {
         Localization::changeLocale($viewLocaleID);
@@ -240,33 +154,6 @@ class Install extends Controller
         $rf = $this->app->make(ResponseFactoryInterface::class);
 
         return $rf->json($form->select('siteLocaleCountry', $countries, $preselectedCountryID));
-    }
-
-    private function getCountriesForLanguage($languageID)
-    {
-        $cl = $this->app->make('lists/countries');
-        $recommendedCountries = [];
-        foreach ($cl->getCountriesForLanguage($languageID) as $countryID) {
-            $recommendedCountries[$countryID] = $cl->getCountryName($countryID);
-        }
-        $otherCountries = [];
-        foreach ($cl->getCountries() as $countryID => $countryName) {
-            if (!isset($recommendedCountries[$countryID])) {
-                $otherCountries[$countryID] = $countryName;
-            }
-        }
-        if (count($recommendedCountries) === 0) {
-            $result = $otherCountries;
-        } elseif (count($otherCountries) === 0) {
-            $result = $recommendedCountries;
-        } else {
-            $result = [
-                t('** Recommended Countries') => $recommendedCountries,
-                t('** Other Countries') => $otherCountries,
-            ];
-        }
-
-        return $result;
     }
 
     /**
@@ -431,5 +318,117 @@ class Install extends Controller
         $rf = $this->app->make(ResponseFactoryInterface::class);
 
         return $rf->json($result);
+    }
+
+    /**
+     * Get the installer instance.
+     *
+     * @return Installer
+     */
+    protected function getInstaller()
+    {
+        if ($this->installer === null) {
+            $this->installer = $this->app->make(Installer::class);
+        }
+
+        return $this->installer;
+    }
+
+    /**
+     * Get the options used by the installer.
+     *
+     * @return \Concrete\Core\Install\InstallerOptions
+     */
+    protected function getInstallerOptions()
+    {
+        return $this->getInstaller()->getOptions();
+    }
+
+    protected function getLocales()
+    {
+        $localLocales = Localization::getAvailableInterfaceLanguageDescriptions(null);
+
+        $coreVersion = $this->app->make('config')->get('concrete.version_installed');
+        $rtp = $this->app->make(RemoteTranslationsProvider::class);
+        /* @var RemoteTranslationsProvider $rtp */
+        // We may be offline, so let's ignore connection issues
+        try {
+            $remoteLocaleStats = $rtp->getAvailableCoreStats($coreVersion);
+        } catch (Exception $x) {
+            $remoteLocaleStats = [];
+        }
+        $remoteLocales = [];
+        foreach (array_keys($remoteLocaleStats) as $remoteLocaleID) {
+            if (!isset($localLocales[$remoteLocaleID])) {
+                $remoteLocales[$remoteLocaleID] = Localization::getLanguageDescription($remoteLocaleID, null);
+            }
+        }
+        $comparer = new PunicComparer();
+        $comparer->sort($remoteLocales, true);
+        if (empty($localLocales) && !empty($remoteLocales)) {
+            $localLocales = [
+                Localization::BASE_LOCALE => Localization::getLanguageDescription(Localization::BASE_LOCALE, null),
+            ];
+        }
+
+        return [$localLocales, $remoteLocales];
+    }
+
+    protected function testAndRunInstall()
+    {
+        $e = $this->app->make('helper/validation/error');
+        try {
+            $installerOptions = $this->getInstallerOptions();
+            $installerOptions->load();
+            $uiLocaleId = $installerOptions->getUiLocaleId();
+            if ($uiLocaleId !== '') {
+                Localization::changeLocale($uiLocaleId);
+            }
+            $e->add($this->getInstaller()->checkOptions());
+        } catch (UserMessageException $x) {
+            $e->add($x);
+        }
+        if ($e->has()) {
+            $this->set('error', $e);
+        } else {
+            $this->set('backgroundFade', 0);
+            $spl = $this->getInstaller()->getStartingPoint(true);
+            $this->set('installPackage', $spl->getPackageHandle());
+            $this->set('installRoutines', $spl->getInstallRoutines());
+            $this->set(
+                'successMessage',
+                t(
+                    'concrete5 has been installed. You have been logged in as <b>%s</b> with the password you chose. If you wish to change this password, you may do so from the users area of the dashboard.',
+                    USER_SUPER
+                )
+            );
+        }
+    }
+
+    private function getCountriesForLanguage($languageID)
+    {
+        $cl = $this->app->make('lists/countries');
+        $recommendedCountries = [];
+        foreach ($cl->getCountriesForLanguage($languageID) as $countryID) {
+            $recommendedCountries[$countryID] = $cl->getCountryName($countryID);
+        }
+        $otherCountries = [];
+        foreach ($cl->getCountries() as $countryID => $countryName) {
+            if (!isset($recommendedCountries[$countryID])) {
+                $otherCountries[$countryID] = $countryName;
+            }
+        }
+        if (count($recommendedCountries) === 0) {
+            $result = $otherCountries;
+        } elseif (count($otherCountries) === 0) {
+            $result = $recommendedCountries;
+        } else {
+            $result = [
+                t('** Recommended Countries') => $recommendedCountries,
+                t('** Other Countries') => $otherCountries,
+            ];
+        }
+
+        return $result;
     }
 }
