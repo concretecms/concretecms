@@ -3,22 +3,21 @@
 namespace Concrete\Controller;
 
 use Concrete\Core\Cache\Cache;
+use Concrete\Core\Controller\Controller;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Install\Installer;
 use Concrete\Core\Install\InstallerOptions;
 use Concrete\Core\Install\PreconditionService;
 use Concrete\Core\Install\WebPreconditionInterface;
-use Concrete\Core\Localization\Localization as Localization;
+use Concrete\Core\Localization\Localization;
 use Concrete\Core\Localization\Service\TranslationsInstaller;
 use Concrete\Core\Localization\Translation\Remote\ProviderInterface as RemoteTranslationsProvider;
-use Controller;
-use Database;
+use Concrete\Core\View\View;
 use Exception;
 use Hautelook\Phpass\PasswordHash;
 use Punic\Comparer as PunicComparer;
 use stdClass;
-use View;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
@@ -155,7 +154,6 @@ class Install extends Controller
     public function getPreconditions()
     {
         $service = $this->app->make(PreconditionService::class);
-        /* @var PreconditionService $service */
         $required = [];
         $optional = [];
         foreach ($service->getPreconditions() as $precondition) {
@@ -252,7 +250,6 @@ class Install extends Controller
     public function web_precondition($handle, $argument = '')
     {
         $service = $this->app->make(PreconditionService::class);
-        /* @var PreconditionService $service */
         $precondition = $service->getPreconditionByHandle($handle);
         if (!$precondition instanceof WebPreconditionInterface) {
             throw new Exception(sprintf('%s is not a valid precondition handle', $handle));
@@ -269,11 +266,9 @@ class Install extends Controller
     public function configure()
     {
         $error = $this->app->make('helper/validation/error');
-        /* @var $error \Concrete\Core\Error\ErrorList\ErrorList */
         try {
             $post = $this->request->request;
             $val = $this->app->make('helper/validation/form');
-            /* @var \Concrete\Core\Form\Service\Validation $val */
             $val->setData($this->post());
             $val->addRequired('SITE', t("Please specify your site's name"));
             $val->addRequiredEmail('uEmail', t('Please specify a valid email address'));
@@ -296,7 +291,6 @@ class Install extends Controller
                 $error->add($val->getError());
             } elseif (!$error->has()) {
                 $options = $this->app->make(InstallerOptions::class);
-                /* @var InstallerOptions $options */
                 $configuration = $post->get('SITE_CONFIG');
                 if (!is_array($configuration)) {
                     $configuration = [];
@@ -331,7 +325,6 @@ class Install extends Controller
                     ->setServerTimeZoneId($post->get('SERVER_TIMEZONE'))
                 ;
                 $installer = $this->app->make(Installer::class);
-                /* @var Installer $installer */
                 $installer->setOptions($options);
                 $error->add($installer->checkOptions());
                 if (!$error->has()) {
@@ -401,7 +394,6 @@ class Install extends Controller
 
         $coreVersion = $this->app->make('config')->get('concrete.version_installed');
         $rtp = $this->app->make(RemoteTranslationsProvider::class);
-        /* @var RemoteTranslationsProvider $rtp */
         // We may be offline, so let's ignore connection issues
         try {
             $remoteLocaleStats = $rtp->getAvailableCoreStats($coreVersion);
