@@ -25,6 +25,34 @@ defined('C5_EXECUTE') or die('Access Denied.');
 class Install extends Controller
 {
     /**
+     * Install step: choose locale.
+     *
+     * @var int
+     */
+    const STEP_CHOOSELOCALE = 1;
+
+    /**
+     * Install step: precondition checks.
+     *
+     * @var int
+     */
+    const STEP_PRECONDITIONS = 2;
+
+    /**
+     * Install step: precondition checks.
+     *
+     * @var int
+     */
+    const STEP_CONFIGURATION = 3;
+
+    /**
+     * Install step: installing/installed.
+     *
+     * @var int
+     */
+    const STEP_INSTALL = 4;
+
+    /**
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Controller\AbstractController::$helpers
@@ -93,6 +121,7 @@ class Install extends Controller
             $this->set('locales', $locales);
             $this->set('onlineLocales', $onlineLocales);
         }
+        $this->setInstallStep();
     }
 
     public function select_language()
@@ -103,20 +132,21 @@ class Install extends Controller
                 $localLocales = Localization::getAvailableInterfaceLanguageDescriptions(null);
                 if (!isset($localLocales[$localeID])) {
                     $ti = $this->app->make(TranslationsInstaller::class);
-                    /* @var TranslationsInstaller $ti */
                     try {
                         $ti->installCoreTranslations($localeID);
                     } catch (Exception $x) {
                         $this->set('error', $x);
                         $this->view();
-
-                        return;
+                        $localeID = null;
                     }
                 }
             }
-            $this->set('locale', $localeID);
-            Localization::changeLocale($localeID);
+            if ($localeID) {
+                $this->set('locale', $localeID);
+                Localization::changeLocale($localeID);
+            }
         }
+        $this->setInstallStep();
     }
 
     /**
@@ -206,6 +236,7 @@ class Install extends Controller
         $this->set('canonicalUrlAlternativeChecked', $canonicalUrlAlternativeChecked);
         $this->set('SERVER_TIMEZONE', @date_default_timezone_get() ?: 'UTC');
         $this->set('availableTimezones', $this->app->make('date')->getGroupedTimezones());
+        $this->setInstallStep();
     }
 
     public function get_site_locale_countries($viewLocaleID, $languageID, $preselectedCountryID)
@@ -314,6 +345,7 @@ class Install extends Controller
         $this->getInstallerOptions()->deleteFiles();
         $this->set('error', $error);
         $this->setup();
+        $this->setInstallStep();
     }
 
     public function run_routine($pkgHandle, $routine)
@@ -422,6 +454,21 @@ class Install extends Controller
                 )
             );
         }
+    }
+
+    private function setInstallStep()
+    {
+        $sets = $this->getSets();
+        if (isset($sets['successMessage'])) {
+            $installStep = static::STEP_INSTALL;
+        } elseif ($this->getAction() == 'setup' || $this->getAction() == 'configure') {
+            $installStep = static::STEP_CONFIGURATION;
+        } elseif (isset($sets['locale']) || (empty($sets['locales']) && empty($sets['onlineLocales']))) {
+            $installStep = static::STEP_PRECONDITIONS;
+        } else {
+            $installStep = static::STEP_CHOOSELOCALE;
+        }
+        $this->set('installStep', $installStep);
     }
 
     /**
