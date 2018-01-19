@@ -5,55 +5,56 @@ use Concrete\Core\Localization\Localization;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-/* @var int $backgroundFade */
 /* @var Concrete\Controller\Install $controller */
 /* @var Concrete\Core\Form\Service\Form $form */
 /* @var Concrete\Core\Html\Service\Html $html */
 /* @var Concrete\Core\View\View $this */
 /* @var Concrete\Core\View\View $view */
 
-$image = date('Ymd') . '.jpg';
-$imagePath = Config::get('concrete.urls.background_feed') . '/' . $image;
+/* @var int $backgroundFade */
+/* @var string $pageTitle */
+/* @var string $image */
+/* @var string $imagePath */
+/* @var string $concreteVersion */
+
+?>
+<style>
+    .panel-heading .panel-title a:after {
+        font-family: 'FontAwesome';
+        content: "\f077";
+        float: right;
+        color: #333;
+    }
+    .panel-heading .panel-title a.collapsed:after {
+        content: "\f078";
+    }
+</style>
+<script type="text/javascript" src="<?= ASSETS_URL_JAVASCRIPT ?>/bootstrap/tooltip.js"></script>
+<script type="text/javascript" src="<?= ASSETS_URL_JAVASCRIPT ?>/jquery-cookie.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $('.launch-tooltip').tooltip({
+            placement: 'bottom'
+        });
+    });
+</script>
+<script type="text/javascript">
+$(function() {
+    $.backstretch("<?= $imagePath ?>", {
+        fade: <?= (int) $backgroundFade ?>
+    });
+});
+</script>
+<div class="ccm-install-version">
+    <span class="label label-info"><?= t('Version %s', $concreteVersion) ?></span>
+</div>
+<?php
 
 $install_config = Config::get('install_overrides');
 $uh = Core::make('helper/concrete/urls');
 if ($install_config) {
     $_POST = $install_config;
 }
-?>
-    <style>
-        .panel-heading .panel-title a:after {
-            font-family: 'FontAwesome';
-            content: "\f077";
-            float: right;
-            color: #333;
-        }
-        .panel-heading .panel-title a.collapsed:after {
-            content: "\f078";
-        }
-    </style>
-    <script type="text/javascript" src="<?= ASSETS_URL_JAVASCRIPT ?>/bootstrap/tooltip.js"></script>
-    <script type="text/javascript" src="<?= ASSETS_URL_JAVASCRIPT ?>/jquery-cookie.js"></script>
-    <script type="text/javascript">
-        $(function () {
-            $(".launch-tooltip").tooltip({
-                placement: 'bottom'
-            });
-        });
-    </script>
-    <script type="text/javascript">
-    $(function() {
-        $.backstretch("<?=$imagePath?>", {
-            fade: <?=(int) $backgroundFade?>
-        });
-    });
-    </script>
-
-    <div class="ccm-install-version">
-        <span class="label label-info"><?= t('Version %s', Config::get('concrete.version')) ?></span>
-    </div>
-
-<?php
 
 if (isset($successMessage)) {
     ?>

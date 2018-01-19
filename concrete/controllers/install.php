@@ -62,6 +62,15 @@ class Install extends Controller
         $this->requireAsset('core/app');
         $this->requireAsset('javascript', 'backstretch');
         $this->requireAsset('javascript', 'bootstrap/collapse');
+
+        $config = $this->app->make('config');
+        $this->set('backgroundFade', 0);
+        $this->set('pageTitle', t('Install concrete5'));
+        $image = date('Ymd') . '.jpg';
+        $this->set('image', date('Ymd') . '.jpg');
+        $this->set('imagePath', $config->get('concrete.urls.background_feed') . '/' . $image);
+        $this->set('concreteVersion', $config->get('concrete.version'));
+
         $locale = $this->request->request->get('locale');
         if ($locale) {
             $loc = Localization::changeLocale($locale);
@@ -72,8 +81,6 @@ class Install extends Controller
         if ($this->app->isInstalled()) {
             throw new Exception(t('concrete5 is already installed.'));
         }
-        $this->set('backgroundFade', 0);
-        $this->set('pageTitle', t('Install concrete5'));
     }
 
     public function view()
@@ -213,9 +220,6 @@ class Install extends Controller
 
     public function web_precondition($handle, $argument = '')
     {
-        if ($prefix === '-') {
-            $prefix = false;
-        }
         $service = $this->app->make(PreconditionService::class);
         /* @var PreconditionService $service */
         $precondition = $service->getPreconditionByHandle($handle);
