@@ -1,9 +1,9 @@
 <?php
-use Concrete\Core\Localization\Localization;
-use Concrete\Core\Install\WebPreconditionInterface;
 use Concrete\Core\Install\PreconditionResult;
+use Concrete\Core\Install\WebPreconditionInterface;
+use Concrete\Core\Localization\Localization;
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
 /* @var int $backgroundFade */
 /* @var Concrete\Controller\Install $controller */
@@ -44,7 +44,7 @@ if ($install_config) {
     <script type="text/javascript">
     $(function() {
         $.backstretch("<?=$imagePath?>", {
-            fade: <?=intval($backgroundFade)?>
+            fade: <?=(int) $backgroundFade?>
         });
     });
     </script>
@@ -93,7 +93,7 @@ if (isset($successMessage)) {
                 }
                 ?>
                 $.ajax(
-                    '<?=$view->url("/install", "run_routine", $installPackage, $routine->getMethod())?>',
+                    '<?=$view->url('/install', 'run_routine', $installPackage, $routine->getMethod())?>',
                     {
                         dataType: 'json'
                     }
@@ -105,7 +105,7 @@ if (isset($successMessage)) {
                     if (r.error) {
                         showFailure(r.message);
                     } else {
-                        NProgress.set(<?=$routine->getProgress()/100?>);
+                        NProgress.set(<?=$routine->getProgress() / 100?>);
                         <?php
                         if ($i < count($installRoutines)) {
                         ?>
@@ -116,7 +116,7 @@ if (isset($successMessage)) {
                         inviteToStayHere = false;
                         $("#install-progress-summary").html('<?=t('All Done.')?>');
                         NProgress.done();
-                        $('button[data-button=installation-complete]').prop('disabled', false).html(<?=json_encode(t('Edit Your Site').' <i class="fa fa-thumbs-up"></i>')?>);
+                        $('button[data-button=installation-complete]').prop('disabled', false).html(<?=json_encode(t('Edit Your Site') . ' <i class="fa fa-thumbs-up"></i>')?>);
                         $('div.ccm-install-title ul.breadcrumb li.active').text('<?=t('Installation Complete.')?>');
 
                         setTimeout(function() {
@@ -492,7 +492,7 @@ if (isset($successMessage)) {
             $requiredPreconditionFailed = false;
             $pendingPreconditions = [];
             list($requiredPreconditions, $optionalPreconditions) = $controller->getPreconditions();
-    
+
             foreach ([
                 t('Required Items') => $requiredPreconditions,
                 t('Optional Items') => $optionalPreconditions,
@@ -710,4 +710,3 @@ if (isset($successMessage)) {
 
     <?php
 }
-
