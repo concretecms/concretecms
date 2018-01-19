@@ -79,7 +79,7 @@ class Install extends Controller
         Cache::disableAll();
 
         if ($this->app->isInstalled()) {
-            throw new Exception(t('concrete5 is already installed.'));
+            throw new UserMessageException(t('concrete5 is already installed.'));
         }
     }
 
