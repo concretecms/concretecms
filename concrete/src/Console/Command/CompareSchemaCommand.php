@@ -7,8 +7,8 @@ use Concrete\Core\Console\Command;
 use Concrete\Core\Database\DatabaseStructureManager;
 use Concrete\Core\Database\Schema\Schema;
 use Concrete\Core\Foundation\Environment;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Support\Facade\Package;
-use Doctrine\DBAL\Schema\MySqlSchemaManager;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -40,9 +40,6 @@ EOT
         $tool = new \Doctrine\ORM\Tools\SchemaTool($em);
         $schemas = [];
         $sm = $db->getSchemaManager();
-        /*
-         * @var MySqlSchemaManager $sm
-         */
         $dbSchema = $sm->createSchema();
 
         // core xml tables
@@ -110,13 +107,20 @@ EOT
      */
     protected function filterQueries($queries)
     {
+        $app = Application::getFacadeApplication();
+        $config = $app->make('config');
+
+        $textIndexDrops = [];
+        foreach ($config->get('database.text_indexes') as $indexTable => $indexDefinition) {
+            foreach (array_keys($indexDefinition) as $indexName) {
+                $textIndexDrops[] = strtolower("DROP INDEX {$indexName} ON {$indexTable}");
+            }
+        }
+
         $returnQueries = [];
         foreach ($queries as $query) {
-            $addQuery = true;
-            if (preg_match('/drop index.*[Groups|UserBannedIPs|SignupRequests|PagePaths]/i', $query)) {
-                $addQuery = false;
-            }
-            if ($addQuery) {
+            $queryLowerCase = strtolower($query);
+            if (!in_array($queryLowerCase, $textIndexDrops, true)) {
                 $returnQueries[] = $query;
             }
         }
