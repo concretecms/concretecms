@@ -24,6 +24,11 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 class Install extends Controller
 {
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Controller\AbstractController::$helpers
+     */
     public $helpers = ['form', 'html'];
 
     /**
@@ -32,6 +37,100 @@ class Install extends Controller
      * @var Installer|null
      */
     private $installer = null;
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Controller\Controller::getViewObject()
+     */
+    public function getViewObject()
+    {
+        $v = new View('/frontend/install');
+        $v->setViewTheme('concrete');
+
+        return $v;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Controller\AbstractController::on_start()
+     */
+    public function on_start()
+    {
+        $this->addHeaderItem('<link href="' . ASSETS_URL_CSS . '/views/install.css" rel="stylesheet" type="text/css" media="all" />');
+        $this->requireAsset('core/app');
+        $this->requireAsset('javascript', 'backstretch');
+        $this->requireAsset('javascript', 'bootstrap/collapse');
+        $locale = $this->request->request->get('locale');
+        if ($locale) {
+            $loc = Localization::changeLocale($locale);
+            $this->set('locale', $locale);
+        }
+        Cache::disableAll();
+
+        if ($this->app->isInstalled()) {
+            throw new Exception(t('concrete5 is already installed.'));
+        }
+        $this->set('backgroundFade', 0);
+        $this->set('pageTitle', t('Install concrete5'));
+    }
+
+    public function view()
+    {
+        $this->set('backgroundFade', 500);
+        if ($this->getInstallerOptions()->hasConfigurationFiles()) {
+            $this->testAndRunInstall();
+        } else {
+            list($locales, $onlineLocales) = $this->getLocales();
+            $this->set('locales', $locales);
+            $this->set('onlineLocales', $onlineLocales);
+        }
+    }
+
+    public function select_language()
+    {
+        $localeID = $this->request->request->get('wantedLocale');
+        if ($localeID) {
+            if ($localeID !== Localization::BASE_LOCALE) {
+                $localLocales = Localization::getAvailableInterfaceLanguageDescriptions(null);
+                if (!isset($localLocales[$localeID])) {
+                    $ti = $this->app->make(TranslationsInstaller::class);
+                    /* @var TranslationsInstaller $ti */
+                    try {
+                        $ti->installCoreTranslations($localeID);
+                    } catch (Exception $x) {
+                        $this->set('error', $x);
+                        $this->view();
+
+                        return;
+                    }
+                }
+            }
+            $this->set('locale', $localeID);
+            Localization::changeLocale($localeID);
+        }
+    }
+
+    /**
+     * @return \Concrete\Core\Install\PreconditionInterface[][]
+     */
+    public function getPreconditions()
+    {
+        $service = $this->app->make(PreconditionService::class);
+        /* @var PreconditionService $service */
+        $required = [];
+        $optional = [];
+        foreach ($service->getPreconditions() as $precondition) {
+            if ($precondition->isOptional()) {
+                $optional[] = $precondition;
+            } else {
+                $required[] = $precondition;
+            }
+        }
+
+        return [$required, $optional];
+    }
 
     public function setup()
     {
@@ -102,50 +201,6 @@ class Install extends Controller
         $this->set('availableTimezones', $this->app->make('date')->getGroupedTimezones());
     }
 
-    public function getViewObject()
-    {
-        $v = new View('/frontend/install');
-        $v->setViewTheme('concrete');
-
-        return $v;
-    }
-
-    public function view()
-    {
-        $this->set('backgroundFade', 500);
-        if ($this->getInstallerOptions()->hasConfigurationFiles()) {
-            $this->testAndRunInstall();
-        } else {
-            list($locales, $onlineLocales) = $this->getLocales();
-            $this->set('locales', $locales);
-            $this->set('onlineLocales', $onlineLocales);
-        }
-    }
-
-    public function select_language()
-    {
-        $localeID = $this->request->request->get('wantedLocale');
-        if ($localeID) {
-            if ($localeID !== Localization::BASE_LOCALE) {
-                $localLocales = Localization::getAvailableInterfaceLanguageDescriptions(null);
-                if (!isset($localLocales[$localeID])) {
-                    $ti = $this->app->make(TranslationsInstaller::class);
-                    /* @var TranslationsInstaller $ti */
-                    try {
-                        $ti->installCoreTranslations($localeID);
-                    } catch (Exception $x) {
-                        $this->set('error', $x);
-                        $this->view();
-
-                        return;
-                    }
-                }
-            }
-            $this->set('locale', $localeID);
-            Localization::changeLocale($localeID);
-        }
-    }
-
     public function get_site_locale_countries($viewLocaleID, $languageID, $preselectedCountryID)
     {
         Localization::changeLocale($viewLocaleID);
@@ -156,47 +211,21 @@ class Install extends Controller
         return $rf->json($form->select('siteLocaleCountry', $countries, $preselectedCountryID));
     }
 
-    /**
-     * Testing.
-     */
-    public function on_start()
+    public function web_precondition($handle, $argument = '')
     {
-        $this->addHeaderItem('<link href="' . ASSETS_URL_CSS . '/views/install.css" rel="stylesheet" type="text/css" media="all" />');
-        $this->requireAsset('core/app');
-        $this->requireAsset('javascript', 'backstretch');
-        $this->requireAsset('javascript', 'bootstrap/collapse');
-        $locale = $this->request->request->get('locale');
-        if ($locale) {
-            $loc = Localization::changeLocale($locale);
-            $this->set('locale', $locale);
+        if ($prefix === '-') {
+            $prefix = false;
         }
-        Cache::disableAll();
-
-        if ($this->app->isInstalled()) {
-            throw new Exception(t('concrete5 is already installed.'));
+        $service = $this->app->make(PreconditionService::class);
+        /* @var PreconditionService $service */
+        $precondition = $service->getPreconditionByHandle($handle);
+        if (!$precondition instanceof WebPreconditionInterface) {
+            throw new Exception(sprintf('%s is not a valid precondition handle', $handle));
         }
-        $this->set('backgroundFade', 0);
-        $this->set('pageTitle', t('Install concrete5'));
-    }
+        $result = $precondition->getAjaxAnswer($argument);
+        $rf = $this->app->make(ResponseFactoryInterface::class);
 
-    public function run_routine($pkgHandle, $routine)
-    {
-        $options = $this->getInstallerOptions();
-        $options->load();
-        $options->setStartingPointHandle($pkgHandle);
-        $jsx = $this->app->make('helper/json');
-        $js = new stdClass();
-        try {
-            $spl = $this->installer->getStartingPoint(false);
-            $spl->executeInstallRoutine($routine);
-            $js->error = false;
-        } catch (Exception $e) {
-            $js->error = true;
-            $js->message = tc('InstallError', '%s.<br><br>Trace:<br>%s', $e->getMessage(), $e->getTraceAsString());
-            $options->deleteFiles();
-        }
-
-        return $this->app->make(ResponseFactoryInterface::class)->json($js);
+        return $rf->json($result);
     }
 
     /**
@@ -283,41 +312,24 @@ class Install extends Controller
         $this->setup();
     }
 
-    /**
-     * @return \Concrete\Core\Install\PreconditionInterface[][]
-     */
-    public function getPreconditions()
+    public function run_routine($pkgHandle, $routine)
     {
-        $service = $this->app->make(PreconditionService::class);
-        /* @var PreconditionService $service */
-        $required = [];
-        $optional = [];
-        foreach ($service->getPreconditions() as $precondition) {
-            if ($precondition->isOptional()) {
-                $optional[] = $precondition;
-            } else {
-                $required[] = $precondition;
-            }
+        $options = $this->getInstallerOptions();
+        $options->load();
+        $options->setStartingPointHandle($pkgHandle);
+        $jsx = $this->app->make('helper/json');
+        $js = new stdClass();
+        try {
+            $spl = $this->installer->getStartingPoint(false);
+            $spl->executeInstallRoutine($routine);
+            $js->error = false;
+        } catch (Exception $e) {
+            $js->error = true;
+            $js->message = tc('InstallError', '%s.<br><br>Trace:<br>%s', $e->getMessage(), $e->getTraceAsString());
+            $options->deleteFiles();
         }
 
-        return [$required, $optional];
-    }
-
-    public function web_precondition($handle, $argument = '')
-    {
-        if ($prefix === '-') {
-            $prefix = false;
-        }
-        $service = $this->app->make(PreconditionService::class);
-        /* @var PreconditionService $service */
-        $precondition = $service->getPreconditionByHandle($handle);
-        if (!$precondition instanceof WebPreconditionInterface) {
-            throw new Exception(sprintf('%s is not a valid precondition handle', $handle));
-        }
-        $result = $precondition->getAjaxAnswer($argument);
-        $rf = $this->app->make(ResponseFactoryInterface::class);
-
-        return $rf->json($result);
+        return $this->app->make(ResponseFactoryInterface::class)->json($js);
     }
 
     /**
@@ -344,6 +356,9 @@ class Install extends Controller
         return $this->getInstaller()->getOptions();
     }
 
+    /**
+     * @return array
+     */
     protected function getLocales()
     {
         $localLocales = Localization::getAvailableInterfaceLanguageDescriptions(null);
@@ -405,6 +420,11 @@ class Install extends Controller
         }
     }
 
+    /**
+     * @param string $languageID
+     *
+     * @return array
+     */
     private function getCountriesForLanguage($languageID)
     {
         $cl = $this->app->make('lists/countries');
