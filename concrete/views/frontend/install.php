@@ -10,6 +10,9 @@ defined('C5_EXECUTE') or die('Access Denied.');
 /* @var Concrete\Core\Html\Service\Html $html */
 /* @var Concrete\Core\View\View $this */
 /* @var Concrete\Core\View\View $view */
+/* @var Concrete\Core\Url\Resolver\UrlResolverInterface $urlResolver */
+/* @var Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface $urlResolver */
+
 
 /* @var int $backgroundFade */
 /* @var string $pageTitle */
@@ -68,7 +71,7 @@ switch ($installStep) {
             </ul>
         </div>
         <div id="ccm-install-intro">
-            <form method="post" id="ccm-install-language-form" action="<?= $view->url('/install', 'select_language') ?>">
+            <form method="post" id="ccm-install-language-form" action="<?= $urlResolver->resolve(['install', 'select_language']) ?>">
             <div class="form-group">
                 <div class="input-group-lg input-group">
                     <?php
@@ -265,14 +268,14 @@ switch ($installStep) {
                     <?= t('Having trouble? Check the <a href="%s">installation help forums</a>, or <a href="%s">have us host a copy</a> for you.', 'http://www.concrete5.org/community/forums', 'http://www.concrete5.org/services/hosting') ?>
                 </div>
                 <div class="ccm-install-actions">
-                    <form method="post" action="<?= $view->url('/install') ?>" id="rerun-tests" class="pull-left">
+                    <form method="post" action="<?= $urlResolver->resolve(['install']) ?>" id="rerun-tests" class="pull-left">
                         <input type="hidden" name="locale" value="<?= h($locale) ?>"/>
                         <button class="btn btn-danger" type="submit">
                             <?= t('Run Tests Again') ?>
                             <i class="fa fa-refresh"></i>
                         </button>
                     </form>
-                    <form method="post" action="<?= $view->url('/install', 'setup') ?>" id="continue-to-installation" style="visibility: hidden" class="pull-right">
+                    <form method="post" action="<?= $urlResolver->resolve(['install', 'setup']) ?>" id="continue-to-installation" style="visibility: hidden" class="pull-right">
                         <input type="hidden" name="locale" value="<?= h($locale) ?>"/>
                         <a class="btn btn-primary" href="javascript:void(0)" onclick="$(this).parent().submit()">
                             <?= t('Continue to Installation') ?>
@@ -329,11 +332,34 @@ switch ($installStep) {
             </ul>
         </div>
 
-        <div class="row">
-            <div class="col-sm-10 col-sm-offset-1">
-
-                <form action="<?= $view->url('/install', 'configure') ?>" method="post">
-
+        <form action="<?= $urlResolver->resolve(['install', 'configure']) ?>" method="post">
+            <?php
+            if (isset($warnings) && $warnings->has()) {
+                /* @var Concrete\Core\Error\ErrorList\ErrorList $warnings */
+                ?>
+                <div class="row">
+                    <div class="col-sm-10 col-sm-offset-1">
+                        <div class="ccm-system-errors alert alert-warning">
+                            <?php
+                            foreach ($warnings->getList() as $warning) {
+                                ?><div><?= nl2br(h($warning)) ?></div><?php
+                            }
+                            ?>
+                            <div class="checkbox">
+                                <label>
+                                    <?= $form->checkbox('ignore-warnings', '1') ?>
+                                    <?= t('Ignore warnings') ?>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    		  <?php
+            }
+            ?>
+            <div class="row">
+                <div class="col-sm-10 col-sm-offset-1">
+    
                     <div class="panel-group" id="accordion">
                         <div class="panel panel-default">
                             <div class="panel-heading">
@@ -501,7 +527,7 @@ switch ($installStep) {
                                             <script>
                                             $('#siteLocaleLanguage').on('change', function() {
                                                 $.ajax(
-                                                    <?= json_encode((string) $view->url('/install', 'get_site_locale_countries')) ?> + '/' + encodeURIComponent(<?= json_encode(Localization::activeLocale()) ?>) + '/' + encodeURIComponent(this.value) + '/' + encodeURIComponent($('#siteLocaleCountry').val()),
+                                                    <?= json_encode((string) $urlResolver->resolve(['install', 'get_site_locale_countries'])) ?> + '/' + encodeURIComponent(<?= json_encode(Localization::activeLocale()) ?>) + '/' + encodeURIComponent(this.value) + '/' + encodeURIComponent($('#siteLocaleCountry').val()),
                                                     {
                                                         dataType: 'json'
                                                     }
@@ -525,11 +551,11 @@ switch ($installStep) {
                             <i class="fa fa-arrow-right fa-white"></i>
                         </button>
                     </div>
-                </form>
-
-                <div class="spacer-row-6"></div>
+    
+                    <div class="spacer-row-6"></div>
+                </div>
             </div>
-        </div>
+        </form>
         <?php
         break;
 
@@ -546,10 +572,10 @@ switch ($installStep) {
                     $("#ccm-install-intro").hide();
                     $("#install-progress-error-wrapper").show();
                     $('button[data-button=installation-complete]').prop('disabled', false).html(<?=json_encode(t('Back'))?>).on('click', function() {
-                        window.location.href='<?= $view->url('/install')?>';
+                        window.location.href = <?= json_encode((string) $urlResolver->resolve(['install'])) ?>;
                     });
                     $("#install-progress-summary").html('<span class="text-danger"><?=t('An error occurred.')?></span>');
-                    $('div.ccm-install-title ul.breadcrumb li.active').text('<?=t('Installation Failed.')?>');
+                    $('div.ccm-install-title ul.breadcrumb li.active').text(<?= json_encode(t('Installation Failed.')) ?>);
                 }
 
                 window.onbeforeunload = function() {
@@ -566,12 +592,12 @@ switch ($installStep) {
                         <?php
                         if ($routine->getText() != '') {
                             ?>
-                            $("#install-progress-summary").html('<?=addslashes($routine->getText())?>');
+                            $("#install-progress-summary").html(<?= json_encode($routine->getText()) ?>);
                             <?php
                         }
                         ?>
                         $.ajax(
-                            '<?=$view->url('/install', 'run_routine', $installPackage, $routine->getMethod())?>',
+                            <?= json_encode((string) $urlResolver->resolve(['install', 'run_routine', $installPackage, $routine->getMethod()])) ?>,
                             {
                                 dataType: 'json'
                             }
@@ -592,10 +618,10 @@ switch ($installStep) {
                                 } else {
                                     ?>
                                     inviteToStayHere = false;
-                                    $("#install-progress-summary").html('<?=t('All Done.')?>');
+                                    $("#install-progress-summary").html(<?= json_encode(t('All Done.')) ?>);
                                     NProgress.done();
                                     $('button[data-button=installation-complete]').prop('disabled', false).html(<?=json_encode(t('Edit Your Site') . ' <i class="fa fa-thumbs-up"></i>')?>);
-                                    $('div.ccm-install-title ul.breadcrumb li.active').text('<?=t('Installation Complete.')?>');
+                                    $('div.ccm-install-title ul.breadcrumb li.active').text(<?= json_encode(t('Installation Complete.')) ?>);
                                     setTimeout(function() {
                                         $("#interstitial-message").hide();
                                         $("#success-message").show().addClass('animated fadeInDown');
@@ -691,7 +717,7 @@ switch ($installStep) {
 
         <div class="ccm-install-actions">
             <div class="pull-left" id="install-progress-summary"><?=t('Beginning Installation')?></div>
-            <button type="submit" disabled="disabled" onclick="window.location.href='<?= URL::to('/') ?>'" data-button="installation-complete" class="btn btn-primary">
+            <button type="submit" disabled="disabled" onclick="<?= h('window.location.href = ' . json_encode($urlResolver->resolve(['/'])) . '; return false') ?>" data-button="installation-complete" class="btn btn-primary">
                 <?= t('Installing...') ?>
                 <i class="fa fa-spinner fa-spin"></i>
             </button>

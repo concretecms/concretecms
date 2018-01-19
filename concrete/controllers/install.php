@@ -6,13 +6,16 @@ use Concrete\Core\Cache\Cache;
 use Concrete\Core\Controller\Controller;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\ResponseFactoryInterface;
+use Concrete\Core\Install\ConnectionOptionsPreconditionInterface;
 use Concrete\Core\Install\Installer;
 use Concrete\Core\Install\InstallerOptions;
+use Concrete\Core\Install\PreconditionResult;
 use Concrete\Core\Install\PreconditionService;
 use Concrete\Core\Install\WebPreconditionInterface;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Localization\Service\TranslationsInstaller;
 use Concrete\Core\Localization\Translation\Remote\ProviderInterface as RemoteTranslationsProvider;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\View\View;
 use Exception;
 use Hautelook\Phpass\PasswordHash;
@@ -89,6 +92,7 @@ class Install extends Controller
         $this->requireAsset('core/app');
         $this->requireAsset('javascript', 'backstretch');
         $this->requireAsset('javascript', 'bootstrap/collapse');
+        $this->set('urlResolver', $this->app->make(ResolverManagerInterface::class));
 
         $config = $this->app->make('config');
         $this->set('backgroundFade', 0);
@@ -265,9 +269,11 @@ class Install extends Controller
      */
     public function configure()
     {
+        $post = $this->request->request;
         $error = $this->app->make('helper/validation/error');
+        $warnings = $this->app->make('helper/validation/error');
+        $ignoreWarnings = !empty($post->get('ignore-warnings'));
         try {
-            $post = $this->request->request;
             $val = $this->app->make('helper/validation/form');
             $val->setData($this->post());
             $val->addRequired('SITE', t("Please specify your site's name"));
@@ -326,8 +332,40 @@ class Install extends Controller
                 ;
                 $installer = $this->app->make(Installer::class);
                 $installer->setOptions($options);
-                $error->add($installer->checkOptions());
-                if (!$error->has()) {
+                try {
+                    $connection = $installer->createConnection();
+                } catch (UserMessageException $x) {
+                    $error->add($x);
+                    $connection = null;
+                }
+                $preconditions = $this->app->make(PreconditionService::class)->getOptionsPreconditions();
+                foreach ($preconditions as $precondition) {
+                    if ($precondition instanceof ConnectionOptionsPreconditionInterface) {
+                        if ($connection === null) {
+                            continue;
+                        }
+                        $precondition->setConnection($connection);
+                    }
+                    $precondition->setInstallerOptions($options);
+                    $check = $precondition->performCheck();
+                    switch ($check->getState()) {
+                        case PreconditionResult::STATE_SKIPPED:
+                        case PreconditionResult::STATE_PASSED:
+                            break;
+                        case PreconditionResult::STATE_WARNING:
+                            $warnings->add($precondition->getName() . ': ' . $check->getMessage());
+                            break;
+                        case PreconditionResult::STATE_FAILED:
+                        default:
+                            if ($precondition->isOptional()) {
+                                $warnings->add($precondition->getName() . ': ' . $check->getMessage());
+                            } else {
+                                $error->add($precondition->getName() . ': ' . $check->getMessage());
+                            }
+                            break;
+                    }
+                }
+                if (!$error->has() && ($ignoreWarnings || !$warnings->has())) {
                     $options->save();
                     $this->redirect('/');
                 }
@@ -337,6 +375,7 @@ class Install extends Controller
         }
         $this->getInstallerOptions()->deleteFiles();
         $this->set('error', $error);
+        $this->set('warnings', $warnings);
         $this->setup();
         $this->setInstallStep();
     }
@@ -427,7 +466,28 @@ class Install extends Controller
             if ($uiLocaleId !== '') {
                 Localization::changeLocale($uiLocaleId);
             }
-            $e->add($this->getInstaller()->checkOptions());
+            $connection = $this->getInstaller()->createConnection();
+            $preconditions = $this->app->make(PreconditionService::class)->getOptionsPreconditions();
+            foreach ($preconditions as $precondition) {
+                if ($precondition->isOptional()) {
+                    continue;
+                }
+                if ($precondition instanceof ConnectionOptionsPreconditionInterface) {
+                    $precondition->setConnection($connection);
+                }
+                $precondition->setInstallerOptions($installerOptions);
+                $check = $precondition->performCheck();
+                switch ($check->getState()) {
+                    case PreconditionResult::STATE_SKIPPED:
+                    case PreconditionResult::STATE_PASSED:
+                    case PreconditionResult::STATE_WARNING:
+                        break;
+                    case PreconditionResult::STATE_FAILED:
+                    default:
+                        $e->add($precondition->getName() . ': ' . $check->getMessage());
+                        break;
+                }
+            }
         } catch (UserMessageException $x) {
             $e->add($x);
         }
