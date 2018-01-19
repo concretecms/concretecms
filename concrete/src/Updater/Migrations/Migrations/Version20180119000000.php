@@ -6,7 +6,7 @@ use Concrete\Core\Entity\Calendar\CalendarEventVersion;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
 
-class Version20180118000000 extends AbstractMigration implements DirectSchemaUpgraderInterface
+class Version20180119000000 extends AbstractMigration implements DirectSchemaUpgraderInterface
 {
     /**
      * {@inheritdoc}
