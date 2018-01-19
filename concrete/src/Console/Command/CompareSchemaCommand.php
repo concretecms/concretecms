@@ -1,15 +1,16 @@
 <?php
+
 namespace Concrete\Core\Console\Command;
 
 use Concrete\Core\Block\BlockType\BlockTypeList;
+use Concrete\Core\Console\Command;
 use Concrete\Core\Database\DatabaseStructureManager;
 use Concrete\Core\Database\Schema\Schema;
 use Concrete\Core\Foundation\Environment;
+use Concrete\Core\Support\Facade\Package;
 use Doctrine\DBAL\Schema\MySqlSchemaManager;
-use Concrete\Core\Console\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Concrete\Core\Support\Facade\Package;
 
 class CompareSchemaCommand extends Command
 {
@@ -102,6 +103,10 @@ EOT
      * Doctrine doens't give us a good way to deal with. This is mostly
      * index lengths that are set in installation that Doctrine doesn't
      * support.
+     *
+     * @param string[] $queries
+     *
+     * @return string[]
      */
     protected function filterQueries($queries)
     {
