@@ -125,14 +125,13 @@ class Installer
 
     /**
      * @deprecated Use the OptionsPreconditionInterface preconditions
-     *
      * @see \Concrete\Core\Install\PreconditionService::getOptionsPreconditions()
      */
     public function checkOptions()
     {
         return $this->application->make('error');
     }
-    
+
     /**
      * @return array|null
      */

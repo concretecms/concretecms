@@ -13,7 +13,6 @@ defined('C5_EXECUTE') or die('Access Denied.');
 /* @var Concrete\Core\Url\Resolver\UrlResolverInterface $urlResolver */
 /* @var Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface $urlResolver */
 
-
 /* @var int $backgroundFade */
 /* @var string $pageTitle */
 /* @var string $image */
