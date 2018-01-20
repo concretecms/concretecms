@@ -39,6 +39,7 @@ class Application extends SymfonyApplication
             $this->add(new Command\UninstallPackageCommand());
             $this->add(new Command\UpdatePackageCommand());
             $this->add(new Command\BlacklistClear());
+            $this->add(new Command\QueueProcessCommand());
         }
         $this->setupRestrictedCommands();
         $this->setupDoctrineCommands();

@@ -4063,59 +4063,31 @@
   </table>
 
   <table name="Queues">
-    <field name="queue_id" type="integer" size="10">
-      <unsigned/>
-      <autoincrement/>
+    <field name="name" type="string">
       <key/>
     </field>
-    <field name="queue_name" type="string" size="100">
-      <notnull/>
-    </field>
-    <field name="timeout" type="integer" size="5">
-      <unsigned/>
-      <default value="30"/>
-      <notnull/>
-    </field>
-    <index name="queue_name">
-      <col>queue_name</col>
-    </index>
-    <opt for="MySQL" engine="INNODB"/>
   </table>
 
   <table name="QueueMessages">
-    <field name="message_id" type="integer" size="20">
+    <field name="id" type="integer">
       <unsigned/>
       <autoincrement/>
       <key/>
-    </field>
-    <field name="queue_id" type="integer" size="10">
-      <unsigned/>
       <notnull/>
     </field>
-    <field name="handle" type="string" size="32"/>
-    <field name="body" type="text">
-      <notnull/>
+    <field name="queue" type="string">
     </field>
-    <field name="md5" type="string" size="32">
-      <notnull/>
+    <field name="message" type="text">
     </field>
-    <field name="timeout" type="decimal" size="14">
+    <field name="visible" type="boolean">
+      <default value="1"/>
     </field>
-    <field name="created" type="integer" size="10">
-      <unsigned/>
-      <notnull/>
-    </field>
-    <index name="message_handle">
-      <unique/>
-      <col>handle</col>
+    <field name="sentAt" type="datetime"/>
+    <index name="originalCID">
+      <col>queue</col>
+      <col>sentAt</col>
+      <col>visible</col>
     </index>
-    <index name="message_queueid">
-      <col>queue_id</col>
-    </index>
-    <opt for="MySQL" engine="INNODB"/>
-    <references table="Queues" onupdate="cascade" ondelete="cascade">
-      <column local="queue_id" foreign="queue_id" />
-    </references>
   </table>
 
   <table name="QueuePageDuplicationRelations">

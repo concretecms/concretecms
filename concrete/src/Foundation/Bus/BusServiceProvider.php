@@ -2,6 +2,7 @@
 namespace Concrete\Core\Foundation\Bus;
 
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
+use League\Tactician\Bernard\QueueMiddleware;
 use League\Tactician\CommandBus;
 use League\Tactician\Handler\CommandHandlerMiddleware;
 use League\Tactician\Handler\CommandNameExtractor\ClassNameExtractor;
@@ -33,6 +34,15 @@ class BusServiceProvider extends ServiceProvider
             $commandBus = new CommandBus([$handlerMiddleware]);
             return $commandBus;
         });
+
+        $this->app->singleton('bus/queue', function($app) {
+            $handlerMiddleware = new QueueMiddleware(
+                $this->app->make('queue/producer')
+            );
+            $commandBus = new CommandBus([$handlerMiddleware]);
+            return $commandBus;
+        });
+
 
         $this->app->bind('bus', CommandBus::class);
     }

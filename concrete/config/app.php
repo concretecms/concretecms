@@ -91,6 +91,7 @@ return [
     'providers' => [
         // Router service provider
         'core_router' => 'Concrete\Core\Routing\RoutingServiceProvider',
+        'core_queue' => '\Concrete\Core\Foundation\Queue\QueueServiceProvider',
         'core_bus' => '\Concrete\Core\Foundation\Bus\BusServiceProvider',
         'core_file' => '\Concrete\Core\File\FileServiceProvider',
         'core_encryption' => '\Concrete\Core\Encryption\EncryptionServiceProvider',
