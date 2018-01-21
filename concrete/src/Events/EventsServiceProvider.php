@@ -3,7 +3,6 @@
 namespace Concrete\Core\Events;
 
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class EventsServiceProvider extends ServiceProvider

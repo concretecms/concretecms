@@ -16,4 +16,11 @@ return array(
     'proxy_exclusions' => array(
         DIR_BASE_CORE . '/' . DIRNAME_CLASSES . '/Support/',
     ),
+
+    'redis' => [
+
+        'parameters' => [],
+        'options' => []
+    ],
+
 );

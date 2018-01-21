@@ -16,6 +16,7 @@ use Bernard\Driver\DoctrineDriver;
 use Normalt\Normalizer\AggregateNormalizer;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Symfony\Component\Serializer\Normalizer\PropertyNormalizer;
+use Concrete\Core\Foundation\Queue\Driver\DriverFactory;
 
 class QueueServiceProvider extends Provider
 {
@@ -23,8 +24,8 @@ class QueueServiceProvider extends Provider
     public function register()
     {
         $this->app->singleton('queue/driver', function($app) {
-            $connection = $app->make(Connection::class);
-            return new ConcreteDatabaseDriver($connection);
+            return $this->app->make(DriverFactory::class)
+                ->createDriver();
         });
 
         $this->app->singleton('queue/serializer', function($app) {
