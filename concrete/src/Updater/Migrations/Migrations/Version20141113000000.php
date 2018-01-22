@@ -1,23 +1,33 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
-use Concrete\Core\Page\Page;
-use Doctrine\DBAL\Migrations\AbstractMigration;
-use Doctrine\DBAL\Schema\Schema;
-use SinglePage;
-use Database;
 use Concrete\Core\Block\BlockType\BlockType;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Updater\Migrations\AbstractMigration;
+use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
+use Database;
+use SinglePage;
 
-class Version20141113000000 extends AbstractMigration
+class Version20141113000000 extends AbstractMigration implements DirectSchemaUpgraderInterface
 {
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Doctrine\DBAL\Migrations\AbstractMigration::getDescription()
+     */
     public function getDescription()
     {
         return '5.7.2.1';
     }
 
-    public function up(Schema $schema)
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface::upgradeDatabase()
+     */
+    public function upgradeDatabase()
     {
-
         /* delete customize page themes dashboard single page */
         $customize = Page::getByPath('/dashboard/pages/themes/customize');
         if (is_object($customize) && !$customize->isError()) {
@@ -63,11 +73,7 @@ class Version20141113000000 extends AbstractMigration
         // Clean up File stupidity
         $r = $db->Execute('select Files.fID from Files left join FileVersions on (Files.fID = FileVersions.fID) where FileVersions.fID is null');
         while ($row = $r->FetchRow()) {
-            $db->Execute('delete from Files where fID = ?', array($row['fID']));
+            $db->Execute('delete from Files where fID = ?', [$row['fID']]);
         }
-    }
-
-    public function down(Schema $schema)
-    {
     }
 }

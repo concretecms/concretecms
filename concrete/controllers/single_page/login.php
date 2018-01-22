@@ -5,10 +5,8 @@ use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Authentication\AuthenticationTypeFailureException;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Localization\Localization;
-use Concrete\Core\Page\Desktop\DesktopList;
-use Concrete\Core\Routing\RedirectResponse;
+use Concrete\Core\User\PostLoginLocation;
 use Exception;
-use Page;
 use PageController;
 use User;
 use UserAttributeKey;
@@ -242,15 +240,8 @@ class Login extends PageController
             if ($u->config('NEWSFLOW_LAST_VIEWED') === 'FIRSTRUN') {
                 $u->saveConfig('NEWSFLOW_LAST_VIEWED', 0);
             }
-
-            $response = new RedirectResponse(
-                $this->getRedirectUrl()
-            );
-
-            // Disable caching for response
-            $response = $response->setMaxAge(0)->setSharedMaxAge(0)->setPrivate();
-            $response->headers->addCacheControlDirective('must-revalidate', true);
-            $response->headers->addCacheControlDirective('no-store', true);
+            $pll = $this->app->make(PostLoginLocation::class);
+            $response = $pll->getPostLoginRedirectResponse(true);
 
             return $response;
         } else {
@@ -260,75 +251,33 @@ class Login extends PageController
     }
 
     /**
+     * @deprecated Use the getPostLoginUrl method of \Concrete\Core\User\PostLoginLocation
+     *
+     * @see \Concrete\Core\User\PostLoginLocation::getPostLoginUrl()
+     *
      * @return string
      */
     public function getRedirectUrl()
     {
-        $config = $this->app->make('config');
-        $login_redirect_mode = (string) $config->get('concrete.misc.login_redirect');
-
-        // Redirect to a page from the session
-        $rUrl = $this->getRedirectUrlFromSession();
-        if ($rUrl) {
-            return $rUrl;
-        }
-
-        // Redirect to custom page
-        $login_redirect_cid = (int) $config->get('concrete.misc.login_redirect_cid');
-        if ($login_redirect_mode === 'CUSTOM' && $login_redirect_cid > 0) {
-            $rc = Page::getByID($login_redirect_cid);
-            if ($rc instanceof Page && !$rc->isError()) {
-                $rUrl = $rc->getCollectionLink();
-                if ($rUrl) {
-                    return $rUrl;
-                }
-            }
-        }
-
-        // Redirect to desktop
-        if ($login_redirect_mode === 'DESKTOP') {
-            $desktop = DesktopList::getMyDesktop();
-            if (is_object($desktop)) {
-                return $desktop->getCollectionLink();
-            }
-        }
-
-        // Return to home page
-        return Page::getByID(Page::getHomePageID())->getCollectionLink();
+        $pll = $this->app->make(PostLoginLocation::class);
+        $url = $pll->getPostLoginUrl(true);
+        
+        return $url;
     }
 
     /**
+     * @deprecated Use the getSessionPostLoginUrl method of \Concrete\Core\User\PostLoginLocation
+     *
+     * @see \Concrete\Core\User\PostLoginLocation::getSessionPostLoginUrl()
+     *
      * @return string|false
      */
     public function getRedirectUrlFromSession()
     {
-        $nh = $this->app->make('helper/validation/numbers');
-        $session = $this->app->make('session');
+        $pll = $this->app->make(PostLoginLocation::class);
+        $url = $pll->getSessionPostLoginUrl(true);
 
-        // Redirect to original destination
-        if ($session->has('rUri')) {
-            $rUrl = $session->get('rUri');
-            $session->remove('rUri');
-            if ($rUrl) {
-                return $rUrl;
-            }
-        }
-
-        if ($session->has('rcID')) {
-            $rcID = $session->get('rcID');
-            if ($nh->integer($rcID)) {
-                $rc = Page::getByID($rcID);
-            } elseif (strlen($rcID)) {
-                $rcID = trim($rcID, '/');
-                $rc = Page::getByPath('/' . $rcID);
-            }
-
-            if ($rc instanceof Page && !$rc->isError()) {
-                return $rc->getCollectionLink();
-            }
-        }
-
-        return false;
+        return $url === '' ? false : $url;
     }
 
     public function view($type = null, $element = 'form')
@@ -443,9 +392,11 @@ class Login extends PageController
     public function forward($cID = 0)
     {
         $nh = $this->app->make('helper/validation/numbers');
-        if ($nh->integer($cID) && intval($cID) > 0) {
-            $this->set('rcID', intval($cID));
-            $this->app->make('session')->set('rcID', intval($cID));
+        if ($nh->integer($cID, 1)) {
+            $rcID = (int) $cID;
+            $this->set('rcID', $rcID);
+            $pll = $this->app->make(PostLoginLocation::class);
+            $pll->setSessionPostLoginUrl($rcID);
         }
     }
 }

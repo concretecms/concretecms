@@ -1,17 +1,28 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
-use Doctrine\DBAL\Schema\Schema;
+use Concrete\Core\Updater\Migrations\AbstractMigration;
+use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
 
-class Version20161203000000 extends AbstractMigration
+class Version20161203000000 extends AbstractMigration implements DirectSchemaUpgraderInterface
 {
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface::upgradeDatabase()
+     */
+    public function upgradeDatabase()
+    {
+        $this->fixFileFolderPermissions();
+        $this->fixWorkflows();
+        $this->fixTrackingCode();
+    }
 
     protected function output($message)
     {
         $this->version->getConfiguration()->getOutputWriter()->write($message);
     }
-
 
     protected function fixFileFolderPermissions()
     {
@@ -45,10 +56,10 @@ class Version20161203000000 extends AbstractMigration
         $config = $site->getConfigRepository();
         $proceed = true;
         $tracking = $config->get('seo.tracking');
-        if (is_array($tracking) && isset($tracking['header']) && $tracking['header']){
+        if (is_array($tracking) && isset($tracking['header']) && $tracking['header']) {
             $proceed = false;
         }
-        if (is_array($tracking) && isset($tracking['footer']) && $tracking['footer']){
+        if (is_array($tracking) && isset($tracking['footer']) && $tracking['footer']) {
             $proceed = false;
         }
         if ($proceed) {
@@ -71,16 +82,5 @@ class Version20161203000000 extends AbstractMigration
             unset($tracking['code_position']);
             $config->save('seo.tracking', $tracking);
         }
-    }
-
-    public function up(Schema $schema)
-    {
-        $this->fixFileFolderPermissions();
-        $this->fixWorkflows();
-        $this->fixTrackingCode();
-    }
-
-    public function down(Schema $schema)
-    {
     }
 }

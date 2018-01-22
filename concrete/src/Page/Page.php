@@ -599,7 +599,11 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
     public function isPageDraft()
     {
-        return $this->cIsDraft;
+        if (isset($this->cIsDraft) && $this->cIsDraft) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private static function translatePermissionsXMLToKeys($node)
@@ -2922,6 +2926,13 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     {
         $db = Database::connection();
         $db->executeQuery('update Pages set cIsActive = 0 where cID = ?', [$this->getCollectionID()]);
+    }
+
+    public function setPageToDraft()
+    {
+        $db = Database::connection();
+        $db->executeQuery('update Pages set cIsDraft = 1 where cID = ?', [$this->getCollectionID()]);
+        $this->cIsDraft = true;
     }
 
     public function activate()

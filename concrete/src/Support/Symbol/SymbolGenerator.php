@@ -75,7 +75,7 @@ class SymbolGenerator
             $lines[] = '{';
             $addNewline = false;
             if ($namespace === '') {
-                $lines[] = "{$padding}die('Intended for use with IDE symbol matching only.');";
+                $lines[] = "{$padding}die('Access Denied.');";
                 $addNewline = true;
             }
             foreach ($this->classes as $class) {

@@ -25,6 +25,7 @@ use Detection\MobileDetect;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Concrete\Core\Http\Service\Ajax;
+use Concrete\Core\User\PostLoginLocation;
 
 class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInterface
 {
@@ -114,8 +115,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
      */
     public function forbidden($requestUrl, $code = Response::HTTP_FORBIDDEN, $headers = [])
     {
-        // set page for redirection after successful login
-        $this->session->set('rUri', $requestUrl);
+        $this->app->make(PostLoginLocation::class)->setSessionPostLoginUrl($requestUrl);
 
         // load page forbidden
         $item = '/page_forbidden';

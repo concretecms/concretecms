@@ -1,16 +1,20 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
-use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use Concrete\Core\Page\Single;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
-use Doctrine\DBAL\Schema\Schema;
+use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
 
-class Version20170609100000 extends AbstractMigration
+class Version20170609100000 extends AbstractMigration implements DirectSchemaUpgraderInterface
 {
-    public function up(Schema $schema)
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface::upgradeDatabase()
+     */
+    public function upgradeDatabase()
     {
-
         $this->refreshDatabaseTables([
             'FailedLoginAttempts',
             'LoginControlIpRanges',
@@ -25,9 +29,5 @@ class Version20170609100000 extends AbstractMigration
             $sp->update(['cName' => 'IP Range']);
             $sp->setAttribute('exclude_nav', true);
         }
-    }
-
-    public function down(Schema $schema)
-    {
     }
 }

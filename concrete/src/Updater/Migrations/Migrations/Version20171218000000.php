@@ -2,32 +2,32 @@
 
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
-use Concrete\Core\Page\Single;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
-use Doctrine\DBAL\Schema\Schema;
+use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
+use Concrete\Core\Updater\Migrations\ManagedSchemaUpgraderInterface;
 use Concrete\Core\Updater\Migrations\Routine\AddPageDraftsBooleanTrait;
+use Doctrine\DBAL\Schema\Schema;
 
-class Version20171218000000 extends AbstractMigration
+class Version20171218000000 extends AbstractMigration implements ManagedSchemaUpgraderInterface, DirectSchemaUpgraderInterface
 {
-
     use AddPageDraftsBooleanTrait;
 
     /**
-     * @param Schema $schema
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Updater\Migrations\ManagedSchemaUpgraderInterface::upgradeSchema()
      */
-    public function up(Schema $schema)
+    public function upgradeSchema(Schema $schema)
     {
         $this->addColumnIfMissing($schema);
     }
 
     /**
-     * @param Schema $schema
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface::upgradeDatabase()
      */
-    public function down(Schema $schema)
-    {
-    }
-
-    public function postUp(Schema $schema)
+    public function upgradeDatabase()
     {
         $this->migrateDrafts();
     }
