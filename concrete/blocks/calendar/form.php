@@ -1,13 +1,10 @@
-<?php
-defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die('Access Denied.');
 $color = \Core::make('helper/form/color');
 ?>
 
 <fieldset>
     <legend><?=t('Data Source')?></legend>
-
     <?php View::element('calendar/block/data_source', ['caID' => $caID, 'calendarAttributeKeyHandle' => $calendarAttributeKeyHandle]) ?>
-
 </fieldset>
 
 <fieldset>
@@ -81,20 +78,17 @@ $color = \Core::make('helper/form/color');
 
 <fieldset>
     <legend><?=t('Filtering')?></legend>
-
     <div class="form-group">
         <label class="control-label" for="totalToRetrieve"><?= t('Filter by Topic Attribute') ?></label>
         <select class="form-control" name="filterByTopicAttributeKeyID">
             <option value=""><?=t('** None')?></option>
             <?php foreach ($attributeKeys as $ak) {
-    $attributeController = $ak->getController();
-    ?>
-                <option value="<?=$ak->getAttributeKeyID()?>" <?php if ($ak->getAttributeKeyID() == $filterByTopicAttributeKeyID) {
-    ?>selected<?php
-}
-    ?> data-tree-id="<?=$attributeController->getTopicTreeID()?>"><?=$ak->getAttributeKeyDisplayName()?></option>
+                $attributeController = $ak->getController();
+                ?>
+                <option value="<?=$ak->getAttributeKeyID()?>" <?php if ($ak->getAttributeKeyID() == $filterByTopicAttributeKeyID) { ?>selected<?php } ?>
+                    data-tree-id="<?=$attributeController->getTopicTreeID()?>"><?=$ak->getAttributeKeyDisplayName()?></option>
             <?php
-} ?>
+            } ?>
         </select>
         <input type="hidden" name="filterByTopicID" value="<?=$filterByTopicID?>">
         <div class="tree-view-container">
@@ -102,22 +96,20 @@ $color = \Core::make('helper/form/color');
             </div>
         </div>
     </div>
-
 </fieldset>
 
 <fieldset>
     <legend><?=t('Lightbox')?></legend>
     <div class="alert alert-info"><?=t('Check any properties that you wish to display in a lightbox. Check none to disable the lightbox.')?></div>
-
-    <?php foreach ($lightboxProperties as $key => $name) {
-    ?>
-        <div class="checkbox"><label>
+    <?php foreach ($lightboxProperties as $key => $name) { ?>
+        <div class="checkbox">
+            <label>
                 <?=$form->checkbox('lightboxProperties[]', $key, in_array($key, $lightboxPropertiesSelected))?>
                 <?=$name?>
             </label>
         </div>
     <?php
-} ?>
+    } ?>
 </fieldset>
 
 <script>
