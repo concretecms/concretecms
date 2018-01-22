@@ -593,8 +593,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
         $this->query->innerJoin('av', 'atSelectedTopics', 'atst', 'av.avID = atst.avID');
         $this->query->andWhere('atst.treeNodeID = :TopicNodeID');
         $this->query->setParameter('TopicNodeID', $treeNodeID);
-        $this->query->select('distinct p.cID');
-        $this->query->addSelect('p.cDisplayOrder');
+        $this->selectDistinct();
     }
 
     public function filterByBlockType(BlockType $bt)
@@ -696,6 +695,15 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
     {
         if ($this->isFulltextSearch) {
             $this->sortBy('cIndexScore', 'desc');
+        }
+    }
+
+    protected function selectDistinct()
+    {
+        $selects = $this->query->getQueryPart('select');
+        if ($selects[0] === 'p.cID') {
+            $selects[0] = 'distinct p.cID';
+            $this->query->select($selects);
         }
     }
 
