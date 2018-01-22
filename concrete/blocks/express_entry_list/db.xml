@@ -17,10 +17,10 @@
 		</field>
 
 
-		<field name="linkedProperties" type="C" size="X">
+		<field name="linkedProperties" type="C" size="255">
 		</field>
 
-		<field name="searchProperties" type="C" size="X">
+		<field name="searchProperties" type="C" size="255">
 		</field>
 
 		<field name="columns" type="X2">
