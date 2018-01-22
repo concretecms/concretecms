@@ -1,3 +1,40 @@
+# 8.3.2
+
+## Feature Updates
+
+* Updated CKEditor rich text editor component to 4.8.0 (thanks MrKarlDilkington)
+
+## Behavioral Improvements
+
+* Improvements to coding standards and PHP documentation (thanks mlocati, HamedDarragi)
+* Scan the SRC directory within the application for translatable strings (thanks matt9mg)
+* Fixed users being able to delete core and active themes (thanks deek87)
+* Removal of inline block JavaScript to facilitate more performant websites (thanks Remo)
+* Certain text field database indexes will be preserve across the upgrade process, leading to better performance (thanks mlocati)
+
+## Bug Fixes
+
+* Express Entity attribute type was not installed due to a bug in 8.3.0 and 8.3.1. This is now fixed.
+* Improvements to the upgrade process: fixes to missing database tables under certain conditions (thanks mlocati)
+* Fixed bug where blocks were not having their output added to the output cache, leading to general slowness, and a slow Dashboard Welcome page.
+* Fixed fatal error on higher traffic websites complaining about timeouts, broken cache files.
+* Fixed: The current "check for updates" dashboard page doesn't report the latest version because of a bug in the cache reading/writing process (thanks mlocati)
+* Fixed: Updating preset layouts destroys database structure which can result in severe errors (thanks mehl)
+* Fixed: filterByTopic / MySQL 5.7 compatibility (thanks apaccou)
+* Fixed bug where Geolocators table wasn’t created when upgrading from 8.2.1.
+* Fixed: Page duplicated from Versions menu doesn't contains IsDraft state, gets published under drafts.
+* Fixed http://www.concrete5.org/developers/bugs/8-3-1/exception-on-login-page-when-mobile-theme-switcher-is-active-and (thanks JeRoNZ)
+* Fixed issue with no blocks displaying on PHP 7.2 (thanks mlocati)
+* Fixed Youtube block video issues with showinfo and loop (thanks deek87)
+* Removed stray </li> tag in topic list block view template (thanks JeRoNZ)
+* Fix directory name in extract package strings (thanks hissy)
+* Fixed: Form submission notifications throw an error on the Waiting for Me page if the form data object is deleted. 
+
+## Developer Improvements
+
+* UserSelector::selectMultipleUsers can now accepted square brackets in its name, enabling it to be used with custom attributes (thanks mlocati)
+* Move the post-login URL management to a service class (thanks mlocati)
+
 # 8.3.1
 
 ## Feature Updates
