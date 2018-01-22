@@ -1,48 +1,51 @@
-<?xml version="1.0"?>
-<schema version="0.3">
-    <table name="btEventList">
-        <field name="bID" type="I">
-            <key/>
-            <unsigned/>
-        </field>
-        <field name="caID" type="X">
-            <notnull />
-            <default value="0" />
-        </field>
-        <field name="calendarAttributeKeyHandle" type="C" size="255">
-        </field>
-        <field name="totalToRetrieve" type="I2">
-            <unsigned />
-            <notnull />
-            <default value="10" />
-        </field>
-        <field name="totalPerPage" type="I2">
-            <unsigned />
-            <notnull />
-            <default value="10" />
-        </field>
-        <field name="filterByTopicAttributeKeyID" type="I" size="10">
-            <unsigned />
-            <notnull />
-            <default value="0" />
-        </field>
-        <field name="filterByTopicID" type="I" size="10">
-            <unsigned />
-            <notnull />
-            <default value="0" />
-        </field>
-        <field name="filterByPageTopicAttributeKeyHandle" type="C" size="255">
-        </field>
-        <field name="filterByFeatured" type="I1" size="1">
-            <notnull />
-            <default value="0" />
-        </field>
-        <field name="eventListTitle" type="C" size="255">
-        </field>
-        <field name="linkToPage" type="I" size="10">
-            <unsigned />
-            <notnull />
-            <default value="0" />
-        </field>
-    </table>
+<?xml version="1.0" encoding="UTF-8"?>
+<schema
+  xmlns="http://www.concrete5.org/doctrine-xml/0.5"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.concrete5.org/doctrine-xml/0.5 http://concrete5.github.io/doctrine-xml/doctrine-xml-0.5.xsd"
+>
+
+  <table name="btEventList">
+    <field name="bID" type="integer">
+      <unsigned/>
+      <key/>
+    </field>
+    <field name="caID" type="text" size="65535">
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="calendarAttributeKeyHandle" type="string" size="255"/>
+    <field name="totalToRetrieve" type="smallint">
+      <unsigned/>
+      <default value="10"/>
+      <notnull/>
+    </field>
+    <field name="totalPerPage" type="smallint">
+      <unsigned/>
+      <default value="10"/>
+      <notnull/>
+    </field>
+    <field name="filterByTopicAttributeKeyID" type="integer" size="10">
+      <unsigned/>
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="filterByTopicID" type="integer" size="10">
+      <unsigned/>
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="filterByPageTopicAttributeKeyHandle" type="string" size="255"/>
+    <field name="filterByFeatured" type="boolean">
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="eventListTitle" type="string" size="255"/>
+    <field name="linkToPage" type="integer" size="10">
+      <unsigned/>
+      <default value="0"/>
+      <notnull/>
+    </field>
+  </table>
+
 </schema>
