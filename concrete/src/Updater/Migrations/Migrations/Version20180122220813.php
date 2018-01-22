@@ -6,7 +6,7 @@ use Concrete\Core\Page\Single as SinglePage;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
 
-class Version20180120000000 extends AbstractMigration implements DirectSchemaUpgraderInterface
+class Version20180122220813 extends AbstractMigration implements DirectSchemaUpgraderInterface
 {
     /**
      * {@inheritdoc}
