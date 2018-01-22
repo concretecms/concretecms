@@ -15,16 +15,31 @@ if ($c->isEditMode()) {
 
     </div>
 
-    <script type="text/javascript">
+    <script>
         $(function() {
             $('div[data-calendar=<?=$bID?>]').fullCalendar({
                 header: {
                     left: 'prev,next today',
                     center: 'title',
-                    right: 'month,basicWeek,basicDay'
+                    right: '<?= $viewTypeString ? $viewTypeString : ''; ?>'
                 },
-                lang: <?= json_encode(Localization::activeLanguage());
-    ?>,
+                locale: <?= json_encode(Localization::activeLanguage()); ?>,
+                views: {
+                    listDay: { buttonText: '<?= t('list day'); ?>' },
+                    listWeek: { buttonText: '<?= t('list week'); ?>' },
+                    listMonth: { buttonText: '<?= t('list month'); ?>' },
+                    listYear: { buttonText: '<?= t('list year'); ?>' }
+                },
+
+                <?php if ($defaultView) { ?>
+                    defaultView: '<?= $defaultView; ?>',
+                <?php } ?>
+                <?php if ($navLinks) { ?>
+                    navLinks: true,
+                <?php } ?>
+                <?php if ($eventLimit) { ?>
+                    eventLimit: true,
+                <?php } ?>
 
                 events: '<?=$view->action('get_events')?>',
 

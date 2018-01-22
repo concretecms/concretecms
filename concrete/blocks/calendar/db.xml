@@ -21,6 +21,11 @@
             <default value="0" />
             <notnull/>
         </field>
+        <field name="viewTypes" type="text" />
+        <field name="viewTypesOrder" type="text" />
+        <field name="defaultView" type="text" />
+        <field name="navLinks" type="integer" />
+        <field name="eventLimit" type="integer" />
         <field name="lightboxProperties" type="text" />
     </table>
 </schema>
