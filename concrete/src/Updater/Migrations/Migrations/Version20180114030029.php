@@ -4,14 +4,12 @@ namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
+use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
 use Doctrine\DBAL\Schema\Schema;
 
-class Version20180114030029 extends AbstractMigration
+class Version20180114030029 extends AbstractMigration implements DirectSchemaUpgraderInterface
 {
-    /**
-     * @param Schema $schema
-     */
-    public function up(Schema $schema)
+    public function upgradeDatabase()
     {
         $this->refreshDatabaseTables([
             'OAuthServerAccessTokens',
@@ -30,12 +28,4 @@ class Version20180114030029 extends AbstractMigration
         }
     }
 
-    /**
-     * @param Schema $schema
-     */
-    public function down(Schema $schema)
-    {
-        // this down() migration is auto-generated, please modify it to your needs
-
-    }
 }

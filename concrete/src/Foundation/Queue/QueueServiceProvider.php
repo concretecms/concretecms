@@ -15,6 +15,7 @@ use Concrete\Core\Foundation\Service\Provider;
 use Bernard\Driver\DoctrineDriver;
 use Normalt\Normalizer\AggregateNormalizer;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Normalizer\PropertyNormalizer;
 use Concrete\Core\Foundation\Queue\Driver\DriverFactory;
 
