@@ -186,6 +186,7 @@ $nav = Loader::helper('navigation');
                                                     data-btn-action="unmap"
                                                     data-btn-url="<?=$multilingualController->action('unmap')?>"
                                                     data-btn-multilingual-page-source="<?php echo $pc->getCollectionID()?>"
+                                                    data-btn-multilingual-section="<?php echo $sc->getCollectionID()?>"
                                                 ><?=t('Un-Map')?></button>
                                         <?php 
 }
@@ -308,16 +309,18 @@ $nav = Loader::helper('navigation');
             });
 
             $('button[data-btn-action=unmap]').on('click', function(e) {
-                var cID = $(this).attr('data-btn-multilingual-page-source');
+                var sectionID = $(this).attr('data-btn-multilingual-section'),
+                  cID = $(this).attr('data-btn-multilingual-page-source');
                 e.preventDefault();
                 $.concreteAjax({
                     url: $(this).attr('data-btn-url'),
                     method: 'post',
                     data: {
+                        'section': sectionID,
                         'cID': cID
                     },
                     success: function(r) {
-                        var $wrapper = $('div[data-multilingual-page-source=' + cID + ']');
+                        var $wrapper = $('div[data-multilingual-page-section=' + sectionID + '][data-multilingual-page-source=' + cID + ']');
                         $wrapper.find('div[data-wrapper=page]').html('<?=t('Unmapped')?>');
                         $wrapper.find('div[data-wrapper=buttons]').hide();
                     }
