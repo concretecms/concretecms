@@ -225,10 +225,6 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
                 break;
         }
 
-        if ($this->isFulltextSearch) {
-            $query->addSelect('match(psi.cName, psi.cDescription, psi.content) against (:fulltext) as cIndexScore');
-        }
-
         if (!$this->includeInactivePages) {
             $query->andWhere('p.cIsActive = :cIsActive');
             $query->setParameter('cIsActive', true);
@@ -572,6 +568,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
     {
         $this->isFulltextSearch = true;
         $this->autoSortColumns[] = 'cIndexScore';
+        $this->query->addSelect('match(psi.cName, psi.cDescription, psi.content) against (:fulltext) as cIndexScore');
         $this->query->where('match(psi.cName, psi.cDescription, psi.content) against (:fulltext)');
         $this->query->orderBy('cIndexScore', 'desc');
         $this->query->setParameter('fulltext', $keywords);
