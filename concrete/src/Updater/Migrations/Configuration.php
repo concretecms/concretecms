@@ -3,6 +3,9 @@
 namespace Concrete\Core\Updater\Migrations;
 
 use Doctrine\DBAL\Migrations\Configuration\Configuration as DoctrineMigrationConfiguration;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Database\Connection\Connection;
+use Exception;
 
 class Configuration extends DoctrineMigrationConfiguration
 {
@@ -13,11 +16,12 @@ class Configuration extends DoctrineMigrationConfiguration
      */
     public function __construct($registerMigrations = true)
     {
-        $db = \Database::get();
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
         parent::__construct($db);
         $directory = DIR_BASE_CORE . '/' . DIRNAME_CLASSES . '/Updater/Migrations/Migrations';
         $this->setName(t('concrete5 Migrations'));
-        $this->setMigrationsNamespace(('Concrete\Core\Updater\Migrations\Migrations'));
+        $this->setMigrationsNamespace('Concrete\Core\Updater\Migrations\Migrations');
         $this->setMigrationsDirectory($directory);
         if ($registerMigrations) {
             $this->registerMigrationsFromDirectory($directory);
@@ -34,10 +38,11 @@ class Configuration extends DoctrineMigrationConfiguration
      */
     public function registerPreviousMigratedVersions()
     {
-        $db = \Database::get();
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
         try {
-            $minimum = $db->GetOne('select min(version) from SystemDatabaseMigrations');
-        } catch (\Exception $e) {
+            $minimum = $db->fetchColumn('select min(version) from SystemDatabaseMigrations');
+        } catch (Exception $e) {
             return;
         }
         $migrations = $this->getMigrations();
