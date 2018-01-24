@@ -20,7 +20,6 @@ use Concrete\Core\Page\Page;
 use Concrete\Core\Support\Facade\Package;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
-use Doctrine\DBAL\Schema\Schema;
 
 class Version20171110032423 extends AbstractMigration implements DirectSchemaUpgraderInterface
 {

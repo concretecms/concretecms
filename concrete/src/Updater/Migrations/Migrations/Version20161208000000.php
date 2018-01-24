@@ -11,6 +11,16 @@ class Version20161208000000 extends AbstractMigration implements DirectSchemaUpg
     /**
      * {@inheritdoc}
      *
+     * @see \Doctrine\DBAL\Migrations\AbstractMigration::getDescription()
+     */
+    public function getDescription()
+    {
+        return '8.0.2';
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @see \Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface::upgradeDatabase()
      */
     public function upgradeDatabase()

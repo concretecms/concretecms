@@ -17,10 +17,10 @@ class Version20170804000000 extends AbstractMigration implements DirectSchemaUpg
     {
         $type = Type::getByHandle('file_manager_detail');
         if ($type) {
-            /**
+            /*
              * Fix issue where file manager detail thumbnails were being added without a height.
              *
-             * @var \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type
+             * @var \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type $type
              */
             if (!$type->getHeight()) {
                 $type->setHeight($type->getWidth());

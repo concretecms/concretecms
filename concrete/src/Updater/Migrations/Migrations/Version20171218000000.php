@@ -15,6 +15,16 @@ class Version20171218000000 extends AbstractMigration implements ManagedSchemaUp
     /**
      * {@inheritdoc}
      *
+     * @see \Doctrine\DBAL\Migrations\AbstractMigration::getDescription()
+     */
+    public function getDescription()
+    {
+        return '8.3.1';
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @see \Concrete\Core\Updater\Migrations\ManagedSchemaUpgraderInterface::upgradeSchema()
      */
     public function upgradeSchema(Schema $schema)
