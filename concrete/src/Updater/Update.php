@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Localization;
 use Marketplace;
+use Throwable;
 
 class Update
 {
@@ -162,9 +163,25 @@ class Update
         }
 
         $configuration->registerPreviousMigratedVersions();
+        $isRerunning = $configuration->getForcedInitialMigration() !== null;
         $migrations = $configuration->getMigrationsToExecute('up', $configuration->getLatestVersion());
         foreach ($migrations as $migration) {
-            $migration->execute('up');
+            $remarkMigrated = $isRerunning && $migration->isMigrated();
+            if ($remarkMigrated) {
+                $migration->markNotMigrated();
+            }
+            $error = null;
+            try {
+                $migration->execute('up');
+            } catch (Exception $x) {
+                $error = $x;
+            } catch (Throwable $x) {
+                $error = $x;
+            }
+            if ($error !== null) {
+                $migration->markMigrated();
+                throw $error;
+            }
         }
         try {
             $app->make('helper/file')->makeExecutable(DIR_BASE_CORE . '/bin/concrete5', 'all');
