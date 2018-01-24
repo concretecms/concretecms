@@ -1,15 +1,15 @@
 <?php
+
 namespace Concrete\Core\Console\Command;
 
+use Concrete\Core\Console\Command;
 use Concrete\Core\Updater\Update;
 use Doctrine\DBAL\Migrations\OutputWriter;
-use Concrete\Core\Console\Command;
-use Symfony\Component\Console\Input\InputOption;
+use Exception;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
-use Database;
-use Exception;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 class UpdateCommand extends Command
@@ -35,11 +35,11 @@ EOT
     {
         if (!$input->getOption('force')) {
             if (!$input->isInteractive()) {
-                throw new Exception("You have to specify the --force option in order to run this command");
+                throw new Exception('You have to specify the --force option in order to run this command');
             }
             $confirmQuestion = new ConfirmationQuestion('Are you sure you want to update this concrete5 installation?');
             if (!$this->getHelper('question')->ask($input, $output, $confirmQuestion)) {
-                throw new Exception("Operation aborted.");
+                throw new Exception('Operation aborted.');
             }
         }
         $configuration = new \Concrete\Core\Updater\Migrations\Configuration();

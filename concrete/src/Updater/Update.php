@@ -1,18 +1,19 @@
 <?php
+
 namespace Concrete\Core\Updater;
 
 use Concrete\Core\Cache\Cache;
-use Concrete\Core\Database\DatabaseStructureManager;
-use Concrete\Core\Updater\Migrations\Configuration;
-use Core;
-use Marketplace;
-use Config;
-use Localization;
-use ORM;
-use Exception;
 use Concrete\Core\Cache\CacheClearer;
-use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Database\DatabaseStructureManager;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Updater\Migrations\Configuration;
+use Config;
+use Core;
+use Exception;
+use Localization;
+use Marketplace;
+use ORM;
 
 class Update
 {
@@ -77,7 +78,6 @@ class Update
      */
     public static function getApplicationUpdateInformation()
     {
-        /* @var $cache \Concrete\Core\Cache\Cache */
         $cache = Core::make('cache');
         $r = $cache->getItem('APP_UPDATE_INFO');
         if ($r->isMiss()) {
@@ -89,32 +89,6 @@ class Update
         }
 
         return $result;
-    }
-
-    /**
-     * Retrieves the info about the latest available information.
-     *
-     * @return RemoteApplicationUpdate|null
-     */
-    protected static function getLatestAvailableUpdate()
-    {
-        $update = null;
-        $app = Application::getFacadeApplication();
-        $config = $app->make('config');
-        $client = $app->make('http/client')->setUri($config->get('concrete.updates.services.get_available_updates'));
-        $client->getRequest()
-            ->setMethod('POST')
-            ->getPost()
-                ->set('LOCALE', Localization::activeLocale())
-                ->set('BASE_URL_FU', Application::getApplicationURL())
-                ->set('APP_VERSION', APP_VERSION);
-        try {
-            $response = $client->send();
-            $update = RemoteApplicationUpdateFactory::getFromJSON($response->getBody());
-        } catch (Exception $x) {
-        }
-
-        return $update;
     }
 
     /**
@@ -163,13 +137,12 @@ class Update
 
     /**
      * Upgrade the current core version to the latest locally available by running the applicable migrations.
+     *
+     * @param null|Configuration $configuration
      */
     public static function updateToCurrentVersion(Configuration $configuration = null)
     {
         $cms = Core::make('app');
-        /**
-         * @var $clearer CacheClearer
-         */
         $clearer = $cms->make(CacheClearer::class);
         $clearer->setClearGlobalAreas(false);
         $clearer->flush();
@@ -189,12 +162,38 @@ class Update
             $migration->execute('up');
         }
         try {
-            $cms->make('helper/file')->makeExecutable(DIR_BASE_CORE.'/bin/concrete5', 'all');
+            $cms->make('helper/file')->makeExecutable(DIR_BASE_CORE . '/bin/concrete5', 'all');
         } catch (\Exception $x) {
         }
         Config::save('concrete.version_installed', Config::get('concrete.version'));
         Config::save('concrete.version_db_installed', Config::get('concrete.version_db'));
         $textIndexes = $cms->make('config')->get('database.text_indexes');
         $cms->make(Connection::class)->createTextIndexes($textIndexes);
+    }
+
+    /**
+     * Retrieves the info about the latest available information.
+     *
+     * @return RemoteApplicationUpdate|null
+     */
+    protected static function getLatestAvailableUpdate()
+    {
+        $update = null;
+        $app = Application::getFacadeApplication();
+        $config = $app->make('config');
+        $client = $app->make('http/client')->setUri($config->get('concrete.updates.services.get_available_updates'));
+        $client->getRequest()
+            ->setMethod('POST')
+            ->getPost()
+                ->set('LOCALE', Localization::activeLocale())
+                ->set('BASE_URL_FU', Application::getApplicationURL())
+                ->set('APP_VERSION', APP_VERSION);
+        try {
+            $response = $client->send();
+            $update = RemoteApplicationUpdateFactory::getFromJSON($response->getBody());
+        } catch (Exception $x) {
+        }
+
+        return $update;
     }
 }
