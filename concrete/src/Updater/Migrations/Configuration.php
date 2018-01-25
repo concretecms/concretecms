@@ -52,7 +52,23 @@ class Configuration extends DoctrineMigrationConfiguration
     }
 
     /**
-     * Force the initial migration.
+     * Force the initial migration to be the least recent repeatable one.
+     */
+    public function forceMaxInitialMigration()
+    {
+        $forcedInitialMigration = null;
+        foreach (array_reverse($this->getMigrations()) as $migration) {
+            /* @var \Doctrine\DBAL\Migrations\Version $migration */
+            if ($migration->isMigrated() && !$migration->getMigration() instanceof RepeatableMigrationInterface) {
+                break;
+            }
+            $forcedInitialMigration = $migration;
+        }
+        $this->forcedInitialMigration = $forcedInitialMigration;
+    }
+
+    /**
+     * Force the initial migration, using a specific point.
      *
      * @param string $reference A concrete5 version (eg. '8.3.1') or a migration identifier (eg '20171218000000')
      * @param string $criteria One of the FORCEDMIGRATION_... constants
@@ -134,21 +150,26 @@ class Configuration extends DoctrineMigrationConfiguration
         $result = parent::getMigrationsToExecute($direction, $to);
         $forcedInitialMigration = $this->getForcedInitialMigration();
         if ($forcedInitialMigration !== null && $direction === Version::DIRECTION_UP) {
-            $forcedMigrations = [];
-            $migrations = $this->getMigrations();
-            $result = [];
-            $add = false;
-            foreach ($migrations as $version => $migration) {
-                if ($add === false && $migration === $forcedInitialMigration) {
-                    $add = true;
-                }
-                if ($add === true) {
-                    $forcedMigrations[$version] = $migration;
-                }
+            $allMigrations = $this->getMigrations();
+            $allMigrationKeys = array_keys($allMigrations);
+            $forcedInitialMigrationIndex = array_search($forcedInitialMigration->getVersion(), $allMigrationKeys, true);
+            if ($forcedInitialMigrationIndex === false) {
+                // This should never occur
+                throw new Exception(t('Unable to find the forced migration with version %s', $forcedInitialMigration->getVersion()));
             }
-            $missingMigrations = array_diff(array_keys($result), array_keys($forcedMigrations));
+            $forcedMigrationKeys = array_slice($allMigrationKeys, $forcedInitialMigrationIndex);
+            $forcedMigrations = [];
+            foreach (array_reverse($forcedMigrationKeys) as $forcedMigrationKey) {
+                $migration = $allMigrations[$forcedMigrationKey];
+                if ($migration->isMigrated() && !$migration->getMigration() instanceof RepeatableMigrationInterface) {
+                    throw new Exception(t('The migration %s has already been executed, and can\'t be executeg again.'));
+                }
+                $forcedMigrations[$forcedMigrationKey] = $migration;
+            }
+            $forcedMigrations = array_reverse($forcedMigrations, true);
+            $missingMigrations = array_diff_key($result, $forcedMigrations);
             if (count($missingMigrations) > 0) {
-                throw new Exception(t('The forced migration is later than the one to be executed (%s)', array_pop($missingMigrations)));
+                throw new Exception(t('The forced migration is later than the one to be executed (%s)', reset($missingMigrations)->getVersion()));
             }
             $result = $forcedMigrations;
         }
