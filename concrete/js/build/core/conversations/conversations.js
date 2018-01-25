@@ -80,8 +80,6 @@
             var enableCommentRating = (obj.options.enableCommentRating);
             var enableTopCommentReviews = (obj.options.enableTopCommentReviews);
             var displaySocialLinks = (obj.options.displaySocialLinks);
-            var commentRatingUserID = (obj.options.commentRatingUserID);
-            var commentRatingIP = (obj.options.commentRatingIP);
             var addMessageLabel = (obj.options.addMessageLabel) ? obj.options.addMessageLabel : '';
             var dateFormat = (obj.options.dateFormat);
             var customDateFormat = (obj.options.customDateFormat);
@@ -108,8 +106,6 @@
                     'enableCommentRating': enableCommentRating,
                     'enableTopCommentReviews': enableTopCommentReviews,
                     'displaySocialLinks': displaySocialLinks,
-                    'commentRatingUserID': commentRatingUserID,
-                    'commentRatingIP': commentRatingIP,
                     'dateFormat': dateFormat,
                     'customDateFormat': customDateFormat,
                     'blockAreaHandle': blockAreaHandle,
@@ -444,9 +440,7 @@
                     'cID': obj.options.cID,
                     'blockID': obj.options.blockID,
                     'cnvMessageID': cnvMessageID,
-                    'cnvRatingTypeHandle': cnvRatingTypeHandle,
-                    'commentRatingUserID': obj.options.commentRatingUserID,
-                    'commentRatingIP': obj.options.commentRatingIP
+                    'cnvRatingTypeHandle': cnvRatingTypeHandle
                 };
                 $.ajax({
                     type: 'post',
