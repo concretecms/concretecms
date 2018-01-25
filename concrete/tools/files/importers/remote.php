@@ -1,11 +1,11 @@
 <?php
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
-use \Concrete\Core\File\EditResponse as FileEditResponse;
+use Concrete\Core\File\EditResponse as FileEditResponse;
 use Concrete\Core\Support\Facade\Application;
 use IPLib\Factory as IPFactory;
-use \IPLib\Range\Type as IPRangeType;
+use IPLib\Range\Type as IPRangeType;
 
 $app = Application::getFacadeApplication();
 
@@ -14,7 +14,7 @@ $u = new User();
 $cf = $app->make('helper/file');
 $fp = FilePermissions::getGlobal();
 if (!$fp->canAddFiles()) {
-    die(t("Unable to add files."));
+    die(t('Unable to add files.'));
 }
 
 $error = $app->make('helper/validation/error');
@@ -37,7 +37,7 @@ $file = $app->make('helper/file');
 $app->make('helper/mime');
 
 // load all the incoming fields into an array
-$incoming_urls = array();
+$incoming_urls = [];
 
 if (!function_exists('iconv_get_encoding')) {
     $error->add(t('Remote URL import requires the iconv extension enabled on your server.'));
@@ -45,7 +45,7 @@ if (!function_exists('iconv_get_encoding')) {
 
 if (!$error->has()) {
     for ($i = 1; $i < 6; ++$i) {
-        $this_url = trim($_REQUEST['url_upload_' .$i]);
+        $this_url = trim($_REQUEST['url_upload_' . $i]);
 
         // did we get anything?
         if (!strlen($this_url)) {
@@ -82,7 +82,6 @@ if (!$error->has()) {
         if ($urlIsValid !== true) {
             $error->add(t('Failed to access "%s"', h($this_url)));
         }
-                
     }
 
     if (!$valt->validate('import_remote')) {
@@ -94,8 +93,8 @@ if (!$error->has()) {
     }
 }
 
-$import_responses = array();
-$files = array();
+$import_responses = [];
+$files = [];
 
 // if we haven't gotten any errors yet then try to process the form
 if (!$error->has()) {
@@ -126,7 +125,7 @@ if (!$error->has()) {
                     do {
                         // make up a filename based on the current date/time, a random int, and the extension from the mime-type
                         $fname = date('Y-m-d_H-i_') . mt_rand(100, 999) . '.' . $fextension;
-                    } while (file_exists($fpath.'/'.$fname));
+                    } while (file_exists($fpath . '/' . $fname));
                 }
             } //else {
                 // if we can't get the filename from the file itself OR from the mime-type I'm not sure there's much else we can do
@@ -134,13 +133,12 @@ if (!$error->has()) {
 
             if (strlen($fname)) {
                 // write the downloaded file to a temporary location on disk
-                $handle = fopen($fpath.'/'.$fname, "w");
+                $handle = fopen($fpath . '/' . $fname, 'w');
                 fwrite($handle, $response->getBody());
                 fclose($handle);
 
                 // import the file into concrete
                 if ($fp->canAddFileType($cf->getExtension($fname))) {
-
                     $folder = null;
                     if (isset($_POST['currentFolder'])) {
                         $node = \Concrete\Core\Tree\Node\Node::getByID($_POST['currentFolder']);
@@ -154,7 +152,7 @@ if (!$error->has()) {
                     }
 
                     $fi = new FileImporter();
-                    $resp = $fi->import($fpath.'/'.$fname, $fname, $fr);
+                    $resp = $fi->import($fpath . '/' . $fname, $fname, $fr);
                     $r->setMessage(t('File uploaded successfully.'));
                     if (is_object($fr)) {
                         $r->setMessage(t('File replaced successfully.'));
@@ -178,7 +176,7 @@ if (!$error->has()) {
                 }
 
                 // clean up the file
-                unlink($fpath.'/'.$fname);
+                unlink($fpath . '/' . $fname);
             } else {
                 // could not figure out a file name
                 $error->add(t(/*i18n: %s is an URL*/'Could not determine the name of the file at %s', h($this_url)));
