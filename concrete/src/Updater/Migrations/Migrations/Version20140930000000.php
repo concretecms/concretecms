@@ -3,10 +3,10 @@
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Updater\Migrations\AbstractMigration;
-use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
-use Doctrine\DBAL\Schema\Comparator;
+use Concrete\Core\Updater\Migrations\ManagedSchemaUpgraderInterface;
+use Doctrine\DBAL\Schema\Schema;
 
-class Version20140930000000 extends AbstractMigration implements DirectSchemaUpgraderInterface
+class Version20140930000000 extends AbstractMigration implements ManagedSchemaUpgraderInterface
 {
     /**
      * {@inheritdoc}
@@ -21,25 +21,22 @@ class Version20140930000000 extends AbstractMigration implements DirectSchemaUpg
     /**
      * {@inheritdoc}
      *
-     * @see \Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface::upgradeDatabase()
+     * @see \Doctrine\DBAL\Migrations\AbstractMigration::preUp()
      */
-    public function upgradeDatabase()
+    public function preUp(Schema $schema)
     {
         \Database::query('UPDATE Config SET configNamespace="" WHERE configNamespace IS NULL');
+    }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Updater\Migrations\ManagedSchemaUpgraderInterface::upgradeSchema()
+     */
+    public function upgradeSchema(Schema $schema)
+    {
         $config = $schema->getTable('Config');
-        $fromConfig = clone $config;
-        $db = \Database::get();
-        $platform = $db->getDatabasePlatform();
         $config->dropPrimaryKey();
         $config->setPrimaryKey(['configNamespace', 'configGroup', 'configItem']);
-        $comparator = new Comparator();
-        $diff = $comparator->diffTable($fromConfig, $config);
-        $sql = $platform->getAlterTableSQL($diff);
-        if (is_array($sql) && count($sql)) {
-            foreach ($sql as $q) {
-                $db->query($q);
-            }
-        }
     }
 }
