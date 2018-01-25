@@ -60,7 +60,11 @@ if (!$error->has()) {
             if (!in_array(strtolower($host), ['', '0', 'localhost'], true)) {
                 $ip = IPFactory::addressFromString($host);
                 if ($ip === null) {
-                    $ip = IPFactory::addressFromString(@gethostbyname($host));
+                    $dnsList = @dns_get_record($host, DNS_A | DNS_AAAA);
+                    while ($ip === null && $dnsList !== false && count($dnsList) > 0) {
+                        $dns = array_shift($dnsList);
+                        $ip = IPFactory::addressFromString($dns['ip']);
+                    }
                 }
                 if ($ip === null || in_array($ip->getRangeType(), [IPRangeType::T_PUBLIC, IPRangeType::T_PRIVATENETWORK], true)) {
                     $client = $app->make('http/client');
