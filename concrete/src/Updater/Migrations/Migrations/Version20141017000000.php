@@ -33,18 +33,22 @@ class Version20141017000000 extends AbstractMigration implements ManagedSchemaUp
     {
         /* refresh CollectionVersionBlocks, CollectionVersionBlocksCacheSettings tables */
         $cvb = $schema->getTable('CollectionVersionBlocks');
-        $cvb->addColumn('cbOverrideBlockTypeCacheSettings', 'boolean', ['default' => 0]);
+        if (!$cvb->hasColumn('cbOverrideBlockTypeCacheSettings')) {
+            $cvb->addColumn('cbOverrideBlockTypeCacheSettings', 'boolean', ['default' => 0]);
+        }
 
-        $cvbcs = $schema->createTable('CollectionVersionBlocksCacheSettings');
-        $cvbcs->addColumn('cID', 'integer', ['notnull' => true, 'unsigned' => true, 'default' => 0]);
-        $cvbcs->addColumn('cvID', 'integer', ['notnull' => true, 'unsigned' => true, 'default' => 1]);
-        $cvbcs->addColumn('bID', 'integer', ['notnull' => true, 'unsigned' => true, 'default' => 0]);
-        $cvbcs->addColumn('arHandle', 'string', ['notnull' => false]);
-        $cvbcs->addColumn('btCacheBlockOutput', 'boolean', ['default' => 0]);
-        $cvbcs->addColumn('btCacheBlockOutputOnPost', 'boolean', ['default' => 0]);
-        $cvbcs->addColumn('btCacheBlockOutputForRegisteredUsers', 'boolean', ['default' => 0]);
-        $cvbcs->addColumn('btCacheBlockOutputLifetime', 'integer', ['notnull' => true, 'unsigned' => true, 'default' => 0]);
-        $cvbcs->setPrimaryKey(['cID', 'cvID', 'bId', 'arHandle']);
+        if (!$schema->hasTable('CollectionVersionBlocksCacheSettings')) {
+            $cvbcs = $schema->createTable('CollectionVersionBlocksCacheSettings');
+            $cvbcs->addColumn('cID', 'integer', ['notnull' => true, 'unsigned' => true, 'default' => 0]);
+            $cvbcs->addColumn('cvID', 'integer', ['notnull' => true, 'unsigned' => true, 'default' => 1]);
+            $cvbcs->addColumn('bID', 'integer', ['notnull' => true, 'unsigned' => true, 'default' => 0]);
+            $cvbcs->addColumn('arHandle', 'string', ['notnull' => false]);
+            $cvbcs->addColumn('btCacheBlockOutput', 'boolean', ['default' => 0]);
+            $cvbcs->addColumn('btCacheBlockOutputOnPost', 'boolean', ['default' => 0]);
+            $cvbcs->addColumn('btCacheBlockOutputForRegisteredUsers', 'boolean', ['default' => 0]);
+            $cvbcs->addColumn('btCacheBlockOutputLifetime', 'integer', ['notnull' => true, 'unsigned' => true, 'default' => 0]);
+            $cvbcs->setPrimaryKey(['cID', 'cvID', 'bId', 'arHandle']);
+        }
     }
 
     /**
