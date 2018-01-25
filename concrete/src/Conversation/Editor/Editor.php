@@ -248,7 +248,7 @@ abstract class Editor extends ConcreteObject
         } else {
             $result = $cnvMessageBody;
         }
-        if ($config['mention'] !== false) {
+        if (isset($config['mention']) && $config['mention'] !== false) {
             $users = $cnv->getConversationMessageUsers();
             $needle = array();
             $haystack = array();
