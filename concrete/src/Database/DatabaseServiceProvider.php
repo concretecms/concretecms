@@ -32,7 +32,7 @@ class DatabaseServiceProvider extends ServiceProvider
             return $manager;
         });
 
-        $this->app->bind('redis',
+        $this->app->singleton('redis',
             function ($app) {
                 $predis = new Client(
                     $app->make('config')->get('database.redis.parameters'),
@@ -41,6 +41,7 @@ class DatabaseServiceProvider extends ServiceProvider
                 return $predis;
             }
         );
+        $this->app->bind(Client::class, 'redis');
 
         // Bind default connection resolver
         $this->app->bind('Concrete\Core\Database\Connection\Connection',

@@ -13,7 +13,9 @@ use Bernard\Serializer;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Foundation\Service\Provider;
 use Bernard\Driver\DoctrineDriver;
+use Doctrine\ORM\EntityManager;
 use Normalt\Normalizer\AggregateNormalizer;
+use Normalt\Normalizer\DoctrineNormalizer;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Normalizer\PropertyNormalizer;
@@ -32,7 +34,7 @@ class QueueServiceProvider extends Provider
         $this->app->singleton('queue/serializer', function($app) {
             $aggregateNormalizer = new AggregateNormalizer([
                 new EnvelopeNormalizer(),
-                new PropertyNormalizer(),
+                new GetSetMethodNormalizer(),
                 new PlainMessageNormalizer(),
             ]);
             $serializer = new Serializer($aggregateNormalizer);
