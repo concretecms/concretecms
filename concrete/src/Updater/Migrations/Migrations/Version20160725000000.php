@@ -3,7 +3,6 @@
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Block\ExpressForm\Controller as ExpressFormBlockController;
-use Concrete\Core\Attribute\Category\PageCategory;
 use Concrete\Core\Attribute\Key\Category;
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Attribute\Type;
@@ -662,7 +661,7 @@ class Version20160725000000 extends AbstractMigration implements DirectSchemaUpg
         }
         $this->createSinglePage('/dashboard/system/basics/attributes', 'Custom Attributes', ['exclude_search_index' => true, 'exclude_nav' => true]);
         $this->createSinglePage('/dashboard/system/registration/global_password_reset', '', ['cDescription' => 'Signs out all users, resets all passwords and forces users to choose a new one', 'meta_keywords' => 'global, password, reset, change password, force, sign out']);
-        $this->createSinglePage('/dashboard/system/registration/notification', 'Notification Settings']);
+        $this->createSinglePage('/dashboard/system/registration/notification', 'Notification Settings');
     }
 
     protected function addBlockTypes()
