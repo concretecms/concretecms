@@ -2,7 +2,6 @@
 
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
-use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
@@ -63,9 +62,6 @@ class Version20141024000000 extends AbstractMigration implements RepeatableMigra
         }
 
         /* Refresh image block */
-        $bt = BlockType::getByHandle('image');
-        if (is_object($bt)) {
-            $bt->refresh();
-        }
+        $this->refreshBlockType('image');
     }
 }

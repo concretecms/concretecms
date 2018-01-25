@@ -15,10 +15,7 @@ class Version20150610000000 extends AbstractMigration implements RepeatableMigra
      */
     public function upgradeDatabase()
     {
-        $bt = \BlockType::getByHandle('file');
-        if (is_object($bt)) {
-            $bt->refresh();
-        }
+        $this->refreshBlockType('file');
         if (\Config::get('conversation.banned_words')) {
             \Config::set('conversations.banned_words', true);
         }

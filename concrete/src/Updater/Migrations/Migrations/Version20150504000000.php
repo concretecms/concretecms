@@ -2,7 +2,6 @@
 
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
-use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Permission\Access\Entity\GroupEntity;
 use Concrete\Core\Permission\Access\Entity\Type;
@@ -123,20 +122,11 @@ class Version20150504000000 extends AbstractMigration implements RepeatableMigra
         $db = \Database::get();
         $db->Execute('DROP TABLE IF EXISTS PageStatistics');
 
-        $bt = BlockType::getByHandle('page_list');
-        if (is_object($bt)) {
-            $bt->refresh();
-        }
+        $this->refreshBlockType('page_list');
 
-        $bt = BlockType::getByHandle('page_title');
-        if (is_object($bt)) {
-            $bt->refresh();
-        }
+        $this->refreshBlockType('page_title');
 
-        $bt = BlockType::getByHandle('form');
-        if (is_object($bt)) {
-            $bt->refresh();
-        }
+        $this->refreshBlockType('form');
 
         $c = \Page::getByPath('/dashboard/system/seo/urls');
         if (is_object($c) && !$c->isError()) {

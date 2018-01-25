@@ -2,7 +2,6 @@
 
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
-use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
@@ -49,15 +48,9 @@ class Version20141113000000 extends AbstractMigration implements RepeatableMigra
             $sp->setAttribute('exclude_nav', 1);
         }
 
-        $bt = BlockType::getByHandle('feature');
-        if (is_object($bt)) {
-            $bt->refresh();
-        }
+        $this->refreshBlockType('feature');
 
-        $bt = BlockType::getByHandle('image_slider');
-        if (is_object($bt)) {
-            $bt->refresh();
-        }
+        $this->refreshBlockType('image_slider');
 
         $db = Database::get();
         $sm = $db->getSchemaManager();

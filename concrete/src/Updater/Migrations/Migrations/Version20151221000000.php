@@ -38,19 +38,10 @@ class Version20151221000000 extends AbstractMigration implements RepeatableMigra
             'StyleCustomizerInlineStyleSets',
         ]);
 
-        $bt = \BlockType::getByHandle('image_slider');
-        if (is_object($bt)) {
-            $bt->refresh();
-        }
+        $this->refreshBlockType('image_slider');
 
-        $bt = \BlockType::getByHandle('youtube');
-        if (is_object($bt)) {
-            $bt->refresh();
-        }
+        $this->refreshBlockType('youtube');
 
-        $bt = \BlockType::getByHandle('autonav');
-        if (is_object($bt)) {
-            $bt->refresh();
-        }
+        $this->refreshBlockType('autonav');
     }
 }

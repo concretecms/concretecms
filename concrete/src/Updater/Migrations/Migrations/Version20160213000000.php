@@ -16,9 +16,6 @@ class Version20160213000000 extends AbstractMigration implements RepeatableMigra
     public function upgradeDatabase()
     {
         // added new delimiter settings.
-        $bt = \BlockType::getByHandle('page_attribute_display');
-        if (is_object($bt)) {
-            $bt->refresh();
-        }
+        $this->refreshBlockType('page_attribute_display');
     }
 }

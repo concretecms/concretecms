@@ -79,8 +79,7 @@ class Version20141219000000 extends AbstractMigration implements RepeatableMigra
             FlagType::add('spam');
         }
 
-        $bt = BlockType::getByHandle('image_slider');
-        $bt->refresh();
+        $this->refreshBlockType('image_slider');
 
         $types = [Type::getByHandle('group'), Type::getByHandle('user'), Type::getByHandle('group_set'), Type::getByHandle('group_combination')];
         $categories = [Category::getByHandle('conversation'), Category::getByHandle('conversation_message')];

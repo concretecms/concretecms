@@ -2,7 +2,6 @@
 
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
-use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
@@ -38,15 +37,8 @@ class Version20161208000000 extends AbstractMigration implements RepeatableMigra
 
     protected function updateBlocks()
     {
-        $this->output(t('Refreshing blocks.'));
-        $bt = BlockType::getByHandle('express_entry_detail');
-        if (is_object($bt)) {
-            $bt->refresh();
-        }
-        $bt = BlockType::getByHandle('page_attribute_display');
-        if (is_object($bt)) {
-            $bt->refresh();
-        }
+        $this->refreshBlockType('express_entry_detail');
+        $this->refreshBlockType('page_attribute_display');
     }
 
     protected function updateDoctrineXmlTables()

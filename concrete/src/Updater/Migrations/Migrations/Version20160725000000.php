@@ -875,25 +875,13 @@ class Version20160725000000 extends AbstractMigration implements DirectSchemaUpg
 
         $desktopSet->addBlockType($bt);
 
-        $bt = BlockType::getByHandle('page_title');
-        if (is_object($bt)) {
-            $bt->refresh();
-        }
+        $this->refreshBlockType('page_title');
 
-        $bt = BlockType::getByHandle('page_list');
-        if (is_object($bt)) {
-            $bt->refresh();
-        }
+        $this->refreshBlockType('page_list');
 
-        $bt = BlockType::getByHandle('next_previous');
-        if (is_object($bt)) {
-            $bt->refresh();
-        }
+        $this->refreshBlockType('next_previous');
 
-        $bt = BlockType::getByHandle('autonav');
-        if (is_object($bt)) {
-            $bt->refresh();
-        }
+        $this->refreshBlockType('autonav');
     }
 
     protected function addTreeNodeTypes()
