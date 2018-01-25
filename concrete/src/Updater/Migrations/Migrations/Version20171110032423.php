@@ -20,8 +20,9 @@ use Concrete\Core\Page\Page;
 use Concrete\Core\Support\Facade\Package;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
+use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
-class Version20171110032423 extends AbstractMigration implements DirectSchemaUpgraderInterface
+class Version20171110032423 extends AbstractMigration implements RepeatableMigrationInterface, DirectSchemaUpgraderInterface
 {
     /**
      * {@inheritdoc}

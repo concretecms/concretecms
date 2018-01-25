@@ -4,9 +4,10 @@ namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\ManagedSchemaUpgraderInterface;
+use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 use Doctrine\DBAL\Schema\Schema;
 
-class Version20170505000000 extends AbstractMigration implements ManagedSchemaUpgraderInterface
+class Version20170505000000 extends AbstractMigration implements RepeatableMigrationInterface, ManagedSchemaUpgraderInterface
 {
     /**
      * {@inheritdoc}

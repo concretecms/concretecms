@@ -8,8 +8,9 @@ use Concrete\Core\Entity\Express\Form as ExpressForm;
 use Concrete\Core\Entity\Package;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
+use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
-class Version20180119000000 extends AbstractMigration implements DirectSchemaUpgraderInterface
+class Version20180119000000 extends AbstractMigration implements RepeatableMigrationInterface, DirectSchemaUpgraderInterface
 {
     /**
      * {@inheritdoc}

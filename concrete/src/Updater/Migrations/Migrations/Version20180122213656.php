@@ -7,9 +7,10 @@ use Concrete\Core\Attribute\TypeFactory;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
+use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 use Doctrine\ORM\EntityManager;
 
-class Version20180122213656 extends AbstractMigration implements DirectSchemaUpgraderInterface
+class Version20180122213656 extends AbstractMigration implements RepeatableMigrationInterface, DirectSchemaUpgraderInterface
 {
     /**
      * {@inheritdoc}

@@ -12,10 +12,11 @@ use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
 use Concrete\Core\Updater\Migrations\ManagedSchemaUpgraderInterface;
+use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 use Concrete\Core\Updater\Migrations\Routine\AddPageDraftsBooleanTrait;
 use Doctrine\DBAL\Schema\Schema;
 
-class Version20170824000000 extends AbstractMigration implements ManagedSchemaUpgraderInterface, DirectSchemaUpgraderInterface
+class Version20170824000000 extends AbstractMigration implements RepeatableMigrationInterface, ManagedSchemaUpgraderInterface, DirectSchemaUpgraderInterface
 {
     use AddPageDraftsBooleanTrait;
 

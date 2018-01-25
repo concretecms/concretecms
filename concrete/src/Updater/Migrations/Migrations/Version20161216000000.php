@@ -6,9 +6,10 @@ use Concrete\Block\ExpressForm\Controller as ExpressFormBlockController;
 use Concrete\Core\Tree\Node\Type\ExpressEntryCategory;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
+use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 use Concrete\Core\User\Group\Group;
 
-class Version20161216000000 extends AbstractMigration implements DirectSchemaUpgraderInterface
+class Version20161216000000 extends AbstractMigration implements RepeatableMigrationInterface, DirectSchemaUpgraderInterface
 {
     /**
      * {@inheritdoc}
