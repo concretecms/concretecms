@@ -2,12 +2,9 @@
 
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
-use Concrete\Core\Attribute\Category\PageCategory;
 use Concrete\Core\Entity\Attribute\Key\Settings\AddressSettings;
 use Concrete\Core\Entity\Geolocator;
 use Concrete\Core\Geolocator\GeolocatorService;
-use Concrete\Core\Page\Page;
-use Concrete\Core\Page\Single as SinglePage;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
@@ -65,20 +62,6 @@ class Version20170824000000 extends AbstractMigration implements RepeatableMigra
             $em->flush($geolocator);
         }
 
-        $pageAttributeCategory = $app->make(PageCategory::class);
-        /* @var PageCategory $pageAttributeCategory */
-        $availableAttributes = [];
-        foreach (['meta_keywords'] as $akHandle) {
-            $availableAttributes[$akHandle] = $pageAttributeCategory->getAttributeKeyByHandle($akHandle) ? true : false;
-        }
-
-        $page = Page::getByPath('/dashboard/system/environment/geolocation');
-        if (!is_object($page) || $page->isError()) {
-            $sp = SinglePage::add('/dashboard/system/environment/geolocation');
-            $sp->update(['cName' => 'Geolocation']);
-            if ($availableAttributes['meta_keywords']) {
-                $sp->setAttribute('meta_keywords', 'geolocation, ip, address, country, nation, place, locate');
-            }
-        }
+        $this->createSinglePage('/dashboard/system/environment/geolocation', 'Geolocation', ['meta_keywords' => 'geolocation, ip, address, country, nation, place, locate']);
     }
 }

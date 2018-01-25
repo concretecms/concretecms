@@ -133,12 +133,7 @@ class Version20150504000000 extends AbstractMigration implements RepeatableMigra
             $c->update(['cName' => 'URLs and Redirection']);
         }
 
-        $sp = \Page::getByPath('/dashboard/system/environment/entities');
-        if (!is_object($sp) || $sp->isError()) {
-            $sp = \SinglePage::add('/dashboard/system/environment/entities');
-            $sp->update(['cName' => 'Database Entities']);
-            $sp->setAttribute('meta_keywords', 'database, entities, doctrine, orm');
-        }
+        $this->createSinglePage('/dashboard/system/environment/entities', 'Database Entities', ['meta_keywords' => 'database, entities, doctrine, orm']);
 
         $pkx = Category::getByHandle('multilingual_section');
         if (!is_object($pkx)) {

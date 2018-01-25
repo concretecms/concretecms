@@ -2,7 +2,6 @@
 
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
-use Concrete\Core\Page\Page;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
 use Concrete\Core\Updater\Migrations\ManagedSchemaUpgraderInterface;
@@ -10,7 +9,6 @@ use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Table;
 use Exception;
-use SinglePage;
 
 class Version20141024000000 extends AbstractMigration implements RepeatableMigrationInterface, ManagedSchemaUpgraderInterface, DirectSchemaUpgraderInterface
 {
@@ -54,12 +52,7 @@ class Version20141024000000 extends AbstractMigration implements RepeatableMigra
     public function upgradeDatabase()
     {
         /* Add query log single pages */
-        $sp = Page::getByPath('/dashboard/system/optimization/query_log');
-        if (!is_object($sp) || $sp->isError()) {
-            $sp = SinglePage::add('/dashboard/system/optimization/query_log');
-            $sp->update(['cName' => 'Database Query Log']);
-            $sp->setAttribute('meta_keywords', 'queries, database, mysql');
-        }
+        $this->createSinglePage('/dashboard/system/optimization/query_log', 'Database Query Log', ['meta_keywords' => 'queries, database, mysql']);
 
         /* Refresh image block */
         $this->refreshBlockType('image');
