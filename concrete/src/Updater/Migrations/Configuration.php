@@ -234,6 +234,9 @@ class Configuration extends DoctrineMigrationConfiguration
     protected function findInitialMigrationByCoreVersion($coreVersion, $criteria)
     {
         $coreVersionNormalized = preg_replace('/(\.0+)+$/', '', $coreVersion);
+        if (version_compare($coreVersionNormalized, '5.7') < 0) {
+            throw new Exception(t('Invalid version specified (%s).', $coreVersion));
+        }
         $migrations = $this->getMigrations();
         $migrationIdentifiers = array_keys($migrations);
         $maxMigrationIndex = count($migrationIdentifiers) - 1;
