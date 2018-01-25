@@ -87,10 +87,10 @@ EOT
                 }
                 if (!$input->getOption('force')) {
                     if (!$input->isInteractive()) {
-                        throw new Exception('You have to specify the --force option in order to run this command when you specify the --after / --since options.');
+                        throw new Exception('You have to specify the --force option in order to run this command when you specify the --rerun option.');
                     }
                     $confirmQuestion = new ConfirmationQuestion(<<<'EOT'
-WARNING: re-running already executed migrations (with the --after / --since options) may be dangerous!
+WARNING: re-running already executed migrations (with the --rerun option) may be dangerous!
 
 Are you sure you want to proceed?
 EOT
