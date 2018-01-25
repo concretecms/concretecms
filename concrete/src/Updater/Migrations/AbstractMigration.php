@@ -185,6 +185,7 @@ abstract class AbstractMigration extends DoctrineAbstractMigration
     {
         $sp = Page::getByPath($path);
         if (!is_object($sp) || $sp->isError()) {
+            $this->output(t('Creating single page at %s...', $path));
             $sp = SinglePage::add($path);
             $update = [];
             $name = (string) $name;
