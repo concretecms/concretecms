@@ -20,7 +20,7 @@ class Version20170613000000 extends AbstractMigration implements DirectSchemaUpg
         $folder = $filesystem->getRootFolder();
         if ($folder) {
             $this->connection->executeQuery(
-                'update btExpressForm set addFilesToFolder = ?', [$folder->getTreeNodeID()]
+                'update btExpressForm set addFilesToFolder = ? where addFilesToFolder IS NULL or addFilesToFolder = 0', [$folder->getTreeNodeID()]
             );
         }
     }
