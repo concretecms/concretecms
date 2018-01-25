@@ -139,7 +139,7 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
                         </li>
                     <?php } ?>
                     <li class="ccm-conversation-social-share">
-                        <a class="ccm-conversation-message-control-icon share-permalink" data-message-id= "<?php echo $messageID ?>" rel="<?php echo $cnvMessageURL ?>"
+                        <a class="ccm-conversation-message-control-icon share-permalink" data-message-id="<?= $message->getConversationMessageID() ?>" rel="<?php echo $cnvMessageURL ?>"
                         title="<?=t('Get message URL.')?>" data-dialog-title="<?php echo t('Link') ?>"  href="#"><i class="fa fa-link"></i></a>
                     </li>
                 </ul>
