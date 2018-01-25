@@ -4,6 +4,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 use \Concrete\Core\File\EditResponse as FileEditResponse;
 use Concrete\Core\Support\Facade\Application;
+use IPLib\Factory as IPFactory;
+use \IPLib\Range\Type as IPRangeType;
 
 $app = Application::getFacadeApplication();
 
@@ -51,20 +53,32 @@ if (!$error->has()) {
         }
 
         // validate URL
+        $urlIsValid = false;
         try {
             $url = \Concrete\Core\Url\Url::createFromUrl($this_url);
-            if (!$url->getHost() || in_array($url->getHost(), ['localhost', '127.0.0.1'])) {
-                throw new \InvalidArgumentException(t('Invalid URL: %s', $this_url));
+            $host = trim((string) $url->getHost());
+            if (!in_array(strtolower($host), ['', '0', 'localhost'], true)) {
+                $ip = IPFactory::addressFromString($host);
+                if ($ip === null) {
+                    $ip = IPFactory::addressFromString(@gethostbyname($host));
+                }
+                if ($ip === null || in_array($ip->getRangeType(), [IPRangeType::T_PUBLIC, IPRangeType::T_PRIVATENETWORK], true)) {
+                    $client = $app->make('http/client');
+                    $request = $client->getRequest();
+                    $request->setUri((string) $url);
+                    $response = $client->send();
+                    if ($response->isOk()) {
+                        $incoming_urls[] = $this_url;
+                        $urlIsValid = true;
+                    }
+                }
             }
-
-            $client = $app->make('http/client');
-            $request = $client->getRequest();
-            $request->setUri((string) $url);
-            $response = $client->send();
-            $incoming_urls[] = $this_url;
         } catch (\Exception $e) {
+        }
+        if ($urlIsValid !== true) {
             $error->add(t('Failed to access "%s"', h($this_url)));
         }
+                
     }
 
     if (!$valt->validate('import_remote')) {
