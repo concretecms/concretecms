@@ -1289,6 +1289,9 @@
       <default value=""/>
       <notnull/>
     </field>
+    <references table="AreaLayouts" ondelete="cascade" onupdate="cascade">
+    	<column local="arLayoutID" foreign="arLayoutID"/>
+    </references>
   </table>
 
   <table name="AreaLayoutPresets">
