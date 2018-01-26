@@ -1278,7 +1278,7 @@ class Version20160725000000 extends AbstractMigration implements DirectSchemaUpg
         $defaultLocale = \Config::get('concrete.multilingual.default_locale');
         $sectionsIncludeHome = false;
         foreach ($sections as $section) {
-            if ($section['cID'] == 1) {
+            if ($section['cID'] == $homeCID) {
                 $sectionsIncludeHome = true;
             }
         }
@@ -1288,7 +1288,7 @@ class Version20160725000000 extends AbstractMigration implements DirectSchemaUpg
         if (!$sectionsIncludeHome && $redirectToDefaultLocale) {
             // Move the home page outside site trees.
             $this->output(t('Moving home page to outside of site trees...'));
-            $this->connection->executeQuery('update Pages set siteTreeID = 0 where cID = 1');
+            $this->connection->executeQuery('update Pages set siteTreeID = 0 where cID = ' . $homeCID);
         }
 
         foreach ($sections as $section) {
@@ -1307,7 +1307,7 @@ class Version20160725000000 extends AbstractMigration implements DirectSchemaUpg
 
             // Now that we have the locale, let's take the multilingual section and make it the
             // home page for the newly created site tree
-            if ($section['cID'] != 1) {
+            if ($section['cID'] != $homeCID) {
                 $tree = $locale->getSiteTree();
                 if (!$redirectToDefaultLocale && $locale->getLocale() == $site->getDefaultLocale()->getLocale()) {
                     // Case 2: This is our default locale (/en perhaps) but it is contained within a home
