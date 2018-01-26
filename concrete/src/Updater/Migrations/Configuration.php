@@ -152,7 +152,7 @@ class Configuration extends DoctrineMigrationConfiguration
         if ($forcedInitialMigration !== null && $direction === Version::DIRECTION_UP) {
             $allMigrations = $this->getMigrations();
             $allMigrationKeys = array_keys($allMigrations);
-            $forcedInitialMigrationIndex = array_search($forcedInitialMigration->getVersion(), $allMigrationKeys, true);
+            $forcedInitialMigrationIndex = array_search($forcedInitialMigration->getVersion(), $allMigrationKeys, false);
             if ($forcedInitialMigrationIndex === false) {
                 // This should never occur
                 throw new Exception(t('Unable to find the forced migration with version %s', $forcedInitialMigration->getVersion()));
@@ -216,7 +216,7 @@ class Configuration extends DoctrineMigrationConfiguration
                 break;
             case static::FORCEDMIGRATION_EXCLUSIVE:
                 $allIdentifiers = array_keys($this->getMigrations());
-                $migrationIndex = array_search($identifier, $allIdentifiers, true);
+                $migrationIndex = array_search($identifier, $allIdentifiers, false);
                 if ($migrationIndex === false) {
                     $result = null;
                 } elseif ($migrationIndex === count($allIdentifiers) - 1) {
@@ -272,7 +272,7 @@ class Configuration extends DoctrineMigrationConfiguration
                             $result = $migration;
                             break;
                         case static::FORCEDMIGRATION_EXCLUSIVE:
-                            $migrationIndex = array_search($identifier, $migrationIdentifiers, true);
+                            $migrationIndex = array_search($identifier, $migrationIdentifiers, false);
                             $result = $migrationIndex === $maxMigrationIndex ? null : $migrations[$migrationIdentifiers[$migrationIndex + 1]];
                             break;
                         default:
