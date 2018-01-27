@@ -101,7 +101,7 @@ $th = Loader::helper('text');
                         }
                     }
                     ?></strong></td>
-                    <td style="width: 100%"><?=$th->makenice($ent->getMessage())?></td>
+                    <td style="width: 100%"><?=$th->makenice(h($ent->getMessage()))?></td>
                 </tr>
             <?php } ?>
             </tbody>
