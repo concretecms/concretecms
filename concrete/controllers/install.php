@@ -418,9 +418,6 @@ class Install extends Controller
 
     public function web_precondition($handle, $argument = '')
     {
-        if ($prefix === '-') {
-            $prefix = false;
-        }
         $service = $this->app->make(PreconditionService::class);
         /* @var PreconditionService $service */
         $precondition = $service->getPreconditionByHandle($handle);

@@ -345,6 +345,10 @@
             </access>
         </permissionkey>
 
+        <permissionkey handle="access_api" name="Access API" package="" category="admin">
+        </permissionkey>
+
+
     </permissionkeys>
 
     <systemcaptcha>

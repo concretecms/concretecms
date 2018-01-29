@@ -4064,59 +4064,31 @@
   </table>
 
   <table name="Queues">
-    <field name="queue_id" type="integer" size="10">
-      <unsigned/>
-      <autoincrement/>
+    <field name="name" type="string">
       <key/>
     </field>
-    <field name="queue_name" type="string" size="100">
-      <notnull/>
-    </field>
-    <field name="timeout" type="integer" size="5">
-      <unsigned/>
-      <default value="30"/>
-      <notnull/>
-    </field>
-    <index name="queue_name">
-      <col>queue_name</col>
-    </index>
-    <opt for="MySQL" engine="INNODB"/>
   </table>
 
   <table name="QueueMessages">
-    <field name="message_id" type="integer" size="20">
+    <field name="id" type="integer">
       <unsigned/>
       <autoincrement/>
       <key/>
-    </field>
-    <field name="queue_id" type="integer" size="10">
-      <unsigned/>
       <notnull/>
     </field>
-    <field name="handle" type="string" size="32"/>
-    <field name="body" type="text">
-      <notnull/>
+    <field name="queue" type="string">
     </field>
-    <field name="md5" type="string" size="32">
-      <notnull/>
+    <field name="message" type="text">
     </field>
-    <field name="timeout" type="decimal" size="14">
+    <field name="visible" type="boolean">
+      <default value="1"/>
     </field>
-    <field name="created" type="integer" size="10">
-      <unsigned/>
-      <notnull/>
-    </field>
-    <index name="message_handle">
-      <unique/>
-      <col>handle</col>
+    <field name="sentAt" type="datetime"/>
+    <index name="originalCID">
+      <col>queue</col>
+      <col>sentAt</col>
+      <col>visible</col>
     </index>
-    <index name="message_queueid">
-      <col>queue_id</col>
-    </index>
-    <opt for="MySQL" engine="INNODB"/>
-    <references table="Queues" onupdate="cascade" ondelete="cascade">
-      <column local="queue_id" foreign="queue_id" />
-    </references>
   </table>
 
   <table name="QueuePageDuplicationRelations">
@@ -4383,6 +4355,145 @@
     </field>
     <field name="lockID" type="string" size="255"/>
     <field name="lockExpires" type="datetime"/>
+  </table>
+
+  <table name="OAuthServerClients">
+    <field name="client_id" type="string" size="80">
+      <key/>
+      <notnull/>
+    </field>
+    <field name="client_secret" type="string" size="80">
+      <notnull/>
+    </field>
+    <field name="redirect_uri" type="string" size="2000">
+    </field>
+    <field name="grant_types" type="string" size="80">
+    </field>
+    <field name="scope" type="string" size="4000">
+    </field>
+    <field name="user_id" type="string" size="80">
+    </field>
+  </table>
+
+  <table name="OAuthServerAccessTokens">
+    <field name="access_token" type="string" size="40">
+      <key/>
+      <notnull/>
+    </field>
+    <field name="client_id" type="string" size="80">
+      <notnull/>
+    </field>
+    <field name="user_id" type="string" size="80">
+    </field>
+    <field name="expires" type="timestamp">
+      <notnull/>
+    </field>
+    <field name="scope" type="string" size="4000">
+    </field>
+  </table>
+
+  <table name="OAuthServerAuthorizationCodes">
+    <field name="access_token" type="string" size="40">
+      <key/>
+      <notnull/>
+    </field>
+    <field name="client_id" type="string" size="80">
+      <notnull/>
+    </field>
+    <field name="user_id" type="string" size="80">
+    </field>
+    <field name="redirect_uri" type="string" size="2000">
+    </field>
+    <field name="expires" type="timestamp">
+      <notnull/>
+    </field>
+    <field name="scope" type="string" size="4000">
+    </field>
+    <field name="id_token" type="string" size="1000">
+    </field>
+  </table>
+
+  <table name="OAuthServerRefreshTokens">
+    <field name="refresh_token" type="string" size="40">
+      <key/>
+      <notnull/>
+    </field>
+    <field name="client_id" type="string" size="80">
+      <notnull/>
+    </field>
+    <field name="user_id" type="string" size="80">
+    </field>
+    <field name="expires" type="timestamp">
+      <notnull/>
+    </field>
+    <field name="scope" type="string" size="4000">
+    </field>
+  </table>
+
+  <table name="OAuthServerUsers">
+    <field name="username" type="string" size="80">
+    </field>
+    <field name="password" type="string" size="80">
+    </field>
+    <field name="first_name" type="string" size="80">
+    </field>
+    <field name="last_name" type="string" size="80">
+    </field>
+    <field name="email" type="string" size="80">
+    </field>
+    <field name="email_verified" type="boolean">
+    </field>
+    <field name="scope" type="string" size="4000">
+    </field>
+  </table>
+
+  <table name="OAuthServerScopes">
+    <field name="scope" type="string" size="80">
+      <key/>
+      <notnull/>
+    </field>
+    <field name="is_default" type="boolean">
+    </field>
+  </table>
+
+  <table name="OAuthServerJwt">
+    <field name="client_id" type="string" size="80">
+      <notnull/>
+    </field>
+    <field name="subject" type="string" size="80">
+    </field>
+    <field name="public_key" type="string" size="2000">
+      <notnull/>
+    </field>
+  </table>
+
+  <table name="OAuthServerJti">
+    <field name="issuer" type="string" size="80">
+      <notnull/>
+    </field>
+    <field name="subject" type="string" size="80">
+    </field>
+    <field name="audiance" type="string" size="80">
+    </field>
+    <field name="expires" type="timestamp">
+      <notnull/>
+    </field>
+    <field name="jti" type="string" size="2000">
+      <notnull/>
+    </field>
+  </table>
+
+  <table name="OAuthServerPublicKeys">
+    <field name="client_id" type="string" size="80">
+      <notnull/>
+    </field>
+    <field name="public_key" type="string" size="2000">
+    </field>
+    <field name="private_key" type="string" size="2000">
+    </field>
+    <field name="encryption_algorithm" type="string" size="100">
+      <default value="RS256"/>
+    </field>
   </table>
 
 </schema>

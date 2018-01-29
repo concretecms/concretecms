@@ -2,8 +2,10 @@
 namespace Concrete\Core\Http;
 
 use Concrete\Core\Application\Application;
-use Concrete\Core\Routing\DispatcherRouteCallback;
+use Concrete\Core\Http\Middleware\DispatcherDelegate;
+use Concrete\Core\Http\Middleware\MiddlewareStack;
 use Concrete\Core\Routing\Redirect;
+use Concrete\Core\Routing\Router;
 use Concrete\Core\Routing\RouterInterface;
 use Concrete\Core\User\User;
 use Concrete\Core\View\View;
@@ -22,11 +24,11 @@ class DefaultDispatcher implements DispatcherInterface
     private $app;
 
     /**
-     * @var \Concrete\Core\Routing\RouterInterface
+     * @var \Concrete\Core\Routing\Router
      */
     private $router;
 
-    public function __construct(Application $app, RouterInterface $router)
+    public function __construct(Application $app, Router $router)
     {
         $this->app = $app;
         $this->router = $router;
@@ -98,28 +100,29 @@ class DefaultDispatcher implements DispatcherInterface
 
     private function handleDispatch($request)
     {
-        $collection = $this->router->getList();
-        $context = new RequestContext();
-        $context->fromRequest($request);
-        $matcher = new UrlMatcher($collection, $context);
-        $path = rtrim($request->getPathInfo(), '/') . '/';
-
         $callDispatcher = false;
         try {
-            $matched = $matcher->match($path);
-            $request->attributes->add($matched);
-            $route = $collection->get($matched['_route']);
-
-            $this->router->setRequest($request);
-            $response = $this->router->execute($route, $matched);
+            $route = $this->router->matchRoute($request)->getRoute();
+            $dispatcher = new RouteActionDispatcher($this->router, $route);
+            $stack = new MiddlewareStack(
+                new DispatcherDelegate($dispatcher)
+            );
+            $stack->setApplication($this->app);
+            foreach($route->getMiddlewares() as $middleware) {
+                $stack = $stack->withMiddleware(
+                    $this->app->make($middleware->getMiddleware()),
+                    $middleware->getPriority()
+                );
+            }
+            return $stack->process($request);
         } catch (ResourceNotFoundException $e) {
             $callDispatcher = true;
         } catch (MethodNotAllowedException $e) {
             $callDispatcher = true;
         }
         if ($callDispatcher) {
-            $callback = $this->app->make(DispatcherRouteCallback::class, ['dispatcher']);
-            $response = $callback->execute($request);
+            $c = \Page::getFromRequest($request);
+            $response = $this->app->make(ResponseFactoryInterface::class)->collection($c);
         }
 
         return $response;

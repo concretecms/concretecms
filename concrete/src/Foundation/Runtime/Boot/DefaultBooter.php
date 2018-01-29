@@ -9,11 +9,14 @@ use Concrete\Core\Foundation\ClassAliasList;
 use Concrete\Core\Foundation\Service\ProviderList;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Routing\RedirectResponse;
+use Concrete\Core\Routing\Router;
+use Concrete\Core\Routing\SystemRouteList;
 use Concrete\Core\Support\Facade\Route;
 use Concrete\Core\Support\Facade\Facade;
 use Illuminate\Config\Repository;
 use Symfony\Component\HttpFoundation\Response;
 use Concrete\Core\Application\ApplicationAwareTrait;
+use Concrete\Core\Page\Theme\ThemeRouteCollection;
 
 class DefaultBooter implements BootInterface, ApplicationAwareInterface
 {
@@ -291,8 +294,19 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
      */
     private function initializeRoutes(Repository $config)
     {
-        Route::registerMultiple($config->get('app.routes'));
-        Route::setThemesByRoutes($config->get('app.theme_paths', array()));
+        /**
+         * @var $router Router
+         */
+        $router = Route::getFacadeRoot();
+        // Legacy route registration.
+        $router->registerMultiple($config->get('app.routes'));
+
+        // New style
+        $router->loadRouteList(new SystemRouteList());
+
+        // theme paths
+        $this->app->make(ThemeRouteCollection::class)
+            ->setThemesByRoutes($config->get('app.theme_paths', array()));
     }
 
     /**

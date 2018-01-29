@@ -79,7 +79,14 @@
     "paragonie/random_compat": "^2.0",
     "league/flysystem-cached-adapter": "~1.0.3",
     "league/csv": "~8.0",
-    "league/tactician": "^1.0"
+    "league/tactician": "^1.0",
+    "bshaffer/oauth2-server-php": "^1.10",
+    "guzzlehttp/guzzle": "^6.3",
+    "guzzlehttp/guzzle-services": "^1.1",
+    "frankkessler/guzzle-oauth2-middleware": "^0.1.1",
+    "league/fractal": "^0.17.0",
+    "bernard/bernard": "1.0.x-dev",
+    "league/tactician-bernard": "^0.6.0"
   },
   "extra": {
     "branch-alias": {

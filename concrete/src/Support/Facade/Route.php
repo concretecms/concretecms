@@ -5,6 +5,6 @@ class Route extends Facade
 {
     public static function getFacadeAccessor()
     {
-        return 'Concrete\Core\Routing\RouterInterface';
+        return 'Concrete\Core\Routing\Router';
     }
 }

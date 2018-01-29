@@ -33,4 +33,11 @@ return [
             ],
         ],
     ],
+
+    'redis' => [
+
+        'parameters' => [],
+        'options' => []
+    ],
+
 ];
