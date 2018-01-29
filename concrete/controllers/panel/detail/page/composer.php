@@ -1,24 +1,20 @@
 <?php
+
 namespace Concrete\Controller\Panel\Detail\Page;
 
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
 use Concrete\Core\Form\Service\Widget\DateTime;
-use PageEditResponse;
-use PageType;
-use View;
-use Loader;
-use PageTemplate;
-use User;
 use Core;
+use Loader;
+use PageEditResponse;
+use PageTemplate;
+use PageType;
+use User;
+use View;
 
 class Composer extends BackendInterfacePageController
 {
     protected $viewPath = '/panels/details/page/composer';
-
-    protected function canAccess()
-    {
-        return $this->permissions->canEditPageContents();
-    }
 
     public function view()
     {
@@ -116,6 +112,11 @@ class Composer extends BackendInterfacePageController
         } else {
             throw new \Exception(t('Access Denied.'));
         }
+    }
+
+    protected function canAccess()
+    {
+        return $this->permissions->canEditPageContents();
     }
 
     protected function save()
