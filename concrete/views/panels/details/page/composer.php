@@ -13,6 +13,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 /* @var string $viewURL */
 /* @var Concrete\Core\Page\Page $c */
 /* @var int $cID */
+/* @var int|null $idleTimeout */
 
 ?>
 
@@ -32,9 +33,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
 <script type="text/javascript">
 var ConcretePageComposerDetail = {
 
-    timeout: 5000,
     saving: false,
-    interval: false,
+    saver: null,
     $form: $('form[data-panel-detail-form=compose]'),
 
     saveDraft: function(onComplete) {
@@ -55,11 +55,15 @@ var ConcretePageComposerDetail = {
     },
 
     enableAutosave: function() {
-        this.saver.resetIdleTimer();
+        if (this.saver) {
+            this.saver.resetIdleTimer();
+        }
     },
 
     disableAutosave: function() {
-        this.saver.disableIdleTimer();
+        if (this.saver) {
+            this.saver.disableIdleTimer();
+        }
     },
 
     updateWatchers: function() {
@@ -72,13 +76,15 @@ var ConcretePageComposerDetail = {
 
         my.watching = my.watching.add(newElements);
 
-        newElements.bind('change', function() {
-            my.saver.requestSave();
-        });
-
-        newElements.bind('keyup', function() {
-            my.saver.requestSave(true);
-        });
+        if (this.saver) {
+            newElements.bind('change', function() {
+                my.saver.requestSave();
+            });
+    
+            newElements.bind('keyup', function() {
+                my.saver.requestSave(true);
+            });
+        }
     },
 
     start: function() {
@@ -86,19 +92,25 @@ var ConcretePageComposerDetail = {
         my.watching = $();
         my.updateWatchers();
 
-        my.saver = my.$form
-            .saveCoordinator(
-                function(coordinater, data, success) {
-                    my.updateWatchers();
-                    my.saveDraft(function() {
-                        success();
-                    });
-                },
-                {
-                    idleTimeout: 1
-                }
-            )
-            .data('SaveCoordinator');
+        <?php
+        if ($idleTimeout) {
+            ?>
+            my.saver = my.$form
+                .saveCoordinator(
+                    function(coordinater, data, success) {
+                        my.updateWatchers();
+                        my.saveDraft(function() {
+                            success();
+                        });
+                    },
+                    {
+                        idleTimeout: <?= $idleTimeout ?>
+                    }
+                )
+                .data('SaveCoordinator');
+            <?php
+        }
+        ?>
 
         $('button[data-page-type-composer-form-btn=discard]').on('click', function() {
             if (confirm(<?= json_encode(t('This will remove this draft and it cannot be undone. Are you sure?')) ?>)) {
@@ -175,10 +187,14 @@ var ConcretePageComposerDetail = {
         });
 
         ConcreteEvent.subscribe('AjaxRequestError',function(r) {
-            my.saver.disable();
+            if (this.saver) {
+                my.saver.disable();
+            }
         });
 
-        this.saver.enable();
+        if (this.saver) {
+            this.saver.enable();
+        }
         my.enableAutosave();
     }
 

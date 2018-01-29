@@ -28,7 +28,10 @@ class Composer extends BackendInterfacePageController
         $this->set('viewURL', $viewURL);
         $this->set('pagetype', $pagetype);
         $this->set('c', $this->page);
-        $this->set('cID', (int) $this->page->getCollectionID());
+        $this->set('cID', (int) $id);
+        $config = $this->app->make('config');
+        $idleTimeout = (float) $config->get('concrete.composer.idle_timeout');
+        $this->set('idleTimeout', $idleTimeout > 0 ? $idleTimeout : null);
     }
 
     public function autosave()
