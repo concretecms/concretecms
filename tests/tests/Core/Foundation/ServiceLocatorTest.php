@@ -6,6 +6,8 @@ use Concrete\Core\Foundation\Service\ProviderList;
 
 class ServiceLocatorTest extends \PHPUnit_Framework_TestCase
 {
+    protected $sl;
+
     public function setUp()
     {
         $this->sl = new ServiceLocator();

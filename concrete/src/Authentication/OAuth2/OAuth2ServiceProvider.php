@@ -10,21 +10,14 @@ use Concrete\Core\Database\Connection\Connection;
 class OAuth2ServiceProvider extends Provider
 {
 
-    protected $db;
-    protected $router;
-
-    public function __construct(Router $router, Application $app)
-    {
-        if ($app->isInstalled()) {
-            $this->db = $app->make(Connection::class);
-        }
-        $this->router = $router;
-        parent::__construct($app);
-    }
-
     public function register()
     {
-        $this->router->buildGroup()
+        if ($this->app->isInstalled()) {
+            $this->db = $this->app->make(Connection::class);
+        }
+        $router = $this->app->make(Router::class);
+
+        $router->buildGroup()
             ->setPrefix('/oauth/2.0')
             ->setNamespace('Concrete\Controller')
             ->routes(function(Router $groupRouter) {

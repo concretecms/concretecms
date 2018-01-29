@@ -12,14 +12,6 @@ use Concrete\Core\Http\Middleware\APIAuthenticatorMiddleware;
 class APIServiceProvider extends ServiceProvider
 {
 
-    protected $router;
-
-    public function __construct(Router $router, Application $app)
-    {
-        $this->router = $router;
-        parent::__construct($app);
-    }
-
     public function register()
     {
         $this->app->singleton('api', function ($app) {
