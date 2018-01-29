@@ -1,117 +1,135 @@
 <?php
 defined('C5_EXECUTE') or die('Access Denied.');
-$cID = $c->getCollectionID();
+
+/* @var Concrete\Controller\Panel\Detail\Page\Composer $controller */
+/* @var Concrete\Core\View\DialogView $view */
+/* @var Concrete\Core\User\User $u */
+
+/* @var Concrete\Core\Application\Service\UserInterface\Help $ui */
+/* @var Concrete\Core\Application\Service\Composer $composer */
+/* @var Concrete\Core\Validation\CSRF\Token $token */
+/* @var Concrete\Core\Page\Type\Type $pagetype */
+/* @var string $saveURL */
+/* @var string $viewURL */
+/* @var Concrete\Core\Page\Page $c */
+/* @var int $cID */
+
 ?>
 
 <section class="ccm-ui">
-	<header><?=t('Composer - %s', $pagetype->getPageTypeDisplayName())?></header>
-	<form method="post" data-panel-detail-form="compose">
-		<?=Loader::helper('concrete/ui/help')->display('panel', '/page/composer')?>
+    <header><?= t('Composer - %s', $pagetype->getPageTypeDisplayName()) ?></header>
+    <form method="post" data-panel-detail-form="compose">
+        <?= $ui->display('panel', '/page/composer') ?>
 
-		<?php Loader::helper('concrete/composer')->display($pagetype, $c); ?>
-	</form>
+        <?php $composer->display($pagetype, $c); ?>
+    </form>
 
-	<div class="ccm-panel-detail-form-actions dialog-buttons">
-		<?php Loader::helper('concrete/composer')->displayButtons($pagetype, $c); ?>
-	</div>
+    <div class="ccm-panel-detail-form-actions dialog-buttons">
+        <?php $composer->displayButtons($pagetype, $c); ?>
+    </div>
 </section>
 
 <script type="text/javascript">
-ConcretePageComposerDetail = {
+var ConcretePageComposerDetail = {
 
-	timeout: 5000,
-	saving: false,
-	interval: false,
-	$form: $('form[data-panel-detail-form=compose]'),
+    timeout: 5000,
+    saving: false,
+    interval: false,
+    $form: $('form[data-panel-detail-form=compose]'),
 
-	saveDraft: function(onComplete) {
-		var my = this;
-		my.$form.concreteAjaxForm({
-    		'beforeSubmit': function() {
-    			my.saving = true;
-    		},
-			url: '<?=$controller->action('autosave')?>',
-			success: function(r) {
-				my.saving = false;
-		        $('#ccm-page-type-composer-form-save-status').html(r.message).show();
-		        if (onComplete) {
-		        	onComplete(r);
-		        }
-			}
-		}).submit();
-	},
+    saveDraft: function(onComplete) {
+        var my = this;
+        my.$form.concreteAjaxForm({
+            beforeSubmit: function() {
+                my.saving = true;
+            },
+            url: <?= json_encode($controller->action('autosave')) ?>,
+            success: function(r) {
+                my.saving = false;
+                $('#ccm-page-type-composer-form-save-status').html(r.message).show();
+                if (onComplete) {
+                    onComplete(r);
+                }
+            }
+        }).submit();
+    },
 
-	enableAutosave: function() {
-		this.saver.resetIdleTimer();
-	},
+    enableAutosave: function() {
+        this.saver.resetIdleTimer();
+    },
 
-	disableAutosave: function() {
-		this.saver.disableIdleTimer();
-	},
+    disableAutosave: function() {
+        this.saver.disableIdleTimer();
+    },
 
-	updateWatchers: function() {
-		var newElements = this.$form.find('button,input,keygen,output,select,textarea').not(this.watching),
-			my = this;
+    updateWatchers: function() {
+        var my = this,
+            newElements = my.$form.find('button,input,keygen,output,select,textarea').not(my.watching);
 
-		if (!this.watching.length) {
-			newElements = newElements.add(this.$form);
-		}
+        if (!my.watching.length) {
+            newElements = newElements.add(my.$form);
+        }
 
-		this.watching = this.watching.add(newElements);
+        my.watching = my.watching.add(newElements);
 
-		newElements.bind('change', function() {
-			my.saver.requestSave();
-		});
+        newElements.bind('change', function() {
+            my.saver.requestSave();
+        });
 
-		newElements.bind('keyup', function() {
-			my.saver.requestSave(true);
-		});
-	},
+        newElements.bind('keyup', function() {
+            my.saver.requestSave(true);
+        });
+    },
 
-	start: function() {
-		var my = this;
-		this.watching = $();
-		my.updateWatchers();
+    start: function() {
+        var my = this;
+        my.watching = $();
+        my.updateWatchers();
 
-		this.saver = this.$form.saveCoordinator(function(coordinater, data, success) {
-			my.updateWatchers();
-			my.saveDraft(function() {
-				success();
-			});
-		},{
-			idleTimeout: 1
-		}).data('SaveCoordinator');
+        my.saver = my.$form
+            .saveCoordinator(
+                function(coordinater, data, success) {
+                    my.updateWatchers();
+                    my.saveDraft(function() {
+                        success();
+                    });
+                },
+                {
+                    idleTimeout: 1
+                }
+            )
+            .data('SaveCoordinator');
 
-	    $('button[data-page-type-composer-form-btn=discard]').on('click', function() {
-			if (confirm('<?=t('This will remove this draft and it cannot be undone. Are you sure?')?>')) {
-		    	my.disableAutosave();
-		    	$.concreteAjax({
-		    		'url': '<?=$controller->action('discard')?>',
-		    		'data': {cID: '<?=$cID?>'},
-		    		success: function(r) {
-						window.location.href = r.redirectURL;
-		    		}
-		    	});
-			}
-		});
+        $('button[data-page-type-composer-form-btn=discard]').on('click', function() {
+            if (confirm(<?= json_encode(t('This will remove this draft and it cannot be undone. Are you sure?')) ?>)) {
+                my.disableAutosave();
+                $.concreteAjax({
+                    url: <?= json_encode($controller->action('discard')) ?>,
+                    data: {cID: <?= $cID ?>},
+                    success: function(r) {
+                        window.location.href = r.redirectURL;
+                    }
+                });
+            }
+        });
 
-	    $('button[data-page-type-composer-form-btn=preview]').on('click', function() {
-	    	my.disableAutosave();
-	    	redirect = function () {
-	   			window.location.href = CCM_DISPATCHER_FILENAME + '?cID=<?=$cID?>&ctask=check-out&<?=Loader::helper('validation/token')->getParameter()?>';
-	    	}
-	    	if (!my.saving) {
-	    		my.saveDraft(redirect);
-	    	} else {
-	    		redirect();
-	    	}
-		});
+        $('button[data-page-type-composer-form-btn=preview]').on('click', function() {
+            my.disableAutosave();
+            function redirect() {
+                window.location.href = CCM_DISPATCHER_FILENAME + <?= json_encode('?cID=' . $cID . '&ctask=check-out&' . $token->getParameter()) ?>;
+            }
+            if (!my.saving) {
+                my.saveDraft(redirect);
+            } else {
+                redirect();
+            }
+        });
 
         $('button[data-page-type-composer-form-btn=exit]').on('click', function() {
             my.disableAutosave();
             var submitSuccess = false;
             my.$form.concreteAjaxForm({
-                url: '<?=$controller->action('save_and_exit')?>',
+                url: <?= json_encode($controller->action('save_and_exit')) ?>,
                 success: function(r) {
                     submitSuccess = true;
                     window.location.href = r.redirectURL;
@@ -125,48 +143,48 @@ ConcretePageComposerDetail = {
             }).submit();
         });
 
-		$('button[data-page-type-composer-form-btn=publish]').on('click', function() {
-			var data = my.$form.serializeArray();
-			ConcreteEvent.fire('PanelComposerPublish', {data: data});
-		});
+        $('button[data-page-type-composer-form-btn=publish]').on('click', function() {
+            var data = my.$form.serializeArray();
+            ConcreteEvent.fire('PanelComposerPublish', {data: data});
+        });
 
-		ConcreteEvent.subscribe('PanelCloseDetail',function(e, panelDetail) {
-			if (panelDetail && panelDetail.identifier == 'page-composer') {
-				my.disableAutosave();
-			}
-		});
+        ConcreteEvent.subscribe('PanelCloseDetail',function(e, panelDetail) {
+            if (panelDetail && panelDetail.identifier == 'page-composer') {
+                my.disableAutosave();
+            }
+        });
 
-		ConcreteEvent.subscribe('PanelComposerPublish',function(e, data) {
+        ConcreteEvent.subscribe('PanelComposerPublish',function(e, data) {
 
-			my.disableAutosave();
-			var submitSuccess = false;
-			$.concreteAjax({
-				data: data.data,
-				url: '<?=$controller->action('publish')?>',
-				success: function(r) {
-					submitSuccess = true;
-					window.location.href = r.redirectURL;
-				},
-				complete: function() {
-					if (!submitSuccess) {
-						my.enableAutosave();
-					}
-					jQuery.fn.dialog.hideLoader();
-				}
-			});
-		});
+            my.disableAutosave();
+            var submitSuccess = false;
+            $.concreteAjax({
+                data: data.data,
+                url: <?= json_encode($controller->action('publish')) ?>,
+                success: function(r) {
+                    submitSuccess = true;
+                    window.location.href = r.redirectURL;
+                },
+                complete: function() {
+                    if (!submitSuccess) {
+                        my.enableAutosave();
+                    }
+                    jQuery.fn.dialog.hideLoader();
+                }
+            });
+        });
 
-		ConcreteEvent.subscribe('AjaxRequestError',function(r) {
-			my.saver.disable();
-		});
+        ConcreteEvent.subscribe('AjaxRequestError',function(r) {
+            my.saver.disable();
+        });
 
-		this.saver.enable();
-	    my.enableAutosave();
-	}
+        this.saver.enable();
+        my.enableAutosave();
+    }
 
-}
+};
 
 $(function() {
-	ConcretePageComposerDetail.start();
+    ConcretePageComposerDetail.start();
 });
 </script>

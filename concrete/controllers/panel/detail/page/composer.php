@@ -4,8 +4,6 @@ namespace Concrete\Controller\Panel\Detail\Page;
 
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
 use Concrete\Core\Form\Service\Widget\DateTime;
-use Core;
-use Loader;
 use PageEditResponse;
 use PageTemplate;
 use PageType;
@@ -23,9 +21,14 @@ class Composer extends BackendInterfacePageController
         $id = $this->page->getCollectionID();
         $saveURL = View::url('/dashboard/composer/write', 'save', 'draft', $id);
         $viewURL = View::url('/dashboard/composer/write', 'draft', $id);
+        $this->set('ui', $this->app->make('helper/concrete/ui/help'));
+        $this->set('composer', $this->app->make('helper/concrete/composer'));
+        $this->set('token', $this->app->make('token'));
         $this->set('saveURL', $saveURL);
         $this->set('viewURL', $viewURL);
         $this->set('pagetype', $pagetype);
+        $this->set('c', $this->page);
+        $this->set('cID', (int) $this->page->getCollectionID());
     }
 
     public function autosave()
@@ -34,7 +37,7 @@ class Composer extends BackendInterfacePageController
             $r = $this->save();
             $ptr = $r[0];
             if (!$ptr->error->has()) {
-                $ptr->setMessage(t('Page saved on %s', Core::make('helper/date')->formatDateTime($ptr->time, true, true)));
+                $ptr->setMessage(t('Page saved on %s', $this->app->make('helper/date')->formatDateTime($ptr->time, true, true)));
             }
             $ptr->outputJSON();
         } else {
@@ -85,7 +88,7 @@ class Composer extends BackendInterfacePageController
                 }
 
                 $pagetype->publish($c, $publishDateTime);
-                $ptr->setRedirectURL(Loader::helper('navigation')->getLinkToCollection($c));
+                $ptr->setRedirectURL($this->app->make('helper/navigation')->getLinkToCollection($c));
             }
             $ptr->outputJSON();
         } else {
@@ -103,7 +106,7 @@ class Composer extends BackendInterfacePageController
                 $cID = $u->getPreviousFrontendPageID();
                 $ptr->setRedirectURL(DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID);
             } else {
-                $e = Loader::helper('validation/error');
+                $e = $this->app->make('helper/validation/error');
                 $e->add(t('You do not have permission to discard this page.'));
                 $ptr->setError($e);
             }
