@@ -29,7 +29,7 @@ $sh = Loader::helper('concrete/dashboard/sitemap');
 <?php
 $u = new User();
 if ($u->isSuperUser()) {
-    if (Queue::exists('copy_page')) {
+    /*if (Queue::exists('copy_page')) {
         $q = Queue::get('copy_page');
         if ($q->count() > 0) { ?>
 		<div class="alert alert-warning">
@@ -37,7 +37,7 @@ if ($u->isSuperUser()) {
 			<button class="btn btn-xs btn-default pull-right" onclick="ConcreteSitemap.refreshCopyOperations()"><?=t('Resume Copy')?></button>
 		</div>
 	<?php }
-    }
+    }*/
 }
     ?>
 
