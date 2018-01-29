@@ -131,7 +131,7 @@ if (is_object($mui)) {
 					</td>
 					<td class="ccm-profile-messages-item-name"><a href="<?=$view->url('/account/messages', 'view_message', $mailbox, $msg->getMessageID())?>"><?=$msg->getFormattedMessageSubject()?></a></td>
 					<td style="white-space: nowrap"><?=$dh->formatDateTime($msg->getMessageDateAdded(), true)?></td>
-					<td><?=$msg->getMessageStatus()?></td>
+					<td style="white-space: nowrap"><?=$msg->getMessageStatus()?></td>
 				</tr>
 
 
