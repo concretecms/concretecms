@@ -162,7 +162,7 @@ class Configuration extends DoctrineMigrationConfiguration
             foreach (array_reverse($forcedMigrationKeys) as $forcedMigrationKey) {
                 $migration = $allMigrations[$forcedMigrationKey];
                 if ($migration->isMigrated() && !$migration->getMigration() instanceof RepeatableMigrationInterface) {
-                    throw new Exception(t('The migration %s has already been executed, and can\'t be executeg again.'));
+                    throw new Exception(t('The migration %s has already been executed, and can\'t be executed again.'));
                 }
                 $forcedMigrations[$forcedMigrationKey] = $migration;
             }

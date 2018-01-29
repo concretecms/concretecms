@@ -29,7 +29,7 @@ class UpdateCommand extends Command
 Examples:
 
   ./concrete/bin/concrete5 c5:update
-    Execute the migrations that haven't het been executed
+    Execute the migrations that haven't yet been executed
 
   ./concrete/bin/concrete5 c5:update --rerun
     (Re)Execute all the migrations, including the ones that have already been executed (if possible).
