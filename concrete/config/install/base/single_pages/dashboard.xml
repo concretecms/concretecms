@@ -957,6 +957,14 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="System Email Addresses" path="/dashboard/system/mail/addresses"
+              filename="/dashboard/system/mail/addresses.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>mail settings, mail configuration, email, sender</value>
+                </attributekey>
+            </attributes>
+        </page>
 
         <page name="Calendar" path="/dashboard/system/calendar"
               filename="/dashboard/system/calendar/view.php" pagetype=""

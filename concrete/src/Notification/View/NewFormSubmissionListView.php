@@ -27,9 +27,13 @@ class NewFormSubmissionListView extends StandardListView
     public function getActionDescription()
     {
         $entry = $this->notification->getEntry();
-        $entity = $entry->getEntity();
-        return t('New form submission: <a href="%s"><strong>%s</strong></a>.',
-            \URL::to('/dashboard/reports/forms', 'view_entry', $entry->getID()), $entity->getEntityDisplayName());
+        if ($entry) {
+            $entity = $entry->getEntity();
+            if ($entity) {
+                return t('New form submission: <a href="%s"><strong>%s</strong></a>.',
+                    \URL::to('/dashboard/reports/forms', 'view_entry', $entry->getID()), $entity->getEntityDisplayName());
+            }
+        }
     }
 
 

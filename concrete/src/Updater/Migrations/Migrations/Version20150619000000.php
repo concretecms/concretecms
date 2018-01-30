@@ -1,20 +1,22 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
-use Doctrine\DBAL\Schema\Schema;
+use Concrete\Core\Updater\Migrations\AbstractMigration;
+use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
 
-class Version20150619000000 extends AbstractMigration
+class Version20150619000000 extends AbstractMigration implements DirectSchemaUpgraderInterface
 {
-    public function up(Schema $schema)
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface::upgradeDatabase()
+     */
+    public function upgradeDatabase()
     {
-        \Concrete\Core\Database\Schema\Schema::refreshCoreXMLSchema(array(
+        \Concrete\Core\Database\Schema\Schema::refreshCoreXMLSchema([
             'AreaLayouts',
             'AreaLayoutsUsingPresets',
-        ));
-    }
-
-    public function down(Schema $schema)
-    {
+        ]);
     }
 }

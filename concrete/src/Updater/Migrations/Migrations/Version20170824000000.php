@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Attribute\Category\PageCategory;
@@ -9,23 +10,35 @@ use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Single as SinglePage;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
+use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
+use Concrete\Core\Updater\Migrations\ManagedSchemaUpgraderInterface;
 use Concrete\Core\Updater\Migrations\Routine\AddPageDraftsBooleanTrait;
 use Doctrine\DBAL\Schema\Schema;
 
-class Version20170824000000 extends AbstractMigration
+class Version20170824000000 extends AbstractMigration implements ManagedSchemaUpgraderInterface, DirectSchemaUpgraderInterface
 {
     use AddPageDraftsBooleanTrait;
 
-    public function up(Schema $schema)
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Updater\Migrations\ManagedSchemaUpgraderInterface::upgradeSchema()
+     */
+    public function upgradeSchema(Schema $schema)
     {
         $this->addColumnIfMissing($schema);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface::upgradeDatabase()
+     */
+    public function upgradeDatabase()
+    {
         $this->refreshEntities([
             AddressSettings::class,
         ]);
-    }
-
-    public function postUp(Schema $schema)
-    {
         $this->migrateDrafts();
         $app = Application::getFacadeApplication();
         // I think this has to be in postUp because it's a completely new table that's not in Schema at all? Bleh.
@@ -51,7 +64,6 @@ class Version20170824000000 extends AbstractMigration
             $em->flush($geolocator);
         }
 
-
         $pageAttributeCategory = $app->make(PageCategory::class);
         /* @var PageCategory $pageAttributeCategory */
         $availableAttributes = [];
@@ -67,9 +79,5 @@ class Version20170824000000 extends AbstractMigration
                 $sp->setAttribute('meta_keywords', 'geolocation, ip, address, country, nation, place, locate');
             }
         }
-    }
-
-    public function down(Schema $schema)
-    {
     }
 }

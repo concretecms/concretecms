@@ -1,20 +1,23 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Updater\Migrations\AbstractMigration;
+use Concrete\Core\Updater\Migrations\ManagedSchemaUpgraderInterface;
 use Doctrine\DBAL\Schema\Schema;
 
-class Version20170505000000 extends AbstractMigration
+class Version20170505000000 extends AbstractMigration implements ManagedSchemaUpgraderInterface
 {
-    public function up(Schema $schema)
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Updater\Migrations\ManagedSchemaUpgraderInterface::upgradeSchema()
+     */
+    public function upgradeSchema(Schema $schema)
     {
         $stacks = $schema->getTable('Stacks');
         if ($stacks->hasColumn('siteTreeID')) {
             $stacks->dropColumn('siteTreeID');
         }
-    }
-
-    public function down(Schema $schema)
-    {
     }
 }

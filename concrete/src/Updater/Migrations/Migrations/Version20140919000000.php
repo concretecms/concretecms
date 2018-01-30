@@ -1,19 +1,30 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Permission\Access\Entity\Type;
 use Concrete\Core\Permission\Category;
-use Doctrine\DBAL\Migrations\AbstractMigration;
-use Doctrine\DBAL\Schema\Schema;
+use Concrete\Core\Updater\Migrations\AbstractMigration;
+use Concrete\Core\Updater\Migrations\DirectSchemaChangerInterface;
 
-class Version20140919000000 extends AbstractMigration
+class Version20140919000000 extends AbstractMigration implements DirectSchemaChangerInterface
 {
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Doctrine\DBAL\Migrations\AbstractMigration::getDescription()
+     */
     public function getDescription()
     {
         return '5.7.0.2';
     }
 
-    public function up(Schema $schema)
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface::upgradeDatabase()
+     */
+    public function upgradeDatabase()
     {
         // assign the page owner access entity to the page type category
         $pe = Type::getByHandle('page_owner');
@@ -23,7 +34,12 @@ class Version20140919000000 extends AbstractMigration
         }
     }
 
-    public function down(Schema $schema)
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Updater\Migrations\DirectSchemaDowngraderInterface::downgradeDatabase()
+     */
+    public function downgradeDatabase()
     {
         $pe = Type::getByHandle('page_owner');
         $category = Category::getByHandle('page_type');

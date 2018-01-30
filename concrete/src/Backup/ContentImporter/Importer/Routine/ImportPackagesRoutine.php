@@ -5,7 +5,9 @@ use Concrete\Core\Attribute\Type;
 use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Package\Package;
 use Concrete\Core\Permission\Category;
+use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Validation\BannedWord\BannedWord;
+use Concrete\Core\Package\PackageService;
 
 class ImportPackagesRoutine extends AbstractRoutine
 {
@@ -22,7 +24,9 @@ class ImportPackagesRoutine extends AbstractRoutine
                 if (!$pkg) {
                     $pkgClass = Package::getClass((string) $p['handle']);
                     if ($pkgClass) {
-                        $pkgClass->install();
+                        $app = Facade::getFacadeApplication();
+                        $service = $app->make(PackageService::class);
+                        $service->install($pkgClass, []);
                     }
                 }
             }

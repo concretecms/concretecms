@@ -130,12 +130,18 @@ class StorageLocation implements StorageLocationInterface
     public function getFileSystemObject()
     {
         $adapter = $this->getConfigurationObject()->getAdapter();
-
+        /*
+         * This is currently broken. The cache implementation in the file system
+         * causes problems under high load because the files that are written
+         * are huge.
+         * @TODO - perhaps make this configurable and default to off? That way
+         * we can reenable it if we're using a backend like memcache?
         $pool = \Core::make(ExpensiveCache::class)->pool;
         $cache = new Psr6Cache($pool, 'flysystem-id-' . $this->getID());
         $cachedAdapter = new FlysystemCache($adapter, $cache);
         $filesystem = new \League\Flysystem\Filesystem($cachedAdapter);
-
+        */
+        $filesystem = new \League\Flysystem\Filesystem($adapter);
         return $filesystem;
     }
 
@@ -144,9 +150,13 @@ class StorageLocation implements StorageLocationInterface
      */
     public function clearCache()
     {
+        /*
+         * Disabled until the cache is re-enabled.
         $pool = \Core::make(ExpensiveCache::class)->pool;
         $cache = new Psr6Cache($pool, 'flysystem-id-' . $this->getID());
         $cache->flush();
+        */
+        return;
     }
 
     public function delete()
