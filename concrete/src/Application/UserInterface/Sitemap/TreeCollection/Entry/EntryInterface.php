@@ -7,6 +7,7 @@ interface EntryInterface
     function getSiteTreeID();
     function getOptionElement();
     function getLabel();
+    function getIcon();
     function getID();
     function getGroupClass();
     function isSelected();

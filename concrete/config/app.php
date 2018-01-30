@@ -1171,4 +1171,10 @@ return [
     'commands' => [
     ],
 
+    'api' => [
+
+        'base_url' => '/ccm/api/v1'
+
+    ]
+
 ];
