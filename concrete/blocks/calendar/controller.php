@@ -322,7 +322,7 @@ class Controller extends BlockController
             }
             $this->set('permissions', $permissions);
             $this->set('calendar', $calendar);
-            $this->set('viewTypeString', $this->getViewTypeString(json_decode($this->viewTypesOrder)));
+            $this->set('viewTypeString', $this->getViewTypeString((array) json_decode($this->viewTypesOrder)));
         }
     }
 }
