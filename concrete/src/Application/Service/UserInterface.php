@@ -2,6 +2,7 @@
 namespace Concrete\Core\Application\Service;
 
 use Concrete\Core\Asset\JavascriptInlineAsset;
+use Concrete\Core\Http\Response;
 use Concrete\Core\Http\ResponseAssetGroup;
 use HtmlObject\Element;
 use HtmlObject\Traits\Tag;
@@ -340,7 +341,7 @@ class UserInterface
      */
     public function renderError($title, $error, $exception = false)
     {
-        \Response::closeOutputBuffers(1, false);
+        Response::closeOutputBuffers(1, false);
         $this->buildErrorResponse($title, $error, $exception)->send();
     }
 
@@ -362,7 +363,7 @@ class UserInterface
     
         $ve = new ErrorView($o);
         $contents = $ve->render($o);
-        return \Response::create($contents);
+        return Response::create($contents, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     /**
