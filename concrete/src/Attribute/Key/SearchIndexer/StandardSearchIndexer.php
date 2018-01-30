@@ -48,7 +48,7 @@ class StandardSearchIndexer implements SearchIndexerInterface
     private function setTypeLength($options)
     {
         // If we have explicitly set a length, use it
-        if ($options['length']) {
+        if (isset($options['length']) && $options['length']) {
             return $options;
         }
         if ($options['type']->getName() == 'text') {
