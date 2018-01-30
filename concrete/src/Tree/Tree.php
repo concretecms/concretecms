@@ -139,7 +139,7 @@ abstract class Tree extends ConcreteObject
                 $computedPath .= '/' . $name;
             }
 
-            if ($computedPath == $path) {
+            if (strcasecmp($computedPath, $path) == 0) {
                 return $node;
             } else {
                 $children = $node->getChildNodes();

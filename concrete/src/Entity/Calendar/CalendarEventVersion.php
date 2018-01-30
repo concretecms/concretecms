@@ -57,13 +57,13 @@ class CalendarEventVersion implements ObjectInterface, \JsonSerializable
 
     /**
      * These have to be public so we can use doctrine criteria from another class. Sigh.
-     * @ORM\Column(type="datetimetz")
+     * @ORM\Column(type="datetime")
      */
     public $evDateAdded;
 
     /**
      * These have to be public so we can use doctrine criteria from another class. Sigh.
-     * @ORM\Column(type="datetimetz", nullable=true)
+     * @ORM\Column(type="datetime", nullable=true)
      */
     protected $evActivateDateTime;
 

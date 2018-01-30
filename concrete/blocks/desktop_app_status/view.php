@@ -5,7 +5,7 @@ if (version_compare($latest_version, APP_VERSION, '>')) {
     ?>
     <div class="alert alert-info">
         <?php echo t('The latest version of concrete5 is <strong>%s</strong>. You are currently running concrete5 version <strong>%s</strong>.', $latest_version, APP_VERSION) ?>
-        <a class="pull-right btn btn-info btn-xs" href="<?php echo $view->url('/dashboard/system/backup/update')?>"><?php echo t('Update')?></a>
+        <a class="pull-right btn btn-info btn-xs" href="<?php echo $view->url('/dashboard/system/update/update')?>"><?php echo t('Update')?></a>
     </div>
     <?php
 } elseif (version_compare(APP_VERSION, Config::get('concrete.version'), '>')) {

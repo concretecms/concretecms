@@ -10,7 +10,9 @@ use Config;
 use Localization;
 use ORM;
 use Exception;
+use Concrete\Core\Cache\CacheClearer;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Database\Connection\Connection;
 
 class Update
 {
@@ -80,10 +82,13 @@ class Update
         $r = $cache->getItem('APP_UPDATE_INFO');
         if ($r->isMiss()) {
             $r->lock();
-            $r->set(static::getLatestAvailableUpdate());
+            $result = static::getLatestAvailableUpdate();
+            $r->set($result)->save();
+        } else {
+            $result = $r->get();
         }
 
-        return $r->get();
+        return $result;
     }
 
     /**
@@ -162,7 +167,12 @@ class Update
     public static function updateToCurrentVersion(Configuration $configuration = null)
     {
         $cms = Core::make('app');
-        $cms->clearCaches();
+        /**
+         * @var $clearer CacheClearer
+         */
+        $clearer = $cms->make(CacheClearer::class);
+        $clearer->setClearGlobalAreas(false);
+        $clearer->flush();
 
         $em = ORM::entityManager();
         $dbm = new DatabaseStructureManager($em);
@@ -184,5 +194,7 @@ class Update
         }
         Config::save('concrete.version_installed', Config::get('concrete.version'));
         Config::save('concrete.version_db_installed', Config::get('concrete.version_db'));
+        $textIndexes = $cms->make('config')->get('database.text_indexes');
+        $cms->make(Connection::class)->createTextIndexes($textIndexes);
     }
 }

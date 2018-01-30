@@ -252,7 +252,7 @@ abstract class Job extends ConcreteObject
                 if (class_exists($className, true)) {
                     $j = Core::make($className);
                     $j->jHandle = $jHandle;
-                    if (intval($jobData['jID']) > 0) {
+                    if (isset($jobData['jID']) && (int) $jobData['jID'] > 0) {
                         $j->setPropertiesFromArray($jobData);
                     }
     

@@ -347,7 +347,7 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
 
     public function getExporter()
     {
-        return new EntryExporter(new Identifier());
+        return \Core::make(EntryExporter::class);
     }
 
 }

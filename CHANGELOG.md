@@ -1,3 +1,245 @@
+# 8.3.2
+
+## Feature Updates
+
+* Updated CKEditor rich text editor component to 4.8.0 (thanks MrKarlDilkington)
+
+## Behavioral Improvements
+
+* Improvements to coding standards and PHP documentation (thanks mlocati, HamedDarragi)
+* Scan the SRC directory within the application for translatable strings (thanks matt9mg)
+* Fixed users being able to delete core and active themes (thanks deek87)
+* Removal of inline block JavaScript to facilitate more performant websites (thanks Remo)
+* Certain text field database indexes will be preserve across the upgrade process, leading to better performance (thanks mlocati)
+
+## Bug Fixes
+
+* Express Entity attribute type was not installed due to a bug in 8.3.0 and 8.3.1. This is now fixed.
+* Improvements to the upgrade process: fixes to missing database tables under certain conditions (thanks mlocati)
+* Fixed bug where blocks were not having their output added to the output cache, leading to general slowness, and a slow Dashboard Welcome page.
+* Fixed fatal error on higher traffic websites complaining about timeouts, broken cache files.
+* Fixed: The current "check for updates" dashboard page doesn't report the latest version because of a bug in the cache reading/writing process (thanks mlocati)
+* Fixed: Updating preset layouts destroys database structure which can result in severe errors (thanks mehl)
+* Fixed: filterByTopic / MySQL 5.7 compatibility (thanks apaccou)
+* Fixed bug where Geolocators table wasn’t created when upgrading from 8.2.1.
+* Fixed: Page duplicated from Versions menu doesn't contains IsDraft state, gets published under drafts.
+* Fixed http://www.concrete5.org/developers/bugs/8-3-1/exception-on-login-page-when-mobile-theme-switcher-is-active-and (thanks JeRoNZ)
+* Fixed issue with no blocks displaying on PHP 7.2 (thanks mlocati)
+* Fixed Youtube block video issues with showinfo and loop (thanks deek87)
+* Removed stray </li> tag in topic list block view template (thanks JeRoNZ)
+* Fix directory name in extract package strings (thanks hissy)
+* Fixed: Form submission notifications throw an error on the Waiting for Me page if the form data object is deleted. 
+
+## Developer Improvements
+
+* UserSelector::selectMultipleUsers can now accepted square brackets in its name, enabling it to be used with custom attributes (thanks mlocati)
+* Move the post-login URL management to a service class (thanks mlocati)
+
+# 8.3.1
+
+## Feature Updates
+
+* Added support for upgrading from older versions of concrete5. Now you may upgrade from 5.7.5.13 all the way to 8.3.1, and from any version in between.
+* Added the ability to search form results in the Dashboard.
+* Added support for importing and exporting Express entities and their entries to the Migration tool. 
+* Added the ability to sort by custom display order to the Express Entry List block (thanks gutding)
+
+## Behavioral Improvements
+
+* Delete empty global area record when clearing cache (should speed up a sure) (thanks remo)
+* Add more information on workflow notification popup window (thanks hissy)
+* Code cleanup and improvements (thanks mlocati)
+* Miscellaneous code cleanup (thanks mlocati)
+* Multilingual sitemap now remembers which tree you were viewing last, will open to that language in Dashboard Sitemap.
+* Improvements to pages panel sitemap when used in a multilingual site.
+* Added a link from a form results Dashboard view over to its Express data object editor in the system and settings page.
+* Improvements to block/area box-shadow styling when using the design editor (thanks mnakalay)
+* Do not allow folder names to be null in file manager (thanks deek87)
+* Simplified the public registration settings form in Dashboard (thanks biplobice)
+* Moving and updating files in the file manager will now update the modification date of the containing folder (thanks deek87)
+* Made file inspectors more robust so that broken images or other issues don’t cause them to die (thanks mlocati)
+
+## Bug Fixes
+
+* Fixed bug where block action URLs for blocks in global areas would not work, leading to an inability to edit bugs like the Express Form when the block is in a global area.
+* Fixes #6135 when editing a survey block would delete existing options (thanks mnakalay)
+* Fixed: When adding new options to existing options in a survey block, they are saved with a display order starting at 0 so the order is not respected (thanks mnakalay)
+* Fixed: Next/Previous showing unapproved pages (thanks deek87)
+* Fix: All drafts or no drafts are listed in "Add Pages and Navigate Your Site" panel (thanks hissy)
+* Fixed bug where publishing pages in composer using in-page sitemap wouldn’t show languages in a multlingual site.
+* Fixed: Dashboard's Update pages has been moved, and now link is still unchanged and get 404 (thanks katz)
+* Fixed bug where blocks that register view assets (like JS and CSS that they require) do not output those assets when the block is pasted throughout the site using the clipboard (thanks Ruud-Zicherlicht)
+* Fixed bug where errors could occur when submitting an Express Form with incomplete values (failing validation) and having an option list attribute in the same form.
+
+# 8.3.0
+
+## Major New Features
+
+* The core team’s Calendar add-on is now available in the core! It’s much improved from the version in the marketplace. It includes:
+* The ability to add multiple calendars to your site
+* Join pages to calendar events
+* Calendar events are a separate data model from pages.
+* Custom attributes on calendars
+* Event List, Calendar and Calendar Event blocks
+* Calendar and Calendar Event custom attributes.
+* Detailed permissions at the calendar level.
+* Workflow integration with calendar events.
+* Version control for calendar events (!)
+* A powerful recurring event model that works even with event versioning.
+* Additionally, the core team’s Document Library add-on is now available in the core! The Document Library add-on lets you easily place a list of files on the front-end of your website. Filter by folder or file set, provide a simple search interface, control the styling of results and more.
+
+## More New Features
+
+* New GeoLocation Framework available, along with an included plugin from geoPlugin); geolocate site visitors and get information about where they’re coming from. Ability to automatically populate address attributes from geolocation information (thanks mlocati). More here: https://github.com/concrete5/concrete5/pull/5837
+* New command line utilities to clear IP blacklists, and dialogs to do the same (thanks mlocati)
+* You can now edit multilingual locates you add through Multilingual Setup (thanks mlocati)
+* Conversation block - toggle display of social sharing links and code update (thanks MrKarlDilkington)
+* Added the ability to customize CKEditor toolbar groups via the configuration file, without overriding PHP classes. An example of a customized config file that controls editor/toolbar groups can be found here: https://gist.github.com/MrKarlDilkington/5a14cf2c8aca511c8c9d2026e07b297c (thanks MrKarlDilkington)
+* Added the ability to turn the Select attribute (now called “Option List” into a list of radio buttons.)
+* Mobile Dashboard menu now includes subpages (thanks MrKarlDilkington).
+* Improved appearance of CKEditor rich text editor; now closer to concrete5’s UI (thanks MrKarlDilkington)
+* Allow users to add <meta rel="canonical"> tags to site pages (thanks mlocati)
+* Make username and confirm password display/hide configurable for registration form from dashboard (thanks biplobice)
+* Improvements to CSV export and import of data.
+
+## Behavioral Improvements
+
+* Added the ability to search by users not in a group to the Dashboard user search interface.
+* Added the ability to see the date of last login to the Dashboard user search interface.
+* Added an icon to notice level logs in the Dashboard logs interface.
+* Added logging into cache clearing.
+* Added ability to open links in Image block in a new window (thanks a3020)
+* Add date created to csv export for express entities
+* Feature block: increase the preview icon size (thanks MrKarlDilkington)
+* Let users configure the thumbnail generation strategy via UI  (thanks mlocati)
+* Thumbnails for PNG images are now PNG files and not JPEG files (thanks mlocati)
+* UI tweaks and code improvements to External Form block (thanks MrKarlDilkington)
+* Add option to retain thumbnails when clearing cache from command line (thanks mlocati)
+* Cosmetic improvements to upload dialog (thanks andoro)
+* Show current language when showing when showing hreflang (https://github.com/concrete5/concrete5/pull/5868) (thanks Remo)
+* Reset answer type form after adding question (thanks Remo)
+* PageList and Page List block - sort pages by date modified (thanks MrKarlDilkington)
+* Removed exception throwing from invalid SQL order by provided by user – instead it will be ignored.
+* You can now search multilingual trees through the page search interface in the Dashboard.
+* Retina/High DPI thumbnails are now controlled via config value that can be disabled (thanks Remo)
+* Improve image rendering in ImageEditor for browsers that supports it (thanks mlocati)
+* Make Basic Workflow Notification From Address and Name configurable (thanks katz)
+* Fix position of dropdown menu in blacklist dashboard page (thanks mlocati)
+* Miscellaneous small performance improvements and optimizations (thanks mlocati)
+* Better error message when saving attributes (thanks mlocati)
+* Fixed package restore after failed package update (thanks mnakalay)
+* Refactoring and cleanup of installation process (thanks mlocati)
+* Add Pager Pagination page number (thanks MrKarlDilkington)
+* File manager is now more mobile friendly.
+* Improvements to the date attributes custom text mode setting (thanks mlocati)
+* captcha improvements https://github.com/concrete5/concrete5/pull/6036 (thanks mlocati)
+* Allow customizing the headers of the email attachments (thanks mlocati)
+* Hide block and area design features if disabled (thanks Remo)
+* Much better performance when grabbing page drafts on a live site.
+
+## Bug Fixes
+
+* Fixed bug where cache directory and thumbnail cache was cleared any time an override cache was cleared. (Note: this fixed an issue with the new asynchronous thumbnail generation strategy that left thumbnails unable to rebuild.)
+* Dashboard mobile menu works again.
+* Fixed user account menu not showing account operations like Edit Profile, Edit User Picture unless the user was a user with access to the dashboard.
+* Fixed issue when using the Page Selector and choosing an alias the original would be selected instead (thanks Ruud-Zuiderlicht)
+* Fixed: Survey Dashboard page broken.
+* Fixed: Empty file & image blocks get exposed when block cache is enabled after quitting edit mode without doing anything
+* Fixed bug where topic order wasn’t being saved properly in the topic trees (thanks deek87)
+* Fixed bug where new drafts had the locale of the default site tree, in multilingual sites. Fixed bug where they could not be duplicated into a new part of the site properly.
+* Fixed checkbox attribute not honoring settings when editing attributes with values.
+* Fixed: Error on file\_manager\_detail thumbnail creation (no height set on installation.)
+* Fixed: Saving and re-editing content won't allow you to edit links (thanks mnakalay)
+* Fixed bug where searching express entities by a many association wasn’t selecting the entries on returning to the form.
+* Fixed: Multilingual redirect based on browser locale not always working (thanks fabian)
+* Fixed bug where CSS and JS provided by block view templates was wrong in certain situations (thanks mlocati)
+* Fixed bugs where thumbnails were removed from the cache directory even when that setting wasn’t checked (thanks mlocati)
+* Fixed inability to search in “all pages” in Dashboard Page search in a particular multilingual site tree.
+* Fix the site tree filter of MultilingualPageList in multilingual/page\_report (thanks mlocati)
+* Fixed in ability to create page from multilingual page report (thanks Remo)
+* Fixed http://www.concrete5.org/community/forums/internationalization/multilingual-site-error-after-upgrade-to-8.2 (thanks mlocati)
+* Fixed inability to post results to a different page when using the search block (thanks mlocati)
+* Fixed: Editing Express Entries uses the default view form instead of the edit form.
+* Snippets in CKEditor work again (along with improved performance) - thanks mnakalay
+* Fixed bug in Express where entities listed in an association could not be clicked into from associated entities.
+* Fixed: Conversation block generates ccm\_addHeaderItem error when not logged in
+* Fixed error when adding attribute from a package into a Form block.
+* Prevent uncaught type error when editing links in CKEditor (thanks MrKarlDilkington)
+* Fix multiple files showing up when browsing folders in the file manager as the non admin user.
+* Fixed: Global Password reset process fails when email registration is enabled (thanks biplobice)
+* Fixed possible errors when rescanning files are stuck in the queue and they no longer exist.
+* Following an expired Forgot password token no longer gives you a message about it being an ‘Unexpected Error’ (thanks biplobice and katz)
+* Fixes a bug with using Group Sets in the "Approve or Deny" permission on the Workflows settings screen for a workflow (thanks justbane)
+* Fixed: When duplicating a file, two copies of it gets created (thanks mlocati)
+* Fixed possible XSS in stored URL locations dialog (thanks bl4de)
+* Fixed: When we adding a new Storage Location that's set as as the default one, we currently end up having two default storage locations in the database (thanks mlocati)
+* Image Block: checkbox formatting and prevents the "Open link in new window" value from always being true (thanks MrKarlDilkington)
+*Fixed: FAQ block: Entries with " are not properly saved (thanks MrKarlDilkington)
+* Fixed: Upgrade 5.7.5.13 to 8.2.1 fails on duplicate key (thanks Ruud-Zuiderlicht)
+* Fixed error message “Unable to get permission key for view\_edit\_interface” showing up when an invalid block was specified in an edit interface.
+* Fixes duplicating a duplicated file in a folder (thanks Mnakalay)
+* Fixed bug where duplicated files weren’t duplicate thumbnails (thanks mnakalay)
+* Fixed bug where CSV files exported from Express sometimes didn’t have a filename (only an extension) (thanks toesslab)
+* Fixed issue with existing ratings not being populated in edit mode (thanks ggwc82)
+* Calls to getContents (a wrapper for the HTTP client) now honor the $timeout argument (thanks mnakalay)
+* Faster file rescan when using image constraints (thanks mnakalay)
+* Prevent image upload resizing of SVG files (thanks MrKarlDilkington)
+* Fixed: It is not possible to make default / main language invisible for a group and show another language sitemap
+* Fix saving "thumbnail is built" in ThumbnailMiddleware (thanks mlocati)
+* Fixed bug with  uncaught exception in authentication types.
+* Fixed: Adding a new page via the sitemap with a required user prevents the page from being created
+* Fixed bug where folders and files were showing up as translatable in translate site interface.
+* Fixed bug where concrete5 couldn’t be installed on versions of PHP 5.5 before 5.5.21.
+* Fixed: Disable intelligent search for marketplace when setting warrants it.
+* Page Templates can now be uninstalled from packages that install them (thanks mlocati)
+* Show only accessible languages in switch\_language blocks (thanks mlocati)
+* Fix to allow strings to be passed to getThumbnail method (thanks deek87)
+* Fix clearing cache but keep thumbnails on Windows (thanks mlocati)
+* Fixed https://github.com/concrete5/concrete5/issues/5798
+* Incorrect CSRF token validation no longer throws an exception in the legacy form.
+* Miscellaneous bug fixes to asynchronous thumbnail generation strategy.
+* https://github.com/concrete5/concrete5/pull/5968 (thanks mlocati)
+* Fixed: Avatar upload should use global jpeg quality settings
+* Fixed: File Manager - Advanced search Customize Results don't persist
+* Fixed: Password url lifetime doesn't work for different hash type (thanks biplobice)
+* Fixed: File Manager - Replaced files are not resized to match the image uploading resize dimension
+* 
+* Fixed display bug when editing conversation messages.
+* fix inline edit detection for blocks pasted from the clipboard (thanks Remo)
+* Fixed: Upgraded concrete5 caused duplicated results of topic filter (thanks biplobice)
+* Miscellaneous content exporter fixes (thanks mlocati)
+* Fixed inability to hard code a block’s custom template in a theme template file and provide that custom template in the theme. 
+* fixes bug where fill records were orphaned when deleting a file set. (Thanks Ramonleenders) 
+* Fix hacker One report #243865
+* Sanitized display value for file nodes
+* Prevent XSS in group badge description
+* Fixed User date attribute can cause error on profile page
+* fixed: When trying to save an edited video block you get the error An invalid form control with name='width' is not focusable.(thanks rikzuiderlicht)
+* fixes filterByBlockType on PageLists so that it works with strict versions of mySQL. (Thanks deek87)
+* Fix W3C HTML Validator Error for Meta Canonical (thanks appacou)
+* Fix possible self-xss on installation screen.
+* Better conversation message sanitization when using the rich text editor conversation editor.
+
+## Developer Updates
+
+* Added the ability to specify package dependencies in a package controller (thanks mlocati)
+* Updated Laravel Config dependency to 5.2.x. 
+* Improvements to command line/composer integration in Windows (thanks mlocati)
+* Lots of minor updates to third party libraries.
+* Simple syntax for obtaining an error message by field: https://github.com/concrete5/concrete5/pull/5939 (thanks biplobice)
+* Support for handling multiple entity managers in a package (thanks mlocati)
+* Add support to foreign keys in attribute index tables (thanks mlocati)
+* Content Interchange Format can now associate attribute categories to existing attribute types (thanks mlocati)
+* Allow converting an error list to plain text (thanks mlocati)
+* Added API methods for easily adding a country and state/province selector (used by the address attribute type.) (thanks mlocati)
+* Fixed namespace when generating migrations (thanks Remo).
+* raise event when page not found is shown (thanks Remo)
+
+## Backward Compatibility
+
+* Captcha updates make affect backward
+Compatibility. ( https://github.com/concrete5/concrete5/pull/6036)
+
 # 8.2.1
 
 ## Feature Improvements

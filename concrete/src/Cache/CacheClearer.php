@@ -45,6 +45,11 @@ class CacheClearer
         'page' => 'cache/page'
     ];
 
+    /**
+     * @var bool
+     */
+    private $clearGlobalAreas = true;
+
     public function __construct(
         EventDispatcher $dispatcher,
         DatabaseManager $manager,
@@ -96,6 +101,14 @@ class CacheClearer
         $this->deleteEmptyGlobalAreas();
 
         $this->dispatcher->dispatch('on_cache_flush_end');
+    }
+
+    /**
+     * @param boolean $clearGlobalAreas
+     */
+    public function setClearGlobalAreas($clearGlobalAreas)
+    {
+        $this->clearGlobalAreas = $clearGlobalAreas;
     }
 
     /**
@@ -229,6 +242,8 @@ class CacheClearer
 
     protected function deleteEmptyGlobalAreas()
     {
-        GlobalArea::deleteEmptyAreas();
+        if ($this->clearGlobalAreas) {
+            GlobalArea::deleteEmptyAreas();
+        }
     }
 }

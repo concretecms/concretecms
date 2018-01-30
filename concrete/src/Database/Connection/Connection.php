@@ -74,6 +74,48 @@ class Connection extends \Doctrine\DBAL\Connection
     }
 
     /**
+     * This is essentially a workaround for not being able to define indexes on TEXT fields with the current version of Doctrine DBAL.
+     * This feature will be removed when DBAL will support it, so don't use this feature.
+
+     * @param array $textIndexes
+     */
+    public function createTextIndexes(array $textIndexes)
+    {
+        if (!empty($textIndexes)) {
+            $sm = $this->getSchemaManager();
+            foreach ($textIndexes as $tableName => $indexes) {
+                if ($sm->tablesExist([$tableName])) {
+                    $existingIndexNames = array_map(
+                        function (\Doctrine\DBAL\Schema\Index $index) {
+                            return $index->getShortestName('');
+                        },
+                        $sm->listTableIndexes($tableName)
+                    );
+                    $chunks = [];
+                    foreach ($indexes as $indexName => $indexColumns) {
+                        if (!in_array(strtolower($indexName), $existingIndexNames, true)) {
+                            $newIndexColumns = [];
+                            foreach ((array) $indexColumns as $indexColumn) {
+                                $indexColumn = (array) $indexColumn;
+                                $s = $this->quoteIdentifier($indexColumn[0]);
+                                if (!empty($indexColumn[1])) {
+                                    $s .= '(' . (int) $indexColumn[1] . ')';
+                                }
+                                $newIndexColumns[] = $s;
+                            }
+                            $chunks[] = $this->quoteIdentifier($indexName) . ' (' . implode(', ', $newIndexColumns) . ')';
+                        }
+                    }
+                    if (!empty($chunks)) {
+                        $sql = 'ALTER TABLE ' . $this->quoteIdentifier($tableName) . ' ADD INDEX ' . implode(', ADD INDEX ', $chunks);
+                        $this->executeQuery($sql);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * @deprecated
      * alias to old ADODB method
      */

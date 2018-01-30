@@ -323,7 +323,7 @@ class LinkAbstractor extends ConcreteObject
                 $f = \File::getByID($fID);
                 if (is_object($f)) {
                     $picture->fid = false;
-                    $picture->file = $f->getFilename();
+                    $picture->file = $f->getPrefix() . ':' . $f->getFilename();
                 }
             }
             $text = (string) $r->restore_noise($r);

@@ -2,19 +2,50 @@
 
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
-use Concrete\Core\Updater\Migrations\AbstractMigration;
-use Doctrine\DBAL\Schema\Schema;
+use Concrete\Core\Attribute\Category\PageCategory;
 use Concrete\Core\Entity\Attribute\Key\Settings\DateTimeSettings;
 use Concrete\Core\Page\Page;
-use SinglePage;
 use Concrete\Core\Support\Facade\Application;
-use Concrete\Core\Attribute\Category\PageCategory;
+use Concrete\Core\Updater\Migrations\AbstractMigration;
+use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
+use Concrete\Core\Updater\Migrations\ManagedSchemaUpgraderInterface;
+use Concrete\Core\Updater\Migrations\Routine\AddPageDraftsBooleanTrait;
+use Doctrine\DBAL\Schema\Schema;
+use SinglePage;
 
-class Version20170202000000 extends AbstractMigration
+class Version20170202000000 extends AbstractMigration implements ManagedSchemaUpgraderInterface, DirectSchemaUpgraderInterface
 {
-    public function up(Schema $schema)
+    use AddPageDraftsBooleanTrait;
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Updater\Migrations\ManagedSchemaUpgraderInterface::upgradeSchema()
+     */
+    public function upgradeSchema(Schema $schema)
     {
-        $pageAttributeCategory = Application::getFacadeApplication()->make(PageCategory::class);
+        $this->addColumnIfMissing($schema);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface::upgradeDatabase()
+     */
+    public function upgradeDatabase()
+    {
+        $app = Application::getFacadeApplication();
+
+        $this->refreshEntities([
+            DateTimeSettings::class,
+        ]);
+        $config = $app->make('config');
+        if (!$config->get('app.curl.verifyPeer')) {
+            $config->save('app.http_client.sslverifypeer', false);
+        }
+        $this->migrateDrafts();
+        $app = Application::getFacadeApplication();
+        $pageAttributeCategory = $app->make(PageCategory::class);
         /* @var PageCategory $pageAttributeCategory */
         $availableAttributes = [];
         foreach ([
@@ -24,7 +55,6 @@ class Version20170202000000 extends AbstractMigration
             $availableAttributes[$akHandle] = $pageAttributeCategory->getAttributeKeyByHandle($akHandle) ? true : false;
         }
 
-        $app = Application::getFacadeApplication();
         $sp = Page::getByPath('/dashboard/system/files/thumbnails/options');
         if (!is_object($sp) || $sp->isError()) {
             $sp = SinglePage::add('/dashboard/system/files/thumbnails/options');
@@ -36,16 +66,5 @@ class Version20170202000000 extends AbstractMigration
                 $sp->setAttribute('meta_keywords', 'thumbnail, format, png, jpg, jpeg, quality, compression, gd, imagick, imagemagick, transparency');
             }
         }
-        $this->refreshEntities([
-            DateTimeSettings::class,
-        ]);
-        $config = $app->make('config');
-        if (!$config->get('app.curl.verifyPeer')) {
-            $config->save('app.http_client.sslverifypeer', false);
-        }
-    }
-
-    public function down(Schema $schema)
-    {
     }
 }

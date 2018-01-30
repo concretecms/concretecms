@@ -22,9 +22,11 @@ class Dashboard
     public function canRead()
     {
         $c = Page::getByPath('/dashboard', 'ACTIVE');
-        $cp = new Permissions($c);
+        if ($c && !$c->isError()) {
+            $cp = new Permissions($c);
 
-        return $cp->canViewPage();
+            return $cp->canViewPage();
+        }
     }
 
     /**
@@ -211,10 +213,15 @@ class Dashboard
             return $dashboardMenus[$dashboardMenusKey];
         }
 
+        $page = Page::getByPath('/dashboard');
+        if (!$page || $page->isError()) {
+            return '';
+        }
+
+
         ob_start(); ?>
         <div id="ccm-intelligent-search-results">
             <?php
-            $page = Page::getByPath('/dashboard');
         $children = $page->getCollectionChildrenArray(true);
         $navHelper = Core::make('helper/navigation');
         $packagepages = [];

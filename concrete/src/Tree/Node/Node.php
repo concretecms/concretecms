@@ -482,11 +482,23 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
             $oldParent = $this->getTreeNodeParentObject();
             if (is_object($oldParent)) {
                 $oldParent->rescanChildrenDisplayOrder();
+                $oldParent->updateDateModified();
             }
             $newParent->rescanChildrenDisplayOrder();
+            $newParent->updateDateModified();
             $this->treeNodeParentID = $newParent->getTreeNodeID();
             $this->treeNodeDisplayOrder = $treeNodeDisplayOrder;
         }
+    }
+
+    /**
+     * Update the Date Modified to the current time
+     *
+     */
+    public function updateDateModified(){
+            $dateModified = Core::make('date')->toDB();
+            $db = Database::connection();
+            $db->update('TreeNodes', ['dateModified'=>$dateModified],['treeNodeID'=>$this->getTreeNodeID()]);
     }
 
     protected function rescanChildrenDisplayOrder()
@@ -525,6 +537,7 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
             $treeID = $parent->getTreeID();
             $inheritPermissionsFromTreeNodeID = $parent->getTreeNodePermissionsNodeID();
             $treeNodeDisplayOrder = (int) $db->fetchColumn('select count(treeNodeDisplayOrder) from TreeNodes where treeNodeParentID = ?', [$treeNodeParentID]);
+            $parent->updateDateModified();
         }
 
         $treeNodeTypeHandle = uncamelcase(strrchr(get_called_class(), '\\'));
@@ -623,6 +636,11 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
             $db->executeQuery('update TreeNodes set inheritPermissionsFromTreeNodeID = ? where treeNodeID = ?', [$parentNode->getTreeNodePermissionsNodeID(), $node->getTreeNodeID()]);
         }
         $r->closeCursor();
+
+        $parent = $this->getTreeNodeParentObject();
+        if (is_object($parent)){
+            $parent->updateDateModified();
+        }
 
         if (!$this->childNodesLoaded) {
             $this->populateChildren();

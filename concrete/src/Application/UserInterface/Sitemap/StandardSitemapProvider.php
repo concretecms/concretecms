@@ -130,7 +130,10 @@ class StandardSitemapProvider implements ProviderInterface
     public function getRequestedSiteTree()
     {
         if ($this->request->query->has('siteTreeID') && $this->request->query->get('siteTreeID') > 0) {
+            $this->cookieJar->set('ConcreteSitemapTreeID', $this->request->query->get('siteTreeID'));
             return $this->siteService->getSiteTreeByID($this->request->query->get('siteTreeID'));
+        } else if ($this->cookieJar->has('ConcreteSitemapTreeID')) {
+            return $this->siteService->getSiteTreeByID($this->cookieJar->get('ConcreteSitemapTreeID'));
         } else {
             $site = $this->siteService->getActiveSiteForEditing();
             $locale = $site->getDefaultLocale();

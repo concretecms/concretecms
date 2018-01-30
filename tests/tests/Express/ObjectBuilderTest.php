@@ -156,6 +156,11 @@ class ObjectBuilderTest extends ConcreteDatabaseTestCase
             ->addAttributeKeyControl('bio');
         $form = $form->save();
 
+        $defaultViewForm = $student->getDefaultViewForm();
+        $defaultEditForm = $student->getDefaultEditForm();
+        $this->assertEquals($defaultEditForm, $form);
+        $this->assertEquals($defaultViewForm, $form);
+
         $this->assertInstanceOf('Concrete\Core\Entity\Express\Form', $form);
         $this->assertEquals('Form', $form->getName());
         $this->assertNotEquals('', $form->getID());
@@ -182,6 +187,23 @@ class ObjectBuilderTest extends ConcreteDatabaseTestCase
         $type = $key->getAttributeType();
         $this->assertInstanceOf('Concrete\Core\Entity\Attribute\Type', $type);
         $this->assertEquals('textarea', $type->getAttributeTypeHandle());
+
+        // Create a second form.
+        $secondForm = $student->buildForm('Form');
+        $secondForm->addFieldset('Second Form')
+            ->addAttributeKeyControl('first_name')
+            ->addAttributeKeyControl('last_name')
+            ->addTextControl('', 'This is just some basic explanatory text.')
+            ->addAttributeKeyControl('bio');
+        $secondForm = $secondForm->save();
+
+        $defaultViewForm = $student->getDefaultViewForm();
+        $defaultEditForm = $student->getDefaultEditForm();
+        $this->assertEquals($defaultEditForm, $form);
+        $this->assertEquals($defaultViewForm, $form);
+        $this->assertNotEquals($defaultViewForm, $secondForm);
+        $this->assertNotEquals($defaultViewForm, $secondForm);
+        
     }
 
     public function testCreateAssociation()

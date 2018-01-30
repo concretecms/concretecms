@@ -14,12 +14,8 @@ if (is_object($control->getPageObject())) {
     $relevantPage = $control->getPageObject();
 } else if ($control->getTargetParentPageID()) {
     $relevantPage = \Page::getByID($control->getTargetParentPageID());
-}
-
-if (is_object($relevantPage) && !$relevantPage->isError()) {
     $tree = $relevantPage->getSiteTreeObject();
 }
-
 
 if (is_object($pagetype) && $pagetype->getPageTypePublishTargetTypeID() == $configuration->getPageTypePublishTargetTypeID()) {
     $configuredTarget = $pagetype->getPageTypePublishTargetObject();

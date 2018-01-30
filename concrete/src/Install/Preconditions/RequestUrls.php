@@ -22,7 +22,6 @@ class RequestUrls implements WebPreconditionInterface
     public function __construct(ResolverManager $resolver)
     {
         $this->resolver = $resolver;
-        $this->request = $request;
     }
 
     /**

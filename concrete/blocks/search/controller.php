@@ -315,6 +315,7 @@ class Controller extends BlockController
             'postTo_cID' => 0,
             'externalTarget' => 0,
             'resultsURL' => '',
+            'resultsPageKind' => '',
         ];
         $args = [
             'title' => (string) $data['title'],
