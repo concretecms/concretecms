@@ -9,11 +9,16 @@ class CacheServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        $this->app->singleton('cache', Level\ObjectCache::class);
-        $this->app->singleton('cache/request', Level\RequestCache::class);
-        $this->app->singleton('cache/expensive', Level\ExpensiveCache::class);
-        $this->app->singleton('cache/overrides', Level\OverridesCache::class);
-        $this->app->singleton('cache/page', function() {
+        foreach ([
+            'cache' => Level\ObjectCache::class,
+            'cache/request' => Level\RequestCache::class,
+            'cache/expensive' => Level\ExpensiveCache::class,
+            'cache/overrides' => Level\OverridesCache::class,
+        ] as $alias => $class) {
+            $this->app->singleton($class);
+            $this->app->alias($class, $alias);
+        }
+        $this->app->singleton('cache/page', function () {
             return PageCache::getLibrary();
         });
     }
