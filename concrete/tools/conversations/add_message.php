@@ -82,7 +82,7 @@ if (is_object($blockObj)) {
     }
 }
 
-if ($review = intval($_POST['review'])) {
+if ($review = empty($_POST['review']) ? 0 : intval($_POST['review'])) {
     if (!$canReview) {
         $ve->add(t('Reviews have not been enabled for this discussion.'));
     } elseif ($review > 5 || $review < 1) {
