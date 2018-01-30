@@ -6,6 +6,6 @@ return [
         'enabled' => false,
         'overrides' => false,
         'pages' => false,
-        'blocks' => false
-    ]
+        'blocks' => false,
+    ],
 ];
