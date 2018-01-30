@@ -9,17 +9,14 @@ use Concrete\Core\Calendar\Event\EventOccurrenceList;
 use Core;
 use Page;
 use Concrete\Core\Calendar\CalendarServiceProvider;
-use Concrete\Core\Calendar\Event\Formatter;
 use Symfony\Component\HttpFoundation\JsonResponse;
-
-defined('C5_EXECUTE') or die("Access Denied.");
 
 class Controller extends BlockController
 {
-    public $helpers = array('form');
+    public $helpers = ['form'];
 
     protected $btInterfaceWidth = 500;
-    protected $btInterfaceHeight = 340;
+    protected $btInterfaceHeight = 475;
     protected $btTable = 'btCalendar';
 
     public function getBlockTypeDescription()
@@ -39,21 +36,32 @@ class Controller extends BlockController
 
     public function loadData()
     {
-        $lightboxProperties = array(
+        $viewTypes = [
+            'month' => t('Month'),
+            'basicWeek' => t('Week'),
+            'basicDay' => t('Day'),
+            'listYear' => t('List Year'),
+            'listMonth' => t('List Month'),
+            'listWeek' => t('List Week'),
+            'listDay' => t('List Day'),
+        ];
+        $this->set('viewTypes', $viewTypes);
+
+        $lightboxProperties = [
             'title' => t('Title'),
             'date' => t('Date'),
             'description' => t('Description'),
             'linkToPage' => t('Link to Page'),
-        );
+        ];
         foreach ($this->eventAttributes as $ak) {
             $lightboxProperties['ak_' . $ak->getAttributeKeyID()] = $ak->getAttributeKeyDisplayName();
         }
         $this->set('lightboxProperties', $lightboxProperties);
 
         // topics
-        $keys = EventKey::getList(array('atHandle' => 'topics'));
+        $keys = EventKey::getList(['atHandle' => 'topics']);
         $this->set('attributeKeys', array_filter($keys, function ($ak) {
-            return $ak->getAttributeTypeHandle() == 'topics';
+            return 'topics' == $ak->getAttributeTypeHandle();
         }));
     }
 
@@ -76,7 +84,7 @@ class Controller extends BlockController
             $list->filterByStartTimeBefore(strtotime($end));
             $results = $list->getResults();
 
-            $data = array();
+            $data = [];
             $formatter = $this->app->make(CalendarServiceProvider::class)->getLinkFormatter();
             foreach ($results as $occurrence) {
                 $event = $occurrence->getEvent();
@@ -91,7 +99,7 @@ class Controller extends BlockController
                 $obj->borderColor = $background;
                 $obj->textColor = $text;
                 $url = $formatter->getEventOccurrenceFrontendViewLink($occurrence);
-                if($url) {
+                if ($url) {
                     $obj->url = (string) $url;
                 }
                 $data[] = $obj;
@@ -105,8 +113,11 @@ class Controller extends BlockController
     public function add()
     {
         $this->loadData();
-        $this->set('lightboxPropertiesSelected', array());
+        $this->set('lightboxPropertiesSelected', []);
         $this->edit();
+        // set default view types: month, week, day
+        $this->set('viewTypesSelected', ['month', 'basicWeek', 'basicDay']);
+        $this->set('viewTypesOrder', ['month_' . t('Month'), 'basicWeek_' . t('Week'), 'basicDay_' . t('Day')]);
     }
 
     public function getCalendar()
@@ -126,6 +137,31 @@ class Controller extends BlockController
     public function getSelectedLightboxProperties()
     {
         return (array) json_decode($this->lightboxProperties);
+    }
+
+    /**
+     * Extract the view type from the $viewTypesOrder array values.
+     *
+     * Example: month_Month
+     * - "month" is the view type
+     * - "Month" is the view type display name
+     *
+     * @param array $viewTypesOrder
+     *
+     * @return string
+     */
+    public function getViewTypeString($viewTypesOrder)
+    {
+        $viewTypeArray = [];
+        $i = 0;
+        foreach ($viewTypesOrder as $test) {
+            $viewType = explode('_', $test);
+            $viewTypeArray[$i] = $viewType[0];
+            ++$i;
+        }
+        $viewTypeString = implode(',', $viewTypeArray);
+
+        return $viewTypeString;
     }
 
     public function getPropertyTitle($key)
@@ -190,6 +226,8 @@ class Controller extends BlockController
     public function edit()
     {
         $this->loadData();
+        $this->set('viewTypesSelected', (array) json_decode($this->viewTypes));
+        $this->set('viewTypesOrder', (array) json_decode($this->viewTypesOrder));
         $this->set('lightboxPropertiesSelected', $this->getSelectedLightboxProperties());
         $this->requireAsset('core/topics');
         $calendars = array_filter(Calendar::getList(), function ($calendar) {
@@ -197,7 +235,7 @@ class Controller extends BlockController
 
             return $p->canViewCalendarInEditInterface();
         });
-        $calendarSelect = array('' => t('** Select a Calendar'));
+        $calendarSelect = ['' => t('** Select a Calendar')];
         foreach ($calendars as $calendar) {
             $calendarSelect[$calendar->getID()] = $calendar->getName();
         }
@@ -229,24 +267,41 @@ class Controller extends BlockController
 
     public function save($args)
     {
-        if ($args['chooseCalendar'] == 'specific') {
+        if ('specific' == $args['chooseCalendar']) {
             $args['caID'] = intval($args['caID']);
             $args['calendarAttributeKeyHandle'] = '';
         }
-        if ($args['chooseCalendar'] == 'site') {
+        if ('site' == $args['chooseCalendar']) {
             $args['caID'] = 0;
             // pass through the attribute key handle to save.
         }
+
+        $viewTypes = [];
+        if (isset($args['viewTypes']) && is_array($args['viewTypes'])) {
+            $viewTypes = $args['viewTypes'];
+        }
+        $args['viewTypes'] = json_encode($viewTypes);
+
+        $viewTypesOrder = [];
+        if (isset($args['viewTypesOrder']) && is_array($args['viewTypesOrder'])) {
+            $viewTypesOrder = $args['viewTypesOrder'];
+        }
+        $args['viewTypesOrder'] = json_encode($viewTypesOrder);
+
+        $args['navLinks'] = isset($args['navLinks']) ? 1 : 0;
+        $args['eventLimit'] = isset($args['eventLimit']) ? 1 : 0;
 
         if (!$args['filterByTopicAttributeKeyID']) {
             $args['filterByTopicID'] = 0;
             $args['filterByTopicAttributeKeyID'] = 0;
         }
-        $lightboxProperties = array();
+
+        $lightboxProperties = [];
         if (isset($args['lightboxProperties']) && is_array($args['lightboxProperties'])) {
             $lightboxProperties = $args['lightboxProperties'];
         }
         $args['lightboxProperties'] = json_encode($lightboxProperties);
+
         parent::save($args);
     }
 
@@ -262,11 +317,12 @@ class Controller extends BlockController
             }
 
             if ($permissions->canAccessCalendarRssFeed()) {
-                $link = new HeadLink(\URL::route(array('/feed', 'calendar'), $this->getCalendar()->getID()), 'alternate', 'application/rss+xml');
+                $link = new HeadLink(\URL::route(['/feed', 'calendar'], $this->getCalendar()->getID()), 'alternate', 'application/rss+xml');
                 $this->addHeaderItem($link);
             }
             $this->set('permissions', $permissions);
             $this->set('calendar', $calendar);
+            $this->set('viewTypeString', $this->getViewTypeString(json_decode($this->viewTypesOrder)));
         }
     }
 }

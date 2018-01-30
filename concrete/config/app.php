@@ -812,7 +812,7 @@ return [
             ['css', 'js/fullcalendar/fullcalendar.css', ['minify' => false]],
         ],
         'fullcalendar/localization' => [
-            ['javascript', 'js/fullcalendar/lang-all.js', ['minify' => false, 'combine' => false]],
+            ['javascript', 'js/fullcalendar/locale-all.js', ['minify' => false, 'combine' => false]],
         ],
         'fullcalendar/print' => [
             ['css', 'js/fullcalendar/fullcalendar.print.css', ['minify' => false]],
