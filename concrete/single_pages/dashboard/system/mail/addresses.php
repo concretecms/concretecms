@@ -46,6 +46,14 @@
     </fieldset>
 
     <fieldset>
+        <legend><?php echo t('Website Registration Notification'); ?></legend>
+        <div class="form-group">
+            <?php echo $form->label('registerNotificationAddress', t('Address')); ?>
+            <?php echo $form->email('registerNotificationAddress', $registerNotificationAddress); ?>
+        </div>
+    </fieldset>
+
+    <fieldset>
         <legend><?php echo t('Validate Registration'); ?></legend>
         <div class="form-group">
             <?php echo $form->label('validateRegistrationName', t('Name')); ?>
