@@ -1,7 +1,7 @@
 <?php
 
-defined('C5_EXECUTE') or die("Access Denied.");
-$form = Core::make("helper/form");
+defined('C5_EXECUTE') or die('Access Denied.');
+$form = Core::make('helper/form');
 
 $calendars = array_filter(\Concrete\Core\Calendar\Calendar::getList(), function ($calendar) {
     $p = new \Permissions($calendar);
@@ -9,9 +9,9 @@ $calendars = array_filter(\Concrete\Core\Calendar\Calendar::getList(), function 
     return $p->canViewCalendarInEditInterface();
 });
 if (isset($multiple) && $multiple) {
-    $calendarSelect = array();
+    $calendarSelect = [];
 } else {
-    $calendarSelect = array('' => t('** Select a Calendar'));
+    $calendarSelect = ['' => t('** Select a Calendar')];
 }
 
 foreach ($calendars as $calendar) {
@@ -27,7 +27,7 @@ foreach ($keys as $ak) {
     }
 }
 
-$calendarAttributeKeySelect = array('' => t('** Select Attribute'));
+$calendarAttributeKeySelect = ['' => t('** Select Attribute')];
 foreach ($calendarAttributeKeys as $ak) {
     $calendarAttributeKeySelect[$ak->getAttributeKeyHandle()] = $ak->getAttributeKeyDisplayName();
 }
