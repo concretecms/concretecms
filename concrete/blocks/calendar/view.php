@@ -4,9 +4,11 @@ if (!isset($calendar) || !is_object($calendar)) {
     $calendar = null;
 }
 $c = Page::getCurrentPage();
-if ($c->isEditMode()) { ?>
-    <div class="ccm-edit-mode-disabled-item"><?=t('Calendar disabled in edit mode.')?></div>
-<?php
+if ($c->isEditMode()) {
+    $loc = Localization::getInstance();
+    $loc->pushActiveContext(Localization::CONTEXT_UI);
+    ?><div class="ccm-edit-mode-disabled-item"><?=t('Calendar disabled in edit mode.')?></div><?php
+    $loc->popActiveContext();
 } elseif ($calendar !== null && $permissions->canViewCalendar()) { ?>
     <div class="ccm-block-calendar-wrapper" data-calendar="<?=$bID?>"></div>
 
