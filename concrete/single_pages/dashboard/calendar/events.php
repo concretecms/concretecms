@@ -4,6 +4,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 use Concrete\Core\Calendar\Event\EventOccurrence;
 
+if (!isset($topic)) {
+    $topic = null;
+}
+
 Loader::element('calendar/header', array(
     'calendar' => $calendar,
     'calendars' => $calendars,
