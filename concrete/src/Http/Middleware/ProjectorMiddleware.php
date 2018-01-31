@@ -2,11 +2,13 @@
 
 namespace Concrete\Core\Http\Middleware;
 
+use Concrete\Core\API\Resource\TransformableInterface;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Http\Middleware\DelegateInterface;
 use Concrete\Core\Http\Middleware\MiddlewareInterface;
 use Concrete\Core\Http\ResponseFactory;
 use League\Fractal\Manager;
+use League\Fractal\Resource\Item;
 use League\Fractal\Resource\ResourceInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -41,9 +43,16 @@ class ProjectorMiddleware implements MiddlewareInterface
     {
         $result = $frame->next($request);
 
-        if ($result instanceof ResourceInterface) {
-            $fractal = $this->app->make(Manager::class);
+        $fractal = $this->app->make(Manager::class);
+
+        if ($result instanceof TransformableInterface) {
+            $item = new Item($result, $result->getTransformer());
+            $data = $fractal->createData($item);
+        } else if ($result instanceof ResourceInterface) {
             $data = $fractal->createData($result);
+        }
+
+        if (isset($data)) {
 
             /** @var \Symfony\Component\HttpFoundation\JsonResponse $result */
             $result = $this->factory->json($data->toArray(), 200);

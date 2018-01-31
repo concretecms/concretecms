@@ -1,12 +1,14 @@
 <?php
 namespace Concrete\Core\System;
 
+use Concrete\Core\API\Resource\TransformableInterface;
+use Concrete\Core\API\Transformer\InfoTransformer;
 use Localization;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Foundation\Environment;
 use Concrete\Core\Package\PackageList;
 
-class Info
+class Info implements TransformableInterface
 {
     /**
      * @var bool
@@ -421,6 +423,10 @@ class Info
         return $this->dbVersion;
     }
 
+    public function getTransformer()
+    {
+        return new InfoTransformer();
+    }
 
 
 }

@@ -79,7 +79,8 @@ class SystemRouteList implements RouteListInterface
             ->setPrefix('/ccm/api/v1')
             ->addMiddleware(ProjectorMiddleware::class)
             ->addMiddleware(APIAuthenticatorMiddleware::class)
-            ->routes('api.php');
+            ->routes('api/system.php')
+            ->routes('api/site.php');
     }
 
 

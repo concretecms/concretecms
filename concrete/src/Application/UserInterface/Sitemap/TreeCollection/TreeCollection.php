@@ -1,10 +1,11 @@
 <?php
 namespace Concrete\Core\Application\UserInterface\Sitemap\TreeCollection;
 
+use Concrete\Core\API\Resource\TransformableInterface;
 use Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\Entry\EntryInterface;
 use Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\Entry\Group\GroupInterface;
 
-abstract class TreeCollection implements TreeCollectionInterface
+abstract class TreeCollection implements TreeCollectionInterface, TransformableInterface
 {
 
     /**
@@ -41,4 +42,8 @@ abstract class TreeCollection implements TreeCollectionInterface
         return $this->entryGroups;
     }
 
+    public function getTransformer()
+    {
+        return new TreeCollectionTransformer();
+    }
 }

@@ -171,6 +171,7 @@ class RouteGroupBuilder
             throw new \RuntimeException(t('Invalid input passed to RouteGroupBuilder::routes'));
         }
         $this->sendFromGroupToRouter($router->getRoutes(), $this->router);
+        return $this;
     }
 
 
