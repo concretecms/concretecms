@@ -24,7 +24,7 @@ final class APIFactory
 
     public function getDescriptionConfig($name)
     {
-        $description = $this->config->get('api.' . $name);
+        $description = $this->config->get('api::' . $name);
         $baseUrl = $this->config->get('app.api.base_url') . '/' .
             $name . '/';
         $description['baseUrl'] = $baseUrl;
