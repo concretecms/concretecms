@@ -15,6 +15,56 @@ class Controller extends BlockController
 {
     public $helpers = ['form'];
 
+    /**
+     * @var int|null
+     */
+    public $caID;
+    
+    /**
+     * @var string|null
+     */
+    public $calendarAttributeKeyHandle;
+    
+    /**
+     * @var int|null
+     */
+    public $filterByTopicAttributeKeyID;
+    
+    /**
+     * @var int|null
+     */
+    public $filterByTopicID;
+    
+    /**
+     * @var string|null
+     */
+    public $viewTypes;
+
+    /**
+     * @var string|null
+     */
+    public $viewTypesOrder;
+
+    /**
+     * @var string|null
+     */
+    public $defaultView;
+
+    /**
+     * @var int|null
+     */
+    public $navLinks;
+
+    /**
+     * @var int|null
+     */
+    public $eventLimit;
+    
+    /**
+     * @var string|null
+     */
+    public $lightboxProperties;
+
     protected $btInterfaceWidth = 500;
     protected $btInterfaceHeight = 475;
     protected $btTable = 'btCalendar';
