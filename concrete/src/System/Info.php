@@ -2,7 +2,7 @@
 namespace Concrete\Core\System;
 
 use Concrete\Core\API\Resource\TransformableInterface;
-use Concrete\Core\API\Transformer\InfoTransformer;
+use Concrete\Core\API\Transformer\System\InfoTransformer;
 use Localization;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Foundation\Environment;

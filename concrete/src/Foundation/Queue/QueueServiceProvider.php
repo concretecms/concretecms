@@ -2,24 +2,15 @@
 
 namespace Concrete\Core\Foundation\Queue;
 
-use Bernard\Command\ProduceCommand;
 use Bernard\Normalizer\EnvelopeNormalizer;
 use Bernard\Normalizer\PlainMessageNormalizer;
-use Concrete\Core\Console\Application;
-use Concrete\Core\Foundation\Queue\Driver\ConcreteDatabaseDriver;
 use Bernard\Producer;
 use Bernard\QueueFactory\PersistentFactory;
 use Bernard\Serializer;
-use Concrete\Core\Database\Connection\Connection;
-use Concrete\Core\Foundation\Service\Provider;
-use Bernard\Driver\DoctrineDriver;
-use Doctrine\ORM\EntityManager;
-use Normalt\Normalizer\AggregateNormalizer;
-use Normalt\Normalizer\DoctrineNormalizer;
-use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Normalizer\PropertyNormalizer;
 use Concrete\Core\Foundation\Queue\Driver\DriverFactory;
+use Concrete\Core\Foundation\Service\Provider;
+use Normalt\Normalizer\AggregateNormalizer;
+use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 
 class QueueServiceProvider extends Provider
 {
@@ -47,5 +38,6 @@ class QueueServiceProvider extends Provider
             $producer = new Producer($factory, $this->app->make('director'));
             return $producer;
         });
+
     }
 }
