@@ -31,6 +31,7 @@ class InstallPackageCommand extends Command
             ->addOption('languages', 'l', InputOption::VALUE_REQUIRED, 'Force to install ("yes") or to not install ("no") language files. If "auto", language files will be installed if the package is connected to the project ("auto" requires that the canonical URL is set)', 'auto')
             ->setDescription('Install a concrete5 package')
             ->addEnvOption()
+            ->discourageRunAsRoot()
             ->addArgument('package', InputArgument::REQUIRED, 'The handle of the package to be installed')
             ->addArgument('package-options', InputArgument::IS_ARRAY, 'List of key-value pairs to pass to the package install routine (example: foo=bar baz=foo)')
             ->setHelp(<<<EOT

@@ -19,6 +19,7 @@ class GenerateIDESymbolsCommand extends Command
             ->setName('c5:ide-symbols')
             ->setDescription('Generate IDE symbols')
             ->addEnvOption()
+            ->discourageRunAsRoot()
             ->addArgument('generate-what', InputArgument::IS_ARRAY, 'Elements to generate [all|ide-classes|phpstorm]', ['all'])
             ->setHelp(<<<EOT
 Returns codes:
