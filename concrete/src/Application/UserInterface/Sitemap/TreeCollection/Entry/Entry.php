@@ -33,7 +33,7 @@ abstract class Entry implements EntryInterface
         if ($this->getIconElement()) {
             $element->appendChild($this->getIconElement());
         }
-        $element->appendChild(new Element('span', $this->getLabel(), ['class' => 'ccm-sitemap-tree-menu-label']));
+        $element->appendChild(new Element('span', h($this->getLabel()), ['class' => 'ccm-sitemap-tree-menu-label']));
         return $element;
     }
 
