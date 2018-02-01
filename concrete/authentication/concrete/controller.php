@@ -193,11 +193,7 @@ class Controller extends AuthenticationTypeController
                 if ($oUser) {
                     $mh = Core::make('helper/mail');
                     //$mh->addParameter('uPassword', $oUser->resetUserPassword());
-                    if (Config::get('concrete.user.registration.email_registration')) {
-                        $mh->addParameter('uName', $oUser->getUserEmail());
-                    } else {
-                        $mh->addParameter('uName', $oUser->getUserName());
-                    }
+                    $mh->addParameter('uName', $oUser->getUserDisplayName());
                     $mh->to($oUser->getUserEmail());
 
                     //generate hash that'll be used to authenticate user, allowing them to change their password
