@@ -149,7 +149,7 @@ class RouteGroupBuilder
         }
     }
 
-    public function routes($routes)
+    public function routes($routes, $pkgHandle = null)
     {
         // First, create a new, empty router for use with the routes passed in the callable.
         $router = new Router(new RouteCollection(), $this->router->getActionFactory());
@@ -163,6 +163,9 @@ class RouteGroupBuilder
              * @var $locator FileLocator
              */
             $locator = $app->make(FileLocator::class);
+            if ($pkgHandle) {
+                $locator->addLocation(new FileLocator\PackageLocation($pkgHandle));
+            }
             $file = $locator->getRecord(DIRNAME_ROUTES . DIRECTORY_SEPARATOR . $routes);
             if ($file->exists()) {
                 require $file->getFile();
