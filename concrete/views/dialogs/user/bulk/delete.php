@@ -3,7 +3,7 @@
 if (! is_array($users) || count($users) ==0) {
 	?>
 	<div class="alert-message info">
-		<?php  echo t("No users are elligible for this operation"); ?>
+		<?php  echo t("No users are eligible for this operation"); ?>
 	</div>
 <?php
 } else {
