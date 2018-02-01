@@ -56,6 +56,7 @@ class Version20160725000000 extends AbstractMigration implements DirectSchemaUpg
     {
         $this->connection->Execute('set foreign_key_checks = 0');
         $this->prepareInvalidForeignKeys();
+        $this->fixMultilingualPageRelations();
         $this->renameProblematicTables();
         $this->updateDoctrineXmlTables();
         $this->prepareProblematicEntityTables();
@@ -1346,7 +1347,7 @@ class Version20160725000000 extends AbstractMigration implements DirectSchemaUpg
         $site = \Site::getSite();
         if ((int) $this->connection->fetchColumn('select count(*) from SiteLocales where siteID = ?', [$site->getSiteID()]) > 1) {
             $neutrals = [];
-            foreach ($this->connection->fetchAll('select stName, stType from Stacks where stMultilingualSection = 0') as $row) {
+            foreach ($this->connection->fetchAll('select stName, stType, cID from Stacks where stMultilingualSection = 0') as $row) {
                 $neutrals[$row['stName'] . '@' . $row['stType']] = $row['cID'];
             }
             foreach ($this->connection->fetchAll('select * from Stacks where stMultilingualSection <> 0') as $row) {
@@ -1380,5 +1381,95 @@ class Version20160725000000 extends AbstractMigration implements DirectSchemaUpg
             // Consider all the stacks and global areas as "neutral version"
             $this->connection->executeQuery('update Stacks set stMultilingualSection = 0');
         }
+    }
+
+    protected function fixMultilingualPageRelations()
+    {
+        // Delete records in MultilingualPageRelations with invalid locales
+        $this->connection->query(<<<'EOT'
+DELETE MultilingualPageRelations
+FROM MultilingualPageRelations
+LEFT JOIN MultilingualSections ON (
+    (MultilingualPageRelations.mpLocale = CONCAT(MultilingualSections.msLanguage, '_', MultilingualSections.msCountry))
+    OR
+    (MultilingualPageRelations.mpLocale = MultilingualSections.msLanguage AND '' = MultilingualSections.msCountry)
+)
+WHERE MultilingualSections.cID IS NULL
+EOT
+        );
+        // Set the mpLanguage field where it's missing
+        $this->connection->query(<<<'EOT'
+UPDATE MultilingualPageRelations
+SET mpLanguage = mpLocale
+WHERE mpLanguage = '' AND LOCATE('_', mpLocale) = 0
+EOT
+        );
+        $this->connection->query(<<<'EOT'
+UPDATE MultilingualPageRelations
+SET mpLanguage = LEFT(mpLocale, LOCATE('_', mpLocale) - 1)
+WHERE mpLanguage = '' AND LOCATE('_', mpLocale) > 1
+EOT
+        );
+        // Determine the map between locale and cID
+        $locales = [];
+        $rs = $this->connection->query('SELECT cID, msLanguage, msCountry FROM MultilingualSections');
+        while (false !== ($row = $rs->fetch())) {
+            $locales[$row['msLanguage'] . '_' . $row['msCountry']] = (int) $row['cID'];
+            if ((string) $row['msLanguage'] === '') {
+                $locales[$row['msLanguage']] = (int) $row['cID'];
+            }
+        }
+        // Delete duplicated relations p
+        $rs = $this->connection->query(<<<'EOT'
+SELECT
+    mpRelationID, cID, GROUP_CONCAT(mpLocale SEPARATOR '|') as mpLocales
+FROM
+    MultilingualPageRelations
+GROUP BY
+    mpRelationID,
+    cID
+HAVING
+    LOCATE('|', mpLocales) > 0
+EOT
+        );
+        while (false !== ($row = $rs->fetch())) {
+            $cID = (int) $row['cID'];
+            $trail = null;
+            $mpLocales = explode('|', $row['mpLocales']);
+            foreach (explode('|', $row['mpLocales']) as $locale) {
+                if (!isset($locales[$locale])) {
+                    $delete = true;
+                } elseif ($locales[$locale] === $cID) {
+                    $delete = false;
+                } else {
+                    if ($trail === null) {
+                        $trail = $this->getCollectionIdTrail($cID);
+                    }
+                    $delete = !in_array($locales[$locale], $trail, true);
+                }
+                if ($delete) {
+                    $this->connection->executeQuery('DELETE FROM MultilingualPageRelations WHERE mpRelationID = ? AND cID = ? AND mpLocale = ?', [$row['mpRelationID'], $cID, $locale]);
+                }
+            }
+        }
+    }
+
+    /**
+     * @param int $cID
+     *
+     * @return int[]
+     */
+    private function getCollectionIdTrail($cID)
+    {
+        $result = [];
+        $cID = (int) $cID;
+        if ($cID > 0) {
+            $result[] = $cID;
+            $cParentID = $this->connection->fetchColumn('SELECT cParentID FROM Pages WHERE cID = ?', [$cID]);
+            if ($cParentID) {
+                $result = array_merge($result, $this->getCollectionIdTrail($cParentID)); 
+            }
+        }
+        return $result;
     }
 }
