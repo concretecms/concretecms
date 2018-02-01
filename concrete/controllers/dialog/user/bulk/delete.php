@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Controller\Dialog\User\Bulk;
+defined('C5_EXECUTE') or die("Access Denied.");
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Concrete\Core\Application\EditResponse as UserEditResponse;
@@ -23,11 +24,10 @@ class Delete extends BackendInterfaceController
         $this->set('excluded', $this->excluded);
     }
 
-    public function delete()
+    public function submit()
     {
         $r = new UserEditResponse();
-        $valt = Core::make('helper/validation/token');
-        if (!$valt->validate((isset($this->validationToken)) ? $this->validationToken : get_class($this))) {
+		if (!$this->validateAction()) {
             $r->setError(new \Exception(t('Invalid Token')));
             $r->outputJSON();
             \Core::shutdown();
@@ -121,10 +121,7 @@ class Delete extends BackendInterfaceController
         }
 
         $this->canEdit = true;
-        if (0 == count($this->users)) {
-            $this->canEdit = false;
-        }
 
-        return $this->canEdit;
+		return $this->canEdit;
     }
 }
