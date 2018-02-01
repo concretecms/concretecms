@@ -1,11 +1,12 @@
 <?php
+
 namespace Concrete\Core\Console;
 
-use Symfony\Component\Console\Command\Command as SymfonyCommand;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Exception;
+use Symfony\Component\Console\Command\Command as SymfonyCommand;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 use Throwable;
 
 abstract class Command extends SymfonyCommand
