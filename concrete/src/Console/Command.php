@@ -2,11 +2,15 @@
 
 namespace Concrete\Core\Console;
 
+use Concrete\Core\Error\UserMessageException;
+use Concrete\Core\Foundation\Environment\User;
+use Concrete\Core\Support\Facade\Application as ApplicationFacade;
 use Exception;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Throwable;
 
 abstract class Command extends SymfonyCommand
@@ -17,6 +21,11 @@ abstract class Command extends SymfonyCommand
      * @var int
      */
     const RETURN_CODE_ON_FAILURE = 1;
+
+    /**
+     * @var bool
+     */
+    protected $runAsRootDiscouraged = false;
 
     /**
      * {@inheritdoc}
@@ -33,6 +42,18 @@ abstract class Command extends SymfonyCommand
         $this->writeError($output, $error);
 
         return static::RETURN_CODE_ON_FAILURE;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Symfony\Component\Console\Command\Command::initialize()
+     */
+    protected function initialize(InputInterface $input, OutputInterface $output)
+    {
+        if ($this->runAsRootDiscouraged && $this->isRunningAsRoot() === true) {
+            $this->confirmRunningAsRoot($input, $output);
+        }
     }
 
     /**
@@ -66,12 +87,60 @@ abstract class Command extends SymfonyCommand
     /**
      * Add the "env" option to the command options.
      *
-     * @return static
+     * @return $this
      */
     protected function addEnvOption()
     {
         $this->addOption('env', null, InputOption::VALUE_REQUIRED, 'The environment (if not specified, we\'ll work with the configuration item valid for all environments)');
 
         return $this;
+    }
+
+    /**
+     * Add the "--allow-as-root" option to the command options, and enable the runtime check to see if the current user is root.
+     *
+     * @return $this
+     */
+    protected function discourageRunAsRoot()
+    {
+        $this->addOption('allow-as-root', null, InputOption::VALUE_NONE, 'Allow executing this command as root without confirmation');
+        $this->runAsRootDiscouraged = true;
+
+        return $this;
+    }
+
+    /**
+     * Is the current user root?
+     *
+     * @return bool|null NULL if unknown, or boolean if determined
+     */
+    protected function isRunningAsRoot()
+    {
+        $app = ApplicationFacade::getFacadeApplication();
+
+        return $app->make(User::class)->isSuperUser();
+    }
+
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     *
+     * @throws UserMessageException
+     */
+    protected function confirmRunningAsRoot(InputInterface $input, OutputInterface $output)
+    {
+        if (!$input->getOption('allow-as-root')) {
+            if (!$input->isInteractive()) {
+                throw new UserMessageException("The current user is root: this is discouraged for this CLI command.\nYou can execute this command anyway by specifying the --allow-as-root option.");
+            }
+            $questionHelper = $this->getHelper('question');
+            $question = new ConfirmationQuestion(
+                "The current user is root: this is discouraged for this CLI command.\nDo you want to proceed anyway [Y/N]? ",
+                false
+            );
+            if (!$questionHelper->ask($input, $output, $question)) {
+                throw new UserMessageException('Operation aborted.');
+            }
+        }
     }
 }
