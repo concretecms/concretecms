@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "67bb99b67999e4cfbed7994ae1c40f95",
+    "content-hash": "832bd669b37f529497c48de9b7aa12a4",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -2742,16 +2742,16 @@
         },
         {
             "name": "punic/punic",
-            "version": "2.1.0",
+            "version": "3.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/punic/punic.git",
-                "reference": "a3dce50ddddfa48832eefb8c2c37f8571a12adc7"
+                "reference": "4cb3bd37b72047c507689733e2f84647e11d9afd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/punic/punic/zipball/a3dce50ddddfa48832eefb8c2c37f8571a12adc7",
-                "reference": "a3dce50ddddfa48832eefb8c2c37f8571a12adc7",
+                "url": "https://api.github.com/repos/punic/punic/zipball/4cb3bd37b72047c507689733e2f84647e11d9afd",
+                "reference": "4cb3bd37b72047c507689733e2f84647e11d9afd",
                 "shasum": ""
             },
             "require": {
@@ -2762,12 +2762,16 @@
                 "punic/common": "*"
             },
             "require-dev": {
-                "apigen/apigen": "4.0.*"
+                "friendsofphp/php-cs-fixer": "2.2.*",
+                "phpunit/phpunit": "^4"
             },
+            "bin": [
+                "bin/punic-data"
+            ],
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "Punic\\": "code/"
+                    "Punic\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -2803,7 +2807,7 @@
                 "translations",
                 "unicode"
             ],
-            "time": "2017-03-23T14:26:42+00:00"
+            "time": "2018-02-01T09:33:14+00:00"
         },
         {
             "name": "sunra/php-simple-html-dom-parser",

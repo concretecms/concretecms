@@ -66,7 +66,7 @@
     "zendframework/zend-i18n": "2.7.*",
     "nesbot/carbon": "~1.15",
     "egulias/email-validator": "1.*",
-    "punic/punic": "~2.1",
+    "punic/punic": "^3.0.1",
     "tedivm/stash": "0.14.*",
     "lusitanian/oauth": "0.8.*",
     "concrete5/oauth-user-data": "~1.0",
