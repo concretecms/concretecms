@@ -71,7 +71,7 @@ class Duplicate extends BackendInterfaceController
     public function view()
     {
         if ($this->canAccess()) {
-            $event = $this->app->make(EventService::class)->getByID($_REQUEST['eventID']);
+            $event = $this->app->make(EventService::class)->getByID($_REQUEST['eventID'], EventService::EVENT_VERSION_RECENT);
             $calendars = [];
             /**
              * @var $service CalendarService
@@ -103,7 +103,7 @@ class Duplicate extends BackendInterfaceController
 
     protected function canAccess()
     {
-        $event = $this->app->make(EventService::class)->getByID($_REQUEST['eventID']);
+        $event = $this->app->make(EventService::class)->getByID($_REQUEST['eventID'], EventService::EVENT_VERSION_RECENT);
         if ($event) {
             $calendar = $event->getCalendar();
             if (is_object($calendar)) {
