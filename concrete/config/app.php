@@ -363,6 +363,17 @@ return [
         '/ccm/system/dialogs/user/bulk/properties' => ['\Concrete\Controller\Dialog\User\Bulk\Properties::view'],
         '/ccm/system/dialogs/user/bulk/properties/clear_attribute' => ['\Concrete\Controller\Dialog\User\Bulk\Properties::clearAttribute'],
         '/ccm/system/dialogs/user/bulk/properties/update_attribute' => ['\Concrete\Controller\Dialog\User\Bulk\Properties::updateAttribute'],
+		'/ccm/system/dialogs/user/bulk/groupadd' => ['\Concrete\Controller\Dialog\User\Bulk\Group::groupadd'],
+		'/ccm/system/dialogs/user/bulk/groupadd/submit' => ['\Concrete\Controller\Dialog\User\Bulk\Group::groupaddsubmit'],
+		'/ccm/system/dialogs/user/bulk/groupremove' => ['\Concrete\Controller\Dialog\User\Bulk\Group::groupremove'],
+		'/ccm/system/dialogs/user/bulk/groupremove/submit' => ['\Concrete\Controller\Dialog\User\Bulk\Group::groupremovesubmit'],
+		'/ccm/system/dialogs/user/bulk/delete' => ['\Concrete\Controller\Dialog\User\Bulk\Delete::view'],
+		'/ccm/system/dialogs/user/bulk/delete/delete' => ['\Concrete\Controller\Dialog\User\Bulk\Delete::delete'],
+		'/ccm/system/dialogs/user/bulk/activate' => ['\Concrete\Controller\Dialog\User\Bulk\Activate::activate'],
+		'/ccm/system/dialogs/user/bulk/deactivate' => ['\Concrete\Controller\Dialog\User\Bulk\Activate::deactivate'],
+		'/ccm/system/dialogs/user/bulk/activate/submit' => ['\Concrete\Controller\Dialog\User\Bulk\Activate::activatesubmit'],
+		'/ccm/system/dialogs/user/bulk/deactivate/submit' => ['\Concrete\Controller\Dialog\User\Bulk\Activate::deactivatesubmit'],
+
         '/ccm/system/dialogs/user/search' => ['\Concrete\Controller\Dialog\User\Search::view'],
 
         '/ccm/system/dialogs/user/advanced_search' => ['\Concrete\Controller\Dialog\User\AdvancedSearch::view'],
