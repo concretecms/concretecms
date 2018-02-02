@@ -8,32 +8,49 @@ use Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\Entry\Group\G
 abstract class TreeCollection implements TreeCollectionInterface
 {
     /**
-     * @var EntryInterface[]
+     * @var \Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\Entry\EntryInterface[]
      */
     protected $entries = [];
 
+    /**
+     * @var \Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\Entry\Group\GroupInterface[]
+     */
     protected $entryGroups = [];
 
     /**
-     * @return array
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\TreeCollectionInterface::getEntries()
      */
     public function getEntries()
     {
         return $this->entries;
     }
 
+    /**
+     * Add an entry to the entry list.
+     *
+     * @param \Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\Entry\EntryInterface $entry
+     */
     public function addEntry(EntryInterface $entry)
     {
         $this->entries[] = $entry;
     }
 
+    /**
+     * Add a group to the group list.
+     *
+     * @param \Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\Entry\Group\GroupInterface $group
+     */
     public function addEntryGroup(GroupInterface $group)
     {
         $this->entryGroups[] = $group;
     }
 
     /**
-     * @return array
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\TreeCollectionInterface::getEntryGroups()
      */
     public function getEntryGroups()
     {
