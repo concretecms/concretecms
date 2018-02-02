@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Application\UserInterface\Sitemap\TreeCollection;
 
 use Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\Entry\EntryInterface;
@@ -6,7 +7,6 @@ use Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\Entry\Group\G
 
 abstract class TreeCollection implements TreeCollectionInterface
 {
-
     /**
      * @var EntryInterface[]
      */
@@ -32,7 +32,6 @@ abstract class TreeCollection implements TreeCollectionInterface
         $this->entryGroups[] = $group;
     }
 
-
     /**
      * @return array
      */
@@ -40,5 +39,4 @@ abstract class TreeCollection implements TreeCollectionInterface
     {
         return $this->entryGroups;
     }
-
 }
