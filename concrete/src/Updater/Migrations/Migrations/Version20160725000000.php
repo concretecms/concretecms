@@ -3,7 +3,6 @@
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Block\ExpressForm\Controller as ExpressFormBlockController;
-use Concrete\Core\Attribute\Category\PageCategory;
 use Concrete\Core\Attribute\Key\Category;
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Attribute\Type;
@@ -14,7 +13,6 @@ use Concrete\Core\Entity\Attribute\Key\PageKey;
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Page\Page;
-use Concrete\Core\Page\Single as SinglePage;
 use Concrete\Core\Page\Template;
 use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Permission\Access\Entity\GroupEntity;
@@ -647,112 +645,23 @@ class Version20160725000000 extends AbstractMigration implements DirectSchemaUpg
     {
         $this->output(t('Updating Dashboard...'));
 
-        $pageAttributeCategory = Application::getFacadeApplication()->make(PageCategory::class);
-        /* @var PageCategory $pageAttributeCategory */
-        $availableAttributes = [];
-        foreach ([
-            'exclude_nav',
-            'exclude_search_index',
-            'meta_keywords',
-        ] as $akHandle) {
-            $availableAttributes[$akHandle] = $pageAttributeCategory->getAttributeKeyByHandle($akHandle) ? true : false;
-        }
-
-        $page = Page::getByPath('/dashboard/express');
-        if (!is_object($page) || $page->isError()) {
-            $sp = SinglePage::add('/dashboard/express');
-            $sp->update(['cName' => 'Express', 'cDescription' => 'Express Data Objects']);
-        }
-        $page = Page::getByPath('/dashboard/express/entries');
-        if (!is_object($page) || $page->isError()) {
-            $sp = SinglePage::add('/dashboard/express/entries');
-            $sp->update(['cName' => 'View Entries']);
-        }
-        $page = Page::getByPath('/dashboard/system/express');
-        if (!is_object($page) || $page->isError()) {
-            $sp = SinglePage::add('/dashboard/system/express');
-            $sp->update(['cName' => 'Express']);
-        }
-        $page = Page::getByPath('/dashboard/system/express/entities');
-        if (!is_object($page) || $page->isError()) {
-            $sp = SinglePage::add('/dashboard/system/express/entities');
-            $sp->update(['cName' => 'Data Objects']);
-            if ($availableAttributes['exclude_nav']) {
-                $sp->setAttribute('exclude_nav', true);
-            }
-        }
-        $page = Page::getByPath('/dashboard/system/express/entities/attributes');
-        if (!is_object($page) || $page->isError()) {
-            $sp = SinglePage::add('/dashboard/system/express/entities/attributes');
-            if ($availableAttributes['exclude_nav']) {
-                $sp->setAttribute('exclude_nav', true);
-            }
-        }
-        $page = Page::getByPath('/dashboard/system/express/entities/associations');
-        if (!is_object($page) || $page->isError()) {
-            $sp = SinglePage::add('/dashboard/system/express/entities/associations');
-            if ($availableAttributes['exclude_nav']) {
-                $sp->setAttribute('exclude_nav', true);
-            }
-        }
-        $page = Page::getByPath('/dashboard/system/express/entities/forms');
-        if (!is_object($page) || $page->isError()) {
-            $sp = SinglePage::add('/dashboard/system/express/entities/forms');
-            if ($availableAttributes['exclude_nav']) {
-                $sp->setAttribute('exclude_nav', true);
-            }
-        }
-        $page = Page::getByPath('/dashboard/system/express/entities/customize_search');
-        if (!is_object($page) || $page->isError()) {
-            $sp = SinglePage::add('/dashboard/system/express/entities/customize_search');
-            if ($availableAttributes['exclude_nav']) {
-                $sp->setAttribute('exclude_nav', true);
-            }
-        }
-        $page = Page::getByPath('/dashboard/system/express/entries');
-        if (!is_object($page) || $page->isError()) {
-            $sp = SinglePage::add('/dashboard/system/express/entries');
-            $sp->update(['cName' => 'Custom Entry Locations']);
-        }
-        $page = Page::getByPath('/dashboard/reports/forms/legacy');
-        if (!is_object($page) || $page->isError()) {
-            $sp = SinglePage::add('/dashboard/reports/forms/legacy');
-            $sp->update(['cName' => 'Form Results']);
-            if ($availableAttributes['exclude_search_index']) {
-                $sp->setAttribute('exclude_search_index', true);
-            }
-            if ($availableAttributes['exclude_nav']) {
-                $sp->setAttribute('exclude_nav', true);
-            }
-        }
+        $this->createSinglePage('/dashboard/express', 'Express', ['cDescription' => 'Express Data Objects']);
+        $this->createSinglePage('/dashboard/express/entries', 'View Entries');
+        $this->createSinglePage('/dashboard/system/express', 'Express');
+        $this->createSinglePage('/dashboard/system/express/entities', 'Data Objects', ['exclude_nav' => true]);
+        $this->createSinglePage('/dashboard/system/express/entities/attributes', '', ['exclude_nav' => true]);
+        $this->createSinglePage('/dashboard/system/express/entities/associations', '', ['exclude_nav' => true]);
+        $this->createSinglePage('/dashboard/system/express/entities/forms', '', ['exclude_nav' => true]);
+        $this->createSinglePage('/dashboard/system/express/entities/customize_search', '', ['exclude_nav' => true]);
+        $this->createSinglePage('/dashboard/system/express/entries', 'Custom Entry Locations');
+        $this->createSinglePage('/dashboard/reports/forms/legacy', 'Form Results', ['exclude_search_index' => true, 'exclude_nav' => true]);
         $page = Page::getByPath('/dashboard/system/basics/name');
         if (is_object($page) && !$page->isError()) {
             $page->update(['cName' => 'Name & Attributes']);
         }
-        $page = Page::getByPath('/dashboard/system/basics/attributes');
-        if (!is_object($page) || $page->isError()) {
-            $sp = SinglePage::add('/dashboard/system/basics/attributes');
-            $sp->update(['cName' => 'Custom Attributes']);
-            if ($availableAttributes['exclude_search_index']) {
-                $sp->setAttribute('exclude_search_index', true);
-            }
-            if ($availableAttributes['exclude_nav']) {
-                $sp->setAttribute('exclude_nav', true);
-            }
-        }
-        $page = Page::getByPath('/dashboard/system/registration/global_password_reset');
-        if (!is_object($page) || $page->isError()) {
-            $sp = SinglePage::add('/dashboard/system/registration/global_password_reset');
-            $sp->update(['cDescription' => 'Signs out all users, resets all passwords and forces users to choose a new one']);
-            if ($availableAttributes['meta_keywords']) {
-                $sp->setAttribute('meta_keywords', 'global, password, reset, change password, force, sign out');
-            }
-        }
-        $page = Page::getByPath('/dashboard/system/registration/notification');
-        if (!is_object($page) || $page->isError()) {
-            $sp = SinglePage::add('/dashboard/system/registration/notification');
-            $sp->update(['cName' => 'Notification Settings']);
-        }
+        $this->createSinglePage('/dashboard/system/basics/attributes', 'Custom Attributes', ['exclude_search_index' => true, 'exclude_nav' => true]);
+        $this->createSinglePage('/dashboard/system/registration/global_password_reset', '', ['cDescription' => 'Signs out all users, resets all passwords and forces users to choose a new one', 'meta_keywords' => 'global, password, reset, change password, force, sign out']);
+        $this->createSinglePage('/dashboard/system/registration/notification', 'Notification Settings');
     }
 
     protected function addBlockTypes()
@@ -875,25 +784,13 @@ class Version20160725000000 extends AbstractMigration implements DirectSchemaUpg
 
         $desktopSet->addBlockType($bt);
 
-        $bt = BlockType::getByHandle('page_title');
-        if (is_object($bt)) {
-            $bt->refresh();
-        }
+        $this->refreshBlockType('page_title');
 
-        $bt = BlockType::getByHandle('page_list');
-        if (is_object($bt)) {
-            $bt->refresh();
-        }
+        $this->refreshBlockType('page_list');
 
-        $bt = BlockType::getByHandle('next_previous');
-        if (is_object($bt)) {
-            $bt->refresh();
-        }
+        $this->refreshBlockType('next_previous');
 
-        $bt = BlockType::getByHandle('autonav');
-        if (is_object($bt)) {
-            $bt->refresh();
-        }
+        $this->refreshBlockType('autonav');
     }
 
     protected function addTreeNodeTypes()
@@ -976,7 +873,7 @@ class Version20160725000000 extends AbstractMigration implements DirectSchemaUpg
         }
 
         // Private Messages tweak
-        SinglePage::add('/account/messages');
+        $this->createSinglePage('/account/messages');
 
         $bt = BlockType::getByHandle('rss_displayer');
         if (!is_object($bt)) {
@@ -999,10 +896,7 @@ class Version20160725000000 extends AbstractMigration implements DirectSchemaUpg
         if (is_object($page) && !$page->isError()) {
             $page->moveToTrash();
         }
-        $page = \Page::getByPath('/dashboard/system/permissions/workflows');
-        if (!is_object($page) || $page->isError()) {
-            SinglePage::add('/dashboard/system/permissions/workflows');
-        }
+        $this->createSinglePage('/dashboard/system/permissions/workflows', '');
     }
 
     protected function installSite()

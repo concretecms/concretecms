@@ -1,18 +1,18 @@
 <?php
+
 namespace Concrete\Core\Updater;
 
 use Concrete\Core\Cache\Cache;
-use Concrete\Core\Database\DatabaseStructureManager;
-use Concrete\Core\Updater\Migrations\Configuration;
-use Core;
-use Marketplace;
-use Config;
-use Localization;
-use ORM;
-use Exception;
 use Concrete\Core\Cache\CacheClearer;
-use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Database\DatabaseStructureManager;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Updater\Migrations\Configuration;
+use Doctrine\ORM\EntityManagerInterface;
+use Exception;
+use Localization;
+use Marketplace;
+use Throwable;
 
 class Update
 {
@@ -25,10 +25,12 @@ class Update
      */
     public static function getLatestAvailableVersionNumber()
     {
+        $app = Application::getFacadeApplication();
+        $config = $app->make('config');
         // first, we check session
         $queryWS = false;
         Cache::disableAll();
-        $vNum = Config::get('concrete.misc.latest_version', true);
+        $vNum = $config->get('concrete.misc.latest_version', true);
         Cache::enableAll();
         $versionNum = null;
         if (is_object($vNum)) {
@@ -40,7 +42,7 @@ class Update
                 $versionNum = $version;
             }
             $diff = time() - $seconds;
-            if ($diff > Config::get('concrete.updates.check_threshold')) {
+            if ($diff > $config->get('concrete.updates.check_threshold')) {
                 // we grab a new value from the service
                 $queryWS = true;
             }
@@ -59,10 +61,10 @@ class Update
                 $versionNum = $update->getVersion();
             }
             if ($versionNum) {
-                Config::save('concrete.misc.latest_version', $versionNum);
+                $config->save('concrete.misc.latest_version', $versionNum);
             } else {
                 // we don't know so we're going to assume we're it
-                Config::save('concrete.misc.latest_version', APP_VERSION);
+                $config->save('concrete.misc.latest_version', APP_VERSION);
             }
         }
 
@@ -77,8 +79,8 @@ class Update
      */
     public static function getApplicationUpdateInformation()
     {
-        /* @var $cache \Concrete\Core\Cache\Cache */
-        $cache = Core::make('cache');
+        $app = Application::getFacadeApplication();
+        $cache = $app->make('cache');
         $r = $cache->getItem('APP_UPDATE_INFO');
         if ($r->isMiss()) {
             $r->lock();
@@ -92,32 +94,6 @@ class Update
     }
 
     /**
-     * Retrieves the info about the latest available information.
-     *
-     * @return RemoteApplicationUpdate|null
-     */
-    protected static function getLatestAvailableUpdate()
-    {
-        $update = null;
-        $app = Application::getFacadeApplication();
-        $config = $app->make('config');
-        $client = $app->make('http/client')->setUri($config->get('concrete.updates.services.get_available_updates'));
-        $client->getRequest()
-            ->setMethod('POST')
-            ->getPost()
-                ->set('LOCALE', Localization::activeLocale())
-                ->set('BASE_URL_FU', Application::getApplicationURL())
-                ->set('APP_VERSION', APP_VERSION);
-        try {
-            $response = $client->send();
-            $update = RemoteApplicationUpdateFactory::getFromJSON($response->getBody());
-        } catch (Exception $x) {
-        }
-
-        return $update;
-    }
-
-    /**
      * Looks in the designated updates location for all directories, ascertains what
      * version they represent, and finds all versions greater than the currently installed version of
      * concrete5.
@@ -126,7 +102,8 @@ class Update
      */
     public function getLocalAvailableUpdates()
     {
-        $fh = Core::make('helper/file');
+        $app = Application::getFacadeApplication();
+        $fh = $app->make('helper/file');
         $updates = [];
         $contents = @$fh->getDirectoryContents(DIR_CORE_UPDATES);
         foreach ($contents as $con) {
@@ -154,47 +131,91 @@ class Update
      */
     public static function isCurrentVersionNewerThanDatabaseVersion()
     {
-        $db = \Database::get();
-        $database = $db->GetOne('select max(version) from SystemDatabaseMigrations');
-        $code = Config::get('concrete.version_db');
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $config = $app->make('config');
+        $database = $db->fetchColumn('select max(version) from SystemDatabaseMigrations');
+        $code = $config->get('concrete.version_db');
 
         return $database < $code;
     }
 
     /**
      * Upgrade the current core version to the latest locally available by running the applicable migrations.
+     *
+     * @param null|Configuration $configuration
      */
     public static function updateToCurrentVersion(Configuration $configuration = null)
     {
-        $cms = Core::make('app');
-        /**
-         * @var $clearer CacheClearer
-         */
-        $clearer = $cms->make(CacheClearer::class);
+        $app = Application::getFacadeApplication();
+        $config = $app->make('config');
+        $clearer = $app->make(CacheClearer::class);
         $clearer->setClearGlobalAreas(false);
         $clearer->flush();
 
-        $em = ORM::entityManager();
+        $em = $app->make(EntityManagerInterface::class);
         $dbm = new DatabaseStructureManager($em);
         $dbm->destroyProxyClasses('ConcreteCore');
         $dbm->generateProxyClasses();
 
         if (!$configuration) {
-            $configuration = new \Concrete\Core\Updater\Migrations\Configuration();
+            $configuration = new Configuration();
         }
 
         $configuration->registerPreviousMigratedVersions();
+        $isRerunning = $configuration->getForcedInitialMigration() !== null;
         $migrations = $configuration->getMigrationsToExecute('up', $configuration->getLatestVersion());
         foreach ($migrations as $migration) {
-            $migration->execute('up');
+            $remarkMigrated = $isRerunning && $migration->isMigrated();
+            if ($remarkMigrated) {
+                $migration->markNotMigrated();
+            }
+            $error = null;
+            try {
+                $migration->execute('up');
+            } catch (Exception $x) {
+                $error = $x;
+            } catch (Throwable $x) {
+                $error = $x;
+            }
+            if ($error !== null) {
+                $migration->markMigrated();
+                throw $error;
+            }
         }
         try {
-            $cms->make('helper/file')->makeExecutable(DIR_BASE_CORE.'/bin/concrete5', 'all');
-        } catch (\Exception $x) {
+            $app->make('helper/file')->makeExecutable(DIR_BASE_CORE . '/bin/concrete5', 'all');
+        } catch (Exception $x) {
         }
-        Config::save('concrete.version_installed', Config::get('concrete.version'));
-        Config::save('concrete.version_db_installed', Config::get('concrete.version_db'));
-        $textIndexes = $cms->make('config')->get('database.text_indexes');
-        $cms->make(Connection::class)->createTextIndexes($textIndexes);
+        $config->save('concrete.version_installed', $config->get('concrete.version'));
+        $config->save('concrete.version_db_installed', $config->get('concrete.version_db'));
+        $textIndexes = $app->make('config')->get('database.text_indexes');
+        $app->make(Connection::class)->createTextIndexes($textIndexes);
+    }
+
+    /**
+     * Retrieves the info about the latest available information.
+     *
+     * @return RemoteApplicationUpdate|null
+     */
+    protected static function getLatestAvailableUpdate()
+    {
+        $app = Application::getFacadeApplication();
+        $config = $app->make('config');
+        $client = $app->make('http/client')->setUri($config->get('concrete.updates.services.get_available_updates'));
+        $client->getRequest()
+            ->setMethod('POST')
+            ->getPost()
+                ->set('LOCALE', Localization::activeLocale())
+                ->set('BASE_URL_FU', Application::getApplicationURL())
+                ->set('APP_VERSION', APP_VERSION);
+        try {
+            $response = $client->send();
+            $update = RemoteApplicationUpdateFactory::getFromJSON($response->getBody());
+        } catch (Exception $x) {
+            $update = null;
+        }
+
+        return $update;
     }
 }
