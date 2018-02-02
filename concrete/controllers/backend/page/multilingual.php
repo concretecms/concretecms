@@ -31,7 +31,7 @@ class Multilingual extends Page
 
     public function unmap()
     {
-        $section = Section::getByID((int) $_POST['section']);
+        $section = Section::getByID((int) $this->request->request('section'));
         if (is_object($section)) {
             $relatedID = $section->getTranslatedPageID($this->page);
             $relatedPage = \Page::getByID((int) $relatedID);
