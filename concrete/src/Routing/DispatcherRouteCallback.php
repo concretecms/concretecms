@@ -10,7 +10,7 @@ use Core;
 class DispatcherRouteCallback extends RouteCallback
 {
     /**
-     * @var \Concrete\Core\Page\Collection\ResponseFactoryInterface
+     * @var \Concrete\Core\Http\ResponseFactoryInterface
      */
     protected $factory;
 
@@ -63,7 +63,7 @@ class DispatcherRouteCallback extends RouteCallback
      */
     protected function sendPageNotFound(Request $request)
     {
-        return $this->factory->notFound();
+        return $this->factory->notFound('');
     }
 
     /**
