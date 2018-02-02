@@ -27,7 +27,7 @@ class Delete extends BackendInterfaceController
     public function submit()
     {
         $r = new UserEditResponse();
-		if (!$this->validateAction()) {
+        if (!$this->validateAction()) {
             $r->setError(new \Exception(t('Invalid Token')));
             $r->outputJSON();
             \Core::shutdown();
@@ -122,6 +122,6 @@ class Delete extends BackendInterfaceController
 
         $this->canEdit = true;
 
-		return $this->canEdit;
+        return $this->canEdit;
     }
 }

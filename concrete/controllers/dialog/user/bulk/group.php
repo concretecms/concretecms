@@ -62,7 +62,7 @@ class Group extends BackendInterfaceController
     private function handler($function)
     {
         $r = new UserEditResponse();
-		if (!$this->validateAction()) {
+        if (!$this->validateAction()) {
             $r->setError(new \Exception(t('Invalid Token')));
             $r->outputJSON();
             \Core::shutdown();
@@ -170,7 +170,7 @@ class Group extends BackendInterfaceController
         }
 
         $this->canEdit = true;
-		
-		return $this->canEdit;
+
+        return $this->canEdit;
     }
 }
