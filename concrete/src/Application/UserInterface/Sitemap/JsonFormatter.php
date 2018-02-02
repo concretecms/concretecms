@@ -1,12 +1,12 @@
 <?php
+
 namespace Concrete\Core\Application\UserInterface\Sitemap;
 
-use Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\TreeCollectionInterface;
 use Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\TreeCollectionJsonFormatter;
+use JsonSerializable;
 
-final class JsonFormatter implements \JsonSerializable
+final class JsonFormatter implements JsonSerializable
 {
-
     protected $provider;
 
     public function __construct(ProviderInterface $provider)
@@ -16,7 +16,7 @@ final class JsonFormatter implements \JsonSerializable
 
     public function jsonSerialize()
     {
-        $data = array();
+        $data = [];
 
         if ($this->provider->includeMenuInResponse()) {
             $collection = $this->provider->getTreeCollection($this->provider->getRequestedSiteTree());
@@ -27,8 +27,6 @@ final class JsonFormatter implements \JsonSerializable
             return $this->provider->getRequestedNodes();
         }
 
-
         return $data;
     }
-
 }
