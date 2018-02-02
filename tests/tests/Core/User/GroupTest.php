@@ -215,7 +215,7 @@ class GroupTest extends \UserTestCase
         $list3 = new UserList();
         $list3->filterByGroup($groupB, false);
         $results = $list3->getResults();
-        $this->assertEquals(4, count($results));
+        $this->assertEquals(3, count($results));
 
     }
 }
