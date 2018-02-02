@@ -34,6 +34,8 @@ final class JsonFormatter implements JsonSerializable
             $formatter = new TreeCollectionJsonFormatter($collection);
             $data['trees'] = $formatter;
             $data['children'] = $this->provider->getRequestedNodes();
+            $siteTree = $this->provider->getRequestedSiteTree();
+            $data['homeCID'] = $siteTree === null ? null : ((int) $siteTree->getSiteHomePageID() ?: null);
         } else {
             return $this->provider->getRequestedNodes();
         }
