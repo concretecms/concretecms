@@ -27,6 +27,7 @@
 		my.options = options;
 		my.$element = $element;
 		my.$sitemap = null;
+		my.homeCID = null;
 		my.setupTree();
 		my.setupTreeEvents();
 
@@ -229,8 +230,9 @@
 					if (my.options.displayNodePagination) {
 						my.setupNodePagination(my.$sitemap, my.options.cParentID);
 					}
-
-					my.setupSiteTreeSelector(my.getTree().data.trees);
+					var treeData = my.getTree().data;
+					my.homeCID = 'homeCID' in treeData ? treeData.homeCID : null;
+					my.setupSiteTreeSelector(treeData.trees);
 
 				},
 				/*
@@ -320,14 +322,15 @@
 					},
 
 					dragEnter: function(targetNode, data) {
-						if ((!targetNode.parent.data.cID) && (targetNode.data.cID !== '1')) { // Home page has no parents, but we still want to be able to hit it.
+                        var cID = parseInt(targetNode.data.cID);
+                        if (!targetNode.parent.data.cID && cID !== my.homeCID) { // Home page has no parents, but we still want to be able to hit it.
 							return false;
 						}
-                        if (targetNode.data.cID == 1) {  // Home gets no siblings
+                        if (cID === my.homeCID) {  // Home gets no siblings
 							return 'over';
                         }
 
-                        if (targetNode.data.cID == data.otherNode.data.cID) {
+                        if (cID == data.otherNode.data.cID) {
                             return false; // can't drag node onto itself.
                         }
 						if (!data.otherNode.data.cID && data.hitMode == 'after') {
@@ -482,7 +485,7 @@
     	displaySingleLevel: function(node) {
     		var my = this,
     			options = my.options,
-    			minExpandLevel = (node.data.cID == 1) ? 2 : 3;
+    			minExpandLevel = parseInt(node.data.cID) === my.homeCID ? 2 : 3;
 
             (my.options.onDisplaySingleLevel || $.noop).call(this, node);
 
