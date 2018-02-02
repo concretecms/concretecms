@@ -16,21 +16,37 @@ use Symfony\Component\HttpFoundation\Request;
 
 class StandardSitemapProvider implements ProviderInterface
 {
-    protected $permissionsIgnored = false;
-    protected $cookieJar;
-    protected $request;
-    protected $app;
     /**
-     * @var Service
+     * @var string
+     */
+    protected $permissionsIgnored = false;
+
+    /**
+     * @var \Concrete\Core\Cookie\CookieJar
+     */
+    protected $cookieJar;
+
+    /**
+     * @var \Symfony\Component\HttpFoundation\Request
+     */
+    protected $request;
+
+    /**
+     * @var \Concrete\Core\Application\Application
+     */
+    protected $app;
+
+    /**
+     * @var \Concrete\Core\Site\Service
      */
     protected $siteService;
 
     /**
      * StandardSitemapProvider constructor.
      *
-     * @param Service $siteService
-     * @param Application $app
-     * @param CookieJar $cookies
+     * @param \Concrete\Core\Application\Application $app
+     * @param \Concrete\Core\Site\Service $siteService
+     * @param \Concrete\Core\Cookie\CookieJar $cookies
      */
     public function __construct(Application $app, CookieJar $cookies, Service $siteService)
     {
@@ -40,11 +56,21 @@ class StandardSitemapProvider implements ProviderInterface
         $this->request = Request::createFromGlobals();
     }
 
+    /**
+     * Ignore the permissions.
+     */
     public function ignorePermissions()
     {
         $this->permissionsIgnored = true;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Application\UserInterface\Sitemap\ProviderInterface::getTreeCollection()
+     *
+     * @return \Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\StandardTreeCollection
+     */
     public function getTreeCollection(Tree $selectedTree = null)
     {
         $collection = new StandardTreeCollection();
@@ -84,6 +110,11 @@ class StandardSitemapProvider implements ProviderInterface
         return $collection;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Application\UserInterface\Sitemap\ProviderInterface::includeMenuInResponse()
+     */
     public function includeMenuInResponse()
     {
         if (($this->request->query->has('cParentID') && $this->request->query->get('cParentID'))
@@ -94,6 +125,13 @@ class StandardSitemapProvider implements ProviderInterface
         return true;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Application\UserInterface\Sitemap\ProviderInterface::getRequestedSiteTree()
+     *
+     * @return \Concrete\Core\Entity\Site\Tree|null
+     */
     public function getRequestedSiteTree()
     {
         if ($this->request->query->has('siteTreeID') && $this->request->query->get('siteTreeID') > 0) {
@@ -120,6 +158,11 @@ class StandardSitemapProvider implements ProviderInterface
         }
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Application\UserInterface\Sitemap\ProviderInterface::getRequestedNodes()
+     */
     public function getRequestedNodes()
     {
         $dh = $this->getSitemapDataProvider();
@@ -138,6 +181,11 @@ class StandardSitemapProvider implements ProviderInterface
         return $nodes;
     }
 
+    /**
+     * @param \Concrete\Core\Entity\Site\Site[] $sites
+     *
+     * @return bool
+     */
     protected function useGroups($sites)
     {
         if (count($sites) < 2) {
@@ -147,6 +195,11 @@ class StandardSitemapProvider implements ProviderInterface
         return $this->useLocales($sites);
     }
 
+    /**
+     * @param \Concrete\Core\Site\Tree\TreeInterface $object
+     *
+     * @return bool
+     */
     protected function checkPermissions(TreeInterface $object)
     {
         if (!$this->permissionsIgnored) {
@@ -161,6 +214,11 @@ class StandardSitemapProvider implements ProviderInterface
         return true;
     }
 
+    /**
+     * @param \Concrete\Core\Entity\Site\Site[] $sites
+     *
+     * @return bool
+     */
     protected function useLocales($sites)
     {
         foreach ($sites as $site) {
@@ -173,6 +231,9 @@ class StandardSitemapProvider implements ProviderInterface
         return false;
     }
 
+    /**
+     * @return \Concrete\Core\Application\Service\Dashboard\Sitemap
+     */
     protected function getSitemapDataProvider()
     {
         $dh = $this->app->make('helper/concrete/dashboard/sitemap');

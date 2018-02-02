@@ -4,6 +4,11 @@ namespace Concrete\Core\Application\UserInterface\Sitemap;
 
 class FlatSitemapProvider extends StandardSitemapProvider
 {
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Application\UserInterface\Sitemap\ProviderInterface::getRequestedNodes()
+     */
     public function getRequestedNodes()
     {
         $dh = $this->getSitemapDataProvider();
