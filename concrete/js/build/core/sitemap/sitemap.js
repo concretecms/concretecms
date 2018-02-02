@@ -17,7 +17,7 @@
             displaySingleLevel: false,
 			persist: true,
 			minExpandLevel: false,
-			dataSource: CCM_TOOLS_PATH + '/dashboard/sitemap_data',
+			dataSource: CCM_DISPATCHER_FILENAME + '/ccm/system/page/sitemap_data',
 			ajaxData: {},
 			selectMode: false, // 1 - single, 2 = multiple , 3 = hierarchical-multiple - has NOTHING to do with clicks. If you enable select mode you CANNOT use a click handler.
 			onClickNode: false, // This handles clicking on the title.

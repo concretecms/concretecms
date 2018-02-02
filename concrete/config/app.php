@@ -424,6 +424,7 @@ return [
         '/ccm/system/page/multilingual/ignore' => ['\Concrete\Controller\Backend\Page\Multilingual::ignore'],
         '/ccm/system/page/multilingual/unmap' => ['\Concrete\Controller\Backend\Page\Multilingual::unmap'],
         '/ccm/system/page/select_sitemap' => ['\Concrete\Controller\Backend\Page\SitemapSelector::view'],
+        '/ccm/system/page/sitemap_data' => ['\Concrete\Controller\Backend\Page\SitemapData::view'],
 
         /*
          * Block actions - non UI
