@@ -1,17 +1,16 @@
 <?php
+
 namespace Concrete\Core\Application\UserInterface\Sitemap;
 
-use Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\TreeCollectionInterface;
-use Concrete\Core\Entity\Site\SiteTree;
 use Concrete\Core\Entity\Site\Tree;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 interface ProviderInterface
 {
+    public function getTreeCollection(Tree $selectedTree = null);
 
-    function getTreeCollection(Tree $selectedTree = null);
-    function getRequestedNodes();
-    function getRequestedSiteTree();
-    function includeMenuInResponse();
+    public function getRequestedNodes();
 
+    public function getRequestedSiteTree();
+
+    public function includeMenuInResponse();
 }
