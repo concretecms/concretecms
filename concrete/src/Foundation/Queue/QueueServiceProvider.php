@@ -6,11 +6,10 @@ use Bernard\Normalizer\EnvelopeNormalizer;
 use Bernard\Normalizer\PlainMessageNormalizer;
 use Bernard\Producer;
 use Bernard\QueueFactory\PersistentFactory;
-use Bernard\Serializer;
 use Concrete\Core\Foundation\Queue\Driver\DriverFactory;
 use Concrete\Core\Foundation\Service\Provider;
-use Normalt\Normalizer\AggregateNormalizer;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
+use Concrete\Core\Foundation\Queue\Serializer\SerializerManager;
 
 class QueueServiceProvider extends Provider
 {
@@ -22,14 +21,16 @@ class QueueServiceProvider extends Provider
                 ->createDriver();
         });
 
+        $this->app->singleton(SerializerManager::class, function($app) {
+            $manager = new SerializerManager();
+            $manager->addNormalizer(new EnvelopeNormalizer());
+            $manager->addNormalizer(new PlainMessageNormalizer());
+            return $manager;
+        });
+
         $this->app->singleton('queue/serializer', function($app) {
-            $aggregateNormalizer = new AggregateNormalizer([
-                new EnvelopeNormalizer(),
-                new GetSetMethodNormalizer(),
-                new PlainMessageNormalizer(),
-            ]);
-            $serializer = new Serializer($aggregateNormalizer);
-            return $serializer;
+            $manager = $app->make(SerializerManager::class);
+            return $manager->getSerializer();
         });
 
         $this->app->singleton('queue/producer', function($app) {

@@ -100,7 +100,12 @@ class API
         return $this->getServiceClient('site');
     }
 
-
+    public function __call($name, $arguments)
+    {
+        // Handles dynamic parsing of the service client, allowing packages
+        // to add to this via config.
+        return $this->getServiceClient($name);
+    }
 
 
 }
