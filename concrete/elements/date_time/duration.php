@@ -15,33 +15,41 @@ for ($i = 1; $i <= 12; ++$i) {
 }
 
 $values = array();
-foreach (array(12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11) as $hour) {
-    $values[] = $hour . ':00am';
-    $values[] = $hour . ':05am';
-    $values[] = $hour . ':10am';
-    $values[] = $hour . ':15am';
-    $values[] = $hour . ':20am';
-    $values[] = $hour . ':25am';
-    $values[] = $hour . ':30am';
-    $values[] = $hour . ':35am';
-    $values[] = $hour . ':40am';
-    $values[] = $hour . ':45am';
-    $values[] = $hour . ':50am';
-    $values[] = $hour . ':55am';
-}
-foreach (array(12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11) as $hour) {
-    $values[] = $hour . ':00pm';
-    $values[] = $hour . ':05pm';
-    $values[] = $hour . ':10pm';
-    $values[] = $hour . ':15pm';
-    $values[] = $hour . ':20pm';
-    $values[] = $hour . ':25pm';
-    $values[] = $hour . ':30pm';
-    $values[] = $hour . ':35pm';
-    $values[] = $hour . ':40pm';
-    $values[] = $hour . ':45pm';
-    $values[] = $hour . ':50pm';
-    $values[] = $hour . ':55pm';
+if (Punic\Calendar::has12HoursClock()) {
+    foreach (array(12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11) as $hour) {
+        $values[] = $hour . ':00am';
+        $values[] = $hour . ':05am';
+        $values[] = $hour . ':10am';
+        $values[] = $hour . ':15am';
+        $values[] = $hour . ':20am';
+        $values[] = $hour . ':25am';
+        $values[] = $hour . ':30am';
+        $values[] = $hour . ':35am';
+        $values[] = $hour . ':40am';
+        $values[] = $hour . ':45am';
+        $values[] = $hour . ':50am';
+        $values[] = $hour . ':55am';
+    }
+    foreach (array(12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11) as $hour) {
+        $values[] = $hour . ':00pm';
+        $values[] = $hour . ':05pm';
+        $values[] = $hour . ':10pm';
+        $values[] = $hour . ':15pm';
+        $values[] = $hour . ':20pm';
+        $values[] = $hour . ':25pm';
+        $values[] = $hour . ':30pm';
+        $values[] = $hour . ':35pm';
+        $values[] = $hour . ':40pm';
+        $values[] = $hour . ':45pm';
+        $values[] = $hour . ':50pm';
+        $values[] = $hour . ':55pm';
+    }
+} else {
+    foreach (range(0, 23) as $hour) {
+        foreach (range(0, 55, 5) as $minute) {
+            $values[] = $hour . ':' . substr('0' . $minute, -2);
+        }
+    }
 }
 
 $repeats = array(
