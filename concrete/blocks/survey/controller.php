@@ -119,6 +119,12 @@ class Controller extends BlockController
                 if ($u->getUserID() > 0) {
                     $duID = $u->getUserID();
                 }
+		    
+		$currPg = Page::getCurrentPage();
+		    
+		if (is_object($currPg)) {
+                    $this->cID = $currPg->getCollectionID();
+		}
 
                 /** @var \Concrete\Core\Permission\IPService $iph */
                 $iph = Core::make('helper/validation/ip');
