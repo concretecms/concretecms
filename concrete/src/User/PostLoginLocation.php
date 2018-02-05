@@ -115,7 +115,7 @@ class PostLoginLocation
         $result = '';
         $normalized = $this->session->get(static::POSTLOGIN_SESSION_KEY);
         if ($this->valn->integer($normalized, 1)) {
-            $page = Page::getByID($$normalized);
+            $page = Page::getByID($normalized);
             if ($page && !$page->isError()) {
                 $result = (string) $this->resolverManager->resolve([$page]);
             }

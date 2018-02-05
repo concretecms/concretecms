@@ -81,6 +81,7 @@ abstract class ItemList extends AbstractItemList
     {
         if (in_array(strtolower($direction), array('asc', 'desc'))) {
             $this->query->orderBy($column, $direction);
+            $this->ensureSelected($column);
         }
     }
 
@@ -102,6 +103,22 @@ abstract class ItemList extends AbstractItemList
             $this->query->andWhere(implode(' ', array(
                $field, $comparison, $this->query->createNamedParameter($value),
             )));
+        }
+    }
+
+    protected function ensureSelected($field)
+    {
+        $rx = '/\b' . preg_quote($field, '/') . '\b/i';
+        $selects = $this->query->getQueryPart('select');
+        $add = true;
+        foreach ($selects as $select) {
+            if (preg_match($rx, $select)) {
+                $add = false;
+                break;
+            }
+        }
+        if ($add) {
+            $this->query->addSelect($field);
         }
     }
 

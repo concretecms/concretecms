@@ -68,7 +68,7 @@ if ($downloadUrl !== $url) {
             }
             $folders .= $folder->getTreeNodeName();
 
-            print trim($folders);
+            print h(trim($folders));
             ?>
             </a>
         </div>

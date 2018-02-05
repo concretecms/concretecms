@@ -282,6 +282,7 @@
             });
 
             var $body = $(window.document.body),
+                $document = $(window.document),
                 scrolling = false,
                 scroll_buffer = 100;
 
@@ -335,22 +336,22 @@
 
                 if (!scrolling) {
                     // Vertical
-                    scrollLoop(block, $body, 2, 10, function () {
-                        var pos = block.getDraggerPosition().y - $body.scrollTop();
+                    scrollLoop(block, $document, 2, 10, function () {
+                        var pos = block.getDraggerPosition().y - $document.scrollTop();
                         return block.getDragging() && $(window).height() - pos <= scroll_buffer;
                     }, $.fn.scrollTop, 'y');
-                    scrollLoop(block, $body, -2, 10, function () {
-                        var pos = block.getDraggerPosition().y - $body.scrollTop();
+                    scrollLoop(block, $document, -2, 10, function () {
+                        var pos = block.getDraggerPosition().y - $document.scrollTop();
                         return block.getDragging() && pos <= scroll_buffer;
                     }, $.fn.scrollTop, 'y');
 
                     // Horizontal
-                    scrollLoop(block, $body, 2, 10, function () {
-                        var pos = block.getDraggerPosition().x - $body.scrollLeft();
+                    scrollLoop(block, $document, 2, 10, function () {
+                        var pos = block.getDraggerPosition().x - $document.scrollLeft();
                         return block.getDragging() && $(window).width() - pos <= scroll_buffer;
                     }, $.fn.scrollLeft, 'x');
-                    scrollLoop(block, $body, -2, 10, function () {
-                        var pos = block.getDraggerPosition().x - $body.scrollLeft();
+                    scrollLoop(block, $document, -2, 10, function () {
+                        var pos = block.getDraggerPosition().x - $document.scrollLeft();
                         return block.getDragging() && pos <= scroll_buffer;
                     }, $.fn.scrollLeft, 'x');
                 }

@@ -39,7 +39,7 @@ class AnonymousAvatar implements AvatarInterface
     public function output()
     {
         $img = new Image();
-        $img->src($this->getPath())->class('u-avatar')->alt($this->getAlt());
+        $img->src($this->getPath())->class('u-avatar')->alt(h($this->getAlt()));
         return (string) $img;
     }
 }

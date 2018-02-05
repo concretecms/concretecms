@@ -43,7 +43,8 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Concrete\\Tests\\": "tests/tests"
+      "Concrete\\Tests\\": "tests/tests/",
+      "Concrete\\TestHelpers\\": "tests/helpers/"
     }
   },
   "scripts": {

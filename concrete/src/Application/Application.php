@@ -457,6 +457,16 @@ class Application extends Container
     }
 
     /**
+     * Get the list of registered instances.
+     *
+     * @return string[]
+     */
+    public function getRegisteredInstances()
+    {
+        return array_keys($this->instances);
+    }
+
+    /**
      * @deprecated Use the singleton method
      *
      * @param $abstract

@@ -8,7 +8,7 @@ return [
      */
     'version' => '8.4.0a1',
     'version_installed' => '8.4.0a1',
-    'version_db' => '20180114030029', // the key of the latest database migration
+    'version_db' => '20180123000000', // the key of the latest database migration
 
     /*
      * Installation status
@@ -354,7 +354,7 @@ return [
         ],
     ],
 
-/*
+    /*
      * ------------------------------------------------------------------------
      * Email settings
      * ------------------------------------------------------------------------
@@ -965,5 +965,10 @@ return [
         'plugins' => [
             'selected' => [],
         ],
+    ],
+
+    'composer' => [
+        // [float] The time in seconds until idle triggers a save (set to 0 to disable autosave)
+        'idle_timeout' => 1,
     ],
 ];

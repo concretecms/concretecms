@@ -2,7 +2,6 @@
 
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
-use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Permission\Access\Entity\GroupEntity;
 use Concrete\Core\Permission\Access\Entity\Type;
@@ -12,10 +11,11 @@ use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
 use Concrete\Core\Updater\Migrations\ManagedSchemaUpgraderInterface;
+use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 use Concrete\Core\User\Group\Group;
 use Doctrine\DBAL\Schema\Schema;
 
-class Version20150504000000 extends AbstractMigration implements ManagedSchemaUpgraderInterface, DirectSchemaUpgraderInterface
+class Version20150504000000 extends AbstractMigration implements RepeatableMigrationInterface, ManagedSchemaUpgraderInterface, DirectSchemaUpgraderInterface
 {
     private $updateSectionPlurals = false;
     private $updateMultilingualTranslations = false;
@@ -122,32 +122,18 @@ class Version20150504000000 extends AbstractMigration implements ManagedSchemaUp
         $db = \Database::get();
         $db->Execute('DROP TABLE IF EXISTS PageStatistics');
 
-        $bt = BlockType::getByHandle('page_list');
-        if (is_object($bt)) {
-            $bt->refresh();
-        }
+        $this->refreshBlockType('page_list');
 
-        $bt = BlockType::getByHandle('page_title');
-        if (is_object($bt)) {
-            $bt->refresh();
-        }
+        $this->refreshBlockType('page_title');
 
-        $bt = BlockType::getByHandle('form');
-        if (is_object($bt)) {
-            $bt->refresh();
-        }
+        $this->refreshBlockType('form');
 
         $c = \Page::getByPath('/dashboard/system/seo/urls');
         if (is_object($c) && !$c->isError()) {
             $c->update(['cName' => 'URLs and Redirection']);
         }
 
-        $sp = \Page::getByPath('/dashboard/system/environment/entities');
-        if (!is_object($sp) || $sp->isError()) {
-            $sp = \SinglePage::add('/dashboard/system/environment/entities');
-            $sp->update(['cName' => 'Database Entities']);
-            $sp->setAttribute('meta_keywords', 'database, entities, doctrine, orm');
-        }
+        $this->createSinglePage('/dashboard/system/environment/entities', 'Database Entities', ['meta_keywords' => 'database, entities, doctrine, orm']);
 
         $pkx = Category::getByHandle('multilingual_section');
         if (!is_object($pkx)) {
