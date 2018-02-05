@@ -273,10 +273,8 @@
                 my.$element.find('input[name=' + my.options.namespace + '_pdEndRepeatDateSpecific_pub_' + my.getSetID() + ']').datepicker('setDate', momentEndDateSpecific.toDate());
             }
 
-            my.$element.find('input[name=' + my.options.namespace + '_pdStartDate_pub_' + my.getSetID() + ']').datepicker({
-                onSelect: function () {
-                    $(this).trigger('change');
-                }
+            my.$element.find('input[name=' + my.options.namespace + '_pdStartDate_pub_' + my.getSetID() + ']').datepicker('option', 'onSelect', function () {
+                $(this).trigger('change');
             });
             my.$element.find('input[name=' + my.options.namespace + '_pdStartDate_pub_' + my.getSetID() + ']').on('change', function () {
                 my.$element.find('input[name=' + my.options.namespace + '_pdEndDate_pub_' + my.getSetID() + ']').datepicker('setDate', $(this).val());
