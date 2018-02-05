@@ -69,7 +69,7 @@ $weekDays = \Punic\Calendar::getSortedWeekdays('wide');
                 <div class="col-sm-6 ccm-date-time-date-group">
                     <div class="row">
                         <div class="col-sm-12">
-                            <label class="control-label"><?= t('From') ?></label> <i
+                            <label class="control-label"><?= tc('Start date', 'From')  ?></label> <i
                                 class="fa fa-info-circle launch-tooltip"
                                 title="<?php echo t('Choose Repeat Event and choose a frequency to make this event recurring.') ?>"></i>
                         </div>
@@ -91,7 +91,7 @@ $weekDays = \Punic\Calendar::getSortedWeekdays('wide');
                 <div class="col-sm-6 ccm-date-time-date-group">
                     <div class="row">
                         <div class="col-sm-12">
-                            <label class="control-label"><?= t('To') ?></label>
+                            <label class="control-label"><?= tc('End date', 'To') ?></label>
                         </div>
                     </div>
                     <div class="row">
