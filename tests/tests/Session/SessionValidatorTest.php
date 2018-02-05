@@ -3,6 +3,7 @@
 namespace Concrete\Tests\Session;
 
 use Concrete\Core\Http\Request;
+use Concrete\Core\Permission\IPService;
 use Concrete\Core\Session\SessionValidator;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\TestHelpers\TestHeadersTrait;
@@ -38,7 +39,8 @@ class SessionValidatorTest extends PHPUnit_Framework_TestCase
         $this->app['config'] = clone $this->app['config'];
 
         $this->request = Request::create('http://url.com/');
-        $this->validator = new SessionValidator($this->app, $this->app['config'], $this->request);
+        $config = $this->app->make('config');
+        $this->validator = new SessionValidator($this->app, $this->app['config'], $this->request, $this->app->build(IPService::class, ['config' => $config, 'request' => $this->request]));
 
         $store = [];
         $mock = $this->getMockBuilder('Symfony\Component\HttpFoundation\Session\Session')
