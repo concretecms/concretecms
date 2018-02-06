@@ -2,11 +2,11 @@
 
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
-use Concrete\Core\Page\Page;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
+use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
-class Version20150612000000 extends AbstractMigration implements DirectSchemaUpgraderInterface
+class Version20150612000000 extends AbstractMigration implements RepeatableMigrationInterface, DirectSchemaUpgraderInterface
 {
     /**
      * {@inheritdoc}
@@ -15,10 +15,6 @@ class Version20150612000000 extends AbstractMigration implements DirectSchemaUpg
      */
     public function upgradeDatabase()
     {
-        $sp = Page::getByPath('/dashboard/system/multilingual/copy');
-        if (!is_object($sp) || $sp->isError()) {
-            $sp = \Concrete\Core\Page\Single::add('/dashboard/system/multilingual/copy');
-            $sp->update(['cName' => 'Copy Languages']);
-        }
+        $this->createSinglePage('/dashboard/system/multilingual/copy', 'Copy Languages');
     }
 }

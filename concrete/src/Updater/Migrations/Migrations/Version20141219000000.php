@@ -11,12 +11,12 @@ use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
 use Concrete\Core\Updater\Migrations\ManagedSchemaUpgraderInterface;
+use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 use Doctrine\DBAL\Schema\Schema;
 use Exception;
 use Page;
-use SinglePage;
 
-class Version20141219000000 extends AbstractMigration implements ManagedSchemaUpgraderInterface, DirectSchemaUpgraderInterface
+class Version20141219000000 extends AbstractMigration implements RepeatableMigrationInterface, ManagedSchemaUpgraderInterface, DirectSchemaUpgraderInterface
 {
     /**
      * {@inheritdoc}
@@ -78,8 +78,7 @@ class Version20141219000000 extends AbstractMigration implements ManagedSchemaUp
             FlagType::add('spam');
         }
 
-        $bt = BlockType::getByHandle('image_slider');
-        $bt->refresh();
+        $this->refreshBlockType('image_slider');
 
         $types = [Type::getByHandle('group'), Type::getByHandle('user'), Type::getByHandle('group_set'), Type::getByHandle('group_combination')];
         $categories = [Category::getByHandle('conversation'), Category::getByHandle('conversation_message')];
@@ -176,31 +175,10 @@ class Version20141219000000 extends AbstractMigration implements ManagedSchemaUp
         }
 
         // single pages
-        $sp = Page::getByPath('/dashboard/system/multilingual');
-        if (!is_object($sp) || $sp->isError()) {
-            $sp = SinglePage::add('/dashboard/system/multilingual');
-            $sp->update(['cName' => 'Multilingual']);
-            $sp->setAttribute('meta_keywords', 'multilingual, localization, internationalization, i18n');
-        }
-        $sp = Page::getByPath('/dashboard/system/multilingual/setup');
-        if (!is_object($sp) || $sp->isError()) {
-            $sp = SinglePage::add('/dashboard/system/multilingual/setup');
-            $sp->update(['cName' => 'Multilingual Setup']);
-        }
-        $sp = Page::getByPath('/dashboard/system/multilingual/page_report');
-        if (!is_object($sp) || $sp->isError()) {
-            $sp = SinglePage::add('/dashboard/system/multilingual/page_report');
-            $sp->update(['cName' => 'Page Report']);
-        }
-        $sp = Page::getByPath('/dashboard/system/multilingual/translate_interface');
-        if (!is_object($sp) || $sp->isError()) {
-            $sp = SinglePage::add('/dashboard/system/multilingual/translate_interface');
-            $sp->update(['cName' => 'Translate Interface']);
-        }
-        $sp = Page::getByPath('/dashboard/pages/types/attributes');
-        if (!is_object($sp) || $sp->isError()) {
-            $sp = SinglePage::add('/dashboard/pages/types/attributes');
-            $sp->update(['cName' => 'Page Type Attributes']);
-        }
+        $this->createSinglePage('/dashboard/system/multilingual', 'Multilingual', ['meta_keywords' => 'multilingual, localization, internationalization, i18n']);
+        $this->createSinglePage('/dashboard/system/multilingual/setup', 'Multilingual Setup');
+        $this->createSinglePage('/dashboard/system/multilingual/page_report', 'Page Report');
+        $this->createSinglePage('/dashboard/system/multilingual/translate_interface', 'Translate Interface');
+        $this->createSinglePage('/dashboard/pages/types/attributes', 'Page Type Attributes');
     }
 }

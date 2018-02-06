@@ -2,14 +2,13 @@
 
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
-use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
+use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 use Database;
-use SinglePage;
 
-class Version20141113000000 extends AbstractMigration implements DirectSchemaUpgraderInterface
+class Version20141113000000 extends AbstractMigration implements RepeatableMigrationInterface, DirectSchemaUpgraderInterface
 {
     /**
      * {@inheritdoc}
@@ -35,28 +34,13 @@ class Version20141113000000 extends AbstractMigration implements DirectSchemaUpg
         }
 
         /* Add inspect single page back if it's missing */
-        $sp = Page::getByPath('/dashboard/pages/themes/inspect');
-        if (!is_object($sp) || $sp->isError()) {
-            $sp = SinglePage::add('/dashboard/pages/themes/inspect');
-            $sp->setAttribute('meta_keywords', 'inspect, templates');
-            $sp->setAttribute('exclude_nav', 1);
-        }
+        $this->createSinglePage('/dashboard/pages/themes/inspect', '', ['meta_keywords' => 'inspect, templates', 'exclude_nav' => 1]);
 
-        $sp = Page::getByPath('/members/directory');
-        if (!is_object($sp) || $sp->isError()) {
-            $sp = SinglePage::add('/members/directory');
-            $sp->setAttribute('exclude_nav', 1);
-        }
+        $this->createSinglePage('/members/directory', '', ['exclude_nav' => 1]);
 
-        $bt = BlockType::getByHandle('feature');
-        if (is_object($bt)) {
-            $bt->refresh();
-        }
+        $this->refreshBlockType('feature');
 
-        $bt = BlockType::getByHandle('image_slider');
-        if (is_object($bt)) {
-            $bt->refresh();
-        }
+        $this->refreshBlockType('image_slider');
 
         $db = Database::get();
         $sm = $db->getSchemaManager();

@@ -7,11 +7,26 @@ use Concrete\Core\Attribute\TypeFactory;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
+use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 use Doctrine\ORM\EntityManager;
 
-class Version20180122213656 extends AbstractMigration implements DirectSchemaUpgraderInterface
+class Version20180122213656 extends AbstractMigration implements RepeatableMigrationInterface, DirectSchemaUpgraderInterface
 {
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Doctrine\DBAL\Migrations\AbstractMigration::getDescription()
+     */
+    public function getDescription()
+    {
+        return '8.3.2';
+    }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface::upgradeDatabase()
+     */
     public function upgradeDatabase()
     {
         $app = Facade::getFacadeApplication();
@@ -26,7 +41,7 @@ class Version20180122213656 extends AbstractMigration implements DirectSchemaUpg
             $type = $typeFactory->add('express', 'Express Entity');
         }
 
-        foreach (array('collection', 'user', 'file', 'site') as $handle) {
+        foreach (['collection', 'user', 'file', 'site'] as $handle) {
             $category = $categoryService->getByHandle($handle);
             if ($category !== null) {
                 $categoryTypes = $category->getAttributeTypes();
@@ -36,6 +51,5 @@ class Version20180122213656 extends AbstractMigration implements DirectSchemaUpg
             }
         }
         $em->flush();
-
     }
 }

@@ -5,10 +5,21 @@ namespace Concrete\Core\Updater\Migrations\Migrations;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
 use Concrete\Core\Updater\Migrations\ManagedSchemaUpgraderInterface;
+use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 use Doctrine\DBAL\Schema\Schema;
 
-class Version20150731000000 extends AbstractMigration implements ManagedSchemaUpgraderInterface, DirectSchemaUpgraderInterface
+class Version20150731000000 extends AbstractMigration implements RepeatableMigrationInterface, ManagedSchemaUpgraderInterface, DirectSchemaUpgraderInterface
 {
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Doctrine\DBAL\Migrations\AbstractMigration::getDescription()
+     */
+    public function getDescription()
+    {
+        return '5.7.5.2';
+    }
+
     /**
      * {@inheritdoc}
      *
@@ -37,9 +48,6 @@ class Version20150731000000 extends AbstractMigration implements ManagedSchemaUp
         $db->executeQuery('DELETE FROM DownloadStatistics WHERE fID NOT IN (SELECT fID FROM Files)');
         $db->executeQuery('DELETE FROM FilePermissionAssignments WHERE fID NOT IN (SELECT fID FROM Files)');
 
-        $bt = \BlockType::getByHandle('page_list');
-        if (is_object($bt)) {
-            $bt->refresh();
-        }
+        $this->refreshBlockType('page_list');
     }
 }

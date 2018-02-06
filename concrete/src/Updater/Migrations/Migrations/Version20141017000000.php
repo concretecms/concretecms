@@ -2,17 +2,18 @@
 
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
+use Concrete\Core\Attribute\Category\PageCategory;
 use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
 use Concrete\Core\Updater\Migrations\ManagedSchemaUpgraderInterface;
+use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 use Doctrine\DBAL\Schema\Schema;
 use Exception;
-use SinglePage;
 
-class Version20141017000000 extends AbstractMigration implements ManagedSchemaUpgraderInterface, DirectSchemaUpgraderInterface
+class Version20141017000000 extends AbstractMigration implements RepeatableMigrationInterface, ManagedSchemaUpgraderInterface, DirectSchemaUpgraderInterface
 {
     /**
      * {@inheritdoc}
@@ -33,18 +34,22 @@ class Version20141017000000 extends AbstractMigration implements ManagedSchemaUp
     {
         /* refresh CollectionVersionBlocks, CollectionVersionBlocksCacheSettings tables */
         $cvb = $schema->getTable('CollectionVersionBlocks');
-        $cvb->addColumn('cbOverrideBlockTypeCacheSettings', 'boolean', ['default' => 0]);
+        if (!$cvb->hasColumn('cbOverrideBlockTypeCacheSettings')) {
+            $cvb->addColumn('cbOverrideBlockTypeCacheSettings', 'boolean', ['default' => 0]);
+        }
 
-        $cvbcs = $schema->createTable('CollectionVersionBlocksCacheSettings');
-        $cvbcs->addColumn('cID', 'integer', ['notnull' => true, 'unsigned' => true, 'default' => 0]);
-        $cvbcs->addColumn('cvID', 'integer', ['notnull' => true, 'unsigned' => true, 'default' => 1]);
-        $cvbcs->addColumn('bID', 'integer', ['notnull' => true, 'unsigned' => true, 'default' => 0]);
-        $cvbcs->addColumn('arHandle', 'string', ['notnull' => false]);
-        $cvbcs->addColumn('btCacheBlockOutput', 'boolean', ['default' => 0]);
-        $cvbcs->addColumn('btCacheBlockOutputOnPost', 'boolean', ['default' => 0]);
-        $cvbcs->addColumn('btCacheBlockOutputForRegisteredUsers', 'boolean', ['default' => 0]);
-        $cvbcs->addColumn('btCacheBlockOutputLifetime', 'integer', ['notnull' => true, 'unsigned' => true, 'default' => 0]);
-        $cvbcs->setPrimaryKey(['cID', 'cvID', 'bId', 'arHandle']);
+        if (!$schema->hasTable('CollectionVersionBlocksCacheSettings')) {
+            $cvbcs = $schema->createTable('CollectionVersionBlocksCacheSettings');
+            $cvbcs->addColumn('cID', 'integer', ['notnull' => true, 'unsigned' => true, 'default' => 0]);
+            $cvbcs->addColumn('cvID', 'integer', ['notnull' => true, 'unsigned' => true, 'default' => 1]);
+            $cvbcs->addColumn('bID', 'integer', ['notnull' => true, 'unsigned' => true, 'default' => 0]);
+            $cvbcs->addColumn('arHandle', 'string', ['notnull' => false]);
+            $cvbcs->addColumn('btCacheBlockOutput', 'boolean', ['default' => 0]);
+            $cvbcs->addColumn('btCacheBlockOutputOnPost', 'boolean', ['default' => 0]);
+            $cvbcs->addColumn('btCacheBlockOutputForRegisteredUsers', 'boolean', ['default' => 0]);
+            $cvbcs->addColumn('btCacheBlockOutputLifetime', 'integer', ['notnull' => true, 'unsigned' => true, 'default' => 0]);
+            $cvbcs->setPrimaryKey(['cID', 'cvID', 'bId', 'arHandle']);
+        }
     }
 
     /**
@@ -65,24 +70,9 @@ class Version20141017000000 extends AbstractMigration implements ManagedSchemaUp
         }
 
         /* Add marketplace single pages */
-        $sp = Page::getByPath('/dashboard/extend/connect');
-        if (!is_object($sp) || $sp->isError()) {
-            $sp = SinglePage::add('/dashboard/extend/connect');
-            $sp->update(['cName' => 'Connect to the Community']);
-            $sp->setAttribute('meta_keywords', 'concrete5.org, my account, marketplace');
-        }
-        $sp = Page::getByPath('/dashboard/extend/themes');
-        if (!is_object($sp) || $sp->isError()) {
-            $sp = SinglePage::add('/dashboard/extend/themes');
-            $sp->update(['cName' => 'Get More Themes']);
-            $sp->setAttribute('meta_keywords', 'buy theme, new theme, marketplace, template');
-        }
-        $sp = Page::getByPath('/dashboard/extend/addons');
-        if (!is_object($sp) || $sp->isError()) {
-            $sp = SinglePage::add('/dashboard/extend/addons');
-            $sp->update(['cName' => 'Get More Add-Ons']);
-            $sp->setAttribute('meta_keywords', 'buy addon, buy add on, buy add-on, purchase addon, purchase add on, purchase add-on, find addon, new addon, marketplace');
-        }
+        $this->createSinglePage('/dashboard/extend/connect', 'Connect to the Community', ['meta_keywords' => 'concrete5.org, my account, marketplace']);
+        $this->createSinglePage('/dashboard/extend/themes', 'Get More Themes', ['meta_keywords' => 'buy theme, new theme, marketplace, template']);
+        $this->createSinglePage('/dashboard/extend/addons', 'Get More Add-Ons', ['meta_keywords' => 'buy addon, buy add on, buy add-on, purchase addon, purchase add on, purchase add-on, find addon, new addon, marketplace']);
 
         /* Add auth types ("handle|name") "twitter|Twitter" and "community|concrete5.org" */
         try {
@@ -111,7 +101,7 @@ class Version20141017000000 extends AbstractMigration implements ManagedSchemaUp
 
         /* exclude nav from flat view in dashboard */
         $flat = Page::getByPath('/dashboard/sitemap/explore');
-        if (is_object($customize) && !$customize->isError()) {
+        if (is_object($customize) && !$customize->isError() && $this->isAttributeHandleValid(PageCategory::class, 'exclude_nav')) {
             $flat->setAttribute('exclude_nav', false);
         }
     }

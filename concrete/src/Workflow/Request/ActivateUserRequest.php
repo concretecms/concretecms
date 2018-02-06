@@ -122,11 +122,8 @@ class ActivateUserRequest extends UserRequest
     {
         $mh = Loader::helper('mail');
         $mh->to($ui->getUserEmail());
-        if (Config::get('concrete.user.registration.notification_email')) {
-            $mh->from(
-                Config::get('concrete.user.registration.notification_email'),
-                t('Website Registration Notification')
-            );
+        if (Config::get('concrete.email.register_notification.address')) {
+            $mh->from(Config::get('concrete.email.register_notification.address'), t('Website Registration Notification'));
         } else {
             $adminUser = UserInfo::getByID(USER_SUPER_ID);
             $mh->from($adminUser->getUserEmail(), t('Website Registration Notification'));

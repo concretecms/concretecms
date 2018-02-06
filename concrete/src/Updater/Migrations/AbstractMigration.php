@@ -2,8 +2,12 @@
 
 namespace Concrete\Core\Updater\Migrations;
 
+use Concrete\Core\Attribute\Category\PageCategory;
 use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Database\DatabaseStructureManager;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Single as SinglePage;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Support\Facade\Facade;
 use Doctrine\DBAL\Migrations\AbstractMigration as DoctrineAbstractMigration;
 use Doctrine\DBAL\Migrations\Version;
@@ -13,6 +17,8 @@ use Doctrine\ORM\Tools\SchemaTool;
 abstract class AbstractMigration extends DoctrineAbstractMigration
 {
     protected $app;
+
+    protected $validAttributes = [];
 
     public function __construct(Version $version)
     {
@@ -149,5 +155,60 @@ abstract class AbstractMigration extends DoctrineAbstractMigration
             left join {$sqlLinkedTable} on {$sqlTable}.{$sqlField} = {$sqlLinkedTable}.{$sqlLinkedField}
             where {$sqlLinkedTable}.{$sqlLinkedField} is null
         ");
+    }
+
+    protected function isAttributeHandleValid($categoryClass, $handle)
+    {
+        if (!isset($this->validAttributes[$categoryClass])) {
+            $this->validAttributes[$categoryClass] = [];
+        }
+        if (!isset($this->validAttributes[$categoryClass][$handle])) {
+            $app = Application::getFacadeApplication();
+            $category = $app->make($categoryClass);
+            $this->validAttributes[$categoryClass][$handle] = $category->getAttributeKeyByHandle($handle) ? true : false;
+        }
+
+        return $this->validAttributes[$categoryClass][$handle];
+    }
+
+    /**
+     * Create a new SinglePage (if it does not exist).
+     *
+     * @param string $path the single page path
+     * @param string $name the single page name
+     * @param array $attributes the attribute values (keys are the attribute handles, values are the attribute values)
+
+     *
+     * @return \Concrete\Core\Page\Page
+     */
+    protected function createSinglePage($path, $name = '', array $attributes = [])
+    {
+        $sp = Page::getByPath($path);
+        if (!is_object($sp) || $sp->isError()) {
+            $this->output(t('Creating single page at %s...', $path));
+            $sp = SinglePage::add($path);
+            $update = [];
+            $name = (string) $name;
+            if ($name !== '') {
+                $update['cName'] = $name;
+            }
+            if (array_key_exists('cDescription', $attributes)) {
+                $description = (string) $attributes['cDescription'];
+                unset($attributes['cDescription']);
+                if ($description !== '') {
+                    $update['cDescription'] = $description;
+                }
+            }
+            if (count($update) > 0) {
+                $sp->update($update);
+            }
+            foreach ($attributes as $attributeHandle => $attributeValue) {
+                if ($this->isAttributeHandleValid(PageCategory::class, $attributeHandle)) {
+                    $sp->setAttribute($attributeHandle, $attributeValue);
+                }
+            }
+        }
+
+        return $sp;
     }
 }

@@ -6,8 +6,9 @@ use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Support\Facade\Package;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
+use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
-class Version20171025000000 extends AbstractMigration implements DirectSchemaUpgraderInterface
+class Version20171025000000 extends AbstractMigration implements RepeatableMigrationInterface, DirectSchemaUpgraderInterface
 {
     /**
      * {@inheritdoc}

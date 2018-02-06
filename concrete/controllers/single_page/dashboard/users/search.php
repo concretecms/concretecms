@@ -115,11 +115,8 @@ class Search extends DashboardPageController
                         $mh = $this->app->make('helper/mail');
                         $mh->to($this->user->getUserEmail());
                         $config = $this->app->make('config');
-                        if ($config->get('concrete.user.registration.notification_email')) {
-                            $mh->from(
-                                $config->get('concrete.user.registration.notification_email'),
-                                t('Website Registration Notification')
-                            );
+                        if ($config->get('concrete.email.register_notification.address')) {
+                            $mh->from($config->get('concrete.email.register_notification.address'), t('Website Registration Notification'));
                         } else {
                             $adminUser = UserInfo::getByID(USER_SUPER_ID);
                             $mh->from($adminUser->getUserEmail(), t('Website Registration Notification'));

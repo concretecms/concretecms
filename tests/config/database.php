@@ -1,6 +1,6 @@
 <?php
 /**
- * Test database configuration
+ * Test database configuration.
  */
 return [
     'default-connection' => 'travis',
@@ -19,6 +19,6 @@ return [
             'username' => 'travis',
             'password' => '',
             'charset' => 'utf8',
-        ]
-    ]
+        ],
+    ],
 ];

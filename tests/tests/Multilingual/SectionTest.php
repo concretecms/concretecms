@@ -1,5 +1,9 @@
 <?php
 
+namespace Concrete\Tests\Multilingual;
+
+use Concrete\TestHelpers\Page\PageTestCase;
+
 class SectionTest extends PageTestCase
 {
     public function setUp()

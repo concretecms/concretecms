@@ -316,7 +316,7 @@ return [
         ],
     ],
 
-/*
+    /*
      * ------------------------------------------------------------------------
      * Email settings
      * ------------------------------------------------------------------------
@@ -923,5 +923,10 @@ return [
         'plugins' => [
             'selected' => [],
         ],
+    ],
+
+    'composer' => [
+        // [float] The time in seconds until idle triggers a save (set to 0 to disable autosave)
+        'idle_timeout' => 1,
     ],
 ];
