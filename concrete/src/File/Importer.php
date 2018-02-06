@@ -17,22 +17,101 @@ use Concrete\Core\Support\Facade\Application;
 class Importer
 {
     /**
-     * PHP error constants - these match those founds in $_FILES[$field]['error] if it exists.
+     * Standard PHP error: there is no error, the file uploaded with success.
+     *
+     * @var int
      */
-    const E_PHP_FILE_ERROR_DEFAULT = 0;
-    const E_PHP_FILE_EXCEEDS_UPLOAD_MAX_FILESIZE = 1;
-    const E_PHP_FILE_EXCEEDS_HTML_MAX_FILE_SIZE = 2;
-    const E_PHP_FILE_PARTIAL_UPLOAD = 3;
-    const E_PHP_NO_FILE = 4;
+    const E_PHP_FILE_ERROR_DEFAULT = UPLOAD_ERR_OK;
 
     /**
-     * concrete5 internal error constants.
+     * Standard PHP error: the uploaded file exceeds the upload_max_filesize directive in php.ini.
+     *
+     * @var int
+     */
+    const E_PHP_FILE_EXCEEDS_UPLOAD_MAX_FILESIZE = UPLOAD_ERR_INI_SIZE;
+
+    /**
+     * Standard PHP error: the uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form.
+     *
+     * @var int
+     */
+    const E_PHP_FILE_EXCEEDS_HTML_MAX_FILE_SIZE = UPLOAD_ERR_FORM_SIZE;
+
+    /**
+     * Standard PHP error: the uploaded file was only partially uploaded.
+     *
+     * @var int
+     */
+    const E_PHP_FILE_PARTIAL_UPLOAD = UPLOAD_ERR_PARTIAL;
+
+    /**
+     * Standard PHP error: no file was uploaded.
+     *
+     * @var int
+     */
+    const E_PHP_NO_FILE = UPLOAD_ERR_NO_FILE;
+
+    /**
+     * Standard PHP error: missing a temporary folder.
+     *
+     * @var int
+     */
+    const E_PHP_NO_TMP_DIR = UPLOAD_ERR_NO_TMP_DIR;
+
+    /**
+     * Standard PHP error: failed to write file to disk.
+     *
+     * @var int
+     */
+    const E_PHP_CANT_WRITE = UPLOAD_ERR_CANT_WRITE;
+
+    /**
+     * Standard PHP error: a PHP extension stopped the file upload.
+     *
+     * @var int
+     */
+    const E_PHP_EXTENSION = UPLOAD_ERR_EXTENSION;
+
+    /**
+     * concrete5 internal error: invalid file extension.
+     *
+     * @var int
      */
     const E_FILE_INVALID_EXTENSION = 10;
-    const E_FILE_INVALID = 11; // pointer is invalid file, is a directory, etc...
+
+    /**
+     * concrete5 internal error: pointer is invalid file, is a directory, etc...
+     *
+     * @var int
+     */
+    const E_FILE_INVALID = 11;
+
+    /**
+     * concrete5 internal error: unable to copy file to storage location.
+     *
+     * @var int
+     */
     const E_FILE_UNABLE_TO_STORE = 12;
+
+    /**
+     * concrete5 internal error: default file storage location not found.
+     *
+     * @var int
+     */
     const E_FILE_INVALID_STORAGE_LOCATION = 13;
+
+    /**
+     * concrete5 internal error: unable to copy file to storage location (with provided prefix).
+     *
+     * @var int
+     */
     const E_FILE_UNABLE_TO_STORE_PREFIX_PROVIDED = 14;
+
+    /**
+     * concrete5 internal error: Uploaded file is too large.
+     *
+     * @var int
+     */
     const E_FILE_EXCEEDS_POST_MAX_FILE_SIZE = 20;
 
     protected $rescanThumbnailsOnImport = true;
@@ -99,6 +178,15 @@ class Importer
                 break;
             case self::E_FILE_UNABLE_TO_STORE_PREFIX_PROVIDED:
                 $msg = t('Unable to copy file to storage location "%s". This file already exists in your site, or there is insufficient disk space for this operation.', $defaultStorage);
+                break;
+            case self::E_PHP_NO_TMP_DIR:
+                $msg = t('Missing a temporary folder.');
+                break;
+            case self::E_PHP_CANT_WRITE:
+                $msg = t('Failed to write file to disk.');
+                break;
+            case self::E_PHP_CANT_WRITE:
+                $msg = t('A PHP extension stopped the file upload.');
                 break;
             case self::E_PHP_FILE_ERROR_DEFAULT:
             default:
