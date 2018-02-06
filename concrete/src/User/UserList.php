@@ -5,10 +5,7 @@ use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemLis
 use Concrete\Core\Search\ItemList\Pager\Manager\UserListPagerManager;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 use Concrete\Core\Search\ItemList\Pager\QueryString\VariableFactory;
-use Concrete\Core\Search\Pagination\PagerPagination;
-use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Search\Pagination\PaginationProviderInterface;
-use Concrete\Core\Search\PermissionableListItemInterface;
 use Concrete\Core\Search\StickyRequest;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\Group\Group;
@@ -393,14 +390,15 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
                 $groupIDs[] = $group->getGroupID();
             }
         }
-
-        if ($inGroups) {
-            $orX->add($this->getQueryObject()->expr()->in('g.gID', $groupIDs));
-            $this->getQueryObject()->andWhere($orX, $this->getQueryObject()->expr()->isNotNull('g.gID'));
-        } else {
-            $orX->add($this->getQueryObject()->expr()->notIn('g.gID', $groupIDs));
-            $orX->add($this->getQueryObject()->expr()->isNull('g.gID'));
-            $this->getQueryObject()->andWhere($orX);
+        if (is_array($groups) && count($groups) > 0) {
+            if ($inGroups) {
+                $orX->add($this->getQueryObject()->expr()->in('g.gID', $groupIDs));
+                $this->getQueryObject()->andWhere($orX, $this->getQueryObject()->expr()->isNotNull('g.gID'));
+            } else {
+                $orX->add($this->getQueryObject()->expr()->notIn('g.gID', $groupIDs));
+                $orX->add($this->getQueryObject()->expr()->isNull('g.gID'));
+                $this->getQueryObject()->andWhere($orX);
+            }
         }
     }
 
