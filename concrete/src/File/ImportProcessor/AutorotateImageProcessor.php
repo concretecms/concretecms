@@ -18,9 +18,48 @@ class AutorotateImageProcessor implements ProcessorInterface
      */
     protected $app;
 
+    /**
+     * @var int|null
+     */
+    protected $jpegCompression;
+
     public function __construct()
     {
         $this->app = Application::getFacadeApplication();
+    }
+
+    /**
+     * Set the JPEG compression.
+     *
+     * @param int $value Valid values are from 0 to 100
+     *
+     * @return $this
+     */
+    public function setJpegCompression($value)
+    {
+        if ($this->app->make('helper/validation/numbers')->integer($value, 0, 100)) {
+            $this->jpegCompression = (int) $value;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get the JPEG compression.
+     *
+     * @return int
+     */
+    public function getJpegCompression()
+    {
+        if ($this->jpegCompression === null) {
+            $config = $this->app->make('config');
+            $this->setJpegCompression($config->get('concrete.misc.default_jpeg_image_compression'));
+            if ($this->jpegCompression === null) {
+                $this->jpegCompression = 80;
+            }
+        }
+
+        return $this->jpegCompression;
     }
 
     /**
@@ -36,7 +75,7 @@ class AutorotateImageProcessor implements ProcessorInterface
                 try {
                     $fr = $version->getFileResource();
                     $medatadaReader = new ExifMetadataReader();
-                    $metadata = $medatadaReader->readStream($fr);
+                    $metadata = $medatadaReader->readData($fr->read());
                     switch (isset($metadata['ifd0.Orientation']) ? $metadata['ifd0.Orientation'] : null) {
                         case 2: // top-right
                         case 3: // bottom-right
@@ -72,6 +111,6 @@ class AutorotateImageProcessor implements ProcessorInterface
 
         $transformation = new Transformation($imagine);
         $transformation->applyFilter($image, new Autorotate());
-        $version->updateContents($image->get('jpg'));
+        $version->updateContents($image->get('jpg', ['jpeg_quality' => $this->getJpegCompression()]));
     }
 }
