@@ -3,13 +3,22 @@
 namespace Concrete\Tests\Session;
 
 use Concrete\Core\Http\Request;
+use Concrete\Core\Permission\IPService;
 use Concrete\Core\Session\SessionValidator;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\TestHelpers\TestHeadersTrait;
 use PHPUnit_Framework_TestCase;
 use Symfony\Component\HttpFoundation\Session\Session;
 
+/**
+ * @runTestsInSeparateProcesses
+ */
 class SessionValidatorTest extends PHPUnit_Framework_TestCase
 {
+    use TestHeadersTrait;
+
+    protected $preserveGlobalState = false;
+
     /** @var \Concrete\Core\Application\Application */
     protected $app;
 
@@ -24,15 +33,14 @@ class SessionValidatorTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        if (headers_sent()) {
-            return $this->markTestSkipped('This test cannot run once headers have been sent.');
-        }
+        $this->skipIfHeadersSent();
 
         $this->app = clone Application::getFacadeApplication();
         $this->app['config'] = clone $this->app['config'];
 
         $this->request = Request::create('http://url.com/');
-        $this->validator = new SessionValidator($this->app, $this->app['config'], $this->request);
+        $config = $this->app->make('config');
+        $this->validator = new SessionValidator($this->app, $this->app['config'], $this->request, $this->app->build(IPService::class, ['config' => $config, 'request' => $this->request]));
 
         $store = [];
         $mock = $this->getMockBuilder('Symfony\Component\HttpFoundation\Session\Session')
