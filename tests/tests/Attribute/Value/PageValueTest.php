@@ -1,15 +1,17 @@
 <?php
 
-require_once __DIR__ . '/fixtures/RelatedPageController.php';
+namespace Concrete\Tests\Attribute\Value;
 
-class PageValueTest extends \AttributeValueTestCase
+use Concrete\TestHelpers\Attribute\AttributeValueTestCase;
+use Page;
+
+class PageValueTest extends AttributeValueTestCase
 {
-
-    public function __construct($name = null, array $data = array(), $dataName = '')
+    public function __construct($name = null, array $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
 
-        $this->tables = array_merge($this->tables, array(
+        $this->tables = array_merge($this->tables, [
             'PageTypes',
             'PageThemes',
             'PermissionAccessEntityTypes',
@@ -17,14 +19,19 @@ class PageValueTest extends \AttributeValueTestCase
             'PermissionKeys',
             'PageTypePublishTargetTypes',
             'PageThemes',
-        ));
+        ]);
 
-        $this->metadatas = array_merge($this->metadatas, array(
+        $this->metadatas = array_merge($this->metadatas, [
             'Concrete\Core\Entity\Attribute\Key\Settings\EmptySettings',
             'Concrete\Core\Entity\Attribute\Value\Value\NumberValue',
             'Concrete\Core\Entity\Page\Template',
-        ));
+        ]);
+    }
 
+    public static function setUpBeforeClass()
+    {
+        parent::setUpBeforeClass();
+        require_once DIR_TESTS . '/assets/Attribute/Value/RelatedPageController.php';
     }
 
     public function setUp()
@@ -34,22 +41,22 @@ class PageValueTest extends \AttributeValueTestCase
         parent::setUp();
 
         $template = \Concrete\Core\Page\Template::add('full', 'Full');
-        $pt = \Concrete\Core\Page\Type\Type::add(array(
+        $pt = \Concrete\Core\Page\Type\Type::add([
             'handle' => 'basic',
             'name' => 'Basic',
-        ));
+        ]);
 
         $parent = Page::getByID(Page::getHomePageID());
 
-        $parent->add($pt, array(
+        $parent->add($pt, [
             'cName' => 'Test Page 1',
             'pTemplateID' => $template->getPageTemplateID(),
-        ));
+        ]);
 
-        $parent->add($pt, array(
+        $parent->add($pt, [
             'cName' => 'Test Page 2',
             'pTemplateID' => $template->getPageTemplateID(),
-        ));
+        ]);
     }
 
     public function getAttributeKeyHandle()
@@ -84,54 +91,51 @@ class PageValueTest extends \AttributeValueTestCase
 
     public function baseAttributeValues()
     {
-        return array(
-            array(
-                function() {
+        return [
+            [
+                function () {
                     return \Page::getByID(1);
                 },
-                function() {
+                function () {
                     return \Page::getByID(1);
                 },
-            )
-        );
+            ],
+        ];
     }
 
     public function displayAttributeValues()
     {
-        return array(
-            array(
-                function() {
+        return [
+            [
+                function () {
                     return \Page::getByID(1);
                 },
                 'Home',
-            )
-        );
+            ],
+        ];
     }
 
     public function plaintextAttributeValues()
     {
-        return array(
-            array(
-                function() {
+        return [
+            [
+                function () {
                     return \Page::getByID(1);
                 },
                 'Home',
-            )
-        );
+            ],
+        ];
     }
 
     public function searchIndexAttributeValues()
     {
-        return array(
-            array(
-                function() {
+        return [
+            [
+                function () {
                     return \Page::getByID(1);
                 },
                 1,
-            )
-        );
+            ],
+        ];
     }
-
-
-
 }

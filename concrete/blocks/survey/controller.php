@@ -106,6 +106,10 @@ class Controller extends BlockController
             $c = $this->getCollectionObject();
         }
 
+	if (is_object($c)) {
+            $this->cID = $c->getCollectionID();
+        }
+
         if ($this->requiresRegistration()) {
             if (!$u->isRegistered()) {
                 $this->redirect('/login');

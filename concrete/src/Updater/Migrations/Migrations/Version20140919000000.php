@@ -6,8 +6,9 @@ use Concrete\Core\Permission\Access\Entity\Type;
 use Concrete\Core\Permission\Category;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\DirectSchemaChangerInterface;
+use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
-class Version20140919000000 extends AbstractMigration implements DirectSchemaChangerInterface
+class Version20140919000000 extends AbstractMigration implements RepeatableMigrationInterface, DirectSchemaChangerInterface
 {
     /**
      * {@inheritdoc}

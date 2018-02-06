@@ -1,6 +1,10 @@
 <?php
 
+namespace Concrete\Tests\Asset;
+
+use AssetList;
 use Concrete\Core\Asset\Asset;
+use PHPUnit_Framework_TestCase;
 
 class AssetTest extends PHPUnit_Framework_TestCase
 {
@@ -11,13 +15,13 @@ class AssetTest extends PHPUnit_Framework_TestCase
             'css', 'test-css', 'css/awesome.css'
         );
 
-        $al->register('javascript', 'jquery', '//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js', array('local' => false));
+        $al->register('javascript', 'jquery', '//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js', ['local' => false]);
 
         $pkg = new \Concrete\Core\Entity\Package();
         $pkg->setPackageHandle('testing_package');
         $al->register(
             'javascript', 'testing/tab', 'blocks/testing_block/js/tab.js',
-            array('version' => '3.2.0', 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false), $pkg
+            ['version' => '3.2.0', 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false], $pkg
         );
 
         $asset1 = $al->getAsset('css', 'test-css');
@@ -30,7 +34,7 @@ class AssetTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js', $asset3->getAssetURL());
 
         // overrides test
-        $al->register('javascript', 'jquery', '//ajax.googleapis.com/ajax/libs/jquery/2.0/jquery.min.js', array('local' => false, 'version' => '2.0'));
+        $al->register('javascript', 'jquery', '//ajax.googleapis.com/ajax/libs/jquery/2.0/jquery.min.js', ['local' => false, 'version' => '2.0']);
         $asset3 = $al->getAsset('javascript', 'jquery');
         $this->assertEquals('//ajax.googleapis.com/ajax/libs/jquery/2.0/jquery.min.js', $asset3->getAssetURL());
     }

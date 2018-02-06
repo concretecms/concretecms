@@ -1,12 +1,12 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
-use Concrete\Core\Page\Page;
-use Concrete\Core\Page\Single as SinglePage;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
+use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
-class Version20180122220813 extends AbstractMigration implements DirectSchemaUpgraderInterface
+class Version20180122220813 extends AbstractMigration implements RepeatableMigrationInterface, DirectSchemaUpgraderInterface
 {
     /**
      * {@inheritdoc}
@@ -15,11 +15,6 @@ class Version20180122220813 extends AbstractMigration implements DirectSchemaUpg
      */
     public function upgradeDatabase()
     {
-        $page = Page::getByPath('/dashboard/system/mail/addresses');
-        if (!is_object($page) || $page->isError()) {
-            $sp = SinglePage::add('/dashboard/system/mail/addresses');
-            $sp->update(['cName' => 'System Email Addresses']);
-            $sp->setAttribute('meta_keywords', 'mail settings, mail configuration, email, sender');
-        }
+        $this->createSinglePage('/dashboard/system/mail/addresses', 'System Email Addresses', ['meta_keywords' => 'mail settings, mail configuration, email, sender']);
     }
 }

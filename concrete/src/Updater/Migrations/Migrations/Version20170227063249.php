@@ -4,11 +4,12 @@ namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
+use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
 /**
  * Conversations Ratings Page Review Migration.
  */
-class Version20170227063249 extends AbstractMigration implements DirectSchemaUpgraderInterface
+class Version20170227063249 extends AbstractMigration implements RepeatableMigrationInterface, DirectSchemaUpgraderInterface
 {
     /**
      * {@inheritdoc}
