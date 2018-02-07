@@ -165,6 +165,28 @@ class Repository extends \Illuminate\Config\Repository
 
         return false;
     }
+    
+    /**
+     * Delete a key.
+     *
+     * @param $key
+     *
+     * @return bool
+     */
+    public function delete($key)
+    {
+        list($namespace, $group, $item) = $this->parseKey($key);
+        $collection = $this->getCollection($group, $namespace);
+        unset($this->items[$collection]);
+
+        if ($this->saver->delete($item, $this->environment, $group, $namespace)) {
+            $this->load($group, $namespace, $this->getCollection($group, $namespace));
+
+            return true;
+        }
+
+        return false;
+    }
 
     /**
      * Clear specific key.
