@@ -33,11 +33,15 @@ if (file_exists($app_config_path)) {
     if (isset($app_config['enable_legacy_src_namespace'])) {
         $enable_legacy_src_namespace = $app_config['enable_legacy_src_namespace'];
     }
+    unset($app_config);
 }
+unset($app_config_path);
 if (isset($namespace)) {
     $class_loader->setApplicationNamespace($namespace);
 }
 if ($enable_legacy_src_namespace) {
     $class_loader->enableLegacyNamespace();
 }
+unset($enable_legacy_src_namespace);
 $class_loader->enable();
+unset($class_loader);
