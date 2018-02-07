@@ -101,23 +101,23 @@ class Version20171110032423 extends AbstractMigration implements RepeatableMigra
     protected function backupLegacyCalendar()
     {
         $this->output(t('Backing up legacy calendar...'));
-        if (!$this->connection->tableExists('_CalendarEventAttributeValues')) {
-            $this->connection->Execute('alter table CalendarEventAttributeValues rename _CalendarEventAttributeValues');
-        }
-        if (!$this->connection->tableExists('_CalendarEventOccurrences')) {
-            $this->connection->Execute('alter table CalendarEventOccurrences rename _CalendarEventOccurrences');
-        }
-        if (!$this->connection->tableExists('_CalendarEventRepetitions')) {
-            $this->connection->Execute('alter table CalendarEventRepetitions rename _CalendarEventRepetitions');
-        }
-        if (!$this->connection->tableExists('_CalendarEventSearchIndexAttributes')) {
-            $this->connection->Execute('alter table CalendarEventSearchIndexAttributes rename _CalendarEventSearchIndexAttributes');
-        }
-        if (!$this->connection->tableExists('_CalendarEvents')) {
-            $this->connection->Execute('alter table CalendarEvents rename _CalendarEvents');
-        }
-        if (!$this->connection->tableExists('_Calendars')) {
-            $this->connection->Execute('alter table Calendars rename _Calendars');
+        $sm = $this->connection->getSchemaManager();
+        foreach ([
+            'CalendarEventAttributeValues',
+            'CalendarEventOccurrences',
+            'CalendarEventRepetitions',
+            'CalendarEventSearchIndexAttributes',
+            'CalendarEvents',
+            'Calendars',
+        ] as $tableName) {
+            $newTableName = '_' . $tableName;
+            if ($sm->tablesExist($newTableName)) {
+                continue;
+            }
+            foreach ($sm->listTableForeignKeys($tableName) as $foreignKey) {
+                $sm->dropForeignKey($foreignKey, $tableName);
+            }
+            $sm->renameTable($tableName, $newTableName);
         }
     }
 
