@@ -27,6 +27,8 @@ class Events extends DashboardCalendarPageController
         $this->set('calendars', $calendars);
         $this->set('calendarPermissions', new \Permissions($calendar));
         $this->set('calendar', $calendar);
+        
+        $dateService = $this->app->make('helper/date');
 
         if (!$year) {
             $year = date('Y');
@@ -86,7 +88,7 @@ class Events extends DashboardCalendarPageController
         $timezone = $calendar->getTimezone();
         $todayDate = new \DateTime($year . '-' . $month . '-01 00:00:00', new \DateTimeZone($timezone));
         $todayDateTimestamp = $todayDate->getTimestamp();
-        $this->set('monthText', date('F', $monthYearTimestamp));
+        $this->set('monthText', ucfirst($dateService->formatCustom('F', $monthYearTimestamp)));
         $this->set('month', $month);
         $this->set('year', $year);
         $this->set('daysInMonth', date('t', $monthYearTimestamp));
