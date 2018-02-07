@@ -256,7 +256,7 @@ class PageController extends Controller
             $valid = false;
         }
 
-        if (is_callable(array($this, $this->action))  && (get_class($this) != '\Concrete\Controller\PageForbidden')) {
+        if ($valid && is_callable(array($this, $this->action))  && !($this instanceof \Concrete\Controller\SinglePage\PageForbidden)) {
             // we use reflection to see if the task itself, which now much exist, takes fewer arguments than
             // what is specified
             $r = new \ReflectionMethod(get_class($this), $this->action);
