@@ -10,7 +10,8 @@
             'repetition': '',
             'template': 'script[data-template=duration-wrapper]',
             'dateFormat': '',
-            'allowRepeat': true
+            'allowRepeat': true,
+            'timeFormat': 24
         }, options);
 
         my.options = options;
@@ -179,35 +180,44 @@
         },
 
         getTimeFromDate: function (momentDate, round) {
-            var minutes = momentDate.minutes();
-            var hours, pm;
+            var minutes = momentDate.minutes(),
+                hours,
+                pm,
+                selectedTime;
 
-            if (momentDate.hours() == 0) {
-                hours = 12;
-                pm = 'am';
-            } else if (momentDate.hours() > 11) {
-                pm = 'pm';
-                if (momentDate.hours() > 12) {
-                    hours = momentDate.hours() - 12;
-                } else {
+            switch (this.options.timeFormat) {
+                case 12:
+                    if (momentDate.hours() == 0) {
+                        hours = 12;
+                        pm = 'am';
+                    } else if (momentDate.hours() > 11) {
+                        pm = 'pm';
+                        if (momentDate.hours() > 12) {
+                            hours = momentDate.hours() - 12;
+                        } else {
+                            hours = momentDate.hours();
+                        }
+                    } else {
+                        hours = momentDate.hours();
+                        pm = 'am';
+                    }
+                    break;
+                case 24:
                     hours = momentDate.hours();
-                }
-            } else {
-                hours = momentDate.hours();
-                pm = 'am';
+                    pm = '';
+                    break;
             }
-
             if (minutes < 10) {
                 minutes = '0' + minutes;
             }
-
             if (round) {
-                var selectedTime = hours +  ':00' + pm;
                 if (minutes > 29) {
-                    var selectedTime = hours + ':30' + pm;
+                    selectedTime = hours + ':30' + pm;
+                } else {
+                    selectedTime = hours +  ':00' + pm;                    
                 }
             } else {
-                var selectedTime = hours + ':' + minutes + pm;
+                selectedTime = hours + ':' + minutes + pm;
             }
 
             return selectedTime;
@@ -273,10 +283,8 @@
                 my.$element.find('input[name=' + my.options.namespace + '_pdEndRepeatDateSpecific_pub_' + my.getSetID() + ']').datepicker('setDate', momentEndDateSpecific.toDate());
             }
 
-            my.$element.find('input[name=' + my.options.namespace + '_pdStartDate_pub_' + my.getSetID() + ']').datepicker({
-                onSelect: function () {
-                    $(this).trigger('change');
-                }
+            my.$element.find('input[name=' + my.options.namespace + '_pdStartDate_pub_' + my.getSetID() + ']').datepicker('option', 'onSelect', function () {
+                $(this).trigger('change');
             });
             my.$element.find('input[name=' + my.options.namespace + '_pdStartDate_pub_' + my.getSetID() + ']').on('change', function () {
                 my.$element.find('input[name=' + my.options.namespace + '_pdEndDate_pub_' + my.getSetID() + ']').datepicker('setDate', $(this).val());
