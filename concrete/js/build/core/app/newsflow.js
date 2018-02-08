@@ -9,7 +9,7 @@
 			width: '800',
 			height: '450', // the dialog adds 100 pixels
 			title: 'Help',
-			href: CCM_DISPATCHER_FILENAME + '/dashboard/home?_ccm_dashboard_external=1',
+			href: CCM_DISPATCHER_FILENAME + '/dashboard/welcome?_ccm_dashboard_external=1',
 			dialogClass: 'ccm-dialog-slim ccm-dialog-help-wrapper',
 
 			onOpen: function($dialog) {
