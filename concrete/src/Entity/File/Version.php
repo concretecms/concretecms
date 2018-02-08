@@ -11,6 +11,7 @@ use Concrete\Core\Entity\Attribute\Value\FileValue;
 use Concrete\Core\Entity\File\StorageLocation\StorageLocation;
 use Concrete\Core\File\Event\FileVersion as FileVersionEvent;
 use Concrete\Core\File\Exception\InvalidDimensionException;
+use Concrete\Core\File\Image\BitmapFormat;
 use Concrete\Core\File\Image\Thumbnail\Path\Resolver;
 use Concrete\Core\File\Image\Thumbnail\Thumbnail;
 use Concrete\Core\File\Image\Thumbnail\ThumbnailFormatService;
@@ -1423,10 +1424,11 @@ class Version implements ObjectInterface
         $app = Application::getFacadeApplication();
         $config = $app->make('config');
         $image = $this->getImagineImage();
+        $bitmapFormat = $app->make(BitmapFormat::class);
 
         $filesystem = $this->getFile()
-        ->getFileStorageLocationObject()
-        ->getFileSystemObject();
+            ->getFileStorageLocationObject()
+            ->getFileSystemObject();
 
         $height = $type->getHeight();
         $width = $type->getWidth();
@@ -1457,17 +1459,8 @@ class Version implements ObjectInterface
         $thumbnailPath = $type->getFilePath($this);
         $thumbnailFormat = $app->make(ThumbnailFormatService::class)->getFormatForFile($this);
 
-        switch ($thumbnailFormat) {
-            case ThumbnailFormatService::FORMAT_JPEG:
-                $mimetype = 'image/jpeg';
-                $thumbnailOptions = ['jpeg_quality' => $config->get('concrete.misc.default_jpeg_image_compression')];
-                break;
-            case ThumbnailFormatService::FORMAT_PNG:
-            default:
-                $mimetype = 'image/png';
-                $thumbnailOptions = ['png_compression_level' => $config->get('concrete.misc.default_png_image_compression')];
-                break;
-        }
+        $mimetype = $bitmapFormat->getFormatMimeType($thumbnailFormat);
+        $thumbnailOptions = $bitmapFormat->getFormatImagineSaveOptions($format);
 
         $filesystem->write(
             $thumbnailPath,

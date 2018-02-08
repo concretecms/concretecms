@@ -3,6 +3,7 @@
 namespace Concrete\Core\File\ImportProcessor;
 
 use Concrete\Core\Entity\File\Version;
+use Concrete\Core\File\Image\BitmapFormat;
 use Concrete\Core\Support\Facade\Application;
 use Exception;
 use Imagine\Filter\Basic\Autorotate;
@@ -18,48 +19,9 @@ class AutorotateImageProcessor implements ProcessorInterface
      */
     protected $app;
 
-    /**
-     * @var int|null
-     */
-    protected $jpegCompression;
-
     public function __construct()
     {
         $this->app = Application::getFacadeApplication();
-    }
-
-    /**
-     * Set the JPEG compression.
-     *
-     * @param int $value Valid values are from 0 to 100
-     *
-     * @return $this
-     */
-    public function setJpegCompression($value)
-    {
-        if ($this->app->make('helper/validation/numbers')->integer($value, 0, 100)) {
-            $this->jpegCompression = (int) $value;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Get the JPEG compression.
-     *
-     * @return int
-     */
-    public function getJpegCompression()
-    {
-        if ($this->jpegCompression === null) {
-            $config = $this->app->make('config');
-            $this->setJpegCompression($config->get('concrete.misc.default_jpeg_image_compression'));
-            if ($this->jpegCompression === null) {
-                $this->jpegCompression = 80;
-            }
-        }
-
-        return $this->jpegCompression;
     }
 
     /**
@@ -111,6 +73,8 @@ class AutorotateImageProcessor implements ProcessorInterface
 
         $transformation = new Transformation($imagine);
         $transformation->applyFilter($image, new Autorotate());
-        $version->updateContents($image->get('jpg', ['jpeg_quality' => $this->getJpegCompression()]));
+        $format = BitmapFormat::FORMAT_JPEG;
+        $saveOptions = $this->app->make(BitmapFormat::class)->getFormatImagineSaveOptions($format);
+        $version->updateContents($image->get($format, $saveOptions));
     }
 }

@@ -1,10 +1,14 @@
 <?php
 namespace Concrete\Core\File\ImportProcessor;
 
+use Concrete\Core\File\Image\BitmapFormat;
 use Concrete\Core\File\Type\Type;
 use Concrete\Core\Entity\File\Version;
+use Concrete\Core\Support\Facade\Application;
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
+use Imagine\Image\Point;
+use InvalidArgumentException;
 
 class ConstrainImageProcessor implements ProcessorInterface
 {
@@ -180,28 +184,10 @@ class ConstrainImageProcessor implements ProcessorInterface
             $thumbnail = $image->thumbnail(new Box($width, $height), $mode);
         }
         $mimetype = $fr->getMimeType();
-        $thumbnailOptions = array();
-        switch ($mimetype) {
-            case 'image/jpeg':
-                $thumbnailType = 'jpeg';
-                $thumbnailOptions = array('jpeg_quality' => \Config::get('concrete.misc.default_jpeg_image_compression'));
-                break;
-            case 'image/png':
-                $thumbnailType = 'png';
-                break;
-            case 'image/gif':
-                $thumbnailType = 'gif';
-                break;
-            case 'image/xbm':
-                $thumbnailType = 'xbm';
-                break;
-            case 'image/vnd.wap.wbmp':
-                $thumbnailType = 'wbmp';
-                break;
-            default:
-                $thumbnailType = 'png';
-                break;
-        }
+        $app = Application::getFacadeApplication();
+        $bitmapFormat = $app->make(BitmapFormat::class);
+        $thumbnailType = $bitmapFormat->getFormatFromMimeType($mimetype, BitmapFormat::FORMAT_PNG);
+        $thumbnailOptions = $bitmapFormat->getFormatImagineSaveOptions($thumbnailType);
 
         $version->updateContents($thumbnail->get($thumbnailType, $thumbnailOptions));
     }
