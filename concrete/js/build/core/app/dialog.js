@@ -1,6 +1,8 @@
 /**
  * concrete5 wrapper for jQuery UI
  */
+/* jshint unused:vars, undef:true, jquery:true, browser:true, -W061, -W014 */
+/* global ConcreteMenuManager, ccmi18n, NProgress */
 $.widget("concrete.dialog", $.ui.dialog, {
     _allowInteraction: function(event) {
         return !!$(event.target).closest('.ccm-interaction-dialog').length
@@ -42,7 +44,7 @@ jQuery.fn.dialog = function() {
             */
             var onClose = $(this).attr('dialog-on-close');
             var onDirectClose = $(this).attr('dialog-on-direct-close');
-            obj = {
+            var obj = {
                 modal: true,
                 href: href,
                 width: width,
@@ -54,17 +56,17 @@ jQuery.fn.dialog = function() {
                 onClose: onClose,
                 onDirectClose: onDirectClose,
                 launcher: $(this)
-            }
+            };
             jQuery.fn.dialog.open(obj);
             return false;
         });
     });
-}
+};
 
 jQuery.fn.dialog.close = function(num) {
     num++;
     $("#ccm-dialog-content" + num).jqdialog('close');
-}
+};
 
 jQuery.fn.dialog.open = function(options) {
     if (typeof(ConcreteMenu) != 'undefined') {
@@ -73,7 +75,7 @@ jQuery.fn.dialog.open = function(options) {
             activeMenu.hide();
         }
     }
-
+    var w;
     if (typeof(options.width) == 'string') {
         if (options.width == 'auto') {
             w = 'auto';
@@ -92,6 +94,7 @@ jQuery.fn.dialog.open = function(options) {
         w = 550;
     }
 
+    var h;
     if (typeof(options.height) == 'string') {
         if (options.height == 'auto') {
             h = 'auto';
@@ -233,7 +236,7 @@ jQuery.fn.dialog.open = function(options) {
         });
     }
 
-}
+};
 
 jQuery.fn.dialog.activateDialogContents = function($dialog) {
     // handle buttons
@@ -244,11 +247,11 @@ jQuery.fn.dialog.activateDialogContents = function($dialog) {
     $dialog.find('[data-dialog-form]').each(function() {
         var $form = $(this),
             options = {};
-        if ($(this).attr("data-dialog-form-processing") == 'progressive') {
+        if ($form.attr("data-dialog-form-processing") == 'progressive') {
             options.progressiveOperation = true;
             options.progressiveOperationElement = 'div[data-dialog-form-element=progress-bar]';
         }
-        $(this).concreteAjaxForm(options);
+        $form.concreteAjaxForm(options);
     });
 
 
@@ -280,11 +283,11 @@ jQuery.fn.dialog.activateDialogContents = function($dialog) {
     // help handling
     if ($dialog.find('.dialog-help').length > 0) {
         $dialog.find('.dialog-help').hide();
-        var helpContent = $dialog.find('.dialog-help').html();
+        var helpContent = $dialog.find('.dialog-help').html(), helpText;
         if (ccmi18n.helpPopup) {
-            var helpText = ccmi18n.helpPopup;
+            helpText = ccmi18n.helpPopup;
         } else {
-            var helpText = 'Help';
+            helpText = 'Help';
         }
         var button = $('<button class="ui-dialog-titlebar-help ccm-menu-help-trigger"><i class="fa fa-info-circle"></i></button>'),
             container = $('#ccm-tooltip-holder');
@@ -319,35 +322,35 @@ jQuery.fn.dialog.activateDialogContents = function($dialog) {
             });
         });
     }
-}
+};
 
 jQuery.fn.dialog.getTop = function() {
     var nd = $(".ui-dialog:visible").length;
     return $($('.ui-dialog:visible')[nd-1]).find('.ui-dialog-content');
-}
+};
 
 jQuery.fn.dialog.replaceTop = function(html) {
-    $dialog = jQuery.fn.dialog.getTop();
+    var $dialog = jQuery.fn.dialog.getTop();
     $dialog.html(html);
     jQuery.fn.dialog.activateDialogContents($dialog);
-}
+};
 
 jQuery.fn.dialog.showLoader = function(text) {
     NProgress.start();
-}
+};
 
 jQuery.fn.dialog.hideLoader = function() {
     NProgress.done();
-}
+};
 
 jQuery.fn.dialog.closeTop = function() {
-    $dialog = jQuery.fn.dialog.getTop();
+    var $dialog = jQuery.fn.dialog.getTop();
     $dialog.jqdialog('close');
-}
+};
 
 jQuery.fn.dialog.closeAll = function() {
     $($(".ui-dialog-content").get().reverse()).jqdialog('close');
-}
+};
 
 $.ui.dialog.prototype._focusTabbable = $.noop;
 
