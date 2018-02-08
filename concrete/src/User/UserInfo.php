@@ -808,11 +808,16 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     }
 
     /**
-     * @see \Concrete\Core\Entity\User\User::getUserName()
+     * @return string
      */
     public function getUserDisplayName()
     {
-        return $this->entity->getUserName();
+        $config = $this->application->make('config');
+        if ($config->get('concrete.user.registration.email_registration')) {
+            return $this->getUserEmail();
+        } else {
+            return $this->getUserName();
+        }
     }
 
     /**
