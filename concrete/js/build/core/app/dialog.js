@@ -226,8 +226,10 @@ jQuery.fn.dialog.open = function(options) {
             type: 'GET',
             url: finalSettings.href,
             data: finalSettings.data,
+            complete: function() {
+                jQuery.fn.dialog.hideLoader();                
+            },
             success: function(r) {
-                jQuery.fn.dialog.hideLoader();
                 // note the order here is very important in order to actually run javascript in
                 // the pages we load while having access to the jqdialog object.
                 // Ensure that the dialog is open prior to evaluating javascript.
