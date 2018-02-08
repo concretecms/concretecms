@@ -136,7 +136,8 @@ if ($calendar) {
                         start     = 0,
                         container = $('<div />').css({
                             position: 'relative',
-                            overflow: 'hidden'
+                            overflow: 'hidden',
+                            transition: 'height .5s'
                         }),
                         set_container = $('<div />'),
                         slider    = $('<div />').css({
@@ -220,6 +221,7 @@ if ($calendar) {
                                     position: 'static',
                                     left: 0
                                 }).append(subset);
+                                container.height(subset.parent().height());
                                 slider.remove();
                                 callback.apply(this, Array.prototype.slice.call(arguments));
                             });
@@ -237,6 +239,7 @@ if ($calendar) {
                                     position: 'static',
                                     left: 0
                                 }).append(subset);
+                                container.height(subset.parent().height());
                                 slider.remove();
                                 callback.apply(this, Array.prototype.slice.call(arguments));
                             });
