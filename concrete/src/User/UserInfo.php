@@ -38,6 +38,7 @@ use stdClass;
 use User as ConcreteUser;
 use View;
 use Concrete\Core\Export\Item\User as UserExporter;
+use Concrete\Core\File\Image\BitmapFormat;
 
 class UserInfo extends ConcreteObject implements AttributeObjectInterface, PermissionObjectInterface, ExportableInterface
 {
@@ -251,10 +252,9 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     public function updateUserAvatar(ImageInterface $image)
     {
         $fsl = $this->application->make(StorageLocationFactory::class)->fetchDefault()->getFileSystemObject();
+        $bitmapFormat = $this->application->make(BitmapFormat::class);
         $config = $this->application->make('config');
-        $image = $image->get('jpg', [
-            'jpeg_quality' => $config->get('concrete.misc.default_jpeg_image_compression')
-        ]);
+        $image = $image->get(BitmapFormat::FORMAT_JPEG, $bitmapFormat->getFormatImagineSaveOptions(BitmapFormat::FORMAT_JPEG));
         $file = REL_DIR_FILES_AVATARS . '/' . $this->getUserID() . '.jpg';
         if ($fsl->has($file)) {
             $fsl->delete($file);

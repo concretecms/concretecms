@@ -3,6 +3,7 @@
 namespace Concrete\Core\File\Image\Thumbnail\Type;
 
 use Concrete\Core\Entity\File\Version as FileVersion;
+use Concrete\Core\File\Image\BitmapFormat;
 use Concrete\Core\File\Image\Thumbnail\ThumbnailFormatService;
 use Concrete\Core\File\Image\Thumbnail\Type\Type as ThumbnailType;
 use Concrete\Core\Support\Facade\Application;
@@ -289,15 +290,7 @@ class Version
         $prefix = $fv->getPrefix();
         $filename = $fv->getFileName();
         $thumbnailFormat = $app->make(ThumbnailFormatService::class)->getFormatForFile($filename);
-        switch ($thumbnailFormat) {
-            case ThumbnailFormatService::FORMAT_JPEG:
-                $extension = 'jpg';
-                break;
-            case ThumbnailFormatService::FORMAT_PNG:
-            default:
-                $extension = 'png';
-                break;
-        }
+        $extension = $app->make(BitmapFormat::class)->getFormatFileExtension($thumbnailFormat);
 
         return REL_DIR_FILES_THUMBNAILS . '/' . $this->getDirectoryName() . $ii->prefix($prefix, $hi->replaceExtension($filename, $extension));
     }
