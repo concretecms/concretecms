@@ -17,10 +17,10 @@ if (! is_array($users) || count($users) ==0) {
 ?>
 	<p><?php
 		if ('activate' == $function) {
-			echo t('Are you sure you would like to activate the following users');
+			echo t('Are you sure you would like to activate the following users?');
 			$button = t('Activate');
 		} else {
-			echo t('Are you sure you would like to deactivate the following users');
+			echo t('Are you sure you would like to deactivate the following users?');
 			$button = t('Deactivate');
 		}
 		?>?</p>
