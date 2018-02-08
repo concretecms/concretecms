@@ -4,6 +4,7 @@ namespace Concrete\Core\File\Service;
 use Concrete\Core\File\StorageLocation\StorageLocation;
 use Config;
 use Concrete\Core\Support\Facade\Application as ApplicationFacade;
+use Concrete\Core\File\Image\BitmapFormat;
 use Concrete\Core\File\Image\Thumbnail\ThumbnailFormatService;
 
 class Application
@@ -30,15 +31,7 @@ class Application
         }
         $app = ApplicationFacade::getFacadeApplication();
         $format = $app->make(ThumbnailFormatService::class)->getFormatForFile($filename);
-        switch ($format) {
-            case ThumbnailFormatService::FORMAT_JPEG:
-                $extension = 'jpg';
-                break;
-            case ThumbnailFormatService::FORMAT_PNG:
-            default:
-                $extension = 'png';
-                break;
-        }
+        $extension = $app->make(BitmapFormat::class)->getFormatFileExtension($format);
         $hi = $app->make('helper/file');
         $filename = $hi->replaceExtension($filename, $extension);
 

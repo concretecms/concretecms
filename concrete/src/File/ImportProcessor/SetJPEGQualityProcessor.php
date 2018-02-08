@@ -2,6 +2,7 @@
 namespace Concrete\Core\File\ImportProcessor;
 
 use Concrete\Core\Entity\File\Version;
+use Concrete\Core\File\Image\BitmapFormat;
 
 class SetJPEGQualityProcessor implements ProcessorInterface
 {
@@ -37,6 +38,6 @@ class SetJPEGQualityProcessor implements ProcessorInterface
     {
         $fr = $version->getFileResource();
         $image = \Image::load($fr->read());
-        $version->updateContents($image->get('jpg', array('jpeg_quality' => $this->getQuality())));
+        $version->updateContents($image->get(BitmapFormat::FORMAT_JPEG, array('jpeg_quality' => $this->getQuality())));
     }
 }
