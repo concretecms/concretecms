@@ -1460,7 +1460,7 @@ class Version implements ObjectInterface
         $thumbnailFormat = $app->make(ThumbnailFormatService::class)->getFormatForFile($this);
 
         $mimetype = $bitmapFormat->getFormatMimeType($thumbnailFormat);
-        $thumbnailOptions = $bitmapFormat->getFormatImagineSaveOptions($format);
+        $thumbnailOptions = $bitmapFormat->getFormatImagineSaveOptions($thumbnailFormat);
 
         $filesystem->write(
             $thumbnailPath,
