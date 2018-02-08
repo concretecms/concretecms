@@ -25,10 +25,9 @@ use Concrete\Core\Tree\Node\Type\FileFolder;
 use Concrete\Core\Tree\TreeType;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
-use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
 use Concrete\Core\Updater\Migrations\Routine\AddPageDraftsBooleanTrait;
 
-class Version20160725000000 extends AbstractMigration implements DirectSchemaUpgraderInterface
+class Version20160725000000 extends AbstractMigration
 {
     use AddPageDraftsBooleanTrait;
 
@@ -48,7 +47,7 @@ class Version20160725000000 extends AbstractMigration implements DirectSchemaUpg
     /**
      * {@inheritdoc}
      *
-     * @see \Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface::upgradeDatabase()
+     * @see \Concrete\Core\Updater\Migrations\AbstractMigration::upgradeDatabase()
      */
     public function upgradeDatabase()
     {
@@ -1361,9 +1360,10 @@ EOT
             $result[] = $cID;
             $cParentID = $this->connection->fetchColumn('SELECT cParentID FROM Pages WHERE cID = ?', [$cID]);
             if ($cParentID) {
-                $result = array_merge($result, $this->getCollectionIdTrail($cParentID)); 
+                $result = array_merge($result, $this->getCollectionIdTrail($cParentID));
             }
         }
+
         return $result;
     }
 }

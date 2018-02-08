@@ -5,7 +5,6 @@ namespace Concrete\Core\Updater\Migrations\Migrations;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Express\EntryList;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
-use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
 /**
@@ -18,12 +17,12 @@ use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
  * After refreshing all columns we go though all entities and re-fill the search indexes so that any values that are
  * longer than 255 chars will now be indexed properly.
  */
-class Version20170316000000 extends AbstractMigration implements RepeatableMigrationInterface, DirectSchemaUpgraderInterface
+class Version20170316000000 extends AbstractMigration implements RepeatableMigrationInterface
 {
     /**
      * {@inheritdoc}
      *
-     * @see \Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface::upgradeDatabase()
+     * @see \Concrete\Core\Updater\Migrations\AbstractMigration::upgradeDatabase()
      */
     public function upgradeDatabase()
     {
