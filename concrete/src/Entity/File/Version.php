@@ -1145,9 +1145,10 @@ class Version implements ObjectInterface
     /**
      * Update the contents of the file.
      *
-     * @param string $contents
+     * @param string $contents The new content of the file
+     * @param bool $rescanThumbnails Should thumbnails be rescanned as well?
      */
-    public function updateContents($contents)
+    public function updateContents($contents, $rescanThumbnails = true)
     {
         $storage = $this->getFile()->getFileStorageLocationObject();
         if ($storage !== null) {
@@ -1165,7 +1166,7 @@ class Version implements ObjectInterface
             $this->logVersionUpdate(self::UT_CONTENTS);
             $fve = new FileVersionEvent($this);
             $app->make(EventDispatcherInterface::class)->dispatch('on_file_version_update_contents', $fve);
-            $this->refreshAttributes();
+            $this->refreshAttributes($rescanThumbnails);
         }
     }
 
@@ -1469,7 +1470,7 @@ class Version implements ObjectInterface
                 'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
                 'mimetype' => $mimetype,
             ]
-            );
+        );
 
         if ($type->getHandle() == $config->get('concrete.icons.file_manager_listing.handle')) {
             $this->fvHasListingThumbnail = true;
