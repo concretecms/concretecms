@@ -1472,12 +1472,13 @@ class Version implements ObjectInterface
             ]
         );
 
-        if ($type->getHandle() == $config->get('concrete.icons.file_manager_listing.handle')) {
+        if ($type->getHandle() == $config->get('concrete.icons.file_manager_listing.handle') && !$this->fvHasListingThumbnail) {
             $this->fvHasListingThumbnail = true;
+            $this->save();
         }
-
-        if ($type->getHandle() == $config->get('concrete.icons.file_manager_detail.handle')) {
+        if ($type->getHandle() == $config->get('concrete.icons.file_manager_detail.handle') && !$this->fvHasDetailThumbnail) {
             $this->fvHasDetailThumbnail = true;
+            $this->save();
         }
 
         unset($size);
@@ -1650,6 +1651,8 @@ class Version implements ObjectInterface
      */
     public function deleteThumbnail($type)
     {
+        $app = Application::getFacadeApplication();
+        $config = $app->make('config');
         if (!($type instanceof ThumbnailTypeVersion)) {
             $type = ThumbnailTypeVersion::getByHandle($type);
         }
@@ -1660,6 +1663,14 @@ class Version implements ObjectInterface
                 $fsl->delete($path);
             }
         } catch (FileNotFoundException $e) {
+        }
+        if ($type->getHandle() == $config->get('concrete.icons.file_manager_listing.handle') && $this->fvHasListingThumbnail) {
+            $this->fvHasListingThumbnail = false;
+            $this->save();
+        }
+        if ($type->getHandle() == $config->get('concrete.icons.file_manager_detail.handle') && $this->fvHasDetailThumbnail) {
+            $this->fvHasDetailThumbnail = false;
+            $this->save();
         }
     }
 
