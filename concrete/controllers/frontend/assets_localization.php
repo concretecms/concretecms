@@ -597,11 +597,30 @@ jQuery.ui.fancytree.prototype.options.strings.loadError = ' . json_encode(t('Loa
      */
     public function getDropzoneJavascript()
     {
-        $content =
-'Dropzone.prototype.defaultOptions.dictDefaultMessage = ' . json_encode(t('Drop files here or click to upload.')) . ';
+        $content = ';
+Dropzone.prototype.defaultOptions.dictDefaultMessage = ' . json_encode(t('Drop files here or click to upload.')) . ';
 Dropzone.prototype.defaultOptions.dictFallbackMessage = ' . json_encode(t("Your browser does not support drag'n'drop file uploads.")) . ';
 Dropzone.prototype.defaultOptions.dictFallbackText = ' . json_encode(t('Please use the fallback form below to upload your files like in the olden days.')) . ';
+Dropzone.prototype.defaultOptions.dictFallbackText = ' . json_encode(t('Please use the fallback form below to upload your files like in the olden days.')) . ';
+Dropzone.prototype.defaultOptions.dictFileTooBig = ' . json_encode(t('File is too big ({{filesize}}MiB). Max filesize: {{maxFilesize}}MiB.')) . ';
+Dropzone.prototype.defaultOptions.dictInvalidFileType = ' . json_encode(t('You can\'t upload files of this type.')) . ';
+Dropzone.prototype.defaultOptions.dictResponseError = ' . json_encode(t('Server responded with {{statusCode}} code.')) . ';
+Dropzone.prototype.defaultOptions.dictCancelUpload = ' . json_encode(t('Cancel upload')) . ';
+Dropzone.prototype.defaultOptions.dictCancelUploadConfirmation = ' . json_encode(t('Are you sure you want to cancel this upload?')) . ';
+Dropzone.prototype.defaultOptions.dictRemoveFile = ' . json_encode(t('Remove file')) . ';
+Dropzone.prototype.defaultOptions.dictMaxFilesExceeded = ' . json_encode(t('You can not upload any more files.')) . ';
 ';
+        $config = $this->app->make('config');
+        if ($config->get('concrete.file_manager.restrict_uploaded_image_sizes')) {
+            $maxWidth = (int) $config->get('concrete.file_manager.restrict_max_width');
+            if ($maxWidth > 0) {
+                $content .= "Dropzone.prototype.defaultOptions.resizeWidth = {$maxWidth};\n";
+            }
+            $maxHeight = (int) $config->get('concrete.file_manager.restrict_max_height');
+            if ($maxHeight > 0) {
+                $content .= "Dropzone.prototype.defaultOptions.resizeHeight = {$maxHeight};\n";
+            }
+        }
 
         return $this->createJavascriptResponse($content);
     }
