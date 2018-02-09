@@ -3,24 +3,25 @@
 namespace Concrete\Controller\Backend;
 
 use Concrete\Core\Controller\Controller;
+use Concrete\Core\Entity\File\File as FileEntity;
+use Concrete\Core\Entity\File\Version as FileVersionEntity;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\File\EditResponse as FileEditResponse;
 use Concrete\Core\File\Importer;
 use Concrete\Core\File\ImportProcessor\AutorotateImageProcessor;
 use Concrete\Core\File\ImportProcessor\ConstrainImageProcessor;
-use Concrete\Core\Foundation\Queue\Queue;
-use Concrete\Core\Http\ResponseFactory;
+use Concrete\Core\Foundation\Queue\QueueService;
+use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\FileFolder;
-use Core;
+use Concrete\Core\View\View;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
-use File as ConcreteFile;
-use FileImporter;
 use FilePermissions;
 use FileSet;
-use Loader;
 use Permissions as ConcretePermissions;
 use stdClass;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class File extends Controller
 {
@@ -47,14 +48,14 @@ class File extends Controller
         $files = $this->getRequestFiles('canEditFileContents');
         $r = new FileEditResponse();
         $r->setFiles($files);
-        $error = new \Concrete\Core\Error\Error();
+        $error = $this->app->make('error');
 
         try {
             $this->doRescan($files[0]);
             $r->setMessage(t('File rescanned successfully.'));
         } catch (UserMessageException $e) {
             $error->add($e->getMessage());
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $error->add($e->getMessage());
         }
         $r->setError($error);
@@ -64,20 +65,19 @@ class File extends Controller
     public function rescanMultiple()
     {
         $files = $this->getRequestFiles('canEditFileContents');
-        $q = Queue::get('rescan_files');
-        if ($_POST['process']) {
+        $q = $this->app->make(QueueService::class)->get('rescan_files');
+        if ($this->request->request->get('process')) {
             $obj = new stdClass();
+            $em = $this->app->make(EntityManagerInterface::class);
             $messages = $q->receive(5);
             foreach ($messages as $key => $msg) {
                 // delete the page here
                 $file = unserialize($msg->body);
-                if ($file === false) {
-                    $q->deleteMessage($msg);
-                    continue;
-                }
-                $f = \Concrete\Core\File\File::getByID($file['fID']);
-                if (is_object($f)) {
-                    $this->doRescan($f);
+                if ($file !== false) {
+                    $f = $em->find(FileEntity::class, $file['fID']);
+                    if ($f !== null) {
+                        $this->doRescan($f);
+                    }
                 }
                 $q->deleteMessage($msg);
             }
@@ -85,8 +85,8 @@ class File extends Controller
             if ($q->count() == 0) {
                 $q->deleteQueue();
             }
-            echo json_encode($obj);
-            exit;
+
+            return $this->app->make(ResponseFactoryInterface::class)->json($data);
         } elseif ($q->count() == 0) {
             foreach ($files as $f) {
                 $q->send(serialize([
@@ -96,20 +96,21 @@ class File extends Controller
         }
 
         $totalItems = $q->count();
-        Loader::element('progress_bar', ['totalItems' => $totalItems, 'totalItemsSummary' => t2('%d file', '%d files', $totalItems)]);
+        View::element('progress_bar', ['totalItems' => $totalItems, 'totalItemsSummary' => t2('%d file', '%d files', $totalItems)]);
     }
 
     public function approveVersion()
     {
         $files = $this->getRequestFiles('canEditFileContents');
+        $fvID = $this->request->request->get('fvID', $this->request->query->get('fvID'));
+        $fvID = $this->app->make('helper/security')->sanitizeInt($fvID);
+        $fv = $files[0]->getVersion($fvID);
+        if ($fv === null) {
+            throw new UserMessageException(t('Invalid file version.'), 400);
+        }
+        $fv->approve();
         $r = new FileEditResponse();
         $r->setFiles($files);
-        $fv = $files[0]->getVersion(Loader::helper('security')->sanitizeInt($_REQUEST['fvID']));
-        if (is_object($fv)) {
-            $fv->approve();
-        } else {
-            throw new Exception(t('Invalid file version.'), 400);
-        }
         $r->outputJSON();
     }
 
@@ -119,25 +120,24 @@ class File extends Controller
         if (!$token->validate('delete-version')) {
             $files = $this->getRequestFiles('canEditFileContents');
         }
+        $fvID = $this->request->request->get('fvID', $this->request->query->get('fvID'));
+        $fvID = $this->app->make('helper/security')->sanitizeInt($fvID);
+        $fv = $files[0]->getVersion($fvID);
+        if ($fv === null || !$fv->isApproved()) {
+            throw new UserMessageException(t('Invalid file version.', 400));
+        }
+        if (!$token->validate('version/delete/' . $fv->getFileID() . '/' . $fv->getFileVersionId())) {
+            throw new UserMessageException($token->getErrorMessage(), 401);
+        }
+        $fv->delete();
         $r = new FileEditResponse();
         $r->setFiles($files);
-        $fv = $files[0]->getVersion(Loader::helper('security')->sanitizeInt($_REQUEST['fvID']));
-        if (is_object($fv) && !$fv->isApproved()) {
-            if (!$token->validate('version/delete/' . $fv->getFileID() . '/' . $fv->getFileVersionId())) {
-                throw new Exception($token->getErrorMessage(), 401);
-            }
-            $fv->delete();
-        } else {
-            throw new Exception(t('Invalid file version.', 400));
-        }
         $r->outputJSON();
     }
 
     public function upload()
     {
-        /** @var ResponseFactory $responseFactory */
-        $responseFactory = $this->app->make(ResponseFactory::class);
-
+        $responseFactory = $this->app->make(ResponseFactoryInterface::class);
         try {
             $folder = null;
             if ($this->request->request->has('currentFolder')) {
@@ -148,39 +148,43 @@ class File extends Controller
             }
 
             if ($folder) {
-                $fp = new \Permissions($folder);
+                $fp = new ConcretePermissions($folder);
             } else {
                 $fp = FilePermissions::getGlobal();
             }
 
             if (!$fp->canAddFiles()) {
-                throw new Exception(t('Unable to add files.'), 400);
+                throw new UserMessageException(t('Unable to add files.'), 400);
             }
 
-            if ($post_max_size = \Loader::helper('number')->getBytes(ini_get('post_max_size'))) {
+            if ($post_max_size = $this->app->make('helper/number')->getBytes(ini_get('post_max_size'))) {
                 if ($post_max_size < $_SERVER['CONTENT_LENGTH']) {
-                    throw new Exception(FileImporter::getErrorMessage(Importer::E_FILE_EXCEEDS_POST_MAX_FILE_SIZE), 400);
+                    throw new UserMessageException(Importer::getErrorMessage(Importer::E_FILE_EXCEEDS_POST_MAX_FILE_SIZE), 400);
                 }
             }
 
-            if (!Loader::helper('validation/token')->validate()) {
-                throw new Exception(Loader::helper('validation/token')->getErrorMessage(), 401);
+            $token = $this->app->make('token');
+            if (!$token->validate()) {
+                throw new UserMessageException($token->getErrorMessage(), 401);
             }
 
-            if (isset($_FILES['file'])) {
+            if ($this->request->files->has('file')) {
                 $files = $this->handleUpload('file', $folder);
             }
-            if (isset($_FILES['files']['tmp_name'][0])) {
+            $postedFiles = $this->request->files->get('files');
+            if (is_array($postedFiles)) {
                 $files = [];
-                for ($i = 0; $i < count($_FILES['files']['tmp_name']); ++$i) {
+                foreach (array_keys($postedFiles) as $i) {
                     $files = array_merge($files, $this->handleUpload('files', $folder, $i));
                 }
             }
+        } catch (UserMessageException $e) {
+            return $responseFactory->error($e->getMessage());
         } catch (Exception $e) {
-            if ($code = $e->getCode()) {
+            $code = $e->getCode();
+            if ($code) {
                 return $responseFactory->error($e->getMessage(), $code);
             }
-
             // This error doesn't have a code, it's likely not what we're wanting.
             throw $e;
         }
@@ -217,7 +221,7 @@ class File extends Controller
         $fv = $f->getApprovedVersion();
         $resp = $fv->refreshAttributes(false);
         switch ($resp) {
-            case \Concrete\Core\File\Importer::E_FILE_INVALID:
+            case Importer::E_FILE_INVALID:
                 $errorMessage = t('File %s could not be found.', $fv->getFilename()) . '<br/>';
                 throw new UserMessageException($errorMessage, 404);
         }
@@ -254,21 +258,25 @@ class File extends Controller
     protected function getRequestFiles($permission = 'canViewFileInFileManager')
     {
         $files = [];
-        if (is_array($_REQUEST['fID'])) {
-            $fileIDs = $_REQUEST['fID'];
+        $fID = $this->request->request->get('fID', $this->request->query->get('fID'));
+        if (is_array($fID)) {
+            $fileIDs = $fID;
         } else {
-            $fileIDs[] = $_REQUEST['fID'];
+            $fileIDs = [$fID];
         }
+        $em = $this->app->make(EntityManagerInterface::class);
         foreach ($fileIDs as $fID) {
-            $f = ConcreteFile::getByID($fID);
-            $fp = new ConcretePermissions($f);
-            if ($fp->$permission()) {
-                $files[] = $f;
+            $f = $fID ? $em->find(FileEntity::class, $fID) : null;
+            if ($f !== null) {
+                $fp = new ConcretePermissions($f);
+                if ($fp->$permission()) {
+                    $files[] = $f;
+                }
             }
         }
 
         if (count($files) == 0) {
-            Core::make('helper/ajax')->sendError(t('File not found.'));
+            $this->app->make('helper/ajax')->sendError(t('File not found.'));
         }
 
         return $files;
@@ -277,41 +285,40 @@ class File extends Controller
     protected function handleUpload($property, $folder = null, $index = false)
     {
         if ($index !== false) {
-            $name = $_FILES[$property]['name'][$index];
-            $tmp_name = $_FILES[$property]['tmp_name'][$index];
-
-            if ($_FILES[$property]['error'][$index]) {
-                throw new \Exception(FileImporter::getErrorMessage($_FILES[$property]['error'][$index]), 400);
-            }
+            $list = $this->request->files->get($property);
+            $file = $list[$index];
         } else {
-            $name = $_FILES[$property]['name'];
-            $tmp_name = $_FILES[$property]['tmp_name'];
-
-            if ($_FILES[$property]['error']) {
-                throw new \Exception(FileImporter::getErrorMessage($_FILES[$property]['error']), 400);
-            }
+            $file = $this->request->files->get($property);
         }
+        if (!$file instanceof UploadedFile) {
+            throw new UserMessageException(Importer::getErrorMessage(Importer::E_FILE_INVALID));
+        }
+        if (!$file->isValid()) {
+            throw new UserMessageException(Importer::getErrorMessage($file->getError()));
+        }
+        $cf = $this->app->make('helper/file');
+        $name = $file->getClientOriginalName();
+        $tmp_name = $file->getPathname();
 
         $files = [];
         if (is_object($folder)) {
-            $fp = new \Permissions($folder);
+            $fp = new ConcretePermissions($folder);
         } else {
             $fp = FilePermissions::getGlobal();
         }
-        $cf = Loader::helper('file');
         if (!$fp->canAddFileType($cf->getExtension($name))) {
-            throw new Exception(FileImporter::getErrorMessage(FileImporter::E_FILE_INVALID_EXTENSION), 403);
+            throw new UserMessageException(Importer::getErrorMessage(Importer::E_FILE_INVALID_EXTENSION), 403);
         } else {
-            $importer = new FileImporter();
+            $importer = new Importer();
             $response = $importer->import($tmp_name, $name, $folder);
         }
-        if (!($response instanceof \Concrete\Core\Entity\File\Version)) {
-            throw new Exception(FileImporter::getErrorMessage($response), 400);
+        if (!$response instanceof FileVersionEntity) {
+            throw new UserMessageException(Importer::getErrorMessage($response), 400);
         } else {
             $file = $response->getFile();
-            if (isset($_POST['ocID'])) {
+            if ($this->request->request->has('ocID')) {
                 // we check $fr because we don't want to set it if we are replacing an existing file
-                $file->setOriginalPage($_POST['ocID']);
+                $file->setOriginalPage($this->request->request->get('ocID'));
             }
             $files[] = $file->getJSONObject();
         }
