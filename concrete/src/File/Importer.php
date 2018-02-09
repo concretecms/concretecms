@@ -327,6 +327,7 @@ class Importer
         if ($this->rescanThumbnailsOnImport) {
             $fv->rescanThumbnails();
         }
+        $fv->releaseImagineImage();
 
         return $fv;
     }

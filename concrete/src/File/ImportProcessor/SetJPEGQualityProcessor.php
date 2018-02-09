@@ -36,8 +36,7 @@ class SetJPEGQualityProcessor implements ProcessorInterface
 
     public function process(Version $version)
     {
-        $fr = $version->getFileResource();
-        $image = \Image::load($fr->read());
+        $image = $version->getImagineImage();
         $version->updateContents($image->get(BitmapFormat::FORMAT_JPEG, array('jpeg_quality' => $this->getQuality())));
     }
 }

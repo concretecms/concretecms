@@ -84,6 +84,7 @@ class File extends Controller
             }
         }
         $fv->rescanThumbnails();
+        $fv->releaseImagineImage();
     }
 
     public function rescan()

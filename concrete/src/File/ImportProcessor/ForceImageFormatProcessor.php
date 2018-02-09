@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\File\ImportProcessor;
 
 use Concrete\Core\Entity\File\Version;
@@ -55,8 +56,7 @@ class ForceImageFormatProcessor implements ProcessorInterface
         if ($format !== null) {
             $bitmapFormat = \Core::make(BitmapFormat::class);
             $extension = $bitmapFormat->getFormatFileExtension($format);
-            $fr = $version->getFileResource();
-            $image = \Image::load($fr->read());
+            $image = $version->getImagineImage();
             $filename = $version->getFileName();
             $service = \Core::make('helper/file');
             $newFilename = $service->replaceExtension($filename, $extension);

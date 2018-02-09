@@ -8,7 +8,6 @@ use Concrete\Core\File\Type\Type;
 use Concrete\Core\Support\Facade\Application;
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
-use Imagine\Image\ImagineInterface;
 use Imagine\Image\Point;
 use InvalidArgumentException;
 
@@ -253,9 +252,7 @@ class ConstrainImageProcessor implements ProcessorInterface
 
     public function process(Version $version)
     {
-        $fr = $version->getFileResource();
-        $image = $this->app->make(ImagineInterface::class)->load($fr->read());
-        /* @var \Imagine\Image\ImageInterface $image */
+        $image = $version->getImagineImage();
         $imageSize = $image->getSize();
         $newBox = null;
         if ($this->maxWidth !== null && $this->maxHeight !== null) {
@@ -273,8 +270,9 @@ class ConstrainImageProcessor implements ProcessorInterface
             }
         }
         if ($newBox !== null) {
-            $thumbnail = $this->resizeInPlace($image, $newBox, $this->getConstraintMode());
+            $fr = $version->getFileResource();
             $mimetype = $fr->getMimeType();
+            $thumbnail = $this->resizeInPlace($image, $newBox, $this->getConstraintMode());
             $bitmapFormat = $this->app->make(BitmapFormat::class);
             $thumbnailType = $bitmapFormat->getFormatFromMimeType($mimetype, BitmapFormat::FORMAT_PNG);
             $thumbnailOptions = $bitmapFormat->getFormatImagineSaveOptions($thumbnailType);

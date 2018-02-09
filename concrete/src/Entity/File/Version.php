@@ -1150,6 +1150,7 @@ class Version implements ObjectInterface
      */
     public function updateContents($contents, $rescanThumbnails = true)
     {
+        $this->releaseImagineImage();
         $storage = $this->getFile()->getFileStorageLocationObject();
         if ($storage !== null) {
             $app = Application::getFacadeApplication();
@@ -1341,6 +1342,16 @@ class Version implements ObjectInterface
         }
 
         return $this->imagineImage ?: null;
+    }
+
+    /**
+     * Does the \Imagine\Image\ImageInterface instance have already been loaded?
+     *
+     * @return bool
+     */
+    public function hasImagineImage()
+    {
+        return $this->imagineImage ? true : false;
     }
 
     /**

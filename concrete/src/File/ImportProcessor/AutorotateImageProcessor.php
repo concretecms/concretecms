@@ -66,10 +66,13 @@ class AutorotateImageProcessor implements ProcessorInterface
         if (ExifMetadataReader::isSupported()) {
             if ($version->getTypeObject()->getName() == 'JPEG') {
                 try {
-                    $fr = $version->getFileResource();
-                    $medatadaReader = new ExifMetadataReader();
-                    $metadata = $medatadaReader->readData($fr->read());
-                    switch (isset($metadata['ifd0.Orientation']) ? $metadata['ifd0.Orientation'] : null) {
+                    $metadata = $version->hasImagineImage() ? $version->getImagineImage()->metadata() : null;
+                    if ($metadata === null) {
+                        $fr = $version->getFileResource();
+                        $medatadaReader = new ExifMetadataReader();
+                        $metadata = $medatadaReader->readData($fr->read());
+                    }
+                    switch ($metadata->get('ifd0.Orientation', null)) {
                         case 2: // top-right
                         case 3: // bottom-right
                         case 4: // bottom-left
@@ -96,13 +99,8 @@ class AutorotateImageProcessor implements ProcessorInterface
      */
     public function process(Version $version)
     {
-        $fr = $version->getFileResource();
-
-        $imagine = $this->app->make(ImagineInterface::class);
-        $imagine->setMetadataReader(new ExifMetadataReader());
-        $image = $imagine->load($fr->read());
-
-        $transformation = new Transformation($imagine);
+        $image = $version->getImagineImage();
+        $transformation = new Transformation($this->app->make(ImagineInterface::class));
         $transformation->applyFilter($image, new Autorotate());
         $format = BitmapFormat::FORMAT_JPEG;
         $saveOptions = $this->app->make(BitmapFormat::class)->getFormatImagineSaveOptions($format);
