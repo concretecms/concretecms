@@ -1,18 +1,16 @@
 <?php
+
 namespace Concrete\Core\File;
 
+use Concrete\Core\Entity\File\File as FileEntity;
+use Concrete\Core\Entity\File\StorageLocation\StorageLocation;
+use Concrete\Core\File\ImportProcessor\AutorotateImageProcessor;
 use Concrete\Core\File\ImportProcessor\ConstrainImageProcessor;
 use Concrete\Core\File\ImportProcessor\ProcessorInterface;
-use Concrete\Core\File\ImportProcessor\SetJPEGQualityProcessor;
-use Concrete\Core\File\ImportProcessor\AutorotateImageProcessor;
-use Concrete\Core\File\StorageLocation\StorageLocation;
-use League\Flysystem\AdapterInterface;
-use Loader;
-use Core;
-use Config;
-use Concrete\Core\Entity\File\File as FileEntity;
-use Concrete\Core\Tree\Node\Type\FileFolder;
+use Concrete\Core\File\StorageLocation\StorageLocationFactory;
 use Concrete\Core\Support\Facade\Application;
+use Exception;
+use League\Flysystem\AdapterInterface;
 
 class Importer
 {
@@ -114,14 +112,29 @@ class Importer
      */
     const E_FILE_EXCEEDS_POST_MAX_FILE_SIZE = 20;
 
+    /**
+     * Should thumbnails be scanned when importing an image?
+     *
+     * @var bool
+     */
     protected $rescanThumbnailsOnImport = true;
 
-    protected $importProcessors = array();
+    /**
+     * The list of configured import processors.
+     *
+     * @var \Concrete\Core\File\ImportProcessor\ProcessorInterface
+     */
+    protected $importProcessors = [];
+
+    /**
+     * @var \Concrete\Core\Application\Application
+     */
+    protected $app;
 
     public function __construct()
     {
-        $app = Application::getFacadeApplication();
-        $config = $app->make('config');
+        $this->app = Application::getFacadeApplication();
+        $config = $this->app->make('config');
         if ($config->get('concrete.file_manager.images.use_exif_data_to_rotate_images')) {
             $processor = new AutorotateImageProcessor();
             $processor->setRescanThumbnails(false);
@@ -147,7 +160,7 @@ class Importer
      */
     public static function getErrorMessage($code)
     {
-        $defaultStorage = StorageLocation::getDefault()->getName();
+        $defaultStorage = $this->app->make(StorageLocationFactory::class)->fetchDefault()->getName();
         $msg = '';
         switch ($code) {
             case self::E_PHP_NO_FILE:
@@ -198,43 +211,50 @@ class Importer
         return $msg;
     }
 
+    /**
+     * Add an import processor.
+     *
+     * @param \Concrete\Core\File\ImportProcessor\ProcessorInterface $processor
+     */
     public function addImportProcessor(ProcessorInterface $processor)
     {
         $this->importProcessors[] = $processor;
     }
 
     /**
+     * Generate a file prefix.
+     *
      * @return string
      */
     public function generatePrefix()
     {
-        $prefix = rand(10, 99) . time();
+        $prefix = mt_rand(10, 99) . time();
 
         return $prefix;
     }
 
     /**
-     * Imports a local file into the system. The file must be added to this path
-     * somehow. That's what happens in tools/files/importers/.
-     * If a $fr (FileRecord) object is passed, we assign the newly imported FileVersion
-     * object to that File. If not, we make a new filerecord.
+     * Imports a local file into the system.
      *
-     * @param string $pointer path to file
-     * @param string|bool $filename
-     * @param File|FileFolder|bool $fr
+     * @param string $pointer The path to the file
+     * @param string|bool $filename A custom name to give to the file. If not specified, we'll derive it from $pointer.
+     * @param \Concrete\Core\Entity\File\File|\Concrete\Core\Tree\Node\Type\FileFolder|null|false $fr If it's a File entity we assign the newly imported FileVersion object to that File. If it's a FileFolder entiity we'll create a new File in that folder (otherwise the new File will be created in the root folder).
+     * @param string|null $prefix the prefix to be used to store the file (if empty we'll generate a new prefix)
      *
-     * @return number Error Code | \Concrete\Core\EntiFile\Version
+     * @return \Concrete\Core\Entity\File\Version|int the imported file version (or an error code in case of problems)
      */
     public function import($pointer, $filename = false, $fr = false, $prefix = null)
     {
-        if ($filename == false) {
+        $fh = $this->app->make('helper/validation/file');
+        $fi = $this->app->make('helper/file');
+        $cf = $this->app->make('helper/concrete/file');
+
+        $filename = (string) $filename;
+        if ($filename === '') {
             // determine filename from $pointer
             $filename = basename($pointer);
         }
 
-        $fh = Loader::helper('validation/file');
-        $fi = Loader::helper('file');
-        $cf = Core::make('helper/concrete/file');
         $sanitizedFilename = $fi->sanitize($filename);
 
         // test if file is valid, else return FileImporter::E_FILE_INVALID
@@ -249,39 +269,49 @@ class Importer
         if ($fr instanceof FileEntity) {
             $fsl = $fr->getFileStorageLocationObject();
         } else {
-            $fsl = StorageLocation::getDefault();
+            $fsl = $this->app->make(StorageLocationFactory::class)->fetchDefault();
         }
-        if (!($fsl instanceof \Concrete\Core\Entity\File\StorageLocation\StorageLocation)) {
+        if (!($fsl instanceof StorageLocation)) {
             return self::E_FILE_INVALID_STORAGE_LOCATION;
         }
 
         // store the file in the file storage location.
         $filesystem = $fsl->getFileSystemObject();
-        $prefixIsAutoGenerated = false;
-        if (!$prefix) {
+        if ($prefix) {
+            $prefixIsAutoGenerated = false;
+        } else {
             // note, if you pass in a prefix manually, make sure it conforms to standards
             // (e.g. it is 12 digits, numeric only)
             $prefix = $this->generatePrefix();
             $prefixIsAutoGenerated = true;
         }
 
+        $src = @fopen($pointer, 'rb');
+        if ($src === false) {
+            return self::E_FILE_INVALID;
+        }
         try {
-            $src = fopen($pointer, 'rb');
-            $filesystem->writeStream($cf->prefix($prefix, $sanitizedFilename), $src, array(
-                'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
-                'mimetype' => Core::make('helper/mime')->mimeFromExtension($fi->getExtension($sanitizedFilename)),
-            ));
-        } catch (\Exception $e) {
+            $filesystem->writeStream(
+                $cf->prefix($prefix, $sanitizedFilename),
+                $src,
+                [
+                    'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
+                    'mimetype' => $this->app->make('helper/mime')->mimeFromExtension($fi->getExtension($sanitizedFilename)),
+                ]
+            );
+        } catch (Exception $e) {
             if (!$prefixIsAutoGenerated) {
                 return self::E_FILE_UNABLE_TO_STORE_PREFIX_PROVIDED;
             } else {
                 return self::E_FILE_UNABLE_TO_STORE;
             }
+        } finally {
+            @fclose($src);
         }
 
         if (!($fr instanceof FileEntity)) {
             // we have to create a new file object for this file version
-            $fv = File::add($sanitizedFilename, $prefix, array('fvTitle' => $filename), $fsl, $fr);
+            $fv = File::add($sanitizedFilename, $prefix, ['fvTitle' => $filename], $fsl, $fr);
         } else {
             // We get a new version to modify
             $fv = $fr->getVersionToModify(true);
@@ -302,21 +332,22 @@ class Importer
     }
 
     /**
-     * Imports a file in the default file storage location's incoming directory.
+     * Import a file in the default file storage location's incoming directory.
      *
-     * @param string $filename
-     * @param File|FileFolder|bool $fr
+     * @param string $filename the name of the file in the incoming directory
+     * @param \Concrete\Core\Entity\File\File|\Concrete\Core\Tree\Node\Type\FileFolder|null|false $fr If it's a File entity we assign the newly imported FileVersion object to that File. If it's a FileFolder entiity we'll create a new File in that folder (otherwise the new File will be created in the root folder).
      *
-     * @return number Error Code | \Concrete\Core\Entity\File\Version
+     * @return \Concrete\Core\Entity\File\Version|int the imported file version (or an error code in case of problems)
      */
     public function importIncomingFile($filename, $fr = false)
     {
-        $fh = Loader::helper('validation/file');
-        $fi = Loader::helper('file');
-        $cf = Core::make('helper/concrete/file');
+        $fh = $this->app->make('helper/validation/file');
+        $fi = $this->app->make('helper/file');
+        $cf = $this->app->make('helper/concrete/file');
+
         $sanitizedFilename = $fi->sanitize($filename);
 
-        $default = StorageLocation::getDefault();
+        $default = $this->app->make(StorageLocationFactory::class)->fetchDefault();
         $storage = $default->getFileSystemObject();
 
         if (!$storage->has(REL_DIR_FILES_INCOMING . '/' . $filename)) {
@@ -329,21 +360,24 @@ class Importer
 
         // first we import the file into the storage location that is the same.
         $prefix = $this->generatePrefix();
+        $destinationPath = $cf->prefix($prefix, $sanitizedFilename);
         try {
-            $copied = $storage->copy(REL_DIR_FILES_INCOMING . '/' . $filename, $cf->prefix($prefix, $sanitizedFilename));
-        } catch (\Exception $e) {
+            $copied = $storage->copy(REL_DIR_FILES_INCOMING . '/' . $filename, $destinationPath);
+        } catch (Exception $e) {
             $copied = false;
         }
         if (!$copied) {
-            $storage->writeStream(
-                $cf->prefix($prefix, $sanitizedFilename),
-                $storage->readStream(REL_DIR_FILES_INCOMING . '/' . $filename)
-            );
+            $src = $storage->readStream(REL_DIR_FILES_INCOMING . '/' . $filename);
+            if (!$src) {
+                return self::E_FILE_INVALID;
+            }
+            $storage->writeStream($destinationPath, $src);
+            @fclose($src);
         }
 
         if (!($fr instanceof FileEntity)) {
             // we have to create a new file object for this file version
-            $fv = File::add($sanitizedFilename, $prefix, array('fvTitle' => $filename), $default, $fr);
+            $fv = File::add($sanitizedFilename, $prefix, ['fvTitle' => $filename], $default, $fr);
             $fv->refreshAttributes($this->rescanThumbnailsOnImport);
 
             foreach ($this->importProcessors as $processor) {
@@ -361,6 +395,11 @@ class Importer
         return $fv;
     }
 
+    /**
+     * Enable scanning of thumbnails when importing an image?
+     *
+     * @param bool $refresh
+     */
     public function setRescanThumbnailsOnImport($refresh)
     {
         $this->rescanThumbnailsOnImport = $refresh;
