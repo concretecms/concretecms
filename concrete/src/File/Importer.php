@@ -160,7 +160,8 @@ class Importer
      */
     public static function getErrorMessage($code)
     {
-        $defaultStorage = $this->app->make(StorageLocationFactory::class)->fetchDefault()->getName();
+        $app = Application::getFacadeApplication();
+        $defaultStorage = $app->make(StorageLocationFactory::class)->fetchDefault()->getName();
         $msg = '';
         switch ($code) {
             case self::E_PHP_NO_FILE:
