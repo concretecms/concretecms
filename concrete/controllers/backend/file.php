@@ -1,29 +1,26 @@
 <?php
+
 namespace Concrete\Controller\Backend;
 
 use Concrete\Core\Controller\Controller;
 use Concrete\Core\Error\UserMessageException;
+use Concrete\Core\File\EditResponse as FileEditResponse;
 use Concrete\Core\File\Importer;
 use Concrete\Core\File\ImportProcessor\AutorotateImageProcessor;
+use Concrete\Core\File\ImportProcessor\ConstrainImageProcessor;
+use Concrete\Core\Foundation\Queue\Queue;
 use Concrete\Core\Http\ResponseFactory;
-use Concrete\Core\Http\Service\Ajax;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\FileFolder;
-use Concrete\Core\File\ImportProcessor\ConstrainImageProcessor;
-use Concrete\Core\File\ImportProcessor\SetJPEGQualityProcessor;
-use Concrete\Core\Foundation\Queue\Queue;
-use Concrete\Core\Validation\CSRF\Token;
-use FileSet;
-use File as ConcreteFile;
-use Concrete\Core\File\EditResponse as FileEditResponse;
-use Loader;
-use FileImporter;
-use Config;
-use stdClass;
-use Exception;
-use Permissions as ConcretePermissions;
-use FilePermissions;
 use Core;
+use Exception;
+use File as ConcreteFile;
+use FileImporter;
+use FilePermissions;
+use FileSet;
+use Loader;
+use Permissions as ConcretePermissions;
+use stdClass;
 
 class File extends Controller
 {
@@ -42,6 +39,173 @@ class File extends Controller
                 $r->setAdditionalDataAttribute('star', true);
             }
         }
+        $r->outputJSON();
+    }
+
+    public function rescan()
+    {
+        $files = $this->getRequestFiles('canEditFileContents');
+        $r = new FileEditResponse();
+        $r->setFiles($files);
+        $error = new \Concrete\Core\Error\Error();
+
+        try {
+            $this->doRescan($files[0]);
+            $r->setMessage(t('File rescanned successfully.'));
+        } catch (UserMessageException $e) {
+            $error->add($e->getMessage());
+        } catch (\Exception $e) {
+            $error->add($e->getMessage());
+        }
+        $r->setError($error);
+        $r->outputJSON();
+    }
+
+    public function rescanMultiple()
+    {
+        $files = $this->getRequestFiles('canEditFileContents');
+        $q = Queue::get('rescan_files');
+        if ($_POST['process']) {
+            $obj = new stdClass();
+            $messages = $q->receive(5);
+            foreach ($messages as $key => $msg) {
+                // delete the page here
+                $file = unserialize($msg->body);
+                if ($file === false) {
+                    $q->deleteMessage($msg);
+                    continue;
+                }
+                $f = \Concrete\Core\File\File::getByID($file['fID']);
+                if (is_object($f)) {
+                    $this->doRescan($f);
+                }
+                $q->deleteMessage($msg);
+            }
+            $obj->totalItems = $q->count();
+            if ($q->count() == 0) {
+                $q->deleteQueue();
+            }
+            echo json_encode($obj);
+            exit;
+        } elseif ($q->count() == 0) {
+            foreach ($files as $f) {
+                $q->send(serialize([
+                    'fID' => $f->getFileID(),
+                ]));
+            }
+        }
+
+        $totalItems = $q->count();
+        Loader::element('progress_bar', ['totalItems' => $totalItems, 'totalItemsSummary' => t2('%d file', '%d files', $totalItems)]);
+    }
+
+    public function approveVersion()
+    {
+        $files = $this->getRequestFiles('canEditFileContents');
+        $r = new FileEditResponse();
+        $r->setFiles($files);
+        $fv = $files[0]->getVersion(Loader::helper('security')->sanitizeInt($_REQUEST['fvID']));
+        if (is_object($fv)) {
+            $fv->approve();
+        } else {
+            throw new Exception(t('Invalid file version.'), 400);
+        }
+        $r->outputJSON();
+    }
+
+    public function deleteVersion()
+    {
+        $token = $this->app->make('token');
+        if (!$token->validate('delete-version')) {
+            $files = $this->getRequestFiles('canEditFileContents');
+        }
+        $r = new FileEditResponse();
+        $r->setFiles($files);
+        $fv = $files[0]->getVersion(Loader::helper('security')->sanitizeInt($_REQUEST['fvID']));
+        if (is_object($fv) && !$fv->isApproved()) {
+            if (!$token->validate('version/delete/' . $fv->getFileID() . '/' . $fv->getFileVersionId())) {
+                throw new Exception($token->getErrorMessage(), 401);
+            }
+            $fv->delete();
+        } else {
+            throw new Exception(t('Invalid file version.', 400));
+        }
+        $r->outputJSON();
+    }
+
+    public function upload()
+    {
+        /** @var ResponseFactory $responseFactory */
+        $responseFactory = $this->app->make(ResponseFactory::class);
+
+        try {
+            $folder = null;
+            if ($this->request->request->has('currentFolder')) {
+                $node = Node::getByID($this->request->request->get('currentFolder'));
+                if ($node instanceof FileFolder) {
+                    $folder = $node;
+                }
+            }
+
+            if ($folder) {
+                $fp = new \Permissions($folder);
+            } else {
+                $fp = FilePermissions::getGlobal();
+            }
+
+            if (!$fp->canAddFiles()) {
+                throw new Exception(t('Unable to add files.'), 400);
+            }
+
+            if ($post_max_size = \Loader::helper('number')->getBytes(ini_get('post_max_size'))) {
+                if ($post_max_size < $_SERVER['CONTENT_LENGTH']) {
+                    throw new Exception(FileImporter::getErrorMessage(Importer::E_FILE_EXCEEDS_POST_MAX_FILE_SIZE), 400);
+                }
+            }
+
+            if (!Loader::helper('validation/token')->validate()) {
+                throw new Exception(Loader::helper('validation/token')->getErrorMessage(), 401);
+            }
+
+            if (isset($_FILES['file'])) {
+                $files = $this->handleUpload('file', $folder);
+            }
+            if (isset($_FILES['files']['tmp_name'][0])) {
+                $files = [];
+                for ($i = 0; $i < count($_FILES['files']['tmp_name']); ++$i) {
+                    $files = array_merge($files, $this->handleUpload('files', $folder, $i));
+                }
+            }
+        } catch (Exception $e) {
+            if ($code = $e->getCode()) {
+                return $responseFactory->error($e->getMessage(), $code);
+            }
+
+            // This error doesn't have a code, it's likely not what we're wanting.
+            throw $e;
+        }
+
+        return $responseFactory->json($files);
+    }
+
+    public function duplicate()
+    {
+        $files = $this->getRequestFiles('canCopyFile');
+        $r = new FileEditResponse();
+        $newFiles = [];
+        foreach ($files as $f) {
+            $nf = $f->duplicate();
+            $newFiles[] = $nf;
+        }
+        $r->setFiles($newFiles);
+        $r->outputJSON();
+    }
+
+    public function getJSON()
+    {
+        $files = $this->getRequestFiles();
+        $r = new FileEditResponse();
+        $r->setFiles($files);
         $r->outputJSON();
     }
 
@@ -87,103 +251,9 @@ class File extends Controller
         $fv->releaseImagineImage();
     }
 
-    public function rescan()
-    {
-        $files = $this->getRequestFiles('canEditFileContents');
-        $r = new FileEditResponse();
-        $r->setFiles($files);
-        $error = new \Concrete\Core\Error\Error;
-
-        try {
-            $this->doRescan($files[0]);
-            $r->setMessage(t('File rescanned successfully.'));
-        } catch (UserMessageException $e) {
-            $error->add($e->getMessage());
-        } catch(\Exception $e) {
-            $error->add($e->getMessage());
-        }
-        $r->setError($error);
-        $r->outputJSON();
-    }
-
-    public function rescanMultiple()
-    {
-        $files = $this->getRequestFiles('canEditFileContents');
-        $q = Queue::get('rescan_files');
-        if ($_POST['process']) {
-            $obj = new stdClass();
-            $messages = $q->receive(5);
-            foreach($messages as $key => $msg) {
-                // delete the page here
-                $file = unserialize($msg->body);
-                if ($file === false) {
-                    $q->deleteMessage($msg);
-                    continue;
-                }
-                $f = \Concrete\Core\File\File::getByID($file['fID']);
-                if (is_object($f)) {
-                    $this->doRescan($f);
-                }
-                $q->deleteMessage($msg);
-            }
-            $obj->totalItems = $q->count();
-            if ($q->count() == 0) {
-                $q->deleteQueue();
-            }
-            print json_encode($obj);
-            exit;
-        } else if ($q->count() == 0) {
-            foreach($files as $f) {
-                $q->send(serialize(array(
-                    'fID' => $f->getFileID()
-                )));
-            }
-        }
-
-        $totalItems = $q->count();
-        Loader::element('progress_bar', array('totalItems' => $totalItems, 'totalItemsSummary' => t2("%d file", "%d files", $totalItems)));
-        return;
-    }
-
-
-    public function approveVersion()
-    {
-        $files = $this->getRequestFiles('canEditFileContents');
-        $r = new FileEditResponse();
-        $r->setFiles($files);
-        $fv = $files[0]->getVersion(Loader::helper('security')->sanitizeInt($_REQUEST['fvID']));
-        if (is_object($fv)) {
-            $fv->approve();
-        } else {
-            throw new Exception(t('Invalid file version.'), 400);
-        }
-        $r->outputJSON();
-    }
-
-    public function deleteVersion()
-    {
-        /** @var Token $token */
-        $token = $this->app->make('token');
-        if (!$token->validate('delete-version')) {
-            $files = $this->getRequestFiles('canEditFileContents');
-        }
-        $r = new FileEditResponse();
-        $r->setFiles($files);
-        $fv = $files[0]->getVersion(Loader::helper('security')->sanitizeInt($_REQUEST['fvID']));
-        if (is_object($fv) && !$fv->isApproved()) {
-            if (!$token->validate('version/delete/' . $fv->getFileID() . "/" . $fv->getFileVersionId())) {
-                throw new Exception($token->getErrorMessage(), 401);
-            }
-            $fv->delete();
-        } else {
-            throw new Exception(t('Invalid file version.', 400));
-        }
-        $r->outputJSON();
-    }
-
     protected function getRequestFiles($permission = 'canViewFileInFileManager')
     {
-        $files = array();
+        $files = [];
         if (is_array($_REQUEST['fID'])) {
             $fileIDs = $_REQUEST['fID'];
         } else {
@@ -206,7 +276,6 @@ class File extends Controller
 
     protected function handleUpload($property, $folder = null, $index = false)
     {
-
         if ($index !== false) {
             $name = $_FILES[$property]['name'][$index];
             $tmp_name = $_FILES[$property]['tmp_name'][$index];
@@ -215,7 +284,6 @@ class File extends Controller
                 throw new \Exception(FileImporter::getErrorMessage($_FILES[$property]['error'][$index]), 400);
             }
         } else {
-
             $name = $_FILES[$property]['name'];
             $tmp_name = $_FILES[$property]['tmp_name'];
 
@@ -224,7 +292,7 @@ class File extends Controller
             }
         }
 
-        $files = array();
+        $files = [];
         if (is_object($folder)) {
             $fp = new \Permissions($folder);
         } else {
@@ -247,83 +315,7 @@ class File extends Controller
             }
             $files[] = $file->getJSONObject();
         }
+
         return $files;
-    }
-
-    public function upload()
-    {
-        /** @type ResponseFactory $responseFactory */
-        $responseFactory = $this->app->make(ResponseFactory::class);
-
-        try {
-            $folder = null;
-            if ($this->request->request->has('currentFolder')) {
-                $node = Node::getByID($this->request->request->get('currentFolder'));
-                if ($node instanceof FileFolder) {
-                    $folder = $node;
-                }
-            }
-
-            if ($folder) {
-                $fp = new \Permissions($folder);
-            } else {
-                $fp = FilePermissions::getGlobal();
-            }
-
-            if (!$fp->canAddFiles()) {
-                throw new Exception(t("Unable to add files."), 400);
-            }
-
-            if ($post_max_size = \Loader::helper('number')->getBytes(ini_get('post_max_size'))) {
-                if ($post_max_size < $_SERVER['CONTENT_LENGTH']) {
-                    throw new Exception(FileImporter::getErrorMessage(Importer::E_FILE_EXCEEDS_POST_MAX_FILE_SIZE), 400);
-                }
-            }
-
-            if (!Loader::helper('validation/token')->validate()) {
-                throw new Exception(Loader::helper('validation/token')->getErrorMessage(), 401);
-            }
-
-            if (isset($_FILES['file'])) {
-                $files = $this->handleUpload('file', $folder);
-            }
-            if (isset($_FILES['files']['tmp_name'][0])) {
-                $files = array();
-                for ($i = 0; $i < count($_FILES['files']['tmp_name']); ++$i) {
-                    $files = array_merge($files, $this->handleUpload('files', $folder, $i));
-                }
-            }
-
-        } catch (Exception $e) {
-            if ($code = $e->getCode()) {
-                return $responseFactory->error($e->getMessage(), $code);
-            }
-
-            // This error doesn't have a code, it's likely not what we're wanting.
-            throw $e;
-        }
-
-        return $responseFactory->json($files);
-    }
-
-    public function duplicate()
-    {
-        $files = $this->getRequestFiles('canCopyFile');
-        $r = new FileEditResponse();
-        $newFiles = array();
-        foreach ($files as $f) {
-            $nf = $f->duplicate();
-            $newFiles[] = $nf;
-        }
-        $r->setFiles($newFiles);
-        $r->outputJSON();
-    }
-
-    public function getJSON()
-    {
-        $files = $this->getRequestFiles();
-        $r = new FileEditResponse();
-        $r->setFiles($files);
-        $r->outputJSON();
     }
 }
