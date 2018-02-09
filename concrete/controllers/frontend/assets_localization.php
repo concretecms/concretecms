@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Controller\Frontend;
 
+use Concrete\Core\File\Image\BitmapFormat;
 use Concrete\Core\File\Type\Type as FileType;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Localization\Localization;
@@ -609,6 +610,7 @@ Dropzone.prototype.defaultOptions.dictCancelUpload = ' . json_encode(t('Cancel u
 Dropzone.prototype.defaultOptions.dictCancelUploadConfirmation = ' . json_encode(t('Are you sure you want to cancel this upload?')) . ';
 Dropzone.prototype.defaultOptions.dictRemoveFile = ' . json_encode(t('Remove file')) . ';
 Dropzone.prototype.defaultOptions.dictMaxFilesExceeded = ' . json_encode(t('You can not upload any more files.')) . ';
+Dropzone.prototype.defaultOptions.resizeQuality = ' . ($this->app->make(BitmapFormat::class)->getDefaultJpegQuality() / 100) . ';
 ';
         $config = $this->app->make('config');
         if ($config->get('concrete.file_manager.restrict_uploaded_image_sizes')) {
