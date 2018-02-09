@@ -2,7 +2,9 @@
 namespace Concrete\Controller\Backend;
 
 use Concrete\Core\Controller\Controller;
+use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\File\Importer;
+use Concrete\Core\File\ImportProcessor\AutorotateImageProcessor;
 use Concrete\Core\Http\ResponseFactory;
 use Concrete\Core\Http\Service\Ajax;
 use Concrete\Core\Tree\Node\Node;
@@ -43,44 +45,45 @@ class File extends Controller
         $r->outputJSON();
     }
 
+    /**
+     * @param \Concrete\Core\Entity\File\File $f
+     */
     protected function doRescan($f)
     {
-        $resize = \Config::get('concrete.file_manager.restrict_uploaded_image_sizes');
-        $processors = array();
-        if ($resize) {
-            $width = (int) \Config::get('concrete.file_manager.restrict_max_width');
-            $height = (int) \Config::get('concrete.file_manager.restrict_max_height');
-            $fWidth = (int) $f->getAttribute('width');
-            $fHeight = (int) $f->getAttribute('height');
-            if ($fWidth > $width || $fHeight > $height) {
-                $quality = (int) \Config::get('concrete.file_manager.restrict_resize_quality');
-                $resizeProcessor = new ConstrainImageProcessor($width, $height);
-                // Do not make a copy before processing as it is not needed when rescanning
-                // and it will save some memory
-                $resizeProcessor->setResizeInPlace(true);
-                $qualityProcessor = new SetJPEGQualityProcessor($quality);
-                $processors[] = $resizeProcessor;
-                $processors[] = $qualityProcessor;
-            }
-        }
-
-        if (count($processors)) {
-            $fv = $f->createNewVersion(true);
-            foreach($processors as $processor) {
-                if ($processor->shouldProcess($fv)) {
-                    $processor->process($fv);
-                }
-            }
-        } else {
-            $fv = $f->getApprovedVersion();
-        }
-        $resp = $fv->refreshAttributes();
+        $fv = $f->getApprovedVersion();
+        $resp = $fv->refreshAttributes(false);
         switch ($resp) {
             case \Concrete\Core\File\Importer::E_FILE_INVALID:
                 $errorMessage = t('File %s could not be found.', $fv->getFilename()) . '<br/>';
-                throw new Exception($errorMessage, 404);
-                break;
+                throw new UserMessageException($errorMessage, 404);
         }
+        $config = $this->app->make('config');
+        $newFileVersion = null;
+        if ($config->get('concrete.file_manager.images.use_exif_data_to_rotate_images')) {
+            $processor = new AutorotateImageProcessor();
+            if ($processor->shouldProcess($fv)) {
+                if ($newFileVersion === null) {
+                    $fv = $newFileVersion = $f->createNewVersion(true);
+                }
+                $processor->setRescanThumbnails(false);
+                $processor->process($newFileVersion);
+            }
+        }
+        if ($config->get('concrete.file_manager.restrict_uploaded_image_sizes')) {
+            $width = (int) $config->get('concrete.file_manager.restrict_max_width');
+            $height = (int) $config->get('concrete.file_manager.restrict_max_height');
+            if ($width > 0 || $height > 0) {
+                $processor = new ConstrainImageProcessor($width, $height);
+                if ($processor->shouldProcess($fv)) {
+                    if ($newFileVersion === null) {
+                        $fv = $newFileVersion = $f->createNewVersion(true);
+                    }
+                    $processor->setRescanThumbnails(false);
+                    $processor->process($newFileVersion);
+                }
+            }
+        }
+        $fv->rescanThumbnails();
     }
 
     public function rescan()
@@ -93,9 +96,8 @@ class File extends Controller
         try {
             $this->doRescan($files[0]);
             $r->setMessage(t('File rescanned successfully.'));
-        } catch (\Concrete\Flysystem\FileNotFoundException $e) {
-            $errorMessage = t('File %s could not be found.', $files[0]->getFilename()) . '<br/>';
-            $error->add($errorMessage);
+        } catch (UserMessageException $e) {
+            $error->add($e->getMessage());
         } catch(\Exception $e) {
             $error->add($e->getMessage());
         }

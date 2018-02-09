@@ -1,59 +1,63 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php
+defined('C5_EXECUTE') or die('Access Denied.');
 
-<?=Core::make('helper/concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Image Uploading'), false, 'span8 offset2', false)?>
+/* @var Concrete\Core\Page\View\PageView $view */
+/* @var Concrete\Core\Validation\CSRF\Token $token */
+/* @var Concrete\Core\Form\Service\Form $form */
 
-<form method="post" id="file-access-extensions" action="<?=$view->action('save')?>" role="form">
-    <?=$validation_token->output('image_uploading');?>
+/* @var bool $restrict_uploaded_image_sizes */
+/* @var int $restrict_max_width */
+/* @var int $restrict_max_height */
+
+?>
+
+<form method="POST" action="<?= $view->action('save') ?>">
+    <?= $token->output('image_uploading') ?>
 
     <div class="checkbox">
         <label>
-            <?=$form->checkbox('restrict_uploaded_image_sizes', '1', $restrict_uploaded_image_sizes)?>
+            <?= $form->checkbox('restrict_uploaded_image_sizes', '1', $restrict_uploaded_image_sizes) ?>
             <span><?=t('Automatically resize uploaded images')?></span>
         </label>
     </div>
 
-    <div id="resizing-values" <?=($restrict_uploaded_image_sizes ?  '' : 'style="display: none"');?>>
+    <div id="resizing-values"<?= $restrict_uploaded_image_sizes ? '' : ' style="display: none"' ?>>
         <div class="form-group">
-            <label for="restrict_max_width" class="control-label"><?= t('Maximum Width') ?></label>
+            <?= $form->label('restrict_max_width', t('Maximum Width')) ?>
             <div class="input-group">
-                <input class="form-control" type="number" name="restrict_max_width" placeholder="1920" value="<?=$restrict_max_width?>">
+                <?= $form->number('restrict_max_width', $restrict_max_width > 0 ? $restrict_max_width : '', ['min' => 0, 'placeholder' => t('Empty for no limit')]) ?>
                 <div class="input-group-addon"><?= t(/* i18n: short for pixels */ 'px') ?></div>
             </div>
         </div>
-
         <div class="form-group">
-            <label for="restrict_max_height" class="control-label"><?= t('Maximum Height') ?></label>
+            <?= $form->label('restrict_max_height', t('Maximum Height')) ?>
             <div class="input-group">
-                <input class="form-control" type="number" name="restrict_max_height" placeholder="1080" value="<?=$restrict_max_height?>">
+                <?= $form->number('restrict_max_height', $restrict_max_height > 0 ? $restrict_max_height : '', ['min' => 0, 'placeholder' => t('Empty for no limit')]) ?>
                 <div class="input-group-addon"><?= t(/* i18n: short for pixels */ 'px') ?></div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="restrict_resize_quality" class="control-label"><?= t('Image Compression Quality') ?></label>
-            <div class="input-group">
-                <input class="form-control" type="number" name="restrict_resize_quality" placeholder="85" value="<?=$restrict_resize_quality?>">
-                <div class="input-group-addon">%</div>
             </div>
         </div>
     </div>
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <button class="pull-right btn btn-primary" type="submit" value="file-access-extensions"><?=t('Save')?></button>
+            <button class="pull-right btn btn-primary" type="submit"><?= t('Save') ?></button>
         </div>
     </div>
 </form>
 
-<?=Core::make('helper/concrete/dashboard')->getDashboardPaneFooterWrapper(false)?>
-
-<script type="text/javascript">
-$("input[name=restrict_uploaded_image_sizes]").click(function() {
-    if ($(this).is(":checked")) {
-        $("#resizing-values").show();
-    } else {
-        $("#resizing-values").hide();
-    }
-});
+<script>
+$(document).ready(function() {
+    var $div = $('#resizing-values');
+    $('#restrict_uploaded_image_sizes')
+        .on('change', function() {
+            if ($(this).is(':checked')) {
+                $div.show();
+            } else {
+                $div.hide();
+            }
+        })
+        .trigger('change')
+    ;
+})();
 </script>
 

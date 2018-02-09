@@ -12,6 +12,7 @@ use Core;
 use Config;
 use Concrete\Core\Entity\File\File as FileEntity;
 use Concrete\Core\Tree\Node\Type\FileFolder;
+use Concrete\Core\Support\Facade\Application;
 
 class Importer
 {
@@ -40,22 +41,21 @@ class Importer
 
     public function __construct()
     {
-        $resize = Config::get('concrete.file_manager.restrict_uploaded_image_sizes');
-        if ($resize) {
-            $width = (int) Config::get('concrete.file_manager.restrict_max_width');
-            $height = (int) Config::get('concrete.file_manager.restrict_max_height');
-            $quality = (int) Config::get('concrete.file_manager.restrict_resize_quality');
-            $resizeProcessor = new ConstrainImageProcessor($width, $height);
-            // Do not make a copy before processing as it is not needed on import
-            // and it will save memory
-            $resizeProcessor->setResizeInPlace(true);
-            $qualityProcessor = new SetJPEGQualityProcessor($quality);
-            $this->addImportProcessor($resizeProcessor);
-            $this->addImportProcessor($qualityProcessor);
+        $app = Application::getFacadeApplication();
+        $config = $app->make('config');
+        if ($config->get('concrete.file_manager.images.use_exif_data_to_rotate_images')) {
+            $processor = new AutorotateImageProcessor();
+            $processor->setRescanThumbnails(false);
+            $this->addImportProcessor($processor);
         }
-        
-        if (Config::get('concrete.file_manager.images.use_exif_data_to_rotate_images')) {
-            $this->addImportProcessor(new AutorotateImageProcessor);
+        if ($config->get('concrete.file_manager.restrict_uploaded_image_sizes')) {
+            $width = (int) $config->get('concrete.file_manager.restrict_max_width');
+            $height = (int) $config->get('concrete.file_manager.restrict_max_height');
+            if ($width > 0 || $height > 0) {
+                $processor = new ConstrainImageProcessor($width, $height);
+                $processor->setRescanThumbnails(false);
+                $this->addImportProcessor($processor);
+            }
         }
     }
 
@@ -200,12 +200,15 @@ class Importer
             $fv->updateFile($sanitizedFilename, $prefix);
         }
 
+        $fv->refreshAttributes(false);
         foreach ($this->importProcessors as $processor) {
             if ($processor->shouldProcess($fv)) {
                 $processor->process($fv);
             }
         }
-        $fv->refreshAttributes($this->rescanThumbnailsOnImport);
+        if ($this->rescanThumbnailsOnImport) {
+            $fv->rescanThumbnails();
+        }
 
         return $fv;
     }

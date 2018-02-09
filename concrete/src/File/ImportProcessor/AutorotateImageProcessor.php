@@ -19,9 +19,40 @@ class AutorotateImageProcessor implements ProcessorInterface
      */
     protected $app;
 
+    /**
+     * Should thumbnails be rescanned when the image is rotated?
+     *
+     * @var bool
+     */
+    protected $rescanThumbnails = true;
+
     public function __construct()
     {
         $this->app = Application::getFacadeApplication();
+    }
+
+    /**
+     * Should thumbnails be rescanned when the image is rotated?
+     *
+     * @return bool
+     */
+    public function isRescanThumbnails()
+    {
+        return $this->rescanThumbnails;
+    }
+    
+    /**
+     * Should thumbnails be rescanned when the image is rotated?
+     *
+     * @param bool $rescanThumbnails
+     *
+     * @return $this
+     */
+    public function setRescanThumbnails($rescanThumbnails)
+    {
+        $this->rescanThumbnails = (bool) $rescanThumbnails;
+        
+        return $this;
     }
 
     /**
@@ -75,6 +106,6 @@ class AutorotateImageProcessor implements ProcessorInterface
         $transformation->applyFilter($image, new Autorotate());
         $format = BitmapFormat::FORMAT_JPEG;
         $saveOptions = $this->app->make(BitmapFormat::class)->getFormatImagineSaveOptions($format);
-        $version->updateContents($image->get($format, $saveOptions));
+        $version->updateContents($image->get($format, $saveOptions), $this->rescanThumbnails);
     }
 }
