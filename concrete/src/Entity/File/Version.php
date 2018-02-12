@@ -1374,39 +1374,41 @@ class Version implements ObjectInterface
             try {
                 $image = $this->getImagineImage();
                 if ($image) {
-                    $imagewidth = $this->getAttribute('width') ?: $image->getSize()->getWidth();
-                    $imageheight = $this->getAttribute('height') ?: $image->getSize()->getHeight();
+                    $imageWidth = (int) $this->getAttribute('width') ?: (int) $image->getSize()->getWidth();
+                    $imageHeight = (int) $this->getAttribute('height') ?: (int) $image->getSize()->getHeight();
                     $types = Type::getVersionList();
                     foreach ($types as $type) {
                         // delete the file if it exists
                         $this->deleteThumbnail($type);
 
+                        $thumbnailWidth = (int) $type->getWidth() ?: 0;
+                        $thumbnailHeight = (int) $type->getHeight() ?: 0;
                         // if image is smaller than size requested, don't create thumbnail
-                        if ($imagewidth < $type->getWidth() && $imageheight < $type->getHeight()) {
+                        if ($imageWidth < $thumbnailWidth && $imageHeight < $thumbnailHeight) {
                             continue;
                         }
 
                         // This should not happen as it is not allowed when creating thumbnail types and both width and height
                         // are required for Exact sizing but it's here just in case
-                        if ($type->getSizingMode() === Type::RESIZE_EXACT && (!$type->getWidth() || !$type->getHeight())) {
+                        if ($type->getSizingMode() === Type::RESIZE_EXACT && (!$thumbnailWidth || !$thumbnailHeight)) {
                             continue;
                         }
 
                         // If requesting an exact size and any of the dimensions requested is larger than the image's
                         // don't process as we won't get an exact size
-                        if ($type->getSizingMode() === Type::RESIZE_EXACT && ($imagewidth < $type->getWidth() || $imageheight < $type->getHeight())) {
+                        if ($type->getSizingMode() === Type::RESIZE_EXACT && ($imageWidth < $thumbnailWidth || $imageHeight < $thumbnailHeight)) {
                             continue;
                         }
 
                         // if image is the same width as thumbnail, and there's no thumbnail height set,
                         // or if a thumbnail height set and the image has a smaller or equal height, don't create thumbnail
-                        if ($imagewidth == $type->getWidth() && (!$type->getHeight() || $imageheight <= $type->getHeight())) {
+                        if ($imageWidth == $thumbnailWidth && (!$thumbnailHeight || $imageHeight <= $thumbnailHeight)) {
                             continue;
                         }
 
                         // if image is the same height as thumbnail, and there's no thumbnail width set,
                         // or if a thumbnail width set and the image has a smaller or equal width, don't create thumbnail
-                        if ($imageheight == $type->getHeight() && (!$type->getWidth() || $imagewidth <= $type->getWidth())) {
+                        if ($imageHeight == $thumbnailHeight && (!$thumbnailWidth || $imageWidth <= $thumbnailWidth)) {
                             continue;
                         }
 
