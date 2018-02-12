@@ -63,11 +63,14 @@ class ConcreteBootstrap3PagerTemplate extends Template
     public function current($page)
     {
         $href = $this->generateRoute($page);
+        $pageNumber = 1;
         $pageResult = '/ccm_cursor=([\d\|]+)/';
-        preg_match_all($pageResult, $href, $pageResultMatches);
-        $page = '/(\d+)/';
-        preg_match_all($page, $pageResultMatches[1][0], $pageMatches);
-        $pageNumber = count($pageMatches[1]) + 1;
+        if (preg_match_all($pageResult, $href, $pageResultMatches)) {
+            $page = '/(\d+)/';
+            if (preg_match_all($page, $pageResultMatches[1][0], $pageMatches)) {
+                $pageNumber = count($pageMatches[1]) + 1;
+            }
+        }
 
         return '<li class="active"><span>' . $pageNumber . '</span></li>';
     }
