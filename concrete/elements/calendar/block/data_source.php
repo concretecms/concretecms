@@ -1,5 +1,6 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
-$form = Core::make("helper/form");
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+$form = $app->make('helper/form');
 
 $calendars = array_filter(\Concrete\Core\Calendar\Calendar::getList(), function ($calendar) {
     $p = new \Permissions($calendar);
