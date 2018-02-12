@@ -19,6 +19,13 @@ class Driver extends \Doctrine\DBAL\Driver\PDOMySql\Driver
             $driverOptions
         );
 
+        /* defining client_encoding via SET NAMES to avoid inconsistent DSN support
+        * - the 'client_encoding' connection param only works with MySQL >= 4.1
+        */
+        if (isset($params['charset'])) {
+              $conn->query('SET NAMES \''.$params['charset'].'\'');
+        }
+        
         return $conn;
     }
 
