@@ -1525,12 +1525,14 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Resolve a path using the default core path resolver.
-     * Avoid using this method when you have access to the resolver instance.
+     * Get the URL of a thumbnail type.
+     * If the thumbnail is smaller than the image you'll get the URL of the image itself.
+     *
+     * Please remark that the path is resolved using the default core path resolver: avoid using this method when you have access to the resolver instance.
      *
      * @param \Concrete\Core\File\Image\Thumbnail\Type\Version|string $type the thumbnail type version (or its handle)
      *
-     * @return string|null
+     * @return string|null return NULL if the thumbnail does not exist and the file storage location is invalid
      *
      * @example /application/files/thumbnails/file_manager_listing/0000/0000/0000/file.png
      */
@@ -1538,13 +1540,18 @@ class Version implements ObjectInterface
     {
         $app = Application::getFacadeApplication();
 
+        $path = null;
         if (!($type instanceof ThumbnailTypeVersion)) {
             $type = ThumbnailTypeVersion::getByHandle($type);
         }
-
-        $path_resolver = $app->make(Resolver::class);
-
-        $path = $path_resolver->getPath($this, $type);
+        if ($type !== null) {
+            $imageWidth = (int) $this->getAttribute('width');
+            $imageHeight = (int) $this->getAttribute('height');
+            if ($type->shouldExistFor($imageWidth, $imageHeight)) {
+                $path_resolver = $app->make(Resolver::class);
+                $path = $path_resolver->getPath($this, $type);
+            }
+        }
         if (!$path) {
             $url = $this->getURL();
             $path = $url ? (string) $url : null;
