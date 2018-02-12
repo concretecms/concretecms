@@ -9,6 +9,7 @@ $calendars = array_filter(\Concrete\Core\Calendar\Calendar::getList(), function 
     return $p->canViewCalendarInEditInterface();
 });
 if (isset($multiple) && $multiple) {
+    View::getInstance()->requireAsset('selectize');
     $calendarSelect = array();
 } else {
     $calendarSelect = array('' => t('** Select a Calendar'));
@@ -51,7 +52,7 @@ if ($calendarAttributeKeyHandle) {
     <div class="radio">
         <label>
             <input type="radio" name="chooseCalendar" value="specific" <?php if ($chooseCalendar == 'specific') {
-    ?> checked <?php 
+    ?> checked <?php
 } ?>>
             Specific Calendar
         </label>
@@ -61,7 +62,7 @@ if ($calendarAttributeKeyHandle) {
     <div class="radio">
         <label>
             <input type="radio" name="chooseCalendar" value="site" <?php if ($chooseCalendar == 'site') {
-    ?> checked <?php 
+    ?> checked <?php
 }
     ?>>
             Site-wide Calendar
@@ -74,7 +75,7 @@ if ($calendarAttributeKeyHandle) {
     ?>
             </div>
         </div>
-    <?php 
+    <?php
 } ?>
     <div data-row="specific-calendar">
         <div class="form-group">
@@ -91,6 +92,12 @@ if ($calendarAttributeKeyHandle) {
 
 <script type="text/javascript">
    $(function() {
+    <?php if (isset($multiple) && $multiple) { ?>
+      $('#caID').selectize({
+          plugins: ['remove_button']
+      });
+    <?php } ?>
+
        $('input[name=chooseCalendar]').on('change', function() {
            var selected = $('input[name=chooseCalendar]:checked').val();
            if (selected == 'site') {
