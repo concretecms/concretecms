@@ -1549,30 +1549,22 @@ class Version implements ObjectInterface
     public function getThumbnails()
     {
         $thumbnails = [];
-        $types = Type::getVersionList();
-        $width = $this->getAttribute('width');
-        $height = $this->getAttribute('height');
-        $file = $this->getFile();
-
-        if (!$width || $width < 0) {
+        $imageWidth = (int) $this->getAttribute('width');
+        $imageHeight = (int) $this->getAttribute('height');
+        if ($imageWidth < 1 || $imageHeight < 1) {
             throw new InvalidDimensionException($this->getFile(), $this, t('Invalid dimensions.'));
         }
-
+        $types = Type::getVersionList();
+        $file = $this->getFile();
         foreach ($types as $type) {
-            if ($width < $type->getWidth()) {
-                continue;
-            }
-
-            if ($width == $type->getWidth() && (!$type->getHeight() || $height <= $type->getHeight())) {
-                continue;
-            }
-
-            $thumbnailPath = $type->getFilePath($this);
-            $location = $file->getFileStorageLocationObject();
-            $configuration = $location->getConfigurationObject();
-            $filesystem = $location->getFileSystemObject();
-            if ($filesystem->has($thumbnailPath)) {
-                $thumbnails[] = new Thumbnail($type, $configuration->getPublicURLToFile($thumbnailPath));
+            if ($type->shouldExistFor($imageWidth, $imageHeight)) {
+                $thumbnailPath = $type->getFilePath($this);
+                $location = $file->getFileStorageLocationObject();
+                $configuration = $location->getConfigurationObject();
+                $filesystem = $location->getFileSystemObject();
+                if ($filesystem->has($thumbnailPath)) {
+                    $thumbnails[] = new Thumbnail($type, $configuration->getPublicURLToFile($thumbnailPath));
+                }
             }
         }
 
