@@ -1380,43 +1380,9 @@ class Version implements ObjectInterface
                     foreach ($types as $type) {
                         // delete the file if it exists
                         $this->deleteThumbnail($type);
-                        if ($imageWidth < 1 || $imageHeight < 1) {
-                            continue;
+                        if ($type->shouldExistFor($imageWidth, $imageHeight)) {
+                            $this->generateThumbnail($type);
                         }
-
-                        $thumbnailWidth = (int) $type->getWidth() ?: 0;
-                        $thumbnailHeight = (int) $type->getHeight() ?: 0;
-                        // if image is smaller than size requested, don't create thumbnail
-                        if ($imageWidth < $thumbnailWidth && $imageHeight < $thumbnailHeight) {
-                            continue;
-                        }
-
-                        // This should not happen as it is not allowed when creating thumbnail types and both width and height
-                        // are required for Exact sizing but it's here just in case
-                        if ($type->getSizingMode() === Type::RESIZE_EXACT && (!$thumbnailWidth || !$thumbnailHeight)) {
-                            continue;
-                        }
-
-                        // If requesting an exact size and any of the dimensions requested is larger than the image's
-                        // don't process as we won't get an exact size
-                        if ($type->getSizingMode() === Type::RESIZE_EXACT && ($imageWidth < $thumbnailWidth || $imageHeight < $thumbnailHeight)) {
-                            continue;
-                        }
-
-                        // if image is the same width as thumbnail, and there's no thumbnail height set,
-                        // or if a thumbnail height set and the image has a smaller or equal height, don't create thumbnail
-                        if ($imageWidth == $thumbnailWidth && (!$thumbnailHeight || $imageHeight <= $thumbnailHeight)) {
-                            continue;
-                        }
-
-                        // if image is the same height as thumbnail, and there's no thumbnail width set,
-                        // or if a thumbnail width set and the image has a smaller or equal width, don't create thumbnail
-                        if ($imageHeight == $thumbnailHeight && (!$thumbnailWidth || $imageWidth <= $thumbnailWidth)) {
-                            continue;
-                        }
-
-                        // otherwise file is bigger than thumbnail in some way, proceed to create thumbnail
-                        $this->generateThumbnail($type);
                     }
                     $result = true;
                 }

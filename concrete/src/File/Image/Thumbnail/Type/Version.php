@@ -294,4 +294,55 @@ class Version
 
         return REL_DIR_FILES_THUMBNAILS . '/' . $this->getDirectoryName() . $ii->prefix($prefix, $hi->replaceExtension($filename, $extension));
     }
+
+    /**
+     * Check if this thumbnail type version should exist for an image with the specified dimensions.
+     *
+     * @param int $imageWidth The original image width
+     * @param int $imageHeight The original image height
+     *
+     * @return bool
+     */
+    public function shouldExistFor($imageWidth, $imageHeight)
+    {
+        $imageWidth = (int) $imageWidth;
+        $imageHeight = (int) $imageHeight;
+        if ($imageWidth < 1 || $imageHeight < 1) {
+            return false;
+        }
+
+        $thumbnailWidth = (int) $this->getWidth() ?: 0;
+        $thumbnailHeight = (int) $this->getHeight() ?: 0;
+        // if image is smaller than size requested, don't create thumbnail
+        if ($imageWidth < $thumbnailWidth && $imageHeight < $thumbnailHeight) {
+            return false;
+        }
+
+        // This should not happen as it is not allowed when creating thumbnail types and both width and height
+        // are required for Exact sizing but it's here just in case
+        if ($this->getSizingMode() === Type::RESIZE_EXACT && (!$thumbnailWidth || !$thumbnailHeight)) {
+            return false;
+        }
+
+        // If requesting an exact size and any of the dimensions requested is larger than the image's
+        // don't process as we won't get an exact size
+        if ($this->getSizingMode() === Type::RESIZE_EXACT && ($imageWidth < $thumbnailWidth || $imageHeight < $thumbnailHeight)) {
+            return false;
+        }
+
+        // if image is the same width as thumbnail, and there's no thumbnail height set,
+        // or if a thumbnail height set and the image has a smaller or equal height, don't create thumbnail
+        if ($imageWidth == $thumbnailWidth && (!$thumbnailHeight || $imageHeight <= $thumbnailHeight)) {
+            return false;
+        }
+
+        // if image is the same height as thumbnail, and there's no thumbnail width set,
+        // or if a thumbnail width set and the image has a smaller or equal width, don't create thumbnail
+        if ($imageHeight == $thumbnailHeight && (!$thumbnailWidth || $imageWidth <= $thumbnailWidth)) {
+            return false;
+        }
+
+        // otherwise file is bigger than thumbnail in some way, proceed to create thumbnail
+        return true;
+    }
 }
