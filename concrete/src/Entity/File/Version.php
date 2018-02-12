@@ -35,6 +35,7 @@ use Imagine\Image\ImageInterface;
 use Imagine\Image\ImagineInterface;
 use Imagine\Image\Metadata\ExifMetadataReader;
 use League\Flysystem\AdapterInterface;
+use League\Flysystem\Cached\CachedAdapter;
 use League\Flysystem\FileNotFoundException;
 use League\Flysystem\MountManager;
 use League\Flysystem\Util;
@@ -1220,6 +1221,19 @@ class Version implements ObjectInterface
     public function refreshAttributes($rescanThumbnails = true)
     {
         $app = Application::getFacadeApplication();
+
+        $storage = $this->getFile()->getFileStorageLocationObject();
+        if ($storage !== null) {
+            $fs = $storage->getFileSystemObject();
+            $adapter = $fs->getAdapter();
+            if ($adapter instanceof CachedAdapter) {
+                $cache = $adapter->getCache();
+                $cf = $app->make('helper/concrete/file');
+                $path = Util::normalizePath($cf->prefix($this->fvPrefix, $this->fvFilename));
+                $cache->delete($path);
+            }
+        }
+
         $em = $app->make(EntityManagerInterface::class);
         $fh = $app->make('helper/file');
         $ext = $fh->getExtension($this->fvFilename);
