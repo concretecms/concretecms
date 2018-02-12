@@ -1,6 +1,4 @@
-<?php
-
-defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die('Access Denied.');
 $form = Core::make("helper/form");
 
 $calendars = array_filter(\Concrete\Core\Calendar\Calendar::getList(), function ($calendar) {
@@ -8,6 +6,7 @@ $calendars = array_filter(\Concrete\Core\Calendar\Calendar::getList(), function 
 
     return $p->canViewCalendarInEditInterface();
 });
+
 if (isset($multiple) && $multiple) {
     View::getInstance()->requireAsset('selectize');
     $calendarSelect = array();
@@ -51,32 +50,25 @@ if ($calendarAttributeKeyHandle) {
     </div>*/ ?>
     <div class="radio">
         <label>
-            <input type="radio" name="chooseCalendar" value="specific" <?php if ($chooseCalendar == 'specific') {
-    ?> checked <?php
-} ?>>
-            Specific Calendar
+            <input type="radio" name="chooseCalendar" value="specific" <?php if ($chooseCalendar == 'specific') { ?> checked <?php } ?>> Specific Calendar
         </label>
     </div>
-    <?php if (count($calendarAttributeKeys)) {
-    ?>
-    <div class="radio">
-        <label>
-            <input type="radio" name="chooseCalendar" value="site" <?php if ($chooseCalendar == 'site') {
-    ?> checked <?php
-}
-    ?>>
-            Site-wide Calendar
-        </label>
-    </div>
-        <div data-row="calendar-attribute">
-            <div class="form-group">
-                <?= $form->label('calendarAttributeKeyHandle', t('Calendar Site Attribute')) ?>
-                <?php echo $form->select('calendarAttributeKeyHandle', $calendarAttributeKeySelect, $calendarAttributeKeyHandle);
-    ?>
-            </div>
+
+    <?php if (count($calendarAttributeKeys)) { ?>
+        <div class="radio">
+            <label>
+                <input type="radio" name="chooseCalendar" value="site" <?php if ($chooseCalendar == 'site') { ?> checked <?php } ?>> Site-wide Calendar
+            </label>
         </div>
-    <?php
-} ?>
+            <div data-row="calendar-attribute">
+                <div class="form-group">
+                    <?= $form->label('calendarAttributeKeyHandle', t('Calendar Site Attribute')) ?>
+                    <?php echo $form->select('calendarAttributeKeyHandle', $calendarAttributeKeySelect, $calendarAttributeKeyHandle); ?>
+                </div>
+            </div>
+        <?php
+    } ?>
+
     <div data-row="specific-calendar">
         <div class="form-group">
             <?php
@@ -89,27 +81,26 @@ if ($calendarAttributeKeyHandle) {
     </div>
 </div>
 
+<script>
+    $(function() {
+        <?php if (isset($multiple) && $multiple) { ?>
+            $('#caID').selectize({
+                plugins: ['remove_button']
+            });
+        <?php } ?>
 
-<script type="text/javascript">
-   $(function() {
-    <?php if (isset($multiple) && $multiple) { ?>
-      $('#caID').selectize({
-          plugins: ['remove_button']
-      });
-    <?php } ?>
-
-       $('input[name=chooseCalendar]').on('change', function() {
-           var selected = $('input[name=chooseCalendar]:checked').val();
-           if (selected == 'site') {
-               $('div[data-row=calendar-attribute]').show();
-               $('div[data-row=specific-calendar]').hide();
-           } else if (selected == 'specific') {
-               $('div[data-row=specific-calendar]').show();
-               $('div[data-row=calendar-attribute]').hide();
-           } else {
-               $('div[data-row=specific-calendar]').hide();
-               $('div[data-row=calendar-attribute]').hide();
-           }
-       }).trigger('change');
-   });
+        $('input[name=chooseCalendar]').on('change', function() {
+            var selected = $('input[name=chooseCalendar]:checked').val();
+            if (selected == 'site') {
+                $('div[data-row=calendar-attribute]').show();
+                $('div[data-row=specific-calendar]').hide();
+            } else if (selected == 'specific') {
+                $('div[data-row=specific-calendar]').show();
+                $('div[data-row=calendar-attribute]').hide();
+            } else {
+                $('div[data-row=specific-calendar]').hide();
+                $('div[data-row=calendar-attribute]').hide();
+            }
+        }).trigger('change');
+    });
 </script>
