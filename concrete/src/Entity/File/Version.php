@@ -1380,6 +1380,9 @@ class Version implements ObjectInterface
                     foreach ($types as $type) {
                         // delete the file if it exists
                         $this->deleteThumbnail($type);
+                        if ($imageWidth < 1 || $imageHeight < 1) {
+                            continue;
+                        }
 
                         $thumbnailWidth = (int) $type->getWidth() ?: 0;
                         $thumbnailHeight = (int) $type->getHeight() ?: 0;
