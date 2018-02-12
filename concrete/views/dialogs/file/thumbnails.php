@@ -1,25 +1,26 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
-/* @var FileVersion $version */
 use Concrete\Core\File\Image\Thumbnail\Type\Version;
+
+/* @var Concrete\Core\Entity\File\Version $version */
+/* @var Concrete\Core\File\Image\Thumbnail\Type\Version[] $types */
 ?>
 
 <div class="ccm-ui">
     <?php
     $i = 1;
 
-    /* @var Version $type */
+    $location = $version->getFile()->getFileStorageLocationObject();
+    $configuration = $location->getConfigurationObject();
+    $filesystem = $location->getFileSystemObject();
+    $url = URL::to('/ccm/system/dialogs/file/thumbnails/edit');
     foreach ($types as $type) {
-        $width = $type->getWidth();
-        $height = $type->getHeight() ? $type->getHeight() : t('Automatic');
+        $width = (int) $type->getWidth() ?: t('Automatic');
+        $height = (int) $type->getHeight() ?: t('Automatic');
         $sizingMode = $type->getSizingModeDisplayName();
         $thumbnailPath = $type->getFilePath($version);
-        $location = $version->getFile()->getFileStorageLocationObject();
-        $configuration = $location->getConfigurationObject();
-        $filesystem = $location->getFileSystemObject();
         $hasFile = $filesystem->has($thumbnailPath);
 
-        $url = URL::to('/ccm/system/dialogs/file/thumbnails/edit');
         $query = http_build_query(array(
             'fID' => $version->getFileID(),
             'fvID' => $version->getFileVersionID(),
