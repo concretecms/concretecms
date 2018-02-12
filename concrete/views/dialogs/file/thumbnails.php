@@ -7,19 +7,20 @@ defined('C5_EXECUTE') or die('Access Denied.');
 ?>
 <div class="ccm-ui">
     <?php
-    $i = 1;
-
+    $imageWidth = (int) $version->getAttribute('width');
+    $imageHeight = (int) $version->getAttribute('height');
     $location = $version->getFile()->getFileStorageLocationObject();
     $configuration = $location->getConfigurationObject();
     $filesystem = $location->getFileSystemObject();
     $url = URL::to('/ccm/system/dialogs/file/thumbnails/edit');
+    $i = 1;
     foreach ($types as $type) {
         $width = (int) $type->getWidth() ?: t('Automatic');
         $height = (int) $type->getHeight() ?: t('Automatic');
         $sizingMode = $type->getSizingModeDisplayName();
         $thumbnailPath = $type->getFilePath($version);
         $hasFile = $filesystem->has($thumbnailPath);
-
+        $shouldHaveFile = $type->shouldExistFor($imageWidth, $imageHeight);
         $query = http_build_query([
             'fID' => $version->getFileID(),
             'fvID' => $version->getFileVersionID(),
@@ -62,8 +63,10 @@ defined('C5_EXECUTE') or die('Access Denied.');
                             src="<?= $configuration->getPublicURLToFile($thumbnailPath) ?>"
                         />
                         <?php
+                    } elseif ($shouldHaveFile) {
+                        echo t('Thumbnail not found.');
                     } else {
-                        echo t('No thumbnail found. Usually this is because the source file is smaller than this thumbnail configuration.');
+                        echo t('Source image too small for this thumbnail.');
                     }
                     ?>
                 </div>
