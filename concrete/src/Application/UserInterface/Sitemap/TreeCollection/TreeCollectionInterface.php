@@ -1,29 +1,30 @@
 <?php
+
 namespace Concrete\Core\Application\UserInterface\Sitemap\TreeCollection;
 
-use Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\Entry\EntryInterface;
-use Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\Entry\EntryGroupInterface;
-use Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\Entry\Group\GroupInterface;
-
+/**
+ * Interface that all the sitemap tree collections (eg multilingual sections) must implement.
+ */
 interface TreeCollectionInterface
 {
-
     /**
-     * @return EntryInterface
+     * Get the list of sitemap entries.
+     *
+     * @return \Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\Entry\EntryInterface
      */
-    function getEntries();
+    public function getEntries();
 
     /**
-     * @return GroupInterface
+     * Get the list of sitemap groups.
+     *
+     * @return \Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\Entry\Group\GroupInterface
      */
-    function getEntryGroups();
-
+    public function getEntryGroups();
 
     /**
+     * Should the site locales menu be displayed?
+     *
      * @return bool
      */
-    function displayMenu();
-
-
-
+    public function displayMenu();
 }
