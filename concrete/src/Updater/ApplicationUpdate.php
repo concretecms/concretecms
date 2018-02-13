@@ -1,14 +1,15 @@
 <?php
+
 namespace Concrete\Core\Updater;
 
+use Concrete\Core\Cache\OpCache;
 use Concrete\Core\Config\Renderer;
 use Concrete\Core\Foundation\Environment;
 use Concrete\Core\Marketplace\Marketplace;
 use Concrete\Core\Package\Package;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Updater\ApplicationUpdate\DiagnosticFactory;
 use Config;
-use Concrete\Core\Cache\OpCache;
-use Concrete\Core\Support\Facade\Application;
 
 class ApplicationUpdate
 {
@@ -41,6 +42,7 @@ class ApplicationUpdate
     {
         return $this->version;
     }
+
     /**
      * Returns the version identifier (equals to the name of the directory under the updates directory).
      *
