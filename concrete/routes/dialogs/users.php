@@ -12,3 +12,14 @@ $router->all('/advanced_search', 'AdvancedSearch::view');
 $router->all('/advanced_search/add_field', 'AdvancedSearch::addField');
 $router->all('/advanced_search/submit', 'AdvancedSearch::submit');
 $router->all('/advanced_search/save_preset', 'AdvancedSearch::savePreset');
+
+$router->all('/groupadd', 'Bulk\Group::groupadd');
+$router->all('/groupadd/submit', 'Bulk\Group::groupaddsubmit');
+$router->all('/groupremove', 'Bulk\Group::groupremove');
+$router->all('/groupremove/submit', 'Bulk\Group::groupremovesubmit');
+$router->all('/delete', 'Bulk\Delete::view');
+$router->all('/delete/submit', 'Bulk\Delete::submit');
+$router->all('/activate', 'Bulk\Activate::activate');
+$router->all('/deactivate', 'Bulk\Activate::deactivate');
+$router->all('/activate/submit', 'Bulk\Activate::activatesubmit');
+$router->all('/deactivate/submit', 'Bulk\Activate::deactivatesubmit');
