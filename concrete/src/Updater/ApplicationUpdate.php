@@ -97,7 +97,7 @@ class ApplicationUpdate
     /**
      * Parse an update dir and returns an ApplicationUpdate instance.
      *
-     * @param $dir The base name of the directory under the updates directory
+     * @param string $dir The base name of the directory under the updates directory
      *
      * @return ApplicationUpdate|null Returns null if there's no update in the $dir directory, or an ApplicationUpdate instance if $dir is ok
      */
@@ -128,7 +128,7 @@ class ApplicationUpdate
     /**
      * Given the current update object, sends information to concrete5.org to determine updatability.
      *
-     * @return \Concrete\Core\Updater\ApplicationUpdateDiagnostic
+     * @return \Concrete\Core\Updater\ApplicationUpdate\Diagnostic
      */
     public function getDiagnosticObject()
     {
