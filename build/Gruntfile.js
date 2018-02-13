@@ -101,7 +101,6 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/core/app/panels.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/dialog.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/alert.js',
-                '<%= DIR_BASE %>/concrete/js/build/core/app/newsflow.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/editable-field/container.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/page-reindexing.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/in-context-menu.js',
