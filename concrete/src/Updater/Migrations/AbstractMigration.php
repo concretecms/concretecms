@@ -28,15 +28,47 @@ abstract class AbstractMigration extends DoctrineAbstractMigration
     }
 
     /**
+     * Override this method when the database structure is upgraded using ONLY the DBAL Schema object.
+     *
+     * @param Schema $schema
+     */
+    public function upgradeSchema(Schema $schema)
+    {
+    }
+
+    /**
+     * Override this method when database schema is not upgraded, or when it's upgraded without using a Schema.
+     *
+     * @param Schema $schema
+     */
+    public function upgradeDatabase()
+    {
+    }
+
+    /**
+     * Override this method when the database structure is downgraded using ONLY the DBAL Schema object.
+     *
+     * @param Schema $schema
+     */
+    public function downgradeSchema(Schema $schema)
+    {
+    }
+
+    /**
+     * Override this method when database schema is not downgraded, or when it's downgraded without using a Schema.
+     */
+    public function downgradeDatabase()
+    {
+    }
+    
+    /**
      * {@inheritdoc}
      *
      * @see \Doctrine\DBAL\Migrations\AbstractMigration::up()
      */
     final public function up(Schema $schema)
     {
-        if ($this instanceof ManagedSchemaUpgraderInterface) {
-            $this->upgradeSchema($schema);
-        }
+        $this->upgradeSchema($schema);
     }
 
     /**
@@ -46,9 +78,7 @@ abstract class AbstractMigration extends DoctrineAbstractMigration
      */
     final public function postUp(Schema $schema)
     {
-        if ($this instanceof DirectSchemaUpgraderInterface) {
-            $this->upgradeDatabase();
-        }
+        $this->upgradeDatabase();
     }
 
     /**
@@ -58,9 +88,7 @@ abstract class AbstractMigration extends DoctrineAbstractMigration
      */
     final public function down(Schema $schema)
     {
-        if ($this instanceof ManagedSchemaDowngraderInterface) {
-            $this->downgradeSchema($schema);
-        }
+        $this->downgradeSchema($schema);
     }
 
     /**
@@ -70,9 +98,7 @@ abstract class AbstractMigration extends DoctrineAbstractMigration
      */
     final public function postDown(Schema $schema)
     {
-        if ($this instanceof DirectSchemaDowngraderInterface) {
-            $this->downgradeDatabase();
-        }
+        $this->downgradeDatabase();
     }
 
     protected function output($message)
