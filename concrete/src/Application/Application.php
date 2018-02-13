@@ -33,12 +33,18 @@ use Redirect;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response;
 use View;
+use Concrete\Core\Foundation\Bus\Bus;
 
 class Application extends Container
 {
     protected $installed = null;
     protected $environment = null;
     protected $packages = [];
+
+    /**
+     * @var Bus
+     */
+    public $commandBus;
 
     /**
      * Turns off the lights.
@@ -417,8 +423,13 @@ class Application extends Container
     public function build($concrete, array $parameters = [])
     {
         $object = parent::build($concrete, $parameters);
-        if (is_object($object) && $object instanceof ApplicationAwareInterface) {
-            $object->setApplication($this);
+        if (is_object($object)) {
+            if ($object instanceof ApplicationAwareInterface) {
+                $object->setApplication($this);
+            }
+            if ($object instanceof CommandBusAwareInterface) {
+                $object->setCommandBus($this->make(Bus::class));
+            }
         }
 
         return $object;

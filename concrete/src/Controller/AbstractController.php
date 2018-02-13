@@ -3,6 +3,9 @@ namespace Concrete\Core\Controller;
 
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
+use Concrete\Core\Application\CommandBusAwareInterface;
+use Concrete\Core\Application\CommandBusAwareTrait;
+use Concrete\Core\Foundation\Bus\Bus;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Core;
 use Request;
@@ -11,10 +14,10 @@ use View;
 /**
  * Base class for all the controllers.
  */
-abstract class AbstractController implements ApplicationAwareInterface
+abstract class AbstractController implements ApplicationAwareInterface, CommandBusAwareInterface
 {
     use ApplicationAwareTrait;
-
+    use CommandBusAwareTrait;
     /**
      * The handles of the helpers to be returned by the getHelperObjects method.
      * These will be automatically sent to Views as variables.

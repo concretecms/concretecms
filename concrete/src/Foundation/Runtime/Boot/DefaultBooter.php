@@ -17,6 +17,7 @@ use Illuminate\Config\Repository;
 use Symfony\Component\HttpFoundation\Response;
 use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Page\Theme\ThemeRouteCollection;
+use Concrete\Core\Foundation\Bus\Bus;
 
 class DefaultBooter implements BootInterface, ApplicationAwareInterface
 {
@@ -265,6 +266,9 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
 
         // Register all other providers
         $list->registerProviders($config->get('app.providers'));
+
+        // Register the command bus
+        $app->commandBus = $app->make(Bus::class);
     }
 
     /**

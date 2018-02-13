@@ -38,8 +38,8 @@ class QueueProcessCommand extends Command
     {
         $cms = Core::make('app');
 
-        $bus = $cms->make('bus');
-        $receiver = new SeparateBusReceiver($bus);
+        $bus = $cms->make('command/bus');
+        $receiver = new SeparateBusReceiver($bus->getSyncBus());
         $router = new ClassNameRouter();
         $router->add(QueueableCommand::class, $receiver);
 
