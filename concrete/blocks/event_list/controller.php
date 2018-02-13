@@ -73,6 +73,9 @@ class Controller extends BlockController
 
     public function view()
     {
+        if (!$this->totalToRetrieve) {
+            $this->set('totalToRetrieve', 9);
+        }
         $this->requireAsset('font-awesome');
         $list = new EventOccurrenceList();
         $calendar = $this->getCalendarOrCalendars();

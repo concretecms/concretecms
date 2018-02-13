@@ -716,7 +716,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         ];
         $cobj = parent::addCollection($data);
         $newCID = $cobj->getCollectionID();
-        $siteTreeID = \Core::make('site')->getSite()->getSiteTreeID();
+        $siteTreeID = $c->getSiteTreeID();
 
         $v = [$newCID, $siteTreeID, $cParentID, $uID, $this->getCollectionID(), $cDisplayOrder];
         $q = "insert into Pages (cID, siteTreeID, cParentID, uID, cPointerID, cDisplayOrder) values (?, ?, ?, ?, ?, ?)";

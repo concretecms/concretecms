@@ -8,7 +8,7 @@ return [
      */
     'version' => '8.4.0a1',
     'version_installed' => '8.4.0a1',
-    'version_db' => '20180123000000', // the key of the latest database migration
+    'version_db' => '20180130000000', // the key of the latest database migration
 
     /*
      * Installation status
@@ -491,7 +491,7 @@ return [
          * The default thumbnail format: jpeg, png, auto (if auto: we'll create a jpeg if the source image is jpeg, we'll create a png otherwise).
          */
         'default_thumbnail_format' => 'auto',
-        /**
+        /*
          * @var string (now|async)
          */
         'basic_thumbnailer_generation_strategy' => 'now',
@@ -735,7 +735,6 @@ return [
              * @var bool
              */
             'email_registration' => false,
-
 
             /*
              * Determines whether the username field is displayed when registering

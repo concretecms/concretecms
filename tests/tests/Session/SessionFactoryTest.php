@@ -7,10 +7,13 @@ use Concrete\Core\Http\Request;
 use Concrete\Core\Session\SessionFactory;
 use Concrete\Core\Session\SessionFactoryInterface;
 use Concrete\Core\Session\Storage\Handler\NativeFileSessionHandler;
+use Concrete\TestHelpers\TestHeadersTrait;
 use PHPUnit_Framework_TestCase;
 
 class SessionFactoryTest extends PHPUnit_Framework_TestCase
 {
+    use TestHeadersTrait;
+
     /** @var Application */
     protected $app;
 
@@ -52,11 +55,13 @@ class SessionFactoryTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Session\SessionInterface', $this->request->getSession());
     }
 
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
     public function testHandlerConfiguration()
     {
-        if (headers_sent()) {
-            $this->markTestSkipped('Cannot test sessions after headers have been sent.');
-        }
+        $this->skipIfHeadersSent();
 
         $config = $this->app['config'];
         $config['concrete.session'] = ['handler' => 'database', 'save_path' => '/tmp'];

@@ -61,6 +61,7 @@ if (!defined('APP_UPDATED_PASSTHRU')) {
             exit;
         }
     }
+    unset($update_file);
     define('APP_UPDATED_PASSTHRU', false);
 }
 
@@ -366,10 +367,12 @@ foreach (str_split(decoct($DIRECTORY_PERMISSIONS_MODE), 1) as $p) {
     }
     $FILE_PERMISSIONS_MODE .= intval($p) - 1;
 }
+unset($p);
 $FILE_PERMISSIONS_MODE = octdec($FILE_PERMISSIONS_MODE);
 define('DIRECTORY_PERMISSIONS_MODE_COMPUTED', $DIRECTORY_PERMISSIONS_MODE);
+unset($DIRECTORY_PERMISSIONS_MODE);
 define('FILE_PERMISSIONS_MODE_COMPUTED', $FILE_PERMISSIONS_MODE);
-
+unset($FILE_PERMISSIONS_MODE);
 /*
  * ----------------------------------------------------------------------------
  * We need our include path to be set here for libraries like Zend Framework
