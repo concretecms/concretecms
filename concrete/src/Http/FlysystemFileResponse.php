@@ -202,6 +202,7 @@ class FlysystemFileResponse extends Response
                 if ($start <= $end) {
                     if ($start < 0 || $end > $fileSize - 1) {
                         $this->setStatusCode(416);
+                        $this->headers->set('Content-Range', sprintf('bytes */%s', $fileSize));
                     } elseif ($start !== 0 || $end !== $fileSize - 1) {
                         $this->maxlen = $end < $fileSize ? $end - $start + 1 : -1;
                         $this->offset = $start;
