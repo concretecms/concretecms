@@ -3,7 +3,6 @@
 namespace Concrete\Core\File\Type\Inspector;
 
 use Concrete\Core\Entity\File\Version;
-use Concrete\Core\Support\Facade\Application;
 use Exception;
 use Imagine\Image\ImageInterface;
 use Throwable;
@@ -28,12 +27,7 @@ class ImageInspector extends Inspector
             $image = null;
         }
         if ($image !== null) {
-            $app = Application::getFacadeApplication();
-            $config = $app->make('config');
             $this->updateSize($fv, $image);
-            if ($config->get('concrete.file_manager.images.use_exif_data_to_rotate_images')) {
-                $this->fixOrientation($fv, $image);
-            }
             $fv->releaseImagineImage();
         }
     }
@@ -67,41 +61,6 @@ class ImageInspector extends Inspector
                 $fv->setAttribute($atHeight, $size->getHeight());
             }
             $result = true;
-        }
-
-        return $result;
-    }
-
-    /**
-     * Fix the orientation of the file accordingly to the EXIF metadata.
-     *
-     * @param Version $fv
-     * @param ImageInterface $image
-     *
-     * @return bool true if changed, false otherwise
-     */
-    private function fixOrientation(Version $fv, ImageInterface $image)
-    {
-        $result = false;
-        $metadata = $image->metadata();
-        if (isset($metadata['ifd0.Orientation'])) {
-            switch ($metadata['ifd0.Orientation']) {
-                case 3:
-                    $image->rotate(180);
-                    $fv->updateContents($image->get($fv->getExtension()));
-                    $result = true;
-                    break;
-                case 6:
-                    $image->rotate(90);
-                    $fv->updateContents($image->get($fv->getExtension()));
-                    $result = true;
-                    break;
-                case 8:
-                    $image->rotate(-90);
-                    $fv->updateContents($image->get($fv->getExtension()));
-                    $result = true;
-                    break;
-            }
         }
 
         return $result;
