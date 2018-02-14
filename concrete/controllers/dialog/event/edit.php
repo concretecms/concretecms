@@ -67,13 +67,21 @@ class Edit extends BackendInterfaceController
 
     protected function canAccess()
     {
-        $calendar = Calendar::getByID($_REQUEST['caID']);
+        $caID = $this->request->request->get('caID');
+        if ($caID === null) {
+            $caID = $this->request->query->get('caID');
+        }
+        $calendar = $caID ? Calendar::getByID($caID) : null;
         if (is_object($calendar)) {
             $cp = new \Permissions($calendar);
 
             return $cp->canAddCalendarEvent();
         } else {
-            $occurrence = $this->eventOccurrenceService->getByID($_REQUEST['versionOccurrenceID']);
+            $versionOccurrenceID = $this->request->request->get('versionOccurrenceID');
+            if ($versionOccurrenceID === null) {
+                $versionOccurrenceID = $this->request->query->get('versionOccurrenceID');
+            }
+            $occurrence = $versionOccurrenceID ? $this->eventOccurrenceService->getByID($versionOccurrenceID) : null;
             if (is_object($occurrence)) {
                 $calendar = $occurrence->getEvent()->getCalendar();
                 if (is_object($calendar)) {

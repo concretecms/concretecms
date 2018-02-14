@@ -4,7 +4,7 @@ $color = \Core::make('helper/form/color');
 
 <fieldset>
     <legend><?=t('Data Source')?></legend>
-    <?php View::element('calendar/block/data_source', ['caID' => $caID, 'calendarAttributeKeyHandle' => $calendarAttributeKeyHandle]) ?>
+    <?php View::element('calendar/block/data_source', ['caID' => isset($caID) ? $caID : null, 'calendarAttributeKeyHandle' => isset($calendarAttributeKeyHandle) ? $calendarAttributeKeyHandle : null]) ?>
 </fieldset>
 
 <fieldset>
@@ -50,14 +50,14 @@ $color = \Core::make('helper/form/color');
 
     <div class="form-group">
         <?= $form->label('defaultView', t('Default View')); ?>
-        <?= $form->select('defaultView', $viewTypes, $defaultView); ?>
+        <?= $form->select('defaultView', $viewTypes, isset($defaultView) ? $defaultView : null); ?>
     </div>
 
     <div class="form-group">
         <label class="control-label"><?= t('Day Heading Links'); ?></label>
         <div class="checkbox">
             <label>
-                <?= $form->checkbox('navLinks', 1, $navLinks); ?>
+                <?= $form->checkbox('navLinks', 1, !empty($navLinks)); ?>
                 <?= t('Make day headings into links.'); ?>
             </label>
             <p class="help-block"><?= t('When clicked, day heading links go to the view that represents the day.'); ?></p>
@@ -68,7 +68,7 @@ $color = \Core::make('helper/form/color');
         <label class="control-label"><?= t('Event Limit'); ?></label>
         <div class="checkbox">
             <label>
-                <?= $form->checkbox('eventLimit', 1, $eventLimit); ?>
+                <?= $form->checkbox('eventLimit', 1, !empty($eventLimit)); ?>
                 <?= t('Limit the number of events displayed on a day.'); ?>
             </label>
             <p class="help-block"><?= t('When there are too many events, an "+X more" link is displayed.'); ?></p>
@@ -85,12 +85,12 @@ $color = \Core::make('helper/form/color');
             <?php foreach ($attributeKeys as $ak) {
                 $attributeController = $ak->getController();
                 ?>
-                <option value="<?=$ak->getAttributeKeyID()?>" <?php if ($ak->getAttributeKeyID() == $filterByTopicAttributeKeyID) { ?>selected<?php } ?>
+                <option value="<?=$ak->getAttributeKeyID()?>" <?php if (isset($filterByTopicAttributeKeyID) && $ak->getAttributeKeyID() == $filterByTopicAttributeKeyID) { ?>selected<?php } ?>
                     data-tree-id="<?=$attributeController->getTopicTreeID()?>"><?=$ak->getAttributeKeyDisplayName()?></option>
             <?php
             } ?>
         </select>
-        <input type="hidden" name="filterByTopicID" value="<?=$filterByTopicID?>">
+        <input type="hidden" name="filterByTopicID" value="<?=isset($filterByTopicID) ? $filterByTopicID : ''?>">
         <div class="tree-view-container">
             <div class="tree-view-template">
             </div>
@@ -126,7 +126,7 @@ $color = \Core::make('helper/form/color');
             $('.tree-view-template').concreteTree({
                 'treeID': chosenTree,
                 'chooseNodeInForm': true,
-                'selectNodesByKey': [<?=intval($filterByTopicID)?>],
+                'selectNodesByKey': [<?=isset($filterByTopicID) ? (int) $filterByTopicID : 0?>],
                 'onSelect' : function(nodes) {
                     if (nodes.length) {
                         $('input[name=filterByTopicID]').val(nodes[0]);

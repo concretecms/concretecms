@@ -4,6 +4,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 $calendarPermissions = new Permissions($calendar);
 $preferences = Core::make('Concrete\Core\Calendar\Utility\Preferences');
+if (!isset($mode)) {
+    $mode = null;
+}
+if (!isset($month)) {
+    $month = null;
+}
 ?>
 
 

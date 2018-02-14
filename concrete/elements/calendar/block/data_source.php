@@ -1,18 +1,22 @@
-<?php defined('C5_EXECUTE') or die('Access Denied.');
-$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
-$form = $app->make('helper/form');
+<?php
 
-$calendars = array_filter(\Concrete\Core\Calendar\Calendar::getList(), function ($calendar) {
-    $p = new \Permissions($calendar);
+defined('C5_EXECUTE') or die('Access Denied.');
 
-    return $p->canViewCalendarInEditInterface();
-});
+$form = Core::make('helper/form');
 
+$calendars = array_filter(
+    Concrete\Core\Calendar\Calendar::getList(),
+    function ($calendar) {
+        $p = new \Permissions($calendar);
+
+        return $p->canViewCalendarInEditInterface();
+    }
+);
 if (isset($multiple) && $multiple) {
+    $calendarSelect = [];
     View::getInstance()->requireAsset('selectize');
-    $calendarSelect = array();
 } else {
-    $calendarSelect = array('' => t('** Select a Calendar'));
+    $calendarSelect = ['' => t('** Select a Calendar')];
 }
 
 foreach ($calendars as $calendar) {
@@ -21,14 +25,14 @@ foreach ($calendars as $calendar) {
 
 $chooseCalendar = 'all';
 $calendarAttributeKeys = [];
-$keys = \Concrete\Core\Attribute\Key\SiteKey::getList();
+$keys = Concrete\Core\Attribute\Key\SiteKey::getList();
 foreach ($keys as $ak) {
     if ($ak->getAttributeTypeHandle() == 'calendar') {
         $calendarAttributeKeys[] = $ak;
     }
 }
 
-$calendarAttributeKeySelect = array('' => t('** Select Attribute'));
+$calendarAttributeKeySelect = ['' => t('** Select Attribute')];
 foreach ($calendarAttributeKeys as $ak) {
     $calendarAttributeKeySelect[$ak->getAttributeKeyHandle()] = $ak->getAttributeKeyDisplayName();
 }
@@ -39,37 +43,39 @@ if ($calendarAttributeKeyHandle) {
     $chooseCalendar = 'specific';
 }
 ?>
-
 <div class="form-group">
     <label class="control-label"><?= t('Calendar') ?></label>
     <?php /* ?>
     <div class="radio">
         <label>
-            <input type="radio" name="chooseCalendar" value="all" <?php if ($chooseCalendar == 'all') { ?> checked <?php } ?>>
-            All Events
+            <input type="radio" name="chooseCalendar" value="all"<?= $chooseCalendar == 'all' ? ' checked' : '' ?>>
+            <?= t('All Events') ?>
         </label>
     </div>*/ ?>
     <div class="radio">
         <label>
-            <input type="radio" name="chooseCalendar" value="specific" <?php if ($chooseCalendar == 'specific') { ?> checked <?php } ?>> Specific Calendar
+            <input type="radio" name="chooseCalendar" value="specific"<?= $chooseCalendar == 'specific' ? ' checked' : '' ?>>
+            <?= t('Specific Calendar') ?>
         </label>
     </div>
-
-    <?php if (count($calendarAttributeKeys)) { ?>
+    <?php
+    if (count($calendarAttributeKeys)) {
+        ?>
         <div class="radio">
             <label>
-                <input type="radio" name="chooseCalendar" value="site" <?php if ($chooseCalendar == 'site') { ?> checked <?php } ?>> Site-wide Calendar
+                <input type="radio" name="chooseCalendar" value="site<?= $chooseCalendar == 'site' ? ' checked' : '' ?>>
+                <?= t('Site-wide Calendar') ?>
             </label>
         </div>
-            <div data-row="calendar-attribute">
-                <div class="form-group">
-                    <?= $form->label('calendarAttributeKeyHandle', t('Calendar Site Attribute')) ?>
-                    <?php echo $form->select('calendarAttributeKeyHandle', $calendarAttributeKeySelect, $calendarAttributeKeyHandle); ?>
-                </div>
+        <div data-row="calendar-attribute">
+            <div class="form-group">
+                <?= $form->label('calendarAttributeKeyHandle', t('Calendar Site Attribute')) ?>
+                <?= $form->select('calendarAttributeKeyHandle', $calendarAttributeKeySelect, $calendarAttributeKeyHandle) ?>
             </div>
+        </div>
         <?php
-    } ?>
-
+        }
+    ?>
     <div data-row="specific-calendar">
         <div class="form-group">
             <?php
@@ -77,7 +83,7 @@ if ($calendarAttributeKeyHandle) {
             $calendarField = isset($multiple) && $multiple ? 'caID[]' : 'caID';
             ?>
             <?= $form->label($calendarField, t('Calendar')) ?>
-            <?php echo $form->$method('caID', $calendarSelect, $caID); ?>
+            <?= $form->$method('caID', $calendarSelect, $caID) ?>
         </div>
     </div>
 </div>

@@ -26,6 +26,8 @@ class DashboardCalendarPageController extends DashboardSitePageController
             if (!$cp->canViewCalendarInEditInterface()) {
                 unset($calendar);
             }
+        } else {
+            $calendar = null;
         }
 
         if (!$calendar) {

@@ -7,6 +7,7 @@ Loader::element('calendar/header', array(
     'calendars' => $calendars,
     'mode' => 'list',
 ));
+$topic_id = Request::getInstance()->get('topic_id');
 ?>
 
 <form method="get" action="<?=$view->action('search')?>">
@@ -22,7 +23,7 @@ Loader::element('calendar/header', array(
                     <select data-select="bootstrap" name="topic_id">
                         <option value=""><?=t('All Categories')?></option>
                         <?php foreach($topics as $topic_node) { ?>
-                            <option <?php if ($_REQUEST['topic_id'] == $topic_node->getTreeNodeID()) { ?>selected<?php } ?> value="<?= $topic_node->getTreeNodeID() ?>"><?= h($topic_node->getTreeNodeDisplayName('html')) ?></option>
+                            <option <?php if ($topic_id == $topic_node->getTreeNodeID()) { ?>selected<?php } ?> value="<?= $topic_node->getTreeNodeID() ?>"><?= h($topic_node->getTreeNodeDisplayName('html')) ?></option>
                         <?php } ?>
                     </select>
 
