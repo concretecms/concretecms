@@ -1,8 +1,3 @@
-<?php
-if (Request::getInstance()->get('_ccm_dashboard_external')) {
-    return;
-}
-?>
 </div>
 </div>
 

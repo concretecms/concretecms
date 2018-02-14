@@ -5,10 +5,6 @@ use Concrete\Controller\Panel\Dashboard as DashboardPanel;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-if (Request::getInstance()->get('_ccm_dashboard_external')) {
-    return;
-}
-
 $app = Application::getFacadeApplication();
 
 $html = $app->make('helper/html');
