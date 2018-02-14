@@ -164,18 +164,11 @@ class FlysystemFileResponse extends Response
      */
     public function prepare(\Symfony\Component\HttpFoundation\Request $request)
     {
-        $this->headers->set('Content-Length', $this->file->getSize());
-
-        if (!$this->headers->has('Accept-Ranges')) {
-            // Only accept ranges on safe HTTP methods
-            $this->headers->set('Accept-Ranges', $request->isMethodSafe(false) ? 'bytes' : 'none');
-        }
-
         if (!$this->headers->has('Content-Type')) {
             $this->headers->set('Content-Type', $this->file->getMimetype() ?: 'application/octet-stream');
         }
 
-        if ('HTTP/1.0' != $request->server->get('SERVER_PROTOCOL')) {
+        if ('HTTP/1.0' !== $request->server->get('SERVER_PROTOCOL')) {
             $this->setProtocolVersion('1.1');
         }
 
@@ -184,11 +177,20 @@ class FlysystemFileResponse extends Response
         $this->offset = 0;
         $this->maxlen = -1;
 
+        if (false === $fileSize = $this->file->getSize()) {
+            return $this;
+        }
+        $this->headers->set('Content-Length', $fileSize);
+
+        if (!$this->headers->has('Accept-Ranges')) {
+            // Only accept ranges on safe HTTP methods
+            $this->headers->set('Accept-Ranges', $request->isMethodSafe(false) ? 'bytes' : 'none');
+        }
+
         if ($request->headers->has('Range')) {
             // Process the range headers.
             if (!$request->headers->has('If-Range') || $this->hasValidIfRangeHeader($request->headers->get('If-Range'))) {
                 $range = $request->headers->get('Range');
-                $fileSize = $this->file->getSize();
 
                 list($start, $end) = explode('-', substr($range, 6), 2) + array(0);
 
