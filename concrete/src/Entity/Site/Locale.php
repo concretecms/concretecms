@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Entity
  * @ORM\Table(name="SiteLocales")
+ * @ORM\EntityListeners({"\Concrete\Core\Site\Locale\Listener"})
  */
 class Locale implements LocaleInterface, TreeInterface
 {
