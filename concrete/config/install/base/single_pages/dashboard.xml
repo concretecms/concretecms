@@ -757,11 +757,11 @@
                 </attributekey>
             </attributes>
         </page>
-        <page name="Image Uploading" path="/dashboard/system/files/image_uploading"
+        <page name="Image Options" path="/dashboard/system/files/image_uploading"
               filename="/dashboard/system/files/image_uploading.php" pagetype="" description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
-                    <value>uploading, upload, images, image, resizing, manager</value>
+                    <value>uploading, upload, images, image, resizing, manager, exif, rotation, rotate, quality, compression, png, jpg, jpeg</value>
                 </attributekey>
             </attributes>
         </page>

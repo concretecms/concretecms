@@ -6,7 +6,7 @@ use Concrete\Core\File\Image\Thumbnail\Thumbnail;
 $view = new View('image-editor/editor');
 
 $file = File::getByID(intval(Request::request('fID', 1)));
-/** @var FileVersion $file_version */
+
 $file_version = $file->getVersion(intval(Request::request('fvID', 1)));
 
 $handle = Request::request('thumbnail', '');
