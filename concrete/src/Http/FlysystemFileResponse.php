@@ -59,7 +59,7 @@ class FlysystemFileResponse extends Response
      * @param null|string         $contentDisposition The type of Content-Disposition to set automatically with the filename
      * @param bool                $autoEtag           Whether the ETag header should be automatically set
      *
-     * @return BinaryFileResponse The created response
+     * @return FlysystemFileResponse The created response
      */
     public static function create($file = null, $status = 200, $headers = array(), $public = true, $contentDisposition = null, $autoEtag = false)
     {
@@ -73,7 +73,7 @@ class FlysystemFileResponse extends Response
      * @param string              $contentDisposition
      * @param bool                $autoEtag
      *
-     * @return BinaryFileResponse
+     * @return $this
      *
      * @throws FileException
      */
@@ -129,7 +129,7 @@ class FlysystemFileResponse extends Response
      * @param string $filename         Optionally use this filename instead of the real name of the file
      * @param string $filenameFallback A fallback filename, containing only ASCII characters. Defaults to an automatically encoded filename
      *
-     * @return BinaryFileResponse
+     * @return $this
      */
     public function setContentDisposition($disposition, $filename = '', $filenameFallback = '')
     {
@@ -234,7 +234,7 @@ class FlysystemFileResponse extends Response
     public function setContent($content)
     {
         if (null !== $content) {
-            throw new \LogicException('The content cannot be set on a BinaryFileResponse instance.');
+            throw new \LogicException('The content cannot be set on a FlysystemFileResponse instance.');
         }
     }
 
