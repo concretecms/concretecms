@@ -205,17 +205,17 @@ class FlysystemFileResponse extends Response
 
     /**
      * Sends the file.
+     *
+     * {@inheritdoc}
      */
     public function sendContent()
     {
         if (!$this->isSuccessful()) {
-            parent::sendContent();
-
-            return;
+            return parent::sendContent();
         }
 
         if (0 === $this->maxlen) {
-            return;
+            return $this;
         }
 
         $out = fopen('php://output', 'wb');
@@ -224,6 +224,8 @@ class FlysystemFileResponse extends Response
 
         fclose($out);
         fclose($file);
+
+        return $this;
     }
 
     /**
