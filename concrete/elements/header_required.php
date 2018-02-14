@@ -182,10 +182,6 @@ if ($u->isRegistered()) {
 }
 if ($cp) {
     View::element('page_controls_header', ['cp' => $cp, 'c' => $c]);
-    $cih = $app->make('helper/concrete/ui');
-    if ($cih->showNewsflowOverlay()) {
-        $v->addFooterItem('<script type="text/javascript">$(function() { new ConcreteNewsflowDialog().open(); });</script>');
-    }
     if ($isEditMode) {
         $cookie = $app->make('cookie');
         if ($cookie->get('ccmLoadAddBlockWindow')) {

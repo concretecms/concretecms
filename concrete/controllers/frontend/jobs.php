@@ -26,19 +26,26 @@ class Jobs extends Controller
         $r->error = false;
         $r->results = array();
 
-        if (Job::authenticateRequest($_REQUEST['auth'])) {
+        if (Job::authenticateRequest($this->request->request->get('auth', $this->request->query->get('auth')))) {
             $js = null;
-            if ($_REQUEST['jID']) {
-                $j = Job::getByID($_REQUEST['jID']);
+            $jID = $this->request->request->get('jID', $this->request->query->get('jID'));
+            if ($jID) {
+                $j = Job::getByID($jID);
                 $r->results[] = $j->executeJob();
-            } elseif ($_REQUEST['jHandle']) {
-                $j = Job::getByHandle($_REQUEST['jHandle']);
-                $r->results[] = $j->executeJob();
-            } elseif ($_REQUEST['jsID']) {
-                $js = JobSet::getByID($_REQUEST['jsID']);
             } else {
-                // default set legacy support
-                $js = JobSet::getDefault();
+                $jHandle = $this->request->request->get('jHandle', $this->request->query->get('jHandle'));
+                if ($jHandle) {
+                    $j = Job::getByHandle($jHandle);
+                    $r->results[] = $j->executeJob();
+                } else {
+                    $jsID = $this->request->request->get('jsID', $this->request->query->get('jsID'));
+                    if ($jsID) {
+                        $js = JobSet::getByID($jsID);
+                    } else {
+                        // default set legacy support
+                        $js = JobSet::getDefault();
+                    }
+                }
             }
 
             if (is_object($js)) {
@@ -86,12 +93,14 @@ class Jobs extends Controller
         $r->error = false;
 
         $job = null;
-        if (Job::authenticateRequest($_REQUEST['auth'])) {
-            if (strlen($_REQUEST['jHandle']) > 0 || intval($_REQUEST['jID']) > 0) {
-                if ($_REQUEST['jHandle']) {
-                    $job = Job::getByHandle($_REQUEST['jHandle']);
-                } else {
-                    $job = Job::getByID(intval($_REQUEST['jID']));
+        if (Job::authenticateRequest($this->request->request->get('auth', $this->request->query->get('auth')))) {
+            $jHandle = $this->request->request->get('jHandle', $this->request->query->get('jHandle'));
+            if ($jHandle) {
+                $job = Job::getByHandle($jHandle);
+            } else {
+                $jID = (int) $this->request->request->get('jID', $this->request->query->get('jID'));
+                if ($jID !== 0) {
+                    $job = Job::getByID($jID);
                 }
             }
 
@@ -99,7 +108,7 @@ class Jobs extends Controller
                 if ($job instanceof QueueableJob && $job->supportsQueue()) {
                     $q = $job->getQueueObject();
 
-                    if ($_POST['process']) {
+                    if ($this->request->request->get('process')) {
                         $obj = new stdClass();
                         $obj->error = false;
                         try {
@@ -174,7 +183,7 @@ class Jobs extends Controller
         $r->error = false;
         $r->results = array();
 
-        if (Job::authenticateRequest($_REQUEST['auth'])) {
+        if (Job::authenticateRequest($this->request->request->get('auth', $this->request->query->get('auth')))) {
             $list = Job::getList();
             foreach ($list as $job) {
                 if ($job->supportsQueue() && $job instanceof QueueableJob) {

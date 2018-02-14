@@ -310,7 +310,6 @@ const ONLINE_NOW_TIMEOUT = 300;
 const UVTYPE_REGISTER = 0;
 const UVTYPE_CHANGE_PASSWORD = 1;
 const UVTYPE_LOGIN_FOREVER = 2;
-const NEWSFLOW_VIEWED_THRESHOLD = 86400; // once a day
 
 /* -- Pages -- */
 const CHECKOUT_TIMEOUT = 300; // # in seconds.
