@@ -59,7 +59,7 @@ class FlysystemFileResponse extends Response
      * @param null|string         $contentDisposition The type of Content-Disposition to set automatically with the filename
      * @param bool                $autoEtag           Whether the ETag header should be automatically set
      *
-     * @return FlysystemFileResponse The created response
+     * @return static
      */
     public static function create($file = null, $status = 200, $headers = array(), $public = true, $contentDisposition = null, $autoEtag = false)
     {
@@ -114,6 +114,8 @@ class FlysystemFileResponse extends Response
 
     /**
      * Automatically sets the ETag header according to the checksum of the file.
+     *
+     * @return $this
      */
     public function setAutoEtag()
     {
