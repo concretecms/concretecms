@@ -613,15 +613,13 @@ Dropzone.prototype.defaultOptions.dictMaxFilesExceeded = ' . json_encode(t('You 
 Dropzone.prototype.defaultOptions.resizeQuality = ' . ($this->app->make(BitmapFormat::class)->getDefaultJpegQuality() / 100) . ';
 ';
         $config = $this->app->make('config');
-        if ($config->get('concrete.file_manager.restrict_uploaded_image_sizes')) {
-            $maxWidth = (int) $config->get('concrete.file_manager.restrict_max_width');
-            if ($maxWidth > 0) {
-                $content .= "Dropzone.prototype.defaultOptions.resizeWidth = {$maxWidth};\n";
-            }
-            $maxHeight = (int) $config->get('concrete.file_manager.restrict_max_height');
-            if ($maxHeight > 0) {
-                $content .= "Dropzone.prototype.defaultOptions.resizeHeight = {$maxHeight};\n";
-            }
+        $maxWidth = (int) $config->get('concrete.file_manager.restrict_max_width');
+        if ($maxWidth > 0) {
+            $content .= "Dropzone.prototype.defaultOptions.resizeWidth = {$maxWidth};\n";
+        }
+        $maxHeight = (int) $config->get('concrete.file_manager.restrict_max_height');
+        if ($maxHeight > 0) {
+            $content .= "Dropzone.prototype.defaultOptions.resizeHeight = {$maxHeight};\n";
         }
 
         return $this->createJavascriptResponse($content);

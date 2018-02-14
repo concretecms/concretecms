@@ -237,18 +237,16 @@ class File extends Controller
                 $processor->process($newFileVersion);
             }
         }
-        if ($config->get('concrete.file_manager.restrict_uploaded_image_sizes')) {
-            $width = (int) $config->get('concrete.file_manager.restrict_max_width');
-            $height = (int) $config->get('concrete.file_manager.restrict_max_height');
-            if ($width > 0 || $height > 0) {
-                $processor = new ConstrainImageProcessor($width, $height);
-                if ($processor->shouldProcess($fv)) {
-                    if ($newFileVersion === null) {
-                        $fv = $newFileVersion = $f->createNewVersion(true);
-                    }
-                    $processor->setRescanThumbnails(false);
-                    $processor->process($newFileVersion);
+        $width = (int) $config->get('concrete.file_manager.restrict_max_width');
+        $height = (int) $config->get('concrete.file_manager.restrict_max_height');
+        if ($width > 0 || $height > 0) {
+            $processor = new ConstrainImageProcessor($width, $height);
+            if ($processor->shouldProcess($fv)) {
+                if ($newFileVersion === null) {
+                    $fv = $newFileVersion = $f->createNewVersion(true);
                 }
+                $processor->setRescanThumbnails(false);
+                $processor->process($newFileVersion);
             }
         }
         $fv->rescanThumbnails();

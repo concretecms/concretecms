@@ -140,14 +140,12 @@ class Importer
             $processor->setRescanThumbnails(false);
             $this->addImportProcessor($processor);
         }
-        if ($config->get('concrete.file_manager.restrict_uploaded_image_sizes')) {
-            $width = (int) $config->get('concrete.file_manager.restrict_max_width');
-            $height = (int) $config->get('concrete.file_manager.restrict_max_height');
-            if ($width > 0 || $height > 0) {
-                $processor = new ConstrainImageProcessor($width, $height);
-                $processor->setRescanThumbnails(false);
-                $this->addImportProcessor($processor);
-            }
+        $width = (int) $config->get('concrete.file_manager.restrict_max_width');
+        $height = (int) $config->get('concrete.file_manager.restrict_max_height');
+        if ($width > 0 || $height > 0) {
+            $processor = new ConstrainImageProcessor($width, $height);
+            $processor->setRescanThumbnails(false);
+            $this->addImportProcessor($processor);
         }
     }
 

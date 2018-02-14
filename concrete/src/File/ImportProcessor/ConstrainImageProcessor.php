@@ -56,12 +56,8 @@ class ConstrainImageProcessor implements ProcessorInterface
     public function __construct($maxWidth = null, $maxHeight = null, $constraintMode = null)
     {
         $this->app = Application::getFacadeApplication();
-        if ($maxWidth) {
-            $this->setMaxWidth($maxWidth);
-        }
-        if ($maxHeight) {
-            $this->setMaxHeight($maxHeight);
-        }
+        $this->setMaxWidth($maxWidth);
+        $this->setMaxHeight($maxHeight);
         if ($constraintMode) {
             $this->setConstraintMode($constraintMode);
         }
@@ -84,10 +80,8 @@ class ConstrainImageProcessor implements ProcessorInterface
      */
     public function setMaxWidth($maxWidth)
     {
-        $this->maxWidth = (int) $maxWidth;
-        if ($this->maxWidth < 1) {
-            $this->maxWidth = null;
-        }
+        $maxWidth = (int) $maxWidth;
+        $this->maxWidth = $maxWidth > 0 ? $maxWidth : null;
     }
 
     /**
@@ -107,10 +101,8 @@ class ConstrainImageProcessor implements ProcessorInterface
      */
     public function setMaxHeight($maxHeight)
     {
-        $this->maxHeight = (int) $maxHeight;
-        if ($this->maxHeight < 1) {
-            $this->maxHeight = null;
-        }
+        $maxHeight = (int) $maxHeight;
+        $this->maxHeight = $maxHeight > 0 ? $maxHeight : null;
     }
 
     /**

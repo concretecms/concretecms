@@ -26,9 +26,8 @@ class ImageUploading extends DashboardPageController
         $this->set('jpeg_quality', $bitmapFormat->getDefaultJpegQuality());
         $this->set('png_compression', $bitmapFormat->getDefaultPngCompressionLevel());
 
-        $enabled = (bool) $config->get('concrete.file_manager.restrict_uploaded_image_sizes');
-        $this->set('restrict_max_width', $enabled ? (int) $config->get('concrete.file_manager.restrict_max_width') : 0);
-        $this->set('restrict_max_height', $enabled ? (int) $config->get('concrete.file_manager.restrict_max_height') : 0);
+        $this->set('restrict_max_width', (int) $config->get('concrete.file_manager.restrict_max_width'));
+        $this->set('restrict_max_height', (int) $config->get('concrete.file_manager.restrict_max_height'));
 
         $this->set('use_exif_data_to_rotate_images', (bool) $config->get('concrete.file_manager.images.use_exif_data_to_rotate_images'));
 
@@ -107,7 +106,6 @@ class ImageUploading extends DashboardPageController
             } else {
                 $restrict_max_height = null;
             }
-            $restrict_uploaded_image_sizes = $restrict_max_width !== null || $restrict_max_height !== null;
 
             $use_exif_data_to_rotate_images = (bool) $post->get('use_exif_data_to_rotate_images');
 
@@ -117,7 +115,6 @@ class ImageUploading extends DashboardPageController
                 $bitmapFormat->setDefaultJpegQuality($jpeg_quality);
                 $bitmapFormat->setDefaultPngCompressionLevel($png_compression);
                 $config->save('concrete.file_manager.images.use_exif_data_to_rotate_images', $use_exif_data_to_rotate_images);
-                $config->save('concrete.file_manager.restrict_uploaded_image_sizes', $restrict_uploaded_image_sizes);
                 $config->save('concrete.file_manager.restrict_max_width', $restrict_max_width);
                 $config->save('concrete.file_manager.restrict_max_height', $restrict_max_height);
                 $this->flash('success', t('Image options saved.'));

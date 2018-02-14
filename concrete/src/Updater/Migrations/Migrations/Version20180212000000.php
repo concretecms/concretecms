@@ -39,5 +39,15 @@ class Version20180212000000 extends AbstractMigration implements DirectSchemaUpg
                 $sp->setAttribute('meta_keywords', 'uploading, upload, images, image, resizing, manager, exif, rotation, rotate, quality, compression, png, jpg, jpeg');
             }
         }
+        $config = $this->app->make('config');
+        $restrict_uploaded_image_sizes = $config->get('concrete.file_manager.restrict_uploaded_image_sizes');
+        if ($restrict_uploaded_image_sizes !== null) {
+            if (!$restrict_uploaded_image_sizes) {
+                $config->save('concrete.file_manager.restrict_max_width', null);
+                $config->save('concrete.file_manager.restrict_max_height', null);
+            }
+            $config->set('concrete.file_manager.restrict_uploaded_image_sizes', null);
+            $config->save('concrete.file_manager.restrict_uploaded_image_sizes', null);
+        }
     }
 }
