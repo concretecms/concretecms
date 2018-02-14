@@ -135,7 +135,7 @@ class FlysystemFileResponse extends Response
      */
     public function setContentDisposition($disposition, $filename = '', $filenameFallback = '')
     {
-        if ($filename === '') {
+        if ('' === $filename) {
             $filename = basename($this->file->getPath());
         }
 
@@ -207,7 +207,7 @@ class FlysystemFileResponse extends Response
                     if ($start < 0 || $end > $fileSize - 1) {
                         $this->setStatusCode(416);
                         $this->headers->set('Content-Range', sprintf('bytes */%s', $fileSize));
-                    } elseif ($start !== 0 || $end !== $fileSize - 1) {
+                    } elseif (0 !== $start || $end !== $fileSize - 1) {
                         $this->maxlen = $end < $fileSize ? $end - $start + 1 : -1;
                         $this->offset = $start;
 
