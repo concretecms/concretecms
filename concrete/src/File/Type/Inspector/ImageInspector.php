@@ -28,7 +28,6 @@ class ImageInspector extends Inspector
         }
         if ($image !== null) {
             $this->updateSize($fv, $image);
-            $fv->releaseImagineImage();
         }
     }
 

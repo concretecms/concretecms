@@ -1402,9 +1402,6 @@ class Version implements ObjectInterface
                 }
             } catch (\Imagine\Exception\InvalidArgumentException $e) {
             } catch (\Imagine\Exception\RuntimeException $e) {
-            } finally {
-                unset($image);
-                $this->releaseImagineImage();
             }
         }
 
