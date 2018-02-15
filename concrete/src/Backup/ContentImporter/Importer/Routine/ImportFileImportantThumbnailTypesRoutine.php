@@ -1,7 +1,8 @@
 <?php
 namespace Concrete\Core\Backup\ContentImporter\Importer\Routine;
 
-use Concrete\Core\Permission\Category;
+use Concrete\Core\Entity\File\Image\Thumbnail\Type\TypeFileSet;
+use Concrete\Core\File\Set\Set as FileSet;
 
 class ImportFileImportantThumbnailTypesRoutine extends AbstractRoutine
 {
@@ -17,13 +18,36 @@ class ImportFileImportantThumbnailTypesRoutine extends AbstractRoutine
                 $type = new \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type();
                 $type->setName((string) $l['name']);
                 $type->setHandle((string) $l['handle']);
-                $type->setSizingMode((string) $l['sizingMode']);
-                $type->setWidth((string) $l['width']);
-                $type->setHeight((string) $l['height']);
-                $required = (string) $l['required'];
-                if ($required) {
-                    $type->requireType();
+                if (isset($l['sizingMode'])) {
+                    $type->setSizingMode((string) $l['sizingMode']);
                 }
+                if (isset($l['width'])) {
+                    $type->setWidth((string) $l['width']);
+                }
+                if (isset($l['height'])) {
+                    $type->setHeight((string) $l['height']);
+                }
+                if (isset($l['required'])) {
+                    $required = (string) $l['required'];
+                    if ($required) {
+                        $type->requireType();
+                    }
+                }
+                if (isset($l['limitedToFileSets'])) {
+                    $type->setLimitedToFileSets((bool) (string) $l['limitedToFileSets']);
+                }
+                if (isset($l->fileSets)) {
+                    foreach ($l->fileSets as $xFileSet) {
+                        $name = isset($xFileSet['name']) ? trim((string) $xFileSet['name']) : '';
+                        if ($name !== '') {
+                            $fileSet = FileSet::getByName($name);
+                            if ($fileSet !== null && $fileSet->getFileSetType() === FileSet::TYPE_PUBLIC) {
+                                $type->getAssociatedFileSets()->add(new TypeFileSet($type, $fileSet));
+                            }
+                        }
+                    }
+                }
+                
                 $type->save();
             }
         }
