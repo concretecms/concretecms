@@ -71,7 +71,7 @@ class Set
     /**
      * @param bool|\User $u
      *
-     * @return array
+     * @return static[]
      */
     public static function getMySets($u = false)
     {
