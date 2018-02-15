@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Backup\ContentImporter\Importer\Routine;
 
 use Concrete\Core\Entity\File\Image\Thumbnail\Type\TypeFileSet;
@@ -41,13 +42,15 @@ class ImportFileImportantThumbnailTypesRoutine extends AbstractRoutine
                         $name = isset($xFileSet['name']) ? trim((string) $xFileSet['name']) : '';
                         if ($name !== '') {
                             $fileSet = FileSet::getByName($name);
-                            if ($fileSet !== null && $fileSet->getFileSetType() === FileSet::TYPE_PUBLIC) {
+                            if ($fileSet === null) {
+                                $fileSet = FileSet::create($name);
+                            }
+                            if ($fileSet->getFileSetType() == FileSet::TYPE_PUBLIC) {
                                 $type->getAssociatedFileSets()->add(new TypeFileSet($type, $fileSet));
                             }
                         }
                     }
                 }
-                
                 $type->save();
             }
         }
