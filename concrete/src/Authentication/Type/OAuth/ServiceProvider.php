@@ -55,6 +55,9 @@ class ServiceProvider extends Provider
                                 case 'attach_callback':
                                     return $controller->handle_attach_callback();
                                     break;
+                                case 'attempt_detach':
+                                    return $controller->handle_detach_attempt();
+                                    break;
                             }
                         }
                     }
