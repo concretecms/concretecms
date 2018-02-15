@@ -4,10 +4,9 @@ namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
-use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
 use Doctrine\DBAL\Schema\Schema;
 
-class Version20180114030029 extends AbstractMigration implements DirectSchemaUpgraderInterface
+class Version20180114030029 extends AbstractMigration
 {
     public function upgradeDatabase()
     {
