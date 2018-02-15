@@ -49,7 +49,7 @@ class FillThumbnailsTable extends QueueableJob
      */
     public function getJobName()
     {
-        return t('Fill thumbnails table');
+        return t('Fill thumbnail database table');
     }
 
     /**
@@ -59,7 +59,7 @@ class FillThumbnailsTable extends QueueableJob
      */
     public function getJobDescription()
     {
-        return t('Populate the thumbnail table with all the files.');
+        return t('Re-populate the thumbnail path database table.');
     }
 
     /**
@@ -111,7 +111,7 @@ class FillThumbnailsTable extends QueueableJob
      */
     public function finish(Queue $q)
     {
-        return t('All image files have been processed.');
+        return t('All thumbnail path have been processed.');
     }
 
     /**
