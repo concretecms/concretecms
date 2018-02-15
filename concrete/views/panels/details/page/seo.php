@@ -22,7 +22,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	<div class="form-group">
 		<label class="control-label launch-tooltip" data-placement="bottom" title="<?=t('This page must always be available from at least one URL. This is that URL.')?>" class="launch-tooltip"><?=t('URL Slug')?></label>
 		<div>
-			<input type="text" class="form-control" name="cHandle" value="<?php echo $c->getCollectionHandle()?>" id="cHandle"><input type="hidden" name="oldCHandle" id="oldCHandle" value="<?php echo $c->getCollectionHandle()?>">
+
+			<input type="text" class="form-control" name="cHandle" <?php if($autoUpdateUrlSlug)echo 'data-auto-update="true"'?> value="<?php echo $c->getCollectionHandle()?>" id="cHandle">
+            <i class="fa-refresh fa-spin fa ccm-composer-url-slug-loading pull-right" style="display: none;"></i>
+            <input type="hidden" name="oldCHandle" id="oldCHandle" value="<?php echo $c->getCollectionHandle()?>">
+            <input type="hidden" name="parentId" id="parentId" value="<?php echo $c->getCollectionParentID()?>">
 		</div>
 	</div>
 	<?php
@@ -69,5 +73,34 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			counterText: '<?php echo t('Characters'); ?>: ',
 			countContainerClass: 'help-block'
 		});
+
+        var $urlSlugField = $('#cHandle');
+        var $nameField = $('.ccm-panel-detail-content-form [name=cName]');
+        var autoUpdate = $urlSlugField.data('auto-update');
+        if ($urlSlugField.length && autoUpdate == true) {
+            $nameField.on('input', function() {
+                var input = $(this);
+                var send = {
+                    token: '<?=Loader::helper('validation/token')->generate('get_url_slug')?>',
+                    name: input.val()
+                };
+                var parentID = input.closest('form').find('input[name=cParentID]').val();
+                if (parentID) {
+                    send.parentID = parentID;
+                }
+                clearTimeout(concreteComposerAddPageTimer);
+                var concreteComposerAddPageTimer = setTimeout(function() {
+                    $('.ccm-composer-url-slug-loading').show();
+                    $.post(
+                        '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/url_slug',
+                        send,
+                        function(r) {
+                            $('.ccm-composer-url-slug-loading').hide();
+                            $urlSlugField.val(r);
+                        }
+                    );
+                }, 150);
+            });
+        }
     });
 </script>

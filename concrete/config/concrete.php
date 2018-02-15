@@ -869,7 +869,12 @@ return [
         ],
         'exclude_words' => 'a, an, as, at, before, but, by, for, from, is, in, into, like, of, off, on, onto, per, ' .
             'since, than, the, this, that, to, up, via, with',
-
+        /*
+         * Automatically Update the URL Slug whenever a Page Name is changed
+         *
+         * @var bool
+         */
+        'auto_update_url_slug' => true,
         /*
          * URL rewriting
          *

@@ -1920,6 +1920,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public function update($data)
     {
         $db = Database::connection();
+        $txt = Core::make('helper/text');
 
         $vo = $this->getVersionObject();
         $cvID = $vo->getVersionID();
@@ -1941,6 +1942,19 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
         if (isset($data['cName'])) {
             $cName = $data['cName'];
+            // With this option, we always want to update the handle whenever the page's name is changed
+            if(Config::get('concrete.seo.auto_update_url_slug')){
+                // If there is a existing handle on this page we keep it as alternative PagePath
+                if($this->getCollectionHandle() != ''){
+                    $p = new PagePath();
+                    $p->setPagePath('/'.$this->getCollectionHandle());
+                    $p->setPagePathIsCanonical(false);
+                    $p->setPageObject($this);
+                }
+                // Than change the Handle according to the new name
+                $data['cHandle'] = $txt->urlify($cName);
+                $data['cHandle'] = str_replace('-', Config::get('concrete.seo.page_path_separator'), $data['cHandle']);
+            }
         }
         if (isset($data['cCacheFullPageContent'])) {
             $cCacheFullPageContent = $data['cCacheFullPageContent'];
@@ -1970,7 +1984,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         if (!$cDatePublic) {
             $cDatePublic = Core::make('helper/date')->getOverridableNow();
         }
-        $txt = Core::make('helper/text');
+
         $isHomePage = $this->isHomePage();
         if (!isset($data['cHandle']) && ($this->getCollectionHandle() != '')) {
             // No passed cHandle, and there is an existing handle.

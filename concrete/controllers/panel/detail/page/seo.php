@@ -8,6 +8,7 @@ use Concrete\Core\Attribute\Set as AttributeSet;
 use PermissionKey;
 use Concrete\Core\Page\Collection\Version\Version;
 use User;
+use Config;
 
 class Seo extends BackendInterfacePageController
 {
@@ -34,6 +35,7 @@ class Seo extends BackendInterfacePageController
         $as = AttributeSet::getByHandle('seo');
         $attributes = $as->getAttributeKeys();
         $this->set('attributes', $attributes);
+        $this->set('autoUpdateUrlSlug', Config::get('concrete.seo.auto_update_url_slug'));
         $this->set('allowEditPaths', $this->asl->allowEditPaths());
         $this->set('allowEditName', $this->asl->allowEditName());
     }
