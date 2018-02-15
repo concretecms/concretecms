@@ -4,7 +4,9 @@ namespace Concrete\Controller\SinglePage;
 
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\Controller\PageController;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\User\User;
+use Symfony\Component\HttpFoundation\Response;
 
 class PageForbidden extends PageController
 {
@@ -38,7 +40,8 @@ class PageForbidden extends PageController
         if ($user === null || !$user->isRegistered()) {
             $config = $this->app->make('config');
             if ($config->get('concrete.permissions.forward_to_login')) {
-                $result = $this->app->make(ResponseFactoryInterface::class)->redirect('/login');
+                $destination = $this->app->make(ResolverManagerInterface::class)->resolve(['/login']);
+                $result = $this->app->make(ResponseFactoryInterface::class)->redirect($destination, Response::HTTP_FOUND);
             }
         }
 

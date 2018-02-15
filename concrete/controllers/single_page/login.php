@@ -237,9 +237,6 @@ class Login extends PageController
 
         $u = new User(); // added for the required registration attribute change above. We recalc the user and make sure they're still logged in
         if ($u->isRegistered()) {
-            if ($u->config('NEWSFLOW_LAST_VIEWED') === 'FIRSTRUN') {
-                $u->saveConfig('NEWSFLOW_LAST_VIEWED', 0);
-            }
             $pll = $this->app->make(PostLoginLocation::class);
             $response = $pll->getPostLoginRedirectResponse(true);
 

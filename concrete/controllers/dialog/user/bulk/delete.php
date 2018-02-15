@@ -70,7 +70,7 @@ class Delete extends BackendInterfaceController
             }
         }
 
-        $r->setMessage(t('%s users deleted', $count));
+        $r->setMessage(t2('%s user deleted', '%s users deleted', $count));
         $r->setTitle(t('Users Deleted'));
         $r->setRedirectURL(Url::to('/dashboard/users/search'));
         $r->outputJSON();

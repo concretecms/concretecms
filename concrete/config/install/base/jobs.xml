@@ -9,6 +9,7 @@
         <job handle="remove_old_page_versions" package=""/>
         <job handle="update_gatherings" package=""/>
         <job handle="update_statistics" package=""/>
+        <job handle="fill_thumbnails_table" package=""/>
     </jobs>
     <jobsets>
         <jobset name="Default" package="">
@@ -17,6 +18,7 @@
             <job handle="process_email"/>
             <job handle="remove_old_page_versions"/>
             <job handle="update_gatherings"/>
+            <job handle="fill_thumbnails_table"/>
         </jobset>
     </jobsets>
 </concrete5-cif>

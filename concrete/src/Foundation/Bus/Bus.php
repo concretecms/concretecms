@@ -62,12 +62,12 @@ class Bus
         return $this->locator;
     }
 
-    public function handle(CommandInterface $command)
+    public function executeCommand(CommandInterface $command)
     {
         return $this->getSyncBus()->handle($command);
     }
 
-    public function queue(QueueableCommand $command)
+    public function queueCommand(QueueableCommand $command)
     {
         return $this->getQueueBus()->handle($command);
     }

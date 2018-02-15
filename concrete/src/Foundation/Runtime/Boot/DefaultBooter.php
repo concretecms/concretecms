@@ -266,9 +266,6 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
 
         // Register all other providers
         $list->registerProviders($config->get('app.providers'));
-
-        // Register the command bus
-        $app->commandBus = $app->make(Bus::class);
     }
 
     /**

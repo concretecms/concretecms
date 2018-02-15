@@ -3,13 +3,11 @@
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Updater\Migrations\AbstractMigration;
-use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
-use Concrete\Core\Updater\Migrations\ManagedSchemaUpgraderInterface;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 use Concrete\Core\Updater\Migrations\Routine\AddPageDraftsBooleanTrait;
 use Doctrine\DBAL\Schema\Schema;
 
-class Version20171218000000 extends AbstractMigration implements RepeatableMigrationInterface, ManagedSchemaUpgraderInterface, DirectSchemaUpgraderInterface
+class Version20171218000000 extends AbstractMigration implements RepeatableMigrationInterface
 {
     use AddPageDraftsBooleanTrait;
 
@@ -26,7 +24,7 @@ class Version20171218000000 extends AbstractMigration implements RepeatableMigra
     /**
      * {@inheritdoc}
      *
-     * @see \Concrete\Core\Updater\Migrations\ManagedSchemaUpgraderInterface::upgradeSchema()
+     * @see \Concrete\Core\Updater\Migrations\AbstractMigration::upgradeSchema()
      */
     public function upgradeSchema(Schema $schema)
     {
@@ -36,7 +34,7 @@ class Version20171218000000 extends AbstractMigration implements RepeatableMigra
     /**
      * {@inheritdoc}
      *
-     * @see \Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface::upgradeDatabase()
+     * @see \Concrete\Core\Updater\Migrations\AbstractMigration::upgradeDatabase()
      */
     public function upgradeDatabase()
     {

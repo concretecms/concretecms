@@ -5,10 +5,9 @@ namespace Concrete\Core\Updater\Migrations\Migrations;
 use Concrete\Core\Permission\Access\Entity\Type;
 use Concrete\Core\Permission\Category;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
-use Concrete\Core\Updater\Migrations\DirectSchemaChangerInterface;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
-class Version20140919000000 extends AbstractMigration implements RepeatableMigrationInterface, DirectSchemaChangerInterface
+class Version20140919000000 extends AbstractMigration implements RepeatableMigrationInterface
 {
     /**
      * {@inheritdoc}
@@ -23,7 +22,7 @@ class Version20140919000000 extends AbstractMigration implements RepeatableMigra
     /**
      * {@inheritdoc}
      *
-     * @see \Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface::upgradeDatabase()
+     * @see \Concrete\Core\Updater\Migrations\AbstractMigration::upgradeDatabase()
      */
     public function upgradeDatabase()
     {
@@ -38,7 +37,7 @@ class Version20140919000000 extends AbstractMigration implements RepeatableMigra
     /**
      * {@inheritdoc}
      *
-     * @see \Concrete\Core\Updater\Migrations\DirectSchemaDowngraderInterface::downgradeDatabase()
+     * @see \Concrete\Core\Updater\Migrations\AbstractMigration::downgradeDatabase()
      */
     public function downgradeDatabase()
     {

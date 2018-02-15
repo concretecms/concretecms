@@ -121,7 +121,7 @@ class Group extends BackendInterfaceController
             }
         }
 
-        $r->setMessage(t('%s users updated', count($updated)));
+        $r->setMessage(t2('%s user updated', '%s users updated', count($updated)));
         $r->setTitle(t('User Groups Updated'));
         $r->outputJSON();
     }

@@ -50,6 +50,7 @@ class MiniSurvey
                 $jsonVals['hideQID'] = intval($this->db->fetchColumn("SELECT MAX(qID) FROM btFormQuestions WHERE bID!=0 AND msqID=?", $vals));
             } else {
                 $jsonVals['mode'] = '"Add"';
+                $pendingEditExists = false;
             }
 
             //see if the 'send notification from' checkbox is checked and save this to the options field

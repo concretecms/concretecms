@@ -6,6 +6,7 @@ use Concrete\Core\Cache\Page\PageCache;
 use Concrete\Core\Cache\Page\PageCacheRecord;
 use Concrete\Core\Database\EntityManagerConfigUpdater;
 use Concrete\Core\Entity\Site\Site;
+use Concrete\Core\Foundation\Bus\Command\CommandInterface;
 use Concrete\Core\Foundation\ClassLoader;
 use Concrete\Core\Foundation\EnvironmentDetector;
 use Concrete\Core\Foundation\Runtime\DefaultRuntime;
@@ -27,6 +28,7 @@ use Exception;
 use Illuminate\Container\Container;
 use Job;
 use JobSet;
+use League\Tactician\Bernard\QueueableCommand;
 use Log;
 use Page;
 use Redirect;
@@ -41,10 +43,33 @@ class Application extends Container
     protected $environment = null;
     protected $packages = [];
 
+    protected $commandBus;
+
+    public function getCommandBus()
+    {
+        if (!isset($this->commandBus)) {
+            $this->commandBus = $this->make(Bus::class);
+        }
+        return $this->commandBus;
+    }
+
     /**
-     * @var Bus
+     * Dispatches a command to the command bus.
+     * @param CommandInterface $command
      */
-    public $commandBus;
+    public function executeCommand(CommandInterface $command)
+    {
+        return $this->getCommandBus()->executeCommand($command);
+    }
+
+    /**
+     * Dispatches a command to the command queue.
+     * @param QueueableCommand $command
+     */
+    public function queueCommand(QueueableCommand $command)
+    {
+        return $this->getCommandBus()->queueCommand($command);
+    }
 
     /**
      * Turns off the lights.
@@ -426,9 +451,6 @@ class Application extends Container
         if (is_object($object)) {
             if ($object instanceof ApplicationAwareInterface) {
                 $object->setApplication($this);
-            }
-            if ($object instanceof CommandBusAwareInterface) {
-                $object->setCommandBus($this->make(Bus::class));
             }
         }
 

@@ -13,7 +13,7 @@ if (!$fp->canEditFileContents()) {
     die(t('Access Denied.'));
 }
 
-$searchInstance = $app->make('helper/text')->entities($_REQUEST['searchInstance']);
+$searchInstance = isset($_REQUEST['searchInstance']) ? $app->make('helper/text')->entities($_REQUEST['searchInstance']) : '';
 ?>
 
 <div class="ccm-ui">

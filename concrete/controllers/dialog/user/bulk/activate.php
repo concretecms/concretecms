@@ -102,10 +102,10 @@ class Activate extends BackendInterfaceController
         }
 
         if ('activate' == $function) {
-            $r->setMessage(t('%s users activated', $count));
+            $r->setMessage(t2('%s user activated', '%s users activated', $count));
             $r->setTitle(t('Users Activated'));
         } else {
-            $r->setMessage(t('%s users deactivated', $count));
+            $r->setMessage(t2('%s user deactivated', '%s users deactivated', $count));
             $r->setTitle(t('Users Deactivated'));
         }
 

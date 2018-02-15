@@ -450,13 +450,6 @@ return [
         'intelligent_search_help' => true,
 
         /*
-         * Display an overlay with up-to-date news from concrete5
-         *
-         * @var bool concrete.external.news_overlay
-         */
-        'news_overlay' => false,
-
-        /*
          * Enable concrete5 news within your site
          *
          * @var bool concrete.external.news

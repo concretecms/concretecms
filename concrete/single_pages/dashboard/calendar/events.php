@@ -3,6 +3,11 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 
 use Concrete\Core\Calendar\Event\EventOccurrence;
+use Punic\Calendar as PunicCalendar;
+
+if (!isset($topic)) {
+    $topic = null;
+}
 
 Loader::element('calendar/header', array(
     'calendar' => $calendar,
@@ -24,12 +29,12 @@ Loader::element('calendar/header', array(
         ?>
         <div class="btn-group" id="calendar-topics">
             <button type="button" id="topics_button" class="btn btn-default btn-sm" data-toggle="dropdown">
-                <?= $topic ? h($topic->getTreeNodeDisplayName('html')) : 'All Categories' ?>
+                <?= $topic ? h($topic->getTreeNodeDisplayName('html')) : t('All Categories') ?>
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu" aria-labelledby="topics_button">
                 <li>
-                    <a href="?topic_id=0">All Categories</a>
+                    <a href="?topic_id=0"><?= t('All Categories') ?></a>
                 </li>
                 <?php
                 /** @var \Concrete\Core\Tree\Node\Node $topic_node */
@@ -106,13 +111,11 @@ Loader::element('calendar/header', array(
 <table class="ccm-dashboard-calendar table table-bordered">
     <thead>
     <tr>
-        <td width="14%"><h4><?= t('Sun') ?></h4></td>
-        <td width="14%"><h4><?= t('Mon') ?></h4></td>
-        <td width="14%"><h4><?= t('Tue') ?></h4></td>
-        <td width="14%"><h4><?= t('Wed') ?></h4></td>
-        <td width="14%"><h4><?= t('Thu') ?></h4></td>
-        <td width="14%"><h4><?= t('Fri') ?></h4></td>
-        <td width="14%"><h4><?= t('Sat') ?></h4></td>
+        <?php
+        for($weekday = 0; $weekday < 7; $weekday++) {
+            ?><td width="<?= 100 / 7?>%"><h4><?= PunicCalendar::getWeekdayName($weekday, 'abbreviated', '', true) ?></h4></td><?php
+        }
+        ?>
     </tr>
     </thead>
     <tbody>
@@ -122,7 +125,7 @@ Loader::element('calendar/header', array(
         $cellCounter = 0;
         $isToday = false;
         Loader::helper('text');
-        for ($i = ($firstDayInMonthNum * -1) + 1; $i <= $daysInMonth; ++$i) {
+        for ($i = 1 - $firstDayInMonthNum; $i <= $daysInMonth; ++$i) {
             ++$cellCounter;
             if ($cols >= 7) {
                 echo '</tr><tr>';

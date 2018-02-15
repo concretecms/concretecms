@@ -5,10 +5,10 @@ defined('C5_EXECUTE') or die('Access Denied');
 
 use Concrete\Core\Authentication\Type\OAuth\OAuth1a\GenericOauth1aTypeController;
 use Concrete\Core\Authentication\Type\Twitter\Factory\TwitterServiceFactory;
-use Concrete\Core\Validation\CSRF\Token;
-use OAuth\Common\Exception\Exception;
 use OAuth\OAuth1\Service\Twitter;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Concrete\Core\User\User;
+use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Routing\RedirectResponse;
 
 class Controller extends GenericOauth1aTypeController
 {
@@ -27,7 +27,7 @@ class Controller extends GenericOauth1aTypeController
 
     public function registrationGroupID()
     {
-        return \Config::get('auth.twitter.registration.group');
+        return $this->app->make('config')->get('auth.twitter.registration.group');
     }
 
     /**
@@ -37,7 +37,7 @@ class Controller extends GenericOauth1aTypeController
      */
     public function supportsRegistration()
     {
-        return \Config::get('auth.twitter.registration.enabled', false);
+        return $this->app->make('config')->get('auth.twitter.registration.enabled', false);
     }
 
     /**
@@ -76,92 +76,52 @@ class Controller extends GenericOauth1aTypeController
 
     public function saveAuthenticationType($args)
     {
-        \Config::save('auth.twitter.appid', $args['apikey']);
-        \Config::save('auth.twitter.secret', $args['apisecret']);
-        \Config::save('auth.twitter.registration.enabled', (bool) $args['registration_enabled']);
-        \Config::save('auth.twitter.registration.group', intval($args['registration_group'], 10));
+        $config = $this->app->make('config');
+        $config->save('auth.twitter.appid', $args['apikey']);
+        $config->save('auth.twitter.secret', $args['apisecret']);
+        $config->save('auth.twitter.registration.enabled', (bool) $args['registration_enabled']);
+        $config->save('auth.twitter.registration.group', intval($args['registration_group'], 10));
     }
 
     public function edit()
     {
-        $this->set('form', \Loader::helper('form'));
-        $this->set('apikey', \Config::get('auth.twitter.appid', ''));
-        $this->set('apisecret', \Config::get('auth.twitter.secret', ''));
+        $config = $this->app->make('config');
+        $this->set('form', $this->app->make('helper/form'));
+        $this->set('apikey', $config->get('auth.twitter.appid', ''));
+        $this->set('apisecret', $config->get('auth.twitter.secret', ''));
 
         $list = new \GroupList();
         $list->includeAllGroups();
         $this->set('groups', $list->getResults());
     }
 
-    /**
-     * We override this method because twitter doesn't give us the email, we have to have the user input it before we can create a user.
-     *
-     * @return null|\User
-     *
-     * @throws Exception
-     */
-    protected function attemptAuthentication()
+    public function handle_detach_attempt()
     {
-        $extractor = $this->getExtractor();
-        $user_id = $this->getBoundUserID($extractor->getUniqueId());
 
-        if ($user_id && $user_id > 0) {
-            $user = \User::loginByUserID($user_id);
-            if ($user && !$user->isError()) {
-                return $user;
-            }
-        }
-
-        if ($extractor->supportsEmail() && $user = \UserInfo::getByEmail($extractor->getEmail())) {
-            if ($user && !$user->isError()) {
-                throw new Exception('A user account already exists for this email, please log in and attach from your account page.');
-            }
-        }
-
-        if ($this->supportsRegistration()) {
-            /** @var FlashBagInterface $flashbag */
-            $flashbag = \Session::getFlashBag();
-            $flashbag->set('firstname', parent::getFirstName());
-            $flashbag->set('lastname', parent::getLastName());
-            $flashbag->set('username', parent::getUsername());
-            $flashbag->set('token', $this->getToken());
-
-            $response = \Redirect::to('/login/callback/twitter/handle_register/', id(new Token())->generate('twitter_register'));
+        if (!User::isLoggedIn()) {
+            $response = new RedirectResponse(\URL::to('/login'), 302);
             $response->send();
             exit;
         }
+        $user = new User();
+        $uID = $user->getUserID();
+        $namespace = $this->getHandle();
 
-        return null;
-    }
 
-    public function handle_register($token = null)
-    {
+        $binding = $this->getBindingForUser($user);
 
-        /** @var FlashBagInterface $flashbag */
-        $flashbag = \Session::getFlashBag();
-        $this->firstName = array_shift($flashbag->peek('firstname'));
-        $this->lastName = array_shift($flashbag->peek('lastName'));
-        $this->username = array_shift($flashbag->peek('username'));
-        $this->token = array_shift($flashbag->peek('token'));
-
-        $token_helper = new Token();
-
-        if (!$token_helper->validate('twitter_register', $token) && !$token_helper->validate('twitter_register') ||
-            !$this->token) {
-            $this->redirect('/login/');
+        // Twitter Sign in is Oauth 1 so we can't revoke access only delete from the database
+        try {
+            /* @var \Concrete\Core\Database\Connection\Connection $database */
+            $database = $this->app->make(Connection::class);
+            $database->delete('OauthUserMap', ['user_id' => $uID, 'namespace' => $namespace, 'binding' => $binding]);
+            $this->showSuccess(t('Successfully detached.'));
+            exit;
+        } catch (\Exception $e) {
+            \Log::error(t('Deattach Error %s', $e->getMessage()));
+            $this->showError(t('Unable to detach account.'));
             exit;
         }
-        if (\Request::request('uEmail', false)) {
-            $this->email = \Request::request('uEmail');
-
-            $user = $this->createUser();
-            if ($user && !$user->isError()) {
-                return $this->completeAuthentication($user);
-            }
-        }
-
-        $this->set('username', $this->username);
-        $this->set('show_email', true);
     }
 
     public function supportsEmail()

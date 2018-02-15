@@ -3,21 +3,21 @@ namespace Concrete\Core\Controller;
 
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
-use Concrete\Core\Application\CommandBusAwareInterface;
-use Concrete\Core\Application\CommandBusAwareTrait;
 use Concrete\Core\Foundation\Bus\Bus;
+use Concrete\Core\Foundation\Bus\Command\CommandInterface;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Core;
+use League\Tactician\Bernard\QueueableCommand;
 use Request;
 use View;
 
 /**
  * Base class for all the controllers.
  */
-abstract class AbstractController implements ApplicationAwareInterface, CommandBusAwareInterface
+abstract class AbstractController implements ApplicationAwareInterface
 {
     use ApplicationAwareTrait;
-    use CommandBusAwareTrait;
+
     /**
      * The handles of the helpers to be returned by the getHelperObjects method.
      * These will be automatically sent to Views as variables.
@@ -309,5 +309,23 @@ abstract class AbstractController implements ApplicationAwareInterface, CommandB
     public function request($key = null)
     {
         return Request::request($key);
+    }
+
+    /**
+     * Dispatches a command to the command bus.
+     * @param CommandInterface $command
+     */
+    public function executeCommand(CommandInterface $command)
+    {
+        return $this->app->executeCommand($command);
+    }
+
+    /**
+     * Dispatches a command to the command queue.
+     * @param QueueableCommand $command
+     */
+    public function queueCommand(QueueableCommand $command)
+    {
+        return $this->app->queueCommand($command);
     }
 }

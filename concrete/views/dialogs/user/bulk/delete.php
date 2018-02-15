@@ -15,7 +15,7 @@ if (! is_array($users) || count($users) ==0) {
 	<?php
 	}
 ?>
-	<p><?php echo t('Are you sure you would like to delete the following users'); ?>?</p>
+	<p><?php echo t('Are you sure you would like to delete the following users?'); ?>?</p>
 
 	<form method="post" data-dialog-form="save-file-set" action="<?= $controller->action('submit'); ?>">
 		<?php
