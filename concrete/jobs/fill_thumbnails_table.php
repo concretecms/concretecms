@@ -111,7 +111,7 @@ class FillThumbnailsTable extends QueueableJob
      */
     public function finish(Queue $q)
     {
-        return t('All thumbnail path have been processed.');
+        return t('All thumbnail paths have been processed.');
     }
 
     /**
