@@ -259,7 +259,7 @@ class Thumbnails extends DashboardPageController
         $result = [];
         foreach (FileSet::getMySets() as $fileSet) {
             if ($fileSet->getFileSetType() == FileSet::TYPE_PUBLIC) {
-                $result[$fileSet->getFileSetID()] = $asObjects ? $fileSet : $fileSet->getFileSetName();
+                $result[$fileSet->getFileSetID()] = $asObjects ? $fileSet : $fileSet->getFileSetDisplayName();
             }
         }
 
