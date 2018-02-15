@@ -4,6 +4,7 @@ namespace Concrete\Core\Entity\File\Image\Thumbnail\Type;
 
 use Concrete\Core\File\Image\Thumbnail\Type\Version;
 use Concrete\Core\Support\Facade\Application;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -39,7 +40,8 @@ class Type
     /**
      * The thumbnail unique identifier.
      *
-     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
      *
      * @var int|null
@@ -99,6 +101,29 @@ class Type
      * @var string
      */
     protected $ftTypeSizingMode = self::RESIZE_DEFAULT;
+
+    /**
+     * Should the thumbnails be build for files in every set except the specified ones (false), or for files only in the specified file sets (true)?
+     *
+     * @ORM\Column(type="boolean", nullable=false)
+     *
+     * @var bool
+     */
+    protected $ftLimitedToFileSets = false;
+
+    /**
+     * Associated file sets (whose meaning depends on the value of ftLimitedToFileSets).
+     *
+     * @ORM\OneToMany(targetEntity="TypeFileSet", mappedBy="ftfsThumbnailType", cascade={"all"}, orphanRemoval=true)
+     *
+     * @var ArrayCollection|TypeFileSet[]
+     */
+    protected $ftAssociatedFileSets;
+
+    public function __construct()
+    {
+        $this->ftAssociatedFileSets = new ArrayCollection();
+    }
 
     /**
      * Get the thumbnail unique identifier.
@@ -274,6 +299,40 @@ class Type
         ];
 
         return $sizingModeDisplayNames[$this->getSizingMode()];
+    }
+
+    /**
+     * Should the thumbnails be build for files in every set except the specified ones (false), or for files only in the specified file sets (true)?
+     *
+     * @param bool $value
+     *
+     * @return $this
+     */
+    public function setLimitedToFileSets($value)
+    {
+        $this->ftLimitedToFileSets = (bool) $value;
+
+        return $this;
+    }
+
+    /**
+     * Should the thumbnails be build for files in every set except the specified ones (false), or for files only in the specified file sets (true)?
+     *
+     * @return bool
+     */
+    public function isLimitedToFileSets()
+    {
+        return $this->ftLimitedToFileSets;
+    }
+
+    /**
+     * Get the associated file sets (whose meaning depends on the value of ftLimitedToFileSets).
+     *
+     * @return ArrayCollection|TypeFileSet[]
+     */
+    public function getAssociatedFileSets()
+    {
+        return $this->ftAssociatedFileSets;
     }
 
     /**

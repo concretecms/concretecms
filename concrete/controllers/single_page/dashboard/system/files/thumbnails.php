@@ -3,13 +3,21 @@
 namespace Concrete\Controller\SinglePage\Dashboard\System\Files;
 
 use Concrete\Core\Entity\File\Image\Thumbnail\Type\Type as TypeEntity;
+use Concrete\Core\Entity\File\Image\Thumbnail\Type\TypeFileSet;
 use Concrete\Core\File\Image\Thumbnail\Type\Type as TypeService;
+use Concrete\Core\File\Set\Set as FileSet;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Doctrine\ORM\EntityManagerInterface;
 
 class Thumbnails extends DashboardPageController
 {
+    const FILESETOPTION_ALL = 'all';
+
+    const FILESETOPTION_ALL_EXCEPT = 'except';
+
+    const FILESETOPTION_ONLY = 'only';
+
     public function view()
     {
         $list = TypeService::getList();
@@ -31,6 +39,14 @@ class Thumbnails extends DashboardPageController
         $this->set('type', $type);
         $this->set('sizingModes', $this->getSizingModes());
         $this->set('sizingModeHelps', $this->getSizingModeHelps());
+        if ($type->getID() && $type->isRequired()) {
+            $this->set('allowConditionalThumbnails', false);
+        } else {
+            $this->set('allowConditionalThumbnails', true);
+            $this->requireAsset('selectize');
+            $this->set('fileSetOptions', $this->getFileSetOptions());
+            $this->set('fileSets', $this->getPublicFileSets(false));
+        }
     }
 
     public function save($ftTypeID = false)
@@ -119,6 +135,45 @@ class Thumbnails extends DashboardPageController
             } else {
                 $type->setSizingMode($sizingMode);
             }
+            if ($ftTypeID === 'new' || !$type->isRequired()) {
+                $fileSetOption = $post->get('fileSetOption');
+                if (!in_array($fileSetOption, array_keys($this->getFileSetOptions()), true)) {
+                    $this->error->add(t('Please specify the Conditional thumbnails criteria.'));
+                } elseif ($fileSetOption === static::FILESETOPTION_ALL) {
+                    $type->getAssociatedFileSets()->clear();
+                    $type->setLimitedToFileSets(false);
+                } else {
+                    $publicFileSets = $this->getPublicFileSets(true);
+                    $receivedFileSetIDs = [];
+                    $ids = $post->get('fileSets', []);
+                    if (is_array($ids)) {
+                        foreach ($ids as $id) {
+                            if ($valNumbers->integer($id, 1)) {
+                                $id = (int) $id;
+                                if (!in_array($id, $receivedFileSetIDs, true) && isset($publicFileSets[$id])) {
+                                    $receivedFileSetIDs[] = $id;
+                                }
+                            }
+                        }
+                    }
+                    if (empty($receivedFileSetIDs)) {
+                        $this->error->add(t('Please specify the file sets for the Conditional thumbnails criteria.'));
+                    } else {
+                        $type->setLimitedToFileSets($fileSetOption === static::FILESETOPTION_ONLY);
+                        foreach ($type->getAssociatedFileSets() as $afs) {
+                            $index = array_search($afs->getFileSetID(), $receivedFileSetIDs, true);
+                            if ($index === false) {
+                                $type->getAssociatedFileSets()->removeElement($afs);
+                            } else {
+                                unset($receivedFileSetIDs[$index]);
+                            }
+                        }
+                        foreach ($receivedFileSetIDs as $newFileSetID) {
+                            $type->getAssociatedFileSets()->add(new TypeFileSet($type, $publicFileSets[$newFileSetID]));
+                        }
+                    }
+                }
+            }
 
             if (!$this->error->has()) {
                 if ($ftTypeID === 'new') {
@@ -184,6 +239,27 @@ class Thumbnails extends DashboardPageController
                     break;
                 default:
                     $result[$sizingMode] = '';
+            }
+        }
+
+        return $result;
+    }
+
+    protected function getFileSetOptions()
+    {
+        return [
+            static::FILESETOPTION_ALL => t('Always generate thumbnails'),
+            static::FILESETOPTION_ONLY => t('Generate thumbnails for images that are in the following file sets'),
+            static::FILESETOPTION_ALL_EXCEPT => t('Generate thumbnails for images that are NOT in the following file sets'),
+        ];
+    }
+
+    protected function getPublicFileSets($asObjects)
+    {
+        $result = [];
+        foreach (FileSet::getMySets() as $fileSet) {
+            if ($fileSet->getFileSetType() == FileSet::TYPE_PUBLIC) {
+                $result[$fileSet->getFileSetID()] = $asObjects ? $fileSet : $fileSet->getFileSetName();
             }
         }
 
