@@ -1392,10 +1392,11 @@ class Version implements ObjectInterface
                     $imageWidth = (int) $this->getAttribute('width') ?: (int) $image->getSize()->getWidth();
                     $imageHeight = (int) $this->getAttribute('height') ?: (int) $image->getSize()->getHeight();
                     $types = Type::getVersionList();
+                    $file = $this->getFile();
                     foreach ($types as $type) {
                         // delete the file if it exists
                         $this->deleteThumbnail($type);
-                        if ($type->shouldExistFor($imageWidth, $imageHeight)) {
+                        if ($type->shouldExistFor($imageWidth, $imageHeight, $file)) {
                             $this->generateThumbnail($type);
                         }
                     }
@@ -1545,7 +1546,8 @@ class Version implements ObjectInterface
         if ($type !== null) {
             $imageWidth = (int) $this->getAttribute('width');
             $imageHeight = (int) $this->getAttribute('height');
-            if ($type->shouldExistFor($imageWidth, $imageHeight)) {
+            $file = $this->getFile();
+            if ($type->shouldExistFor($imageWidth, $imageHeight, $file)) {
                 $path_resolver = $app->make(Resolver::class);
                 $path = $path_resolver->getPath($this, $type);
             }
@@ -1576,7 +1578,7 @@ class Version implements ObjectInterface
         $types = Type::getVersionList();
         $file = $this->getFile();
         foreach ($types as $type) {
-            if ($type->shouldExistFor($imageWidth, $imageHeight)) {
+            if ($type->shouldExistFor($imageWidth, $imageHeight, $file)) {
                 $thumbnailPath = $type->getFilePath($this);
                 $location = $file->getFileStorageLocationObject();
                 $configuration = $location->getConfigurationObject();
