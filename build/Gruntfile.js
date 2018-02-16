@@ -489,6 +489,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-newer');
 
     // Now let's build the final configuration for Grunt.
@@ -570,6 +571,15 @@ module.exports = function(grunt) {
         }
     };
 
+    config.jshint = {
+        options: {
+        },
+        all: [
+            '<%=DIR_BASE%>/concrete/js/build/core/**/*.js',
+            '!<%=DIR_BASE%>/concrete/js/build/core/image-editor/build/**/*.js',
+            '!<%=DIR_BASE%>/concrete/js/build/core/app/json.js',
+        ]
+    };
 
     // Set Grunt tasks
     grunt.initConfig(config);
@@ -605,6 +615,7 @@ module.exports = function(grunt) {
     grunt.registerTask('js:debug', ['jsOnly:debug', 'gitskip-on:js']);
     grunt.registerTask('js:release', ['jsOnly:release', 'gitskip-off:js']);
     grunt.registerTask('js', 'js:release');
+    grunt.registerTask('js:check', ['concat:image_editor', 'jshint:all']);
 
     grunt.registerTask('css:debug', ['less:debug', 'gitskip-on:css']);
     grunt.registerTask('css:release', ['less:release', 'gitskip-off:css']);
