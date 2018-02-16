@@ -181,7 +181,7 @@ class Application extends Container
 
                 if (strlen($url)) {
                     try {
-                        $this->make('http/client')->setUri($url)->send();
+                        $this->make('http/client')->get($url);
                     } catch (Exception $x) {
                     }
                 }

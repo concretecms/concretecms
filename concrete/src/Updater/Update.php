@@ -202,16 +202,15 @@ class Update
     {
         $app = Application::getFacadeApplication();
         $config = $app->make('config');
-        $client = $app->make('http/client')->setUri($config->get('concrete.updates.services.get_available_updates'));
-        $client->getRequest()
-            ->setMethod('POST')
-            ->getPost()
-                ->set('LOCALE', Localization::activeLocale())
-                ->set('BASE_URL_FU', Application::getApplicationURL())
-                ->set('APP_VERSION', APP_VERSION);
         try {
-            $response = $client->send();
-            $update = RemoteApplicationUpdateFactory::getFromJSON($response->getBody());
+            $response = $app->make('http/client')->post($config->get('concrete.updates.services.get_available_updates'),
+                ['form_params' => [
+                    'LOCALE' =>  Localization::activeLocale(),
+                    'BASE_URL_FU' => (string) Application::getApplicationURL(),
+                    'APP_VERSION' => APP_VERSION
+                ]]
+            );
+            $update = RemoteApplicationUpdateFactory::getFromJSON($response->getBody()->getContents());
         } catch (Exception $x) {
             $update = null;
         }

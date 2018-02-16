@@ -1,14 +1,20 @@
 <?php
 namespace Concrete\Core\Http\Client;
 
-use Zend\Http\Client as ZendClient;
-use Zend\Http\Request as ZendRequest;
-use Zend\Uri\Http as ZendUriHttp;
+use GuzzleHttp\Client as GuzzleHttpClient;
+
+use Psr\Http\Message\RequestInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 
-class Client extends ZendClient implements LoggerAwareInterface
+class Client extends GuzzleHttpClient implements LoggerAwareInterface
 {
+
+    /**
+     * @var GuzzleHttpClient
+     */
+    protected $client;
+
     /**
      * @var LoggerInterface|null
      */
@@ -38,14 +44,10 @@ class Client extends ZendClient implements LoggerAwareInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @see ZendClient::send()
-     */
-    public function send(ZendRequest $request = null)
+
+    public function send(RequestInterface $request, array $options = [])
     {
-        $response = parent::send($request);
+        $response = parent::send($request, $options);
         $logger = $this->getLogger();
         if ($logger !== null) {
             $statusCode = $response->getStatusCode();
@@ -65,24 +67,26 @@ class Client extends ZendClient implements LoggerAwareInterface
                 ]
             );
         }
-
         return $response;
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @see ZendClient::doRequest()
-     */
-    protected function doRequest(ZendUriHttp $uri, $method, $secure = false, $headers = [], $body = '')
+    public function request($method, $uri = '', array $options = [])
     {
         $logger = $this->getLogger();
         if ($logger !== null) {
+            $body = '';
+            if (isset($options['body'])) {
+                $body = $options['body'];
+            }
             $uriString = (string) $uri;
             if (mb_strlen($body) <= 200) {
                 $shortBody = (string) $body;
             } else {
                 $shortBody = mb_substr($body, 0, 197) . '...';
+            }
+            $headers = null;
+            if (isset($options['headers'])) {
+                $headers = $options['headers'];
             }
             $logger->debug(
                 'Sending {method} request to {uri} with body {shortBody}',
@@ -95,7 +99,8 @@ class Client extends ZendClient implements LoggerAwareInterface
                 ]
             );
         }
+        return parent::request($method, $uri, $options);
 
-        return parent::doRequest($uri, $method, $secure, $headers, $body);
     }
+
 }

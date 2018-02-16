@@ -58,9 +58,7 @@ if (!$error->has()) {
             }
 
             $client = $app->make('http/client');
-            $request = $client->getRequest();
-            $request->setUri((string) $url);
-            $response = $client->send();
+            $response = $client->get((string) $url);
             $incoming_urls[] = $this_url;
         } catch (\Exception $e) {
             $error->add(t('Failed to access "%s"', h($this_url)));
@@ -85,17 +83,14 @@ if (!$error->has()) {
     foreach ($incoming_urls as $this_url) {
         // try to D/L the provided file
         $client = $app->make('http/client');
-        $request = $client->getRequest();
-        $request->setUri($this_url);
-        $response = $client->send();
-        if ($response->isSuccess()) {
-            $headers = $response->getHeaders();
-            $contentType = $headers->get('ContentType')->getFieldValue();
+        try {
+            $response = $client->get((string) $this_url);
+            $contentType = $response->getHeaderLine('Content-Type');
 
             $fpath = $file->getTemporaryDirectory();
 
             // figure out a filename based on filename, mimetype, ???
-            if (preg_match('/^.+?[\\/]([-\w%]+\.[-\w%]+)$/', $request->getUri(), $matches)) {
+            if (preg_match('/^.+?[\\/]([-\w%]+\.[-\w%]+)$/', $this_url, $matches)) {
                 // got a filename (with extension)... use it
                 $fname = $matches[1];
             } elseif ($contentType) {
@@ -117,7 +112,7 @@ if (!$error->has()) {
             if (strlen($fname)) {
                 // write the downloaded file to a temporary location on disk
                 $handle = fopen($fpath.'/'.$fname, "w");
-                fwrite($handle, $response->getBody());
+                fwrite($handle, $response->getBody()->getContents());
                 fclose($handle);
 
                 // import the file into concrete
@@ -165,8 +160,7 @@ if (!$error->has()) {
                 // could not figure out a file name
                 $error->add(t(/*i18n: %s is an URL*/'Could not determine the name of the file at %s', h($this_url)));
             }
-        } else {
-            // warn that we couldn't download the file
+        } catch(Exception $e) {
             $error->add(t(/*i18n: %s is an URL*/'There was an error downloading %s', h($this_url)));
         }
     }
