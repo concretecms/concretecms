@@ -1946,10 +1946,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             if(Config::get('concrete.seo.auto_update_url_slug')){
                 // If there is a existing handle on this page we keep it as alternative PagePath
                 if($this->getCollectionHandle() != ''){
-                    $p = new PagePath();
-                    $p->setPagePath('/'.$this->getCollectionHandle());
-                    $p->setPagePathIsCanonical(false);
-                    $p->setPageObject($this);
+                    $this->addAdditionalPagePath($this->generatePagePath());
                 }
                 // Than change the Handle according to the new name
                 $data['cHandle'] = $txt->urlify($cName);
