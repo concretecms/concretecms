@@ -1,19 +1,17 @@
-/**
- * block ajax
- */
+/* jshint unused:vars, undef:true, browser:true, jquery:true */
+/* global _, ccmi18n_filemanager, CCM_IMAGE_PATH, ConcreteFileManager, ConcreteFileMenu */
 
-!function(global, $) {
+;(function(global, $) {
     'use strict';
 
     function ConcreteFileSelector($element, options) {
-        'use strict';
-        var my = this,
-            options = $.extend({
-                'chooseText': ccmi18n_filemanager.chooseNew,
-                'inputName': 'concreteFile',
-                'fID': false,
-                'filters': []
-            }, options);
+        var my = this;
+        options = $.extend({
+            'chooseText': ccmi18n_filemanager.chooseNew,
+            'inputName': 'concreteFile',
+            'fID': false,
+            'filters': []
+        }, options);
 
         var dialogOpts = {};
         dialogOpts.filters = options.filters;
@@ -76,15 +74,15 @@
             });
         }
 
-    }
+    };
 
     // jQuery Plugin
     $.fn.concreteFileSelector = function(options) {
         return $.each($(this), function(i, obj) {
             new ConcreteFileSelector($(this), options);
         });
-    }
+    };
 
     global.ConcreteFileSelector = ConcreteFileSelector;
 
-}(this, $);
+})(this, jQuery);

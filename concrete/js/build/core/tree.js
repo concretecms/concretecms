@@ -1,5 +1,7 @@
+/* jshint unused:vars, undef:true, browser:true, jquery:true */
+/* global ccmi18n, ccmi18n_tree, CCM_DISPATCHER_FILENAME, ConcreteAlert, ConcreteEvent, ConcreteMenu */
 
-!function(global, $, _) {
+;(function(global, $) {
 	'use strict';
 
 	function ConcreteTree($element, options) {
@@ -102,10 +104,11 @@
 				minExpandLevel = options.minExpandLevel;
 			}
 
+			var ajaxURL;
 			if (!options.treeNodeParentID) {
-				var ajaxURL = CCM_DISPATCHER_FILENAME + '/ccm/system/tree/load';
+				ajaxURL = CCM_DISPATCHER_FILENAME + '/ccm/system/tree/load';
 			} else {
-				var ajaxURL = CCM_DISPATCHER_FILENAME + '/ccm/system/tree/node/load_starting';
+				ajaxURL = CCM_DISPATCHER_FILENAME + '/ccm/system/tree/node/load_starting';
 			}
 
 			$(my.$element).fancytree({
@@ -167,8 +170,9 @@
 						$tree.fancytree('disable');
 					}
 
+					var selectedNodes;
 					if (options.chooseNodeInForm) {
-						var selectedNodes = $tree.fancytree('getTree');
+						selectedNodes = $tree.fancytree('getTree');
 						selectedNodes = selectedNodes.getSelectedNodes();
 						if (selectedNodes.length) {
 							var keys = $.map(selectedNodes, function(node) {
@@ -178,7 +182,7 @@
 						}
 					}
 					if (selectedNodes) {
-						var selKeys = $.map(selectedNodes, function(node){
+						$.map(selectedNodes, function(node){
 							node.makeVisible();
 						});
 					}
@@ -264,7 +268,7 @@
 					dragDrop: function(targetNode, data) {
 						my.dragRequest(data.otherNode, targetNode, data.hitMode, function() {
 							data.otherNode.moveTo(targetNode, data.hitMode);
-                            var treeNodeParentID = data.otherNode.parent.data.treeNodeID;;
+                            var treeNodeParentID = data.otherNode.parent.data.treeNodeID;
                             if (data.hitMode == 'over') {
                                 treeNodeParentID = targetNode.data.treeNodeID;
                             }
@@ -288,7 +292,6 @@
 
 		getLoadNodePromise: function(node) {
 			var my = this,
-				options = my.options,
 				ajaxData = my.options.ajaxData != false ? my.options.ajaxData : {};
 
 			ajaxData.treeNodeParentID = node.data.treeNodeID;
@@ -394,14 +397,15 @@
 
 		ConcreteEvent.subscribe('ConcreteTreeAddTreeNode.concreteTree', function(e, r) {
 			var $tree = $('[data-tree=' + my.options.treeID + ']'),
-				nodes = r.node;
+				nodes = r.node,
+				node;
 			if (nodes.length) {
 				for (var i = 0; i < nodes.length; i++) {
-					var node = $tree.fancytree('getTree').getNodeByKey(nodes[i].treeNodeParentID);
+					node = $tree.fancytree('getTree').getNodeByKey(nodes[i].treeNodeParentID);
 					node.addChildren(nodes);
 				}
 			} else {
-				var node = $tree.fancytree('getTree').getNodeByKey(nodes.treeNodeParentID);
+				node = $tree.fancytree('getTree').getNodeByKey(nodes.treeNodeParentID);
 				node.addChildren(nodes);
 			}
 		});
@@ -427,4 +431,4 @@
 
 	global.ConcreteTree = ConcreteTree;
 
-}(this, $, _);
+})(this, jQuery);

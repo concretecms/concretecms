@@ -1,4 +1,7 @@
-!function (global, $, _) {
+/* jshint unused:vars, undef:true, browser:true, jquery:true */
+/* global _, Concrete, ConcreteEvent */
+
+;(function(global, $) {
     'use strict';
 
     function ConcreteMenu($element, options) {
@@ -86,7 +89,7 @@
         },
 
         destroy: function () {
-            var my = this, global = ConcreteMenuManager;
+            var my = this;
             my.hide();
             my.$launcher.each(function () {
                 $(this).unbind('mousemove.concreteMenu');
@@ -177,7 +180,7 @@
                 $highlighter.removeClass();
                 my.positionAt($highlighter, $launcher);
                 _.defer(function () {
-                    $highlighter.addClass(options.highlightClassName)
+                    $highlighter.addClass(options.highlightClassName);
                 });
             }
 
@@ -347,4 +350,4 @@
     global.ConcreteMenu = ConcreteMenu;
     global.ConcreteMenuManager = ConcreteMenuManager;
 
-}(this, $, _);
+})(window, jQuery);

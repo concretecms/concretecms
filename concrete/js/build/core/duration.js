@@ -1,8 +1,10 @@
-!function (global, $) {
+/* jshint unused:vars, undef:true, jquery:true */
+/* global moment, _ */
+
+;(function(global, $) {
     'use strict';
 
     function ConcreteDurationSelectorRepetition($element, options) {
-        'use strict';
         var my = this;
 
         options = $.extend({
@@ -32,7 +34,6 @@
     }
 
     function ConcreteDurationSelector($element, options) {
-        'use strict';
         var my = this;
         options = $.extend({
             'template': 'script[data-template=duration-wrapper]',
@@ -79,7 +80,7 @@
             });
             my.$element.find('div[data-duration-selector]').append(object.getElement());
 
-            if (my.totalRepetitions == 0) {
+            if (!my.totalRepetitions) {
                 object.getElement().find('a[data-delete=duration]').hide();
             }
 
@@ -91,7 +92,7 @@
             });
 
         }
-    },
+    };
 
     ConcreteDurationSelectorRepetition.prototype = {
 
@@ -110,7 +111,7 @@
                 momentStartDate = moment(repetition.pdStartDateTimestamp * 1000).tz(
                     repetition.timezone.timezone
                 ),
-                round = repetition.repetitionID == 0;
+                round = !repetition.repetitionID;
 
             // if this is a new repetition (ID == 0) then we round the starting date.
             // otherwise we accept what is passed exactly
@@ -189,7 +190,7 @@
 
             switch (this.options.timeFormat) {
                 case 12:
-                    if (momentDate.hours() == 0) {
+                    if (!momentDate.hours()) {
                         hours = 12;
                         pm = 'am';
                     } else if (momentDate.hours() > 11) {
@@ -394,7 +395,7 @@
             my.$element.find("div[data-wrapper=duration-dates-repeat-weekly]").hide();
             my.$element.find("div[data-wrapper=duration-dates-repeat-monthly]").hide();
             var repeatPeriod = my.$element.find('select[name=' + my.options.namespace + '_pdRepeatPeriod_' + my.getSetID() + ']').val();
-            if (repeatPeriod != '') {
+            if (repeatPeriod) {
                 my.$element.find("div[data-wrapper=duration-dates-repeat-" + repeatPeriod + "]").show();
                 my.$element.find("div[data-wrapper=duration-repeat-dates]").show();
             }
@@ -424,15 +425,15 @@
             my.onRepeatPeriodChange();
             my.calculateRepeatEnd();
         }
-    }
+    };
 
     // jQuery Plugin
     $.fn.concreteDurationSelector = function (options) {
         return $.each($(this), function (i, obj) {
             new ConcreteDurationSelector($(this), options);
         });
-    }
+    };
 
     global.ConcreteDurationSelector = ConcreteDurationSelector;
 
-}(this, $);
+})(this, jQuery);

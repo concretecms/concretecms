@@ -5,7 +5,7 @@ im.extend = function(property,value) {
 im.alterCore = function(property,value) {
   var nim = im, ns = 'core', i;
   if (im.namespace) {
-    var ns = nim.namespace;
+    ns = nim.namespace;
     nim = im.realIm;
   }
   im[property] = value;
@@ -31,8 +31,9 @@ im.clone = function(namespace) {
 };
 
 im.addControlSet = function(ns,js,elem) {
-  if (jQuery && elem instanceof jQuery) elem = elem[0];
+  if ($ && elem instanceof $) elem = elem[0];
   elem.controlSet = function(im,js) {
+    // jshint -W054
     im.disable = function() {
       im.enabled = false;
       $(elem).parent().parent().addClass('disabled');
@@ -47,7 +48,7 @@ im.addControlSet = function(ns,js,elem) {
     try {
       (new Function('im','$',js)).call(this, im, $);
     } catch(e) {
-      console.log(e.stack);
+      window.console.log(e.stack);
       var pos = e.stack.replace(/[\S\s]+at HTMLDivElement.eval.+?<anonymous>:(\d+:\d+)[\S\s]+/,'$1').split(':');
       if (pos[1] && !isNaN(parseInt(pos[1]))) {
         var jsstack = js.split("\n");
@@ -69,6 +70,7 @@ im.addControlSet = function(ns,js,elem) {
 
 im.addFilter = function(ns,js) {
   var filter = function(im,js) {
+     // jshint -W054
     this.namespace = im.namespace;
     this.im = im;
     try {
@@ -97,8 +99,9 @@ im.addFilter = function(ns,js) {
 };
 
 im.addComponent = function(ns,js,elem) {
-  if (jQuery && elem instanceof jQuery) elem = elem[0];
+  if ($ && elem instanceof $) elem = elem[0];
   elem.component = function(im,js) {
+    // jshint -W054
     im.disable = function() {
       $(this).parent().parent().addClass('disabled');
     };

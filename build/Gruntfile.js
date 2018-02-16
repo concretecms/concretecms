@@ -31,9 +31,10 @@ module.exports = function(grunt) {
             beforeJS: true,
             dest: '<%= DIR_BASE %>/concrete/js/build/core/image-editor/image-editor.js',
             src: [
+                '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/_start.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/kinetic.prototype.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/imageeditor.js',
-                '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/history.js.js',
+                //'<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/history.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/events.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/elements.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/controls.js',
@@ -45,7 +46,8 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/actions.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/slideOut.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/jquerybinding.js',
-                '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/filters.js'
+                '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/filters.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/_end.js',
             ]
         }
     };

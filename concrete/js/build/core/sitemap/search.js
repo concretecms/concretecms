@@ -1,8 +1,7 @@
-/**
- * block ajax
- */
+/* jshint unused:vars, undef:true, browser:true, jquery:true */
+/* global _, ccmi18n, ccmi18n_sitemap, CCM_DISPATCHER_FILENAME, CCM_TOOLS_PATH, Concrete, ConcreteAjaxSearch, ConcreteAlert, ConcreteEvent */
 
-!function (global, $) {
+;(function(global, $) {
     'use strict';
 
     function ConcretePageAjaxSearch($element, options) {
@@ -57,11 +56,11 @@
                 return false;
             });
         }
-    }
+    };
 
     ConcretePageAjaxSearch.prototype.handleSelectedBulkAction = function (value, type, $option, $items) {
         if (value == 'movecopy' || value == 'Move/Copy') {
-            var url, my = this, itemIDs = [];
+            var url, itemIDs = [];
             $.each($items, function (i, checkbox) {
                 itemIDs.push($(checkbox).val());
             });
@@ -84,7 +83,7 @@
             ConcreteEvent.subscribe('SitemapSelectPage.search', subscription);
         }
         ConcreteAjaxSearch.prototype.handleSelectedBulkAction.call(this, value, type, $option, $items);
-    }
+    };
 
     ConcreteAjaxSearch.prototype.createMenu = function ($selector) {
         var my = this;
@@ -92,7 +91,7 @@
             'container': my,
             'menu': $('[data-search-menu=' + $selector.attr('data-launch-search-menu') + ']')
         });
-    }
+    };
 
     /**
      * Static Methods
@@ -199,7 +198,7 @@
                 '<% } %>' +
                 '</ul></div></div>';
         }
-    }
+    };
 
 
     // jQuery Plugin
@@ -207,9 +206,9 @@
         return $.each($(this), function (i, obj) {
             new ConcretePageAjaxSearch($(this), options);
         });
-    }
+    };
 
     global.ConcretePageAjaxSearch = ConcretePageAjaxSearch;
     global.ConcretePageAjaxSearchMenu = ConcretePageAjaxSearchMenu;
 
-}(this, $);
+})(this, jQuery);

@@ -1,8 +1,8 @@
-/**
- * Base search class for AJAX forms in the UI
- */
+/* jshint unused:vars, undef:true, browser:true, jquery:true */
+/* global ConcreteAjaxRequest, ccm_doProgressiveOperation, ConcreteEvent, ConcreteAlert */
 
-!function(global, $) {
+/* Base search class for AJAX forms in the UI */
+;(function(global, $) {
     'use strict';
 
     function ConcreteAjaxForm($form, options) {
@@ -51,14 +51,14 @@
                 options.complete(my);
             }
         });
-    }
+    };
 
     ConcreteAjaxForm.prototype.handleProgressiveOperation = function(resp, onComplete) {
         var my = this,
             url = my.$form.attr('action') ? my.$form.attr("action") : my.options.url,
             params = my.$form.formToArray(true);
 
-        jQuery.fn.dialog.hideLoader();
+        $.fn.dialog.hideLoader();
         if (!my.options.progressiveOperationElement) {
             $('<div id="ccm-dialog-progress-bar" />').appendTo(document.body).html(resp).jqdialog({
                 autoOpen: false,
@@ -82,14 +82,14 @@
             var totalItems = $('#ccm-progressive-operation-progress-bar').attr('data-total-items');
             ccm_doProgressiveOperation(url, params, totalItems, onComplete, false, $element);
         }
-    }
+    };
 
     ConcreteAjaxForm.prototype.error = function(r, my, callback) {
         ConcreteAjaxRequest.prototype.error(r, my);
         if (callback) {
             callback(r);
         }
-    }
+    };
 
     ConcreteAjaxForm.prototype.doFinish = function(r) {
         var my = this;
@@ -98,7 +98,7 @@
             window.location.href = r.redirectURL;
         } else {
             if (my.$form.attr('data-dialog-form')) {
-                jQuery.fn.dialog.closeTop();
+                $.fn.dialog.closeTop();
             }
             if (r.message) {
                 ConcreteAlert.notify({
@@ -107,7 +107,7 @@
                 });
             }
         }
-    }
+    };
 
     ConcreteAjaxForm.prototype.success = function(resp, my, callback) {
         if (my.validateResponse(resp)) {
@@ -129,15 +129,15 @@
                 }
             }
         }
-    }
+    };
 
     // jQuery Plugin
     $.fn.concreteAjaxForm = function(options) {
         return $.each($(this), function(i, obj) {
             new ConcreteAjaxForm($(this), options);
         });
-    }
+    };
 
     global.ConcreteAjaxForm = ConcreteAjaxForm;
 
-}(this, $);
+})(this, jQuery);
