@@ -2242,8 +2242,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     /**
      * Adds a block to the page.
      *
-     * @param Concrete\Core\Block\BlockType\BlockType $bt   The type of block to be added. 
-     * @param Concrete\Core\Area\Area $a    The area the block will appear. 
+     * @param \Concrete\Core\Block\BlockType\BlockType $bt   The type of block to be added. 
+     * @param \Concrete\Core\Area\Area $a    The area the block will appear. 
      * @param array $data   An array of settings for the block.
      * 
      * @return Block
