@@ -171,18 +171,20 @@ class Resolver
      * @param \Concrete\Core\Entity\File\StorageLocation\StorageLocation $storage
      * @param \Concrete\Core\File\StorageLocation\Configuration\ConfigurationInterface $configuration
      * @param string $format
-     * @return string
+     * @return string|null
      */
     protected function determineThumbnailPath(Version $file_version, ThumbnailVersion $thumbnail, StorageLocation $storage, ConfigurationInterface $configuration, $format)
     {
-        $path = $thumbnail->getFilePath($file_version, $format);
-
-        if ($configuration instanceof DeferredConfigurationInterface) {
-            // Lets defer getting the path from the configuration until we know we need to
-            return $path;
+        if ($thumbnail->shouldExistFor($file_version->getAttribute('width'), $file_version->getAttribute('height'))) {
+            $path = $thumbnail->getFilePath($file_version, $format);
+    
+            if ($configuration instanceof DeferredConfigurationInterface) {
+                // Lets defer getting the path from the configuration until we know we need to
+                return $path;
+            }
+    
+            return $configuration->getRelativePathToFile($path);
         }
-
-        return $configuration->getRelativePathToFile($path);
     }
 
     /**

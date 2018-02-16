@@ -6,15 +6,14 @@ use Concrete\Core\Entity\Geolocator;
 use Concrete\Core\Geolocator\GeolocatorService;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
-use Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
-class Version20171221194440 extends AbstractMigration implements RepeatableMigrationInterface, DirectSchemaUpgraderInterface
+class Version20171221194440 extends AbstractMigration implements RepeatableMigrationInterface
 {
     /**
      * {@inheritdoc}
      *
-     * @see \Concrete\Core\Updater\Migrations\DirectSchemaUpgraderInterface::upgradeDatabase()
+     * @see \Concrete\Core\Updater\Migrations\AbstractMigration::upgradeDatabase()
      */
     public function upgradeDatabase()
     {

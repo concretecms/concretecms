@@ -1386,9 +1386,9 @@ return [
         'core/calendar/admin' => [
             [
                 ['javascript-localized', 'core/localization'],
-                ['javascript-localized', 'jquery/ui'],
                 ['javascript', 'jquery'],
                 ['javascript', 'jquery/ui'],
+                ['javascript-localized', 'jquery/ui'],
                 ['javascript', 'core/events'],
                 ['javascript', 'underscore'],
                 ['javascript', 'backbone'],

@@ -105,7 +105,7 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
     public function getJpegCompression()
     {
         if ($this->jpegCompression === null) {
-            $this->jpegCompression = (int) $this->app->make('config')->get('concrete.misc.default_jpeg_image_compression');
+            $this->jpegCompression = $this->app->make(BitmapFormat::class)->getDefaultJpegQuality();
         }
 
         return $this->jpegCompression;
@@ -133,7 +133,7 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
     public function getPngCompression()
     {
         if ($this->pngCompression === null) {
-            $this->pngCompression = (int) $this->app->make('config')->get('concrete.misc.default_png_image_compression');
+            $this->pngCompression = $this->app->make(BitmapFormat::class)->getDefaultPngCompressionLevel();
         }
 
         return $this->pngCompression;
@@ -146,19 +146,13 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
      */
     public function setThumbnailsFormat($thumbnailsFormat)
     {
-        $thumbnailsFormat = $thumbnailsFormat ? strtolower(trim((string) $thumbnailsFormat)) : '';
-        switch ($thumbnailsFormat) {
-            case ThumbnailFormatService::FORMAT_JPEG:
-            case ThumbnailFormatService::FORMAT_PNG:
-            case ThumbnailFormatService::FORMAT_AUTO:
-                $this->thumbnailsFormat = $thumbnailsFormat;
-                break;
-            case 'jpg':
-                $this->thumbnailsFormat = ThumbnailFormatService::FORMAT_JPEG;
-                break;
-            default:
-                $this->thumbnailsFormat = ThumbnailFormatService::FORMAT_JPEG;
+        $thumbnailsFormat = strtolower(trim((string) $thumbnailsFormat));
+        if ($thumbnailsFormat !== ThumbnailFormatService::FORMAT_AUTO) {
+            if (!$this->app->make(BitmapFormat::class)->isFormatValid($thumbnailsFormat)) {
+                $thumbnailsFormat = BitmapFormat::FORMAT_JPEG;
+            }
         }
+        $this->thumbnailsFormat = $thumbnailsFormat;
 
         return $this;
     }
@@ -302,18 +296,10 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
             $baseFilename = md5(implode(':', [$obj, $maxWidth, $maxHeight, $crop, @filemtime($obj)]));
         }
         $thumbnailFormat = $this->getThumbnailsFormat();
-        if ($thumbnailFormat == ThumbnailFormatService::FORMAT_AUTO) {
+        if ($thumbnailFormat === ThumbnailFormatService::FORMAT_AUTO) {
             $thumbnailFormat = $this->app->make(ThumbnailFormatService::class)->getAutomaticFormatForFileExtension($extension);
         }
-        switch ($thumbnailFormat) {
-            case ThumbnailFormatService::FORMAT_JPEG:
-                $thumbnailExtension = 'jpg';
-                break;
-            case ThumbnailFormatService::FORMAT_PNG:
-            default:
-                $thumbnailExtension = 'png';
-                break;
-        }
+        $thumbnailExtension = $this->app->make(BitmapFormat::class)->getFormatFileExtension($thumbnailFormat);
 
         $filename = $baseFilename . '.' . $thumbnailExtension;
 

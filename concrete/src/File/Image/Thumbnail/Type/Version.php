@@ -3,6 +3,7 @@
 namespace Concrete\Core\File\Image\Thumbnail\Type;
 
 use Concrete\Core\Entity\File\Version as FileVersion;
+use Concrete\Core\File\Image\BitmapFormat;
 use Concrete\Core\File\Image\Thumbnail\ThumbnailFormatService;
 use Concrete\Core\File\Image\Thumbnail\Type\Type as ThumbnailType;
 use Concrete\Core\Support\Facade\Application;
@@ -289,16 +290,64 @@ class Version
         $prefix = $fv->getPrefix();
         $filename = $fv->getFileName();
         $thumbnailFormat = $app->make(ThumbnailFormatService::class)->getFormatForFile($filename);
-        switch ($thumbnailFormat) {
-            case ThumbnailFormatService::FORMAT_JPEG:
-                $extension = 'jpg';
-                break;
-            case ThumbnailFormatService::FORMAT_PNG:
-            default:
-                $extension = 'png';
-                break;
-        }
+        $extension = $app->make(BitmapFormat::class)->getFormatFileExtension($thumbnailFormat);
 
         return REL_DIR_FILES_THUMBNAILS . '/' . $this->getDirectoryName() . $ii->prefix($prefix, $hi->replaceExtension($filename, $extension));
+    }
+
+    /**
+     * Check if this thumbnail type version should exist for an image with the specified dimensions.
+     *
+     * @param int $imageWidth The original image width
+     * @param int $imageHeight The original image height
+     *
+     * @return bool
+     */
+    public function shouldExistFor($imageWidth, $imageHeight)
+    {
+        $result = false;
+        $imageWidth = (int) $imageWidth;
+        $imageHeight = (int) $imageHeight;
+        if ($imageWidth > 0 && $imageHeight > 0) {
+            // We have both image dimensions
+            $thumbnailWidth = (int) $this->getWidth() ?: 0;
+            $thumbnailHeight = (int) $this->getHeight() ?: 0;
+            switch ($this->getSizingMode()) {
+                case ThumbnailType::RESIZE_EXACT:
+                    // Both the thumbnail width and height must be set
+                    if ($thumbnailWidth > 0 && $thumbnailHeight > 0) {
+                        // None of the thumbnail dimensions can be greater that image ones
+                        if ($thumbnailWidth <= $imageWidth && $thumbnailHeight <= $imageHeight) {
+                            // Thumbnail must not be the same size as the image
+                            if ($thumbnailWidth !== $imageWidth || $thumbnailHeight !== $imageHeight) {
+                                $result = true;
+                            }
+                        }
+                    }
+                    break;
+                case ThumbnailType::RESIZE_PROPORTIONAL:
+                default:
+                    if ($thumbnailWidth > 0 && $thumbnailHeight > 0) {
+                        // Both the thumbnail width and height are set
+                        // At least one thumbnail dimension must be smaller that the corresponding image dimension
+                        if ($thumbnailWidth < $imageWidth || $thumbnailHeight < $imageHeight) {
+                            $result = true;
+                        }
+                    } elseif ($thumbnailWidth > 0) {
+                        // Only the thumbnail width is set: the thumbnail must be narrower than the image.
+                        if ($thumbnailWidth < $imageWidth) {
+                            $result = true;
+                        }
+                    } elseif ($thumbnailHeight > 0) {
+                        // Only the thumbnail height is set: the thumbnail must be shorter than the image.
+                        if ($thumbnailHeight < $imageHeight) {
+                            $result = true;
+                        }
+                    }
+                    break;
+            }
+
+            return $result;
+        }
     }
 }

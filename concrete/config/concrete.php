@@ -8,7 +8,7 @@ return [
      */
     'version' => '8.3.3a1',
     'version_installed' => '8.3.3a1',
-    'version_db' => '20180130000000', // the key of the latest database migration
+    'version_db' => '20180213000000', // the key of the latest database migration
 
     /*
      * Installation status
@@ -410,13 +410,6 @@ return [
          * @var bool concrete.external.intelligent_search_help
          */
         'intelligent_search_help' => true,
-
-        /*
-         * Display an overlay with up-to-date news from concrete5
-         *
-         * @var bool concrete.external.news_overlay
-         */
-        'news_overlay' => false,
 
         /*
          * Enable concrete5 news within your site

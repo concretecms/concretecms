@@ -553,9 +553,6 @@ class StartingPointPackage extends BasePackage
             ]
         );
 
-        $u = new User();
-        $u->saveConfig('NEWSFLOW_LAST_VIEWED', 'FIRSTRUN');
-
         // login
         $login = Page::getByPath('/login', 'RECENT');
         $login->assignPermissions($g1, ['view_page']);

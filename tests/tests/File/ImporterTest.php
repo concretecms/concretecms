@@ -179,6 +179,7 @@ class ImporterTest extends FileStorageTestCase
                 $config->set('concrete.misc.basic_thumbnailer_generation_strategy', $strategy);
                 $fi = new Importer();
                 $fo = $fi->import($file, 'background-slider-night-road.png');
+                $this->assertTrue(is_object($fo), 'Import failed (' . (is_object($fo) ? null : Importer::getErrorMessage($fo)) . ')');
                 $type = $fo->getTypeObject();
                 $this->assertEquals(\Concrete\Core\File\Type\Type::T_IMAGE, $type->getGenericType());
 

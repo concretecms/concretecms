@@ -54,6 +54,7 @@ EOT
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $initialMigration = null;
         if ($input->getOption('rerun')) {
             if ($input->getOption('after') === null && $input->getOption('since') === null) {
                 $initialMigration = 'max';

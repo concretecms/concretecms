@@ -63,7 +63,7 @@ class DashboardManager extends AbstractManager
             '/dashboard/users/attributes' => t('Store data about your users-- like site preferences, birthdays, bios and more. Control which elements are available for users to update themselves.'),
             '/dashboard/users/add' => t('Manually create new user accounts for your concrete5 site.'),
             '/dashboard' => t('The Dashboard allows you to perform administrative tasks for your site.'),
-            '/dashboard/system/files/image_uploading' => t('Control maximum dimensions for all images uploaded to your website. Ensures that enormous images will be resized.'),
+            '/dashboard/system/files/image_uploading' => t('Control maximum dimensions for all images uploaded to your website. Ensures that enormous images will be resized.') . ' ' . t('Auto-rotate images accordingly to EXIF metadata.') . '<br />' . t('Set PNG and JPEG compression options.'),
         ]);
 
         $message = new Message();

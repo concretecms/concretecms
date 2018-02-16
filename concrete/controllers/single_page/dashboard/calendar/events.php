@@ -28,6 +28,7 @@ class Events extends DashboardCalendarPageController
         $this->set('calendarPermissions', new \Permissions($calendar));
         $this->set('calendar', $calendar);
 
+        $dh = $this->app->make('date');
         if (!$year) {
             $year = date('Y');
         }
@@ -35,27 +36,12 @@ class Events extends DashboardCalendarPageController
             $month = date('m');
         }
 
-        $monthYearTimestamp = strtotime($year . '-' . $month . '-01');
-        $firstDayInMonthNum = date('N', $monthYearTimestamp);
-        if ($firstDayInMonthNum == 7) {
-            $firstDayInMonthNum = 0;
-        }
-        $nextLinkYear = $year;
-        $previousLinkYear = $year;
-        $nextLinkMonth = $month + 1;
-        $previousLinkMonth = $month - 1;
-        if ($month == 12) {
-            $nextLinkMonth = 01;
-        }
-        if ($month == 01) {
-            $previousLinkMonth = 12;
-        }
-        if ($month == 12) {
-            $nextLinkYear = $year + 1;
-        }
-        if ($month == 01) {
-            $previousLinkYear = $year - 1;
-        }
+        $monthYearTimestamp = strtotime($year . '-' . substr('0' . $month, -2) . '-01');
+        $firstDayInMonthNum = date('N', $monthYearTimestamp) % 7;
+        $previousLinkMonth = $month == 1 ? 12 : $month - 1;
+        $previousLinkYear = $month == 1 ? $year - 1 : $year;
+        $nextLinkMonth = $month == 12 ? 1 : $month + 1;
+        $nextLinkYear = $month == 12 ? $year + 1: $year;
 
         $session = \Core::make('session');
         $topic_id = $this->request->get('topic_id', $session->get('dashboard_calendar_events_topic_list', null));
@@ -84,9 +70,9 @@ class Events extends DashboardCalendarPageController
 
         // Set the date picker and keep the time zone properly available. Sigh.
         $timezone = $calendar->getTimezone();
-        $todayDate = new \DateTime($year . '-' . $month . '-01 00:00:00', new \DateTimeZone($timezone));
+        $todayDate = new \DateTime($year . '-' . substr('0' . $month, -2) . '-01 00:00:00', new \DateTimeZone($timezone));
         $todayDateTimestamp = $todayDate->getTimestamp();
-        $this->set('monthText', date('F', $monthYearTimestamp));
+        $this->set('monthText', $dh->date('F', $monthYearTimestamp, $todayDate->getTimezone()));
         $this->set('month', $month);
         $this->set('year', $year);
         $this->set('daysInMonth', date('t', $monthYearTimestamp));
