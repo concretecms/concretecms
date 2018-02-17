@@ -106,16 +106,16 @@
         },
         {
             "name": "bernard/bernard",
-            "version": "dev-master",
+            "version": "1.0.0-alpha9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bernardphp/bernard.git",
-                "reference": "6edbd78f4a750528493087bdf39d2e5038f57eca"
+                "reference": "1144b4dd9b87f22091dfceabb91d74f295ade034"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bernardphp/bernard/zipball/6edbd78f4a750528493087bdf39d2e5038f57eca",
-                "reference": "6edbd78f4a750528493087bdf39d2e5038f57eca",
+                "url": "https://api.github.com/repos/bernardphp/bernard/zipball/1144b4dd9b87f22091dfceabb91d74f295ade034",
+                "reference": "1144b4dd9b87f22091dfceabb91d74f295ade034",
                 "shasum": ""
             },
             "require": {
@@ -128,17 +128,18 @@
                 "aws/aws-sdk-php": "~2.4|~3.0",
                 "doctrine/dbal": "~2.3",
                 "iron-io/iron_mq": "~4.0",
-                "leanphp/phpspec-code-coverage": "^3.0 || ^4.0",
+                "league/container": "~2.3",
                 "pda/pheanstalk": "~3.0",
                 "php-amqplib/php-amqplib": "~2.5",
-                "phpspec/phpspec": "^3.0 || ^4.0",
-                "phpunit/phpunit": "^5.5 || ^6.0 || ^7.0",
+                "phpspec/phpspec": "^2.4",
+                "phpunit/phpunit": "^5.5|^6.0",
+                "pimple/pimple": "~1.0",
                 "predis/predis": "~0.8",
-                "psr/container": "^1.0",
-                "psr/log": "^1.0",
+                "psr/log": "~1.0",
                 "queue-interop/amqp-interop": "^0.6",
                 "queue-interop/queue-interop": "^0.6",
-                "symfony/console": "^2.7|^3.0|^4.0"
+                "symfony/console": "^2.7|^3.0|^4.0",
+                "symfony/dependency-injection": "^2.7|^3.0|^4.0"
             },
             "suggest": {
                 "aws/aws-sdk-php": "Allow sending messages to AWS services like Simple Queue Service",
@@ -174,7 +175,7 @@
                 "message queue",
                 "queue"
             ],
-            "time": "2018-02-16 08:38:38"
+            "time": "2018-02-13 07:52:58"
         },
         {
             "name": "bernard/normalt",
@@ -5137,6 +5138,59 @@
             "time": "2016-02-11 18:54:29"
         },
         {
+            "name": "zendframework/zend-http",
+            "version": "2.7.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zendframework/zend-http.git",
+                "reference": "78aa510c0ea64bfb2aa234f50c4f232c9531acfa"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zendframework/zend-http/zipball/78aa510c0ea64bfb2aa234f50c4f232c9531acfa",
+                "reference": "78aa510c0ea64bfb2aa234f50c4f232c9531acfa",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.6 || ^7.0",
+                "zendframework/zend-loader": "^2.5.1",
+                "zendframework/zend-stdlib": "^3.1 || ^2.7.7",
+                "zendframework/zend-uri": "^2.5.2",
+                "zendframework/zend-validator": "^2.10.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^6.4.1 || ^5.7.15",
+                "zendframework/zend-coding-standard": "~1.0.0",
+                "zendframework/zend-config": "^3.1 || ^2.6"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.7-dev",
+                    "dev-develop": "2.8-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Zend\\Http\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "provides an easy interface for performing Hyper-Text Transfer Protocol (HTTP) requests",
+            "homepage": "https://github.com/zendframework/zend-http",
+            "keywords": [
+                "ZendFramework",
+                "http",
+                "http client",
+                "zend",
+                "zf"
+            ],
+            "time": "2017-10-13 12:06:24"
+        },
+        {
             "name": "zendframework/zend-hydrator",
             "version": "1.1.0",
             "source": {
@@ -5529,6 +5583,53 @@
                 "zf2"
             ],
             "time": "2016-04-12 21:17:31"
+        },
+        {
+            "name": "zendframework/zend-uri",
+            "version": "2.5.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zendframework/zend-uri.git",
+                "reference": "0bf717a239432b1a1675ae314f7c4acd742749ed"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zendframework/zend-uri/zipball/0bf717a239432b1a1675ae314f7c4acd742749ed",
+                "reference": "0bf717a239432b1a1675ae314f7c4acd742749ed",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.5 || ^7.0",
+                "zendframework/zend-escaper": "^2.5",
+                "zendframework/zend-validator": "^2.5"
+            },
+            "require-dev": {
+                "fabpot/php-cs-fixer": "1.7.*",
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.5-dev",
+                    "dev-develop": "2.6-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Zend\\Uri\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "a component that aids in manipulating and validating » Uniform Resource Identifiers (URIs)",
+            "homepage": "https://github.com/zendframework/zend-uri",
+            "keywords": [
+                "uri",
+                "zf2"
+            ],
+            "time": "2016-02-17 22:38:51"
         },
         {
             "name": "zendframework/zend-validator",
@@ -6747,7 +6848,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "bernard/bernard": 20
+        "bernard/bernard": 15
     },
     "prefer-stable": true,
     "prefer-lowest": false,
