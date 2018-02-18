@@ -296,21 +296,38 @@ class DateTime
             $html .= <<<EOT
 <script type="text/javascript">
 $(function() {
-  $('#{$id}_dt_pub').datepicker($.extend({$datePickerOptionsAsJSON}, {
-    dateFormat: $dateFormat,
-    altFormat: 'yy-mm-dd',
-    altField: '#{$id}_dt',
-    changeYear: true,
-    showAnim: 'fadeIn',
-    yearRange: 'c-100:c+10',
-    $beforeShow
-    onClose: function(dateText, inst) {
-      if(!dateText) {
-        $(inst.settings.altField).val('');
-      }
+  // Only the first DatePicker with this ID receives updated input, make sure it
+  // get's delegated to other instances with the same ID
+  if ($('#{$id}_dt_pub[is-date-picker-initialized]').length < 1) {
+    $(document).on('change', '#{$id}_dt_pub[is-date-picker-initialized]', function() {
+      $('#{$id}_dt_pub[is-date-picker-initialized]').val($(this).val());
+    });
+  }
+
+  $(document).on('focus', '#{$id}_dt_pub', function() {
+    var input = $(this);
+    if (input.attr('is-date-picker-initialized') != null) {
+      return;
     }
-  })).datepicker('setDate', $defaultDateJs);
-})
+
+    input.attr('is-date-picker-initialized', true);
+
+    input.datepicker($.extend({$datePickerOptionsAsJSON}, {
+      dateFormat: $dateFormat,
+      altFormat: 'yy-mm-dd',
+      altField: '#{$id}_dt',
+      changeYear: true,
+      showAnim: 'fadeIn',
+      yearRange: 'c-100:c+10',
+      $beforeShow
+      onClose: function(dateText, inst) {
+        if(!dateText) {
+          $(inst.settings.altField).val('');
+        }
+      }
+    })).datepicker('setDate', $defaultDateJs);
+  });
+});
 </script>
 EOT;
         }
