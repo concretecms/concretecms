@@ -14,3 +14,4 @@ $router->all('/multilingual/create_new', 'Page\Multilingual::create_new');
 $router->all('/multilingual/ignore', 'Page\Multilingual::ignore');
 $router->all('/multilingual/unmap', 'Page\Multilingual::unmap');
 $router->all('/select_sitemap', 'Page\SitemapSelector::view');
+$router->all('/sitemap_data', 'Page\SitemapData::view');
