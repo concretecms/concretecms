@@ -605,8 +605,13 @@
         }
 
 		if (type == 'progressive') {
-			ccm_triggerProgressiveOperation($option.attr('data-bulk-action-url'), itemIDs,	$option.attr('data-bulk-action-title'), function() {
-				cs.refreshResults();
+			var op = new ConcreteProgressiveOperation({
+				url: $option.attr('data-bulk-action-url'),
+				data: itemIDs,
+				title: $option.attr('data-bulk-action-title'),
+				onComplete: function() {
+					cs.refreshResults();
+				}
 			});
 		}
 		cs.publish('SearchBulkActionSelect', {value: value, option: $option, items: $items});

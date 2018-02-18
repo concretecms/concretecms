@@ -10,6 +10,7 @@ use Concrete\Core\File\EditResponse as FileEditResponse;
 use Concrete\Core\File\Importer;
 use Concrete\Core\File\ImportProcessor\AutorotateImageProcessor;
 use Concrete\Core\File\ImportProcessor\ConstrainImageProcessor;
+use Concrete\Core\Foundation\Queue\Response\EnqueueItemsResponse;
 use Concrete\Core\Foundation\Queue\QueueService;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Tree\Node\Node;
@@ -22,6 +23,7 @@ use FileSet;
 use Permissions as ConcretePermissions;
 use stdClass;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class File extends Controller
 {
@@ -65,11 +67,13 @@ class File extends Controller
     public function rescanMultiple()
     {
         $files = $this->getRequestFiles('canEditFileContents');
-        $q = $this->app->make(QueueService::class)->get('rescan_files');
+        $queue = $this->app->make(QueueService::class);
+        $q = $queue->get('rescan_files');
+        /*
         if ($this->request->request->get('process')) {
             $obj = new stdClass();
             $em = $this->app->make(EntityManagerInterface::class);
-            $messages = $q->receive(5);
+            $messages = $queue->receive($q, 5);
             foreach ($messages as $key => $msg) {
                 // delete the page here
                 $file = unserialize($msg->body);
@@ -87,16 +91,17 @@ class File extends Controller
             }
 
             return $this->app->make(ResponseFactoryInterface::class)->json($data);
-        } elseif ($q->count() == 0) {
-            foreach ($files as $f) {
-                $q->send(serialize([
-                    'fID' => $f->getFileID(),
-                ]));
-            }
+        } elseif ($q->count() == 0) { */
+
+
+        foreach ($files as $f) {
+            $queue->send($q, [
+                'fID' => $f->getFileID(),
+            ]);
         }
 
-        $totalItems = $q->count();
-        View::element('progress_bar', ['totalItems' => $totalItems, 'totalItemsSummary' => t2('%d file', '%d files', $totalItems)]);
+        $response = new EnqueueItemsResponse($q);
+        return $response;
     }
 
     public function approveVersion()

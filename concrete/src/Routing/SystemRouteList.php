@@ -75,6 +75,8 @@ class SystemRouteList implements RouteListInterface
 
         $router->buildGroup()->routes('calendar.php');
 
+        $router->buildGroup()->routes('misc.php');
+
         $router->buildGroup()
             ->setPrefix('/ccm/api/v1')
             ->addMiddleware(ProjectorMiddleware::class)

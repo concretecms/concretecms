@@ -19,6 +19,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Core;
 use Exception;
 use PortlandLabs\LibertaServer\Pipeline\Command\Queue\CodeDeploy\PrepareActionCommand;
+use Concrete\Core\Foundation\Queue\QueueService;
 
 class QueueProcessCommand extends Command
 {
@@ -36,38 +37,16 @@ class QueueProcessCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $cms = Core::make('app');
+        $app = Core::make('app');
 
-        $bus = $cms->make('command/bus');
+        $bus = $app->make('command/bus');
         $receiver = new SeparateBusReceiver($bus->getSyncBus());
         $router = new ClassNameRouter();
         $router->add(QueueableCommand::class, $receiver);
 
-        $consumer = new Consumer($router, $cms->make('director'));
-        $queue = $this->getQueue($input->getArgument('queue'));
+        $consumer = new Consumer($router, $app->make('director'));
+        $queue = $app->make(QueueService::class)->get($input->getArgument('queue'));
         $consumer->consume($queue, $input->getOptions());
-    }
-
-    /**
-     * @param array|string $queue
-     *
-     * @return Queue
-     */
-    protected function getQueue($queue)
-    {
-        $cms = Core::make('app');
-        $queues = new PersistentFactory($cms->make('queue/driver'), $cms->make('queue/serializer'));
-        if (count($queue) > 1) {
-            $queues = array_map([$queues, 'create'], $queue);
-
-            return new RoundRobinQueue($queues);
-        }
-
-        if (is_array($queue)) {
-            $queue = $queue[0];
-        }
-
-        return $queues->create($queue);
     }
 
 }
