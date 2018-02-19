@@ -2,8 +2,12 @@
 
 namespace Concrete\Core\Backup\ContentImporter\Importer\Routine;
 
+use Concrete\Core\Entity\File\Image\Thumbnail\Type\Type as ThumbnailType;
 use Concrete\Core\Entity\File\Image\Thumbnail\Type\TypeFileSet;
 use Concrete\Core\File\Set\Set as FileSet;
+use Concrete\Core\Support\Facade\Application;
+use Doctrine\ORM\EntityManagerInterface;
+use SimpleXMLElement;
 
 class ImportFileImportantThumbnailTypesRoutine extends AbstractRoutine
 {
@@ -12,11 +16,18 @@ class ImportFileImportantThumbnailTypesRoutine extends AbstractRoutine
         return 'file_important_thumbnail_types';
     }
 
-    public function import(\SimpleXMLElement $sx)
+    public function import(SimpleXMLElement $sx)
     {
+        $app = Application::getFacadeApplication();
+        $em = $app->make(EntityManagerInterface::class);
+        $repo = $em->getRepository(ThumbnailType::class);
         if (isset($sx->thumbnailtypes)) {
             foreach ($sx->thumbnailtypes->thumbnailtype as $l) {
-                $type = new \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type();
+                $handle = (string) $l['handle'];
+                if ($repo->findOneBy(['ftTypeHandle' => $handle]) !== null) {
+                    continue;
+                }
+                $type = new ThumbnailType();
                 $type->setName((string) $l['name']);
                 $type->setHandle((string) $l['handle']);
                 if (isset($l['sizingMode'])) {
@@ -51,7 +62,8 @@ class ImportFileImportantThumbnailTypesRoutine extends AbstractRoutine
                         }
                     }
                 }
-                $type->save();
+                $em->persist($type);
+                $em->flush();
             }
         }
     }
