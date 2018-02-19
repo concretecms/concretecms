@@ -76,6 +76,8 @@ class Thumbnails extends DashboardPageController
                 $this->error->add(t('Your thumbnail type must have a handle.'));
             } elseif (!$valStrings->handle($handle)) {
                 $this->error->add(t('Your thumbnail type handle must only contain lowercase letters and underscores.'));
+            } elseif (substr($handle, -strlen(TypeEntity::HIGHDPI_SUFFIX)) === TypeEntity::HIGHDPI_SUFFIX) {
+                $this->error->add(t('Thumbnail type handles can\'t end with "%s".', TypeEntity::HIGHDPI_SUFFIX));
             } else {
                 $alreadyExists = false;
                 foreach ($repo->findBy(['ftTypeHandle' => $handle]) as $existingType) {

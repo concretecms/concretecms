@@ -38,6 +38,13 @@ class Type
     const RESIZE_DEFAULT = self::RESIZE_PROPORTIONAL;
 
     /**
+     * Suffix for high DPI thumbnails (eg. Retina).
+     * 
+     * @var string
+     */
+    const HIGHDPI_SUFFIX = '_2x';
+
+    /**
      * The thumbnail unique identifier.
      *
      * @ORM\Id
@@ -382,7 +389,7 @@ class Type
      */
     private function getVersion($doubled)
     {
-        $suffix = $doubled ? '_2x' : '';
+        $suffix = $doubled ? static::HIGHDPI_SUFFIX : '';
         $handle = $this->getHandle();
         $width = $this->getWidth();
         if ($width && $doubled) {
