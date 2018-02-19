@@ -89,7 +89,8 @@ class EventService
             $return->setIsApproved(false);
 
             // Persist the cloned version
-            $return = this->entityManager->persist($return);
+            $this->entityManager->persist($return);
+            $this->entityManager->flush();
 
             // Duplicate attribute Values
             $values = $this->eventCategory->getAttributeValues($recent);
