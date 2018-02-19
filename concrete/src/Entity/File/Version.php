@@ -1525,7 +1525,7 @@ class Version implements ObjectInterface
 
     /**
      * Get the URL of a thumbnail type.
-     * If the thumbnail is smaller than the image you'll get the URL of the image itself.
+     * If the thumbnail is smaller than the image (or if the file does not satisfy the Conditional Thumbnail criterias) you'll get the URL of the image itself.
      *
      * Please remark that the path is resolved using the default core path resolver: avoid using this method when you have access to the resolver instance.
      *
