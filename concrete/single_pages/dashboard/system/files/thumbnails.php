@@ -78,7 +78,7 @@ if (isset($type)) {
             }
             ?>
             <div class="form-group">
-                <?= $form->label('fileSetOption', t('Conditional thumbnails')) ?>
+                <?= $form->label('fileSetOption', t('Conditional Thumbnails')) ?>
                 <?= $form->select('fileSetOption', $fileSetOptions, $fileSetOption, ['required' => 'required']) ?>
             </div>
             <div class="form-group">

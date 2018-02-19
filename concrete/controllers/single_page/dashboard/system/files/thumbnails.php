@@ -138,7 +138,7 @@ class Thumbnails extends DashboardPageController
             if ($ftTypeID === 'new' || !$type->isRequired()) {
                 $fileSetOption = $post->get('fileSetOption');
                 if (!in_array($fileSetOption, array_keys($this->getFileSetOptions()), true)) {
-                    $this->error->add(t('Please specify the Conditional thumbnails criteria.'));
+                    $this->error->add(t('Please specify the Conditional Thumbnails criteria.'));
                 } elseif ($fileSetOption === static::FILESETOPTION_ALL) {
                     $type->getAssociatedFileSets()->clear();
                     $type->setLimitedToFileSets(false);
@@ -157,7 +157,7 @@ class Thumbnails extends DashboardPageController
                         }
                     }
                     if (empty($receivedFileSetIDs)) {
-                        $this->error->add(t('Please specify the file sets for the Conditional thumbnails criteria.'));
+                        $this->error->add(t('Please specify the file sets for the Conditional Thumbnails criteria.'));
                     } else {
                         $type->setLimitedToFileSets($fileSetOption === static::FILESETOPTION_ONLY);
                         foreach ($type->getAssociatedFileSets() as $afs) {
