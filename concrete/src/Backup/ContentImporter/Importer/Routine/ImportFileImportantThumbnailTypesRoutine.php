@@ -37,8 +37,8 @@ class ImportFileImportantThumbnailTypesRoutine extends AbstractRoutine
                 if (isset($l['limitedToFileSets'])) {
                     $type->setLimitedToFileSets((bool) (string) $l['limitedToFileSets']);
                 }
-                if (isset($l->fileSets)) {
-                    foreach ($l->fileSets as $xFileSet) {
+                if (isset($l->filesets)) {
+                    foreach ($l->filesets->fileset as $xFileSet) {
                         $name = isset($xFileSet['name']) ? trim((string) $xFileSet['name']) : '';
                         if ($name !== '') {
                             $fileSet = FileSet::getByName($name);
