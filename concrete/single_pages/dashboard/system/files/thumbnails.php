@@ -127,7 +127,9 @@ if (isset($type)) {
         if ($allowConditionalThumbnails) {
             ?>
             var $fileSets = $('#fileSets');
-            $fileSets.selectize();
+            $fileSets.selectize({
+                plugins: ['remove_button']
+            });
             $('#fileSetOption')
                 .on('change', function() {
                     if ($(this).val() === <?= json_encode($controller::FILESETOPTION_ALL) ?>) {
