@@ -1169,6 +1169,7 @@ return [
     ],
 
     'commands' => [
+        'Concrete\Core\File\Command\RescanFileCommand' => 'Concrete\Core\File\Command\RescanFileCommandHandler'
     ],
 
     'api' => [

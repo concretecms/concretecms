@@ -54,6 +54,10 @@ class QueueService
             return new RoundRobinQueue($queues);
         }
 
+        if (is_array($queue)) {
+            $queue = $queue[0];
+        }
+
         return $this->factory->create($queue);
     }
 

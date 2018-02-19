@@ -25,6 +25,7 @@ class QueueServiceProvider extends Provider
             $manager = new SerializerManager();
             $manager->addNormalizer(new EnvelopeNormalizer());
             $manager->addNormalizer(new PlainMessageNormalizer());
+            $manager->addNormalizer(new GetSetMethodNormalizer());
             return $manager;
         });
 

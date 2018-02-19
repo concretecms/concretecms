@@ -6,6 +6,7 @@ use Concrete\Core\Controller\Controller;
 use Concrete\Core\Entity\File\File as FileEntity;
 use Concrete\Core\Entity\File\Version as FileVersionEntity;
 use Concrete\Core\Error\UserMessageException;
+use Concrete\Core\File\Command\RescanFileCommand;
 use Concrete\Core\File\EditResponse as FileEditResponse;
 use Concrete\Core\File\Importer;
 use Concrete\Core\File\ImportProcessor\AutorotateImageProcessor;
@@ -69,6 +70,7 @@ class File extends Controller
         $files = $this->getRequestFiles('canEditFileContents');
         $queue = $this->app->make(QueueService::class);
         $q = $queue->get('rescan_files');
+
         /*
         if ($this->request->request->get('process')) {
             $obj = new stdClass();
@@ -95,9 +97,8 @@ class File extends Controller
 
 
         foreach ($files as $f) {
-            $queue->send($q, [
-                'fID' => $f->getFileID(),
-            ]);
+            $command = new RescanFileCommand($f->getFileID());
+            $this->queueCommand($command);
         }
 
         $response = new EnqueueItemsResponse($q);
@@ -216,46 +217,6 @@ class File extends Controller
         $r = new FileEditResponse();
         $r->setFiles($files);
         $r->outputJSON();
-    }
-
-    /**
-     * @param \Concrete\Core\Entity\File\File $f
-     */
-    protected function doRescan($f)
-    {
-        $fv = $f->getApprovedVersion();
-        $resp = $fv->refreshAttributes(false);
-        switch ($resp) {
-            case Importer::E_FILE_INVALID:
-                $errorMessage = t('File %s could not be found.', $fv->getFilename()) . '<br/>';
-                throw new UserMessageException($errorMessage, 404);
-        }
-        $config = $this->app->make('config');
-        $newFileVersion = null;
-        if ($config->get('concrete.file_manager.images.use_exif_data_to_rotate_images')) {
-            $processor = new AutorotateImageProcessor();
-            if ($processor->shouldProcess($fv)) {
-                if ($newFileVersion === null) {
-                    $fv = $newFileVersion = $f->createNewVersion(true);
-                }
-                $processor->setRescanThumbnails(false);
-                $processor->process($newFileVersion);
-            }
-        }
-        $width = (int) $config->get('concrete.file_manager.restrict_max_width');
-        $height = (int) $config->get('concrete.file_manager.restrict_max_height');
-        if ($width > 0 || $height > 0) {
-            $processor = new ConstrainImageProcessor($width, $height);
-            if ($processor->shouldProcess($fv)) {
-                if ($newFileVersion === null) {
-                    $fv = $newFileVersion = $f->createNewVersion(true);
-                }
-                $processor->setRescanThumbnails(false);
-                $processor->process($newFileVersion);
-            }
-        }
-        $fv->rescanThumbnails();
-        $fv->releaseImagineImage();
     }
 
     protected function getRequestFiles($permission = 'canViewFileInFileManager')

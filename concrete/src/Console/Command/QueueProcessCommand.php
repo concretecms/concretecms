@@ -17,8 +17,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Core;
-use Exception;
-use PortlandLabs\LibertaServer\Pipeline\Command\Queue\CodeDeploy\PrepareActionCommand;
 use Concrete\Core\Foundation\Queue\QueueService;
 
 class QueueProcessCommand extends Command
