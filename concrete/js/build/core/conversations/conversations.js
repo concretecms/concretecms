@@ -636,7 +636,7 @@
                 data: formArray,
                 url: CCM_TOOLS_PATH + '/conversations/message_detail',
                 success: function(html) {
-                    var $parent = $('[data-conversation-message-id=' + json.cnvMessageParentID + ']');
+                    var $parent = $('.ccm-conversation-message[data-conversation-message-id=' + json.cnvMessageParentID + ']');
 
                     if ($parent.length) {
                         $parent.after(html);
