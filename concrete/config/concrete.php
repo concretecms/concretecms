@@ -867,7 +867,7 @@ return [
          *
          * @var bool
          */
-        'auto_update_url_slug' => true,
+        'auto_update_url_slug' => false,
         /*
          * URL rewriting
          *
