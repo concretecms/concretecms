@@ -19,9 +19,13 @@ class SemaphoreMutex implements MutexInterface
      */
     public static function isSupported(Application $app)
     {
-        $fi = $app->make(FunctionInspector::class);
+        $result = false;
+        if (PHP_VERSION_ID >= 50601) { // we need the $nowait parameter of sem_acquire, available since PHP 5.6.1
+            $fi = $app->make(FunctionInspector::class);
+            $result = $fi->functionAvailable('sem_get') && $fi->functionAvailable('sem_acquire') && $fi->functionAvailable('sem_release');
+        }
 
-        return $fi->functionAvailable('sem_get') && $fi->functionAvailable('sem_acquire') && $fi->functionAvailable('sem_release');
+        return $result;
     }
 
     /**
@@ -84,7 +88,7 @@ class SemaphoreMutex implements MutexInterface
     protected function keyToInt($key)
     {
         // djb2
-        $key = (string) $key;
+        $key = DIR_BASE . (string) $key;
         $hash = 5381;
         $len = strlen($key);
         for ($i = 0; $i < $len; ++$i) {
