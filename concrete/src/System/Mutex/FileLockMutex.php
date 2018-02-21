@@ -101,6 +101,6 @@ class FileLockMutex implements MutexInterface
      */
     protected function keyToFilename($key)
     {
-        return $this->temporaryDirectory . '/' . md5((string) $key) . '.lock';
+        return $this->temporaryDirectory . '/' . md5(DIR_BASE . (string) $key) . '.lock';
     }
 }
