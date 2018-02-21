@@ -2265,7 +2265,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                 $themeTemplates = [];
             } else {
                 foreach($themeTemplates as $key => $template){
-                    $pt = ($this->getPageTypeHandle()) ? $this->getPageTypeHandle() : 'page';
+                    $pt = ($this->getPageTemplateHandle()) ? $this->getPageTemplateHandle() : 'default';
                     if(is_array($template) && $key == $pt){
                         $pageTypeTemplates = $template;
                     }
