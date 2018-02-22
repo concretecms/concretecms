@@ -1,13 +1,9 @@
 <?php
 
-use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Http\Request;
-use Concrete\Core\Support\Facade\Config;
-use Concrete\TestHelpers\Config\Fixtures\TestFileLoader;
-use Concrete\TestHelpers\Config\Fixtures\TestFileSaver;
-use Illuminate\Filesystem\Filesystem;
 
 // Define test constants
+putenv('CONCRETE5_ENV=travis');
 define('DIR_TESTS', str_replace(DIRECTORY_SEPARATOR, '/', __DIR__));
 define('DIR_CONFIG_SITE', DIR_TESTS . '/config');
 define('DIR_BASE', dirname(DIR_TESTS));
@@ -37,13 +33,8 @@ $app = require DIR_BASE_CORE . '/bootstrap/start.php';
 error_reporting(E_ALL & ~E_STRICT & ~E_DEPRECATED);
 PHPUnit_Framework_Error_Notice::$enabled = false;
 
-// Configure the configuration system
-$files = new Filesystem();
-$config = new Repository(new TestFileLoader($files), new TestFileSaver($files), 'travis');
-$app->instance('config', $config);
-Config::clearResolvedInstance('config');
-
 // Disable caches
+$config = $app->make('config');
 $config->get('concrete');
 $config->set('concrete.cache.blocks', false);
 $config->set('concrete.cache.pages', false);
@@ -64,6 +55,5 @@ $cn->close();
 unset(
     $app,
     $config,
-    $cn,
-    $files
+    $cn
 );
