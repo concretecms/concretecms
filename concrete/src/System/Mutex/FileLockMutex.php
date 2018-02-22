@@ -3,9 +3,13 @@
 namespace Concrete\Core\System\Mutex;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Config\Repository\Repository;
+use Exception;
 
 class FileLockMutex implements MutexInterface
 {
+    use MutexTrait;
+
     /**
      * @var string
      */
@@ -16,8 +20,13 @@ class FileLockMutex implements MutexInterface
      */
     protected $resources = [];
 
-    public function __construct($temporaryDirectory)
+    /**
+     * @param Repository $config
+     * @param string $temporaryDirectory
+     */
+    public function __construct(Repository $config, $temporaryDirectory)
     {
+        $this->config = $config;
         $this->temporaryDirectory = rtrim(str_replace(DIRECTORY_SEPARATOR, '/', $temporaryDirectory), '/');
     }
 
@@ -75,7 +84,10 @@ class FileLockMutex implements MutexInterface
             unset($this->resources[$key]);
             @flock($fd, LOCK_UN);
             @fclose($fd);
-            @unlink($this->keyToFilename($key));
+            try {
+                @unlink($this->keyToFilename($key));
+            } catch (Exception $x) {
+            }
         }
     }
 
@@ -97,10 +109,14 @@ class FileLockMutex implements MutexInterface
     /**
      * @param string $key
      *
+     * @throws InvalidMutexKeyException
+     *
      * @return string
      */
     protected function keyToFilename($key)
     {
-        return $this->temporaryDirectory . '/' . md5(DIR_BASE . (string) $key) . '.lock';
+        $keyIndex = $this->getMutexKeyIndex($key);
+
+        return $this->temporaryDirectory . '/mutex-' . $keyIndex . '.lock';
     }
 }

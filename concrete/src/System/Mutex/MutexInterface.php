@@ -42,11 +42,12 @@ interface MutexInterface
 
     /**
      * Acquire a mutex given its key.
-     * If the mutex is already acquired (for example by another process), a MutexBusyException exception will be thrown.
+     * If the mutex is already acquired (for example by another process), a.
      *
      * @param string $key The identifier of the mutex you want to acquire
      *
-     * @throws MutexBusyException
+     * @throws InvalidMutexKeyException Throws an InvalidMutexKeyException exception if the mutex key is not listed in the app.mutex configuration key
+     * @throws MutexBusyException Throws a MutexBusyException exception if the mutex key is already acquired
      */
     public function acquire($key);
 
@@ -55,18 +56,18 @@ interface MutexInterface
      * If the mutex not already acquired nothing happens.
      * When the current PHP process ends, the mutex will be released automatically.
      *
-     * @param string $key The identifier of the mutex you want to acquire
+     * @param string $key The identifier of the mutex you want to release
      */
     public function release($key);
 
     /**
      * Execute a callable by acquiring and releasing a mutex, so that the callable won't be executed by multiple processes concurrently.
-     * If the mutex is already acquired (for example by another process), a MutexBusyException exception will be thrown.
      *
      * @param string $key The identifier of the mutex
      * @param callable $callback The callback function to be executed
      *
-     * @throws MutexBusyException
+     * @throws InvalidMutexKeyException Throws an InvalidMutexKeyException exception if the mutex key is not listed in the app.mutex configuration key
+     * @throws MutexBusyException Throws a MutexBusyException exception if the mutex key is already acquired
      */
     public function execute($key, callable $callback);
 }

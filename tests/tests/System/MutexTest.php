@@ -7,6 +7,7 @@ use Concrete\Core\Support\Facade\Application as ApplicationFacade;
 use Concrete\Core\System\Mutex\FileLockMutex;
 use Concrete\Core\System\Mutex\MutexBusyException;
 use Concrete\Core\System\Mutex\SemaphoreMutex;
+use Concrete\Core\Updater\Update;
 use PHPUnit_Framework_TestCase;
 
 class MutexTest extends PHPUnit_Framework_TestCase
@@ -35,8 +36,8 @@ class MutexTest extends PHPUnit_Framework_TestCase
         }
         $mutex = $app->make($mutexClass);
         /* @var \Concrete\Core\System\Mutex\MutexInterface $mutex */
-        $key1 = 'ccm-test-system-1-' . mt_rand(0, PHP_INT_MAX);
-        $key2 = 'ccm-test-system-2-' . mt_rand(0, PHP_INT_MAX);
+        $key1 = 'core_system_install';
+        $key2 = Update::MUTEX_KEY;
 
         try {
             // Let's check that

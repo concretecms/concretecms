@@ -3,14 +3,26 @@
 namespace Concrete\Core\System\Mutex;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Foundation\Environment\FunctionInspector;
+use RuntimeException;
 
 class SemaphoreMutex implements MutexInterface
 {
+    use MutexTrait;
+
     /**
      * @var array
      */
     protected $semaphores = [];
+
+    /**
+     * @param Repository $config
+     */
+    public function __construct(Repository $config)
+    {
+        $this->config = $config;
+    }
 
     /**
      * {@inheritdoc}
@@ -22,7 +34,7 @@ class SemaphoreMutex implements MutexInterface
         $result = false;
         if (PHP_VERSION_ID >= 50601) { // we need the $nowait parameter of sem_acquire, available since PHP 5.6.1
             $fi = $app->make(FunctionInspector::class);
-            $result = $fi->functionAvailable('sem_get') && $fi->functionAvailable('sem_acquire') && $fi->functionAvailable('sem_release');
+            $result = $fi->functionAvailable('sem_get') && $fi->functionAvailable('sem_acquire') && $fi->functionAvailable('sem_release') & $fi->functionAvailable('ftok');
         }
 
         return $result;
@@ -60,7 +72,7 @@ class SemaphoreMutex implements MutexInterface
             $sem = $this->semaphores[$key];
             unset($this->semaphores[$key]);
             if (is_resource($sem)) {
-                sem_release($sem);
+                @sem_release($sem);
             }
         }
     }
@@ -83,18 +95,35 @@ class SemaphoreMutex implements MutexInterface
     /**
      * @param string $key
      *
+     * @throws InvalidMutexKeyException
+     * @throws RuntimeException
+     *
      * @return int
      */
     protected function keyToInt($key)
     {
-        // djb2
-        $key = DIR_BASE . (string) $key;
-        $hash = 5381;
-        $len = strlen($key);
-        for ($i = 0; $i < $len; ++$i) {
-            $hash = (($hash << 5) + $hash + ord($key[$i])) & 0x7FFFFFFF;
+        // for ftok, only the low-order 8-bits of id are significant.
+        // The behavior of ftok() is unspecified if these bits are 0.
+        // This means that the second parameter of ftok can be a single-bite character ranging from chr(1) to chr(255)
+        $index = $this->getMutexKeyIndex($key) + 1;
+        $existingApplicationFiles = [
+            DIR_BASE . '/index.php',
+        ];
+        for (; ;) {
+            $existingApplicationFile = array_shift($existingApplicationFiles);
+            if ($existingApplicationFile === null) {
+                throw new RuntimeException('Mutex index is too big');
+            }
+            if ($index <= 255) {
+                break;
+            }
+            $index -= 255;
+        }
+        $result = @ftok($existingApplicationFile, chr($index));
+        if (!is_int($result) || $result === -1) {
+            throw new RuntimeException("ftok() failed for path {$existingApplicationFile} and index {$index}");
         }
 
-        return $hash;
+        return $result;
     }
 }

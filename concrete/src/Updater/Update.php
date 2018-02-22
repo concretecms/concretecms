@@ -21,7 +21,7 @@ class Update
      *
      * @var string
      */
-    const MUTEX_KEY = 'ccm-mutex-update';
+    const MUTEX_KEY = 'core_system_upgrade';
 
     /**
      * Fetch from the remote marketplace the latest available versions of the core and the packages.
