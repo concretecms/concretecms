@@ -8,7 +8,7 @@ return [
     /*
      * The location of the doctrine Proxy Classes
      */
-    'proxy_classes' => DIR_APPLICATION . '/config/doctrine/proxies',
+    'proxy_classes' => DIR_CONFIG_SITE . '/doctrine/proxies',
 
     /*
      * Paths to exclude from the doctrine proxy classes

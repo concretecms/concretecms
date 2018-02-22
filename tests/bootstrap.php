@@ -9,6 +9,7 @@ use Illuminate\Filesystem\Filesystem;
 
 // Define test constants
 define('DIR_TESTS', str_replace(DIRECTORY_SEPARATOR, '/', __DIR__));
+define('DIR_CONFIG_SITE', DIR_TESTS . '/config');
 define('DIR_BASE', dirname(DIR_TESTS));
 define('BASE_URL', 'http://www.dummyco.com/path/to/server');
 
