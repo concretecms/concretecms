@@ -5,6 +5,7 @@ use Concrete\Core\Site\Config\Liaison as Repository;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Localization\Localization;
+use Concrete\Core\Page\Theme\Theme as PageTheme;
 use Concrete\Core\Utility\Service\Identifier;
 use URL;
 use User;
@@ -84,8 +85,20 @@ EOL;
             if ($cp->canViewPage()) {
                 $pt = $c->getCollectionThemeObject();
                 if (is_object($pt)) {
-                    $obj->classes = $pt->getThemeEditorClasses();
+                    if ($pt->getThemeHandle()) {
+                        $obj->classes = $pt->getThemeEditorClasses();
+                    } else {
+                        $siteTheme = $pt::getSiteTheme();
+                        if (is_object($siteTheme)) {
+                            $obj->classes = $siteTheme->getThemeEditorClasses();
+                        }
+                    }
                 }
+            }
+        } else {
+            $siteTheme = PageTheme::getSiteTheme();
+            if (is_object($siteTheme)) {
+                $obj->classes = $siteTheme->getThemeEditorClasses();
             }
         }
 
