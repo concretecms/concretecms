@@ -1,6 +1,7 @@
 <?php
 
 use Concrete\Core\Http\Request;
+use Illuminate\Filesystem\Filesystem;
 
 // Define test constants
 putenv('CONCRETE5_ENV=travis');
@@ -14,6 +15,18 @@ require DIR_BASE . '/concrete/bootstrap/configure.php';
 
 // Include all autoloaders.
 require DIR_BASE_CORE . '/bootstrap/autoload.php';
+
+// Reset the configuration environment
+$fs = new Filesystem();
+if ($fs->isDirectory(DIR_CONFIG_SITE . '/generated_overrides')) {
+    $fs->deleteDirectory(DIR_CONFIG_SITE . '/generated_overrides', true);
+} else {
+    $fs->makeDirectory(DIR_CONFIG_SITE . '/generated_overrides', 0777, true);
+}
+$fs->put(DIR_CONFIG_SITE . '/generated_overrides/.gitignore', '');
+if ($fs->isDirectory(DIR_CONFIG_SITE . '/doctrine')) {
+    $fs->deleteDirectory(DIR_CONFIG_SITE . '/doctrine');
+}
 
 // Define a fake request
 Request::setInstance(new Request(
@@ -46,5 +59,6 @@ $cn->close();
 // Unset variables, so that PHPUnit won't consider them as global variables.
 unset(
     $app,
+    $fs,
     $cn
 );
