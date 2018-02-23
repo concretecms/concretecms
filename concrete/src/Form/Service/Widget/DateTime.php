@@ -375,7 +375,7 @@ EOT;
         // Build HTML
         $datePickerOptionsAsJSON = json_encode($datePickerOptions, JSON_FORCE_OBJECT);
         $shownDateFormat = $dh->getPHPDatePattern();
-        $html = '<div class="form-inline">';
+        $html = '<div>';
         $html .= '<span class="ccm-input-date-wrapper" id="' . $id . '_dw">';
         $html .= '<input type="text" id="' . $id . '_pub" class="form-control ccm-input-date"';
         if (!$calendarAutoStart && $dateTime !== null) {
