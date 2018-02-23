@@ -33,14 +33,6 @@ $app = require DIR_BASE_CORE . '/bootstrap/start.php';
 error_reporting(E_ALL & ~E_STRICT & ~E_DEPRECATED);
 PHPUnit_Framework_Error_Notice::$enabled = false;
 
-// Disable caches
-$config = $app->make('config');
-$config->get('concrete');
-$config->set('concrete.cache.blocks', false);
-$config->set('concrete.cache.pages', false);
-$config->set('concrete.cache.enabled', false);
-$config->set('concrete.user.password.hash_cost_log2', 1);
-
 // Initialize the database
 $cn = $app->make('database')->connection('travisWithoutDB');
 $cn->connect();
@@ -54,6 +46,5 @@ $cn->close();
 // Unset variables, so that PHPUnit won't consider them as global variables.
 unset(
     $app,
-    $config,
     $cn
 );
