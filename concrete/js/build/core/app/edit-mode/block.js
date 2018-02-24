@@ -198,7 +198,7 @@
                 href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/block/delete',
                 modal: true,
                 data: data,
-                title: ccmi18n.deleteBlockConfirm
+                title: ccmi18n.deleteBlockTitle
             });
 
         },

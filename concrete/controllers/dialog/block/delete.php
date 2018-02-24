@@ -18,6 +18,18 @@ class Delete extends BackendInterfaceBlockController
 
     public function view()
     {
+        if ($this->page->isMasterCollection()) {
+            if ($this->block->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) {
+                $this->set('defaultsMessage', t('Warning! This layout is contained in the page type defaults. Anywhere this layout is used may have content deleted. This cannot be undone.'));
+            } else {
+                $this->set('defaultsMessage', t('Warning! This block is contained in the page type defaults. Any blocks aliased from this block in the site will be deleted. This cannot be undone.'));
+            }
+        }
+        if ($this->block->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) {
+            $this->set('message', t('Are you sure you wish to delete this layout? It will remove the blocks that are contained within it.'));
+        } else {
+            $this->set('message', t('Are you sure you wish to delete this block?'));
+        }
         $this->set('isMasterCollection', $this->page->isMasterCollection());
         $this->set('deleteAllAction', $this->action('submit_all'));
         $this->set('deleteAction', $this->action('submit'));
