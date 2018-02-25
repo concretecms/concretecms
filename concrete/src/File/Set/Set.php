@@ -468,6 +468,9 @@ class Set
 
     public function delete()
     {
+        $fe = new \Concrete\Core\File\Event\FileSet($this);
+        Events::dispatch('on_file_set_delete', $fe);
+
         $db = Database::connection();
         $db->delete('FileSets', array('fsID' => $this->fsID));
         $db->executeQuery('DELETE FROM FileSetSavedSearches WHERE fsID = ?', array($this->fsID));
