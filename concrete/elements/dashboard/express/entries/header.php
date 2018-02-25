@@ -20,15 +20,16 @@
               </span>
         </div>
 
-        <ul class="ccm-header-search-navigation">
-            <li>
-                <a href="<?= $exportURL ?>" class="link-primary">
-                    <i class="fa fa-download"></i> <?= t('Export to CSV') ?>
-                </a>
-            </li>
-            <li><a href="<?= $createURL ?>" class="link-primary"><i class="fa fa-plus"></i> <?= t('New %s',
+        <?php if ($exportURL != null && $createURL != null) { ?>
+            <ul class="ccm-header-search-navigation">
+                <li>
+                    <a href="<?= $exportURL ?>" class="link-primary">
+                        <i class="fa fa-download"></i> <?= t('Export to CSV') ?>
+                    </a>
+                </li>
+                <li><a href="<?= $createURL ?>" class="link-primary"><i class="fa fa-plus"></i> <?= t('New %s',
                         $entity->getEntityDisplayName()) ?></a></li>
-        </ul>
-
+            </ul>
+        <?php } ?>
     </form>
 </div>
