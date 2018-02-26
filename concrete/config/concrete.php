@@ -564,7 +564,8 @@ return [
          * @var bool
          */
         'choose_language_login' => false,
-
+        // Fetch language files when installing a package connected to the marketplace [boolean]
+        'auto_install_package_languages' => true,
         // Community Translation instance offering concrete5 translations
         'community_translation' => [
             // API entry point of the Community Translation instance

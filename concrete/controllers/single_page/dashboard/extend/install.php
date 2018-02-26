@@ -118,6 +118,18 @@ class Install extends DashboardPageController
             if ($p instanceof BrokenPackage) {
                 $this->error->add($p->getInstallErrorMessage());
             } elseif (is_object($p)) {
+                $config = $this->app->make('config');
+                if ($config->get('concrete.i18n.auto_install_package_languages')) {
+                    $associatedPackages = Marketplace::getAvailableMarketplaceItems(false);
+                    if (isset($associatedPackages[$p->getPackageHandle()])) {
+                        try {
+                            $this->app->make(TranslationsInstaller::class)->installMissingPackageTranslations($p);
+                        } catch (Exception $x) {
+                            $logger = $this->app->make(Logger::class);
+                            $logger->addError($x);
+                        }
+                    }
+                }
                 $loader = new ClassLoader();
                 $loader->registerPackageCustomAutoloaders($p);
                 if (
