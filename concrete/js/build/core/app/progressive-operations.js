@@ -10,45 +10,52 @@
 			title: '',
 			onComplete: null,
 			onError: null,
-			pollRetryTimeout: 5000,
+			pollRetryTimeout: 1000,
 			$element: null
 		}, options);
 		my.options = options;
-		my.lastRemaining = null;
-		my.processed = 0;
+		my.current = 0;
+		my.total = -1; // unknown
+		my.pnotify = false;
 		my.execute();
 	}
 
-	ConcreteProgressiveOperation.prototype.poll = function(queue, token, processed, remaining) {
+	ConcreteProgressiveOperation.prototype.poll = function(queue, token, remaining) {
 		var my = this,
-			total = processed + remaining;
-			url = CCM_DISPATCHER_FILENAME + '/ccm/system/queue/monitor/' + queue + '/' + token + '/' + processed;
-		if (remaining) {
-			if (my.lastRemaining) {
-				my.processed += my.lastRemaining - remaining;
-			}
-			my.lastRemaining = remaining;
-		}
+			url = CCM_DISPATCHER_FILENAME + '/ccm/system/queue/monitor/' + queue + '/' + token;
+
 		$.concreteAjax({
 			loader: false,
 			url: url,
 			type: 'POST',
 			dataType: 'json',
 			success: function(r) {
-				var pnotify = new PNotify({
-					text: '<div data-total-items="' + total + '"><span id="ccm-progressive-operation-status">1</span> of ' + total + '</div>',
-					hide: false,
-					title: my.options.title,
-					buttons: {
-						closer: false
-					},
-					type: 'info',
-					icon: 'fa fa-refresh fa-spin'
-				});
 
-				setTimeout(function() {
-					my.poll(queue, token, 0, r.remaining);
-				}, my.options.pollRetryTimeout);
+				if (my.total == -1) {
+					// We haven't set the total yet.
+					my.total = r.remaining;
+				}
+
+				my.current += my.total - r.remaining;
+				NProgress.set((my.total - r.remaining) / my.total);
+
+				$('div[data-wrapper=progressive-operation-status]').html(r.remaining + ' remaining');
+
+				if (r.remaining > 0) {
+					setTimeout(function() {
+						my.poll(queue, token, r.remaining);
+					}, my.options.pollRetryTimeout);
+				} else {
+					setTimeout(function() {
+						// give the animation time to catch up.
+						NProgress.done();
+						my.pnotify.remove();
+						if (typeof(my.options.onComplete) == 'function') {
+							my.options.onComplete(r);
+						}
+					}, 1000);
+
+				}
 			}
 		});
 	}
@@ -66,7 +73,19 @@
 			data: my.options.data,
 			dataType: 'json',
 			success: function(r) {
-				my.poll(r.queue, r.token, 0);
+
+				my.pnotify = new PNotify({
+					text: '<div data-wrapper="progressive-operation-status">' + ccmi18n.progressiveOperationLoading + '</div>',
+					hide: false,
+					title: my.options.title,
+					buttons: {
+						closer: false
+					},
+					type: 'info',
+					icon: 'fa fa-refresh fa-spin'
+				});
+
+				my.poll(r.queue, r.token);
 			}
 		});
 	}

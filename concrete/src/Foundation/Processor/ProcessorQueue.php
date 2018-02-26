@@ -1,29 +1,24 @@
 <?php
 namespace Concrete\Core\Foundation\Processor;
 
+use Bernard\Queue;
+use Concrete\Core\Foundation\Queue\QueueService;
+
 class ProcessorQueue extends Processor
 {
     protected $itemsPerBatch = 20;
     protected $tasks = array();
     protected $queue;
+    protected $queueService;
 
-    /**
-     * @return int
-     */
-    public function getItemsPerBatch()
+
+    public function __construct(QueueService $queueService, TargetInterface $target)
     {
-        return $this->itemsPerBatch;
+        $this->queueService = $queueService;
+        parent::__construct($target);
     }
 
-    /**
-     * @param int $itemsPerBatch
-     */
-    public function setItemsPerBatch($itemsPerBatch)
-    {
-        $this->itemsPerBatch = $itemsPerBatch;
-    }
-
-    public function setQueue(\ZendQueue\Queue $queue)
+    public function setQueue(Queue $queue)
     {
         $this->queue = $queue;
     }
@@ -35,7 +30,7 @@ class ProcessorQueue extends Processor
 
     public function __sleep()
     {
-        return array('itemsPerBatch', 'tasks');
+        return array('tasks');
     }
 
     public function receive()
@@ -53,26 +48,11 @@ class ProcessorQueue extends Processor
 
     public function finish()
     {
-        $this->getQueue()->deleteQueue();
         $tasks = $this->getTasks();
         foreach ($tasks as $task) {
             $action = new QueueAction($this, $this->target, $task[1]);
             $action->finish();
         }
-    }
-
-    public function execute(ActionInterface $action)
-    {
-        $action->execute();
-        $this->getQueue()->deleteMessage($action->getQueueItem());
-        if ($this->getQueue()->count() == 0) {
-            $this->finish();
-        }
-    }
-
-    public function getTotalTasks()
-    {
-        return $this->getQueue()->count();
     }
 
     /**
@@ -81,12 +61,12 @@ class ProcessorQueue extends Processor
      */
     public function process()
     {
-        $queue = $this->getQueue();
         $tasks = $this->getTasks();
         foreach ($this->target->getItems() as $targetItem) {
             foreach ($tasks as $task) {
                 $action = new QueueAction($this, $this->target, $task[1], $targetItem);
-                $queue->send(serialize($action));
+                $message = new ProcessorQueueMessage($action);
+                $this->queueService->push($this->queue, $message);
             }
         }
     }

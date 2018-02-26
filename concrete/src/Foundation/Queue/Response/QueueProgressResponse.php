@@ -11,14 +11,12 @@ class QueueProgressResponse extends JsonResponse
 
     protected $name;
 
-    public function __construct(Queue $queue, $processed = 0)
+    public function __construct(Queue $queue)
     {
         $count = $queue->count();
         $data = [
             'queue' => (string) $queue,
-            'processed' => intval($processed),
             'remaining' => $count,
-            'progress' => round($processed / ($processed + $count))
         ];
         parent::__construct($data);
     }

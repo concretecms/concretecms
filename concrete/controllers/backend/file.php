@@ -71,31 +71,6 @@ class File extends Controller
         $queue = $this->app->make(QueueService::class);
         $q = $queue->get('rescan_files');
 
-        /*
-        if ($this->request->request->get('process')) {
-            $obj = new stdClass();
-            $em = $this->app->make(EntityManagerInterface::class);
-            $messages = $queue->receive($q, 5);
-            foreach ($messages as $key => $msg) {
-                // delete the page here
-                $file = unserialize($msg->body);
-                if ($file !== false) {
-                    $f = $em->find(FileEntity::class, $file['fID']);
-                    if ($f !== null) {
-                        $this->doRescan($f);
-                    }
-                }
-                $q->deleteMessage($msg);
-            }
-            $obj->totalItems = $q->count();
-            if ($q->count() == 0) {
-                $q->deleteQueue();
-            }
-
-            return $this->app->make(ResponseFactoryInterface::class)->json($data);
-        } elseif ($q->count() == 0) { */
-
-
         foreach ($files as $f) {
             $command = new RescanFileCommand($f->getFileID());
             $this->queueCommand($command);

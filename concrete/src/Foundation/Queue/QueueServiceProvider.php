@@ -2,14 +2,18 @@
 
 namespace Concrete\Core\Foundation\Queue;
 
+use Bernard\BernardEvents;
+use Bernard\Event\RejectEnvelopeEvent;
 use Bernard\Normalizer\EnvelopeNormalizer;
 use Bernard\Normalizer\PlainMessageNormalizer;
 use Bernard\Producer;
 use Bernard\QueueFactory\PersistentFactory;
 use Concrete\Core\Foundation\Queue\Driver\DriverFactory;
 use Concrete\Core\Foundation\Service\Provider;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Concrete\Core\Foundation\Queue\Serializer\SerializerManager;
+use Concrete\Core\Events\EventDispatcher;
 
 class QueueServiceProvider extends Provider
 {
@@ -41,5 +45,21 @@ class QueueServiceProvider extends Provider
             return $producer;
         });
 
+        $this->app->singleton('queue', function($app) {
+            return $app->make(QueueService::class);
+        });
+
+        $dispatcher = $this->app->make(EventDispatcher::class);
+        $app = $this->app;
+        $dispatcher->addListener(BernardEvents::REJECT, function(RejectEnvelopeEvent $event) use ($app) {
+            /**
+             * @var $logger LoggerInterface
+             */
+            $logger = $app->make('log');
+            $logger->error(t('Error processing queue item: %s – %s',
+                $event->getEnvelope()->getMessage()->getName(),
+                $event->getException()->getMessage()
+            ));
+        });
     }
 }

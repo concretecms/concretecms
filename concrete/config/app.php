@@ -89,7 +89,8 @@ return [
      * Core Providers
      */
     'providers' => [
-        // Router service provider
+        // Router service provider. Events come first because we need them in some service providers.
+        'core_events' => '\Concrete\Core\Events\EventsServiceProvider',
         'core_router' => 'Concrete\Core\Routing\RoutingServiceProvider',
         'core_queue' => '\Concrete\Core\Foundation\Queue\QueueServiceProvider',
         'core_bus' => '\Concrete\Core\Foundation\Bus\BusServiceProvider',
@@ -117,7 +118,6 @@ return [
         'core_session' => '\Concrete\Core\Session\SessionServiceProvider',
         'core_cookie' => '\Concrete\Core\Cookie\CookieServiceProvider',
         'core_http' => '\Concrete\Core\Http\HttpServiceProvider',
-        'core_events' => '\Concrete\Core\Events\EventsServiceProvider',
         'core_whoops' => '\Concrete\Core\Error\Provider\WhoopsServiceProvider',
         'core_logging' => '\Concrete\Core\Logging\LoggingServiceProvider',
         'core_element' => '\Concrete\Core\Filesystem\FilesystemServiceProvider',
@@ -1169,7 +1169,8 @@ return [
     ],
 
     'commands' => [
-        'Concrete\Core\File\Command\RescanFileCommand' => 'Concrete\Core\File\Command\RescanFileCommandHandler'
+        'Concrete\Core\File\Command\RescanFileCommand' => 'Concrete\Core\File\Command\RescanFileCommandHandler',
+        'Concrete\Core\Page\Command\RescanMultilingualPageCommand' => 'Concrete\Core\Page\Command\RescanMultilingualPageCommandHandler'
     ],
 
     'api' => [

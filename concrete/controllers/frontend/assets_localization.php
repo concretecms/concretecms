@@ -143,6 +143,7 @@ class AssetsLocalization extends Controller
     'lineHeight' => t('Line Height'),
     'emptyArea' => t('Empty %s Area', '<%- area_handle %>'),
     'fullArea' => t('This area is full!'),
+    'progressiveOperationLoading' => t('Determining items remaining...'),
 ]) . ';
 var ccmi18n_editor = ' . json_encode([
     'insertLinkToFile' => t('Insert Link to File'),

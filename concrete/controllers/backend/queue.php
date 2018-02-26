@@ -27,12 +27,12 @@ class Queue extends AbstractController
         parent::__construct();
     }
 
-    public function monitor($queue, $token, $processed)
+    public function monitor($queue, $token)
     {
         if ($this->token->validate($queue, $token)) {
             $queue = $this->service->get($queue);
             if ($queue) {
-                return new QueueProgressResponse($queue, $processed);
+                return new QueueProgressResponse($queue);
             }
         }
         throw new \Exception(t('Access Denied'));

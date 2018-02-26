@@ -3,9 +3,11 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Multilingual;
 
 use Concrete\Controller\Panel\Multilingual;
 use Concrete\Core\Foundation\Queue\Queue;
+use Concrete\Core\Foundation\Queue\QueueService;
+use Concrete\Core\Foundation\Queue\Response\EnqueueItemsResponse;
 use Concrete\Core\Multilingual\Page\Section\Processor\MultilingualProcessorTarget;
-use Concrete\Core\Multilingual\Page\Section\Processor\Processor;
 use Concrete\Core\Multilingual\Page\Section\Section;
+use Concrete\Core\Page\Command\RescanMultilingualPageCommand;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
 
@@ -35,24 +37,15 @@ class Copy extends DashboardSitePageController
         if ($this->token->validate('rescan_locale')) {
             $u = new \User();
             if ($u->isSuperUser()) {
-                \Core::make('cache/request')->disable();
+                $queue = $this->app->make(QueueService::class);
+                $q = $queue->get('rescan_multilingual_page');
                 $section = Section::getByID($_REQUEST['locale']);
                 $target = new MultilingualProcessorTarget($section);
-                $processor = new Processor($target);
-                if ($_POST['process']) {
-                    foreach ($processor->receive() as $task) {
-                        $processor->execute($task);
-                    }
-                    $obj = new \stdClass();
-                    $obj->totalItems = $processor->getTotalTasks();
-                    echo json_encode($obj);
-                    exit;
-                } else {
-                    $processor->process();
+                foreach($target->getItems() as $item) {
+                    $command = new RescanMultilingualPageCommand($item['cID']);
+                    $this->queueCommand($command);
                 }
-                $totalItems = $processor->getTotalTasks();
-                \View::element('progress_bar', array('totalItems' => $totalItems, 'totalItemsSummary' => t2("%d task", "%d tasks", $totalItems)));
-                exit;
+                return new EnqueueItemsResponse($q);
             }
         }
     }

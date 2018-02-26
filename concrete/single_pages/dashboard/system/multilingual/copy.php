@@ -121,20 +121,20 @@ use Concrete\Core\Multilingual\Page\Section\Section as MultilingualSection;
                         $("#ccm-internationalization-rescan-tree").on('submit', function () {
                             var ctf = $('select[name=rescanLocale]').val();
                             if (ctf > 0) {
-                                ccm_triggerProgressiveOperation(
-                                    '<?=$view->action('rescan_locale')?>',
-                                    [
+                                new ConcreteProgressiveOperation({
+                                    url: '<?=$view->action('rescan_locale')?>',
+                                    data: [
                                         {'name': 'locale', 'value': ctf},
                                         {
                                             'name': 'ccm_token',
                                             'value': '<?=Core::make('token')->generate('rescan_locale')?>'
                                         }
                                     ],
-                                    "<?=t('Rescan Links')?>",
-                                    function () {
+                                    title: "<?=t('Rescan Links')?>",
+                                    onComplete: function() {
                                         window.location.href = "<?=$this->action('links_rescanned')?>";
                                     }
-                                );
+                                });
                             }
                             return false;
                         });
