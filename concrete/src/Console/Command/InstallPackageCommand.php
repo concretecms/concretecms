@@ -1,15 +1,17 @@
 <?php
+
 namespace Concrete\Core\Console\Command;
 
-use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Console\Command;
 use Concrete\Core\Console\ConsoleAwareInterface;
-use Symfony\Component\Console\Input\InputInterface;
+use Concrete\Core\Error\ErrorList\ErrorList;
+use Concrete\Core\Package\PackageService;
+use Concrete\Core\Support\Facade\Application;
+use Exception;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Exception;
-use Concrete\Core\Support\Facade\Package;
 
 class InstallPackageCommand extends Command
 {
@@ -40,6 +42,8 @@ EOT
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $app = Application::getFacadeApplication();
+        $packageService = $app->make(PackageService::class);
         $pkgHandle = $input->getArgument('package');
         $packageOptions = [];
         foreach ($input->getArgument('package-options') as $keyValuePair) {
@@ -65,13 +69,13 @@ EOT
         }
 
         $output->write("Looking for package '$pkgHandle'... ");
-        foreach (Package::getInstalledList() as $installed) {
+        foreach ($packageService->getInstalledList() as $installed) {
             if ($installed->getPackageHandle() === $pkgHandle) {
                 throw new Exception(sprintf("The package '%s' (%s) is already installed", $pkgHandle, $installed->getPackageName()));
             }
         }
         $pkg = null;
-        foreach (Package::getAvailablePackages() as $available) {
+        foreach ($packageService->getAvailablePackages() as $available) {
             if ($available->getPackageHandle() === $pkgHandle) {
                 $pkg = $available;
                 break;
@@ -93,17 +97,16 @@ EOT
         if (is_object($test)) {
             throw new Exception(implode("\n", $test->getList()));
         }
+        $output->writeln('<info>passed.</info>');
 
-        $output->write('Preconditions good. Installing...');
-
-        $r = Package::install($pkg, []);
+        $output->write('Installing...');
+        $r = $packageService->install($pkg, []);
         if ($r instanceof ErrorList) {
             throw new Exception(implode("\n", $r->getList()));
         }
+        $output->writeln('<info>installed.</info>');
 
-        $output->writeln('<info>Package Installed.</info>');
         $swapper = $pkg->getContentSwapper();
-
         if ($swapper->allowsFullContentSwap($pkg) && $input->getOption('full-content-swap')) {
             $output->write('Performing full content swap... ');
             $swapper->swapContent($pkg, []);
