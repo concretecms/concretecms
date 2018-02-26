@@ -191,6 +191,7 @@ class Marketplace
             $frameURL = Config::get('concrete.urls.concrete5_secure');
         }
         if ($tp->canInstallPackages()) {
+            $csToken = null;
             if (!$this->isConnected()) {
                 if (!$completeURL) {
                     $completeURL = URL::to('/dashboard/extend/connect', 'connect_complete');
@@ -235,7 +236,7 @@ class Marketplace
                 $csiBaseURL = urlencode(Core::getApplicationURL());
                 $url = $frameURL . Config::get('concrete.urls.paths.marketplace.connect_success') . '?csToken=' . $this->getSiteToken() . '&csiBaseURL=' . $csiBaseURL;
             }
-            if ($csToken == false && !$this->isConnected()) {
+            if (!$csToken && !$this->isConnected()) {
                 return '<div class="ccm-error">' . t(
                     'Unable to generate a marketplace token. Please ensure that allow_url_fopen is turned on, or that cURL is enabled on your server. If these are both true, It\'s possible your site\'s IP address may be blacklisted for some reason on our server. Please ask your webhost what your site\'s outgoing cURL request IP address is, and email it to us at <a href="mailto:help@concrete5.org">help@concrete5.org</a>.') . '</div>';
             } else {
