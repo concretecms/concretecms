@@ -1,20 +1,22 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\Extend;
 
+use Concrete\Core\Entity\Package as PackageEntity;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Foundation\ClassLoader;
+use Concrete\Core\Localization\Service\TranslationsInstaller;
+use Concrete\Core\Logging\Logger;
+use Concrete\Core\Marketplace\Marketplace;
+use Concrete\Core\Marketplace\RemoteItem as MarketplaceRemoteItem;
 use Concrete\Core\Package\BrokenPackage;
 use Concrete\Core\Package\ItemCategory\Manager;
+use Concrete\Core\Package\PackageService;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Support\Facade\Package;
+use Exception;
 use Loader;
 use TaskPermission;
-use Concrete\Core\Support\Facade\Package;
-use Concrete\Core\Entity\Package as PackageEntity;
-use Localization;
-use Marketplace;
-use Concrete\Core\Marketplace\RemoteItem as MarketplaceRemoteItem;
-use Exception;
-use User;
 
 class Install extends DashboardPageController
 {
@@ -33,7 +35,7 @@ class Install extends DashboardPageController
 
         $pkg = Package::getByID($pkgID);
         if (!is_object($pkg)) {
-            $this->redirect("/dashboard/extend/install");
+            $this->redirect('/dashboard/extend/install');
         }
         $manager = new Manager($this->app);
         $this->set('text', Loader::helper('text'));
@@ -111,7 +113,8 @@ class Install extends DashboardPageController
     {
         $tp = new TaskPermission();
         if ($tp->canInstallPackages()) {
-            $p = Package::getClass($package);
+            $packageService = $this->app->make(PackageService::class);
+            $p = $packageService->getClass($package);
             if ($p instanceof BrokenPackage) {
                 $this->error->add($p->getInstallErrorMessage());
             } elseif (is_object($p)) {
@@ -125,7 +128,7 @@ class Install extends DashboardPageController
                     if (is_object($tests)) {
                         $this->error->add($tests);
                     } else {
-                        $r = Package::install($p, $this->post());
+                        $r = $packageService->install($p, $this->post());
                         if ($r instanceof ErrorList) {
                             $this->error->add($r);
                             if ($p->showInstallOptionsScreen()) {
