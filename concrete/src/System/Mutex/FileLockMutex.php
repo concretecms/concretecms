@@ -117,6 +117,6 @@ class FileLockMutex implements MutexInterface
     {
         $keyIndex = $this->getMutexKeyIndex($key);
 
-        return $this->temporaryDirectory . '/mutex-' . $keyIndex . '.lock';
+        return $this->temporaryDirectory . '/mutex-' . md5(DIR_APPLICATION) . '-' . $keyIndex . '.lock';
     }
 }
