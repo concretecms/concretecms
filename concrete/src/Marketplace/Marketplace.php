@@ -7,6 +7,7 @@ use Concrete\Core\Support\Facade\Package;
 use TaskPermission;
 use URL;
 use Zend\Http\Client\Adapter\Exception\TimeoutException;
+use Exception;
 
 class Marketplace
 {
@@ -116,7 +117,7 @@ class Marketplace
         $em->flush();
     }
 
-    public function getAvailableMarketplaceItems($filterInstalled = true)
+    public static function getAvailableMarketplaceItems($filterInstalled = true)
     {
         $fh = Core::make('helper/file');
         if (!$fh) {
