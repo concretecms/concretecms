@@ -87,25 +87,25 @@ if (isset($type)) {
                     <?= $form->selectMultiple('fileSets', $fileSets, $selectedFileSets, $fileSetAttributes) ?>
                 </div>
             </div>
-            <div class="ccm-dashboard-form-actions-wrapper">
-                <div class="ccm-dashboard-form-actions">
-                    <a href="<?= $view->action('') ?>" class="btn pull-left btn-default"><?= t('Back') ?></a>
-                    <?php
-                    if ($type->getID() !== null) {
-                        ?>
-                        <button type="submit" class="btn btn-primary pull-right"><?= t('Save') ?></button>
-                        <?php
-                    } else {
-                        ?>
-                        <button type="submit" class="btn btn-primary pull-right"><?= t('Add') ?></button>
-                        <?php
-                    }
-                    ?>
-                </div>
-            </div>
             <?php
         }
         ?>
+        <div class="ccm-dashboard-form-actions-wrapper">
+            <div class="ccm-dashboard-form-actions">
+                <a href="<?= $view->action('') ?>" class="btn pull-left btn-default"><?= t('Back') ?></a>
+                <?php
+                if ($type->getID() !== null) {
+                    ?>
+                    <button type="submit" class="btn btn-primary pull-right"><?= t('Save') ?></button>
+                    <?php
+                } else {
+                    ?>
+                    <button type="submit" class="btn btn-primary pull-right"><?= t('Add') ?></button>
+                    <?php
+                }
+                ?>
+            </div>
+        </div>
     </form>
     <script>
     $(document).ready(function() {
