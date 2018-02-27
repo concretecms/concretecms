@@ -274,7 +274,19 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         }
 
         $scheduledVersion = Version::get($collection, "SCHEDULED");
-        if ($publishDate = $scheduledVersion->cvPublishDate) {
+        $publishDate = $scheduledVersion->getPublishDate();
+        $publishEndDate = $scheduledVersion->getPublishEndDate();
+
+        if ($publishEndDate) {
+            $datetime = $this->app->make('helper/date');
+            $now = $datetime->date('Y-m-d G:i:s');
+
+            if (strtotime($now) >= strtotime($publishEndDate)) {
+                $scheduledVersion->deny();
+            }
+        }
+
+        if ($publishDate) {
             $datetime = $this->app->make('helper/date');
             $now = $datetime->date('Y-m-d G:i:s');
 
