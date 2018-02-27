@@ -30,7 +30,7 @@ if (isset($type)) {
         <div class="form-group">
             <?= $form->label('ftTypeHandle', t('Handle')) ?>
             <div class="input-group">
-                <?= $form->text('ftTypeHandle', $type->getHandle(), ['required' => 'required', 'maxlength' => '255']) ?>
+                <?= $form->text('ftTypeHandle', $type->getHandle(), ['required' => 'required', 'maxlength' => '255'] + ($type->getID() !== null && $type->isRequired() ? ['readonly' => 'readonly'] : []) ) ?>
                 <span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
             </div>
         </div>

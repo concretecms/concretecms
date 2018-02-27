@@ -70,28 +70,30 @@ class Thumbnails extends DashboardPageController
             $valNumbers = $this->app->make('helper/validation/numbers');
             $valStrings = $this->app->make('helper/validation/strings');
 
-            $handle = $post->get('ftTypeHandle');
-            $handle = is_string($handle) ? trim($handle) : '';
-            if ($handle === '') {
-                $this->error->add(t('Your thumbnail type must have a handle.'));
-            } elseif (!$valStrings->handle($handle)) {
-                $this->error->add(t('Your thumbnail type handle must only contain lowercase letters and underscores.'));
-            } elseif (substr($handle, -strlen(TypeEntity::HIGHDPI_SUFFIX)) === TypeEntity::HIGHDPI_SUFFIX) {
-                $this->error->add(t('Thumbnail type handles can\'t end with "%s".', TypeEntity::HIGHDPI_SUFFIX));
-            } elseif (preg_match('/^ccm_(\d+)x(\d+)/', $handle)) {
-                $this->error->add(t('Thumbnail type handles start with "%s" followed by numbers.', 'ccm_'));
-            } else {
-                $alreadyExists = false;
-                foreach ($repo->findBy(['ftTypeHandle' => $handle]) as $existingType) {
-                    if ($existingType !== $type) {
-                        $alreadyExists = true;
-                        break;
-                    }
-                }
-                if ($alreadyExists) {
-                    $this->error->add(t('That handle is in use.'));
+            if ($type->getID() === null || !$type->isRequired()) {
+                $handle = $post->get('ftTypeHandle');
+                $handle = is_string($handle) ? trim($handle) : '';
+                if ($handle === '') {
+                    $this->error->add(t('Your thumbnail type must have a handle.'));
+                } elseif (!$valStrings->handle($handle)) {
+                    $this->error->add(t('Your thumbnail type handle must only contain lowercase letters and underscores.'));
+                } elseif (substr($handle, -strlen(TypeEntity::HIGHDPI_SUFFIX)) === TypeEntity::HIGHDPI_SUFFIX) {
+                    $this->error->add(t('Thumbnail type handles can\'t end with "%s".', TypeEntity::HIGHDPI_SUFFIX));
+                } elseif (preg_match('/^ccm_(\d+)x(\d+)/', $handle)) {
+                    $this->error->add(t('Thumbnail type handles start with "%s" followed by numbers.', 'ccm_'));
                 } else {
-                    $type->setHandle($handle);
+                    $alreadyExists = false;
+                    foreach ($repo->findBy(['ftTypeHandle' => $handle]) as $existingType) {
+                        if ($existingType !== $type) {
+                            $alreadyExists = true;
+                            break;
+                        }
+                    }
+                    if ($alreadyExists) {
+                        $this->error->add(t('That handle is in use.'));
+                    } else {
+                        $type->setHandle($handle);
+                    }
                 }
             }
 
