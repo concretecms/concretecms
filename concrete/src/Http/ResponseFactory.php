@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Http;
 
 use Concrete\Controller\Frontend\PageForbidden;
@@ -6,6 +7,7 @@ use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Controller\Controller;
+use Concrete\Core\Http\Service\Ajax;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Page\Collection\Collection;
 use Concrete\Core\Page\Collection\Version\Version;
@@ -18,13 +20,12 @@ use Concrete\Core\Permission\Checker;
 use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Routing\RedirectResponse;
 use Concrete\Core\Routing\RouterInterface;
+use Concrete\Core\User\PostLoginLocation;
 use Concrete\Core\User\User;
 use Concrete\Core\View\View;
 use Detection\MobileDetect;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Concrete\Core\Http\Service\Ajax;
-use Concrete\Core\User\PostLoginLocation;
 
 class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInterface
 {
@@ -159,17 +160,17 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         $this->localization->pushActiveContext(Localization::CONTEXT_SITE);
         try {
             $request = $this->request;
-    
+
             if ($response = $controller->on_start()) {
                 return $response;
             }
-    
+
             if ($controller instanceof PageController) {
                 if ($controller->isReplaced()) {
                     return $this->controller($controller->getReplacement(), $code, $headers);
                 }
                 $controller->setupRequestActionAndParameters($request);
-    
+
                 $response = $controller->validateRequest();
                 // If validaterequest returned a response
                 if ($response instanceof \Symfony\Component\HttpFoundation\Response) {
@@ -180,7 +181,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
                         return $this->notFound('', Response::HTTP_NOT_FOUND, $headers);
                     }
                 }
-    
+
                 $requestTask = $controller->getRequestAction();
                 $requestParameters = $controller->getRequestActionParameters();
                 $response = $controller->runAction($requestTask, $requestParameters);
@@ -195,9 +196,9 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
                     return $response;
                 }
             }
-    
+
             $view = $controller->getViewObject();
-    
+
             // Mobile theme
             if ($this->config->get('concrete.misc.mobile_theme_id') > 0) {
                 $md = $this->app->make(MobileDetect::class);
@@ -209,7 +210,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
                     }
                 }
             }
-    
+
             return $this->view($view, $code, $headers);
         } finally {
             $this->localization->popActiveContext();
@@ -280,7 +281,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
             return $this->notFound('', Response::HTTP_NOT_FOUND, $headers);
         }
 
-        $scheduledVersion = Version::get($collection, "SCHEDULED");
+        $scheduledVersion = Version::get($collection, 'SCHEDULED');
         if ($publishDate = $scheduledVersion->cvPublishDate) {
             $datetime = $this->app->make('helper/date');
             $now = $datetime->date('Y-m-d G:i:s');
