@@ -78,13 +78,12 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
     public function notFound($content, $code = Response::HTTP_NOT_FOUND, $headers = [])
     {
         if ($this->app->make(Ajax::class)->isAjaxRequest($this->request)) {
-            $loc = $this->localization;
-            $loc->pushActiveContext(Localization::CONTEXT_SITE);
+            $this->localization->pushActiveContext(Localization::CONTEXT_SITE);
             $responseData = [
                 'error' => t('Page not found'),
                 'errors' => [t('Page not found')],
             ];
-            $loc->popActiveContext();
+            $this->localization->popActiveContext();
 
             return $this->json($responseData, $code, $headers);
         }
@@ -143,10 +142,13 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
     public function view(View $view, $code = Response::HTTP_OK, $headers = [])
     {
         $this->localization->pushActiveContext(Localization::CONTEXT_SITE);
+        try {
+            $contents = $view->render();
 
-        $contents = $view->render();
-
-        return $this->create($contents, $code, $headers);
+            return $this->create($contents, $code, $headers);
+        } finally {
+            $this->localization->popActiveContext();
+        }
     }
 
     /**
@@ -154,59 +156,64 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
      */
     public function controller(Controller $controller, $code = Response::HTTP_OK, $headers = [])
     {
-        $request = $this->request;
-
-        if ($response = $controller->on_start()) {
-            return $response;
-        }
-
-        if ($controller instanceof PageController) {
-            if ($controller->isReplaced()) {
-                return $this->controller($controller->getReplacement(), $code, $headers);
-            }
-            $controller->setupRequestActionAndParameters($request);
-
-            $response = $controller->validateRequest();
-            // If validaterequest returned a response
-            if ($response instanceof \Symfony\Component\HttpFoundation\Response) {
+        $this->localization->pushActiveContext(Localization::CONTEXT_SITE);
+        try {
+            $request = $this->request;
+    
+            if ($response = $controller->on_start()) {
                 return $response;
+            }
+    
+            if ($controller instanceof PageController) {
+                if ($controller->isReplaced()) {
+                    return $this->controller($controller->getReplacement(), $code, $headers);
+                }
+                $controller->setupRequestActionAndParameters($request);
+    
+                $response = $controller->validateRequest();
+                // If validaterequest returned a response
+                if ($response instanceof \Symfony\Component\HttpFoundation\Response) {
+                    return $response;
+                } else {
+                    // If validateRequest did not return true
+                    if ($response == false) {
+                        return $this->notFound('', Response::HTTP_NOT_FOUND, $headers);
+                    }
+                }
+    
+                $requestTask = $controller->getRequestAction();
+                $requestParameters = $controller->getRequestActionParameters();
+                $response = $controller->runAction($requestTask, $requestParameters);
+                if ($response instanceof \Symfony\Component\HttpFoundation\Response) {
+                    return $response;
+                }
+                if ($controller->isReplaced()) {
+                    return $this->controller($controller->getReplacement(), $code, $headers);
+                }
             } else {
-                // If validateRequest did not return true
-                if ($response == false) {
-                    return $this->notFound('', Response::HTTP_NOT_FOUND, $headers);
+                if ($response = $controller->runAction('view')) {
+                    return $response;
                 }
             }
-
-            $requestTask = $controller->getRequestAction();
-            $requestParameters = $controller->getRequestActionParameters();
-            $response = $controller->runAction($requestTask, $requestParameters);
-            if ($response instanceof \Symfony\Component\HttpFoundation\Response) {
-                return $response;
-            }
-            if ($controller->isReplaced()) {
-                return $this->controller($controller->getReplacement(), $code, $headers);
-            }
-        } else {
-            if ($response = $controller->runAction('view')) {
-                return $response;
-            }
-        }
-
-        $view = $controller->getViewObject();
-
-        // Mobile theme
-        if ($this->config->get('concrete.misc.mobile_theme_id') > 0) {
-            $md = $this->app->make(MobileDetect::class);
-            if ($md->isMobile()) {
-                $mobileTheme = Theme::getByID($this->app->config->get('concrete.misc.mobile_theme_id'));
-                if ($mobileTheme instanceof Theme) {
-                    $view->setViewTheme($mobileTheme);
-                    $controller->setTheme($mobileTheme);
+    
+            $view = $controller->getViewObject();
+    
+            // Mobile theme
+            if ($this->config->get('concrete.misc.mobile_theme_id') > 0) {
+                $md = $this->app->make(MobileDetect::class);
+                if ($md->isMobile()) {
+                    $mobileTheme = Theme::getByID($this->app->config->get('concrete.misc.mobile_theme_id'));
+                    if ($mobileTheme instanceof Theme) {
+                        $view->setViewTheme($mobileTheme);
+                        $controller->setTheme($mobileTheme);
+                    }
                 }
             }
+    
+            return $this->view($view, $code, $headers);
+        } finally {
+            $this->localization->popActiveContext();
         }
-
-        return $this->view($view, $code, $headers);
     }
 
     /**
