@@ -87,10 +87,11 @@ class Composer extends BackendInterfacePageController
                 $publishDateTime = false;
                 if ($this->request->request->get('action') == 'schedule') {
                     $dateTime = new DateTime();
-                    $publishDateTime = $dateTime->translate('check-in-scheduler');
+                    $publishDateTime = $dateTime->translate('cvPublishDate');
+                    $publishEndDateTime = $dateTime->translate('cvPublishEndDate');
                 }
 
-                $pagetype->publish($c, $publishDateTime);
+                $pagetype->publish($c, $publishDateTime, $publishEndDateTime);
                 $ptr->setRedirectURL($this->app->make('helper/navigation')->getLinkToCollection($c));
             }
             $ptr->outputJSON();

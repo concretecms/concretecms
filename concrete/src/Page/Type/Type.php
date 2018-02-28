@@ -176,7 +176,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         }
     }
 
-    public function publish(Page $c, $requestOrDateTime = null)
+    public function publish(Page $c, $requestOrDateTime = null, $cvPublishEndDate = null)
     {
         $this->stripEmptyPageTypeComposerControls($c);
         $parent = Page::getByID($c->getPageDraftTargetParentPageID());
@@ -206,7 +206,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
             $pkr->setRequesterUserID($u->getUserID());
             if ($requestOrDateTime) {
                 // That means it's a date time
-                $pkr->scheduleVersion($requestOrDateTime);
+                $pkr->scheduleVersion($requestOrDateTime, $cvPublishEndDate);
             }
         } else {
             $pkr = $requestOrDateTime;
