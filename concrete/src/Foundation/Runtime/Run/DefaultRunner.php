@@ -11,6 +11,8 @@ use Concrete\Core\Localization\Localization;
 use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Routing\RouterInterface;
 use Concrete\Core\Site\Service as SiteService;
+use Concrete\Core\System\Mutex\MutexBusyException;
+use Concrete\Core\Updater\Update;
 use Concrete\Core\Url\Resolver\CanonicalUrlResolver;
 use Concrete\Core\Url\Resolver\UrlResolverInterface;
 use Concrete\Core\User\User;
@@ -270,8 +272,16 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
      */
     protected function handleUpdates()
     {
-        if (!$this->app->make('config')->get('concrete.maintenance_mode')) {
-            $this->app->handleAutomaticUpdates();
+        $config = $this->app->make('config');
+        if (!$config->get('concrete.maintenance_mode')) {
+            try {
+                $this->app->handleAutomaticUpdates();
+            } catch (MutexBusyException $x) {
+                if ($x->getMutexKey() !== Update::MUTEX_KEY) {
+                    throw $x;
+                }
+                $config->set('concrete.maintenance_mode', true);
+            }
         }
     }
 
