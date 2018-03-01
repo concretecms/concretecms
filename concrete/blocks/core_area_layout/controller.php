@@ -74,6 +74,8 @@ class Controller extends BlockController
             }
         }
 
+        $arrAssetBlocks = [];
+        
         foreach ($blocks as $b) {
             $btCacheBlockOutput = $btCacheBlockOutput && $b->cacheBlockOutput();
             $btCacheBlockOutputOnPost = $btCacheBlockOutputOnPost && $b->cacheBlockOutputOnPost();
@@ -88,11 +90,22 @@ class Controller extends BlockController
                     $btCacheBlockOutputLifetime = $expires;
                 }
             }
+
+            $objController = $b->getController();
+            if (is_callable(array($objController, 'registerViewAssets'))) {
+                $arrAssetBlocks[] = $objController;
+            }
+
         }
 
         $this->btCacheBlockOutput = $btCacheBlockOutput;
         $this->btCacheBlockOutputOnPost = $btCacheBlockOutputOnPost;
         $this->btCacheBlockOutputLifetime = $btCacheBlockOutputLifetime;
+
+        foreach ($arrAssetBlocks as $objController) {
+            $objController->on_start();
+            $objController->registerViewAssets();
+        }
     }
 
     public function getBlockTypeDescription()
