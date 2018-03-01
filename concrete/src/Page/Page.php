@@ -2265,14 +2265,23 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $theme = $this->getCollectionThemeObject();
         if ($btHandle && $theme) {
             $areaTemplates = [];
+            $pageTypeTemplates = [];
             if (is_object($a)) {
                 $areaTemplates = $a->getAreaCustomTemplates();
             }
             $themeTemplates = $theme->getThemeDefaultBlockTemplates();
             if (!is_array($themeTemplates)) {
                 $themeTemplates = [];
+            } else {
+                foreach($themeTemplates as $key => $template){
+                    $pt = ($this->getPageTemplateHandle()) ? $this->getPageTemplateHandle() : 'default';
+                    if(is_array($template) && $key == $pt){
+                        $pageTypeTemplates = $template;
+                    }
+                    unset($themeTemplates[$key]);
+                }
             }
-            $templates = array_merge($themeTemplates, $areaTemplates);
+            $templates = array_merge($pageTypeTemplates, $themeTemplates, $areaTemplates);
             if (count($templates) && isset($templates[$btHandle])) {
                 $template = $templates[$btHandle];
                 $b->updateBlockInformation(['bFilename' => $template]);
