@@ -177,6 +177,16 @@ abstract class Column extends ConcreteObject implements ColumnInterface
         return 0;
     }
 
+    public function getSubAreaObject()
+    {
+        $layout = $this->getAreaLayoutObject();
+        $a = $layout->getAreaObject();
+        $as = new SubArea($this->getAreaLayoutColumnDisplayID(), $a->getAreaHandle(), $a->getAreaID());
+        $as->setAreaGridMaximumColumns($this->getSubAreaMaximumColumns());
+        $as->setAreaDisplayName(t('Column %s', $this->getAreaLayoutColumnIndex() + 1));
+        return $as;
+    }
+
     /**
      * @param bool $disableControls
      */
@@ -185,9 +195,7 @@ abstract class Column extends ConcreteObject implements ColumnInterface
         $layout = $this->getAreaLayoutObject();
         $a = $layout->getAreaObject();
         if (is_object($a)) {
-            $as = new SubArea($this->getAreaLayoutColumnDisplayID(), $a->getAreaHandle(), $a->getAreaID());
-            $as->setAreaGridMaximumColumns($this->getSubAreaMaximumColumns());
-            $as->setAreaDisplayName(t('Column %s', $this->getAreaLayoutColumnIndex() + 1));
+            $as = $this->getSubAreaObject();
             if ($disableControls) {
                 $as->disableControls();
             }
