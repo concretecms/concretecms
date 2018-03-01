@@ -270,7 +270,9 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
      */
     protected function handleUpdates()
     {
-        $this->app->handleAutomaticUpdates();
+        if (!$this->app->make('config')->get('concrete.maintenance_mode')) {
+            $this->app->handleAutomaticUpdates();
+        }
     }
 
     /**
