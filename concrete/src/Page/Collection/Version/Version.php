@@ -94,9 +94,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         }
         $v = array($cID);
 
-        $q = "select cvID, cvIsApproved, cvIsNew, cvHandle, cvName, cvDescription, cvDateCreated, cvDatePublic, " .
-             "pTemplateID, cvAuthorUID, cvApproverUID, cvComments, pThemeID, cvPublishDate, cvPublishEndDate from CollectionVersions " .
-             "where cID = ?";
+        $q = "select * from CollectionVersions where cID = ?";
 
         $now = new \DateTime();
 
@@ -353,15 +351,14 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
             $this->pThemeID,
             $this->pTemplateID,
             null,
-            null,
         );
         // important: cvPublishDate used to be the same for the new version as it is for the current , but it made it
         // impossible to create a version that wasn't scheduled once you scheduled a version so I'm turning it off for
         // now - AE
 
        $q = "insert into CollectionVersions (cID, cvID, cvName, cvHandle, cvDescription, cvDatePublic, " .
-            "cvDateCreated, cvComments, cvAuthorUID, cvIsNew, pThemeID, pTemplateID, cvPublishDate, cvPublishEndDate) " .
-            "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            "cvDateCreated, cvComments, cvAuthorUID, cvIsNew, pThemeID, pTemplateID, cvPublishDate) " .
+            "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
        $db->executeQuery($q, $v);
 
