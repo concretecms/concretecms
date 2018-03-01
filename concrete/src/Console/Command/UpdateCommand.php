@@ -3,6 +3,8 @@
 namespace Concrete\Core\Console\Command;
 
 use Concrete\Core\Console\Command;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\System\Mutex\MutexInterface;
 use Concrete\Core\Updater\Migrations\Configuration;
 use Concrete\Core\Updater\Update;
 use Doctrine\DBAL\Migrations\OutputWriter;
@@ -84,6 +86,9 @@ EOT
                 }
             }
         }
-        Update::updateToCurrentVersion($configuration);
+        $app = Application::getFacadeApplication();
+        $app->make(MutexInterface::class)->execute(Update::MUTEX_KEY, function () use ($configuration) {
+            Update::updateToCurrentVersion($configuration);
+        });
     }
 }

@@ -17,6 +17,13 @@ use Throwable;
 class Update
 {
     /**
+     * Keyof the mutex to be used when performing core upgrades.
+     *
+     * @var string
+     */
+    const MUTEX_KEY = 'core_system_upgrade';
+
+    /**
      * Fetch from the remote marketplace the latest available versions of the core and the packages.
      * These operations are done only the first time or after at least APP_VERSION_LATEST_THRESHOLD seconds since the previous check.
      *

@@ -114,6 +114,7 @@ return [
         'core_database' => '\Concrete\Core\Database\DatabaseServiceProvider',
         'core_form' => '\Concrete\Core\Form\FormServiceProvider',
         'core_session' => '\Concrete\Core\Session\SessionServiceProvider',
+        'core_system' => '\Concrete\Core\System\SystemServiceProvider',
         'core_cookie' => '\Concrete\Core\Cookie\CookieServiceProvider',
         'core_http' => '\Concrete\Core\Http\HttpServiceProvider',
         'core_events' => '\Concrete\Core\Events\EventsServiceProvider',
@@ -1577,5 +1578,11 @@ return [
         'core_cookie' => \Concrete\Core\Http\Middleware\CookieMiddleware::class,
         'core_xframeoptions' => \Concrete\Core\Http\Middleware\FrameOptionsMiddleware::class,
         'core_thumbnails' => '\Concrete\Core\Http\Middleware\ThumbnailMiddleware',
+    ],
+
+    // Registered mutex keys
+    'mutex' => [
+        'core_system_install',
+        'core_system_upgrade',
     ],
 ];

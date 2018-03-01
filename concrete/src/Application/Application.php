@@ -17,6 +17,7 @@ use Concrete\Core\Logging\Query\Logger;
 use Concrete\Core\Package\PackageService;
 use Concrete\Core\Routing\RedirectResponse;
 use Concrete\Core\Support\Facade\Package;
+use Concrete\Core\System\Mutex\MutexInterface;
 use Concrete\Core\Updater\Update;
 use Concrete\Core\Url\Url;
 use Concrete\Core\Url\UrlImmutable;
@@ -198,7 +199,9 @@ class Application extends Container
         $installed = $config->get('concrete.version_db_installed');
         $core = $config->get('concrete.version_db');
         if ($installed < $core) {
-            Update::updateToCurrentVersion();
+            $this->make(MutexInterface::class)->execute(Update::MUTEX_KEY, function() {
+                Update::updateToCurrentVersion();
+            });
         }
     }
 
