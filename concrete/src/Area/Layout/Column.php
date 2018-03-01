@@ -180,11 +180,13 @@ abstract class Column extends ConcreteObject implements ColumnInterface
     public function getSubAreaObject()
     {
         $layout = $this->getAreaLayoutObject();
-        $a = $layout->getAreaObject();
-        $as = new SubArea($this->getAreaLayoutColumnDisplayID(), $a->getAreaHandle(), $a->getAreaID());
-        $as->setAreaGridMaximumColumns($this->getSubAreaMaximumColumns());
-        $as->setAreaDisplayName(t('Column %s', $this->getAreaLayoutColumnIndex() + 1));
-        return $as;
+        if ($layout) {
+            $a = $layout->getAreaObject();
+            $as = new SubArea($this->getAreaLayoutColumnDisplayID(), $a->getAreaHandle(), $a->getAreaID());
+            $as->setAreaGridMaximumColumns($this->getSubAreaMaximumColumns());
+            $as->setAreaDisplayName(t('Column %s', $this->getAreaLayoutColumnIndex() + 1));
+            return $as;
+        }
     }
 
     /**
