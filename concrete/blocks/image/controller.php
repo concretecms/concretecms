@@ -225,7 +225,7 @@ class Controller extends BlockController implements FileTrackableInterface
      */
     public function getFileOnstateObject()
     {
-        if ($this->fOnstateID) {
+        if (isset($this->fOnstateID) && $this->fOnstateID) {
             return File::getByID($this->fOnstateID);
         }
     }
