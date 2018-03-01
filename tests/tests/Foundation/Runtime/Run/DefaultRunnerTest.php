@@ -3,12 +3,12 @@
 namespace Concrete\Tests\Foundation\Runtime\Run;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Config\FileLoader;
+use Concrete\Core\Config\FileSaver;
 use Concrete\Core\Config\Repository\Liaison;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Foundation\Runtime\Run\DefaultRunner;
 use Concrete\Core\Http\ServerInterface;
-use Concrete\TestHelpers\Config\Fixtures\TestFileLoader;
-use Concrete\TestHelpers\Config\Fixtures\TestFileSaver;
 use Illuminate\Filesystem\Filesystem;
 use PHPUnit_Framework_TestCase;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,7 +28,7 @@ class DefaultRunnerTest extends PHPUnit_Framework_TestCase
         // Create a mock application
         $fs = new Filesystem();
         $config = new Liaison(
-            new Repository(new TestFileLoader($fs), new TestFileSaver($fs), 'test'),
+            new Repository(new FileLoader($fs), new FileSaver($fs), 'test'),
             'default'
         );
 

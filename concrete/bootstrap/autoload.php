@@ -24,7 +24,7 @@ require DIR_BASE_CORE . '/' . DIRNAME_CLASSES . '/Foundation/ClassAliasList.php'
 $class_loader = \Concrete\Core\Foundation\ClassLoader::getInstance();
 
 $enable_legacy_src_namespace = false;
-$app_config_path = DIR_APPLICATION . '/config/app.php';
+$app_config_path = DIR_CONFIG_SITE . '/app.php';
 if (file_exists($app_config_path)) {
     $app_config = require $app_config_path;
     if (isset($app_config['namespace'])) {

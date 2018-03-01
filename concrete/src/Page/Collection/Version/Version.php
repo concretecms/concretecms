@@ -34,6 +34,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
     public $cvComments;
     public $pThemeID;
     public $cvPublishDate;
+    public $cvPublishEndDate;
 
     // Other properties
     public $cID;
@@ -94,7 +95,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         $v = array($cID);
 
         $q = "select cvID, cvIsApproved, cvIsNew, cvHandle, cvName, cvDescription, cvDateCreated, cvDatePublic, " .
-             "pTemplateID, cvAuthorUID, cvApproverUID, cvComments, pThemeID, cvPublishDate from CollectionVersions " .
+             "pTemplateID, cvAuthorUID, cvApproverUID, cvComments, pThemeID, cvPublishDate, cvPublishEndDate from CollectionVersions " .
              "where cID = ?";
 
         $now = new \DateTime();
@@ -105,7 +106,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
                 $v[] = $now->format('Y-m-d H:i:s');
                 break;
             case 'SCHEDULED':
-                $q .= ' and cvIsApproved = 1 and cvPublishDate is not NULL';
+                $q .= ' and cvIsApproved = 1 and (cvPublishDate is not NULL or cvPublishEndDate is not null) ';
                 break;
             case 'RECENT':
                 $q .= ' order by cvID desc';
@@ -166,6 +167,12 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
     {
         return $this->cvPublishDate;
     }
+
+    public function getPublishEndDate()
+    {
+        return $this->cvPublishEndDate;
+    }
+
 
     public function isMostRecent()
     {
@@ -298,6 +305,23 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         $this->cvPublishDate = $publishDate;
     }
 
+    public function setPublishEndDate($publishEndDate)
+    {
+        $thisCVID = $this->getVersionID();
+        $v = array(
+            $publishEndDate,
+            $thisCVID,
+            $this->cID,
+        );
+
+        $app = Facade::getFacadeApplication();
+        $db = $app->make('database')->connection();
+        $q = "update CollectionVersions set cvPublishEndDate = ? where cvID = ? and cID = ?";
+        $db->executeQuery($q, $v);
+        $this->cvPublishEndDate = $publishEndDate;
+    }
+
+
     public function createNew($versionComments)
     {
         $app = Facade::getFacadeApplication();
@@ -329,14 +353,15 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
             $this->pThemeID,
             $this->pTemplateID,
             null,
+            null,
         );
         // important: cvPublishDate used to be the same for the new version as it is for the current , but it made it
         // impossible to create a version that wasn't scheduled once you scheduled a version so I'm turning it off for
         // now - AE
 
        $q = "insert into CollectionVersions (cID, cvID, cvName, cvHandle, cvDescription, cvDatePublic, " .
-            "cvDateCreated, cvComments, cvAuthorUID, cvIsNew, pThemeID, pTemplateID, cvPublishDate) " .
-            "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            "cvDateCreated, cvComments, cvAuthorUID, cvIsNew, pThemeID, pTemplateID, cvPublishDate, cvPublishEndDate) " .
+            "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
        $db->executeQuery($q, $v);
 
@@ -399,7 +424,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         return $nv;
     }
 
-    public function approve($doReindexImmediately = true, $scheduleDatetime = null)
+    public function approve($doReindexImmediately = true, $cvPublishDate = null, $cvPublishEndDate = null)
     {
         $app = Facade::getFacadeApplication();
         $db = $app->make('database')->connection();
@@ -423,14 +448,15 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         ));
 
         // Remove all publish dates before setting the new ones, if any
-        $this->clearPublishDates();
+        $this->clearPublishStartDate();
 
-        if ($scheduleDatetime) {
+        if ($cvPublishDate || $cvPublishEndDate) {
             // remove approval for all versions except the current one because a scheduled version is being processed
             $oldVersion = $ov->getVersionObject();
             $v = array($cID, $oldVersion->cvID);
             $q = "update CollectionVersions set cvIsApproved = 0 where cID = ? and cvID != ?";
-            $this->setPublishDate($scheduleDatetime);
+            $this->setPublishDate($cvPublishDate);
+            $this->setPublishEndDate($cvPublishEndDate);
         } else {
             // remove approval for the other version of this collection
             $v = array($cID);
@@ -652,7 +678,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         $this->refreshCache();
     }
 
-    private function clearPublishDates()
+    private function clearPublishStartDate()
     {
         $app = Facade::getFacadeApplication();
         $db = $app->make('database')->connection();

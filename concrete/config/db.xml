@@ -1849,7 +1849,8 @@
       <notnull/>
     </field>
     <field name="cvActivateDatetime" type="datetime"/>
-    <field name="cvPublishDate" type="datetime"/>
+    <field name="cvPublishDate" type="datetime" />
+    <field name="cvPublishEndDate" type="datetime" />
     <index name="cvIsApproved">
       <col>cvIsApproved</col>
     </index>

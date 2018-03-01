@@ -134,7 +134,7 @@ class ClassLoader
     {
         $loader = new ModifiedPSR4ClassLoader();
         $loader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\StartingPointPackage',
-            DIR_BASE_CORE . '/config/install/' . DIRNAME_PACKAGES);
+            DIR_STARTING_POINT_PACKAGES_CORE);
         $loader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Attribute', DIR_BASE_CORE . '/' . DIRNAME_ATTRIBUTES);
         $loader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\MenuItem', DIR_BASE_CORE . '/' . DIRNAME_MENU_ITEMS);
         $loader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Authentication',
@@ -148,7 +148,7 @@ class ClassLoader
         $loader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Geolocator', DIR_BASE_CORE . '/' . DIRNAME_GEOLOCATION);
 
         $loader->addPrefix($this->getApplicationNamespace() . '\\StartingPointPackage',
-            DIR_APPLICATION . '/config/install/' . DIRNAME_PACKAGES);
+            DIR_STARTING_POINT_PACKAGES);
         $loader->addPrefix($this->getApplicationNamespace() . '\\Attribute',
             DIR_APPLICATION . '/' . DIRNAME_ATTRIBUTES);
         $loader->addPrefix($this->getApplicationNamespace() . '\\MenuItem', DIR_APPLICATION . '/' . DIRNAME_MENU_ITEMS);

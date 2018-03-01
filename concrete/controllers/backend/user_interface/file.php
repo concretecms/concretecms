@@ -2,6 +2,7 @@
 namespace Concrete\Controller\Backend\UserInterface;
 
 use Concrete\Core\Entity\File\File as FileEntity;
+use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\File\File as ConcreteFile;
 use Loader;
 use Permissions;
@@ -21,7 +22,7 @@ abstract class File extends \Concrete\Controller\Backend\UserInterface
                 if (is_object($file) && !$file->isError()) {
                     $this->setFileObject($file);
                 } else {
-                    throw new Exception(t('Invalid file.'));
+                    throw new UserMessageException(t('Invalid file.'));
                 }
             }
         }
