@@ -67,7 +67,7 @@ if (!defined('DIR_BASE')) {
 
 if (!defined('APP_UPDATED_PASSTHRU')) {
     // Check for an updated core available
-    $updates = DIR_BASE . '/application/config/update.php';
+    $updates = (defined('DIR_CONFIG_SITE') ? DIR_CONFIG_SITE : (DIR_BASE . '/application/config')) . '/update.php';
     if (is_file($updates)) {
         $updates = (array) include $updates;
         if (isset($updates['core']) && is_dir(DIR_BASE . '/updates/' . $updates['core'] . '/concrete')) {
