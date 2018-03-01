@@ -127,6 +127,10 @@ class Service
     {
         $tree = $locale->getSiteTree();
         if (is_object($tree)) {
+            $home = $tree->getSiteHomePageObject();
+            if ($home) {
+                $home->delete();
+            }
             $locale->setSiteTree(null);
             $this->entityManager->remove($tree);
             $this->entityManager->flush();
