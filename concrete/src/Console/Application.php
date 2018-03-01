@@ -23,6 +23,7 @@ class Application extends SymfonyApplication
 
     public function setupDefaultCommands()
     {
+        $this->add(new Command\IsInstalledCommand());
         $this->add(new Command\InfoCommand());
         $this->add(new Command\InstallCommand());
         $this->add(new Command\InstallLanguageCommand());
