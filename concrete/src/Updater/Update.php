@@ -6,13 +6,14 @@ use Concrete\Core\Cache\Cache;
 use Concrete\Core\Cache\CacheClearer;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Database\DatabaseStructureManager;
+use Concrete\Core\Foundation\Environment\FunctionInspector;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Updater\Migrations\Configuration;
+use Concrete\Core\Utility\Service\Validation\Numbers;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Localization;
 use Marketplace;
-use Throwable;
 
 class Update
 {
@@ -151,10 +152,30 @@ class Update
      * Upgrade the current core version to the latest locally available by running the applicable migrations.
      *
      * @param null|Configuration $configuration
+     *
+     * @throws \Concrete\Core\Updater\Migrations\MigrationIncompleteException throws a MigrationIncompleteException exception if there's still some migration pending
      */
     public static function updateToCurrentVersion(Configuration $configuration = null)
     {
         $app = Application::getFacadeApplication();
+        $functionInspector = $app->make(FunctionInspector::class);
+        if (!$app->isRunThroughCommandLineInterface()) {
+            if ($functionInspector->functionAvailable('ignore_user_abort')) {
+                // Don't abort the script execution when the web client disconnects,
+                // otherwise we risk to halt the execution in the middle of a migration.
+                @ignore_user_abort(true);
+            }
+        }
+        $canSetTimeLimit = $functionInspector->functionAvailable('set_time_limit');
+        $defaultTimeLimit = null;
+        if ($functionInspector->functionAvailable('ini_get')) {
+            $defaultTimeLimit = @ini_get('max_execution_time');
+            if ($app->make(Numbers::class)->integer($defaultTimeLimit)) {
+                $defaultTimeLimit = (int) $defaultTimeLimit;
+            } else {
+                $defaultTimeLimit = null;
+            }
+        }
         $config = $app->make('config');
         $clearer = $app->make(CacheClearer::class);
         $clearer->setClearGlobalAreas(false);
@@ -172,22 +193,36 @@ class Update
         $configuration->registerPreviousMigratedVersions();
         $isRerunning = $configuration->getForcedInitialMigration() !== null;
         $migrations = $configuration->getMigrationsToExecute('up', $configuration->getLatestVersion());
+        $totalMigrations = count($migrations);
+        $performedMigrations = 0;
         foreach ($migrations as $migration) {
-            $remarkMigrated = $isRerunning && $migration->isMigrated();
-            if ($remarkMigrated) {
+            if ($defaultTimeLimit !== 0) {
+                // The current execution time is not unlimited
+                $timeLimitSet = $canSetTimeLimit ? @set_time_limit(max((int) $defaultTimeLimit, 300)) : false;
+                if (!$timeLimitSet && $performedMigrations > 0) {
+                    // We are not able to reset the execution time limit
+                    if ($performedMigrations > 10 || $migration instanceof Migrations\LongRunningMigrationInterface) {
+                        // If we have done 10 migrations, or if the next migration requires long time
+                        throw new Migrations\MigrationIncompleteException($performedMigrations, $totalMigrations - $performedMigrations);
+                    }
+                }
+            }
+            if ($isRerunning && $migration->isMigrated()) {
                 $migration->markNotMigrated();
-            }
-            $error = null;
-            try {
+                try {
+                    $migration->execute('up');
+                } finally {
+                    $migration->markMigrated();
+                }
+            } else {
                 $migration->execute('up');
-            } catch (Exception $x) {
-                $error = $x;
-            } catch (Throwable $x) {
-                $error = $x;
             }
-            if ($error !== null) {
-                $migration->markMigrated();
-                throw $error;
+            ++$performedMigrations;
+            if ($defaultTimeLimit !== 0 && !$timeLimitSet && $migration instanceof Migrations\LongRunningMigrationInterface) {
+                // The current eecution time is not unlimited, we are unable to reset the time limit, and the performed migration took long time
+                if ($performedMigrations < $totalMigrations) {
+                    throw new Migrations\MigrationIncompleteException($performedMigrations, $totalMigrations - $performedMigrations);
+                }
             }
         }
         try {
