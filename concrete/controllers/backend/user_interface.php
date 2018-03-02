@@ -1,21 +1,16 @@
 <?php
+
 namespace Concrete\Controller\Backend;
 
 use Concrete\Core\Controller\Controller;
 use Concrete\Core\View\DialogView;
-use Request;
 use Loader;
+use Request;
 
 abstract class UserInterface extends Controller
 {
-    abstract protected function canAccess();
     protected $error;
     protected $validationToken;
-
-    public function shouldRunControllerTask()
-    {
-        return $this->canAccess();
-    }
 
     public function __construct()
     {
@@ -30,6 +25,11 @@ abstract class UserInterface extends Controller
         $this->request = $request;
     }
 
+    public function shouldRunControllerTask()
+    {
+        return $this->canAccess();
+    }
+
     public function getViewObject()
     {
         if ($this->canAccess()) {
@@ -37,6 +37,17 @@ abstract class UserInterface extends Controller
         }
         throw new \Exception(t('Access Denied'));
     }
+
+    public function action()
+    {
+        $token = (isset($this->validationToken)) ? $this->validationToken : get_class($this);
+        $url = call_user_func_array('parent::action', func_get_args());
+        $url .= '?ccm_token=' . \Core::make('helper/validation/token')->generate($token);
+
+        return $url;
+    }
+
+    abstract protected function canAccess();
 
     protected function validateAction()
     {
@@ -51,14 +62,5 @@ abstract class UserInterface extends Controller
         }
 
         return true;
-    }
-
-    public function action()
-    {
-        $token = (isset($this->validationToken)) ? $this->validationToken : get_class($this);
-        $url = call_user_func_array('parent::action', func_get_args());
-        $url .= '?ccm_token=' . \Core::make('helper/validation/token')->generate($token);
-
-        return $url;
     }
 }

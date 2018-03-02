@@ -1,11 +1,12 @@
 <?php
+
 namespace Concrete\Controller;
 
-use Concrete\Core\Updater\Update;
-use View;
 use Concrete\Controller\Backend\UserInterface as BackendUserInterfaceController;
 use Concrete\Core\System\Mutex\MutexInterface;
+use Concrete\Core\Updater\Update;
 use Config;
+use View;
 
 class Upgrade extends BackendUserInterfaceController
 {
@@ -54,7 +55,7 @@ class Upgrade extends BackendUserInterfaceController
     {
         if ($this->validateAction()) {
             try {
-                $this->app->make(MutexInterface::class)->execute(Update::MUTEX_KEY, function() {
+                $this->app->make(MutexInterface::class)->execute(Update::MUTEX_KEY, function () {
                     Update::updateToCurrentVersion();
                 });
                 $this->set('success', t('Upgrade to <b>%s</b> complete!', APP_VERSION));
