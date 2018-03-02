@@ -17,7 +17,7 @@ use Throwable;
 class Update
 {
     /**
-     * Keyof the mutex to be used when performing core upgrades.
+     * Key of the mutex to be used when performing core upgrades.
      *
      * @var string
      */
