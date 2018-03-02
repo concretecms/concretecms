@@ -23,6 +23,13 @@ abstract class Command extends SymfonyCommand
     const RETURN_CODE_ON_FAILURE = 1;
 
     /**
+     * The name of the environment variable that allows running CLI commands as root without confirmation.
+     *
+     * @var string
+     */
+    const ENV_ALLOWASROOT = 'C5_ALLOW_CLI_AS_ROOT';
+
+    /**
      * @var bool
      */
     protected $runAsRootDiscouraged = false;
@@ -51,7 +58,7 @@ abstract class Command extends SymfonyCommand
      */
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
-        if ($this->runAsRootDiscouraged && $this->isRunningAsRoot() === true) {
+        if ($this->runAsRootDiscouraged && $this->isRunningAsRoot() === true && !@getenv(static::ENV_ALLOWASROOT)) {
             $this->confirmRunningAsRoot($input, $output);
         }
     }
@@ -103,7 +110,7 @@ abstract class Command extends SymfonyCommand
      */
     protected function discourageRunAsRoot()
     {
-        $this->addOption('allow-as-root', null, InputOption::VALUE_NONE, 'Allow executing this command as root without confirmation');
+        $this->addOption('allow-as-root', null, InputOption::VALUE_NONE, 'Allow executing this command as root without confirmation (you can also set the ' . static::ENV_ALLOWASROOT . ' environment variable)');
         $this->runAsRootDiscouraged = true;
 
         return $this;
@@ -131,7 +138,7 @@ abstract class Command extends SymfonyCommand
     {
         if (!$input->getOption('allow-as-root')) {
             if (!$input->isInteractive()) {
-                throw new UserMessageException("The current user is root: this is discouraged for this CLI command.\nYou can execute this command anyway by specifying the --allow-as-root option.");
+                throw new UserMessageException("The current user is root: this is discouraged for this CLI command.\nYou can execute this command anyway by specifying the --allow-as-root option or setting the " . static::ENV_ALLOWASROOT . " environment variable.");
             }
             $questionHelper = $this->getHelper('question');
             $question = new ConfirmationQuestion(
