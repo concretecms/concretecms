@@ -143,7 +143,7 @@ class Logs extends DashboardPageController
         return $list;
     }
 
-    public function deleteLog($token = '', $logID)
+    public function deleteLog($logID, $token = '')
     {
         $app = Application::getFacadeApplication();
         $valt = $app->make('helper/validation/token');
