@@ -126,7 +126,7 @@ $th = $app->make('helper/text');
         ConcreteAlert.confirm(
             <?= json_encode(t('Are you sure you want to delete this log?')); ?>,
             function() {
-                location.href = "<?= $controller->action('deleteLog', $valt->generate()); ?>/" + logID;
+                location.href = "<?= $controller->action('deleteLog'); ?>/" + logID + "/<?= $valt->generate(); ?>";
             },
             'btn-danger',
             <?= json_encode(t('Delete')); ?>
