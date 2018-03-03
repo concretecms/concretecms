@@ -155,7 +155,7 @@ class LogEntry
      * 
      * @param int $logID Id of the log
      * 
-     * @return LogEntry
+     * @return LogEntry|null
      */
     public static function getByID($logID)
     {
