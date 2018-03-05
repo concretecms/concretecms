@@ -1325,6 +1325,7 @@ class Version implements ObjectInterface
             switch ($mimetype) {
                 case 'image/svg+xml':
                 case 'image/svg-xml':
+                case 'text/plain':
                     if ($imageLibrary instanceof \Imagine\Gd\Imagine) {
                         try {
                             $imageLibrary = $app->make('image/imagick');
