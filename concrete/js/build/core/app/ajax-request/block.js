@@ -125,6 +125,14 @@
     }
 
     ConcreteAjaxBlockForm.prototype.success = function (resp, my) {
+        var form = my.$form[0];
+        if (resp.newbID && form) {
+            // Replace old block id in form action
+            var actionURL = form.action;
+            var bIDParam = actionURL.substring(actionURL.indexOf('&bID='));
+            var newActionURL = actionURL.replace(bIDParam, '&bID=' + resp.newbID);
+            $(form).attr('action', newActionURL);
+        }
         if (my.options.progressiveOperation) {
             my.handleProgressiveOperation(resp, function(r) {
                 my.refreshBlock(r);
