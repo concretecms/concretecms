@@ -68,7 +68,7 @@ if (!$error->has()) {
     }
 
     if (!$valt->validate('import_remote')) {
-        $$error->add($valt->getErrorMessage());
+        $error->add($valt->getErrorMessage());
     }
 
     if (count($incoming_urls) < 1) {
