@@ -23,9 +23,8 @@ services:
 
 install:
   - ps: |
-    $ProgressPreference="SilentlyContinue"
+    $ProgressPreference = "SilentlyContinue"
     $ErrorActionPreference = "Stop"
-    [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
     If(-Not(Test-Path -Path "C:\tools")) {
         Write-Host "Creating tools directory"
         New-Item -ItemType Directory -Path "C:\tools" | Out-Null
