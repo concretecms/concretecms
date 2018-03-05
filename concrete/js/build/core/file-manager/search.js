@@ -5,7 +5,7 @@
         'use strict';
         var my = this;
         options = $.extend({
-            'breadcrumbElement': 'div.ccm-search-results-breadcrumb',
+            'breadcrumbElement': '[data-header=file-manager] div.ccm-search-results-breadcrumb',
             'bulkParameterName': 'fID',
             'searchMethod': 'get',
             'appendToOuterDialog': true,
