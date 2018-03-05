@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Install;
 
 use Concrete\Core\Cache\OpCache;
