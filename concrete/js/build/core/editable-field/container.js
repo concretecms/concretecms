@@ -44,6 +44,10 @@
 				params: my.options.data,
 				url: my.options.url,
 				success: function(r, newValue) {
+					// let's check if we have to change the username in the panel footer
+					if (r.isCurrentUser) {
+						$('.ccm-panel-content').find('.ccm-panel-dashboard-footer p a').text(newValue);
+					}
 		        	if (ConcreteAjaxRequest.validateResponse(r)) {
 		        		return {'newValue': newValue};
 		        	} else {

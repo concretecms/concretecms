@@ -296,6 +296,12 @@ class Search extends DashboardPageController
                 $data = ['uName' => $username];
                 $this->user->update($data);
                 $sr->setMessage(t('Username saved successfully.'));
+                $currentUser = new User();
+                $isCurrentUser = false;
+                if ($currentUser->getUserID() == $this->user->getUserID()) {
+                    $isCurrentUser = true;
+                }
+                $sr->setAdditionalDataAttribute('isCurrentUser', $isCurrentUser);
             } else {
                 $sr->setError($this->error);
             }
