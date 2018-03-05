@@ -1,9 +1,11 @@
 <?php
+
 namespace Concrete\Core\Console\Command;
 
 use Concrete\Core\Cache\Cache;
 use Concrete\Core\Console\Command;
 use Concrete\Core\Database\Connection\Timezone;
+use Concrete\Core\Install\ConnectionOptionsPreconditionInterface;
 use Concrete\Core\Install\Installer;
 use Concrete\Core\Install\PreconditionResult;
 use Concrete\Core\Install\PreconditionService;
@@ -72,6 +74,7 @@ class InstallCommand extends Command
             ->addOption('attach', null, InputOption::VALUE_NONE, 'Attach if database contains an existing concrete5 instance')
             ->addOption('force-attach', null, InputOption::VALUE_NONE, 'Always attach')
             ->addOption('interactive', 'i', InputOption::VALUE_NONE, 'Install using interactive (wizard) mode')
+            ->addOption('ignore-warnings', null, InputOption::VALUE_NONE, 'Ignore warnings')
             ->setHelp(<<<EOT
 Returns codes:
   0 operation completed successfully
@@ -147,9 +150,8 @@ EOT
             ->setUserPasswordHash($hasher->HashPassword($options['admin-password']))
             ->setServerTimeZoneId($timezone)
         ;
-        $e = $installer->checkOptions();
-        if ($e->has()) {
-            throw new Exception(implode("\n", $e->getList()));
+        if ($this->checkOptionPreconditions($app, $installer, $input, $output) !== true) {
+            throw new Exception(t('One or more precondition failed!'));
         }
         Cache::disableAll();
         $spl = $installer->getStartingPoint(false);
@@ -263,6 +265,8 @@ EOT
                 if (!$given || !preg_match('/^[yn]/i', $given)) {
                     throw new \InvalidArgumentException(t('Please answer either Y or N.'));
                 }
+
+                return $given;
             });
 
             $answer = $helper->ask($input, $output, $confirm);
@@ -270,7 +274,7 @@ EOT
             // Cancel if they said no
             if (stripos('n', $answer) === 0) {
                 $output->writeln('Installation cancelled.');
-                exit;
+                exit(1);
             }
 
             // Add a bit of padding
@@ -667,6 +671,111 @@ EOT
                             $result = false;
                         }
                         break;
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param Installer $installer
+     * @param \Concrete\Core\Application\Application $app
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     *
+     * @return bool
+     */
+    private function checkOptionPreconditions(\Concrete\Core\Application\Application $app, Installer $installer, InputInterface $input, OutputInterface $output)
+    {
+        $connection = $installer->createConnection();
+        $result = true;
+        $someWarnings = false;
+        $service = $app->make(PreconditionService::class);
+        $requiredPreconditions = [];
+        $optionalPreconditions = [];
+        foreach ($service->getOptionsPreconditions() as $precondition) {
+            if ($precondition->isOptional()) {
+                $optionalPreconditions[] = $precondition;
+            } else {
+                $requiredPreconditions[] = $precondition;
+            }
+        }
+        foreach ([
+            t('Checking required configuration preconditions:') => $requiredPreconditions,
+            t('Checking optional configuration preconditions:') => $optionalPreconditions,
+        ] as $text => $preconditions) {
+            if (empty($preconditions)) {
+                continue;
+            }
+            if ($output->getVerbosity() >= OutputInterface::VERBOSITY_NORMAL) {
+                $output->writeln($text);
+            }
+            foreach ($preconditions as $precondition) {
+                if ($precondition instanceof ConnectionOptionsPreconditionInterface) {
+                    $precondition->setConnection($connection);
+                }
+                $precondition->setInstallerOptions($installer->getOptions());
+                if ($output->getVerbosity() >= OutputInterface::VERBOSITY_NORMAL) {
+                    $output->write(sprintf('- %s... ', $precondition->getName()));
+                } elseif ($precondition->isOptional()) {
+                    continue;
+                }
+                $preconditionResult = $precondition->performCheck();
+                switch ($preconditionResult->getState()) {
+                    case PreconditionResult::STATE_PASSED:
+                        if ($output->getVerbosity() >= OutputInterface::VERBOSITY_NORMAL) {
+                            $message = $preconditionResult->getMessage();
+                            $message = $message ? t('passed (%s).', $message) : t('passed.');
+                            $output->writeln(sprintf('<info>%s</info>', $message));
+                        }
+                        break;
+                    case PreconditionResult::STATE_WARNING:
+                        $someWarnings = true;
+                        if ($output->getVerbosity() >= OutputInterface::VERBOSITY_NORMAL) {
+                            $output->writeln(sprintf('<comment>%s</comment>', $preconditionResult->getMessage()));
+                        }
+                        break;
+                    case PreconditionResult::STATE_SKIPPED:
+                        if ($output->getVerbosity() >= OutputInterface::VERBOSITY_NORMAL) {
+                            $output->writeln(sprintf('<comment>%s</comment>', $preconditionResult->getMessage() ?: t('skipped.')));
+                        }
+                        break;
+                    case PreconditionResult::STATE_FAILED:
+                    default:
+                        if ($output->getVerbosity() >= OutputInterface::VERBOSITY_NORMAL) {
+                            $output->writeln(sprintf('<error>%s</error>', $preconditionResult->getMessage()));
+                        }
+                        if (!$precondition->isOptional()) {
+                            $result = false;
+                        } else {
+                            $someWarnings = true;
+                        }
+                        break;
+                }
+            }
+        }
+
+        if ($result === true && $someWarnings === true) {
+            if (!$input->getOption('ignore-warnings')) {
+                if ($input->isInteractive()) {
+                    $confirm = new Question('Configuration warnings detected. Would you like to install anyway? [ y / n ]: ', false);
+                    $confirm->setValidator(function ($given) {
+                        if (!$given || !preg_match('/^[yn]/i', $given)) {
+                            throw new \InvalidArgumentException(t('Please answer either Y or N.'));
+                        }
+
+                        return $given;
+                    });
+                    $helper = $this->getHelper('question');
+                    $answer = $helper->ask($input, $output, $confirm);
+                    // Cancel if they said no
+                    if (stripos('n', $answer) === 0) {
+                        $output->writeln('Installation cancelled.');
+                        exit(1);
+                    }
+                } else {
+                    $result = false;
                 }
             }
         }
