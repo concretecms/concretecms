@@ -1,7 +1,7 @@
 environment:
   matrix:
-    - platform: x86
-      PHP_VERSION: '7.1.6'
+    - PLATFORM: x86
+      PHP_VERSION: '7.1.15'
       VC_VERSION: '14'
       PREFER_LOWEST: 
 
@@ -22,49 +22,99 @@ services:
   - mysql
 
 install:
-  - if not exist C:\tools mkdir C:\tools
-  - if not exist C:\tools\downloads mkdir C:\tools\downloads
-  - cd /D C:\tools\downloads
-  - set PHP_ZIP=php-%PHP_VERSION%-Win32-VC%VC_VERSION%-%PLATFORM%.zip
-  - if not exist %PHP_ZIP% (appveyor DownloadFile http://windows.php.net/downloads/releases/archives/%PHP_ZIP% || exit 0)
-  - if not exist %PHP_ZIP% (appveyor DownloadFile http://windows.php.net/downloads/releases/%PHP_ZIP% || exit 0)
-  - if not exist %PHP_ZIP% appveyor DownloadFile http://windows.php.net/downloads/releases/qa/%PHP_ZIP%
-  - set GETTEXT_ZIP=gettext0.19.8.1-iconv1.14-shared-32.zip
-  - if not exist %GETTEXT_ZIP% appveyor DownloadFile https://github.com/mlocati/gettext-iconv-windows/releases/download/v0.19.8.1-v1.14/%GETTEXT_ZIP%
-  - if not exist composer.phar appveyor DownloadFile https://getcomposer.org/download/1.4.2/composer.phar
-  - cd /D C:\tools
-  - if not exist php-%PHP_VERSION% mkdir php-%PHP_VERSION%
-  - cd /D C:\tools\php-%PHP_VERSION%
-  - if not exist php-installed.txt 7z x -bd -o. -y -- ..\downloads\%PHP_ZIP% >NUL
-  - if not exist php-installed.txt copy /Y php.ini-development php.ini
-  - if not exist php-installed.txt echo date.timezone="UTC" >> php.ini
-  - if not exist php-installed.txt echo extension_dir=ext >> php.ini
-  - if not exist php-installed.txt echo extension=php_mbstring.dll >> php.ini
-  - if not exist php-installed.txt echo extension=php_bz2.dll >> php.ini
-  - if not exist php-installed.txt echo extension=php_mysqli.dll >> php.ini
-  - if not exist php-installed.txt echo extension=php_curl.dll >> php.ini
-  - if not exist php-installed.txt echo extension=php_gd2.dll >> php.ini
-  - if not exist php-installed.txt echo extension=php_intl.dll >> php.ini
-  - if not exist php-installed.txt echo extension=php_pdo_mysql.dll >> php.ini
-  - if not exist php-installed.txt echo extension=php_xsl.dll >> php.ini
-  - if not exist php-installed.txt echo extension=php_fileinfo.dll >> php.ini
-  - if not exist php-installed.txt echo extension=php_openssl >> php.ini
-  - if not exist php-installed.txt echo zend.assertions=1 >> php.ini
-  - if not exist php-installed.txt echo assert.exception=On >> php.ini
-  - if not exist php-installed.txt type nul > php-installed.txt
-  - cd /D C:\tools
-  - if not exist composer.bat echo @php %%~dp0downloads\composer.phar %%* > composer.bat
-  - cd /D C:\tools
-  - if not exist gettext mkdir gettext
-  - cd /D C:\tools\gettext
-  - if not exist bin\msgen.exe 7z x -bd -o. -y -- ..\downloads\%GETTEXT_ZIP% >NUL
-  - cd /d "%APPVEYOR_BUILD_FOLDER%"
+  - ps: |
+      $ProgressPreference = "SilentlyContinue"
+      $ErrorActionPreference = "Stop"
+      [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
+      If(-Not(Test-Path -Path "C:\tools")) {
+          Write-Host "Creating tools directory"
+          New-Item -ItemType Directory -Path "C:\tools" | Out-Null
+      }
+      If(-Not(Test-Path -Path "C:\tools\downloads")) {
+          Write-Host "Creating download directory"
+          New-Item -ItemType Directory -Path "C:\tools\downloads" | Out-Null
+      }
+      Set-Location -Path C:\tools\downloads
+      $PHP_ZIP = "php-" + $env:PHP_VERSION + "-Win32-VC" + $env:VC_VERSION + "-" + $env:PLATFORM + ".zip"
+      If(-Not(Test-Path $PHP_ZIP)) {
+          Try {
+              Write-Host "Downloading PHP (release)"
+              Invoke-WebRequest $("http://windows.php.net/downloads/releases/" + $PHP_ZIP) -OutFile $PHP_ZIP
+          } Catch {
+              Try {
+                  Write-Host "Downloading PHP (archived)"
+                  Invoke-WebRequest $("http://windows.php.net/downloads/releases/archives/" + $PHP_ZIP) -OutFile $PHP_ZIP
+              } Catch {
+                  Write-Host "Downloading PHP (QA)"
+                  Invoke-WebRequest $("http://windows.php.net/downloads/releases/qa/" + $PHP_ZIP) -OutFile $PHP_ZIP
+              }
+          }
+      }
+      $GETTEXT_ZIP = "gettext0.19.8.1-iconv1.15-shared-32.zip"
+      If(-Not(Test-Path $GETTEXT_ZIP)) {
+          Write-Host "Downloading gettext"
+          Invoke-WebRequest $("https://github.com/mlocati/gettext-iconv-windows/releases/download/v0.19.8.1-v1.15/" + $GETTEXT_ZIP) -OutFile $GETTEXT_ZIP
+      }
+      If(-Not(Test-Path "composer.phar")) {
+          Write-Host "Downloading composer"
+          Invoke-WebRequest "https://getcomposer.org/download/1.6.3/composer.phar" -OutFile "composer.phar"
+      }
+      Set-Location -Path "C:\tools"
+      If(-Not(Test-Path -Path $("php-" + $env:PHP_VERSION))) {
+          Write-Host "Creating PHP directory"
+          New-Item -ItemType Directory -Path $("php-" + $env:PHP_VERSION) | Out-Null
+      }
+      Set-Location -Path $("php-" + $env:PHP_VERSION)
+      If(-Not(Test-Path -Path "php.exe")) {
+          Write-Host "Extracting PHP"
+          (7z.exe x -bd -y -- $("..\downloads\" + $PHP_ZIP)) | Out-Null
+          If(-Not($?)) {
+              throw "7z failed!"
+          }
+      }
+      If(-Not(Test-Path -Path "php-installed.txt")) {
+          Write-Host "Creating php.ini"
+          Copy-Item -Path "php.ini-development" -Destination "php.ini"
+          Add-Content -Path "php.ini" -Value "date.timezone=""UTC"""
+          Add-Content -Path "php.ini" -Value "extension_dir=ext"
+          Add-Content -Path "php.ini" -Value "extension=php_mbstring.dll"
+          Add-Content -Path "php.ini" -Value "extension=php_bz2.dll"
+          Add-Content -Path "php.ini" -Value "extension=php_mysqli.dll"
+          Add-Content -Path "php.ini" -Value "extension=php_curl.dll"
+          Add-Content -Path "php.ini" -Value "extension=php_gd2.dll"
+          Add-Content -Path "php.ini" -Value "extension=php_intl.dll"
+          Add-Content -Path "php.ini" -Value "extension=php_pdo_mysql.dll"
+          Add-Content -Path "php.ini" -Value "extension=php_xsl.dll"
+          Add-Content -Path "php.ini" -Value "extension=php_fileinfo.dll"
+          Add-Content -Path "php.ini" -Value "extension=php_openssl"
+          Add-Content -Path "php.ini" -Value "zend.assertions=1"
+          Add-Content -Path "php.ini" -Value "assert.exception=On"
+          New-Item -ItemType File "php-installed.txt" | Out-Null
+      }
+      Set-Location -Path "C:\tools"
+      If(-Not(Test-Path -Path "composer.bat")) {
+          Write-Host "Creating composer.bat"
+          Add-Content -Path "composer.bat" -Value "@php C:\tools\downloads\composer.phar %*"
+      }
+      If(-Not(Test-Path -Path "gettext")) {
+          Write-Host "Creating gettext directory"
+          New-Item -ItemType Directory -Path "gettext" | Out-Null
+      }
+      Set-Location -Path "C:\tools\gettext"
+      If(-Not(Test-Path -Path "bin\msgen.exe ")) {
+          Write-Host "Extracting gettext"
+          (7z.exe x -bd -y -- $("..\downloads\" + $GETTEXT_ZIP)) | Out-Null
+          If(-Not($?)) {
+              throw "7z failed!"
+          }
+      }
+      Set-Location -Path $env:APPVEYOR_BUILD_FOLDER
+  - cd /D "%APPVEYOR_BUILD_FOLDER%"
   - composer install --no-progress --no-suggest --optimize-autoloader --no-ansi --no-interaction %PREFER_LOWEST%
 
 build: off
 
 test_script:
-  - mysql --user=root -e "SET GLOBAL sql_mode = 'STRICT_TRANS_TABLES,STRICT_ALL_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION,ONLY_FULL_GROUP_BY'"
   - mysql --user=root -e "CREATE USER 'travis'@'localhost' IDENTIFIED BY '';" || exit 0
   - mysql --user=root -e "GRANT ALL PRIVILEGES ON *.* TO 'travis'@'localhost' WITH GRANT OPTION; FLUSH PRIVILEGES;"
   - cd /d "%APPVEYOR_BUILD_FOLDER%"
