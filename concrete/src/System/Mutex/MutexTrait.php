@@ -22,7 +22,7 @@ trait MutexTrait
     {
         $configuredMutex = $this->config->get('app.mutex');
         if (is_array($configuredMutex)) {
-            $index = array_search((string) $key, $configuredMutex, true);
+            $index = array_search((string) $key, array_keys($configuredMutex), true);
         } else {
             $index = false;
         }
