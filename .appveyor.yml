@@ -94,7 +94,7 @@ install:
       Set-Location -Path "C:\tools"
       If(-Not(Test-Path -Path "composer.bat")) {
           Write-Host "Creating composer.bat"
-          Add-Content -Path "composer.bat" -Value "@php C:\tools\downloads\composer.phar %%*"
+          Add-Content -Path "composer.bat" -Value "@php C:\tools\downloads\composer.phar %*"
       }
       If(-Not(Test-Path -Path "gettext")) {
           Write-Host "Creating gettext directory"
