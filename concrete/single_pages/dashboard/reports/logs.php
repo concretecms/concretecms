@@ -104,7 +104,7 @@ $th = $app->make('helper/text');
                     }
                     ?></strong></td>
                     <td style="width: 100%"><?=$th->makenice($ent->getMessage())?></td>
-                    <td valign="top" style="text-align: center; padding: 15px;"><a href="javascript:void(0)" class="btn btn-default btn-danger" onclick="deleteLog(<?=$ent->getID()?>)"><?=t('Delete')?></a></td>
+                    <td valign="top" style="text-align: center; padding: 15px;"><a href="javascript:void(0)" class="btn btn-default btn-xs btn-danger" onclick="deleteLog(<?=$ent->getID()?>)"><?=t('Delete')?></a></td>
                 </tr>
             <?php } ?>
             </tbody>
