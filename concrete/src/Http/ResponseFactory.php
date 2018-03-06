@@ -284,6 +284,18 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         // let's check if there are scheduled versions of pages
         Version::checkScheduledVersions();
 
+        $scheduledVersion = Version::get($collection, "SCHEDULED");
+        $publishDate = $scheduledVersion->getPublishDate();
+
+        if ($publishDate) {
+            $datetime = $this->app->make('helper/date');
+            $now = $datetime->date('Y-m-d G:i:s');
+
+            if (strtotime($now) >= strtotime($publishDate)) {
+                $collection->loadVersionObject('ACTIVE');
+            }
+        }
+
         if ($cp->canEditPageContents() || $cp->canEditPageProperties() || $cp->canViewPageVersions()) {
             $collection->loadVersionObject('RECENT');
         }

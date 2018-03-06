@@ -854,7 +854,6 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
                     if ($publishDate) {
                         if (strtotime($now) >= strtotime($publishDate)) {
                             $scheduledVersion->approve();
-                            $collection->loadVersionObject('ACTIVE');
                         }
                     }
                 }
