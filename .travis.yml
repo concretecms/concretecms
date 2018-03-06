@@ -33,7 +33,6 @@ before_script:
     fi
   - travis_retry composer update --no-suggest --no-interaction $PREFER_LOWEST # Run once to install magento's composer merger
   - travis_retry composer update --no-suggest --no-interaction $PREFER_LOWEST # Run twice to install merged dependencies
-  - phpunit --version
 
 script:
   # Run PHPUnit if we're not checking code style, otherwise run phpcs
