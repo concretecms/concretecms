@@ -54,6 +54,7 @@ class InstallCommand extends Command
             ->setName('c5:install')
             ->setDescription('Install concrete5')
             ->addEnvOption()
+            ->setCanRunAsRoot(false)
             ->addOption('db-server', null, InputOption::VALUE_REQUIRED, 'Location of database server')
             ->addOption('db-username', null, InputOption::VALUE_REQUIRED, 'Database username')
             ->addOption('db-password', null, InputOption::VALUE_REQUIRED, 'Database password')
