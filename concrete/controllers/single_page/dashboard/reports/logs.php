@@ -1,13 +1,14 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\Reports;
 
+use Concrete\Core\Logging\LogEntry;
+use Concrete\Core\Logging\LogList;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Support\Facade\Application;
-use Concrete\Core\Logging\LogList;
-use Concrete\Core\Logging\LogEntry;
 use Concrete\Core\User\User;
-use Request;
 use Log;
+use Request;
 
 class Logs extends DashboardPageController
 {
@@ -71,13 +72,13 @@ class Logs extends DashboardPageController
             $list = $this->getFilteredList();
             $entries = $list->get(0);
 
-            $fileName = "Log Search Results";
+            $fileName = 'Log Search Results';
 
-            header("Content-Type: text/csv");
-            header("Cache-control: private");
-            header("Pragma: public");
+            header('Content-Type: text/csv');
+            header('Cache-control: private');
+            header('Pragma: public');
             $date = date('Ymd');
-            header("Content-Disposition: attachment; filename=" . $fileName . "_form_data_{$date}.csv");
+            header('Content-Disposition: attachment; filename=' . $fileName . "_form_data_{$date}.csv");
 
             $fp = fopen('php://output', 'w');
 
@@ -95,7 +96,7 @@ class Logs extends DashboardPageController
             foreach ($entries as $ent) {
                 $uID = $ent->getUserID();
                 if (empty($uID)) {
-                    $user = t("Guest");
+                    $user = t('Guest');
                 } else {
                     $u = User::getByUserID($uID);
                     if (is_object($u)) {

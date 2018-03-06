@@ -1,6 +1,6 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die('Access Denied.');
 
-$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+$app = Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $valt = $app->make('helper/validation/token');
 $th = $app->make('helper/text');
 ?>
@@ -17,7 +17,7 @@ $th = $app->make('helper/text');
         <div class="ccm-search-field-content">
             <div class="ccm-search-main-lookup-field">
                 <i class="fa fa-search"></i>
-                <?=$form->search('keywords', array('placeholder' => t('Keywords')))?>
+                <?=$form->search('keywords', ['placeholder' => t('Keywords')])?>
                 <button type="submit" class="ccm-search-field-hidden-submit" tabindex="-1"><?=t('Search')?></button>
             </div>
         </div>
@@ -93,7 +93,7 @@ $th = $app->make('helper/text');
                     <td valign="top"><strong><?php
                     $uID = $ent->getUserID();
                     if (empty($uID)) {
-                        echo t("Guest");
+                        echo t('Guest');
                     } else {
                         $u = User::getByUserID($uID);
                         if (is_object($u)) {
