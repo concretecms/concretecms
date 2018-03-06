@@ -281,25 +281,17 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
             return $this->notFound('', Response::HTTP_NOT_FOUND, $headers);
         }
 
+        // let's check if there are scheduled versions of pages
+        Version::checkScheduledVersions();
+
         $scheduledVersion = Version::get($collection, "SCHEDULED");
         $publishDate = $scheduledVersion->getPublishDate();
-        $publishEndDate = $scheduledVersion->getPublishEndDate();
-
-        if ($publishEndDate) {
-            $datetime = $this->app->make('helper/date');
-            $now = $datetime->date('Y-m-d G:i:s');
-
-            if (strtotime($now) >= strtotime($publishEndDate)) {
-                $scheduledVersion->deny();
-            }
-        }
 
         if ($publishDate) {
             $datetime = $this->app->make('helper/date');
             $now = $datetime->date('Y-m-d G:i:s');
 
             if (strtotime($now) >= strtotime($publishDate)) {
-                $scheduledVersion->approve();
                 $collection->loadVersionObject('ACTIVE');
             }
         }
