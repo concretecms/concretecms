@@ -34,7 +34,7 @@ class ConfigCommand extends Command
             ->addArgument('item', InputArgument::REQUIRED, 'The configuration item (eg: concrete.debug.display_errors)')
             ->addArgument('value', InputArgument::OPTIONAL, 'The new value of the configuration item')
             ->addEnvOption()
-            ->discourageRunAsRoot()
+            ->setCanRunAsRoot(false)
             ->addOption('environment', 'e', InputOption::VALUE_REQUIRED, 'The environment (if not specified, we\'ll work with the configuration item valid for all environments)')
             ->addOption('generated-overrides', 'g', InputOption::VALUE_NONE, 'Set this option to save configurations to the generated_overrides folder')
         ;

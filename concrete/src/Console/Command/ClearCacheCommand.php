@@ -19,7 +19,7 @@ class ClearCacheCommand extends Command
             ->setDescription('Clear the concrete5 cache')
             ->addOption('thumbnails', 't', InputOption::VALUE_REQUIRED, "Should the thumbnails be removed from the cache? [Y/N]")
             ->addEnvOption()
-            ->discourageRunAsRoot()
+            ->setCanRunAsRoot(false)
             ->setHelp(<<<EOT
 If the --thumbnails options is not specified, we'll use the last value set in the dashboard.
 
