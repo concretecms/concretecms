@@ -5,7 +5,6 @@ namespace Concrete\Controller\SinglePage\Dashboard\Reports;
 use Concrete\Core\Logging\LogEntry;
 use Concrete\Core\Logging\LogList;
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\User;
 use Log;
 use Request;
@@ -14,8 +13,7 @@ class Logs extends DashboardPageController
 {
     public function clear($token = '', $channel = false)
     {
-        $app = Application::getFacadeApplication();
-        $valt = $app->make('helper/validation/token');
+        $valt = $this->app->make('helper/validation/token');
         if ($valt->validate('', $token)) {
             if (!$channel) {
                 Log::clearAll();
@@ -64,8 +62,7 @@ class Logs extends DashboardPageController
 
     public function csv($token = '')
     {
-        $app = Application::getFacadeApplication();
-        $valt = $app->make('helper/validation/token');
+        $valt = $this->app->make('helper/validation/token');
         if (!$valt->validate('', $token)) {
             $this->redirect('/dashboard/reports/logs');
         } else {
@@ -146,8 +143,7 @@ class Logs extends DashboardPageController
 
     public function deleteLog($logID, $token = '')
     {
-        $app = Application::getFacadeApplication();
-        $valt = $app->make('helper/validation/token');
+        $valt = $this->app->make('helper/validation/token');
         if ($valt->validate('', $token) && !empty($logID)) {
             $log = LogEntry::getByID($logID);
             if (is_object($log)) {
