@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Logging;
 
 use Concrete\Core\Support\Facade\Application;
@@ -6,10 +7,9 @@ use Concrete\Core\User\User;
 
 class LogEntry
 {
-
     /**
      * Gets the level of the log.
-     * 
+     *
      * @return string
      */
     public function getLevel()
@@ -19,7 +19,7 @@ class LogEntry
 
     /**
      * Gets the name of the logging level.
-     * 
+     *
      * @return string
      */
     public function getLevelName()
@@ -39,7 +39,7 @@ class LogEntry
 
     /**
      * Gets the message of the log.
-     * 
+     *
      * @return string
      */
     public function getMessage()
@@ -49,7 +49,7 @@ class LogEntry
 
     /**
      * Gets the channel of the log.
-     * 
+     *
      * @return string
      */
     public function getChannel()
@@ -59,7 +59,7 @@ class LogEntry
 
     /**
      * Gets the channel name of the logging level.
-     * 
+     *
      * @return string
      */
     public function getChannelDisplayName()
@@ -69,7 +69,7 @@ class LogEntry
 
     /**
      * Gets the id of the log.
-     * 
+     *
      * @return int
      */
     public function getID()
@@ -79,7 +79,7 @@ class LogEntry
 
     /**
      * Gets the HTML code for the icon of the logging level.
-     * 
+     *
      * @return string
      */
     public function getLevelIcon()
@@ -104,7 +104,7 @@ class LogEntry
 
     /**
      * Gets the user id of the user that caused the log.
-     * 
+     *
      * @return int
      */
     public function getUserID()
@@ -114,7 +114,7 @@ class LogEntry
 
     /**
      * Gets the user object of the user that caused the log.
-     * 
+     *
      * @return \Concrete\Core\User\User|null
      */
     public function getUserObject()
@@ -129,7 +129,7 @@ class LogEntry
 
     /**
      * Gets the formatted time of the log timestamp.
-     * 
+     *
      * @return string
      */
     public function getDisplayTimestamp()
@@ -142,7 +142,7 @@ class LogEntry
 
     /**
      * Gets the timestamp of the log.
-     * 
+     *
      * @return string
      */
     public function getTimestamp()
@@ -152,16 +152,16 @@ class LogEntry
 
     /**
      * Gets the log object from its id.
-     * 
+     *
      * @param int $logID Id of the log
-     * 
+     *
      * @return LogEntry|null
      */
     public static function getByID($logID)
     {
         $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
-        $row = $db->fetchAssoc("select * from Logs where logID = ?", [$logID]);
+        $row = $db->fetchAssoc('select * from Logs where logID = ?', [$logID]);
         if ($row) {
             $obj = new static();
             $obj = array_to_object($obj, $row);

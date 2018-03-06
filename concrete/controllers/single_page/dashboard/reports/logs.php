@@ -1,20 +1,19 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\Reports;
 
-use Concrete\Core\Page\Controller\DashboardPageController;
-use Concrete\Core\Support\Facade\Application;
-use Concrete\Core\Logging\LogList;
 use Concrete\Core\Logging\LogEntry;
+use Concrete\Core\Logging\LogList;
+use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\User\User;
-use Request;
 use Log;
+use Request;
 
 class Logs extends DashboardPageController
 {
     public function clear($token = '', $channel = false)
     {
-        $app = Application::getFacadeApplication();
-        $valt = $app->make('helper/validation/token');
+        $valt = $this->app->make('helper/validation/token');
         if ($valt->validate('', $token)) {
             if (!$channel) {
                 Log::clearAll();
@@ -63,21 +62,20 @@ class Logs extends DashboardPageController
 
     public function csv($token = '')
     {
-        $app = Application::getFacadeApplication();
-        $valt = $app->make('helper/validation/token');
+        $valt = $this->app->make('helper/validation/token');
         if (!$valt->validate('', $token)) {
             $this->redirect('/dashboard/reports/logs');
         } else {
             $list = $this->getFilteredList();
             $entries = $list->get(0);
 
-            $fileName = "Log Search Results";
+            $fileName = 'Log Search Results';
 
-            header("Content-Type: text/csv");
-            header("Cache-control: private");
-            header("Pragma: public");
+            header('Content-Type: text/csv');
+            header('Cache-control: private');
+            header('Pragma: public');
             $date = date('Ymd');
-            header("Content-Disposition: attachment; filename=" . $fileName . "_form_data_{$date}.csv");
+            header('Content-Disposition: attachment; filename=' . $fileName . "_form_data_{$date}.csv");
 
             $fp = fopen('php://output', 'w');
 
@@ -95,7 +93,7 @@ class Logs extends DashboardPageController
             foreach ($entries as $ent) {
                 $uID = $ent->getUserID();
                 if (empty($uID)) {
-                    $user = t("Guest");
+                    $user = t('Guest');
                 } else {
                     $u = User::getByUserID($uID);
                     if (is_object($u)) {
@@ -145,8 +143,7 @@ class Logs extends DashboardPageController
 
     public function deleteLog($logID, $token = '')
     {
-        $app = Application::getFacadeApplication();
-        $valt = $app->make('helper/validation/token');
+        $valt = $this->app->make('helper/validation/token');
         if ($valt->validate('', $token) && !empty($logID)) {
             $log = LogEntry::getByID($logID);
             if (is_object($log)) {
