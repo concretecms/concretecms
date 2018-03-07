@@ -64,8 +64,8 @@ if (isset($showinfo) && $showinfo) {
     $params[] = 'showinfo=0';
 }
 
-if (!empty($startTime)) {
-    $params[] = 'start=' . $startTime;
+if (!empty($startSeconds)) {
+    $params[] = 'start=' . $startSeconds;
 }
 
 $paramstring = '?' . implode('&', $params);

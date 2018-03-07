@@ -49,6 +49,7 @@ class Controller extends BlockController
                 $videoID = '';
             } else {
                 $videoID = (isset($query['v'])) ? $query['v'] : $videoID;
+                $videoID = strtok($videoID, '?');
             }
         }
 
@@ -56,11 +57,11 @@ class Controller extends BlockController
             $this->set('playlist', $videoID);
         }
 
-        if ($this->startTimeEnabled && !empty($this->startTime)) {
-            $this->set('startTime', $this->convertStringToSeconds($this->startTime));
+        if ($this->startTimeEnabled == 1 && ($this->startTime === '0' || $this->startTime)) {
+            $this->set('startSeconds', $this->convertStringToSeconds($this->startTime));
         }
         elseif ($params['t']) {
-            $this->set('startTime', $this->convertStringToSeconds($params['t']));
+            $this->set('startSeconds', $this->convertStringToSeconds($params['t']));
         }
 
         $this->set('videoID', $videoID);
@@ -85,7 +86,7 @@ class Controller extends BlockController
                 }
             }
         }
-        if ($seconds > 0) {
+        if ($seconds === 0 || $seconds > 0) {
             return $seconds;
         }
         return false;
