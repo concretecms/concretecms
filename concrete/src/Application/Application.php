@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Application;
 
 use Concrete\Core\Cache\CacheClearer;
@@ -193,13 +194,19 @@ class Application extends Container
         return false;
     }
 
+    /**
+     * Check if the core needs to be updated, and if so, updates it.
+     *
+     * @throws \Concrete\Core\System\Mutex\MutexBusyException throws a MutexBusyException exception if there upgrade process is already running
+     * @throws \Concrete\Core\Updater\Migrations\MigrationIncompleteException throws a MigrationIncompleteException exception if there's still some migration pending
+     */
     public function handleAutomaticUpdates()
     {
         $config = $this['config'];
         $installed = $config->get('concrete.version_db_installed');
         $core = $config->get('concrete.version_db');
         if ($installed < $core) {
-            $this->make(MutexInterface::class)->execute(Update::MUTEX_KEY, function() {
+            $this->make(MutexInterface::class)->execute(Update::MUTEX_KEY, function () {
                 Update::updateToCurrentVersion();
             });
         }
@@ -415,7 +422,7 @@ class Application extends Container
      *
      * @return mixed
      *
-     * @throws BindingResolutionException
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function build($concrete, array $parameters = [])
     {
