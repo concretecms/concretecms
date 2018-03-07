@@ -1378,11 +1378,13 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Delete and re-create all the thumbnail types (only applicable to image files).
+     * Create missing thumbnails (or re-create all the thumbnails).
+     *
+     * @param bool $deleteExistingThumbnails Set to true to delete existing thumbnails (they will be re-created from scratch)
      *
      * @return bool return true on success, false on failure (file is not an image, problems during image processing, ...)
      */
-    public function rescanThumbnails()
+    public function refreshThumbnails($deleteExistingThumbnails)
     {
         $result = false;
         if ($this->fvType == \Concrete\Core\File\Type\Type::T_IMAGE) {
@@ -1393,11 +1395,29 @@ class Version implements ObjectInterface
                     $imageHeight = (int) $this->getAttribute('height') ?: (int) $image->getSize()->getHeight();
                     $types = Type::getVersionList();
                     $file = $this->getFile();
+                    $fsl = null;
                     foreach ($types as $type) {
-                        // delete the file if it exists
-                        $this->deleteThumbnail($type);
                         if ($type->shouldExistFor($imageWidth, $imageHeight, $file)) {
+                            if ($deleteExistingThumbnails) {
+                                $this->deleteThumbnail($type);
+                            } else {
+                                if ($fsl === null) {
+                                    $fsl = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
+                                }
+                                $path = $type->getFilePath($this);
+                                try {
+                                    $exists = $fsl->has($path);
+                                } catch (FileNotFoundException $e) {
+                                    $exists = false;
+                                }
+                                if ($exists) {
+                                    continue;
+                                }
+                            }
                             $this->generateThumbnail($type);
+                        } else {
+                            // delete the file if it exists
+                            $this->deleteThumbnail($type);
                         }
                     }
                     $result = true;
@@ -1785,6 +1805,16 @@ class Version implements ObjectInterface
         }
 
         return false;
+    }
+
+    /**
+     * @deprecated use refreshThumbnails(true) instead
+     *
+     * @return bool
+     */
+    public function rescanThumbnails()
+    {
+        return $this->refreshThumbnails(true);
     }
 
     /**
