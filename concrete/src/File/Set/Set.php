@@ -421,25 +421,31 @@ class Set
     {
         $app = Application::getFacadeApplication();
         if (is_object($f_id)) {
-            $fileVersion = $f_id;
-            $f_id = (int) $fileVersion->getFileID();
-            if ($fileVersion instanceof FileEntity) {
-                $fileVersion = $fileVersion->getApprovedVersion() ?: $fileVersion->getRecentVersion();
+            $f = $f_id;
+            if ($f instanceof FileEntity) {
+                $file = $f;
+                $fileVersion = $file->getApprovedVersion();
+            } else {
+                $fileVersion = $f;
+                $file = $fileVersion->getFile();
             }
+            $f_id = (int) $file->getFileID();
         } else {
             $f_id = (int) $f_id;
             $em = $app->make(EntityManagerInterface::class);
             $file = $em->find(FileEntity::class, $f_id);
-            $fileVersion = $file->getApprovedVersion() ?: $file->getRecentVersion();
+            $fileVersion = $file->getApprovedVersion();
         }
-        if ($fileVersion === null) {
+        if ($file === null) {
             $result = null;
         } else {
             $file_set_file = File::createAndGetFile($f_id, $this->fsID);
             $fe = new \Concrete\Core\File\Event\FileSetFile($file_set_file);
             $director = $app->make(EventDispatcherInterface::class);
             $director->dispatch('on_file_added_to_set', $fe);
-            $fileVersion->refreshThumbnails(false);
+            if ($fileVersion !== null) {
+                $fileVersion->refreshThumbnails(false);
+            }
             $result = $file_set_file;
         }
 
@@ -465,18 +471,22 @@ class Set
     {
         $app = Application::getFacadeApplication();
         if (is_object($f_id)) {
-            $fileVersion = $f_id;
-            $f_id = (int) $fileVersion->getFileID();
-            if ($fileVersion instanceof FileEntity) {
-                $fileVersion = $fileVersion->getApprovedVersion() ?: $fileVersion->getRecentVersion();
+            $f = $f_id;
+            if ($f instanceof FileEntity) {
+                $file = $f;
+                $fileVersion = $file->getApprovedVersion();
+            } else {
+                $fileVersion = $f;
+                $file = $fileVersion->getFile();
             }
+            $f_id = (int) $file->getFileID();
         } else {
             $f_id = (int) $f_id;
             $em = $app->make(EntityManagerInterface::class);
             $file = $em->find(FileEntity::class, $f_id);
-            $fileVersion = $file->getApprovedVersion() ?: $file->getRecentVersion();
+            $fileVersion = $file->getApprovedVersion();
         }
-        if ($fileVersion === null) {
+        if ($file === null) {
             $result = false;
         } else {
             $file_set_file = File::createAndGetFile($f_id, $this->fsID);
@@ -488,7 +498,9 @@ class Set
             $fe = new \Concrete\Core\File\Event\FileSetFile($file_set_file);
             $director = $app->make(EventDispatcherInterface::class);
             $director->dispatch('on_file_removed_from_set', $fe);
-            $fileVersion->refreshThumbnails(false);
+            if ($fileVersion !== null) {
+                $fileVersion->refreshThumbnails(false);
+            }
             $result = true;
         }
 
