@@ -85,6 +85,7 @@ class Composer extends BackendInterfacePageController
 
             if (!$e->has()) {
                 $publishDateTime = false;
+                $publishEndDateTime = false;
                 if ($this->request->request->get('action') == 'schedule') {
                     $dateTime = new DateTime();
                     $publishDateTime = $dateTime->translate('cvPublishDate');
