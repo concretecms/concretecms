@@ -1,8 +1,10 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\System\Attributes;
 
+use Concrete\Core\Http\Request;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Tree\Tree;
+use Concrete\Core\Utility\Service\Validation\Strings;
 use Loader;
 use Core;
 use Concrete\Core\Tree\Type\Topic as TopicTree;
@@ -103,9 +105,12 @@ class Topics extends DashboardPageController
 
     public function tree_edit()
     {
-        $vs = Loader::helper('validation/strings');
+        $vs = $this->app->make('helper/validation/strings');
+        $request = Request::getInstance();
+        $treeId = $request->get('treeID');
+        $treeName = $request->get('treeName');
 
-        if (!$vs->notempty($_REQUEST['treeName'])) {
+        if (!$vs->notempty($treeName)) {
             $this->error->add(t('You must specify a valid name for your tree.'));
         }
 
@@ -114,12 +119,14 @@ class Topics extends DashboardPageController
         }
 
         if ($this->error->has()) {
-            return $this->view($_REQUEST['treeID']);
+            return $this->view($treeId);
         }
 
-        $tree = Tree::getByID(Loader::helper('security')->sanitizeInt($_REQUEST['treeID']));
+
+        $tree = Tree::getByID($this->app->make('helper/security')->sanitizeInt($treeId));
 
         $treeType = $tree->getTreeTypeObject();
+        $treeTypeHandle = '';
         if (is_object($treeType)) {
             $treeTypeHandle = $treeType->getTreeTypeHandle();
         }
@@ -127,8 +134,8 @@ class Topics extends DashboardPageController
             if (\PermissionKey::getByHandle('edit_topic_tree')->validate()) {
                 $topic = new \Concrete\Core\Tree\Type\Topic();
                 $topic->setPropertiesFromArray($tree);
-                $topic->setTopicTreeName($_REQUEST['treeName']);
-                $this->redirect('/dashboard/system/attributes/topics/' . $_REQUEST['treeID']);
+                $topic->setTopicTreeName($treeName);
+                $this->redirect('/dashboard/system/attributes/topics/' . $treeId);
             }
         }
     }

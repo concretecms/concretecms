@@ -1,6 +1,4 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
-
-$jh = Core::make('helper/json');
 ?>
 
 <nav class="navbar navbar-default">
@@ -61,7 +59,7 @@ $jh = Core::make('helper/json');
                 element: '#ccm-dialog-delete-topic-tree',
                 modal: true,
                 width: 320,
-                title: <?=$jh->encode(t("Delete Topic Tree")); ?>,
+                title: <?=json_encode(t("Delete Topic Tree")); ?>,
                 height: 'auto'
             });
         });
@@ -71,7 +69,7 @@ $jh = Core::make('helper/json');
                 element: '#ccm-dialog-edit-topic-tree',
                 modal: true,
                 width: 320,
-                title: <?=$jh->encode(t("Edit Topic Tree")); ?>,
+                title: <?=json_encode(t("Edit Topic Tree")); ?>,
                 height: 'auto'
             });
         });
