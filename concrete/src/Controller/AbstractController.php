@@ -51,12 +51,15 @@ abstract class AbstractController implements ApplicationAwareInterface
      */
     protected $parameters;
 
+    protected $app;
+
     /**
      * Initialize the instance.
      */
     public function __construct()
     {
         $this->request = Request::getInstance();
+        $this->app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
     }
 
     /**
@@ -66,7 +69,7 @@ abstract class AbstractController implements ApplicationAwareInterface
      */
     public function getRequest()
     {
-        if ($this->request === null) {
+        if (null === $this->request) {
             $this->request = Request::getInstance();
         }
 
@@ -176,7 +179,7 @@ abstract class AbstractController implements ApplicationAwareInterface
      */
     public function get($key = null, $defaultValue = null)
     {
-        if ($key == null) {
+        if (null == $key) {
             return $_GET;
         }
 
@@ -306,5 +309,21 @@ abstract class AbstractController implements ApplicationAwareInterface
     public function request($key = null)
     {
         return Request::request($key);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getApp()
+    {
+        return $this->app;
+    }
+
+    /**
+     * @param mixed $app
+     */
+    public function setApp($app)
+    {
+        $this->app = $app;
     }
 }

@@ -3,6 +3,7 @@ namespace Concrete\Controller\Panel\Detail\Page;
 
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
 use Concrete\Core\Attribute\Context\AttributePanelContext;
+use Concrete\Core\Error\ErrorList\Error\Error;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Workflow\Request\ApprovePageRequest;
 use PageEditResponse;
@@ -39,7 +40,7 @@ class Attributes extends BackendInterfacePageController
     {
         ob_start();
         $av = new AttributeTypeView($ak);
-        if ($mode == 'edit') {
+        if ('edit' == $mode) {
             $caValue = $this->page->getAttributeValueObject($ak);
             $ak->render(new AttributePanelContext(), $caValue);
         } else {
@@ -51,7 +52,7 @@ class Attributes extends BackendInterfacePageController
         $obj->akID = $ak->getAttributeKeyID();
         $obj->label = $ak->getAttributeKeyDisplayName();
         $obj->content = $html;
-        $obj->pending = ($mode == 'add') ? true : false;
+        $obj->pending = ('add' == $mode) ? true : false;
 
         return $obj;
     }
@@ -61,7 +62,7 @@ class Attributes extends BackendInterfacePageController
         $this->set('assignment', $this->assignment);
         $this->set('dt', Loader::helper('form/date_time'));
         $this->set('uh', Loader::helper('form/user_selector'));
-        $selectedAttributes = array();
+        $selectedAttributes = [];
         $allowed = $this->assignment->getAttributesAllowedArray();
         foreach ($this->page->getSetCollectionAttributes() as $ak) {
             if (is_object($ak) && in_array($ak->getAttributeKeyID(), $allowed)) {
@@ -81,7 +82,7 @@ class Attributes extends BackendInterfacePageController
             $asl = $this->assignment;
 
             $nvc = $c->getVersionToModify();
-            $data = array();
+            $data = [];
             if ($asl->allowEditName()) {
                 $data['cName'] = $post->get('cName');
             }
@@ -101,12 +102,12 @@ class Attributes extends BackendInterfacePageController
 
             // First, we check out the attributes we need to clear.
             $setAttribs = $nvc->getSetCollectionAttributes();
-            $processedAttributes = array();
+            $processedAttributes = [];
             $selectedAKIDs = $post->get('selectedAKIDs');
             if (!is_array($selectedAKIDs)) {
-                $selectedAKIDs = array();
+                $selectedAKIDs = [];
             }
-            $selected = is_array($post->get('selectedAKIDs')) ? $post->get('selectedAKIDs') : array();
+            $selected = is_array($post->get('selectedAKIDs')) ? $post->get('selectedAKIDs') : [];
 
             foreach ($setAttribs as $ak) {
                 // do I have the ability to edit this attribute?
@@ -115,7 +116,16 @@ class Attributes extends BackendInterfacePageController
                     if (in_array($ak->getAttributeKeyID(), $selected)) {
                         $controller = $ak->getController();
                         $value = $controller->createAttributeValueFromRequest();
-                        $nvc->setAttribute($ak, $value);
+                        $controller->setAttributeKey($ak->getAttributeTypeHandle());
+                        $setAttribute = $nvc->setAttribute($ak, $value);
+                        if (!$setAttribute instanceof Error) {
+                            $r = new PageEditResponse();
+                            $r->setPage($c);
+                            $r->setTitle(t('Page attribute not updated'));
+                            $error = t($setAttribute->getMessage());
+                            $r->setError($error);
+                            $r->outputJSON();
+                        }
                     } else {
                         // it is being removed
                         $nvc->clearAttribute($ak);
@@ -129,7 +139,15 @@ class Attributes extends BackendInterfacePageController
                     $ak = CollectionAttributeKey::getByID($akID);
                     $controller = $ak->getController();
                     $value = $controller->createAttributeValueFromRequest();
-                    $nvc->setAttribute($ak, $value);
+                    $setNewAttribute = $nvc->setAttribute($ak, $value);
+                    if ($setNewAttribute instanceof Error) {
+                        $r = new PageEditResponse();
+                        $r->setPage($c);
+                        $r->setTitle(t('Page attribute not updated'));
+                        $error = t($setNewAttribute->getMessage());
+                        $r->setError($error);
+                        $r->outputJSON();
+                    }
                 }
             }
 
@@ -164,7 +182,7 @@ class Attributes extends BackendInterfacePageController
         if (is_object($ak) && in_array($ak->getAttributeKeyID(), $allowed)) {
             $obj = $this->getAttributeJSONRepresentation($ak, 'add');
             $obj->pending = true;
-            $obj->assets = array();
+            $obj->assets = [];
             $ag = ResponseAssetGroup::get();
             foreach ($ag->getAssetsToOutput() as $position => $assets) {
                 foreach ($assets as $asset) {

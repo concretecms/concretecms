@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Page\Collection;
 
 use Area;
@@ -9,6 +8,8 @@ use CollectionVersion;
 use Concrete\Core\Area\CustomStyle as AreaCustomStyle;
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Block\CustomStyle as BlockCustomStyle;
+use Concrete\Core\Entity\Attribute\Key\Key;
+use Concrete\Core\Entity\Attribute\Key\PageKey;
 use Concrete\Core\Entity\Attribute\Value\PageValue;
 use Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVersionFeatureAssignment;
 use Concrete\Core\Feature\Feature;
@@ -102,7 +103,7 @@ class Collection extends ConcreteObject implements TrackableInterface
         $c = new self();
         $c->setPropertiesFromArray($row);
 
-        if ($version != false) {
+        if (false != $version) {
             // we don't do this on the front page
             $c->loadVersionObject($version);
         }
@@ -127,7 +128,7 @@ class Collection extends ConcreteObject implements TrackableInterface
             'select Collections.cID, Pages.cID as pcID from Collections left join Pages on Collections.cID = Pages.cID where Collections.cHandle = ?',
             [$handle]
             );
-        if ($r->numRows() == 0) {
+        if (0 == $r->numRows()) {
             // there is nothing in the collections table for this page, so we create and grab
 
             $data = [
@@ -136,7 +137,7 @@ class Collection extends ConcreteObject implements TrackableInterface
             $cObj = self::createCollection($data);
         } else {
             $row = $r->fetchRow();
-            if ($row['cID'] > 0 && $row['pcID'] == null) {
+            if ($row['cID'] > 0 && null == $row['pcID']) {
                 // there is a collection, but it is not a page. so we grab it
                 $cObj = self::getByID($row['cID']);
             }
@@ -222,7 +223,7 @@ class Collection extends ConcreteObject implements TrackableInterface
             $newCID = $db->Insert_ID();
         }
 
-        $cvIsApproved = (isset($data['cvIsApproved']) && $data['cvIsApproved'] == 0) ? 0 : 1;
+        $cvIsApproved = (isset($data['cvIsApproved']) && 0 == $data['cvIsApproved']) ? 0 : 1;
         $cvIsNew = 1;
         if ($cvIsApproved) {
             $cvIsNew = 0;
@@ -414,7 +415,7 @@ class Collection extends ConcreteObject implements TrackableInterface
         if ($this->isAlias() && !$this->isExternalLink()) {
             return false;
         }
-        if ($actuallyDoReindex || Config::get('concrete.page.search.always_reindex') == true) {
+        if ($actuallyDoReindex || true == Config::get('concrete.page.search.always_reindex')) {
             // Retrieve the attribute values for the current page
             $category = \Core::make('Concrete\Core\Attribute\Category\PageCategory');
             $indexer = $category->getSearchIndexer();
@@ -423,7 +424,7 @@ class Collection extends ConcreteObject implements TrackableInterface
                 $indexer->indexEntry($category, $value, $this);
             }
 
-            if ($index == false) {
+            if (false == $index) {
                 $index = new IndexedSearch();
             }
 
@@ -469,7 +470,68 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     public function setAttribute($ak, $value)
     {
-        return $this->vObj->setAttribute($ak, $value);
+        /**
+         * @var PageKey
+         */
+        $validate = $this->validate($ak, $value);
+        if (true === $validate) {
+            return $this->vObj->setAttribute($ak, $value);
+        } else {
+            return $validate;
+        }
+    }
+
+    /**
+     * Given a page key attribute, determine the best class name for it
+     * e.g. date_time = DateTime. Full class name == Concrete\Attribute\DateTime\Controller.
+     *
+     * @param PageKey $pageKey
+     *
+     * @return mixed
+     */
+    protected function getC5ControllerFromAttributeTypeHandle(PageKey $pageKey)
+    {
+        return str_replace(' ', '', (ucwords(str_replace('_', ' ', $pageKey->getAttributeTypeHandle()))));
+    }
+
+    /**
+     * Validate a given attribute.
+     *
+     * @param PageKey $pageKey
+     * @param $value
+     *
+     * @return bool
+     */
+    public function validate(PageKey $pageKey, $value)
+    {
+        $classname = 'Concrete\\Attribute\\' . $this->getC5ControllerFromAttributeTypeHandle($pageKey) . '\\Controller';
+        if (class_exists($classname) && method_exists($classname, 'validateForm')) {
+            $em = \Core::make('Doctrine\ORM\EntityManager');
+            $attributeClass = new $classname($em);
+            $key = $this->setAttributeKey($pageKey);
+            $attributeClass->setAttributeKey($key);
+
+            return $attributeClass->validateForm(['value' => $value]);
+        }
+
+        return true;
+    }
+
+    protected function setAttributeKey(PageKey $pageKey)
+    {
+        $key = new Key();
+        $key->setAttributeKeyHandle($pageKey->getAttributeKeyHandle());
+        $key->setAttributeType($pageKey->getAttributeType());
+        $key->setAttributeKeyName($pageKey->getAttributeKeyName());
+        $key->setAttributeCategoryEntity($pageKey->getAttributeCategoryEntity());
+        $key->setAttributeKeyID($pageKey->getAttributeKeyID());
+        $key->setAttributeKeySettings($pageKey->getAttributeKeySettings());
+        $key->setIsAttributeKeyContentIndexed($pageKey->getSearchIndexer());
+        $key->isAttributeKeyInternal($pageKey->isAttributeKeyInternal());
+        $key->setPackage($pageKey->getPackage());
+        $key->setAkIsRequired($pageKey->getAkIsRequired());
+
+        return $key;
     }
 
     /**
@@ -781,13 +843,13 @@ class Collection extends ConcreteObject implements TrackableInterface
         $styleHeader = '';
         foreach ($psss as $st) {
             $css = $st->getCSS();
-            if ($css !== '') {
+            if ('' !== $css) {
                 $styleHeader .= $st->getStyleWrapper($css);
             }
         }
 
         if (strlen(trim($styleHeader))) {
-            if ($return == true) {
+            if (true == $return) {
                 return $styleHeader;
             } else {
                 $v = \View::getInstance();
@@ -928,7 +990,7 @@ class Collection extends ConcreteObject implements TrackableInterface
         }
 
         $result = [];
-        if ($arHandle != false) {
+        if (false != $arHandle) {
             $key = strtolower($arHandle);
             if (isset($blockIDs[$key])) {
                 $result = $blockIDs[$key];
@@ -1048,7 +1110,7 @@ class Collection extends ConcreteObject implements TrackableInterface
                 // then we know we got a value; we increment it and return
                 $res = $r->fetchRow();
                 $displayOrder = $res['cbdis'];
-                if ($displayOrder === null) {
+                if (null === $displayOrder) {
                     return 0;
                 }
                 ++$displayOrder;
@@ -1257,7 +1319,7 @@ class Collection extends ConcreteObject implements TrackableInterface
                 ];
                 $q = 'insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbDisplayOrder, cbRelationID, isOriginal, cbOverrideAreaPermissions, cbIncludeAll) values (?, ?, ?, ?, ?, ?, ?, ?, ?)';
                 $db->query($q, $v);
-                if ($row['cbOverrideAreaPermissions'] != 0) {
+                if (0 != $row['cbOverrideAreaPermissions']) {
                     $q2 = "select paID, pkID from BlockPermissionAssignments where cID = '{$this->cID}' and bID = '{$row['bID']}' and cvID = '{$row['cvID']}'";
                     $r2 = $db->query($q2);
                     while ($row2 = $r2->fetchRow()) {

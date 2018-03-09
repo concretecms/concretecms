@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Attribute\Email;
 
 use Concrete\Core\Attribute\DefaultController;
@@ -49,7 +48,7 @@ class Controller extends DefaultController
     public function updateAttributeValueFromTextRepresentation($textRepresentation, ErrorList $warnings)
     {
         $good = true;
-        if ($textRepresentation !== '') {
+        if ('' !== $textRepresentation) {
             $vs = $this->app->make('helper/validation/strings');
             /* @var \Concrete\Core\Utility\Service\Validation\Strings $vs */
             if (!$vs->email($textRepresentation)) {

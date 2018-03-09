@@ -4,7 +4,9 @@ namespace Concrete\Core\Attribute;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Entity\Attribute\Key\Settings\TextSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\TextValue;
+use Concrete\Core\Error\ErrorList\Error\Error;
 use Concrete\Core\Error\ErrorList\ErrorList;
+use Concrete\Core\Error\ErrorList\Field\AttributeField;
 use Core;
 
 class DefaultController extends AttributeTypeController implements SimpleTextExportableAttributeInterface
@@ -13,6 +15,8 @@ class DefaultController extends AttributeTypeController implements SimpleTextExp
         'type' => 'text',
         'options' => ['default' => null, 'notnull' => false],
     ];
+
+    protected $akIsRequired;
 
     public function form()
     {
@@ -25,7 +29,7 @@ class DefaultController extends AttributeTypeController implements SimpleTextExp
 
     public function searchForm($list)
     {
-        if ($this->request('value') === '') {
+        if ('' === $this->request('value')) {
             return $list;
         }
         $list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), '%' . $this->request('value') . '%',
@@ -73,12 +77,17 @@ class DefaultController extends AttributeTypeController implements SimpleTextExp
 
     public function validateValue()
     {
-        return $this->attributeValue->getValue() != '';
+        return '' != $this->attributeValue->getValue();
     }
 
     public function validateForm($data)
     {
-        return isset($data['value']) && $data['value'] != '';
+        if (empty(trim($data['value']->getValue())) && $this->getAttributeKey()->getAkIsRequired()) {
+            return new Error(t($this->getAttributeKey()->getAttributeKeyName() . ' is required'), new
+            AttributeField($this->getAttributeKey()));
+        } else {
+            return true;
+        }
     }
 
     /**
@@ -89,7 +98,7 @@ class DefaultController extends AttributeTypeController implements SimpleTextExp
     public function getAttributeValueTextRepresentation()
     {
         $value = $this->getAttributeValueObject();
-        if ($value === null) {
+        if (null === $value) {
             $result = '';
         } else {
             $result = (string) $value->getValue();
@@ -106,8 +115,8 @@ class DefaultController extends AttributeTypeController implements SimpleTextExp
     public function updateAttributeValueFromTextRepresentation($textRepresentation, ErrorList $warnings)
     {
         $value = $this->getAttributeValueObject();
-        if ($value === null) {
-            if ($textRepresentation !== '') {
+        if (null === $value) {
+            if ('' !== $textRepresentation) {
                 $value = $this->createAttributeValue($textRepresentation);
             }
         } else {

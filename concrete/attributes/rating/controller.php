@@ -1,12 +1,13 @@
 <?php
-
 namespace Concrete\Attribute\Rating;
 
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\SimpleTextExportableAttributeInterface;
 use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
+use Concrete\Core\Error\ErrorList\Error\Error;
 use Concrete\Core\Error\ErrorList\ErrorList;
+use Concrete\Core\Error\ErrorList\Field\AttributeField;
 
 class Controller extends AttributeTypeController implements SimpleTextExportableAttributeInterface
 {
@@ -55,7 +56,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     public function createAttributeValue($rating)
     {
         $value = new NumberValue();
-        if ($rating == '') {
+        if ('' == $rating) {
             $rating = 0;
         }
         $value->setValue($rating);
@@ -85,9 +86,9 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     {
         $result = '';
         $value = $this->getAttributeValueObject();
-        if ($value !== null) {
+        if (null !== $value) {
             $number = $value->getValue();
-            if ($number !== null) {
+            if (null !== $number) {
                 $result = (string) (int) round($number / 20);
             }
         }
@@ -104,19 +105,19 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     {
         $value = $this->getAttributeValueObject();
         $textRepresentation = trim($textRepresentation);
-        if ($textRepresentation === '') {
-            if ($value !== null) {
+        if ('' === $textRepresentation) {
+            if (null !== $value) {
                 $value->setValue(null);
             }
         } else {
             $i = filter_var($textRepresentation, FILTER_VALIDATE_INT);
-            if ($i === null) {
+            if (null === $i) {
                 $warnings->add(t('"%1$s" is not a valid rating value for the attribute with handle %2$s', $textRepresentation, $this->attributeKey->getAttributeKeyHandle()));
             } elseif ($i < 0 || $i > 5) {
                 $warnings->add(t('The rating value of the attribute with handle %2$s must range from 0 to 5 (value received: %1$s)', $textRepresentation, $this->attributeKey->getAttributeKeyHandle()));
             } else {
                 $i = $i * 20;
-                if ($value === null) {
+                if (null === $value) {
                     $value = $this->createAttributeValue($i);
                 } else {
                     $value->setValue($i);
@@ -125,5 +126,28 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         }
 
         return $value;
+    }
+
+    public function type_form()
+    {
+        $this->set('form', \Core::make('helper/form'));
+        $this->set('akIsRequired', $this->getAttributeKey() ? $this->getAttributeKey()->getAkIsRequired() : false);
+    }
+
+    public function validateForm($data)
+    {
+        $required = $this->getAttributeKey()->getAkIsRequired();
+        $value = $data['value']->getValue();
+
+        if (!$required) {
+            return true;
+        } elseif ($required && !$value) {
+            return new Error(t('You must specify a valid a rating for attribute %s', $this->getAttributeKey()
+                ->getAttributeKeyDisplayName()),
+                new AttributeField($this->getAttributeKey())
+            );
+        }
+
+        return true;
     }
 }

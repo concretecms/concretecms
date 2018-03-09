@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Attribute\Boolean;
 
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
@@ -7,7 +6,9 @@ use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\SimpleTextExportableAttributeInterface;
 use Concrete\Core\Entity\Attribute\Key\Settings\BooleanSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\BooleanValue;
+use Concrete\Core\Error\ErrorList\Error\Error;
 use Concrete\Core\Error\ErrorList\ErrorList;
+use Concrete\Core\Error\ErrorList\Field\AttributeField;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Core;
 
@@ -30,7 +31,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     public function search()
     {
         $f = $this->app->make('helper/form');
-        $checked = $this->request('value') == '1' ? true : false;
+        $checked = '1' == $this->request('value') ? true : false;
         echo '<div class="checkbox"><label>' . $f->checkbox($this->field('value'), 1, $checked) . ' ' . t('Yes') . '</label></div>';
     }
 
@@ -84,10 +85,10 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         if (isset($akey->type)) {
             $checked = (string) $akey->type['checked'];
             $label = (string) $akey->type['checkbox-label'];
-            if ($checked != '') {
+            if ('' != $checked) {
                 $type->setIsCheckedByDefault(true);
             }
-            if ($label != '') {
+            if ('' != $label) {
                 $type->setCheckboxLabel($label);
             }
         }
@@ -101,7 +102,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         $checked = false;
         if (is_object($this->attributeValue)) {
             $value = $this->getAttributeValue()->getValue();
-            $checked = $value == 1 ? true : false;
+            $checked = 1 == $value ? true : false;
         } else {
             if ($this->akCheckedByDefault) {
                 $checked = true;
@@ -120,7 +121,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     public function createAttributeValue($value)
     {
         $v = new BooleanValue();
-        $value = ($value == false || $value == '0') ? false : true;
+        $value = (false == $value || '0' == $value) ? false : true;
         $v->setValue($value);
 
         return $v;
@@ -142,7 +143,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     {
         $v = $this->getAttributeValue()->getValue();
 
-        return $v == 1;
+        return 1 == $v;
     }
 
     public function getSearchIndexValue()
@@ -180,7 +181,12 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     // if this gets run we assume we need it to be validated/checked
     public function validateForm($data)
     {
-        return isset($data['value']) && $data['value'] == 1;
+        if (isset($data['value']) && 1 == $data['value'] && true === $this->getAttributeKey()->getAkIsRequired()) {
+            return new Error(t($this->getAttributeKey()->getAttributeKeyName() . ' requires an option to be selected'), new
+            AttributeField($this->getAttributeKey()));
+        } else {
+            return true;
+        }
     }
 
     public function getAttributeKeySettingsClass()
@@ -196,7 +202,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     public function getAttributeValueTextRepresentation()
     {
         $value = $this->getAttributeValueObject();
-        if ($value === null || $value->getValue() === null) {
+        if (null === $value || null === $value->getValue()) {
             $result = '';
         } else {
             $result = $value->getValue() ? '1' : '0';
@@ -214,18 +220,18 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     {
         $value = $this->getAttributeValueObject();
         $textRepresentation = trim($textRepresentation);
-        if ($textRepresentation === '') {
-            if ($value !== null) {
+        if ('' === $textRepresentation) {
+            if (null !== $value) {
                 $value->setValue(null);
             }
         } else {
             // false values: '0', 'no', 'true' (case insensitive)
             // true values: '1', 'yes', 'false' (case insensitive)
             $bool = filter_var($textRepresentation, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
-            if ($bool === null) {
+            if (null === $bool) {
                 $warnings->add(t('"%1$s" is not a valid boolean value for the attribute with handle %2$s', $textRepresentation, $this->attributeKey->getAttributeKeyHandle()));
             } else {
-                if ($value === null) {
+                if (null === $value) {
                     $value = $this->createAttributeValue($bool);
                 } else {
                     $value->setValue($bool);

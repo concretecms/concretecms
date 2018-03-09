@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Attribute\Topics;
 
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
@@ -8,7 +7,9 @@ use Concrete\Core\Attribute\SimpleTextExportableAttributeInterface;
 use Concrete\Core\Entity\Attribute\Key\Settings\TopicsSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectedTopic;
 use Concrete\Core\Entity\Attribute\Value\Value\TopicsValue;
+use Concrete\Core\Error\ErrorList\Error\Error;
 use Concrete\Core\Error\ErrorList\ErrorList;
+use Concrete\Core\Error\ErrorList\Field\AttributeField;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Node as TreeNode;
@@ -80,7 +81,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         ];
         $akTopicParentNodeID = $data['akTopicParentNodeID'];
         $akTopicTreeID = $data['akTopicTreeID'];
-        if (isset($data['akTopicAllowMultipleValues']) && $data['akTopicAllowMultipleValues'] == 1) {
+        if (isset($data['akTopicAllowMultipleValues']) && 1 == $data['akTopicAllowMultipleValues']) {
             $akTopicAllowMultipleValues = 1;
         } else {
             $akTopicAllowMultipleValues = 0;
@@ -197,7 +198,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         $allowMultipleValues = $key->tree['allow-multiple-values'];
         $type->setTopicTreeID($tree->getTreeID());
         $type->setParentNodeID($node->getTreeNodeID());
-        $type->setAllowMultipleValues(((string) $allowMultipleValues) == '1' ? true : false);
+        $type->setAllowMultipleValues('1' == ((string) $allowMultipleValues) ? true : false);
 
         return $type;
     }
@@ -256,7 +257,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         }
 
         // remove line break for empty list
-        if ($str == "\n") {
+        if ("\n" == $str) {
             return '';
         }
 
@@ -327,7 +328,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
 
     public function validateKey($data = false)
     {
-        if ($data == false) {
+        if (false == $data) {
             $data = $this->post();
         }
 
@@ -349,9 +350,19 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
 
     public function validateForm($p)
     {
-        $topicsArray = $_POST['topics_' . $this->attributeKey->getAttributeKeyID()];
+        $topics = $p['value']->getSelectedTopics();
+        $required = $this->getAttributeKey()->getAkIsRequired();
 
-        return is_array($topicsArray) && count($topicsArray) > 0;
+        if (!$required) {
+            return true;
+        } elseif ($required && !count($topics)) {
+            return new Error(t('You must specify some topics for %s', $this->getAttributeKey()
+                ->getAttributeKeyDisplayName()),
+                new AttributeField($this->getAttributeKey())
+            );
+        }
+
+        return true;
     }
 
     public function getTopicParentNode()
@@ -406,7 +417,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     {
         $result = '';
         $value = $this->getAttributeValueObject();
-        if ($value !== null) {
+        if (null !== $value) {
             $topics = $value->getSelectedTopics();
             if (!empty($topics)) {
                 $ids = [];
@@ -430,8 +441,8 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     {
         $value = $this->getAttributeValueObject();
         $textRepresentation = trim($textRepresentation);
-        if ($textRepresentation === '') {
-            if ($value !== null) {
+        if ('' === $textRepresentation) {
+            if (null !== $value) {
                 $value->getSelectedTopics()->clear();
             }
         } elseif (!preg_match('/^tid:\d+(,tid:\d+)*$/', $textRepresentation)) {
@@ -445,7 +456,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
             $nodeIDs = array_unique(array_map('intval', $matches[1]));
             foreach ($nodeIDs as $nodeID) {
                 $node = TreeNode::getByID($nodeID);
-                if ($node === null) {
+                if (null === $node) {
                     $warnings->add(t('"%1$s" is not a valid node identifier for the Topics attribute with handle %2$s', $nodeID, $this->attributeKey->getAttributeKeyHandle()));
                     continue;
                 }
@@ -457,13 +468,13 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
                         break;
                     }
                 }
-                if ($withinParentScope === false) {
+                if (false === $withinParentScope) {
                     $warnings->add(t('The Topic node with ID "%1$s" is not a child of the root node of the Topics attribute with handle %2$s', $nodeID, $this->attributeKey->getAttributeKeyHandle()));
                     continue;
                 }
-                if ($initialized === false) {
+                if (false === $initialized) {
                     $initialized = true;
-                    if ($value === null) {
+                    if (null === $value) {
                         $value = new TopicsValue();
                     } else {
                         $value->getSelectedTopics()->clear();

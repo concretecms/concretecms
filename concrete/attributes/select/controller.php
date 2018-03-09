@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Attribute\Select;
 
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
@@ -16,6 +15,8 @@ use Core;
 use Database;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Concrete\Core\Error\ErrorList\Error\Error;
+use Concrete\Core\Error\ErrorList\Field\AttributeField;
 
 class Controller extends AttributeTypeController implements SimpleTextExportableAttributeInterface
 {
@@ -28,6 +29,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     private $akHideNoneOption;
     private $akSelectOptionDisplayOrder;
     private $akDisplayMultipleValuesOnSelect;
+    private $akIsRequired;
 
     public function getIconFormatter()
     {
@@ -44,7 +46,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         $this->set('form', Core::make('helper/form'));
         $this->load();
 
-        if ($this->request->getMethod() == 'POST') {
+        if ('POST' == $this->request->getMethod()) {
             $akSelectValues = $this->getSelectValuesFromPost();
             $this->set('akSelectValues', $akSelectValues);
         } elseif (isset($this->attributeKey)) {
@@ -157,11 +159,11 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
             $akSelectAllowOtherValues = $akey->type['allow-other-values'];
             $akHideNoneOption = $akey->type['hide-none-option'];
 
-            $type->setAllowMultipleValues(((string) $akSelectAllowMultipleValues) == '1' ? true : false);
+            $type->setAllowMultipleValues('1' == ((string) $akSelectAllowMultipleValues) ? true : false);
             $type->setDisplayOrder($akSelectOptionDisplayOrder);
-            $type->setAllowOtherValues(((string) $akSelectAllowOtherValues) == '1' ? true : false);
-            $type->setDisplayMultipleValuesOnSelect(((string) $akDisplayMultipleValuesOnSelect) == '1' ? true : false);
-            $type->setHideNoneOption(((string) $akHideNoneOption) == '1' ? true : false);
+            $type->setAllowOtherValues('1' == ((string) $akSelectAllowOtherValues) ? true : false);
+            $type->setDisplayMultipleValuesOnSelect('1' == ((string) $akDisplayMultipleValuesOnSelect) ? true : false);
+            $type->setHideNoneOption('1' == ((string) $akHideNoneOption) ? true : false);
 
             $list = new SelectValueOptionList();
             if (isset($akey->type->options)) {
@@ -191,7 +193,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
             // This is the fancy auto complete, which uses an irritating way of handling
             // IDs so that we can discern whether something is an existing selected option
             // vs just a number that happens to match that option's ID.
-            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            if ('POST' == $_SERVER['REQUEST_METHOD']) {
                 $options = $this->loadSelectedTagValueFromPost($this->request('atSelectOptionValue'));
                 foreach ($options as $opt) {
                     $selectedOptions[] = ['id' => $opt->id, 'text' => $opt->text];
@@ -205,7 +207,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
                 }
             }
         } else {
-            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            if ('POST' == $_SERVER['REQUEST_METHOD']) {
                 $options = $this->loadSelectedTagValueFromPost($this->request('atSelectOptionValue'));
                 foreach ($options as $opt) {
                     $selectedOptionIDs[] = $opt->id;
@@ -384,7 +386,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
 
         $options = [];
 
-        if ($value != null) {
+        if (null != $value) {
             if (is_array($value) && $this->akSelectAllowMultipleValues) {
                 foreach ($value as $v) {
                     if ($v instanceof SelectValueOption) {
@@ -440,15 +442,18 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
 
     public function validateValue()
     {
-        return is_object($value = $this->getAttributeValue()->getValue()) && ((string) $value != '');
+        return is_object($value = $this->getAttributeValue()->getValue()) && ('' != (string) $value);
     }
 
     public function validateForm($p)
     {
         $this->load();
         $options = $this->request('atSelectOptionValue');
-
-        return $options != '';
+        if (empty($options) && true === $this->getAttributeKey()->getAkIsRequired()) {
+            return new Error(t($this->getAttributeKey()->getAttributeKeyName() . ' requires an option to be selected'), new AttributeField($this->getAttributeKey()));
+        } else {
+            return true;
+        }
     }
 
     public function searchForm($list)
@@ -467,7 +472,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
                 }
             }
         }
-        if (count($optionQuery) == 0) {
+        if (0 == count($optionQuery)) {
             return false;
         }
 
@@ -496,7 +501,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
             }
         }
         // remove line break for empty list
-        if ($str == "\n") {
+        if ("\n" == $str) {
             return '';
         }
 
@@ -566,7 +571,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
             $column = 'ak_' . $this->attributeKey->getAttributeKeyHandle();
             $qb = $list->getQueryObject();
             $qb->andWhere(
-                $comparison === '!=' || $comparison === '<>'
+                '!=' === $comparison || '<>' === $comparison
                     ? $qb->expr()->notLike($column, ':optionValue_' . $this->attributeKey->getAttributeKeyID())
                     : $qb->expr()->like($column, ':optionValue_' . $this->attributeKey->getAttributeKeyID())
             );
@@ -639,17 +644,17 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         $type = $this->getAttributeKeySettings();
         $optionList = $type->getOptionList();
 
-        if (isset($data['akSelectAllowMultipleValues']) && ($data['akSelectAllowMultipleValues'] == 1)) {
+        if (isset($data['akSelectAllowMultipleValues']) && (1 == $data['akSelectAllowMultipleValues'])) {
             $akSelectAllowMultipleValues = 1;
         } else {
             $akSelectAllowMultipleValues = 0;
         }
-        if (isset($data['akSelectAllowOtherValues']) && ($data['akSelectAllowOtherValues'] == 1)) {
+        if (isset($data['akSelectAllowOtherValues']) && (1 == $data['akSelectAllowOtherValues'])) {
             $akSelectAllowOtherValues = 1;
         } else {
             $akSelectAllowOtherValues = 0;
         }
-        if (isset($data['akDisplayMultipleValuesOnSelect']) && ($data['akDisplayMultipleValuesOnSelect'] == 1)) {
+        if (isset($data['akDisplayMultipleValuesOnSelect']) && (1 == $data['akDisplayMultipleValuesOnSelect'])) {
             $akDisplayMultipleValuesOnSelect = 1;
         } else {
             $akDisplayMultipleValuesOnSelect = 0;
@@ -663,10 +668,16 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
             $akSelectOptionDisplayOrder = 'display_asc';
         }
 
-        if (isset($data['akHideNoneOption']) && ($data['akHideNoneOption'] == 1)) {
+        if (isset($data['akHideNoneOption']) && (1 == $data['akHideNoneOption'])) {
             $akHideNoneOption = 1;
         } else {
             $akHideNoneOption = 0;
+        }
+
+        if (isset($data['akIsRequired']) && (1 == $data['akIsRequired'])) {
+            $akIsRequired = 1;
+        } else {
+            $akIsRequired = 0;
         }
 
         $type->setAllowMultipleValues((bool) $akSelectAllowMultipleValues);
@@ -702,7 +713,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
      */
     public function getAllowMultipleValues()
     {
-        if ($this->akSelectAllowMultipleValues === null) {
+        if (null === $this->akSelectAllowMultipleValues) {
             $this->load();
         }
 
@@ -711,7 +722,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
 
     public function getAllowOtherValues()
     {
-        if ($this->akSelectAllowOtherValues === null) {
+        if (null === $this->akSelectAllowOtherValues) {
             $this->load();
         }
 
@@ -720,7 +731,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
 
     public function getOptionDisplayOrder()
     {
-        if ($this->akSelectOptionDisplayOrder === null) {
+        if (null === $this->akSelectOptionDisplayOrder) {
             $this->load();
         }
 
@@ -745,7 +756,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     public function getAttributeValueTextRepresentation()
     {
         $value = $this->getAttributeValueObject();
-        if ($value === null) {
+        if (null === $value) {
             $result = '';
         } else {
             $options = [];
@@ -771,12 +782,12 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         $optionTexts = array_filter(
             array_map('trim', $optionTexts),
             function ($optionText) {
-                return $optionText !== '';
+                return '' !== $optionText;
             }
         );
         $numOptions = count($optionTexts);
-        if ($numOptions === 0) {
-            if ($value !== null) {
+        if (0 === $numOptions) {
+            if (null !== $value) {
                 $value->getSelectedOptions()->clear();
             }
         } else {
@@ -801,7 +812,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
                         break;
                     }
                 }
-                if ($selectedOption === null) {
+                if (null === $selectedOption) {
                     if ($settings->getAllowOtherValues()) {
                         $selectedOption = new SelectValueOption();
                         $selectedOption->setOptionList($optionList);
@@ -816,8 +827,8 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
                         $warnings->add(t('"%1$s" is not a valid option for the Select Attribute with handle "%2$s"', $optionText, $this->attributeKey->getAttributeKeyHandle()));
                     }
                 }
-                if ($selectedOption !== null) {
-                    if ($value === null) {
+                if (null !== $selectedOption) {
+                    if (null === $value) {
                         $value = new SelectValue();
                     }
                     if ($firstOption) {
@@ -852,12 +863,14 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
             $this->akSelectOptionDisplayOrder = $type->getDisplayOrder();
             $this->akDisplayMultipleValuesOnSelect = $type->getDisplayMultipleValuesOnSelect();
             $this->akHideNoneOption = $type->getHideNoneOption();
+            $this->akIsRequired = $ak->getAkIsRequired();
 
             $this->set('akDisplayMultipleValuesOnSelect', $this->akDisplayMultipleValuesOnSelect);
             $this->set('akSelectAllowMultipleValues', $this->akSelectAllowMultipleValues);
             $this->set('akSelectAllowOtherValues', $this->akSelectAllowOtherValues);
             $this->set('akSelectOptionDisplayOrder', $this->akSelectOptionDisplayOrder);
             $this->set('akHideNoneOption', $this->akHideNoneOption);
+            $this->set('akIsRequired', $this->akIsRequired);
         }
     }
 
@@ -878,12 +891,12 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         } else {
             $values = $value;
         }
-        
+
         $response = [];
         foreach ($values as $value) {
             $value = trim($value);
             $o = new \stdClass();
-            if (strpos($value, 'SelectAttributeOption:') === 0) {
+            if (0 === strpos($value, 'SelectAttributeOption:')) {
                 $optionID = substr($value, 22);
                 $option = $r->findOneBy(['list' => $type->getOptionList(), 'avSelectOptionID' => $optionID]);
                 if (is_object($option)) {
@@ -906,7 +919,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         $displayOrder = 0;
         $options = [];
         foreach ($_POST as $key => $value) {
-            if (!strstr($key, 'akSelectValue_') || $value == 'TEMPLATE') {
+            if (!strstr($key, 'akSelectValue_') || 'TEMPLATE' == $value) {
                 continue;
             }
             $opt = false;

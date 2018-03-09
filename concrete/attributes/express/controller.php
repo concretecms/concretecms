@@ -5,13 +5,14 @@ use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Entity\Attribute\Key\Settings\ExpressSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\ExpressValue;
-use Doctrine\ORM\Query\Expr;
+use Concrete\Core\Error\ErrorList\Error\Error;
+use Concrete\Core\Error\ErrorList\Field\AttributeField;
 
 class Controller extends AttributeTypeController
 {
     public $helpers = ['form'];
 
-    protected $searchIndexFieldDefinition = array('type' => 'integer', 'options' => array('notnull' => false));
+    protected $searchIndexFieldDefinition = ['type' => 'integer', 'options' => ['notnull' => false]];
 
     public function getIconFormatter()
     {
@@ -26,7 +27,7 @@ class Controller extends AttributeTypeController
     public function saveKey($data)
     {
         /**
-         * @var $type ExpressType
+         * @var ExpressType
          */
         $type = $this->getAttributeKeySettings();
         $id = $data['exEntityID'];
@@ -35,6 +36,7 @@ class Controller extends AttributeTypeController
         if (is_object($entity)) {
             $type->setEntity($entity);
         }
+
         return $type;
     }
 
@@ -61,9 +63,9 @@ class Controller extends AttributeTypeController
     public function searchForm($list)
     {
         $list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), '%' . $this->request('value') . '%', 'like');
+
         return $list;
     }
-
 
     public function getSearchIndexValue()
     {
@@ -78,7 +80,7 @@ class Controller extends AttributeTypeController
 
     public function createAttributeValue($entry)
     {
-        $selected = array();
+        $selected = [];
         if (!is_array($entry)) {
             $selected[] = $entry;
         } else {
@@ -86,21 +88,23 @@ class Controller extends AttributeTypeController
         }
         $av = new ExpressValue();
         $av->setSelectedEntries($selected);
+
         return $av;
     }
 
     public function getDisplayValue()
     {
         $html = '';
-        foreach($this->attributeValue->getValue()->getSelectedEntries() as $entry) {
+        foreach ($this->attributeValue->getValue()->getSelectedEntries() as $entry) {
             $html .= '<div>';
             $entity = $entry->getEntity();
             $columns = $entity->getResultColumnSet();
-            foreach($columns->getColumns() as $column) {
+            foreach ($columns->getColumns() as $column) {
                 $html .= '<span>' . $column->getColumnValue($entry) . '</span>';
             }
             $html .= '</div>';
         }
+
         return $html;
     }
 
@@ -125,12 +129,12 @@ class Controller extends AttributeTypeController
         if (is_object($type)) {
             return $type->getEntity();
         }
-
     }
+
     protected function load()
     {
         $entityID = 0;
-        $entities = array();
+        $entities = [];
         $entity = $this->getEntity();
         if (is_object($entity)) {
             $entityID = $entity->getID();
@@ -149,4 +153,20 @@ class Controller extends AttributeTypeController
         return ExpressSettings::class;
     }
 
+    public function validateForm($data)
+    {
+        $required = $this->getAttributeKey()->getAkIsRequired();
+        $value = $data['value']->getValue()->getSelectedEntries();
+
+        if (!$required) {
+            return true;
+        } elseif ($required && !count($value)) {
+            return new Error(t('You must specify a valid a express entity for attribute %s', $this->getAttributeKey()
+                ->getAttributeKeyDisplayName()),
+                new AttributeField($this->getAttributeKey())
+            );
+        }
+
+        return true;
+    }
 }

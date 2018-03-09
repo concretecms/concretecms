@@ -2,44 +2,41 @@
 
 function getAttributeOptionHTML($v)
 {
-    if ($v == 'TEMPLATE') {
+    if ('TEMPLATE' == $v) {
         $akSelectValueID = 'TEMPLATE_CLEAN';
         $akSelectValue = 'TEMPLATE';
     } else {
-        if ($v->getSelectAttributeOptionID() != false) {
+        if (false != $v->getSelectAttributeOptionID()) {
             $akSelectValueID = $v->getSelectAttributeOptionID();
         } else {
             $akSelectValueID = uniqid();
         }
         $akSelectValue = $v->getSelectAttributeOptionValue();
-    }
-    ?>
-		<div id="akSelectValueDisplay_<?=$akSelectValueID?>" >
+    } ?>
+		<div id="akSelectValueDisplay_<?=$akSelectValueID; ?>" >
 			<div class="rightCol">
-				<input class="btn btn-primary" type="button" onClick="ccmAttributesHelper.editValue('<?=addslashes($akSelectValueID)?>')" value="<?=t('Edit')?>" />
-				<input class="btn btn-danger" type="button" onClick="ccmAttributesHelper.deleteValue('<?=addslashes($akSelectValueID)?>')" value="<?=t('Delete')?>" />
+				<input class="btn btn-primary" type="button" onClick="ccmAttributesHelper.editValue('<?=addslashes($akSelectValueID); ?>')" value="<?=t('Edit'); ?>" />
+				<input class="btn btn-danger" type="button" onClick="ccmAttributesHelper.deleteValue('<?=addslashes($akSelectValueID); ?>')" value="<?=t('Delete'); ?>" />
 			</div>			
-			<span onClick="ccmAttributesHelper.editValue('<?=addslashes($akSelectValueID)?>')" id="akSelectValueStatic_<?=$akSelectValueID?>" class="leftCol"><?=$akSelectValue ?></span>
+			<span onClick="ccmAttributesHelper.editValue('<?=addslashes($akSelectValueID); ?>')" id="akSelectValueStatic_<?=$akSelectValueID; ?>" class="leftCol"><?=$akSelectValue; ?></span>
 		</div>
-		<div id="akSelectValueEdit_<?=$akSelectValueID?>" style="display:none">
+		<div id="akSelectValueEdit_<?=$akSelectValueID; ?>" style="display:none">
 			<span class="leftCol">
-				<input name="akSelectValueOriginal_<?=$akSelectValueID?>" type="hidden" value="<?=$akSelectValue?>" />
+				<input name="akSelectValueOriginal_<?=$akSelectValueID; ?>" type="hidden" value="<?=$akSelectValue; ?>" />
 				<?php if (is_object($v) && $v->getSelectAttributeOptionID()) {
-    ?>
-					<input id="akSelectValueExistingOption_<?=$akSelectValueID?>" name="akSelectValueExistingOption_<?=$akSelectValueID?>" type="hidden" value="<?=$akSelectValueID?>" />
+        ?>
+					<input id="akSelectValueExistingOption_<?=$akSelectValueID; ?>" name="akSelectValueExistingOption_<?=$akSelectValueID; ?>" type="hidden" value="<?=$akSelectValueID; ?>" />
 				<?php
-} else {
-    ?>
-					<input id="akSelectValueNewOption_<?=$akSelectValueID?>" name="akSelectValueNewOption_<?=$akSelectValueID?>" type="hidden" value="<?=$akSelectValueID?>" />
+    } else {
+        ?>
+					<input id="akSelectValueNewOption_<?=$akSelectValueID; ?>" name="akSelectValueNewOption_<?=$akSelectValueID; ?>" type="hidden" value="<?=$akSelectValueID; ?>" />
 				<?php
-}
-    ?>
-				<input id="akSelectValueField_<?php echo $akSelectValueID?>" onkeypress="ccmAttributesHelper.keydownHandler(event);" class="akSelectValueField form-control" data-select-value-id="<?php echo $akSelectValueID;
-    ?>" name="akSelectValue_<?php echo $akSelectValueID?>" type="text" value="<?php echo $akSelectValue?>" size="40" />
+    } ?>
+				<input id="akSelectValueField_<?php echo $akSelectValueID; ?>" onkeypress="ccmAttributesHelper.keydownHandler(event);" class="akSelectValueField form-control" data-select-value-id="<?php echo $akSelectValueID; ?>" name="akSelectValue_<?php echo $akSelectValueID; ?>" type="text" value="<?php echo $akSelectValue; ?>" size="40" />
 			</span>		
 			<div class="rightCol">
-				<input class="btn btn-default" type="button" onClick="ccmAttributesHelper.editValue('<?=addslashes($akSelectValueID)?>')" value="<?=t('Cancel')?>" />
-				<input class="btn btn-success" type="button" onClick="ccmAttributesHelper.changeValue('<?=addslashes($akSelectValueID)?>')" value="<?=t('Save')?>" />
+				<input class="btn btn-default" type="button" onClick="ccmAttributesHelper.editValue('<?=addslashes($akSelectValueID); ?>')" value="<?=t('Cancel'); ?>" />
+				<input class="btn btn-success" type="button" onClick="ccmAttributesHelper.changeValue('<?=addslashes($akSelectValueID); ?>')" value="<?=t('Save'); ?>" />
 			</div>		
 		</div>	
 		<div class="ccm-spacer">&nbsp;</div>
@@ -47,90 +44,98 @@ function getAttributeOptionHTML($v)
 } ?>
 
 <fieldset class="ccm-attribute ccm-attribute-select">
-<legend><?=t('Select Options')?></legend>
+<legend><?=t('Select Options'); ?></legend>
 
-<div class="form-group">
-    <label><?=t("Multiple Values")?></label>
+<div class="form-group" data-group="single-value">
+    <label><?=t("Required"); ?></label>
     <div class="checkbox">
         <label>
-            <?=$form->checkbox('akSelectAllowMultipleValues', 1, $akSelectAllowMultipleValues)?> <span><?=t('Allow multiple options to be chosen.')?></span>
+            <?=$form->checkbox('akIsRequired', 1, $akIsRequired); ?> <span><?=t('Ensure a value is selected.'); ?></span>
+        </label>
+    </div>
+</div>
+
+<div class="form-group">
+    <label><?=t("Multiple Values"); ?></label>
+    <div class="checkbox">
+        <label>
+            <?=$form->checkbox('akSelectAllowMultipleValues', 1, $akSelectAllowMultipleValues); ?> <span><?=t('Allow multiple options to be chosen.'); ?></span>
         </label>
     </div>
 </div>
 
 <div class="form-group" data-group="single-value">
-	<label><?=t("Single Value")?></label>
+	<label><?=t("Single Value"); ?></label>
 	<div class="checkbox">
 		<label>
-			<?=$form->checkbox('akDisplayMultipleValuesOnSelect', 1, $akDisplayMultipleValuesOnSelect)?> <span><?=t('Display full option list when selecting.')?></span>
+			<?=$form->checkbox('akDisplayMultipleValuesOnSelect', 1, $akDisplayMultipleValuesOnSelect); ?> <span><?=t('Display full option list when selecting.'); ?></span>
 		</label>
 	</div>
-	<div class="help-block"><?=t('Enabling this will typically display the list with radio buttons.')?></div>
+	<div class="help-block"><?=t('Enabling this will typically display the list with radio buttons.'); ?></div>
 </div>
 
 <div class="form-group" data-group="single-value">
-    <label><?=t("Hide None Option")?></label>
+    <label><?=t("Hide None Option"); ?></label>
     <div class="checkbox">
         <label>
-            <?=$form->checkbox('akHideNoneOption', 1, $akHideNoneOption)?> <span><?=t('Hide none option from the list.')?></span>
+            <?=$form->checkbox('akHideNoneOption', 1, $akHideNoneOption); ?> <span><?=t('Hide none option from the list.'); ?></span>
         </label>
     </div>
 </div>
 
 <div class="form-group">
-    <label><?=t("User Submissions")?></label>
+    <label><?=t("User Submissions"); ?></label>
     <div class="checkbox">
         <label>
-            <?=$form->checkbox('akSelectAllowOtherValues', 1, $akSelectAllowOtherValues)?> <span><?=t('Allow users to add to this list.')?></span>
+            <?=$form->checkbox('akSelectAllowOtherValues', 1, $akSelectAllowOtherValues); ?> <span><?=t('Allow users to add to this list.'); ?></span>
         </label>
     </div>
 </div>
 
 <div class="form-group">
-<label for="akSelectOptionDisplayOrder"><?=t("Option Order")?></label>
+<label for="akSelectOptionDisplayOrder"><?=t("Option Order"); ?></label>
 	<?php
-    $displayOrderOptions = array(
+    $displayOrderOptions = [
         'display_asc' => t('Display Order'),
         'alpha_asc' => t('Alphabetical'),
         'popularity_desc' => t('Most Popular First'),
-    );
+    ];
     ?>
 
-	<?=$form->select('akSelectOptionDisplayOrder', $displayOrderOptions, $akSelectOptionDisplayOrder)?>
+	<?=$form->select('akSelectOptionDisplayOrder', $displayOrderOptions, $akSelectOptionDisplayOrder); ?>
 </div>
 
 <div class="clearfix">
-<label><?=t('Values')?></label>
+<label><?=t('Values'); ?></label>
 <div class="input">
 	<div id="attributeValuesInterface">
 	<div id="attributeValuesWrap">
 	<?php
     Loader::helper('text');
     foreach ($akSelectValues as $v) {
-        if ($v->getSelectAttributeOptionID() != false) {
+        if (false != $v->getSelectAttributeOptionID()) {
             $akSelectValueID = $v->getSelectAttributeOptionID();
         } else {
             $akSelectValueID = uniqid();
-        }
-        ?>
-		<div id="akSelectValueWrap_<?=$akSelectValueID?>" class="akSelectValueWrap akSelectValueWrapSortable">
-			<?=getAttributeOptionHTML($v)?>
+        } ?>
+		<div id="akSelectValueWrap_<?=$akSelectValueID; ?>" class="akSelectValueWrap akSelectValueWrapSortable">
+			<?=getAttributeOptionHTML($v); ?>
 		</div>
 	<?php
     } ?>
 	</div>
 	
 	<div id="akSelectValueWrapTemplate" class="akSelectValueWrap" style="display:none">
-		<?=getAttributeOptionHTML('TEMPLATE') ?>
+		<?=getAttributeOptionHTML('TEMPLATE'); ?>
 	</div>
 	
 	<div id="addAttributeValueWrap" class="form-inline">
-		<input id="akSelectValueFieldNew" name="akSelectValueNew" type="text" value="<?=$defaultNewOptionNm ?>" size="40"  class="form-control"
-		onfocus="ccmAttributesHelper.clrInitTxt(this,'<?=$defaultNewOptionNm ?>','faint',0)" 
-		onblur="ccmAttributesHelper.clrInitTxt(this,'<?=$defaultNewOptionNm ?>','faint',1)"
+		<input id="akSelectValueFieldNew" name="akSelectValueNew" type="text" value="<?=$defaultNewOptionNm; ?>" size="40"  class="form-control"
+		onfocus="ccmAttributesHelper.clrInitTxt(this,'<?=$defaultNewOptionNm; ?>','faint',0)" 
+		onblur="ccmAttributesHelper.clrInitTxt(this,'<?=$defaultNewOptionNm; ?>','faint',1)"
 		onkeypress="ccmAttributesHelper.keydownHandler(event);"
 		 /> 
-		<input class="btn btn-primary" type="button" onClick="ccmAttributesHelper.saveNewOption(); $('#ccm-attribute-key-form').unbind()" value="<?=t('Add') ?>" />
+		<input class="btn btn-primary" type="button" onClick="ccmAttributesHelper.saveNewOption(); $('#ccm-attribute-key-form').unbind()" value="<?=t('Add'); ?>" />
 	</div>
 	</div>
 
@@ -265,7 +270,7 @@ function getAttributeOptionHTML($v)
             var $form = $("#ccm-attribute-key-form");
             $form.on('submit', function(e) {
                 var numFields = $form.find(':input').length;
-                if (numFields > <?=$max_input_vars?>) {
+                if (numFields > <?=$max_input_vars; ?>) {
                     alert(
                         <?=json_encode(t(
 <<<'EOT'
@@ -275,7 +280,7 @@ You should increase the value of the %1$s option in your php.ini.
 
 The current value of this option is %2$s, but this form requires at least a value of %3$s.
 EOT
-                        , 'max_input_vars', $max_input_vars, '[[CURRENT_NUMBER_OF_FIELDS]]'))?>.replace('[[CURRENT_NUMBER_OF_FIELDS]]', numFields.toString())
+                        , 'max_input_vars', $max_input_vars, '[[CURRENT_NUMBER_OF_FIELDS]]')); ?>.replace('[[CURRENT_NUMBER_OF_FIELDS]]', numFields.toString())
                     );
                     e.preventDefault();
                 }

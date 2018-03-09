@@ -7,7 +7,6 @@ use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
 use Concrete\Core\Calendar\Calendar;
 use Concrete\Core\Calendar\Event\Event;
 use Concrete\Core\Entity\Calendar\CalendarEvent;
-use Concrete\Core\Attribute\Context\BasicFormContext;
 
 class Controller extends \Concrete\Attribute\Number\Controller
 {
@@ -42,7 +41,7 @@ class Controller extends \Concrete\Attribute\Number\Controller
     {
         $value = $this->getValue();
         /**
-         * @var $linkFormatter LinkFormatterInterface
+         * @var LinkFormatterInterface
          */
         $linkFormatter = \Core::make('calendar/event/formatter/link');
         $event = Event::getByID($value);
@@ -52,6 +51,7 @@ class Controller extends \Concrete\Attribute\Number\Controller
             if ($url) {
                 $text .= ' (' . $url . ')';
             }
+
             return $text;
         }
     }
@@ -116,6 +116,30 @@ class Controller extends \Concrete\Attribute\Number\Controller
     {
         $eventID = (int) ($this->request('eventID'));
         $list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), $eventID, '=');
+
         return $list;
+    }
+
+    public function type_form()
+    {
+        $this->set('form', \Core::make('helper/form'));
+        $this->set('akIsRequired', $this->getAttributeKey() ? $this->getAttributeKey()->getAkIsRequired() : false);
+    }
+
+    public function validateForm($data)
+    {
+        $required = $this->getAttributeKey()->getAkIsRequired();
+        $value = $data['value']->getValue();
+
+        if (!$required) {
+            return true;
+        } elseif ($required && !$value) {
+            return new Error(t('You must specify a valid a calendar for attribute %s', $this->getAttributeKey()
+                ->getAttributeKeyDisplayName()),
+                new AttributeField($this->getAttributeKey())
+            );
+        }
+
+        return true;
     }
 }
