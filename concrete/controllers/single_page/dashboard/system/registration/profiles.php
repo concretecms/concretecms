@@ -27,12 +27,18 @@ class Profiles extends DashboardSitePageController
 
             $config = $this->getSite()->getConfigRepository();
 
+            $isProfileOptionChanged = $config->get('user.profiles_enabled') === $this->post('public_profiles') ? true : false;
+
             $config->save('user.profiles_enabled', ($this->post('public_profiles') ? true : false));
             $config->save('user.gravatar.enabled', ($this->post('gravatar_fallback') ? true : false));
             $config->save('user.gravatar.max_level', Loader::helper('security')->sanitizeString($this->post('gravatar_max_level')));
             $config->save('user.gravatar.image_set', Loader::helper('security')->sanitizeString($this->post('gravatar_image_set')));
             $config->save('user.display_account_menu', (bool) $this->post('display_account_menu', false));
 
+            if (!$isProfileOptionChanged) {
+                $this->redirect('/dashboard/system/registration/profiles/profiles_updated');
+                return;
+            }
 
             // $message = ($this->post('public_profiles')?t('Public profiles have been enabled'):t('Public profiles have been disabled.'));
             if ($this->post('public_profiles')) {
@@ -54,6 +60,12 @@ class Profiles extends DashboardSitePageController
                 $this->redirect('/dashboard/system/registration/profiles/profiles_disabled');
             }
         }
+    }
+
+    public function profiles_updated()
+    {
+        $this->set('message', t('Public profiles settings have been updated.'));
+        $this->view();
     }
 
     public function profiles_enabled()
