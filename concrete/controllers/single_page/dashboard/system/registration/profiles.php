@@ -3,7 +3,6 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Registration;
 
 use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Concrete\Core\Page\Single;
-use Loader;
 
 class Profiles extends DashboardSitePageController
 {
@@ -27,8 +26,8 @@ class Profiles extends DashboardSitePageController
 
             $config->save('user.profiles_enabled', ($this->post('public_profiles') ? true : false));
             $config->save('user.gravatar.enabled', ($this->post('gravatar_fallback') ? true : false));
-            $config->save('user.gravatar.max_level', Loader::helper('security')->sanitizeString($this->post('gravatar_max_level')));
-            $config->save('user.gravatar.image_set', Loader::helper('security')->sanitizeString($this->post('gravatar_image_set')));
+            $config->save('user.gravatar.max_level', $this->app->make('helper/security')->sanitizeString($this->post('gravatar_max_level')));
+            $config->save('user.gravatar.image_set', $this->app->make('helper/security')->sanitizeString($this->post('gravatar_image_set')));
             $config->save('user.display_account_menu', (bool) $this->post('display_account_menu', false));
 
             if (!$isProfileOptionChanged) {
@@ -80,7 +79,6 @@ class Profiles extends DashboardSitePageController
         if ($message) {
             $this->set('message', $message);
         }
-        $this->token = Loader::helper('validation/token');
 
         $config = $this->getSite()->getConfigRepository();
 
