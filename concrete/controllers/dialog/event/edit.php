@@ -152,7 +152,7 @@ class Edit extends BackendInterfaceController
                         }
                     } else {
                         // Otherwise unset the page completely
-                        $eventVersion->setPageObject(0);
+                        $eventVersion->setPageID(0);
                     }
                 }
             }
