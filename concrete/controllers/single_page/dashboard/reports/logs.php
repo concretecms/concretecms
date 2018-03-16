@@ -1,18 +1,19 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\Reports;
 
-use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Logging\LogEntry;
 use Concrete\Core\Logging\LogList;
+use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\User\User;
 use Log;
-use Core;
 use Request;
-use User;
 
 class Logs extends DashboardPageController
 {
     public function clear($token = '', $channel = false)
     {
-        $valt = Core::make('helper/validation/token');
+        $valt = $this->app->make('helper/validation/token');
         if ($valt->validate('', $token)) {
             if (!$channel) {
                 Log::clearAll();
@@ -30,22 +31,22 @@ class Logs extends DashboardPageController
     {
         $this->requireAsset('selectize');
 
-        $levels = array();
+        $levels = [];
         foreach (Log::getLevels() as $level) {
             $levels[$level] = Log::getLevelDisplayName($level);
         }
 
-        $channels = array('' => t('All Channels'));
+        $channels = ['' => t('All Channels')];
         foreach (Log::getChannels() as $channel) {
             $channels[$channel] = Log::getChannelDisplayName($channel);
         }
 
         $r = Request::getInstance();
-        $query = http_build_query(array(
+        $query = http_build_query([
             'channel' => $r->query->get('channel'),
             'keywords' => $r->query->get('keywords'),
             'level' => $r->query->get('level'),
-        ));
+        ]);
 
         $list = $this->getFilteredList();
 
@@ -61,38 +62,38 @@ class Logs extends DashboardPageController
 
     public function csv($token = '')
     {
-        $valt = Core::make('helper/validation/token');
+        $valt = $this->app->make('helper/validation/token');
         if (!$valt->validate('', $token)) {
             $this->redirect('/dashboard/reports/logs');
         } else {
             $list = $this->getFilteredList();
             $entries = $list->get(0);
 
-            $fileName = "Log Search Results";
+            $fileName = 'Log Search Results';
 
-            header("Content-Type: text/csv");
-            header("Cache-control: private");
-            header("Pragma: public");
+            header('Content-Type: text/csv');
+            header('Cache-control: private');
+            header('Pragma: public');
             $date = date('Ymd');
-            header("Content-Disposition: attachment; filename=" . $fileName . "_form_data_{$date}.csv");
+            header('Content-Disposition: attachment; filename=' . $fileName . "_form_data_{$date}.csv");
 
             $fp = fopen('php://output', 'w');
 
             // write the columns
-            $row = array(
+            $row = [
                 t('Date'),
                 t('Level'),
                 t('Channel'),
                 t('User'),
                 t('Message'),
-            );
+            ];
 
             fputcsv($fp, $row);
 
             foreach ($entries as $ent) {
                 $uID = $ent->getUserID();
                 if (empty($uID)) {
-                    $user = t("Guest");
+                    $user = t('Guest');
                 } else {
                     $u = User::getByUserID($uID);
                     if (is_object($u)) {
@@ -102,13 +103,13 @@ class Logs extends DashboardPageController
                     }
                 }
 
-                $row = array(
+                $row = [
                     $ent->getDisplayTimestamp(),
                     $ent->getLevelName(),
                     $ent->getChannelDisplayName(),
                     $user,
                     $ent->getMessage(),
-                );
+                ];
 
                 fputcsv($fp, $row);
             }
@@ -138,5 +139,20 @@ class Logs extends DashboardPageController
         }
 
         return $list;
+    }
+
+    public function deleteLog($logID, $token = '')
+    {
+        $valt = $this->app->make('helper/validation/token');
+        if ($valt->validate('', $token) && !empty($logID)) {
+            $log = LogEntry::getByID($logID);
+            if (is_object($log)) {
+                $log->delete();
+            }
+            $this->redirect('/dashboard/reports/logs');
+        } else {
+            $this->redirect('/dashboard/reports/logs');
+        }
+        $this->view();
     }
 }
