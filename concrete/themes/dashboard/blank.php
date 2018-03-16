@@ -64,7 +64,7 @@ if (isset($headerMenu) && $headerMenu instanceof \Concrete\Core\Controller\Eleme
 
 if (isset($breadcrumb) && (!empty($breadcrumb))) {
     ?>
-    <div class="ccm-search-results-breadcrumb">
+    <div class="ccm-search-results-breadcrumb" <?= ($c->getCollectionPath() == '/dashboard/files/search') ? 'file-manager-breadcrumb' : ''; ?>>
         <ol class="breadcrumb">
             <?php
             foreach ($breadcrumb as $value) {
