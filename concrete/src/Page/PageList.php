@@ -219,8 +219,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
             case self::PAGE_VERSION_ACTIVE:
             default:
                 $now = new \DateTime();
-                $query->andWhere('cvIsApproved = 1');
-                $query->andWhere('(cvPublishDate <= :cvPublishDate or cvPublishDate is null)');
+                $query->andWhere('cvID = (select cvID from CollectionVersions where cID = cv.cID and cvIsApproved = 1 and ((cvPublishDate <= :cvPublishDate or cvPublishDate is null) and (cvPublishEndDate >= :cvPublishDate or cvPublishEndDate is null)) order by cvPublishDate desc limit 1)');
                 $query->setParameter('cvPublishDate', $now->format('Y-m-d H:i:s'));
                 break;
         }

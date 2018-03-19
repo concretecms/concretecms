@@ -3,9 +3,10 @@
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Updater\Migrations\AbstractMigration;
+use Concrete\Core\Updater\Migrations\LongRunningMigrationInterface;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
-class Version20170412000000 extends AbstractMigration implements RepeatableMigrationInterface
+class Version20170412000000 extends AbstractMigration implements RepeatableMigrationInterface, LongRunningMigrationInterface
 {
     /**
      * {@inheritdoc}

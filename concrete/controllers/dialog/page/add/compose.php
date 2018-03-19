@@ -87,6 +87,7 @@ class Compose extends Controller
             if ($this->request->request('addPageComposeAction') == 'publish'
             || $this->request->request('addPageComposeAction') == 'schedule') {
                 $publishDateTime = false;
+                $publishEndDateTime = false;
                 if ($this->request->request->get('addPageComposeAction') == 'schedule') {
                     $dateTime = new DateTime();
                     $publishDateTime = $dateTime->translate('cvPublishDate');
