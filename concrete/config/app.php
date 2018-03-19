@@ -1174,6 +1174,12 @@ return [
         'Concrete\Core\Page\Command\CopyPageCommand' => 'Concrete\Core\Page\Command\CopyPageCommandHandler'
     ],
 
+    'queues' => [
+        'rescan_file',
+        'rescan_multilingual_page',
+        'copy_page'
+    ],
+
     'api' => [
 
         'base_url' => '/ccm/api/v1'

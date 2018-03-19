@@ -8,7 +8,9 @@ use Bernard\Queue;
 use Bernard\Queue\RoundRobinQueue;
 use Bernard\QueueFactory\PersistentFactory;
 use Concrete\Core\Application\Application;
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Events\EventDispatcher;
+use League\Tactician\Bernard\QueueableCommand;
 
 /**
  * A handy wrapper for calling Bernard functions using the full API.
@@ -28,13 +30,19 @@ class QueueService
     protected $factory;
 
     /**
+     * @var Repository
+     */
+    protected $config;
+
+    /**
      * @var Producer
      */
     protected $producer;
 
-    public function __construct(Application $app)
+    public function __construct(Application $app, Repository $config)
     {
         $this->app = $app;
+        $this->config = $config;
         $this->factory = new PersistentFactory(
             $this->app->make('queue/driver'),
             $this->app->make('queue/serializer')
@@ -46,8 +54,12 @@ class QueueService
      * A single queue (string) or an array of queues.
      * @param $mixed $queue
      */
-    public function get($queue)
+    public function get($queue = null)
     {
+
+        if (!$queue) {
+            $queue = $this->config->get('app.queues');
+        }
 
         if (is_array($queue) && count($queue) > 1) {
             $queues = array_map([$this->factory, 'create'], $queue);

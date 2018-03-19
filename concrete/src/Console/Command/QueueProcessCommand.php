@@ -1,7 +1,9 @@
 <?php
 namespace Concrete\Core\Console\Command;
 
+use Bernard\BernardEvents;
 use Bernard\Consumer;
+use Bernard\Event\EnvelopeEvent;
 use Bernard\Queue\RoundRobinQueue;
 use Bernard\QueueFactory\PersistentFactory;
 use Bernard\Router\ClassNameRouter;
@@ -29,7 +31,7 @@ class QueueProcessCommand extends Command
             ->addOption('max-messages', null, InputOption::VALUE_OPTIONAL, 'Maximum number of messages that should be consumed.', null)
             ->addOption('stop-when-empty', null, InputOption::VALUE_NONE, 'Stop consumer when queue is empty.', null)
             ->addOption('stop-on-error', null, InputOption::VALUE_NONE, 'Stop consumer when an error occurs.', null)
-            ->addArgument('queue', InputArgument::REQUIRED | InputArgument::IS_ARRAY, 'Names of one or more queues that will be consumed.')
+            ->addArgument('queue', InputOption::VALUE_OPTIONAL, 'Names of one or more queues that will be consumed.')
         ;
     }
 
@@ -42,8 +44,33 @@ class QueueProcessCommand extends Command
         $router = new ClassNameRouter();
         $router->add(QueueableCommand::class, $receiver);
 
+        $queueName = $input->getArgument('queue');
+
+        /*
+        $eventDispatcher = $app->make('director');
+        $eventDispatcher->addListener(
+            BernardEvents::INVOKE,
+            function(EnvelopeEvent $envelopeEvent) {
+                echo PHP_EOL . 'Processing: ' . $envelopeEvent->getEnvelope()->getClass();
+            }
+        );
+        $eventDispatcher->addListener(
+            BernardEvents::ACKNOWLEDGE,
+            function(EnvelopeEvent $envelopeEvent) {
+                echo PHP_EOL . 'Processed: ' . $envelopeEvent->getEnvelope()->getClass();
+            }
+        );
+        $eventDispatcher->addListener(
+            BernardEvents::REJECT,
+            function(EnvelopeEvent $envelopeEvent) {
+                echo PHP_EOL . 'Failed: ' . $envelopeEvent->getEnvelope()->getClass();
+                // you can also log error messages here
+            }
+        );
+        */
+
         $consumer = new Consumer($router, $app->make('director'));
-        $queue = $app->make(QueueService::class)->get($input->getArgument('queue'));
+        $queue = $app->make(QueueService::class)->get($queueName);
         $consumer->consume($queue, $input->getOptions());
     }
 
