@@ -55,18 +55,19 @@ use Concrete\Core\Multilingual\Page\Section\Section as MultilingualSection;
                             var ctf = $('select[name=copyTreeFrom]').val();
                             var ctt = $('select[name=copyTreeTo]').val();
                             if (ctt > 0 && ctf > 0 && ctt != ctf) {
-                                ccm_triggerProgressiveOperation(
-                                    CCM_TOOLS_PATH + '/dashboard/sitemap_copy_all',
-                                    [
+                                new ConcreteProgressiveOperation({
+                                    url: CCM_DISPATCHER_FILENAME + '/ccm/system/page/copy_all',
+                                    data: [
                                         {'name': 'origCID', 'value': ctf},
                                         {'name': 'destCID', 'value': ctt},
                                         {'name': 'copyChildrenOnly', 'value': true},
                                         {'name': 'multilingual', 'value': true}
                                     ],
-                                    "<?=t('Copy Locale Tree')?>", function () {
+                                    title: "<?=t('Copy Locale Tree')?>",
+                                    onComplete: function() {
                                         window.location.href = "<?=$this->action('tree_copied')?>";
                                     }
-                                );
+                                });
                             } else {
                                 alert("<?=t('You must choose two separate multilingual sections to copy from/to')?>");
                             }

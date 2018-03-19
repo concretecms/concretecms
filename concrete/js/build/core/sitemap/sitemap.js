@@ -554,13 +554,6 @@
 		$.get(CCM_TOOLS_PATH + "/dashboard/sitemap_check_in?cID=" + cID  + "&ccm_token=" + CCM_SECURITY_TOKEN);
 	}
 
-	ConcreteSitemap.refreshCopyOperations = function() {
-		ccm_triggerProgressiveOperation(CCM_TOOLS_PATH + '/dashboard/sitemap_copy_all', [],	ccmi18n_sitemap.copyProgressTitle, function() {
-			$('.ui-dialog-content').dialog('close');
-			window.location.reload();
-		});
-	}
-
 	ConcreteSitemap.submitDragRequest = function() {
 
 		var origCID = $('#origCID').val();
@@ -587,14 +580,16 @@
 		if (copyAll == 1) {
 
 			var dialogTitle = ccmi18n_sitemap.copyProgressTitle;
-			ccm_triggerProgressiveOperation(
-				CCM_TOOLS_PATH + '/dashboard/sitemap_copy_all',
-				[{'name': 'origCID', 'value': origCID}, {'name': 'destCID', 'value': destCID}],
-				dialogTitle, function() {
+
+			new ConcreteProgressiveOperation({
+				url: CCM_DISPATCHER_FILENAME + '/ccm/system/page/copy_all',
+				data: [{'name': 'origCID', 'value': origCID}, {'name': 'destCID', 'value': destCID}],
+				title: dialogTitle,
+				onComplete: function() {
 					$('.ui-dialog-content').dialog('close');
 					ConcreteEvent.publish('SitemapDragRequestComplete', {'task': ctask});
 				}
-			);
+			});
 
 		} else {
 

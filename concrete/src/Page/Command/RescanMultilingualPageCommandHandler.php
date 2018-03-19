@@ -4,12 +4,13 @@ namespace Concrete\Core\Page\Command;
 
 use Concrete\Core\Multilingual\Page\Section\Processor\ReplaceBlockPageRelationsTask;
 use Concrete\Core\Multilingual\Page\Section\Processor\ReplaceContentLinksTask;
+use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Page;
 
 class RescanMultilingualPageCommandHandler
 {
 
-    protected function replaceBlockPageRelations(Page $c)
+    protected function replaceBlockPageRelations(Page $c, Page $section)
     {
         $db = \Database::connection();
         $blocks = $c->getBlocks();
@@ -30,7 +31,6 @@ class RescanMultilingualPageCommandHandler
                     $cID = $data[$column];
                     if ($cID > 0) {
                         $link = Page::getByID($cID, 'ACTIVE');
-                        $section = $target->getSection();
                         if (is_object($section)) {
                             $relatedID = $section->getTranslatedPageID($link);
                             if ($relatedID) {
@@ -58,7 +58,7 @@ class RescanMultilingualPageCommandHandler
         }
     }
 
-    public function replaceContentLinks(Page $c)
+    public function replaceContentLinks(Page $c, Page $section)
     {
         $blocks = $c->getBlocks();
         $nvc = $c->getVersionToModify();
@@ -68,11 +68,10 @@ class RescanMultilingualPageCommandHandler
                 $content = $b->getController()->content;
                 $content = preg_replace_callback(
                     '/{CCM:CID_([0-9]+)}/i',
-                    function ($matches) use ($target) {
+                    function ($matches) {
                         $cID = $matches[1];
                         if ($cID > 0) {
                             $link = Page::getByID($cID, 'ACTIVE');
-                            $section = $target->getSection();
                             if (is_object($section)) {
                                 $relatedID = $section->getTranslatedPageID($link);
                                 if ($relatedID) {
@@ -104,8 +103,9 @@ class RescanMultilingualPageCommandHandler
     {
         $page = Page::getByID($command->getPageID());
         if ($page && !$page->isError()) {
-            $this->replaceBlockPageRelations($page);
-            $this->replaceContentLinks($page);
+            $section = Section::getBySectionOfSite($page);
+            $this->replaceBlockPageRelations($page, $section);
+            $this->replaceContentLinks($page, $section);
         }
     }
 

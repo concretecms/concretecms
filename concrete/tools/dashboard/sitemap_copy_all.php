@@ -4,11 +4,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 use Concrete\Core\Multilingual\Page\Section\Section;
 
-$dh = Loader::helper('concrete/dashboard/sitemap');
-if (!$dh->canRead()) {
-    die(t("Access Denied."));
-}
-
 // we have to do this otherwise permissions pointers aren't correct
 // (cInheritPermissionsFromCID on parent nodes)
 Core::make('cache/request')->disable();
@@ -83,31 +78,6 @@ if (isset($_POST['process']) && $_POST['process']) {
     }
     exit;
 } elseif ($q->count() == 0) {
-    if (isset($_REQUEST['origCID']) && strpos($_REQUEST['origCID'], ',') > -1) {
-        $ocs = explode(',', $_REQUEST['origCID']);
-        foreach ($ocs as $ocID) {
-            $oc = Page::getByID($ocID);
-            if (is_object($oc) && !$oc->isError()) {
-                $originalPages[] = $oc;
-            }
-        }
-    } else {
-        $oc = isset($_REQUEST['origCID']) ? Page::getByID($_REQUEST['origCID']) : null;
-        if (is_object($oc) && !$oc->isError()) {
-            $originalPages[] = $oc;
-        }
-    }
-
-    $dc = isset($_REQUEST['destCID']) ? Page::getByID($_REQUEST['destCID']) : null;
-    if (count($originalPages) > 0 && is_object($dc) && !$dc->isError()) {
-        $u = new User();
-        if ($u->isSuperUser() && $oc->canMoveCopyTo($dc)) {
-            foreach ($originalPages as $oc) {
-                $oc->queueForDuplication($dc, $includeParent);
-                $totalItems = $q->count();
-            }
-        }
-    }
 }
 $totalItems = $q->count();
 Loader::element('progress_bar', array('totalItems' => $totalItems, 'totalItemsSummary' => t2("%d page", "%d pages", $totalItems)));

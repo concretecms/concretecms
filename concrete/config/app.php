@@ -1170,7 +1170,8 @@ return [
 
     'commands' => [
         'Concrete\Core\File\Command\RescanFileCommand' => 'Concrete\Core\File\Command\RescanFileCommandHandler',
-        'Concrete\Core\Page\Command\RescanMultilingualPageCommand' => 'Concrete\Core\Page\Command\RescanMultilingualPageCommandHandler'
+        'Concrete\Core\Page\Command\RescanMultilingualPageCommand' => 'Concrete\Core\Page\Command\RescanMultilingualPageCommandHandler',
+        'Concrete\Core\Page\Command\CopyPageCommand' => 'Concrete\Core\Page\Command\CopyPageCommandHandler'
     ],
 
     'api' => [

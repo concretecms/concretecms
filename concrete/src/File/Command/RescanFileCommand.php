@@ -10,7 +10,7 @@ class RescanFileCommand extends FileCommand implements QueueableCommand
 
     public function getName()
     {
-        return 'rescan_files';
+        return 'rescan_file';
     }
 
 }

@@ -938,7 +938,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         return 0;
     }
 
-    public function queueForDuplicationSort($a, $b)
+    public static function queueForDuplicationSort($a, $b)
     {
         if ($a['level'] > $b['level']) {
             return 1;
@@ -992,20 +992,6 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         }
         foreach ($pages as $page) {
             $queue->send(serialize($page));
-        }
-    }
-
-    public function queueForDuplication($destination, $includeParent = true)
-    {
-        $pages = [];
-        $pages = $this->populateRecursivePages($pages, ['cID' => $this->getCollectionID()], $this->getCollectionParentID(), 0, $includeParent);
-        // we want to order the pages by level, which should get us no funny
-        // business if the queue dies.
-        usort($pages, ['Page', 'queueForDuplicationSort']);
-        $q = Queue::get('copy_page');
-        foreach ($pages as $page) {
-            $page['destination'] = $destination->getCollectionID();
-            $q->send(serialize($page));
         }
     }
 
