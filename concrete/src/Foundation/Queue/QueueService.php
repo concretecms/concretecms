@@ -58,7 +58,12 @@ class QueueService
     {
 
         if (!$queue) {
-            $queue = $this->config->get('app.queues');
+            $queue = [];
+            foreach($this->config->get('app.commands') as $entry) {
+                if ($entry[2]) {
+                    $queue[] = $entry[2];
+                }
+            }
         }
 
         if (is_array($queue) && count($queue) > 1) {

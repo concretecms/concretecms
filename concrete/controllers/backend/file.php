@@ -69,7 +69,7 @@ class File extends Controller
     {
         $files = $this->getRequestFiles('canEditFileContents');
         $queue = $this->app->make(QueueService::class);
-        $q = $queue->get('rescan_files');
+        $q = $queue->get('rescan_file');
 
         foreach ($files as $f) {
             $command = new RescanFileCommand($f->getFileID());

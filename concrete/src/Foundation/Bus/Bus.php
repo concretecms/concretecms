@@ -49,7 +49,9 @@ class Bus
         $this->app = $app;
         $this->config = $config;
         $this->locator = new InMemoryLocator();
-        foreach($this->config->get('app.commands') as $command => $handler) {
+        foreach($this->config->get('app.commands') as $entry) {
+            $command = $entry[0];
+            $handler = $entry[1];
             $this->locator->addHandler($app->make($handler), $command);
         }
     }
