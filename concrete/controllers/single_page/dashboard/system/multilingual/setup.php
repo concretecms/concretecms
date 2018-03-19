@@ -7,6 +7,7 @@ use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Concrete\Core\Page\Template;
 use Concrete\Core\User\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Events;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
@@ -107,6 +108,10 @@ class Setup extends DashboardSitePageController
             $service->addHomePage($locale, $template, $this->request->request->get('homePageName'), $this->request->request->get('urlSlug'));
             $this->flash('success', t('Locale added successfully.'));
 
+            $event = new \Symfony\Component\EventDispatcher\GenericEvent();
+            $event->setArgument('locale', $locale);
+            Events::dispatch('on_locale_added', $event);
+            
             return new JsonResponse($locale);
         } else {
             return new JsonResponse($this->error);
@@ -172,6 +177,11 @@ class Setup extends DashboardSitePageController
         if (!$this->error->has()) {
             $service->delete($locale);
             $this->flash('success', t('Section removed.'));
+            
+            $event = new \Symfony\Component\EventDispatcher\GenericEvent();
+            $event->setArgument('locale', $locale);
+            Events::dispatch('on_locale_removed', $event);
+            
             $this->redirect('/dashboard/system/multilingual/setup', 'view');
         }
 
@@ -215,6 +225,10 @@ class Setup extends DashboardSitePageController
                     $editingLocale->setCountry($msCountry);
                     $service->updatePluralSettings($editingLocale);
                     $this->entityManager->flush($editingLocale);
+                    
+                    $event = new \Symfony\Component\EventDispatcher\GenericEvent();
+                    $event->setArgument('locale', $editingLocale);
+                    Events::dispatch('on_locale_change', $event);
                 }
             }
         }
