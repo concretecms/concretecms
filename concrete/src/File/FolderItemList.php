@@ -84,7 +84,7 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
 
     public function createQuery()
     {
-        $this->query->select('n.treeNodeID')
+        $this->query->select('distinct n.treeNodeID')
             ->addSelect('if(nt.treeNodeTypeHandle=\'file\', fv.fvTitle, n.treeNodeName) as folderItemName')
             ->addSelect('if(nt.treeNodeTypeHandle=\'file\', fv.fvDateAdded, n.dateModified) as folderItemModified')
             ->addSelect('case when nt.treeNodeTypeHandle=\'search_preset\' then 1 when nt.treeNodeTypeHandle=\'file_folder\' then 2 else (10 + fvType) end as folderItemType')
