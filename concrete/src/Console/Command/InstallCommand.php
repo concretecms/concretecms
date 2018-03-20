@@ -134,7 +134,7 @@ EOT
                             'server' => $options['db-server'],
                             'database' => $options['db-database'],
                             'username' => $options['db-username'],
-                            'password' => $options['db-password'],
+                            'password' => (string) $options['db-password'],
                             'charset' => 'utf8',
                         ],
                     ],
