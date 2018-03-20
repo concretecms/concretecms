@@ -311,7 +311,10 @@ EOT
         // If the default value is callable, it's probably actually the mutator
         if (is_callable($default)) {
             $mutator = $default;
-            $default = null;
+            $default = array_shift($row);
+            if (is_callable($default)) {
+                $default = $default($input);
+            }
         } elseif ($row) { // Otherwise if there's still items, the mutator is last.
             $mutator = array_shift($row);
         }
@@ -578,11 +581,11 @@ EOT
             [
                 'site-locale',
                 function (Question $question, InputInterface $input, InputOption $option) {
-                    $newDefault = $input->getOption('language');
-                    $input->setOption('site-locale', $newDefault);
-
                     return $question;
                 },
+                function (InputInterface $input) {
+                    return $input->getOption('site-locale') ?: $input->getOption('language') ?: Localization::BASE_LOCALE;
+                }
             ],
             // Test the site locale
             function (InputInterface $input, OutputInterface $output) use ($checkLocale) {
