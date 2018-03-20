@@ -227,59 +227,67 @@ EOT
             $helper = $this->getHelper('question');
             /* @var \Symfony\Component\Console\Helper\QuestionHelper $helper */
 
-            // Get the wizard generator
-            $wizard = $this->getWizard($input, $output);
-            $hidden = [];
+            for (; ;) {
+                // Get the wizard generator
+                $wizard = $this->getWizard($input, $output);
+                $hidden = [];
 
-            // Loop over the questions
-            foreach ($wizard as $key => $question) {
-                if ($question->isHidden()) {
-                    // If this question is hidden, lets store its key for later
-                    $hidden[] = $key;
-                }
-
-                // Set the option value to the result of asking the question
-                $input->setOption($key, $helper->ask($input, $output, $question));
-            }
-
-            // Lets output a table with the provided options for review
-            $table = new Table($output);
-            foreach ($this->getDefinition()->getOptions() as $option) {
-                if ($option->isValueRequired()) {
-                    $name = $option->getName();
-                    $value = $input->getOption($name) ?: '';
-
-                    // If this question had hidden output, lets not show it now
-                    if ($value && in_array($name, $hidden)) {
-                        $value = '<options=bold>HIDDEN</>';
+                // Loop over the questions
+                foreach ($wizard as $key => $question) {
+                    if ($question->isHidden()) {
+                        // If this question is hidden, lets store its key for later
+                        $hidden[] = $key;
                     }
 
-                    $table->addRow([$name, $value]);
-                }
-            }
-
-            $table->setHeaders(['Question', 'Value']);
-            $table->render();
-
-            $confirm = new Question('Would you like to install with these settings? [ y / n ]: ', false);
-            $confirm->setValidator(function ($given) {
-                if (!$given || !preg_match('/^[yn]/i', $given)) {
-                    throw new \InvalidArgumentException(t('Please answer either Y or N.'));
+                    // Set the option value to the result of asking the question
+                    $input->setOption($key, $helper->ask($input, $output, $question));
                 }
 
-                return $given;
-            });
+                // Lets output a table with the provided options for review
+                $table = new Table($output);
+                foreach ($this->getDefinition()->getOptions() as $option) {
+                    if ($option->isValueRequired()) {
+                        $name = $option->getName();
+                        $value = $input->getOption($name) ?: '';
 
-            $answer = $helper->ask($input, $output, $confirm);
+                        // If this question had hidden output, lets not show it now
+                        if ($value && in_array($name, $hidden)) {
+                            $value = '<options=bold>HIDDEN</>';
+                        }
 
-            // Cancel if they said no
-            if (stripos('n', $answer) === 0) {
-                $output->writeln('Installation cancelled.');
-                exit(1);
+                        $table->addRow([$name, $value]);
+                    }
+                }
+
+                $table->setHeaders(['Question', 'Value']);
+                $table->render();
+
+                $confirm = new Question('Would you like to install with these settings? [ Yes / No / Retry ]: ', false);
+                $confirm->setValidator(function ($given) {
+                    if (!$given || !preg_match('/^[ynr]/i', $given)) {
+                        throw new \InvalidArgumentException(t('Please answer either Y, N or R.'));
+                    }
+
+                    return $given;
+                });
+
+                $answer = $helper->ask($input, $output, $confirm);
+
+                // Cancel if they said no
+                if (stripos('n', $answer) === 0) {
+                    $output->writeln('Installation cancelled.');
+                    exit(1);
+                }
+
+                // Retry if they ask so
+                if (stripos('r', $answer) === 0) {
+                    continue;
+                }
+
+                // Add a bit of padding
+                $output->writeln('');
+                break;
             }
-
-            // Add a bit of padding
-            $output->writeln('');
         }
     }
 
@@ -400,8 +408,12 @@ EOT
      */
     private function getQuestionString(InputOption $option, $default)
     {
-        if ($default) {
-            return sprintf('%s? [Default: <options=bold>%s</>]: ', $option->getDescription(), $default);
+        if ('' !== (string) $default) {
+            if (stripos($option->getName(), 'password') !== false) {
+                return sprintf('%s? [<options=bold>HIDDEN</>]: ', $option->getDescription(), $default);
+            }
+
+            return sprintf('%s? [<options=bold>%s</>]: ', $option->getDescription(), $default);
         }
 
         return sprintf('%s?: ', $option->getDescription());
@@ -585,7 +597,7 @@ EOT
                 },
                 function (InputInterface $input) {
                     return $input->getOption('site-locale') ?: $input->getOption('language') ?: Localization::BASE_LOCALE;
-                }
+                },
             ],
             // Test the site locale
             function (InputInterface $input, OutputInterface $output) use ($checkLocale) {
