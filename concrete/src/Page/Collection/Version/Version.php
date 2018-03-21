@@ -447,6 +447,13 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         // Remove all publish dates before setting the new ones, if any
         $this->clearPublishStartDate();
 
+        if ($this->getPublishEndDate()) {
+            $now = $dh->date('Y-m-d G:i:s');
+            if (strtotime($now) >= strtotime($this->getPublishEndDate())) {
+                $this->clearPublishEndDate();
+            }
+        }
+
         if ($cvPublishDate || $cvPublishEndDate) {
             // remove approval for all versions except the current one because a scheduled version is being processed
             $oldVersion = $ov->getVersionObject();
@@ -683,4 +690,14 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
 
         $db->executeQuery($q, array($this->cID));
     }
+
+    private function clearPublishEndDate()
+    {
+        $app = Facade::getFacadeApplication();
+        $db = $app->make('database')->connection();
+        $q = "update CollectionVersions set cvPublishEndDate = NULL where cID = ?";
+
+        $db->executeQuery($q, array($this->cID));
+    }
+
 }
