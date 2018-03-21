@@ -72,7 +72,7 @@ class InstallCommand extends Command
             ->addOption('starting-point', null, InputOption::VALUE_REQUIRED, 'Starting point to use', 'elemental_blank')
             ->addOption('admin-email', null, InputOption::VALUE_REQUIRED, 'Email of the admin user of the install', 'admin@example.com')
             ->addOption('admin-password', null, InputOption::VALUE_REQUIRED, 'Password of the admin user of the install')
-            ->addOption('demo-username', null, InputOption::VALUE_REQUIRED, 'Additional user username', 'demo')
+            ->addOption('demo-username', null, InputOption::VALUE_REQUIRED, 'Additional user username')
             ->addOption('demo-password', null, InputOption::VALUE_REQUIRED, 'Additional user password')
             ->addOption('demo-email', null, InputOption::VALUE_REQUIRED, 'Additional user email', 'demo@example.com')
             ->addOption('language', null, InputOption::VALUE_REQUIRED, 'The default concrete5 interface language (eg en_US)')
@@ -402,6 +402,10 @@ EOT
             // If we still have a firstKey set, that means we've hit the first key. Unset so that we don't test again
             if ($firstKey) {
                 $firstKey = null;
+            }
+
+            if (in_array($question[0], ['demo-password', 'demo-email'], true) && '' === (string) $input->getOption('demo-username')) {
+                continue;
             }
 
             yield $question[0] => $this->getQuestion($question, $input);
