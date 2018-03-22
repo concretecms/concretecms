@@ -2,7 +2,7 @@
 
 <div class="ccm-header-search-form ccm-ui" data-header="file-manager">
     <?php if ($includeBreadcrumb) { ?>
-        <div class="ccm-search-results-breadcrumb file-manager-breadcrumb">
+        <div class="ccm-search-results-breadcrumb <?= (isset($breadcrumbClass)) ? $breadcrumbClass : ''; ?>">
         </div>
     <?php } ?>
 

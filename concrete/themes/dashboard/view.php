@@ -26,7 +26,7 @@ $view->inc('elements/header.php');
 
     <?php
     // We output the DIV even if it's empty because some pages might add to it via javascript ?>
-    <div class="ccm-search-results-breadcrumb <?= ($c->getCollectionPath() == '/dashboard/files/search') ? 'file-manager-breadcrumb' : ''; ?>">
+    <div class="ccm-search-results-breadcrumb <?= (isset($breadcrumbClass)) ? $breadcrumbClass : ''; ?>">
 
     <?php if (isset($breadcrumb) && (!empty($breadcrumb))) { ?>
         <ol class="breadcrumb">
