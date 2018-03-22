@@ -107,11 +107,6 @@ class Setup extends DashboardSitePageController
             $locale = $service->add($this->getSite(), $this->request->request->get('msLanguage'), $this->request->request->get('msCountry'));
             $service->addHomePage($locale, $template, $this->request->request->get('homePageName'), $this->request->request->get('urlSlug'));
             $this->flash('success', t('Locale added successfully.'));
-
-            $event = new \Symfony\Component\EventDispatcher\GenericEvent();
-            $event->setArgument('locale', $locale);
-            Events::dispatch('on_locale_added', $event);
-            
             return new JsonResponse($locale);
         } else {
             return new JsonResponse($this->error);
@@ -177,11 +172,6 @@ class Setup extends DashboardSitePageController
         if (!$this->error->has()) {
             $service->delete($locale);
             $this->flash('success', t('Section removed.'));
-            
-            $event = new \Symfony\Component\EventDispatcher\GenericEvent();
-            $event->setArgument('locale', $locale);
-            Events::dispatch('on_locale_removed', $event);
-            
             $this->redirect('/dashboard/system/multilingual/setup', 'view');
         }
 
