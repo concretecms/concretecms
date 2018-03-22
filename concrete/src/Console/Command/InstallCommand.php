@@ -101,9 +101,8 @@ EOT
         if ($this->getPreconditionsPassed($app, $output) !== true) {
             throw new Exception('One or more precondition failed!');
         }
-
+        $config = $app->make('config');
         $options = $this->getFinalOptions($input);
-
         $installer = $this->configuredInstaller;
         if ($installer === null) {
             $installer = $this->buildInstaller($options);
