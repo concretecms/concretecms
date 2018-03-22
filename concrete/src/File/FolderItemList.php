@@ -155,16 +155,14 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
 
     public function deliverQueryObject()
     {
-        if (isset($this->parent)) {
-            $parent = $this->parent;
-        } else {
+        if (!isset($this->parent)) {
             $filesystem = new Filesystem();
-            $parent = $filesystem->getRootFolder();
+            $this->parent = $filesystem->getRootFolder();
         }
 
         if ($this->searchSubFolders) {
             // determine how many subfolders are within the parent folder.
-            $subFolders = $parent->getHierarchicalNodesOfType('file_folder', 1, false, true);
+            $subFolders = $this->parent->getHierarchicalNodesOfType('file_folder', 1, false, true);
             $subFolderIds = array();
             foreach($subFolders as $subFolder) {
                 $subFolderIds[] = $subFolder['treeNodeID'];
@@ -174,7 +172,7 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
             );
         } else {
             $this->query->andWhere('n.treeNodeParentID = :treeNodeParentID');
-            $this->query->setParameter('treeNodeParentID', $parent->getTreeNodeID());
+            $this->query->setParameter('treeNodeParentID', $this->parent->getTreeNodeID());
         }
 
         return parent::deliverQueryObject();
@@ -187,6 +185,7 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
         if (!$u->isSuperUser()) {
             $pk = FileFolderKey::getByHandle('search_file_folder');
             if (is_object($pk)) {
+                $pk->setPermissionObject($this->parent);
                 /** @var PermissionAccess $pa */
                 $pa = $pk->getPermissionAccessObject();
                 // Whether or not current user can access the file manager
