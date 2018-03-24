@@ -218,7 +218,7 @@ class Setup extends DashboardSitePageController
                     
                     $event = new \Symfony\Component\EventDispatcher\GenericEvent();
                     $event->setArgument('locale', $editingLocale);
-                    Events::dispatch('on_locale_change', $event);
+                    Events::dispatch('on_locale_changed', $event);
                 }
             }
         }
