@@ -246,7 +246,6 @@ jQuery.fn.dialog.activateDialogContents = function($dialog) {
             options = {};
         if ($(this).attr("data-dialog-form-processing") == 'progressive') {
             options.progressiveOperation = true;
-            options.progressiveOperationElement = 'div[data-dialog-form-element=progress-bar]';
         }
         $(this).concreteAjaxForm(options);
     });

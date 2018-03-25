@@ -2020,15 +2020,7 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
             }
         }
 
-        $name = $queue->getName();
-        $queue->deleteQueue();
-        $queue = Queue::get($name);
-
-        foreach ($blocks as $block) {
-            $queue->send(serialize($block));
-        }
-
-        return $queue;
+        return $blocks;
     }
 
     /**

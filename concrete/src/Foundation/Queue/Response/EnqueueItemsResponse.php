@@ -11,13 +11,15 @@ class EnqueueItemsResponse extends JsonResponse
 
     protected $name;
 
-    public function __construct(Queue $queue)
+    public function __construct(Queue $queue, $moreData = [])
     {
         $validator = new Token();
         $data = [
             'queue' => (string) $queue,
             'token' => $validator->generate((string) $queue)
         ];
+
+        $data += $moreData;
         parent::__construct($data);
     }
 

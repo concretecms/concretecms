@@ -23,9 +23,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				<div class="radio"><label><input type="radio" name="deleteAll" value="1"> <?=t('Delete even forked instances on child pages.')?></label></div>
 			</div>
 
-
-			<div data-dialog-form-element="progress-bar"></div>
-
 		<?php
 } else {
     ?>
@@ -47,7 +44,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					url: $form.attr('data-action-delete-all'),
 					data: $form.formToArray(true),
 					progressiveOperation: true,
-					progressiveOperationElement: 'div[data-dialog-form-element=progress-bar]'
+					progressiveOperationTitle: <?=json_encode(t('Delete Blocks'))?>
 				}
 			} else {
 				options = {

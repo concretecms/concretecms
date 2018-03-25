@@ -8,6 +8,7 @@
 			url: '',
 			data: {},
 			title: '',
+			response: null, // If we have already performed the queueing action, as in a form, we will have a response, and no URL/data
 			onComplete: null,
 			onError: null,
 			pollRetryTimeout: 1000,
@@ -60,34 +61,44 @@
 		});
 	}
 
+	ConcreteProgressiveOperation.prototype.startPolling = function(queue, token) {
+		var my = this;
+		my.pnotify = new PNotify({
+			text: '<div data-wrapper="progressive-operation-status">' + ccmi18n.progressiveOperationLoading + '</div>',
+			hide: false,
+			title: my.options.title,
+			buttons: {
+				closer: false
+			},
+			type: 'info',
+			icon: 'fa fa-refresh fa-spin'
+		});
+
+		my.poll(queue, token);
+	}
+
 	ConcreteProgressiveOperation.prototype.execute = function() {
 		var my = this;
 		if (!my.options.$element) {
 			NProgress.set(0);
 		}
 
-		$.concreteAjax({
-			loader: false,
-			url: my.options.url,
-			type: 'POST',
-			data: my.options.data,
-			dataType: 'json',
-			success: function(r) {
-
-				my.pnotify = new PNotify({
-					text: '<div data-wrapper="progressive-operation-status">' + ccmi18n.progressiveOperationLoading + '</div>',
-					hide: false,
-					title: my.options.title,
-					buttons: {
-						closer: false
-					},
-					type: 'info',
-					icon: 'fa fa-refresh fa-spin'
-				});
-
-				my.poll(r.queue, r.token);
-			}
-		});
+		if (my.options.response) {
+			// We have already performed the submit as part of another operation,
+			// like a concrete5 ajax form submission
+			my.startPolling(my.options.response.queue, my.options.response.token)
+		} else {
+			$.concreteAjax({
+				loader: false,
+				url: my.options.url,
+				type: 'POST',
+				data: my.options.data,
+				dataType: 'json',
+				success: function(r) {
+					my.startPolling(r.queue, r.token)
+				}
+			});
+		}
 	}
 
 	global.ConcreteProgressiveOperation = ConcreteProgressiveOperation;

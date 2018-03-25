@@ -11,16 +11,12 @@
         options = $.extend({
             'progressiveOperation': false,
             'progressiveOperationTitle': '',
-            'progressiveOperationElement': '',
             'beforeSubmit': my.before,
             'complete': my.complete,
             'data': {},
             error: null
         }, options);
         my.$form = $form;
-        if (options.progressiveOperation) {
-            options.dataType = 'html';
-        }
         ConcreteAjaxRequest.call(my, options);
         return my.$form;
     }
@@ -59,29 +55,14 @@
             params = my.$form.formToArray(true);
 
         jQuery.fn.dialog.hideLoader();
-        if (!my.options.progressiveOperationElement) {
-            $('<div id="ccm-dialog-progress-bar" />').appendTo(document.body).html(resp).jqdialog({
-                autoOpen: false,
-                height: 200,
-                width: 400,
-                modal: true,
-                title: my.options.progressiveOperationTitle,
-                closeOnEscape: false,
-                open: function(e, ui) {
-                    $('.ui-dialog-titlebar-close', this.parentNode).hide();
-                    var totalItems = $('#ccm-progressive-operation-progress-bar').attr('data-total-items');
-                    ccm_doProgressiveOperation(url, params, totalItems, function(r) {
-                        onComplete(r);
-                    });
-                }
-            });
-            $("#ccm-dialog-progress-bar").jqdialog('open');
-        } else {
-            var $element = $(my.options.progressiveOperationElement);
-            $element.html(resp);
-            var totalItems = $('#ccm-progressive-operation-progress-bar').attr('data-total-items');
-            ccm_doProgressiveOperation(url, params, totalItems, onComplete, false, $element);
-        }
+
+        new ConcreteProgressiveOperation({
+            response: resp,
+            title: my.options.progressiveOperationTitle,
+            onComplete: function() {
+                onComplete(resp);
+            }
+        });
     }
 
     ConcreteAjaxForm.prototype.error = function(r, my, callback) {
