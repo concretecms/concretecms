@@ -1922,7 +1922,7 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
      *
      * @return \ZendQueue\Queue
      */
-    public function queueForDefaultsAliasing($addBlock, $queue)
+    public function queueForDefaultsAliasing($addBlock)
     {
         $records = [];
         $db = \Database::connection();
@@ -1972,15 +1972,7 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
             }
         }
 
-        $name = $queue->getName();
-        $queue->deleteQueue();
-        $queue = Queue::get($name);
-
-        foreach ($records as $record) {
-            $queue->send(serialize($record));
-        }
-
-        return $queue;
+        return $records;
     }
 
     /**
@@ -1993,7 +1985,7 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
      *
      * @return \ZendQueue\Queue
      */
-    public function queueForDefaultsUpdate($data, $queue, $includeThisBlock = true)
+    public function queueForDefaultsUpdate($data, $includeThisBlock = true)
     {
         $blocks = [];
         $db = \Database::connection();

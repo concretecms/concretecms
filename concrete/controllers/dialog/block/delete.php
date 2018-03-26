@@ -56,7 +56,7 @@ class Delete extends BackendInterfaceBlockController
             if ($this->permissions->canDeleteBlock() && $this->page->isMasterCollection()) {
                 $queue = $this->app->make(QueueService::class);
                 $q = $queue->get('delete_block');
-                $blocks = $this->block->queueForDefaultsUpdate($_POST, $queue);
+                $blocks = $this->block->queueForDefaultsUpdate($_POST);
                 foreach($blocks as $b) {
                     $command = new DeleteBlockCommand(
                         $b['bID'], $b['cID'], $b['cvID'], $b['arHandle']

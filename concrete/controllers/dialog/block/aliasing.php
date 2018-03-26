@@ -2,6 +2,11 @@
 namespace Concrete\Controller\Dialog\Block;
 
 use Concrete\Controller\Backend\UserInterface\Block as BackendInterfaceBlockController;
+use Concrete\Core\Block\Command\AddAliasDefaultsBlockCommand;
+use Concrete\Core\Block\Command\UpdateDefaultsBlockCommand;
+use Concrete\Core\Block\Command\UpdateForkedAliasDefaultsBlockCommand;
+use Concrete\Core\Foundation\Queue\QueueService;
+use Concrete\Core\Foundation\Queue\Response\EnqueueItemsResponse;
 use Concrete\Core\Page\EditResponse;
 use Concrete\Core\Page\PageList;
 use Concrete\Core\Page\Template;
@@ -32,6 +37,7 @@ class Aliasing extends BackendInterfaceBlockController
                 $b = \Block::getByID($_GET['bID'], $c, $a);
                 $p = new \Permissions($b);
                 if ($p->canAdminBlock() && $c->isMasterCollection()) {
+                    /*
                     $name = sprintf('update_defaults_%s', $b->getBlockID());
                     $queue = \Queue::get($name);
 
@@ -84,6 +90,30 @@ class Aliasing extends BackendInterfaceBlockController
 
                     $totalItems = $queue->count();
                     \View::element('progress_bar', array('totalItems' => $totalItems, 'totalItemsSummary' => t2("%d pages", "%d pages", $totalItems)));
+                    */
+
+                    $queue = $this->app->make(QueueService::class);
+                    $q = $queue->get('update_defaults');
+                    $blocks = $this->block->queueForDefaultsAliasing($_POST);
+
+                    foreach ($blocks as $b) {
+                        if ($b['action'] == 'update_forked_alias') {
+                            $command = UpdateForkedAliasDefaultsBlockCommand::class;
+                        } else {
+                            $command = AddAliasDefaultsBlockCommand::class;
+                        }
+
+                        $command = new $command(
+                            $this->block->getBlockID(), $c->getCollectionID(),
+                            $c->getVersionID(), $this->request->query->get('arHandle'),
+                            $b['bID'], $b['cID'], $b['cvID'], $b['arHandle']
+                        );
+                        $this->queueCommand($command);
+                    }
+
+                    $response = new EnqueueItemsResponse($q);
+                    return $response;
+
                 }
             }
         }

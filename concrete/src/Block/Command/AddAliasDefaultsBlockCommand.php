@@ -5,12 +5,12 @@ namespace Concrete\Core\Block\Command;
 use Concrete\Core\Foundation\Bus\Command\CommandInterface;
 use League\Tactician\Bernard\QueueableCommand;
 
-class DeleteBlockCommand extends BlockCommand implements QueueableCommand
+class AddAliasDefaultsBlockCommand extends DefaultsBlockCommand implements QueueableCommand
 {
 
     public function getName()
     {
-        return 'delete_block';
+        return 'update_defaults';
     }
 
 }

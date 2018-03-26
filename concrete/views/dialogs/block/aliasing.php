@@ -9,7 +9,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 
 <?php } else { ?>
 
-    <form method="post" id="ccmBlockMasterCollectionForm" data-dialog-form-processing="progressive" data-dialog-form="master-collection-alias" action="<?=$controller->action('submit')?>">
+    <form method="post" id="ccmBlockMasterCollectionForm" data-dialog-form-processing="progressive" data-dialog-form="master-collection-alias" data-dialog-form-processing-title="<?=t('Update Defaults')?>" action="<?=$controller->action('submit')?>">
 
     <p><?=t('This block will be added to all pages of this type. If it has been previously added it will be updated – even if the block on the child page has been forked from this block.')?></p>
 
