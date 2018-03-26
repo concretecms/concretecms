@@ -10,7 +10,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
     <?php } ?>
 <?php } else { ?>
 
-    <form method="post" id="ccmUpdateFromPageTypeForm" data-dialog-form-processing="progressive" data-dialog-form="update-from-page-type" action="<?php echo $controller->action('submit')?>">
+    <form method="post" id="ccmUpdateFromPageTypeForm" data-dialog-form-processing="progressive" data-dialog-form="update-from-page-type" data-dialog-form-processing-title="<?=t('Update Defaults')?>" action="<?php echo $controller->action('submit')?>">
 
     <p><?php echo t('This will reset all blocks and their positions on child pages to those that are set in the defaults.')?></p>
 
