@@ -1171,6 +1171,7 @@ return [
     'commands' => [
         ['Concrete\Core\File\Command\RescanFileCommand', 'Concrete\Core\File\Command\RescanFileCommandHandler', 'rescan_file'],
         ['Concrete\Core\Page\Command\RescanMultilingualPageCommand', 'Concrete\Core\Page\Command\RescanMultilingualPageCommandHandler', 'rescan_multilingual_page'],
+        ['Concrete\Core\Page\Command\DeletePageForeverCommand', 'Concrete\Core\Page\Command\DeletePageForeverCommandHandler', 'delete_page_forever'],
         ['Concrete\Core\Page\Command\CopyPageCommand', 'Concrete\Core\Page\Command\CopyPageCommandHandler', 'copy_page'],
         ['Concrete\Core\Block\Command\DeleteBlockCommand', 'Concrete\Core\Block\Command\DeleteBlockCommandHandler', 'delete_block'],
         ['Concrete\Core\Block\Command\AddAliasDefaultsBlockCommand', 'Concrete\Core\Block\Command\AddAliasDefaultsBlockCommandHandler', 'update_defaults'],

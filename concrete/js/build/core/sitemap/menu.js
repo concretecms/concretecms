@@ -30,11 +30,11 @@
 			$menu.find('[data-sitemap-mode=explore]').remove();
 		}
 		$menu.find('a[data-action=delete-forever]').on('click', function() {
-			ccm_triggerProgressiveOperation(
-				CCM_TOOLS_PATH + '/dashboard/sitemap_delete_forever', 
-				[{'name': 'cID', 'value': cID}],
-				ccmi18n_sitemap.deletePages,
-				function() {
+			new ConcreteProgressiveOperation({
+				url: CCM_DISPATCHER_FILENAME + '/ccm/system/page/sitemap_delete_forever',
+				data: [{'name': 'cID', 'value': cID}],
+				title: ccmi18n_sitemap.deletePages,
+				onComplete: function() {
 					if (my.options.sitemap) {
 						var tree = my.options.sitemap.getTree(),
 							node = tree.getNodeByKey(cID);
@@ -42,18 +42,18 @@
 						node.remove();
 					}
 					ConcreteAlert.notify({
-					'message': ccmi18n_sitemap.deletePageSuccessMsg,
+						'message': ccmi18n_sitemap.deletePageSuccessMsg,
 					});
 				}
-			);
+			});
 			return false;
 		});
 		$menu.find('a[data-action=empty-trash]').on('click', function() {
-			ccm_triggerProgressiveOperation(
-				CCM_TOOLS_PATH + '/dashboard/sitemap_delete_forever', 
-				[{'name': 'cID', 'value': cID}],
-				ccmi18n_sitemap.deletePages,
-				function() {
+			new ConcreteProgressiveOperation({
+				url: CCM_DISPATCHER_FILENAME + '/ccm/system/page/sitemap_delete_forever',
+				data: [{'name': 'cID', 'value': cID}],
+				title: ccmi18n_sitemap.deletePages,
+				onComplete: function() {
 					if (my.options.sitemap) {
 						var tree = my.options.sitemap.getTree(),
 							node = tree.getNodeByKey(cID);
@@ -61,7 +61,7 @@
 						node.removeChildren();
 					}
 				}
-			);
+			});
 			return false;
 		});
 	}

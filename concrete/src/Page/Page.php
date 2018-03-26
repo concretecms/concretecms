@@ -926,7 +926,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         return $pages;
     }
 
-    public function queueForDeletionSort($a, $b)
+    public static function queueForDeletionSort($a, $b)
     {
         if ($a['level'] > $b['level']) {
             return -1;
@@ -960,39 +960,6 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         }
 
         return 0;
-    }
-
-    public function queueForDeletion()
-    {
-        $pages = [];
-        $includeThisPage = true;
-        if ($this->getCollectionPath() == Config::get('concrete.paths.trash')) {
-            // we're in the trash. we can't delete the trash. we're skipping over the trash node.
-            $includeThisPage = false;
-        }
-        $pages = $this->populateRecursivePages($pages, ['cID' => $this->getCollectionID()], $this->getCollectionParentID(), 0, $includeThisPage);
-        // now, since this is deletion, we want to order the pages by level, which
-        // should get us no funny business if the queue dies.
-        usort($pages, ['Page', 'queueForDeletionSort']);
-        $q = Queue::get('delete_page');
-        foreach ($pages as $page) {
-            $q->send(serialize($page));
-        }
-    }
-
-    public function queueForDeletionRequest($queue = null, $includeThisPage = true)
-    {
-        $pages = [];
-        $pages = $this->populateRecursivePages($pages, ['cID' => $this->getCollectionID()], $this->getCollectionParentID(), 0, $includeThisPage);
-        // now, since this is deletion, we want to order the pages by level, which
-        // should get us no funny business if the queue dies.
-        usort($pages, ['Page', 'queueForDeletionSort']);
-        if (!$queue) {
-            $queue = Queue::get('delete_page_request');
-        }
-        foreach ($pages as $page) {
-            $queue->send(serialize($page));
-        }
     }
 
     public function export($pageNode, $includePublicDate = true)

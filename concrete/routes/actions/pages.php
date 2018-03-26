@@ -16,3 +16,4 @@ $router->all('/multilingual/unmap', 'Page\Multilingual::unmap');
 $router->all('/select_sitemap', 'Page\SitemapSelector::view');
 $router->all('/sitemap_data', 'Page\SitemapData::view');
 $router->all('/copy_all', 'Page\CopyAll::fillQueue');
+$router->all('/sitemap_delete_forever', 'Page\SitemapDeleteForever::fillQueue');
