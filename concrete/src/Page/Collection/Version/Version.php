@@ -10,6 +10,8 @@ use Page;
 use PageType;
 use Permissions;
 use User;
+use Config;
+use Core;
 use Concrete\Core\Attribute\ObjectInterface as AttributeObjectInterface;
 use Concrete\Core\Permission\ObjectInterface as PermissionObjectInterface;
 use Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVersionFeatureAssignment;
@@ -415,6 +417,19 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         $oldHandle = $ov->getCollectionHandle();
         $newHandle = $this->cvHandle;
 
+        // if config is set update the page handle with every change to the collection name
+        if(Config::get('concrete.seo.auto_update_url_slug') && ($ov->getCollectionName() != $this->cvName)){
+            $txt = Core::make('helper/text');
+            $newHandle = str_replace('-', Config::get('concrete.seo.page_path_separator'),$txt->urlify($this->cvName));
+            if($newHandle != $oldHandle && $oldHandle != ''){
+                $pp = $c->getCollectionPathObject();
+                $oldPath = $pp->getPagePath();
+                $pp->setPagePath(str_replace($oldHandle, $newHandle, $oldPath));
+                $pp->setPagePathIsCanonical(true);
+                $c->addAdditionalPagePath($oldPath, false);
+            }
+        }
+
         // update a collection updated record
         $dh = $app->make('helper/date');
         $db->executeQuery('update Collections set cDateModified = ? where cID = ?', array(
@@ -443,10 +458,11 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         // now we approve our version
         $v2 = array(
             $uID,
+            $newHandle,
             $cID,
             $cvID,
         );
-        $q2 = "update CollectionVersions set cvIsNew = 0, cvIsApproved = 1, cvApproverUID = ? where cID = ? and cvID = ?";
+        $q2 = "update CollectionVersions set cvIsNew = 0, cvIsApproved = 1, cvApproverUID = ?, cvHandle = ? where cID = ? and cvID = ?";
         $db->executeQuery($q2, $v2);
 
         // next, we rescan our collection paths for the particular collection, but only if this isn't a generated collection
@@ -457,9 +473,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
             $shouldRescanCollectionPath = false;
         }
         if ($shouldRescanCollectionPath) {
-
             $c->rescanCollectionPath();
-
         }
 
         // check for related version edits. This only gets applied when we edit global areas.
