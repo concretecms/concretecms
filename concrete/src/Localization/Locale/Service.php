@@ -70,7 +70,7 @@ class Service
         
         $event = new \Symfony\Component\EventDispatcher\GenericEvent();
         $event->setArgument('locale', $locale);
-        Events::dispatch('on_locale_added', $event);
+        Events::dispatch('on_locale_add', $event);
         
         return $locale;
     }
@@ -145,6 +145,6 @@ class Service
         
         $event = new \Symfony\Component\EventDispatcher\GenericEvent();
         $event->setArgument('locale', $locale);
-        Events::dispatch('on_locale_removed', $event);
+        Events::dispatch('on_locale_delete', $event);
     }
 }
