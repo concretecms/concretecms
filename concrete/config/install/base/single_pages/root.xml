@@ -10,9 +10,6 @@
                 </attributekey>
             </attributes>
         </page>
-        <page name="Page Not Found" path="/page_not_found" filename="/page_not_found.php" pagetype="" description="" package="" root="true" >
-            <area name="Main"/>
-        </page>
 
         <page name="Welcome Back" path="/desktop" custom-path="/account/welcome" filename="/desktop.php" pagetype="" description="" package="" root="true">
             <attributes>
