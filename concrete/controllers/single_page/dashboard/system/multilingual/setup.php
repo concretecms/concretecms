@@ -7,6 +7,7 @@ use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Concrete\Core\Page\Template;
 use Concrete\Core\User\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Events;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
@@ -106,7 +107,6 @@ class Setup extends DashboardSitePageController
             $locale = $service->add($this->getSite(), $this->request->request->get('msLanguage'), $this->request->request->get('msCountry'));
             $service->addHomePage($locale, $template, $this->request->request->get('homePageName'), $this->request->request->get('urlSlug'));
             $this->flash('success', t('Locale added successfully.'));
-
             return new JsonResponse($locale);
         } else {
             return new JsonResponse($this->error);
@@ -215,6 +215,10 @@ class Setup extends DashboardSitePageController
                     $editingLocale->setCountry($msCountry);
                     $service->updatePluralSettings($editingLocale);
                     $this->entityManager->flush($editingLocale);
+                    
+                    $event = new \Symfony\Component\EventDispatcher\GenericEvent();
+                    $event->setArgument('locale', $editingLocale);
+                    Events::dispatch('on_locale_change', $event);
                 }
             }
         }
