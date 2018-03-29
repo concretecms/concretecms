@@ -24,6 +24,7 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
         'CollectionVersionThemeCustomStyles',
         'CollectionVersionRelatedEdits',
         'CollectionVersionAreaStyles',
+        'CollectionVersionBlocksCacheSettings',
         'PermissionAccessEntityTypes',
         'PagePermissionAssignments',
         'CollectionVersionBlocks',
