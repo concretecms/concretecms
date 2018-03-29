@@ -872,10 +872,20 @@ class Theme extends ConcreteObject
         $entityManager->persist($site);
         $entityManager->flush();
 
+        $treeIDs = [0];
+        foreach($site->getLocales() as $locale) {
+            $tree = $locale->getSiteTree();
+            if (is_object($tree)) {
+                $treeIDs[] = $tree->getSiteTreeID();
+            }
+        }
+
+        $treeIDs = implode(',', $treeIDs);
+
         $db = Loader::db();
         $r = $db->query(
-            "update CollectionVersions inner join Pages on CollectionVersions.cID = Pages.cID left join Packages on Pages.pkgID = Packages.pkgID set CollectionVersions.pThemeID = ? where cIsTemplate = 0 and siteTreeID = ? and (Packages.pkgHandle <> 'core' or pkgHandle is null or Pages.ptID > 0)",
-            array($this->pThemeID, $site->getSiteTreeID())
+            "update CollectionVersions inner join Pages on CollectionVersions.cID = Pages.cID left join Packages on Pages.pkgID = Packages.pkgID set CollectionVersions.pThemeID = ? where cIsTemplate = 0 and siteTreeID in ({$treeIDs}) and (Pages.ptID > 0 or CollectionVersions.pTemplateID > 0)",
+            array($this->pThemeID)
         );
     }
 
