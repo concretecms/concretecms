@@ -407,12 +407,11 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
     {
         $valt = Core::make('helper/validation/token');
         $token = '&'.$valt->getParameter();
-        $step = ($_REQUEST['step']) ? '&step='.$_REQUEST['step'] : '';
         $c = $this->getAreaCollectionObject();
         if ($alternateHandler) {
-            $str = $alternateHandler."?atask={$task}&cID=".$c->getCollectionID().'&arHandle='.$this->getAreaHandle().$step.$token;
+            $str = $alternateHandler."?atask={$task}&cID=".$c->getCollectionID().'&arHandle='.$this->getAreaHandle().$token;
         } else {
-            $str = DIR_REL.'/'.DISPATCHER_FILENAME.'?atask='.$task.'&cID='.$c->getCollectionID().'&arHandle='.$this->getAreaHandle().$step.$token;
+            $str = DIR_REL.'/'.DISPATCHER_FILENAME.'?atask='.$task.'&cID='.$c->getCollectionID().'&arHandle='.$this->getAreaHandle().$token;
         }
 
         return $str;
