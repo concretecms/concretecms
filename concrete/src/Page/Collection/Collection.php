@@ -7,6 +7,7 @@ use Block;
 use CacheLocal;
 use CollectionVersion;
 use Concrete\Core\Area\CustomStyle as AreaCustomStyle;
+use Concrete\Core\Area\GlobalArea;
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Block\CustomStyle as BlockCustomStyle;
 use Concrete\Core\Entity\Attribute\Value\PageValue;
@@ -763,7 +764,7 @@ class Collection extends ConcreteObject implements TrackableInterface
                         if (is_object($obj)) {
                             $b = new Block();
                             $b->bID = $r['bID'];
-                            $a = new Area($r['arHandle']);
+                            $a = new GlobalArea($garHandle);
                             $b->setBlockAreaObject($a);
                             $obj = new BlockCustomStyle($obj, $b, $this->getCollectionThemeObject());
                             $psss[] = $obj;
