@@ -7,6 +7,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 ?>
 <div class="ccm-ui">
     <?php
+    $file = $version->getFile();
     $imageWidth = (int) $version->getAttribute('width');
     $imageHeight = (int) $version->getAttribute('height');
     $location = $version->getFile()->getFileStorageLocationObject();
@@ -20,7 +21,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
         $sizingMode = $type->getSizingModeDisplayName();
         $thumbnailPath = $type->getFilePath($version);
         $hasFile = $filesystem->has($thumbnailPath);
-        $shouldHaveFile = $type->shouldExistFor($imageWidth, $imageHeight);
+        $shouldHaveFile = $type->shouldExistFor($imageWidth, $imageHeight, $file);
         $query = http_build_query([
             'fID' => $version->getFileID(),
             'fvID' => $version->getFileVersionID(),
@@ -66,7 +67,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                     } elseif ($shouldHaveFile) {
                         echo t('Thumbnail not found.');
                     } else {
-                        echo t('Source image too small for this thumbnail.');
+                        echo t('Thumbnail not to be generated for this file.');
                     }
                     ?>
                 </div>

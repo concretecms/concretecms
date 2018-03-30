@@ -3,6 +3,7 @@
 namespace Concrete\Core\File\Image\Thumbnail\Type;
 
 use Concrete\Core\Entity\File\Image\Thumbnail\Type\Type as ThumbnailTypeEntity;
+use Concrete\Core\File\Set\Set as FileSet;
 use Concrete\Core\Support\Facade\Application;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -79,6 +80,7 @@ class Type
             $linkNode = $child->addChild('thumbnailtype');
             $linkNode->addAttribute('name', $link->getName());
             $linkNode->addAttribute('handle', $link->getHandle());
+            $linkNode->addAttribute('sizingMode', $link->getSizingMode());
             if ($link->getWidth()) {
                 $linkNode->addAttribute('width', $link->getWidth());
             }
@@ -87,6 +89,17 @@ class Type
             }
             if ($link->isRequired()) {
                 $linkNode->addAttribute('required', $link->isRequired());
+            }
+            $linkNode->addAttribute('limitedToFileSets', $link->isLimitedToFileSets() ? '1' : '0');
+            $filesetsNode = null;
+            foreach ($link->getAssociatedFileSets() as $afs) {
+                $fileSet = FileSet::getByID($afs->getFileSetID());
+                if ($fileSet !== null) {
+                    if ($filesetsNode === null) {
+                        $filesetsNode = $linkNode->addChild('fileSets');
+                    }
+                    $filesetsNode->addChild('fileSet')->addAttribute('name', $fileSet->getFileSetName());
+                }
             }
         }
     }
