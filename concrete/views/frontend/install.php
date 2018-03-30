@@ -716,7 +716,7 @@ switch ($installStep) {
 
         <div class="ccm-install-actions">
             <div class="pull-left" id="install-progress-summary"><?=t('Beginning Installation')?></div>
-            <button type="submit" disabled="disabled" onclick="<?= h('window.location.href = ' . json_encode($urlResolver->resolve(['/'])) . '; return false') ?>" data-button="installation-complete" class="btn btn-primary">
+            <button type="submit" disabled="disabled" onclick="window.location.href='<?= URL::to('/') ?>'" data-button="installation-complete" class="btn btn-primary">
                 <?= t('Installing...') ?>
                 <i class="fa fa-spinner fa-spin"></i>
             </button>
