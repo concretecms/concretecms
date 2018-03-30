@@ -794,6 +794,11 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
             $this->arOverrideCollectionPermissions = $area->overrideCollectionPermissions();
             $this->arInheritPermissionsFromAreaOnCID = $area->getAreaCollectionInheritID();
             $this->arID = $area->getAreaID();
+
+            $area = $this;
+            array_map(function($ab) use ($area) {
+                $ab->setBlockAreaObject($this);
+            }, $this->areaBlocksArray);
         }
     }
 
@@ -806,7 +811,6 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         $currentPage = Page::getCurrentPage();
         $blocks = array();
         foreach ($blocksTmp as $ab) {
-            $ab->setBlockAreaObject($this);
             if (is_object($currentPage) && $currentPage->getCollectionID() != $this->c->getCollectionID()) {
                 // this is useful for rendering areas from one page
                 // onto the next and including interactive elements
