@@ -1165,6 +1165,7 @@ return [
         ],
         'core_cookie' => \Concrete\Core\Http\Middleware\CookieMiddleware::class,
         'core_xframeoptions' => \Concrete\Core\Http\Middleware\FrameOptionsMiddleware::class,
+        'core_queue_polling' => '\Concrete\Core\Http\Middleware\StartQueuePollingMiddleware',
         'core_thumbnails' => '\Concrete\Core\Http\Middleware\ThumbnailMiddleware',
     ],
 
