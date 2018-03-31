@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Localization\Service;
 
+use Concrete\Core\Application\Application;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Localization\Translation\Local\FactoryInterface as LocalFactory;
@@ -34,24 +35,24 @@ class TranslationsInstaller
     protected $fs;
 
     /**
-     * @var SiteService
+     * @var Application
      */
-    protected $siteService;
+    protected $app;
 
     /**
      * @param Repository $config
      * @param LocalFactory $localFactory
      * @param RemoteProvider $remoteProvider
      * @param Filesystem $fs
-     * @param SiteService $siteService
+     * @param Application $app
      */
-    public function __construct(Repository $config, LocalFactory $localFactory, RemoteProvider $remoteProvider, Filesystem $fs, SiteService $siteService)
+    public function __construct(Repository $config, LocalFactory $localFactory, RemoteProvider $remoteProvider, Filesystem $fs, Application $app)
     {
         $this->config = $config;
         $this->localFactory = $localFactory;
         $this->remoteProvider = $remoteProvider;
         $this->fs = $fs;
-        $this->siteService = $siteService;
+        $this->app = $app;
     }
 
     /**
@@ -91,7 +92,8 @@ class TranslationsInstaller
         // Get the list of languages that users may need for the user interface.
         $wanted = Localization::getAvailableInterfaceLanguages();
         // Get the list of languages that users may need for the site locales.
-        $site = $this->siteService->getSite();
+        $siteService = $this->app->make(SiteService::class);
+        $site = $siteService->getSite();
         if ($site) {
             foreach ($site->getLocales() as $locale) {
                 $wanted[] = $locale->getLocale();
