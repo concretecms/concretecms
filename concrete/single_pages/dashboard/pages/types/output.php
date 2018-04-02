@@ -13,7 +13,7 @@ $pageTypeDefaultTemplateID = $pagetype->getPageTypeDefaultPageTemplateID();
                     target="_blank"><?php echo $pt->getPageTemplateIconImage(); ?></a>
             </td>
             <td style="vertical-align: middle;">
-                <p class="lead" style="margin-bottom: 0;"><?php echo $pt->getPageTemplateDisplayName() . ($defaultTemplate ? t(' (%s)', 'Default') : ''); ?></p>
+                <p class="lead" style="margin-bottom: 0;"><?php echo $pt->getPageTemplateDisplayName() . ($defaultTemplate ? ' (' . tc('PageTemplate', 'Default') . ')' : ''); ?></p>
             </td>
             <td style="vertical-align: middle;">
             <a href="<?php echo $view->action('edit_defaults', $pagetype->getPageTypeID(), $pt->getPageTemplateID()); ?>"
