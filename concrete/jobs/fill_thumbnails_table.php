@@ -94,7 +94,7 @@ class FillThumbnailsTable extends QueueableJob
                         $imageWidth = (int) $fileVersion->getAttribute('width');
                         $imageHeight = (int) $fileVersion->getAttribute('height');
                         foreach ($this->getThumbnailTypeVersions() as $thumbnailTypeVersion) {
-                            if ($thumbnailTypeVersion->shouldExistFor($imageWidth, $imageHeight)) {
+                            if ($thumbnailTypeVersion->shouldExistFor($imageWidth, $imageHeight, $file)) {
                                 $this->thumbnailPathResolver->getPath($fileVersion, $thumbnailTypeVersion);
                             }
                         }

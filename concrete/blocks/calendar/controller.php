@@ -144,8 +144,16 @@ class Controller extends BlockController
                 $obj = new \stdClass();
                 $obj->id = $occurrence->getID();
                 $obj->title = $event->getName();
-                $obj->start = $service->formatCustom('Y-m-d H:i:s', $occurrence->getStart());
-                $obj->end = $service->formatCustom('Y-m-d H:i:s', $occurrence->getEnd());
+                $repetition = $occurrence->getRepetition();
+                if ($repetition->isStartDateAllDay()) {
+                    $obj->allDay = true;
+                    $obj->start = $service->formatCustom('Y-m-d', $occurrence->getStart());
+                    $obj->end = $service->formatCustom('Y-m-d', $occurrence->getEnd());
+                } else {
+                    $obj->start = $service->formatCustom('Y-m-d H:i:s', $occurrence->getStart());
+                    $obj->end = $service->formatCustom('Y-m-d H:i:s', $occurrence->getEnd());
+
+                }
                 $obj->backgroundColor = $background;
                 $obj->borderColor = $background;
                 $obj->textColor = $text;

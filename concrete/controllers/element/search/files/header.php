@@ -38,6 +38,7 @@ class Header extends ElementController
         $this->set('query', $this->query);
         $this->set('form', \Core::make('helper/form'));
         $this->set('token', \Core::make('token'));
+        $this->set('breadcrumbClass', 'ccm-file-manager-breadcrumb');
     }
 
 }
