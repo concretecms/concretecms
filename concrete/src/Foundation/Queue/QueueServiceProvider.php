@@ -3,13 +3,17 @@
 namespace Concrete\Core\Foundation\Queue;
 
 use Bernard\BernardEvents;
+use Bernard\Consumer;
 use Bernard\Event\RejectEnvelopeEvent;
 use Bernard\Normalizer\EnvelopeNormalizer;
 use Bernard\Normalizer\PlainMessageNormalizer;
 use Bernard\Producer;
 use Bernard\QueueFactory\PersistentFactory;
+use Bernard\Router\ClassNameRouter;
 use Concrete\Core\Foundation\Queue\Driver\DriverFactory;
 use Concrete\Core\Foundation\Service\Provider;
+use League\Tactician\Bernard\QueueableCommand;
+use League\Tactician\Bernard\Receiver\SeparateBusReceiver;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Concrete\Core\Foundation\Queue\Serializer\SerializerManager;
@@ -31,6 +35,19 @@ class QueueServiceProvider extends Provider
             $manager->addNormalizer(new PlainMessageNormalizer());
             $manager->addNormalizer(new GetSetMethodNormalizer());
             return $manager;
+        });
+
+        $this->app->singleton('queue/router', function($app) {
+            $bus = $app->make('command/bus');
+            $receiver = new SeparateBusReceiver($bus->getSyncBus());
+            $router = new ClassNameRouter();
+            $router->add(QueueableCommand::class, $receiver);
+            return $router;
+        });
+
+        $this->app->singleton('queue/consumer', function($app) {
+            $router = $app->make('queue/router');
+            return new Consumer($router, $app->make('director'));
         });
 
         $this->app->singleton('queue/serializer', function($app) {

@@ -38,14 +38,6 @@ class QueueProcessCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $app = Core::make('app');
-
-        $bus = $app->make('command/bus');
-        $receiver = new SeparateBusReceiver($bus->getSyncBus());
-        $router = new ClassNameRouter();
-        $router->add(QueueableCommand::class, $receiver);
-
-        $queueName = $input->getArgument('queue');
-
         /*
         $eventDispatcher = $app->make('director');
         $eventDispatcher->addListener(
@@ -69,7 +61,9 @@ class QueueProcessCommand extends Command
         );
         */
 
-        $consumer = new Consumer($router, $app->make('director'));
+        $queueName = $input->getArgument('queue');
+
+        $consumer = $app->make('queue/consumer');
         $queue = $app->make(QueueService::class)->get($queueName);
         $consumer->consume($queue, $input->getOptions());
     }

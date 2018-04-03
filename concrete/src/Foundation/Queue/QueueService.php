@@ -10,7 +10,9 @@ use Bernard\QueueFactory\PersistentFactory;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Events\EventDispatcher;
+use Concrete\Core\Support\Facade\Facade;
 use League\Tactician\Bernard\QueueableCommand;
+use Spatie\Async\Pool;
 
 /**
  * A handy wrapper for calling Bernard functions using the full API.
@@ -100,6 +102,14 @@ class QueueService
     public function send(Queue $queue, $mixed)
     {
         $this->push($queue, $mixed);
+    }
+
+    public function consume(Queue $queue)
+    {
+        $consumer = $this->app->make('queue/consumer');
+        $consumer->consume($queue, [
+            'stop-when-empty' => true,
+        ]);
     }
 
 }

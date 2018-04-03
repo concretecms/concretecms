@@ -9,10 +9,11 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class EnqueueItemsResponse extends JsonResponse
 {
 
-    protected $name;
+    protected $queue;
 
     public function __construct(Queue $queue, $moreData = [])
     {
+        $this->queue = $queue;
         $validator = new Token();
         $data = [
             'queue' => (string) $queue,
@@ -22,5 +23,15 @@ class EnqueueItemsResponse extends JsonResponse
         $data += $moreData;
         parent::__construct($data);
     }
+
+    /**
+     * @return Queue
+     */
+    public function getQueue()
+    {
+        return $this->queue;
+    }
+
+
 
 }
