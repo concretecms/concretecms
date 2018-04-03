@@ -286,6 +286,9 @@ echo Core::make('helper/concrete/ui')->tabs($tabs);
 		<div class="radio">
 			<label><input type="radio" name="<?php echo $view->field('navigationType'); ?>" value="2" <?php echo $navigationType == 2 ? 'checked' : ''; ?> /><?php echo t('Arrows & Bullets'); ?></label>
 		</div>
+        <div class="radio">
+            <label><input type="radio" name="<?php echo $view->field('navigationType'); ?>" value="3" <?php echo $navigationType == 3 ? 'checked' : ''; ?> /><?php echo t('None'); ?></label>
+        </div>
     </div>
     <div class="form-group">
         <?php echo $form->label($view->field('timeout'), t('Slide Duration')); ?>

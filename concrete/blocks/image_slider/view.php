@@ -34,10 +34,14 @@ $(document).ready(function(){
 		<?php
 		}elseif($navigationType == 1) {?> 
 		pager: true,
-		<?php }
-		else{?>
-		nav:true,
-		pager: true,
+		<?php
+		} elseif ($navigationType == 2) {?>
+        nav: true,
+        pager: true,
+        <?php
+        } else{?>
+		nav:false,
+		pager: false,
 		<?php }?>
             <?php if ($timeout) { echo "timeout: $timeout,"; } ?>
             <?php if ($speed) { echo "speed: $speed,"; } ?>
