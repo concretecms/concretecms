@@ -195,6 +195,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         $this->load();
         $data = $this->post();
         $datetime = null;
+        $dh = $this->app->make('helper/date');
         switch ($this->akDateDisplayMode) {
             case 'text':
             case 'date_text':
@@ -206,7 +207,6 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
                     } else {
                         $format = $dh->getPHPDateTimePattern();
                     }
-                    $dh = $this->app->make('helper/date');
                     try {
                         $parsed = DateTime::createFromFormat(
                             $format,
