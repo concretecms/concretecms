@@ -317,10 +317,6 @@ div#ccm-panel-dashboard {
   div.ccm-panel-header-accordion {
     nav {
 
-      ul.ccm-panel-header-accordion-dropdown:after {
-        border-color: #97aabc transparent;
-      }
-
       li > a:hover {
         background-color: #3f4750;
       }
@@ -334,6 +330,10 @@ div#ccm-panel-dashboard {
         color: #97aabc;
         background-color: #414d59;
         .box-shadow(inset 10px 1px 10px rgba(0, 0, 0, 0.12));
+
+        &:after {
+          border-color: #97aabc transparent;
+        }
 
         &:hover {
           background-color: #333c46;
@@ -896,7 +896,7 @@ div.ccm-panel-header-accordion {
       }
     }
 
-    ul.ccm-panel-header-accordion-dropdown:after {
+    span:after {
       content: "";
       width: 0;
       height: 0;
@@ -912,7 +912,7 @@ div.ccm-panel-header-accordion {
 
 div.ccm-panel-header-accordion-dropdown-visible {
   nav {
-    ul.ccm-panel-header-accordion-dropdown:after {
+    span:after {
       border-width: 0px 6px 6px 6px;
     }
   }
@@ -1338,10 +1338,6 @@ div.ccm-panel-header-accordion {
 
   nav {
 
-    ul.ccm-panel-header-accordion-dropdown:after {
-      border-color: #999 transparent;
-    }
-
     li > a:hover {
       background-color: #111215;
     }
@@ -1353,6 +1349,11 @@ div.ccm-panel-header-accordion {
     span {
       color: #999;
       background-color: #202226;
+
+      &:after {
+        border-color: #999 transparent;
+      }
+
       &:hover {
         background-color: #111215;
       }
@@ -1367,5 +1368,3 @@ div.ccm-panel-header-accordion-dropdown-visible {
     }
   }
 }
-
-
