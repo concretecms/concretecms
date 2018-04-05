@@ -70,6 +70,9 @@
                         concreteMenu.show(event);
                     }
                 });
+                my.$element.find('.ccm-file-selector-file-selected').on('clearField', function(event) {
+                    _.defer(function() { my.$element.html(my._chooseTemplate); });
+                });
                 if (callback) {
                     callback(r);
                 }
