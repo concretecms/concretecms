@@ -95,6 +95,15 @@ class QueueService
     }
 
     /**
+     * Returns true if the current queue is currently being processed.
+     * @param Queue
+     */
+    protected function isBeingProcessed(Queue $queue)
+    {
+        return false;
+    }
+
+    /**
      * @deprecated
      * @param Queue $queue
      * @param $mixed
@@ -104,12 +113,24 @@ class QueueService
         $this->push($queue, $mixed);
     }
 
-    public function consume(Queue $queue)
+    public function consumeFromPoll(Queue $queue)
     {
         $consumer = $this->app->make('queue/consumer');
-        $consumer->consume($queue, [
-            'stop-when-empty' => true,
-        ]);
+        if (!$this->isBeingProcessed($queue)) {
+            $consumer->consume($queue, [
+                'stop-when-empty' => true,
+                'max-messages' => 5
+            ]);
+        }
     }
+
+    public function consume(Queue $queue, $options = [])
+    {
+        if (!$this->isBeingProcessed()) {
+            $consumer = $this->app->make('queue/consumer');
+            $consumer->consume($queue, $options);
+        }
+    }
+
 
 }

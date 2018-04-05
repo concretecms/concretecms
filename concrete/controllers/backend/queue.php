@@ -32,7 +32,7 @@ class Queue extends AbstractController
         if ($this->token->validate($queue, $token)) {
             $queue = $this->service->get($queue);
             if ($queue) {
-                $this->service->consume($queue);
+                $this->service->consumeFromPoll($queue);
                 return new QueueProgressResponse($queue);
             }
         }

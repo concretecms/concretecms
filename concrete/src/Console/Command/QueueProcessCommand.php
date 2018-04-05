@@ -61,11 +61,10 @@ class QueueProcessCommand extends Command
         );
         */
 
+        $service = $app->make(QueueService::class);
         $queueName = $input->getArgument('queue');
-
-        $consumer = $app->make('queue/consumer');
-        $queue = $app->make(QueueService::class)->get($queueName);
-        $consumer->consume($queue, $input->getOptions());
+        $queue = $service->get($queueName);
+        $service->consume($queue, $input->getOptions());
     }
 
 }
