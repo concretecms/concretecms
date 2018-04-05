@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\File\Image\Thumbnail\Type;
 
+use Concrete\Core\Entity\File\File;
 use Concrete\Core\Entity\File\Version as FileVersion;
 use Concrete\Core\File\Image\BitmapFormat;
 use Concrete\Core\File\Image\Thumbnail\ThumbnailFormatService;
@@ -64,6 +65,20 @@ class Version
     protected $sizingMode;
 
     /**
+     * Should the thumbnails be build for every file that ARE NOT in the file sets (false), or only for files that ARE in the specified file sets (true)?
+     *
+     * @var bool
+     */
+    protected $limitedToFileSets;
+
+    /**
+     * Associated file set IDs (whose meaning depends on the value of limitedToFileSets).
+     *
+     * @var int[]
+     */
+    protected $associatedFileSetIDs;
+
+    /**
      * Initialize the instance.
      *
      * @param string $directoryName the name of the directory that contains the thumbnails
@@ -73,8 +88,10 @@ class Version
      * @param int|null $height the height of the thumbnails (or the maximum height in case of proportional sizing)
      * @param bool $isDoubledVersion is this a high-DPI thumbnail type version?
      * @param string $sizingMode the thumbnail sizing mode (one of the \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type::RESIZE_... constants)
+     * @param bool $limitedToFileSets Should the thumbnails be build for every file that ARE NOT in the file sets (false), or only for files that ARE in the specified file sets (true)?
+     * @param int[] $associatedFileSetIDs the IDs of the associated file sets (whose meaning depends on the value of $limitedToFileSets)
      */
-    public function __construct($directoryName, $handle, $name, $width, $height, $isDoubledVersion = false, $sizingMode = ThumbnailType::RESIZE_DEFAULT)
+    public function __construct($directoryName, $handle, $name, $width, $height, $isDoubledVersion = false, $sizingMode = ThumbnailType::RESIZE_DEFAULT, $limitedToFileSets = false, array $associatedFileSetIDs = [])
     {
         $this->setDirectoryName($directoryName);
         $this->setHandle($handle);
@@ -83,6 +100,8 @@ class Version
         $this->setHeight($height);
         $this->isDoubledVersion = (bool) $isDoubledVersion;
         $this->setSizingMode($sizingMode);
+        $this->setLimitedToFileSets($limitedToFileSets);
+        $this->setAssociatedFileSetIDs($associatedFileSetIDs);
     }
 
     /**
@@ -259,6 +278,54 @@ class Version
     }
 
     /**
+     * Should the thumbnails be build for every file that ARE NOT in the file sets (false), or only for files that ARE in the specified file sets (true)?
+     *
+     * @param bool $value
+     *
+     * @return $this
+     */
+    public function setLimitedToFileSets($value)
+    {
+        $this->limitedToFileSets = (bool) $value;
+
+        return $this;
+    }
+
+    /**
+     * Should the thumbnails be build for every file that ARE NOT in the file sets (false), or only for files that ARE in the specified file sets (true)?
+     *
+     * @return bool
+     */
+    public function isLimitedToFileSets()
+    {
+        return $this->limitedToFileSets;
+    }
+
+    /**
+     * Set the IDs of the associated file sets (whose meaning depends on the value of limitedToFileSets).
+     *
+     * @param int[] $value
+     *
+     * @return $this
+     */
+    public function setAssociatedFileSetIDs(array $value)
+    {
+        $this->associatedFileSetIDs = $value;
+
+        return $this;
+    }
+
+    /**
+     * Get the IDs of associated file sets (whose meaning depends on the value of limitedToFileSets).
+     *
+     * @return int[]
+     */
+    public function getAssociatedFileSetIDs()
+    {
+        return $this->associatedFileSetIDs;
+    }
+
+    /**
      * Get the display name of the thumbnail sizing mode.
      *
      * @return string
@@ -300,10 +367,11 @@ class Version
      *
      * @param int $imageWidth The original image width
      * @param int $imageHeight The original image height
+     * @param File|null $file The File instance to check file sets against
      *
      * @return bool
      */
-    public function shouldExistFor($imageWidth, $imageHeight)
+    public function shouldExistFor($imageWidth, $imageHeight, File $file = null)
     {
         $result = false;
         $imageWidth = (int) $imageWidth;
@@ -345,6 +413,28 @@ class Version
                         }
                     }
                     break;
+            }
+            if ($result === true && $file !== null) {
+                $fileSetIDs = $this->getAssociatedFileSetIDs();
+                if ($this->isLimitedToFileSets()) {
+                    // Thumbnail only if the file is in the specified file sets
+                    if (empty($fileSetIDs)) {
+                        $result = false;
+                    } else {
+                        $valid = array_intersect($fileSetIDs, $file->getFileSetIDs());
+                        if (empty($valid)) {
+                            $result = false;
+                        }
+                    }
+                } else {
+                    // Thumbnail only if the file is NOT in the specified file sets
+                    if (!empty($fileSetIDs)) {
+                        $blocking = array_intersect($fileSetIDs, $file->getFileSetIDs());
+                        if (!empty($blocking)) {
+                            $result = false;
+                        }
+                    }
+                }
             }
 
             return $result;

@@ -94,22 +94,20 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         }
         $v = array($cID);
 
-        $q = "select cvID, cvIsApproved, cvIsNew, cvHandle, cvName, cvDescription, cvDateCreated, cvDatePublic, " .
-             "pTemplateID, cvAuthorUID, cvApproverUID, cvComments, pThemeID, cvPublishDate, cvPublishEndDate from CollectionVersions " .
-             "where cID = ?";
+        $q = "select * from CollectionVersions where cID = ?";
 
         $now = new \DateTime();
 
         switch ($cvID) {
             case 'ACTIVE':
-                $q .= ' and cvIsApproved = 1 and (cvPublishDate is NULL or cvPublishDate <= ?) ';
+                $q .= ' and cvIsApproved = 1 and (cvPublishDate <= ? or cvPublishDate is null) order by cvPublishDate desc limit 1';
                 $v[] = $now->format('Y-m-d H:i:s');
                 break;
             case 'SCHEDULED':
-                $q .= ' and cvIsApproved = 1 and (cvPublishDate is not NULL or cvPublishEndDate is not null) ';
+                $q .= ' and cvIsApproved = 1 and (cvPublishDate is not NULL or cvPublishEndDate is not null) limit 1';
                 break;
             case 'RECENT':
-                $q .= ' order by cvID desc';
+                $q .= ' order by cvID desc limit 1';
                 break;
             default:
                 $v[] = $cvID;
@@ -353,15 +351,14 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
             $this->pThemeID,
             $this->pTemplateID,
             null,
-            null,
         );
         // important: cvPublishDate used to be the same for the new version as it is for the current , but it made it
         // impossible to create a version that wasn't scheduled once you scheduled a version so I'm turning it off for
         // now - AE
 
        $q = "insert into CollectionVersions (cID, cvID, cvName, cvHandle, cvDescription, cvDatePublic, " .
-            "cvDateCreated, cvComments, cvAuthorUID, cvIsNew, pThemeID, pTemplateID, cvPublishDate, cvPublishEndDate) " .
-            "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            "cvDateCreated, cvComments, cvAuthorUID, cvIsNew, pThemeID, pTemplateID, cvPublishDate) " .
+            "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
        $db->executeQuery($q, $v);
 
@@ -449,6 +446,13 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
 
         // Remove all publish dates before setting the new ones, if any
         $this->clearPublishStartDate();
+
+        if ($this->getPublishEndDate()) {
+            $now = $dh->date('Y-m-d G:i:s');
+            if (strtotime($now) >= strtotime($this->getPublishEndDate())) {
+                $this->clearPublishEndDate();
+            }
+        }
 
         if ($cvPublishDate || $cvPublishEndDate) {
             // remove approval for all versions except the current one because a scheduled version is being processed
@@ -686,4 +690,14 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
 
         $db->executeQuery($q, array($this->cID));
     }
+
+    private function clearPublishEndDate()
+    {
+        $app = Facade::getFacadeApplication();
+        $db = $app->make('database')->connection();
+        $q = "update CollectionVersions set cvPublishEndDate = NULL where cID = ?";
+
+        $db->executeQuery($q, array($this->cID));
+    }
+
 }

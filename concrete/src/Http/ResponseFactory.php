@@ -291,6 +291,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
 
             if (strtotime($now) >= strtotime($publishEndDate)) {
                 $scheduledVersion->deny();
+                return $this->notFound('', Response::HTTP_NOT_FOUND, $headers);
             }
         }
 

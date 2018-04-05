@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\File;
 
+use Concrete\Core\Permission\Access\Access as PermissionAccess;
+use Concrete\Core\Permission\Access\Entity\FileUploaderEntity;
+use Concrete\Core\Permission\Key\FileFolderKey;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Concrete\Core\Search\ItemList\Pager\Manager\FolderItemListPagerManager;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
@@ -13,6 +16,7 @@ use Concrete\Core\Search\PermissionableListItemInterface;
 use Concrete\Core\Search\StickyRequest;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\FileFolder;
+use Concrete\Core\User\User;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use Closure;
 use Concrete\Core\Permission\Checker as Permissions;
@@ -84,7 +88,7 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
 
     public function createQuery()
     {
-        $this->query->select('n.treeNodeID')
+        $this->query->select('distinct n.treeNodeID')
             ->addSelect('if(nt.treeNodeTypeHandle=\'file\', fv.fvTitle, n.treeNodeName) as folderItemName')
             ->addSelect('if(nt.treeNodeTypeHandle=\'file\', fv.fvDateAdded, n.dateModified) as folderItemModified')
             ->addSelect('case when nt.treeNodeTypeHandle=\'search_preset\' then 1 when nt.treeNodeTypeHandle=\'file_folder\' then 2 else (10 + fvType) end as folderItemType')
@@ -151,16 +155,14 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
 
     public function deliverQueryObject()
     {
-        if (isset($this->parent)) {
-            $parent = $this->parent;
-        } else {
+        if (!isset($this->parent)) {
             $filesystem = new Filesystem();
-            $parent = $filesystem->getRootFolder();
+            $this->parent = $filesystem->getRootFolder();
         }
 
         if ($this->searchSubFolders) {
             // determine how many subfolders are within the parent folder.
-            $subFolders = $parent->getHierarchicalNodesOfType('file_folder', 1, false, true);
+            $subFolders = $this->parent->getHierarchicalNodesOfType('file_folder', 1, false, true);
             $subFolderIds = array();
             foreach($subFolders as $subFolder) {
                 $subFolderIds[] = $subFolder['treeNodeID'];
@@ -170,10 +172,48 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
             );
         } else {
             $this->query->andWhere('n.treeNodeParentID = :treeNodeParentID');
-            $this->query->setParameter('treeNodeParentID', $parent->getTreeNodeID());
+            $this->query->setParameter('treeNodeParentID', $this->parent->getTreeNodeID());
         }
 
         return parent::deliverQueryObject();
+    }
+
+    public function finalizeQuery(\Doctrine\DBAL\Query\QueryBuilder $query)
+    {
+        $u = new User();
+        // Super user can search any files
+        if (!$u->isSuperUser()) {
+            /** @var FileFolderKey $pk */
+            $pk = FileFolderKey::getByHandle('search_file_folder');
+            if (is_object($pk)) {
+                $pk->setPermissionObject($this->parent);
+                /** @var PermissionAccess $pa */
+                $pa = $pk->getPermissionAccessObject();
+                // Check whether or not current user can search files in the current folder
+                if (is_object($pa) && $pa->validate()) {
+                    // Get all access entities without "File Uploader" entity
+                    $accessEntitiesWithoutFileUploader = [];
+                    $accessEntities = $u->getUserAccessEntityObjects();
+                    foreach ($accessEntities as $accessEntity) {
+                        if (! $accessEntity instanceof FileUploaderEntity) {
+                            $accessEntitiesWithoutFileUploader[] = $accessEntity;
+                        }
+                    }
+                    /**
+                     * For performance reason, if the current user can not search files without "File Uploader" entity,
+                     * we filter only files that uploaded by the current user or permission overridden.
+                     */
+                    if (!$pa->validateAccessEntities($accessEntitiesWithoutFileUploader)) {
+                        $query
+                            ->leftJoin('tf', 'Files', 'f', 'tf.fID = f.fID')
+                            ->andWhere('(f.uID = :fileUploaderID OR f.fOverrideSetPermissions = 1) OR nt.treeNodeTypeHandle != \'file\'')
+                            ->setParameter('fileUploaderID', $u->getUserID());
+                    }
+                }
+            }
+        }
+
+        return $query;
     }
 
     public function sortByNodeName()

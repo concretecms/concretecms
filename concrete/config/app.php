@@ -115,6 +115,7 @@ return [
         'core_database' => '\Concrete\Core\Database\DatabaseServiceProvider',
         'core_form' => '\Concrete\Core\Form\FormServiceProvider',
         'core_session' => '\Concrete\Core\Session\SessionServiceProvider',
+        'core_system' => '\Concrete\Core\System\SystemServiceProvider',
         'core_cookie' => '\Concrete\Core\Cookie\CookieServiceProvider',
         'core_http' => '\Concrete\Core\Http\HttpServiceProvider',
         'core_events' => '\Concrete\Core\Events\EventsServiceProvider',
@@ -1175,6 +1176,11 @@ return [
 
         'base_url' => '/ccm/api/v1'
 
-    ]
+    ],
 
+    // Registered mutex keys
+    'mutex' => [
+        'core_system_install' => true,
+        'core_system_upgrade' => true,
+    ],
 ];

@@ -435,11 +435,13 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
 
     public function sortByUserName()
     {
+        $this->query->addGroupBy('u.uName');
         $this->query->orderBy('u.uName', 'asc');
     }
 
     public function sortByDateAdded()
     {
+        $this->query->addGroupBy('u.uDateAdded');
         $this->query->orderBy('u.uDateAdded', 'desc');
     }
 }

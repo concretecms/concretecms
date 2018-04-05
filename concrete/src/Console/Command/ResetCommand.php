@@ -19,6 +19,7 @@ class ResetCommand extends Command
             ->setName('c5:reset')
             ->setDescription('Reset the concrete5 installation, deleting files and emptying the database')
             ->addEnvOption()
+            ->setCanRunAsRoot(false)
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force the reset')
             ->setHelp(<<<EOT
 Returns codes:

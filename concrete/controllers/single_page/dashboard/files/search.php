@@ -18,6 +18,7 @@ class Search extends DashboardPageController
 
         $header = new Header();
         $this->set('headerMenu', $header);
+        $this->set('breadcrumbClass', 'ccm-file-manager-breadcrumb');
         $this->requireAsset('core/file-manager');
         $this->requireAsset('core/imageeditor');
 

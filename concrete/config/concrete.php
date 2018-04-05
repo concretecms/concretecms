@@ -8,7 +8,7 @@ return [
      */
     'version' => '9.0.0a1',
     'version_installed' => '9.0.0a1',
-    'version_db' => '20180227035239', // the key of the latest database migration
+    'version_db' => '20180330080830', // the key of the latest database migration
 
     /*
      * Installation status
@@ -602,7 +602,8 @@ return [
          * @var bool
          */
         'choose_language_login' => false,
-
+        // Fetch language files when installing a package connected to the marketplace [boolean]
+        'auto_install_package_languages' => true,
         // Community Translation instance offering concrete5 translations
         'community_translation' => [
             // API entry point of the Community Translation instance

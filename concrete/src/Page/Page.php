@@ -335,6 +335,18 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
+     * @private
+     * Forces all pages to be checked in and edit mode to be reset.
+     * @TODO – move this into a command in version 9.
+     */
+    public static function forceCheckInForAllPages()
+    {
+        $db = Database::connection();
+        $q = 'update Pages set cIsCheckedOut = 0, cCheckedOutUID = null, cCheckedOutDatetime = null, cCheckedOutDatetimeLastEdit = null';
+        $db->executeQuery($q);
+    }
+
+    /**
      * Checks if the page is a dashboard page, returns true if it is.
      *
      * @return bool
