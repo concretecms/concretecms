@@ -3,6 +3,8 @@
 namespace Concrete\Core\Console\Command;
 
 use Concrete\Core\Console\Command;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\System\Mutex\MutexInterface;
 use Concrete\Core\Updater\Migrations\Configuration;
 use Concrete\Core\Updater\Update;
 use Doctrine\DBAL\Migrations\OutputWriter;
@@ -20,6 +22,7 @@ class UpdateCommand extends Command
             ->setName('c5:update')
             ->setDescription('Runs all database migrations to bring the concrete5 installation up to date.')
             ->addEnvOption()
+            ->setCanRunAsRoot(false)
             ->addOption('rerun', null, InputOption::VALUE_NONE, '(Re)apply already executed migrations')
             ->addOption('after', 'a', InputOption::VALUE_REQUIRED, '(Re)apply migrations after a specific version or migration (requires --rerun)')
             ->addOption('since', 's', InputOption::VALUE_REQUIRED, '(Re)apply migrations starting from a specific version or migration (requires --rerun)')
@@ -84,6 +87,9 @@ EOT
                 }
             }
         }
-        Update::updateToCurrentVersion($configuration);
+        $app = Application::getFacadeApplication();
+        $app->make(MutexInterface::class)->execute(Update::MUTEX_KEY, function () use ($configuration) {
+            Update::updateToCurrentVersion($configuration);
+        });
     }
 }

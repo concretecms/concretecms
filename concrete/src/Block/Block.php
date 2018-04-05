@@ -1930,7 +1930,16 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $site = \Core::make('site')->getSite();
         $siteTreeID = $site->getSiteTreeID();
         $cbRelationID = $this->getBlockRelationID();
-        $rows = $db->GetAll('select p.cID, max(cvID) as cvID from Pages p inner join CollectionVersions cv on p.cID = cv.cID where ptID = ? and cIsTemplate = 0 and cIsActive = 1 and siteTreeID = ? group by cID order by cID', [$oc->getPageTypeID(), $siteTreeID]);
+        $treeIDs = [0];
+        foreach($site->getLocales() as $locale) {
+            $tree = $locale->getSiteTree();
+            if (is_object($tree)) {
+                $treeIDs[] = $tree->getSiteTreeID();
+            }
+        }
+        $treeIDs = implode(',', $treeIDs);
+
+        $rows = $db->GetAll('select p.cID, max(cvID) as cvID from Pages p inner join CollectionVersions cv on p.cID = cv.cID where ptID = ? and cIsTemplate = 0 and cIsActive = 1 and siteTreeID in (' . $treeIDs . ') group by cID order by cID', [$oc->getPageTypeID()]);
 
         // now we have a list of all pages of this type in the site.
         foreach ($rows as $row) {
@@ -2035,10 +2044,9 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $cID = $this->getBlockActionCollectionID();
         $bID = $this->getBlockID();
         $arHandle = urlencode($this->getAreaHandle());
-        $step = ($_REQUEST['step']) ? '&amp;step=' . $_REQUEST['step'] : '';
         $valt = Loader::helper('validation/token');
         $token = $valt->generate();
-        $str = DIR_REL . '/' . DISPATCHER_FILENAME . "?cID={$cID}&amp;bID={$bID}&amp;arHandle={$arHandle}" . $step . '&amp;ccm_token=' . $token;
+        $str = DIR_REL . '/' . DISPATCHER_FILENAME . "?cID={$cID}&amp;bID={$bID}&amp;arHandle={$arHandle}&amp;ccm_token={$token}";
 
         return $str;
     }

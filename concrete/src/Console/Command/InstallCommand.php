@@ -1,9 +1,10 @@
 <?php
+
 namespace Concrete\Core\Console\Command;
 
 use Concrete\Core\Cache\Cache;
 use Concrete\Core\Console\Command;
-use Concrete\Core\Database\Connection\Timezone;
+use Concrete\Core\Install\ConnectionOptionsPreconditionInterface;
 use Concrete\Core\Install\Installer;
 use Concrete\Core\Install\PreconditionResult;
 use Concrete\Core\Install\PreconditionService;
@@ -12,11 +13,9 @@ use Concrete\Core\Package\Routine\AttachModeCompatibleRoutineInterface;
 use Concrete\Core\Support\Facade\Application;
 use Database;
 use DateTimeZone;
-use Doctrine\DBAL\Configuration;
-use Doctrine\DBAL\DriverManager;
-use Doctrine\DBAL\Exception\ConnectionException;
 use Exception;
 use Hautelook\Phpass\PasswordHash;
+use InvalidArgumentException;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -26,24 +25,33 @@ use Symfony\Component\Console\Question\Question;
 
 class InstallCommand extends Command
 {
+    /**
+     * @var int
+     * @access private
+     */
+    const OPTIONPRECONDITIONS_ERROR = 1;
+
+    /**
+     * @var int
+     * @access private
+     */
+    const OPTIONPRECONDITIONS_WARNINGS = 2;
+
+    /**
+     * @var int
+     * @access private
+     */
+    const OPTIONPRECONDITIONS_SUCCESS = 3;
+
+    /**
+     * @var bool|null
+     */
     private $preconditionsPassed = null;
 
     /**
      * @var Installer|null
      */
-    private $installer = null;
-
-    /**
-     * @return Installer
-     */
-    protected function getInstaller()
-    {
-        if ($this->installer === null) {
-            $this->installer = Application::getFacadeApplication()->make(Installer::class);
-        }
-
-        return $this->installer;
-    }
+    private $configuredInstaller = null;
 
     protected function configure()
     {
@@ -52,6 +60,7 @@ class InstallCommand extends Command
             ->setName('c5:install')
             ->setDescription('Install concrete5')
             ->addEnvOption()
+            ->setCanRunAsRoot(false)
             ->addOption('db-server', null, InputOption::VALUE_REQUIRED, 'Location of database server')
             ->addOption('db-username', null, InputOption::VALUE_REQUIRED, 'Database username')
             ->addOption('db-password', null, InputOption::VALUE_REQUIRED, 'Database password')
@@ -63,7 +72,7 @@ class InstallCommand extends Command
             ->addOption('starting-point', null, InputOption::VALUE_REQUIRED, 'Starting point to use', 'elemental_blank')
             ->addOption('admin-email', null, InputOption::VALUE_REQUIRED, 'Email of the admin user of the install', 'admin@example.com')
             ->addOption('admin-password', null, InputOption::VALUE_REQUIRED, 'Password of the admin user of the install')
-            ->addOption('demo-username', null, InputOption::VALUE_REQUIRED, 'Additional user username', 'demo')
+            ->addOption('demo-username', null, InputOption::VALUE_REQUIRED, 'Additional user username')
             ->addOption('demo-password', null, InputOption::VALUE_REQUIRED, 'Additional user password')
             ->addOption('demo-email', null, InputOption::VALUE_REQUIRED, 'Additional user email', 'demo@example.com')
             ->addOption('language', null, InputOption::VALUE_REQUIRED, 'The default concrete5 interface language (eg en_US)')
@@ -72,6 +81,7 @@ class InstallCommand extends Command
             ->addOption('attach', null, InputOption::VALUE_NONE, 'Attach if database contains an existing concrete5 instance')
             ->addOption('force-attach', null, InputOption::VALUE_NONE, 'Always attach')
             ->addOption('interactive', 'i', InputOption::VALUE_NONE, 'Install using interactive (wizard) mode')
+            ->addOption('ignore-warnings', null, InputOption::VALUE_NONE, 'Ignore warnings')
             ->setHelp(<<<EOT
 Returns codes:
   0 operation completed successfully
@@ -88,68 +98,43 @@ EOT
         if ($app->isInstalled()) {
             throw new Exception('concrete5 is already installed.');
         }
-        $options = $input->getOptions();
-        if (isset($options['config']) && $options['config'] && strtolower($options['config']) !== 'none') {
-            if (!is_file($options['config'])) {
-                throw new Exception('Unable to find the configuration file ' . $options['config']);
-            }
-            $configOptions = include $options['config'];
-            if (!is_array($configOptions)) {
-                throw new Exception('The configuration file did not returned an array.');
-            }
-            foreach ($configOptions as $k => $v) {
-                if (!$input->hasParameterOption("--$k")) {
-                    $options[$k] = $v;
-                }
-            }
-        }
         if ($this->getPreconditionsPassed($app, $output) !== true) {
-            throw new Exception(t('One or more precondition failed!'));
+            throw new Exception('One or more precondition failed!');
         }
-
-        if (isset($options['timezone'])) {
-            $timezone = $options['timezone'];
-        } else {
-            $timezone = @date_default_timezone_get() ?: 'UTC';
-        }
-
-        $force_attach = $input->getOption('force-attach');
-        $auto_attach = $force_attach || $input->getOption('attach');
         $config = $app->make('config');
-        $hasher = new PasswordHash($config->get('concrete.user.password.hash_cost_log2'), $config->get('concrete.user.password.hash_portable'));
+        $options = $this->getFinalOptions($input);
+        $installer = $this->configuredInstaller;
+        if ($installer === null) {
+            $installer = $this->buildInstaller($options);
+            switch ($this->checkOptionPreconditions($app, $installer, $input, $output)) {
+                case self::OPTIONPRECONDITIONS_ERROR:
+                    $output->writeln('One or more precondition failed!');
+                    exit(1);
+                case self::OPTIONPRECONDITIONS_WARNINGS:
+                    if (!$input->getOption('ignore-warnings')) {
+                        if (!$input->isInteractive()) {
+                            $output->writeln('One or more precondition failed!');
+                            exit(1);
+                        }
+                        $confirm = new Question('Configuration warnings detected. Would you like to install anyway? [Y]es / [N]o: ', false);
+                        $confirm->setValidator(function ($given) {
+                            if (!$given || !preg_match('/^[yn]/i', $given)) {
+                                throw new InvalidArgumentException('Please answer either Y or N.');
+                            }
 
-        $installer = $this->getInstaller();
-
-        $installer->getOptions()
-            ->setConfiguration([
-                'database' => [
-                    'default-connection' => 'concrete',
-                    'connections' => [
-                        'concrete' => [
-                            'driver' => 'c5_pdo_mysql',
-                            'server' => $options['db-server'],
-                            'database' => $options['db-database'],
-                            'username' => $options['db-username'],
-                            'password' => $options['db-password'],
-                            'charset' => 'utf8',
-                        ],
-                    ],
-                ],
-                'canonical-url' => $options['canonical-url'] ?: '',
-                'canonical-url-alternative' => $options['canonical-url-alternative'] ?: '',
-            ])
-            ->setSiteLocaleId(isset($options['site-locale']) ? $options['site-locale'] : Localization::BASE_LOCALE)
-            ->setUiLocaleId(isset($options['language']) ? $options['language'] : Localization::BASE_LOCALE)
-            ->setAutoAttachEnabled($auto_attach)
-            ->setStartingPointHandle($options['starting-point'])
-            ->setSiteName($options['site'])
-            ->setUserEmail($options['admin-email'])
-            ->setUserPasswordHash($hasher->HashPassword($options['admin-password']))
-            ->setServerTimeZoneId($timezone)
-        ;
-        $e = $installer->checkOptions();
-        if ($e->has()) {
-            throw new Exception(implode("\n", $e->getList()));
+                            return $given;
+                        });
+                        $helper = $this->getHelper('question');
+                        $answer = $helper->ask($input, $output, $confirm);
+                        // Cancel if they said no
+                        if (stripos('n', $answer) === 0) {
+                            $output->writeln('Installation cancelled.');
+                            exit(1);
+                        }
+                    }
+                    break;
+            }
+            $this->configuredInstaller = $installer;
         }
         Cache::disableAll();
         $spl = $installer->getStartingPoint(false);
@@ -165,24 +150,19 @@ EOT
             });
             Database::setDefaultConnection('install');
             $config->set('database.connections.install', []);
-            $attach_mode = $force_attach;
-
-            if (!$force_attach && $auto_attach) {
-                /** @var \Doctrine\DBAL\Connection $db */
+            $attach_mode = $options['force_attach'];
+            if (!$attach_mode && $options['auto_attach']) {
                 $db = $app->make('database')->connection();
-
                 if ($db->query('show tables')->rowCount()) {
                     $attach_mode = true;
                 }
             }
             $routines = $spl->getInstallRoutines();
             foreach ($routines as $r) {
-                // If we're
                 if ($attach_mode && !$r instanceof AttachModeCompatibleRoutineInterface) {
                     $output->writeln("{$r->getProgress()}%: {$r->getText()} (Skipped)");
                     continue;
                 }
-
                 $output->writeln($r->getProgress() . '%: ' . $r->getText());
                 $spl->executeInstallRoutine($r->getMethod());
             }
@@ -193,9 +173,7 @@ EOT
         if (
             isset($options['demo-username']) && isset($options['demo-password']) && isset($options['demo-email'])
             &&
-            is_string($options['demo-username']) && is_string($options['demo-password']) && is_string($options['demo-email'])
-            &&
-            ($options['demo-username'] !== '') && ($options['demo-password'] !== '') && ($options['demo-email'] !== '')
+            ((string) $options['demo-username'] !== '') && ((string) $options['demo-password'] !== '') && ((string) $options['demo-email'] !== '')
         ) {
             $output->write('Adding demo user... ');
             \UserInfo::add([
@@ -217,64 +195,115 @@ EOT
     protected function interact(InputInterface $input, OutputInterface $output)
     {
         if ($this->getPreconditionsPassed(Application::getFacadeApplication(), $output) !== true) {
-            throw new Exception(t('One or more precondition failed!'));
+            throw new Exception('One or more precondition failed!');
         }
         // If we're in interactive mode, fire up the wizard
         if ($input->getOption('interactive')) {
+            $app = Application::getFacadeApplication();
             $helper = $this->getHelper('question');
             /* @var \Symfony\Component\Console\Helper\QuestionHelper $helper */
 
-            // Get the wizard generator
-            $wizard = $this->getWizard($input, $output);
-            $hidden = [];
+            for (; ;) {
+                // Get the wizard generator
+                $wizard = $this->getWizard($input, $output);
+                $hidden = [];
 
-            // Loop over the questions
-            foreach ($wizard as $key => $question) {
-                if ($question->isHidden()) {
-                    // If this question is hidden, lets store its key for later
-                    $hidden[] = $key;
-                }
-
-                // Set the option value to the result of asking the question
-                $input->setOption($key, $helper->ask($input, $output, $question));
-            }
-
-            // Lets output a table with the provided options for review
-            $table = new Table($output);
-            foreach ($this->getDefinition()->getOptions() as $option) {
-                if ($option->isValueRequired()) {
-                    $name = $option->getName();
-                    $value = $input->getOption($name) ?: '';
-
-                    // If this question had hidden output, lets not show it now
-                    if ($value && in_array($name, $hidden)) {
-                        $value = '<options=bold>HIDDEN</>';
+                // Loop over the questions
+                foreach ($wizard as $key => $question) {
+                    if ($question->isHidden()) {
+                        // If this question is hidden, lets store its key for later
+                        $hidden[] = $key;
                     }
 
-                    $table->addRow([$name, $value]);
+                    // Set the option value to the result of asking the question
+                    $input->setOption($key, $helper->ask($input, $output, $question));
                 }
-            }
 
-            $table->setHeaders(['Question', 'Value']);
-            $table->render();
+                $installer = $this->buildInstaller($this->getFinalOptions($input));
+                switch ($this->checkOptionPreconditions($app, $installer, $input, $output)) {
+                    case self::OPTIONPRECONDITIONS_ERROR:
+                        $confirm = new Question('Errors detected! Would you like to change the above settings? [Y]es / [N]o: ', false);
+                        $confirm->setValidator(function ($given) {
+                            if (!$given || !preg_match('/^[yn]/i', $given)) {
+                                throw new InvalidArgumentException('Please answer either Y, N or R.');
+                            }
 
-            $confirm = new Question('Would you like to install with these settings? [ y / n ]: ', false);
-            $confirm->setValidator(function ($given) {
-                if (!$given || !preg_match('/^[yn]/i', $given)) {
-                    throw new \InvalidArgumentException(t('Please answer either Y or N.'));
+                            return $given;
+                        });
+                        $answer = $helper->ask($input, $output, $confirm);
+                        // Cancel if they said no
+                        if (stripos('n', $answer) === 0) {
+                            $output->writeln('Installation cancelled.');
+                            exit(1);
+                        }
+                        continue 2;
+                    case self::OPTIONPRECONDITIONS_WARNINGS:
+                        $confirm = new Question('Warnings detected! Would you like to change the above settings? [Y]es / [N]o / [A]bort: ', false);
+                        $confirm->setValidator(function ($given) {
+                            if (!$given || !preg_match('/^[yna]/i', $given)) {
+                                throw new InvalidArgumentException('Please answer either Y, N or A.');
+                            }
+
+                            return $given;
+                        });
+                        $answer = $helper->ask($input, $output, $confirm);
+                        // Cancel if they said no
+                        if (stripos('a', $answer) === 0) {
+                            $output->writeln('Installation cancelled.');
+                            exit(1);
+                        }
+                        if (stripos('y', $answer) === 0) {
+                            continue 2;
+                        }
+                        break;
                 }
-            });
 
-            $answer = $helper->ask($input, $output, $confirm);
+                // Lets output a table with the provided options for review
+                $table = new Table($output);
+                foreach ($this->getDefinition()->getOptions() as $option) {
+                    if ($option->isValueRequired()) {
+                        $name = $option->getName();
+                        $value = $input->getOption($name) ?: '';
 
-            // Cancel if they said no
-            if (stripos('n', $answer) === 0) {
-                $output->writeln('Installation cancelled.');
-                exit;
+                        // If this question had hidden output, lets not show it now
+                        if ($value && in_array($name, $hidden)) {
+                            $value = '<options=bold>HIDDEN</>';
+                        }
+
+                        $table->addRow([$name, $value]);
+                    }
+                }
+
+                $table->setHeaders(['Question', 'Value']);
+                $table->render();
+
+                $confirm = new Question('Would you like to install with these settings? [Y]es / [N]o / [E]dit: ', false);
+                $confirm->setValidator(function ($given) {
+                    if (!$given || !preg_match('/^[yne]/i', $given)) {
+                        throw new InvalidArgumentException('Please answer either Y, N or R.');
+                    }
+
+                    return $given;
+                });
+
+                $answer = $helper->ask($input, $output, $confirm);
+
+                // Cancel if they said no
+                if (stripos('n', $answer) === 0) {
+                    $output->writeln('Installation cancelled.');
+                    exit(1);
+                }
+
+                // Retry if they ask so
+                if (stripos('e', $answer) === 0) {
+                    continue;
+                }
+
+                // Add a bit of padding
+                $output->writeln('');
+                $this->configuredInstaller = $installer;
+                break;
             }
-
-            // Add a bit of padding
-            $output->writeln('');
         }
     }
 
@@ -306,7 +335,10 @@ EOT
         // If the default value is callable, it's probably actually the mutator
         if (is_callable($default)) {
             $mutator = $default;
-            $default = null;
+            $default = array_shift($row);
+            if (is_callable($default)) {
+                $default = $default($input);
+            }
         } elseif ($row) { // Otherwise if there's still items, the mutator is last.
             $mutator = array_shift($row);
         }
@@ -371,6 +403,10 @@ EOT
                 $firstKey = null;
             }
 
+            if (in_array($question[0], ['demo-password', 'demo-email'], true) && '' === (string) $input->getOption('demo-username')) {
+                continue;
+            }
+
             yield $question[0] => $this->getQuestion($question, $input);
         }
 
@@ -392,8 +428,12 @@ EOT
      */
     private function getQuestionString(InputOption $option, $default)
     {
-        if ($default) {
-            return sprintf('%s? [Default: <options=bold>%s</>]: ', $option->getDescription(), $default);
+        if ('' !== (string) $default) {
+            if (stripos($option->getName(), 'password') !== false) {
+                return sprintf('%s? [<options=bold>HIDDEN</>]: ', $option->getDescription(), $default);
+            }
+
+            return sprintf('%s? [<options=bold>%s</>]: ', $option->getDescription(), $default);
         }
 
         return sprintf('%s?: ', $option->getDescription());
@@ -433,7 +473,7 @@ EOT
             'db-database',
             function (InputInterface $input, OutputInterface $output) {
                 if (!trim($input->getOption('db-database'))) {
-                    $output->writeln(sprintf('<error>%s</error>', t('A database name is required.')));
+                    $output->writeln(sprintf('<error>%s</error>', 'A database name is required.'));
 
                     return 'db-database';
                 }
@@ -451,62 +491,14 @@ EOT
             function (InputInterface $input, OutputInterface $output) {
                 $timezone = trim($input->getOption('timezone'));
                 if ($timezone === '') {
-                    $output->writeln(sprintf('<error>%s</error>', t('A time zone identifier is required.')));
+                    $output->writeln(sprintf('<error>%s</error>', 'A time zone identifier is required.'));
 
                     return 'timezone';
                 }
                 try {
                     new DateTimeZone($timezone);
                 } catch (Exception $x) {
-                    $output->writeln(sprintf('<error>%s</error>', t('Invalid time zone identifier.')));
-
-                    return 'timezone';
-                }
-
-                return true;
-            },
-            function (InputInterface $input, OutputInterface $output) {
-                $params = [
-                    'wrapperClass' => 'Concrete\Core\Database\Connection\Connection',
-                    'dbname' => $input->getOption('db-database'),
-                    'user' => $input->getOption('db-username'),
-                    'password' => $input->getOption('db-password'),
-                    'host' => $input->getOption('db-server'),
-                    'driver' => 'pdo_mysql',
-                ];
-
-                $config = new Configuration();
-                $connection = DriverManager::getConnection($params, $config);
-                try {
-                    $connection->connect();
-                } catch (ConnectionException $e) {
-                    $e = $e->getMessage();
-                    $connection = false;
-                }
-
-                if (!$connection || !$connection->ping()) {
-                    $output->writeln(sprintf('<error>%s</error>', t('Unable to connect using provided credentials.')));
-                    if (isset($e)) {
-                        $output->writeln(sprintf('<error>%s</error>', $e));
-                    }
-
-                    // Set the option to an empty string so that we don't output the password
-                    $input->setOption('db-password', '');
-
-                    return false;
-                }
-                $app = Application::getFacadeApplication();
-                $ctz = $app->make(Timezone::class, ['connection' => $connection]);
-                $deltaTimezone = $ctz->getDeltaTimezone($input->getOption('timezone'));
-                if ($deltaTimezone !== null) {
-                    $error = $ctz->describeDeltaTimezone($deltaTimezone);
-                    $suggestTimezones = $ctz->getCompatibleTimezones();
-                    if (!empty($suggestTimezones)) {
-                        $suggestTimezones = array_keys($suggestTimezones);
-                        sort($suggestTimezones);
-                        $error .= "\n" . t('You may want to use one of these time zones:' . "\n" . implode("\n", $suggestTimezones));
-                    }
-                    $output->writeln(sprintf('<error>%s</error>', $error));
+                    $output->writeln(sprintf('<error>%s</error>', 'Invalid time zone identifier.'));
 
                     return 'timezone';
                 }
@@ -563,7 +555,7 @@ EOT
             function (InputInterface $input, OutputInterface $output) use ($checkLocale) {
                 $code = $input->getOption('language');
                 if ($checkLocale($code) !== true) {
-                    $output->writeln(sprintf('<error>%s</error>', t("The language code '%s' is not valid.", $code)));
+                    $output->writeln(sprintf('<error>%s</error>', sprintf("The language code '%s' is not valid.", $code)));
 
                     return 'language';
                 }
@@ -573,17 +565,17 @@ EOT
             [
                 'site-locale',
                 function (Question $question, InputInterface $input, InputOption $option) {
-                    $newDefault = $input->getOption('language');
-                    $input->setOption('site-locale', $newDefault);
-
                     return $question;
+                },
+                function (InputInterface $input) {
+                    return $input->getOption('site-locale') ?: $input->getOption('language') ?: Localization::BASE_LOCALE;
                 },
             ],
             // Test the site locale
             function (InputInterface $input, OutputInterface $output) use ($checkLocale) {
                 $code = $input->getOption('site-locale');
                 if ($checkLocale($code) !== true) {
-                    $output->writeln(sprintf('<error>%s</error>', t("The language code '%s' is not valid.", $code)));
+                    $output->writeln(sprintf('<error>%s</error>', sprintf("The language code '%s' is not valid.", $code)));
 
                     return 'site-locale';
                 }
@@ -624,8 +616,8 @@ EOT
             }
         }
         foreach ([
-            t('Checking required preconditions:') => $requiredPreconditions,
-            t('Checking optional preconditions:') => $optionalPreconditions,
+            'Checking required preconditions:' => $requiredPreconditions,
+            'Checking optional preconditions:' => $optionalPreconditions,
         ] as $text => $preconditions) {
             if (empty($preconditions)) {
                 continue;
@@ -644,7 +636,7 @@ EOT
                     case PreconditionResult::STATE_PASSED:
                         if ($output->getVerbosity() >= OutputInterface::VERBOSITY_NORMAL) {
                             $message = $preconditionResult->getMessage();
-                            $message = $message ? t('passed (%s).', $message) : t('passed.');
+                            $message = $message ? sprintf('passed (%s).', $message) : 'passed.';
                             $output->writeln(sprintf('<info>%s</info>', $message));
                         }
                         break;
@@ -655,7 +647,7 @@ EOT
                         break;
                     case PreconditionResult::STATE_SKIPPED:
                         if ($output->getVerbosity() >= OutputInterface::VERBOSITY_NORMAL) {
-                            $output->writeln(sprintf('<comment>%s</comment>', $preconditionResult->getMessage() ?: t('skipped.')));
+                            $output->writeln(sprintf('<comment>%s</comment>', $preconditionResult->getMessage() ?: 'skipped.'));
                         }
                         break;
                     case PreconditionResult::STATE_FAILED:
@@ -672,5 +664,166 @@ EOT
         }
 
         return $result;
+    }
+
+    /**
+     * @param InputInterface $input
+     *
+     * @return array
+     */
+    private function getFinalOptions(InputInterface $input)
+    {
+        $options = $input->getOptions();
+        if (isset($options['config']) && $options['config'] && strtolower($options['config']) !== 'none') {
+            if (!is_file($options['config'])) {
+                throw new Exception('Unable to find the configuration file ' . $options['config']);
+            }
+            $configOptions = include $options['config'];
+            if (!is_array($configOptions)) {
+                throw new Exception('The configuration file did not returned an array.');
+            }
+            foreach ($configOptions as $k => $v) {
+                if (!$input->hasParameterOption("--$k")) {
+                    $options[$k] = $v;
+                }
+            }
+        }
+        if (empty($options['timezone'])) {
+            $options['timezone'] = @date_default_timezone_get() ?: 'UTC';
+        }
+        $options['attach'] = (bool) $input->getOption('attach');
+        $options['force_attach'] = (bool) $input->getOption('force-attach');
+        $options['auto_attach'] = $options['attach'] || $options['force_attach'];
+
+        return $options;
+    }
+
+    /**
+     * @param array $options
+     *
+     * @return Installer
+     */
+    private function buildInstaller(array $options)
+    {
+        $app = Application::getFacadeApplication();
+        $config = $app->make('config');
+        $hasher = new PasswordHash($config->get('concrete.user.password.hash_cost_log2'), $config->get('concrete.user.password.hash_portable'));
+        $installer = $app->make(Installer::class);
+        $installer->getOptions()
+            ->setConfiguration([
+                'database' => [
+                    'default-connection' => 'concrete',
+                    'connections' => [
+                        'concrete' => [
+                            'driver' => 'c5_pdo_mysql',
+                            'server' => $options['db-server'],
+                            'database' => $options['db-database'],
+                            'username' => $options['db-username'],
+                            'password' => (string) $options['db-password'],
+                            'charset' => 'utf8',
+                        ],
+                    ],
+                ],
+                'canonical-url' => $options['canonical-url'] ?: '',
+                'canonical-url-alternative' => $options['canonical-url-alternative'] ?: '',
+            ])
+            ->setSiteLocaleId(isset($options['site-locale']) ? $options['site-locale'] : Localization::BASE_LOCALE)
+            ->setUiLocaleId(isset($options['language']) ? $options['language'] : Localization::BASE_LOCALE)
+            ->setAutoAttachEnabled($options['auto_attach'])
+            ->setStartingPointHandle($options['starting-point'])
+            ->setSiteName($options['site'])
+            ->setUserEmail($options['admin-email'])
+            ->setUserPasswordHash($hasher->HashPassword($options['admin-password']))
+            ->setServerTimeZoneId($options['timezone'])
+        ;
+
+        return $installer;
+    }
+
+    /**
+     * @param Installer $installer
+     * @param \Concrete\Core\Application\Application $app
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     *
+     * @return int One of the InstallCommand::OPTIONPRECONDITIONS_... constants
+     */
+    private function checkOptionPreconditions(\Concrete\Core\Application\Application $app, Installer $installer, InputInterface $input, OutputInterface $output)
+    {
+        $connection = $installer->createConnection();
+        $result = true;
+        $someWarnings = false;
+        $service = $app->make(PreconditionService::class);
+        $requiredPreconditions = [];
+        $optionalPreconditions = [];
+        foreach ($service->getOptionsPreconditions() as $precondition) {
+            if ($precondition->isOptional()) {
+                $optionalPreconditions[] = $precondition;
+            } else {
+                $requiredPreconditions[] = $precondition;
+            }
+        }
+        foreach ([
+            'Checking required configuration preconditions:' => $requiredPreconditions,
+            'Checking optional configuration preconditions:' => $optionalPreconditions,
+        ] as $text => $preconditions) {
+            if (empty($preconditions)) {
+                continue;
+            }
+            if ($output->getVerbosity() >= OutputInterface::VERBOSITY_NORMAL) {
+                $output->writeln($text);
+            }
+            foreach ($preconditions as $precondition) {
+                if ($precondition instanceof ConnectionOptionsPreconditionInterface) {
+                    $precondition->setConnection($connection);
+                }
+                $precondition->setInstallerOptions($installer->getOptions());
+                if ($output->getVerbosity() >= OutputInterface::VERBOSITY_NORMAL) {
+                    $output->write(sprintf('- %s... ', $precondition->getName()));
+                } elseif ($precondition->isOptional()) {
+                    continue;
+                }
+                $preconditionResult = $precondition->performCheck();
+                switch ($preconditionResult->getState()) {
+                    case PreconditionResult::STATE_PASSED:
+                        if ($output->getVerbosity() >= OutputInterface::VERBOSITY_NORMAL) {
+                            $message = $preconditionResult->getMessage();
+                            $message = $message ? sprintf('passed (%s).', $message) : 'passed.';
+                            $output->writeln(sprintf('<info>%s</info>', $message));
+                        }
+                        break;
+                    case PreconditionResult::STATE_WARNING:
+                        $someWarnings = true;
+                        if ($output->getVerbosity() >= OutputInterface::VERBOSITY_NORMAL) {
+                            $output->writeln(sprintf('<comment>%s</comment>', $preconditionResult->getMessage()));
+                        }
+                        break;
+                    case PreconditionResult::STATE_SKIPPED:
+                        if ($output->getVerbosity() >= OutputInterface::VERBOSITY_NORMAL) {
+                            $output->writeln(sprintf('<comment>%s</comment>', $preconditionResult->getMessage() ?: 'skipped.'));
+                        }
+                        break;
+                    case PreconditionResult::STATE_FAILED:
+                    default:
+                        if ($output->getVerbosity() >= OutputInterface::VERBOSITY_NORMAL) {
+                            $output->writeln(sprintf('<error>%s</error>', $preconditionResult->getMessage()));
+                        }
+                        if (!$precondition->isOptional()) {
+                            $result = false;
+                        } else {
+                            $someWarnings = true;
+                        }
+                        break;
+                }
+            }
+        }
+
+        if ($result === false) {
+            return self::OPTIONPRECONDITIONS_ERROR;
+        } elseif ($someWarnings === true) {
+            return self::OPTIONPRECONDITIONS_WARNINGS;
+        } else {
+            return self::OPTIONPRECONDITIONS_SUCCESS;
+        }
     }
 }

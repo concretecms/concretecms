@@ -66,17 +66,18 @@ class QueueServiceProvider extends Provider
             return $app->make(QueueService::class);
         });
 
-        $dispatcher = $this->app->make(EventDispatcher::class);
-        $app = $this->app;
-        $dispatcher->addListener(BernardEvents::REJECT, function(RejectEnvelopeEvent $event) use ($app) {
-            /**
-             * @var $logger LoggerInterface
-             */
-            $logger = $app->make('log');
-            $logger->error(t('Error processing queue item: %s – %s',
-                $event->getEnvelope()->getMessage()->getName(),
-                $event->getException()->getMessage()
-            ));
-        });
+        $subscriber = $this->app->make(BernardSubscriber::class);
+        $dispatcher = $this->app->make('director');
+        $dispatcher->addSubscriber($subscriber);
+
+        $config = $this->app->make('config');
+        $mutexes = $config->get('app.mutex');
+        $generator = new QueueMutexKeyGenerator();
+        foreach($config->get('app.commands') as $entry) {
+            if ($entry[2]) {
+                $mutexes[$generator->getMutexKey($entry[2])] = true;
+            }
+        }
+        $config->set('app.mutex', $mutexes);
     }
 }

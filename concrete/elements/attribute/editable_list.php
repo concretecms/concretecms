@@ -10,7 +10,7 @@ foreach ($attributes as $ak) {
             'saveAction' => $saveAction,
             'clearAction' => $clearAction,
             'permissionsCallback' => $permissionsCallback,
-            'permissionsArguments' => $permissionsArguments,
+            'permissionsArguments' => isset($permissionsArguments) ? $permissionsArguments : null,
         )
     );
 }

@@ -8,6 +8,7 @@ use Concrete\Core\Entity\Site\SiteTree;
 use Concrete\Core\Page\Page;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
+use Events;
 
 class Service
 {
@@ -66,7 +67,11 @@ class Service
         $this->entityManager->persist($tree);
         $this->entityManager->persist($locale);
         $this->entityManager->flush();
-
+        
+        $event = new \Symfony\Component\EventDispatcher\GenericEvent();
+        $event->setArgument('locale', $locale);
+        Events::dispatch('on_locale_add', $event);
+        
         return $locale;
     }
 
@@ -127,11 +132,19 @@ class Service
     {
         $tree = $locale->getSiteTree();
         if (is_object($tree)) {
+            $home = $tree->getSiteHomePageObject();
+            if ($home) {
+                $home->delete();
+            }
             $locale->setSiteTree(null);
             $this->entityManager->remove($tree);
             $this->entityManager->flush();
         }
         $this->entityManager->remove($locale);
         $this->entityManager->flush();
+        
+        $event = new \Symfony\Component\EventDispatcher\GenericEvent();
+        $event->setArgument('locale', $locale);
+        Events::dispatch('on_locale_delete', $event);
     }
 }

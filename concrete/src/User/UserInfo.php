@@ -217,7 +217,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
         // can get all the details of the user being deleted.
         $this->getDirector()->dispatch('on_user_deleted', new UserInfoEvent($this));
 
-        $attributes = $this->attributeCategory->getAttributeValues($this);
+        $attributes = $this->attributeCategory->getAttributeValues($this->getEntityObject());
         foreach ($attributes as $attribute) {
             $this->attributeCategory->deleteValue($attribute);
         }

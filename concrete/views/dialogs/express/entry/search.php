@@ -2,13 +2,17 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 
-<div data-search="express_entries" class="ccm-ui">
-    <?php View::element('express/entries/search', array('controller' => $searchController, 'selectMode' => true)) ?>
+<div class="ccm-express-entry-search-dialog">
+  <?php $headerMenu->render(); ?>
+
+  <div data-search="express_entries" class="ccm-ui">
+      <?php View::element('express/entries/search', array('controller' => $searchController, 'selectMode' => true)) ?>
+  </div>
 </div>
 
 <script type="text/javascript">
     $(function () {
-        $('div[data-search=express_entries]').concreteAjaxSearch({
+        $('.ccm-express-entry-search-dialog').concreteAjaxSearch({
             result: <?=$result?>,
             onUpdateResults: function(concreteSearch) {
                 concreteSearch.$element.on('mouseover', 'tr[data-entity-id]', function(e) {

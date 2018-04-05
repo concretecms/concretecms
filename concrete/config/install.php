@@ -20,5 +20,12 @@ return [
         'memory_limit' => Concrete\Core\Install\Preconditions\MemoryLimit::class,
         'remote_file_importing' => Concrete\Core\Install\Preconditions\RemoteFileImporting::class,
         'zip_support' => Concrete\Core\Install\Preconditions\ZipSupport::class,
+        // OptionsPreconditionInterface
+        'canonical_urls' => Concrete\Core\Install\Preconditions\CanonicalUrls::class,
+        'database_timezone' => Concrete\Core\Install\Preconditions\DatabaseTimeZone::class,
+        'empty_database' => Concrete\Core\Install\Preconditions\EmptyDatabase::class,
+        'innodb' => Concrete\Core\Install\Preconditions\InnoDB::class,
+        'starting_point' => Concrete\Core\Install\Preconditions\StartingPoint::class,
+        'table_case' => Concrete\Core\Install\Preconditions\TableCase::class,
     ],
 ];

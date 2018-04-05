@@ -42,7 +42,7 @@ class AssetsLocalization extends Controller
     'collapse' => t('Collapse'),
     'error' => t('Error'),
     'errorDetails' => t('Details'),
-    'deleteBlockConfirm' => t('Delete Block'),
+    'deleteBlockTitle' => t('Delete'),
     'deleteBlock' => t('Block Deleted'),
     'deleteBlockMsg' => t('The block has been removed successfully.'),
     'addBlock' => t('Add Block'),

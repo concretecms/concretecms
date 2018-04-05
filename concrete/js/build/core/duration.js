@@ -41,7 +41,8 @@
             'repetitions': [],
             'allowRepeat': true,
             'allowMultiple': true,
-            'namespace': ''
+            'namespace': '',
+            'timeFormat': 24
         }, options);
 
         my.options = options;
@@ -73,7 +74,8 @@
                 'dateFormat': my.options.dateFormat,
                 'template': my.options.template,
                 'allowRepeat': my.options.allowRepeat,
-                'namespace': my.options.namespace
+                'namespace': my.options.namespace,
+                'timeFormat': my.options.timeFormat
             });
             my.$element.find('div[data-duration-selector]').append(object.getElement());
 

@@ -415,11 +415,17 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
         echo $dh->getIntelligentSearchMenu();
 
         if ($pageInUseBySomeoneElse) {
+            $buttons = array();
+            if ($canApprovePageVersions) {
+                $buttons[] = '<a onclick="$.get(\'' . REL_DIR_FILES_TOOLS_REQUIRED . '/dashboard/sitemap_check_in?cID=' . $c->getCollectionID() . $token . '\', function() { window.location.reload(); })" href="javascript:void(0)" class="dialog-launch btn btn-xs btn-default">' . t('Force Exit Edit Mode') . '</a>';
+            }
+
             echo $cih->notify(array(
                 'title' => t('Editing Unavailable.'),
                 'text' => t("%s is currently editing this page.", $c->getCollectionCheckedOutUserName()),
                 'type' => 'info',
                 'icon' => 'fa fa-exclamation-circle',
+                'buttons' => $buttons
             ));
         } else {
             if ($c->getCollectionPointerID() > 0) {

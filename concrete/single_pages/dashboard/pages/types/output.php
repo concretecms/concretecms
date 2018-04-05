@@ -1,7 +1,8 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die('Access Denied.');
+$pageTypeDefaultTemplateID = $pagetype->getPageTypeDefaultPageTemplateID();
+?>
 
 <p class="lead"><?php echo $pagetype->getPageTypeDisplayName(); ?></p>
-
     <table class="table table-striped">
 
 <?php foreach ($pagetype->getPageTypePageTemplateObjects() as $pt) {

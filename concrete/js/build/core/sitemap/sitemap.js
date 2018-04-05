@@ -371,6 +371,21 @@
 	 			var node = my.$sitemap.fancytree('getActiveNode');
 				var parent = node.parent;
 				my.reloadNode(parent);
+				$(my.$sitemap).fancytree('getTree').visit(function(node) {
+
+					// update the trash node when a page is deleted
+					if (node.data.isTrash) {
+						var isTrashNodeExpanded = node.expanded;
+						my.getLoadNodePromise(node).done(function(data) {
+							node.removeChildren();
+							node.addChildren(data);
+							if (isTrashNodeExpanded) {
+								node.setExpanded(true, {noAnimation: true});
+							}
+						});
+						return false;
+					}
+				});
 			});
             ConcreteEvent.unsubscribe('SitemapAddPageRequestComplete.sitemap');
             ConcreteEvent.subscribe('SitemapAddPageRequestComplete.sitemap', function(e, data) {

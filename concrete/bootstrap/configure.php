@@ -237,7 +237,7 @@ define('DIR_FILES_BLOCK_TYPES_CORE', DIR_BASE_CORE . '/' . DIRNAME_BLOCKS);
 define('DIR_FILES_TOOLS', DIR_APPLICATION . '/tools');
 define('DIR_FILES_TOOLS_REQUIRED', DIR_BASE_CORE . '/tools');
 define('DIR_PACKAGES_CORE', DIR_BASE_CORE . '/packages');
-define('DIR_STARTING_POINT_PACKAGES', DIR_APPLICATION . '/config/install/packages');
+defined('DIR_STARTING_POINT_PACKAGES') or define('DIR_STARTING_POINT_PACKAGES', DIR_CONFIG_SITE . '/install/packages');
 define('DIR_STARTING_POINT_PACKAGES_CORE', DIR_BASE_CORE . '/config/install/packages');
 define('DIR_CORE_UPDATES', DIR_BASE . '/' . DIRNAME_UPDATES);
 define('DIR_FILES_PAGE_TEMPLATE_ICONS', DIR_BASE_CORE . '/images/icons/page_templates');

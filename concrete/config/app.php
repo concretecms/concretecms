@@ -89,7 +89,9 @@ return [
      * Core Providers
      */
     'providers' => [
-        // Router service provider. Events come first because we need them in some service providers.
+        // Note, the order of these first few is important - we need events early for other service providers, but it depends on some things.
+        'core_system' => '\Concrete\Core\System\SystemServiceProvider',
+        'core_logging' => '\Concrete\Core\Logging\LoggingServiceProvider',
         'core_events' => '\Concrete\Core\Events\EventsServiceProvider',
         'core_router' => 'Concrete\Core\Routing\RoutingServiceProvider',
         'core_queue' => '\Concrete\Core\Foundation\Queue\QueueServiceProvider',
@@ -119,7 +121,6 @@ return [
         'core_cookie' => '\Concrete\Core\Cookie\CookieServiceProvider',
         'core_http' => '\Concrete\Core\Http\HttpServiceProvider',
         'core_whoops' => '\Concrete\Core\Error\Provider\WhoopsServiceProvider',
-        'core_logging' => '\Concrete\Core\Logging\LoggingServiceProvider',
         'core_element' => '\Concrete\Core\Filesystem\FilesystemServiceProvider',
         'core_oauth2' => '\Concrete\Core\Authentication\OAuth2\OAuth2ServiceProvider',
         'core_notification' => '\Concrete\Core\Notification\NotificationServiceProvider',
@@ -1184,6 +1185,11 @@ return [
 
         'base_url' => '/ccm/api/v1'
 
-    ]
+    ],
 
+    // Registered mutex keys
+    'mutex' => [
+        'core_system_install' => true,
+        'core_system_upgrade' => true,
+    ],
 ];

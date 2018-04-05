@@ -335,6 +335,18 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
+     * @private
+     * Forces all pages to be checked in and edit mode to be reset.
+     * @TODO – move this into a command in version 9.
+     */
+    public static function forceCheckInForAllPages()
+    {
+        $db = Database::connection();
+        $q = 'update Pages set cIsCheckedOut = 0, cCheckedOutUID = null, cCheckedOutDatetime = null, cCheckedOutDatetimeLastEdit = null';
+        $db->executeQuery($q);
+    }
+
+    /**
      * Checks if the page is a dashboard page, returns true if it is.
      *
      * @return bool
@@ -2196,6 +2208,15 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         }
     }
 
+    /**
+     * Adds a block to the page.
+     *
+     * @param \Concrete\Core\Block\BlockType\BlockType $bt   The type of block to be added. 
+     * @param \Concrete\Core\Area\Area $a    The area the block will appear. 
+     * @param array $data   An array of settings for the block.
+     * 
+     * @return Block
+     */
     public function addBlock($bt, $a, $data)
     {
         $b = parent::addBlock($bt, $a, $data);
@@ -2213,14 +2234,23 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $theme = $this->getCollectionThemeObject();
         if ($btHandle && $theme) {
             $areaTemplates = [];
+            $pageTypeTemplates = [];
             if (is_object($a)) {
                 $areaTemplates = $a->getAreaCustomTemplates();
             }
             $themeTemplates = $theme->getThemeDefaultBlockTemplates();
             if (!is_array($themeTemplates)) {
                 $themeTemplates = [];
+            } else {
+                foreach($themeTemplates as $key => $template){
+                    $pt = ($this->getPageTemplateHandle()) ? $this->getPageTemplateHandle() : 'default';
+                    if(is_array($template) && $key == $pt){
+                        $pageTypeTemplates = $template;
+                    }
+                    unset($themeTemplates[$key]);
+                }
             }
-            $templates = array_merge($themeTemplates, $areaTemplates);
+            $templates = array_merge($pageTypeTemplates, $themeTemplates, $areaTemplates);
             if (count($templates) && isset($templates[$btHandle])) {
                 $template = $templates[$btHandle];
                 $b->updateBlockInformation(['bFilename' => $template]);

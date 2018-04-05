@@ -139,7 +139,7 @@ class Edit extends BackendInterfaceController
 
             $permissions = new \Permissions($calendar);
             if ($permissions->canEditCalendarEventMoreDetailsLocation()) {
-                if ($this->request->request->get('cID')) {
+                if ($this->request->request->get('cID') !== null) {
                     $cID = intval($this->request->request->get('cID'));
                     if ($cID) {
                         $eventPage = \Page::getByID($cID);
@@ -150,6 +150,9 @@ class Edit extends BackendInterfaceController
                                 $eventVersion->setPageObject($eventPage);
                             }
                         }
+                    } else {
+                        // Otherwise unset the page completely
+                        $eventVersion->setPageID(0);
                     }
                 }
             }

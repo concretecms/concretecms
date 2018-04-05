@@ -69,10 +69,13 @@
                 displayMode: 'threaded',
                 itemsPerPage: -1,
                 activeUsers: [],
-                uninitialized: true
+                uninitialized: true,
+                deleteMessageToken: null,
+                addMessageToken: null,
+                editMessageToken: null
             }, options);
 
-            var enablePosting = (obj.options.posttoken != '') ? 1 : 0;
+            var enablePosting = (obj.options.addMessageToken != '') ? 1 : 0;
             var paginate = (obj.options.paginate) ? 1 : 0;
             var orderBy = (obj.options.orderBy);
             var enableOrdering = (obj.options.enableOrdering);
@@ -247,7 +250,7 @@
                 });
             }
             var paginate = (obj.options.paginate) ? 1 : 0;
-            var enablePosting = (obj.options.posttoken != '') ? 1 : 0;
+            var enablePosting = (obj.options.addMessageToken != '') ? 1 : 0;
             var addMessageLabel = (obj.options.addMessageLabel) ? obj.options.addMessageLabel : '';
 
             obj.$replyholder = obj.$element.find('div.ccm-conversation-add-reply');
@@ -515,22 +518,30 @@
             var formArray = [{
                 'name': 'cnvMessageID',
                 'value': msgID
+            }, {
+                'name': 'token',
+                'value': obj.options.deleteMessageToken
             }];
 
             $.ajax({
                 type: 'post',
                 data: formArray,
+                dataType: 'json',
                 url: CCM_TOOLS_PATH + '/conversations/delete_message',
-                success: function(html) {
-                    var $parent = $('[data-conversation-message-id=' + msgID + ']');
+                success: function(r) {
+                    if (!r.error) {
+                        var $parent = $('[data-conversation-message-id=' + msgID + ']');
 
-                    if ($parent.length) {
-                        $parent.after(html).remove();
+                        if ($parent.length) {
+                            $parent.remove();
+                        }
+                        obj.updateCount();
+                        if (obj.$deletedialog.dialog)
+                            obj.$deletedialog.dialog('close');
+                        obj.publish('conversationDeleteMessage', { msgID: msgID });
+                    } else {
+                        window.alert(i18n.Error_deleting_message + "\n\n" + r.errors.join("\n"));
                     }
-                    obj.updateCount();
-                    if (obj.$deletedialog.dialog)
-                        obj.$deletedialog.dialog('close');
-                    obj.publish('conversationDeleteMessage', { msgID: msgID });
                 },
                 error: function(e) {
                     obj.publish('conversationDeleteMessageError', { msgID: msgID, error: arguments });
@@ -613,7 +624,7 @@
         addMessageFromJSON: function($form, json) {
             var obj = this;
             obj.publish('conversationBeforeAddMessageFromJSON', { json: json, form: $form });
-            var enablePosting = (obj.options.posttoken != '') ? 1 : 0;
+            var enablePosting = (obj.options.addMessageToken != '') ? 1 : 0;
             var formArray = [{
                 'name': 'cnvMessageID',
                 'value': json.cnvMessageID
@@ -636,7 +647,7 @@
                 data: formArray,
                 url: CCM_TOOLS_PATH + '/conversations/message_detail',
                 success: function(html) {
-                    var $parent = $('[data-conversation-message-id=' + json.cnvMessageParentID + ']');
+                    var $parent = $('.ccm-conversation-message[data-conversation-message-id=' + json.cnvMessageParentID + ']');
 
                     if ($parent.length) {
                         $parent.after(html);
@@ -669,7 +680,7 @@
         },
         updateMessageFromJSON: function($form, json) {
             var obj = this;
-            var enablePosting = (obj.options.posttoken != '') ? 1 : 0;
+            var enablePosting = (obj.options.addMessageToken != '') ? 1 : 0;
             var formArray = [{
                 'name': 'cnvMessageID',
                 'value': json.cnvMessageID
@@ -719,7 +730,7 @@
 
             formArray.push({
                 'name': 'token',
-                'value': obj.options.posttoken
+                'value': obj.options.addMessageToken
             }, {
                 'name': 'cnvID',
                 'value': obj.options.cnvID
@@ -778,7 +789,7 @@
 
             formArray.push({
                 'name': 'token',
-                'value': obj.options.posttoken
+                'value': obj.options.editMessageToken
             }, {
                 'name': 'cnvMessageID',
                 'value': cnvMessageID

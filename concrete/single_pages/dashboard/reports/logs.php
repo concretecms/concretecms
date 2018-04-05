@@ -1,7 +1,8 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die('Access Denied.');
 
-$valt = Loader::helper('validation/token');
-$th = Loader::helper('text');
+$app = Concrete\Core\Support\Facade\Application::getFacadeApplication();
+$valt = $app->make('helper/validation/token');
+$th = $app->make('helper/text');
 ?>
 
 <div class="ccm-dashboard-header-buttons">
@@ -16,7 +17,7 @@ $th = Loader::helper('text');
         <div class="ccm-search-field-content">
             <div class="ccm-search-main-lookup-field">
                 <i class="fa fa-search"></i>
-                <?=$form->search('keywords', array('placeholder' => t('Keywords')))?>
+                <?=$form->search('keywords', ['placeholder' => t('Keywords')])?>
                 <button type="submit" class="ccm-search-field-hidden-submit" tabindex="-1"><?=t('Search')?></button>
             </div>
         </div>
@@ -80,6 +81,7 @@ $th = Loader::helper('text');
                     <th><span><?=t('Channel')?></span></th>
                     <th><span><?=t('User')?></span></th>
                     <th><span><?=t('Message')?></span></th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -91,7 +93,7 @@ $th = Loader::helper('text');
                     <td valign="top"><strong><?php
                     $uID = $ent->getUserID();
                     if (empty($uID)) {
-                        echo t("Guest");
+                        echo t('Guest');
                     } else {
                         $u = User::getByUserID($uID);
                         if (is_object($u)) {
@@ -102,6 +104,7 @@ $th = Loader::helper('text');
                     }
                     ?></strong></td>
                     <td style="width: 100%"><?=$th->makenice($ent->getMessage())?></td>
+                    <td valign="top" style="text-align: center; padding: 15px;"><a href="javascript:void(0)" class="btn btn-default btn-xs btn-danger" onclick="deleteLog(<?=$ent->getID()?>)"><?=t('Delete')?></a></td>
                 </tr>
             <?php } ?>
             </tbody>
@@ -113,9 +116,20 @@ $th = Loader::helper('text');
 </div>
 
 <script>
-$(function() {
-    $('#level').selectize({
-        plugins: ['remove_button']
+    $(function() {
+        $('#level').selectize({
+            plugins: ['remove_button']
+        });
     });
-});
+
+    deleteLog = function(logID) {
+        ConcreteAlert.confirm(
+            <?= json_encode(t('Are you sure you want to delete this log?')); ?>,
+            function() {
+                location.href = "<?= $controller->action('deleteLog'); ?>/" + logID + "/<?= $valt->generate(); ?>";
+            },
+            'btn-danger',
+            <?= json_encode(t('Delete')); ?>
+        );
+    };
 </script>

@@ -11,6 +11,8 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Events\EventDispatcher;
 use Concrete\Core\Support\Facade\Facade;
+use Concrete\Core\System\Mutex\MutexBusyException;
+use Concrete\Core\System\Mutex\MutexInterface;
 use League\Tactician\Bernard\QueueableCommand;
 use Spatie\Async\Pool;
 
@@ -95,15 +97,6 @@ class QueueService
     }
 
     /**
-     * Returns true if the current queue is currently being processed.
-     * @param Queue
-     */
-    protected function isBeingProcessed(Queue $queue)
-    {
-        return false;
-    }
-
-    /**
      * @deprecated
      * @param Queue $queue
      * @param $mixed
@@ -115,20 +108,19 @@ class QueueService
 
     public function consumeFromPoll(Queue $queue)
     {
-        $consumer = $this->app->make('queue/consumer');
-        if (!$this->isBeingProcessed($queue)) {
-            $consumer->consume($queue, [
-                'stop-when-empty' => true,
-                'max-messages' => 5
-            ]);
-        }
+        $this->consume($queue, [
+            'stop-when-empty' => true,
+            'max-messages' => 5
+        ]);
     }
 
     public function consume(Queue $queue, $options = [])
     {
-        if (!$this->isBeingProcessed()) {
+        try {
             $consumer = $this->app->make('queue/consumer');
             $consumer->consume($queue, $options);
+        } catch(MutexBusyException $exception) {
+            // Nothing
         }
     }
 

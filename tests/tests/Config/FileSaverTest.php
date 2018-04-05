@@ -3,7 +3,6 @@
 namespace Concrete\Tests\Config;
 
 use Concrete\Core\Config\FileSaver;
-use Concrete\TestHelpers\Config\Fixtures\TestFileSaver;
 use Illuminate\Filesystem\Filesystem;
 use PHPUnit_Framework_TestCase;
 
@@ -17,7 +16,7 @@ class FileSaverTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->saver = new TestFileSaver($this->files = new Filesystem());
+        $this->saver = new FileSaver($this->files = new Filesystem());
     }
 
     public function testSavingArray()
@@ -27,7 +26,7 @@ class FileSaverTest extends PHPUnit_Framework_TestCase
         $this->saver->save('test.array', [1, 2], 'testing', $group);
         $this->saver->save('test.array', [1], 'testing', $group);
 
-        $path = DIR_TESTS . "/config/generated_overrides/{$group}.php";
+        $path = DIR_CONFIG_SITE . "/generated_overrides/{$group}.php";
         $contents = @include_once $path;
 
         $this->files->delete($path);
@@ -43,7 +42,7 @@ class FileSaverTest extends PHPUnit_Framework_TestCase
 
         $this->saver->save($item, $value, 'testing', $group);
 
-        $path = DIR_TESTS . "/config/generated_overrides/{$group}.php";
+        $path = DIR_CONFIG_SITE . "/generated_overrides/{$group}.php";
         $exists = $this->files->exists($path);
 
         $array = [];
@@ -65,7 +64,7 @@ class FileSaverTest extends PHPUnit_Framework_TestCase
 
         $this->saver->save($item, $value, 'testing', $group, $namespace);
 
-        $path = DIR_TESTS . "/config/generated_overrides/{$namespace}/{$group}.php";
+        $path = DIR_CONFIG_SITE . "/generated_overrides/{$namespace}/{$group}.php";
         $exists = $this->files->exists($path);
 
         $array = [];

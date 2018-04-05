@@ -216,8 +216,8 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
     private function initializeEnvironmentDetection(Application $app)
     {
         $db_config = array();
-        if (file_exists(DIR_APPLICATION . '/config/database.php')) {
-            $db_config = include DIR_APPLICATION . '/config/database.php';
+        if (file_exists(DIR_CONFIG_SITE . '/database.php')) {
+            $db_config = include DIR_CONFIG_SITE . '/database.php';
         }
         $environment = $app->environment();
         $app->detectEnvironment(function () use ($db_config, $environment, $app) {

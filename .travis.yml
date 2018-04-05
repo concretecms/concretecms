@@ -1,6 +1,5 @@
 language: php
 sudo: false
-dist: precise
 
 php:
   - 5.6
@@ -33,8 +32,6 @@ before_script:
     fi
   - travis_retry composer update --no-suggest --no-interaction $PREFER_LOWEST # Run once to install magento's composer merger
   - travis_retry composer update --no-suggest --no-interaction $PREFER_LOWEST # Run twice to install merged dependencies
-  - mysql -e "SET GLOBAL sql_mode = 'STRICT_TRANS_TABLES,STRICT_ALL_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION,ONLY_FULL_GROUP_BY'"
-  - phpunit --version
 
 script:
   # Run PHPUnit if we're not checking code style, otherwise run phpcs
