@@ -417,15 +417,19 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         $oldHandle = $ov->getCollectionHandle();
         $newHandle = $this->cvHandle;
 
-        // if config is set update the page handle with every change to the collection name
-        if(Config::get('concrete.seo.auto_update_url_slug') && ($ov->getCollectionName() != $this->cvName)){
+        if(Config::get('concrete.seo.auto_update_url_slug')){
+            $pp = $c->getCollectionPathObject();
+            $oldPath = $pp->getPagePath();
             $txt = Core::make('helper/text');
-            $newHandle = str_replace('-', Config::get('concrete.seo.page_path_separator'),$txt->urlify($this->cvName));
-            if($newHandle != $oldHandle && $oldHandle != ''){
-                $pp = $c->getCollectionPathObject();
-                $oldPath = $pp->getPagePath();
+            // if the handle is the same check for a changed name and generate a new handle
+            if($newHandle == $oldHandle AND $ov->getCollectionName() != $this->cvName){
+                $newHandle = str_replace('-', Config::get('concrete.seo.page_path_separator'),$txt->urlify($this->cvName));
+            }
+            if($newHandle != $oldHandle && !empty($oldHandle)){
+                // if the handle was changed use that new handle
                 $pp->setPagePath(str_replace($oldHandle, $newHandle, $oldPath));
                 $pp->setPagePathIsCanonical(true);
+                // Add the old path as alternative
                 $c->addAdditionalPagePath($oldPath, false);
             }
         }

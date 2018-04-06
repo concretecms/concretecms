@@ -1,9 +1,10 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
+(is_object($draft) && !$draft->isPageDraft() || Config::get('concrete.seo.auto_update_url_slug')) ? $showInEditMode = true : $showInEditMode = false;
 $draft = $control->getPageObject();
 ?>
 
-<div class="form-group ccm-composer-url-slug" data-composer-field="url_slug" style="position: relative">
+<div class="form-group ccm-composer-url-slug" data-composer-field="url_slug" style="position: relative" data-auto-update="<?=Config::get('concrete.seo.auto_update_url_slug')?>">
 	<label class="control-label"><?=$label?></label>
     <?php if ($control->isPageTypeComposerControlRequiredByDefault() || $control->isPageTypeComposerFormControlRequiredOnThisRequest()) : ?>
         <span class="label label-info"><?= t('Required') ?></span>
@@ -17,7 +18,7 @@ $draft = $control->getPageObject();
     ?>
     <div>
         <i class="fa-refresh fa-spin fa ccm-composer-url-slug-loading"></i>
-        <?php if (is_object($draft) && !$draft->isPageDraft()) {
+        <?php if ( !$showInEditMode ) {
     ?>
             <div><a href="#" class="icon-link" data-composer-field="edit_url_slug"><i class="fa fa-pencil"></i></a> <span><?=$control->getPageTypeComposerControlDraftValue()?></span></div>
         <?php 
@@ -46,9 +47,11 @@ $draft = $control->getPageObject();
             e.preventDefault();
             $(this).parent().replaceWith(slugHTML);
         });
-        var $urlSlugField = $('div[data-composer-field=url_slug] input');
-        if ($urlSlugField.length) {
-            $('div[data-composer-field=name] input').on('input', function() {
+        var $urlSlugField = $('div.ccm-composer-url-slug input');
+        var $nameField = $('div[data-composer-field=name] input');
+        var autoUpdate = $urlSlugField.data('auto-update');
+        if ($urlSlugField.length && autoUpdate == true) {
+            $nameField.on('input', function() {
                 var input = $(this);
                 var send = {
                     token: '<?=Loader::helper('validation/token')->generate('get_url_slug')?>',
@@ -56,10 +59,10 @@ $draft = $control->getPageObject();
                 };
                 var parentID = input.closest('form').find('input[name=cParentID]').val();
                 if (parentID) {
-                  send.parentID = parentID;
+                    send.parentID = parentID;
                 }
                 clearTimeout(concreteComposerAddPageTimer);
-                concreteComposerAddPageTimer = setTimeout(function() {
+                var concreteComposerAddPageTimer = setTimeout(function() {
                     $('.ccm-composer-url-slug-loading').show();
                     $.post(
                         '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/url_slug',
