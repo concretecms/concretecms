@@ -1,12 +1,13 @@
 <?php
-
 namespace Concrete\Attribute\Number;
 
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\SimpleTextExportableAttributeInterface;
 use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
+use Concrete\Core\Error\ErrorList\Error\Error;
 use Concrete\Core\Error\ErrorList\ErrorList;
+use Concrete\Core\Error\ErrorList\Field\AttributeField;
 
 class Controller extends AttributeTypeController implements SimpleTextExportableAttributeInterface
 {
@@ -64,23 +65,39 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         $this->set('value', $value);
     }
 
-    public function validateForm($p)
+    public function validateForm($data)
     {
-        return $p['value'] != false;
+        $required = $this->getAttributeKey()->getAkIsRequired();
+
+        if (!$required) {
+            return true;
+        } elseif ($required && !$data['value']->getValue()) {
+            return new Error(t('You must specify a valid number for %s', $this->getAttributeKey()->getAttributeKeyDisplayName()),
+                new AttributeField($this->getAttributeKey())
+            );
+        }
+
+        if (!is_numeric($data['value']->getValue())) {
+            return new Error(t('You must specify a valid number for %s', $this->getAttributeKey()->getAttributeKeyDisplayName()),
+                new AttributeField($this->getAttributeKey())
+            );
+        }
+
+        return true;
     }
 
     public function validateValue()
     {
         $val = $this->getAttributeValue()->getValue();
 
-        return $val !== null && $val !== false;
+        return null !== $val && false !== $val;
     }
 
     // run when we call setAttribute(), instead of saving through the UI
     public function createAttributeValue($value)
     {
         $av = new NumberValue();
-        $value = ($value == false || $value == '0') ? 0 : $value;
+        $value = (false == $value || '0' == $value) ? 0 : $value;
         $av->setValue($value);
 
         return $av;
@@ -102,7 +119,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     public function getAttributeValueTextRepresentation()
     {
         $value = $this->getAttributeValueObject();
-        if ($value === null) {
+        if (null === $value) {
             $result = '';
         } else {
             $result = (string) $value->getValue();
@@ -120,12 +137,12 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     {
         $value = $this->getAttributeValueObject();
         $textRepresentation = trim($textRepresentation);
-        if ($textRepresentation === '') {
-            if ($value !== null) {
+        if ('' === $textRepresentation) {
+            if (null !== $value) {
                 $value->setValue(null);
             }
         } elseif (is_numeric($textRepresentation)) {
-            if ($value === null) {
+            if (null === $value) {
                 $value = $this->createAttributeValue($textRepresentation);
             } else {
                 $value->setValue($textRepresentation);
@@ -135,5 +152,11 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         }
 
         return $value;
+    }
+
+    public function type_form()
+    {
+        $this->set('form', \Core::make('helper/form'));
+        $this->set('akIsRequired', $this->getAttributeKey() ? $this->getAttributeKey()->getAkIsRequired() : false);
     }
 }

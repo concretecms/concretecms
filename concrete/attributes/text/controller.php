@@ -4,21 +4,22 @@ namespace Concrete\Attribute\Text;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\DefaultController;
 use Concrete\Core\Entity\Attribute\Key\Settings\TextSettings;
+use Concrete\Core\Error\ErrorList\Error\Error;
+use Concrete\Core\Error\ErrorList\Field\AttributeField;
 use Core;
-use Database;
 use Concrete\Core\Entity\Attribute\Value\Value\TextValue;
+
 class Controller extends DefaultController
 {
-
     protected $akTextPlaceholder;
-    public $helpers = array('form');
+    public $helpers = ['form'];
 
     public function saveKey($data)
     {
         $type = $this->getAttributeKeySettings();
-        $data += array(
+        $data += [
             'akTextPlaceholder' => null,
-        );
+        ];
         $akTextPlaceholder = $data['akTextPlaceholder'];
 
         $type->setPlaceholder($akTextPlaceholder);
@@ -72,11 +73,12 @@ class Controller extends DefaultController
         }
 
         $type = $ak->getAttributeKeySettings();
-        /**
+        /*
          * @var $type TextSettings
          */
         $this->akTextPlaceholder = $type->getPlaceholder();
         $this->set('akTextPlaceholder', $type->getPlaceholder());
+        $this->set('akIsRequired', $this->getAttributeKey()->getAkIsRequired());
     }
 
     public function exportKey($akey)
@@ -109,5 +111,15 @@ class Controller extends DefaultController
     public function getIconFormatter()
     {
         return new FontAwesomeIconFormatter('file-text');
+    }
+
+    public function validateForm($data)
+    {
+        if (empty(trim($data['value']->getValue())) && $this->getAttributeKey()->getAkIsRequired()) {
+            return new Error(t($this->getAttributeKey()->getAttributeKeyName() . ' is required'), new
+            AttributeField($this->getAttributeKey()));
+        } else {
+            return true;
+        }
     }
 }

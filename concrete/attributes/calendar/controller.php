@@ -5,6 +5,8 @@ use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
 use Concrete\Core\Calendar\Calendar;
 use Concrete\Core\Entity\Calendar\CalendarEvent;
+use Concrete\Core\Error\ErrorList\Error\Error;
+use Concrete\Core\Error\ErrorList\Field\AttributeField;
 
 class Controller extends \Concrete\Attribute\Number\Controller
 {
@@ -39,13 +41,14 @@ class Controller extends \Concrete\Attribute\Number\Controller
         $node = dom_import_simplexml($cnode);
         $no = $node->ownerDocument;
         $node->appendChild($no->createCDataSection($val->getName()));
+
         return $cnode;
     }
 
     public function createAttributeValueFromRequest()
     {
-        $data = $this->post();
-        $calendar = Calendar::getByID($data['calendarID']);
+        $calendarID = $this->request->get('calendarID');
+        $calendar = Calendar::getByID($calendarID);
         if (is_object($calendar)) {
             return $this->createAttributeValue($calendar);
         } else {
@@ -78,5 +81,28 @@ class Controller extends \Concrete\Attribute\Number\Controller
             $calendars[$calendar->getID()] = $calendar->getName();
         }
         $this->set('calendars', $calendars);
+    }
+
+    public function type_form()
+    {
+        $this->set('form', \Core::make('helper/form'));
+        $this->set('akIsRequired', $this->getAttributeKey() ? $this->getAttributeKey()->getAkIsRequired() : false);
+    }
+
+    public function validateForm($data)
+    {
+        $required = $this->getAttributeKey()->getAkIsRequired();
+        $value = $data['value']->getValue();
+
+        if (!$required) {
+            return true;
+        } elseif ($required && !$value) {
+            return new Error(t('You must specify a valid a calendar for attribute %s', $this->getAttributeKey()
+                ->getAttributeKeyDisplayName()),
+                new AttributeField($this->getAttributeKey())
+            );
+        }
+
+        return true;
     }
 }

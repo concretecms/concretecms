@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Attribute\DateTime;
 
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
@@ -7,7 +6,9 @@ use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\SimpleTextExportableAttributeInterface;
 use Concrete\Core\Entity\Attribute\Key\Settings\DateTimeSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\DateTimeValue;
+use Concrete\Core\Error\ErrorList\Error\Error;
 use Concrete\Core\Error\ErrorList\ErrorList;
+use Concrete\Core\Error\ErrorList\Field\AttributeField;
 use DateTime;
 use Exception;
 
@@ -55,7 +56,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     {
         $datetime = $this->getDateTime();
 
-        return ($datetime === null) ? null : $datetime->format('Y-m-d H:i:s');
+        return (null === $datetime) ? null : $datetime->format('Y-m-d H:i:s');
     }
 
     public function searchForm($list)
@@ -78,7 +79,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     {
         $this->load();
         $datetime = $this->getDateTime();
-        if ($datetime === null && $this->akUseNowIfEmpty) {
+        if (null === $datetime && $this->akUseNowIfEmpty) {
             $datetime = new DateTime();
         }
         $this->set('value', $datetime);
@@ -116,32 +117,69 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     {
         $v = $this->getAttributeValue()->getValue();
 
-        return $v != false;
+        return false != $v;
     }
 
     public function validateForm($data)
     {
-        if ($this->akDateDisplayMode === null) {
-            $this->load();
-        }
-        switch ($this->akDateDisplayMode) {
-            case 'date_time':
-                if (empty($data['value_dt']) || (!is_numeric($data['value_h'])) || (!is_numeric($data['value_m']))) {
-                    return false;
-                }
-                $dh = $this->app->make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
-                switch ($dh->getTimeFormat()) {
-                    case 12:
-                        if (empty($data['value_a'])) {
-                            return false;
-                        }
-                        break;
+        $required = $this->getAttributeKey()->getAkIsRequired();
+        if (!$required) {
+            return true;
+        } else {
+            $dataPosted = $this->post();
+            $original_value = array_key_exists('value', $dataPosted) ? $dataPosted['value'] : false;
+            $value = $data['value']->getValue();
+            if (!$original_value) {
+                return new Error(t($this->getAttributeKey()->getAttributeKeyName() . ' requires a valid date time no date given'),
+                    new
+                AttributeField($this->getAttributeKey()));
+            }
+            if (null === $this->akDateDisplayMode) {
+                $this->load();
+            }
+            switch ($this->akDateDisplayMode) {
+                case 'date_time':
+                case 'date':
+                    if (!$value instanceof DateTime) {
+                        return new Error(t($this->getAttributeKey()->getAttributeKeyName() . ' requires a valid date time'), new
+                        AttributeField($this->getAttributeKey()));
+                    }
+                    break;
+                case 'date_text':
+                case 'text':
+                $dh = $this->app->make('helper/date');
+                $format = $this->getAttributeKeySettings()->getTextCustomFormat();
+                if (!$format) {
+                    // get default format we want to implement
+                    if ('date_text' === $this->akDateDisplayMode) {
+                        $format = $dh->getPHPDatePattern();
+                    } else {
+                        $format = $dh->getPHPDateTimePattern();
+                    }
                 }
 
-                return true;
-            default:
-                return $data['value'] != '';
+                $parsed = false;
+                if ($original_value && $format) {
+                    $parsed = DateTime::createFromFormat(
+                        $format,
+                        $original_value,
+                        $dh->getTimezone('user')
+                    );
+                }
+                if (!$parsed && $format) {
+                    $now = (new DateTime())->format('Y-m-d H:i:s');
+                    $formattedDateExample = DateTime::createFromFormat('Y-m-d H:i:s', $now);
+                    $formattedDateExample = $formattedDateExample->format($format);
+
+                    return new Error(t($this->getAttributeKey()->getAttributeKeyName() . ' should match the following format e.g. ' .
+                        $formattedDateExample, new AttributeField($this->getAttributeKey())));
+                }
+
+                break;
+            }
         }
+
+        return true;
     }
 
     public function search()
@@ -199,25 +237,30 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         switch ($this->akDateDisplayMode) {
             case 'text':
             case 'date_text':
-                if (isset($data['value']) && is_string($data['value']) && $data['value'] !== '') {
-                    if ($this->akTextCustomFormat !== '') {
+                if (isset($data['value']) && is_string($data['value']) && '' !== $data['value']) {
+                    $dh = $this->app->make('helper/date');
+                    if ('' !== $this->akTextCustomFormat) {
                         $format = $this->akTextCustomFormat;
-                    } elseif ($this->akDateDisplayMode === 'date_text') {
+                    } elseif ('date_text' === $this->akDateDisplayMode) {
                         $format = $dh->getPHPDatePattern();
                     } else {
                         $format = $dh->getPHPDateTimePattern();
                     }
+
                     try {
                         $parsed = DateTime::createFromFormat(
                             $format,
                             $data['value'],
                             $dh->getTimezone('user')
                         );
+
                         if ($parsed) {
-                            if ($this->akDateDisplayMode !== 'date_text') {
+                            if ('date_text' !== $this->akDateDisplayMode) {
                                 $parsed->setTimezone($dh->getTimezone('system'));
                             }
                             $datetime = $parsed;
+                            $datetime->original_value = $data['value'];
+                            $datetime->date_format = $format;
                         }
                     } catch (Exception $x) {
                     }
@@ -249,8 +292,8 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     {
         $result = '';
         $datetime = $this->getDateTime();
-        if ($datetime !== null) {
-            if ($this->akDateDisplayMode === null) {
+        if (null !== $datetime) {
+            if (null === $this->akDateDisplayMode) {
                 $this->load();
             }
             $dh = $this->app->make('helper/date');
@@ -260,14 +303,14 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
                     $result = $dh->formatDate($datetime, 'short', $datetime->getTimezone());
                     break;
                 case 'date_text':
-                    if ($this->akTextCustomFormat === '') {
+                    if ('' === $this->akTextCustomFormat) {
                         $result = $dh->formatDate($datetime, 'short', $datetime->getTimezone());
                     } else {
                         $result = $dh->formatCustom($this->akTextCustomFormat, $datetime, $datetime->getTimezone());
                     }
                     break;
                 case 'text':
-                    if ($this->akTextCustomFormat === '') {
+                    if ('' === $this->akTextCustomFormat) {
                         $result = $dh->formatDateTime($datetime);
                     } else {
                         $result = $dh->formatCustom($this->akTextCustomFormat, $datetime);
@@ -291,7 +334,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     public function getAttributeValueTextRepresentation()
     {
         $dateTime = $this->getDateTime();
-        if ($dateTime === null) {
+        if (null === $dateTime) {
             $result = '';
         } else {
             if (!isset($this->akDateDisplayMode)) {
@@ -325,8 +368,8 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     public function updateAttributeValueFromTextRepresentation($textRepresentation, ErrorList $warnings)
     {
         $value = $this->getAttributeValueObject();
-        if ($textRepresentation === '') {
-            if ($value !== null) {
+        if ('' === $textRepresentation) {
+            if (null !== $value) {
                 $value->setValue(null);
             }
         } else {
@@ -351,7 +394,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
             if (!$dateTime) {
                 $warnings->add(t('"%1$s" is not a valid date value for the attribute with handle %2$s', $textRepresentation, $this->attributeKey->getAttributeKeyHandle()));
             } else {
-                if ($value === null) {
+                if (null === $value) {
                     $value = $this->createAttributeValue($dateTime);
                 } else {
                     $value->setValue($dateTime);
@@ -379,6 +422,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         $this->set('akTextCustomFormat', $this->akTextCustomFormat);
         $this->akTimeResolution = $type->getTimeResolution();
         $this->set('akTimeResolution', $this->akTimeResolution);
+        $this->set('akIsRequired', $this->getAttributeKey()->getAkIsRequired());
     }
 
     /**
@@ -391,7 +435,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         $result = null;
         if ($this->attributeValue) {
             $valueObject = $this->getAttributeValue();
-            if ($valueObject !== null) {
+            if (null !== $valueObject) {
                 $dateTime = $valueObject->getValue();
                 if ($dateTime instanceof DateTime) {
                     $result = $dateTime;

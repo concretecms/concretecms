@@ -12,6 +12,7 @@ class StandardRequestLoader implements RequestLoaderInterface
         $key->setAttributeKeyHandle($request->request->get('akHandle'));
         $key->setIsAttributeKeyContentIndexed((bool) $request->request->get('akIsSearchableIndexed'));
         $key->setIsAttributeKeySearchable((bool) $request->request->get('akIsSearchable'));
+        $key->setAkIsRequired((bool) $request->request->get('akIsRequired'));
 
         return $key;
     }

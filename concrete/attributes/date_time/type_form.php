@@ -1,18 +1,27 @@
 <fieldset class="ccm-attribute ccm-attribute-date-time">
 
-    <legend><?=t('Date/Time Options')?></legend>
+    <legend><?=t('Date/Time Options'); ?></legend>
 
     <div class="form-group">
         <div class="checkbox">
             <label class="checkbox">
-                <?=$form->checkbox('akUseNowIfEmpty', '1', isset($akUseNowIfEmpty) ? $akUseNowIfEmpty : false)?>
-                <?=t('Suggest the current date/time if empty')?>
+                <?=$form->checkbox('akUseNowIfEmpty', '1', isset($akUseNowIfEmpty) ? $akUseNowIfEmpty : false); ?>
+                <?=t('Suggest the current date/time if empty'); ?>
+            </label>
+        </div>
+    </div>
+
+    <div class="form-group" data-group="single-value">
+        <label><?=t("Required"); ?></label>
+        <div class="checkbox">
+            <label>
+                <?=$form->checkbox('akIsRequired', 1, $akIsRequired); ?> <span><?=t('Ensure a value is selected.'); ?></span>
             </label>
         </div>
     </div>
 
     <div class="form-group">
-        <?=$form->label('akDateDisplayMode', t('Ask User For'))?>
+        <?=$form->label('akDateDisplayMode', t('Ask User For')); ?>
         <?php
         $akDateDisplayModeOptions = [
             'date_time' => t('Both Date and Time'),
@@ -24,16 +33,16 @@
             $akDateDisplayMode = key($akDateDisplayModeOptions);
         }
         ?>
-        <?=$form->select('akDateDisplayMode', $akDateDisplayModeOptions, $akDateDisplayMode) ?>
+        <?=$form->select('akDateDisplayMode', $akDateDisplayModeOptions, $akDateDisplayMode); ?>
     </div>
 
     <div class="form-group">
-        <?= $form->label('akTextCustomFormat', '<a href="http://php.net/manual/function.date.php" target="_blank">' . t('Custom format') . ' ' . '<i class="fa fa-question-circle"></i></a>', ['class' => 'launch-tooltip', 'data-html' => 'true', 'title' => h(t('Here you can specify an optional custom format for text inputs (click to see the PHP manual for the %s function)', '<code>date</code>'))]) ?>
-        <?= $form->text('akTextCustomFormat', isset($akTextCustomFormat) ? $akTextCustomFormat : '') ?>
+        <?= $form->label('akTextCustomFormat', '<a href="http://php.net/manual/function.date.php" target="_blank">' . t('Custom format') . ' ' . '<i class="fa fa-question-circle"></i></a>', ['class' => 'launch-tooltip', 'data-html' => 'true', 'title' => h(t('Here you can specify an optional custom format for text inputs (click to see the PHP manual for the %s function)', '<code>date</code>'))]); ?>
+        <?= $form->text('akTextCustomFormat', isset($akTextCustomFormat) ? $akTextCustomFormat : ''); ?>
     </div>
 
     <div class="form-group">
-        <?=$form->label('akTimeResolution', t('Time Resolution'))?>
+        <?=$form->label('akTimeResolution', t('Time Resolution')); ?>
         <?php
         $akTimeResolutionOptions = [];
         foreach ([
@@ -42,7 +51,7 @@
             // Minutes only
             60 * 1, 60 * 5, 60 * 10, 60 * 15, 60 * 30,
             // Hours only
-            60 * 60, 60 * 60 * 3, 60 * 60 * 4, 60 * 60 * 6, 60 * 60 * 12
+            60 * 60, 60 * 60 * 3, 60 * 60 * 4, 60 * 60 * 6, 60 * 60 * 12,
         ] as $totalSeconds) {
             $seconds = $totalSeconds;
             $hours = (int) ($totalSeconds / 3600);
@@ -50,26 +59,26 @@
             $minutes = (int) ($seconds / 60);
             $seconds -= $minutes * 60;
             $parts = [];
-            if ($hours !== 0) {
+            if (0 !== $hours) {
                 $parts[] = Punic\Unit::format($hours, 'duration/hour', 'long');
             }
-            if ($minutes !== 0) {
+            if (0 !== $minutes) {
                 $parts[] = Punic\Unit::format($minutes, 'duration/minute', 'long');
             }
-            if (empty($parts) || $seconds !== 0) {
+            if (empty($parts) || 0 !== $seconds) {
                 $parts[] = Punic\Unit::format($seconds, 'duration/second', 'long');
             }
             $akTimeResolutionOptions[$totalSeconds] = Punic\Misc::join($parts);
         }
         $akTimeResolutionExtra = [];
-        if ($akDateDisplayMode !== 'date_time') {
+        if ('date_time' !== $akDateDisplayMode) {
             $akTimeResolutionExtra['disabled'] = 'disabled';
         }
         if (!isset($akTimeResolution) || !isset($akTimeResolutionOptions[$akTimeResolution])) {
             $akTimeResolution = '60';
         }
         ?>
-        <?=$form->select('akTimeResolution', $akTimeResolutionOptions, $akTimeResolution, $akTimeResolutionExtra)?>
+        <?=$form->select('akTimeResolution', $akTimeResolutionOptions, $akTimeResolution, $akTimeResolutionExtra);?>
     </div>
 
 </fieldset>

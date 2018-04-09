@@ -105,8 +105,10 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase
      */
     public function testSetAttribute($handle, $first, $second, $firstStatic = null, $secondStatic = null)
     {
-        $this->getAttributeObjectForSet()->setAttribute($handle, $first);
+
         $attribute = $this->getAttributeObjectForGet()->getAttribute($handle);
+        $this->getAttributeObjectForSet()->setAttribute($attribute, $first);
+
         if ($firstStatic != null) {
             $this->assertSame($firstStatic, $attribute);
         } else {

@@ -4,7 +4,6 @@ namespace Concrete\Core\Entity\Attribute\Key;
 use Concrete\Core\Attribute\AttributeKeyInterface;
 use Concrete\Core\Attribute\View;
 use Concrete\Core\Form\Context\ContextInterface;
-use Concrete\Core\Attribute\Key\SearchIndexer\StandardSearchIndexer;
 use Concrete\Core\Attribute\Type;
 use Concrete\Core\Entity\Attribute\Category;
 use Concrete\Core\Entity\Attribute\Set;
@@ -81,6 +80,11 @@ class Key implements AttributeKeyInterface, ExportableInterface, ControlInterfac
      * @ORM\JoinColumn(name="akCategoryID", referencedColumnName="akCategoryID")
      **/
     protected $category;
+
+    /**
+     * @ORM\Column(type="boolean",options={"default":0})
+     */
+    protected $akIsRequired = false;
 
     public function setAttributeKeyID($akID)
     {
@@ -217,6 +221,7 @@ class Key implements AttributeKeyInterface, ExportableInterface, ControlInterfac
     {
         $controller = $this->type->getController();
         $controller->setAttributeKey($this);
+
         return $controller;
     }
 
@@ -237,6 +242,7 @@ class Key implements AttributeKeyInterface, ExportableInterface, ControlInterfac
         if (is_object($this->category)) {
             $category->setCategoryEntity($this->category);
         }
+
         return $category;
     }
 
@@ -247,7 +253,6 @@ class Key implements AttributeKeyInterface, ExportableInterface, ControlInterfac
     {
         $this->category = $category;
     }
-
 
     public function getExporter()
     {
@@ -327,7 +332,22 @@ class Key implements AttributeKeyInterface, ExportableInterface, ControlInterfac
      */
     public function getAttributeValueIDList()
     {
-        return array();
+        return [];
     }
 
+    /**
+     * @return mixed
+     */
+    public function getAkIsRequired()
+    {
+        return $this->akIsRequired;
+    }
+
+    /**
+     * @param mixed $akIsRequired
+     */
+    public function setAkIsRequired($akIsRequired)
+    {
+        $this->akIsRequired = $akIsRequired;
+    }
 }

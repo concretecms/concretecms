@@ -79,8 +79,9 @@ class CheckIn extends BackendInterfacePageController
         if ($this->validateAction()) {
             $comments = $this->request->request('comments');
             $comments = is_string($comments) ? trim($comments) : '';
-            if ($comments === '' && $this->app->make('config')->get('concrete.misc.require_version_comments')) {
+            if ('' === $comments && $this->app->make('config')->get('concrete.misc.require_version_comments')) {
                 $rf = $this->app->make(ResponseFactoryInterface::class);
+
                 return $rf->create(t('Please specify the version comments'), 400);
             }
             $c = $this->page;
@@ -88,8 +89,8 @@ class CheckIn extends BackendInterfacePageController
             $v = CollectionVersion::get($c, "RECENT");
             $v->setComment($comments);
             $pr = new PageEditResponse();
-            if (($this->request->request->get('action') == 'publish'
-                    || $this->request->request->get('action') == 'schedule')
+            if (('publish' == $this->request->request->get('action')
+                    || 'schedule' == $this->request->request->get('action'))
                 && $this->permissions->canApprovePageVersions()
             ) {
                 $e = $this->checkForPublishing();
@@ -101,7 +102,7 @@ class CheckIn extends BackendInterfacePageController
                     $pkr->setRequesterUserID($u->getUserID());
                     $u->unloadCollectionEdit($c);
 
-                    if ($this->request->request->get('action') == 'schedule') {
+                    if ('schedule' == $this->request->request->get('action')) {
                         $dateTime = new DateTime();
                         $publishDateTime = $dateTime->translate('cvPublishDate');
                         $publishEndDateTime = $dateTime->translate('cvPublishEndDate');
@@ -116,7 +117,7 @@ class CheckIn extends BackendInterfacePageController
                     }
                 }
             } else {
-                if ($this->request->request->get('action') == 'discard') {
+                if ('discard' == $this->request->request->get('action')) {
                     if ($c->isPageDraft() && $this->permissions->canDeletePage()) {
                         $u = new User();
                         $cID = $u->getPreviousFrontendPageID();

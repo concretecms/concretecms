@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Attribute\ImageFile;
 
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
@@ -36,7 +35,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
             'mode' => null,
         ];
         $mode = $data['mode'];
-        if ($mode == ImageFileSettings::TYPE_HTML_INPUT) {
+        if (ImageFileSettings::TYPE_HTML_INPUT == $mode) {
             $type->setModeToHtmlInput();
         } else {
             $type->setModeToFileManager();
@@ -49,6 +48,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     {
         $this->set('form', \Core::make('helper/form'));
         $this->set('mode', $this->getAttributeKeySettings()->getMode());
+        $this->set('akIsRequired', $this->getAttributeKey() ? $this->getAttributeKey()->getAkIsRequired() : false);
     }
 
     public function exportKey($akey)
@@ -132,7 +132,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
          */
         if (isset($akey->type)) {
             $mode = (string) $akey->type['mode'];
-            if ($mode == 'html_input') {
+            if ('html_input' == $mode) {
                 $type->setModeToHtmlInput();
             }
         }
@@ -182,6 +182,15 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
 
     public function validateForm($data)
     {
+        $required = $this->getAttributeKey()->getAkIsRequired();
+        $fileId = $data['value']->getFileID();
+        if (!$required) {
+            return true;
+        } elseif ($required && !$fileId) {
+            return new Error(t('You must specify a valid file for %s', $this->getAttributeKey()->getAttributeKeyDisplayName()),
+                new AttributeField($this->getAttributeKey())
+            );
+        }
         if ($this->getAttributeKeySettings()->isModeFileManager()) {
             if ((int) ($data['value']) > 0) {
                 $f = File::getByID((int) ($data['value']));
@@ -265,9 +274,9 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     {
         $result = '';
         $value = $this->getAttributeValueObject();
-        if ($value !== null) {
+        if (null !== $value) {
             $file = $value->getFileObject();
-            if ($file !== null) {
+            if (null !== $file) {
                 $result = 'fid:' . $file->getFileID();
             }
         }
@@ -283,15 +292,15 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     public function updateAttributeValueFromTextRepresentation($textRepresentation, ErrorList $warnings)
     {
         $value = $this->getAttributeValueObject();
-        if ($textRepresentation === '') {
-            if ($value !== null) {
+        if ('' === $textRepresentation) {
+            if (null !== $value) {
                 $value->setFileObject(null);
             }
         } elseif (preg_match('/^fid:(\d+)$/', $textRepresentation, $matches)) {
             $fID = (int) $matches[1];
             $file = $this->entityManager->find(FileEntity::class, $fID);
-            if ($file !== null) {
-                if ($value === null) {
+            if (null !== $file) {
+                if (null === $value) {
                     $value = $this->createAttributeValue($file);
                 } else {
                     $value->setFileObject($file);

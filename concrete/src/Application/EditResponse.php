@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Application;
 
+use Concrete\Core\Error\ErrorList\Error\Error;
 use Core;
 use stdClass;
 
@@ -10,7 +11,7 @@ class EditResponse implements \JsonSerializable
     public $message;
     public $redirectURL;
     public $title;
-    protected $additionalData = array();
+    protected $additionalData = [];
     public $error;
 
     public function setRedirectURL($url)
@@ -35,7 +36,7 @@ class EditResponse implements \JsonSerializable
 
     public function setError($error)
     {
-        $this->error = $error;
+        $this->error->add($error);
     }
 
     public function setMessage($message)
@@ -94,9 +95,10 @@ class EditResponse implements \JsonSerializable
 
     public function hasError()
     {
-        if ($this->error && is_object($this->error) && (($this->error instanceof \Exception) || $this->error->has())) {
+        if ($this->error && is_object($this->error) && (($this->error instanceof Error) || $this->error->has())) {
             return true;
         }
+
         return false;
     }
 

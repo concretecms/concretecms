@@ -9,11 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class PageKey extends Key
 {
-
     public function getAttributeKeyCategoryHandle()
     {
         return 'collection';
     }
-
-
 }
