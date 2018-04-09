@@ -132,7 +132,7 @@ class Controller extends BlockController
             $this->cPID = $c->getCollectionParentID();
         }
 
-        if ($this->displayFeaturedOnly == 1) {
+        if (1 == $this->displayFeaturedOnly) {
             $cak = CollectionAttributeKey::getByHandle('is_featured');
             if (is_object($cak)) {
                 $this->list->filterByIsFeatured(1);
@@ -175,12 +175,12 @@ class Controller extends BlockController
 
         $this->list->filterByExcludePageList(false);
 
-        if (intval($this->cParentID) != 0) {
+        if (0 != intval($this->cParentID)) {
             $cParentID = ($this->cThis) ? $this->cID : (($this->cThisParent) ? $this->cPID : $this->cParentID);
             if ($this->includeAllDescendents) {
-                $this->list->filterByPath(Page::getByID($cParentID)->getCollectionPath());
-            } else {
                 $this->list->filterByParentID($cParentID);
+            } else {
+                $this->list->filterByPath(Page::getByID($cParentID)->getCollectionPath());
             }
         }
 
@@ -249,7 +249,7 @@ class Controller extends BlockController
         $bID = $b->getBlockID();
         $this->set('bID', $bID);
         $c = Page::getCurrentPage();
-        if ((!$this->cThis) && (!$this->cThisParent) && ($this->cParentID != 0)) {
+        if ((!$this->cThis) && (!$this->cThisParent) && (0 != $this->cParentID)) {
             $isOtherPage = true;
             $this->set('isOtherPage', true);
         }
@@ -272,7 +272,7 @@ class Controller extends BlockController
         $attributeKeys = [];
         $keys = CollectionKey::getList();
         foreach ($keys as $ak) {
-            if ($ak->getAttributeTypeHandle() == 'topics') {
+            if ('topics' == $ak->getAttributeTypeHandle()) {
                 $attributeKeys[] = $ak;
             }
         }
@@ -315,7 +315,7 @@ class Controller extends BlockController
             }
             $dh = Core::make('helper/date');
             /* @var $dh \Concrete\Core\Localization\Service\Date */
-            if ($timezone !== 'system') {
+            if ('system' !== $timezone) {
                 $start = $dh->toDB($start, $timezone);
                 $end = $dh->toDB($end, $timezone);
             }
@@ -323,7 +323,7 @@ class Controller extends BlockController
             $this->list->filterByPublicDate($end, '<=');
 
             $seo = Core::make('helper/seo');
-            $date = ucfirst(\Punic\Calendar::getMonthName($month, 'wide', '', true).' '.$year);
+            $date = ucfirst(\Punic\Calendar::getMonthName($month, 'wide', '', true) . ' ' . $year);
             $seo->addTitleSegment($date);
         }
         $this->view();
@@ -354,10 +354,10 @@ class Controller extends BlockController
 
     public function getPassThruActionAndParameters($parameters)
     {
-        if ($parameters[0] == 'topic') {
+        if ('topic' == $parameters[0]) {
             $method = 'action_filter_by_topic';
             $parameters = array_slice($parameters, 1);
-        } elseif ($parameters[0] == 'tag') {
+        } elseif ('tag' == $parameters[0]) {
             $method = 'action_filter_by_tag';
             $parameters = array_slice($parameters, 1);
         } elseif (Core::make('helper/validation/numbers')->integer($parameters[0])) {
@@ -417,7 +417,7 @@ class Controller extends BlockController
         $args['num'] = ($args['num'] > 0) ? $args['num'] : 0;
         $args['cThis'] = ($args['cParentID'] == $this->cID) ? '1' : '0';
         $args['cThisParent'] = ($args['cParentID'] == $this->cPID) ? '1' : '0';
-        $args['cParentID'] = ($args['cParentID'] == 'OTHER') ? $args['cParentIDValue'] : $args['cParentID'];
+        $args['cParentID'] = ('OTHER' == $args['cParentID']) ? $args['cParentIDValue'] : $args['cParentID'];
         if (!$args['cParentID']) {
             $args['cParentID'] = 0;
         }
@@ -426,8 +426,8 @@ class Controller extends BlockController
         $args['includeDate'] = ($args['includeDate']) ? '1' : '0';
         $args['truncateSummaries'] = ($args['truncateSummaries']) ? '1' : '0';
         $args['displayFeaturedOnly'] = ($args['displayFeaturedOnly']) ? '1' : '0';
-        $args['filterByRelated'] = ($args['topicFilter'] == 'related') ? '1' : '0';
-        $args['filterByCustomTopic'] = ($args['topicFilter'] == 'custom') ? '1' : '0';
+        $args['filterByRelated'] = ('related' == $args['topicFilter']) ? '1' : '0';
+        $args['filterByCustomTopic'] = ('custom' == $args['topicFilter']) ? '1' : '0';
         $args['displayThumbnail'] = ($args['displayThumbnail']) ? '1' : '0';
         $args['displayAliases'] = ($args['displayAliases']) ? '1' : '0';
         $args['truncateChars'] = intval($args['truncateChars']);
@@ -467,7 +467,7 @@ class Controller extends BlockController
         } elseif (isset($this->pfID) && $this->pfID && !$args['rss']) {
             // let's make sure this isn't in use elsewhere.
             $cnt = $db->fetchColumn('select count(pfID) from btPageList where pfID = ?', [$this->pfID]);
-            if ($cnt == 1) { // this is the last one, so we delete
+            if (1 == $cnt) { // this is the last one, so we delete
                 $pf = Feed::getByID($this->pfID);
                 if (is_object($pf)) {
                     $pf->delete();
@@ -476,14 +476,14 @@ class Controller extends BlockController
             $args['pfID'] = 0;
         }
 
-        if ($args['filterDateOption'] != 'between') {
+        if ('between' != $args['filterDateOption']) {
             $args['filterDateStart'] = null;
             $args['filterDateEnd'] = null;
         }
 
-        if ($args['filterDateOption'] == 'past') {
+        if ('past' == $args['filterDateOption']) {
             $args['filterDateDays'] = $args['filterDatePast'];
-        } elseif ($args['filterDateOption'] == 'future') {
+        } elseif ('future' == $args['filterDateOption']) {
             $args['filterDateDays'] = $args['filterDateFuture'];
         } else {
             $args['filterDateDays'] = null;
@@ -499,7 +499,7 @@ class Controller extends BlockController
         if (isset($this->pageListTitle) && $this->pageListTitle) {
             return false;
         }
-        if (count($pages) == 0) {
+        if (0 == count($pages)) {
             if ($this->noResultsMessage) {
                 return false;
             } else {
@@ -518,7 +518,7 @@ class Controller extends BlockController
 
     public function cacheBlockOutput()
     {
-        if ($this->btCacheBlockOutput === null) {
+        if (null === $this->btCacheBlockOutput) {
             if (!$this->enableExternalFiltering && !$this->paginate) {
                 $this->btCacheBlockOutput = true;
             } else {
