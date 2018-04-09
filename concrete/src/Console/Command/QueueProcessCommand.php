@@ -4,7 +4,6 @@ namespace Concrete\Core\Console\Command;
 use Bernard\BernardEvents;
 use Bernard\Consumer;
 use Bernard\Event\EnvelopeEvent;
-use Bernard\Queue\RoundRobinQueue;
 use Bernard\QueueFactory\PersistentFactory;
 use Bernard\Router\ClassNameRouter;
 use Bernard\Router\SimpleRouter;

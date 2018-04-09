@@ -11,6 +11,8 @@ use Bernard\Producer;
 use Bernard\QueueFactory\PersistentFactory;
 use Bernard\Router\ClassNameRouter;
 use Concrete\Core\Foundation\Queue\Driver\DriverFactory;
+use Concrete\Core\Foundation\Queue\Mutex\MutexGeneratorFactory;
+use Concrete\Core\Foundation\Queue\Mutex\QueueMutexGenerator;
 use Concrete\Core\Foundation\Service\Provider;
 use League\Tactician\Bernard\QueueableCommand;
 use League\Tactician\Bernard\Receiver\SeparateBusReceiver;
@@ -28,6 +30,8 @@ class QueueServiceProvider extends Provider
             return $this->app->make(DriverFactory::class)
                 ->createDriver();
         });
+
+        $this->app->singleton(MutexGeneratorFactory::class);
 
         $this->app->singleton(SerializerManager::class, function($app) {
             $manager = new SerializerManager();
@@ -69,15 +73,5 @@ class QueueServiceProvider extends Provider
         $subscriber = $this->app->make(BernardSubscriber::class);
         $dispatcher = $this->app->make('director');
         $dispatcher->addSubscriber($subscriber);
-
-        $config = $this->app->make('config');
-        $mutexes = $config->get('app.mutex');
-        $generator = new QueueMutexKeyGenerator();
-        foreach($config->get('app.commands') as $entry) {
-            if ($entry[2]) {
-                $mutexes[$generator->getMutexKey($entry[2])] = true;
-            }
-        }
-        $config->set('app.mutex', $mutexes);
     }
 }

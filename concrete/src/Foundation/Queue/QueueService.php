@@ -5,14 +5,13 @@ namespace Concrete\Core\Foundation\Queue;
 use Bernard\Message;
 use Bernard\Producer;
 use Bernard\Queue;
-use Bernard\Queue\RoundRobinQueue;
 use Bernard\QueueFactory\PersistentFactory;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Events\EventDispatcher;
+use Concrete\Core\Foundation\Queue\Mutex\MutexGeneratorFactory;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\System\Mutex\MutexBusyException;
-use Concrete\Core\System\Mutex\MutexInterface;
 use League\Tactician\Bernard\QueueableCommand;
 
 /**
@@ -43,21 +42,15 @@ class QueueService
     protected $producer;
 
     /**
-     * @var MutexInterface
+     * @var MutexGeneratorFactory
      */
-    protected $mutex;
+    protected $mutexGeneratorFactory;
 
-    /**
-     * @var QueueMutexKeyGenerator
-     */
-    protected $keyGenerator;
-
-    public function __construct(Application $app, Repository $config, QueueMutexKeyGenerator $keyGenerator, MutexInterface $mutex)
+    public function __construct(Application $app, Repository $config, MutexGeneratorFactory $mutexGeneratorFactory)
     {
         $this->app = $app;
         $this->config = $config;
-        $this->mutex = $mutex;
-        $this->keyGenerator = $keyGenerator;
+        $this->mutexGeneratorFactory = $mutexGeneratorFactory;
         $this->factory = new PersistentFactory(
             $this->app->make('queue/driver'),
             $this->app->make('queue/serializer')
@@ -132,7 +125,8 @@ class QueueService
     public function consume(Queue $queue, $options = [])
     {
         $consumer = $this->app->make('queue/consumer');
-        $this->mutex->execute($this->keyGenerator->getMutexKey($queue), function() use ($consumer, $queue, $options) {
+        $generator = $this->mutexGeneratorFactory->create($queue);
+        $generator->execute($queue, function() use ($consumer, $queue, $options) {
             $consumer->consume($queue, $options);
         });
     }
