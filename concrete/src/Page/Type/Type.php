@@ -204,7 +204,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
             $pkr->setRequestedPage($c);
             $pkr->setRequestedVersionID($v->getVersionID());
             $pkr->setRequesterUserID($u->getUserID());
-            if ($requestOrDateTime) {
+            if ($requestOrDateTime || $cvPublishEndDate) {
                 // That means it's a date time
                 $pkr->scheduleVersion($requestOrDateTime, $cvPublishEndDate);
             }

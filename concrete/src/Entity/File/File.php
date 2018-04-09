@@ -7,6 +7,7 @@ use Concrete\Core\File\Event\FileVersion;
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use Concrete\Core\File\Importer;
 use Concrete\Core\File\Set\Set;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Support\Facade\Database;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\NodeType;
@@ -327,16 +328,31 @@ class File implements \Concrete\Core\Permission\ObjectInterface
     }
 
     /**
+     * Get the IDs of the file sets that this file belongs to.
+     *
+     * @return int[]
+     */
+    public function getFileSetIDs()
+    {
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $rows = $db->fetchAll('select fsID from FileSetFiles where fID = ?', [$this->getFileID()]);
+        $ids = array_map('intval', array_map('array_pop', $rows));
+
+        return $ids;
+    }
+
+    /**
+     * Get the file sets that this file belongs to.
+     *
      * @return FileSet[]
      */
     public function getFileSets()
     {
-        $db = Loader::db();
-        $fsIDs = $db->Execute('select fsID from FileSetFiles where fID = ?', [$this->getFileID()]);
         $filesets = [];
-        while ($row = $fsIDs->FetchRow()) {
-            $fs = FileSet::getByID($row['fsID']);
-            if (is_object($fs)) {
+        foreach ($this->getFileSetIDs() as $fsID) {
+            $fs = FileSet::getByID($fsID);
+            if ($fs !== null) {
                 $filesets[] = $fs;
             }
         }

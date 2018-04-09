@@ -9,11 +9,12 @@ use Concrete\Core\Permission\Category;
 use Concrete\Core\Permission\Duration;
 use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
+use Concrete\Core\Updater\Migrations\LongRunningMigrationInterface;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 use Concrete\Core\User\Group\Group;
 use Doctrine\DBAL\Schema\Schema;
 
-class Version20150504000000 extends AbstractMigration implements RepeatableMigrationInterface
+class Version20150504000000 extends AbstractMigration implements RepeatableMigrationInterface, LongRunningMigrationInterface
 {
     private $updateSectionPlurals = false;
     private $updateMultilingualTranslations = false;

@@ -1378,11 +1378,13 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Delete and re-create all the thumbnail types (only applicable to image files).
+     * Create missing thumbnails (or re-create all the thumbnails).
+     *
+     * @param bool $deleteExistingThumbnails Set to true to delete existing thumbnails (they will be re-created from scratch)
      *
      * @return bool return true on success, false on failure (file is not an image, problems during image processing, ...)
      */
-    public function rescanThumbnails()
+    public function refreshThumbnails($deleteExistingThumbnails)
     {
         $result = false;
         if ($this->fvType == \Concrete\Core\File\Type\Type::T_IMAGE) {
@@ -1392,11 +1394,30 @@ class Version implements ObjectInterface
                     $imageWidth = (int) $this->getAttribute('width') ?: (int) $image->getSize()->getWidth();
                     $imageHeight = (int) $this->getAttribute('height') ?: (int) $image->getSize()->getHeight();
                     $types = Type::getVersionList();
+                    $file = $this->getFile();
+                    $fsl = null;
                     foreach ($types as $type) {
-                        // delete the file if it exists
-                        $this->deleteThumbnail($type);
-                        if ($type->shouldExistFor($imageWidth, $imageHeight)) {
+                        if ($type->shouldExistFor($imageWidth, $imageHeight, $file)) {
+                            if ($deleteExistingThumbnails) {
+                                $this->deleteThumbnail($type);
+                            } else {
+                                if ($fsl === null) {
+                                    $fsl = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
+                                }
+                                $path = $type->getFilePath($this);
+                                try {
+                                    $exists = $fsl->has($path);
+                                } catch (FileNotFoundException $e) {
+                                    $exists = false;
+                                }
+                                if ($exists) {
+                                    continue;
+                                }
+                            }
                             $this->generateThumbnail($type);
+                        } else {
+                            // delete the file if it exists
+                            $this->deleteThumbnail($type);
                         }
                     }
                     $result = true;
@@ -1524,7 +1545,7 @@ class Version implements ObjectInterface
 
     /**
      * Get the URL of a thumbnail type.
-     * If the thumbnail is smaller than the image you'll get the URL of the image itself.
+     * If the thumbnail is smaller than the image (or if the file does not satisfy the Conditional Thumbnail criterias) you'll get the URL of the image itself.
      *
      * Please remark that the path is resolved using the default core path resolver: avoid using this method when you have access to the resolver instance.
      *
@@ -1545,7 +1566,8 @@ class Version implements ObjectInterface
         if ($type !== null) {
             $imageWidth = (int) $this->getAttribute('width');
             $imageHeight = (int) $this->getAttribute('height');
-            if ($type->shouldExistFor($imageWidth, $imageHeight)) {
+            $file = $this->getFile();
+            if ($type->shouldExistFor($imageWidth, $imageHeight, $file)) {
                 $path_resolver = $app->make(Resolver::class);
                 $path = $path_resolver->getPath($this, $type);
             }
@@ -1576,7 +1598,7 @@ class Version implements ObjectInterface
         $types = Type::getVersionList();
         $file = $this->getFile();
         foreach ($types as $type) {
-            if ($type->shouldExistFor($imageWidth, $imageHeight)) {
+            if ($type->shouldExistFor($imageWidth, $imageHeight, $file)) {
                 $thumbnailPath = $type->getFilePath($this);
                 $location = $file->getFileStorageLocationObject();
                 $configuration = $location->getConfigurationObject();
@@ -1783,6 +1805,16 @@ class Version implements ObjectInterface
         }
 
         return false;
+    }
+
+    /**
+     * @deprecated use refreshThumbnails(true) instead
+     *
+     * @return bool
+     */
+    public function rescanThumbnails()
+    {
+        return $this->refreshThumbnails(true);
     }
 
     /**

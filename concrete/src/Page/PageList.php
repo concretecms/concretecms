@@ -209,18 +209,17 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
 
         switch ($this->pageVersionToRetrieve) {
             case self::PAGE_VERSION_RECENT:
-                $query->andWhere('cvID = (select max(cvID) from CollectionVersions where cID = cv.cID)');
+                $query->andWhere('cv.cvID = (select max(cvID) from CollectionVersions where cID = cv.cID)');
                 break;
             case self::PAGE_VERSION_RECENT_UNAPPROVED:
                 $query
-                    ->andWhere('cvID = (select max(cvID) from CollectionVersions where cID = cv.cID)')
+                    ->andWhere('cv.cvID = (select max(cvID) from CollectionVersions where cID = cv.cID)')
                     ->andWhere('cvIsApproved = 0');
                 break;
             case self::PAGE_VERSION_ACTIVE:
             default:
                 $now = new \DateTime();
-                $query->andWhere('cvIsApproved = 1');
-                $query->andWhere('(cvPublishDate <= :cvPublishDate or cvPublishDate is null)');
+                $query->andWhere('cv.cvID = (select cvID from CollectionVersions where cID = cv.cID and cvIsApproved = 1 and ((cvPublishDate <= :cvPublishDate or cvPublishDate is null) and (cvPublishEndDate >= :cvPublishDate or cvPublishEndDate is null)) order by cvPublishDate desc limit 1)');
                 $query->setParameter('cvPublishDate', $now->format('Y-m-d H:i:s'));
                 break;
         }

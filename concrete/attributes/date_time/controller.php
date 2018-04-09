@@ -233,6 +233,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         $this->load();
         $data = $this->post();
         $datetime = null;
+        $dh = $this->app->make('helper/date');
         switch ($this->akDateDisplayMode) {
             case 'text':
             case 'date_text':

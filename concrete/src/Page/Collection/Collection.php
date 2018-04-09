@@ -6,6 +6,7 @@ use Block;
 use CacheLocal;
 use CollectionVersion;
 use Concrete\Core\Area\CustomStyle as AreaCustomStyle;
+use Concrete\Core\Area\GlobalArea;
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Block\CustomStyle as BlockCustomStyle;
 use Concrete\Core\Entity\Attribute\Key\Key;
@@ -825,7 +826,7 @@ class Collection extends ConcreteObject implements TrackableInterface
                         if (is_object($obj)) {
                             $b = new Block();
                             $b->bID = $r['bID'];
-                            $a = new Area($r['arHandle']);
+                            $a = new GlobalArea($garHandle);
                             $b->setBlockAreaObject($a);
                             $obj = new BlockCustomStyle($obj, $b, $this->getCollectionThemeObject());
                             $psss[] = $obj;
@@ -1301,9 +1302,17 @@ class Collection extends ConcreteObject implements TrackableInterface
                 $db->query($ql, $vl);
             }
 
+            $ql = "select * from CollectionVersionBlocksCacheSettings where cID = '{$this->cID}'";
+            $rl = $db->query($ql);
+            while ($row = $rl->fetchRow()) {
+                $vl = [$newCID, $row['cvID'], $row['bID'], $row['arHandle'], $row['btCacheBlockOutput'], $row['btCacheBlockOutputOnPost'], $row['btCacheBlockOutputForRegisteredUsers'], $row['btCacheBlockOutputLifetime']];
+                $ql = 'insert into CollectionVersionBlocksCacheSettings (cID, cvID, bID, arHandle, btCacheBlockOutput, btCacheBlockOutputOnPost, btCacheBlockOutputForRegisteredUsers, btCacheBlockOutputLifetime) values (?, ?, ?, ?, ?, ?, ?, ?)';
+                $db->query($ql, $vl);
+            }
+
             // now we grab all the blocks we're going to need
             $cvList = implode(',', $cvList);
-            $q = "select bID, cvID, arHandle, cbDisplayOrder, cbOverrideAreaPermissions, cbIncludeAll, cbRelationID from CollectionVersionBlocks where cID = '{$this->cID}' and cvID in ({$cvList})";
+            $q = "select bID, cvID, arHandle, cbDisplayOrder, cbOverrideAreaPermissions, cbIncludeAll, cbRelationID, cbOverrideBlockTypeCacheSettings, cbOverrideBlockTypeContainerSettings, cbEnableBlockContainer from CollectionVersionBlocks where cID = '{$this->cID}' and cvID in ({$cvList})";
             $r = $db->query($q);
             while ($row = $r->fetchRow()) {
                 $v = [
@@ -1316,8 +1325,11 @@ class Collection extends ConcreteObject implements TrackableInterface
                     0,
                     $row['cbOverrideAreaPermissions'],
                     $row['cbIncludeAll'],
+                    $row['cbOverrideBlockTypeCacheSettings'],
+                    $row['cbOverrideBlockTypeContainerSettings'],
+                    $row['cbEnableBlockContainer']
                 ];
-                $q = 'insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbDisplayOrder, cbRelationID, isOriginal, cbOverrideAreaPermissions, cbIncludeAll) values (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+                $q = 'insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbDisplayOrder, cbRelationID, isOriginal, cbOverrideAreaPermissions, cbIncludeAll, cbOverrideBlockTypeCacheSettings, cbOverrideBlockTypeContainerSettings, cbEnableBlockContainer) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
                 $db->query($q, $v);
                 if (0 != $row['cbOverrideAreaPermissions']) {
                     $q2 = "select paID, pkID from BlockPermissionAssignments where cID = '{$this->cID}' and bID = '{$row['bID']}' and cvID = '{$row['cvID']}'";

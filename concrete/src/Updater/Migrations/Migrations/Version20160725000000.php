@@ -25,9 +25,10 @@ use Concrete\Core\Tree\Node\Type\FileFolder;
 use Concrete\Core\Tree\TreeType;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
+use Concrete\Core\Updater\Migrations\LongRunningMigrationInterface;
 use Concrete\Core\Updater\Migrations\Routine\AddPageDraftsBooleanTrait;
 
-class Version20160725000000 extends AbstractMigration
+class Version20160725000000 extends AbstractMigration implements LongRunningMigrationInterface
 {
     use AddPageDraftsBooleanTrait;
 

@@ -277,10 +277,14 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
                         } else {
                             $option = $this->getOptionByValue(trim($data['atSelectOptionValue']), $this->attributeKey);
                             if (!is_object($option)) {
+                                $displayOrder = 0;
+                                if ($optionList) {
+                                    $displayOrder = count($optionList->getOptions());
+                                }
                                 $option = new SelectValueOption();
                                 $option->setOptionList($optionList);
                                 $option->setIsEndUserAdded(true);
-                                $option->setDisplayOrder(count($optionList));
+                                $option->setDisplayOrder($displayOrder);
                                 $option->setSelectAttributeOptionValue(trim($data['atSelectOptionValue']));
                             }
                         }
@@ -302,9 +306,13 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
                                 } else {
                                     $option = $this->getOptionByValue(trim($value), $this->attributeKey);
                                     if (!is_object($option)) {
+                                        $displayOrder = 0;
+                                        if ($optionList) {
+                                            $displayOrder = count($optionList->getOptions());
+                                        }
                                         $option = new SelectValueOption();
                                         $option->setOptionList($optionList);
-                                        $option->setDisplayOrder(count($optionList));
+                                        $option->setDisplayOrder($displayOrder);
                                         $option->setSelectAttributeOptionValue(trim($value));
                                         $option->setIsEndUserAdded(true);
                                     }
@@ -814,10 +822,14 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
                 }
                 if (null === $selectedOption) {
                     if ($settings->getAllowOtherValues()) {
+                        $displayOrder = 0;
+                        if ($optionList) {
+                            $displayOrder = count($optionList->getOptions());
+                        }
                         $selectedOption = new SelectValueOption();
                         $selectedOption->setOptionList($optionList);
                         $selectedOption->setIsEndUserAdded(true);
-                        $selectedOption->setDisplayOrder(count($optionList));
+                        $selectedOption->setDisplayOrder($displayOrder);
                         $selectedOption->setSelectAttributeOptionValue($optionText);
                         $optionList->getOptions()->add($selectedOption);
                     } elseif (isset($deletedOptions[$optionText])) {

@@ -4,6 +4,7 @@ namespace Concrete\Core\Entity\File\Image\Thumbnail\Type;
 
 use Concrete\Core\File\Image\Thumbnail\Type\Version;
 use Concrete\Core\Support\Facade\Application;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -37,9 +38,17 @@ class Type
     const RESIZE_DEFAULT = self::RESIZE_PROPORTIONAL;
 
     /**
+     * Suffix for high DPI thumbnails (eg. Retina).
+     * 
+     * @var string
+     */
+    const HIGHDPI_SUFFIX = '_2x';
+
+    /**
      * The thumbnail unique identifier.
      *
-     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
      *
      * @var int|null
@@ -99,6 +108,29 @@ class Type
      * @var string
      */
     protected $ftTypeSizingMode = self::RESIZE_DEFAULT;
+
+    /**
+     * Should the thumbnails be build for every file that ARE NOT in the file sets (false), or only for files that ARE in the specified file sets (true)?
+     *
+     * @ORM\Column(type="boolean", nullable=false)
+     *
+     * @var bool
+     */
+    protected $ftLimitedToFileSets = false;
+
+    /**
+     * Associated file sets (whose meaning depends on the value of ftLimitedToFileSets).
+     *
+     * @ORM\OneToMany(targetEntity="TypeFileSet", mappedBy="ftfsThumbnailType", cascade={"all"}, orphanRemoval=true)
+     *
+     * @var ArrayCollection|TypeFileSet[]
+     */
+    protected $ftAssociatedFileSets;
+
+    public function __construct()
+    {
+        $this->ftAssociatedFileSets = new ArrayCollection();
+    }
 
     /**
      * Get the thumbnail unique identifier.
@@ -277,6 +309,40 @@ class Type
     }
 
     /**
+     * Should the thumbnails be build for every file that ARE NOT in the file sets (false), or only for files that ARE in the specified file sets (true)?
+     *
+     * @param bool $value
+     *
+     * @return $this
+     */
+    public function setLimitedToFileSets($value)
+    {
+        $this->ftLimitedToFileSets = (bool) $value;
+
+        return $this;
+    }
+
+    /**
+     * Should the thumbnails be build for every file that ARE NOT in the file sets (false), or only for files that ARE in the specified file sets (true)?
+     *
+     * @return bool
+     */
+    public function isLimitedToFileSets()
+    {
+        return $this->ftLimitedToFileSets;
+    }
+
+    /**
+     * Get the associated file sets (whose meaning depends on the value of ftLimitedToFileSets).
+     *
+     * @return ArrayCollection|TypeFileSet[]
+     */
+    public function getAssociatedFileSets()
+    {
+        return $this->ftAssociatedFileSets;
+    }
+
+    /**
      * Save this instance to the database.
      */
     public function save()
@@ -303,7 +369,7 @@ class Type
      */
     public function getBaseVersion()
     {
-        return new Version($this->getHandle(), $this->getHandle(), $this->getName(), $this->getWidth(), $this->getHeight(), false, $this->getSizingMode());
+        return $this->getVersion(false);
     }
 
     /**
@@ -313,15 +379,36 @@ class Type
      */
     public function getDoubledVersion()
     {
+        return $this->getVersion(true);
+    }
+
+    /**
+     * @param bool $doubled
+     *
+     * @return \Concrete\Core\File\Image\Thumbnail\Type\Version
+     */
+    private function getVersion($doubled)
+    {
+        $suffix = $doubled ? static::HIGHDPI_SUFFIX : '';
+        $handle = $this->getHandle();
         $width = $this->getWidth();
-        if ($width !== null) {
+        if ($width && $doubled) {
             $width *= 2;
         }
         $height = $this->getHeight();
-        if ($height !== null) {
+        if ($height && $doubled) {
             $height *= 2;
         }
-
-        return new Version($this->getHandle() . '_2x', $this->getHandle() . '_2x', $this->getName(), $width, $height, true, $this->getSizingMode());
+        if ($this->isRequired()) {
+            $limitedToFileSets = false;
+            $filesetIDs = [];
+        } else {
+            $limitedToFileSets = $this->isLimitedToFileSets();
+            $filesetIDs = [];
+            foreach ($this->getAssociatedFileSets() as $afs) {
+                $filesetIDs[] = $afs->getFileSetID();
+            }
+        }
+        return new Version($handle . $suffix, $handle . $suffix, $this->getName(), $width, $height, $doubled, $this->getSizingMode(), $limitedToFileSets, $filesetIDs);
     }
 }

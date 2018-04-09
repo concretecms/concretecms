@@ -175,7 +175,7 @@ class Resolver
      */
     protected function determineThumbnailPath(Version $file_version, ThumbnailVersion $thumbnail, StorageLocation $storage, ConfigurationInterface $configuration, $format)
     {
-        if ($thumbnail->shouldExistFor($file_version->getAttribute('width'), $file_version->getAttribute('height'))) {
+        if ($thumbnail->shouldExistFor($file_version->getAttribute('width'), $file_version->getAttribute('height'), $file_version->getFile())) {
             $path = $thumbnail->getFilePath($file_version, $format);
     
             if ($configuration instanceof DeferredConfigurationInterface) {
