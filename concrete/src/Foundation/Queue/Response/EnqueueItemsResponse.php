@@ -17,6 +17,7 @@ class EnqueueItemsResponse extends JsonResponse
         $validator = new Token();
         $data = [
             'queue' => (string) $queue,
+            'remaining' => $queue->count(),
             'token' => $validator->generate((string) $queue)
         ];
 

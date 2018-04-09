@@ -25,22 +25,22 @@
 		var my = this,
 			url = CCM_DISPATCHER_FILENAME + '/ccm/system/queue/monitor/' + queue + '/' + token;
 
+		if (my.total == -1) {
+			// We haven't set the total yet.
+			my.total = remaining;
+		}
+
+		my.current += my.total - remaining;
+		NProgress.set((my.total - remaining) / my.total);
+
+		$('div[data-wrapper=progressive-operation-status]').html(remaining + ' remaining');
+
 		$.concreteAjax({
 			loader: false,
 			url: url,
 			type: 'POST',
 			dataType: 'json',
 			success: function(r) {
-
-				if (my.total == -1) {
-					// We haven't set the total yet.
-					my.total = r.remaining;
-				}
-
-				my.current += my.total - r.remaining;
-				NProgress.set((my.total - r.remaining) / my.total);
-
-				$('div[data-wrapper=progressive-operation-status]').html(r.remaining + ' remaining');
 
 				if (r.remaining > 0) {
 					setTimeout(function() {
@@ -61,7 +61,7 @@
 		});
 	}
 
-	ConcreteProgressiveOperation.prototype.startPolling = function(queue, token) {
+	ConcreteProgressiveOperation.prototype.startPolling = function(queue, token, remaining) {
 		var my = this;
 		my.pnotify = new PNotify({
 			text: '<div data-wrapper="progressive-operation-status">' + ccmi18n.progressiveOperationLoading + '</div>',
@@ -74,7 +74,7 @@
 			icon: 'fa fa-refresh fa-spin'
 		});
 
-		my.poll(queue, token);
+		my.poll(queue, token, remaining);
 	}
 
 	ConcreteProgressiveOperation.prototype.execute = function() {
@@ -86,7 +86,7 @@
 		if (my.options.response) {
 			// We have already performed the submit as part of another operation,
 			// like a concrete5 ajax form submission
-			my.startPolling(my.options.response.queue, my.options.response.token)
+			my.startPolling(my.options.response.queue, my.options.response.token, my.options.response.remaining)
 		} else {
 			$.concreteAjax({
 				loader: false,
@@ -95,7 +95,7 @@
 				data: my.options.data,
 				dataType: 'json',
 				success: function(r) {
-					my.startPolling(r.queue, r.token)
+					my.startPolling(r.queue, r.token, r.remaining)
 				}
 			});
 		}

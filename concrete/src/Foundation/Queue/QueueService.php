@@ -14,7 +14,6 @@ use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\System\Mutex\MutexBusyException;
 use Concrete\Core\System\Mutex\MutexInterface;
 use League\Tactician\Bernard\QueueableCommand;
-use Spatie\Async\Pool;
 
 /**
  * A handy wrapper for calling Bernard functions using the full API.
@@ -43,10 +42,22 @@ class QueueService
      */
     protected $producer;
 
-    public function __construct(Application $app, Repository $config)
+    /**
+     * @var MutexInterface
+     */
+    protected $mutex;
+
+    /**
+     * @var QueueMutexKeyGenerator
+     */
+    protected $keyGenerator;
+
+    public function __construct(Application $app, Repository $config, QueueMutexKeyGenerator $keyGenerator, MutexInterface $mutex)
     {
         $this->app = $app;
         $this->config = $config;
+        $this->mutex = $mutex;
+        $this->keyGenerator = $keyGenerator;
         $this->factory = new PersistentFactory(
             $this->app->make('queue/driver'),
             $this->app->make('queue/serializer')
@@ -108,20 +119,22 @@ class QueueService
 
     public function consumeFromPoll(Queue $queue)
     {
-        $this->consume($queue, [
-            'stop-when-empty' => true,
-            'max-messages' => 5
-        ]);
+        try {
+            $this->consume($queue, [
+                'stop-when-empty' => true,
+                'max-messages' => 5
+            ]);
+        } catch (MutexBusyException $exception) {
+            return false;
+        }
     }
 
     public function consume(Queue $queue, $options = [])
     {
-        try {
-            $consumer = $this->app->make('queue/consumer');
+        $consumer = $this->app->make('queue/consumer');
+        $this->mutex->execute($this->keyGenerator->getMutexKey($queue), function() use ($consumer, $queue, $options) {
             $consumer->consume($queue, $options);
-        } catch(MutexBusyException $exception) {
-            // Nothing
-        }
+        });
     }
 
 
