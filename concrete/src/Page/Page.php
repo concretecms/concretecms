@@ -3177,7 +3177,13 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
         $cInheritPermissionsFromCID = ($this->overrideTemplatePermissions()) ? $this->getPermissionsCollectionID() : $masterCID;
         $cInheritPermissionsFrom = ($this->overrideTemplatePermissions()) ? 'PARENT' : 'TEMPLATE';
-        $v = [$cID, $siteTreeID, $ptID, $cParentID, $uID, $cInheritPermissionsFrom, $this->overrideTemplatePermissions(), (int) $cInheritPermissionsFromCID, $cDisplayOrder, $pkgID, $cIsActive, $cIsDraft];
+
+        if(is_null($cParentID) && isset($_REQUEST['cParentID'])) {
+            $cParentID = $_REQUEST['cParentID'];
+        }
+        $overrideTemplatePermissions = ($this->overrideTemplatePermissions()) ? $this->overrideTemplatePermissions() : 0;
+
+        $v = [$cID, $siteTreeID, $ptID, $cParentID, $uID, $cInheritPermissionsFrom, $overrideTemplatePermissions, (int) $cInheritPermissionsFromCID, $cDisplayOrder, $pkgID, $cIsActive, $cIsDraft];
         $q = 'insert into Pages (cID, siteTreeID, ptID, cParentID, uID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cDisplayOrder, pkgID, cIsActive, cIsDraft) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
         $r = $db->prepare($q);
         $res = $r->execute($v);
