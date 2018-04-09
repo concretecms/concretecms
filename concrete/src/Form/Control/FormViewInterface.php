@@ -7,4 +7,5 @@ interface FormViewInterface extends ViewInterface
     function getLabel();
     function setLabel($label);
     function supportsLabel();
+    function getControlID();
 }

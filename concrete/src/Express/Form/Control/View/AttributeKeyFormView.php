@@ -33,6 +33,11 @@ class AttributeKeyFormView extends BaseFormView
         }
     }
 
+    public function getControlID()
+    {
+        return $this->key->getController()->getControlID();
+    }
+
     public function createTemplateLocator()
     {
         return $this->view->createTemplateLocator();

@@ -2,14 +2,14 @@
 
 <div class="form-group">
     <?php if ($view->supportsLabel()) { ?>
-        <label class="control-label"><?=$label?></label>
+        <label class="control-label" for="<?=$view->getControlID()?>"><?=$label?></label>
     <?php } ?>
 
     <?php
     if (!empty($entities)) {
         $selectedEntity = $selectedEntities[0];
         ?>
-        <select class="form-control" name="express_association_<?=$control->getId()?>">
+        <select class="form-control" id="<?=$view->getControlID()?>" name="express_association_<?=$control->getId()?>">
             <option value=""><?=t('** Choose %s', $control->getControlLabel())?></option>
             <?php
             foreach ($entities as $entity) {
