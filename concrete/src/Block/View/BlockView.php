@@ -1,7 +1,9 @@
 <?php
 namespace Concrete\Core\Block\View;
 
+use Concrete\Core\Block\Events\BlockBeforeRender;
 use Concrete\Core\Localization\Localization;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\View\AbstractView;
 use Config;
 use Area;
@@ -251,6 +253,23 @@ class BlockView extends AbstractView
 
     public function renderViewContents($scopeItems)
     {
+        $shouldRender = function() {
+            $app = Application::getFacadeApplication();
+
+            // If you hook into this event and use `preventRendering()`
+            // you can prevent the block from being displayed.
+            $event = new BlockBeforeRender($this->block);
+            $app->make('director')->dispatch('on_block_before_render', $event);
+
+            return $event->proceed();
+        };
+
+        if (!$shouldRender()) {
+            return;
+        }
+
+        unset($shouldRender);
+
         extract($scopeItems);
         if (!$this->outputContent) {
             ob_start();
