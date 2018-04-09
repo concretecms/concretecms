@@ -2,6 +2,7 @@
 namespace Concrete\Controller\Dialog\Page;
 
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
+use Concrete\Core\Page\Type\Type;
 use URL;
 use Concrete\Core\Page\EditResponse;
 
@@ -16,6 +17,17 @@ class AddExternal extends BackendInterfacePageController
 
     public function view()
     {
+        $typesSelect = [];
+        if (is_object($tree)) {
+            $type = $tree->getSiteType();
+            $typeList = Type::getList(false, $type);
+            foreach ($typeList as $_pagetype) {
+                $typesSelect[$_pagetype->getPageTypeID()] = $_pagetype->getPageTypeDisplayName();
+            }
+        }
+        $tree = $this->page->getSiteTreeObject();
+
+        $this->set('types', $typesSelect);
     }
 
     public function submit()
@@ -25,7 +37,8 @@ class AddExternal extends BackendInterfacePageController
             $this->page->addCollectionAliasExternal(
                 $request->request->get('name'),
                 $request->request->get('link'),
-                $request->request->get('openInNewWindow')
+                $request->request->get('openInNewWindow'),
+                $request->request->get('ptID')
             );
 
             $r = new EditResponse();
