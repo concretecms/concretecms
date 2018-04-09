@@ -11,7 +11,7 @@ class TextView extends View
 
     public function getControlID()
     {
-        return false;
+        return null;
     }
 
     public function createTemplateLocator()

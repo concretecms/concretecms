@@ -437,7 +437,7 @@ class Controller extends AbstractController implements AttributeInterface
      */
     public function getLabelID()
     {
-        return $this->field('value');
+        return $this->getControlID();
     }
 
     /**
@@ -453,7 +453,7 @@ class Controller extends AbstractController implements AttributeInterface
             $text = $customText;
         }
         $form = $this->app->make('helper/form');
-        echo $form->label($this->getLabelID(), $text);
+        echo $form->label($this->getControlID(), $text);
     }
 
     /**
