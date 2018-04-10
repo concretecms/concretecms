@@ -48,6 +48,7 @@ class Attributes extends BackendInterfacePageController
         $html = ob_get_contents();
         ob_end_clean();
         $obj = new stdClass();
+        $obj->controlID = $ak->getController()->getControlID();
         $obj->akID = $ak->getAttributeKeyID();
         $obj->label = $ak->getAttributeKeyDisplayName();
         $obj->content = $html;

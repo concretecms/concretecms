@@ -37,6 +37,11 @@ class View extends BaseFormView
         $this->addScopeItem('key', $key);
     }
 
+    public function getControlID()
+    {
+        return $this->key->getController()->getControlID();
+    }
+
     public function createTemplateLocator()
     {
         $locator = new TemplateLocator();
