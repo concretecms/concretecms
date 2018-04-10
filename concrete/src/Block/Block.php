@@ -1648,6 +1648,11 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
                 );
         }
 
+        $event = $app->make(\Concrete\Core\Block\Events\BlockDuplicate::class, ['subject' => $nb]);
+        $event->setOldBlock($this);
+
+        $app->make('director')->dispatch('on_block_duplicate', $event);
+
         return $nb;
     }
 
