@@ -740,7 +740,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         return SelectSettings::class;
     }
 
-    public function getLabelID()
+    public function getControlID()
     {
         return $this->field('atSelectOptionValue');
     }
