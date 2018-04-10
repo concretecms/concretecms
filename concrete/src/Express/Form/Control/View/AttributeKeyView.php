@@ -22,6 +22,11 @@ class AttributeKeyView extends View
         }
     }
 
+    public function getControlID()
+    {
+        return null;
+    }
+
     public function createTemplateLocator()
     {
         $locator = new TemplateLocator('attribute_key');

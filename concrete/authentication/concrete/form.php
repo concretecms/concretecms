@@ -6,13 +6,13 @@ $form = Core::make('helper/form');
 <form method="post" action="<?= URL::to('/login', 'authenticate', $this->getAuthenticationTypeHandle()) ?>">
 
 	<div class="form-group">
-		<label class="control-label"><?=Config::get('concrete.user.registration.email_registration') ? t('Email Address') : t('Username')?></label>
-		<input name="uName" class="form-control" autofocus="autofocus" />
+		<label class="control-label" for="uName"><?=Config::get('concrete.user.registration.email_registration') ? t('Email Address') : t('Username')?></label>
+		<input name="uName" id="uName" class="form-control" autofocus="autofocus" />
 	</div>
 
 	<div class="form-group">
-		<label class="control-label"><?=t('Password')?></label>
-		<input name="uPassword" class="form-control" type="password" />
+		<label class="control-label" for="uPassword"><?=t('Password')?></label>
+		<input name="uPassword" id="uPassword" class="form-control" type="password" />
 	</div>
 
 	<div class="checkbox">
