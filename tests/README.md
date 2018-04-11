@@ -16,7 +16,9 @@ You need to create a MySQL account with login `travis` and an empty password, an
 
 ```sql
 CREATE USER 'travis'@'localhost' IDENTIFIED BY '';
+CREATE USER 'travis'@'::1' IDENTIFIED BY '';
 GRANT ALL ON concrete5_tests.* TO 'travis'@'localhost' WITH GRANT OPTION;
+GRANT ALL ON concrete5_tests.* TO 'travis'@'::1' WITH GRANT OPTION;
 FLUSH PRIVILEGES;
 ```
 
