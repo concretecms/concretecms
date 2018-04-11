@@ -151,7 +151,7 @@ EOL;
 
         $customConfigOptions = $this->config->get('editor.ckeditor4.custom_config_options');
         if ($customConfigOptions) {
-            $options = array_merge($customConfigOptions, $options);
+            $options = array_merge($options, $customConfigOptions);
         }
 
         $options = json_encode($options);
