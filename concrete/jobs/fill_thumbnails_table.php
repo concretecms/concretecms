@@ -7,10 +7,11 @@ use Concrete\Core\File\FileList;
 use Concrete\Core\File\Image\Thumbnail\Path\Resolver as ThumbnailPathResolver;
 use Concrete\Core\File\Image\Thumbnail\Type\Type as ThumbnailType;
 use Concrete\Core\File\Type\Type as FileType;
+use Concrete\Core\Job\JobQueue;
+use Concrete\Core\Job\JobQueueMessage;
 use Concrete\Core\Job\QueueableJob;
 use Doctrine\ORM\EntityManagerInterface;
 use ZendQueue\Message;
-use ZendQueue\Queue;
 
 class FillThumbnailsTable extends QueueableJob
 {
@@ -67,7 +68,7 @@ class FillThumbnailsTable extends QueueableJob
      *
      * @see \Concrete\Core\Job\QueueableJob::start()
      */
-    public function start(Queue $queue)
+    public function start(JobQueue $queue)
     {
         $list = new FileList();
         $list->filterByType(FileType::T_IMAGE);
@@ -82,7 +83,7 @@ class FillThumbnailsTable extends QueueableJob
      *
      * @see \Concrete\Core\Job\QueueableJob::processQueueItem()
      */
-    public function processQueueItem(Message $msg)
+    public function processQueueItem(JobQueueMessage $msg)
     {
         $fID = (int) $msg->body;
         if ($fID > 0) {
@@ -109,7 +110,7 @@ class FillThumbnailsTable extends QueueableJob
      *
      * @see \Concrete\Core\Job\QueueableJob::finish()
      */
-    public function finish(Queue $q)
+    public function finish(JobQueue $q)
     {
         return t('All thumbnail paths have been processed.');
     }

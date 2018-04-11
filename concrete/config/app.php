@@ -1179,6 +1179,7 @@ return [
         ['Concrete\Core\Block\Command\AddAliasDefaultsBlockCommand', 'Concrete\Core\Block\Command\AddAliasDefaultsBlockCommandHandler', 'update_defaults'],
         ['Concrete\Core\Block\Command\UpdateForkedAliasDefaultsBlockCommand', 'Concrete\Core\Block\Command\UpdateForkedAliasDefaultsBlockCommandHandler', 'update_defaults'],
         ['Concrete\Core\Page\Type\Command\UpdatePageTypeDefaultsCommand', 'Concrete\Core\Page\Type\Command\UpdatePageTypeDefaultsCommandHandler', 'update_page_type_defaults'],
+        ['Concrete\Core\Job\Command\ExecuteJobItemCommand', 'Concrete\Core\Job\Command\ExecuteJobItemCommandHandler'],
     ],
 
     'api' => [

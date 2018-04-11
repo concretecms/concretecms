@@ -26,6 +26,13 @@ class MutexGeneratorFactory
                 $mutexes[$keyGenerator->getMutexKey($entry[2])] = true;
             }
         }
+
+        $jobs = \Job::getList();
+        foreach($jobs as $job) {
+            if ($job->supportsQueue()) {
+                $mutexes[$keyGenerator->getMutexKey($job)] = true;
+            }
+        }
         $config->set('app.mutex', $mutexes);
     }
 

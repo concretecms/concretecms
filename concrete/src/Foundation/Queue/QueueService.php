@@ -10,6 +10,8 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Events\EventDispatcher;
 use Concrete\Core\Foundation\Queue\Mutex\MutexGeneratorFactory;
+use Concrete\Core\Job\JobQueue;
+use Concrete\Core\Job\QueueableJob;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\System\Mutex\MutexBusyException;
 use League\Tactician\Bernard\QueueableCommand;
@@ -86,6 +88,10 @@ class QueueService
         return $this->factory->create($queue);
     }
 
+    public function getJobQueue(QueueableJob $job)
+    {
+        return new JobQueue($job, $this->app, $this);
+    }
 
     /**
      * Sends an arbitrary object into the queue.

@@ -1,7 +1,9 @@
 <?php
 namespace Concrete\Controller\Frontend;
 
+use Concrete\Core\Foundation\Queue\Response\EnqueueItemsResponse;
 use Concrete\Core\Job\QueueableJob;
+use Concrete\Core\Job\Response\EnqueueJobResponse;
 use Controller;
 use stdClass;
 use Job;
@@ -106,8 +108,13 @@ class Jobs extends Controller
 
             if (is_object($job)) {
                 if ($job instanceof QueueableJob && $job->supportsQueue()) {
-                    $q = $job->getQueueObject();
+                    $q = $job->markStarted();
+                    $job->start($q);
 
+                    return new EnqueueJobResponse($job);
+
+
+                    /*
                     if ($this->request->request->get('process')) {
                         $obj = new stdClass();
                         $obj->error = false;
@@ -134,8 +141,6 @@ class Jobs extends Controller
                         \Core::shutdown();
                     } else {
                         if ($q->count() == 0) {
-                            $q = $job->markStarted();
-                            $job->start($q);
                         }
                     }
 
@@ -145,6 +150,7 @@ class Jobs extends Controller
                         'totalItemsSummary' => t2("%d item", "%d items", $totalItems),
                     ));
                     \Core::shutdown();
+                    */
                 } else {
                     $r = $job->executeJob();
                     $response->setStatusCode(Response::HTTP_OK);

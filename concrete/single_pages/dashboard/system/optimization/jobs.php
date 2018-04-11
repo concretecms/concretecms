@@ -584,16 +584,15 @@ $(function() {
 			{'name': 'jID', 'value': jID}
 		];
 		if (jSupportsQueue) {
-			ccm_triggerProgressiveOperation(
-				'<?php echo addslashes(URL::to('/ccm/system/jobs/run_single'))?>',
-				params,
-				jName, function(r) {
+			new ConcreteProgressiveOperation({
+				url: '<?php echo addslashes(URL::to('/ccm/system/jobs/run_single'))?>',
+				data: params,
+				title: jName,
+				onComplete: function(r) {
 					$('.ui-dialog-content').dialog('close');
 					row.processResponse(r);
-				}, function(r) {
-					row.processResponse(r);
 				}
-			);
+			});
 		} else {
 			$.ajax({
 				url: '<?php echo addslashes(URL::to('/ccm/system/jobs/run_single'))?>',

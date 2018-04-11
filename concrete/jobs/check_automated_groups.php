@@ -1,13 +1,13 @@
 <?php
 namespace Concrete\Job;
 
+use Concrete\Core\Job\JobQueue;
+use Concrete\Core\Job\JobQueueMessage;
 use Concrete\Core\User\Group\GroupList;
 use Loader;
 use QueueableJob;
 use Group;
 use User;
-use ZendQueue\Queue as ZendQueue;
-use ZendQueue\Message as ZendQueueMessage;
 
 class CheckAutomatedGroups extends QueueableJob
 {
@@ -23,7 +23,7 @@ class CheckAutomatedGroups extends QueueableJob
         return t("Automatically add users to groups and assign badges.");
     }
 
-    public function start(ZendQueue $q)
+    public function start(JobQueue $q)
     {
         $db = Loader::db();
         $r = $db->Execute('select Users.uID from Users where uIsActive = 1 order by uID asc');
@@ -32,12 +32,12 @@ class CheckAutomatedGroups extends QueueableJob
         }
     }
 
-    public function finish(ZendQueue $q)
+    public function finish(JobQueue $q)
     {
         return t('Active users updated.');
     }
 
-    public function processQueueItem(ZendQueueMessage $msg)
+    public function processQueueItem(JobQueueMessage $msg)
     {
         $ux = User::getByUserID($msg->body);
         $groupControllers = Group::getAutomatedOnJobRunGroupControllers($ux);

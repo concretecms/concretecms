@@ -3,7 +3,7 @@ namespace Concrete\Job;
 
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
-use ZendQueue\Message;
+use Concrete\Core\Job\JobQueueMessage;
 
 class IndexSearch extends IndexSearchAll implements ApplicationAwareInterface
 {
@@ -47,7 +47,7 @@ class IndexSearch extends IndexSearchAll implements ApplicationAwareInterface
     }
 
 
-    public function processQueueItem(Message $msg)
+    public function processQueueItem(JobQueueMessage $msg)
     {
         $index = $this->indexManager;
 
