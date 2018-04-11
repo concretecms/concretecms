@@ -7,6 +7,7 @@ use BlockType;
 use CacheLocal;
 use Collection;
 use Concrete\Core\Backup\ContentExporter;
+use Concrete\Core\Block\Events\BlockDuplicate;
 use Concrete\Core\Block\View\BlockView;
 use Concrete\Core\Feature\Assignment\Assignment as FeatureAssignment;
 use Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVersionFeatureAssignment;
@@ -1647,6 +1648,11 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
                 $v
                 );
         }
+
+        $event = new BlockDuplicate($nb);
+        $event->setOldBlock($this);
+
+        $app->make('director')->dispatch('on_block_duplicate', $event);
 
         return $nb;
     }
