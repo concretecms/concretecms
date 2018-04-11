@@ -70,6 +70,17 @@
                         concreteMenu.show(event);
                     }
                 });
+                ConcreteEvent.unsubscribe('ConcreteTreeDeleteTreeNode');
+                ConcreteEvent.subscribe('ConcreteTreeDeleteTreeNode', function(e, data) {
+                    if (data.node && data.node.treeJSONObject) {
+                        var fID = data.node.treeJSONObject.fID;
+                        if (fID) {
+                            $('[data-file-selector]').find('.ccm-file-selector-file-selected input[value=' + fID + ']').each(function(index, element) {
+                                _.defer(function() { my.$element.html(my._chooseTemplate); });
+                            });
+                        }
+                    }
+                });
                 if (callback) {
                     callback(r);
                 }
