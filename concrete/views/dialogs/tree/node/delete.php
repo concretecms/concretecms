@@ -20,11 +20,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
             ConcreteEvent.subscribe('AjaxFormSubmitSuccess.deleteTreeNode', function(e, data) {
                 if (data.form == 'remove-tree-node') {
                     ConcreteEvent.publish('ConcreteTreeDeleteTreeNode', {'node': data.response});
-                    if (data.response.treeJSONObject.fID) {
-                        $('[data-file-selector]').find('.ccm-file-selector-file-selected input[value=' + data.response.treeJSONObject.fID + ']').each(function(index, element) {
-                            $(element).parent().trigger('clearField');
-                        });
-                    }
                 }
             });
         });
