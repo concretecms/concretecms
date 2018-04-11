@@ -89,11 +89,17 @@ class BlockViewTemplateTest extends PHPUnit_Framework_TestCase
 
     protected function getMockPackageList($handles = [])
     {
-        // First, we create the package list we're going to use. It's going to have three mock packages in it
+        // First, we create the package list we're going to use.
         $packages = [];
         foreach ($handles as $pkgHandle) {
-            $pkg = new Package();
-            $pkg->setPackageHandle($pkgHandle);
+            $pkg = $this->getMockBuilder(Package::class)
+                ->disableOriginalConstructor()
+                ->getMock();
+
+            $pkg->expects($this->any())
+                ->method('getPackageHandle')
+                ->willReturn($pkgHandle);
+
             $packages[] = $pkg;
         }
         $packageList = $this->getMockBuilder(PackageList::class)
