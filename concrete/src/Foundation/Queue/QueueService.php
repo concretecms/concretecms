@@ -10,6 +10,7 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Events\EventDispatcher;
 use Concrete\Core\Foundation\Queue\Mutex\MutexGeneratorFactory;
+use Concrete\Core\Job\Job;
 use Concrete\Core\Job\JobQueue;
 use Concrete\Core\Job\QueueableJob;
 use Concrete\Core\Support\Facade\Facade;
@@ -116,12 +117,32 @@ class QueueService
         $this->push($queue, $mixed);
     }
 
+    private function getPollingMax(Queue $queue)
+    {
+        if (strpos((string) $queue, 'job_') === 0) {
+            $job = Job::getByHandle(substr((string) $queue, 4));
+            if ($job) {
+                if ($job instanceof QueueableJob) {
+                    $max = $job->getJobQueueBatchSize();
+                }
+            }
+        }
+        if (!isset($max)) {
+            $max = $this->config->get(sprintf('app.queue.polling_batch.%s', (string) $queue));
+            if (!$max) {
+                $max = $this->config->get('app.queue.polling_batch.default');
+            }
+        }
+
+        return $max;
+    }
     public function consumeFromPoll(Queue $queue)
     {
+        $max = $this->getPollingMax($queue);
         try {
             $this->consume($queue, [
                 'stop-when-empty' => true,
-                'max-messages' => 5
+                'max-messages' => $max
             ]);
         } catch (MutexBusyException $exception) {
             return false;

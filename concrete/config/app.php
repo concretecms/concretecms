@@ -1182,6 +1182,16 @@ return [
         ['Concrete\Core\Job\Command\ExecuteJobItemCommand', 'Concrete\Core\Job\Command\ExecuteJobItemCommandHandler'],
     ],
 
+    'queue' => [
+        'polling_batch' => [
+            'default' => 50,
+            'rescan_file' => 10,
+            'delete_page' => 100,
+            'delete_page_forever' => 100,
+            'copy_page' => 10,
+        ],
+    ],
+
     'api' => [
 
         'base_url' => '/ccm/api/v1'
