@@ -63,6 +63,11 @@ Expected output is something like
 	Tests: 1366, Assertions: 3413, Skipped: 6, Incomplete: 6.
 
 
+To run a single tests, you can run for example
+```bash
+composer test -- --filter testCoreBlockView
+```
+
 # Write Tests!
 
 Send us tests via pull request:
