@@ -49,7 +49,8 @@ class SemaphoreMutex implements MutexInterface
     public function acquire($key)
     {
         $filename = $this->getFilenameForMutexKey($key);
-        for ($cycle = 1; $cycle < 5; ++$cycle) {
+        for ($cycle = 1; ; ++$cycle) {
+            $retry = false;
             // Let's cycle a few times to avoid concurrency problems
             try {
                 if (isset($this->semaphores[$key]) && is_resource($this->semaphores[$key]) && is_file($filename)) {
@@ -61,6 +62,7 @@ class SemaphoreMutex implements MutexInterface
                     $statBefore = @stat($filename);
                     $semKey = @ftok($filename, 'a');
                     if (!is_int($semKey) || $semKey === -1) {
+                        $retry = true; // file may have been deleted in the meanwhile
                         throw new RuntimeException("ftok() failed for path {$filename}");
                     }
                     $sem = sem_get($semKey, 1);
@@ -74,14 +76,16 @@ class SemaphoreMutex implements MutexInterface
                 $statAfter = @stat($filename);
                 if (!$statBefore || !$statAfter || $statBefore['ino'] !== $statBefore['ino']) {
                     @sem_release($sem);
+                    $retry = true; // file may have been deleted and re-created in the meanwhile
                     throw new RuntimeException("sem_get() failed for path {$filename}");
                 }
-                break;
             } catch (RuntimeException $x) {
-                if ($cycle >= 5) {
-                    throw $x;
+                if ($retry === true && $cycle < 5) {
+                    continue;
                 }
+                throw $x;
             }
+            break;
         }
         $this->semaphores[$key] = $sem;
     }
