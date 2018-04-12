@@ -20,6 +20,13 @@ class SystemServiceProvider extends ServiceProvider
             return $app->make($mutexClass);
         });
         $this->app
+            ->when(Mutex\SemaphoreMutex::class)
+            ->needs('$temporaryDirectory')
+            ->give(function (Application $app) {
+                return $app->make(FileService::class)->getTemporaryDirectory();
+            })
+        ;
+        $this->app
             ->when(Mutex\FileLockMutex::class)
             ->needs('$temporaryDirectory')
             ->give(function (Application $app) {

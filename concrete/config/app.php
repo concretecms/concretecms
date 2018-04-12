@@ -1579,10 +1579,4 @@ return [
         'core_xframeoptions' => \Concrete\Core\Http\Middleware\FrameOptionsMiddleware::class,
         'core_thumbnails' => '\Concrete\Core\Http\Middleware\ThumbnailMiddleware',
     ],
-
-    // Registered mutex keys
-    'mutex' => [
-        'core_system_install' => true,
-        'core_system_upgrade' => true,
-    ],
 ];

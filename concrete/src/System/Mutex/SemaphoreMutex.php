@@ -3,7 +3,6 @@
 namespace Concrete\Core\System\Mutex;
 
 use Concrete\Core\Application\Application;
-use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Foundation\Environment\FunctionInspector;
 use RuntimeException;
 
@@ -17,11 +16,13 @@ class SemaphoreMutex implements MutexInterface
     protected $semaphores = [];
 
     /**
-     * @param Repository $config
+     * Initialize the instance.
+     *
+     * @param string $temporaryDirectory the path to the temporary directory
      */
-    public function __construct(Repository $config)
+    public function __construct($temporaryDirectory)
     {
-        $this->config = $config;
+        $this->setTemporaryDirectory($temporaryDirectory);
     }
 
     /**
@@ -47,15 +48,40 @@ class SemaphoreMutex implements MutexInterface
      */
     public function acquire($key)
     {
-        $key = (string) $key;
-        if (isset($this->semaphores[$key]) && is_resource($this->semaphores[$key])) {
-            $sem = $this->semaphores[$key];
-        } else {
-            $semKey = $this->keyToInt($key);
-            $sem = sem_get($semKey, 1);
-        }
-        if (@sem_acquire($sem, true) !== true) {
-            throw new MutexBusyException($key);
+        $filename = $this->getFilenameForMutexKey($key);
+        for ($cycle = 1; $cycle < 5; ++$cycle) {
+            // Let's cycle a few times to avoid concurrency problems
+            try {
+                if (isset($this->semaphores[$key]) && is_resource($this->semaphores[$key]) && is_file($filename)) {
+                    $statBefore = @stat($filename);
+                    $sem = $this->semaphores[$key];
+                } else {
+                    @touch($filename);
+                    @chmod($filename, 0666);
+                    $statBefore = @stat($filename);
+                    $semKey = @ftok($filename, 'a');
+                    if (!is_int($semKey) || $semKey === -1) {
+                        throw new RuntimeException("ftok() failed for path {$filename}");
+                    }
+                    $sem = sem_get($semKey, 1);
+                    if ($sem === false) {
+                        throw new RuntimeException("sem_get() failed for path {$filename}");
+                    }
+                }
+                if (@sem_acquire($sem, true) !== true) {
+                    throw new MutexBusyException($key);
+                }
+                $statAfter = @stat($filename);
+                if (!$statBefore || !$statAfter || $statBefore['ino'] !== $statBefore['ino']) {
+                    @sem_release($sem);
+                    throw new RuntimeException("sem_get() failed for path {$filename}");
+                }
+                break;
+            } catch (RuntimeException $x) {
+                if ($cycle >= 5) {
+                    throw $x;
+                }
+            }
         }
         $this->semaphores[$key] = $sem;
     }
@@ -74,6 +100,10 @@ class SemaphoreMutex implements MutexInterface
             if (is_resource($sem)) {
                 @sem_release($sem);
             }
+            $filename = $this->getFilenameForMutexKey($key);
+            if (is_file($filename)) {
+                @unlink($filename);
+            }
         }
     }
 
@@ -90,40 +120,5 @@ class SemaphoreMutex implements MutexInterface
         } finally {
             $this->release($key);
         }
-    }
-
-    /**
-     * @param string $key
-     *
-     * @throws InvalidMutexKeyException
-     * @throws RuntimeException
-     *
-     * @return int
-     */
-    protected function keyToInt($key)
-    {
-        // for ftok, only the low-order 8-bits of id are significant.
-        // The behavior of ftok() is unspecified if these bits are 0.
-        // This means that the second parameter of ftok can be a single-bite character ranging from chr(1) to chr(255)
-        $index = $this->getMutexKeyIndex($key) + 1;
-        $existingApplicationFiles = [
-            DIR_BASE . '/index.php',
-        ];
-        for (; ;) {
-            $existingApplicationFile = array_shift($existingApplicationFiles);
-            if ($existingApplicationFile === null) {
-                throw new RuntimeException('Mutex index is too big');
-            }
-            if ($index <= 255) {
-                break;
-            }
-            $index -= 255;
-        }
-        $result = @ftok($existingApplicationFile, chr($index));
-        if (!is_int($result) || $result === -1) {
-            throw new RuntimeException("ftok() failed for path {$existingApplicationFile} and index {$index}");
-        }
-
-        return $result;
     }
 }
