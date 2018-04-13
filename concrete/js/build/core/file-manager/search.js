@@ -29,7 +29,7 @@
         my.setupFolderNavigation();
         my.setupFileUploads();
         my.setupFileDownloads();
-
+        my.setupImageThumbnails();
     }
 
     ConcreteFileManager.prototype = Object.create(ConcreteAjaxSearch.prototype);
@@ -371,6 +371,23 @@
 
         });
 
+    }
+
+    ConcreteFileManager.prototype.setupImageThumbnails = function() {
+        var fm = this;
+        console.log(fm);
+        $('.ccm-file-manager-list-thumbnail.ccm-thumbnail-hover').each(function(e){
+            var my = $(this);
+            var imageURL = my.data('hover-image');
+            $(this).popover({
+                animation: true,
+                html: true,
+                content: '<img class="img-responsive" src="'+imageURL+'" alt="Thumbnail"/>',
+                //container: fm,
+                placement: 'right',
+                trigger: 'hover'
+            });
+        })
     }
 
     ConcreteFileManager.prototype.showMenu = function($element, $menu, event) {

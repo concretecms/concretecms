@@ -18,8 +18,17 @@
 table.ccm-file-manager-list {
   img.ccm-file-manager-list-thumbnail,
   img.ccm-generic-thumbnail {
-    width: 30px;
-    height: 30px;
+    &.ccm-thumbnail-small, &.ccm-thumbnail-hover {
+      width: 30px;
+      height: 30px;
+    }
+    &.ccm-thumbnail-large, &.ccm-thumbnail-large-hover {
+      width: 60px;
+      height: 60px;
+    }
+    &.ccm-thumbnail-full{
+
+    }
   }
   td.ccm-search-results-icon {
     i {

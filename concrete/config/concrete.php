@@ -503,6 +503,10 @@ return [
             'use_exif_data_to_rotate_images' => false,
             'manipulation_library' => 'gd',
             'create_high_dpi_thumbnails' => true,
+            /*
+             * The style of preview image used in the file_manager: small(default), large, full, hover or large-hover
+             */
+            'preview_images' => 'hover'
         ],
         'results' => 10,
     ],
