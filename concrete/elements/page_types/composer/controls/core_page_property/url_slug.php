@@ -1,7 +1,7 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-(is_object($draft) && !$draft->isPageDraft() || Config::get('concrete.seo.auto_update_url_slug')) ? $showInEditMode = true : $showInEditMode = false;
 $draft = $control->getPageObject();
+(!is_object($draft) || $draft->isPageDraft() || Config::get('concrete.seo.auto_update_url_slug')) ? $showInEditMode = true : $showInEditMode = false;
 ?>
 
 <div class="form-group ccm-composer-url-slug" data-composer-field="url_slug" style="position: relative" data-auto-update="<?=Config::get('concrete.seo.auto_update_url_slug')?>">
