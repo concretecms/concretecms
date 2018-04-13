@@ -504,9 +504,17 @@ return [
             'manipulation_library' => 'gd',
             'create_high_dpi_thumbnails' => true,
             /*
-             * The style of preview image used in the file_manager: small(default), large, full, hover or large-hover
+             * The style of preview image used in the file_manager
+             *
+             * @var string 'small'(default), 'large' or 'full'
              */
-            'preview_images' => 'hover'
+            'preview_image_size' => 'small',
+            /*
+             * Show larger preview image in popover
+             *
+             * @var boolean
+             */
+            'preview_image_popover' => true
         ],
         'results' => 10,
     ],

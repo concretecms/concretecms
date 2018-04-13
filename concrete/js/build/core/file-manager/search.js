@@ -29,7 +29,6 @@
         my.setupFolderNavigation();
         my.setupFileUploads();
         my.setupFileDownloads();
-        my.setupImageThumbnails();
     }
 
     ConcreteFileManager.prototype = Object.create(ConcreteAjaxSearch.prototype);
@@ -374,17 +373,16 @@
     }
 
     ConcreteFileManager.prototype.setupImageThumbnails = function() {
-        var fm = this;
-        console.log(fm);
-        $('.ccm-file-manager-list-thumbnail.ccm-thumbnail-hover').each(function(e){
+        $('.ccm-file-manager-list-thumbnail[data-hover-image]').each(function( ){
             var my = $(this);
-            var imageURL = my.data('hover-image');
-            $(this).popover({
+            var image = new Image();
+            image.src = my.data('hover-image');
+            my.popover({
                 animation: true,
                 html: true,
-                content: '<img class="img-responsive" src="'+imageURL+'" alt="Thumbnail"/>',
-                //container: fm,
-                placement: 'right',
+                content: '<img class="img-responsive" src="'+image.src+'" alt="Thumbnail"/>',
+                container: '#ccm-dashboard-content',
+                placement: 'auto',
                 trigger: 'hover'
             });
         })
@@ -399,7 +397,6 @@
         });
         concreteMenu.show(event);
     }
-
 
     ConcreteFileManager.prototype.activateMenu = function($menu) {
         var my = this;
@@ -519,7 +516,7 @@
         my.setupFolders(result);
         my.setupBreadcrumb(result);
         my.setupRowDragging();
-
+        my.setupImageThumbnails();
         if (my.options.selectMode == 'choose') {
             my.$element.unbind('.concreteFileManagerHoverFile');
             my.$element.on('mouseover.concreteFileManagerHoverFile', 'tr[data-file-manager-tree-node-type]', function() {
