@@ -506,11 +506,11 @@ return [
             /*
              * The style of preview image used in the file_manager
              *
-             * @var string 'small'(default), 'large' or 'full'
+             * @var string 'small'(default,30x30), 'large(60x60)' or 'full(size of file_manager_listing)'
              */
             'preview_image_size' => 'small',
             /*
-             * Show larger preview image in popover
+             * Show file_manager_detail thumbnail as preview image in popover
              *
              * @var boolean
              */
