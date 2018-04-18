@@ -514,7 +514,7 @@ return [
              *
              * @var boolean
              */
-            'preview_image_popover' => true
+            'preview_image_popover' => false
         ],
         'results' => 10,
     ],
