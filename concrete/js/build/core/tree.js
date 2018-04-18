@@ -344,6 +344,7 @@
 	};
 
 	ConcreteTree.setupTreeEvents = function(my) {
+        ConcreteEvent.unsubscribe('ConcreteMenuShow');
 		ConcreteEvent.subscribe('ConcreteMenuShow', function(e, data) {
 			var $menu = data.menuElement;
 			$menu.find('a[data-tree-action]').on('click.concreteMenu', function(e) {

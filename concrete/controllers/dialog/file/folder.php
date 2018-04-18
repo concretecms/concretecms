@@ -23,14 +23,13 @@ class Folder extends BackendInterfaceFileController
     public function submit()
     {
         $destNode = Node::getByID($this->request->request->get('folderID'));
-        $validate = true;
         if (is_object($destNode)) {
             $dp = new \Permissions($destNode);
             if (!$dp->canAddTreeSubNode()) {
-                $validate = false;
+                throw new \Exception(t('You are not allowed to move files to this location.'));
             }
         } else {
-            $validate = false;
+            throw new \Exception(t('You have not selected a valid folder.'));
         }
 
         $sourceNode = $this->file->getFileNodeObject();
@@ -38,21 +37,19 @@ class Folder extends BackendInterfaceFileController
         if (is_object($sourceNode)) {
             $dp = new \Permissions($sourceNode);
             if (!$dp->canEditTreeNode()) {
-                throw new \Exception(t('You are not allowed to move files to this folder.'));
-                exit;
+                throw new \Exception(t('You are not allowed to move this file.'));
             }
         } else {
-            $validate = false;
+            throw new \Exception(t('Invalid source file object.'));
         }
 
-        if ($this->validateAction() && $validate) {
+        if ($this->validateAction()) {
             $sourceNode->move($destNode);
+            $response = new EditResponse();
+            $response->setFile($this->file);
+            $response->setMessage(t('File moved to folder successfully.'));
+            $response->setAdditionalDataAttribute('folder', $destNode->getTreeNodeJSON());
+            $response->outputJSON();
         }
-
-        $response = new EditResponse();
-        $response->setFile($this->file);
-        $response->setMessage(t('File moved to folder successfully.'));
-        $response->setAdditionalDataAttribute('folder', $destNode->getTreeNodeJSON());
-        $response->outputJSON();
     }
 }

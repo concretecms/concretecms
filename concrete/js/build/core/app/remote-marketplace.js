@@ -3,12 +3,6 @@
     'use strict';
 
     var ConcreteMarketplace = {
-
-        updatesShowMore: function(obj) {
-            $(obj).parent().hide();
-            $(obj).parent().parent().find('.ccm-marketplace-update-changelog').css('max-height', 'none');
-        },
-
         getMoreInformation: function(mpID)
         {
             jQuery.fn.dialog.showLoader();

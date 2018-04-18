@@ -59,8 +59,8 @@ class Manager extends FieldManager
         ]);
 
         $associations = $this->expressCategory->getExpressEntity()->getAssociations();
+        $group = [];
         if (count($associations)) {
-            $group = [];
             foreach($associations as $association) {
                 if ($association instanceof ManyToManyAssociation || $association instanceof ManyToOneAssociation) {
                     $group[] = new AssociationField($association);
