@@ -9,6 +9,7 @@ interface EntryInterface
     function getLabel();
     function getIcon();
     function getID();
+    function getIcon();
     function getGroupClass();
     function isSelected();
 

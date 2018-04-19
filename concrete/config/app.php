@@ -1198,9 +1198,4 @@ return [
 
     ],
 
-    // Registered mutex keys
-    'mutex' => [
-        'core_system_install' => true,
-        'core_system_upgrade' => true,
-    ],
 ];

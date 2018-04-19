@@ -7,7 +7,6 @@ use Concrete\Core\Support\Facade\Application as ApplicationFacade;
 use Concrete\Core\System\Mutex\FileLockMutex;
 use Concrete\Core\System\Mutex\MutexBusyException;
 use Concrete\Core\System\Mutex\SemaphoreMutex;
-use Concrete\Core\Updater\Update;
 use PHPUnit_Framework_TestCase;
 
 class MutexTest extends PHPUnit_Framework_TestCase
@@ -36,17 +35,19 @@ class MutexTest extends PHPUnit_Framework_TestCase
         }
         $mutex = $app->make($mutexClass);
         /* @var \Concrete\Core\System\Mutex\MutexInterface $mutex */
-        $key1 = 'core_system_install';
-        $key2 = Update::MUTEX_KEY;
-
+        $key1 = 'ccm-test-mutex-1-' . mt_rand(0, mt_getrandmax());
+        $key2 = 'ccm-test-mutex-2-' . mt_rand(0, mt_getrandmax());
         try {
-            // Let's check that
+            // Let's check that the mutex works when there's no concurrency.
             $executed = false;
             $mutex->execute($key1, function () use (&$executed) { $executed = true; });
             $this->assertTrue($executed);
 
+            // Let's acquire two mutexes
             $mutex->acquire($key1);
             $mutex->acquire($key2);
+
+            // Let's be sure that acquiring again these mutex fails
             $error = null;
             try {
                 $mutex->acquire($key1);
@@ -54,7 +55,6 @@ class MutexTest extends PHPUnit_Framework_TestCase
                 $error = $x;
             }
             $this->assertInstanceOf(MutexBusyException::class, $error);
-
             $error = null;
             try {
                 $mutex->execute($key2, function () {});
@@ -63,6 +63,7 @@ class MutexTest extends PHPUnit_Framework_TestCase
             }
             $this->assertInstanceOf(MutexBusyException::class, $error);
 
+            // Let's launch another process, so that we can check that the mutex system works across different processes
             $mutex->release($key2);
             foreach ([$key1 => 'Mutex busy', $key2 => 'Mutex acquired'] as $key => $result) {
                 $cmd = escapeshellarg(PHP_BINARY);
