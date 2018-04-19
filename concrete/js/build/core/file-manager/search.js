@@ -381,7 +381,7 @@
                 animation: true,
                 html: true,
                 content: '<img class="img-responsive" src="'+image.src+'" alt="Thumbnail"/>',
-                container: '#ccm-dashboard-content',
+                container: '.ccm-file-manager-list',
                 placement: 'auto',
                 trigger: 'hover'
             });
