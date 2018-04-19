@@ -16,7 +16,9 @@ You need to create a MySQL account with login `travis` and an empty password, an
 
 ```sql
 CREATE USER 'travis'@'localhost' IDENTIFIED BY '';
+CREATE USER 'travis'@'::1' IDENTIFIED BY '';
 GRANT ALL ON concrete5_tests.* TO 'travis'@'localhost' WITH GRANT OPTION;
+GRANT ALL ON concrete5_tests.* TO 'travis'@'::1' WITH GRANT OPTION;
 FLUSH PRIVILEGES;
 ```
 
@@ -62,6 +64,11 @@ Expected output is something like
 	OK, but incomplete, skipped, or risky tests!
 	Tests: 1366, Assertions: 3413, Skipped: 6, Incomplete: 6.
 
+
+To run a single tests, you can run for example
+```bash
+composer test -- --filter testCoreBlockView
+```
 
 # Write Tests!
 
