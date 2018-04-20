@@ -231,6 +231,10 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $env = Environment::get();
             if ($this->getPageTypeID() > 0) {
                 $pt = $this->getPageTypeObject();
+                // return null if page type doesn't exist anymore
+                if (!$pt) {
+                    return;
+                }
                 $ptHandle = $pt->getPageTypeHandle();
                 $r = $env->getRecord(DIRNAME_CONTROLLERS.'/'.DIRNAME_PAGE_TYPES.'/'.$ptHandle.'.php', $pt->getPackageHandle());
                 $prefix = $r->override ? true : $pt->getPackageHandle();

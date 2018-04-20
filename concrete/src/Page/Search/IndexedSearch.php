@@ -154,13 +154,7 @@ class IndexedSearch
         }
 
         // add content defined by a page type controller
-        $pageControllerTypeObject = $c->getPageTypeObject();
-
-        // getting the page controller frequently fails, for example if there's an inconsistent page type,
-        // let's just ignore those exceptions to not break the indexer for existing projects.
-        if ($pageControllerTypeObject) {
-            $pageController = $c->getPageController();
-
+        if ($pageController = $c->getPageController()) {
             $searchableContent = $pageController->getSearchableContent();
 
             if (strlen(trim($searchableContent))) {
