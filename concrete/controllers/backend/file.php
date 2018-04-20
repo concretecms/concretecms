@@ -86,7 +86,7 @@ class File extends Controller
                 $q->deleteQueue();
             }
 
-            return $this->app->make(ResponseFactoryInterface::class)->json($data);
+            return $this->app->make(ResponseFactoryInterface::class)->json($obj);
         } elseif ($q->count() == 0) {
             foreach ($files as $f) {
                 $q->send(serialize([
