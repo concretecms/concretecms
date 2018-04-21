@@ -2922,11 +2922,6 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                             $systemPage = true;
                         }
                     }
-                    foreach (Section::getList() as $item) {
-                        if ($fragments[1] == $item->getCollectionHandle()) {
-                            $systemPage = false;
-                        }
-                    }
                 }
             }
         }
