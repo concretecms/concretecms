@@ -78,10 +78,12 @@
 </div>
 
 <script>
+var isCheckKeyRunning = false;
 var validKey;
 function gm_authFailure() {
     $('#check-spinner').removeClass('fa-refresh fa-spin').addClass('fa-play');
     alert('<?php echo t('Invalid API Key'); ?>');
+    isCheckKeyRunning = false;
     validKey = false;
 }
 
@@ -90,26 +92,30 @@ function gm_authFailure() {
 
     var checkKey = function() {
         $('#ccm-google-map-key').click(function() {
-            validKey = true;
-            $('#check-spinner').removeClass('fa-play').addClass('fa-refresh fa-spin');
+            if (!isCheckKeyRunning) {
+                isCheckKeyRunning = true;
+                validKey = true;
+                $('#check-spinner').removeClass('fa-play').addClass('fa-refresh fa-spin');
 
-            $('#location').removeAttr('placeholder autocomplete disabled style');
-            $('#location').removeClass('gm-err-autocomplete');
+                $('#location').removeAttr('placeholder autocomplete disabled style');
+                $('#location').removeClass('gm-err-autocomplete');
 
-            var apiKey = $('#apiKey').val().trim();
-            if ($('#apiKeyCheck')) {
-                $('#apiKeyCheck').remove();
-            }
-            $('body').append('<script id="apiKeyCheck" src="https://maps.googleapis.com/maps/api/js?' +
-                'key=' + apiKey +
-                '&libraries=places" <\/script>'
-            );
-            setTimeout(function() {
-                if (validKey) {
-                    window.C5GMaps.init();
-                    isValidKey();
+                var apiKey = $('#apiKey').val().trim();
+                if ($('#apiKeyCheck')) {
+                    $('#apiKeyCheck').remove();
                 }
-            }, 10000);
+                $('body').append('<script id="apiKeyCheck" src="https://maps.googleapis.com/maps/api/js?' +
+                    'key=' + apiKey +
+                    '&libraries=places" <\/script>'
+                );
+                setTimeout(function() {
+                    if (validKey) {
+                        window.C5GMaps.init();
+                        isValidKey();
+                        isCheckKeyRunning = false;
+                    }
+                }, 10000);
+            }
         });
     };
     checkKey();
