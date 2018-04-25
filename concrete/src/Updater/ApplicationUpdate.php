@@ -146,7 +146,7 @@ class ApplicationUpdate
         $mi = Marketplace::getInstance();
         if ($mi->isConnected() && !$mi->hasConnectionError()) {
             $config = \Core::make('config/database');
-            $formData['marketplace_token'] = $config->get('concrete.marketplace.token'));
+            $formData['marketplace_token'] = $config->get('concrete.marketplace.token');
             $list = Package::getInstalledList();
             $packages = [];
             foreach ($list as $pkg) {
