@@ -82,16 +82,7 @@ install:
           Set-PhpIniKey -Key date.timezone -Value UTC
           Set-PhpIniKey -Key zend.assertions -Value 1
           Set-PhpIniKey -Key assert.exception -Value On
-          Enable-PhpExtension -Extension mbstring
-          Enable-PhpExtension -Extension bz2
-          Enable-PhpExtension -Extension mysqli
-          Enable-PhpExtension -Extension curl
-          Enable-PhpExtension -Extension gd
-          Enable-PhpExtension -Extension intl
-          Enable-PhpExtension -Extension pdo_mysql
-          Enable-PhpExtension -Extension xsl
-          Enable-PhpExtension -Extension fileinfo
-          Enable-PhpExtension -Extension openssl
+          Enable-PhpExtension -Extension mbstring,bz2,mysqli,curl,gd,intl,pdo_mysql,xsl,fileinfo,openssl
           New-Item -ItemType File -Path "$phpInstallPath\php-installed.txt" | Out-Null
       }
   - composer install --no-progress --no-suggest --optimize-autoloader --no-ansi --no-interaction %PREFER_LOWEST%
