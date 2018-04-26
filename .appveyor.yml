@@ -1,3 +1,5 @@
+version: "Build {build}"
+
 environment:
   matrix:
     - PHP_VERSION: '7.1'
@@ -75,6 +77,7 @@ install:
               Write-Output -InputObject 'Installing PhpManager PowerShell module'
               Install-Module -Name PhpManager -Repository PSGallery -Scope AllUsers -Force
           }
+          Set-PhpDownloadCache -Path C:\tools\downloads
           Install-Php -Version $Env:PHP_VERSION -Architecture $Env:PHP_ARCHITECTURE -ThreadSafe $false -Path $phpInstallPath -TimeZone UTC -AddToPath System -InitialPhpIni Production -InstallVC -Force
           Set-PhpIniKey -Key date.timezone -Value UTC
           Set-PhpIniKey -Key zend.assertions -Value 1
