@@ -14,6 +14,11 @@ class SerializerManager
         $this->normalizers[] = $normalizer;
     }
 
+    public function prependNormalizer(NormalizerInterface $normalizer)
+    {
+        $this->normalizers = array_prepend($this->normalizers, $normalizer);
+    }
+
     /**
      * @return array
      */
