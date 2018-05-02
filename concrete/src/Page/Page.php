@@ -2250,12 +2250,12 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             if (!is_array($themeTemplates)) {
                 $themeTemplates = [];
             } else {
-                foreach($themeTemplates as $key => $template){
+                foreach($themeTemplates as $key => $template) {
                     $pt = ($this->getPageTemplateHandle()) ? $this->getPageTemplateHandle() : 'default';
-                    if(is_array($template) && $key == $pt){
+                    if(is_array($template) && $key == $pt) {
                         $pageTypeTemplates = $template;
+                        unset($themeTemplates[$key]);
                     }
-                    unset($themeTemplates[$key]);
                 }
             }
             $templates = array_merge($pageTypeTemplates, $themeTemplates, $areaTemplates);
