@@ -306,7 +306,12 @@
 
     ConcreteFileManager.prototype.refreshResults = function(files) {
         var my = this;
-        my.loadFolder(this.currentFolder, false, true);
+        if (this.currentFolder) {
+            my.loadFolder(this.currentFolder, false, true);
+        } else {
+            // re-trigger a file search
+            my.$element.find('div[data-header=file-manager] form').trigger('submit');
+        }
     }
 
     ConcreteFileManager.prototype._launchUploadCompleteDialog = function(files) {

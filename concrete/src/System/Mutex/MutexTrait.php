@@ -2,34 +2,51 @@
 
 namespace Concrete\Core\System\Mutex;
 
+/**
+ * Trait that contains stuff that can be useful for Mutexes.
+ */
 trait MutexTrait
 {
     /**
-     * @var \Concrete\Core\Config\Repository\Repository
+     * The temporary directory.
+     *
+     * @var string
      */
-    protected $config;
+    protected $temporaryDirectory;
 
     /**
-     * Get the index of the mutex as defined in the app.mutex configuration key.
+     * Set the temporary directory.
      *
-     * @param string|mixed $key The mutex key to look for
-     *
-     * @throws InvalidMutexKeyException Throws an InvalidMutexKeyException if $key is not listed in the app.mutex configuration key.
-     *
-     * @return int
+     * @param string $value
+     * @param mixed $temporaryDirectory
      */
-    protected function getMutexKeyIndex($key)
+    protected function setTemporaryDirectory($temporaryDirectory)
     {
-        $configuredMutex = $this->config->get('app.mutex');
-        if (is_array($configuredMutex)) {
-            $index = array_search((string) $key, array_keys($configuredMutex), true);
-        } else {
-            $index = false;
+        $this->temporaryDirectory = rtrim(str_replace(DIRECTORY_SEPARATOR, '/', $temporaryDirectory), '/');
+    }
+
+    /**
+     * Get the full path of a temporary file that's unique for the concrete5 application and for the specified mutex key.
+     *
+     * @param string $key The mutex key
+     * @param mixed $mutexKey
+     *
+     * @throws InvalidMutexKeyException
+     *
+     * @return string
+     */
+    protected function getFilenameForMutexKey($mutexKey)
+    {
+        $mutexKeyString = (is_string($mutexKey) || is_int($mutexKey)) ? (string) $mutexKey : '';
+        if ($mutexKeyString === '') {
+            throw new InvalidMutexKeyException($mutexKey);
         }
-        if (!is_int($index)) {
-            throw new InvalidMutexKeyException($key);
+        if (preg_match('/^[a-zA-Z0-9_\-]{1,50}$/', $mutexKeyString)) {
+            $filenameChunk = $mutexKeyString;
+        } else {
+            $filenameChunk = sha1($mutexKeyString);
         }
 
-        return $index;
+        return $this->temporaryDirectory . '/mutex-' . md5(DIR_APPLICATION) . '-' . $filenameChunk . '.lock';
     }
 }

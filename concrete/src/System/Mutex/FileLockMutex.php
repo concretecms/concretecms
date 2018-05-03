@@ -3,7 +3,6 @@
 namespace Concrete\Core\System\Mutex;
 
 use Concrete\Core\Application\Application;
-use Concrete\Core\Config\Repository\Repository;
 use Exception;
 
 class FileLockMutex implements MutexInterface
@@ -11,23 +10,18 @@ class FileLockMutex implements MutexInterface
     use MutexTrait;
 
     /**
-     * @var string
-     */
-    protected $temporaryDirectory;
-
-    /**
      * @var array
      */
     protected $resources = [];
 
     /**
-     * @param Repository $config
-     * @param string $temporaryDirectory
+     * Initialize the instance.
+     *
+     * @param string $temporaryDirectory the path to the temporary directory
      */
-    public function __construct(Repository $config, $temporaryDirectory)
+    public function __construct($temporaryDirectory)
     {
-        $this->config = $config;
-        $this->temporaryDirectory = rtrim(str_replace(DIRECTORY_SEPARATOR, '/', $temporaryDirectory), '/');
+        $this->setTemporaryDirectory($temporaryDirectory);
     }
 
     public function __destruct()
@@ -54,15 +48,13 @@ class FileLockMutex implements MutexInterface
      */
     public function acquire($key)
     {
-        $success = false;
-        $key = (string) $key;
+        $filename = $this->getFilenameForMutexKey($key);
         if (isset($this->resources[$key])) {
             $fd = $this->resources[$key];
             if (is_resource($fd)) {
                 throw new MutexBusyException($key);
             }
         }
-        $filename = $this->keyToFilename($key);
         @touch($filename);
         @chmod($filename, 0666);
         $fd = @fopen($filename, 'r+');
@@ -85,7 +77,7 @@ class FileLockMutex implements MutexInterface
             @flock($fd, LOCK_UN);
             @fclose($fd);
             try {
-                @unlink($this->keyToFilename($key));
+                @unlink($this->getFilenameForMutexKey($key));
             } catch (Exception $x) {
             }
         }
@@ -104,19 +96,5 @@ class FileLockMutex implements MutexInterface
         } finally {
             $this->release($key);
         }
-    }
-
-    /**
-     * @param string $key
-     *
-     * @throws InvalidMutexKeyException
-     *
-     * @return string
-     */
-    protected function keyToFilename($key)
-    {
-        $keyIndex = $this->getMutexKeyIndex($key);
-
-        return $this->temporaryDirectory . '/mutex-' . md5(DIR_APPLICATION) . '-' . $keyIndex . '.lock';
     }
 }
