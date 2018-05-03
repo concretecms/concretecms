@@ -408,7 +408,14 @@ class Type
             $url = AL_ICON_DEFAULT;
         }
         if ($fullImageTag == true) {
-            return sprintf('<img src="%s" width="%s" height="%s" class="img-responsive ccm-generic-thumbnail">', $url, $type->getWidth(), $type->getHeight());
+            return sprintf(
+                '<img src="%s" width="%s" height="%s" class="img-responsive ccm-generic-thumbnail" alt="%s %s">',
+                $url,
+                $type->getWidth(),
+                $type->getHeight(),
+                strtoupper($this->getExtension()),
+                tc('GenericThumbnailIcon', 'file icon')
+            );
         } else {
             return $url;
         }
