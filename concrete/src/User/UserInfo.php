@@ -169,7 +169,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     public function getUserBadges()
     {
         $groups = [];
-        $r = $this->connection->executeQuery('select g.gID from Groups g inner join UserGroups ug on g.gID = ug.gID where g.gIsBadge = 1 and ug.uID = ? order by ugEntered desc', [$this->getUserID()]);
+        $r = $this->connection->executeQuery('select g.gID from ' . $this->connection->getDatabasePlatform()->quoteSingleIdentifier('Groups') . ' g inner join UserGroups ug on g.gID = ug.gID where g.gIsBadge = 1 and ug.uID = ? order by ugEntered desc', [$this->getUserID()]);
         while ($row = $r->fetch()) {
             $groups[] = Group::getByID($row['gID']);
         }
