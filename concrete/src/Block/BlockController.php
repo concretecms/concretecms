@@ -670,7 +670,17 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
      */
     public function getAreaObject()
     {
-        return $this->area;
+        $result = null;
+        if (isset($this->area)) {
+            $result = $this->area;
+        } else {
+            $block = $this->getBlockObject();
+            if ($block) {
+                $result = $block->getBlockAreaObject();
+            }
+        }
+
+        return $result;
     }
 
     public function setAreaObject($a)
