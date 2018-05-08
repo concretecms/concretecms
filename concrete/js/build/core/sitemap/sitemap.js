@@ -1,8 +1,8 @@
-/**
- * Base search class for AJAX forms in the UI
- */
+/* jshint unused:vars, undef:true, browser:true, jquery:true */
+/* global _, ccmi18n_sitemap, CCM_DISPATCHER_FILENAME, CCM_SECURITY_TOKEN, CCM_REL, CCM_TOOLS_PATH, Concrete, ConcreteAlert, ConcretePageMenu, ccm_parseJSON, ccm_triggerProgressiveOperation, ConcreteEvent */
 
-!function(global, $, _) {
+/* Base search class for AJAX forms in the UI */
+;(function(global, $) {
 	'use strict';
 
 	function ConcreteSitemap($element, options) {
@@ -402,7 +402,7 @@
 					if (parent) {
 						my.reloadNode(parent);
 					}
-				} catch(e) {}
+				} catch(ex) {}
             });
 		},
 
@@ -436,7 +436,7 @@
     		var my = this;
 			var dialog_title = ccmi18n_sitemap.moveCopyPage;
 			if (!dragMode) {
-				var dragMode = '';
+				dragMode = '';
 			}
 			var dialog_url = CCM_TOOLS_PATH + '/dashboard/sitemap_drag_request?origCID=' + node.data.cID + '&destCID=' + destNode.data.cID + '&dragMode=' + dragMode;
 			var dialog_height = 350;
@@ -499,8 +499,8 @@
 
     	displaySingleLevel: function(node) {
     		var my = this,
-    			options = my.options,
-    			minExpandLevel = parseInt(node.data.cID) === my.homeCID ? 2 : 3;
+    		    /*minExpandLevel = parseInt(node.data.cID) === my.homeCID ? 2 : 3,*/
+    			options = my.options;
 
             (my.options.onDisplaySingleLevel || $.noop).call(this, node);
 
@@ -559,7 +559,7 @@
 				}
 			});
 		}
-	}
+	};
 
 	/**
 	 * Static methods
@@ -567,19 +567,19 @@
 
     ConcreteSitemap.exitEditMode = function(cID) {
 		$.get(CCM_TOOLS_PATH + "/dashboard/sitemap_check_in?cID=" + cID  + "&ccm_token=" + CCM_SECURITY_TOKEN);
-	}
+	};
 
 	ConcreteSitemap.refreshCopyOperations = function() {
 		ccm_triggerProgressiveOperation(CCM_TOOLS_PATH + '/dashboard/sitemap_copy_all', [],	ccmi18n_sitemap.copyProgressTitle, function() {
 			$('.ui-dialog-content').dialog('close');
 			window.location.reload();
 		});
-	}
+	};
 
 	ConcreteSitemap.submitDragRequest = function() {
 
 		var origCID = $('#origCID').val();
-		var destParentID = $('#destParentID').val();
+		//var destParentID = $('#destParentID').val();
 		var destCID = $('#destCID').val();
 		var dragMode = $('#dragMode').val();
 		var destSibling = $('#destSibling').val();
@@ -630,15 +630,15 @@
 				});
 			});
 		}
-	}
+	};
 
 	// jQuery Plugin
 	$.fn.concreteSitemap = function(options) {
 		return $.each($(this), function(i, obj) {
 			new ConcreteSitemap($(this), options);
 		});
-	}
+	};
 
 	global.ConcreteSitemap = ConcreteSitemap;
 
-}(this, $, _);
+})(this, jQuery);

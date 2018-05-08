@@ -1,7 +1,9 @@
-/**
- * Free-Form Layouts
- */
-(function (global, jQuery) {
+/* jshint unused:vars, undef:true, browser:true, jquery:true */
+/* global CCM_CID, CCM_DISPATCHER_FILENAME, Concrete, ConcreteEvent */
+
+/* Free-Form Layouts */
+;(function(global, $) {
+    'use strict';
 
     // plugins
     jQuery.fn.concreteLayout = function (options) {
@@ -218,7 +220,6 @@
 
     ConcreteLayout.prototype._buildThemeGridGridFromPresetColumns = function (arLayoutColumns) {
         this.$element.html('');
-        var obj = this;
         var row = this.options.rowstart;
         row += '<div id="ccm-theme-grid-edit-mode-row-wrapper">';
         $.each(arLayoutColumns, function (i, column) {
@@ -276,15 +277,16 @@
         if (!this.options.editing) {
             this.$element.html('');
         }
+        var $highlight, $column, i;
         for (i = 0; i < this.columns; i++) {
             if (this.options.editing) {
                 if ($('#ccm-edit-layout-column-' + i).length > 0) {
                     continue;
                 }
             }
-            var $column = $('<div />').attr('class', 'ccm-layout-column');
+            $column = $('<div />').attr('class', 'ccm-layout-column');
             $column.attr('id', 'ccm-edit-layout-column-' + i);
-            var $highlight = $('<div />').attr('class', 'ccm-layout-column-highlight');
+            $highlight = $('<div />').attr('class', 'ccm-layout-column-highlight');
             $highlight.append($('<input />', {
                 'name': 'width[' + i + ']',
                 'type': 'hidden',
@@ -312,11 +314,12 @@
                 $highlight.css('margin-right', (this.customspacing / 2) + 'px');
             }
             $column = $('#ccm-edit-layout-column-' + i);
+            var width;
             if ($column.attr('data-width')) {
-                var width = $column.attr('data-width') + 'px';
+                width = $column.attr('data-width') + 'px';
                 this.columnwidths.push(parseInt($column.attr('data-width')));
             } else {
-                var width = (100 / this.columns) + '%';
+                width = (100 / this.columns) + '%';
             }
             $column.css('width', width);
         }
@@ -366,7 +369,6 @@
 
     ConcreteLayout.prototype._getThemeGridNearestValue = function (value, values) {
         var nearest = null;
-        var diff = null;
         $.each(values, function () {
             if (nearest == null || Math.abs(this - value) < Math.abs(nearest - value)) {
                 nearest = this;
@@ -385,6 +387,7 @@
 
         // set the breakpoints
         var breaks = [];
+        var $column;
         for (i = 0; i < obj.columns; i++) {
             $column = $('#ccm-edit-layout-column-' + i);
             if (i == 0) {
@@ -401,7 +404,6 @@
 
         // set the valid widths
         var tw = $('#ccm-area-layout-active-control-bar').width();
-        var sw = 0;
         var validStartPoints = [];
         var validEndPoints = [];
 
@@ -417,23 +419,21 @@
         var columnHTML = '';
         for (i = 1; i <= maxColumns; i++) {
             if (obj.options.additionalGridColumnClasses) {
-                columnHTML += '<div class="' + minColumnClass + ' ' + obj.options.additionalGridColumnClasses + '"><br><br></div>'
+                columnHTML += '<div class="' + minColumnClass + ' ' + obj.options.additionalGridColumnClasses + '"><br><br></div>';
             } else {
-                columnHTML += '<div class="' + minColumnClass + '"><br><br></div>'
+                columnHTML += '<div class="' + minColumnClass + '"><br><br></div>';
             }
         }
 
 
-        var grid_elem = obj.options.rowstart
-            + columnHTML
-            + obj.options.rowend;
+        var grid_elem = obj.options.rowstart + columnHTML + obj.options.rowend;
 
         test_container_div.append(
             $(grid_elem)
         );
         var marginModifier = 0;
         for (var i = 0; i < maxColumns; i++) {
-            var $column = test_container_div.find('.' + minColumnClass).eq(i);
+            $column = test_container_div.find('.' + minColumnClass).eq(i);
             if (i == 0) {
                 var pl = $column.position().left;
                 if (pl < 0) {
@@ -501,13 +501,14 @@
 
                 if (proceed) {
                     obj.$slider.slider('values', index, newValue);
+                    var span, $offsetcolumn, offset, i, $innercolumn;
                     if ((index % 2) == 0) {
                         i = Math.floor(index / 2);
                         // we are a righthand handle
                         $innercolumn = $('#ccm-edit-layout-column-' + i);
-                        var span = parseInt($innercolumn.attr('data-span'));
-                        var $offsetcolumn = $innercolumn.nextAll('.ccm-theme-grid-column:first');
-                        var offset = $offsetcolumn.attr('data-offset');
+                        span = parseInt($innercolumn.attr('data-span'));
+                        $offsetcolumn = $innercolumn.nextAll('.ccm-theme-grid-column:first');
+                        offset = $offsetcolumn.attr('data-offset');
                         if (offset) {
                             offset = parseInt(offset);
                         } else {
@@ -522,11 +523,11 @@
                         }
                     } else {
                         // we are a righthand handle
-                        var i = Math.ceil(index / 2);
+                        i = Math.ceil(index / 2);
                         $innercolumn = $('#ccm-edit-layout-column-' + i);
-                        var span = parseInt($innercolumn.attr('data-span'));
-                        var $offsetcolumn = $innercolumn;
-                        var offset = $offsetcolumn.attr('data-offset');
+                        span = parseInt($innercolumn.attr('data-span'));
+                        $offsetcolumn = $innercolumn;
+                        offset = $offsetcolumn.attr('data-offset');
                         if (offset) {
                             offset = parseInt(offset);
                         } else {
@@ -615,7 +616,6 @@
             values: breaks,
             create: function (e, ui) {
                 var createoffset = 0;
-                var breakwidths = [];
 
                 $.each($columns, function (i, col) {
                     var bw = breaks[i], value;
@@ -670,4 +670,5 @@
         });
 
     };
-}(this, jQuery));
+
+})(this, jQuery);

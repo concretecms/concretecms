@@ -1,8 +1,8 @@
-/**
- * Base search class for AJAX searching
- */
+/* jshint unused:vars, undef:true, browser:true, jquery:true */
+/* global _, ccmi18n, ccmi18n_filemanager, ccm_triggerProgressiveOperation, ConcreteAlert, ConcreteAssetLoader, ConcreteEvent, ConcreteMenu */
 
-!function(global, $) {
+/* Base search class for AJAX searching */
+;(function(global, $) {
 	'use strict';
 
 	function ConcreteAjaxSearch($element, options) {
@@ -92,8 +92,8 @@
 					callback(r);
 				}
 			}
-		})
-	}
+		});
+	};
 
 	ConcreteAjaxSearch.prototype.scrollToTop = function() {
 		var cs = this,
@@ -104,14 +104,14 @@
 		} else {
 			window.scrollTo(0, 0);
 		}
-	}
+	};
 
 	ConcreteAjaxSearch.prototype.getSearchData = function() {
 		var cs = this;
 		var $form = cs.$element.find('form[data-search-form]');
 		var data = $form.serializeArray();
 		return data;
-	}
+	};
 
 	ConcreteAjaxSearch.prototype.setupSelectize = function() {
         var selects = this.$element.find('.selectize-select');
@@ -120,7 +120,7 @@
         		plugins: ['remove_button']
         	});
         }
-    }
+    };
 
 
 
@@ -132,7 +132,7 @@
 		$selector.concreteMenu({
 			'menu': $('[data-search-menu=' + $selector.attr('data-launch-search-menu') + ']')
 		});
-	}
+	};
 
 	/**
 	 * The legacy setup menus function for simple list items without multiple selection
@@ -153,7 +153,7 @@
 				cs.createMenu($(this));
 			});
 		}
-	}
+	};
 
 	ConcreteAjaxSearch.prototype.setupCustomizeColumns = function() {
 		var cs = this;
@@ -173,7 +173,7 @@
 			});
 			return false;
 		});
-	}
+	};
 
 	/*
 	 * Returns an array of selected result objects. These are not DOM objects, they are objects
@@ -193,7 +193,7 @@
 		});
 
 		return results;
-	}
+	};
 
 	ConcreteAjaxSearch.prototype.showMenu = function($element, $menu, event) {
 		var concreteMenu = new ConcreteMenu($element, {
@@ -201,7 +201,7 @@
 			handle: 'none'
 		});
 		concreteMenu.show(event);
-	}
+	};
 
 	ConcreteAjaxSearch.prototype.handleSelectClick = function(event, $row) {
 		var my = this;
@@ -266,7 +266,7 @@
 
 	ConcreteAjaxSearch.prototype.getResult = function() {
 		return this.result;
-	}
+	};
 
 	ConcreteAjaxSearch.prototype.updateResults = function(result) {
 		var cs = this,
@@ -334,11 +334,11 @@
 		if (options.onUpdateResults) {
 			options.onUpdateResults(this);
 		}
-	}
+	};
 
 	ConcreteAjaxSearch.prototype.hoverIsEnabled = function($element) {
 		return true;
-	}
+	};
 
 	ConcreteAjaxSearch.prototype.setupAdvancedSearch = function() {
 		var cs = this;
@@ -387,7 +387,7 @@
 			return false;
 		});
 
-	}
+	};
 
 	ConcreteAjaxSearch.prototype.setupAdvancedSearchDialog = function() {
 		var my = this;
@@ -459,7 +459,7 @@
 		});
 
 		$('button[data-button-action=save-search-preset]').on('click.saveSearchPreset', function() {
-			jQuery.fn.dialog.open({
+			$.fn.dialog.open({
 				element: 'div[data-dialog=save-search-preset]:first',
 				modal: true,
 				width: 320,
@@ -482,7 +482,7 @@
 				data: formData,
 				url: $presetForm.attr('action'),
 				success: function(r) {
-					jQuery.fn.dialog.closeAll();
+					$.fn.dialog.closeAll();
 					ConcreteEvent.publish('SavedSearchCreated', {search: r});
 				}
 			});
@@ -490,7 +490,7 @@
 		});
 
 		my.setupSearch();
-	}
+	};
 
 	ConcreteAjaxSearch.prototype.setupSort = function() {
 		var cs = this;
@@ -498,12 +498,12 @@
 			cs.ajaxUpdate($(this).attr('href'));
 			return false;
 		});
-	}
+	};
 
 	ConcreteAjaxSearch.prototype.refreshResults = function() {
 		var cs = this;
 		cs.$element.find('form[data-search-form]').trigger('submit');
-	}
+	};
 
 	ConcreteAjaxSearch.prototype.setupSearch = function() {
 		// OLD SEARCH
@@ -540,7 +540,7 @@
 		$('form[data-form=advanced-search]').concreteAjaxForm({
 			'success': function(r) {
 				cs.updateResults(r);
-				jQuery.fn.dialog.closeTop();
+				$.fn.dialog.closeTop();
 				cs.$advancedSearchButton.html(ccmi18n_filemanager.edit);
 				cs.$resetSearchButton.show();
 				cs.$headerSearch.find('div.btn-group').hide(); // hide any fancy button groups we've added here.
@@ -563,13 +563,13 @@
 				}
 			});
 		});
-	}
+	};
 
 	ConcreteAjaxSearch.prototype.handleSelectedBulkAction = function(value, type, $option, $items) {
 		var cs = this,
 			itemIDs = [];
 
-		if ($items instanceof jQuery) {
+		if ($items instanceof $) {
 			$.each($items, function(i, checkbox) {
 				itemIDs.push({'name': cs.options.bulkParameterName + '[]', 'value': $(checkbox).val()});
 			});
@@ -580,11 +580,11 @@
 		}
 
 		if (type == 'dialog') {
-			jQuery.fn.dialog.open({
+			$.fn.dialog.open({
 				width: $option.attr('data-bulk-action-dialog-width'),
 				height: $option.attr('data-bulk-action-dialog-height'),
 				modal: true,
-				href: $option.attr('data-bulk-action-url') + '?' + jQuery.param(itemIDs),
+				href: $option.attr('data-bulk-action-url') + '?' + $.param(itemIDs),
 				title: $option.attr('data-bulk-action-title')
 			});
 		}
@@ -610,17 +610,17 @@
 			});
 		}
 		cs.publish('SearchBulkActionSelect', {value: value, option: $option, items: $items});
-	}
+	};
 
 	ConcreteAjaxSearch.prototype.publish = function(eventName, data) {
 		var cs = this;
 		ConcreteEvent.publish(eventName, data, cs);
-	}
+	};
 
 	ConcreteAjaxSearch.prototype.subscribe = function(eventName, callback) {
 		var cs = this;
 		ConcreteEvent.subscribe(eventName, callback, cs);
-	}
+	};
 
 	ConcreteAjaxSearch.prototype.setupBulkActions = function() {
 		var cs = this;
@@ -635,7 +635,7 @@
 			cs.handleSelectedBulkAction(value, type, $option, cs.$element.find('input[data-search-checkbox=individual]:checked'));
 			cs.$element.find('option').eq(0).prop('selected', true);
 		});
-	}
+	};
 
 	ConcreteAjaxSearch.prototype.setupPagination = function() {
 		var cs = this;
@@ -643,16 +643,14 @@
 			cs.ajaxUpdate($(this).attr('href'));
 			return false;
 		});
-	}
+	};
 
 	ConcreteAjaxSearch.prototype.getResultMenu = function(results) {
-		var cs = this;
+		var cs = this, menu;
 		if (results.length > 1 && cs.options.result.bulkMenus) {
 			var propertyName = cs.options.result.bulkMenus.propertyName,
-				menu = cs.options.result.bulkMenus.menu,
-				type,
-				currentType;
-
+				type;
+			menu = cs.options.result.bulkMenus.menu;
 			$.each(results, function(i, result) {
 				var propertyValue = result[propertyName];
 				if (i == 0) {
@@ -665,11 +663,11 @@
 				return $(menu);
 			}
 		} else if (results.length == 1) {
-			var menu = results[0].treeNodeMenu;
+			menu = results[0].treeNodeMenu;
 			return $(menu);
 		}
 		return false;
-	}
+	};
 
 	ConcreteAjaxSearch.prototype.setupCheckboxes = function() {
 		var cs = this;
@@ -694,13 +692,13 @@
 		}, cs.$element);
 
 
-	}
+	};
 
 	// jQuery Plugin
 	$.fn.concreteAjaxSearch = function(options) {
 		return new ConcreteAjaxSearch(this, options);
-	}
+	};
 
 	global.ConcreteAjaxSearch = ConcreteAjaxSearch;
 
-}(this, $);
+})(window, jQuery);

@@ -1,8 +1,10 @@
-!function(global, $) {
+/* jshint unused:vars, undef:true, jquery:true */
+/* global ccmi18n, ConcreteEvent, ConcreteAlert */
+
+;(function(global, $) {
 	'use strict';
 
 	function ConcreteAjaxRequest(options) {
-		'use strict';
 		var my = this;
 		options = options || {};
 		options = $.extend({
@@ -37,7 +39,7 @@
 
 		before: function(my) {
 			if (my.options.loader) {
-				jQuery.fn.dialog.showLoader();
+				$.fn.dialog.showLoader();
 			}
 		},
 
@@ -96,7 +98,7 @@
 
 		complete: function(my) {
 			if (my.options.loader) {
-				jQuery.fn.dialog.hideLoader();
+				$.fn.dialog.hideLoader();
 			}
 		}
 	};
@@ -112,4 +114,4 @@
 
 	global.ConcreteAjaxRequest = ConcreteAjaxRequest;
 
-}(this, $);
+})(this, jQuery);
