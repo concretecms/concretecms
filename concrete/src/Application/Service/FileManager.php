@@ -60,7 +60,7 @@ class FileManager
 		<div class="ccm-file-selector" data-file-selector="{$id}"></div>
 		<script type="text/javascript">
 		$(function() {
-			$('[data-file-selector={$id}]').concreteFileSelector({$args});
+			$('[data-file-selector="{$id}"]').concreteFileSelector({$args});
 		});
 		</script>
 EOL;
