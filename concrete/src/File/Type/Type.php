@@ -409,12 +409,11 @@ class Type
         }
         if ($fullImageTag == true) {
             return sprintf(
-                '<img src="%s" width="%s" height="%s" class="img-responsive ccm-generic-thumbnail" alt="%s %s">',
+                '<img src="%s" width="%s" height="%s" class="img-responsive ccm-generic-thumbnail" alt="%s">',
                 $url,
                 $type->getWidth(),
                 $type->getHeight(),
-                strtoupper($this->getExtension()),
-                tc('GenericThumbnailIcon', 'file icon')
+                t(/* i18n: %s is a file type */ '%s file icon', mb_strtoupper($this->getExtension()))
             );
         } else {
             return $url;
