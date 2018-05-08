@@ -1,5 +1,5 @@
 /* jshint unused:vars, undef:true, browser:true, jquery:true */
-/* global _, ccmi18n_filemanager, CCM_IMAGE_PATH, ConcreteFileManager, ConcreteFileMenu */
+/* global _, ccmi18n_filemanager, CCM_IMAGE_PATH, ConcreteFileManager, ConcreteFileMenu, ConcreteEvent */
 
 ;(function(global, $) {
     'use strict';

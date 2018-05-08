@@ -314,7 +314,7 @@
             // re-trigger a file search
             my.$element.find('div[data-header=file-manager] form').trigger('submit');
         }
-    }
+    };
 
     ConcreteFileManager.prototype._launchUploadCompleteDialog = function(files) {
         var my = this;
