@@ -209,10 +209,17 @@ class Update
             }
             if ($isRerunning && $migration->isMigrated()) {
                 $migration->markNotMigrated();
+                $migrated = false;
                 try {
                     $migration->execute('up');
+                    $migrated = true;
                 } finally {
-                    $migration->markMigrated();
+                    if (!$migrated) {
+                        try {
+                            $migration->markMigrated();
+                        } catch (Exception $x) {
+                        }
+                    }
                 }
             } else {
                 $migration->execute('up');
