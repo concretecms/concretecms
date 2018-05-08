@@ -3,12 +3,11 @@
 namespace Concrete\TestHelpers\Database;
 
 use CacheLocal;
+use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Database\DatabaseStructureManager;
 use Concrete\Core\Database\Schema\Schema;
 use Core;
-use Doctrine\DBAL\Driver\Connection;
 use Doctrine\DBAL\Driver\PDOConnection;
-use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\ORM\EntityManagerInterface;
 use ORM;
 use PHPUnit_Extensions_Database_DataSet_CompositeDataSet;
@@ -262,7 +261,7 @@ abstract class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_Test
     {
         // Convert the given partial into sql create statements
         $schema = Schema::loadFromXMLElement($xml, $connection);
-        $queries = $schema->toSql(new MySqlPlatform());
+        $queries = $schema->toSql($connection->getDatabasePlatform());
 
         // Run queries
         foreach ($queries as $query) {

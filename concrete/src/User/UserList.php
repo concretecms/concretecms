@@ -331,7 +331,7 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
         $this->checkGroupJoin();
         $query = $this->getQueryObject()->getConnection()->createQueryBuilder();
         $orX = $this->getQueryObject()->expr()->orX();
-        $query->select('u.uID')->from('Users','u')->leftJoin('u','UserGroups','ug','u.uID=ug.uID')->leftJoin('ug','Groups','g', 'ug.gID=g.gID');
+        $query->select('u.uID')->from('Users','u')->leftJoin('u','UserGroups','ug','u.uID=ug.uID')->leftJoin('ug', $query->getConnection()->getDatabasePlatform()->quoteSingleIdentifier('Groups'), 'g', 'ug.gID=g.gID');
         $orX->add($this->getQueryObject()->expr()->like('g.gPath', "'" . $group->getGroupPath() . "/%'"));
         $orX->add($this->getQueryObject()->expr()->eq('g.gID', $group->getGroupID()));
         $query->where($orX);
@@ -347,7 +347,8 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
      * Function used to check if a group join has already been set
      */
     private function checkGroupJoin() {
-        $params    = $this->getQueryObject()->getQueryPart('join');
+        $query = $this->getQueryObject();
+        $params = $query->getQueryPart('join');
         $isGroupSet = false;
         $isUserGroupSet = false;
         // Loop twice as params returns an array of arrays
@@ -361,10 +362,10 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
             }
         }
         if ($isUserGroupSet === false) {
-            $this->getQueryObject()->leftJoin('u', 'UserGroups', 'ug', 'ug.uID = u.uID');
+            $query->leftJoin('u', 'UserGroups', 'ug', 'ug.uID = u.uID');
         }
         if ($isGroupSet === false) {
-            $this->getQueryObject()->leftJoin('ug','Groups','g', 'ug.gID = g.gID');
+            $query->leftJoin('ug', $query->getConnection()->getDatabasePlatform()->quoteSingleIdentifier('Groups'),'g', 'ug.gID = g.gID');
         }
     }
 
