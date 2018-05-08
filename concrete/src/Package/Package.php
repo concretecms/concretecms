@@ -734,20 +734,20 @@ abstract class Package implements LocalizablePackageInterface
      */
     public function testForInstall($testForAlreadyInstalled = true)
     {
-        $errors = [];
+        $errors = $this->app->make('error');
 
         // Step 1 does that package exist ?
         if ($this instanceof BrokenPackage) {
-            $errors[] = self::E_PACKAGE_NOT_FOUND;
+            $errors->add($this->getErrorText(self::E_PACKAGE_NOT_FOUND));
         } elseif ($this->getPackageHandle() === '' || !is_dir($this->getPackagePath())) {
-            $errors[] = self::E_PACKAGE_NOT_FOUND;
+            $errors->add($this->getErrorText(self::E_PACKAGE_NOT_FOUND));
         }
 
         // Step 2 - check to see if the user has already installed a package w/this handle
         if ($testForAlreadyInstalled) {
             $entity = $this->getPackageEntity();
             if ($entity !== null && $entity->isPackageInstalled()) {
-                $errors[] = self::E_PACKAGE_INSTALLED;
+                $errors->add($this->getErrorText(self::E_PACKAGE_INSTALLED));
             }
         }
 
@@ -755,24 +755,15 @@ abstract class Package implements LocalizablePackageInterface
             // Step 3 - test minimum application version requirement
             $applicationVersionRequired = $this->getApplicationVersionRequired();
             if (version_compare(APP_VERSION, $applicationVersionRequired, '<')) {
-                $errors[] = [self::E_PACKAGE_VERSION, $applicationVersionRequired];
+                $errors->add($this->getErrorText([self::E_PACKAGE_VERSION, $applicationVersionRequired]));
             }
 
             // Step 4 - Check for package dependencies
             $dependencyChecker = $this->app->build(DependencyChecker::class);
-            $errors = array_merge($errors, $dependencyChecker->testForInstall($this)->getList());
+            $errors->add($dependencyChecker->testForInstall($this));
         }
 
-        if (empty($errors)) {
-            $result = true;
-        } else {
-            $result = $this->app->make('error');
-            foreach ($errors as $error) {
-                $result->add($this->getErrorText($error));
-            }
-        }
-
-        return $result;
+        return $errors->has() ? $errors : true;
     }
 
     /**
@@ -794,7 +785,7 @@ abstract class Package implements LocalizablePackageInterface
      */
     public function testForUninstall()
     {
-        $errors = [];
+        $errors = $this->app->make('error');
         $manager = new Manager($this->app);
 
         $driver = $manager->driver('theme');
@@ -804,25 +795,16 @@ abstract class Package implements LocalizablePackageInterface
         $active_theme = Theme::getSiteTheme();
         foreach ($themes as $theme) {
             if ($active_theme->getThemeID() == $theme->getThemeID()) {
-                $errors[] = self::E_PACKAGE_THEME_ACTIVE;
+                $errors->add($this->getErrorText(self::E_PACKAGE_THEME_ACTIVE));
                 break;
             }
         }
 
         // Step 2, check for package dependencies
         $dependencyChecker = $this->app->build(DependencyChecker::class);
-        $errors = array_merge($errors, $dependencyChecker->testForUninstall($this)->getList());
+        $errors->add($dependencyChecker->testForUninstall($this));
 
-        if (empty($errors)) {
-            $result = true;
-        } else {
-            $result = $this->app->make('error');
-            foreach ($errors as $error) {
-                $result->add($this->getErrorText($error));
-            }
-        }
-
-        return $result;
+        return $errors->has() ? $errors : true;
     }
 
     /**
