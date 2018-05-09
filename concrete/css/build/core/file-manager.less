@@ -5,6 +5,17 @@
 
 
 /**
+ * Preview Image Popover
+ */
+@import "../vendor/bootstrap/popovers.less";
+//since the popover must be placed in body to prevent clipping in a modal situation we need to include not namespaced
+// styles here and adjust the z-Index
+.popover {
+  z-index: @index-level-dialog-content-click-proxy;
+  max-width: none;
+}
+
+/**
  * File Results List Wrapper
  */
 .ccm-ui .ccm-file-manager-list-wrapper {
@@ -26,9 +37,6 @@ table.ccm-file-manager-list {
       width: auto;
       height: auto;
     }
-  }
-  > .popover {
-    max-width: none;
   }
   td.ccm-search-results-icon {
     i {
