@@ -299,7 +299,7 @@
         // now we remove unused columns
         var $columns = this.$element.find('.ccm-layout-column');
         if (this.columns < $columns.length) {
-            for (i = columns; i < $columns.length; i++) {
+            for (i = this.columns; i < $columns.length; i++) {
                 $('#ccm-edit-layout-column-' + i).remove();
             }
         }
