@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Block;
 
 use Database;
@@ -28,9 +29,9 @@ class CacheSettings
             $db = Database::get();
             $r = $db->GetRow('select * from CollectionVersionBlocksCacheSettings where
               cID = ? and cvID = ? and arHandle = ? and bID = ?',
-                array(
+                [
                     $cID, $cvID, $arHandle, $bID,
-                )
+                ]
             );
             if ($r['bID']) {
                 $o = new static();
