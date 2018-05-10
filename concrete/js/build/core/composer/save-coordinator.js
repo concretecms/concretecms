@@ -1,6 +1,7 @@
-/* jshint unused:vars, undef:true, jquery:true */
+/* jshint unused:vars, undef:true, browser:true, jquery:true */
 /* global _ */
-(function(global, $, _) {
+
+;(function(global, $) {
     'use strict';
 
     function SaveCoordinator($form, saver, options) {
@@ -338,4 +339,4 @@
         });
     };
 
-}(this, jQuery, _));
+})(this, jQuery);

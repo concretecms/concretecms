@@ -1,4 +1,7 @@
-/**
+/* jshint unused:vars, undef:true, browser:true, jquery:true */
+/* global ConcreteEvent, CCM_TOOLS_PATH */
+
+/*
  * $.fn.concreteConversation
  * Functions for conversation handling
  *
@@ -17,12 +20,9 @@
  *    conversationBeforeSubmitForm         : Before submitting form
  *    conversationSubmitForm               : After submitting form
  */
+;(function(global, $) {
+    'use strict';
 
-/* jshint unused:vars, undef:true, browser:true, jquery:true, -W041 */
-/* global CCM_TOOLS_PATH, ConcreteEvent */
-
-(function($, window) {
-    "use strict";
     $.extend($.fn, {
         concreteConversation: function(options) {
             return this.each(function() {
@@ -87,9 +87,9 @@
             var dateFormat = (obj.options.dateFormat);
             var customDateFormat = (obj.options.customDateFormat);
             var blockAreaHandle = (obj.options.blockAreaHandle);
-            var maxFiles = (obj.options.maxFiles); // unused
-            var maxFileSize = (obj.options.maxFileSize); // unused
-            var fileExtensions = (obj.options.fileExtensions); // unused
+            // var maxFiles = (obj.options.maxFiles); unused
+            // var maxFileSize = (obj.options.maxFileSize); unused
+            // var fileExtensions = (obj.options.fileExtensions); unused
             var attachmentsEnabled = (obj.options.attachmentsEnabled);
             var attachmentOverridesEnabled = (obj.options.attachmentOverridesEnabled);
 
@@ -886,4 +886,5 @@
             }
         }
     };
-})(jQuery, window);
+
+})(window, jQuery);

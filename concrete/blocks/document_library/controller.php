@@ -858,12 +858,10 @@ class Controller extends BlockController
         switch ($key) {
             case 'thumbnail':
             case 'image':
-                $url = $this->app->make('url/canonical');
-                $path = $url->getPath();
-                $path .= '/' . DIRNAME_PACKAGES . '/document_library/images/folder.png';
-                $url = $url->setPath($path);
-
-                return sprintf('<img src="%s" class="img-responsive" />', $url);
+                return sprintf(
+                    '<i class="fa fa-folder ccm-block-document-library-icon-folder" aria-hidden="true"></i><span class="sr-only">%s</span>',
+                    t('folder icon')
+                );
             case 'title':
                 $view = new BlockView($this->getBlockObject());
                 /** @var UrlImmutable $action */

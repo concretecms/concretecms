@@ -1,9 +1,12 @@
-!function(global, $, _) {
+/* jshint unused:vars, undef:true, browser:true, jquery:true */
+/* global _, ccmi18n_sitemap, CCM_TOOLS_PATH, ccm_triggerProgressiveOperation, ConcreteAlert, ConcretePageAjaxSearchMenu, ConcreteMenu */
+
+;(function(global, $) {
 	'use strict';
 
 	function ConcretePageMenu($element, options) {
-		var my = this, 
-			options = options || {};
+		var my = this;
+		options = options || {};
 
 		options = $.extend({
 			'sitemap': false,
@@ -22,8 +25,7 @@
 	ConcretePageMenu.prototype.setupMenuOptions = function($menu) {
 		var my = this, 
 			parent = ConcreteMenu.prototype,
-			cID = $menu.attr('data-search-page-menu'),
-			container = my.options.container;
+			cID = $menu.attr('data-search-page-menu');
 
 		parent.setupMenuOptions($menu);
 		if (!my.options.sitemap || my.options.sitemap.options.displaySingleLevel == false) {
@@ -64,15 +66,15 @@
 			});
 			return false;
 		});
-	}
+	};
 
 	// jQuery Plugin
 	$.fn.concretePageMenu = function(options) {
 		return $.each($(this), function(i, obj) {
 			new ConcretePageMenu($(this), options);
 		});
-	}
+	};
 
 	global.ConcretePageMenu = ConcretePageMenu;
 
-}(this, $, _);
+})(this, jQuery);

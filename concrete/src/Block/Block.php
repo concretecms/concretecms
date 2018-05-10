@@ -1394,7 +1394,8 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
             $this->instance = $app->build($class, [$this]);
         }
         $this->instance->setBlockObject($this);
-
+        $this->instance->setAreaObject($this->getBlockAreaObject());
+        
         return $this->instance;
     }
 

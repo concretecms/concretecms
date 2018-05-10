@@ -27,12 +27,16 @@ class EventOccurrenceService
 
     /**
      * This code below retrieves based on the occurrence ID which can remain the same across versions.
-     * @param $occurrenceID
      */
-    public function getByOccurrenceID($occurrenceID)
+    public function getByOccurrenceID($occurrenceID, $retrieveVersion = EventService::EVENT_VERSION_APPROVED)
     {
-        $query = $this->entityManager->createQuery('select vo from calendar:CalendarEventVersionOccurrence vo JOIN
-vo.version v JOIN vo.occurrence o where o.occurrenceID = :occurrenceID order by v.evDateAdded DESC');
+        if ($retrieveVersion == EventService::EVENT_VERSION_RECENT) {
+            $query = $this->entityManager->createQuery('select vo from calendar:CalendarEventVersionOccurrence vo JOIN
+    vo.version v JOIN vo.occurrence o where o.occurrenceID = :occurrenceID order by v.evDateAdded DESC');
+        } else {
+            $query = $this->entityManager->createQuery('select vo from calendar:CalendarEventVersionOccurrence vo JOIN
+    vo.version v JOIN vo.occurrence o where o.occurrenceID = :occurrenceID and v.evIsApproved = 1');
+        }
         $query->setMaxResults(1);
         $query->setParameter('occurrenceID', $occurrenceID);
         $object = $query->getOneOrNullResult();

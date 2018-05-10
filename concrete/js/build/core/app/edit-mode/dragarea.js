@@ -1,4 +1,7 @@
-(function (window, $, _, Concrete) {
+/* jshint unused:vars, undef:true, browser:true, jquery:true */
+/* global _, Concrete */
+
+;(function(window, $) {
     'use strict';
 
     /**
@@ -137,6 +140,4 @@
 
     };
 
-
-
-}(window, jQuery, _, Concrete));
+})(window, jQuery);

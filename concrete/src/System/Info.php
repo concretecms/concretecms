@@ -127,28 +127,28 @@ class Info implements TransformableInterface
                 sprintf('Overrides Cache - %s', $config->get('concrete.cache.overrides') ? 'On' : 'Off'),
                 sprintf('Full Page Caching - %s',
                     $config->get('concrete.cache.pages') == 'blocks' ?
-                    'On - If blocks on the particular page allow it.'
-                    :
-                    (
-                        $config->get('concrete.cache.pages') == 'all' ?
-                        'On - In all cases.'
+                        'On - If blocks on the particular page allow it.'
                         :
-                        'Off'
+                        (
+                        $config->get('concrete.cache.pages') == 'all' ?
+                            'On - In all cases.'
+                            :
+                            'Off'
                         )
-                    ),
+                ),
             ];
             if ($config->get('concrete.cache.full_page_lifetime')) {
                 $cache[] = sprintf("Full Page Cache Lifetime - %s",
                     $config->get('concrete.cache.full_page_lifetime') == 'default' ?
-                    sprintf('Every %s (default setting).', $app->make('helper/date')->describeInterval($config->get('concrete.cache.lifetime')))
-                    :
-                    (
-                        $config->get('concrete.cache.full_page_lifetime') == 'forever' ?
-                        'Only when manually removed or the cache is cleared.'
+                        sprintf('Every %s (default setting).', $app->make('helper/date')->describeInterval($config->get('concrete.cache.lifetime')))
                         :
-                        sprintf('Every %s minutes.', $config->get('concrete.cache.full_page_lifetime_value'))
+                        (
+                        $config->get('concrete.cache.full_page_lifetime') == 'forever' ?
+                            'Only when manually removed or the cache is cleared.'
+                            :
+                            sprintf('Every %s minutes.', $config->get('concrete.cache.full_page_lifetime_value'))
                         )
-                    );
+                );
             }
             $this->cache = implode("\n", $cache);
 

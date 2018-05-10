@@ -1,10 +1,15 @@
-(function (window, $, _, Concrete) {
+/* jshint unused:vars, undef:true, browser:true, jquery:true */
+/* global Concrete, ConcreteAlert, ConcreteEvent, ConcreteMenuManager, ConcretePanelManager, ConcreteToolbar, ccmi18n, _, CCM_DISPATCHER_FILENAME, CCM_TOOLS_PATH */
+
+;(function(window, $) {
     'use strict';
+
+    var html = $('html');
 
     /**
      * Edit mode object for managing editing.
      */
-    var EditMode = Concrete.EditMode = function EditMode(options) {
+    var EditMode = Concrete.EditMode = function(options) {
         this.init.call(this, options);
     };
 
@@ -65,7 +70,6 @@
                         {name: 'aID', value: area.getId()},
                         {name: 'bID', value: block.getId()}
                     ],
-                    bID = block.getId(),
                     $container = block.getElem(),
                     prop;
 
@@ -193,7 +197,7 @@
 
                 ConcreteMenuManager.disable();
                 ConcreteToolbar.disable();
-                jQuery.fn.dialog.closeAll();
+                $.fn.dialog.closeAll();
 
                 $('div.ccm-area').addClass('ccm-area-inline-edit-disabled');
 
@@ -281,8 +285,7 @@
                 });
             });
 
-            var $body = $(window.document.body),
-                $document = $(window.document),
+            var $document = $(window.document),
                 scrolling = false,
                 scroll_buffer = 100;
 
@@ -361,7 +364,7 @@
             my.bindEvent('EditModeBlockDragStop', function editModeEditModeBlockDragStopEventHandler(e, data) {
                 Concrete.event.fire('EditModeContenders', []);
                 Concrete.event.fire('EditModeSelectableContender');
-                $('html').removeClass('ccm-block-dragging');
+                html.removeClass('ccm-block-dragging');
 
                 if (data.block instanceof Concrete.BlockType) return;
                 my.scanBlocks();
@@ -404,7 +407,7 @@
             });
 
             my.bindEvent('EditModeBlockDragStart', function editModeEditModeBlockDragStartEventHandler() {
-                $('html').addClass('ccm-block-dragging');
+                html.addClass('ccm-block-dragging');
                 my.setDragging(true);
             });
 
@@ -427,8 +430,6 @@
         },
 
         bindEvent: function editModeBindEvent(event, handler) {
-            var my = this;
-
             return Concrete.event.bind(event, handler);
         },
 
@@ -443,7 +444,7 @@
         },
 
         scanBlocks: function editModeScanBlocks() {
-            var my = this, area, block;
+            var my = this, area;
             my.reset();
 
             $('div.ccm-area').each(function () {
@@ -479,7 +480,7 @@
 
 
             $(element).find('div.ccm-panel-add-block-stack-item').each(function () {
-                var stack, block, me = $(this), dragger = me.find('div.stack-name');
+                var stack, me = $(this), dragger = me.find('div.stack-name');
                 stack = new Concrete.Stack($(this), my, dragger, next_area);
 
                 stack.setPeper(dragger);
@@ -493,7 +494,7 @@
             });
 
             $(element).find('div.ccm-panel-add-clipboard-block-item').each(function () {
-                var block, me = $(this);
+                var me = $(this);
                 new Concrete.DuplicateBlock(me, my, next_area);
             });
 
@@ -636,13 +637,14 @@
         loadInlineEditModeToolbars: function ($container, toolbarHTML) {
 
             $('#ccm-inline-toolbar-container').remove();
-            var $holder = $('<div />', {id: 'ccm-inline-toolbar-container'}).appendTo(document.body);
+            var $holder = $('<div />', {id: 'ccm-inline-toolbar-container'}).appendTo(document.body),
+                $toolbar;
 
             if (toolbarHTML) {
                 $holder.append(toolbarHTML);
-                var $toolbar = $holder.find('.ccm-inline-toolbar');
+                $toolbar = $holder.find('.ccm-inline-toolbar');
             } else {
-                var $toolbar = $container.find('.ccm-inline-toolbar');
+                $toolbar = $container.find('.ccm-inline-toolbar');
                 $toolbar.appendTo($holder);
             }
 
@@ -681,4 +683,4 @@
         }
     };
 
-}(window, jQuery, _, Concrete));
+})(window, jQuery);

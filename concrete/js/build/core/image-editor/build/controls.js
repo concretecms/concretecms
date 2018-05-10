@@ -11,8 +11,8 @@ zoom.zoomOut = getElem("<div class='bottombarbutton'><i class='fa fa-minus'></i>
 zoom.zoomIn.appendTo(controlBar);
 zoom.zoomOut.appendTo(controlBar);
 
-zoom.zoomIn.click(function(e){im.fire('zoomInClick',e)});
-zoom.zoomOut.click(function(e){im.fire('zoomOutClick',e)});
+zoom.zoomIn.click(function(e){im.fire('zoomInClick',e);});
+zoom.zoomOut.click(function(e){im.fire('zoomOutClick',e);});
 
 var scale = getElem('<div></div>').addClass('scale').text('100%');
 im.on('scaleChange',function(e){
@@ -30,7 +30,7 @@ scale.click(function(){
 });
 scale.appendTo(controlBar);
 
-var minScale = 0, maxScale = 3000, stepScale = 5/6;
+var stepScale = 5/6;
 
 im.on('zoomInClick',function(e){
   var centerx = (-im.stage.getX() + (im.stage.getWidth() / 2)) / im.scale,
