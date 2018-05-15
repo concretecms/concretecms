@@ -378,17 +378,27 @@
     }
 
     ConcreteFileManager.prototype.setupImageThumbnails = function() {
-        $('.ccm-file-manager-list-thumbnail[data-hover-image]').each(function( ){
+        $('.ccm-file-manager-list-thumbnail[data-hover-image]').each(function( e ){
             var my = $(this);
-            var image = new Image();
-            image.src = my.data('hover-image');
-            my.popover({
-                animation: true,
-                html: true,
-                content: '<img class="img-responsive" src="'+image.src+'" alt="Thumbnail"/>',
-                container: 'body',
-                placement: 'auto',
-                trigger: 'hover'
+            $(this).hover(function(){
+                var image = new Image();
+                image.src = my.data('hover-image');
+                my.popover({
+                    animation: true,
+                    html: true,
+                    content: '<img class="img-responsive" src="'+image.src+'" alt="Thumbnail"/>',
+                    container: 'body',
+                    placement: 'right',
+                    trigger: 'manual'
+                });
+                if (image.complete) {
+                    my.popover('toggle');
+                }
+                else {
+                    image.addEventListener('load', function() {
+                        my.popover('toggle');
+                    })
+                }
             });
         })
     }
