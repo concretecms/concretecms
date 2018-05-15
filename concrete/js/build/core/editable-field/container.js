@@ -1,8 +1,8 @@
-/**
- * Base search class for AJAX forms in the UI
- */
+/* jshint unused:vars, undef:true, browser:true, jquery:true */
+/* global _, ccmi18n, CKEDITOR, ConcreteAlert, ConcreteAjaxRequest */
 
-!function(global, $) {
+/* Base search class for AJAX forms in the UI */
+;(function(global, $) {
 	'use strict';
 
 	function ConcreteEditableFieldContainer($element, options) {
@@ -111,9 +111,8 @@
 				}
 			});
 			$field.on('hidden', function() {
-				var $parent = $field.parent();
 				if (typeof CKEDITOR != 'undefined') {
-					for (name in CKEDITOR.instances) {
+					for (var name in CKEDITOR.instances) {
 						var instance = CKEDITOR.instances[name];
 						instance.destroy(true);
 					}
@@ -132,7 +131,7 @@
 		        dataType: 'json',
 		        formData: my.options.data,
 		        start: function() {
-		        	jQuery.fn.dialog.showLoader();
+		        	$.fn.dialog.showLoader();
 		        	//ConcreteAlert.showLoader();
 		        },
 		        success: function(r) {
@@ -142,7 +141,7 @@
 					ConcreteAlert.dialog(ccmi18n.error, r.responseText);
 		        },
 		        complete: function(r) {
-		        	jQuery.fn.dialog.hideLoader();
+		        	$.fn.dialog.hideLoader();
 		        	//ConcreteAlert.hideLoader()
 		        }
 		    });
@@ -219,15 +218,15 @@
 			});
 		}
 
-	}
+	};
 
 	// jQuery Plugin
 	$.fn.concreteEditableFieldContainer = function(options) {
 		return $.each($(this), function(i, obj) {
 			new ConcreteEditableFieldContainer($(this), options);
 		});
-	}
+	};
 
 	global.ConcreteEditableFieldContainer = ConcreteEditableFieldContainer;
 
-}(this, $);
+})(this, jQuery);

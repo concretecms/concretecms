@@ -23,25 +23,33 @@ class ApproveCalendarEventRequest extends CalendarEventRequest
     public function trigger()
     {
         $version = $this->getRequestedEventVersionObject();
-        $event = $version->getEvent();
-        $calendar = $event->getCalendar();
-        $pk = $this->getWorkflowRequestPermissionKeyObject();
-        $pk->setPermissionObject($calendar);
+        if ($version) {
+            $event = $version->getEvent();
+            if ($event) {
+                $calendar = $event->getCalendar();
+                $pk = $this->getWorkflowRequestPermissionKeyObject();
+                $pk->setPermissionObject($calendar);
 
-        return parent::triggerRequest($pk);
+                return parent::triggerRequest($pk);
+            }
+        }
     }
 
     protected function isNewEventRequest()
     {
         $version = $this->getRequestedEventVersionObject();
-        $event = $version->getEvent();
-        $active = Event::getByID($event->getID());
-        if ($active) {
-            if ($active->getSelectedVersion()) {
-                return false;
+        if ($version) {
+            $event = $version->getEvent();
+            if ($event) {
+                $active = Event::getByID($event->getID());
+                if ($active) {
+                    if ($active->getSelectedVersion()) {
+                        return false;
+                    }
+                }
+                return true;
             }
         }
-        return true;
     }
 
     public function getWorkflowRequestDescriptionObject()

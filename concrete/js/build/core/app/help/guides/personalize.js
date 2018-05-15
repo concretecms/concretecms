@@ -1,6 +1,10 @@
-!function(global, $) {
+/* jshint unused:vars, undef:true, browser:true, jquery:true */
+/* global Tourist, ccmi18n_helpGuides, ConcreteEvent, ConcreteHelpGuideManager */ 
+
+;(function(global, $) {
 	'use strict';
-	var i18n = ccmi18n_helpGuides['personalize'];
+
+	var i18n = ccmi18n_helpGuides.personalize;
 	var steps = [{
 		content: '<p><span class="h5">' + i18n[0].title + '</span><br/>' + i18n[0].text + '</p>',
 		highlightTarget: true,
@@ -41,7 +45,7 @@
 					}
 				}, 500);
 			});
-			return {target: $('a[data-launch-panel-detail=page-design]').eq(0)}
+			return {target: $('a[data-launch-panel-detail=page-design]').eq(0)};
 		}
 	},{
 		content: '<p><span class="h5">' + i18n[2].title + '</span><br/>' + i18n[2].text + '</p>',
@@ -51,7 +55,7 @@
 		my: 'bottom center',
 		at: 'top center',
 		setup: function(tour, options) {
-			return {target: $('span.ccm-page-design-theme-customize')}
+			return {target: $('span.ccm-page-design-theme-customize')};
 		}
 	}];
 
@@ -73,4 +77,4 @@
 
 	ConcreteHelpGuideManager.register('personalize', tour);
 
-}(window, jQuery);
+})(window, jQuery);

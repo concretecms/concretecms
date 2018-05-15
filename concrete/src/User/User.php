@@ -734,7 +734,7 @@ class User extends ConcreteObject
         $db = $app['database']->connection();
 
         $v = array($this->uID);
-        $cnt = $db->GetOne("select Groups.gID from UserGroups inner join Groups on UserGroups.gID = Groups.gID where uID = ? and gPath like " . $db->quote($g->getGroupPath() . '%'), $v);
+        $cnt = $db->GetOne("select Groups.gID from UserGroups inner join " . $db->getDatabasePlatform()->quoteSingleIdentifier('Groups') . " on UserGroups.gID = Groups.gID where uID = ? and gPath like " . $db->quote($g->getGroupPath() . '%'), $v);
 
         return $cnt > 0;
     }

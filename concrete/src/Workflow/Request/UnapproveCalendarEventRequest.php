@@ -21,27 +21,34 @@ class UnapproveCalendarEventRequest extends CalendarEventRequest
 
     public function trigger()
     {
-        $event = $this->getRequestedEventVersionObject()->getEvent();
-        $calendar = $event->getCalendar();
-        $pk = $this->getWorkflowRequestPermissionKeyObject();
-        $pk->setPermissionObject($calendar);
+        $version = $this->getRequestedEventVersionObject();
+        if ($version) {
+            $event = $version->getEvent();
+            if ($event) {
+                $calendar = $event->getCalendar();
+                $pk = $this->getWorkflowRequestPermissionKeyObject();
+                $pk->setPermissionObject($calendar);
 
-        return parent::triggerRequest($pk);
+                return parent::triggerRequest($pk);
+            }
+        }
     }
 
     public function getWorkflowRequestDescriptionObject()
     {
         $d = new Description();
-        $event = $this->getRequestedEventVersionObject()->getEvent();
-        if (is_object($event)) {
-            // Completely new page.
-            $d->setEmailDescription(t("Event unapproval requested for event \"%s\".",
-                $event->getName()));
-            $d->setDescription(t("Event: %s", $event->getName()));
-            $d->setInContextDescription(t("Event %s submitted for unapproval.", $event->getName()));
-            $d->setShortStatus(t("Event Unapproval"));
+        $version = $this->getRequestedEventVersionObject();
+        if ($version) {
+            $event = $version->getEvent();
+            if ($event) {
+                // Completely new page.
+                $d->setEmailDescription(t("Event unapproval requested for event \"%s\".",
+                    $event->getName()));
+                $d->setDescription(t("Event: %s", $event->getName()));
+                $d->setInContextDescription(t("Event %s submitted for unapproval.", $event->getName()));
+                $d->setShortStatus(t("Event Unapproval"));
+            }
         }
-
         return $d;
     }
 
