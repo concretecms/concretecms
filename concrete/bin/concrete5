@@ -77,7 +77,7 @@ if (!defined('APP_UPDATED_PASSTHRU')) {
     }
     unset($updates);
     if (defined('APP_UPDATED_PASSTHRU')) {
-        return require DIR_BASE . '/updates/' . DIRNAME_APP_UPDATED . '/concrete/bin/concrete5.php';
+        return require DIR_BASE . '/updates/' . DIRNAME_APP_UPDATED . '/concrete/bin/concrete5';
     }
     define('APP_UPDATED_PASSTHRU', false);
 }
