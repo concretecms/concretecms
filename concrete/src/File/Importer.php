@@ -11,6 +11,7 @@ use Concrete\Core\File\StorageLocation\StorageLocationFactory;
 use Concrete\Core\Support\Facade\Application;
 use Exception;
 use League\Flysystem\AdapterInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class Importer
 {
@@ -393,6 +394,38 @@ class Importer
         }
 
         return $fv;
+    }
+
+    /**
+     * Import a file received via a POST request to the default file storage location.
+     *
+     * @param \Symfony\Component\HttpFoundation\File\UploadedFile $uploadedFile The uploaded file
+     * @param \Concrete\Core\Entity\File\File|\Concrete\Core\Tree\Node\Type\FileFolder|null|false $fr If it's a File entity we assign the newly imported FileVersion object to that File. If it's a FileFolder entiity we'll create a new File in that folder (otherwise the new File will be created in the root folder).
+     *
+     * @return \Concrete\Core\Entity\File\Version|int the imported file version (or an error code in case of problems)
+     *
+     * @example
+     * <pre><code>
+     * $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+     * $request = $app->make(\Concrete\Core\Http\Request::class);
+     * $importer = $app->make(\Concrete\Core\File\Importer::class);
+     * $fv = $importer->importUploadedFile($request->files->get('field_name'));
+     * if (is_int($fv)) {
+     *     $errorToShow = $importer->getErrorMessage($fv);
+     * }
+     * </code></pre>
+     */
+    public function importUploadedFile(UploadedFile $uploadedFile = null, $fr = false)
+    {
+        if ($uploadedFile === null) {
+            $result = E_PHP_NO_FILE;
+        } elseif (!$uploadedFile->isValid()) {
+            $result = $uploadedFile->getError();
+        } else {
+            $result = $this->import($uploadedFile->getPathname(), $uploadedFile->getClientOriginalName(), $fr);
+        }
+
+        return $result;
     }
 
     /**
