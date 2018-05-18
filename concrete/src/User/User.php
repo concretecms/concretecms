@@ -458,6 +458,8 @@ class User extends ConcreteObject
             $session->clear();
         } else {
             $session->invalidate();
+            // Really not sure why this doesn't happen with invalidate, but oh well.
+            $cookie->clear($config->get('concrete.session.name'));
         }
 
         if ($cookie->has('ccmAuthUserHash') && $cookie->get('ccmAuthUserHash')) {
