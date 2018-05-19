@@ -159,4 +159,9 @@ abstract class GridFramework
     {
         return false;
     }
+
+    public function isFlex()
+    {
+        return false;
+    }
 }

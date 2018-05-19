@@ -3,8 +3,10 @@ namespace Concrete\Core\Page\Theme\GridFramework;
 
 use Concrete\Core\Page\Theme\GridFramework\Type\Bootstrap2;
 use Concrete\Core\Page\Theme\GridFramework\Type\Bootstrap3;
+use Concrete\Core\Page\Theme\GridFramework\Type\Bootstrap4;
 use Concrete\Core\Page\Theme\GridFramework\Type\NineSixty;
 use Concrete\Core\Page\Theme\GridFramework\Type\Foundation;
+use Concrete\Core\Page\Theme\GridFramework\Type\Foundation6;
 use Concrete\Core\Support\Manager as CoreManager;
 
 class Manager extends CoreManager
@@ -24,8 +26,18 @@ class Manager extends CoreManager
         return new Bootstrap3();
     }
 
+    protected function createBootstrap4Driver()
+    {
+        return new Bootstrap4();
+    }
+
     protected function createFoundationDriver()
     {
         return new Foundation();
+    }
+
+    protected function createFoundation6Driver()
+    {
+        return new Foundation6();
     }
 }
