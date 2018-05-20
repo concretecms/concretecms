@@ -1,7 +1,6 @@
 <?php
 if (isset($user) && is_object($user)) {
-    $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
-    ?>
+    $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */ ?>
 
     <style type="text/css">
         div[data-container=editable-fields] section {
@@ -32,8 +31,7 @@ if (isset($user) && is_object($user)) {
                                 data-type="text"
                                 data-name="uName"
                                 <?php
-                            }
-                            ?>
+                            } ?>
                         ><?= h($user->getUserName()) ?></span></p></div>
                     </div>
                     <div class="row">
@@ -47,8 +45,7 @@ if (isset($user) && is_object($user)) {
                                 data-type="email"
                                 data-name="uEmail"
                                 <?php
-                            }
-                            ?>
+                            } ?>
                         ><?= h($user->getUserEmail()) ?></span></p>
                         </div>
                     </div>
@@ -60,8 +57,7 @@ if (isset($user) && is_object($user)) {
                                 ?><a href="#" class="btn btn-xs btn-default" data-button="change-password"><?= t('Change') ?></a><?php
                             } else {
                                 ?>*********<?php
-                            }
-                            ?>
+                            } ?>
                         </p></div>
                     </div>
                     <div class="row">
@@ -74,8 +70,7 @@ if (isset($user) && is_object($user)) {
                                 data-editable-field-inline-commands="true"
                                 data-url="<?= $view->action('update_avatar', $user->getUserID()) ?>"
                                 <?php
-                            }
-                            ?>
+                            } ?>
                         >
                             <ul class="ccm-edit-mode-inline-commands">
                                 <li><a href="#" data-editable-field-command="clear"><i class="fa fa-trash-o"></i></a></li>
@@ -103,8 +98,7 @@ if (isset($user) && is_object($user)) {
                         $uTimezone = $user->getUserTimezone();
                         if (empty($uTimezone)) {
                             $uTimezone = date_default_timezone_get();
-                        }
-                        ?>
+                        } ?>
                         <div class="row">
                             <div class="col-md-4"><p><?= t('Timezone') ?></p></div>
                             <div class="col-md-8"><p><span
@@ -117,15 +111,14 @@ if (isset($user) && is_object($user)) {
                                 data-type="select" data-name="uTimezone"
                                 data-value="<?= h($uTimezone) ?>"
                                 <?php
-                            }
-                            ?>
+                            } ?>
                             ><?= $dh->getTimezoneDisplayName($uTimezone) ?></span></p></div>
                         </div>
                     <?php
                     }
-                    $languages = Localization::getAvailableInterfaceLanguages();
-                    if (count($languages) > 0) {
-                        ?>
+    $languages = Localization::getAvailableInterfaceLanguages();
+    if (count($languages) > 0) {
+        ?>
                         <div class="row">
                             <div class="col-md-4"><p><?= t('Language') ?></p></div>
                             <div class="col-md-8"><p><span
@@ -139,14 +132,13 @@ if (isset($user) && is_object($user)) {
                                 data-name="uDefaultLanguage"
                                 data-value="<?= h($user->getUserDefaultLanguage()) ?>"
                                 <?php
-                            }
-                            ?>
+                            } ?>
                             ><?= h(Punic\Language::getName($user->getUserDefaultLanguage())) ?></span></p></div>
                         </div>
                         <?php
-                    }
-                    if (Config::get('concrete.user.registration.validate_email')) {
-                        ?>
+    }
+    if (Config::get('concrete.user.registration.validate_email')) {
+        ?>
                         <div class="row">
                             <div class="col-md-4"><p><?= t('Full Record') ?></p></div>
                             <div class="col-md-8"><p><?= ($user->isFullRecord()) ? t('Yes') : t('No') ?></p></div>
@@ -165,13 +157,11 @@ if (isset($user) && is_object($user)) {
                                     case '1':
                                         print t('Yes');
                                         break;
-                                }
-                                ?>
+                                } ?>
                             </p></div>
                         </div>
                         <?php
-                    }
-                    ?>
+    } ?>
 
                     <h4><?= t('Groups') ?></h4>
                     <div data-container="group-list"></div>
@@ -184,8 +174,7 @@ if (isset($user) && is_object($user)) {
                            href="<?= URL::to('/ccm/system/dialogs/group/search') ?>?filter=assign"
                            dialog-title="<?= t('Add Groups') ?>" dialog-modal="false"><?= t('Add Group') ?></a>
                         <?php
-                    }
-                    ?>
+                    } ?>
                 </div>
 
             </div>
@@ -198,7 +187,7 @@ if (isset($user) && is_object($user)) {
                 <h4><?php echo $set->getAttributeSetDisplayName()?></h4>
                 <?php
                     View::element('attribute/editable_list', [
-                        'attributes' => $set->getAttributeKeys(),
+                        'attributes' => $setManager->getSetAttributesKeys($groupObjects, $set),
                         'object' => $user,
                         'saveAction' => $view->action('update_attribute', $user->getUserID()),
                         'clearAction' => $view->action('clear_attribute', $user->getUserID()),
@@ -210,11 +199,12 @@ if (isset($user) && is_object($user)) {
             <?php endforeach; ?>
 
             <?php if (count($unassigned)) :
-                if (count($attributeSets)) { ?>
+                if (count($attributeSets)) {
+                    ?>
                     <h4><?php echo t('Other')?></h4>
                 <?php
                 }
-                View::element('attribute/editable_list', [
+    View::element('attribute/editable_list', [
                     'attributes' => $unassigned,
                     'object' => $user,
                     'saveAction' => $view->action('update_attribute', $user->getUserID()),
@@ -257,8 +247,7 @@ if (isset($user) && is_object($user)) {
             </div>
         </div>
         <?php
-    }
-    ?>
+    } ?>
 
     <script type="text/template" data-template="user-add-groups">
         <% _.each(groups, function(group) { %>
@@ -358,13 +347,12 @@ if (isset($user) && is_object($user)) {
         View::element('workflow/notifications', [
             'workflowList' => $workflowList,
         ]);
-    }
-    ?>
+    } ?>
     <?php
 } else {
-    $tp = Core::make('helper/concrete/user');
-    if ($tp->canAccessUserSearchInterface()) {
-        ?>
+        $tp = Core::make('helper/concrete/user');
+        if ($tp->canAccessUserSearchInterface()) {
+            ?>
 
         <div class="ccm-dashboard-content-full">
             <?php View::element('users/search', ['result' => $result])?>
@@ -385,10 +373,9 @@ if (isset($user) && is_object($user)) {
         </script>
 
         <?php
-    } else {
-        ?>
+        } else {
+            ?>
         <p><?= t('You do not have access to user search. This setting may be changed in the access section of the dashboard settings page.') ?></p>
         <?php
+        }
     }
-
-}

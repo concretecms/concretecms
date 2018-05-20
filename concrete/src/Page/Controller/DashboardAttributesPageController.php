@@ -103,7 +103,8 @@ abstract class DashboardAttributesPageController extends DashboardPageController
                 $set = Set::getByID($request->request->get('asID'));
                 $setKeys = Set::getByAttributeKey($key);
                 if (in_array($set, $setKeys)) {
-                    // The set is already a part of this key, so we return.
+                    // The set is already a part of this key, so we save key changes and  return.
+                    $this->entityManager->flush();
                     return;
                 }
             }

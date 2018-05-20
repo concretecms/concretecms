@@ -3,7 +3,8 @@
 <h2><?=t($c->getCollectionName())?></h2>
 
 <form method="post" action="<?php echo $view->action('save')?>" enctype="multipart/form-data">
-	<?php  $attribs = UserAttributeKey::getEditableInProfileList();
+	<?php
+    $attribs = UserAttributeKey::getEditableInProfileList($userGroups);
     $valt->output('profile_edit');
     ?>
 	<fieldset>
@@ -13,31 +14,31 @@
 		<?php echo $form->text('uEmail', $profile->getUserEmail())?>
 	</div>
 	<?php  if (Config::get('concrete.misc.user_timezones')) {
-     ?>
+        ?>
 		<div class="form-group">
 			<?php echo  $form->label('uTimezone', t('Time Zone'))?>
-			<?php echo  $form->select('uTimezone',
+			<?php echo  $form->select(
+         'uTimezone',
                 Core::make('helper/date')->getTimezones(),
                 ($profile->getUserTimezone() ? $profile->getUserTimezone() : date_default_timezone_get())
-        );
-     ?>
+        ); ?>
 		</div>
 	<?php
- } ?>
+    } ?>
 	<?php  if (is_array($locales) && count($locales)) {
-     ?>
+        ?>
 		<div class="form-group">
 			<?php echo $form->label('uDefaultLanguage', t('Language'))?>
 			<?php echo $form->select('uDefaultLanguage', $locales, Localization::activeLocale())?>
 		</div>
 	<?php
- } ?>
+    } ?>
 	<?php
     if (is_array($attribs) && count($attribs)) {
         foreach ($attribs as $ak) {
             echo $profileFormRenderer
                 ->buildView($ak)
-                ->setIsRequired($ak->isAttributeKeyRequiredOnProfile())
+                ->setIsRequired($ak->isAttributeKeyRequiredOnProfileForUserGroups($userGroups))
                 ->render();
         }
     }
@@ -65,11 +66,9 @@
 			<?php
             foreach ($ats as $at) {
                 call_user_func($at);
-            }
-        ?>
+            } ?>
 		</fieldset>
 		<?php
-
     }
     ?>
         <br/>

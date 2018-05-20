@@ -17,17 +17,16 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 			<a href="<?=$view->url('/account/edit_profile')?>" class="btn btn-sm btn-default"><i class="fa fa-cog"></i> <?=t('Edit')?></a>
 			<a href="<?=$view->url('/')?>" class="btn btn-sm btn-default"><i class="fa fa-home"></i> <?=t('Home')?></a>
 		</div>
-	<?php 
+	<?php
 } else {
-    ?>
+        ?>
 		<?php if ($profile->getAttribute('profile_private_messages_enabled')) {
-    ?>
+            ?>
 			<a href="<?=$view->url('/account/messages', 'write', $profile->getUserID())?>" class="btn btn-sm btn-default"><i class="fa-user fa"></i> <?=t('Connect')?></a>
-		<?php 
-}
-    ?>
-	<?php 
-} ?>
+		<?php
+        } ?>
+	<?php
+    } ?>
 </div>
 
 
@@ -53,7 +52,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 
 
         <?php
-        $uaks = UserAttributeKey::getPublicProfileList();
+        $uaks = UserAttributeKey::getPublicProfileList($profile->getUserObject()->getUserGroupObjects());
         foreach ($uaks as $ua) {
             ?>
 		<div>
@@ -64,23 +63,22 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                 echo $r;
             } else {
                 echo t('None');
-            }
-            ?>
+            } ?>
 		</div>
-        <?php 
+        <?php
         } ?>
 
 		<h4><?=t("Badges")?></h4>
 		<?php if (count($badges) > 0) {
-    ?>
+            ?>
 
 
 		<ul class="thumbnails">
 
 			<?php foreach ($badges as $ub) {
-    $uf = $ub->getGroupBadgeImageObject();
-    if (is_object($uf)) {
-        ?>
+                $uf = $ub->getGroupBadgeImageObject();
+                if (is_object($uf)) {
+                    ?>
 
 			  <li class="span2">
 
@@ -91,22 +89,20 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 
 			</li>
 
-			    <?php 
-    }
-    ?>
+			    <?php
+                } ?>
 
-			<?php 
-}
-    ?>
+			<?php
+            } ?>
 
 		</ul>
 
-		<?php 
-} else {
-    ?>
+		<?php
+        } else {
+            ?>
 			<p><?=t("This user hasn't won any badges.")?></p>
-		<?php 
-} ?>
+		<?php
+        } ?>
 
 
 		<?php

@@ -40,6 +40,7 @@ class Register extends PageController
         $this->set('displayUserName', $displayUserName);
         $this->requireAsset('css', 'core/frontend/captcha');
         $this->set('renderer', new Renderer(new FrontendFormContext()));
+        $this->set('userGroups', array(\Group::getByName("Guest")));
     }
 
     public function forward($cID = 0)
@@ -91,7 +92,8 @@ class Register extends PageController
                 }
             }
 
-            $aks = UserAttributeKey::getRegistrationList();
+            $userGroups=$this->getSets()['userGroups'];
+            $aks = UserAttributeKey::getRegistrationList($userGroups);
 
             foreach ($aks as $uak) {
                 $controller = $uak->getController();
@@ -99,7 +101,7 @@ class Register extends PageController
                 $response = $validator->validateSaveValueRequest(
                     $controller,
                     $this->request,
-                    $uak->isAttributeKeyRequiredOnRegister()
+                    $uak->isAttributeKeyRequiredOnRegisterForUserGroups($userGroups)
                 );
                 if (!$response->isValid()) {
                     $error = $response->getErrorObject();
@@ -144,8 +146,10 @@ class Register extends PageController
                     $attribs = UserAttributeKey::getRegistrationList();
                     $attribValues = [];
                     foreach ($attribs as $ak) {
-                        $attribValues[] = $ak->getAttributeKeyDisplayName('text') . ': ' . $process->getAttribute($ak->getAttributeKeyHandle(),
-                                'display');
+                        $attribValues[] = $ak->getAttributeKeyDisplayName('text') . ': ' . $process->getAttribute(
+                            $ak->getAttributeKeyHandle(),
+                                'display'
+                        );
                     }
                     $mh->addParameter('attribs', $attribValues);
                     $mh->addParameter('siteName', tc('SiteName', \Core::make('site')->getSite()->getSiteName()));

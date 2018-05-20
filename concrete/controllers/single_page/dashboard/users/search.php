@@ -373,13 +373,15 @@ class Search extends DashboardPageController
         $this->requireAsset('selectize');
 
         $ui = $this->user;
+
         if (is_object($ui)) {
             $dh = $this->app->make('helper/date');
             /* @var $dh \Concrete\Core\Localization\Service\Date */
             $this->requireAsset('core/app/editable-fields');
             $uo = $this->user->getUserObject();
+            $groupObjects=$uo->getUserGroupObjects();
             $groups = [];
-            foreach ($uo->getUserGroupObjects() as $g) {
+            foreach ($groupObjects as $g) {
                 $obj = new stdClass();
                 $obj->gDisplayName = $g->getGroupDisplayName();
                 $obj->gID = $g->getGroupID();
@@ -393,7 +395,9 @@ class Search extends DashboardPageController
             $category = $categoryEntity->getController();
             $setManager = $category->getSetManager();
             $sets = $setManager->getAttributeSets();
-            $unassigned = $setManager->getUnassignedAttributeKeys();
+            $unassigned = $setManager->getUnassignedAttributeKeysCommonAndAssociatedToGroups($groupObjects);
+            $this->set('setManager', $setManager);
+            $this->set('groupObjects', $groupObjects);
             $this->set('attributeSets', $sets);
             $this->set('unassigned', $unassigned);
 
@@ -503,7 +507,8 @@ class Search extends DashboardPageController
                 $writer->insertList($result->getItemListObject());
             },
             200,
-            $headers);
+            $headers
+        );
     }
 
     protected function setupUser($uID)

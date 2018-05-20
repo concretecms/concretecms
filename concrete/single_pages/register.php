@@ -11,7 +11,7 @@ $token = \Core::make('Concrete\Core\Validation\CSRF\Token');
 </div>
 
 <?php
-$attribs = UserAttributeKey::getRegistrationList();
+$attribs = UserAttributeKey::getRegistrationList($userGroups);
 
 if (!empty($registerSuccess)) {
     ?>
@@ -37,14 +37,12 @@ if (!empty($registerSuccess)) {
                     <p><a href="<?= $view->url('/') ?>"><?= t('Return to Home') ?></a></p>
                     <?php
                     break;
-            }
-            ?>
+            } ?>
         </div>
     </div>
     <?php
-
 } else {
-    ?>
+                ?>
     <form method="post" action="<?= $view->url('/register', 'do_register') ?>" class="form-stacked">
         <?php $token->output('register.do_register') ?>
         <div class="row">
@@ -59,8 +57,7 @@ if (!empty($registerSuccess)) {
                             <?= $form->text('uName') ?>
                         </div>
                         <?php
-                    }
-                    ?>
+                    } ?>
                     <div class="form-group">
                         <?= $form->label('uEmail', t('Email Address')) ?>
                         <?= $form->text('uEmail') ?>
@@ -77,8 +74,7 @@ if (!empty($registerSuccess)) {
                             <?= $form->password('uPasswordConfirm', array('autocomplete' => 'off')) ?>
                         </div>
                         <?php
-                    }
-                    ?>
+                    } ?>
 
                 </fieldset>
             </div>
@@ -92,41 +88,35 @@ if (!empty($registerSuccess)) {
                         <legend><?= t('Options') ?></legend>
                         <?php
                         foreach ($attribs as $ak) {
-                            $renderer->buildView($ak)->setIsRequired($ak->isAttributeKeyRequiredOnRegister())->render();
-                        }
-                        ?>
+                            $renderer->buildView($ak)->setIsRequired($ak->isAttributeKeyRequiredOnRegisterForUserGroups($userGroups))->render();
+                        } ?>
                     </fieldset>
                 </div>
             </div>
             <?php
-
         }
-        if (Config::get('concrete.user.registration.captcha')) {
-            ?>
+                if (Config::get('concrete.user.registration.captcha')) {
+                    ?>
             <div class="row">
                 <div class="col-sm-10 col-sm-offset-1 ">
 
                     <div class="form-group">
                         <?php
                         $captcha = Loader::helper('validation/captcha');
-                        echo $captcha->label();
-                        ?>
+                    echo $captcha->label(); ?>
                         <?php
                         $captcha->showInput();
-                        $captcha->display();
-                        ?>
+                    $captcha->display(); ?>
                     </div>
                 </div>
             </div>
 
             <?php
-        }
-        ?>
+                } ?>
         <div class="row">
             <div class="col-sm-10 col-sm-offset-1">
                 <div class="form-actions">
-                    <?= $form->hidden('rcID', isset($rcID) ? $rcID : '');
-                    ?>
+                    <?= $form->hidden('rcID', isset($rcID) ? $rcID : ''); ?>
                     <?= $form->submit('register', t('Register') . ' &gt;', array('class' => 'btn-lg btn-primary')) ?>
                 </div>
             </div>
@@ -134,6 +124,5 @@ if (!empty($registerSuccess)) {
     </form>
 
     <?php
-
-}
+            }
 ?>

@@ -21,54 +21,49 @@
 
 		<div><?=t('No users found.')?></div>
 
-	<?php 
+	<?php
 } else {
-    ?>
+        ?>
 
 		<table class="table table-striped" id="ccm-members-directory">
 
 
 		<?php
         $av = Loader::helper('concrete/avatar');
-    $u = new User();
+        $u = new User();
 
-    foreach ($users as $user) {
-        ?>
+        foreach ($users as $user) {
+            ?>
 
 		<tr>
 			<td class="ccm-members-directory-avatar"><a href="<?=$user->getUserPublicProfileURL()?>"><?=$user->getUserAvatar()->output()?></a></td>
 			<td class="ccm-members-directory-name"><a href="<?=$user->getUserPublicProfileURL()?>"><?=ucfirst($user->getUserName())?></a></td>
 			<?php
-            foreach ($attribs as $ak) {
+            $userGroups=$user->getUserObject()->getUserGroupObjects() ;
+            foreach (UserAttributeKey::getMemberListList($userGroups) as $ak) {
                 ?>
 				<td>
-					<?=$user->getAttribute($ak, 'displaySanitized', 'display');
-                ?>
+					<?=$user->getAttribute($ak, 'displaySanitized', 'display'); ?>
 				</td>
-			<?php 
-            }
-        ?>
+			<?php
+            } ?>
 		</tr>
 
-		<?php 
-    }
-    ?>
+		<?php
+        } ?>
 
 		</table>
 
         <?php if ($pagination->haveToPaginate()) {
-    ?>
+            ?>
 
-            <?=$pagination->renderView('dashboard');
-    ?>
+            <?=$pagination->renderView('dashboard'); ?>
 
-        <?php 
-}
-    ?>
+        <?php
+        } ?>
 
 	<?php
-
-} ?>
+    } ?>
 
 
 </div>
