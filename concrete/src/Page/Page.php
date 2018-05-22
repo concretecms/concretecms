@@ -3347,19 +3347,6 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         return $current;
     }
 
-    /**
-     * Returns the total number of page views for a specific page.
-     */
-    public function getTotalPageViews($date = null)
-    {
-        $db = Database::connection();
-        if ($date != null) {
-            return $db->fetchColumn('select count(pstID) from PageStatistics where date = ? AND cID = ?', [$date, $this->getCollectionID()]);
-        } else {
-            return $db->fetchColumn('select count(pstID) from PageStatistics where cID = ?', [$this->getCollectionID()]);
-        }
-    }
-
     public function getPageDraftTargetParentPageID()
     {
         $db = Database::connection();
