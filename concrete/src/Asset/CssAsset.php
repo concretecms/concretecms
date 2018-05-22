@@ -210,7 +210,7 @@ class CssAsset extends Asset
     public function register($filename, $args, $pkg = false)
     {
         parent::register($filename, $args, $pkg);
-        if ($args['media']) {
+        if (!empty($args['media'])) {
             $this->setAssetMedia($args['media']);
         }
     }
