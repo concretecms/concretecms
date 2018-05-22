@@ -3366,22 +3366,4 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
         Section::registerPage($this);
     }
-
-    /**
-     * Gets a pages statistics.
-     */
-    public function getPageStatistics($limit = 20)
-    {
-        $db = Database::connection();
-        $limitString = '';
-        if ($limit != false) {
-            $limitString = 'limit '.$limit;
-        }
-
-        if (is_object($this) && $this instanceof self) {
-            return $db->fetchAll("SELECT * FROM PageStatistics WHERE cID = ? ORDER BY timestamp desc {$limitString}", [$this->getCollectionID()]);
-        } else {
-            return $db->fetchAll("SELECT * FROM PageStatistics ORDER BY timestamp desc {$limitString}");
-        }
-    }
 }
