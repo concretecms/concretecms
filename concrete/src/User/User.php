@@ -272,22 +272,6 @@ class User extends ConcreteObject
     }
 
     /**
-     * Update PageStatistics
-     *
-     * @param Page $c
-     */
-    public function recordView($c)
-    {
-        $app = Application::getFacadeApplication();
-        $db = $app['database']->connection();
-
-        $uID = ($this->uID > 0) ? $this->uID : 0;
-        $cID = $c->getCollectionID();
-        $v = array($cID, $uID);
-        $db->query("insert into PageStatistics (cID, uID, date) values (?, ?, NOW())", $v);
-    }
-
-    /**
      * $salt is retained for compatibilty with older versions of concerete5, but not used.
      *
      * @param string $uPassword
