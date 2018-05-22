@@ -21,7 +21,7 @@ class CssAsset extends Asset
      *
      * @var string
      */
-    protected $media = 'all';
+    protected $assetMedia = 'all';
 
     /**
      * @return string
@@ -42,11 +42,11 @@ class CssAsset extends Asset
     /**
      * Set the media of this asset.
      *
-     * @param string $media
+     * @param string $assetMedia
      */
-    public function setAssetMedia($media)
+    public function setAssetMedia($assetMedia)
     {
-        $this->media = $media;
+        $this->assetMedia = $assetMedia;
     }
 
     /**
@@ -56,7 +56,7 @@ class CssAsset extends Asset
      */
     public function getAssetMedia()
     {
-        return $this->media;
+        return $this->assetMedia;
     }
 
     /**
