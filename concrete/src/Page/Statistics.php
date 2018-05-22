@@ -6,23 +6,6 @@ use Loader;
 class Statistics
 {
     /**
-     * Gets total page views across the entire site.
-     *
-     * @param date $date
-     *
-     * @return int
-     */
-    public static function getTotalPageViews($date = null)
-    {
-        $db = Loader::db();
-        if ($date != null) {
-            return $db->GetOne("select count(pstID) from PageStatistics where date = ?", array($date));
-        }
-
-        return $db->GetOne("select count(pstID) from PageStatistics");
-    }
-
-    /**
      * Gets total page views for everyone but the passed user object.
      *
      * @param \User $u
