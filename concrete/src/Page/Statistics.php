@@ -6,27 +6,6 @@ use Loader;
 class Statistics
 {
     /**
-     * Gets total page views for everyone but the passed user object.
-     *
-     * @param \User $u
-     * @param date $date
-     *
-     * @return int
-     */
-    public static function getTotalPageViewsForOthers($u, $date = null)
-    {
-        $db = Loader::db();
-        if ($date != null) {
-            $v = array($u->getUserID(), $date);
-
-            return $db->GetOne("select count(pstID) from PageStatistics where uID <> ? and date = ?", $v);
-        }
-        $v = array($u->getUserID());
-
-        return $db->GetOne("select count(pstID) from PageStatistics where uID <> ?", $v);
-    }
-
-    /**
      * Gets the total number of versions across all pages. Used in the dashboard.
      *
      * @todo It might be nice if this were a little more generalized
