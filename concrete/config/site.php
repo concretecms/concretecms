@@ -29,6 +29,8 @@ return [
                 'modern_tile_thumbnail_fid' => null,
                 // Background color for Windows 8 tile icon
                 'modern_tile_thumbnail_bgcolor' => null,
+                // Theme color (eg color of toolbar for Chrome 39+ for Android)
+                'theme_color' => null,
             ],
             'editor' => [
                 'concrete' => [

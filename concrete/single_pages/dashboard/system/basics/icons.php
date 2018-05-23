@@ -13,8 +13,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
 /* @var Concrete\Core\Entity\File\File|null $iosHome */
 /* @var Concrete\Core\Entity\File\File|null $modernThumb */
 /* @var string $modernThumbBG */
+/* @var string $themeColor */
 ?>
-
 <form method="POST" class="form-horizontal" id="favicon-form" action="<?= $view->action('update_icons') ?>" >
     <?= $validation_token->output('update_icons') ?>
     <fieldset>
@@ -27,7 +27,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
     <fieldset>
         <legend><?= t('iPhone Thumbnail') ?></legend>
-        <div class="help-block"><?=t('iPhone home screen icons should be 57x57 and be in the .png format.') ?></div>
+        <div class="help-block"><?= t('iPhone home screen icons should be 57x57 and be in the .png format.') ?></div>
         <div class="form-group">
             <?= $concrete_asset_library->file('ccm-iphone-file', 'iosHomeFID', t('Choose File'), $iosHome) ?>
         </div>
@@ -41,15 +41,23 @@ defined('C5_EXECUTE') or die('Access Denied.');
             <?= $concrete_asset_library->file('ccm-modern-file', 'modernThumbFID', t('Choose File'), $modernThumb) ?>
         </div>
         <div class="form-group">
-            <label class="control-label"><?=t('Background Color')?></label>
+            <label class="control-label"><?= t('Background Color') ?></label>
             <div><?= $form_color->output('modernThumbBG', $modernThumbBG) ?></div>
         </div>
+    </fieldset>
 
+    <fieldset>
+        <legend><?= t('Theme') ?></legend>
+        <div class="help-block"><?= t('This value may be used by some browsers (for example Chrome and Opera on Android) to set the toolbar color.') ?></div>
+        <div class="form-group">
+            <label class="control-label"><?= t('Theme Color') ?></label>
+            <div><?= $form_color->output('themeColor', $themeColor) ?></div>
+        </div>
     </fieldset>
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <button class="pull-right btn btn-primary" type="submit" ><?=t('Save')?></button>
+            <button class="pull-right btn btn-primary" type="submit" ><?= t('Save') ?></button>
         </div>
     </div>
 
