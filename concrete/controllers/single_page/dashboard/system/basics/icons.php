@@ -2,43 +2,66 @@
 
 namespace Concrete\Controller\SinglePage\Dashboard\System\Basics;
 
+use Concrete\Core\Entity\File\File as FileEntity;
+use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
-use Config;
-use Core;
-use View;
+use Concrete\Core\Utility\Service\Validation\Numbers;
 
 class Icons extends DashboardSitePageController
 {
-    public $helpers = ['form', 'concrete/asset_library', 'json'];
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Controller\AbstractController::$helpers
+     */
+    public $helpers = ['form', 'concrete/asset_library', 'validation/token', 'form/color'];
 
-    public function on_start()
+    public function view()
     {
-        parent::on_start();
-        $this->requireAsset()
-        $this->set('config', $this->getSite()->getConfigRepository());
-    }
+        $this->requireAsset('core/colorpicker');
+        $config = $this->getSite()->getConfigRepository();
 
-    public function icons_saved()
-    {
-        $this->set('message', t('Icons updated successfully.'));
+        $fid = (int) $config->get('misc.favicon_fid');
+        $this->set('favicon', $fid === 0 ? null : $this->entityManager->find(FileEntity::class, $fid));
+
+        $fid = (int) $config->get('misc.iphone_home_screen_thumbnail_fid');
+        $this->set('iosHome', $fid === 0 ? null : $this->entityManager->find(FileEntity::class, $fid));
+
+        $fid = (int) $config->get('misc.modern_tile_thumbnail_fid');
+        $this->set('modernThumb', $fid === 0 ? null : $this->entityManager->find(FileEntity::class, $fid));
+
+        $this->set('modernThumbBG', (string) $config->get('misc.modern_tile_thumbnail_bgcolor'));
+
+        $this->set('themeColor', (string) $config->get('misc.theme_color'));
     }
 
     public function update_icons()
     {
         $config = $this->getSite()->getConfigRepository();
         if ($this->token->validate('update_icons')) {
-            $s = Core::make('helper/security');
-            $faviconFID = $s->sanitizeInt($this->post('faviconFID'));
-            $iosHomeFID = $s->sanitizeInt($this->post('iosHomeFID'));
-            $modernThumbFID = $s->sanitizeInt($this->post('modernThumbFID'));
-            $modernThumbBG = $s->sanitizeString($this->post('modernThumbBG'));
+            $post = $this->request->request;
 
-            $config->save('misc.favicon_fid', (int) $faviconFID);
-            $config->save('misc.iphone_home_screen_thumbnail_fid', (int) $iosHomeFID);
-            $config->save('misc.modern_tile_thumbnail_fid', (int) $modernThumbFID);
-            $config->save('misc.modern_tile_thumbnail_bgcolor', $modernThumbBG);
+            $valn = $this->app->make(Numbers::class);
+            $security = $this->app->make('helper/security');
 
-            $this->redirect('/dashboard/system/basics/icons/', 'icons_saved');
+            $fid = $post->get('faviconFID');
+            $config->save('misc.favicon_fid', $valn->integer($fid, 1) ? (int) $fid : null);
+
+            $fid = $post->get('iosHomeFID');
+            $config->save('misc.iphone_home_screen_thumbnail_fid', $valn->integer($fid, 1) ? (int) $fid : null);
+
+            $fid = $post->get('modernThumbFID');
+            $config->save('misc.modern_tile_thumbnail_fid', $valn->integer($fid, 1) ? (int) $fid : null);
+
+            $s = $security->sanitizeString($post->get('modernThumbBG'));
+            $config->save('misc.modern_tile_thumbnail_bgcolor', $s === '' ? null : $s);
+
+            $s = $security->sanitizeString($post->get('themeColor'));
+            $config->save('misc.theme_color', $s === '' ? null : $s);
+            
+            $this->flash('success', t('Icons updated successfully.'));
+
+            return $this->app->make(ResponseFactoryInterface::class)->redirect($this->action(), 302);
         } else {
             $this->set('error', [$this->token->getErrorMessage()]);
         }
