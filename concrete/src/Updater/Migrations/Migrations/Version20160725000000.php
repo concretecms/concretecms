@@ -58,7 +58,7 @@ class Version20160725000000 extends AbstractMigration implements LongRunningMigr
         $this->renameProblematicTables();
         $this->updateDoctrineXmlTables();
         $this->prepareProblematicEntityTables();
-        $this->installEntities(['Concrete\Core\Entity\File\File', 'Concrete\Core\Entity\File\Version']);
+        $this->installEntities(['Concrete\Core\Entity\File\File', 'Concrete\Core\Entity\File\Version', 'Concrete\Core\Entity\File\Image\Thumbnail\Type\Type']);
         $this->installOtherEntities();
         $this->installSite();
         $this->importAttributeTypes();
