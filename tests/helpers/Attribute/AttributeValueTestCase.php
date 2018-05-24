@@ -36,6 +36,7 @@ abstract class AttributeValueTestCase extends ConcreteDatabaseTestCase
         'CollectionVersions',
         'Pages',
         'PageThemes',
+        'Groups',
     ];
 
     protected function setUp()
