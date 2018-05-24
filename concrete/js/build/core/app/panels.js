@@ -95,18 +95,7 @@
     
         this.toggle = function () {
             if (this.isOpen) {
-                if (this.options.pinable )
-                {
-                    if (!this.isPinned )
-                    {
-                        this.isPinned = true;
-                    }
-                    else
-                    {
-                        this.isPinned = false;
-                        this.hide();
-                    }
-                } else this.hide();
+                this.hide();
             } else {
                 this.show();
             }

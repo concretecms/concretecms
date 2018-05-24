@@ -81,23 +81,35 @@
             var $this = $(this);
 			var panelID = $this.attr('data-launch-panel');
 			var panel = ConcretePanelManager.getByIdentifier(panelID);
-            if ( !panel.willBePinned() ) $this.toggleClass('ccm-launch-panel-loading');
-
-            if ( panel.isPinable() )
-            {
-                var parent = $($this.parent());
-                if ( panel.willBePinned() || panel.pinned() ) parent.toggleClass("ccm-toolbar-page-edit-mode-pinned ");
-				if (panel.willBePinned()) {
-					$this.attr('data-original-icon-class', $this.find('i').attr('class'));
-					$this.find('i').removeClass().addClass('fa fa-lock');
-				} else if ($this.attr('data-original-icon-class')) {
-					$this.find('i').removeClass().addClass($this.attr('data-original-icon-class'));
-					$this.removeAttr('data-original-icon-class');
-				}
-            }
+			var parent = $($this.parent());
+			if (!$this.attr('data-original-icon-class')) {
+				$this.attr('data-original-icon-class', $this.find('i').attr('class'));
+			}
+			$this.find('i').removeClass().addClass($this.attr('data-original-icon-class'));
+			if (panel.isPinable() && panel.isPinned) {
+				panel.isPinned = false;
+				parent.removeClass('ccm-toolbar-page-edit-mode-pinned');
+			}
 			panel.toggle();
 			return false;
+		}).on('dblclick', function() {
+            var $this = $(this);
+			var panelID = $this.attr('data-launch-panel');
+			var panel = ConcretePanelManager.getByIdentifier(panelID);
+			if (panel.isPinable()) {
+				var parent = $($this.parent());
+				if ((panel.isOpen && !panel.pinned()) || !panel.isOpen) {
+					$this.find('i').removeClass().addClass('fa fa-lock');
+					parent.addClass('ccm-toolbar-page-edit-mode-pinned');
+					panel.isPinned = true;
+				}
+				if (!panel.isOpen) {
+					panel.toggle();
+				}
+			}
+			return false;
 		});
+
 		$('html').addClass('ccm-panel-ready');
 
 		ConcreteEvent.subscribe('PanelOpen',function(e, data) {
