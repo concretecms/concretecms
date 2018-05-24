@@ -146,10 +146,26 @@ class FileList extends DatabaseItemList implements PagerProviderInterface, Pagin
         $this->filter('fvType', $type);
     }
 
+    /**
+     * Filter the files by their extension.
+     *
+     * @param string|string[] $extension One or more file extensions (with or without leading dot).
+     */
     public function filterByExtension($extension)
     {
-        $this->query->andWhere('fv.fvExtension = :fvExtension');
-        $this->query->setParameter('fvExtension', $extension);
+        $extensions = is_array($extension) ? $extension : [$extension];
+        if (count($extensions) > 0) {
+            $expr = $this->query->expr();
+            $or = $expr->orX();
+            foreach ($extensions as $extension) {
+                $extension = ltrim((string) $extension, '.');
+                $or->add($expr->eq('fv.fvExtension', $this->query->createNamedParameter($extension)));
+                if ($extension === '') {
+                    $or->add($expr->isNull('fv.fvExtension'));
+                }
+            }
+            $this->query->andWhere($or);
+        }
     }
 
     /**

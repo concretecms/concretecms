@@ -23,6 +23,7 @@ class FileFolderManager extends FieldManager
         $this->fileCategory = $fileCategory;
         $this->addGroup('', [
             new TypeField(),
+            new ExtensionField(),
         ]);
     }
 
