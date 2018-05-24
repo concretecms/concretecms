@@ -5,7 +5,7 @@ use Concrete\Core\Block\BlockController;
 
 class Controller extends BlockController
 {
-    public $helpers = ['file'];
+    public $helpers = ['file', 'form'];
     protected $btTable = 'btExternalForm';
     protected $btInterfaceWidth = 420;
     protected $btInterfaceHeight = 175;
