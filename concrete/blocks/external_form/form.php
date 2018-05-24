@@ -19,7 +19,13 @@ foreach ($filenames as $ffilename) {
     <?= $form->select('filename', $optionValues, $filename) ?>
 </div>
 <div class="help-block">
-    <p style="word-break: break-all;"><?= t('This is a list of forms found in your external forms directory:')
-    . '<br>'
-    . DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL; ?></p>
+    <p><?= t('This is a list of forms found in your external forms directory:') ?><br />
+    <code style="word-break: break-all;"><?php
+    if (strpos(DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL, DIR_BASE . '/') === 0) {
+        echo '...', str_replace('/', DIRECTORY_SEPARATOR, substr(DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL, strlen(DIR_BASE)));
+    } else {
+        echo str_replace('/', DIRECTORY_SEPARATOR, DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL);
+    }
+    ?>
+    </code></p>
 </div>
