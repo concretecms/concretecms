@@ -610,7 +610,11 @@ class User extends ConcreteObject
             }
         } else {
             $group = Group::getByID(GUEST_GROUP_ID);
-            $entities = [GroupEntity::getOrCreate($group)];
+            if ($group) {
+                $entities = [GroupEntity::getOrCreate($group)];
+            } else {
+                $entities = [];
+            }
         }
         return $entities;
     }
