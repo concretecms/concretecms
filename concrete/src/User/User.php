@@ -589,7 +589,6 @@ class User extends ConcreteObject
      */
     public function getUserAccessEntityObjects()
     {
-        $entities = [];
         $app = Application::getFacadeApplication();
         $session = $app['session'];
         $validator = $app->make(SessionValidator::class);
@@ -609,6 +608,9 @@ class User extends ConcreteObject
                 $session->set('accessEntities', $entities);
                 $session->set('accessEntitiesUpdated', time());
             }
+        } else {
+            $group = Group::getByID(GUEST_GROUP_ID);
+            $entities = [GroupEntity::getOrCreate($group)];
         }
         return $entities;
     }

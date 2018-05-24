@@ -5,6 +5,7 @@ use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Authentication\AuthenticationTypeFailureException;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Localization\Localization;
+use Concrete\Core\Routing\RedirectResponse;
 use Concrete\Core\User\PostLoginLocation;
 use Exception;
 use PageController;
@@ -187,7 +188,29 @@ class Login extends PageController
         $ue = new \Concrete\Core\User\Event\User($u);
         $this->app->make('director')->dispatch('on_user_login', $ue);
 
-        return $this->chooseRedirect($u);
+        return new RedirectResponse(
+            $this->app->make('url/manager')->resolve(['/login', 'login_complete'])
+        );
+    }
+
+    public function login_complete()
+    {
+        // Move this functionality to a redirected endpoint rather than from within the previous method because
+        // session isn't set until we redirect and reload.
+        $u = new User();
+        if (!$this->error) {
+            $this->error = $this->app->make('helper/validation/error');
+        }
+
+        if ($u->isRegistered()) {
+            $pll = $this->app->make(PostLoginLocation::class);
+            $response = $pll->getPostLoginRedirectResponse(true);
+
+            return $response;
+        } else {
+            $this->error->add(t('User is not registered. Check your authentication controller.'));
+            $u->logout();
+        }
     }
 
     public function on_start()
@@ -227,23 +250,6 @@ class Login extends PageController
         $loc->popActiveContext();
         $this->locales = $locales;
         $this->set('locales', $locales);
-    }
-
-    public function chooseRedirect(User $u)
-    {
-        if (!$this->error) {
-            $this->error = $this->app->make('helper/validation/error');
-        }
-
-        if ($u->isRegistered()) {
-            $pll = $this->app->make(PostLoginLocation::class);
-            $response = $pll->getPostLoginRedirectResponse(true);
-
-            return $response;
-        } else {
-            $this->error->add(t('User is not registered. Check your authentication controller.'));
-            $u->logout();
-        }
     }
 
     /**
