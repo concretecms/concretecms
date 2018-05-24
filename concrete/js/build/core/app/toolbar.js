@@ -77,35 +77,36 @@
             $(this).prepend('<span class="spinner"><div class="double-bounce1"></div><div class="double-bounce2"></div></span>');
         });
 
-		$('[data-launch-panel]').unbind().on('click', function() {
+		$('[data-launch-panel]').unbind().on('click', function(e) {
             var $this = $(this);
 			var panelID = $this.attr('data-launch-panel');
 			var panel = ConcretePanelManager.getByIdentifier(panelID);
-			var parent = $($this.parent());
 			if (!$this.attr('data-original-icon-class')) {
 				$this.attr('data-original-icon-class', $this.find('i').attr('class'));
 			}
-			$this.find('i').removeClass().addClass($this.attr('data-original-icon-class'));
-			if (panel.isPinable() && panel.isPinned) {
-				panel.isPinned = false;
-				parent.removeClass('ccm-toolbar-page-edit-mode-pinned');
+			if (!e.altKey && !$this.find('i').hasClass($this.attr('data-original-icon-class'))) {
+				$this.find('i').removeClass().addClass($this.attr('data-original-icon-class'));
 			}
-			panel.toggle();
-			return false;
-		}).on('dblclick', function() {
-            var $this = $(this);
-			var panelID = $this.attr('data-launch-panel');
-			var panel = ConcretePanelManager.getByIdentifier(panelID);
 			if (panel.isPinable()) {
 				var parent = $($this.parent());
-				if ((panel.isOpen && !panel.pinned()) || !panel.isOpen) {
-					$this.find('i').removeClass().addClass('fa fa-lock');
-					parent.addClass('ccm-toolbar-page-edit-mode-pinned');
-					panel.isPinned = true;
-				}
-				if (!panel.isOpen) {
+				if (e.altKey) {
+					if (!panel.pinned()) {
+						$this.find('i').removeClass().addClass('fa fa-lock');
+						parent.addClass('ccm-toolbar-page-edit-mode-pinned');
+						panel.isPinned = true;
+						if (!panel.isOpen) {
+							panel.show();
+						}
+					}
+				} else {
+					if (panel.isPinned) {
+						panel.isPinned = false;
+						parent.removeClass('ccm-toolbar-page-edit-mode-pinned');
+					}
 					panel.toggle();
 				}
+			} else {
+				panel.toggle();
 			}
 			return false;
 		});
