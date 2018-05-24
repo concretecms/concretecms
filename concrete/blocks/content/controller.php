@@ -1,7 +1,7 @@
 <?php
+
 namespace Concrete\Block\Content;
 
-use Concrete\Core\Backup\ContentImporter\ValueInspector\InspectionRoutine\PictureRoutine;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Editor\LinkAbstractor;
 use Concrete\Core\File\Tracker\FileTrackableInterface;
@@ -19,9 +19,10 @@ use Concrete\Core\Statistics\UsageTracker\AggregateTracker;
  */
 class Controller extends BlockController implements FileTrackableInterface
 {
+    public $content;
     protected $btTable = 'btContentLocal';
-    protected $btInterfaceWidth = "600";
-    protected $btInterfaceHeight = "465";
+    protected $btInterfaceWidth = 600;
+    protected $btInterfaceHeight = 465;
     protected $btCacheBlockRecord = true;
     protected $btCacheBlockOutput = true;
     protected $btCacheBlockOutputOnPost = true;
@@ -30,27 +31,25 @@ class Controller extends BlockController implements FileTrackableInterface
     protected $btCacheBlockOutputForRegisteredUsers = false;
     protected $btCacheBlockOutputLifetime = 0; //until manually updated or cleared
 
-    public $content;
-
     /**
-     * @var \Concrete\Core\Statistics\UsageTracker\AggregateTracker
+     * @var \Concrete\Core\Statistics\UsageTracker\AggregateTracker|null
      */
     protected $tracker;
 
+    public function __construct($obj = null, AggregateTracker $tracker = null)
+    {
+        parent::__construct($obj);
+        $this->tracker = $tracker;
+    }
+
     public function getBlockTypeDescription()
     {
-        return t("HTML/WYSIWYG Editor Content.");
+        return t('HTML/WYSIWYG Editor Content.');
     }
 
     public function getBlockTypeName()
     {
-        return t("Content");
-    }
-
-    public function __construct($obj=null, AggregateTracker $tracker=null)
-    {
-        parent::__construct($obj);
-        $this->tracker = $tracker;
+        return t('Content');
     }
 
     public function getContent()
@@ -92,7 +91,7 @@ class Controller extends BlockController implements FileTrackableInterface
     {
         $content = $blockNode->data->record->content;
         $content = LinkAbstractor::import($content);
-        $args = array('content' => $content);
+        $args = ['content' => $content];
 
         return $args;
     }
@@ -120,7 +119,7 @@ class Controller extends BlockController implements FileTrackableInterface
     }
 
     /**
-     * Tell the tracker to forget us when we are deleted
+     * Tell the tracker to forget us when we are deleted.
      */
     public function delete()
     {
@@ -133,9 +132,9 @@ class Controller extends BlockController implements FileTrackableInterface
         $files = [];
         $matches = [];
         if (preg_match_all('/\<concrete-picture[^>]*?fID\s*=\s*[\'"]([^\'"]*?)[\'"]/i', $this->content, $matches)) {
-            list(,$ids) = $matches;
+            list(, $ids) = $matches;
             foreach ($ids as $id) {
-                $files[] = intval($id);
+                $files[] = (int) $id;
             }
         }
 
@@ -146,5 +145,4 @@ class Controller extends BlockController implements FileTrackableInterface
     {
         return $this->getCollectionObject();
     }
-
 }

@@ -1,38 +1,39 @@
 <?php
+
 namespace Concrete\Block\ImageSlider;
 
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Editor\LinkAbstractor;
 use Concrete\Core\File\Tracker\FileTrackableInterface;
 use Concrete\Core\Statistics\UsageTracker\AggregateTracker;
+use Core;
 use Database;
 use Page;
-use Concrete\Core\Editor\LinkAbstractor;
-use Core;
 
 class Controller extends BlockController implements FileTrackableInterface
 {
     protected $btTable = 'btImageSlider';
-    protected $btExportTables = array('btImageSlider', 'btImageSliderEntries');
-    protected $btInterfaceWidth = "600";
+    protected $btExportTables = ['btImageSlider', 'btImageSliderEntries'];
+    protected $btInterfaceWidth = 600;
+    protected $btInterfaceHeight = 550;
     protected $btWrapperClass = 'ccm-ui';
-    protected $btInterfaceHeight = "550";
     protected $btCacheBlockRecord = true;
-    protected $btExportFileColumns = array('fID');
+    protected $btExportFileColumns = ['fID'];
     protected $btCacheBlockOutput = true;
     protected $btCacheBlockOutputOnPost = true;
     protected $btCacheBlockOutputForRegisteredUsers = false;
     protected $btIgnorePageThemeGridFrameworkContainer = true;
 
     /**
-     * @var \Concrete\Core\Statistics\UsageTracker\AggregateTracker
+     * @var \Concrete\Core\Statistics\UsageTracker\AggregateTracker|null
      */
     protected $tracker;
 
     /**
      * Instantiates the block controller.
      *
-     * @param BlockType|null $obj
-     * @param \Concrete\Core\Statistics\UsageTracker\AggregateTracker $tracker
+     * @param \Concrete\Core\Block\BlockType\BlockType|null $obj
+     * @param \Concrete\Core\Statistics\UsageTracker\AggregateTracker|null $tracker
      */
     public function __construct($obj = null, AggregateTracker $tracker = null)
     {
@@ -42,24 +43,24 @@ class Controller extends BlockController implements FileTrackableInterface
 
     public function getBlockTypeDescription()
     {
-        return t("Display your images and captions in an attractive slideshow format.");
+        return t('Display your images and captions in an attractive slideshow format.');
     }
 
     public function getBlockTypeName()
     {
-        return t("Image Slider");
+        return t('Image Slider');
     }
 
     public function getSearchableContent()
     {
         $content = '';
         $db = Database::get();
-        $v = array($this->bID);
+        $v = [$this->bID];
         $q = 'select * from btImageSliderEntries where bID = ?';
         $r = $db->query($q, $v);
         foreach ($r as $row) {
-            $content .= $row['title'].' ';
-            $content .= $row['description'].' ';
+            $content .= $row['title'] . ' ';
+            $content .= $row['description'] . ' ';
         }
 
         return $content;
@@ -76,7 +77,7 @@ class Controller extends BlockController implements FileTrackableInterface
         $this->requireAsset('core/file-manager');
         $this->requireAsset('core/sitemap');
         $db = Database::get();
-        $query = $db->GetAll('SELECT * from btImageSliderEntries WHERE bID = ? ORDER BY sortOrder', array($this->bID));
+        $query = $db->GetAll('SELECT * from btImageSliderEntries WHERE bID = ? ORDER BY sortOrder', [$this->bID]);
         $this->set('rows', $query);
     }
 
@@ -102,9 +103,9 @@ class Controller extends BlockController implements FileTrackableInterface
     public function getEntries()
     {
         $db = Database::get();
-        $r = $db->GetAll('SELECT * from btImageSliderEntries WHERE bID = ? ORDER BY sortOrder', array($this->bID));
+        $r = $db->GetAll('SELECT * from btImageSliderEntries WHERE bID = ? ORDER BY sortOrder', [$this->bID]);
         // in view mode, linkURL takes us to where we need to go whether it's on our site or elsewhere
-        $rows = array();
+        $rows = [];
         foreach ($r as $q) {
             if (!$q['linkURL'] && $q['internalLinkCID']) {
                 $c = Page::getByID($q['internalLinkCID'], 'ACTIVE');
@@ -127,12 +128,12 @@ class Controller extends BlockController implements FileTrackableInterface
     {
         parent::duplicate($newBID);
         $db = Database::get();
-        $v = array($this->bID);
+        $v = [$this->bID];
         $q = 'select * from btImageSliderEntries where bID = ?';
         $r = $db->query($q, $v);
         while ($row = $r->FetchRow()) {
             $db->execute('INSERT INTO btImageSliderEntries (bID, fID, linkURL, title, description, sortOrder, internalLinkCID) values(?,?,?,?,?,?,?)',
-                array(
+                [
                     $newBID,
                     $row['fID'],
                     $row['linkURL'],
@@ -140,7 +141,7 @@ class Controller extends BlockController implements FileTrackableInterface
                     $row['description'],
                     $row['sortOrder'],
                     $row['internalLinkCID'],
-                )
+                ]
             );
         }
     }
@@ -148,7 +149,7 @@ class Controller extends BlockController implements FileTrackableInterface
     public function delete()
     {
         $db = Database::get();
-        $db->delete('btImageSliderEntries', array('bID' => $this->bID));
+        $db->delete('btImageSliderEntries', ['bID' => $this->bID]);
         parent::delete();
 
         $this->tracker->forget($this);
@@ -157,8 +158,8 @@ class Controller extends BlockController implements FileTrackableInterface
     public function validate($args)
     {
         $error = Core::make('helper/validation/error');
-        $timeout = intval($args['timeout']);
-        $speed = intval($args['speed']);
+        $timeout = (int) $args['timeout'];
+        $speed = (int) $args['speed'];
 
         if (!$timeout) {
             $error->add(t('Slide Duration must be greater than 0.'));
@@ -177,18 +178,18 @@ class Controller extends BlockController implements FileTrackableInterface
 
     public function save($args)
     {
-        $args += array(
+        $args += [
             'timeout' => 4000,
             'speed' => 500,
-        );
-        $args['timeout'] = intval($args['timeout']);
-        $args['speed'] = intval($args['speed']);
+        ];
+        $args['timeout'] = (int) $args['timeout'];
+        $args['speed'] = (int) $args['speed'];
         $args['noAnimate'] = isset($args['noAnimate']) ? 1 : 0;
         $args['pause'] = isset($args['pause']) ? 1 : 0;
-        $args['maxWidth'] = isset($args['maxWidth']) ? intval($args['maxWidth']) : 0;
+        $args['maxWidth'] = isset($args['maxWidth']) ? (int) $args['maxWidth'] : 0;
 
         $db = Database::get();
-        $db->execute('DELETE from btImageSliderEntries WHERE bID = ?', array($this->bID));
+        $db->execute('DELETE from btImageSliderEntries WHERE bID = ?', [$this->bID]);
         parent::save($args);
         if (isset($args['sortOrder'])) {
             $count = count($args['sortOrder']);
@@ -197,7 +198,7 @@ class Controller extends BlockController implements FileTrackableInterface
             while ($i < $count) {
                 $linkURL = $args['linkURL'][$i];
                 $internalLinkCID = $args['internalLinkCID'][$i];
-                switch (intval($args['linkType'][$i])) {
+                switch ((int) $args['linkType'][$i]) {
                     case 1:
                         $linkURL = '';
                         break;
@@ -215,15 +216,15 @@ class Controller extends BlockController implements FileTrackableInterface
                 }
 
                 $db->execute('INSERT INTO btImageSliderEntries (bID, fID, title, description, sortOrder, linkURL, internalLinkCID) values(?, ?, ?, ?,?,?,?)',
-                    array(
+                    [
                         $this->bID,
-                        intval($args['fID'][$i]),
+                        (int) $args['fID'][$i],
                         $args['title'][$i],
                         $args['description'][$i],
                         $args['sortOrder'][$i],
                         $linkURL,
                         $internalLinkCID,
-                    )
+                    ]
                 );
                 ++$i;
             }
@@ -234,7 +235,7 @@ class Controller extends BlockController implements FileTrackableInterface
 
     public function getUsedFiles()
     {
-        return array_map(function($entry) {
+        return array_map(function ($entry) {
             return $entry['fID'];
         }, $this->getEntries());
     }
@@ -243,5 +244,4 @@ class Controller extends BlockController implements FileTrackableInterface
     {
         return $this->getCollectionObject();
     }
-
 }

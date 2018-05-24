@@ -1,7 +1,7 @@
 <?php
+
 namespace Concrete\Block\Image;
 
-use Concrete\Core\Block\Block;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Error\Error;
 use Concrete\Core\File\File;
@@ -25,7 +25,9 @@ class Controller extends BlockController implements FileTrackableInterface
         'image',
     ];
 
-    /** @var AggregateTracker */
+    /**
+     * @var \Concrete\Core\Statistics\UsageTracker\AggregateTracker|null
+     */
     protected $tracker;
 
     public function __construct($blockType = null, AggregateTracker $tracker = null)
@@ -328,6 +330,8 @@ class Controller extends BlockController implements FileTrackableInterface
     }
 
     /**
+     * @param array $args
+     *
      * @return Error
      */
     public function validate($args)
@@ -343,7 +347,7 @@ class Controller extends BlockController implements FileTrackableInterface
             $e->add(t('Please select an image.'));
         }
 
-        if (isset($args['cropImage']) && (intval($args['maxWidth']) <= 0 || (intval($args['maxHeight']) <= 0)) && !$svg) {
+        if (isset($args['cropImage']) && ((int) $args['maxWidth'] <= 0 || ((int) $args['maxHeight'] <= 0)) && !$svg) {
             $e->add(t('Cropping an image requires setting a max width and max height.'));
         }
 
@@ -385,8 +389,8 @@ class Controller extends BlockController implements FileTrackableInterface
         $args['fOnstateID'] = $args['fOnstateID'] != '' ? $args['fOnstateID'] : 0;
         $args['fileLinkID'] = $args['fileLinkID'] != '' ? $args['fileLinkID'] : 0;
         $args['cropImage'] = isset($args['cropImage']) ? 1 : 0;
-        $args['maxWidth'] = intval($args['maxWidth']) > 0 ? intval($args['maxWidth']) : 0;
-        $args['maxHeight'] = intval($args['maxHeight']) > 0 ? intval($args['maxHeight']) : 0;
+        $args['maxWidth'] = (int) $args['maxWidth'] > 0 ? (int) $args['maxWidth'] : 0;
+        $args['maxHeight'] = (int) $args['maxHeight'] > 0 ? (int) $args['maxHeight'] : 0;
 
         if (!$args['constrainImage']) {
             $args['cropImage'] = 0;
@@ -394,7 +398,7 @@ class Controller extends BlockController implements FileTrackableInterface
             $args['maxHeight'] = 0;
         }
 
-        switch (intval($args['linkType'])) {
+        switch ((int) $args['linkType']) {
             case 1:
                 $args['externalLink'] = '';
                 $args['fileLinkID'] = 0;
