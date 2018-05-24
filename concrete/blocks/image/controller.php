@@ -363,7 +363,7 @@ class Controller extends BlockController implements FileTrackableInterface
      */
     public function delete()
     {
-        $this->tracker->forget($this);
+        $this->getTracker()->forget($this);
         parent::delete();
     }
 
@@ -426,7 +426,7 @@ class Controller extends BlockController implements FileTrackableInterface
         unset($args['linkType']);
 
         parent::save($args);
-        $this->tracker->track($this);
+        $this->getTracker()->track($this);
     }
 
     public function getUsedFiles()
@@ -437,5 +437,17 @@ class Controller extends BlockController implements FileTrackableInterface
     public function getUsedCollection()
     {
         return $this->getCollectionObject();
+    }
+
+    /**
+     * @return \Concrete\Core\Statistics\UsageTracker\AggregateTracker
+     */
+    protected function getTracker()
+    {
+        if ($this->tracker === null) {
+            $this->tracker = $this->app->make(AggregateTracker::class);
+        }
+
+        return $this->tracker;
     }
 }
