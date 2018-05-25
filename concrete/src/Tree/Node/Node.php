@@ -465,7 +465,7 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
             $rows = $db->fetchAll('select treeNodeID from TreeNodes where treeNodeParentID = ?', [$treeNodeParentID]);
             foreach ($rows as $row) {
                 $nodeIDs[] = $row['treeNodeID'];
-                $walk($nodeID);
+                $walk($row['treeNodeID']);
             }
         };
         $walk($this->treeNodeID);
@@ -563,7 +563,7 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
     /**
      * Add a new node.
      *
-     * @param Node|null|false $parent The parent node.
+     * @param Node|null|false $parent the parent node
      *
      * @return Node
      */
