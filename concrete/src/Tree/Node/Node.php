@@ -1,48 +1,47 @@
 <?php
+
 namespace Concrete\Core\Tree\Node;
 
 use Concrete\Core\Foundation\ConcreteObject;
-use Concrete\Core\Permission\Access\Access;
-use Concrete\Core\Permission\Access\Entity\GroupCombinationEntity;
-use Concrete\Core\Permission\Access\Entity\GroupEntity;
-use Concrete\Core\Permission\Access\Entity\UserEntity;
 use Concrete\Core\Permission\AssignableObjectInterface;
 use Concrete\Core\Permission\AssignableObjectTrait;
-use Concrete\Core\Permission\Key\Key;
-use Concrete\Core\Permission\Key\TreeNodeKey;
 use Concrete\Core\Support\Facade\Facade;
-use Concrete\Core\Tree\Tree;
-use Concrete\Core\User\User;
-use Concrete\Core\User\UserInfo;
-use Database;
+use Concrete\Core\Tree\Node\Exception\MoveException;
 use Concrete\Core\Tree\Node\NodeType as TreeNodeType;
+use Concrete\Core\Tree\Tree;
+use Core;
+use Database;
+use Gettext\Translations;
 use PermissionKey;
 use Permissions;
-use Core;
 use stdClass;
-use Gettext\Translations;
-use Concrete\Core\Tree\Node\Exception\MoveException;
 
 abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\ObjectInterface, AssignableObjectInterface
 {
-
     use AssignableObjectTrait;
+
+    protected $childNodes = [];
+
+    protected $childNodesLoaded = false;
+
+    protected $treeNodeIsSelected = false;
+
+    protected $tree;
 
     abstract public function loadDetails();
 
-    /** Returns the display name for this tree node (localized and escaped accordingly to $format)
-     * @param  string $format = 'html' Escape the result in html format (if $format is 'html'). If $format is 'text' or any other value, the display name won't be escaped.
+    /**
+     * Returns the display name for this tree node (localized and escaped accordingly to $format).
+     *
+     * @param string $format = 'html' Escape the result in html format (if $format is 'html'). If $format is 'text' or any other value, the display name won't be escaped.
      *
      * @return string
      */
     abstract public function getTreeNodeDisplayName($format = 'html');
-    abstract public function deleteDetails();
-    abstract public function getTreeNodeTypeName();
 
-    protected $childNodes = [];
-    protected $childNodesLoaded = false;
-    protected $treeNodeIsSelected = false;
-    protected $tree;
+    abstract public function deleteDetails();
+
+    abstract public function getTreeNodeTypeName();
 
     public function getTreeNodeTypeDisplayName($format = 'html')
     {
@@ -70,10 +69,12 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
     {
         return $this->treeNodeID;
     }
+
     public function getTreeNodeParentID()
     {
         return $this->treeNodeParentID;
     }
+
     public function getTreeNodeParentObject()
     {
         return self::getByID($this->treeNodeParentID);
@@ -119,10 +120,12 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
     {
         return $this->treeID;
     }
+
     public function getTreeNodeTypeID()
     {
         return $this->treeNodeTypeID;
     }
+
     public function getTreeNodeTypeObject()
     {
         if (!isset($this->treeNodeType)) {
@@ -139,14 +142,22 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
             return $type->getTreeNodeTypeHandle();
         }
     }
+
+    /**
+     * Return the list of child nodes (call populateDirectChildrenOnly() before calling this method).
+     *
+     * @return static[]
+     */
     public function getChildNodes()
     {
         return $this->childNodes;
     }
+
     public function overrideParentTreeNodePermissions()
     {
         return $this->treeNodeOverridePermissions;
     }
+
     public function getTreeNodePermissionsNodeID()
     {
         return $this->inheritPermissionsFromTreeNodeID;
@@ -163,16 +174,17 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
         } else {
             return (int) $db->fetchColumn('select count(treeNodeID) from TreeNodes where treeNodeParentID = ?', [$this->treeNodeID]);
         }
-
     }
 
-    public function getChildNodesLoaded() 
+    public function getChildNodesLoaded()
     {
         return $this->childNodesLoaded;
     }
 
     /**
      * Transforms a node to another node.
+     *
+     * @param mixed $treeNodeType
      */
     public function transformNode($treeNodeType)
     {
@@ -208,11 +220,8 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
     /**
      * Recursively searches for a children node and marks it as selected.
      *
-     * @param $nodeID - nodeID of the children to be selected
-     * @param $loadMissingChildren - if set to true, it will fetch, as needed, the children 
-     * of the current node, that have not been loaded yet
-     *
-     * @return JsonResponse
+     * @param int $nodeID ID of the children to be selected
+     * @param bool $loadMissingChildren if set to true, it will fetch, as needed, the children of the current node, that have not been loaded yet
      */
     public function selectChildrenNodesByID($nodeID, $loadMissingChildren = false)
     {
@@ -220,7 +229,7 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
             $this->treeNodeIsSelected = true;
         } else {
             foreach ($this->getChildNodes() as $childnode) {
-                if( $loadMissingChildren && !$childnode->getChildNodesLoaded() ) {
+                if ($loadMissingChildren && !$childnode->getChildNodesLoaded()) {
                     $childnode->populateDirectChildrenOnly();
                 }
 
@@ -334,21 +343,10 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
         return $path;
     }
 
-    protected function duplicateChildren(Node $node)
-    {
-        if ($this->overrideParentTreeNodePermissions()) {
-            $node->setTreeNodePermissionsToOverride();
-        }
-        $this->populateDirectChildrenOnly();
-        foreach ($this->getChildNodes() as $childnode) {
-            $childnode->duplicate($node);
-        }
-    }
-
     public function setChildPermissionsToOverride()
     {
         $this->populateDirectChildrenOnly();
-        foreach($this->getChildNodes() as $child) {
+        foreach ($this->getChildNodes() as $child) {
             $child->setTreeNodePermissionsToOverride();
         }
     }
@@ -436,9 +434,9 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
     /**
      * Check if this node can be moved under another parent.
      *
-     * @param Node $newParent The new parent node.
+     * @param Node $newParent the new parent node
      *
-     * @return MoveException|null Return a MoveException in case of problems, null in case of success.
+     * @return MoveException|null return a MoveException in case of problems, null in case of success
      */
     public function checkMove(Node $newParent)
     {
@@ -464,7 +462,7 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
      *
      * @param Node $newParent The new parent node
      *
-     * @throws MoveException Throws a MoveException in case of errors.
+     * @throws MoveException throws a MoveException in case of errors
      */
     public function move(Node $newParent)
     {
@@ -492,25 +490,13 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
     }
 
     /**
-     * Update the Date Modified to the current time
-     *
+     * Update the Date Modified to the current time.
      */
-    public function updateDateModified(){
-            $dateModified = Core::make('date')->toDB();
-            $db = Database::connection();
-            $db->update('TreeNodes', ['dateModified'=>$dateModified],['treeNodeID'=>$this->getTreeNodeID()]);
-    }
-
-    protected function rescanChildrenDisplayOrder()
+    public function updateDateModified()
     {
+        $dateModified = Core::make('date')->toDB();
         $db = Database::connection();
-        $r = $db->executeQuery('select treeNodeID from TreeNodes WHERE treeNodeParentID = ? order by treeNodeDisplayOrder asc', [$this->getTreeNodeID()]);
-        $displayOrder = 0;
-        while ($row = $r->fetch()) {
-            $db->executeQuery('update TreeNodes set treeNodeDisplayOrder = ? where treeNodeID = ?', [$displayOrder, $row['treeNodeID']]);
-            ++$displayOrder;
-        }
-        $r->closeCursor();
+        $db->update('TreeNodes', ['dateModified' => $dateModified], ['treeNodeID' => $this->getTreeNodeID()]);
     }
 
     public function saveChildOrder($orderedIDs)
@@ -619,7 +605,6 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
 
     public function delete()
     {
-
         // do other nodes that aren't child nodes somehow
         // inherit permissions from here? If so, we rescan those nodes
         $db = Database::connection();
@@ -638,7 +623,7 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
         $r->closeCursor();
 
         $parent = $this->getTreeNodeParentObject();
-        if (is_object($parent)){
+        if (is_object($parent)) {
             $parent->updateDateModified();
         }
 
@@ -674,10 +659,11 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
                 $node->loadDetails();
             }
             $cache->save($item->set($node));
+
             return $node;
         }
     }
-    
+
     /**
      * @param Translations $translations
      *
@@ -710,45 +696,12 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
         }
     }
 
-    protected function populateRecursiveNodes($treeNodeTypeID, $nodes, $nodeRow, $level, $returnNodeObjects = false, $includeThisNode = true)
-    {
-        $db = Database::connection();
-        $children = $db->fetchAll('select treeNodeID, treeNodeTypeID, treeNodeParentID, treeNodeDisplayOrder from TreeNodes where treeNodeTypeID = ? and treeNodeParentID = ? order by treeNodeDisplayOrder asc', [$treeNodeTypeID, $nodeRow['treeNodeID']]);
-        
-        if ($includeThisNode) {
-            $data = [
-                'treeNodeID' => $nodeRow['treeNodeID'],
-                'treeNodeDisplayOrder' => $nodeRow['treeNodeDisplayOrder'],
-                'treeNodeParentID' => $nodeRow['treeNodeParentID'],
-                'level' => $level,
-                'total' => count($children),
-            ];
-            if ($returnNodeObjects) {
-                $node = self::getByID($nodeRow['treeNodeID']);
-                if (is_object($node)) {
-                        $data['treeNodeObject'] = $node;
-                }
-            }
-
-            $nodes[] = $data;
-        }
-        ++$level;
-        if (count($children) > 0) {
-            foreach ($children as $nodeRow) {
-                $nodes = $this->populateRecursiveNodes($treeNodeTypeID, $nodes, $nodeRow, $level, $returnNodeObjects);
-            }
-        }
-
-        return $nodes;
-    }
-
     public function getHierarchicalNodesOfType($treeNodeTypeHandle, $level = 1, $returnNodeObjects = false, $includeThisNode = true)
     {
         $treeNodeType = TreeNodeType::getByHandle($treeNodeTypeHandle);
-        
 
-        $nodesOfType = $this->populateRecursiveNodes($treeNodeType->getTreeNodeTypeID(), array(), array('treeNodeID' => $this->getTreeNodeID(), 'treeNodeParentID' => $this->getTreeNodeParentID(), 'treeNodeDisplayOrder' => 0), $level, $returnNodeObjects, $includeThisNode);
-        
+        $nodesOfType = $this->populateRecursiveNodes($treeNodeType->getTreeNodeTypeID(), [], ['treeNodeID' => $this->getTreeNodeID(), 'treeNodeParentID' => $this->getTreeNodeParentID(), 'treeNodeDisplayOrder' => 0], $level, $returnNodeObjects, $includeThisNode);
+
         return $nodesOfType;
     }
 
@@ -772,5 +725,60 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
         }
 
         return $nodeList;
+    }
+
+    protected function duplicateChildren(Node $node)
+    {
+        if ($this->overrideParentTreeNodePermissions()) {
+            $node->setTreeNodePermissionsToOverride();
+        }
+        $this->populateDirectChildrenOnly();
+        foreach ($this->getChildNodes() as $childnode) {
+            $childnode->duplicate($node);
+        }
+    }
+
+    protected function rescanChildrenDisplayOrder()
+    {
+        $db = Database::connection();
+        $r = $db->executeQuery('select treeNodeID from TreeNodes WHERE treeNodeParentID = ? order by treeNodeDisplayOrder asc', [$this->getTreeNodeID()]);
+        $displayOrder = 0;
+        while ($row = $r->fetch()) {
+            $db->executeQuery('update TreeNodes set treeNodeDisplayOrder = ? where treeNodeID = ?', [$displayOrder, $row['treeNodeID']]);
+            ++$displayOrder;
+        }
+        $r->closeCursor();
+    }
+
+    protected function populateRecursiveNodes($treeNodeTypeID, $nodes, $nodeRow, $level, $returnNodeObjects = false, $includeThisNode = true)
+    {
+        $db = Database::connection();
+        $children = $db->fetchAll('select treeNodeID, treeNodeTypeID, treeNodeParentID, treeNodeDisplayOrder from TreeNodes where treeNodeTypeID = ? and treeNodeParentID = ? order by treeNodeDisplayOrder asc', [$treeNodeTypeID, $nodeRow['treeNodeID']]);
+
+        if ($includeThisNode) {
+            $data = [
+                'treeNodeID' => $nodeRow['treeNodeID'],
+                'treeNodeDisplayOrder' => $nodeRow['treeNodeDisplayOrder'],
+                'treeNodeParentID' => $nodeRow['treeNodeParentID'],
+                'level' => $level,
+                'total' => count($children),
+            ];
+            if ($returnNodeObjects) {
+                $node = self::getByID($nodeRow['treeNodeID']);
+                if (is_object($node)) {
+                    $data['treeNodeObject'] = $node;
+                }
+            }
+
+            $nodes[] = $data;
+        }
+        ++$level;
+        if (count($children) > 0) {
+            foreach ($children as $nodeRow) {
+                $nodes = $this->populateRecursiveNodes($treeNodeTypeID, $nodes, $nodeRow, $level, $returnNodeObjects);
+            }
+        }
+
+        return $nodes;
     }
 }
