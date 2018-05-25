@@ -1,18 +1,16 @@
 <?php
+
 namespace Concrete\Core\Tree\Type;
 
-use Concrete\Core\Permission\Access\Access;
-use Concrete\Core\Permission\Access\Entity\GroupEntity;
-use Concrete\Core\Permission\Key\CategoryTreeNodeKey;
-use Concrete\Core\Tree\Node\Type\Category;
 use Concrete\Core\Tree\Node\Type\FileFolder;
 use Concrete\Core\Tree\Tree;
-use Concrete\Core\User\Group\Group as ConcreteGroup;
 use Database;
 
 class FileManager extends Tree
 {
-    /** Returns the standard name for this tree
+    /**
+     * Returns the standard name for this tree.
+     *
      * @return string
      */
     public function getTreeName()
@@ -20,7 +18,9 @@ class FileManager extends Tree
         return 'File Manager';
     }
 
-    /** Returns the display name for this tree (localized and escaped accordingly to $format)
+    /**
+     * Returns the display name for this tree (localized and escaped accordingly to $format).
+     *
      * @param  string $format = 'html' Escape the result in html format (if $format is 'html'). If $format is 'text' or any other value, the display name won't be escaped.
      *
      * @return string
@@ -37,6 +37,11 @@ class FileManager extends Tree
         }
     }
 
+    /**
+     * Get the FileManager instance.
+     *
+     * @return FileManager|null
+     */
     public static function get()
     {
         $db = Database::connection();
@@ -47,10 +52,6 @@ class FileManager extends Tree
     }
 
     public function exportDetails(\SimpleXMLElement $sx)
-    {
-    }
-
-    protected function deleteDetails()
     {
     }
 
@@ -67,8 +68,11 @@ class FileManager extends Tree
         return $tree;
     }
 
-    protected function loadDetails()
+    protected function deleteDetails()
     {
     }
 
+    protected function loadDetails()
+    {
+    }
 }
