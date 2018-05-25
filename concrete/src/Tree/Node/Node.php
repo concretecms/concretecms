@@ -511,6 +511,13 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
         }
     }
 
+    /**
+     * Add a new node.
+     *
+     * @param Node|null|false $parent The parent node.
+     *
+     * @return Node
+     */
     public static function add($parent = false)
     {
         $db = Database::connection();
@@ -524,6 +531,8 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
             $inheritPermissionsFromTreeNodeID = $parent->getTreeNodePermissionsNodeID();
             $treeNodeDisplayOrder = (int) $db->fetchColumn('select count(treeNodeDisplayOrder) from TreeNodes where treeNodeParentID = ?', [$treeNodeParentID]);
             $parent->updateDateModified();
+        } else {
+            $parent = null;
         }
 
         $treeNodeTypeHandle = uncamelcase(strrchr(get_called_class(), '\\'));
@@ -549,6 +558,10 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
 
         if (!$inheritPermissionsFromTreeNodeID) {
             $node->setTreeNodePermissionsToOverride();
+        }
+
+        if ($parent !== null && $parent->childNodesLoaded) {
+            $parent->childNodes[] = $node;
         }
 
         return $node;
