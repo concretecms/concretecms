@@ -90,7 +90,7 @@ class ContentImporter
         }
         $contents = Core::make('helper/file')->getDirectoryContents($fromPath);
         foreach ($contents as $filename) {
-            if (!is_dir($filename)) {
+            if (!is_dir($fromPath . '/' . $filename)) {
                 if (preg_match("/([0-9]{12}]*)\_(.*)/", $filename, $matches)) {
                     // a prefix is already present in the filename.
                     $fvPrefix = $matches[1];
@@ -101,6 +101,9 @@ class ContentImporter
                 }
 
                 $fv = $fh->import($fromPath . '/' . $filename, $fvFilename, null, $fvPrefix);
+                if (!is_object($fv)) {
+                    throw new \Exception(Importer::getErrorMessage($fv));
+                }
                 if (!$computeThumbnails) {
                     $types = \Concrete\Core\File\Image\Thumbnail\Type\Type::getVersionList();
                     foreach ($types as $type) {

@@ -8,7 +8,7 @@ return [
      */
     'version' => '8.4.0RC4',
     'version_installed' => '8.4.0RC4',
-    'version_db' => '20180518153531', // the key of the latest database migration
+    'version_db' => '20180524000000', // the key of the latest database migration
 
     /*
      * Installation status
@@ -585,6 +585,7 @@ return [
         'concrete5_secure' => 'https://www.concrete5.org',
         'newsflow' => 'http://newsflow.concrete5.org',
         'background_feed' => '//backgroundimages.concrete5.org/wallpaper',
+        'privacy_policy' => '//www.concrete5.org/legal/privacy-policy',
         'background_feed_secure' => 'https://backgroundimages.concrete5.org/wallpaper',
         'background_info' => 'http://backgroundimages.concrete5.org/get_image_data.php',
         'videos' => 'https://www.youtube.com/user/concrete5cms/videos',

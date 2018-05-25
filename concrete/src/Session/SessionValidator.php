@@ -95,6 +95,12 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
         return $invalidate;
     }
 
+    public function hasActiveSession()
+    {
+        $cookie = $this->app['cookie'];
+        return $cookie->has($this->config->get('concrete.session.name'));
+    }
+
     /**
      * @return bool
      */

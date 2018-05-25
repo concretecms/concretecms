@@ -131,7 +131,7 @@ class PostLoginLocation
     }
 
     /**
-     * Get the default post-login URL.
+     * Get the default post-login URLgetDefaultPostLoginUrl.
      *
      * @return string Empty string if unavailable
      */
