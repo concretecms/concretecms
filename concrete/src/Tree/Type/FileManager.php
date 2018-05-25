@@ -45,10 +45,9 @@ class FileManager extends Tree
     public static function get()
     {
         $db = Database::connection();
-        $treeTypeID = $db->GetOne('select treeTypeID from TreeTypes where treeTypeHandle = ?', array('file_manager'));
-        $treeID = $db->GetOne('select treeID from Trees where treeTypeID = ?', array($treeTypeID));
+        $treeID = $db->fetchColumn('select Trees.treeID from TreeTypes inner join Trees on TreeTypes.treeTypeID = Trees.treeTypeID where TreeTypes.treeTypeHandle = ?', ['file_manager']);
 
-        return Tree::getByID($treeID);
+        return $treeID ? Tree::getByID($treeID) : null;
     }
 
     public function exportDetails(\SimpleXMLElement $sx)
