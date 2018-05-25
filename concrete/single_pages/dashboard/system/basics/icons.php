@@ -21,7 +21,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
         <legend><?= t('Favicon') ?></legend>
             <div class="help-block"><?= t('Your image should be 16x16 pixels, and should be a gif or a png with a .ico file extension.') ?></div>
             <div class="form-group">
-                <?= $concrete_asset_library->file('ccm-favicon-file', 'faviconFID', t('Choose File'), $favicon) ?>
+                <?= $concrete_asset_library->image('ccm-favicon-file', 'faviconFID', t('Choose File'), $favicon, ['filters' => [['field' => 'extension', 'extension' => 'ico']]]) ?>
             </div>
     </fieldset>
 
@@ -29,7 +29,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
         <legend><?= t('iPhone Thumbnail') ?></legend>
         <div class="help-block"><?= t('iPhone home screen icons should be 57x57 and be in the .png format.') ?></div>
         <div class="form-group">
-            <?= $concrete_asset_library->file('ccm-iphone-file', 'iosHomeFID', t('Choose File'), $iosHome) ?>
+            <?= $concrete_asset_library->image('ccm-iphone-file', 'iosHomeFID', t('Choose File'), $iosHome, ['filters' => [['field' => 'extension', 'extension' => 'png']]]) ?>
         </div>
     </fieldset>
 
@@ -38,7 +38,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
         <div class="help-block"><?= t('Windows 8 start screen tiles should be 144x144 and be in the .png format.') ?></div>
         <div class="form-group">
             <label class="control-label"><?= t('File') ?></label>
-            <?= $concrete_asset_library->file('ccm-modern-file', 'modernThumbFID', t('Choose File'), $modernThumb) ?>
+            <?= $concrete_asset_library->image('ccm-modern-file', 'modernThumbFID', t('Choose File'), $modernThumb, ['filters' => [['field' => 'extension', 'extension' => 'png']]]) ?>
         </div>
         <div class="form-group">
             <label class="control-label"><?= t('Background Color') ?></label>
