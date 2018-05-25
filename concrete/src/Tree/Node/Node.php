@@ -153,6 +153,55 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
         return $this->childNodes;
     }
 
+    /**
+     * Get the first child node that has a specific name.
+     *
+     * @param string $name The name of the child node
+     * @param bool $create Should the child node be created if it does not exist?
+     *
+     * @return static|null return NULL if no child node has the specified name and $create is false
+     */
+    public function getChildNodeByName($name, $create = false)
+    {
+        $result = null;
+        $this->populateDirectChildrenOnly();
+        foreach ($this->getChildNodes() as $childNode) {
+            if ($childNode->getTreeNodeName() === $name) {
+                $result = $childNode;
+                break;
+            }
+        }
+        if ($result === null && $create) {
+            $result = self::add($this);
+            $result->setTreeNodeName($name);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get a descendent node given its path.
+     *
+     * @param array $names The names of the child nodes (1st item: child name, 2nd item: grand-child name, ...)
+     * @param bool $create Should the descendent node be created if it does not exist?
+     *
+     * @return static|null return NULL if the descendent node has not been found and $create is false
+     */
+    public function getChildNodeByPath(array $names, $create = false)
+    {
+        if (count($names) === 0) {
+            $result = $this;
+        } else {
+            $childName = array_shift($names);
+            $result = $this->getChildNodeByName($childName, $create);
+            if ($result !== null) {
+                $result = $result->getChildNodeByPath($names, $create);
+            }
+        }
+
+        return $result;
+    }
+
     public function overrideParentTreeNodePermissions()
     {
         return $this->treeNodeOverridePermissions;
