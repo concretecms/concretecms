@@ -93,6 +93,8 @@ class DashboardPageController extends PageController
         if (!$pageTitle) {
             $this->set('pageTitle', $this->c->getCollectionName());
         }
+        $dbConfig = $this->app->make('config/database');
+        $this->set('showPrivacyPolicyNotice', !$dbConfig->get('app.privacy_policy_accepted'));
         $this->set('token', $this->token);
         $this->set('error', $this->error);
     }
