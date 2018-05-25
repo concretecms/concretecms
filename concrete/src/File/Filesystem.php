@@ -16,6 +16,8 @@ class Filesystem
 {
     /**
      * Creates everything necessary to store files in folders.
+     *
+     * @return \Concrete\Core\Tree\Type\FileManager
      */
     public function create()
     {
@@ -56,6 +58,13 @@ class Filesystem
         $pt->assignPermissionAccess($pa);
     }
 
+    /**
+     * Get a folder given its ID.
+     *
+     * @param mixed $folderID
+     *
+     * @return \Concrete\Core\Tree\Node\Type\FileFolder|null
+     */
     public function getFolder($folderID)
     {
         $node = Node::getByID($folderID);
@@ -64,14 +73,27 @@ class Filesystem
         }
     }
 
+    /**
+     * Get the root folder.
+     *
+     * @return \Concrete\Core\Tree\Node\Type\FileFolder|null
+     */
     public function getRootFolder()
     {
         $tree = FileManager::get();
-        if (is_object($tree)) {
+        if ($tree !== null) {
             return $tree->getRootTreeNodeObject();
         }
     }
 
+    /**
+     * Create a new folder.
+     *
+     * @param FileFolder $folder The parent folder
+     * @param string $name The name of the new folder
+     *
+     * @return \Concrete\Core\Tree\Node\Type\FileFolder
+     */
     public function addFolder(FileFolder $folder, $name)
     {
         return $folder->add($name, $folder);
