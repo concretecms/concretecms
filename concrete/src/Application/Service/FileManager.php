@@ -70,7 +70,7 @@ class FileManager
             if ($file !== null) {
                 $fileSelectorArguments['fID'] = $file->getFileID();
             }
-        } elseif ($vh->integer($request->request->get($preselectedFile))) {
+        } elseif ($vh->integer($preselectedFile)) {
             $fileSelectorArguments['fID'] = (int) $preselectedFile;
         } elseif (is_object($preselectedFile)) {
             $fileSelectorArguments['fID'] = (int) $preselectedFile->getFileID();
@@ -220,6 +220,9 @@ EOL;
      */
     private function fileOfType($type, $inputID, $inputName, $chooseText, $preselectedFile = null, $args = [])
     {
+        if (!is_array($args)) {
+            $args = [];
+        }
         if (!isset($args['filters']) || !is_array($args['filters'])) {
             $args['filters'] = [];
         }
