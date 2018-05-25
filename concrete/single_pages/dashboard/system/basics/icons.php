@@ -13,7 +13,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 /* @var Concrete\Core\Entity\File\File|null $iosHome */
 /* @var Concrete\Core\Entity\File\File|null $modernThumb */
 /* @var string $modernThumbBG */
-/* @var string $themeColor */
+/* @var string $browserToolbarColor */
 ?>
 <form method="POST" class="form-horizontal" id="favicon-form" action="<?= $view->action('update_icons') ?>" >
     <?= $validation_token->output('update_icons') ?>
@@ -47,11 +47,11 @@ defined('C5_EXECUTE') or die('Access Denied.');
     </fieldset>
 
     <fieldset>
-        <legend><?= t('Theme') ?></legend>
+        <legend><?= t('Browser Toolbar Color') ?></legend>
         <div class="help-block"><?= t('This value may be used by some browsers (for example Chrome and Opera on Android) to set the toolbar color.') ?></div>
         <div class="form-group">
-            <label class="control-label"><?= t('Theme Color') ?></label>
-            <div><?= $form_color->output('themeColor', $themeColor) ?></div>
+            <label class="control-label"><?= t('Color') ?></label>
+            <div><?= $form_color->output('browserToolbarColor', $browserToolbarColor) ?></div>
         </div>
     </fieldset>
 

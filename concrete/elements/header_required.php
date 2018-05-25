@@ -113,9 +113,9 @@ if (($favIconFID = (int) $config->get('misc.favicon_fid')) && ($favIconFile = Fi
 if (($appleIconFID = (int) $config->get('misc.iphone_home_screen_thumbnail_fid')) && ($appleIconFile = File::getByID($appleIconFID))) {
     $linkTags['apple-touch-icon'] = sprintf('<link rel="apple-touch-icon" href="%s"/>', $appleIconFile->getURL());
 }
-$themeColor = (string) $config->get('misc.theme_color');
-if ($themeColor !== '') {
-    $metaTags['themeColor'] = sprintf('<meta name="theme-color" content="%s"/>', h($themeColor));
+$browserToolbarColor = (string) $config->get('misc.browser_toolbar_color');
+if ($browserToolbarColor !== '') {
+    $metaTags['browserToolbarColor'] = sprintf('<meta name="theme-color" content="%s"/>', h($browserToolbarColor));
 }
 if ($config->get('seo.canonical_tag')) {
     if (($canonicalLink = $app->make(SeoCanonical::class)->getPageCanonicalURLTag($c, Request::getInstance())) !== null) {

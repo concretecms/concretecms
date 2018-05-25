@@ -32,7 +32,7 @@ class Icons extends DashboardSitePageController
 
         $this->set('modernThumbBG', (string) $config->get('misc.modern_tile_thumbnail_bgcolor'));
 
-        $this->set('themeColor', (string) $config->get('misc.theme_color'));
+        $this->set('browserToolbarColor', (string) $config->get('misc.browser_toolbar_color'));
     }
 
     public function update_icons()
@@ -56,8 +56,8 @@ class Icons extends DashboardSitePageController
             $s = $security->sanitizeString($post->get('modernThumbBG'));
             $config->save('misc.modern_tile_thumbnail_bgcolor', $s === '' ? null : $s);
 
-            $s = $security->sanitizeString($post->get('themeColor'));
-            $config->save('misc.theme_color', $s === '' ? null : $s);
+            $s = $security->sanitizeString($post->get('browserToolbarColor'));
+            $config->save('misc.browser_toolbar_color', $s === '' ? null : $s);
             
             $this->flash('success', t('Icons updated successfully.'));
 
