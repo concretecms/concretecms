@@ -709,11 +709,11 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
         }
     }
 
-    public function getHierarchicalNodesOfType($treeNodeTypeHandle, $level = 1, $returnNodeObjects = false, $includeThisNode = true)
+    public function getHierarchicalNodesOfType($treeNodeTypeHandle, $level = 1, $returnNodeObjects = false, $includeThisNode = true, $maxDepth = null)
     {
         $treeNodeType = TreeNodeType::getByHandle($treeNodeTypeHandle);
 
-        $nodesOfType = $this->populateRecursiveNodes($treeNodeType->getTreeNodeTypeID(), [], ['treeNodeID' => $this->getTreeNodeID(), 'treeNodeParentID' => $this->getTreeNodeParentID(), 'treeNodeDisplayOrder' => 0], $level, $returnNodeObjects, $includeThisNode);
+        $nodesOfType = $this->populateRecursiveNodes($treeNodeType->getTreeNodeTypeID(), [], ['treeNodeID' => $this->getTreeNodeID(), 'treeNodeParentID' => $this->getTreeNodeParentID(), 'treeNodeDisplayOrder' => 0], $level, $returnNodeObjects, $includeThisNode, $maxDepth);
 
         return $nodesOfType;
     }
@@ -763,10 +763,15 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
         $r->closeCursor();
     }
 
-    protected function populateRecursiveNodes($treeNodeTypeID, $nodes, $nodeRow, $level, $returnNodeObjects = false, $includeThisNode = true)
+    protected function populateRecursiveNodes($treeNodeTypeID, $nodes, $nodeRow, $level, $returnNodeObjects = false, $includeThisNode = true, $maxDepth = null)
     {
         $db = Database::connection();
-        $children = $db->fetchAll('select treeNodeID, treeNodeTypeID, treeNodeParentID, treeNodeDisplayOrder from TreeNodes where treeNodeTypeID = ? and treeNodeParentID = ? order by treeNodeDisplayOrder asc', [$treeNodeTypeID, $nodeRow['treeNodeID']]);
+        if ($maxDepth === null || --$maxDepth >= 0) {
+            $children = $db->fetchAll('select treeNodeID, treeNodeTypeID, treeNodeParentID, treeNodeDisplayOrder from TreeNodes where treeNodeTypeID = ? and treeNodeParentID = ? order by treeNodeDisplayOrder asc', [$treeNodeTypeID, $nodeRow['treeNodeID']]);
+            $numChildren = count($children);
+        } else {
+            $numChildren = (int) $db->fetchColumn('select count(*) from TreeNodes where treeNodeTypeID = ? and treeNodeParentID = ? order by treeNodeDisplayOrder asc', [$treeNodeTypeID, $nodeRow['treeNodeID']]);
+        }
 
         if ($includeThisNode) {
             $data = [
@@ -774,7 +779,7 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
                 'treeNodeDisplayOrder' => $nodeRow['treeNodeDisplayOrder'],
                 'treeNodeParentID' => $nodeRow['treeNodeParentID'],
                 'level' => $level,
-                'total' => count($children),
+                'total' => $numChildren,
             ];
             if ($returnNodeObjects) {
                 $node = self::getByID($nodeRow['treeNodeID']);
@@ -785,10 +790,10 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
 
             $nodes[] = $data;
         }
-        ++$level;
-        if (count($children) > 0) {
+        if ($numChildren > 0 && ($maxDepth === null || $maxDepth >= 0)) {
+            ++$level;
             foreach ($children as $nodeRow) {
-                $nodes = $this->populateRecursiveNodes($treeNodeTypeID, $nodes, $nodeRow, $level, $returnNodeObjects);
+                $nodes = $this->populateRecursiveNodes($treeNodeTypeID, $nodes, $nodeRow, $level, $returnNodeObjects, true, $maxDepth);
             }
         }
 
