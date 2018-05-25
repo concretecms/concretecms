@@ -1,13 +1,10 @@
 <?php
+
 namespace Concrete\Core\File;
 
-use Concrete\Core\File\Search\ColumnSet\DefaultSet;
-use Concrete\Core\File\Search\ColumnSet\FolderSet;
-use Concrete\Core\File\Search\Result\Result;
 use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Permission\Access\Entity\GroupEntity;
 use Concrete\Core\Permission\Key\CategoryTreeNodeKey;
-use Concrete\Core\File\FolderItemList;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\NodeType;
 use Concrete\Core\Tree\Node\Type\FileFolder;
@@ -79,5 +76,4 @@ class Filesystem
     {
         return $folder->add($name, $folder);
     }
-
 }
