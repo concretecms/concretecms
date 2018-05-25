@@ -1,12 +1,11 @@
-/**
- * block ajax
- */
+/* jshint unused:vars, undef:true, jquery:true */
+/* global ConcreteAjaxForm, ConcreteEvent, CCM_CID, Concrete, CCM_DISPATCHER_FILENAME, ConcreteToolbar, ConcreteAlert, ccmi18n */
 
-!function (global, $) {
+/* Block ajax */
+;(function(global, $) {
     'use strict';
 
     function ConcreteAjaxBlockForm($form, options) {
-        'use strict';
         var my = this;
         options = $.extend({
             'iframe': true,
@@ -29,7 +28,7 @@
     ConcreteAjaxBlockForm.prototype = Object.create(ConcreteAjaxForm.prototype);
 
     ConcreteAjaxBlockForm.prototype.before = function (my) {
-        jQuery.fn.dialog.showLoader();
+        $.fn.dialog.showLoader();
         ConcreteEvent.fire('EditModeBeforeBlockSubmit', {
             'form': my
         });
@@ -43,7 +42,7 @@
             arEnableGridContainer = area.getEnableGridContainer() ? 1 : 0,
             action = CCM_DISPATCHER_FILENAME + '/ccm/system/block/render';
 
-        jQuery.fn.dialog.closeTop();
+        $.fn.dialog.closeTop();
 
         $.get(action, {
             arHandle: area.getHandle(),
@@ -55,7 +54,7 @@
             var block, edit_mode = Concrete.getEditMode(), local_area = area.inEditMode(edit_mode);
 
             ConcreteToolbar.disableDirectExit();
-            jQuery.fn.dialog.hideLoader();
+            $.fn.dialog.hideLoader();
 
             if (my.options.task == 'add') {
                 var $area = local_area.getElem(), $elem = $(r);
@@ -88,7 +87,7 @@
                     'message': ccmi18n.addBlockMsg,
                     'title': ccmi18n.addBlock
                 });
-                jQuery.fn.dialog.closeAll();
+                $.fn.dialog.closeAll();
 
                 if (my.options.btSupportsInlineAdd) {
                     editor.destroyInlineEditModeToolbars();
@@ -122,7 +121,7 @@
                 });
             }
         });
-    }
+    };
 
     ConcreteAjaxBlockForm.prototype.success = function (resp, my) {
         var form = my.$form[0];
@@ -151,4 +150,4 @@
 
     global.ConcreteAjaxBlockForm = ConcreteAjaxBlockForm;
 
-}(this, $);
+})(this, jQuery);

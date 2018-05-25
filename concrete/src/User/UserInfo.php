@@ -169,7 +169,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     public function getUserBadges()
     {
         $groups = [];
-        $r = $this->connection->executeQuery('select g.gID from Groups g inner join UserGroups ug on g.gID = ug.gID where g.gIsBadge = 1 and ug.uID = ? order by ugEntered desc', [$this->getUserID()]);
+        $r = $this->connection->executeQuery('select g.gID from ' . $this->connection->getDatabasePlatform()->quoteSingleIdentifier('Groups') . ' g inner join UserGroups ug on g.gID = ug.gID where g.gIsBadge = 1 and ug.uID = ? order by ugEntered desc', [$this->getUserID()]);
         while ($row = $r->fetch()) {
             $groups[] = Group::getByID($row['gID']);
         }
@@ -223,6 +223,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
         }
 
         $r = $this->connection->executeQuery('DELETE FROM OauthUserMap WHERE user_id = ?', [(int) $this->getUserID()]);
+        $r = $this->connection->executeQuery('DELETE FROM Logs WHERE uID = ?', [(int) $this->getUserID()]);
         $r = $this->connection->executeQuery('DELETE FROM UserSearchIndexAttributes WHERE uID = ?', [(int) $this->getUserID()]);
         $r = $this->connection->executeQuery('DELETE FROM UserGroups WHERE uID = ?', [(int) $this->getUserID()]);
         $r = $this->connection->executeQuery('DELETE FROM UserValidationHashes WHERE uID = ?', [(int) $this->getUserID()]);

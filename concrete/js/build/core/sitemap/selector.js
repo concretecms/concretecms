@@ -1,15 +1,17 @@
-!function(global, $) {
+/* jshint unused:vars, undef:true, browser:true, jquery:true */
+/* global _, ccmi18n_sitemap, ConcretePageAjaxSearch, ConcretePageAjaxSearchMenu */
+
+;(function(global, $) {
     'use strict';
 
     function ConcretePageSelector($element, options) {
-        'use strict';
-        var my = this,
-            options = $.extend({
-                'chooseText': ccmi18n_sitemap.choosePage,
-                'loadingText': ccmi18n_sitemap.loadingText,
-                'inputName': 'cID',
-                'cID': 0
-            }, options);
+        var my = this;
+        options = $.extend({
+            'chooseText': ccmi18n_sitemap.choosePage,
+            'loadingText': ccmi18n_sitemap.loadingText,
+            'inputName': 'cID',
+            'cID': 0
+        }, options);
 
         my.$element = $element;
         my.options = options;
@@ -55,15 +57,15 @@
                 });
             });
         }
-    }
+    };
 
     // jQuery Plugin
     $.fn.concretePageSelector = function(options) {
         return $.each($(this), function(i, obj) {
             new ConcretePageSelector($(this), options);
         });
-    }
+    };
 
     global.ConcretePageSelector = ConcretePageSelector;
 
-}(this, $);
+})(this, jQuery);

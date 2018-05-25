@@ -1,31 +1,34 @@
 <?php
+
 namespace Concrete\Core\File;
 
-use Concrete\Core\Permission\Access\Access as PermissionAccess;
+use Closure;
 use Concrete\Core\Permission\Access\Entity\FileUploaderEntity;
+use Concrete\Core\Permission\Checker as Permissions;
 use Concrete\Core\Permission\Key\FileFolderKey;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Concrete\Core\Search\ItemList\Pager\Manager\FolderItemListPagerManager;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 use Concrete\Core\Search\ItemList\Pager\QueryString\VariableFactory;
-use Concrete\Core\Search\Pagination\PagerPagination;
-use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Search\Pagination\PaginationProviderInterface;
-use Concrete\Core\Search\Pagination\PermissionablePagination;
-use Concrete\Core\Search\PermissionableListItemInterface;
 use Concrete\Core\Search\StickyRequest;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\FileFolder;
 use Concrete\Core\User\User;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
-use Closure;
-use Concrete\Core\Permission\Checker as Permissions;
 
 class FolderItemList extends AttributedItemList implements PagerProviderInterface, PaginationProviderInterface
 {
     protected $parent;
     protected $searchSubFolders = false;
     protected $permissionsChecker;
+
+    protected $autoSortColumns = [
+        'folderItemName',
+        'folderItemModified',
+        'folderItemType',
+        'folderItemSize',
+    ];
 
     public function __construct(StickyRequest $req = null)
     {
@@ -35,13 +38,6 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
         }
         parent::__construct($req);
     }
-
-    protected $autoSortColumns = [
-        'folderItemName',
-        'folderItemModified',
-        'folderItemType',
-        'folderItemSize',
-    ];
 
     public function enableSubFolderSearch()
     {
@@ -64,11 +60,6 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
     public function getPagerManager()
     {
         return new FolderItemListPagerManager($this);
-    }
-
-    protected function getAttributeKeyClassName()
-    {
-        return '\\Concrete\\Core\\Attribute\\Key\\FileKey';
     }
 
     public function setPermissionsChecker(Closure $checker = null)
@@ -115,6 +106,7 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
         $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
             $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct n.treeNodeID)')->setMaxResults(1);
         });
+
         return $adapter;
     }
 
@@ -141,7 +133,6 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
         return $fp->canViewTreeNode();
     }
 
-
     public function filterByParentFolder(FileFolder $folder)
     {
         $this->parent = $folder;
@@ -151,6 +142,28 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
     {
         $this->query->andWhere('fv.fvType = :fvType or fvType is null');
         $this->query->setParameter('fvType', $type);
+    }
+
+    /**
+     * Filter the files by their extension.
+     *
+     * @param string|string[] $extension one or more file extensions (with or without leading dot)
+     */
+    public function filterByExtension($extension)
+    {
+        $extensions = is_array($extension) ? $extension : [$extension];
+        if (count($extensions) > 0) {
+            $expr = $this->query->expr();
+            $or = $expr->orX();
+            foreach ($extensions as $extension) {
+                $extension = ltrim((string) $extension, '.');
+                $or->add($expr->eq('fv.fvExtension', $this->query->createNamedParameter($extension)));
+                if ($extension === '') {
+                    $or->add($expr->isNull('fv.fvExtension'));
+                }
+            }
+            $this->query->andWhere($or);
+        }
     }
 
     public function deliverQueryObject()
@@ -163,8 +176,8 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
         if ($this->searchSubFolders) {
             // determine how many subfolders are within the parent folder.
             $subFolders = $this->parent->getHierarchicalNodesOfType('file_folder', 1, false, true);
-            $subFolderIds = array();
-            foreach($subFolders as $subFolder) {
+            $subFolderIds = [];
+            foreach ($subFolders as $subFolder) {
                 $subFolderIds[] = $subFolder['treeNodeID'];
             }
             $this->query->andWhere(
@@ -187,7 +200,7 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
             $pk = FileFolderKey::getByHandle('search_file_folder');
             if (is_object($pk)) {
                 $pk->setPermissionObject($this->parent);
-                /** @var PermissionAccess $pa */
+                /** @var \Concrete\Core\Permission\Access\Access $pa */
                 $pa = $pk->getPermissionAccessObject();
                 // Check whether or not current user can search files in the current folder
                 if (is_object($pa) && $pa->validate()) {
@@ -195,11 +208,11 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
                     $accessEntitiesWithoutFileUploader = [];
                     $accessEntities = $u->getUserAccessEntityObjects();
                     foreach ($accessEntities as $accessEntity) {
-                        if (! $accessEntity instanceof FileUploaderEntity) {
+                        if (!$accessEntity instanceof FileUploaderEntity) {
                             $accessEntitiesWithoutFileUploader[] = $accessEntity;
                         }
                     }
-                    /**
+                    /*
                      * For performance reason, if the current user can not search files without "File Uploader" entity,
                      * we filter only files that uploaded by the current user or permission overridden.
                      */
@@ -224,5 +237,10 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
     public function sortByNodeType()
     {
         $this->sortBy('folderItemType', 'asc');
+    }
+
+    protected function getAttributeKeyClassName()
+    {
+        return '\\Concrete\\Core\\Attribute\\Key\\FileKey';
     }
 }

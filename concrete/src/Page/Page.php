@@ -3347,19 +3347,6 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         return $current;
     }
 
-    /**
-     * Returns the total number of page views for a specific page.
-     */
-    public function getTotalPageViews($date = null)
-    {
-        $db = Database::connection();
-        if ($date != null) {
-            return $db->fetchColumn('select count(pstID) from PageStatistics where date = ? AND cID = ?', [$date, $this->getCollectionID()]);
-        } else {
-            return $db->fetchColumn('select count(pstID) from PageStatistics where cID = ?', [$this->getCollectionID()]);
-        }
-    }
-
     public function getPageDraftTargetParentPageID()
     {
         $db = Database::connection();
@@ -3378,23 +3365,5 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $this->cDraftTargetParentPageID = $cParentID;
 
         Section::registerPage($this);
-    }
-
-    /**
-     * Gets a pages statistics.
-     */
-    public function getPageStatistics($limit = 20)
-    {
-        $db = Database::connection();
-        $limitString = '';
-        if ($limit != false) {
-            $limitString = 'limit '.$limit;
-        }
-
-        if (is_object($this) && $this instanceof self) {
-            return $db->fetchAll("SELECT * FROM PageStatistics WHERE cID = ? ORDER BY timestamp desc {$limitString}", [$this->getCollectionID()]);
-        } else {
-            return $db->fetchAll("SELECT * FROM PageStatistics ORDER BY timestamp desc {$limitString}");
-        }
     }
 }

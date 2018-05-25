@@ -1,7 +1,7 @@
-/* jshint unused:vars, undef:true, browser:true */
-/* global $, ConcreteEvent, ConcreteStyleCustomizerPalette */
+/* jshint unused:vars, undef:true, browser:true, jquery:true */
+/* global ConcreteEvent, ConcreteStyleCustomizerPalette */
 
-(function(global, $) {
+;(function(global, $) {
     'use strict';
 
     function ConcreteStyleCustomizerImageSelector($element, options) {
@@ -53,4 +53,4 @@
 
     global.ConcreteStyleCustomizerImageSelector = ConcreteStyleCustomizerImageSelector;
 
-})(this, $);
+})(this, jQuery);

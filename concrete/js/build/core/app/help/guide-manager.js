@@ -1,4 +1,7 @@
-!function (global, $) {
+/* jshint unused:vars, undef:true, browser:true, jquery:true */
+/* global ConcreteHelpLauncher, CCM_REL */
+
+;(function(global, $) {
     'use strict';
 
     var ConcreteHelpGuideManager = {
@@ -27,7 +30,7 @@
         showOverlay: function() {
             // if the widget overlay doesn't exist, show it
             if ($('.ui-widget-overlay').length < 1) {
-                var $overlay = $('<div class="ui-widget-overlay"></div>').hide().appendTo('body');
+                $('<div class="ui-widget-overlay"></div>').hide().appendTo('body');
             }
             $('.ui-widget-overlay').addClass('animated fadeIn').show();
 
@@ -85,4 +88,4 @@
 
     global.ConcreteHelpGuideManager = ConcreteHelpGuideManager;
 
-}(this, $);
+})(window, jQuery);
