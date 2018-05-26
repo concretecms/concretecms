@@ -12,6 +12,7 @@ use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Page\View\PageView;
 use Symfony\Component\HttpFoundation\Response;
+use Concrete\Core\Session\SessionValidator;
 
 class PageController extends Controller
 {
@@ -111,13 +112,17 @@ class PageController extends Controller
 
     public function getSets()
     {
+        $app = $this->app;
         $sets = parent::getSets();
+        $validator = $app->make(SessionValidator::class);
         $session = Application::getFacadeApplication()->make('session');
-        if ($session->getFlashBag()->has('page_message')) {
-            $value = $session->getFlashBag()->get('page_message');
-            foreach ($value as $message) {
-                $sets[$message[0]] = $message[1];
-                $sets[$message[0].'IsHTML'] = isset($message[2]) && $message[2];
+        if ($validator->hasActiveSession()) {
+            if ($session->getFlashBag()->has('page_message')) {
+                $value = $session->getFlashBag()->get('page_message');
+                foreach ($value as $message) {
+                    $sets[$message[0]] = $message[1];
+                    $sets[$message[0].'IsHTML'] = isset($message[2]) && $message[2];
+                }
             }
         }
 

@@ -9,6 +9,7 @@ $router->all('/ccm/system/dialogs/language/update/details', '\Concrete\Controlle
 $router->all('/dashboard/blocks/stacks/list', '\Concrete\Controller\SinglePage\Dashboard\Blocks\Stacks::list_page');
 $router->all('/ccm/system/notification/alert/archive/', '\Concrete\Controller\Backend\Notification\Alert::archive');
 $router->all('/ccm/system/dialogs/help/introduction/', '\Concrete\Controller\Dialog\Help\Introduction::view');
+$router->all('/ccm/system/accept_privacy_policy/', '\Concrete\Controller\Backend\PrivacyPolicy::acceptPrivacyPolicy');
 
 $router->all('/ccm/system/css/layout/{arLayoutID}', '\Concrete\Controller\Frontend\Stylesheet::layout');
 $router->all('/ccm/system/css/page/{cID}/{stylesheet}/{cvID}', '\Concrete\Controller\Frontend\Stylesheet::page_version');

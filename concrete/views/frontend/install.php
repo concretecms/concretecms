@@ -22,36 +22,37 @@ defined('C5_EXECUTE') or die('Access Denied.');
 /* @var int $installStep */
 
 ?>
-<style>
-    .panel-heading .panel-title a:after {
-        font-family: 'FontAwesome';
-        content: "\f077";
-        float: right;
-        color: #333;
-    }
-    .panel-heading .panel-title a.collapsed:after {
-        content: "\f078";
-    }
-</style>
-<script type="text/javascript" src="<?= ASSETS_URL_JAVASCRIPT ?>/bootstrap/tooltip.js"></script>
-<script type="text/javascript" src="<?= ASSETS_URL_JAVASCRIPT ?>/jquery-cookie.js"></script>
-<script type="text/javascript">
-    $(function () {
-        $('.launch-tooltip').tooltip({
-            placement: 'bottom'
+    <style>
+        .panel-heading .panel-title a:after {
+            font-family: 'FontAwesome';
+            content: "\f077";
+            float: right;
+            color: #333;
+        }
+
+        .panel-heading .panel-title a.collapsed:after {
+            content: "\f078";
+        }
+    </style>
+    <script type="text/javascript" src="<?= ASSETS_URL_JAVASCRIPT ?>/bootstrap/tooltip.js"></script>
+    <script type="text/javascript" src="<?= ASSETS_URL_JAVASCRIPT ?>/jquery-cookie.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('.launch-tooltip').tooltip({
+                placement: 'bottom'
+            });
         });
-    });
-</script>
-<script type="text/javascript">
-$(function() {
-    $.backstretch("<?= $imagePath ?>", {
-        fade: <?= (int) $backgroundFade ?>
-    });
-});
-</script>
-<div class="ccm-install-version">
-    <span class="label label-info"><?= t('Version %s', $concreteVersion) ?></span>
-</div>
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            $.backstretch("<?= $imagePath ?>", {
+                fade: <?= (int)$backgroundFade ?>
+            });
+        });
+    </script>
+    <div class="ccm-install-version">
+        <span class="label label-info"><?= t('Version %s', $concreteVersion) ?></span>
+    </div>
 <?php
 
 $install_config = Config::get('install_overrides');
@@ -70,23 +71,24 @@ switch ($installStep) {
             </ul>
         </div>
         <div id="ccm-install-intro">
-            <form method="post" id="ccm-install-language-form" action="<?= $urlResolver->resolve(['install', 'select_language']) ?>">
-            <div class="form-group">
-                <div class="input-group-lg input-group">
-                    <?php
-                    $selectOptions = $locales;
-                    if (!empty($onlineLocales)) {
-                        $selectOptions[t('Online Languages')] = $onlineLocales;
-                    }
-                    ?>
-                    <?= $form->select('wantedLocale', $selectOptions, Localization::BASE_LOCALE); ?>
-                    <div class="input-group-btn">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fa fa-arrow-right"></i>
-                        </button>
+            <form method="post" id="ccm-install-language-form"
+                  action="<?= $urlResolver->resolve(['install', 'select_language']) ?>">
+                <div class="form-group">
+                    <div class="input-group-lg input-group">
+                        <?php
+                        $selectOptions = $locales;
+                        if (!empty($onlineLocales)) {
+                            $selectOptions[t('Online Languages')] = $onlineLocales;
+                        }
+                        ?>
+                        <?= $form->select('wantedLocale', $selectOptions, Localization::BASE_LOCALE); ?>
+                        <div class="input-group-btn">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-arrow-right"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
             </form>
         </div>
         <?php
@@ -109,9 +111,9 @@ switch ($installStep) {
                 $pendingPreconditions = [];
                 list($requiredPreconditions, $optionalPreconditions) = $controller->getPreconditions();
                 foreach ([
-                    t('Required Items') => $requiredPreconditions,
-                    t('Optional Items') => $optionalPreconditions,
-                ] as $preconditionsTitle => $preconditions) {
+                             t('Required Items') => $requiredPreconditions,
+                             t('Optional Items') => $optionalPreconditions,
+                         ] as $preconditionsTitle => $preconditions) {
                     $numPreconditions = count($preconditions);
                     if ($numPreconditions === 0) {
                         continue;
@@ -130,68 +132,69 @@ switch ($installStep) {
                                     <div class="col-sm-6">
                                         <table class="table requirements-table">
                                             <tbody>
-                                                <?php
-                                                foreach ($preconditions as $precondition) {
-                                                    /* @var Concrete\Core\Install\PreconditionInterface $precondition */
-                                                    if ($precondition instanceof WebPreconditionInterface) {
-                                                        echo $precondition->getHtml();
-                                                        $preconditionState = $precondition->getInitialState();
-                                                        $preconditionMessage = $precondition->getInitialMessage();
-                                                        $pendingPreconditions[] = $precondition->getUniqueIdentifier();
-                                                    } else {
-                                                        $preconditionResult = $precondition->performCheck();
-                                                        $preconditionState = $preconditionResult->getState();
-                                                        $preconditionMessage = $preconditionResult->getMessage();
-                                                    }
-                                                    ?>
-                                                    <tr id="precondition-<?= $precondition->getUniqueIdentifier() ?>">
-                                                        <td>
-                                                            <?php
-                                                            if ($preconditionState === null) {
-                                                                echo '<i class="precondition-state fa fa-spinner fa-spin"></i>';
-                                                            } else {
-                                                                switch ($preconditionState) {
-                                                                    case PreconditionResult::STATE_PASSED:
-                                                                        echo '<i class="precondition-state fa fa-check"></i>';
-                                                                        break;
-                                                                    case PreconditionResult::STATE_WARNING:
-                                                                        if (!$precondition instanceof WebPreconditionInterface) {
-                                                                            $showRerunTests = true;
-                                                                        }
-                                                                        echo '<i class="precondition-state fa fa-warning"></i>';
-                                                                        break;
-                                                                    case PreconditionResult::STATE_SKIPPED:
-                                                                        break;
-                                                                    case PreconditionResult::STATE_FAILED:
-                                                                    default:
-                                                                        if (!$precondition instanceof WebPreconditionInterface) {
-                                                                            $showRerunTests = true;
-                                                                            if (!$precondition->isOptional()) {
-                                                                                $requiredPreconditionFailed = true;
-                                                                            }
-                                                                        }
-                                                                        echo '<i class="precondition-state fa fa-exclamation-circle"></i>';
-                                                                        break;
-                                                                }
-                                                            }
-                                                            ?>
-                                                        </td>
-                                                        <td style="width: 100%">
-                                                            <?= h($precondition->getName()) ?>
-                                                        </td>
-                                                        <td class="preconditionmessage">
-                                                            <?php
-                                                            if ($preconditionMessage !== '') {
-                                                                ?>
-                                                                <i class="fa fa-question-circle launch-tooltip" title="<?= h($preconditionMessage) ?>"></i>
-                                                                <?php
-                                                            }
-                                                            ?>
-                                                        </td>
-                                                    </tr>
-                                                    <?php
+                                            <?php
+                                            foreach ($preconditions as $precondition) {
+                                                /* @var Concrete\Core\Install\PreconditionInterface $precondition */
+                                                if ($precondition instanceof WebPreconditionInterface) {
+                                                    echo $precondition->getHtml();
+                                                    $preconditionState = $precondition->getInitialState();
+                                                    $preconditionMessage = $precondition->getInitialMessage();
+                                                    $pendingPreconditions[] = $precondition->getUniqueIdentifier();
+                                                } else {
+                                                    $preconditionResult = $precondition->performCheck();
+                                                    $preconditionState = $preconditionResult->getState();
+                                                    $preconditionMessage = $preconditionResult->getMessage();
                                                 }
                                                 ?>
+                                                <tr id="precondition-<?= $precondition->getUniqueIdentifier() ?>">
+                                                    <td>
+                                                        <?php
+                                                        if ($preconditionState === null) {
+                                                            echo '<i class="precondition-state fa fa-spinner fa-spin"></i>';
+                                                        } else {
+                                                            switch ($preconditionState) {
+                                                                case PreconditionResult::STATE_PASSED:
+                                                                    echo '<i class="precondition-state fa fa-check"></i>';
+                                                                    break;
+                                                                case PreconditionResult::STATE_WARNING:
+                                                                    if (!$precondition instanceof WebPreconditionInterface) {
+                                                                        $showRerunTests = true;
+                                                                    }
+                                                                    echo '<i class="precondition-state fa fa-warning"></i>';
+                                                                    break;
+                                                                case PreconditionResult::STATE_SKIPPED:
+                                                                    break;
+                                                                case PreconditionResult::STATE_FAILED:
+                                                                default:
+                                                                    if (!$precondition instanceof WebPreconditionInterface) {
+                                                                        $showRerunTests = true;
+                                                                        if (!$precondition->isOptional()) {
+                                                                            $requiredPreconditionFailed = true;
+                                                                        }
+                                                                    }
+                                                                    echo '<i class="precondition-state fa fa-exclamation-circle"></i>';
+                                                                    break;
+                                                            }
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                    <td style="width: 100%">
+                                                        <?= h($precondition->getName()) ?>
+                                                    </td>
+                                                    <td class="preconditionmessage">
+                                                        <?php
+                                                        if ($preconditionMessage !== '') {
+                                                            ?>
+                                                            <i class="fa fa-question-circle launch-tooltip"
+                                                               title="<?= h($preconditionMessage) ?>"></i>
+                                                            <?php
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                </tr>
+                                                <?php
+                                            }
+                                            ?>
                                             </tbody>
                                         </table>
                                     </div>
@@ -205,76 +208,91 @@ switch ($installStep) {
                 }
                 ?>
                 <script>
-                (function() {
-                    var showRerunTests = <?= json_encode($showRerunTests) ?>,
-                        requiredPreconditionFailed = <?= json_encode($requiredPreconditionFailed) ?>,
-                        pendingPreconditions = <?= json_encode($pendingPreconditions) ?>;
-                    function checkDone() {
-                        if (pendingPreconditions.length > 0) {
-                            return;
-                        }
-                        if (showRerunTests) {
-                            $('#rerun-tests').css('visibility', 'visible');
-                        }
-                        if (!requiredPreconditionFailed) {
-                            $('#continue-to-installation').css('visibility', 'visible');
-                        }
-                    }
-                    window.setWebPreconditionResult = function(id, success, message, isOptional) {
-                        if (!success) {
-                            showRerunTests = true;
-                            if (!isOptional) {
-                                requiredPreconditionFailed = true;
+                    (function () {
+                        var showRerunTests = <?= json_encode($showRerunTests) ?>,
+                            requiredPreconditionFailed = <?= json_encode($requiredPreconditionFailed) ?>,
+                            pendingPreconditions = <?= json_encode($pendingPreconditions) ?>;
+
+                        function checkDone() {
+                            if (pendingPreconditions.length > 0) {
+                                return;
+                            }
+                            if (showRerunTests) {
+                                $('#rerun-tests').css('visibility', 'visible');
+                            }
+                            if (!requiredPreconditionFailed) {
+                                $('#continue-to-installation').css('visibility', 'visible');
                             }
                         }
-                        var index = pendingPreconditions.indexOf(id);
-                        if (index >= 0) {
-                            pendingPreconditions.splice(index, 1);
-                        }
-                        var $tr = $('#precondition-' + id),
-                            $state = $tr.find('.precondition-state'),
-                            $message = $tr.find('.preconditionmessage');
-                        $state
-                            .removeClass('fa-spinner fa-spin fa-check fa-warning fa-exclamation-circle')
-                            .addClass(success ? 'fa-check' : 'fa-exclamation-circle');
-                        $message.empty();
-                        if (message) {
-                            $message.append(
-                                $('<i class="fa fa-question-circle launch-tooltip" />')
-                                .attr('title', message)
-                                .tooltip()
-                            );
-                        }
-                        checkDone();
-                    };
-                    $(document).ready(function() {
-                        checkDone();
-                    });
-                })();
+
+                        window.setWebPreconditionResult = function (id, success, message, isOptional) {
+                            if (!success) {
+                                showRerunTests = true;
+                                if (!isOptional) {
+                                    requiredPreconditionFailed = true;
+                                }
+                            }
+                            var index = pendingPreconditions.indexOf(id);
+                            if (index >= 0) {
+                                pendingPreconditions.splice(index, 1);
+                            }
+                            var $tr = $('#precondition-' + id),
+                                $state = $tr.find('.precondition-state'),
+                                $message = $tr.find('.preconditionmessage');
+                            $state
+                                .removeClass('fa-spinner fa-spin fa-check fa-warning fa-exclamation-circle')
+                                .addClass(success ? 'fa-check' : 'fa-exclamation-circle');
+                            $message.empty();
+                            if (message) {
+                                $message.append(
+                                    $('<i class="fa fa-question-circle launch-tooltip" />')
+                                        .attr('title', message)
+                                        .tooltip()
+                                );
+                            }
+                            checkDone();
+                        };
+                        $(document).ready(function () {
+                            checkDone();
+                        });
+                    })();
                 </script>
                 <style>
-                    #install-errors { display: none }
-                    #rerun-tests { visibility: hidden }
+                    #install-errors {
+                        display: none
+                    }
+
+                    #rerun-tests {
+                        visibility: hidden
+                    }
                 </style>
                 <noscript>
                     <style>
-                        #install-errors { display: block }
-                        #rerun-tests { visibility: visible }
+                        #install-errors {
+                            display: block
+                        }
+
+                        #rerun-tests {
+                            visibility: visible
+                        }
                     </style>
                 </noscript>
                 <div class="alert alert-danger" id="install-errors">
                     <?= t('There are problems with your installation environment. Please correct them and click the button below to re-run the pre-installation tests.') ?>
-                    <?= t('Having trouble? Check the <a href="%s">installation help forums</a>, or <a href="%s">have us host a copy</a> for you.', 'http://www.concrete5.org/community/forums', 'http://www.concrete5.org/services/hosting') ?>
+                    <?= t('Having trouble? Check the <a href="%s">installation help forums</a>, or <a href="%s">have us host a copy</a> for you.',
+                        'http://www.concrete5.org/community/forums', 'http://www.concrete5.org/services/hosting') ?>
                 </div>
                 <div class="ccm-install-actions">
-                    <form method="post" action="<?= $urlResolver->resolve(['install']) ?>" id="rerun-tests" class="pull-left">
+                    <form method="post" action="<?= $urlResolver->resolve(['install']) ?>" id="rerun-tests"
+                          class="pull-left">
                         <input type="hidden" name="locale" value="<?= h($locale) ?>"/>
                         <button class="btn btn-danger" type="submit">
                             <?= t('Run Tests Again') ?>
                             <i class="fa fa-refresh"></i>
                         </button>
                     </form>
-                    <form method="post" action="<?= $urlResolver->resolve(['install', 'setup']) ?>" id="continue-to-installation" style="visibility: hidden" class="pull-right">
+                    <form method="post" action="<?= $urlResolver->resolve(['install', 'setup']) ?>"
+                          id="continue-to-installation" style="visibility: hidden" class="pull-right">
                         <input type="hidden" name="locale" value="<?= h($locale) ?>"/>
                         <a class="btn btn-primary" href="javascript:void(0)" onclick="$(this).parent().submit()">
                             <?= t('Continue to Installation') ?>
@@ -311,6 +329,7 @@ switch ($installStep) {
                         }
                     });
                 }
+
                 $('#canonicalUrlChecked,#canonicalUrlAlternativeChecked').change(updateCanonicalURLState);
                 <?php
                 if ($setInitialState) {
@@ -341,7 +360,8 @@ switch ($installStep) {
                         <div class="ccm-system-errors alert alert-warning">
                             <?php
                             foreach ($warnings->getList() as $warning) {
-                                ?><div><?= nl2br(h($warning)) ?></div><?php
+                                ?>
+                                <div><?= nl2br(h($warning)) ?></div><?php
                             }
                             ?>
                             <div class="checkbox">
@@ -353,12 +373,12 @@ switch ($installStep) {
                         </div>
                     </div>
                 </div>
-    		  <?php
+                <?php
             }
             ?>
             <div class="row">
                 <div class="col-sm-10 col-sm-offset-1">
-    
+
                     <div class="panel-group" id="accordion">
                         <div class="panel panel-default">
                             <div class="panel-heading">
@@ -417,9 +437,10 @@ switch ($installStep) {
                                             <div class="col-md-6">
                                                 <div class="radio">
                                                     <label>
-                                                        <?=$form->radio('SAMPLE_CONTENT', $pkgHandle, ($pkgHandle == 'elemental_full' || count($availableSampleContent) == 1))?>
-                                                        <strong><?=$spl->getPackageName()?></strong><br/>
-                                                        <?=$spl->getPackageDescription()?>
+                                                        <?= $form->radio('SAMPLE_CONTENT', $pkgHandle,
+                                                            ($pkgHandle == 'elemental_full' || count($availableSampleContent) == 1)) ?>
+                                                        <strong><?= $spl->getPackageName() ?></strong><br/>
+                                                        <?= $spl->getPackageDescription() ?>
                                                     </label>
                                                 </div>
                                             </div>
@@ -437,33 +458,57 @@ switch ($installStep) {
                             <div id="database" class="panel-collapse collapse in">
                                 <div class="panel-body">
                                     <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label class="control-label" for="DB_SERVER"><?= t('Server') ?></label>
-                                            <?= $form->text('DB_SERVER', ['required' => 'required']) ?>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="control-label" for="DB_SERVER"><?= t('Server') ?></label>
+                                                <?= $form->text('DB_SERVER', ['required' => 'required']) ?>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="control-label"
+                                                       for="DB_USERNAME"><?= t('MySQL Username') ?></label>
+                                                <?= $form->text('DB_USERNAME') ?>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="control-label"
+                                                       for="DB_PASSWORD"><?= t('MySQL Password') ?></label>
+                                                <?= $form->password('DB_PASSWORD', ['autocomplete' => 'off']) ?>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="control-label"
+                                                       for="DB_DATABASE"><?= t('Database Name') ?></label>
+                                                <?= $form->text('DB_DATABASE', ['required' => 'required']) ?>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label class="control-label"
-                                                   for="DB_USERNAME"><?= t('MySQL Username') ?></label>
-                                            <?= $form->text('DB_USERNAME') ?>
+                                </div>
+                            </div>
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <?= t('Privacy Policy') ?>
+                                </h4>
+                            </div>
+                            <div id="privacy" class="panel-collapse collapse in">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <div class="checkbox">
+                                                    <p class="text-muted"><?= t('concrete5 collects some information about your website to assist in upgrading and checking add-on compatibility. This information can be disabled in configuration.') ?></p>
+                                                    <label>
+
+                                                        <?= $form->checkbox('privacy', 1, ['required' => 'required']) ?>
+                                                        <?= t('Yes, I understand and agree to the <a target="_blank" href="%s">Privacy Policy</a>.',
+                                                            Config::get('concrete.urls.privacy_policy')) ?>
+                                                    </label>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label class="control-label"
-                                                   for="DB_PASSWORD"><?= t('MySQL Password') ?></label>
-                                            <?= $form->password('DB_PASSWORD', ['autocomplete' => 'off']) ?>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label class="control-label"
-                                                   for="DB_DATABASE"><?= t('Database Name') ?></label>
-                                            <?= $form->text('DB_DATABASE', ['required' => 'required']) ?>
-                                        </div>
-                                    </div>
                                     </div>
                                 </div>
                             </div>
@@ -471,7 +516,8 @@ switch ($installStep) {
                         <div class="panel panel-default">
                             <div class="panel-heading" role="tab" id="headingThree">
                                 <h4 class="panel-title">
-                                    <a class="collapsed" role="button" data-toggle="collapse" href="#advanced"><?= t('Advanced Options') ?>
+                                    <a class="collapsed" role="button" data-toggle="collapse"
+                                       href="#advanced"><?= t('Advanced Options') ?>
                                     </a>
                                 </h4>
                             </div>
@@ -482,59 +528,79 @@ switch ($installStep) {
                                     <div class="row">
 
                                         <div class="col-sm-6">
-                                            <h4><?=t('URLs & Session')?></h4>
+                                            <h4><?= t('URLs & Session') ?></h4>
 
                                             <div class="form-group">
                                                 <label class="control-label">
-                                                    <?=$form->checkbox('canonicalUrlChecked', '1')?>
-                                                    <?=t('Set main canonical URL')?>:
+                                                    <?= $form->checkbox('canonicalUrlChecked', '1') ?>
+                                                    <?= t('Set main canonical URL') ?>:
                                                 </label>
-                                                <?=$form->url('canonicalUrl', h($canonicalUrl), ['pattern' => 'https?:.+', 'placeholder' => t('%s or %s', 'http://...', 'https://...')])?>
+                                                <?= $form->url('canonicalUrl', h($canonicalUrl), [
+                                                    'pattern' => 'https?:.+',
+                                                    'placeholder' => t('%s or %s', 'http://...', 'https://...')
+                                                ]) ?>
                                             </div>
 
                                             <div class="form-group">
                                                 <label class="control-label">
-                                                    <?=$form->checkbox('canonicalUrlAlternativeChecked', '1')?>
-                                                    <?=t('Set alternative canonical URL')?>:
+                                                    <?= $form->checkbox('canonicalUrlAlternativeChecked', '1') ?>
+                                                    <?= t('Set alternative canonical URL') ?>:
                                                 </label>
-                                                <?=$form->url('canonicalUrlAlternative', h($canonicalUrlAlternative), ['pattern' => 'https?:.+', 'placeholder' => t('%s or %s', 'http://...', 'https://...')])?>
+                                                <?= $form->url('canonicalUrlAlternative', h($canonicalUrlAlternative), [
+                                                    'pattern' => 'https?:.+',
+                                                    'placeholder' => t('%s or %s', 'http://...', 'https://...')
+                                                ]) ?>
                                             </div>
                                             <div class="form-group">
-                                                <label class="control-label" for="sessionHandler"><?=t('Session Handler')?></label>
-                                                <?=$form->select('sessionHandler', ['' => t('Default Handler (Recommended)'), 'database' => t('Database')])?>
+                                                <label class="control-label"
+                                                       for="sessionHandler"><?= t('Session Handler') ?></label>
+                                                <?= $form->select('sessionHandler', [
+                                                    '' => t('Default Handler (Recommended)'),
+                                                    'database' => t('Database')
+                                                ]) ?>
                                             </div>
 
                                         </div>
                                         <div class="col-sm-6">
-                                            <h4><?=t('Locale')?></h4>
+                                            <h4><?= t('Locale') ?></h4>
 
                                             <div class="form-group">
-                                                <label class="control-label" for="sessionHandler"><?=t('Language')?></label>
-                                                <?=$form->select('siteLocaleLanguage', $languages, $computedSiteLocaleLanguage)?>
+                                                <label class="control-label"
+                                                       for="sessionHandler"><?= t('Language') ?></label>
+                                                <?= $form->select('siteLocaleLanguage', $languages,
+                                                    $computedSiteLocaleLanguage) ?>
                                             </div>
 
                                             <div class="form-group">
-                                                <label class="control-label" for="sessionHandler"><?=t('Country')?></label>
-                                                <?= $form->select('siteLocaleCountry', $countries, $computedSiteLocaleCountry) ?>
+                                                <label class="control-label"
+                                                       for="sessionHandler"><?= t('Country') ?></label>
+                                                <?= $form->select('siteLocaleCountry', $countries,
+                                                    $computedSiteLocaleCountry) ?>
                                             </div>
 
                                             <div class="form-group">
-                                                <label class="control-label" for="SERVER_TIMEZONE"><?=t('System Time Zone')?></label>
-                                                <?= $form->select('SERVER_TIMEZONE', $availableTimezones, $SERVER_TIMEZONE, ['required' => 'required']) ?>
+                                                <label class="control-label"
+                                                       for="SERVER_TIMEZONE"><?= t('System Time Zone') ?></label>
+                                                <?= $form->select('SERVER_TIMEZONE', $availableTimezones,
+                                                    $SERVER_TIMEZONE,
+                                                    ['required' => 'required']) ?>
                                             </div>
 
                                             <script>
-                                            $('#siteLocaleLanguage').on('change', function() {
-                                                $.ajax(
-                                                    <?= json_encode((string) $urlResolver->resolve(['install', 'get_site_locale_countries'])) ?> + '/' + encodeURIComponent(<?= json_encode(Localization::activeLocale()) ?>) + '/' + encodeURIComponent(this.value) + '/' + encodeURIComponent($('#siteLocaleCountry').val()),
-                                                    {
-                                                        dataType: 'json'
-                                                    }
-                                                )
-                                                .done(function (r) {
-                                                    $('#siteLocaleCountry').replaceWith(r);
+                                                $('#siteLocaleLanguage').on('change', function () {
+                                                    $.ajax(
+                                                        <?= json_encode((string)$urlResolver->resolve([
+                                                            'install',
+                                                            'get_site_locale_countries'
+                                                        ])) ?> +'/' + encodeURIComponent(<?= json_encode(Localization::activeLocale()) ?>) + '/' + encodeURIComponent(this.value) + '/' + encodeURIComponent($('#siteLocaleCountry').val()),
+                                                        {
+                                                            dataType: 'json'
+                                                        }
+                                                        )
+                                                        .done(function (r) {
+                                                            $('#siteLocaleCountry').replaceWith(r);
+                                                        });
                                                 });
-                                            });
                                             </script>
                                         </div>
                                     </div>
@@ -550,7 +616,7 @@ switch ($installStep) {
                             <i class="fa fa-arrow-right fa-white"></i>
                         </button>
                     </div>
-    
+
                     <div class="spacer-row-6"></div>
                 </div>
             </div>
@@ -564,42 +630,47 @@ switch ($installStep) {
             $(function () {
                 var inviteToStayHere = false;
 
-                showFailure = function(message) {
+                showFailure = function (message) {
                     NProgress.done();
                     inviteToStayHere = false;
                     $("#install-progress-errors").append('<div class="alert alert-danger">' + message + '</div>');
                     $("#ccm-install-intro").hide();
                     $("#install-progress-error-wrapper").show();
-                    $('button[data-button=installation-complete]').prop('disabled', false).html(<?=json_encode(t('Back'))?>).on('click', function() {
-                        window.location.href = <?= json_encode((string) $urlResolver->resolve(['install'])) ?>;
+                    $('button[data-button=installation-complete]').prop('disabled', false).html(<?=json_encode(t('Back'))?>).on('click', function () {
+                        window.location.href = <?= json_encode((string)$urlResolver->resolve(['install'])) ?>;
                     });
                     $("#install-progress-summary").html('<span class="text-danger"><?=t('An error occurred.')?></span>');
                     $('div.ccm-install-title ul.breadcrumb li.active').text(<?= json_encode(t('Installation Failed.')) ?>);
                 }
 
-                window.onbeforeunload = function() {
+                window.onbeforeunload = function () {
                     if (inviteToStayHere) {
                         return <?=json_encode(t("concrete5 installation is still in progress: you shouldn't close this page at the moment"))?>;
                     }
                 };
-                NProgress.configure({ showSpinner: false });
+                NProgress.configure({showSpinner: false});
                 <?php
                 for ($i = 1; $i <= count($installRoutines); ++$i) {
-                    $routine = $installRoutines[$i - 1];
+                $routine = $installRoutines[$i - 1];
+                ?>
+                ccm_installRoutine<?=$i?> = function () {
+                    <?php
+                    if ($routine->getText() != '') {
                     ?>
-                    ccm_installRoutine<?=$i?> = function () {
-                        <?php
-                        if ($routine->getText() != '') {
-                            ?>
-                            $("#install-progress-summary").html(<?= json_encode($routine->getText()) ?>);
-                            <?php
+                    $("#install-progress-summary").html(<?= json_encode($routine->getText()) ?>);
+                    <?php
+                    }
+                    ?>
+                    $.ajax(
+                        <?= json_encode((string)$urlResolver->resolve([
+                            'install',
+                            'run_routine',
+                            $installPackage,
+                            $routine->getMethod()
+                        ])) ?>,
+                        {
+                            dataType: 'json'
                         }
-                        ?>
-                        $.ajax(
-                            <?= json_encode((string) $urlResolver->resolve(['install', 'run_routine', $installPackage, $routine->getMethod()])) ?>,
-                            {
-                                dataType: 'json'
-                            }
                         )
                         .fail(function (r) {
                             showFailure(r.responseText);
@@ -611,27 +682,27 @@ switch ($installStep) {
                                 NProgress.set(<?=$routine->getProgress() / 100?>);
                                 <?php
                                 if ($i < count($installRoutines)) {
-                                    ?>
-                                    ccm_installRoutine<?=$i + 1?>();
-                                    <?php
+                                ?>
+                                ccm_installRoutine<?=$i + 1?>();
+                                <?php
                                 } else {
-                                    ?>
-                                    inviteToStayHere = false;
-                                    $("#install-progress-summary").html(<?= json_encode(t('All Done.')) ?>);
-                                    NProgress.done();
-                                    $('button[data-button=installation-complete]').prop('disabled', false).html(<?=json_encode(t('Edit Your Site') . ' <i class="fa fa-thumbs-up"></i>')?>);
-                                    $('div.ccm-install-title ul.breadcrumb li.active').text(<?= json_encode(t('Installation Complete.')) ?>);
-                                    setTimeout(function() {
-                                        $("#interstitial-message").hide();
-                                        $("#success-message").show().addClass('animated fadeInDown');
-                                    },500);
-                                    <?php
+                                ?>
+                                inviteToStayHere = false;
+                                $("#install-progress-summary").html(<?= json_encode(t('All Done.')) ?>);
+                                NProgress.done();
+                                $('button[data-button=installation-complete]').prop('disabled', false).html(<?=json_encode(t('Edit Your Site') . ' <i class="fa fa-thumbs-up"></i>')?>);
+                                $('div.ccm-install-title ul.breadcrumb li.active').text(<?= json_encode(t('Installation Complete.')) ?>);
+                                setTimeout(function () {
+                                    $("#interstitial-message").hide();
+                                    $("#success-message").show().addClass('animated fadeInDown');
+                                }, 500);
+                                <?php
                                 }
                                 ?>
                             }
                         });
-                    }
-                    <?php
+                }
+                <?php
                 }
                 ?>
                 inviteToStayHere = true;
@@ -650,7 +721,7 @@ switch ($installStep) {
 
             <div id="interstitial-message">
                 <div class="panel panel-info">
-                    <div class="panel-heading"><?=t('While You Wait')?></div>
+                    <div class="panel-heading"><?= t('While You Wait') ?></div>
                     <div class="panel-body">
 
                         <div class="media">
@@ -658,8 +729,9 @@ switch ($installStep) {
                                 <i class="fa fa-comments-o fa-2x"></i>
                             </div>
                             <div class="media-body">
-                                <h4 class="media-heading"><?=t('Forums')?></h4>
-                                <?=t('<a href="%s" target="_blank">The forum</a> on concrete5.org is full of helpful community members that make concrete5 so great.', Config::get('concrete.urls.help.forum'))?>
+                                <h4 class="media-heading"><?= t('Forums') ?></h4>
+                                <?= t('<a href="%s" target="_blank">The forum</a> on concrete5.org is full of helpful community members that make concrete5 so great.',
+                                    Config::get('concrete.urls.help.forum')) ?>
                             </div>
                         </div>
 
@@ -668,8 +740,9 @@ switch ($installStep) {
                                 <i class="fa fa-book fa-2x"></i>
                             </div>
                             <div class="media-body">
-                                <h4 class="media-heading"><?=t('User Documentation')?></h4>
-                                <?=t('Read the <a href="%s" target="_blank">User Documentation</a> to learn editing and site management with concrete5.', Config::get('concrete.urls.help.user'))?>
+                                <h4 class="media-heading"><?= t('User Documentation') ?></h4>
+                                <?= t('Read the <a href="%s" target="_blank">User Documentation</a> to learn editing and site management with concrete5.',
+                                    Config::get('concrete.urls.help.user')) ?>
                             </div>
                         </div>
 
@@ -678,8 +751,9 @@ switch ($installStep) {
                                 <i class="fa fa-youtube fa-2x"></i>
                             </div>
                             <div class="media-body">
-                                <h4 class="media-heading"><?=t('Screencasts')?></h4>
-                                <?=t('The concrete5 <a href="%s" target="_blank">YouTube Channel</a> is full of useful videos covering how to use concrete5.', Config::get('concrete.urls.videos'))?>
+                                <h4 class="media-heading"><?= t('Screencasts') ?></h4>
+                                <?= t('The concrete5 <a href="%s" target="_blank">YouTube Channel</a> is full of useful videos covering how to use concrete5.',
+                                    Config::get('concrete.urls.videos')) ?>
                             </div>
                         </div>
 
@@ -688,8 +762,9 @@ switch ($installStep) {
                                 <i class="fa fa-code fa-2x"></i>
                             </div>
                             <div class="media-body">
-                                <h4 class="media-heading"><?=t('Developer Documentation')?></h4>
-                                <?=t('The <a href="%s" target="_blank">Developer Documentation</a> covers theming, building add-ons and custom concrete5 development.', Config::get('concrete.urls.help.developer'))?>
+                                <h4 class="media-heading"><?= t('Developer Documentation') ?></h4>
+                                <?= t('The <a href="%s" target="_blank">Developer Documentation</a> covers theming, building add-ons and custom concrete5 development.',
+                                    Config::get('concrete.urls.help.developer')) ?>
                             </div>
                         </div>
 
@@ -699,7 +774,7 @@ switch ($installStep) {
 
             <div id="success-message">
                 <div class="panel panel-success">
-                    <div class="panel-heading"><?=t('Installation Complete')?></div>
+                    <div class="panel-heading"><?= t('Installation Complete') ?></div>
                     <div class="panel-body">
                         <?= $successMessage ?>
                     </div>
@@ -715,8 +790,9 @@ switch ($installStep) {
         </div>
 
         <div class="ccm-install-actions">
-            <div class="pull-left" id="install-progress-summary"><?=t('Beginning Installation')?></div>
-            <button type="submit" disabled="disabled" onclick="window.location.href='<?= URL::to('/') ?>'" data-button="installation-complete" class="btn btn-primary">
+            <div class="pull-left" id="install-progress-summary"><?= t('Beginning Installation') ?></div>
+            <button type="submit" disabled="disabled" onclick="window.location.href='<?= URL::to('/') ?>'"
+                    data-button="installation-complete" class="btn btn-primary">
                 <?= t('Installing...') ?>
                 <i class="fa fa-spinner fa-spin"></i>
             </button>

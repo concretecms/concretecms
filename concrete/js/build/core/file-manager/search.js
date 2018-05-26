@@ -312,7 +312,7 @@
             my.loadFolder(this.currentFolder, false, true);
         } else {
             // re-trigger a file search
-            my.$element.find('div[data-header=file-manager] form').trigger('submit');
+            $('div[data-header=file-manager] form').trigger('submit');
         }
     };
 

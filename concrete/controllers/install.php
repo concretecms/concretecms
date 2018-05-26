@@ -281,6 +281,7 @@ class Install extends Controller
             $val->addRequired('DB_DATABASE', t('You must specify a valid database name'));
             $val->addRequired('DB_SERVER', t('You must specify a valid database server'));
             $val->addRequired('SERVER_TIMEZONE', t('You must specify the system time zone'));
+            $val->addRequired('privacy', t('You must agree to the privacy policy'));
 
             $password = $post->get('uPassword');
             $passwordConfirm = $post->get('uPasswordConfirm');
@@ -296,6 +297,9 @@ class Install extends Controller
             if (!$val->test()) {
                 $error->add($val->getError());
             } elseif (!$error->has()) {
+                /**
+                 * @var $options InstallerOptions
+                 */
                 $options = $this->app->make(InstallerOptions::class);
                 $configuration = $post->get('SITE_CONFIG');
                 if (!is_array($configuration)) {
@@ -322,6 +326,7 @@ class Install extends Controller
                 $config = $this->app->make('config');
                 $hasher = new PasswordHash($config->get('concrete.user.password.hash_cost_log2'), $config->get('concrete.user.password.hash_portable'));
                 $options
+                    ->setPrivacyPolicyAccepted($post->get('privacy') == '1' ? true : false)
                     ->setUserEmail($post->get('uEmail'))
                     ->setUserPasswordHash($hasher->HashPassword($post->get('uPassword')))
                     ->setStartingPointHandle($post->get('SAMPLE_CONTENT'))

@@ -16,7 +16,7 @@ $topic_id = Request::getInstance()->get('topic_id');
     <div class="input-group">
         <?=$form->text('query', array('placeholder' => t('Keywords')))?>
 
-            <div class="input-group-btn">
+            <div class="input-group-btn" style="z-index: 501;">
 
                 <?php if (isset($topics) && is_array($topics)) { ?>
 

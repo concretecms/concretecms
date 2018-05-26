@@ -27,8 +27,14 @@ View::element(
 <?php echo $innerContent ?>
 
 <div class="ccm-page-background-credit" style="display:none">
-    <?= t('Photo Credit:') ?>
-    <a href="#" style="pull-right"></a>
+    <div class="ccm-page-background-privacy-notice pull-left">
+        <?=t('Image served from concrete5.org. <a href="%s" target="_blank">View Privacy Policy</a>.',
+            Config::get('concrete.urls.privacy_policy'))?>
+    </div>
+    <div class="ccm-page-background-photo-credit pull-right">
+        <?= t('Photo Credit:') ?>
+        <a href="#"></a>
+    </div>
 </div>
 
 </div>
@@ -73,7 +79,7 @@ $(function() {
             shown = true;
 
             if (info) {
-                $('div.ccm-page-background-credit').fadeIn().children().attr('href', info.link).text(info.author.join());
+                $('div.ccm-page-background-credit').fadeIn().find('div.ccm-page-background-photo-credit').children().attr('href', info.link).text(info.author.join());
             }
 
         });

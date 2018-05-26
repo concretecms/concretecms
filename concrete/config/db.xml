@@ -4314,8 +4314,7 @@
       <key/>
       <notnull/>
     </field>
-    <field name="sessionValue" type="text" size="65535">
-      <notnull/>
+    <field name="sessionValue" type="text">
     </field>
     <field name="sessionTime" type="integer" size="11">
       <unsigned/>

@@ -30,8 +30,6 @@ class Key implements AttributeKeyInterface, ExportableInterface, ControlInterfac
 {
     use PackageTrait;
 
-    protected $controller;
-
     protected $settings;
 
     /**
@@ -217,11 +215,9 @@ class Key implements AttributeKeyInterface, ExportableInterface, ControlInterfac
 
     public function getController()
     {
-        if (!isset($this->controller)) {
-            $this->controller = $this->type->getController();
-            $this->controller->setAttributeKey($this);
-        }
-        return $this->controller;
+        $controller = $this->type->getController();
+        $controller->setAttributeKey($this);
+        return $controller;
     }
 
     public function getAttributeKeyCategoryHandle()

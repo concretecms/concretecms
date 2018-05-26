@@ -155,7 +155,7 @@ class Controller extends BlockController
             $ak = CollectionKey::getByHandle($this->relatedTopicAttributeKeyHandle);
             if (is_object($ak)) {
                 $topics = $c->getAttribute($ak->getAttributeKeyHandle());
-                if (count($topics) > 0 && is_array($topics)) {
+                if (is_array($topics) && count($topics) > 0) {
                     $topic = $topics[array_rand($topics)];
                     $this->list->filter('p.cID', $c->getCollectionID(), '<>');
                     $this->list->filterByTopic($topic);
@@ -499,7 +499,7 @@ class Controller extends BlockController
         if (isset($this->pageListTitle) && $this->pageListTitle) {
             return false;
         }
-        if (count($pages) == 0) {
+        if (empty($pages)) {
             if ($this->noResultsMessage) {
                 return false;
             } else {
