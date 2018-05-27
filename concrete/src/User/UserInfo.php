@@ -237,6 +237,12 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
             $set->delete();
         }
 
+        // Public file sets should be detached from the user
+        $this->connection->executeQuery('UPDATE FileSets SET uID = 0 WHERE uID = ? AND fsType = ?', [
+            (int) $this->getUserID(),
+            \Concrete\Core\File\Set\Set::TYPE_PUBLIC,
+        ]);
+
         $r = $this->connection->executeQuery('UPDATE Blocks set uID = ? WHERE uID = ?', [(int) USER_SUPER_ID, (int) $this->getUserID()]);
         $r = $this->connection->executeQuery('UPDATE Pages set uID = ? WHERE uID = ?', [(int) USER_SUPER_ID, (int) $this->getUserID()]);
         $r = $this->connection->executeQuery('UPDATE DownloadStatistics set uID = 0 WHERE uID = ?', [(int) $this->getUserID()]);
