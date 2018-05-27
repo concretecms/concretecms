@@ -231,6 +231,12 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
         $r = $this->connection->executeQuery('DELETE FROM ConfigStore WHERE uID = ?', [(int) $this->getUserID()]);
         $r = $this->connection->executeQuery('DELETE FROM ConversationSubscriptions WHERE uID = ?', [(int) $this->getUserID()]);
         $r = $this->connection->executeQuery('DELETE FROM PermissionAccessEntityUsers WHERE uID = ?', [(int) $this->getUserID()]);
+
+        // Delete private file sets from this user
+        foreach (\Concrete\Core\File\Set\Set::getMySets($this) as $set) {
+            $set->delete();
+        }
+
         $r = $this->connection->executeQuery('UPDATE Blocks set uID = ? WHERE uID = ?', [(int) USER_SUPER_ID, (int) $this->getUserID()]);
         $r = $this->connection->executeQuery('UPDATE Pages set uID = ? WHERE uID = ?', [(int) USER_SUPER_ID, (int) $this->getUserID()]);
         $r = $this->connection->executeQuery('UPDATE DownloadStatistics set uID = 0 WHERE uID = ?', [(int) $this->getUserID()]);
