@@ -13,6 +13,7 @@ use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
+use Concrete\Core\Session\SessionValidator;
 
 class DefaultDispatcher implements DispatcherInterface
 {
@@ -59,15 +60,17 @@ class DefaultDispatcher implements DispatcherInterface
 
     private function getEarlyDispatchResponse()
     {
-        $session = $this->app['session'];
+        $validator = $this->app->make(SessionValidator::class);
+        if ($validator->hasActiveSession()) {
+            $session = $this->app['session'];
+            if (!$session->has('uID')) {
+                User::verifyAuthTypeCookie();
+            }
 
-        if (!$session->has('uID')) {
-            User::verifyAuthTypeCookie();
-        }
-
-        // User may have been logged in, so lets check status again.
-        if ($session->has('uID') && $session->get('uID') > 0 && $response = $this->validateUser()) {
-            return $response;
+            // User may have been logged in, so lets check status again.
+            if ($session->has('uID') && $session->get('uID') > 0 && $response = $this->validateUser()) {
+                return $response;
+            }
         }
     }
 

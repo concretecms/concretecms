@@ -29,6 +29,7 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
         'PagePermissionAssignments',
         'CollectionVersionBlocks',
         'Areas',
+        'Groups',
         'PageSearchIndex',
         'ConfigStore',
         'GatheringDataSources',

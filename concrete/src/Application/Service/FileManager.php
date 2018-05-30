@@ -1,193 +1,241 @@
 <?php
+
 namespace Concrete\Core\Application\Service;
 
-use View;
-use Core;
+use Concrete\Core\Entity\File\File as FileEntity;
 use Concrete\Core\File\Type\Type as FileType;
-use File;
+use Concrete\Core\Http\Request;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\View\View;
+use Doctrine\ORM\EntityManagerInterface;
 
 class FileManager
 {
     /**
-     * Sets up a file field for use with a block.
+     * Sets up a form field to let users pick a file.
      *
-     * @param string $id The ID of your form field
-     * @param string $postname The name of your database column into which you'd like to save the file ID
-     * @param string $chooseText
-     * @param \File $bf
+     * @param string $inputID The ID of the form field
+     * @param string $inputName The name of the form field (the selected file ID will be posted with this name)
+     * @param string $chooseText The text to be used to tell users "Choose a File"
+     * @param \Concrete\Core\Entity\File\File|\Concrete\Core\Entity\File\Version|int|null $preselectedFile the pre-selected file (or its ID)
+     * @param array $args An array with additional arguments. Supported array keys are:
+     * <ul>
+     *     <li><code>'filters'</code><br />
+     *         A list of file filters. Every array item must have a 'field' key (with the name of the field as the value), and another field that's specific of the field.<br />
+     *         For a list of valid field identifiers, see the definition of the loadDataFromRequest method of the classes that implement \ Concrete\Core\Search\Field\FieldInterface (usually it's the requestVariables property).
+     *     </li>
+     * </ul>A list of arrays. Each array item must have a 'field' key whose value is the name of the field, and
      *
      * @return string $html
+     *
+     * @example <code><pre>
+     * $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+     * $filemanager = $app->make(\Concrete\Core\Application\Service\FileManager::class);
+     * echo $filemanager->file(
+     *     'myId',
+     *     'myName',
+     *     t('Choose File'),
+     *     $preselectedFile,
+     *     [
+     *         'filters' => [
+     *             [
+     *                 'field' => 'type',
+     *                 'type' => \Concrete\Core\File\Type\Type::T_IMAGE,
+     *             ],
+     *             [
+     *                 'field' => 'extension',
+     *                 'extension' => ['.png', '.jpg'],
+     *             ],
+     *         ],
+     *     ]
+     * )
+     * </pre></code>
      */
-    public function file($id, $postname, $chooseText, $bf = null, $filterArgs = [])
+    public function file($inputID, $inputName, $chooseText, $preselectedFile = null, $args = [])
     {
-        $fileID = 0;
-        $v = View::getInstance();
-        $v->requireAsset('core/file-manager');
+        $app = Application::getFacadeApplication();
 
-        /*
-         * If $_POST[$postname] is a valid File ID
-         * use that file
-         * If not try to use the $bf parameter passed in
-         */
-        $vh = Core::make('helper/validation/numbers');
-        if (isset($_POST[$postname]) && $vh->integer($_POST[$postname])) {
-            $postFile = File::getByID($_POST[$postname]);
-            if (is_object($postFile) && $postFile->getFileID() > 0) {
-                $bf = $postFile;
+        $view = View::getInstance();
+        $request = $app->make(Request::class);
+        $vh = $app->make('helper/validation/numbers');
+
+        $view->requireAsset('core/file-manager');
+        $fileSelectorArguments = [
+            'inputName' => (string) $inputName,
+            'fID' => null,
+            'filters' => [],
+        ];
+        if ($vh->integer($request->request->get($inputName))) {
+            $file = $app->make(EntityManagerInterface::class)->find(FileEntity::class, $request->request->get($inputName));
+            if ($file !== null) {
+                $fileSelectorArguments['fID'] = $file->getFileID();
             }
+        } elseif ($vh->integer($preselectedFile)) {
+            $fileSelectorArguments['fID'] = (int) $preselectedFile;
+        } elseif (is_object($preselectedFile)) {
+            $fileSelectorArguments['fID'] = (int) $preselectedFile->getFileID();
+        }
+        if ($fileSelectorArguments['fID'] === null && (string) $chooseText !== '') {
+            $fileSelectorArguments['chooseText'] = (string) $chooseText;
         }
 
-        if (is_object($bf) && $bf->getFileID() > 0) {
-            $fileID = $bf->getFileID();
+        if (isset($args['filters']) && is_array($args['filters'])) {
+            $fileSelectorArguments['filters'] = $args['filters'];
         }
 
-        $filters = '[]';
-        if (isset($filterArgs['filters']) && $filterArgs['filters']) {
-            $filters = json_encode($filterArgs['filters']);
-        }
-
-        if (!empty($chooseText)) {
-            $chooseText = json_encode($chooseText);
-            $chooseText = "'chooseText': $chooseText";
-        }
-        if ($fileID) {
-            $args = "{'inputName': '{$postname}', 'fID': {$fileID}, 'filters': $filters }";
-        } else {
-            $args = "{'inputName': '{$postname}', 'filters': $filters, $chooseText }";
-        }
-
+        $fileSelectorArgumentsJson = json_encode($fileSelectorArguments);
         $html = <<<EOL
-		<div class="ccm-file-selector" data-file-selector="{$id}"></div>
-		<script type="text/javascript">
-		$(function() {
-			$('[data-file-selector="{$id}"]').concreteFileSelector({$args});
-		});
-		</script>
+<div class="ccm-file-selector" data-file-selector="{$inputID}"></div>
+<script type="text/javascript">
+$(function() {
+    $('[data-file-selector="{$inputID}"]').concreteFileSelector({$fileSelectorArgumentsJson});
+});
+</script>
 EOL;
-        /*
-         * $html = '<div id="' . $id . '-fm-selected" class="ccm-file-selected-wrapper">'; $html .= '<div class="ccm-file-manager-select" id="' . $id . '-fm-display" ccm-file-manager-field="' . $id . '" style="display: ' . $resetDisplay . '">'; $html .= '<a href="javascript:void(0)" onclick="ccm_chooseAsset=false; ccm_alLaunchSelectorFileManager(\'' . $id . '\')">' . $chooseText . '</a>'; $html .= '</div><input id="' . $id . '-fm-value" type="hidden" name="' . $postname . '" value="' . $fileID . '" />'; $html .= '<script type="text/javascript">$(function() { if (is_object($bf) && (!$bf->isError()) && $bf->getFileID() > 0) { $html .= '<script type="text/javascript">$(function() { ccm_triggerSelectFile(' . $fileID . ', \'' . $id . '\'); });</script>'; }
-         */
 
         return $html;
     }
 
     /**
-     * Sets up an image to be chosen for use with a block.
+     * Sets up a form field to let users pick an image file.
      *
-     * @param string $id The ID of your form field
-     * @param string $postname The name of your database column into which you'd like to save the file ID
-     * @param string $chooseText
-     * @param \File $fileInstanceBlock
-     * @param array $additionalArgs
+     * @param string $inputID The ID of the form field
+     * @param string $inputName The name of the form field (the selected file ID will be posted with this name)
+     * @param string $chooseText The text to be used to tell users "Choose a File"
+     * @param \Concrete\Core\Entity\File\File|\Concrete\Core\Entity\File\Version|int|null $preselectedFile the pre-selected file (or its ID)
+     * @param array $args See the $args description of the <code>file</code> method
      *
      * @return string $html
+     *
+     * @see \Concrete\Core\Application\Service\FileManager::file()
      */
-    public function image($id, $postname, $chooseText, $fileInstanceBlock = null, $additionalArgs = [])
+    public function image($inputID, $inputName, $chooseText, $preselectedFile = null, $args = [])
     {
-        $args = [];
-        $args['filters'] = [['field' => 'type', 'type' => FileType::T_IMAGE]];
-        $args = array_merge($args, $additionalArgs);
-
-        return $this->file($id, $postname, $chooseText, $fileInstanceBlock, $args);
+        return $this->fileOfType(FileType::T_IMAGE, $inputID, $inputName, $chooseText, $preselectedFile, $args);
     }
 
     /**
-     * Sets up a video to be chosen for use with a block.
+     * Sets up a form field to let users pick a video file.
      *
-     * @param string $id  The ID of your form field
-     * @param string $postname The name of your database column into which you'd like to save the file ID
-     * @param string $chooseText
-     * @param \File $fileInstanceBlock
-     * @param array $additionalArgs
+     * @param string $inputID The ID of the form field
+     * @param string $inputName The name of the form field (the selected file ID will be posted with this name)
+     * @param string $chooseText The text to be used to tell users "Choose a File"
+     * @param \Concrete\Core\Entity\File\File|\Concrete\Core\Entity\File\Version|int|null $preselectedFile the pre-selected file (or its ID)
+     * @param array $args See the $args description of the <code>file</code> method
      *
      * @return string $html
+     *
+     * @see \Concrete\Core\Application\Service\FileManager::file()
      */
-    public function video($id, $postname, $chooseText, $fileInstanceBlock = null, $additionalArgs = [])
+    public function video($inputID, $inputName, $chooseText, $preselectedFile = null, $args = [])
     {
-        $args = [];
-        $args['filters'] = [['field' => 'type', 'type' => FileType::T_VIDEO]];
-        $args = array_merge($args, $additionalArgs);
-
-        return $this->file($id, $postname, $chooseText, $fileInstanceBlock, $args);
+        return $this->fileOfType(FileType::T_VIDEO, $inputID, $inputName, $chooseText, $preselectedFile, $args);
     }
 
     /**
-     * Sets up a text file to be chosen for use with a block.
+     * Sets up a form field to let users pick a text file.
      *
-     * @param string $id The ID of your form field
-     * @param string $postname The name of your database column into which you'd like to save the file ID
-     * @param string $chooseText
-     * @param \File $fileInstanceBlock
-     * @param array $additionalArgs
+     * @param string $inputID The ID of your form field
+     * @param string $inputName The name of the form field (the selected file ID will be posted with this name)
+     * @param string $chooseText The text to be used to tell users "Choose a File"
+     * @param \Concrete\Core\Entity\File\File|\Concrete\Core\Entity\File\Version|int|null $preselectedFile the pre-selected file (or its ID)
+     * @param array $args See the $args description of the <code>file</code> method
      *
      * @return string $html
+     *
+     * @see \Concrete\Core\Application\Service\FileManager::file()
      */
-    public function text($id, $postname, $chooseText, $fileInstanceBlock = null, $additionalArgs = [])
+    public function text($inputID, $inputName, $chooseText, $preselectedFile = null, $args = [])
     {
-        $args = [];
-        $args['filters'] = [['field' => 'type', 'type' => FileType::T_TEXT]];
-        $args = array_merge($args, $additionalArgs);
-
-        return $this->file($id, $postname, $chooseText, $fileInstanceBlock, $args);
+        return $this->fileOfType(FileType::T_TEXT, $inputID, $inputName, $chooseText, $preselectedFile, $args);
     }
 
     /**
-     * Sets up audio to be chosen for use with a block.
+     * Sets up a form field to let users pick an audio file.
      *
-     * @param string $id The ID of your form field
-     * @param string $postname The name of your database column into which you'd like to save the file ID
-     * @param string $chooseText
-     * @param \File $fileInstanceBlock
-     * @param array $additionalArgs
+     * @param string $inputID The ID of your form field
+     * @param string $inputName The name of the form field (the selected file ID will be posted with this name)
+     * @param string $chooseText The text to be used to tell users "Choose a File"
+     * @param \Concrete\Core\Entity\File\File|\Concrete\Core\Entity\File\Version|int|null $preselectedFile the pre-selected file (or its ID)
+     * @param array $args See the $args description of the <code>file</code> method
      *
      * @return string $html
+     *
+     * @see \Concrete\Core\Application\Service\FileManager::file()
      */
-    public function audio($id, $postname, $chooseText, $fileInstanceBlock = null, $additionalArgs = [])
+    public function audio($inputID, $inputName, $chooseText, $preselectedFile = null, $args = [])
     {
-        $args = [];
-        $args['filters'] = [['field' => 'type', 'type' => FileType::T_AUDIO]];
-        $args = array_merge($args, $additionalArgs);
-
-        return $this->file($id, $postname, $chooseText, $fileInstanceBlock, $args);
+        return $this->fileOfType(FileType::T_AUDIO, $inputID, $inputName, $chooseText, $preselectedFile, $args);
     }
 
     /**
-     * Sets up a document to be chosen for use with a block.
+     * Sets up a form field to let users pick a document file.
      *
-     * @param string $id  The ID of your form field
-     * @param string $postname The name of your database column into which you'd like to save the file ID
-     * @param string $chooseText
-     * @param \File $fileInstanceBlock
-     * @param array $additionalArgs
+     * @param string $inputID  The ID of your form field
+     * @param string $inputName The name of the form field (the selected file ID will be posted with this name)
+     * @param string $chooseText The text to be used to tell users "Choose a File"
+     * @param \Concrete\Core\Entity\File\File|\Concrete\Core\Entity\File\Version|int|null $preselectedFile the pre-selected file (or its ID)
+     * @param array $args See the $args description of the <code>file</code> method
      *
      * @return string $html
+     *
+     * @see \Concrete\Core\Application\Service\FileManager::file()
      */
-    public function doc($id, $postname, $chooseText, $fileInstanceBlock = null, $additionalArgs = [])
+    public function doc($inputID, $inputName, $chooseText, $preselectedFile = null, $args = [])
     {
-        $args = [];
-        $args['filters'] = [['field' => 'type', 'type' => FileType::T_DOCUMENT]];
-        $args = array_merge($args, $additionalArgs);
-
-        return $this->file($id, $postname, $chooseText, $fileInstanceBlock, $args);
+        return $this->fileOfType(FileType::T_DOCUMENT, $inputID, $inputName, $chooseText, $preselectedFile, $args);
     }
 
     /**
-     * Sets up an application to be chosen for use with a block.
+     * Sets up a form field to let users pick a application file.
      *
-     * @param string $id The ID of your form field
-     * @param string $postname The name of your database column into which you'd like to save the file ID
-     * @param string $chooseText
-     * @param \File $fileInstanceBlock
-     * @param array $additionalArgs
+     * @param string $inputID The ID of your form field
+     * @param string $inputName The name of the form field (the selected file ID will be posted with this name)
+     * @param string $chooseText The text to be used to tell users "Choose a File"
+     * @param \Concrete\Core\Entity\File\File|\Concrete\Core\Entity\File\Version|int|null $preselectedFile the pre-selected file (or its ID)
+     * @param array $args See the $args description of the <code>file</code> method
      *
      * @return string $html
+     *
+     * @see \Concrete\Core\Application\Service\FileManager::file()
      */
-    public function app($id, $postname, $chooseText, $fileInstanceBlock = null, $additionalArgs = [])
+    public function app($inputID, $inputName, $chooseText, $preselectedFile = null, $args = [])
     {
-        $args = [];
-        $args['filters'] = [['field' => 'type', 'type' => FileType::T_APPLICATION]];
-        $args = array_merge($args, $additionalArgs);
+        return $this->fileOfType(FileType::T_APPLICATION, $inputID, $inputName, $chooseText, $preselectedFile, $args);
+    }
 
-        return $this->file($id, $postname, $chooseText, $fileInstanceBlock, $args);
+    /**
+     * Sets up a form field to let users pick a file of a specific type.
+     *
+     * @param int $type One of the \Concrete\Core\File\Type\Type::T_... constants.
+     * @param string $inputID The ID of your form field
+     * @param string $inputName The name of the form field (the selected file ID will be posted with this name)
+     * @param string $chooseText The text to be used to tell users "Choose a File"
+     * @param \Concrete\Core\Entity\File\File|\Concrete\Core\Entity\File\Version|int|null $preselectedFile the pre-selected file (or its ID)
+     * @param array $args See the $args description of the <code>file</code> method
+     *
+     * @return string
+     *
+     * @see \Concrete\Core\Application\Service\FileManager::file()
+     */
+    private function fileOfType($type, $inputID, $inputName, $chooseText, $preselectedFile = null, $args = [])
+    {
+        if (!is_array($args)) {
+            $args = [];
+        }
+        if (!isset($args['filters']) || !is_array($args['filters'])) {
+            $args['filters'] = [];
+        }
+        $args['filters'] = array_merge(
+            [
+                [
+                    'field' => 'type',
+                    'type' => (int) $type,
+                ],
+            ],
+            $args['filters']
+        );
+
+        return $this->file($inputID, $inputName, $chooseText, $preselectedFile, $args);
     }
 }

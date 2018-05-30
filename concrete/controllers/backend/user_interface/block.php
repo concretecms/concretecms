@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Controller\Backend\UserInterface;
 
-use Exception;
+use Concrete\Core\Error\UserMessageException;
 use Page as ConcretePage;
 use Permissions;
 
@@ -38,7 +38,7 @@ abstract class Block extends Page
         }
         $a = \Area::get($this->page, $arHandle);
         if (!is_object($a)) {
-            throw new \Exception('Invalid Area');
+            throw new UserMessageException('Invalid Area');
         }
         $this->area = $a;
         if (!$a->isGlobalArea()) {
@@ -52,7 +52,7 @@ abstract class Block extends Page
             $this->set('isGlobalArea', true);
         }
         if (!$b) {
-            throw new Exception(t('Access Denied'));
+            throw new UserMessageException(t('Access Denied'));
         }
         $this->block = $b;
         $this->permissions = new \Permissions($b);
@@ -65,7 +65,7 @@ abstract class Block extends Page
         if ($this->permissions->canViewEditInterface() && $this->canAccess()) {
             return \Concrete\Core\Controller\Controller::getViewObject();
         }
-        throw new Exception(t('Access Denied'));
+        throw new UserMessageException(t('Access Denied'));
     }
 
     protected function getBlockToEdit()

@@ -640,7 +640,12 @@ return [
          */
         '/ccm/system/dialogs/language/update/details' => ['\Concrete\Controller\Dialog\Language\Update\Details::view'],
 
-        /*
+		/*
+		 * Privacy Policy
+		 */
+		'/ccm/system/accept_privacy_policy' => ['\Concrete\Controller\Backend\PrivacyPolicy::acceptPrivacyPolicy'],
+
+		/*
          * Captcha images
          */
         '/ccm/system/captcha/picture' => ['\Concrete\Core\Captcha\CaptchaWithPictureInterface::displayCaptchaPicture'],

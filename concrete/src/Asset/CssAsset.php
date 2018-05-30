@@ -17,6 +17,13 @@ class CssAsset extends Asset
     protected $assetSupportsCombination = true;
 
     /**
+     * The default media of this asset.
+     *
+     * @var string
+     */
+    protected $assetMedia = 'all';
+
+    /**
      * @return string
      */
     public function getAssetDefaultPosition()
@@ -30,6 +37,26 @@ class CssAsset extends Asset
     public function getAssetType()
     {
         return 'css';
+    }
+
+    /**
+     * Set the media of this asset.
+     *
+     * @param string $assetMedia
+     */
+    public function setAssetMedia($assetMedia)
+    {
+        $this->assetMedia = $assetMedia;
+    }
+
+    /**
+     * Get the media of this asset.
+     *
+     * @return string
+     */
+    public function getAssetMedia()
+    {
+        return $this->assetMedia;
     }
 
     /**
@@ -176,11 +203,24 @@ class CssAsset extends Asset
     }
 
     /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Asset\AssetInterface::register()
+     */
+    public function register($filename, $args, $pkg = false)
+    {
+        parent::register($filename, $args, $pkg);
+        if (!empty($args['media'])) {
+            $this->setAssetMedia($args['media']);
+        }
+    }
+
+    /**
      * @return string
      */
     public function __toString()
     {
-        $e = new HeadLink($this->getAssetURL(), 'stylesheet', 'text/css', 'all');
+        $e = new HeadLink($this->getAssetURL(), 'stylesheet', 'text/css', $this->getAssetMedia());
         if (count($this->combinedAssetSourceFiles)) {
             $source = '';
             foreach ($this->combinedAssetSourceFiles as $file) {

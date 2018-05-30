@@ -179,16 +179,6 @@
                 </attributekey>
             </attributes>
         </page>
-        <!--
-        <page name="Statistics" path="/dashboard/reports/statistics" filename="/dashboard/reports/statistics.php"
-              pagetype="" description="View your site activity." package="">
-            <attributes>
-                <attributekey handle="meta_keywords">
-                    <value>hits, pageviews, visitors, activity</value>
-                </attributekey>
-            </attributes>
-        </page>
-        //-->
         <page name="Form Results" path="/dashboard/reports/forms" filename="/dashboard/reports/forms.php" pagetype=""
               description="Get submission data." package="">
             <attributes>

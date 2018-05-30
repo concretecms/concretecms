@@ -118,6 +118,25 @@
 
     };
 
+	var setupPrivacyPolicy = function() {
+
+		$('div#ccm-dashboard-page').on('click', 'button[data-action=agree-privacy-policy]', function() {
+			$('div.ccm-dashboard-privacy-policy').hide();
+			var url = CCM_DISPATCHER_FILENAME + '/ccm/system/accept_privacy_policy';
+			$.concreteAjax({
+				dataType: 'json',
+				data: {'ccm_token': $(this).attr('data-token')},
+				type: 'POST',
+				url: url,
+				success: function(r) {
+
+				}
+			});
+		});
+
+	};
+
+
 	var setupSelects = function() {
 		$('select[data-select=bootstrap]').bootstrapSelectToButton();
 	};
@@ -145,6 +164,7 @@
 			setupSelects();
 			setupDetailsURLs();
 			setupFavorites();
+			setupPrivacyPolicy();
 		}
 	};
 

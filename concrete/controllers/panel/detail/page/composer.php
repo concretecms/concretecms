@@ -4,11 +4,13 @@ namespace Concrete\Controller\Panel\Detail\Page;
 
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
 use Concrete\Core\Form\Service\Widget\DateTime;
-use PageEditResponse;
-use PageTemplate;
-use PageType;
-use User;
-use View;
+use Concrete\Core\Page\EditResponse as PageEditResponse;
+use Concrete\Core\Page\Template as PageTemplate;
+use Concrete\Core\Page\Type\Type as PageType;
+use Concrete\Core\Page\Page;
+use Concrete\Core\User\User;
+use Concrete\Core\View\View;
+use Exception;
 
 class Composer extends BackendInterfacePageController
 {
@@ -44,7 +46,7 @@ class Composer extends BackendInterfacePageController
             }
             $ptr->outputJSON();
         } else {
-            throw new \Exception(t('Access Denied.'));
+            throw new Exception(t('Access Denied.'));
         }
     }
 
@@ -54,11 +56,11 @@ class Composer extends BackendInterfacePageController
             $r = $this->save();
             $ptr = $r[0];
             $u = new User();
-            $c = \Page::getByID($u->getPreviousFrontendPageID());
+            $c = Page::getCurrentPage();
             $ptr->setRedirectURL($c->getCollectionLink(true));
             $ptr->outputJSON();
         } else {
-            throw new \Exception(t('Access Denied.'));
+            throw new Exception(t('Access Denied.'));
         }
     }
 
@@ -74,9 +76,9 @@ class Composer extends BackendInterfacePageController
             $e = $ptr->error;
             $validator = $pagetype->getPageTypeValidatorObject();
             if ($this->page->isPageDraft()) {
-                $target = \Page::getByID($this->page->getPageDraftTargetParentPageID());
+                $target = Page::getByID($this->page->getPageDraftTargetParentPageID());
             } else {
-                $target = \Page::getByID($this->page->getCollectionParentID());
+                $target = Page::getByID($this->page->getCollectionParentID());
             }
             $e->add($validator->validatePublishLocationRequest($target, $c));
             $e->add($validator->validatePublishDraftRequest($c));
@@ -97,7 +99,7 @@ class Composer extends BackendInterfacePageController
             }
             $ptr->outputJSON();
         } else {
-            throw new \Exception(t('Access Denied.'));
+            throw new Exception(t('Access Denied.'));
         }
     }
 
@@ -118,7 +120,7 @@ class Composer extends BackendInterfacePageController
 
             $ptr->outputJSON();
         } else {
-            throw new \Exception(t('Access Denied.'));
+            throw new Exception(t('Access Denied.'));
         }
     }
 

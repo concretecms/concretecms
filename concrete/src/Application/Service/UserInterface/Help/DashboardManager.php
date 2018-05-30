@@ -18,7 +18,6 @@ class DashboardManager extends AbstractManager
             '/dashboard/users/groups' => t('View, search for, add, and edit groups. Click a group to edit it. Groups are useful for organizing users and setting permissions for multiple users simultaneously.'),
             '/dashboard/users/add_group' => t('Create a new group to organize and classify users. Choose an expiration date to remove users automatically.'),
             '/dashboard/reports/forms' => t("View responses to your site's forms. Submitted form data is collected here."),
-            '/dashboard/reports/statistics' => t('View graphs showing recent site traffic, registration, page creation and downloaded files.'),
             '/dashboard/reports/surveys' => t('The results of completed survey blocks are logged here. Find out what your users have submitted.'),
             '/dashboard/reports/logs' => t('View a record of errors your site has encountered, and a log of outgoing email messages sent by your site.'),
             '/dashboard/pages/themes' => t("Themes change the overall design of your site's pages. Activating a theme will apply it to every page in your site. Preview allows you to see how your content will look when the new theme is applied. Inspect lists the Page Types a theme uses. Customize allows you to change certain properties of your theme's styles, if allowed."),

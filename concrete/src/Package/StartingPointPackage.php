@@ -526,6 +526,9 @@ class StartingPointPackage extends BasePackage
 
         Config::save('concrete.version_installed', APP_VERSION);
         Config::save('concrete.misc.login_redirect', 'DESKTOP');
+
+        $dbConfig = \Core::make('config/database');
+        $dbConfig->save('app.privacy_policy_accepted', $this->installerOptions->isPrivacyPolicyAccepted());
     }
 
     protected function install_site_permissions()
