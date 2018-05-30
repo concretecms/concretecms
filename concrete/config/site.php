@@ -20,6 +20,18 @@ return [
                  */
                 'display_account_menu' => true,
             ],
+            'misc' => [
+                // File ID for favicon
+                'favicon_fid' => null,
+                // File ID for iPhone home screen icon
+                'iphone_home_screen_thumbnail_fid' => null,
+                // File ID for Windows 8 tile icon 
+                'modern_tile_thumbnail_fid' => null,
+                // Background color for Windows 8 tile icon
+                'modern_tile_thumbnail_bgcolor' => null,
+                // theme-color meta-tag (eg color of toolbar for Chrome 39+ on Android)
+                'browser_toolbar_color' => null,
+            ],
             'editor' => [
                 'concrete' => [
                     'enable_filemanager' => true,
