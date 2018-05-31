@@ -877,6 +877,14 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="Trusted Proxies" path="/dashboard/system/permissions/trusted_proxies"
+              filename="/dashboard/system/permissions/trusted_proxies.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>trusted, proxy, proxies, ip, cloudflare</value>
+                </attributekey>
+            </attributes>
+        </page>
 
         <page name="Login &amp; Registration" path="/dashboard/system/registration"
               filename="/dashboard/system/registration/view.php" pagetype=""

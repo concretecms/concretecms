@@ -37,6 +37,7 @@ class DashboardManager extends AbstractManager
             '/dashboard/system/permissions/tasks' => t("Control users' ability to do perform specific tasks, such as install packages, alter permissions, etc."),
             '/dashboard/system/permissions/file_types' => t('View and change which file types you permit users to upload to your File Manager.'),
             '/dashboard/system/permissions/files' => t("Control how users interact with your site's File Manager, allowing or disallowing actions like search, upload, replace and more."),
+            '/dashboard/system/permissions/trusted_proxies' => t('If your website uses a reverse proxy (like <a href="%s" target="_blank">Cloudflare</a>), you have to specify here the list of the IP addresses of the proxy, so that concrete5 can detect the actual IP address of the visitors.', 'https://www.cloudflare.com/ips/'),
             '/dashboard/system/basics/editor' => t("Control which set of tools the content-editor toolbar includes (e.g., Simple, Advanced, Office), and the toolbar's spatial dimensions."),
             '/dashboard/system/basics/multilingual' => t('View available language packs installed for the concrete5 Dashboard and editing interface.'),
             '/dashboard/system/basics/multilingual/update' => t('Install new language files and update the outdated ones.<br />You can contribute to translations on %s', '<a href="https://translate.concrete5.org" target="_blank">translate.concrete5.org</a>.'),
