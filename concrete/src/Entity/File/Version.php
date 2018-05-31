@@ -1471,7 +1471,20 @@ class Version implements ObjectInterface
             }
         }
 
-        $thumbnail = $image->thumbnail($size, $thumbnailMode);
+        $imageForThumbnail = $image;
+        if ($type->isUpscalingEnabled()) {
+            $imageSize = $image->getSize();
+            if ($size->contains($imageSize) && $imageSize->getWidth() !== $size->getWidth() && $imageSize->getHeight() !== $size->getHeight()) {
+                if (($imageSize->getWidth() / $imageSize->getHeight()) >= ($size->getWidth() / $size->getHeight())) {
+                    $newImageSize = $imageSize->heighten($size->getHeight());
+                } else {
+                    $newImageSize = $imageSize->widen($size->getWidth());
+                }
+                $imageForThumbnail = $image->copy()->resize($newImageSize);
+            }
+        }
+        $thumbnail = $imageForThumbnail->thumbnail($size, $thumbnailMode);
+        unset($imageForThumbnail);
         $thumbnailPath = $type->getFilePath($this);
         $thumbnailFormat = $app->make(ThumbnailFormatService::class)->getFormatForFile($this);
 
