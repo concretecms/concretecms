@@ -8,7 +8,6 @@ use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Asset\AssetList;
 use Concrete\Core\File\Type\TypeList;
 use Concrete\Core\Foundation\ClassAliasList;
-use Concrete\Core\Foundation\Service\ProviderList;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Routing\RedirectResponse;
 use Concrete\Core\Support\Facade\Facade;
@@ -255,7 +254,6 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
      */
     private function initializeServiceProviders(Application $app, Repository $config)
     {
-        /** @var ProviderList $list */
         $list = $this->app->make('Concrete\Core\Foundation\Service\ProviderList');
 
         // Register events first so that they can be used by other providers.
