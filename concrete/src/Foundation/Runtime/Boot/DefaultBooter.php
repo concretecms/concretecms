@@ -338,7 +338,10 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
                         }
                     }
                 } else {
-                    $proxyHeadersBitfield = (string) $proxyHeaders === '' ? -1 : (int) $proxyHeaders;
+                    $proxyHeadersBitfield = (int) $proxyHeaders;
+                }
+                if ($proxyHeadersBitfield === 0) {
+                    $proxyHeadersBitfield = -1;
                 }
                 Request::setTrustedProxies($trustedProxiesIps, $proxyHeadersBitfield);
             } else {
