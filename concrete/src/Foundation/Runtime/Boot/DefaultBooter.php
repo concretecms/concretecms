@@ -1,19 +1,20 @@
 <?php
+
 namespace Concrete\Core\Foundation\Runtime\Boot;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Application\ApplicationAwareInterface;
+use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Asset\AssetList;
 use Concrete\Core\File\Type\TypeList;
 use Concrete\Core\Foundation\ClassAliasList;
 use Concrete\Core\Foundation\Service\ProviderList;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Routing\RedirectResponse;
-use Concrete\Core\Support\Facade\Route;
 use Concrete\Core\Support\Facade\Facade;
+use Concrete\Core\Support\Facade\Route;
 use Illuminate\Config\Repository;
 use Symfony\Component\HttpFoundation\Response;
-use Concrete\Core\Application\ApplicationAwareTrait;
 
 class DefaultBooter implements BootInterface, ApplicationAwareInterface
 {
@@ -152,7 +153,6 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
                 return $response;
             }
 
-
             /*
              * ----------------------------------------------------------------------------
              * Now we load all installed packages, and register their package autoloaders.
@@ -211,7 +211,7 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
      */
     private function initializeEnvironmentDetection(Application $app)
     {
-        $db_config = array();
+        $db_config = [];
         if (file_exists(DIR_CONFIG_SITE . '/database.php')) {
             $db_config = include DIR_CONFIG_SITE . '/database.php';
         }
@@ -282,8 +282,8 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
     {
         $asset_list = AssetList::getInstance();
 
-        $asset_list->registerMultiple($config->get('app.assets', array()));
-        $asset_list->registerGroupMultiple($config->get('app.asset_groups', array()));
+        $asset_list->registerMultiple($config->get('app.assets', []));
+        $asset_list->registerGroupMultiple($config->get('app.asset_groups', []));
     }
 
     /**
@@ -292,7 +292,7 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
     private function initializeRoutes(Repository $config)
     {
         Route::registerMultiple($config->get('app.routes'));
-        Route::setThemesByRoutes($config->get('app.theme_paths', array()));
+        Route::setThemesByRoutes($config->get('app.theme_paths', []));
     }
 
     /**
@@ -301,8 +301,8 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
     private function initializeFileTypes(Repository $config)
     {
         $type_list = TypeList::getInstance();
-        $type_list->defineMultiple($config->get('app.file_types', array()));
-        $type_list->defineImporterAttributeMultiple($config->get('app.importer_attributes', array()));
+        $type_list->defineMultiple($config->get('app.file_types', []));
+        $type_list->defineImporterAttributeMultiple($config->get('app.importer_attributes', []));
     }
 
     /**
@@ -354,7 +354,7 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
                 && !$request->matches('/ccm/assets/localization/*')
             ) {
                 $manager = $app->make('Concrete\Core\Url\Resolver\Manager\ResolverManager');
-                $response = new RedirectResponse($manager->resolve(array('install')));
+                $response = new RedirectResponse($manager->resolve(['install']));
 
                 return $response;
             }
