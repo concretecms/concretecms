@@ -11,7 +11,7 @@ if (!is_object($set)) {
     die(t('Invalid set'));
 }
 if ($cp->canViewPage()) {
-    if ($_POST['ptComposerControlTypeID'] && $_POST['ptComposerControlIdentifier']) {
+    if (isset($_POST['ptComposerControlTypeID']) && $_POST['ptComposerControlTypeID'] && $_POST['ptComposerControlIdentifier']) {
         $type = PageTypeComposerControlType::getByID($_POST['ptComposerControlTypeID']);
         $control = $type->getPageTypeComposerControlByIdentifier($_POST['ptComposerControlIdentifier']);
         $layoutSetControl = $control->addToPageTypeComposerFormLayoutSet($set);
