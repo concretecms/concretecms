@@ -246,6 +246,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
         $r = $this->connection->executeQuery('UPDATE Blocks set uID = ? WHERE uID = ?', [(int) USER_SUPER_ID, (int) $this->getUserID()]);
         $r = $this->connection->executeQuery('UPDATE Pages set uID = ? WHERE uID = ?', [(int) USER_SUPER_ID, (int) $this->getUserID()]);
         $r = $this->connection->executeQuery('UPDATE DownloadStatistics set uID = 0 WHERE uID = ?', [(int) $this->getUserID()]);
+        $this->connection->executeQuery('DELETE FROM authTypeConcreteCookieMap WHERE uID = ?', [(int) $this->getUserID()]);
 
         $this->entityManager->remove($this->entity);
         $this->entityManager->flush();
