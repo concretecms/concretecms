@@ -19,15 +19,6 @@ if (basename($_SERVER['PHP_SELF']) == DISPATCHER_FILENAME_CORE) {
 \Patchwork\Utf8\Bootup::initAll();
 
 /*
- * Patch the request before anything could access it.
- */
-if(isset($_POST['__ccm_consider_request_as_ajax']) && $_POST['__ccm_consider_request_as_ajax'] === '1') {
-    unset($_POST['__ccm_consider_request_as_ajax']);
-    unset($_REQUEST['__ccm_consider_request_as_ajax']);
-    $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-}
-
-/*
  * ----------------------------------------------------------------------------
  * Instantiate concrete5.
  * ----------------------------------------------------------------------------
