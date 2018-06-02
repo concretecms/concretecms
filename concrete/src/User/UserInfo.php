@@ -222,15 +222,16 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
             $this->attributeCategory->deleteValue($attribute);
         }
 
-        $r = $this->connection->executeQuery('DELETE FROM OauthUserMap WHERE user_id = ?', [(int) $this->getUserID()]);
-        $r = $this->connection->executeQuery('DELETE FROM Logs WHERE uID = ?', [(int) $this->getUserID()]);
-        $r = $this->connection->executeQuery('DELETE FROM UserSearchIndexAttributes WHERE uID = ?', [(int) $this->getUserID()]);
-        $r = $this->connection->executeQuery('DELETE FROM UserGroups WHERE uID = ?', [(int) $this->getUserID()]);
-        $r = $this->connection->executeQuery('DELETE FROM UserValidationHashes WHERE uID = ?', [(int) $this->getUserID()]);
-        $r = $this->connection->executeQuery('DELETE FROM Piles WHERE uID = ?', [(int) $this->getUserID()]);
-        $r = $this->connection->executeQuery('DELETE FROM ConfigStore WHERE uID = ?', [(int) $this->getUserID()]);
-        $r = $this->connection->executeQuery('DELETE FROM ConversationSubscriptions WHERE uID = ?', [(int) $this->getUserID()]);
-        $r = $this->connection->executeQuery('DELETE FROM PermissionAccessEntityUsers WHERE uID = ?', [(int) $this->getUserID()]);
+        $this->connection->executeQuery('DELETE FROM OauthUserMap WHERE user_id = ?', [(int) $this->getUserID()]);
+        $this->connection->executeQuery('DELETE FROM Logs WHERE uID = ?', [(int) $this->getUserID()]);
+        $this->connection->executeQuery('DELETE FROM UserSearchIndexAttributes WHERE uID = ?', [(int) $this->getUserID()]);
+        $this->connection->executeQuery('DELETE FROM UserGroups WHERE uID = ?', [(int) $this->getUserID()]);
+        $this->connection->executeQuery('DELETE FROM UserValidationHashes WHERE uID = ?', [(int) $this->getUserID()]);
+        $this->connection->executeQuery('DELETE FROM Piles WHERE uID = ?', [(int) $this->getUserID()]);
+        $this->connection->executeQuery('DELETE FROM ConfigStore WHERE uID = ?', [(int) $this->getUserID()]);
+        $this->connection->executeQuery('DELETE FROM ConversationSubscriptions WHERE uID = ?', [(int) $this->getUserID()]);
+        $this->connection->executeQuery('DELETE FROM PermissionAccessEntityUsers WHERE uID = ?', [(int) $this->getUserID()]);
+        $this->connection->executeQuery('DELETE FROM authTypeConcreteCookieMap WHERE uID = ?', [(int) $this->getUserID()]);
 
         // Delete private file sets from this user
         foreach (\Concrete\Core\File\Set\Set::getMySets($this) as $set) {
@@ -243,10 +244,9 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
             \Concrete\Core\File\Set\Set::TYPE_PUBLIC,
         ]);
 
-        $r = $this->connection->executeQuery('UPDATE Blocks set uID = ? WHERE uID = ?', [(int) USER_SUPER_ID, (int) $this->getUserID()]);
-        $r = $this->connection->executeQuery('UPDATE Pages set uID = ? WHERE uID = ?', [(int) USER_SUPER_ID, (int) $this->getUserID()]);
-        $r = $this->connection->executeQuery('UPDATE DownloadStatistics set uID = 0 WHERE uID = ?', [(int) $this->getUserID()]);
-        $this->connection->executeQuery('DELETE FROM authTypeConcreteCookieMap WHERE uID = ?', [(int) $this->getUserID()]);
+        $this->connection->executeQuery('UPDATE Blocks set uID = ? WHERE uID = ?', [(int) USER_SUPER_ID, (int) $this->getUserID()]);
+        $this->connection->executeQuery('UPDATE Pages set uID = ? WHERE uID = ?', [(int) USER_SUPER_ID, (int) $this->getUserID()]);
+        $this->connection->executeQuery('UPDATE DownloadStatistics set uID = 0 WHERE uID = ?', [(int) $this->getUserID()]);
 
         $this->entityManager->remove($this->entity);
         $this->entityManager->flush();
