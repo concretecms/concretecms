@@ -1689,6 +1689,10 @@ class Version implements ObjectInterface
         try {
             if ($fsl->has($path)) {
                 $fsl->delete($path);
+
+                $app['director']->dispatch('on_thumbnail_delete',
+                    new \Concrete\Core\File\Event\ThumbnailDelete($path, $type)
+                );
             }
         } catch (FileNotFoundException $e) {
         }
