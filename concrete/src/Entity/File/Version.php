@@ -1500,6 +1500,10 @@ class Version implements ObjectInterface
             ]
         );
 
+        $app['director']->dispatch('on_thumbnail_generate',
+            new \Concrete\Core\File\Event\ThumbnailGenerate($thumbnailPath, $type)
+        );
+
         if ($type->getHandle() == $config->get('concrete.icons.file_manager_listing.handle') && !$this->fvHasListingThumbnail) {
             $this->fvHasListingThumbnail = true;
             $this->save();
