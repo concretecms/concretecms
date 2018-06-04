@@ -292,24 +292,18 @@ EOL;
      */
     public function saveOptionsForm(Request $request)
     {
-        $this->config->save('editor.concrete.enable_filemanager', $request->request->get('enable_filemanager'));
-        $this->config->save('editor.concrete.enable_sitemap', $request->request->get('enable_sitemap'));
+        $this->config->save('editor.concrete.enable_filemanager', (bool) $request->request->get('enable_filemanager'));
+        $this->config->save('editor.concrete.enable_sitemap', (bool) $request->request->get('enable_sitemap'));
 
-        $plugins = [];
+        $selected = $this->config->get('editor.ckeditor4.plugins.selected_hidden');
         $post = $request->request->get('plugin');
-        $selectedHidden = $this->config->get('editor.ckeditor4.plugins.selected_hidden');
         if (is_array($post)) {
-            $post = array_merge($selectedHidden, $post);
-            foreach ($post as $plugin) {
-                if ($this->pluginManager->isAvailable($plugin)) {
-                    $plugins[] = $plugin;
-                }
-            }
-        } else {
-            foreach ($selectedHidden as $plugin) {
-                if ($this->pluginManager->isAvailable($plugin)) {
-                    $plugins[] = $plugin;
-                }
+            $selected = array_merge($selected, $post);
+        }
+        $plugins = [];
+        foreach ($selected as $plugin) {
+            if ($this->pluginManager->isAvailable($plugin)) {
+                $plugins[] = $plugin;
             }
         }
 
