@@ -25,6 +25,13 @@ class Plugin
     protected $name;
 
     /**
+     * The plugin description.
+     *
+     * @var string
+     */
+    protected $description = '';
+
+    /**
      * The list of required assets for this plugin.
      *
      * @var \Concrete\Core\Asset\AssetGroup
@@ -113,5 +120,25 @@ class Plugin
     public function setName($name)
     {
         $this->name = $name;
+    }
+
+    /**
+     * Get the plugin description.
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Set the plugin description.
+     *
+     * @param string $description
+     */
+    public function setDescription($description)
+    {
+        $this->description = (string) $description;
     }
 }

@@ -389,6 +389,8 @@ return [
         '/ccm/system/dialogs/express/advanced_search/add_field/' => ['\Concrete\Controller\Dialog\Express\AdvancedSearch::addField'],
         '/ccm/system/dialogs/express/advanced_search/submit' => ['\Concrete\Controller\Dialog\Express\AdvancedSearch::submit'],
 
+        '/ccm/system/dialogs/editor/settings/preview' => ['\Concrete\Controller\Dialog\Editor\Settings\Preview::view'],
+
         /*
          * Conversations
          */
