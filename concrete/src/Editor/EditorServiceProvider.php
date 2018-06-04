@@ -15,7 +15,7 @@ class EditorServiceProvider extends ServiceProvider
                 $config = $app->make('site')->getSite()->getConfigRepository();
                 $styles = $config->get('editor.ckeditor4.styles', array());
                 $pluginManager = new PluginManager();
-                $pluginManager->selectMultiple(
+                $pluginManager->select(
                     $config->get('editor.ckeditor4.plugins.selected', array())
                 );
                 $this->registerCkeditorPlugins($pluginManager);
