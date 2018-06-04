@@ -21,7 +21,7 @@ class EditorServiceProvider extends ServiceProvider
                 $pluginManager = new PluginManager();
                 $selectedPlugins = $config->get('editor.ckeditor4.plugins.selected');
                 if (!is_array($selectedPlugins)) {
-                    $selectedPlugins = $config->get('editor.ckeditor4.plugins.selected_default');
+                    $selectedPlugins = array_merge($config->get('editor.ckeditor4.plugins.selected_default'), $config->get('editor.ckeditor4.plugins.selected_hidden'));
                 }
                 $pluginManager->select($selectedPlugins);
                 $this->registerCkeditorPlugins($pluginManager);
