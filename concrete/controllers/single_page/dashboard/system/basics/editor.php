@@ -2,7 +2,9 @@
 
 namespace Concrete\Controller\SinglePage\Dashboard\System\Basics;
 
+use Concrete\Core\Editor\Plugin;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
+use Punic\Comparer;
 
 class Editor extends DashboardSitePageController
 {
@@ -11,10 +13,14 @@ class Editor extends DashboardSitePageController
         $manager = $this->app->make('editor')->getPluginManager();
         $config = $this->app->make('site')->getDefault()->getConfigRepository();
         $plugins = $manager->getAvailablePlugins();
+        $cmp = new Comparer();
+        uasort($plugins, function (Plugin $a, Plugin $b) use ($cmp) {
+            return $cmp->compare($a->getName(), $b->getName());
+        });
 
         $this->set('filemanager', (bool) $config->get('editor.concrete.enable_filemanager'));
         $this->set('sitemap', (bool) $config->get('editor.concrete.enable_sitemap'));
-        
+
         $this->set('plugins', $plugins);
         $this->set('manager', $manager);
         $this->set('selected_hidden', $config->get('editor.ckeditor4.plugins.selected_hidden'));
