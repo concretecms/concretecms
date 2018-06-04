@@ -1,28 +1,33 @@
 <?php
+
 namespace Concrete\Core\Editor;
 
+use AssetList;
+use Concrete\Core\Application\Application;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 use Concrete\Core\Legacy\FilePermissions;
 use Concrete\Core\Legacy\TaskPermission;
+use Concrete\Core\Localization\Localization;
 
 class EditorServiceProvider extends ServiceProvider
 {
     public function register()
     {
         $this->app->singleton(
-            'editor',
-            function ($app) {
+            EditorInterface::class,
+            function (Application $app) {
                 $config = $app->make('site')->getSite()->getConfigRepository();
-                $styles = $config->get('editor.ckeditor4.styles', array());
+                $styles = $config->get('editor.ckeditor4.styles', []);
                 $pluginManager = new PluginManager();
-                $pluginManager->selectMultiple(
-                    $config->get('editor.ckeditor4.plugins.selected', array())
-                );
+                $selectedPlugins = $config->get('editor.ckeditor4.plugins.selected');
+                if (!is_array($selectedPlugins)) {
+                    $selectedPlugins = array_merge($config->get('editor.ckeditor4.plugins.selected_default'), $config->get('editor.ckeditor4.plugins.selected_hidden'));
+                }
+                $pluginManager->select($selectedPlugins);
                 $this->registerCkeditorPlugins($pluginManager);
                 $this->registerCorePlugins($pluginManager);
                 $editor = new CkeditorEditor($config, $pluginManager, $styles);
                 $editor->setToken($app->make('token')->generate('editor'));
-
 
                 $filePermission = FilePermissions::getGlobal();
                 $taskPermission = new TaskPermission();
@@ -35,89 +40,95 @@ class EditorServiceProvider extends ServiceProvider
                     $taskPermission->canAccessSitemap()
                     && $config->get('editor.concrete.enable_sitemap')
                 );
+
                 return $editor;
             }
         );
+        $this->app->alias(EditorInterface::class, 'editor');
     }
 
     protected function registerCkeditorPlugins(PluginManager $pluginManager)
     {
-        $pluginList = array(
-            array('key' => 'about', 'name' => t('About')),
-            array('key' => 'autogrow', 'name' => t('Auto Grow')),
-            array('key' => 'a11yhelp', 'name' => t('Accessibility Help')),
-            array('key' => 'basicstyles', 'name' => t('Basic Styles')),
-            array('key' => 'bidi', 'name' => t('BiDi (Text Direction)')),
-            array('key' => 'blockquote', 'name' => t('Blockquote')),
-            array('key' => 'clipboard', 'name' => t('Clipboard')),
-            array('key' => 'colorbutton', 'name' => t('Color Button')),
-            array('key' => 'colordialog', 'name' => t('Color Dialog')),
-            array('key' => 'contextmenu', 'name' => t('Context Menu')),
-            array('key' => 'dialogadvtab', 'name' => t('Advanced Tab for Dialogs')),
-            array('key' => 'div', 'name' => t('Div Container Manager')),
-            array('key' => 'divarea', 'name' => t('Div Editing Area')),
-            array('key' => 'elementspath', 'name' => t('Elements Path')),
-            array('key' => 'enterkey', 'name' => t('Enter Key')),
-            array('key' => 'entities', 'name' => t('Escape HTML Entities')),
-            array('key' => 'find', 'name' => t('Find / Replace')),
-            array('key' => 'flash', 'name' => t('Flash Dialog')),
-            array('key' => 'floatingspace', 'name' => t('Floating Space')),
-            array('key' => 'font', 'name' => t('Font Size and Family')),
-            array('key' => 'format', 'name' => t('Format')),
-            array('key' => 'horizontalrule', 'name' => t('Horizontal Rule')),
-            array('key' => 'htmlwriter', 'name' => t('HTML Output Writer')),
-            array('key' => 'image', 'name' => t('Image')),
-            array('key' => 'image2', 'name' => t('Enhanced Image')),
-            array('key' => 'indentblock', 'name' => t('Indent Block')),
-            array('key' => 'indentlist', 'name' => t('Indent List')),
-            array('key' => 'justify', 'name' => t('Justify')),
-            array('key' => 'language', 'name' => t('Language')),
-            array('key' => 'list', 'name' => t('List')),
-            array('key' => 'liststyle', 'name' => t('List Style')),
-            array('key' => 'magicline', 'name' => t('Magic Line')),
-            array('key' => 'maximize', 'name' => t('Maximize')),
-            array('key' => 'newpage', 'name' => t('New Page')),
-            array('key' => 'pagebreak', 'name' => t('Page Break')),
-            array('key' => 'pastetext', 'name' => t('Paste As Plain Text')),
-            array('key' => 'pastefromword', 'name' => t('Paste from Word')),
-            array('key' => 'preview', 'name' => t('Preview')),
-            array('key' => 'removeformat', 'name' => t('Remove Format')),
-            array('key' => 'resize', 'name' => t('Editor Resize')),
-            array('key' => 'scayt', 'name' => t('SpellCheckAsYouType (SCAYT)')),
-            array('key' => 'selectall', 'name' => t('Select All')),
-            array('key' => 'showblocks', 'name' => t('Show Blocks')),
-            array('key' => 'showborders', 'name' => t('Show Table Borders')),
-            array('key' => 'smiley', 'name' => t('Insert Smiley')),
-            array('key' => 'sourcearea', 'name' => t('Source Editing Area')),
-            array('key' => 'sourcedialog', 'name' => t('Source Dialog')),
-            array('key' => 'specialchar', 'name' => t('Special Characters')),
-            array('key' => 'stylescombo', 'name' => t('Styles Combo')),
-            array('key' => 'tab', 'name' => t('Tab Key Handling')),
-            array('key' => 'table', 'name' => t('Table')),
-            array('key' => 'tableresize', 'name' => t('Table Resize')),
-            array('key' => 'tableselection', 'name' => t('Table Selection')),
-            array('key' => 'tabletools', 'name' => t('Table Tools')),
-            array('key' => 'toolbar', 'name' => t('Editor Toolbar')),
-            array('key' => 'undo', 'name' => t('Undo')),
-            array('key' => 'wsc', 'name' => t('WebSpellChecker')),
-            array('key' => 'wysiwygarea', 'name' => t('IFrame Editing Area')),
-        );
-
-        foreach ($pluginList as $plugin) {
+        $loc = Localization::getInstance();
+        $loc->pushActiveContext(Localization::CONTEXT_UI);
+        try {
+            $pluginList = [
+                'about' => t('About'),
+                'autogrow' => t('Auto Grow'),
+                'a11yhelp' => t('Accessibility Help'),
+                'basicstyles' => t('Basic Styles'),
+                'bidi' => t('BiDi (Text Direction)'),
+                'blockquote' => t('Blockquote'),
+                'clipboard' => t('Clipboard'),
+                'colorbutton' => t('Color Button'),
+                'colordialog' => t('Color Dialog'),
+                'contextmenu' => t('Context Menu'),
+                'dialogadvtab' => t('Advanced Tab for Dialogs'),
+                'div' => t('Div Container Manager'),
+                'divarea' => t('Div Editing Area'),
+                'elementspath' => t('Elements Path'),
+                'enterkey' => t('Enter Key'),
+                'entities' => t('Escape HTML Entities'),
+                'find' => t('Find / Replace'),
+                'flash' => t('Flash Dialog'),
+                'floatingspace' => t('Floating Space'),
+                'font' => t('Font Size and Family'),
+                'format' => t('Format'),
+                'horizontalrule' => t('Horizontal Rule'),
+                'htmlwriter' => t('HTML Output Writer'),
+                'image' => t('Image'),
+                'image2' => t('Enhanced Image'),
+                'indentblock' => t('Indent Block'),
+                'indentlist' => t('Indent List'),
+                'justify' => t('Justify'),
+                'language' => t('Language'),
+                'list' => t('List'),
+                'liststyle' => t('List Style'),
+                'magicline' => t('Magic Line'),
+                'maximize' => t('Maximize'),
+                'newpage' => t('New Page'),
+                'pagebreak' => t('Page Break'),
+                'pastetext' => t('Paste As Plain Text'),
+                'pastefromword' => t('Paste from Word'),
+                'preview' => t('Preview'),
+                'removeformat' => t('Remove Format'),
+                'resize' => t('Editor Resize'),
+                'scayt' => t('SpellCheckAsYouType (SCAYT)'),
+                'selectall' => t('Select All'),
+                'showblocks' => t('Show Blocks'),
+                'showborders' => t('Show Table Borders'),
+                'smiley' => t('Insert Smiley'),
+                'sourcearea' => t('Source Editing Area'),
+                'sourcedialog' => t('Source Dialog'),
+                'specialchar' => t('Special Characters'),
+                'stylescombo' => t('Styles Combo'),
+                'tab' => t('Tab Key Handling'),
+                'table' => t('Table'),
+                'tableresize' => t('Table Resize'),
+                'tableselection' => t('Table Selection'),
+                'tabletools' => t('Table Tools'),
+                'toolbar' => t('Editor Toolbar'),
+                'undo' => t('Undo'),
+                'wsc' => t('WebSpellChecker'),
+                'wysiwygarea' => t('IFrame Editing Area'),
+            ];
+        } finally {
+            $loc->popActiveContext();
+        }
+        foreach ($pluginList as $key => $name) {
             $editorPlugin = new Plugin();
-            $editorPlugin->setKey($plugin['key']);
-            $editorPlugin->setName($plugin['name']);
+            $editorPlugin->setKey($key);
+            $editorPlugin->setName($name);
             $pluginManager->register($editorPlugin);
         }
     }
 
     private function registerCorePlugins(PluginManager $pluginManager)
     {
-
         $coreAssetDir = 'js/ckeditor4/core/';
         $vendorAssetDir = 'js/ckeditor4/vendor/';
 
-        $assetList = \AssetList::getInstance();
+        $assetList = AssetList::getInstance();
         $assetList->register(
             'javascript',
             'editor/ckeditor4',
@@ -137,11 +148,11 @@ class EditorServiceProvider extends ServiceProvider
 
         $assetList->registerGroup(
             'editor/ckeditor4',
-            array(
-                array('javascript', 'editor/ckeditor4'),
-                array('css', 'editor/ckeditor4'),
-                array('javascript', 'editor/ckeditor4/jquery_adapter')
-            )
+            [
+                ['javascript', 'editor/ckeditor4'],
+                ['css', 'editor/ckeditor4'],
+                ['javascript', 'editor/ckeditor4/jquery_adapter'],
+            ]
         );
 
         $assetList->register(
@@ -157,10 +168,10 @@ class EditorServiceProvider extends ServiceProvider
 
         $assetList->registerGroup(
             'editor/ckeditor4/concrete5inline',
-            array(
-                array('javascript', 'editor/ckeditor4/concrete5inline'),
-                array('css', 'editor/ckeditor4/concrete5inline')
-            )
+            [
+                ['javascript', 'editor/ckeditor4/concrete5inline'],
+                ['css', 'editor/ckeditor4/concrete5inline'],
+            ]
         );
 
         $assetList->register(
@@ -175,10 +186,10 @@ class EditorServiceProvider extends ServiceProvider
         );
         $assetList->registerGroup(
             'editor/ckeditor4/concrete5filemanager',
-            array(
-                array('javascript', 'editor/ckeditor4/concrete5filemanager'),
-                array('css', 'editor/ckeditor4/concrete5filemanager'),
-            )
+            [
+                ['javascript', 'editor/ckeditor4/concrete5filemanager'],
+                ['css', 'editor/ckeditor4/concrete5filemanager'],
+            ]
         );
 
         $assetList->register(
@@ -188,9 +199,9 @@ class EditorServiceProvider extends ServiceProvider
         );
         $assetList->registerGroup(
             'editor/ckeditor4/concrete5uploadimage',
-            array(
-                array('javascript', 'editor/ckeditor4/concrete5uploadimage'),
-            )
+            [
+                ['javascript', 'editor/ckeditor4/concrete5uploadimage'],
+            ]
         );
 
         $assetList->register(
@@ -200,9 +211,9 @@ class EditorServiceProvider extends ServiceProvider
         );
         $assetList->registerGroup(
             'editor/ckeditor4/concrete5link',
-            array(
-                array('javascript', 'editor/ckeditor4/concrete5link'),
-            )
+            [
+                ['javascript', 'editor/ckeditor4/concrete5link'],
+            ]
         );
 
         $assetList->register(
@@ -212,11 +223,10 @@ class EditorServiceProvider extends ServiceProvider
         );
         $assetList->registerGroup(
             'editor/ckeditor4/normalizeonchange',
-            array(
-                array('javascript', 'editor/ckeditor4/normalizeonchange'),
-            )
+            [
+                ['javascript', 'editor/ckeditor4/normalizeonchange'],
+            ]
         );
-
 
         $assetList->register(
             'javascript',
@@ -230,10 +240,10 @@ class EditorServiceProvider extends ServiceProvider
         );
         $assetList->registerGroup(
             'editor/ckeditor4/concrete5styles',
-            array(
-                array('javascript', 'editor/ckeditor4/concrete5styles'),
-                array('css', 'editor/ckeditor4/concrete5styles'),
-            )
+            [
+                ['javascript', 'editor/ckeditor4/concrete5styles'],
+                ['css', 'editor/ckeditor4/concrete5styles'],
+            ]
         );
 
         $plugin = new Plugin();
