@@ -305,7 +305,7 @@ class StartingPointPackage extends BasePackage
         $thumbnailType->setName(tc('ThumbnailTypeName', 'File Manager Thumbnails'));
         $thumbnailType->setHandle(Config::get('concrete.icons.file_manager_listing.handle'));
         $thumbnailType->setSizingMode($thumbnailType::RESIZE_EXACT);
-        $thumbnailType->setIsUpscalingEnabled(false);
+        $thumbnailType->setIsUpscalingEnabled(true);
         $thumbnailType->setWidth(Config::get('concrete.icons.file_manager_listing.width'));
         $thumbnailType->setHeight(Config::get('concrete.icons.file_manager_listing.height'));
         $thumbnailType->save();
