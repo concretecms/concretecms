@@ -166,7 +166,7 @@ class EditorServiceProvider extends ServiceProvider
                 // https://ckeditor.com/cke4/addon/undo
                 'undo' => [t('Undo'), t('This plugin provides the undo and redo features.')],
                 // https://ckeditor.com/cke4/addon/wsc
-                'wsc' => [t('WebSpellChecker'), t('This plugin privides a dialog window for spell checking.')],
+                'wsc' => [t('WebSpellChecker'), t('This plugin provides a dialog window for spell checking.')],
                 // https://ckeditor.com/cke4/addon/wysiwygarea
                 'wysiwygarea' => [t('IFrame Editing Area'), t('This plugin represents an editing area that stores the editor content inside of an embedded iframe.')],
             ];
