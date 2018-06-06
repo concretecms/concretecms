@@ -56,117 +56,117 @@ class EditorServiceProvider extends ServiceProvider
                 // https://ckeditor.com/cke4/addon/about
                 'about' => [t('About'), t('This plugin displays the editor version, online documentation links, and licensing information.')],
                 // https://ckeditor.com/cke4/addon/autogrow
-                'autogrow' => [t('Auto Grow'), t('The editor will automatically expand and shrink vertically depending on the amount and size of content entered in its editing area.')],
+                'autogrow' => [t('Auto Grow'), t('The editor will automatically expand and shrink vertically depending on its content.')],
                 // https://ckeditor.com/cke4/addon/a11yhelp
-                'a11yhelp' => [t('Accessibility Help'), t('This plugin displays the editor key map information in a dialog window to illustrate generic keystrokes to access each editor part, as well as the key bindings to various editor commands.')],
+                'a11yhelp' => [t('Accessibility Help'), t('This plugin displays information about the keyboard usage using the ALT+0 combination.')],
                 // https://ckeditor.com/cke4/addon/basicstyles
-                'basicstyles' => [t('Basic Styles'), t('This plugin adds the following basic formatting commands to the editor: bold, italic, underline, strikethrough, subscript, superscript.')],
+                'basicstyles' => [t('Basic Styles'), t('This plugin adds the basic formatting buttons: bold, italic, underline, strikethrough, subscript, superscript.')],
                 // https://ckeditor.com/cke4/addon/bidi
-                'bidi' => [t('BiDi (Text Direction)'), t('This plugin makes it possible to change the text direction for a block-level content element.')],
+                'bidi' => [t('BiDi (Text Direction)'), t('This plugin adds buttons to change the text direction.')],
                 // https://ckeditor.com/cke4/addon/blockquote
-                'blockquote' => [t('Blockquote'), t('This plugin provides the feature of block-level quotation (HTML <blockquote> tag) in contents.')],
+                'blockquote' => [t('Blockquote'), t('This plugin adds a button to insert quotations (HTML <blockquote> tag).')],
                 // https://ckeditor.com/cke4/addon/clipboard
-                'clipboard' => [t('Clipboard'), t('This plugin handles cut/copy/paste inside of the editor.')],
+                'clipboard' => [t('Clipboard'), t('This plugin handles the Cut/Copy/Paste operations.')],
                 // https://ckeditor.com/cke4/addon/colorbutton
-                'colorbutton' => [t('Color Button'), t('This plugin adds the Text Color and Background Color feature to the editor.')],
+                'colorbutton' => [t('Color Button'), t('This plugin adds buttons to manage the text & background colors.')],
                 // https://ckeditor.com/cke4/addon/colordialog
-                'colordialog' => [t('Color Dialog'), t('This plugin provides a dedicated Select Color dialog window with a table of colors.')],
+                'colordialog' => [t('Color Dialog'), t('This plugin improves the Color Button feature by providing an advanced color selection window.')],
                 // https://ckeditor.com/cke4/addon/contextmenu
-                'contextmenu' => [t('Context Menu'), t('The plugin provides the editor\'s context menu to use instead of the browser\'s native menu in place.')],
+                'contextmenu' => [t('Context Menu'), t('The plugin replaces the browser\'s native menu with the editor\'s one.')],
                 // https://ckeditor.com/cke4/addon/dialogadvtab
-                'dialogadvtab' => [t('Advanced Tab for Dialogs'), t('This plugin provides the Advanced dialog window tab to extend some editor dialog windows.')],
+                'dialogadvtab' => [t('Advanced Tab for Dialogs'), t('This plugin provides the Advanced tab to extend some dialog windows.')],
                 // https://ckeditor.com/cke4/addon/div
-                'div' => [t('Div Container Manager'), t('This plugin adds a command that allows for grouping of content blocks under a <div> element as a container, with styles and attributes optionally specified in a dedicated dialog.')],
+                'div' => [t('Div Container Manager'), t('This plugin adds a command that allows grouping content blocks under a container <div> element, with styles and attributes support.')],
                 // https://ckeditor.com/cke4/addon/divarea
-                'divarea' => [t('Div Editing Area'), t('This plugin uses a <div> element (instead of the traditional <iframe> element) as the editable area in the themedui creator. Much similar to inline editing, it benefits from allowing the editor content to inherit from host page styles.')],
+                'divarea' => [t('Div Editing Area'), t('This plugin uses a <div> element (instead of the <iframe> element) as the editable area. Much similar to inline editing, it allows the content to inherit styles from host page.')],
                 // https://ckeditor.com/cke4/addon/elementspath
-                'elementspath' => [t('Elements Path'), t('This plugin displays a list of HTML element names in the current cursor position.')],
+                'elementspath' => [t('Elements Path'), t('This plugin displays the list of HTML elements at the current cursor position.')],
                 // https://ckeditor.com/cke4/addon/enterkey
-                'enterkey' => [t('Enter Key'), t('This plugin defines the Enter key (line breaking) behavior in all contexts.')],
+                'enterkey' => [t('Enter Key'), t('This plugin defines the Enter key (line breaking) behavior.')],
                 // https://ckeditor.com/cke4/addon/entities
-                'entities' => [t('Escape HTML Entities'), t('This plugin escapes HTML entities that appear in the editor output based on configuration.')],
+                'entities' => [t('Escape HTML Entities'), t('This plugin escapes entities in the generated HTML.')],
                 // https://ckeditor.com/cke4/addon/find
-                'find' => [t('Find / Replace'), t('This plugin adds Find and Replace dialog.')],
+                'find' => [t('Find / Replace'), t('This plugin adds the Find and Replace dialog.')],
                 // https://ckeditor.com/cke4/addon/flash
-                'flash' => [t('Flash Dialog'), t('This plugin comes with a dialog to manage flash embed in the document.')],
+                'flash' => [t('Flash Dialog'), t('This plugin adds features to manage embedded Flash files.')],
                 // https://ckeditor.com/cke4/addon/floatingspace
-                'floatingspace' => [t('Floating Space'), t('This plugin is used in inline creator to place the editor toolbar in the best position around the editable element.')],
+                'floatingspace' => [t('Floating Space'), t('This plugin places the editor toolbar in the best position.')],
                 // https://ckeditor.com/cke4/addon/font
-                'font' => [t('Font Size and Family'), t('This plugin adds Font Size and Font Family dropdowns that applies as inline element style.')],
+                'font' => [t('Font Size and Family'), t('This plugin adds the Font Size and Font Family dropdowns.')],
                 // https://ckeditor.com/cke4/addon/format
-                'format' => [t('Format'), t('This plugin adds Format combo allows you to apply block-level format styles.')],
+                'format' => [t('Format'), t('This plugin adds the Format dropdown.')],
                 // https://ckeditor.com/cke4/addon/horizontalrule
-                'horizontalrule' => [t('Horizontal Rule'), t('This plugin provides the command to insert Horizontal Rule (<hr> element) in content.')],
+                'horizontalrule' => [t('Horizontal Rule'), t('This plugin adds a button to insert Horizontal Rules (<hr>).')],
                 // https://ckeditor.com/cke4/addon/htmlwriter
                 'htmlwriter' => [t('HTML Output Writer'), t('This plugin provides flexible HTML output formatting.')],
                 // https://ckeditor.com/cke4/addon/image
-                'image' => [t('Image'), t('This plugin adds the image-related features to the editor.')],
+                'image' => [t('Image'), t('This plugin adds the image-related features.')],
                 // https://ckeditor.com/cke4/addon/image2
                 'image2' => [t('Enhanced Image'), t('This is an enhanced version of the Image plugin that introduces the image widget.')],
                 // https://ckeditor.com/cke4/addon/indentblock
-                'indentblock' => [t('Indent Block'), t('This plugin handles indentation of text blocks.')],
+                'indentblock' => [t('Indent Block'), t('This plugin adds buttons to manage the text indentation.')],
                 // https://ckeditor.com/cke4/addon/indentlist
-                'indentlist' => [t('Indent List'), t('This plugin handles list indentation (for <ul> and <ol> elements).')],
+                'indentlist' => [t('Indent List'), t('This plugin adds buttons to manage the lists (<ul> and <ol> elements) indentation.')],
                 // https://ckeditor.com/cke4/addon/justify
-                'justify' => [t('Justify'), t('This plugin adds text justification commands.')],
+                'justify' => [t('Justify'), t('This plugin adds text justification buttons.')],
                 // https://ckeditor.com/cke4/addon/language
-                'language' => [t('Language'), t('This plugin implements the Language toolbar button.')],
+                'language' => [t('Language'), t('This plugin adds the Language button.')],
                 // https://ckeditor.com/cke4/addon/list
-                'list' => [t('List'), t('With this plugin it is possible to insert and remove numbered and bulleted lists in the editor.')],
+                'list' => [t('List'), t('This plugin adds buttons to add/remove numbered and bulleted lists.')],
                 // https://ckeditor.com/cke4/addon/liststyle
                 'liststyle' => [t('List Style'), t('This plugin adds numbered list and ordered list properties dialogs (available in context menu).')],
                 // https://ckeditor.com/cke4/addon/magicline
                 'magicline' => [t('Magic Line'), t('This plugin makes it easier to place cursor and add content near some problematic document elements.')],
                 // https://ckeditor.com/cke4/addon/maximize
-                'maximize' => [t('Maximize'), t('This plugin adds toolbar button maximizing the editor inside a browser window.')],
+                'maximize' => [t('Maximize'), t('This plugin adds a button to maximize the editor.')],
                 // https://ckeditor.com/cke4/addon/newpage
-                'newpage' => [t('New Page'), t('This plugin adds toolbar button which clears the editing area and creates a new page.')],
+                'newpage' => [t('New Page'), t('This plugin adds a button to clears the editor content.')],
                 // https://ckeditor.com/cke4/addon/pagebreak
-                'pagebreak' => [t('Page Break'), t('This plugin adds toolbar button which inserts horizontal page breaks, useful for setting document printing sections.')],
+                'pagebreak' => [t('Page Break'), t('This plugin adds a button which inserts horizontal page breaks (useful for document printing).')],
                 // https://ckeditor.com/cke4/addon/pastetext
-                'pastetext' => [t('Paste As Plain Text'), t('With this plugin it is possible to have the clipboard data to be always pasted as plain text.')],
+                'pastetext' => [t('Paste As Plain Text'), t('This adds a button to paste clipboard contents as plain text.')],
                 // https://ckeditor.com/cke4/addon/pastefromword
-                'pastefromword' => [t('Paste from Word'), t('This plugin allows you to paste content from Microsoft Word and maintain original content formatting.')],
+                'pastefromword' => [t('Paste from Word'), t('This adds a button to paste content from Microsoft Word and maintain original formatting.')],
                 // https://ckeditor.com/cke4/addon/preview
-                'preview' => [t('Preview'), t('This plugin adds toolbar button which shows a preview of the document as it will be displayed to end users or printed.')],
+                'preview' => [t('Preview'), t('This plugin adds a button which shows a preview of the document as it will be displayed to end users or printed.')],
                 // https://ckeditor.com/cke4/addon/removeformat
-                'removeformat' => [t('Remove Format'), t('This plugin adds the Remove Format toolbar button which makes it possible to remove all text styling (bold, font color, etc.) applied to a selected part of the document.')],
+                'removeformat' => [t('Remove Format'), t('This plugin adds the Remove Format button to remove all styles from the selected part of the document.')],
                 // https://ckeditor.com/cke4/addon/resize
-                'resize' => [t('Editor Resize'), t('This plugin allows you to resize the classic editor instance by dragging the resize handle located in the bottom corner of the editor.')],
+                'resize' => [t('Editor Resize'), t('This plugin adds a handle that allows resizing the classic editor instances.')],
                 // https://ckeditor.com/cke4/addon/scayt
                 'scayt' => [t('SpellCheckAsYouType (SCAYT)'), t('This plugin brings Spell Check As You Type (SCAYT) functionality.')],
                 // https://ckeditor.com/cke4/addon/selectall
-                'selectall' => [t('Select All'), t('This plugin adds select all toolbar button which makes possible to select entire contents of the document.')],
+                'selectall' => [t('Select All'), t('This plugin adds a Select all button.')],
                 // https://ckeditor.com/cke4/addon/showblocks
-                'showblocks' => [t('Show Blocks'), t('This plugin adds the command to visualize all block-level elements by surrounding them with an outline and displaying their element name at the top-left.')],
+                'showblocks' => [t('Show Blocks'), t('This plugin adds a button to outline all block-level elements.')],
                 // https://ckeditor.com/cke4/addon/showborders
                 'showborders' => [t('Show Table Borders'), t('This plugin displays visible outlines around all table elements.')],
                 // https://ckeditor.com/cke4/addon/smiley
-                'smiley' => [t('Insert Smiley'), t('This plugin provides a set of emoticons to insert into the editor via a dialog window.')],
+                'smiley' => [t('Insert Smiley'), t('This plugin adds a button to insert emoticons.')],
                 // https://ckeditor.com/cke4/addon/sourcearea
-                'sourcearea' => [t('Source Editing Area'), t('This plugin adds the source editing mode.')],
+                'sourcearea' => [t('Source Editing Area'), t('This plugin adds a button to switch to the HTML source editing mode.')],
                 // https://ckeditor.com/cke4/addon/sourcedialog
-                'sourcedialog' => [t('Source Dialog'), t('This plugin provides an easy way to edit raw HTML source of the editor content using a dialog window.')],
+                'sourcedialog' => [t('Source Dialog'), t('This plugin adds a button to edit the HTML source in a dialog window.')],
                 // https://ckeditor.com/cke4/addon/specialchar
-                'specialchar' => [t('Special Characters'), t('With this plugin it is possible to insert characters that are not part of the standard keyboard.')],
+                'specialchar' => [t('Special Characters'), t('This plugin adds a button to insert characters.')],
                 // https://ckeditor.com/cke4/addon/stylescombo
-                'stylescombo' => [t('Styles Combo'), t('This plugin provides the Styles drop-down list added to the editor toolbar.')],
+                'stylescombo' => [t('Styles Combo'), t('This plugin adds the Styles dropdown.')],
                 // https://ckeditor.com/cke4/addon/tab
-                'tab' => [t('Tab Key Handling'), t('This plugin provides basic Tab/Shift-Tab key handling (move to next/previous table cell, move to next editor instance in page).')],
+                'tab' => [t('Tab Key Handling'), t('This plugin provides basic TAB/SHIFT-TAB key handling (move to next/previous table cell, move to next editor instance in page).')],
                 // https://ckeditor.com/cke4/addon/table
-                'table' => [t('Table'), t('This plugin adds the Table Properties dialog window with support for creating tables and setting basic table properties.')],
+                'table' => [t('Table'), t('This plugin adds the Table Properties dialog window to create and edit tables.')],
                 // https://ckeditor.com/cke4/addon/tableresize
                 'tableresize' => [t('Table Resize'), t('This plugin adds support for table column resizing with the mouse.')],
                 // https://ckeditor.com/cke4/addon/tableselection
-                'tableselection' => [t('Table Selection'), t('This plugin introduces a unique custom selection system for tables to select arbitrary rectangular table fragments, apply formatting or add a link to all selected cells at once, cut/copy/paste entire rows or columns.')],
+                'tableselection' => [t('Table Selection'), t('This plugin allows selecting arbitrary rectangular table fragments, appling formatting or adding links to all selected cells, cut/copy/paste entire rows or columns.')],
                 // https://ckeditor.com/cke4/addon/tabletools
                 'tabletools' => [t('Table Tools'), t('This plugin adds a more advanced context menu for table items and the Cell Properties dialog window.')],
                 // https://ckeditor.com/cke4/addon/toolbar
                 'toolbar' => [t('Editor Toolbar'), t('This plugin provides the classical experience to access editor commands, including items like buttons and drop-down lists.')],
                 // https://ckeditor.com/cke4/addon/undo
-                'undo' => [t('Undo'), t('This plugin is to provide undo and redo feature to content modifications.')],
+                'undo' => [t('Undo'), t('This plugin provides the undo and redo features.')],
                 // https://ckeditor.com/cke4/addon/wsc
-                'wsc' => [t('WebSpellChecker'), t('This plugin brings spell checking in a dialog window into the editor.')],
+                'wsc' => [t('WebSpellChecker'), t('This plugin privides a dialog window for spell checking.')],
                 // https://ckeditor.com/cke4/addon/wysiwygarea
                 'wysiwygarea' => [t('IFrame Editing Area'), t('This plugin represents an editing area that stores the editor content inside of an embedded iframe.')],
             ];
