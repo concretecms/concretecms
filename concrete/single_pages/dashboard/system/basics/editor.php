@@ -107,7 +107,8 @@ function updatePreview() {
         return;
     }
     var data = {
-        <?= json_encode($token::DEFAULT_TOKEN_NAME) ?>: <?= json_encode($token->generate('ccm-editor-preview'))?>
+        <?= json_encode($token::DEFAULT_TOKEN_NAME) ?>: <?= json_encode($token->generate('ccm-editor-preview'))?>,
+        previewHtml: $('textarea[name="preview"]').val() || ''
     };
     $('#ccm-editor-config input[type="checkbox"]:checked').each(function() {
         var $chk = $(this), name = $chk.attr('name');

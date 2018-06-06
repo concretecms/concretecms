@@ -48,6 +48,8 @@ class Preview extends BackendUserInterface
             $manager->select($plugins);
         }
         $this->set('editor', $editor);
+        $previewHtml = $post->get('previewHtml');
+        $this->set('previewHtml', is_string($previewHtml) ? $previewHtml : '');
     }
 
     protected function canAccess()
