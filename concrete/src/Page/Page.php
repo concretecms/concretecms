@@ -18,6 +18,7 @@ use Concrete\Core\Page\Type\Composer\FormLayoutSetControl;
 use Concrete\Core\Page\Type\Type;
 use Concrete\Core\Permission\AssignableObjectInterface;
 use Concrete\Core\Permission\Key\Key;
+use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Support\Facade\Route;
 use Concrete\Core\Permission\Access\Entity\PageOwnerEntity;
 use Database;
@@ -53,12 +54,13 @@ use Log;
 use Environment;
 use Group;
 use Session;
+use Concrete\Core\Attribute\ObjectInterface as AttributeObjectInterface;
 
 /**
  * The page object in Concrete encapsulates all the functionality used by a typical page and their contents
  * including blocks, page metadata, page permissions.
  */
-class Page extends Collection implements \Concrete\Core\Permission\ObjectInterface, AssignableObjectInterface, TreeInterface, SiteAggregateInterface, ExportableInterface
+class Page extends Collection implements \Concrete\Core\Permission\ObjectInterface, AttributeObjectInterface, AssignableObjectInterface, TreeInterface, SiteAggregateInterface, ExportableInterface
 {
     protected $controller;
     protected $blocksAliasedFromMasterCollection = null;
@@ -102,6 +104,12 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         }
 
         return self::getByID($cID, $version);
+    }
+
+    public function getObjectAttributeCategory()
+    {
+        $app = Facade::getFacadeApplication();
+        return $app->make('\Concrete\Core\Attribute\Category\PageCategory');
     }
 
     /**
