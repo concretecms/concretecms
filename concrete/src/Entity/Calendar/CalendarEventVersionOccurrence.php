@@ -1,14 +1,45 @@
 <?php
 namespace Concrete\Core\Entity\Calendar;
 
+use Concrete\Core\Attribute\ObjectInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="CalendarEventVersionOccurrences")
  */
-class CalendarEventVersionOccurrence
+class CalendarEventVersionOccurrence implements ObjectInterface
 {
+
+    public function getAttribute($ak, $mode = false)
+    {
+        return $this->version->getAttribute($ak, $mode);
+    }
+
+    public function getAttributeValue($ak)
+    {
+        return $this->version->getAttributeValue($ak);
+    }
+
+    public function getAttributeValueObject($ak, $createIfNotExists = false)
+    {
+        return $this->version->getAttributeValueObject($ak, $createIfNotExists);
+    }
+
+    public function getObjectAttributeCategory()
+    {
+        return $this->version->getObjectAttributeCategory();
+    }
+
+    public function clearAttribute($ak)
+    {
+        $this->version->clearAttribute($ak);
+    }
+
+    public function setAttribute($ak, $value)
+    {
+        $this->version->setAttribute($ak, $value);
+    }
 
     /**
      * @ORM\Id @ORM\Column(type="integer", options={"unsigned": true})
