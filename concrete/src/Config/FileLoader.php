@@ -153,6 +153,22 @@ class FileLoader implements LoaderInterface {
     }
 
     /**
+     * @param string $namespace
+     * @return string[]
+     */
+    private function getNamespaceDefaultPaths($namespace)
+    {
+        $result = [];
+        if ((string) $namespace !== '') {
+            $result = [
+                "{$this->defaultPath}/generated_overrides/{$namespace}",
+                "{$this->defaultPath}/{$namespace}",
+            ];
+        }
+        return $result;
+    }
+
+    /**
      * Merge the items in the given file into the items.
      *
      * @param  array   $items
@@ -295,9 +311,11 @@ class FileLoader implements LoaderInterface {
      */
     public function clearNamespace($namespace)
     {
-        $path = $this->getPath($namespace);
-        if ($path !== $this->getPath(null) && $this->files->isDirectory($namespace)) {
-            $this->files->deleteDirectory($path);
+        $paths = $this->getNamespaceDefaultPaths($namespace);
+        foreach ($paths as $path) {
+            if ($this->files->isDirectory($path)) {
+                $this->files->deleteDirectory($path);
+            }
         }
     }
 
