@@ -3,6 +3,7 @@
 namespace Concrete\Core\Form\Service;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Http\Request;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Localization\Service\CountryList;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
@@ -58,6 +59,13 @@ class Form
     protected $ah;
 
     /**
+     * The Request instance.
+     *
+     * @var \Concrete\Core\Http\Request
+     */
+    protected $request;
+
+    /**
      * Initialize the instance.
      *
      * @param Application $app
@@ -67,6 +75,7 @@ class Form
         $this->app = $app;
         $this->th = $this->app->make(TextService::class);
         $this->ah = $this->app->make(ArraysService::class);
+        $this->request = $this->app->make(Request::class);
     }
 
     /**
@@ -74,6 +83,8 @@ class Form
      *
      * @param string $action
      * @param string $task
+     *
+     * @return \League\URL\URLInterface
      */
     public function action($action, $task = null)
     {
@@ -177,7 +188,7 @@ class Form
         }
 
         $checked = false;
-        if ($isChecked && \Request::request($_field) === null && !\Request::isPost()) {
+        if ($isChecked && $this->request->get($_field) === null && $this->request->getMethod() !== 'POST') {
             $checked = true;
         } else {
             $requestValue = $this->getRequestValue($key);
@@ -625,20 +636,20 @@ EOT;
      */
     protected function processRequestValue($key, $type = 'post')
     {
-        $arr = ($type == 'post') ? $_POST : $_GET;
+        $bag = $type == 'post' ? $this->request->request : $this->request->query;
         if (strpos($key, '[') !== false) {
             $key = str_replace(']', '', $key);
             $key = explode('[', trim($key, '['));
-            $v2 = $this->ah->get($arr, $key);
-            if (isset($v2)) {
+            $v2 = $this->ah->get($bag->all(), $key);
+            if ($v2 !== null) {
                 if (is_string($v2)) {
                     return $this->th->specialchars($v2);
                 } else {
                     return $v2;
                 }
             }
-        } elseif (isset($arr[$key]) && is_string($arr[$key])) {
-            return $this->th->specialchars($arr[$key]);
+        } elseif ($bag->has($key) && is_string($s = $bag->get($key))) {
+            return $this->th->specialchars($s);
         }
 
         return false;
