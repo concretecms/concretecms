@@ -37,13 +37,14 @@ class UnapprovePageRequest extends PageRequest
     public function getWorkflowRequestDescriptionObject()
     {
         $d = new WorkflowDescription();
-        $c = Page::getByID($this->cID, 'RECENT');
+        $c = Page::getByID($this->cID, $this->cvID);
         $link = Loader::helper('navigation')->getLinkToCollection($c, true);
         $v = $c->getVersionObject();
         if (is_object($v)) {
             $d->setEmailDescription(t("Page unapproval requested for page: \"%s\".\n\nView the page here: %s.", $c->getCollectionName(), $link));
+            $d->setDescription(t("Page %s submitted for unapproval.", '<a target="_blank" href="' . $c->getCollectionLink() . '">' . $c->getCollectionName() . '</a>'));
             $d->setInContextDescription(t("Page %s submitted for unapproval.", $c->getCollectionName()));
-            $d->setShortStatus(t("Page Version Unnapproval"));
+            $d->setShortStatus(t("Page Version Unapproval"));
         }
 
         return $d;
