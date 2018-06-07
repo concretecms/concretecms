@@ -61,9 +61,9 @@ class Form
     /**
      * The Request instance.
      *
-     * @var \Concrete\Core\Http\Request
+     * @var \Concrete\Core\Http\Request|null
      */
-    protected $request;
+    private $request;
 
     /**
      * Initialize the instance.
@@ -75,9 +75,28 @@ class Form
         $this->app = $app;
         $this->th = $this->app->make(TextService::class);
         $this->ah = $this->app->make(ArraysService::class);
-        $this->request = $this->app->make(Request::class);
     }
 
+    /**
+     * Set the request instance.
+     *
+     * @param Request $request
+     */
+    public function setRequest(Request $request)
+    {
+        $this->request = $request;
+    }
+
+    /**
+     * @return \Concrete\Core\Http\Request
+     */
+    protected function getRequest()
+    {
+        if ($this->request == null) {
+            $this->request = $this->app->make(Request::class);
+        }
+        return $this->request;
+    }
     /**
      * Returns an action suitable for including in a form action property.
      *
@@ -188,7 +207,7 @@ class Form
         }
 
         $checked = false;
-        if ($isChecked && $this->request->get($_field) === null && $this->request->getMethod() !== 'POST') {
+        if ($isChecked && $this->getRequest()->get($_field) === null && $this->getRequest()->getMethod() !== 'POST') {
             $checked = true;
         } else {
             $requestValue = $this->getRequestValue($key);
@@ -636,7 +655,7 @@ EOT;
      */
     protected function processRequestValue($key, $type = 'post')
     {
-        $bag = $type == 'post' ? $this->request->request : $this->request->query;
+        $bag = $type == 'post' ? $this->getRequest()->request : $this->getRequest()->query;
         if (strpos($key, '[') !== false) {
             $key = str_replace(']', '', $key);
             $key = explode('[', trim($key, '['));
