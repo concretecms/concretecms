@@ -240,6 +240,11 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         return DateTimeSettings::class;
     }
 
+    public function getPlainTextValue()
+    {
+        return $this->getDisplayValue();
+    }
+
     /**
      * {@inheritdoc}
      *
