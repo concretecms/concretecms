@@ -2,6 +2,7 @@
 namespace Concrete\Controller\Dialog\Search;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Controller\Element\Search\CustomizeResults;
 use Concrete\Core\Entity\Search\Query;
 use Concrete\Core\Entity\Search\SavedFileSearch;
@@ -22,6 +23,8 @@ abstract class AdvancedSearch extends BackendInterfaceController
     abstract public function getBasicSearchBaseURL();
 
     abstract public function getCurrentSearchBaseURL();
+
+    abstract public function getSavedSearchEntity();
 
     public function getAddFieldAction()
     {
@@ -69,9 +72,21 @@ abstract class AdvancedSearch extends BackendInterfaceController
         return $element;
     }
 
+    protected function getSearchPresets()
+    {
+        $searchPresets = [];
+        $app = Application::getFacadeApplication();
+        $searchEntity = $this->getSavedSearchEntity();
+        if (!empty($searchEntity)) {
+            $searchPresets = $searchEntity->findAll();
+        }
+
+        return $searchPresets;
+    }
+
     public function view()
     {
-
+        $app = Application::getFacadeApplication();
         $this->requireAsset('selectize');
 
         $manager = $this->getFieldManager();
@@ -79,8 +94,12 @@ abstract class AdvancedSearch extends BackendInterfaceController
 
         $this->set('defaultQuery', json_encode($query));
         $this->set('customizeElement', $this->getCustomizeResultsElement());
+        if ($this->supportsSavedSearch) {
+            $this->set('searchPresets', $this->getSearchPresets());
+        }
         $this->set('manager', $manager);
         $this->set('supportsSavedSearch', $this->supportsSavedSearch);
+        $this->set('form', $app->make('helper/form'));
     }
 
     public function addField()

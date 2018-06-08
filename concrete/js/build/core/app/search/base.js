@@ -461,6 +461,20 @@
 			$row.remove();
 		});
 
+		$('[data-search-preset-id]').on('click', function(e) {
+			e.preventDefault();
+			if (!$(e.target).is('button') && $(this).data('action')) {
+				$.fn.dialog.closeAll();
+				my.ajaxUpdate($(this).data('action'));
+			}
+		});
+
+		$('.ccm-search-presets-table tbody tr').on('mouseover', function() {
+			$(this).addClass('ccm-search-select-hover');
+		}).on('mouseout', function() {
+			$(this).removeClass('ccm-search-select-hover');
+		});
+
 		$('button[data-button-action=save-search-preset]').on('click.saveSearchPreset', function() {
 			$.fn.dialog.open({
 				element: 'div[data-dialog=save-search-preset]:first',

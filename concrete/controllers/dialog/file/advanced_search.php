@@ -6,6 +6,7 @@ use Concrete\Core\Entity\Search\SavedSearch;
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Search\Field\Field\KeywordsField;
 use Concrete\Core\Search\Field\ManagerFactory;
+use Doctrine\ORM\EntityManager;
 use FilePermissions;
 
 use Concrete\Controller\Dialog\Search\AdvancedSearch as AdvancedSearchController;
@@ -25,6 +26,16 @@ class AdvancedSearch extends AdvancedSearchController
     public function getSearchProvider()
     {
         return $this->app->make('Concrete\Core\File\Search\SearchProvider');
+    }
+
+    public function getSavedSearchEntity()
+    {
+        $em = $this->app->make(EntityManager::class);
+        if (is_object($em)) {
+            return $em->getRepository('Concrete\Core\Entity\Search\SavedFileSearch');
+        }
+
+        return null;
     }
 
     public function getFieldManager()
