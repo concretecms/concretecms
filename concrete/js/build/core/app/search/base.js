@@ -506,6 +506,28 @@
 			return false;
 		});
 
+		$('button[data-button-action=edit-search-preset]').on('click', function(e) {
+			e.preventDefault();
+			var url = $(this).attr('data-tree-action-url'),
+				title = $(this).attr('dialog-title');
+
+			$.fn.dialog.open({
+				title: title,
+				href: url,
+				width: 550,
+				modal: true,
+				height: 'auto'
+			});
+		});
+
+		ConcreteEvent.unsubscribe('SavedSearchUpdated');
+		ConcreteEvent.subscribe('SavedSearchUpdated', function(e, data) {
+			$.fn.dialog.closeAll();
+			if (data.preset && data.preset.actionURL) {
+				my.ajaxUpdate(data.preset.actionURL);
+			}
+		});
+
 		my.setupSearch();
 	};
 

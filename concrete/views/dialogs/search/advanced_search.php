@@ -41,6 +41,9 @@
                             <?php foreach ($searchPresets as $searchPreset) { ?>
                                 <tr data-search-preset-id="<?= $searchPreset->getId(); ?>" data-search-preset-name="<?= $searchPreset->getPresetName(); ?>" data-action="<?= $controller->getSavedSearchBaseURL($searchPreset); ?>">
                                     <td style="padding-left: 15px;"><?= $searchPreset->getPresetName(); ?></td>
+                                    <td valign="top" style="text-align: right; padding-right: 15px;">
+                                            <button type="button" data-button-action="edit-search-preset" dialog-title="<?= t('Edit Search Preset'); ?>" data-tree-action-url="<?= $controller->getSavedSearchEditURL($searchPreset); ?>" class="btn btn-info btn-xs"><?= t('Edit'); ?></button>
+                                    </td>
                                 </tr>
                             <?php } ?>
                         </tbody>
