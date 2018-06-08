@@ -276,7 +276,7 @@ class DestinationPicker
             $optionValues['F'] = t('File');
         }
         $optionValue = $this->request->request->get("{$key}__which");
-        if ($optionValue !== null && (!is_string($optionValue) || !isset($optionValues[$optionValue]))) {
+        if ($optionValue === null || !is_string($optionValue) || !isset($optionValues[$optionValue])) {
             if ($pageID !== false && $pageID !== null) {
                 $optionValue = 'P';
             } elseif ($externalUrl !== false && $externalUrl !== '') {
