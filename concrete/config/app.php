@@ -385,6 +385,8 @@ return [
         '/ccm/system/dialogs/user/advanced_search/add_field' => ['\Concrete\Controller\Dialog\User\AdvancedSearch::addField'],
         '/ccm/system/dialogs/user/advanced_search/submit' => ['\Concrete\Controller\Dialog\User\AdvancedSearch::submit'],
         '/ccm/system/dialogs/user/advanced_search/save_preset' => ['\Concrete\Controller\Dialog\User\AdvancedSearch::savePreset'],
+        '/ccm/system/dialogs/user/advanced_search/preset/edit' => ['\Concrete\Controller\Dialog\User\Preset\Edit::view'],
+        '/ccm/system/dialogs/user/advanced_search/preset/edit/edit_search_preset' => ['\Concrete\Controller\Dialog\User\Preset\Edit::edit_search_preset'],
 
         '/ccm/system/dialogs/type/update_from_type/{ptID}/{pTemplateID}' => ['\Concrete\Controller\Dialog\Type\UpdateFromType::view'],
         '/ccm/system/dialogs/type/update_from_type/{ptID}/{pTemplateID}/submit' => ['\Concrete\Controller\Dialog\Type\UpdateFromType::submit'],
