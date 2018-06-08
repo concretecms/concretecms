@@ -74,4 +74,8 @@ class AdvancedSearch extends AdvancedSearchController
     }
 
 
+    public function getSavedSearchEditURL(SavedSearch $search)
+    {
+        return (string) URL::to('/ccm/system/dialogs/file/advanced_search/preset/edit?presetID=' . $search->getID());
+    }
 }

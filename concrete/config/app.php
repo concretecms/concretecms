@@ -317,6 +317,8 @@ return [
         '/ccm/system/dialogs/file/advanced_search/add_field' => ['\Concrete\Controller\Dialog\File\AdvancedSearch::addField'],
         '/ccm/system/dialogs/file/advanced_search/submit' => ['\Concrete\Controller\Dialog\File\AdvancedSearch::submit'],
         '/ccm/system/dialogs/file/advanced_search/save_preset' => ['\Concrete\Controller\Dialog\File\AdvancedSearch::savePreset'],
+        '/ccm/system/dialogs/file/advanced_search/preset/edit' => ['\Concrete\Controller\Dialog\File\Preset\Edit::view'],
+        '/ccm/system/dialogs/file/advanced_search/preset/edit/edit_search_preset' => ['\Concrete\Controller\Dialog\File\Preset\Edit::edit_search_preset'],
         '/ccm/system/dialogs/file/properties/clear_attribute' => ['\Concrete\Controller\Dialog\File\Properties::clear_attribute'],
         '/ccm/system/dialogs/file/properties/save' => ['\Concrete\Controller\Dialog\File\Properties::save'],
         '/ccm/system/dialogs/file/properties/update_attribute' => ['\Concrete\Controller\Dialog\File\Properties::update_attribute'],
@@ -534,6 +536,7 @@ return [
         '/ccm/system/search/files/current' => ['\Concrete\Controller\Search\Files::searchCurrent'],
         '/ccm/system/search/files/preset/{presetID}' => ['\Concrete\Controller\Search\Files::searchPreset'],
         '/ccm/system/search/files/clear' => ['\Concrete\Controller\Search\Files::clearSearch'],
+
         '/ccm/system/search/pages/basic' => ['\Concrete\Controller\Search\Pages::searchBasic'],
         '/ccm/system/search/pages/current' => ['\Concrete\Controller\Search\Pages::searchCurrent'],
         '/ccm/system/search/pages/preset/{presetID}' => ['\Concrete\Controller\Search\Pages::searchPreset'],
