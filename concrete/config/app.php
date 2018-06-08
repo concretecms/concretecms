@@ -362,6 +362,8 @@ return [
         '/ccm/system/dialogs/page/advanced_search/add_field' => ['\Concrete\Controller\Dialog\Page\AdvancedSearch::addField'],
         '/ccm/system/dialogs/page/advanced_search/submit' => ['\Concrete\Controller\Dialog\Page\AdvancedSearch::submit'],
         '/ccm/system/dialogs/page/advanced_search/save_preset' => ['\Concrete\Controller\Dialog\Page\AdvancedSearch::savePreset'],
+        '/ccm/system/dialogs/page/advanced_search/preset/edit' => ['\Concrete\Controller\Dialog\Page\Preset\Edit::view'],
+        '/ccm/system/dialogs/page/advanced_search/preset/edit/edit_search_preset' => ['\Concrete\Controller\Dialog\Page\Preset\Edit::edit_search_preset'],
 
         '/ccm/system/dialogs/user/bulk/properties' => ['\Concrete\Controller\Dialog\User\Bulk\Properties::view'],
         '/ccm/system/dialogs/user/bulk/properties/clear_attribute' => ['\Concrete\Controller\Dialog\User\Bulk\Properties::clearAttribute'],
