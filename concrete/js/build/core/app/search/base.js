@@ -506,7 +506,7 @@
 			return false;
 		});
 
-		$('button[data-button-action=edit-search-preset]').on('click', function(e) {
+		$('button[data-button-action=edit-search-preset], button[data-button-action=delete-search-preset]').on('click', function(e) {
 			e.preventDefault();
 			var url = $(this).attr('data-tree-action-url'),
 				title = $(this).attr('dialog-title');
@@ -518,6 +518,12 @@
 				modal: true,
 				height: 'auto'
 			});
+		});
+
+		ConcreteEvent.unsubscribe('SavedSearchDeleted');
+		ConcreteEvent.subscribe('SavedSearchDeleted', function() {
+			$.fn.dialog.closeAll();
+			my.ajaxUpdate(my.$resetSearchButton.data('button-action-url'));
 		});
 
 		ConcreteEvent.unsubscribe('SavedSearchUpdated');
