@@ -4,12 +4,12 @@ namespace Concrete\Controller\Dialog\User;
 use Concrete\Controller\Dialog\Search\AdvancedSearch as AdvancedSearchController;
 use Concrete\Core\Entity\Search\SavedSearch;
 use Concrete\Core\Search\Field\ManagerFactory;
+use Doctrine\ORM\EntityManager;
 use URL;
 
 class AdvancedSearch extends AdvancedSearchController
 {
-
-    protected $supportsSavedSearch = false;
+    protected $supportsSavedSearch = true;
 
     protected function canAccess()
     {
@@ -21,6 +21,16 @@ class AdvancedSearch extends AdvancedSearchController
     public function getSearchProvider()
     {
         return $this->app->make('Concrete\Core\User\Search\SearchProvider');
+    }
+
+    public function getSavedSearchEntity()
+    {
+        $em = $this->app->make(EntityManager::class);
+        if (is_object($em)) {
+            return $em->getRepository('Concrete\Core\Entity\Search\SavedUserSearch');
+        }
+
+        return null;
     }
 
     public function getFieldManager()
