@@ -593,7 +593,6 @@ return [
             'developer' => 'http://documentation.concrete5.org/developers',
             'user' => 'http://documentation.concrete5.org/editors',
             'forum' => 'http://www.concrete5.org/community/forums',
-            'slack' => 'https://www.concrete5.org/slack',
         ],
         'paths' => [
             'menu_help_service' => '/tools/get_remote_help_list/',
@@ -752,14 +751,6 @@ return [
         'private_messages' => [
             'throttle_max' => 20,
             'throttle_max_timespan' => 15, // minutes
-        ],
-
-        'deactivation' => [
-            'enable_login_threshold_deactivation' => false,
-            'login' => [
-                'threshold' => 120 // in days
-            ],
-            'message' => 'This user is inactive. Please contact us regarding this account.',
         ],
     ],
 
