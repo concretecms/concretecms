@@ -1,27 +1,25 @@
 <?php
 namespace Concrete\Core\Express\Entry;
 
-
 use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Support\Facade\Facade;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 
 class Listener
 {
-
     public function preRemove(Entry $entry, LifecycleEventArgs $event)
     {
         $app = Facade::getFacadeApplication();
         $express = $app->make('express');
         $associations = $entry->getAssociations();
-        foreach($associations as $entryAssociation) {
+        foreach ($associations as $entryAssociation) {
             /**
              * @var $entryAssociation Entry\Association
              */
             if ($entryAssociation->getAssociation()->isOwningAssociation()) {
                 $associatedEntries = $entryAssociation->getSelectedEntries();
                 if ($associatedEntries) {
-                    foreach($associatedEntries as $associatedEntry) {
+                    foreach ($associatedEntries as $associatedEntry) {
                         $express->deleteEntry($associatedEntry->getId());
                     }
                 }
@@ -37,12 +35,8 @@ class Listener
 
         $category = \Core::make('Concrete\Core\Attribute\Category\ExpressCategory');
 
-        foreach($category->getAttributeValues($entry) as $value) {
+        foreach ($category->getAttributeValues($entry) as $value) {
             $category->deleteValue($value);
         }
-
     }
-
-
-
 }
