@@ -4,6 +4,7 @@ namespace Concrete\Controller\Dialog\Page;
 use Concrete\Controller\Dialog\Search\AdvancedSearch as AdvancedSearchController;
 use Concrete\Core\Entity\Search\SavedSearch;
 use Concrete\Core\Search\Field\ManagerFactory;
+use URL;
 
 class AdvancedSearch extends AdvancedSearchController
 {
@@ -13,6 +14,7 @@ class AdvancedSearch extends AdvancedSearchController
     protected function canAccess()
     {
         $dh = $this->app->make('helper/concrete/dashboard/sitemap');
+
         return $dh->canRead();
     }
 
@@ -28,17 +30,17 @@ class AdvancedSearch extends AdvancedSearchController
 
     public function getSavedSearchBaseURL(SavedSearch $search)
     {
-        return \URL::to('/ccm/system/search/pages/preset', $search->getID());
+        return (string) URL::to('/ccm/system/search/pages/preset', $search->getID());
     }
 
     public function getCurrentSearchBaseURL()
     {
-        return \URL::to('/ccm/system/search/pages/current');
+        return (string) URL::to('/ccm/system/search/pages/current');
     }
 
     public function getBasicSearchBaseURL()
     {
-        return \URL::to('/ccm/system/search/pages/basic');
+        return (string) URL::to('/ccm/system/search/pages/basic');
     }
 
 }

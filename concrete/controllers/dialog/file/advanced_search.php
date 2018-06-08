@@ -1,15 +1,13 @@
 <?php
 namespace Concrete\Controller\Dialog\File;
 
-use Concrete\Core\Entity\Search\SavedFileSearch;
+use Concrete\Controller\Dialog\Search\AdvancedSearch as AdvancedSearchController;
 use Concrete\Core\Entity\Search\SavedSearch;
 use Concrete\Core\File\Filesystem;
-use Concrete\Core\File\Search\Field\Field\KeywordsField;
 use Concrete\Core\Search\Field\ManagerFactory;
 use Doctrine\ORM\EntityManager;
 use FilePermissions;
-
-use Concrete\Controller\Dialog\Search\AdvancedSearch as AdvancedSearchController;
+use URL;
 
 class AdvancedSearch extends AdvancedSearchController
 {
@@ -62,17 +60,17 @@ class AdvancedSearch extends AdvancedSearchController
 
     public function getSavedSearchBaseURL(SavedSearch $search)
     {
-        return \URL::to('/ccm/system/search/files/preset', $search->getID());
+        return (string) URL::to('/ccm/system/search/files/preset', $search->getID());
     }
 
     public function getCurrentSearchBaseURL()
     {
-        return \URL::to('/ccm/system/search/files/current');
+        return (string) URL::to('/ccm/system/search/files/current');
     }
 
     public function getBasicSearchBaseURL()
     {
-        return \URL::to('/ccm/system/search/files/basic');
+        return (string) URL::to('/ccm/system/search/files/basic');
     }
 
 
