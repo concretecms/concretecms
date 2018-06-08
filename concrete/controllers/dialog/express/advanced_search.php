@@ -107,4 +107,9 @@ class AdvancedSearch extends AdvancedSearchController
         return (string) $url;
     }
 
+    public function getSavedSearchEntity()
+    {
+        return null;
+    }
+
 }
