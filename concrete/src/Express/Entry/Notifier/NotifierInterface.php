@@ -7,9 +7,7 @@ use Concrete\Core\Entity\Express\Form;
 
 interface NotifierInterface
 {
+    public function getNotificationList();
 
-    function getNotificationList();
-
-    function sendNotifications(NotificationListInterface $notifications, Entry $entry, $updateType);
-
+    public function sendNotifications(NotificationListInterface $notifications, Entry $entry, $updateType);
 }

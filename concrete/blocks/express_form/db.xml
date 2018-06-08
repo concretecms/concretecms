@@ -22,6 +22,9 @@
     <field name="displayCaptcha" type="integer">
       <default value="1"/>
     </field>
+    <field name="storeFormSubmission" type="boolean">
+     <default value="1"/>
+    </field>
     <field name="redirectCID" type="integer">
       <default value="0"/>
     </field>
