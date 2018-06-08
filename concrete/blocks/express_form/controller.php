@@ -212,6 +212,11 @@ class Controller extends BlockController implements NotificationProviderInterfac
                         }
                     }
 
+                    // if user don't want to store submission then we only send an email
+                    if(!$this->storeFormSubmission) {
+                        $manager->deleteEntry($entry);
+                    }
+
                     $r = null;
                     if ($this->redirectCID > 0) {
                         $c = \Page::getByID($this->redirectCID);
@@ -378,6 +383,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
 
     public function save($data)
     {
+        $data['storeFormSubmission'] = isset($data['storeFormSubmission'])?:0;
         if (isset($data['exFormID']) && $data['exFormID'] != '') {
             return parent::save($data);
         }

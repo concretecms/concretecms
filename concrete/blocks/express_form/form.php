@@ -139,6 +139,13 @@
             <?=$form->text('submitLabel', $submitLabel)?>
         </div>
         <div class="form-group">
+            <div class="checkbox"><label>
+                <?=$form->checkbox('storeFormSubmission', 1, $storeFormSubmission); ?>
+                <?=t('Store Form Submission.')?>
+            </label></div>
+            <span class="text-muted"><?=t('If not checked submitted data will be only sent by Email.')?></span>
+        </div>
+        <div class="form-group">
             <label class="control-label"><?=t('Solving a <a href="%s" target="_blank">CAPTCHA</a> Required to Post?', t('http://en.wikipedia.org/wiki/Captcha'))?></label>
             <div class="radio">
                 <label>
