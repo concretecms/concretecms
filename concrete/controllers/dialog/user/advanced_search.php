@@ -53,6 +53,11 @@ class AdvancedSearch extends AdvancedSearchController
         return (string) URL::to('/ccm/system/search/users/basic');
     }
 
+    public function getSavedSearchDeleteURL(SavedSearch $search, $confirm = false)
+    {
+        return (string) URL::to('/ccm/system/dialogs/user/advanced_search/preset/delete?presetID=' . $search->getID());
+    }
+
     public function getSavedSearchEditURL(SavedSearch $search)
     {
         return (string) URL::to('/ccm/system/dialogs/user/advanced_search/preset/edit?presetID=' . $search->getID());

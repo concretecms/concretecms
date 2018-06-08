@@ -391,6 +391,8 @@ return [
         '/ccm/system/dialogs/user/advanced_search/save_preset' => ['\Concrete\Controller\Dialog\User\AdvancedSearch::savePreset'],
         '/ccm/system/dialogs/user/advanced_search/preset/edit' => ['\Concrete\Controller\Dialog\User\Preset\Edit::view'],
         '/ccm/system/dialogs/user/advanced_search/preset/edit/edit_search_preset' => ['\Concrete\Controller\Dialog\User\Preset\Edit::edit_search_preset'],
+        '/ccm/system/dialogs/user/advanced_search/preset/delete' => ['\Concrete\Controller\Dialog\User\Preset\Delete::view'],
+        '/ccm/system/dialogs/user/advanced_search/preset/delete/remove_search_preset' => ['\Concrete\Controller\Dialog\User\Preset\Delete::remove_search_preset'],
 
         '/ccm/system/dialogs/type/update_from_type/{ptID}/{pTemplateID}' => ['\Concrete\Controller\Dialog\Type\UpdateFromType::view'],
         '/ccm/system/dialogs/type/update_from_type/{ptID}/{pTemplateID}/submit' => ['\Concrete\Controller\Dialog\Type\UpdateFromType::submit'],
