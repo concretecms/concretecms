@@ -319,6 +319,8 @@ return [
         '/ccm/system/dialogs/file/advanced_search/save_preset' => ['\Concrete\Controller\Dialog\File\AdvancedSearch::savePreset'],
         '/ccm/system/dialogs/file/advanced_search/preset/edit' => ['\Concrete\Controller\Dialog\File\Preset\Edit::view'],
         '/ccm/system/dialogs/file/advanced_search/preset/edit/edit_search_preset' => ['\Concrete\Controller\Dialog\File\Preset\Edit::edit_search_preset'],
+        '/ccm/system/dialogs/file/advanced_search/preset/delete' => ['\Concrete\Controller\Dialog\File\Preset\Delete::view'],
+        '/ccm/system/dialogs/file/advanced_search/preset/delete/remove_search_preset' => ['\Concrete\Controller\Dialog\File\Preset\Delete::remove_search_preset'],
         '/ccm/system/dialogs/file/properties/clear_attribute' => ['\Concrete\Controller\Dialog\File\Properties::clear_attribute'],
         '/ccm/system/dialogs/file/properties/save' => ['\Concrete\Controller\Dialog\File\Properties::save'],
         '/ccm/system/dialogs/file/properties/update_attribute' => ['\Concrete\Controller\Dialog\File\Properties::update_attribute'],
