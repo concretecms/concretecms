@@ -770,7 +770,7 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
             $children = $db->fetchAll('select treeNodeID, treeNodeTypeID, treeNodeParentID, treeNodeDisplayOrder from TreeNodes where treeNodeTypeID = ? and treeNodeParentID = ? order by treeNodeDisplayOrder asc', [$treeNodeTypeID, $nodeRow['treeNodeID']]);
             $numChildren = count($children);
         } else {
-            $numChildren = (int) $db->fetchColumn('select count(*) from TreeNodes where treeNodeTypeID = ? and treeNodeParentID = ? order by treeNodeDisplayOrder asc', [$treeNodeTypeID, $nodeRow['treeNodeID']]);
+            $numChildren = (int) $db->fetchColumn('select count(*) from TreeNodes where treeNodeTypeID = ? and treeNodeParentID = ?', [$treeNodeTypeID, $nodeRow['treeNodeID']]);
         }
 
         if ($includeThisNode) {
