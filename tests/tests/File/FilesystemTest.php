@@ -7,6 +7,9 @@ use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 
 class FilesystemTest extends ConcreteDatabaseTestCase
 {
+    /**
+     * @var \Concrete\Core\File\Filesystem
+     */
     protected $filesystem;
 
     protected $tables = [
