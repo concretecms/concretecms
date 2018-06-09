@@ -102,6 +102,7 @@ class FileFolder extends Category
             $childNodesData = $this->getHierarchicalNodesOfType($typeHandle, 1, true, false, 1);
             $childNodes = array_map(function ($item) { return $item['treeNodeObject']; }, $childNodesData);
         }
+        $result = null;
         foreach ($childNodes as $childNode) {
             if ($childNode->getTreeNodeTypeHandle() === $typeHandle && $childNode->getTreeNodeName() === $name) {
                 $result = $childNode;
