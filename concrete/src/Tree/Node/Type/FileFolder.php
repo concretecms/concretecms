@@ -62,7 +62,7 @@ class FileFolder extends Category
         $sort = false;
         $list = new FolderItemList();
         $list->filterByParentFolder($this);
-        if (is_object($u)) {
+        if ($u !== null) {
             if (($column = $request->get($list->getQuerySortColumnParameter())) && ($direction = $request->get($list->getQuerySortDirectionParameter()))) {
                 if (is_object($available->getColumnByKey($column)) && ($direction == 'asc' || $direction == 'desc')) {
                     $sort = [$column, $direction];
