@@ -2,6 +2,7 @@
 namespace Concrete\Core\Database\Driver\PDOMySqlConcrete5;
 
 use Concrete\Core\Database\Connection\PDOConnection;
+use Concrete\Core\Database\Platforms\MySQL80Platform;
 
 /**
  * PDO MySql driver.
@@ -20,6 +21,24 @@ class Driver extends \Doctrine\DBAL\Driver\PDOMySql\Driver
         );
 
         return $conn;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Doctrine\DBAL\Driver\AbstractMySQLDriver::createDatabasePlatformForVersion()
+     */
+    public function createDatabasePlatformForVersion($version)
+    {
+        if (false === stripos($version, 'mariadb')) {
+            if (preg_match('/^(\d+)/', $version, $match)) {
+                if ((int) $match[1] >= 8) {
+                    return new MySQL80Platform();
+                }
+            }
+        }
+
+        return parent::createDatabasePlatformForVersion($version);
     }
 
     /**
