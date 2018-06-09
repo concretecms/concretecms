@@ -48,7 +48,7 @@ class FilesystemTest extends ConcreteDatabaseTestCase
     public function testGetFolderByName()
     {
         $rootFolder = $this->filesystem->getRootFolder();
-        $uniqueID = microtime(true) . '-' - mt_rand();
+        $uniqueID = microtime(true) . '-' . mt_rand();
         // Create these folders:
         // |- Folder 1
         // |   |- Folder 1.1
