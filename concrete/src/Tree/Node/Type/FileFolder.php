@@ -4,17 +4,13 @@ namespace Concrete\Core\Tree\Node\Type;
 use Concrete\Core\File\FolderItemList;
 use Concrete\Core\File\Search\ColumnSet\FolderSet;
 use Concrete\Core\Tree\Node\Node as TreeNode;
-use Concrete\Core\Tree\Node\Type\Formatter\CategoryListFormatter;
-use Concrete\Core\Tree\Node\Type\Menu\CategoryMenu;
 use Concrete\Core\Tree\Node\Type\Menu\FileFolderMenu;
 use Concrete\Core\User\User;
 use Gettext\Translations;
-use Loader;
 use Symfony\Component\HttpFoundation\Request;
 
 class FileFolder extends Category
 {
-
     public function getPermissionResponseClassName()
     {
         return '\\Concrete\\Core\\Permission\\Response\\FileFolderResponse';
@@ -24,6 +20,7 @@ class FileFolder extends Category
     {
         return '\\Concrete\\Core\\Permission\\Assignment\\FileFolderAssignment';
     }
+
     public function getPermissionObjectKeyCategoryHandle()
     {
         return 'file_folder';
@@ -46,6 +43,7 @@ class FileFolder extends Category
             $node->isFolder = true;
             $node->resultsThumbnailImg = $this->getListFormatter()->getIconElement();
         }
+
         return $node;
     }
 
@@ -54,6 +52,7 @@ class FileFolder extends Category
         if ($this->getTreeNodeParentID() == 0) {
             return t('File Manager');
         }
+
         return parent::getTreeNodeName();
     }
 
@@ -66,7 +65,7 @@ class FileFolder extends Category
         if (is_object($u)) {
             if (($column = $request->get($list->getQuerySortColumnParameter())) && ($direction = $request->get($list->getQuerySortDirectionParameter()))) {
                 if (is_object($available->getColumnByKey($column)) && ($direction == 'asc' || $direction == 'desc')) {
-                    $sort = array($column, $direction);
+                    $sort = [$column, $direction];
                     $u->saveConfig(sprintf('file_manager.sort.%s', $this->getTreeNodeID()), json_encode($sort));
                 }
             } else {
@@ -82,6 +81,7 @@ class FileFolder extends Category
                 }
             }
         }
+
         return $list;
     }
 
@@ -89,5 +89,4 @@ class FileFolder extends Category
     {
         return false;
     }
-
 }
