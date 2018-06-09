@@ -16,7 +16,7 @@ class Version20180609000000 extends AbstractMigration implements RepeatableMigra
      */
     public function upgradeDatabase()
     {
-        $factory = $app->make(TypeFactory::class);
+        $factory = $this->app->make(TypeFactory::class);
 
         // check if an attribute with the 'page_selector' handle exists
         $pageSelectorAttribute = $factory->getByHandle('page_selector');
@@ -25,7 +25,7 @@ class Version20180609000000 extends AbstractMigration implements RepeatableMigra
             // unlink the attribute type from any package and change its name
             $pageSelectorAttribute->setPackage(null);
             $pageSelectorAttribute->setAttributeTypeName(t('Page Selector'));
-            $em = $app->make(EntityManager::class);
+            $em = $this->app->make(EntityManager::class);
             $em->persist($pageSelectorAttribute);
             $em->flush();
         } else {
