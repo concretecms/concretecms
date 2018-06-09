@@ -10,7 +10,7 @@ use Concrete\Core\Database\Connection\PDOConnection;
  */
 class Driver extends \Doctrine\DBAL\Driver\PDOMySql\Driver
 {
-    public function connect(array $params, $username = null, $password = null, array $driverOptions = array())
+    public function connect(array $params, $username = null, $password = null, array $driverOptions = [])
     {
         $conn = new PDOConnection(
             $this->_constructPdoDsn($params),
@@ -27,7 +27,7 @@ class Driver extends \Doctrine\DBAL\Driver\PDOMySql\Driver
      *
      * @param array $params
      *
-     * @return string The DSN.
+     * @return string the DSN
      */
     private function _constructPdoDsn(array $params)
     {
