@@ -92,74 +92,52 @@ class Controller extends BlockController
      */
     public function getNextCollection()
     {
-        $page = false;
-
         $app = Facade::getFacadeApplication();
         $db = $app->make('database')->connection();
-
-        $siteTreeID = \Core::make('site')->getSite()->getSiteTreeID();
-        $cID = 1;
-        $currentPage = Page::getCurrentPage();
-
-        while ($cID > 0) {
-
+        for ($page = Page::getCurrentPage();;) {
             switch ($this->orderBy) {
                 case 'chrono_desc':
-                    $cID = $db->GetOne(
-                        'select Pages.cID from Pages inner join CollectionVersions cv on Pages.cID = cv.cID where Pages.cID != ? and cvIsApproved = 1 and cvDatePublic > ? and cParentID = ? order by cvDatePublic asc',
-                        [$cID, $currentPage->getCollectionDatePublic(), $currentPage->getCollectionParentID()]);
+                    $cID = $db->GetOne('select Pages.cID from Pages inner join CollectionVersions cv on Pages.cID = cv.cID where Pages.cID <> ? and cvIsApproved = 1 and ((cvDatePublic = ? and cDisplayOrder > ?) or cvDatePublic > ?) and cParentID = ?  order by cvDatePublic asc, cDisplayOrder asc', [$page->getCollectionID(), $page->getCollectionDatePublic(), $page->getCollectionDisplayOrder(), $page->getCollectionDatePublic(), $page->getCollectionParentID()]);
                     break;
                 case 'chrono_asc':
-                    $cID = $db->GetOne(
-                        'select Pages.cID from Pages inner join CollectionVersions cv on Pages.cID = cv.cID where Pages.cID != ? and cvIsApproved = 1 and cvDatePublic < ? and cParentID = ?  order by cvDatePublic desc',
-                        [$cID, $currentPage->getCollectionDatePublic(), $currentPage->getCollectionParentID()]);
+                    $cID = $db->GetOne('select Pages.cID from Pages inner join CollectionVersions cv on Pages.cID = cv.cID where Pages.cID <> ? and cvIsApproved = 1 and ((cvDatePublic = ? and cDisplayOrder < ?) or cvDatePublic < ?) and cParentID = ?  order by cvDatePublic desc, cDisplayOrder desc', [$page->getCollectionID(), $page->getCollectionDatePublic(), $page->getCollectionDisplayOrder(), $page->getCollectionDatePublic(), $page->getCollectionParentID()]);
                     break;
                 case 'display_desc':
-                    $cID = $db->GetOne(
-                        'select Pages.cID from Pages inner join CollectionVersions cv on Pages.cID = cv.cID where cvIsApproved = 1 and Pages.cID != ? and cDisplayOrder < ? and cParentID = ? order by cDisplayOrder desc',
-                        [$cID, $currentPage->getCollectionDisplayOrder(), $currentPage->getCollectionParentID()]);
+                    $cID = $db->GetOne('select Pages.cID from Pages inner join CollectionVersions cv on Pages.cID = cv.cID where cvIsApproved = 1 and Pages.cID <> ? and cDisplayOrder < ? and cParentID = ? order by cDisplayOrder desc', [$page->getCollectionID(), $page->getCollectionDisplayOrder(), $page->getCollectionParentID()]);
                     break;
                 case 'display_asc':
                 default:
-                    $cID = $db->GetOne(
-                        'select Pages.cID from Pages inner join CollectionVersions cv on Pages.cID = cv.cID where cvIsApproved = 1 and Pages.cID != ? and  cDisplayOrder > ? and cParentID = ? order by cDisplayOrder asc',
-                        [$cID, $currentPage->getCollectionDisplayOrder(), $currentPage->getCollectionParentID()]);
+                    $cID = $db->GetOne('select Pages.cID from Pages inner join CollectionVersions cv on Pages.cID = cv.cID where cvIsApproved = 1 and Pages.cID <> ? and  cDisplayOrder > ? and cParentID = ? order by cDisplayOrder asc', [$page->getCollectionID(), $page->getCollectionDisplayOrder(), $page->getCollectionParentID()]);
                     break;
             }
-
-            if ($cID > 0) {
-                $page = Page::getByID($cID, 'ACTIVE');
-                $currentPage = $page;
-                $cp = new Permissions($page);
-                if ($cp->canRead() && $page->getAttribute('exclude_nav') != 1) {
-                    break;
-                } else {
-                    $page = false; //avoid accidentally returning this $page if we're on last loop iteration
+            if ($cID <= 0) {
+                if ($this->loopSequence) {
+                    $c = Page::getCurrentPage();
+                    $parent = Page::getByID($c->getCollectionParentID(), 'ACTIVE');
+                    switch ($this->orderBy) {
+                        case 'chrono_desc':
+                            return $parent->getFirstChild('cvDatePublic asc, cDisplayOrder asc');
+                            break;
+                        case 'chrono_asc':
+                            return $parent->getFirstChild('cvDatePublic desc, cDisplayOrder desc');
+                            break;
+                        case 'display_desc':
+                            return $parent->getFirstChild('cDisplayOrder desc');
+                            break;
+                        case 'display_asc':
+                        default:
+                            return $parent->getFirstChild('cDisplayOrder asc');
+                            break;
+                    }
                 }
+				return false;
+            }
+            $page = Page::getByID($cID, 'ACTIVE');
+            $cp = new Permissions($page);
+            if ($cp->canRead() && $page->getAttribute('exclude_nav') != 1) {
+                return $page;
             }
         }
-
-        if (!is_object($page) && $this->loopSequence) {
-            $c = Page::getCurrentPage();
-            $parent = Page::getByID($c->getCollectionParentID(), 'ACTIVE');
-            switch ($this->orderBy) {
-                case 'chrono_desc':
-                    return $parent->getFirstChild('cvDatePublic asc');
-                    break;
-                case 'chrono_asc':
-                    return $parent->getFirstChild('cvDatePublic desc');
-                    break;
-                case 'display_desc':
-                    return $parent->getFirstChild('cDisplayOrder desc');
-                    break;
-                case 'display_asc':
-                default:
-                    return $parent->getFirstChild('cDisplayOrder asc');
-                    break;
-            }
-        }
-
-        return $page;
     }
 
     /**
@@ -167,63 +145,51 @@ class Controller extends BlockController
      */
     public function getPreviousCollection()
     {
-        $page = false;
-
         $app = Facade::getFacadeApplication();
         $db = $app->make('database')->connection();
-
-        $cID = 1;
-        $currentPage = Page::getCurrentPage();
-
-        while ($cID > 0) {
+        for ($page = Page::getCurrentPage();;) {
             switch ($this->orderBy) {
                 case 'chrono_desc':
-                    $cID = $db->GetOne('select Pages.cID from Pages inner join CollectionVersions cv on Pages.cID = cv.cID where cvIsApproved = 1 and cvDatePublic < ? and cParentID = ?  order by cvDatePublic desc', [$currentPage->getCollectionDatePublic(), $currentPage->getCollectionParentID()]);
+                    $cID = $db->GetOne('select Pages.cID from Pages inner join CollectionVersions cv on Pages.cID = cv.cID where Pages.cID <> ? and cvIsApproved = 1 and ((cvDatePublic = ? and cDisplayOrder < ?) or cvDatePublic < ?) and cParentID = ?  order by cvDatePublic desc, cDisplayOrder desc', [$page->getCollectionID(), $page->getCollectionDatePublic(), $page->getCollectionDisplayOrder(), $page->getCollectionDatePublic(), $page->getCollectionParentID()]);
                     break;
                 case 'chrono_asc':
-                    $cID = $db->GetOne('select Pages.cID from Pages inner join CollectionVersions cv on Pages.cID = cv.cID where cvIsApproved = 1 and cvDatePublic > ? and cParentID = ?  order by cvDatePublic asc', [$currentPage->getCollectionDatePublic(), $currentPage->getCollectionParentID()]);
+                    $cID = $db->GetOne('select Pages.cID from Pages inner join CollectionVersions cv on Pages.cID = cv.cID where Pages.cID <> ? and cvIsApproved = 1 and ((cvDatePublic = ? and cDisplayOrder > ?) or cvDatePublic > ?) and cParentID = ?  order by cvDatePublic asc, cDisplayOrder asc', [$page->getCollectionID(), $page->getCollectionDatePublic(), $page->getCollectionDisplayOrder(), $page->getCollectionDatePublic(), $page->getCollectionParentID()]);
                     break;
                 case 'display_desc':
-                    $cID = $db->GetOne('select Pages.cID from Pages inner join CollectionVersions cv on Pages.cID = cv.cID where cvIsApproved = 1 and cDisplayOrder > ? and cParentID = ? order by cDisplayOrder asc', [$currentPage->getCollectionDisplayOrder(), $currentPage->getCollectionParentID()]);
+                    $cID = $db->GetOne('select Pages.cID from Pages inner join CollectionVersions cv on Pages.cID = cv.cID where cvIsApproved = 1 and Pages.cID <> ? and cDisplayOrder > ? and cParentID = ? order by cDisplayOrder asc', [$page->getCollectionID(), $page->getCollectionDisplayOrder(), $page->getCollectionParentID()]);
                     break;
                 case 'display_asc':
                 default:
-                    $cID = $db->GetOne('select Pages.cID from Pages inner join CollectionVersions cv on Pages.cID = cv.cID where cvIsApproved = 1 and cDisplayOrder < ? and cParentID = ? order by cDisplayOrder desc', [$currentPage->getCollectionDisplayOrder(), $currentPage->getCollectionParentID()]);
+                    $cID = $db->GetOne('select Pages.cID from Pages inner join CollectionVersions cv on Pages.cID = cv.cID where cvIsApproved = 1 and Pages.cID <> ? and  cDisplayOrder < ? and cParentID = ? order by cDisplayOrder desc', [$page->getCollectionID(), $page->getCollectionDisplayOrder(), $page->getCollectionParentID()]);
                     break;
             }
-
-            if ($cID > 0) {
-                $page = Page::getByID($cID, 'ACTIVE');
-                $currentPage = $page;
-                $cp = new Permissions($page);
-                if ($cp->canRead() && $page->getAttribute('exclude_nav') != 1) {
-                    break;
-                } else {
-                    $page = false; //avoid accidentally returning this $page if we're on last loop iteration
+            if ($cID <= 0) {
+                if ($this->loopSequence) {
+                    $c = Page::getCurrentPage();
+                    $parent = Page::getByID($c->getCollectionParentID(), 'ACTIVE');
+                    switch ($this->orderBy) {
+                        case 'chrono_desc':
+                            return $parent->getFirstChild('cvDatePublic desc, cDisplayOrder desc');
+                            break;
+                        case 'chrono_asc':
+                            return $parent->getFirstChild('cvDatePublic asc, cDisplayOrder asc');
+                            break;
+                        case 'display_desc':
+                            return $parent->getFirstChild('cDisplayOrder asc');
+                            break;
+                        case 'display_asc':
+                        default:
+                            return $parent->getFirstChild('cDisplayOrder desc');
+                            break;
+                    }
                 }
+				return false;
             }
+            $page = Page::getByID($cID, 'ACTIVE');
+            $cp = new Permissions($page);
+            if ($cp->canRead() && $page->getAttribute('exclude_nav') != 1) {
+                return $page;
+           }
         }
-
-        if (!is_object($page) && $this->loopSequence) {
-            $c = Page::getCurrentPage();
-            $parent = Page::getByID($c->getCollectionParentID(), 'ACTIVE');
-            switch ($this->orderBy) {
-                case 'chrono_desc':
-                    return $parent->getFirstChild('cvDatePublic desc');
-                    break;
-                case 'chrono_asc':
-                    return $parent->getFirstChild('cvDatePublic asc');
-                    break;
-                case 'display_desc':
-                    return $parent->getFirstChild('cDisplayOrder asc');
-                    break;
-                case 'display_asc':
-                default:
-                    return $parent->getFirstChild('cDisplayOrder desc');
-                    break;
-            }
-        }
-
-        return $page;
     }
 }
