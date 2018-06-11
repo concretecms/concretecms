@@ -16,6 +16,10 @@
             'data': {},
             error: null
         }, options);
+        if (!options.data) {
+            options.data = {};
+        }
+        options.data.__ccm_consider_request_as_xhr = '1';
         my.$form = $form;
         ConcreteAjaxRequest.call(my, options);
         return my.$form;

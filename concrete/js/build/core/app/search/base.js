@@ -373,6 +373,9 @@
 
 		// NEW SEARCH
 		cs.$advancedSearchButton.on('click', function() {
+
+			// remove previous save-search-preset dialog
+			$('div[data-dialog=save-search-preset]').remove();
 			var url = $(this).attr('href');
 			$.fn.dialog.open({
 				width: 620,

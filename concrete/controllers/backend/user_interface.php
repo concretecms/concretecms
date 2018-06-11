@@ -3,9 +3,9 @@
 namespace Concrete\Controller\Backend;
 
 use Concrete\Core\Controller\Controller;
+use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\View\DialogView;
-use Exception;
 use Request;
 
 abstract class UserInterface extends Controller
@@ -57,7 +57,7 @@ abstract class UserInterface extends Controller
         if ($this->canAccess()) {
             return parent::getViewObject();
         }
-        throw new Exception(t('Access Denied'));
+        throw new UserMessageException(t('Access Denied'));
     }
 
     /**

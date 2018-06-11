@@ -3,7 +3,7 @@
 <?php
 if ($_REQUEST['paID'] && $_REQUEST['paID'] > 0) {
     $pa = PermissionAccess::getByID($_REQUEST['paID'], $permissionKey);
-    if ($pa->isPermissionAccessInUse() || $_REQUEST['duplicate'] == '1') {
+    if ($pa->isPermissionAccessInUse() || (isset($_REQUEST['duplicate']) && $_REQUEST['duplicate'] == '1')) {
         $pa = $pa->duplicate();
     }
 } else {

@@ -12,7 +12,7 @@ if (!$tu->canAccessUserSearchInterface() && !$tp->canAccessGroupSearch()) {
     die(t("You do not have user search or group search permissions."));
 }
 $pae = false;
-if ($_REQUEST['peID']) {
+if (!empty($_REQUEST['peID'])) {
     $pae = PermissionAccessEntity::getByID($_REQUEST['peID']);
 }
 if (!is_object($pae)) {
@@ -20,14 +20,14 @@ if (!is_object($pae)) {
 }
 
 $pd = false;
-if ($_REQUEST['pdID']) {
+if (!empty($_REQUEST['pdID'])) {
     $pd = PermissionDuration::getByID($_REQUEST['pdID']);
 }
 if (!is_object($pd)) {
     $pd = false;
 }
 
-if ($_POST['task'] == 'save_permissions') {
+if (isset($_POST['task']) && $_POST['task'] == 'save_permissions') {
     $js = Loader::helper('json');
     $r = new stdClass();
 
@@ -38,7 +38,7 @@ if ($_POST['task'] == 'save_permissions') {
         $r->message = t('You must choose who this permission is for.');
     }
 
-    if (!$r->error) {
+    if (empty($r->error)) {
         $r->peID = $pae->getAccessEntityID();
         if (is_object($pd)) {
             $r->pdID = $pd->getPermissionDurationID();
@@ -80,7 +80,7 @@ if ($_POST['task'] == 'save_permissions') {
 		</a>
 	<ul class="dropdown-menu">
 	<?php
-    $category = PermissionKeyCategory::getByHandle($_REQUEST['pkCategoryHandle']);
+    $category = PermissionKeyCategory::getByHandle(isset($_REQUEST['pkCategoryHandle']) ? $_REQUEST['pkCategoryHandle'] : null);
     $entitytypes = PermissionAccessEntityType::getList($category);
     foreach ($entitytypes as $type) {
         ?>
@@ -150,7 +150,7 @@ if ($_POST['task'] == 'save_permissions') {
 				ConcreteAlert.dialog('<?=t("Error")?>', r.message);
 			} else {
 				if (typeof(ccm_addAccessEntity) == 'function') {
-					ccm_addAccessEntity(r.peID, r.pdID, '<?=addslashes(h($_REQUEST["accessType"]))?>');
+					ccm_addAccessEntity(r.peID, r.pdID, <?= json_encode(isset($_REQUEST["accessType"]) ? h((string) $_REQUEST["accessType"]) : '') ?>);
 				} else {
 					alert(r.peID);
 					alert(r.pdID);

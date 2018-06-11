@@ -65,6 +65,13 @@ class Version
     protected $sizingMode;
 
     /**
+     * Upscaling is enabled?
+     *
+     * @var bool
+     */
+    protected $upscalingEnabled;
+
+    /**
      * Should the thumbnails be build for every file that ARE NOT in the file sets (false), or only for files that ARE in the specified file sets (true)?
      *
      * @var bool
@@ -90,8 +97,9 @@ class Version
      * @param string $sizingMode the thumbnail sizing mode (one of the \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type::RESIZE_... constants)
      * @param bool $limitedToFileSets Should the thumbnails be build for every file that ARE NOT in the file sets (false), or only for files that ARE in the specified file sets (true)?
      * @param int[] $associatedFileSetIDs the IDs of the associated file sets (whose meaning depends on the value of $limitedToFileSets)
+     * @param bool $upscalingEnabled Upscaling is enabled?
      */
-    public function __construct($directoryName, $handle, $name, $width, $height, $isDoubledVersion = false, $sizingMode = ThumbnailType::RESIZE_DEFAULT, $limitedToFileSets = false, array $associatedFileSetIDs = [])
+    public function __construct($directoryName, $handle, $name, $width, $height, $isDoubledVersion = false, $sizingMode = ThumbnailType::RESIZE_DEFAULT, $limitedToFileSets = false, array $associatedFileSetIDs = [], $upscalingEnabled = false)
     {
         $this->setDirectoryName($directoryName);
         $this->setHandle($handle);
@@ -102,6 +110,7 @@ class Version
         $this->setSizingMode($sizingMode);
         $this->setLimitedToFileSets($limitedToFileSets);
         $this->setAssociatedFileSetIDs($associatedFileSetIDs);
+        $this->setIsUpscalingEnabled($upscalingEnabled);
     }
 
     /**
@@ -278,6 +287,26 @@ class Version
     }
 
     /**
+     * Is upscaling enabled?
+     *
+     * @param bool $value
+     */
+    public function setIsUpscalingEnabled($value)
+    {
+        $this->upscalingEnabled = (bool) $value;
+    }
+
+    /**
+     * Is upscaling enabled?
+     *
+     * @return bool
+     */
+    public function isUpscalingEnabled()
+    {
+        return (bool) $this->upscalingEnabled;
+    }
+
+    /**
      * Should the thumbnails be build for every file that ARE NOT in the file sets (false), or only for files that ARE in the specified file sets (true)?
      *
      * @param bool $value
@@ -385,31 +414,41 @@ class Version
                     // Both the thumbnail width and height must be set
                     if ($thumbnailWidth > 0 && $thumbnailHeight > 0) {
                         // None of the thumbnail dimensions can be greater that image ones
-                        if ($thumbnailWidth <= $imageWidth && $thumbnailHeight <= $imageHeight) {
-                            // Thumbnail must not be the same size as the image
-                            if ($thumbnailWidth !== $imageWidth || $thumbnailHeight !== $imageHeight) {
-                                $result = true;
+                        if ($this->isUpscalingEnabled()) {
+                            $result = true;
+                        } else {
+                            if ($thumbnailWidth <= $imageWidth && $thumbnailHeight <= $imageHeight) {
+                                // Thumbnail must not be the same size as the image
+                                if ($thumbnailWidth !== $imageWidth || $thumbnailHeight !== $imageHeight) {
+                                    $result = true;
+                                }
                             }
                         }
                     }
                     break;
                 case ThumbnailType::RESIZE_PROPORTIONAL:
                 default:
-                    if ($thumbnailWidth > 0 && $thumbnailHeight > 0) {
-                        // Both the thumbnail width and height are set
-                        // At least one thumbnail dimension must be smaller that the corresponding image dimension
-                        if ($thumbnailWidth < $imageWidth || $thumbnailHeight < $imageHeight) {
+                    if ($thumbnailWidth > 0 || $thumbnailHeight > 0) {
+                        if ($this->isUpscalingEnabled()) {
                             $result = true;
-                        }
-                    } elseif ($thumbnailWidth > 0) {
-                        // Only the thumbnail width is set: the thumbnail must be narrower than the image.
-                        if ($thumbnailWidth < $imageWidth) {
-                            $result = true;
-                        }
-                    } elseif ($thumbnailHeight > 0) {
-                        // Only the thumbnail height is set: the thumbnail must be shorter than the image.
-                        if ($thumbnailHeight < $imageHeight) {
-                            $result = true;
+                        } else {
+                            if ($thumbnailWidth > 0 && $thumbnailHeight > 0) {
+                                // Both the thumbnail width and height are set
+                                // At least one thumbnail dimension must be smaller that the corresponding image dimension
+                                if ($thumbnailWidth < $imageWidth || $thumbnailHeight < $imageHeight) {
+                                    $result = true;
+                                }
+                            } elseif ($thumbnailWidth > 0) {
+                                // Only the thumbnail width is set: the thumbnail must be narrower than the image.
+                                if ($thumbnailWidth < $imageWidth) {
+                                    $result = true;
+                                }
+                            } elseif ($thumbnailHeight > 0) {
+                                // Only the thumbnail height is set: the thumbnail must be shorter than the image.
+                                if ($thumbnailHeight < $imageHeight) {
+                                    $result = true;
+                                }
+                            }
                         }
                     }
                     break;

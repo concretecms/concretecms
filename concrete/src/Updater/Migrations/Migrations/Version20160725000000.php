@@ -547,15 +547,18 @@ class Version20160725000000 extends AbstractMigration implements LongRunningMigr
                     if (!$count) {
                         $rowA = $this->connection->fetchAssoc('select * from _atAddressSettings where akID = ?', [$akID]);
                         if ($rowA['akID']) {
-                            $countries = $this->connection->fetchAll('select * from _atAddressCustomCountries where akID = ?', [$akID]);
-                            if (!$countries) {
-                                $countries = [];
+                            $countries = [];
+                            foreach ($this->connection->fetchAll('select * from _atAddressCustomCountries where akID = ?', [$akID]) as $customCountryRow) {
+                                if ($customCountryRow['country']) {
+                                    $countries[] = $customCountryRow['country'];
+                                }
                             }
                             $this->connection->insert('atAddressSettings', [
                                 'akHasCustomCountries' => $rowA['akHasCustomCountries'],
                                 'akDefaultCountry' => $rowA['akDefaultCountry'],
                                 'customCountries' => json_encode($countries),
                                 'akID' => $akID,
+                                'akGeolocateCountry' => 0,
                             ]);
                         }
                     }
