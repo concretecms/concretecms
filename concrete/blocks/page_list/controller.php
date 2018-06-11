@@ -51,7 +51,7 @@ class Controller extends BlockController
     {
         $this->list = new PageList();
         $this->list->disableAutomaticSorting();
-        //$pl->setNameSpace('b' . $this->bID);
+        $this->list->setNameSpace('b' . $this->bID);
 
         $cArray = [];
 
