@@ -170,7 +170,7 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
     public function getAttributeValueObject($ak, $createIfNotExists = false)
     {
         if (!is_object($ak)) {
-            $ak = SiteKey::getByHandle($ak);
+            $ak = SiteKey::getAttributeKeyByHandle($ak);
         }
         $value = false;
         if (is_object($ak)) {
