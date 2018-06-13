@@ -11,6 +11,7 @@ use Concrete\Core\Permission\ObjectInterface as PermissionObjectInterface;
 use Concrete\Core\Permission\Response\SiteResponse;
 use Concrete\Core\Site\Config\Liaison;
 use Concrete\Core\Site\Tree\TreeInterface;
+use Concrete\Core\Support\Facade\Application;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -154,7 +155,9 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
      */
     public function getObjectAttributeCategory()
     {
-        return \Core::make(SiteCategory::class);
+        $app = Application::getFacadeApplication();
+
+        return $app->make(SiteCategory::class);
     }
 
     /**
@@ -203,7 +206,8 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
     public function getConfigRepository()
     {
         if (!$this->siteConfig) {
-            $this->updateSiteConfigRepository(\Core::make('config'), $this);
+            $app = Application::getFacadeApplication();
+            $this->updateSiteConfigRepository($app->make('config'), $this);
         }
 
         return $this->siteConfig;
