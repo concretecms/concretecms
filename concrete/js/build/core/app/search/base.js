@@ -1,5 +1,5 @@
 /* jshint unused:vars, undef:true, browser:true, jquery:true */
-/* global _, ccmi18n, ccmi18n_filemanager, ccm_triggerProgressiveOperation, ConcreteAlert, ConcreteAssetLoader, ConcreteEvent, ConcreteMenu */
+/* global _, ccmi18n, ccmi18n_filemanager, ConcreteProgressiveOperation, ConcreteAlert, ConcreteAssetLoader, ConcreteEvent, ConcreteMenu */
 
 /* Base search class for AJAX searching */
 ;(function(global, $) {

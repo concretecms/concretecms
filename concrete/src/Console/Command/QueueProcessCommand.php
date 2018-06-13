@@ -4,6 +4,7 @@ namespace Concrete\Core\Console\Command;
 use Bernard\BernardEvents;
 use Bernard\Consumer;
 use Bernard\Event\EnvelopeEvent;
+use Bernard\Event\RejectEnvelopeEvent;
 use Bernard\QueueFactory\PersistentFactory;
 use Bernard\Router\ClassNameRouter;
 use Bernard\Router\SimpleRouter;
@@ -37,28 +38,28 @@ class QueueProcessCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $app = Core::make('app');
-        /*
-        $eventDispatcher = $app->make('director');
-        $eventDispatcher->addListener(
-            BernardEvents::INVOKE,
-            function(EnvelopeEvent $envelopeEvent) {
-                echo PHP_EOL . 'Processing: ' . $envelopeEvent->getEnvelope()->getClass();
-            }
-        );
-        $eventDispatcher->addListener(
-            BernardEvents::ACKNOWLEDGE,
-            function(EnvelopeEvent $envelopeEvent) {
-                echo PHP_EOL . 'Processed: ' . $envelopeEvent->getEnvelope()->getClass();
-            }
-        );
-        $eventDispatcher->addListener(
-            BernardEvents::REJECT,
-            function(EnvelopeEvent $envelopeEvent) {
-                echo PHP_EOL . 'Failed: ' . $envelopeEvent->getEnvelope()->getClass();
-                // you can also log error messages here
-            }
-        );
-        */
+
+        if ($output->isVeryVerbose()) {
+            $eventDispatcher = $app->make('director');
+            $eventDispatcher->addListener(
+                BernardEvents::INVOKE,
+                function(EnvelopeEvent $envelopeEvent) use ($output) {
+                    $output->writeln(t('Processing: %s', $envelopeEvent->getEnvelope()->getClass()));
+                }
+            );
+            $eventDispatcher->addListener(
+                BernardEvents::ACKNOWLEDGE,
+                function(EnvelopeEvent $envelopeEvent) use ($output) {
+                    $output->writeln(t('Processed: %s', $envelopeEvent->getEnvelope()->getClass()));
+                }
+            );
+            $eventDispatcher->addListener(
+                BernardEvents::REJECT,
+                function(RejectEnvelopeEvent $envelopeEvent) use ($output) {
+                    $output->writeln(t('Failed: %s: %s', $envelopeEvent->getEnvelope()->getClass(), $envelopeEvent->getException()->getMessage()));
+                }
+            );
+        }
 
         $service = $app->make(QueueService::class);
         $queueName = $input->getArgument('queue');
