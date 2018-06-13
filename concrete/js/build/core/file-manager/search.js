@@ -386,7 +386,7 @@
                 html: true,
                 content: '<img class="img-responsive" src="'+my.data('hover-image')+'" alt="Thumbnail"/>',
                 container: 'body',
-                placement: 'right',
+                placement: 'bottom',
                 trigger: 'manual'
             });
             $(this).hover(function(){
