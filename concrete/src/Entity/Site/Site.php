@@ -169,19 +169,20 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
      */
     public function getAttributeValueObject($ak, $createIfNotExists = false)
     {
+        $result = null;
         if (!is_object($ak)) {
             $ak = SiteKey::getAttributeKeyByHandle($ak);
         }
-        $value = $ak === null ? false : $this->getObjectAttributeCategory()->getAttributeValue($ak, $this);
-        if ($value) {
-            return $value;
-        } elseif ($createIfNotExists) {
-            $attributeValue = new SiteValue();
-            $attributeValue->setSite($this);
-            $attributeValue->setAttributeKey($ak);
-
-            return $attributeValue;
+        if ($ak !== null) {
+            $result = $this->getObjectAttributeCategory()->getAttributeValue($ak, $this);
+            if ($result === null && $createIfNotExists) {
+                $result = new SiteValue();
+                $result->setSite($this);
+                $result->setAttributeKey($ak);
+            }
         }
+
+        return $result;
     }
 
     /**
