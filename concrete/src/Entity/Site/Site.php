@@ -172,11 +172,7 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
         if (!is_object($ak)) {
             $ak = SiteKey::getAttributeKeyByHandle($ak);
         }
-        $value = false;
-        if (is_object($ak)) {
-            $value = $this->getObjectAttributeCategory()->getAttributeValue($ak, $this);
-        }
-
+        $value = $ak === null ? false : $this->getObjectAttributeCategory()->getAttributeValue($ak, $this);
         if ($value) {
             return $value;
         } elseif ($createIfNotExists) {
@@ -261,9 +257,8 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
     public function getSiteHomePageID()
     {
         $tree = $this->getSiteTreeObject();
-        if (is_object($tree)) {
-            return $tree->getSiteHomePageID();
-        }
+
+        return $tree === null ? null : $tree->getSiteHomePageID();
     }
 
     /**
@@ -274,9 +269,8 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
     public function getSiteTreeID()
     {
         $tree = $this->getSiteTreeObject();
-        if (is_object($tree)) {
-            return $tree->getSiteTreeID();
-        }
+
+        return $tree === null ? null : $tree->getSiteTreeID();
     }
 
     /**
@@ -319,9 +313,8 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
     public function getSiteHomePageObject($version = 'RECENT')
     {
         $tree = $this->getSiteTreeObject();
-        if (is_object($tree)) {
-            return $tree->getSiteHomePageObject($version);
-        }
+
+        return $tree === null ? null : $tree->getSiteHomePageObject($version);
     }
 
     /**
