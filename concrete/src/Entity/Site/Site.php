@@ -301,12 +301,12 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
     public function getSiteTreeObject()
     {
         $locale = $this->getDefaultLocale();
-        if (!is_object($locale)) {
+        if ($locale === null) {
             $locales = $this->getLocales()->toArray();
-            $locale = $locales[0];
+            $locale = array_shift($locales);
         }
 
-        return $locale->getSiteTree();
+        return $locale === null ? $locale->getSiteTree() : null;
     }
 
     /**
