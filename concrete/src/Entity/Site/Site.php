@@ -365,7 +365,7 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
      */
     public function setIsDefault($siteIsDefault)
     {
-        $this->siteIsDefault = $siteIsDefault;
+        $this->siteIsDefault = (bool) $siteIsDefault;
     }
 
     /**
