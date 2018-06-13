@@ -246,7 +246,7 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
     /**
      * Set the language sections of this site.
      *
-     * @param \Concrete\Core\Entity\Site\Locale[] $locales
+     * @param \Concrete\Core\Entity\Site\Locale[]|\Doctrine\Common\Collections\ArrayCollection $locales
      */
     public function setLocales($locales)
     {
@@ -254,7 +254,9 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
     }
 
     /**
-     * @return mixed
+     * Get the ID of the home page.
+     *
+     * @return int|null
      */
     public function getSiteHomePageID()
     {
@@ -264,6 +266,11 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
         }
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Site\Tree\TreeInterface::getSiteTreeID()
+     */
     public function getSiteTreeID()
     {
         $tree = $this->getSiteTreeObject();
