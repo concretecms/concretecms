@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Entity\Site;
 
 use Concrete\Core\Attribute\Key\SiteKey;
@@ -18,6 +19,47 @@ use Doctrine\ORM\Mapping as ORM;
 class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
 {
     use ObjectTrait;
+
+    protected $siteConfig;
+
+    /**
+     * @ORM\Id @ORM\Column(type="integer", options={"unsigned":true})
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $siteID;
+
+    /**
+     * @ORM\Column(type="integer", options={"unsigned":true})
+     */
+    protected $pThemeID = 0;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $siteIsDefault = false;
+
+    /**
+     * @ORM\Column(type="string", unique=true)
+     */
+    protected $siteHandle;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Locale", cascade={"all"}, mappedBy="site")
+     * @ORM\JoinColumn(name="siteLocaleID", referencedColumnName="siteLocaleID")
+     **/
+    protected $locales;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Type", inversedBy="sites")
+     * @ORM\JoinColumn(name="siteTypeID", referencedColumnName="siteTypeID")
+     */
+    protected $type;
+
+    public function __construct($appConfigRepository)
+    {
+        $this->updateSiteConfigRepository($appConfigRepository);
+        $this->locales = new ArrayCollection();
+    }
 
     public function getPermissionObjectIdentifier()
     {
@@ -65,35 +107,6 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
         }
     }
 
-    protected $siteConfig;
-
-    /**
-     * @ORM\Id @ORM\Column(type="integer", options={"unsigned":true})
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $siteID;
-
-    /**
-     * @ORM\Column(type="integer", options={"unsigned":true})
-     */
-    protected $pThemeID = 0;
-
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    protected $siteIsDefault = false;
-
-    /**
-     * @ORM\Column(type="string", unique=true)
-     */
-    protected $siteHandle;
-
-    public function __construct($appConfigRepository)
-    {
-        $this->updateSiteConfigRepository($appConfigRepository);
-        $this->locales = new ArrayCollection();
-    }
-
     public function updateSiteConfigRepository($appConfigRepository)
     {
         $this->siteConfig = new Liaison($appConfigRepository, $this);
@@ -107,18 +120,6 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
 
         return $this->siteConfig;
     }
-
-    /**
-     * @ORM\OneToMany(targetEntity="Locale", cascade={"all"}, mappedBy="site")
-     * @ORM\JoinColumn(name="siteLocaleID", referencedColumnName="siteLocaleID")
-     **/
-    protected $locales;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Type", inversedBy="sites")
-     * @ORM\JoinColumn(name="siteTypeID", referencedColumnName="siteTypeID")
-     */
-    protected $type;
 
     /**
      * @return mixed
@@ -259,7 +260,7 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
      */
     public function getSiteCanonicalURL()
     {
-        return (string)$this->getConfigRepository()->get('seo.canonical_url');
+        return (string) $this->getConfigRepository()->get('seo.canonical_url');
     }
 
     /**
@@ -269,7 +270,7 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
      */
     public function getSiteAlternativeCanonicalURL()
     {
-        return (string)$this->getConfigRepository()->get('seo.canonical_url_alternative');
+        return (string) $this->getConfigRepository()->get('seo.canonical_url_alternative');
     }
 
     /**
@@ -303,6 +304,7 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
         if (!$timezone) {
             $timezone = date_default_timezone_get();
         }
+
         return $timezone;
     }
 
