@@ -2,11 +2,13 @@
 
 namespace Concrete\Core\Entity\Site;
 
+use Concrete\Core\Attribute\Category\SiteCategory;
 use Concrete\Core\Attribute\Key\SiteKey;
 use Concrete\Core\Attribute\ObjectInterface;
 use Concrete\Core\Attribute\ObjectTrait;
 use Concrete\Core\Entity\Attribute\Value\SiteValue;
 use Concrete\Core\Permission\ObjectInterface as PermissionObjectInterface;
+use Concrete\Core\Permission\Response\SiteResponse;
 use Concrete\Core\Site\Config\Liaison;
 use Concrete\Core\Site\Tree\TreeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -116,7 +118,7 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
      */
     public function getPermissionResponseClassName()
     {
-        return '\\Concrete\\Core\\Permission\\Response\\SiteResponse';
+        return SiteResponse::class;
     }
 
     /**
@@ -152,7 +154,7 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
      */
     public function getObjectAttributeCategory()
     {
-        return \Core::make('\Concrete\Core\Attribute\Category\SiteCategory');
+        return \Core::make(SiteCategory::class);
     }
 
     /**
