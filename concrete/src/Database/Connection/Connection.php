@@ -246,10 +246,10 @@ class Connection extends \Doctrine\DBAL\Connection
      * @deprecated
      * Alias to old ADODB Replace() method
      *
-     * @param mixed $table
-     * @param mixed $fieldArray
-     * @param mixed $keyCol
-     * @param mixed $autoQuote
+     * @param string $table
+     * @param array $fieldArray
+     * @param string|string[] $keyCol
+     * @param bool $autoQuote
      */
     public function Replace($table, $fieldArray, $keyCol, $autoQuote = true)
     {
@@ -273,12 +273,15 @@ class Connection extends \Doctrine\DBAL\Connection
             $where->add($qb->expr()->eq($key, $field));
         }
         $qb->where($where);
-        $num = $this->query($qb->getSql())->fetchColumn();
-        if ($num < 1) {
-            $this->insert($table, $fieldArray);
-        } else {
-            $this->update($table, $fieldArray, $updateKeys);
-        }
+        $sql = $qb->getSql();
+        $this->transactional(function () use ($sql, $table, $fieldArray, $updateKeys) {
+            $num = parent::query($sql)->fetchColumn();
+            if ($num) {
+                $this->update($table, $fieldArray, $updateKeys);
+            } else {
+                $this->insert($table, $fieldArray);
+            }
+        });
     }
 
     /**
