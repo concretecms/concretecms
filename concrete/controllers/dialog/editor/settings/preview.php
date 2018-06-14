@@ -52,11 +52,20 @@ class Preview extends BackendUserInterface
         $this->set('previewHtml', is_string($previewHtml) ? $previewHtml : '');
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Controller\Backend\UserInterface::canAccess()
+     */
     protected function canAccess()
     {
+        $result = false;
         $page = Page::getByPath('/dashboard/system/basics/editor');
-        $checker = new Checker($page);
+        if ($page && !$page->isError()) {
+            $checker = new Checker($page);
+            $result = $checker->canViewPage();
+        }
 
-        return $checker->canView();
+        return $result;
     }
 }
