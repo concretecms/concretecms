@@ -1,25 +1,34 @@
-<?php if ($showPrivacyPolicyNotice) { ?>
-<div class="ccm-dashboard-privacy-policy">
-    <div class="ccm-dashboard-privacy-policy-inner">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-sm-12">
-                    <p>
-                    <?=t('concrete5 collects some information about your website to assist in upgrading and checking add-on compatibility. This information can be disabled in configuration.')?></p>
+<?php
+if (!empty($showPrivacyPolicyNotice)) {
+    $app = Concrete\Core\Support\Facade\Application::getFacadeApplication();
+    $config = $app->make('config');
+    if (empty($token)) {
+        $token = $app->make('token');
+    }
+    ?>
+    <div class="ccm-dashboard-privacy-policy">
+        <div class="ccm-dashboard-privacy-policy-inner">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <p>
+                        <?=t('concrete5 collects some information about your website to assist in upgrading and checking add-on compatibility. This information can be disabled in configuration.')?></p>
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-6">
-                    <a target="_blank" href="<?=Config::get('concrete.urls.privacy_policy')?>" class="btn-block btn btn-default"><?=t('View Privacy Policy')?></a>
-                </div>
-                <div class="col-sm-6">
-                    <button data-action="agree-privacy-policy" data-token="<?=$token->generate('accept_privacy_policy')?>" class="btn-block btn btn-primary"><?=t('Accept and Close')?></button>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <a target="_blank" href="<?=$config->get('concrete.urls.privacy_policy')?>" class="btn-block btn btn-default"><?=t('View Privacy Policy')?></a>
+                    </div>
+                    <div class="col-sm-6">
+                        <button data-action="agree-privacy-policy" data-token="<?=$token->generate('accept_privacy_policy')?>" class="btn-block btn btn-primary"><?=t('Accept and Close')?></button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<?php } ?>
+    <?php
+    }
+?>
 
 </div>
 </div>
