@@ -502,7 +502,7 @@ switch ($installStep) {
                                                     <p class="text-muted"><?= t('concrete5 collects some information about your website to assist in upgrading and checking add-on compatibility. This information can be disabled in configuration.') ?></p>
                                                     <label>
 
-                                                        <?= $form->checkbox('privacy', 1, ['required' => 'required']) ?>
+                                                        <?= $form->checkbox('privacy', 1, false, ['required' => 'required']) ?>
                                                         <?= t('Yes, I understand and agree to the <a target="_blank" href="%s">Privacy Policy</a>.',
                                                             Config::get('concrete.urls.privacy_policy')) ?>
                                                     </label>
