@@ -13,21 +13,42 @@ use Symfony\Component\EventDispatcher\GenericEvent;
 class SitemapWriter
 {
     /**
-     * Write mode: automatic.
+     * Name of the event called when a page is going to be added to the sitemap.
+     *
+     * @var string
+     */
+    const EVENTNAME_ELEMENTREADY = 'on_sitemap_xml_element';
+
+    /**
+     * Name of the deprecated event called when a page is going to be added to the sitemap.
+     *
+     * @var string
+     */
+    const EVENTNAME_PAGEREADY_DEPRECATED = 'on_sitemap_xml_addingpage';
+
+    /**
+     * Name of the event called when the whole XML is ready.
+     *
+     * @var string
+     */
+    const EVENTNAME_XMLREADY = 'on_sitemap_xml_ready';
+
+    /**
+     * Write mode: automatic (MODE_HIGHMEMORY if the on_sitemap_xml_addingpage/on_sitemap_xml_ready events are hooked, MODE_LOWMEMORY otherwise).
      *
      * @var int
      */
     const MODE_AUTO = 0;
 
     /**
-     * Write mode: use less memory (the on_sitemap_xml_ready event won't be called).
+     * Write mode: use less memory (the on_sitemap_xml_addingpage/on_sitemap_xml_ready events won't be fired).
      *
      * @var int
      */
     const MODE_LOWMEMORY = 1;
 
     /**
-     * Write mode: use more memory (the on_sitemap_xml_ready event will be called).
+     * Write mode: use more memory (the on_sitemap_xml_addingpage/on_sitemap_xml_ready event will be called).
      *
      * @var int
      */
@@ -247,11 +268,12 @@ class SitemapWriter
     {
         $indenter = $this->getIndenter();
         $lineTerminator = $this->getLineTerminator();
-        $dispatchXmlNewPage = $this->director->hasListeners('on_sitemap_xml_addingpage');
-        $dispatchXmlReady = $this->director->hasListeners('on_sitemap_xml_ready');
+        $dispatchElementReady = $this->director->hasListeners(static::EVENTNAME_ELEMENTREADY);
+        $dispatchPageReadyDeprecated = $this->director->hasListeners(static::EVENTNAME_PAGEREADY_DEPRECATED);
+        $dispatchXmlReady = $this->director->hasListeners(static::EVENTNAME_XMLREADY);
         $mode = $this->getMode();
         if ($mode !== static::MODE_HIGHMEMORY && $mode !== static::MODE_LOWMEMORY) {
-            $mode = $dispatchXmlReady ? static::MODE_HIGHMEMORY : static::MODE_LOWMEMORY;
+            $mode = ($dispatchPageReadyDeprecated || $dispatchXmlReady) ? static::MODE_HIGHMEMORY : static::MODE_LOWMEMORY;
         }
         $outputFilename = $this->getOutputFilename();
         $this->checkOutputFilename($outputFilename);
@@ -269,14 +291,17 @@ class SitemapWriter
                 if ($pulse !== null) {
                     $pulse($element);
                 }
-                if ($dispatchXmlNewPage && $element instanceof SitemapPage) {
-                    $this->director->dispatch('on_sitemap_xml_addingpage', new GenericEvent(['sitemapPage' => $element]));
+                if ($dispatchElementReady) {
+                    $this->director->dispatch(static::EVENTNAME_ELEMENTREADY, new GenericEvent(['sitemapPage' => $element]));
                 }
                 if ($mode === static::MODE_HIGHMEMORY) {
                     if ($element instanceof SitemapHeader) {
                         $xmlDocument = $element->toXmlElement();
                     } else {
-                        $element->toXmlElement($xmlDocument);
+                        $xmlNode = $element->toXmlElement($xmlDocument);
+                        if ($dispatchPageReadyDeprecated && $element instanceof SitemapPage) {
+                            $this->director->dispatch(static::EVENTNAME_PAGEREADY_DEPRECATED, new GenericEvent(['page' => $element->getPage(), 'xmlNode' => $xmlNode]));
+                        }
                     }
                 } else {
                     $lines = $element->toXmlLines($indenter);
@@ -290,7 +315,7 @@ class SitemapWriter
             }
             if ($mode === static::MODE_HIGHMEMORY) {
                 if ($dispatchXmlReady) {
-                    $this->director->dispatch('on_sitemap_xml_addingpage', new GenericEvent(['xmlDoc' => $xmlDocument]));
+                    $this->director->dispatch(static::EVENTNAME_XMLREADY, new GenericEvent(['xmlDoc' => $xmlDocument]));
                 }
                 $dom = dom_import_simplexml($xmlDocument)->ownerDocument;
                 unset($xmlDocument);
