@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Database\Connection;
 
 use Doctrine\ORM\EntityManager;
@@ -13,6 +14,7 @@ class Connection extends \Doctrine\DBAL\Connection
      * @deprecated Please use the ORM facade instead of this method:
      * - ORM::entityManager() in the application/site code and core
      * - $pkg->getEntityManager() in packages
+     *
      * @return EntityManager
      */
     public function getEntityManager()
@@ -25,9 +27,9 @@ class Connection extends \Doctrine\DBAL\Connection
     }
 
     /**
-     * @return EntityManager
-     *
      * @throws \Doctrine\ORM\ORMException
+     *
+     * @return EntityManager
      */
     public function createEntityManager()
     {
@@ -35,7 +37,9 @@ class Connection extends \Doctrine\DBAL\Connection
     }
 
     /**
-     * Returns true if a table exists – is NOT case sensitive.
+     * Returns true if a table exists – is NOT case sensitive.
+     *
+     * @param mixed $tableName
      *
      * @return bool
      */
@@ -49,14 +53,17 @@ class Connection extends \Doctrine\DBAL\Connection
 
     /**
      * @deprecated
+     *
+     * @param mixed $q
+     * @param mixed $arguments
      */
-    public function Execute($q, $arguments = array())
+    public function Execute($q, $arguments = [])
     {
         if ($q instanceof \Doctrine\DBAL\Statement) {
             return $q->execute($arguments);
         } else {
             if (!is_array($arguments)) {
-                $arguments = array($arguments); // adodb backward compatibility
+                $arguments = [$arguments]; // adodb backward compatibility
             }
 
             return $this->executeQuery($q, $arguments);
@@ -76,7 +83,7 @@ class Connection extends \Doctrine\DBAL\Connection
     /**
      * This is essentially a workaround for not being able to define indexes on TEXT fields with the current version of Doctrine DBAL.
      * This feature will be removed when DBAL will support it, so don't use this feature.
-
+     *
      * @param array $textIndexes
      */
     public function createTextIndexes(array $textIndexes)
@@ -118,15 +125,18 @@ class Connection extends \Doctrine\DBAL\Connection
     /**
      * @deprecated
      * alias to old ADODB method
+     *
+     * @param mixed $q
+     * @param mixed $arguments
      */
-    public function GetRow($q, $arguments = array())
+    public function GetRow($q, $arguments = [])
     {
         if (!is_array($arguments)) {
-            $arguments = array($arguments); // adodb backward compatibility
+            $arguments = [$arguments]; // adodb backward compatibility
         }
         $r = $this->fetchAssoc($q, $arguments);
         if (!is_array($r)) {
-            $r = array();
+            $r = [];
         }
 
         return $r;
@@ -135,6 +145,8 @@ class Connection extends \Doctrine\DBAL\Connection
     /**
      * @deprecated
      * alias to old ADODB method
+     *
+     * @param mixed $string
      */
     public function qstr($string)
     {
@@ -144,11 +156,14 @@ class Connection extends \Doctrine\DBAL\Connection
     /**
      * @deprecated
      * alias to old ADODB method
+     *
+     * @param mixed $q
+     * @param mixed $arguments
      */
-    public function GetOne($q, $arguments = array())
+    public function GetOne($q, $arguments = [])
     {
         if (!is_array($arguments)) {
-            $arguments = array($arguments); // adodb backward compatibility
+            $arguments = [$arguments]; // adodb backward compatibility
         }
 
         return $this->fetchColumn($q, $arguments, 0);
@@ -170,11 +185,14 @@ class Connection extends \Doctrine\DBAL\Connection
     /**
      * @deprecated
      * alias to old ADODB method
+     *
+     * @param mixed $q
+     * @param mixed $arguments
      */
-    public function GetAll($q, $arguments = array())
+    public function GetAll($q, $arguments = [])
     {
         if (!is_array($arguments)) {
-            $arguments = array($arguments); // adodb backward compatibility
+            $arguments = [$arguments]; // adodb backward compatibility
         }
 
         return $this->fetchAll($q, $arguments);
@@ -183,8 +201,11 @@ class Connection extends \Doctrine\DBAL\Connection
     /**
      * @deprecated
      * alias to old ADODB method
+     *
+     * @param mixed $q
+     * @param mixed $arguments
      */
-    public function GetArray($q, $arguments = array())
+    public function GetArray($q, $arguments = [])
     {
         return $this->GetAll($q, $arguments);
     }
@@ -192,8 +213,11 @@ class Connection extends \Doctrine\DBAL\Connection
     /**
      * @deprecated
      * alias to old ADODB method
+     *
+     * @param mixed $q
+     * @param mixed $arguments
      */
-    public function GetAssoc($q, $arguments = array())
+    public function GetAssoc($q, $arguments = [])
     {
         $query = $this->query($q, $arguments);
 
@@ -203,11 +227,13 @@ class Connection extends \Doctrine\DBAL\Connection
     /**
      * @deprecated
      * Returns an associative array of all columns in a table
+     *
+     * @param mixed $table
      */
     public function MetaColumnNames($table)
     {
         $sm = $this->getSchemaManager();
-        $columnNames = array();
+        $columnNames = [];
         $columns = $sm->listTableColumns($table);
         foreach ($columns as $column) {
             $columnNames[] = $column->getName();
@@ -218,16 +244,21 @@ class Connection extends \Doctrine\DBAL\Connection
 
     /**
      * @deprecated
-     * Alias to old ADODB Replace() method.
+     * Alias to old ADODB Replace() method
+     *
+     * @param string $table
+     * @param array $fieldArray
+     * @param string|string[] $keyCol
+     * @param bool $autoQuote
      */
     public function Replace($table, $fieldArray, $keyCol, $autoQuote = true)
     {
         $qb = $this->createQueryBuilder();
         $qb->select('count(*)')->from($table, 't');
         $where = $qb->expr()->andX();
-        $updateKeys = array();
+        $updateKeys = [];
         if (!is_array($keyCol)) {
-            $keyCol = array($keyCol);
+            $keyCol = [$keyCol];
         }
         foreach ($keyCol as $key) {
             if (isset($fieldArray[$key])) {
@@ -242,22 +273,28 @@ class Connection extends \Doctrine\DBAL\Connection
             $where->add($qb->expr()->eq($key, $field));
         }
         $qb->where($where);
-        $num = $this->query($qb->getSql())->fetchColumn();
-        if ($num < 1) {
-            $this->insert($table, $fieldArray);
-        } else {
-            $this->update($table, $fieldArray, $updateKeys);
-        }
+        $sql = $qb->getSql();
+        $this->transactional(function () use ($sql, $table, $fieldArray, $updateKeys) {
+            $num = parent::query($sql)->fetchColumn();
+            if ($num) {
+                $this->update($table, $fieldArray, $updateKeys);
+            } else {
+                $this->insert($table, $fieldArray);
+            }
+        });
     }
 
     /**
      * @deprecated -
      * alias to old ADODB method
+     *
+     * @param mixed $q
+     * @param mixed $arguments
      */
-    public function GetCol($q, $arguments = array())
+    public function GetCol($q, $arguments = [])
     {
         $r = $this->fetchAll($q, $arguments);
-        $return = array();
+        $return = [];
 
         foreach ($r as $value) {
             $return[] = $value[key($value)];
@@ -282,7 +319,7 @@ class Connection extends \Doctrine\DBAL\Connection
     {
         $sm = $this->getSchemaManager();
         $schemaTables = $sm->listTables();
-        $tables = array();
+        $tables = [];
         foreach ($schemaTables as $table) {
             $tables[] = $table->getName();
         }
@@ -292,6 +329,8 @@ class Connection extends \Doctrine\DBAL\Connection
 
     /**
      * @deprecated
+     *
+     * @param mixed $table
      */
     public function MetaColumns($table)
     {
