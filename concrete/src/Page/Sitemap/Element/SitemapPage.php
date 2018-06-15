@@ -11,6 +11,55 @@ use SimpleXMLElement;
 class SitemapPage extends SitemapElement
 {
     /**
+     * Change frequency: always (pagess change each time they are accessed).
+     *
+     * @var string
+     */
+    const CHANGEFREQUENCY_ALWAYS = 'always';
+
+    /**
+     * Change frequency: hourly.
+     *
+     * @var string
+     */
+    const CHANGEFREQUENCY_HOURLY = 'hourly';
+
+    /**
+     * Change frequency: daily.
+     *
+     * @var string
+     */
+    const CHANGEFREQUENCY_DAILY = 'daily';
+
+    /**
+     * Change frequency: weekly.
+     *
+     * @var string
+     */
+    const CHANGEFREQUENCY_WEEKLY = 'weekly';
+
+    /**
+     * Change frequency: monthly.
+     *
+     * @var string
+     */
+    const CHANGEFREQUENCY_MONTHLY = 'monthly';
+
+    /**
+     * Change frequency: yearly.
+     *
+     * @var string
+     */
+    const CHANGEFREQUENCY_YEARLY = 'yearly';
+
+    /**
+     * Change frequency: never (should be used to describe archived URLs).
+     *
+     * @var string
+     */
+    const CHANGEFREQUENCY_NEVER = 'never';
+
+    /**
      * The page.
      *
      * @var \Concrete\Core\Page\Page
@@ -29,10 +78,10 @@ class SitemapPage extends SitemapElement
      *
      * @var \DateTime|null
      */
-    protected $lastMod;
+    protected $lastModifiedAt;
 
     /**
-     * The page change frequency.
+     * The page change frequency (one of the SitemapPage::CHANGEFREQUENCY_... constants, or an empty string in unavailable).
      *
      * @var string
      */
@@ -62,16 +111,15 @@ class SitemapPage extends SitemapElement
     /**
      * @param Page $page the page
      * @param UrlInterface $url the URL of the page
-     * @param \DateTime|null the last modification date/time
-     * @param string $changeFrequency the page change frequency
+     * @param \DateTime|null $lastModifiedAt the last modification date/time
+     * @param string $changeFrequency the page change frequency (one of the SitemapPage::CHANGEFREQUENCY_... constants, or an empty string in unavailable)
      * @param string $priority the page priority
-     * @param null|DateTime $lastMod
      */
-    public function __construct(Page $page, UrlInterface $url, DateTime $lastMod = null, $changeFrequency = '', $priority = '')
+    public function __construct(Page $page, UrlInterface $url, DateTime $lastModifiedAt = null, $changeFrequency = '', $priority = '')
     {
         $this->page = $page;
         $this->setUrl($url);
-        $this->setLastMod($lastMod);
+        $this->setLastModifiedAt($lastModifiedAt);
         $this->setChangeFrequency($changeFrequency);
         $this->setPriority($priority);
     }
@@ -115,27 +163,27 @@ class SitemapPage extends SitemapElement
      *
      * @return \DateTime|null
      */
-    public function getLastMod()
+    public function getLastModifiedAt()
     {
-        return $this->lastMod;
+        return $this->lastModifiedAt;
     }
 
     /**
      * Set the last modification date/time.
      *
-     * @param \DateTime|null $lastMod
+     * @param \DateTime|null $lastModifiedAt
      *
      * @return $this
      */
-    public function setLastMod(DateTime $lastMod = null)
+    public function setLastModifiedAt(DateTime $lastModifiedAt = null)
     {
-        $this->lastMod = $lastMod;
+        $this->lastModifiedAt = $lastModifiedAt;
 
         return $this;
     }
 
     /**
-     * Get the page change frequency.
+     * Get the page change frequency (one of the SitemapPage::CHANGEFREQUENCY_... constants, or an empty string in unavailable).
      *
      * @return string
      */
@@ -147,7 +195,7 @@ class SitemapPage extends SitemapElement
     /**
      * Set the page change frequency.
      *
-     * @param string $changeFrequency
+     * @param string $changeFrequency one of the SitemapPage::CHANGEFREQUENCY_... constants, or an empty string in unavailable
      *
      * @return $this
      */
@@ -252,10 +300,10 @@ class SitemapPage extends SitemapElement
                 "{$prefix}<url>",
                 "{$prefix2}<loc>{$loc}</loc>",
             ];
-            $lastMod = $this->getLastMod();
-            if ($lastMod !== null) {
-                $lastMod = $lastMod->format(DateTime::ATOM);
-                $result[] = "{$prefix2}<lastmod>{$lastMod}</lastmod>";
+            $lastModifiedAt = $this->getLastModifiedAt();
+            if ($lastModifiedAt !== null) {
+                $lastModifiedAt = $lastModifiedAt->format(DateTime::ATOM);
+                $result[] = "{$prefix2}<lastmod>{$lastModifiedAt}</lastmod>";
             }
             $changeFrequency = $this->getChangeFrequency();
             if ($changeFrequency !== '') {
@@ -286,9 +334,9 @@ class SitemapPage extends SitemapElement
         }
         $result = $parentElement->addChild('url');
         $result->addChild('loc', (string) $this->getUrl());
-        $lastMod = $this->getLastMod();
-        if ($lastMod !== null) {
-            $result->addChild('lastmod', $lastMod->format(DateTime::ATOM));
+        $lastModifiedAt = $this->getLastModifiedAt();
+        if ($lastModifiedAt !== null) {
+            $result->addChild('lastmod', $lastModifiedAt->format(DateTime::ATOM));
         }
         $changeFrequency = $this->getChangeFrequency();
         if ($changeFrequency !== '') {

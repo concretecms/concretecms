@@ -5,6 +5,7 @@ namespace Concrete\Core\Page\Sitemap;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Attribute\Category\PageCategory;
 use Concrete\Core\Cache\Cache;
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Sitemap\Element\SitemapFooter;
 use Concrete\Core\Page\Sitemap\Element\SitemapHeader;
@@ -24,11 +25,6 @@ class SitemapGenerator
     protected $app;
 
     /**
-     * @var \Concrete\Core\Page\Sitemap\PageListGenerator
-     */
-    protected $pageListGenerator;
-
-    /**
      * @var \Concrete\Core\Config\Repository\Repository
      */
     protected $config;
@@ -39,7 +35,12 @@ class SitemapGenerator
     protected $customSiteCanonicalUrl = '';
 
     /**
-     * @var \Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface
+     * @var \Concrete\Core\Page\Sitemap\PageListGenerator|null
+     */
+    private $pageListGenerator;
+
+    /**
+     * @var \Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface|null
      */
     private $resolverManager;
 
@@ -67,15 +68,12 @@ class SitemapGenerator
      * Initialize the instance.
      *
      * @param \Concrete\Core\Application\Application $app
-     * @param \Concrete\Core\Page\Sitemap\PageListGenerator $pageListGenerator
-     * @param \Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface $resolverManager
+     * @param \Concrete\Core\Config\Repository\Repository $config
      */
-    public function __construct(Application $app, PageListGenerator $pageListGenerator, ResolverManagerInterface $resolverManager)
+    public function __construct(Application $app, Repository $config)
     {
         $this->app = $app;
-        $this->pageListGenerator = $pageListGenerator;
-        $this->resolverManager = $resolverManager;
-        $this->config = $this->app->make('config');
+        $this->config = $config;
     }
 
     /**
@@ -83,7 +81,47 @@ class SitemapGenerator
      */
     public function getPageListGenerator()
     {
+        if ($this->pageListGenerator === null) {
+            $this->pageListGenerator = $this->app->make(PageListGenerator::class);
+        }
+
         return $this->pageListGenerator;
+    }
+
+    /**
+     * @param \Concrete\Core\Page\Sitemap\PageListGenerator $pageListGenerator
+     *
+     * @return $this;
+     */
+    public function setPageListGenerator(PageListGenerator $pageListGenerator)
+    {
+        $this->pageListGenerator = $pageListGenerator;
+
+        return $this;
+    }
+
+    /**
+     * @return \Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface
+     */
+    public function getResolverManager()
+    {
+        if ($this->resolverManager === null) {
+            $this->resolverManager = $this->app->make(ResolverManagerInterface::class);
+        }
+
+        return $this->resolverManager;
+    }
+
+    /**
+     * @param \Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface $resolverManager
+     *
+     * @return $this;
+     */
+    public function setResolverManager(ResolverManagerInterface $resolverManager)
+    {
+        $this->pageListGenerator = $resolverManager;
+
+        return $this;
     }
 
     /**
@@ -91,17 +129,18 @@ class SitemapGenerator
      */
     public function generateContents()
     {
-        Cache::disableAll();
+        $pageListGenerator = $this->getPageListGenerator();
         $customCanonicalUrl = $this->getCustomSiteCanonicalUrl();
         if ($customCanonicalUrl !== '') {
-            $siteConfig = $this->getPageListGenerator()->getSite()->getConfigRepository();
+            $siteConfig = $pageListGenerator->getSite()->getConfigRepository();
             $originalSiteCanonicalUrl = $siteConfig->get('seo.canonical_url');
             $siteConfig->set('seo.canonical_url', $customCanonicalUrl);
         }
         try {
-            $multilingualEnabled = $this->pageListGenerator->isMultilingualEnabled();
+            Cache::disableAll();
+            $multilingualEnabled = $pageListGenerator->isMultilingualEnabled();
             yield new SitemapHeader($multilingualEnabled);
-            foreach ($this->pageListGenerator->generatePageList() as $page) {
+            foreach ($pageListGenerator->generatePageList() as $page) {
                 yield $this->createSitemapPage($page, $multilingualEnabled);
             }
             yield new SitemapFooter();
@@ -164,7 +203,7 @@ class SitemapGenerator
     public function resolveUrl(array $args)
     {
         return $this->withCustomCanonicalUrl(function () use ($args) {
-            return $this->resolverManager->resolve($args);
+            return $this->getResolverManager()->resolve($args);
         });
     }
 
@@ -225,7 +264,7 @@ class SitemapGenerator
      */
     protected function getPageUrl(Page $page)
     {
-        return $this->resolverManager->resolve([$page]);
+        return $this->getResolverManager()->resolve([$page]);
     }
 
     /**
@@ -277,7 +316,7 @@ class SitemapGenerator
         $result = new SitemapPage($page, $this->getPageUrl($page));
         $lasMod = $page->getCollectionDateLastModified();
         if ($lasMod) {
-            $result->setLastMod(new DateTime($lasMod));
+            $result->setLastModifiedAt(new DateTime($lasMod));
         }
         $result
             ->setChangeFrequency($this->getPageChangeFrequency($page))
@@ -296,16 +335,17 @@ class SitemapGenerator
      */
     protected function populateLanguageAlternatives(SitemapPage $sitemapPage)
     {
+        $pageListGenerator = $this->getPageListGenerator();
         $page = $sitemapPage->getPage();
-        $pageSection = $this->pageListGenerator->getMultilingualSectionForPage($page);
+        $pageSection = $pageListGenerator->getMultilingualSectionForPage($page);
         if ($pageSection !== null) {
             $addThisPage = false;
-            foreach ($this->pageListGenerator->getMultilingualSections() as $relatedSection) {
+            foreach ($pageListGenerator->getMultilingualSections() as $relatedSection) {
                 if ($relatedSection !== $pageSection) {
                     $relatedPageID = $relatedSection->getTranslatedPageID($page);
                     if ($relatedPageID) {
                         $relatedPage = Page::getByID($relatedPageID);
-                        if ($relatedPage || $this->pageListGenerator->canIncludePageInSitemap($relatedPage)) {
+                        if ($relatedPage || $pageListGenerator->canIncludePageInSitemap($relatedPage)) {
                             $relatedUrl = $this->getPageUrl($relatedPage);
                             $sitemapPage->addAlternativeLanguage(new SitemapPageAlternativeLanguage($relatedSection, $relatedPage, $relatedUrl));
                             $addThisPage = true;

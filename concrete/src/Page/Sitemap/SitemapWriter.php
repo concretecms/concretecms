@@ -287,7 +287,7 @@ class SitemapWriter
             // fopen/fwrite/fclose is one order of magnitude faster than $this->filesystem->append
             $fd = fopen($tempFilename, 'wb');
             $xmlDocument = null;
-            foreach ($this->sitemapGenerator->generateContents() as $element) {
+            foreach ($this->getSitemapGenerator()->generateContents() as $element) {
                 if ($pulse !== null) {
                     $pulse($element);
                 }

@@ -117,7 +117,7 @@ class PageListGenerator
     }
 
     /**
-     * Checks if the current site has more than one multilingual section.
+     * Check if the current site has more than one multilingual section.
      *
      * @return bool
      */

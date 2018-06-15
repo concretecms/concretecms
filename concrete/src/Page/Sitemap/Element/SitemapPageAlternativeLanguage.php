@@ -58,7 +58,7 @@ class SitemapPageAlternativeLanguage extends SitemapElement
     }
 
     /**
-     * Ghe multilingual section associated to this alternative page.
+     * Get the multilingual section associated to this alternative page.
      *
      * @return \Concrete\Core\Multilingual\Page\Section\Section
      */
