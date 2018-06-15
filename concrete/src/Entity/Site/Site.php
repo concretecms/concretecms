@@ -301,7 +301,7 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
             $locale = array_shift($locales);
         }
 
-        return $locale === null ? $locale->getSiteTree() : null;
+        return $locale === null ? null : $locale->getSiteTree();
     }
 
     /**
