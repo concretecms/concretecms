@@ -97,9 +97,9 @@ EOT
         $this->shouldClearLocalizationCache = false;
 
         $processCore = $this->checkCoreFlag($input);
-        $processPackages = $this->checkPackagesFlag($input);
+        $packagesToProcess = $this->checkPackagesFlag($input);
 
-        $data = $this->getTranslationsData($processCore, $processPackages);
+        $data = $this->getTranslationsData($processCore, $packagesToProcess);
 
         if ($input->getOption('update')) {
             $this->updateLanguages($data);
@@ -125,12 +125,22 @@ EOT
     /**
      * @param InputInterface $input
      *
-     * @return Package
+     * @return Package[]
      */
     private function checkPackagesFlag(InputInterface $input)
     {
         $result = [];
-        if (!$input->getOption('core') || count($input->getOption('packages')) > 0) {
+        if (count($input->getOption('packages')) > 0) {
+            if (!$this->app->isInstalled()) {
+                throw new Exception('concrete5 is not installed: you can only work with core language files.');
+            }
+            $proceed = true;
+        } elseif (!$input->getOption('core')) {
+            $proceed = $this->app->isInstalled();
+        } else {
+            $proceed = false;
+        }
+        if ($proceed) {
             $pkgList = $input->getOption('packages');
             if ($pkgList === [null]) {
                 $pkgList = [];
@@ -164,11 +174,11 @@ EOT
 
     /**
      * @param bool $processCore
-     * @param Package[] $processPackages
+     * @param Package[] $packagesToProcess
      *
      * @return \Concrete\Core\Localization\Translation\LocaleStatus[]
      */
-    private function getTranslationsData($processCore, array $processPackages)
+    private function getTranslationsData($processCore, array $packagesToProcess)
     {
         if ($this->output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
             $this->output->write('# Fetching list of translations... ');
@@ -177,7 +187,7 @@ EOT
         if ($processCore) {
             $result[] = $this->translationsChecker->getCoreTranslations();
         }
-        foreach ($processPackages as $package) {
+        foreach ($packagesToProcess as $package) {
             $result[] = $this->translationsChecker->getPackageTranslations($package);
         }
         if ($this->output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
