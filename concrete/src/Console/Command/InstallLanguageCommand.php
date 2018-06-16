@@ -16,6 +16,31 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class InstallLanguageCommand extends Command
 {
+    /**
+     * @var \Concrete\Core\Application\Application|null
+     */
+    protected $app;
+
+    /**
+     * @var TranslationsChecker|null
+     */
+    protected $translationsChecker;
+
+    /**
+     * @var TranslationsInstaller|null
+     */
+    protected $translationsInstaller;
+
+    /**
+     * @var OutputInterface|null
+     */
+    protected $output;
+
+    /**
+     * @var bool|null
+     */
+    protected $shouldClearLocalizationCache;
+
     protected function configure()
     {
         $errExitCode = static::RETURN_CODE_ON_FAILURE;
@@ -58,31 +83,6 @@ More info at http://documentation.concrete5.org/developers/appendix/cli-commands
 EOT
             );
     }
-
-    /**
-     * @var \Concrete\Core\Application\Application|null
-     */
-    protected $app;
-
-    /**
-     * @var TranslationsChecker|null
-     */
-    protected $translationsChecker;
-
-    /**
-     * @var TranslationsInstaller|null
-     */
-    protected $translationsInstaller;
-
-    /**
-     * @var OutputInterface|null
-     */
-    protected $output;
-
-    /**
-     * @var bool|null
-     */
-    protected $shouldClearLocalizationCache;
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -216,7 +216,7 @@ EOT
 
     /**
      * @param \Concrete\Core\Localization\Translation\LocalRemoteCouple[] $installedOutdated
-     * @param Package $package
+     * @param Package|null $package
      *
      * @return int
      */
@@ -272,7 +272,7 @@ EOT
 
     /**
      * @param \Concrete\Core\Localization\Translation\LocaleStatus[] $data
-     * @param string $localeIDs
+     * @param string $localeID
      */
     private function addLanguage(array $data, $localeID)
     {
@@ -292,7 +292,8 @@ EOT
 
     /**
      * @param \Concrete\Core\Localization\Translation\Remote\Stats[] $availableRemoteStats
-     * @param Package $package
+     * @param string $localeID
+     * @param Package|null $package
      *
      * @return bool
      */
