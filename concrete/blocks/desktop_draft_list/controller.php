@@ -12,9 +12,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class Controller extends BlockController
 {
-    protected $btInterfaceWidth = 450;
-    protected $btInterfaceHeight = 560;
-    protected $resultsPerPage = 10;
+    public $helpers = ['form'];
+    protected $btTable = 'btDesktopDraftList';
+    protected $defaultDraftsPerPage = 10;
 
     public function getBlockTypeDescription()
     {
@@ -24,6 +24,37 @@ class Controller extends BlockController
     public function getBlockTypeName()
     {
         return t('Draft List');
+    }
+
+    public function add()
+    {
+        $this->set('defaultDraftsPerPage', $this->defaultDraftsPerPage);
+    }
+
+    public function edit()
+    {
+        $this->set('defaultDraftsPerPage', $this->defaultDraftsPerPage);
+    }
+
+    public function validate($args)
+    {
+        $e = $this->app->make('helper/validation/error');
+        if (!empty($args['draftsPerPage'])) {
+            $numbersValidation = $this->app->make('helper/validation/numbers');
+            if (!$numbersValidation->integer($args['draftsPerPage'])) {
+                $e->add(t('You must specify an integer value for the number of drafts per page.'));
+            }
+        }
+
+        return $e;
+    }
+
+    public function save($args)
+    {
+        if (empty($args['draftsPerPage'])) {
+            $args['draftsPerPage'] = $this->defaultDraftsPerPage;
+        }
+        parent::save($args);
     }
 
     public function view()
@@ -42,7 +73,7 @@ class Controller extends BlockController
                 $list->includeInactivePages();
                 $list->sortBy('cDateAdded', 'desc');
                 $list->setPageVersionToRetrieve($list::PAGE_VERSION_RECENT);
-                $list->setItemsPerPage($this->resultsPerPage);
+                $list->setItemsPerPage((!empty($this->draftsPerPage)) ? $this->draftsPerPage : $this->defaultDraftsPerPage);
                 $pagination = $list->getPagination();
                 $drafts = $pagination->getCurrentPageResults();
                 if ($pagination->haveToPaginate()) {
@@ -80,7 +111,7 @@ class Controller extends BlockController
                         'name' => $draftName,
                         'dateAdded' => $date->formatDateTime($draft->getCollectionDateAdded(), false),
                         'user' => $draftUser,
-                        'deleteLink' => $deleteLink
+                        'deleteLink' => $deleteLink,
                     ];
                 }
             }
