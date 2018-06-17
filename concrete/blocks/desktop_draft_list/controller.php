@@ -3,6 +3,7 @@ namespace Concrete\Block\DesktopDraftList;
 
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Page\Page;
+use Concrete\Core\Page\PageList;
 use Concrete\Core\User\UserInfo;
 use Permissions;
 use URL;
@@ -11,9 +12,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class Controller extends BlockController
 {
-
     protected $btInterfaceWidth = 450;
     protected $btInterfaceHeight = 560;
+    protected $resultsPerPage = 10;
 
     public function getBlockTypeDescription()
     {
@@ -28,9 +29,30 @@ class Controller extends BlockController
     public function view()
     {
         $myDrafts = [];
+        $showPagination = false;
+        $pagination = null;
         $site = $this->app->make('site')->getSite();
         if (is_object($site)) {
-            $drafts = Page::getDrafts($site);
+            $draftsParentPage = Page::getDraftsParentPage($site);
+            if (is_object($draftsParentPage) && !empty($draftsParentPage->getCollectionID())) {
+                $list = new PageList();
+                $list->setNameSpace('b' . $this->bID);
+                $list->filterByParentID($draftsParentPage->getCollectionID());
+                $list->includeSystemPages();
+                $list->includeInactivePages();
+                $list->sortBy('cDateAdded', 'desc');
+                $list->setPageVersionToRetrieve($list::PAGE_VERSION_RECENT);
+                $list->setItemsPerPage($this->resultsPerPage);
+                $pagination = $list->getPagination();
+                $drafts = $pagination->getCurrentPageResults();
+                if ($pagination->haveToPaginate()) {
+                    $showPagination = true;
+                    $pagination = $pagination->renderDefaultView();
+                }
+            }
+        }
+
+        if (!empty($drafts)) {
             $date = $this->app->make('helper/date');
             $navigation = $this->app->make('helper/navigation');
             foreach ($drafts as $draft) {
@@ -64,5 +86,7 @@ class Controller extends BlockController
             }
         }
         $this->set('drafts', $myDrafts);
+        $this->set('showPagination', $showPagination);
+        $this->set('pagination', $pagination);
     }
 }

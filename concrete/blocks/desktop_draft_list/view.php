@@ -15,6 +15,11 @@
                     <?php } ?>
                 </div>
             <?php } ?>
+            <?php
+                if ($showPagination) {
+                    echo $pagination;
+                }
+            ?>
         </div>
     <?php } else { ?>
         <p><?= t('There are no drafts.'); ?></p>
