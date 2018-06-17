@@ -33,7 +33,7 @@ class Add extends BackendInterfacePageController
             $tab = $session->get('panels_page_add_block_tab');
         }
 
-        $sp = (new Pile())->getDefault();
+        $sp = Pile::getDefault();
         $contents = $sp->getPileContentObjects('date_desc');
 
         $stacks = new StackList();

@@ -4,6 +4,7 @@ namespace Concrete\Controller\Panel\Page;
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Page\Collection\Collection;
+use Concrete\Core\Workflow\Request\UnapprovePageRequest;
 use Permissions;
 use Page;
 use Loader;
@@ -201,6 +202,40 @@ class Versions extends BackendInterfacePageController
                     }
                     $r->addCollectionVersion(CollectionVersion::get($c, $nvID));
                     $r->setMessage(t('Version %s approved successfully', $v->getVersionID()));
+                }
+            } else {
+                $e = Loader::helper('validation/error');
+                $e->add(t('You do not have permission to approve page versions.'));
+                $r = new PageEditResponse($e);
+            }
+
+            $r->outputJSON();
+        }
+    }
+
+    public function unapprove()
+    {
+        $c = $this->page;
+        $cp = $this->permissions;
+        if ($this->validateAction()) {
+            $r = new PageEditVersionResponse();
+            if ($cp->canApprovePageVersions()) {
+                $cvID = $this->request->request->get('cvID');
+                $r = new PageEditVersionResponse();
+                $r->setPage($c);
+                $u = new User();
+                $pkr = new UnapprovePageRequest();
+                $pkr->setRequestedPage($c);
+                $v = CollectionVersion::get($c, $_REQUEST['cvID']);
+                $pkr->setRequestedVersionID($v->getVersionID());
+                $pkr->setRequesterUserID($u->getUserID());
+                $response = $pkr->trigger();
+                if (!($response instanceof WorkflowProgressResponse)) {
+                    // we are deferred
+                    $r->setMessage(t('<strong>Request Saved.</strong> You must complete the workflow before this change is active.'));
+                } else {
+                    $r->addCollectionVersion(CollectionVersion::get($c, $cvID));
+                    $r->setMessage(t('Version %s unapproved successfully', $v->getVersionID()));
                 }
             } else {
                 $e = Loader::helper('validation/error');

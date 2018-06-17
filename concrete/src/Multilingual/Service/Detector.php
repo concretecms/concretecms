@@ -66,11 +66,11 @@ class Detector
             $config = $site->getConfigRepository();
             if ($config->get('multilingual.use_browser_detected_locale')) {
                 $home = false;
-                $locales = \Punic\Misc::getBrowserLocales();
-                foreach (array_keys($locales) as $locale) {
-                    $home = Section::getByLocaleOrLanguage($locale);
+                $browserLocales = \Punic\Misc::getBrowserLocales();
+                foreach (array_keys($browserLocales) as $browserLocale) {
+                    $home = Section::getByLocaleOrLanguage($browserLocale);
                     if ($home) {
-                        $result = [$locale, $home];
+                        $result = [$home->getLocale(), $home];
                         break;
                     }
                 }

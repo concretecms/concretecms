@@ -406,6 +406,8 @@ return [
         '/ccm/system/dialogs/express/advanced_search/preset/delete' => ['\Concrete\Controller\Dialog\Express\Preset\Delete::view'],
         '/ccm/system/dialogs/express/advanced_search/preset/delete/remove_search_preset' => ['\Concrete\Controller\Dialog\Express\Preset\Delete::remove_search_preset'],
 
+        '/ccm/system/dialogs/editor/settings/preview' => ['\Concrete\Controller\Dialog\Editor\Settings\Preview::view'],
+
         /*
          * Conversations
          */
@@ -599,6 +601,7 @@ return [
         '/ccm/system/panels/page/versions/new_page' => ['\Concrete\Controller\Panel\Page\Versions::new_page'],
         '/ccm/system/panels/page/versions/delete' => ['\Concrete\Controller\Panel\Page\Versions::delete'],
         '/ccm/system/panels/page/versions/approve' => ['\Concrete\Controller\Panel\Page\Versions::approve'],
+		'/ccm/system/panels/page/versions/unapprove' => ['\Concrete\Controller\Panel\Page\Versions::unapprove'],
         '/ccm/system/panels/page/devices' => ['\Concrete\Controller\Panel\Page\Devices::view'],
         '/ccm/system/panels/page/devices/preview' => ['\Concrete\Controller\Panel\Page\Devices::preview'],
         '/ccm/system/panels/sitemap' => ['\Concrete\Controller\Panel\Sitemap::view'],

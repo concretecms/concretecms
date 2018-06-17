@@ -41,7 +41,7 @@ return [
                     'custom_config_options' => '',
                     'editor_function_options' => '',
                     'plugins' => [
-                        'selected' => [
+                        'selected_default' => [
                             'autogrow',
                             'a11yhelp',
                             'basicstyles',

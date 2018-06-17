@@ -60,6 +60,15 @@ if (isset($type)) {
             <?= $form->select('ftTypeSizingMode', $sizingModes, $type->getSizingMode()) ?>
             <p class="help-block" id="sizingmode-help"><span><?= $sizingModeHelps[$type->getSizingMode()] ?></span></p>
         </div>
+        <div class="form-group">
+            <?= $form->label('', t('Options')) ?>
+            <div class="checkbox">
+                <label>
+                    <?= $form->checkbox('ftUpscalingEnabled', '1', $type->isUpscalingEnabled()) ?>
+                    <?= t('Allow upscaling images smaller than the thumbnail size') ?>
+                </label>
+            </div>
+        </div>
         <?php
         if ($allowConditionalThumbnails) {
             $selectedFileSets = [];
