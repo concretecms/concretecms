@@ -1,31 +1,53 @@
 <?php
-namespace Concrete\Controller\Dialog\Search\Preset;
+namespace Concrete\Controller\Dialog\Express\Preset;
 
-use Concrete\Controller\Backend\UserInterface;
+use Concrete\Controller\Dialog\Search\Preset\Delete as PresetDelete;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Application\EditResponse;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Permissions;
 
-abstract class Delete extends UserInterface
+class Delete extends PresetDelete
 {
-    protected $viewPath = '/dialogs/search/preset/delete';
-    protected $validationToken = 'remove_search_preset';
-    public $objectID = null;
-
-    public function view()
+    protected function getEntity()
     {
-        $app = Application::getFacadeApplication();
-        $searchPreset = null;
-        $securityHelper = $app->make('helper/security');
-        $presetID = $securityHelper->sanitizeInt($this->request->query->get('presetID'));
-        $searchEntity = $this->getSavedSearchEntity();
-        if (!empty($presetID) && is_object($searchEntity)) {
-            $searchPreset = $searchEntity->findOneById($presetID);
+        $entity = null;
+        $em = $this->app->make(EntityManager::class);
+        if (is_object($em)) {
+            $entityID = $this->request->query->get('objectID'); 
+            if (empty($entityID) && !empty($this->request->request->get('objectID'))) {
+                $entityID = $this->request->request->get('objectID');
+            }
+            $entity = $em->getRepository('Concrete\Core\Entity\Express\Entity')->findOneById($entityID);
+            if (is_object($entity)) {
+                $this->objectID = $entityID;
+            }
         }
-        $this->set('searchPreset', $searchPreset);
-        $this->set('form', $app->make('helper/form'));
-        $this->set('token', $app->make('helper/validation/token'));
+
+        return $entity;
+    }
+
+    protected function canAccess()
+    {
+        $entity = $this->getEntity();
+        if (is_object($entity)) {
+            $ep = new Permissions($entity);
+
+            return $ep->canViewExpressEntries();
+        }
+
+        return false;
+    }
+
+    public function getSavedSearchEntity()
+    {
+        $em = $this->app->make(EntityManager::class);
+        if (is_object($em)) {
+            return $em->getRepository('Concrete\Core\Entity\Search\SavedExpressSearch');
+        }
+
+        return null;
     }
 
     public function remove_search_preset()
@@ -45,7 +67,7 @@ abstract class Delete extends UserInterface
                         $response = new EditResponse();
                         $response->setMessage(t('%s deleted successfully.', $searchPreset->getPresetName()));
                         $response->setAdditionalDataAttribute('presetID', $presetID);
-                        $em = $this->app->make(EntityManager::class);
+                        $em = $this->app->make(\Doctrine\ORM\EntityManager::class);
                         $em->remove($searchPreset);
                         $em->flush();
 
@@ -57,10 +79,5 @@ abstract class Delete extends UserInterface
         $this->error->add(t('You can\'t delete this search preset.'));
 
         return new JsonResponse($this->error);
-    }
-
-    public function getObjectID()
-    {
-        return (string) $this->objectID;
     }
 }

@@ -7,14 +7,13 @@ use Concrete\Core\Express\Entry\Search\Result\Result;
 use Concrete\Core\Express\EntryList;
 use Concrete\Core\Express\Search\ColumnSet\DefaultSet;
 use Concrete\Core\Search\AbstractSearchProvider;
-use Concrete\Core\Search\ProviderInterface;
 use Concrete\Core\Express\Search\ColumnSet\Available;
 use Concrete\Core\Express\Search\ColumnSet\ColumnSet;
+use Concrete\Core\Entity\Search\SavedExpressSearch;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 class SearchProvider extends AbstractSearchProvider
 {
-
     protected $category;
     protected $entity;
     protected $columnSet;
@@ -71,6 +70,7 @@ class SearchProvider extends AbstractSearchProvider
             }
             $this->columnSet = $current;
         }
+
         return $this->columnSet;
     }
 
@@ -88,10 +88,9 @@ class SearchProvider extends AbstractSearchProvider
     {
         return new DefaultSet($this->category);
     }
-    
-    function getSavedSearch()
-    {
-        // TODO: Implement getSavedSearch() method.
-    }
 
+    public function getSavedSearch()
+    {
+        return new SavedExpressSearch();
+    }
 }

@@ -11,6 +11,7 @@ abstract class Edit extends UserInterface
 {
     protected $viewPath = '/dialogs/search/preset/edit';
     protected $validationToken = 'edit_search_preset';
+    public $objectID = null;
 
     public function view()
     {
@@ -59,5 +60,10 @@ abstract class Edit extends UserInterface
         $this->error->add(t('You can\'t edit this search preset.'));
 
         return new JsonResponse($this->error);
+    }
+
+    public function getObjectID()
+    {
+        return (string) $this->objectID;
     }
 }

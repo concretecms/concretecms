@@ -75,6 +75,7 @@
         <div data-dialog="save-search-preset" class="ccm-ui">
             <form data-form="save-preset" action="<?=$controller->action('save_preset')?>" method="post">
                 <?= $form->hidden('presetID'); ?>
+                <?= $form->hidden('objectID', $controller->getObjectID()); ?>
                 <div class="form-group">
                     <?=$form->label('presetName', t('Name'))?>
                     <?=$form->text('presetName')?>
