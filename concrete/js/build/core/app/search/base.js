@@ -34,9 +34,15 @@
 		if ($element.find('script[data-template=search-form]').length) {
 			this._templateSearchForm = _.template($element.find('script[data-template=search-form]').html());
 		}
-		this._templateSearchResultsTableHead = _.template($element.find('script[data-template=search-results-table-head]').html());
-		this._templateSearchResultsTableBody = _.template($element.find('script[data-template=search-results-table-body]').html());
-		this._templateSearchResultsPagination = _.template($element.find('script[data-template=search-results-pagination]').html());
+		if ($element.find('script[data-template=search-results-table-head]').length) {
+			this._templateSearchResultsTableHead = _.template($element.find('script[data-template=search-results-table-head]').html());
+		}
+		if ($element.find('script[data-template=search-results-table-body]').length) {
+			this._templateSearchResultsTableBody = _.template($element.find('script[data-template=search-results-table-body]').html());
+		}
+		if ($element.find('script[data-template=search-results-pagination]').length) {
+			this._templateSearchResultsPagination = _.template($element.find('script[data-template=search-results-pagination]').html());
+		}
 		if (this.$menuTemplate.length) {
 			this._templateSearchResultsMenu = _.template(this.$menuTemplate.html());
 		}
@@ -276,19 +282,27 @@
 
 		cs.result = result;
 
-		cs.$resultsTableHead.html(cs._templateSearchResultsTableHead({'columns': result.columns}));
-		cs.$resultsTableBody.html(cs._templateSearchResultsTableBody({'items': result.items}));
-		cs.$resultsPagination.html(cs._templateSearchResultsPagination({'paginationTemplate': result.paginationTemplate}));
-		if (cs.$advancedFields) {
-			cs.$advancedFields.html('');
-			if (cs.$advancedFields.length) {
-				$.each(result.fields, function(i, field) {
-					cs.$advancedFields.append(cs._templateAdvancedSearchFieldRow({'field': field}));
-				});
+		if (result) {
+			if (cs.$resultsTableHead.length) {
+				cs.$resultsTableHead.html(cs._templateSearchResultsTableHead({'columns': result.columns}));
 			}
+			if (cs.$resultsTableBody.length) {
+				cs.$resultsTableBody.html(cs._templateSearchResultsTableBody({'items': result.items}));
+			}
+			if (cs.$resultsPagination.length) {
+				cs.$resultsPagination.html(cs._templateSearchResultsPagination({'paginationTemplate': result.paginationTemplate}));
+			}
+			if (cs.$advancedFields) {
+				cs.$advancedFields.html('');
+				if (cs.$advancedFields.length) {
+					$.each(result.fields, function(i, field) {
+						cs.$advancedFields.append(cs._templateAdvancedSearchFieldRow({'field': field}));
+					});
+				}
+			}
+	
+			cs.setupResetButton(result);
 		}
-
-		cs.setupResetButton(result);
 
 		if (options.selectMode == 'multiple') {
 			// We enable item selection, click to select single, command click for
@@ -408,7 +422,7 @@
 			);
 		});
 
-		if (my.result.query) {
+		if (my.result && my.result.query) {
 			$.each(my.result.query.fields, function(i, field) {
 				$container.append(
 					renderFieldRowTemplate({'field': field})
