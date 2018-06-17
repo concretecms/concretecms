@@ -9,8 +9,8 @@
                         <?= t('%s created by %s on %s', $draft['name'], $draft['user'], $draft['dateAdded']); ?>
                     </a>
                     <?php if (!empty($draft['deleteLink'])) { ?>
-                        <a class="dialog-launch btn btn-danger btn-xs" href="<?= $draft['deleteLink']; ?>" dialog-modal="true" dialog-title="<?= t('Delete Page'); ?>" dialog-width="400" dialog-height="250">
-                            <?= t('Delete Page'); ?>
+                        <a class="dialog-launch btn btn-danger btn-xs" href="<?= $draft['deleteLink']; ?>" dialog-modal="true" dialog-title="<?= t('Delete Draft'); ?>" dialog-width="400" dialog-height="250">
+                            <?= t('Delete Draft'); ?>
                         </a>
                     <?php } ?>
                 </div>
