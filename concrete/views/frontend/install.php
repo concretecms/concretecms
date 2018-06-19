@@ -737,6 +737,17 @@ switch ($installStep) {
 
                         <div class="media">
                             <div class="media-left" style="padding-right: 1em">
+                                <i class="fa fa-slack fa-2x"></i>
+                            </div>
+                            <div class="media-body">
+                                <h4 class="media-heading"><?= t('Slack') ?></h4>
+                                <?= t('In the <a href="%s" target="_blank">concrete5 Slack channels</a> you can get in touch with a lot of concrete5 lovers and developers.',
+                                    Config::get('concrete.urls.help.slack')) ?>
+                            </div>
+                        </div>
+
+                        <div class="media">
+                            <div class="media-left" style="padding-right: 1em">
                                 <i class="fa fa-book fa-2x"></i>
                             </div>
                             <div class="media-body">

@@ -593,6 +593,7 @@ return [
             'developer' => 'http://documentation.concrete5.org/developers',
             'user' => 'http://documentation.concrete5.org/editors',
             'forum' => 'http://www.concrete5.org/community/forums',
+            'slack' => 'https://www.concrete5.org/slack',
         ],
         'paths' => [
             'menu_help_service' => '/tools/get_remote_help_list/',
