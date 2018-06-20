@@ -268,13 +268,15 @@ abstract class Editor extends ConcreteObject
     /**
      * Replace javascript links with dummy links
      *
-     * @param $html
-     * @return mixed
+     * @param string $html
+     * @return string 
      */
     protected function removeJavascriptLinks($html)
     {
         // Use regex to replace javascript links with javascript:void
-        return preg_replace('/href=(\'|")\s*javascript/i', 'data-blocked=$1/', $html);
+        $html = preg_replace('/\bhref\s*=\s*["\']?\s*(javascript|data)\s*:/i', 'data-blocked-$0/', $html);
+
+        return $html;
     }
 
     /**
