@@ -265,7 +265,7 @@ class UsernameValidator
     {
         $username = $this->normalizeString($username);
         if ($username === '') {
-            $result |= static::E_INVALID_STRING;
+            $result = static::E_INVALID_STRING;
         } else {
             $result = static::E_OK;
             $usernameLength = mb_strlen($username);
@@ -293,9 +293,8 @@ class UsernameValidator
     {
         $username = $this->normalizeString($username);
         if ($username === '') {
-            $result |= static::E_INVALID_STRING;
+            $result = static::E_INVALID_STRING;
         } else {
-            $result = static::E_OK;
             $rx = $this->getValidCharactersRegularExpression();
             $match = preg_match($rx, $username);
             if ($match === false) {
