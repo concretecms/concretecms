@@ -25,7 +25,7 @@ $view->addFooterItem('<script type="text/javascript">$(function() { ConcreteTool
 if ($config->get('concrete.misc.enable_progressive_page_reindex') && $config->get('concrete.misc.do_page_reindex_check')) {
     $view->addFooterItem('<script type="text/javascript">$(function() { ccm_doPageReindexing(); });</script>');
 }
-$view->addHeaderItem('<meta name="viewport" content="width=device-width, initial-scale=1">');
+$view->addHeaderItem('<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">');
 $view->addFooterItem('<script type="text/javascript">$(function() { ConcreteDashboard.start(); });</script>');
 
 $u = new User();

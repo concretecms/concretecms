@@ -9,7 +9,7 @@ $view->requireAsset('css', 'font-awesome');
 $view->requireAsset('javascript', 'bootstrap/alert');
 $view->requireAsset('javascript', 'bootstrap/transition');
 $view->requireAsset('javascript', 'jquery');
-$view->addHeaderItem('<meta name="viewport" content="width=device-width, initial-scale=1">');
+$view->addHeaderItem('<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">');
 
 $showLogo = true;
 if (isset($c) && is_object($c)) {
