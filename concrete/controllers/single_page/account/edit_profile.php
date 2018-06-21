@@ -13,6 +13,7 @@ use Loader;
 use User;
 use UserAttributeKey;
 use Concrete\Core\Localization\Localization;
+use Concrete\Core\User\Validation\UsernameValidator;
 
 class EditProfile extends AccountPageController
 {
@@ -74,18 +75,17 @@ class EditProfile extends AccountPageController
     {
         $this->view();
         $ui = $this->get('profile');
+        /* @var \Concrete\Core\User\UserInfo $ui */
 
-        /** @var Application $app */
         $app = $this->app;
 
-        /** @var Strings $vsh */
         $vsh = $app->make('helper/validation/strings');
 
-        /** @var Validation $cvh */
         $cvh = $app->make('helper/concrete/validation');
 
-        /** @var Token $valt */
         $valt = $app->make('token');
+
+        $usernameValidator = $app->make(UsernameValidator::class);
 
         $data = $this->post();
 
@@ -107,11 +107,7 @@ class EditProfile extends AccountPageController
          * Username validation
          */
         if ($username = $this->post('uName')) {
-            if (!$cvh->username($username)) {
-                $this->error->add(t('Invalid username provided.'));
-            } elseif (!$cvh->isUniqueUsername($username)) {
-                $this->error->add(t("The username '%s' is already in use. Please choose another.", $username));
-            }
+            $this->error->add($usernameValidator->describeError($usernameValidator->check($username, $ui->getUserID())));
         }
 
         // password

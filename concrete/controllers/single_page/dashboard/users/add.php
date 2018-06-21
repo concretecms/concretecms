@@ -2,6 +2,7 @@
 namespace Concrete\Controller\SinglePage\Dashboard\Users;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\User\Validation\UsernameValidator;
 use Concrete\Core\Validation\ResponseInterface;
 use Config;
 use Imagine\Image\Box;
@@ -40,9 +41,10 @@ class Add extends DashboardPageController
     public function submit()
     {
         $assignment = PermissionKey::getByHandle('edit_user_properties')->getMyAssignment();
-        $vals = Loader::helper('validation/strings');
-        $valt = Loader::helper('validation/token');
-        $valc = Loader::helper('concrete/validation');
+        $vals = $this->app->make('helper/validation/strings');
+        $valt = $this->app->make('helper/validation/token');
+        $valc = $this->app->make('helper/concrete/validation');
+        $usernameValidator = $this->app->make(UsernameValidator::class);
 
         $username = trim($_POST['uName']);
         $username = preg_replace("/\s+/", " ", $username);
@@ -56,29 +58,7 @@ class Add extends DashboardPageController
             $this->error->add(t("The email address '%s' is already in use. Please choose another.", $_POST['uEmail']));
         }
 
-        if (strlen($username) < Config::get('concrete.user.username.minimum')) {
-            $this->error->add(t('A username must be at least %s characters long.', Config::get('concrete.user.username.minimum')));
-        }
-
-        if (strlen($username) > Config::get('concrete.user.username.maximum')) {
-            $this->error->add(t('A username cannot be more than %s characters long.', Config::get('concrete.user.username.maximum')));
-        }
-
-        if (strlen($username) >= Config::get('concrete.user.username.minimum') && !$valc->username($username)) {
-            if (Config::get('concrete.user.username.allow_spaces')) {
-                $this->error->add(t('A username may only contain letters, numbers, spaces (not at the beginning/end), dots (not at the beginning/end), underscores (not at the beginning/end).'));
-            } else {
-                $this->error->add(t('A username may only contain letters, numbers, dots (not at the beginning/end), underscores (not at the beginning/end).'));
-            }
-        }
-
-        if (!$valc->isUniqueUsername($username)) {
-            $this->error->add(t("The username '%s' already exists. Please choose another", $username));
-        }
-
-        if ($username == USER_SUPER) {
-            $this->error->add(t('Invalid Username'));
-        }
+        $this->error->add($usernameValidator->describeError($usernameValidator->check($username)));
 
         \Core::make('validator/password')->isValid($password, $this->error);
 

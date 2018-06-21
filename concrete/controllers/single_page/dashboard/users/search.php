@@ -7,6 +7,7 @@ use Concrete\Core\Localization\Localization;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Csv\Export\UserExporter;
 use Concrete\Core\User\EditResponse as UserEditResponse;
+use Concrete\Core\User\Validation\UsernameValidator;
 use Concrete\Core\Workflow\Progress\UserProgress as UserWorkflowProgress;
 use Imagine\Image\Box;
 use Exception;
@@ -22,6 +23,9 @@ use UserInfo;
 
 class Search extends DashboardPageController
 {
+    /**
+     * @var \Concrete\Core\User\UserInfo|false
+     */
     protected $user = false;
 
     public function update_avatar($uID = false)
@@ -246,49 +250,13 @@ class Search extends DashboardPageController
     public function update_username($uID = false)
     {
         $this->setupUser($uID);
-        if ($this->canEditUserName) {
-            $config = $this->app->make('config');
+        if ($this->user &&  $this->canEditUserName) {
+            $usernameValidator = $this->app->make(UsernameValidator::class);
             $username = $this->post('value');
             if (!$this->app->make('helper/validation/token')->validate()) {
                 $this->error->add($this->app->make('helper/validation/token')->getErrorMessage());
             }
-            if (strlen($username) < $config->get('concrete.user.username.minimum')) {
-                $this->error->add(
-                    t(
-                        'A username must be at least %s characters long.',
-                        $config->get('concrete.user.username.minimum')
-                    )
-                );
-            }
-
-            if (strlen($username) > $config->get('concrete.user.username.maximum')) {
-                $this->error->add(
-                    t(
-                        'A username cannot be more than %s characters long.',
-                        $config->get('concrete.user.username.maximum')
-                    )
-                );
-            }
-
-            if (strlen($username) >= $config->get('concrete.user.username.minimum') && !$this->app->make('helper/concrete/validation')->username($username)) {
-                if ($config->get('concrete.user.username.allow_spaces')) {
-                    $this->error->add(
-                        t(
-                            'A username may only contain letters, numbers, spaces, dots (not at the beginning/end), underscores (not at the beginning/end).'
-                        )
-                    );
-                } else {
-                    $this->error->add(
-                        t(
-                            'A username may only contain letters, numbers, dots (not at the beginning/end), underscores (not at the beginning/end).'
-                        )
-                    );
-                }
-            }
-            $uo = $this->user->getUserObject();
-            if (strcasecmp($uo->getUserName(), $username) && !$this->app->make('helper/concrete/validation')->isUniqueUsername($username)) {
-                $this->error->add(t("The username '%s' already exists. Please choose another", $username));
-            }
+            $this->error->add($usernameValidator->describeError($usernameValidator->check($username, $this->user->getUserID())));
 
             $sr = new UserEditResponse();
             $sr->setUser($this->user);
