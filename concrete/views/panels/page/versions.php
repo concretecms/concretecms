@@ -22,14 +22,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			<% if (cvIsApproved) { %>
 				<p><span class="label label-info"><?=t('Live')?></span></p>
 			<% } %>
-			<p><span class="ccm-panel-page-versions-version-timestamp"><%-cvDateVersionCreated%></span></p>
+			<p><span class="ccm-panel-page-versions-version-timestamp"><?= t('Created on'); ?> <%-cvDateVersionCreated%></span></p>
 			<% if (cvComments) { %>
 				<p class="ccm-panel-page-versions-description"><%-cvComments%></p>
 			<% } %>
 			<div class="ccm-panel-page-versions-more-info">
 				<p><?=t('Edit by')?> <%-cvAuthorUserName%></p>
 				<% if (cvIsApproved == 1) { %>
-					<p><?=t('Approved by')?> <%-cvApproverUserName%></p>
+					<p><?=t('Approved on')?> <%-cvApprovedDate%> <?= t('by'); ?> <%-cvApproverUserName%></p>
 				<% } %>
 				<% if (cvIsScheduled == 1) { %>
 				<p><?=t('Scheduled by')?> <%-cvApproverUserName%> <?=tc(/*i18n: In the sentence Scheduled by USERNAME for DATE/TIME*/'ScheduledByFor', ' for ')?> <%-cvPublishDate%></p>
