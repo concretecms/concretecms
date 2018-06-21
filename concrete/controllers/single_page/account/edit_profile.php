@@ -1,19 +1,16 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Account;
 
-use Concrete\Core\Error\UserMessageException;
-use Concrete\Core\Page\Controller\AccountPageController;
-use Concrete\Core\Validation\ResponseInterface;
-use Config;
-use UserInfo;
-use Exception;
 use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Authentication\AuthenticationTypeFailureException;
-use Loader;
-use User;
-use UserAttributeKey;
+use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Localization\Localization;
+use Concrete\Core\Page\Controller\AccountPageController;
 use Concrete\Core\User\Validation\UsernameValidator;
+use Config;
+use Exception;
+use UserAttributeKey;
 
 class EditProfile extends AccountPageController
 {
@@ -24,7 +21,7 @@ class EditProfile extends AccountPageController
             throw new UserMessageException(t('You must be logged in to access this page.'));
         }
 
-        $locales = array();
+        $locales = [];
         $languages = Localization::getAvailableInterfaceLanguages();
         if (count($languages) > 0) {
             array_unshift($languages, Localization::BASE_LOCALE);
@@ -34,7 +31,7 @@ class EditProfile extends AccountPageController
                 $locales[$lang] = \Punic\Language::getName($lang, $lang);
             }
             asort($locales);
-            $locales = array_merge(array('' => tc('Default locale', '** Default')), $locales);
+            $locales = array_merge(['' => tc('Default locale', '** Default')], $locales);
         }
         $this->set('locales', $locales);
     }
@@ -54,7 +51,7 @@ class EditProfile extends AccountPageController
         }
         if ($method != 'callback') {
             if (!is_array($at->controller->apiMethods) || !in_array($method, $at->controller->apiMethods)) {
-                throw new UserMessageException("Invalid method.");
+                throw new UserMessageException('Invalid method.');
             }
         }
         try {
@@ -103,9 +100,7 @@ class EditProfile extends AccountPageController
             }
         }
 
-        /**
-         * Username validation
-         */
+        // Username validation
         if ($username = $this->post('uName')) {
             $this->error->add($usernameValidator->describeError($usernameValidator->check($username, $ui->getUserID())));
         }
@@ -132,9 +127,6 @@ class EditProfile extends AccountPageController
             $controller = $uak->getController();
             $validator = $controller->getValidator();
             $response = $validator->validateSaveValueRequest($controller, $this->request, $uak->isAttributeKeyRequiredOnProfile());
-            /**
-             * @var $response ResponseInterface
-             */
             if (!$response->isValid()) {
                 $error = $response->getErrorObject();
                 $this->error->add($error);
@@ -149,7 +141,7 @@ class EditProfile extends AccountPageController
 
             $ui->saveUserAttributesForm($aks);
             $ui->update($data);
-            $this->redirect("/account/edit_profile", "save_complete");
+            $this->redirect('/account/edit_profile', 'save_complete');
         }
     }
 }

@@ -1,25 +1,24 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\Users;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\User\Validation\UsernameValidator;
-use Concrete\Core\Validation\ResponseInterface;
 use Config;
+use Group;
+use GroupList;
 use Imagine\Image\Box;
 use Loader;
-use UserInfo;
+use Localization;
 use PermissionKey;
 use Permissions;
 use UserAttributeKey;
-use Group;
-use Localization;
-use GroupList;
+use UserInfo;
 
 class Add extends DashboardPageController
 {
     public function view()
     {
-        $loc = Localization::getInstance();
         $locales = Localization::getAvailableInterfaceLanguageDescriptions();
         $attribs = UserAttributeKey::getRegistrationList();
         $assignment = PermissionKey::getByHandle('edit_user_properties')->getMyAssignment();
@@ -47,7 +46,7 @@ class Add extends DashboardPageController
         $usernameValidator = $this->app->make(UsernameValidator::class);
 
         $username = trim($_POST['uName']);
-        $username = preg_replace("/\s+/", " ", $username);
+        $username = preg_replace("/\s+/", ' ', $username);
         $_POST['uName'] = $username;
 
         $password = $_POST['uPassword'];
@@ -74,9 +73,6 @@ class Add extends DashboardPageController
             $response = $validator->validateSaveValueRequest(
                 $controller, $this->request, $uak->isAttributeKeyRequiredOnRegister()
             );
-            /**
-             * @var $response ResponseInterface
-             */
             if (!$response->isValid()) {
                 $error = $response->getErrorObject();
                 $this->error->add($error);
@@ -85,10 +81,9 @@ class Add extends DashboardPageController
 
         if (!$this->error->has()) {
             // do the registration
-            $data = array('uName' => $username, 'uPassword' => $password, 'uEmail' => $_POST['uEmail'], 'uDefaultLanguage' => $_POST['uDefaultLanguage']);
+            $data = ['uName' => $username, 'uPassword' => $password, 'uEmail' => $_POST['uEmail'], 'uDefaultLanguage' => $_POST['uDefaultLanguage']];
             $uo = UserInfo::add($data);
             if (is_object($uo)) {
-                $av = Loader::helper('concrete/avatar');
                 if ($assignment->allowEditAvatar()) {
                     if (is_uploaded_file($_FILES['uAvatar']['tmp_name'])) {
                         $image = \Image::open($_FILES['uAvatar']['tmp_name']);
@@ -100,7 +95,7 @@ class Add extends DashboardPageController
                     }
                 }
 
-                $saveAttributes = array();
+                $saveAttributes = [];
                 foreach ($aks as $uak) {
                     if (in_array($uak->getAttributeKeyID(), $assignment->getAttributesAllowedArray())) {
                         $saveAttributes[] = $uak;
@@ -111,7 +106,7 @@ class Add extends DashboardPageController
                     $uo->saveUserAttributesForm($saveAttributes);
                 }
 
-                $gIDs = array();
+                $gIDs = [];
                 if (is_array($_POST['gID'])) {
                     foreach ($_POST['gID'] as $gID) {
                         $gx = Group::getByID($gID);

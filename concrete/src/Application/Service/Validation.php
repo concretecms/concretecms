@@ -1,16 +1,17 @@
 <?php
+
 namespace Concrete\Core\Application\Service;
 
-use Loader;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\Validation\UsernameValidator;
+use Loader;
 
 class Validation
 {
     /**
      * @deprecated Use \Core::make(\Concrete\Core\User\Validation\UsernameValidator::class)->check()
      *
-     * @param string $username
+     * @param string $uName
      *
      * @return bool
      */
@@ -25,15 +26,16 @@ class Validation
     /**
      * Checks whether a passed email address is unique.
      *
-     * @return bool
      *
      * @param string $uEmail
+     *
+     * @return bool
      */
     public function isUniqueEmail($uEmail)
     {
         $db = Loader::db();
-        $q = "select uID from Users where uEmail = ?";
-        $r = $db->getOne($q, array($uEmail));
+        $q = 'select uID from Users where uEmail = ?';
+        $r = $db->getOne($q, [$uEmail]);
         if ($r) {
             return false;
         } else {
