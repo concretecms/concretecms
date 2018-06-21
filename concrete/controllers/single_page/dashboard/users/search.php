@@ -1,19 +1,20 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\Users;
 
 use Concrete\Controller\Element\Search\Users\Header;
 use Concrete\Core\Attribute\Category\CategoryService;
+use Concrete\Core\Csv\Export\UserExporter;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Concrete\Core\Csv\Export\UserExporter;
 use Concrete\Core\User\EditResponse as UserEditResponse;
+use Concrete\Core\User\Validation\UsernameValidator;
 use Concrete\Core\Workflow\Progress\UserProgress as UserWorkflowProgress;
-use Imagine\Image\Box;
 use Exception;
-use Core;
+use Imagine\Image\Box;
 use League\Csv\Writer;
-use Permissions;
 use PermissionKey;
+use Permissions;
 use stdClass;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use User;
@@ -22,6 +23,9 @@ use UserInfo;
 
 class Search extends DashboardPageController
 {
+    /**
+     * @var \Concrete\Core\User\UserInfo|false
+     */
     protected $user = false;
 
     public function update_avatar($uID = false)
@@ -61,48 +65,6 @@ class Search extends DashboardPageController
         $html = $av->output();
         $sr->setAdditionalDataAttribute('imageHTML', $html);
         $sr->outputJSON();
-    }
-
-    protected function setupUser($uID)
-    {
-        $me = new User();
-        $ui = UserInfo::getByID($this->app->make('helper/security')->sanitizeInt($uID));
-        if (is_object($ui)) {
-            $up = new Permissions($ui);
-            if (!$up->canViewUser()) {
-                throw new Exception(t('Access Denied.'));
-            }
-            $tp = new Permissions();
-            $pke = PermissionKey::getByHandle('edit_user_properties');
-            $this->user = $ui;
-            $this->assignment = $pke->getMyAssignment();
-            $this->canEdit = $up->canEditUser();
-            if ($this->canEdit) {
-                $this->canActivateUser = $tp->canActivateUser() && $me->getUserID() != $ui->getUserID();
-                $this->canEditAvatar = $this->assignment->allowEditAvatar();
-                $this->canEditUserName = $this->assignment->allowEditUserName();
-                $this->canEditLanguage = $this->assignment->allowEditDefaultLanguage();
-                $this->canEditTimezone = $this->assignment->allowEditTimezone();
-                $this->canEditEmail = $this->assignment->allowEditEmail();
-                $this->canEditPassword = $this->assignment->allowEditPassword();
-                $this->canSignInAsUser = $tp->canSudo() && $me->getUserID() != $ui->getUserID();
-                $this->canDeleteUser = $tp->canDeleteUser() && $me->getUserID() != $ui->getUserID();
-                $this->canAddGroup = $tp->canAccessGroupSearch();
-                $this->allowedEditAttributes = $this->assignment->getAttributesAllowedArray();
-            }
-            $this->set('user', $ui);
-            $this->set('canEditAvatar', $this->canEditAvatar);
-            $this->set('canEditUserName', $this->canEditUserName);
-            $this->set('canEditEmail', $this->canEditEmail);
-            $this->set('canEditPassword', $this->canEditPassword);
-            $this->set('canEditTimezone', $this->canEditTimezone);
-            $this->set('canEditLanguage', $this->canEditLanguage);
-            $this->set('canActivateUser', $this->canActivateUser);
-            $this->set('canSignInAsUser', $this->canSignInAsUser);
-            $this->set('canDeleteUser', $this->canDeleteUser);
-            $this->set('allowedEditAttributes', $this->allowedEditAttributes);
-            $this->set('canAddGroup', $this->canAddGroup);
-        }
     }
 
     public function update_status($uID = false)
@@ -246,49 +208,13 @@ class Search extends DashboardPageController
     public function update_username($uID = false)
     {
         $this->setupUser($uID);
-        if ($this->canEditUserName) {
-            $config = $this->app->make('config');
+        if ($this->user && $this->canEditUserName) {
+            $usernameValidator = $this->app->make(UsernameValidator::class);
             $username = $this->post('value');
             if (!$this->app->make('helper/validation/token')->validate()) {
                 $this->error->add($this->app->make('helper/validation/token')->getErrorMessage());
             }
-            if (strlen($username) < $config->get('concrete.user.username.minimum')) {
-                $this->error->add(
-                    t(
-                        'A username must be at least %s characters long.',
-                        $config->get('concrete.user.username.minimum')
-                    )
-                );
-            }
-
-            if (strlen($username) > $config->get('concrete.user.username.maximum')) {
-                $this->error->add(
-                    t(
-                        'A username cannot be more than %s characters long.',
-                        $config->get('concrete.user.username.maximum')
-                    )
-                );
-            }
-
-            if (strlen($username) >= $config->get('concrete.user.username.minimum') && !$this->app->make('helper/concrete/validation')->username($username)) {
-                if ($config->get('concrete.user.username.allow_spaces')) {
-                    $this->error->add(
-                        t(
-                            'A username may only contain letters, numbers, spaces, dots (not at the beginning/end), underscores (not at the beginning/end).'
-                        )
-                    );
-                } else {
-                    $this->error->add(
-                        t(
-                            'A username may only contain letters, numbers, dots (not at the beginning/end), underscores (not at the beginning/end).'
-                        )
-                    );
-                }
-            }
-            $uo = $this->user->getUserObject();
-            if (strcasecmp($uo->getUserName(), $username) && !$this->app->make('helper/concrete/validation')->isUniqueUsername($username)) {
-                $this->error->add(t("The username '%s' already exists. Please choose another", $username));
-            }
+            $this->error->add($usernameValidator->describeError($usernameValidator->check($username, $this->user->getUserID())));
 
             $sr = new UserEditResponse();
             $sr->setUser($this->user);
@@ -374,9 +300,10 @@ class Search extends DashboardPageController
             $sr = new UserEditResponse();
             $sr->setUser($this->user);
             if (!$this->error->has()) {
-                $data['uPassword'] = $password;
-                $data['uPasswordConfirm'] = $passwordConfirm;
-                $this->user->update($data);
+                $this->user->update([
+                    'uPassword' => $password,
+                    'uPasswordConfirm' => $passwordConfirm,
+                ]);
                 $sr->setMessage(t('Password updated successfully.'));
             } else {
                 $sr->setError($this->error);
@@ -500,14 +427,14 @@ class Search extends DashboardPageController
 
             switch ($status) {
                 case 'activated':
-                    if (in_array("activate", $workflowRequestActions)) {
+                    if (in_array('activate', $workflowRequestActions)) {
                         $this->set('message', t('User activation workflow initiated.'));
                     } else {
                         $this->set('success', t('User activated successfully.'));
                     }
                     break;
                 case 'deactivated':
-                    if (in_array("deactivate", $workflowRequestActions)) {
+                    if (in_array('deactivate', $workflowRequestActions)) {
                         $this->set('message', t('User deactivation workflow initiated.'));
                     } else {
                         $this->set('message', t('User deactivated successfully.'));
@@ -562,19 +489,19 @@ class Search extends DashboardPageController
     {
         $search = $this->app->make('Concrete\Controller\Search\Users');
         $result = $search->getCurrentSearchObject();
-        
+
         $headers = [
             'Content-Type' => 'text/csv',
-            'Content-Disposition' => 'attachment; filename=concrete5_users.csv'
+            'Content-Disposition' => 'attachment; filename=concrete5_users.csv',
         ];
         $app = $this->app;
 
         return StreamedResponse::create(
-            function() use ($app, $result) {
+            function () use ($app, $result) {
                 $writer = $app->build(
                     UserExporter::class,
                     [
-                        'writer'=> Writer::createFromPath('php://output', 'w')
+                        'writer' => Writer::createFromPath('php://output', 'w'),
                     ]
                 );
 
@@ -583,5 +510,47 @@ class Search extends DashboardPageController
             },
             200,
             $headers);
+    }
+
+    protected function setupUser($uID)
+    {
+        $me = new User();
+        $ui = UserInfo::getByID($this->app->make('helper/security')->sanitizeInt($uID));
+        if (is_object($ui)) {
+            $up = new Permissions($ui);
+            if (!$up->canViewUser()) {
+                throw new Exception(t('Access Denied.'));
+            }
+            $tp = new Permissions();
+            $pke = PermissionKey::getByHandle('edit_user_properties');
+            $this->user = $ui;
+            $this->assignment = $pke->getMyAssignment();
+            $this->canEdit = $up->canEditUser();
+            if ($this->canEdit) {
+                $this->canActivateUser = $tp->canActivateUser() && $me->getUserID() != $ui->getUserID();
+                $this->canEditAvatar = $this->assignment->allowEditAvatar();
+                $this->canEditUserName = $this->assignment->allowEditUserName();
+                $this->canEditLanguage = $this->assignment->allowEditDefaultLanguage();
+                $this->canEditTimezone = $this->assignment->allowEditTimezone();
+                $this->canEditEmail = $this->assignment->allowEditEmail();
+                $this->canEditPassword = $this->assignment->allowEditPassword();
+                $this->canSignInAsUser = $tp->canSudo() && $me->getUserID() != $ui->getUserID();
+                $this->canDeleteUser = $tp->canDeleteUser() && $me->getUserID() != $ui->getUserID();
+                $this->canAddGroup = $tp->canAccessGroupSearch();
+                $this->allowedEditAttributes = $this->assignment->getAttributesAllowedArray();
+            }
+            $this->set('user', $ui);
+            $this->set('canEditAvatar', $this->canEditAvatar);
+            $this->set('canEditUserName', $this->canEditUserName);
+            $this->set('canEditEmail', $this->canEditEmail);
+            $this->set('canEditPassword', $this->canEditPassword);
+            $this->set('canEditTimezone', $this->canEditTimezone);
+            $this->set('canEditLanguage', $this->canEditLanguage);
+            $this->set('canActivateUser', $this->canActivateUser);
+            $this->set('canSignInAsUser', $this->canSignInAsUser);
+            $this->set('canDeleteUser', $this->canDeleteUser);
+            $this->set('allowedEditAttributes', $this->allowedEditAttributes);
+            $this->set('canAddGroup', $this->canAddGroup);
+        }
     }
 }

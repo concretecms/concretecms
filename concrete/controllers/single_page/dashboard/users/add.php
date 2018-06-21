@@ -1,24 +1,24 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\Users;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Concrete\Core\Validation\ResponseInterface;
+use Concrete\Core\User\Validation\UsernameValidator;
 use Config;
+use Group;
+use GroupList;
 use Imagine\Image\Box;
 use Loader;
-use UserInfo;
+use Localization;
 use PermissionKey;
 use Permissions;
 use UserAttributeKey;
-use Group;
-use Localization;
-use GroupList;
+use UserInfo;
 
 class Add extends DashboardPageController
 {
     public function view()
     {
-        $loc = Localization::getInstance();
         $locales = Localization::getAvailableInterfaceLanguageDescriptions();
         $attribs = UserAttributeKey::getRegistrationList();
         $assignment = PermissionKey::getByHandle('edit_user_properties')->getMyAssignment();
@@ -40,12 +40,13 @@ class Add extends DashboardPageController
     public function submit()
     {
         $assignment = PermissionKey::getByHandle('edit_user_properties')->getMyAssignment();
-        $vals = Loader::helper('validation/strings');
-        $valt = Loader::helper('validation/token');
-        $valc = Loader::helper('concrete/validation');
+        $vals = $this->app->make('helper/validation/strings');
+        $valt = $this->app->make('helper/validation/token');
+        $valc = $this->app->make('helper/concrete/validation');
+        $usernameValidator = $this->app->make(UsernameValidator::class);
 
         $username = trim($_POST['uName']);
-        $username = preg_replace("/\s+/", " ", $username);
+        $username = preg_replace("/\s+/", ' ', $username);
         $_POST['uName'] = $username;
 
         $password = $_POST['uPassword'];
@@ -56,29 +57,7 @@ class Add extends DashboardPageController
             $this->error->add(t("The email address '%s' is already in use. Please choose another.", $_POST['uEmail']));
         }
 
-        if (strlen($username) < Config::get('concrete.user.username.minimum')) {
-            $this->error->add(t('A username must be at least %s characters long.', Config::get('concrete.user.username.minimum')));
-        }
-
-        if (strlen($username) > Config::get('concrete.user.username.maximum')) {
-            $this->error->add(t('A username cannot be more than %s characters long.', Config::get('concrete.user.username.maximum')));
-        }
-
-        if (strlen($username) >= Config::get('concrete.user.username.minimum') && !$valc->username($username)) {
-            if (Config::get('concrete.user.username.allow_spaces')) {
-                $this->error->add(t('A username may only contain letters, numbers, spaces (not at the beginning/end), dots (not at the beginning/end), underscores (not at the beginning/end).'));
-            } else {
-                $this->error->add(t('A username may only contain letters, numbers, dots (not at the beginning/end), underscores (not at the beginning/end).'));
-            }
-        }
-
-        if (!$valc->isUniqueUsername($username)) {
-            $this->error->add(t("The username '%s' already exists. Please choose another", $username));
-        }
-
-        if ($username == USER_SUPER) {
-            $this->error->add(t('Invalid Username'));
-        }
+        $this->error->add($usernameValidator->describeError($usernameValidator->check($username)));
 
         \Core::make('validator/password')->isValid($password, $this->error);
 
@@ -94,9 +73,6 @@ class Add extends DashboardPageController
             $response = $validator->validateSaveValueRequest(
                 $controller, $this->request, $uak->isAttributeKeyRequiredOnRegister()
             );
-            /**
-             * @var $response ResponseInterface
-             */
             if (!$response->isValid()) {
                 $error = $response->getErrorObject();
                 $this->error->add($error);
@@ -105,10 +81,9 @@ class Add extends DashboardPageController
 
         if (!$this->error->has()) {
             // do the registration
-            $data = array('uName' => $username, 'uPassword' => $password, 'uEmail' => $_POST['uEmail'], 'uDefaultLanguage' => $_POST['uDefaultLanguage']);
+            $data = ['uName' => $username, 'uPassword' => $password, 'uEmail' => $_POST['uEmail'], 'uDefaultLanguage' => $_POST['uDefaultLanguage']];
             $uo = UserInfo::add($data);
             if (is_object($uo)) {
-                $av = Loader::helper('concrete/avatar');
                 if ($assignment->allowEditAvatar()) {
                     if (is_uploaded_file($_FILES['uAvatar']['tmp_name'])) {
                         $image = \Image::open($_FILES['uAvatar']['tmp_name']);
@@ -120,7 +95,7 @@ class Add extends DashboardPageController
                     }
                 }
 
-                $saveAttributes = array();
+                $saveAttributes = [];
                 foreach ($aks as $uak) {
                     if (in_array($uak->getAttributeKeyID(), $assignment->getAttributesAllowedArray())) {
                         $saveAttributes[] = $uak;
@@ -131,7 +106,7 @@ class Add extends DashboardPageController
                     $uo->saveUserAttributesForm($saveAttributes);
                 }
 
-                $gIDs = array();
+                $gIDs = [];
                 if (is_array($_POST['gID'])) {
                     foreach ($_POST['gID'] as $gID) {
                         $gx = Group::getByID($gID);

@@ -8,7 +8,7 @@ return [
      */
     'version' => '8.4.1a2',
     'version_installed' => '8.4.1a2',
-    'version_db' => '20180615000000', // the key of the latest database migration
+    'version_db' => '20180621000000', // the key of the latest database migration
 
     /*
      * Installation status
@@ -740,7 +740,10 @@ return [
         'username' => [
             'maximum' => 64,
             'minimum' => 3,
-            'allow_spaces' => false,
+            'allowed_characters' => [
+                'boundary' => 'A-Za-z0-9',
+                'middle' => 'A-Za-z0-9_\.',
+            ],
         ],
         'password' => [
             'maximum' => 128,
