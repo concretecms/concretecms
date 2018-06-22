@@ -1,8 +1,9 @@
 <?php
+
 namespace Concrete\Core\Application\Service;
 
-use Loader;
 use Config;
+use Loader;
 
 class Validation
 {
@@ -16,8 +17,8 @@ class Validation
     public function isUniqueUsername($uName)
     {
         $db = Loader::db();
-        $q = "select uID from Users where uName = ?";
-        $r = $db->getOne($q, array($uName));
+        $q = 'select uID from Users where uName = ?';
+        $r = $db->getOne($q, [$uName]);
         if ($r) {
             return false;
         } else {
@@ -28,15 +29,16 @@ class Validation
     /**
      * Checks whether a passed email address is unique.
      *
-     * @return bool
      *
      * @param string $uEmail
+     *
+     * @return bool
      */
     public function isUniqueEmail($uEmail)
     {
         $db = Loader::db();
-        $q = "select uID from Users where uEmail = ?";
-        $r = $db->getOne($q, array($uEmail));
+        $q = 'select uID from Users where uEmail = ?';
+        $r = $db->getOne($q, [$uEmail]);
         if ($r) {
             return false;
         } else {

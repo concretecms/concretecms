@@ -1,11 +1,11 @@
 <?php
+
 namespace Concrete\Controller\SinglePage;
 
 use Concrete\Core\Attribute\Context\FrontendFormContext;
 use Concrete\Core\Attribute\Form\Renderer;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Page\Controller\PageController;
-use Concrete\Core\Validation\ResponseInterface;
 use Config;
 use Loader;
 use User;
@@ -132,9 +132,6 @@ class Register extends PageController
                     $this->request,
                     $uak->isAttributeKeyRequiredOnRegister()
                 );
-                /**
-                 * @var ResponseInterface
-                 */
                 if (!$response->isValid()) {
                     $error = $response->getErrorObject();
                     $e->add($error);
