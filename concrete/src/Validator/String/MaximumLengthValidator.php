@@ -42,7 +42,7 @@ class MaximumLengthValidator extends AbstractTranslatableValidator
         $this->setErrorString(
             self::E_TOO_LONG,
             function (MaximumLengthValidator $validator, $code, $mixed) {
-                return t('String \"%s\" must be at most %s characters long.', $mixed, $validator->getMaximumLength());
+                return t('String "%s" must be at most %s characters long.', $mixed, $validator->getMaximumLength());
             }
         );
     }

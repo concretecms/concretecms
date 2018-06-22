@@ -42,7 +42,7 @@ class MinimumLengthValidator extends AbstractTranslatableValidator
         $this->setErrorString(
             self::E_TOO_SHORT,
             function (MinimumLengthValidator $validator, $code, $mixed) {
-                return t('String \"%s\" must be at least %s characters long.', $mixed, $validator->getMinimumLength());
+                return t('String "%s" must be at least %s characters long.', $mixed, $validator->getMinimumLength());
             }
         );
     }

@@ -57,13 +57,13 @@ class UniqueUserNameValidator extends AbstractTranslatableValidator implements V
         $this->setErrorString(
             self::E_USERNAME_IN_USE,
             function (UniqueUserNameValidator $validator, $code, $mixed) {
-                return t('The username \"%s\" is already taken.', $mixed);
+                return t('The username "%s" is already taken.', $mixed);
             }
         );
         $this->setErrorString(
             self::E_USERNAME_USED_BY_ANOTHER_USER,
             function (UniqueUserNameValidator $validator, $code, $mixed) {
-                return t('The username \"%s\" is already used by another user.', $mixed);
+                return t('The username "%s" is already used by another user.', $mixed);
             }
         );
     }

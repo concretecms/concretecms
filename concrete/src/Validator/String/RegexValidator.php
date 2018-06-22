@@ -38,7 +38,7 @@ class RegexValidator extends AbstractTranslatableValidator
         $this->setErrorString(
             self::E_DOES_NOT_MATCH,
             function ($validator, $code, $mixed) {
-                return t('RegexError: String \"%s\" does not match expected pattern.', $mixed);
+                return t('RegexError: String "%s" does not match expected pattern.', $mixed);
             }
         );
     }
