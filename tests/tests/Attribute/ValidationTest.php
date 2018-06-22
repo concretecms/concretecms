@@ -73,7 +73,7 @@ class ValidationTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($error->has());
         $errors = $error->getList();
         $this->assertInstanceOf('\Concrete\Core\Error\ErrorList\Error\Error', $errors[0]);
-        $this->assertEquals('Invalid email address.', (string) $errors[0]);
+        $this->assertEquals('The email address "foo" is not valid.', (string) $errors[0]);
         $this->assertEquals(1, count($errors));
 
         $post['akID'][1]['value'] = 'test@test.com';
