@@ -925,6 +925,10 @@
               filename="/dashboard/system/registration/notification.php" pagetype="" description="" package="">
         </page>
 
+        <page name="User Deactivation Settings" path="/dashboard/system/registration/deactivation"
+              filename="/dashboard/system/registration/deactivation.php" pagetype="" description="" package="">
+        </page>
+
         <page name="Email" path="/dashboard/system/mail" filename="/dashboard/system/mail/view.php" pagetype=""
               description="Control how your site send and processes mail." package="">
             <attributes>
