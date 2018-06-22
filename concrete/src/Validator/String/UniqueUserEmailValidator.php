@@ -60,13 +60,13 @@ class UniqueUserEmailValidator extends EmailValidator implements ValidatorForSub
         $this->setErrorString(
             self::E_EMAIL_IN_USE,
             function (UniqueUserEmailValidator $validator, $code, $mixed) {
-                return t('The email address "%s" is already taken.', $mixed);
+                return t('The email address "%s" is already in use.', $mixed);
             }
         );
         $this->setErrorString(
             self::E_EMAIL_USED_BY_ANOTHER_USER,
             function (UniqueUserEmailValidator $validator, $code, $mixed) {
-                return t('The email address "%s" is already associated to another user.', $mixed);
+                return t('The email address "%s" is already in use.', $mixed);
             }
         );
     }
