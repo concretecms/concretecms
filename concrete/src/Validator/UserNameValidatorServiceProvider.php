@@ -61,7 +61,7 @@ class UserNameValidatorServiceProvider extends Provider
 
             $rxBoundary = '[' . $config->get('concrete.user.username.allowed_characters.boundary') . ']';
             $rxMiddle = '[' . $config->get('concrete.user.username.allowed_characters.middle') . ']';
-            $rx = "/^{$rxBoundary}({$rxMiddle}*{$rxBoundary})?$/";
+            $rx = "/^({$rxBoundary}({$rxMiddle}*{$rxBoundary})?)?$/";
             $rxValidator = $app->make(RegexValidator::class, [$rx]);
             $rxValidator->setRequirementString($rxValidator::E_DOES_NOT_MATCH, function($validator, $code) {
                 return t('The username can\'t contain special characters.');
