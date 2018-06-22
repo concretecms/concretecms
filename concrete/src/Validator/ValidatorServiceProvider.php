@@ -15,5 +15,6 @@ class ValidatorServiceProvider extends Provider
     {
         // Bind the manager interface to the default implementation
         $this->app->bind(ValidatorManagerInterface::class, ValidatorManager::class);
+        $this->app->bind(ValidatorForSubjectInterface::class, ValidatorForSubjectManager::class);
     }
 }
