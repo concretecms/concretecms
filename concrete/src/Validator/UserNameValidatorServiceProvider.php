@@ -59,8 +59,8 @@ class UserNameValidatorServiceProvider extends Provider
                 $manager->setValidator('maximum_length', $maximumLengthValidator);
             }
 
-            $rxBoundary = $config->get('concrete.user.username.allowed_characters.boundary');
-            $rxMiddle = $config->get('concrete.user.username.allowed_characters.middle');
+            $rxBoundary = '[' . $config->get('concrete.user.username.allowed_characters.boundary') . ']';
+            $rxMiddle = '[' . $config->get('concrete.user.username.allowed_characters.middle') . ']';
             $rx = "/^{$rxBoundary}({$rxMiddle}*{$rxBoundary})?$/";
             $rxValidator = $app->make(RegexValidator::class, [$rx]);
             $rxValidator->setRequirementString($rxValidator::E_DOES_NOT_MATCH, function($validator, $code) {
