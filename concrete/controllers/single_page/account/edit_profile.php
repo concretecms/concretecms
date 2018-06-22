@@ -71,17 +71,10 @@ class EditProfile extends AccountPageController
     {
         $this->view();
         $ui = $this->get('profile');
+        /* @var \Concrete\Core\User\UserInfo $ui */
 
-        /** @var Application $app */
         $app = $this->app;
 
-        /** @var Strings $vsh */
-        $vsh = $app->make('helper/validation/strings');
-
-        /** @var Validation $cvh */
-        $cvh = $app->make('helper/concrete/validation');
-
-        /** @var Token $valt */
         $valt = $app->make('token');
 
         $data = $this->post();
@@ -92,21 +85,12 @@ class EditProfile extends AccountPageController
 
         // validate the user's email
         $email = $this->post('uEmail');
-        if (!$vsh->email($email)) {
-            $this->error->add(t('Invalid email address provided.'));
-        } else {
-            if (!$cvh->isUniqueEmail($email) && $ui->getUserEmail() != $email) {
-                $this->error->add(t("The email address '%s' is already in use. Please choose another.", $email));
-            }
-        }
+        $app->make('validator/user/email')->isValidFor($email, $ui, $this->error);
 
         // Username validation
-        if ($username = $this->post('uName')) {
-            if (!$cvh->username($username)) {
-                $this->error->add(t('Invalid username provided.'));
-            } elseif (!$cvh->isUniqueUsername($username)) {
-                $this->error->add(t("The username '%s' is already in use. Please choose another.", $username));
-            }
+        $username = $this->post('uName');
+        if ($username) {
+            $app->make('validator/user/name')->isValidFor($username, $ui, $this->error);
         }
 
         // password
@@ -114,7 +98,7 @@ class EditProfile extends AccountPageController
             $passwordNew = $data['uPasswordNew'];
             $passwordNewConfirm = $data['uPasswordNewConfirm'];
 
-            \Core::make('validator/password')->isValid($passwordNew, $this->error);
+            $app->make('validator/password')->isValid($passwordNew, $this->error);
 
             if ($passwordNew) {
                 if ($passwordNew != $passwordNewConfirm) {
