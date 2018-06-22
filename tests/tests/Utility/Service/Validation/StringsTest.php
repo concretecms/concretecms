@@ -18,7 +18,7 @@ class StringsTest extends PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->object = new \Concrete\Core\Utility\Service\Validation\Strings();
+        $this->object = \Core::make(\Concrete\Core\Utility\Service\Validation\Strings::class);
     }
 
     /**
