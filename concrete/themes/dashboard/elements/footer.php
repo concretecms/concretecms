@@ -1,5 +1,5 @@
 <?php
-if ($showPrivacyPolicyNotice) { ?>
+if (!empty($showPrivacyPolicyNotice)) { ?>
 <div class="ccm-dashboard-privacy-policy">
     <div class="ccm-dashboard-privacy-policy-inner">
         <div class="container-fluid">
