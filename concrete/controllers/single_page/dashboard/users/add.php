@@ -38,9 +38,6 @@ class Add extends DashboardPageController
     public function submit()
     {
         $assignment = PermissionKey::getByHandle('edit_user_properties')->getMyAssignment();
-        $vals = $this->app->make('helper/validation/strings');
-        $valt = $this->app->make('helper/validation/token');
-        $valc = $this->app->make('helper/concrete/validation');
 
         $username = trim($_POST['uName']);
         $username = preg_replace("/\s+/", ' ', $username);
@@ -48,40 +45,14 @@ class Add extends DashboardPageController
 
         $password = $_POST['uPassword'];
 
-        if (!$vals->email($_POST['uEmail'])) {
-            $this->error->add(t('Invalid email address provided.'));
-        } elseif (!$valc->isUniqueEmail($_POST['uEmail'])) {
-            $this->error->add(t("The email address '%s' is already in use. Please choose another.", $_POST['uEmail']));
-        }
+        $this->app->make('validator/user/name')->isValid($username, $this->error);
 
-        if (strlen($username) < Config::get('concrete.user.username.minimum')) {
-            $this->error->add(t('A username must be at least %s characters long.', Config::get('concrete.user.username.minimum')));
-        }
+        $this->app->make('validator/password')->isValid($password, $this->error);
 
-        if (strlen($username) > Config::get('concrete.user.username.maximum')) {
-            $this->error->add(t('A username cannot be more than %s characters long.', Config::get('concrete.user.username.maximum')));
-        }
+        $this->app->make('validator/user/email')->isValid($_POST['uEmail'], $this->error);
 
-        if (strlen($username) >= Config::get('concrete.user.username.minimum') && !$valc->username($username)) {
-            if (Config::get('concrete.user.username.allow_spaces')) {
-                $this->error->add(t('A username may only contain letters, numbers, spaces (not at the beginning/end), dots (not at the beginning/end), underscores (not at the beginning/end).'));
-            } else {
-                $this->error->add(t('A username may only contain letters, numbers, dots (not at the beginning/end), underscores (not at the beginning/end).'));
-            }
-        }
-
-        if (!$valc->isUniqueUsername($username)) {
-            $this->error->add(t("The username '%s' already exists. Please choose another", $username));
-        }
-
-        if ($username == USER_SUPER) {
-            $this->error->add(t('Invalid Username'));
-        }
-
-        \Core::make('validator/password')->isValid($password, $this->error);
-
-        if (!$valt->validate('submit')) {
-            $this->error->add($valt->getErrorMessage());
+        if (!$this->token->validate('submit')) {
+            $this->error->add($this->token->getErrorMessage());
         }
 
         $aks = UserAttributeKey::getRegistrationList();
@@ -104,7 +75,7 @@ class Add extends DashboardPageController
             $uo = UserInfo::add($data);
             if (is_object($uo)) {
                 if ($assignment->allowEditAvatar()) {
-                    if (is_uploaded_file($_FILES['uAvatar']['tmp_name'])) {
+                    if (!empty($_FILES['uAvatar']) && is_uploaded_file($_FILES['uAvatar']['tmp_name'])) {
                         $image = \Image::open($_FILES['uAvatar']['tmp_name']);
                         $image = $image->thumbnail(new Box(
                                                        Config::get('concrete.icons.user_avatar.width'),
@@ -126,7 +97,7 @@ class Add extends DashboardPageController
                 }
 
                 $gIDs = [];
-                if (is_array($_POST['gID'])) {
+                if (!empty($_POST['gID']) && is_array($_POST['gID'])) {
                     foreach ($_POST['gID'] as $gID) {
                         $gx = Group::getByID($gID);
                         $gxp = new Permissions($gx);
