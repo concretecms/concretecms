@@ -7,7 +7,6 @@ use Config;
 use Group;
 use GroupList;
 use Imagine\Image\Box;
-use Loader;
 use Localization;
 use PermissionKey;
 use Permissions;
@@ -24,12 +23,12 @@ class Add extends DashboardPageController
         $gl = new GroupList();
         $gArray = $gl->getPagination()->setMaxPerPage(10000)->getCurrentPageResults();
 
-        $this->set('form', Loader::helper('form'));
-        $this->set('valt', Loader::helper('validation/token'));
-        $this->set('valc', Loader::helper('concrete/validation'));
-        $this->set('ih', Loader::helper('concrete/ui'));
-        $this->set('av', Loader::helper('concrete/avatar'));
-        $this->set('dtt', Loader::helper('form/date_time'));
+        $this->set('form', $this->app->make('helper/form'));
+        $this->set('valt', $this->app->make('helper/validation/token'));
+        $this->set('valc', $this->app->make('helper/concrete/validation'));
+        $this->set('ih', $this->app->make('helper/concrete/ui'));
+        $this->set('av', $this->app->make('helper/concrete/avatar'));
+        $this->set('dtt', $this->app->make('helper/form/date_time'));
         $this->set('gArray', $gArray);
         $this->set('assignment', $assignment);
         $this->set('locales', $locales);
@@ -39,9 +38,9 @@ class Add extends DashboardPageController
     public function submit()
     {
         $assignment = PermissionKey::getByHandle('edit_user_properties')->getMyAssignment();
-        $vals = Loader::helper('validation/strings');
-        $valt = Loader::helper('validation/token');
-        $valc = Loader::helper('concrete/validation');
+        $vals = $this->app->make('helper/validation/strings');
+        $valt = $this->app->make('helper/validation/token');
+        $valc = $this->app->make('helper/concrete/validation');
 
         $username = trim($_POST['uName']);
         $username = preg_replace("/\s+/", ' ', $username);
@@ -104,7 +103,6 @@ class Add extends DashboardPageController
             $data = ['uName' => $username, 'uPassword' => $password, 'uEmail' => $_POST['uEmail'], 'uDefaultLanguage' => $_POST['uDefaultLanguage']];
             $uo = UserInfo::add($data);
             if (is_object($uo)) {
-                $av = Loader::helper('concrete/avatar');
                 if ($assignment->allowEditAvatar()) {
                     if (is_uploaded_file($_FILES['uAvatar']['tmp_name'])) {
                         $image = \Image::open($_FILES['uAvatar']['tmp_name']);
