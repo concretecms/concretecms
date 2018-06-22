@@ -47,7 +47,7 @@ class EmailValidator extends AbstractTranslatableValidator
      * @param bool $testMXRecord Should we test the MX record to see if the domain is valid?
      * @param bool $strict Should email address warnings be considered as errors?
      */
-    public function __construct($testMXRecord = false, $strict = false)
+    public function __construct($testMXRecord = false, $strict = true)
     {
         $this
             ->setTestMXRecord($testMXRecord)
@@ -62,7 +62,7 @@ class EmailValidator extends AbstractTranslatableValidator
         $this->setErrorString(
             self::E_INVALID_ADDRESS,
             function (EmailValidator $validator, $code, $mixed) {
-                return t('The email address \"%s\" is not valid.', $mixed);
+                return t('The email address "%s" is not valid.', $mixed);
             }
         );
     }
