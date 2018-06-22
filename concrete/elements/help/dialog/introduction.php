@@ -7,7 +7,7 @@ $config = Concrete\Core\Support\Facade\Application::getFacadeApplication()->make
 <div id="ccm-dialog-help" class="ccm-ui">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-xs-8">
+            <div class="col-xs-6">
                 <h2><?= t('Learn the basics.') ?></h2>
                 <div class="spacer-row-2"></div>
                 <div class="row">
@@ -51,7 +51,7 @@ $config = Concrete\Core\Support\Facade\Application::getFacadeApplication()->make
                     </div>
                 </div>
             </div>
-            <div class="col-xs-4 col-accented">
+            <div class="col-xs-6 col-accented">
                 <h2><?= t('More help.') ?></h2>
                 <div class="spacer-row-2"></div>
                 <div class="ccm-dialog-help-item">
