@@ -16,9 +16,19 @@ class UserEmailValidatorServiceProvider extends Provider
     public function register()
     {
         $this->app->singleton('validator/user/email', function (Application $app) {
+            $config = $app->make('config');
             $manager = $app->make(ValidatorForSubjectInterface::class);
 
-            $manager->setValidator('unique_user_email', $app->make(UniqueUserEmailValidator::class));
+            $manager->setValidator(
+                'unique_user_email',
+                $app->make(
+                    UniqueUserEmailValidator::class,
+                    [
+                        'testMXRecord' => $config->get('concrete.user.email.test_mx_record'),
+                        'strict' => $config->get('concrete.user.email.strict'),
+                    ]
+                )
+            );
 
             return $manager;
         });

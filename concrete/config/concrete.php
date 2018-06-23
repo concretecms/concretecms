@@ -754,6 +754,10 @@ return [
             'hash_cost_log2' => 12,
             'legacy_salt' => '',
         ],
+        'email' => [
+            'test_mx_record' => false,
+            'strict' => true,
+        ],
         'private_messages' => [
             'throttle_max' => 20,
             'throttle_max_timespan' => 15, // minutes

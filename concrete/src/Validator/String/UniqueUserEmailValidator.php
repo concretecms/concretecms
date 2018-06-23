@@ -41,7 +41,7 @@ class UniqueUserEmailValidator extends EmailValidator implements ValidatorForSub
      * @param bool $strict Should email address warnings be considered as errors?
      * @param \Concrete\Core\Database\Connection\Connection $connection
      */
-    public function __construct($testMXRecord = false, $strict = true, Connection $connection)
+    public function __construct($testMXRecord = false, $strict = false, Connection $connection)
     {
         parent::__construct($testMXRecord, $strict);
         $this->connection = $connection;
