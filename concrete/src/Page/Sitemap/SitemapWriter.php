@@ -277,15 +277,15 @@ class SitemapWriter
         }
         $outputFilename = $this->getOutputFilename();
         $this->checkOutputFilename($outputFilename);
-        $allGood = false;
         $fd = null;
+        $fdDest = null;
         $tempFilename = @tempnam($this->getTemporaryDirectory(), 'sitemap');
         if ($tempFilename === false) {
             throw new UserMessageException(t('Unable to create a temporary file.'));
         }
         try {
             // fopen/fwrite/fclose is one order of magnitude faster than $this->filesystem->append
-            $fd = fopen($tempFilename, 'wb');
+            $fd = fopen($tempFilename, 'wb+');
             $xmlDocument = null;
             foreach ($this->getSitemapGenerator()->generateContents() as $element) {
                 if ($pulse !== null) {
@@ -325,22 +325,32 @@ class SitemapWriter
                 }
             }
             fflush($fd);
-            fclose($fd);
-            $fd = null;
-            if (!$this->filesystem->move($tempFilename, $outputFilename)) {
+            fseek($fd, 0, SEEK_SET);
+            $updatechmod = !$this->filesystem->isFile($outputFilename);
+            $fdDest = @fopen($outputFilename, 'wb');
+            if (@stream_copy_to_stream($fd, $fdDest) === false) {
                 throw new UserMessageException(t('Failed to create the sitemap file.'));
             }
-            $allGood = true;
-        } finally {
-            if (!$allGood) {
-                if ($fd !== null) {
-                    @fclose($fd);
-                    $fd = null;
-                }
-                $this->filesystem->delete([$tempFilename]);
+            fflush($fdDest);
+            fclose($fdDest);
+            $fdDest = null;
+            fclose($fd);
+            $fd = null;
+            if ($updatechmod) {
+                @chmod($outputFilename, 0644);
             }
+        } finally {
+            if ($fdDest !== null) {
+                @fclose($fdDest);
+                $fdDest = null;
+            }
+            if ($fd !== null) {
+                @fclose($fd);
+                $fd = null;
+            }
+            $this->filesystem->delete([$tempFilename]);
         }
-        @chmod($outputFilename, 0644);
+        
     }
 
     /**
