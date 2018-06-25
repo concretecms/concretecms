@@ -8,7 +8,7 @@ class EditResponse extends \Concrete\Core\Application\EditResponse
 
     public function setPage(Page $page)
     {
-        if ($page->isAlias()) {
+        if ($page->isAlias() && !$page->isExternalLink()) {
             $this->cID = $page->getCollectionPointerOriginalID();
         } else {
             $this->cID = $page->getCollectionID();
