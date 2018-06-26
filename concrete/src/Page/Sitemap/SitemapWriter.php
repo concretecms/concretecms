@@ -395,7 +395,7 @@ class SitemapWriter
             if ($p === false) {
                 $outputFolder = '.';
             } else {
-                $outputFolder = substr($outputFilename, strrpos($outputFilename, '/'));
+                $outputFolder = substr($outputFilename, 0, $p + 1);
             }
             if (!$this->filesystem->isDirectory($outputFolder)) {
                 throw new UserMessageException(t('The directory containing %s does not exist', $displayFilename));
