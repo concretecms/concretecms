@@ -213,8 +213,8 @@
 		var my = this;
 		event.preventDefault();
 		$row.removeClass('ccm-search-select-hover');
+		var $selected = my.$element.find('.ccm-search-select-selected');
 		if (event.shiftKey) {
-			var $selected = my.$element.find('.ccm-search-select-selected');
 			var index = my.$element.find('tbody tr').index($row);
 			if (!$selected.length) {
 				// If nothing is selected, we select everything from the beginning up to row.
@@ -239,6 +239,7 @@
 			if (event.which == 3) {
 				my.handleMenuClick(event, $row);
 			} else {
+				$selected.removeClass('ccm-search-select-selected');
 				if (!$row.hasClass('ccm-search-select-selected')) {
 					// Select the row
 					$row.addClass('ccm-search-select-selected');
@@ -722,7 +723,7 @@
 					type = null;
 				}
 			});
-			if (type) {
+			if (type && type == cs.options.result.bulkMenus.propertyValue) {
 				return $(menu);
 			}
 		} else if (results.length == 1) {

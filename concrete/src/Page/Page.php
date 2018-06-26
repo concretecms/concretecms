@@ -227,7 +227,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     {
         $r = new \stdClass();
         $r->name = $this->getCollectionName();
-        if ($this->isAlias()) {
+        if ($this->isAlias() && !$this->isExternalLink()) {
             $r->cID = $this->getCollectionPointerOriginalID();
         } else {
             $r->cID = $this->getCollectionID();
