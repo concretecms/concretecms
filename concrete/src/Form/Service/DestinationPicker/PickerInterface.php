@@ -1,0 +1,54 @@
+<?php
+
+namespace Concrete\Core\Form\Service\DestinationPicker;
+
+use ArrayAccess;
+use Symfony\Component\HttpFoundation\ParameterBag;
+
+interface PickerInterface
+{
+    /**
+     * Get the display name of this picker (to be used in the SELECT html element).
+     *
+     * @param array $options
+     *
+     * @return string
+     */
+    public function getDisplayName(array $options);
+
+    /**
+     * Get the name to be used to POST data.
+     *
+     * @param string $key
+     * @param array $options
+     */
+    public function getPostName($key, array $options);
+
+    /**
+     * Get the height of this picker (in pixels).
+     *
+     * @return int
+     */
+    public function getHeight();
+
+    /**
+     * Generate the HTML for the picker.
+     *
+     * @param string $key
+     * @param array $options
+     * @param mixed|null $selectedValue
+     *
+     * @return string
+     */
+    public function generate($key, array $options, $selectedValue = null);
+
+    /**
+     * Decode the value received via post.
+     *
+     * @param \Symfony\Component\HttpFoundation\ParameterBag $data
+     * @param string $key
+     * @param array $options
+     * @param \ArrayAccess $errors
+     */
+    public function decode(ParameterBag $data, $key, array $options, ArrayAccess $errors = null);
+}
