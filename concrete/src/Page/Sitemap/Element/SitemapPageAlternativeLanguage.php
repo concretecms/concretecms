@@ -164,7 +164,7 @@ class SitemapPageAlternativeLanguage extends SitemapElement
             $hreflang = h($this->getFinalHrefLang());
             $href = h((string) $this->getUrl());
             $result = [
-                "{$indenter}{$indenter}{$indenter}<{$nsn}:link rel=\"alternate\" hreflang=\"{$hreflang}\" href=\"{$href}\" />",
+                "{$indenter}{$indenter}<{$nsn}:link rel=\"alternate\" hreflang=\"{$hreflang}\" href=\"{$href}\" />",
             ];
         }
 
