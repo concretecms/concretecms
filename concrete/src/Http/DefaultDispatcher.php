@@ -141,22 +141,29 @@ class DefaultDispatcher implements DispatcherInterface
      */
     private function filterRouteCollectionForPath(RouteCollection $routes, $path)
     {
-        $routes = clone $routes;
+        $result = new RouteCollection();
+        foreach ($routes->getResources() as $resource) {
+            $result->addResource($resource);
+        }
         foreach ($routes->all() as $name => $route) {
             $routePath = $route->getPath();
             $p = strpos($routePath, '{');
+            $skip = false;
             if ($p === false) {
                 if ($routePath !== $path) {
-                    $routes->remove($name);
+                    $skip = true;
                 }
             } elseif ($p > 0) {
                 $routeFixedPath = substr($routePath, 0, $p);
                 if (strpos($path, $routeFixedPath) !== 0) {
-                    $routes->remove($name);
+                    $skip = true;
                 }
+            }
+            if ($skip === false) {
+                $result->add($name, $route);
             }
         }
 
-        return $routes;
+        return $result;
     }
 }
