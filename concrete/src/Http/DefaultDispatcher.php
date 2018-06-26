@@ -1,10 +1,12 @@
 <?php
+
 namespace Concrete\Core\Http;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Routing\DispatcherRouteCallback;
 use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Routing\RouterInterface;
+use Concrete\Core\Session\SessionValidator;
 use Concrete\Core\User\User;
 use Concrete\Core\View\View;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
@@ -13,7 +15,6 @@ use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
-use Concrete\Core\Session\SessionValidator;
 
 class DefaultDispatcher implements DispatcherInterface
 {
