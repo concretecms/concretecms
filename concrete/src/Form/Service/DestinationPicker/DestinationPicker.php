@@ -36,8 +36,8 @@ class DestinationPicker
      * Initialize the instance.
      *
      * @param \Concrete\Core\Application\Application $app
-     * @param Form $formService
-     * @param Request $request
+     * @param \Concrete\Core\Form\Service\Form $formService
+     * @param \Concrete\Core\Http\Request $request
      */
     public function __construct(Application $app, Form $formService, Request $request)
     {
@@ -114,12 +114,23 @@ class DestinationPicker
     /**
      * Generate the HTML that renders the destination picker.
      *
-     * @param string $key
-     * @param string[]|array[] $pickers
-     * @param string|null $currentPickerHandle
-     * @param mixed|null $currentValue
+     * @param string $key The field name
+     * @param string[]|array[] $pickers The list of picker handles. To pass options to the pickers use the handles as keys, and arrays for values.
+     * @param string|null $currentPickerHandle The handle of the pre-selected picker
+     * @param mixed|null $currentValue the value of the pre-selected picker
      *
      * @return string
+     *
+     * @example
+     * <code><pre>echo $app->make(DestinationPicker::class)->generate(
+     *     'my_field',
+     *     [
+     *         'none',
+     *         'page',
+     *         'external_url' => ['maxlength' => 255],
+     *         'file' => ['filters' => [['field' => 'type', 'type' => \Concrete\Core\File\Type\Type::T_IMAGE]]],
+     *     ]
+     * );</pre></code>
      */
     public function generate($key, array $pickers, $currentPickerHandle = null, $currentValue = null)
     {
@@ -169,12 +180,32 @@ EOT
     }
 
     /**
-     * @param string $key
-     * @param string[]|array[] $pickers
-     * @param ArrayAccess|null $errors
-     * @param string|null $fieldDisplayName
+     * Parse and validate the data received in POST.
      *
-     * @return string[]|mixed[]|null[]
+     * @param string $key The field name
+     * @param string[]|array[] $pickers The list of picker handles. To pass options to the pickers use the handles as keys, and arrays for values.
+     * @param \ArrayAccess|null $errors A list to add errors to
+     * @param string|null $fieldDisplayName The name of the field (used to describe errors)
+     *
+     * @return string[]|mixed[]|null[] Returns two NULLs in case of errors, or the selected picker handle and its value otherwise
+     *
+     * @example
+     * <code><pre>
+     * $errors = $app->make('errors');
+     * $dp = $app->make(DestinationPicker::class);
+     * list($handle, $value) = $dp->decode(
+     *     'my_field',
+     *     [
+     *         'none',
+     *         'page',
+     *         'external_url' => ['maxlength' => 255],
+     *         'file',
+     *     ],
+     *     $errors,
+     *     t('Destination')
+     * );
+     * </pre></code>
+     * $handle and $value will be NULL if (and only if) errors occurred (added to the $errors parameter).
      */
     public function decode($key, array $pickers, ArrayAccess $errors = null, $fieldDisplayName = null)
     {
