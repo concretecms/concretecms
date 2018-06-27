@@ -674,13 +674,16 @@ class Service
             $l->close();
         }
 
+        if ($sendError !== null && $this->isThrowOnFailure()) {
+            if ($resetData) {
+                $this->reset();
+            }
+            throw $sendError;
+        }
+
         // clear data if applicable
         if ($resetData) {
             $this->reset();
-        }
-
-        if ($sendError !== null && $this->isThrowOnFailure()) {
-            throw $sendError;
         }
 
         return $sendError === null;
