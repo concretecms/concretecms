@@ -241,14 +241,14 @@ EOT
                 $selectedOption = $currentHandler;
             } else {
                 $selectedOption = null;
-                foreach ($this->getRegisteredPickers() as $handle => $picker) {
-                    if ($picker instanceof NoDestinationPicker) {
+                foreach (array_keys($pickerHandlesWithOptions) as $handle) {
+                    if ($this->getPicker($handle) instanceof NoDestinationPicker) {
                         $selectedOption = $handle;
                         break;
                     }
                 }
                 if ($selectedOption === null) {
-                    $selectOptions = array_merge(['' => t('** Please Select')]);
+                    $selectOptions = array_merge(['' => t('** Please Select')], $selectOptions);
                     $selectedOption = '';
                 }
             }
