@@ -6,7 +6,7 @@ use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
-class Version20180622095800 extends AbstractMigration implements RepeatableMigrationInterface
+class Version20180627083200 extends AbstractMigration implements RepeatableMigrationInterface
 {
     /**
      * @var string
