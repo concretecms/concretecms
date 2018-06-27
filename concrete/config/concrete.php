@@ -8,7 +8,7 @@ return [
      */
     'version' => '8.4.1a2',
     'version_installed' => '8.4.1a2',
-    'version_db' => '20180620000000', // the key of the latest database migration
+    'version_db' => '20180622192332', // the key of the latest database migration
 
     /*
      * Installation status
@@ -752,6 +752,14 @@ return [
         'private_messages' => [
             'throttle_max' => 20,
             'throttle_max_timespan' => 15, // minutes
+        ],
+
+        'deactivation' => [
+            'enable_login_threshold_deactivation' => false,
+            'login' => [
+                'threshold' => 120 // in days
+            ],
+            'message' => 'This user is inactive. Please contact us regarding this account.',
         ],
     ],
 

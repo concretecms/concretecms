@@ -30,7 +30,8 @@ class Login extends PageController
 
     public function account_deactivated()
     {
-        $this->error->add(t('This user is inactive. Please contact us regarding this account.'));
+        $config = $this->app->make('config');
+        $this->error->add(t($config->get('concrete.user.deactivation.message')));
     }
 
     public function session_invalidated()
