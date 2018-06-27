@@ -1,9 +1,10 @@
 <?php
 
-defined('C5_EXECUTE') or die("Access Denied.");
 use Concrete\Core\Conversation\Message\Message as ConversationMessage;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Validator\String\EmailValidator;
+
+defined('C5_EXECUTE') or die("Access Denied.");
 
 $app = Application::getFacadeApplication();
 $ax = $app->make('helper/ajax');
