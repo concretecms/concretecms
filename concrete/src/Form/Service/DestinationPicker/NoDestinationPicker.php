@@ -5,6 +5,15 @@ namespace Concrete\Core\Form\Service\DestinationPicker;
 use ArrayAccess;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
+/**
+ * A picker for DestinationPicker that allows users specify no value.
+ *
+ * Supported options for the generate method:
+ * - displayName: the display name of this picker (to be used in the SELECT html element).
+ *
+ * Supported options for the decode method:
+ * - none
+ */
 class NoDestinationPicker implements PickerInterface
 {
     /**

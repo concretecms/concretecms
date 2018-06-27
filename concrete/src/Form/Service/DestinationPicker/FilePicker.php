@@ -9,6 +9,17 @@ use Concrete\Core\Utility\Service\Validation\Numbers;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
+/**
+ * A picker for DestinationPicker that allows users specify a concrete5 file.
+ *
+ * Supported options for the generate method:
+ * - displayName: the display name of this picker (to be used in the SELECT html element).
+ * - chooseFileText: the text to be used for the "Choose File" button
+ * - any other option will be passed to the concrete5 File Manager picker (for example: 'filters' may be useful - @see \Concrete\Core\Application\Service\FileManager::file() )
+ *
+ * Supported options for the decode method:
+ * - none
+ */
 class FilePicker implements PickerInterface
 {
     /**

@@ -6,6 +6,16 @@ use ArrayAccess;
 use Concrete\Core\Form\Service\Form;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
+/**
+ * A picker for DestinationPicker that allows users specify an external URL.
+ *
+ * Supported options for the generate method:
+ * - displayName: the display name of this picker (to be used in the SELECT html element).
+ * - any other options will be used to create the INPUT html element
+ *
+ * Supported options for the decode method:
+ * - maxlength: the maximum length of the email address
+ */
 class ExternalUrlPicker implements PickerInterface
 {
     /**

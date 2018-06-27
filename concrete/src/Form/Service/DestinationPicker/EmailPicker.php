@@ -7,6 +7,18 @@ use Concrete\Core\Form\Service\Form;
 use Egulias\EmailValidator\EmailValidator;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
+/**
+ * A picker for DestinationPicker that allows users specify an email address.
+ *
+ * Supported options for the generate method:
+ * - displayName: the display name of this picker (to be used in the SELECT html element).
+ * - any other options (except the ones used for the "decode" method) will be used to create the INPUT html element
+ *
+ * Supported options for the decode method:
+ * - checkDNS: should we check if the email address has a valid MX record associated to the domain?
+ * - strict: should validation warnings be considered as errors?
+ * - maxlength: the maximum length of the email address
+ */
 class EmailPicker implements PickerInterface
 {
     /**

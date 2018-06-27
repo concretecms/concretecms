@@ -8,6 +8,15 @@ use Concrete\Core\Page\Page;
 use Concrete\Core\Utility\Service\Validation\Numbers;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
+/**
+ * A picker for DestinationPicker that allows users specify a concrete5 page.
+ *
+ * Supported options for the generate method:
+ * - displayName: the display name of this picker (to be used in the SELECT html element).
+ *
+ * Supported options for the decode method:
+ * - none
+ */
 class PagePicker implements PickerInterface
 {
     /**
