@@ -32,16 +32,6 @@ class EmailPicker implements PickerInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Concrete\Core\Form\Service\DestinationPicker\PickerInterface::getPostName()
-     */
-    public function getPostName($key, array $options)
-    {
-        return empty($options['postName']) ? "{$key}_email" : $options['postName'];
-    }
-
-    /**
-     * {@inheritdoc}
-     *
      * @see \Concrete\Core\Form\Service\DestinationPicker\PickerInterface::getHeight()
      */
     public function getHeight()
@@ -54,15 +44,14 @@ class EmailPicker implements PickerInterface
      *
      * @see \Concrete\Core\Form\Service\DestinationPicker\PickerInterface::generate()
      */
-    public function generate($key, array $options, $selectedValue = null)
+    public function generate($pickerKey, array $options, $selectedValue = null)
     {
         $miscFields = $options;
         unset($miscFields['displayName']);
-        unset($miscFields['postName']);
         unset($miscFields['checkDNS']);
         unset($miscFields['strict']);
 
-        return $this->formService->email($this->getPostName($key, $options), $selectedValue, $options);
+        return $this->formService->email($pickerKey, $selectedValue, $options);
     }
 
     /**
@@ -70,11 +59,10 @@ class EmailPicker implements PickerInterface
      *
      * @see \Concrete\Core\Form\Service\DestinationPicker\PickerInterface::decode()
      */
-    public function decode(ParameterBag $data, $key, array $options, ArrayAccess $errors = null)
+    public function decode(ParameterBag $data, $pickerKey, array $options, ArrayAccess $errors = null)
     {
         $result = null;
-        $postName = $this->getPostName($key, $options);
-        $postValue = $data->get($postName);
+        $postValue = $data->get($pickerKey);
         if (is_string($postValue)) {
             $postValue = trim($postValue);
             if ($postValue !== '') {

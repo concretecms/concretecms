@@ -56,21 +56,10 @@ class FilePicker implements PickerInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Concrete\Core\Form\Service\DestinationPicker\PickerInterface::getPostName()
-     */
-    public function getPostName($key, array $options)
-    {
-        return empty($options['postName']) ? "{$key}_fid" : $options['postName'];
-    }
-
-    /**
-     * {@inheritdoc}
-     *
      * @see \Concrete\Core\Form\Service\DestinationPicker\PickerInterface::generate()
      */
-    public function generate($key, array $options, $selectedValue = null)
+    public function generate($pickerKey, array $options, $selectedValue = null)
     {
-        $postName = $this->getPostName($key, $options);
         if (is_object($selectedValue)) {
             $fileID = (int) $selectedValue->getFileID();
         } elseif (empty($selectedValue)) {
@@ -80,10 +69,9 @@ class FilePicker implements PickerInterface
         }
         $args = $options;
         unset($args['displayName']);
-        unset($args['postName']);
         unset($args['chooseFileText']);
 
-        return $this->fileManager->file($postName, $postName, empty($options['chooseFileText']) ? t('Choose File') : $options['chooseFileText'], $fileID, $args);
+        return $this->fileManager->file($pickerKey, $pickerKey, empty($options['chooseFileText']) ? t('Choose File') : $options['chooseFileText'], $fileID, $args);
     }
 
     /**
@@ -91,11 +79,10 @@ class FilePicker implements PickerInterface
      *
      * @see \Concrete\Core\Form\Service\DestinationPicker\PickerInterface::decode()
      */
-    public function decode(ParameterBag $data, $key, array $options, ArrayAccess $errors = null)
+    public function decode(ParameterBag $data, $pickerKey, array $options, ArrayAccess $errors = null)
     {
         $result = null;
-        $postName = $this->getPostName($key, $options);
-        $postValue = $data->get($postName);
+        $postValue = $data->get($pickerKey);
         if ($this->numbers->integer($postValue, 1)) {
             $postValue = (int) $postValue;
             if ($this->entityManager->find(File::class, $postValue) === null) {

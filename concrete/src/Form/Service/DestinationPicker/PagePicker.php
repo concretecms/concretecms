@@ -43,16 +43,6 @@ class PagePicker implements PickerInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Concrete\Core\Form\Service\DestinationPicker\PickerInterface::getPostName()
-     */
-    public function getPostName($key, array $options)
-    {
-        return empty($options['postName']) ? "{$key}_cid" : $options['postName'];
-    }
-
-    /**
-     * {@inheritdoc}
-     *
      * @see \Concrete\Core\Form\Service\DestinationPicker\PickerInterface::getHeight()
      */
     public function getHeight()
@@ -65,9 +55,8 @@ class PagePicker implements PickerInterface
      *
      * @see \Concrete\Core\Form\Service\DestinationPicker\PickerInterface::generate()
      */
-    public function generate($key, array $options, $selectedValue = null)
+    public function generate($pickerKey, array $options, $selectedValue = null)
     {
-        $postName = $this->getPostName($key, $options);
         if (is_object($selectedValue)) {
             $pageID = (int) $selectedValue->getCollectionID();
         } elseif (empty($selectedValue)) {
@@ -76,7 +65,7 @@ class PagePicker implements PickerInterface
             $pageID = (int) $selectedValue;
         }
 
-        return $this->pageSelector->selectPage($postName, $pageID ?: null);
+        return $this->pageSelector->selectPage($pickerKey, $pageID ?: null);
     }
 
     /**
@@ -84,11 +73,10 @@ class PagePicker implements PickerInterface
      *
      * @see \Concrete\Core\Form\Service\DestinationPicker\PickerInterface::decode()
      */
-    public function decode(ParameterBag $data, $key, array $options, ArrayAccess $errors = null)
+    public function decode(ParameterBag $data, $pickerKey, array $options, ArrayAccess $errors = null)
     {
         $result = null;
-        $postName = $this->getPostName($key, $options);
-        $postValue = $data->get($postName);
+        $postValue = $data->get($pickerKey);
         if ($this->numbers->integer($postValue, 1)) {
             $postValue = (int) $postValue;
             $page = Page::getByID($postValue);

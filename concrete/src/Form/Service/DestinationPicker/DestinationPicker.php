@@ -132,9 +132,9 @@ class DestinationPicker
         foreach ($pickerHandlesWithOptions as $handle => $options) {
             $picker = $this->getPicker($handle);
             $pickersHeight = max($pickersHeight, $picker->getHeight());
-            $postName = $picker->getPostName($key, $options);
-            $pickerValue = $this->request->isPost() ? $this->request->request->get($postName) : ($selectedPicker === $currentPickerHandle ? $currentValue : null);
-            $pickerHtml = $picker->generate($key, $options, $pickerValue);
+            $pickerKey = "{$key}_{$handle}";
+            $pickerValue = $this->request->isPost() ? $this->request->request->get($pickerKey) : ($selectedPicker === $currentPickerHandle ? $currentValue : null);
+            $pickerHtml = $picker->generate($pickerKey, $options, $pickerValue);
             if ($pickerHtml !== '') {
                 $style = $selectedPicker === $handle ? '' : ' style="display: none"';
                 $pickersHtml .= <<<EOT
@@ -184,7 +184,8 @@ EOT
             $pickerHandlesWithOptions = $this->getHandlesWithOptions($pickers);
             if (isset($pickerHandlesWithOptions[$which])) {
                 $picker = $this->getPicker($which);
-                $value = $picker->decode($this->request->request, $key, $pickerHandlesWithOptions[$which], $errors);
+                $pickerKey = "{$which}_{$handle}";
+                $value = $picker->decode($this->request->request, $pickerKey, $pickerHandlesWithOptions[$which], $errors);
                 if ($value !== null) {
                     $handle = $which;
                 }
@@ -234,7 +235,7 @@ EOT
         foreach ($pickerHandlesWithOptions as $handle => $options) {
             $selectOptions[$handle] = $this->getPicker($handle)->getDisplayName($options);
         }
-        $selectedOption = $this->request->isPost() ? $this->request->request->get($key) : null;
+        $selectedOption = $this->request->isPost() ? $this->request->request->get("{$key}__which") : null;
         if (!is_string($selectOptions) || !isset($selectOptions[$selectedOption])) {
             if ((string) $currentHandler !== '' && isset($pickerHandlesWithOptions[$currentHandler])) {
                 $selectedOption = $currentHandler;

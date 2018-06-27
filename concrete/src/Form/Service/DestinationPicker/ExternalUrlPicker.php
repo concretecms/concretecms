@@ -31,16 +31,6 @@ class ExternalUrlPicker implements PickerInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Concrete\Core\Form\Service\DestinationPicker\PickerInterface::getPostName()
-     */
-    public function getPostName($key, array $options)
-    {
-        return empty($options['postName']) ? "{$key}_external_url" : $options['postName'];
-    }
-
-    /**
-     * {@inheritdoc}
-     *
      * @see \Concrete\Core\Form\Service\DestinationPicker\PickerInterface::getHeight()
      */
     public function getHeight()
@@ -53,13 +43,12 @@ class ExternalUrlPicker implements PickerInterface
      *
      * @see \Concrete\Core\Form\Service\DestinationPicker\PickerInterface::generate()
      */
-    public function generate($key, array $options, $selectedValue = null)
+    public function generate($pickerKey, array $options, $selectedValue = null)
     {
         $miscFields = $options;
         unset($miscFields['displayName']);
-        unset($miscFields['postName']);
 
-        return $this->formService->text($this->getPostName($key, $options), $selectedValue, $options);
+        return $this->formService->text($pickerKey, $selectedValue, $options);
     }
 
     /**
@@ -67,11 +56,10 @@ class ExternalUrlPicker implements PickerInterface
      *
      * @see \Concrete\Core\Form\Service\DestinationPicker\PickerInterface::decode()
      */
-    public function decode(ParameterBag $data, $key, array $options, ArrayAccess $errors = null)
+    public function decode(ParameterBag $data, $pickerKey, array $options, ArrayAccess $errors = null)
     {
         $result = null;
-        $postName = $this->getPostName($key, $options);
-        $postValue = $data->get($postName);
+        $postValue = $data->get($pickerKey);
         if (is_string($postValue)) {
             $postValue = trim($postValue);
             if ($postValue !== '') {

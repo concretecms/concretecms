@@ -20,16 +20,6 @@ class NoDestinationPicker implements PickerInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Concrete\Core\Form\Service\DestinationPicker\PickerInterface::getPostName()
-     */
-    public function getPostName($key, array $options)
-    {
-        return '';
-    }
-
-    /**
-     * {@inheritdoc}
-     *
      * @see \Concrete\Core\Form\Service\DestinationPicker\PickerInterface::getHeight()
      */
     public function getHeight()
@@ -42,7 +32,7 @@ class NoDestinationPicker implements PickerInterface
      *
      * @see \Concrete\Core\Form\Service\DestinationPicker\PickerInterface::generate()
      */
-    public function generate($key, array $options, $selectedValue = null)
+    public function generate($pickerKey, array $options, $selectedValue = null)
     {
         return '';
     }
@@ -52,7 +42,7 @@ class NoDestinationPicker implements PickerInterface
      *
      * @see \Concrete\Core\Form\Service\DestinationPicker\PickerInterface::decode()
      */
-    public function decode(ParameterBag $data, $key, array $options, ArrayAccess $errors = null)
+    public function decode(ParameterBag $data, $pickerKey, array $options, ArrayAccess $errors = null)
     {
         return '';
     }

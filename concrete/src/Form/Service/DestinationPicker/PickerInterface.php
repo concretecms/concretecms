@@ -17,14 +17,6 @@ interface PickerInterface
     public function getDisplayName(array $options);
 
     /**
-     * Get the name to be used to POST data.
-     *
-     * @param string $key
-     * @param array $options
-     */
-    public function getPostName($key, array $options);
-
-    /**
      * Get the height of this picker (in pixels).
      *
      * @return int
@@ -34,21 +26,21 @@ interface PickerInterface
     /**
      * Generate the HTML for the picker.
      *
-     * @param string $key
+     * @param string $pickerKey
      * @param array $options
      * @param mixed|null $selectedValue
      *
      * @return string
      */
-    public function generate($key, array $options, $selectedValue = null);
+    public function generate($pickerKey, array $options, $selectedValue = null);
 
     /**
      * Decode the value received via post.
      *
      * @param \Symfony\Component\HttpFoundation\ParameterBag $data
-     * @param string $key
+     * @param string $pickerKey
      * @param array $options
      * @param \ArrayAccess $errors
      */
-    public function decode(ParameterBag $data, $key, array $options, ArrayAccess $errors = null);
+    public function decode(ParameterBag $data, $pickerKey, array $options, ArrayAccess $errors = null);
 }
