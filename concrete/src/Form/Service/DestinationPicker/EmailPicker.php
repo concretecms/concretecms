@@ -59,7 +59,7 @@ class EmailPicker implements PickerInterface
      *
      * @see \Concrete\Core\Form\Service\DestinationPicker\PickerInterface::decode()
      */
-    public function decode(ParameterBag $data, $pickerKey, array $options, ArrayAccess $errors = null)
+    public function decode(ParameterBag $data, $pickerKey, array $options, ArrayAccess $errors = null, $fieldDisplayName = null)
     {
         $result = null;
         $postValue = $data->get($pickerKey);
@@ -72,7 +72,11 @@ class EmailPicker implements PickerInterface
                     if ($postLength > $maxLength) {
                         $postValue = null;
                         if ($errors !== null) {
-                            $errors[] = t('The maximum length of the email address is %s characters.', $maxLength);
+                            if ((string) $fieldDisplayName === '') {
+                                $errors[] = t('The maximum length of the email address is %s characters.', $maxLength);
+                            } else {
+                                $errors[] = t('The maximum length of %1$s is %s characters.', $fieldDisplayName, $maxLength);
+                            }
                         }
                     }
                 }
@@ -81,7 +85,11 @@ class EmailPicker implements PickerInterface
                     if (!$emailValidator->isValid($postValue, !empty($options['checkDNS']), !empty($options['strict']))) {
                         $postValue = null;
                         if ($errors !== null) {
-                            $errors[] = t('The specified email address is not valid.');
+                            if ((string) $fieldDisplayName === '') {
+                                $errors[] = t('The specified email address is not valid.');
+                            } else {
+                                $errors[] = t('Please specify a valid email address for %s.', $fieldDisplayName);
+                            }
                         }
                     }
                 }

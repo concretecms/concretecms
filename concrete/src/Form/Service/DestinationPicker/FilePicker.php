@@ -79,7 +79,7 @@ class FilePicker implements PickerInterface
      *
      * @see \Concrete\Core\Form\Service\DestinationPicker\PickerInterface::decode()
      */
-    public function decode(ParameterBag $data, $pickerKey, array $options, ArrayAccess $errors = null)
+    public function decode(ParameterBag $data, $pickerKey, array $options, ArrayAccess $errors = null, $fieldDisplayName = null)
     {
         $result = null;
         $postValue = $data->get($pickerKey);
@@ -87,7 +87,11 @@ class FilePicker implements PickerInterface
             $postValue = (int) $postValue;
             if ($this->entityManager->find(File::class, $postValue) === null) {
                 if ($errors !== null) {
-                    $errors[] = t('Unable to find the specified file.');
+                    if ((string) $fieldDisplayName === '') {
+                        $errors[] = t('Unable to find the specified file.');
+                    } else {
+                        $errors[] = t('Unable to find the file specified for %s.', $fieldDisplayName);
+                    }
                 }
             } else {
                 $result = $postValue;

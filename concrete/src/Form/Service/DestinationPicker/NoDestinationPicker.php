@@ -42,7 +42,7 @@ class NoDestinationPicker implements PickerInterface
      *
      * @see \Concrete\Core\Form\Service\DestinationPicker\PickerInterface::decode()
      */
-    public function decode(ParameterBag $data, $pickerKey, array $options, ArrayAccess $errors = null)
+    public function decode(ParameterBag $data, $pickerKey, array $options, ArrayAccess $errors = null, $fieldDisplayName = null)
     {
         return '';
     }

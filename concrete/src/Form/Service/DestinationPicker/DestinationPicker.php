@@ -172,10 +172,11 @@ EOT
      * @param string $key
      * @param string[]|array[] $pickers
      * @param ArrayAccess|null $errors
+     * @param string|null $fieldDisplayName
      *
      * @return string[]|mixed[]|null[]
      */
-    public function decode($key, array $pickers, ArrayAccess $errors = null)
+    public function decode($key, array $pickers, ArrayAccess $errors = null, $fieldDisplayName = null)
     {
         $handle = null;
         $value = null;
@@ -184,11 +185,19 @@ EOT
             $pickerHandlesWithOptions = $this->getHandlesWithOptions($pickers);
             if (isset($pickerHandlesWithOptions[$which])) {
                 $picker = $this->getPicker($which);
-                $pickerKey = "{$which}_{$handle}";
-                $value = $picker->decode($this->request->request, $pickerKey, $pickerHandlesWithOptions[$which], $errors);
+                $pickerKey = "{$key}_{$which}";
+                $value = $picker->decode($this->request->request, $pickerKey, $pickerHandlesWithOptions[$which], $errors, $fieldDisplayName);
                 if ($value !== null) {
                     $handle = $which;
                 }
+            }
+            if ($handle === null && count($pickerHandlesWithOptions) === 1) {
+                $handle = key($pickerHandlesWithOptions);
+            }
+        }
+        if ($handle === null) {
+            if ($errors !== null) {
+                $errors[] = t('Please select a value for %s', (string) $fieldDisplayName === '' ? $key : $fieldDisplayName);
             }
         }
 

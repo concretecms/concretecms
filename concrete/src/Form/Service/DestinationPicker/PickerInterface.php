@@ -41,6 +41,7 @@ interface PickerInterface
      * @param string $pickerKey
      * @param array $options
      * @param \ArrayAccess $errors
+     * @param string|null $fieldDisplayName
      */
-    public function decode(ParameterBag $data, $pickerKey, array $options, ArrayAccess $errors = null);
+    public function decode(ParameterBag $data, $pickerKey, array $options, ArrayAccess $errors = null, $fieldDisplayName = null);
 }

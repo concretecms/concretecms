@@ -73,7 +73,7 @@ class PagePicker implements PickerInterface
      *
      * @see \Concrete\Core\Form\Service\DestinationPicker\PickerInterface::decode()
      */
-    public function decode(ParameterBag $data, $pickerKey, array $options, ArrayAccess $errors = null)
+    public function decode(ParameterBag $data, $pickerKey, array $options, ArrayAccess $errors = null, $fieldDisplayName = null)
     {
         $result = null;
         $postValue = $data->get($pickerKey);
@@ -82,7 +82,11 @@ class PagePicker implements PickerInterface
             $page = Page::getByID($postValue);
             if (!$page || $page->isError()) {
                 if ($errors !== null) {
-                    $errors[] = t('Unable to find the specified page.');
+                    if ((string) $fieldDisplayName === '') {
+                        $errors[] = t('Unable to find the specified page.');
+                    } else {
+                        $errors[] = t('Unable to find the page specified for %s.', $fieldDisplayName);
+                    }
                 }
             } else {
                 $result = $postValue;

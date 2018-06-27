@@ -56,7 +56,7 @@ class ExternalUrlPicker implements PickerInterface
      *
      * @see \Concrete\Core\Form\Service\DestinationPicker\PickerInterface::decode()
      */
-    public function decode(ParameterBag $data, $pickerKey, array $options, ArrayAccess $errors = null)
+    public function decode(ParameterBag $data, $pickerKey, array $options, ArrayAccess $errors = null, $fieldDisplayName = null)
     {
         $result = null;
         $postValue = $data->get($pickerKey);
@@ -69,7 +69,11 @@ class ExternalUrlPicker implements PickerInterface
                     if ($postLength > $maxLength) {
                         $postValue = null;
                         if ($errors !== null) {
-                            $errors[] = t('The maximum length of the external URL is %s characters.', $maxLength);
+                            if ((string) $fieldDisplayName === '') {
+                                $errors[] = t('The maximum length of %1$s is %s characters.', $fieldDisplayName, $maxLength);
+                            } else {
+                                $errors[] = t('The maximum length of the external URL is %s characters.', $maxLength);
+                            }
                         }
                     }
                 }
