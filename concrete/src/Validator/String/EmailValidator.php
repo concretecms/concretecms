@@ -145,7 +145,20 @@ class EmailValidator extends AbstractTranslatableValidator
      */
     protected function checkEmail($mixed)
     {
-        return is_string($mixed) && $mixed !== '' && $this->getEguliasEmailValidator()->isValid($mixed, $this->isTestMXRecord(), $this->isStrict());
+        $result = false;
+        if (is_string($mixed) && $mixed !== '') {
+            $eev = $this->getEguliasEmailValidator();
+            $testMX = $this->isTestMXRecord();
+            if ($eev->isValid($mixed, $testMX, $this->isStrict())) {
+                if ($testMX) {
+                    $result = !in_array(EguliasEmailValidator::DNSWARN_NO_RECORD, $eev->getWarnings(), true);
+                } else {
+                    $result = true;
+                }
+            }
+        }
+
+        return $result;
     }
 
     /**
