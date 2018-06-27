@@ -352,7 +352,7 @@ class Controller extends AuthenticationTypeController
                     }
                     break;
                 case USER_INACTIVE:
-                    throw new \Exception(t('This user is inactive. Please contact us regarding this account.'));
+                    throw new \Exception(t(Config::get('concrete.user.deactivation.message')));
                     break;
             }
         }

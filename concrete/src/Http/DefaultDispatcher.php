@@ -1,10 +1,12 @@
 <?php
+
 namespace Concrete\Core\Http;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Routing\DispatcherRouteCallback;
 use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Routing\RouterInterface;
+use Concrete\Core\Session\SessionValidator;
 use Concrete\Core\User\User;
 use Concrete\Core\View\View;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
@@ -13,7 +15,7 @@ use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
-use Concrete\Core\Session\SessionValidator;
+use Symfony\Component\Routing\RouteCollection;
 
 class DefaultDispatcher implements DispatcherInterface
 {
@@ -101,24 +103,27 @@ class DefaultDispatcher implements DispatcherInterface
 
     private function handleDispatch($request)
     {
-        $collection = $this->router->getList();
-        $context = new RequestContext();
-        $context->fromRequest($request);
-        $matcher = new UrlMatcher($collection, $context);
         $path = rtrim($request->getPathInfo(), '/') . '/';
-
-        $callDispatcher = false;
-        try {
-            $matched = $matcher->match($path);
-            $request->attributes->add($matched);
-            $route = $collection->get($matched['_route']);
-
-            $this->router->setRequest($request);
-            $response = $this->router->execute($route, $matched);
-        } catch (ResourceNotFoundException $e) {
+        $collection = $this->router->getList();
+        $collection = $this->filterRouteCollectionForPath($collection, $path);
+        if ($collection->count() === 0) {
             $callDispatcher = true;
-        } catch (MethodNotAllowedException $e) {
-            $callDispatcher = true;
+        } else {
+            $context = new RequestContext();
+            $context->fromRequest($request);
+            $matcher = new UrlMatcher($collection, $context);
+            $callDispatcher = false;
+            try {
+                $matched = $matcher->match($path);
+                $request->attributes->add($matched);
+                $route = $collection->get($matched['_route']);
+                $this->router->setRequest($request);
+                $response = $this->router->execute($route, $matched);
+            } catch (ResourceNotFoundException $e) {
+                $callDispatcher = true;
+            } catch (MethodNotAllowedException $e) {
+                $callDispatcher = true;
+            }
         }
         if ($callDispatcher) {
             $callback = $this->app->make(DispatcherRouteCallback::class, ['dispatcher']);
@@ -126,5 +131,39 @@ class DefaultDispatcher implements DispatcherInterface
         }
 
         return $response;
+    }
+
+    /**
+     * @param \Symfony\Component\Routing\RouteCollection $routes
+     * @param string $path
+     *
+     * @return \Symfony\Component\Routing\RouteCollection
+     */
+    private function filterRouteCollectionForPath(RouteCollection $routes, $path)
+    {
+        $result = new RouteCollection();
+        foreach ($routes->getResources() as $resource) {
+            $result->addResource($resource);
+        }
+        foreach ($routes->all() as $name => $route) {
+            $routePath = $route->getPath();
+            $p = strpos($routePath, '{');
+            $skip = false;
+            if ($p === false) {
+                if ($routePath !== $path) {
+                    $skip = true;
+                }
+            } elseif ($p > 0) {
+                $routeFixedPath = substr($routePath, 0, $p);
+                if (strpos($path, $routeFixedPath) !== 0) {
+                    $skip = true;
+                }
+            }
+            if ($skip === false) {
+                $result->add($name, $route);
+            }
+        }
+
+        return $result;
     }
 }

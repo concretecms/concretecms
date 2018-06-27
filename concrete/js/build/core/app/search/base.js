@@ -34,9 +34,15 @@
 		if ($element.find('script[data-template=search-form]').length) {
 			this._templateSearchForm = _.template($element.find('script[data-template=search-form]').html());
 		}
-		this._templateSearchResultsTableHead = _.template($element.find('script[data-template=search-results-table-head]').html());
-		this._templateSearchResultsTableBody = _.template($element.find('script[data-template=search-results-table-body]').html());
-		this._templateSearchResultsPagination = _.template($element.find('script[data-template=search-results-pagination]').html());
+		if ($element.find('script[data-template=search-results-table-head]').length) {
+			this._templateSearchResultsTableHead = _.template($element.find('script[data-template=search-results-table-head]').html());
+		}
+		if ($element.find('script[data-template=search-results-table-body]').length) {
+			this._templateSearchResultsTableBody = _.template($element.find('script[data-template=search-results-table-body]').html());
+		}
+		if ($element.find('script[data-template=search-results-pagination]').length) {
+			this._templateSearchResultsPagination = _.template($element.find('script[data-template=search-results-pagination]').html());
+		}
 		if (this.$menuTemplate.length) {
 			this._templateSearchResultsMenu = _.template(this.$menuTemplate.html());
 		}
@@ -207,8 +213,8 @@
 		var my = this;
 		event.preventDefault();
 		$row.removeClass('ccm-search-select-hover');
+		var $selected = my.$element.find('.ccm-search-select-selected');
 		if (event.shiftKey) {
-			var $selected = my.$element.find('.ccm-search-select-selected');
 			var index = my.$element.find('tbody tr').index($row);
 			if (!$selected.length) {
 				// If nothing is selected, we select everything from the beginning up to row.
@@ -233,6 +239,7 @@
 			if (event.which == 3) {
 				my.handleMenuClick(event, $row);
 			} else {
+				$selected.removeClass('ccm-search-select-selected');
 				if (!$row.hasClass('ccm-search-select-selected')) {
 					// Select the row
 					$row.addClass('ccm-search-select-selected');
@@ -276,19 +283,27 @@
 
 		cs.result = result;
 
-		cs.$resultsTableHead.html(cs._templateSearchResultsTableHead({'columns': result.columns}));
-		cs.$resultsTableBody.html(cs._templateSearchResultsTableBody({'items': result.items}));
-		cs.$resultsPagination.html(cs._templateSearchResultsPagination({'paginationTemplate': result.paginationTemplate}));
-		if (cs.$advancedFields) {
-			cs.$advancedFields.html('');
-			if (cs.$advancedFields.length) {
-				$.each(result.fields, function(i, field) {
-					cs.$advancedFields.append(cs._templateAdvancedSearchFieldRow({'field': field}));
-				});
+		if (result) {
+			if (cs.$resultsTableHead.length) {
+				cs.$resultsTableHead.html(cs._templateSearchResultsTableHead({'columns': result.columns}));
 			}
+			if (cs.$resultsTableBody.length) {
+				cs.$resultsTableBody.html(cs._templateSearchResultsTableBody({'items': result.items}));
+			}
+			if (cs.$resultsPagination.length) {
+				cs.$resultsPagination.html(cs._templateSearchResultsPagination({'paginationTemplate': result.paginationTemplate}));
+			}
+			if (cs.$advancedFields) {
+				cs.$advancedFields.html('');
+				if (cs.$advancedFields.length) {
+					$.each(result.fields, function(i, field) {
+						cs.$advancedFields.append(cs._templateAdvancedSearchFieldRow({'field': field}));
+					});
+				}
+			}
+	
+			cs.setupResetButton(result);
 		}
-
-		cs.setupResetButton(result);
 
 		if (options.selectMode == 'multiple') {
 			// We enable item selection, click to select single, command click for
@@ -408,7 +423,7 @@
 			);
 		});
 
-		if (my.result.query) {
+		if (my.result && my.result.query) {
 			$.each(my.result.query.fields, function(i, field) {
 				$container.append(
 					renderFieldRowTemplate({'field': field})
@@ -461,6 +476,24 @@
 			$row.remove();
 		});
 
+		$('[data-search-preset-id]').on('click', function(e) {
+			e.preventDefault();
+			if (!$(e.target).is('button') && $(this).data('action')) {
+				$.fn.dialog.closeAll();
+				my.ajaxUpdate($(this).data('action'));
+				my.$resetSearchButton.show();
+				my.$headerSearch.find('div.btn-group').hide();
+				my.$headerSearchInput.prop('disabled', true).val('');
+				my.$headerSearchInput.attr('placeholder', '');
+			}
+		});
+
+		$('.ccm-search-presets-table tbody tr').on('mouseover', function() {
+			$(this).addClass('ccm-search-select-hover');
+		}).on('mouseout', function() {
+			$(this).removeClass('ccm-search-select-hover');
+		});
+
 		$('button[data-button-action=save-search-preset]').on('click.saveSearchPreset', function() {
 			$.fn.dialog.open({
 				element: 'div[data-dialog=save-search-preset]:first',
@@ -490,6 +523,34 @@
 				}
 			});
 			return false;
+		});
+
+		$('button[data-button-action=edit-search-preset], button[data-button-action=delete-search-preset]').on('click', function(e) {
+			e.preventDefault();
+			var url = $(this).attr('data-tree-action-url'),
+				title = $(this).attr('dialog-title');
+
+			$.fn.dialog.open({
+				title: title,
+				href: url,
+				width: 550,
+				modal: true,
+				height: 'auto'
+			});
+		});
+
+		ConcreteEvent.unsubscribe('SavedSearchDeleted');
+		ConcreteEvent.subscribe('SavedSearchDeleted', function() {
+			$.fn.dialog.closeAll();
+			my.ajaxUpdate(my.$resetSearchButton.data('button-action-url'));
+		});
+
+		ConcreteEvent.unsubscribe('SavedSearchUpdated');
+		ConcreteEvent.subscribe('SavedSearchUpdated', function(e, data) {
+			$.fn.dialog.closeAll();
+			if (data.preset && data.preset.actionURL) {
+				my.ajaxUpdate(data.preset.actionURL);
+			}
 		});
 
 		my.setupSearch();
@@ -662,7 +723,7 @@
 					type = null;
 				}
 			});
-			if (type) {
+			if (type && type == cs.options.result.bulkMenus.propertyValue) {
 				return $(menu);
 			}
 		} else if (results.length == 1) {

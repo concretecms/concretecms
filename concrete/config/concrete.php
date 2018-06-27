@@ -762,6 +762,14 @@ return [
             'throttle_max' => 20,
             'throttle_max_timespan' => 15, // minutes
         ],
+
+        'deactivation' => [
+            'enable_login_threshold_deactivation' => false,
+            'login' => [
+                'threshold' => 120 // in days
+            ],
+            'message' => 'This user is inactive. Please contact us regarding this account.',
+        ],
     ],
 
     /*
