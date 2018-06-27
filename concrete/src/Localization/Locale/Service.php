@@ -6,6 +6,7 @@ use Concrete\Core\Entity\Site\Locale;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Entity\Site\SiteTree;
 use Concrete\Core\Page\Page;
+use Concrete\Core\Page\PageList;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
 use Events;
@@ -132,9 +133,11 @@ class Service
     {
         $tree = $locale->getSiteTree();
         if (is_object($tree)) {
-            $home = $tree->getSiteHomePageObject();
-            if ($home) {
-                $home->delete();
+            $list = new PageList();
+            $list->setSiteTreeObject($tree);
+            $pages = $list->getResults();
+            foreach ($pages as $page) {
+                $page->delete();
             }
             $locale->setSiteTree(null);
             $this->entityManager->remove($tree);
