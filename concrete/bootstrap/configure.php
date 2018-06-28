@@ -336,6 +336,7 @@ const COLLECTION_PRIVATE = 40;
 const BLOCK_NOT_AVAILABLE = 50;
 
 /* -- Debugging and Logging -- */
+defined('DEFAULT_ERROR_REPORTING') or define('DEFAULT_ERROR_REPORTING', E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
 const DEBUG_DISPLAY_PRODUCTION = 0;
 const DEBUG_DISPLAY_ERRORS = 1;
 const DEBUG_DISPLAY_ERRORS_SQL = 2; // not used
@@ -347,7 +348,7 @@ const LOG_TYPE_EXCEPTIONS = 'exceptions';
  * concrete5 depends on some more forgiving error handling.
  * ----------------------------------------------------------------------------
  */
-error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
+error_reporting(DEFAULT_ERROR_REPORTING);
 
 /*
  * ----------------------------------------------------------------------------

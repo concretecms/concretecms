@@ -80,10 +80,12 @@ defined('C5_EXECUTE') or die('Access Denied.');
 <script>
 $(document).ready(function() {
 
-var iframe = $('iframe#sample'),
-    enabled = $('input[name=debug_enabled]'),
-    detail = $('input[name=debug_detail]'),
-    inputs = $('input:not([data-dont-update])');
+var form = $('#debug-form'),
+    iframe = $('iframe#sample'),
+    enabled = form.find('input[name=debug_enabled]'),
+    detail = form.find('input[name=debug_detail]'),
+    warningsAsErrors = form.find('input[name=warnings_as_errors]'),
+    inputs = form.find('input');
 
 inputs
     .on('change', function () {
@@ -93,6 +95,7 @@ inputs
         } else {
             url = enabled.data('sample');
         }
+        url += (url.indexOf('?') < 0 ? '?' : '&') + 'warnings_as_errors=' + (warningsAsErrors.is(':checked') ? 1 : 0);
         iframe.show().attr('src', url);
     })
     .trigger('change')
