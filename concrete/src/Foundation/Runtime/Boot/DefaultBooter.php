@@ -317,7 +317,7 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
          * to consider 3rd party libraries (like Symfony for instance) which use
          * those superglobals.
          */
-        if(isset($_POST['__ccm_consider_request_as_xhr']) && $_POST['__ccm_consider_request_as_xhr'] === '1') {
+        if (isset($_POST['__ccm_consider_request_as_xhr']) && $_POST['__ccm_consider_request_as_xhr'] === '1') {
             unset($_POST['__ccm_consider_request_as_xhr']);
             unset($_REQUEST['__ccm_consider_request_as_xhr']);
             $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';

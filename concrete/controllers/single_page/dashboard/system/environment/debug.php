@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\System\Environment;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
@@ -17,14 +18,14 @@ class Debug extends DashboardPageController
 
     public function update_debug()
     {
-        if ($this->token->validate("update_debug")) {
+        if ($this->token->validate('update_debug')) {
             if ($this->isPost()) {
                 Config::save('concrete.debug.detail', $this->post('debug_detail'));
                 Config::save('concrete.debug.display_errors', (bool) $this->post('debug_enabled'));
                 $this->redirect('/dashboard/system/environment/debug', 'debug_saved');
             }
         } else {
-            $this->set('error', array($this->token->getErrorMessage()));
+            $this->set('error', [$this->token->getErrorMessage()]);
         }
     }
 
