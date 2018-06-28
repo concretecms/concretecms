@@ -10,6 +10,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 /* @var string $debug_detail */
 /* @var bool $debug_enabled */
 /* @var bool $show_warnings */
+/* @var bool $warnings_as_errors */
 ?>
 <form method="post" id="debug-form" action="<?= $view->action('update_debug') ?>">
     <?= $token->output('update_debug') ?>
@@ -46,6 +47,23 @@ defined('C5_EXECUTE') or die('Access Denied.');
         </div>
     </div>
 
+    <div class="form-group">
+        <?= $form->label('', t('Error Level')) ?>
+        <div class="checkbox">
+            <label>
+                <?= $form->checkbox('warnings_as_errors', 1, $warnings_as_errors, ['data-dont-update' => '1']) ?>
+                <?= t('Consider warnings as errors') ?>
+                <span class="help-block">
+                    <span class="text-danger">
+                        <i class="fa fa-exclamation-triangle"></i>
+                        <?= t('This option should only be enabled by developers: it could brick your site.') ?><br />
+                        <?= t('In this case you\'ll have to manually delete the %s configuration key.', '<code>concrete.debug.error_reporting</code>') ?>
+                    </span>
+                </span>
+            </label>
+        </div>
+    </div>
+
     <fieldset>
         <legend><?= t('Example') ?></legend>
         <iframe id="sample" style="display:none;width:100%;height:600px;border:0"></iframe>
@@ -65,7 +83,7 @@ $(document).ready(function() {
 var iframe = $('iframe#sample'),
     enabled = $('input[name=debug_enabled]'),
     detail = $('input[name=debug_detail]'),
-    inputs = $('input');
+    inputs = $('input:not([data-dont-update])');
 
 inputs
     .on('change', function () {
@@ -79,6 +97,13 @@ inputs
     })
     .trigger('change')
 ;
+
+$('#warnings_as_errors').on('click', function(e) {
+    if (this.checked && !window.confirm(<?= json_encode(t('Are you sure?')) ?>)) {
+        e.preventDefault();
+        return false;
+    }
+});
 
 });
 </script>

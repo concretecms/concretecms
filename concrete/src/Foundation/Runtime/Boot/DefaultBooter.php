@@ -61,6 +61,13 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
 
         /*
          * ----------------------------------------------------------------------------
+         * Set configured error reporting
+         * ----------------------------------------------------------------------------
+         */
+        $this->setupErrorReporting($config);
+
+        /*
+         * ----------------------------------------------------------------------------
          * Enable Localization
          * ----------------------------------------------------------------------------
          */
@@ -187,6 +194,19 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
         $config = $app->make('config');
 
         return $config;
+    }
+
+    /**
+     * Setup the configured error reporting.
+     *
+     * @param Repository $config
+     */
+    private function setupErrorReporting(Repository $config)
+    {
+        $error_reporting = $config->get('concrete.debug.error_reporting');
+        if ((string) $error_reporting !== '') {
+            error_reporting((int) $error_reporting);
+        }
     }
 
     /**

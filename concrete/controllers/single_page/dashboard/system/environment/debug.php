@@ -3,7 +3,7 @@
 namespace Concrete\Controller\SinglePage\Dashboard\System\Environment;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Config;
+use Exception;
 
 class Debug extends DashboardPageController
 {
@@ -12,6 +12,7 @@ class Debug extends DashboardPageController
         $config = $this->app->make('config');
         $this->set('debug_enabled', (bool) $config->get('concrete.debug.display_errors'));
         $this->set('debug_detail', $config->get('concrete.debug.detail'));
+        $this->set('warnings_as_errors', (string) $config->get('concrete.debug.error_reporting') !== '');
     }
 
     public function update_debug()
@@ -22,6 +23,7 @@ class Debug extends DashboardPageController
                 $config = $this->app->make('config');
                 $config->save('concrete.debug.display_errors', (bool) $post->get('debug_enabled'));
                 $config->save('concrete.debug.detail', $post->get('debug_detail'));
+                $config->save('concrete.debug.error_reporting', $post->get('warnings_as_errors') ? -1 : null);
                 $this->flash('success', t('Debug configuration saved.'));
                 $this->redirect($this->action(''));
             }
@@ -66,6 +68,6 @@ class Debug extends DashboardPageController
     }
 }
 
-class ExampleException extends \Exception
+class ExampleException extends Exception
 {
 }

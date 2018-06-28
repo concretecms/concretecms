@@ -51,6 +51,13 @@ return [
          * @var string (message|debug)
          */
         'detail' => 'message',
+
+        /*
+         * Error reporting level
+         *
+         * @var int|null
+         */
+        'error_reporting' => null,
     ],
 
     /*
