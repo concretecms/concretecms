@@ -2,6 +2,7 @@
 namespace Concrete\Core\Block\View;
 
 use Concrete\Core\Block\Events\BlockBeforeRender;
+use Concrete\Core\Block\Events\BlockOutput;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\View\AbstractView;
@@ -290,6 +291,7 @@ class BlockView extends AbstractView
         $this->controller->registerViewAssets($this->outputContent);
 
         $this->onBeforeGetContents();
+        $this->fireOnBlockOutputEvent();
         echo $this->outputContent;
         $this->onAfterGetContents();
 
@@ -478,5 +480,24 @@ class BlockView extends AbstractView
         $v = View::getInstance();
 
         return $v->getThemePath();
+    }
+
+    /**
+     * Fire an event just before the block is outputted on the page
+     *
+     * Custom code can modify the block contents before
+     * the block contents are 'echoed' out on the page.
+     *
+     * @since 8.4.1
+     */
+    private function fireOnBlockOutputEvent()
+    {
+        $event = new BlockOutput($this->block);
+        $event->setContents($this->outputContent);
+
+        $app = Application::getFacadeApplication();
+        $app->make('director')->dispatch('on_block_output', $event);
+
+        $this->outputContent = $event->getContents();
     }
 }
