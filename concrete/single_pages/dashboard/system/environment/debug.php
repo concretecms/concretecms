@@ -101,8 +101,8 @@ inputs
     .trigger('change')
 ;
 
-$('#warnings_as_errors').on('click', function(e) {
-    if (this.checked && !window.confirm(<?= json_encode(t('Are you sure?')) ?>)) {
+form.on('submit', function(e) {
+    if (warningsAsErrors.is(':checked') && !window.confirm(<?= json_encode(t('Are you sure you want to consider warnings as errors?') . "\n" . t('This option should only be enabled by developers: it could brick your site.')) ?>)) {
         e.preventDefault();
         return false;
     }
