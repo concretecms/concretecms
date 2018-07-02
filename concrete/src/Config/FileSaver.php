@@ -56,7 +56,7 @@ class FileSaver implements SaverInterface
             }
         }
 
-        $file = $this->getFilename(($environment == "production") ? $group : $environment . "." . $group, $path);
+        $file = $this->getFilename(($environment && $environment !=="production") ? $environment . "." . $group : $group , $path);
 
         $current = array();
         if ($this->files->exists($file)) {
