@@ -56,8 +56,9 @@ class FileSaver implements SaverInterface
             }
         }
 
-        $file = $this->getFilename(($environment && $environment !=="production") ? $environment . "." . $group : $group , $path);
-
+        //testing check is only temporary because of the phpuint tests
+        $file = $this->getFilename(($environment !=="production" && $environment !=="testing") ? $environment . "." . $group : $group , $path);
+        
         $current = array();
         if ($this->files->exists($file)) {
             if (\Config::get('concrete.config.temp_save', true)) {
