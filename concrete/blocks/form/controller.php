@@ -596,7 +596,9 @@ class Controller extends BlockController
                 $mh->addParameter('questionSetId', $this->questionSetId);
                 $mh->addParameter('questionAnswerPairs', $questionAnswerPairs);
                 $mh->load('block_form_submission');
-                $mh->setSubject(t('%s Form Submission', $this->surveyName));
+                if (empty($mh->getSubject())) {
+                    $mh->setSubject(t('%s Form Submission', $this->surveyName));
+                }
                 //echo $mh->body.'<br>';
                 @$mh->sendMail();
             }
