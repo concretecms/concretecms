@@ -2,7 +2,7 @@
 <form method="post" id="login-redirect-form" action="<?php echo $view->url('/dashboard/system/registration/postlogin', 'update_login_redirect')?>">
     <?php echo $this->controller->token->output('update_login_redirect')?>
     <fieldset>
-    <legend><?php echo t('AFTER LOGIN')?></legend>
+    <legend><?php echo t('After login')?></legend>
     <div class="form-group">
         <div class="input">
             <div class="radio">
