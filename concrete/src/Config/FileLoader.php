@@ -132,6 +132,7 @@ class FileLoader implements LoaderInterface {
 
             $paths = array(
                 "{$path}/generated_overrides/{$group}.php",
+                "{$path}/generated_overrides/{$environment}.{$group}.php",
                 "{$path}/{$group}.php",
                 "{$path}/{$environment}.{$group}.php", );
         } else {
@@ -139,6 +140,7 @@ class FileLoader implements LoaderInterface {
                 "{$path}/{$group}.php",
                 "{$path}/{$environment}.{$group}.php",
                 "{$this->defaultPath}/generated_overrides/{$namespace}/{$group}.php",
+                "{$this->defaultPath}/generated_overrides/{$namespace}/{$environment}.{$group}.php", 
                 "{$this->defaultPath}/{$namespace}/{$group}.php",
                 "{$this->defaultPath}/{$namespace}/{$environment}.{$group}.php", );
         }
