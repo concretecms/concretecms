@@ -14,8 +14,13 @@ echo Core::make('helper/concrete/dashboard')->getDashboardPaneHeaderWrapper(t('C
         <legend><?php echo t('Attachment Settings'); ?></legend>
         <p class="help-block"><?php echo t('Note: These settings can be overridden in the block edit form for individual conversations.'); ?></p>
         <div class="form-group">
-            <label class="control-label"><?= t('Enable Attachments') ?></label>
-            <?= $form->checkbox('attachmentsEnabled', 1, $attachmentsEnabled) ?>
+            <label class="control-label"><?= t('Attachments') ?></label>
+            <div class="checkbox">
+                <label>
+                    <?= $form->checkbox('attachmentsEnabled', 1, $attachmentsEnabled) ?>
+                    <?= t('Enable File Attachments') ?>
+                </label>
+            </div>
         </div>
         <div class="form-group">
             <label class="control-label"><?= t('Max Attachment Size for Guest Users. (MB)') ?></label>
