@@ -18,7 +18,7 @@ echo Core::make('helper/concrete/dashboard')->getDashboardPaneHeaderWrapper(t('C
             <div class="checkbox">
                 <label>
                     <?= $form->checkbox('attachmentsEnabled', 1, $attachmentsEnabled) ?>
-                    <?= t('enable file attachments') ?>
+                    <?= t('Enable File Attachments') ?>
                 </label>
             </div>
         </div>
