@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Express\Entry;
 
+use Concrete\Core\Entity\Attribute\Value\ExpressValue;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Entity\Express\Form;
@@ -12,7 +13,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class Manager implements EntryManagerInterface
 {
-
     protected $entityManager;
     protected $request;
 
@@ -44,18 +44,27 @@ class Manager implements EntryManagerInterface
         } else {
             ++$displayOrder;
         }
+
         return $displayOrder;
     }
 
-    public function addEntry(Entity $entity)
+    public function createEntry(Entity $entity)
     {
         $entry = new Entry();
         $entry->setEntity($entity);
         if ($entity->supportsCustomDisplayOrder()) {
             $entry->setEntryDisplayOrder($this->getNewDisplayOrder($entity));
         }
+
+        return $entry;
+    }
+
+    public function addEntry(Entity $entity)
+    {
+        $entry = $this->createEntry($entity);
         $this->entityManager->persist($entry);
         $this->entityManager->flush();
+
         return $entry;
     }
 
@@ -75,13 +84,28 @@ class Manager implements EntryManagerInterface
                 $saver->saveFromRequest($control, $entry, $this->request);
             }
         }
-
         $this->entityManager->flush();
 
         $ev = new Event($entry);
         $ev->setEntityManager($this->entityManager);
         \Events::dispatch('on_express_entry_saved', $ev);
+
         return $ev->getEntry();
     }
 
+    public function getEntryAttributeValuesForm(Form $form, Entry $entry)
+    {
+        $submittedAttributeValues = [];
+        foreach ($form->getControls() as $control) {
+            $attributeKey = $control->getAttributeKey();
+            $genericValue = $attributeKey->getController()->createAttributeValueFromRequest();
+            $attributeValue = new ExpressValue();
+            $attributeValue->setAttributeKey($attributeKey);
+            $attributeValue->setEntry($entry);
+            $attributeValue->setAttributeValueObject($genericValue);
+            $submittedAttributeValues[] = $attributeValue;
+        }
+
+        return $submittedAttributeValues;
+    }
 }
