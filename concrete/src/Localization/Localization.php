@@ -252,7 +252,7 @@ class Localization
     /**
      * Gets the locale for the active context.
      *
-     * @param string
+     * @return string
      */
     public function getLocale()
     {
