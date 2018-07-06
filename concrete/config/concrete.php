@@ -172,7 +172,7 @@ return [
         /*
          * Cache full page
          *
-         * @var bool|string (block|all)
+         * @var bool|string (blocks|all)
          */
         'pages' => false,
 
