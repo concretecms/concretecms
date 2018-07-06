@@ -123,7 +123,7 @@ class File extends Controller
         $fvID = $this->request->request->get('fvID', $this->request->query->get('fvID'));
         $fvID = $this->app->make('helper/security')->sanitizeInt($fvID);
         $fv = $files[0]->getVersion($fvID);
-        if ($fv === null || !$fv->isApproved()) {
+        if ($fv === null || $fv->isApproved()) {
             throw new UserMessageException(t('Invalid file version.', 400));
         }
         if (!$token->validate('version/delete/' . $fv->getFileID() . '/' . $fv->getFileVersionId())) {
