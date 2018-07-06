@@ -87,7 +87,7 @@ $controls = $editor->getControlList()
     </div>
 
 <?php
-if (!$settings) {
+if (empty($settings)) {
     $settings = array();
 }
 $fnames = array();
