@@ -359,6 +359,27 @@ class Repository extends \Illuminate\Config\Repository
     }
 
     /**
+     * Execute a callable using a specific key value.
+     *
+     * @param string $key
+     * @param mixed $value
+     * @param callable $callable
+     *
+     * @return mixed returns the result of $callable
+     */
+    public function withKey($key, $value, callable $callable)
+    {
+        $initialValue = $this->get($key);
+        try {
+            $this->set($key, $value);
+
+            return $callable();
+        } finally {
+            $this->set($key, $initialValue);
+        }
+    }
+
+    /**
      * Load the configuration group for the key.
      *
      * @param string $group

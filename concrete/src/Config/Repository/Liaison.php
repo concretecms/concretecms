@@ -115,6 +115,20 @@ class Liaison
     }
 
     /**
+     * Execute a callable using a specific key value.
+     *
+     * @param string $key
+     * @param mixed $value
+     * @param callable $callable
+     *
+     * @return mixed returns the result of $callable
+     */
+    public function withKey($key, $value, callable $callable)
+    {
+        return $this->repository->withKey($key, $value, $callable);
+    }
+
+    /**
      * @param $key
      *
      * @return string
