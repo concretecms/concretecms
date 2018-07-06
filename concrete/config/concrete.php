@@ -51,6 +51,13 @@ return [
          * @var string (message|debug)
          */
         'detail' => 'message',
+
+        /*
+         * Error reporting level
+         *
+         * @var int|null
+         */
+        'error_reporting' => null,
     ],
 
     /*
@@ -757,7 +764,7 @@ return [
         'deactivation' => [
             'enable_login_threshold_deactivation' => false,
             'login' => [
-                'threshold' => 120 // in days
+                'threshold' => 120, // in days
             ],
             'message' => 'This user is inactive. Please contact us regarding this account.',
         ],

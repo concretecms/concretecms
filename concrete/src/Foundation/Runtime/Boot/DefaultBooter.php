@@ -61,6 +61,13 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
 
         /*
          * ----------------------------------------------------------------------------
+         * Set configured error reporting
+         * ----------------------------------------------------------------------------
+         */
+        $this->setupErrorReporting($config);
+
+        /*
+         * ----------------------------------------------------------------------------
          * Enable Localization
          * ----------------------------------------------------------------------------
          */
@@ -187,6 +194,19 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
         $config = $app->make('config');
 
         return $config;
+    }
+
+    /**
+     * Setup the configured error reporting.
+     *
+     * @param Repository $config
+     */
+    private function setupErrorReporting(Repository $config)
+    {
+        $error_reporting = $config->get('concrete.debug.error_reporting');
+        if ((string) $error_reporting !== '') {
+            error_reporting((int) $error_reporting);
+        }
     }
 
     /**
@@ -317,7 +337,7 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
          * to consider 3rd party libraries (like Symfony for instance) which use
          * those superglobals.
          */
-        if(isset($_POST['__ccm_consider_request_as_xhr']) && $_POST['__ccm_consider_request_as_xhr'] === '1') {
+        if (isset($_POST['__ccm_consider_request_as_xhr']) && $_POST['__ccm_consider_request_as_xhr'] === '1') {
             unset($_POST['__ccm_consider_request_as_xhr']);
             unset($_REQUEST['__ccm_consider_request_as_xhr']);
             $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
