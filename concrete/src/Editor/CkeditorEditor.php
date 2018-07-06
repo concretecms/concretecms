@@ -86,11 +86,11 @@ class CkeditorEditor implements EditorInterface
     /**
      * Generate the Javascript code that initialize the plugin.
      *
-     * @param array $options a list of custom options that override the default one
+     * @param array $dynamicOptions a list of custom options that override the default ones
      *
      * @return string
      */
-    public function getEditorInitJSFunction($options = [])
+    public function getEditorInitJSFunction($dynamicOptions = [])
     {
         $pluginManager = $this->getPluginManager();
 
@@ -104,35 +104,36 @@ class CkeditorEditor implements EditorInterface
         $plugins = $pluginManager->getSelectedPlugins();
         $snippetsAndClasses = $this->getEditorSnippetsAndClasses();
 
-        $options = array_merge(
-            $options,
-            [
-                'plugins' => implode(',', $plugins),
-                'stylesSet' => 'concrete5styles',
-                'filebrowserBrowseUrl' => 'a',
-                'uploadUrl' => (string) URL::to('/ccm/system/file/upload'),
-                'language' => $this->getLanguageOption(),
-                'customConfig' => '',
-                'allowedContent' => true,
-                'baseFloatZIndex' => 1990, /* Must come below modal variable in variables.less */
-                'image2_captionedClass' => 'content-editor-image-captioned',
-                'image2_alignClasses' => [
-                    'content-editor-image-left',
-                    'content-editor-image-center',
-                    'content-editor-image-right',
-                ],
-                'toolbarGroups' => $this->config->get('editor.ckeditor4.toolbar_groups'),
-                'snippets' => $snippetsAndClasses->snippets,
-                'classes' => $snippetsAndClasses->classes,
-            ]
-        );
-
-        $customConfigOptions = $this->config->get('editor.ckeditor4.custom_config_options');
-        if ($customConfigOptions) {
-            $options = array_merge($options, $customConfigOptions);
+        if (!is_array($dynamicOptions)) {
+            $dynamicOptions = [];
         }
 
-        $options = json_encode($options);
+        $defaultOptions = [
+            'plugins' => implode(',', $plugins),
+            'stylesSet' => 'concrete5styles',
+            'filebrowserBrowseUrl' => 'a',
+            'uploadUrl' => (string) URL::to('/ccm/system/file/upload'),
+            'language' => $this->getLanguageOption(),
+            'customConfig' => '',
+            'allowedContent' => true,
+            'baseFloatZIndex' => 1990, /* Must come below modal variable in variables.less */
+            'image2_captionedClass' => 'content-editor-image-captioned',
+            'image2_alignClasses' => [
+                'content-editor-image-left',
+                'content-editor-image-center',
+                'content-editor-image-right',
+            ],
+            'toolbarGroups' => $this->config->get('editor.ckeditor4.toolbar_groups'),
+            'snippets' => $snippetsAndClasses->snippets,
+            'classes' => $snippetsAndClasses->classes,
+        ];
+
+        $customOptions = $this->config->get('editor.ckeditor4.custom_config_options');
+        if (!is_array($customOptions)) {
+            $customOptions = [];
+        }
+
+        $options = json_encode($dynamicOptions + $customOptions + $defaultOptions);
         $removeEmptyIcon = '$removeEmpty[\'i\']';
 
         $jsfunc = <<<EOL
