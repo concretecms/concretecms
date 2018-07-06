@@ -1,0 +1,41 @@
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+$fp = FilePermissions::getGlobal();
+$tp = new TaskPermission();
+$form = Loader::helper('form');
+$cnvID = 0;
+$obj = $editor->getConversationObject();
+if (is_object($obj)) {
+    $cnvID = $obj->getConversationID();
+}
+
+echo $form->textarea($editor->getConversationEditorInputName(), $editor->getConversationEditorMessageBody(), array('class' => 'unbound conversation-editor ckeditor_conversation_editor_'.$cnvID));
+?>
+<script>
+$(function() {
+    var textarea = $('textarea.unbound.ckeditor_conversation_editor_<?=$cnvID?>').removeClass('unbound');
+
+    var ckeditor = $(textarea).ckeditor({$options}).editor;
+
+    //CKEDITOR.replace('ckeditor_conversaton_editor_<?//=$cnvID?>//');
+
+    //var textarea = $('textarea.unbound.redactor_conversation_edito r_<?//=$cnvID?>//').removeClass('unbound');
+    //$(textarea).redactor({
+    //    autoresize: false,
+    //    minHeight: '150px',
+    //    buttons: [ 'bold','italic','deleted','|','fontcolor','|','link' ],
+    //    callback: function(obj) {
+    //        ConcreteEvent.publish('ConversationRedactorEditorLoaded',obj);
+    //        ConcreteEvent.bind('ConversationSubmitForm',function(){
+    //            obj.setCode("");
+    //			$('.preview.processing').each(function(){
+    //				$('input[rel="'+ $(this).attr('rel') +'"]').remove();
+    //				$(this).remove();
+    //			});
+    //			if($('.ccm-conversation-attachment-container').is(':visible')) {
+    //				$('.ccm-conversation-attachment-container').toggle();
+    //			}
+    //        });
+    //    }
+    //});
+});
+</script>
