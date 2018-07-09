@@ -78,7 +78,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      * @param string $path /path/to/page
      * @param string $version ACTIVE or RECENT
      *
-     * @return Page
+     * @return \Concrete\Core\Page\Page
      */
     public static function getByPath($path, $version = 'RECENT', TreeInterface $tree = null)
     {
@@ -116,7 +116,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      * @param int $cID Collection ID of a page
      * @param string $version ACTIVE or RECENT
      *
-     * @return Page
+     * @return \Concrete\Core\Page\Page
      */
     public static function getByID($cID, $version = 'RECENT')
     {
