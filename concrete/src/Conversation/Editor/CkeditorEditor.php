@@ -13,6 +13,7 @@ class CkeditorEditor extends Editor
         /** @TODO Move CKEditor registration out of Editor Interface Factory */
         \Core::make(EditorInterface::class);
         $list = AssetList::getInstance();
+
         $r = $list->getAssetGroup('editor/ckeditor4');
 
 
