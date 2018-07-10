@@ -11,6 +11,9 @@ use Concrete\Core\Search\ProviderInterface;
 use Concrete\Core\File\Search\ColumnSet\Available;
 use Concrete\Core\File\Search\ColumnSet\ColumnSet;
 use Concrete\Core\Search\QueryableInterface;
+use Concrete\Core\Search\StickyRequest;
+use Concrete\Core\Tree\Node\Node;
+use Concrete\Core\Tree\Node\Type\SearchPreset;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Concrete\Core\Entity\Search\SavedFileSearch;
 
@@ -64,6 +67,20 @@ class SearchProvider extends AbstractSearchProvider implements QueryableInterfac
         });
         return $list;
     }
+
+    public function getItemsPerPage()
+    {
+        $searchRequest = new StickyRequest('file_manager_folder');
+        $searchParams = $searchRequest->getSearchRequest();
+        $node = empty($searchParams['folder']) ? null : Node::getByID($searchParams['folder']);
+        if ($node instanceof SearchPreset) {
+            $searchObj = $node->getSavedSearchObject();
+            return $searchObj->getQuery()->getItemsPerPage();
+        } else {
+            return parent::getItemsPerPage();
+        }
+    }
+
 
     public function createSearchResultObject($columns, $list)
     {
