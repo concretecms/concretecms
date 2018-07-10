@@ -189,7 +189,7 @@ class CookieJar
      */
     public function getNewCookies()
     {
-        return $this->cookies;
+        return $this->getCookies();
     }
 
     /**
