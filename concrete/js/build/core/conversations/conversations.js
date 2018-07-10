@@ -573,7 +573,7 @@
                 data: formArray,
                 url: CCM_TOOLS_PATH + '/conversations/edit_message',
                 success: function(html) {
-                    var $parent = $('[data-conversation-message-id=' + msgID + ']');
+                    var $parent = $('.ccm-conversation-message[data-conversation-message-id=' + msgID + ']');
                     var $previousContents = $parent;
                     $parent.after(html).remove();
                     $('.ccm-conversation-attachment-container').hide();
@@ -607,7 +607,7 @@
                 data: formArray,
                 url: CCM_TOOLS_PATH + '/conversations/flag_message',
                 success: function(html) {
-                    var $parent = $('[data-conversation-message-id=' + msgID + ']');
+                    var $parent = $('.ccm-conversation-message[data-conversation-message-id=' + msgID + ']');
 
                     if ($parent.length) {
                         $parent.after(html).remove();
