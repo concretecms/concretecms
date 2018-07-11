@@ -464,7 +464,7 @@ return [
          *
          * @var bool
          */
-        'enable_move_blocktypes_across_sets' => true,
+        'enable_move_blocktypes_across_sets' => false,
     ],
 
     'theme' => [
