@@ -166,13 +166,6 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
              * ----------------------------------------------------------------------------
              */
             $this->initializePackages($app);
-
-            /**
-             * ----------------------------------------------------------------------------
-             * Load preprocess items
-             * ----------------------------------------------------------------------------.
-             */
-            require DIR_BASE_CORE . '/bootstrap/preprocess.php';
         }
     }
 
