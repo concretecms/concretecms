@@ -218,8 +218,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
             break;
 
         case 'blocks':
-            /* @var Concrete\Core\Entity\Block\BlockType\BlockType[] $blockTypes */
-            /* @var Concrete\Core\Block\BlockType\Set[] $sets */
+            /* @var Concrete\Core\Entity\Block\BlockType\BlockType[] $blockTypesForSets */
             ?>
             <div class="ccm-panel-header-search">
                 <i class="fa fa-search"></i>
@@ -227,79 +226,13 @@ defined('C5_EXECUTE') or die('Access Denied.');
             </div>
             <div class="ccm-panel-content-inner" id="ccm-panel-add-blocktypes-list">
                 <?php
-                $types = [];
-                foreach ($blockTypes as $bt) {
-                    if (!$cp->canAddBlockType($bt)) {
-                        continue;
-                    }
-                    $btsets = $bt->getBlockTypeSets();
-                    foreach ($btsets as $set) {
-                        $types[$set->getBlockTypeSetName()][] = $bt;
-                    }
-                    if (count($btsets) == 0) {
-                        $types['Other'][] = $bt;
-                    }
-                }
-                for ($i = 0; $i < count($sets); ++$i) {
-                    $set = $sets[$i];
+                foreach ($blockTypesForSets as $setName => $blockTypes) {
                     ?>
                     <div class="ccm-panel-add-block-set">
-                        <?php
-                        $blocktypes = isset($types[$set->getBlockTypeSetName()]) ? $types[$set->getBlockTypeSetName()] : null;
-                        if (!$blocktypes) {
-                            $blocktypes = [];
-                        }
-                        /* @var Concrete\Core\Block\BlockType\BlockType[] $blocktypes */
-                        if (count($blocktypes)) {
-                            ?>
-                            <header><?= $set->getBlockTypeSetDisplayName() ?></header>
-                            <?php
-                        }
-                        ?>
+                        <header><?= $setName ?></header>
                         <ul>
                             <?php
-                            if (count($blocktypes)) {
-                                usort($blocktypes, function ($bt_a, $bt_b) use ($set) {
-                                    return ($set->displayOrder($bt_a) > $set->displayOrder($bt_b)) ? 1 : -1;
-                                });
-                                foreach ($blocktypes as $bt) {
-                                    $btIcon = $ci->getBlockTypeIconURL($bt);
-                                    ?>
-                                    <li>
-                                        <a
-                                            data-panel-add-block-drag-item="block"
-                                            class="ccm-panel-add-block-draggable-block-type"
-                                            data-cID="<?= $c->getCollectionID() ?>"
-                                            data-block-type-handle="<?= $bt->getBlockTypeHandle() ?>"
-                                            data-dialog-title="<?= t('Add %s', t($bt->getBlockTypeName())) ?>"
-                                            data-dialog-width="<?= $bt->getBlockTypeInterfaceWidth() ?>"
-                                            data-dialog-height="<?= $bt->getBlockTypeInterfaceHeight() ?>"
-                                            data-has-add-template="<?= $bt->hasAddTemplate() ?>"
-                                            data-supports-inline-add="<?= $bt->supportsInlineAdd() ?>"
-                                            data-btID="<?= $bt->getBlockTypeID() ?>"
-                                            data-dragging-avatar="<?= h('<p><img src="' . $btIcon . '" /><span>' . t($bt->getBlockTypeInSetName()) . '</span></p>') ?>"
-                                            title="<?= t($bt->getBlockTypeName()) ?>"
-                                            href="javascript:void(0)"
-                                        >
-                                            <p><img src="<?= $btIcon ?>"/><span><?= t($bt->getBlockTypeInSetName()) ?></span></p>
-                                        </a>
-                                    </li>
-                                    <?php
-                                }
-                            }
-                            ?>
-                        </ul>
-                    </div>
-                    <?php
-                }
-                if (isset($types['Other']) && is_array($types['Other'])) {
-                    ?>
-                    <div class="ccm-panel-add-block-set">
-                        <header><?= t('Other') ?></header>
-                        <ul>
-                            <?php
-                            $blocktypes = $types['Other'];
-                            foreach ($blocktypes as $bt) {
+                            foreach ($blockTypes as $bt) {
                                 $btIcon = $ci->getBlockTypeIconURL($bt);
                                 ?>
                                 <li>
@@ -314,11 +247,11 @@ defined('C5_EXECUTE') or die('Access Denied.');
                                         data-has-add-template="<?= $bt->hasAddTemplate() ?>"
                                         data-supports-inline-add="<?= $bt->supportsInlineAdd() ?>"
                                         data-btID="<?= $bt->getBlockTypeID() ?>"
-                                        data-dragging-avatar="<?= h('<p><img src="' . $btIcon . '" /><span>' . t($bt->getBlockTypeName()) . '</span></p>') ?>"
+                                        data-dragging-avatar="<?= h('<p><img src="' . $btIcon . '" /><span>' . t($bt->getBlockTypeInSetName()) . '</span></p>') ?>"
                                         title="<?= t($bt->getBlockTypeName()) ?>"
                                         href="javascript:void(0)"
                                     >
-                                        <p><img src="<?= $btIcon ?>"/><span><?= t($bt->getBlockTypeName()) ?></span></p>
+                                        <p><img src="<?= $btIcon ?>"/><span><?= t($bt->getBlockTypeInSetName()) ?></span></p>
                                     </a>
                                 </li>
                                 <?php
@@ -344,4 +277,5 @@ defined('C5_EXECUTE') or die('Access Denied.');
             </div>
         </section>
         <?php
+        break;
 }
