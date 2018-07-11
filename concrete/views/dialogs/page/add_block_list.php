@@ -1,6 +1,6 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
-$types = array();
+defined('C5_EXECUTE') or die('Access Denied.');
+$types = [];
 foreach ($blockTypes as $bt) {
     if (!$cp->canAddBlockType($bt)) {
         continue;
@@ -24,7 +24,7 @@ for ($i = 0; $i < count($sets); ++$i) {
 <section>
     <legend><?= $set->getBlockTypeSetDisplayName() ?></legend>
     <ul class="item-select-list">
-        <?php $blockTypes = isset($types[$set->getBlockTypeSetName()]) ? $types[$set->getBlockTypeSetName()] : array();
+        <?php $blockTypes = isset($types[$set->getBlockTypeSetName()]) ? $types[$set->getBlockTypeSetName()] : [];
     foreach ($blockTypes as $bt) {
         $btIcon = $ci->getBlockTypeIconURL($bt);
         ?>

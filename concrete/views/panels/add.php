@@ -1,10 +1,10 @@
 <?php
 use Concrete\Core\Page\Stack\Pile\PileContent;
 
-/**
+/*
  * @var \Concrete\Core\Block\BlockType\BlockType[] $blockTypes
  */
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 ?>
 
 <section>
@@ -33,7 +33,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
     <?php
     switch ($tab) {
-
     case 'tiles':
         ?>
         Gathering tiles
@@ -56,14 +55,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 ?>
                 <div class="ccm-panel-add-block-stack-item"
                      data-panel-add-block-drag-item="stack-item"
-                     data-cID="<?= intval($c->getCollectionID()) ?>"
-                     data-sID="<?= intval($stack->getCollectionID()) ?>"
+                     data-cID="<?= (int) ($c->getCollectionID()) ?>"
+                     data-sID="<?= (int) ($stack->getCollectionID()) ?>"
                      data-block-type-handle="stack"
                      data-has-add-template="no"
                      data-supports-inline-add="no"
                      data-btID="0"
                      data-dragging-avatar="<p><img src='<?=DIR_REL?>/concrete/images/stack.png' /><span><?= t('Stack')?>'</span></p>"
-            data-block-id="<?= intval($stack->getCollectionID()) ?>">
+            data-block-id="<?= (int) ($stack->getCollectionID()) ?>">
                     <div class="stack-name">
                         <span class="handle"><?= htmlspecialchars($stack->getStackName()) ?></span>
                     </div>
@@ -95,7 +94,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                                  ) ?>"
                                  title="<?= t($type->getBlockTypeName()) ?>"
                                  href="javascript:void(0)"
-                                 data-block-id="<?= intval($block->getBlockID()) ?>">
+                                 data-block-id="<?= (int) ($block->getBlockID()) ?>">
 
                                 <div class="block-name">
                                     <span class="handle"><?= h($type->getBlockTypeName()) ?></span>
@@ -200,7 +199,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                              $type->getBlockTypeName()
                          ) . '</span></p>'
                      ) ?>"
-                     data-block-id="<?= intval($block->getBlockID()) ?>">
+                     data-block-id="<?= (int) ($block->getBlockID()) ?>">
                     <div class="block-content">
                         <div class="block-name">
                             <span class="handle"><?= h(t($type->getBlockTypeName())) ?></span>
@@ -261,7 +260,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
     <div class="ccm-panel-content-inner" id="ccm-panel-add-blocktypes-list">
 
         <?php
-        $types = array();
+        $types = [];
         foreach ($blockTypes as $bt) {
             if (!$cp->canAddBlockType($bt)) {
                 continue;
@@ -284,7 +283,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 /** @var \Concrete\Core\Block\BlockType\BlockType[] $blocktypes */
                 $blocktypes = $types[$set->getBlockTypeSetName()];
                 if (!$blocktypes) {
-                    $blocktypes = array();
+                    $blocktypes = [];
                 }
                 ?>
 
@@ -394,7 +393,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
             ?>
             <div class="ccm-marketplace-btn-wrapper">
                 <button type="button" onclick="window.location.href='<?= URL::to('/dashboard/extend/addons') ?>'"
-                        class="btn-info btn-block btn btn-large"><?= t("Get More Blocks") ?></button>
+                        class="btn-info btn-block btn btn-large"><?= t('Get More Blocks') ?></button>
             </div>
             <?php
         } ?>
