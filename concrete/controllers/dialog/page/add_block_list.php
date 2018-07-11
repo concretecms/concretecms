@@ -2,9 +2,9 @@
 
 namespace Concrete\Controller\Dialog\Page;
 
-use Concrete\Controller\Panel\Add;
+use Concrete\Controller\Panel\Add as AddPanelController;
 
-class AddBlockList extends Add
+class AddBlockList extends AddPanelController
 {
     protected $viewPath = '/dialogs/page/add_block_list';
 
