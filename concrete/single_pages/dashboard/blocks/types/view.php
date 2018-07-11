@@ -80,6 +80,7 @@ if ($controller->getAction() == 'inspect') {
     /* @var Concrete\Core\Entity\Block\BlockType\BlockType[] $internalBlockTypes */
     /* @var array $normalBlockTypesAndSets */
     /* @var bool $marketplaceEnabled */
+    /* @var bool $enableMoveBlocktypesAcrossSets */
     ?>
     <h3><?= t('Awaiting Installation') ?></h3>
     <?php
@@ -233,8 +234,18 @@ if ($controller->getAction() == 'inspect') {
             handle: 'a .fa-bars',
             cursor: 'move',
             axis: 'y',
-            containment: $btSetList,
-            connectWith: $btLists,
+            <?php
+            if ($enableMoveBlocktypesAcrossSets) {
+                ?>
+                containment: $btSetList,
+                connectWith: $btLists,
+                <?php
+            } else {
+                ?>
+                containment: 'parent',
+                <?php
+            }
+            ?>
             start: function() {
                 var $me = $(this),
                     $btSet = $me.closest('.ccm-btlist-btset'),

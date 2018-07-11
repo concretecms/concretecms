@@ -46,6 +46,7 @@ class Types extends DashboardPageController
         $this->set('normalBlockTypesAndSets', $this->getSetsData($normalBlockTypes));
         $this->set('availableBlockTypes', $availableBlockTypes);
         $this->set('marketplaceEnabled', (bool) $config->get('concrete.marketplace.enabled'));
+        $this->set('enableMoveBlocktypesAcrossSets', (bool) $config->get('concrete.misc.enable_move_blocktypes_across_sets'));
         $this->addHeaderItem(<<<EOT
 <style>
     #ccm-btlist-btsets .fa-bars {
@@ -234,6 +235,7 @@ EOT
         if (!$this->token->validate('ccm-sort_blocktypes')) {
             throw new UserMessageException($this->token->getErrorMessage());
         }
+        $config = $this->app->make('config');
         $post = $this->request->request;
         $valn = $this->app->make(Numbers::class);
         $movingID = $post->get('movingID');
@@ -271,6 +273,9 @@ EOT
             if ($newBtSet === null) {
                 throw new UserMessageException(sprintf('Invalid parameters: %s', 'newBtSetID'));
             }
+        }
+        if (!$config->get('concrete.misc.enable_move_blocktypes_across_sets') && $newBtSetID !== $oldBtSetID) {
+            throw new UserMessageException(sprintf('Invalid parameters: %s', 'oldBtSetID, newBtSetID'));
         }
         $rawBtIDs = $this->request->request->get('btIDs');
         if (!is_array($rawBtIDs)) {
