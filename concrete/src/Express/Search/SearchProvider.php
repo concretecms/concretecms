@@ -94,6 +94,10 @@ class SearchProvider extends AbstractSearchProvider
         return new DefaultSet($this->category);
     }
 
+    /**
+     * Returns the number of items per page.
+     * @return int
+     */
     public function getItemsPerPage()
     {
         $query = $this->getSessionCurrentQuery();

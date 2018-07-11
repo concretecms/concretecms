@@ -73,12 +73,13 @@ class SearchProvider extends AbstractSearchProvider implements QueryableInterfac
         $searchRequest = new StickyRequest('file_manager_folder');
         $searchParams = $searchRequest->getSearchRequest();
         $node = empty($searchParams['folder']) ? null : Node::getByID($searchParams['folder']);
-        if ($node instanceof SearchPreset) {
-            $searchObj = $node->getSavedSearchObject();
-            return $searchObj->getQuery()->getItemsPerPage();
-        } else {
+
+        if (!($node instanceof SearchPreset)) {
             return parent::getItemsPerPage();
         }
+
+        $searchObj = $node->getSavedSearchObject();
+        return $searchObj->getQuery()->getItemsPerPage();
     }
 
 

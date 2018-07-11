@@ -368,7 +368,7 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getItemsPerPage()
     {
