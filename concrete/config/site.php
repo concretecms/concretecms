@@ -148,6 +148,12 @@ return [
                         'ccm_token',
                     ],
                 ],
+                'tracking' => [
+                    'code' => [
+                        'header' => '',
+                        'footer' => '',
+                    ],
+                ],
             ],
         ],
     ],

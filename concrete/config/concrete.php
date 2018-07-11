@@ -863,21 +863,6 @@ return [
      * ------------------------------------------------------------------------
      */
     'seo' => [
-        'tracking' => [
-            /*
-             * User defined tracking code
-             *
-             * @var string
-             */
-            'code' => '',
-
-            /*
-             * Tracking code position
-             *
-             * @var string (top|bottom)
-             */
-            'code_position' => 'bottom',
-        ],
         'exclude_words' => 'a, an, as, at, before, but, by, for, from, is, in, into, like, of, off, on, onto, per, ' .
             'since, than, the, this, that, to, up, via, with',
 
