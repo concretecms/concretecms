@@ -2,51 +2,50 @@
 
 namespace Concrete\Core\Http\Middleware;
 
-use Concrete\Core\Cookie\CookieJar;
+use Concrete\Core\Cookie\ResponseCookieJar;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Middleware for adding and deleting cookies to an http response
+ * Middleware for adding and deleting cookies to an http response.
+ *
  * @package Concrete\Core\Http
  */
 class CookieMiddleware implements MiddlewareInterface
 {
+    /**
+     * @var \Concrete\Core\Cookie\ResponseCookieJar
+     */
+    private $responseCookies;
 
     /**
-     * @var \Concrete\Core\Cookie\CookieJar
+     * @param \Concrete\Core\Cookie\ResponseCookieJar $responseCookiess
      */
-    private $cookies;
-
-    public function __construct(CookieJar $cookies)
+    public function __construct(ResponseCookieJar $responseCookiess)
     {
-        $this->cookies = $cookies;
+        $this->responseCookiess = $responseCookiess;
     }
 
     /**
-     * Add or remove cookies from the
-     * @param Request $request
-     * @param \Concrete\Core\Http\Middleware\DelegateInterface $frame
-     * @return Response
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Http\Middleware\MiddlewareInterface::process()
      */
     public function process(Request $request, DelegateInterface $frame)
     {
         $this->cookies->setRequest($request);
 
-        /** @var Response $response */
         $response = $frame->next($request);
 
-        $cleared = $this->cookies->getClearedCookies();
+        $cleared = $this->responseCookies->getClearedCookies();
         foreach ($cleared as $cookie) {
             $response->headers->clearCookie($cookie, DIR_REL . '/');
         }
 
-        $cookies = $this->cookies->getCookies();
+        $cookies = $this->responseCookies->getCookies();
         foreach ($cookies as $cookie) {
             $response->headers->setCookie($cookie);
         }
 
         return $response;
     }
-
 }
