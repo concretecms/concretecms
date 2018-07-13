@@ -3,7 +3,8 @@ namespace Concrete\Core\Express\Entry\Notifier\Notification;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Express\Entry\Notifier\NotificationInterface;
-use Concrete\Block\ExpressForm\Controller as ExpressFormBlockController;
+use Concrete\Core\Block\BlockController;
+use Exception;
 
 abstract class AbstractFormBlockSubmissionNotification implements NotificationInterface
 {
@@ -11,11 +12,14 @@ abstract class AbstractFormBlockSubmissionNotification implements NotificationIn
     protected $blockController;
     protected $app;
 
-    public function __construct(Application $app, ExpressFormBlockController $blockController)
+    public function __construct(Application $app, $blockController)
     {
-        $this->blockController = $blockController;
-        $this->app = $app;
+        if($blockController instanceof BlockController){
+            $this->blockController = $blockController;
+            $this->app = $app;
+        }else{
+            throw new Exception("Invalid block controller");
+        }
     }
-
 
 }
