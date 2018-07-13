@@ -292,7 +292,7 @@ EOT
                 if ($bt === null) {
                     throw new UserMessageException(sprintf('Invalid parameters: %s', 'btIDs'));
                 }
-                throw new UserMessageException(t('The block type set "%1$s" already contains the block type "$2$s".', $newBtSet === null ? t('Other') : $newBtSet->getBlockTypeSetDisplayName('text')));
+                throw new UserMessageException(t('The block type set "%1$s" already contains the block type "%2$s".', $newBtSet === null ? t('Other') : $newBtSet->getBlockTypeSetDisplayName('text')));
             }
             $btIDs[] = $btID;
         }
