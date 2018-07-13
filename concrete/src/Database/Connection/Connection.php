@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Database\Connection;
 
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManager;
 use ORM;
 
@@ -274,14 +275,20 @@ class Connection extends \Doctrine\DBAL\Connection
         }
         $qb->where($where);
         $sql = $qb->getSql();
-        $this->transactional(function () use ($sql, $table, $fieldArray, $updateKeys) {
-            $num = parent::query($sql)->fetchColumn();
-            if ($num) {
-                $this->update($table, $fieldArray, $updateKeys);
-            } else {
+        $num = parent::query($sql)->fetchColumn();
+        if ($num) {
+            $update = true;
+        } else {
+            try {
                 $this->insert($table, $fieldArray);
+                $update = false;
+            } catch (UniqueConstraintViolationException $x) {
+                $update = true;
             }
-        });
+        }
+        if ($update) {
+            $this->update($table, $fieldArray, $updateKeys);
+        }
     }
 
     /**
