@@ -39,6 +39,16 @@ class CookieJar
     }
 
     /**
+     * Get the object containing the response cookies.
+     *
+     * @return \Concrete\Core\Cookie\ResponseCookieJar
+     */
+    public function getResponseCookiesJar()
+    {
+        return $this->responseCookiesJar;
+    }
+
+    /**
      * Does a cookie exist in the request or response cookies?
      *
      * @param string $name
@@ -90,7 +100,7 @@ class CookieJar
             }
         }
         foreach ($this->responseCookiesJar->getCookies() as $cookie) {
-            if ($cookie->isCleared()) {
+            if ($cookie->getExpiresTime() !== 0 && $cookie->isCleared()) {
                 unset($result[$cookie->getName()]);
             } else {
                 $result[$cookie->getName()] = $cookie->getValue();
