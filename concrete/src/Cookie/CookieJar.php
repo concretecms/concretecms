@@ -90,7 +90,11 @@ class CookieJar
             }
         }
         foreach ($this->responseCookiesJar->getCookies() as $cookie) {
-            $result[$cookie->getName()] = $cookie->getValue();
+            if ($cookie->isCleared()) {
+                unset($result[$cookie->getName()]);
+            } else {
+                $result[$cookie->getName()] = $cookie->getValue();
+            }
         }
 
         return $result;
