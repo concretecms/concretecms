@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Entity\Site;
 
 use Concrete\Core\Entity\LocaleTrait;
@@ -41,9 +42,9 @@ class Locale implements LocaleInterface, TreeInterface
     public $msIsDefault = false;
 
     /**
-     * Get the site locale record identifier (or NULL if the record has not been saved yet).
+     * {@inheritdoc}
      *
-     * @return int|null
+     * @see \Concrete\Core\Localization\Locale\LocaleInterface::getLocaleID()
      */
     public function getLocaleID()
     {
