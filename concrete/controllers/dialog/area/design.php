@@ -22,6 +22,23 @@ class Design extends BackendPageController
         return $this->permissions->canEditAreaDesign();
     }
 
+    /**
+     * Recursive function to find the root area of an
+     * area/subarea and return the handle of that area.
+     *
+     * @param $a
+     * @return mixed
+     */
+    public function getRootAreaHandle($a) {
+        if ($a instanceof \Concrete\Core\Area\SubArea) {
+            $paID = $a->getAreaParentID();
+            $paHandle = \Concrete\Core\Area\Area::getAreaHandleFromID($paID);
+            return $this->getRootAreaHandle(\Concrete\Core\Area\Area::getOrCreate($this->page, $paHandle));
+        } else {
+            return $a->getAreaHandle();
+        }
+    }
+
     public function reset()
     {
         $a = $this->area;

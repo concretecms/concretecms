@@ -11,12 +11,7 @@ $areaClasses = $pt->getThemeAreaClasses();
 $customClasses = array();
 
 // Use the area handle as the key to map against area classes
-$areaHandle = $a->getAreaHandle();
-
-// If its a SubArea, find the parent handle and use that
-if ($a instanceof \Concrete\Core\Area\SubArea) {
-    $areaHandle = \Concrete\Core\Area\Area::getAreaHandleFromID($a->getAreaParentID());
-}
+$areaHandle = $this->controller->getRootAreaHandle($a);
 
 if (isset($areaClasses[$areaHandle])) {
     $customClasses = $areaClasses[$areaHandle];
