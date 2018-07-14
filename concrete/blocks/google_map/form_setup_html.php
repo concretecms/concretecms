@@ -239,7 +239,7 @@ var setupApiKey = (function() {
             }
             var places = new google.maps.places.PlacesService(document.createElement('div'));
             window.gm_authFailure = function() {
-                placesLoaded(<?= json_encode(t('The API Key NOT is valid.')) ?>);
+                placesLoaded(<?= json_encode(t('The API Key is NOT valid.')) ?>);
             };
             places.getDetails(
                 {
@@ -247,7 +247,7 @@ var setupApiKey = (function() {
                 },
                 function(place, status) {
                     if (status === 'REQUEST_DENIED') {
-                        placesLoaded(<?= json_encode(t('The API Key NOT is valid for Google Places.')) ?>);
+                        placesLoaded(<?= json_encode(t('The API Key is NOT valid for Google Places.')) ?>);
                     } else {
                         placesLoaded(null, places);
                     }
@@ -259,7 +259,7 @@ var setupApiKey = (function() {
             scriptLoaded(null);
         };
         window.gm_authFailure = function() {
-            scriptLoaded(<?= json_encode(t('The API Key NOT is valid.')) ?>);
+            scriptLoaded(<?= json_encode(t('The API Key is NOT valid.')) ?>);
         };
         $checkSpinner.removeClass('fa-play').addClass('fa-refresh fa-spin');
         $(document.body).append($script = $('<' + 'script src="https://maps.googleapis.com/maps/api/js?key=' + encodeURIComponent(key) + '&libraries=places&callback=' + encodeURIComponent(scriptLoadedFunctionName) + '"></' + 'script>'));
