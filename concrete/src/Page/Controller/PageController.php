@@ -205,7 +205,7 @@ class PageController extends Controller
             $requestPath = $request->getPath();
         }
         $taskparts = $this->getTaskPathsFromRequest($requestPath);
-        if (isset($taskparts[0]) && $taskparts[0] !== '') {
+        if (is_array($taskparts) && isset($taskparts[0]) && $taskparts[0] !== '') {
             $method = $taskparts[0];
         } elseif (is_object($this->c) && is_callable(array($this, $this->c->getCollectionHandle()))) {
             $method = $this->c->getCollectionHandle();
@@ -240,13 +240,13 @@ class PageController extends Controller
 
         if ($foundTask) {
             $this->action = $method;
-            if (isset($taskparts[1])) {
+            if (is_array($taskparts) && isset($taskparts[1])) {
                 array_shift($taskparts);
                 $this->parameters = $taskparts;
             }
         } else {
             $this->action = 'view';
-            if ($taskparts[0] !== '') {
+            if (is_array($taskparts) && $taskparts[0] !== '') {
                 $this->parameters = $taskparts;
             }
         }
