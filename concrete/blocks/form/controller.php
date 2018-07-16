@@ -14,6 +14,7 @@ use FileSet;
 use Page;
 use User;
 use UserInfo;
+use Concrete\Core\Validator\String\EmailValidator;
 
 class Controller extends BlockController
 {
@@ -382,7 +383,6 @@ class Controller extends BlockController
                 $_REQUEST['ccmCaptchaCode'] = '';
             }
         }
-
         //checked required fields
         foreach ($rows as $row) {
             if ($row['inputType'] == 'datetime') {
@@ -397,8 +397,12 @@ class Controller extends BlockController
             if (intval($row['required']) == 1) {
                 $notCompleted = 0;
                 if ($row['inputType'] == 'email') {
-                    if (!Core::make('helper/validation/strings')->email($_POST['Question' . $row['msqID']])) {
-                        $errors['emails'] = t('You must enter a valid email address.');
+                    if (!isset($emailValidator)) {
+                        $emailValidator = $this->app->make(EmailValidator::class);
+                    }
+                    $e = $this->app->make('error');
+                    if (!$emailValidator->isValid($_POST['Question' . $row['msqID']], $e)) {
+                        $errors['emails'] = $e->toText();
                         $errorDetails[$row['msqID']]['emails'] = $errors['emails'];
                     }
                 }

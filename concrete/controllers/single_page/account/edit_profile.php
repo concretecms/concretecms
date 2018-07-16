@@ -1,18 +1,15 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Account;
 
-use Concrete\Core\Error\UserMessageException;
-use Concrete\Core\Page\Controller\AccountPageController;
-use Concrete\Core\Validation\ResponseInterface;
-use Config;
-use UserInfo;
-use Exception;
 use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Authentication\AuthenticationTypeFailureException;
-use Loader;
-use User;
-use UserAttributeKey;
+use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Localization\Localization;
+use Concrete\Core\Page\Controller\AccountPageController;
+use Config;
+use Exception;
+use UserAttributeKey;
 
 class EditProfile extends AccountPageController
 {
@@ -23,7 +20,7 @@ class EditProfile extends AccountPageController
             throw new UserMessageException(t('You must be logged in to access this page.'));
         }
 
-        $locales = array();
+        $locales = [];
         $languages = Localization::getAvailableInterfaceLanguages();
         if (count($languages) > 0) {
             array_unshift($languages, Localization::BASE_LOCALE);
@@ -33,7 +30,7 @@ class EditProfile extends AccountPageController
                 $locales[$lang] = \Punic\Language::getName($lang, $lang);
             }
             asort($locales);
-            $locales = array_merge(array('' => tc('Default locale', '** Default')), $locales);
+            $locales = array_merge(['' => tc('Default locale', '** Default')], $locales);
         }
         $this->set('locales', $locales);
     }
@@ -53,7 +50,7 @@ class EditProfile extends AccountPageController
         }
         if ($method != 'callback') {
             if (!is_array($at->controller->apiMethods) || !in_array($method, $at->controller->apiMethods)) {
-                throw new UserMessageException("Invalid method.");
+                throw new UserMessageException('Invalid method.');
             }
         }
         try {
@@ -74,17 +71,10 @@ class EditProfile extends AccountPageController
     {
         $this->view();
         $ui = $this->get('profile');
+        /* @var \Concrete\Core\User\UserInfo $ui */
 
-        /** @var Application $app */
         $app = $this->app;
 
-        /** @var Strings $vsh */
-        $vsh = $app->make('helper/validation/strings');
-
-        /** @var Validation $cvh */
-        $cvh = $app->make('helper/concrete/validation');
-
-        /** @var Token $valt */
         $valt = $app->make('token');
 
         $data = $this->post();
@@ -95,23 +85,12 @@ class EditProfile extends AccountPageController
 
         // validate the user's email
         $email = $this->post('uEmail');
-        if (!$vsh->email($email)) {
-            $this->error->add(t('Invalid email address provided.'));
-        } else {
-            if (!$cvh->isUniqueEmail($email) && $ui->getUserEmail() != $email) {
-                $this->error->add(t("The email address '%s' is already in use. Please choose another.", $email));
-            }
-        }
+        $app->make('validator/user/email')->isValidFor($email, $ui, $this->error);
 
-        /**
-         * Username validation
-         */
-        if ($username = $this->post('uName')) {
-            if (!$cvh->username($username)) {
-                $this->error->add(t('Invalid username provided.'));
-            } elseif (!$cvh->isUniqueUsername($username)) {
-                $this->error->add(t("The username '%s' is already in use. Please choose another.", $username));
-            }
+        // Username validation
+        $username = $this->post('uName');
+        if ($username) {
+            $app->make('validator/user/name')->isValidFor($username, $ui, $this->error);
         }
 
         // password
@@ -119,7 +98,7 @@ class EditProfile extends AccountPageController
             $passwordNew = $data['uPasswordNew'];
             $passwordNewConfirm = $data['uPasswordNewConfirm'];
 
-            \Core::make('validator/password')->isValid($passwordNew, $this->error);
+            $app->make('validator/password')->isValid($passwordNew, $this->error);
 
             if ($passwordNew) {
                 if ($passwordNew != $passwordNewConfirm) {
@@ -136,9 +115,6 @@ class EditProfile extends AccountPageController
             $controller = $uak->getController();
             $validator = $controller->getValidator();
             $response = $validator->validateSaveValueRequest($controller, $this->request, $uak->isAttributeKeyRequiredOnProfile());
-            /**
-             * @var $response ResponseInterface
-             */
             if (!$response->isValid()) {
                 $error = $response->getErrorObject();
                 $this->error->add($error);
@@ -153,7 +129,7 @@ class EditProfile extends AccountPageController
 
             $ui->saveUserAttributesForm($aks);
             $ui->update($data);
-            $this->redirect("/account/edit_profile", "save_complete");
+            $this->redirect('/account/edit_profile', 'save_complete');
         }
     }
 }

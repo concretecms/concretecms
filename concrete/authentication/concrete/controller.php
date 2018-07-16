@@ -13,6 +13,7 @@ use Exception;
 use Session;
 use UserInfo;
 use View;
+use Concrete\Core\Validator\String\EmailValidator;
 
 class Controller extends AuthenticationTypeController
 {
@@ -172,8 +173,7 @@ class Controller extends AuthenticationTypeController
     public function forgot_password()
     {
         $loginData['success'] = 0;
-        $error = Core::make('helper/validation/error');
-        $vs = Core::make('helper/validation/strings');
+        $error = $this->app->make('helper/validation/error');
         $em = $this->post('uEmail');
         $token = $this->app->make(Token::class);
         $this->set('authType', $this->getAuthenticationType());
@@ -185,13 +185,14 @@ class Controller extends AuthenticationTypeController
                     throw new \Exception($token->getErrorMessage());
                 }
 
-                if (!$vs->email($em)) {
-                    throw new \Exception(t('Invalid email address.'));
+                $e = $this->app->make('error');
+                if (!$this->app->make(EmailValidator::class)->isValid($em, $e)) {
+                    throw new \Exception($e->toText());
                 }
 
                 $oUser = UserInfo::getByEmail($em);
                 if ($oUser) {
-                    $mh = Core::make('helper/mail');
+                    $mh = $this->app->make('helper/mail');
                     //$mh->addParameter('uPassword', $oUser->resetUserPassword());
                     if (Config::get('concrete.user.registration.email_registration')) {
                         $mh->addParameter('uName', $oUser->getUserEmail());
@@ -229,7 +230,7 @@ class Controller extends AuthenticationTypeController
                         $mh->from($fromEmail, $fromName);
                     }
 
-                    $mh->addParameter('siteName', tc('SiteName', \Core::make('site')->getSite()->getSiteName()));
+                    $mh->addParameter('siteName', tc('SiteName', $this->app->make('site')->getSite()->getSiteName()));
                     $mh->load('forgot_password');
                     @$mh->sendMail();
                 }

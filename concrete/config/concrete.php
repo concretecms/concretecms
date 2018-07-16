@@ -8,7 +8,7 @@ return [
      */
     'version' => '8.4.2b1',
     'version_installed' => '8.4.2b1',
-    'version_db' => '20180710203437', // the key of the latest database migration
+    'version_db' => '20180716000000', // the key of the latest database migration
 
     /*
      * Installation status
@@ -753,7 +753,12 @@ return [
         'username' => [
             'maximum' => 64,
             'minimum' => 3,
-            'allow_spaces' => false,
+            'allowed_characters' => [
+                'boundary' => 'A-Za-z0-9',
+                'middle' => 'A-Za-z0-9_\.',
+                'requirement_string' => 'A username may only contain letters, numbers, dots (not at the beginning/end), underscores (not at the beginning/end).',
+                'error_string' => 'A username may only contain letters, numbers, dots (not at the beginning/end), underscores (not at the beginning/end).',
+            ],
         ],
         'password' => [
             'maximum' => 128,
@@ -761,6 +766,10 @@ return [
             'hash_portable' => false,
             'hash_cost_log2' => 12,
             'legacy_salt' => '',
+        ],
+        'email' => [
+            'test_mx_record' => false,
+            'strict' => true,
         ],
         'private_messages' => [
             'throttle_max' => 20,
