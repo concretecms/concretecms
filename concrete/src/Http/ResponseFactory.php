@@ -331,7 +331,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         $site = $this->app['site']->getSite();
 
         $response = $cms->handleCanonicalURLRedirection($request, $site);
-        if (!$response) {
+        if (!$response && $collection->getCollectionPath() !== '/page_not_found') {
             $response = $cms->handleURLSlashes($request, $site);
         }
         if (isset($response)) {
