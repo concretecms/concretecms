@@ -101,8 +101,9 @@ class LinkAbstractor extends ConcreteObject
                 $cID = $matches[1];
                 if ($cID > 0) {
                     $c = Page::getByID($cID, 'ACTIVE');
-
-                    return Loader::helper("navigation")->getLinkToCollection($c);
+                    if ($c->isActive()) {
+                        return (string) \URL::to($c);
+                    }
                 }
             },
             $text
