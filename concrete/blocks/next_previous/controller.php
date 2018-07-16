@@ -19,6 +19,46 @@ class Controller extends BlockController
 
     protected $btWrapperClass = 'ccm-ui';
 
+    /**
+     * The label to go to the previous page.
+     *
+     * @var string
+     */
+    public $previousLabel;
+
+    /**
+     * The label to go to the next page.
+     *
+     * @var string
+     */
+    public $nextLabel;
+
+    /**
+     * The label of the parent page.
+     *
+     * @var string
+     */
+    public $parentLabel;
+
+    /**
+     * Whether the navigation should be looped.
+     *
+     * 0 = don't loop
+     * 1 = loop (default)
+     *
+     * @var int
+     */
+    public $loopSequence;
+
+    /**
+     * How to order the sibling pages.
+     *
+     * @example E.g. <code>display_asc</code>
+     *
+     * @var string
+     */
+    public $orderBy;
+
     public function getBlockTypeDescription()
     {
         return t('Navigate through sibling pages.');
