@@ -355,8 +355,7 @@ class PageController extends Controller
         $task = substr($requestPath, strlen($this->c->getCollectionPath()));
         if(is_string($task)) {
             if (strpos($task, '/') !== false) {
-                $replaceCount = 1;
-                $task = str_replace('/', '', $task, $replaceCount);
+                $task = ltrim($task, '/');
                 $task = str_replace('-/', '', $task);
                 $taskparts = explode('/', $task);
 
