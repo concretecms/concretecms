@@ -204,9 +204,7 @@ class PageController extends Controller
         if ($requestPath === null) {
             $requestPath = $request->getPath();
         }
-        $task = substr($requestPath, strlen($this->c->getCollectionPath()) + 1);
-        $task = str_replace('-/', '', $task);
-        $taskparts = explode('/', $task);
+        $taskparts = $this->getTaskPathsFromRequest($requestPath);
         if (isset($taskparts[0]) && $taskparts[0] !== '') {
             $method = $taskparts[0];
         } elseif (is_object($this->c) && is_callable(array($this, $this->c->getCollectionHandle()))) {
@@ -349,5 +347,29 @@ class PageController extends Controller
     public function useUserLocale()
     {
         return false;
+    }
+
+    private function getTaskPathsFromRequest($requestPath)
+    {
+        $result = null;
+        $task = substr($requestPath, strlen($this->c->getCollectionPath()));
+        if(is_string($task)) {
+            if (strpos($task, '/') !== false) {
+                $task = ltrim($task, '/');
+                $task = str_replace('-/', '', $task);
+                $taskparts = explode('/', $task);
+
+                $result = $taskparts;
+            } else {
+                $result = [];
+                $result[] = '';
+                $this->requestValidated = false;
+            }
+        } elseif ($task === false) {
+            $result = [];
+            $result[] = '';
+        }
+
+        return $result;
     }
 }
