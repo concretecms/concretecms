@@ -91,8 +91,8 @@ if ($controller->getAction() == 'inspect') {
             foreach ($availableBlockTypes as $bt) {
                 $btIcon = $ci->getBlockTypeIconURL($bt);
                 ?>
-                <li><span><img src="<?= $btIcon ?>" /> <?= t($bt->getBlockTypeName()) ?>
-                    <a href="<?= $urlResolver->resolve('/dashboard/blocks/types', 'install', $bt->getBlockTypeHandle()) ?>" class="btn pull-right btn-sm btn-default"><?= t('Install') ?></a>
+                <li><span class="clearfix"><img src="<?= $btIcon ?>" /> <?= t($bt->getBlockTypeName()) ?>
+                    <a href="<?= $urlResolver->resolve(['/dashboard/blocks/types', 'install', $bt->getBlockTypeHandle()]) ?>" class="btn pull-right btn-sm btn-default"><?= t('Install') ?></a>
                 </span></li>
                 <?php
             }
