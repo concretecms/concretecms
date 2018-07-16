@@ -204,10 +204,8 @@ class PageController extends Controller
         if ($requestPath === null) {
             $requestPath = $request->getPath();
         }
-        $task = substr($requestPath, strlen($this->c->getCollectionPath()) + 1);
-        $task = str_replace('-/', '', $task);
-        $taskparts = explode('/', $task);
-        if (isset($taskparts[0]) && $taskparts[0] !== '') {
+        $taskparts = $this->getTaskPathsFromRequest($requestPath);
+        if (is_array($taskparts) && isset($taskparts[0]) && $taskparts[0] !== '') {
             $method = $taskparts[0];
         } elseif (is_object($this->c) && is_callable(array($this, $this->c->getCollectionHandle()))) {
             $method = $this->c->getCollectionHandle();
@@ -242,13 +240,13 @@ class PageController extends Controller
 
         if ($foundTask) {
             $this->action = $method;
-            if (isset($taskparts[1])) {
+            if (is_array($taskparts) && isset($taskparts[1])) {
                 array_shift($taskparts);
                 $this->parameters = $taskparts;
             }
         } else {
             $this->action = 'view';
-            if ($taskparts[0] !== '') {
+            if (is_array($taskparts) && $taskparts[0] !== '') {
                 $this->parameters = $taskparts;
             }
         }
@@ -349,5 +347,30 @@ class PageController extends Controller
     public function useUserLocale()
     {
         return false;
+    }
+
+    private function getTaskPathsFromRequest($requestPath)
+    {
+        $result = null;
+        $task = substr($requestPath, strlen($this->c->getCollectionPath()));
+        if(is_string($task)) {
+            if (strpos($task, '/') !== false) {
+                $replaceCount = 1;
+                $task = str_replace('/', '', $task, $replaceCount);
+                $task = str_replace('-/', '', $task);
+                $taskparts = explode('/', $task);
+
+                $result = $taskparts;
+            } else {
+                $result = [];
+                $result[] = '';
+                $this->requestValidated = false;
+            }
+        } elseif ($task === false) {
+            $result = [];
+            $result[] = '';
+        }
+
+        return $result;
     }
 }
