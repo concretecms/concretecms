@@ -15,14 +15,14 @@ class CookieMiddleware implements MiddlewareInterface
     /**
      * @var \Concrete\Core\Cookie\ResponseCookieJar
      */
-    private $responseCookies;
+    private $responseCookieJar;
 
     /**
-     * @param \Concrete\Core\Cookie\ResponseCookieJar $responseCookiess
+     * @param \Concrete\Core\Cookie\ResponseCookieJar $responseCookieJar
      */
-    public function __construct(ResponseCookieJar $responseCookiess)
+    public function __construct(ResponseCookieJar $responseCookieJar)
     {
-        $this->responseCookiess = $responseCookiess;
+        $this->responseCookieJar = $responseCookieJar;
     }
 
     /**
@@ -32,16 +32,14 @@ class CookieMiddleware implements MiddlewareInterface
      */
     public function process(Request $request, DelegateInterface $frame)
     {
-        $this->cookies->setRequest($request);
-
         $response = $frame->next($request);
 
-        $cleared = $this->responseCookies->getClearedCookies();
+        $cleared = $this->responseCookieJar->getClearedCookies();
         foreach ($cleared as $cookie) {
             $response->headers->clearCookie($cookie, DIR_REL . '/');
         }
 
-        $cookies = $this->responseCookies->getCookies();
+        $cookies = $this->responseCookieJar->getCookies();
         foreach ($cookies as $cookie) {
             $response->headers->setCookie($cookie);
         }

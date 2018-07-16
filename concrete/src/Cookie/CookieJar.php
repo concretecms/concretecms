@@ -24,18 +24,18 @@ class CookieJar
      *
      * @var \Concrete\Core\Cookie\ResponseCookieJar
      */
-    protected $responseCookiesJar;
+    protected $responseCookieJar;
 
     /**
      * Initialize the instance.
      *
      * @param Request $request the object containing the request cookies
-     * @param ResponseCookieJar $responseCookiesJar the object containing the response cookies
+     * @param ResponseCookieJar $responseCookieJar the object containing the response cookies
      */
-    public function __construct(Request $request, ResponseCookieJar $responseCookiesJar)
+    public function __construct(Request $request, ResponseCookieJar $responseCookieJar)
     {
         $this->setRequest($request);
-        $this->responseCookiesJar = $responseCookiesJar;
+        $this->responseCookieJar = $responseCookieJar;
     }
 
     /**
@@ -45,7 +45,7 @@ class CookieJar
      */
     public function getResponseCookiesJar()
     {
-        return $this->responseCookiesJar;
+        return $this->responseCookieJar;
     }
 
     /**
@@ -57,11 +57,11 @@ class CookieJar
      */
     public function has($name)
     {
-        if (in_array($name, $this->responseCookiesJar->getClearedCookies(), true)) {
+        if (in_array($name, $this->responseCookieJar->getClearedCookies(), true)) {
             return false;
         }
 
-        return $this->request->cookies->has($name) || $this->responseCookiesJar->hasCookie($name);
+        return $this->request->cookies->has($name) || $this->responseCookieJar->hasCookie($name);
     }
 
     /**
@@ -74,11 +74,11 @@ class CookieJar
      */
     public function get($name, $default = null)
     {
-        $responseCookie = $this->responseCookiesJar->getCookieByName($name);
+        $responseCookie = $this->responseCookieJar->getCookieByName($name);
         if ($responseCookie !== null) {
             return $responseCookie->getValue();
         }
-        if (in_array($name, $this->responseCookiesJar->getClearedCookies(), true)) {
+        if (in_array($name, $this->responseCookieJar->getClearedCookies(), true)) {
             return $default;
         }
 
@@ -93,13 +93,13 @@ class CookieJar
     public function getAll()
     {
         $result = [];
-        $clearedRequestCookies = $this->responseCookiesJar->getClearedCookies();
+        $clearedRequestCookies = $this->responseCookieJar->getClearedCookies();
         foreach ($this->request->cookies->all() as $name => $value) {
             if (!in_array($name, $clearedRequestCookies, true)) {
                 $result[$name] = $value;
             }
         }
-        foreach ($this->responseCookiesJar->getCookies() as $cookie) {
+        foreach ($this->responseCookieJar->getCookies() as $cookie) {
             if ($cookie->getExpiresTime() !== 0 && $cookie->isCleared()) {
                 unset($result[$cookie->getName()]);
             } else {
@@ -135,7 +135,7 @@ class CookieJar
      */
     public function set($name, $value = null, $expire = 0, $path = '/', $domain = null, $secure = false, $httpOnly = true)
     {
-        return $this->responseCookiesJar->addCookie($name, $value, $expire, $path, $domain, $secure, $httpOnly);
+        return $this->responseCookieJar->addCookie($name, $value, $expire, $path, $domain, $secure, $httpOnly);
     }
 
     /**
@@ -145,7 +145,7 @@ class CookieJar
      */
     public function add($cookie)
     {
-        $this->responseCookiesJar->addCookieObject($cookie);
+        $this->responseCookieJar->addCookieObject($cookie);
     }
 
     /**
@@ -155,7 +155,7 @@ class CookieJar
      */
     public function clear($name)
     {
-        $this->responseCookiesJar->clear($name);
+        $this->responseCookieJar->clear($name);
     }
 
     /**
@@ -165,7 +165,7 @@ class CookieJar
      */
     public function getCookies()
     {
-        return $this->responseCookiesJar->getCookies();
+        return $this->responseCookieJar->getCookies();
     }
 
     /**
