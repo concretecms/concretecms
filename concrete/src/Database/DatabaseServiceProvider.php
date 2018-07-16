@@ -108,6 +108,10 @@ class DatabaseServiceProvider extends ServiceProvider
             $cache     = $app->make('orm/cache');
             $config    = \Doctrine\ORM\Tools\Setup::createConfiguration(
                 $isDevMode, $proxyDir, $cache);
+
+            foreach($app->make('config')->get('app.entity_namespaces') as $namespace => $class) {
+                $config->addEntityNamespace($namespace, $class);
+            }
             return $config;
         });
 

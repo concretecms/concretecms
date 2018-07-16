@@ -25,7 +25,7 @@ class CoreLocation implements LocationInterface
     public function contains($file)
     {
         $record = new Record($this->filesystem);
-        $record->setFile(DIR_BASE_CORE . DIRECTORY_SEPARATOR . $file);
+        $record->setFile(DIR_BASE_CORE . '/' . $file);
         $record->setUrl(ASSETS_URL . '/' . $file);
         return $record;
     }

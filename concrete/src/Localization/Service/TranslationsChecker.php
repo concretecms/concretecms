@@ -30,8 +30,9 @@ class TranslationsChecker
     protected $remoteProvider;
 
     /**
-     * @param LocalTranslationFactoryInterface $localFactory
-     * @param RemoteTranslationsProviderInterface $remoteProvider
+     * @param Application $app
+     * @param LocalFactory $localFactory
+     * @param RemoteProvider $remoteProvider
      */
     public function __construct(Application $app, LocalFactory $localFactory, RemoteProvider $remoteProvider)
     {

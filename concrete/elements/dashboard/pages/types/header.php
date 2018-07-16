@@ -14,8 +14,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
         </ul>
     </div>
     <?php } ?>
-    <a href="<?=$view->url('/dashboard/pages/types/organize', $siteTypeID)?>" class="btn btn-default"><?=t('Order &amp; Group')?></a>
-    <a href="<?=$view->url('/dashboard/pages/types/add', $siteTypeID)?>" class="btn btn-primary"><?=t('Add Page Type')?></a>
+    <a href="<?=$view->url('/dashboard/pages/types/organize', isset($siteTypeID) ? $siteTypeID : null)?>" class="btn btn-default"><?=t('Order &amp; Group')?></a>
+    <a href="<?=$view->url('/dashboard/pages/types/add', isset($siteTypeID) ? $siteTypeID : null)?>" class="btn btn-primary"><?=t('Add Page Type')?></a>
 </div>
 
 

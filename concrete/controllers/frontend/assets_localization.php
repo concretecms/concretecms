@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Controller\Frontend;
 
+use Concrete\Core\File\Image\BitmapFormat;
 use Concrete\Core\File\Type\Type as FileType;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Localization\Localization;
@@ -41,7 +42,7 @@ class AssetsLocalization extends Controller
     'collapse' => t('Collapse'),
     'error' => t('Error'),
     'errorDetails' => t('Details'),
-    'deleteBlockConfirm' => t('Delete Block'),
+    'deleteBlockTitle' => t('Delete'),
     'deleteBlock' => t('Block Deleted'),
     'deleteBlockMsg' => t('The block has been removed successfully.'),
     'addBlock' => t('Add Block'),
@@ -79,6 +80,8 @@ class AssetsLocalization extends Controller
     'copyBlockToScrapbook' => t('Copy to Clipboard'),
     'changeBlockTemplate' => t('Custom Template'),
     'changeBlockCSS' => t('Design'),
+    'go' => t('Go'),
+    'confirm' => t('Confirm'),
     'errorCustomStylePresetNoName' => t('You must give your custom style preset a name.'),
     'changeBlockBaseStyle' => t('Set Block Styles'),
     'confirmCssReset' => t('Are you sure you want to remove all of these custom styles?'),
@@ -595,11 +598,29 @@ jQuery.ui.fancytree.prototype.options.strings.loadError = ' . json_encode(t('Loa
      */
     public function getDropzoneJavascript()
     {
-        $content =
-'Dropzone.prototype.defaultOptions.dictDefaultMessage = ' . json_encode(t('Drop files here or click to upload.')) . ';
+        $content = ';
+Dropzone.prototype.defaultOptions.dictDefaultMessage = ' . json_encode(t('Drop files here or click to upload.')) . ';
 Dropzone.prototype.defaultOptions.dictFallbackMessage = ' . json_encode(t("Your browser does not support drag'n'drop file uploads.")) . ';
 Dropzone.prototype.defaultOptions.dictFallbackText = ' . json_encode(t('Please use the fallback form below to upload your files like in the olden days.')) . ';
+Dropzone.prototype.defaultOptions.dictFallbackText = ' . json_encode(t('Please use the fallback form below to upload your files like in the olden days.')) . ';
+Dropzone.prototype.defaultOptions.dictFileTooBig = ' . json_encode(t('File is too big ({{filesize}}MiB). Max filesize: {{maxFilesize}}MiB.')) . ';
+Dropzone.prototype.defaultOptions.dictInvalidFileType = ' . json_encode(t('You can\'t upload files of this type.')) . ';
+Dropzone.prototype.defaultOptions.dictResponseError = ' . json_encode(t('Server responded with {{statusCode}} code.')) . ';
+Dropzone.prototype.defaultOptions.dictCancelUpload = ' . json_encode(t('Cancel upload')) . ';
+Dropzone.prototype.defaultOptions.dictCancelUploadConfirmation = ' . json_encode(t('Are you sure you want to cancel this upload?')) . ';
+Dropzone.prototype.defaultOptions.dictRemoveFile = ' . json_encode(t('Remove file')) . ';
+Dropzone.prototype.defaultOptions.dictMaxFilesExceeded = ' . json_encode(t('You can not upload any more files.')) . ';
+Dropzone.prototype.defaultOptions.resizeQuality = ' . ($this->app->make(BitmapFormat::class)->getDefaultJpegQuality() / 100) . ';
 ';
+        $config = $this->app->make('config');
+        $maxWidth = (int) $config->get('concrete.file_manager.restrict_max_width');
+        if ($maxWidth > 0) {
+            $content .= "Dropzone.prototype.defaultOptions.resizeWidth = {$maxWidth};\n";
+        }
+        $maxHeight = (int) $config->get('concrete.file_manager.restrict_max_height');
+        if ($maxHeight > 0) {
+            $content .= "Dropzone.prototype.defaultOptions.resizeHeight = {$maxHeight};\n";
+        }
 
         return $this->createJavascriptResponse($content);
     }

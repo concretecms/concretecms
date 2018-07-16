@@ -54,7 +54,14 @@ class Action extends AbstractController
     {
         $c = \Page::getByID($cID);
         if (is_object($c) && !$c->isError()) {
-            $b = \Block::getByID($bID, $c, $arHandle);
+            $a = \Area::getOrCreate($c, $arHandle);
+            $ax = $a;
+            $cx = $c;
+            if ($a->isGlobalArea()) {
+                $cx = \Stack::getByName($arHandle);
+                $ax = \Area::get($cx, STACKS_AREA_NAME);
+            }
+            $b = \Block::getByID($bID, $cx, $ax);
             if (is_object($b)) {
                 $controller = $b->getController();
                 if ($controller->validateEditBlockPassThruAction($b)) {

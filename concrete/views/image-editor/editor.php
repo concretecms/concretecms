@@ -2,6 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\ImageEditor\ImageEditor;
+use Concrete\Core\File\Image\BitmapFormat;
 use Whoops\Exception\ErrorException;
 
 $editorid = substr(sha1(time()), 0, 5); // Just enough entropy.
@@ -86,7 +87,7 @@ $controls = $editor->getControlList()
     </div>
 
 <?php
-if (!$settings) {
+if (empty($settings)) {
     $settings = array();
 }
 $fnames = array();
@@ -118,7 +119,7 @@ foreach ($filters as $filter) {
                         controlsets: {},
                         filters: {},
                         debug: false,
-                        jpegCompression: <?= Config::get('concrete.misc.default_jpeg_image_compression') / 100 ?>,
+                        jpegCompression: <?= Core::make(BitmapFormat::class)->getDefaultJpegQuality() / 100 ?>,
                         mime: '<?= $fv->getMimeType() ?>'
                     },
                     settings = _.extend(defaults, <?= json_encode($settings) ?>);

@@ -1,7 +1,9 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <div class="form-group">
-    <label class="control-label"><?=$label?></label>
+    <?php if ($view->supportsLabel()) { ?>
+        <label class="control-label"><?=$label?></label>
+    <?php } ?>
     <?php
     if (!empty($entities)) {
         foreach ($entities as $entity) {

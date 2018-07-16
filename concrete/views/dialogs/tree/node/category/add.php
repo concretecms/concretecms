@@ -24,6 +24,9 @@ $form = \Core::make('helper/form');
 
 	<script type="text/javascript">
 		$(function() {
+			_.defer(function() {
+				$('input[name=treeNodeCategoryName]').focus();
+			});
 			ConcreteEvent.unsubscribe('AjaxFormSubmitSuccess.addTreeNode');
 			ConcreteEvent.subscribe('AjaxFormSubmitSuccess.addTreeNode', function(e, data) {
 				if (data.form == 'add-category-node') {

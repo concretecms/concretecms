@@ -63,7 +63,14 @@ class SitemapSelector extends UserInterface
             // this is an open node request
             $response = $dh->getSubNodes($this->request->query->get('cParentID'), $callback);
         } else if ($this->request->query->get('startingPoint') && $this->request->query->get('startingPoint') > 1) {
-            $response = $dh->getSubNodes($this->request->query->get('startingPoint'), $callback);
+            $startingPoint = Page::getByID($this->request->query->get('startingPoint'));
+            if ($startingPoint && !$startingPoint->isError()) {
+                $response = [
+                    'children' => [
+                        $dh->getNode($startingPoint)
+                    ]
+                ];
+            }
         } else {
             $service = \Core::make('site');
             if (isset($_REQUEST['siteTreeID']) && $_REQUEST['siteTreeID'] > 0) {

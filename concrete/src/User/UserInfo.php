@@ -13,7 +13,7 @@ use Concrete\Core\Entity\Attribute\Value\Value\Value;
 use Concrete\Core\Entity\User\User as UserEntity;
 use Concrete\Core\Export\ExportableInterface;
 use Concrete\Core\File\StorageLocation\StorageLocationFactory;
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Mail\Importer\MailImporter;
 use Concrete\Core\Permission\ObjectInterface as PermissionObjectInterface;
 use Concrete\Core\User\Avatar\AvatarServiceInterface;
@@ -38,8 +38,9 @@ use stdClass;
 use User as ConcreteUser;
 use View;
 use Concrete\Core\Export\Item\User as UserExporter;
+use Concrete\Core\File\Image\BitmapFormat;
 
-class UserInfo extends Object implements AttributeObjectInterface, PermissionObjectInterface, ExportableInterface
+class UserInfo extends ConcreteObject implements AttributeObjectInterface, PermissionObjectInterface, ExportableInterface
 {
     use ObjectTrait;
 
@@ -168,7 +169,7 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
     public function getUserBadges()
     {
         $groups = [];
-        $r = $this->connection->executeQuery('select g.gID from Groups g inner join UserGroups ug on g.gID = ug.gID where g.gIsBadge = 1 and ug.uID = ? order by ugEntered desc', [$this->getUserID()]);
+        $r = $this->connection->executeQuery('select g.gID from ' . $this->connection->getDatabasePlatform()->quoteSingleIdentifier('Groups') . ' g inner join UserGroups ug on g.gID = ug.gID where g.gIsBadge = 1 and ug.uID = ? order by ugEntered desc', [$this->getUserID()]);
         while ($row = $r->fetch()) {
             $groups[] = Group::getByID($row['gID']);
         }
@@ -205,20 +206,24 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
             return false;
         }
 
-        // run any internal event we have for user deletion
-
+        // Dispatch an on_user_delete event, that every subscriber can cancel.
         $ue = new DeleteUserEvent($this);
         $ue = $this->getDirector()->dispatch('on_user_delete', $ue);
         if (!$ue->proceed()) {
             return false;
         }
+        // Dispatch an on_user_deleted event: subscribers can't cancel this event.
+        // This event could be at the end of this method, but let's keep it here so that subscribers
+        // can get all the details of the user being deleted.
+        $this->getDirector()->dispatch('on_user_deleted', new UserInfoEvent($this));
 
-        $attributes = $this->attributeCategory->getAttributeValues($this);
+        $attributes = $this->attributeCategory->getAttributeValues($this->getEntityObject());
         foreach ($attributes as $attribute) {
             $this->attributeCategory->deleteValue($attribute);
         }
 
         $r = $this->connection->executeQuery('DELETE FROM OauthUserMap WHERE user_id = ?', [(int) $this->getUserID()]);
+        $r = $this->connection->executeQuery('DELETE FROM Logs WHERE uID = ?', [(int) $this->getUserID()]);
         $r = $this->connection->executeQuery('DELETE FROM UserSearchIndexAttributes WHERE uID = ?', [(int) $this->getUserID()]);
         $r = $this->connection->executeQuery('DELETE FROM UserGroups WHERE uID = ?', [(int) $this->getUserID()]);
         $r = $this->connection->executeQuery('DELETE FROM UserValidationHashes WHERE uID = ?', [(int) $this->getUserID()]);
@@ -248,7 +253,9 @@ class UserInfo extends Object implements AttributeObjectInterface, PermissionObj
     public function updateUserAvatar(ImageInterface $image)
     {
         $fsl = $this->application->make(StorageLocationFactory::class)->fetchDefault()->getFileSystemObject();
-        $image = $image->get('jpg');
+        $bitmapFormat = $this->application->make(BitmapFormat::class);
+        $config = $this->application->make('config');
+        $image = $image->get(BitmapFormat::FORMAT_JPEG, $bitmapFormat->getFormatImagineSaveOptions(BitmapFormat::FORMAT_JPEG));
         $file = REL_DIR_FILES_AVATARS . '/' . $this->getUserID() . '.jpg';
         if ($fsl->has($file)) {
             $fsl->delete($file);

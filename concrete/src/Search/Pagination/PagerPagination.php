@@ -23,7 +23,6 @@ class PagerPagination extends Pagination
         $this->app = Facade::getFacadeApplication();
 
         $manager = $itemList->getPagerManager();
-        $manager->sortListByCursor($itemList);
 
         $factory = $itemList->getPagerVariableFactory();
         $start = $factory->getCurrentCursor();
@@ -120,7 +119,6 @@ class PagerPagination extends Pagination
             $this->currentPageResults = $this->getCurrentPageResults();
         }
         $manager = $this->list->getPagerManager();
-        $adapter = $this->getAdapter();
         $lastResult = end($this->currentPageResults);
 
         if ($lastResult) {

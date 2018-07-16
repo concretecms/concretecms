@@ -1,13 +1,13 @@
 <?php
 namespace Concrete\Core\Tree\Node;
 
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Tree\Node\NodeType as TreeNodeType;
 use Concrete\Core\Package\PackageList;
 use Core;
 use Database;
 
-class NodeType extends Object
+class NodeType extends ConcreteObject
 {
     public function getTreeNodeTypeID()
     {

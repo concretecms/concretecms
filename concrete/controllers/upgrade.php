@@ -1,24 +1,38 @@
 <?php
+
 namespace Concrete\Controller;
 
-use Concrete\Core\Updater\Update;
-use View;
 use Concrete\Controller\Backend\UserInterface as BackendUserInterfaceController;
-use Config;
+use Concrete\Core\Cache\Cache;
+use Concrete\Core\Permission\Checker;
+use Concrete\Core\System\Mutex\MutexInterface;
+use Concrete\Core\Updater\Update;
+use Exception;
+use View;
 
 class Upgrade extends BackendUserInterfaceController
 {
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Controller\Backend\UserInterface::canAccess()
+     */
     public function canAccess()
     {
-        if (!Config::get('concrete.updates.enable_permissions_protection')) {
+        if (!$this->app->make('config')->get('concrete.updates.enable_permissions_protection')) {
             return true; // we have turned this off temporarily which means anyone even non-logged-in users can run update.
         }
 
-        $p = new \Permissions();
+        $p = new Checker();
 
         return $p->canUpgrade();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Controller\AbstractController::on_start()
+     */
     public function on_start()
     {
         parent::on_start();
@@ -26,24 +40,25 @@ class Upgrade extends BackendUserInterfaceController
         $this->view = new View('/frontend/upgrade');
         $this->setTheme('concrete');
 
-        $this->siteVersion = \Config::get('concrete.version_installed');
+        $this->siteVersion = $this->app->make('config')->get('concrete.version_installed');
         $this->checkSecurity();
-        \Cache::disableAll();
+        Cache::disableAll();
     }
 
     public function checkSecurity()
     {
-        $fh = \Loader::helper('file');
+        $fh = $this->app->make('helper/file');
         $updates = $fh->getDirectoryContents(DIR_CORE_UPDATES);
         foreach ($updates as $upd) {
-            if (is_dir(DIR_CORE_UPDATES . '/' . $upd) && is_writable(DIR_CORE_UPDATES . '/' . $upd)) {
-                if (file_exists(DIR_CORE_UPDATES . '/' . $upd . '/' . DISPATCHER_FILENAME) && is_writable(
-                        DIR_CORE_UPDATES . '/' . $upd . '/' . DISPATCHER_FILENAME)
-                ) {
-                    unlink(DIR_CORE_UPDATES . '/' . $upd . '/' . DISPATCHER_FILENAME);
+            $updFullPath = DIR_CORE_UPDATES . '/' . $upd;
+            if (is_dir($updFullPath) && is_writable($updFullPath)) {
+                $dispatcher = $updFullPath . '/' . DISPATCHER_FILENAME;
+                if (file_exists($dispatcher) && is_writable($dispatcher)) {
+                    unlink($dispatcher);
                 }
-                if (!file_exists(DIR_CORE_UPDATES . '/' . $upd . '/index.html')) {
-                    touch(DIR_CORE_UPDATES . '/' . $upd . '/index.html');
+                $index = $updFullPath . '/index.html';
+                if (!file_exists($index)) {
+                    touch($index);
                 }
             }
         }
@@ -53,9 +68,11 @@ class Upgrade extends BackendUserInterfaceController
     {
         if ($this->validateAction()) {
             try {
-                Update::updateToCurrentVersion();
+                $this->app->make(MutexInterface::class)->execute(Update::MUTEX_KEY, function () {
+                    Update::updateToCurrentVersion();
+                });
                 $this->set('success', t('Upgrade to <b>%s</b> complete!', APP_VERSION));
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $this->set('error', $e);
             }
         }
@@ -73,13 +90,10 @@ class Upgrade extends BackendUserInterfaceController
             if (version_compare($sav, APP_VERSION, '>')) {
                 $message = t('Upgrading from <b>%s</b>', $sav) . '<br/>';
                 $message .= t('Upgrading to <b>%s</b>', APP_VERSION) . '<br/><br/>';
-                $message .= t(
-                    'Your current website uses a version of concrete5 greater than this one. You cannot upgrade.');
+                $message .= t('Your current website uses a version of concrete5 greater than this one. You cannot upgrade.');
             } else {
                 if (version_compare($sav, APP_VERSION, '=')) {
-                    $message = t(
-                        'Your site is already up to date! The current version of concrete5 is <b>%s</b>.',
-                        APP_VERSION);
+                    $message = t('Your site is already up to date! The current version of concrete5 is <b>%s</b>.', APP_VERSION);
                 } else {
                     $message = '';
                     $message .= t('Upgrading from <b>%s</b>', $sav) . '<br/>';

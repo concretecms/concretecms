@@ -138,7 +138,16 @@ class Controller extends BlockController
         $bc = $this->getScrapbookBlockController();
 
         if (is_object($bc)) {
-            $bc->runAction($action, $parameters);
+            return $bc->runAction($action, $parameters);
+        }
+    }
+
+    public function registerViewAssets($outputContent = '')
+    {
+        $bc = $this->getScrapbookBlockController();
+
+        if (is_object($bc) && is_callable(array($bc, 'registerViewAssets'))) {
+            $bc->registerViewAssets($outputContent);
         }
     }
 
@@ -147,7 +156,7 @@ class Controller extends BlockController
         $bc = $this->getScrapbookBlockController();
 
         if ($bc && method_exists($bc, 'on_page_view')) {
-            $bc->on_page_view($page);
+            return $bc->on_page_view($page);
         }
     }
 

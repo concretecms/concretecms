@@ -1,18 +1,21 @@
 <?php
 
-class AddressValueTest extends \AttributeValueTestCase
-{
+namespace Concrete\Tests\Attribute\Value;
 
-    public function __construct($name = null, array $data = array(), $dataName = '')
+use Concrete\TestHelpers\Attribute\AttributeValueTestCase;
+
+class AddressValueTest extends AttributeValueTestCase
+{
+    public function __construct($name = null, array $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
 
-        $this->tables = array_merge($this->tables, array());
+        $this->tables = array_merge($this->tables, []);
 
-        $this->metadatas = array_merge($this->metadatas, array(
+        $this->metadatas = array_merge($this->metadatas, [
             'Concrete\Core\Entity\Attribute\Key\Settings\AddressSettings',
             'Concrete\Core\Entity\Attribute\Value\Value\AddressValue',
-        ));
+        ]);
     }
 
     public function getAttributeKeyHandle()
@@ -45,9 +48,69 @@ class AddressValueTest extends \AttributeValueTestCase
         return 'Concrete\Core\Entity\Attribute\Value\Value\AddressValue';
     }
 
+    public function baseAttributeValues()
+    {
+        return [
+            [
+                $this->getAddress1(),
+                $this->getAddress1(),
+            ],
+            [
+                $this->getAddress1(false),
+                $this->getAddress1(),
+            ],
+            [
+                $this->getAddress2(),
+                $this->getAddress2(),
+            ],
+            [
+                $this->getAddress2(false),
+                $this->getAddress2(),
+            ],
+        ];
+    }
+
+    public function displayAttributeValues()
+    {
+        return [
+            [
+                $this->getAddress1(),
+                "123 Fake St.<br />\nSuite 100<br />\nPortland, Oregon 90000<br />\nUnited States",
+            ],
+        ];
+    }
+
+    public function plaintextAttributeValues()
+    {
+        return [
+            [
+                $this->getAddress1(),
+                "123 Fake St.\nSuite 100\nPortland, Oregon 90000\nUnited States",
+            ],
+        ];
+    }
+
+    public function searchIndexAttributeValues()
+    {
+        return [
+            [
+                $this->getAddress2(),
+                [
+                    'address1' => '500 SW Test',
+                    'address2' => 'Suite 1',
+                    'city' => 'Toronto',
+                    'state_province' => 'ON',
+                    'country' => 'CA',
+                    'postal_code' => 'M4V 1W6',
+                ],
+            ],
+        ];
+    }
+
     protected function prepareBaseValueAfterRetrieving($value)
     {
         $value->setGenericValue(null);
+
         return $value;
     }
 
@@ -61,16 +124,17 @@ class AddressValueTest extends \AttributeValueTestCase
             $object->setStateProvince('OR');
             $object->setCountry('US');
             $object->setPostalCode('90000');
+
             return $object;
         } else {
-            return array(
+            return [
                 'address1' => '123 Fake St.',
                 'address2' => 'Suite 100',
                 'city' => 'Portland',
                 'state_province' => 'OR',
                 'country' => 'US',
-                'postal_code' => '90000'
-            );
+                'postal_code' => '90000',
+            ];
         }
     }
 
@@ -84,79 +148,17 @@ class AddressValueTest extends \AttributeValueTestCase
             $object->setStateProvince('ON');
             $object->setCountry('CA');
             $object->setPostalCode('M4V 1W6');
+
             return $object;
         } else {
-            return array(
+            return [
                 'address1' => '500 SW Test',
                 'address2' => 'Suite 1',
                 'city' => 'Toronto',
                 'state_province' => 'ON',
                 'country' => 'CA',
-                'postal_code' => 'M4V 1W6'
-            );
+                'postal_code' => 'M4V 1W6',
+            ];
         }
     }
-
-    public function baseAttributeValues()
-    {
-
-        return array(
-            array(
-                $this->getAddress1(),
-                $this->getAddress1(),
-            ),
-            array(
-                $this->getAddress1(false),
-                $this->getAddress1(),
-            ),
-            array(
-                $this->getAddress2(),
-                $this->getAddress2(),
-            ),
-            array(
-                $this->getAddress2(false),
-                $this->getAddress2(),
-            ),
-        );
-    }
-
-    public function displayAttributeValues()
-    {
-        return array(
-            array(
-                $this->getAddress1(),
-                "123 Fake St.<br />\nSuite 100<br />\nPortland, Oregon 90000<br />\nUnited States"
-            )
-        );
-    }
-
-    public function plaintextAttributeValues()
-    {
-        return array(
-            array(
-                $this->getAddress1(),
-                "123 Fake St.\nSuite 100\nPortland, Oregon 90000\nUnited States"
-            )
-        );
-    }
-
-    public function searchIndexAttributeValues()
-    {
-        return array(
-            array(
-                $this->getAddress2(),
-                array(
-                    'address1' => '500 SW Test',
-                    'address2' => 'Suite 1',
-                    'city' => 'Toronto',
-                    'state_province' => 'ON',
-                    'country' => 'CA',
-                    'postal_code' => 'M4V 1W6'
-                ),
-            )
-        );
-    }
-
-
-
 }

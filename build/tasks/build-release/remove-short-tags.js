@@ -8,6 +8,9 @@ module.exports = function(grunt, config, parameters, done) {
 		var buildParameters = require('util')._extend({}, parameters);
 		buildParameters = parameters;
 		buildParameters.source = workFolder;
+		if (buildParameters.keepShortEcho === null || buildParameters.keepShortEcho === undefined) {
+		    buildParameters.keepShortEcho = true;
+		}
 		require('../remove-short-tags.js')(grunt, config, buildParameters, done);
 	}
 	catch(e) {

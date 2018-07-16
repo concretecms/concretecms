@@ -56,7 +56,7 @@ class MovePageRequest extends PageRequest
 
     public function getWorkflowRequestApproveButtonClass()
     {
-        return 'info';
+        return '';
     }
 
     public function getWorkflowRequestApproveButtonInnerButtonRightHTML()

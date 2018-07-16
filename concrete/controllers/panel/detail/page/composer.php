@@ -1,24 +1,20 @@
 <?php
+
 namespace Concrete\Controller\Panel\Detail\Page;
 
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
 use Concrete\Core\Form\Service\Widget\DateTime;
-use PageEditResponse;
-use PageType;
-use View;
-use Loader;
-use PageTemplate;
-use User;
-use Core;
+use Concrete\Core\Page\EditResponse as PageEditResponse;
+use Concrete\Core\Page\Template as PageTemplate;
+use Concrete\Core\Page\Type\Type as PageType;
+use Concrete\Core\Page\Page;
+use Concrete\Core\User\User;
+use Concrete\Core\View\View;
+use Exception;
 
 class Composer extends BackendInterfacePageController
 {
     protected $viewPath = '/panels/details/page/composer';
-
-    protected function canAccess()
-    {
-        return $this->permissions->canEditPageContents();
-    }
 
     public function view()
     {
@@ -27,9 +23,17 @@ class Composer extends BackendInterfacePageController
         $id = $this->page->getCollectionID();
         $saveURL = View::url('/dashboard/composer/write', 'save', 'draft', $id);
         $viewURL = View::url('/dashboard/composer/write', 'draft', $id);
+        $this->set('ui', $this->app->make('helper/concrete/ui/help'));
+        $this->set('composer', $this->app->make('helper/concrete/composer'));
+        $this->set('token', $this->app->make('token'));
         $this->set('saveURL', $saveURL);
         $this->set('viewURL', $viewURL);
         $this->set('pagetype', $pagetype);
+        $this->set('c', $this->page);
+        $this->set('cID', (int) $id);
+        $config = $this->app->make('config');
+        $idleTimeout = (float) $config->get('concrete.composer.idle_timeout');
+        $this->set('idleTimeout', $idleTimeout > 0 ? $idleTimeout : null);
     }
 
     public function autosave()
@@ -38,11 +42,11 @@ class Composer extends BackendInterfacePageController
             $r = $this->save();
             $ptr = $r[0];
             if (!$ptr->error->has()) {
-                $ptr->setMessage(t('Page saved on %s', Core::make('helper/date')->formatDateTime($ptr->time, true, true)));
+                $ptr->setMessage(t('Page saved on %s', $this->app->make('helper/date')->formatDateTime($ptr->time, true, true)));
             }
             $ptr->outputJSON();
         } else {
-            throw new \Exception(t('Access Denied.'));
+            throw new Exception(t('Access Denied.'));
         }
     }
 
@@ -52,11 +56,11 @@ class Composer extends BackendInterfacePageController
             $r = $this->save();
             $ptr = $r[0];
             $u = new User();
-            $c = \Page::getByID($u->getPreviousFrontendPageID());
+            $c = Page::getCurrentPage();
             $ptr->setRedirectURL($c->getCollectionLink(true));
             $ptr->outputJSON();
         } else {
-            throw new \Exception(t('Access Denied.'));
+            throw new Exception(t('Access Denied.'));
         }
     }
 
@@ -72,9 +76,9 @@ class Composer extends BackendInterfacePageController
             $e = $ptr->error;
             $validator = $pagetype->getPageTypeValidatorObject();
             if ($this->page->isPageDraft()) {
-                $target = \Page::getByID($this->page->getPageDraftTargetParentPageID());
+                $target = Page::getByID($this->page->getPageDraftTargetParentPageID());
             } else {
-                $target = \Page::getByID($this->page->getCollectionParentID());
+                $target = Page::getByID($this->page->getCollectionParentID());
             }
             $e->add($validator->validatePublishLocationRequest($target, $c));
             $e->add($validator->validatePublishDraftRequest($c));
@@ -83,17 +87,19 @@ class Composer extends BackendInterfacePageController
 
             if (!$e->has()) {
                 $publishDateTime = false;
+                $publishEndDateTime = false;
                 if ($this->request->request->get('action') == 'schedule') {
                     $dateTime = new DateTime();
-                    $publishDateTime = $dateTime->translate('check-in-scheduler');
+                    $publishDateTime = $dateTime->translate('cvPublishDate');
+                    $publishEndDateTime = $dateTime->translate('cvPublishEndDate');
                 }
 
-                $pagetype->publish($c, $publishDateTime);
-                $ptr->setRedirectURL(Loader::helper('navigation')->getLinkToCollection($c));
+                $pagetype->publish($c, $publishDateTime, $publishEndDateTime);
+                $ptr->setRedirectURL($this->app->make('helper/navigation')->getLinkToCollection($c));
             }
             $ptr->outputJSON();
         } else {
-            throw new \Exception(t('Access Denied.'));
+            throw new Exception(t('Access Denied.'));
         }
     }
 
@@ -107,15 +113,20 @@ class Composer extends BackendInterfacePageController
                 $cID = $u->getPreviousFrontendPageID();
                 $ptr->setRedirectURL(DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID);
             } else {
-                $e = Loader::helper('validation/error');
+                $e = $this->app->make('helper/validation/error');
                 $e->add(t('You do not have permission to discard this page.'));
                 $ptr->setError($e);
             }
 
             $ptr->outputJSON();
         } else {
-            throw new \Exception(t('Access Denied.'));
+            throw new Exception(t('Access Denied.'));
         }
+    }
+
+    protected function canAccess()
+    {
+        return $this->permissions->canEditPageContents();
     }
 
     protected function save()

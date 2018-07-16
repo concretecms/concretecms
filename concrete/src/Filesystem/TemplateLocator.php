@@ -84,7 +84,7 @@ class TemplateLocator
     protected function getPath(TemplateLocation $location, Template $template)
     {
         $location = $location->getLocation()
-            . DIRECTORY_SEPARATOR
+            . '/'
             . $template->getTemplateHandle() . '.php';
         return $location;
     }

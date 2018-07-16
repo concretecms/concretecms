@@ -51,16 +51,16 @@ class ApplicationDriver implements DriverInterface
     {
         $config = $this->config;
         if ($this->isLegacy()) {
-            $appEntityPath = DIR_APPLICATION . DIRECTORY_SEPARATOR . DIRNAME_CLASSES;
+            $appEntityPath = DIR_APPLICATION . '/' . DIRNAME_CLASSES;
             $reader = $this->app->make('orm/cachedSimpleAnnotationReader');
         } else {
-            $appEntityPath = DIR_APPLICATION . DIRECTORY_SEPARATOR . DIRNAME_CLASSES . DIRECTORY_SEPARATOR . DIRNAME_ENTITIES;
+            $appEntityPath = DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES;
             $reader = $this->app->make('orm/cachedAnnotationReader');
         }
 
         $appDriverSettings = $config->get(CONFIG_ORM_METADATA_APPLICATION);
-        $xmlConfig = DIR_APPLICATION . DIRECTORY_SEPARATOR . REL_DIR_METADATA_XML;
-        $ymlConfig = DIR_APPLICATION . DIRECTORY_SEPARATOR . REL_DIR_METADATA_YAML;
+        $xmlConfig = DIR_APPLICATION . '/' . REL_DIR_METADATA_XML;
+        $ymlConfig = DIR_APPLICATION . '/' . REL_DIR_METADATA_YAML;
 
         // Default setting so it comes first
         if (empty($appDriverSettings) && is_dir($appEntityPath)) {

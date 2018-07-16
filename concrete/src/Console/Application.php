@@ -23,6 +23,7 @@ class Application extends SymfonyApplication
 
     public function setupDefaultCommands()
     {
+        $this->add(new Command\IsInstalledCommand());
         $this->add(new Command\InfoCommand());
         $this->add(new Command\InstallCommand());
         $this->add(new Command\InstallLanguageCommand());
@@ -38,6 +39,9 @@ class Application extends SymfonyApplication
             $this->add(new Command\InstallPackageCommand());
             $this->add(new Command\UninstallPackageCommand());
             $this->add(new Command\UpdatePackageCommand());
+            $this->add(new Command\BlacklistClear());
+            $this->add(new Command\FillThumbnailsTableCommand());
+            $this->add(new Command\GenerateSitemapCommand());
         }
         $this->setupRestrictedCommands();
         $this->setupDoctrineCommands();

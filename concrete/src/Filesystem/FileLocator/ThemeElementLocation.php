@@ -12,25 +12,25 @@ class ThemeElementLocation extends ThemeLocation
     {
         if ($this->pkgHandle) {
             return DIR_PACKAGES
-                . DIRECTORY_SEPARATOR
+                . '/'
                 . $this->pkgHandle
-                . DIRECTORY_SEPARATOR
+                . '/'
                 . DIRNAME_THEMES
-                . DIRECTORY_SEPARATOR
+                . '/'
                 . $this->themeHandle
-                . DIRECTORY_SEPARATOR
+                . '/'
                 . DIRNAME_ELEMENTS
-                . DIRECTORY_SEPARATOR
+                . '/'
                 . 'concrete';
         } else {
             return DIR_APPLICATION
-                . DIRECTORY_SEPARATOR
+                . '/'
                 . DIRNAME_THEMES
-                . DIRECTORY_SEPARATOR
+                . '/'
                 . $this->themeHandle
-                . DIRECTORY_SEPARATOR
+                . '/'
                 . DIRNAME_ELEMENTS
-                . DIRECTORY_SEPARATOR
+                . '/'
                 . 'concrete';
         }
     }
@@ -38,7 +38,7 @@ class ThemeElementLocation extends ThemeLocation
     public function contains($file)
     {
         // Since we are testing this in a special way, we strip DIRNAME_ELEMENTS off the front.
-        $length = strlen(DIRNAME_ELEMENTS . DIRECTORY_SEPARATOR);
+        $length = strlen(DIRNAME_ELEMENTS . '/');
         $file = substr($file, $length);
         return parent::contains($file);
     }
@@ -46,26 +46,26 @@ class ThemeElementLocation extends ThemeLocation
     public function getURL()
     {
         if ($this->pkgHandle) {
-            return DIR_REL
-            . DIRECTORY_SEPARATOR
+            return REL_DIR_PACKAGES
+            . '/'
             . $this->pkgHandle
-            . DIRECTORY_SEPARATOR
+            . '/'
             . DIRNAME_THEMES
-            . DIRECTORY_SEPARATOR
+            . '/'
             . $this->themeHandle
-            . DIRECTORY_SEPARATOR
+            . '/'
             . DIRNAME_ELEMENTS
-            . DIRECTORY_SEPARATOR
+            . '/'
             . 'concrete';
         } else {
-            return DIR_REL
-            . DIRECTORY_SEPARATOR
+            return REL_DIR_APPLICATION
+            . '/'
             . DIRNAME_THEMES
-            . DIRECTORY_SEPARATOR
+            . '/'
             . $this->themeHandle
-            . DIRECTORY_SEPARATOR
+            . '/'
             . DIRNAME_ELEMENTS
-            . DIRECTORY_SEPARATOR
+            . '/'
             . 'concrete';
         }
     }

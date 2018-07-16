@@ -16,9 +16,9 @@ use Page;
 use Loader;
 use URL;
 use Sunra\PhpSimple\HtmlDomParser;
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 
-class LinkAbstractor extends Object
+class LinkAbstractor extends ConcreteObject
 {
     /**
      * Takes a chunk of content containing full urls
@@ -323,7 +323,7 @@ class LinkAbstractor extends Object
                 $f = \File::getByID($fID);
                 if (is_object($f)) {
                     $picture->fid = false;
-                    $picture->file = $f->getFilename();
+                    $picture->file = $f->getPrefix() . ':' . $f->getFilename();
                 }
             }
             $text = (string) $r->restore_noise($r);

@@ -5,6 +5,11 @@ use Concrete\Core\Application\Application;
 
 class ProviderList
 {
+    /**
+     * @var Application
+     */
+    protected $app;
+
     public function __construct(Application $app)
     {
         $this->app = $app;

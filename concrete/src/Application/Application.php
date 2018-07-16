@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Application;
 
 use Concrete\Core\Cache\CacheClearer;
@@ -17,6 +18,7 @@ use Concrete\Core\Logging\Query\Logger;
 use Concrete\Core\Package\PackageService;
 use Concrete\Core\Routing\RedirectResponse;
 use Concrete\Core\Support\Facade\Package;
+use Concrete\Core\System\Mutex\MutexInterface;
 use Concrete\Core\Updater\Update;
 use Concrete\Core\Url\Url;
 use Concrete\Core\Url\UrlImmutable;
@@ -192,13 +194,21 @@ class Application extends Container
         return false;
     }
 
+    /**
+     * Check if the core needs to be updated, and if so, updates it.
+     *
+     * @throws \Concrete\Core\System\Mutex\MutexBusyException throws a MutexBusyException exception if there upgrade process is already running
+     * @throws \Concrete\Core\Updater\Migrations\MigrationIncompleteException throws a MigrationIncompleteException exception if there's still some migration pending
+     */
     public function handleAutomaticUpdates()
     {
         $config = $this['config'];
         $installed = $config->get('concrete.version_db_installed');
         $core = $config->get('concrete.version_db');
         if ($installed < $core) {
-            Update::updateToCurrentVersion();
+            $this->make(MutexInterface::class)->execute(Update::MUTEX_KEY, function () {
+                Update::updateToCurrentVersion();
+            });
         }
     }
 
@@ -395,7 +405,7 @@ class Application extends Container
             $pos = $pos - 1;
         }
         $home = substr($r->server->get('SCRIPT_NAME'), 0, $pos);
-        $this['app_relative_path'] = rtrim($home, '/');
+        $this['app_relative_path'] = rtrim(str_replace(DIRECTORY_SEPARATOR, '/', $home), '/');
 
         $args = isset($_SERVER['argv']) ? $_SERVER['argv'] : null;
 
@@ -412,7 +422,7 @@ class Application extends Container
      *
      * @return mixed
      *
-     * @throws BindingResolutionException
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function build($concrete, array $parameters = [])
     {
@@ -444,6 +454,26 @@ class Application extends Container
         }
 
         return $runtime;
+    }
+
+    /**
+     * Get the list of registered aliases.
+     *
+     * @return string[]
+     */
+    public function getRegisteredAliases()
+    {
+        return array_keys($this->aliases);
+    }
+
+    /**
+     * Get the list of registered instances.
+     *
+     * @return string[]
+     */
+    public function getRegisteredInstances()
+    {
+        return array_keys($this->instances);
     }
 
     /**

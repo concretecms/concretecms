@@ -18,7 +18,7 @@ if (isset($group)) {
     if ($u->isSuperUser() == false) {
         ?>
 		<?=t('You must be logged in as %s to remove groups.', USER_SUPER)?>
-	<?php 
+	<?php
     } else {
         ?>
 
@@ -30,7 +30,7 @@ if (isset($group)) {
 	}
 	</script>
 
-	<?php 
+	<?php
     }
     ?>
 
@@ -70,12 +70,12 @@ if (isset($group)) {
 
             <div class="form-group">
                 <label for="gBadgeDescription"><?=t('Badge Description')?></label>
-                <?=$form->textarea('gBadgeDescription', $group->getGroupBadgeDescription(), array('rows' => 6, 'class' => 'form-control'))?>
+                <?=$form->textarea('gBadgeDescription', h($group->getGroupBadgeDescription()), array('rows' => 6, 'class' => 'form-control'))?>
             </div>
 
             <div class="form-group">
                 <label for="gBadgeCommunityPointValue"><?=t('Community Points')?></label>
-                <?=$form->text('gBadgeCommunityPointValue', $group->getGroupBadgeCommunityPointValue(), array('class' => 'form-control'))?>
+                <?=$form->text('gBadgeCommunityPointValue', h($group->getGroupBadgeCommunityPointValue()), array('class' => 'form-control'))?>
             </div>
 		</div>
 	</fieldset>
@@ -120,7 +120,7 @@ if (isset($group)) {
 
     		<div class="alert alert-info">
     			<?php
-                $path = $group->getGroupAutomationControllerClass();
+                $path = h($group->getGroupAutomationControllerClass());
     echo t('For custom automated group actions, make sure an automation group controller exists at %s', $path);
     ?>
     		</div>
@@ -207,7 +207,7 @@ if (isset($group)) {
     ?>
                 <?php echo $ih->button_js(t('Delete'), "deleteGroup()", 'right', 'btn-danger');
     ?>
-            <?php 
+            <?php
 }
     ?>
         </div>
@@ -260,7 +260,7 @@ $(function() {
 
 });
 </script>
-<?php 
+<?php
 } else {
     ?>
 
@@ -269,7 +269,7 @@ $(function() {
 	<div class="ccm-dashboard-header-buttons">
 		<a href="<?php echo View::url('/dashboard/users/add_group')?>" class="btn btn-primary"><?php echo t("Add Group")?></a>
 	</div>
-	<?php 
+	<?php
 }
     ?>
 
@@ -277,5 +277,5 @@ $(function() {
 <?php Loader::element('group/search', array('controller' => $searchController, 'selectMode' => false))?>
 
 
-<?php 
+<?php
 } ?>

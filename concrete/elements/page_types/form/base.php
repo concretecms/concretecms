@@ -20,7 +20,7 @@ $ptDefaultPageTemplateID = 0;
 $ptLaunchInComposer = 0;
 $ptIsFrequentlyAdded = 1;
 $token = 'add_page_type';
-if (is_object($pagetype)) {
+if (isset($pagetype) && is_object($pagetype)) {
     $token = 'update_page_type';
 	$siteType = $pagetype->getSiteTypeObject();
     $ptName = $pagetype->getPageTypeName();
@@ -33,6 +33,8 @@ if (is_object($pagetype)) {
     foreach ($selectedtemplates as $pt) {
         $ptPageTemplateID[] = $pt->getPageTemplateID();
     }
+} else {
+    $pagetype = null;
 }
 ?>
 

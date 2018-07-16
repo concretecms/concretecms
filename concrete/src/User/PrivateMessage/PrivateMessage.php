@@ -1,14 +1,14 @@
 <?php
 namespace Concrete\Core\User\PrivateMessage;
 
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Notification\Subject\SubjectInterface;
 use Concrete\Core\User\PrivateMessage\Mailbox as UserPrivateMessageMailbox;
 use Loader;
 use UserInfo;
 use Events;
 
-class PrivateMessage extends Object implements SubjectInterface
+class PrivateMessage extends ConcreteObject implements SubjectInterface
 {
     protected $authorName = false;
     protected $mailbox;

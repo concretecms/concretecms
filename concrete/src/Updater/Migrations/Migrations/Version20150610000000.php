@@ -1,23 +1,22 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
-use Doctrine\DBAL\Schema\Schema;
+use Concrete\Core\Updater\Migrations\AbstractMigration;
+use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
-class Version20150610000000 extends AbstractMigration
+class Version20150610000000 extends AbstractMigration implements RepeatableMigrationInterface
 {
-    public function up(Schema $schema)
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Updater\Migrations\AbstractMigration::upgradeDatabase()
+     */
+    public function upgradeDatabase()
     {
-        $bt = \BlockType::getByHandle('file');
-        if (is_object($bt)) {
-            $bt->refresh();
-        }
+        $this->refreshBlockType('file');
         if (\Config::get('conversation.banned_words')) {
             \Config::set('conversations.banned_words', true);
         }
-    }
-
-    public function down(Schema $schema)
-    {
     }
 }

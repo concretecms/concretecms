@@ -12,13 +12,13 @@ use Doctrine\ORM\Mapping as ORM;
 class SetKey
 {
     /**
-     * @ORM\Id @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Attribute\Key\Key")
+     * @ORM\Id @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Attribute\Key\Key", inversedBy="set_keys")
      * @ORM\JoinColumn(name="akID", referencedColumnName="akID")
      */
     protected $attribute_key;
 
     /**
-     * @ORM\Id @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Attribute\Set")
+     * @ORM\Id @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Attribute\Set", inversedBy="keys")
      * @ORM\JoinColumn(name="asID", referencedColumnName="asID")
      */
     protected $set;

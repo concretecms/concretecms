@@ -25,7 +25,7 @@ define('ASSETS_URL_IMAGES', $ap . '/images');
  * ----------------------------------------------------------------------------
  */
 define('REL_DIR_APPLICATION', $app['app_relative_path'] . '/' . DIRNAME_APPLICATION);
-define('REL_DIR_STARTING_POINT_PACKAGES', REL_DIR_APPLICATION . '/config/install/packages');
+defined('REL_DIR_STARTING_POINT_PACKAGES') or define('REL_DIR_STARTING_POINT_PACKAGES', REL_DIR_APPLICATION . '/config/install/packages');
 define('REL_DIR_STARTING_POINT_PACKAGES_CORE', ASSETS_URL . '/config/install/packages');
 define('REL_DIR_PACKAGES', $app['app_relative_path'] . '/packages');
 define('REL_DIR_PACKAGES_CORE', ASSETS_URL . '/packages');

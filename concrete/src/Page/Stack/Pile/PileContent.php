@@ -2,10 +2,10 @@
 namespace Concrete\Core\Page\Stack\Pile;
 
 use Loader;
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Block;
 
-class PileContent extends Object
+class PileContent extends ConcreteObject
 {
     public $p, $pID, $pcID, $itemID, $itemType, $quantity, $timestamp, $displayOrder;
 
@@ -92,7 +92,7 @@ class PileContent extends Object
         }
     }
 
-    public function get($pcID)
+    public static function get($pcID)
     {
         $db = Loader::db();
         $v = array($pcID);

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema
+  xmlns="http://www.concrete5.org/doctrine-xml/0.5"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.concrete5.org/doctrine-xml/0.5 http://concrete5.github.io/doctrine-xml/doctrine-xml-0.5.xsd"
+>
+
+  <table name="btDocumentLibrary">
+    <field name="bID" type="integer">
+      <unsigned/>
+      <key/>
+    </field>
+    <field name="setIds" type="string" size="255">
+      <notnull/>
+    </field>
+    <field name="folderID" type="integer">
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="setMode" type="string" size="32"/>
+    <field name="onlyCurrentUser" type="integer">
+      <default value="0"/>
+    </field>
+    <field name="tags" type="string" size="128"/>
+    <field name="viewProperties" type="text"/>
+    <field name="expandableProperties" type="string" size="255"/>
+    <field name="searchProperties" type="string" size="255"/>
+    <field name="orderBy" type="string" size="64">
+      <default value="title"/>
+    </field>
+    <field name="displayLimit" type="integer">
+      <default value="20"/>
+    </field>
+    <field name="displayOrderDesc" type="boolean">
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="addFilesToSetID" type="integer">
+      <unsigned/>
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="maxThumbWidth" type="integer">
+      <default value="100"/>
+    </field>
+    <field name="maxThumbHeight" type="integer">
+      <default value="150"/>
+    </field>
+    <field name="enableSearch" type="integer">
+      <default value="0"/>
+    </field>
+    <field name="heightMode" type="string" size="32">
+      <default value="auto"/>
+    </field>
+    <field name="downloadFileMethod" type="string" size="32">
+      <default value="force"/>
+    </field>
+    <field name="fixedHeightSize" type="integer">
+      <default value="0"/>
+    </field>
+    <field name="headerBackgroundColor" type="string" size="32">
+      <default value=""/>
+    </field>
+    <field name="headerBackgroundColorActiveSort" type="string" size="32">
+      <default value=""/>
+    </field>
+    <field name="headerTextColor" type="string" size="32">
+      <default value=""/>
+    </field>
+    <field name="allowFileUploading" type="integer">
+      <default value="0"/>
+    </field>
+    <field name="allowInPageFileManagement" type="integer">
+      <default value="0"/>
+    </field>
+    <field name="tableName" type="string" size="255">
+      <default value=""/>
+    </field>
+    <field name="tableDescription" type="string" size="255">
+      <default value=""/>
+    </field>
+    <field name="tableStriped" type="boolean">
+      <default value="0"/>
+    </field>
+    <field name="rowBackgroundColorAlternate" type="string" size="32">
+      <default value=""/>
+    </field>
+  </table>
+
+</schema>

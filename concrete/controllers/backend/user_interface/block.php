@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Controller\Backend\UserInterface;
 
-use Exception;
+use Concrete\Core\Error\UserMessageException;
 use Page as ConcretePage;
 use Permissions;
 
@@ -38,18 +38,23 @@ abstract class Block extends Page
         }
         $a = \Area::get($this->page, $arHandle);
         if (!is_object($a)) {
-            throw new \Exception('Invalid Area');
+            throw new UserMessageException('Invalid Area');
         }
         $this->area = $a;
         if (!$a->isGlobalArea()) {
-            $b = \Block::getByID($bID, $this->page, $a);
             $this->set('isGlobalArea', false);
+            $b = \Block::getByID($bID, $this->page, $a);
         } else {
+            $this->set('isGlobalArea', true);
             $stack = \Stack::getByName($arHandle);
             $sc = ConcretePage::getByID($stack->getCollectionID(), 'RECENT');
             $b = \Block::getByID($bID, $sc, STACKS_AREA_NAME);
-            $b->setBlockAreaObject($a); // set the original area object
-            $this->set('isGlobalArea', true);
+            if ($b) {
+                $b->setBlockAreaObject($a); // set the original area object
+            }
+        }
+        if (!$b) {
+            throw new UserMessageException(t('Access Denied'));
         }
         $this->block = $b;
         $this->permissions = new \Permissions($b);
@@ -62,7 +67,7 @@ abstract class Block extends Page
         if ($this->permissions->canViewEditInterface() && $this->canAccess()) {
             return \Concrete\Core\Controller\Controller::getViewObject();
         }
-        throw new Exception(t('Access Denied'));
+        throw new UserMessageException(t('Access Denied'));
     }
 
     protected function getBlockToEdit()

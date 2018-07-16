@@ -1,10 +1,16 @@
 <?php
 namespace Concrete\Core\File\Set;
 
+use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Entity\File\File as FileEntity;
+use Concrete\Core\Entity\File\Version as FileVersionEntity;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Permission\Access\Entity\GroupCombinationEntity as GroupCombinationPermissionAccessEntity;
 use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
 use Concrete\Core\Permission\Access\Entity\UserEntity as UserPermissionAccessEntity;
 use Concrete\Core\Permission\Key\FileSetKey as FileSetPermissionKey;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Events;
 use File as ConcreteFile;
 use Database;
@@ -71,7 +77,7 @@ class Set
     /**
      * @param bool|\User $u
      *
-     * @return array
+     * @return static[]
      */
     public static function getMySets($u = false)
     {
@@ -407,21 +413,43 @@ class Set
     /**
      * Adds the file to the set.
      *
-     * @param int|\File $f_id //accepts an ID or a File object
+     * @param int|FileEntity|FileVersionEntity $f_id
      *
-     * @return File|mixed
+     * @return \Concrete\Core\File\Set\File|null returns NULL if the operation failed (for instance because $f_id is invalid), a \Concrete\Core\File\Set\File instance otherwise  
      */
     public function addFileToSet($f_id)
     {
+        $app = Application::getFacadeApplication();
         if (is_object($f_id)) {
-            $f_id = $f_id->getFileID();
+            $f = $f_id;
+            if ($f instanceof FileEntity) {
+                $file = $f;
+                $fileVersion = $file->getApprovedVersion();
+            } else {
+                $fileVersion = $f;
+                $file = $fileVersion->getFile();
+            }
+            $f_id = (int) $file->getFileID();
+        } else {
+            $f_id = (int) $f_id;
+            $em = $app->make(EntityManagerInterface::class);
+            $file = $em->find(FileEntity::class, $f_id);
+            $fileVersion = $file->getApprovedVersion();
         }
-        $file_set_file = File::createAndGetFile($f_id, $this->fsID);
+        if ($file === null) {
+            $result = null;
+        } else {
+            $file_set_file = File::createAndGetFile($f_id, $this->fsID);
+            $fe = new \Concrete\Core\File\Event\FileSetFile($file_set_file);
+            $director = $app->make(EventDispatcherInterface::class);
+            $director->dispatch('on_file_added_to_set', $fe);
+            if ($fileVersion !== null) {
+                $fileVersion->refreshThumbnails(false);
+            }
+            $result = $file_set_file;
+        }
 
-        $fe = new \Concrete\Core\File\Event\FileSetFile($file_set_file);
-        Events::dispatch('on_file_added_to_set', $fe);
-
-        return $file_set_file;
+        return $result;
     }
 
     public function getSavedSearchRequest()
@@ -435,23 +463,48 @@ class Set
     }
 
     /**
-     * @param int|\File $f_id
+     * @param int|FileEntity|FileVersionEntity $f_id
+     *
+     * @return bool Returns false if the operation failed (for instance because $f_id is invalid), true otherwise
      */
     public function removeFileFromSet($f_id)
     {
+        $app = Application::getFacadeApplication();
         if (is_object($f_id)) {
-            $f_id = $f_id->getFileID();
+            $f = $f_id;
+            if ($f instanceof FileEntity) {
+                $file = $f;
+                $fileVersion = $file->getApprovedVersion();
+            } else {
+                $fileVersion = $f;
+                $file = $fileVersion->getFile();
+            }
+            $f_id = (int) $file->getFileID();
+        } else {
+            $f_id = (int) $f_id;
+            $em = $app->make(EntityManagerInterface::class);
+            $file = $em->find(FileEntity::class, $f_id);
+            $fileVersion = $file->getApprovedVersion();
+        }
+        if ($file === null) {
+            $result = false;
+        } else {
+            $file_set_file = File::createAndGetFile($f_id, $this->fsID);
+            $db = $app->make(Connection::class);
+            $db->executeQuery(
+                'DELETE FROM FileSetFiles WHERE fID = ? AND fsID = ?',
+                [$f_id, $this->getFileSetID()]
+            );
+            $fe = new \Concrete\Core\File\Event\FileSetFile($file_set_file);
+            $director = $app->make(EventDispatcherInterface::class);
+            $director->dispatch('on_file_removed_from_set', $fe);
+            if ($fileVersion !== null) {
+                $fileVersion->refreshThumbnails(false);
+            }
+            $result = true;
         }
 
-        $file_set_file = File::createAndGetFile($f_id, $this->fsID);
-
-        $db = Database::connection();
-        $db->executeQuery(
-            'DELETE FROM FileSetFiles WHERE fID = ? AND fsID = ?',
-            array($f_id, $this->getFileSetID())
-        );
-        $fe = new \Concrete\Core\File\Event\FileSetFile($file_set_file);
-        Events::dispatch('on_file_removed_from_set', $fe);
+        return $result;
     }
 
     public function hasFileID($f_id)
@@ -468,9 +521,14 @@ class Set
 
     public function delete()
     {
+        $fe = new \Concrete\Core\File\Event\FileSet($this);
+        Events::dispatch('on_file_set_delete', $fe);
+
         $db = Database::connection();
         $db->delete('FileSets', array('fsID' => $this->fsID));
         $db->executeQuery('DELETE FROM FileSetSavedSearches WHERE fsID = ?', array($this->fsID));
+        $db->executeQuery('DELETE FROM FileSetFiles WHERE fsID = ?', array($this->fsID));
+        $db->executeQuery('DELETE FROM FileImageThumbnailTypeFileSets WHERE ftfsFileSetID = ?', [$this->fsID]);
     }
 
     /*

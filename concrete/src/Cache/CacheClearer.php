@@ -3,6 +3,7 @@
 namespace Concrete\Core\Cache;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Area\GlobalArea;
 use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Database\DatabaseManager;
@@ -11,6 +12,7 @@ use Concrete\Core\Localization\Localization;
 use Exception;
 use FilesystemIterator;
 use Illuminate\Filesystem\Filesystem;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class CacheClearer
@@ -31,6 +33,9 @@ class CacheClearer
     /** @var \Illuminate\Filesystem\Filesystem */
     private $filesystem;
 
+    /** @var LoggerInterface */
+    private $logger;
+
     /** @var \Concrete\Core\Cache\Level\ObjectCache */
     private $caches = [
         'cache' => 'cache',
@@ -40,23 +45,32 @@ class CacheClearer
         'page' => 'cache/page'
     ];
 
+    /**
+     * @var bool
+     */
+    private $clearGlobalAreas = true;
+
     public function __construct(
         EventDispatcher $dispatcher,
         DatabaseManager $manager,
         Repository $repository,
         Application $application,
-        Filesystem $filesystem
+        Filesystem $filesystem,
+        LoggerInterface $logger
     ) {
         $this->dispatcher = $dispatcher;
         $this->application = $application;
         $this->manager = $manager;
         $this->repository = $repository;
         $this->filesystem = $filesystem;
+        $this->logger = $logger;
     }
 
     public function flush()
     {
         $this->dispatcher->dispatch('on_cache_flush');
+
+        $this->logger->notice(t('Clearing cache with CacheClearer::flush().'));
 
         // Flush the cache objects
         $this->flushCaches();
@@ -83,7 +97,18 @@ class CacheClearer
         // Setup the filesystem
         $this->setupFilesystem();
 
+        // Delete global areas without any blocks
+        $this->deleteEmptyGlobalAreas();
+
         $this->dispatcher->dispatch('on_cache_flush_end');
+    }
+
+    /**
+     * @param boolean $clearGlobalAreas
+     */
+    public function setClearGlobalAreas($clearGlobalAreas)
+    {
+        $this->clearGlobalAreas = $clearGlobalAreas;
     }
 
     /**
@@ -145,6 +170,7 @@ class CacheClearer
      */
     protected function filesToClear($directory)
     {
+        $directory = str_replace('/', DIRECTORY_SEPARATOR, $directory);
         try {
             $iterator = new FilesystemIterator($directory);
         } catch (\UnexpectedValueException $e) {
@@ -155,7 +181,9 @@ class CacheClearer
         $exclude = [];
 
         if (!$this->repository->get('concrete.cache.clear.thumbnails', true)) {
-            $exclude[] = $directory . '/thumbnails';
+            $exclude[] = $directory . DIRECTORY_SEPARATOR . 'thumbnails';
+        } else {
+            $this->logger->notice(t('Clearing cache thumbnails directory.'));
         }
 
         /** @var \SplFileInfo $item */
@@ -210,5 +238,12 @@ class CacheClearer
     protected function clearOpcodeCache()
     {
         OpCache::clear();
+    }
+
+    protected function deleteEmptyGlobalAreas()
+    {
+        if ($this->clearGlobalAreas) {
+            GlobalArea::deleteEmptyAreas();
+        }
     }
 }

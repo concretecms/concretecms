@@ -2,49 +2,61 @@
 
 namespace Concrete\Core\Entity\File;
 
-use Carbon\Carbon;
-use Concrete\Core\Attribute\Key\FileKey;
+use Concrete\Core\Attribute\AttributeKeyInterface;
+use Concrete\Core\Attribute\Category\FileCategory;
 use Concrete\Core\Attribute\ObjectInterface;
 use Concrete\Core\Attribute\ObjectTrait;
+use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Attribute\Value\FileValue;
 use Concrete\Core\Entity\File\StorageLocation\StorageLocation;
+use Concrete\Core\File\Event\FileVersion as FileVersionEvent;
 use Concrete\Core\File\Exception\InvalidDimensionException;
+use Concrete\Core\File\Image\BitmapFormat;
 use Concrete\Core\File\Image\Thumbnail\Path\Resolver;
 use Concrete\Core\File\Image\Thumbnail\Thumbnail;
+use Concrete\Core\File\Image\Thumbnail\ThumbnailFormatService;
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use Concrete\Core\File\Image\Thumbnail\Type\Version as ThumbnailTypeVersion;
 use Concrete\Core\File\Importer;
 use Concrete\Core\File\Menu;
 use Concrete\Core\File\Type\TypeList as FileTypeList;
 use Concrete\Core\Http\FlysystemFileResponse;
+use Concrete\Core\Http\Request;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+use Concrete\Core\User\UserInfoRepository;
+use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping as ORM;
+use Exception;
 use Imagine\Exception\NotSupportedException;
-use Imagine\Gd\Image;
+use Imagine\Image\Box;
+use Imagine\Image\ImageInterface;
+use Imagine\Image\ImagineInterface;
 use Imagine\Image\Metadata\ExifMetadataReader;
 use League\Flysystem\AdapterInterface;
+use League\Flysystem\Cached\CachedAdapter;
 use League\Flysystem\FileNotFoundException;
-use Core;
-use Database;
-use Events;
-use Imagine\Image\ImageInterface;
+use League\Flysystem\MountManager;
+use League\Flysystem\Util;
 use Page;
 use Permissions;
 use stdClass;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Throwable;
 use User;
-use View;
-use Doctrine\ORM\Mapping as ORM;
-use Concrete\Core\Support\Facade\Facade;
-use Imagine\Image\Box;
 
 /**
+ * Represents a version of a file.
+ *
  * @ORM\Entity
  * @ORM\Table(
  *     name="FileVersions",
  *     indexes={
- *     @ORM\Index(name="fvFilename", columns={"fvFilename"}),
- *     @ORM\Index(name="fvExtension", columns={"fvExtension"}),
- *     @ORM\Index(name="fvType", columns={"fvType"})
+ *         @ORM\Index(name="fvFilename", columns={"fvFilename"}),
+ *         @ORM\Index(name="fvExtension", columns={"fvExtension"}),
+ *         @ORM\Index(name="fvType", columns={"fvType"})
  *     }
  * )
  */
@@ -52,151 +64,295 @@ class Version implements ObjectInterface
 {
     use ObjectTrait;
 
+    /**
+     * Update type: file replaced.
+     *
+     * @var int
+     */
     const UT_REPLACE_FILE = 1;
-    const UT_TITLE = 2;
-    const UT_DESCRIPTION = 3;
-    const UT_TAGS = 4;
-    const UT_EXTENDED_ATTRIBUTE = 5;
-    const UT_CONTENTS = 6;
-    const UT_RENAME = 7;
-
-    public function __construct()
-    {
-        $this->fvDateAdded = new \DateTime();
-        $this->fvActivateDateTime = new \DateTime();
-    }
 
     /**
-     * /* @ORM\Id
+     * Update type: title updated.
+     *
+     * @var int
+     */
+    const UT_TITLE = 2;
+
+    /**
+     * Update type: description updated.
+     *
+     * @var int
+     */
+    const UT_DESCRIPTION = 3;
+
+    /**
+     * Update type: tags modified.
+     *
+     * @var int
+     */
+    const UT_TAGS = 4;
+
+    /**
+     * Update type: extended attributes changed.
+     *
+     * @var int
+     */
+    const UT_EXTENDED_ATTRIBUTE = 5;
+
+    /**
+     * Update type: contents changed.
+     *
+     * @var int
+     */
+    const UT_CONTENTS = 6;
+
+    /**
+     * Update type: file version renamed.
+     *
+     * @var int
+     */
+    const UT_RENAME = 7;
+
+    /**
+     * The associated File instance.
+     *
+     * @ORM\Id
      * @ORM\ManyToOne(targetEntity="File", inversedBy="versions")
      * @ORM\JoinColumn(name="fID", referencedColumnName="fID")
      *
      * @var \Concrete\Core\Entity\File\File
      */
     protected $file;
-    /** @ORM\Id
+
+    /**
+     * The progressive file version identifier.
+     *
+     * @ORM\Id
      * @ORM\Column(type="integer")
+     *
+     * @var int
      */
     protected $fvID = 0;
+
     /**
+     * The name of the file.
+     *
      * @ORM\Column(type="string")
+     *
+     * @var string
      */
     protected $fvFilename = null;
+
     /**
+     * The path prefix used to store the file in the file system.
+     *
      * @ORM\Column(type="string", nullable=true)
+     *
+     * @var string
      */
     protected $fvPrefix;
+
     /**
+     * The date/time when the file version has been added.
+     *
      * @ORM\Column(type="datetime")
+     *
+     * @var \DateTime
      */
     protected $fvDateAdded;
+
     /**
+     * The date/time when the file version has been approved.
+     *
      * @ORM\Column(type="datetime")
+     *
+     * @var \DateTime
      */
     protected $fvActivateDateTime;
+
     /**
+     * Is this version the approved one for the associated file?
+     *
      * @ORM\Column(type="boolean")
+     *
+     * @var bool
      */
     protected $fvIsApproved = false;
+
     /**
+     * The ID of the user that created the file version.
+     *
      * @ORM\Column(type="integer")
+     *
+     * @var int
      */
     protected $fvAuthorUID = 0;
+
     /**
-     * @ORM\Column(type="bigint")
-     */
-    protected $fvSize = 0;
-    /**
+     * The ID of the user that approved the file version.
+     *
      * @ORM\Column(type="integer")
+     *
+     * @var int
      */
     protected $fvApproverUID = 0;
+
     /**
+     * The size (in bytes) of the file version.
+     *
+     * @ORM\Column(type="bigint")
+     *
+     * @var int
+     */
+    protected $fvSize = 0;
+
+    /**
+     * The title of the file version.
+     *
      * @ORM\Column(type="string", nullable=true)
+     *
+     * @var string|null
      */
     protected $fvTitle = null;
+
     /**
+     * The description of the file version.
+     *
      * @ORM\Column(type="text", nullable=true)
+     *
+     * @var string|null
      */
     protected $fvDescription = null;
+
     /**
+     * The extension of the file version.
+     *
      * @ORM\Column(type="string", nullable=true)
+     *
+     * @var string|null
      */
     protected $fvExtension = null;
 
     /**
-     * @ORM\Column(type="integer")
-     */
-    protected $fvType = 0;
-    /**
+     * The tags assigned to the file version (separated by a newline character - '\n').
+     *
      * @ORM\Column(type="text", nullable=true)
+     *
+     * @var string|null
      */
     protected $fvTags = null;
+
     /**
+     * The type of the file version.
+     *
+     * @ORM\Column(type="integer")
+     *
+     * @var int
+     */
+    protected $fvType = 0;
+
+    /**
+     * Does this file version has a thumbnail to be used for file listing?
+     *
      * @ORM\Column(type="boolean")
+     *
+     * @var bool
      */
     protected $fvHasListingThumbnail = false;
+
     /**
+     * Does this file version has a thumbnail to be used used for details?
+     *
      * @ORM\Column(type="boolean")
+     *
+     * @var bool
      */
     protected $fvHasDetailThumbnail = false;
 
+    /**
+     * The currently loaded Image instance.
+     *
+     * @var \Imagine\Image\ImageInterface|false|null null: still not loaded; false: load failed; ImageInterface otherwise
+     */
     private $imagineImage = null;
 
     /**
+     * Initialize the instance.
+     */
+    public function __construct()
+    {
+        $this->fvDateAdded = new DateTime();
+        $this->fvActivateDateTime = new DateTime();
+    }
+
+    /**
      * Add a new file version.
+     * You should call refreshAttributes in order to update the size, extension, type and other attributes.
      *
-     * @param File   $file
-     * @param string $filename
-     * @param string $prefix
-     * @param array  $data
+     * @param \Concrete\Core\Entity\File\File $file the File instance associated to this version
+     * @param string $filename The name of the file
+     * @param string $prefix the path prefix used to store the file in the file system
+     * @param array $data Valid array keys are {
+     *
+     *     @var int|null $uID the ID of the user that creates the file version (if not specified or empty: we'll assume the currently user logged in user)
+     *     @var string $fvTitle the title of the file version
+     *     @var string $fvDescription the description of the file version
+     *     @var string $fvTags the tags to be assigned to the file version (separated by newlines and/or commas)
+     *     @var bool $fvIsApproved Is this version the approved one for the associated file? (default: true)
+     * }
      *
      * @return static
      */
-    public static function add(\Concrete\Core\Entity\File\File $file, $filename, $prefix, $data = [])
+    public static function add(File $file, $filename, $prefix, $data = [])
     {
-        $u = new User();
-        $uID = (isset($data['uID']) && $data['uID'] > 0) ? $data['uID'] : $u->getUserID();
+        $data += [
+            'uID' => 0,
+            'fvTitle' => '',
+            'fvDescription' => '',
+            'fvTags' => '',
+            'fvIsApproved' => true,
+        ];
 
+        $app = Application::getFacadeApplication();
+        $em = $app->make(EntityManagerInterface::class);
+        $dh = $app->make('date');
+
+        $date = new DateTime($dh->getOverridableNow());
+        $uID = (int) $data['uID'];
         if ($uID < 1) {
-            $uID = 0;
+            if (User::isLoggedIn()) {
+                $uID = (int) (new User())->getUserID();
+            } else {
+                $uID = 0;
+            }
         }
 
-        $fvTitle = (isset($data['fvTitle'])) ? $data['fvTitle'] : '';
-        $fvDescription = (isset($data['fvDescription'])) ? $data['fvDescription'] : '';
-        $fvTags = (isset($data['fvTags'])) ? self::cleanTags($data['fvTags']) : '';
-        $fvIsApproved = (isset($data['fvIsApproved'])) ? $data['fvIsApproved'] : '1';
-
-        $dh = Core::make('helper/date');
-        $date = new Carbon($dh->getOverridableNow());
-
         $fv = new static();
-        $fv->fvFilename = $filename;
-        $fv->fvPrefix = $prefix;
-        $fv->fvDateAdded = $date;
-        $fv->fvIsApproved = (bool) $fvIsApproved;
-        $fv->fvApproverUID = $uID;
-        $fv->fvAuthorUID = $uID;
-        $fv->fvActivateDateTime = $date;
-        $fv->fvTitle = $fvTitle;
-        $fv->fvDescription = $fvDescription;
-        $fv->fvTags = $fvTags;
         $fv->file = $file;
         $fv->fvID = 1;
-
-        $em = \ORM::entityManager();
+        $fv->fvFilename = (string) $filename;
+        $fv->fvPrefix = $prefix;
+        $fv->fvDateAdded = $date;
+        $fv->fvActivateDateTime = $date;
+        $fv->fvIsApproved = (bool) $data['fvIsApproved'];
+        $fv->fvAuthorUID = $uID;
+        $fv->fvApproverUID = $uID;
+        $fv->fvTitle = (string) $data['fvTitle'];
+        $fv->fvDescription = (string) $data['fvDescription'];
+        $fv->fvTags = self::cleanTags((string) $data['fvTags']);
         $em->persist($fv);
         $em->flush();
 
-        $fve = new \Concrete\Core\File\Event\FileVersion($fv);
-        Events::dispatch('on_file_version_add', $fve);
+        $fve = new FileVersionEvent($fv);
+        $app->make(EventDispatcherInterface::class)->dispatch('on_file_version_add', $fve);
 
         return $fv;
     }
 
     /**
-     * Clean the tags (removing whitespace).
+     * Normalize the tags separator, remove empty tags.
      *
-     * @param $tagsStr string Delimited by '\n'
+     * @param string $tagsStr The list of tags, delimited by '\n', '\r' or ','
      *
      * @return string
      */
@@ -205,77 +361,29 @@ class Version implements ObjectInterface
         $tagsArray = explode("\n", str_replace(["\r", ','], "\n", $tagsStr));
         $cleanTags = [];
         foreach ($tagsArray as $tag) {
-            if (!strlen(trim($tag))) {
-                continue;
+            $tag = trim($tag);
+            if ($tag !== '') {
+                $cleanTags[] = $tag;
             }
-            $cleanTags[] = trim($tag);
         }
         //the leading and trailing line break char is for searching: fvTag like %\ntag\n%
-        return "\n".implode("\n", $cleanTags)."\n";
+        return isset($cleanTags[0]) ? "\n" . implode("\n", $cleanTags) . "\n" : '';
     }
 
     /**
-     * Set the filename.
+     * Set the associated File instance.
      *
-     * @param string $filename
+     * @param \Concrete\Core\Entity\File\File $file
      */
-    public function setFilename($filename)
+    public function setFile(File $file)
     {
-        $this->fvFilename = $filename;
+        $this->file = $file;
     }
 
     /**
-     * Path prefix for a file.
+     * Get the associated File instance.
      *
-     * @return string
-     */
-    public function getPrefix()
-    {
-        return $this->fvPrefix;
-    }
-
-    /**
-     * If the current version is approved.
-     *
-     * @return bool
-     */
-    public function isApproved()
-    {
-        return $this->fvIsApproved;
-    }
-
-    /**
-     * Get the tags as an array of strings.
-     *
-     * @return string[]
-     */
-    public function getTagsList()
-    {
-        $tags = explode("\n", str_replace("\r", "\n", trim($this->getTags())));
-        $clean_tags = [];
-        foreach ($tags as $tag) {
-            if (strlen(trim($tag))) {
-                $clean_tags[] = trim($tag);
-            }
-        }
-
-        return $clean_tags;
-    }
-
-    /**
-     * Get the tags for a file.
-     *
-     * @return null|string
-     */
-    public function getTags()
-    {
-        return $this->fvTags;
-    }
-
-    /**
-     * returns the File object associated with this FileVersion object.
-     *
-     * @return File
+     * @return \Concrete\Core\Entity\File\File
      */
     public function getFile()
     {
@@ -283,17 +391,7 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Set the current file.
-     *
-     * @param File $file
-     */
-    public function setFile(\Concrete\Core\Entity\File\File $file)
-    {
-        $this->file = $file;
-    }
-
-    /**
-     * File ID.
+     * Get the ID of the associated file instance.
      *
      * @return int
      */
@@ -303,7 +401,17 @@ class Version implements ObjectInterface
     }
 
     /**
-     * File Version ID.
+     * Set the progressive file version identifier.
+     *
+     * @param int $fvID
+     */
+    public function setFileVersionID($fvID)
+    {
+        $this->fvID = (int) $fvID;
+    }
+
+    /**
+     * Get the progressive file version identifier.
      *
      * @return int
      */
@@ -313,147 +421,154 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Removes a version of a file. Note, does NOT remove the file because we don't know where the file might elsewhere be used/referenced.
+     * Rename the file.
      *
-     * @param bool $deleteFilesAndThumbnails Whether we should delete all file versions and thumbnails
+     * @param string $filename
      */
-    public function delete($deleteFilesAndThumbnails = false)
+    public function rename($filename)
     {
-        $db = Database::get();
+        $storage = $this->getFile()->getFileStorageLocationObject();
+        if ($storage !== null) {
+            $filename = (string) $filename;
+            $app = Application::getFacadeApplication();
+            $cf = $app->make('helper/concrete/file');
+            $oldFilename = $this->fvFilename;
+            $path = $cf->prefix($this->fvPrefix, $oldFilename);
+            $newPath = $cf->prefix($this->fvPrefix, $filename);
+            $filesystem = $storage->getFileSystemObject();
+            if ($filesystem->has($path)) {
+                $filesystem->rename($path, $newPath);
+            }
+            $this->fvFilename = $filename;
+            if ($this->fvTitle == $oldFilename) {
+                $this->fvTitle = $filename;
+            }
+            $this->logVersionUpdate(self::UT_RENAME);
+            $this->save();
+            $fve = new FileVersionEvent($this);
+            $app->make(EventDispatcherInterface::class)->dispatch('on_file_version_rename', $fve);
+        }
+    }
 
-        $category = \Core::make('Concrete\Core\Attribute\Category\FileCategory');
+    /**
+     * Update the filename and the path prefix of the file.
+     *
+     * @param string $filename The new name of file
+     * @param string $prefix The new path prefix
+     */
+    public function updateFile($filename, $prefix)
+    {
+        $this->fvFilename = $filename;
+        $this->fvPrefix = $prefix;
+        $this->save();
+        $this->logVersionUpdate(self::UT_REPLACE_FILE);
+    }
 
-        foreach ($this->getAttributes() as $attribute) {
-            $category->deleteValue($attribute);
+    /**
+     * Set the name of the file.
+     *
+     * @param string $filename
+     */
+    public function setFilename($filename)
+    {
+        $this->fvFilename = $filename;
+    }
+
+    /**
+     * Get the name of the file.
+     *
+     * @return string
+     */
+    public function getFileName()
+    {
+        return $this->fvFilename;
+    }
+
+    /**
+     * Get the path prefix used to store the file in the file system.
+     *
+     * @return string
+     */
+    public function getPrefix()
+    {
+        return $this->fvPrefix;
+    }
+
+    /**
+     * Get the date/time when the file version has been added.
+     *
+     * @return \DateTime
+     */
+    public function getDateAdded()
+    {
+        return $this->fvDateAdded;
+    }
+
+    /**
+     * Get the date/time when the file version has been activated (or NULL if the file version is not approved).
+     *
+     * @return \DateTime|null
+     */
+    public function getActivateDateTime()
+    {
+        return $this->fvIsApproved ? $this->fvActivateDateTime : null;
+    }
+
+    /**
+     * Mark this file version as approved (and disapprove all the other versions of the file).
+     * The currently logged in user (if any) will be stored as the approver.
+     */
+    public function approve()
+    {
+        $app = Application::getFacadeApplication();
+        foreach ($this->file->getFileVersions() as $fv) {
+            $fv->fvIsApproved = false;
+            $fv->save(false);
         }
 
-        $db->Execute('DELETE FROM FileVersionLog WHERE fID = ? AND fvID = ?', [$this->getFileID(), $this->fvID]);
-
-        $types = Type::getVersionList();
-
-        if ($deleteFilesAndThumbnails) {
-            try {
-                foreach ($types as $type) {
-                    $this->deleteThumbnail($type);
-                }
-
-                $fsl = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
-                $fre = $this->getFileResource();
-                if ($fsl->has($fre->getPath())) {
-                    $fsl->delete($fre->getPath());
-                }
-            } catch (FileNotFoundException $e) {
+        $this->fvIsApproved = true;
+        $this->fvActivateDateTime = new DateTime();
+        if (User::isLoggedIn()) {
+            $uID = (int) (new User())->getUserID();
+            if ($uID > 0) {
+                $this->fvApproverUID = $uID;
             }
         }
+        $this->save();
 
-        $em = \ORM::entityManager();
-        $em->remove($this);
-        $em->flush();
+        $fve = new FileVersionEvent($this);
+        $app->make(EventDispatcherInterface::class)->dispatch('on_file_version_approve', $fve);
+
+        $fo = $this->getFile();
+        $fo->reindex();
+        $app->make('cache/request')->delete('file/version/approved/' . $this->getFileID());
     }
 
     /**
-     * Deletes the thumbnail for the particular thumbnail type.
-     *
-     * @param string|ThumbnailTypeVersion $type
+     * Mark this file version as not approved.
      */
-    public function deleteThumbnail($type)
+    public function deny()
     {
-        if (!($type instanceof ThumbnailTypeVersion)) {
-            $type = ThumbnailTypeVersion::getByHandle($type);
-        }
-        $fsl = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
-        $path = $type->getFilePath($this);
-        if ($fsl->has($path)) {
-            $fsl->delete($path);
-        }
+        $app = Application::getFacadeApplication();
+        $this->fvIsApproved = false;
+        $this->save();
+        $fve = new FileVersionEvent($this);
+        $app->make(EventDispatcherInterface::class)->dispatch('on_file_version_deny', $fve);
+        $app->make('cache/request')->delete('file/version/approved/' . $this->getFileID());
     }
 
     /**
-     * Move the thumbnails for the current file version to a new storage location.
+     * Is this version the approved one for the associated file?
      *
-     * @param string          $type
-     * @param StorageLocation $location
+     * @return bool
      */
-    public function updateThumbnailStorageLocation($type, StorageLocation $location)
+    public function isApproved()
     {
-        if (!($type instanceof ThumbnailTypeVersion)) {
-            $type = ThumbnailTypeVersion::getByHandle($type);
-        }
-        $fsl = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
-        $path = $type->getFilePath($this);
-        $manager = new \League\Flysystem\MountManager([
-            'current' => $fsl,
-            'new' => $location->getFileSystemObject(),
-        ]);
-        try {
-            $manager->move('current://'.$path, 'new://'.$path);
-        } catch (FileNotFoundException $e) {
-        }
+        return $this->fvIsApproved;
     }
 
     /**
-     * Returns an abstracted File object for the resource. NOT a concrete5 file object.
-     *
-     * @return \League\Flysystem\File
-     */
-    public function getFileResource()
-    {
-        $cf = Core::make('helper/concrete/file');
-        $fs = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
-        $fo = $fs->get($cf->prefix($this->fvPrefix, $this->fvFilename));
-
-        return $fo;
-    }
-
-    /**
-     * Get the mime type of the file if known.
-     *
-     * @return string
-     */
-    public function getMimeType()
-    {
-        $fre = $this->getFileResource();
-
-        return $fre->getMimetype();
-    }
-
-    /**
-     * Get the formatted filesize of a file e.g. 123KB.
-     *
-     * @return mixed|string
-     */
-    public function getSize()
-    {
-        return Core::make('helper/number')->formatSize($this->fvSize, 'KB');
-    }
-
-    /**
-     * File size of the file.
-     *
-     * @return int
-     */
-    public function getFullSize()
-    {
-        return $this->fvSize;
-    }
-
-    /**
-     * The author of the file (or Unknown).
-     *
-     * @return string
-     */
-    public function getAuthorName()
-    {
-        $ui = \UserInfo::getByID($this->fvAuthorUID);
-        if (is_object($ui)) {
-            return $ui->getUserDisplayName();
-        }
-
-        return t('(Unknown)');
-    }
-
-    /**
-     * Return the uID for the author of the file.
+     * Get the ID of the user that created the file version.
      *
      * @return int
      */
@@ -463,17 +578,125 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Gets the date a file version was added.
+     * Get the username of the user that created the file version (or "Unknown").
      *
-     * @return string date formated like: 2009-01-01 00:00:00
+     * @return string
      */
-    public function getDateAdded()
+    public function getAuthorName()
     {
-        return $this->fvDateAdded;
+        if ($this->fvAuthorUID) {
+            $app = Application::getFacadeApplication();
+            $ui = $app->make(UserInfoRepository::class)->getByID($this->fvAuthorUID);
+        } else {
+            $ui = null;
+        }
+
+        return $ui === null ? t('(Unknown)') : $ui->getUserDisplayName();
     }
 
     /**
-     * Get the file extension for a file.
+     * Get the ID of the user that approved the file version.
+     *
+     * @return int
+     */
+    public function getApproverUserID()
+    {
+        return $this->fvApproverUID;
+    }
+
+    /**
+     * Get the username of the user that approved the file version (or "Unknown").
+     *
+     * @return string
+     */
+    public function getApproverName()
+    {
+        if ($this->fvApproverUID) {
+            $app = Application::getFacadeApplication();
+            $ui = $app->make(UserInfoRepository::class)->getByID($this->fvApproverUID);
+        } else {
+            $ui = null;
+        }
+
+        return $ui === null ? t('(Unknown)') : $ui->getUserDisplayName();
+    }
+
+    /**
+     * Get the file size of the file (in bytes).
+     *
+     * @return int
+     */
+    public function getFullSize()
+    {
+        return $this->fvSize;
+    }
+
+    /**
+     * Get the formatted file size.
+     *
+     * @return string
+     *
+     * @example 123 KB
+     */
+    public function getSize()
+    {
+        $app = Application::getFacadeApplication();
+
+        return $app->make('helper/number')->formatSize($this->fvSize, 'KB');
+    }
+
+    /**
+     * Update the title of the file.
+     *
+     * @param string $title
+     */
+    public function updateTitle($title)
+    {
+        $app = Application::getFacadeApplication();
+        $this->fvTitle = $title;
+        $this->save();
+        $this->logVersionUpdate(self::UT_TITLE);
+        $fve = new FileVersionEvent($this);
+        $app->make(EventDispatcherInterface::class)->dispatch('on_file_version_update_title', $fve);
+    }
+
+    /**
+     * Get the title of the file version.
+     *
+     * @return null|string
+     */
+    public function getTitle()
+    {
+        return $this->fvTitle;
+    }
+
+    /**
+     * Update the description of the file.
+     *
+     * @param string $descr
+     */
+    public function updateDescription($descr)
+    {
+        $app = Application::getFacadeApplication();
+        $this->fvDescription = $descr;
+        $this->save();
+        $this->logVersionUpdate(self::UT_DESCRIPTION);
+        $fve = new FileVersionEvent($this);
+        $app->make(EventDispatcherInterface::class)->dispatch('on_file_version_update_description', $fve);
+    }
+
+    /**
+     * Get the description of the file version.
+     *
+     * @return null|string
+     */
+    public function getDescription()
+    {
+        return $this->fvDescription;
+    }
+
+    /**
+     * Get the extension of the file version.
      *
      * @return null|string
      */
@@ -483,85 +706,84 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Set the ID for the file version.
+     * Update the tags associated to the file.
      *
-     * @param int $fvID
+     * @param string $tags List of tags separated by newlines and/or commas
      */
-    public function setFileVersionID($fvID)
+    public function updateTags($tags)
     {
-        $this->fvID = $fvID;
-    }
-
-    /**
-     * Takes the current value of the file version and makes a new one with the same values.
-     *
-     * @return Version
-     */
-    public function duplicate()
-    {
-        $em = \ORM::entityManager();
-        $qq = $em->createQuery('SELECT max(v.fvID) FROM \Concrete\Core\Entity\File\Version v where v.file = :file');
-        $qq->setParameter('file', $this->file);
-        $fvID = $qq->getSingleScalarResult();
-        ++$fvID;
-
-        $fv = clone $this;
-        $fv->fvID = $fvID;
-        $fv->fvIsApproved = false;
-        $fv->fvDateAdded = new \DateTime();
-        $uID = (int) (new User())->getUserID();
-        if ($uID !== 0) {
-            $fv->fvAuthorUID = $uID;
-        }
-
-        $em->persist($fv);
-
-        $this->deny();
-
-        foreach ($this->getAttributes() as $value) {
-            $value = clone $value;
-            /*
-             * @var $value AttributeValue
-             */
-            $value->setVersion($fv);
-            $em->persist($value);
-        }
-
-        $em->flush();
-
-        $fe = new \Concrete\Core\File\Event\FileVersion($fv);
-        Events::dispatch('on_file_version_duplicate', $fe);
-
-        return $fv;
-    }
-
-    /**
-     * Deny a file version update.
-     */
-    public function deny()
-    {
-        $this->fvIsApproved = false;
+        $app = Application::getFacadeApplication();
+        $tags = self::cleanTags($tags);
+        $this->fvTags = $tags;
         $this->save();
-        $fe = new \Concrete\Core\File\Event\FileVersion($this);
-        Events::dispatch('on_file_version_deny', $fe);
+        $this->logVersionUpdate(self::UT_TAGS);
+        $fve = new FileVersionEvent($this);
+        $app->make(EventDispatcherInterface::class)->dispatch('on_file_version_update_tags', $fve);
     }
 
     /**
-     * Save changes to a file.
+     * Get the tags assigned to the file version (as a list of strings).
      *
-     * @param bool $flush Flush the EM cache
+     * @return string[]
      */
-    protected function save($flush = true)
+    public function getTagsList()
     {
-        $em = \ORM::entityManager();
-        $em->persist($this);
-        if ($flush) {
-            $em->flush();
+        $tags = explode("\n", str_replace("\r", "\n", trim($this->getTags())));
+        $clean_tags = [];
+        foreach ($tags as $tag) {
+            $tag = trim($tag);
+            if ($tag !== '') {
+                $clean_tags[] = $tag;
+            }
         }
+
+        return $clean_tags;
     }
 
     /**
-     * Get the file type name.
+     * Get the tags assigned to the file version (one tag per line - lines are separated by '\n').
+     *
+     * @return null|string
+     */
+    public function getTags()
+    {
+        return $this->fvTags;
+    }
+
+    /**
+     * Get the mime type of the file if known.
+     *
+     * @return string|false
+     */
+    public function getMimeType()
+    {
+        try {
+            $fre = $this->getFileResource();
+            $result = $fre->getMimetype();
+        } catch (FileNotFoundException $x) {
+            $result = false;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get the type of the file.
+     *
+     * @return \Concrete\Core\File\Type\Type
+     */
+    public function getTypeObject()
+    {
+        $app = Application::getFacadeApplication();
+        $fh = $app->make('helper/file');
+        $ext = $fh->getExtension($this->fvFilename);
+        $ftl = FileTypeList::getType($ext);
+
+        return $ftl;
+    }
+
+    /**
+     * Get the name of the file type.
      *
      * @return string
      */
@@ -573,7 +795,7 @@ class Version implements ObjectInterface
     }
 
     /**
-     * Get the file type display name (localized).
+     * Get the localized name of the file type.
      *
      * @return string
      */
@@ -585,28 +807,49 @@ class Version implements ObjectInterface
     }
 
     /**
-     * @return \Concrete\Core\File\Type\Type
+     * Get the localized name of the generic category type.
+     *
+     * @return string
      */
-    public function getTypeObject()
+    public function getGenericTypeText()
     {
-        $fh = Core::make('helper/file');
-        $ext = $fh->getExtension($this->fvFilename);
+        $to = $this->getTypeObject();
 
-        $ftl = FileTypeList::getType($ext);
-
-        return $ftl;
+        return $to->getGenericDisplayType();
     }
 
     /**
-     * Returns an array containing human-readable descriptions of everything that happened in this version.
+     * Log updates to files.
+     *
+     * @param int $updateTypeID One of the Version::UT_... constants
+     * @param int $updateTypeAttributeID the ID of the attribute that has been updated (if any - useful when $updateTypeID is UT_EXTENDED_ATTRIBUTE)
+     */
+    public function logVersionUpdate($updateTypeID, $updateTypeAttributeID = 0)
+    {
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $db->executeQuery(
+            'INSERT INTO FileVersionLog (fID, fvID, fvUpdateTypeID, fvUpdateTypeAttributeID) VALUES (?, ?, ?, ?)',
+            [
+                $this->getFileID(),
+                $this->getFileVersionID(),
+                $updateTypeID,
+                $updateTypeAttributeID,
+            ]
+        );
+    }
+
+    /**
+     * Get an array containing human-readable descriptions of everything that happened to this file version.
      *
      * @return string[]
      */
     public function getVersionLogComments()
     {
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
         $updates = [];
-        $db = Database::get();
-        $ga = $db->GetAll(
+        $ga = $db->fetchAll(
             'SELECT fvUpdateTypeID, fvUpdateTypeAttributeID FROM FileVersionLog WHERE fID = ? AND fvID = ? ORDER BY fvlID ASC',
             [$this->getFileID(), $this->getFileVersionID()]
         );
@@ -631,271 +874,36 @@ class Version implements ObjectInterface
                     $updates[] = t('File Name');
                     break;
                 case self::UT_EXTENDED_ATTRIBUTE:
-                    $val = $db->GetOne(
+                    $val = $db->fetchColumn(
                         'SELECT akName FROM AttributeKeys WHERE akID = ?',
                         [$a['fvUpdateTypeAttributeID']]
                     );
-                    if ($val != '') {
+                    if ($val !== false) {
                         $updates[] = $val;
                     }
                     break;
             }
         }
-        $updates = array_unique($updates);
-        $updates1 = [];
-        foreach ($updates as $val) {
-            // normalize the keys
-            $updates1[] = $val;
-        }
 
-        return $updates1;
+        return array_values(array_unique($updates));
     }
 
     /**
-     * Update the Title for a file.
+     * Get the path to the file relative to the webroot (may not exist).
+     * Return NULL if the file storage location is invalid.
+     * If the storage location does not support relative paths, you'll get the URL to the file (or the download URL if the file is not directly accessible).
      *
-     * @param string $title
-     */
-    public function updateTitle($title)
-    {
-        $this->fvTitle = $title;
-        $this->save();
-        $this->logVersionUpdate(self::UT_TITLE);
-        $fe = new \Concrete\Core\File\Event\FileVersion($this);
-        Events::dispatch('on_file_version_update_title', $fe);
-    }
-
-    /**
-     * Duplicate a file (adds a new version).
-     */
-    public function duplicateUnderlyingFile()
-    {
-        $importer = new Importer();
-        $fi = Core::make('helper/file');
-        $cf = Core::make('helper/concrete/file');
-        $filesystem = $this->getFile()->
-            getFileStorageLocationObject()->getFileSystemObject();
-        do {
-            $prefix = $importer->generatePrefix();
-            $path = $cf->prefix($prefix, $this->getFilename());
-        } while ($filesystem->has($path));
-        $filesystem->write(
-            $path,
-            $this->getFileResource()->read(),
-            [
-                'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
-                'mimetype' => Core::make('helper/mime')->mimeFromExtension($fi->getExtension($this->getFilename())),
-            ]
-        );
-        $this->updateFile($this->getFilename(), $prefix);
-    }
-
-    /**
-     * Log updates to files.
+     * @return string|null
      *
-     * @param int $updateTypeID          Refers to the constants
-     * @param int $updateTypeAttributeID
-     */
-    public function logVersionUpdate($updateTypeID, $updateTypeAttributeID = 0)
-    {
-        $db = Database::get();
-        $db->Execute(
-            'INSERT INTO FileVersionLog (fID, fvID, fvUpdateTypeID, fvUpdateTypeAttributeID) VALUES (?, ?, ?, ?)',
-            [
-                $this->getFileID(),
-                $this->getFileVersionID(),
-                $updateTypeID,
-                $updateTypeAttributeID,
-            ]
-        );
-    }
-
-    /**
-     * Update the tags for a file.
-     *
-     * @param string $tags
-     */
-    public function updateTags($tags)
-    {
-        $tags = self::cleanTags($tags);
-        $this->fvTags = $tags;
-        $this->save();
-        $this->logVersionUpdate(self::UT_TAGS);
-        $fe = new \Concrete\Core\File\Event\FileVersion($this);
-        Events::dispatch('on_file_version_update_tags', $fe);
-    }
-
-    /**
-     * Update the description of a file.
-     *
-     * @param string $descr
-     */
-    public function updateDescription($descr)
-    {
-        $this->fvDescription = $descr;
-        $this->save();
-        $this->logVersionUpdate(self::UT_DESCRIPTION);
-        $fe = new \Concrete\Core\File\Event\FileVersion($this);
-        Events::dispatch('on_file_version_update_description', $fe);
-    }
-
-    /**
-     * Rename a file.
-     *
-     * @param string $filename
-     */
-    public function rename($filename)
-    {
-        $cf = Core::make('helper/concrete/file');
-        $storage = $this->getFile()->getFileStorageLocationObject();
-        $oldFilename = $this->fvFilename;
-        if (is_object($storage)) {
-            $path = $cf->prefix($this->fvPrefix, $oldFilename);
-            $newPath = $cf->prefix($this->fvPrefix, $filename);
-            $filesystem = $storage->getFileSystemObject();
-            if ($filesystem->has($path)) {
-                $filesystem->rename($path, $newPath);
-            }
-            $this->fvFilename = $filename;
-            if ($this->fvTitle == $oldFilename) {
-                $this->fvTitle = $filename;
-            }
-            $this->logVersionUpdate(self::UT_RENAME);
-            $this->save();
-        }
-    }
-
-    /**
-     * Update the contents of a file.
-     *
-     * @param string $contents
-     */
-    public function updateContents($contents)
-    {
-        $cf = Core::make('helper/concrete/file');
-        $storage = $this->getFile()->getFileStorageLocationObject();
-        if (is_object($storage)) {
-            $path = $cf->prefix($this->fvPrefix, $this->fvFilename);
-            $filesystem = $storage->getFileSystemObject();
-            if ($filesystem->has($path)) {
-                $filesystem->delete($path);
-            }
-            $filesystem->write($path, $contents);
-            $this->logVersionUpdate(self::UT_CONTENTS);
-            $fe = new \Concrete\Core\File\Event\FileVersion($this);
-            Events::dispatch('on_file_version_update_contents', $fe);
-            $this->refreshAttributes();
-        }
-    }
-
-    /**
-     * Update the filename and prefix of a file.
-     *
-     * @param string $filename
-     * @param string $prefix
-     */
-    public function updateFile($filename, $prefix)
-    {
-        $this->fvFilename = $filename;
-        $this->fvPrefix = $prefix;
-        $this->save();
-        $this->logVersionUpdate(self::UT_REPLACE_FILE);
-    }
-
-    /**
-     * Approve the change to a file version.
-     */
-    public function approve()
-    {
-        foreach ($this->file->getFileVersions() as $fv) {
-            $fv->fvIsApproved = false;
-            $fv->save(false);
-        }
-
-        $this->fvIsApproved = true;
-        $uID = (int) (new User())->getUserID();
-        if ($uID !== 0) {
-            $this->fvApproverUID = $uID;
-        }
-        $this->save();
-
-        $fe = new \Concrete\Core\File\Event\FileVersion($this);
-        Events::dispatch('on_file_version_approve', $fe);
-
-        $fo = $this->getFile();
-        $fo->reindex();
-
-        \Core::make('cache/request')->delete('file/version/approved/'.$this->getFileID());
-    }
-
-    /**
-     * Return the contents of a file.
-     *
-     * @return string
-     */
-    public function getFileContents()
-    {
-        $cf = Core::make('helper/concrete/file');
-        $fsl = $this->getFile()->getFileStorageLocationObject();
-        if (is_object($fsl)) {
-            return $fsl->getFileSystemObject()->read($cf->prefix($this->fvPrefix, $this->fvFilename));
-        }
-    }
-
-    /**
-     * Returns a url that can be used to download a file, will force the download of all file types, even if your browser can display them.
-     *
-     * @return string
-     */
-    public function getForceDownloadURL()
-    {
-        $c = Page::getCurrentPage();
-        $cID = ($c instanceof Page) ? $c->getCollectionID() : 0;
-
-        return View::url('/download_file', 'force', $this->getFileID(), $cID);
-    }
-
-    /**
-     * Forces the download of a file.
-     */
-    public function forceDownload()
-    {
-        session_write_close();
-        $fre = $this->getFileResource();
-
-        $fs = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
-        $response = new FlysystemFileResponse($fre->getPath(), $fs);
-
-        $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT);
-        $response->prepare(\Request::getInstance());
-
-        ob_end_clean();
-        $response->send();
-        \Core::shutdown();
-        exit;
-    }
-
-    /**
-     * Return the filename for a file if it exists.
-     *
-     * @return null|string
-     */
-    public function getFileName()
-    {
-        return $this->fvFilename;
-    }
-
-    /**
-     * Return the relative path for a file (may not exist).
-     *
-     * @return string
+     * @example /application/files/0000/0000/0000/file.png
      */
     public function getRelativePath()
     {
-        $cf = Core::make('helper/concrete/file');
-        $fsl = $this->getFile()->getFileStorageLocationObject();
         $url = null;
-        if (is_object($fsl)) {
+        $fsl = $this->getFile()->getFileStorageLocationObject();
+        if ($fsl !== null) {
+            $app = Application::getFacadeApplication();
+            $cf = $app->make('helper/concrete/file');
             $configuration = $fsl->getConfigurationObject();
             if ($configuration->hasRelativePath()) {
                 $url = $configuration->getRelativePathToFile($cf->prefix($this->fvPrefix, $this->fvFilename));
@@ -904,46 +912,717 @@ class Version implements ObjectInterface
                 $url = $configuration->getPublicURLToFile($cf->prefix($this->fvPrefix, $this->fvFilename));
             }
             if (!$url) {
-                $url =  $this->getDownloadURL();
+                $url = (string) $this->getDownloadURL();
             }
         }
+
         return $url;
     }
 
     /**
-     * Get an array of thumbnails.
+     * Get an URL that points to the file on disk (if not available, you'll get the result of the getDownloadURL method).
+     * Return NULL if the file storage location is invalid.
+     * If the file is not directly accessible, you'll get the download URL.
      *
-     * @return Thumbnail[]
+     * @return string|null
+     */
+    public function getURL()
+    {
+        $url = null;
+        $fsl = $this->getFile()->getFileStorageLocationObject();
+        if ($fsl !== null) {
+            $app = Application::getFacadeApplication();
+            $cf = $app->make('helper/concrete/file');
+            $configuration = $fsl->getConfigurationObject();
+            if ($configuration->hasPublicURL()) {
+                $url = $configuration->getPublicURLToFile($cf->prefix($this->fvPrefix, $this->fvFilename));
+            }
+            if (!$url) {
+                $url = (string) $this->getDownloadURL();
+            }
+        }
+
+        return $url;
+    }
+
+    /**
+     * Get an URL that can be used to download the file.
+     * This passes through the download_file single page.
      *
-     * @throws InvalidDimensionException
+     * @return \League\URL\URLInterface
+     */
+    public function getDownloadURL()
+    {
+        $app = Application::getFacadeApplication();
+        $urlResolver = $app->make(ResolverManagerInterface::class);
+        $c = Page::getCurrentPage();
+        $cID = $c instanceof Page && !$c->isError() ? $c->getCollectionID() : 0;
+
+        return $urlResolver->resolve(['/download_file', $this->getFileID(), $cID]);
+    }
+
+    /**
+     * Get an URL that can be used to download the file (it will force the download of all file types, even if the browser can display them).
+     *
+     * @return \League\URL\URLInterface
+     */
+    public function getForceDownloadURL()
+    {
+        $app = Application::getFacadeApplication();
+        $c = Page::getCurrentPage();
+        $cID = $c instanceof Page && !$c->isError() ? $c->getCollectionID() : 0;
+        $urlResolver = $app->make(ResolverManagerInterface::class);
+
+        return $urlResolver->resolve(['/download_file', 'force', $this->getFileID(), $cID]);
+    }
+
+    /**
+     * Get a Response instance that will force the browser to download the file, even if the browser can display it.
+     *
+     * @return \Concrete\Core\Http\Response
+     */
+    public function buildForceDownloadResponse()
+    {
+        $app = Application::getFacadeApplication();
+        $fre = $this->getFileResource();
+
+        $fs = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
+        $response = new FlysystemFileResponse($fre->getPath(), $fs);
+
+        $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT);
+
+        return $response;
+    }
+
+    /**
+     * Check if there is a viewer for the type of the file.
+     *
+     * @return bool
+     */
+    public function canView()
+    {
+        $to = $this->getTypeObject();
+
+        return (string) $to->getView() !== '';
+    }
+
+    /**
+     * Check if there is an editor for the type of the file.
+     *
+     * @return bool
+     */
+    public function canEdit()
+    {
+        $to = $this->getTypeObject();
+
+        return (string) $to->getEditor() !== '';
+    }
+
+    /**
+     * Create a new (unapproved) copy of this file version.
+     * The new Version instance will have the current user as the author (if available), and a new version ID.
+     *
+     * @return Version
+     */
+    public function duplicate()
+    {
+        $app = Application::getFacadeApplication();
+        $em = $app->make(EntityManagerInterface::class);
+        $qq = $em->createQuery('SELECT max(v.fvID) FROM \Concrete\Core\Entity\File\Version v where v.file = :file');
+        $qq->setParameter('file', $this->file);
+        $fvID = $qq->getSingleScalarResult();
+        ++$fvID;
+
+        $fv = clone $this;
+        $fv->fvID = $fvID;
+        $fv->fvIsApproved = false;
+        $fv->fvDateAdded = new DateTime();
+        if (User::isLoggedIn()) {
+            $uID = (int) (new User())->getUserID();
+            if ($uID !== 0) {
+                $fv->fvAuthorUID = $uID;
+            }
+        }
+
+        $em->persist($fv);
+
+        $this->deny();
+
+        foreach ($this->getAttributes() as $value) {
+            $value = clone $value;
+            $value->setVersion($fv);
+            $em->persist($value);
+        }
+
+        $em->flush();
+
+        $fve = new FileVersionEvent($fv);
+        $app->make(EventDispatcherInterface::class)->dispatch('on_file_version_duplicate', $fve);
+
+        return $fv;
+    }
+
+    /**
+     * Duplicate the underlying file and assign its new position to this instance.
+     */
+    public function duplicateUnderlyingFile()
+    {
+        $app = Application::getFacadeApplication();
+        $importer = new Importer();
+        $fi = $app->make('helper/file');
+        $cf = $app->make('helper/concrete/file');
+        $filesystem = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
+        $fileName = $this->getFileName();
+        do {
+            $prefix = $importer->generatePrefix();
+            $path = $cf->prefix($prefix, $fileName);
+        } while ($filesystem->has($path));
+        $fileContents = $this->getFileResource()->read();
+        $mimeType = Util::guessMimeType($fileName, $fileContents);
+        $filesystem->write(
+            $path,
+            $fileContents,
+            [
+                'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
+                'mimetype' => $mimeType,
+            ]
+        );
+        $this->updateFile($fileName, $prefix);
+    }
+
+    /**
+     * Delete this version of the file.
+     *
+     * @param bool $deleteFilesAndThumbnails should we delete the actual file and the thumbnails?
+     */
+    public function delete($deleteFilesAndThumbnails = false)
+    {
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $em = $app->make(EntityManagerInterface::class);
+        $category = $this->getObjectAttributeCategory();
+
+        foreach ($this->getAttributes() as $attribute) {
+            $category->deleteValue($attribute);
+        }
+
+        $db->executeQuery('DELETE FROM FileVersionLog WHERE fID = ? AND fvID = ?', [$this->getFileID(), $this->fvID]);
+
+        if ($deleteFilesAndThumbnails) {
+            $types = Type::getVersionList();
+            foreach ($types as $type) {
+                $this->deleteThumbnail($type);
+            }
+            try {
+                $fsl = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
+                $fre = $this->getFileResource();
+                if ($fsl->has($fre->getPath())) {
+                    $fsl->delete($fre->getPath());
+                }
+            } catch (FileNotFoundException $e) {
+            }
+        }
+        $em->remove($this);
+        $em->flush();
+    }
+
+    /**
+     * Get an abstract object to work with the actual file resource (note: this is NOT a concrete5 File object).
+     *
+     * @throws \League\Flysystem\FileNotFoundException
+     *
+     * @return \League\Flysystem\File
+     */
+    public function getFileResource()
+    {
+        $app = Application::getFacadeApplication();
+        $cf = $app->make('helper/concrete/file');
+        $fs = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
+        $fo = $fs->get($cf->prefix($this->fvPrefix, $this->fvFilename));
+
+        return $fo;
+    }
+
+    /**
+     * Update the contents of the file.
+     *
+     * @param string $contents The new content of the file
+     * @param bool $rescanThumbnails Should thumbnails be rescanned as well?
+     */
+    public function updateContents($contents, $rescanThumbnails = true)
+    {
+        $this->releaseImagineImage();
+        $storage = $this->getFile()->getFileStorageLocationObject();
+        if ($storage !== null) {
+            $app = Application::getFacadeApplication();
+            $cf = $app->make('helper/concrete/file');
+            $path = $cf->prefix($this->fvPrefix, $this->fvFilename);
+            $filesystem = $storage->getFileSystemObject();
+            try {
+                if ($filesystem->has($path)) {
+                    $filesystem->delete($path);
+                }
+            } catch (FileNotFoundException $x) {
+            }
+            $filesystem->write($path, $contents);
+            $this->logVersionUpdate(self::UT_CONTENTS);
+            $fve = new FileVersionEvent($this);
+            $app->make(EventDispatcherInterface::class)->dispatch('on_file_version_update_contents', $fve);
+            $this->refreshAttributes($rescanThumbnails);
+        }
+    }
+
+    /**
+     * Get the contents of the file.
+     *
+     * @return string|null return NULL if the actual file does not exist or can't be read
+     */
+    public function getFileContents()
+    {
+        $result = null;
+        $fsl = $this->getFile()->getFileStorageLocationObject();
+        if ($fsl !== null) {
+            $app = Application::getFacadeApplication();
+            $cf = $app->make('helper/concrete/file');
+            try {
+                $result = $fsl->getFileSystemObject()->read($cf->prefix($this->fvPrefix, $this->fvFilename));
+                if ($result === false) {
+                    $result = null;
+                }
+            } catch (FileNotFoundException $x) {
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\ObjectInterface::getObjectAttributeCategory()
+     *
+     * @return \Concrete\Core\Attribute\Category\FileCategory
+     */
+    public function getObjectAttributeCategory()
+    {
+        $app = Application::getFacadeApplication();
+
+        return $app->make(FileCategory::class);
+    }
+
+    /**
+     * Rescan all the attributes of this file version.
+     * This will run any type-based import routines, and store those attributes, generate thumbnails, etc...
+     *
+     * @param bool $rescanThumbnails Should thumbnails be rescanned as well?
+     *
+     * @return null|int Return one of the \Concrete\Core\File\Importer::E_... constants in case of errors, NULL otherwise.
+     */
+    public function refreshAttributes($rescanThumbnails = true)
+    {
+        $app = Application::getFacadeApplication();
+
+        $storage = $this->getFile()->getFileStorageLocationObject();
+        if ($storage !== null) {
+            $fs = $storage->getFileSystemObject();
+            $adapter = $fs->getAdapter();
+            if ($adapter instanceof CachedAdapter) {
+                $cache = $adapter->getCache();
+                $cf = $app->make('helper/concrete/file');
+                $path = Util::normalizePath($cf->prefix($this->fvPrefix, $this->fvFilename));
+                $cache->delete($path);
+            }
+        }
+
+        $em = $app->make(EntityManagerInterface::class);
+        $fh = $app->make('helper/file');
+        $ext = $fh->getExtension($this->fvFilename);
+        $ftl = FileTypeList::getType($ext);
+
+        $cl = $ftl->getCustomInspector();
+        if ($cl !== null) {
+            $this->fvGenericType = $ftl->getGenericType();
+            $cl->inspect($this);
+        }
+
+        $em->refresh($this);
+
+        try {
+            $fsr = $this->getFileResource();
+            if (!$fsr->isFile()) {
+                return Importer::E_FILE_INVALID;
+            }
+        } catch (FileNotFoundException $e) {
+            return Importer::E_FILE_INVALID;
+        }
+
+        $this->fvExtension = $ext;
+        $this->fvType = $ftl->getGenericType();
+        if ($this->fvTitle === null) {
+            $this->fvTitle = $this->getFileName();
+        }
+        $this->fvSize = $fsr->getSize();
+
+        if ($rescanThumbnails) {
+            $this->rescanThumbnails();
+        }
+
+        $this->save();
+
+        $f = $this->getFile();
+        $f->reindex();
+    }
+
+    /**
+     * Get the list of attributes associated to this file version.
+     *
+     * @return \Concrete\Core\Entity\Attribute\Value\FileValue[]
+     */
+    public function getAttributes()
+    {
+        return $this->getObjectAttributeCategory()->getAttributeValues($this);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\ObjectInterface::getAttributeValueObject()
+     *
+     * @return \Concrete\Core\Entity\Attribute\Value\FileValue|null
+     */
+    public function getAttributeValueObject($ak, $createIfNotExists = false)
+    {
+        if (!($ak instanceof AttributeKeyInterface)) {
+            $ak = $ak ? $this->getObjectAttributeCategory()->getAttributeKeyByHandle((string) $ak) : null;
+        }
+        if ($ak === null) {
+            $result = null;
+        } else {
+            $result = $this->getObjectAttributeCategory()->getAttributeValue($ak, $this);
+            if ($result === null && $createIfNotExists) {
+                $result = new FileValue();
+                $result->setVersion($this);
+                $result->setAttributeKey($ak);
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get an \Imagine\Image\ImageInterface representing the image.
+     *
+     * @return \Imagine\Image\ImageInterface|null return NULL if the image coulnd't be read, an ImageInterface otherwise
+     */
+    public function getImagineImage()
+    {
+        if (null === $this->imagineImage) {
+            $app = Application::getFacadeApplication();
+            $resource = $this->getFileResource();
+            $mimetype = $resource->getMimeType();
+            $imageLibrary = $app->make(ImagineInterface::class);
+
+            switch ($mimetype) {
+                case 'image/svg+xml':
+                case 'image/svg-xml':
+                case 'text/plain':
+                    if ($imageLibrary instanceof \Imagine\Gd\Imagine) {
+                        try {
+                            $imageLibrary = $app->make('image/imagick');
+                        } catch (Exception $x) {
+                            $this->imagineImage = false;
+                        } catch (Throwable $x) {
+                            $this->imagineImage = false;
+                        }
+                    }
+                    break;
+            }
+
+            if (null === $this->imagineImage) {
+                $metadataReader = $imageLibrary->getMetadataReader();
+                if (!$metadataReader instanceof ExifMetadataReader) {
+                    if ($app->make('config')->get('concrete.file_manager.images.use_exif_data_to_rotate_images')) {
+                        try {
+                            $imageLibrary->setMetadataReader(new ExifMetadataReader());
+                        } catch (NotSupportedException $e) {
+                        }
+                    }
+                }
+                try {
+                    $this->imagineImage = $imageLibrary->load($resource->read());
+                } catch (FileNotFoundException $e) {
+                    $this->imagineImage = false;
+                }
+            }
+        }
+
+        return $this->imagineImage ?: null;
+    }
+
+    /**
+     * Does the \Imagine\Image\ImageInterface instance have already been loaded?
+     *
+     * @return bool
+     */
+    public function hasImagineImage()
+    {
+        return $this->imagineImage ? true : false;
+    }
+
+    /**
+     * Unload the loaded Image instance.
+     */
+    public function releaseImagineImage()
+    {
+        $this->imagineImage = null;
+    }
+
+    /**
+     * Create missing thumbnails (or re-create all the thumbnails).
+     *
+     * @param bool $deleteExistingThumbnails Set to true to delete existing thumbnails (they will be re-created from scratch)
+     *
+     * @return bool return true on success, false on failure (file is not an image, problems during image processing, ...)
+     */
+    public function refreshThumbnails($deleteExistingThumbnails)
+    {
+        $result = false;
+        if ($this->fvType == \Concrete\Core\File\Type\Type::T_IMAGE) {
+            try {
+                $image = $this->getImagineImage();
+                if ($image) {
+                    $imageWidth = (int) $this->getAttribute('width') ?: (int) $image->getSize()->getWidth();
+                    $imageHeight = (int) $this->getAttribute('height') ?: (int) $image->getSize()->getHeight();
+                    $types = Type::getVersionList();
+                    $file = $this->getFile();
+                    $fsl = null;
+                    foreach ($types as $type) {
+                        if ($type->shouldExistFor($imageWidth, $imageHeight, $file)) {
+                            if ($deleteExistingThumbnails) {
+                                $this->deleteThumbnail($type);
+                            } else {
+                                if ($fsl === null) {
+                                    $fsl = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
+                                }
+                                $path = $type->getFilePath($this);
+                                try {
+                                    $exists = $fsl->has($path);
+                                } catch (FileNotFoundException $e) {
+                                    $exists = false;
+                                }
+                                if ($exists) {
+                                    continue;
+                                }
+                            }
+                            $this->generateThumbnail($type);
+                        } else {
+                            // delete the file if it exists
+                            $this->deleteThumbnail($type);
+                        }
+                    }
+                    $result = true;
+                }
+            } catch (\Imagine\Exception\InvalidArgumentException $e) {
+            } catch (\Imagine\Exception\RuntimeException $e) {
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Generate a thumbnail for a specific thumbnail type version.
+     *
+     * @param \Concrete\Core\File\Image\Thumbnail\Type\Version $type
+     */
+    public function generateThumbnail(ThumbnailTypeVersion $type)
+    {
+        $app = Application::getFacadeApplication();
+        $config = $app->make('config');
+        $image = $this->getImagineImage();
+        $bitmapFormat = $app->make(BitmapFormat::class);
+
+        $filesystem = $this->getFile()
+            ->getFileStorageLocationObject()
+            ->getFileSystemObject();
+
+        $height = $type->getHeight();
+        $width = $type->getWidth();
+        if ($height && $width) {
+            $size = new Box($width, $height);
+        } elseif ($width) {
+            $size = $image->getSize()->widen($width);
+        } else {
+            $size = $image->getSize()->heighten($height);
+        }
+
+        // isCropped only exists on the CustomThumbnail type
+        if (method_exists($type, 'isCropped') && $type->isCropped()) {
+            $thumbnailMode = ImageInterface::THUMBNAIL_OUTBOUND;
+        } else {
+            switch ($type->getSizingMode()) {
+                case Type::RESIZE_EXACT:
+                    $thumbnailMode = ImageInterface::THUMBNAIL_OUTBOUND;
+                    break;
+                case Type::RESIZE_PROPORTIONAL:
+                default:
+                    $thumbnailMode = ImageInterface::THUMBNAIL_INSET;
+                    break;
+            }
+        }
+
+        $imageForThumbnail = $image;
+        if ($type->isUpscalingEnabled()) {
+            $imageSize = $image->getSize();
+            if ($size->contains($imageSize) && $imageSize->getWidth() !== $size->getWidth() && $imageSize->getHeight() !== $size->getHeight()) {
+                if (($imageSize->getWidth() / $imageSize->getHeight()) >= ($size->getWidth() / $size->getHeight())) {
+                    $newImageSize = $imageSize->heighten($size->getHeight());
+                } else {
+                    $newImageSize = $imageSize->widen($size->getWidth());
+                }
+                $imageForThumbnail = $image->copy()->resize($newImageSize);
+            }
+        }
+        $thumbnail = $imageForThumbnail->thumbnail($size, $thumbnailMode);
+        unset($imageForThumbnail);
+        $thumbnailPath = $type->getFilePath($this);
+        $thumbnailFormat = $app->make(ThumbnailFormatService::class)->getFormatForFile($this);
+
+        $mimetype = $bitmapFormat->getFormatMimeType($thumbnailFormat);
+        $thumbnailOptions = $bitmapFormat->getFormatImagineSaveOptions($thumbnailFormat);
+
+        $filesystem->write(
+            $thumbnailPath,
+            $thumbnail->get($thumbnailFormat, $thumbnailOptions),
+            [
+                'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
+                'mimetype' => $mimetype,
+            ]
+        );
+
+        $app['director']->dispatch('on_thumbnail_generate',
+            new \Concrete\Core\File\Event\ThumbnailGenerate($thumbnailPath, $type)
+        );
+
+        if ($type->getHandle() == $config->get('concrete.icons.file_manager_listing.handle') && !$this->fvHasListingThumbnail) {
+            $this->fvHasListingThumbnail = true;
+            $this->save();
+        }
+        if ($type->getHandle() == $config->get('concrete.icons.file_manager_detail.handle') && !$this->fvHasDetailThumbnail) {
+            $this->fvHasDetailThumbnail = true;
+            $this->save();
+        }
+
+        unset($size);
+        unset($thumbnail);
+        unset($filesystem);
+    }
+
+    /**
+     * Import an existing file as a thumbnail type version.
+     *
+     * @param \Concrete\Core\File\Image\Thumbnail\Type\Version $version
+     * @param string $path
+     */
+    public function importThumbnail(ThumbnailTypeVersion $version, $path)
+    {
+        $app = Application::getFacadeApplication();
+        $config = $app->make('config');
+        $thumbnailPath = $version->getFilePath($this);
+        $filesystem = $this->getFile()
+            ->getFileStorageLocationObject()
+            ->getFileSystemObject();
+        try {
+            if ($filesystem->has($thumbnailPath)) {
+                $filesystem->delete($thumbnailPath);
+            }
+        } catch (FileNotFoundException $e) {
+        }
+        $fileContents = file_get_contents($path);
+        $mimeType = Util::guessMimeType($path, $fileContents);
+        $filesystem->write(
+            $thumbnailPath,
+            $fileContents,
+            [
+                'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
+                'mimetype' => $mimeType,
+            ]
+        );
+
+        if ($version->getHandle() == $config->get('concrete.icons.file_manager_listing.handle')) {
+            $this->fvHasListingThumbnail = true;
+        }
+
+        if ($version->getHandle() == $config->get('concrete.icons.file_manager_detail.handle')) {
+            $this->fvHasDetailThumbnail = true;
+        }
+
+        $this->save();
+    }
+
+    /**
+     * Get the URL of a thumbnail type.
+     * If the thumbnail is smaller than the image (or if the file does not satisfy the Conditional Thumbnail criterias) you'll get the URL of the image itself.
+     *
+     * Please remark that the path is resolved using the default core path resolver: avoid using this method when you have access to the resolver instance.
+     *
+     * @param \Concrete\Core\File\Image\Thumbnail\Type\Version|string $type the thumbnail type version (or its handle)
+     *
+     * @return string|null return NULL if the thumbnail does not exist and the file storage location is invalid
+     *
+     * @example /application/files/thumbnails/file_manager_listing/0000/0000/0000/file.png
+     */
+    public function getThumbnailURL($type)
+    {
+        $app = Application::getFacadeApplication();
+
+        $path = null;
+        if (!($type instanceof ThumbnailTypeVersion)) {
+            $type = ThumbnailTypeVersion::getByHandle($type);
+        }
+        if ($type !== null) {
+            $imageWidth = (int) $this->getAttribute('width');
+            $imageHeight = (int) $this->getAttribute('height');
+            $file = $this->getFile();
+            if ($type->shouldExistFor($imageWidth, $imageHeight, $file)) {
+                $path_resolver = $app->make(Resolver::class);
+                $path = $path_resolver->getPath($this, $type);
+            }
+        }
+        if (!$path) {
+            $url = $this->getURL();
+            $path = $url ? (string) $url : null;
+        }
+
+        return $path;
+    }
+
+    /**
+     * Get the list of all the thumbnails.
+     *
+     * @throws \Concrete\Core\File\Exception\InvalidDimensionException
+     *
+     * @return \Concrete\Core\File\Image\Thumbnail\Thumbnail[]
      */
     public function getThumbnails()
     {
         $thumbnails = [];
-        $types = Type::getVersionList();
-        $width = $this->getAttribute('width');
-        $height = $this->getAttribute('height');
-        $file = $this->getFile();
-
-        if (!$width || $width < 0) {
+        $imageWidth = (int) $this->getAttribute('width');
+        $imageHeight = (int) $this->getAttribute('height');
+        if ($imageWidth < 1 || $imageHeight < 1) {
             throw new InvalidDimensionException($this->getFile(), $this, t('Invalid dimensions.'));
         }
-
+        $types = Type::getVersionList();
+        $file = $this->getFile();
         foreach ($types as $type) {
-            if ($width < $type->getWidth()) {
-                continue;
-            }
-
-            if ($width == $type->getWidth() && (!$type->getHeight() || $height <= $type->getHeight())) {
-                continue;
-            }
-
-            $thumbnailPath = $type->getFilePath($this);
-            $location = $file->getFileStorageLocationObject();
-            $configuration = $location->getConfigurationObject();
-            $filesystem = $location->getFileSystemObject();
-            if ($filesystem->has($thumbnailPath)) {
-                $thumbnails[] = new Thumbnail($type, $configuration->getPublicURLToFile($thumbnailPath));
+            if ($type->shouldExistFor($imageWidth, $imageHeight, $file)) {
+                $thumbnailPath = $type->getFilePath($this);
+                $location = $file->getFileStorageLocationObject();
+                $configuration = $location->getConfigurationObject();
+                $filesystem = $location->getFileSystemObject();
+                if ($filesystem->has($thumbnailPath)) {
+                    $thumbnails[] = new Thumbnail($type, $configuration->getPublicURLToFile($thumbnailPath));
+                }
             }
         }
 
@@ -951,163 +1630,191 @@ class Version implements ObjectInterface
     }
 
     /**
-     * @return \Concrete\Core\Attribute\Category\FileCategory|mixed
+     * Get the HTML that renders the thumbnail for the details (a generic type icon if the thumbnail does not exist).
+     * Return the thumbnail for an image or a generic type icon for a file.
+     *
+     * @return string
      */
-    public function getObjectAttributeCategory()
+    public function getDetailThumbnailImage()
     {
-        return \Core::make('\Concrete\Core\Attribute\Category\FileCategory');
+        if ($this->fvHasDetailThumbnail) {
+            $app = Application::getFacadeApplication();
+            $config = $app->make('config');
+            $type = Type::getByHandle($config->get('concrete.icons.file_manager_detail.handle'));
+            $result = '<img src="' . $this->getThumbnailURL($type->getBaseVersion()) . '"';
+            if ($config->get('concrete.file_manager.images.create_high_dpi_thumbnails')) {
+                $result .= ' data-at2x="' . $this->getThumbnailURL($type->getDoubledVersion()) . '"';
+            }
+            $result .= ' />';
+        } else {
+            $result = $this->getTypeObject()->getThumbnail();
+        }
+
+        return $result;
     }
 
     /**
-     * Necessary because getAttribute() returns the Value Value object, and this returns the
-     * File Attribute Value object.
+     * Get the HTML that renders the thumbnail for the file listing (a generic type icon if the thumbnail does not exist).
      *
-     * @param string|FileKey $ak
-     * @param bool           $createIfNotExists
-     *
-     * @return mixed|FileValue
+     * @return string
      */
-    public function getAttributeValueObject($ak, $createIfNotExists = false)
+    public function getListingThumbnailImage()
     {
-        if (!is_object($ak)) {
-            $ak = FileKey::getByHandle($ak);
-        }
-        $value = false;
-        if (is_object($ak)) {
-            $value = $this->getObjectAttributeCategory()->getAttributeValue($ak, $this);
-        }
-
-        if ($value) {
-            return $value;
-        } elseif ($createIfNotExists) {
-            if (!is_object($ak)) {
-                $ak = FileKey::getByHandle($ak);
+        if ($this->fvHasListingThumbnail) {
+            $app = Application::getFacadeApplication();
+            $config = $app->make('config');
+            $type = Type::getByHandle($config->get('concrete.icons.file_manager_listing.handle'));
+            $result = '<img class="ccm-file-manager-list-thumbnail" src="' . $this->getThumbnailURL($type->getBaseVersion()) . '"';
+            if ($config->get('concrete.file_manager.images.create_high_dpi_thumbnails')) {
+                $result .= '  data-at2x="' . $this->getThumbnailURL($type->getDoubledVersion()) . '"';
             }
-            $attributeValue = new FileValue();
-            $attributeValue->setVersion($this);
-            $attributeValue->setAttributeKey($ak);
-
-            return $attributeValue;
+            $result .= ' />';
+        } else {
+            return $this->getTypeObject()->getThumbnail();
         }
+
+        return $result;
     }
 
     /**
-     * @return bool|Image
-     */
-    public function getImagineImage()
-    {
-        if (null === $this->imagineImage) {
-            $resource = $this->getFileResource();
-            $mimetype = $resource->getMimeType();
-            $imageLibrary = \Image::getFacadeRoot();
-
-            switch ($mimetype) {
-                case 'image/svg+xml':
-                case 'image/svg-xml':
-                    if ($imageLibrary instanceof \Imagine\Gd\Imagine) {
-                        try {
-                            $app = Facade::getFacadeApplication();
-                            $imageLibrary = $app->make('image/imagick');
-                        } catch (\Exception $x) {
-                            $this->imagineImage = false;
-                        }
-                    }
-                    break;
-            }
-
-            $metadataReader = $imageLibrary->getMetadataReader();
-            if (!$metadataReader instanceof ExifMetadataReader) {
-                if (\Config::get('concrete.file_manager.images.use_exif_data_to_rotate_images')) {
-                    try {
-                        $imageLibrary->setMetadataReader(new ExifMetadataReader());
-                    } catch (NotSupportedException $e) {
-                    }
-                }
-            }
-
-            $this->imagineImage = $imageLibrary->load($resource->read());
-        }
-
-        return $this->imagineImage;
-    }
-
-    /**
-     * Rescan the thumbnails for a file (images only).
+     * Delete the thumbnail for a specific thumbnail type version.
      *
-     * @return bool False on failure
+     * @param \Concrete\Core\File\Image\Thumbnail\Type\Version|string $type the thumbnail type version (or its handle)
      */
-    public function rescanThumbnails()
+    public function deleteThumbnail($type)
     {
-        if ($this->fvType != \Concrete\Core\File\Type\Type::T_IMAGE) {
-            return false;
+        $app = Application::getFacadeApplication();
+        $config = $app->make('config');
+        if (!($type instanceof ThumbnailTypeVersion)) {
+            $type = ThumbnailTypeVersion::getByHandle($type);
         }
-
-        $imagewidth = $this->getAttribute('width');
-        $imageheight = $this->getAttribute('height');
-        $types = Type::getVersionList();
-
+        $fsl = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
+        $path = $type->getFilePath($this);
         try {
-            $image = $this->getImagineImage();
+            if ($fsl->has($path)) {
+                $fsl->delete($path);
 
-            if ($image) {
-                /* @var \Imagine\Imagick\Image $image */
-                if (!$imagewidth) {
-                    $imagewidth = $image->getSize()->getWidth();
-                }
-                if (!$imageheight) {
-                    $imageheight = $image->getSize()->getHeight();
-                }
-
-                foreach ($types as $type) {
-                    // delete the file if it exists
-                    $this->deleteThumbnail($type);
-                    
-                    // if image is smaller than size requested, don't create thumbnail
-                    if ($imagewidth < $type->getWidth() && $imageheight < $type->getHeight()) {
-                        continue;
-                    }
-
-                    // This should not happen as it is not allowed when creating thumbnail types and both width and heght
-                    // are required for Exact sizing but it's here just in case
-                    if ($type->getSizingMode() === Type::RESIZE_EXACT && (!$type->getWidth() || !$type->getHeight())) {
-                        continue;
-                    }
-                    
-                    // If requesting an exact size and any of the dimensions requested is larger than the image's
-                    // don't process as we won't get an exact size
-                    if ($type->getSizingMode() === Type::RESIZE_EXACT && ($imagewidth < $type->getWidth() || $imageheight < $type->getHeight())) {
-                        continue;
-                    }
-
-                    // if image is the same width as thumbnail, and there's no thumbnail height set,
-                    // or if a thumbnail height set and the image has a smaller or equal height, don't create thumbnail
-                    if ($imagewidth == $type->getWidth() && (!$type->getHeight() || $imageheight <= $type->getHeight())) {
-                        continue;
-                    }
-
-                    // if image is the same height as thumbnail, and there's no thumbnail width set,
-                    // or if a thumbnail width set and the image has a smaller or equal width, don't create thumbnail
-                    if ($imageheight == $type->getHeight() && (!$type->getWidth() || $imagewidth <= $type->getWidth())) {
-                        continue;
-                    }
-
-                    // otherwise file is bigger than thumbnail in some way, proceed to create thumbnail
-                    $this->generateThumbnail($type);
-                }
+                $app['director']->dispatch('on_thumbnail_delete',
+                    new \Concrete\Core\File\Event\ThumbnailDelete($path, $type)
+                );
             }
-        } catch (\Imagine\Exception\InvalidArgumentException $e) {
-            return false;
-        } catch (\Imagine\Exception\RuntimeException $e) {
-            return false;
+        } catch (FileNotFoundException $e) {
         }
+        if ($type->getHandle() == $config->get('concrete.icons.file_manager_listing.handle') && $this->fvHasListingThumbnail) {
+            $this->fvHasListingThumbnail = false;
+            $this->save();
+        }
+        if ($type->getHandle() == $config->get('concrete.icons.file_manager_detail.handle') && $this->fvHasDetailThumbnail) {
+            $this->fvHasDetailThumbnail = false;
+            $this->save();
+        }
+    }
+
+    /**
+     * Move the thumbnail of a specific thumbnail type version to a new storage location.
+     *
+     * @param \Concrete\Core\File\Image\Thumbnail\Type\Version|string $type the thumbnail type version (or its handle)
+     * @param StorageLocation $location The destination storage location
+     */
+    public function updateThumbnailStorageLocation($type, StorageLocation $location)
+    {
+        if (!($type instanceof ThumbnailTypeVersion)) {
+            $type = ThumbnailTypeVersion::getByHandle($type);
+        }
+        $fsl = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
+        $path = $type->getFilePath($this);
+        $manager = new MountManager([
+            'current' => $fsl,
+            'new' => $location->getFileSystemObject(),
+        ]);
+        try {
+            $manager->move('current://' . $path, 'new://' . $path);
+        } catch (FileNotFoundException $e) {
+        }
+    }
+
+    /**
+     * Copy the thumbnail of a specific thumbnail type version from another file version (useful for instance when duplicating a file).
+     *
+     * @param \Concrete\Core\File\Image\Thumbnail\Type\Version|string $type the thumbnail type version (or its handle)
+     * @param Version $source The File Version instance to copy the thumbnail from
+     */
+    public function duplicateUnderlyingThumbnailFiles($type, Version $source)
+    {
+        if (!($type instanceof ThumbnailTypeVersion)) {
+            $type = ThumbnailTypeVersion::getByHandle($type);
+        }
+        $new = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
+        $current = $source->getFile()->getFileStorageLocationObject()->getFileSystemObject();
+        $newPath = $type->getFilePath($this);
+        $currentPath = $type->getFilePath($source);
+        $manager = new MountManager([
+            'current' => $current,
+            'new' => $new,
+        ]);
+        try {
+            $manager->copy('current://' . $currentPath, 'new://' . $newPath);
+        } catch (FileNotFoundException $e) {
+        }
+    }
+
+    /**
+     * Get a representation of this Version instance that's easily serializable.
+     *
+     * @return stdClass A \stdClass instance with all the information about a file (including permissions)
+     */
+    public function getJSONObject()
+    {
+        $app = Application::getFacadeApplication();
+        $urlResolver = $app->make(ResolverManagerInterface::class);
+        $r = new stdClass();
+        $fp = new Permissions($this->getFile());
+        $r->canCopyFile = $fp->canCopyFile();
+        $r->canEditFileProperties = $fp->canEditFileProperties();
+        $r->canEditFilePermissions = $fp->canEditFilePermissions();
+        $r->canDeleteFile = $fp->canDeleteFile();
+        $r->canReplaceFile = $fp->canEditFileContents();
+        $r->canEditFileContents = $fp->canEditFileContents();
+        $r->canViewFileInFileManager = $fp->canRead();
+        $r->canRead = $fp->canRead();
+        $r->canViewFile = $this->canView();
+        $r->canEditFile = $this->canEdit();
+        $r->url = $this->getURL();
+        $r->urlInline = (string) $urlResolver->resolve(['/download_file', 'view_inline', $this->getFileID()]);
+        $r->urlDownload = (string) $urlResolver->resolve(['/download_file', 'view', $this->getFileID()]);
+        $r->title = $this->getTitle();
+        $r->genericTypeText = $this->getGenericTypeText();
+        $r->description = $this->getDescription();
+        $r->fileName = $this->getFileName();
+        $r->resultsThumbnailImg = $this->getListingThumbnailImage();
+        $r->fID = $this->getFileID();
+        $r->treeNodeMenu = new Menu($this->getfile());
+
+        return $r;
+    }
+
+    /**
+     * @deprecated Use buildForceDownloadResponse
+     */
+    public function forceDownload()
+    {
+        $app = Application::getFacadeApplication();
+        $response = $this->buildForceDownloadResponse();
+        $response->prepare($app->make(Request::class));
+
+        session_write_close();
+        ob_end_clean();
+        $response->send();
+        $app->shutdown();
+        exit;
     }
 
     /**
      * @deprecated
      *
-     * @param $level
+     * @param int $level
      *
-     * @return mixed
+     * @return bool
      */
     public function hasThumbnail($level)
     {
@@ -1122,369 +1829,27 @@ class Version implements ObjectInterface
     }
 
     /**
-     *  Return the thumbnail for an image or a generic type icon for a file.
+     * @deprecated use refreshThumbnails(true) instead
      *
-     * @return string
+     * @return bool
      */
-    public function getDetailThumbnailImage()
+    public function rescanThumbnails()
     {
-        if ($this->fvHasDetailThumbnail) {
-            $type = Type::getByHandle(\Config::get('concrete.icons.file_manager_detail.handle'));
-            $baseSrc = $this->getThumbnailURL($type->getBaseVersion());
-            $doubledSrc = $this->getThumbnailURL($type->getDoubledVersion());
-
-            return '<img src="'.$baseSrc.'" data-at2x="'.$doubledSrc.'" />';
-        } else {
-            return $this->getTypeObject()->getThumbnail();
-        }
+        return $this->refreshThumbnails(true);
     }
 
     /**
-     * Resolve a path using the default core path resolver.
-     * Avoid using this method when you have access to your a resolver instance.
+     * Save the instance changes.
      *
-     * @param string|ThumbnailTypeVersion $type
-     *
-     * @return null|string
+     * @param bool $flush Flush the EM cache?
      */
-    public function getThumbnailURL($type)
+    protected function save($flush = true)
     {
         $app = Application::getFacadeApplication();
-
-        if (!($type instanceof ThumbnailTypeVersion)) {
-            $type = ThumbnailTypeVersion::getByHandle($type);
+        $em = $app->make(EntityManagerInterface::class);
+        $em->persist($this);
+        if ($flush) {
+            $em->flush();
         }
-
-        /** @var Resolver $path_resolver */
-        $path_resolver = $app->make('Concrete\Core\File\Image\Thumbnail\Path\Resolver');
-
-        if ($path = $path_resolver->getPath($this, $type)) {
-            return $path;
-        }
-
-        return $this->getURL();
-    }
-
-    /**
-     * When given a thumbnail type versin object and a full path to a file on the server
-     * the file is imported into the system as is as the thumbnail.
-     *
-     * @param ThumbnailTypeVersion $version
-     * @param string               $path
-     */
-    public function importThumbnail(ThumbnailTypeVersion $version, $path)
-    {
-        $thumbnailPath = $version->getFilePath($this);
-        $filesystem = $this->getFile()
-            ->getFileStorageLocationObject()
-            ->getFileSystemObject();
-        if ($filesystem->has($thumbnailPath)) {
-            $filesystem->delete($thumbnailPath);
-        }
-
-        $filesystem->write(
-            $thumbnailPath,
-            file_get_contents($path),
-            [
-                'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
-                'mimetype' => 'image/jpeg',
-            ]
-        );
-
-        if ($version->getHandle() == \Config::get('concrete.icons.file_manager_listing.handle')) {
-            $this->fvHasListingThumbnail = true;
-        }
-
-        if ($version->getHandle() == \Config::get('concrete.icons.file_manager_detail.handle')) {
-            $this->fvHasDetailThumbnail = true;
-        }
-
-        $this->save();
-    }
-
-    /**
-     * Returns a full URL to the file on disk.
-     *
-     * @return null|string Url to a file
-     */
-    public function getURL()
-    {
-        $cf = Core::make('helper/concrete/file');
-        $fsl = $this->getFile()->getFileStorageLocationObject();
-        if (is_object($fsl)) {
-            $configuration = $fsl->getConfigurationObject();
-            if ($configuration->hasPublicURL()) {
-                return $configuration->getPublicURLToFile($cf->prefix($this->fvPrefix, $this->fvFilename));
-            } else {
-                return $this->getDownloadURL();
-            }
-        }
-    }
-
-    /**
-     * Returns a URL that can be used to download the file. This passes through the download_file single page.
-     *
-     * @return string download_file url for a file
-     */
-    public function getDownloadURL()
-    {
-        $c = Page::getCurrentPage();
-        $cID = ($c instanceof Page) ? $c->getCollectionID() : 0;
-
-        return View::url('/download_file', $this->getFileID(), $cID);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAttributes()
-    {
-        return $this->getObjectAttributeCategory()->getAttributeValues($this);
-    }
-
-    /**
-     * Responsible for taking a particular version of a file and rescanning all its attributes
-     * This will run any type-based import routines, and store those attributes, generate thumbnails,
-     * etc...
-     *
-     * @param bool $rescanThumbnails Whether or not we should rescan thumbnails as well
-     *
-     * @return null|int
-     */
-    public function refreshAttributes($rescanThumbnails = true)
-    {
-        $fh = Core::make('helper/file');
-        $ext = $fh->getExtension($this->fvFilename);
-        $ftl = FileTypeList::getType($ext);
-
-        if (is_object($ftl)) {
-            if ($ftl->getCustomImporter() != false) {
-                $this->fvGenericType = $ftl->getGenericType();
-                $cl = $ftl->getCustomInspector();
-                $cl->inspect($this);
-            }
-        }
-
-        \ORM::entityManager()->refresh($this);
-
-        $fsr = $this->getFileResource();
-        if (!$fsr->isFile()) {
-            return Importer::E_FILE_INVALID;
-        }
-
-        $size = $fsr->getSize();
-
-        $this->fvExtension = $ext;
-        $this->fvType = $ftl->getGenericType();
-        if ($this->fvTitle === null) {
-            $this->fvTitle = $this->getFilename();
-        }
-        $this->fvSize = $size;
-
-        if ($rescanThumbnails) {
-            $this->rescanThumbnails();
-        }
-
-        $this->save();
-
-        $f = $this->getFile();
-        $f->reindex();
-    }
-
-    /**
-     * Title for the file if one exists.
-     *
-     * @return null|string
-     */
-    public function getTitle()
-    {
-        return $this->fvTitle;
-    }
-
-    /**
-     * Return a representation of the current FileVersion object as something easily serializable.
-     *
-     * @return string A JSON object with all the information about a file (including permissions)
-     */
-    public function getJSONObject()
-    {
-        $r = new stdClass();
-        $fp = new Permissions($this->getFile());
-        $r->canCopyFile = $fp->canCopyFile();
-        $r->canEditFileProperties = $fp->canEditFileProperties();
-        $r->canEditFilePermissions = $fp->canEditFilePermissions();
-        $r->canDeleteFile = $fp->canDeleteFile();
-        $r->canReplaceFile = $fp->canEditFileContents();
-        $r->canEditFileContents = $fp->canEditFileContents();
-        $r->canViewFileInFileManager = $fp->canRead();
-        $r->canRead = $fp->canRead();
-        $r->canViewFile = $this->canView();
-        $r->canEditFile = $this->canEdit();
-        $r->url = $this->getURL();
-        $r->urlInline = (string) View::url('/download_file', 'view_inline', $this->getFileID());
-        $r->urlDownload = (string) View::url('/download_file', 'view', $this->getFileID());
-        $r->title = $this->getTitle();
-        $r->genericTypeText = $this->getGenericTypeText();
-        $r->description = $this->getDescription();
-        $r->fileName = $this->getFilename();
-        $r->resultsThumbnailImg = $this->getListingThumbnailImage();
-        $r->fID = $this->getFileID();
-        $r->treeNodeMenu = new Menu($this->getfile());
-
-        return $r;
-    }
-
-    /**
-     * Checks current viewers for this type and returns true if there is a viewer for this type, false if not.
-     *
-     * @return bool
-     */
-    public function canView()
-    {
-        $to = $this->getTypeObject();
-        if ($to->getView() != '') {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Checks current viewers for this type and returns true if there is a viewer for this type, false if not.
-     *
-     * @return bool
-     */
-    public function canEdit()
-    {
-        $to = $this->getTypeObject();
-        if ($to->getEditor() != '') {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Get the localized name of the generic category type.
-     *
-     * @return string
-     */
-    public function getGenericTypeText()
-    {
-        $to = $this->getTypeObject();
-
-        return $to->getGenericDisplayType();
-    }
-
-    /**
-     * Returns the description for the file if there is one.
-     *
-     * @return null|string
-     */
-    public function getDescription()
-    {
-        return $this->fvDescription;
-    }
-
-    /**
-     * Return the thumbnail for an image or a generic type icon for a file.
-     *
-     * @return string
-     */
-    public function getListingThumbnailImage()
-    {
-        if ($this->fvHasListingThumbnail) {
-            $type = Type::getByHandle(\Config::get('concrete.icons.file_manager_listing.handle'));
-            $baseSrc = $this->getThumbnailURL($type->getBaseVersion());
-            $doubledSrc = $this->getThumbnailURL($type->getDoubledVersion());
-
-            return sprintf('<img class="ccm-file-manager-list-thumbnail" src="%s" data-at2x="%s">', $baseSrc, $doubledSrc);
-        } else {
-            return $this->getTypeObject()->getThumbnail();
-        }
-    }
-
-    /**
-     * Generate a thumbnail given a type
-     * @param \Concrete\Core\File\Image\Thumbnail\Type\Version $type
-     */
-    public function generateThumbnail(ThumbnailTypeVersion $type)
-    {
-        $image = $this->getImagineImage();
-        $mimetype = $this->getMimetype();
-
-        $filesystem = $this->getFile()
-            ->getFileStorageLocationObject()
-            ->getFileSystemObject();
-            
-        $height = $type->getHeight();
-        $width = $type->getWidth();
-        $sizingMode = $type->getSizingMode();
-
-        if ($height && $width) {
-            $size = new Box($width, $height);
-        } else if ($width) {
-            $size = $image->getSize()->widen($width);
-        } else {
-            $size = $image->getSize()->heighten($height);
-        }
-
-        if ($sizingMode === Type::RESIZE_EXACT) {
-             $thumbnailMode = ImageInterface::THUMBNAIL_OUTBOUND;
-        } else if ($sizingMode === Type::RESIZE_PROPORTIONAL) {
-            $thumbnailMode = ImageInterface::THUMBNAIL_INSET;
-        }
-
-        // isCropped only exists on the CustomThumbnail type
-        if (method_exists($type, 'isCropped') && $type->isCropped()) {
-            $thumbnailMode = ImageInterface::THUMBNAIL_OUTBOUND;
-        }
-
-        $thumbnail = $image->thumbnail($size, $thumbnailMode);
-        $thumbnailPath = $type->getFilePath($this);
-        $thumbnailOptions = [];
-
-        switch ($mimetype) {
-            case 'image/jpeg':
-                $thumbnailType = 'jpeg';
-                $thumbnailOptions = ['jpeg_quality' => \Config::get('concrete.misc.default_jpeg_image_compression')];
-                break;
-            case 'image/png':
-                $thumbnailType = 'png';
-                break;
-            case 'image/gif':
-                $thumbnailType = 'gif';
-                break;
-            case 'image/xbm':
-                $thumbnailType = 'xbm';
-                break;
-            case 'image/vnd.wap.wbmp':
-                $thumbnailType = 'wbmp';
-                break;
-            default:
-                $thumbnailType = 'png';
-                break;
-        }
-
-        $filesystem->write(
-            $thumbnailPath,
-            $thumbnail->get($thumbnailType, $thumbnailOptions),
-            [
-                'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
-                'mimetype' => $mimetype,
-            ]
-        );
-
-        if ($type->getHandle() == \Config::get('concrete.icons.file_manager_listing.handle')) {
-            $this->fvHasListingThumbnail = true;
-        }
-
-        if ($type->getHandle() == \Config::get('concrete.icons.file_manager_detail.handle')) {
-            $this->fvHasDetailThumbnail = true;
-        }
-
-        unset($size);
-        unset($thumbnail);
-        unset($filesystem);
     }
 }

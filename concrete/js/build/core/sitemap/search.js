@@ -1,8 +1,7 @@
-/**
- * block ajax
- */
+/* jshint unused:vars, undef:true, browser:true, jquery:true */
+/* global _, ccmi18n, ccmi18n_sitemap, CCM_DISPATCHER_FILENAME, CCM_TOOLS_PATH, Concrete, ConcreteAjaxSearch, ConcreteAlert, ConcreteEvent */
 
-!function (global, $) {
+;(function(global, $) {
     'use strict';
 
     function ConcretePageAjaxSearch($element, options) {
@@ -57,11 +56,11 @@
                 return false;
             });
         }
-    }
+    };
 
     ConcretePageAjaxSearch.prototype.handleSelectedBulkAction = function (value, type, $option, $items) {
         if (value == 'movecopy' || value == 'Move/Copy') {
-            var url, my = this, itemIDs = [];
+            var url, itemIDs = [];
             $.each($items, function (i, checkbox) {
                 itemIDs.push($(checkbox).val());
             });
@@ -84,7 +83,7 @@
             ConcreteEvent.subscribe('SitemapSelectPage.search', subscription);
         }
         ConcreteAjaxSearch.prototype.handleSelectedBulkAction.call(this, value, type, $option, $items);
-    }
+    };
 
     ConcreteAjaxSearch.prototype.createMenu = function ($selector) {
         var my = this;
@@ -92,7 +91,7 @@
             'container': my,
             'menu': $('[data-search-menu=' + $selector.attr('data-launch-search-menu') + ']')
         });
-    }
+    };
 
     /**
      * Static Methods
@@ -143,7 +142,7 @@
                 '<% } else if (item.isInTrash) { %>' +
                 '<li><a data-action="delete-forever" href="javascript:void(0)">' + ccmi18n_sitemap.deletePageForever + '</a></li>' +
                 '<% } else if (item.cAlias == \'LINK\' || item.cAlias == \'POINTER\') { %>' +
-                '<li><a href="<%=item.link%>">' + ccmi18n_sitemap.visitExternalLink + '</a></li>' +
+                '<li><a href="<%- item.link %>">' + ccmi18n_sitemap.visitExternalLink + '</a></li>' +
                 '<% if (item.cAlias == \'LINK\' && item.canEditPageProperties) { %>' +
                 '<li><a class="dialog-launch" dialog-width="350" dialog-height="260" dialog-title="' + ccmi18n_sitemap.editExternalLink + '" dialog-modal="false" dialog-append-buttons="true" href="' + CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/edit_external?cID=<%=item.cID%>">' + ccmi18n_sitemap.editExternalLink + '</a></li>' +
                 '<li><a class="dialog-launch" dialog-on-close="ConcreteSitemap.exitEditMode(<%=item.cID%>)" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.pageAttributesTitle + '" href="' + CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/attributes?cID=<%=item.cID%>">' + ccmi18n_sitemap.pageAttributes + '</a></li>' +
@@ -153,7 +152,7 @@
                 '<li><a class="dialog-launch" dialog-width="360" dialog-height="150" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.deleteExternalLink + '" href="' + CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/delete_alias?cID=<%=item.cID%>">' + ccmi18n_sitemap.deleteExternalLink + '</a></li>' +
                 '<% } %>' +
                 '<% } else { %>' +
-                '<li><a href="<%=item.link%>">' + ccmi18n_sitemap.visitPage + '</a></li>' +
+                '<li><a href="<%- item.link %>">' + ccmi18n_sitemap.visitPage + '</a></li>' +
                 '<% if (item.canEditPageProperties || item.canEditPageSpeedSettings || item.canEditPagePermissions || item.canEditPageDesign || item.canViewPageVersions || item.canDeletePage) { %>' +
                 '<li class="divider"></li>' +
                 '<% } %>' +
@@ -199,7 +198,7 @@
                 '<% } %>' +
                 '</ul></div></div>';
         }
-    }
+    };
 
 
     // jQuery Plugin
@@ -207,9 +206,9 @@
         return $.each($(this), function (i, obj) {
             new ConcretePageAjaxSearch($(this), options);
         });
-    }
+    };
 
     global.ConcretePageAjaxSearch = ConcretePageAjaxSearch;
     global.ConcretePageAjaxSearchMenu = ConcretePageAjaxSearchMenu;
 
-}(this, $);
+})(this, jQuery);

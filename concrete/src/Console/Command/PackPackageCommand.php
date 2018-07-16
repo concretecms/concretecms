@@ -38,7 +38,11 @@ final class PackPackageCommand extends Command
         $keepSources = static::KEEP_SOURCES;
         $errExitCode = static::RETURN_CODE_ON_FAILURE;
         $this
-            ->setName('c5:package-pack')
+            ->setName('c5:package:pack')
+            ->setAliases([
+                'c5:package-pack',
+                'c5:pack-package',
+            ])
             ->setDescription('Process a package (expand PHP short tags, compile icons and translations, create zip archive)')
             ->addArgument('package', InputArgument::REQUIRED, 'The handle of the package to work on (or the path to a directory containing a concrete5 package)')
             ->addEnvOption()
@@ -152,6 +156,7 @@ EOT
             if ($result->packageDirectory === false) {
                 throw new Exception("Unable to find the directory '$p'");
             }
+            $result->packageDirectory = str_replace(DIRECTORY_SEPARATOR, '/', $result->packageDirectory);
             $controllerFile = $result->packageDirectory . '/' . FILENAME_CONTROLLER;
             if (!is_file($controllerFile)) {
                 throw new Exception("The directory '{$result->packageDirectory}' does not seems to contain a valid concrete5 package");
@@ -304,7 +309,8 @@ EOT
                 if ($dir === false) {
                     throw new Exception('Unable to normalize the directory ' . $zipOption);
                 }
-                $result->zipFilename = $dir . DIRECTORY_SEPARATOR . $result->packageHandle;
+                $dir = str_replace(DIRECTORY_SEPARATOR, '/', $dir);
+                $result->zipFilename = $dir . '/' . $result->packageHandle;
                 if ($result->packageVersion !== null) {
                     $result->zipFilename .= '-' . $result->packageVersion;
                 }
@@ -347,7 +353,7 @@ EOT
                 if ($item[0] === '.' && !in_array(static::KEEP_DOT, $state->keep)) {
                     continue;
                 }
-                $itemAbs = $dirAbs . DIRECTORY_SEPARATOR . $item;
+                $itemAbs = $dirAbs . '/' . $item;
                 if (is_dir($itemAbs)) {
                     $subDirs[] = $item;
                     continue;
@@ -538,7 +544,7 @@ EOT
             }
             unset($store);
             foreach ($subDirs as $subDir) {
-                static::processDirectory($state, $output, $dirAbs . DIRECTORY_SEPARATOR . $subDir, ($dirRel === '') ? $subDir : "$dirRel/$subDir");
+                static::processDirectory($state, $output, $dirAbs . '/' . $subDir, ($dirRel === '') ? $subDir : "$dirRel/$subDir");
             }
         } catch (Exception $x) {
             @closedir($hDir);

@@ -46,7 +46,7 @@ class Url extends Facade
         if (!$arguments) {
             $arguments = array();
         }
-        $route = \Router::route($data);
+        $route = static::getFacadeApplication()->make(\Router::class)->route($data);
         array_unshift($arguments, $route);
 
         return static::getFacadeRoot()->resolve($arguments);

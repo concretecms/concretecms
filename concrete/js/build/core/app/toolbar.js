@@ -1,8 +1,9 @@
-/**
- * Basic concrete5 toolbar class
- */
+/* jshint unused:vars, undef:true, browser:true, jquery:true */
+/* global CCM_DISPATCHER_FILENAME, ConcreteEvent, ConcreteHelpDialog, ConcreteHelpGuideManager, ConcretePanelManager */
 
-var ConcreteToolbar = function() {
+/* Basic concrete5 toolbar class */
+;(function(global, $) {
+    'use strict';
 
 	var $toolbar = $('#ccm-toolbar');
 	var $searchInput = $('#ccm-nav-intelligent-search');
@@ -13,7 +14,7 @@ var ConcreteToolbar = function() {
         $searchResults.css('right', $(window).width() - $searchInput.offset().left - $searchResults.width() - 1);
     }
 
-	setupHelpNotifications = function() {
+	function setupHelpNotifications() {
 		$('.ccm-notification .dialog-launch').dialog();
 		$('a[data-help-notification-toggle]').concreteHelpLauncher();
 		$('a[data-help-launch-dialog=main]').on('click', function(e) {
@@ -28,7 +29,7 @@ var ConcreteToolbar = function() {
 		}
 	}
 
-	setupPageAlerts = function() {
+	function setupPageAlerts() {
 		$(document.body).on('click', 'a[data-dismiss-alert=page-alert]', function(e) {
 			e.stopPropagation();
 			$(this).closest('.ccm-notification').queue(function() {
@@ -44,7 +45,7 @@ var ConcreteToolbar = function() {
 		$('form[data-form=workflow]').ajaxForm({
 			dataType: 'json',
 			beforeSubmit: function() {
-				jQuery.fn.dialog.showLoader();
+				$.fn.dialog.showLoader();
 			},
 			success: function(r) {
 				if (r.redirect) {
@@ -53,42 +54,63 @@ var ConcreteToolbar = function() {
 			}
 		});
 
+		$('a[data-workflow-task]').on('click', function(e) {
+			var action = $(this).attr('data-workflow-task'),
+				$form = $(this).closest('form[data-form=workflow]');
+			$form.append('<input type="hidden" name="action_' + action + '" value="' + action + '">');
+			$form.submit();
+		});
+
+
 	}
 
-	setupTooltips = function() {
+	function setupTooltips() {
 		if ($("#ccm-tooltip-holder").length == 0) {
 			$('<div />').attr('id','ccm-tooltip-holder').attr('class', 'ccm-ui').prependTo(document.body);
 		}
 		$('.launch-tooltip').tooltip({'container': '#ccm-tooltip-holder'});
 	}
 
-	setupPanels = function() {
+	function setupPanels() {
 		$('<div />', {'id': 'ccm-panel-overlay'}).appendTo($(document.body));
         $('[data-launch-panel]').each(function() {
-            $(this).prepend('<span class="spinner"><div class="double-bounce1"></div><div class="double-bounce2"></div></span>')
+            $(this).prepend('<span class="spinner"><div class="double-bounce1"></div><div class="double-bounce2"></div></span>');
         });
 
-		$('[data-launch-panel]').unbind().on('click', function() {
+		$('[data-launch-panel]').unbind().on('click', function(e) {
             var $this = $(this);
 			var panelID = $this.attr('data-launch-panel');
 			var panel = ConcretePanelManager.getByIdentifier(panelID);
-            if ( !panel.willBePinned() ) $this.toggleClass('ccm-launch-panel-loading');
-            
-            if ( panel.isPinable() ) 
-            {
-                var parent = $($this.parent());
-                if ( panel.willBePinned() || panel.pinned() ) parent.toggleClass("ccm-toolbar-page-edit-mode-pinned ");
-				if (panel.willBePinned()) {
-					$this.attr('data-original-icon-class', $this.find('i').attr('class'));
-					$this.find('i').removeClass().addClass('fa fa-lock');
-				} else if ($this.attr('data-original-icon-class')) {
-					$this.find('i').removeClass().addClass($this.attr('data-original-icon-class'));
-					$this.removeAttr('data-original-icon-class');
+			if (!$this.attr('data-original-icon-class')) {
+				$this.attr('data-original-icon-class', $this.find('i').attr('class'));
+			}
+			if (!e.altKey && !$this.find('i').hasClass($this.attr('data-original-icon-class'))) {
+				$this.find('i').removeClass().addClass($this.attr('data-original-icon-class'));
+			}
+			if (panel.isPinable()) {
+				var parent = $($this.parent());
+				if (e.altKey) {
+					if (!panel.pinned()) {
+						$this.find('i').removeClass().addClass('fa fa-lock');
+						parent.addClass('ccm-toolbar-page-edit-mode-pinned');
+						panel.isPinned = true;
+						if (!panel.isOpen) {
+							panel.show();
+						}
+					}
+				} else {
+					if (panel.isPinned) {
+						panel.isPinned = false;
+						parent.removeClass('ccm-toolbar-page-edit-mode-pinned');
+					}
+					panel.toggle();
 				}
-            }
-			panel.toggle();
+			} else {
+				panel.toggle();
+			}
 			return false;
 		});
+
 		$('html').addClass('ccm-panel-ready');
 
 		ConcreteEvent.subscribe('PanelOpen',function(e, data) {
@@ -106,10 +128,11 @@ var ConcreteToolbar = function() {
 			$('a[data-toolbar-action=check-in]').unbind('click.close-check-in');
 		});
 
-	};
+	}
 
-	setupIntelligentSearch = function() {
+	function setupIntelligentSearch() {
 		$searchInput.bind('keydown.ccm-intelligent-search', function(e) {
+		    // jshint -W107
 			if (e.keyCode == 13 || e.keyCode == 40 || e.keyCode == 38) {
 				e.preventDefault();
 				e.stopPropagation();
@@ -128,6 +151,7 @@ var ConcreteToolbar = function() {
 				if (e.keyCode == 40 || e.keyCode == 38) {
 					$.each(visibleitems, function(i, item) {
 						if ($(item).children('a').hasClass('ccm-intelligent-search-result-selected')) {
+						    var io;
 							if (e.keyCode == 38) {
 								io = visibleitems[i-1];
 							} else {
@@ -154,23 +178,43 @@ var ConcreteToolbar = function() {
 
 	}
 
-   setupMobileNav = function(){
+   function setupMobileNav(){
         $('.ccm-toolbar-mobile-menu-button').click(function(){
             $(this).toggleClass('ccm-mobile-close');   // slide out mobile nav
             $('.ccm-mobile-menu-overlay').slideToggle();
         });
-        $('.ccm-mobile-menu-overlay .parent-ul a').click(function(event) {
-            if(!($(this).parent('li').hasClass('last-li'))) {
-                $(this).parent('li').siblings().children('ul').hide();
-                if(!($(this).parent('li').children('ul').is(':visible'))) {
-                    $(this).next('ul').show();
-                    event.preventDefault();
-                }
-            }
+
+		// on page load
+		// - open drop-downs to current page
+        // - from the current page, set parent toggle arrows up
+        var navSelectedParents = $('.ccm-mobile-menu-entries li.nav-selected')
+            .parentsUntil('.ccm-mobile-menu-entries')
+            .show();
+        $(navSelectedParents).last()
+            .find('.drop-down-toggle:first, .nav-path-selected:not(.nav-selected) > .drop-down-toggle')
+            .removeClass('fa-caret-down')
+            .addClass('fa-caret-up');
+
+        $('.ccm-mobile-menu-entries .drop-down-toggle').on('click', function() {
+        	// toggle the arrows and toggle the drop-downs
+            $(this).toggleClass('fa-caret-down fa-caret-up');
+            $(this).next('ul').slideToggle();
+
+            // find the parent's siblings
+            // - close them and their children
+            // - set toggle arrows down on closed drop-downs
+            var toggleParent = $(this).parent('li');
+            $(toggleParent).siblings('li')
+                .find('ul')
+                .slideUp();
+            $(toggleParent).siblings('li')
+                .find('.drop-down-toggle')
+                .removeClass('fa-caret-up')
+                .addClass('fa-caret-down');
         });
     }
 
-	activateIntelligentSearchResults = function() {
+	function activateIntelligentSearchResults() {
 		if ($("#ccm-intelligent-search-results div:visible").length == 0) {
 			$("#ccm-intelligent-search-results").hide();
 		}
@@ -182,9 +226,8 @@ var ConcreteToolbar = function() {
 		});
 	}
 
-
-	doRemoteSearchCall = function(query) {
-		query = jQuery.trim(query);
+	function doRemoteSearchCall(query) {
+		query = $.trim(query);
 		if (!query) {
 			return;
 		}
@@ -212,7 +255,7 @@ var ConcreteToolbar = function() {
 				function(r) {
 					$("#ccm-intelligent-search-results-list-marketplace").parent().addClass('ccm-intelligent-search-results-module-loaded');
 					$("#ccm-intelligent-search-results-list-marketplace").html('');
-					for (i = 0; i < r.length; i++) {
+					for (var i = 0; i < r.length; i++) {
 						var rr= r[i];
 						var _onclick = "ConcreteMarketplace.getMoreInformation(" + rr.mpID + ")";
 						$("#ccm-intelligent-search-results-list-marketplace").append('<li><a href="javascript:void(0)" onclick="' + _onclick + '"><img src="' + rr.img + '" />' + rr.name + '</a></li>');
@@ -236,7 +279,7 @@ var ConcreteToolbar = function() {
 
 					$("#ccm-intelligent-search-results-list-help").parent().addClass('ccm-intelligent-search-results-module-loaded');
 					$("#ccm-intelligent-search-results-list-help").html('');
-					for (i = 0; i < r.length; i++) {
+					for (var i = 0; i < r.length; i++) {
 						var rr= r[i];
 						$("#ccm-intelligent-search-results-list-help").append('<li><a href="' + rr.href + '">' + rr.name + '</a></li>');
 					}
@@ -260,7 +303,7 @@ var ConcreteToolbar = function() {
 
 					$("#ccm-intelligent-search-results-list-your-site").parent().addClass('ccm-intelligent-search-results-module-loaded');
 					$("#ccm-intelligent-search-results-list-your-site").html('');
-					for (i = 0; i < r.length; i++) {
+					for (var i = 0; i < r.length; i++) {
 						var rr= r[i];
 						$("#ccm-intelligent-search-results-list-your-site").append('<li><a href="' + rr.href + '">' + rr.name + '</a></li>');
 					}
@@ -280,7 +323,7 @@ var ConcreteToolbar = function() {
 		}
 	}
 
-	return {
+	global.ConcreteToolbar = {
 		start: function() {
 			if ($toolbar.length > 0) {
 
@@ -292,7 +335,6 @@ var ConcreteToolbar = function() {
 				setupPageAlerts();
 				setupHelpNotifications();
                 setupMobileNav();
-
 			}
 		},
 
@@ -319,7 +361,6 @@ var ConcreteToolbar = function() {
 				});
 			}
 		}
+	};
 
-
-	}
-}();
+})(window, jQuery);

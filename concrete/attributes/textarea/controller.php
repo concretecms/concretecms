@@ -3,6 +3,7 @@ namespace Concrete\Attribute\Textarea;
 
 use Concrete\Core\Attribute\DefaultController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
+use Concrete\Core\Editor\LinkAbstractor;
 use Concrete\Core\Entity\Attribute\Key\Settings\TextareaSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\TextValue;
 use Core;
@@ -47,16 +48,38 @@ class Controller extends DefaultController
             return parent::getDisplayValue();
         }
 
-        return htmLawed($this->getAttributeValue()->getValue(), array('safe' => 1, 'deny_attribute' => 'style'));
+        $value = null;
+        if (is_object($this->attributeValue)) {
+            $value = $this->getAttributeValue()->getValue();
+
+            if ($value) {
+                $this->load();
+                if ($this->akTextareaDisplayMode == 'rich_text') {
+                    $value = LinkAbstractor::translateFrom($value);
+                }
+            }
+        }
+
+        if ($this->akTextareaDisplayMode == 'rich_text') {
+          return htmLawed($value, array('safe' => 1));
+        }
+
+        return htmLawed($value, array('safe' => 1, 'deny_attribute' => 'style'));
     }
+
 
     public function form()
     {
         $this->load();
-
         $value = null;
         if (is_object($this->attributeValue)) {
             $value = $this->getAttributeValue()->getValue();
+
+            if ($value) {
+                if ($this->akTextareaDisplayMode == 'rich_text') {
+                    $value = LinkAbstractor::translateFromEditMode($value);
+                }
+            }
         }
         $this->set('akTextareaDisplayMode', $this->akTextareaDisplayMode);
         $this->set('value', $value);
@@ -117,6 +140,11 @@ class Controller extends DefaultController
 
     public function createAttributeValue($value)
     {
+        $this->load();
+        if ($this->akTextareaDisplayMode == 'rich_text') {
+            $value = LinkAbstractor::translateTo($value);
+        }
+
         $av = new TextValue();
         $av->setValue($value);
 

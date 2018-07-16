@@ -16,6 +16,11 @@ class AssociationView extends View
     protected $allEntities = [];
     protected $selectedEntities = [];
 
+    public function getControlID()
+    {
+        return 'express_association_' . $this->control->getID();
+    }
+
     public function __construct(ContextInterface $context, Control $control)
     {
         parent::__construct($context, $control);

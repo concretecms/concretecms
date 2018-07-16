@@ -43,6 +43,7 @@ class Entities extends DashboardPageController
                 $entity->setName($this->request->request->get('name'));
                 $entity->setHandle($this->request->request->get('handle'));
                 $entity->setPluralHandle($this->request->request->get('plural_handle'));
+                $entity->setLabelMask($this->request->request->get('label_mask'));
                 $entity->setDescription($this->request->request->get('description'));
 
                 if ($this->request->request->get('supports_custom_display_order')) {
@@ -236,6 +237,7 @@ class Entities extends DashboardPageController
             $entity->setName($name);
             $entity->setHandle($handle);
             $entity->setPluralHandle($this->request->request->get('plural_handle'));
+            $entity->setLabelMask($this->request->request->get('label_mask'));
             $entity->setDescription($this->request->request->get('description'));
             $entity->setDefaultViewForm($viewForm);
             $entity->setDefaultEditForm($editForm);

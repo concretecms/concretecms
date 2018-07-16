@@ -1,5 +1,5 @@
 <phpunit
-        bootstrap="./tests/tests/bootstrap.php"
+        bootstrap="./tests/bootstrap.php"
         colors="true"
         convertErrorsToExceptions="true"
         convertNoticesToExceptions="true"
@@ -8,13 +8,7 @@
         backupStaticAttributes="false">
     <testsuites>
         <testsuite name="Tests">
-            <directory>tests/tests/Asset/</directory>
-            <directory>tests/tests/Attribute/</directory>
-            <directory>tests/tests/AttributeValue/</directory>
-            <directory>tests/tests/Block/</directory>
-            <directory>tests/tests/CodingStyle/</directory>
-            <directory>tests/tests/Core/</directory>
-            <directory>tests/tests/Localization/</directory>
+            <directory>tests/tests/</directory>
         </testsuite>
     </testsuites>
 </phpunit>

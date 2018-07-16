@@ -1,43 +1,41 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
-use Concrete\Core\Page\Page;
-use Doctrine\DBAL\Migrations\AbstractMigration;
-use Doctrine\DBAL\Schema\Schema;
+use Concrete\Core\Updater\Migrations\AbstractMigration;
+use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
-class Version20151221000000 extends AbstractMigration
+class Version20151221000000 extends AbstractMigration implements RepeatableMigrationInterface
 {
-    public function up(Schema $schema)
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Doctrine\DBAL\Migrations\AbstractMigration::getDescription()
+     */
+    public function getDescription()
     {
-        // image resizing options
-        $sp = Page::getByPath('/dashboard/system/files/image_uploading');
-        if (!is_object($sp) || $sp->isError()) {
-            $sp = \Concrete\Core\Page\Single::add('/dashboard/system/files/image_uploading');
-            $sp->update(array('cName' => 'Image Uploading'));
-        }
-
-        // background size/position
-        \Concrete\Core\Database\Schema\Schema::refreshCoreXMLSchema(array(
-            'StyleCustomizerInlineStyleSets',
-        ));
-
-        $bt = \BlockType::getByHandle('image_slider');
-        if (is_object($bt)) {
-            $bt->refresh();
-        }
-
-        $bt = \BlockType::getByHandle('youtube');
-        if (is_object($bt)) {
-            $bt->refresh();
-        }
-
-        $bt = \BlockType::getByHandle('autonav');
-        if (is_object($bt)) {
-            $bt->refresh();
-        }
+        return '5.7.5.4';
     }
 
-    public function down(Schema $schema)
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Updater\Migrations\AbstractMigration::upgradeDatabase()
+     */
+    public function upgradeDatabase()
     {
+        // image resizing options
+        $this->createSinglePage('/dashboard/system/files/image_uploading', 'Image Uploading');
+
+        // background size/position
+        \Concrete\Core\Database\Schema\Schema::refreshCoreXMLSchema([
+            'StyleCustomizerInlineStyleSets',
+        ]);
+
+        $this->refreshBlockType('image_slider');
+
+        $this->refreshBlockType('youtube');
+
+        $this->refreshBlockType('autonav');
     }
 }

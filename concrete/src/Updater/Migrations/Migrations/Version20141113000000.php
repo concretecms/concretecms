@@ -1,23 +1,31 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Page\Page;
-use Doctrine\DBAL\Migrations\AbstractMigration;
-use Doctrine\DBAL\Schema\Schema;
-use SinglePage;
+use Concrete\Core\Updater\Migrations\AbstractMigration;
+use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 use Database;
-use Concrete\Core\Block\BlockType\BlockType;
 
-class Version20141113000000 extends AbstractMigration
+class Version20141113000000 extends AbstractMigration implements RepeatableMigrationInterface
 {
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Doctrine\DBAL\Migrations\AbstractMigration::getDescription()
+     */
     public function getDescription()
     {
         return '5.7.2.1';
     }
 
-    public function up(Schema $schema)
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Updater\Migrations\AbstractMigration::upgradeDatabase()
+     */
+    public function upgradeDatabase()
     {
-
         /* delete customize page themes dashboard single page */
         $customize = Page::getByPath('/dashboard/pages/themes/customize');
         if (is_object($customize) && !$customize->isError()) {
@@ -25,28 +33,13 @@ class Version20141113000000 extends AbstractMigration
         }
 
         /* Add inspect single page back if it's missing */
-        $sp = Page::getByPath('/dashboard/pages/themes/inspect');
-        if (!is_object($sp) || $sp->isError()) {
-            $sp = SinglePage::add('/dashboard/pages/themes/inspect');
-            $sp->setAttribute('meta_keywords', 'inspect, templates');
-            $sp->setAttribute('exclude_nav', 1);
-        }
+        $this->createSinglePage('/dashboard/pages/themes/inspect', '', ['meta_keywords' => 'inspect, templates', 'exclude_nav' => 1]);
 
-        $sp = Page::getByPath('/members/directory');
-        if (!is_object($sp) || $sp->isError()) {
-            $sp = SinglePage::add('/members/directory');
-            $sp->setAttribute('exclude_nav', 1);
-        }
+        $this->createSinglePage('/members/directory', '', ['exclude_nav' => 1]);
 
-        $bt = BlockType::getByHandle('feature');
-        if (is_object($bt)) {
-            $bt->refresh();
-        }
+        $this->refreshBlockType('feature');
 
-        $bt = BlockType::getByHandle('image_slider');
-        if (is_object($bt)) {
-            $bt->refresh();
-        }
+        $this->refreshBlockType('image_slider');
 
         $db = Database::get();
         $sm = $db->getSchemaManager();
@@ -63,11 +56,7 @@ class Version20141113000000 extends AbstractMigration
         // Clean up File stupidity
         $r = $db->Execute('select Files.fID from Files left join FileVersions on (Files.fID = FileVersions.fID) where FileVersions.fID is null');
         while ($row = $r->FetchRow()) {
-            $db->Execute('delete from Files where fID = ?', array($row['fID']));
+            $db->Execute('delete from Files where fID = ?', [$row['fID']]);
         }
-    }
-
-    public function down(Schema $schema)
-    {
     }
 }

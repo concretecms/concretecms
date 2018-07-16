@@ -18,7 +18,8 @@ class ApprovePageRequest extends PageRequest
 {
     protected $wrStatusNum = 30;
     private $isScheduled = false;
-    private $scheduleDatetime;
+    private $cvPublishDate;
+    private $cvPublishEndDate;
 
     public function __construct()
     {
@@ -85,7 +86,7 @@ class ApprovePageRequest extends PageRequest
 
     public function getWorkflowRequestApproveButtonClass()
     {
-        return 'btn-success';
+        return '';
     }
 
     public function getWorkflowRequestApproveButtonInnerButtonRightHTML()
@@ -130,9 +131,8 @@ class ApprovePageRequest extends PageRequest
             $button->addWorkflowProgressActionButtonParameter('dialog-height', '70%');
             $button->addWorkflowProgressActionButtonParameter('data-dismiss-alert', 'page-alert');
             $button->addWorkflowProgressActionButtonParameter('dialog-height', '70%');
-            $button->setWorkflowProgressActionStyleInnerButtonLeftHTML('<i class="fa fa-eye"></i>');
             $button->setWorkflowProgressActionURL(REL_DIR_FILES_TOOLS_REQUIRED . '/workflow/dialogs/approve_page_preview?wpID=' . $wp->getWorkflowProgressID());
-            $button->setWorkflowProgressActionStyleClass('btn-default dialog-launch');
+            $button->setWorkflowProgressActionStyleClass('dialog-launch');
             $buttons[] = $button;
         }
 
@@ -155,7 +155,7 @@ class ApprovePageRequest extends PageRequest
     {
         $c = Page::getByID($this->getRequestedPageID());
         $v = CollectionVersion::get($c, $this->cvID);
-        $v->approve(false, $this->scheduleDatetime);
+        $v->approve(false, $this->cvPublishDate, $this->cvPublishEndDate);
 
         $ev = new \Concrete\Core\Page\Collection\Version\Event($c);
         $ev->setCollectionVersionObject($v);
@@ -167,10 +167,11 @@ class ApprovePageRequest extends PageRequest
         return $wpr;
     }
 
-    public function scheduleVersion($dateTime)
+    public function scheduleVersion($cvPublishDate, $cvPublishEndDate)
     {
         $this->isScheduled = true;
-        $this->scheduleDatetime = $dateTime;
+        $this->cvPublishDate = $cvPublishDate;
+        $this->cvPublishEndDate = $cvPublishEndDate;
     }
 
     public function getRequesterComment()

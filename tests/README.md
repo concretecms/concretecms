@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.org/concrete5/concrete5.svg?branch=master)](https://travis-ci.org/concrete5/concrete5-tests)
-
 ## Step 1: Clone this repository.
 
 Or download it.
@@ -18,7 +16,9 @@ You need to create a MySQL account with login `travis` and an empty password, an
 
 ```sql
 CREATE USER 'travis'@'localhost' IDENTIFIED BY '';
+CREATE USER 'travis'@'::1' IDENTIFIED BY '';
 GRANT ALL ON concrete5_tests.* TO 'travis'@'localhost' WITH GRANT OPTION;
+GRANT ALL ON concrete5_tests.* TO 'travis'@'::1' WITH GRANT OPTION;
 FLUSH PRIVILEGES;
 ```
 
@@ -65,6 +65,14 @@ Expected output is something like
 	Tests: 1366, Assertions: 3413, Skipped: 6, Incomplete: 6.
 
 
+To run a single tests, you can run for example
+```bash
+composer test -- --filter testCoreBlockView
+```
+
 # Write Tests!
 
-Send us tests via pull request.
+Send us tests via pull request:
+- actual test classes must go to the /tests/tests folder (classes must be defined in a namespace starting with Concrete\Tests\...)
+- helper classes must go to the /tests/helpers folder (classes must be defined in a namespace starting with Concrete\TestHelpers\...)
+- other files must go to the /tests/assets filder (images, fake classes, ...)

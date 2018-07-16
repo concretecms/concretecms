@@ -38,12 +38,12 @@ class ImportPageStructureRoutine extends AbstractPageStructureRoutine implements
                 ++$i;
             }
             usort($nodes, array('static', 'setupPageNodeOrder'));
-            $siteTree = null;
             if (isset($this->home)) {
                 $home = $this->home;
                 $siteTree = $this->home->getSiteTreeObject();
             } else {
-                $home = Page::getByID(HOME_CID, 'RECENT');
+                $home = Page::getByID(Page::getHomePageID(), 'RECENT');
+                $siteTree = null;
             }
 
             foreach ($nodes as $px) {

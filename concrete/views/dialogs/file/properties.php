@@ -41,7 +41,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                 <?php if ($previewMode) {
     $mode = 'preview';
 } ?>
-                <?php Loader::element('files/properties', array('fv' => $fv, 'mode' => $mode))?>
+                <?php Loader::element('files/properties', array('fv' => $fv, 'mode' => isset($mode) ? $mode : null))?>
 
             </section>
 

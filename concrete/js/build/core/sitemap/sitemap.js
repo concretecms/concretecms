@@ -1,8 +1,8 @@
-/**
- * Base search class for AJAX forms in the UI
- */
+/* jshint unused:vars, undef:true, browser:true, jquery:true */
+/* global _, ccmi18n_sitemap, CCM_DISPATCHER_FILENAME, CCM_SECURITY_TOKEN, CCM_REL, CCM_TOOLS_PATH, Concrete, ConcreteAlert, ConcretePageMenu, ccm_parseJSON, ccm_triggerProgressiveOperation, ConcreteEvent */
 
-!function(global, $, _) {
+/* Base search class for AJAX forms in the UI */
+;(function(global, $) {
 	'use strict';
 
 	function ConcreteSitemap($element, options) {
@@ -17,7 +17,7 @@
             displaySingleLevel: false,
 			persist: true,
 			minExpandLevel: false,
-			dataSource: CCM_TOOLS_PATH + '/dashboard/sitemap_data',
+			dataSource: CCM_DISPATCHER_FILENAME + '/ccm/system/page/sitemap_data',
 			ajaxData: {},
 			selectMode: false, // 1 - single, 2 = multiple , 3 = hierarchical-multiple - has NOTHING to do with clicks. If you enable select mode you CANNOT use a click handler.
 			onClickNode: false, // This handles clicking on the title.
@@ -27,6 +27,7 @@
 		my.options = options;
 		my.$element = $element;
 		my.$sitemap = null;
+		my.homeCID = null;
 		my.setupTree();
 		my.setupTreeEvents();
 
@@ -229,8 +230,9 @@
 					if (my.options.displayNodePagination) {
 						my.setupNodePagination(my.$sitemap, my.options.cParentID);
 					}
-
-					my.setupSiteTreeSelector(my.getTree().data.trees);
+					var treeData = my.getTree().data;
+					my.homeCID = 'homeCID' in treeData ? treeData.homeCID : null;
+					my.setupSiteTreeSelector(treeData.trees);
 
 				},
 				/*
@@ -320,14 +322,15 @@
 					},
 
 					dragEnter: function(targetNode, data) {
-						if ((!targetNode.parent.data.cID) && (targetNode.data.cID !== '1')) { // Home page has no parents, but we still want to be able to hit it.
+                        var cID = parseInt(targetNode.data.cID);
+                        if (!targetNode.parent.data.cID && cID !== my.homeCID) { // Home page has no parents, but we still want to be able to hit it.
 							return false;
 						}
-                        if (targetNode.data.cID == 1) {  // Home gets no siblings
+                        if (cID === my.homeCID) {  // Home gets no siblings
 							return 'over';
                         }
 
-                        if (targetNode.data.cID == data.otherNode.data.cID) {
+                        if (cID == data.otherNode.data.cID) {
                             return false; // can't drag node onto itself.
                         }
 						if (!data.otherNode.data.cID && data.hitMode == 'after') {
@@ -368,6 +371,21 @@
 	 			var node = my.$sitemap.fancytree('getActiveNode');
 				var parent = node.parent;
 				my.reloadNode(parent);
+				$(my.$sitemap).fancytree('getTree').visit(function(node) {
+
+					// update the trash node when a page is deleted
+					if (node.data.isTrash) {
+						var isTrashNodeExpanded = node.expanded;
+						my.getLoadNodePromise(node).done(function(data) {
+							node.removeChildren();
+							node.addChildren(data);
+							if (isTrashNodeExpanded) {
+								node.setExpanded(true, {noAnimation: true});
+							}
+						});
+						return false;
+					}
+				});
 			});
             ConcreteEvent.unsubscribe('SitemapAddPageRequestComplete.sitemap');
             ConcreteEvent.subscribe('SitemapAddPageRequestComplete.sitemap', function(e, data) {
@@ -384,7 +402,7 @@
 					if (parent) {
 						my.reloadNode(parent);
 					}
-				} catch(e) {}
+				} catch(ex) {}
             });
 		},
 
@@ -418,7 +436,7 @@
     		var my = this;
 			var dialog_title = ccmi18n_sitemap.moveCopyPage;
 			if (!dragMode) {
-				var dragMode = '';
+				dragMode = '';
 			}
 			var dialog_url = CCM_TOOLS_PATH + '/dashboard/sitemap_drag_request?origCID=' + node.data.cID + '&destCID=' + destNode.data.cID + '&dragMode=' + dragMode;
 			var dialog_height = 350;
@@ -481,8 +499,8 @@
 
     	displaySingleLevel: function(node) {
     		var my = this,
-    			options = my.options,
-    			minExpandLevel = (node.data.cID == 1) ? 2 : 3;
+    		    /*minExpandLevel = parseInt(node.data.cID) === my.homeCID ? 2 : 3,*/
+    			options = my.options;
 
             (my.options.onDisplaySingleLevel || $.noop).call(this, node);
 
@@ -541,7 +559,7 @@
 				}
 			});
 		}
-	}
+	};
 
 	/**
 	 * Static methods
@@ -549,19 +567,19 @@
 
     ConcreteSitemap.exitEditMode = function(cID) {
 		$.get(CCM_TOOLS_PATH + "/dashboard/sitemap_check_in?cID=" + cID  + "&ccm_token=" + CCM_SECURITY_TOKEN);
-	}
+	};
 
 	ConcreteSitemap.refreshCopyOperations = function() {
 		ccm_triggerProgressiveOperation(CCM_TOOLS_PATH + '/dashboard/sitemap_copy_all', [],	ccmi18n_sitemap.copyProgressTitle, function() {
 			$('.ui-dialog-content').dialog('close');
 			window.location.reload();
 		});
-	}
+	};
 
 	ConcreteSitemap.submitDragRequest = function() {
 
 		var origCID = $('#origCID').val();
-		var destParentID = $('#destParentID').val();
+		//var destParentID = $('#destParentID').val();
 		var destCID = $('#destCID').val();
 		var dragMode = $('#dragMode').val();
 		var destSibling = $('#destSibling').val();
@@ -612,15 +630,15 @@
 				});
 			});
 		}
-	}
+	};
 
 	// jQuery Plugin
 	$.fn.concreteSitemap = function(options) {
 		return $.each($(this), function(i, obj) {
 			new ConcreteSitemap($(this), options);
 		});
-	}
+	};
 
 	global.ConcreteSitemap = ConcreteSitemap;
 
-}(this, $, _);
+})(this, jQuery);

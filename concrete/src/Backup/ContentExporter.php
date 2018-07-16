@@ -97,7 +97,7 @@ class ContentExporter
         if ($fID > 0) {
             $f = File::getByID($fID);
             if (is_object($f)) {
-                return '{ccm:export:file:' . $f->getFileName() . '}';
+                return '{ccm:export:file:' . $f->getPrefix() . ':' . $f->getFileName() . '}';
             }
         }
     }

@@ -1,11 +1,12 @@
-/** 
- * Basic concrete5 toolbar class
- */
+/* jshint unused:vars, undef:true, browser:true, jquery:true */
+/* global CCM_DISPATCHER_FILENAME */
 
-var ConcreteDashboard = function() {
-	setupResultMessages = function() {
-		if ($('#ccm-dashboard-result-message').length > 0) { 
-			if ($('.ccm-pane').length > 0) { 
+;(function(global, $) {
+    'use strict';
+
+	var setupResultMessages = function() {
+		if ($('#ccm-dashboard-result-message').length > 0) {
+			if ($('.ccm-pane').length > 0) {
 				var pclass = $('.ccm-pane').parent().attr('class');
 				var gpclass = $('.ccm-pane').parent().parent().attr('class');
 				var html = $('#ccm-dashboard-result-message').html();
@@ -19,14 +20,15 @@ var ConcreteDashboard = function() {
 	var setupFavorites = function() {
 		var $addFavorite = $('a[data-bookmark-action=add-favorite]'),
 			$removeFavorite = $('a[data-bookmark-action=remove-favorite]'),
-			url = false;
+			url = false,
+			$link;
 
 		if ($addFavorite.length) {
-			var url = CCM_DISPATCHER_FILENAME + '/ccm/system/panels/dashboard/add_favorite',
-				$link = $addFavorite;
+			url = CCM_DISPATCHER_FILENAME + '/ccm/system/panels/dashboard/add_favorite';
+			$link = $addFavorite;
 		} else if ($removeFavorite.length) {
-			var url = CCM_DISPATCHER_FILENAME + '/ccm/system/panels/dashboard/remove_favorite',
-				$link = $removeFavorite;
+			url = CCM_DISPATCHER_FILENAME + '/ccm/system/panels/dashboard/remove_favorite';
+			$link = $removeFavorite;
 		}
 
 		if (url) {
@@ -51,7 +53,7 @@ var ConcreteDashboard = function() {
 				});
 			});
 		}
-	}
+	};
 
 	var setupDetailsURLs = function() {
 		$('table.ccm-search-results-table tr[data-details-url]').each(function() {
@@ -73,7 +75,7 @@ var ConcreteDashboard = function() {
 					window.location.href = $(this).data('details-url');
 				});
 		});
-	}
+	};
 
 	var setupTooltips = function() {
 		if ($("#ccm-tooltip-holder").length == 0) {
@@ -98,10 +100,11 @@ var ConcreteDashboard = function() {
 			if (!height) {
 				height = 'auto';
 			}
+			var title;
 			if ($(this).attr('data-dialog-title')) {
-				var title = $(this).attr('data-dialog-title');
+				title = $(this).attr('data-dialog-title');
 			} else {
-				var title = $(this).text();
+				title = $(this).text();
 			}
 			var element = 'div[data-dialog-wrapper=' + $(this).attr('data-dialog') + ']';
 			jQuery.fn.dialog.open({
@@ -115,10 +118,30 @@ var ConcreteDashboard = function() {
 
     };
 
+	var setupPrivacyPolicy = function() {
+
+		$('div#ccm-dashboard-page').on('click', 'button[data-action=agree-privacy-policy]', function() {
+			$('div.ccm-dashboard-privacy-policy').hide();
+			var url = CCM_DISPATCHER_FILENAME + '/ccm/system/accept_privacy_policy';
+			$.concreteAjax({
+				dataType: 'json',
+				data: {'ccm_token': $(this).attr('data-token')},
+				type: 'POST',
+				url: url,
+				success: function(r) {
+
+				}
+			});
+		});
+
+	};
+
+
 	var setupSelects = function() {
 		$('select[data-select=bootstrap]').bootstrapSelectToButton();
 	};
 
+	/*
 	var setupHeaderMenu = function() {
 		var $buttons = $('.ccm-dashboard-header-buttons'),
 			$menu = $('header div.ccm-dashboard-header-menu');
@@ -130,9 +153,9 @@ var ConcreteDashboard = function() {
 			}
 		}
 	};
+	*/
 
-
-	return {
+	global.ConcreteDashboard = {
 		start: function(options) {
 			setupTooltips();
 			setupResultMessages();
@@ -141,8 +164,8 @@ var ConcreteDashboard = function() {
 			setupSelects();
 			setupDetailsURLs();
 			setupFavorites();
+			setupPrivacyPolicy();
 		}
+	};
 
-	}
-
-}();
+})(this, jQuery);

@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Config\Repository;
 
 /**
@@ -14,7 +15,9 @@ class Liaison
     protected $repository;
 
     /**
-     * @var string Default Namespace
+     * Default Namespace.
+     *
+     * @var string
      */
     protected $default_namespace;
 
@@ -22,7 +25,7 @@ class Liaison
      * Create a new configuration repository.
      *
      * @param \Concrete\Core\Config\Repository\Repository $repository
-     * @param string                                      $default_namespace
+     * @param string $default_namespace
      */
     public function __construct(\Concrete\Core\Config\Repository\Repository $repository, $default_namespace)
     {
@@ -31,27 +34,7 @@ class Liaison
     }
 
     /**
-     * @param $key
-     *
-     * @return string
-     */
-    protected function transformKey($key)
-    {
-        list($namespace, $group, $item) = $this->repository->parseKey($key);
-        if (!$namespace) {
-            $namespace = $this->default_namespace;
-        }
-
-        $collection = "{$namespace}::{$group}";
-        if ($item) {
-            $collection .= ".{$item}";
-        }
-
-        return $collection;
-    }
-
-    /**
-     * @param $key
+     * @param string $key
      *
      * @return bool
      */
@@ -61,8 +44,8 @@ class Liaison
     }
 
     /**
-     * @param      $key
-     * @param null $default
+     * @param string $key
+     * @param mixed $default
      *
      * @return mixed
      */
@@ -72,8 +55,8 @@ class Liaison
     }
 
     /**
-     * @param $key
-     * @param $value
+     * @param string $key
+     * @param mixed $value
      *
      * @return bool
      */
@@ -83,8 +66,8 @@ class Liaison
     }
 
     /**
-     * @param $key
-     * @param $value
+     * @param string $key
+     * @param mixed $value
      */
     public function set($key, $value)
     {
@@ -129,5 +112,39 @@ class Liaison
     public function setDefaultNamespace($default_namespace)
     {
         $this->default_namespace = $default_namespace;
+    }
+
+    /**
+     * Execute a callable using a specific key value.
+     *
+     * @param string $key
+     * @param mixed $value
+     * @param callable $callable
+     *
+     * @return mixed returns the result of $callable
+     */
+    public function withKey($key, $value, callable $callable)
+    {
+        return $this->repository->withKey($key, $value, $callable);
+    }
+
+    /**
+     * @param $key
+     *
+     * @return string
+     */
+    protected function transformKey($key)
+    {
+        list($namespace, $group, $item) = $this->repository->parseKey($key);
+        if (!$namespace) {
+            $namespace = $this->default_namespace;
+        }
+
+        $collection = "{$namespace}::{$group}";
+        if ($item) {
+            $collection .= ".{$item}";
+        }
+
+        return $collection;
     }
 }

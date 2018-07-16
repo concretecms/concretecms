@@ -18,9 +18,14 @@ class Entries extends DashboardExpressEntityPageController
      */
     protected $entity;
 
-    public function getEntity()
+    public function getEntity(\Concrete\Core\Tree\Node\Type\ExpressEntryResults $parent = null)
     {
-        return $this->entity;
+        if ($this->entity) {
+            return $this->entity;
+        } else {
+            return $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entity')
+                ->findOneByResultsNode($parent);
+        }
     }
 
     protected function getBackURL(Entity $entity)

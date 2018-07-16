@@ -43,7 +43,7 @@ class AssociationFormView extends AssociationView
             if ($association->getTargetEntity()->supportsCustomDisplayOrder()) {
                 $element = 'select_multiple_reorder';
             } else {
-                return false;
+                $element = 'view';
             }
         }
         $locator = new TemplateLocator('association/' . $element);

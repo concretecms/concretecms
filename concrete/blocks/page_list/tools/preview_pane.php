@@ -38,6 +38,9 @@ $controller->paginate = (bool) $_REQUEST['paginate'];
 $controller->enableExternalFiltering = $_REQUEST['enableExternalFiltering'];
 $controller->filterByRelated = $_REQUEST['filterByRelated'];
 $controller->relatedTopicAttributeKeyHandle = $_REQUEST['relatedTopicAttributeKeyHandle'];
+$controller->filterByCustomTopic = ($_REQUEST['topicFilter'] == 'custom') ? '1' : '0';
+$controller->customTopicAttributeKeyHandle = $_REQUEST['customTopicAttributeKeyHandle'];
+$controller->customTopicTreeNodeID = $_REQUEST['customTopicTreeNodeID'];
 $controller->includeAllDescendents = $_REQUEST['includeAllDescendents'];
 $controller->includeName = $_REQUEST['includeName'];
 $controller->includeDate = $_REQUEST['includeDate'];
@@ -52,6 +55,8 @@ $controller->on_start();
 $controller->add();
 $controller->view();
 $pages = $controller->get('pages');
+$customTopicAttributeKeyHandle = $controller->get('customTopicAttributeKeyHandle');
+$customTopicTreeNodeID = $controller->get('customTopicTreeNodeID');
 
 extract($controller->getSets());
 

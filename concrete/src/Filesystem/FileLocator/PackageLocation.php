@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Filesystem\FileLocator;
 
+use Concrete\Core\Entity\Package;
+
 class PackageLocation extends AbstractLocation
 {
     /**
@@ -15,8 +17,13 @@ class PackageLocation extends AbstractLocation
         return $this->pkgHandle;
     }
 
-    public function __construct($pkgHandle, $checkExists = false)
+    public function __construct($pkgOrHandle, $checkExists = false)
     {
+        if ($pkgOrHandle instanceof Package) {
+            $pkgHandle = $pkgOrHandle->getPackageHandle();
+        } else {
+            $pkgHandle = $pkgOrHandle;
+        }
         $this->pkgHandle = $pkgHandle;
         $this->checkExists = $checkExists;
     }
@@ -28,13 +35,12 @@ class PackageLocation extends AbstractLocation
 
     public function getPath()
     {
-        $pkgHandle = $this->pkgHandle;
-        return DIR_PACKAGES . DIRECTORY_SEPARATOR . $pkgHandle;
+        return DIR_PACKAGES . '/' . $this->pkgHandle;
     }
 
     public function getURL()
     {
-        return DIR_REL . '/' . DIRNAME_PACKAGES . '/' . $this->pkgHandle;
+        return REL_DIR_PACKAGES . '/' . $this->pkgHandle;
     }
 
     public function contains($file)

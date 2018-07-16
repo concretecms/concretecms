@@ -80,7 +80,7 @@ class DeleteUserRequest extends UserRequest
 
     public function getWorkflowRequestApproveButtonClass()
     {
-        return 'btn-success';
+        return '';
     }
 
     public function getWorkflowRequestApproveButtonInnerButtonRightHTML()
@@ -101,9 +101,8 @@ class DeleteUserRequest extends UserRequest
         $button->addWorkflowProgressActionButtonParameter('dialog-title', t('User Details'));
         $button->addWorkflowProgressActionButtonParameter('dialog-width', '420');
         $button->addWorkflowProgressActionButtonParameter('dialog-height', '310');
-        $button->setWorkflowProgressActionStyleInnerButtonLeftHTML('<i class="fa fa-eye"></i>');
         $button->setWorkflowProgressActionURL(REL_DIR_FILES_TOOLS_REQUIRED . '/workflow/dialogs/user_details?uID=' . $this->getRequestedUserID());
-        $button->setWorkflowProgressActionStyleClass('btn-default dialog-launch');
+        $button->setWorkflowProgressActionStyleClass('dialog-launch');
         $buttons[] = $button;
 
         return $buttons;

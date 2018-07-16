@@ -1,128 +1,139 @@
 <?php
+
 namespace Concrete\Core\Editor;
 
-use Concrete\Core\Site\Config\Liaison as Repository;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Localization\Localization;
+use Concrete\Core\Page\Theme\Theme as PageTheme;
+use Concrete\Core\Site\Config\Liaison as Repository;
 use Concrete\Core\Utility\Service\Identifier;
+use Page;
+use Permissions;
+use stdClass;
 use URL;
+use User;
 
 class CkeditorEditor implements EditorInterface
 {
-    /** @var Repository */
+    /**
+     * The configuration repository.
+     *
+     * @var Repository
+     */
     protected $config;
 
-    /** @var PluginManager */
+    /**
+     * The plugin manager instance.
+     *
+     * @var PluginManager
+     */
     protected $pluginManager;
 
-    /** @var ResponseAssetGroup */
+    /**
+     * @var ResponseAssetGroup
+     */
     protected $assets;
 
+    /**
+     * The custom editor identifier.
+     *
+     * @var string|null
+     */
     protected $identifier;
+
+    /**
+     * The CSRF token.
+     *
+     * @var string|null
+     */
     protected $token;
-    protected $allowFileManager;
-    protected $allowSitemap;
+
+    /**
+     * Can the editor offer the "browse files" feature?
+     *
+     * @var bool
+     */
+    protected $allowFileManager = false;
+
+    /**
+     * Can the editor offer the "browse sitemap" feature?
+     *
+     * @var bool
+     */
+    protected $allowSitemap = false;
+
+    /**
+     * @var array
+     */
     protected $styles;
 
+    /**
+     * Initialize the instance.
+     *
+     * @param Repository $config
+     * @param PluginManager $pluginManager
+     * @param array $styles
+     */
     public function __construct(Repository $config, PluginManager $pluginManager, $styles)
     {
-        $this->assets = ResponseAssetGroup::get();
-        $this->pluginManager = $pluginManager;
         $this->config = $config;
+        $this->pluginManager = $pluginManager;
+        $this->assets = ResponseAssetGroup::get();
         $this->styles = $styles;
     }
 
     /**
-     * @param string $identifier
-     * @param array $options
+     * Generate the Javascript code that initialize the plugin.
+     *
+     * @param array $dynamicOptions a list of custom options that override the default ones
      *
      * @return string
      */
-    protected function getEditorScript($identifier, $options = [])
+    public function getEditorInitJSFunction($dynamicOptions = [])
     {
-        $jsFunc = $this->getEditorInitJSFunction($options);
-
-        $html = <<<EOL
-        <script type="text/javascript">
-        $(function() {
-            var initEditor = {$jsFunc};
-            initEditor('#{$identifier}');
-         });
-        </script>
-EOL;
-
-        return $html;
-    }
-
-    /**
-     * @param array $options
-     *
-     * @return string
-     */
-    public function getEditorInitJSFunction($options = [])
-    {
-        $pluginManager = $this->pluginManager;
+        $pluginManager = $this->getPluginManager();
 
         if ($this->allowFileManager()) {
-            $pluginManager->select('concrete5filemanager');
-            $pluginManager->select('concrete5uploadimage');
+            $pluginManager->select(['concrete5filemanager', 'concrete5uploadimage']);
         } else {
-            $pluginManager->deselect('concrete5filemanager');
-            $pluginManager->deselect('concrete5uploadimage');
+            $pluginManager->deselect(['concrete5filemanager', 'concrete5uploadimage']);
         }
 
         $this->requireEditorAssets();
         $plugins = $pluginManager->getSelectedPlugins();
+        $snippetsAndClasses = $this->getEditorSnippetsAndClasses();
 
-        $options = array_merge(
-            $options,
-            [
-                'plugins' => implode(',', $plugins),
-                'stylesSet' => 'concrete5styles',
-                'filebrowserBrowseUrl' => 'a',
-                'uploadUrl' => (string) URL::to('/ccm/system/file/upload'),
-                'language' => $this->getLanguageOption(),
-                'customConfig' => '',
-                'allowedContent' => true,
-                'baseFloatZIndex' => 1990, /* Must come below modal variable in variables.less */
-                'image2_captionedClass' => 'content-editor-image-captioned',
-                'image2_alignClasses' => [
-                    'content-editor-image-left',
-                    'content-editor-image-center',
-                    'content-editor-image-right',
-                ],
-                'toolbarGroups' => [
-                    ['name' => 'mode', 'groups' => ['mode']],
-                    ['name' => 'document', 'groups' => ['document']],
-                    ['name' => 'doctools', 'groups' => ['doctools']],
-                    ['name' => 'clipboard', 'groups' => ['clipboard']],
-                    ['name' => 'undo', 'groups' => ['undo']],
-                    ['name' => 'find', 'groups' => ['find']],
-                    ['name' => 'selection', 'groups' => ['selection']],
-                    ['name' => 'spellchecker', 'groups' => ['spellchecker']],
-                    ['name' => 'editing', 'groups' => ['editing']],
-                    ['name' => 'basicstyles', 'groups' => ['basicstyles']],
-                    ['name' => 'cleanup', 'groups' => ['cleanup']],
-                    ['name' => 'list', 'groups' => ['list']],
-                    ['name' => 'indent', 'groups' => ['indent']],
-                    ['name' => 'blocks', 'groups' => ['blocks']],
-                    ['name' => 'align', 'groups' => ['align']],
-                    ['name' => 'bidi', 'groups' => ['bidi']],
-                    ['name' => 'paragraph', 'groups' => ['paragraph']],
-                    ['name' => 'links', 'groups' => ['links']],
-                    ['name' => 'insert', 'groups' => ['insert']],
-                    ['name' => 'forms', 'groups' => ['forms']],
-                    ['name' => 'styles', 'groups' => ['styles']],
-                    ['name' => 'colors', 'groups' => ['colors']],
-                    ['name' => 'tools', 'groups' => ['tools']],
-                    ['name' => 'others', 'groups' => ['others']],
-                    ['name' => 'about', 'groups' => ['about']],
-                ],
-            ]
-        );
+        if (!is_array($dynamicOptions)) {
+            $dynamicOptions = [];
+        }
 
-        $options = json_encode($options);
+        $defaultOptions = [
+            'plugins' => implode(',', $plugins),
+            'stylesSet' => 'concrete5styles',
+            'filebrowserBrowseUrl' => 'a',
+            'uploadUrl' => (string) URL::to('/ccm/system/file/upload'),
+            'language' => $this->getLanguageOption(),
+            'customConfig' => '',
+            'allowedContent' => true,
+            'baseFloatZIndex' => 1990, /* Must come below modal variable in variables.less */
+            'image2_captionedClass' => 'content-editor-image-captioned',
+            'image2_alignClasses' => [
+                'content-editor-image-left',
+                'content-editor-image-center',
+                'content-editor-image-right',
+            ],
+            'toolbarGroups' => $this->config->get('editor.ckeditor4.toolbar_groups'),
+            'snippets' => $snippetsAndClasses->snippets,
+            'classes' => $snippetsAndClasses->classes,
+        ];
+
+        $customOptions = $this->config->get('editor.ckeditor4.custom_config_options');
+        if (!is_array($customOptions)) {
+            $customOptions = [];
+        }
+
+        $options = json_encode($dynamicOptions + $customOptions + $defaultOptions);
         $removeEmptyIcon = '$removeEmpty[\'i\']';
 
         $jsfunc = <<<EOL
@@ -153,6 +164,7 @@ EOL;
                     }, 50);
                 });
             }
+            {$this->config->get('editor.ckeditor4.editor_function_options')}
         }
 EOL;
 
@@ -160,30 +172,33 @@ EOL;
     }
 
     /**
+     * Generate the Javascript code that initialize the plugin when it will be used inline.
+     *
      * @return string
      */
     public function outputInlineEditorInitJSFunction()
     {
-        if ($this->getPluginManager()->isSelected('autogrow')) {
-            $this->getPluginManager()->deselect('autogrow');
+        $pluginManager = $this->getPluginManager();
+        if ($pluginManager->isSelected('autogrow')) {
+            $pluginManager->deselect('autogrow');
         }
 
         return $this->getEditorInitJSFunction();
     }
 
     /**
-     * @param string $key
-     * @param string|null $content
+     * {@inheritdoc}
      *
-     * @return string
+     * @see \Concrete\Core\Editor\EditorInterface::outputPageInlineEditor()
      */
     public function outputPageInlineEditor($key, $content = null)
     {
-        if ($this->getPluginManager()->isSelected('autogrow')) {
-            $this->getPluginManager()->deselect('autogrow');
+        $pluginManager = $this->getPluginManager();
+        if ($pluginManager->isSelected('autogrow')) {
+            $pluginManager->deselect('autogrow');
         }
 
-        $this->getPluginManager()->select('concrete5inline');
+        $pluginManager->select('concrete5inline');
         $identifier = $this->getIdentifier();
 
         $html = sprintf(
@@ -207,10 +222,9 @@ EOL;
     }
 
     /**
-     * @param string $key
-     * @param string|null $content
+     * {@inheritdoc}
      *
-     * @return string
+     * @see \Concrete\Core\Editor\EditorInterface::outputStandardEditor()
      */
     public function outputStandardEditor($key, $content = null)
     {
@@ -218,8 +232,9 @@ EOL;
             'disableAutoInline' => true,
         ];
 
-        if ($this->getPluginManager()->isSelected('sourcearea')) {
-            $this->getPluginManager()->deselect('sourcedialog');
+        $pluginManager = $this->getPluginManager();
+        if ($pluginManager->isSelected('sourcearea')) {
+            $pluginManager->deselect('sourcedialog');
         }
 
         $identifier = $this->getIdentifier();
@@ -239,6 +254,8 @@ EOL;
     }
 
     /**
+     * Generate the standard Javascript code that initialize the plugin.
+     *
      * @return string
      */
     public function outputStandardEditorInitJSFunction()
@@ -247,42 +264,44 @@ EOL;
             'disableAutoInline' => true,
         ];
 
-        if ($this->getPluginManager()->isSelected('sourcearea')) {
-            $this->getPluginManager()->deselect('sourcedialog');
+        $pluginManager = $this->getPluginManager();
+        if ($pluginManager->isSelected('sourcearea')) {
+            $pluginManager->deselect('sourcedialog');
         }
 
         return $this->getEditorInitJSFunction($options);
     }
 
     /**
-     * @param Request $request
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Editor\EditorInterface::saveOptionsForm()
      */
     public function saveOptionsForm(Request $request)
     {
-        $this->config->save('editor.concrete.enable_filemanager', $request->request->get('enable_filemanager'));
-        $this->config->save('editor.concrete.enable_sitemap', $request->request->get('enable_sitemap'));
+        $this->config->save('editor.concrete.enable_filemanager', (bool) $request->request->get('enable_filemanager'));
+        $this->config->save('editor.concrete.enable_sitemap', (bool) $request->request->get('enable_sitemap'));
 
-        $plugins = [];
+        $selected = $this->config->get('editor.ckeditor4.plugins.selected_hidden');
         $post = $request->request->get('plugin');
-        $selectedHidden = $this->config->get('editor.ckeditor4.plugins.selected_hidden');
         if (is_array($post)) {
-            $post = array_merge($selectedHidden, $post);
-            foreach ($post as $plugin) {
-                if ($this->pluginManager->isAvailable($plugin)) {
-                    $plugins[] = $plugin;
-                }
-            }
-        } else {
-            foreach ($selectedHidden as $plugin) {
-                if ($this->pluginManager->isAvailable($plugin)) {
-                    $plugins[] = $plugin;
-                }
+            $selected = array_merge($selected, $post);
+        }
+        $plugins = [];
+        foreach ($selected as $plugin) {
+            if ($this->pluginManager->isAvailable($plugin)) {
+                $plugins[] = $plugin;
             }
         }
 
         $this->config->save('editor.ckeditor4.plugins.selected', $plugins);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Editor\EditorInterface::requireEditorAssets()
+     */
     public function requireEditorAssets()
     {
         $this->assets->requireAsset('core/file-manager');
@@ -298,27 +317,7 @@ EOL;
     }
 
     /**
-     * Returns the CKEditor language configuration
-     *
-     * @return string
-     */
-    protected function getLanguageOption()
-    {
-        $langPath = DIR_BASE_CORE . '/js/ckeditor4/vendor/lang/';
-        $useLanguage = 'en';
-
-        $language = strtolower(str_replace('_', '-', Localization::activeLocale()));
-        if (file_exists($langPath . $language . '.js')) {
-            $useLanguage = $language;
-        } elseif (file_exists($langPath . strtolower(Localization::activeLanguage()) . '.js')) {
-            $useLanguage = strtolower(Localization::activeLanguage());
-        }
-
-        return $useLanguage;
-    }
-
-    /**
-     * Returns a JSON Encoded string of styles
+     * Returns a JSON Encoded string of styles.
      *
      * @return string
      */
@@ -328,10 +327,9 @@ EOL;
     }
 
     /**
-     * @param string $key
-     * @param string $content
+     * {@inheritdoc}
      *
-     * @return string
+     * @see \Concrete\Core\Editor\EditorInterface::outputPageComposerEditor()
      */
     public function outputPageComposerEditor($key, $content)
     {
@@ -339,44 +337,59 @@ EOL;
     }
 
     /**
-     * @param string $key
-     * @param string $content
+     * {@inheritdoc}
      *
-     * @return string
+     * @see \Concrete\Core\Editor\EditorInterface::outputBlockEditModeEditor()
      */
     public function outputBlockEditModeEditor($key, $content)
     {
         return $this->outputStandardEditor($key, $content);
     }
 
+    /**
+     * Can the editor offer the "browse files" feature?
+     *
+     * @return bool
+     */
     public function allowFileManager()
     {
         return $this->allowFileManager;
     }
 
+    /**
+     * Can the editor offer the "browse sitemap" feature?
+     *
+     * @return bool
+     */
     public function allowSitemap()
     {
         return $this->allowSitemap;
     }
 
     /**
-     * @param bool $allow
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Editor\EditorInterface::setAllowFileManager()
      */
     public function setAllowFileManager($allow)
     {
-        $this->allowFileManager = $allow;
+        $this->allowFileManager = (bool) $allow;
     }
 
     /**
-     * @param bool $allow
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Editor\EditorInterface::setAllowSitemap()
      */
     public function setAllowSitemap($allow)
     {
-        $this->allowSitemap = $allow;
+        $this->allowSitemap = (bool) $allow;
     }
 
     /**
-     * @return PluginManager
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Editor\EditorInterface::getPluginManager()
      */
     public function getPluginManager()
     {
@@ -384,6 +397,8 @@ EOL;
     }
 
     /**
+     * Set the CSRF token.
+     *
      * @param string $token
      */
     public function setToken($token)
@@ -392,6 +407,8 @@ EOL;
     }
 
     /**
+     * Set the custom editor identifier.
+     *
      * @param string $identifier
      */
     public function setIdentifier($identifier)
@@ -400,6 +417,8 @@ EOL;
     }
 
     /**
+     * Get the editor identifier.
+     *
      * @param bool $autogenerate When true, will generate a new identifier, when false will use the object's set identifier
      *
      * @return string
@@ -411,5 +430,97 @@ EOL;
         }
 
         return $this->identifier;
+    }
+
+    /**
+     * Get the HTML code to be used to initialize the editor.
+     *
+     * @param string $identifier the editor identifier
+     * @param array $options a list of custom options that override the default one
+     *
+     * @return string
+     */
+    protected function getEditorScript($identifier, $options = [])
+    {
+        $jsFunc = $this->getEditorInitJSFunction($options);
+
+        $html = <<<EOL
+        <script type="text/javascript">
+        $(function() {
+            var initEditor = {$jsFunc};
+            initEditor('#{$identifier}');
+         });
+        </script>
+EOL;
+
+        return $html;
+    }
+
+    /**
+     * Get the CKEditor language configuration.
+     *
+     * @return string|null
+     */
+    protected function getLanguageOption()
+    {
+        $langPath = DIR_BASE_CORE . '/js/ckeditor4/vendor/lang/';
+        $useLanguage = 'en';
+
+        $language = strtolower(str_replace('_', '-', Localization::activeLocale()));
+        if (file_exists($langPath . $language . '.js')) {
+            $useLanguage = $language;
+        } elseif (file_exists($langPath . strtolower(Localization::activeLanguage()) . '.js')) {
+            $useLanguage = strtolower(Localization::activeLanguage());
+        } else {
+            $useLanguage = null;
+        }
+
+        return $useLanguage;
+    }
+
+    /**
+     * Build an object containing the CKEditor preconfigured snippets and classes.
+     *
+     * @return \stdClass
+     */
+    private function getEditorSnippetsAndClasses()
+    {
+        $obj = new stdClass();
+        $obj->snippets = [];
+        $u = new User();
+        if ($u->isRegistered()) {
+            $snippets = \Concrete\Core\Editor\Snippet::getActiveList();
+            foreach ($snippets as $sns) {
+                $menu = new stdClass();
+                $menu->scsHandle = $sns->getSystemContentEditorSnippetHandle();
+                $menu->scsName = $sns->getSystemContentEditorSnippetName();
+                $obj->snippets[] = $menu;
+            }
+        }
+        $c = Page::getCurrentPage();
+        $obj->classes = [];
+        if (is_object($c) && !$c->isError()) {
+            $cp = new Permissions($c);
+            if ($cp->canViewPage()) {
+                $pt = $c->getCollectionThemeObject();
+                if (is_object($pt)) {
+                    if ($pt->getThemeHandle()) {
+                        $obj->classes = $pt->getThemeEditorClasses();
+                    } else {
+                        $siteTheme = $pt::getSiteTheme();
+                        if (is_object($siteTheme)) {
+                            $obj->classes = $siteTheme->getThemeEditorClasses();
+                        }
+                    }
+                }
+            }
+        } else {
+            $siteTheme = PageTheme::getSiteTheme();
+            if (is_object($siteTheme)) {
+                $obj->classes = $siteTheme->getThemeEditorClasses();
+            }
+        }
+
+        return $obj;
     }
 }

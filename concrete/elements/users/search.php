@@ -6,7 +6,7 @@ $form = $app->make('helper/form');
 $ek = PermissionKey::getByHandle('edit_user_properties');
 $ik = PermissionKey::getByHandle('activate_user');
 $dk = PermissionKey::getByHandle('delete_user');
-
+$gk = PermissionKey::getByHandle('assign_group');
 ?>
 
 <script type="text/template" data-template="search-results-table-body">
@@ -46,30 +46,38 @@ $dk = PermissionKey::getByHandle('delete_user');
 		<th>
 			<span class="ccm-search-results-checkbox">
 				<select data-bulk-action="users" disabled class="ccm-search-bulk-action form-control">
-					<option value=""><?php echo t('Items Selected')?></option>
+					<option value=""><?php echo t('Items Selected'); ?></option>
 					<?php
-					if ($ek->validate()) {
-						?>
-						<option data-bulk-action-type="dialog" data-bulk-action-title="<?php echo t('Edit Properties')?>" data-bulk-action-url="<?php echo URL::to('/ccm/system/dialogs/user/bulk/properties')?>" data-bulk-action-dialog-width="630" data-bulk-action-dialog-height="450"><?php echo t('Edit Properties')?></option>
+                    if ($ek->validate()) {
+                        ?>
+						<option data-bulk-action-type="dialog" data-bulk-action-title="<?php echo t('Edit Properties'); ?>" data-bulk-action-url="<?php echo URL::to('/ccm/system/dialogs/user/bulk/properties'); ?>" data-bulk-action-dialog-width="630" data-bulk-action-dialog-height="450"><?php echo t('Edit Properties'); ?></option>
 						<?php
-					}
-					/*
-					<?php if ($ik->validate()) { ?>
-						<option value="activate"><?=t('Activate')?></option>
-						<option value="deactivate"><?=t('Deactivate')?></option>
-					<?php } ?>
-					<option value="group_add"><?=t('Add to Group')?></option>
-					<option value="group_remove"><?=t('Remove from Group')?></option>
-					<?php if ($dk->validate()) { ?>
-						<option value="delete"><?=t('Delete')?></option>
-					<?php } ?>
-					*/
-					if (isset($mode) && $mode == 'choose_multiple') {
-						?>
-						<option value="choose"><?php echo t('Choose')?></option>
+                    }
+                    if ($ik->validate()) {
+                        ?>
+						<option data-bulk-action-type="dialog" data-bulk-action-title="<?php echo t('Activate Users'); ?>" data-bulk-action-url="<?php echo URL::to('/ccm/system/dialogs/user/bulk/activate'); ?>" data-bulk-action-dialog-width="630" data-bulk-action-dialog-height="450"><?php echo t('Activate Users'); ?></option>
+						<option data-bulk-action-type="dialog" data-bulk-action-title="<?php echo t('Deactivate Users'); ?>" data-bulk-action-url="<?php echo URL::to('/ccm/system/dialogs/user/bulk/deactivate'); ?>" data-bulk-action-dialog-width="630" data-bulk-action-dialog-height="450"><?php echo t('Deactivate Users'); ?></option>
 						<?php
-					}
-					?>
+                    }
+                    if ($gk->validate()) {
+                        ?>
+						<option data-bulk-action-type="dialog" data-bulk-action-title="<?php echo t('Add to Group'); ?>" data-bulk-action-url="<?php echo URL::to('/ccm/system/dialogs/user/bulk/groupadd'); ?>" data-bulk-action-dialog-width="630" data-bulk-action-dialog-height="450"><?php echo t('Add to Group'); ?></option>
+						<option data-bulk-action-type="dialog" data-bulk-action-title="<?php echo t('Remove From Group'); ?>" data-bulk-action-url="<?php echo URL::to('/ccm/system/dialogs/user/bulk/groupremove'); ?>" data-bulk-action-dialog-width="630" data-bulk-action-dialog-height="450"><?php echo t('Remove From Group'); ?></option>
+						<?php
+                    }
+                    if ($dk->validate()) {
+                        ?>
+						<option data-bulk-action-type="dialog" data-bulk-action-title="<?php echo t('Delete Users'); ?>" data-bulk-action-url="<?php echo URL::to('/ccm/system/dialogs/user/bulk/delete'); ?>" data-bulk-action-dialog-width="630" data-bulk-action-dialog-height="450"><?php echo t('Delete'); ?></option>
+						<?php
+                    }
+
+                    /*
+                    if (isset($mode) && $mode == 'choose_multiple') {
+                        ?>
+                        <option value="choose"><?php echo t('Choose')?></option>
+                        <?php
+                    }*/
+                    ?>
 				</select>
 				<input type="checkbox" data-search-checkbox="select-all" class="ccm-flat-checkbox" />
 			</span>

@@ -1,18 +1,21 @@
 <?php
 
-class NumberValueTest extends \AttributeValueTestCase
-{
+namespace Concrete\Tests\Attribute\Value;
 
-    public function __construct($name = null, array $data = array(), $dataName = '')
+use Concrete\TestHelpers\Attribute\AttributeValueTestCase;
+
+class NumberValueTest extends AttributeValueTestCase
+{
+    public function __construct($name = null, array $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
 
-        $this->tables = array_merge($this->tables, array());
+        $this->tables = array_merge($this->tables, []);
 
-        $this->metadatas = array_merge($this->metadatas, array(
+        $this->metadatas = array_merge($this->metadatas, [
             'Concrete\Core\Entity\Attribute\Key\Settings\EmptySettings',
             'Concrete\Core\Entity\Attribute\Value\Value\NumberValue',
-        ));
+        ]);
     }
 
     public function getAttributeKeyHandle()
@@ -47,52 +50,49 @@ class NumberValueTest extends \AttributeValueTestCase
 
     public function baseAttributeValues()
     {
-        return array(
-            array(
+        return [
+            [
                 5,
                 5,
-            ),
-            array(
+            ],
+            [
                 12.5,
-                12.5
-            ),
-            array(
+                12.5,
+            ],
+            [
                 12.505,
-                12.505
-            )
-        );
+                12.505,
+            ],
+        ];
     }
 
     public function displayAttributeValues()
     {
-        return array(
-            array(
+        return [
+            [
                 5,
-                5
-            )
-        );
+                5,
+            ],
+        ];
     }
 
     public function plaintextAttributeValues()
     {
-        return array(
-            array(
+        return [
+            [
                 5,
                 5,
-            )
-        );
+            ],
+        ];
     }
 
     public function searchIndexAttributeValues()
     {
-        return array(
-            array(
+        return [
+            [
                 5,
                 5,
-            )
-        );
+            ],
+        ];
     }
-
-
-
 }

@@ -34,6 +34,15 @@ class Entity implements ItemInterface
             $node->addAttribute('results-folder', $path);
         }
 
+        $attributes = $entity->getAttributes();
+        if (count($attributes)) {
+            $asn = $node->addChild('attributekeys');
+            foreach($attributes as $ak) {
+                $exporter = $ak->getExporter();
+                $exporter->export($ak, $asn);
+            }
+        }
+
         $associations = $entity->getAssociations();
         if (count($associations)) {
             $asn = $node->addChild('associations');

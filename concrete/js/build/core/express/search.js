@@ -1,12 +1,10 @@
-/**
- * block ajax
- */
+/* jshint unused:vars, undef:true, browser:true, jquery:true */
+/* global ccmi18n, ccmi18n_express, CCM_DISPATCHER_FILENAME, ConcreteAlert, ConcreteAjaxSearch, ConcreteEvent */
 
-!function(global, $) {
+;(function(global, $) {
     'use strict';
 
     function ConcreteExpressEntryAjaxSearch($element, options) {
-        'use strict';
         var my = this;
         options = $.extend({
 
@@ -37,7 +35,7 @@
             onOpen: function() {
                 ConcreteEvent.unsubscribe('SelectExpressEntry');
                 ConcreteEvent.subscribe('SelectExpressEntry', function(e, data) {
-                    jQuery.fn.dialog.closeTop();
+                    $.fn.dialog.closeTop();
                     callback(data);
                 });
             }
@@ -68,4 +66,4 @@
 
     global.ConcreteExpressEntryAjaxSearch = ConcreteExpressEntryAjaxSearch;
 
-}(window, $);
+})(window, jQuery);

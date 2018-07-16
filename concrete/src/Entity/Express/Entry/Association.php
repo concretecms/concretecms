@@ -28,7 +28,7 @@ abstract class Association
     protected $entry;
 
     /**
-     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Express\Association")
+     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Express\Association", inversedBy="entry")
      */
     protected $association;
 

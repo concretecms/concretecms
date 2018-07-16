@@ -115,7 +115,8 @@ class Register extends PageController
 
             \Core::make('validator/password')->isValid($password, $e);
 
-            if ($password) {
+            $displayConfirmPasswordField = $config->get('concrete.user.registration.display_confirm_password_field');
+            if ($password && $displayConfirmPasswordField) {
                 if ($password != $passwordConfirm) {
                     $e->add(t('The two passwords provided do not match.'));
                 }
@@ -183,8 +184,8 @@ class Register extends PageController
                     $mh->addParameter('attribs', $attribValues);
                     $mh->addParameter('siteName', tc('SiteName', \Core::make('site')->getSite()->getSiteName()));
 
-                    if ($config->get('concrete.user.registration.notification_email')) {
-                        $mh->from(Config::get('concrete.user.registration.notification_email'), t('Website Registration Notification'));
+                    if ($config->get('concrete.email.register_notification.address')) {
+                        $mh->from(Config::get('concrete.email.register_notification.address'), t('Website Registration Notification'));
                     } else {
                         $adminUser = UserInfo::getByID(USER_SUPER_ID);
                         if (is_object($adminUser)) {

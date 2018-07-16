@@ -92,7 +92,7 @@ class View extends AbstractView
             $this->templateLocator = new TemplateLocator();
             foreach($context->getControlTemplates() as $template) {
                 $pkgHandle = $template[1] ? $template[1] : $this->attributePkgHandle;
-                $location = new TemplateLocation(DIRNAME_ATTRIBUTES . DIRECTORY_SEPARATOR . $atHandle . DIRECTORY_SEPARATOR . $template[0] . '.php', $pkgHandle);
+                $location = new TemplateLocation(DIRNAME_ATTRIBUTES . '/' . $atHandle . '/' . $template[0] . '.php', $pkgHandle);
                 $this->templateLocator->addLocation($location);
             }
             foreach($context->getActions() as $method) {

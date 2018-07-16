@@ -18,7 +18,6 @@ class DashboardManager extends AbstractManager
             '/dashboard/users/groups' => t('View, search for, add, and edit groups. Click a group to edit it. Groups are useful for organizing users and setting permissions for multiple users simultaneously.'),
             '/dashboard/users/add_group' => t('Create a new group to organize and classify users. Choose an expiration date to remove users automatically.'),
             '/dashboard/reports/forms' => t("View responses to your site's forms. Submitted form data is collected here."),
-            '/dashboard/reports/statistics' => t('View graphs showing recent site traffic, registration, page creation and downloaded files.'),
             '/dashboard/reports/surveys' => t('The results of completed survey blocks are logged here. Find out what your users have submitted.'),
             '/dashboard/reports/logs' => t('View a record of errors your site has encountered, and a log of outgoing email messages sent by your site.'),
             '/dashboard/pages/themes' => t("Themes change the overall design of your site's pages. Activating a theme will apply it to every page in your site. Preview allows you to see how your content will look when the new theme is applied. Inspect lists the Page Types a theme uses. Customize allows you to change certain properties of your theme's styles, if allowed."),
@@ -48,7 +47,7 @@ class DashboardManager extends AbstractManager
             '/dashboard/system/registration/profiles' => t("Display information about your concrete5 site's users, on a public page."),
             '/dashboard/system/registration/postlogin' => t('Determine where users should be redirected to after they login.'),
             '/dashboard/system/environment/storage' => t("Create an alternate file-storage location (in addition to the standard file location) where you'll have the option of putting files after uploading them to the File Manager. "),
-            '/dashboard/system/backup/update' => t('Download the latest version of concrete5 and upgrade your site.'),
+            '/dashboard/system/update/update' => t('Download the latest version of concrete5 and upgrade your site.'),
             '/dashboard/system/permissions/maintenance_mode' => t('Enable or disable maintenance mode, in which your site is only visible to the admin user. Maintenance Mode is useful for developing, testing or temporarily disabling a site.'),
             '/dashboard/system/optimization/jobs' => t('Have concrete5 perform various tasks to help your site running in top condition, process email posts, and update search engine indexing maps. Click the triangle icon next to the job to start it. A success message will be displayed once the job has been completed.'),
             '/dashboard/system/optimization/clearcache' => t("If your site is behaving oddly or displaying out-of-date content, it's a good idea to clear the cache. If you're having to clear the cache a lot, you might want to just turn off caching in Cache & Speed Settings."),
@@ -63,7 +62,12 @@ class DashboardManager extends AbstractManager
             '/dashboard/users/attributes' => t('Store data about your users-- like site preferences, birthdays, bios and more. Control which elements are available for users to update themselves.'),
             '/dashboard/users/add' => t('Manually create new user accounts for your concrete5 site.'),
             '/dashboard' => t('The Dashboard allows you to perform administrative tasks for your site.'),
-            '/dashboard/system/files/image_uploading' => t('Control maximum dimensions for all images uploaded to your website. Ensures that enormous images will be resized.'),
+            '/dashboard/system/files/image_uploading' => t('Control maximum dimensions for all images uploaded to your website. Ensures that enormous images will be resized.') . ' ' . t('Auto-rotate images accordingly to EXIF metadata.') . '<br />' . t('Set PNG and JPEG compression options.'),
         ]);
+
+        $message = new Message();
+        $message->addGuide('add-calendar');
+        $message->setMessageContent(t('Add a calendar using the form. You may add multiple calendars, but you must add at least one before you can use the Calendar add-on.'));
+        $this->setMessage('/dashboard/calendar/add', $message);
     }
 }

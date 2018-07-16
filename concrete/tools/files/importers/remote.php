@@ -52,18 +52,23 @@ if (!$error->has()) {
 
         // validate URL
         try {
+            $url = \Concrete\Core\Url\Url::createFromUrl($this_url);
+            if (!$url->getHost() || in_array($url->getHost(), ['localhost', '127.0.0.1'])) {
+                throw new \InvalidArgumentException(t('Invalid URL: %s', $this_url));
+            }
+
             $client = $app->make('http/client');
             $request = $client->getRequest();
-            $request->setUri($this_url);
+            $request->setUri((string) $url);
             $response = $client->send();
             $incoming_urls[] = $this_url;
         } catch (\Exception $e) {
-            $error->add($e->getMessage());
+            $error->add(t('Failed to access "%s"', h($this_url)));
         }
     }
 
     if (!$valt->validate('import_remote')) {
-        $$error->add($valt->getErrorMessage());
+        $error->add($valt->getErrorMessage());
     }
 
     if (count($incoming_urls) < 1) {
@@ -97,7 +102,7 @@ if (!$error->has()) {
                 // use mimetype from http response
                 $fextension = $app->make('helper/mime')->mimeToExtension($contentType);
                 if ($fextension === false) {
-                    $error->add(t('Unknown mime-type: %s', $contentType));
+                    $error->add(t('Unknown mime-type: %s', h($contentType)));
                 } else {
                     // make sure we're coming up with a unique filename
                     do {

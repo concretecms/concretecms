@@ -27,7 +27,7 @@
     ?>
                     <li>
                         <a href="<?=URL::to('/dashboard/system/express/entities/forms', 'view_form_details', $form->getID())?>">
-                            <i class="fa fa-list-alt"></i> <?=$form->getName()?>
+                            <i class="fa fa-list-alt"></i> <?=h($form->getName())?>
                         </a>
                     </li>
                 <?php 

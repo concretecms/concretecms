@@ -58,7 +58,7 @@ class Limit
 
         $admin = UserInfo::getByID(USER_SUPER_ID);
 
-        Log::addEntry(t("User: %s has tried to send more than %s private messages within %s minutes", $offender->getUserName(), Config::get('concrete.user.private_messages.throttle_max'), Config::get('concrete.user.private_messages.throttle_max_timespan')), t('warning'));
+        \Log::addEntry(t("User: %s has tried to send more than %s private messages within %s minutes", $offender->getUserName(), Config::get('concrete.user.private_messages.throttle_max'), Config::get('concrete.user.private_messages.throttle_max_timespan')), t('warning'));
 
         $mh = Loader::helper('mail');
 

@@ -23,6 +23,90 @@ class Controller extends BlockController
     protected $btSupportsInlineEdit = true;
     protected $btTable = 'btCoreAreaLayout';
     protected $btIsInternal = true;
+    protected $btCacheSettingsInitialized = false;
+
+    public function cacheBlockOutput()
+    {
+        $this->setupCacheSettings();
+
+        return $this->btCacheBlockOutput;
+    }
+
+    public function cacheBlockOutputOnPost()
+    {
+        $this->setupCacheSettings();
+
+        return $this->btCacheBlockOutputOnPost;
+    }
+
+    public function getBlockTypeCacheOutputLifetime()
+    {
+        $this->setupCacheSettings();
+
+        return $this->btCacheBlockOutputLifetime;
+    }
+
+    protected function setupCacheSettings()
+    {
+        if ($this->btCacheSettingsInitialized || Page::getCurrentPage()->isEditMode()) {
+            return;
+        }
+
+        $this->btCacheSettingsInitialized = true;
+
+        $btCacheBlockOutput = true;
+        $btCacheBlockOutputOnPost = true;
+        $btCacheBlockOutputLifetime = 0;
+
+        $c = $this->getCollectionObject();
+
+        $blocks = [];
+        $layout = $this->getAreaLayoutObject();
+        $layout->setAreaObject($this->getAreaObject());
+        if ($layout) {
+            foreach($layout->getAreaLayoutColumns() as $column) {
+                $area = $column->getSubAreaObject();
+                if ($area) {
+                    foreach($area->getAreaBlocksArray($c) as $block) {
+                        $blocks[] = $block;
+                    }
+                }
+            }
+        }
+
+        $arrAssetBlocks = [];
+        
+        foreach ($blocks as $b) {
+            $btCacheBlockOutput = $btCacheBlockOutput && $b->cacheBlockOutput();
+            $btCacheBlockOutputOnPost = $btCacheBlockOutputOnPost && $b->cacheBlockOutputOnPost();
+
+            //As soon as we find something which cannot be cached, entire block cannot be cached, so stop checking.
+            if (!$btCacheBlockOutput) {
+                return;
+            }
+
+            if ($expires = $b->getBlockOutputCacheLifetime()) {
+                if ($expires && $btCacheBlockOutputLifetime < $expires) {
+                    $btCacheBlockOutputLifetime = $expires;
+                }
+            }
+
+            $objController = $b->getController();
+            if (is_callable(array($objController, 'registerViewAssets'))) {
+                $arrAssetBlocks[] = $objController;
+            }
+
+        }
+
+        $this->btCacheBlockOutput = $btCacheBlockOutput;
+        $this->btCacheBlockOutputOnPost = $btCacheBlockOutputOnPost;
+        $this->btCacheBlockOutputLifetime = $btCacheBlockOutputLifetime;
+
+        foreach ($arrAssetBlocks as $objController) {
+            $objController->on_start();
+            $objController->registerViewAssets();
+        }
+    }
 
     public function getBlockTypeDescription()
     {

@@ -31,9 +31,10 @@ module.exports = function(grunt) {
             beforeJS: true,
             dest: '<%= DIR_BASE %>/concrete/js/build/core/image-editor/image-editor.js',
             src: [
+                '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/_start.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/kinetic.prototype.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/imageeditor.js',
-                '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/history.js.js',
+                //'<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/history.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/events.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/elements.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/controls.js',
@@ -45,7 +46,8 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/actions.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/slideOut.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/jquerybinding.js',
-                '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/filters.js'
+                '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/filters.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/image-editor/build/_end.js',
             ]
         }
     };
@@ -101,7 +103,6 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/core/app/panels.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/dialog.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/alert.js',
-                '<%= DIR_BASE %>/concrete/js/build/core/app/newsflow.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/editable-field/container.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/page-reindexing.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/in-context-menu.js',
@@ -306,6 +307,11 @@ module.exports = function(grunt) {
             src: '<%= DIR_BASE %>/concrete/js/build/core/events.js'
         },
 
+        ccm_asset_loader: {
+            dest: '<%= DIR_BASE %>/concrete/js/asset-loader.js',
+            src: '<%= DIR_BASE %>/concrete/js/build/core/asset-loader.js'
+        },
+
         ccm_sitemap: {
             dest: '<%= DIR_BASE %>/concrete/js/sitemap.js',
             src: [
@@ -321,6 +327,21 @@ module.exports = function(grunt) {
             dest: '<%= DIR_BASE %>/concrete/js/users.js',
             src: [
                 '<%= DIR_BASE %>/concrete/js/build/core/user/selector.js'
+            ]
+        },
+
+        ccm_calendar_event: {
+            dest: '<%= DIR_BASE %>/concrete/js/calendar/event-selector.js',
+            src: [
+                '<%= DIR_BASE %>/concrete/js/build/core/calendar/event-selector.js',
+            ]
+        },
+
+        ccm_calendar_admin: {
+            dest: '<%= DIR_BASE %>/concrete/js/calendar/admin.js',
+            src: [
+                '<%= DIR_BASE %>/concrete/js/build/core/calendar/admin.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/calendar/menu.js'
             ]
         },
 
@@ -370,6 +391,11 @@ module.exports = function(grunt) {
             src: '<%= DIR_BASE %>/concrete/js/build/core/frontend/parallax-image.js'
         },
 
+        ccm_frontend_thumbnail_builder: {
+            dest: '<%= DIR_BASE %>/concrete/js/frontend/thumbnail-builder.js',
+            src: '<%= DIR_BASE %>/concrete/js/build/core/frontend/thumbnail-builder.js'
+        },
+
         ccm_gathering: {
             dest: '<%= DIR_BASE %>/concrete/js/gathering.js',
             src: [
@@ -405,6 +431,10 @@ module.exports = function(grunt) {
         jquery_text_counter: {
             dest: '<%= DIR_BASE %>/concrete/js/textcounter.js',
             src: '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-text-counter/textcounter.js'
+        },
+        ccm_country_stateprovince_link: {
+            dest: '<%= DIR_BASE %>/concrete/js/country-stateprovince-link.js',
+            src: '<%= DIR_BASE %>/concrete/js/build/core/country-stateprovince-link.js'
         }
     };
 
@@ -461,6 +491,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-newer');
 
     // Now let's build the final configuration for Grunt.
@@ -542,6 +573,15 @@ module.exports = function(grunt) {
         }
     };
 
+    config.jshint = {
+        options: {
+        },
+        all: [
+            '<%=DIR_BASE%>/concrete/js/build/core/**/*.js',
+            '!<%=DIR_BASE%>/concrete/js/build/core/image-editor/build/**/*.js',
+            '!<%=DIR_BASE%>/concrete/js/build/core/app/json.js',
+        ]
+    };
 
     // Set Grunt tasks
     grunt.initConfig(config);
@@ -577,6 +617,7 @@ module.exports = function(grunt) {
     grunt.registerTask('js:debug', ['jsOnly:debug', 'gitskip-on:js']);
     grunt.registerTask('js:release', ['jsOnly:release', 'gitskip-off:js']);
     grunt.registerTask('js', 'js:release');
+    grunt.registerTask('js:check', ['concat:image_editor', 'jshint:all']);
 
     grunt.registerTask('css:debug', ['less:debug', 'gitskip-on:css']);
     grunt.registerTask('css:release', ['less:release', 'gitskip-off:css']);
