@@ -257,8 +257,12 @@ class SecurimageController extends AbstractController implements CaptchaWithPict
         } else {
             $inputName = static::DEFAULT_INPUT_NAME;
         }
+        $checkCode = $this->request->get($inputName);
+        if (!is_string($checkCode)) {
+            $checkCode = '';
+        }
 
-        return $this->securimage->check($this->request->get($inputName));
+        return $this->securimage->check($checkCode);
     }
 
     /**

@@ -145,6 +145,12 @@
                 <category handle="site"/>
             </categories>
         </attributetype>
+        <attributetype handle="page_selector" name="Page Selector" package="">
+            <categories>
+                <category handle="collection"/>
+                <category handle="site"/>
+            </categories>
+        </attributetype>
     </attributetypes>
     <attributekeys>
         <attributekey handle="meta_title" name="Meta Title" package="" searchable="1" indexed="0" type="text" category="collection"/>

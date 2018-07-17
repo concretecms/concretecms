@@ -1,7 +1,20 @@
 <?php
+
 namespace Concrete\Controller\Dialog\Page;
 
-class Clipboard extends \Concrete\Controller\Panel\Add
+use Concrete\Controller\Panel\Add as AddPanelController;
+
+class Clipboard extends AddPanelController
 {
     protected $viewPath = '/dialogs/page/clipboard';
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Controller\Panel\Add::getSelectedTab()
+     */
+    protected function getSelectedTab()
+    {
+        return 'clipboard';
+    }
 }

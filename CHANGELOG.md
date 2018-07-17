@@ -1,3 +1,79 @@
+# 8.4.1
+
+## Feature Updates
+
+* Added the ability to automatically deactivate users based on how long it’s been since they’ve logged in.
+* Added the ability to save search presets for users and pages and Express objects. (thanks marvinde)
+* Added the ability to sort block types and block type sets in the Dashboard (thanks mlocati)
+* Add support for theme-color meta tag in the Basics settings section of the Dashboard (thanks mlocati)
+* Allow upscaling images for thumbnails based on thumbnail type (thanks mlocati, jneijt)
+* Add tooltips to the plugins listed on the Rich Text Editor page in the Dashboard that describe what they do (thanks mlocati)
+* The Page Selector attribute is now integrated into the core (thanks marvinde)
+* Added a Draft List block type to the Waiting for Me screen in the Desktop (thanks marvinde)
+* Added a command line script to generate sitemap.xml (thanks mlocati)
+
+## Behavioral Improvements
+
+* Reworked Add Content Panel Functionality: Make it so that clicking again on the plus/add panel closes the panel (like all others.), If a user option/clicks the panel when opening it, activate the blue/pinned/locked functionality. Clicking to close the panel closes the panel and removes this functionality (thanks marvinde)
+* Use UI localization context in concrete5 toolbar & account menu (thanks mlocati)
+* Fixed: Whoops report is confusing the reporting with the original error when adding or updating blocks that fail (thanks mlocati)
+* Version approved date is now shown in the approved version panel (thanks marvinde)
+* Fixed: Language Switcher's language text should display in their native language (thanks mlocati)
+* We now highlight localized stacks that have been created to override global stacks in a multilingual website (thanks mlocati)
+* Make marketplace error handling more consolidated and handle timeouts
+* Set links color in jquery ui dialogs (thanks mlocati)
+* Better support for with MySQL 8 (thanks mlocati)
+* Support for multiple Page List blocks on a page (thanks marvinde)
+* Fix handling of JavascriptLocalizedAsset URL & path (thanks mlocati)
+* Don't try to get package lists when concrete5 is not installed in language-install CLI command (thanks mlocati)
+* Reduce concurrency problems in FileSystemStashDriver::storeData (can be a problem when clearing a cache on a high traffic site) (thanks mlocati)
+* Added a link to the concrete5 Slack channel on the installation screen (thanks mlocati)
+* Added a link to the concrete5 Sack channel in the welcome screen (thanks mlocati)
+* Improved performance in route resolution (thanks mlocati)
+* Avoid long timeouts when checking the Google API Key in Google Maps block (thanks mlocati)
+* Avoid warning in Securimage::check when no captcha token is received (thanks mlocati)
+* Add $subject to form email templates to make it easier to customize (thanks katzueno)
+* Add option to not create session cookies in multilingual sites (thanks mlocati)
+* Changed Redactor to CKEditor in the Conversations Rich text editor
+* Add ability to change social network icon via config (thanks goesredy)
+
+## Bug Fixes
+
+* Fixed irritating bug where adding multiple express form controls of the same type in a row would cause an error and require form controls to be added and re-saved before proceeding (thanks JeffPaetkau!)
+* Fixed error when trying to login using certain third party authentication types (thanks fabian)
+* Fixed: File Manager - Duplicate and blank search presets created when creating multiple search presets without page refresh (thanks marvinde)
+* Fixed bug where Next/Previous block might skip pages under certain conditions (thanks gfischershaw, mlocati)
+* Fixed: C5 8.4.0 - Unable to select root page (home) when adding a new page in sitemap on a multilingual site
+* Specifying the items per page for an express entity now works.
+* Fixed: 8.4, File Manager in versions, "Invalid file version" when removing old item (thanks mlocati)
+* Fixed Call to a member function generate() on null at index.php/dashboard/extend/update
+* Fixed bug resolving proper Multilingual Section from browser locale under certain situations (thanks mlocati)
+* Fix HackerOne issue 277479 (thanks mlocati)
+* Fixed: Copy page moves cID instead of copy in MultilingualPageRelations table (thanks 1stthomas)
+* Fixed Express Bug: Argument 1 passed to DashboardFormContext::setLocation() must be an instance of TemplateLocator, boolean given
+* Fixed exception thrown when accessing index.php/ccm/system/accept_privacy_policy directly.
+* Fixed: Deleting theme error does not have a method 'getPackageItems
+* Fixed out of memory error happening on non-US systems when a broken legacy package is included in the packages directory (thanks mlocati)
+* Fixed errors with the Page List block not properly filtering by date options (thanks gfischershaw)
+* Fixed 8.4.0RC2 - Search presets cannot be deleted in bulk (as the context menu suggests
+* Fix a bug where the file manager's breadcrumb is behind the search form (thanks marvinde)
+* Fixed inability to disable CKEditor plugins (thanks mlocati)
+* Fix setTrustedProxies for Symfony 3.3.0 (thanks mlocati)
+* Fixed: FileFolder::getNodeByName and duplicated folder names (thanks mlocati)
+* Fix setting the "required" attribute of the privacy agreement on install page (thanks mlocati)
+* Actually add translatable strings extracted from config files to Translations instance (thanks mlocati)
+
+## Developer Updates
+
+* Much improve sitemap.xml generation routine, including better memory usage, better ability for extension, and cleaner code (thanks mlocati)
+* General code cleanup (thanks mlocati)
+* Add "withKey" feature to configuration (thanks mlocati)
+* Add Thumbnail Type events (thanks a3020)
+* Fix returning file objects in Exception classes (thanks a3020)
+* Added `on_block_output` event (thanks a3020)
+* Added a debug option in the Dashboard to report PHP NOTICE errors (thanks mlocati)
+* Bring back the setNameSpace() method in ItemList (thanks marvinde)
+
 # 8.4.0
 
 ## Feature Updates

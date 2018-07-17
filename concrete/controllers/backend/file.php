@@ -17,6 +17,7 @@ use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\FileFolder;
 use Concrete\Core\View\View;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use FilePermissions;
@@ -104,13 +105,25 @@ class File extends Controller
         $fvID = $this->request->request->get('fvID', $this->request->query->get('fvID'));
         $fvID = $this->app->make('helper/security')->sanitizeInt($fvID);
         $fv = $files[0]->getVersion($fvID);
-        if ($fv === null || !$fv->isApproved()) {
+        if ($fv === null || $fv->isApproved()) {
             throw new UserMessageException(t('Invalid file version.', 400));
         }
         if (!$token->validate('version/delete/' . $fv->getFileID() . '/' . $fv->getFileVersionId())) {
             throw new UserMessageException($token->getErrorMessage(), 401);
         }
-        $fv->delete();
+        $expr = Criteria::expr();
+        $criteria = Criteria::create()
+            ->andWhere($expr->orX(
+                $expr->neq('file', $fv->getFile()),
+                $expr->neq('fvID', $fv->getFileVersionID())
+            ))
+            ->andWhere($expr->eq('fvPrefix', $fv->getPrefix()))
+            ->andWhere($expr->eq('fvFilename', $fv->getFileName()))
+        ;
+        $em = $this->app->make(EntityManagerInterface::class);
+        $repo = $em->getRepository(FileVersionEntity::class);
+        $deleteFilesAndThumbnails = $repo->matching($criteria)->isEmpty();
+        $fv->delete($deleteFilesAndThumbnails);
         $r = new FileEditResponse();
         $r->setFiles($files);
         $r->outputJSON();

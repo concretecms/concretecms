@@ -13,7 +13,7 @@ $token = \Core::make('Concrete\Core\Validation\CSRF\Token');
 <?php
 $attribs = UserAttributeKey::getRegistrationList();
 
-if ($registerSuccess) {
+if (!empty($registerSuccess)) {
     ?>
     <div class="row">
         <div class="col-sm-10 col-sm-offset-1">
@@ -125,7 +125,7 @@ if ($registerSuccess) {
         <div class="row">
             <div class="col-sm-10 col-sm-offset-1">
                 <div class="form-actions">
-                    <?= $form->hidden('rcID', $rcID);
+                    <?= $form->hidden('rcID', isset($rcID) ? $rcID : '');
                     ?>
                     <?= $form->submit('register', t('Register') . ' &gt;', array('class' => 'btn-lg btn-primary')) ?>
                 </div>

@@ -925,6 +925,10 @@
               filename="/dashboard/system/registration/notification.php" pagetype="" description="" package="">
         </page>
 
+        <page name="User Deactivation Settings" path="/dashboard/system/registration/deactivation"
+              filename="/dashboard/system/registration/deactivation.php" pagetype="" description="" package="">
+        </page>
+
         <page name="Email" path="/dashboard/system/mail" filename="/dashboard/system/mail/view.php" pagetype=""
               description="Control how your site send and processes mail." package="">
             <attributes>
@@ -1255,7 +1259,24 @@
     <page name="Waiting for Me" path="/dashboard/welcome/me" filename="" pagetype="" template="desktop" description="" package="">
         <area name="Main">
             <blocks>
-                <block type="desktop_waiting_for_me" />
+                <block type="core_area_layout" name="">
+                    <arealayout type="theme-grid" columns="12">
+                        <columns>
+                            <column span="12" offset="0">
+                                <block type="desktop_waiting_for_me" />
+                            </column>
+                        </columns>
+                    </arealayout>
+                </block>
+                <block type="core_area_layout" name="">
+                    <arealayout type="theme-grid" columns="12">
+                        <columns>
+                            <column span="12" offset="0">
+                                <block type="desktop_draft_list" />
+                            </column>
+                        </columns>
+                    </arealayout>
+                </block>
             </blocks>
         </area>
     </page>

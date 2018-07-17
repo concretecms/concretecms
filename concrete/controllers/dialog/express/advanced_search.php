@@ -5,18 +5,29 @@ use Concrete\Controller\Dialog\Search\AdvancedSearch as AdvancedSearchController
 use Concrete\Controller\Element\Search\Express\CustomizeResults;
 use Concrete\Core\Attribute\Category\ExpressCategory;
 use Concrete\Core\Entity\Search\SavedSearch;
+use Concrete\Core\Support\Facade\Express;
 use Concrete\Core\Express\Search\Field\Manager;
 use Concrete\Core\Express\Search\SearchProvider;
 use Concrete\Core\Search\Field\ManagerFactory;
 use Doctrine\ORM\EntityManager;
-use League\Url\Url;
+use League\Url\Url as LeagueUrl;
+use URL;
+use Permissions;
+use Exception;
 
 class AdvancedSearch extends AdvancedSearchController
 {
-
+    /**
+     * @var Express
+     */
     protected $entity;
 
-    protected $supportsSavedSearch = false;
+    /**
+     * @var string
+     */
+    protected $entityID;
+
+    protected $supportsSavedSearch = true;
 
     public function view()
     {
@@ -24,13 +35,27 @@ class AdvancedSearch extends AdvancedSearchController
         parent::view();
     }
 
+    public function setEntityID($entityID)
+    {
+        $this->entityID = (string) $entityID;
+    }
+
     protected function loadEntity()
     {
         if (!isset($this->entity)) {
-            $entity = \Express::getObjectByID($this->request->query->get('exEntityID'));
-            $this->entity = $entity;
-            if (!$this->entity) {
-                throw new \Exception(t('Access Denied.'));
+            $entityID = $this->entityID;
+            if (empty($entityID)) {
+                $entityID = $this->request->query->get('exEntityID');
+                if (empty($entityID) && !empty($this->request->request->get('objectID'))) {
+                    $entityID = $this->request->request->get('objectID');
+                }
+            }
+            $entity = Express::getObjectByID($entityID);
+            if (is_object($entity)) {
+                $this->entity = $entity;
+                $this->objectID = $this->entity->getID();
+            } else {
+                throw new Exception(t('Access Denied.'));
             }
         }
     }
@@ -39,13 +64,15 @@ class AdvancedSearch extends AdvancedSearchController
     {
         $provider = $this->getSearchProvider();
         $element = new CustomizeResults($provider);
+
         return $element;
     }
 
     protected function canAccess()
     {
         $this->loadEntity();
-        $ep = new \Permissions($this->entity);
+        $ep = new Permissions($this->entity);
+
         return $ep->canViewExpressEntries();
     }
 
@@ -58,6 +85,7 @@ class AdvancedSearch extends AdvancedSearchController
     {
         $this->loadEntity();
         $provider = new SearchProvider($this->entity, $this->getExpressCategory(), $this->app->make('session'));
+
         return $provider;
     }
 
@@ -65,46 +93,75 @@ class AdvancedSearch extends AdvancedSearchController
     {
         $this->loadEntity();
         $manager = ManagerFactory::get('express');
-        /**
+        /*
          * @var $manager Manager
          */
         $manager->setExpressCategory($this->getExpressCategory());
+
         return $manager;
     }
 
     public function getSavedSearchBaseURL(SavedSearch $search)
     {
-        return false;
+        $url = null;
+        if (is_object($this->entity)) {
+            $url = URL::to('/ccm/system/search/express/preset', $this->entity->getID(), $search->getID());
+        }
+
+        return (string) $url;
     }
 
     public function getCurrentSearchBaseURL()
     {
-        $url = \URL::to('/ccm/system/search/express/current');
+        $url = URL::to('/ccm/system/search/express/current');
         $url->getQuery()->modify(['exEntityID' => $this->entity->getID()]);
+
         return (string) $url;
     }
 
     public function getBasicSearchBaseURL()
     {
-        $url = \URL::to('/ccm/system/search/express/basic');
+        $url = URL::to('/ccm/system/search/express/basic');
         $url->getQuery()->modify(['exEntityID' => $this->entity->getID()]);
+
         return (string) $url;
+    }
+
+    public function getSavedSearchDeleteURL(SavedSearch $search)
+    {
+        return (string) URL::to('/ccm/system/dialogs/express/advanced_search/preset/delete?presetID=' . $search->getID() . '&objectID=' . $this->objectID);
+    }
+
+    public function getSavedSearchEditURL(SavedSearch $search)
+    {
+        return (string) URL::to('/ccm/system/dialogs/express/advanced_search/preset/edit?presetID=' . $search->getID() . '&objectID=' . $this->objectID);
     }
 
     public function getAddFieldAction()
     {
         $action = $this->action('add_field');
-        $url = Url::createFromUrl($action);
+        $url = LeagueUrl::createFromUrl($action);
         $url->getQuery()->modify(['exEntityID' => $this->entity->getID()]);
+
         return (string) $url;
     }
 
     public function getSubmitAction()
     {
         $action = $this->action('submit');
-        $url = Url::createFromUrl($action);
+        $url = LeagueUrl::createFromUrl($action);
         $url->getQuery()->modify(['exEntityID' => $this->entity->getID()]);
+
         return (string) $url;
     }
 
+    public function getSavedSearchEntity()
+    {
+        $em = $this->app->make(EntityManager::class);
+        if (is_object($em)) {
+            return $em->getRepository('Concrete\Core\Entity\Search\SavedExpressSearch');
+        }
+
+        return null;
+    }
 }

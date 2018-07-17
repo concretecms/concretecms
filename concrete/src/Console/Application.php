@@ -42,6 +42,8 @@ class Application extends SymfonyApplication
             $this->add(new Command\BlacklistClear());
             $this->add(new Command\QueueProcessCommand());
             $this->add(new Command\FillThumbnailsTableCommand());
+            $this->add(new Command\GenerateSitemapCommand());
+            $this->add(new Command\RefreshEntitiesCommand());
         }
         $this->setupRestrictedCommands();
         $this->setupDoctrineCommands();

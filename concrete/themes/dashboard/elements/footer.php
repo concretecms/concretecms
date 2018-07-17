@@ -1,4 +1,5 @@
-<?php if ($showPrivacyPolicyNotice) { ?>
+<?php
+if (!empty($showPrivacyPolicyNotice)) { ?>
 <div class="ccm-dashboard-privacy-policy">
     <div class="ccm-dashboard-privacy-policy-inner">
         <div class="container-fluid">
@@ -13,7 +14,7 @@
                     <a target="_blank" href="<?=Config::get('concrete.urls.privacy_policy')?>" class="btn-block btn btn-default"><?=t('View Privacy Policy')?></a>
                 </div>
                 <div class="col-sm-6">
-                    <button data-action="agree-privacy-policy" data-token="<?=$token->generate('accept_privacy_policy')?>" class="btn-block btn btn-primary"><?=t('Accept and Close')?></button>
+                    <button data-action="agree-privacy-policy" data-token="<?=Core::make('token')->generate('accept_privacy_policy')?>" class="btn-block btn btn-primary"><?=t('Accept and Close')?></button>
                 </div>
             </div>
         </div>
