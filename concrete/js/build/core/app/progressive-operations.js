@@ -12,13 +12,32 @@
 			onComplete: null,
 			onError: null,
 			pollRetryTimeout: 1000,
-			$element: null
+			element: null
 		}, options);
 		my.options = options;
 		my.current = 0;
 		my.total = -1; // unknown
 		my.pnotify = false;
 		my.execute();
+	}
+
+	ConcreteProgressiveOperation.prototype.setProgressBarStatus = function(completion, remaining) {
+		var my = this,
+			$remainingElement = my.options.element.find('div[data-progress-bar=remaining]');
+
+		if (remaining > -1) {
+			my.options.element.find('div.progress').removeClass('progress-striped active');
+			my.options.element.find('div.progress-bar').css('width', completion + '%');
+
+			if (!$remainingElement.length) {
+				my.options.element.append('<div data-progress-bar="remaining"></div>');
+				$remainingElement = my.options.element.find('div[data-progress-bar=remaining]');
+			}
+			$remainingElement.html(remaining + ' remaining');
+		} else {
+			my.options.element.find('div.progress').addClass('progress-striped active');
+			my.options.element.find('div.progress-bar').css('width', '100%');
+		}
 	}
 
 	ConcreteProgressiveOperation.prototype.poll = function(queue, token, remaining) {
@@ -31,9 +50,14 @@
 		}
 
 		my.current += my.total - remaining;
-		NProgress.set((my.total - remaining) / my.total);
 
-		$('div[data-wrapper=progressive-operation-status]').html(remaining + ' remaining');
+		if (!my.options.element) {
+			NProgress.set((my.total - remaining) / my.total);
+			$('div[data-wrapper=progressive-operation-status]').html(remaining + ' remaining');
+		} else {
+			var completion = ((my.total - remaining) / my.total) * 100;
+			my.setProgressBarStatus(completion, remaining);
+		}
 
 		$.concreteAjax({
 			loader: false,
@@ -48,9 +72,12 @@
 					}, my.options.pollRetryTimeout);
 				} else {
 					setTimeout(function() {
-						// give the animation time to catch up.
-						NProgress.done();
-						my.pnotify.remove();
+						if (my.options.element) {
+							my.setProgressBarStatus(100, 0);
+						} else {
+							NProgress.done();
+							my.pnotify.remove();
+						}
 						if (typeof(my.options.onComplete) == 'function') {
 							my.options.onComplete(r);
 						}
@@ -63,23 +90,28 @@
 
 	ConcreteProgressiveOperation.prototype.startPolling = function(queue, token, remaining) {
 		var my = this;
-		my.pnotify = new PNotify({
-			text: '<div data-wrapper="progressive-operation-status">' + ccmi18n.progressiveOperationLoading + '</div>',
-			hide: false,
-			title: my.options.title,
-			buttons: {
-				closer: false
-			},
-			type: 'info',
-			icon: 'fa fa-refresh fa-spin'
-		});
+		if (!my.options.element) {
+
+			my.pnotify = new PNotify({
+				text: '<div data-wrapper="progressive-operation-status">' + ccmi18n.progressiveOperationLoading + '</div>',
+				hide: false,
+				title: my.options.title,
+				buttons: {
+					closer: false
+				},
+				type: 'info',
+				icon: 'fa fa-refresh fa-spin'
+			});
+		}
 
 		my.poll(queue, token, remaining);
 	}
 
 	ConcreteProgressiveOperation.prototype.execute = function() {
 		var my = this;
-		if (!my.options.$element) {
+		if (my.options.element) {
+			my.setProgressBarStatus(0, -1);
+		} else {
 			NProgress.set(0);
 		}
 
