@@ -34,4 +34,8 @@ $router->all('/thumbnails', 'Thumbnails::view');
 $router->all('/thumbnails/edit', 'Thumbnails\Edit::view');
 $router->all('/usage/{fID}', 'Usage::view');
 
+$router->all('/advanced_search/preset/edit', 'Preset\Edit::view');
+$router->all('/advanced_search/preset/edit/edit_search_preset', 'Preset\Edit::edit_search_preset');
+$router->all('/advanced_search/preset/delete', 'Preset\Delete::view');
+$router->all('/advanced_search/preset/delete/remove_search_preset', 'Preset\Delete::remove_search_preset');
 
