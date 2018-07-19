@@ -146,8 +146,6 @@ class Marketplace implements ApplicationAwareInterface
     {
         // Get the marketplace instance
         $marketplace = static::getInstance();
-        $marketplace->app->make('test');
-
         $file .= '?csiURL=' . urlencode($marketplace->getSiteURL()) . "&csiVersion=" . APP_VERSION;
 
         // Retreive the package
