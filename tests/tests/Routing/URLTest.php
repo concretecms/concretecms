@@ -115,32 +115,41 @@ class URLTest extends PHPUnit_Framework_TestCase
     public function testCanonicalURLRedirection()
     {
         $app = Core::make('app');
-        Config::set('concrete.seo.redirect_to_canonical_url', true);
-        $request = \Concrete\Core\Http\Request::create('http://www.awesome.com/path/to/site/index.php/dashboard?bar=1&foo=1');
+        $config = Core::make('config');
+        $original_redirect_to_canonical_url = $config->get('concrete.seo.redirect_to_canonical_url');
+        $original_trailing_slash = $config->get('concrete.seo.trailing_slash');
+        try {
+            $config->set('concrete.seo.redirect_to_canonical_url', true);
+            $config->set('concrete.seo.trailing_slash', false);
+            $request = \Concrete\Core\Http\Request::create('http://www.awesome.com/path/to/site/index.php/dashboard?bar=1&foo=1');
 
-        $site = $this->getMockBuilder(\Concrete\Core\Entity\Site\Site::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+            $site = $this->getMockBuilder(\Concrete\Core\Entity\Site\Site::class)
+                ->disableOriginalConstructor()
+                ->getMock();
+            
+            $liaison = $this->getMockBuilder(\Concrete\Core\Config\Repository\Liaison::class)
+                ->disableOriginalConstructor()
+                ->getMock();
+            
+            $liaison->expects($this->any())
+                ->method('get')
+                ->will($this->returnValueMap([
+                    ['seo.canonical_url', null, 'https://www2.myawesomesite.com:8080'],
+                    ['seo.canonical_url_alternative', null, 'https://www2.myawesomesite.com:8080'],
+                ]));
+            
+            
+            $site->expects($this->once())
+                ->method('getConfigRepository')
+                ->will($this->returnValue($liaison));
 
-        $liaison = $this->getMockBuilder(\Concrete\Core\Config\Repository\Liaison::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+            $response = $app->handleCanonicalURLRedirection($request, $site);
 
-        $liaison->expects($this->any())
-            ->method('get')
-            ->will($this->returnValueMap([
-                ['seo.canonical_url', null, 'https://www2.myawesomesite.com:8080'],
-                ['seo.trailing_slash', null, false],
-                ['seo.canonical_url_alternative', null, 'https://www2.myawesomesite.com:8080'],
-            ]));
-
-        $site->expects($this->once())
-            ->method('getConfigRepository')
-            ->will($this->returnValue($liaison));
-
-        $response = $app->handleCanonicalURLRedirection($request, $site);
-
-        $this->assertEquals('https://www2.myawesomesite.com:8080/path/to/site/index.php/dashboard?bar=1&foo=1', $response->getTargetUrl());
+            $this->assertEquals('https://www2.myawesomesite.com:8080/path/to/site/index.php/dashboard?bar=1&foo=1', $response->getTargetUrl());
+        } finally {
+            $config->set('concrete.seo.redirect_to_canonical_url', $original_redirect_to_canonical_url);
+            $config->set('concrete.seo.trailing_slash', $original_trailing_slash);
+        }
     }
 
     public function testCanonicalURLRedirectionSameDomain()
@@ -209,80 +218,57 @@ class URLTest extends PHPUnit_Framework_TestCase
     public function testPathSlashesRedirection()
     {
         $app = Core::make('app');
+        $config = Core::make('config');
 
+        $original_trailing_slash = $config->get('concrete.seo.trailing_slash');
         $site = $this->getMockBuilder(\Concrete\Core\Entity\Site\Site::class)
             ->disableOriginalConstructor()
             ->getMock();
+        try {
+            $config->set('concrete.seo.trailing_slash', false);
+            
+            $request = \Concrete\Core\Http\Request::create('http://xn--mgbh0fb.xn--kgbechtv/services');
+            $response = $app->handleURLSlashes($request, $site);
+            $this->assertNull($response);
 
-        $liaison = $this->getMockBuilder(\Concrete\Core\Config\Repository\Liaison::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+            $request = \Concrete\Core\Http\Request::create('http://xn--fsqu00a.xn--0zwm56d/services/');
+            $response = $app->handleURLSlashes($request, $site);
+            $this->assertEquals('http://例子.测试/services', $response->getTargetUrl());
 
-        $liaison->expects($this->any())
-            ->method('get')
-            ->will($this->returnValueMap([
-                ['seo.trailing_slash', null, false],
-            ]));
+            $request = \Concrete\Core\Http\Request::create('http://concrete5.dev/derp');
+            $response = $app->handleURLSlashes($request, $site);
+            $this->assertNull($response);
 
-        $site->expects($this->any())
-            ->method('getConfigRepository')
-            ->will($this->returnValue($liaison));
+            $request = \Concrete\Core\Http\Request::create('http://concrete5.dev/index.php?cID=1');
+            $response = $app->handleURLSlashes($request, $site);
+            $this->assertNull($response);
 
-        $request = \Concrete\Core\Http\Request::create('http://xn--mgbh0fb.xn--kgbechtv/services');
-        $response = $app->handleURLSlashes($request, $site);
-        $this->assertNull($response);
+            $request = \Concrete\Core\Http\Request::create('http://www.awesome.com/about-us/now');
+            $response = $app->handleURLSlashes($request, $site);
+            $this->assertNull($response);
 
-        $request = \Concrete\Core\Http\Request::create('http://xn--fsqu00a.xn--0zwm56d/services/');
-        $response = $app->handleURLSlashes($request, $site);
-        $this->assertEquals('http://例子.测试/services', $response->getTargetUrl());
+            $request = \Concrete\Core\Http\Request::create('http://www.awesome.com/about-us/now/');
+            $response = $app->handleURLSlashes($request, $site);
+            $this->assertInstanceOf('\Concrete\Core\Routing\RedirectResponse', $response);
+            $this->assertEquals('http://www.awesome.com/about-us/now', $response->getTargetUrl());
 
-        $request = \Concrete\Core\Http\Request::create('http://concrete5.dev/derp');
-        $response = $app->handleURLSlashes($request, $site);
-        $this->assertNull($response);
+            $request = \Concrete\Core\Http\Request::create('http://www.awesome.com/index.php/about-us/now/?bar=1&foo=2');
+            $response = $app->handleURLSlashes($request, $site);
+            $this->assertInstanceOf('\Concrete\Core\Routing\RedirectResponse', $response);
+            $this->assertEquals('http://www.awesome.com/index.php/about-us/now?bar=1&foo=2', $response->getTargetUrl());
 
-        $request = \Concrete\Core\Http\Request::create('http://concrete5.dev/index.php?cID=1');
-        $response = $app->handleURLSlashes($request, $site);
-        $this->assertNull($response);
+            $config->set('concrete.seo.trailing_slash', true);
 
-        $request = \Concrete\Core\Http\Request::create('http://www.awesome.com/about-us/now');
-        $response = $app->handleURLSlashes($request, $site);
-        $this->assertNull($response);
-
-        $request = \Concrete\Core\Http\Request::create('http://www.awesome.com/about-us/now/');
-        $response = $app->handleURLSlashes($request, $site);
-        $this->assertInstanceOf('\Concrete\Core\Routing\RedirectResponse', $response);
-        $this->assertEquals('http://www.awesome.com/about-us/now', $response->getTargetUrl());
-
-        $request = \Concrete\Core\Http\Request::create('http://www.awesome.com/index.php/about-us/now/?bar=1&foo=2');
-        $response = $app->handleURLSlashes($request, $site);
-        $this->assertInstanceOf('\Concrete\Core\Routing\RedirectResponse', $response);
-        $this->assertEquals('http://www.awesome.com/index.php/about-us/now?bar=1&foo=2', $response->getTargetUrl());
-
-        $site = $this->getMockBuilder(\Concrete\Core\Entity\Site\Site::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $liaison = $this->getMockBuilder(\Concrete\Core\Config\Repository\Liaison::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $liaison->expects($this->any())
-            ->method('get')
-            ->will($this->returnValueMap([
-                ['seo.trailing_slash', null, true],
-            ]));
-
-        $site->expects($this->any())
-            ->method('getConfigRepository')
-            ->will($this->returnValue($liaison));
-
-        $request = \Concrete\Core\Http\Request::create('http://www.awesome.com:8080/index.php/about-us/now/?bar=1&foo=2');
-        $response = $app->handleURLSlashes($request, $site);
-        $this->assertNull($response);
-
-        $request = \Concrete\Core\Http\Request::create('http://www.awesome.com:8080/index.php/about-us/now?bar=1&foo=2');
-        $response = $app->handleURLSlashes($request, $site);
-        $this->assertEquals('http://www.awesome.com:8080/index.php/about-us/now/?bar=1&foo=2', $response->getTargetUrl());
+            $request = \Concrete\Core\Http\Request::create('http://www.awesome.com:8080/index.php/about-us/now/?bar=1&foo=2');
+            $response = $app->handleURLSlashes($request, $site);
+            $this->assertNull($response);
+    
+            $request = \Concrete\Core\Http\Request::create('http://www.awesome.com:8080/index.php/about-us/now?bar=1&foo=2');
+            $response = $app->handleURLSlashes($request, $site);
+            $this->assertEquals('http://www.awesome.com:8080/index.php/about-us/now/?bar=1&foo=2', $response->getTargetUrl());
+        } finally {
+            $config->set('concrete.seo.trailing_slash', $original_trailing_slash);
+        }
     }
 
     public function testUrlRewritingAll()

@@ -302,12 +302,11 @@ class Application extends Container
      */
     public function handleURLSlashes(SymfonyRequest $request, Site $site)
     {
-        $siteConfig = $site->getConfigRepository();
-        $trailing_slashes = $siteConfig->get('seo.trailing_slash');
         $path = $request->getPathInfo();
-
         // If this isn't the homepage
         if ($path && $path != '/') {
+            $config = $this->make('config');
+            $trailing_slashes = $config->get('concrete.seo.trailing_slash');
             // If the trailing slash doesn't match the config, return a redirect response
             if (($trailing_slashes && substr($path, -1) != '/') ||
                 (!$trailing_slashes && substr($path, -1) == '/')) {
@@ -348,7 +347,7 @@ class Application extends Container
                 }
                 $canonicalUrl = UrlImmutable::createFromUrl(
                     $canonicalUrlString,
-                    (bool) $siteConfig->get('seo.trailing_slash')
+                    (bool) $globalConfig->get('concrete.seo.trailing_slash')
                 );
                 // Set the parts of the current URL that are specified in the canonical URL, including host,
                 // scheme, port. Set scheme first so that our port can use the magic "set if necessary" method.
