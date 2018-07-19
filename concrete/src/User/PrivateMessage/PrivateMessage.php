@@ -147,6 +147,21 @@ class PrivateMessage extends ConcreteObject implements SubjectInterface
         return $msgBody;
     }
 
+    public function isMessageUnread()
+    {
+        return $this->msgIsUnread;
+    }
+
+    public function isMessageReplied()
+    {
+        return $this->msgIsReplied;
+    }
+
+    public function isMessageNew()
+    {
+        return $this->msgIsNew;
+    }
+
     public function delete()
     {
         $db = Loader::db();
