@@ -239,7 +239,9 @@
 			if (event.which == 3) {
 				my.handleMenuClick(event, $row);
 			} else {
-				$selected.removeClass('ccm-search-select-selected');
+				if (!event.metaKey) {
+					$selected.removeClass('ccm-search-select-selected');
+				}
 				if (!$row.hasClass('ccm-search-select-selected')) {
 					// Select the row
 					$row.addClass('ccm-search-select-selected');
