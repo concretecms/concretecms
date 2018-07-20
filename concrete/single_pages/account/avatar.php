@@ -2,7 +2,7 @@
 
 $save_url = \Concrete\Core\Url\Url::createFromUrl($view->action('save_avatar'));
 $save_url = $save_url->setQuery(array(
-    'ccm_token' => \Core::make('token')->generate('avatar/save_avatar'),
+    'ccm_token' => $token->generate('avatar/save_avatar'),
 ));
 ?>
 
@@ -19,6 +19,13 @@ $save_url = $save_url->setQuery(array(
             src="<?= $profile->getUserAvatar()->getPath() ?>">
     </avatar-cropper>
 
+    <?php if ($profile->hasAvatar()) { ?>
+        <form method="post" action="<?=$view->action('delete')?>">
+            <?=$token->output('delete_avatar')?>
+            <button class="btn btn-danger btn-sm"><?=t('Delete Avatar')?></button>
+        </form>
+    <?php } ?>
+
     <br/>
 
     <div class="ccm-dashboard-form-actions-wrapper">
@@ -27,6 +34,3 @@ $save_url = $save_url->setQuery(array(
         </div>
     </div>
 </div>
-
-
-<script src="/concrete/js/components/main.bundle.js" defer></script>

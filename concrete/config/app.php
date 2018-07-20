@@ -1064,6 +1064,9 @@ return [
         'core/calendar/admin' => [
             ['javascript', 'js/calendar/admin.js', ['minify' => false]],
         ],
+		'core/avatar' => [
+			['javascript', 'js/components/avatar.bundle.js', ['minify' => false]],
+		],
         'core/notification' => [
             ['javascript', 'js/notification.js', ['minify' => false]],
         ],
@@ -1164,6 +1167,11 @@ return [
                 ['javascript', 'ace'],
             ],
         ],
+		'core/avatar' => [
+			[
+				['javascript', 'core/avatar'],
+			],
+		],
         'core/notification' => [
             [
                 ['javascript', 'core/notification'],
