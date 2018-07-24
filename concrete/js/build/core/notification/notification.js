@@ -57,6 +57,7 @@
         my.$element.on('click', 'div.ccm-pagination-wrapper a', function(e) {
             e.preventDefault();
             my.showLoader();
+            window.scrollTo(0, 0);
             $.concreteAjax({
                 loader: false,
                 dataType: 'html',
