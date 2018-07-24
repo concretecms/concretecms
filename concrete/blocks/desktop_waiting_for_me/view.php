@@ -1,10 +1,23 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
-<div class="ccm-block-desktop-waiting-for-me">
+<div class="ccm-block-desktop-waiting-for-me" data-wrapper="desktop-waiting-for-me">
+
+
     <div data-list="notification">
 
-    <h3><?=t('Waiting For Me')?></h3>
+        <h3><?=t('Waiting For Me')?>
+            <i class="ccm-block-desktop-waiting-for-me-loader fa fa-refresh fa-spin"></i>
+        </h3>
 
-    <?php
+
+        <div data-form="notification">
+            <form method="get" action="<?=$view->action('reload_results')?>">
+            <div class="form-group" style="font-size: 12px">
+                <?=$form->select('filter', $filterValues, $filter)?>
+            </div>
+            </form>
+        </div>
+
+        <?php
 
         foreach($items as $item) {
             $notification = $item->getNotification();
@@ -48,7 +61,16 @@
 
         <p <?php if (count($items)) { ?> style="display: none"<?php }  ?> data-notification-description="empty"><?=t('There are no items that currently need your attention.')?></p>
 
+        <?php if ($pagination && $pagination->haveToPaginate()) {
+            $pagination->setBaseURL($view->action('reload_results') . '?filter=' . $activeFilter);
+            ?>
+
+            <?=$pagination->renderDefaultView(); ?>
+
+        <?php } ?>
+
     </div>
+
 
 
     <script type="text/javascript">
