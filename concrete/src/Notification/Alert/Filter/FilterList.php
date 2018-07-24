@@ -40,7 +40,7 @@ class FilterList
 
     /**
      * @param string $key
-     * @return FilterInterface
+     * @return FilterInterface|null
      */
     public function getFilterByKey($key)
     {
