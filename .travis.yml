@@ -13,6 +13,7 @@ matrix:
   include:
     - language: node_js
       dist: trusty
+      node_js: lts/*
       env: ACTION="js_check"
   allow_failures:
     - php: nightly
