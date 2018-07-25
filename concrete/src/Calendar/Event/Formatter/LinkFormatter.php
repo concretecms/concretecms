@@ -64,7 +64,11 @@ class LinkFormatter implements LinkFormatterInterface
         $page = $occurrence->getEvent()->getPageObject();
         $href = 'javascript:void(0)';
         if (!$occurrence->getVersion()->isApproved()) {
-            $value .= '<i class="fa fa-exclamation-circle"></i>';
+            // Output a tooltip with text that makes it clear that there are unpublished changes
+            $value .= sprintf(
+                '<i class="fa fa-exclamation-circle z-indexable z-1000" data-toggle="tooltip" data-placement="bottom" title="%s"></i>',
+                t('This event has unpublished versions.')
+            );
         }
         $background = $this->getEventOccurrenceBackgroundColor($occurrence);
         $text = $this->getEventOccurrenceTextColor($occurrence);
