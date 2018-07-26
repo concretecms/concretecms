@@ -141,6 +141,8 @@ return [
         // Validator
         'core_validator' => '\Concrete\Core\Validator\ValidatorServiceProvider',
         'core_validator_password' => '\Concrete\Core\Validator\PasswordValidatorServiceProvider',
+        'core_validator_user_name' => '\Concrete\Core\Validator\UserNameValidatorServiceProvider',
+        'core_validator_user_email' => '\Concrete\Core\Validator\UserEmailValidatorServiceProvider',
 
         // Express
         'core_attribute' => '\Concrete\Core\Attribute\AttributeServiceProvider',
@@ -1062,6 +1064,9 @@ return [
         'core/calendar/admin' => [
             ['javascript', 'js/calendar/admin.js', ['minify' => false]],
         ],
+		'core/avatar' => [
+			['javascript', 'js/components/avatar.bundle.js', ['minify' => false]],
+		],
         'core/notification' => [
             ['javascript', 'js/notification.js', ['minify' => false]],
         ],
@@ -1162,6 +1167,11 @@ return [
                 ['javascript', 'ace'],
             ],
         ],
+		'core/avatar' => [
+			[
+				['javascript', 'core/avatar'],
+			],
+		],
         'core/notification' => [
             [
                 ['javascript', 'core/notification'],

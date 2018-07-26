@@ -6,9 +6,9 @@ return [
      *
      * @var string
      */
-    'version' => '8.4.1a3',
-    'version_installed' => '8.4.1a3',
-    'version_db' => '20180627000000', // the key of the latest database migration
+    'version' => '8.4.2b1',
+    'version_installed' => '8.4.2b1',
+    'version_db' => '20180716000000', // the key of the latest database migration
 
     /*
      * Installation status
@@ -51,6 +51,13 @@ return [
          * @var string (message|debug)
          */
         'detail' => 'message',
+
+        /*
+         * Error reporting level
+         *
+         * @var int|null
+         */
+        'error_reporting' => null,
     ],
 
     /*
@@ -165,7 +172,7 @@ return [
         /*
          * Cache full page
          *
-         * @var bool|string (block|all)
+         * @var bool|string (blocks|all)
          */
         'pages' => false,
 
@@ -452,6 +459,12 @@ return [
         'basic_thumbnailer_generation_strategy' => 'now',
         'help_overlay' => true,
         'require_version_comments' => false,
+        /*
+         * Control whether a block type can me moved to different block type sets
+         *
+         * @var bool
+         */
+        'enable_move_blocktypes_across_sets' => false,
     ],
 
     'theme' => [
@@ -593,6 +606,7 @@ return [
             'developer' => 'http://documentation.concrete5.org/developers',
             'user' => 'http://documentation.concrete5.org/editors',
             'forum' => 'http://www.concrete5.org/community/forums',
+            'slack' => 'https://www.concrete5.org/slack',
         ],
         'paths' => [
             'menu_help_service' => '/tools/get_remote_help_list/',
@@ -739,7 +753,12 @@ return [
         'username' => [
             'maximum' => 64,
             'minimum' => 3,
-            'allow_spaces' => false,
+            'allowed_characters' => [
+                'boundary' => 'A-Za-z0-9',
+                'middle' => 'A-Za-z0-9_\.',
+                'requirement_string' => 'A username may only contain letters, numbers, dots (not at the beginning/end), underscores (not at the beginning/end).',
+                'error_string' => 'A username may only contain letters, numbers, dots (not at the beginning/end), underscores (not at the beginning/end).',
+            ],
         ],
         'password' => [
             'maximum' => 128,
@@ -748,9 +767,21 @@ return [
             'hash_cost_log2' => 12,
             'legacy_salt' => '',
         ],
+        'email' => [
+            'test_mx_record' => false,
+            'strict' => true,
+        ],
         'private_messages' => [
             'throttle_max' => 20,
             'throttle_max_timespan' => 15, // minutes
+        ],
+
+        'deactivation' => [
+            'enable_login_threshold_deactivation' => false,
+            'login' => [
+                'threshold' => 120, // in days
+            ],
+            'message' => 'This user is inactive. Please contact us regarding this account.',
         ],
     ],
 
@@ -847,21 +878,6 @@ return [
      * ------------------------------------------------------------------------
      */
     'seo' => [
-        'tracking' => [
-            /*
-             * User defined tracking code
-             *
-             * @var string
-             */
-            'code' => '',
-
-            /*
-             * Tracking code position
-             *
-             * @var string (top|bottom)
-             */
-            'code_position' => 'bottom',
-        ],
         'exclude_words' => 'a, an, as, at, before, but, by, for, from, is, in, into, like, of, off, on, onto, per, ' .
             'since, than, the, this, that, to, up, via, with',
 

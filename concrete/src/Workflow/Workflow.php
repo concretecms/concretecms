@@ -177,6 +177,7 @@ abstract class Workflow extends ConcreteObject implements \Concrete\Core\Permiss
         $r = $db->GetRow('select WorkflowTypes.wftHandle, WorkflowTypes.pkgID from Workflows inner join WorkflowTypes on Workflows.wftID = WorkflowTypes.wftID where Workflows.wfID = ?',
             array($wfID));
         if ($r['wftHandle']) {
+            $prefix = null;
             $class = '\\Core\\Workflow\\' . Loader::helper('text')->camelcase($r['wftHandle']) . 'Workflow';
             if ($r['pkgID']) {
                 $pkg = Package::getByID($r['pkgID']);

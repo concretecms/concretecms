@@ -103,7 +103,9 @@ class FormBlockSubmissionEmailNotification extends AbstractFormBlockSubmissionNo
             }
             $mh->addParameter('attributes', $this->getAttributeValues($entry));
             $mh->load('block_express_form_submission');
-            $mh->setSubject(t('Website Form Submission – %s', $this->getFormName($entry)));
+            if (empty($mh->getSubject())) {
+                $mh->setSubject(t('Website Form Submission – %s', $this->getFormName($entry)));
+            }
             $mh->sendMail();
             //we have to delete the files as they are created automatically and are not attached to the entry save
             if (!$this->blockController->storeFormSubmission) {

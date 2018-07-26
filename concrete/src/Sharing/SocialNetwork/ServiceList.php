@@ -28,7 +28,7 @@ class ServiceList
         );
 
         if ($additionalSocialNetworks = \Config::get('concrete.social.additional_services')) {
-            $services = array_merge($services, $additionalSocialNetworks);
+            $services = $additionalSocialNetworks + $services;
         }
 
         return $services;

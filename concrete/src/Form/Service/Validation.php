@@ -2,6 +2,8 @@
 namespace Concrete\Core\Form\Service;
 
 use Loader;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Validator\String\EmailValidator;
 
 /**
  * \@package    Helpers
@@ -157,9 +159,10 @@ class Validation
      */
     public function test()
     {
-        $val = Loader::helper('validation/strings');
-        $num = Loader::helper('validation/numbers');
-        $fil = Loader::helper('validation/file');
+        $app = Application::getFacadeApplication();
+        $val = $app->make('helper/validation/strings');
+        $num = $app->make('helper/validation/numbers');
+        $fil = $app->make('helper/validation/file');
 
         // loop through all the fields in the array, and run whatever validation
         // the validate parameter says is required
@@ -174,7 +177,7 @@ class Validation
                     }
                     break;
                 case self::VALID_TOKEN:
-                    $vt = Loader::helper('validation/token');
+                    $vt = $app->make('helper/validation/token');
                     if (!$vt->validate($f->value)) {
                         $this->fieldsInvalid[] = $f;
                     }
@@ -210,7 +213,7 @@ class Validation
                     }
                     break;
                 case self::VALID_EMAIL:
-                    if (!$val->email($fieldValue)) {
+                    if (!$app->make(EmailValidator::class)->isValid($fieldValue)) {
                         $this->fieldsInvalid[] = $f;
                     }
                     break;

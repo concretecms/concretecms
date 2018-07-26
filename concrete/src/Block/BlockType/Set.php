@@ -1,113 +1,247 @@
 <?php
+
 namespace Concrete\Core\Block\BlockType;
 
+use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Block\BlockType\BlockType as BlockTypeEntity;
 use Concrete\Core\Foundation\ConcreteObject;
-use Doctrine\DBAL\Connection;
-use Loader;
-use Core;
 use Concrete\Core\Package\PackageList;
+use Concrete\Core\Support\Facade\Application;
 
 class Set extends ConcreteObject
 {
+    /**
+     * Get a block type set given its ID.
+     *
+     * @param int $btsID
+     *
+     * @return static|null
+     */
     public static function getByID($btsID)
     {
-        $cache = Core::make('cache/request');
-        $identifier = sprintf('block/type/set/%s', $btsID);
-        $item = $cache->getItem($identifier);
-        if (!$item->isMiss()) {
-            return $item->get();
+        $result = null;
+        $btsID = (int) $btsID;
+        if ($btsID !== 0) {
+            $app = Application::getFacadeApplication();
+            $cache = $app->make('cache/request');
+            $identifier = sprintf('block/type/set/%s', $btsID);
+            $item = $cache->getItem($identifier);
+            if ($item->isMiss()) {
+                $item->lock();
+                $db = $app->make(Connection::class);
+                $row = $db->fetchAssoc('select btsID, btsHandle, pkgID, btsName from BlockTypeSets where btsID = ?', [$btsID]);
+                if ($row !== false) {
+                    $result = new static();
+                    $result->setPropertiesFromArray($row);
+                }
+                $item->set($result)->save();
+            } else {
+                $result = $item->get();
+            }
         }
 
-        $item->lock();
-
-        $db = Loader::db();
-        $row = $db->GetRow('select btsID, btsHandle, pkgID, btsName from BlockTypeSets where btsID = ?', array($btsID));
-        if (isset($row['btsID'])) {
-            $akc = new static();
-            $akc->setPropertiesFromArray($row);
-            $cache->save($item->set($akc));
-
-            return $akc;
-        }
-    }
-
-    public static function getByHandle($btsHandle)
-    {
-        $db = Loader::db();
-        $row = $db->GetRow('select btsID, btsHandle, pkgID, btsName from BlockTypeSets where btsHandle = ?', array($btsHandle));
-        if (isset($row['btsID'])) {
-            $akc = new static();
-            $akc->setPropertiesFromArray($row);
-
-            return $akc;
-        }
-    }
-
-    public static function getListByPackage($pkg)
-    {
-        $db = Loader::db();
-        $list = array();
-        $r = $db->Execute('select btsID from BlockTypeSets where pkgID = ? order by btsID asc', array($pkg->getPackageID()));
-        while ($row = $r->FetchRow()) {
-            $list[] = static::getByID($row['btsID']);
-        }
-        $r->Close();
-
-        return $list;
+        return $result;
     }
 
     /**
+     * Get a block type set given its handle.
+     *
+     * @param string $btsHandle
+     *
+     * @return static|null
+     */
+    public static function getByHandle($btsHandle)
+    {
+        $result = null;
+        $btsHandle = (string) $btsHandle;
+        if ($btsHandle !== '') {
+            $app = Application::getFacadeApplication();
+            $db = $app->make(Connection::class);
+            $row = $db->fetchAssoc('select btsID, btsHandle, pkgID, btsName from BlockTypeSets where btsHandle = ?', [$btsHandle]);
+            if ($row !== false) {
+                $result = new static();
+                $result->setPropertiesFromArray($row);
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get the list of block type sets defined by a package.
+     *
+     * @param \Concrete\Core\Entity\Package|\Concrete\Core\Package\Package|int $pkg
+     *
+     * @return static[]
+     */
+    public static function getListByPackage($pkg)
+    {
+        $result = [];
+        $pkgID = (int) (is_object($pkg) ? $pkg->getPackageID() : $pkg);
+        if ($pkgID !== 0) {
+            $app = Application::getFacadeApplication();
+            $db = $app->make(Connection::class);
+            $rs = $db->executeQuery('select btsID from BlockTypeSets where pkgID = ? order by btsID asc', [$pkgID]);
+            while (($btsID = $rs->fetchColumn()) !== false) {
+                $result[] = static::getByID($btsID);
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get the list of block type sets.
+     *
+     * @param string[] $excluded a list of block type set handles to be exluded
+     *
      * @return static[]
      */
     public static function getList($excluded = ['core_desktop'])
     {
-        $db = Loader::db();
-        $list = array();
-        if (count($excluded)) {
-            $r = $db->executeQuery('select btsID from BlockTypeSets where btsHandle not in (?) order by btsDisplayOrder asc',
-                array($excluded),
-                array(Connection::PARAM_STR_ARRAY));
+        $result = [];
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        if (empty($excluded)) {
+            $rs = $db->executeQuery('select btsID from BlockTypeSets order by btsDisplayOrder asc');
         } else {
-            $r = $db->executeQuery('select btsID from BlockTypeSets order by btsDisplayOrder asc');
+            $rs = $db->executeQuery('select btsID from BlockTypeSets where btsHandle not in (?) order by btsDisplayOrder asc',
+                [$excluded],
+                [Connection::PARAM_STR_ARRAY]
+            );
         }
-        while ($row = $r->fetch()) {
-            $list[] = static::getByID($row['btsID']);
+        while (($btsID = $rs->fetchColumn()) !== false) {
+            $result[] = static::getByID($btsID);
         }
-        $r->Close();
 
-        return $list;
+        return $result;
     }
 
+    /**
+     * Create a new block type set.
+     *
+     * @param string $btsHandle
+     * @param string $btsName
+     * @param \Concrete\Core\Entity\Package|\Concrete\Core\Package\Package|int|false $pkg
+     *
+     * @return static
+     */
+    public static function add($btsHandle, $btsName, $pkg = false)
+    {
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $pkgID = (int) (is_object($pkg) ? $pkg->getPackageID() : $pkg);
+        $displayOrder = $db->fetchColumn('select max(btsDisplayOrder) from BlockTypeSets');
+        if ($displayOrder === null) {
+            $displayOrder = 0;
+        } else {
+            ++$displayOrder;
+        }
+        $db->insert(
+            'BlockTypeSets',
+            [
+                'btsHandle' => (string) $btsHandle,
+                'btsName' => (string) $btsName,
+                'pkgID' => $pkgID,
+            ]
+        );
+        $id = $db->lastInsertId();
+
+        $bs = static::getByID($id);
+
+        return $bs;
+    }
+
+    /**
+     * Export all the block type sets to a SimpleXMLElement element.
+     *
+     * @param \SimpleXMLElement $xml The parent SimpleXMLElement element
+     */
+    public static function exportList($xml)
+    {
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $bxml = $xml->addChild('blocktypesets');
+        $rs = $db->executeQuery('select btsID from BlockTypeSets order by btsID asc');
+        while (($btsID = $rs->fetchColumn()) !== false) {
+            $bts = static::getByID($btsID);
+            $bts->export($bxml);
+        }
+    }
+
+    /**
+     * Get the list of block types that don't belong to any block type set.
+     *
+     * @param bool $includeInternalBlockTypes
+     *
+     * @return \Concrete\Core\Entity\Block\BlockType\BlockType[]
+     */
+    public static function getUnassignedBlockTypes($includeInternalBlockTypes = false)
+    {
+        $result = [];
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $rs = $db->executeQuery(<<<EOT
+select BlockTypes.btID
+from BlockTypes
+left join BlockTypeSetBlockTypes on BlockTypes.btID = BlockTypeSetBlockTypes.btID
+left join BlockTypeSets on BlockTypeSetBlockTypes.btsID = BlockTypeSets.btsID
+where BlockTypeSets.btsID is null
+order by BlockTypes.btDisplayOrder asc
+EOT
+        );
+        while (($btID = $rs->fetchColumn()) !== false) {
+            $bt = BlockType::getByID($btID);
+            if ($bt !== null) {
+                if ($includeInternalBlockTypes || !$bt->isBlockTypeInternal()) {
+                    $result[] = $bt;
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get the block type set ID.
+     *
+     * @return int
+     */
     public function getBlockTypeSetID()
     {
         return $this->btsID;
     }
+
+    /**
+     * Get the block type set handle.
+     *
+     * @return string
+     */
     public function getBlockTypeSetHandle()
     {
         return $this->btsHandle;
     }
+
+    /**
+     * Get the block type set name.
+     *
+     * @return string
+     */
     public function getBlockTypeSetName()
     {
         return $this->btsName;
     }
-    public function getPackageID()
-    {
-        return $this->pkgID;
-    }
-    public function getPackageHandle()
-    {
-        return PackageList::getHandle($this->pkgID);
-    }
 
-    /** Returns the display name for this instance (localized and escaped accordingly to $format)
+    /**
+     * Get the block type set name (localized and escaped accordingly to $format).
+     *
      * @param string $format = 'html' Escape the result in html format (if $format is 'html'). If $format is 'text' or any other value, the display name won't be escaped.
      *
      * @return string
      */
     public function getBlockTypeSetDisplayName($format = 'html')
     {
-        $value = tc('BlockTypeSetName', $this->btsName);
+        $value = tc('BlockTypeSetName', $this->getBlockTypeSetName());
         switch ($format) {
             case 'html':
                 return h($value);
@@ -116,64 +250,147 @@ class Set extends ConcreteObject
                 return $value;
         }
     }
+
+    /**
+     * Get the ID of the package that defined this set.
+     *
+     * @return int|null
+     */
+    public function getPackageID()
+    {
+        return $this->pkgID;
+    }
+
+    /**
+     * Get the handle of the package that defined this set.
+     *
+     * @return string|false
+     */
+    public function getPackageHandle()
+    {
+        $pkgID = $this->getPackageID();
+
+        return empty($pkgID) ? false : PackageList::getHandle($pkgID);
+    }
+
+    /**
+     * Update the name of this set.
+     *
+     * @param string $btsName
+     */
     public function updateBlockTypeSetName($btsName)
     {
+        $btsName = (string) $btsName;
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $db->update('BlockTypeSets', ['btsName' => $btsName], ['btsID' => $this->getBlockTypeSetID()]);
         $this->btsName = $btsName;
-        $db = Loader::db();
-        $db->Execute("update BlockTypeSets set btsName = ? where btsID = ?", array($btsName, $this->btsID));
     }
 
+    /**
+     * Update the handle of this set.
+     *
+     * @param string $btsHandle
+     */
     public function updateBlockTypeSetHandle($btsHandle)
     {
+        $btsHandle = (string) $btsHandle;
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $db->update('BlockTypeSets', ['btsHandle' => $btsHandle], ['btsID' => $this->getBlockTypeSetID()]);
         $this->btsHandle = $btsHandle;
-        $db = Loader::db();
-        $db->Execute("update BlockTypeSets set btsHandle = ? where btsID = ?", array($btsHandle, $this->btsID));
     }
 
+    /**
+     * Update the display order of this set.
+     *
+     * @param int $displayOrder
+     */
+    public function updateBlockTypeSetDisplayOrder($displayOrder)
+    {
+        $displayOrder = (string) $displayOrder;
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $db->update('BlockTypeSets', ['btsDisplayOrder' => $displayOrder], ['btsID' => $this->getBlockTypeSetID()]);
+    }
+
+    /**
+     * Associate a block type to this set.
+     *
+     * @param \Concrete\Core\Entity\Block\BlockType\BlockType $bt
+     */
     public function addBlockType(BlockTypeEntity $bt)
     {
-        $db = Loader::db();
-        $no = $db->GetOne("select count(btID) from BlockTypeSetBlockTypes where btID = ? and btsID = ?", array($bt->getBlockTypeID(), $this->getBlockTypeSetID()));
-        if ($no < 1) {
-            $types = $db->GetOne('select count(btID) from BlockTypeSetBlockTypes where btsID = ?', array($this->getBlockTypeSetID()));
-            $displayOrder = 0;
-            if ($types > 0) {
-                $displayOrder = $db->GetOne('select max(displayOrder) from BlockTypeSetBlockTypes where btsID = ?', array($this->getBlockTypeSetID()));
+        if (!$this->contains($bt)) {
+            $app = Application::getFacadeApplication();
+            $db = $app->make(Connection::class);
+            $displayOrder = $db->fetchColumn('select max(displayOrder) from BlockTypeSetBlockTypes where btsID = ?', [$this->getBlockTypeSetID()]);
+            if ($displayOrder === null) {
+                $displayOrder = 0;
+            } else {
                 ++$displayOrder;
             }
-
-            $db->Execute('insert into BlockTypeSetBlockTypes (btsID, btID, displayOrder) values (?, ?, ?)', array($this->getBlockTypeSetID(), $bt->getBlockTypeID(), $displayOrder));
+            $db->insert(
+                'BlockTypeSetBlockTypes',
+                [
+                    'btsID' => $this->getBlockTypeSetID(),
+                    'btID' => $bt->getBlockTypeID(),
+                    'displayOrder' => $displayOrder,
+                ]
+            );
         }
     }
 
+    /**
+     * Update the display order of a block type contained in this set.
+     *
+     * @param \Concrete\Core\Entity\Block\BlockType\BlockType $bt The block type to be updated
+     * @param int $displayOrder the new display order of the blocktype inside this set
+     */
+    public function setBlockTypeDisplayOrder(BlockTypeEntity $bt, $displayOrder)
+    {
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $db->update(
+            'BlockTypeSetBlockTypes',
+            ['displayOrder' => $displayOrder],
+            ['btID' => $bt->getBlockTypeID(), 'btsID' => $this->getBlockTypeSetID()]
+        );
+    }
+
+    /**
+     * Disassociate all the block types currently associated to this set.
+     */
     public function clearBlockTypes()
     {
-        $db = Loader::db();
-        $db->Execute('delete from BlockTypeSetBlockTypes where btsID = ?', array($this->btsID));
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $db->delete('BlockTypeSetBlockTypes', ['btsID' => $this->getBlockTypeSetID()]);
     }
 
-    public static function add($btsHandle, $btsName, $pkg = false)
+    /**
+     * Dissociate a specific block type currently associated to this set.
+     *
+     * @param \Concrete\Core\Entity\Block\BlockType\BlockType|int $bt A block type (or its ID)
+     */
+    public function deleteKey($bt)
     {
-        $db = Loader::db();
-        $pkgID = 0;
-        if (is_object($pkg)) {
-            $pkgID = $pkg->getPackageID();
+        $btID = (int) (is_object($bt) ? $bt->getBlockTypeID() : $bt);
+        if ($btID !== 0) {
+            $app = Application::getFacadeApplication();
+            $db = $app->make(Connection::class);
+            $db->delete('BlockTypeSetBlockTypes', ['btsID' => $this->getBlockTypeSetID(), 'btID' => $btID]);
+            $this->rescanDisplayOrder();
         }
-        $sets = $db->GetOne('select count(btsID) from BlockTypeSets');
-        $btsDisplayOrder = 0;
-        if ($sets > 0) {
-            $btsDisplayOrder = $db->GetOne('select max(btsDisplayOrder) from BlockTypeSets');
-            ++$btsDisplayOrder;
-        }
-
-        $db->Execute('insert into BlockTypeSets (btsHandle, btsName, pkgID) values (?, ?, ?)', array($btsHandle, $btsName, $pkgID));
-        $id = $db->Insert_ID();
-
-        $bs = static::getByID($id);
-
-        return $bs;
     }
 
+    /**
+     * Export this set to a SimpleXMLElement element.
+     *
+     * @param \SimpleXMLElement $axml The parent SimpleXMLElement element
+     *
+     * @return \SimpleXMLElement returns the newly created SimpleXMLElement element representing this set
+     */
     public function export($axml)
     {
         $bset = $axml->addChild('blocktypeset');
@@ -189,88 +406,113 @@ class Set extends ConcreteObject
         return $bset;
     }
 
-    public static function exportList($xml)
-    {
-        $bxml = $xml->addChild('blocktypesets');
-        $db = Loader::db();
-        $r = $db->Execute('select btsID from BlockTypeSets order by btsID asc');
-        $list = array();
-        while ($row = $r->FetchRow()) {
-            $list[] = static::getByID($row['btsID']);
-        }
-        foreach ($list as $bs) {
-            $bs->export($bxml);
-        }
-    }
-
+    /**
+     * Get the list of block types associated to this set.
+     *
+     * @return \Concrete\Core\Entity\Block\BlockType\BlockType[]
+     */
     public function getBlockTypes()
     {
-        $db = Loader::db();
-        $r = $db->Execute('select btID from BlockTypeSetBlockTypes where btsID = ? order by displayOrder asc', $this->getBlockTypeSetID());
-        $types = array();
-        while ($row = $r->FetchRow()) {
-            $bt = BlockType::getByID($row['btID']);
-            if (is_object($bt)) {
-                $types[] = $bt;
+        $result = [];
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $rs = $db->executeQuery('select btID from BlockTypeSetBlockTypes where btsID = ? order by displayOrder asc', [$this->getBlockTypeSetID()]);
+        while (($btID = $rs->fetchColumn()) !== false) {
+            $bt = BlockType::getByID($btID);
+            if ($bt !== null) {
+                $result[] = $bt;
             }
         }
 
-        return $types;
+        return $result;
     }
 
-    public function get()
-    {
-        $db = Loader::db();
-        $r = $db->Execute('select btID from BlockTypeSetBlockTypes where btsID = ? order by displayOrder asc', $this->getBlockTypeSetID());
-        $types = array();
-        while ($row = $r->FetchRow()) {
-            $bt = BlockType::getByHandle($row['btID']);
-            if (is_object($bt)) {
-                $types[] = $bt;
-            }
-        }
-
-        return $types;
-    }
-
+    /**
+     * Does this set contain a block type?
+     *
+     * @param \Concrete\Core\Entity\Block\BlockType\BlockType|int $bt A block type (or its ID)
+     *
+     * @return bool
+     */
     public function contains($bt)
     {
-        $db = Loader::db();
-        $r = $db->GetOne('select count(*) from BlockTypeSetBlockTypes where btsID = ? and btID = ?', array($this->getBlockTypeSetID(), $bt->getBlockTypeID()));
+        $result = false;
+        $btID = (int) (is_object($bt) ? $bt->getBlockTypeID() : $bt);
+        if ($btID !== 0) {
+            $app = Application::getFacadeApplication();
+            $db = $app->make(Connection::class);
+            $result = $db->fetchColumn('select btID from BlockTypeSetBlockTypes where btsID = ? and btID = ?', [$this->getBlockTypeSetID(), $btID]) !== false;
+        }
 
-        return $r > 0;
+        return $result;
     }
 
+    /**
+     * Get the display order of a block type as sorted for this set.
+     *
+     * @param \Concrete\Core\Entity\Block\BlockType\BlockType|int $bt A block type (or its ID)
+     *
+     * @return int|false Returns false if the block type is not associated to this set
+     */
     public function displayOrder($bt)
     {
-        $db = Loader::db();
-        $r = $db->GetOne('select displayOrder from BlockTypeSetBlockTypes where btsID = ? and btID = ?', array($this->getBlockTypeSetID(), $bt->getBlockTypeID()));
+        $result = false;
+        $btID = (int) (is_object($bt) ? $bt->getBlockTypeID() : $bt);
+        if ($btID !== 0) {
+            $app = Application::getFacadeApplication();
+            $db = $app->make(Connection::class);
+            $displayOrder = $db->fetchColumn('select displayOrder from BlockTypeSetBlockTypes where btsID = ? and btID = ?', [$this->getBlockTypeSetID(), $btID]);
+            if ($displayOrder !== false) {
+                $result = (int) $displayOrder;
+            }
+        }
 
-        return $r;
+        return $result;
     }
 
+    /**
+     * Delete this set.
+     */
     public function delete()
     {
-        $db = Loader::db();
-        $db->Execute('delete from BlockTypeSets where btsID = ?', array($this->getBlockTypeSetID()));
-        $db->Execute('delete from BlockTypeSetBlockTypes where btsID = ?', array($this->getBlockTypeSetID()));
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $db->delete('BlockTypeSetBlockTypes', ['btsID' => $this->getBlockTypeSetID()]);
+        $db->delete('BlockTypeSets', ['btsID' => $this->getBlockTypeSetID()]);
     }
 
-    public function deleteKey($bt)
+    /**
+     * @deprecated This method is an alias of getBlockTypes
+     *
+     * @return \Concrete\Core\Entity\Block\BlockType\BlockType[]
+     */
+    public function get()
     {
-        $db = Loader::db();
-        $db->Execute('delete from BlockTypeSetBlockTypes where btsID = ? and btID = ?', array($this->getBlockTypeSetID(), $bt->getBlockTypeID()));
-        $this->rescanDisplayOrder();
+        return $this->getBlockTypes();
     }
 
+    /**
+     * Regenereate the display order values of the block types associated to this set.
+     */
     protected function rescanDisplayOrder()
     {
-        $db = Loader::db();
-        $do = 1;
-        $r = $db->Execute('select btID from BlockTypeSetBlockTypes where btsID = ? order by displayOrder asc', $this->getBlockTypeSetID());
-        while ($row = $r->FetchRow()) {
-            $db->Execute('update BlockTypeSetBlockTypes set displayOrder = ? where btID = ? and btsID = ?', array($do, $row['btID'], $this->getBlockTypeSetID()));
-            ++$do;
+        $displayOrder = 0;
+        $btsID = $this->getBlockTypeSetID();
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $rs = $db->executeQuery('select btID from BlockTypeSetBlockTypes where btsID = ? order by displayOrder asc', [$btsID]);
+        while (($btID = $rs->fetchColumn()) !== false) {
+            $db->update(
+                'BlockTypeSetBlockTypes',
+                [
+                    'displayOrder' => $displayOrder,
+                ],
+                [
+                    'btID' => $btID,
+                    'btsID' => $btsID,
+                ]
+            );
+            ++$displayOrder;
         }
     }
 }

@@ -4,6 +4,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 $formDisplayUrl = URL::to('/dashboard/reports/forms', 'view', $entity->getEntityResultsNodeId());
 
+$subject = t('Website Form Submission – %s', $formName);
+
 $submittedData = '';
 foreach ($attributes as $value) {
     if ("image_file" != $value->getAttributeTypeObject()->getAttributeTypeHandle() || ($dataSaveEnabled && "image_file" == $value->getAttributeTypeObject()->getAttributeTypeHandle())) {
