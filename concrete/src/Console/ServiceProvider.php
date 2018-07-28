@@ -3,10 +3,10 @@
 namespace Concrete\Core\Console;
 
 use Concrete\Core\Foundation\Service\Provider;
-use Concrete\Core\Tools\Console\Doctrine\ConsoleRunner;
+use Concrete\Core\Tools\Console\Doctrine\ConsoleRunner as DeprecatedConsoleRunner;
 use Concrete\Core\Updater\Migrations\Configuration as MigrationsConfiguration;
 use Doctrine\DBAL\Migrations\OutputWriter;
-use Doctrine\DBAL\Migrations\Tools\Console\Command\AbstractCommand;
+use Doctrine\ORM\Tools\Console\ConsoleRunner;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 
@@ -72,6 +72,14 @@ class ServiceProvider extends Provider
      */
     public function register()
     {
+        /**
+         * @deprecated Use the final ConsoleRunner class directly
+         * @todo Remove in v9
+         */
+        if (!class_exists(DeprecatedConsoleRunner::class)) {
+            class_alias(ConsoleRunner::class, DeprecatedConsoleRunner::class);
+        }
+
         $this->app->extend(Application::class, function (Application $cli) {
             $this->cli = $cli;
             $this->setupDefaultCommands();
@@ -101,7 +109,6 @@ class ServiceProvider extends Provider
 
             // Add migration commands
             $migrationsConfiguration = $this->getMigrationConfiguration();
-            echo('Adding MigrationCommands');
 
             foreach ($this->migrationCommands as $migrationsCommand) {
                 $command = $this->app->make($migrationsCommand);
