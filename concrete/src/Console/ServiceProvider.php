@@ -101,10 +101,13 @@ class ServiceProvider extends Provider
 
             // Add migration commands
             $migrationsConfiguration = $this->getMigrationConfiguration();
-            $this->add($this->migrationCommands, true, function (AbstractCommand $command) use ($migrationsConfiguration) {
-                // Set the migration configuration
+            echo('Adding MigrationCommands');
+
+            foreach ($this->migrationCommands as $migrationsCommand) {
+                $command = $this->app->make($migrationsCommand);
                 $command->setMigrationConfiguration($migrationsConfiguration);
-            });
+                $this->add($command, true);
+            }
         }
     }
 
