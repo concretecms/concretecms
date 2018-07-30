@@ -370,7 +370,7 @@ class SitemapWriter
             $this->temporaryDirectory = $temporaryDirectory;
         }
 
-        return $result;
+        return $this->temporaryDirectory;
     }
 
     /**
