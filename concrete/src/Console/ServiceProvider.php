@@ -50,6 +50,9 @@ class ServiceProvider extends Provider
         Command\UpdatePackageCommand::class,
         Command\BlacklistClear::class,
         Command\JobCommand::class,
+        Command\RefreshEntitiesCommand::class,
+        Command\GenerateSitemapCommand::class,
+        Command\FillThumbnailsTableCommand::class,
         Command\UpdateCommand::class,
     ];
 
