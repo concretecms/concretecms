@@ -75,7 +75,7 @@ class Marketplace implements ApplicationAwareInterface
 
         if ($csToken != '') {
             $fh = $this->app->make('helper/file');
-            $csiURL = urlencode($this->urlResolver->resolve(['/']));
+            $csiURL = urlencode($this->getSiteURL());
             $url = $this->config->get('concrete.urls.concrete5') . $this->config->get('concrete.urls.paths.marketplace.connect_validate') . "?csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION;
             $vn = $this->app->make('helper/validation/numbers');
             $r = $this->get($url);
@@ -147,9 +147,7 @@ class Marketplace implements ApplicationAwareInterface
     {
         // Get the marketplace instance
         $marketplace = static::getInstance();
-        $marketplace->app->make('test');
-
-        $file .= '?csiURL=' . urlencode($marketplace->urlResolver->resolve(['/'])) . "&csiVersion=" . APP_VERSION;
+        $file .= '?csiURL=' . urlencode($marketplace->getSiteURL()) . "&csiVersion=" . APP_VERSION;
 
         // Retreive the package
         $pkg = $marketplace->get($file);
@@ -211,7 +209,7 @@ class Marketplace implements ApplicationAwareInterface
 
         // Retrieve the URL contents
         $csToken = $marketplace->databaseConfig->get('concrete.marketplace.token');
-        $csiURL = urlencode($marketplace->urlResolver->resolve(['/']));
+        $csiURL = urlencode($marketplace->getSiteURL());
         $url = $marketplace->config->get('concrete.urls.concrete5') . $marketplace->config->get('concrete.urls.paths.marketplace.purchases');
         $url .= "?csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION;
         $json = $marketplace->get($url);
@@ -283,7 +281,7 @@ class Marketplace implements ApplicationAwareInterface
                     ));
                 }
                 $csReferrer = urlencode($completeURL);
-                $csiURL = urlencode($this->urlResolver->resolve(['/']));
+                $csiURL = urlencode($this->getSiteURL());
 
                 // this used to be the BASE_URL and not BASE_URL . DIR_REL but I don't have a method for that
                 // and honestly I'm not sure why it needs to be that way
@@ -319,7 +317,7 @@ class Marketplace implements ApplicationAwareInterface
                         ENT_QUOTES,
                         APP_CHARSET);
             } else {
-                $csiBaseURL = urlencode($this->urlResolver->resolve(['/']));
+                $csiBaseURL = urlencode($this->getSiteURL());
                 $url = $frameURL . $this->config->get('concrete.urls.paths.marketplace.connect_success') . '?csToken=' . $this->getSiteToken() . '&csiBaseURL=' . $csiBaseURL;
             }
 
@@ -377,6 +375,13 @@ class Marketplace implements ApplicationAwareInterface
         return $token;
     }
 
+    public function getSiteURL()
+    {
+        $url = $this->app->make('url/canonical');
+        $url = rtrim((string) $url, '/');
+        return $url;
+    }
+
     public function getMarketplacePurchaseFrame($mp, $width = '100%', $height = '530')
     {
         $tp = new TaskPermission();
@@ -387,7 +392,7 @@ class Marketplace implements ApplicationAwareInterface
             }
             if ($this->isConnected()) {
                 $url = $this->config->get('concrete.urls.concrete5_secure') . $this->config->get('concrete.urls.paths.marketplace.checkout');
-                $csiURL = urlencode($this->urlResolver->resolve(['/']));
+                $csiURL = urlencode($this->getSiteURL());
                 $csiBaseURL = $csiURL;
                 $csToken = $this->getSiteToken();
                 $url = $url . '/' . $mp->getProductBlockID() . '?ts=' . time() . '&csiBaseURL=' . $csiBaseURL . '&csiURL=' . $csiURL . '&csToken=' . $csToken;

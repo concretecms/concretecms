@@ -135,6 +135,9 @@ return [
         'core_geolocator' => 'Concrete\Core\Geolocator\GeolocatorServiceProvider',
         'core_calendar' => 'Concrete\Core\Calendar\CalendarServiceProvider',
 
+        // Console CLI commands
+        'core_console' => \Concrete\Core\Console\ServiceProvider::class,
+
         // Authentication
         'core_oauth' => '\Concrete\Core\Authentication\Type\OAuth\ServiceProvider',
         'core_auth_community' => '\Concrete\Core\Authentication\Type\Community\ServiceProvider',
@@ -626,6 +629,9 @@ return [
         'core/calendar/admin' => [
             ['javascript', 'js/calendar/admin.js', ['minify' => false]],
         ],
+		'core/avatar' => [
+			['javascript', 'js/components/avatar.bundle.js', ['minify' => false]],
+		],
         'core/notification' => [
             ['javascript', 'js/notification.js', ['minify' => false]],
         ],
@@ -726,6 +732,11 @@ return [
                 ['javascript', 'ace'],
             ],
         ],
+		'core/avatar' => [
+			[
+				['javascript', 'core/avatar'],
+			],
+		],
         'core/notification' => [
             [
                 ['javascript', 'core/notification'],

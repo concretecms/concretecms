@@ -1,6 +1,6 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
 
-<?php if (count($options) > 0) { ?>
+<?php if (isset($options) && count($options) > 0) { ?>
 <div class="ccm-block-tags-wrapper">
     <?php if ($title) { ?>
     <div class="ccm-block-tags-header">
