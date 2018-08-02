@@ -7,7 +7,7 @@ $app = Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $valt = $app->make('helper/validation/token');
 
 if ($this->controller->getTask() == 'translate_po') {
-    $url = Url::createFromUrl($this->controller->action('save_translation'));
+    $url = Url::createFromUrl($this->controller->action('save_translation'), false);
     $url = $url->setQuery([
         'ccm_token' => $app->make('token')->generate('translate/save'),
     ]);
