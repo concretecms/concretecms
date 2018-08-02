@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Page\Controller;
 
+use Concrete\Core\Csv\WriterFactory;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Express\Entry\Notifier\NotificationInterface;
@@ -108,7 +109,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
         return StreamedResponse::create(function() use ($entity, $me) {
             $entryList = new EntryList($entity);
 
-            $writer = new CsvWriter(Writer::createFromPath('php://output', 'w'), new Date());
+            $writer = new CsvWriter($this->app->make(WriterFactory::class)->createFromPath('php://output', 'w'), new Date());
             $writer->insertHeaders($entity);
             $writer->insertEntryList($entryList);
         }, 200, $headers);
