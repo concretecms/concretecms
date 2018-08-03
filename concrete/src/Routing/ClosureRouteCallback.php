@@ -18,10 +18,13 @@ class ClosureRouteCallback extends RouteCallback
             return $callback_response;
         }
 
-        $r = new Response();
-        $r->setContent($callback_response);
+        if (is_string($callback_response)) {
+            $r = new Response();
+            $r->setContent($callback_response);
+            return $r;
+        }
 
-        return $r;
+        return $callback_response;
     }
 
     public function __sleep()

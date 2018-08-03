@@ -39,6 +39,14 @@ class ApplicationAwareControllerResolver extends SymfonyControllerResolver imple
             return false;
         }
 
+//        if (is_array($controller) && $route = $request->attributes->get('_route')) {
+//            if (is_string($controller[0])) {
+//                return function() use ($controller) {
+//                    return $this->app->call($controller);
+//                };
+//            }
+//        }
+
         if (is_array($controller)) {
             return $controller;
         }

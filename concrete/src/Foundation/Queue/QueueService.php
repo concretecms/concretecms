@@ -60,4 +60,26 @@ class QueueService
 
         return (bool) $id;
     }
+
+    /**
+     * Get a list of existing queues.
+     *
+     * @return array
+     */
+    public function listQueues()
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $result = $qb->select('q.queue_name name', 'count(m.message_id) count')->from('Queues', 'q')
+            ->leftJoin('q', 'QueueMessages', 'm', 'q.queue_id = m.queue_id')
+            ->groupBy('q.queue_id')
+            ->execute();
+
+        $queues = [];
+
+        foreach ($result as $row) {
+            $queues[trim($row['name'])] = (int) $row['count'];
+        }
+
+        return $queues;
+    }
 }
