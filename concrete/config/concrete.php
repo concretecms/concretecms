@@ -284,6 +284,14 @@ return [
          */
         'driver' => 'database',
 
+
+        /*
+         * Default queue to use
+         *
+         * @var string
+         */
+        'default' => 'default',
+
     ],
 
     /*

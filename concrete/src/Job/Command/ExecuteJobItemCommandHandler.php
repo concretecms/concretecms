@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Job\Command;
 
-use Concrete\Core\Foundation\Bus\Command\CommandInterface;
+use Concrete\Core\Foundation\Command\CommandInterface;
 use Concrete\Core\Job\Job;
 use Concrete\Core\Job\JobQueueMessage;
 use Concrete\Core\Job\QueueableJob;

@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Page\Type\Command;
 
-use Concrete\Core\Foundation\Bus\Command\CommandInterface;
+use Concrete\Core\Foundation\Command\CommandInterface;
 use League\Tactician\Bernard\QueueableCommand;
 
 class UpdatePageTypeDefaultsCommand implements CommandInterface, QueueableCommand

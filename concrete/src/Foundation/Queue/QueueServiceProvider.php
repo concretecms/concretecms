@@ -20,6 +20,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Concrete\Core\Foundation\Queue\Serializer\SerializerManager;
 use Concrete\Core\Events\EventDispatcher;
+use Concrete\Core\Foundation\Command\DispatcherFactory;
 
 class QueueServiceProvider extends Provider
 {
@@ -36,14 +37,14 @@ class QueueServiceProvider extends Provider
         $this->app->singleton(SerializerManager::class, function($app) {
             $manager = new SerializerManager();
             $manager->addNormalizer(new EnvelopeNormalizer());
-            $manager->addNormalizer(new PlainMessageNormalizer());
             $manager->addNormalizer(new GetSetMethodNormalizer());
+            $manager->addNormalizer(new PlainMessageNormalizer());
             return $manager;
         });
 
         $this->app->singleton('queue/router', function($app) {
-            $bus = $app->make('command/bus');
-            $receiver = new SeparateBusReceiver($bus->getSyncBus());
+            $dispatcher = $app->make(DispatcherFactory::class)->createDispatcher();
+            $receiver = new SeparateBusReceiver($dispatcher->getSyncBus());
             $router = new ClassNameRouter();
             $router->add(QueueableCommand::class, $receiver);
             return $router;

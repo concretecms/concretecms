@@ -17,7 +17,7 @@ class DeletePageCommandHandler
                 $pkr = new DeletePageRequest();
                 $pkr->setRequestedPage($c);
                 $pkr->setRequesterUserID($command->getUserID());
-                $pkr->trigger();
+                return $pkr->trigger();
             }
         }
     }

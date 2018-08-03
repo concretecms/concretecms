@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\Foundation\Bus\Command;
+namespace Concrete\Core\Foundation\Command;
 
 use Concrete\Core\Error\ErrorList\ErrorList;
 

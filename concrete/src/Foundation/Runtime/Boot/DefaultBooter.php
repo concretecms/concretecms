@@ -18,7 +18,6 @@ use Illuminate\Config\Repository;
 use Symfony\Component\HttpFoundation\Request as SymphonyRequest;
 use Symfony\Component\HttpFoundation\Response;
 use Concrete\Core\Page\Theme\ThemeRouteCollection;
-use Concrete\Core\Foundation\Bus\Bus;
 
 class DefaultBooter implements BootInterface, ApplicationAwareInterface
 {

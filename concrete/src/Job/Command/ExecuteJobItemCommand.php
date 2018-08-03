@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Job\Command;
 
-use Concrete\Core\Foundation\Bus\Command\CommandInterface;
+use Concrete\Core\Foundation\Command\CommandInterface;
 use League\Tactician\Bernard\QueueableCommand;
 
 class ExecuteJobItemCommand implements QueueableCommand, CommandInterface

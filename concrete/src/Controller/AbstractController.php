@@ -3,8 +3,7 @@ namespace Concrete\Core\Controller;
 
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
-use Concrete\Core\Foundation\Bus\Bus;
-use Concrete\Core\Foundation\Bus\Command\CommandInterface;
+use Concrete\Core\Foundation\Command\CommandInterface;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Core;
 use League\Tactician\Bernard\QueueableCommand;

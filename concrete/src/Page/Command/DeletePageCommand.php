@@ -4,7 +4,7 @@ namespace Concrete\Core\Page\Command;
 
 use League\Tactician\Bernard\QueueableCommand;
 
-class DeletePageCommand extends PageCommand implements QueueableCommand
+class DeletePageCommand extends PageCommand
 {
 
     protected $userID;
@@ -31,9 +31,5 @@ class DeletePageCommand extends PageCommand implements QueueableCommand
         parent::__construct($pageID);
     }
 
-    public function getName()
-    {
-        return 'delete_page';
-    }
 
 }

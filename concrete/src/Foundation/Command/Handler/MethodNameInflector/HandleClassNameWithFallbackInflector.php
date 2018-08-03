@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Core\Foundation\Bus\Handler\MethodNameInflector;
+namespace Concrete\Core\Foundation\Command\Handler\MethodNameInflector;
 
 use League\Tactician\Handler\MethodNameInflector\ClassNameInflector;
 
