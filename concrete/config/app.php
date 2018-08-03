@@ -1185,13 +1185,13 @@ return [
     'commands' => [
         ['Concrete\Core\File\Command\RescanFileCommand', 'Concrete\Core\File\Command\RescanFileCommandHandler'],
         ['Concrete\Core\Page\Command\RescanMultilingualPageCommand', 'Concrete\Core\Page\Command\RescanMultilingualPageCommandHandler'],
-        ['Concrete\Core\Page\Command\DeletePageCommand', 'Concrete\Core\Page\Command\DeletePageCommandHandler', true],
-        ['Concrete\Core\Page\Command\DeletePageForeverCommand', 'Concrete\Core\Page\Command\DeletePageForeverCommandHandler', true],
+        ['Concrete\Core\Page\Command\DeletePageCommand', 'Concrete\Core\Page\Command\DeletePageCommandHandler'],
+        ['Concrete\Core\Page\Command\DeletePageForeverCommand', 'Concrete\Core\Page\Command\DeletePageForeverCommandHandler'],
         ['Concrete\Core\Page\Command\CopyPageCommand', 'Concrete\Core\Page\Command\CopyPageCommandHandler'],
         ['Concrete\Core\Block\Command\DeleteBlockCommand', 'Concrete\Core\Block\Command\DeleteBlockCommandHandler'],
         ['Concrete\Core\Block\Command\AddAliasDefaultsBlockCommand', 'Concrete\Core\Block\Command\AddAliasDefaultsBlockCommandHandler'],
         ['Concrete\Core\Block\Command\UpdateForkedAliasDefaultsBlockCommand', 'Concrete\Core\Block\Command\UpdateForkedAliasDefaultsBlockCommandHandler'],
-        ['Concrete\Core\Page\Type\Command\UpdatePageTypeDefaultsCommand', 'Concrete\Core\Page\Type\Command\UpdatePageTypeDefaultsCommandHandler'],
+        ['Concrete\Core\Page\Type\Command\UpdatePageTypeDefaultsCommand', 'Concrete\Core\Page\Type\Command\UpdatePageTypeDefaultsCommandHandler', true],
         ['Concrete\Core\Job\Command\ExecuteJobItemCommand', 'Concrete\Core\Job\Command\ExecuteJobItemCommandHandler'],
     ],
 

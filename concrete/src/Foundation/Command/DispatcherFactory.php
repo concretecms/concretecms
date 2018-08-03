@@ -18,23 +18,36 @@ class DispatcherFactory
      */
     protected $config;
 
+    /**
+     * @var Dispatcher
+     */
+    protected $dispatcher;
+
     public function __construct(Application $app, Repository $config)
     {
         $this->app = $app;
         $this->config = $config;
-    }
-
-    public function createDispatcher()
-    {
-        $dispatcher = new Dispatcher($this->app);
-        $dispatcher->setDefaultQueue($this->config->get('concrete.queue.default'));
+        $this->dispatcher = new Dispatcher($this->app);
+        $this->dispatcher->setDefaultQueue($this->config->get('concrete.queue.default'));
         foreach($this->config->get('app.commands') as $entry) {
             $command = $entry[0];
             $handler = $entry[1];
-            $queue = $entry[2];
-            $dispatcher->registerCommand($this->app->make($handler), $command, $queue);
+            $queue = null;
+            if (isset($entry[2])) {
+                $queue = $entry[2];
+            }
+            $this->dispatcher->registerCommand($this->app->make($handler), $command, $queue);
         }
-        return $dispatcher;
+    }
+
+    public function registerCommand($handler, $command, $queue = null)
+    {
+        $this->dispatcher->registerCommand($handler, $command, $queue);
+    }
+
+    public function getDispatcher()
+    {
+        return $this->dispatcher;
     }
 
 }

@@ -1,7 +1,8 @@
 <?php
 namespace Concrete\Core\Foundation\Queue\Serializer;
 
-use Bernard\Serializer;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Serializer as SymfonySerializer;
 use Normalt\Normalizer\AggregateNormalizer;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -27,10 +28,19 @@ class SerializerManager
         return $this->normalizers;
     }
 
-    public function getSerializer()
+    public function getAggregateNormalizer()
     {
         $normalizer = new AggregateNormalizer($this->normalizers);
-        $serializer = new Serializer($normalizer);
+        return $normalizer;
+    }
+
+    public function getSerializer()
+    {
+        // Important note: we used to use the Bernard serializer here
+        // but I got so 1@#$! tired of "serializer not a normalizer" errors
+        // that I wanted to kill myself.
+        $serializer = new SymfonySerializer([$this->getAggregateNormalizer()], [new JsonEncoder()]);
+        $serializer = new Serializer($serializer);
         return $serializer;
     }
 

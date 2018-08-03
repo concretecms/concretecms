@@ -5,7 +5,7 @@ namespace Concrete\Core\Foundation\Queue;
 use Bernard\Message;
 use Bernard\Producer;
 use Bernard\Queue;
-use Bernard\QueueFactory\PersistentFactory;
+use Concrete\Core\Foundation\Queue\QueueFactory;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Events\EventDispatcher;
@@ -30,7 +30,7 @@ class QueueService
     protected $app;
 
     /**
-     * @var PersistentFactory
+     * @var QueueFactory
      */
     protected $factory;
 
@@ -54,7 +54,7 @@ class QueueService
         $this->app = $app;
         $this->config = $config;
         $this->mutexGeneratorFactory = $mutexGeneratorFactory;
-        $this->factory = new PersistentFactory(
+        $this->factory = new QueueFactory(
             $this->app->make('queue/driver'),
             $this->app->make('queue/serializer')
         );

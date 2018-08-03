@@ -86,6 +86,11 @@ class Dispatcher
         return $this->buses[$type];
     }
 
+    public function getSynchronousBus()
+    {
+        return $this->getBus(self::BUS_TYPE_SYNC);
+    }
+
     protected function registerQueuableCommand($command, $queue)
     {
         if ($queue === true) {
@@ -102,7 +107,13 @@ class Dispatcher
         }
     }
 
-    public function dispatch(CommandInterface $command)
+
+    /**
+     * Retrieves the bus to dispatch a command onto.
+     * @param CommandInterface $command
+     * @return array
+     */
+    public function getBusTypeForCommand(CommandInterface $command)
     {
         $useQueue = null;
         foreach($this->queuableCommands as $queueableCommand => $queue)
@@ -113,10 +124,25 @@ class Dispatcher
             }
         }
         if ($useQueue) {
-            $bus = $this->getBus(self::BUS_TYPE_ASYNC);
-            $command = new QueueCommand($command, $useQueue);
+            $type = self::BUS_TYPE_ASYNC;
         } else {
-            $bus = $this->getBus(self::BUS_TYPE_SYNC);
+            $type = self::BUS_TYPE_SYNC;
+        }
+
+        return [$type, $useQueue];
+    }
+
+    /**
+     * Executes a command.
+     * @param CommandInterface $command
+     * @return mixed
+     */
+    public function dispatch(CommandInterface $command)
+    {
+        list($bus, $queue) = $this->getBusTypeForCommand($command);
+        $bus = $this->getBus($bus);
+        if ($queue) {
+            $command = new QueueCommand($command, $queue);
         }
         return $bus->handle($command);
     }

@@ -54,7 +54,7 @@ class Application extends Container
     public function getCommandDispatcher()
     {
         if (!isset($this->commandDispatcher)) {
-            $this->commandDispatcher = $this->make(DispatcherFactory::class)->createDispatcher();
+            $this->commandDispatcher = $this->make(DispatcherFactory::class)->getDispatcher();
         }
         return $this->commandDispatcher;
     }

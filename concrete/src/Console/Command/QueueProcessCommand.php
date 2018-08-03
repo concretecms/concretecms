@@ -5,7 +5,6 @@ use Bernard\BernardEvents;
 use Bernard\Consumer;
 use Bernard\Event\EnvelopeEvent;
 use Bernard\Event\RejectEnvelopeEvent;
-use Bernard\QueueFactory\PersistentFactory;
 use Bernard\Router\ClassNameRouter;
 use Bernard\Router\SimpleRouter;
 use Bernard\Serializer;

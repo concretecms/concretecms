@@ -12,7 +12,8 @@
     ]
   },
   "require": {
-    "wikimedia/composer-merge-plugin": "~1.3"
+    "wikimedia/composer-merge-plugin": "~1.3",
+    "symfony/property-access": "^3.4"
   },
   "require-dev": {
     "squizlabs/php_codesniffer": "^2.7",

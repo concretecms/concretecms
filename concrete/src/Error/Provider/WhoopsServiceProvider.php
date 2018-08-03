@@ -4,7 +4,7 @@ namespace Concrete\Core\Error\Provider;
 use Concrete\Core\Error\Handler\ErrorHandler;
 use Concrete\Core\Error\Handler\JsonErrorHandler;
 use Concrete\Core\Foundation\Service\Provider;
-use Whoops\Handler\PlainTextHandler;
+use Concrete\Core\Error\Handler\PlainTextHandler;
 use Whoops\Run;
 use Whoops\Util\Misc;
 
