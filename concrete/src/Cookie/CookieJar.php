@@ -24,18 +24,18 @@ class CookieJar
      *
      * @var \Concrete\Core\Cookie\ResponseCookieJar
      */
-    protected $responseCookieJar;
+    protected $responseCookies;
 
     /**
      * Initialize the instance.
      *
      * @param Request $request the object containing the request cookies
-     * @param ResponseCookieJar $responseCookieJar the object containing the response cookies
+     * @param ResponseCookieJar $responseCookies the object containing the response cookies
      */
-    public function __construct(Request $request, ResponseCookieJar $responseCookieJar)
+    public function __construct(Request $request, ResponseCookieJar $responseCookies)
     {
         $this->setRequest($request);
-        $this->responseCookieJar = $responseCookieJar;
+        $this->responseCookies = $responseCookies;
     }
 
     /**
@@ -43,9 +43,9 @@ class CookieJar
      *
      * @return \Concrete\Core\Cookie\ResponseCookieJar
      */
-    public function getResponseCookiesJar()
+    public function getResponseCookies()
     {
-        return $this->responseCookieJar;
+        return $this->responseCookies;
     }
 
     /**
@@ -57,11 +57,11 @@ class CookieJar
      */
     public function has($name)
     {
-        if (in_array($name, $this->responseCookieJar->getClearedCookies(), true)) {
+        if (in_array($name, $this->responseCookies->getClearedCookies(), true)) {
             return false;
         }
 
-        return $this->request->cookies->has($name) || $this->responseCookieJar->hasCookie($name);
+        return $this->request->cookies->has($name) || $this->responseCookies->hasCookie($name);
     }
 
     /**
@@ -74,11 +74,11 @@ class CookieJar
      */
     public function get($name, $default = null)
     {
-        $responseCookie = $this->responseCookieJar->getCookieByName($name);
+        $responseCookie = $this->responseCookies->getCookieByName($name);
         if ($responseCookie !== null) {
             return $responseCookie->getValue();
         }
-        if (in_array($name, $this->responseCookieJar->getClearedCookies(), true)) {
+        if (in_array($name, $this->responseCookies->getClearedCookies(), true)) {
             return $default;
         }
 
@@ -93,13 +93,13 @@ class CookieJar
     public function getAll()
     {
         $result = [];
-        $clearedRequestCookies = $this->responseCookieJar->getClearedCookies();
+        $clearedRequestCookies = $this->responseCookies->getClearedCookies();
         foreach ($this->request->cookies->all() as $name => $value) {
             if (!in_array($name, $clearedRequestCookies, true)) {
                 $result[$name] = $value;
             }
         }
-        foreach ($this->responseCookieJar->getCookies() as $cookie) {
+        foreach ($this->responseCookies->getCookies() as $cookie) {
             if ($cookie->getExpiresTime() !== 0 && $cookie->isCleared()) {
                 unset($result[$cookie->getName()]);
             } else {
@@ -121,7 +121,7 @@ class CookieJar
     }
 
     /**
-     * @deprecated Use $app->make(ResponseCookieJar::class)->addCookie()
+     * @deprecated Use ->getResponseCookies()->addCookie() or $app->make(ResponseCookieJar::class)->addCookie()
      *
      * @param string $name
      * @param string|null $value
@@ -135,37 +135,37 @@ class CookieJar
      */
     public function set($name, $value = null, $expire = 0, $path = '/', $domain = null, $secure = false, $httpOnly = true)
     {
-        return $this->responseCookieJar->addCookie($name, $value, $expire, $path, $domain, $secure, $httpOnly);
+        return $this->responseCookies->addCookie($name, $value, $expire, $path, $domain, $secure, $httpOnly);
     }
 
     /**
-     * @deprecated Use $app->make(ResponseCookieJar::class)->addCookieObject()
+     * @deprecated Use ->getResponseCookies()->addCookieObject() or $app->make(ResponseCookieJar::class)->addCookieObject()
      *
      * @param \Symfony\Component\HttpFoundation\Cookie $cookie
      */
     public function add($cookie)
     {
-        $this->responseCookieJar->addCookieObject($cookie);
+        $this->responseCookies->addCookieObject($cookie);
     }
 
     /**
-     * @deprecated use $app->make(ResponseCookieJar::class)->clear()
+     * @deprecated Use ->getResponseCookies()->clear() or $app->make(ResponseCookieJar::class)->clear()
      *
      * @param string $name
      */
     public function clear($name)
     {
-        $this->responseCookieJar->clear($name);
+        $this->responseCookies->clear($name);
     }
 
     /**
-     * @deprecated use $app->make(ResponseCookieJar::class)->getCookies()
+     * @deprecated Use ->getResponseCookies()->getCookies() or $app->make(ResponseCookieJar::class)->getCookies()
      *
      * @return \Symfony\Component\HttpFoundation\Cookie[]
      */
     public function getCookies()
     {
-        return $this->responseCookieJar->getCookies();
+        return $this->responseCookies->getCookies();
     }
 
     /**
