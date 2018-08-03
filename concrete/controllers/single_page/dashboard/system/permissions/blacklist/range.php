@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\System\Permissions\Blacklist;
 
+use Concrete\Core\Csv\WriterFactory;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\Controller\DashboardPageController;
@@ -168,7 +169,10 @@ class Range extends DashboardPageController
 
         return StreamedResponse::create(
             function () use ($app, $type, $ranges) {
-                $writer = $app->build(IPRangesCsvWriter::class, ['writer' => Writer::createFromPath('php://output', 'w'), 'type' => $type]);
+                $writer = $app->build(IPRangesCsvWriter::class, [
+                    'writer' => $app->make(WriterFactory::class)->createFromPath('php://output', 'w'),
+                    'type' => $type
+                ]);
                 $writer->insertHeaders();
                 $writer->insertRanges($ranges);
             },
