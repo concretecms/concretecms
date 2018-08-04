@@ -17,7 +17,7 @@ use Loader;
 class Router implements RouterInterface, ApplicationAwareInterface
 {
 
-    use ApplicationAwareTrait;
+    use ApplicationAwareTrait, RouterTrait;
 
     /**
      * @var UrlGeneratorInterface|null
@@ -386,100 +386,4 @@ class Router implements RouterInterface, ApplicationAwareInterface
     {
         return $this->register($path, $handler, null, [], [], '', [], (array) $methods);
     }
-
-    /**
-     * Add a route that matches the GET request method
-     * @param string $path
-     * @param string|callable|string[] $handler
-     * @return \Concrete\Core\Routing\Route
-     */
-    public function get($path, $handler)
-    {
-        return $this->to(['GET', 'HEAD'], $path, $handler);
-    }
-
-    /**
-     * Add a route that matches the POST request method
-     *
-     * @param string $path
-     * @param string|callable|string[] $handler
-     * @return \Concrete\Core\Routing\Route
-     */
-    public function post($path, $handler)
-    {
-        return $this->to('POST', $path, $handler);
-    }
-
-    /**
-     * Add a route that matches the PUT request method
-     *
-     * @param string $path
-     * @param string|callable|string[] $handler
-     * @return \Concrete\Core\Routing\Route
-     */
-    public function put($path, $handler)
-    {
-        return $this->to('PUT', $path, $handler);
-    }
-
-    /**
-     * Add a route that matches the PATCH request method
-     *
-     * @param string $path
-     * @param string|callable|string[] $handler
-     * @return \Concrete\Core\Routing\Route
-     */
-    public function patch($path, $handler)
-    {
-        return $this->to('PATCH', $path, $handler);
-    }
-
-    /**
-     * Add a route that matches the HEAD request method
-     *
-     * @param string $path
-     * @param string|callable|string[] $handler
-     * @return \Concrete\Core\Routing\Route
-     */
-    public function head($path, $handler)
-    {
-        return $this->to('HEAD', $path, $handler);
-    }
-
-    /**
-     * Add a route that matches the DELETE request method
-     *
-     * @param string $path
-     * @param string|callable|string[] $handler
-     * @return \Concrete\Core\Routing\Route
-     */
-    public function delete($path, $handler)
-    {
-        return $this->to('DELETE', $path, $handler);
-    }
-
-    /**
-     * Add a route that matches the OPTIONS request method
-     *
-     * @param string $path
-     * @param string|callable|string[] $handler
-     * @return \Concrete\Core\Routing\Route
-     */
-    public function options($path, $handler)
-    {
-        return $this->to('OPTIONS', $path, $handler);
-    }
-
-    /**
-     * Add a route that matches any incoming request method
-     *
-     * @param string $path
-     * @param string|callable|string[] $handler
-     * @return \Concrete\Core\Routing\Route
-     */
-    public function any($path, $handler)
-    {
-        return $this->to(['GET', 'POST', 'PUT', 'PATCH', 'HEAD', 'DELETE', 'OPTIONS'], $path, $handler);
-    }
-
 }

@@ -213,6 +213,8 @@ class RouteCollector
             // Run the callable with our empty router.
             $resolver($router, $this);
             // Grab the routes from the router, and pass them to our route group builder.
+        } elseif ($resolver instanceof RouteProviderInterface) {
+            $resolver->registerRoutes($router, $this);
         } else {
             if (is_string($resolver)) {
                 $this->routeFile($resolver, $router, $pkgHandle);

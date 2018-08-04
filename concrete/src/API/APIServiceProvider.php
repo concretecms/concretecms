@@ -3,6 +3,9 @@
 namespace Concrete\Core\API;
 
 use Concrete\Core\API\OAuth\Validator\DefaultValidator;
+use Concrete\Core\API\Routing\OAuthRouteProvider;
+use Concrete\Core\API\Routing\SiteRouteProvider;
+use Concrete\Core\API\Routing\SystemRouteProvider;
 use Concrete\Core\Entity\OAuth\AccessToken;
 use Concrete\Core\Entity\OAuth\AuthCode;
 use Concrete\Core\Entity\OAuth\Client;
@@ -64,36 +67,12 @@ class APIServiceProvider extends ServiceProvider implements RouteProviderInterfa
      * @param \Concrete\Core\Routing\RouterInterface $router
      * @return void
      */
-    public function registerRoutes(RouterInterface $router)
+    public function registerRoutes(RouterInterface $router, RouteCollector $collector = null)
     {
-        // OAuth routes
-        $router->group('/oauth/2.0', function (RouterInterface $router, RouteCollector $collector) {
-            // Register middlewares for this grouop
-            $collector->addMiddleware(OAuthErrorMiddleware::class);
-
-            // Register routes
-            $router->post('/token', [OAuth\Controller::class, 'token']);
-        });
-
-        // System routes
-        $router->group('/ccm/api/v1/', function (Router $r, RouteCollector $collector) {
-            $collector
-                ->addMiddleware(OAuthErrorMiddleware::class)
-                ->addMiddleware(OAuthAuthenticationMiddleware::class)
-                ->addMiddleware(FractalNegotiatorMiddleware::class);
-
-            $r->group('/system', function (Router $r, RouteCollector $collector) {
-                //$collector->addScope('system');
-
-                $r->get('/info', [Controller\V1\System::class, 'info']);
-                $r->get('/status/queue', [Controller\V1\System::class, 'queueStatus']);
-            });
-
-            $r->group('/site', function(Router $r, RouteCollector $collector) {
-                //$collector->addScope('site');
-
-                $r->get('/trees', [Controller\V1\Site::class, 'trees']);
-            });
+        $router->group('/oauth/2.0', $this->app->make(OAuthRouteProvider::class));
+        $router->group('/ccm/api/v1', function($router) {
+            $router->group('/system', $this->app->make(SystemRouteProvider::class));
+            $router->group('/site', $this->app->make(SiteRouteProvider::class));
         });
     }
 
