@@ -142,7 +142,7 @@ class DefaultPackageProviderTest extends PHPUnit_Framework_TestCase
      *
      * @param \Exception $e
      */
-    protected function onNotSuccessfulTest(\Exception $e)
+    protected function onNotSuccessfulTest($e)
     {
         $this->removePackageFolderOfTestMetadataDriverDefault();
         $this->removePackageFolderOfTestMetadataDriverDefault();
