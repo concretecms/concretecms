@@ -91,7 +91,7 @@ return [
     'providers' => [
         // Router service provider
         'core_router' => 'Concrete\Core\Routing\RoutingServiceProvider',
-        'core_api' => 'Concrete\Core\Api\ApiServiceProvider',
+        'core_api' => 'Concrete\Core\API\APIServiceProvider',
 
         'core_file' => '\Concrete\Core\File\FileServiceProvider',
         'core_encryption' => '\Concrete\Core\Encryption\EncryptionServiceProvider',
