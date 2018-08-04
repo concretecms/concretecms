@@ -380,109 +380,106 @@ class Router implements RouterInterface, ApplicationAwareInterface
      * @param $path The path to the route `/path/to/route`
      * @param string|callable|array $handler
      * @param callable $factory A callable to help build the route `function(Route $route): Route`
+     * @return \Concrete\Core\Routing\Route
      */
-    public function to($methods, $path, $handler, $factory = null)
+    public function to($methods, $path, $handler)
     {
-        $handle = $this->getHandle($path);
-        $route = $this->buildRoute($path, $handler, [], [], null, [], (array) $methods);
-
-        if ($factory) {
-            // Run the factory method and give it a chance to replace the route instance
-            if ($result = $factory($route)) {
-                $route = $result;
-            }
-        }
-
-        $this->collection->add($handle, $route);
+        return $this->register($path, $handler, null, [], [], '', [], (array) $methods);
     }
 
     /**
-     * @param $path
-     * @param $handler
-     * @param $factory
+     * Add a route that matches the GET request method
+     * @param string $path
+     * @param string|callable|string[] $handler
+     * @return \Concrete\Core\Routing\Route
      */
-    public function get($path, $handler, $factory = null)
+    public function get($path, $handler)
     {
-        return $this->to(['GET', 'HEAD'], $path, $handler, $factory);
+        return $this->to(['GET', 'HEAD'], $path, $handler);
     }
 
     /**
      * Add a route that matches the POST request method
-     * @param $path
-     * @param $handler
-     * @param $factory
+     *
+     * @param string $path
+     * @param string|callable|string[] $handler
+     * @return \Concrete\Core\Routing\Route
      */
-    public function post($path, $handler, $factory = null)
+    public function post($path, $handler)
     {
-        return $this->to('POST', $path, $handler, $factory);
+        return $this->to('POST', $path, $handler);
     }
 
     /**
      * Add a route that matches the PUT request method
-     * @param $path
-     * @param $handler
-     * @param $factory
+     *
+     * @param string $path
+     * @param string|callable|string[] $handler
+     * @return \Concrete\Core\Routing\Route
      */
-    public function put($path, $handler, $factory = null)
+    public function put($path, $handler)
     {
-        return $this->to('PUT', $path, $handler, $factory);
+        return $this->to('PUT', $path, $handler);
     }
 
     /**
      * Add a route that matches the PATCH request method
-     * @param $path
-     * @param $handler
-     * @param $factory
+     *
+     * @param string $path
+     * @param string|callable|string[] $handler
+     * @return \Concrete\Core\Routing\Route
      */
-    public function patch($path, $handler, $factory = null)
+    public function patch($path, $handler)
     {
-        return $this->to('PATCH', $path, $handler, $factory);
+        return $this->to('PATCH', $path, $handler);
     }
 
     /**
      * Add a route that matches the HEAD request method
-     * @param $path
-     * @param $handler
-     * @param $factory
+     *
+     * @param string $path
+     * @param string|callable|string[] $handler
+     * @return \Concrete\Core\Routing\Route
      */
-    public function head($path, $handler, $factory = null)
+    public function head($path, $handler)
     {
-        return $this->to('HEAD', $path, $handler, $factory);
+        return $this->to('HEAD', $path, $handler);
     }
 
     /**
      * Add a route that matches the DELETE request method
-     * @param $path
-     * @param $handler
-     * @param $factory
+     *
+     * @param string $path
+     * @param string|callable|string[] $handler
+     * @return \Concrete\Core\Routing\Route
      */
-    public function delete($path, $handler, $factory = null)
+    public function delete($path, $handler)
     {
-        return $this->to('DELETE', $path, $handler, $factory);
+        return $this->to('DELETE', $path, $handler);
     }
 
     /**
      * Add a route that matches the OPTIONS request method
      *
-     * @param $path
-     * @param $handler
-     * @param $factory
+     * @param string $path
+     * @param string|callable|string[] $handler
+     * @return \Concrete\Core\Routing\Route
      */
-    public function options($path, $handler, $factory = null)
+    public function options($path, $handler)
     {
-        return $this->to('OPTIONS', $path, $handler, $factory);
+        return $this->to('OPTIONS', $path, $handler);
     }
 
     /**
      * Add a route that matches any incoming request method
      *
-     * @param $path
-     * @param $handler
-     * @param $factory
+     * @param string $path
+     * @param string|callable|string[] $handler
+     * @return \Concrete\Core\Routing\Route
      */
-    public function any($path, $handler, $factory = null)
+    public function any($path, $handler)
     {
-        return $this->to(['GET', 'POST', 'PUT', 'PATCH', 'HEAD', 'DELETE', 'OPTIONS'], $path, $handler, $factory);
+        return $this->to(['GET', 'POST', 'PUT', 'PATCH', 'HEAD', 'DELETE', 'OPTIONS'], $path, $handler);
     }
 
 }

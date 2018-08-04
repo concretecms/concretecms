@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\API;
 
+use Concrete\Core\API\OAuth\Validator\DefaultValidator;
 use Concrete\Core\Entity\OAuth\AccessToken;
 use Concrete\Core\Entity\OAuth\AuthCode;
 use Concrete\Core\Entity\OAuth\Client;
@@ -168,6 +169,13 @@ class APIServiceProvider extends ServiceProvider implements RouteProviderInterfa
     {
         // The ResourceServer deals with authenticating requests, in other words validating tokens
         $this->app->when(ResourceServer::class)->needs('$publicKey')->give($this->getKey(self::KEY_PUBLIC));
+        $this->app->bind(ResourceServer::class, function() {
+            return $this->app->build(ResourceServer::class, [
+                $this->app->make(AccessTokenRepositoryInterface::class),
+                $this->getKey(self::KEY_PUBLIC)(),
+                $this->app->make(DefaultValidator::class)
+            ]);
+        });
 
         // AuthorizationServer on the other hand deals with authorizing a session with a username and password and key and secret
         $this->app->when(AuthorizationServer::class)->needs('$privateKey')->give($this->getKey(self::KEY_PRIVATE));
