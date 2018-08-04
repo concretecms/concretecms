@@ -22,6 +22,12 @@ use Concrete\Core\Foundation\Queue\QueueService;
 
 class QueueProcessCommand extends Command
 {
+
+    public function getDescription()
+    {
+        return t('Processes the concrete5 queue. Leaving the queue option blank will process the default queue');
+    }
+
     protected function configure()
     {
         $this
@@ -30,7 +36,8 @@ class QueueProcessCommand extends Command
             ->addOption('max-messages', null, InputOption::VALUE_OPTIONAL, 'Maximum number of messages that should be consumed.', null)
             ->addOption('stop-when-empty', null, InputOption::VALUE_NONE, 'Stop consumer when queue is empty.', null)
             ->addOption('stop-on-error', null, InputOption::VALUE_NONE, 'Stop consumer when an error occurs.', null)
-            ->addArgument('queue', InputOption::VALUE_OPTIONAL, 'Names of one or more queues that will be consumed.')
+            ->addOption('all', null, InputOption::VALUE_NONE, 'Processes all available queues in a round robin style.', null)
+            ->addArgument('queue', InputOption::VALUE_OPTIONAL, 'A single queue or list of queues to be processed. If blank the default queue will be processed.', null)
         ;
     }
 
@@ -60,10 +67,37 @@ class QueueProcessCommand extends Command
             );
         }
 
+
         $service = $app->make(QueueService::class);
+        if ($input->getOption('all') && $input->getArgument('queue')) {
+            throw new \Exception(t('You cannot specify a queue and use the --all option'));
+        }
+
         $queueName = $input->getArgument('queue');
-        $queue = $service->get($queueName);
-        $service->consume($queue, $input->getOptions());
+        $queue = null;
+        if ($queueName) {
+            $queue = $queueName[0];
+        } else {
+            if (!$input->getOption('all')) {
+                $queue = $service->getDefaultQueueHandle();
+            }
+        }
+
+        $options = $input->getOptions();
+        if (isset($options['all'])) {
+            unset($options['all']); // this comes from our CLI script.
+        }
+
+        if (!$output->isQuiet()) {
+            if ($queue) {
+                $output->writeln(t('Processing queue: %s', $queue));
+            } else {
+                $output->writeln(t('Processing all queues with round-robin.'));
+            }
+        }
+
+        $queue = $service->get($queue);
+        $service->consume($queue, $options);
     }
 
 }

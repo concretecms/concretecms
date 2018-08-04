@@ -61,6 +61,15 @@ class QueueService
         $this->producer = new Producer($this->factory, $this->app->make(EventDispatcher::class));
     }
 
+
+    /**
+     * @return string
+     */
+    public function getDefaultQueueHandle()
+    {
+        return $this->config->get('concrete.queue.default');
+    }
+
     /**
      * A single queue (string) or an array of queues.
      * @param $mixed $queue
