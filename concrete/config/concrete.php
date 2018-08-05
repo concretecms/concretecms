@@ -6,9 +6,9 @@ return [
      *
      * @var string
      */
-    'version' => '9.0.0a1',
-    'version_installed' => '9.0.0a1',
-    'version_db' => '20180716000000', // the key of the latest database migration
+    'version' => '9.0.0a2',
+    'version_installed' => '9.0.0a2',
+    'version_db' => '20180804160826', // the key of the latest database migration
 
     /*
      * Installation status
@@ -291,6 +291,20 @@ return [
          * @var string
          */
         'default' => 'default',
+
+        /*
+         * If we're consuming the queue through polling, how many entries do we do at a time
+         *
+         * @var int
+         */
+        'polling_batch' => [
+            'default' => 10,
+            'rescan_file' => 5,
+            'delete_page' => 100,
+            'delete_page_forever' => 100,
+            'copy_page' => 10,
+        ],
+
 
     ],
 

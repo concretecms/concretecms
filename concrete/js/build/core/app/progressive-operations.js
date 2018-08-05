@@ -40,9 +40,9 @@
 		}
 	}
 
-	ConcreteProgressiveOperation.prototype.poll = function(queue, token, remaining) {
+	ConcreteProgressiveOperation.prototype.poll = function(batch, token, remaining) {
 		var my = this,
-			url = CCM_DISPATCHER_FILENAME + '/ccm/system/queue/monitor/' + queue + '/' + token;
+			url = CCM_DISPATCHER_FILENAME + '/ccm/system/batch/monitor/' + batch + '/' + token;
 
 		if (my.total == -1) {
 			// We haven't set the total yet.
@@ -65,10 +65,10 @@
 			type: 'POST',
 			dataType: 'json',
 			success: function(r) {
-
-				if (r.remaining > 0) {
+                var remaining = r.total - r.completed;
+				if (remaining > 0) {
 					setTimeout(function() {
-						my.poll(queue, token, r.remaining);
+						my.poll(batch, token, remaining);
 					}, my.options.pollRetryTimeout);
 				} else {
 					setTimeout(function() {
@@ -88,7 +88,7 @@
 		});
 	}
 
-	ConcreteProgressiveOperation.prototype.startPolling = function(queue, token, remaining) {
+	ConcreteProgressiveOperation.prototype.startPolling = function(batch, token, remaining) {
 		var my = this;
 		if (!my.options.element) {
 
@@ -104,7 +104,7 @@
 			});
 		}
 
-		my.poll(queue, token, remaining);
+		my.poll(batch, token, remaining);
 	}
 
 	ConcreteProgressiveOperation.prototype.execute = function() {
@@ -118,7 +118,8 @@
 		if (my.options.response) {
 			// We have already performed the submit as part of another operation,
 			// like a concrete5 ajax form submission
-			my.startPolling(my.options.response.queue, my.options.response.token, my.options.response.remaining)
+			var remaining = my.options.response.total - my.options.response.completed;
+			my.startPolling(my.options.response.batch, my.options.response.token, remaining)
 		} else {
 			$.concreteAjax({
 				loader: false,
@@ -127,7 +128,8 @@
 				data: my.options.data,
 				dataType: 'json',
 				success: function(r) {
-					my.startPolling(r.queue, r.token, r.remaining)
+                    var remaining = r.total - r.completed;
+					my.startPolling(r.batch, r.token, remaining)
 				}
 			});
 		}

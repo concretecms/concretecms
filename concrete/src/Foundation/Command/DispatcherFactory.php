@@ -28,7 +28,8 @@ class DispatcherFactory
         $this->app = $app;
         $this->config = $config;
         $this->dispatcher = new Dispatcher($this->app);
-        $this->dispatcher->setDefaultQueue($this->config->get('concrete.queue.default'));
+        $defaultQueue = $this->config->get('concrete.queue.default');
+        $this->dispatcher->setDefaultQueue($defaultQueue);
         foreach($this->config->get('app.commands') as $entry) {
             $command = $entry[0];
             $handler = $entry[1];

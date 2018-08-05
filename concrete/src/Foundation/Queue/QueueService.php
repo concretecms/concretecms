@@ -5,6 +5,7 @@ namespace Concrete\Core\Foundation\Queue;
 use Bernard\Message;
 use Bernard\Producer;
 use Bernard\Queue;
+use Concrete\Core\Entity\Queue\Batch;
 use Concrete\Core\Foundation\Queue\QueueFactory;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Config\Repository\Repository;
@@ -126,10 +127,10 @@ class QueueService
         $this->push($queue, $mixed);
     }
 
-    private function getPollingMax(Queue $queue)
+    private function getPollingMax(string $batch)
     {
-        if (strpos((string) $queue, 'job_') === 0) {
-            $job = Job::getByHandle(substr((string) $queue, 4));
+        if (strpos($batch, 'job_') === 0) {
+            $job = Job::getByHandle(substr($batch, 4));
             if ($job) {
                 if ($job instanceof QueueableJob) {
                     $max = $job->getJobQueueBatchSize();
@@ -137,21 +138,22 @@ class QueueService
             }
         }
         if (!isset($max)) {
-            $max = $this->config->get(sprintf('app.queue.polling_batch.%s', (string) $queue));
+            $max = $this->config->get(sprintf('concrete.queue.polling_batch.%s', $batch));
             if (!$max) {
-                $max = $this->config->get('app.queue.polling_batch.default');
+                $max = $this->config->get('concrete.queue.polling_batch.default');
             }
         }
 
         return $max;
     }
-    public function consumeFromPoll(Queue $queue)
+    public function consumeBatchFromPoll(Batch $batch)
     {
-        $max = $this->getPollingMax($queue);
+        $maxMessages = $this->getPollingMax($batch->getBatchHandle());
+        $queue = $this->get($this->getDefaultQueueHandle());
         try {
             $this->consume($queue, [
                 'stop-when-empty' => true,
-                'max-messages' => $max
+                'max-messages' => $maxMessages
             ]);
         } catch (MutexBusyException $exception) {
             return false;

@@ -29,4 +29,4 @@ $router->all('/ccm/system/upgrade/', '\Concrete\Controller\Upgrade::view');
 $router->all('/ccm/system/upgrade/submit', '\Concrete\Controller\Upgrade::submit');
 $router->all('/ccm/system/country-stateprovince-link/get_stateprovinces', '\Concrete\Controller\Frontend\CountryStateprovinceLink::getStateprovinces');
 
-$router->all('/ccm/system/queue/monitor/{queue}/{token}', '\Concrete\Controller\Backend\Queue::monitor');
+$router->all('/ccm/system/batch/monitor/{batch}/{token}', '\Concrete\Controller\Backend\Batch::monitor');

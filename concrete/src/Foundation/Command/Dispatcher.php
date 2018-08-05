@@ -6,6 +6,7 @@ use Concrete\Core\Foundation\Command\Handler\MethodNameInflector\HandleClassName
 use League\Tactician\Bernard\QueueCommand;
 use League\Tactician\Bernard\QueueMiddleware;
 use League\Tactician\CommandBus;
+use Concrete\Core\Foundation\Command\Middleware\BatchUpdatingMiddleware;
 use League\Tactician\Handler\CommandHandlerMiddleware;
 use League\Tactician\Handler\CommandNameExtractor\ClassNameExtractor;
 use League\Tactician\Handler\Locator\InMemoryLocator;
@@ -67,6 +68,7 @@ class Dispatcher
         $this->app = $app;
         $this->locator = new InMemoryLocator();
         $this->addBus(self::BUS_TYPE_SYNC, new CommandBus([
+            $this->app->make(BatchUpdatingMiddleware::class),
             new CommandHandlerMiddleware(
                 new ClassNameExtractor(),
                 $this->locator,
@@ -91,6 +93,11 @@ class Dispatcher
         return $this->getBus(self::BUS_TYPE_SYNC);
     }
 
+    public function getQueueBus()
+    {
+        return $this->getBus(self::BUS_TYPE_ASYNC);
+    }
+
     protected function registerQueuableCommand($command, $queue)
     {
         if ($queue === true) {
@@ -105,6 +112,23 @@ class Dispatcher
         if ($queue) {
             $this->registerQueuableCommand($command, $queue);
         }
+    }
+
+    /**
+     * @param CommandInterface $command
+     * @return string
+     */
+    public function getQueueForCommand(CommandInterface $command)
+    {
+        $queue = $this->getDefaultQueue();
+        foreach($this->queuableCommands as $queueableCommand => $queue)
+        {
+            if ($command instanceof $queueableCommand) {
+                $queue = $queue;
+                break;
+            }
+        }
+        return $queue;
     }
 
 
@@ -130,6 +154,13 @@ class Dispatcher
         }
 
         return [$type, $useQueue];
+    }
+
+    public function dispatchOnQueue(CommandInterface $command, $queue)
+    {
+        $bus = $this->getBus(self::BUS_TYPE_ASYNC);
+        $command = new QueueCommand($command, $queue);
+        return $bus->handle($command);
     }
 
     /**
