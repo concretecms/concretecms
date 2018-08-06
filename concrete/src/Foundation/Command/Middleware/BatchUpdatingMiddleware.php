@@ -27,7 +27,7 @@ class BatchUpdatingMiddleware implements Middleware
 
         if ($command instanceof BatchableCommandInterface) {
             $r = $this->entityManager->getRepository(Batch::class);
-            $batch = $r->findOneByBatchHandle($command::getBatchHandle());
+            $batch = $r->findOneByBatchHandle($command->getBatchHandle());
             if ($batch) {
                 /**
                  * @var $batch Batch

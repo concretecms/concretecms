@@ -2,9 +2,11 @@
 
 namespace Concrete\Core\Foundation\Queue\Batch\Command;
 
-interface BatchableCommandInterface
+use Concrete\Core\Foundation\Command\CommandInterface;
+
+interface BatchableCommandInterface extends CommandInterface
 {
 
-    static function getBatchHandle();
+    public function getBatchHandle();
 
 }

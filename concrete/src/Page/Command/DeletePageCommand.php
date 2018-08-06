@@ -32,7 +32,7 @@ class DeletePageCommand extends PageCommand implements BatchableCommandInterface
         parent::__construct($pageID);
     }
 
-    public static function getBatchHandle()
+    public function getBatchHandle()
     {
         return 'delete_page';
     }

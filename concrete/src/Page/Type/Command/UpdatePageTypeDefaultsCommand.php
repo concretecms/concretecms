@@ -6,7 +6,7 @@ use Concrete\Core\Foundation\Command\CommandInterface;
 use Concrete\Core\Foundation\Queue\Batch\Command\BatchableCommandInterface;
 use League\Tactician\Bernard\QueueableCommand;
 
-class UpdatePageTypeDefaultsCommand implements CommandInterface, BatchableCommandInterface
+class UpdatePageTypeDefaultsCommand implements BatchableCommandInterface
 {
 
     protected $pageTypeDefaultPageID;
@@ -120,7 +120,7 @@ class UpdatePageTypeDefaultsCommand implements CommandInterface, BatchableComman
         return 'update_page_type_defaults';
     }
 
-    public static function getBatchHandle()
+    public function getBatchHandle()
     {
         return 'update_page_type_defaults';
     }

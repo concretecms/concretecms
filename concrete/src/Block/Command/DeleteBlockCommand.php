@@ -9,7 +9,7 @@ use League\Tactician\Bernard\QueueableCommand;
 class DeleteBlockCommand extends BlockCommand implements BatchableCommandInterface
 {
 
-    public static function getBatchHandle()
+    public function getBatchHandle()
     {
         return 'delete_block';
     }

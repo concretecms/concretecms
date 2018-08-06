@@ -6,6 +6,7 @@ use Bernard\Message;
 use Bernard\Producer;
 use Bernard\Queue;
 use Concrete\Core\Entity\Queue\Batch;
+use Concrete\Core\Foundation\Queue\Batch\BatchFactory;
 use Concrete\Core\Foundation\Queue\QueueFactory;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Config\Repository\Repository;
@@ -101,7 +102,7 @@ class QueueService
 
     public function getJobQueue(QueueableJob $job)
     {
-        return new JobQueue($job, $this->app, $this);
+        return new JobQueue($job, $this->app, $this, $this->app->make(BatchFactory::class));
     }
 
     /**

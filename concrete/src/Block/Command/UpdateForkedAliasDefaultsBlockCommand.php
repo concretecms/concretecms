@@ -9,7 +9,7 @@ use League\Tactician\Bernard\QueueableCommand;
 class UpdateForkedAliasDefaultsBlockCommand extends DefaultsBlockCommand implements BatchableCommandInterface
 {
 
-    public static function getBatchHandle()
+    public function getBatchHandle()
     {
         return 'update_defaults';
     }

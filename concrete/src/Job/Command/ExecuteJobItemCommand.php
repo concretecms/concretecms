@@ -3,20 +3,30 @@
 namespace Concrete\Core\Job\Command;
 
 use Concrete\Core\Foundation\Command\CommandInterface;
+use Concrete\Core\Foundation\Queue\Batch\Command\BatchableCommandInterface;
 use League\Tactician\Bernard\QueueableCommand;
 
-class ExecuteJobItemCommand implements QueueableCommand, CommandInterface
+class ExecuteJobItemCommand implements BatchableCommandInterface
 {
 
-    protected $queueName;
+    /**
+     * @var string
+     */
+    protected $batchHandle;
 
+    /**
+     * @var string
+     */
     protected $data;
 
+    /**
+     * @var string
+     */
     protected $jobHandle;
 
-    public function __construct($queueName, $jobHandle, $data)
+    public function __construct($batchHandle, $jobHandle, $data)
     {
-        $this->queueName = $queueName;
+        $this->batchHandle = $batchHandle;
         $this->data = $data;
         $this->jobHandle = $jobHandle;
     }
@@ -55,25 +65,19 @@ class ExecuteJobItemCommand implements QueueableCommand, CommandInterface
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getQueueName()
+    public function getBatchHandle(): string
     {
-        return $this->queueName;
+        return $this->batchHandle;
     }
 
     /**
-     * @param mixed $queueName
+     * @param string $batchHandle
      */
-    public function setQueueName($queueName)
+    public function setBatchHandle(string $batchHandle): void
     {
-        $this->queueName = $queueName;
-    }
-
-
-    public function getName()
-    {
-        return $this->getQueueName();
+        $this->batchHandle = $batchHandle;
     }
 
 }

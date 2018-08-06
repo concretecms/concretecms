@@ -156,8 +156,11 @@ class Dispatcher
         return [$type, $useQueue];
     }
 
-    public function dispatchOnQueue(CommandInterface $command, $queue)
+    public function dispatchOnQueue(CommandInterface $command, $queue = null)
     {
+        if (!$queue) {
+            $queue = $this->getDefaultQueue();
+        }
         $bus = $this->getBus(self::BUS_TYPE_ASYNC);
         $command = new QueueCommand($command, $queue);
         return $bus->handle($command);

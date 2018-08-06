@@ -47,7 +47,7 @@ class CopyPageCommand extends PageCommand implements BatchableCommandInterface
     }
 
 
-    public static function getBatchHandle()
+    public function getBatchHandle()
     {
         return 'copy_page';
     }

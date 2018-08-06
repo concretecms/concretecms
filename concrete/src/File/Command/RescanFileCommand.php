@@ -9,7 +9,7 @@ use League\Tactician\Bernard\QueueableCommand;
 class RescanFileCommand extends FileCommand implements BatchableCommandInterface
 {
 
-    public static function getBatchHandle()
+    public function getBatchHandle()
     {
         return 'rescan_file';
     }

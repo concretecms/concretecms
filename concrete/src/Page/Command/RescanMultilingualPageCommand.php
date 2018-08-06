@@ -8,7 +8,7 @@ use League\Tactician\Bernard\QueueableCommand;
 class RescanMultilingualPageCommand extends PageCommand implements BatchableCommandInterface
 {
 
-    public static function getBatchHandle()
+    public function getBatchHandle()
     {
         return 'rescan_multilingual_page';
     }

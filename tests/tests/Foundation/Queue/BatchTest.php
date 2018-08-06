@@ -53,7 +53,9 @@ class BatchTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($repository));
 
         $factory = new BatchFactory($em);
-        $batch = $factory->getBatchFromCommand(RescanFileCommand::class);
+        $file = new File();
+        $command = new RescanFileCommand($file);
+        $batch = $factory->getBatchFromCommand($command);
         $this->assertInstanceOf(Batch::class, $batch);
         $this->assertEquals('rescan_file', $batch->getBatchHandle());
     }

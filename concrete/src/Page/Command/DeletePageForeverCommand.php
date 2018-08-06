@@ -8,7 +8,7 @@ use League\Tactician\Bernard\QueueableCommand;
 class DeletePageForeverCommand extends PageCommand implements BatchableCommandInterface
 {
 
-    public static function getBatchHandle()
+    public function getBatchHandle()
     {
         return 'delete_page_forever';
     }

@@ -3,20 +3,20 @@ namespace Concrete\Core\Job;
 
 use Bernard\Queue;
 use Concrete\Core\Application\Application;
+use Concrete\Core\Entity\Queue\Batch;
+use Concrete\Core\Foundation\Queue\Batch\BatchFactory;
 use Concrete\Core\Foundation\Queue\QueueService;
 use Concrete\Core\Job\Command\ExecuteJobItemCommand;
 
 /**
- * Wrapper class for Bernard specifically for use with jobs to minimize backward compatibility headaches.
- * Class JobQueue
- * @package Concrete\Core\Job
+ * Wrapper class for our batching specifically for use with jobs to minimize backward compatibility headaches.
  */
 class JobQueue
 {
     /**
-     * @var Queue
+     * @var BatchFactory
      */
-    protected $queue;
+    protected $batchFactory;
 
     /**
      * @var Application
@@ -28,12 +28,25 @@ class JobQueue
      */
     protected $job;
 
-    public function __construct(QueueableJob $job, Application $app, QueueService $queueService)
+    /**
+     * @var QueueService
+     */
+    protected $service;
+
+    /**
+     * @var Batch
+     */
+    protected $batch;
+
+    public function __construct(QueueableJob $job, Application $app, QueueService $service, BatchFactory $batchFactory)
     {
-        $queue = $queueService->get(sprintf('job_%s', $job->getJobHandle()));
-        $this->queue = $queue;
+        $this->service = $service;
+        $this->batchFactory = $batchFactory;
         $this->job = $job;
         $this->app = $app;
+        $this->queue = $service->get($service->getDefaultQueueHandle());
+        $this->batch = $this->batchFactory->getBatch(sprintf('job_%s', $this->job->getJobHandle()));
+
     }
 
     /**
@@ -49,11 +62,16 @@ class JobQueue
         return $this->queue->close();
     }
 
+    public function getBatch()
+    {
+        return $this->batch;
+    }
+
     public function send($mixed)
     {
         $data = serialize($mixed);
-        $command = new ExecuteJobItemCommand((string) $this->queue, $this->job->getJobHandle(), $data);
-        return $this->app->queueCommand($command);
+        $command = new ExecuteJobItemCommand($this->batch->getBatchHandle(), $this->job->getJobHandle(), $data);
+        return $this->app->getCommandDispatcher()->dispatchOnQueue($command);
     }
 
 }

@@ -25,14 +25,9 @@ class BatchFactory
         $this->entityManager = $entityManager;
     }
 
-    public function getBatchFromCommand(string $command)
+    public function getBatchFromCommand(BatchableCommandInterface $command)
     {
-        $reflectionClass = new \ReflectionClass($command);
-        if (!$reflectionClass->implementsInterface(BatchableCommandInterface::class)) {
-            throw new \Exception(t('Command %s passed to getBatchFromCommand does not implement the BatchableCommandInterface', $command));
-        }
-
-        $handle = $command::getBatchHandle();
+        $handle = $command->getBatchHandle();
         return $this->getBatch($handle);
     }
 
