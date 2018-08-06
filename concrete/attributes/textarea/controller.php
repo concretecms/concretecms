@@ -41,16 +41,17 @@ class Controller extends DefaultController
         return $type;
     }
 
-    public function getDisplayValue()
+    public function getValue()
     {
         $this->load();
         if ($this->akTextareaDisplayMode == 'text') {
-            return parent::getDisplayValue();
+            $value = $this->getAttributeValue()->getValueObject();
+            return (string)$value;
         }
 
         $value = null;
         if (is_object($this->attributeValue)) {
-            $value = $this->getAttributeValue()->getValue();
+            $value = $this->getAttributeValue()->getValueObject();
 
             if ($value) {
                 $this->load();
@@ -59,13 +60,19 @@ class Controller extends DefaultController
                 }
             }
         }
+        return $value;
+    }
 
+    public function getDisplayValue()
+    {
+        $value = $this->getValue();
         if ($this->akTextareaDisplayMode == 'rich_text') {
-          return htmLawed($value, array('safe' => 1));
+            return htmLawed($value, array('safe' => 1));
         }
 
         return htmLawed($value, array('safe' => 1, 'deny_attribute' => 'style'));
     }
+
 
 
     public function form()
