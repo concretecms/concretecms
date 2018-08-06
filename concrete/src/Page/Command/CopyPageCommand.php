@@ -2,9 +2,10 @@
 
 namespace Concrete\Core\Page\Command;
 
+use Concrete\Core\Foundation\Queue\Batch\Command\BatchableCommandInterface;
 use League\Tactician\Bernard\QueueableCommand;
 
-class CopyPageCommand extends PageCommand implements QueueableCommand
+class CopyPageCommand extends PageCommand implements BatchableCommandInterface
 {
 
     protected $destinationPageID;
@@ -46,7 +47,7 @@ class CopyPageCommand extends PageCommand implements QueueableCommand
     }
 
 
-    public function getName()
+    public static function getBatchHandle()
     {
         return 'copy_page';
     }

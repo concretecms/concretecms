@@ -8,7 +8,15 @@ use Concrete\Core\Foundation\Queue\Batch\Response\BatchProcessorResponse;
 interface BatchProcessFactoryInterface
 {
 
-    public function getCommand($mixed) : BatchableCommandInterface;
+    /**
+     * @param $mixed
+     * @return BatchableCommandInterface[]
+     */
+    public function getCommands($mixed) : array;
+
+    /**
+     * @return string
+     */
     public function getBatchHandle();
 
 }

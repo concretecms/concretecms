@@ -17,12 +17,12 @@ class RescanFileBatchProcessFactory implements BatchProcessFactoryInterface
         return 'rescan_file';
     }
 
-    /**
-     * @param File $mixed
-     * @return BatchableCommandInterface|string
-     */
-    public function getCommand($mixed) : BatchableCommandInterface
+    public function getCommands($files) : array
     {
-        return new RescanFileCommand($mixed->getFileID());
+        $commands = [];
+        foreach($files as $file) {
+            $commands[] = new RescanFileCommand($file->getFileID());
+        }
+        return $commands;
     }
 }

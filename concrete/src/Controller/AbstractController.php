@@ -319,12 +319,4 @@ abstract class AbstractController implements ApplicationAwareInterface
         return $this->app->executeCommand($command);
     }
 
-    /**
-     * Dispatches a command to the command queue.
-     * @param QueueableCommand $command
-     */
-    public function queueCommand(QueueableCommand $command)
-    {
-        return $this->app->queueCommand($command);
-    }
 }

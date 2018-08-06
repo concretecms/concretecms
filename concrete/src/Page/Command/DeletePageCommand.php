@@ -2,9 +2,10 @@
 
 namespace Concrete\Core\Page\Command;
 
+use Concrete\Core\Foundation\Queue\Batch\Command\BatchableCommandInterface;
 use League\Tactician\Bernard\QueueableCommand;
 
-class DeletePageCommand extends PageCommand
+class DeletePageCommand extends PageCommand implements BatchableCommandInterface
 {
 
     protected $userID;
@@ -31,5 +32,9 @@ class DeletePageCommand extends PageCommand
         parent::__construct($pageID);
     }
 
+    public static function getBatchHandle()
+    {
+        return 'delete_page';
+    }
 
 }

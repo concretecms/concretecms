@@ -107,9 +107,22 @@
 		my.poll(batch, token, remaining);
 	}
 
+    ConcreteProgressiveOperation.prototype.initProgressBar = function() {
+		var my = this,
+			$wrapper = my.options.element,
+			title = my.options.title,
+			html = '<h4>' + title + '</h4>' +
+				'<div class="progress progress-striped active">' +
+				'<div class="progress-bar" style="width: 0%;"></div>' +
+				'</div>';
+		$wrapper.append(html);
+    }
+
+
 	ConcreteProgressiveOperation.prototype.execute = function() {
 		var my = this;
-		if (my.options.element) {
+		if (my.options.element && my.options.element.length) {
+			my.initProgressBar();
 			my.setProgressBarStatus(0, -1);
 		} else {
 			NProgress.set(0);

@@ -36,18 +36,17 @@ class Processor implements ProcessorInterface
         $this->batchFactory = $batchFactory;
     }
 
-    public function process(BatchProcessFactoryInterface $factory, array $items, $additionalResponseData = []): BatchProcessorResponse
+    public function process(BatchProcessFactoryInterface $factory, $mixed, $additionalResponseData = []): BatchProcessorResponse
     {
         $dispatcher = $this->dispatcherFactory->getDispatcher();
         $batch = $this->batchFactory->getBatch($factory->getBatchHandle());
+        $commands = $factory->getCommands($mixed);
 
-        $commands = [];
-        foreach($items as $item) {
-            $command = $factory->getCommand($item);
+        foreach($commands as $command) {
             $dispatcher->dispatchOnQueue($command, $dispatcher->getQueueForCommand($command));
         }
 
-        $this->batchFactory->incrementTotals($batch, count($items));
+        $this->batchFactory->incrementTotals($batch, count($commands));
 
         return $this->responseFactory->createResponse($batch, $additionalResponseData);
 

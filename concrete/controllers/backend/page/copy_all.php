@@ -3,8 +3,10 @@ namespace Concrete\Controller\Backend\Page;
 
 use Concrete\Core\Controller\AbstractController;
 use Concrete\Core\Error\UserMessageException;
+use Concrete\Core\Foundation\Queue\Batch\Processor;
 use Concrete\Core\Foundation\Queue\QueueService;
 use Concrete\Core\Foundation\Queue\Response\EnqueueItemsResponse;
+use Concrete\Core\Page\Command\CopyPageBatchProcessFactory;
 use Concrete\Core\Page\Command\CopyPageCommand;
 use Concrete\Core\Page\Page;
 
@@ -56,10 +58,17 @@ class CopyAll extends AbstractController
                         // we want to order the pages by level, which should get us no funny
                         // business if the queue dies.
                         usort($pages, ['\Concrete\Core\Page\Page', 'queueForDuplicationSort']);
+
+                        $ids = [];
+
                         foreach ($pages as $page) {
-                            $command = new CopyPageCommand($page['cID'], $dc->getCollectionID(), $isMultilingual);
-                            $this->queueCommand($command);
+                            $ids[] = $page['cID'];
                         }
+
+
+                        $factory = new CopyPageBatchProcessFactory($dc, $isMultilingual);
+                        $processor = $this->app->make(Processor::class);
+                        return $processor->process($factory, $ids);
                     }
                 }
             }

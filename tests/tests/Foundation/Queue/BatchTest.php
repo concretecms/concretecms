@@ -105,7 +105,7 @@ class BatchTest extends \PHPUnit_Framework_TestCase
             // as array, even if you only have one
             // argument!
             ->with(
-                $this->equalTo('rescan_files')
+                $this->equalTo('rescan_file')
             )
             ->willReturn($batch);
 
