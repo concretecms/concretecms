@@ -2,28 +2,19 @@
 namespace Concrete\Tests\Core\Command;
 
 use Bernard\Envelope;
-use Bernard\Normalizer\EnvelopeNormalizer;
-use Bernard\Normalizer\PlainMessageNormalizer;
-use Concrete\Core\Foundation\Queue\Router\QueuedCommandClassNameRouter;
+use Bernard\Message;
 use Concrete\Core\Foundation\Command\Dispatcher;
+use Concrete\Core\Foundation\Command\DispatcherFactory;
+use Concrete\Core\Foundation\Queue\Router\QueuedCommandClassNameRouter;
+use Concrete\Core\Foundation\Queue\Serializer\SerializerManager;
+use Concrete\Core\Page\Command\DeletePageCommand;
+use Concrete\Core\Page\Command\DeletePageCommandHandler;
 use Concrete\Core\Page\Type\Command\UpdatePageTypeDefaultsCommand;
 use Concrete\Core\Support\Facade\Facade;
-
-use Concrete\Core\Page\Command\DeletePageCommand;
 use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 use League\Tactician\Bernard\QueueableCommand;
 use League\Tactician\Bernard\QueueCommand;
-use Concrete\Core\Foundation\Queue\Serializer\SerializerManager;
-use League\Tactician\Bernard\Receiver\SameBusReceiver;
-use Normalt\Normalizer\AggregateNormalizer;
-use Symfony\Component\Serializer\Encoder\JsonEncode;
-use Symfony\Component\Serializer\Encoder\XmlEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
-use Concrete\Core\Foundation\Command\DispatcherFactory;
 use League\Tactician\CommandBus;
-use Bernard\Message;
-use Concrete\Core\Page\Command\DeletePageCommandHandler;
 
 class TestCommand implements QueueableCommand
 {

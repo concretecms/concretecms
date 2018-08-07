@@ -22,44 +22,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class BatchTest extends \PHPUnit_Framework_TestCase
 {
 
-
-    public function testCommand()
-    {
-
-
-        // Now, mock the repository
-        $repository = $this
-            ->getMockBuilder(EntityRepository::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $repository->expects($this->once())
-            ->method('__call')
-            // Be sure to pass the method argument(s)
-            // as array, even if you only have one
-            // argument!
-            ->with(
-                $this->equalTo('findOneByBatchHandle'),
-                $this->equalTo(['rescan_file'])
-            )
-            ->willReturn(null);
-
-        $em = $this
-            ->getMockBuilder(EntityManager::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $em->expects($this->once())
-            ->method('getRepository')
-            ->will($this->returnValue($repository));
-
-        $factory = new BatchFactory($em);
-        $file = new File();
-        $command = new RescanFileCommand($file);
-        $batch = $factory->getBatchFromCommand($command);
-        $this->assertInstanceOf(Batch::class, $batch);
-        $this->assertEquals('rescan_file', $batch->getBatchHandle());
-    }
-
     protected function buildFile($fID)
     {
         $file = $this->getMockBuilder(File::class)

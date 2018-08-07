@@ -2,9 +2,7 @@
 
 namespace Concrete\Core\Page\Type\Command;
 
-use Concrete\Core\Foundation\Command\CommandInterface;
 use Concrete\Core\Foundation\Queue\Batch\BatchProcessFactoryInterface;
-use League\Tactician\Bernard\QueueableCommand;
 
 class UpdatePageTypeDefaultsBatchProcessFactory implements BatchProcessFactoryInterface
 {

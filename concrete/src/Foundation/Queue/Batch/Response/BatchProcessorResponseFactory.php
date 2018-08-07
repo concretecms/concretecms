@@ -39,4 +39,15 @@ class BatchProcessorResponseFactory
         return new BatchProcessorResponse($data);
     }
 
+    public function createEmptyResponse(string $batchHandle)
+    {
+        $data = [
+            'batch' => $batchHandle,
+            'total' => 0,
+            'completed' => 0,
+            'token' => $this->tokenService->generate($batchHandle)
+        ];
+
+        return new BatchProcessorResponse($data);
+    }
 }

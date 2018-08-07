@@ -2,9 +2,7 @@
 
 namespace Concrete\Core\Job\Command;
 
-use Concrete\Core\Foundation\Command\CommandInterface;
 use Concrete\Core\Foundation\Queue\Batch\Command\BatchableCommandInterface;
-use League\Tactician\Bernard\QueueableCommand;
 
 class ExecuteJobItemCommand implements BatchableCommandInterface
 {

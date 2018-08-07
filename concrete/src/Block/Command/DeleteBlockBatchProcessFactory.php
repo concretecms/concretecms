@@ -2,9 +2,7 @@
 
 namespace Concrete\Core\Block\Command;
 
-use Concrete\Core\Foundation\Command\CommandInterface;
 use Concrete\Core\Foundation\Queue\Batch\BatchProcessFactoryInterface;
-use League\Tactician\Bernard\QueueableCommand;
 
 class DeleteBlockBatchProcessFactory implements BatchProcessFactoryInterface
 {

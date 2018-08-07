@@ -2,24 +2,19 @@
 
 namespace Concrete\Core\Foundation\Queue;
 
-use Bernard\BernardEvents;
 use Bernard\Consumer;
-use Bernard\Event\RejectEnvelopeEvent;
 use Bernard\Normalizer\EnvelopeNormalizer;
 use Bernard\Normalizer\PlainMessageNormalizer;
 use Bernard\Producer;
 use Bernard\Router\ClassNameRouter;
-
+use Concrete\Core\Foundation\Command\DispatcherFactory;
 use Concrete\Core\Foundation\Queue\Driver\DriverFactory;
 use Concrete\Core\Foundation\Queue\Mutex\MutexGeneratorFactory;
-use Concrete\Core\Foundation\Queue\Mutex\QueueMutexGenerator;
-use Concrete\Core\Foundation\Service\Provider;
 use Concrete\Core\Foundation\Queue\Receiver\QueueCommandMessageReceiver;
+use Concrete\Core\Foundation\Queue\Serializer\SerializerManager;
+use Concrete\Core\Foundation\Service\Provider;
 use League\Tactician\Bernard\QueueableCommand;
 use League\Tactician\Bernard\QueueCommandNormalizer;
-use Concrete\Core\Foundation\Queue\Serializer\SerializerManager;
-use Concrete\Core\Events\EventDispatcher;
-use Concrete\Core\Foundation\Command\DispatcherFactory;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
 class QueueServiceProvider extends Provider

@@ -5,19 +5,17 @@ namespace Concrete\Core\Foundation\Queue;
 use Bernard\Message;
 use Bernard\Producer;
 use Bernard\Queue;
-use Concrete\Core\Entity\Queue\Batch;
-use Concrete\Core\Foundation\Queue\Batch\BatchFactory;
-use Concrete\Core\Foundation\Queue\QueueFactory;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Config\Repository\Repository;
+use Concrete\Core\Entity\Queue\Batch;
 use Concrete\Core\Events\EventDispatcher;
+use Concrete\Core\Foundation\Queue\Batch\BatchFactory;
 use Concrete\Core\Foundation\Queue\Mutex\MutexGeneratorFactory;
 use Concrete\Core\Job\Job;
 use Concrete\Core\Job\JobQueue;
 use Concrete\Core\Job\QueueableJob;
-use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\System\Mutex\MutexBusyException;
-use League\Tactician\Bernard\QueueableCommand;
+use Doctrine\ORM\EntityManager;
 
 /**
  * A handy wrapper for calling Bernard functions using the full API.
@@ -102,7 +100,7 @@ class QueueService
 
     public function getJobQueue(QueueableJob $job)
     {
-        return new JobQueue($job, $this->app, $this, $this->app->make(BatchFactory::class));
+        return $this->app->make(JobQueue::class, ['job' => $job]);
     }
 
     /**

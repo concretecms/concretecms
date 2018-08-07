@@ -28,10 +28,16 @@ class Processor implements ProcessorInterface
      */
     protected $dispatcherFactory;
 
+    /**
+     * @var BatchProgressUpdater
+     */
+    protected $updater;
 
-    public function __construct(DispatcherFactory $dispatcherFactory, BatchFactory $batchFactory, BatchProcessorResponseFactory $responseFactory)
+
+    public function __construct(DispatcherFactory $dispatcherFactory, BatchFactory $batchFactory, BatchProgressUpdater $updater, BatchProcessorResponseFactory $responseFactory)
     {
         $this->dispatcherFactory = $dispatcherFactory;
+        $this->updater = $updater;
         $this->responseFactory = $responseFactory;
         $this->batchFactory = $batchFactory;
     }
@@ -39,14 +45,14 @@ class Processor implements ProcessorInterface
     public function process(BatchProcessFactoryInterface $factory, $mixed, $additionalResponseData = []): BatchProcessorResponse
     {
         $dispatcher = $this->dispatcherFactory->getDispatcher();
-        $batch = $this->batchFactory->getBatch($factory->getBatchHandle());
+        $batch = $this->batchFactory->createOrGetBatch($factory->getBatchHandle());
         $commands = $factory->getCommands($mixed);
 
         foreach($commands as $command) {
             $dispatcher->dispatchOnQueue($command, $dispatcher->getQueueForCommand($command));
         }
 
-        $this->batchFactory->incrementTotals($batch, count($commands));
+        $this->updater->incrementTotals($batch, count($commands));
 
         return $this->responseFactory->createResponse($batch, $additionalResponseData);
 

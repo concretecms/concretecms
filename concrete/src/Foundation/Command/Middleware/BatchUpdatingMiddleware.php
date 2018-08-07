@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Foundation\Command\Middleware;
 
-use Concrete\Core\Entity\Queue\Batch;
+use Concrete\Core\Foundation\Queue\Batch\BatchProgressUpdater;
 use Concrete\Core\Foundation\Queue\Batch\Command\BatchableCommandInterface;
 use Doctrine\ORM\EntityManager;
 use League\Tactician\Middleware;
@@ -10,13 +10,13 @@ class BatchUpdatingMiddleware implements Middleware
 {
 
     /**
-     * @var EntityManager
+     * @var BatchProgressUpdater
      */
-    protected $entityManager;
+    protected $updater;
 
-    public function __construct(EntityManager $entityManager)
+    public function __construct(BatchProgressUpdater $updater)
     {
-        $this->entityManager = $entityManager;
+        $this->updater = $updater;
     }
 
     public function execute($command, callable $next)
@@ -26,25 +26,7 @@ class BatchUpdatingMiddleware implements Middleware
 
 
         if ($command instanceof BatchableCommandInterface) {
-            $r = $this->entityManager->getRepository(Batch::class);
-            $batch = $r->findOneByBatchHandle($command->getBatchHandle());
-            if ($batch) {
-                /**
-                 * @var $batch Batch
-                 */
-                $total = $batch->getTotal();
-                $completed = $batch->getCompleted();
-
-                $completed++;
-
-                if ($completed < $total) {
-                    $batch->setCompleted($completed);
-                    $this->entityManager->persist($batch);
-                } else {
-                    $this->entityManager->remove($batch);
-                }
-                $this->entityManager->flush();
-            }
+            $this->updater->incrementCommandProgress($command);
         }
 
 

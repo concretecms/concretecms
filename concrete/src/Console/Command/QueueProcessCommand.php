@@ -2,23 +2,14 @@
 namespace Concrete\Core\Console\Command;
 
 use Bernard\BernardEvents;
-use Bernard\Consumer;
 use Bernard\Event\EnvelopeEvent;
 use Bernard\Event\RejectEnvelopeEvent;
-use Bernard\Router\ClassNameRouter;
-use Bernard\Router\SimpleRouter;
-use Bernard\Serializer;
-use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Console\Command;
-use League\Tactician\Bernard\QueueableCommand;
-use League\Tactician\Bernard\Receiver\SameBusReceiver;
-use League\Tactician\Bernard\Receiver\SeparateBusReceiver;
-use Symfony\Component\Console\Input\InputArgument;
+use Concrete\Core\Foundation\Queue\QueueService;
+use Core;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Core;
-use Concrete\Core\Foundation\Queue\QueueService;
 
 class QueueProcessCommand extends Command
 {

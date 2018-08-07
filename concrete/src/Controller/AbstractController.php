@@ -6,7 +6,6 @@ use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Foundation\Command\CommandInterface;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Core;
-use League\Tactician\Bernard\QueueableCommand;
 use Request;
 use View;
 

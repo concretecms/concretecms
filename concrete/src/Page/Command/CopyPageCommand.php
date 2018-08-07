@@ -3,7 +3,6 @@
 namespace Concrete\Core\Page\Command;
 
 use Concrete\Core\Foundation\Queue\Batch\Command\BatchableCommandInterface;
-use League\Tactician\Bernard\QueueableCommand;
 
 class CopyPageCommand extends PageCommand implements BatchableCommandInterface
 {

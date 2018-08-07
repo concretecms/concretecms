@@ -112,6 +112,7 @@ class Jobs extends Controller
                     /**
                      * @var $responseFactory BatchProcessorResponseFactory
                      */
+                    $q->saveBatch();
                     $responseFactory = $this->app->make(BatchProcessorResponseFactory::class);
                     return $responseFactory->createResponse($q->getBatch());
 

@@ -32,7 +32,6 @@ use Exception;
 use Illuminate\Container\Container;
 use Job;
 use JobSet;
-use League\Tactician\Bernard\QueueableCommand;
 use Log;
 use Page;
 use Redirect;

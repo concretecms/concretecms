@@ -25,25 +25,15 @@ class BatchFactory
         $this->entityManager = $entityManager;
     }
 
-    public function getBatchFromCommand(BatchableCommandInterface $command)
+    public function createOrGetBatch(string $handle)
     {
-        $handle = $command->getBatchHandle();
-        return $this->getBatch($handle);
-    }
-
-    public function incrementTotals(Batch $batch, $additional)
-    {
-        $total = $batch->getTotal();
-        $total += $additional;
-        $batch->setTotal($total);
-        $this->entityManager->persist($batch);
-        $this->entityManager->flush();
-    }
-
-    public function getBatch(string $handle)
-    {
-        $r = $this->entityManager->getRepository(Batch::class);
-        $batch = $r->findOneByBatchHandle($handle);
+        $batch = $this->getBatch($handle);
+        if ($batch && $batch->getTotal() == $batch->getCompleted()) {
+            // This batch is closed. Let's delete it and open a new one.
+            $this->entityManager->remove($batch);
+            $this->entityManager->flush();
+            unset($batch);
+        }
         if (!$batch) {
             $batch = new Batch();
             $batch->setBatchHandle($handle);
@@ -51,6 +41,12 @@ class BatchFactory
             $this->entityManager->flush();
         }
         return $batch;
+    }
+
+    public function getBatch(string $handle)
+    {
+        $r = $this->entityManager->getRepository(Batch::class);
+        return $r->findOneByBatchHandle($handle);
     }
 
 }

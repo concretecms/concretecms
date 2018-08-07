@@ -40,13 +40,15 @@ class Batch extends AbstractController
         parent::__construct();
     }
 
-    public function monitor($batch, $token)
+    public function monitor($handle, $token)
     {
-        if ($this->token->validate($batch, $token)) {
-            $batch = $this->batchFactory->getBatch($batch);
+        if ($this->token->validate($handle, $token)) {
+            $batch = $this->batchFactory->getBatch($handle);
             if ($batch) {
                 $this->service->consumeBatchFromPoll($batch);
                 return $this->batchProcessorResponseFactory->createResponse($batch);
+            } else {
+                $this->batchProcessorResponseFactory->createEmptyResponse($handle);
             }
         }
         throw new \Exception(t('Access Denied'));
