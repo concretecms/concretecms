@@ -6,6 +6,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 $color = Core::make('helper/form/color');
 echo Core::make('helper/concrete/ui')->tabs(array(
     array('search', t('Source & Search'), true),
+    array('filtering', t('Filtering')),
     array('results', t('Results')),
     array('design', t('Design'))
 ));
@@ -47,6 +48,17 @@ echo Core::make('helper/concrete/ui')->tabs(array(
             </div>
         </div>
     </fieldset>
+
+</div>
+
+<div class="ccm-tab-content" id="ccm-tab-content-filtering">
+
+    <?php if ($searchFieldSelectorElement) { ?>
+        <?php $searchFieldSelectorElement->render() ?>
+    <?php } else {  ?>
+        <?=t('You must choose an entity before you can customize its filtering.') ?>
+    <?php } ?>
+
 
 </div>
 

@@ -2,11 +2,13 @@
 namespace Concrete\Block\ExpressEntryList;
 
 use Concrete\Controller\Element\Search\CustomizeResults;
+use Concrete\Controller\Element\Search\SearchFieldSelector;
 use \Concrete\Core\Block\BlockController;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Express\Entry\Search\Result\Result;
 use Concrete\Core\Express\EntryList;
 use Concrete\Core\Search\Column\AttributeKeyColumn;
+use Concrete\Core\Search\Field\ManagerFactory;
 use Concrete\Core\Search\Result\ItemColumn;
 use Concrete\Core\Support\Facade\Facade;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -81,7 +83,13 @@ class Controller extends BlockController
                 $element = new CustomizeResults($provider);
                 $element->setIncludeNumberOfResults(false);
 
+
+                $fieldManager = ManagerFactory::get('express');
+                $fieldManager->setExpressCategory($entity->getAttributeKeyCategory());
+                $fieldSelectorElement = new SearchFieldSelector($fieldManager, '#');
+
                 $this->set('customizeElement', $element);
+                $this->set('searchFieldSelectorElement', $fieldSelectorElement);
                 $this->set('linkedPropertiesSelected', $linkedPropertiesSelected);
                 $this->set('searchPropertiesSelected', $searchPropertiesSelected);
                 $this->set('searchProperties', $searchProperties);
@@ -235,6 +243,8 @@ class Controller extends BlockController
                 $element->getViewObject()->render();
                 $r->customize = ob_get_contents();
                 ob_end_clean();
+
+
 
                 $r->attributes = $this->getSearchPropertiesJsonArray($entity);
                 return new JsonResponse($r);
