@@ -57,7 +57,8 @@ class LinkFormatter implements LinkFormatterInterface
 
     public function getEventOccurrenceLinkObject(CalendarEventVersionOccurrence $occurrence)
     {
-        $value = $occurrence->getEvent()->getName();
+        $value = h($occurrence->getEvent()->getName());
+        
         if (!$value) {
             $value = t('(No Title)');
         }
@@ -73,7 +74,7 @@ class LinkFormatter implements LinkFormatterInterface
         $background = $this->getEventOccurrenceBackgroundColor($occurrence);
         $text = $this->getEventOccurrenceTextColor($occurrence);
 
-        $link = new Link($href, h($value));
+        $link = new Link($href, $value);
         $link->setAttribute('style', sprintf('background-color: %s; color: %s', $background, $text));
 
         if ($occurrence->isCancelled()) {
