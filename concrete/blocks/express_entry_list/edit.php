@@ -53,11 +53,13 @@ echo Core::make('helper/concrete/ui')->tabs(array(
 
 <div class="ccm-tab-content" id="ccm-tab-content-filtering">
 
-    <?php if ($searchFieldSelectorElement) { ?>
-        <?php $searchFieldSelectorElement->render() ?>
-    <?php } else {  ?>
-        <?=t('You must choose an entity before you can customize its filtering.') ?>
-    <?php } ?>
+    <div data-container="search-field-selector">
+        <?php if ($searchFieldSelectorElement) { ?>
+            <?php $searchFieldSelectorElement->render() ?>
+        <?php } else {  ?>
+            <?=t('You must choose an entity before you can customize its filtering.') ?>
+        <?php } ?>
+    </div>
 
 
 </div>

@@ -52,6 +52,32 @@ class Controller extends BlockController
         $this->set('displayLimit', 20);
     }
 
+    protected function getSearchFieldManager(Entity $entity)
+    {
+        $fieldManager = ManagerFactory::get('express');
+        $fieldManager->setExpressCategory($entity->getAttributeKeyCategory());
+        return $fieldManager;
+    }
+
+    public function action_add_search_field($entityID = null)
+    {
+        if (!$entityID) {
+            $entityID = $this->exEntityID;
+        }
+        $entity = $this->entityManager->find('Concrete\Core\Entity\Express\Entity', $entityID);
+
+        if ($entity) {
+            $manager = $this->getSearchFieldManager($entity);
+            if ($manager) {
+                $field = $this->request->request->get('field');
+                $field = $manager->getFieldByKey($field);
+                if (is_object($field)) {
+                    return new JsonResponse($field);
+                }
+            }
+        }
+    }
+
     public function edit()
     {
         $this->loadData();
@@ -84,9 +110,8 @@ class Controller extends BlockController
                 $element->setIncludeNumberOfResults(false);
 
 
-                $fieldManager = ManagerFactory::get('express');
-                $fieldManager->setExpressCategory($entity->getAttributeKeyCategory());
-                $fieldSelectorElement = new SearchFieldSelector($fieldManager, '#');
+                $fieldManager = $this->getSearchFieldManager($entity);
+                $fieldSelectorElement = new SearchFieldSelector($fieldManager, $this->getActionURL('add_search_field'));
 
                 $this->set('customizeElement', $element);
                 $this->set('searchFieldSelectorElement', $fieldSelectorElement);
@@ -244,7 +269,14 @@ class Controller extends BlockController
                 $r->customize = ob_get_contents();
                 ob_end_clean();
 
-
+                $fieldManager = $this->getSearchFieldManager($entity);
+                $addFieldAction = $this->getActionURL('add_search_field', $exEntityID);
+                $fieldSelectorElement = new SearchFieldSelector($fieldManager, $addFieldAction);
+                $r = new \stdClass;
+                ob_start();
+                $fieldSelectorElement->getViewObject()->render();
+                $r->searchFields = ob_get_contents();
+                ob_end_clean();
 
                 $r->attributes = $this->getSearchPropertiesJsonArray($entity);
                 return new JsonResponse($r);

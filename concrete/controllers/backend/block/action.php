@@ -12,6 +12,7 @@ class Action extends AbstractController
     public function add($cID, $arHandle, $btID, $action)
     {
         $c = \Page::getByID($cID);
+
         if (is_object($c) && !$c->isError()) {
             $a = \Area::getOrCreate($c, $arHandle);
             if (is_object($a)) {
@@ -19,6 +20,8 @@ class Action extends AbstractController
                 $bt = \BlockType::getByID($btID);
                 if (is_object($bt)) {
                     $controller = $bt->getController();
+                    $controller->setAreaObject($a);
+                    $this->request->setCurrentPage($c);
                     if ($controller->validateAddBlockPassThruAction($ap, $bt)) {
                         return $this->deliverResponse($controller, $action);
                     }
@@ -31,9 +34,16 @@ class Action extends AbstractController
         return $response;
     }
 
+    public function getMethodAndParameters(BlockController $controller, $action)
+    {
+        $action = trim($action, '/');
+        $action = explode('/', $action);
+        return $controller->getPassThruActionAndParameters($action);
+    }
+
     protected function deliverResponse(BlockController $controller, $action)
     {
-        list($method, $parameters) = $controller->getPassThruActionAndParameters(array($action));
+        list($method, $parameters) = $this->getMethodAndParameters($controller, $action);
         if ($controller->isValidControllerTask($method, $parameters)) {
             $controller->on_start();
             $response = $controller->runAction($method, $parameters);
@@ -54,6 +64,7 @@ class Action extends AbstractController
     {
         $c = \Page::getByID($cID);
         if (is_object($c) && !$c->isError()) {
+            $this->request->setCurrentPage($c);
             $a = \Area::getOrCreate($c, $arHandle);
             $ax = $a;
             $cx = $c;
@@ -100,6 +111,7 @@ class Action extends AbstractController
         $setControl = FormLayoutSetControl::getByID($ptComposerFormLayoutSetControlID);
         if (is_object($setControl)) {
             if (is_object($c) && !$c->isError()) {
+                $this->request->setCurrentPage($c);
                 $formControl = $setControl->getPageTypeComposerControlObject();
                 if ($formControl instanceof BlockControl) {
                     $b = $formControl->getPageTypeComposerControlBlockObject($c);

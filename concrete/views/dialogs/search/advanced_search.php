@@ -13,7 +13,7 @@
         echo Core::make('helper/concrete/ui')->tabs($tabs);
     ?>
 
-    <form class="ccm-search-fields ccm-search-fields-none" data-form="advanced-search" method="post" action="<?=$controller->getSubmitAction()?>">
+    <form data-form="advanced-search" method="post" action="<?=$controller->getSubmitAction()?>">
 
         <div class="ccm-tab-content" id="ccm-tab-content-fields">
 
