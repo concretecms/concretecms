@@ -438,9 +438,9 @@
 			if (!dragMode) {
 				dragMode = '';
 			}
-			var dialog_url = CCM_TOOLS_PATH + '/dashboard/sitemap_drag_request?origCID=' + node.data.cID + '&destCID=' + destNode.data.cID + '&dragMode=' + dragMode;
-			var dialog_height = 350;
-			var dialog_width = 350;
+			var dialog_url = CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/drag_request?origCID=' + node.data.cID + '&destCID=' + destNode.data.cID + '&dragMode=' + dragMode;
+			var dialog_height = 400;
+			var dialog_width = 520;
 
 			$.fn.dialog.open({
 				title: dialog_title,
@@ -570,65 +570,67 @@
 	};
 
 	ConcreteSitemap.refreshCopyOperations = function() {
-		ccm_triggerProgressiveOperation(CCM_TOOLS_PATH + '/dashboard/sitemap_copy_all', [],	ccmi18n_sitemap.copyProgressTitle, function() {
-			$('.ui-dialog-content').dialog('close');
-			window.location.reload();
-		});
+		ccm_triggerProgressiveOperation(
+		    CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/drag_request/copy_all',
+		    [],
+		    ccmi18n_sitemap.copyProgressTitle,
+		    function() {
+		        $('.ui-dialog-content').dialog('close');
+		        window.location.reload();
+		    }
+		);
 	};
 
 	ConcreteSitemap.submitDragRequest = function() {
-
-		var origCID = $('#origCID').val();
-		//var destParentID = $('#destParentID').val();
-		var destCID = $('#destCID').val();
-		var dragMode = $('#dragMode').val();
-		var destSibling = $('#destSibling').val();
-		var ctask = $("input[name=ctask]:checked").val();
-		var copyAll = $("input[name=copyAll]:checked").val();
-		var saveOldPagePath = $("input[name=saveOldPagePath]:checked").val();
-		var params = {
-
-			'origCID': origCID,
-			'destCID': destCID,
-			'ctask': ctask,
-			'ccm_token': CCM_SECURITY_TOKEN,
-			'copyAll': copyAll,
-			'destSibling': destSibling,
-			'dragMode': dragMode,
-			'saveOldPagePath': saveOldPagePath
-		};
-
-
-		if (copyAll == 1) {
-
-			var dialogTitle = ccmi18n_sitemap.copyProgressTitle;
+        var params = {
+            ccm_token: $('#validationToken').val(),
+            dragMode: $('#dragMode').val(),
+            destCID: $('#destCID').val(),
+            destSibling: $('#destSibling').val() || '',
+            origCID: $('#origCID').val(),
+            ctask: $("input[name=ctask]:checked").val()
+        };
+        var isCopyAll = false;
+        switch (params.ctask) {
+            case 'MOVE':
+                params.saveOldPagePath = $('#saveOldPagePath').is(':checked') ? 1 : 0;
+                break;
+            case 'COPY':
+                if ($('#copyChildren').is(':checked')) {
+                    isCopyAll = true;
+                }
+                break;
+        }
+        var paramsArray = [];
+        $.each(params, function (name, value) {
+            paramsArray.push({name: name, value: value});
+        });
+		if (isCopyAll) {
 			ccm_triggerProgressiveOperation(
-				CCM_TOOLS_PATH + '/dashboard/sitemap_copy_all',
-				[{'name': 'origCID', 'value': origCID}, {'name': 'destCID', 'value': destCID}],
-				dialogTitle, function() {
+			    CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/drag_request/copy_all',
+			    paramsArray,
+				ccmi18n_sitemap.copyProgressTitle,
+				function() {
 					$('.ui-dialog-content').dialog('close');
-					ConcreteEvent.publish('SitemapDragRequestComplete', {'task': ctask});
+					ConcreteEvent.publish('SitemapDragRequestComplete', {'task': params.ctask});
 				}
 			);
-
 		} else {
-
 			jQuery.fn.dialog.showLoader();
-
-			$.getJSON(CCM_TOOLS_PATH + '/dashboard/sitemap_drag_request', params, function(resp) {
-				// parse response
-				ccm_parseJSON(resp, function() {
-					jQuery.fn.dialog.closeAll();
-					jQuery.fn.dialog.hideLoader();
-					ConcreteAlert.notify({
-					'message': resp.message
-					});
-
-					ConcreteEvent.publish('SitemapDragRequestComplete', {'task': ctask});
-					jQuery.fn.dialog.closeTop();
-					jQuery.fn.dialog.closeTop();
-				});
-			});
+			$.getJSON(
+			    CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/drag_request/submit',
+			    params,
+			    function(resp) {
+			        ccm_parseJSON(resp, function() {
+			            jQuery.fn.dialog.closeAll();
+			            jQuery.fn.dialog.hideLoader();
+			            ConcreteAlert.notify({message: resp.message});
+			            ConcreteEvent.publish('SitemapDragRequestComplete', {task: params.ctask});
+			            jQuery.fn.dialog.closeTop();
+			            jQuery.fn.dialog.closeTop();
+			        });
+			    }
+			);
 		}
 	};
 

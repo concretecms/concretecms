@@ -364,6 +364,9 @@ return [
         '/ccm/system/dialogs/page/location' => ['\Concrete\Controller\Dialog\Page\Location::view'],
         '/ccm/system/dialogs/page/search' => ['\Concrete\Controller\Dialog\Page\Search::view'],
         '/ccm/system/dialogs/page/seo' => ['\Concrete\Controller\Dialog\Page\Seo::view'],
+        '/ccm/system/dialogs/page/drag_request' => ['\Concrete\Controller\Dialog\Page\DragRequest::view'],
+        '/ccm/system/dialogs/page/drag_request/submit' => ['\Concrete\Controller\Dialog\Page\DragRequest::submit'],
+        '/ccm/system/dialogs/page/drag_request/copy_all' => ['\Concrete\Controller\Dialog\Page\DragRequest::doCopyAll'],
 
         '/ccm/system/dialogs/page/advanced_search' => ['\Concrete\Controller\Dialog\Page\AdvancedSearch::view'],
         '/ccm/system/dialogs/page/advanced_search/add_field' => ['\Concrete\Controller\Dialog\Page\AdvancedSearch::addField'],
