@@ -98,19 +98,14 @@ class Dispatcher
         return $this->getBus(self::BUS_TYPE_ASYNC);
     }
 
-    protected function registerQueuableCommand($command, $queue)
-    {
-        if ($queue === true) {
-            $queue = $this->getDefaultQueue();
-        }
-        $this->queuableCommands[$command] = $queue;
-    }
-
     public function registerCommand($handler, $command, $queue = null)
     {
         $this->locator->addHandler($handler, $command);
         if ($queue) {
-            $this->registerQueuableCommand($command, $queue);
+            if ($queue === true) {
+                $queue = $this->getDefaultQueue();
+            }
+            $this->queuableCommands[$command] = $queue;
         }
     }
 
