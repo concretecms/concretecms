@@ -1321,7 +1321,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     /**
      * Returns theme id for the collection.
      *
-     * @return int
+     * @return int|null
      */
     public function getCollectionThemeID()
     {
