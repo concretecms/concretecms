@@ -2,32 +2,33 @@
 
 namespace Concrete\Core\Page\Collection;
 
-use Area;
-use Block;
-use CacheLocal;
-use CollectionVersion;
+use Concrete\Core\Area\Area;
 use Concrete\Core\Area\CustomStyle as AreaCustomStyle;
 use Concrete\Core\Area\GlobalArea;
-use Concrete\Core\Attribute\Key\CollectionKey;
+use Concrete\Core\Attribute\Category\PageCategory as PageAttributeCategory;
+use Concrete\Core\Block\Block;
 use Concrete\Core\Block\CustomStyle as BlockCustomStyle;
-use Concrete\Core\Entity\Attribute\Value\PageValue;
+use Concrete\Core\Cache\Page\PageCache;
+use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Entity\Attribute\Value\PageValue as PageAttributeValue;
 use Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVersionFeatureAssignment;
 use Concrete\Core\Feature\Feature;
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Gathering\Item\Page as PageGatheringItem;
+use Concrete\Core\Page\Collection\Version\Version as CollectionVersion;
 use Concrete\Core\Page\Collection\Version\VersionList;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Search\IndexedSearch;
+use Concrete\Core\Page\Stack\Stack;
+use Concrete\Core\Permission\Checker;
 use Concrete\Core\Search\Index\IndexManagerInterface;
 use Concrete\Core\Statistics\UsageTracker\TrackableInterface;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 use Concrete\Core\Support\Facade\Application;
-use Config;
-use Loader;
-use Page;
-use PageCache;
-use Permissions;
-use Stack;
-use User;
+use Concrete\Core\View\View;
+use Doctrine\ORM\EntityManagerInterface;
+use Exception;
+use PDO;
 
 class Collection extends ConcreteObject implements TrackableInterface
 {
@@ -92,18 +93,19 @@ class Collection extends ConcreteObject implements TrackableInterface
      * @param int $cID The collection ID
      * @param string|int|false $version the collection version ('RECENT' for the most recent version, 'ACTIVE' for the currently published version, a falsy value to not load the collection version, or an integer to retrieve a specific version ID)
      *
-     * @return Collection If the collection is not found, you'll get an empty Collection instance
+     * @return \Concrete\Core\Page\Collection\Collection If the collection is not found, you'll get an empty Collection instance
      */
     public static function getByID($cID, $version = 'RECENT')
     {
-        $db = Loader::db();
-        $q = 'select Collections.cDateAdded, Collections.cDateModified, Collections.cID from Collections where cID = ?';
-        $row = $db->getRow($q, [$cID]);
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $row = $db->fetchAssoc('select Collections.cDateAdded, Collections.cDateModified, Collections.cID from Collections where cID = ?', [$cID]);
 
         $c = new self();
-        $c->setPropertiesFromArray($row);
-
-        if ($version != false) {
+        if ($row !== false) {
+            $c->setPropertiesFromArray($row);
+        }
+        if ($version) {
             // we don't do this on the front page
             $c->loadVersionObject($version);
         }
@@ -121,31 +123,26 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     public static function getByHandle($handle)
     {
-        $db = Loader::db();
-
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
         // first we ensure that this does NOT appear in the Pages table. This is not a page. It is more basic than that
-        $r = $db->query(
+        $row = $db->fetchAssoc(
             'select Collections.cID, Pages.cID as pcID from Collections left join Pages on Collections.cID = Pages.cID where Collections.cHandle = ?',
             [$handle]
-            );
-        if ($r->numRows() == 0) {
+        );
+        if ($row === false) {
             // there is nothing in the collections table for this page, so we create and grab
-
-            $data = [
+            $cObj = self::createCollection([
                 'handle' => $handle,
-            ];
-            $cObj = self::createCollection($data);
+            ]);
+        } elseif ($row['pcID'] == null) {
+            // there is a collection, but it is not a page. so we grab it
+            $cObj = self::getByID($row['cID']);
         } else {
-            $row = $r->fetchRow();
-            if ($row['cID'] > 0 && $row['pcID'] == null) {
-                // there is a collection, but it is not a page. so we grab it
-                $cObj = self::getByID($row['cID']);
-            }
+            $cObj = null;
         }
 
-        if (isset($cObj)) {
-            return $cObj;
-        }
+        return $cObj;
     }
 
     /**
@@ -156,16 +153,16 @@ class Collection extends ConcreteObject implements TrackableInterface
     public static function reindexPendingPages()
     {
         $app = Application::getFacadeApplication();
-
         $indexStack = $app->make(IndexManagerInterface::class);
+        $db = $app->make(Connection::class);
 
         $num = 0;
-        $db = $app['database']->connection();
-        $r = $db->execute('select cID from PageSearchIndex where cRequiresReindex = 1');
+        $r = $db->executeQuery('select cID from PageSearchIndex where cRequiresReindex = 1');
         while ($id = $r->fetchColumn()) {
-            $indexStack->index(\Concrete\Core\Page\Page::class, $id);
+            $indexStack->index(Page::class, $id);
+            ++$num;
         }
-        Config::save('concrete.misc.do_page_reindex_check', false);
+        $app->make('config')->save('concrete.misc.do_page_reindex_check', false);
 
         return $num;
     }
@@ -191,82 +188,62 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     public static function createCollection($data)
     {
-        $db = Loader::db();
-        $dh = Loader::helper('date');
-        $cDate = $dh->getOverridableNow();
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $dh = $app->make('date');
+        $now = $dh->getOverridableNow();
 
-        $data = array_merge(
-            [
-                'name' => '',
-                'pTemplateID' => 0,
-                'handle' => null,
-                'uID' => null,
-                'cDatePublic' => $cDate,
-                'cDescription' => null,
-            ],
-            $data
-            );
+        if (!is_array($data)) {
+            $data = [];
+        }
+        $data += [
+            'name' => '',
+            'pTemplateID' => 0,
+            'pThemeID' => 0,
+            'handle' => null,
+            'uID' => null,
+            'cDatePublic' => $now,
+            'cDescription' => null,
+        ];
 
-        $cDatePublic = ($data['cDatePublic']) ? $data['cDatePublic'] : $cDate;
-
-        if (isset($data['cID'])) {
-            $res = $db->query(
-                'insert into Collections (cID, cHandle, cDateAdded, cDateModified) values (?, ?, ?, ?)',
-                [$data['cID'], $data['handle'], $cDate, $cDate]
-                );
-            $newCID = $data['cID'];
+        $insert = [
+            'cHandle' => $data['handle'],
+            'cDateAdded' => $now,
+            'cDateModified' => $now,
+        ];
+        if (empty($data['cID'])) {
+            $db->insert('Collections', $insert);
+            $newCID = $db->lastInsertId();
         } else {
-            $res = $db->query(
-                'insert into Collections (cHandle, cDateAdded, cDateModified) values (?, ?, ?)',
-                [$data['handle'], $cDate, $cDate]
-                );
-            $newCID = $db->Insert_ID();
+            $insert['cID'] = $data['cID'];
+            $db->insert('Collections', $insert);
+            $newCID = $data['cID'];
         }
 
-        $cvIsApproved = (isset($data['cvIsApproved']) && $data['cvIsApproved'] == 0) ? 0 : 1;
-        $cvIsNew = 1;
-        if ($cvIsApproved) {
-            $cvIsNew = 0;
-        }
+        $insert = [
+            'cID' => $newCID,
+            'cvID' => 1,
+            'pTemplateID' => $data['pTemplateID'] ?: 0,
+            'cvName' => $app->make('helper/text')->sanitize($data['name']),
+            'cvHandle' => $data['handle'],
+            'cvDescription' => $data['cDescription'],
+            'cvDatePublic' => $data['cDatePublic'] ?: $now,
+            'cvDateCreated' => $now,
+            'cvComments' => t(VERSION_INITIAL_COMMENT),
+            'cvAuthorUID' => $data['uID'],
+            'cvIsApproved' => isset($data['cvIsApproved']) && empty($data['cvIsApproved']) ? 0 : 1,
+            'pThemeID' => $data['pThemeID'] ?: 0,
+        ];
         if (isset($data['cvIsNew'])) {
-            $cvIsNew = $data['cvIsNew'];
+            $insert['cvIsNew'] = $data['cvIsNew'] ? 1 : 0;
+        } else {
+            $insert['cvIsNew'] = $cvIsApproved ? 0 : 1;
         }
-        $data['name'] = Loader::helper('text')->sanitize($data['name']);
-        $pThemeID = 0;
-        if (isset($data['pThemeID']) && $data['pThemeID']) {
-            $pThemeID = $data['pThemeID'];
-        }
+        $db->insert('CollectionVersions', $insert);
 
-        $pTemplateID = 0;
-        if ($data['pTemplateID']) {
-            $pTemplateID = $data['pTemplateID'];
-        }
+        $newCollection = self::getByID($newCID);
 
-        if ($res) {
-            // now we add a pending version to the collectionversions table
-            $v2 = [
-                $newCID,
-                1,
-                $pTemplateID,
-                $data['name'],
-                $data['handle'],
-                $data['cDescription'],
-                $cDatePublic,
-                $cDate,
-                t(VERSION_INITIAL_COMMENT),
-                $data['uID'],
-                $cvIsApproved,
-                $cvIsNew,
-                $pThemeID,
-            ];
-            $q2 = 'insert into CollectionVersions (cID, cvID, pTemplateID, cvName, cvHandle, cvDescription, cvDatePublic, cvDateCreated, cvComments, cvAuthorUID, cvIsApproved, cvIsNew, pThemeID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-            $r2 = $db->prepare($q2);
-            $res2 = $db->execute($r2, $v2);
-        }
-
-        $nc = self::getByID($newCID);
-
-        return $nc;
+        return $newCollection;
     }
 
     /**
@@ -316,11 +293,13 @@ class Collection extends ConcreteObject implements TrackableInterface
     /**
      * Get the ID of the currently loaded version.
      *
-     * @return int
+     * @return int|null
      */
     public function getVersionID()
     {
-        return $this->vObj->cvID;
+        $versionObject = $this->getVersionObject();
+
+        return $versionObject ? $versionObject->getVersionID() : null;
     }
 
     /**
@@ -353,10 +332,10 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     public function addCollection($data)
     {
-        $data['pThemeID'] = 0;
-        if (isset($this) && $this instanceof Page) {
-            $data['pThemeID'] = $this->getCollectionThemeID();
+        if (!is_array($data)) {
+            $data = [];
         }
+        $data['pThemeID'] = $this instanceof Page ? (int) $this->getCollectionThemeID() : 0;
 
         return static::createCollection($data);
     }
@@ -378,15 +357,15 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     public function getVersionToModify()
     {
-        $u = new User();
-        $vObj = $this->getVersionObject();
-        if ($this->isMasterCollection() || ($vObj->isNew())) {
+        if ($this->isMasterCollection()) {
             return $this;
-        } else {
-            $nc = $this->cloneVersion(null);
-
-            return $nc;
         }
+        $vObj = $this->getVersionObject();
+        if ($vObj->isNew()) {
+            return $this;
+        }
+
+        return $this->cloneVersion(null);
     }
 
     /**
@@ -397,7 +376,7 @@ class Collection extends ConcreteObject implements TrackableInterface
     public function getNextVersionComments()
     {
         $c = Page::getByID($this->getCollectionID(), 'ACTIVE');
-        $cvID = $c->getVersionID();
+        $cvID = (int) $c->getVersionID();
 
         return t('Version %d', $cvID + 1);
     }
@@ -415,23 +394,25 @@ class Collection extends ConcreteObject implements TrackableInterface
         if ($this->isAlias() && !$this->isExternalLink()) {
             return false;
         }
-        if ($actuallyDoReindex || Config::get('concrete.page.search.always_reindex') == true) {
+        $app = Application::getFacadeApplication();
+        $config = $app->make('config');
+        $db = $app->make(Connection::class);
+        if ($actuallyDoReindex || $config->get('concrete.page.search.always_reindex')) {
             // Retrieve the attribute values for the current page
-            $category = \Core::make('Concrete\Core\Attribute\Category\PageCategory');
+            $category = $app->make(PageAttributeCategory::class);
             $indexer = $category->getSearchIndexer();
             $values = $category->getAttributeValues($this);
             foreach ($values as $value) {
                 $indexer->indexEntry($category, $value, $this);
             }
 
-            if ($index == false) {
+            if (!$index) {
                 $index = new IndexedSearch();
             }
 
             $index->reindexPage($this);
 
-            $db = \Database::connection();
-            $db->Replace(
+            $db->replace(
                'PageSearchIndex',
                ['cID' => $this->getCollectionID(), 'cRequiresReindex' => 0],
                ['cID'],
@@ -449,9 +430,8 @@ class Collection extends ConcreteObject implements TrackableInterface
                 $it->assignFeatureAssignments($c);
             }
         } else {
-            $db = Loader::db();
-            Config::save('concrete.misc.do_page_reindex_check', true);
-            $db->Replace(
+            $config->save('concrete.misc.do_page_reindex_check', true);
+            $db->replace(
                'PageSearchIndex',
                ['cID' => $this->getCollectionID(), 'cRequiresReindex' => 1],
                ['cID'],
@@ -470,7 +450,7 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     public function setAttribute($ak, $value)
     {
-        return $this->vObj->setAttribute($ak, $value);
+        return $this->getVersionObject()->setAttribute($ak, $value);
     }
 
     /**
@@ -495,8 +475,9 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     public function getAttribute($akHandle, $displayMode = false)
     {
-        if (is_object($this->vObj)) {
-            return $this->vObj->getAttribute($akHandle, $displayMode);
+        $vObj = $this->getVersionObject();
+        if ($vObj) {
+            return $vObj->getAttribute($akHandle, $displayMode);
         }
     }
 
@@ -504,13 +485,15 @@ class Collection extends ConcreteObject implements TrackableInterface
      * Return the attribute value object with the handle $akHandle of the currently loaded version (if it's loaded).
      *
      * @param string|\Concrete\Core\Attribute\Key\CollectionKey $akHandle the attribute key (or its handle)
+     * @param mixed $createIfNotExists
      *
      * @return \Concrete\Core\Entity\Attribute\Value\PageValue|null
      */
     public function getAttributeValueObject($akHandle, $createIfNotExists = false)
     {
-        if (is_object($this->vObj)) {
-            return $this->vObj->getAttributeValue($akHandle);
+        $vObj = $this->getVersionObject();
+        if ($vObj) {
+            return $vObj->getAttributeValue($akHandle);
         }
     }
 
@@ -521,21 +504,23 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     public function clearCollectionAttributes($retainAKIDs = [])
     {
-        $db = Loader::db();
-        if (count($retainAKIDs) > 0) {
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        if (!empty($retainAKIDs)) {
             $cleanAKIDs = [];
             foreach ($retainAKIDs as $akID) {
                 $cleanAKIDs[] = (int) $akID;
             }
             $akIDStr = implode(',', $cleanAKIDs);
-            $v2 = [$this->getCollectionID(), $this->getVersionID()];
-            $db->query(
+            $db->executeQuery(
                 "delete from CollectionAttributeValues where cID = ? and cvID = ? and akID not in ({$akIDStr})",
-                $v2
+                [$this->getCollectionID(), $this->getVersionID()]
             );
         } else {
-            $v2 = [$this->getCollectionID(), $this->getVersionID()];
-            $db->query('delete from CollectionAttributeValues where cID = ? and cvID = ?', $v2);
+            $db->executeQuery(
+                'delete from CollectionAttributeValues where cID = ? and cvID = ?',
+                [$this->getCollectionID(), $this->getVersionID()]
+            );
         }
         $this->reindex();
     }
@@ -547,7 +532,10 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     public function clearAttribute($ak)
     {
-        $this->vObj->clearAttribute($ak);
+        $vObj = $this->getVersionObject();
+        if ($vObj) {
+            $vObj->clearAttribute($ak);
+        }
     }
 
     /**
@@ -557,8 +545,9 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     public function getSetCollectionAttributes()
     {
-        $category = $this->vObj->getObjectAttributeCategory();
-        $values = $category->getAttributeValues($this->vObj);
+        $vObj = $this->getVersionObject();
+        $category = $vObj->getObjectAttributeCategory();
+        $values = $category->getAttributeValues($vObj);
         $attribs = [];
         foreach ($values as $value) {
             $attribs[] = $value->getAttributeKey();
@@ -572,7 +561,7 @@ class Collection extends ConcreteObject implements TrackableInterface
      *
      * @param string $arHandle the handle of the area
      *
-     * @return Area|null
+     * @return \Concrete\Core\Area\Area|null
      */
     public function getArea($arHandle)
     {
@@ -586,29 +575,28 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     public function hasAliasedContent()
     {
-        $db = Loader::db();
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
         // aliased content is content on the particular page that is being
         // used elsewhere - but the content on the PAGE is the original version
-        $v = [$this->cID];
-        $q = 'select bID from CollectionVersionBlocks where cID = ? and isOriginal = 1';
-        $r = $db->query($q, $v);
+        $r = $db->executeQuery(
+            'select bID from CollectionVersionBlocks where cID = ? and isOriginal = 1',
+            [$this->getCollectionID()]
+        );
         $bIDArray = [];
-        if ($r) {
-            while ($row = $r->fetchRow()) {
-                $bIDArray[] = $row['bID'];
-            }
-            if (count($bIDArray) > 0) {
-                $bIDList = implode(',', $bIDArray);
-                $v2 = [$bIDList, $this->cID];
-                $q2 = 'select cID from CollectionVersionBlocks where bID in (?) and cID <> ? limit 1';
-                $aliasedCID = $db->getOne($q2, $v2);
-                if ($aliasedCID > 0) {
-                    return true;
-                }
-            }
+        while (($bID = $r->fetchColumn()) !== false) {
+            $bIDArray[] = $bID;
         }
+        if (empty($bIDArray)) {
+            return false;
+        }
+        $bIDList = implode(',', $bIDArray);
+        $aliasedCID = $db->fetchColumn(
+            'select cID from CollectionVersionBlocks where bID in (?) and cID <> ? limit 1',
+            [$bIDList, $this->getCollectionID()]
+        );
 
-        return false;
+        return $aliasedCID ? true : false;
     }
 
     /**
@@ -627,12 +615,13 @@ class Collection extends ConcreteObject implements TrackableInterface
             // stacks that have been added to other areas of the page.
             return null;
         }
-        $result = null;
-        $styles = $this->vObj->getCustomAreaStyles();
+        $styles = $this->getVersionObject()->getCustomAreaStyles();
         $areaHandle = $area->getAreaHandle();
         if ($force || isset($styles[$areaHandle])) {
             $pss = isset($styles[$areaHandle]) ? StyleSet::getByID($styles[$areaHandle]) : null;
             $result = new AreaCustomStyle($pss, $area, $this->getCollectionThemeObject());
+        } else {
+            $result = null;
         }
 
         return $result;
@@ -646,8 +635,9 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     public function setCustomStyleSet($area, $set)
     {
-        $db = Loader::db();
-        $db->Replace(
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $db->replace(
             'CollectionVersionAreaStyles',
             [
                 'cID' => $this->getCollectionID(),
@@ -657,7 +647,7 @@ class Collection extends ConcreteObject implements TrackableInterface
             ],
             ['cID', 'cvID', 'arHandle'],
             true
-            );
+        );
     }
 
     /**
@@ -667,15 +657,13 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     public function resetAreaCustomStyle($area)
     {
-        $db = Loader::db();
-        $db->Execute(
-            'delete from CollectionVersionAreaStyles where cID = ? and cvID = ? and arHandle = ?',
-            [
-                $this->getCollectionID(),
-                $this->getVersionID(),
-                $area->getAreaHandle(),
-            ]
-            );
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $db->delete('CollectionVersionAreaStyles', [
+            'cID' => $this->getCollectionID(),
+            'cvID' => $this->getVersionID(),
+            'arHandle' => $area->getAreaHandle(),
+        ]);
     }
 
     /**
@@ -687,93 +675,68 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     public function outputCustomStyleHeaderItems($return = false)
     {
-        if (!Config::get('concrete.design.enable_custom')) {
+        $app = Application::getFacadeApplication();
+        $config = $app->make('config');
+        if (!$config->get('concrete.design.enable_custom')) {
             return '';
         }
+        $db = $app->make(Connection::class);
+        $txt = $app->make('helper/text');
 
-        $db = Loader::db();
         $psss = [];
-        $txt = Loader::helper('text');
-        CacheLocal::set('pssCheck', $this->getCollectionID() . ':' . $this->getVersionID(), true);
 
-        $r1 = $db->GetAll(
-                 'select bID, arHandle, issID from CollectionVersionBlockStyles where cID = ? and cvID = ? and issID > 0',
-                 [$this->getCollectionID(), $this->getVersionID()]
+        $blockStyles = $db->fetchAll(
+            'select bID, arHandle, issID from CollectionVersionBlockStyles where cID = ? and cvID = ? and issID > 0',
+            [$this->getCollectionID(), $this->getVersionID()]
         );
-        $r2 = $db->GetAll(
-                 'select arHandle, issID from CollectionVersionAreaStyles where cID = ? and cvID = ? and issID > 0',
-                 [$this->getCollectionID(), $this->getVersionID()]
-        );
-        foreach ($r1 as $r) {
-            $issID = $r['issID'];
-            $arHandle = $txt->filterNonAlphaNum($r['arHandle']);
-            $bID = $r['bID'];
-            $obj = StyleSet::getByID($issID);
-            if (is_object($obj)) {
+        foreach ($blockStyles as $blockStyle) {
+            $styleSet = StyleSet::getByID($blockStyle['issID']);
+            if ($styleSet !== null) {
                 $b = new Block();
-                $b->bID = $bID;
-                $a = new Area($arHandle);
+                $b->bID = $blockStyle['bID'];
+                $a = new Area($txt->filterNonAlphaNum($blockStyle['arHandle']));
                 $b->setBlockAreaObject($a);
-                $obj = new BlockCustomStyle($obj, $b, $this->getCollectionThemeObject());
-                $psss[] = $obj;
-                CacheLocal::set(
-                          'pssObject',
-                          $this->getCollectionID() . ':' . $this->getVersionID() . ':' . $r['arHandle'] . ':' . $r['bID'],
-                          $obj
-                );
+                $psss[] = new BlockCustomStyle($styleSet, $b, $this->getCollectionThemeObject());
             }
         }
 
-        foreach ($r2 as $r) {
-            $issID = $r['issID'];
-            $obj = StyleSet::getByID($issID);
-            if (is_object($obj)) {
-                $a = new Area($r['arHandle']);
-                $obj = new AreaCustomStyle($obj, $a, $this->getCollectionThemeObject());
-                $psss[] = $obj;
-                CacheLocal::set(
-                          'pssObject',
-                          $this->getCollectionID() . ':' . $this->getVersionID() . ':' . $r['arHandle'],
-                          $obj
-                );
+        $areaStyles = $db->fetchAll(
+            'select arHandle, issID from CollectionVersionAreaStyles where cID = ? and cvID = ? and issID > 0',
+            [$this->getCollectionID(), $this->getVersionID()]
+        );
+        foreach ($areaStyles as $areaStyle) {
+            $styleSet = StyleSet::getByID($areaStyle['issID']);
+            if ($styleSet !== null) {
+                $a = new Area($areaStyle['arHandle']);
+                $psss[] = new AreaCustomStyle($styleSet, $a, $this->getCollectionThemeObject());
             }
         }
 
         // grab all the header block style rules for items in global areas on this page
-        $rs = $db->GetCol(
-                 'select arHandle from Areas where arIsGlobal = 1 and cID = ?',
-                 [$this->getCollectionID()]
-        );
-        if (count($rs) > 0) {
-            $pcp = new Permissions($this);
-            foreach ($rs as $garHandle) {
-                if ($pcp->canViewPageVersions()) {
-                    $s = Stack::getByName($garHandle, 'RECENT');
-                } else {
-                    $s = Stack::getByName($garHandle, 'ACTIVE');
-                }
-                if (is_object($s)) {
-                    CacheLocal::set('pssCheck', $s->getCollectionID() . ':' . $s->getVersionID(), true);
-                    $rs1 = $db->GetAll(
-                              'select bID, issID, arHandle from CollectionVersionBlockStyles where cID = ? and cvID = ? and issID > 0',
-                              [$s->getCollectionID(), $s->getVersionID()]
-                    );
-                    foreach ($rs1 as $r) {
-                        $issID = $r['issID'];
-                        $obj = StyleSet::getByID($issID);
-                        if (is_object($obj)) {
-                            $b = new Block();
-                            $b->bID = $r['bID'];
-                            $a = new GlobalArea($garHandle);
-                            $b->setBlockAreaObject($a);
-                            $obj = new BlockCustomStyle($obj, $b, $this->getCollectionThemeObject());
-                            $psss[] = $obj;
-                            CacheLocal::set(
-                                      'pssObject',
-                                      $s->getCollectionID() . ':' . $s->getVersionID() . ':' . $r['arHandle'] . ':' . $r['bID'],
-                                      $obj
-                            );
-                        }
+        $pcp = null;
+        $rs = $db->executeQuery('select arHandle from Areas where arIsGlobal = 1 and cID = ?', [$this->getCollectionID()]);
+        while (($garHandle = $rs->fetchColumn()) !== false) {
+            if ($pcp === null) {
+                $pcp = new Checker($this);
+            }
+            if ($pcp->canViewPageVersions()) {
+                $s = Stack::getByName($garHandle, 'RECENT');
+            } else {
+                $s = Stack::getByName($garHandle, 'ACTIVE');
+            }
+            if ($s) {
+                $blockStyles = $db->fetchAll(
+                  'select bID, issID, arHandle from CollectionVersionBlockStyles where cID = ? and cvID = ? and issID > 0',
+                  [$s->getCollectionID(), $s->getVersionID()]
+                );
+                foreach ($blockStyles as $blockStyle) {
+                    $styleSet = StyleSet::getByID($blockStyle['issID']);
+                    if ($styleSet !== null) {
+                        $b = new Block();
+                        $b->bID = $blockStyle['bID'];
+                        $a = new GlobalArea($garHandle);
+                        $b->setBlockAreaObject($a);
+                        $psss[] = new BlockCustomStyle($styleSet, $b, $this->getCollectionThemeObject());
                     }
                 }
             }
@@ -787,12 +750,12 @@ class Collection extends ConcreteObject implements TrackableInterface
             }
         }
 
-        if (strlen(trim($styleHeader))) {
-            if ($return == true) {
+        if (trim($styleHeader) !== '') {
+            if ($return) {
                 return $styleHeader;
             } else {
-                $v = \View::getInstance();
-                $v->addHeaderItem($styleHeader);
+                $v = View::getInstance();
+                $v->addHeaderAsset($styleHeader);
             }
         }
     }
@@ -808,25 +771,25 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     public function relateVersionEdits($oc)
     {
-        $db = Loader::db();
-        $v = [
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $params = [
             $this->getCollectionID(),
             $this->getVersionID(),
             $oc->getCollectionID(),
             $oc->getVersionID(),
         ];
-        $r = $db->GetOne(
-                'select count(*) from CollectionVersionRelatedEdits where cID = ? and cvID = ? and cRelationID = ? and cvRelationID = ?',
-                $v
+        $count = $db->fetchColumn(
+            'select count(*) from CollectionVersionRelatedEdits where cID = ? and cvID = ? and cRelationID = ? and cvRelationID = ?',
+            $params
         );
-        if ($r > 0) {
+        if ($count) {
             return false;
-        } else {
-            $db->Execute(
-               'insert into CollectionVersionRelatedEdits (cID, cvID, cRelationID, cvRelationID) values (?, ?, ?, ?)',
-               $v
-            );
         }
+        $db->executeQuery(
+            'insert into CollectionVersionRelatedEdits (cID, cvID, cRelationID, cvRelationID) values (?, ?, ?, ?)',
+            $params
+        );
     }
 
     /**
@@ -844,7 +807,9 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     public function refreshCache()
     {
-        CacheLocal::flush();
+        $app = Application::getFacadeApplication();
+        $cache = $app->make('cache/request');
+        $cache->flush();
     }
 
     /**
@@ -854,22 +819,22 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     public function getGlobalBlocks()
     {
-        $db = Loader::db();
-        $v = [Stack::ST_TYPE_GLOBAL_AREA];
-        $rs = $db->GetCol('select stName from Stacks where Stacks.stType = ?', $v);
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
         $blocks = [];
-        if (count($rs) > 0) {
-            $pcp = new Permissions($this);
-            foreach ($rs as $garHandle) {
-                if ($pcp->canViewPageVersions()) {
-                    $s = Stack::getByName($garHandle, 'RECENT');
-                } else {
-                    $s = Stack::getByName($garHandle, 'ACTIVE');
-                }
-                if (is_object($s)) {
-                    $blocksTmp = $s->getBlocks(STACKS_AREA_NAME);
-                    $blocks = array_merge($blocks, $blocksTmp);
-                }
+        $pcp = null;
+        $rs = $db->executeQuery('select stName from Stacks where Stacks.stType = ?', [Stack::ST_TYPE_GLOBAL_AREA]);
+        while (($garHandle = $rs->fetchColumn()) !== false) {
+            if ($pcp === null) {
+                $pcp = new Checker($this);
+            }
+            if ($pcp->canViewPageVersions()) {
+                $s = Stack::getByName($garHandle, 'RECENT');
+            } else {
+                $s = Stack::getByName($garHandle, 'ACTIVE');
+            }
+            if ($s) {
+                $blocks = array_merge($blocks, $s->getBlocks(STACKS_AREA_NAME));
             }
         }
 
@@ -885,15 +850,11 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     public function getBlocks($arHandle = false)
     {
-        $blockIDs = $this->getBlockIDs($arHandle);
-
         $blocks = [];
-        if (is_array($blockIDs)) {
-            foreach ($blockIDs as $row) {
-                $ab = Block::getByID($row['bID'], $this, $row['arHandle']);
-                if (is_object($ab)) {
-                    $blocks[] = $ab;
-                }
+        foreach ($this->getBlockIDs($arHandle) as $row) {
+            $block = Block::getByID($row['bID'], $this, $row['arHandle']);
+            if ($block) {
+                $blocks[] = $block;
             }
         }
 
@@ -909,27 +870,26 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     public function getBlockIDs($arHandle = false)
     {
-        $blockIDs = CacheLocal::getEntry(
-                              'collection_block_ids',
-                              $this->getCollectionID() . ':' . $this->getVersionID()
-        );
-
-        if (!is_array($blockIDs)) {
-            $v = [$this->getCollectionID(), $this->getVersionID()];
-            $db = Loader::db();
-            $q = 'select Blocks.bID, CollectionVersionBlocks.arHandle from CollectionVersionBlocks inner join Blocks on (CollectionVersionBlocks.bID = Blocks.bID) inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where CollectionVersionBlocks.cID = ? and (CollectionVersionBlocks.cvID = ? or CollectionVersionBlocks.cbIncludeAll=1) order by CollectionVersionBlocks.cbDisplayOrder asc';
-            $r = $db->GetAll($q, $v);
+        $app = Application::getFacadeApplication();
+        $cache = $app->make('cache/request');
+        $cacheItem = $cache->getItem('collection_block_ids/' . $this->getCollectionID() . ':' . $this->getVersionID());
+        if ($cacheItem->isMiss()) {
+            $db = $app->make(Connection::class);
             $blockIDs = [];
-            if (is_array($r)) {
-                foreach ($r as $bl) {
-                    $blockIDs[strtolower($bl['arHandle'])][] = $bl;
-                }
+            $rs = $db->executeQuery(
+                'select Blocks.bID, CollectionVersionBlocks.arHandle from CollectionVersionBlocks inner join Blocks on (CollectionVersionBlocks.bID = Blocks.bID) inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where CollectionVersionBlocks.cID = ? and (CollectionVersionBlocks.cvID = ? or CollectionVersionBlocks.cbIncludeAll=1) order by CollectionVersionBlocks.cbDisplayOrder asc',
+                [$this->getCollectionID(), $this->getVersionID()]
+            );
+            while (($row = $rs->fetch(PDO::FETCH_ASSOC)) !== false) {
+                $blockIDs[strtolower($row['arHandle'])][] = $row;
             }
-            CacheLocal::set('collection_block_ids', $this->getCollectionID() . ':' . $this->getVersionID(), $blockIDs);
+            $cacheItem->set($blockIDs)->save();
+        } else {
+            $blockIDs = $cacheItem->get();
         }
 
         $result = [];
-        if ($arHandle != false) {
+        if ($arHandle) {
             $key = strtolower($arHandle);
             if (isset($blockIDs[$key])) {
                 $result = $blockIDs[$key];
@@ -950,22 +910,24 @@ class Collection extends ConcreteObject implements TrackableInterface
     /**
      * Add a new block to a specific area of the currently loaded collection version.
      *
-     * @param \Concrete\Core\Entity\Block\BlockType\BlockType $bt the type of block to be added
+     * @param \Concrete\Core\Entity\Block\BlockType\BlockType $blockType the type of block to be added
      * @param string|\Concrete\Core\Area\Area $a the area instance (or its handle) to which the block should be added to
      * @param array $data The data of the block. This data depends on the specific block type. Common values are: 'uID' to specify the ID of the author (if not specified: we'll use the current user), 'bName' to specify the block name.
+     * @param mixed $bt
      *
      * @return \Concrete\Core\Block\Block
      */
     public function addBlock($bt, $a, $data)
     {
-        $db = Loader::db();
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
 
         // first we add the block to the system
-        $nb = $bt->add($data, $this, $a);
+        $newBlock = $bt->add($data, $this, $a);
 
         // now that we have a block, we add it to the collectionversions table
 
-        $arHandle = (is_object($a)) ? $a->getAreaHandle() : $a;
+        $arHandle = is_object($a) ? $a->getAreaHandle() : $a;
         $cID = $this->getCollectionID();
         $vObj = $this->getVersionObject();
 
@@ -973,54 +935,37 @@ class Collection extends ConcreteObject implements TrackableInterface
             // normally, display order is dependant on a per area, per version basis. However, since this block
             // is not aliased across versions, then we want to get display order simply based on area, NOT based
             // on area + version
-            $newBlockDisplayOrder = $this->getCollectionAreaDisplayOrder(
-                                         $arHandle,
-                                         true
-            ); // second argument is "ignoreVersions"
+            $newBlockDisplayOrder = $this->getCollectionAreaDisplayOrder($arHandle, true);
         } else {
             $newBlockDisplayOrder = $this->getCollectionAreaDisplayOrder($arHandle);
         }
 
-        $cbRelationID = $db->GetOne('select max(cbRelationID) as cbRelationID from CollectionVersionBlocks');
-        if (!$cbRelationID) {
-            $cbRelationID = 1;
-        } else {
-            ++$cbRelationID;
-        }
+        $cbRelationID = 1 + (int) $db->fetchColumn('select max(cbRelationID) from CollectionVersionBlocks');
 
-        $v = [
-            $cID,
-            $vObj->getVersionID(),
-            $nb->getBlockID(),
-            $arHandle,
-            $cbRelationID,
-            $newBlockDisplayOrder,
-            1,
-            (int) ($bt->includeAll()),
-        ];
-        $q = 'insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbRelationID, cbDisplayOrder, isOriginal, cbIncludeAll) values (?, ?, ?, ?, ?, ?, ?, ?)';
-
-        $res = $db->Execute($q, $v);
-
-        $controller = $nb->getController();
+        $db->insert('CollectionVersionBlocks', [
+            'cID' => $cID,
+            'cvID' => $vObj->getVersionID(),
+            'bID' => $newBlock->getBlockID(),
+            'arHandle' => $arHandle,
+            'cbRelationID' => $cbRelationID,
+            'cbDisplayOrder' => $newBlockDisplayOrder,
+            'isOriginal' => 1,
+            'cbIncludeAll' => (int) $bt->includeAll(),
+        ]);
+        $controller = $newBlock->getController();
         $features = $controller->getBlockTypeFeatureObjects();
-        if (count($features) > 0) {
-            foreach ($features as $fe) {
-                $fd = $fe->getFeatureDetailObject($controller);
-                $fa = CollectionVersionFeatureAssignment::add($fe, $fd, $this);
-                $db->Execute(
-                   'insert into BlockFeatureAssignments (cID, cvID, bID, faID) values (?, ?, ?, ?)',
-                   [
-                       $this->getCollectionID(),
-                       $this->getVersionID(),
-                       $nb->getBlockID(),
-                       $fa->getFeatureAssignmentID(),
-                   ]
-                );
-            }
+        foreach ($features as $fe) {
+            $fd = $fe->getFeatureDetailObject($controller);
+            $fa = CollectionVersionFeatureAssignment::add($fe, $fd, $this);
+            $db->insert('BlockFeatureAssignments', [
+                'cID' => $this->getCollectionID(),
+                'cvID' => $this->getVersionID(),
+                'bID' => $newBlock->getBlockID(),
+                'faID' => $fa->getFeatureAssignmentID(),
+            ]);
         }
 
-        return Block::getByID($nb->getBlockID(), $this, $a);
+        return Block::getByID($newBlock->getBlockID(), $this, $a);
     }
 
     /**
@@ -1033,33 +978,18 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     public function getCollectionAreaDisplayOrder($arHandle, $ignoreVersions = false)
     {
-        $db = Loader::db();
-        $cID = $this->cID;
-        $cvID = $this->vObj->cvID;
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
         if ($ignoreVersions) {
-            $q = 'select max(cbDisplayOrder) as cbdis from CollectionVersionBlocks where cID = ? and arHandle = ?';
-            $v = [$cID, $arHandle];
+            $q = 'select max(cbDisplayOrder) from CollectionVersionBlocks where cID = ? and arHandle = ?';
+            $v = [$this->getCollectionID(), $arHandle];
         } else {
-            $q = 'select max(cbDisplayOrder) as cbdis from CollectionVersionBlocks where cID = ? and cvID = ? and arHandle = ?';
-            $v = [$cID, $cvID, $arHandle];
+            $q = 'select max(cbDisplayOrder) from CollectionVersionBlocks where cID = ? and cvID = ? and arHandle = ?';
+            $v = [$this->getCollectionID(), $this->getVersionID(), $arHandle];
         }
-        $r = $db->query($q, $v);
-        if ($r) {
-            if ($r->numRows() > 0) {
-                // then we know we got a value; we increment it and return
-                $res = $r->fetchRow();
-                $displayOrder = $res['cbdis'];
-                if ($displayOrder === null) {
-                    return 0;
-                }
-                ++$displayOrder;
+        $maxDisplayOrder = $db->fetchColumn($q, $v);
 
-                return $displayOrder;
-            } else {
-                // we didn't get anything, so we return a zero
-                return 0;
-            }
-        }
+        return $maxDisplayOrder === null || $maxDisplayOrder === false ? 0 : 1 + $maxDisplayOrder;
     }
 
     /**
@@ -1069,24 +999,21 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     public function rescanDisplayOrder($arHandle)
     {
-        // this collection function f
-
-        $db = Loader::db();
-        $cID = $this->cID;
-        $cvID = $this->vObj->cvID;
-        $args = [$cID, $cvID, $arHandle];
-        $q = 'select bID from CollectionVersionBlocks where cID = ? and cvID = ? and arHandle=? order by cbDisplayOrder asc';
-        $r = $db->query($q, $args);
-
-        if ($r) {
-            $displayOrder = 0;
-            while ($row = $r->fetchRow()) {
-                $args = [$displayOrder, $cID, $cvID, $arHandle, $row['bID']];
-                $q = 'update CollectionVersionBlocks set cbDisplayOrder = ? where cID = ? and cvID = ? and arHandle = ? and bID = ?';
-                $db->query($q, $args);
-                ++$displayOrder;
-            }
-            $r->free();
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $cID = $this->getCollectionID();
+        $cvID = $this->getVersionID();
+        $displayOrder = 0;
+        $rs = $db->executeQuery(
+            'select bID from CollectionVersionBlocks where cID = ? and cvID = ? and arHandle = ? order by cbDisplayOrder asc',
+            [$cID, $cvID, $arHandle]
+        );
+        while (($bID = $rs->fetchColumn()) !== false) {
+            $db->executeQuery(
+                'update CollectionVersionBlocks set cbDisplayOrder = ? where cID = ? and cvID = ? and arHandle = ? and bID = ?',
+                [$displayOrder, $cID, $cvID, $arHandle, $bID]
+            );
+            ++$displayOrder;
         }
     }
 
@@ -1097,8 +1024,9 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     public function addFeature(Feature $fe)
     {
-        $db = Loader::db();
-        $db->Replace(
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $db->replace(
            'CollectionVersionFeatures',
            ['cID' => $this->getCollectionID(), 'cvID' => $this->getVersionID(), 'feID' => $fe->getFeatureID()],
            ['cID', 'cvID', 'feID'],
@@ -1113,27 +1041,23 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     public function getFeatureAssignments()
     {
-        if (is_object($this->vObj)) {
-            return CollectionVersionFeatureAssignment::getList($this);
-        }
+        $version = $this->getVersionObject();
 
-        return [];
+        return $version === null ? [] : CollectionVersionFeatureAssignment::getList($this);
     }
 
     /**
-     * Update the last edit date/time.
+     * Mark this collection as newly modified.
      */
     public function markModified()
     {
-        // marks this collection as newly modified
-        $db = Loader::db();
-        $dh = Loader::helper('date');
-        $cDateModified = $dh->getOverridableNow();
-
-        $v = [$cDateModified, $this->cID];
-        $q = 'update Collections set cDateModified = ? where cID = ?';
-        $r = $db->prepare($q);
-        $res = $db->execute($r, $v);
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $dh = $app->make('date');
+        $db->executeQuery(
+            'update Collections set cDateModified = ? where cID = ?',
+            [$dh->getOverridableNow(), $this->getCollectionID()]
+        );
     }
 
     /**
@@ -1141,30 +1065,21 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     public function delete()
     {
-        if ($this->cID > 0) {
-            $db = Loader::db();
-
+        $cID = $this->getCollectionID();
+        if ($cID) {
+            $app = Application::getFacadeApplication();
+            $db = $app->make(Connection::class);
             // First we delete all versions
-            $vl = new VersionList($this);
-            $vl->setItemsPerPage(-1);
-            $vlArray = $vl->getPage();
-
-            foreach ($vlArray as $v) {
+            $versionList = new VersionList($this);
+            $versionList->setItemsPerPage(-1);
+            foreach ($versionList->getPage() as $v) {
                 $v->delete();
             }
-
-            $cID = $this->getCollectionID();
-
-            $q = "delete from CollectionAttributeValues where cID = {$cID}";
-            $db->query($q);
-
-            $q = "delete from Collections where cID = '{$cID}'";
-            $r = $db->query($q);
-
+            $db->executeQuery('delete from CollectionAttributeValues where cID = ?', [$cID]);
+            $db->executeQuery('delete from Collections where cID = ?', [$cID]);
             try {
-                $q = "delete from CollectionSearchIndexAttributes where cID = {$cID}";
-                $db->query($q);
-            } catch (\Exception $e) {
+                $db->executeQuery('delete from CollectionSearchIndexAttributes where cID = ?', [$cID]);
+            } catch (Exception $e) {
             }
         }
     }
@@ -1176,137 +1091,89 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     public function duplicateCollection()
     {
-        $db = Loader::db();
-        $dh = Loader::helper('date');
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $em = $app->make(EntityManagerInterface::class);
+        $dh = $app->make('date');
         $cDate = $dh->getOverridableNow();
+        $cID = $this->getCollectionID();
 
-        $v = [$cDate, $cDate, $this->cHandle];
-        $r = $db->query('insert into Collections (cDateAdded, cDateModified, cHandle) values (?, ?, ?)', $v);
-        $newCID = $db->Insert_ID();
+        $db->insert('Collections', [
+            'cDateAdded' => $cDate,
+            'cDateModified' => $cDate,
+            'cHandle' => $this->getCollectionHandle(),
+        ]);
+        $newCID = $db->lastInsertId();
 
-        if ($r) {
-            // first, we get the creation date of the active version in this collection
-            //$q = "select cvDateCreated from CollectionVersions where cvIsApproved = 1 and cID = {$this->cID}";
-            //$dcOriginal = $db->getOne($q);
-            // now we create the query that will grab the versions we're going to copy
-
-            $qv = "select * from CollectionVersions where cID = '{$this->cID}' order by cvDateCreated asc";
-
-            // now we grab all of the current versions
-            $rv = $db->query($qv);
-            $cvList = [];
-            while ($row = $rv->fetchRow()) {
-                // insert
-                $cvList[] = $row['cvID'];
-                $cDate = date('Y-m-d H:i:s', strtotime($cDate) + 1);
-                $vv = [
-                    $newCID,
-                    $row['cvID'],
-                    $row['cvName'],
-                    $row['cvHandle'],
-                    $row['cvDescription'],
-                    $row['cvDatePublic'],
-                    $cDate,
-                    $row['cvComments'],
-                    $row['cvAuthorUID'],
-                    $row['cvIsApproved'],
-                    $row['pThemeID'],
-                    $row['pTemplateID'],
-                ];
-                $qv = 'insert into CollectionVersions (cID, cvID, cvName, cvHandle, cvDescription, cvDatePublic, cvDateCreated, cvComments, cvAuthorUID, cvIsApproved, pThemeID, pTemplateID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-                $db->query($qv, $vv);
-            }
-
-            $ql = "select * from CollectionVersionBlockStyles where cID = '{$this->cID}'";
-            $rl = $db->query($ql);
-            while ($row = $rl->fetchRow()) {
-                $vl = [$newCID, $row['cvID'], $row['bID'], $row['arHandle'], $row['issID']];
-                $ql = 'insert into CollectionVersionBlockStyles (cID, cvID, bID, arHandle, issID) values (?, ?, ?, ?, ?)';
-                $db->query($ql, $vl);
-            }
-            $ql = "select * from CollectionVersionAreaStyles where cID = '{$this->cID}'";
-            $rl = $db->query($ql);
-            while ($row = $rl->fetchRow()) {
-                $vl = [$newCID, $row['cvID'], $row['arHandle'], $row['issID']];
-                $ql = 'insert into CollectionVersionAreaStyles (cID, cvID, arHandle, issID) values (?, ?, ?, ?)';
-                $db->query($ql, $vl);
-            }
-
-            $ql = "select * from CollectionVersionThemeCustomStyles where cID = '{$this->cID}'";
-            $rl = $db->query($ql);
-            while ($row = $rl->fetchRow()) {
-                $vl = [$newCID, $row['cvID'], $row['pThemeID'], $row['scvlID'], $row['preset'], $row['sccRecordID']];
-                $ql = 'insert into CollectionVersionThemeCustomStyles (cID, cvID, pThemeID, scvlID, preset, sccRecordID) values (?, ?, ?, ?, ?, ?)';
-                $db->query($ql, $vl);
-            }
-
-            $ql = "select * from CollectionVersionBlocksCacheSettings where cID = '{$this->cID}'";
-            $rl = $db->query($ql);
-            while ($row = $rl->fetchRow()) {
-                $vl = [$newCID, $row['cvID'], $row['bID'], $row['arHandle'], $row['btCacheBlockOutput'], $row['btCacheBlockOutputOnPost'], $row['btCacheBlockOutputForRegisteredUsers'], $row['btCacheBlockOutputLifetime']];
-                $ql = 'insert into CollectionVersionBlocksCacheSettings (cID, cvID, bID, arHandle, btCacheBlockOutput, btCacheBlockOutputOnPost, btCacheBlockOutputForRegisteredUsers, btCacheBlockOutputLifetime) values (?, ?, ?, ?, ?, ?, ?, ?)';
-                $db->query($ql, $vl);
-            }
-
-            // now we grab all the blocks we're going to need
-            $cvList = implode(',', $cvList);
-            $q = "select bID, cvID, arHandle, cbDisplayOrder, cbOverrideAreaPermissions, cbIncludeAll, cbRelationID, cbOverrideBlockTypeCacheSettings, cbOverrideBlockTypeContainerSettings, cbEnableBlockContainer from CollectionVersionBlocks where cID = '{$this->cID}' and cvID in ({$cvList})";
-            $r = $db->query($q);
-            while ($row = $r->fetchRow()) {
-                $v = [
-                    $newCID,
-                    $row['cvID'],
-                    $row['bID'],
-                    $row['arHandle'],
-                    $row['cbDisplayOrder'],
-                    $row['cbRelationID'],
-                    0,
-                    $row['cbOverrideAreaPermissions'],
-                    $row['cbIncludeAll'],
-                    $row['cbOverrideBlockTypeCacheSettings'],
-                    $row['cbOverrideBlockTypeContainerSettings'],
-                    $row['cbEnableBlockContainer']
-                ];
-                $q = 'insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbDisplayOrder, cbRelationID, isOriginal, cbOverrideAreaPermissions, cbIncludeAll, cbOverrideBlockTypeCacheSettings, cbOverrideBlockTypeContainerSettings, cbEnableBlockContainer) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-                $db->query($q, $v);
-                if ($row['cbOverrideAreaPermissions'] != 0) {
-                    $q2 = "select paID, pkID from BlockPermissionAssignments where cID = '{$this->cID}' and bID = '{$row['bID']}' and cvID = '{$row['cvID']}'";
-                    $r2 = $db->query($q2);
-                    while ($row2 = $r2->fetchRow()) {
-                        $db->Replace(
-                           'BlockPermissionAssignments',
-                           [
-                               'cID' => $newCID,
-                               'cvID' => $row['cvID'],
-                               'bID' => $row['bID'],
-                               'paID' => $row2['paID'],
-                               'pkID' => $row2['pkID'],
-                           ],
-                           ['cID', 'cvID', 'bID', 'paID', 'pkID'],
-                           true
-                        );
-                    }
-                }
-            }
-
-            // duplicate any attributes belonging to the collection
-            $list = CollectionKey::getAttributeValues($this->vObj);
-            $em = \Database::connection()->getEntityManager();
-            foreach ($list as $av) {
-                /**
-                 * @var PageValue
-                 */
-                $cav = new PageValue();
-                $cav->setPageID($newCID);
-                $cav->setGenericValue($av->getGenericValue());
-                $cav->setVersionID($this->vObj->getVersionID());
-                $cav->setAttributeKey($av->getAttributeKey());
-                $em->persist($cav);
-            }
-            $em->flush();
-
-            return self::getByID($newCID);
+        $rs = $db->executeQuery('select * from CollectionVersions where cID = ? order by cvDateCreated asc', [$cID]);
+        while (($row = $rs->fetch(PDO::FETCH_ASSOC)) !== false) {
+            // insert
+            $cDate = date('Y-m-d H:i:s', strtotime($cDate) + 1);
+            $db->insert('CollectionVersions', [
+                'cID' => $newCID,
+                'cvID' => $row['cvID'],
+                'cvName' => $row['cvName'],
+                'cvHandle' => $row['cvHandle'],
+                'cvDescription' => $row['cvDescription'],
+                'cvDatePublic' => $row['cvDatePublic'],
+                'cvDateCreated' => $cDate,
+                'cvComments' => $row['cvComments'],
+                'cvAuthorUID' => $row['cvAuthorUID'],
+                'cvIsApproved' => $row['cvIsApproved'],
+                'pThemeID' => $row['pThemeID'],
+                'pTemplateID' => $row['pTemplateID'],
+            ]);
         }
+
+        $copyFields = 'cvID, bID, arHandle, issID';
+        $db->executeQuery(
+            "insert into CollectionVersionBlockStyles (cID, {$copyFields}) select ?, {$copyFields} from CollectionVersionBlockStyles where cID = ?",
+            [$newCID, $cID]
+        );
+
+        $copyFields = 'cvID, arHandle, issID';
+        $db->executeQuery(
+            "insert into CollectionVersionAreaStyles (cID, {$copyFields}) select ?, {$copyFields} from CollectionVersionAreaStyles where cID = ?",
+            [$newCID, $cID]
+        );
+
+        $copyFields = 'cvID, pThemeID, scvlID, preset, sccRecordID';
+        $db->executeQuery(
+            "insert into CollectionVersionThemeCustomStyles (cID, {$copyFields}) select ?, {$copyFields} from CollectionVersionThemeCustomStyles where cID = ?",
+            [$newCID, $cID]
+        );
+
+        $copyFields = 'cvID, bID, arHandle, btCacheBlockOutput, btCacheBlockOutputOnPost, btCacheBlockOutputForRegisteredUsers, btCacheBlockOutputLifetime';
+        $db->executeQuery(
+            "insert into CollectionVersionBlocksCacheSettings (cID, {$copyFields}) select ?, {$copyFields} from CollectionVersionBlocksCacheSettings where cID = ?",
+            [$newCID, $cID]
+        );
+
+        $copyFields = 'cvID, bID, arHandle, cbDisplayOrder, cbRelationID, cbOverrideAreaPermissions, cbIncludeAll, cbOverrideBlockTypeCacheSettings, cbOverrideBlockTypeContainerSettings, cbEnableBlockContainer';
+        $db->executeQuery(
+            "insert into CollectionVersionBlocks (cID, isOriginal, {$copyFields}) select ?, 0, {$copyFields} from CollectionVersionBlocks where cID = ?",
+            [$newCID, $cID]
+        );
+
+        $copyFields = 'cvID, bID, pkID, paID';
+        $db->executeQuery(
+            "insert into BlockPermissionAssignments (cID, {$copyFields}) select ?, {$copyFields} from BlockPermissionAssignments where cID = ?",
+            [$newCID, $cID]
+        );
+
+        $versionID = $this->getVersionID();
+        $list = $app->make(PageAttributeCategory::class)->getAttributeValues($this->getVersionObject());
+        foreach ($list as $av) {
+            $cav = new PageAttributeValue();
+            $cav->setPageID($newCID);
+            $cav->setGenericValue($av->getGenericValue());
+            $cav->setVersionID($versionID);
+            $cav->setAttributeKey($av->getAttributeKey());
+            $em->persist($cav);
+        }
+        $em->flush();
+
+        return self::getByID($newCID);
     }
 
     /**
@@ -1319,6 +1186,9 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     public function cloneVersion($versionComments, $createEmpty = false)
     {
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+
         // first, we run the version object's createNew() command, which returns a new
         // version object, which we can combine with our collection object, so we'll have
         // our original collection object ($this), and a new collection object, consisting
@@ -1327,42 +1197,31 @@ class Collection extends ConcreteObject implements TrackableInterface
         $nvObj = $vObj->createNew($versionComments);
         $nc = Page::getByID($this->getCollectionID());
         $nc->vObj = $nvObj;
-        // now that we have the original version object and the cloned version object,
-        // we're going to select all the blocks that exist for this page, and we're going
-        // to copy them to the next version
-        // unless btIncludeAll is set -- as that gets included no matter what
 
-        $db = Loader::db();
-        $cID = $this->getCollectionID();
-        $cvID = $vObj->getVersionID();
         if (!$createEmpty) {
-            $q = "select bID, arHandle from CollectionVersionBlocks where cID = '$cID' and cvID = '$cvID' and cbIncludeAll=0 order by cbDisplayOrder asc";
-            $r = $db->query($q);
-            if ($r) {
-                while ($row = $r->fetchRow()) {
-                    // now we loop through these, create block objects for all of them, and
-                    // duplicate them to our collection object (which is actually the same collection,
-                    // but different version)
-                    $b = Block::getByID($row['bID'], $this, $row['arHandle']);
-                    if (is_object($b)) {
-                        $b->alias($nc);
-                    }
+            // now that we have the original version object and the cloned version object,
+            // we're going to select all the blocks that exist for this page, and we're going
+            // to copy them to the next version
+            // unless btIncludeAll is set -- as that gets included no matter what
+            $cID = $this->getCollectionID();
+            $oldVersionID = $vObj->getVersionID();
+            $newVersionID = $nvObj->getVersionID();
+            $rs = $db->executeQuery('select bID, arHandle from CollectionVersionBlocks where cID = ? and cvID = ? and cbIncludeAll = 0 order by cbDisplayOrder asc', [$cID, $oldVersionID]);
+            while (($row = $rs->fetch(PDO::FETCH_ASSOC)) !== false) {
+                // now we loop through these, create block objects for all of them, and
+                // duplicate them to our collection object (which is actually the same collection,
+                // but different version)
+                $b = Block::getByID($row['bID'], $this, $row['arHandle']);
+                if ($b) {
+                    $b->alias($nc);
                 }
             }
             // duplicate any area styles
-            $q = "select issID, arHandle from CollectionVersionAreaStyles where cID = '$cID' and cvID = '$cvID'";
-            $r = $db->query($q);
-            while ($row = $r->FetchRow()) {
-                $db->Execute(
-                    'insert into CollectionVersionAreaStyles (cID, cvID, arHandle, issID) values (?, ?, ?, ?)',
-                    [
-                        $this->getCollectionID(),
-                        $nvObj->getVersionID(),
-                        $row['arHandle'],
-                        $row['issID'],
-                    ]
-                    );
-            }
+            $copyFields = 'arHandle, issID';
+            $db->executeQuery(
+                "insert into CollectionVersionAreaStyles (cID, cvID, {$copyFields}) select ?, ?, {$copyFields} from CollectionVersionAreaStyles where cID = ? and cvID = ?",
+                [$cID, $newVersionID, $cID, $oldVersionID]
+            );
         }
 
         return $nc;
