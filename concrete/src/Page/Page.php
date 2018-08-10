@@ -139,6 +139,36 @@ class Page extends Collection implements PermissionObjectInterface, AttributeObj
     }
 
     /**
+     * * Get a page given its ID.
+     *
+     * @param int $cID the ID of the page
+     * @param string $version the page version ('RECENT' for the most recent version, 'ACTIVE' for the currently published version, or an integer to retrieve a specific version ID)
+     *
+     * @return \Concrete\Core\Page\Page
+     */
+    public static function getByID($cID, $version = 'RECENT')
+    {
+        $class = get_called_class();
+        if ($cID && $version) {
+            $app = Application::getFacadeApplication();
+            $cacheItem = $app->make('cache/request')->getItem("page/{$cID}/{$version}/{$class}");
+            $c = $cacheItem->get();
+            if ($c instanceof $class) {
+                return $c;
+            }
+        } else {
+            $cacheItem = null;
+        }
+        $c = new $class();
+        $c->populatePage($cID, 'where Pages.cID = ?', $version);
+        if ($cacheItem !== null) {
+            $cacheItem->set($c)->save();
+        }
+
+        return $c;
+    }
+
+    /**
      * Get a page given its path.
      *
      * @param string $path the page path (example: /path/to/page)
@@ -178,6 +208,349 @@ class Page extends Collection implements PermissionObjectInterface, AttributeObj
     }
 
     /**
+     * Get the ID of the home page.
+     *
+     * @param Page|int $page the page (or its ID) for which you want the home (if not specified, we'll use the default locale site tree)
+     *
+     * @return int|null returns NULL if $page is null (or it doesn't have a SiteTree associated) and if there's no default locale
+     */
+    public static function getHomePageID($page = null)
+    {
+        if ($page) {
+            if (!$page instanceof self) {
+                $page = self::getByID($page);
+            }
+            if ($page instanceof self) {
+                $siteTree = $page->getSiteTreeObject();
+                if ($siteTree !== null) {
+                    return $siteTree->getSiteHomePageID();
+                }
+            }
+        }
+        $locale = Application::getFacadeApplication()->make(LocaleService::class)->getDefaultLocale();
+        if ($locale !== null) {
+            $siteTree = $locale->getSiteTreeObject();
+            if ($siteTree != null) {
+                return $siteTree->getSiteHomePageID();
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Add the home page to the system. Typically used only by the installation program.
+     *
+     * @param \Concrete\Core\Site\Tree\TreeInterface|null $siteTree
+     *
+     * @return \Concrete\Core\Page\Page
+     **/
+    public static function addHomePage(TreeInterface $siteTree = null)
+    {
+        // creates the home page of the site
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+
+        $cParentID = 0;
+        $uID = HOME_UID;
+
+        $homeCollection = parent::createCollection([
+            'name' => HOME_NAME,
+            'uID' => $uID,
+        ]);
+        $cID = $homeCollection->getCollectionID();
+
+        if (!$siteTree) {
+            $site = $app->make('site')->getSite();
+            $siteTree = $site->getSiteTreeObject();
+        }
+        $siteTreeID = $siteTree->getSiteTreeID();
+
+        $db->insert('Pages', [
+            'cID' => $cID,
+            'siteTreeID' => $siteTreeID,
+            'cParentID' => $cParentID,
+            'uID' => $uID,
+            'cInheritPermissionsFrom' => 'OVERRIDE',
+            'cOverrideTemplatePermissions' => 1,
+            'cInheritPermissionsFromCID' => $cID,
+            'cDisplayOrder' => 0,
+        ]);
+        $homePage = self::getByID($cID, 'RECENT');
+
+        return $homePage;
+    }
+
+    /**
+     * Create a new page.
+     *
+     * @param array $data The data to be used to create the page. See Collection::createCollection() for the supported keys, plus 'pkgID' and 'filename'.
+     * @param \Concrete\Core\Site\Tree\TreeInterface|null $parent the parent page (or the site) that will contain the new page
+     *
+     * @return \Concrete\Core\Page\Page
+     *
+     * @see \Concrete\Core\Page\Collection\Collection::createCollection()
+     */
+    public static function addStatic($data, TreeInterface $parent = null)
+    {
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        if ($parent instanceof self) {
+            $cParentID = $parent->getCollectionID();
+            $parent->rescanChildrenDisplayOrder();
+            $cDisplayOrder = $parent->getNextSubPageDisplayOrder();
+            $cInheritPermissionsFromCID = $parent->getPermissionsCollectionID();
+            $cOverrideTemplatePermissions = $parent->overrideTemplatePermissions();
+        } else {
+            $cParentID = static::getHomePageID();
+            $cDisplayOrder = 0;
+            $cInheritPermissionsFromCID = $cParentID;
+            $cOverrideTemplatePermissions = 1;
+        }
+        // These get set to parent by default here, but they can be overridden later
+        $data['uID'] = USER_SUPER_ID;
+        $newCollection = parent::createCollection($data);
+        $cID = $newCollection->getCollectionID();
+
+        $db->insert('Pages', [
+            'cID' => $cID,
+            'siteTreeID' => $parent ? $parent->getSiteTreeID() : 0,
+            'cFilename' => isset($data['filename']) ? $data['filename'] : null,
+            'cParentID' => $cParentID,
+            'cInheritPermissionsFrom' => 'PARENT',
+            'cOverrideTemplatePermissions' => $cOverrideTemplatePermissions,
+            'cInheritPermissionsFromCID' => (int) $cInheritPermissionsFromCID,
+            'cDisplayOrder' => $cDisplayOrder,
+            'uID' => $data['uID'],
+            'pkgID' => isset($data['pkgID']) ? $data['pkgID'] : 0,
+        ]);
+
+        PageStatistics::incrementParents($cID);
+
+        $pc = self::getByID($cID);
+        $pc->rescanCollectionPath();
+
+        return $pc;
+    }
+
+    /**
+     * Uses a Request object to determine which page to load. Queries by path and then by cID.
+     *
+     * @param \Concrete\Core\Http\Request $request
+     */
+    public static function getFromRequest(Request $request)
+    {
+        // if something has already set a page object, we return it
+        $c = $request->getCurrentPage();
+        if ($c) {
+            return $c;
+        }
+        $app = Application::getFacadeApplication();
+        $path = $request->getPath();
+        if ($path !== '') {
+            $db = $app->make(Connection::class);
+            $site = $app->make('site')->getSite();
+            $treeIDs = [0];
+            foreach ($site->getLocales() as $locale) {
+                $tree = $locale->getSiteTree();
+                if ($tree) {
+                    $treeIDs[] = $tree->getSiteTreeID();
+                }
+            }
+            $treeIDs = implode(',', $treeIDs);
+            $cID = false;
+            $ppIsCanonical = false;
+            while (!$cID && $path) {
+                $row = $db->fetchAssoc('select pp.cID, ppIsCanonical from PagePaths pp inner join Pages p on pp.cID = p.cID where cPath = ? and siteTreeID in (' . $treeIDs . ')', [$path]);
+                if ($row !== false) {
+                    $cID = $row['cID'];
+                    if ($cID) {
+                        $cPath = $path;
+                        $ppIsCanonical = (bool) $row['ppIsCanonical'];
+                        break;
+                    }
+                }
+                $path = substr($path, 0, strrpos($path, '/'));
+            }
+            if ($cID && $cPath) {
+                $c = self::getByID($cID, 'ACTIVE');
+                $c->cPathFetchIsCanonical = $ppIsCanonical;
+            } else {
+                $c = new self();
+                $c->loadError(COLLECTION_NOT_FOUND);
+            }
+
+            return $c;
+        }
+        $cID = $request->query->get('cID');
+        if (!$cID) {
+            $cID = $request->request->get('cID');
+        }
+        $cID = $app->make('helper/security')->sanitizeInt($cID);
+        if ($cID) {
+            $c = self::getByID($cID, 'ACTIVE');
+        } else {
+            $site = $app->make('site')->getSite();
+            $c = $site->getSiteHomePageObject('ACTIVE');
+        }
+        $c->cPathFetchIsCanonical = true;
+
+        return $c;
+    }
+
+    /**
+     * Get the currently requested page.
+     *
+     * @return \Concrete\Core\Page\Page|null
+     */
+    public static function getCurrentPage()
+    {
+        $req = Request::getInstance();
+        $current = $req->getCurrentPage();
+
+        return $current;
+    }
+
+    /**
+     * Get the path for a page from its cID.
+     *
+     * @param int $cID
+     *
+     * @return string|false
+     */
+    public static function getCollectionPathFromID($cID)
+    {
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $path = $db->fetchColumn(
+            'select cPath from PagePaths inner join CollectionVersions on PagePaths.cID = CollectionVersions.cID and CollectionVersions.cvIsApproved = 1 where PagePaths.cID = ? order by PagePaths.ppIsCanonical desc',
+            [$cID]
+            );
+
+        return $path;
+    }
+
+    /**
+     * Get the parent cID of a page given its cID.
+     *
+     * @param int $cID
+     *
+     * @return int|null
+     */
+    public static function getCollectionParentIDFromChildID($cID)
+    {
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $cParentID = $db->fetchColumn('select cParentID from Pages where cID = ?', [(int) $cID]);
+
+        return $cParentID ?: null;
+    }
+
+    /**
+     * @private
+     * Forces all pages to be checked in and edit mode to be reset.
+     * @TODO – move this into a command in version 9.
+     */
+    public static function forceCheckInForAllPages()
+    {
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $db->query('update Pages set cIsCheckedOut = 0, cCheckedOutUID = null, cCheckedOutDatetime = null, cCheckedOutDatetimeLastEdit = null');
+    }
+
+    /**
+     * Get the drafts parent page for a specific site.
+     *
+     * @param \Concrete\Core\Entity\Site\Site|null $site
+     *
+     * @return \Concrete\Core\Page\Page
+     */
+    public static function getDraftsParentPage(Site $site = null)
+    {
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        if ($site === null) {
+            $site = $app->make('site')->getSite();
+        }
+        $config = $app->make('config');
+        $cParentID = $db->fetchColumn(
+            'select p.cID from PagePaths pp inner join Pages p on pp.cID = p.cID inner join SiteLocales sl on p.siteTreeID = sl.siteTreeID where cPath = ? and sl.siteID = ?',
+            [$config->get('concrete.paths.drafts'), $site->getSiteID()]
+            );
+
+        return self::getByID($cParentID);
+    }
+
+    /**
+     * Get the list of draft pages in a specific site.
+     *
+     * @param \Concrete\Core\Entity\Site\Site $site
+     *
+     * @return \Concrete\Core\Page\Page[]
+     */
+    public static function getDrafts(Site $site)
+    {
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $parentPage = self::getDraftsParentPage($site);
+        $pages = [];
+        $r = $db->executeQuery('select Pages.cID from Pages inner join Collections c on Pages.cID = c.cID where cParentID = ? order by cDateAdded desc', [$parentPage->getCollectionID()]);
+        while (($cID = $r->fetchColumn()) !== false) {
+            $entry = self::getByID($cID);
+            if ($entry && !$entry->isError()) {
+                $pages[] = $entry;
+            }
+        }
+
+        return $pages;
+    }
+
+    /**
+     * Sort a list of pages, so that the order is correct for the deletion.
+     *
+     * @param array $a
+     * @param array $b
+     *
+     * @return int
+     */
+    public static function queueForDeletionSort($a, $b)
+    {
+        return $b['level'] - $a['level'];
+    }
+
+    /**
+     * Sort a list of pages, so that the order is correct for the duplication.
+     *
+     * @param array $a
+     * @param array $b
+     *
+     * @return int
+     */
+    public static function queueForDuplicationSort($a, $b)
+    {
+        $cmp = $a['level'] - $b['level'];
+        if ($cmp === 0) {
+            $cmp = $a['cDisplayOrder'] - $b['cDisplayOrder'];
+            if ($cmp === 0) {
+                $cmp = $a['cID'] - $b['cID'];
+            }
+        }
+
+        return $cmp;
+    }
+
+    /**
+     * Clears the custom theme styles for every page.
+     */
+    public static function resetAllCustomStyles()
+    {
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $db->delete('CollectionVersionThemeCustomStyles', ['1' => 1]);
+        $app->clearCaches();
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Attribute\ObjectInterface::getObjectAttributeCategory()
@@ -189,36 +562,6 @@ class Page extends Collection implements PermissionObjectInterface, AttributeObj
         $app = Application::getFacadeApplication();
 
         return $app->make(PageCategory::class);
-    }
-
-    /**
-     * * Get a page given its ID.
-     *
-     * @param int $cID the ID of the page
-     * @param string $version the page version ('RECENT' for the most recent version, 'ACTIVE' for the currently published version, or an integer to retrieve a specific version ID)
-     *
-     * @return \Concrete\Core\Page\Page
-     */
-    public static function getByID($cID, $version = 'RECENT')
-    {
-        $class = get_called_class();
-        if ($cID && $version) {
-            $app = Application::getFacadeApplication();
-            $cacheItem = $app->make('cache/request')->getItem("page/{$cID}/{$version}/{$class}");
-            $c = $cacheItem->get();
-            if ($c instanceof $class) {
-                return $c;
-            }
-        } else {
-            $cacheItem = null;
-        }
-        $c = new $class();
-        $c->populatePage($cID, 'where Pages.cID = ?', $version);
-        if ($cacheItem !== null) {
-            $cacheItem->set($c)->save();
-        }
-
-        return $c;
     }
 
     /**
@@ -394,16 +737,6 @@ class Page extends Collection implements PermissionObjectInterface, AttributeObj
     }
 
     /**
-     * @deprecated
-     *
-     * @return false
-     */
-    public function isArrangeMode()
-    {
-        return false;
-    }
-
-    /**
      * Forces the page to be checked in if its checked out.
      */
     public function forceCheckIn()
@@ -414,18 +747,6 @@ class Page extends Collection implements PermissionObjectInterface, AttributeObj
             'update Pages set cIsCheckedOut = 0, cCheckedOutUID = null, cCheckedOutDatetime = null, cCheckedOutDatetimeLastEdit = null where cID = ?',
             [$this->getCollectionID()]
         );
-    }
-
-    /**
-     * @private
-     * Forces all pages to be checked in and edit mode to be reset.
-     * @TODO – move this into a command in version 9.
-     */
-    public static function forceCheckInForAllPages()
-    {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
-        $db->query('update Pages set cIsCheckedOut = 0, cCheckedOutUID = null, cCheckedOutDatetime = null, cCheckedOutDatetimeLastEdit = null');
     }
 
     /**
@@ -440,71 +761,6 @@ class Page extends Collection implements PermissionObjectInterface, AttributeObj
         }
 
         return strpos($this->getCollectionFilename(), '/' . DIRNAME_DASHBOARD) !== false;
-    }
-
-    /**
-     * Uses a Request object to determine which page to load. Queries by path and then by cID.
-     *
-     * @param \Concrete\Core\Http\Request $request
-     */
-    public static function getFromRequest(Request $request)
-    {
-        // if something has already set a page object, we return it
-        $c = $request->getCurrentPage();
-        if ($c) {
-            return $c;
-        }
-        $app = Application::getFacadeApplication();
-        $path = $request->getPath();
-        if ($path !== '') {
-            $db = $app->make(Connection::class);
-            $site = $app->make('site')->getSite();
-            $treeIDs = [0];
-            foreach ($site->getLocales() as $locale) {
-                $tree = $locale->getSiteTree();
-                if ($tree) {
-                    $treeIDs[] = $tree->getSiteTreeID();
-                }
-            }
-            $treeIDs = implode(',', $treeIDs);
-            $cID = false;
-            $ppIsCanonical = false;
-            while (!$cID && $path) {
-                $row = $db->fetchAssoc('select pp.cID, ppIsCanonical from PagePaths pp inner join Pages p on pp.cID = p.cID where cPath = ? and siteTreeID in (' . $treeIDs . ')', [$path]);
-                if ($row !== false) {
-                    $cID = $row['cID'];
-                    if ($cID) {
-                        $cPath = $path;
-                        $ppIsCanonical = (bool) $row['ppIsCanonical'];
-                        break;
-                    }
-                }
-                $path = substr($path, 0, strrpos($path, '/'));
-            }
-            if ($cID && $cPath) {
-                $c = self::getByID($cID, 'ACTIVE');
-                $c->cPathFetchIsCanonical = $ppIsCanonical;
-            } else {
-                $c = new self();
-                $c->loadError(COLLECTION_NOT_FOUND);
-            }
-
-            return $c;
-        }
-        $cID = $request->query->get('cID');
-        if (!$cID) {
-            $cID = $request->request->get('cID');
-        }
-        $cID = $app->make('helper/security')->sanitizeInt($cID);
-        if ($cID) {
-            $c = self::getByID($cID, 'ACTIVE');
-        } else {
-            $site = $app->make('site')->getSite();
-            $c = $site->getSiteHomePageObject('ACTIVE');
-        }
-        $c->cPathFetchIsCanonical = true;
-
-        return $c;
     }
 
     /**
@@ -694,63 +950,6 @@ class Page extends Collection implements PermissionObjectInterface, AttributeObj
     }
 
     /**
-     * Get the drafts parent page for a specific site.
-     *
-     * @param \Concrete\Core\Entity\Site\Site|null $site
-     *
-     * @return \Concrete\Core\Page\Page
-     */
-    public static function getDraftsParentPage(Site $site = null)
-    {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
-        if ($site === null) {
-            $site = $app->make('site')->getSite();
-        }
-        $config = $app->make('config');
-        $cParentID = $db->fetchColumn(
-            'select p.cID from PagePaths pp inner join Pages p on pp.cID = p.cID inner join SiteLocales sl on p.siteTreeID = sl.siteTreeID where cPath = ? and sl.siteID = ?',
-            [$config->get('concrete.paths.drafts'), $site->getSiteID()]
-        );
-
-        return self::getByID($cParentID);
-    }
-
-    /**
-     * Get the list of draft pages in a specific site.
-     *
-     * @param \Concrete\Core\Entity\Site\Site $site
-     *
-     * @return \Concrete\Core\Page\Page[]
-     */
-    public static function getDrafts(Site $site)
-    {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
-        $parentPage = self::getDraftsParentPage($site);
-        $pages = [];
-        $r = $db->executeQuery('select Pages.cID from Pages inner join Collections c on Pages.cID = c.cID where cParentID = ? order by cDateAdded desc', [$parentPage->getCollectionID()]);
-        while (($cID = $r->fetchColumn()) !== false) {
-            $entry = self::getByID($cID);
-            if ($entry && !$entry->isError()) {
-                $pages[] = $entry;
-            }
-        }
-
-        return $pages;
-    }
-
-    /**
-     * Is this a draft?
-     *
-     * @return bool
-     */
-    public function isPageDraft()
-    {
-        return !empty($this->cIsDraft);
-    }
-
-    /**
      * Set the page controller.
      *
      * @param \Concrete\Core\Page\Controller\PageController|null $controller
@@ -758,14 +957,6 @@ class Page extends Collection implements PermissionObjectInterface, AttributeObj
     public function setController($controller)
     {
         $this->controller = $controller;
-    }
-
-    /**
-     * @deprecated use the getPageController() method
-     */
-    public function getController()
-    {
-        return $this->getPageController();
     }
 
     /**
@@ -1041,40 +1232,6 @@ class Page extends Collection implements PermissionObjectInterface, AttributeObj
     }
 
     /**
-     * Sort a list of pages, so that the order is correct for the deletion.
-     *
-     * @param array $a
-     * @param array $b
-     *
-     * @return int
-     */
-    public static function queueForDeletionSort($a, $b)
-    {
-        return $b['level'] - $a['level'];
-    }
-
-    /**
-     * Sort a list of pages, so that the order is correct for the duplication.
-     *
-     * @param array $a
-     * @param array $b
-     *
-     * @return int
-     */
-    public static function queueForDuplicationSort($a, $b)
-    {
-        $cmp = $a['level'] - $b['level'];
-        if ($cmp === 0) {
-            $cmp = $a['cDisplayOrder'] - $b['cDisplayOrder'];
-            if ($cmp === 0) {
-                $cmp = $a['cID'] - $b['cID'];
-            }
-        }
-
-        return $cmp;
-    }
-
-    /**
      * Add this page and its subpages to the Delete Page queue.
      */
     public function queueForDeletion()
@@ -1135,17 +1292,6 @@ class Page extends Collection implements PermissionObjectInterface, AttributeObj
             $page['destination'] = $destination->getCollectionID();
             $queue->send(serialize($page));
         }
-    }
-
-    /**
-     * @deprecated use the \Concrete\Core\Page\Exporter class
-     *
-     * @param \SimpleXMLElement $pageNode
-     */
-    public function export($pageNode)
-    {
-        $exporter = new Exporter();
-        $exporter->export($this, $pageNode);
     }
 
     /**
@@ -1324,25 +1470,6 @@ class Page extends Collection implements PermissionObjectInterface, AttributeObj
     }
 
     /**
-     * Get the path for a page from its cID.
-     *
-     * @param int $cID
-     *
-     * @return string|false
-     */
-    public static function getCollectionPathFromID($cID)
-    {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
-        $path = $db->fetchColumn(
-            'select cPath from PagePaths inner join CollectionVersions on PagePaths.cID = CollectionVersions.cID and CollectionVersions.cvIsApproved = 1 where PagePaths.cID = ? order by PagePaths.ppIsCanonical desc',
-            [$cID]
-        );
-
-        return $path;
-    }
-
-    /**
      * Get the uID of the page author (if any).
      *
      * @return int|null
@@ -1363,14 +1490,6 @@ class Page extends Collection implements PermissionObjectInterface, AttributeObj
     }
 
     /**
-     * @deprecated use the getPageTypeName() method
-     */
-    public function getCollectionTypeName()
-    {
-        return $this->getPageTypeName();
-    }
-
-    /**
      * Get the display name of the page type (if available).
      *
      * @return string|null
@@ -1383,14 +1502,6 @@ class Page extends Collection implements PermissionObjectInterface, AttributeObj
         if ($this->pageType) {
             return $this->pageType->getPageTypeDisplayName();
         }
-    }
-
-    /**
-     * @deprecated use the getPageTypeID() method
-     */
-    public function getCollectionTypeID()
-    {
-        return $this->getPageTypeID();
     }
 
     /**
@@ -1468,16 +1579,6 @@ class Page extends Collection implements PermissionObjectInterface, AttributeObj
         }
 
         return $this->ptHandle;
-    }
-
-    /**
-     * @deprecated use the getPageTypeHandle() method
-     *
-     * @return string|false
-     */
-    public function getCollectionTypeHandle()
-    {
-        return $this->getPageTypeHandle();
     }
 
     /**
@@ -1695,22 +1796,6 @@ EOT
         if (isset($this->cParentID)) {
             return $this->cParentID;
         }
-    }
-
-    /**
-     * Get the parent cID of a page given its cID.
-     *
-     * @param int $cID
-     *
-     * @return int|null
-     */
-    public static function getCollectionParentIDFromChildID($cID)
-    {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
-        $cParentID = $db->fetchColumn('select cParentID from Pages where cID = ?', [(int) $cID]);
-
-        return $cParentID ?: null;
     }
 
     /**
@@ -2134,17 +2219,6 @@ EOT
     }
 
     /**
-     * Clears the custom theme styles for every page.
-     */
-    public static function resetAllCustomStyles()
-    {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
-        $db->delete('CollectionVersionThemeCustomStyles', ['1' => 1]);
-        $app->clearCaches();
-    }
-
-    /**
      * Update the data of this page.
      *
      * @param array $data Allowed keys {
@@ -2497,27 +2571,6 @@ EOT
             "insert into PagePermissionAssignments (cID, {$copyFields}) select ?, {$copyFields} from PagePermissionAssignments where cID = ?",
             [$this->getCollectionID(), $permissionsCollectionID]
         );
-    }
-
-    /**
-     * @deprecated is this function still useful? There's no reference to it in the core
-     *
-     * @param int|string $cParentIDString
-     */
-    public function updateGroupsSubCollection($cParentIDString)
-    {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
-        $rs = $db->executeQuery("select cID from Pages where cParentID in ({$cParentIDString}) and cInheritPermissionsFrom = 'PARENT'");
-        $cList = [];
-        while (($cID = $rs->fetchColumn()) !== false) {
-            $cList[] = $cID;
-        }
-        if (count($cList) > 0) {
-            $cParentIDString = implode(',', $cList);
-            $db->executeQuery("update Pages set cInheritPermissionsFromCID = ? where cID in ({$cParentIDString})", [$this->getCollectionID()]);
-            $this->updateGroupsSubCollection($cParentIDString);
-        }
     }
 
     /**
@@ -2947,47 +3000,6 @@ EOT
     }
 
     /**
-     * @deprecated use the isHomePage() method
-     *
-     * @return bool
-     */
-    public function isLocaleHomePage()
-    {
-        return $this->isHomePage();
-    }
-
-    /**
-     * Get the ID of the home page.
-     *
-     * @param Page|int $page the page (or its ID) for which you want the home (if not specified, we'll use the default locale site tree)
-     *
-     * @return int|null returns NULL if $page is null (or it doesn't have a SiteTree associated) and if there's no default locale
-     */
-    public static function getHomePageID($page = null)
-    {
-        if ($page) {
-            if (!$page instanceof self) {
-                $page = self::getByID($page);
-            }
-            if ($page instanceof self) {
-                $siteTree = $page->getSiteTreeObject();
-                if ($siteTree !== null) {
-                    return $siteTree->getSiteHomePageID();
-                }
-            }
-        }
-        $locale = Application::getFacadeApplication()->make(LocaleService::class)->getDefaultLocale();
-        if ($locale !== null) {
-            $siteTree = $locale->getSiteTreeObject();
-            if ($siteTree != null) {
-                return $siteTree->getSiteHomePageID();
-            }
-        }
-
-        return null;
-    }
-
-    /**
      * Get a new PagePath object with the computed canonical page path.
      *
      * @return \Concrete\Core\Entity\Page\PagePath
@@ -3228,17 +3240,6 @@ EOT
     }
 
     /**
-     * Mark this page as non draft.
-     */
-    public function setPageToDraft()
-    {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
-        $db->executeQuery('update Pages set cIsDraft = 1 where cID = ?', [$this->getCollectionID()]);
-        $this->cIsDraft = true;
-    }
-
-    /**
      * Mark this page as active.
      */
     public function activate()
@@ -3290,49 +3291,6 @@ EOT
         $db = $app->make(Connection::class);
 
         return (string) $db->fetchColumn('select content from PageSearchIndex where cID = ?', [$this->getCollectionID()]);
-    }
-
-    /**
-     * Add the home page to the system. Typically used only by the installation program.
-     *
-     * @param \Concrete\Core\Site\Tree\TreeInterface|null $siteTree
-     *
-     * @return \Concrete\Core\Page\Page
-     **/
-    public static function addHomePage(TreeInterface $siteTree = null)
-    {
-        // creates the home page of the site
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
-
-        $cParentID = 0;
-        $uID = HOME_UID;
-
-        $homeCollection = parent::createCollection([
-            'name' => HOME_NAME,
-            'uID' => $uID,
-        ]);
-        $cID = $homeCollection->getCollectionID();
-
-        if (!$siteTree) {
-            $site = $app->make('site')->getSite();
-            $siteTree = $site->getSiteTreeObject();
-        }
-        $siteTreeID = $siteTree->getSiteTreeID();
-
-        $db->insert('Pages', [
-            'cID' => $cID,
-            'siteTreeID' => $siteTreeID,
-            'cParentID' => $cParentID,
-            'uID' => $uID,
-            'cInheritPermissionsFrom' => 'OVERRIDE',
-            'cOverrideTemplatePermissions' => 1,
-            'cInheritPermissionsFromCID' => $cID,
-            'cDisplayOrder' => 0,
-        ]);
-        $homePage = self::getByID($cID, 'RECENT');
-
-        return $homePage;
     }
 
     /**
@@ -3567,68 +3525,24 @@ EOT
     }
 
     /**
-     * Create a new page.
+     * Is this a draft?
      *
-     * @param array $data The data to be used to create the page. See Collection::createCollection() for the supported keys, plus 'pkgID' and 'filename'.
-     * @param \Concrete\Core\Site\Tree\TreeInterface|null $parent the parent page (or the site) that will contain the new page
-     *
-     * @return \Concrete\Core\Page\Page
-     *
-     * @see \Concrete\Core\Page\Collection\Collection::createCollection()
+     * @return bool
      */
-    public static function addStatic($data, TreeInterface $parent = null)
+    public function isPageDraft()
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
-        if ($parent instanceof self) {
-            $cParentID = $parent->getCollectionID();
-            $parent->rescanChildrenDisplayOrder();
-            $cDisplayOrder = $parent->getNextSubPageDisplayOrder();
-            $cInheritPermissionsFromCID = $parent->getPermissionsCollectionID();
-            $cOverrideTemplatePermissions = $parent->overrideTemplatePermissions();
-        } else {
-            $cParentID = static::getHomePageID();
-            $cDisplayOrder = 0;
-            $cInheritPermissionsFromCID = $cParentID;
-            $cOverrideTemplatePermissions = 1;
-        }
-        // These get set to parent by default here, but they can be overridden later
-        $data['uID'] = USER_SUPER_ID;
-        $newCollection = parent::createCollection($data);
-        $cID = $newCollection->getCollectionID();
-
-        $db->insert('Pages', [
-            'cID' => $cID,
-            'siteTreeID' => $parent ? $parent->getSiteTreeID() : 0,
-            'cFilename' => isset($data['filename']) ? $data['filename'] : null,
-            'cParentID' => $cParentID,
-            'cInheritPermissionsFrom' => 'PARENT',
-            'cOverrideTemplatePermissions' => $cOverrideTemplatePermissions,
-            'cInheritPermissionsFromCID' => (int) $cInheritPermissionsFromCID,
-            'cDisplayOrder' => $cDisplayOrder,
-            'uID' => $data['uID'],
-            'pkgID' => isset($data['pkgID']) ? $data['pkgID'] : 0,
-        ]);
-
-        PageStatistics::incrementParents($cID);
-
-        $pc = self::getByID($cID);
-        $pc->rescanCollectionPath();
-
-        return $pc;
+        return !empty($this->cIsDraft);
     }
 
     /**
-     * Get the currently requested page.
-     *
-     * @return \Concrete\Core\Page\Page|null
+     * Mark this page as non draft.
      */
-    public static function getCurrentPage()
+    public function setPageToDraft()
     {
-        $req = Request::getInstance();
-        $current = $req->getCurrentPage();
-
-        return $current;
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $db->executeQuery('update Pages set cIsDraft = 1 where cID = ?', [$this->getCollectionID()]);
+        $this->cIsDraft = true;
     }
 
     /**
@@ -3660,6 +3574,94 @@ EOT
         $db->executeQuery('update Pages set cDraftTargetParentPageID = ? where cID = ?', [$cParentID, $this->getCollectionID()]);
         $this->cDraftTargetParentPageID = $cParentID;
         Section::registerPage($this);
+    }
+
+    /**
+     * @deprecated use the isHomePage() method
+     *
+     * @return bool
+     */
+    public function isLocaleHomePage()
+    {
+        return $this->isHomePage();
+    }
+
+    /**
+     * @deprecated use the getPageController() method
+     */
+    public function getController()
+    {
+        return $this->getPageController();
+    }
+
+    /**
+     * @deprecated use the getPageTypeID() method
+     */
+    public function getCollectionTypeID()
+    {
+        return $this->getPageTypeID();
+    }
+
+    /**
+     * @deprecated use the getPageTypeHandle() method
+     *
+     * @return string|false
+     */
+    public function getCollectionTypeHandle()
+    {
+        return $this->getPageTypeHandle();
+    }
+
+    /**
+     * @deprecated use the getPageTypeName() method
+     */
+    public function getCollectionTypeName()
+    {
+        return $this->getPageTypeName();
+    }
+
+    /**
+     * @deprecated There's no more an "Arrange Mode"
+     *
+     * @return false
+     */
+    public function isArrangeMode()
+    {
+        return false;
+    }
+
+    /**
+     * @deprecated use the \Concrete\Core\Page\Exporter class
+     *
+     * @param \SimpleXMLElement $pageNode
+     *
+     * @see \Concrete\Core\Page\Page::getExporter()
+     */
+    public function export($pageNode)
+    {
+        $exporter = $this->getExporter();
+        $exporter->export($this, $pageNode);
+    }
+
+    /**
+     * @deprecated is this function still useful? There's no reference to it in the core
+     *
+     * @param int|string $cParentIDString
+     */
+    public function updateGroupsSubCollection($cParentIDString)
+    {
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $rs = $db->executeQuery("select cID from Pages where cParentID in ({$cParentIDString}) and cInheritPermissionsFrom = 'PARENT'");
+        $cList = [];
+        while (($cID = $rs->fetchColumn()) !== false) {
+            $cList[] = $cID;
+        }
+        if (count($cList) > 0) {
+            $cParentIDString = implode(',', $cList);
+            $db->executeQuery("update Pages set cInheritPermissionsFromCID = ? where cID in ({$cParentIDString})", [$this->getCollectionID()]);
+            $this->updateGroupsSubCollection($cParentIDString);
+        }
     }
 
     /**
