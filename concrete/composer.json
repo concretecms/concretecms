@@ -87,7 +87,8 @@
     "frankkessler/guzzle-oauth2-middleware": "^0.1.1",
     "league/fractal": "^0.17.0",
     "bernard/bernard": "1.0.0-alpha9",
-    "league/tactician-bernard": "^0.6.0"
+    "league/tactician-bernard": "^0.6.0",
+    "league/pipeline": "^1.0"
   },
   "extra": {
     "branch-alias": {
