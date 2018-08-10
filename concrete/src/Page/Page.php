@@ -2884,7 +2884,7 @@ EOT
         if (!$pe->proceed()) {
             return false;
         }
-        $app->make('log')->debug(t('Page "%s" at path "%s" deleted', $this->getCollectionName(), $this->getCollectionPath()), t('Page Action'));
+        $app->make('log')->debug(t('Page "%s" at path "%s" deleted', $this->getCollectionName(), $this->getCollectionPath()));
 
         parent::delete();
 
@@ -2946,7 +2946,7 @@ EOT
         $app->make('director')->dispatch('on_page_move_to_trash', $pe);
 
         $trash = self::getByPath($config->get('concrete.paths.trash'));
-        $app->make('log')->debug(t('Page "%s" at path "%s" Moved to trash', $this->getCollectionName(), $this->getCollectionPath()), t('Page Action'));
+        $app->make('log')->debug(t('Page "%s" at path "%s" Moved to trash', $this->getCollectionName(), $this->getCollectionPath()));
         $this->move($trash);
         $this->deactivate();
 
