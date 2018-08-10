@@ -3694,13 +3694,13 @@ EOT
                     $this->{$key} = $value;
                 }
                 $this->isMasterCollection = $row['cIsTemplate'];
-                if (isset($originalRow)) {
-                    $this->cPointerID = $row['cPointerID'];
-                    $this->cIsActive = $row['cIsActive'];
-                    $this->cPointerOriginalID = $row['cID'];
-                    $this->cPath = $row['cPath'];
-                    $this->cParentID = $row['cParentID'];
-                    $this->cDisplayOrder = $row['cDisplayOrder'];
+                if ($originalRow !== null) {
+                    $this->cPointerID = $originalRow['cPointerID'];
+                    $this->cIsActive = $originalRow['cIsActive'];
+                    $this->cPointerOriginalID = $originalRow['cID'];
+                    $this->cPath = $originalRow['cPath'];
+                    $this->cParentID = $originalRow['cParentID'];
+                    $this->cDisplayOrder = $originalRow['cDisplayOrder'];
                 }
                 if ($cvID) {
                     $this->loadVersionObject($cvID);
