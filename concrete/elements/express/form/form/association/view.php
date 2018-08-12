@@ -10,12 +10,14 @@
     }
     if (count($entities)) {
         ?>
+        <ul>
         <?php foreach ($entities as $entity) {
     ?>
-            <div><a href="<?=URL::to('/dashboard/express/entries', 'view_entry', $entity->getID())?>"><?=$formatter->getEntryDisplayName($control, $entity)?></a></div>
+            <li><a href="<?=URL::to('/dashboard/express/entries', 'view_entry', $entity->getID())?>"><?=$formatter->getEntryDisplayName($control, $entity)?></a></li>
         <?php 
 }
         ?>
+        </ul>
     <?php 
     } ?>
 </div>
