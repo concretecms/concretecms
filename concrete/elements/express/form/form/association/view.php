@@ -5,6 +5,9 @@
     <label class="control-label"><?=$label?></label>
     </div>
     <?php
+    if (isset($selectedEntities) && is_array($selectedEntities)) {
+        $entities = $selectedEntities;
+    }
     if (count($entities)) {
         ?>
         <?php foreach ($entities as $entity) {
