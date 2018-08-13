@@ -2,7 +2,7 @@
 namespace Concrete\Block\ExpressEntryList;
 
 use Concrete\Controller\Element\Search\CustomizeResults;
-use \Concrete\Core\Block\BlockController;
+use Concrete\Core\Block\BlockController;
 use Concrete\Core\Entity\Express\Association;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\ManyToManyAssociation;
@@ -17,11 +17,10 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Controller extends BlockController
 {
-
     protected $btInterfaceWidth = "640";
     protected $btInterfaceHeight = "400";
     protected $btTable = 'btExpressEntryList';
-    protected $entityAttributes = array();
+    protected $entityAttributes = [];
 
     public function on_start()
     {
@@ -60,32 +59,32 @@ class Controller extends BlockController
         $this->loadData();
         if ($this->exEntityID) {
             /**
-             * @var $entity Entity
+             * @var Entity
              */
             $entity = $this->entityManager->find('Concrete\Core\Entity\Express\Entity', $this->exEntityID);
             if (is_object($entity)) {
                 if ($this->searchProperties) {
                     $searchPropertiesSelected = (array) json_decode($this->searchProperties);
                 } else {
-                    $searchPropertiesSelected = array();
+                    $searchPropertiesSelected = [];
                 }
 
                 if ($this->searchAssociations) {
                     $searchAssociationsSelected = (array) json_decode($this->searchAssociations);
                 } else {
-                    $searchAssociationsSelected = array();
+                    $searchAssociationsSelected = [];
                 }
 
                 if ($this->linkedProperties) {
                     $linkedPropertiesSelected = (array) json_decode($this->linkedProperties);
                 } else {
-                    $linkedPropertiesSelected = array();
+                    $linkedPropertiesSelected = [];
                 }
 
                 $searchProperties = $this->getSearchPropertiesJsonArray($entity);
                 $searchAssociations = $this->getSearchAssociationsJsonArray($entity);
                 $columns = unserialize($this->columns);
-                $provider = \Core::make('Concrete\Core\Express\Search\SearchProvider', array($entity, $entity->getAttributeKeyCategory()));
+                $provider = \Core::make('Concrete\Core\Express\Search\SearchProvider', [$entity, $entity->getAttributeKeyCategory()]);
                 if ($columns) {
                     $provider->setColumnSet($columns);
                 }
@@ -101,19 +100,19 @@ class Controller extends BlockController
                 $this->set('searchAssociations', $searchAssociations);
             }
         }
-
     }
 
     protected function getSearchPropertiesJsonArray($entity)
     {
         $attributes = $entity->getAttributeKeyCategory()->getList();
-        $select = array();
-        foreach($attributes as $ak) {
-            $o = new \stdClass;
+        $select = [];
+        foreach ($attributes as $ak) {
+            $o = new \stdClass();
             $o->akID = $ak->getAttributeKeyID();
             $o->akName = $ak->getAttributeKeyDisplayName();
             $select[] = $o;
         }
+
         return $select;
     }
 
@@ -121,14 +120,15 @@ class Controller extends BlockController
     {
         $associations = $entity->getAssociations();
         $select = [];
-        foreach($associations as $association) {
+        foreach ($associations as $association) {
             if ($association instanceof ManyToManyAssociation || $association instanceof ManyToOneAssociation) {
-                $o = new \stdClass;
+                $o = new \stdClass();
                 $o->associationID = $association->getId();
                 $o->associationName = $association->getTargetEntity()->getName();
                 $select[] = $o;
             }
         }
+
         return $select;
     }
 
@@ -164,13 +164,13 @@ class Controller extends BlockController
                 $list->filterByKeywords($this->request->query->get('keywords'));
             }
 
-            $tableSearchProperties = array();
+            $tableSearchProperties = [];
             if ($this->searchProperties) {
                 $searchPropertiesSelected = (array) json_decode($this->searchProperties);
             } else {
-                $searchPropertiesSelected = array();
+                $searchPropertiesSelected = [];
             }
-            foreach($searchPropertiesSelected as $akID) {
+            foreach ($searchPropertiesSelected as $akID) {
                 $ak = $category->getAttributeKeyByID($akID);
                 if (is_object($ak)) {
                     $tableSearchProperties[] = $ak;
@@ -182,11 +182,11 @@ class Controller extends BlockController
                 }
             }
 
-            $tableSearchAssociations = array();
+            $tableSearchAssociations = [];
             if ($this->searchAssociations) {
                 $searchAssociationsSelected = (array) json_decode($this->searchAssociations);
             } else {
-                $searchAssociationsSelected = array();
+                $searchAssociationsSelected = [];
             }
             foreach ($searchAssociationsSelected as $associationID) {
                 $association = $this->entityManager->find(Association::class, $associationID);
@@ -222,7 +222,7 @@ class Controller extends BlockController
             if (isset($data['searchProperties']) && is_array($data['searchProperties'])) {
                 $searchProperties = $data['searchProperties'];
             } else {
-                $searchProperties = array();
+                $searchProperties = [];
             }
 
             $data['searchProperties'] = json_encode($searchProperties);
@@ -230,7 +230,7 @@ class Controller extends BlockController
             if (isset($data['searchAssociations']) && is_array($data['searchAssociations'])) {
                 $searchAssociations = $data['searchAssociations'];
             } else {
-                $searchAssociations = array();
+                $searchAssociations = [];
             }
 
             $data['searchAssociations'] = json_encode($searchAssociations);
@@ -239,8 +239,8 @@ class Controller extends BlockController
                 $data['enableSearch'] = 0;
             }
         } else {
-            $data['searchProperties'] = array();
-            $data['searchAssociations'] = array();
+            $data['searchProperties'] = [];
+            $data['searchAssociations'] = [];
             $data['enableKeywordSearch'] = 0;
             $data['enableSearch'] = 0;
         }
@@ -248,7 +248,7 @@ class Controller extends BlockController
         if (isset($data['linkedProperties']) && is_array($data['linkedProperties'])) {
             $linkedProperties = $data['linkedProperties'];
         } else {
-            $linkedProperties = array();
+            $linkedProperties = [];
         }
         $data['linkedProperties'] = json_encode($linkedProperties);
 
@@ -258,8 +258,7 @@ class Controller extends BlockController
 
         $entity = $this->entityManager->find('Concrete\Core\Entity\Express\Entity', $data['exEntityID']);
         if (is_object($entity) && is_array($this->request->request->get('column'))) {
-
-            $provider = $this->app->make('Concrete\Core\Express\Search\SearchProvider', array($entity, $entity->getAttributeKeyCategory()));
+            $provider = $this->app->make('Concrete\Core\Express\Search\SearchProvider', [$entity, $entity->getAttributeKeyCategory()]);
             $set = $this->app->make('Concrete\Core\Express\Search\ColumnSet\ColumnSet');
             $available = $provider->getAvailableColumnSet();
             foreach ($this->request->request->get('column') as $key) {
@@ -270,7 +269,6 @@ class Controller extends BlockController
             $set->setDefaultSortColumn($sort, $this->request->request->get('fSearchDefaultSortDirection'));
 
             $data['columns'] = serialize($set);
-
         }
 
         parent::save($data);
@@ -282,10 +280,10 @@ class Controller extends BlockController
         if ($exEntityID) {
             $entity = $this->entityManager->find('Concrete\Core\Entity\Express\Entity', $exEntityID);
             if (is_object($entity)) {
-                $provider = \Core::make('Concrete\Core\Express\Search\SearchProvider', array($entity, $entity->getAttributeKeyCategory()));
+                $provider = \Core::make('Concrete\Core\Express\Search\SearchProvider', [$entity, $entity->getAttributeKeyCategory()]);
                 $element = new CustomizeResults($provider);
                 $element->setIncludeNumberOfResults(false);
-                $r = new \stdClass;
+                $r = new \stdClass();
                 ob_start();
                 $element->getViewObject()->render();
                 $r->customize = ob_get_contents();
@@ -293,6 +291,7 @@ class Controller extends BlockController
 
                 $r->attributes = $this->getSearchPropertiesJsonArray($entity);
                 $r->associations = $this->getSearchAssociationsJsonArray($entity);
+
                 return new JsonResponse($r);
             }
         }
@@ -300,13 +299,12 @@ class Controller extends BlockController
         \Core::make('app')->shutdown();
     }
 
-
     public function loadData()
     {
         $r = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entity');
         $entityObjects = $r->findAll();
-        $entities = array('' => t("** Choose Entity"));
-        foreach($entityObjects as $entity) {
+        $entities = ['' => t("** Choose Entity")];
+        foreach ($entityObjects as $entity) {
             $entities[$entity->getID()] = $entity->getEntityDisplayName();
         }
         $this->set('entities', $entities);
@@ -340,5 +338,4 @@ class Controller extends BlockController
             }
         }
     }
-
 }
