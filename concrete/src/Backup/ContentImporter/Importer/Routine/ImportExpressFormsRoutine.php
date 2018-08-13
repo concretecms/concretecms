@@ -35,25 +35,31 @@ class ImportExpressFormsRoutine extends AbstractRoutine
                         if (isset($formNode->fieldsets)) {
                             $fieldSetPosition = 0;
                             foreach($formNode->fieldsets->fieldset as $fieldSetNode) {
-                                $fieldset = new FieldSet();
-                                $fieldset->setDescription((string) $fieldSetNode['description']);
-                                $fieldset->setTitle((string) $fieldSetNode['title']);
-                                $fieldset->setPosition($fieldSetPosition);
+                                $fieldset = $em->find('Concrete\Core\Entity\Express\FieldSet', (string) $fieldSetNode['id']);
+                                if (!$fieldset) {
+                                    $fieldset = new FieldSet();
+                                    $fieldset->setDescription((string)$fieldSetNode['description']);
+                                    $fieldset->setTitle((string)$fieldSetNode['title']);
+                                    $fieldset->setPosition($fieldSetPosition);
+                                    $form->getFieldSets()->add($fieldset);
+                                    $fieldset->setForm($form);
+                                    $fieldSetPosition++;
+                                }
                                 if (isset($fieldSetNode->controls)) {
                                     $manager = \Core::make('express/control/type/manager');
                                     $controlPosition = 0;
                                     foreach($fieldSetNode->controls->control as $controlNode) {
-                                        $type = $manager->driver((string) $controlNode['type']);
-                                        $control = $type->getImporter()->import($controlNode, $entity);
-                                        $control->setFieldSet($fieldset);
-                                        $control->setPosition($controlPosition);
-                                        $fieldset->getControls()->add($control);
-                                        $controlPosition++;
+                                        $control = $em->find('Concrete\Core\Entity\Express\Control\Control', (string) $controlNode['id']);
+                                        if (!$control) {
+                                            $type = $manager->driver((string) $controlNode['type']);
+                                            $control = $type->getImporter()->import($controlNode, $entity);
+                                            $control->setFieldSet($fieldset);
+                                            $control->setPosition($controlPosition);
+                                            $fieldset->getControls()->add($control);
+                                            $controlPosition++;
+                                        }
                                     }
                                 }
-                                $form->getFieldSets()->add($fieldset);
-                                $fieldset->setForm($form);
-                                $fieldSetPosition++;
                             }
                         }
                         $entity->getForms()->add($form);
