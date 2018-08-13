@@ -1138,7 +1138,7 @@ class Page extends Collection implements PermissionObjectInterface, AttributeObj
             if ($pkgHandle) {
                 if (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) {
                     $dirp = DIR_PACKAGES;
-                    $url = $app->getApplicationURL();
+                    $url = Application::getApplicationURL();
                 } else {
                     $dirp = DIR_PACKAGES_CORE;
                     $url = ASSETS_URL;
