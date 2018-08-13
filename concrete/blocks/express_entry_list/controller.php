@@ -3,9 +3,13 @@ namespace Concrete\Block\ExpressEntryList;
 
 use Concrete\Controller\Element\Search\CustomizeResults;
 use \Concrete\Core\Block\BlockController;
+use Concrete\Core\Entity\Express\Association;
 use Concrete\Core\Entity\Express\Entity;
+use Concrete\Core\Entity\Express\ManyToManyAssociation;
+use Concrete\Core\Entity\Express\ManyToOneAssociation;
 use Concrete\Core\Express\Entry\Search\Result\Result;
 use Concrete\Core\Express\EntryList;
+use Concrete\Core\Express\Search\Field\AssociationField;
 use Concrete\Core\Search\Column\AttributeKeyColumn;
 use Concrete\Core\Search\Result\ItemColumn;
 use Concrete\Core\Support\Facade\Facade;
@@ -46,6 +50,7 @@ class Controller extends BlockController
         $this->loadData();
         $this->set('searchProperties', []);
         $this->set('searchPropertiesSelected', []);
+        $this->set('searchAssociations', []);
         $this->set('linkedProperties', []);
         $this->set('displayLimit', 20);
     }
@@ -65,6 +70,12 @@ class Controller extends BlockController
                     $searchPropertiesSelected = array();
                 }
 
+                if ($this->searchAssociations) {
+                    $searchAssociationsSelected = (array) json_decode($this->searchAssociations);
+                } else {
+                    $searchAssociationsSelected = array();
+                }
+
                 if ($this->linkedProperties) {
                     $linkedPropertiesSelected = (array) json_decode($this->linkedProperties);
                 } else {
@@ -72,6 +83,7 @@ class Controller extends BlockController
                 }
 
                 $searchProperties = $this->getSearchPropertiesJsonArray($entity);
+                $searchAssociations = $this->getSearchAssociationsJsonArray($entity);
                 $columns = unserialize($this->columns);
                 $provider = \Core::make('Concrete\Core\Express\Search\SearchProvider', array($entity, $entity->getAttributeKeyCategory()));
                 if ($columns) {
@@ -85,6 +97,8 @@ class Controller extends BlockController
                 $this->set('linkedPropertiesSelected', $linkedPropertiesSelected);
                 $this->set('searchPropertiesSelected', $searchPropertiesSelected);
                 $this->set('searchProperties', $searchProperties);
+                $this->set('searchAssociationsSelected', $searchAssociationsSelected);
+                $this->set('searchAssociations', $searchAssociations);
             }
         }
 
@@ -99,6 +113,21 @@ class Controller extends BlockController
             $o->akID = $ak->getAttributeKeyID();
             $o->akName = $ak->getAttributeKeyDisplayName();
             $select[] = $o;
+        }
+        return $select;
+    }
+
+    protected function getSearchAssociationsJsonArray($entity)
+    {
+        $associations = $entity->getAssociations();
+        $select = [];
+        foreach($associations as $association) {
+            if ($association instanceof ManyToManyAssociation || $association instanceof ManyToOneAssociation) {
+                $o = new \stdClass;
+                $o->associationID = $association->getId();
+                $o->associationName = $association->getTargetEntity()->getName();
+                $select[] = $o;
+            }
         }
         return $select;
     }
@@ -153,6 +182,22 @@ class Controller extends BlockController
                 }
             }
 
+            $tableSearchAssociations = array();
+            if ($this->searchAssociations) {
+                $searchAssociationsSelected = (array) json_decode($this->searchAssociations);
+            } else {
+                $searchAssociationsSelected = array();
+            }
+            foreach ($searchAssociationsSelected as $associationID) {
+                $association = $this->entityManager->find(Association::class, $associationID);
+                if (is_object($association)) {
+                    $tableSearchAssociations[] = $association;
+                    $field = new AssociationField($association);
+                    $field->loadDataFromRequest($this->getRequest()->query->all());
+                    $field->filterList($list);
+                }
+            }
+
             $result = new Result($set, $list);
             $pagination = $list->getPagination();
             if ($pagination->haveToPaginate()) {
@@ -164,6 +209,7 @@ class Controller extends BlockController
             $this->set('result', $result);
             $this->set('entity', $entity);
             $this->set('tableSearchProperties', $tableSearchProperties);
+            $this->set('tableSearchAssociations', $tableSearchAssociations);
             $this->set('detailPage', $this->getDetailPageObject());
         }
     }
@@ -181,11 +227,20 @@ class Controller extends BlockController
 
             $data['searchProperties'] = json_encode($searchProperties);
 
-            if (empty($searchProperties) && empty($linkedProperties) && empty($data['enableKeywordSearch'])) {
+            if (isset($data['searchAssociations']) && is_array($data['searchAssociations'])) {
+                $searchAssociations = $data['searchAssociations'];
+            } else {
+                $searchAssociations = array();
+            }
+
+            $data['searchAssociations'] = json_encode($searchAssociations);
+
+            if (empty($searchProperties) && empty($searchAssociations) && empty($linkedProperties) && empty($data['enableKeywordSearch'])) {
                 $data['enableSearch'] = 0;
             }
         } else {
             $data['searchProperties'] = array();
+            $data['searchAssociations'] = array();
             $data['enableKeywordSearch'] = 0;
             $data['enableSearch'] = 0;
         }
@@ -237,6 +292,7 @@ class Controller extends BlockController
                 ob_end_clean();
 
                 $r->attributes = $this->getSearchPropertiesJsonArray($entity);
+                $r->associations = $this->getSearchAssociationsJsonArray($entity);
                 return new JsonResponse($r);
             }
         }

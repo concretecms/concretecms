@@ -5,6 +5,8 @@ $(function() {
         this.options = $.extend({
             searchProperties: [],
             searchPropertiesSelected: [],
+            searchAssociations: [],
+            searchAssociationsSelected: [],
             linkedPropertiesSelected: []
         }, options);
         this.init(options);
@@ -14,6 +16,7 @@ $(function() {
         var $source = $('#ccm-tab-content-search'),
             $customizeContainer = $('#ccm-tab-content-results div[data-container=customize-results]');
             _searchAttributesTemplate = _.template($('script[data-template=express-attribute-search-list]').html()),
+            _searchAssociationsTemplate = _.template($('script[data-template=express-association-search-list]').html()),
             _linkedAttributesTemplate = _.template($('script[data-template=express-attribute-link-list]').html()),
             my = this;
 
@@ -26,6 +29,7 @@ $(function() {
                     success: function(r) {
                         $customizeContainer.html(r.customize);
                         my.setSearchableProperties(r.attributes);
+                        my.setSearchableAssociations(r.associations);
                         my.setLinkableProperties(r.attributes);
                     }
                 });
@@ -36,6 +40,11 @@ $(function() {
     ConcreteExpressEntryListBlockForm.prototype.setSearchableProperties = function(attributes, selected) {
         var $attributesContainer = $('#ccm-tab-content-search div[data-container=advanced-search]');
         $attributesContainer.html(_searchAttributesTemplate({attributes: attributes, selected: selected}));
+    }
+
+    ConcreteExpressEntryListBlockForm.prototype.setSearchableAssociations = function(associations, selected) {
+        var $associationsContainer = $('#ccm-tab-content-search div[data-container=search-associations]');
+        $associationsContainer.html(_searchAssociationsTemplate({associations: associations, selected: selected}));
     }
 
     ConcreteExpressEntryListBlockForm.prototype.setLinkableProperties = function(attributes, selected) {
@@ -70,6 +79,7 @@ $(function() {
 
         if (my.options.searchProperties.length) {
             my.setSearchableProperties(my.options.searchProperties, my.options.searchPropertiesSelected);
+            my.setSearchableAssociations(my.options.searchAssociations, my.options.searchAssociationsSelected);
             my.setLinkableProperties(my.options.searchProperties, my.options.linkedPropertiesSelected);
         }
 
