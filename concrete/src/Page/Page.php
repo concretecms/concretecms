@@ -142,7 +142,7 @@ class Page extends Collection implements PermissionObjectInterface, AttributeObj
      * * Get a page given its ID.
      *
      * @param int $cID the ID of the page
-     * @param string $version the page version ('RECENT' for the most recent version, 'ACTIVE' for the currently published version, or an integer to retrieve a specific version ID)
+     * @param string $version the page version ('RECENT' for the most recent version, 'ACTIVE' for the currently published version, 'SCHEDULED' for the currently scheduled version, or an integer to retrieve a specific version ID)
      *
      * @return \Concrete\Core\Page\Page
      */
@@ -172,7 +172,7 @@ class Page extends Collection implements PermissionObjectInterface, AttributeObj
      * Get a page given its path.
      *
      * @param string $path the page path (example: /path/to/page)
-     * @param string $version the page version ('RECENT' for the most recent version, 'ACTIVE' for the currently published version, or an integer to retrieve a specific version ID)
+     * @param string $version the page version ('RECENT' for the most recent version, 'ACTIVE' for the currently published version, 'SCHEDULED' for the currently scheduled version, or an integer to retrieve a specific version ID)
      * @param \Concrete\Core\Site\Tree\TreeInterface|null $tree
      *
      * @return \Concrete\Core\Page\Page
