@@ -237,7 +237,7 @@ class Collection extends ConcreteObject implements TrackableInterface
         if (isset($data['cvIsNew'])) {
             $insert['cvIsNew'] = $data['cvIsNew'] ? 1 : 0;
         } else {
-            $insert['cvIsNew'] = $cvIsApproved ? 0 : 1;
+            $insert['cvIsNew'] = $insert['cvIsApproved'] ? 0 : 1;
         }
         $db->insert('CollectionVersions', $insert);
 
