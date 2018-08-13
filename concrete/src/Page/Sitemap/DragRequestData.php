@@ -109,11 +109,13 @@ class DragRequestData
     }
 
     /**
-     * @return \Concrete\Core\Page\Page
+     * Get a Page instance if and only if there's just one original page.
+     *
+     * @return \Concrete\Core\Page\Page|null
      */
-    public function getFirstOriginalPage()
+    public function getSingleOriginalPage()
     {
-        return $this->originalPages[0];
+        return count($this->originalPages) === 1 ? $this->originalPages[0] : null;
     }
 
     /**

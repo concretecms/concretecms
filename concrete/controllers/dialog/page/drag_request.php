@@ -47,7 +47,6 @@ class DragRequest extends UserInterfaceController
         $this->set('validationToken', $this->app->make('token')->generate($this->validationToken));
         $this->set('dragRequestData', $dragRequestData);
         $this->set('originalPageIDs', implode(',', $originalPageIDs));
-        $this->set('singleOriginalPage', count($dragRequestData->getOriginalPages()) === 1 ? $dragRequestData->getFirstOriginalPage() : null);
     }
 
     public function submit()

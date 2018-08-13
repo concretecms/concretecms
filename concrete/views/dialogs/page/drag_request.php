@@ -13,13 +13,13 @@ defined('C5_EXECUTE') or die('Access Denied.');
 /* @var string $validationToken */
 /* @var Concrete\Core\Page\Sitemap\DragRequestData $dragRequestData */
 /* @var string $originalPageIDs */
-/* @var Concrete\Core\Page\Page|null $singleOriginalPage */
 
 if (isset($showProgressBar) && $showProgressBar) {
     View::element('progress_bar', ['totalItems' => $totalItems, 'totalItemsSummary' => t2('%d page', '%d pages', $totalItems)]);
 
     return;
 }
+$singleOriginalPage = $dragRequestData->getSingleOriginalPage();
 ?>
 
 <div class="alert alert-info">
