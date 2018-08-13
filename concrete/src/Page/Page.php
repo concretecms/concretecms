@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Page;
 
+use Collection;
 use Concrete\Core\Area\Area;
 use Concrete\Core\Attribute\Category\PageCategory;
 use Concrete\Core\Attribute\ObjectInterface as AttributeObjectInterface;
@@ -24,7 +25,6 @@ use Concrete\Core\Localization\Locale\Service as LocaleService;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Multilingual\Service\UserInterface\Flag;
 use Concrete\Core\Package\PackageList;
-use Concrete\Core\Page\Collection\Collection;
 use Concrete\Core\Page\Controller\PageController;
 use Concrete\Core\Page\Stack\Stack;
 use Concrete\Core\Page\Statistics as PageStatistics;
