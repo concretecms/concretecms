@@ -129,7 +129,7 @@ class Controller extends DefaultController
          * @var $type TextareaSettings
          */
 
-        $this->akTextareaDisplayMode = $type->getMode();
+        $this->akTextareaDisplayMode = $type->getMode() ?: 'text';
         $this->set('akTextareaDisplayMode', $type->getMode());
     }
 
