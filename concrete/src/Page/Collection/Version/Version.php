@@ -2,91 +2,215 @@
 
 namespace Concrete\Core\Page\Collection\Version;
 
-use Block;
-use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Attribute\ObjectInterface as AttributeObjectInterface;
 use Concrete\Core\Attribute\ObjectTrait;
+use Concrete\Core\Block\Block;
+use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Attribute\Value\PageValue;
 use Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVersionFeatureAssignment;
 use Concrete\Core\Foundation\ConcreteObject;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Type\Type as PageType;
+use Concrete\Core\Permission\Checker;
 use Concrete\Core\Permission\ObjectInterface as PermissionObjectInterface;
-use Concrete\Core\Support\Facade\Facade;
-use Page;
-use PageType;
-use Permissions;
-use User;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\User\User;
+use Doctrine\ORM\EntityManagerInterface;
+use PDO;
 
 class Version extends ConcreteObject implements PermissionObjectInterface, AttributeObjectInterface
 {
     use ObjectTrait;
 
     // Properties from database record
+
+    /**
+     * @deprecated what's deprecated is the public part of this property: use the getVersionID() method instead
+     *
+     * @var int|string
+     */
     public $cvID;
 
+    /**
+     * @deprecated what's deprecated is the public part of this property: use the isApproved() method instead
+     *
+     * @var bool|int|string
+     */
     public $cvIsApproved;
 
+    /**
+     * @deprecated what's deprecated is the public part of this property: use the isNew() / removeNewStatus() method instead
+     *
+     * @var bool|int|string
+     */
     public $cvIsNew;
 
+    /**
+     * The collection version handle.
+     *
+     * @var string|null
+     */
     public $cvHandle;
 
+    /**
+     * @deprecated what's deprecated is the public part of this property: use the getVersionName() method instead
+     *
+     * @var string|null
+     */
     public $cvName;
 
+    /**
+     * The collection version description.
+     *
+     * @var string|null
+     */
     public $cvDescription;
 
+    /**
+     * @deprecated what's deprecated is the public part of this property: use the getVersionDateCreated() method instead
+     *
+     * @var string|null
+     */
     public $cvDateCreated;
 
+    /**
+     * The date/time when this collection version was made public.
+     *
+     * @var string|null
+     *
+     * @example '2018-21-31 23:59:59'
+     */
     public $cvDatePublic;
 
+    /**
+     * The ID of the page template.
+     *
+     * @var int|string
+     */
     public $pTemplateID;
 
+    /**
+     * @deprecated what's deprecated is the public part of this property: use the getVersionAuthorUserID() method instead
+     *
+     * @var int|string|null
+     */
     public $cvAuthorUID;
 
+    /**
+     * @deprecated what's deprecated is the public part of this property: use the getVersionApproverUserID() method instead
+     *
+     * @var int|string|null
+     */
     public $cvApproverUID;
 
+    /**
+     * @deprecated what's deprecated is the public part of this property: use the getVersionComments() / setComment() methods instead
+     *
+     * @var string|null
+     */
     public $cvComments;
 
+    /**
+     * The ID of the page theme.
+     *
+     * @var int|string
+     */
     public $pThemeID;
 
+    /**
+     * @deprecated what's deprecated is the public part of this property: use the getPublishDate() / setPublishDate() methods instead
+     *
+     * @var string|null
+     */
     public $cvPublishDate;
 
+    /**
+     * @deprecated what's deprecated is the public part of this property: use the getPublishEndDate() / setPublishEndDate() methods instead
+     *
+     * @var string|null
+     */
     public $cvPublishEndDate;
 
+    /**
+     * @deprecated what's deprecated is the public part of this property: use the getVersionDateApproved() method instead
+     *
+     * @var string|null
+     */
     public $cvDateApproved;
 
     // Other properties
+
+    /**
+     * @deprecated what's deprecated is the public part of this property: use the getCollectionID() method instead
+     *
+     * @var int
+     */
     public $cID;
 
-    public $layoutStyles = [];
-
-    protected $attributes = [];
-
+    /**
+     * Is this the most recent version?
+     *
+     * @var bool|null
+     *
+     * @see \Concrete\Core\Page\Collection\Version\Version::isMostRecent()
+     */
     protected $isMostRecent;
 
+    /**
+     * The custom area style IDs.
+     *
+     * @var array|null
+     *
+     * @see \Concrete\Core\Page\Collection\Version\Version::getCustomAreaStyles()
+     */
     protected $customAreaStyles;
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\ObjectInterface::getPermissionObjectIdentifier()
+     */
     public function getPermissionObjectIdentifier()
     {
         return $this->getCollectionID() . ':' . $this->getVersionID();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\ObjectInterface::getPermissionResponseClassName()
+     */
     public function getPermissionResponseClassName()
     {
         return '\\Concrete\\Core\\Permission\\Response\\CollectionVersionResponse';
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\ObjectInterface::getPermissionAssignmentClassName()
+     */
     public function getPermissionAssignmentClassName()
     {
         return '\\Concrete\\Core\\Permission\\Assignment\\PageAssignment';
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\ObjectInterface::getPermissionObjectKeyCategoryHandle()
+     */
     public function getPermissionObjectKeyCategoryHandle()
     {
         return 'page';
     }
 
+    /**
+     * Clear the cache for this collection.
+     */
     public function refreshCache()
     {
-        $app = Facade::getFacadeApplication();
+        $app = Application::getFacadeApplication();
         $cache = $app->make('cache/request');
         if ($cache->isEnabled()) {
             $cache->delete('page/' . $this->getCollectionID());
@@ -103,29 +227,27 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
      */
     public static function get($c, $cvID)
     {
-        $app = Facade::getFacadeApplication();
-        $db = $app->make('database')->connection();
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
 
         $cID = false;
-        if ($c instanceof \Concrete\Core\Page\Page) {
+        if ($c instanceof Page) {
             $cID = $c->getCollectionPointerID();
         }
         if (!$cID) {
             $cID = $c->getCollectionID();
         }
+
         $v = [$cID];
-
         $q = 'select * from CollectionVersions where cID = ?';
-
-        $now = new \DateTime();
 
         switch ($cvID) {
             case 'ACTIVE':
                 $q .= ' and cvIsApproved = 1 and (cvPublishDate <= ? or cvPublishDate is null) order by cvPublishDate desc limit 1';
-                $v[] = $now->format('Y-m-d H:i:s');
+                $v[] = $app->make('date')->getOverridableNow();
                 break;
             case 'SCHEDULED':
-                $q .= ' and cvIsApproved = 1 and (cvPublishDate is not NULL or cvPublishEndDate is not null) limit 1';
+                $q .= ' and cvIsApproved = 1 and (cvPublishDate is not null or cvPublishEndDate is not null) limit 1';
                 break;
             case 'RECENT':
                 $q .= ' order by cvID desc limit 1';
@@ -148,26 +270,39 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         return $cv;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\ObjectInterface::getObjectAttributeCategory()
+     *
+     * @return \Concrete\Core\Attribute\Category\PageCategory
+     */
     public function getObjectAttributeCategory()
     {
-        $app = Facade::getFacadeApplication();
+        $app = Application::getFacadeApplication();
 
         return $app->make('\Concrete\Core\Attribute\Category\PageCategory');
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\ObjectInterface::getAttributeValueObject()
+     *
+     * @return \Concrete\Core\Entity\Attribute\Value\PageValue|null
+     */
     public function getAttributeValueObject($ak, $createIfNotExists = false)
     {
+        $akCategory = $this->getObjectAttributeCategory();
         if (!is_object($ak)) {
-            $ak = CollectionKey::getByHandle($ak);
+            $ak = $akCategory->getAttributeKeyByHandle($ak);
         }
-        $value = false;
-        if (is_object($ak)) {
-            $value = $this->getObjectAttributeCategory()->getAttributeValue($ak, $this);
-        }
+        $value = is_object($ak) ? $akCategory->getAttributeValue($ak, $this) : false;
 
         if ($value) {
             return $value;
-        } elseif ($createIfNotExists) {
+        }
+        if ($createIfNotExists) {
             $attributeValue = new PageValue();
             $attributeValue->setPageID($this->getCollectionID());
             $attributeValue->setVersionID($this->getVersionID());
@@ -177,103 +312,175 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         }
     }
 
+    /**
+     * Is this version approved?
+     *
+     * @var bool|int|string
+     */
     public function isApproved()
     {
         return $this->cvIsApproved;
     }
 
+    /**
+     * Get the scheduled date/time when the collection is published: start.
+     *
+     * @return string|null
+     *
+     * @example '2018-21-31 23:59:59'
+     */
     public function getPublishDate()
     {
         return $this->cvPublishDate;
     }
 
+    /**
+     * Get the scheduled date/time when the collection is published: end.
+     *
+     * @return string|null
+     *
+     * @example '2018-21-31 23:59:59'
+     */
     public function getPublishEndDate()
     {
         return $this->cvPublishEndDate;
     }
 
+    /**
+     * Is this the most recent version?
+     *
+     * @return bool
+     */
     public function isMostRecent()
     {
-        if (!isset($this->isMostRecent)) {
-            $app = Facade::getFacadeApplication();
-            $db = $app->make('database')->connection();
-            $cvID = $db->fetchColumn('select cvID from CollectionVersions where cID = ? order by cvID desc', [$this->cID]);
-            $this->isMostRecent = ($cvID == $this->cvID);
+        if ($this->isMostRecent === null) {
+            $app = Application::getFacadeApplication();
+            $db = $app->make(Connection::class);
+            $cvID = $db->fetchColumn('select cvID from CollectionVersions where cID = ? order by cvID desc', [$this->getCollectionID()]);
+            $this->isMostRecent = $cvID == $this->getVersionID();
         }
 
         return $this->isMostRecent;
     }
 
+    /**
+     * Is this a new version?
+     *
+     * @return bool|number|string
+     */
     public function isNew()
     {
         return $this->cvIsNew;
     }
 
+    /**
+     * Get the collection version ID.
+     *
+     * @return int|string
+     */
     public function getVersionID()
     {
         return $this->cvID;
     }
 
+    /**
+     * Get the collection ID.
+     *
+     * @return int
+     */
     public function getCollectionID()
     {
         return $this->cID;
     }
 
+    /**
+     * The collection version name.
+     *
+     * @return string|null
+     */
     public function getVersionName()
     {
         return $this->cvName;
     }
 
+    /**
+     * Get the collection version comments.
+     *
+     * @return string|null
+     */
     public function getVersionComments()
     {
         return $this->cvComments;
     }
 
+    /**
+     * Get the ID of the user that created this collection version.
+     *
+     * @return int|string|null
+     */
     public function getVersionAuthorUserID()
     {
         return $this->cvAuthorUID;
     }
 
+    /**
+     * Get the ID of the user that approved this collection version.
+     *
+     * @var int|string|null
+     */
     public function getVersionApproverUserID()
     {
         return $this->cvApproverUID;
     }
 
+    /**
+     * Get the name of the user that approved this collection version.
+     *
+     * @var string|null|false return NULL if there's no author, false if it has been deleted, or a string otherwise
+     */
     public function getVersionAuthorUserName()
     {
-        if ($this->cvAuthorUID > 0) {
-            $app = Facade::getFacadeApplication();
-            $db = $app->make('database')->connection();
+        $uID = $this->getVersionAuthorUserID();
+        if ($uID > 0) {
+            $app = Application::getFacadeApplication();
+            $db = $app->make(Connection::class);
 
-            return $db->fetchColumn('select uName from Users where uID = ?', [
-                $this->cvAuthorUID,
-            ]);
+            return $db->fetchColumn('select uName from Users where uID = ?', [$uID]);
         }
     }
 
+    /**
+     * Get the name of the user that approved this collection version.
+     *
+     * @var string|null|false return NULL if there's no author, false if it has been deleted, or a string otherwise
+     */
     public function getVersionApproverUserName()
     {
-        if ($this->cvApproverUID > 0) {
-            $app = Facade::getFacadeApplication();
-            $db = $app->make('database')->connection();
+        $uID = $this->getVersionApproverUserID();
+        if ($uID > 0) {
+            $app = Application::getFacadeApplication();
+            $db = $app->make(Connection::class);
 
-            return $db->fetchColumn('select uName from Users where uID = ?', [
-                $this->cvApproverUID,
-            ]);
+            return $db->fetchColumn('select uName from Users where uID = ?', [$uID]);
         }
     }
 
+    /**
+     * Get the custom area style IDs.
+     *
+     * @return array key: area handle, value: the inline stle set ID
+     */
     public function getCustomAreaStyles()
     {
         if (!isset($this->customAreaStyles)) {
-            $app = Facade::getFacadeApplication();
-            $db = $app->make('database')->connection();
-            $r = $db->fetchAll('select issID, arHandle from CollectionVersionAreaStyles where cID = ? and cvID = ?', [
+            $app = Application::getFacadeApplication();
+            $db = $app->make(Connection::class);
+            $rs = $db->fetchAll('select issID, arHandle from CollectionVersionAreaStyles where cID = ? and cvID = ?', [
                 $this->getCollectionID(),
-                $this->cvID,
+                $this->getVersionID(),
             ]);
             $this->customAreaStyles = [];
-            foreach ($r as $styles) {
+            foreach ($rs as $styles) {
                 $this->customAreaStyles[$styles['arHandle']] = $styles['issID'];
             }
         }
@@ -282,9 +489,11 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
     }
 
     /**
-     * Gets the date the collection version was created.
+     * Get the date/time when the collection version was created.
      *
-     * @return string date formated like: 2009-01-01 00:00:00
+     * @var string|null
+     *
+     * @example '2018-21-31 23:59:59'
      */
     public function getVersionDateCreated()
     {
@@ -292,151 +501,138 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
     }
 
     /**
-     * Gets the date the collection version was approved.
+     * Get the date the collection version was approved.
      *
-     * @return null|string date formated like: 2009-01-01 00:00:00
+     * @var string|null
+     *
+     * @example '2018-21-31 23:59:59'
      */
     public function getVersionDateApproved()
     {
         return $this->cvDateApproved;
     }
 
+    /**
+     * Set the collection version comments.
+     *
+     * @param string $comment
+     */
     public function setComment($comment)
     {
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
         $thisCVID = $this->getVersionID();
-        $comment = ($comment != null) ? $comment : "Version {$thisCVID}";
-        $v = [
-            $comment,
-            $thisCVID,
-            $this->cID,
-        ];
-        $app = Facade::getFacadeApplication();
-        $db = $app->make('database')->connection();
-        $q = 'update CollectionVersions set cvComments = ? where cvID = ? and cID = ?';
-        $db->executeQuery($q, $v);
+        $comment = (string) $comment;
+        if ($comment === '') {
+            $comment = "Version {$thisCVID}";
+        }
+        $db->executeQuery(
+            'update CollectionVersions set cvComments = ? where cvID = ? and cID = ?',
+            [$comment, $thisCVID, $this->getCollectionID()]
+        );
         $this->cvComments = $comment;
     }
 
+    /**
+     * Set the scheduled date/time when the collection is published: start.
+     *
+     * @param string|null $publishDate Date/time in format like '2018-21-31 23:59:59'
+     */
     public function setPublishDate($publishDate)
     {
-        $thisCVID = $this->getVersionID();
-        $v = [
-            $publishDate,
-            $thisCVID,
-            $this->cID,
-        ];
-
-        $app = Facade::getFacadeApplication();
-        $db = $app->make('database')->connection();
-        $q = 'update CollectionVersions set cvPublishDate = ? where cvID = ? and cID = ?';
-        $db->executeQuery($q, $v);
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $db->executeQuery(
+            'update CollectionVersions set cvPublishDate = ? where cvID = ? and cID = ?',
+            [$publishDate, $this->getVersionID(), $this->getCollectionID()]
+        );
         $this->cvPublishDate = $publishDate;
     }
 
+    /**
+     * Set the scheduled date/time when the collection is published: end.
+     *
+     * @param string|null $publishEndDate Date/time in format like '2018-21-31 23:59:59'
+     */
     public function setPublishEndDate($publishEndDate)
     {
-        $thisCVID = $this->getVersionID();
-        $v = [
-            $publishEndDate,
-            $thisCVID,
-            $this->cID,
-        ];
-
-        $app = Facade::getFacadeApplication();
-        $db = $app->make('database')->connection();
-        $q = 'update CollectionVersions set cvPublishEndDate = ? where cvID = ? and cID = ?';
-        $db->executeQuery($q, $v);
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $db->executeQuery(
+            'update CollectionVersions set cvPublishEndDate = ? where cvID = ? and cID = ?',
+            [$publishEndDate, $this->getVersionID(), $this->getCollectionID()]
+        );
         $this->cvPublishEndDate = $publishEndDate;
     }
 
+    /**
+     * Create a new version for the same collection as this collection version.
+     *
+     * @param string $versionComments the new collection version comments
+     *
+     * @return \Concrete\Core\Page\Collection\Version\Version
+     */
     public function createNew($versionComments)
     {
-        $app = Facade::getFacadeApplication();
-        $db = $app->make('database')->connection();
-        $highestVID = $db->fetchColumn('select max(cvID) from CollectionVersions where cID = ?', [
-            $this->cID,
-        ]);
-        $newVID = ($highestVID === false) ? 1 : ($highestVID + 1);
-        $c = Page::getByID($this->cID, $this->cvID);
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $dh = $app->make('date');
+        $em = $app->make(EntityManagerInterface::class);
+        $category = $this->getObjectAttributeCategory();
 
+        $cID = $this->getCollectionID();
+        $c = Page::getByID($cID, $this->getVersionID());
         $u = new User();
-        $versionComments = (!$versionComments) ? t('New Version %s', $newVID) : $versionComments;
+
+        $newVID = 1 + (int) $db->fetchColumn('select max(cvID) from CollectionVersions where cID = ?', [$cID]);
+        $versionComments = (string) $versionComments;
+        if ($versionComments === '') {
+            $versionComments = t('New Version %s', $newVID);
+        }
         $cvIsNew = 1;
         if ($c->getPageTypeHandle() === STACKS_PAGE_TYPE) {
             $cvIsNew = 0;
         }
-        $dh = $app->make('helper/date');
-        $v = [
-            $this->cID,
-            $newVID,
-            $c->getCollectionName(),
-            $c->getCollectionHandle(),
-            $c->getCollectionDescription(),
-            $c->getCollectionDatePublic(),
-            $dh->getOverridableNow(),
-            $versionComments,
-            $u->getUserID(),
-            $cvIsNew,
-            $this->pThemeID,
-            $this->pTemplateID,
-            null,
-        ];
-        // important: cvPublishDate used to be the same for the new version as it is for the current , but it made it
-        // impossible to create a version that wasn't scheduled once you scheduled a version so I'm turning it off for
-        // now - AE
 
-        $q = 'insert into CollectionVersions (cID, cvID, cvName, cvHandle, cvDescription, cvDatePublic, ' .
-            'cvDateCreated, cvComments, cvAuthorUID, cvIsNew, pThemeID, pTemplateID, cvPublishDate) ' .
-            'values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        $db->insert('CollectionVersions', [
+            'cID' => $cID,
+            'cvID' => $newVID,
+            'cvName' => $c->getCollectionName(),
+            'cvHandle' => $c->getCollectionHandle(),
+            'cvDescription' => $c->getCollectionDescription(),
+            'cvDatePublic' => $c->getCollectionDatePublic(),
+            'cvDateCreated' => $dh->getOverridableNow(),
+            'cvComments' => $versionComments,
+            'cvAuthorUID' => $u->getUserID(),
+            'cvIsNew' => $cvIsNew,
+            'pThemeID' => $this->pThemeID,
+            'pTemplateID' => $this->pTemplateID,
+            // important: cvPublishDate used to be the same for the new version as it is for the current,
+            // but it made it impossible to create a version that wasn't scheduled once you scheduled a version
+            // so I'm turning it off for now - AE
+            'cvPublishDate' => null,
+        ]);
 
-        $db->executeQuery($q, $v);
-
-        $category = $this->getObjectAttributeCategory();
         $values = $category->getAttributeValues($this);
-        $em = $app->make('Doctrine\ORM\EntityManagerInterface');
-
         foreach ($values as $value) {
             $value = clone $value;
-            /*
-             * @var $value PageValue
-             */
+            /* @var \Concrete\Core\Entity\Attribute\Value\PageValue $value */
             $value->setVersionID($newVID);
             $em->persist($value);
         }
         $em->flush();
 
-        $q3 = 'select faID from CollectionVersionFeatureAssignments where cID = ? and cvID = ?';
-        $v3 = [
-            $c->getCollectionID(),
-            $this->getVersionID(),
-        ];
-        $r3 = $db->executeQuery($q3, $v3);
-        while ($row3 = $r3->fetch()) {
-            $v3 = [
-                (int) ($c->getCollectionID()),
-                $newVID,
-                $row3['faID'],
-            ];
-            $db->query('insert into CollectionVersionFeatureAssignments (cID, cvID, faID) values (?, ?, ?)', $v3);
-        }
+        $copyFields = 'faID';
+        $db->executeQuery(
+            "insert into CollectionVersionFeatureAssignments (cID, cvID, {$copyFields}) select ?, ?, {$copyFields} from CollectionVersionFeatureAssignments where cID = ? and cvID = ?",
+            [$c->getCollectionID(), $newVID, $c->getCollectionID(), $this->getVersionID()]
+        );
 
-        $q4 = 'select pThemeID, scvlID, preset, sccRecordID from CollectionVersionThemeCustomStyles where cID = ? and cvID = ?';
-        $v4 = [
-            $c->getCollectionID(),
-            $this->getVersionID(),
-        ];
-        $r4 = $db->executeQuery($q4, $v4);
-        while ($row4 = $r4->fetch()) {
-            $v4 = [
-                (int) $c->getCollectionID(),
-                $newVID,
-                $row4['pThemeID'],
-                $row4['scvlID'],
-                $row4['preset'],
-                $row4['sccRecordID'],
-            ];
-            $db->executeQuery('insert into CollectionVersionThemeCustomStyles (cID, cvID, pThemeID, scvlID, preset, sccRecordID) values (?, ?, ?, ?, ?, ?)', $v4);
-        }
+        $copyFields = 'pThemeID, scvlID, preset, sccRecordID';
+        $db->executeQuery(
+            "insert into CollectionVersionThemeCustomStyles (cID, cvID, {$copyFields}) select ?, ?, {$copyFields} from CollectionVersionThemeCustomStyles where cID = ? and cvID = ?",
+            [$c->getCollectionID(), $newVID, $c->getCollectionID(), $this->getVersionID()]
+        );
 
         $nv = static::get($c, $newVID);
 
@@ -446,108 +642,108 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         $app->make('director')->dispatch('on_page_version_add', $ev);
 
         $nv->refreshCache();
-        // now we return it
+
         return $nv;
     }
 
+    /**
+     * Approve this collection version.
+     *
+     * @param bool $doReindexImmediately reindex the collection contents now? Otherwise it's reindexing will just be scheduled
+     * @param string|null $cvPublishDate the scheduled date/time when the collection is published (start)
+     * @param string|null $cvPublishEndDate the scheduled date/time when the collection is published (end)
+     */
     public function approve($doReindexImmediately = true, $cvPublishDate = null, $cvPublishEndDate = null)
     {
-        $app = Facade::getFacadeApplication();
-        $db = $app->make('database')->connection();
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $dh = $app->make('date');
         $u = new User();
-        $uID = $u->getUserID();
-        $cvID = $this->cvID;
-        $cID = $this->cID;
-        $c = Page::getByID($cID, $this->cvID);
+        $cvID = $this->getVersionID();
+        $cID = $this->getCollectionID();
+        $c = Page::getByID($cID, $cvID);
+        $currentActivePage = Page::getByID($cID, 'ACTIVE');
 
-        // Current active
-        $ov = Page::getByID($cID, 'ACTIVE');
-
-        $oldHandle = $ov->getCollectionHandle();
+        $oldHandle = $currentActivePage->getCollectionHandle();
         $newHandle = $this->cvHandle;
 
         // update a collection updated record
-        $dh = $app->make('helper/date');
-        $db->executeQuery('update Collections set cDateModified = ? where cID = ?', [
-            $dh->getOverridableNow(),
-            $cID,
-        ]);
+        $db->executeQuery('update Collections set cDateModified = ? where cID = ?', [$dh->getOverridableNow(), $cID]);
 
         // Remove all publish dates before setting the new ones, if any
-        $this->clearPublishStartDate();
+        $this->clearPublishStartDate($db);
 
-        if ($this->getPublishEndDate()) {
-            $now = $dh->date('Y-m-d G:i:s');
-            if (strtotime($now) >= strtotime($this->getPublishEndDate())) {
-                $this->clearPublishEndDate();
-            }
+        if ($this->getPublishEndDate() && strtotime($this->getPublishEndDate()) <= time()) {
+            $this->clearPublishEndDate($db);
         }
 
         if ($cvPublishDate || $cvPublishEndDate) {
             // remove approval for all versions except the current one because a scheduled version is being processed
-            $oldVersion = $ov->getVersionObject();
-            $v = [$cID, $oldVersion->cvID];
-            $q = 'update CollectionVersions set cvIsApproved = 0 where cID = ? and cvID != ?';
+            $oldVersion = $currentActivePage->getVersionObject();
             $this->setPublishDate($cvPublishDate);
             $this->setPublishEndDate($cvPublishEndDate);
+            $db->executeQuery(
+                'update CollectionVersions set cvIsApproved = 0 where cID = ? and cvID != ?',
+                [$cID, $oldVersion->getVersionID()]
+            );
         } else {
             // remove approval for the other version of this collection
-            $v = [$cID];
-            $q = 'update CollectionVersions set cvIsApproved = 0 where cID = ?';
+            $db->executeQuery(
+                'update CollectionVersions set cvIsApproved = 0 where cID = ?',
+                [$cID]
+            );
         }
 
-        $r = $db->executeQuery($q, $v);
-        $ov->refreshCache();
+        $currentActivePage->refreshCache();
 
         // now we approve our version
-        $v2 = [
-            $uID,
-            $dh->getOverridableNow(),
-            $cID,
-            $cvID,
-        ];
-        $q2 = 'update CollectionVersions set cvIsNew = 0, cvIsApproved = 1, cvApproverUID = ?, cvDateApproved = ? where cID = ? and cvID = ?';
-        $db->executeQuery($q2, $v2);
+        $db->update(
+            'CollectionVersions',
+            [
+                'cvIsNew' => 0,
+                'cvIsApproved' => 1,
+                'cvApproverUID' => $u->getUserID(),
+                'cvDateApproved' => $dh->getOverridableNow(),
+            ],
+            [
+                'cID' => $cID,
+                'cvID' => $cvID,
+            ]
+        );
 
         // next, we rescan our collection paths for the particular collection, but only if this isn't a generated collection
-        $shouldRescanCollectionPath = true;
-        if ($c->isGeneratedCollection()) {
-            $shouldRescanCollectionPath = false;
-        } elseif ($oldHandle == $newHandle) {
-            $shouldRescanCollectionPath = false;
-        }
-        if ($shouldRescanCollectionPath) {
+        if (!$c->isGeneratedCollection() && $oldHandle != $newHandle) {
             $c->rescanCollectionPath();
         }
 
         // check for related version edits. This only gets applied when we edit global areas.
-        $r = $db->executeQuery('select cRelationID, cvRelationID from CollectionVersionRelatedEdits where cID = ? and cvID = ?', [
-            $cID,
-            $cvID,
-        ]);
-        while ($row = $r->fetch()) {
+        $rs = $db->executeQuery(
+            'select cRelationID, cvRelationID from CollectionVersionRelatedEdits where cID = ? and cvID = ?',
+            [$cID, $cvID]
+        );
+        while (($row = $rs->fetch(PDO::FETCH_ASSOC)) !== false) {
             $cn = Page::getByID($row['cRelationID'], $row['cvRelationID']);
-            $cnp = new Permissions($cn);
+            $cnp = new Checker($cn);
             if ($cnp->canApprovePageVersions()) {
                 $v = $cn->getVersionObject();
                 $v->approve();
-                $db->executeQuery('delete from CollectionVersionRelatedEdits where cID = ? and cvID = ? and cRelationID = ? and cvRelationID = ?', [
-                    $cID,
-                    $cvID,
-                    $row['cRelationID'],
-                    $row['cvRelationID'],
+                $db->delete('CollectionVersionRelatedEdits', [
+                    'cID' => $cID,
+                    'cvID' => $cvID,
+                    'cRelationID' => $row['cRelationID'],
+                    'cvRelationID' => $row['cvRelationID'],
                 ]);
             }
         }
 
-        if ($c->getCollectionInheritance() == 'TEMPLATE') {
+        if ($c->getCollectionInheritance() === 'TEMPLATE') {
             // we make sure to update the cInheritPermissionsFromCID value
             $pType = PageType::getByID($c->getPageTypeID());
             $masterC = $pType->getPageTypePageTemplateDefaultPageObject();
-            $db->executeQuery('update Pages set cInheritPermissionsFromCID = ? where cID = ?', [
-                (int) $masterC->getCollectionID(),
-                $c->getCollectioniD(),
-            ]);
+            $db->executeQuery(
+                'update Pages set cInheritPermissionsFromCID = ? where cID = ?',
+                [(int) $masterC->getCollectionID(), $c->getCollectioniD()]
+            );
         }
 
         $ev = new Event($c);
@@ -559,46 +755,50 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         $this->refreshCache();
     }
 
+    /**
+     * Discard my most recent edit that is pending.
+     */
     public function discard()
     {
-        // discard's my most recent edit that is pending
         if ($this->isNew()) {
-            $app = Facade::getFacadeApplication();
-            $db = $app->make('database')->connection();
+            $app = Application::getFacadeApplication();
+            $db = $app->make(Connection::class);
             // check for related version edits. This only gets applied when we edit global areas.
-            $r = $db->executeQuery('select cRelationID, cvRelationID from CollectionVersionRelatedEdits where cID = ? and cvID = ?', [
-                $this->cID,
-                $this->cvID,
-            ]);
-            while ($row = $r->fetch()) {
+            $rs = $db->executeQuery(
+                'select cRelationID, cvRelationID from CollectionVersionRelatedEdits where cID = ? and cvID = ?',
+                [$this->getCollectionID(), $this->getVersionID()]
+            );
+            while (($row = $rs->fetch(PDO::FETCH_ASSOC)) !== false) {
                 $cn = Page::getByID($row['cRelationID'], $row['cvRelationID']);
-                $cnp = new Permissions($cn);
+                $cnp = new Checker($cn);
                 if ($cnp->canApprovePageVersions()) {
                     $v = $cn->getVersionObject();
                     $v->delete();
-                    $db->executeQuery('delete from CollectionVersionRelatedEdits where cID = ? and cvID = ? and cRelationID = ? and cvRelationID = ?', [
-                        $this->cID,
-                        $this->cvID,
-                        $row['cRelationID'],
-                        $row['cvRelationID'],
+                    $db->delete('CollectionVersionRelatedEdits', [
+                        'cID' => $this->getCollectionID(),
+                        'cvID' => $this->getVersionID(),
+                        'cRelationID' => $row['cRelationID'],
+                        'cvRelationID' => $row['cvRelationID'],
                     ]);
                 }
             }
             $this->delete();
+            $this->refreshCache();
         }
-        $this->refreshCache();
     }
 
+    /**
+     * Check if this collection version can be discarded.
+     *
+     * @return bool
+     */
     public function canDiscard()
     {
         $result = false;
         if ($this->isNew()) {
-            $app = Facade::getFacadeApplication();
-            $db = $app->make('database')->connection();
-            $total = $db->fetchColumn('select count(cvID) from CollectionVersions where cID = ?', [
-                $this->cID,
-            ]);
-            if ($total > 1) {
+            $app = Application::getFacadeApplication();
+            $db = $app->make(Connection::class);
+            if ($db->fetchColumn('select cvID from CollectionVersions where cID = ? limit 1', [$this->getCollectionID()]) !== false) {
                 $result = true;
             }
         }
@@ -606,69 +806,74 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         return $result;
     }
 
+    /**
+     * Mark this collection version as not new.
+     */
     public function removeNewStatus()
     {
-        $app = Facade::getFacadeApplication();
-        $db = $app->make('database')->connection();
-        $db->executeQuery('update CollectionVersions set cvIsNew = 0 where cID = ? and cvID = ?', [
-            $this->cID,
-            $this->cvID,
-        ]);
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $db->executeQuery(
+            'update CollectionVersions set cvIsNew = 0 where cID = ? and cvID = ?',
+            [$this->getCollectionID(), $this->getVersionID()]
+        );
+        $this->cvIsNew = 0;
         $this->refreshCache();
     }
 
+    /**
+     * Mark this collection version as not approved.
+     */
     public function deny()
     {
-        $app = Facade::getFacadeApplication();
-        $db = $app->make('database')->connection();
-        $cvID = $this->cvID;
-        $cID = $this->cID;
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $dh = $app->make('date');
 
-        // first we update a collection updated record
-        $dh = $app->make('helper/date');
-        $db->executeQuery('update Collections set cDateModified = ? where cID = ?', [
-            $dh->getOverridableNow(),
-            $cID,
-        ]);
+        $cvID = $this->getVersionID();
+        $cID = $this->getCollectionID();
 
-        // first we remove approval for all versions of this collection
-        $v = [
-            $cID,
-        ];
-        $q = 'update CollectionVersions set cvIsApproved = 0 where cID = ?';
-        $db->executeQuery($q, $v);
+        // Update the collection updated field
+        $db->executeQuery(
+            'update Collections set cDateModified = ? where cID = ?',
+            [$dh->getOverridableNow(), $cID]
+        );
 
-        // now we deny our version
-        $v2 = [
-            $cID,
-            $cvID,
-        ];
-        $q2 = 'update CollectionVersions set cvIsApproved = 0, cvApproverUID = 0 where cID = ? and cvID = ?';
-        $db->executeQuery($q2, $v2);
+        // Remove approval for all versions of this collection
+        $db->executeQuery(
+            'update CollectionVersions set cvIsApproved = 0 where cID = ?',
+            [$cID]
+        );
+
+        // Deny our version
+        $db->executeQuery(
+            'update CollectionVersions set cvIsApproved = 0, cvApproverUID = 0 where cID = ? and cvID = ?',
+            [$cID, $cvID]
+        );
+
         $this->refreshCache();
     }
 
+    /**
+     * Delete this version and its related data (blocks, feature assignments, attributes, custom styles, ...).
+     */
     public function delete()
     {
-        $app = Facade::getFacadeApplication();
-        $db = $app->make('database')->connection();
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
 
-        $cvID = $this->cvID;
-        $c = Page::getByID($this->cID, $cvID);
+        $cvID = $this->getVersionID();
+        $c = Page::getByID($this->getCollectionID(), $cvID);
         $cID = $c->getCollectionID();
 
-        $q = 'select bID, arHandle from CollectionVersionBlocks where cID = ? and cvID = ?';
-        $r = $db->executeQuery($q, [
-            $cID,
-            $cvID,
-        ]);
-        while ($row = $r->fetch()) {
-            if ($row['bID']) {
-                $b = Block::getByID($row['bID'], $c, $row['arHandle']);
-                if (is_object($b)) {
-                    $b->deleteBlock();
-                }
-                unset($b);
+        $rs = $db->executeQuery(
+            'select bID, arHandle from CollectionVersionBlocks where cID = ? and cvID = ?',
+            [$cID, $cvID]
+        );
+        while (($row = $rs->fetch(PDO::FETCH_ASSOC)) !== false) {
+            $b = Block::getByID($row['bID'], $c, $row['arHandle']);
+            if ($b) {
+                $b->deleteBlock();
             }
         }
 
@@ -677,54 +882,61 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
             $fa->delete();
         }
 
-        $category = $app->make('Concrete\Core\Attribute\Category\PageCategory');
+        $category = $this->getObjectAttributeCategory();
         $attributes = $category->getAttributeValues($this);
         foreach ($attributes as $attribute) {
             $category->deleteValue($attribute);
         }
 
-        $db->executeQuery('delete from CollectionVersionBlockStyles where cID = ? and cvID = ?', [
-            $cID,
-            $cvID,
-        ]);
-        $db->executeQuery('delete from CollectionVersionThemeCustomStyles where cID = ? and cvID = ?', [
-            $cID,
-            $cvID,
-        ]);
-        $db->executeQuery('delete from CollectionVersionRelatedEdits where cID = ? and cvID = ?', [
-            $cID,
-            $cvID,
-        ]);
-        $db->executeQuery('delete from CollectionVersionAreaStyles where cID = ? and cvID = ?', [
-            $cID,
-            $cvID,
-        ]);
+        $db->executeQuery(
+            'delete from CollectionVersionBlockStyles where cID = ? and cvID = ?',
+            [$cID, $cvID]
+        );
+        $db->executeQuery(
+            'delete from CollectionVersionThemeCustomStyles where cID = ? and cvID = ?',
+            [$cID, $cvID]
+        );
+        $db->executeQuery(
+            'delete from CollectionVersionRelatedEdits where cID = ? and cvID = ?',
+            [$cID, $cvID]
+        );
+        $db->executeQuery(
+            'delete from CollectionVersionAreaStyles where cID = ? and cvID = ?',
+            [$cID, $cvID]
+        );
+        $db->executeQuery(
+            'delete from PageTypeComposerOutputBlocks where cID = ? and cvID = ?',
+            [$cID, $cvID]
+        );
 
-        $db->executeQuery('delete from PageTypeComposerOutputBlocks where cID = ? and cvID = ?', [
-            $cID,
-            $cvID,
-        ]);
-
-        $q = "delete from CollectionVersions where cID = '{$cID}' and cvID='{$cvID}'";
-        $db->executeQuery($q);
+        $db->executeQuery(
+            'delete from CollectionVersions where cID = ? and cvID = ?',
+            [$cID, $cvID]
+        );
         $this->refreshCache();
     }
 
-    private function clearPublishStartDate()
+    /**
+     * @param \Concrete\Core\Database\Connection\Connection $db
+     */
+    private function clearPublishStartDate(Connection $db)
     {
-        $app = Facade::getFacadeApplication();
-        $db = $app->make('database')->connection();
-        $q = 'update CollectionVersions set cvPublishDate = NULL where cID = ?';
-
-        $db->executeQuery($q, [$this->cID]);
+        $db->executeQuery(
+            'update CollectionVersions set cvPublishDate = NULL where cID = ?',
+            [$this->getCollectionID()]
+        );
+        $this->cvPublishDate = null;
     }
 
-    private function clearPublishEndDate()
+    /**
+     * @param \Concrete\Core\Database\Connection\Connection $db
+     */
+    private function clearPublishEndDate(Connection $db)
     {
-        $app = Facade::getFacadeApplication();
-        $db = $app->make('database')->connection();
-        $q = 'update CollectionVersions set cvPublishEndDate = NULL where cID = ?';
-
-        $db->executeQuery($q, [$this->cID]);
+        $db->executeQuery(
+            'update CollectionVersions set cvPublishEndDate = NULL where cID = ?',
+            [$this->getCollectionID()]
+        );
+        $this->cvPublishEndDate = null;
     }
 }
