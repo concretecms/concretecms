@@ -3146,16 +3146,18 @@ EOT
         }
         $app = Application::getFacadeApplication();
         $db = $app->make(Connection::class);
+        $myCID = $this->getCollectionPointerOriginalID() ?: $this->getCollectionID();
+        $relatedCID = $referencePage->getCollectionPointerOriginalID() ?: $referencePage->getCollectionID();
         // first, we get a list of IDs.
         $pageIDs = [];
-        $rs = $db->executeQuery('select cID from Pages where cParentID = ? and cID <> ? order by cDisplayOrder asc', [$this->getCollectionParentID(), $this->getCollectionID()]);
+        $rs = $db->executeQuery('select cID from Pages where cParentID = ? and cID <> ? order by cDisplayOrder asc', [$this->getCollectionParentID(), $myCID]);
         while (($cID = $rs->fetchColumn()) !== false) {
-            if ($cID == $referencePage->getCollectionID() && $position == 'before') {
-                $pageIDs[] = $this->getCollectionID();
+            if ($cID == $relatedCID && $position == 'before') {
+                $pageIDs[] = $myCID;
             }
             $pageIDs[] = $cID;
-            if ($cID == $referencePage->getCollectionID() && $position == 'after') {
-                $pageIDs[] = $this->getCollectionID();
+            if ($cID == $relatedCID && $position == 'after') {
+                $pageIDs[] = $myCID;
             }
         }
         $displayOrder = 0;
