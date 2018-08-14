@@ -189,7 +189,7 @@
 
             my.$element.append(_sitemap);
             my.$sitemap = my.$element.find('div.ccm-sitemap-tree');
-            $(my.$sitemap).fancytree({
+            my.$sitemap.fancytree({
                 tabindex: null,
                 titlesTabbable: false,
                 extensions: extensions,
@@ -316,6 +316,7 @@
                             return false;
                         }
                         dndPerformed = true;
+                        my.$sitemap.addClass('ccm-sitemap-dnd');
                         return true;
                     },
                     dragEnter: function(targetNode, data) { // return false: disable drag, true: enable drag, string (or string[]) to limit operations ('over', 'before', 'after')
@@ -356,6 +357,7 @@
                         }
                     },
                     dragStop: function() {
+                        my.$sitemap.removeClass('ccm-sitemap-dnd');
                         setTimeout(function() {
                             dndPerformed = false;
                         }, 0);
