@@ -323,18 +323,23 @@
                             // data.otherNode may be null for non-fancytree droppables
                             return false;
                         }
-                        var sourceCID = parseInt(targetNode.data.cID),
-                            destinationCID = parseInt(data.otherNode.data.cID),
-                            destinationIsHome = targetNode.parent.data.cID ? false : true;
-                        if (!sourceCID || !destinationCID) {
+                        var hoverCID = parseInt(targetNode.data.cID),
+                            draggingCID = parseInt(data.otherNode.data.cID),
+                            hoveringHome = targetNode.parent && targetNode.parent.data.cID ? false : true;
+
+                        if (!hoverCID || !draggingCID) {
                             // something strange occurred
                             return false;
                         }
-                        if (sourceCID === destinationCID) {
+                        if (targetNode.data.cAlias) {
+                            // destination is an alias
+                            return ['before', 'after'];
+                        }
+                        if (hoverCID === draggingCID) {
                             // we can only copy node under itself
                             return 'over';
                         }
-                        if (destinationIsHome) {
+                        if (hoveringHome) {
                             // home gets no siblings
                             return 'over';
                         }
