@@ -466,8 +466,16 @@ return [
          * Block actions - non UI
          */
         '/ccm/system/block/render/' => ['\Concrete\Controller\Backend\Block::render'],
-        '/ccm/system/block/action/add/{cID}/{arHandle}/{btID}/{action}' => ['\Concrete\Controller\Backend\Block\Action::add'],
-        '/ccm/system/block/action/edit/{cID}/{arHandle}/{bID}/{action}' => ['\Concrete\Controller\Backend\Block\Action::edit'],
+        '/ccm/system/block/action/add/{cID}/{arHandle}/{btID}/{action}' => [
+            '\Concrete\Controller\Backend\Block\Action::add',
+            'block_render_action_add',
+            ['action' => '.+'],
+        ],
+        '/ccm/system/block/action/edit/{cID}/{arHandle}/{bID}/{action}' => [
+            '\Concrete\Controller\Backend\Block\Action::edit',
+            'block_render_action_edit',
+            ['action' => '.+'],
+        ],
         '/ccm/system/block/action/add_composer/{ptComposerFormLayoutSetControlID}/{action}' => ['\Concrete\Controller\Backend\Block\Action::add_composer'],
         '/ccm/system/block/action/edit_composer/{cID}/{arHandle}/{ptComposerFormLayoutSetControlID}/{action}' => ['\Concrete\Controller\Backend\Block\Action::edit_composer'],
 

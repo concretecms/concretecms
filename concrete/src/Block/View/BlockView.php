@@ -92,7 +92,7 @@ class BlockView extends AbstractView
     /**
      * Creates a URL that can be posted or navigated to that, when done so, will automatically run the corresponding method inside the block's controller.
      * <code>
-     *     <a href="<?=$this->action('get_results')?>">Get the results</a>
+     *     <a href="<?=$view->action('get_results')?>">Get the results</a>
      * </code>.
      *
      * @param string $task
@@ -101,47 +101,7 @@ class BlockView extends AbstractView
      */
     public function action($task)
     {
-        try {
-            if ($this->viewToRender == 'add') {
-                $c = $this->area->getAreaCollectionObject();
-                $arguments = array('/ccm/system/block/action/add',
-                    $c->getCollectionID(),
-                    urlencode($this->area->getAreaHandle()),
-                    $this->blockType->getBlockTypeID(),
-                    $task,
-                );
-
-                return call_user_func_array(array('\URL', 'to'), $arguments);
-            } elseif (is_object($this->block)) {
-                if (is_object($this->block->getProxyBlock())) {
-                    $b = $this->block->getProxyBlock();
-                } else {
-                    $b = $this->block;
-                }
-
-                if ($this->viewToRender == 'edit') {
-                    $c = $this->area->getAreaCollectionObject();
-                    $arguments = array('/ccm/system/block/action/edit',
-                        $c->getCollectionID(),
-                        urlencode($this->area->getAreaHandle()),
-                        $b->getBlockID(),
-                        $task,
-                    );
-
-                    return call_user_func_array(array('\URL', 'to'), $arguments);
-                } else {
-                    $c = Page::getCurrentPage();
-                    if (is_object($b) && is_object($c)) {
-                        $arguments = func_get_args();
-                        $arguments[] = $b->getBlockID();
-                        array_unshift($arguments, $c);
-
-                        return call_user_func_array(array('\URL', 'page'), $arguments);
-                    }
-                }
-            }
-        } catch (Exception $e) {
-        }
+        return call_user_func_array([$this->controller, 'getActionURL'], func_get_args());
     }
 
     public function startRender()

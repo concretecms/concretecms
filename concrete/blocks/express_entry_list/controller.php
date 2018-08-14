@@ -2,11 +2,14 @@
 namespace Concrete\Block\ExpressEntryList;
 
 use Concrete\Controller\Element\Search\CustomizeResults;
+use Concrete\Controller\Element\Search\SearchFieldSelector;
 use \Concrete\Core\Block\BlockController;
 use Concrete\Core\Entity\Express\Entity;
+use Concrete\Core\Entity\Search\Query;
 use Concrete\Core\Express\Entry\Search\Result\Result;
 use Concrete\Core\Express\EntryList;
 use Concrete\Core\Search\Column\AttributeKeyColumn;
+use Concrete\Core\Search\Field\ManagerFactory;
 use Concrete\Core\Search\Result\ItemColumn;
 use Concrete\Core\Support\Facade\Facade;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -50,6 +53,32 @@ class Controller extends BlockController
         $this->set('displayLimit', 20);
     }
 
+    protected function getSearchFieldManager(Entity $entity)
+    {
+        $fieldManager = ManagerFactory::get('express');
+        $fieldManager->setExpressCategory($entity->getAttributeKeyCategory());
+        return $fieldManager;
+    }
+
+    public function action_add_search_field($entityID = null)
+    {
+        if (!$entityID) {
+            $entityID = $this->exEntityID;
+        }
+        $entity = $this->entityManager->find('Concrete\Core\Entity\Express\Entity', $entityID);
+
+        if ($entity) {
+            $manager = $this->getSearchFieldManager($entity);
+            if ($manager) {
+                $field = $this->request->request->get('field');
+                $field = $manager->getFieldByKey($field);
+                if (is_object($field)) {
+                    return new JsonResponse($field);
+                }
+            }
+        }
+    }
+
     public function edit()
     {
         $this->loadData();
@@ -81,7 +110,18 @@ class Controller extends BlockController
                 $element = new CustomizeResults($provider);
                 $element->setIncludeNumberOfResults(false);
 
+                $fieldManager = $this->getSearchFieldManager($entity);
+                $fieldSelectorElement = new SearchFieldSelector($fieldManager, $this->getActionURL('add_search_field'));
+
+                if ($this->filterFields) {
+                    $filterFields = unserialize($this->filterFields);
+                    $query = new Query();
+                    $query->setFields($filterFields);
+                    $fieldSelectorElement->setQuery($query);
+                }
+
                 $this->set('customizeElement', $element);
+                $this->set('searchFieldSelectorElement', $fieldSelectorElement);
                 $this->set('linkedPropertiesSelected', $linkedPropertiesSelected);
                 $this->set('searchPropertiesSelected', $searchPropertiesSelected);
                 $this->set('searchProperties', $searchProperties);
@@ -111,6 +151,16 @@ class Controller extends BlockController
             $list = new EntryList($entity);
             if ($this->displayLimit > 0) {
                 $list->setItemsPerPage(intval($this->displayLimit));
+            }
+            
+            // Filter by any pre-set search criteria
+            if ($this->filterFields) {
+                $filterFields = unserialize($this->filterFields);
+                if (is_array($filterFields)) {
+                    foreach($filterFields as $field) {
+                        $field->filterList($list);
+                    }
+                }
             }
             $set = unserialize($this->columns);
             $defaultSortColumn = $set->getDefaultSortColumn();
@@ -215,8 +265,14 @@ class Controller extends BlockController
             $set->setDefaultSortColumn($sort, $this->request->request->get('fSearchDefaultSortDirection'));
 
             $data['columns'] = serialize($set);
-
         }
+
+        if ($entity) {
+            $manager = $this->getSearchFieldManager($entity);
+            $filterFields = $manager->getFieldsFromRequest($this->request->request->all());
+            $data['filterFields'] = serialize($filterFields);
+        }
+
 
         parent::save($data);
     }
@@ -234,6 +290,14 @@ class Controller extends BlockController
                 ob_start();
                 $element->getViewObject()->render();
                 $r->customize = ob_get_contents();
+                ob_end_clean();
+
+                $fieldManager = $this->getSearchFieldManager($entity);
+                $addFieldAction = $this->getActionURL('add_search_field', $exEntityID);
+                $fieldSelectorElement = new SearchFieldSelector($fieldManager, $addFieldAction);
+                ob_start();
+                $fieldSelectorElement->getViewObject()->render();
+                $r->searchFields = ob_get_contents();
                 ob_end_clean();
 
                 $r->attributes = $this->getSearchPropertiesJsonArray($entity);
