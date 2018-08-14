@@ -627,7 +627,14 @@
 			            jQuery.fn.dialog.closeTop();
 			        });
 			    }
-			);
+			).error(function(xhr, status, error) {
+			    jQuery.fn.dialog.hideLoader();
+                var msg = error, json = xhr ? xhr.responseJSON : null;
+                if (json && json.error) {
+                    msg = json.errors instanceof Array ? json.errors.join('\n') : json.error;
+                }
+                window.alert(msg);
+			});
 		}
 	};
 
