@@ -71,8 +71,13 @@ class BlockActionTest extends PHPUnit_Framework_TestCase
         $url = $controller->getActionURL('delete_form', 'token');
 
         $this->assertEquals('http://www.dummyco.com/path/to/server/index.php/ccm/system/block/action/add/123/Main/4/delete_form/token', (string)$url);
+    }
 
+    protected function tearDown()
+    {
+        $req = Request::getInstance();
         $req->clearcurrentPage();
+        parent::tearDown();
     }
 
     protected function getTestBlockViewEditObject()

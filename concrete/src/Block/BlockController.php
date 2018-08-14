@@ -499,7 +499,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     /**
      * @return int|null
      */
-    public function getBlockTypeID(): ?int
+    public function getBlockTypeID()
     {
         return $this->btID;
     }
