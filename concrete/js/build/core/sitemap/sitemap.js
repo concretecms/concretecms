@@ -128,11 +128,11 @@
         setupTree: function() {
             var minExpandLevel,
                 my = this,
-                doPersist = true;
-
-            var treeSelectMode = 1,
+                doPersist = true,
+                treeSelectMode = 1,
                 checkbox = false,
-                classNames = false;
+                classNames = false,
+                dndPerformed = false;
 
             if (my.options.selectMode == 'single') {
                 checkbox = true;
@@ -315,6 +315,7 @@
                         if (!sourceNode.data.cID) {
                             return false;
                         }
+                        dndPerformed = true;
                         return true;
                     },
                     dragEnter: function(targetNode, data) { // return false: disable drag, true: enable drag, string (or string[]) to limit operations ('over', 'before', 'after')
@@ -327,7 +328,6 @@
                             destinationIsHome = targetNode.parent.data.cID ? false : true;
                         if (!sourceCID || !destinationCID) {
                             // something strange occurred
-                            alert(1);
                             return false;
                         }
                         if (sourceCID === destinationCID) {
@@ -349,7 +349,17 @@
                             // we are dragging either onto a node or into another part of the site
                             my.selectMoveCopyTarget(data.otherNode, targetNode, data.hitMode);
                         }
+                    },
+                    dragStop: function() {
+                        setTimeout(function() {
+                            dndPerformed = false;
+                        }, 0);
                     }
+                }
+            });
+            ConcreteEvent.subscribe('ConcreteMenuShow', function(e, data) {
+                if (dndPerformed) {
+                    data.menu.hide();
                 }
             });
         },
