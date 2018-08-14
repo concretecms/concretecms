@@ -115,7 +115,7 @@
 	}
 
 	span.fancytree-node.fancytree-drop-target {
-		&.fancytree-drop-accept span.fancytree-title {
+		&.fancytree-drop-accept:not(.fancytree-drop-before):not(.fancytree-drop-after) span.fancytree-title {
 			opacity: 1;
 			color: darken(@gray-light, 20%);
 			background-color: @fancy-active-color;
