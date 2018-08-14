@@ -35,7 +35,7 @@ class SearchFieldSelector extends ElementController
     /**
      * @return string
      */
-    public function getAddFieldAction(): string
+    public function getAddFieldAction()
     {
         return $this->addFieldAction;
     }
@@ -43,7 +43,7 @@ class SearchFieldSelector extends ElementController
     /**
      * @param string $addFieldAction
      */
-    public function setAddFieldAction(string $addFieldAction): void
+    public function setAddFieldAction(string $addFieldAction)
     {
         $this->addFieldAction = $addFieldAction;
     }
@@ -51,7 +51,7 @@ class SearchFieldSelector extends ElementController
     /**
      * @return ManagerInterface
      */
-    public function getFieldManager(): ManagerInterface
+    public function getFieldManager()
     {
         return $this->fieldManager;
     }
@@ -59,7 +59,7 @@ class SearchFieldSelector extends ElementController
     /**
      * @param ManagerInterface $fieldManager
      */
-    public function setFieldManager(ManagerInterface $fieldManager): void
+    public function setFieldManager(ManagerInterface $fieldManager)
     {
         $this->fieldManager = $fieldManager;
     }
@@ -67,7 +67,7 @@ class SearchFieldSelector extends ElementController
     /**
      * @return Query
      */
-    public function getQuery(): Query
+    public function getQuery()
     {
         return $this->query;
     }
@@ -75,7 +75,7 @@ class SearchFieldSelector extends ElementController
     /**
      * @param Query $query
      */
-    public function setQuery(Query $query): void
+    public function setQuery(Query $query)
     {
         $this->query = $query;
     }

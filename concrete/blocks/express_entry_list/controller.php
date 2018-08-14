@@ -5,6 +5,7 @@ use Concrete\Controller\Element\Search\CustomizeResults;
 use Concrete\Controller\Element\Search\SearchFieldSelector;
 use \Concrete\Core\Block\BlockController;
 use Concrete\Core\Entity\Express\Entity;
+use Concrete\Core\Entity\Search\Query;
 use Concrete\Core\Express\Entry\Search\Result\Result;
 use Concrete\Core\Express\EntryList;
 use Concrete\Core\Search\Column\AttributeKeyColumn;
@@ -109,9 +110,15 @@ class Controller extends BlockController
                 $element = new CustomizeResults($provider);
                 $element->setIncludeNumberOfResults(false);
 
-
                 $fieldManager = $this->getSearchFieldManager($entity);
                 $fieldSelectorElement = new SearchFieldSelector($fieldManager, $this->getActionURL('add_search_field'));
+
+                if ($this->filterFields) {
+                    $filterFields = unserialize($this->filterFields);
+                    $query = new Query();
+                    $query->setFields($filterFields);
+                    $fieldSelectorElement->setQuery($query);
+                }
 
                 $this->set('customizeElement', $element);
                 $this->set('searchFieldSelectorElement', $fieldSelectorElement);
@@ -144,6 +151,16 @@ class Controller extends BlockController
             $list = new EntryList($entity);
             if ($this->displayLimit > 0) {
                 $list->setItemsPerPage(intval($this->displayLimit));
+            }
+            
+            // Filter by any pre-set search criteria
+            if ($this->filterFields) {
+                $filterFields = unserialize($this->filterFields);
+                if (is_array($filterFields)) {
+                    foreach($filterFields as $field) {
+                        $field->filterList($list);
+                    }
+                }
             }
             $set = unserialize($this->columns);
             $defaultSortColumn = $set->getDefaultSortColumn();
@@ -248,8 +265,14 @@ class Controller extends BlockController
             $set->setDefaultSortColumn($sort, $this->request->request->get('fSearchDefaultSortDirection'));
 
             $data['columns'] = serialize($set);
-
         }
+
+        if ($entity) {
+            $manager = $this->getSearchFieldManager($entity);
+            $filterFields = $manager->getFieldsFromRequest($this->request->request->all());
+            $data['filterFields'] = serialize($filterFields);
+        }
+
 
         parent::save($data);
     }
@@ -272,7 +295,6 @@ class Controller extends BlockController
                 $fieldManager = $this->getSearchFieldManager($entity);
                 $addFieldAction = $this->getActionURL('add_search_field', $exEntityID);
                 $fieldSelectorElement = new SearchFieldSelector($fieldManager, $addFieldAction);
-                $r = new \stdClass;
                 ob_start();
                 $fieldSelectorElement->getViewObject()->render();
                 $r->searchFields = ob_get_contents();
