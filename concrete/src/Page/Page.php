@@ -2071,21 +2071,25 @@ EOT
     }
 
     /**
-     * Check if a collection is not already a child page of this collection.
+     * Check if a collection is this page itself or one of its sub-pages.
      *
-     * @param \Concrete\Core\Page\Page $cobj
+     * @param \Concrete\Core\Page\Collection\Collection|int $otherPage
+     * @param mixed $otherCollection
      *
      * @return bool
      */
-    public function canMoveCopyTo($cobj)
+    public function isParentOf($otherCollection)
     {
-        $cID = $cobj->getCollectionID();
-        if ($cID == $this->getCollectionID()) {
+        $otherCollectionID = (int) (is_object($otherCollection) ? $otherCollection->getCollectionID() : $otherCollection);
+        if ($otherCollectionID === 0) {
             return false;
         }
-        $children = $this->getCollectionChildrenArray();
+        if ($otherCollectionID == $this->getCollectionID()) {
+            return false;
+        }
+        $childIDs = $this->getCollectionChildrenArray();
 
-        return !in_array($cID, $children);
+        return !in_array($otherCollectionID, $childIDs);
     }
 
     /**
@@ -3589,7 +3593,19 @@ EOT
     }
 
     /**
-     * @deprecated Use the isAliasPageOrExternalLink() method.
+     * @deprecated This method is an alias of isParentOf()
+     *
+     * @param \Concrete\Core\Page\Page $cobj
+     *
+     * @return bool
+     */
+    public function canMoveCopyTo($cobj)
+    {
+        return $this->isParentOf($cobj);
+    }
+
+    /**
+     * @deprecated use the isAliasPageOrExternalLink() method
      *
      * @return bool
      */
