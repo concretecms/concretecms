@@ -19,6 +19,14 @@ if (isset($showProgressBar) && $showProgressBar) {
 
     return;
 }
+if (!$dragRequestData->canDoAnyOf([$dragRequestData::OPERATION_MOVE, $dragRequestData::OPERATION_ALIAS, $dragRequestData::OPERATION_COPY])) {
+    ?>
+    <div class="alert alert-danger">
+        <?= t('You are not allowed to perform any operation with the selected pages.') ?>
+    </div>
+    <?php
+    return;
+}
 $singleOriginalPage = $dragRequestData->getSingleOriginalPage();
 ?>
 
@@ -31,6 +39,7 @@ $singleOriginalPage = $dragRequestData->getSingleOriginalPage();
     }
     ?>
 </div>
+
 <form>
     <input type="hidden" name="validationToken" id="validationToken" value="<?= h($validationToken) ?>" />
     <input type="hidden" name="dragMode" id="dragMode" value="<?= h($dragRequestData->getDragMode()) ?>" />
@@ -44,33 +53,38 @@ $singleOriginalPage = $dragRequestData->getSingleOriginalPage();
     ?>
     <input type="hidden" name="origCID" id="origCID" value="<?= $originalPageIDs ?>" />
 
-    <div class="form-group">
-        <div class="radio">
-            <label>
-                <input type="radio" id="ctaskMove" name="ctask" value="MOVE" checked="checked" />
-                <?php
-                if ($singleOriginalPage !== null) {
-                    echo t('<strong>Move</strong> "%1$s" beneath "%2$s"', h($singleOriginalPage->getCollectionName()), h($dragRequestData->getDestinationPage()->getCollectionName()));
-                 } else {
-                     echo t('<strong>Move</strong> pages beneath "%s"', h($dragRequestData->getDestinationPage()->getCollectionName()));
-                 }
-                 ?>
-            </label>
-            <div class="checkbox" style="margin: 0 0 0 20px">
-                <label>
-                    <input type="checkbox" id="saveOldPagePath" name="saveOldPagePath" value="1" />
-                    <?= t('Save old page path') ?>
-                </label>
-            </div>
-        </div>
-    </div>
     <?php
-    if ($dragRequestData->isSomeOriginalPageALink() === false) {
+    if ($dragRequestData->canDo($dragRequestData::OPERATION_MOVE)) {
         ?>
         <div class="form-group">
             <div class="radio">
                 <label>
-                    <input type="radio" id="ctaskAlias" name="ctask" value="ALIAS" />
+                    <input type="radio" id="ctaskMove" name="ctask" value="<?= $dragRequestData::OPERATION_MOVE ?>" checked="checked" />
+                    <?php
+                    if ($singleOriginalPage !== null) {
+                        echo t('<strong>Move</strong> "%1$s" beneath "%2$s"', h($singleOriginalPage->getCollectionName()), h($dragRequestData->getDestinationPage()->getCollectionName()));
+                     } else {
+                         echo t('<strong>Move</strong> pages beneath "%s"', h($dragRequestData->getDestinationPage()->getCollectionName()));
+                     }
+                     ?>
+                </label>
+                <div class="checkbox" style="margin: 0 0 0 20px">
+                    <label>
+                        <input type="checkbox" id="saveOldPagePath" name="saveOldPagePath" value="1" />
+                        <?= t('Save old page path') ?>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <?php
+    }
+
+    if ($dragRequestData->canDo($dragRequestData::OPERATION_ALIAS)) {
+        ?>
+        <div class="form-group">
+            <div class="radio">
+                <label>
+                    <input type="radio" id="ctaskAlias" name="ctask" value="<?= $dragRequestData::OPERATION_ALIAS ?>" />
                     <?php
                     if ($singleOriginalPage !== null) {
                         echo t('<strong>Alias</strong> "%1$s" beneath "%2$s"', h($singleOriginalPage->getCollectionName()), h($dragRequestData->getDestinationPage()->getCollectionName()));
@@ -86,22 +100,23 @@ $singleOriginalPage = $dragRequestData->getSingleOriginalPage();
         </div>
         <?php
     }
-    ?>
-    <div class="form-group">
-        <div class="radio">
-            <label>
-                <input type="radio" id="ctaskCopy" name="ctask" value="COPY" />
+
+    if ($dragRequestData->canDo($dragRequestData::OPERATION_COPY)) {
+        ?>
+        <div class="form-group">
+            <div class="radio">
+                <label>
+                    <input type="radio" id="ctaskCopy" name="ctask" value="<?= $dragRequestData::OPERATION_COPY ?>" />
+                    <?php
+                    if ($singleOriginalPage !== null) {
+                        echo t('<strong>Copy</strong> "%1$s" beneath "%2$s"', h($singleOriginalPage->getCollectionName()), h($dragRequestData->getDestinationPage()->getCollectionName()));
+                    } else {
+                        echo t('<strong>Copy</strong> pages beneath "%s"', h($dragRequestData->getDestinationPage()->getCollectionName()));
+                    }
+                    ?>
+                </label>
                 <?php
-                if ($singleOriginalPage !== null) {
-                    echo t('<strong>Copy</strong> "%1$s" beneath "%2$s"', h($singleOriginalPage->getCollectionName()), h($dragRequestData->getDestinationPage()->getCollectionName()));
-                } else {
-                    echo t('<strong>Copy</strong> pages beneath "%s"', h($dragRequestData->getDestinationPage()->getCollectionName()));
-                }
-                ?>
-            </label>
-            <?php
-            if ($dragRequestData->canCopyChildren()) {
-                if ($singleOriginalPage === null || !empty($singleOriginalPage->getCollectionChildrenArray(true))) {
+                if ($dragRequestData->canDo($dragRequestData::OPERATION_COPYALL)) {
                     ?>
                     <div class="checkbox" style="margin: 0 0 0 20px">
                         <label class="text-muted">
@@ -116,17 +131,19 @@ $singleOriginalPage = $dragRequestData->getSingleOriginalPage();
                         </label>
                     </div>
                     <?php
+                } else {
+                    ?>
+                    <div class="text-muted" style="margin: 0 0 0 20px">
+                        <?= t('Your copy operation will only affect the current page - not any children.') ?>
+                    </div>
+                    <?php
                 }
-            } else {
                 ?>
-                <div class="text-muted" style="margin: 0 0 0 20px">
-                    <?= t('Your copy operation will only affect the current page - not any children.') ?>
-                </div>
-                <?php
-            }
-            ?>
+            </div>
         </div>
-    </div>
+        <?php
+    }
+    ?>
 
     <div class="dialog-buttons">
         <a href="javascript:void(0)" onclick="$.fn.dialog.closeTop()" class="pull-left btn btn-default"><?= t('Cancel') ?></a>

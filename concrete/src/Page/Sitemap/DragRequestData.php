@@ -12,6 +12,34 @@ use Concrete\Core\User\User;
 class DragRequestData
 {
     /**
+     * Drag operation: move page(s).
+     *
+     * @var string
+     */
+    const OPERATION_MOVE = 'MOVE';
+
+    /**
+     * Drag operation: alias page(s).
+     *
+     * @var string
+     */
+    const OPERATION_ALIAS = 'ALIAS';
+
+    /**
+     * Drag operation: copy page(s).
+     *
+     * @var string
+     */
+    const OPERATION_COPY = 'COPY';
+
+    /**
+     * Drag operation: copy page(s) and their sub-pages.
+     *
+     * @var string
+     */
+    const OPERATION_COPYALL = 'COPY_ALL';
+
+    /**
      * @var \Concrete\Core\Application\Application
      */
     protected $app;
@@ -44,12 +72,12 @@ class DragRequestData
     /**
      * @var bool|null
      */
-    protected $canCopyChildren;
+    protected $isSomeOriginalPageWithChildren;
 
     /**
      * @var bool|null
      */
-    protected $isSomeOriginalPageALink;
+    protected $isSomeOriginalPageAnAlias;
 
     /**
      * @var bool|null
@@ -60,6 +88,13 @@ class DragRequestData
      * @var bool|null
      */
     protected $isCopyChildrenOnly;
+
+    /**
+     * Array keys are the OPERATION_... constant values, array values are the reasons why the operation can't be performed (or empty string if they can be performed).
+     *
+     * @var array
+     */
+    protected $operationErrors = [];
 
     /**
      * @param Request $request
@@ -115,50 +150,9 @@ class DragRequestData
      */
     public function getSingleOriginalPage()
     {
-        return count($this->originalPages) === 1 ? $this->originalPages[0] : null;
-    }
+        $originalPages = $this->getOriginalPages();
 
-    /**
-     * @return bool
-     */
-    public function canCopyChildren()
-    {
-        if ($this->canCopyChildren === null) {
-            $u = $this->app->make(User::class);
-            if ($u->isSuperUser()) {
-                $this->canCopyChildren = true;
-            } else {
-                $canCopyChildren = true;
-                foreach ($this->originalPages as $originalPage) {
-                    if ($originalPage->getCollectionPointerID() > 0) {
-                        $canCopyChildren = false;
-                        break;
-                    }
-                }
-                $this->canCopyChildren = $canCopyChildren;
-            }
-        }
-
-        return $this->canCopyChildren;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isSomeOriginalPageALink()
-    {
-        if ($this->isSomeOriginalPageALink === null) {
-            $isSomeOriginalPageALink = false;
-            foreach ($this->originalPages as $originalPage) {
-                if ($originalPage->getCollectionPointerID()) {
-                    $isSomeOriginalPageALink = true;
-                    break;
-                }
-            }
-            $this->isSomeOriginalPageALink = $isSomeOriginalPageALink;
-        }
-
-        return $this->isSomeOriginalPageALink;
+        return count($originalPages) === 1 ? $originalPages[0] : null;
     }
 
     /**
@@ -185,6 +179,111 @@ class DragRequestData
         return $this->isCopyChildrenOnly;
     }
 
+    /**
+     * Check if an operation can be performed.
+     *
+     * @param string $operation The value of one of the OPERATION_... constants
+     *
+     * @return bool
+     */
+    public function canDo($operation)
+    {
+        return $this->whyCantDo($operation) === '';
+    }
+
+    /**
+     * Check if at least one operation can be performed.
+     *
+     * @param string[] $operations The values of one of the OPERATION_... constants
+     *
+     * @return bool
+     */
+    public function canDoAnyOf(array $operations)
+    {
+        foreach ($operations as $operation) {
+            if ($this->canDo($operation)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+    
+    /**
+     * Get the reason why an operation can't be performed.
+     *
+     * @param string $operation The value of one of the OPERATION_... constants.
+     *
+     * @return string empty string if the operation CAN be performed
+     */
+    public function whyCantDo($operation)
+    {
+        if (!is_string($operation)) {
+            return 'Invalid $operation';
+        }
+        if (!isset($this->operationErrors[$operation])) {
+            switch ($operation) {
+                case static::OPERATION_MOVE:
+                    $error = $this->whyCantMove();
+                    break;
+                case static::OPERATION_ALIAS:
+                    $error = $this->whyCantAlias();
+                    break;
+                case static::OPERATION_COPY:
+                    $error = $this->whyCantCopy();
+                    break;
+                case static::OPERATION_COPYALL:
+                    $error = $this->whyCantDo(static::OPERATION_COPY);
+                    if ($error === '') {
+                        $error = $this->whyCantCopyAll();
+                    }
+                    break;
+                default:
+                    return 'Invalid $operation';
+            }
+            $this->operationErrors[$operation] = $error;
+        }
+
+        return $this->operationErrors[$operation];
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isSomeOriginalPageWithChildren()
+    {
+        if ($this->isSomeOriginalPageWithChildren === null) {
+            $isSomeOriginalPageWithChildren = false;
+            foreach ($this->getOriginalPages() as $originalPage) {
+                if (!empty($originalPage->getCollectionChildrenArray(true))) {
+                    $isSomeOriginalPageWithChildren = true;
+                }
+            }
+            $this->isSomeOriginalPageWithChildren = $isSomeOriginalPageWithChildren;
+        }
+
+        return $this->isSomeOriginalPageWithChildren;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isSomeOriginalPageAnAlias()
+    {
+        if ($this->isSomeOriginalPageAnAlias === null) {
+            $isSomeOriginalPageAnAlias = false;
+            foreach ($this->getOriginalPages() as $originalPage) {
+                if ($originalPage->getCollectionPointerID()) {
+                    $isSomeOriginalPageAnAlias = true;
+                    break;
+                }
+            }
+            $this->isSomeOriginalPageAnAlias = $isSomeOriginalPageAnAlias;
+        }
+
+        return $this->isSomeOriginalPageAnAlias;
+    }
+
     protected function initializeDragMode()
     {
         $this->dragMode = $this->request->request->get('dragMode', $this->request->query->get('dragMode', ''));
@@ -200,7 +299,7 @@ class DragRequestData
         if (!$this->destinationPage || $this->destinationPage->isError()) {
             throw new UserMessageException(t('Error loading the destination page.'));
         }
-        if ($this->dragMode === 'after' || $this->dragMode === 'before') {
+        if ($this->getDragMode() === 'after' || $this->getDragMode() === 'before') {
             $siblingCID = $this->request->request->get('destSibling', $this->request->query->get('destSibling'));
             if ($siblingCID) {
                 $this->destinationSibling = is_int($siblingCID) || (is_string($siblingCID) && is_numeric($siblingCID)) ? Page::getByID($siblingCID) : null;
@@ -217,8 +316,11 @@ class DragRequestData
         } else {
             $this->destinationSibling = null;
         }
+        if ($this->destinationPage->isExternalLink()) {
+            throw new UserMessageException(t('The destination is an external link.'));
+        }
         if ($this->destinationPage->isAlias()) {
-            throw new UserMessageException(t('You may not move/copy/alias the chosen page(s) to that location.'));
+            throw new UserMessageException(t('The destination is an alias page.'));
         }
     }
 
@@ -244,7 +346,6 @@ class DragRequestData
             $collectionIDs
         ));
         $this->originalPages = [];
-        $destinationPageChecker = new Checker($this->destinationPage);
         foreach ($collectionIDs as $cID) {
             $c = Page::getByID($cID);
             if (!$c || $c->isError()) {
@@ -257,17 +358,110 @@ class DragRequestData
             if (!$pc->canMoveOrCopyPage()) {
                 throw new UserMessageException(t('You cannot move or copy the source page(s).'));
             }
-            if (!$c->canMoveCopyTo($this->destinationPage)) {
-                throw new UserMessageException(t('You may not move/copy/alias the chosen page(s) to that location.'));
-            }
-            $ct = $c->getPageTypeObject();
-            if (!$destinationPageChecker->canAddSubpage($ct)) {
-                throw new UserMessageException(t('You do not have sufficient privileges to add this page or these pages to this destination.'));
-            }
             $this->originalPages[] = $c;
         }
         if (empty($this->originalPages)) {
             throw new UserMessageException(t('No original page specified.'));
         }
+    }
+
+    /**
+     * Get the reason why the move operation can't be performed.
+     *
+     * @return string empty string if the operation CAN be performed
+     */
+    protected function whyCantMove()
+    {
+        $destinationPageChecker = new Checker($this->getDestinationPage());
+        $destinationPageID = $this->getDestinationPage()->getCollectionID();
+        foreach ($this->getOriginalPages() as $originalPage) {
+            $originalPageChecker = new Checker($originalPage);
+            if (!$originalPageChecker->canMoveOrCopyPage()) {
+                return t('You don\'t have the permission move the page "%s".', $originalPage->getCollectionName());
+            }
+            if ($originalPage->getCollectionID() == $destinationPageID) {
+                return t('It\'t not possible to move the page "%s" under itself.', $originalPage->getCollectionName());
+            }
+            if (in_array($destinationPageID, $originalPage->getCollectionChildrenArray())) {
+                return t('It\'s not possible to move the page "%s" under one of its child pages.', $originalPage->getCollectionName());
+            }
+            $originalPageType = $originalPage->getPageTypeObject();
+            if (!$destinationPageChecker->canAddSubpage($originalPageType)) {
+                return t('You do not have sufficient privileges to move the page "$1%s" under "$2%s".', $originalPage->getCollectionName(), $this->getDestinationPage()->getCollectionName());
+            }
+        }
+
+        return '';
+    }
+
+    /**
+     * Get the reason why the alias operation can't be performed.
+     *
+     * @return string empty string if the operation CAN be performed
+     */
+    protected function whyCantAlias()
+    {
+        if ($this->isSomeOriginalPageAnAlias()) {
+            return t('It\'s not possible to create aliases of aliases.');
+        }
+        $destinationPageChecker = new Checker($this->getDestinationPage());
+        foreach ($this->getOriginalPages() as $originalPage) {
+            $originalPageChecker = new Checker($originalPage);
+            if (!$originalPageChecker->canMoveOrCopyPage()) {
+                return t('You don\'t have the permission alias the page "%s".', $originalPage->getCollectionName());
+            }
+            $originalPageType = $originalPage->getPageTypeObject();
+            if (!$destinationPageChecker->canAddSubpage($originalPageType)) {
+                return t('You do not have sufficient privileges to alias the page "$1%s" under "$2%s".', $originalPage->getCollectionName(), $this->getDestinationPage()->getCollectionName());
+            }
+        }
+
+        return '';
+    }
+
+    /**
+     * Get the reason why the copy operation can't be performed.
+     *
+     * @return string empty string if the operation CAN be performed
+     */
+    protected function whyCantCopy()
+    {
+        $destinationPageChecker = new Checker($this->getDestinationPage());
+        foreach ($this->getOriginalPages() as $originalPage) {
+            $originalPageChecker = new Checker($originalPage);
+            if (!$originalPageChecker->canMoveOrCopyPage()) {
+                return t('You don\'t have the permission copy the page "%s".', $originalPage->getCollectionName());
+            }
+            $originalPageType = $originalPage->getPageTypeObject();
+            if (!$destinationPageChecker->canAddSubpage($originalPageType)) {
+                return t('You do not have sufficient privileges to copy the page "$1%s" under "$2%s".', $originalPage->getCollectionName(), $this->getDestinationPage()->getCollectionName());
+            }
+        }
+
+        return '';
+    }
+
+    /**
+     * Get the reason why the copy-all operation can't be performed (NOTE: this DOES NOT include the checks performed in the whyCantCopy() method).
+     *
+     * @return string empty string if the operation CAN be performed
+     */
+    protected function whyCantCopyAll()
+    {
+        $u = $this->app->make(User::class);
+        if (!$u->isSuperUser() && $this->isSomeOriginalPageAnAlias()) {
+            return t('Only the administrator can copy aliased pages.');
+        }
+        $destinationPageID = $this->getDestinationPage()->getCollectionID();
+        foreach ($this->getOriginalPages() as $originalPage) {
+            if ($originalPage->getCollectionID() == $destinationPageID) {
+                return t('It\'s not possible to copy the page "%s" and its child pages under the page itself.', $originalPage->getCollectionName());
+            }
+            if (in_array($destinationPageID, $originalPage->getCollectionChildrenArray())) {
+                return t('It\'s not possible to copy the page "%s" and its child pages under one of its child pages.', $originalPage->getCollectionName());
+            }
+        }
+        
+        return '';
     }
 }

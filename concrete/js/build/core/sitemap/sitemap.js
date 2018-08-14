@@ -304,43 +304,40 @@
 				},
 
 				dnd: {
-					preventRecursiveMoves: true, // Prevent dropping nodes on own descendants,
-					focusOnClick: true,
-					preventVoidMoves: true, // Prevent dropping nodes 'before self', etc.
-
-					dragStart: function(sourceNode, data) {
+				    // https://github.com/mar10/fancytree/wiki/ExtDnd
+                    focusOnClick: true, // Focus although draggable cancels mousedown event?
+                    preventRecursiveMoves: false, // Prevent dropping nodes on own descendants?
+                    preventVoidMoves: false, // Prevent dropping nodes 'before self', etc.
+					dragStart: function(sourceNode, data) { // return true to enable dnd
 						if (my.options.selectMode) {
 							return false;
 						}
-                        if (sourceNode.data.cID) {
-							return true;
+                        if (!sourceNode.data.cID) {
+							return false;
 						}
-						return false;
-					},
-					dragStop: function(sourceNode, data) {
 						return true;
 					},
-
-					dragEnter: function(targetNode, data) {
-                        var cID = parseInt(targetNode.data.cID);
-                        if (!targetNode.parent.data.cID && cID !== my.homeCID) { // Home page has no parents, but we still want to be able to hit it.
-							return false;
-						}
-                        if (cID === my.homeCID) {  // Home gets no siblings
-							return 'over';
+					dragEnter: function(targetNode, data) { // return false: disable drag, true: enable drag, string (or string[]) to limit operations ('over', 'before', 'after')
+					    if (!data.otherNode) {
+					        // data.otherNode may be null for non-fancytree droppables
+					        return false;
+					    }
+                        var sourceCID = parseInt(targetNode.data.cID),
+                            destinationCID = parseInt(data.otherNode.data.cID),
+                            destinationIsHome = targetNode.parent.data.cID ? false : true;
+                        if (!sourceCID || !destinationCID) {
+                            // something strange occurred
+                            alert(1);
+                            return false;
                         }
-
-                        if (cID == data.otherNode.data.cID) {
-                            return false; // can't drag node onto itself.
+                        if (sourceCID === destinationCID) {
+                            // we can only copy node under itself
+                            return 'over';
                         }
-						if (!data.otherNode.data.cID && data.hitMode == 'after') {
-							return false;
-						}
-
-				        // Prevent dropping a parent below it's own child
-				        if (targetNode.isDescendantOf(data.otherNode)) {
-							return false;
-				        }
+                        if (destinationIsHome) {
+                            // home gets no siblings
+                            return 'over';
+                        }
 				        return true;
 					},
 					dragDrop: function(targetNode, data) {

@@ -56,11 +56,11 @@ class DragRequest extends UserInterfaceController
         }
         $dragRequestData = $this->app->make(DragRequestData::class);
         switch ($this->request->request->get('ctask', $this->request->query->get('ctask'))) {
-            case 'ALIAS':
+            case $dragRequestData::OPERATION_ALIAS:
                 return $this->doAlias($dragRequestData);
-            case 'COPY':
+            case $dragRequestData::OPERATION_COPY:
                 return $this->doCopy($dragRequestData);
-            case 'MOVE':
+            case $dragRequestData::OPERATION_MOVE:
                 return $this->doMove($dragRequestData);
             default:
                 throw new UserMessageException('Invalid parameter: ctask (unrecognized)');
@@ -76,6 +76,10 @@ class DragRequest extends UserInterfaceController
             throw new UserMessageException($this->error->toText());
         }
         $dragRequestData = $this->app->make(DragRequestData::class);
+        $error = $dragRequestData->whyCantDo($dragRequestData::OPERATION_COPYALL);
+        if ($error !== '') {
+            throw new UserMessageException($error);
+        }
         $queue = $this->app->make(QueueService::class)->get('copy_page');
         if ($queue->count() == 0) {
             foreach ($dragRequestData->getOriginalPages() as $originalPage) {
@@ -155,8 +159,9 @@ class DragRequest extends UserInterfaceController
 
     protected function doAlias(DragRequestData $dragRequestData)
     {
-        if ($dragRequestData->isSomeOriginalPageALink()) {
-            throw new UserMessageException('Invalid parameter: ctask (aliasing links)');
+        $error = $dragRequestData->whyCantDo($dragRequestData::OPERATION_ALIAS);
+        if ($error !== '') {
+            throw new UserMessageException($error);
         }
         $newCIDs = [];
         $successMessages = [];
@@ -172,6 +177,10 @@ class DragRequest extends UserInterfaceController
 
     protected function doCopy(DragRequestData $dragRequestData)
     {
+        $error = $dragRequestData->whyCantDo($dragRequestData::OPERATION_COPY);
+        if ($error !== '') {
+            throw new UserMessageException($error);
+        }
         $newCIDs = [];
         $successMessages = [];
         $destipationPage = $dragRequestData->getDestinationPage();
@@ -195,6 +204,10 @@ class DragRequest extends UserInterfaceController
 
     protected function doMove(DragRequestData $dragRequestData)
     {
+        $error = $dragRequestData->whyCantDo($dragRequestData::OPERATION_MOVE);
+        if ($error !== '') {
+            throw new UserMessageException($error);
+        }
         $newCIDs = [];
         $successMessages = [];
         $destipationPage = $dragRequestData->getDestinationPage();
