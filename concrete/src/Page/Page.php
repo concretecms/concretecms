@@ -615,7 +615,7 @@ class Page extends Collection implements PermissionObjectInterface, AttributeObj
     {
         $r = new stdClass();
         $r->name = $this->getCollectionName();
-        if ($this->isAlias() && !$this->isExternalLink()) {
+        if ($this->isAliasPage()) {
             $r->cID = $this->getCollectionPointerOriginalID();
         } else {
             $r->cID = $this->getCollectionID();
@@ -1057,7 +1057,7 @@ class Page extends Collection implements PermissionObjectInterface, AttributeObj
      */
     public function updateCollectionAliasExternal($cName, $cLink, $newWindow = 0)
     {
-        if ($this->cPointerExternalLink) {
+        if ($this->isExternalLink()) {
             $app = Application::getFacadeApplication();
             $db = $app->make(Connection::class);
             $this->markModified();
@@ -1713,13 +1713,23 @@ EOT
     }
 
     /**
-     * Is this page an alias or an external link?
+     * Is this page an alias page or an external link?
      *
      * @return bool
      */
-    public function isAlias()
+    public function isAliasPageOrExternalLink()
     {
-        return $this->getCollectionPointerID() > 0 || $this->cPointerExternalLink;
+        return $this->isExternalLink() || $this->isAliasPage();
+    }
+
+    /**
+     * Is this page an alias page?
+     *
+     * @return bool
+     */
+    public function isAliasPage()
+    {
+        return $this->getCollectionPointerID() > 0;
     }
 
     /**
@@ -1729,7 +1739,7 @@ EOT
      */
     public function isExternalLink()
     {
-        return $this->cPointerExternalLink != null;
+        return (string) $this->cPointerExternalLink !== '';
     }
 
     /**
@@ -2865,7 +2875,7 @@ EOT
      */
     public function delete()
     {
-        if ($this->isAlias() && !$this->isExternalLink()) {
+        if ($this->isAliasPage()) {
             $this->removeThisAlias();
 
             return;
@@ -3576,6 +3586,16 @@ EOT
         $db->executeQuery('update Pages set cDraftTargetParentPageID = ? where cID = ?', [$cParentID, $this->getCollectionID()]);
         $this->cDraftTargetParentPageID = $cParentID;
         Section::registerPage($this);
+    }
+
+    /**
+     * @deprecated Use the isAliasPageOrExternalLink() method.
+     *
+     * @return bool
+     */
+    public function isAlias()
+    {
+        return $this->isAliasPageOrExternalLink();
     }
 
     /**
