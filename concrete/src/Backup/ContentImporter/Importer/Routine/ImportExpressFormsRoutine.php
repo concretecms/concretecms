@@ -55,11 +55,11 @@ class ImportExpressFormsRoutine extends AbstractRoutine
                                     $fieldSetPosition++;
                                 }
                             }
-                            $entity->getForms()->add($form);
-                            $form->setEntity($entity);
-                            $em->persist($entity);
-                            $em->persist($form);
                         }
+                        $entity->getForms()->add($form);
+                        $form->setEntity($entity);
+                        $em->persist($entity);
+                        $em->persist($form);
                     }
                 }
             }
