@@ -8,6 +8,8 @@ use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Search\Query;
 use Concrete\Core\Express\Entry\Search\Result\Result;
 use Concrete\Core\Express\EntryList;
+use Concrete\Core\Express\Search\ColumnSet\ColumnSet;
+use Concrete\Core\Express\Search\ColumnSet\DefaultSet;
 use Concrete\Core\Search\Column\AttributeKeyColumn;
 use Concrete\Core\Search\Field\ManagerFactory;
 use Concrete\Core\Search\Result\ItemColumn;
@@ -163,6 +165,9 @@ class Controller extends BlockController
                 }
             }
             $set = unserialize($this->columns);
+            if (!$set) {
+                $set = new DefaultSet($category);
+            }
             $defaultSortColumn = $set->getDefaultSortColumn();
             if ($this->request->query->has($list->getQuerySortDirectionParameter())) {
                 $direction = $this->request->query->get($list->getQuerySortDirectionParameter());
