@@ -9,7 +9,9 @@ use Concrete\Core\Asset\AssetList;
 use Concrete\Core\File\Type\TypeList;
 use Concrete\Core\Foundation\ClassAliasList;
 use Concrete\Core\Http\Request;
+use Concrete\Core\Page\Theme\ThemeRouteCollection;
 use Concrete\Core\Routing\RedirectResponse;
+use Concrete\Core\Routing\SystemRouteList;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Support\Facade\Route;
 use Illuminate\Config\Repository;
@@ -303,8 +305,19 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
      */
     private function initializeRoutes(Repository $config)
     {
-        Route::registerMultiple($config->get('app.routes'));
-        Route::setThemesByRoutes($config->get('app.theme_paths', []));
+        /**
+         * @var $router Router
+         */
+        $router = Route::getFacadeRoot();
+        // Legacy route registration.
+        $router->registerMultiple($config->get('app.routes'));
+
+        // New style
+        $router->loadRouteList(new SystemRouteList());
+
+        // theme paths
+        $this->app->make(ThemeRouteCollection::class)
+            ->setThemesByRoutes($config->get('app.theme_paths', array()));
     }
 
     /**
