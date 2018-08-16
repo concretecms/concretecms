@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Form\Service\Widget;
 
 use Concrete\Core\Support\Facade\Application;
@@ -93,7 +94,7 @@ class DateTime
      *
      * @return string
      */
-    public function datetime($field, $value = null, $includeActivation = false, $calendarAutoStart = true, $classes = null, $timeResolution = 60, array $datePickerOptions = array())
+    public function datetime($field, $value = null, $includeActivation = false, $calendarAutoStart = true, $classes = null, $timeResolution = 60, array $datePickerOptions = [])
     {
         $app = Application::getFacadeApplication();
         $dh = $app->make('helper/date');
@@ -114,8 +115,6 @@ class DateTime
             $fieldSeconds = $prefix . '_s]';
             $fieldAMPM = $prefix . '_a]';
         } else {
-            $checkPostField = $field;
-            $checkPostData = $_POST;
             $fieldActivate = $field . '_activate';
             $fieldDate = $field . '_dt';
             $fieldHours = $field . '_h';
@@ -210,7 +209,7 @@ class DateTime
         $html .= '<select class="form-control" id="' . $id . '_h" name="' . $fieldHours . '"' . $disabled . '>';
         $hourStart = ($timeFormat === 12) ? 1 : 0;
         $hourEnd = ($timeFormat === 12) ? 12 : 23;
-        $hourList = [];
+        $hoursList = [];
         for ($i = $hourStart; $i <= $hourEnd; $i += $stepHours) {
             $hoursList[] = $i;
         }
@@ -296,7 +295,7 @@ class DateTime
             $html .= <<<EOT
 <script type="text/javascript">
 $(function() {
-  $('#{$id}_dt_pub').datepicker($.extend({$datePickerOptionsAsJSON}, {
+  $('#{$id}_dt_pub').datepicker($.extend({
     dateFormat: $dateFormat,
     altFormat: 'yy-mm-dd',
     altField: '#{$id}_dt',
@@ -309,7 +308,7 @@ $(function() {
         $(inst.settings.altField).val('');
       }
     }
-  })).datepicker('setDate', $defaultDateJs);
+  }, {$datePickerOptionsAsJSON})).datepicker('setDate', $defaultDateJs);
 })
 </script>
 EOT;
@@ -345,13 +344,11 @@ EOT;
      *
      * @return string
      */
-    public function date($field, $value = null, $calendarAutoStart = true, array $datePickerOptions = array())
+    public function date($field, $value = null, $calendarAutoStart = true, array $datePickerOptions = [])
     {
         $app = Application::getFacadeApplication();
         $dh = $app->make('helper/date');
         /* @var \Concrete\Core\Localization\Service\Date $dh */
-        $fh = $app->make('helper/form');
-        /* @var \Concrete\Core\Form\Service\Form $fh */
 
         // Calculate the field names
         $id = trim(preg_replace('/[^0-9A-Za-z-]+/', '_', $field), '_');
@@ -397,7 +394,7 @@ EOT;
             $html .= <<<EOT
 <script type="text/javascript">
 $(function() {
-  $('#{$id}_pub').datepicker($.extend({$datePickerOptionsAsJSON}, {
+  $('#{$id}_pub').datepicker($.extend({
     dateFormat: $dateFormat,
     altFormat: 'yy-mm-dd',
     altField: '#{$id}',
@@ -409,7 +406,7 @@ $(function() {
         $(inst.settings.altField).val('');
       }
     }
-  })).datepicker('setDate', $defaultDateJs);
+  }, {$datePickerOptionsAsJSON})).datepicker('setDate', $defaultDateJs);
 });
 </script>
 EOT;
