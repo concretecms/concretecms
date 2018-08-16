@@ -1,7 +1,10 @@
 <?php
 namespace Concrete\Core\Routing;
 
+use Concrete\Core\Controller\AbstractController;
+use Concrete\Core\Support\Facade\Facade;
 use Symfony\Component\Routing\RouteCollection;
+use Concrete\Core\Controller\Controller;
 
 class RouteActionFactory implements RouteActionFactoryInterface
 {
@@ -13,7 +16,6 @@ class RouteActionFactory implements RouteActionFactoryInterface
         }
         if (is_string($route->getAction())) {
             return new ControllerRouteAction($route->getAction());
-
         }
     }
 

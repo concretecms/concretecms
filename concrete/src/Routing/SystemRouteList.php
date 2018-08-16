@@ -2,6 +2,7 @@
 namespace Concrete\Core\Routing;
 
 use Concrete\Core\Http\Middleware\APIAuthenticatorMiddleware;
+use Concrete\Core\HTTP\Middleware\OAuthErrorMiddleware;
 use Concrete\Core\Http\Middleware\ProjectorMiddleware;
 
 class SystemRouteList implements RouteListInterface
@@ -76,6 +77,9 @@ class SystemRouteList implements RouteListInterface
         $router->buildGroup()->routes('calendar.php');
 
         $router->buildGroup()->routes('misc.php');
+
+        $router->buildGroup()->addMiddleware(OAuthErrorMiddleware::class)
+            ->routes( 'api/oauth2.php');
 
         $router->buildGroup()
             ->setPrefix('/ccm/api/v1')

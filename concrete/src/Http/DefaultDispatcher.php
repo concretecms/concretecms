@@ -107,7 +107,7 @@ class DefaultDispatcher implements DispatcherInterface
         $callDispatcher = false;
         try {
             $route = $this->router->matchRoute($request)->getRoute();
-            $dispatcher = new RouteActionDispatcher($this->router, $route);
+            $dispatcher = new RouteDispatcher($this->router, $route, []);
             $stack = new MiddlewareStack(
                 new DispatcherDelegate($dispatcher)
             );

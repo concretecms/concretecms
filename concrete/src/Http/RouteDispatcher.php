@@ -2,11 +2,12 @@
 namespace Concrete\Core\Http;
 
 use Concrete\Core\Routing\Router;
+use Concrete\Core\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
-use Symfony\Component\Routing\Route;
+use Concrete\Core\Routing\Route;
 
-class RouteActionDispatcher implements DispatcherInterface
+class RouteDispatcher implements DispatcherInterface
 {
 
     /** @var Route */
@@ -15,10 +16,15 @@ class RouteActionDispatcher implements DispatcherInterface
     /** @var Router */
     protected $router;
 
-    public function __construct(Router $router, Route $route)
+    /** @var array */
+    private $parameters;
+
+
+    public function __construct(RouterInterface $router, Route $route, array $parameters)
     {
         $this->router = $router;
         $this->route = $route;
+        $this->parameters = $parameters;
     }
 
     /**
@@ -28,7 +34,7 @@ class RouteActionDispatcher implements DispatcherInterface
     public function dispatch(SymfonyRequest $request)
     {
         $action = $this->router->getAction($this->route);
-        $response = $action->execute($request, $this->route, []);
+        $response = $action->execute($request, $this->route, $this->parameters);
         return $response;
     }
 
