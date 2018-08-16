@@ -108,7 +108,8 @@ abstract class ItemList extends AbstractItemList
 
     protected function ensureSelected($field)
     {
-        $rx = '/\b' . preg_quote($field, '/') . '\b/i';
+        $quoter = $this->query->getConnection()->getDatabasePlatform()->getIdentifierQuoteCharacter();
+        $rx = '/\b' . preg_quote($field, '/') . preg_quote($quoter, '/') . '?\s*$/i';
         $selects = $this->query->getQueryPart('select');
         $add = true;
         foreach ($selects as $select) {
