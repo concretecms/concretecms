@@ -244,15 +244,14 @@ class Connection extends \Doctrine\DBAL\Connection
     }
 
     /**
-     * @deprecated
-     * Alias to old ADODB Replace() method
+     * Insert or update a row in a database table.
      *
-     * @param string $table
-     * @param array $fieldArray
-     * @param string|string[] $keyCol
-     * @param bool $autoQuote
+     * @param string $table the name of the database table
+     * @param array $fieldArray array keys are the field names, array values are the field values
+     * @param string|string[] $keyCol the names of the primary key fields
+     * @param bool $autoQuote set to true to quote the field values
      */
-    public function Replace($table, $fieldArray, $keyCol, $autoQuote = true)
+    public function replace($table, $fieldArray, $keyCol, $autoQuote = true)
     {
         $qb = $this->createQueryBuilder();
         $qb->select('count(*)')->from($table, 't');

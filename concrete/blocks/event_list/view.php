@@ -45,12 +45,12 @@ if ($calendar) {
                     $url = $linkFormatter->getEventOccurrenceFrontendViewLink($occurrence);
                     if ($url) {
     ?>
-                        <a href="<?= $url ?>"><?=$event->getName()?></a>
+                        <a href="<?= $url ?>"><?= h($event->getName()) ?></a>
                     <?php
 
 } else {
     ?>
-                        <?=$event->getName()?>
+                        <?= h($event->getName()) ?>
                     <?php
 
 }
@@ -260,5 +260,5 @@ if ($calendar) {
     }
     ?>
 
-<?php 
+<?php
 } ?>

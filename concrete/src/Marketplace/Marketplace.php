@@ -88,8 +88,8 @@ class Marketplace implements ApplicationAwareInterface
                     $this->connectionError = $r;
 
                     if ($this->connectionError == self::E_DELETED_SITE_TOKEN) {
-                        $dbConfig->clear('concrete.marketplace.token');
-                        $dbConfig->clear('concrete.marketplace.url_token');
+                        $this->databaseConfig->clear('concrete.marketplace.token');
+                        $this->databaseConfig->clear('concrete.marketplace.url_token');
                     }
                 } else {
                     $this->isConnected = false;
@@ -254,8 +254,7 @@ class Marketplace implements ApplicationAwareInterface
 
     public function getSitePageURL()
     {
-        $dbConfig = $this->app->make('config/database');
-        $token = $dbConfig->get('concrete.marketplace.url_token');
+        $token = $this->databaseConfig->get('concrete.marketplace.url_token');
         $url = $this->config->get('concrete.urls.concrete5') . $this->config->get('concrete.urls.paths.site_page');
 
         return $url . '/' . $token;

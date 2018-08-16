@@ -1275,7 +1275,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     /**
      * Returns theme id for the collection.
      *
-     * @return int
+     * @return int|null
      */
     public function getCollectionThemeID()
     {
@@ -2803,17 +2803,18 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
     public function movePageDisplayOrderToSibling(Page $c, $position = 'before')
     {
-        // first, we get a list of IDs.
+        $myCID = $this->getCollectionPointerOriginalID() ?: $this->getCollectionID();
+        $relatedCID = $c->getCollectionPointerOriginalID() ?: $c->getCollectionID();
         $pageIDs = [];
         $db = Database::connection();
-        $r = $db->executeQuery('select cID from Pages where cParentID = ? and cID <> ? order by cDisplayOrder asc', [$this->getCollectionParentID(), $this->getCollectionID()]);
-        while ($row = $r->FetchRow()) {
-            if ($row['cID'] == $c->getCollectionID() && $position == 'before') {
-                $pageIDs[] = $this->cID;
+        $r = $db->executeQuery('select cID from Pages where cParentID = ? and cID <> ? order by cDisplayOrder asc', [$this->getCollectionParentID(), $myCID]);
+        while (($cID = $r->fetchColumn()) !== false) {
+            if ($cID == $relatedCID && $position == 'before') {
+                $pageIDs[] = $myCID;
             }
-            $pageIDs[] = $row['cID'];
-            if ($row['cID'] == $c->getCollectionID() && $position == 'after') {
-                $pageIDs[] = $this->cID;
+            $pageIDs[] = $cID;
+            if ($cID == $relatedCID && $position == 'after') {
+                $pageIDs[] = $myCID;
             }
         }
         $displayOrder = 0;

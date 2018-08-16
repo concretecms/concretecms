@@ -5,6 +5,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\Users;
 use Concrete\Controller\Element\Search\Users\Header;
 use Concrete\Core\Attribute\Category\CategoryService;
 use Concrete\Core\Csv\Export\UserExporter;
+use Concrete\Core\Csv\WriterFactory;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\User\EditResponse as UserEditResponse;
@@ -494,7 +495,7 @@ class Search extends DashboardPageController
                 $writer = $app->build(
                     UserExporter::class,
                     [
-                        'writer' => Writer::createFromPath('php://output', 'w'),
+                        'writer' => $this->app->make(WriterFactory::class)->createFromPath('php://output', 'w'),
                     ]
                 );
 
