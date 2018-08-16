@@ -34,6 +34,12 @@ class Router
         return '/' . trim($path, '/') . '/';
     }
 
+    /**
+     * @param $path
+     * @param $action
+     * @param $methods
+     * @return RouteBuilder
+     */
     private function createRouteBuilder($path, $action, $methods)
     {
         $route = new Route($this->normalizePath($path));

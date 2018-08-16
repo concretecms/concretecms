@@ -61,9 +61,5 @@ class QueueServiceProvider extends Provider
         $this->app->singleton('queue', function($app) {
             return $app->make(QueueService::class);
         });
-
-        $subscriber = $this->app->make(BernardSubscriber::class);
-        $dispatcher = $this->app->make('director');
-        $dispatcher->addSubscriber($subscriber);
     }
 }
