@@ -44,9 +44,6 @@ class ControllerRouteAction implements RouteActionInterface
     public function execute(Request $request, Route $route, $parameters)
     {
         $request->attributes->set('_controller', $this->getAction());
-
-        print $this->action;
-        exit;
         $app = Facade::getFacadeApplication();
         $controllerResolver = $app->make(ApplicationAwareControllerResolver::class);
         $callback = $controllerResolver->getController($request);
