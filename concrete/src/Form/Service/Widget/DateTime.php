@@ -115,8 +115,6 @@ class DateTime
             $fieldSeconds = $prefix . '_s]';
             $fieldAMPM = $prefix . '_a]';
         } else {
-            $checkPostField = $field;
-            $checkPostData = $_POST;
             $fieldActivate = $field . '_activate';
             $fieldDate = $field . '_dt';
             $fieldHours = $field . '_h';
@@ -211,7 +209,7 @@ class DateTime
         $html .= '<select class="form-control" id="' . $id . '_h" name="' . $fieldHours . '"' . $disabled . '>';
         $hourStart = ($timeFormat === 12) ? 1 : 0;
         $hourEnd = ($timeFormat === 12) ? 12 : 23;
-        $hourList = [];
+        $hoursList = [];
         for ($i = $hourStart; $i <= $hourEnd; $i += $stepHours) {
             $hoursList[] = $i;
         }
@@ -351,8 +349,6 @@ EOT;
         $app = Application::getFacadeApplication();
         $dh = $app->make('helper/date');
         /* @var \Concrete\Core\Localization\Service\Date $dh */
-        $fh = $app->make('helper/form');
-        /* @var \Concrete\Core\Form\Service\Form $fh */
 
         // Calculate the field names
         $id = trim(preg_replace('/[^0-9A-Za-z-]+/', '_', $field), '_');
