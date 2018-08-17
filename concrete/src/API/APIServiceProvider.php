@@ -17,6 +17,7 @@ use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 use Concrete\Core\Http\Middleware\PSR7Middleware;
 use Concrete\Core\Routing\RouteCollector;
 use Concrete\Core\Routing\RouteProviderInterface;
+use Concrete\Core\Routing\Router;
 use Doctrine\ORM\EntityManagerInterface;
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\Grant\ClientCredentialsGrant;
@@ -44,7 +45,13 @@ class APIServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->registerAuthorizationServer();
+        $config = $this->app->make("config");
+        if ($config->get('concrete.api.enabled')) {
+            $router = $this->app->make(Router::class);
+            $list = new APIRouteList();
+            $list->loadRoutes($router);
+            $this->registerAuthorizationServer();
+        }
     }
 
     private function repositoryFactory($factoryClass, $entityClass)

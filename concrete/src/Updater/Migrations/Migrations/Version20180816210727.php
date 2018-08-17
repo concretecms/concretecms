@@ -8,8 +8,9 @@ use Concrete\Core\Entity\OAuth\Client;
 use Concrete\Core\Entity\OAuth\RefreshToken;
 use Concrete\Core\Entity\OAuth\Scope;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
+use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
-class Version20180816210727 extends AbstractMigration
+class Version20180816210727 extends AbstractMigration implements RepeatableMigrationInterface
 {
 
     public function upgradeDatabase()
@@ -21,5 +22,7 @@ class Version20180816210727 extends AbstractMigration
             RefreshToken::class,
             Scope::class
         ]);
+        $this->createSinglePage('/dashboard/system/api', 'API');
+        $this->createSinglePage('/dashboard/system/api/settings', 'API Settings');
     }
 }

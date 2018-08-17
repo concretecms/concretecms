@@ -91,6 +91,7 @@ return [
     'providers' => [
         // Router service provider
         'core_router' => 'Concrete\Core\Routing\RoutingServiceProvider',
+        'core_cache' => '\Concrete\Core\Cache\CacheServiceProvider', // needs to come before api
         'core_api' => 'Concrete\Core\API\APIServiceProvider',
         'core_file' => '\Concrete\Core\File\FileServiceProvider',
         'core_encryption' => '\Concrete\Core\Encryption\EncryptionServiceProvider',
@@ -122,7 +123,6 @@ return [
         'core_logging' => '\Concrete\Core\Logging\LoggingServiceProvider',
         'core_element' => '\Concrete\Core\Filesystem\FilesystemServiceProvider',
         'core_notification' => '\Concrete\Core\Notification\NotificationServiceProvider',
-        'core_cache' => '\Concrete\Core\Cache\CacheServiceProvider',
         'core_url' => '\Concrete\Core\Url\UrlServiceProvider',
         'core_devices' => '\Concrete\Core\Device\DeviceServiceProvider',
         'core_imageeditor' => '\Concrete\Core\ImageEditor\EditorServiceProvider',
