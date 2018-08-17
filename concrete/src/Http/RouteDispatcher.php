@@ -33,7 +33,7 @@ class RouteDispatcher implements DispatcherInterface
      */
     public function dispatch(SymfonyRequest $request)
     {
-        $action = $this->router->getAction($this->route);
+        $action = $this->router->resolveAction($this->route);
         $response = $action->execute($request, $this->route, $this->parameters);
         return $response;
     }

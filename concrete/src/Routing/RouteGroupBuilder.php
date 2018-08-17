@@ -123,8 +123,7 @@ class RouteGroupBuilder
     protected function processNamespace(Route $route)
     {
         if ($this->namespace) {
-            $action = $this->router->getAction($route);
-            if ($action instanceof ControllerRouteAction) {
+            if (is_string($route->getAction())) {
                 $controller = [$this->namespace, trim($route->getAction(), '\\')];
                 $route->setAction(implode('\\', $controller));
             }

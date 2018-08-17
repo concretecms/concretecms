@@ -93,7 +93,7 @@ class Router implements RouterInterface
      * @param Route $route
      * @return RouteActionInterface
      */
-    public function getAction(Route $route)
+    public function resolveAction(Route $route)
     {
         return $this->actionFactory->createAction($route);
     }

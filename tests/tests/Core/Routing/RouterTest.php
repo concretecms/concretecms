@@ -112,12 +112,12 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $route = $router->get('/hello-world', function() { return 'hello world.'; })
             ->getRoute();
         $this->assertInstanceOf(Route::class, $route);
-        $callback = $router->getAction($route);
+        $callback = $router->resolveAction($route);
         $this->assertInstanceOf(ClosureRouteAction::class, $callback);
 
         $route = $router->get('/hello-world', 'Concrete\Tests\Core\Routing\TestController')
             ->getRoute();
-        $action = $router->getAction($route);
+        $action = $router->resolveAction($route);
         $this->assertInstanceOf(ControllerRouteAction::class, $action);
         $action = $action->getAction();
         $this->assertEquals('Concrete\Tests\Core\Routing\TestController', $action);
@@ -138,7 +138,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $route = $route->getRoute();
         $this->assertInstanceOf(Route::class, $route);
         $this->assertEquals('something_hello_world', $route->getName());
-        $action = $router->getAction($route);
+        $action = $router->resolveAction($route);
         $response = $action->execute($request, $route, []);
         $this->assertEquals('oh hai', $response->getContent());
     }
@@ -199,7 +199,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $requirements = $route->getRequirements();
         $this->assertCount(1, $requirements);
         $this->assertEquals('[A-Za-z0-9_/.]+', $requirements['identifier']);
-        $action = $router->getAction($route);
+        $action = $router->resolveAction($route);
         $this->assertInstanceOf(ControllerRouteAction::class, $action);
         $controller = $action->getAction();
 

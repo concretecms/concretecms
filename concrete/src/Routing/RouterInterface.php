@@ -13,7 +13,7 @@ interface RouterInterface
      * @param Route $route
      * @return RouteActionInterface
      */
-    public function getAction(Route $route);
+    public function resolveAction(Route $route);
 
 
     /**

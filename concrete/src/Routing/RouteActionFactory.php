@@ -14,9 +14,24 @@ class RouteActionFactory implements RouteActionFactoryInterface
         if ($route->getAction() instanceof \Closure) {
             return new ClosureRouteAction($route->getAction());
         }
-        if (is_string($route->getAction())) {
-            return new ControllerRouteAction($route->getAction());
+
+        $action = $route->getAction();
+        $class = null;
+        $method = null;
+        if (is_string($action)) {
+            list($class, $method) = explode('::', $action);
+        } else {
+            $class = $action[0];
+            $method = $action[1];
         }
+
+        $reflected = new \ReflectionClass($class);
+        if ($reflected->isSubclassOf(AbstractController::class)) {
+            return new ControllerRouteAction($action);
+        }
+
+        $app = Facade::getFacadeApplication();
+        return new ApplicationRouteAction($app, [$class, $method]);
     }
 
 }

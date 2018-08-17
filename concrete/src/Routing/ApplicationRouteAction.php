@@ -10,12 +10,16 @@ class ApplicationRouteAction implements RouteActionInterface
 
     protected $app;
 
+
+    /**
+     * @var array
+     */
     protected $callback;
 
     /**
      * ApplicationRouteCallback constructor.
      */
-    public function __construct(Application $app, $callback)
+    public function __construct(Application $app, array $callback)
     {
         $this->app = $app;
         $this->callback = $callback;
@@ -41,8 +45,10 @@ class ApplicationRouteAction implements RouteActionInterface
 
     public function execute(Request $request, Route $route, $parameters)
     {
+        $callback = $this->callback;
+        $callback[0] = $this->app->make($callback[0]);
         // Call the resolved object method
-        return $this->app->call($this->callback, [$request, $route]);
+        return $this->app->call($callback, [$request, $route]);
     }
 
 }
