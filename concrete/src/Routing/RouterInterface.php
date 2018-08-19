@@ -83,4 +83,14 @@ interface RouterInterface
     public function getThemeByRoute($path);
 
     public function route($data);
+
+    /**
+     * Create a group of routes all bound by the same settings
+     *
+     * @param string $prefix
+     * @param callable|string $resolver Either a callable or a path to a file to load
+     * @param string|null $pkgHandle A package handle to search for the path in
+     * @return static
+     */
+    public function group($prefix, $resolver, $pkgHandle = null);
 }

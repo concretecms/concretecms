@@ -1,10 +1,12 @@
 <?php
+
 namespace Concrete\Core\System;
 
-use Localization;
-use Concrete\Core\Support\Facade\Facade;
-use Concrete\Core\Foundation\Environment;
+use Concrete\Core\API\Transformer\System\InfoTransformer;
 use Concrete\Core\Package\PackageList;
+use Concrete\Core\Support\Facade\Facade;
+use League\Fractal\TransformerAbstract;
+use Localization;
 
 class Info
 {
@@ -73,7 +75,6 @@ class Info
      */
     protected $dbVersion;
 
-
     public function __construct()
     {
         $loc = Localization::getInstance();
@@ -84,7 +85,7 @@ class Info
             $maxExecutionTime = ini_get('max_execution_time');
             @set_time_limit(5);
 
-            $this->installed = (bool) $app->isInstalled();
+            $this->installed = (bool)$app->isInstalled();
 
             $this->webRootDirectory = DIR_BASE;
 
@@ -94,13 +95,12 @@ class Info
             $this->dbVersion = $config->get('concrete.version_db');
             $this->versionInstalled = $config->get('concrete.version_installed');
 
-            $versions = ['Core Version - '. $this->codeVersion];
+            $versions = ['Core Version - ' . $this->codeVersion];
             if ($this->installed) {
                 $versions[] = 'Version Installed - ' . $this->versionInstalled;
             }
             $versions[] = 'Database Version - ' . $this->dbVersion;
             $this->coreVersions = implode("\n", $versions);
-
 
             $packages = [];
             if ($this->installed) {
@@ -138,7 +138,8 @@ class Info
             if ($config->get('concrete.cache.full_page_lifetime')) {
                 $cache[] = sprintf("Full Page Cache Lifetime - %s",
                     $config->get('concrete.cache.full_page_lifetime') == 'default' ?
-                        sprintf('Every %s (default setting).', $app->make('helper/date')->describeInterval($config->get('concrete.cache.lifetime')))
+                        sprintf('Every %s (default setting).',
+                            $app->make('helper/date')->describeInterval($config->get('concrete.cache.lifetime')))
                         :
                         (
                         $config->get('concrete.cache.full_page_lifetime') == 'forever' ?
@@ -198,7 +199,8 @@ class Info
             } else {
                 $section = 'phpinfo';
                 $phpinfo[$section] = [];
-                if (preg_match_all('#(?:<h2>(?:<a name=".*?">)?(.*?)(?:</a>)?</h2>)|(?:<tr(?: class=".*?")?><t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>(?:<t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>(?:<t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>)?)?</tr>)#s', $buffer, $matches, PREG_SET_ORDER)) {
+                if (preg_match_all('#(?:<h2>(?:<a name=".*?">)?(.*?)(?:</a>)?</h2>)|(?:<tr(?: class=".*?")?><t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>(?:<t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>(?:<t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>)?)?</tr>)#s',
+                    $buffer, $matches, PREG_SET_ORDER)) {
                     foreach ($matches as $match) {
                         if ($match[1] !== null && $match[1] !== '') {
                             $section = $match[1];
@@ -219,7 +221,8 @@ class Info
                     if (preg_match('/.*max_execution_time*/', $key)) {
                         continue;
                     }
-                    if (strpos($key, 'limit') === false && strpos($key, 'safe') === false && strpos($key, 'max') === false) {
+                    if (strpos($key, 'limit') === false && strpos($key, 'safe') === false && strpos($key,
+                            'max') === false) {
                         continue;
                     }
                     if (is_array($val)) {
@@ -248,26 +251,26 @@ class Info
             DIR_FILES_BLOCK_TYPES,
             DIR_FILES_CONTROLLERS,
             DIR_FILES_ELEMENTS,
-            DIR_APPLICATION.'/'.DIRNAME_ATTRIBUTES,
-            DIR_APPLICATION.'/'.DIRNAME_AUTHENTICATION,
+            DIR_APPLICATION . '/' . DIRNAME_ATTRIBUTES,
+            DIR_APPLICATION . '/' . DIRNAME_AUTHENTICATION,
             DIR_FILES_JOBS,
-            DIR_APPLICATION.'/'.DIRNAME_CSS,
-            DIR_APPLICATION.'/'.DIRNAME_JAVASCRIPT,
+            DIR_APPLICATION . '/' . DIRNAME_CSS,
+            DIR_APPLICATION . '/' . DIRNAME_JAVASCRIPT,
             DIR_FILES_EMAIL_TEMPLATES,
             DIR_FILES_CONTENT,
             DIR_FILES_THEMES,
             DIR_FILES_TOOLS,
-            DIR_APPLICATION.'/'.DIRNAME_PAGE_TEMPLATES,
-            DIR_APPLICATION.'/'.DIRNAME_VIEWS,
-            DIR_APPLICATION.'/'.DIRNAME_CLASSES,
-            DIR_APPLICATION.'/'.DIRNAME_MENU_ITEMS,
+            DIR_APPLICATION . '/' . DIRNAME_PAGE_TEMPLATES,
+            DIR_APPLICATION . '/' . DIRNAME_VIEWS,
+            DIR_APPLICATION . '/' . DIRNAME_CLASSES,
+            DIR_APPLICATION . '/' . DIRNAME_MENU_ITEMS,
         );
         foreach ($check as $loc) {
             if (is_dir($loc)) {
                 $contents = $fh->getDirectoryContents($loc, array(), true);
                 foreach ($contents as $f) {
-                    $item = str_replace(DIR_APPLICATION.'/', '', $f);
-                    $item = str_replace(DIR_BASE.'/', '', $item);
+                    $item = str_replace(DIR_APPLICATION . '/', '', $f);
+                    $item = str_replace(DIR_BASE . '/', '', $item);
                     $overrides[] = $item;
                 }
             }
