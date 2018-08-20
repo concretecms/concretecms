@@ -27,8 +27,10 @@ class AssociationView extends View
         $this->entry = $context->getEntry();
         $this->association = $this->control->getAssociation();
         $entity = $this->association->getTargetEntity();
-        $list = new EntryList($entity);
-        $this->allEntities = $list->getResults();
+        if ($control->getEntrySelectorMode() != AssociationControl::TYPE_ENTRY_SELECTOR) {
+            $list = new EntryList($entity);
+            $this->allEntities = $list->getResults();
+        }
 
         if (is_object($this->entry)) {
             $related = $this->entry->getAssociations();
