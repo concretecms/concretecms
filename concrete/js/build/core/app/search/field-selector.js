@@ -1,5 +1,4 @@
 /* jshint unused:vars, undef:true, browser:true, jquery:true */
-/* global ConcreteSearchFieldSelector */
 
 ;(function(global, $) {
     'use strict';
