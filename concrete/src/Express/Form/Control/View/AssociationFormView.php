@@ -3,13 +3,11 @@ namespace Concrete\Core\Express\Form\Control\View;
 
 use Concrete\Core\Entity\Express\Control\AssociationControl;
 use Concrete\Core\Entity\Express\Control\Control;
-use Concrete\Core\Express\EntryList;
 use Concrete\Core\Express\Form\Context\ContextInterface;
 use Concrete\Core\Filesystem\TemplateLocator;
 
 class AssociationFormView extends AssociationView
 {
-
     protected $association;
 
     public function __construct(ContextInterface $context, Control $control)
@@ -21,21 +19,22 @@ class AssociationFormView extends AssociationView
 
     /**
      * @param AssociationControl $control
+     *
      * @return string
      */
     protected function getFormFieldElement(AssociationControl $control)
     {
         $mode = $control->getEntrySelectorMode();
         $class = get_class($control->getAssociation());
-        $class = strtolower(str_replace(array('Concrete\\Core\\Entity\\Express\\', 'Association'), '', $class));
-        if (substr($class, -4) == 'many') {
-            if($mode == AssociationControl::TYPE_ENTRY_SELECTOR) {
+        $class = strtolower(str_replace(['Concrete\\Core\\Entity\\Express\\', 'Association'], '', $class));
+        if ('many' == substr($class, -4)) {
+            if (AssociationControl::TYPE_ENTRY_SELECTOR == $mode) {
                 return 'entry_selector_multiple';
             } else {
                 return 'select_multiple';
             }
         } else {
-            if($mode == AssociationControl::TYPE_ENTRY_SELECTOR) {
+            if (AssociationControl::TYPE_ENTRY_SELECTOR == $mode) {
                 return 'entry_selector';
             } else {
                 return 'select';
@@ -56,9 +55,7 @@ class AssociationFormView extends AssociationView
             }
         }
         $locator = new TemplateLocator('association/' . $element);
+
         return $locator;
     }
-
-
-
 }
