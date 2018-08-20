@@ -4,6 +4,8 @@ namespace Concrete\Controller\Backend\Express;
 use Concrete\Core\Controller\AbstractController;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Express\EntryList;
+use Concrete\Core\Legacy\Pagination;
+use Concrete\Core\Search\Pagination\PaginationFactory;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -44,7 +46,9 @@ class Entry extends AbstractController
             if (is_object($entity)) {
                 $list = new EntryList($entity);
                 $list->filterByKeywords($_REQUEST['keyword']);
-                $entries = $list->getResults();
+                $factory = new PaginationFactory($this->getRequest());
+                $pagination = $factory->createPaginationObject($list, PaginationFactory::PERMISSIONED_PAGINATION_STYLE_PAGER);
+                $entries = $pagination->getCurrentPageResults();
             }
         }
 
