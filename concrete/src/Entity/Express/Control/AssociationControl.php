@@ -14,6 +14,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class AssociationControl extends Control
 {
+    const TYPE_HTML_INPUT = 0;
+    const TYPE_ENTRY_SELECTOR = 5;
+
     /**
      * @var \Concrete\Core\Entity\Express\Association
      * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Express\Association", inversedBy="controls")
@@ -24,6 +27,19 @@ class AssociationControl extends Control
      * @ORM\Column(type="string", nullable=true)
      */
     protected $association_entity_label_mask;
+
+    /**
+     * The association selector mode (one of the self::TYPE_... constants).
+     *
+     * @ORM\Column(type="integer", options={"unsigned": true, "default": 0})
+     * @var integer
+     */
+    protected $entry_selector_mode;
+
+    public function __construct()
+    {
+        $this->entry_selector_mode = self::TYPE_HTML_INPUT;
+    }
 
     /**
      * @return mixed
@@ -47,6 +63,22 @@ class AssociationControl extends Control
     public function setAssociationEntityLabelMask($association_entity_label_mask)
     {
         $this->association_entity_label_mask = $association_entity_label_mask;
+    }
+
+    /**
+     * @return int
+     */
+    public function getEntrySelectorMode()
+    {
+        return $this->entry_selector_mode;
+    }
+
+    /**
+     * @param int $entry_selector_mode
+     */
+    public function setEntrySelectorMode($entry_selector_mode)
+    {
+        $this->entry_selector_mode = $entry_selector_mode;
     }
 
     /**

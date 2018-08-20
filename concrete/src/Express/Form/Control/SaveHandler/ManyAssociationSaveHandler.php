@@ -6,6 +6,7 @@ use Concrete\Core\Entity\Express\Control\Control;
 use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Express\Association\Applier;
 use Concrete\Core\Express\ObjectManager;
+use Concrete\Core\Support\Facade\Application;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -24,6 +25,10 @@ abstract class ManyAssociationSaveHandler implements SaveHandlerInterface
     {
         $r = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entry');
         $entryIDs = $request->request->get('express_association_' . $control->getId());
+        $vals = Application::getFacadeApplication()->make('helper/validation/strings');
+        if (!is_array($entryIDs) && $vals->notempty($entryIDs)) {
+            $entryIDs = explode(',', $entryIDs);
+        }
         $associatedEntries = array();
         if (is_array($entryIDs)) {
             foreach($entryIDs as $entryID) {

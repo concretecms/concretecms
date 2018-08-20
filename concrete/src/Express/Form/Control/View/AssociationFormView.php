@@ -25,12 +25,21 @@ class AssociationFormView extends AssociationView
      */
     protected function getFormFieldElement(AssociationControl $control)
     {
+        $mode = $control->getEntrySelectorMode();
         $class = get_class($control->getAssociation());
         $class = strtolower(str_replace(array('Concrete\\Core\\Entity\\Express\\', 'Association'), '', $class));
         if (substr($class, -4) == 'many') {
-            return 'select_multiple';
+            if($mode == AssociationControl::TYPE_ENTRY_SELECTOR) {
+                return 'entry_selector_multiple';
+            } else {
+                return 'select_multiple';
+            }
         } else {
-            return 'select';
+            if($mode == AssociationControl::TYPE_ENTRY_SELECTOR) {
+                return 'entry_selector';
+            } else {
+                return 'select';
+            }
         }
     }
 
