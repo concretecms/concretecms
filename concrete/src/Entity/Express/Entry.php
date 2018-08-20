@@ -241,9 +241,6 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
     }
 
 
-    /**
-     * @deprecated See \Concrete\Core\Entity\Express\Entry::getEntryAssociation
-     */
     public function getAssociation($handle)
     {
         if ($handle instanceof Association) {

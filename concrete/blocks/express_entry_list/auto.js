@@ -14,7 +14,8 @@ $(function() {
 
     ConcreteExpressEntryListBlockForm.prototype.initEntitySelector = function() {
         var $source = $('#ccm-tab-content-search'),
-            $customizeContainer = $('#ccm-tab-content-results div[data-container=customize-results]');
+            $searchFieldSelectorContainer = $('div[data-container=search-field-selector]');
+            $customizeContainer = $('div[data-container=customize-results]');
             _searchAttributesTemplate = _.template($('script[data-template=express-attribute-search-list]').html()),
             _searchAssociationsTemplate = _.template($('script[data-template=express-association-search-list]').html()),
             _linkedAttributesTemplate = _.template($('script[data-template=express-attribute-link-list]').html()),
@@ -27,6 +28,7 @@ $(function() {
                     url: $(this).attr('data-action'),
                     data: {'exEntityID': $(this).val()},
                     success: function(r) {
+                        $searchFieldSelectorContainer.html(r.searchFields);
                         $customizeContainer.html(r.customize);
                         my.setSearchableProperties(r.attributes);
                         my.setSearchableAssociations(r.associations);
