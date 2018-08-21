@@ -217,11 +217,11 @@ class Stack extends Page implements ExportableInterface
     }
 
     /**
-     * @param |\Concrete\Core\Page\Collection $nc
-     * @param bool $preserveUserID
-     * @param \Concrete\Core\Entity\Site\Site $site
+     * {@inheritdoc}
      *
-     * @return Stack
+     * @see \Concrete\Core\Page\Page::duplicate()
+     * 
+     * @return static
      */
     public function duplicate($nc = null, $preserveUserID = false, TreeInterface $site = null)
     {
