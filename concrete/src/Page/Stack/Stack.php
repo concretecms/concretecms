@@ -14,6 +14,8 @@ use Core;
 use Concrete\Core\Page\Page;
 use PageType;
 use Concrete\Core\Entity\Site\Site;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Database\Connection\Connection;
 
 /**
  * Class Stack.
@@ -215,11 +217,11 @@ class Stack extends Page implements ExportableInterface
     }
 
     /**
-     * @param |\Concrete\Core\Page\Collection $nc
-     * @param bool $preserveUserID
-     * @param \Concrete\Core\Entity\Site\Site $site
+     * {@inheritdoc}
      *
-     * @return Stack
+     * @see \Concrete\Core\Page\Page::duplicate()
+     * 
+     * @return static
      */
     public function duplicate($nc = null, $preserveUserID = false, TreeInterface $site = null)
     {
@@ -505,6 +507,17 @@ class Stack extends Page implements ExportableInterface
         Area::getOrCreate($localizedStackPage, STACKS_AREA_NAME);
         $localizedStackCID = $localizedStackPage->getCollectionID();
         $db = Database::connection();
+        if ($localizedStackPage->getCollectionInheritance() === 'PARENT') {
+            $site = $section->getSite();
+            if ($site) {
+                $defaultSiteTree = $site->getSiteTreeObject();
+                if ($defaultSiteTree) {
+                    if ($localizedStackPage->getPermissionsCollectionID() == $defaultSiteTree->getSiteHomePageID()) {
+                        $db->executeQuery('update Pages set cInheritPermissionsFromCID = ? where cID = ?', [$section->getCollectionID(), $localizedStackPage->getCollectionID()]);
+                    }
+                }
+            }
+        }
         $db->executeQuery('
             insert into Stacks (stName, cID, stType, stMultilingualSection) values (?, ?, ?, ?)',
             [
@@ -515,7 +528,7 @@ class Stack extends Page implements ExportableInterface
             ]
         );
         $localizedStack = static::getByID($localizedStackCID);
-
+            
         return $localizedStack;
     }
 }
