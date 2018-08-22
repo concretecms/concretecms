@@ -322,6 +322,14 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
                     $this->redirect($this->getBackURL($entity));
                 }
             }
+
+            if ($entry === null) {
+                if (method_exists($this, 'create_entry')) {
+                    $this->create_entry($id);
+                }
+            } else {
+                $this->edit_entry($entry->getID());
+            }
         } else {
             throw new \Exception(t('Invalid form.'));
         }
