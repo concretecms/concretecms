@@ -9,11 +9,19 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class Users extends Standard
 {
+    /**
+     * @return \Concrete\Controller\Dialog\Search\AdvancedSearch
+     */
     protected function getAdvancedSearchDialogController()
     {
         return $this->app->make(AdvancedSearch::class);
     }
 
+    /**
+     * @param int $presetID
+     *
+     * @return \Concrete\Core\Entity\Search\SavedUserSearch|null
+     */
     protected function getSavedSearchPreset($presetID)
     {
         $em = $this->app->make(EntityManagerInterface::class);
@@ -21,6 +29,9 @@ class Users extends Standard
         return $em->find(SavedUserSearch::class, $presetID);
     }
 
+    /**
+     * @return KeywordsField[]
+     */
     protected function getBasicSearchFieldsFromRequest()
     {
         $fields = parent::getBasicSearchFieldsFromRequest();
@@ -32,6 +43,9 @@ class Users extends Standard
         return $fields;
     }
 
+    /**
+     * @return bool
+     */
     protected function canAccess()
     {
         $dh = $this->app->make('helper/concrete/user');
