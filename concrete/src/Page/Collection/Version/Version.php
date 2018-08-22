@@ -851,7 +851,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
      */
     public function getPermissionResponseClassName()
     {
-        return '\\Concrete\\Core\\Permission\\Response\\CollectionVersionResponse';
+        return \Concrete\Core\Permission\Response\CollectionVersionResponse::class;
     }
 
     /**
@@ -861,7 +861,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
      */
     public function getPermissionAssignmentClassName()
     {
-        return '\\Concrete\\Core\\Permission\\Assignment\\PageAssignment';
+        return \Concrete\Core\Permission\Assignment\PageAssignment::class;
     }
 
     /**
@@ -885,7 +885,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
     {
         $app = Application::getFacadeApplication();
 
-        return $app->make('\Concrete\Core\Attribute\Category\PageCategory');
+        return $app->make(\Concrete\Core\Attribute\Category\PageCategory::class);
     }
 
     /**
