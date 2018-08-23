@@ -13,6 +13,7 @@ use Concrete\Core\Express\Entry\Search\Result\Result;
 use Concrete\Core\Express\EntryList;
 use Concrete\Core\Express\Search\Field\AssociationField;
 use Concrete\Core\Express\Search\ColumnSet\DefaultSet;
+use Concrete\Core\Express\Search\SearchProvider;
 use Concrete\Core\Search\Column\AttributeKeyColumn;
 use Concrete\Core\Search\Field\ManagerFactory;
 use Concrete\Core\Search\Result\ItemColumn;
@@ -70,7 +71,7 @@ class Controller extends BlockController
         if (!$entityID) {
             $entityID = $this->exEntityID;
         }
-        $entity = $this->entityManager->find('Concrete\Core\Entity\Express\Entity', $entityID);
+        $entity = $this->entityManager->find(Entity::class, $entityID);
 
         if ($entity) {
             $manager = $this->getSearchFieldManager($entity);
@@ -91,7 +92,7 @@ class Controller extends BlockController
             /**
              * @var Entity
              */
-            $entity = $this->entityManager->find('Concrete\Core\Entity\Express\Entity', $this->exEntityID);
+            $entity = $this->entityManager->find(Entity::class, $this->exEntityID);
             if (is_object($entity)) {
                 if ($this->searchProperties) {
                     $searchPropertiesSelected = (array) json_decode($this->searchProperties);
@@ -114,7 +115,7 @@ class Controller extends BlockController
                 $searchProperties = $this->getSearchPropertiesJsonArray($entity);
                 $searchAssociations = $this->getSearchAssociationsJsonArray($entity);
                 $columns = unserialize($this->columns);
-                $provider = \Core::make('Concrete\Core\Express\Search\SearchProvider', [$entity, $entity->getAttributeKeyCategory()]);
+                $provider = \Core::make(SearchProvider::class, [$entity, $entity->getAttributeKeyCategory()]);
                 if ($columns) {
                     $provider->setColumnSet($columns);
                 }
@@ -165,7 +166,7 @@ class Controller extends BlockController
             if ($association instanceof ManyToManyAssociation || $association instanceof ManyToOneAssociation) {
                 $o = new \stdClass();
                 $o->associationID = $association->getId();
-                $o->associationName = $association->getTargetEntity()->getName();
+                $o->associationName = $association->getTargetEntity()->getEntityDisplayName();
                 $select[] = $o;
             }
         }
@@ -175,7 +176,7 @@ class Controller extends BlockController
 
     public function view()
     {
-        $entity = $this->entityManager->find('Concrete\Core\Entity\Express\Entity', $this->exEntityID);
+        $entity = $this->entityManager->find(Entity::class, $this->exEntityID);
         if (is_object($entity)) {
             $category = $entity->getAttributeKeyCategory();
             $list = new EntryList($entity);
@@ -312,7 +313,7 @@ class Controller extends BlockController
 
         $entity = $this->entityManager->find('Concrete\Core\Entity\Express\Entity', $data['exEntityID']);
         if (is_object($entity) && is_array($this->request->request->get('column'))) {
-            $provider = $this->app->make('Concrete\Core\Express\Search\SearchProvider', [$entity, $entity->getAttributeKeyCategory()]);
+            $provider = $this->app->make(SearchProvider::class, [$entity, $entity->getAttributeKeyCategory()]);
             $set = $this->app->make('Concrete\Core\Express\Search\ColumnSet\ColumnSet');
             $available = $provider->getAvailableColumnSet();
             foreach ($this->request->request->get('column') as $key) {
@@ -339,9 +340,9 @@ class Controller extends BlockController
     {
         $exEntityID = $this->request->request->get('exEntityID');
         if ($exEntityID) {
-            $entity = $this->entityManager->find('Concrete\Core\Entity\Express\Entity', $exEntityID);
+            $entity = $this->entityManager->find(Entity::class, $exEntityID);
             if (is_object($entity)) {
-                $provider = \Core::make('Concrete\Core\Express\Search\SearchProvider', [$entity, $entity->getAttributeKeyCategory()]);
+                $provider = \Core::make(SearchProvider::class, [$entity, $entity->getAttributeKeyCategory()]);
                 $element = new CustomizeResults($provider);
                 $element->setIncludeNumberOfResults(false);
                 $r = new \stdClass();
@@ -370,7 +371,7 @@ class Controller extends BlockController
 
     public function loadData()
     {
-        $r = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entity');
+        $r = $this->entityManager->getRepository(Entity::class);
         $entityObjects = $r->findAll();
         $entities = ['' => t("** Choose Entity")];
         foreach ($entityObjects as $entity) {

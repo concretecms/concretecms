@@ -39,7 +39,7 @@ if ($entity) { ?>
                         </div>
                     <?php } ?>
                     <?php foreach ($tableSearchAssociations as $association) { ?>
-                        <h4><?= $association->getTargetEntity()->getName() ?></h4>
+                        <h4><?= $association->getTargetEntity()->getEntityDisplayName() ?></h4>
                         <div>
                             <?php
                             $field = new \Concrete\Core\Express\Search\Field\AssociationField($association);
@@ -127,7 +127,7 @@ if ($entity) { ?>
             <?php } ?>
         </style>
     <?php } else { ?>
-        <p><?=t('No "%s" entries can be found', $entity->getName())?>
+        <p><?=t('No "%s" entries can be found', $entity->getEntityDisplayName())?>
     <?php } ?>
 
     <?php if ($enableKeywordSearch) { ?>
