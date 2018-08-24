@@ -284,6 +284,11 @@ return [
         '/ccm/system/dialogs/area/layout/presets/{arLayoutID}' => ['\Concrete\Controller\Dialog\Area\Layout\Presets::view'],
         '/ccm/system/dialogs/area/layout/presets/{arLayoutID}/submit' => ['\Concrete\Controller\Dialog\Area\Layout\Presets::submit'],
         '/ccm/system/dialogs/area/layout/presets/get/{cID}/{arLayoutPresetID}' => ['\Concrete\Controller\Dialog\Area\Layout\Presets::getPresetData'],
+        '/ccm/system/dialogs/area/edit/add_from_stack' => ['\Concrete\Controller\Dialog\Area\Edit\AddFromStack::view'],
+        '/ccm/system/dialogs/area/edit/add_stack_contents' => ['\Concrete\Controller\Dialog\Area\Edit::AddStackContents::view'],
+        '/ccm/system/dialogs/area/edit/paste' => ['\Concrete\Controller\Dialog\Area\Edit\Paste::view'],
+        '/ccm/system/dialogs/area/edit/permissions' => ['\Concrete\Controller\Dialog\Area\Edit\Permissions::view'],
+        '/ccm/system/dialogs/area/edit/advanced_permissions' => ['\Concrete\Controller\Dialog\Area\Edit\AdvancedPermissions::view'],
 
         '/ccm/system/dialogs/block/aliasing/' => ['\Concrete\Controller\Dialog\Block\Aliasing::view'],
         '/ccm/system/dialogs/block/aliasing/submit' => ['\Concrete\Controller\Dialog\Block\Aliasing::submit'],
