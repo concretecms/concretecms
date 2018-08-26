@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Express\Form;
 
 use Concrete\Core\Entity\Express\Entry;
@@ -41,7 +42,6 @@ class Renderer
         $this->context = $context;
     }
 
-
     /**
      * @param \Concrete\Core\Entity\Express\Entry|null $entry
      *
@@ -55,8 +55,8 @@ class Renderer
 
         /** @var \Concrete\Core\Form\Control\View $view */
         $view = $this->form->getControlView($this->context);
+
         $renderer = $view->getControlRenderer();
         $renderer->render();
     }
-
 }
