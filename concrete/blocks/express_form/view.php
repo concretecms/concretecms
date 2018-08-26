@@ -28,35 +28,30 @@ defined('C5_EXECUTE') or die('Access Denied.');
                 </div>
             <?php } ?>
 
-
             <form enctype="multipart/form-data" class="form-stacked" method="post" action="<?=$view->action('submit')?>#form<?=$bID?>">
-            <?php
-            $renderer->render();
+                <?php
+                $renderer->render();
 
-            if ($displayCaptcha) {
-                ?>
-                <div class="form-group captcha">
-                    <?php
-                    $captchaLabel = $captcha->label();
-                    if (!empty($captchaLabel)) {
-                        ?>
-                        <label class="control-label"><?php echo $captchaLabel;
-                            ?></label>
-                        <?php
-
-                    }
+                if ($displayCaptcha) {
                     ?>
-                    <div><?php  $captcha->display(); ?></div>
-                    <div><?php  $captcha->showInput(); ?></div>
+                    <div class="form-group captcha">
+                        <?php
+                        $captchaLabel = $captcha->label();
+                        if (!empty($captchaLabel)) {
+                            ?>
+                            <label class="control-label"><?php echo $captchaLabel; ?></label>
+                            <?php
+                        }
+                        ?>
+                        <div><?php $captcha->display(); ?></div>
+                        <div><?php $captcha->showInput(); ?></div>
+                    </div>
+                <?php } ?>
+
+                <div class="form-actions">
+                    <button type="submit" name="Submit" class="btn btn-primary"><?=t($submitLabel)?></button>
                 </div>
-            <?php } ?>
-
-            <div class="form-actions">
-                <button type="submit" name="Submit" class="btn btn-primary"><?=t($submitLabel)?></button>
-            </div>
-
             </form>
-
         </div>
     <?php } else { ?>
         <p><?=t('This form is unavailable.')?></p>
