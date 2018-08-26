@@ -30,7 +30,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
             <form enctype="multipart/form-data" class="form-stacked" method="post" action="<?=$view->action('submit')?>#form<?=$bID?>">
             <?php
-            print $renderer->render();
+            $renderer->render();
 
             if ($displayCaptcha) {
                 $captcha = \Core::make('helper/validation/captcha');
