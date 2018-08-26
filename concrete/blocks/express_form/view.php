@@ -7,6 +7,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 /** @var string|null $success */
 /** @var string $bID */
 /** @var \Concrete\Core\Error\ErrorList\ErrorList|null $error */
+/** @var \Concrete\Core\Captcha\CaptchaInterface|null $captcha */
 /** @var string $displayCaptcha "0" or "1" */
 /** @var string $submitLabel */
 ?>
@@ -33,7 +34,6 @@ defined('C5_EXECUTE') or die('Access Denied.');
             $renderer->render();
 
             if ($displayCaptcha) {
-                $captcha = \Core::make('helper/validation/captcha');
                 ?>
                 <div class="form-group captcha">
                     <?php
