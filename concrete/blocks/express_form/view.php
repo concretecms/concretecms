@@ -1,4 +1,15 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php
+
+defined('C5_EXECUTE') or die('Access Denied.');
+
+/** @var \Concrete\Core\Block\View\BlockView $view */
+/** @var \Concrete\Core\Express\Form\Renderer|null $renderer */
+/** @var string|null $success */
+/** @var string $bID */
+/** @var \Concrete\Core\Error\ErrorList\ErrorList|null $error */
+/** @var string $displayCaptcha "0" or "1" */
+/** @var string $submitLabel */
+?>
 <div class="ccm-block-express-form">
     <?php if (isset($renderer)) { ?>
         <div class="ccm-form">
