@@ -237,6 +237,13 @@
                     // the pages we load while having access to the jqdialog object.
                     // Ensure that the dialog is open prior to evaluating javascript.
                     $('<div />').jqdialog(finalSettings).html(r).jqdialog('open');
+                },
+                error: function(xhr, status, error) {
+                    var msg = error, json = xhr ? xhr.responseJSON : null;
+                    if (json && json.error) {
+                        msg = json.errors instanceof Array ? json.errors.join('\n') : json.error;
+                    }
+                    window.alert(msg);
                 }
             });
         }
