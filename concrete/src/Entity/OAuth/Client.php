@@ -32,6 +32,12 @@ class Client implements ClientEntityInterface
     protected $name;
 
     /**
+     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\User\User")
+     * @ORM\JoinColumn(name="uID", referencedColumnName="uID", onDelete="SET NULL")
+     **/
+    protected $user;
+
+    /**
      * @var string|string[]
      * @ORM\Column(type="string")
      */
@@ -96,4 +102,22 @@ class Client implements ClientEntityInterface
     {
         $this->redirectUri = $redirectUri;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param mixed $user
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+    }
+
+
 }

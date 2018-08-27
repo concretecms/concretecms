@@ -24,5 +24,6 @@ class Version20180816210727 extends AbstractMigration implements RepeatableMigra
         ]);
         $this->createSinglePage('/dashboard/system/api', 'API');
         $this->createSinglePage('/dashboard/system/api/settings', 'API Settings');
+        $this->createSinglePage('/dashboard/users/oauth2', 'OAuth2 Integrations', ['exclude_nav' => true, 'exclude_search_index' => true]);
     }
 }
