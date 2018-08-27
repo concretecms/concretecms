@@ -165,7 +165,8 @@ $(function() {
         $.concreteAjax({
             url: '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/conversations/delete_message',
             data: {
-                'cnvMessageID': $(this).attr('data-message-id')
+                'cnvMessageID': $(this).attr('data-message-id'),
+                'token': '<?= $valt->generate('delete_conversation_message'); ?>'
             },
             success: function(r) {
                 window.location.reload();
