@@ -75,6 +75,7 @@ abstract class DashboardExpressEntityPageController extends DashboardExpressEntr
             $form
         );
         $this->set('renderer', $renderer);
+        $this->set('pageTitle', t('Add %s', $entity->getName()));
         $this->render('/dashboard/express/entries/create', false);
     }
 
