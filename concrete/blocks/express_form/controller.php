@@ -38,6 +38,7 @@ use Concrete\Core\Tree\Type\ExpressEntryResults;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Id\UuidGenerator;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Concrete\Core\Permission\Checker;
 
 class Controller extends BlockController implements NotificationProviderInterface
 {
@@ -622,7 +623,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
         if ($addFilesToFolderFromPost && $addFilesToFolderFromPost != $existingAddFilesToFolder) {
             $filesystem = new Filesystem();
             $addFilesToFolder = $filesystem->getFolder($addFilesToFolderFromPost);
-            $fp = new \Permissions($addFilesToFolder);
+            $fp = new Checker($addFilesToFolder);
             if ($fp->canSearchFiles()) {
                 $data['addFilesToFolder'] = $addFilesToFolderFromPost;
             }
@@ -684,11 +685,11 @@ class Controller extends BlockController implements NotificationProviderInterfac
         $tree = ExpressEntryResults::get();
         $this->set('tree', $tree);
         $addFilesToFolder = null;
-        
+
         if ($this->addFilesToFolder) {
             $filesystem = new Filesystem();
             $addFilesToFolder = $filesystem->getFolder($this->addFilesToFolder);
-            $fp = new \Permissions($addFilesToFolder);
+            $fp = new Checker($addFilesToFolder);
             if ($fp->canSearchFiles()) {
                 $this->set('addFilesToFolder', $addFilesToFolder);
             }
