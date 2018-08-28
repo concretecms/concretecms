@@ -108,16 +108,12 @@ class Controller extends BlockController implements NotificationProviderInterfac
 
     public function add()
     {
-        $c = $this->request->getCurrentPage();
-        $this->set('formName', $c->getCollectionName());
+        $this->set('formName', $this->request->getCurrentPage()->getCollectionName());
         $this->set('submitLabel', t('Submit'));
         $this->set('thankyouMsg', t('Thanks!'));
         $this->edit();
         $this->set('resultsFolder', $this->get('formResultsRootFolderNodeID'));
-
-        $filesystem = new Filesystem();
-        $addFilesToFolder = $filesystem->getRootFolder();
-        $this->set('addFilesToFolder', $addFilesToFolder);
+        $this->set('addFilesToFolder', (new Filesystem())->getRootFolder());
     }
 
     public function getNotifications()
@@ -154,7 +150,6 @@ class Controller extends BlockController implements NotificationProviderInterfac
 		    }
 	    }
     }
-
 
     public function action_submit($bID = null)
     {
@@ -331,6 +326,13 @@ class Controller extends BlockController implements NotificationProviderInterfac
         return new JsonResponse($control);
     }
 
+    /**
+     * @param \Concrete\Core\Attribute\Controller $controller
+     * @param ExpressKey $key
+     * @param array $post
+     *
+     * @return ExpressKey
+     */
     protected function saveAttributeKeySettings($controller, ExpressKey $key, $post)
     {
         $settings = $controller->saveKey($post);
@@ -742,6 +744,12 @@ class Controller extends BlockController implements NotificationProviderInterfac
         $this->app->shutdown();
     }
 
+    /**
+     * @return array [
+     *  Key: string, asset type
+     *  Value: string, the URL of the asset
+     * ]
+     */
     protected function getAssetsDefinedDuringOutput()
     {
         $ag = ResponseAssetGroup::get();
@@ -816,6 +824,9 @@ class Controller extends BlockController implements NotificationProviderInterfac
         $this->app->shutdown();
     }
 
+    /**
+     * @return \Concrete\Core\Entity\Express\Form|null
+     */
     protected function getFormEntity()
     {
         $entityManager = $this->app->make(EntityManagerInterface::class);
