@@ -27,11 +27,14 @@ use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Set\Set;
 use Concrete\Core\Form\Context\ContextFactory;
 use Concrete\Core\Http\ResponseAssetGroup;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Support\Facade\Express;
+use Concrete\Core\Support\Facade\Url;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\ExpressEntryCategory;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Id\UuidGenerator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -66,13 +69,13 @@ class Controller extends BlockController implements NotificationProviderInterfac
 
     protected function clearSessionControls()
     {
-        $session = \Core::make('session');
+        $session = $this->app->make('session');
         $session->remove('block.express_form.new');
     }
 
     public function add()
     {
-        $c = \Page::getCurrentPage();
+        $c = $this->request->getCurrentPage();
         $this->set('formName', $c->getCollectionName());
         $this->set('submitLabel', t('Submit'));
         $this->set('thankyouMsg', t('Thanks!'));
@@ -106,7 +109,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
 	    $form = $this->getFormEntity();
 	    if (is_object($form)) {
 		    $entity = $form->getEntity();
-		    $entityManager = \Core::make('database/orm')->entityManager();
+		    $entityManager = $this->app->make(EntityManagerInterface::class);
 		    // Important – are other blocks in the system using this form? If so, we don't want to delete it!
 		    $db = $entityManager->getConnection();
 		    $r = $db->fetchColumn('select count(bID) from btExpressForm where bID <> ? and exFormID = ?', [$this->bID, $this->exFormID]);
@@ -121,11 +124,11 @@ class Controller extends BlockController implements NotificationProviderInterfac
     public function action_submit($bID = null)
     {
         if ($this->bID == $bID) {
-            $entityManager = \Core::make('database/orm')->entityManager();
+            $entityManager = $this->app->make(EntityManagerInterface::class);
             $form = $this->getFormEntity();
             if (is_object($form)) {
 
-                $express = \Core::make('express');
+                $express = $this->app->make('express');
                 $entity = $form->getEntity();
                 /**
                  * @var $controller ControllerInterface
@@ -134,7 +137,9 @@ class Controller extends BlockController implements NotificationProviderInterfac
                 $processor = $controller->getFormProcessor();
                 $validator = $processor->getValidator($this->request);
                 if ($this->displayCaptcha) {
-                    $validator->addRoutine(new CaptchaRoutine(\Core::make('helper/validation/captcha')));
+                    $validator->addRoutine(new CaptchaRoutine(
+                        $this->app->make('helper/validation/captcha'))
+                    );
                 }
 
                 $validator->validate($form, ProcessorInterface::REQUEST_TYPE_ADD);
@@ -151,7 +156,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
                     $values = $entity->getAttributeKeyCategory()->getAttributeValues($entry);
 
                     // Check antispam
-                    $antispam = \Core::make('helper/validation/antispam');
+                    $antispam = $this->app->make('helper/validation/antispam');
                     $submittedData = '';
                     foreach($values as $value) {
                         $submittedData .= $value->getAttributeKey()->getAttributeKeyDisplayName('text') . ":\r\n";
@@ -163,8 +168,8 @@ class Controller extends BlockController implements NotificationProviderInterfac
                         $entityManager->refresh($entry);
                         $entityManager->remove($entry);
                         $entityManager->flush();
-                        $c = \Page::getCurrentPage();
-                        $r = Redirect::page($c);
+
+                        $r = Redirect::page($this->request->getCurrentPage());
                         $r->setTargetUrl($r->getTargetUrl() . '#form' . $this->bID);
                         return $r;
                     }
@@ -207,7 +212,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
 
                     $r = null;
                     if ($this->redirectCID > 0) {
-                        $c = \Page::getByID($this->redirectCID);
+                        $c = Page::getByID($this->redirectCID);
                         if (is_object($c) && !$c->isError()) {
                             $r = Redirect::page($c);
                             $r->setTargetUrl($r->getTargetUrl() . '?form_success=1');
@@ -215,8 +220,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
                     }
 
                     if (!$r) {
-                        $c = \Page::getCurrentPage();
-                        $url = \URL::to($c, 'form_success', $this->bID);
+                        $url = Url::to($this->request->getCurrentPage(), 'form_success', $this->bID);
                         $r = Redirect::to($url);
                         $r->setTargetUrl($r->getTargetUrl() . '#form' . $this->bID);
                     }
@@ -236,9 +240,9 @@ class Controller extends BlockController implements NotificationProviderInterfac
 
     public function action_add_control()
     {
-        $entityManager = \Core::make('database/orm')->entityManager();
+        $entityManager = $this->app->make(EntityManagerInterface::class);
         $post = $this->request->request->all();
-        $session = \Core::make('session');
+        $session = $this->app->make('session');
         $controls = $session->get('block.express_form.new');
 
         if (!is_array($controls)) {
@@ -260,7 +264,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
                     }
                     $key->setAttributeType($type);
                     if (!$post['question']) {
-                        $e = \Core::make('error');
+                        $e = $this->app->make('error');
                         $e->add(t('You must give this question a name.'));
                         return new JsonResponse($e);
                     }
@@ -283,7 +287,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
         }
 
         if (!isset($control)) {
-            $e = \Core::make('error');
+            $e = $this->app->make('error');
             $e->add(t('You must choose a valid field type.'));
             return new JsonResponse($e);
         } else {
@@ -306,9 +310,9 @@ class Controller extends BlockController implements NotificationProviderInterfac
 
     public function action_update_control()
     {
-        $entityManager = \Core::make('database/orm')->entityManager();
+        $entityManager = $this->app->make(EntityManagerInterface::class);
         $post = $this->request->request->all();
-        $session = \Core::make('session');
+        $session = $this->app->make('session');
 
         $sessionControls = $session->get('block.express_form.new');
         if (is_array($sessionControls)) {
@@ -333,7 +337,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
                     $key = $control->getAttributeKey();
                     $key->setAttributeKeyName($post['question']);
                     if (!$post['question']) {
-                        $e = \Core::make('error');
+                        $e = $this->app->make('error');
                         $e->add(t('You must give this question a name.'));
                         return new JsonResponse($e);
                     }
@@ -358,7 +362,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
         }
 
         if (!is_object($type)) {
-            $e = \Core::make('error');
+            $e = $this->app->make('error');
             $e->add(t('You must choose a valid field type.'));
             return new JsonResponse($e);
         } else {
@@ -375,8 +379,8 @@ class Controller extends BlockController implements NotificationProviderInterfac
             return parent::save($data);
         }
         $requestControls = (array) $this->request->request->get('controlID');
-        $entityManager = \Core::make('database/orm')->entityManager();
-        $session = \Core::make('session');
+        $entityManager = $this->app->make(EntityManagerInterface::class);
+        $session = $this->app->make('session');
         $sessionControls = $session->get('block.express_form.new');
 
         $name = $data['formName'] ? $data['formName'] : t('Form');
@@ -384,7 +388,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
         if (!$this->exFormID) {
 
             // This is a new submission.
-            $c = \Page::getCurrentPage();
+            $c = Page::getCurrentPage();
 
             // Create a results node
             $node = ExpressEntryCategory::getNodeByName(self::FORM_RESULTS_CATEGORY_NAME);
@@ -555,7 +559,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
 
         $entityManager->flush();
 
-        $category = new ExpressCategory($entity, \Core::make('app'), $entityManager);
+        $category = new ExpressCategory($entity, $this->app, $entityManager);
         $indexer = $category->getSearchIndexer();
         foreach($indexKeys as $key) {
             $entityManager->refresh($key->getAttributeType()); // The key might not be fully initialized and it might be coming from session and might not have all the right info in it. This is to fix a bug where packaged attribute types weren't being seen as being in a package because the package handle property on the object wasn't set.
@@ -690,7 +694,8 @@ class Controller extends BlockController implements NotificationProviderInterfac
         if (isset($obj)) {
             return new JsonResponse($obj);
         }
-        \Core::make('app')->shutdown();
+
+        $this->app->shutdown();
     }
 
     protected function getAssetsDefinedDuringOutput()
@@ -709,8 +714,8 @@ class Controller extends BlockController implements NotificationProviderInterfac
 
     public function action_get_control()
     {
-        $entityManager = \Core::make('database/orm')->entityManager();
-        $session = \Core::make('session');
+        $entityManager = $this->app->make(EntityManagerInterface::class);
+        $session = $this->app->make('session');
         $sessionControls = $session->get('block.express_form.new');
         if (is_array($sessionControls)) {
             foreach($sessionControls as $sessionControl) {
@@ -722,7 +727,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
         }
 
         if (!isset($control)) {
-            $control = $entityManager->getRepository('Concrete\Core\Entity\Express\Control\Control')
+            $control = $entityManager->getRepository(\Concrete\Core\Entity\Express\Control\Control::class)
                 ->findOneById($this->request->query->get('control'));
         }
 
@@ -761,14 +766,15 @@ class Controller extends BlockController implements NotificationProviderInterfac
             $obj->typeContent = $html;
             return new JsonResponse($obj);
         }
-        \Core::make('app')->shutdown();
+
+        $this->app->shutdown();
     }
 
 
 
     protected function getFormEntity()
     {
-        $entityManager = \Core::make('database/orm')->entityManager();
+        $entityManager = $this->app->make(EntityManagerInterface::class);
         return $entityManager->getRepository('Concrete\Core\Entity\Express\Form')
             ->findOneById($this->exFormID);
     }
@@ -778,7 +784,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
         if ($form) {
             $entity = $form->getEntity();
             if ($entity) {
-                $express = \Core::make('express');
+                $express = $this->app->make('express');
                 $controller = $express->getEntityController($entity);
                 $factory = new ContextFactory($controller);
                 $context = $factory->getContext(new FrontendFormContext());
