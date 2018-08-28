@@ -386,10 +386,6 @@ class Controller extends BlockController implements NotificationProviderInterfac
         $name = $data['formName'] ? $data['formName'] : t('Form');
 
         if (!$this->exFormID) {
-
-            // This is a new submission.
-            $c = Page::getCurrentPage();
-
             // Create a results node
             $node = ExpressEntryCategory::getNodeByName(self::FORM_RESULTS_CATEGORY_NAME);
             $node = \Concrete\Core\Tree\Node\Type\ExpressEntryResults::add($name, $node);
@@ -496,7 +492,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
                     foreach($existingControls as $existingControl) {
                         if ($existingControl->getId() == $id) {
                             if ($control instanceof AttributeKeyControl) {
-                                $settings = $control->getAttributeKey()->getAttributeKeySettings();
+                                $control->getAttributeKey()->getAttributeKeySettings();
                                 $key = $existingControl->getAttributeKey();
                                 $type = $key->getAttributeType();
                                 $type = $entityManager->merge($type);
@@ -514,7 +510,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
                                 $key->setAttributeType($type);
                                 $settings = $control->getAttributeKey()->getAttributeKeySettings();
                                 $settings->setAttributeKey($key);
-                                $settings = $settings->mergeAndPersist($entityManager);
+                                $settings->mergeAndPersist($entityManager);
 
                                 // Required
                                 $existingControl->setIsRequired($control->isRequired());
