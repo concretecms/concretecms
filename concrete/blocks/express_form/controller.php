@@ -67,6 +67,38 @@ class Controller extends BlockController implements NotificationProviderInterfac
         return t('Form');
     }
 
+    public function view()
+    {
+        $form = $this->getFormEntity();
+        if ($form) {
+            $entity = $form->getEntity();
+            if ($entity) {
+                $express = $this->app->make('express');
+                $controller = $express->getEntityController($entity);
+                $factory = new ContextFactory($controller);
+                $context = $factory->getContext(new FrontendFormContext());
+                $renderer = new \Concrete\Core\Express\Form\Renderer(
+                    $context,
+                    $form
+                );
+                if (is_object($form)) {
+                    $this->set('expressForm', $form);
+                }
+                if ($this->displayCaptcha) {
+                    $this->set('captcha', $this->app->make('helper/validation/captcha'));
+                    $this->requireAsset('css', 'core/frontend/captcha');
+                }
+                $this->requireAsset('css', 'core/frontend/errors');
+                $this->set('renderer', $renderer);
+            }
+        }
+        if (!isset($renderer)) {
+            $page = $this->block->getBlockCollectionObject();
+            $this->app->make('log')
+                ->warning(t('Form block on page %s (ID: %s) could not be loaded. Its express object or express form no longer exists.', $page->getCollectionName(), $page->getCollectionID()));
+        }
+    }
+
     protected function clearSessionControls()
     {
         $session = $this->app->make('session');
@@ -789,37 +821,5 @@ class Controller extends BlockController implements NotificationProviderInterfac
 
         return $entityManager->getRepository(\Concrete\Core\Entity\Express\Form::class)
             ->findOneById($this->exFormID);
-    }
-
-    public function view()
-    {
-        $form = $this->getFormEntity();
-        if ($form) {
-            $entity = $form->getEntity();
-            if ($entity) {
-                $express = $this->app->make('express');
-                $controller = $express->getEntityController($entity);
-                $factory = new ContextFactory($controller);
-                $context = $factory->getContext(new FrontendFormContext());
-                $renderer = new \Concrete\Core\Express\Form\Renderer(
-                    $context,
-                    $form
-                );
-                if (is_object($form)) {
-                    $this->set('expressForm', $form);
-                }
-                if ($this->displayCaptcha) {
-                    $this->set('captcha', $this->app->make('helper/validation/captcha'));
-                    $this->requireAsset('css', 'core/frontend/captcha');
-                }
-                $this->requireAsset('css', 'core/frontend/errors');
-                $this->set('renderer', $renderer);
-            }
-        }
-        if (!isset($renderer)) {
-            $page = $this->block->getBlockCollectionObject();
-            $this->app->make('log')
-                ->warning(t('Form block on page %s (ID: %s) could not be loaded. Its express object or express form no longer exists.', $page->getCollectionName(), $page->getCollectionID()));
-        }
     }
 }
