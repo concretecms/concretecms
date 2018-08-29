@@ -249,43 +249,46 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
                             $tree = $site->getSiteTreeObject();
                         }
                         break;
+                    default:
+                        $tree = null;
+                        break;
                 }
             }
 
-            if (isset($tree)) {
-                if (is_array($tree)) {
-                    $treeIDs = array();
-                    foreach($tree as $siteTree) {
+            if ($tree !== null) {
+                if (!is_array($tree)) {
+                    $tree = [$tree];
+                }
+                $treeIDs = [];
+                foreach ($tree as $siteTree) {
+                    if ($siteTree instanceof Site) {
+                        foreach ($siteTree->getLocales() as $locale) {
+                            $treeIDs[] = $locale->getSiteTreeID();
+                        }
+                    } else {
                         $treeIDs[] = $siteTree->getSiteTreeID();
                     }
-                    if ($this->includeSystemPages) {
-                        $query->andWhere(
-                            $query->expr()->orX()->add(
-                                $query->expr()->in('p.siteTreeID', array_map([$query->getConnection(), 'quote'], $treeIDs))
-                            )->add('p.siteTreeID = 0')
-                        );
-                    } else {
-                        $query->andWhere(
-                            $query->expr()->in('p.siteTreeID', array_map([$query->getConnection(), 'quote'], $treeIDs))
-                        );
+                }
+                if (count($treeIDs) === 0) {
+                    if (!$this->includeSystemPages) {
+                        $query->andWhere($query->expr()->neq('p.siteTreeID', 0));
                     }
-
                 } else {
-                    // We have either passed in a specific tree or we are looking at the current site.
-                    $query->setParameter('siteTreeID', $tree->getSiteTreeID());
-                    if ($this->includeSystemPages) {
-                        $query->andWhere('(p.siteTreeID = :siteTreeID or p.siteTreeID = 0)');
-                    } else {
-                        $query->andWhere('p.siteTreeID = :siteTreeID');
+                    $or = $query->expr()->orX();
+                    foreach ($treeIDs as $treeID) {
+                        $or->add($query->expr()->eq('p.siteTreeID', $treeID));
                     }
+                    if ($this->includeSystemPages) {
+                        $or->add($query->expr()->eq('p.siteTreeID', 0));
+                    }
+                    $query->andWhere($or);
                 }
             }
 
         }
 
         if (!$this->includeSystemPages) {
-            $query->andWhere('p.cIsSystemPage = :cIsSystemPage');
-            $query->setParameter('cIsSystemPage', false);
+            $query->andWhere($query->expr()->eq('p.cIsSystemPage', 0));
         }
 
         return $query;
