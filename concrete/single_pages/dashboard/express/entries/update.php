@@ -1,5 +1,12 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<div class="ccm-dashboard-header-buttons">
 
+  <?php
+  $manage = new \Concrete\Controller\Element\Dashboard\Express\Forms($entity,$url,$currentForm);
+  $manage->render();
+  ?>
+
+</div>
 <?php
 
 if (is_object($renderer)) {

@@ -58,5 +58,96 @@ class Entries extends DashboardExpressEntityPageController
         }
     }
 
+      public function edit_entry($id = null, $formId = null)
+  {
+    $entry = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entry')
+      ->findOneById($id);
+
+    $permissions = new \Permissions($entry);
+    if (!$permissions->canEditExpressEntry()) {
+      throw new \Exception(t('Access Denied'));
+    }
+
+    $entity = $entry->getEntity();
+    $this->set('entry', $entry);
+    $this->set('entity', $entity);
+    $entity = $entry->getEntity();
+    $this->entityManager->refresh($entity); // sometimes this isn't eagerly loaded (?)
+
+    $express = \Core::make('express');
+    $controller = $express->getEntityController($entity);
+    $factory = new ContextFactory($controller);
+    $context = $factory->getContext(new DashboardFormContext());
+    $customForm = false;
+    if($formId != null){
+      $customForm = $this->getForm($entity, $formId);
+    }
+    $renderer = new Renderer(
+      $context,
+      $customForm ? $customForm : $entity->getDefaultEditForm()
+    );
+
+    $this->set('renderer', $renderer);
+    $this->set('backURL', $this->getBackURL($entry->getEntity()));
+    $this->set('editURL', $this->getEditEntryURL($entry));
+    $this->set('currentForm', $customForm ? $customForm : $entity->getDefaultEditForm());
+    $this->render('/dashboard/express/entries/update', false);
+  }
+
+  public function create_entry($id = null, $owner_entry_id = null, $formId = null)
+  {
+    $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
+    $entity = $r->findOneById($id);
+    if (!is_object($entity)) {
+      $this->redirect('/dashboard/express/entries');
+    }
+    if ($owner_entry_id) {
+      $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entry');
+      $entry = $r->findOneById($owner_entry_id);
+    }
+    $permissions = new \Permissions($entity);
+    if (!$permissions->canAddExpressEntries()) {
+      throw new \Exception(t('You do not have access to add entries of this entity type.'));
+    }
+    $this->set('entity', $entity);
+    $form = $entity->getDefaultEditForm();
+    if (is_object($entry) && $entry->getEntity() == $entity->getOwnedBy()) {
+      $form = new OwnedEntityForm($form, $entry);
+      $this->set('backURL', $this->getViewEntryURL($entry));
+    } else {
+      $this->set('backURL', $this->getBackURL($entity));
+    }
+
+    $express = \Core::make('express');
+    $controller = $express->getEntityController($entity);
+    $factory = new ContextFactory($controller);
+    $context = $factory->getContext(new DashboardFormContext());
+    $customForm = false;
+    if($formId != null){
+      $customForm = $this->getForm($entity, $formId);
+    }
+    $renderer = new Renderer(
+      $context,
+      $customForm ? $customForm : $form
+    );
+    $this->set('renderer', $renderer);
+    $this->set('url', $this->getCreateURL($entity, $entry) . ($owner_entry_id == null ? '/' : ''));
+    $this->set('currentForm', $customForm ? $customForm : $form);
+    $this->render('/dashboard/express/entries/create', false);
+  }
+
+  private function getForm(Entity $entity, $formId)
+  {
+    $form = null;
+    if ($formId) {
+      try {
+        $form = $entity->getForms()->filter(function ($form) use ($formId) {
+          return $form->getId() == $formId;
+        })->first();
+      } catch (\Exception $ex) {
+      }
+    }
+    return $form;
+  }
 
 }
