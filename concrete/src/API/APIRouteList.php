@@ -2,6 +2,8 @@
 
 namespace Concrete\Core\API;
 
+use Concrete\Core\Http\Middleware\FractalNegotiatorMiddleware;
+use Concrete\Core\Http\Middleware\OAuthAuthenticationMiddleware;
 use Concrete\Core\HTTP\Middleware\OAuthErrorMiddleware;
 use Concrete\Core\Routing\RouteListInterface;
 use Concrete\Core\Routing\Router;
@@ -17,8 +19,9 @@ class APIRouteList implements RouteListInterface
 
         $router->buildGroup()
             ->setPrefix('/ccm/api/v1')
-            ->addMiddleware(ProjectorMiddleware::class)
-            ->addMiddleware(APIAuthenticatorMiddleware::class)
+            ->addMiddleware(OAuthErrorMiddleware::class)
+            ->addMiddleware(OAuthAuthenticationMiddleware::class)
+            ->addMiddleware(FractalNegotiatorMiddleware::class)
             ->routes('api/system.php')
             ->routes('api/site.php');
     }

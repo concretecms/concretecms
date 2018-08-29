@@ -8,12 +8,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
  */
 
 use Concrete\Core\System\Info;
-use Concrete\Core\System\Status\QueueStatus;
 
 $router->get('/system/info', function() {
-    return new Info();
-});
-
-$router->get('/system/status/queue', function() use ($app){
-    return $app->make(QueueStatus::class);
+    return new \League\Fractal\Resource\Item(new Info(), new \Concrete\Core\System\InfoTransformer());
 });

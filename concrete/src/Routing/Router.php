@@ -130,10 +130,10 @@ class Router implements RouterInterface
             id(new RequestContext())->fromRequest($request)
         );
         $path = $this->normalizePath($request->getPathInfo());
-        $request->attributes->add($matcher->match($path));
         $matched = $matcher->match($path);
         if (isset($matched['_route'])) {
             $route = $this->routes->get($matched['_route']);
+            $request->attributes->set('_route', $route);
             return new MatchedRoute($route, $matched);
         }
     }
