@@ -213,6 +213,7 @@ class Controller extends BlockController
             if ($pagination->haveToPaginate()) {
                 $pagination = $pagination->renderDefaultView();
                 $this->set('pagination', $pagination);
+                $this->requireAsset('css', 'core/frontend/pagination');
             }
 
             $this->set('list', $list);
