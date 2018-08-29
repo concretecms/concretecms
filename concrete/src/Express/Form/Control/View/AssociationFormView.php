@@ -15,8 +15,12 @@ class AssociationFormView extends AssociationView
     public function __construct(ContextInterface $context, Control $control)
     {
         parent::__construct($context, $control);
-        $this->addScopeItem('entities', $this->allEntities);
-        $this->addScopeItem('selectedEntities', $this->selectedEntities);
+        $this->addScopeItem('allEntries', $this->allEntries);
+        $this->addScopeItem('selectedEntries', $this->selectedEntries);
+
+        // @deprecated – use allEntries and selectedEntries instead
+        $this->addScopeItem('entities', $this->allEntries);
+        $this->addScopeItem('selectedEntities', $this->selectedEntries);
     }
 
     /**
