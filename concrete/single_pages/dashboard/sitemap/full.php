@@ -48,7 +48,7 @@ if ($u->isSuperUser()) {
                 <div class="ccm-dashboard-full-sitemap-container" data-container="sitemap"></div>
             </div>
             <div class="col-md-6">
-                <div class="ccm-dashboard-full-sitemap-container" data-container="sitemap"></div>
+                <div class="ccm-dashboard-full-sitemap-container" data-container="sitemap" data-sitemap-index="1"></div>
             </div>
         </div>
 
@@ -67,12 +67,12 @@ if ($u->isSuperUser()) {
 
 <script>
 $(function() {
-    $('div[data-container=sitemap]').concreteSitemap({
-        <?php if ($includeSystemPages) { ?>
-        includeSystemPages: 1
-        <?php } else { ?>
-        includeSystemPages: 0
-        <?php } ?>
+    $('div[data-container=sitemap]').each(function() {
+        var $my = $(this);
+        $my.concreteSitemap({
+            includeSystemPages: <?= $includeSystemPages ? 1 : 0 ?>,
+            sitemapIndex: parseInt($my.data('sitemap-index'), 10) || 0
+        });
     });
 
     $('input[name=includeSystemPages]').on('click', function() {
