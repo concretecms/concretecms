@@ -50,7 +50,7 @@ class AccessToken implements AccessTokenEntityInterface
 
     public function getScopes()
     {
-        return iterator_to_array($this->scopes);
+        return $this->scopes;
     }
 
 }

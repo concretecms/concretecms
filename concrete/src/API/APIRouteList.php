@@ -26,5 +26,10 @@ class APIRouteList implements RouteListInterface
         $api->buildGroup()
             ->scope('system')
             ->routes('api/system.php');
+
+        $api->buildGroup()
+            ->scope('site')
+            ->routes('api/site.php');
+
     }
 }
