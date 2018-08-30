@@ -40,7 +40,7 @@ class APIServiceProvider extends ServiceProvider
     public function register()
     {
         $config = $this->app->make("config");
-        if ($config->get('concrete.api.enabled')) {
+        if ($this->app->isInstalled() && $config->get('concrete.api.enabled')) {
             $router = $this->app->make(Router::class);
             $list = new APIRouteList();
             $list->loadRoutes($router);
@@ -100,17 +100,15 @@ class APIServiceProvider extends ServiceProvider
     /**
      * Get a key by handle
      * @param $handle privatekey | publickey
-     * @return callable
+     * @return string
      */
     private function getKey($handle)
     {
-        return function () use ($handle) {
-            if (!$this->keyPair) {
-                $this->keyPair = $this->getKeyPair();
-            }
+        if (!$this->keyPair) {
+            $this->keyPair = $this->getKeyPair();
+        }
 
-            return isset($this->keyPair[$handle]) ? $this->keyPair[$handle] : null;
-        };
+        return isset($this->keyPair[$handle]) ? $this->keyPair[$handle] : null;
     }
 
     /**
@@ -123,7 +121,7 @@ class APIServiceProvider extends ServiceProvider
         $this->app->bind(ResourceServer::class, function() {
             return $this->app->build(ResourceServer::class, [
                 $this->app->make(AccessTokenRepositoryInterface::class),
-                $this->getKey(self::KEY_PUBLIC)(),
+                $this->getKey(self::KEY_PUBLIC),
                 $this->app->make(DefaultValidator::class)
             ]);
         });

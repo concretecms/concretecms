@@ -92,7 +92,6 @@ return [
         // Router service provider
         'core_router' => 'Concrete\Core\Routing\RoutingServiceProvider',
         'core_cache' => '\Concrete\Core\Cache\CacheServiceProvider', // needs to come before api
-        'core_api' => 'Concrete\Core\API\APIServiceProvider',
         'core_file' => '\Concrete\Core\File\FileServiceProvider',
         'core_encryption' => '\Concrete\Core\Encryption\EncryptionServiceProvider',
         'core_validation' => '\Concrete\Core\Validation\ValidationServiceProvider',
@@ -113,6 +112,7 @@ return [
         'core_manager_search_fields' => '\Concrete\Core\Search\Field\ManagerServiceProvider',
         'core_permissions' => '\Concrete\Core\Permission\PermissionServiceProvider',
         'core_database' => '\Concrete\Core\Database\DatabaseServiceProvider',
+        'core_api' => 'Concrete\Core\API\APIServiceProvider',
         'core_form' => '\Concrete\Core\Form\FormServiceProvider',
         'core_session' => '\Concrete\Core\Session\SessionServiceProvider',
         'core_system' => '\Concrete\Core\System\SystemServiceProvider',
