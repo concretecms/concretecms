@@ -10,8 +10,11 @@ use Concrete\Core\Block\BlockController;
 use Concrete\Core\Entity\Block\BlockType\BlockType;
 use Concrete\Core\Block\View\BlockView;
 use Concrete\Core\Page\Page;
+use Concrete\Core\Routing\MatchedRoute;
 use Concrete\Core\Routing\Route;
+use Concrete\Core\Routing\RouteActionFactory;
 use Concrete\Core\Routing\Router;
+use Concrete\Core\Routing\SystemRouteList;
 use Concrete\Core\Support\Facade\Facade;
 use PHPUnit_Framework_TestCase;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -171,10 +174,10 @@ class BlockActionTest extends PHPUnit_Framework_TestCase
     public function blockControllerActionRoutingDataProvider()
     {
         return [
-            ['/ccm/system/block/action/add/123/Main/4/add_form/', '\Concrete\Controller\Backend\Block\Action::add'],
-            ['/ccm/system/block/action/edit/123/Main/1184/edit_control/', '\Concrete\Controller\Backend\Block\Action::edit'],
-            ['/ccm/system/block/action/add/123/Main/4/add_form/123/x/', '\Concrete\Controller\Backend\Block\Action::add'],
-            ['/ccm/system/block/action/edit/123/Main/1184/edit_control/123/x/', '\Concrete\Controller\Backend\Block\Action::edit'],
+            ['/ccm/system/block/action/add/123/Main/4/add_form/', 'Concrete\Controller\Backend\Block\Action::add'],
+            ['/ccm/system/block/action/edit/123/Main/1184/edit_control/', 'Concrete\Controller\Backend\Block\Action::edit'],
+            ['/ccm/system/block/action/add/123/Main/4/add_form/123/x/', 'Concrete\Controller\Backend\Block\Action::add'],
+            ['/ccm/system/block/action/edit/123/Main/1184/edit_control/123/x/', 'Concrete\Controller\Backend\Block\Action::edit'],
         ];
     }
     /**
@@ -185,18 +188,21 @@ class BlockActionTest extends PHPUnit_Framework_TestCase
     {
         $app = Facade::getFacadeApplication();
 
-        $config = $app->make('config');
-        $routes = $config->get('app.routes');
-        $router = new Router();
-        $router->registerMultiple($routes);
-
-        $route = new \Concrete\Core\Routing\Route($path);
-        $route->setPath($path);
+        $router = new Router(new RouteCollection(), new RouteActionFactory());
+        $list = new SystemRouteList();
+        $list->loadRoutes($router);
 
         $context = new RequestContext();
         $context->fromRequest(Request::getInstance());
-        $matcher = new UrlMatcher($router->getList(), $context);
-        $matchedRoute = $matcher->match($path);
-        $this->assertEquals($class, $matchedRoute['_controller']);
+        $matcher = new UrlMatcher($router->getRoutes(), $context);
+        $matched = $matcher->match($path);
+        if ($matched) {
+            $route = $router->getRoutes()->get($matched['_route']);
+            $action = $router->resolveAction($route);
+            $this->assertEquals($class, $action->getControllerCallback());
+        } else {
+            throw new \Exception('Route did not match.');
+        }
+
     }
 }
