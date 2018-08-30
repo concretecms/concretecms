@@ -100,7 +100,7 @@ class APIServiceProvider extends ServiceProvider
     /**
      * Get a key by handle
      * @param $handle privatekey | publickey
-     * @return string
+     * @return string|null
      */
     private function getKey($handle)
     {
