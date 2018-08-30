@@ -26,9 +26,7 @@ class AuthCode implements AuthCodeEntityInterface
     protected $identifier;
 
     /**
-     * @var ScopeEntityInterface[]
-     * @ORM\ManyToMany(targetEntity="Scope", mappedBy="scopes")
-     * @ORM\JoinColumn(name="scopes", referencedColumnName="identifier")
+     * @ORM\Column(type="json_array")
      */
     protected $scopes = [];
 

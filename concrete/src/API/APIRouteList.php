@@ -17,12 +17,14 @@ class APIRouteList implements RouteListInterface
         $router->buildGroup()->addMiddleware(OAuthErrorMiddleware::class)
             ->routes( 'api/oauth2.php');
 
-        $router->buildGroup()
+        $api = $router->buildGroup()
             ->setPrefix('/ccm/api/v1')
             ->addMiddleware(OAuthErrorMiddleware::class)
             ->addMiddleware(OAuthAuthenticationMiddleware::class)
-            ->addMiddleware(FractalNegotiatorMiddleware::class)
-            ->routes('api/system.php')
-            ->routes('api/site.php');
+            ->addMiddleware(FractalNegotiatorMiddleware::class);
+
+        $api->buildGroup()
+            ->scope('system')
+            ->routes('api/system.php');
     }
 }

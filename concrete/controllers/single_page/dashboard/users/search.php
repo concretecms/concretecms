@@ -13,7 +13,6 @@ use Concrete\Core\Workflow\Progress\UserProgress as UserWorkflowProgress;
 use Exception;
 use Imagine\Image\Box;
 use League\Csv\Writer;
-use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
 use PermissionKey;
 use Permissions;
 use stdClass;
@@ -375,15 +374,6 @@ class Search extends DashboardPageController
 
         $ui = $this->user;
         if (is_object($ui)) {
-            $apiEnabled = false;
-            $config = $this->app->make('config');
-            if ($config->get('concrete.api.enabled')) {
-                $apiEnabled = true;
-                $r = $this->app->make(ClientRepositoryInterface::class);
-                $clients = $r->findByUser($ui->getEntityObject());
-                $this->set('clients', $clients);
-            }
-            $this->set('apiEnabled', $apiEnabled);
             $dh = $this->app->make('helper/date');
             /* @var $dh \Concrete\Core\Localization\Service\Date */
             $this->requireAsset('core/app/editable-fields');

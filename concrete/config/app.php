@@ -1168,6 +1168,15 @@ return [
         'logger' => null,
     ],
 
+    'api' => [
+
+        'scopes' => [
+
+            'system',
+            'site'
+        ]
+    ],
+
     // HTTP middleware for processing http requests
     'middleware' => [
         [

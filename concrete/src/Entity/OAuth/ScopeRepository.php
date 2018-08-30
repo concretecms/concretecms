@@ -2,18 +2,14 @@
 
 namespace Concrete\Core\Entity\OAuth;
 
-use Concrete\Core\Entity\Express\EntityRepository;
+use Concrete\Core\Support\Facade\Facade;
+use Doctrine\ORM\EntityRepository;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 
 class ScopeRepository extends EntityRepository implements ScopeRepositoryInterface
 {
-
-    private $allowedScopes = [
-        'system',
-        'site'
-    ];
 
     /**
      * Return information about a scope.
@@ -44,9 +40,11 @@ class ScopeRepository extends EntityRepository implements ScopeRepositoryInterfa
         ClientEntityInterface $clientEntity,
         $userIdentifier = null
     ) {
+        $app = Facade::getFacadeApplication();
+        $allowedScopes = $app->make('config')->get('app.api.scopes');
         $winnowed = [];
         foreach ($scopes as $scope) {
-            if (in_array($scope->getIdentifier(), $this->allowedScopes)) {
+            if (in_array($scope->getIdentifier(), $allowedScopes)) {
                 $winnowed[] = $scope;
             }
         }

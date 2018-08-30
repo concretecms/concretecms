@@ -25,22 +25,21 @@ class AccessToken implements AccessTokenEntityInterface
     protected $identifier;
 
     /**
-     * @var ScopeEntityInterface[]
-     * @ORM\ManyToMany(targetEntity="Scope", mappedBy="scopes")
-     * @ORM\JoinColumn(name="scopes", referencedColumnName="identifier")
-     */
-    protected $scopes = [];
-
-    /**
      * @var \DateTime
      * @ORM\Column(type="datetime")
      */
     protected $expiryDateTime;
 
     /**
-     * @ORM\Column(type="integer", options={"unsigned":true})
+     * @ORM\Column(type="integer", options={"unsigned":true}, nullable=true)
      */
     protected $userIdentifier;
+
+    /**
+     * @ORM\Column(type="json_array")
+     */
+    protected $scopes = [];
+
 
     /**
      * @var ScopeEntityInterface[]

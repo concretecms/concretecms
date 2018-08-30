@@ -3,9 +3,6 @@
 namespace Concrete\Core\API;
 
 use Concrete\Core\API\OAuth\Validator\DefaultValidator;
-use Concrete\Core\API\Routing\OAuthRouteProvider;
-use Concrete\Core\API\Routing\SiteRouteProvider;
-use Concrete\Core\API\Routing\SystemRouteProvider;
 use Concrete\Core\Entity\OAuth\AccessToken;
 use Concrete\Core\Entity\OAuth\AuthCode;
 use Concrete\Core\Entity\OAuth\Client;
@@ -14,13 +11,9 @@ use Concrete\Core\Entity\OAuth\Scope;
 use Concrete\Core\Entity\OAuth\UserRepository;
 use Concrete\Core\Entity\User\User;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
-use Concrete\Core\Http\Middleware\PSR7Middleware;
-use Concrete\Core\Routing\RouteCollector;
-use Concrete\Core\Routing\RouteProviderInterface;
 use Concrete\Core\Routing\Router;
 use Doctrine\ORM\EntityManagerInterface;
 use League\OAuth2\Server\AuthorizationServer;
-use Concrete\Core\API\Oauth\Grant\ClientCredentialsGrant;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
 use League\OAuth2\Server\Repositories\AuthCodeRepositoryInterface;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
@@ -29,6 +22,7 @@ use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
 use League\OAuth2\Server\ResourceServer;
 use phpseclib\Crypt\RSA;
+use League\OAuth2\Server\Grant\ClientCredentialsGrant;
 
 class APIServiceProvider extends ServiceProvider
 {

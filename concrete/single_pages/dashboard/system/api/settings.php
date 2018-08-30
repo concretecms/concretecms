@@ -20,3 +20,25 @@ defined('C5_EXECUTE') or die("Access Denied.");
         </div>
     </div>
 </form>
+
+<?php if ($enable_api) { ?>
+    <section>
+        <h3><?=t('API Integrations')?></h3>
+        <?php if ($clients && count($clients)) { ?>
+            <ul class="item-select-list">
+                <?php foreach($clients as $client) { ?>
+                    <li><a href="<?=URL::to('/dashboard/system/api/integrations', 'view_client', $client->getIdentifier())?>">
+                        <i class="fa fa-handshake-o"></i>
+                        <?=$client->getName()?>
+                    </a></li>
+                    <?php
+                }
+                ?>
+            </ul>
+        <?php } else { ?>
+            <div class="text-muted"><?=t('None')?></div>
+        <?php } ?>
+        <hr>
+        <div><a href="<?=URL::to('/dashboard/system/api/integrations', 'add')?>" class="btn btn-default btn-xs"><?=t('Add Integration')?></a></div>
+    </section>
+<?php } ?>

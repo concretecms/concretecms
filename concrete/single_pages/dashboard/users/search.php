@@ -228,26 +228,6 @@ if (isset($user) && is_object($user)) {
         </section>
 
 
-        <?php if ($apiEnabled) { ?>
-            <section>
-                <h3><?=t('API Integrations')?></h3>
-                <?php if ($clients && count($clients)) { ?>
-                <ul class="list-unstyled">
-                    <?php foreach($clients as $client) { ?>
-                        <li><a href="<?=URL::to('/dashboard/users/oauth2', 'view_client', $client->getIdentifier())?>"><?=$client->getName()?></a></li>
-                    <?php
-                    }
-                    ?>
-                </ul>
-                <?php } else { ?>
-                    <div class="text-muted"><?=t('None')?></div>
-                <?php } ?>
-                <hr>
-                <div><a href="<?=URL::to('/dashboard/users/oauth2/add', $user->getUserID())?>" class="btn btn-default btn-xs"><?=t('Add Integration')?></a></div>
-            </section>
-        <?php } ?>
-
-
     </div>
 
     <?php

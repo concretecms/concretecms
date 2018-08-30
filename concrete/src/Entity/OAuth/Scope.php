@@ -24,6 +24,16 @@ class Scope implements ScopeEntityInterface
     protected $identifier;
 
     /**
+     * @ORM\ManyToMany(targetEntity="AuthCode", mappedBy="scopes")
+     */
+    protected $codes;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="AccessToken", mappedBy="scopes")
+     */
+    protected $tokens;
+
+    /**
      * Serialize into a string
      */
     public function jsonSerialize()

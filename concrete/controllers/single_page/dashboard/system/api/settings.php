@@ -2,6 +2,7 @@
 namespace Concrete\Controller\SinglePage\Dashboard\System\Api;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
+use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
 
 class Settings extends DashboardPageController
 {
@@ -9,7 +10,14 @@ class Settings extends DashboardPageController
     public function view()
     {
         $config = $this->app->make("config");
-        $this->set("enable_api", $config->get('concrete.api.enabled'));
+        $enable_api = (bool) $config->get('concrete.api.enabled');
+        if ($enable_api) {
+            $r = $this->app->make(ClientRepositoryInterface::class);
+            $clients = $r->findAll();
+            $this->set('clients', $clients);
+        }
+        $this->set("enable_api", $enable_api);
+
     }
 
     public function submit()
