@@ -134,12 +134,17 @@ class StandardSitemapProvider implements ProviderInterface
      */
     public function getRequestedSiteTree()
     {
-        if ($this->request->query->has('siteTreeID') && $this->request->query->get('siteTreeID') > 0) {
-            $this->cookieJar->set('ConcreteSitemapTreeID', $this->request->query->get('siteTreeID'));
+        $query = $this->request->query;
+        $cookieKey = 'ConcreteSitemapTreeID';
+        if ($query->has('sitemapIndex') && $query->get('sitemapIndex') > 0) {
+            $cookieKey .= '-' . (int) $query->get('sitemapIndex');
+        }
+        if ($query->has('siteTreeID') && $query->get('siteTreeID') > 0) {
+            $this->cookieJar->getResponseCookies()->addCookie($cookieKey, $query->get('siteTreeID'));
 
-            return $this->siteService->getSiteTreeByID($this->request->query->get('siteTreeID'));
-        } elseif ($this->cookieJar->has('ConcreteSitemapTreeID')) {
-            return $this->siteService->getSiteTreeByID($this->cookieJar->get('ConcreteSitemapTreeID'));
+            return $this->siteService->getSiteTreeByID($query->get('siteTreeID'));
+        } elseif ($this->cookieJar->has($cookieKey)) {
+            return $this->siteService->getSiteTreeByID($this->cookieJar->get($cookieKey));
         } else {
             $site = $this->siteService->getActiveSiteForEditing();
             $locale = $site->getDefaultLocale();

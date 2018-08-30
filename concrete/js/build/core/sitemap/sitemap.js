@@ -8,11 +8,13 @@
 	function ConcreteSitemap($element, options) {
 		var my = this;
 		options = options || {};
+
+		options.sitemapIndex = Math.max(0, parseInt(options.sitemapIndex, 10) || 0);
 		options = $.extend({
 			displayNodePagination: false,
 			cParentID: 0,
 			siteTreeID: 0,
-			cookieId: 'ConcreteSitemap',
+			cookieId: 'ConcreteSitemap' + (options.sitemapIndex > 0 ? '-' + options.sitemapIndex : ''),
 			includeSystemPages: false,
             displaySingleLevel: false,
 			persist: true,
@@ -24,6 +26,9 @@
 			onSelectNode: false, // this handles when a radio or checkbox in the tree is checked
 			init: false
 		}, options);
+        if (options.sitemapIndex > 0) {
+            options.ajaxData.sitemapIndex = options.sitemapIndex;
+        }
 		my.options = options;
 		my.$element = $element;
 		my.$sitemap = null;
