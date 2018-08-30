@@ -33,7 +33,7 @@
     "symfony/class-loader": "3.*",
     "symfony/http-foundation": "3.*",
     "symfony/routing": "3.*",
-    "symfony/http-kernel": "3.*",
+    "symfony/http-kernel": "3.4.*",
     "doctrine/orm": "~2.5",
     "doctrine/migrations": "1.*",
     "league/flysystem": "1.*",
