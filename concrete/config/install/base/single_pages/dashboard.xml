@@ -564,16 +564,6 @@
 
         <page name="Data Objects" path="/dashboard/system/express/entities" filename="/dashboard/system/express/entities.php" pagetype=""
               description="" package="">
-
-            <attributes>
-                <attributekey handle="exclude_nav">
-                    <value><![CDATA[1]]></value>
-                </attributekey>
-                <attributekey handle="exclude_search_index">
-                    <value>1</value>
-                </attributekey>
-            </attributes>
-
         </page>
 
         <page name="Attributes" path="/dashboard/system/express/entities/attributes"
