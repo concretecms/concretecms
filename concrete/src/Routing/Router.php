@@ -134,6 +134,7 @@ class Router implements RouterInterface
         if (isset($matched['_route'])) {
             $route = $this->routes->get($matched['_route']);
             $request->attributes->set('_route', $route);
+            $request->attributes->add($matched);
             return new MatchedRoute($route, $matched);
         }
     }
