@@ -19,10 +19,16 @@ final class Controller
     /** @var \Doctrine\ORM\EntityManagerInterface  */
     private $entityManager;
 
-    public function __construct(AuthorizationServer $oauthServer, EntityManagerInterface $entityManager)
+    /**
+     * @var ServerRequestInterface
+     */
+    private $request;
+
+    public function __construct(AuthorizationServer $oauthServer, EntityManagerInterface $entityManager, ServerRequestInterface $request)
     {
         $this->oauthServer = $oauthServer;
         $this->entityManager = $entityManager;
+        $this->request = $request;
     }
 
     /**
@@ -32,10 +38,10 @@ final class Controller
      * @return \Psr\Http\Message\ResponseInterface
      * @throws \Exception
      */
-    public function token(ServerRequestInterface $request)
+    public function token()
     {
         try {
-            $response = $this->oauthServer->respondToAccessTokenRequest($request, new Response());
+            $response = $this->oauthServer->respondToAccessTokenRequest($this->request, new Response());
 
             // We generated a new token, let's prune old ones
             $this->pruneTokens();

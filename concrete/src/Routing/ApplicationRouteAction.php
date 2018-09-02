@@ -4,7 +4,7 @@ namespace Concrete\Core\Routing;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Http\Request;
-
+use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
 class ApplicationRouteAction implements RouteActionInterface
 {
 
@@ -48,7 +48,9 @@ class ApplicationRouteAction implements RouteActionInterface
         $callback = $this->callback;
         $callback[0] = $this->app->make($callback[0]);
         // Call the resolved object method
-        return $this->app->call($callback, [$request, $route]);
+        $argumentsResolver = $this->app->make(ArgumentResolver::class);
+        $arguments = $argumentsResolver->getArguments($request, $callback);
+        return $this->app->call($callback, $arguments);
     }
 
 }

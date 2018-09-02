@@ -133,8 +133,8 @@ class Router implements RouterInterface
         $matched = $matcher->match($path);
         if (isset($matched['_route'])) {
             $route = $this->routes->get($matched['_route']);
-            $request->attributes->set('_route', $route);
             $request->attributes->add($matched);
+            $request->attributes->set('_route', $route);
             return new MatchedRoute($route, $matched);
         }
     }
