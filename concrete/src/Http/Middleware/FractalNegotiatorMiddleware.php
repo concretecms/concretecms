@@ -5,6 +5,8 @@ namespace Concrete\Core\Http\Middleware;
 use League\Fractal\Manager;
 use League\Fractal\Resource\ResourceInterface;
 use League\Fractal\Scope;
+use League\Fractal\Serializer\ArraySerializer;
+use League\Fractal\Serializer\DataArraySerializer;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -21,6 +23,11 @@ class FractalNegotiatorMiddleware implements MiddlewareInterface
         $this->fractal = $fractal;
     }
 
+    protected function getSerializer()
+    {
+        return new DataArraySerializer();
+    }
+
     /**
      * Process the request and return a response
      *
@@ -31,6 +38,8 @@ class FractalNegotiatorMiddleware implements MiddlewareInterface
     public function process(Request $request, DelegateInterface $frame)
     {
         $response = $frame->next($request);
+
+        $this->fractal->setSerializer($this->getSerializer());
 
         // Handle a Resource
         if ($response instanceof ResourceInterface) {

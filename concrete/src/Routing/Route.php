@@ -86,11 +86,18 @@ class Route extends SymfonyRoute
 
     private function getGeneratedName()
     {
+        $methods = $this->getMethods();
+        if (count($methods) == 7) {
+            $methodName = 'all';
+        } else {
+            $methodName = strtolower(implode('_', $methods));
+        }
         $path = $this->getPath();
         $path = trim($path, '/');
         $name = preg_replace('/[^A-Za-z0-9\_]/', '_', $path);
         $name = preg_replace('/\_+/', '_', $name);
         $name = trim($name, '_');
+        $name .= '_' . $methodName;
         return $name;
     }
 
