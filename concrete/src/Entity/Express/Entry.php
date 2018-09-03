@@ -64,7 +64,7 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
         if (substr($nm, 0, 3) == 'set') {
             $nm = preg_replace('/(?!^)[[:upper:]]/', '_\0', $nm);
             $nm = strtolower($nm);
-            $identifier = str_replace('set_', '', $nm);
+            $identifier = substr($nm, 4);
 
             // Assume attribute otherwise
             $this->setAttribute($identifier, $a[0]);
