@@ -73,7 +73,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $route = $router->all('/my/method', 'Something\Controller')->getRoute();
         $this->assertCount(7, $route->getMethods());
 
-        $route = $router->getRoutes()->get('my_method');
+        $route = $router->getRoutes()->get('my_method_all');
         $this->assertInstanceOf(Route::class, $route);
 
         $route = $router->head('/something/special', 'Something\Controller')
@@ -140,7 +140,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(MatchedRoute::class, $route);
         $route = $route->getRoute();
         $this->assertInstanceOf(Route::class, $route);
-        $this->assertEquals('something_hello_world', $route->getName());
+        $this->assertEquals('something_hello_world_get', $route->getName());
         $action = $router->resolveAction($route);
         $response = $action->execute($request, $route, []);
         $this->assertEquals('oh hai', $response->getContent());
@@ -172,9 +172,9 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(4, $routes);
 
         // Test prefix and name.
-        $this->assertEquals('/api/v1/hello-world/', $routes->get('api_v1_hello_world')->getPath());
-        $this->assertEquals('/a-fun-test/', $routes->get('a_fun_test')->getPath());
-        $this->assertEquals('/api/v1/status/', $routes->get('api_v1_status')->getPath());
+        $this->assertEquals('/api/v1/hello-world/', $routes->get('api_v1_hello_world_get')->getPath());
+        $this->assertEquals('/a-fun-test/', $routes->get('a_fun_test_post')->getPath());
+        $this->assertEquals('/api/v1/status/', $routes->get('api_v1_status_get')->getPath());
         $this->assertEquals('/api/v1/user/{:user}/', $routes->get('user_details')->getPath());
 
         // Test everything
@@ -192,7 +192,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
                 return $groupRouter;
             });
 
-        $route = $router->getRoutes()->get('ccm_system_user_remove_group');
+        $route = $router->getRoutes()->get('ccm_system_user_remove_group_post');
         $middlewares = $route->getMiddlewares();
         $this->assertCount(2, $middlewares);
         $this->assertEquals('Concrete\Tests\Core\Routing\AnotherMiddleware', $middlewares[1]->getMiddleware());
