@@ -16,8 +16,6 @@ $router->all('/attributes', 'Attributes::view');
 $router->all('/bulk/properties', 'Bulk\Properties::view');
 $router->all('/bulk/properties/clear_attribute', 'Bulk\Properties::clearAttribute');
 $router->all('/bulk/properties/update_attribute', 'Bulk\Properties::updateAttribute');
-$router->all('/bulk/delete', 'Bulk\Delete::view');
-$router->all('/bulk/delete/submit', 'Bulk\Delete::submit');
 $router->all('/clipboard', 'Clipboard::view');
 $router->all('/delete', 'Delete::view');
 $router->all('/delete/submit', 'Delete::submit');
