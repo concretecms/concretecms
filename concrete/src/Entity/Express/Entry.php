@@ -72,6 +72,11 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
 
         return null;
     }
+    
+    public function is($entityHandle)
+    {
+        return $this->getEntity()->getHandle() == $entityHandle;
+    }
 
     public function getPermissionObjectIdentifier()
     {
