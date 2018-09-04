@@ -25,14 +25,10 @@ class CheckRoutesTest extends PHPUnit_Framework_TestCase
         return $result;
     }
 
-    /**
-     * @dataProvider routeDestinationProvider
-     *
-     * @param Application $app
-     * @param mixed $path
-     * @param mixed $callable
-     */
-    public function testRouteDestination(Application $app, $path, $callable)
+/** Issue with dataproviders that return nothing
+ * on phpunit old versions
+ */
+    public function testRouteDestination()
     {
         $this->markTestSkipped('Skipping until we can rewrite for new router.');
         $checked = false;
