@@ -133,6 +133,12 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
     protected $exEntryID;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Concrete\Core\Entity\User\User")
+     * @ORM\JoinColumn(name="uID", referencedColumnName="uID")
+     */
+    protected $author;
+
+    /**
      * @ORM\Column(type="integer")
      */
     protected $exEntryDisplayOrder = 0;
@@ -351,5 +357,23 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
     {
         return \Core::make(EntryExporter::class);
     }
+
+    /**
+     * @return mixed
+     */
+    public function getAuthor()
+    {
+        return $this->author;
+    }
+
+    /**
+     * @param mixed $author
+     */
+    public function setAuthor($author)
+    {
+        $this->author = $author;
+    }
+
+
 
 }
