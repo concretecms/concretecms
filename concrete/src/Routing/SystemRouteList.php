@@ -34,7 +34,7 @@ class SystemRouteList implements RouteListInterface
         $router->buildGroup()->setNamespace('Concrete\Controller\Backend')->setPrefix('/ccm/system/file')
             ->routes('actions/files.php');
 
-        $router->buildGroup()->setNamespace('Concrete\Controller\Dialog')->setPrefix('/ccm/system/dialogs/conversation')
+        $router->buildGroup()->setNamespace('Concrete\Controller\Dialog\Conversation')->setPrefix('/ccm/system/dialogs/conversation')
             ->routes('dialogs/conversations.php');
 
         $router->buildGroup()->setNamespace('Concrete\Controller\Dialog\Type')
