@@ -51,7 +51,7 @@ class CheckRoutesTest extends PHPUnit_Framework_TestCase
                 $this->assertTrue(method_exists($class, $method), "No Method! Invalid route for path $path : $callable");
                 $checked = true;
             } elseif ($app->isAlias($class)) {
-                $this->assertTrue(method_exists($class, $method), 'bound but no method!');
+                $this->assertTrue(method_exists($class, $method), "Alias but no method! Invalid route for path $path : $callable");
             }
         }
         if ($checked === false) {
