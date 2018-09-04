@@ -242,7 +242,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 
         $routes = $router->getRoutes();
         $this->assertEquals(6, count($routes));
-        $route = $router->getRoutes()->get('ccm_api_v1_system_status');
+        $route = $router->getRoutes()->get('ccm_api_v1_system_status_get');
         $middlewares = $route->getMiddlewares();
         $scope = $route->getOption('oauth_scopes');
 
@@ -250,7 +250,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('/ccm/api/v1/system/status/', $route->getPath());
         $this->assertEquals('api', $scope);
 
-        $route = $router->getRoutes()->get('ccm_api_v1_products_add');
+        $route = $router->getRoutes()->get('ccm_api_v1_products_add_post');
         $middlewares = $route->getMiddlewares();
         $scope = $route->getOption('oauth_scopes');
         $methods = $route->getMethods();
@@ -261,7 +261,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('POST', $methods[0]);
         $this->assertEquals('api,products', $scope);
 
-        $route = $router->getRoutes()->get('ccm_api_v1_users');
+        $route = $router->getRoutes()->get('ccm_api_v1_users_get');
         $scope = $route->getOption('oauth_scopes');
         $middlewares = $route->getMiddlewares();
         $this->assertCount(3, $middlewares);
