@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Routing;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -10,7 +11,6 @@ use Symfony\Component\Routing\RouteCollection;
 
 class Router implements RouterInterface
 {
-
     /**
      * @var RouteActionFactoryInterface
      */
@@ -24,22 +24,9 @@ class Router implements RouterInterface
     public function __construct(
         RouteCollection $routes,
         RouteActionFactoryInterface $actionFactory
-    ){
+    ) {
         $this->routes = $routes;
         $this->actionFactory = $actionFactory;
-    }
-
-    private function normalizePath($path)
-    {
-        return '/' . trim($path, '/') . '/';
-    }
-
-    private function createRouteBuilder($path, $action, $methods)
-    {
-        $route = new Route($this->normalizePath($path));
-        $route->setMethods($methods);
-        $route->setAction($action);
-        return new RouteBuilder($this, $route);
     }
 
     public function buildGroup()
@@ -85,12 +72,13 @@ class Router implements RouterInterface
     public function all($path, $action)
     {
         return $this->createRouteBuilder($path, $action, [
-            'GET', 'POST', 'PUT', 'PATCH', 'HEAD', 'DELETE', 'OPTIONS'
+            'GET', 'POST', 'PUT', 'PATCH', 'HEAD', 'DELETE', 'OPTIONS',
         ]);
     }
 
     /**
      * @param Route $route
+     *
      * @return RouteActionInterface
      */
     public function resolveAction(Route $route)
@@ -121,6 +109,7 @@ class Router implements RouterInterface
 
     /**
      * @param Request $request
+     *
      * @return null|MatchedRoute|ResourceNotFoundException|MethodNotAllowedException
      */
     public function matchRoute(Request $request)
@@ -135,6 +124,7 @@ class Router implements RouterInterface
             $route = $this->routes->get($matched['_route']);
             $request->attributes->add($matched);
             $request->attributes->set('_route', $route);
+
             return new MatchedRoute($route, $matched);
         }
     }
@@ -146,6 +136,7 @@ class Router implements RouterInterface
 
     /**
      * @deprecated. Use the verb methods instead.
+     *
      * @param $path
      * @param $callback
      * @param null $handle
@@ -155,17 +146,18 @@ class Router implements RouterInterface
      * @param array $schemes
      * @param array $methods
      * @param null $condition
+     *
      * @return Route
      */
     public function register(
         $path,
         $callback,
         $handle = null,
-        array $requirements = array(),
-        array $options = array(),
+        array $requirements = [],
+        array $options = [],
         $host = '',
-        $schemes = array(),
-        $methods = array(),
+        $schemes = [],
+        $methods = [],
         $condition = null)
     {
         $route = new Route($this->normalizePath($path), [], $requirements, $options, $host, $schemes, $methods, $condition);
@@ -174,28 +166,33 @@ class Router implements RouterInterface
             $route->setCustomName($handle);
         }
         $this->addRoute($route);
+
         return $route;
     }
 
     /**
      * Registers routes from a config array. This is deprecated. Use the $router object
      * directly in an included file.
+     *
      * @deprecated.
+     *
      * @param array $routes
      */
     public function registerMultiple(array $routes)
     {
         foreach ($routes as $route => $route_settings) {
             array_unshift($route_settings, $route);
-            call_user_func_array(array($this, 'register'), $route_settings);
+            call_user_func_array([$this, 'register'], $route_settings);
         }
     }
 
-
     /**
      * Returns a route string based on data. DO NOT USE THIS.
+     *
      * @deprecated
+     *
      * @param $data
+     *
      * @return string
      */
     public function route($data)
@@ -229,6 +226,20 @@ class Router implements RouterInterface
         return $route;
     }
 
+    private function normalizePath($path)
+    {
+        return '/' . trim($path, '/') . '/';
+    }
+
+    private function createRouteBuilder($path, $action, $methods)
+    {
+        $route = new Route($this->normalizePath($path));
+        $route->setMethods($methods);
+        $route->setAction($action);
+
+        return new RouteBuilder($this, $route);
+    }
+
     /**
      * @param \Symfony\Component\Routing\RouteCollection $routes
      * @param string $path
@@ -259,6 +270,7 @@ class Router implements RouterInterface
                 $result->add($name, $route);
             }
         }
+
         return $result;
     }
 }
