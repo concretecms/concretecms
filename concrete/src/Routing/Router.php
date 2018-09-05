@@ -31,7 +31,9 @@ class Router implements RouterInterface
 
     private function normalizePath($path)
     {
-        return '/' . trim($path, '/') . '/';
+        $path = trim($path, '/');
+
+        return $path === '' ? '/' : "/{$path}/";
     }
 
     private function createRouteBuilder($path, $action, $methods)
