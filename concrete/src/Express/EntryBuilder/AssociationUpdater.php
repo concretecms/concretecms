@@ -21,7 +21,7 @@ class AssociationUpdater
         if (substr($method, 0, 3) == 'set') {
             $method = preg_replace('/(?!^)[[:upper:]]/', '_\0', $method);
             $method = strtolower($method);
-            $identifier = str_replace('set_', '', $method);
+            $identifier = substr($method, 4);
             $this->associate($identifier, $arguments[0]);
         }
         return $this;

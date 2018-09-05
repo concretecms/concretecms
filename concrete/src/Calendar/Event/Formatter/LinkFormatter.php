@@ -57,7 +57,8 @@ class LinkFormatter implements LinkFormatterInterface
 
     public function getEventOccurrenceLinkObject(CalendarEventVersionOccurrence $occurrence)
     {
-        $value = $occurrence->getEvent()->getName();
+        $value = h($occurrence->getEvent()->getName());
+        
         if (!$value) {
             $value = t('(No Title)');
         }

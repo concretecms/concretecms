@@ -6,6 +6,7 @@ use Concrete\Block\ExpressForm\Controller as ExpressFormBlockController;
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Config\Renderer;
 use Concrete\Core\Database\DatabaseStructureManager;
+use Concrete\Core\Entity\OAuth\Scope;
 use Concrete\Core\Entity\Site\Locale;
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Service\File;
@@ -30,6 +31,7 @@ use Exception;
 use Group;
 use GroupTree;
 use Hautelook\Phpass\PasswordHash;
+use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 use Package as BasePackage;
 use Page;
 use PermissionKey;
@@ -84,6 +86,7 @@ class StartingPointPackage extends BasePackage
             new StartingPointInstallRoutine('import_files', 65, t('Importing files.')),
             new StartingPointInstallRoutine('install_content', 70, t('Adding pages and content.')),
             new StartingPointInstallRoutine('install_desktops', 85, t('Adding desktops.')),
+            new StartingPointInstallRoutine('install_api', 88, t('Installing API.')),
             new StartingPointInstallRoutine('install_site_permissions', 90, t('Setting site permissions.')),
             new AttachModeInstallRoutine('finish', 95, t('Finishing.')),
         ];
@@ -340,6 +343,18 @@ class StartingPointPackage extends BasePackage
     {
         $desktop = \Page::getByPath('/dashboard/welcome');
         $desktop->movePageDisplayOrderToTop();
+    }
+
+    protected function install_api()
+    {
+        $scopes = $this->app->make('config')->get('app.api.scopes');
+        $em = $this->app->make(EntityManager::class);
+        foreach($scopes as $scope) {
+            $s = new Scope();
+            $s->setIdentifier($scope);
+            $em->persist($s);
+            $em->flush();
+        }
     }
 
     protected function install_database()

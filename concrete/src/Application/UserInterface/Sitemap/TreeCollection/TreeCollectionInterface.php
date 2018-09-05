@@ -10,14 +10,14 @@ interface TreeCollectionInterface
     /**
      * Get the list of sitemap entries.
      *
-     * @return \Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\Entry\EntryInterface
+     * @return \Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\Entry\EntryInterface[]
      */
     public function getEntries();
 
     /**
      * Get the list of sitemap groups.
      *
-     * @return \Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\Entry\Group\GroupInterface
+     * @return \Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\Entry\Group\GroupInterface[]
      */
     public function getEntryGroups();
 

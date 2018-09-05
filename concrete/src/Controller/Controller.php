@@ -2,6 +2,7 @@
 namespace Concrete\Core\Controller;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Page\Theme\ThemeRouteCollection;
 use Concrete\Core\Support\Facade\Facade;
 use Request;
 use PageTheme;
@@ -33,7 +34,8 @@ class Controller extends AbstractController
     public function getTheme()
     {
         if (is_object($this->view)) {
-            $tmpTheme = Route::getThemeByRoute($this->view->getViewPath());
+            $tmpTheme = $this->app->make(ThemeRouteCollection::class)
+                ->getThemeByRoute($this->view->getViewPath());
             if ($tmpTheme) {
                 return $tmpTheme[0];
             }
@@ -55,7 +57,8 @@ class Controller extends AbstractController
         }
 
         if (is_object($this->view)) {
-            $tmpTheme = Route::getThemeByRoute($this->view->getViewPath());
+            $tmpTheme = $this->app->make(ThemeRouteCollection::class)
+                ->getThemeByRoute($this->view->getViewPath());
             if ($tmpTheme && isset($tmpTheme[1])) {
                 return $tmpTheme[1];
             }

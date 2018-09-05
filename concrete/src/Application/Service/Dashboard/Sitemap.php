@@ -210,7 +210,7 @@ class Sitemap
                 $cAlias = 'POINTER';
                 $cID = $c->getCollectionPointerOriginalID();
             } else {
-                $cIconClass = 'fa fa-sign-out';
+                $cIconClass = 'fa fa-external-link';
                 $cAlias = 'LINK';
             }
         }

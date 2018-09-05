@@ -64,13 +64,18 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
         if (substr($nm, 0, 3) == 'set') {
             $nm = preg_replace('/(?!^)[[:upper:]]/', '_\0', $nm);
             $nm = strtolower($nm);
-            $identifier = str_replace('set_', '', $nm);
+            $identifier = substr($nm, 4);
 
             // Assume attribute otherwise
             $this->setAttribute($identifier, $a[0]);
         }
 
         return null;
+    }
+    
+    public function is($entityHandle)
+    {
+        return $this->getEntity()->getHandle() == $entityHandle;
     }
 
     public function getPermissionObjectIdentifier()
@@ -126,6 +131,12 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $exEntryID;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Concrete\Core\Entity\User\User")
+     * @ORM\JoinColumn(name="uID", referencedColumnName="uID")
+     */
+    protected $author;
 
     /**
      * @ORM\Column(type="integer")
@@ -241,9 +252,6 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
     }
 
 
-    /**
-     * @deprecated See \Concrete\Core\Entity\Express\Entry::getEntryAssociation
-     */
     public function getAssociation($handle)
     {
         if ($handle instanceof Association) {
@@ -349,5 +357,23 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
     {
         return \Core::make(EntryExporter::class);
     }
+
+    /**
+     * @return mixed
+     */
+    public function getAuthor()
+    {
+        return $this->author;
+    }
+
+    /**
+     * @param mixed $author
+     */
+    public function setAuthor($author)
+    {
+        $this->author = $author;
+    }
+
+
 
 }

@@ -55,6 +55,7 @@ class Controller extends DefaultController
 
             if ($value) {
                 $this->load();
+                $value = (string) $value;
                 if ($this->akTextareaDisplayMode == 'rich_text') {
                     $value = LinkAbstractor::translateFrom($value);
                 }

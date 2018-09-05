@@ -5,9 +5,9 @@
         <label class="control-label"><?=$label?></label>
     <?php } ?>
     <?php
-    if (!empty($selectedEntities) && count($selectedEntities)) { ?>
+    if (!empty($selectedEntries) && count($selectedEntries)) { ?>
         <ul class="item-select-list" data-sortable-list="items">
-            <?php foreach($selectedEntities as $entry) { ?>
+            <?php foreach($selectedEntries as $entry) { ?>
                 <li>
                     <input type="hidden" name="express_association_<?=$control->getID()?>[]" value="<?=$entry->getID()?>">
                     <?=$formatter->getEntryDisplayName($control, $entry)?>
@@ -17,6 +17,8 @@
             <?php } ?>
         </ul>
         <?php
+    } else {
+        ?><p><?=t('No available entries found.')?></p><?php
     }
     ?>
 </div>

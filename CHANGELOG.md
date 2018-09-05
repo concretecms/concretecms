@@ -1,3 +1,39 @@
+# 8.5.0
+
+# 8.4.2
+
+## Feature Updates
+
+* Added filtering and pagination to the Waiting for Me workflow notification list.
+* Better unsetting/removal of data when users are deleted (useful for GDPR compliance). More details here: https://github.com/concrete5/concrete5/pull/6693 (thanks a3020)
+* Delete unused filesystem files and thumbnails when a file version is removed (thanks mlocati)
+* We have removed the Flash-based avatar editor in favor of a JavaScript-based component
+* Fix typos in Google Maps API check (thanks mlocati)
+* Do not link to non active page in content block (thanks hissy)
+
+## Bug Fixes
+
+* Fixed error linking to marketplace addon and theme pages on the Connected to Community Pages; Fixed inability to click through to marketplace detail add-on or theme pages in the Dashboard
+* Fixed inability to download free add-ons through the marketplace Dashboard pages.
+* Fixed inability to install new block types via the Block Types Dashboard page (thanks dimger)
+* Fixed bug where multiple workflows wouldn’t fire if the user could automatically approve the first one.
+* Fixed inability to ctrl-click or command-click file manager results to select them in bulk (thanks dimger)
+* Fixed error getting temporary directory when running generate sitemap job (thanks mindhun)
+* Fixed: 8.4.0 - An exception occurred while executing 'INSERT INTO UserWorkflowProgress (uID, wpID) VALUES (?, ?)' with params [null, \"25\"]:\n\nSQLSTATE[23000]: Integrity constraint violation: 1048 Column 'uID' cannot be null (thanks dimger)
+* Fixed bug in migrating data where sites already had the Page Selector add-on installed, and some attribute values were null (Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException) (thanks mlocati)
+* Fixed inability to upgrade to 8.4.1 from 5.7.5.13.
+* Fix JavascriptLocalizedAsset::getAssetContents when concrete5 is installed in subdirectory (thanks mlocati)
+* Fix infinite redirection visiting existing dirs when seo.trailing_slash is false (thanks mlocati)
+* Fixed: Duplicated seo.trailing_slash definition (thanks mlocati)
+* Made it impossible to store XSS in calendar event names.
+
+## Developer Updates
+
+* Lots of code cleanup surrounding username and email validation, added a new Username and Email validator (thanks mlocati)
+* Add public properties to next_previous block controller (thanks a3020)
+* Add CLI command to refresh database entities (thanks mlocati)
+* Updated Translation Library (thanks mlocati)
+
 # 8.4.1
 
 ## Feature Updates

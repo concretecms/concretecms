@@ -5,32 +5,18 @@
 ;(function(global, $) {
     'use strict';
 
-    function ConcreteSitemap($element, options) {
-        var my = this;
-        options = options || {};
-        options = $.extend({
-            displayNodePagination: false,
-            cParentID: 0,
-            siteTreeID: 0,
-            cookieId: 'ConcreteSitemap',
-            includeSystemPages: false,
-            displaySingleLevel: false,
-            persist: true,
-            minExpandLevel: false,
-            dataSource: CCM_DISPATCHER_FILENAME + '/ccm/system/page/sitemap_data',
-            ajaxData: {},
-            selectMode: false, // 1 - single, 2 = multiple , 3 = hierarchical-multiple - has NOTHING to do with clicks. If you enable select mode you CANNOT use a click handler.
-            onClickNode: false, // This handles clicking on the title.
-            onSelectNode: false, // this handles when a radio or checkbox in the tree is checked
-            init: false
-        }, options);
-        my.options = options;
-        my.$element = $element;
-        my.$sitemap = null;
-        my.homeCID = null;
-        my.setupTree();
-        my.setupTreeEvents();
-
+	function ConcreteSitemap($element, options) {		var my = this;		options = options || {};		options.sitemapIndex = Math.max(0, parseInt(options.sitemapIndex, 10) || 0);		options = $.extend({			displayNodePagination: false,			cParentID: 0,			siteTreeID: 0,			cookieId: 'ConcreteSitemap' + (options.sitemapIndex > 0 ? '-' + options.sitemapIndex : ''),			includeSystemPages: false,            displaySingleLevel: false,
+			persist: true,			minExpandLevel: false,			dataSource: CCM_DISPATCHER_FILENAME + '/ccm/system/page/sitemap_data',			ajaxData: {},			selectMode: false, // 1 - single, 2 = multiple , 3 = hierarchical-multiple - has NOTHING to do with clicks. If you enable select mode you CANNOT use a click handler.
+			onClickNode: false, // This handles clicking on the title.
+			onSelectNode: false, // this handles when a radio or checkbox in the tree is checked
+			init: false		}, options);        if (options.sitemapIndex > 0) {
+            options.ajaxData.sitemapIndex = options.sitemapIndex;
+        }		my.options = options;
+		my.$element = $element;
+		my.$sitemap = null;
+		my.homeCID = null;
+		my.setupTree();
+		my.setupTreeEvents();
         Concrete.event.publish('ConcreteSitemap', this);
 
         return my.$element;
