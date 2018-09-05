@@ -7,6 +7,8 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Page\Theme\ThemeRouteCollection;
 
 class Router implements RouterInterface
 {
@@ -229,5 +231,12 @@ class Router implements RouterInterface
         return $route;
     }
 
-
+    /**
+     * @deprecated Use $app->make(\Concrete\Core\Page\Theme\ThemeRouteCollection::class)->setThemeByRoute() with the same arguments
+     */
+    public function setThemeByRoute($path, $theme = null, $wrapper = FILENAME_THEMES_VIEW)
+    {
+        $app = Application::getFacadeApplication();
+        $app->make(ThemeRouteCollection::class)->setThemeByRoute($path, $theme, $wrapper);
+    }
 }
