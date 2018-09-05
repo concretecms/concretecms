@@ -72,6 +72,12 @@
         <permissionkey handle="edit_area_permissions" name="Edit Area Permissions" package="" description="Controls whether users can access the permissions on an area. Custom area permissions could override those of the page." category="area"/>
         <permissionkey handle="delete_area_contents" name="Delete Area Contents" package="" description="Controls whether users can delete blocks from this area." category="area"/>
         <permissionkey handle="schedule_area_contents_guest_access" name="Schedule Guest Access" description="Controls whether users can schedule guest access permissions on blocks in this area. Guest Access is a shortcut for granting permissions just to the Guest Group." package="" category="area" />
+        <permissionkey handle="approve_area_versions" name="Approve Area Versions" description="Can publish an unapproved version of the area." package="" category="area" can-trigger-workflow="true"/>
+        <permissionkey handle="delete_area" name="" description="Delete Area" package="Ability to delete this area." category="area" can-trigger-workflow="true"/>
+        <permissionkey handle="delete_area_versions" name="Delete Area Versions" description="Ability to remove old versions of this area." package="" category="area" can-trigger-workflow="true"/>
+        <permissionkey handle="view_area_versions" name="View Area Versions" description="Can view the area versions dialog and read past versions of an area." package="" category="area"/>
+        <permissionkey handle="move_or_copy_area" name="Move or Copy Area" description="Can move or copy this area to another location." package="" category="area" can-trigger-workflow="true" />
+        <permissionkey handle="edit_area_properties" name="Edit Properties" description="Ability to change anything in the Area Properties menu." package="" category="area"/>
 
         <!-- blocks //-->
         <permissionkey handle="view_block" name="View Block" package="" category="block" description="Controls whether users can view this block in the page." />

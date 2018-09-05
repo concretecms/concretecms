@@ -46,7 +46,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 						<% } %>
 						<li><% if (!cvIsApproved) { %><span><?=t('Unapprove')?></span><% } else { %><a href="#" data-version-menu-task="unapprove" data-version-id="<%-cvID%>"><?=t('Unapprove')?></a><% } %></li>
 
-						<% if (cpCanDeletePageVersions) { %>
+						<% if (cpCanDeletePageOrAreaVersions) { %>
 						<li class="ccm-menu-item-delete">
 							<span <% if (cvIsApproved != 1) { %>style="display:none"<% } %>><?=t('Delete')?></span>
 							<a <% if (cvIsApproved == 1) { %>style="display:none"<% } %> href="#" data-version-menu-task="delete" data-version-id="<%-cvID%>"><?=t('Delete')?></a>
@@ -280,7 +280,7 @@ $(function() {
 		if (checkboxes.length > 1) {
 			$('button[data-version-action=compare]').removeClass('disabled');
 		}
-		if (checkboxes.length > 0  && notChecked.length > 0 && !checkboxes.filter('[data-version-active=true]').length) {
+		if (checkboxes.length > 0  && notChecked.length > 0 && !checkboxes.filter('[data-version-active=true]').length && $('#ccm-panel-page-versions tbody [data-version-menu-task=delete]').length) {
 			$('button[data-version-action=delete]').removeClass('disabled');
 		}
 

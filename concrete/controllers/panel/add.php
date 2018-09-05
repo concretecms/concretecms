@@ -54,7 +54,7 @@ class Add extends BackendInterfacePageController
 
     protected function canAccess()
     {
-        return $this->permissions->canEditPageContents();
+        return $this->stackPermissions ? $this->stackPermissions->canEditAreaContents() : $this->permissions->canEditPageContents();
     }
 
     /**

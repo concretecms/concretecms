@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\Blocks;
 
+use Concrete\Core\Area\Area;
 use Concrete\Core\Entity\Statistics\UsageTracker\StackUsageRecord;
 use Concrete\Core\Http\Response;
 use Concrete\Core\Multilingual\Page\Section\Section;
@@ -400,8 +401,8 @@ class Stacks extends DashboardPageController
                     }
                 }
                 if (!$this->error->has()) {
-                    $sps = new Permissions($s);
-                    if ($sps->canDeletePage()) {
+                    $sps = new Permissions(Area::get($s, STACKS_AREA_NAME));
+                    if ($sps->canDeleteArea()) {
                         $u = new \User();
                         $pkr = new DeletePageRequest();
                         $pkr->setRequestedPage($s);
@@ -435,8 +436,8 @@ class Stacks extends DashboardPageController
             $s = Stack::getByID($stackID);
             if (is_object($s)) {
                 $isGlobalArea = $s->getStackType() == Stack::ST_TYPE_GLOBAL_AREA;
-                $sps = new Permissions($s);
-                if ($sps->canApprovePageVersions()) {
+                $sps = new Permissions(Area::get($s, STACKS_AREA_NAME));
+                if ($sps->canApproveAreaVersions()) {
                     $u = new User();
                     $v = Version::get($s, 'RECENT');
                     $pkr = new ApproveStackRequest();
@@ -491,15 +492,20 @@ class Stacks extends DashboardPageController
             $this->error->add(t('Invalid stack'));
             $this->view();
         } else {
-            $sps = new Permissions($page);
-            if (!$sps->canEditPageProperties()) {
-                if ($isFolder) {
-                    $this->error->add(t("You don't have the permission to rename this stack"));
-                } else {
+            if ($isFolder) {
+                $sps = new Permissions($page);
+                if (!$sps->canEditPageProperties()) {
                     $this->error->add(t("You don't have the permission to rename this stack folder"));
+                    $this->view_details($viewCID);
                 }
-                $this->view_details($viewCID);
             } else {
+                $sps = new Permissions(Area::get($page, STACKS_AREA_NAME));
+                if (!$sps->canEditAreaProperties()) {
+                    $this->error->add(t("You don't have the permission to rename this stack"));
+                    $this->view_details($viewCID);
+                }
+            }
+            if (!$this->error->has()) {
                 $this->set('renamePage', $page);
                 $this->set('isFolder', $isFolder);
                 $this->set('oldName', $isFolder ? $page->getCollectionName() : $stack->getStackName());
@@ -635,8 +641,8 @@ class Stacks extends DashboardPageController
             if ($ns !== null) {
                 $this->redirect('/dashboard/blocks/stacks', 'duplicate', $ns->getCollectionID());
             }
-            $sps = new Permissions($s);
-            if (!$sps->canMoveOrCopyPage()) {
+            $sps = new Permissions(Area::get($s, STACKS_AREA_NAME));
+            if (!$sps->canMoveOrCopyArea()) {
                 $this->error->add(t("You don't have the permission to clone this stack"));
                 $this->view_details($cID);
             } else {

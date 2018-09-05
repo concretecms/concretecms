@@ -3,7 +3,8 @@ namespace Concrete\Core\Page\Collection\Version;
 
 use Core;
 use PageEditResponse;
-use Page;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Area\Area;
 use Permissions;
 use stdClass;
 
@@ -11,6 +12,28 @@ class EditResponse extends PageEditResponse
 {
     protected $versions = array();
     protected $vl;
+
+    /**
+     * The editing area (only in case of stacks)
+     *
+     * @var \Concrete\Core\Area\Area|null
+     */
+    protected $stackArea = null;
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Page\EditResponse::setPage()
+     */
+    public function setPage(Page $page)
+    {
+        parent::setPage($page);
+        if (strpos($page->getCollectionPath(), STACKS_PAGE_PATH . '/') === 0) {
+            $this->stackArea = Area::get($page, STACKS_AREA_NAME);
+        } else {
+            $this->stackArea = null;
+        }
+    }
 
     public function addCollectionVersion(Version $cv)
     {
@@ -34,9 +57,13 @@ class EditResponse extends PageEditResponse
         $o = parent::getBaseJSONObject();
 
         $c = Page::getByID($this->cID);
-        $cp = new Permissions($c);
-        $cpCanDeletePageVersions = $cp->cpCanDeletePageVersions();
-
+        if ($this->stackArea === null) {
+            $cp = new Permissions($c);
+            $cpCanDeletePageOrAreaVersions = $cp->canDeletePageVersions();
+        } else {
+            $cp = new Permissions($this->stackArea);
+            $cpCanDeletePageOrAreaVersions = $cp->canDeleteAreaVersions();
+        }
         $versions = array();
         foreach ($this->versions as $v) {
             $obj = new stdClass();
@@ -45,7 +72,7 @@ class EditResponse extends PageEditResponse
             $obj->cvIsScheduled = $v->getPublishDate() != null;
             $obj->cvPublishDate = $dateHelper->formatDateTime($v->getPublishDate());
             $obj->cvPublishEndDate = $dateHelper->formatDateTime($v->getPublishEndDate());
-            $obj->cpCanDeletePageVersions = $cpCanDeletePageVersions;
+            $obj->cpCanDeletePageOrAreaVersions = $cpCanDeletePageOrAreaVersions;
             $obj->cvDateVersionCreated = $dateHelper->formatDateTime($v->getVersionDateCreated());
             $obj->cvApprovedDate = $dateHelper->formatDateTime($v->getVersionDateApproved());
             $obj->cvAuthorUserName = $v->getVersionAuthorUserName();

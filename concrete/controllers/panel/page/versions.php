@@ -5,7 +5,6 @@ use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageContro
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Page\Collection\Collection;
 use Concrete\Core\Workflow\Request\UnapprovePageRequest;
-use Permissions;
 use Page;
 use Loader;
 use Core;
@@ -23,6 +22,9 @@ class Versions extends BackendInterfacePageController
     protected $viewPath = '/panels/page/versions';
     public function canAccess()
     {
+        if ($this->stackPermissions) {
+            return $this->stackPermissions->canViewAreaVersions();
+        }
         return $this->permissions->canViewPageVersions() || $this->permissions->canEditPageVersions();
     }
 
@@ -35,7 +37,6 @@ class Versions extends BackendInterfacePageController
         $r = new PageEditVersionResponse();
         $r->setPage($this->page);
         $r->setVersionList($vl);
-        $cpCanDeletePageVersions = $this->permissions->canDeletePageVersions();
         foreach ($vArray as $v) {
             $r->addCollectionVersion($v);
         }
@@ -121,9 +122,12 @@ class Versions extends BackendInterfacePageController
             /** @var \Concrete\Core\Page\Collection\Collection $c */
             $c = $this->page;
             $versions = $this->countVersions($c);
-
-            $cp = new Permissions($this->page);
-            if ($cp->canDeletePageVersions()) {
+            if ($this->stackPermissions) {
+                $canDelete = $this->stackPermissions->canDeleteAreaVersions();
+            } else {
+                $canDelete = $this->permissions->canDeletePageVersions();
+            }
+            if ($canDelete) {
                 $r = new PageEditVersionResponse();
                 $r->setPage($c);
                 if (is_array($_POST['cvID'])) {
@@ -174,10 +178,14 @@ class Versions extends BackendInterfacePageController
     public function approve()
     {
         $c = $this->page;
-        $cp = $this->permissions;
         if ($this->validateAction()) {
             $r = new PageEditVersionResponse();
-            if ($cp->canApprovePageVersions()) {
+            if ($this->stackPermissions) {
+                $canApprove = $this->stackPermissions->canApproveAreaVersions();
+            } else {
+                $canApprove = $this->permissions->canApprovePageVersions();
+            }
+            if ($canApprove) {
                 $ov = CollectionVersion::get($c, 'ACTIVE');
                 if (is_object($ov)) {
                     $ovID = $ov->getVersionID();
@@ -216,10 +224,14 @@ class Versions extends BackendInterfacePageController
     public function unapprove()
     {
         $c = $this->page;
-        $cp = $this->permissions;
         if ($this->validateAction()) {
             $r = new PageEditVersionResponse();
-            if ($cp->canApprovePageVersions()) {
+            if ($this->stackPermissions) {
+                $canApprove = $this->stackPermissions->canApproveAreaVersions();
+            } else {
+                $canApprove = $this->permissions->canApprovePageVersions();
+            }
+            if ($canApprove) {
                 $cvID = $this->request->request->get('cvID');
                 $r = new PageEditVersionResponse();
                 $r->setPage($c);

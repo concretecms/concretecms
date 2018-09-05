@@ -46,14 +46,15 @@ if (isset($neutralStack)) {
         </form>
         <?php
     } else {
-        $cpc = new Permissions($stackToEdit);
+        $a = Area::get($stackToEdit, STACKS_AREA_NAME);
+        $cpc = new Permissions($a);
         $showApprovalButton = false;
         $hasPendingPageApproval = false;
         $workflowList = PageWorkflowProgress::getList($stackToEdit);
         foreach ($workflowList as $wl) {
             $wr = $wl->getWorkflowRequestObject();
             $wrk = $wr->getWorkflowRequestPermissionKeyObject();
-            if ($wrk->getPermissionKeyHandle() == 'approve_page_versions') {
+            if ($wrk->getPermissionKeyHandle() == 'approve_area_versions') {
                 $hasPendingPageApproval = true;
                 break;
             }
@@ -62,7 +63,7 @@ if (isset($neutralStack)) {
         if (!$hasPendingPageApproval) {
             $vo = $stackToEdit->getVersionObject();
             $composer = Core::make('helper/concrete/composer');
-            if ($cpc->canApprovePageVersions()) {
+            if ($cpc->canApproveAreaVersions()) {
                 $publishTitle = $composer->getPublishButtonTitle($stackToEdit);
                 $showApprovalButton = true;
             }
@@ -72,32 +73,32 @@ if (isset($neutralStack)) {
         <nav class="navbar navbar-default">
             <div class="container-fluid">
                 <ul class="nav navbar-nav small">
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><?=t('Add')?> <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dialog-launch" dialog-modal="false" dialog-width="550" dialog-height="380" dialog-title="<?=t('Add')?>" href="<?=URL::to('/ccm/system/dialogs/page/add_block_list')?>?cID=<?=$stackToEdit->getCollectionID()?>&arHandle=<?=STACKS_AREA_NAME?>"><?=t('Add Block')?></a></li>
-                            <li><a class="dialog-launch" dialog-modal="false" dialog-width="550" dialog-height="380" dialog-title="<?=t('Paste From Clipboard')?>" href="<?=URL::to('/ccm/system/dialogs/page/clipboard')?>?cID=<?=$stackToEdit->getCollectionID()?>&arHandle=<?=STACKS_AREA_NAME?>"><?=t('Paste From Clipboard')?></a></li>
-                        </ul>
-                    </li>
-                    <li><a dialog-width="640" dialog-height="340" class="dialog-launch" id="stackVersions" dialog-title="<?=t('Version History')?>" href="<?=URL::to('/ccm/system/panels/page/versions')?>?cID=<?=$stackToEdit->getCollectionID()?>"><?=t('Version History')?></a></li>
-                    <?php if (!$isGlobalArea && $cpc->canEditPageProperties()) { ?>
+                    <?php if ($cpc->canAddBlockToArea()) { ?>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#"><?=t('Add')?> <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dialog-launch" dialog-modal="false" dialog-width="550" dialog-height="380" dialog-title="<?=t('Add')?>" href="<?=URL::to('/ccm/system/dialogs/page/add_block_list')?>?cID=<?=$stackToEdit->getCollectionID()?>&arHandle=<?=STACKS_AREA_NAME?>"><?=t('Add Block')?></a></li>
+                                <li><a class="dialog-launch" dialog-modal="false" dialog-width="550" dialog-height="380" dialog-title="<?=t('Paste From Clipboard')?>" href="<?=URL::to('/ccm/system/dialogs/page/clipboard')?>?cID=<?=$stackToEdit->getCollectionID()?>&arHandle=<?=STACKS_AREA_NAME?>"><?=t('Paste From Clipboard')?></a></li>
+                            </ul>
+                        </li>
+                    <?php } ?>
+                    <?php if ($cpc->canViewAreaVersions()) { ?>
+                        <li><a dialog-width="640" dialog-height="340" class="dialog-launch" id="stackVersions" dialog-title="<?=t('Version History')?>" href="<?=URL::to('/ccm/system/panels/page/versions')?>?cID=<?=$stackToEdit->getCollectionID()?>"><?=t('Version History')?></a></li>
+                    <?php } ?>
+                    <?php if (!$isGlobalArea && $neutralStack === $stackToEdit && $cpc->canEditAreaProperties()) { ?>
                         <li><a href="<?=$view->action('rename', $neutralStack->getCollectionID())?>"><?=t('Rename')?></a></li>
                     <?php } ?>
-                    <?php if ($cpc->canEditPagePermissions() && Config::get('concrete.permissions.model') == 'advanced') { ?>
+                    <?php if ($cpc->canEditAreaPermissions() && Config::get('concrete.permissions.model') == 'advanced') { ?>
                         <li><a dialog-width="580" class="dialog-launch" dialog-append-buttons="true" dialog-height="420" dialog-title="<?=t('Stack Permissions')?>" id="stackPermissions" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup?cID=<?=$stackToEdit->getCollectionID()?>&arHandle=<?=STACKS_AREA_NAME?>&atask=groups"><?=t('Permissions')?></a></li>
                     <?php } ?>
-                    <?php if (!$isGlobalArea && $cpc->canMoveOrCopyPage()) { ?>
+                    <?php if (!$isGlobalArea && $cpc->canMoveOrCopyArea()) { ?>
                         <li><a href="<?=$view->action('duplicate', $neutralStack->getCollectionID())?>" style="margin-right: 4px;"><?=t('Duplicate')?></a></li>
                     <?php } ?>
                     <?php if (!$isGlobalArea) { ?>
-                    <li>
-                        <a dialog-width="640" dialog-height="340" class="dialog-launch" id="stackUsage" dialog-title="<?=t('Usage')?>" href="<?= $view->action('usage', $stackToEdit->getCollectionID()) ?>">
-                   <?=t('Stack Usage')?>
-                    </a>
-                    </li>
+                        <li><a dialog-width="640" dialog-height="340" class="dialog-launch" id="stackUsage" dialog-title="<?=t('Usage')?>" href="<?= $view->action('usage', $stackToEdit->getCollectionID()) ?>"><?=t('Stack Usage')?></a></li>
                     <?php } ?>
                     <?php
-                    if ($cpc->canDeletePage()) {
+                    if ($cpc->canDeleteArea()) {
                         if ($isGlobalArea) {
                             if ($stackToEdit !== $neutralStack) {
                                 $deleteLabels = ['title' => t('Delete Localized Version'), 'button' => t('Delete')];
@@ -130,7 +131,6 @@ if (isset($neutralStack)) {
 
         <div id="ccm-stack-container">
             <?php
-            $a = Area::get($stackToEdit, STACKS_AREA_NAME);
             $a->forceControlsToDisplay();
             View::element('block_area_header', array('a' => $a));
             foreach ($blocks as $b) {
