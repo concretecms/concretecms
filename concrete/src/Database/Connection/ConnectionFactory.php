@@ -48,7 +48,9 @@ class ConnectionFactory
             }
         }
 
-        return new $wrapperClass($params, $driver);
+        $connection =  new $wrapperClass($params, $driver);
+        $connection->getDatabasePlatform()->registerDoctrineTypeMapping('json', 'json_array');
+        return $connection;
     }
 
     /**
