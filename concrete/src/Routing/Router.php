@@ -125,11 +125,11 @@ class Router implements RouterInterface
      */
     public function matchRoute(Request $request)
     {
+        $path = $this->normalizePath($request->getPathInfo());
         $matcher = new UrlMatcher(
-            $this->getRoutes(),
+            $this->filterRouteCollectionForPath($this->getRoutes(), $path),
             id(new RequestContext())->fromRequest($request)
         );
-        $path = $this->normalizePath($request->getPathInfo());
         $matched = $matcher->match($path);
         if (isset($matched['_route'])) {
             $route = $this->routes->get($matched['_route']);
@@ -229,5 +229,36 @@ class Router implements RouterInterface
         return $route;
     }
 
-
+    /**
+     * @param \Symfony\Component\Routing\RouteCollection $routes
+     * @param string $path
+     *
+     * @return \Symfony\Component\Routing\RouteCollection
+     */
+    private function filterRouteCollectionForPath(RouteCollection $routes, $path)
+    {
+        $result = new RouteCollection();
+        foreach ($routes->getResources() as $resource) {
+            $result->addResource($resource);
+        }
+        foreach ($routes->all() as $name => $route) {
+            $routePath = $route->getPath();
+            $p = strpos($routePath, '{');
+            $skip = false;
+            if ($p === false) {
+                if ($routePath !== $path) {
+                    $skip = true;
+                }
+            } elseif ($p > 0) {
+                $routeFixedPath = substr($routePath, 0, $p);
+                if (strpos($path, $routeFixedPath) !== 0) {
+                    $skip = true;
+                }
+            }
+            if ($skip === false) {
+                $result->add($name, $route);
+            }
+        }
+        return $result;
+    }
 }
