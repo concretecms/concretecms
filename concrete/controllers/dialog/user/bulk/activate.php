@@ -9,6 +9,7 @@ use Permissions;
 use UserInfo;
 use Core;
 use Concrete\Core\User\User;
+use Concrete\Core\Workflow\Progress\UserProgress as UserWorkflowProgress;
 
 class Activate extends BackendInterfaceController
 {

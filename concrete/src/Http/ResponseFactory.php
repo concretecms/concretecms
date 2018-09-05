@@ -16,6 +16,7 @@ use Concrete\Core\Page\Event;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Relation\Menu\Item\RelationListItem;
 use Concrete\Core\Page\Theme\Theme;
+use Concrete\Core\Page\Theme\ThemeRouteCollection;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Routing\RedirectResponse;
@@ -255,8 +256,8 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
             if ($smm == 1 && !Key::getByHandle('view_in_maintenance_mode')->validate() && ($_SERVER['REQUEST_METHOD'] != 'POST' || $this->app->make('token')->validate() == false)) {
                 $v = new View('/frontend/maintenance_mode');
 
-                $router = $this->app->make(RouterInterface::class);
-                $tmpTheme = $router->getThemeByRoute('/frontend/maintenance_mode');
+                $tmpTheme = $this->app->make(ThemeRouteCollection::class)
+                    ->getThemeByRoute('/frontend/maintenance_mode');
                 $v->setViewTheme($tmpTheme[0]);
                 $v->addScopeItems(['c' => $collection]);
                 $request->setCurrentPage($collection);

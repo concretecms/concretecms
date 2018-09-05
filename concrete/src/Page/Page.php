@@ -9,6 +9,7 @@ use Concrete\Core\Entity\Site\SiteTree;
 use Concrete\Core\Export\ExportableInterface;
 use Concrete\Core\Page\Stack\Stack;
 use Concrete\Core\Page\Theme\Theme;
+use Concrete\Core\Page\Theme\ThemeRouteCollection;
 use Concrete\Core\Permission\AssignableObjectTrait;
 use Concrete\Core\Site\SiteAggregateInterface;
 use Concrete\Core\Site\Tree\TreeInterface;
@@ -1371,7 +1372,9 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public function getCollectionThemeObject()
     {
         if (!isset($this->themeObject)) {
-            $tmpTheme = Route::getThemeByRoute($this->getCollectionPath());
+            $app = Facade::getFacadeApplication();
+            $tmpTheme = $app->make(ThemeRouteCollection::class)
+                ->getThemeByRoute($this->getCollectionPath());
             if (isset($tmpTheme[0])) {
                 switch ($tmpTheme[0]) {
                     case VIEW_CORE_THEME:

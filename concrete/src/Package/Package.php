@@ -751,7 +751,7 @@ abstract class Package implements LocalizablePackageInterface
             }
         }
 
-        if (empty($errors)) {
+        if (!$errors->has()) {
             // Step 3 - test minimum application version requirement
             $applicationVersionRequired = $this->getApplicationVersionRequired();
             if (version_compare(APP_VERSION, $applicationVersionRequired, '<')) {

@@ -2,6 +2,7 @@
 namespace Concrete\Core\Entity\User;
 
 use Doctrine\ORM\Mapping as ORM;
+use League\OAuth2\Server\Entities\UserEntityInterface;
 
 /**
  * @ORM\Entity
@@ -12,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     }
  * )
  */
-class User
+class User implements UserEntityInterface
 {
     /**
      * @ORM\Id @ORM\Column(type="integer", options={"unsigned": true})
@@ -456,5 +457,15 @@ class User
     public function __toString()
     {
         return (string) $this->getUserID();
+    }
+
+    /**
+     * Return the user's identifier.
+     *
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->getUserID();
     }
 }

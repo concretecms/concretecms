@@ -6,9 +6,9 @@ return [
      *
      * @var string
      */
-    'version' => '8.5.0a1',
-    'version_installed' => '8.5.0a1',
-    'version_db' => '20180813220933', // the key of the latest database migration
+    'version' => '8.5.0a2',
+    'version_installed' => '8.5.0a2',
+    'version_db' => '20180904165911', // the key of the latest database migration
 
     /*
      * Installation status
@@ -940,4 +940,20 @@ return [
         // [float] The time in seconds until idle triggers a save (set to 0 to disable autosave)
         'idle_timeout' => 1,
     ],
+
+    /*
+     * ------------------------------------------------------------------------
+     * API settings
+     * ------------------------------------------------------------------------
+     */
+    'api' => [
+        /*
+         * Enabled
+         *
+         * @var bool
+         */
+        'enabled' => false,
+
+    ],
+
 ];

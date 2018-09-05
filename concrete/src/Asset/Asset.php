@@ -488,7 +488,7 @@ abstract class Asset implements AssetInterface
         try {
             $app = Application::getFacadeApplication();
             $router = $app->make(RouterInterface::class);
-            $routes = $router->getList();
+            $routes = $router->getRoutes();
             $context = new RequestContext();
             $request = $app->make(Request::class);
             $context->fromRequest($request);

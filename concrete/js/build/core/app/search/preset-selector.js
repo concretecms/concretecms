@@ -1,5 +1,5 @@
 /* jshint unused:vars, undef:true, browser:true, jquery:true */
-/* global ConcreteAdvancedSearchPresetSelector */
+/* global ConcreteEvent */
 
 ;(function(global, $) {
     'use strict';

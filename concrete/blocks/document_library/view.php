@@ -3,7 +3,7 @@
 $c = Page::getCurrentPage();
 ?>
 
-<?php if ($success) { ?>
+<?php if (isset($success) && $success) { ?>
     <div class="alert alert-success"><?=$success?></div>
 <?php } ?>
 
