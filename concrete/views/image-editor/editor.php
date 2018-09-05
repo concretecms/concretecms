@@ -121,11 +121,9 @@ $url = $fv->getRelativePath();
                     filters: {},
                     debug: false,
                     jpegCompression: <?= Core::make(BitmapFormat::class)->getDefaultJpegQuality() / 100 ?>,
-                    mime: '<?= $fv->getMimeType() ?>',
-                    <?php
+                    mime: '<?= $fv->getMimeType() ?>'<?php
                     if (\Core::make('config')->get('concrete.misc.image_editor_cors_policy.enable_cross_origin', false) && preg_match('/^http[s]?:\/\/.*$/', $url)) {
-
-                        echo "crossOrigin: '" . (\Core::make('config')->get('concrete.misc.image_editor_cors_policy.anonymous_request', true) ? 'anonymous' : 'use-credentials') . "',";
+                        echo ",\n                    crossOrigin: '" . (\Core::make('config')->get('concrete.misc.image_editor_cors_policy.anonymous_request', true) ? 'anonymous' : 'use-credentials') . "'";
                     }
                     ?>
                 },
