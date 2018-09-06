@@ -90,14 +90,9 @@ class BlockView extends AbstractView
     }
 
     /**
-     * Creates a URL that can be posted or navigated to that, when done so, will automatically run the corresponding method inside the block's controller.
-     * <code>
-     *     <a href="<?=$view->action('get_results')?>">Get the results</a>
-     * </code>.
+     * @deprecated In views, use $controller->getActionURL() using the same arguments.
      *
-     * @param string $task
-     *
-     * @return string $url
+     * @return \Concrete\Core\Url\UrlImmutable|null
      */
     public function action($task)
     {
