@@ -240,10 +240,17 @@ class Router implements RouterInterface
         $app->make(ThemeRouteCollection::class)->setThemeByRoute($path, $theme, $wrapper);
     }
 
+    /**
+     * @param string $path
+     *
+     * @return string
+     */
     private function normalizePath($path)
     {
-        $path = trim($path, '/');
-        return $path === '' ? '/' : "/{$path}/";
+        $parts = explode('?', (string) $path, 2);
+        $path = trim($parts[0], '/');
+
+        return ($path === '' ? '/' : "/{$path}/") . (isset($parts[1]) ? "?{$parts[1]}" : '');
     }
 
     private function createRouteBuilder($path, $action, $methods)
