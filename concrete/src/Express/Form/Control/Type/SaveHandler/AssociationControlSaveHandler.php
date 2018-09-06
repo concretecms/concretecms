@@ -10,6 +10,7 @@ class AssociationControlSaveHandler extends ControlSaveHandler
     {
         $control = parent::saveFromRequest($control, $request);
         $control->setAssociationEntityLabelMask($request->request('label_mask'));
+        $control->setEntrySelectorMode($request->request('mode'));
 
         return $control;
     }

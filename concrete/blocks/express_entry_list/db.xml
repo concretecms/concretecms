@@ -20,6 +20,7 @@
     </field>
     <field name="linkedProperties" type="string" size="255"/>
     <field name="searchProperties" type="string" size="255"/>
+    <field name="searchAssociations" type="text" />
     <field name="columns" type="text"/>
     <field name="filterFields" type="text"/>
     <field name="displayLimit" type="integer">

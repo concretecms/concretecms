@@ -506,8 +506,12 @@ abstract class Asset implements AssetInterface
                 }
             }
             if ($matched !== null) {
+                if (isset($matched['_route'])) {
+                    $controller = $routes->get($matched['_route'])->getAction();
+                } else {
+                    $controller = $matched['_controller'];
+                }
                 $callable = null;
-                $controller = $matched['_controller'];
                 if (is_string($controller)) {
                     $chunks = explode('::', $controller, 2);
                     if (count($chunks) === 2) {
