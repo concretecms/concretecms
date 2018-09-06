@@ -21,6 +21,7 @@ class AreaAssignment extends Assignment
         'edit_area_permissions' => 'edit_page_permissions',
         'schedule_area_contents_guest_access' => 'schedule_page_contents_guest_access',
         'delete_area_contents' => 'edit_page_contents',
+        'add_subarea' => 'add_subpage',
         'approve_area_versions' => 'approve_page_versions',
         'delete_area' => 'delete_page',
         'delete_area_versions' => 'delete_page_versions',

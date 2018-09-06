@@ -336,8 +336,14 @@ class Stacks extends DashboardPageController
                     $this->error->add(t(/*i18n %s is a language name*/ "There's already a version of this stack in %s", $section->getLanguageText()).' ('.$section->getLocale().')');
                 }
             }
+            if ($neutralStack) {
+                $cpc = new Permissions(Area::get($neutralStack, STACKS_AREA_NAME));
+                if (!$cpc->canAddSubarea()) {
+                    $this->error->add(t('Access denied'));
+                }
+            }
             if (!$this->error->has()) {
-                $localizedStack = $neutralStack->addLocalizedStack($section);
+                $neutralStack->addLocalizedStack($section);
                 $this->redirect(
                     '/dashboard/blocks/stacks',
                     'view_details',

@@ -31,19 +31,26 @@ if (isset($neutralStack)) {
     <?php
     if ($stackToEdit === null) {
         ?>
-        <form method="post" action="<?=$view->action('add_localized_stack')?>">
-            <?=$token->output('add_localized_stack')?>
-            <?=$form->hidden('stackID', $neutralStack->getCollectionID());?>
-            <?=$form->hidden('locale', $localeCode);?>
-            <div class="alert alert-info">
-                <p>
-                    <?=t(/*i18n: %1$s is a language name, %2$s is a language code*/'This stack is not defined for %1$s (%2$s): the default version will be used.', $localeName, $localeCode); ?>
-                </p>
-                <p>
-                    <button class="btn btn-primary" type="submit"><?=$isGlobalArea ? t('Create localized global area version') : t('Create localized stack version')?></button><br />
-                </p>
-            </div>
-        </form>
+        <div class="alert alert-info">
+            <p>
+                <?=t(/*i18n: %1$s is a language name, %2$s is a language code*/'This stack is not defined for %1$s (%2$s): the default version will be used.', $localeName, $localeCode); ?>
+            </p>
+            <?php
+            $cpc = new Permissions(Area::get($neutralStack, STACKS_AREA_NAME));
+            if ($cpc->canAddSubarea()) {
+                ?>
+                <form method="post" action="<?=$view->action('add_localized_stack')?>">
+                    <?=$token->output('add_localized_stack')?>
+                    <?=$form->hidden('stackID', $neutralStack->getCollectionID());?>
+                    <?=$form->hidden('locale', $localeCode);?>
+                    <p>
+                        <button class="btn btn-primary" type="submit"><?=$isGlobalArea ? t('Create localized global area version') : t('Create localized stack version')?></button><br />
+                    </p>
+                </form>
+                <?php
+            }
+            ?>
+        </div>
         <?php
     } else {
         $a = Area::get($stackToEdit, STACKS_AREA_NAME);

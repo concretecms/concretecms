@@ -11,6 +11,7 @@ class Version20180905122100 extends AbstractMigration implements RepeatableMigra
 {
     public function upgradeDatabase()
     {
+        $this->addPermissionKey('area', 'add_subarea', 'Add Sub-Areas', 'Can add an area beneath the current area.', false, false);
         $this->addPermissionKey('area', 'approve_area_versions', 'Approve Area Versions', 'Can publish an unapproved version of the area.', false, true);
         $this->addPermissionKey('area', 'delete_area', 'Delete Area', 'Ability to delete this area', false, true);
         $this->addPermissionKey('area', 'delete_area_versions', 'Delete Area Versions', 'Ability to remove old versions of this area.', false, true);

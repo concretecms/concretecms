@@ -34,6 +34,10 @@ class AreaResponse extends Response
     {
         return $this->validate('add_layout_to_area');
     }
+    public function canAddSubarea()
+    {
+        return $this->validate('add_subarea');
+    }
     public function canApproveAreaVersions()
     {
         return $this->validate('approve_area_versions');
