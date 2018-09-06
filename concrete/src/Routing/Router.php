@@ -110,25 +110,33 @@ class Router implements RouterInterface
     }
 
     /**
-     * @param Request $request
+     * {@inheritdoc}
      *
-     * @return null|MatchedRoute|ResourceNotFoundException|MethodNotAllowedException
+     * @see \Concrete\Core\Routing\RouterInterface::getRouteByPath()
+     */
+    public function getRouteByPath($path, RequestContext $context, array &$routeAttributes = [])
+    {
+        $path = $this->normalizePath($path);
+        $potentialRoutes = $this->filterRouteCollectionForPath($this->getRoutes(), $path);
+        $matcher = new UrlMatcher($potentialRoutes, $context);
+        $routeAttributes = $matcher->match($path);
+
+        return $potentialRoutes->get($routeAttributes['_route']);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Routing\RouterInterface::matchRoute()
      */
     public function matchRoute(Request $request)
     {
-        $path = $this->normalizePath($request->getPathInfo());
-        $matcher = new UrlMatcher(
-            $this->filterRouteCollectionForPath($this->getRoutes(), $path),
-            id(new RequestContext())->fromRequest($request)
-        );
-        $matched = $matcher->match($path);
-        if (isset($matched['_route'])) {
-            $route = $this->routes->get($matched['_route']);
-            $request->attributes->add($matched);
-            $request->attributes->set('_route', $route);
+        $attributes = [];
+        $route = $this->getRouteByPath($request->getPathInfo(), (new RequestContext())->fromRequest($request), $attributes);
+        $request->attributes->add($attributes);
+        $request->attributes->set('_route', $route);
 
-            return new MatchedRoute($route, $matched);
-        }
+        return new MatchedRoute($route, $attributes);
     }
 
     public function loadRouteList(RouteListInterface $list)

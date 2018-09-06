@@ -10,7 +10,6 @@ use Concrete\Core\Routing\RouterInterface;
 use Concrete\Core\Support\Facade\Application;
 use Exception;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 
 abstract class Asset implements AssetInterface
@@ -488,57 +487,38 @@ abstract class Asset implements AssetInterface
         try {
             $app = Application::getFacadeApplication();
             $router = $app->make(RouterInterface::class);
-            $routes = $router->getRoutes();
             $context = new RequestContext();
-            $request = $app->make(Request::class);
-            $context->fromRequest($request);
-            $matcher = new UrlMatcher($routes, $context);
-            $matched = null;
-            try {
-                $matched = $matcher->match($route);
-            } catch (Exception $x) {
-                // Route matcher requires that paths ends with a slash
-                if (preg_match('/^(.*[^\/])($|\?.*)$/', $route, $m)) {
-                    try {
-                        $matched = $matcher->match($m[1] . '/' . (isset($m[2]) ? $m[2] : ''));
-                    } catch (Exception $x) {
+            $context->fromRequest($app->make(Request::class));
+            $context->setMethod('GET');
+            $matched = $router->getRouteByPath($route, $context);
+            $controller = $matched->getAction();
+            $callable = null;
+            if (is_string($controller)) {
+                $chunks = explode('::', $controller, 2);
+                if (count($chunks) === 2) {
+                    if (class_exists($chunks[0])) {
+                        $array = [$app->make($chunks[0]), $chunks[1]];
+                        if (is_callable($array)) {
+                            $callable = $array;
+                        }
                     }
-                }
-            }
-            if ($matched !== null) {
-                if (isset($matched['_route'])) {
-                    $controller = $routes->get($matched['_route'])->getAction();
                 } else {
-                    $controller = $matched['_controller'];
-                }
-                $callable = null;
-                if (is_string($controller)) {
-                    $chunks = explode('::', $controller, 2);
-                    if (count($chunks) === 2) {
-                        if (class_exists($chunks[0])) {
-                            $array = [$app->make($chunks[0]), $chunks[1]];
-                            if (is_callable($array)) {
-                                $callable = $array;
-                            }
-                        }
-                    } else {
-                        if (class_exists($controller) && method_exists($controller, '__invoke')) {
-                            $callable = $app->make($controller);
-                        }
+                    if (class_exists($controller) && method_exists($controller, '__invoke')) {
+                        $callable = $app->make($controller);
                     }
-                } elseif (is_callable($controller)) {
-                    $callable = $controller;
                 }
-                if ($callable !== null) {
-                    ob_start();
-                    $r = call_user_func($callable, false);
-                    if ($r instanceof Response) {
-                        $result = $r->getContent();
-                    } elseif ($r !== false) {
-                        $result = ob_get_contents();
-                    }
-                    ob_end_clean();
+            } elseif (is_callable($controller)) {
+                $callable = $controller;
+            }
+            if ($callable !== null) {
+                ob_start();
+                $r = call_user_func($callable, false);
+                if ($r instanceof Response) {
+                    $result = $r->getContent();
+                } elseif ($r !== false) {
+                    $result = ob_get_contents();
                 }
+                ob_end_clean();
             }
         } catch (Exception $x) {
         }
