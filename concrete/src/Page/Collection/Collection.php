@@ -485,7 +485,7 @@ class Collection extends ConcreteObject implements TrackableInterface
      * Return the attribute value object with the handle $akHandle of the currently loaded version (if it's loaded).
      *
      * @param string|\Concrete\Core\Attribute\Key\CollectionKey $akHandle the attribute key (or its handle)
-     * @param mixed $createIfNotExists
+     * @param bool $createIfNotExists
      *
      * @return \Concrete\Core\Entity\Attribute\Value\PageValue|null
      */
@@ -910,10 +910,9 @@ class Collection extends ConcreteObject implements TrackableInterface
     /**
      * Add a new block to a specific area of the currently loaded collection version.
      *
-     * @param \Concrete\Core\Entity\Block\BlockType\BlockType $blockType the type of block to be added
+     * @param \Concrete\Core\Entity\Block\BlockType\BlockType $bt the type of block to be added
      * @param string|\Concrete\Core\Area\Area $a the area instance (or its handle) to which the block should be added to
      * @param array $data The data of the block. This data depends on the specific block type. Common values are: 'uID' to specify the ID of the author (if not specified: we'll use the current user), 'bName' to specify the block name.
-     * @param mixed $bt
      *
      * @return \Concrete\Core\Block\Block
      */
@@ -1047,7 +1046,7 @@ class Collection extends ConcreteObject implements TrackableInterface
     }
 
     /**
-     * Mark this collection as newly modified.
+     * Mark this collection as modified right now.
      */
     public function markModified()
     {
