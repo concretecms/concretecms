@@ -44,7 +44,7 @@ abstract class Page extends \Concrete\Controller\Backend\UserInterface
     {
         $this->page = $c;
         $this->permissions = new Permissions($this->page);
-        if (strpos($c->getCollectionPath(), STACKS_PAGE_PATH . '/') === 0) {
+        if ($this->page->getPageTypeHandle() === STACKS_PAGE_TYPE) {
             $this->stackPermissions = new Permissions(Area::get($this->page, STACKS_AREA_NAME));
         } else {
             $this->stackPermissions = null;

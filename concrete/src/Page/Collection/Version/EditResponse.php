@@ -28,7 +28,7 @@ class EditResponse extends PageEditResponse
     public function setPage(Page $page)
     {
         parent::setPage($page);
-        if (strpos($page->getCollectionPath(), STACKS_PAGE_PATH . '/') === 0) {
+        if ($page->getPageTypeHandle() === STACKS_PAGE_TYPE) {
             $this->stackArea = Area::get($page, STACKS_AREA_NAME);
         } else {
             $this->stackArea = null;
