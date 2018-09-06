@@ -23,6 +23,10 @@ class DatabaseTest extends ConcreteDatabaseTestCase
         parent::setUp();
     }
 
+    /**
+     * @expectedException \Doctrine\DBAL\Driver\PDOException
+     * @expectedExceptionMessage getaddrinfo failed
+     */
     public function testInvalidConnection()
     {
         $connection = Database::getFactory()->createConnection(
@@ -32,14 +36,7 @@ class DatabaseTest extends ConcreteDatabaseTestCase
                 'password' => md5(mt_rand()),
                 'host' => 'DB_SERVER',
             ]);
-
-        try {
-            $errorCode = $connection->errorCode();
-        } catch (PDOException $e) {
-            return;
-        }
-
-        $this->fail('Invalid PDO exception not raised on failed connection.');
+        $connection->errorCode();
     }
 
     public function testValidConnection()
