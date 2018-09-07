@@ -7,9 +7,7 @@ use Concrete\Core\Http\Response;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Collection\Version\Version;
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Concrete\Core\Support\Facade\StackFolder;
-use Concrete\Core\View\AbstractView;
 use Config;
 use Concrete\Core\Page\Stack\StackList;
 use Doctrine\ORM\EntityManagerInterface;
@@ -150,7 +148,6 @@ class Stacks extends DashboardPageController
                 $stm->filterByFolder($folder);
                 $this->set('currentStackFolderID', $folder->getPage()->getCollectionID());
                 $this->set('breadcrumb', $this->getBreadcrumb($folder->getPage()));
-                $this->set('current', $current);
                 $this->deliverStackList($stm);
                 $this->set('canMoveStacks', $this->canMoveStacks($folder));
             } else {
@@ -390,7 +387,6 @@ class Stacks extends DashboardPageController
             if (is_object($s)) {
                 $isGlobalArea = $s->getStackType() == Stack::ST_TYPE_GLOBAL_AREA;
                 $neutralStack = $s->getNeutralStack();
-                $locale = '';
                 if ($neutralStack === null) {
                     $nextID = $s->getCollectionParentID();
                     if ($isGlobalArea) {
@@ -728,7 +724,7 @@ class Stacks extends DashboardPageController
                 'stack_id' => $stackId
         ]);
 
-        /** @var AbstractView $view */
+        /** @var \Concrete\Core\View\AbstractView $view */
         $view = new \Concrete\Core\View\DialogView('dialogs/stack/usage');
         $view->setController($this);
 
@@ -773,22 +769,5 @@ class Stacks extends DashboardPageController
     {
         $this->set('message', t('Stack duplicated successfully'));
         $this->view();
-    }
-
-    public function update_order()
-    {
-        $ret = array('success' => false, 'message' => t("Error"));
-        if ($this->isPost() && is_array($stIDs = $this->post('stID'))) {
-            $parent = Page::getByPath(STACKS_PAGE_PATH);
-            $cpc = new Permissions($parent);
-            if ($cpc->canMoveOrCopyPage()) {
-                foreach ($stIDs as $displayOrder => $cID) {
-                    $c = Page::getByID($cID);
-                    $c->updateDisplayOrder($displayOrder, $cID);
-                }
-                $ret['success'] = true;
-                $ret['message'] = t("Stack order updated successfully.");
-            }
-        }
     }
 }
