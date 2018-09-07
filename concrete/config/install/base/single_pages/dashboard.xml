@@ -867,6 +867,13 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="Security Options" path="/dashboard/system/permissions/security" filename="/dashboard/system/permissions/security.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>login, logout, user, agent, ip, change</value>
+                </attributekey>
+            </attributes>
+        </page>
 
         <page name="Login &amp; Registration" path="/dashboard/system/registration"
               filename="/dashboard/system/registration/view.php" pagetype=""
