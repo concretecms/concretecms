@@ -14,7 +14,7 @@ class ArrangeBlocks extends Page
 {
     public function canAccess()
     {
-        return $this->permissions->canEditPageContents();
+        return $this->stackPermissions ? $this->stackPermissions->canEditAreaContents() : $this->permissions->canEditPageContents();
     }
 
     public function arrange()

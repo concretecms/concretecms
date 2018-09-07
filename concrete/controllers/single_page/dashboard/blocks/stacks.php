@@ -1,14 +1,13 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\Blocks;
 
+use Concrete\Core\Area\Area;
 use Concrete\Core\Entity\Statistics\UsageTracker\StackUsageRecord;
 use Concrete\Core\Http\Response;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Collection\Version\Version;
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Concrete\Core\Support\Facade\StackFolder;
-use Concrete\Core\View\AbstractView;
 use Config;
 use Concrete\Core\Page\Stack\StackList;
 use Doctrine\ORM\EntityManagerInterface;
@@ -149,7 +148,6 @@ class Stacks extends DashboardPageController
                 $stm->filterByFolder($folder);
                 $this->set('currentStackFolderID', $folder->getPage()->getCollectionID());
                 $this->set('breadcrumb', $this->getBreadcrumb($folder->getPage()));
-                $this->set('current', $current);
                 $this->deliverStackList($stm);
                 $this->set('canMoveStacks', $this->canMoveStacks($folder));
             } else {
@@ -335,8 +333,14 @@ class Stacks extends DashboardPageController
                     $this->error->add(t(/*i18n %s is a language name*/ "There's already a version of this stack in %s", $section->getLanguageText()).' ('.$section->getLocale().')');
                 }
             }
+            if ($neutralStack) {
+                $cpc = new Permissions(Area::get($neutralStack, STACKS_AREA_NAME));
+                if (!$cpc->canAddSubarea()) {
+                    $this->error->add(t('Access denied'));
+                }
+            }
             if (!$this->error->has()) {
-                $localizedStack = $neutralStack->addLocalizedStack($section);
+                $neutralStack->addLocalizedStack($section);
                 $this->redirect(
                     '/dashboard/blocks/stacks',
                     'view_details',
@@ -383,7 +387,6 @@ class Stacks extends DashboardPageController
             if (is_object($s)) {
                 $isGlobalArea = $s->getStackType() == Stack::ST_TYPE_GLOBAL_AREA;
                 $neutralStack = $s->getNeutralStack();
-                $locale = '';
                 if ($neutralStack === null) {
                     $nextID = $s->getCollectionParentID();
                     if ($isGlobalArea) {
@@ -400,8 +403,8 @@ class Stacks extends DashboardPageController
                     }
                 }
                 if (!$this->error->has()) {
-                    $sps = new Permissions($s);
-                    if ($sps->canDeletePage()) {
+                    $sps = new Permissions(Area::get($s, STACKS_AREA_NAME));
+                    if ($sps->canDeleteArea()) {
                         $u = new \User();
                         $pkr = new DeletePageRequest();
                         $pkr->setRequestedPage($s);
@@ -435,8 +438,8 @@ class Stacks extends DashboardPageController
             $s = Stack::getByID($stackID);
             if (is_object($s)) {
                 $isGlobalArea = $s->getStackType() == Stack::ST_TYPE_GLOBAL_AREA;
-                $sps = new Permissions($s);
-                if ($sps->canApprovePageVersions()) {
+                $sps = new Permissions(Area::get($s, STACKS_AREA_NAME));
+                if ($sps->canApproveAreaVersions()) {
                     $u = new User();
                     $v = Version::get($s, 'RECENT');
                     $pkr = new ApproveStackRequest();
@@ -491,15 +494,20 @@ class Stacks extends DashboardPageController
             $this->error->add(t('Invalid stack'));
             $this->view();
         } else {
-            $sps = new Permissions($page);
-            if (!$sps->canEditPageProperties()) {
-                if ($isFolder) {
-                    $this->error->add(t("You don't have the permission to rename this stack"));
-                } else {
+            if ($isFolder) {
+                $sps = new Permissions($page);
+                if (!$sps->canEditPageProperties()) {
                     $this->error->add(t("You don't have the permission to rename this stack folder"));
+                    $this->view_details($viewCID);
                 }
-                $this->view_details($viewCID);
             } else {
+                $sps = new Permissions(Area::get($page, STACKS_AREA_NAME));
+                if (!$sps->canEditAreaProperties()) {
+                    $this->error->add(t("You don't have the permission to rename this stack"));
+                    $this->view_details($viewCID);
+                }
+            }
+            if (!$this->error->has()) {
                 $this->set('renamePage', $page);
                 $this->set('isFolder', $isFolder);
                 $this->set('oldName', $isFolder ? $page->getCollectionName() : $stack->getStackName());
@@ -635,8 +643,8 @@ class Stacks extends DashboardPageController
             if ($ns !== null) {
                 $this->redirect('/dashboard/blocks/stacks', 'duplicate', $ns->getCollectionID());
             }
-            $sps = new Permissions($s);
-            if (!$sps->canMoveOrCopyPage()) {
+            $sps = new Permissions(Area::get($s, STACKS_AREA_NAME));
+            if (!$sps->canMoveOrCopyArea()) {
                 $this->error->add(t("You don't have the permission to clone this stack"));
                 $this->view_details($cID);
             } else {
@@ -716,7 +724,7 @@ class Stacks extends DashboardPageController
                 'stack_id' => $stackId
         ]);
 
-        /** @var AbstractView $view */
+        /** @var \Concrete\Core\View\AbstractView $view */
         $view = new \Concrete\Core\View\DialogView('dialogs/stack/usage');
         $view->setController($this);
 
@@ -761,22 +769,5 @@ class Stacks extends DashboardPageController
     {
         $this->set('message', t('Stack duplicated successfully'));
         $this->view();
-    }
-
-    public function update_order()
-    {
-        $ret = array('success' => false, 'message' => t("Error"));
-        if ($this->isPost() && is_array($stIDs = $this->post('stID'))) {
-            $parent = Page::getByPath(STACKS_PAGE_PATH);
-            $cpc = new Permissions($parent);
-            if ($cpc->canMoveOrCopyPage()) {
-                foreach ($stIDs as $displayOrder => $cID) {
-                    $c = Page::getByID($cID);
-                    $c->updateDisplayOrder($displayOrder, $cID);
-                }
-                $ret['success'] = true;
-                $ret['message'] = t("Stack order updated successfully.");
-            }
-        }
     }
 }

@@ -34,6 +34,35 @@ class AreaResponse extends Response
     {
         return $this->validate('add_layout_to_area');
     }
+    public function canAddSubarea()
+    {
+        return $this->validate('add_subarea');
+    }
+    public function canApproveAreaVersions()
+    {
+        return $this->validate('approve_area_versions');
+    }
+    public function canDeleteArea()
+    {
+        return $this->validate('delete_area');
+    }
+    public function canDeleteAreaVersions()
+    {
+        return $this->validate('delete_area_versions');
+    }
+    public function canViewAreaVersions()
+    {
+        return $this->validate('view_area_versions');
+    }
+    public function canEditAreaProperties()
+    {
+        return $this->validate('edit_area_properties');
+    }
+    public function canMoveOrCopyArea()
+    {
+        return $this->validate('move_or_copy_area');
+    }
+
     public function canAddBlock($bt)
     {
         if ($bt->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) {

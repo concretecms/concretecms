@@ -123,9 +123,9 @@ class Menu extends ContextMenu
 
             $stack = \Stack::getByID($bi->stID);
             if (is_object($stack)) {
-                $sp = new \Permissions($stack);
+                $sp = new \Permissions(Area::get($stack, STACKS_AREA_NAME));
                 if ($sp->canWrite()) {
-                    $this->addItem(new LinkItem(\URL::to('/dashboard/blocks/stacks', 'view_details', $stack->getCollectionID()), t('Manage Stack Contents')));
+                    $this->addItem(new LinkItem(\URL::to(STACKS_LISTING_PAGE_PATH, 'view_details', $stack->getCollectionID()), t('Manage Stack Contents')));
                 }
             }
         } else if ($p->canEditBlock() && $b->isEditable()) {

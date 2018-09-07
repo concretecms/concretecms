@@ -3,6 +3,7 @@ namespace Concrete\Controller\Backend\UserInterface;
 
 use Page as ConcretePage;
 use Permissions;
+use Concrete\Core\Area\Area;
 
 abstract class Page extends \Concrete\Controller\Backend\UserInterface
 {
@@ -11,6 +12,13 @@ abstract class Page extends \Concrete\Controller\Backend\UserInterface
 
     /** @var Permissions This page's permissions */
     protected $permissions;
+
+    /**
+     * Stack permissions (only if the current "page" is a stack).
+     *
+     * @var \Concrete\Core\Permission\Checker|null
+     */
+    protected $stackPermissions;
 
     public function on_start()
     {
@@ -36,6 +44,11 @@ abstract class Page extends \Concrete\Controller\Backend\UserInterface
     {
         $this->page = $c;
         $this->permissions = new Permissions($this->page);
+        if ($this->page->getPageTypeHandle() === STACKS_PAGE_TYPE) {
+            $this->stackPermissions = new Permissions(Area::get($this->page, STACKS_AREA_NAME));
+        } else {
+            $this->stackPermissions = null;
+        }
         $this->set('c', $this->page);
         $this->set('cp', $this->permissions);
     }
