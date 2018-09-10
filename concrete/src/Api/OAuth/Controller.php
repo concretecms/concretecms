@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Core\API\OAuth;
+namespace Concrete\Core\Api\OAuth;
 
 use Concrete\Core\Entity\OAuth\AccessToken;
 use Concrete\Core\Entity\OAuth\AuthCode;

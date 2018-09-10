@@ -1,9 +1,9 @@
 <?php
 
-namespace Concrete\Core\API\Controller\V1;
+namespace Concrete\Core\Api\Controller\V1;
 
-use Concrete\Core\API\Transformer\System\InfoTransformer;
-use Concrete\Core\API\Transformer\System\Status\QueueStatusTransformer;
+use Concrete\Core\Api\Transformer\System\InfoTransformer;
+use Concrete\Core\Api\Transformer\System\Status\QueueStatusTransformer;
 use Concrete\Core\Application\Application;
 use Concrete\Core\System\Info;
 use Concrete\Core\System\Status\QueueStatus;
@@ -34,7 +34,7 @@ class System
      * /ccm/api/v1/system/info
      *
      * @param \Concrete\Core\System\Info $info
-     * @param \Concrete\Core\API\Transformer\System\InfoTransformer $transformer
+     * @param \Concrete\Core\Api\Transformer\System\InfoTransformer $transformer
      * @return \League\Fractal\Resource\Item
      */
     public function info(Info $info, InfoTransformer $transformer)
@@ -48,7 +48,7 @@ class System
      * /ccm/api/v1/system/status/queue
      *
      * @param \Concrete\Core\System\Status\QueueStatus $status
-     * @param \Concrete\Core\API\Transformer\System\Status\QueueStatusTransformer $transformer
+     * @param \Concrete\Core\Api\Transformer\System\Status\QueueStatusTransformer $transformer
      * @return \League\Fractal\Resource\Item|mixed
      */
     public function queueStatus(QueueStatus $status, QueueStatusTransformer $transformer)
