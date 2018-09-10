@@ -186,23 +186,14 @@ class BlockActionTest extends PHPUnit_Framework_TestCase
      */
     public function testBlockControllerActionRouting($path, $class)
     {
-        $app = Facade::getFacadeApplication();
-
         $router = new Router(new RouteCollection(), new RouteActionFactory());
         $list = new SystemRouteList();
         $list->loadRoutes($router);
 
         $context = new RequestContext();
         $context->fromRequest(Request::getInstance());
-        $matcher = new UrlMatcher($router->getRoutes(), $context);
-        $matched = $matcher->match($path);
-        if ($matched) {
-            $route = $router->getRoutes()->get($matched['_route']);
-            $action = $router->resolveAction($route);
-            $this->assertEquals($class, $action->getControllerCallback());
-        } else {
-            throw new \Exception('Route did not match.');
-        }
-
+        $route = $router->getRouteByPath($path, $context);
+        $action = $router->resolveAction($route);
+        $this->assertEquals($class, $action->getControllerCallback());
     }
 }
