@@ -7,7 +7,7 @@
     <?php
     if (count($selectedEntries)) {
         ?>
-        <?php foreach ($selectedEntriesies as $entry) {
+        <?php foreach ($selectedEntries as $entry) {
     ?>
             <div><a href="<?=URL::to('/dashboard/express/entries', 'view_entry', $entry->getID())?>"><?=$formatter->getEntryDisplayName($control, $entry)?></a></div>
         <?php 

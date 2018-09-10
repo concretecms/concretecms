@@ -52,11 +52,7 @@ class AssociationFormView extends AssociationView
         $element = $this->getFormFieldElement($this->control);
         $association = $this->association;
         if ($association->isOwningAssociation()) {
-            if ($association->getTargetEntity()->supportsCustomDisplayOrder()) {
-                $element = 'select_multiple_reorder';
-            } else {
-                $element = 'view';
-            }
+            $element = 'view';
         }
         $locator = new TemplateLocator('association/' . $element);
 

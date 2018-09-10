@@ -7,7 +7,7 @@ use Concrete\Core\Support\Facade\Application;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Request;
 
-abstract class ManyAssociationSaveHandler implements SaveHandlerInterface
+abstract class ManyAssociationSaveHandler implements ManySaveHandlerInterface
 {
     protected $entityManager;
     protected $applier;
@@ -18,7 +18,7 @@ abstract class ManyAssociationSaveHandler implements SaveHandlerInterface
         $this->applier = $applier;
     }
 
-    protected function getAssociatedEntriesFromRequest(Control $control, Request $request)
+    public function getAssociatedEntriesFromRequest(Control $control, Request $request)
     {
         $r = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entry');
         $entryIDs = $request->request->get('express_association_' . $control->getId());

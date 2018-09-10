@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Entity\Express\Control;
 
+use Concrete\Core\Entity\Express\Association;
 use Concrete\Core\Form\Context\ContextInterface;
 use Concrete\Core\Express\Form\Control\Type\SaveHandler\AssociationControlSaveHandler;
 use Concrete\Core\Form\Context\Registry\ControlRegistry;
@@ -34,6 +35,14 @@ class AssociationControl extends Control
      * @var int
      */
     protected $entry_selector_mode;
+
+    /**
+     * Does the control give us the ability to reorder entries in the association?
+     *
+     * @ORM\Column(type="boolean")
+     */
+    protected $enable_entry_reordering = false;
+
 
     public function __construct()
     {
@@ -82,7 +91,7 @@ class AssociationControl extends Control
     }
 
     /**
-     * @return mixed
+     * @return Association
      */
     public function getAssociation()
     {
@@ -116,4 +125,22 @@ class AssociationControl extends Control
     {
         return new \Concrete\Core\Export\Item\Express\Control\AssociationControl();
     }
+
+    /**
+     * @return mixed
+     */
+    public function enableEntryReordering()
+    {
+        return $this->enable_entry_reordering;
+    }
+
+    /**
+     * @param mixed $enable_entry_reordering
+     */
+    public function setEnableEntryReordering($enable_entry_reordering)
+    {
+        $this->enable_entry_reordering = $enable_entry_reordering;
+    }
+
+
 }
