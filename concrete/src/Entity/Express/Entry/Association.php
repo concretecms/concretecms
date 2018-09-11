@@ -33,11 +33,7 @@ abstract class Association
     protected $association;
 
     /**
-     * @ORM\ManyToMany(targetEntity="\Concrete\Core\Entity\Express\Entry", cascade={"persist"}, inversedBy="containing_associations")
-     * @ORM\JoinTable(name="ExpressEntityAssociationSelectedEntries",
-     * joinColumns={@ORM\JoinColumn(name="id", referencedColumnName="id")},
-     * inverseJoinColumns={@ORM\JoinColumn(name="exSelectedEntryID", referencedColumnName="exEntryID")  }
-     * )
+     * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Express\Entry\AssociationEntry", mappedBy="association", cascade={"all"})
      */
     protected $selectedEntries;
 
@@ -104,23 +100,40 @@ abstract class Association
      */
     public function getSelectedEntries()
     {
-        if ($this->sorted) {
-            return $this->selectedEntries;
-        }
-
-        $this->sorted = true;
 
         // I would use criteria for this but once again Doctrine fails
         if ($this->getAssociation()->getTargetEntity()->supportsCustomDisplayOrder()) {
-            $entries = $this->getSelectedEntriesCollection()->toArray();
-            usort($entries, function($a, $b) {
+            $entries = [];
+            foreach ($this->getSelectedEntriesCollection() as $associationEntry) {
+                $entries[] = $associationEntry->getEntry();
+            }
+
+            usort($entries, function ($a, $b) {
                 return $a->getEntryDisplayOrder() - $b->getEntryDisplayOrder();
             });
 
-            $this->setSelectedEntries(new ArrayCollection($entries));
+            $sortedEntries = new ArrayCollection($entries);
+        } else {
+
+            // we rely on the display order that is set at the entry\association level
+            $entries = [];
+            foreach ($this->getSelectedEntriesCollection() as $associationEntry) {
+                $entries[] = $associationEntry;
+            }
+
+            usort($entries, function ($a, $b) {
+                return $a->getDisplayOrder() - $b->getDisplayOrder();
+            });
+
+            $sortedEntries = [];
+            foreach($entries as $associationEntry) {
+                $sortedEntries[] = $associationEntry->getEntry();
+            }
+            $sortedEntries = new ArrayCollection($sortedEntries);
+
         }
 
-        return $this->getSelectedEntriesCollection();
+        return $sortedEntries;
     }
 
     /**
@@ -135,15 +148,6 @@ abstract class Association
     {
         $this->selectedEntries = new ArrayCollection();
     }
-
-    public function removeSelectedEntry(Entry $entry)
-    {
-        foreach($this->getSelectedEntries() as $selectedEntry) {
-            if ($selectedEntry->getId() == $entry->getID()) {
-                $this->selectedEntries->removeElement($selectedEntry);
-            }
-        }
-    }
-
+    
 
 }

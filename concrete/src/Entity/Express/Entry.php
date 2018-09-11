@@ -227,15 +227,6 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
     protected $associations;
 
     /**
-     * @ORM\ManyToMany(targetEntity="\Concrete\Core\Entity\Express\Entry\Association", mappedBy="selectedEntries")
-     * @ORM\JoinTable(name="ExpressEntityAssociationSelectedEntries",
-     * joinColumns={@ORM\JoinColumn(name="exSelectedEntryID", referencedColumnName="exEntryID")},
-     * inverseJoinColumns={@ORM\JoinColumn(name="id", referencedColumnName="id")  }
-     * )
-     */
-    protected $containing_associations;
-
-    /**
      * @return mixed
      */
     public function getAssociations()

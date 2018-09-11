@@ -5,7 +5,7 @@ namespace Concrete\Core\Updater\Migrations\Migrations;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
-class Version20180906000000 extends AbstractMigration implements RepeatableMigrationInterface
+class Version20180907091500 extends AbstractMigration implements RepeatableMigrationInterface
 {
     /**
      * {@inheritdoc}
@@ -14,8 +14,6 @@ class Version20180906000000 extends AbstractMigration implements RepeatableMigra
      */
     public function upgradeDatabase()
     {
-        $this->refreshEntities([
-            'Concrete\Core\Entity\Express\Control\AssociationControl',
-        ]);
+        $this->createSinglePage('/dashboard/system/permissions/security', 'Security Options', ['meta_keywords' => 'login, logout, user, agent, ip, change']);
     }
 }

@@ -498,7 +498,7 @@ class Search extends DashboardPageController
                         'writer' => $this->app->make(WriterFactory::class)->createFromPath('php://output', 'w'),
                     ]
                 );
-
+                $writer->setUnloadDoctrineEveryTick(50);
                 $writer->insertHeaders();
                 $writer->insertList($result->getItemListObject());
             },

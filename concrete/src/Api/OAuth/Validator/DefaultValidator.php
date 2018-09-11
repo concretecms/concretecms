@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Core\API\OAuth\Validator;
+namespace Concrete\Core\Api\OAuth\Validator;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\User\User;

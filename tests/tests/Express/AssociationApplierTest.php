@@ -27,6 +27,7 @@ class AssociationApplierTest extends ConcreteDatabaseTestCase
         'Concrete\Core\Entity\Express\Entity',
         'Concrete\Core\Entity\Express\Entry',
         'Concrete\Core\Entity\Express\Entry\Association',
+        'Concrete\Core\Entity\Express\Entry\AssociationEntry',
         'Concrete\Core\Entity\Attribute\Value\ExpressValue',
         'Concrete\Core\Entity\Attribute\Value\Value\Value',
         'Concrete\Core\Entity\Attribute\Value\Value\TextValue',
@@ -65,7 +66,7 @@ class AssociationApplierTest extends ConcreteDatabaseTestCase
         $factory->add('textarea', 'Textarea');
     }
 
-    public function testOneToMany()
+    public function testOneToManyAll()
     {
         $this->createProjectData();
 
@@ -96,7 +97,7 @@ class AssociationApplierTest extends ConcreteDatabaseTestCase
 
         // Test the final amount of rows in the table
         $db = \Database::connection();
-        $cnt = $db->getOne('select count(*) from ExpressEntityAssociationSelectedEntries');
+        $cnt = $db->getOne('select count(*) from ExpressEntityAssociationEntries');
         $this->assertEquals(6, $cnt);
     }
 
@@ -178,7 +179,6 @@ class AssociationApplierTest extends ConcreteDatabaseTestCase
             8 => [1],
             11 => [1],
         ]);
-
         $this->addManyToManyAssociationAndTestIt(7, [1, 3, 4], [
             1 => [6, 8, 11, 7], 3 => [7], 4 => [7],
         ], [
@@ -250,7 +250,7 @@ class AssociationApplierTest extends ConcreteDatabaseTestCase
         }
     }
 
-    protected function addManyToOneAssociationAndTestIt($projectID, $categoryID, $results)
+    protected function addManyToOneAssociationAndTestIt($projectID, $categoryID, $results, $debug = false)
     {
         $db = \Database::connection();
         $em = $db->getEntityManager();
@@ -264,6 +264,11 @@ class AssociationApplierTest extends ConcreteDatabaseTestCase
         $applier->associateManyToOne($association, $project, $category);
 
         Express::refresh($project);
+
+        if ($debug) {
+            $this->debugAndExit();
+        }
+
         $category = $project->getCategory();
         $this->assertEquals($categoryID, $category->getID());
 
@@ -280,7 +285,7 @@ class AssociationApplierTest extends ConcreteDatabaseTestCase
         // Also, verify that the amount of entries in the associations table for the inverse matches
         // the count we passed in of the $results variable.
 
-        $count = $db->getOne('select count(*) from ExpressEntityEntryAssociations a inner join ExpressEntityAssociationSelectedEntries ae on a.id = ae.id where a.exEntryID = ?', [$category->getID()]);
+        $count = $db->getOne('select count(*) from ExpressEntityEntryAssociations a inner join ExpressEntityAssociationEntries ae on a.id = ae.association_id where a.exEntryID = ?', [$category->getID()]);
         $this->assertEquals(count($results), $count);
     }
 
@@ -329,10 +334,10 @@ class AssociationApplierTest extends ConcreteDatabaseTestCase
         // Also, verify that the amount of entries in the associations table for the inverse matches
         // the count we passed in of the $results variable.
 
-        $count = $db->getOne('select count(*) from ExpressEntityEntryAssociations a inner join ExpressEntityAssociationSelectedEntries ae on a.id = ae.id where a.exEntryID = ?', [$category->getID()]);
+        $count = $db->getOne('select count(*) from ExpressEntityEntryAssociations a inner join ExpressEntityAssociationEntries ae on a.id = ae.association_id where a.exEntryID = ?', [$category->getID()]);
         $this->assertEquals(1, $count);
 
-        $count = $db->getOne('select count(*) from ExpressEntityEntryAssociations a inner join ExpressEntityAssociationSelectedEntries ae on a.id = ae.id where a.exEntryID = ?', [$project->getID()]);
+        $count = $db->getOne('select count(*) from ExpressEntityEntryAssociations a inner join ExpressEntityAssociationEntries ae on a.id = ae.association_id where a.exEntryID = ?', [$project->getID()]);
         $this->assertEquals(1, $count);
     }
 
@@ -379,7 +384,7 @@ class AssociationApplierTest extends ConcreteDatabaseTestCase
 
                 // Also, verify that there is only one database row in the entries table matching the entry ID to
                 // the category
-                $count = $db->getOne('select count(*) from ExpressEntityEntryAssociations a inner join ExpressEntityAssociationSelectedEntries ae on a.id = ae.id where a.exEntryID = ?', [$project->getID()]);
+                $count = $db->getOne('select count(*) from ExpressEntityEntryAssociations a inner join ExpressEntityAssociationEntries ae on a.id = ae.association_id where a.exEntryID = ?', [$project->getID()]);
                 $this->assertEquals(1, $count);
             }
         }
@@ -398,7 +403,7 @@ class AssociationApplierTest extends ConcreteDatabaseTestCase
             fwrite(STDERR, "Project: {$project->getProjectName()} ({$project->getId()})\n");
             $categoryAssociation = $project->getAssociations()[0];
             if ($categoryAssociation) {
-                $entries = $db->GetCol('select exSelectedEntryID from ExpressEntityAssociationSelectedEntries where id = ?', [$categoryAssociation->getId()]);
+                $entries = $db->GetCol('select exEntryID from ExpressEntityAssociationEntries where association_id = ? order by displayOrder asc ', [$categoryAssociation->getId()]);
                 foreach ($entries as $entry) {
                     fwrite(STDERR, "Found Related Category ID: {$entry}\n");
                 }
@@ -415,7 +420,7 @@ class AssociationApplierTest extends ConcreteDatabaseTestCase
             fwrite(STDERR, "Category: {$category->getCategoryName()} ({$category->getId()})\n");
             $projectAssociation = $category->getAssociations()[0];
             if ($projectAssociation) {
-                $entries = $db->GetCol('select exSelectedEntryID from ExpressEntityAssociationSelectedEntries where id = ?', [$projectAssociation->getId()]);
+                $entries = $db->GetCol('select exEntryID from ExpressEntityAssociationEntries where association_id = ? order by displayOrder asc ', [$projectAssociation->getId()]);
                 foreach ($entries as $entry) {
                     fwrite(STDERR, "Found Related Project ID: {$entry}\n");
                 }
@@ -453,7 +458,6 @@ class AssociationApplierTest extends ConcreteDatabaseTestCase
         }
 
         // Now lets see if the results are right.
-
         foreach ($entryResults as $entryID => $associationEntryIDs) {
             $entry = Express::getEntry($entryID);
             Express::refresh($entry);

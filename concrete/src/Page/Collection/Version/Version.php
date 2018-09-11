@@ -698,7 +698,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
     {
         $app = Facade::getFacadeApplication();
         $db = $app->make('database')->connection();
-        $q = "update CollectionVersions set cvPublishDate = NULL where cID = ?";
+        $q = "update CollectionVersions set cvPublishDate = NULL , cvIsApproved = 0 where cID = ? AND cvPublishDate IS NOT NULL";
 
         $db->executeQuery($q, array($this->cID));
     }

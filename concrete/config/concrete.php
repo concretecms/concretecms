@@ -8,7 +8,7 @@ return [
      */
     'version' => '8.5.0a2',
     'version_installed' => '8.5.0a2',
-    'version_db' => '20180906000000', // the key of the latest database migration
+    'version_db' => '20180910000000', // the key of the latest database migration
 
     /*
      * Installation status
@@ -465,6 +465,13 @@ return [
          * @var bool
          */
         'enable_move_blocktypes_across_sets' => false,
+        /*
+         * Control whether or not the image editor should add crossOrigin when loading images from external sources (s3, etc)
+         */
+        'image_editor_cors_policy' => [
+            'enable_cross_origin' => false,
+            'anonymous_request' => true,
+        ],
     ],
 
     'theme' => [

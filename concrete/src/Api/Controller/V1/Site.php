@@ -1,9 +1,9 @@
 <?php
 
-namespace Concrete\Core\API\Controller\V1;
+namespace Concrete\Core\Api\Controller\V1;
 
-use Concrete\Core\API\Transformer\System\InfoTransformer;
-use Concrete\Core\API\Transformer\System\Status\QueueStatusTransformer;
+use Concrete\Core\Api\Transformer\System\InfoTransformer;
+use Concrete\Core\Api\Transformer\System\Status\QueueStatusTransformer;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Application\UserInterface\Sitemap\StandardSitemapProvider;
 use Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\TreeCollectionTransformer;

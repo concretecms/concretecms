@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\API\Transformer\System;
+namespace Concrete\Core\Api\Transformer\System;
 
 use Concrete\Core\System\Info;
 use League\Fractal\TransformerAbstract;
