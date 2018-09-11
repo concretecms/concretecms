@@ -63,30 +63,47 @@ class Reorder extends BackendInterfaceController
         }
     }
 
+    public function getAssociationEntry($entry, $association, $selectedEntry)
+    {
+        $entryAssociation = $entry->getAssociation($association);
+        foreach($entryAssociation->getSelectedEntriesCollection() as $associatedEntry) {
+            if ($associatedEntry->getEntry()->getId() == $selectedEntry->getId()) {
+                return $associatedEntry;
+            }
+        }
+    }
+
     public function submit()
     {
         $em = \Database::connection()->getEntityManager();
         $selectedEntry = $this->getEntry();
         $control = $this->getControl();
         if ($association = $control->getAssociation()) {
+            $i = 0;
+            $handler = $association->getSaveHandler();
+            /**
+             * @var $handler ManySaveHandlerInterface
+             */
+            $supportsCustomDisplayOrder = false;
             if ($association->getTargetEntity()->supportsCustomDisplayOrder()) {
-                $i = 0;
-                $handler = $association->getSaveHandler();
-                /**
-                 * @var $handler ManySaveHandlerInterface
-                 */
-                $associatedEntries = $handler->getAssociatedEntriesFromRequest($control, $this->request);
-                foreach($associatedEntries as $entry) {
-                    $entry->setEntryDisplayOrder($i);
-                    $em->persist($entry);
-                    $i++;
-                }
-                $em->flush();
-            } else {
-
+                $supportsCustomDisplayOrder = true;
             }
 
-            $this->flash('success', t('Display order saved succesfully.'));
+            $associatedEntries = $handler->getAssociatedEntriesFromRequest($control, $this->request);
+            foreach($associatedEntries as $entry) {
+                if ($supportsCustomDisplayOrder) {
+                    $entry->setEntryDisplayOrder($i);
+                    $em->persist($entry);
+                } else {
+                    $associationEntry = $this->getAssociationEntry($selectedEntry, $association, $entry);
+                    $associationEntry->setDisplayOrder($i);
+                    $em->persist($associationEntry);
+                }
+                $i++;
+            }
+
+            $em->flush();
+            $this->flash('success', t('Display order saved successfully.'));
             $response = new EditResponse();
             $response->setRedirectURL(\URL::to('/dashboard/express/entries/', 'view_entry', $selectedEntry->getId()));
             $response->outputJSON();
