@@ -279,13 +279,10 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
         $connection = array_get($db_config, "connections.{$defaultConnection}");
 
         // Make sure we have all the keys we are expecting
-        if ($defaultConnection && $connection &&
+        return $defaultConnection && $connection &&
             array_get($connection, 'database') &&
             array_get($connection, 'username') &&
-            array_get($connection, 'server')
-        ) {
-            return $environment;
-        }
+            array_get($connection, 'server');
     }
 
     /**
