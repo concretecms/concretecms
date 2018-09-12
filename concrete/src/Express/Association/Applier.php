@@ -248,6 +248,11 @@ class Applier
             $associatedAssociationEntries[] = $associatedAssociationEntry;
         }
 
+        foreach($manyAssociation->getSelectedEntriesCollection() as $manyAssociationSelectedEntry) {
+            $this->entityManager->remove($manyAssociationSelectedEntry);
+        }
+        $this->entityManager->flush();
+
         $manyAssociation->setSelectedEntries($associatedAssociationEntries);
         $this->entityManager->persist($manyAssociation);
         $this->entityManager->flush();

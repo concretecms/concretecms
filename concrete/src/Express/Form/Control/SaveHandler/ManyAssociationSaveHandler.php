@@ -27,6 +27,7 @@ abstract class ManyAssociationSaveHandler implements ManySaveHandlerInterface
             $entryIDs = explode(',', $entryIDs);
         }
         $associatedEntries = [];
+        var_dump_safe($entryIDs);
         if (is_array($entryIDs)) {
             foreach ($entryIDs as $entryID) {
                 $associatedEntry = $r->findOneById($entryID);

@@ -199,6 +199,66 @@ class AssociationApplierTest extends ConcreteDatabaseTestCase
         $this->assertNoCategories(11);
     }
 
+    public function testOneToManyDuplicates()
+    {
+        $this->createProjectData();
+        $db = \Database::connection();
+
+        // Websites
+        $this->addOneToManyAssociationAndTestIt(1, [6, 8, 11], [
+            1 => [6, 8, 11],
+        ]);
+
+        $this->assertEquals(3, $db->fetchColumn('select count(*) from ExpressEntityAssociationEntries where association_id = 1'));
+        $this->assertEquals(1, $db->fetchColumn('select count(*) from ExpressEntityAssociationEntries where association_id = 2'));
+        $this->assertEquals(1, $db->fetchColumn('select count(*) from ExpressEntityAssociationEntries where association_id = 3'));
+        $this->assertEquals(1, $db->fetchColumn('select count(*) from ExpressEntityAssociationEntries where association_id = 4'));
+
+        $this->addOneToManyAssociationAndTestIt(1, [6, 8, 11], [
+            1 => [6, 8, 11],
+        ]);
+
+        $this->assertEquals(3, $db->fetchColumn('select count(*) from ExpressEntityAssociationEntries where association_id = 1'));
+        $this->assertEquals(1, $db->fetchColumn('select count(*) from ExpressEntityAssociationEntries where association_id = 5'));
+        $this->assertEquals(1, $db->fetchColumn('select count(*) from ExpressEntityAssociationEntries where association_id = 6'));
+        $this->assertEquals(1, $db->fetchColumn('select count(*) from ExpressEntityAssociationEntries where association_id = 7'));
+
+    }
+
+    public function testManyToManyDuplicates()
+    {
+        $this->createProjectData('ManyToMany');
+
+        $this->addManyToManyAssociationAndTestIt(1, [6, 8, 11], [
+            1 => [6, 8, 11],
+        ], [
+            6 => [1],
+            8 => [1],
+            11 => [1],
+        ]);
+
+        $db = \Database::connection();
+        $this->assertEquals(3, $db->fetchColumn('select count(*) from ExpressEntityAssociationEntries where association_id = 1'));
+        $this->assertEquals(1, $db->fetchColumn('select count(*) from ExpressEntityAssociationEntries where association_id = 2'));
+        $this->assertEquals(1, $db->fetchColumn('select count(*) from ExpressEntityAssociationEntries where association_id = 3'));
+        $this->assertEquals(1, $db->fetchColumn('select count(*) from ExpressEntityAssociationEntries where association_id = 4'));
+
+
+        $this->addManyToManyAssociationAndTestIt(1, [6, 8, 11], [
+            1 => [6, 8, 11],
+        ], [
+            6 => [1],
+            8 => [1],
+            11 => [1],
+        ]);
+
+        $this->assertEquals(3, $db->fetchColumn('select count(*) from ExpressEntityAssociationEntries where association_id = 1'));
+        $this->assertEquals(1, $db->fetchColumn('select count(*) from ExpressEntityAssociationEntries where association_id = 2'));
+        $this->assertEquals(1, $db->fetchColumn('select count(*) from ExpressEntityAssociationEntries where association_id = 3'));
+        $this->assertEquals(1, $db->fetchColumn('select count(*) from ExpressEntityAssociationEntries where association_id = 4'));
+
+    }
+
     public function testOneToOneSaveHandler()
     {
         $this->createProjectData('OneToOne');

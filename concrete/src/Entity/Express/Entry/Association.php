@@ -148,6 +148,14 @@ abstract class Association
     {
         $this->selectedEntries = new ArrayCollection();
     }
-    
+
+    public function getAssociationEntry(Entry $entry)
+    {
+        foreach($this->getSelectedEntriesCollection() as $associatedEntry) {
+            if ($associatedEntry->getEntry()->getId() == $entry->getId()) {
+                return $associatedEntry;
+            }
+        }
+    }
 
 }

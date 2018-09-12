@@ -63,16 +63,6 @@ class Reorder extends BackendInterfaceController
         }
     }
 
-    public function getAssociationEntry($entry, $association, $selectedEntry)
-    {
-        $entryAssociation = $entry->getAssociation($association);
-        foreach($entryAssociation->getSelectedEntriesCollection() as $associatedEntry) {
-            if ($associatedEntry->getEntry()->getId() == $selectedEntry->getId()) {
-                return $associatedEntry;
-            }
-        }
-    }
-
     public function submit()
     {
         $em = \Database::connection()->getEntityManager();
@@ -95,7 +85,8 @@ class Reorder extends BackendInterfaceController
                     $entry->setEntryDisplayOrder($i);
                     $em->persist($entry);
                 } else {
-                    $associationEntry = $this->getAssociationEntry($selectedEntry, $association, $entry);
+                    $entryAssociation = $selectedEntry->getAssociation($association);
+                    $associationEntry = $entryAssociation->getAssociationEntry($entry);
                     $associationEntry->setDisplayOrder($i);
                     $em->persist($associationEntry);
                 }
