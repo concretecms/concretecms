@@ -155,6 +155,11 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
     protected $entity;
 
     /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $exEntryDateModified;
+
+    /**
      * @return Entity
      */
     public function getEntity()
@@ -304,6 +309,11 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
         $this->associations = new ArrayCollection();
         $this->containing_associations = new ArrayCollection();
         $this->exEntryDateCreated = new \DateTime();
+        $this->exEntryDateModified = new \DateTime();
+    }
+
+    public function updateDateModified() {
+        $this->exEntryDateModified = new \DateTime();
     }
 
     public function getLabel()
@@ -330,6 +340,22 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
             'label' => $this->getLabel()
         );
         return $data;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDateModified()
+    {
+        return $this->exEntryDateModified;
+    }
+
+    /**
+     * @param mixed $exEntryDateModified
+     */
+    public function setDateModified($exEntryDateModified)
+    {
+        $this->exEntryDateModified = $exEntryDateModified;
     }
 
     /**
