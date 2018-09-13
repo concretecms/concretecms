@@ -94,7 +94,7 @@ class AssociationEntry
     /**
      * @param mixed $displayOrder
      */
-    public function setDisplayOrder($displayOrder): void
+    public function setDisplayOrder($displayOrder)
     {
         $this->displayOrder = $displayOrder;
     }
