@@ -29,6 +29,7 @@ class EntryBuilderTest extends ConcreteDatabaseTestCase
         'Concrete\Core\Entity\Express\Entity',
         'Concrete\Core\Entity\Express\Entry',
         'Concrete\Core\Entity\Express\Entry\Association',
+        'Concrete\Core\Entity\Express\Entry\AssociationEntry',
         'Concrete\Core\Entity\Attribute\Value\ExpressValue',
         'Concrete\Core\Entity\Attribute\Value\Value\Value',
         'Concrete\Core\Entity\Attribute\Value\Value\TextValue',
@@ -152,7 +153,7 @@ class EntryBuilderTest extends ConcreteDatabaseTestCase
         $teacherEntry = Express::refresh($teacherEntry);
         $entry2 = Express::refresh($entry2);
         $entry3 = Express::refresh($entry3);
-        $entry3 = Express::refresh($entry4);
+        $entry4 = Express::refresh($entry4);
 
         $students = $teacherEntry->getStudents();
         $this->assertEquals(1, count($students));

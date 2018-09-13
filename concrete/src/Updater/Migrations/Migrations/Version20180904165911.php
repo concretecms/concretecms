@@ -3,6 +3,7 @@
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Entity\Express\Control\AuthorControl;
+use Concrete\Core\Entity\Express\Control\Control;
 use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Entity\User\User;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
@@ -17,7 +18,8 @@ class Version20180904165911 extends AbstractMigration implements RepeatableMigra
         $this->refreshEntities([
             Entry::class,
             User::class,
-            AuthorControl::class
+            AuthorControl::class,
+            Control::class,
         ]);
     }
 }
