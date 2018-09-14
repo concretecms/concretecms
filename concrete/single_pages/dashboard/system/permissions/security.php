@@ -12,7 +12,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
     <?php $token->output('ccm-perm-sec') ?>
 
     <div class="form-group">
-        <?= $form->label('', 'Force users logout') ?>
+        <?= $form->label('', t('Force users logout')) ?>
         <div class="checkbox">
             <label>
                 <?= $form->checkbox('invalidateOnIPMismatch', '1', $invalidateOnIPMismatch) ?>
