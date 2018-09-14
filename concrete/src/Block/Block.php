@@ -256,11 +256,14 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     /**
      * Returns the block identifier (if available).
      *
+     * @version <= 8.4.2 Method returns string|null
+     * @version 8.4.3 Method returns int|null
+     *
      * @return int|null
      */
     public function getBlockID()
     {
-        return isset($this->bID) ? $this->bID : null;
+        return isset($this->bID) ? (int) $this->bID : null;
     }
 
     /**
