@@ -1471,20 +1471,34 @@ class Version implements ObjectInterface
             }
         }
 
-        $imageForThumbnail = $image;
-        if ($type->isUpscalingEnabled()) {
+        if ($type->isUpscalingEnabled() || Type::RESIZE_EXACT === $type->getSizingMode()) {
             $imageSize = $image->getSize();
-            if ($size->contains($imageSize) && $imageSize->getWidth() !== $size->getWidth() && $imageSize->getHeight() !== $size->getHeight()) {
+
+            $sourceIsIncorrectSize = $imageSize->getWidth() !== $size->getWidth() && 
+                $imageSize->getHeight() !== $size->getHeight();
+
+            $sourceIsLargerThanRequested = $imageSize->getWidth() >= $size->getWidth() && 
+                $imageSize->getHeight() >= $size->getHeight();
+
+            $shouldUpscale = $type->isUpscalingEnabled() && 
+                $size->contains($imageSize) && $sourceIsIncorrectSize;
+
+            $shouldFitExactly = $sourceIsIncorrectSize && 
+                Type::RESIZE_EXACT === $type->getSizingMode() &&
+                ($type->isUpscalingEnabled() || $sourceIsLargerThanRequested);
+
+            if ($shouldUpscale || $shouldFitExactly) {
                 if (($imageSize->getWidth() / $imageSize->getHeight()) >= ($size->getWidth() / $size->getHeight())) {
                     $newImageSize = $imageSize->heighten($size->getHeight());
                 } else {
                     $newImageSize = $imageSize->widen($size->getWidth());
                 }
-                $imageForThumbnail = $image->copy()->resize($newImageSize);
+
+                $image = $image->copy()->resize($newImageSize);
             }
         }
-        $thumbnail = $imageForThumbnail->thumbnail($size, $thumbnailMode);
-        unset($imageForThumbnail);
+
+        $thumbnail = $image->thumbnail($size, $thumbnailMode);
         $thumbnailPath = $type->getFilePath($this);
         $thumbnailFormat = $app->make(ThumbnailFormatService::class)->getFormatForFile($this);
 
@@ -1516,6 +1530,7 @@ class Version implements ObjectInterface
         unset($size);
         unset($thumbnail);
         unset($filesystem);
+        unset($image);
     }
 
     /**
