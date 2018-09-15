@@ -1474,18 +1474,17 @@ class Version implements ObjectInterface
         if ($type->isUpscalingEnabled() || Type::RESIZE_EXACT === $type->getSizingMode()) {
             $imageSize = $image->getSize();
 
-            $sourceIsIncorrectSize = $imageSize->getWidth() !== $size->getWidth() && 
-                $imageSize->getHeight() !== $size->getHeight();
-
             $sourceIsLargerThanRequested = $imageSize->getWidth() >= $size->getWidth() && 
                 $imageSize->getHeight() >= $size->getHeight();
 
             $shouldUpscale = $type->isUpscalingEnabled() && 
-                $size->contains($imageSize) && $sourceIsIncorrectSize;
+                $size->contains($imageSize) && 
+                $imageSize->getWidth() !== $size->getWidth() &&
+                $imageSize->getHeight() !== $size->getHeight();
 
-            $shouldFitExactly = $sourceIsIncorrectSize && 
-                Type::RESIZE_EXACT === $type->getSizingMode() &&
-                ($type->isUpscalingEnabled() || $sourceIsLargerThanRequested);
+            $shouldFitExactly =Type::RESIZE_EXACT === $type->getSizingMode() &&
+                ($type->isUpscalingEnabled() || $sourceIsLargerThanRequested) && 
+                ($imageSize->getWidth() !== $size->getWidth() || $imageSize->getHeight() !== $size->getHeight());
 
             if ($shouldUpscale || $shouldFitExactly) {
                 if (($imageSize->getWidth() / $imageSize->getHeight()) >= ($size->getWidth() / $size->getHeight())) {
