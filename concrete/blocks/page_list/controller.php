@@ -51,7 +51,7 @@ class Controller extends BlockController
     {
         $this->list = new PageList();
         $this->list->disableAutomaticSorting();
-        //$pl->setNameSpace('b' . $this->bID);
+        $this->list->setNameSpace('b' . $this->bID);
 
         $cArray = [];
 
@@ -82,17 +82,17 @@ class Controller extends BlockController
                 break;
         }
 
-        $today = date('Y-m-d');
+        $now = Core::make('helper/date')->toDB();
         $end = $start = null;
 
         switch ($this->filterDateOption) {
             case 'now':
-                $start = "$today 00:00:00";
-                $end = "$today 23:59:59";
+                $start = date('Y-m-d').' 00:00:00';
+                $end = $now;
                 break;
 
             case 'past':
-                $end = "$today 23:59:59";
+                $end = $now;
 
                 if ($this->filterDateDays > 0) {
                     $past = date('Y-m-d', strtotime("-{$this->filterDateDays} days"));
@@ -101,7 +101,7 @@ class Controller extends BlockController
                 break;
 
             case 'future':
-                $start = "$today 00:00:00";
+                $start = $now;
 
                 if ($this->filterDateDays > 0) {
                     $future = date('Y-m-d', strtotime("+{$this->filterDateDays} days"));
@@ -417,7 +417,7 @@ class Controller extends BlockController
         $args['num'] = ($args['num'] > 0) ? $args['num'] : 0;
         $args['cThis'] = ($args['cParentID'] == $this->cID) ? '1' : '0';
         $args['cThisParent'] = ($args['cParentID'] == $this->cPID) ? '1' : '0';
-        $args['cParentID'] = ($args['cParentID'] == 'OTHER') ? $args['cParentIDValue'] : $args['cParentID'];
+        $args['cParentID'] = ($args['cParentID'] == 'OTHER') ? (empty($args['cParentIDValue']) ? null : $args['cParentIDValue']) : $args['cParentID'];
         if (!$args['cParentID']) {
             $args['cParentID'] = 0;
         }

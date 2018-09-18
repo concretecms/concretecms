@@ -39,7 +39,7 @@ class Type
 
     /**
      * Suffix for high DPI thumbnails (eg. Retina).
-     * 
+     *
      * @var string
      */
     const HIGHDPI_SUFFIX = '_2x';
@@ -108,6 +108,15 @@ class Type
      * @var string
      */
     protected $ftTypeSizingMode = self::RESIZE_DEFAULT;
+
+    /**
+     * Upscaling is enabled?
+     *
+     * @ORM\Column(type="boolean")
+     *
+     * @var bool
+     */
+    protected $ftUpscalingEnabled = false;
 
     /**
      * Should the thumbnails be build for every file that ARE NOT in the file sets (false), or only for files that ARE in the specified file sets (true)?
@@ -294,6 +303,26 @@ class Type
     }
 
     /**
+     * Upscaling is enabled?
+     *
+     * @return bool
+     */
+    public function isUpscalingEnabled()
+    {
+        return (bool) $this->ftUpscalingEnabled;
+    }
+
+    /**
+     * Upscaling is enabled?
+     *
+     * @param bool $value
+     */
+    public function setIsUpscalingEnabled($value)
+    {
+        $this->ftUpscalingEnabled = (bool) $value;
+    }
+
+    /**
      * Get the display name of the thumbnail sizing mode.
      *
      * @return string
@@ -409,6 +438,7 @@ class Type
                 $filesetIDs[] = $afs->getFileSetID();
             }
         }
-        return new Version($handle . $suffix, $handle . $suffix, $this->getName(), $width, $height, $doubled, $this->getSizingMode(), $limitedToFileSets, $filesetIDs);
+
+        return new Version($handle . $suffix, $handle . $suffix, $this->getName(), $width, $height, $doubled, $this->getSizingMode(), $limitedToFileSets, $filesetIDs, $this->isUpscalingEnabled());
     }
 }

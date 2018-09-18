@@ -106,6 +106,7 @@ class Delete extends BackendInterfaceController
 
         $sh = Core::make('helper/security');
         if (is_array($this->request('item'))) {
+            $this->users = [];
             foreach ($this->request('item') as $uID) {
                 $ui = UserInfo::getByID($sh->sanitizeInt($uID));
                 if (is_object($ui) && !$ui->isError()) {

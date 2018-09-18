@@ -344,6 +344,7 @@ abstract class Job extends ConcreteObject
             if (strlen($resultMsg) == 0) {
                 $resultMsg = t('The Job was run successfully.');
             }
+            $error = static::JOB_SUCCESS;
         } catch (\Exception $e) {
             $resultMsg = $e->getMessage();
             $error = static::JOB_ERROR_EXCEPTION_GENERAL;

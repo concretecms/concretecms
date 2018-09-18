@@ -1,33 +1,34 @@
 <?php
+
 namespace Concrete\Core\Validator;
 
 /**
- * Interface TranslatableValidatorInterface
  * A modifier to the standard validator interface that enables translatable requirements and errors.
- *
- * \@package Concrete\Core\Validator
  */
 interface TranslatableValidatorInterface extends ValidatorInterface
 {
     /**
-     * Set the requirement string to a mixed value
-     * Closure format:
-     *    function(TranslatableValidatorInterface $validator, int $code): string.
+     * Set the requirement string to a mixed value.
      *
-     * @param int             $code    The error code
+     * @param int $code The error code
      * @param string|\Closure $message Either a plain string, or a closure that returns a string
+     *
+     * @example
+     * <code>$message</code> should be like<br />
+     * <code>function(TranslatableValidatorInterface $validator, int $code): string</code>
      */
     public function setRequirementString($code, $message);
 
     /**
-     * Set the error string to a string or to a closure
-     * Closure format:
-     *    function(TranslatableValidatorInterface $validator, int $code, mixed $passed): string.
+     * Set the error string to a string or to a closure.
      *
-     * where `$passed` is whatever was passed to `ValidatorInterface::isValid`
-     *
-     * @param int             $code    The error code
+     * @param int $code The error code
      * @param string|\Closure $message Either a plain string, or a closure that returns a string
+     *
+     * @example
+     * <code>$message</code> should be like<br />
+     * <code>function(TranslatableValidatorInterface $validator, int $code, mixed $passed): string</code><br />
+     * where <code>$passed</code> is whatever was passed to <code>ValidatorInterface::isValid</code>
      */
     public function setErrorString($code, $message);
 }

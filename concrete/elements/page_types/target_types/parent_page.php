@@ -7,6 +7,8 @@ $selectorFormFactor = '';
 if (is_object($pagetype) && $pagetype->getPageTypePublishTargetTypeID() == $type->getPageTypePublishTargetTypeID()) {
     $configuredTarget = $pagetype->getPageTypePublishTargetObject();
     $cID = $configuredTarget->getParentPageID();
+} elseif (!isset($cID)) {
+    $cID = null;
 }
 
 ?>

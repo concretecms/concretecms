@@ -1,11 +1,15 @@
 <?php
 
-defined('C5_EXECUTE') or die("Access Denied.");
-use \Concrete\Core\Conversation\Message\Message as ConversationMessage;
+use Concrete\Core\Conversation\Message\Message as ConversationMessage;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Validator\String\EmailValidator;
 
-$ax = Loader::helper('ajax');
-$vs = Loader::helper('validation/strings');
-$ve = Loader::helper('validation/error');
+defined('C5_EXECUTE') or die("Access Denied.");
+
+$app = Application::getFacadeApplication();
+$ax = $app->make('helper/ajax');
+$vs = $app->make('helper/validation/strings');
+$ve = $app->make('helper/validation/error');
 $u = new User();
 $pageObj = Page::getByID($_POST['cID']);
 $areaObj = Area::get($pageObj, $_POST['blockAreaHandle']);
@@ -19,7 +23,7 @@ if (!is_object($blockObj)) {
     $ve->add(t('Invalid Block Object.'));
 }
 
-if (Loader::helper('validation/numbers')->integer($_POST['cnvID'])) {
+if ($app->make('helper/validation/numbers')->integer($_POST['cnvID'])) {
     $cn = Conversation::getByID($_POST['cnvID']);
 }
 if (!is_object($cn)) {
@@ -31,14 +35,14 @@ if (!is_object($cn)) {
     } else {
         // We know that we have access. So let's check to see if the user is logged in. If they're not we're going
         // to validate their name and email.
-        $author = new \Concrete\Core\Conversation\Message\Author();
+        $author = new Concrete\Core\Conversation\Message\Author();
         if (!$u->isRegistered()) {
             if (!$vs->notempty($_POST['cnvMessageAuthorName'])) {
                 $ve->add(t('You must enter your name to post this message.'));
             } else {
                 $author->setName($_POST['cnvMessageAuthorName']);
             }
-            if (!$vs->email($_POST['cnvMessageAuthorEmail'])) {
+            if (!$app->make(EmailValidator::class)->isValid($_POST['cnvMessageAuthorEmail'])) {
                 $ve->add(t('You must enter a valid email address to post this message.'));
             } else {
                 $author->setEmail($_POST['cnvMessageAuthorEmail']);
@@ -90,7 +94,7 @@ if ($review = empty($_POST['review']) ? 0 : intval($_POST['review'])) {
     }
 }
 
-if (!Loader::helper('validation/token')->validate('add_conversation_message', $_POST['token'])) {
+if (!$app->make('helper/validation/token')->validate('add_conversation_message', $_POST['token'])) {
     $ve->add(t('Invalid conversation post token.'));
 }
 if (!$vs->notempty($_POST['cnvMessageBody'])) {
@@ -98,14 +102,14 @@ if (!$vs->notempty($_POST['cnvMessageBody'])) {
 }
 
 $parent = null;
-if (Loader::helper('validation/numbers')->integer($_POST['cnvMessageParentID']) && $_POST['cnvMessageParentID'] > 0) {
+if ($app->make('helper/validation/numbers')->integer($_POST['cnvMessageParentID']) && $_POST['cnvMessageParentID'] > 0) {
     $parent = ConversationMessage::getByID($_POST['cnvMessageParentID']);
     if (!is_object($parent)) {
         $ve->add(t('Invalid parent message.'));
     }
 }
 
-if (Config::get('conversations.banned_words') && Loader::helper('validation/banned_words')->hasBannedWords($_POST['cnvMessageBody'])) {
+if (Config::get('conversations.banned_words') && $app->make('helper/validation/banned_words')->hasBannedWords($_POST['cnvMessageBody'])) {
     $ve->add(t('Banned words detected.'));
 }
 
@@ -118,7 +122,7 @@ if ($ve->has()) {
         $msg->setReview($review);
     }
 
-    if (!Loader::helper('validation/antispam')->check($_POST['cnvMessageBody'], 'conversation_comment')) {
+    if (!$app->make('helper/validation/antispam')->check($_POST['cnvMessageBody'], 'conversation_comment')) {
         $msg->flag(ConversationFlagType::getByHandle('spam'));
     } else {
         $assignment = $pk->getMyAssignment();
@@ -130,12 +134,11 @@ if ($ve->has()) {
         $msg->attachFile(File::getByID($attachmentID));
     }
 
-    $event = new \Concrete\Core\Conversation\Message\MessageEvent($msg);
+    $event = new Concrete\Core\Conversation\Message\MessageEvent($msg);
 
-    $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
     $app->make('director')->dispatch('on_conversations_message_add', $event);
 
-    $conversationService = $app->make(\Concrete\Core\Conversation\ConversationService::class);
+    $conversationService = $app->make(Concrete\Core\Conversation\ConversationService::class);
     $conversationService->trackReview($msg, $blockObj);
 
     $ax->sendResult($msg);

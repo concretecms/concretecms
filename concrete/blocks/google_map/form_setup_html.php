@@ -1,64 +1,105 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php
+defined('C5_EXECUTE') or die('Access Denied.');
+
+/* @var Concrete\Core\Form\Service\Form $form */
+/* @var string $title */
+/* @var string $location */
+/* @var string $latitude */
+/* @var string $longitude */
+
+/* @var int $zoom */
+/* @var string $width */
+/* @var string $height */
+/* @var int $scrollwheel */
+
+if (!isset($title)) {
+    $title = '';
+}
+if (!isset($location)) {
+    $location = '';
+}
+if (!isset($location)) {
+    $location = '';
+}
+if (!isset($latitude)) {
+    $latitude = '';
+}
+if (!isset($longitude)) {
+    $longitude = '';
+}
+if (empty($zoom)) {
+    $zoom = 14;
+}
+if (!isset($width)) {
+    $width = '100%';
+}
+if (!isset($height)) {
+    $height = '400px';
+}
+$scrollwheel = !empty($scrollwheel);
+?>
 
 <div class="ccm-google-map-block-container row">
     <div class="col-xs-12">
         <div class="form-group">
-            <?php echo $form->label('apiKey', t('API Key')); ?>
-            <?php echo $form->text('apiKey', Config::get('app.api_keys.google.maps')); ?>
-        </div>
-
-        <div class="form-group">
-            <div role="button" id="ccm-google-map-key" class="btn btn-default"><?php echo t('Check API Key'); ?>
-                <i id="check-spinner" class="fa fa-play"></i>
+            <?= $form->label('apiKey', t('API Key') . ' <i class="fa fa-question-circle launch-tooltip" title="' . t('The API Key must be enabled for Google Maps and Google Places.') . "\n" . t('API keys can be obtained in the Google Developers Console.') . '"></i>') ?>
+            <div class="input-group">
+                <?= $form->text('apiKey', Config::get('app.api_keys.google.maps')) ?>
+                <span class="input-group-btn">
+                    <a id="ccm-google-map-check-key" class="btn btn-default" href="#">
+                        <?= t('Check') ?>
+                        &nbsp;
+                        <i id="ccm-google-map-check-key-spinner" class="fa fa-play"></i>
+                    </a>
+                </span>
             </div>
+            <div id="block_note" class="alert alert-info" role="alert"><?= t('Checking API Key...') ?></div>
         </div>
 
         <div class="form-group">
-            <?php echo $form->label('title', t('Map Title (optional)'));?>
-            <?php echo $form->text('title', $title);?>
+        </div>
+
+        <div class="form-group">
+            <?= $form->label('title', t('Map Title (optional)')) ?>
+            <?= $form->text('title', $title) ?>
         </div>
 
         <div id="ccm-google-map-block-location" class="form-group">
-            <?php echo $form->label('location', t('Location'));?>
-            <?php echo $form->text('location', $location);?>
-            <?php echo $form->hidden('latitude', $latitude);?>
-            <?php echo $form->hidden('longitude', $longitude);?>
-            <div id="block_note" class="help-block"><?php echo t('Start typing a location (e.g. Apple Store or 235 W 3rd, New York) then click on the correct entry on the list.')?></div>
+            <?= $form->label('location', t('Location')  . ' <i class="fa fa-question-circle launch-tooltip" title="' . t('Start typing a location (e.g. Apple Store or 235 W 3rd, New York) then click on the correct entry on the list.') . '"></i>') ?>
+            <?= $form->text('location', $location) ?>
+            <?= $form->hidden('latitude', $latitude) ?>
+            <?= $form->hidden('longitude', $longitude) ?>
             <div id="map-canvas"></div>
         </div>
     </div>
 
     <div class="col-xs-4">
         <div class="form-group">
-            <?php echo $form->label('zoom', t('Zoom'));?>
+            <?= $form->label('zoom', t('Zoom')) ?>
             <?php
-            $zoomArray = array();
-            for ($i = 0; $i <= 21; $i++) {
-                $zoomArray[$i] = $i;
-            }
+            $zoomLevels = range(0, 21);
+            $zoomArray = array_combine($zoomLevels, $zoomLevels);
             ?>
-            <?php echo $form->select('zoom', $zoomArray, $zoom ? $zoom : 14);?>
+            <?= $form->select('zoom', $zoomArray, $zoom) ?>
         </div>
     </div>
 
     <div class="col-xs-4">
         <div class="form-group">
-            <?php echo $form->label('width', t('Map Width'));?>
+            <?= $form->label('width', t('Map Width')) ?>
             <div class="input-group">
                 <span class="input-group-addon"><i class="fa fa-arrows-h"></i></span>
-                <?php if(is_null($width) || $width == 0) {$width = '100%';};?>
-                <?php echo $form->text('width', $width);?>
+                <?= $form->text('width', $width) ?>
             </div>
         </div>
     </div>
 
     <div class="col-xs-4">
         <div class="form-group">
-            <?php echo $form->label('height', t('Map Height'));?>
+            <?= $form->label('height', t('Map Height')) ?>
             <div class="input-group">
                 <span class="input-group-addon"><i class="fa fa-arrows-v"></i></span>
-                <?php if(is_null($height) || $height == 0) {$height = '400px';};?>
-                <?php echo $form->text('height', $height); ?>
+                <?= $form->text('height', $height) ?>
             </div>
         </div>
     </div>
@@ -67,10 +108,8 @@
         <div class="form-group">
             <div class="checkbox">
                 <label>
-                <?php
-                echo $form->checkbox('scrollwheel', 1, (is_null($scrollwheel) || $scrollwheel));
-                echo t('Enable Scroll Wheel');
-                ?>
+                <?= $form->checkbox('scrollwheel', 1, $scrollwheel) ?>
+                <?= t('Enable Scroll Wheel') ?>
                 </label>
             </div>
         </div>
@@ -78,119 +117,180 @@
 </div>
 
 <script>
-var isCheckKeyRunning = false;
-var validKey;
-function gm_authFailure() {
-    $('#check-spinner').removeClass('fa-refresh fa-spin').addClass('fa-play');
-    alert('<?php echo t('Invalid API Key'); ?>');
-    isCheckKeyRunning = false;
-    validKey = false;
-}
+$(document).ready(function() {
+'use strict';
 
-(function () {
-    "use strict";
+var $key = $('#apiKey'),
+    $location = $('#ccm-google-map-block-location > input[id="location"]'),
+    $note = $("#block_note");
 
-    var checkKey = function() {
-        $('#ccm-google-map-key').click(function() {
-            if (!isCheckKeyRunning) {
-                isCheckKeyRunning = true;
-                validKey = true;
-                $('#check-spinner').removeClass('fa-play').addClass('fa-refresh fa-spin');
+var setupApiKey = (function() {
+    var $checkSpinner = $('#ccm-google-map-check-key-spinner'),
+        checking = false,
+        $script = null,
+        originalGMAuthFailure = window.gm_authFailure,
+        lastKey = null,
+        lastKeyError = null,
+        autocomplete = null;
 
-                $('#location').removeAttr('placeholder autocomplete disabled style');
-                $('#location').removeClass('gm-err-autocomplete');
-
-                var apiKey = $('#apiKey').val().trim();
-                if ($('#apiKeyCheck')) {
-                    $('#apiKeyCheck').remove();
-                }
-                $('body').append('<script id="apiKeyCheck" src="https://maps.googleapis.com/maps/api/js?' +
-                    'key=' + apiKey +
-                    '&libraries=places" <\/script>'
-                );
-                setTimeout(function() {
-                    if (validKey) {
-                        window.C5GMaps.init();
-                        isValidKey();
-                        isCheckKeyRunning = false;
-                    }
-                }, 10000);
+    function setAutocompletion(places) {
+        if (autocomplete) {
+            $location.removeAttr('placeholder autocomplete disabled style').removeClass('gm-err-autocomplete notfound');
+            google.maps.event.removeListener(autocomplete.listener);
+            google.maps.event.clearInstanceListeners(autocomplete.autocomplete);
+            clearInterval(autocomplete.pacTimer);
+            $('.pac-container').remove();
+            $location.off('change');
+            autocomplete = null;
+        }
+        if (!places) {
+            return;
+        }
+        autocomplete = {
+            autocomplete: new google.maps.places.Autocomplete($location[0])
+        }
+        autocomplete.listener = google.maps.event.addListener(autocomplete.autocomplete, 'place_changed', function () {
+            if (autocomplete === null) {
+                return;
+            }
+            var place = autocomplete.autocomplete.getPlace();
+            if (!place.geometry) {
+                $location.addClass('notfound');
+                $note.text(<?= json_encode(t('The place you entered could not be found.')) ?>).removeClass('alert-info alert-success').removeClass('alert-danger').css('visibility', '');
+            } else {
+                $('#ccm-google-map-block-location > input[id=latitude]').val(place.geometry.location.lat());
+                $('#ccm-google-map-block-location > input[id=longitude]').val(place.geometry.location.lng());
+                $location.removeClass('notfound');
+                $note.css('visibility', 'hidden');
             }
         });
-    };
-    checkKey();
-
-    var isValidKey = function() {
-        if ($('#location')[0].hasAttribute('placeholder')) {
-            setTimeout(function() {
-                if (!$('#location').hasClass('gm-err-autocomplete')) {
-                    $('#check-spinner').removeClass('fa-refresh fa-spin').addClass('fa-play');
-                    alert('<?php echo t('Valid API Key'); ?>');
-                }
-            }, 5000)
-        } else {
-            setTimeout(function() {
-                isValidKey();
-            }, 50);
-        }
-    };
-
-    window.C5GMaps = {
-
-        pacTimer: null,
-
-        init: function () {
-            window.C5GMaps.setupAutocomplete();
-        },
-
-        isMapsPresent: function () {
-            if (typeof google === 'object'
-                    && typeof google.maps === 'object'
-                    && typeof google.maps.places === 'object') {
-                return true;
+        $location.on('change', function() {
+            $location.addClass('notfound');
+        });
+        autocomplete.pacTimer = setInterval(function () {
+            $('.pac-container').css('z-index', '2000');
+            if ($('#ccm-google-map-block-location > input[id="location"]').length === 0) {
+                setAutocompletion(null);
             }
-            return false;
-        },
+        }, 250);
+    }
 
-        setupAutocomplete: function () {
-            var input = $("#ccm-google-map-block-location > input[id=location]").get(0),
-                autocomplete = new google.maps.places.Autocomplete(input),
-                note = $("#ccm-google-map-block-location > #block_note").get(0);
-            input.onchange = function () {
-                this.className = 'notfound form-control ccm-input-text';
-            };
-
-            // Keeps the autocomplete list visible above modal dialogue
-            window.C5GMaps.pacTimer = setInterval(function () {
-                var cntr = $('.pac-container'), locBox = $('#location');
-                cntr.css('z-index', '2000');
-                if (locBox.length === 0) {
-                    clearInterval(window.C5GMaps.pacTimer);
-                    cntr.remove();
-                }
-            }, 250);
-
-            google.maps.event.addDomListener(input, 'keydown', function(e) {
-                if (e.keyCode == 13) {
-                    e.preventDefault();
-                }
-            });
-
-            google.maps.event.addListener(autocomplete, 'place_changed', function () {
-                var place = autocomplete.getPlace();
-                if (!place.geometry) {
-                    // Inform the user that the place was not found and return.
-                    input.className = 'notfound form-control ccm-input-text';
-                    note.innerHTML = 'The place you entered could not be found.';
-                    return;
-                } else {
-                    $('#ccm-google-map-block-location > input[id=latitude]').val(place.geometry.location.lat());
-                    $('#ccm-google-map-block-location > input[id=longitude]').val(place.geometry.location.lng());
-                    input.className = 'form-control ccm-input-text';
-                    note.innerHTML = '';
-                }
-            });
+    return function(onSuccess, onError, forceRecheck) {
+        if (checking) {
+            onError(<?= json_encode(t('Please wait, operation in progress.')) ?>);
+            return;
         }
+        if (!onSuccess) {
+            onSuccess = function() {};
+        }
+        if (!onError) {
+            onError = function() {};
+        }
+        var key = $.trim($key.val());
+        if (key === lastKey && !forceRecheck) {
+            if (lastKeyError === null) {
+                onSuccess();
+            } else {
+                onError(lastKeyError);
+            }
+            return;
+        }
+        function completed(places) {
+            setAutocompletion(places);
+            if (lastKeyError === null) {
+                onSuccess();
+            } else {
+                onError(lastKeyError);
+            }
+        }
+        setAutocompletion();
+        checking = true;
+        if ($script !== null) {
+            $script.remove();
+            $script = null;
+        }
+        var scriptLoadedFunctionName;
+        for (var i = 0; ; i++) {
+            scriptLoadedFunctionName = '_ccm_gmapblock_loaded_' + i;
+            if (typeof window[scriptLoadedFunctionName] === 'undefined') {
+                break;
+            }
+        }
+        
+        function scriptLoaded(error) {
+            delete window[scriptLoadedFunctionName];
+            function placesLoaded(error, places) {
+                if (originalGMAuthFailure) {
+                    window.gm_authFailure = originalGMAuthFailure;
+                } else {
+                    delete window.gm_authFailure;
+                }
+                $checkSpinner.removeClass('fa-refresh fa-spin').addClass('fa-play');
+                lastKey = key;
+                lastKeyError = error;
+                setTimeout(function() {
+                    checking = false;
+                    completed(places)
+                }, 10);
+            }
+            if (error !== null) {
+                placesLoaded(error);
+                return;
+            }
+            var places = new google.maps.places.PlacesService(document.createElement('div'));
+            window.gm_authFailure = function() {
+                placesLoaded(<?= json_encode(t('The API Key is NOT valid.')) ?>);
+            };
+            places.getDetails(
+                {
+                    placeId: 'ChIJJ3SpfQsLlVQRkYXR9ua5Nhw'
+                },
+                function(place, status) {
+                    if (status === 'REQUEST_DENIED') {
+                        placesLoaded(<?= json_encode(t('The API Key is NOT valid for Google Places.')) ?>);
+                    } else {
+                        placesLoaded(null, places);
+                    }
+                }
+            );
+        }
+
+        window[scriptLoadedFunctionName] = function() {
+            scriptLoaded(null);
+        };
+        window.gm_authFailure = function() {
+            scriptLoaded(<?= json_encode(t('The API Key is NOT valid.')) ?>);
+        };
+        $checkSpinner.removeClass('fa-play').addClass('fa-refresh fa-spin');
+        $(document.body).append($script = $('<' + 'script src="https://maps.googleapis.com/maps/api/js?key=' + encodeURIComponent(key) + '&libraries=places&callback=' + encodeURIComponent(scriptLoadedFunctionName) + '"></' + 'script>'));
     };
+})();
+
+$key.on('change keydown keypress', function() {
+    $note.html('&nbsp;').css('visibility', 'hidden');
+});
+$('#ccm-google-map-check-key')
+    .on('click', function(e) {
+        e.preventDefault();
+        $note.text(<?= json_encode(t('Checking API Key...')) ?>).removeClass('alert-success alert-danger').addClass('alert-info').css('visibility', '');
+        setupApiKey(
+            function() {
+                $note.text(<?= json_encode(t('The API Key is valid.')) ?>).removeClass('alert-info alert-danger').addClass('alert-success');
+            },
+            function(err) {
+                $note.text(err).removeClass('alert-success alert-info').addClass('alert-danger');
+            },
+            true
+        );
+    })
+    .trigger('click')
+;
+
+$location.on('keydown', function(e) {
+    if (e.keyCode === 13) {
+        e.preventDefault();
+    }
+});
+
 }());
 </script>

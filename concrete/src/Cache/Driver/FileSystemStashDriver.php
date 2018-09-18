@@ -28,9 +28,12 @@ class FileSystemStashDriver extends FileSystem
         }
 
         if (!file_exists($path)) {
-            if (!is_dir(dirname($path))) {
-                if (!@mkdir(dirname($path), $this->dirPermissions, true)) {
-                    return false;
+            $dirname = dirname($path);
+            if (!is_dir($dirname)) {
+                if (!@mkdir($dirname, $this->dirPermissions, true)) {
+                    if (!is_dir($dirname)) {
+                        return false;
+                    }
                 }
             }
 

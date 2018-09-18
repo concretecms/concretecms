@@ -87,7 +87,7 @@ class ErrorHandler extends PrettyPageHandler
         $this->addDataTable(
             'Concrete5',
             [
-                'Version' => APP_VERSION,
+                'Version' => Config::get('concrete.version'),
                 'Installed Version' => Config::get('concrete.version_installed'),
             ]
         );

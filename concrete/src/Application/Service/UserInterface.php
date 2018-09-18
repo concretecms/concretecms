@@ -385,7 +385,7 @@ class UserInterface
                 }
                 $text .= '<div>' . $singleButton . '</div>';
             } else {
-                $text .= '<div class="btn-group"><button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action <span class="caret"></span></button><ul class="dropdown-menu">';
+                $text .= '<div class="btn-group"><button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' . t('Action') . ' <span class="caret"></span></button><ul class="dropdown-menu">';
                 foreach ($arguments['buttons'] as $button) {
                     $text .= '<li>' . $button . '</li>';
                 }

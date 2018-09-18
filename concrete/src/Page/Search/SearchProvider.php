@@ -67,7 +67,7 @@ class SearchProvider extends AbstractSearchProvider
         return new DefaultSet();
     }
     
-    function getSavedSearch()
+    public function getSavedSearch()
     {
         return new SavedPageSearch();
     }

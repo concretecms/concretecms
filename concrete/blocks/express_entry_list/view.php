@@ -28,7 +28,7 @@ if ($entity) { ?>
                 <br>
             <?php } ?>
 
-            <?php if (count($tableSearchProperties)) { ?>
+            <?php if (count($tableSearchProperties) || count($tableSearchAssociations)) { ?>
                 <div data-express-entry-list-advanced-search-fields="<?=$bID?>" class="ccm-block-express-entry-list-advanced-search-fields">
                     <h3><?=t('Search Entries')?></h3>
                     <input type="hidden" name="advancedSearchDisplayed" value="<?php echo $app->request->request('advancedSearchDisplayed') ? 1 : ''; ?>">
@@ -36,6 +36,16 @@ if ($entity) { ?>
                         <h4><?=$ak->getAttributeKeyDisplayName()?></h4>
                         <div>
                             <?=$ak->render(new \Concrete\Core\Attribute\Context\BasicSearchContext(), null, true)?>
+                        </div>
+                    <?php } ?>
+                    <?php foreach ($tableSearchAssociations as $association) { ?>
+                        <h4><?= $association->getTargetEntity()->getEntityDisplayName() ?></h4>
+                        <div>
+                            <?php
+                            $field = new \Concrete\Core\Express\Search\Field\AssociationField($association);
+                            $field->loadDataFromRequest($controller->getRequest()->query->all());
+                            echo $field->renderSearchField();
+                            ?>
                         </div>
                     <?php } ?>
                 </div>
@@ -117,7 +127,7 @@ if ($entity) { ?>
             <?php } ?>
         </style>
     <?php } else { ?>
-        <p><?=t('No "%s" entries can be found', $entity->getName())?>
+        <p><?=t('No "%s" entries can be found', $entity->getEntityDisplayName())?>
     <?php } ?>
 
     <?php if ($enableKeywordSearch) { ?>

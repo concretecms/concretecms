@@ -133,7 +133,7 @@ abstract class Column extends ConcreteObject implements ColumnInterface
     {
         $db = Database::connection();
         $row = $db->GetRow('select cID, arHandle from Areas where arID = ?', array($this->arID));
-        if ($row['cID'] && $row['arHandle']) {
+        if ($row && !empty($row['cID']) && $row['arHandle']) {
             $c = Page::getByID($row['cID']);
             $area = Area::get($c, $row['arHandle']);
 

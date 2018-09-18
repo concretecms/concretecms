@@ -4,6 +4,7 @@ namespace Concrete\Core\Express\Entry;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Entity\Express\Form;
+use Concrete\Core\Entity\User\User;
 use Concrete\Core\Express\Event\Event;
 use Concrete\Core\Express\Form\Control\SaveHandler\SaveHandlerInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -47,9 +48,16 @@ class Manager implements EntryManagerInterface
         return $displayOrder;
     }
 
-    public function addEntry(Entity $entity)
+    public function addEntry(Entity $entity, User $author = null)
     {
         $entry = new Entry();
+        if (!$author) {
+            $u = new \User();
+            if ($u->isRegistered()) {
+                $author = $u->getUserInfoObject()->getEntityObject();
+                $entry->setAuthor($author);
+            }
+        }
         $entry->setEntity($entity);
         if ($entity->supportsCustomDisplayOrder()) {
             $entry->setEntryDisplayOrder($this->getNewDisplayOrder($entity));

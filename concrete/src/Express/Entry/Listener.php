@@ -15,6 +15,9 @@ class Listener
         // Delete any express entry attributes that have this selected.
         $db->Execute('delete from atExpressSelectedEntries where exEntryID = ?', array($entry->getID()));
 
+        // Delete this from any associations that reference it
+        $db->Execute('delete from ExpressEntityAssociationEntries where exEntryID = ?', array($entry->getID()));
+
         $category = \Core::make('Concrete\Core\Attribute\Category\ExpressCategory');
 
         foreach($category->getAttributeValues($entry) as $value) {

@@ -1,13 +1,15 @@
 <?php
+
 namespace Concrete\Core\Application\Service;
 
-use Loader;
-use Config;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Validator\String\UniqueUserEmailValidator;
+use Concrete\Core\Validator\String\UniqueUserNameValidator;
 
 class Validation
 {
     /**
-     * Checks whether a passed username is unique or if a user of this name already exists.
+     * @deprecated Use the Concrete\Core\Validator\String\UniqueUserNameValidator validator
      *
      * @param string $uName
      *
@@ -15,33 +17,23 @@ class Validation
      */
     public function isUniqueUsername($uName)
     {
-        $db = Loader::db();
-        $q = "select uID from Users where uName = ?";
-        $r = $db->getOne($q, array($uName));
-        if ($r) {
-            return false;
-        } else {
-            return true;
-        }
+        $app = Application::getFacadeApplication();
+
+        return $app->make(UniqueUserNameValidator::class)->isValid($uName);
     }
 
     /**
-     * Checks whether a passed email address is unique.
-     *
-     * @return bool
+     * @deprecated Use \Concrete\Core\Validator\String\UniqueUserEmailValidator
      *
      * @param string $uEmail
+     *
+     * @return bool
      */
     public function isUniqueEmail($uEmail)
     {
-        $db = Loader::db();
-        $q = "select uID from Users where uEmail = ?";
-        $r = $db->getOne($q, array($uEmail));
-        if ($r) {
-            return false;
-        } else {
-            return true;
-        }
+        $app = Application::getFacadeApplication();
+
+        return $app->make(UniqueUserEmailValidator::class)->isValid($uEmail);
     }
 
     /**
@@ -55,12 +47,13 @@ class Validation
      */
     public function password($pass)
     {
-        return \Core::make('validator/password')->isValid($pass);
+        $app = Application::getFacadeApplication();
+
+        return $app->make('validator/password')->isValid($pass);
     }
 
     /**
-     * Returns true if this is a valid username.
-     * Valid usernames can only contain letters, numbers, dots (only in the middle), underscores (only in the middle) and optionally single spaces.
+     * @deprecated use the 'validator/user/name' validator
      *
      * @param string $username
      *
@@ -68,26 +61,13 @@ class Validation
      */
     public function username($username)
     {
-        $username = trim($username);
-        if (strlen($username) < Config::get('concrete.user.username.minimum')) {
-            return false;
-        }
-        if (strlen($username) > Config::get('concrete.user.username.maximum')) {
-            return false;
-        }
-        $rxBoundary = '[A-Za-z0-9]';
-        if (Config::get('concrete.user.username.allow_spaces')) {
-            $rxMiddle = '[A-Za-z0-9_. ]';
-        } else {
-            $rxMiddle = '[A-Za-z0-9_.]';
-        }
-        if (strlen($username) < 3) {
-            if (!preg_match('/^' . $rxBoundary . '+$/', $username)) {
-                return false;
-            }
-        } else {
-            if (!preg_match('/^' . $rxBoundary . $rxMiddle . '+' . $rxBoundary . '$/', $username)) {
-                return false;
+        $app = Application::getFacadeApplication();
+        $validator = $app->make('validator/user/name');
+        foreach ($validator->getValidators() as $handle => $validator) {
+            if ($handle !== 'unique_username') {
+                if (!$validator->isValid($username)) {
+                    return false;
+                }
             }
         }
 

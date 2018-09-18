@@ -502,7 +502,7 @@ switch ($installStep) {
                                                     <p class="text-muted"><?= t('concrete5 collects some information about your website to assist in upgrading and checking add-on compatibility. This information can be disabled in configuration.') ?></p>
                                                     <label>
 
-                                                        <?= $form->checkbox('privacy', 1, ['required' => 'required']) ?>
+                                                        <?= $form->checkbox('privacy', 1, false, ['required' => 'required']) ?>
                                                         <?= t('Yes, I understand and agree to the <a target="_blank" href="%s">Privacy Policy</a>.',
                                                             Config::get('concrete.urls.privacy_policy')) ?>
                                                     </label>
@@ -732,6 +732,17 @@ switch ($installStep) {
                                 <h4 class="media-heading"><?= t('Forums') ?></h4>
                                 <?= t('<a href="%s" target="_blank">The forum</a> on concrete5.org is full of helpful community members that make concrete5 so great.',
                                     Config::get('concrete.urls.help.forum')) ?>
+                            </div>
+                        </div>
+
+                        <div class="media">
+                            <div class="media-left" style="padding-right: 1em">
+                                <i class="fa fa-slack fa-2x"></i>
+                            </div>
+                            <div class="media-body">
+                                <h4 class="media-heading"><?= t('Slack') ?></h4>
+                                <?= t('In the <a href="%s" target="_blank">concrete5 Slack channels</a> you can get in touch with a lot of concrete5 lovers and developers.',
+                                    Config::get('concrete.urls.help.slack')) ?>
                             </div>
                         </div>
 

@@ -57,19 +57,24 @@ class LinkFormatter implements LinkFormatterInterface
 
     public function getEventOccurrenceLinkObject(CalendarEventVersionOccurrence $occurrence)
     {
-        $value = $occurrence->getEvent()->getName();
+        $value = h($occurrence->getEvent()->getName());
+        
         if (!$value) {
             $value = t('(No Title)');
         }
         $page = $occurrence->getEvent()->getPageObject();
         $href = 'javascript:void(0)';
         if (!$occurrence->getVersion()->isApproved()) {
-            $value .= '<i class="fa fa-exclamation-circle"></i>';
+            // Output a tooltip with text that makes it clear that there are unpublished changes
+            $value .= sprintf(
+                '<i class="fa fa-exclamation-circle z-indexable z-1000" data-toggle="tooltip" data-placement="bottom" title="%s"></i>',
+                t('This event has unpublished versions.')
+            );
         }
         $background = $this->getEventOccurrenceBackgroundColor($occurrence);
         $text = $this->getEventOccurrenceTextColor($occurrence);
 
-        $link = new Link($href, $value);
+        $link = new Link($href, h($value));
         $link->setAttribute('style', sprintf('background-color: %s; color: %s', $background, $text));
 
         if ($occurrence->isCancelled()) {

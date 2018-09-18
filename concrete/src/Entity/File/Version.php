@@ -1471,7 +1471,20 @@ class Version implements ObjectInterface
             }
         }
 
-        $thumbnail = $image->thumbnail($size, $thumbnailMode);
+        $imageForThumbnail = $image;
+        if ($type->isUpscalingEnabled()) {
+            $imageSize = $image->getSize();
+            if ($size->contains($imageSize) && $imageSize->getWidth() !== $size->getWidth() && $imageSize->getHeight() !== $size->getHeight()) {
+                if (($imageSize->getWidth() / $imageSize->getHeight()) >= ($size->getWidth() / $size->getHeight())) {
+                    $newImageSize = $imageSize->heighten($size->getHeight());
+                } else {
+                    $newImageSize = $imageSize->widen($size->getWidth());
+                }
+                $imageForThumbnail = $image->copy()->resize($newImageSize);
+            }
+        }
+        $thumbnail = $imageForThumbnail->thumbnail($size, $thumbnailMode);
+        unset($imageForThumbnail);
         $thumbnailPath = $type->getFilePath($this);
         $thumbnailFormat = $app->make(ThumbnailFormatService::class)->getFormatForFile($this);
 
@@ -1485,6 +1498,10 @@ class Version implements ObjectInterface
                 'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
                 'mimetype' => $mimetype,
             ]
+        );
+
+        $app['director']->dispatch('on_thumbnail_generate',
+            new \Concrete\Core\File\Event\ThumbnailGenerate($thumbnailPath, $type)
         );
 
         if ($type->getHandle() == $config->get('concrete.icons.file_manager_listing.handle') && !$this->fvHasListingThumbnail) {
@@ -1680,6 +1697,10 @@ class Version implements ObjectInterface
         try {
             if ($fsl->has($path)) {
                 $fsl->delete($path);
+
+                $app['director']->dispatch('on_thumbnail_delete',
+                    new \Concrete\Core\File\Event\ThumbnailDelete($path, $type)
+                );
             }
         } catch (FileNotFoundException $e) {
         }

@@ -141,6 +141,7 @@ class Thumbnails extends DashboardPageController
             } else {
                 $type->setSizingMode($sizingMode);
             }
+            $type->setIsUpscalingEnabled($post->get('ftUpscalingEnabled') ? true : false);
             if ($ftTypeID === 'new' || !$type->isRequired()) {
                 $fileSetOption = $post->get('fileSetOption');
                 if (!in_array($fileSetOption, array_keys($this->getFileSetOptions()), true)) {
