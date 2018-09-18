@@ -57,5 +57,25 @@ class Version20180628101509 extends AbstractMigration implements RepeatableMigra
             $category = Category::getByHandle('event')->getController();
             $category->associateAttributeKeyType($type);
         }
+
+        $db = $this->connection;
+        if ($db->tableExists('atUserSelector')) {
+            // This is the name of the user selector attribute table in some implementations of the user selector attribute
+            // We need to take this data and place it into atNumber.
+            $db->query(<<<EOT
+insert into atNumber (avID, value)
+    select
+        atUserSelector.avID, atUserSelector.value
+    from
+        atUserSelector
+    inner join
+        AttributeValues on atUserSelector.avID = AttributeValues.avID
+    left join
+        atNumber on atUserSelector.avID = atNumber.avID
+    where
+        atNumber.avID is null
+EOT
+            );
+        }
     }
 }
