@@ -247,7 +247,7 @@ class Controller extends BlockController
         if (is_object($event)) {
             switch ($key) {
                 case 'title':
-                    return '<h3>' . $event->getName() . '</h3>';
+                    return '<h3>' . h($event->getName()) . '</h3>';
                 case 'description':
                     return $event->getDescription();
                 case 'date':

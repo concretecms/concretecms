@@ -35,7 +35,7 @@ class ImageUploading extends DashboardPageController
         $p = Page::getByPath('/dashboard/system/files/thumbnails/options');
         if ($p && !$p->isError()) {
             $pp = new Checker($p);
-            if ($pp->canView()) {
+            if ($pp->canViewPage()) {
                 $thumbnailOptionsURL = (string) $this->app->make(ResolverManager::class)->resolve([$p]);
             }
         }

@@ -41,7 +41,7 @@ class EntryBuilder
         if (substr($nm, 0, 3) == 'set') {
             $nm = preg_replace('/(?!^)[[:upper:]]/', '_\0', $nm);
             $nm = strtolower($nm);
-            $identifier = str_replace('set_', '', $nm);
+            $identifier = substr($nm, 4);
 
             $association = $this->getEntity()->getAssociation($identifier);
             if ($association instanceof Association) {

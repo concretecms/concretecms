@@ -475,8 +475,8 @@ class Version
                     }
                 }
             }
-
-            return $result;
         }
+
+        return $result;
     }
 }

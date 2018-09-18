@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Page\Controller;
 
+use Concrete\Core\Csv\WriterFactory;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Express\Entry\Notifier\NotificationInterface;
@@ -108,7 +109,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
         return StreamedResponse::create(function() use ($entity, $me) {
             $entryList = new EntryList($entity);
 
-            $writer = new CsvWriter(Writer::createFromPath('php://output', 'w'), new Date());
+            $writer = new CsvWriter($this->app->make(WriterFactory::class)->createFromPath('php://output', 'w'), new Date());
             $writer->insertHeaders($entity);
             $writer->insertEntryList($entryList);
         }, 200, $headers);
@@ -231,6 +232,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
             }
         }
         $this->set('subEntities', $subEntities);
+        $this->set('pageTitle', t('View %s Entry', $entity->getName()));
         $this->render('/dashboard/express/entries/view_entry', false);
     }
 
@@ -262,6 +264,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
 
         $this->set('renderer', $renderer);
         $this->set('backURL', $this->getBackURL($entry->getEntity()));
+        $this->set('pageTitle', t('Edit %s Entry', $entity->getName()));
         $this->render('/dashboard/express/entries/update', false);
     }
 
@@ -302,7 +305,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
                 if ($entry === null) {
                     // create
                     $entry = $manager->addEntry($entity);
-                    $manager->saveEntryAttributesForm($form, $entry);
+                    $entry = $manager->saveEntryAttributesForm($form, $entry);
                     $notifier->sendNotifications($notifications, $entry, ProcessorInterface::REQUEST_TYPE_ADD);
 
                     $this->flash(
@@ -312,7 +315,11 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
                         . '<a class="btn btn-default" href="' . \URL::to(\Page::getCurrentPage(), 'view_entry', $entry->getID()) . '">' . t('View Record Here') . '</a>',
                         true
                     );
-                    $this->redirect(\URL::to(\Page::getCurrentPage(), 'create_entry', $entity->getID()));
+                    if (is_object($entry->getOwnedByEntry())) {
+                        $this->redirect(\URL::to(\Page::getCurrentPage(), 'create_entry', $entity->getID(), $entry->getOwnedByEntry()->getID()));
+                    } else {
+                        $this->redirect(\URL::to(\Page::getCurrentPage(), 'create_entry', $entity->getID()));
+                    }
                 } else {
                     // update
                     $manager->saveEntryAttributesForm($form, $entry);

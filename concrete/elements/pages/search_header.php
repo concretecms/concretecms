@@ -18,8 +18,8 @@
         $site = Core::make('site')->getActiveSiteForEditing();
         $locales = $site->getLocales();
         if (count($locales) > 1) {
-            $selector = new \Concrete\Core\Form\Service\Widget\SiteLocaleSelector();
-            print $selector->selectLocale('localeID', $site);
+            $selector = new Concrete\Core\Form\Service\Widget\SiteLocaleSelector();
+            print $selector->selectLocale('localeID', $site, null, ['allowNull' => true, 'noLocaleText' => t('Any Locale')]);
         } ?>
 
         <button class="btn btn-info" type="submit"><i class="fa fa-search"></i></button>

@@ -781,9 +781,9 @@ class Version20160725000000 extends AbstractMigration implements LongRunningMigr
 
         $desktopSet->addBlockType($bt);
 
-        $bt = BlockType::getByHandle('desktop_waiting_for_me');
+        $bt = BlockType::getByHandle('desktop_draft_list');
         if (!is_object($bt)) {
-            $bt = BlockType::installBlockType('desktop_waiting_for_me');
+            $bt = BlockType::installBlockType('desktop_draft_list');
         }
 
         $desktopSet->addBlockType($bt);

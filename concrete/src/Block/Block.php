@@ -9,6 +9,7 @@ use Collection;
 use Concrete\Core\Backup\ContentExporter;
 use Concrete\Core\Block\Events\BlockDuplicate;
 use Concrete\Core\Block\View\BlockView;
+use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Feature\Assignment\Assignment as FeatureAssignment;
 use Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVersionFeatureAssignment;
 use Concrete\Core\Foundation\ConcreteObject;
@@ -16,6 +17,7 @@ use Concrete\Core\Foundation\Queue\Queue;
 use Concrete\Core\Package\PackageList;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Support\Facade\Facade;
 use Config;
 use Loader;
@@ -254,11 +256,14 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     /**
      * Returns the block identifier (if available).
      *
+     * @version <= 8.4.2 Method returns string|null
+     * @version 8.4.3 Method returns int|null
+     *
      * @return int|null
      */
     public function getBlockID()
     {
-        return isset($this->bID) ? $this->bID : null;
+        return isset($this->bID) ? (int) $this->bID : null;
     }
 
     /**
@@ -1182,6 +1187,23 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
             'update CollectionVersionBlocksOutputCache set btCachedBlockOutputExpires = 0 where cID = ? and cvID = ? and arHandle = ? and bID = ?',
             $v
             );
+    }
+
+    /**
+     * Refreshes the block record cache
+     *
+     * The block record contains information from the block's $btTable.
+     *
+     * @since 8.4.1
+     */
+    public function refreshBlockRecordCache()
+    {
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+
+        $db->executeQuery('UPDATE Blocks SET btCachedBlockRecord = NULL WHERE bID = ?', [
+            $this->getBlockID(),
+        ]);
     }
 
     /**

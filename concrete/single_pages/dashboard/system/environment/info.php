@@ -5,7 +5,9 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
-	$('#ccm-dashboard-environment-info').load('<?php  echo $view->action('get_environment_info')?>');	
+    $.get('<?= $view->action('get_environment_info')?>').then(function(data) {
+        $('#ccm-dashboard-environment-info').text(data.replace('&nbsp;', ' '));
+    });
 });
 </script>
 

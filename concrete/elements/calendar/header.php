@@ -17,7 +17,7 @@ if (!isset($month)) {
     <div class="btn-group">
         <div class="btn-group">
             <button type="button" id="calendar_button" class="btn btn-default" data-toggle="dropdown">
-                <?= $calendar->getName() ?>
+                <?= h($calendar->getName()) ?>
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu" aria-labelledby="calendar_button">
@@ -26,8 +26,8 @@ if (!isset($month)) {
     if ($p->canViewCalendarInEditInterface()) {
         ?>
                         <li><a href="<?= URL::to($preferences->getPreferredViewPath(), 'view',
-                                $cal->getID()) ?>"><?= $cal->getName() ?></a></li>
-                    <?php 
+                                $cal->getID()) ?>"><?= h($cal->getName()) ?></a></li>
+                    <?php
     }
     ?>
                     <?php
@@ -42,7 +42,7 @@ if (!isset($month)) {
     ?>
                 <li><a href="<?= URL::to('/dashboard/calendar/add', $calendar->getID()) ?>"><?= t("Details") ?></a>
                 </li>
-            <?php 
+            <?php
 }
     ?>
             <?php if ($calendarPermissions->canEditCalendarPermissions()) {
@@ -50,10 +50,10 @@ if (!isset($month)) {
                 <li><a href="<?= URL::to('/dashboard/calendar/permissions',
                         $calendar->getID()) ?>"><?= t("Permissions") ?></a>
 
-                    <?php 
+                    <?php
 }
     ?>
-                    <?php 
+                    <?php
 } ?>
 
                     <?php if ($calendarPermissions->canDeleteCalendar()) {
@@ -61,24 +61,24 @@ if (!isset($month)) {
                 <li class="divider"></li>
                 <li><a href="#" data-dialog="delete-calendar"><span class="text-danger"><?= t(
                                 "Delete Calendar") ?></span></a></li>
-            <?php 
+            <?php
 } ?>
             </ul>
         </div>
         <a href="<?= URL::to('/dashboard/calendar/events', 'view',
             $calendar->getID()) ?>" class="btn btn-default <?php if ($mode != 'list') {
-    ?>active<?php 
+    ?>active<?php
 } ?>"><i class="fa fa-calendar"></i></a>
         <a href="<?= URL::to('/dashboard/calendar/event_list', 'view',
             $calendar->getID()) ?>" class="btn btn-default <?php if ($mode == 'list') {
-    ?>active<?php 
+    ?>active<?php
 } ?>"><i class="fa fa-list"></i></a>
         <?php if ($calendarPermissions->canAddCalendarEvent()) {
     ?>
             <a class="dialog-launch btn btn-primary" dialog-width="640" dialog-title="<?= t('Add Event') ?>"
                dialog-height="500"
                href="<?= URL::to('/ccm/calendar/dialogs/event/add?caID=' . $calendar->getID()) ?>"><?= t("Add Event") ?></a>
-        <?php 
+        <?php
 } ?>
     </div>
 </div>

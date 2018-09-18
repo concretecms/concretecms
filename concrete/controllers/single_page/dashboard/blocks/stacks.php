@@ -96,17 +96,21 @@ class Stacks extends DashboardPageController
                 $localeCrumbs[] = array(
                     'id' => $neutralStack->getCollectionID(),
                     'active' => $locale === '',
-                    'name' => h(tc('Locale', 'default')),
+                    'name' => '<strong>'.h(tc('Locale', 'default')).'</strong>',
                     'url' => \URL::to('/dashboard/blocks/stacks', 'view_details', $neutralStack->getCollectionID()),
                 );
                 $mif = $this->app->make('multilingual/interface/flag');
                 /* @var \Concrete\Core\Multilingual\Service\UserInterface\Flag $mif */
                 foreach ($sections as $sectionLocale => $section) {
                     /* @var Section $section */
+                    $localizedStackName = $mif->getSectionFlagIcon($section).' '.h($section->getLanguageText());
+                    if ($neutralStack->getLocalizedStack($section) !== null) {
+                        $localizedStackName = '<strong>' . $localizedStackName . '</strong>';
+                    }
                     $localeCrumbs[] = array(
                         'id' => $neutralStack->getCollectionID().'@'.$sectionLocale,
                         'active' => $locale === $sectionLocale,
-                        'name' => $mif->getSectionFlagIcon($section).' '.h($section->getLanguageText()).' <span class="text-muted">'.h($sectionLocale).'</span>',
+                        'name' => $localizedStackName .' <span class="text-muted">'.h($sectionLocale).'</span>',
                         'url' => \URL::to('/dashboard/blocks/stacks', 'view_details', $neutralStack->getCollectionID().rawurlencode('@'.$sectionLocale)),
                     );
                 }

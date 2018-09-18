@@ -81,7 +81,9 @@ class FormBlockSubmissionEmailNotification extends AbstractFormBlockSubmissionNo
             $mh->addParameter('formName', $this->getFormName($entry));
             $mh->addParameter('attributes', $this->getAttributeValues($entry));
             $mh->load('block_express_form_submission');
-            $mh->setSubject(t('Website Form Submission – %s', $this->getFormName($entry)));
+            if (empty($mh->getSubject())) {
+                $mh->setSubject(t('Website Form Submission – %s', $this->getFormName($entry)));
+            }
             $mh->sendMail();
         }
 

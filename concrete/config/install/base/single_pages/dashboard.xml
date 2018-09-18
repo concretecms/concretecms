@@ -564,16 +564,6 @@
 
         <page name="Data Objects" path="/dashboard/system/express/entities" filename="/dashboard/system/express/entities.php" pagetype=""
               description="" package="">
-
-            <attributes>
-                <attributekey handle="exclude_nav">
-                    <value><![CDATA[1]]></value>
-                </attributekey>
-                <attributekey handle="exclude_search_index">
-                    <value>1</value>
-                </attributekey>
-            </attributes>
-
         </page>
 
         <page name="Attributes" path="/dashboard/system/express/entities/attributes"
@@ -877,6 +867,13 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="Security Options" path="/dashboard/system/permissions/security" filename="/dashboard/system/permissions/security.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>login, logout, user, agent, ip, change</value>
+                </attributekey>
+            </attributes>
+        </page>
 
         <page name="Login &amp; Registration" path="/dashboard/system/registration"
               filename="/dashboard/system/registration/view.php" pagetype=""
@@ -1126,6 +1123,32 @@
                 </attributekey>
             </attributes>
         </page>
+
+        <page name="API" path="/dashboard/system/api" filename="/dashboard/system/api/view.php"
+              pagetype="" description="" package="">
+        </page>
+        <page name="API Settings" path="/dashboard/system/api/settings"
+              filename="/dashboard/system/api/settings.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>API, programming, public, app</value>
+                </attributekey>
+            </attributes>
+        </page>
+
+        <page name="API Integrations" path="/dashboard/system/api/integrations" filename="/dashboard/system/api/integrations.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+                <attributekey handle="exclude_search_index">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+
+
         <page name="Welcome" path="/dashboard/welcome" filename="/dashboard/welcome.php" description="" package="">
             <attributes>
                 <attributekey handle="desktop_priority">

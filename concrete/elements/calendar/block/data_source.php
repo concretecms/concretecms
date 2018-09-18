@@ -20,7 +20,7 @@ if (isset($multiple) && $multiple) {
 }
 
 foreach ($calendars as $calendar) {
-    $calendarSelect[$calendar->getID()] = $calendar->getName();
+    $calendarSelect[$calendar->getID()] = h($calendar->getName());
 }
 
 $chooseCalendar = 'all';

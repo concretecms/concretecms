@@ -63,6 +63,11 @@ class SearchProvider extends AbstractSearchProvider
 
     public function getCurrentColumnSet()
     {
+        $query = $this->getSessionCurrentQuery();
+        if ($query) {
+            $this->columnSet = $query->getColumns();
+        }
+
         if (!isset($this->columnSet)) {
             $current = $this->entity->getResultColumnSet();
             if (!is_object($current)) {
@@ -87,6 +92,20 @@ class SearchProvider extends AbstractSearchProvider
     public function getDefaultColumnSet()
     {
         return new DefaultSet($this->category);
+    }
+
+    /**
+     * Returns the number of items per page.
+     * @return int
+     */
+    public function getItemsPerPage()
+    {
+        $query = $this->getSessionCurrentQuery();
+        if ($query) {
+            return $query->getItemsPerPage();
+        } else {
+            return $this->entity->getItemsPerPage();
+        }
     }
 
     public function getSavedSearch()
