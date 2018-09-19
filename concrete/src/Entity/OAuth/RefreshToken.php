@@ -2,10 +2,9 @@
 
 namespace Concrete\Core\Entity\OAuth;
 
-use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
-use League\OAuth2\Server\Entities\Traits\EntityTrait;
-use League\OAuth2\Server\Entities\Traits\RefreshTokenTrait;
 use Doctrine\ORM\Mapping as ORM;
+use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
+use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
 
 /**
  * @ORM\Entity(repositoryClass="RefreshTokenRepository")
@@ -15,9 +14,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class RefreshToken implements RefreshTokenEntityInterface
 {
-
-    use RefreshTokenTrait, EntityTrait;
-
     /**
      * @ORM\Id @ORM\Column(type="guid")
      * @ORM\GeneratedValue(strategy="UUID")
@@ -31,9 +27,69 @@ class RefreshToken implements RefreshTokenEntityInterface
     protected $expiryDateTime;
 
     /**
-     * @var AccessTokenEntityInterface
+     * @var \League\OAuth2\Server\Entities\AccessTokenEntityInterface
      * @ORM\OneToOne(targetEntity="AccessToken")
      * @ORM\JoinColumn(name="client", referencedColumnName="identifier")
      */
     protected $accessToken;
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \League\OAuth2\Server\Entities\RefreshTokenEntityInterface::getIdentifier()
+     */
+    public function getIdentifier()
+    {
+        return $this->identifier;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \League\OAuth2\Server\Entities\RefreshTokenEntityInterface::setIdentifier()
+     */
+    public function setIdentifier($identifier)
+    {
+        $this->identifier = $identifier;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \League\OAuth2\Server\Entities\RefreshTokenEntityInterface::setAccessToken()
+     */
+    public function setAccessToken(AccessTokenEntityInterface $accessToken)
+    {
+        $this->accessToken = $accessToken;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \League\OAuth2\Server\Entities\RefreshTokenEntityInterface::getAccessToken()
+     */
+    public function getAccessToken()
+    {
+        return $this->accessToken;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \League\OAuth2\Server\Entities\RefreshTokenEntityInterface::getExpiryDateTime()
+     */
+    public function getExpiryDateTime()
+    {
+        return $this->expiryDateTime;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \League\OAuth2\Server\Entities\RefreshTokenEntityInterface::setExpiryDateTime()
+     */
+    public function setExpiryDateTime(\DateTime $dateTime)
+    {
+        $this->expiryDateTime = $dateTime;
+    }
 }
