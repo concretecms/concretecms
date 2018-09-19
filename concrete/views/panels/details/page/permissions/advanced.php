@@ -1,56 +1,78 @@
 <?php
+
+use Concrete\Core\Page\Stack\Stack;
+
 defined('C5_EXECUTE') or die('Access Denied.');
+
+/* @var Concrete\Core\Page\Page $c */
 ?>
 <section class="ccm-ui">
     <header><?=t('Page Permissions')?></header>
 
     <?php
+    $stack = null;
+    if ($c->getPageTypeHandle() === STACKS_PAGE_TYPE) {
+        $stack = $c instanceof Stack ? $c : Stack::getByID($c->getCollectionID());
+    }
     $cpc = $c->getPermissionsCollectionObject();
     if ($c->getCollectionInheritance() == 'PARENT') {
-        ?>
-        <?php if ($c->isPageDraft()) {
+        if ($c->isPageDraft()) {
             ?>
-            <div class="alert alert-info"><?=t('This page inherits its permissions from the drafts area, as well as its edit page type drafts permission.');
-                ?></div>
+            <div class="alert alert-info">
+                <?php
+                if ($stack) {
+                    if ($stack->getStackType() === Stack::ST_TYPE_GLOBAL_AREA) {
+                        echo t('This global area inherits its permissions from the drafts area, as well as its edit page type drafts permission.');
+                    } else {
+                        echo t('This stack inherits its permissions from the drafts area, as well as its edit page type drafts permission.');
+                    }
+                } else {
+                    echo t('This page inherits its permissions from the drafts area, as well as its edit page type drafts permission.');
+                }
+                ?>
+            </div>
             <?php
         } else {
             ?>
-            <div class="alert alert-info"><?=t('This page inherits its permissions from:');
-                ?> <a target="_blank" href="<?=URL::to($cpc)?>"><?=$cpc->getCollectionName()?></a></div>
+            <div class="alert alert-info">
+                <?php
+                if ($stack) {
+                    if ($stack->getStackType() === Stack::ST_TYPE_GLOBAL_AREA) {
+                        echo t('This global area inherits its permissions from:');
+                    } else {
+                        echo t('This stack inherits its permissions from:');
+                    }
+                } else {
+                    echo t('This page inherits its permissions from:');
+                }
+                ?>
+                <a target="_blank" href="<?=URL::to($cpc)?>"><?=$cpc->getCollectionName()?></a>
+            </div>
             <?php
         }
-        ?>
-        <?php
-    } ?>
-
-
+    }
+    ?>
     <div>
         <div class="form-group">
             <label class="control-label" for="ccm-page-permissions-inherit"><?=t('Assign Permissions')?></label>
             <select id="ccm-page-permissions-inherit" class="form-control">
-                <?php if ($c->getCollectionID() > 1) {
-                    ?><option value="PARENT" <?php if ($c->getCollectionInheritance() == 'PARENT') {
-                        ?> selected<?php
-
-                    }
-                    ?>><?=t('By Area of Site (Hierarchy)')?></option><?php
-
-                } ?>
-                <?php if ($c->getMasterCollectionID() > 1) {
-                    ?><option value="TEMPLATE"  <?php if ($c->getCollectionInheritance() == 'TEMPLATE') {
-                        ?> selected<?php
-
-                    }
-                    ?>><?=t('From Page Type Defaults')?></option><?php
-
-                } ?>
-                <option value="OVERRIDE" <?php if ($c->getCollectionInheritance() == 'OVERRIDE') {
-                    ?> selected<?php
-
-                } ?>><?=t('Manually')?></option>
+                <?php
+                if ($c->getCollectionID() > 1) {
+                    ?>
+                    <option value="PARENT"<?= $c->getCollectionInheritance() === 'PARENT' ? ' selected="selected"' : ''?>><?=t('By Area of Site (Hierarchy)')?></option>
+                    <?php
+                }
+                if ($c->getMasterCollectionID() > 1) {
+                    ?>
+                    <option value="TEMPLATE"<?= $c->getCollectionInheritance() === 'TEMPLATE' ? ' selected="selected"' : ''?>><?=t('From Page Type Defaults')?></option>
+                    <?php
+                }
+                ?>
+                <option value="OVERRIDE"<?= $c->getCollectionInheritance() === 'OVERRIDE' ? ' selected="selected"' : ''?>><?=t('Manually')?></option>
             </select>
         </div>
-        <?php if (!$c->isMasterCollection()) {
+        <?php
+        if (!$c->isMasterCollection()) {
             ?>
             <div class="form-group">
                 <label class="control-label" for="ccm-page-permissions-subpages-override-template-permissions"><?=t('Subpage Permissions')?></label>

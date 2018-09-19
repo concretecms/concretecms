@@ -29,6 +29,8 @@ class AreaAssignment extends Assignment
      */
     protected $inheritedPermissions = [
         'view_area' => 'view_page',
+        'add_block_to_area' => 'edit_page_contents',
+        'add_stack_to_area' => 'edit_page_contents',
         'edit_area_contents' => 'edit_page_contents',
         'add_layout_to_area' => 'edit_page_contents',
         'edit_area_design' => 'edit_page_contents',
