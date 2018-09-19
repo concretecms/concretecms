@@ -1191,7 +1191,7 @@ return [
         ['Concrete\Core\Block\Command\DeleteBlockCommand', 'Concrete\Core\Block\Command\DeleteBlockCommandHandler'],
         ['Concrete\Core\Block\Command\AddAliasDefaultsBlockCommand', 'Concrete\Core\Block\Command\AddAliasDefaultsBlockCommandHandler'],
         ['Concrete\Core\Block\Command\UpdateForkedAliasDefaultsBlockCommand', 'Concrete\Core\Block\Command\UpdateForkedAliasDefaultsBlockCommandHandler'],
-        ['Concrete\Core\Page\Type\Command\UpdatePageTypeDefaultsCommand', 'Concrete\Core\Page\Type\Command\UpdatePageTypeDefaultsCommandHandler', true],
+        ['Concrete\Core\Page\Type\Command\UpdatePageTypeDefaultsCommand', 'Concrete\Core\Page\Type\Command\UpdatePageTypeDefaultsCommandHandler'],
         ['Concrete\Core\Job\Command\ExecuteJobItemCommand', 'Concrete\Core\Job\Command\ExecuteJobItemCommandHandler'],
     ],
 

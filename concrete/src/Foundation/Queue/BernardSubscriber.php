@@ -55,8 +55,6 @@ class BernardSubscriber implements EventSubscriberInterface
             $command = $message->getCommand();
         }
 
-        \Log::info(get_class($command));
-
         if ($command instanceof BatchableCommandInterface) {
             $this->updater->incrementCommandProgress($command);
         }

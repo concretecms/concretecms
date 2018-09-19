@@ -8,6 +8,7 @@ use Bernard\Normalizer\PlainMessageNormalizer;
 use Bernard\Producer;
 use Bernard\Router\ClassNameRouter;
 use Concrete\Core\Foundation\Command\DispatcherFactory;
+use Concrete\Core\Foundation\Command\SynchronousBus;
 use Concrete\Core\Foundation\Queue\Driver\DriverFactory;
 use Concrete\Core\Foundation\Queue\Mutex\MutexGeneratorFactory;
 use Concrete\Core\Foundation\Queue\Receiver\QueueCommandMessageReceiver;
@@ -40,7 +41,7 @@ class QueueServiceProvider extends Provider
 
         $this->app->singleton('queue/consumer', function($app) {
             $dispatcher = $app->make(DispatcherFactory::class)->getDispatcher();
-            $receiver = new QueueCommandMessageReceiver($dispatcher->getSynchronousBus());
+            $receiver = new QueueCommandMessageReceiver($dispatcher);
             $router = new ClassNameRouter();
             $router->add(QueueableCommand::class, $receiver);
             return new Consumer($router, $app->make('director'));

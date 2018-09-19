@@ -3,8 +3,9 @@
 namespace Concrete\Core\Page\Type\Command;
 
 use Concrete\Core\Foundation\Queue\Batch\Command\BatchableCommandInterface;
+use League\Tactician\Bernard\QueueableCommand;
 
-class UpdatePageTypeDefaultsCommand implements BatchableCommandInterface
+class UpdatePageTypeDefaultsCommand implements BatchableCommandInterface, QueueableCommand
 {
 
     protected $pageTypeDefaultPageID;
@@ -115,7 +116,7 @@ class UpdatePageTypeDefaultsCommand implements BatchableCommandInterface
 
     public function getName()
     {
-        return 'update_page_type_defaults';
+        return 'default';
     }
 
     public function getBatchHandle()

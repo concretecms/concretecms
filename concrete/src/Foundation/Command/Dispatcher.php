@@ -2,36 +2,15 @@
 namespace Concrete\Core\Foundation\Command;
 
 use Concrete\Core\Application\Application;
-use Concrete\Core\Foundation\Command\Handler\MethodNameInflector\HandleClassNameWithFallbackInflector;
+use League\Tactician\Bernard\QueueableCommand;
 use League\Tactician\Bernard\QueueCommand;
-use League\Tactician\Bernard\QueueMiddleware;
-use League\Tactician\CommandBus;
-use Concrete\Core\Foundation\Command\Middleware\BatchUpdatingMiddleware;
-use League\Tactician\Handler\CommandHandlerMiddleware;
-use League\Tactician\Handler\CommandNameExtractor\ClassNameExtractor;
-use League\Tactician\Handler\Locator\InMemoryLocator;
 
 class Dispatcher
 {
 
-    const BUS_TYPE_SYNC = 1; // Synchronous command bus
-    const BUS_TYPE_ASYNC = 2; // Async/queue bus
+    protected $buses = [];
 
-    /**
-     * @var mixed
-     */
-    protected $queuableCommands = [];
-
-    /**
-     * @var CommandBus[]
-     */
-    protected $buses;
-
-    /**
-     * @var InMemoryLocator
-     */
-    protected $locator;
-
+    protected $commands = [];
 
     /**
      * @var Application
@@ -39,140 +18,113 @@ class Dispatcher
     protected $app;
 
     /**
-     * @var string
-     */
-    protected $defaultQueue;
-
-    /**
-     * @return string
-     */
-    public function getDefaultQueue()
-    {
-        return $this->defaultQueue;
-    }
-
-    /**
-     * @param string $defaultQueue
-     */
-    public function setDefaultQueue($defaultQueue)
-    {
-        $this->defaultQueue = $defaultQueue;
-    }
-
-    /**
      * Dispatcher constructor.
-     * @param Application $app
+     * @param BusFactory $busFactory
      */
     public function __construct(Application $app)
     {
         $this->app = $app;
-        $this->locator = new InMemoryLocator();
-        $this->addBus(self::BUS_TYPE_SYNC, new CommandBus([
-            $this->app->make(BatchUpdatingMiddleware::class),
-            new CommandHandlerMiddleware(
-                new ClassNameExtractor(),
-                $this->locator,
-                new HandleClassNameWithFallbackInflector()
-            )
-        ]));
-        $this->addBus(self::BUS_TYPE_ASYNC, new CommandBus([new QueueMiddleware($this->app->make('queue/producer'))]));
+        $this->addBus($this->app->make(SynchronousBus::class));
+        $this->addBus($this->app->make(AsynchronousBus::class));
     }
 
-    public function addBus(int $type, CommandBus $bus)
+    public function addBus(BusInterface $bus)
     {
-        $this->buses[$type] = $bus;
-    }
-
-    public function getBus(int $type)
-    {
-        return $this->buses[$type];
-    }
-
-    public function getSynchronousBus()
-    {
-        return $this->getBus(self::BUS_TYPE_SYNC);
-    }
-
-    public function getQueueBus()
-    {
-        return $this->getBus(self::BUS_TYPE_ASYNC);
-    }
-
-    public function registerCommand($handler, $command, $queue = null)
-    {
-        $this->locator->addHandler($handler, $command);
-        if ($queue) {
-            if ($queue === true) {
-                $queue = $this->getDefaultQueue();
-            }
-            $this->queuableCommands[$command] = $queue;
-        }
+        $this->buses[$bus->getHandle()] = $bus;
     }
 
     /**
-     * @param CommandInterface $command
-     * @return string
+     * Registers a command to be executed by the dispatcher. If a specific bus is passed, the bus with the
+     * corresponding handle will execute the command. Otherwise, we will attempt to determine which bus
+     * to use based on what type of command is passed.
+     * @param $handler
+     * @param $command
+     * @param null $bus
      */
-    public function getQueueForCommand(CommandInterface $command)
+    public function registerCommand($handler, $command, $bus = null)
     {
-        $queue = $this->getDefaultQueue();
-        foreach($this->queuableCommands as $queueableCommand => $queue)
-        {
-            if ($command instanceof $queueableCommand) {
-                $queue = $queue;
-                break;
-            }
-        }
-        return $queue;
+        $this->commands[] = [$handler, $command, $bus];
     }
 
-
     /**
-     * Retrieves the bus to dispatch a command onto.
-     * @param CommandInterface $command
      * @return array
      */
-    public function getBusTypeForCommand(CommandInterface $command)
+    public function getCommands(): array
     {
-        $useQueue = null;
-        foreach($this->queuableCommands as $queueableCommand => $queue)
-        {
-            if ($command instanceof $queueableCommand) {
-                $useQueue = $queue;
-                break;
-            }
-        }
-        if ($useQueue) {
-            $type = self::BUS_TYPE_ASYNC;
-        } else {
-            $type = self::BUS_TYPE_SYNC;
-        }
-
-        return [$type, $useQueue];
-    }
-
-    public function dispatchOnQueue(CommandInterface $command, $queue = null)
-    {
-        if (!$queue) {
-            $queue = $this->getDefaultQueue();
-        }
-        $bus = $this->getBus(self::BUS_TYPE_ASYNC);
-        $command = new QueueCommand($command, $queue);
-        return $bus->handle($command);
+        return $this->commands;
     }
 
     /**
-     * Executes a command.
-     * @param CommandInterface $command
+     * Inspects the passed command, and returns the proper bus to use for it.
+     * @param $command
+     * @return BusInterface $bus
+     */
+    public function getBusForCommand($command)
+    {
+        foreach($this->commands as $row) {
+            $registeredCommand = $row[1];
+            $busHandle = $row[2];
+            if ($command instanceof $registeredCommand) {
+                if ($busHandle) {
+                    return $this->buses[$busHandle];
+                }
+            }
+        }
+
+        if ($command instanceof QueueableCommand) {
+            return $this->buses[AsynchronousBus::getHandle()];
+        } else {
+            return $this->buses[SynchronousBus::getHandle()];
+        }
+    }
+
+    /**
+     * Takes a command and return a command that we dispatch. We have this because sometimes the command we pass
+     * into the dispatcher isn't the one that actually gets dispatched (because we wrap it in a QueueCommand wrapper
+     * for example
+     * @param $command
+     * @param BusInterface $bus
      * @return mixed
      */
-    public function dispatch(CommandInterface $command)
+    public function wrapCommandForDispatch($command, BusInterface $bus)
     {
-        list($bus, $queue) = $this->getBusTypeForCommand($command);
-        $bus = $this->getBus($bus);
-        if ($queue) {
-            $command = new QueueCommand($command, $queue);
+        if ($bus instanceof AsynchronousBusInterface) {
+            if ($command instanceof QueueableCommand) {
+                // This means the command supports asynchronous execution, so we just return the command.
+                return $command;
+            } else {
+                // otherwise, we wrap the command in QueueableCommand
+                $command = new QueueCommand($command, $bus->getQueue());
+                return $command;
+            }
+        } else {
+            return $command;
         }
-        return $bus->handle($command);
     }
+
+    /**
+     * Executes a command. If $onBus is passed, the command will be executed on that bus.
+     * @param $command
+     * @param string|BusInterface $onBus
+     * @return mixed
+     */
+    public function dispatch($command, $onBus = null)
+    {
+        if ($onBus) {
+            if (!($onBus instanceof BusInterface)) {
+                $bus = $this->buses[$onBus];
+            } else {
+                $bus = $onBus;
+            }
+        } else {
+            $bus = $this->getBusForCommand($command);
+        }
+
+        $dispatchCommand = $this->wrapCommandForDispatch($command, $bus);
+        $commandBus = $bus->build($this);
+        return $commandBus->handle($dispatchCommand);
+    }
+
+
+
 }

@@ -115,7 +115,9 @@
 				'<div class="progress progress-striped active">' +
 				'<div class="progress-bar" style="width: 0%;"></div>' +
 				'</div>';
-		$wrapper.append(html);
+		if ($wrapper.find('div.progress-bar').length < 1) {
+            $wrapper.append(html);
+        }
     }
 
 

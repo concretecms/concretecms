@@ -3,8 +3,10 @@ namespace Concrete\Tests\Core\Command;
 
 use Bernard\Envelope;
 use Bernard\Message;
+use Concrete\Core\Foundation\Command\AsynchronousBus;
 use Concrete\Core\Foundation\Command\Dispatcher;
 use Concrete\Core\Foundation\Command\DispatcherFactory;
+use Concrete\Core\Foundation\Command\SynchronousBus;
 use Concrete\Core\Foundation\Queue\Router\QueuedCommandClassNameRouter;
 use Concrete\Core\Foundation\Queue\Serializer\SerializerManager;
 use Concrete\Core\Page\Command\DeletePageCommand;
@@ -91,47 +93,43 @@ class CommandTest extends ConcreteDatabaseTestCase
     public function testBus()
     {
         $app = Facade::getFacadeApplication();
-
-        // This is a basic, unqueued command
-        $deletePageCommand = new DeletePageCommand(4, 1);
-
-        // Wrap it in the queue command wrapper
-        $command = new QueueCommand($deletePageCommand, 'default');
-
         /**
          * @var $dispatcher Dispatcher
          */
         $dispatcher = $app->make(DispatcherFactory::class)->getDispatcher();
-        $bus = $dispatcher->getBus($dispatcher::BUS_TYPE_ASYNC);
-        $this->assertInstanceOf(CommandBus::class, $bus);
-        $bus->handle($command);
+
+        // This is a basic, unqueued command
+        $deletePageCommand = new DeletePageCommand(4, 1);
+        $bus1 = $dispatcher->getBusForCommand($deletePageCommand);
+        $this->assertInstanceOf(SynchronousBus::class, $bus1);
+
+        // Wrap it in the queue command wrapper
+        $command = new QueueCommand($deletePageCommand, 'default');
+
+        $bus2 = $dispatcher->getBusForCommand($command);
+        $this->assertInstanceOf(AsynchronousBus::class, $bus2);
     }
 
-    public function testForcingACommandToQueue()
+    public function testForcingACommandToABus()
     {
         $app = Facade::getFacadeApplication();
         $config = $app->make('config');
         $dispatcherFactory = new DispatcherFactory($app, $config);
         $dispatcher = $dispatcherFactory->getDispatcher();
 
-        $command = new DeletePageCommand(1, 4);
-        list($type, $queue) = $dispatcher->getBusTypeForCommand($command);
-
-        $this->assertNull($queue);
-        $this->assertEquals($dispatcher::BUS_TYPE_SYNC, $type);
-
         $command = new UpdatePageTypeDefaultsCommand(1, 1, 1, 1, 1);
-        list($type, $queue) = $dispatcher->getBusTypeForCommand($command);
+        $bus = $dispatcher->getBusForCommand($command);
+        $this->assertInstanceOf(AsynchronousBus::class, $bus);
+        $command = $dispatcher->wrapCommandForDispatch($command, $bus);
+        $this->assertInstanceOf(UpdatePageTypeDefaultsCommand::class, $command);
 
-        $this->assertEquals('default', $queue);
-        $this->assertEquals($dispatcher::BUS_TYPE_ASYNC, $type);
-
-        $dispatcherFactory->registerCommand(DeletePageCommandHandler::class, DeletePageCommand::class, true);
+        $dispatcher->registerCommand(DeletePageCommandHandler::class, DeletePageCommand::class, AsynchronousBus::getHandle());
 
         $command = new DeletePageCommand(1, 4);
-        list($type, $queue) = $dispatcherFactory->getDispatcher()->getBusTypeForCommand($command);
-
-        $this->assertEquals('default', $queue);
-        $this->assertEquals($dispatcher::BUS_TYPE_ASYNC, $type);
+        $bus = $dispatcher->getBusForCommand($command);
+        $this->assertInstanceOf(AsynchronousBus::class, $bus);
+        $command = $dispatcher->wrapCommandForDispatch($command, $bus);
+        $this->assertInstanceOf(QueueCommand::class, $command);
+        $this->assertEquals('default', $command->getName());
     }
 }

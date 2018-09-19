@@ -27,23 +27,16 @@ class DispatcherFactory
     {
         $this->app = $app;
         $this->config = $config;
-        $this->dispatcher = new Dispatcher($this->app);
-        $defaultQueue = $this->config->get('concrete.queue.default');
-        $this->dispatcher->setDefaultQueue($defaultQueue);
+        $this->dispatcher = $app->make(Dispatcher::class);
         foreach($this->config->get('app.commands') as $entry) {
             $command = $entry[0];
             $handler = $entry[1];
-            $queue = null;
+            $bus = null;
             if (isset($entry[2])) {
-                $queue = $entry[2];
+                $bus = $entry[2];
             }
-            $this->dispatcher->registerCommand($this->app->make($handler), $command, $queue);
+            $this->dispatcher->registerCommand($this->app->make($handler), $command, $bus);
         }
-    }
-
-    public function registerCommand($handler, $command, $queue = null)
-    {
-        $this->dispatcher->registerCommand($handler, $command, $queue);
     }
 
     public function getDispatcher()

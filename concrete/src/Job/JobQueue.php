@@ -4,6 +4,7 @@ namespace Concrete\Core\Job;
 use Bernard\Queue;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Entity\Queue\Batch;
+use Concrete\Core\Foundation\Command\AsynchronousBus;
 use Concrete\Core\Foundation\Queue\Batch\BatchFactory;
 use Concrete\Core\Foundation\Queue\Batch\BatchProgressUpdater;
 use Concrete\Core\Foundation\Queue\QueueService;
@@ -103,7 +104,7 @@ class JobQueue
         $data = serialize($mixed);
         $this->totalMessages++;
         $command = new ExecuteJobItemCommand($this->batch->getBatchHandle(), $this->job->getJobHandle(), $data);
-        return $this->app->getCommandDispatcher()->dispatchOnQueue($command);
+        return $this->app->getCommandDispatcher()->dispatch($command, AsynchronousBus::getHandle());
     }
 
 }

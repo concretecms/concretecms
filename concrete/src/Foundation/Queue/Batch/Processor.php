@@ -3,6 +3,7 @@
 namespace Concrete\Core\Foundation\Queue\Batch;
 
 
+use Concrete\Core\Foundation\Command\AsynchronousBus;
 use Concrete\Core\Foundation\Command\Dispatcher;
 use Concrete\Core\Foundation\Command\DispatcherFactory;
 use Concrete\Core\Foundation\Queue\Batch\Response\BatchProcessorResponse;
@@ -49,7 +50,7 @@ class Processor implements ProcessorInterface
         $commands = $factory->getCommands($mixed);
 
         foreach($commands as $command) {
-            $dispatcher->dispatchOnQueue($command, $dispatcher->getQueueForCommand($command));
+            $dispatcher->dispatch($command, AsynchronousBus::getHandle());
         }
 
         $this->updater->incrementTotals($batch, count($commands));
