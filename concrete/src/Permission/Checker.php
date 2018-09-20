@@ -46,27 +46,43 @@ class Checker
      */
     public function __call($f, $a)
     {
-        if (!is_object($this->response)) {
+        if ($this->response) {
+            switch (count($a)) {
+                case 0:
+                    $r = $this->response->{$f}();
+                    break;
+                case 1:
+                    $r = $this->response->{$f}($a[0]);
+                    break;
+                case 2:
+                    $r = $this->response->{$f}($a[0], $a[1]);
+                    break;
+                default:
+                    $r = call_user_func_array([$this->response, $f], $a);
+                    break;
+            }
+        } else {
             $app = Application::getFacadeApplication();
             // handles task permissions
             $permission = $app->make('helper/text')->uncamelcase($f);
-        }
-
-        if (count($a) > 0) {
-            if ($this->response) {
-                $r = call_user_func_array([$this->response, $f], $a);
-            } else {
-                $pk = PermissionKey::getByHandle($permission);
-                $r = call_user_func_array([$pk, $f], $a);
-            }
-        } elseif (is_object($this->response)) {
-            $r = $this->response->{$f}();
-        } else {
             $pk = PermissionKey::getByHandle($permission);
             if (!$pk) {
                 throw new Exception(t('Unable to get permission key for %s', $permission));
             }
-            $r = $pk->validate();
+            switch (count($a)) {
+                case 0:
+                    $r = $pk->validate();
+                    break;
+                case 1:
+                    $r = $pk->{$f}($a[0]);
+                    break;
+                case 2:
+                    $r = $pk->{$f}($a[0], $a[1]);
+                    break;
+                default:
+                    $r = call_user_func_array([$pk, $f], $a);
+                    break;
+            }
         }
 
         if (is_array($r) || is_object($r)) {
