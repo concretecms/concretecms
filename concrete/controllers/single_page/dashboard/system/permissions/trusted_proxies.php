@@ -22,26 +22,7 @@ class TrustedProxies extends DashboardPageController
     {
         if ($this->token->validate('ccm_trusted_proxies_save')) {
             $post = $this->request->request;
-            $trustedIPs = [];
-            $invalidIPs = [];
-            $rawTrustedIPs = $post->get('trustedIPs');
-            if (is_string($rawTrustedIPs)) {
-                if (preg_match_all('/\S+/', $rawTrustedIPs, $matches)) {
-                    foreach ($matches[0] as $rawRange) {
-                        if (!in_array($rawRange, $invalidIPs, true)) {
-                            $range = Factory::rangeFromString($rawRange);
-                            if ($range === null || $range instanceof Pattern) {
-                                $invalidIPs[] = $rawRange;
-                            } else {
-                                $range = (string) $range;
-                                if (!in_array($range, $trustedIPs, true)) {
-                                    $trustedIPs[] = $range;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            $this->parseIPList($post->get('trustedIPs'), $validIPs, $invalidIPs);
             $numInvalid = count($invalidIPs);
             if ($numInvalid > 0) {
                 $this->error->add(t2('This IP address is not valid: %2$s', 'These IP addresses are not valid: %2$s', $numInvalid, "\n- " . implode("\n- ", $invalidIPs)));
@@ -56,5 +37,33 @@ class TrustedProxies extends DashboardPageController
             $this->error->add($this->token->getErrorMessage());
         }
         $this->view();
+    }
+
+    /**
+     * @param string $input
+     * @param string[] $validIPs
+     * @param string[] $invalidIPs
+     */
+    private function parseIPList($input, &$validIPs, &$invalidIPs)
+    {
+        $validIPs = [];
+        $invalidIPs = [];
+        if (is_string($input)) {
+            if (preg_match_all('/\S+/', $input, $matches)) {
+                foreach ($matches[0] as $rawRange) {
+                    if (!in_array($rawRange, $invalidIPs, true)) {
+                        $range = Factory::rangeFromString($rawRange);
+                        if ($range === null || $range instanceof Pattern) {
+                            $invalidIPs[] = $rawRange;
+                        } else {
+                            $range = (string) $range;
+                            if (!in_array($range, $validIPs, true)) {
+                                $validIPs[] = $range;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
