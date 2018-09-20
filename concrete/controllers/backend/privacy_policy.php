@@ -2,6 +2,7 @@
 namespace Concrete\Controller\Backend;
 
 use Concrete\Core\Controller\AbstractController;
+use Concrete\Core\Error\UserMessageException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class PrivacyPolicy extends AbstractController
@@ -17,6 +18,7 @@ class PrivacyPolicy extends AbstractController
                 return new JsonResponse(['accept_privacy_policy' => true]);
             }
         }
+        throw new UserMessageException(t('Access Denied.'));
     }
 
 

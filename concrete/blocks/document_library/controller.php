@@ -773,45 +773,60 @@ class Controller extends BlockController
 
     public function save($args)
     {
-        $data = array();
-        $fsID = array();
-        if (isset($args['fsID']) && is_array($args['fsID'])) {
-            $fsID = $args['fsID'];
-        }
-        $viewProperties = array();
-        if (isset($args['viewProperties']) && is_array($args['viewProperties'])) {
-            $viewProperties = $args['viewProperties'];
-        }
-        $searchProperties = array();
-        if (isset($args['searchProperties']) && is_array($args['searchProperties'])) {
-            $searchProperties = $args['searchProperties'];
-        }
-        $expandableProperties = array();
-        if (isset($args['expandableProperties']) && is_array($args['expandableProperties'])) {
-            $expandableProperties = $args['expandableProperties'];
-        }
-        $data['folderID'] = array_get($args, 'folderID');
-        $data['viewProperties'] = json_encode($viewProperties);
-        $data['searchProperties'] = json_encode($searchProperties);
-        $data['expandableProperties'] = json_encode($expandableProperties);
-        $data['setIds'] = json_encode($fsID);
-        $data['setMode'] = $args['setMode'] == 'all' ? 'all' : 'any';
-        $data['onlyCurrentUser'] = $args['onlyCurrentUser'] == '1' ? 1 : 0;
-        $data['allowInPageFileManagement'] = $args['allowInPageFileManagement'] == '1' ? 1 : 0;
-        $data['allowFileUploading'] = $args['allowFileUploading'] == '1' ? 1 : 0;
-        $data['tags'] = $args['tags'];
-        $data['orderBy'] = $args['orderBy'];
-        $data['displayLimit'] = $args['displayLimit'];
-        $data['displayOrderDesc'] = $args['displayOrderDesc'] == '1' ? 1 : 0;
-        $data['maxThumbWidth'] = intval($args['maxThumbWidth']);
-        $data['maxThumbHeight'] = intval($args['maxThumbHeight']);
-        $data['enableSearch'] = $args['enableSearch'] == '1' ? 1 : 0;
-        $data['heightMode'] = $args['heightMode'] == 'fixed' ? 'fixed' : 'auto';
-        $data['downloadFileMethod'] = $args['downloadFileMethod'] == 'force' ? 'force' : 'browser';
-        $data['fixedHeightSize'] = intval($args['fixedHeightSize']);
-        $data['headerBackgroundColor'] = $args['headerBackgroundColor'];
-        $data['addFilesToSetID'] = 0;
-        if (isset($args['addFilesToSetID']) && $args['addFilesToSetID'] > 0) {
+        $args += [
+            'folderID' => null,
+            'viewProperties' => null,
+            'searchProperties' => null,
+            'expandableProperties' => null,
+            'fsID' => null,
+            'setMode' => null,
+            'tags' => null,
+            'orderBy' => null,
+            'displayLimit' => null,
+            'maxThumbWidth' => null,
+            'maxThumbHeight' => null,
+            'heightMode' => null,
+            'downloadFileMethod' => null,
+            'fixedHeightSize' => null,
+            'headerBackgroundColor' => null,
+            'addFilesToSetID' => 0,
+            'headerBackgroundColorActiveSort' => null,
+            'headerTextColor' => null,
+            'tableName' => '',
+            'tableDescription' => '',
+            'rowBackgroundColorAlternate' => null,
+        ];
+
+        $data = [
+            'folderID' => $args['folderID'],
+            'viewProperties' => json_encode(is_array($args['viewProperties']) ? $args['viewProperties'] : []),
+            'searchProperties' => json_encode(is_array($args['searchProperties']) ? $args['searchProperties'] : []),
+            'expandableProperties' => json_encode(is_array($args['expandableProperties']) ? $args['expandableProperties'] : []),
+            'setIds' => json_encode(is_array($args['fsID']) ? $args['fsID'] : []),
+            'setMode' => $args['setMode'] == 'all' ? 'all' : 'any',
+            'onlyCurrentUser' => empty($args['onlyCurrentUser']) ? 0 : 1,
+            'allowInPageFileManagement' => empty($args['allowInPageFileManagement']) ? 0 : 1,
+            'allowFileUploading' => empty($args['allowFileUploading']) ? 0 : 1,
+            'tags' => $args['tags'],
+            'orderBy' => $args['orderBy'],
+            'displayLimit' => $args['displayLimit'],
+            'displayOrderDesc' => empty($args['displayOrderDesc']) ? 0 : 1,
+            'maxThumbWidth' => (int) $args['maxThumbWidth'],
+            'maxThumbHeight' => (int) $args['maxThumbHeight'],
+            'enableSearch' => empty($args['enableSearch']) ? 0 : 1,
+            'heightMode' => $args['heightMode'] == 'fixed' ? 'fixed' : 'auto',
+            'downloadFileMethod' => $args['downloadFileMethod'] == 'force' ? 'force' : 'browser',
+            'fixedHeightSize' => (int) $args['fixedHeightSize'],
+            'headerBackgroundColor' => $args['headerBackgroundColor'],
+            'addFilesToSetID' => 0,
+            'headerBackgroundColorActiveSort' => $args['headerBackgroundColorActiveSort'],
+            'headerTextColor' => $args['headerTextColor'],
+            'tableName' => $args['tableName'],
+            'tableDescription' => $args['tableDescription'],
+            'tableStriped' => empty($args['tableStriped']) ? 0 : 1,
+            'rowBackgroundColorAlternate' => empty($args['tableStriped']) ? '' : $args['rowBackgroundColorAlternate'],
+        ];
+        if ((int) $args['addFilesToSetID'] > 0) {
             $fs = \FileSet::getByID($args['addFilesToSetID']);
             if (is_object($fs)) {
                 $fsp = new \Permissions($fs);
@@ -819,17 +834,6 @@ class Controller extends BlockController
                     $data['addFilesToSetID'] = $fs->getFileSetID();
                 }
             }
-        }
-        $data['addFilesToSetID'] = intval($args['addFilesToSetID']);
-        $data['headerBackgroundColorActiveSort'] = $args['headerBackgroundColorActiveSort'];
-        $data['headerTextColor'] = $args['headerTextColor'];
-        $data['tableName'] = $args['tableName'];
-        $data['tableDescription'] = $args['tableDescription'];
-        $data['tableStriped'] = $args['tableStriped'] == '1' ? 1 : 0;
-        if ($data['tableStriped']) {
-            $data['rowBackgroundColorAlternate'] = $args['rowBackgroundColorAlternate'];
-        } else {
-            $data['rowBackgroundColorAlternate'] = '';
         }
         parent::save($data);
     }

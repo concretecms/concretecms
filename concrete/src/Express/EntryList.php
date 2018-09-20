@@ -20,13 +20,13 @@ class EntryList extends DatabaseItemList implements PermissionableListItemInterf
     {
         $this->category = $entity->getAttributeKeyCategory();
         $this->entity = $entity;
+        $this->setItemsPerPage($entity->getItemsPerPage());
         parent::__construct(null);
         if ($entity->supportsCustomDisplayOrder()) {
             $this->setItemsPerPage(-1);
             $this->sortByDisplayOrderAscending();
         }
     }
-
 
     protected function getAttributeKeyClassName()
     {

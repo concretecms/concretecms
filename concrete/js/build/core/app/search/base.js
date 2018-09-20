@@ -34,9 +34,15 @@
 		if ($element.find('script[data-template=search-form]').length) {
 			this._templateSearchForm = _.template($element.find('script[data-template=search-form]').html());
 		}
-		this._templateSearchResultsTableHead = _.template($element.find('script[data-template=search-results-table-head]').html());
-		this._templateSearchResultsTableBody = _.template($element.find('script[data-template=search-results-table-body]').html());
-		this._templateSearchResultsPagination = _.template($element.find('script[data-template=search-results-pagination]').html());
+		if ($element.find('script[data-template=search-results-table-head]').length) {
+			this._templateSearchResultsTableHead = _.template($element.find('script[data-template=search-results-table-head]').html());
+		}
+		if ($element.find('script[data-template=search-results-table-body]').length) {
+			this._templateSearchResultsTableBody = _.template($element.find('script[data-template=search-results-table-body]').html());
+		}
+		if ($element.find('script[data-template=search-results-pagination]').length) {
+			this._templateSearchResultsPagination = _.template($element.find('script[data-template=search-results-pagination]').html());
+		}
 		if (this.$menuTemplate.length) {
 			this._templateSearchResultsMenu = _.template(this.$menuTemplate.html());
 		}
@@ -207,8 +213,8 @@
 		var my = this;
 		event.preventDefault();
 		$row.removeClass('ccm-search-select-hover');
+		var $selected = my.$element.find('.ccm-search-select-selected');
 		if (event.shiftKey) {
-			var $selected = my.$element.find('.ccm-search-select-selected');
 			var index = my.$element.find('tbody tr').index($row);
 			if (!$selected.length) {
 				// If nothing is selected, we select everything from the beginning up to row.
@@ -233,6 +239,9 @@
 			if (event.which == 3) {
 				my.handleMenuClick(event, $row);
 			} else {
+				if (!event.metaKey) {
+					$selected.removeClass('ccm-search-select-selected');
+				}
 				if (!$row.hasClass('ccm-search-select-selected')) {
 					// Select the row
 					$row.addClass('ccm-search-select-selected');
@@ -276,19 +285,27 @@
 
 		cs.result = result;
 
-		cs.$resultsTableHead.html(cs._templateSearchResultsTableHead({'columns': result.columns}));
-		cs.$resultsTableBody.html(cs._templateSearchResultsTableBody({'items': result.items}));
-		cs.$resultsPagination.html(cs._templateSearchResultsPagination({'paginationTemplate': result.paginationTemplate}));
-		if (cs.$advancedFields) {
-			cs.$advancedFields.html('');
-			if (cs.$advancedFields.length) {
-				$.each(result.fields, function(i, field) {
-					cs.$advancedFields.append(cs._templateAdvancedSearchFieldRow({'field': field}));
-				});
+		if (result) {
+			if (cs.$resultsTableHead.length) {
+				cs.$resultsTableHead.html(cs._templateSearchResultsTableHead({'columns': result.columns}));
 			}
+			if (cs.$resultsTableBody.length) {
+				cs.$resultsTableBody.html(cs._templateSearchResultsTableBody({'items': result.items}));
+			}
+			if (cs.$resultsPagination.length) {
+				cs.$resultsPagination.html(cs._templateSearchResultsPagination({'paginationTemplate': result.paginationTemplate}));
+			}
+			if (cs.$advancedFields) {
+				cs.$advancedFields.html('');
+				if (cs.$advancedFields.length) {
+					$.each(result.fields, function(i, field) {
+						cs.$advancedFields.append(cs._templateAdvancedSearchFieldRow({'field': field}));
+					});
+				}
+			}
+	
+			cs.setupResetButton(result);
 		}
-
-		cs.setupResetButton(result);
 
 		if (options.selectMode == 'multiple') {
 			// We enable item selection, click to select single, command click for
@@ -384,7 +401,7 @@
 				modal: true,
 				title: ccmi18n.search,
 				onOpen: function() {
-					cs.setupAdvancedSearchDialog();
+					cs.setupSearch();
 				}
 			});
 			return false;
@@ -392,108 +409,6 @@
 
 	};
 
-	ConcreteAjaxSearch.prototype.setupAdvancedSearchDialog = function() {
-		var my = this;
-		var $container = $('div[data-container=search-fields]');
-		var renderFieldRowTemplate = _.template(
-			$('script[data-template=search-field-row]').html()
-		);
-		var defaultQuery = $('script[data-template=default-query]').html();
-		if (defaultQuery) {
-			defaultQuery = JSON.parse(defaultQuery);
-		}
-		$('button[data-button-action=add-field]').on('click', function() {
-			$container.append(
-				renderFieldRowTemplate()
-			);
-		});
-
-		if (my.result.query) {
-			$.each(my.result.query.fields, function(i, field) {
-				$container.append(
-					renderFieldRowTemplate({'field': field})
-				);
-			});
-		} else if (defaultQuery) {
-			$.each(defaultQuery.fields, function(i, field) {
-				$container.append(
-					renderFieldRowTemplate({'field': field})
-				);
-			});
-		}
-
-		var selects = $container.find('select.selectize-select');
-		if (selects.length) {
-			selects.selectize({
-				plugins: ['remove_button']
-	    	});
-		}
-		$container.on('change', 'select.ccm-search-choose-field', function() {
-			var key = $(this).val();
-			var $content = $(this).parent().find('div.form-group');
-			if (key) {
-				$.concreteAjax({
-					url: $(this).attr('data-action'),
-					data: {
-						'field': key
-					},
-					success: function(r) {
-						_.each(r.assets.css, function(css) {
-							ConcreteAssetLoader.loadCSS(css);
-						});
-						_.each(r.assets.javascript, function(javascript) {
-							ConcreteAssetLoader.loadJavaScript(javascript);
-						});
-						$content.html(r.element);
-						var selects = $content.find('select.selectize-select');
-						if (selects.length) {
-							selects.selectize({
-								plugins: ['remove_button']
-							});
-						}
-					}
-				});
-			}
-		});
-		$container.on('click', 'a[data-search-remove=search-field]', function(e) {
-			e.preventDefault();
-			var $row = $(this).parent();
-			$row.remove();
-		});
-
-		$('button[data-button-action=save-search-preset]').on('click.saveSearchPreset', function() {
-			$.fn.dialog.open({
-				element: 'div[data-dialog=save-search-preset]:first',
-				modal: true,
-				width: 320,
-				title: 'Save Preset',
-				height: 'auto'
-			});
-		});
-
-		var $presetForm = $('form[data-form=save-preset]');
-		var $form = $('form[data-form=advanced-search]');
-		$('button[data-button-action=save-search-preset-submit]').on('click.saveSearchPresetSubmit', function() {
-			var $presetForm = $('form[data-form=save-preset]');
-			$presetForm.trigger('submit');
-		});
-
-		$presetForm.on('submit', function() {
-			var formData = $form.serializeArray();
-			formData = formData.concat($presetForm.serializeArray());
-			$.concreteAjax({
-				data: formData,
-				url: $presetForm.attr('action'),
-				success: function(r) {
-					$.fn.dialog.closeAll();
-					ConcreteEvent.publish('SavedSearchCreated', {search: r});
-				}
-			});
-			return false;
-		});
-
-		my.setupSearch();
-	};
 
 	ConcreteAjaxSearch.prototype.setupSort = function() {
 		var cs = this;
@@ -662,7 +577,7 @@
 					type = null;
 				}
 			});
-			if (type) {
+			if (type && type == cs.options.result.bulkMenus.propertyValue) {
 				return $(menu);
 			}
 		} else if (results.length == 1) {

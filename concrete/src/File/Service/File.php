@@ -288,7 +288,7 @@ class File
             return str_replace(DIRECTORY_SEPARATOR, '/', $temp);
         }
 
-        $temp = tempnam(__FILE__, '');
+        $temp = @tempnam(__FILE__, '');
         if (file_exists($temp)) {
             unlink($temp);
 

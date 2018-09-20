@@ -25,7 +25,24 @@
             </attributes>
             <area name="Main">
                 <blocks>
-                    <block type="desktop_waiting_for_me" />
+                    <block type="core_area_layout" name="">
+                        <arealayout type="theme-grid" columns="12">
+                            <columns>
+                                <column span="12" offset="0">
+                                    <block type="desktop_waiting_for_me" />
+                                </column>
+                            </columns>
+                        </arealayout>
+                    </block>
+                    <block type="core_area_layout" name="">
+                        <arealayout type="theme-grid" columns="12">
+                            <columns>
+                                <column span="12" offset="0">
+                                    <block type="desktop_draft_list" />
+                                </column>
+                            </columns>
+                        </arealayout>
+                    </block>
                 </blocks>
             </area>
         </page>

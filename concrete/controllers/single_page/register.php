@@ -1,11 +1,11 @@
 <?php
+
 namespace Concrete\Controller\SinglePage;
 
 use Concrete\Core\Attribute\Context\FrontendFormContext;
 use Concrete\Core\Attribute\Form\Renderer;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Page\Controller\PageController;
-use Concrete\Core\Validation\ResponseInterface;
 use Config;
 use Loader;
 use User;
@@ -76,44 +76,13 @@ class Register extends PageController
                 }
             }
 
-            if (!$vals->email($_POST['uEmail'])) {
-                $e->add(t('Invalid email address provided.'));
-            } elseif (!$valc->isUniqueEmail($_POST['uEmail'])) {
-                $e->add(t('The email address %s is already in use. Please choose another.', $_POST['uEmail']));
-            }
-
             if ($this->displayUserName) {
-                if (strlen($username) < $config->get('concrete.user.username.minimum')) {
-                    $e->add(t(
-                        'A username must be at least %s characters long.',
-                        $config->get('concrete.user.username.minimum')
-                    ));
-                }
-
-                if (strlen($username) > $config->get('concrete.user.username.maximum')) {
-                    $e->add(t(
-                        'A username cannot be more than %s characters long.',
-                        $config->get('concrete.user.username.maximum')
-                    ));
-                }
-
-                if (strlen($username) >= $config->get('concrete.user.username.minimum') && strlen($username) <= $config->get('concrete.user.username.maximum') && !$valc->username($username)) {
-                    if ($config->get('concrete.user.username.allow_spaces')) {
-                        $e->add(t('A username may only contain letters, numbers, spaces (not at the beginning/end), dots (not at the beginning/end), underscores (not at the beginning/end).'));
-                    } else {
-                        $e->add(t('A username may only contain letters, numbers, dots (not at the beginning/end), underscores (not at the beginning/end).'));
-                    }
-                }
-                if (!$valc->isUniqueUsername($username)) {
-                    $e->add(t('The username %s already exists. Please choose another', $username));
-                }
+                $this->app->make('validator/user/name')->isValid($username, $e);
             }
+            
+            $this->app->make('validator/user/email')->isValid($_POST['uEmail'], $e);
 
-            if ($username == USER_SUPER) {
-                $e->add(t('Invalid Username'));
-            }
-
-            \Core::make('validator/password')->isValid($password, $e);
+            $this->app->make('validator/password')->isValid($password, $e);
 
             $displayConfirmPasswordField = $config->get('concrete.user.registration.display_confirm_password_field');
             if ($password && $displayConfirmPasswordField) {
@@ -132,9 +101,6 @@ class Register extends PageController
                     $this->request,
                     $uak->isAttributeKeyRequiredOnRegister()
                 );
-                /**
-                 * @var ResponseInterface
-                 */
                 if (!$response->isValid()) {
                     $error = $response->getErrorObject();
                     $e->add($error);

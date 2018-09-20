@@ -507,7 +507,7 @@ class Collection extends ConcreteObject implements TrackableInterface
      *
      * @return \Concrete\Core\Entity\Attribute\Value\PageValue|null
      */
-    public function getAttributeValueObject($akHandle)
+    public function getAttributeValueObject($akHandle, $createIfNotExists = false)
     {
         if (is_object($this->vObj)) {
             return $this->vObj->getAttributeValue($akHandle);

@@ -35,6 +35,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
     public $pThemeID;
     public $cvPublishDate;
     public $cvPublishEndDate;
+    public $cvDateApproved;
 
     // Other properties
     public $cID;
@@ -271,6 +272,16 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         return $this->cvDateCreated;
     }
 
+    /**
+     * Gets the date the collection version was approved.
+     *
+     * @return null|string date formated like: 2009-01-01 00:00:00
+     */
+    public function getVersionDateApproved()
+    {
+        return $this->cvDateApproved;
+    }
+
     public function setComment($comment)
     {
         $thisCVID = $this->getVersionID();
@@ -473,10 +484,11 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         // now we approve our version
         $v2 = array(
             $uID,
+            $dh->getOverridableNow(),
             $cID,
             $cvID,
         );
-        $q2 = "update CollectionVersions set cvIsNew = 0, cvIsApproved = 1, cvApproverUID = ? where cID = ? and cvID = ?";
+        $q2 = "update CollectionVersions set cvIsNew = 0, cvIsApproved = 1, cvApproverUID = ?, cvDateApproved = ? where cID = ? and cvID = ?";
         $db->executeQuery($q2, $v2);
 
         // next, we rescan our collection paths for the particular collection, but only if this isn't a generated collection
@@ -686,7 +698,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
     {
         $app = Facade::getFacadeApplication();
         $db = $app->make('database')->connection();
-        $q = "update CollectionVersions set cvPublishDate = NULL where cID = ?";
+        $q = "update CollectionVersions set cvPublishDate = NULL , cvIsApproved = 0 where cID = ? AND cvPublishDate IS NOT NULL";
 
         $db->executeQuery($q, array($this->cID));
     }

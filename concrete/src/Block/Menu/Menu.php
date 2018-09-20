@@ -87,6 +87,8 @@ class Menu extends ContextMenu
             if ($btOriginal->supportsInlineEdit()) {
                 $editInline = true;
             }
+        } else {
+            $_bo = null;
         }
 
 

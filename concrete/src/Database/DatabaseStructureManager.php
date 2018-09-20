@@ -3,7 +3,7 @@ namespace Concrete\Core\Database;
 
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\Schema\SchemaDiff;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Core;
 use Doctrine\ORM\Tools\SchemaTool;
 
@@ -12,7 +12,7 @@ class DatabaseStructureManager
     /**
      * The entity manager instance.
      *
-     * @var \Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManagerInterface
      */
     protected $entityManager;
 
@@ -26,9 +26,9 @@ class DatabaseStructureManager
     /**
      * Create a new structure manager.
      * 
-     * @param \Doctrine\ORM\EntityManager $em
+     * @param \Doctrine\ORM\EntityManagerInterface $em
      */
-    public function __construct(EntityManager $em)
+    public function __construct(EntityManagerInterface $em)
     {
         $this->entityManager = $em;
     }
@@ -36,7 +36,7 @@ class DatabaseStructureManager
     /**
      * Get the entity manager object for this structure manager.
      * 
-     * @return \Doctrine\ORM\EntityManager
+     * @return \Doctrine\ORM\EntityManagerInterface
      */
     public function getEntityManager()
     {

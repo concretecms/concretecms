@@ -54,18 +54,16 @@ EOT
             $sm = $cn->getSchemaManager();
             $tables = $sm->listTables();
             $output->writeln('<info>done.</info>');
-            $tableNames = [];
             foreach ($tables as $table) {
-                $tableNames[] = $table->getName();
                 foreach ($table->getForeignKeys() as $foreignKey) {
                     $output->write("Dropping foreign key {$table->getName()}.{$foreignKey->getName()}... ");
                     $sm->dropForeignKey($foreignKey, $table);
                     $output->writeln('<info>done.</info>');
                 }
             }
-            foreach ($tableNames as $tableName) {
-                $output->write("Dropping table $tableName... ");
-                $sm->dropTable($tableName);
+            foreach ($tables as $table) {
+                $output->write("Dropping table {$table->getName()}... ");
+                $sm->dropTable($table);
                 $output->writeln('<info>done.</info>');
             }
         }

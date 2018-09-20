@@ -10,11 +10,18 @@ foreach ($ctArray as $cta) {
 $ptID = 0;
 $factors = array('' => t('Select Menu'), 'sitemap_in_page' => t('In-Page Sitemap'));
 
-if (is_object($pagetype) && $pagetype->getPageTypePublishTargetTypeID() == $type->getPageTypePublishTargetTypeID()) {
+if (isset($pagetype) && is_object($pagetype) && $pagetype->getPageTypePublishTargetTypeID() == $type->getPageTypePublishTargetTypeID()) {
     $configuredTarget = $pagetype->getPageTypePublishTargetObject();
     $ptID = $configuredTarget->getPageTypeID();
     $startingPointPageID = $configuredTarget->getStartingPointPageID();
     $selectorFormFactor = $configuredTarget->getSelectorFormFactor();
+} else {
+    if (!isset($startingPointPageID)) {
+        $startingPointPageID = null;
+    }
+    if (!isset($selectorFormFactor)) {
+        $selectorFormFactor = null;
+    }
 }
 ?>
 <div class="form-group">
