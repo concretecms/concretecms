@@ -28,7 +28,7 @@ Just log in to the documentation site with your concrete5.org account and edit a
 
 ## Community Channels
 
-* [Public Slack](https://concrete5.signup.team/)
+* [Public Slack](https://slack.concrete5.org)
 * [IRC Channel](https://kiwiirc.com/client/irc.freenode.com/concrete5/)
 * [Forums](https://concrete5.org/community/forums/)
 
