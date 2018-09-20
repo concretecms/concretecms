@@ -34,7 +34,6 @@ final class Controller
     /**
      * Handle authorization
      *
-     * @param \Psr\Http\Message\ServerRequestInterface $request
      * @return \Psr\Http\Message\ResponseInterface
      * @throws \Exception
      */
