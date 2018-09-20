@@ -7,13 +7,8 @@ use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
 class Version20180920000000 extends AbstractMigration implements RepeatableMigrationInterface
 {
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Concrete\Core\Updater\Migrations\AbstractMigration::upgradeDatabase()
-     */
     public function upgradeDatabase()
     {
-        $this->createSinglePage('/dashboard/system/permissions/security', 'Security Options', ['meta_keywords' => 'login, logout, user, agent, ip, change']);
+        $this->createSinglePage('/dashboard/system/permissions/trusted_proxies', 'Trusted Proxies', ['meta_keywords' => 'trusted, proxy, proxies, ip, cloudflare']);
     }
 }
