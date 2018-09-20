@@ -593,13 +593,23 @@ EOT
      */
     public function getAccessListItems()
     {
-        $args = func_get_args();
         $obj = $this->getPermissionAccessObject();
-        if ($obj) {
-            return call_user_func_array([$obj, 'getAccessListItems'], $args);
+        if (!$obj) {
+            return [];
         }
-
-        return [];
+        $args = func_get_args();
+        switch (count($args)) {
+            case 0:
+                return $obj->getAccessListItems();
+            case 1:
+                return $obj->getAccessListItems($args[0]);
+            case 2:
+                return $obj->getAccessListItems($args[0], $args[1]);
+            case 3:
+                return $obj->getAccessListItems($args[0], $args[1], $args[2]);
+            default:
+                return call_user_func_array([$obj, 'getAccessListItems'], $args);
+        }
     }
 
     /**
