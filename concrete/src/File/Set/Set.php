@@ -97,15 +97,12 @@ class Set
         $queryBuilder = $database->createQueryBuilder();
         $results = $queryBuilder->select('*')->from('FileSets')->where(
             $queryBuilder->expr()->eq('fsType', self::TYPE_PUBLIC)
-        )->orWhere(
-            $queryBuilder->expr()->andX(
-            [
-                $queryBuilder->expr()->in('fsType',[self::TYPE_PRIVATE, self::TYPE_STARRED, self::TYPE_PUBLIC]),
-                $queryBuilder->expr()->eq('uID', $user->getUserID())
-            ]
-            )
-
-        )->execute();
+            )->orWhere(
+                $queryBuilder->expr()->andX(
+                    $queryBuilder->expr()->in('fsType',[self::TYPE_PRIVATE, self::TYPE_STARRED, self::TYPE_PUBLIC]),
+                    $queryBuilder->expr()->eq('uID', $user->getUserID())
+                )
+            )->execute();
 
 
         while ($row = $results->fetch()) {
