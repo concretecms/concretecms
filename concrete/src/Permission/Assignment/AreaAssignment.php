@@ -1,19 +1,33 @@
 <?php
+
 namespace Concrete\Core\Permission\Assignment;
 
-use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Area\Area;
-use Stack;
-use Page;
 use Concrete\Core\Area\SubArea;
-use PermissionKey;
-use Database;
+use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Stack\Stack;
+use Concrete\Core\Permission\Access\Access;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
+use Concrete\Core\Support\Facade\Application;
 
 class AreaAssignment extends Assignment
 {
+    /**
+     * @unused
+     *
+     * @var mixed
+     */
     protected $area;
+
     protected $permissionObjectToCheck;
-    protected $inheritedPermissions = array(
+
+    /**
+     * Mapping between area permissions (keys) and page permissions (values) when an area inherit permissions.
+     *
+     * @var array
+     */
+    protected $inheritedPermissions = [
         'view_area' => 'view_page',
         'edit_area_contents' => 'edit_page_contents',
         'add_layout_to_area' => 'edit_page_contents',
@@ -21,23 +35,31 @@ class AreaAssignment extends Assignment
         'edit_area_permissions' => 'edit_page_permissions',
         'schedule_area_contents_guest_access' => 'schedule_page_contents_guest_access',
         'delete_area_contents' => 'edit_page_contents',
-    );
-
-    protected $blockTypeInheritedPermissions = array(
-        'add_block_to_area' => 'add_block',
-        'add_stack_to_area' => 'add_stack',
-    );
+    ];
 
     /**
-     * @param Area $a
+     * Mapping between area permissions (keys) and block type permissions (values) when an area inherit permissions.
+     *
+     * @var array
+     */
+    protected $blockTypeInheritedPermissions = [
+        'add_block_to_area' => 'add_block',
+        'add_stack_to_area' => 'add_stack',
+    ];
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\Assignment\Assignment::setPermissionObject()
+     *
+     * @param \Concrete\Core\Area\Area $a
      */
     public function setPermissionObject($a)
     {
-        $ax = $a;
         if ($a->isGlobalArea()) {
             $cx = Stack::getByName($a->getAreaHandle(), 'ACTIVE');
             $a = Area::get($cx, STACKS_AREA_NAME);
-            if (!is_object($a)) {
+            if (!$a) {
                 return false;
             }
         }
@@ -58,7 +80,7 @@ class AreaAssignment extends Assignment
                 // won't see anything. so we have to check
                 $areac = Page::getByID($a->getAreaCollectionInheritID());
                 $inheritArea = Area::get($areac, $a->getAreaHandle());
-                if (is_object($inheritArea) && $inheritArea->overrideCollectionPermissions()) {
+                if ($inheritArea && $inheritArea->overrideCollectionPermissions()) {
                     // okay, so that area is still around, still has set permissions on it. So we
                     // pass our current area to our grouplist, userinfolist objects, knowing that they will
                     // smartly inherit the correct items.
@@ -72,18 +94,23 @@ class AreaAssignment extends Assignment
         }
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\Assignment\Assignment::getPermissionAccessObject()
+     */
     public function getPermissionAccessObject()
     {
-        $db = Database::connection();
-
         if ($this->permissionObjectToCheck instanceof Area) {
-            $r = $db->GetOne(
+            $app = Application::getFacadeApplication();
+            $db = $app->make(Connection::class);
+            $r = $db->fetchColumn(
                 'select paID from AreaPermissionAssignments where cID = ? and arHandle = ? and pkID = ? ',
-                array(
+                [
                     $this->permissionObjectToCheck->getCollectionID(),
                     $this->permissionObjectToCheck->getAreaHandle(),
                     $this->pk->getPermissionKeyID(),
-                )
+                ]
             );
             if ($r) {
                 return Access::getByID($r, $this->pk, false);
@@ -102,9 +129,14 @@ class AreaAssignment extends Assignment
             return $pae;
         }
 
-        return false;
+        return null;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\Assignment\Assignment::getPermissionKeyToolsURL()
+     */
     public function getPermissionKeyToolsURL($task = false)
     {
         $area = $this->getPermissionObject();
@@ -113,26 +145,38 @@ class AreaAssignment extends Assignment
         return parent::getPermissionKeyToolsURL($task) . '&cID=' . $c->getCollectionID() . '&arHandle=' . urlencode($area->getAreaHandle());
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\Assignment\Assignment::clearPermissionAssignment()
+     */
     public function clearPermissionAssignment()
     {
-        $db = Database::connection();
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
         $area = $this->getPermissionObject();
         $c = $area->getAreaCollectionObject();
-        $db->Execute('update AreaPermissionAssignments set paID = 0 where pkID = ? and cID = ? and arHandle = ?', array($this->pk->getPermissionKeyID(), $c->getCollectionID(), $area->getAreaHandle()));
+        $db->executeQuery('update AreaPermissionAssignments set paID = 0 where pkID = ? and cID = ? and arHandle = ?', [$this->pk->getPermissionKeyID(), $c->getCollectionID(), $area->getAreaHandle()]);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\Assignment\Assignment::assignPermissionAccess()
+     */
     public function assignPermissionAccess(Access $pa)
     {
-        $db = Database::connection();
-        $db->Replace(
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $db->replace(
             'AreaPermissionAssignments',
-            array(
+            [
                 'cID' => $this->getPermissionObject()->getCollectionID(),
                 'arHandle' => $this->getPermissionObject()->getAreaHandle(),
                 'paID' => $pa->getPermissionAccessID(),
                 'pkID' => $this->pk->getPermissionKeyID(),
-            ),
-            array('cID', 'arHandle', 'pkID'),
+            ],
+            ['cID', 'arHandle', 'pkID'],
             true
         );
         $pa->markAsInUse();
