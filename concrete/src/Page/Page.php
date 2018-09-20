@@ -233,6 +233,11 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         } else {
             $r->cID = $this->getCollectionID();
         }
+        if ($this->isExternalLink()) {
+            $r->url = $this->getCollectionPointerExternalLink();
+        } else {
+            $r->url = (string) $this->getCollectionLink();
+        }
 
         return $r;
     }

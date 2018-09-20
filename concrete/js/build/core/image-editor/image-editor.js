@@ -883,6 +883,10 @@ if (settings.src) {
         }
     }, img);
 
+    if ('crossOrigin' in settings) {
+        var credentials = settings.crossOrigin.toString().toLowerCase();
+        img.crossOrigin = credentials;
+    }
     img.src = settings.src;
 } else {
     im.fire('imageload');

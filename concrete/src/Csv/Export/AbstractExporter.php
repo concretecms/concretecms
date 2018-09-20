@@ -6,6 +6,9 @@ use Concrete\Core\Attribute\MulticolumnTextExportableAttributeInterface;
 use Concrete\Core\Attribute\ObjectInterface;
 use Concrete\Core\Attribute\SimpleTextExportableAttributeInterface;
 use Concrete\Core\Search\ItemList\Database\ItemList;
+use Concrete\Core\Support\Facade\Application;
+use Doctrine\Common\Util\ClassUtils;
+use Doctrine\ORM\EntityManagerInterface;
 use League\Csv\Writer;
 
 defined('C5_EXECUTE') or die('Access Denied.');
@@ -34,6 +37,20 @@ abstract class AbstractExporter
     private $attributeKeysAndControllers;
 
     /**
+     * Unload doctrine entities every X ticks (0 for never).
+     *
+     * @var int
+     */
+    private $unloadDoctrineEveryTick = 0;
+
+    /**
+     * Remaining ticks before unloading Doctrine entities.
+     *
+     * @var int|null
+     */
+    private $ticksUntilUnload = null;
+
+    /**
      * Initialize the instance.
      *
      * @param CategoryInterface $category the attribute category
@@ -43,6 +60,49 @@ abstract class AbstractExporter
     {
         $this->setWriter($writer);
         $this->setCategory($category);
+    }
+
+    /**
+     * Set the number of ticks after which doctrine entities should be unloaded (0 for never).
+     *
+     * @param int $value
+     *
+     * @return $this
+     */
+    public function setUnloadDoctrineEveryTick($value)
+    {
+        $this->unloadDoctrineEveryTick = max(0, (int) $value);
+        $this->ticksUntilUnload = $this->unloadDoctrineEveryTick ?: null;
+
+        return $this;
+    }
+
+    /**
+     * Get the number of ticks after which doctrine entities should be unloaded (0 for never).
+     *
+     * @return int
+     */
+    public function getUnloadDoctrineEveryTick()
+    {
+        return $this->unloadDoctrineEveryTick;
+    }
+
+    /**
+     * Add a tick (to be used to unload Doctrine entities).
+     *
+     * @return $this
+     */
+    public function tick()
+    {
+        if ($this->ticksUntilUnload !== null) {
+            --$this->ticksUntilUnload;
+            if ($this->ticksUntilUnload < 1) {
+                $this->unloadDoctrineEntities();
+                $this->ticksUntilUnload = $this->unloadDoctrineEveryTick;
+            }
+        }
+
+        return $this;
     }
 
     /**
@@ -124,10 +184,10 @@ abstract class AbstractExporter
     protected function setWriter(Writer $writer)
     {
         $this->writer = $writer;
-        
+
         return $this;
     }
-    
+
     /**
      * Get the CSV Writer instance.
      *
@@ -231,6 +291,7 @@ abstract class AbstractExporter
             $listResult = $list->getResult($row);
             $object = $this->getObjectFromListResult($list, $listResult);
             yield iterator_to_array($this->projectObject($object));
+            $this->tick();
         }
     }
 
@@ -250,5 +311,20 @@ abstract class AbstractExporter
         }
 
         return $this->attributeKeysAndControllers;
+    }
+
+    /**
+     * Unload every Doctrine entites, and reset the state of this instance.
+     */
+    protected function unloadDoctrineEntities()
+    {
+        $this->attributeKeysAndControllers = null;
+        $app = Application::getFacadeApplication();
+        $entityManager = $app->make(EntityManagerInterface::class);
+        $entityManager->clear();
+        $categoryClass = ClassUtils::getClass($this->category);
+        if (!$entityManager->getMetadataFactory()->isTransient($categoryClass)) {
+            $entityManager->merge($this->category);
+        }
     }
 }

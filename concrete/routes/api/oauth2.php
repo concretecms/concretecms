@@ -2,7 +2,7 @@
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-use Concrete\Core\API\OAuth\Controller as OAuthController;
+use Concrete\Core\Api\OAuth\Controller as OAuthController;
 
 /**
  * @var $router \Concrete\Core\Routing\Router

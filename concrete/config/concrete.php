@@ -465,6 +465,13 @@ return [
          * @var bool
          */
         'enable_move_blocktypes_across_sets' => false,
+        /*
+         * Control whether or not the image editor should add crossOrigin when loading images from external sources (s3, etc)
+         */
+        'image_editor_cors_policy' => [
+            'enable_cross_origin' => false,
+            'anonymous_request' => true,
+        ],
     ],
 
     'theme' => [

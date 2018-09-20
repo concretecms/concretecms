@@ -25,7 +25,7 @@ class RefreshEntitiesCommand extends Command
             ->setHelp(<<<EOT
 This command will refresh the Doctrine database entities and set the following return codes
 
-  0 operation completed succesfully
+  0 operation completed successfully
   {$errExitCode} errors occurred
 EOT
             )

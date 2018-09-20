@@ -1,6 +1,9 @@
 <?php
+
 namespace Concrete\Core\Routing;
 
+use Concrete\Core\Page\Theme\ThemeRouteCollection;
+use Concrete\Core\Support\Facade\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -10,7 +13,6 @@ use Symfony\Component\Routing\RouteCollection;
 
 class Router implements RouterInterface
 {
-
     /**
      * @var RouteActionFactoryInterface
      */
@@ -24,22 +26,9 @@ class Router implements RouterInterface
     public function __construct(
         RouteCollection $routes,
         RouteActionFactoryInterface $actionFactory
-    ){
+    ) {
         $this->routes = $routes;
         $this->actionFactory = $actionFactory;
-    }
-
-    private function normalizePath($path)
-    {
-        return '/' . trim($path, '/') . '/';
-    }
-
-    private function createRouteBuilder($path, $action, $methods)
-    {
-        $route = new Route($this->normalizePath($path));
-        $route->setMethods($methods);
-        $route->setAction($action);
-        return new RouteBuilder($this, $route);
     }
 
     public function buildGroup()
@@ -85,12 +74,13 @@ class Router implements RouterInterface
     public function all($path, $action)
     {
         return $this->createRouteBuilder($path, $action, [
-            'GET', 'POST', 'PUT', 'PATCH', 'HEAD', 'DELETE', 'OPTIONS'
+            'GET', 'POST', 'PUT', 'PATCH', 'HEAD', 'DELETE', 'OPTIONS',
         ]);
     }
 
     /**
      * @param Route $route
+     *
      * @return RouteActionInterface
      */
     public function resolveAction(Route $route)
@@ -120,23 +110,33 @@ class Router implements RouterInterface
     }
 
     /**
-     * @param Request $request
-     * @return null|MatchedRoute|ResourceNotFoundException|MethodNotAllowedException
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Routing\RouterInterface::getRouteByPath()
+     */
+    public function getRouteByPath($path, RequestContext $context, array &$routeAttributes = [])
+    {
+        $path = $this->normalizePath($path);
+        $potentialRoutes = $this->filterRouteCollectionForPath($this->getRoutes(), $path);
+        $matcher = new UrlMatcher($potentialRoutes, $context);
+        $routeAttributes = $matcher->match($path);
+
+        return $potentialRoutes->get($routeAttributes['_route']);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Routing\RouterInterface::matchRoute()
      */
     public function matchRoute(Request $request)
     {
-        $matcher = new UrlMatcher(
-            $this->getRoutes(),
-            id(new RequestContext())->fromRequest($request)
-        );
-        $path = $this->normalizePath($request->getPathInfo());
-        $matched = $matcher->match($path);
-        if (isset($matched['_route'])) {
-            $route = $this->routes->get($matched['_route']);
-            $request->attributes->add($matched);
-            $request->attributes->set('_route', $route);
-            return new MatchedRoute($route, $matched);
-        }
+        $attributes = [];
+        $route = $this->getRouteByPath($request->getPathInfo(), (new RequestContext())->fromRequest($request), $attributes);
+        $request->attributes->add($attributes);
+        $request->attributes->set('_route', $route);
+
+        return new MatchedRoute($route, $attributes);
     }
 
     public function loadRouteList(RouteListInterface $list)
@@ -146,6 +146,7 @@ class Router implements RouterInterface
 
     /**
      * @deprecated. Use the verb methods instead.
+     *
      * @param $path
      * @param $callback
      * @param null $handle
@@ -155,17 +156,18 @@ class Router implements RouterInterface
      * @param array $schemes
      * @param array $methods
      * @param null $condition
+     *
      * @return Route
      */
     public function register(
         $path,
         $callback,
         $handle = null,
-        array $requirements = array(),
-        array $options = array(),
+        array $requirements = [],
+        array $options = [],
         $host = '',
-        $schemes = array(),
-        $methods = array(),
+        $schemes = [],
+        $methods = [],
         $condition = null)
     {
         $route = new Route($this->normalizePath($path), [], $requirements, $options, $host, $schemes, $methods, $condition);
@@ -174,28 +176,33 @@ class Router implements RouterInterface
             $route->setCustomName($handle);
         }
         $this->addRoute($route);
+
         return $route;
     }
 
     /**
      * Registers routes from a config array. This is deprecated. Use the $router object
      * directly in an included file.
+     *
      * @deprecated.
+     *
      * @param array $routes
      */
     public function registerMultiple(array $routes)
     {
         foreach ($routes as $route => $route_settings) {
             array_unshift($route_settings, $route);
-            call_user_func_array(array($this, 'register'), $route_settings);
+            call_user_func_array([$this, 'register'], $route_settings);
         }
     }
 
-
     /**
      * Returns a route string based on data. DO NOT USE THIS.
+     *
      * @deprecated
+     *
      * @param $data
+     *
      * @return string
      */
     public function route($data)
@@ -229,5 +236,65 @@ class Router implements RouterInterface
         return $route;
     }
 
+    /**
+     * @deprecated Use $app->make(\Concrete\Core\Page\Theme\ThemeRouteCollection::class)->setThemeByRoute() with the same arguments
+     *
+     * {@inheritdoc}
+     * @see \Concrete\Core\Page\Theme\ThemeRouteCollection::setThemeByRoute()
+     */
+    public function setThemeByRoute($path, $theme = null, $wrapper = FILENAME_THEMES_VIEW)
+    {
+        $app = Application::getFacadeApplication();
+        $app->make(ThemeRouteCollection::class)->setThemeByRoute($path, $theme, $wrapper);
+    }
+
+    private function normalizePath($path)
+    {
+        $path = trim($path, '/');
+        return $path === '' ? '/' : "/{$path}/";
+    }
+
+    private function createRouteBuilder($path, $action, $methods)
+    {
+        $route = new Route($this->normalizePath($path));
+        $route->setMethods($methods);
+        $route->setAction($action);
+
+        return new RouteBuilder($this, $route);
+    }
+
+    /**
+     * @param \Symfony\Component\Routing\RouteCollection $routes
+     * @param string $path
+     *
+     * @return \Symfony\Component\Routing\RouteCollection
+     */
+    private function filterRouteCollectionForPath(RouteCollection $routes, $path)
+    {
+        $result = new RouteCollection();
+        foreach ($routes->getResources() as $resource) {
+            $result->addResource($resource);
+        }
+        foreach ($routes->all() as $name => $route) {
+            $routePath = $route->getPath();
+            $p = strpos($routePath, '{');
+            $skip = false;
+            if ($p === false) {
+                if ($routePath !== $path) {
+                    $skip = true;
+                }
+            } elseif ($p > 0) {
+                $routeFixedPath = substr($routePath, 0, $p);
+                if (strpos($path, $routeFixedPath) !== 0) {
+                    $skip = true;
+                }
+            }
+            if ($skip === false) {
+                $result->add($name, $route);
+            }
+        }
+
+        return $result;
+    }
 
 }

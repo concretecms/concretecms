@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Core\API;
+namespace Concrete\Core\Api;
 
 use Concrete\Core\Http\Middleware\FractalNegotiatorMiddleware;
 use Concrete\Core\Http\Middleware\OAuthAuthenticationMiddleware;
@@ -8,7 +8,7 @@ use Concrete\Core\HTTP\Middleware\OAuthErrorMiddleware;
 use Concrete\Core\Routing\RouteListInterface;
 use Concrete\Core\Routing\Router;
 
-class APIRouteList implements RouteListInterface
+class ApiRouteList implements RouteListInterface
 {
 
     public function loadRoutes(Router $router)

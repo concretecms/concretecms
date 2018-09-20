@@ -10,7 +10,6 @@ use Concrete\Core\Filesystem\TemplateLocator;
 
 class AssociationView extends View
 {
-
     protected $association;
     protected $entry;
     protected $allEntries = [];
@@ -27,12 +26,14 @@ class AssociationView extends View
         $this->entry = $context->getEntry();
         $this->association = $this->control->getAssociation();
         $entity = $this->association->getTargetEntity();
-        $list = new EntryList($entity);
-        $this->allEntries = $list->getResults();
+        if (AssociationControl::TYPE_ENTRY_SELECTOR != $control->getEntrySelectorMode()) {
+            $list = new EntryList($entity);
+            $this->allEntries = $list->getResults();
+        }
 
         if (is_object($this->entry)) {
             $related = $this->entry->getAssociations();
-            foreach($related as $relatedAssociation) {
+            foreach ($related as $relatedAssociation) {
                 if ($relatedAssociation->getAssociation()->getID() == $this->association->getID()) {
                     $this->selectedEntries = $relatedAssociation->getSelectedEntries();
                 }
@@ -40,7 +41,7 @@ class AssociationView extends View
         } else {
             $form = $context->getForm();
             if ($form instanceof OwnedEntityForm) {
-                $this->selectedEntries = array($form->getOwningEntry());
+                $this->selectedEntries = [$form->getOwningEntry()];
             }
         }
 
@@ -56,9 +57,7 @@ class AssociationView extends View
     public function createTemplateLocator()
     {
         $locator = new TemplateLocator('association');
+
         return $locator;
     }
-
-
-
 }

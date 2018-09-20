@@ -1,8 +1,8 @@
 <?php
 
-namespace Concrete\Core\API;
+namespace Concrete\Core\Api;
 
-use Concrete\Core\API\OAuth\Validator\DefaultValidator;
+use Concrete\Core\Api\OAuth\Validator\DefaultValidator;
 use Concrete\Core\Entity\OAuth\AccessToken;
 use Concrete\Core\Entity\OAuth\AuthCode;
 use Concrete\Core\Entity\OAuth\Client;
@@ -24,7 +24,7 @@ use League\OAuth2\Server\ResourceServer;
 use phpseclib\Crypt\RSA;
 use League\OAuth2\Server\Grant\ClientCredentialsGrant;
 
-class APIServiceProvider extends ServiceProvider
+class ApiServiceProvider extends ServiceProvider
 {
 
     const KEY_PRIVATE = 'privatekey';
@@ -42,7 +42,7 @@ class APIServiceProvider extends ServiceProvider
         $config = $this->app->make("config");
         if ($this->app->isInstalled() && $config->get('concrete.api.enabled')) {
             $router = $this->app->make(Router::class);
-            $list = new APIRouteList();
+            $list = new ApiRouteList();
             $list->loadRoutes($router);
             $this->registerAuthorizationServer();
         }

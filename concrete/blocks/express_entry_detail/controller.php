@@ -9,6 +9,7 @@ use Concrete\Core\Express\EntryList;
 use Concrete\Core\Express\Form\Context\FrontendViewContext;
 use Concrete\Core\Express\Form\Renderer;
 use Concrete\Core\Form\Context\ContextFactory;
+use Concrete\Core\Html\Service\Seo;
 use Concrete\Core\Search\Result\ItemColumn;
 use Concrete\Core\Support\Facade\Express;
 use Concrete\Core\Support\Facade\Facade;
@@ -114,6 +115,9 @@ class Controller extends BlockController
         if (is_object($entry)) {
             $entity = $this->entityManager->find('Concrete\Core\Entity\Express\Entity', $this->exEntityID);
             if ($entry->getEntity()->getID() == $entity->getID()) {
+                /** @var Seo $seo */
+                $seo = $this->app->make('helper/seo');
+                $seo->addTitleSegmentBefore($entry->getLabel());
                 $this->set('entry', $entry);
                 $this->view();
             }

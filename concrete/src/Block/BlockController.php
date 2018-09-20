@@ -517,6 +517,14 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
         return [$method, $parameters];
     }
 
+    /**
+     * Creates a URL that can be posted or navigated to that, when done so, will automatically run the corresponding method inside the block's controller.
+     * It can also be used to perform system operations, accordingly to the current action.
+     *
+     * @param mixed $task,... The arguments to build the URL (variable number of arguments).
+     *
+     * @return \Concrete\Core\Url\UrlImmutable|null Return NULL in case of problems
+     */
     public function getActionURL($task)
     {
         try {
@@ -528,7 +536,8 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
                     $b = $this->block;
                 }
 
-                if ($this->getAction() == 'view') {
+                $action = $this->getAction();
+                if ($action === 'view' || strpos($action, 'action_') === 0) {
                     $c = Page::getCurrentPage();
                     if (is_object($b) && is_object($c)) {
                         $arguments = func_get_args();
@@ -559,7 +568,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
                 return call_user_func_array(array('\URL', 'to'), $arguments);
 
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
         }
 
     }
