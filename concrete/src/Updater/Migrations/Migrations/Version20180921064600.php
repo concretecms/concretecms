@@ -4,25 +4,23 @@ namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Entity\Express\Entity as ExpressEntity;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
+use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 use Doctrine\DBAL\Schema\Schema;
+use Doctrine\ORM\EntityManagerInterface;
 
-class Version20180921064600 extends AbstractMigration
+class Version20180921064600 extends AbstractMigration implements RepeatableMigrationInterface
 {
-    public function up(Schema $schema)
+    public function upgradeSchema(Schema $schema)
     {
         $this->fixAttributeIndexTable($schema, 'FileSearchIndexAttributes', 'fID', 'Files', 'fID');
         $this->fixAttributeIndexTable($schema, 'CollectionSearchIndexAttributes', 'cID', 'Collections', 'cID');
         $this->fixAttributeIndexTable($schema, 'SiteSearchIndexAttributes', 'siteID', 'Sites', 'siteID');
         $this->fixAttributeIndexTable($schema, 'UserSearchIndexAttributes', 'uID', 'Users', 'uID');
-        $entityManager = $this->connection->getEntityManager();
+        $entityManager = $this->app->make(EntityManagerInterface::class);
         $expressEntityRepository = $entityManager->getRepository(ExpressEntity::class);
         foreach ($expressEntityRepository->findAll() as $expressEntity) {
             $this->fixExpressEntityAttributeIndexTable($schema, $expressEntity);
         }
-    }
-
-    public function down(Schema $schema)
-    {
     }
 
     /**
@@ -34,6 +32,7 @@ class Version20180921064600 extends AbstractMigration
      */
     private function fixAttributeIndexTable(Schema $schema, $indexTableName, $indexColumnName, $foreignTableName, $foreignColumn)
     {
+        $this->output("Fixing attribute index table {$indexTableName}...");
         $this->deleteInvalidForeignKey($indexTableName, $indexColumnName, $foreignTableName, $foreignColumn);
         $indexTable = $schema->getTable($indexTableName);
         $indexColumn = $indexTable->getColumn($indexColumnName);
@@ -52,6 +51,7 @@ class Version20180921064600 extends AbstractMigration
      */
     private function fixExpressEntityAttributeIndexTable(Schema $schema, ExpressEntity $expressEntity)
     {
+        $this->output('Fixing express index table for ' . $expressEntity->getName() . '...');
         $attributeCategory = $expressEntity->getAttributeKeyCategory();
         /* @var \Concrete\Core\Attribute\Category\ExpressCategory $attributeCategory */
         $indexTableName = $attributeCategory->getIndexedSearchTable();
