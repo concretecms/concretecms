@@ -501,8 +501,8 @@ class StartingPointPackage extends BasePackage
             $siteConfig->save('seo.canonical_url', $installConfiguration['canonical-url']);
         }
         unset($installConfiguration['canonical-url']);
-        if (isset($site_install['canonical-url-alternative']) && $site_install['canonical-url-alternative']) {
-            $siteConfig->save('seo.canonical_url_alternative', $site_install['canonical-url-alternative']);
+        if (isset($installConfiguration['canonical-url-alternative']) && $installConfiguration['canonical-url-alternative']) {
+            $siteConfig->save('seo.canonical_url_alternative', $installConfiguration['canonical-url-alternative']);
         }
         unset($installConfiguration['canonical-url-alternative']);
         
