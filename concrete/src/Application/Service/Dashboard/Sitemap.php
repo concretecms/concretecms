@@ -167,7 +167,11 @@ class Sitemap
             $nodeOpen = true;
         }
 
-        $numSubpages = ($c->getNumChildren()  > 0) ? $c->getNumChildren()  : '';
+        if ($c->getCollectionPointerID()) {
+            $numSubpages = 0;
+        } else {
+            $numSubpages = (int) $c->getNumChildren();
+        }
 
         $cvName = ($c->getCollectionName() !== '') ? $c->getCollectionName() : '(No Title)';
         $cvName = ($c->isSystemPage() || $cID == 1) ? t($cvName) : $cvName;

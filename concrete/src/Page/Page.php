@@ -939,7 +939,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         if ($includeThisPage) {
             $pages[] = [
                 'cID' => $pageRow['cID'],
-                'cDisplayOrder' => $pageRow['cDisplayOrder'],
+                'cDisplayOrder' => isset($pageRow['cDisplayOrder']) ? $pageRow['cDisplayOrder'] : null,
                 'cParentID' => $cParentID,
                 'level' => $level,
                 'total' => count($children),
