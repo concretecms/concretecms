@@ -6,7 +6,7 @@ use Concrete\Core\Entity\Express\Entity as ExpressEntity;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
-class Version20171106000000 extends AbstractMigration
+class Version20180921064600 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
