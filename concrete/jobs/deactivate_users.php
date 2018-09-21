@@ -43,7 +43,7 @@ class DeactivateUsers extends AbstractJob
                     $ui->deactivate();
                 }
             }
-            return t2('1 user deactivated', '%s users deactivated', $users);
+            return t2('%s user deactivated', '%s users deactivated', $users);
         } else {
             return t('Automatic user deactivation is disabled. Job aborted.');
         }
