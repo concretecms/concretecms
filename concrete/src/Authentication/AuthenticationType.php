@@ -425,6 +425,9 @@ class AuthenticationType extends ConcreteObject
         $form_element = $this->mapAuthenticationTypeFilePath($element . '.php');
         if (!$form_element->exists()) {
             $form_element = $this->mapAuthenticationTypeFilePath('form.php');
+            if (method_exists($this->controller, 'form')) {
+                call_user_func_array([$this->controller, 'form'], $params);
+            }
         }
         ob_start();
         if (method_exists($this->controller, $element)) {

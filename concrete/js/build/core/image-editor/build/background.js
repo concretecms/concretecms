@@ -31,7 +31,7 @@ im.buildBackground = function() {
   im.saveArea.setHeight(im.saveHeight);
 
   if (!im.coverLayer) {
-    im.coverLayer = new Kinetic.Rect;
+    im.coverLayer = new Kinetic.Rect();
     im.coverLayer.setStroke('rgba(150,150,150,.5)');
     im.coverLayer.setFill('transparent');
     im.coverLayer.setListening(false);

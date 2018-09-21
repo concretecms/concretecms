@@ -1,26 +1,22 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Entity\Site\Locale;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
-use Doctrine\DBAL\Schema\Schema;
+use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
-class Version20170818000000 extends AbstractMigration
+class Version20170818000000 extends AbstractMigration implements RepeatableMigrationInterface
 {
     /**
-     * @param Schema $schema
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Updater\Migrations\AbstractMigration::upgradeDatabase()
      */
-    public function up(Schema $schema)
+    public function upgradeDatabase()
     {
         $this->refreshEntities([
             Locale::class,
         ]);
-    }
-
-    /**
-     * @param Schema $schema
-     */
-    public function down(Schema $schema)
-    {
     }
 }

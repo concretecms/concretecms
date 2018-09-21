@@ -4,7 +4,7 @@
     <conversationeditors>
         <editor handle="plain_text" name="Plain Text" package="" activated="1"/>
         <editor handle="markdown" name="Markdown" package="" activated="0"/>
-        <editor handle="redactor" name="Redactor" package="" activated="0"/>
+        <editor handle="rich_text" name="Rich Text" package="" activated="0"/>
     </conversationeditors>
 
     <conversationratingtypes>

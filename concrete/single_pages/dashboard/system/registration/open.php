@@ -56,23 +56,13 @@ $h = Loader::helper('concrete/ui');
             value="<?php echo h($register_notification_email); ?>"/>
     </div>
     <div class="form-group">
-        <label class="control-label"><?php echo t('Spam') ?></label>
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" name="enable_registration_captcha" value="1"
-                       style="" <?php echo ($enable_registration_captcha) ? 'checked' : '' ?> />
-                <span><?php echo t('CAPTCHA required') ?></span>
-            </label>
-        </div>
-    </div>
-    <div class="form-group">
         <label class="control-label"><?php echo t('Login form') ?></label>
         <div class="radio">
             <label>
                 <input type="radio" name="email_as_username" value="0" id="display_username_on_login"
                        style="" <?php echo (!$email_as_username) ? 'checked' : '' ?> />
                     <span>
-                        <?php echo t('Ask for Username & password on login form') ?>
+                        <?php echo t('Ask for username & password') ?>
                     </span>
             </label>
         </div>
@@ -81,7 +71,7 @@ $h = Loader::helper('concrete/ui');
                 <input type="radio" name="email_as_username" value="1"
                        style="" <?php echo ($email_as_username) ? 'checked' : '' ?> />
                     <span>
-                        <?php echo t('Ask for Email & password on login form') ?>
+                        <?php echo t('Ask for email & password') ?>
                     </span>
             </label>
         </div>
@@ -92,14 +82,21 @@ $h = Loader::helper('concrete/ui');
             <label>
                 <input type="checkbox" name="display_username_field" value="1"
                        style="" <?php echo ($display_username_field) ? 'checked' : '' ?> />
-                <span><?php echo t('Ask for Username on registration form') ?></span>
+                <span><?php echo t('Username required') ?></span>
             </label>
         </div>
         <div class="checkbox">
             <label>
                 <input type="checkbox" name="display_confirm_password_field" value="1"
                        style="" <?php echo ($display_confirm_password_field) ? 'checked' : '' ?> />
-                <span><?php echo t('Ask to confirm password on registration form') ?></span>
+                <span><?php echo t('Confirm Password required') ?></span>
+            </label>
+        </div>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="enable_registration_captcha" value="1"
+                       style="" <?php echo ($enable_registration_captcha) ? 'checked' : '' ?> />
+                <span><?php echo t('CAPTCHA required') ?></span>
             </label>
         </div>
     </div>

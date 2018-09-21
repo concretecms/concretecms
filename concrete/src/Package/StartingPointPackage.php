@@ -6,6 +6,7 @@ use Concrete\Block\ExpressForm\Controller as ExpressFormBlockController;
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Config\Renderer;
 use Concrete\Core\Database\DatabaseStructureManager;
+use Concrete\Core\Entity\OAuth\Scope;
 use Concrete\Core\Entity\Site\Locale;
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Service\File;
@@ -30,6 +31,7 @@ use Exception;
 use Group;
 use GroupTree;
 use Hautelook\Phpass\PasswordHash;
+use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 use Package as BasePackage;
 use Page;
 use PermissionKey;
@@ -84,6 +86,7 @@ class StartingPointPackage extends BasePackage
             new StartingPointInstallRoutine('import_files', 65, t('Importing files.')),
             new StartingPointInstallRoutine('install_content', 70, t('Adding pages and content.')),
             new StartingPointInstallRoutine('install_desktops', 85, t('Adding desktops.')),
+            new StartingPointInstallRoutine('install_api', 88, t('Installing API.')),
             new StartingPointInstallRoutine('install_site_permissions', 90, t('Setting site permissions.')),
             new AttachModeInstallRoutine('finish', 95, t('Finishing.')),
         ];
@@ -305,6 +308,7 @@ class StartingPointPackage extends BasePackage
         $thumbnailType->setName(tc('ThumbnailTypeName', 'File Manager Thumbnails'));
         $thumbnailType->setHandle(Config::get('concrete.icons.file_manager_listing.handle'));
         $thumbnailType->setSizingMode($thumbnailType::RESIZE_EXACT);
+        $thumbnailType->setIsUpscalingEnabled(true);
         $thumbnailType->setWidth(Config::get('concrete.icons.file_manager_listing.width'));
         $thumbnailType->setHeight(Config::get('concrete.icons.file_manager_listing.height'));
         $thumbnailType->save();
@@ -314,6 +318,7 @@ class StartingPointPackage extends BasePackage
         $thumbnailType->setName(tc('ThumbnailTypeName', 'File Manager Detail Thumbnails'));
         $thumbnailType->setHandle(Config::get('concrete.icons.file_manager_detail.handle'));
         $thumbnailType->setSizingMode($thumbnailType::RESIZE_EXACT);
+        $thumbnailType->setIsUpscalingEnabled(false);
         $thumbnailType->setWidth(Config::get('concrete.icons.file_manager_detail.width'));
         $thumbnailType->setHeight(Config::get('concrete.icons.file_manager_detail.height'));
         $thumbnailType->save();
@@ -338,6 +343,18 @@ class StartingPointPackage extends BasePackage
     {
         $desktop = \Page::getByPath('/dashboard/welcome');
         $desktop->movePageDisplayOrderToTop();
+    }
+
+    protected function install_api()
+    {
+        $scopes = $this->app->make('config')->get('app.api.scopes');
+        $em = $this->app->make(EntityManager::class);
+        foreach($scopes as $scope) {
+            $s = new Scope();
+            $s->setIdentifier($scope);
+            $em->persist($s);
+            $em->flush();
+        }
     }
 
     protected function install_database()
@@ -387,8 +404,8 @@ class StartingPointPackage extends BasePackage
     {
         $db = Database::get();
 
-        $db->Execute('ALTER TABLE PagePaths ADD INDEX (`cPath` (255))');
-        $db->Execute('ALTER TABLE Groups ADD INDEX (`gPath` (255))');
+        $textIndexes = $this->app->make('config')->get('database.text_indexes');
+        $db->createTextIndexes($textIndexes);
     }
 
     protected function add_users()
@@ -484,8 +501,8 @@ class StartingPointPackage extends BasePackage
             $siteConfig->save('seo.canonical_url', $installConfiguration['canonical-url']);
         }
         unset($installConfiguration['canonical-url']);
-        if (isset($site_install['canonical-url-alternative']) && $site_install['canonical-url-alternative']) {
-            $siteConfig->save('seo.canonical_url_alternative', $site_install['canonical-url-alternative']);
+        if (isset($installConfiguration['canonical-url-alternative']) && $installConfiguration['canonical-url-alternative']) {
+            $siteConfig->save('seo.canonical_url_alternative', $installConfiguration['canonical-url-alternative']);
         }
         unset($installConfiguration['canonical-url-alternative']);
         
@@ -526,6 +543,9 @@ class StartingPointPackage extends BasePackage
 
         Config::save('concrete.version_installed', APP_VERSION);
         Config::save('concrete.misc.login_redirect', 'DESKTOP');
+
+        $dbConfig = \Core::make('config/database');
+        $dbConfig->save('app.privacy_policy_accepted', $this->installerOptions->isPrivacyPolicyAccepted());
     }
 
     protected function install_site_permissions()
@@ -552,9 +572,6 @@ class StartingPointPackage extends BasePackage
                 'add_file',
             ]
         );
-
-        $u = new User();
-        $u->saveConfig('NEWSFLOW_LAST_VIEWED', 'FIRSTRUN');
 
         // login
         $login = Page::getByPath('/login', 'RECENT');

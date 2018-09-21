@@ -3,6 +3,7 @@ namespace Concrete\Controller\SinglePage;
 
 use Concrete\Core\Http\Response;
 use Concrete\Core\Page\Controller\PageController;
+use Events;
 
 class PageNotFound extends PageController
 {
@@ -16,6 +17,8 @@ class PageNotFound extends PageController
     {
         $view = $this->getViewObject();
         $contents = $view->render();
+
+        Events::dispatch('on_page_not_found');
 
         return new Response($contents, 404);
     }

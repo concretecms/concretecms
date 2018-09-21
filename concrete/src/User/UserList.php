@@ -5,10 +5,7 @@ use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemLis
 use Concrete\Core\Search\ItemList\Pager\Manager\UserListPagerManager;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 use Concrete\Core\Search\ItemList\Pager\QueryString\VariableFactory;
-use Concrete\Core\Search\Pagination\PagerPagination;
-use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Search\Pagination\PaginationProviderInterface;
-use Concrete\Core\Search\PermissionableListItemInterface;
 use Concrete\Core\Search\StickyRequest;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\Group\Group;
@@ -331,7 +328,45 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
         if (!($group instanceof \Concrete\Core\User\Group\Group)) {
             $group = \Concrete\Core\User\Group\Group::getByName($group);
         }
-        $this->filterByInAnyGroup([$group], $inGroup);
+        $this->checkGroupJoin();
+        $query = $this->getQueryObject()->getConnection()->createQueryBuilder();
+        $orX = $this->getQueryObject()->expr()->orX();
+        $query->select('u.uID')->from('Users','u')->leftJoin('u','UserGroups','ug','u.uID=ug.uID')->leftJoin('ug', $query->getConnection()->getDatabasePlatform()->quoteSingleIdentifier('Groups'), 'g', 'ug.gID=g.gID');
+        $orX->add($this->getQueryObject()->expr()->like('g.gPath', "'" . $group->getGroupPath() . "/%'"));
+        $orX->add($this->getQueryObject()->expr()->eq('g.gID', $group->getGroupID()));
+        $query->where($orX);
+        if ($inGroup) {
+            $this->getQueryObject()->andWhere($this->getQueryObject()->expr()->in('u.uID', $query->getSQL()));
+        } else {
+            $this->getQueryObject()->andWhere($this->getQueryObject()->expr()->notIn('u.uID', $query->getSQL()));
+        }
+
+    }
+
+    /**
+     * Function used to check if a group join has already been set
+     */
+    private function checkGroupJoin() {
+        $query = $this->getQueryObject();
+        $params = $query->getQueryPart('join');
+        $isGroupSet = false;
+        $isUserGroupSet = false;
+        // Loop twice as params returns an array of arrays
+        foreach ($params as $param) {
+            foreach ($param as $setTable)
+                if (in_array('ug', $setTable)) {
+                    $isUserGroupSet = true;
+                }
+            if (in_array('g', $setTable)) {
+                $isGroupSet = true;
+            }
+        }
+        if ($isUserGroupSet === false) {
+            $query->leftJoin('u', 'UserGroups', 'ug', 'ug.uID = u.uID');
+        }
+        if ($isGroupSet === false) {
+            $query->leftJoin('ug', $query->getConnection()->getDatabasePlatform()->quoteSingleIdentifier('Groups'),'g', 'ug.gID = g.gID');
+        }
     }
 
     /**
@@ -342,36 +377,29 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
      */
     public function filterByInAnyGroup($groups, $inGroups = true)
     {
-        $where = null;
+        $this->checkGroupJoin();
+        $groupIDs = [];
+        $orX = $this->getQueryObject()->expr()->orX();
+
         foreach ($groups as $group) {
             if ($group instanceof \Concrete\Core\User\Group\Group) {
-                $uniqueID = str_replace('.', '_', uniqid($group->getGroupID() . '_', true));
-                $joinTable = 'ug' . $uniqueID;
-                $groupTable = 'g' . $uniqueID;
-                $path = $group->getGroupPath();
-                $this->query->leftJoin('u', 'UserGroups', $joinTable, 'u.uID = ' . $joinTable . '.uID');
-                $this->query->leftJoin($joinTable, 'Groups', $groupTable,
-                    '(' . $joinTable . '.gID = ' . $groupTable . '.gID and ' . $groupTable . '.gPath like :gPath' . $uniqueID . ')');
-                $this->query->setParameter('gPath' . $uniqueID, $path . '%');
                 if ($inGroups) {
-                    if ($where === null) {
-                        $where = $this->query->expr()->orX();
-                    }
-                    $where->add($groupTable . '.gID is not null');
+                    $orX->add($this->getQueryObject()->expr()->like('g.gPath', "'" . $group->getGroupPath() . "/%'"));
                 } else {
-                    if ($where === null) {
-                        $where = $this->query->expr()->andX();
-                    }
-                    $where->add($groupTable . '.gID is null');
+                    $orX->add($this->getQueryObject()->expr()->notLike('g.gPath', "'" . $group->getGroupPath() . "/%'"));
                 }
+                $groupIDs[] = $group->getGroupID();
             }
         }
-        if ($where === null) {
+        if (is_array($groups) && count($groups) > 0) {
             if ($inGroups) {
-                $this->query->andWhere('1 = 0');
+                $orX->add($this->getQueryObject()->expr()->in('g.gID', $groupIDs));
+                $this->getQueryObject()->andWhere($orX, $this->getQueryObject()->expr()->isNotNull('g.gID'));
+            } else {
+                $orX->add($this->getQueryObject()->expr()->notIn('g.gID', $groupIDs));
+                $orX->add($this->getQueryObject()->expr()->isNull('g.gID'));
+                $this->getQueryObject()->andWhere($orX);
             }
-        } else {
-            $this->query->andWhere($where);
         }
     }
 
@@ -408,11 +436,13 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
 
     public function sortByUserName()
     {
+        $this->query->addGroupBy('u.uName');
         $this->query->orderBy('u.uName', 'asc');
     }
 
     public function sortByDateAdded()
     {
+        $this->query->addGroupBy('u.uDateAdded');
         $this->query->orderBy('u.uDateAdded', 'desc');
     }
 }

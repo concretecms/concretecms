@@ -1,7 +1,10 @@
 <?php
 namespace Concrete\Core\Block\View;
 
+use Concrete\Core\Block\Events\BlockBeforeRender;
+use Concrete\Core\Block\Events\BlockOutput;
 use Concrete\Core\Localization\Localization;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\View\AbstractView;
 use Config;
 use Area;
@@ -87,58 +90,13 @@ class BlockView extends AbstractView
     }
 
     /**
-     * Creates a URL that can be posted or navigated to that, when done so, will automatically run the corresponding method inside the block's controller.
-     * <code>
-     *     <a href="<?=$this->action('get_results')?>">Get the results</a>
-     * </code>.
+     * @deprecated In views, use $controller->getActionURL() using the same arguments.
      *
-     * @param string $task
-     *
-     * @return string $url
+     * @return \Concrete\Core\Url\UrlImmutable|null
      */
     public function action($task)
     {
-        try {
-            if ($this->viewToRender == 'add') {
-                $c = $this->area->getAreaCollectionObject();
-                $arguments = array('/ccm/system/block/action/add',
-                    $c->getCollectionID(),
-                    urlencode($this->area->getAreaHandle()),
-                    $this->blockType->getBlockTypeID(),
-                    $task,
-                );
-
-                return call_user_func_array(array('\URL', 'to'), $arguments);
-            } elseif (is_object($this->block)) {
-                if (is_object($this->block->getProxyBlock())) {
-                    $b = $this->block->getProxyBlock();
-                } else {
-                    $b = $this->block;
-                }
-
-                if ($this->viewToRender == 'edit') {
-                    $c = $this->area->getAreaCollectionObject();
-                    $arguments = array('/ccm/system/block/action/edit',
-                        $c->getCollectionID(),
-                        urlencode($this->area->getAreaHandle()),
-                        $b->getBlockID(),
-                        $task,
-                    );
-
-                    return call_user_func_array(array('\URL', 'to'), $arguments);
-                } else {
-                    $c = Page::getCurrentPage();
-                    if (is_object($b) && is_object($c)) {
-                        $arguments = func_get_args();
-                        $arguments[] = $b->getBlockID();
-                        array_unshift($arguments, $c);
-
-                        return call_user_func_array(array('\URL', 'page'), $arguments);
-                    }
-                }
-            }
-        } catch (Exception $e) {
-        }
+        return call_user_func_array([$this->controller, 'getActionURL'], func_get_args());
     }
 
     public function startRender()
@@ -251,6 +209,23 @@ class BlockView extends AbstractView
 
     public function renderViewContents($scopeItems)
     {
+        $shouldRender = function() {
+            $app = Application::getFacadeApplication();
+
+            // If you hook into this event and use `preventRendering()`
+            // you can prevent the block from being displayed.
+            $event = new BlockBeforeRender($this->block);
+            $app->make('director')->dispatch('on_block_before_render', $event);
+
+            return $event->proceed();
+        };
+
+        if (!$shouldRender()) {
+            return;
+        }
+
+        unset($shouldRender);
+
         extract($scopeItems);
         if (!$this->outputContent) {
             ob_start();
@@ -271,6 +246,7 @@ class BlockView extends AbstractView
         $this->controller->registerViewAssets($this->outputContent);
 
         $this->onBeforeGetContents();
+        $this->fireOnBlockOutputEvent();
         echo $this->outputContent;
         $this->onAfterGetContents();
 
@@ -459,5 +435,24 @@ class BlockView extends AbstractView
         $v = View::getInstance();
 
         return $v->getThemePath();
+    }
+
+    /**
+     * Fire an event just before the block is outputted on the page
+     *
+     * Custom code can modify the block contents before
+     * the block contents are 'echoed' out on the page.
+     *
+     * @since 8.4.1
+     */
+    private function fireOnBlockOutputEvent()
+    {
+        $event = new BlockOutput($this->block);
+        $event->setContents($this->outputContent);
+
+        $app = Application::getFacadeApplication();
+        $app->make('director')->dispatch('on_block_output', $event);
+
+        $this->outputContent = $event->getContents();
     }
 }

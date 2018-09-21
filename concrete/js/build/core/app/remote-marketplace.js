@@ -1,24 +1,20 @@
+/* jshint unused:vars, undef:true, browser:true, jquery:true */
+/* global CCM_DISPATCHER_FILENAME, ConcreteEvent, ccmi18n */
 
-!function (global, $, _) {
+;(function(global, $) {
     'use strict';
 
     var ConcreteMarketplace = {
-
-        updatesShowMore: function(obj) {
-            $(obj).parent().hide();
-            $(obj).parent().parent().find('.ccm-marketplace-update-changelog').css('max-height', 'none');
-        },
-
         getMoreInformation: function(mpID)
         {
-            jQuery.fn.dialog.showLoader();
+            $.fn.dialog.showLoader();
             var params = {'mpID': mpID};
             $.concreteAjax({
                 method: 'get',
                 url: CCM_DISPATCHER_FILENAME + '/ccm/system/marketplace/connect',
                 data: params,
                 success: function(resp) {
-                    jQuery.fn.dialog.hideLoader();
+                    $.fn.dialog.hideLoader();
                     if (resp.isConnected) {
                         window.location.href = resp.localURL;
                     } else {
@@ -35,21 +31,21 @@
 
             if (!args.onComplete) {
                 args.onComplete = function(e, data) {
-                    jQuery.fn.dialog.closeTop();
-                }
+                    $.fn.dialog.closeTop();
+                };
             }
 
             ConcreteEvent.subscribe('MarketplaceRequestComplete', args.onComplete);
 
             if (closeTop) {
-                jQuery.fn.dialog.closeTop(); // this is here due to a weird safari behavior
+                $.fn.dialog.closeTop(); // this is here due to a weird safari behavior
             }
-            jQuery.fn.dialog.showLoader();
+            $.fn.dialog.showLoader();
             // first, we check our local install to ensure that we're connected to the
             // marketplace, etc..
             var params = {'mpID': mpID};
             $.getJSON(CCM_DISPATCHER_FILENAME + '/ccm/system/marketplace/connect', params, function(resp) {
-                jQuery.fn.dialog.hideLoader();
+                $.fn.dialog.hideLoader();
                 if (resp.isConnected) {
                     if (!resp.purchaseRequired) {
                         $.fn.dialog.open({
@@ -76,9 +72,8 @@
                 }
             });
         }
-    }
-
+    };
 
     global.ConcreteMarketplace = ConcreteMarketplace;
 
-}(window, jQuery, _);
+})(window, jQuery);

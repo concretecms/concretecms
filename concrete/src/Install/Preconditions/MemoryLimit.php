@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Install\Preconditions;
 
 use Concrete\Core\Install\PreconditionInterface;
@@ -35,7 +36,6 @@ class MemoryLimit implements PreconditionInterface
      */
     public function __construct(Number $numberHelper)
     {
-        $this->application = $application;
         $this->numberHelper = $numberHelper;
     }
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Captcha;
 
 use Concrete\Core\Controller\AbstractController;
@@ -27,35 +28,45 @@ class NoCaptchaController extends AbstractController implements CaptchaWithPictu
 
     /**
      * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Captcha\CaptchaInterface::label()
      */
-    public function showInput(array $customInputAttributes = [])
+    public function label()
     {
     }
 
     /**
      * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Captcha\CaptchaInterface::display()
      */
-    public function display(array $customImageAttributes = [])
+    public function display()
     {
     }
 
     /**
      * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Captcha\CaptchaInterface::showInput()
      */
-    public function label($inputID = 'ccm-captcha-code')
+    public function showInput()
     {
     }
 
     /**
      * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Captcha\CaptchaInterface::check()
      */
-    public function check($fieldName = 'ccmCaptchaCode')
+    public function check()
     {
         return true;
     }
 
     /**
      * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Captcha\CaptchaWithPictureInterface::displayCaptchaPicture()
      */
     public function displayCaptchaPicture()
     {

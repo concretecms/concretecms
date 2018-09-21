@@ -20,7 +20,12 @@ class Entries extends DashboardExpressEntityPageController
 
     public function getEntity(\Concrete\Core\Tree\Node\Type\ExpressEntryResults $parent = null)
     {
-        return $this->entity;
+        if ($this->entity) {
+            return $this->entity;
+        } else {
+            return $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entity')
+                ->findOneByResultsNode($parent);
+        }
     }
 
     protected function getBackURL(Entity $entity)
@@ -45,8 +50,10 @@ class Entries extends DashboardExpressEntityPageController
             if ($permissions->canAddExpressEntries()) {
                 $header = new Header($entity, $this->getPageObject());
                 $this->set('headerMenu', $header);
+                $this->set('pageTitle', t('View %s Entries', $this->getEntity()->getName()));
             }
         } else {
+            $this->set('pageTitle', t('View Express Entities'));
             $this->set('entities', $r->findPublicEntities());
         }
     }

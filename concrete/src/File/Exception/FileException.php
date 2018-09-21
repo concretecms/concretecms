@@ -26,6 +26,6 @@ class FileException extends \Exception
      */
     public function getFileObject()
     {
-        return $this->$fileObject;
+        return $this->fileObject;
     }
 }

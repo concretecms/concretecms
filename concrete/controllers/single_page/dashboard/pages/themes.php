@@ -2,12 +2,13 @@
 namespace Concrete\Controller\SinglePage\Dashboard\Pages;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
-use PageTheme;
+use Concrete\Core\Page\Theme\Theme;
 use Config;
 use Loader;
 use View;
-use Package;
 use Exception;
+use Concrete\Core\Package\ItemCategory\Manager;
+use Concrete\Core\Package\PackageService;
 
 class Themes extends DashboardPageController
 {
@@ -18,13 +19,13 @@ class Themes extends DashboardPageController
         $tArray = array();
         $tArray2 = array();
 
-        $tArray = PageTheme::getList();
-        $tArray2 = PageTheme::getAvailableThemes();
+        $tArray = Theme::getList();
+        $tArray2 = Theme::getAvailableThemes();
 
         $this->set('tArray', $tArray);
         $this->set('tArray2', $tArray2);
         $siteThemeID = 0;
-        $obj = PageTheme::getSiteTheme();
+        $obj = Theme::getSiteTheme();
         if (is_object($obj)) {
             $siteThemeID = $obj->getThemeID();
         }
@@ -41,7 +42,7 @@ class Themes extends DashboardPageController
             return $this->view();
         }
 
-        $pt = PageTheme::getByID($this->post('MOBILE_THEME_ID'));
+        $pt = Theme::getByID($this->post('MOBILE_THEME_ID'));
         if (is_object($pt)) {
             Config::save('concrete.misc.mobile_theme_id', $pt->getThemeID());
         } else {
@@ -58,30 +59,48 @@ class Themes extends DashboardPageController
 
     public function remove($pThemeID, $token = '')
     {
-        $v = Loader::helper('validation/error');
+
         try {
             $valt = Loader::helper('validation/token');
             if (!$valt->validate('remove', $token)) {
                 throw new Exception($valt->getErrorMessage());
             }
-            $pl = PageTheme::getByID($pThemeID);
+            /** @var \Concrete\Core\Page\Theme\Theme $pl */
+            $pl = Theme::getByID($pThemeID);
             if (!is_object($pl)) {
                 throw new Exception(t('Invalid theme.'));
             }
-            /*
-            if ($pl->getPackageID() > 0) {
-                throw new Exception('You may not uninstall a packaged theme.');
+
+            if (!$pl->isUninstallable()) {
+                throw new Exception(t('You can not uninstall a core theme'));
             }
-            */
+            $obj = Theme::getSiteTheme();
+            if (is_object($obj)) {
+                $siteThemeID = $obj->getThemeID();
+            }
+            if ($siteThemeID === $pl->getThemeID()) {
+                 throw new Exception(t('You can not uninstall an active theme'));
+            }
+
 
             $localUninstall = true;
             if ($pl->getPackageID() > 0) {
+                $pkg = $this->app->make(PackageService::class)->getByID($pl->getPackageID());
                 // then we check to see if this is the only theme in that package. If so, we uninstall the package too
-                $pkg = Package::getByID($pl->getPackageID());
-                $items = $pkg->getPackageItems();
+                $manager = new Manager($this->app);
+                $categories = $manager->getPackageItemCategories();
+                $items = [];
+                foreach ($categories as $category) {
+                    if ($category->hasItems($pkg)) {
+                        foreach($category->getItems($pkg) as $item) {
+                            $items[] = $item;
+                        }
+                    }
+                }
+
                 if (count($items) == 1) {
                     $_pl = $items[0];
-                    if ($_pl instanceof PageTheme && $_pl->getThemeID() == $pThemeID) {
+                    if ($_pl instanceof Theme && $_pl->getThemeID() == $pThemeID) {
                         $pkg->uninstall();
                         $localUninstall = false;
                     }
@@ -92,8 +111,7 @@ class Themes extends DashboardPageController
             }
             $this->set('message', t('Theme uninstalled.'));
         } catch (Exception $e) {
-            $v->add($e);
-            $this->set('error', $v);
+            $this->error->add($e);
         }
         $this->view();
     }
@@ -106,7 +124,7 @@ class Themes extends DashboardPageController
 
     public function install($pThemeHandle = null)
     {
-        $th = PageTheme::getByFileHandle($pThemeHandle);
+        $th = Theme::getByFileHandle($pThemeHandle);
         if ($pThemeHandle == null) {
             $this->redirect('/dashboard/pages/themes');
         }
@@ -114,14 +132,14 @@ class Themes extends DashboardPageController
         $v = Loader::helper('validation/error');
         try {
             if (is_object($th)) {
-                $t = PageTheme::add($pThemeHandle);
+                $t = Theme::add($pThemeHandle);
                 $this->redirect('/dashboard/pages/themes/inspect', $t->getThemeID(), 'install');
             } else {
                 throw new Exception('Invalid Theme');
             }
         } catch (Exception $e) {
             switch ($e->getMessage()) {
-                case PageTheme::E_THEME_INSTALLED:
+                case Theme::E_THEME_INSTALLED:
                     $v->add(t('That theme has already been installed.'));
                     break;
                 default:
@@ -138,7 +156,7 @@ class Themes extends DashboardPageController
 
     public function activate_confirm($pThemeID, $token)
     {
-        $l = PageTheme::getByID($pThemeID);
+        $l = Theme::getByID($pThemeID);
         $val = Loader::helper('validation/error');
         $valt = Loader::helper('validation/token');
         if (!$valt->validate('activate', $token)) {

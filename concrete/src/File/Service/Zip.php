@@ -200,7 +200,7 @@ class Zip
         $fs = $this->getFilesystem();
         $normalized = @realpath($sourceDirectory);
         if ($normalized === false || !$fs->isDirectory($normalized)) {
-            throw new Exception(t('Unable to find the directory %s', $destinationDirectory));
+            throw new Exception(t('Unable to find the directory %s', $sourceDirectory));
         }
         $sourceDirectory = $normalized;
         $zipFile = str_replace('/', DIRECTORY_SEPARATOR, $zipFile);

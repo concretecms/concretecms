@@ -1,5 +1,6 @@
 <?php
 use Concrete\Core\Url\SeoCanonical;
+use Concrete\Core\Localization\Localization;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Support\Facade\Application;
 use Symfony\Component\EventDispatcher\GenericEvent;
@@ -112,6 +113,10 @@ if (($favIconFID = (int) $config->get('misc.favicon_fid')) && ($favIconFile = Fi
 if (($appleIconFID = (int) $config->get('misc.iphone_home_screen_thumbnail_fid')) && ($appleIconFile = File::getByID($appleIconFID))) {
     $linkTags['apple-touch-icon'] = sprintf('<link rel="apple-touch-icon" href="%s"/>', $appleIconFile->getURL());
 }
+$browserToolbarColor = (string) $config->get('misc.browser_toolbar_color');
+if ($browserToolbarColor !== '') {
+    $metaTags['browserToolbarColor'] = sprintf('<meta name="theme-color" content="%s"/>', h($browserToolbarColor));
+}
 if ($config->get('seo.canonical_tag')) {
     if (($canonicalLink = $app->make(SeoCanonical::class)->getPageCanonicalURLTag($c, Request::getInstance())) !== null) {
         $linkTags['canonical'] = (string) $canonicalLink;
@@ -169,6 +174,7 @@ if (!empty($alternateHreflangTags)) {
     var CCM_TOOLS_PATH = "<?php echo REL_DIR_FILES_TOOLS_REQUIRED; ?>";
     var CCM_APPLICATION_URL = "<?php echo rtrim((string) $app->make('url/canonical'), '/'); ?>";
     var CCM_REL = "<?php echo $app->make('app_relative_path'); ?>";
+    var CCM_ACTIVE_LOCALE = <?= json_encode(Localization::activeLocale()) ?>;
 </script>
 
 <?php
@@ -180,10 +186,6 @@ if ($u->isRegistered()) {
 }
 if ($cp) {
     View::element('page_controls_header', ['cp' => $cp, 'c' => $c]);
-    $cih = $app->make('helper/concrete/ui');
-    if ($cih->showNewsflowOverlay()) {
-        $v->addFooterItem('<script type="text/javascript">$(function() { new ConcreteNewsflowDialog().open(); });</script>');
-    }
     if ($isEditMode) {
         $cookie = $app->make('cookie');
         if ($cookie->get('ccmLoadAddBlockWindow')) {

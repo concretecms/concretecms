@@ -39,10 +39,12 @@ if (Loader::helper('validation/numbers')->integer($_POST['cnvMessageID']) && $_P
                         <div class="ccm-conversation-errors alert alert-danger"></div>
                         <?php $editor->outputConversationEditorReplyMessageForm();
 
-                        View::element('conversation/message/review', [
-                            'review' => $message->getConversationMessageReview(),
-                        ]);
-            ?>
+                        if ($message->getConversationMessageReview()) {
+                            View::element('conversation/message/review', [
+                                'review' => $message->getConversationMessageReview(),
+                            ]);
+                        }
+                        ?>
                         <button type="button" data-post-message-id="<?=$message->getConversationMessageID()?>" data-submit="update-conversation-message" class="pull-right btn btn-primary btn-small"><?=t('Save')?></button>
                         <?php if ($attachmentsEnabled) {
     ?>

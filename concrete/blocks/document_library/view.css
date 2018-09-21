@@ -121,3 +121,8 @@ a.ccm-block-document-library-icon {
     color: #999;
     text-decoration: none;
 }
+
+.ccm-block-document-library-table .ccm-block-document-library-icon-folder {
+    font-size: 45px;
+    padding: 0 9px;
+}

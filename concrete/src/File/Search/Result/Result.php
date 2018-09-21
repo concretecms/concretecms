@@ -62,6 +62,7 @@ class Result extends SearchResult
 
         $menu->addItem(new LinkItem('#', t('Rescan'), [
             'data-bulk-action-type' => 'progressive',
+            'data-bulk-action-title' => t('Rescan Files'),
             'data-bulk-action-url' => \URL::to('/ccm/system/file/rescan_multiple')
         ]));
 

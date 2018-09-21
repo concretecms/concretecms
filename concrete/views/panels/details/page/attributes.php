@@ -5,7 +5,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <script type="text/template" class="attribute">
 	<div class="form-group <% if (pending) { %>ccm-page-attribute-adding<% } %>" data-attribute-key-id="<%=akID%>">
 		<a href="javascript:void(0)" data-remove-attribute-key="<%=akID%>"><i class="fa fa-minus-circle"></i></a>
-		<label class="control-label"><%=label%></label>
+		<label class="control-label" for="<%=controlID%>"><%=label%></label>
 		<div>
 			<%=content%>
 		</div>
@@ -68,7 +68,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		<div class="form-group">
 			<label for="cDescription" class="control-label"><?=t('Description')?></label>
 			<div>
-				<textarea id="cDescription" name="cDescription" class="form-control" rows="8"><?=$c->getCollectionDescription()?></textarea>
+				<textarea id="cDescription" name="cDescription" class="form-control" rows="8"><?= htmlentities($c->getCollectionDescription(), ENT_QUOTES, APP_CHARSET) ?></textarea>
 			</div>
 		</div>
 		<?php

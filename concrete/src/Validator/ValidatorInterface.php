@@ -1,33 +1,33 @@
 <?php
+
 namespace Concrete\Core\Validator;
 
+use ArrayAccess;
+
 /**
- * Interface ValidatorInterface
  * A generic validator cabable of describing itself and validating mixed values.
- *
- * \@package Concrete\Core\Validator
  */
 interface ValidatorInterface
 {
     /**
      * Get the validator requirements in the form of an array keyed by it's respective error code.
      *
-     * Example:
-     *    [ self::E_TOO_SHORT => 'Must be at least 10 characters' ]
-     *
      * @return string[]
+     *
+     * @example
+     * <code>[self::E_TOO_SHORT => 'Must be at least 10 characters']</code>
      */
     public function getRequirementStrings();
 
     /**
      * Is this mixed value valid.
      *
-     * @param mixed             $mixed Can be any value
+     * @param mixed $mixed Can be any value
      * @param \ArrayAccess|null $error
      *
-     * @return bool
+     * @throws \InvalidArgumentException invalid mixed value type passed
      *
-     * @throws \InvalidArgumentException Invalid mixed value type passed.
+     * @return bool
      */
-    public function isValid($mixed, \ArrayAccess $error = null);
+    public function isValid($mixed, ArrayAccess $error = null);
 }

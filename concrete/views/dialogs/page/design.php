@@ -50,7 +50,7 @@ if (is_object($selectedType)) {
 } else {
     ?>
             <div class="form-group">
-                <?=$form->select('ptID', $typesSelect, $selectedTypeID)?>
+                <?=$form->select('ptID', $typesSelect, isset($selectedTypeID) ? $selectedTypeID : null)?>
             </div>
             <div class="alert alert-warning">
                 <?=t('Changing page types of existing pages could result in unexpected behavior.')?>

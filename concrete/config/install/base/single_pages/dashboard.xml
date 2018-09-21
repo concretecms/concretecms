@@ -179,16 +179,6 @@
                 </attributekey>
             </attributes>
         </page>
-        <!--
-        <page name="Statistics" path="/dashboard/reports/statistics" filename="/dashboard/reports/statistics.php"
-              pagetype="" description="View your site activity." package="">
-            <attributes>
-                <attributekey handle="meta_keywords">
-                    <value>hits, pageviews, visitors, activity</value>
-                </attributekey>
-            </attributes>
-        </page>
-        //-->
         <page name="Form Results" path="/dashboard/reports/forms" filename="/dashboard/reports/forms.php" pagetype=""
               description="Get submission data." package="">
             <attributes>
@@ -342,7 +332,32 @@
             </attributes>
         </page>
 
-        <page name="Conversations" path="/dashboard/conversations" filename="/dashboard/conversations/view.php" pagetype="" description="" package=""></page>
+        <page name="Calendar &amp; Events" path="/dashboard/calendar" filename="/dashboard/calendar/view.php" pagetype="" description="" package="" />
+        <page name="View Calendar" path="/dashboard/calendar/events" filename="/dashboard/calendar/events.php" pagetype="" description="" package="" />
+        <page name="Event List" path="/dashboard/calendar/event_list" filename="/dashboard/calendar/event_list.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+                <attributekey handle="exclude_search_index">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Add Calendar" path="/dashboard/calendar/add" filename="/dashboard/calendar/add.php" pagetype="" description="" package="" />
+        <page name="Permissions" path="/dashboard/calendar/permissions" filename="/dashboard/calendar/permissions.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+                <attributekey handle="exclude_search_index">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Attributes" path="/dashboard/calendar/attributes" filename="/dashboard/calendar/attributes.php" pagetype="" description="" package="">
+        </page>
+        <page name="Conversations" path="/dashboard/conversations" filename="/dashboard/conversations/view.php" pagetype="" description="" package="" />
         <page name="Messages" path="/dashboard/conversations/messages" filename="/dashboard/conversations/messages.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="icon_dashboard">
@@ -534,21 +549,21 @@
             </attributes>
         </page>
 
+        <page name="Reset Edit Mode" path="/dashboard/system/basics/reset_edit_mode" filename="/dashboard/system/basics/reset_edit_mode.php"
+              pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>checkin, check-in, check, force</value>
+                </attributekey>
+            </attributes>
+        </page>
+
+
         <page name="Express" path="/dashboard/system/express" filename="/dashboard/system/express/view.php" pagetype=""
               description="Express" package=""/>
 
         <page name="Data Objects" path="/dashboard/system/express/entities" filename="/dashboard/system/express/entities.php" pagetype=""
               description="" package="">
-
-            <attributes>
-                <attributekey handle="exclude_nav">
-                    <value><![CDATA[1]]></value>
-                </attributekey>
-                <attributekey handle="exclude_search_index">
-                    <value>1</value>
-                </attributekey>
-            </attributes>
-
         </page>
 
         <page name="Attributes" path="/dashboard/system/express/entities/attributes"
@@ -732,11 +747,11 @@
                 </attributekey>
             </attributes>
         </page>
-        <page name="Image Uploading" path="/dashboard/system/files/image_uploading"
+        <page name="Image Options" path="/dashboard/system/files/image_uploading"
               filename="/dashboard/system/files/image_uploading.php" pagetype="" description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
-                    <value>uploading, upload, images, image, resizing, manager</value>
+                    <value>uploading, upload, images, image, resizing, manager, exif, rotation, rotate, quality, compression, png, jpg, jpeg</value>
                 </attributekey>
             </attributes>
         </page>
@@ -852,6 +867,13 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="Security Options" path="/dashboard/system/permissions/security" filename="/dashboard/system/permissions/security.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>login, logout, user, agent, ip, change</value>
+                </attributekey>
+            </attributes>
+        </page>
 
         <page name="Login &amp; Registration" path="/dashboard/system/registration"
               filename="/dashboard/system/registration/view.php" pagetype=""
@@ -900,6 +922,10 @@
               filename="/dashboard/system/registration/notification.php" pagetype="" description="" package="">
         </page>
 
+        <page name="User Deactivation Settings" path="/dashboard/system/registration/deactivation"
+              filename="/dashboard/system/registration/deactivation.php" pagetype="" description="" package="">
+        </page>
+
         <page name="Email" path="/dashboard/system/mail" filename="/dashboard/system/mail/view.php" pagetype=""
               description="Control how your site send and processes mail." package="">
             <attributes>
@@ -932,6 +958,30 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="System Email Addresses" path="/dashboard/system/mail/addresses"
+              filename="/dashboard/system/mail/addresses.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>mail settings, mail configuration, email, sender</value>
+                </attributekey>
+            </attributes>
+        </page>
+
+        <page name="Calendar" path="/dashboard/system/calendar"
+              filename="/dashboard/system/calendar/view.php" pagetype=""
+              description="Manage your calendar settings" package="" />
+        <page name="General Settings" path="/dashboard/system/calendar/settings"
+              filename="/dashboard/system/calendar/settings.php" pagetype=""
+              description="" package="" />
+        <page name="Color Settings" path="/dashboard/system/calendar/colors"
+              filename="/dashboard/system/calendar/colors.php" pagetype=""
+              description="" package="" />
+        <page name="Permissions" path="/dashboard/system/calendar/permissions"
+              filename="/dashboard/system/calendar/permissions.php" pagetype=""
+              description="" package="" />
+        <page name="Import Calendar Data" path="/dashboard/system/calendar/import"
+              filename="/dashboard/system/calendar/import.php" pagetype=""
+              description="" package="" />
 
         <page name="Conversations" path="/dashboard/system/conversations"
               filename="/dashboard/system/conversations/view.php" pagetype=""
@@ -1073,6 +1123,32 @@
                 </attributekey>
             </attributes>
         </page>
+
+        <page name="API" path="/dashboard/system/api" filename="/dashboard/system/api/view.php"
+              pagetype="" description="" package="">
+        </page>
+        <page name="API Settings" path="/dashboard/system/api/settings"
+              filename="/dashboard/system/api/settings.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>API, programming, public, app</value>
+                </attributekey>
+            </attributes>
+        </page>
+
+        <page name="API Integrations" path="/dashboard/system/api/integrations" filename="/dashboard/system/api/integrations.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+                <attributekey handle="exclude_search_index">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+
+
         <page name="Welcome" path="/dashboard/welcome" filename="/dashboard/welcome.php" description="" package="">
             <attributes>
                 <attributekey handle="desktop_priority">
@@ -1206,7 +1282,24 @@
     <page name="Waiting for Me" path="/dashboard/welcome/me" filename="" pagetype="" template="desktop" description="" package="">
         <area name="Main">
             <blocks>
-                <block type="desktop_waiting_for_me" />
+                <block type="core_area_layout" name="">
+                    <arealayout type="theme-grid" columns="12">
+                        <columns>
+                            <column span="12" offset="0">
+                                <block type="desktop_waiting_for_me" />
+                            </column>
+                        </columns>
+                    </arealayout>
+                </block>
+                <block type="core_area_layout" name="">
+                    <arealayout type="theme-grid" columns="12">
+                        <columns>
+                            <column span="12" offset="0">
+                                <block type="desktop_draft_list" />
+                            </column>
+                        </columns>
+                    </arealayout>
+                </block>
             </blocks>
         </area>
     </page>

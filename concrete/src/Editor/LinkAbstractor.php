@@ -13,7 +13,6 @@ namespace Concrete\Core\Editor;
 use Core;
 use File;
 use Page;
-use Loader;
 use URL;
 use Sunra\PhpSimple\HtmlDomParser;
 use Concrete\Core\Foundation\ConcreteObject;
@@ -24,7 +23,7 @@ class LinkAbstractor extends ConcreteObject
      * Takes a chunk of content containing full urls
      * and converts them to abstract link references.
      */
-    private static $blackListImgAttributes = array('src', 'fid', 'data-verified', 'data-save-url');
+    private static $blackListImgAttributes = ['src', 'fid', 'data-verified', 'data-save-url'];
 
     public static function translateTo($text)
     {
@@ -61,16 +60,16 @@ class LinkAbstractor extends ConcreteObject
             $url4 = str_replace('/', '\/', $url4);
             $url4 = str_replace('-', '\-', $url4);
             $text = preg_replace(
-                array(
+                [
                     '/' . $url1 . '\?cID=([0-9]+)/i',
                     '/' . $url4 . '\/([0-9]+)/i',
                     '/' . $url2 . '/i',
-                ),
-                array(
+                ],
+                [
                     '{CCM:CID_\\1}',
                     '{CCM:FID_DL_\\1}',
                     '{CCM:BASE_URL}',
-                ),
+                ],
                 $text
             );
         }
@@ -85,12 +84,12 @@ class LinkAbstractor extends ConcreteObject
     public static function translateFrom($text)
     {
         $text = preg_replace(
-            array(
+            [
                 '/{CCM:BASE_URL}/i',
-            ),
-            array(
+            ],
+            [
                 \Core::getApplicationURL(),
-            ),
+            ],
             $text
         );
 
@@ -101,8 +100,9 @@ class LinkAbstractor extends ConcreteObject
                 $cID = $matches[1];
                 if ($cID > 0) {
                     $c = Page::getByID($cID, 'ACTIVE');
-
-                    return Loader::helper("navigation")->getLinkToCollection($c);
+                    if ($c->isActive()) {
+                        return (string) \URL::to($c);
+                    }
                 }
             },
             $text
@@ -128,7 +128,7 @@ class LinkAbstractor extends ConcreteObject
                         $style = preg_replace($heightPattern, '', $style);
                         $picture->height = $matches[1];
                     }
-                    if ($style === '') {
+                    if ('' === $style) {
                         unset($picture->style);
                     } else {
                         $picture->style = $style;
@@ -145,7 +145,7 @@ class LinkAbstractor extends ConcreteObject
                                         $child->$attr($val);
                                     }
                                 }
-                            } elseif (is_callable(array($tag, $attr))) {
+                            } elseif (is_callable([$tag, $attr])) {
                                 $tag->$attr($val);
                             } else {
                                 $tag->setAttribute($attr, $val);
@@ -165,7 +165,7 @@ class LinkAbstractor extends ConcreteObject
                         }
                     }
 
-                    $picture->outertext = (string)$tag;
+                    $picture->outertext = (string) $tag;
                 }
             }
 
@@ -220,12 +220,12 @@ class LinkAbstractor extends ConcreteObject
     public static function translateFromEditMode($text)
     {
         $text = preg_replace(
-            array(
+            [
                 '/{CCM:BASE_URL}/i',
-            ),
-            array(
+            ],
+            [
                 \Core::getApplicationURL(),
-            ),
+            ],
             $text
         );
 
@@ -305,13 +305,13 @@ class LinkAbstractor extends ConcreteObject
     {
         $text = preg_replace_callback(
             '/{CCM:CID_([0-9]+)}/i',
-            array('\Concrete\Core\Backup\ContentExporter', 'replacePageWithPlaceHolderInMatch'),
+            ['\Concrete\Core\Backup\ContentExporter', 'replacePageWithPlaceHolderInMatch'],
             $text
         );
 
         $text = preg_replace_callback(
             '/{CCM:FID_DL_([0-9]+)}/i',
-            array('\Concrete\Core\Backup\ContentExporter', 'replaceFileWithPlaceHolderInMatch'),
+            ['\Concrete\Core\Backup\ContentExporter', 'replaceFileWithPlaceHolderInMatch'],
             $text
         );
 
@@ -323,7 +323,7 @@ class LinkAbstractor extends ConcreteObject
                 $f = \File::getByID($fID);
                 if (is_object($f)) {
                     $picture->fid = false;
-                    $picture->file = $f->getFilename();
+                    $picture->file = $f->getPrefix() . ':' . $f->getFilename();
                 }
             }
             $text = (string) $r->restore_noise($r);

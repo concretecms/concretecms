@@ -296,7 +296,7 @@ class DateTime
             $html .= <<<EOT
 <script type="text/javascript">
 $(function() {
-  $('#{$id}_dt_pub').datepicker($.extend({$datePickerOptionsAsJSON}, {
+  $('#{$id}_dt_pub').datepicker($.extend({
     dateFormat: $dateFormat,
     altFormat: 'yy-mm-dd',
     altField: '#{$id}_dt',
@@ -309,7 +309,7 @@ $(function() {
         $(inst.settings.altField).val('');
       }
     }
-  })).datepicker('setDate', $defaultDateJs);
+  },{$datePickerOptionsAsJSON})).datepicker('setDate', $defaultDateJs);
 })
 </script>
 EOT;
@@ -375,7 +375,7 @@ EOT;
         // Build HTML
         $datePickerOptionsAsJSON = json_encode($datePickerOptions, JSON_FORCE_OBJECT);
         $shownDateFormat = $dh->getPHPDatePattern();
-        $html = '<div class="form-inline">';
+        $html = '<div>';
         $html .= '<span class="ccm-input-date-wrapper" id="' . $id . '_dw">';
         $html .= '<input type="text" id="' . $id . '_pub" class="form-control ccm-input-date"';
         if (!$calendarAutoStart && $dateTime !== null) {
@@ -397,7 +397,7 @@ EOT;
             $html .= <<<EOT
 <script type="text/javascript">
 $(function() {
-  $('#{$id}_pub').datepicker($.extend({$datePickerOptionsAsJSON}, {
+  $('#{$id}_pub').datepicker($.extend({
     dateFormat: $dateFormat,
     altFormat: 'yy-mm-dd',
     altField: '#{$id}',
@@ -409,7 +409,7 @@ $(function() {
         $(inst.settings.altField).val('');
       }
     }
-  })).datepicker('setDate', $defaultDateJs);
+  },{$datePickerOptionsAsJSON})).datepicker('setDate', $defaultDateJs);
 });
 </script>
 EOT;

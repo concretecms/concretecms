@@ -46,7 +46,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
 {
     protected $btInterfaceWidth = 640;
     protected $btCacheBlockOutput = false;
-    protected $btInterfaceHeight = 480;
+    protected $btInterfaceHeight = 700;
     protected $btTable = 'btExpressForm';
     protected $entityManager;
 
@@ -434,6 +434,10 @@ class Controller extends BlockController implements NotificationProviderInterfac
             $entity->setName($name);
             $entityManager->persist($entity);
             $entityManager->flush();
+
+            $nodeId = $entity->getEntityResultsNodeId();
+            $node = Node::getByID($nodeId);
+            $node->setTreeNodeName($name);
         }
 
         $attributeKeyCategory = $entity->getAttributeKeyCategory();
@@ -462,24 +466,26 @@ class Controller extends BlockController implements NotificationProviderInterfac
 
                         // We have to merge entities back into the entity manager because they have been
                         // serialized. First type, because if we merge key first type gets screwed
-                        $type = $entityManager->merge($type);
+                        $mergedType = $entityManager->merge($type);
 
                         // Now key, because we need key to set as the primary key for settings.
-                        $key = $entityManager->merge($key);
-                        $key->setAttributeType($type);
-                        $key->setEntity($entity);
-                        $key->setAttributeKeyHandle((new AttributeKeyHandleGenerator($attributeKeyCategory))->generate($key));
-                        $entityManager->persist($key);
+                        // Note - we rename the objects in order to get spl_object_hash to not screw them up
+                        // Ref: https://github.com/concrete5/concrete5/issues/5584#issuecomment-403652601
+                        $mergedKey = $entityManager->merge($key);
+                        $mergedKey->setAttributeType($mergedType);
+                        $mergedKey->setEntity($entity);
+                        $mergedKey->setAttributeKeyHandle((new AttributeKeyHandleGenerator($attributeKeyCategory))->generate($mergedKey));
+                        $entityManager->persist($mergedKey);
                         $entityManager->flush();
 
                         // Now attribute settings.
-                        $settings->setAttributeKey($key);
-                        $settings = $entityManager->merge($settings);
-                        $entityManager->persist($settings);
+                        $settings->setAttributeKey($mergedKey);
+                        $mergedSettings = $entityManager->merge($settings);
+                        $entityManager->persist($mergedSettings);
                         $entityManager->flush();
 
-                        $control->setAttributeKey($key);
-                        $indexKeys[] = $key;
+                        $control->setAttributeKey($mergedKey);
+                        $indexKeys[] = $mergedKey;
                     }
 
                     $control->setFieldSet($field_set);
@@ -791,6 +797,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
                     $this->set('expressForm', $form);
                 }
                 if ($this->displayCaptcha) {
+                    $this->set('captcha', $this->app->make('helper/validation/captcha'));
                     $this->requireAsset('css', 'core/frontend/captcha');
                 }
                 $this->requireAsset('css', 'core/frontend/errors');

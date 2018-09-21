@@ -35,7 +35,7 @@ class Delete extends BackendInterfacePageController
             $c = $this->page;
             $cp = $this->permissions;
             $u = new User();
-            if ($cp->canDeletePage() && $c->getCollectionID() != HOME_CID && (!$c->isMasterCollection())) {
+            if ($cp->canDeletePage() && $c->getCollectionID() != Page::getHomePageID() && (!$c->isMasterCollection())) {
                 $children = $c->getNumChildren();
                 if ($children == 0 || $u->isSuperUser()) {
                     if ($c->isExternalLink()) {

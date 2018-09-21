@@ -8,6 +8,8 @@ use Concrete\Core\Error\ErrorList\Field\Field;
 use Concrete\Core\Error\ErrorList\Field\FieldInterface;
 use Concrete\Core\Error\ErrorList\Formatter\JsonFormatter;
 use Concrete\Core\Error\ErrorList\Formatter\StandardFormatter;
+use Concrete\Core\Error\ErrorList\Formatter\TextFormatter;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ErrorList implements \ArrayAccess, \JsonSerializable
 {
@@ -172,6 +174,13 @@ class ErrorList implements \ArrayAccess, \JsonSerializable
         return $formatter->asArray();
     }
 
+    public function toText()
+    {
+        $formatter = new TextFormatter($this);
+
+        return $formatter->getText();
+    }
+
     public function containsField($field)
     {
         $identifier = ($field instanceof FieldInterface) ? $field->getFieldElementName() : $field;
@@ -198,6 +207,14 @@ class ErrorList implements \ArrayAccess, \JsonSerializable
             }
         }
         return false;
+    }
+
+    /**
+     * @return JsonResponse
+     */
+    public function createResponse($errorCode = JsonResponse::HTTP_BAD_REQUEST)
+    {
+        return new JsonResponse($this->jsonSerialize(), $errorCode);
     }
 
 }

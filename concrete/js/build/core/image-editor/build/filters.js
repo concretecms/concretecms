@@ -28,7 +28,6 @@ ImageEditor.prototype = ImageEditor.fn = {
       }
     },
     restore: function (imageData,ob) {
-      var adjustment = ob.level;
         var d = imageData.data;
         var g = ob.imageData.data;
       for (var i=0; i<d.length; i+=4) {

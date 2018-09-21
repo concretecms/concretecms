@@ -9,6 +9,7 @@ $bID = $_GET['bID'];
 $bID = $_REQUEST['bID'];
 
 if ($_GET['cID'] && $_GET['arHandle']) {
+    $badPermissions = false;
     $c = Page::getByID($_GET['cID'], 'RECENT');
     $a = Area::get($c, $_GET['arHandle']);
     if (intval($_GET['bID']) == 0) {
@@ -67,6 +68,6 @@ switch ($_GET['mode']) {
 
     case 'refreshSurvey':
     default:
-        $showEdit = (intval($_REQUEST['showEdit']) == 1) ? true : false;
+        $showEdit = (isset($_REQUEST['showEdit']) && intval($_REQUEST['showEdit']) == 1) ? true : false;
         $miniSurvey->loadSurvey(intval($_GET['qsID']), $showEdit, intval($bID), explode(',', $_GET['hide']), 1, 1);
 }

@@ -3,6 +3,7 @@
 namespace Concrete\Core\Cache;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Area\GlobalArea;
 use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Database\DatabaseManager;
@@ -43,6 +44,11 @@ class CacheClearer
         'request' => 'cache/request',
         'page' => 'cache/page'
     ];
+
+    /**
+     * @var bool
+     */
+    private $clearGlobalAreas = true;
 
     public function __construct(
         EventDispatcher $dispatcher,
@@ -91,7 +97,18 @@ class CacheClearer
         // Setup the filesystem
         $this->setupFilesystem();
 
+        // Delete global areas without any blocks
+        $this->deleteEmptyGlobalAreas();
+
         $this->dispatcher->dispatch('on_cache_flush_end');
+    }
+
+    /**
+     * @param boolean $clearGlobalAreas
+     */
+    public function setClearGlobalAreas($clearGlobalAreas)
+    {
+        $this->clearGlobalAreas = $clearGlobalAreas;
     }
 
     /**
@@ -221,5 +238,12 @@ class CacheClearer
     protected function clearOpcodeCache()
     {
         OpCache::clear();
+    }
+
+    protected function deleteEmptyGlobalAreas()
+    {
+        if ($this->clearGlobalAreas) {
+            GlobalArea::deleteEmptyAreas();
+        }
     }
 }

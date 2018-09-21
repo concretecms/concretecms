@@ -115,7 +115,7 @@ EOL;
         return $html;
     }
 
-    public function selectMultipleFromSitemap($field, $pages = array(), $startingPoint = HOME_CID, $filters = array())
+    public function selectMultipleFromSitemap($field, $pages = array(), $startingPoint = 'HOME_CID', $filters = array())
     {
         $v = \View::getInstance();
         $v->requireAsset('core/sitemap');
@@ -142,7 +142,7 @@ EOL;
         $args->mode = 'multiple';
         $args->token = Core::make('token')->generate('select_sitemap');
         $args->inputName = $field;
-        $args->startingPoint = $startingPoint;
+        $args->startingPoint = $startingPoint === 'HOME_CID' ? Page::getHomePageID() : $startingPoint;
         if (count($filters)) {
             $args->filters = $filters;
         }
@@ -160,7 +160,7 @@ EOL;
         return $html;
     }
 
-    public function selectFromSitemap($field, $page = null, $startingPoint = HOME_CID, SiteTree $siteTree = null, $filters = array())
+    public function selectFromSitemap($field, $page = null, $startingPoint = 'HOME_CID', SiteTree $siteTree = null, $filters = array())
     {
         $v = \View::getInstance();
         $v->requireAsset('core/sitemap');
@@ -181,7 +181,7 @@ EOL;
         $args->identifier = $identifier;
         $args->selected = $selected;
         $args->inputName = $field;
-        $args->startingPoint = $startingPoint;
+        $args->startingPoint = $startingPoint === 'HOME_CID' ? Page::getHomePageID() : $startingPoint;
         if ($siteTree) {
             $args->siteTreeID = $siteTree->getSiteTreeID();
         }

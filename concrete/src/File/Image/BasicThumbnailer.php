@@ -7,15 +7,14 @@ use Concrete\Core\Entity\File\File;
 use Concrete\Core\Entity\File\StorageLocation\StorageLocation;
 use Concrete\Core\File\Image\Thumbnail\ThumbnailerInterface;
 use Concrete\Core\File\Image\Thumbnail\Type\CustomThumbnail;
-use Concrete\Core\File\StorageLocation\Configuration\DefaultConfiguration;
+use Concrete\Core\File\StorageLocation\Configuration\LocalConfiguration;
 use Concrete\Core\File\StorageLocation\StorageLocationInterface;
 use Concrete\Core\Http\ResponseAssetGroup;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Image;
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
+use Concrete\Core\File\Image\Thumbnail\ThumbnailFormatService;
 
 class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterface
 {
@@ -60,8 +59,8 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
     public function getStorageLocation()
     {
         if ($this->storageLocation === null) {
-            /** @var EntityManagerInterface $orm */
             $orm = $this->app['database/orm']->entityManager();
+            /* @var \Doctrine\ORM\EntityManagerInterface $orm */
             $storageLocation = $orm->getRepository(StorageLocation::class)->findOneBy(['fslIsDefault' => true]);
 
             if ($storageLocation) {
@@ -106,7 +105,7 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
     public function getJpegCompression()
     {
         if ($this->jpegCompression === null) {
-            $this->jpegCompression = (int) $this->app->make('config')->get('concrete.misc.default_jpeg_image_compression');
+            $this->jpegCompression = $this->app->make(BitmapFormat::class)->getDefaultJpegQuality();
         }
 
         return $this->jpegCompression;
@@ -134,7 +133,7 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
     public function getPngCompression()
     {
         if ($this->pngCompression === null) {
-            $this->pngCompression = (int) $this->app->make('config')->get('concrete.misc.default_png_image_compression');
+            $this->pngCompression = $this->app->make(BitmapFormat::class)->getDefaultPngCompressionLevel();
         }
 
         return $this->pngCompression;
@@ -147,11 +146,13 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
      */
     public function setThumbnailsFormat($thumbnailsFormat)
     {
-        $thumbnailsFormat = $thumbnailsFormat ? strtolower(trim((string) $thumbnailsFormat)) : '';
-        if ($thumbnailsFormat === 'jpg') {
-            $thumbnailsFormat = 'jpeg';
+        $thumbnailsFormat = strtolower(trim((string) $thumbnailsFormat));
+        if ($thumbnailsFormat !== ThumbnailFormatService::FORMAT_AUTO) {
+            if (!$this->app->make(BitmapFormat::class)->isFormatValid($thumbnailsFormat)) {
+                $thumbnailsFormat = BitmapFormat::FORMAT_JPEG;
+            }
         }
-        $this->thumbnailsFormat = in_array($thumbnailsFormat, ['jpeg', 'png', 'auto']) ? $thumbnailsFormat : 'jpeg';
+        $this->thumbnailsFormat = $thumbnailsFormat;
 
         return $this;
     }
@@ -180,12 +181,10 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
         if ($format === false) {
             $format = $this->getThumbnailsFormat();
         }
-        if ($format === 'auto') {
-            if (preg_match('/\.jpe?g($|\?)/i', $savePath)) {
-                $format = 'jpeg';
-            } else {
-                $format = 'png';
-            }
+        switch ($format) {
+            case ThumbnailFormatService::FORMAT_AUTO:
+                $format = $this->app->make(ThumbnailFormatService::class)->getAutomaticFormatForFile($savePath);
+                break;
         }
         $thumbnailOptions = [
             'jpeg_quality' => $this->getJpegCompression(),
@@ -220,105 +219,46 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
     }
 
     /**
+     * Checks thumbnail resolver for filename, schedule for creation via ajax if necessary.
+     *
+     * @param File|string $obj file instance of path to a file
+     * @param int|null $maxWidth
+     * @param int|null $maxHeight
+     * @param bool $crop
+     *
+     * @return \stdClass
+     */
+    private function returnThumbnailObjectFromResolver($obj, $maxWidth, $maxHeight, $crop = false)
+    {
+        return $this->processThumbnail(true, $obj, $maxWidth, $maxHeight, $crop);
+    }
+
+    /**
      * Checks filesystem for thumbnail and if file doesn't exist will create it immediately.
      * concrete5's default behavior from the beginning up to 8.1.
-     * @deprecated
-     * @param $obj
-     * @param $maxWidth
-     * @param $maxHeight
+     *
+     * @param File|string $obj file instance of path to a file
+     * @param int|null $maxWidth
+     * @param int|null $maxHeight
      * @param bool $crop
+     *
      * @return \stdClass
      */
     private function checkForThumbnailAndCreateIfNecessary($obj, $maxWidth, $maxHeight, $crop = false)
     {
-        if ($obj instanceof File) {
-            $storage = $obj->getFileStorageLocationObject();
-        } else {
-            $storage = $this->getStorageLocation();
-        }
-        $this->setStorageLocation($storage);
-        $filesystem = $storage->getFileSystemObject();
-        $configuration = $storage->getConfigurationObject();
-        $version = null;
-
-        $fh = \Core::make('helper/file');
-        if ($obj instanceof File) {
-            try {
-                $fr = $obj->getFileResource();
-                $fID = $obj->getFileID();
-                $filename = md5(implode(':', array($fID, $maxWidth, $maxHeight, $crop, $fr->getTimestamp())))
-                    . '.' . $fh->getExtension($fr->getPath());
-            } catch (\Exception $e) {
-                $filename = '';
-            }
-        } else {
-            $filename = md5(implode(':', array($obj, $maxWidth, $maxHeight, $crop, @filemtime($obj))))
-                . '.' . $fh->getExtension($obj);
-        }
-
-        $abspath = '/cache/' . $filename;
-
-        $src = $configuration->getPublicURLToFile($abspath);
-
-        /** Attempt to create the image */
-        if (!$filesystem->has($abspath)) {
-            try {
-                if ($obj instanceof File && $fr->exists()) {
-                    $image = \Image::load($fr->read());
-                } else {
-                    $image = \Image::open($obj);
-                }
-            } catch (\Exception $e) {
-                //If we can't open or load the file
-                $abspath = false;
-            }
-
-            if ($abspath === false) {
-                $src = '';
-            } else {
-                // create image there
-                $this->create($image,
-                    $abspath,
-                    $maxWidth,
-                    $maxHeight,
-                    $crop);
-            }
-        }
-
-
-
-        $thumb = new \stdClass();
-        $thumb->src = $src;
-
-        // this is a hack, but we shouldn't go out on the network if we don't have to. We should probably
-        // add a method to the configuration to handle this. The file storage locations should be able to handle
-        // thumbnails.
-        if ($configuration instanceof DefaultConfiguration) {
-            $dimensionsPath = $configuration->getRootPath() . $abspath;
-        } else {
-            $dimensionsPath = $src;
-        }
-
-        try {
-            //try and get it locally, otherwise use http
-            $dimensions = getimagesize($dimensionsPath);
-            $thumb->width = $dimensions[0];
-            $thumb->height = $dimensions[1];
-        } catch (\Exception $e) {
-
-        }
-
-        return $thumb;
+        return $this->processThumbnail(false, $obj, $maxWidth, $maxHeight, $crop);
     }
 
     /**
-     * Checks thumbnail resolver for filename, schedule for creation via ajax if necessary.
-     * @param $obj
-     * @param $maxWidth
-     * @param $maxHeight
+     * @param bool $async
+     * @param File|string $obj
+     * @param int|null $maxWidth
+     * @param int|null $maxHeight
      * @param bool $crop
+     *
+     * @return \stdClass
      */
-    private function returnThumbnailObjectFromResolver($obj, $maxWidth, $maxHeight, $crop = false)
+    private function processThumbnail($async, $obj, $maxWidth, $maxHeight, $crop)
     {
         if ($obj instanceof File) {
             $storage = $obj->getFileStorageLocationObject();
@@ -331,9 +271,10 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
         $version = null;
 
         $fh = $this->app->make('helper/file');
-        $assetGroup = ResponseAssetGroup::get();
-        $assetGroup->requireAsset('core/frontend/thumbnail-builder');
-
+        if ($async) {
+            $assetGroup = ResponseAssetGroup::get();
+            $assetGroup->requireAsset('core/frontend/thumbnail-builder');
+        }
         $baseFilename = '';
         $extension = '';
         if ($obj instanceof File) {
@@ -343,6 +284,10 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
                 $extension = $fh->getExtension($fr->getPath());
                 $baseFilename = md5(implode(':', [$fID, $maxWidth, $maxHeight, $crop, $fr->getTimestamp()]));
             } catch (Exception $e) {
+                $result = new \stdClass();
+                $result->src = '';
+
+                return $result;
             }
         } else {
             $extension = $fh->getExtension($obj);
@@ -350,74 +295,62 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
             // don't care too much about that
             $baseFilename = md5(implode(':', [$obj, $maxWidth, $maxHeight, $crop, @filemtime($obj)]));
         }
+        $thumbnailFormat = $this->getThumbnailsFormat();
+        if ($thumbnailFormat === ThumbnailFormatService::FORMAT_AUTO) {
+            $thumbnailFormat = $this->app->make(ThumbnailFormatService::class)->getAutomaticFormatForFileExtension($extension);
+        }
+        $thumbnailExtension = $this->app->make(BitmapFormat::class)->getFormatFileExtension($thumbnailFormat);
 
-        $thumbnailsFormat = $this->getThumbnailsFormat();
-        switch ($thumbnailsFormat) {
-            case 'jpeg':
-                $extension = 'jpg';
-                break;
-            case 'png':
-                $extension = 'png';
-                break;
-            case 'auto':
-                switch (strtolower($extension)) {
-                    case 'jpeg':
-                    case 'jpg':
-                    case 'pjpeg':
-                        $extension = 'jpg';
-                        $thumbnailsFormat = 'jpeg';
-                        break;
-                    default:
-                        $extension = 'png';
-                        $thumbnailsFormat = 'png';
-                        break;
-                }
-                break;
-        }
-        $filename = '';
-        if ($baseFilename !== '') {
-            $filename = $baseFilename . '.' . $extension;
-        }
+        $filename = $baseFilename . '.' . $thumbnailExtension;
 
         $abspath = '/cache/thumbnails/' . $filename;
 
-        if ($obj instanceof File) {
+        if ($async && $obj instanceof File) {
             $customThumb = new CustomThumbnail($maxWidth, $maxHeight, $abspath, $crop);
 
             $path_resolver = $this->app->make('Concrete\Core\File\Image\Thumbnail\Path\Resolver');
             $path_resolver->getPath($obj->getVersion(), $customThumb);
-        } else { // @TODO This is a path or url and doesn't have a file object, so we just make the thumbnail now...
+        } else {
             if (!$filesystem->has($abspath)) {
+                $created = false;
                 try {
-                    $image = \Image::open($obj);
-                    // create image there
-                    $this->create($image,
-                        $abspath,
-                        $maxWidth,
-                        $maxHeight,
-                        $crop,
-                        $thumbnailsFormat);
+                    if ($obj instanceof File) {
+                        $image = !is_callable([$fr, 'exists']) || $fr->exists() ? \Image::load($fr->read()) : null;
+                    } else {
+                        $image = \Image::open($obj);
+                    }
+                    if ($image) {
+                        $this->create(
+                            $image,
+                            $abspath,
+                            $maxWidth,
+                            $maxHeight,
+                            $crop,
+                            $thumbnailFormat
+                        );
+                        $created = true;
+                    }
                 } catch (\Exception $e) {
-                    $abspath = false;
+                }
+                if ($created === false) {
+                    $result = new \stdClass();
+                    $result->src = '';
+
+                    return $result;
                 }
             }
         }
 
-        $src = '';
-        if ($abspath) {
-            $src = $configuration->getPublicURLToFile($abspath);
-        }
-
         $thumb = new \stdClass();
-        $thumb->src = $src;
+        $thumb->src = $configuration->getPublicURLToFile($abspath);
 
         // this is a hack, but we shouldn't go out on the network if we don't have to. We should probably
         // add a method to the configuration to handle this. The file storage locations should be able to handle
         // thumbnails.
-        if ($configuration instanceof DefaultConfiguration) {
+        if ($configuration instanceof LocalConfiguration) {
             $dimensionsPath = $configuration->getRootPath() . $abspath;
         } else {
-            $dimensionsPath = $src;
+            $dimensionsPath = $thumb->src;
         }
 
         try {
@@ -426,7 +359,7 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
             $dimensions = false;
         }
         $thumb->width = ($dimensions === false) ? null : $dimensions[0];
-        $thumb->height = ($dimensions === false) ?: $dimensions[1];
+        $thumb->height = ($dimensions === false) ? null : $dimensions[1];
 
         return $thumb;
     }

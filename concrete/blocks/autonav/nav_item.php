@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Block\Autonav;
 
+use Concrete\Core\Page\Page;
+
 /**
  * An object used by the Autonav Block to display navigation items in a tree.
  */
@@ -102,7 +104,7 @@ class NavItem
             $link = $this->cPointerExternalLink;
         } elseif ($this->cPath) {
             $link = $this->cPath;
-        } elseif ($this->cID == HOME_CID) {
+        } elseif ($this->cID == Page::getHomePageID()) {
             $link = DIR_REL . '/';
         } else {
             $link = DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $this->cID;

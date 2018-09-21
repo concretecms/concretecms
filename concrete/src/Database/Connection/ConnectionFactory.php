@@ -19,6 +19,11 @@ class ConnectionFactory
         $this->driver_manager = $driver_manager;
     }
 
+    /**
+     * @param \ArrayAccess|array $config
+     *
+     * @return \Concrete\Core\Database\Connection\Connection|\Doctrine\DBAL\Connection
+     */
     public function createConnection($config)
     {
         $driver = $this->driver_manager->driver(array_get($config, 'driver', ''));
@@ -30,8 +35,11 @@ class ConnectionFactory
         $params = $config;
         $params['host'] = array_get($params, 'host', array_get($config, 'server'));
         $params['user'] = array_get($params, 'user', array_get($config, 'username'));
+        if (!isset($params['driverOptions'])) {
+            $params['driverOptions'] = [];
+        }
         if (defined('PDO::MYSQL_ATTR_MULTI_STATEMENTS')) {
-            $params['driverOptions'] = [\PDO::MYSQL_ATTR_MULTI_STATEMENTS => false];
+            $params['driverOptions'][\PDO::MYSQL_ATTR_MULTI_STATEMENTS] = false;
         }
         $params['wrapperClass'] = array_get($config, 'wrapperClass', '\Concrete\Core\Database\Connection\Connection');
         unset($params['driver']);
@@ -45,7 +53,9 @@ class ConnectionFactory
             }
         }
 
-        return new $wrapperClass($params, $driver);
+        $connection =  new $wrapperClass($params, $driver);
+        $connection->getDatabasePlatform()->registerDoctrineTypeMapping('json', 'json_array');
+        return $connection;
     }
 
     /**

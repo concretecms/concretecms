@@ -1,39 +1,65 @@
 <?php
+
 namespace Concrete\Controller;
 
 use Concrete\Core\Cache\Cache;
+use Concrete\Core\Controller\Controller;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\ResponseFactoryInterface;
+use Concrete\Core\Install\ConnectionOptionsPreconditionInterface;
 use Concrete\Core\Install\Installer;
 use Concrete\Core\Install\InstallerOptions;
+use Concrete\Core\Install\PreconditionResult;
 use Concrete\Core\Install\PreconditionService;
 use Concrete\Core\Install\WebPreconditionInterface;
-use Concrete\Core\Localization\Localization as Localization;
+use Concrete\Core\Localization\Localization;
 use Concrete\Core\Localization\Service\TranslationsInstaller;
 use Concrete\Core\Localization\Translation\Remote\ProviderInterface as RemoteTranslationsProvider;
-use Concrete\Core\Url\UrlImmutable;
-use Controller;
-use Database;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+use Concrete\Core\View\View;
 use Exception;
 use Hautelook\Phpass\PasswordHash;
 use Punic\Comparer as PunicComparer;
-use StartingPointPackage;
 use stdClass;
-use View;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
 class Install extends Controller
 {
+    /**
+     * Install step: choose locale.
+     *
+     * @var int
+     */
+    const STEP_CHOOSELOCALE = 1;
+
+    /**
+     * Install step: precondition checks.
+     *
+     * @var int
+     */
+    const STEP_PRECONDITIONS = 2;
+
+    /**
+     * Install step: precondition checks.
+     *
+     * @var int
+     */
+    const STEP_CONFIGURATION = 3;
+
+    /**
+     * Install step: installing/installed.
+     *
+     * @var int
+     */
+    const STEP_INSTALL = 4;
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Controller\AbstractController::$helpers
+     */
     public $helpers = ['form', 'html'];
-
-    public function getViewObject()
-    {
-        $v = new View('/frontend/install');
-        $v->setViewTheme('concrete');
-
-        return $v;
-    }
 
     /**
      * The installer instance.
@@ -43,27 +69,49 @@ class Install extends Controller
     private $installer = null;
 
     /**
-     * Get the installer instance.
+     * {@inheritdoc}
      *
-     * @return Installer
+     * @see \Concrete\Core\Controller\Controller::getViewObject()
      */
-    protected function getInstaller()
+    public function getViewObject()
     {
-        if ($this->installer === null) {
-            $this->installer = $this->app->make(Installer::class);
-        }
+        $v = new View('/frontend/install');
+        $v->setViewTheme('concrete');
 
-        return $this->installer;
+        return $v;
     }
 
     /**
-     * Get the options used by the installer.
+     * {@inheritdoc}
      *
-     * @return \Concrete\Core\Install\InstallerOptions
+     * @see \Concrete\Core\Controller\AbstractController::on_start()
      */
-    protected function getInstallerOptions()
+    public function on_start()
     {
-        return $this->getInstaller()->getOptions();
+        $this->addHeaderItem('<link href="' . ASSETS_URL_CSS . '/views/install.css" rel="stylesheet" type="text/css" media="all" />');
+        $this->requireAsset('core/app');
+        $this->requireAsset('javascript', 'backstretch');
+        $this->requireAsset('javascript', 'bootstrap/collapse');
+        $this->set('urlResolver', $this->app->make(ResolverManagerInterface::class));
+
+        $config = $this->app->make('config');
+        $this->set('backgroundFade', 0);
+        $this->set('pageTitle', t('Install concrete5'));
+        $image = date('Ymd') . '.jpg';
+        $this->set('image', date('Ymd') . '.jpg');
+        $this->set('imagePath', $config->get('concrete.urls.background_feed') . '/' . $image);
+        $this->set('concreteVersion', $config->get('concrete.version'));
+
+        $locale = $this->request->request->get('locale');
+        if ($locale) {
+            $loc = Localization::changeLocale($locale);
+            $this->set('locale', $locale);
+        }
+        Cache::disableAll();
+
+        if ($this->app->isInstalled()) {
+            throw new UserMessageException(t('concrete5 is already installed.'));
+        }
     }
 
     public function view()
@@ -76,6 +124,7 @@ class Install extends Controller
             $this->set('locales', $locales);
             $this->set('onlineLocales', $onlineLocales);
         }
+        $this->setInstallStep();
     }
 
     public function select_language()
@@ -86,81 +135,40 @@ class Install extends Controller
                 $localLocales = Localization::getAvailableInterfaceLanguageDescriptions(null);
                 if (!isset($localLocales[$localeID])) {
                     $ti = $this->app->make(TranslationsInstaller::class);
-                    /* @var TranslationsInstaller $ti */
                     try {
                         $ti->installCoreTranslations($localeID);
                     } catch (Exception $x) {
                         $this->set('error', $x);
                         $this->view();
-
-                        return;
+                        $localeID = null;
                     }
                 }
             }
-            $this->set('locale', $localeID);
-            Localization::changeLocale($localeID);
-        }
-    }
-
-    protected function getLocales()
-    {
-        $localLocales = Localization::getAvailableInterfaceLanguageDescriptions(null);
-
-        $coreVersion = $this->app->make('config')->get('concrete.version_installed');
-        $rtp = $this->app->make(RemoteTranslationsProvider::class);
-        /* @var RemoteTranslationsProvider $rtp */
-        // We may be offline, so let's ignore connection issues
-        try {
-            $remoteLocaleStats = $rtp->getAvailableCoreStats($coreVersion);
-        } catch (Exception $x) {
-            $remoteLocaleStats = [];
-        }
-        $remoteLocales = [];
-        foreach (array_keys($remoteLocaleStats) as $remoteLocaleID) {
-            if (!isset($localLocales[$remoteLocaleID])) {
-                $remoteLocales[$remoteLocaleID] = Localization::getLanguageDescription($remoteLocaleID, null);
+            if ($localeID) {
+                $this->set('locale', $localeID);
+                Localization::changeLocale($localeID);
             }
         }
-        $comparer = new PunicComparer();
-        $comparer->sort($remoteLocales, true);
-        if (empty($localLocales) && !empty($remoteLocales)) {
-            $localLocales = [
-                Localization::BASE_LOCALE => Localization::getLanguageDescription(Localization::BASE_LOCALE, null),
-            ];
-        }
-
-        return [$localLocales, $remoteLocales];
+        $this->setInstallStep();
     }
 
-    protected function testAndRunInstall()
+    /**
+     * @return \Concrete\Core\Install\PreconditionInterface[][]
+     */
+    public function getPreconditions()
     {
-        $e = $this->app->make('helper/validation/error');
-        try {
-            $installerOptions = $this->getInstallerOptions();
-            $installerOptions->load();
-            $uiLocaleId = $installerOptions->getUiLocaleId();
-            if ($uiLocaleId !== '') {
-                Localization::changeLocale($uiLocaleId);
+        $service = $this->app->make(PreconditionService::class);
+        $required = [];
+        $optional = [];
+        foreach ($service->getPreconditions() as $precondition) {
+            if ($precondition->isOptional()) {
+                $optional[] = $precondition;
+            } else {
+                $required[] = $precondition;
             }
-            $e->add($this->getInstaller()->checkOptions());
-        } catch (UserMessageException $x) {
-            $e->add($x);
         }
-        if ($e->has()) {
-            $this->set('error', $e);
-        } else {
-            $this->set('backgroundFade', 0);
-            $spl = $this->getInstaller()->getStartingPoint(true);
-            $this->set('installPackage', $spl->getPackageHandle());
-            $this->set('installRoutines', $spl->getInstallRoutines());
-            $this->set(
-                'successMessage',
-                t(
-                    'concrete5 has been installed. You have been logged in as <b>%s</b> with the password you chose. If you wish to change this password, you may do so from the users area of the dashboard.',
-                    USER_SUPER
-                )
-            );
-        }
+
+        return [$required, $optional];
     }
 
     public function setup()
@@ -230,6 +238,7 @@ class Install extends Controller
         $this->set('canonicalUrlAlternativeChecked', $canonicalUrlAlternativeChecked);
         $this->set('SERVER_TIMEZONE', @date_default_timezone_get() ?: 'UTC');
         $this->set('availableTimezones', $this->app->make('date')->getGroupedTimezones());
+        $this->setInstallStep();
     }
 
     public function get_site_locale_countries($viewLocaleID, $languageID, $preselectedCountryID)
@@ -242,74 +251,17 @@ class Install extends Controller
         return $rf->json($form->select('siteLocaleCountry', $countries, $preselectedCountryID));
     }
 
-    private function getCountriesForLanguage($languageID)
+    public function web_precondition($handle, $argument = '')
     {
-        $cl = $this->app->make('lists/countries');
-        $recommendedCountries = [];
-        foreach ($cl->getCountriesForLanguage($languageID) as $countryID) {
-            $recommendedCountries[$countryID] = $cl->getCountryName($countryID);
+        $service = $this->app->make(PreconditionService::class);
+        $precondition = $service->getPreconditionByHandle($handle);
+        if (!$precondition instanceof WebPreconditionInterface) {
+            throw new Exception(sprintf('%s is not a valid precondition handle', $handle));
         }
-        $otherCountries = [];
-        foreach ($cl->getCountries() as $countryID => $countryName) {
-            if (!isset($recommendedCountries[$countryID])) {
-                $otherCountries[$countryID] = $countryName;
-            }
-        }
-        if (count($recommendedCountries) === 0) {
-            $result = $otherCountries;
-        } elseif (count($otherCountries) === 0) {
-            $result = $recommendedCountries;
-        } else {
-            $result = [
-                t('** Recommended Countries') => $recommendedCountries,
-                t('** Other Countries') => $otherCountries,
-            ];
-        }
+        $result = $precondition->getAjaxAnswer($argument);
+        $rf = $this->app->make(ResponseFactoryInterface::class);
 
-        return $result;
-    }
-
-    /**
-     * Testing.
-     */
-    public function on_start()
-    {
-        $this->addHeaderItem('<link href="' . ASSETS_URL_CSS . '/views/install.css" rel="stylesheet" type="text/css" media="all" />');
-        $this->requireAsset('core/app');
-        $this->requireAsset('javascript', 'backstretch');
-        $this->requireAsset('javascript', 'bootstrap/collapse');
-        $locale = $this->request->request->get('locale');
-        if ($locale) {
-            $loc = Localization::changeLocale($locale);
-            $this->set('locale', $locale);
-        }
-        Cache::disableAll();
-
-        if ($this->app->isInstalled()) {
-            throw new Exception(t('concrete5 is already installed.'));
-        }
-        $this->set('backgroundFade', 0);
-        $this->set('pageTitle', t('Install concrete5'));
-    }
-
-    public function run_routine($pkgHandle, $routine)
-    {
-        $options = $this->getInstallerOptions();
-        $options->load();
-        $options->setStartingPointHandle($pkgHandle);
-        $jsx = $this->app->make('helper/json');
-        $js = new stdClass();
-        try {
-            $spl = $this->installer->getStartingPoint(false);
-            $spl->executeInstallRoutine($routine);
-            $js->error = false;
-        } catch (Exception $e) {
-            $js->error = true;
-            $js->message = tc('InstallError', '%s.<br><br>Trace:<br>%s', $e->getMessage(), $e->getTraceAsString());
-            $options->deleteFiles();
-        }
-
-        return $this->app->make(ResponseFactoryInterface::class)->json($js);
+        return $rf->json($result);
     }
 
     /**
@@ -317,18 +269,19 @@ class Install extends Controller
      */
     public function configure()
     {
+        $post = $this->request->request;
         $error = $this->app->make('helper/validation/error');
-        /* @var $error \Concrete\Core\Error\ErrorList\ErrorList */
+        $warnings = $this->app->make('helper/validation/error');
+        $ignoreWarnings = !empty($post->get('ignore-warnings'));
         try {
-            $post = $this->request->request;
             $val = $this->app->make('helper/validation/form');
-            /* @var \Concrete\Core\Form\Service\Validation $val */
             $val->setData($this->post());
             $val->addRequired('SITE', t("Please specify your site's name"));
             $val->addRequiredEmail('uEmail', t('Please specify a valid email address'));
             $val->addRequired('DB_DATABASE', t('You must specify a valid database name'));
             $val->addRequired('DB_SERVER', t('You must specify a valid database server'));
             $val->addRequired('SERVER_TIMEZONE', t('You must specify the system time zone'));
+            $val->addRequired('privacy', t('You must agree to the privacy policy'));
 
             $password = $post->get('uPassword');
             $passwordConfirm = $post->get('uPasswordConfirm');
@@ -344,8 +297,10 @@ class Install extends Controller
             if (!$val->test()) {
                 $error->add($val->getError());
             } elseif (!$error->has()) {
+                /**
+                 * @var $options InstallerOptions
+                 */
                 $options = $this->app->make(InstallerOptions::class);
-                /* @var InstallerOptions $options */
                 $configuration = $post->get('SITE_CONFIG');
                 if (!is_array($configuration)) {
                     $configuration = [];
@@ -371,6 +326,7 @@ class Install extends Controller
                 $config = $this->app->make('config');
                 $hasher = new PasswordHash($config->get('concrete.user.password.hash_cost_log2'), $config->get('concrete.user.password.hash_portable'));
                 $options
+                    ->setPrivacyPolicyAccepted($post->get('privacy') == '1' ? true : false)
                     ->setUserEmail($post->get('uEmail'))
                     ->setUserPasswordHash($hasher->HashPassword($post->get('uPassword')))
                     ->setStartingPointHandle($post->get('SAMPLE_CONTENT'))
@@ -380,10 +336,41 @@ class Install extends Controller
                     ->setServerTimeZoneId($post->get('SERVER_TIMEZONE'))
                 ;
                 $installer = $this->app->make(Installer::class);
-                /* @var Installer $installer */
                 $installer->setOptions($options);
-                $error->add($installer->checkOptions());
-                if (!$error->has()) {
+                try {
+                    $connection = $installer->createConnection();
+                } catch (UserMessageException $x) {
+                    $error->add($x);
+                    $connection = null;
+                }
+                $preconditions = $this->app->make(PreconditionService::class)->getOptionsPreconditions();
+                foreach ($preconditions as $precondition) {
+                    if ($precondition instanceof ConnectionOptionsPreconditionInterface) {
+                        if ($connection === null) {
+                            continue;
+                        }
+                        $precondition->setConnection($connection);
+                    }
+                    $precondition->setInstallerOptions($options);
+                    $check = $precondition->performCheck();
+                    switch ($check->getState()) {
+                        case PreconditionResult::STATE_SKIPPED:
+                        case PreconditionResult::STATE_PASSED:
+                            break;
+                        case PreconditionResult::STATE_WARNING:
+                            $warnings->add($precondition->getName() . ': ' . $check->getMessage());
+                            break;
+                        case PreconditionResult::STATE_FAILED:
+                        default:
+                            if ($precondition->isOptional()) {
+                                $warnings->add($precondition->getName() . ': ' . $check->getMessage());
+                            } else {
+                                $error->add($precondition->getName() . ': ' . $check->getMessage());
+                            }
+                            break;
+                    }
+                }
+                if (!$error->has() && ($ignoreWarnings || !$warnings->has())) {
                     $options->save();
                     $this->redirect('/');
                 }
@@ -393,43 +380,183 @@ class Install extends Controller
         }
         $this->getInstallerOptions()->deleteFiles();
         $this->set('error', $error);
+        $this->set('warnings', $warnings);
         $this->setup();
+        $this->setInstallStep();
+    }
+
+    public function run_routine($pkgHandle, $routine)
+    {
+        $options = $this->getInstallerOptions();
+        $options->load();
+        $options->setStartingPointHandle($pkgHandle);
+        $jsx = $this->app->make('helper/json');
+        $js = new stdClass();
+        try {
+            $spl = $this->installer->getStartingPoint(false);
+            $spl->executeInstallRoutine($routine);
+            $js->error = false;
+        } catch (Exception $e) {
+            $js->error = true;
+            $js->message = tc('InstallError', '%s.<br><br>Trace:<br>%s', $e->getMessage(), $e->getTraceAsString());
+            $options->deleteFiles();
+        }
+
+        return $this->app->make(ResponseFactoryInterface::class)->json($js);
     }
 
     /**
-     * @return \Concrete\Core\Install\PreconditionInterface[][]
+     * Get the installer instance.
+     *
+     * @return Installer
      */
-    public function getPreconditions()
+    protected function getInstaller()
     {
-        $service = $this->app->make(PreconditionService::class);
-        /* @var PreconditionService $service */
-        $required = [];
-        $optional = [];
-        foreach ($service->getPreconditions() as $precondition) {
-            if ($precondition->isOptional()) {
-                $optional[] = $precondition;
-            } else {
-                $required[] = $precondition;
-            }
+        if ($this->installer === null) {
+            $this->installer = $this->app->make(Installer::class);
         }
 
-        return [$required, $optional];
+        return $this->installer;
     }
 
-    public function web_precondition($handle, $argument = '')
+    /**
+     * Get the options used by the installer.
+     *
+     * @return \Concrete\Core\Install\InstallerOptions
+     */
+    protected function getInstallerOptions()
     {
-        if ($prefix === '-') {
-            $prefix = false;
-        }
-        $service = $this->app->make(PreconditionService::class);
-        /* @var PreconditionService $service */
-        $precondition = $service->getPreconditionByHandle($handle);
-        if (!$precondition instanceof WebPreconditionInterface) {
-            throw new Exception(sprintf('%s is not a valid precondition handle', $handle));
-        }
-        $result = $precondition->getAjaxAnswer($argument);
-        $rf = $this->app->make(ResponseFactoryInterface::class);
+        return $this->getInstaller()->getOptions();
+    }
 
-        return $rf->json($result);
+    /**
+     * @return array
+     */
+    protected function getLocales()
+    {
+        $localLocales = Localization::getAvailableInterfaceLanguageDescriptions(null);
+
+        $coreVersion = $this->app->make('config')->get('concrete.version_installed');
+        $rtp = $this->app->make(RemoteTranslationsProvider::class);
+        // We may be offline, so let's ignore connection issues
+        try {
+            $remoteLocaleStats = $rtp->getAvailableCoreStats($coreVersion);
+        } catch (Exception $x) {
+            $remoteLocaleStats = [];
+        }
+        $remoteLocales = [];
+        foreach (array_keys($remoteLocaleStats) as $remoteLocaleID) {
+            if (!isset($localLocales[$remoteLocaleID])) {
+                $remoteLocales[$remoteLocaleID] = Localization::getLanguageDescription($remoteLocaleID, null);
+            }
+        }
+        $comparer = new PunicComparer();
+        $comparer->sort($remoteLocales, true);
+        if (empty($localLocales) && !empty($remoteLocales)) {
+            $localLocales = [
+                Localization::BASE_LOCALE => Localization::getLanguageDescription(Localization::BASE_LOCALE, null),
+            ];
+        }
+
+        return [$localLocales, $remoteLocales];
+    }
+
+    protected function testAndRunInstall()
+    {
+        $e = $this->app->make('helper/validation/error');
+        try {
+            $installerOptions = $this->getInstallerOptions();
+            $installerOptions->load();
+            $uiLocaleId = $installerOptions->getUiLocaleId();
+            if ($uiLocaleId !== '') {
+                Localization::changeLocale($uiLocaleId);
+            }
+            $connection = $this->getInstaller()->createConnection();
+            $preconditions = $this->app->make(PreconditionService::class)->getOptionsPreconditions();
+            foreach ($preconditions as $precondition) {
+                if ($precondition->isOptional()) {
+                    continue;
+                }
+                if ($precondition instanceof ConnectionOptionsPreconditionInterface) {
+                    $precondition->setConnection($connection);
+                }
+                $precondition->setInstallerOptions($installerOptions);
+                $check = $precondition->performCheck();
+                switch ($check->getState()) {
+                    case PreconditionResult::STATE_SKIPPED:
+                    case PreconditionResult::STATE_PASSED:
+                    case PreconditionResult::STATE_WARNING:
+                        break;
+                    case PreconditionResult::STATE_FAILED:
+                    default:
+                        $e->add($precondition->getName() . ': ' . $check->getMessage());
+                        break;
+                }
+            }
+        } catch (UserMessageException $x) {
+            $e->add($x);
+        }
+        if ($e->has()) {
+            $this->set('error', $e);
+        } else {
+            $this->set('backgroundFade', 0);
+            $spl = $this->getInstaller()->getStartingPoint(true);
+            $this->set('installPackage', $spl->getPackageHandle());
+            $this->set('installRoutines', $spl->getInstallRoutines());
+            $this->set(
+                'successMessage',
+                t(
+                    'concrete5 has been installed. You have been logged in as <b>%s</b> with the password you chose. If you wish to change this password, you may do so from the users area of the dashboard.',
+                    USER_SUPER
+                )
+            );
+        }
+    }
+
+    private function setInstallStep()
+    {
+        $sets = $this->getSets();
+        if (isset($sets['successMessage'])) {
+            $installStep = static::STEP_INSTALL;
+        } elseif ($this->getAction() == 'setup' || $this->getAction() == 'configure') {
+            $installStep = static::STEP_CONFIGURATION;
+        } elseif (isset($sets['locale']) || (empty($sets['locales']) && empty($sets['onlineLocales']))) {
+            $installStep = static::STEP_PRECONDITIONS;
+        } else {
+            $installStep = static::STEP_CHOOSELOCALE;
+        }
+        $this->set('installStep', $installStep);
+    }
+
+    /**
+     * @param string $languageID
+     *
+     * @return array
+     */
+    private function getCountriesForLanguage($languageID)
+    {
+        $cl = $this->app->make('lists/countries');
+        $recommendedCountries = [];
+        foreach ($cl->getCountriesForLanguage($languageID) as $countryID) {
+            $recommendedCountries[$countryID] = $cl->getCountryName($countryID);
+        }
+        $otherCountries = [];
+        foreach ($cl->getCountries() as $countryID => $countryName) {
+            if (!isset($recommendedCountries[$countryID])) {
+                $otherCountries[$countryID] = $countryName;
+            }
+        }
+        if (count($recommendedCountries) === 0) {
+            $result = $otherCountries;
+        } elseif (count($otherCountries) === 0) {
+            $result = $recommendedCountries;
+        } else {
+            $result = [
+                t('** Recommended Countries') => $recommendedCountries,
+                t('** Other Countries') => $otherCountries,
+            ];
+        }
+
+        return $result;
     }
 }

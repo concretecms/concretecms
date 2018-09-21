@@ -31,11 +31,18 @@ class Multilingual extends Page
 
     public function unmap()
     {
-        Section::unregisterPage($this->page);
-        $r = new PageEditResponse();
-        $r->setPage($this->page);
-        $r->setMessage(t('Page unmapped.'));
-        $r->outputJSON();
+        $section = Section::getByID((int) $this->request->request('section'));
+        if (is_object($section)) {
+            $relatedID = $section->getTranslatedPageID($this->page);
+            $relatedPage = \Page::getByID((int) $relatedID);
+            $r = new PageEditResponse();
+            $r->setPage($relatedPage);
+            if (!$relatedPage->isError()) {
+                Section::unregisterPage($relatedPage);
+                $r->setMessage(t('Page unmapped.'));
+            }
+            $r->outputJSON();
+        }
     }
 
     public function assign()
@@ -116,6 +123,7 @@ class Multilingual extends Page
                     }
                     $ih = Core::make('multilingual/interface/flag');
                     $icon = (string) $ih->getSectionFlagIcon($ms);
+                    $pr->setPage($newPage);
                     $pr->setAdditionalDataAttribute('name', $newPage->getCollectionName());
                     $pr->setAdditionalDataAttribute('link', $newPage->getCollectionLink());
                     $pr->setAdditionalDataAttribute('icon', $icon);

@@ -1,0 +1,21 @@
+.ccm-block-calendar-wrapper hr.fc-divider {
+    margin: 0;
+}
+
+div.ccm-block-calendar-event-dialog-details {
+    background: #FFF;
+    margin: 20px auto;
+    max-width: 500px;
+    padding: 20px;
+    position: relative;
+    width: auto;
+}
+
+div.ccm-block-calendar-event-dialog-details h3 {
+    margin-top: 0;
+}
+
+div.ccm-block-calendar-dialog-event-time {
+    font-weight: bold;
+    margin-bottom: 5px;
+}

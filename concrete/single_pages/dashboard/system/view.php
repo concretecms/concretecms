@@ -21,7 +21,7 @@ for ($i = 0; $i < count($categories); ++$i) {
     foreach ($subcats as $catID) {
         $subcat = Page::getByID($catID, 'ACTIVE');
         $catp = new Permissions($subcat);
-        if ($catp->canRead()) {
+        if ($catp->canRead() && !$subcat->getAttribute("exclude_nav")) {
             $show[] = $subcat;
         }
     }

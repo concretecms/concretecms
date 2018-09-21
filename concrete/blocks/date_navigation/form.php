@@ -5,7 +5,7 @@
         <label for='title' class="control-label"><?=t('By Parent Page')?>:</label>
         <div class="checkbox">
             <label>
-                <input <?php if (intval($cParentID) > 0) {
+                <input <?php if (isset($cParentID) && (int) $cParentID > 0) {
     ?>checked<?php 
 } ?> name="filterByParent" type="checkbox" value="1" />
                 <?=t('Filter by Parent Page')?>
@@ -13,7 +13,7 @@
         </div>
         <div id="ccm-block-related-pages-parent-page">
             <?php
-            echo Loader::helper('form/page_selector')->selectPage('cParentID', $cParentID);
+            echo Loader::helper('form/page_selector')->selectPage('cParentID', isset($cParentID) ? $cParentID : null);
             ?>
         </div>
     </div>
@@ -27,7 +27,7 @@
                 foreach ($pagetypes as $ct) {
                     ?>
                     <option
-                        value="<?= $ct->getPageTypeID() ?>" <?php if ($ptID == $ct->getPageTypeID()) {
+                        value="<?= $ct->getPageTypeID() ?>" <?php if ((isset($ptID) ? $ptID : null) == $ct->getPageTypeID()) {
     ?> selected <?php 
 }
                     ?>>
@@ -46,7 +46,7 @@
     <div class="form-group">
         <div class="checkbox">
             <label>
-                <input <?php if (intval($cTargetID) > 0) {
+                <input <?php if (isset($cTargetID) && (int) $cTargetID > 0) {
     ?>checked<?php 
 } ?> name="redirectToResults" type="checkbox" value="1" />
                 <?=t('Redirect to Different Page on Click')?>
@@ -54,7 +54,7 @@
         </div>
         <div id="ccm-block-related-pages-search-page">
             <?php
-            echo Loader::helper('form/page_selector')->selectPage('cTargetID', $cTargetID);
+            echo Loader::helper('form/page_selector')->selectPage('cTargetID', isset($cTargetID) ? $cTargetID : null);
             ?>
         </div>
     </div>

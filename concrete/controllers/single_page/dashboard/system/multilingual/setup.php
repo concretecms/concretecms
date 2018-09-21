@@ -7,6 +7,7 @@ use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Concrete\Core\Page\Template;
 use Concrete\Core\User\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Events;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
@@ -18,6 +19,7 @@ class Setup extends DashboardSitePageController
         $this->set('flag', $this->app->make(Flag::class));
         $cl = $this->app->make('helper/lists/countries');
         $ll = $this->app->make('localization/languages');
+        $siteConfig = $this->getSite()->getConfigRepository();
         $languages = $ll->getLanguageList();
         $templates = ['' => t('** Choose a Page Template')];
         foreach (Template::getList() as $template) {
@@ -30,7 +32,7 @@ class Setup extends DashboardSitePageController
         // settings section
         $defaultSourceLanguage = '';
         $defaultSourceCountry = '';
-        $defaultSourceLocale = $this->getSite()->getConfigRepository()->get('multilingual.default_source_locale');
+        $defaultSourceLocale = $siteConfig->get('multilingual.default_source_locale');
         if ($defaultSourceLocale) {
             if (strpos($defaultSourceLocale, '_') === false) {
                 $defaultSourceLanguage = $defaultSourceLocale;
@@ -40,8 +42,9 @@ class Setup extends DashboardSitePageController
         }
         $this->set('defaultSourceLanguage', $defaultSourceLanguage);
         $this->set('defaultSourceCountry', $defaultSourceCountry);
-        $this->set('redirectHomeToDefaultLocale', $this->getSite()->getConfigRepository()->get('multilingual.redirect_home_to_default_locale'));
-        $this->set('useBrowserDetectedLocale', $this->getSite()->getConfigRepository()->get('multilingual.use_browser_detected_locale'));
+        $this->set('redirectHomeToDefaultLocale', $siteConfig->get('multilingual.redirect_home_to_default_locale'));
+        $this->set('useBrowserDetectedLocale', $siteConfig->get('multilingual.use_browser_detected_locale'));
+        $this->set('alwaysTrackUserLocale', $siteConfig->get('multilingual.always_track_user_locale'));
     }
 
     public function get_countries_for_language()
@@ -106,7 +109,6 @@ class Setup extends DashboardSitePageController
             $locale = $service->add($this->getSite(), $this->request->request->get('msLanguage'), $this->request->request->get('msCountry'));
             $service->addHomePage($locale, $template, $this->request->request->get('homePageName'), $this->request->request->get('urlSlug'));
             $this->flash('success', t('Locale added successfully.'));
-
             return new JsonResponse($locale);
         } else {
             return new JsonResponse($this->error);
@@ -124,11 +126,12 @@ class Setup extends DashboardSitePageController
             $locale = $service->getByID($this->post('defaultLocale'));
             if (is_object($locale)) {
                 /* var \Concrete\Core\Entity\Site\Locale $locale */
+                $siteConfig = $this->getSite()->getConfigRepository();
                 $service->setDefaultLocale($locale);
                 $redirectHomeToDefaultLocale = $this->post('redirectHomeToDefaultLocale') ? true : false;
-                $this->getSite()->getConfigRepository()->save('multilingual.redirect_home_to_default_locale', $redirectHomeToDefaultLocale);
+                $siteConfig->save('multilingual.redirect_home_to_default_locale', $redirectHomeToDefaultLocale);
                 if ($redirectHomeToDefaultLocale) {
-                    $this->getSite()->getConfigRepository()->save('multilingual.use_browser_detected_locale', $this->post('useBrowserDetectedLocale') ? true : false);
+                    $siteConfig->save('multilingual.use_browser_detected_locale', $this->post('useBrowserDetectedLocale') ? true : false);
                 }
                 $defaultSourceLocale = '';
                 $s = $this->post('defaultSourceLanguage');
@@ -139,7 +142,8 @@ class Setup extends DashboardSitePageController
                         $defaultSourceLocale .= '_' . $s;
                     }
                 }
-                $this->getSite()->getConfigRepository()->save('multilingual.default_source_locale', $defaultSourceLocale);
+                $siteConfig->save('multilingual.default_source_locale', $defaultSourceLocale);
+                $siteConfig->save('multilingual.always_track_user_locale', $this->post('alwaysTrackUserLocale') ? true : false);
                 $this->flash('success', t('Default Section settings updated.'));
                 $this->redirect('/dashboard/system/multilingual/setup', 'view');
             } else {
@@ -215,6 +219,10 @@ class Setup extends DashboardSitePageController
                     $editingLocale->setCountry($msCountry);
                     $service->updatePluralSettings($editingLocale);
                     $this->entityManager->flush($editingLocale);
+                    
+                    $event = new \Symfony\Component\EventDispatcher\GenericEvent();
+                    $event->setArgument('locale', $editingLocale);
+                    Events::dispatch('on_locale_change', $event);
                 }
             }
         }

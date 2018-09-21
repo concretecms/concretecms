@@ -26,7 +26,9 @@ if ($akSelectAllowMultipleValues && !$akSelectAllowOtherValues) {
  */
 if (!$akSelectAllowMultipleValues && !$akSelectAllowOtherValues && !$akDisplayMultipleValuesOnSelect) {
     $form = Loader::helper('form');
-    $options = array('' => t('** None'));
+    if (!$akHideNoneOption) {
+        $options = array('' => t('** None'));
+    }
     foreach ($controller->getOptions() as $option) {
         $options[$option->getSelectAttributeOptionID()] = $option->getSelectAttributeOptionDisplayValue();
     }
@@ -43,15 +45,18 @@ if (!$akSelectAllowMultipleValues && !$akSelectAllowOtherValues && !$akDisplayMu
  */
 if (!$akSelectAllowMultipleValues && !$akSelectAllowOtherValues && $akDisplayMultipleValuesOnSelect) {
 	$form = Loader::helper('form');
-	?>
 
-	<div class="radio"><label>
-			<?=$form->radio($view->field('atSelectOptionValue'), '', empty($selectedOptionIDs) ? '' : $selectedOptionIDs[0])?>
-			<?=t('None')?>
-		</label>
-	</div>
+    if (!$akHideNoneOption) {
+        ?>
+        <div class="radio"><label>
+                <?= $form->radio($view->field('atSelectOptionValue'), '', empty($selectedOptionIDs) ? '' : $selectedOptionIDs[0]) ?>
+                <?= t('None') ?>
+            </label>
+        </div>
 
-	<?php
+        <?php
+    }
+
 	foreach ($controller->getOptions() as $opt) { ?>
 
 		<div class="radio"><label>

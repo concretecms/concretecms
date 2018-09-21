@@ -1,19 +1,33 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
+use Concrete\Core\Entity\File\Image\Thumbnail\Type\Type as ThumbnailTypeEntity;
+use Concrete\Core\Entity\File\Image\Thumbnail\Type\TypeFileSet as ThumbnailTypeFileSet;
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
-use Doctrine\DBAL\Schema\Schema;
+use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
-class Version20170804000000 extends AbstractMigration
+class Version20170804000000 extends AbstractMigration implements RepeatableMigrationInterface
 {
-    public function up(Schema $schema)
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Updater\Migrations\AbstractMigration::upgradeDatabase()
+     */
+    public function upgradeDatabase()
     {
+        $this->refreshEntities([
+            ThumbnailTypeEntity::class,
+            ThumbnailTypeFileSet::class,
+        ]);
+
         $type = Type::getByHandle('file_manager_detail');
         if ($type) {
-            /**
+            /*
              * Fix issue where file manager detail thumbnails were being added without a height.
-             * @var $type \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type
+             *
+             * @var \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type $type
              */
             if (!$type->getHeight()) {
                 $type->setHeight($type->getWidth());
@@ -22,9 +36,5 @@ class Version20170804000000 extends AbstractMigration
                 $em->flush();
             }
         }
-    }
-
-    public function down(Schema $schema)
-    {
     }
 }

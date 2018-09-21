@@ -15,33 +15,41 @@ for ($i = 1; $i <= 12; ++$i) {
 }
 
 $values = array();
-foreach (array(12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11) as $hour) {
-    $values[] = $hour . ':00am';
-    $values[] = $hour . ':05am';
-    $values[] = $hour . ':10am';
-    $values[] = $hour . ':15am';
-    $values[] = $hour . ':20am';
-    $values[] = $hour . ':25am';
-    $values[] = $hour . ':30am';
-    $values[] = $hour . ':35am';
-    $values[] = $hour . ':40am';
-    $values[] = $hour . ':45am';
-    $values[] = $hour . ':50am';
-    $values[] = $hour . ':55am';
-}
-foreach (array(12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11) as $hour) {
-    $values[] = $hour . ':00pm';
-    $values[] = $hour . ':05pm';
-    $values[] = $hour . ':10pm';
-    $values[] = $hour . ':15pm';
-    $values[] = $hour . ':20pm';
-    $values[] = $hour . ':25pm';
-    $values[] = $hour . ':30pm';
-    $values[] = $hour . ':35pm';
-    $values[] = $hour . ':40pm';
-    $values[] = $hour . ':45pm';
-    $values[] = $hour . ':50pm';
-    $values[] = $hour . ':55pm';
+if (Punic\Calendar::has12HoursClock()) {
+    foreach (array(12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11) as $hour) {
+        $values[] = $hour . ':00am';
+        $values[] = $hour . ':05am';
+        $values[] = $hour . ':10am';
+        $values[] = $hour . ':15am';
+        $values[] = $hour . ':20am';
+        $values[] = $hour . ':25am';
+        $values[] = $hour . ':30am';
+        $values[] = $hour . ':35am';
+        $values[] = $hour . ':40am';
+        $values[] = $hour . ':45am';
+        $values[] = $hour . ':50am';
+        $values[] = $hour . ':55am';
+    }
+    foreach (array(12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11) as $hour) {
+        $values[] = $hour . ':00pm';
+        $values[] = $hour . ':05pm';
+        $values[] = $hour . ':10pm';
+        $values[] = $hour . ':15pm';
+        $values[] = $hour . ':20pm';
+        $values[] = $hour . ':25pm';
+        $values[] = $hour . ':30pm';
+        $values[] = $hour . ':35pm';
+        $values[] = $hour . ':40pm';
+        $values[] = $hour . ':45pm';
+        $values[] = $hour . ':50pm';
+        $values[] = $hour . ':55pm';
+    }
+} else {
+    foreach (range(0, 23) as $hour) {
+        foreach (range(0, 55, 5) as $minute) {
+            $values[] = $hour . ':' . substr('0' . $minute, -2);
+        }
+    }
 }
 
 $repeats = array(
@@ -69,7 +77,7 @@ $weekDays = \Punic\Calendar::getSortedWeekdays('wide');
                 <div class="col-sm-6 ccm-date-time-date-group">
                     <div class="row">
                         <div class="col-sm-12">
-                            <label class="control-label"><?= t('From') ?></label> <i
+                            <label class="control-label"><?= tc('Start date', 'From')  ?></label> <i
                                 class="fa fa-info-circle launch-tooltip"
                                 title="<?php echo t('Choose Repeat Event and choose a frequency to make this event recurring.') ?>"></i>
                         </div>
@@ -91,7 +99,7 @@ $weekDays = \Punic\Calendar::getSortedWeekdays('wide');
                 <div class="col-sm-6 ccm-date-time-date-group">
                     <div class="row">
                         <div class="col-sm-12">
-                            <label class="control-label"><?= t('To') ?></label>
+                            <label class="control-label"><?= tc('End date', 'To') ?></label>
                         </div>
                     </div>
                     <div class="row">
@@ -175,31 +183,46 @@ $weekDays = \Punic\Calendar::getSortedWeekdays('wide');
 
                 <div class="form-group">
                     <label for="<%=options.namespace%>_pdRepeatPeriodMonthsRepeatBy_<%=repetition.setID%>" class="control-label"><?= t('Repeat By') ?></label>
-                    <div class="">
+                    <div class="form-group">
                         <div class="radio">
                             <label>
                                 <input type="radio" name="<%=options.namespace%>_pdRepeatPeriodMonthsRepeatBy_<%=repetition.setID%>" <% if (repetition.pdRepeatPeriodMonthsRepeatBy == 'month') { %>checked<% } %> value="month">
-                                <?= t('Day of Month')?>
+                                <?= t('Same date.')?>
                             </label>
+                            <div class="help-block">
+                                <?=t('e.g. every Dec 25th...')?>
+                            </div>
+
                         </div>
+                    </div>
+                    <div class="form-group">
                         <div class="radio">
                             <label>
                                 <input type="radio" name="<%=options.namespace%>_pdRepeatPeriodMonthsRepeatBy_<%=repetition.setID%>" <% if (repetition.pdRepeatPeriodMonthsRepeatBy == 'week') { %>checked<% } %> value="week">
-                                <?= t('Day of Week')?>
+                                <?= t('Same type of day from start of the month.')?>
                             </label>
+                            <div class="help-block">
+                                <?=t('e.g. every third Thursday...')?>
+                            </div>
                         </div>
 
+                    </div>
+                    <div class="form-group">
                         <div class="radio">
                             <label>
                                 <input type="radio" name="<%=options.namespace%>_pdRepeatPeriodMonthsRepeatBy_<%=repetition.setID%>" <% if (repetition.pdRepeatPeriodMonthsRepeatBy == 'lastweekday') { %>checked<% } %> value="lastweekday">
-                                <?= t('The last ') ?>
+                                <?= t('The last type of day in the month.') ?>
+                            </label>
+                            <div>
                                 <select name="<%=options.namespace%>_pdRepeatPeriodMonthsRepeatLastDay_<%=repetition.setID%>" class="form-control">
                                     <?php foreach($weekDays as $weekDay) { ?>
                                         <option value="<?=$weekDay['id']?>" <% if (repetition.pdRepeatPeriodMonthsRepeatLastDay == '<?=$weekDay['id']?>') { %>selected<% } %>><?=h($weekDay['name'])?></option>
                                     <?php } ?>
                                 </select>
-
-                            </label>
+                            </div>
+                            <div class="help-block">
+                                <?=t('e.g. every last Friday...')?>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -2,25 +2,31 @@
 
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
-use Concrete\Core\Page\Page;
-use Doctrine\DBAL\Migrations\AbstractMigration;
-use Doctrine\DBAL\Schema\Schema;
-use ORM;
+use Concrete\Core\Updater\Migrations\AbstractMigration;
+use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
-class Version20160412000000 extends AbstractMigration
+class Version20160412000000 extends AbstractMigration implements RepeatableMigrationInterface
 {
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Doctrine\DBAL\Migrations\AbstractMigration::getDescription()
+     */
+    public function getDescription()
+    {
+        return '5.7.5.7';
+    }
 
-    public function up(Schema $schema)
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Updater\Migrations\AbstractMigration::upgradeDatabase()
+     */
+    public function upgradeDatabase()
     {
         // background size/position
-        \Concrete\Core\Database\Schema\Schema::refreshCoreXMLSchema(array(
-            'FileImageThumbnailPaths'
-        ));
+        \Concrete\Core\Database\Schema\Schema::refreshCoreXMLSchema([
+            'FileImageThumbnailPaths',
+        ]);
     }
-
-    public function down(Schema $schema)
-    {
-    }
-
-
 }

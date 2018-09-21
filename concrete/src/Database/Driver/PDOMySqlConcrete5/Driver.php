@@ -2,6 +2,7 @@
 namespace Concrete\Core\Database\Driver\PDOMySqlConcrete5;
 
 use Concrete\Core\Database\Connection\PDOConnection;
+use Concrete\Core\Database\Platforms\MySQL80Platform;
 
 /**
  * PDO MySql driver.
@@ -10,7 +11,7 @@ use Concrete\Core\Database\Connection\PDOConnection;
  */
 class Driver extends \Doctrine\DBAL\Driver\PDOMySql\Driver
 {
-    public function connect(array $params, $username = null, $password = null, array $driverOptions = array())
+    public function connect(array $params, $username = null, $password = null, array $driverOptions = [])
     {
         $conn = new PDOConnection(
             $this->_constructPdoDsn($params),
@@ -23,11 +24,29 @@ class Driver extends \Doctrine\DBAL\Driver\PDOMySql\Driver
     }
 
     /**
+     * {@inheritdoc}
+     *
+     * @see \Doctrine\DBAL\Driver\AbstractMySQLDriver::createDatabasePlatformForVersion()
+     */
+    public function createDatabasePlatformForVersion($version)
+    {
+        if (false === stripos($version, 'mariadb')) {
+            if (preg_match('/^(\d+)/', $version, $match)) {
+                if ((int) $match[1] >= 8) {
+                    return new MySQL80Platform();
+                }
+            }
+        }
+
+        return parent::createDatabasePlatformForVersion($version);
+    }
+
+    /**
      * Constructs the MySql PDO DSN.
      *
      * @param array $params
      *
-     * @return string The DSN.
+     * @return string the DSN
      */
     private function _constructPdoDsn(array $params)
     {

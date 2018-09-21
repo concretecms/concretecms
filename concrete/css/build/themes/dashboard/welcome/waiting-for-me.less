@@ -10,6 +10,30 @@ div.ccm-block-desktop-waiting-for-me {
     border-bottom: 1px solid #d6d6d8;
     font-weight: normal;
     margin-bottom: 20px;
+    position: relative;
+  }
+
+  i.ccm-block-desktop-waiting-for-me-loader {
+    display: none;
+    position: absolute;
+    top: 5px;
+    right: 0px;
+    font-size: 18px;
+  }
+
+  div.ccm-block-desktop-waiting-for-me-loading {
+
+    i.ccm-block-desktop-waiting-for-me-loader {
+      display: block;
+    }
+
+    div.ccm-block-desktop-waiting-for-me-item {
+      opacity: 0.4
+    }
+
+    div.ccm-pagination-wrapper {
+      opacity: 0.4
+    }
   }
 
   div.ccm-block-desktop-waiting-for-me-item {
@@ -57,7 +81,6 @@ div.ccm-block-desktop-waiting-for-me {
       font-size: 0.9em;
 
       div.ccm-block-desktop-waiting-for-me-author-comment {
-        margin-top: 0px;
         color: #999;
         margin-top: 5px;
         border-left: 5px solid #efefef;
@@ -124,7 +147,10 @@ div.ccm-block-desktop-waiting-for-me {
         }
       }
     }
-
-
   }
+
+  div.ccm-pagination-wrapper {
+    text-align: center;
+  }
+
 }

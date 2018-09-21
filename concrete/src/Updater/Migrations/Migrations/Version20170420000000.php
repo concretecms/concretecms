@@ -1,45 +1,26 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
-use Doctrine\DBAL\Schema\Schema;
 use Concrete\Core\Page\Page;
-use Concrete\Core\Page\Single as SinglePage;
-use Concrete\Core\Support\Facade\Application;
-use Concrete\Core\Attribute\Category\PageCategory;
+use Concrete\Core\Updater\Migrations\AbstractMigration;
+use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
-class Version20170420000000 extends AbstractMigration
+class Version20170420000000 extends AbstractMigration implements RepeatableMigrationInterface
 {
-    public function up(Schema $schema)
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Updater\Migrations\AbstractMigration::upgradeDatabase()
+     */
+    public function upgradeDatabase()
     {
-        $pageAttributeCategory = Application::getFacadeApplication()->make(PageCategory::class);
-        /* @var PageCategory $pageAttributeCategory */
-        $availableAttributes = [];
-        foreach (['meta_keywords'] as $akHandle) {
-            $availableAttributes[$akHandle] = $pageAttributeCategory->getAttributeKeyByHandle($akHandle) ? true : false;
-        }
-
         Page::getByPath('/dashboard/system/backup')->delete();
         Page::getByPath('/dashboard/system/backup/backup')->delete();
         Page::getByPath('/dashboard/system/backup/update')->delete();
 
-        $page = Page::getByPath('/dashboard/system/update');
-        if (!is_object($page) || $page->isError()) {
-            $sp = SinglePage::add('/dashboard/system/update');
-            $sp->update(array('cName' => 'Update concrete5'));
-        }
+        $this->createSinglePage('/dashboard/system/update', 'Update concrete5');
 
-        $page = Page::getByPath('/dashboard/system/update/update');
-        if (!is_object($page) || $page->isError()) {
-            $sp = SinglePage::add('/dashboard/system/update/update');
-            $sp->update(array('cName' => 'Apply Update'));
-            if ($availableAttributes['meta_keywords']) {
-                $sp->setAttribute('meta_keywords', 'upgrade, new version, update');
-            }
-        }
-    }
-
-    public function down(Schema $schema)
-    {
+        $this->createSinglePage('/dashboard/system/update/update', 'Apply Update', ['meta_keywords' => 'upgrade, new version, update']);
     }
 }

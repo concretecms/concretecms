@@ -43,7 +43,7 @@ class FileLoader implements LoaderInterface {
     public function __construct(Filesystem $files)
     {
         $this->files = $files;
-        $this->defaultPath = DIR_APPLICATION . '/config';
+        $this->defaultPath = DIR_CONFIG_SITE;
         $this->addNamespace('core', DIR_BASE_CORE . '/config');
     }
 

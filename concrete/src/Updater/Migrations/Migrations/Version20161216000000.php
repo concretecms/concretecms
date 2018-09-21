@@ -1,15 +1,34 @@
 <?php
+
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
-use Concrete\Core\Block\BlockType\BlockType;
-use Concrete\Core\Tree\Node\Type\ExpressEntryCategory;
-use Concrete\Core\User\Group\Group;
-use Doctrine\DBAL\Migrations\AbstractMigration;
-use Doctrine\DBAL\Schema\Schema;
 use Concrete\Block\ExpressForm\Controller as ExpressFormBlockController;
+use Concrete\Core\Tree\Node\Type\ExpressEntryCategory;
+use Concrete\Core\Updater\Migrations\AbstractMigration;
+use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
+use Concrete\Core\User\Group\Group;
 
-class Version20161216000000 extends AbstractMigration
+class Version20161216000000 extends AbstractMigration implements RepeatableMigrationInterface
 {
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Doctrine\DBAL\Migrations\AbstractMigration::getDescription()
+     */
+    public function getDescription()
+    {
+        return '8.0.3';
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Updater\Migrations\AbstractMigration::upgradeDatabase()
+     */
+    public function upgradeDatabase()
+    {
+        $this->updateExpressFormPermissions();
+    }
 
     protected function output($message)
     {
@@ -27,15 +46,5 @@ class Version20161216000000 extends AbstractMigration
                 ['add_express_entries']
             );
         }
-    }
-
-
-    public function up(Schema $schema)
-    {
-        $this->updateExpressFormPermissions();
-    }
-
-    public function down(Schema $schema)
-    {
     }
 }

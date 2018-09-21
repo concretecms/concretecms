@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Install\Preconditions;
 
 use Concrete\Core\Error\UserMessageException;
@@ -22,7 +23,6 @@ class RequestUrls implements WebPreconditionInterface
     public function __construct(ResolverManager $resolver)
     {
         $this->resolver = $resolver;
-        $this->request = $request;
     }
 
     /**

@@ -6,19 +6,13 @@ $paginate = ($paginate) ? 'true' : 'false';
 $itemsPerPage = ($paginate) ? $itemsPerPage : -1;
 $blockAreaHandle = $this->block->getAreaHandle();
 
-/** @var \Concrete\Core\Permission\IPService $iph */
-$iph = $app->make('helper/validation/ip');
-$commentRatingIP = $iph->getRequestIP()->getIp();
-
 $u = new User();
-if ($u->isLoggedIn()) {
-    $uID = $u->getUserID();
+if ($u->isRegistered()) {
     $maxFileSize = $maxFileSizeRegistered;
     $maxFiles = $maxFilesRegistered;
 } else {
     $maxFileSize = $maxFileSizeGuest;
     $maxFiles = $maxFilesGuest;
-    $uID = 0;
 }
 
 if (is_object($conversation)) { ?>
@@ -32,7 +26,9 @@ if (is_object($conversation)) { ?>
             cnvID: <?=$conversation->getConversationID()?>,
             blockID: <?=$bID?>,
             cID: <?=$cID?>,
-            posttoken: '<?=$posttoken?>',
+            addMessageToken: '<?=$addMessageToken?>',
+            editMessageToken: '<?=$editMessageToken?>',
+            deleteMessageToken: '<?=$deleteMessageToken?>',
             displayMode: '<?=$displayMode?>',
             addMessageLabel: '<?=$addMessageLabel?>',
             paginate: <?=$paginate?>,
@@ -42,8 +38,6 @@ if (is_object($conversation)) { ?>
             displayPostingForm: '<?=$displayPostingForm?>',
             activeUsers: <?=$app->make('helper/json')->encode($users)?>,
             enableCommentRating: <?=$enableCommentRating?>,
-            commentRatingUserID: <?=$uID?>,
-            commentRatingIP: '<?=$commentRatingIP?>',
             dateFormat: '<?=$dateFormat?>',
             customDateFormat: '<?=$customDateFormat?>',
             blockAreaHandle: '<?=$blockAreaHandle ?>',

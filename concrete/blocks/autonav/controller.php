@@ -69,7 +69,7 @@ class Controller extends BlockController
             $this->cParentID = $c->getCollectionParentID();
             $this->homePageID = $c->getSiteHomePageID();
         } else {
-            $this->homePageID = HOME_CID;
+            $this->homePageID = Page::getHomePageID();
         }
 
         parent::__construct($obj);
@@ -279,7 +279,7 @@ class Controller extends BlockController
 
             //Page ID stuff
             $item_cid = $_c->getCollectionID();
-            $is_home_page = ($item_cid == HOME_CID);
+            $is_home_page = $item_cid && $item_cid == Page::getHomePageID($item_cid);
 
             //Package up all the data
             $navItem = new \stdClass();
@@ -424,15 +424,15 @@ class Controller extends BlockController
             $this->getNavigationArray($cParentID, $orderBy, $level);
 
             // if we're at the top level we add home to the beginning
-            if ($cParentID == 1) {
+            if ($cParentID == Page::getHomePageID($cParentID)) {
                 if ($this->displayUnapproved) {
-                    $tc1 = Page::getByID(HOME_CID, "RECENT");
+                    $tc1 = Page::getByID($cParentID, "RECENT");
                 } else {
-                    $tc1 = Page::getByID(HOME_CID, "ACTIVE");
+                    $tc1 = Page::getByID($cParentID, "ACTIVE");
                 }
                 $niRow = array();
                 $niRow['cvName'] = $tc1->getCollectionName();
-                $niRow['cID'] = HOME_CID;
+                $niRow['cID'] = $cParentID;
                 $niRow['cvDescription'] = $tc1->getCollectionDescription();
                 $niRow['cPath'] = Core::make('helper/navigation')->getLinkToCollection($tc1);
 

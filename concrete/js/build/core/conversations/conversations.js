@@ -1,4 +1,7 @@
-/**
+/* jshint unused:vars, undef:true, browser:true, jquery:true */
+/* global ConcreteEvent, CCM_TOOLS_PATH */
+
+/*
  * $.fn.concreteConversation
  * Functions for conversation handling
  *
@@ -17,12 +20,9 @@
  *    conversationBeforeSubmitForm         : Before submitting form
  *    conversationSubmitForm               : After submitting form
  */
+;(function(global, $) {
+    'use strict';
 
-/* jshint unused:vars, undef:true, browser:true, jquery:true, -W041 */
-/* global CCM_TOOLS_PATH, ConcreteEvent */
-
-(function($, window) {
-    "use strict";
     $.extend($.fn, {
         concreteConversation: function(options) {
             return this.each(function() {
@@ -69,10 +69,13 @@
                 displayMode: 'threaded',
                 itemsPerPage: -1,
                 activeUsers: [],
-                uninitialized: true
+                uninitialized: true,
+                deleteMessageToken: null,
+                addMessageToken: null,
+                editMessageToken: null
             }, options);
 
-            var enablePosting = (obj.options.posttoken != '') ? 1 : 0;
+            var enablePosting = (obj.options.addMessageToken != '') ? 1 : 0;
             var paginate = (obj.options.paginate) ? 1 : 0;
             var orderBy = (obj.options.orderBy);
             var enableOrdering = (obj.options.enableOrdering);
@@ -80,15 +83,13 @@
             var enableCommentRating = (obj.options.enableCommentRating);
             var enableTopCommentReviews = (obj.options.enableTopCommentReviews);
             var displaySocialLinks = (obj.options.displaySocialLinks);
-            var commentRatingUserID = (obj.options.commentRatingUserID);
-            var commentRatingIP = (obj.options.commentRatingIP);
             var addMessageLabel = (obj.options.addMessageLabel) ? obj.options.addMessageLabel : '';
             var dateFormat = (obj.options.dateFormat);
             var customDateFormat = (obj.options.customDateFormat);
             var blockAreaHandle = (obj.options.blockAreaHandle);
-            var maxFiles = (obj.options.maxFiles); // unused
-            var maxFileSize = (obj.options.maxFileSize); // unused
-            var fileExtensions = (obj.options.fileExtensions); // unused
+            // var maxFiles = (obj.options.maxFiles); unused
+            // var maxFileSize = (obj.options.maxFileSize); unused
+            // var fileExtensions = (obj.options.fileExtensions); unused
             var attachmentsEnabled = (obj.options.attachmentsEnabled);
             var attachmentOverridesEnabled = (obj.options.attachmentOverridesEnabled);
 
@@ -108,8 +109,6 @@
                     'enableCommentRating': enableCommentRating,
                     'enableTopCommentReviews': enableTopCommentReviews,
                     'displaySocialLinks': displaySocialLinks,
-                    'commentRatingUserID': commentRatingUserID,
-                    'commentRatingIP': commentRatingIP,
                     'dateFormat': dateFormat,
                     'customDateFormat': customDateFormat,
                     'blockAreaHandle': blockAreaHandle,
@@ -251,7 +250,7 @@
                 });
             }
             var paginate = (obj.options.paginate) ? 1 : 0;
-            var enablePosting = (obj.options.posttoken != '') ? 1 : 0;
+            var enablePosting = (obj.options.addMessageToken != '') ? 1 : 0;
             var addMessageLabel = (obj.options.addMessageLabel) ? obj.options.addMessageLabel : '';
 
             obj.$replyholder = obj.$element.find('div.ccm-conversation-add-reply');
@@ -444,9 +443,7 @@
                     'cID': obj.options.cID,
                     'blockID': obj.options.blockID,
                     'cnvMessageID': cnvMessageID,
-                    'cnvRatingTypeHandle': cnvRatingTypeHandle,
-                    'commentRatingUserID': obj.options.commentRatingUserID,
-                    'commentRatingIP': obj.options.commentRatingIP
+                    'cnvRatingTypeHandle': cnvRatingTypeHandle
                 };
                 $.ajax({
                     type: 'post',
@@ -521,22 +518,30 @@
             var formArray = [{
                 'name': 'cnvMessageID',
                 'value': msgID
+            }, {
+                'name': 'token',
+                'value': obj.options.deleteMessageToken
             }];
 
             $.ajax({
                 type: 'post',
                 data: formArray,
+                dataType: 'json',
                 url: CCM_TOOLS_PATH + '/conversations/delete_message',
-                success: function(html) {
-                    var $parent = $('[data-conversation-message-id=' + msgID + ']');
+                success: function(r) {
+                    if (!r.error) {
+                        var $parent = $('[data-conversation-message-id=' + msgID + ']');
 
-                    if ($parent.length) {
-                        $parent.after(html).remove();
+                        if ($parent.length) {
+                            $parent.remove();
+                        }
+                        obj.updateCount();
+                        if (obj.$deletedialog.dialog)
+                            obj.$deletedialog.dialog('close');
+                        obj.publish('conversationDeleteMessage', { msgID: msgID });
+                    } else {
+                        window.alert(i18n.Error_deleting_message + "\n\n" + r.errors.join("\n"));
                     }
-                    obj.updateCount();
-                    if (obj.$deletedialog.dialog)
-                        obj.$deletedialog.dialog('close');
-                    obj.publish('conversationDeleteMessage', { msgID: msgID });
                 },
                 error: function(e) {
                     obj.publish('conversationDeleteMessageError', { msgID: msgID, error: arguments });
@@ -568,7 +573,7 @@
                 data: formArray,
                 url: CCM_TOOLS_PATH + '/conversations/edit_message',
                 success: function(html) {
-                    var $parent = $('[data-conversation-message-id=' + msgID + ']');
+                    var $parent = $('.ccm-conversation-message[data-conversation-message-id=' + msgID + ']');
                     var $previousContents = $parent;
                     $parent.after(html).remove();
                     $('.ccm-conversation-attachment-container').hide();
@@ -602,7 +607,7 @@
                 data: formArray,
                 url: CCM_TOOLS_PATH + '/conversations/flag_message',
                 success: function(html) {
-                    var $parent = $('[data-conversation-message-id=' + msgID + ']');
+                    var $parent = $('.ccm-conversation-message[data-conversation-message-id=' + msgID + ']');
 
                     if ($parent.length) {
                         $parent.after(html).remove();
@@ -619,7 +624,7 @@
         addMessageFromJSON: function($form, json) {
             var obj = this;
             obj.publish('conversationBeforeAddMessageFromJSON', { json: json, form: $form });
-            var enablePosting = (obj.options.posttoken != '') ? 1 : 0;
+            var enablePosting = (obj.options.addMessageToken != '') ? 1 : 0;
             var formArray = [{
                 'name': 'cnvMessageID',
                 'value': json.cnvMessageID
@@ -642,7 +647,7 @@
                 data: formArray,
                 url: CCM_TOOLS_PATH + '/conversations/message_detail',
                 success: function(html) {
-                    var $parent = $('[data-conversation-message-id=' + json.cnvMessageParentID + ']');
+                    var $parent = $('.ccm-conversation-message[data-conversation-message-id=' + json.cnvMessageParentID + ']');
 
                     if ($parent.length) {
                         $parent.after(html);
@@ -675,7 +680,7 @@
         },
         updateMessageFromJSON: function($form, json) {
             var obj = this;
-            var enablePosting = (obj.options.posttoken != '') ? 1 : 0;
+            var enablePosting = (obj.options.addMessageToken != '') ? 1 : 0;
             var formArray = [{
                 'name': 'cnvMessageID',
                 'value': json.cnvMessageID
@@ -725,7 +730,7 @@
 
             formArray.push({
                 'name': 'token',
-                'value': obj.options.posttoken
+                'value': obj.options.addMessageToken
             }, {
                 'name': 'cnvID',
                 'value': obj.options.cnvID
@@ -784,7 +789,7 @@
 
             formArray.push({
                 'name': 'token',
-                'value': obj.options.posttoken
+                'value': obj.options.editMessageToken
             }, {
                 'name': 'cnvMessageID',
                 'value': cnvMessageID
@@ -881,4 +886,5 @@
             }
         }
     };
-})(jQuery, window);
+
+})(window, jQuery);

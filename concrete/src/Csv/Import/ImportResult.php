@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Csv\Import;
 
 use Concrete\Core\Error\ErrorList\ErrorList;
@@ -42,6 +43,13 @@ class ImportResult implements JsonSerializable
     protected $importSuccessCount;
 
     /**
+     * The data collected during the import process.
+     *
+     * @var array|null
+     */
+    protected $dataCollected;
+
+    /**
      * Initialize the instance.
      *
      * @param ErrorList $errors
@@ -54,6 +62,7 @@ class ImportResult implements JsonSerializable
         $this->lastDataRowIndex = null;
         $this->totalDataRowsProcessed = 0;
         $this->importSuccessCount = 0;
+        $this->dataCollected = null;
     }
 
     /**
@@ -183,5 +192,34 @@ class ImportResult implements JsonSerializable
             'totalDataRowsProcessed' => $this->totalDataRowsProcessed,
             'importSuccessCount' => $this->importSuccessCount,
         ];
+    }
+
+    /**
+     * Set the data collected during the import process.
+     *
+     * @param array|null $value
+     *
+     * @return $this
+     */
+    public function setDataCollected(array $value = null)
+    {
+        $this->dataCollected = $value;
+
+        return $this;
+    }
+
+    /**
+     * Get the data collected during the import process.
+     *
+     * @return array|null If the data is collected, you'll get an array with the keys:
+     * - attributeKeys: the list of attribute keys (\Concrete\Core\Attribute\AttributeKeyInterface[])
+     * - attributeControllers: the list of attribute key controllers (\Concrete\Core\Attribute\Controller[])
+     * - data: a list of array, whose keys are:
+     *   - object: the object associated to the CSV data row (\Concrete\Core\Attribute\ObjectInterface)
+     *   - attributeValues: the list of attribute values (array[\Concrete\Core\Entity\Attribute\Value\AbstractValue|null])
+     */
+    public function getDataCollected()
+    {
+        return $this->dataCollected;
     }
 }

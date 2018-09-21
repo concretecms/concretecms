@@ -70,8 +70,9 @@ if (count($pages) > 0) {
 
     if ($_REQUEST['task'] == 'change_permission_inheritance' && Loader::helper("validation/token")->validate('change_permission_inheritance')) {
         $deferred = false;
+        $homeCID = Page::getHomePageID();
         foreach ($pages as $c) {
-            if ($c->getCollectionID() == HOME_CID) {
+            if ($c->getCollectionID() == $homeCID) {
                 continue;
             }
 

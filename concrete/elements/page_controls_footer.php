@@ -48,7 +48,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
     ?>
     <div id="ccm-page-controls-wrapper" class="ccm-ui">
         <div id="ccm-toolbar" class="<?= $show_titles ? 'titles' : '' ?> <?= $large_font ? 'large-font' : '' ?>">
-            <div class="ccm-mobile-menu-overlay">
+            <div class="ccm-mobile-menu-overlay" style="height: calc(100vh - 48px)">
                 <div class="ccm-mobile-menu-main">
                     <ul class="ccm-mobile-menu-entries">
                         <?php
@@ -91,7 +91,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                             ?>
                             <li class="parent-ul">
                                 <i class="fa fa-cog mobile-leading-icon"></i>
-                                <a href="#"><?php echo t('Page Properties') ?><i class="fa fa-caret-down"></i></a>
+                                <a href="#"><?php echo t('Page Properties') ?></a><i class="fa fa-caret-down drop-down-toggle"></i>
                                 <ul class="list-unstyled">
                                     <?php
                                     $pagetype = PageType::getByID($c->getPageTypeID());
@@ -415,11 +415,17 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
         echo $dh->getIntelligentSearchMenu();
 
         if ($pageInUseBySomeoneElse) {
+            $buttons = array();
+            if ($canApprovePageVersions) {
+                $buttons[] = '<a onclick="$.get(\'' . REL_DIR_FILES_TOOLS_REQUIRED . '/dashboard/sitemap_check_in?cID=' . $c->getCollectionID() . $token . '\', function() { window.location.reload(); })" href="javascript:void(0)" class="dialog-launch btn btn-xs btn-default">' . t('Force Exit Edit Mode') . '</a>';
+            }
+
             echo $cih->notify(array(
                 'title' => t('Editing Unavailable.'),
                 'text' => t("%s is currently editing this page.", $c->getCollectionCheckedOutUserName()),
                 'type' => 'info',
                 'icon' => 'fa fa-exclamation-circle',
+                'buttons' => $buttons
             ));
         } else {
             if ($c->getCollectionPointerID() > 0) {
