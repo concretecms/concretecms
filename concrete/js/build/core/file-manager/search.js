@@ -398,11 +398,11 @@
                 else {
                     image.addEventListener('load', function() {
                         my.popover('toggle');
-                    })
+                    });
                 }
             });
-        })
-    }
+        });
+    };
 
     ConcreteFileManager.prototype.showMenu = function($element, $menu, event) {
         var my = this;
