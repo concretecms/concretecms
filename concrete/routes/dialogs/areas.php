@@ -12,8 +12,5 @@ $router->all('/layout/presets/manage/delete', 'Layout\Presets\Manage::delete');
 $router->all('/layout/presets/{arLayoutID}', 'Layout\Presets::view');
 $router->all('/layout/presets/{arLayoutID}/submit', 'Layout\Presets::submit');
 $router->all('/layout/presets/get/{cID}/{arLayoutPresetID}', 'Layout\Presets::getPresetData');
-$router->all('/edit/add_from_stack', 'Edit\AddFromStack::view');
-$router->all('/edit/add_stack_contents', 'Edit\AddStackContents::view');
-$router->all('/edit/paste', 'Edit\Paste::view');
 $router->all('/edit/permissions', 'Edit\Permissions::view');
 $router->all('/edit/advanced_permissions', 'Edit\AdvancedPermissions::view');
