@@ -180,13 +180,12 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             }
             $this->isMasterCollection = $row['cIsTemplate'];
             $this->loadError(false);
+            if ($cvID != false) {
+                $this->loadVersionObject($cvID);
+            }
         } else {
             // there was no record of this particular collection in the database
             $this->loadError(COLLECTION_NOT_FOUND);
-        }
-
-        if ($cvID != false && !$this->isError()) {
-            $this->loadVersionObject($cvID);
         }
     }
 
