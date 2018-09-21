@@ -20,50 +20,195 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
     use ObjectTrait;
 
     // Properties from database record
+
+    /**
+     * @deprecated what's deprecated is the public part of this property: use the getVersionID() method instead
+     *
+     * @var int|string
+     */
     public $cvID;
+
+    /**
+     * @deprecated what's deprecated is the public part of this property: use the isApproved() method instead
+     *
+     * @var bool|int|string
+     */
     public $cvIsApproved;
+
+    /**
+     * @deprecated what's deprecated is the public part of this property: use the isNew() / removeNewStatus() method instead
+     *
+     * @var bool|int|string
+     */
     public $cvIsNew;
+
+    /**
+     * The collection version handle.
+     *
+     * @var string|null
+     */
     public $cvHandle;
+
+    /**
+     * @deprecated what's deprecated is the public part of this property: use the getVersionName() method instead
+     *
+     * @var string|null
+     */
     public $cvName;
+
+    /**
+     * The collection version description.
+     *
+     * @var string|null
+     */
     public $cvDescription;
+
+    /**
+     * @deprecated what's deprecated is the public part of this property: use the getVersionDateCreated() method instead
+     *
+     * @var string|null
+     */
     public $cvDateCreated;
+
+    /**
+     * The date/time when this collection version was made public.
+     *
+     * @var string|null
+     *
+     * @example '2018-21-31 23:59:59'
+     */
     public $cvDatePublic;
+
+    /**
+     * The ID of the page template.
+     *
+     * @var int|string
+     */
     public $pTemplateID;
+
+    /**
+     * @deprecated what's deprecated is the public part of this property: use the getVersionAuthorUserID() method instead
+     *
+     * @var int|string|null
+     */
     public $cvAuthorUID;
+
+    /**
+     * @deprecated what's deprecated is the public part of this property: use the getVersionApproverUserID() method instead
+     *
+     * @var int|string|null
+     */
     public $cvApproverUID;
+
+    /**
+     * @deprecated what's deprecated is the public part of this property: use the getVersionComments() / setComment() methods instead
+     *
+     * @var string|null
+     */
     public $cvComments;
+
+    /**
+     * The ID of the page theme.
+     *
+     * @var int|string
+     */
     public $pThemeID;
+
+    /**
+     * @deprecated what's deprecated is the public part of this property: use the getPublishDate() / setPublishDate() methods instead
+     *
+     * @var string|null
+     */
     public $cvPublishDate;
+
+    /**
+     * @deprecated what's deprecated is the public part of this property: use the getPublishEndDate() / setPublishEndDate() methods instead
+     *
+     * @var string|null
+     */
     public $cvPublishEndDate;
+
+    /**
+     * @deprecated what's deprecated is the public part of this property: use the getVersionDateApproved() method instead
+     *
+     * @var string|null
+     */
     public $cvDateApproved;
 
     // Other properties
+
+    /**
+     * @deprecated what's deprecated is the public part of this property: use the getCollectionID() method instead
+     *
+     * @var int
+     */
     public $cID;
+
     protected $attributes = array();
+
     public $layoutStyles = array();
+
+    /**
+     * Is this the most recent version?
+     *
+     * @var bool|null
+     *
+     * @see \Concrete\Core\Page\Collection\Version\Version::isMostRecent()
+     */
     protected $isMostRecent;
+
+    /**
+     * The custom area style IDs.
+     *
+     * @var array|null
+     *
+     * @see \Concrete\Core\Page\Collection\Version\Version::getCustomAreaStyles()
+     */
     protected $customAreaStyles;
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\ObjectInterface::getPermissionObjectIdentifier()
+     */
     public function getPermissionObjectIdentifier()
     {
         return $this->getCollectionID() . ':' . $this->getVersionID();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\ObjectInterface::getPermissionResponseClassName()
+     */
     public function getPermissionResponseClassName()
     {
         return '\\Concrete\\Core\\Permission\\Response\\CollectionVersionResponse';
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\ObjectInterface::getPermissionAssignmentClassName()
+     */
     public function getPermissionAssignmentClassName()
     {
         return '\\Concrete\\Core\\Permission\\Assignment\\PageAssignment';
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\ObjectInterface::getPermissionObjectKeyCategoryHandle()
+     */
     public function getPermissionObjectKeyCategoryHandle()
     {
         return 'page';
     }
 
+    /**
+     * Clear the cache for this collection.
+     */
     public function refreshCache()
     {
         $app = Facade::getFacadeApplication();
@@ -76,8 +221,8 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
     /**
      * Get a Version instance given the Collection and a version identifier.
      *
-     * @param \Concrete\Core\Page\Collection $c The collection for which you want the version.
-     * @param int|string $cvID The specific version ID (or 'ACTIVE', 'SCHEDULED', 'RECENT').
+     * @param \Concrete\Core\Page\Collection\Collection $c the collection for which you want the version
+     * @param int|string $cvID the specific version ID (or 'ACTIVE', 'SCHEDULED', 'RECENT')
      *
      * @return static
      */
@@ -128,6 +273,13 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         return $cv;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\ObjectInterface::getObjectAttributeCategory()
+     *
+     * @return \Concrete\Core\Attribute\Category\PageCategory
+     */
     public function getObjectAttributeCategory()
     {
         $app = Facade::getFacadeApplication();
@@ -135,6 +287,13 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         return $app->make('\Concrete\Core\Attribute\Category\PageCategory');
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\ObjectInterface::getAttributeValueObject()
+     *
+     * @return \Concrete\Core\Entity\Attribute\Value\PageValue|null
+     */
     public function getAttributeValueObject($ak, $createIfNotExists = false)
     {
         if (!is_object($ak)) {
@@ -157,22 +316,45 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         }
     }
 
+    /**
+     * Is this version approved?
+     *
+     * @return bool|int|string
+     */
     public function isApproved()
     {
         return $this->cvIsApproved;
     }
 
+    /**
+     * Get the scheduled date/time when the collection is published: start.
+     *
+     * @return string|null
+     *
+     * @example '2018-21-31 23:59:59'
+     */
     public function getPublishDate()
     {
         return $this->cvPublishDate;
     }
 
+    /**
+     * Get the scheduled date/time when the collection is published: end.
+     *
+     * @return string|null
+     *
+     * @example '2018-21-31 23:59:59'
+     */
     public function getPublishEndDate()
     {
         return $this->cvPublishEndDate;
     }
 
-
+    /**
+     * Is this the most recent version?
+     *
+     * @return bool
+     */
     public function isMostRecent()
     {
         if (!isset($this->isMostRecent)) {
@@ -185,41 +367,81 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         return $this->isMostRecent;
     }
 
+    /**
+     * Is this a new version?
+     *
+     * @return bool|number|string
+     */
     public function isNew()
     {
         return $this->cvIsNew;
     }
 
+    /**
+     * Get the collection version ID.
+     *
+     * @return int|string
+     */
     public function getVersionID()
     {
         return $this->cvID;
     }
 
+    /**
+     * Get the collection ID.
+     *
+     * @return int
+     */
     public function getCollectionID()
     {
         return $this->cID;
     }
 
+    /**
+     * The collection version name.
+     *
+     * @return string|null
+     */
     public function getVersionName()
     {
         return $this->cvName;
     }
 
+    /**
+     * Get the collection version comments.
+     *
+     * @return string|null
+     */
     public function getVersionComments()
     {
         return $this->cvComments;
     }
 
+    /**
+     * Get the ID of the user that created this collection version.
+     *
+     * @return int|string|null
+     */
     public function getVersionAuthorUserID()
     {
         return $this->cvAuthorUID;
     }
 
+    /**
+     * Get the ID of the user that approved this collection version.
+     *
+     * @return int|string|null
+     */
     public function getVersionApproverUserID()
     {
         return $this->cvApproverUID;
     }
 
+    /**
+     * Get the name of the user that approved this collection version.
+     *
+     * @return string|null|false return NULL if there's no author, false if it has been deleted, or a string otherwise
+     */
     public function getVersionAuthorUserName()
     {
         if ($this->cvAuthorUID > 0) {
@@ -232,6 +454,11 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         }
     }
 
+    /**
+     * Get the name of the user that approved this collection version.
+     *
+     * @return string|null|false return NULL if there's no author, false if it has been deleted, or a string otherwise
+     */
     public function getVersionApproverUserName()
     {
         if ($this->cvApproverUID > 0) {
@@ -244,6 +471,11 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         }
     }
 
+    /**
+     * Get the custom area style IDs.
+     *
+     * @return array key: area handle, value: the inline stle set ID
+     */
     public function getCustomAreaStyles()
     {
         if (!isset($this->customAreaStyles)) {
@@ -263,9 +495,11 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
     }
 
     /**
-     * Gets the date the collection version was created.
+     * Get the date/time when the collection version was created.
      *
-     * @return string date formated like: 2009-01-01 00:00:00
+     * @return string|null
+     *
+     * @example '2018-21-31 23:59:59'
      */
     public function getVersionDateCreated()
     {
@@ -273,15 +507,22 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
     }
 
     /**
-     * Gets the date the collection version was approved.
+     * Get the date the collection version was approved.
      *
-     * @return null|string date formated like: 2009-01-01 00:00:00
+     * @return string|null
+     *
+     * @example '2018-21-31 23:59:59'
      */
     public function getVersionDateApproved()
     {
         return $this->cvDateApproved;
     }
 
+    /**
+     * Set the collection version comments.
+     *
+     * @param string $comment
+     */
     public function setComment($comment)
     {
         $thisCVID = $this->getVersionID();
@@ -298,6 +539,11 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         $this->cvComments = $comment;
     }
 
+    /**
+     * Set the scheduled date/time when the collection is published: start.
+     *
+     * @param string|null $publishDate Date/time in format like '2018-21-31 23:59:59'
+     */
     public function setPublishDate($publishDate)
     {
         $thisCVID = $this->getVersionID();
@@ -314,6 +560,11 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         $this->cvPublishDate = $publishDate;
     }
 
+    /**
+     * Set the scheduled date/time when the collection is published: end.
+     *
+     * @param string|null $publishEndDate Date/time in format like '2018-21-31 23:59:59'
+     */
     public function setPublishEndDate($publishEndDate)
     {
         $thisCVID = $this->getVersionID();
@@ -330,7 +581,13 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         $this->cvPublishEndDate = $publishEndDate;
     }
 
-
+    /**
+     * Create a new version for the same collection as this collection version.
+     *
+     * @param string $versionComments the new collection version comments
+     *
+     * @return \Concrete\Core\Page\Collection\Version\Version
+     */
     public function createNew($versionComments)
     {
         $app = Facade::getFacadeApplication();
@@ -432,6 +689,13 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         return $nv;
     }
 
+    /**
+     * Approve this collection version.
+     *
+     * @param bool $doReindexImmediately reindex the collection contents now? Otherwise it's reindexing will just be scheduled
+     * @param string|null $cvPublishDate the scheduled date/time when the collection is published (start)
+     * @param string|null $cvPublishEndDate the scheduled date/time when the collection is published (end)
+     */
     public function approve($doReindexImmediately = true, $cvPublishDate = null, $cvPublishEndDate = null)
     {
         $app = Facade::getFacadeApplication();
@@ -543,9 +807,11 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         $this->refreshCache();
     }
 
+    /**
+     * Discard my most recent edit that is pending.
+     */
     public function discard()
     {
-        // discard's my most recent edit that is pending
         if ($this->isNew()) {
             $app = Facade::getFacadeApplication();
             $db = $app->make('database')->connection();
@@ -573,6 +839,11 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         $this->refreshCache();
     }
 
+    /**
+     * Check if this collection version can be discarded.
+     *
+     * @return bool
+     */
     public function canDiscard()
     {
         $result = false;
@@ -590,6 +861,9 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         return $result;
     }
 
+    /**
+     * Mark this collection version as not new.
+     */
     public function removeNewStatus()
     {
         $app = Facade::getFacadeApplication();
@@ -601,6 +875,9 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         $this->refreshCache();
     }
 
+    /**
+     * Mark this collection version as not approved.
+     */
     public function deny()
     {
         $app = Facade::getFacadeApplication();
@@ -632,6 +909,9 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         $this->refreshCache();
     }
 
+    /**
+     * Delete this version and its related data (blocks, feature assignments, attributes, custom styles, ...).
+     */
     public function delete()
     {
         $app = Facade::getFacadeApplication();
@@ -694,6 +974,9 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         $this->refreshCache();
     }
 
+    /**
+     * Clear the publish start date and mark this version as unapproved.
+     */
     private function clearPublishStartDate()
     {
         $app = Facade::getFacadeApplication();
@@ -703,6 +986,9 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         $db->executeQuery($q, array($this->cID));
     }
 
+    /**
+     * Clear the publish end date.
+     */
     private function clearPublishEndDate()
     {
         $app = Facade::getFacadeApplication();
