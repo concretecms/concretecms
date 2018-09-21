@@ -64,7 +64,7 @@ class JsonErrorHandler extends Handler
         ];
 
         if (Misc::canSendHeaders()) {
-            if (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false) {
+            if (isset($_SERVER['HTTP_ACCEPT']) && preg_match('%^(application|\*)/(json|\*)$%', $_SERVER['HTTP_ACCEPT'])) {
                 header('Content-Type: application/json; charset=' . APP_CHARSET, true);
             } else {
                 header('Content-Type: text/plain; charset=' . APP_CHARSET, true);
