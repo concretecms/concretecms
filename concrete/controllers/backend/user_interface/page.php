@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Controller\Backend\UserInterface;
 
+use Concrete\Core\Error\UserMessageException;
 use Page as ConcretePage;
 use Permissions;
 
@@ -24,12 +25,14 @@ abstract class Page extends \Concrete\Controller\Backend\UserInterface
         } else {
             $page = null;
         }
-        if (is_object($page) && !$page->isError()) {
-            $this->setPageObject($page);
-            $request->setCurrentPage($this->page);
-        } else {
+        if (!is_object($page) || $page->getError() == COLLECTION_NOT_FOUND) {
+            throw new UserMessageException(t('Unable to find the specified page.'));
+        }
+        if ($page->isError()) {
             throw new \Exception(t('Access Denied'));
         }
+        $this->setPageObject($page);
+        $request->setCurrentPage($this->page);
     }
 
     public function setPageObject(ConcretePage $c)
