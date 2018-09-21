@@ -1663,10 +1663,14 @@ class Version implements ObjectInterface
         if ($this->fvHasListingThumbnail) {
             $app = Application::getFacadeApplication();
             $config = $app->make('config');
-            $type = Type::getByHandle($config->get('concrete.icons.file_manager_listing.handle'));
-            $result = '<img class="ccm-file-manager-list-thumbnail" src="' . $this->getThumbnailURL($type->getBaseVersion()) . '"';
+            $listingType = Type::getByHandle($config->get('concrete.icons.file_manager_listing.handle'));
+            $detailType = Type::getByHandle($config->get('concrete.icons.file_manager_detail.handle'));
+            $result = '<img class="ccm-file-manager-list-thumbnail ccm-thumbnail-'.$config->get('concrete.file_manager.images.preview_image_size').'" src="' . $this->getThumbnailURL($listingType->getBaseVersion()) . '"';
             if ($config->get('concrete.file_manager.images.create_high_dpi_thumbnails')) {
-                $result .= '  data-at2x="' . $this->getThumbnailURL($type->getDoubledVersion()) . '"';
+                $result .= ' data-at2x="' . $this->getThumbnailURL($listingType->getDoubledVersion()) . '"';
+            }
+            if($config->get('concrete.file_manager.images.preview_image_popover')){
+                $result .= ' data-hover-image="'.$this->getThumbnailURL($detailType->getBaseVersion()).'"';
             }
             $result .= ' />';
         } else {

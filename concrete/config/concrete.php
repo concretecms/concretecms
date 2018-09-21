@@ -523,6 +523,18 @@ return [
             'use_exif_data_to_rotate_images' => false,
             'manipulation_library' => 'gd',
             'create_high_dpi_thumbnails' => true,
+            /*
+             * The style of preview image used in the file_manager
+             *
+             * @var string 'small'(default,30x30), 'large(60x60)' or 'full(size of file_manager_listing)'
+             */
+            'preview_image_size' => 'small',
+            /*
+             * Show file_manager_detail thumbnail as preview image in popover
+             *
+             * @var boolean
+             */
+            'preview_image_popover' => true
         ],
         'results' => 10,
     ],
