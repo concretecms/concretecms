@@ -83,7 +83,7 @@ if (isset($neutralStack)) {
             <div class="container-fluid">
                 <ul class="nav navbar-nav small">
                     <?php
-                    if ($areaPermissions->canAddBlockToArea()) {
+                    if ($cpc->canEditPageContents()) {
                         ?>
                         <li class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#"><?=t('Add')?> <span class="caret"></span></a>
