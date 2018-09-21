@@ -728,7 +728,10 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $u = new User();
         $uID = $u->getUserID();
 
-        $handle = $this->getCollectionHandle();
+        $handle = (string) $this->getCollectionHandle();
+        if ($handle === '') {
+            $handle = Core::make('helper/text')->handle($this->getCollectionName());
+        }
         $cDisplayOrder = $c->getNextSubPageDisplayOrder();
 
         $_cParentID = $c->getCollectionID();
@@ -741,7 +744,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $cPath = $db->fetchColumn($q, $v);
 
         $data = [
-            'handle' => $this->getCollectionHandle(),
+            'handle' => $handle,
             'name' => $this->getCollectionName(),
         ];
         $cobj = parent::addCollection($data);
