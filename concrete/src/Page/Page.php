@@ -160,20 +160,14 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $q0 = 'select Pages.cID, Pages.pkgID, Pages.siteTreeID, Pages.cPointerID, Pages.cPointerExternalLink, Pages.cIsDraft, Pages.cIsActive, Pages.cIsSystemPage, Pages.cPointerExternalLinkNewWindow, Pages.cFilename, Pages.ptID, Collections.cDateAdded, Pages.cDisplayOrder, Collections.cDateModified, cInheritPermissionsFromCID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cCheckedOutUID, cIsTemplate, uID, cPath, cParentID, cChildren, cCacheFullPageContent, cCacheFullPageContentOverrideLifetime, cCacheFullPageContentLifetimeCustom from Pages inner join Collections on Pages.cID = Collections.cID left join PagePaths on (Pages.cID = PagePaths.cID and PagePaths.ppIsCanonical = 1) ';
         //$q2 = "select cParentID, cPointerID, cPath, Pages.cID from Pages left join PagePaths on (Pages.cID = PagePaths.cID and PagePaths.ppIsCanonical = 1) ";
 
-        $v = [$cInfo];
-        $r = $db->executeQuery($q0.$where, $v);
+        $r = $db->executeQuery($q0 . $where, [$cInfo]);
         $row = $r->fetchRow();
         if ($row['cPointerID'] > 0) {
-            $q1 = $q0.'where Pages.cID = ?';
-            $cPointerOriginalID = $row['cID'];
-            $v = [$row['cPointerID']];
-            $cParentIDOverride = $row['cParentID'];
-            $cPathOverride = $row['cPath'];
-            $cIsActiveOverride = $row['cIsActive'];
-            $cPointerID = $row['cPointerID'];
-            $cDisplayOrderOverride = $row['cDisplayOrder'];
-            $r = $db->executeQuery($q1, $v);
+            $originalRow = $row;
+            $r = $db->executeQuery($q0 . 'where Pages.cID = ?', [$row['cPointerID']]);
             $row = $r->fetchRow();
+        } else {
+            $originalRow = null;
         }
 
         if ($r) {
@@ -181,13 +175,13 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                 foreach ($row as $key => $value) {
                     $this->{$key} = $value;
                 }
-                if (isset($cParentIDOverride)) {
-                    $this->cPointerID = $cPointerID;
-                    $this->cIsActive = $cIsActiveOverride;
-                    $this->cPointerOriginalID = $cPointerOriginalID;
-                    $this->cPath = $cPathOverride;
-                    $this->cParentID = $cParentIDOverride;
-                    $this->cDisplayOrder = $cDisplayOrderOverride;
+                if ($originalRow !== null) {
+                    $this->cPointerID = $originalRow['cPointerID'];
+                    $this->cIsActive = $originalRow['cIsActive'];
+                    $this->cPointerOriginalID = $originalRow['cID'];
+                    $this->cPath = $originalRow['cPath'];
+                    $this->cParentID = $originalRow['cParentID'];
+                    $this->cDisplayOrder = $originalRow['cDisplayOrder'];
                 }
                 $this->isMasterCollection = $row['cIsTemplate'];
             } else {
