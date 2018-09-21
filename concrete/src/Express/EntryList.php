@@ -162,10 +162,16 @@ class EntryList extends DatabaseItemList implements PermissionableListItemInterf
                 // we have a match.
                 $entryAssociation = $entry->getEntryAssociation($targetAssociation);
                 if ($entryAssociation) {
-                    $table = 'ase' . $entryAssociation->getID();
-                    $this->query->innerJoin('e', 'ExpressEntityAssociationSelectedEntries', $table, 'e.exEntryID = ' . $table . '.exSelectedEntryID');
-                    $this->query->andWhere($table . '.id = :entryAssociationID' . $entryAssociation->getID());
-                    $this->query->setParameter('entryAssociationID' . $entryAssociation->getID(), $entryAssociation->getID());
+                    $entryAssociationTable = 'a' . $entryAssociation->getID();
+                    $entryAssociationEntriesTable = 'ae' . $entryAssociation->getID();
+
+                    $this->query->innerJoin('e', 'ExpressEntityEntryAssociations', $entryAssociationTable, 'e.exEntryID = ' . $entryAssociationTable . '.exEntryID');
+                    $this->query->innerJoin($entryAssociationTable, 'ExpressEntityAssociationEntries', $entryAssociationEntriesTable, $entryAssociationTable . '.id = ' . $entryAssociationEntriesTable . '.association_id');
+
+                    $this->query->andWhere($entryAssociationTable . '.association_id = :entryAssociationID' . $entryAssociation->getID());
+                    $this->query->andWhere($entryAssociationEntriesTable . '.exEntryID = :selectedEntryID' . $entryAssociation->getID());
+                    $this->query->setParameter('entryAssociationID' . $entryAssociation->getID(), $association->getID());
+                    $this->query->setParameter('selectedEntryID' . $entryAssociation->getID(), $entry->getID());
                 } else {
                     $this->query->andWhere('1 = 0');
                 }
