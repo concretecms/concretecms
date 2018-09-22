@@ -351,8 +351,8 @@ class Controller extends BlockController implements FileTrackableInterface
             $e->add(t('Cropping an image requires setting a max width and max height.'));
         }
 
-        if ($svg && isset($args['constrainImage'])) {
-            $e->add(t('SVG images cannot be size constrained.'));
+        if ($svg && isset($args['cropImage'])) {
+            $e->add(t('SVG images cannot be cropped.'));
         }
 
         return $e;
