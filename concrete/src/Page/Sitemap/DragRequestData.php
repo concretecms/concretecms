@@ -390,7 +390,7 @@ class DragRequestData
             }
             $originalPageType = $originalPage->getPageTypeObject();
             if (!$destinationPageChecker->canAddSubpage($originalPageType)) {
-                return t('You do not have sufficient privileges to move the page "$1%s" under "$2%s".', $originalPage->getCollectionName(), $this->getDestinationPage()->getCollectionName());
+                return t('You do not have sufficient privileges to move the page "%1$s" under "%2$s".', $originalPage->getCollectionName(), $this->getDestinationPage()->getCollectionName());
             }
         }
 
@@ -415,7 +415,7 @@ class DragRequestData
             }
             $originalPageType = $originalPage->getPageTypeObject();
             if (!$destinationPageChecker->canAddSubpage($originalPageType)) {
-                return t('You do not have sufficient privileges to alias the page "$1%s" under "$2%s".', $originalPage->getCollectionName(), $this->getDestinationPage()->getCollectionName());
+                return t('You do not have sufficient privileges to alias the page "%1$s" under "%2$s".', $originalPage->getCollectionName(), $this->getDestinationPage()->getCollectionName());
             }
         }
 
@@ -437,7 +437,7 @@ class DragRequestData
             }
             $originalPageType = $originalPage->getPageTypeObject();
             if (!$destinationPageChecker->canAddSubpage($originalPageType)) {
-                return t('You do not have sufficient privileges to copy the page "$1%s" under "$2%s".', $originalPage->getCollectionName(), $this->getDestinationPage()->getCollectionName());
+                return t('You do not have sufficient privileges to copy the page "%1$s" under "%2$s".', $originalPage->getCollectionName(), $this->getDestinationPage()->getCollectionName());
             }
         }
 
