@@ -376,7 +376,7 @@ class DragRequestData
         $destinationPageID = $this->getDestinationPage()->getCollectionID();
         foreach ($this->getOriginalPages() as $originalPage) {
             if ($originalPage->getCollectionParentID() === $destinationPageID) {
-                return t('"%1$s" is already the parent page of "$2$s".', $this->getDestinationPage()->getCollectionName(), $originalPage->getCollectionName());
+                return t('"%1$s" is already the parent page of "%2$s".', $this->getDestinationPage()->getCollectionName(), $originalPage->getCollectionName());
             }
             $originalPageChecker = new Checker($originalPage);
             if (!$originalPageChecker->canMoveOrCopyPage()) {
