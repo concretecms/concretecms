@@ -383,7 +383,7 @@ class DragRequestData
                 return t('You don\'t have the permission move the page "%s".', $originalPage->getCollectionName());
             }
             if ($originalPage->getCollectionID() == $destinationPageID) {
-                return t('It\'t not possible to move the page "%s" under itself.', $originalPage->getCollectionName());
+                return t('It\'s not possible to move the page "%s" under itself.', $originalPage->getCollectionName());
             }
             if (in_array($destinationPageID, $originalPage->getCollectionChildrenArray())) {
                 return t('It\'s not possible to move the page "%s" under one of its child pages.', $originalPage->getCollectionName());
