@@ -2,13 +2,11 @@
 
 namespace Concrete\Core\Entity\OAuth;
 
+use Doctrine\ORM\Mapping as ORM;
 use League\OAuth2\Server\Entities\AuthCodeEntityInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\Entities\Traits\AuthCodeTrait;
-use League\OAuth2\Server\Entities\Traits\EntityTrait;
-use League\OAuth2\Server\Entities\Traits\TokenEntityTrait;
-use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="AuthCodeRepository")
@@ -18,8 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class AuthCode implements AuthCodeEntityInterface
 {
-
-    use EntityTrait, AuthCodeTrait;
+    use AuthCodeTrait;
 
     /**
      * @ORM\Id @ORM\Column(type="guid")
@@ -51,9 +48,29 @@ class AuthCode implements AuthCodeEntityInterface
     protected $client;
 
     /**
-     * Associate a scope with the token.
+     * {@inheritdoc}
      *
-     * @param ScopeEntityInterface $scope
+     * @see \League\OAuth2\Server\Entities\TokenInterface::getIdentifier()
+     */
+    public function getIdentifier()
+    {
+        return $this->identifier;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \League\OAuth2\Server\Entities\TokenInterface::setIdentifier()
+     */
+    public function setIdentifier($identifier)
+    {
+        $this->identifier = $identifier;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \League\OAuth2\Server\Entities\TokenInterface::addScope()
      */
     public function addScope(ScopeEntityInterface $scope)
     {
@@ -61,9 +78,9 @@ class AuthCode implements AuthCodeEntityInterface
     }
 
     /**
-     * Return an array of scopes associated with the token.
+     * {@inheritdoc}
      *
-     * @return ScopeEntityInterface[]
+     * @see \League\OAuth2\Server\Entities\TokenInterface::getScopes()
      */
     public function getScopes()
     {
@@ -71,9 +88,9 @@ class AuthCode implements AuthCodeEntityInterface
     }
 
     /**
-     * Get the token's expiry date time.
+     * {@inheritdoc}
      *
-     * @return \DateTime
+     * @see \League\OAuth2\Server\Entities\TokenInterface::getExpiryDateTime()
      */
     public function getExpiryDateTime()
     {
@@ -81,9 +98,9 @@ class AuthCode implements AuthCodeEntityInterface
     }
 
     /**
-     * Set the date time when the token expires.
+     * {@inheritdoc}
      *
-     * @param \DateTime $dateTime
+     * @see \League\OAuth2\Server\Entities\TokenInterface::setExpiryDateTime()
      */
     public function setExpiryDateTime(\DateTime $dateTime)
     {
@@ -91,9 +108,9 @@ class AuthCode implements AuthCodeEntityInterface
     }
 
     /**
-     * Set the identifier of the user associated with the token.
+     * {@inheritdoc}
      *
-     * @param string|int $identifier The identifier of the user
+     * @see \League\OAuth2\Server\Entities\TokenInterface::setUserIdentifier()
      */
     public function setUserIdentifier($identifier)
     {
@@ -101,9 +118,9 @@ class AuthCode implements AuthCodeEntityInterface
     }
 
     /**
-     * Get the token user's identifier.
+     * {@inheritdoc}
      *
-     * @return string|int
+     * @see \League\OAuth2\Server\Entities\TokenInterface::getUserIdentifier()
      */
     public function getUserIdentifier()
     {
@@ -111,9 +128,9 @@ class AuthCode implements AuthCodeEntityInterface
     }
 
     /**
-     * Get the client that the token was issued to.
+     * {@inheritdoc}
      *
-     * @return ClientEntityInterface
+     * @see \League\OAuth2\Server\Entities\TokenInterface::getClient()
      */
     public function getClient()
     {
@@ -121,13 +138,12 @@ class AuthCode implements AuthCodeEntityInterface
     }
 
     /**
-     * Set the client that the token was issued to.
+     * {@inheritdoc}
      *
-     * @param ClientEntityInterface $client
+     * @see \League\OAuth2\Server\Entities\TokenInterface::setClient()
      */
     public function setClient(ClientEntityInterface $client)
     {
         $this->client = $client;
     }
-
 }

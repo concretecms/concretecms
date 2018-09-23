@@ -2,9 +2,8 @@
 
 namespace Concrete\Core\Entity\OAuth;
 
-use League\OAuth2\Server\Entities\ScopeEntityInterface;
-use League\OAuth2\Server\Entities\Traits\EntityTrait;
 use Doctrine\ORM\Mapping as ORM;
+use League\OAuth2\Server\Entities\ScopeEntityInterface;
 
 /**
  * @ORM\Entity(repositoryClass="ScopeRepository")
@@ -14,9 +13,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Scope implements ScopeEntityInterface
 {
-
-    use EntityTrait;
-
     /**
      * @var string
      * @ORM\Id @ORM\Column(type="string")
@@ -34,7 +30,27 @@ class Scope implements ScopeEntityInterface
     protected $tokens;
 
     /**
-     * Serialize into a string
+     * {@inheritdoc}
+     *
+     * @see \League\OAuth2\Server\Entities\ScopeEntityInterface::getIdentifier()
+     */
+    public function getIdentifier()
+    {
+        return $this->identifier;
+    }
+
+    /**
+     * @param string $identifier
+     */
+    public function setIdentifier($identifier)
+    {
+        $this->identifier = $identifier;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \JsonSerializable::jsonSerialize()
      */
     public function jsonSerialize()
     {
