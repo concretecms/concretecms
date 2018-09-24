@@ -81,6 +81,8 @@ class EditorServiceProvider extends ServiceProvider
                 'divarea' => [t('Div Editing Area'), t('This plugin uses a <div> element (instead of the <iframe> element) as the editable area. Much similar to inline editing, it allows the content to inherit styles from host page.')],
                 // https://ckeditor.com/cke4/addon/elementspath
                 'elementspath' => [t('Elements Path'), t('This plugin displays the list of HTML elements at the current cursor position.')],
+                // https://ckeditor.com/cke4/addon/emoji
+                'emoji' => [t('Emoji'), t('This plugin adds autocomplete for inserting Unicode emoji characters. Typing a colon ( : ) followed by at least two additional characters will list available emojis.')],
                 // https://ckeditor.com/cke4/addon/enterkey
                 'enterkey' => [t('Enter Key'), t('This plugin defines the Enter key (line breaking) behavior.')],
                 // https://ckeditor.com/cke4/addon/entities

@@ -11,7 +11,7 @@ part of web applications and websites.
 ## Documentation
 
 The full editor documentation is available online at the following address:
-http://docs.ckeditor.com
+https://ckeditor.com/docs/ckeditor4/latest/
 
 ## Installation
 
