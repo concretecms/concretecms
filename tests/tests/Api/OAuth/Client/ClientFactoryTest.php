@@ -8,9 +8,9 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Id\UuidGenerator;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
+use PHPUnit_Framework_TestCase;
 
-class ClientFactoryTest extends TestCase
+class ClientFactoryTest extends PHPUnit_Framework_TestCase
 {
     use MockeryPHPUnitIntegration;
     protected $app;
