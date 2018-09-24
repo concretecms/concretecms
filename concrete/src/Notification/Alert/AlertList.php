@@ -29,6 +29,7 @@ class AlertList extends ItemList implements PaginationProviderInterface
         $this->query->select('naID')
             ->from('NotificationAlerts', 'na')
             ->where('uID = :uID')
+            ->andWhere('naIsArchived = false')
             ->leftJoin('na', 'Notifications', 'n', 'na.nID = n.nID')
             ->leftJoin('n', 'WorkflowProgressNotifications', 'wn', 'wn.nid = n.nID')
             ->leftJoin('wn', 'WorkflowProgress', 'wp', 'wn.wpID = wp.wpID');
