@@ -120,11 +120,6 @@ class AddBlockToAreaAreaKey extends AreaKey
                 $allBTIDs = $item->get();
             }
             foreach ($list as $l) {
-                if (!method_exists($l, 'getBlockTypesAllowedPermission')) {
-                    if (false) {
-                        continue;
-                    }
-                }
                 switch ($l->getBlockTypesAllowedPermission()) {
                     case 'N':
                         $btIDs = [];
