@@ -51,7 +51,7 @@ $image = (date('Ymd') - 1) . '.jpg';
                         ?>
                         <div class="form-group">
                             <label class="control-label"
-                                   for="uName"><?= Config::get('concrete.user.registration.email_registration') ? t('Email Address') : t('Username') ?></label>
+                                   for="uName"><?= $emailLogin ? t('Email Address') : t('Username') ?></label>
                             <input name="uName" id="uName" class="form-control" autofocus="autofocus"/>
                         </div>
 
