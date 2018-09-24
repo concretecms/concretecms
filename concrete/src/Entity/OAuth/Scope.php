@@ -20,6 +20,12 @@ class Scope implements ScopeEntityInterface
     protected $identifier;
 
     /**
+     * @var string
+     * @ORM\Column(type="string")
+     */
+    protected $description;
+
+    /**
      * @ORM\ManyToMany(targetEntity="AuthCode", mappedBy="scopes")
      */
     protected $codes;
@@ -48,9 +54,26 @@ class Scope implements ScopeEntityInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string $description
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+
+    /**
+     * Serialize this scope into a string.
+     * This method MUST return a string and must match the scope ID that clients will request
      *
-     * @see \JsonSerializable::jsonSerialize()
+     * @return string
      */
     public function jsonSerialize()
     {

@@ -1170,9 +1170,7 @@ return [
     ],
 
     'api' => [
-
         'scopes' => [
-
             'system',
             'site',
             'account'

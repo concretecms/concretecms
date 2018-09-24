@@ -60,8 +60,11 @@ class ServiceFactory
      */
     public function createService(OAuthServiceFactory $factory)
     {
-        $appId = $this->config->get('auth.external_concrete5.appid');
-        $appSecret = $this->config->get('auth.external_concrete5.secret');
+        $config = $this->config->get('auth.external_concrete5');
+
+        $appId = array_get($config, 'appid');
+        $appSecret = array_get($config, 'secret');
+        $baseUrl = array_get($config, 'url');
 
         // Get the callback url
         /** @var Url $callbackUrl */
@@ -77,11 +80,14 @@ class ServiceFactory
         // Create a new session storage object and pass it the active session
         $storage = new SymfonySession($this->session, false);
 
-        $baseUrl = $this->urlResolver->resolve(['']);
-        $baseApiUrl = new Uri((string) $baseUrl);
+        $baseApiUrl = new Uri($baseUrl);
 
         // Create the service using the oauth service factory
-        return $factory->createService('external_concrete5', $credentials, $storage, [ExternalConcrete5Service::SCOPE_ACCOUNT], $baseApiUrl);
+        return $factory->createService('external_concrete5', $credentials, $storage, [
+            ExternalConcrete5Service::SCOPE_SYSTEM,
+            ExternalConcrete5Service::SCOPE_SITE,
+            ExternalConcrete5Service::SCOPE_ACCOUNT,
+        ], $baseApiUrl);
     }
 
 }

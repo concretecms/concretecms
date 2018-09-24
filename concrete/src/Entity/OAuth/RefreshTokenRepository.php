@@ -45,7 +45,7 @@ class RefreshTokenRepository extends EntityRepository implements RefreshTokenRep
             $token = $this->find($tokenId);
 
             if ($token) {
-                $em->detach($token);
+                $em->remove($token);
             }
         });
     }

@@ -13,11 +13,19 @@ use OAuth\OAuth2\Token\TokenInterface;
 class ExternalConcrete5Service extends AbstractService
 {
 
-    const SCOPE_SERVICE = 'service';
+    /** @var string Scope for system info */
+    const SCOPE_SYSTEM = 'system';
+
+    /** @var string Scope for site tree info */
     const SCOPE_SITE = 'site';
+
+    /** @var string Scope for authenticated user */
     const SCOPE_ACCOUNT = 'account';
 
+    /** @var string Authorization path */
     const PATH_AUTHORIZE = '/oauth/2.0/authorize';
+
+    /** @var string Token path */
     const PATH_TOKEN = '/oauth/2.0/token';
 
     /**
@@ -25,9 +33,7 @@ class ExternalConcrete5Service extends AbstractService
      *
      *
      * @param string $responseBody
-     *
      * @return TokenInterface
-     *
      * @throws TokenResponseException
      */
     protected function parseAccessTokenResponse($responseBody)
@@ -74,7 +80,8 @@ class ExternalConcrete5Service extends AbstractService
 
     /**
      * Return a copy of our base api uri
-     * @return null|\OAuth\Common\Http\Uri\UriInterface
+     *
+     * @return \OAuth\Common\Http\Uri\UriInterface
      */
     public function getBaseApiUri()
     {
@@ -83,6 +90,12 @@ class ExternalConcrete5Service extends AbstractService
 
     /**
      * Declare that we use the bearer header field
+     * We want our headers to be:
+     *     Authorization: Bearer SOMETOKEN
+     *
+     * If we didn't declare this everything would break because they'd be
+     *     Authorization: Bearer OAuth SOMETOKEN
+     *
      * @return int
      */
     protected function getAuthorizationMethod()

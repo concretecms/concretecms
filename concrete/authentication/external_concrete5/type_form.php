@@ -1,4 +1,8 @@
 <?php defined('C5_EXECUTE') or die('Access denied.'); ?>
+<div class="alert alert-info">
+    <p><?php echo t('Set the "Redirect URI" to: %s', ' <code>'.$redirectUri.'</code>'); ?></p>
+</div>
+
 <div class='form-group'>
     <?=$form->label('url', t('External concrete5 URL'))?>
     <?=$form->text('url', $data['url'])?>

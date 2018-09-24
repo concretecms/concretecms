@@ -32,8 +32,8 @@ if (!isset($authTypeParams)) {
     $authTypeParams = null;
 }
 
-// Always use yesterday's picture
-$image = (date('Ymd') - 1) . '.jpg';
+// Always use last week's picture
+$image = (date('Ymd') - 7) . '.jpg';
 ?>
 
 <div class="login-page">
@@ -43,7 +43,13 @@ $image = (date('Ymd') - 1) . '.jpg';
     <div class="col-sm-6 col-sm-offset-3 login-form">
         <div class="row login-row">
             <div class="controls col-sm-12 col-xs-12">
-                <h3 class="text-center"><?= t('Sign in to %s', "<strong>{$client->getName()}</strong>") ?></h3>
+                <?php
+                if (!$authorize) {
+                    ?>
+                    <h3 class="text-center"><?= t('Sign in to %s', "<strong>{$client->getName()}</strong>") ?></h3>
+                    <?php
+                }
+                ?>
 
                 <form method="post" action="<?= $request->getUri() ?>">
                     <?php
@@ -88,19 +94,17 @@ $image = (date('Ymd') - 1) . '.jpg';
                         <?php
                     } else {
                         ?>
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" name="authorize_client" value="1">
-                                <?= t('Authorize "%s" to use the following scopes:', $client->getName()) ?>
-                            </label>
-                        </div>
+                        <h3 class="scope-title text-center"><strong><?= h($client->getName()) ?></strong></h3>
+                        <h4 class="scope-description text-center">
+                            <?= t('is requesting access to the following scopes') ?>
+                        </h4>
 
                         <div class="scopes">
                             <ul>
                                 <?php
                                 foreach ($auth->getScopes() as $scope) {
                                     ?>
-                                    <li><?= $scope->getIdentifier() ?></li>
+                                    <li><strong><?= h(ucwords($scope->getIdentifier())) ?></strong>: <?= h($scope->getDescription()) ?></li>
                                     <?php
                                 }
                                 ?>
@@ -108,6 +112,13 @@ $image = (date('Ymd') - 1) . '.jpg';
                         </div>
 
                         <?php $token->output('oauth_authorize_' . $client->getClientKey()); ?>
+
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="authorize_client" value="1" />
+                                <?= t('Authorize %s', '<strong>' . h($client->getName()) . '</strong>') ?>
+                            </label>
+                        </div>
 
                         <div class="form-group">
                             <button class="btn btn-success pull-right"><?= t('Authorize') ?></button>

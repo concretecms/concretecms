@@ -51,7 +51,7 @@ class AuthCodeRepository extends EntityRepository implements AuthCodeRepositoryI
         $this->getEntityManager()->transactional(function(EntityManagerInterface $em) use ($code) {
             $code = $em->merge($code);
             if ($code) {
-                $em->detach($code);
+                $em->remove($code);
             }
         });
     }
