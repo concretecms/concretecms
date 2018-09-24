@@ -22,6 +22,8 @@ foreach ($blockTypesForSets as $setName => $blockTypes) {
                         <a
                             data-cID="<?= $c->getCollectionID() ?>"
                             data-block-type-handle="<?= $bt->getBlockTypeHandle() ?>"
+                            data-block-type-name="<?= h(t($bt->getBlockTypeName())) ?>"
+                            data-block-type-description="<?= h(t($bt->getBlockTypeDescription())) ?>"
                             data-dialog-title="<?= t('Add %s', t($bt->getBlockTypeName())) ?>"
                             data-dialog-width="<?= $bt->getBlockTypeInterfaceWidth() ?>"
                             data-dialog-height="<?= $bt->getBlockTypeInterfaceHeight() ?>"
