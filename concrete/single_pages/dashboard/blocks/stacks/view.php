@@ -106,7 +106,6 @@ if (isset($neutralStack)) {
                     if ($cpc->canEditPagePermissions() && Config::get('concrete.permissions.model') == 'advanced') {
                         ?>
                         <li><a dialog-width="580" class="dialog-launch" dialog-append-buttons="true" dialog-height="420" dialog-title="<?=t('Stack Permissions')?>" id="stackPermissions" href="<?=URL::to('/ccm/system/panels/details/page/permissions?cID=' . $stackToEdit->getCollectionID())?>"><?=t('Permissions')?></a></li>
-                        <li><a dialog-width="580" class="dialog-launch" dialog-append-buttons="true" dialog-height="420" dialog-title="<?=t('Stack Permissions')?>" id="stackPermissions" href="<?= URL::to('/ccm/system/dialogs/area/edit/permissions') ?>?cID=<?=$stackToEdit->getCollectionID()?>&arHandle=<?=STACKS_AREA_NAME?>"><?=t('Permissions')?></a></li>
                         <?php
                     }
                     if (!$isGlobalArea && $cpc->canMoveOrCopyPage()) {
