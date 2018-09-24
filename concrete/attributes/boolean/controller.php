@@ -65,7 +65,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
             return $this->akCheckboxLabel;
         }
 
-        return $this->attributeKey->getAttributeKeyName();
+        return $this->attributeKey->getAttributeKeyDisplayName();
     }
 
     public function exportKey($akey)
