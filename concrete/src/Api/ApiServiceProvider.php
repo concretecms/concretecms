@@ -14,6 +14,7 @@ use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 use Concrete\Core\Routing\Router;
 use Doctrine\ORM\EntityManagerInterface;
 use League\OAuth2\Server\AuthorizationServer;
+use League\OAuth2\Server\Grant\AuthCodeGrant;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
 use League\OAuth2\Server\Repositories\AuthCodeRepositoryInterface;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
@@ -133,9 +134,12 @@ class ApiServiceProvider extends ServiceProvider
             $server->setEncryptionKey($this->app->make('config/database')->get('concrete.security.token.encryption'));
 
             $oneHourTTL = new \DateInterval('PT1H');
+            $oneDayTTL = new \DateInterval('P1D');
+
 
             // Enable client_credentials grant type with 1 hour ttl
             $server->enableGrantType($this->app->make(ClientCredentialsGrant::class), $oneHourTTL);
+            $server->enableGrantType($this->app->make(AuthCodeGrant::class, ['authCodeTTL' => $oneDayTTL]), $oneDayTTL);
 
             return $server;
         });

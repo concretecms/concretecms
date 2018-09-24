@@ -3,7 +3,7 @@
 /**
  * @var \Concrete\Core\Entity\OAuth\Client $client
  */
-$clientSecret = !isset($clientSecret) ? $clientSecret : null;
+$clientSecret = isset($clientSecret) ? $clientSecret : null;
 
 // Make sure the client secret matches this client
 if ($clientSecret && !password_verify($clientSecret, $client->getClientSecret())) {

@@ -31,5 +31,8 @@ class ApiRouteList implements RouteListInterface
             ->scope('site')
             ->routes('api/site.php');
 
+        $api->buildGroup()
+            ->scope('account')
+            ->routes('api/account.php');
     }
 }
