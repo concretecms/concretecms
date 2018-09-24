@@ -24,10 +24,15 @@ class ClientRepository extends EntityRepository implements ClientRepositoryInter
     public function getClientEntity($clientIdentifier, $grantType, $clientSecret = null, $mustValidateSecret = true)
     {
         $client = $this->findOneBy(['clientKey' => $clientIdentifier]);
-        if ($client && $mustValidateSecret) {
-            if ($client->getClientSecret() !== $clientSecret) {
-                throw OAuthServerException::invalidClient();
-            }
+
+        // Handle client not found
+        if (!$client) {
+            throw OAuthServerException::invalidClient();
+        }
+
+        // Handle validation
+        if ($mustValidateSecret && !password_verify($clientSecret, $client->getClientSecret())) {
+            throw OAuthServerException::invalidClient();
         }
 
         return $client;

@@ -2,9 +2,9 @@
 
 namespace Concrete\Core\Entity\OAuth;
 
-use Doctrine\ORM\Mapping as ORM;
-use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
+use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="RefreshTokenRepository")
@@ -29,7 +29,7 @@ class RefreshToken implements RefreshTokenEntityInterface
     /**
      * @var \League\OAuth2\Server\Entities\AccessTokenEntityInterface
      * @ORM\OneToOne(targetEntity="AccessToken")
-     * @ORM\JoinColumn(name="client", referencedColumnName="identifier")
+     * @ORM\JoinColumn(name="accessToken", referencedColumnName="identifier")
      */
     protected $accessToken;
 

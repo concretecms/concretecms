@@ -74,7 +74,7 @@ class AccessToken implements AccessTokenEntityInterface
      */
     public function addScope(ScopeEntityInterface $scope)
     {
-        $this->scopes[$scope->getIdentifier()] = $scope;
+        $this->scopes[] = $scope;
     }
 
     /**
@@ -84,7 +84,7 @@ class AccessToken implements AccessTokenEntityInterface
      */
     public function getScopes()
     {
-        return array_values($this->scopes);
+        return $this->scopes;
     }
 
     /**
