@@ -41,8 +41,6 @@ abstract class AbstractView
 
     /**
      * @param mixed $mixed object to view
-     *
-     * @return void
      */
 
     public function __construct($mixed = false)
