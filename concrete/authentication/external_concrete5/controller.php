@@ -170,6 +170,7 @@ class Controller extends GenericOauth2TypeController
      */
     private function setData()
     {
+        $data = $this->config->get('auth.external_concrete5', '');
         $authUrl = $this->urlResolver->resolve(['/ccm/system/authentication/oauth2/external_concrete5/attempt_auth']);
         $attachUrl = $this->urlResolver->resolve(['/ccm/system/authentication/oauth2/external_concrete5/attempt_attach']);
         $baseUrl = $this->urlResolver->resolve(['/']);
@@ -177,6 +178,7 @@ class Controller extends GenericOauth2TypeController
         $path->remove('index.php');
         $name = trim((string) array_get($data, 'name', t('External concrete5')));
 
+        $this->set('data', $data);
         $this->set('authUrl', $authUrl);
         $this->set('attachUrl', $attachUrl);
         $this->set('baseUrl', $baseUrl);

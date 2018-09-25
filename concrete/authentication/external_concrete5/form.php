@@ -33,7 +33,7 @@ if ($user->getUserID() && $user->checkLogin()) {
     ?>
     <div class="form-group">
         <span>
-            <?= t('Sign in with you %s account', h($name)) ?>
+            <?= t('Sign in with your %s account', h($name)) ?>
         </span>
         <hr class="ccm-authentication-type-external-concrete5">
     </div>
