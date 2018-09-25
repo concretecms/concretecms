@@ -1,8 +1,5 @@
 <?php defined('C5_EXECUTE') or die('Access denied.');
 
-$name = trim((string) array_get($data, 'name', t('External concrete5')));
-$leadingVowel = $name ? in_array(strtolower($name[0]), ['a', 'e', 'i', 'o', 'u'], true) : false;
-
 if (isset($error)) {
     ?>
     <div class="alert alert-danger"><?= $error ?></div>
@@ -16,20 +13,18 @@ if (isset($message)) {
 
 }
 
-$user = new User();
-
-if ($user->isLoggedIn()) {
+if ($user->getUserID() && $user->checkLogin()) {
     ?>
     <div class="form-group">
         <span>
-            <?= $leadingVowel ? t('Attach an %s account', $name) : t('Attach a %s account', $name) ?>
+            <?= t('Attach your %s account', h($name)) ?>
         </span>
         <hr>
     </div>
     <div class="form-group">
         <a href="<?= $attachUrl ?>" class="btn btn-success btn-login btn-attach btn-block">
             <img src="<?= $assetBase ?>/concrete/images/logo.svg" class="concrete5-icon"></i>
-            <?= $leadingVowel ? t('Attach an %s account', $name) : t('Attach a %s account', $name) ?>
+            <?= t('Attach your %s account', h($name)) ?>
         </a>
     </div>
     <?php
@@ -38,14 +33,14 @@ if ($user->isLoggedIn()) {
     ?>
     <div class="form-group">
         <span>
-            <?= $leadingVowel ? t('Sign in with an %s account', $name) : t('Sign in with a %s account', $name) ?>
+            <?= t('Sign in with you %s account', h($name)) ?>
         </span>
         <hr class="ccm-authentication-type-external-concrete5">
     </div>
     <div class="form-group">
         <a href="<?= $authUrl ?>" class="btn btn-success btn-login btn-block">
             <img src="<?= $assetBase ?>/concrete/images/logo.svg" class="concrete5-icon"></i>
-            <?= t('Log in with ' . $name) ?>
+            <?= t('Log in with %s', h($name)) ?>
         </a>
     </div>
     <?php

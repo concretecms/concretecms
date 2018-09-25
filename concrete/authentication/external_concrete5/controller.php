@@ -7,6 +7,7 @@ use Concrete\Core\Authentication\Type\OAuth\OAuth2\GenericOauth2TypeController;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\User\Group\GroupList;
+use Concrete\Core\User\User;
 use League\Url\Url;
 
 class Controller extends GenericOauth2TypeController
@@ -143,15 +144,44 @@ class Controller extends GenericOauth2TypeController
      */
     public function form()
     {
+        $this->setData();
+    }
+
+    /**
+     * Controller method for the hook template
+     * This method is called before hook.php is rendered, use it to set data for that template
+     */
+    public function hook()
+    {
+        $this->setData();
+    }
+
+    /**
+     * Controller method for the hooked template
+     * This method gets called before hooked.php is rendered, use it to set data for that template
+     */
+    public function hooked()
+    {
+        $this->setData();
+    }
+
+    /**
+     * Method for setting general data for all views
+     */
+    private function setData()
+    {
         $authUrl = $this->urlResolver->resolve(['/ccm/system/authentication/oauth2/external_concrete5/attempt_auth']);
         $attachUrl = $this->urlResolver->resolve(['/ccm/system/authentication/oauth2/external_concrete5/attempt_attach']);
         $baseUrl = $this->urlResolver->resolve(['/']);
         $path = $baseUrl->getPath();
         $path->remove('index.php');
+        $name = trim((string) array_get($data, 'name', t('External concrete5')));
 
         $this->set('authUrl', $authUrl);
         $this->set('attachUrl', $attachUrl);
         $this->set('baseUrl', $baseUrl);
         $this->set('assetBase', $baseUrl->setPath($path));
+        $this->set('name', $name);
+        $this->set('user', $this->app->make(User::class));
     }
 }

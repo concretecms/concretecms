@@ -2,14 +2,14 @@
 
 <div class="form-group">
         <span>
-            <?= t('Attach a community account') ?>
+            <?= t('Attach your %s account', h($name)) ?>
         </span>
     <hr>
 </div>
 <div class="form-group">
-    <a href="<?= \URL::to('/ccm/system/authentication/oauth2/external_concrete5/attempt_attach'); ?>" class="btn btn-primary btn-community">
-        <img src="<?= \Core::getApplicationURL() ?>/concrete/images/logo.svg" class="concrete5-icon" />
-        <?= t('Attach a concrete5.org account') ?>
+    <a href="<?= $attachUrl ?>" class="btn btn-primary btn-success btn-external-concrete5">
+        <img src="<?= $assetUrl ?>/concrete/images/logo.svg" class="concrete5-icon" />
+        <?= t('Attach your %s account', h($name)) ?>
     </a>
 </div>
 
