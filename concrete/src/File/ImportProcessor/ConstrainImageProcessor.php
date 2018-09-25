@@ -259,6 +259,7 @@ class ConstrainImageProcessor implements ProcessorInterface
         } elseif ($this->maxHeight !== null) {
             if ($imageSize->getHeight() > $this->maxHeight) {
                 $width = $this->maxHeight * $imageSize->getWidth() / $imageSize->getHeight();
+                $newBox = new Box($width, $this->maxHeight);
             }
         }
         if ($newBox !== null) {
