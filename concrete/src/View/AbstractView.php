@@ -6,6 +6,9 @@ use Request;
 use URL;
 use Core;
 
+/**
+ * Abstract view class
+ */
 abstract class AbstractView
 {
     protected static $requestInstance;
@@ -35,6 +38,12 @@ abstract class AbstractView
 
         return self::$requestInstance;
     }
+
+    /**
+     * @param mixed $mixed object to view
+     *
+     * @return void
+     */
 
     public function __construct($mixed = false)
     {
