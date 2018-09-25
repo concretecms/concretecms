@@ -89,6 +89,7 @@ if (isset($neutralStack)) {
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#"><?=t('Add')?> <span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <li><a class="dialog-launch" dialog-modal="false" dialog-width="550" dialog-height="380" dialog-title="<?=t('Add')?>" href="<?=URL::to('/ccm/system/dialogs/page/add_block_list')?>?cID=<?=$stackToEdit->getCollectionID()?>&arHandle=<?=STACKS_AREA_NAME?>"><?=t('Add Block')?></a></li>
+                                <li><a class="dialog-launch" dialog-modal="false" dialog-width="550" dialog-height="380" dialog-title="<?=t('Paste From Clipboard')?>" href="<?=URL::to('/ccm/system/dialogs/page/clipboard')?>?cID=<?=$stackToEdit->getCollectionID()?>&arHandle=<?=STACKS_AREA_NAME?>"><?=t('Paste From Clipboard')?></a></li>
                             </ul>
                         </li>
                         <?php
