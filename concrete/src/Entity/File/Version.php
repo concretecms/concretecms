@@ -983,7 +983,6 @@ class Version implements ObjectInterface
      */
     public function buildForceDownloadResponse()
     {
-        $app = Application::getFacadeApplication();
         $fre = $this->getFileResource();
 
         $fs = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
