@@ -1,4 +1,15 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php
+/**
+ * @var \Concrete\Core\Entity\OAuth\Client $client
+ */
+$clientSecret = isset($clientSecret) ? $clientSecret : null;
+
+// Make sure the client secret matches this client
+if ($clientSecret && !password_verify($clientSecret, $client->getClientSecret())) {
+    $clientSecret = null;
+}
+?>
 
 <div class="ccm-dashboard-header-buttons">
     <div class="btn-group">
@@ -17,13 +28,27 @@
     </div>
 
     <div class="form-group">
+        <label class="control-label"><?=t('Redirect URI')?></label>
+        <div><?=$client->getRedirectUri() ?: t('None provided') ?></div>
+    </div>
+
+    <div class="form-group">
         <label class="control-label"><?=t('Client ID')?></label>
         <input type="text" class="form-control" onclick="this.select()" value="<?=$client->getClientKey()?>">
     </div>
 
-    <div class="form-group">
+    <div class="form-group <?= $clientSecret ? 'has-warning' : '' ?>">
         <label class="control-label"><?=t('Client Secret')?></label>
-        <input type="text" class="form-control" onclick="this.select()" value="<?=$client->getClientSecret()?>">
+        <input type="<?= $clientSecret ? 'text' : 'password' ?>" class="form-control" onclick="this.select()" value="<?= $clientSecret ?: str_repeat('*', 96) ?>" <?= $clientSecret ? '' : 'disabled' ?>>
+        <div class="help-block">
+            <?php
+            if ($clientSecret) {
+                echo t('Make sure to copy this API secret, this is the last time it will be displayed.');
+            } else {
+                echo t('This API secret was displayed when this client was first created. It can no longer be displayed.');
+            }
+            ?>
+        </div>
     </div>
 
 </fieldset>

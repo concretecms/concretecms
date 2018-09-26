@@ -54,7 +54,7 @@ class AccessTokenRepository extends EntityRepository implements AccessTokenRepos
     {
         if ($token = $this->find($tokenId)) {
             $this->getEntityManager()->transactional(function(EntityManagerInterface $em) use ($token) {
-                $em->detach($token);
+                $em->remove($token);
             });
         }
     }
