@@ -1486,10 +1486,19 @@ class Version implements ObjectInterface
         $thumbnail = $imageForThumbnail->thumbnail($size, $thumbnailMode);
         unset($imageForThumbnail);
         $thumbnailPath = $type->getFilePath($this);
-        $thumbnailFormat = $app->make(ThumbnailFormatService::class)->getFormatForFile($this);
+        if ($type->isKeepAnimations() && $thumbnail->layers()->count() > 1) {
+            $isAnimation = true;
+            $thumbnailFormat = BitmapFormat::FORMAT_GIF;
+        } else {
+            $thumbnailFormat = $app->make(ThumbnailFormatService::class)->getFormatForFile($this);
+            $isAnimation = false;
+        }
 
         $mimetype = $bitmapFormat->getFormatMimeType($thumbnailFormat);
         $thumbnailOptions = $bitmapFormat->getFormatImagineSaveOptions($thumbnailFormat);
+        if ($isAnimation) {
+            $thumbnailOptions['animated'] = true;
+        }
 
         $filesystem->write(
             $thumbnailPath,
