@@ -390,7 +390,7 @@ class DragRequestData
             }
             $originalPageType = $originalPage->getPageTypeObject();
             if (!$destinationPageChecker->canAddSubpage($originalPageType)) {
-                return t('You do not have sufficient privileges to move the page "$1%s" under "$2%s".', $originalPage->getCollectionName(), $this->getDestinationPage()->getCollectionName());
+                return t('You do not have sufficient privileges to move the page "%1$s" under "%2$s".', $originalPage->getCollectionName(), $this->getDestinationPage()->getCollectionName());
             }
         }
 
@@ -411,11 +411,11 @@ class DragRequestData
         foreach ($this->getOriginalPages() as $originalPage) {
             $originalPageChecker = new Checker($originalPage);
             if (!$originalPageChecker->canMoveOrCopyPage()) {
-                return t('You don\'t have the permission alias the page "%s".', $originalPage->getCollectionName());
+                return t('You don\'t have the permission to create an alias of the page "%s".', $originalPage->getCollectionName());
             }
             $originalPageType = $originalPage->getPageTypeObject();
             if (!$destinationPageChecker->canAddSubpage($originalPageType)) {
-                return t('You do not have sufficient privileges to alias the page "$1%s" under "$2%s".', $originalPage->getCollectionName(), $this->getDestinationPage()->getCollectionName());
+                return t('You do not have sufficient privileges to alias the page "%1$s" under "%2$s".', $originalPage->getCollectionName(), $this->getDestinationPage()->getCollectionName());
             }
         }
 
@@ -437,7 +437,7 @@ class DragRequestData
             }
             $originalPageType = $originalPage->getPageTypeObject();
             if (!$destinationPageChecker->canAddSubpage($originalPageType)) {
-                return t('You do not have sufficient privileges to copy the page "$1%s" under "$2%s".', $originalPage->getCollectionName(), $this->getDestinationPage()->getCollectionName());
+                return t('You do not have sufficient privileges to copy the page "%1$s" under "%2$s".', $originalPage->getCollectionName(), $this->getDestinationPage()->getCollectionName());
             }
         }
 
