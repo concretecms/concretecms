@@ -867,6 +867,14 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="Trusted Proxies" path="/dashboard/system/permissions/trusted_proxies"
+              filename="/dashboard/system/permissions/trusted_proxies.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>trusted, proxy, proxies, ip, cloudflare</value>
+                </attributekey>
+            </attributes>
+        </page>
         <page name="Security Options" path="/dashboard/system/permissions/security" filename="/dashboard/system/permissions/security.php" pagetype="" description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
