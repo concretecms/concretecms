@@ -82,6 +82,7 @@ class Type
             $linkNode->addAttribute('handle', $link->getHandle());
             $linkNode->addAttribute('sizingMode', $link->getSizingMode());
             $linkNode->addAttribute('upscalingEnabled', $link->isUpscalingEnabled() ? '1' : '0');
+            $linkNode->addAttribute('keepAnimations', $link->isKeepAnimations() ? '1' : '0');
             if ($link->getWidth()) {
                 $linkNode->addAttribute('width', $link->getWidth());
             }
