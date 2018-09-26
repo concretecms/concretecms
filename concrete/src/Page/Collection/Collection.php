@@ -90,9 +90,9 @@ class Collection extends ConcreteObject implements TrackableInterface
      * Get a collection by ID.
      *
      * @param int $cID The collection ID
-     * @param string|int|false $version the collection version ('RECENT' for the most recent version, 'ACTIVE' for the currently published version, a falsy value to not load the collection version, or an integer to retrieve a specific version ID)
+     * @param string|int|false $version the collection version ('RECENT' for the most recent version, 'ACTIVE' for the currently published version, 'SCHEDULED' for the currently scheduled version, a falsy value to not load the collection version, or an integer to retrieve a specific version ID)
      *
-     * @return Collection If the collection is not found, you'll get an empty Collection instance
+     * @return \Concrete\Core\Page\Collection\Collection If the collection is not found, you'll get an empty Collection instance
      */
     public static function getByID($cID, $version = 'RECENT')
     {
@@ -364,7 +364,7 @@ class Collection extends ConcreteObject implements TrackableInterface
     /**
      * Load a specific collection version (you can retrieve it with the getVersionObject() method).
      *
-     * @param string|int $cvID the collection version ('RECENT' for the most recent version, 'ACTIVE' for the currently published version, or an integer to retrieve a specific version ID)
+     * @param string|int $cvID the collection version ('RECENT' for the most recent version, 'ACTIVE' for the currently published version, 'SCHEDULED' for the currently scheduled version, or an integer to retrieve a specific version ID)
      */
     public function loadVersionObject($cvID = 'ACTIVE')
     {
@@ -504,6 +504,7 @@ class Collection extends ConcreteObject implements TrackableInterface
      * Return the attribute value object with the handle $akHandle of the currently loaded version (if it's loaded).
      *
      * @param string|\Concrete\Core\Attribute\Key\CollectionKey $akHandle the attribute key (or its handle)
+     * @param bool $createIfNotExists
      *
      * @return \Concrete\Core\Entity\Attribute\Value\PageValue|null
      */
@@ -572,7 +573,7 @@ class Collection extends ConcreteObject implements TrackableInterface
      *
      * @param string $arHandle the handle of the area
      *
-     * @return Area|null
+     * @return \Concrete\Core\Area\Area|null
      */
     public function getArea($arHandle)
     {
