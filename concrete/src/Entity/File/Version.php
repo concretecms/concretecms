@@ -1069,7 +1069,6 @@ class Version implements ObjectInterface
     {
         $app = Application::getFacadeApplication();
         $importer = new Importer();
-        $fi = $app->make('helper/file');
         $cf = $app->make('helper/concrete/file');
         $filesystem = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
         $fileName = $this->getFileName();
