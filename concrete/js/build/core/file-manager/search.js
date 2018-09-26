@@ -217,10 +217,9 @@
     ConcreteFileManager.prototype.setupFileUploads = function() {
         var my = this,
             $fileUploader = $('#ccm-file-manager-upload'),
-            $maxWidth = $fileUploader.data('image-max-width'),
-            $maxHeight = $fileUploader.data('image-max-height'),
-            $imageResize = ($maxWidth > 0 && $maxHeight > 0),
-            $quality = $fileUploader.data('image-quality'),
+            imageMaxWidth = parseInt($fileUploader.data('image-max-width'), 10) || null,
+            imageMaxHeight = parseInt($fileUploader.data('image-max-height'), 10) || null,
+            imageQuality = parseInt($fileUploader.data('image-quality'), 10) || 85,
             errors = [],
             files = [],
             error_template = _.template(
@@ -230,10 +229,10 @@
             args = {
                 url: CCM_DISPATCHER_FILENAME + '/ccm/system/file/upload',
                 dataType: 'json',
-                disableImageResize: !$imageResize,
-                imageQuality: ($quality > 0 ? $quality : 85),
-                imageMaxWidth: ($maxWidth > 0 ? $maxWidth : 1920),
-                imageMaxHeight: ($maxHeight > 0 ? $maxHeight : 1080),
+                disableImageResize: imageMaxWidth === null && imageMaxHeight === null,
+                imageQuality: imageQuality,
+                imageMaxWidth: imageMaxWidth,
+                imageMaxHeight: imageMaxHeight,
                 error: function(r) {
                     var message = r.responseText,
                         name = this.files[0].name;
