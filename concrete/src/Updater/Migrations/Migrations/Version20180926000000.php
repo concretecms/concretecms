@@ -8,10 +8,7 @@ use Concrete\Core\Attribute\TypeFactory;
 use Concrete\Core\Attribute\Key\Category;
 use Doctrine\ORM\EntityManager;
 
-/**
- * Auto-generated Migration: Please modify to your needs!
- */
-class Version20180628101509 extends AbstractMigration implements RepeatableMigrationInterface
+class Version20180926000000 extends AbstractMigration implements RepeatableMigrationInterface
 {
     /**
      * {@inheritdoc}
