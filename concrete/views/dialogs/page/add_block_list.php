@@ -8,9 +8,19 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 /* @var Concrete\Core\Entity\Block\BlockType\BlockType[] $blockTypesForSets */
 
-foreach ($blockTypesForSets as $setName => $blockTypes) {
-    ?>
-    <div class="ccm-ui" id="ccm-add-block-list">
+$id = str_replace('.', '_', uniqid('ccm-add-block-lists-', true));
+?>
+<div id="<?= $id ?>">
+    <div class="input-group">
+        <span class="input-group-addon">
+            <i class="fa fa-search"></i>
+        </span>
+        <input type="search" class="form-control" autofocus="autofocus" />
+    </div>
+    <br />
+    <?php
+    foreach ($blockTypesForSets as $setName => $blockTypes) {
+        ?>
         <section>
             <legend><?= $setName ?></legend>
             <ul class="item-select-list">
@@ -22,13 +32,15 @@ foreach ($blockTypesForSets as $setName => $blockTypes) {
                         <a
                             data-cID="<?= $c->getCollectionID() ?>"
                             data-block-type-handle="<?= $bt->getBlockTypeHandle() ?>"
+                            data-block-type-name="<?= h(t($bt->getBlockTypeName())) ?>"
+                            data-block-type-description="<?= h(t($bt->getBlockTypeDescription())) ?>"
                             data-dialog-title="<?= t('Add %s', t($bt->getBlockTypeName())) ?>"
                             data-dialog-width="<?= $bt->getBlockTypeInterfaceWidth() ?>"
                             data-dialog-height="<?= $bt->getBlockTypeInterfaceHeight() ?>"
                             data-has-add-template="<?= $bt->hasAddTemplate() ?>"
                             data-supports-inline-add="<?= $bt->supportsInlineAdd() ?>"
                             data-btID="<?= $bt->getBlockTypeID() ?>"
-                            title="<?= t($bt->getBlockTypeName()) ?>"
+                            title="<?= h(t($bt->getBlockTypeDescription())) ?>"
                             href="javascript:void(0)"
                         ><img src="<?=$btIcon?>" /> <?=t($bt->getBlockTypeName())?></a>
                     </li>
@@ -38,16 +50,44 @@ foreach ($blockTypesForSets as $setName => $blockTypes) {
             </ul>
         </section>
         <?php
-    }
-    ?>
+        }
+        ?>
+    </div>
 </div>
 <script>
     $(function() {
-        $('#ccm-add-block-list').on('click', 'a', function() {
+        var $list = $('#<?= $id ?>'),
+            $search = $list.find('input[type="search"]');
+
+        $search.on('keydown keypress keyup change blur', function() {
+            var search = $.trim($search.val()).toLowerCase();
+            $list.find('section').each(function() {
+                var $section = $(this),
+                    someDisplayed = false;
+                $section.find('li a').each(function() {
+                    var $a = $(this),
+                        $li = $a.closest('li');
+                    if (search === '' || ($a.data('block-type-name') || '').toLowerCase().indexOf(search) >= 0 || ($a.data('block-type-description') || '').toLowerCase().indexOf(search) >= 0) {
+                        $li.show();
+                        someDisplayed = true;
+                    } else {
+                        $li.hide();
+                    }
+                });
+                $section.toggle(someDisplayed);
+            });
+        });
+
+        $list.find('a').on('click', function() {
             ConcreteEvent.publish('AddBlockListAddBlock', {
                 $launcher: $(this)
             });
             return false;
         });
+
+        setTimeout(function() {
+            $search.focus();
+        }, 250);
+
     });
 </script>
