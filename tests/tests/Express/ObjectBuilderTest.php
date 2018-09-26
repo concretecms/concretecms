@@ -27,6 +27,7 @@ class ObjectBuilderTest extends ConcreteDatabaseTestCase
 
     protected $metadatas = [
         'Concrete\Core\Entity\Express\Entity',
+        'Concrete\Core\Entity\Express\Entry',
         'Concrete\Core\Entity\Express\Association',
         'Concrete\Core\Entity\Express\Form',
         'Concrete\Core\Entity\Express\FieldSet',

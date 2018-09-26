@@ -14,6 +14,9 @@ use Doctrine\DBAL\Migrations\Version;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\ORM\Tools\SchemaTool;
 
+/**
+ * @property \Concrete\Core\Database\Connection\Connection $connection
+ */
 abstract class AbstractMigration extends DoctrineAbstractMigration
 {
     protected $app;
