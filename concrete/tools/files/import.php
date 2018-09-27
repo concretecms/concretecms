@@ -7,6 +7,7 @@ $u = new User();
 $ch = Loader::helper('concrete/file');
 $h = Loader::helper('concrete/ui');
 $form = Loader::helper('form');
+$config = \Core::make('config');
 
 $ag = \Concrete\Core\Http\ResponseAssetGroup::get();
 $ag->requireAsset('dropzone');
@@ -46,6 +47,7 @@ $valt = Loader::helper('validation/token');
     ['incoming', t('Incoming Directory')],
     ['remote', t('Remote Files')],
 ]);
+$isChunkingEnabled = $config->get('concrete.upload.chunking_enabled');
 ?>
 
 <script type="text/javascript">
@@ -61,19 +63,26 @@ $(function() {
     var $dropzone = $('#ccm-tab-content-local form').dropzone({
         sending: function() {
             $('[data-button=launch-upload-complete]').hide();
-            totalStarted++;
         },
         success: function(data, r) {
             if (r[0]) {
                 uploads.push(r[0]);
             }
         },
-        complete: function() {
-            totalCompleted++;
-            if (totalCompleted == totalStarted && totalCompleted > 0) {
-                $('[data-button=launch-upload-complete]').show();
+        chunksUploaded: function (file, done) {
+            if (file.xhr.response) {
+                var r = JSON.parse(file.xhr.response);
+                if (r[0]) {
+                    uploads.push(r[0]);
+                }
             }
+            done();
         },
+        queuecomplete: function() {
+            $('[data-button=launch-upload-complete]').show();
+        },
+        chunking: <?= $isChunkingEnabled ? "true" : "false" ?>,
+        retryChunks: <?= $isChunkingEnabled ? "true" : "false" ?>,
         previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-details\">\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n    <div class=\"dz-size\" data-dz-size></div>\n    <img data-dz-thumbnail />\n  </div>\n  <div class=\"dz-progress\"><span class=\"dz-upload\" data-dz-uploadprogress></span></div>\n  <div class=\"dz-success-mark\"><span>✔</span></div>\n  <div class=\"dz-error-mark\"><span>✘</span></div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n</div>"
     });
 
@@ -89,9 +98,7 @@ $(function() {
     $('a[data-tab=local]').trigger('click');
 });
 
-var uploads = [],
-    totalStarted = 0,
-    totalCompleted = 0;
+var uploads = [];
 
 ConcreteFileImportDialog = {
 

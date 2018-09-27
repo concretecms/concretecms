@@ -308,10 +308,16 @@ class File extends Controller
             throw new UserMessageException(Importer::getErrorMessage($file->getError()));
         }
         $cf = $this->app->make('helper/file');
+
+        $file = $this->GetFileToImport($file);
+        $files = [];
+        if ($file === null) {
+            return $files;
+        }
+
         $name = $file->getClientOriginalName();
         $tmp_name = $file->getPathname();
 
-        $files = [];
         if (is_object($folder)) {
             $fp = new ConcretePermissions($folder);
         } else {
@@ -335,5 +341,53 @@ class File extends Controller
         }
 
         return $files;
+    }
+
+    private function GetFileToImport(UploadedFile $file)
+    {
+        $dzuuid = $this->request->post('dzuuid');
+        $dzIndex = $this->request->post('dzchunkindex');
+        $dzTotalChunks = $this->request->post('dztotalchunkcount');
+        if ($dzuuid !== null && $dzIndex !== null && $dzTotalChunks !== null) {
+            $file->move($file->getPath(), $dzuuid.$dzIndex);
+            if ($this->IsFullChunkFilePresent($dzuuid, $file->getPath(), $dzTotalChunks)) {
+                return $this->CombineFileChunks($dzuuid, $file->getPath(), $dzTotalChunks, $file);
+            } else {
+                return null;
+            }
+        } else {
+            return $file;
+        }
+    }
+
+    private function IsFullChunkFilePresent($fileUuid, $tempPath, $totalChunks)
+    {
+        for ($i = 0; $i < $totalChunks; $i++) {
+            if (!file_exists($tempPath . DIRECTORY_SEPARATOR . $fileUuid.$i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private function CombineFileChunks($fileUuid, $tempPath, $totalChunks, UploadedFile $originalFile)
+    {
+        $bufferSize = 10485760; //10mb
+        $finalFilePath = $tempPath . DIRECTORY_SEPARATOR . $fileUuid;
+        $finalFile = fopen($finalFilePath, 'ab');
+        for ($i = 0; $i < $totalChunks; $i++) {
+            $chunkFile = $tempPath . DIRECTORY_SEPARATOR . $fileUuid . $i;
+            $addition = fopen($chunkFile, 'rb');
+            if ($addition) {
+                while ($buffer = fread($addition, $bufferSize)) {
+                    fwrite($finalFile, $buffer);
+                }
+            }
+            if (fclose($addition)) {
+                unlink($chunkFile);
+            }
+        }
+        fclose($finalFile);
+        return new UploadedFile($finalFilePath, $originalFile->getClientOriginalName());
     }
 }
