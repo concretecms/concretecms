@@ -292,7 +292,9 @@ class SitemapWriter
                     $pulse($element);
                 }
                 if ($dispatchElementReady) {
-                    $this->director->dispatch(static::EVENTNAME_ELEMENTREADY, new GenericEvent(['sitemapPage' => $element]));
+                    $event = new GenericEvent(['sitemapPage' => $element], ['sitemapPage' => $element]);
+                    $this->director->dispatch(static::EVENTNAME_ELEMENTREADY, new GenericEvent(['sitemapPage' => $element], ['sitemapPage' => $element]));
+                    $element = $event->getArgument('sitemapPage');
                 }
                 if ($mode === static::MODE_HIGHMEMORY) {
                     if ($element instanceof SitemapHeader) {
@@ -300,7 +302,10 @@ class SitemapWriter
                     } else {
                         $xmlNode = $element->toXmlElement($xmlDocument);
                         if ($dispatchPageReadyDeprecated && $element instanceof SitemapPage) {
-                            $this->director->dispatch(static::EVENTNAME_PAGEREADY_DEPRECATED, new GenericEvent(['page' => $element->getPage(), 'xmlNode' => $xmlNode]));
+                            $eventArgs = ['page' => $element->getPage(), 'xmlNode' => $xmlNode];
+                            $event = new GenericEvent($eventArgs, $eventArgs);
+                            $this->director->dispatch(static::EVENTNAME_PAGEREADY_DEPRECATED, $event);
+                            $xmlNode = $event->getArgument('xmlNode');
                         }
                     }
                 } else {
@@ -315,7 +320,9 @@ class SitemapWriter
             }
             if ($mode === static::MODE_HIGHMEMORY) {
                 if ($dispatchXmlReady) {
-                    $this->director->dispatch(static::EVENTNAME_XMLREADY, new GenericEvent(['xmlDoc' => $xmlDocument]));
+                    $event = new GenericEvent(['xmlDoc' => $xmlDocument]);
+                    $this->director->dispatch(static::EVENTNAME_XMLREADY, $event);
+                    $xmlDocument = $event->getArgument('xmlDoc');
                 }
                 $dom = dom_import_simplexml($xmlDocument)->ownerDocument;
                 unset($xmlDocument);
@@ -350,7 +357,6 @@ class SitemapWriter
             }
             $this->filesystem->delete([$tempFilename]);
         }
-        
     }
 
     /**
