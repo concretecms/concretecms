@@ -350,9 +350,10 @@ class File extends Controller
      */
     private function getFileToImport(UploadedFile $file)
     {
-        $dzuuid = $this->request->post('dzuuid');
-        $dzIndex = $this->request->post('dzchunkindex');
-        $dzTotalChunks = $this->request->post('dztotalchunkcount');
+        $post = $this->request->request;
+        $dzuuid = $post->get('dzuuid');
+        $dzIndex = $post->get('dzchunkindex');
+        $dzTotalChunks = $post->get('dztotalchunkcount');
         if ($dzuuid !== null && $dzIndex !== null && $dzTotalChunks !== null) {
             $file->move($file->getPath(), $dzuuid.$dzIndex);
             if ($this->isFullChunkFilePresent($dzuuid, $file->getPath(), $dzTotalChunks)) {
