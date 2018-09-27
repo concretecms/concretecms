@@ -43,6 +43,10 @@
         $tokenString = 'edit_feed';
         $button = t('Update');
     }
+    if (!isset($feedUsage)) {
+        $feedUsage = null;
+    }
+    /* @var Concrete\Core\Feed\FeedUsage|null $feedUsage */
     ?>
 
     <div class="ccm-dashboard-header-buttons">
@@ -198,6 +202,38 @@
             <?=$form->label('pfAreaHandleToDisplay', t('Select Area'))?>
             <?=$form->select('pfAreaHandleToDisplay', $areas, $pfAreaHandleToDisplay)?>
         </div>
+
+        <?php
+        if ($feedUsage !== null) {
+            ?>
+            <div class="form-group">
+                <?=$form->label('', t('Feed Usage'))?>
+                <?php
+                $usageEntries = $feedUsage->getUsageEntries();
+                if (empty($usageEntries)) {
+                    ?>
+                    <div><?= t('This feed is not used.') ?></div>
+                    <?php
+                } else {
+                    $previousHeading = false;
+                    foreach ($usageEntries as $usageEntry) {
+                        $heading = $usageEntry->getHeadingText();
+                        if ($heading !== $previousHeading) {
+                            if ($previousHeading !== false) {
+                                echo '</ul>';
+                            }
+                            $previousHeading = $heading; 
+                            echo '<ul>', h($heading);
+                        }
+                        echo '<li>', $usageEntry->toHtml(), '</li>';
+                    }
+                    echo '</ul>';
+                }
+                ?>
+            </div>
+            <?php
+        }
+        ?>
 
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">

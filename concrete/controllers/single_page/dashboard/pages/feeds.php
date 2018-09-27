@@ -5,6 +5,7 @@ use Concrete\Core\Area\Area;
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Page\Feed;
+use Concrete\Core\Feed\FeedService;
 use Concrete\Core\Page\Type\Type;
 use Core;
 
@@ -172,6 +173,7 @@ class Feeds extends DashboardPageController
         $this->feed = $feed;
 
         $this->set('feed', $feed);
+        $this->set('feedUsage', $this->app->make(FeedService::class)->getFeedUsage($feed));
         $this->add();
     }
 }
