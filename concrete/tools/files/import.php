@@ -1,22 +1,24 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 use Concrete\Core\File\StorageLocation\StorageLocation;
+use Concrete\Core\Support\Facade\Application;
 
-$u = new User();
-/** @var Concrete\Core\File\Service\Application $ch */
-$ch = Loader::helper('concrete/file');
-$h = Loader::helper('concrete/ui');
-$form = Loader::helper('form');
-$config = \Core::make('config');
+$app = Application::getFacadeApplication();
+$u = $app->make(User::class);
+$ch = $app->make('helper/concrete/file');
+$h = $app->make('helper/concrete/ui');
+$form = $app->make('helper/form');
+$nh = $app->make('helper/number');
+$config = $app->make('config');
 
-$ag = \Concrete\Core\Http\ResponseAssetGroup::get();
+$ag = Concrete\Core\Http\ResponseAssetGroup::get();
 $ag->requireAsset('dropzone');
 
 
 $folder = null;
 if (isset($_REQUEST['currentFolder'])) {
     $node = Concrete\Core\Tree\Node\Node::getByID($_REQUEST['currentFolder']);
-    if ($node instanceof \Concrete\Core\Tree\Node\Type\FileFolder) {
+    if ($node instanceof Concrete\Core\Tree\Node\Type\FileFolder) {
         $folder = $node;
     }
 }
@@ -34,20 +36,36 @@ if (!$fp->canAddFiles()) {
 
 $types = $fp->getAllowedFileExtensions();
 $ocID = 0;
-if (isset($_REQUEST['ocID']) && Loader::helper('validation/numbers')->integer($_REQUEST['ocID'])) {
+if (isset($_REQUEST['ocID']) && $app->make('helper/validation/numbers')->integer($_REQUEST['ocID'])) {
     $ocID = $_REQUEST['ocID'];
 }
 
 $types = $ch->serializeUploadFileExtensions($types);
-$valt = Loader::helper('validation/token');
+$valt = $app->make('helper/validation/token');
 ?>
 <div class="ccm-ui" id="ccm-file-manager-import-files">
-<?=Core::make('helper/concrete/ui')->tabs([
+<?=$app->make('helper/concrete/ui')->tabs([
     ['local', t('Your Computer'), true],
     ['incoming', t('Incoming Directory')],
     ['remote', t('Remote Files')],
 ]);
-$isChunkingEnabled = $config->get('concrete.upload.chunking_enabled');
+$isChunkingEnabled = $config->get('concrete.upload.chunking.enabled');
+$chunkSize = (int) $config->get('concrete.upload.chunking.chunkSize');
+if ($chunkSize < 1) {
+    // Maximum size of an uploaded file, minus a small value (just in case)
+    $uploadMaxFilesize = (int) $nh->getBytes(ini_get('upload_max_filesize')) - 100;
+    // Max size of post data allowed, minus enough space to consider other posted fields.
+    $postMaxSize = (int) $nh->getBytes(ini_get('post_max_size')) - 10000;
+    if ($uploadMaxFilesize < 1 && $postMaxSize < 1) {
+        $chunkSize = 2000000;
+    } elseif ($uploadMaxFilesize < 1) {
+        $chunkSize = $postMaxSize;
+    } elseif ($postMaxSize < 1) {
+        $chunkSize = $uploadMaxFilesize;
+    } else {
+        $chunkSize = min($uploadMaxFilesize, $postMaxSize);
+    }
+}
 ?>
 
 <script type="text/javascript">
@@ -82,6 +100,7 @@ $(function() {
             $('[data-button=launch-upload-complete]').show();
         },
         chunking: <?= $isChunkingEnabled ? "true" : "false" ?>,
+        chunkSize: <?= $chunkSize ?>,
         retryChunks: <?= $isChunkingEnabled ? "true" : "false" ?>,
         previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-details\">\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n    <div class=\"dz-size\" data-dz-size></div>\n    <img data-dz-thumbnail />\n  </div>\n  <div class=\"dz-progress\"><span class=\"dz-upload\" data-dz-uploadprogress></span></div>\n  <div class=\"dz-success-mark\"><span>✔</span></div>\n  <div class=\"dz-error-mark\"><span>✘</span></div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n</div>"
     });
@@ -122,13 +141,13 @@ ConcreteFileImportDialog = {
 </script>
 
 <?php
-    $valt = Loader::helper('validation/token');
-    $fh = Loader::helper('validation/file');
+    $valt = $app->make('helper/validation/token');
+    $fh = $app->make('helper/validation/file');
     $error = false;
 
     try {
         $incoming_contents = $ch->getIncomingDirectoryContents();
-    } catch (\Exception $e) {
+    } catch (Exception $e) {
         $error = t('Unable to get contents of incoming/ directory');
         $error .= '<br>';
         $error .= $e->getMessage();
@@ -138,7 +157,7 @@ ConcreteFileImportDialog = {
     <form action="<?=URL::to('/ccm/system/file/upload')?>"
           class="dropzone"
           >
-        <?=Core::make('token')->output()?>
+        <?=$app->make('token')->output()?>
 
         <?php if (isset($_REQUEST['currentFolder'])) { ?>
             <input type="hidden" name="currentFolder" value="<?=h($_REQUEST['currentFolder'])?>">
@@ -164,7 +183,7 @@ ConcreteFileImportDialog = {
 				<th width="25%" valign="middle" class="center theader"><?=t('Size')?></th>
 			</tr>
 		<?php foreach ($incoming_contents as $i => $file) {
-    $ft = \Concrete\Core\File\Type\TypeList::getType($file['basename']);
+    $ft = Concrete\Core\File\Type\TypeList::getType($file['basename']);
     ?>
 			<tr>
 				<td width="10%" style="vertical-align: middle" class="center">
@@ -177,7 +196,7 @@ ConcreteFileImportDialog = {
 				</td>
 				<td width="20%" style="vertical-align: middle" class="center"><?=$ft->getThumbnail()?></td>
 				<td width="45%" style="vertical-align: middle"><?=$file['basename']?></td>
-				<td width="25%" style="vertical-align: middle" class="center"><?=Loader::helper('number')->formatSize($file['size'], 'KB')?></td>
+				<td width="25%" style="vertical-align: middle" class="center"><?=$nh->formatSize($file['size'], 'KB')?></td>
 			</tr>
 		<?php 
 }

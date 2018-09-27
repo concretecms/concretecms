@@ -87,7 +87,12 @@ return [
             '*.csv;*.pdf;*.tiff;*.rtf;*.m4a;*.mov;*.wmv;*.mpeg;*.mpg;*.wav;*.3gp;*.avi;*.m4v;*.mp4;*.mp3;*.qt;*.ppt;' .
             '*.pptx;*.kml;*.xml;*.svg;*.webm;*.ogg;*.ogv',
 
-        'chunking_enabled' => true
+        'chunking' => [
+            // Enable uploading files in chunks?
+            'enabled' => true,
+            // The chunk size (if empty we'll automatically determine it)
+            'chunkSize' => null,
+        ],
     ],
 
     /*
