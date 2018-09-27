@@ -132,7 +132,7 @@ final class Controller
         while ($this->request->getMethod() === 'POST') {
 
             if (!$this->token->validate('oauth_login_' . $request->getClient()->getClientKey())) {
-                $error->add(t('Invalid request token.'));
+                $error->add($this->token->getErrorMessage());
                 break;
             }
 
@@ -186,7 +186,7 @@ final class Controller
         while ($this->request->getMethod() === 'POST') {
 
             if (!$this->token->validate('oauth_authorize_' . $request->getClient()->getClientKey())) {
-                $error->add(t('Invalid request token.'));
+                $error->add($this->token->getErrorMessage());
                 break;
             }
 
