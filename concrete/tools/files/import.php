@@ -8,6 +8,7 @@ $u = $app->make(User::class);
 $ch = $app->make('helper/concrete/file');
 $h = $app->make('helper/concrete/ui');
 $form = $app->make('helper/form');
+$nh = $app->make('helper/number');
 $config = $app->make('config');
 
 $ag = Concrete\Core\Http\ResponseAssetGroup::get();
@@ -51,7 +52,19 @@ $valt = $app->make('helper/validation/token');
 $isChunkingEnabled = $config->get('concrete.upload.chunking.enabled');
 $chunkSize = (int) $config->get('concrete.upload.chunking.chunkSize');
 if ($chunkSize < 1) {
-    $chunkSize = 2000000;
+    // Maximum size of an uploaded file, minus a small value (just in case)
+    $uploadMaxFilesize = (int) $nh->getBytes(ini_get('upload_max_filesize')) - 100;
+    // Max size of post data allowed, minus enough space to consider other posted fields.
+    $postMaxSize = (int) $nh->getBytes(ini_get('post_max_size')) - 10000;
+    if ($uploadMaxFilesize < 1 && $postMaxSize < 1) {
+        $chunkSize = 2000000;
+    } elseif ($uploadMaxFilesize < 1) {
+        $chunkSize = $postMaxSize;
+    } elseif ($postMaxSize < 1) {
+        $chunkSize = $uploadMaxFilesize;
+    } else {
+        $chunkSize = min($uploadMaxFilesize, $postMaxSize);
+    }
 }
 ?>
 
@@ -183,7 +196,7 @@ ConcreteFileImportDialog = {
 				</td>
 				<td width="20%" style="vertical-align: middle" class="center"><?=$ft->getThumbnail()?></td>
 				<td width="45%" style="vertical-align: middle"><?=$file['basename']?></td>
-				<td width="25%" style="vertical-align: middle" class="center"><?=$app->make('helper/number')->formatSize($file['size'], 'KB')?></td>
+				<td width="25%" style="vertical-align: middle" class="center"><?=$nh->formatSize($file['size'], 'KB')?></td>
 			</tr>
 		<?php 
 }

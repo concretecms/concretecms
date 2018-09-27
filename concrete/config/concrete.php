@@ -88,8 +88,10 @@ return [
             '*.pptx;*.kml;*.xml;*.svg;*.webm;*.ogg;*.ogv',
 
         'chunking' => [
+            // Enable uploading files in chunks?
             'enabled' => true,
-            'chunkSize' => 2000000,
+            // The chunk size (if empty we'll automatically determine it)
+            'chunkSize' => null,
         ],
     ],
 
