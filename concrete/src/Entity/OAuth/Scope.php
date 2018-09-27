@@ -23,7 +23,7 @@ class Scope implements ScopeEntityInterface
      * @var string
      * @ORM\Column(type="string")
      */
-    protected $description;
+    protected $description = '';
 
     /**
      * @ORM\ManyToMany(targetEntity="AuthCode", mappedBy="scopes")
@@ -66,7 +66,7 @@ class Scope implements ScopeEntityInterface
      */
     public function setDescription($description)
     {
-        $this->description = $description;
+        $this->description = (string) $description;
     }
 
     /**
