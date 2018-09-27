@@ -393,20 +393,14 @@ class File extends Controller
      */
     private function combineFileChunks($fileUuid, $tempPath, $totalChunks, UploadedFile $originalFile)
     {
-        $bufferSize = 10485760; //10mb
         $finalFilePath = $tempPath . DIRECTORY_SEPARATOR . $fileUuid;
-        $finalFile = fopen($finalFilePath, 'ab');
+        $finalFile = fopen($finalFilePath, 'wb');
         for ($i = 0; $i < $totalChunks; $i++) {
             $chunkFile = $tempPath . DIRECTORY_SEPARATOR . $fileUuid . $i;
             $addition = fopen($chunkFile, 'rb');
-            if ($addition) {
-                while ($buffer = fread($addition, $bufferSize)) {
-                    fwrite($finalFile, $buffer);
-                }
-            }
-            if (fclose($addition)) {
-                unlink($chunkFile);
-            }
+            stream_copy_to_stream($addition, $finalFile);
+            fclose($addition);
+            unlink($chunkFile);
         }
         fclose($finalFile);
         return new UploadedFile($finalFilePath, $originalFile->getClientOriginalName());
