@@ -309,47 +309,55 @@ class File extends Controller
         }
         $cf = $this->app->make('helper/file');
 
-        $file = $this->getFileToImport($file);
+        $file = $this->getFileToImport($file, $deleteFile);
         $files = [];
         if ($file === null) {
             return $files;
         }
 
-        $name = $file->getClientOriginalName();
-        $tmp_name = $file->getPathname();
-
-        if (is_object($folder)) {
-            $fp = new ConcretePermissions($folder);
-        } else {
-            $fp = FilePermissions::getGlobal();
-        }
-        if (!$fp->canAddFileType($cf->getExtension($name))) {
-            throw new UserMessageException(Importer::getErrorMessage(Importer::E_FILE_INVALID_EXTENSION), 403);
-        } else {
-            $importer = new Importer();
-            $response = $importer->import($tmp_name, $name, $folder);
-        }
-        if (!$response instanceof FileVersionEntity) {
-            throw new UserMessageException(Importer::getErrorMessage($response), 400);
-        } else {
-            $file = $response->getFile();
-            if ($this->request->request->has('ocID')) {
-                // we check $fr because we don't want to set it if we are replacing an existing file
-                $file->setOriginalPage($this->request->request->get('ocID'));
+        try {
+            $name = $file->getClientOriginalName();
+            $tmp_name = $file->getPathname();
+    
+            if (is_object($folder)) {
+                $fp = new ConcretePermissions($folder);
+            } else {
+                $fp = FilePermissions::getGlobal();
             }
-            $files[] = $file->getJSONObject();
+            if (!$fp->canAddFileType($cf->getExtension($name))) {
+                throw new UserMessageException(Importer::getErrorMessage(Importer::E_FILE_INVALID_EXTENSION), 403);
+            } else {
+                $importer = new Importer();
+                $response = $importer->import($tmp_name, $name, $folder);
+            }
+            if (!$response instanceof FileVersionEntity) {
+                throw new UserMessageException(Importer::getErrorMessage($response), 400);
+            } else {
+                $fileEntity = $response->getFile();
+                if ($this->request->request->has('ocID')) {
+                    // we check $fr because we don't want to set it if we are replacing an existing file
+                    $fileEntity->setOriginalPage($this->request->request->get('ocID'));
+                }
+                $files[] = $fileEntity->getJSONObject();
+            }
+    
+            return $files;
+        } finally {
+            if ($deleteFile) {
+                @unlink($file->getPathname());
+            }
         }
-
-        return $files;
     }
 
     /**
      * @param \Symfony\Component\HttpFoundation\File\UploadedFile $file
+     * @param bool $deleteFile output parameter that's set to true if the uploaded file should be deleted manually
      *
      * @return \Symfony\Component\HttpFoundation\File\UploadedFile|null
      */
-    private function getFileToImport(UploadedFile $file)
+    private function getFileToImport(UploadedFile $file, &$deleteFile)
     {
+        $deleteFile = false;
         $post = $this->request->request;
         $dzuuid = $post->get('dzuuid');
         $dzIndex = $post->get('dzchunkindex');
@@ -357,6 +365,7 @@ class File extends Controller
         if ($dzuuid !== null && $dzIndex !== null && $dzTotalChunks !== null) {
             $file->move($file->getPath(), $dzuuid.$dzIndex);
             if ($this->isFullChunkFilePresent($dzuuid, $file->getPath(), $dzTotalChunks)) {
+                $deleteFile = true;
                 return $this->combineFileChunks($dzuuid, $file->getPath(), $dzTotalChunks, $file);
             } else {
                 return null;
