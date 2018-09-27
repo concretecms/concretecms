@@ -2,6 +2,7 @@
 namespace Concrete\Controller;
 
 use Concrete\Core\Controller\Controller;
+use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\Feed as PageFeed;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -16,8 +17,7 @@ class Feed extends Controller
                 return Response::create($xml, 200, array('Content-Type' => 'text/xml'));
             }
         }
-
-        return Response::create('', 404);
+        return $this->app->make(ResponseFactoryInterface::class)->notFound(t('Unable to find the requested RSS feed.'));
     }
 
 }
