@@ -309,7 +309,7 @@ class File extends Controller
         }
         $cf = $this->app->make('helper/file');
 
-        $file = $this->GetFileToImport($file);
+        $file = $this->getFileToImport($file);
         $files = [];
         if ($file === null) {
             return $files;
@@ -343,15 +343,20 @@ class File extends Controller
         return $files;
     }
 
-    private function GetFileToImport(UploadedFile $file)
+    /**
+     * @param \Symfony\Component\HttpFoundation\File\UploadedFile $file
+     *
+     * @return \Symfony\Component\HttpFoundation\File\UploadedFile|null
+     */
+    private function getFileToImport(UploadedFile $file)
     {
         $dzuuid = $this->request->post('dzuuid');
         $dzIndex = $this->request->post('dzchunkindex');
         $dzTotalChunks = $this->request->post('dztotalchunkcount');
         if ($dzuuid !== null && $dzIndex !== null && $dzTotalChunks !== null) {
             $file->move($file->getPath(), $dzuuid.$dzIndex);
-            if ($this->IsFullChunkFilePresent($dzuuid, $file->getPath(), $dzTotalChunks)) {
-                return $this->CombineFileChunks($dzuuid, $file->getPath(), $dzTotalChunks, $file);
+            if ($this->isFullChunkFilePresent($dzuuid, $file->getPath(), $dzTotalChunks)) {
+                return $this->combineFileChunks($dzuuid, $file->getPath(), $dzTotalChunks, $file);
             } else {
                 return null;
             }
@@ -360,17 +365,32 @@ class File extends Controller
         }
     }
 
-    private function IsFullChunkFilePresent($fileUuid, $tempPath, $totalChunks)
+    /**
+     * @param string $fileUuid
+     * @param string $tempPath
+     * @param int $totalChunks
+     *
+     * @return boolean
+     */
+    private function isFullChunkFilePresent($fileUuid, $tempPath, $totalChunks)
     {
         for ($i = 0; $i < $totalChunks; $i++) {
-            if (!file_exists($tempPath . DIRECTORY_SEPARATOR . $fileUuid.$i)) {
+            if (!file_exists($tempPath . DIRECTORY_SEPARATOR . $fileUuid . $i)) {
                 return false;
             }
         }
         return true;
     }
 
-    private function CombineFileChunks($fileUuid, $tempPath, $totalChunks, UploadedFile $originalFile)
+    /**
+     * @param string $fileUuid
+     * @param string $tempPath
+     * @param int $totalChunks
+     * @param \Symfony\Component\HttpFoundation\File\UploadedFile $originalFile
+     *
+     * @return \Symfony\Component\HttpFoundation\File\UploadedFile
+     */
+    private function combineFileChunks($fileUuid, $tempPath, $totalChunks, UploadedFile $originalFile)
     {
         $bufferSize = 10485760; //10mb
         $finalFilePath = $tempPath . DIRECTORY_SEPARATOR . $fileUuid;
