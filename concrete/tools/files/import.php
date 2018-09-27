@@ -47,7 +47,11 @@ $valt = Loader::helper('validation/token');
     ['incoming', t('Incoming Directory')],
     ['remote', t('Remote Files')],
 ]);
-$isChunkingEnabled = $config->get('concrete.upload.chunking_enabled');
+$isChunkingEnabled = $config->get('concrete.upload.chunking.enabled');
+$chunkSize = (int) $config->get('concrete.upload.chunking.chunkSize');
+if ($chunkSize < 1) {
+    $chunkSize = 2000000;
+}
 ?>
 
 <script type="text/javascript">
@@ -82,6 +86,7 @@ $(function() {
             $('[data-button=launch-upload-complete]').show();
         },
         chunking: <?= $isChunkingEnabled ? "true" : "false" ?>,
+        chunkSize: <?= $chunkSize ?>,
         retryChunks: <?= $isChunkingEnabled ? "true" : "false" ?>,
         previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-details\">\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n    <div class=\"dz-size\" data-dz-size></div>\n    <img data-dz-thumbnail />\n  </div>\n  <div class=\"dz-progress\"><span class=\"dz-upload\" data-dz-uploadprogress></span></div>\n  <div class=\"dz-success-mark\"><span>✔</span></div>\n  <div class=\"dz-error-mark\"><span>✘</span></div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n</div>"
     });

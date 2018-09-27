@@ -87,7 +87,10 @@ return [
             '*.csv;*.pdf;*.tiff;*.rtf;*.m4a;*.mov;*.wmv;*.mpeg;*.mpg;*.wav;*.3gp;*.avi;*.m4v;*.mp4;*.mp3;*.qt;*.ppt;' .
             '*.pptx;*.kml;*.xml;*.svg;*.webm;*.ogg;*.ogv',
 
-        'chunking_enabled' => true
+        'chunking' => [
+            'enabled' => true,
+            'chunkSize' => 2000000,
+        ],
     ],
 
     /*
