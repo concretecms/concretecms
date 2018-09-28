@@ -6,6 +6,7 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Page\Sitemap\Element\SitemapHeader;
 use Concrete\Core\Page\Sitemap\Element\SitemapPage;
+use Concrete\Core\Page\Sitemap\Event\SitemapXmlElementEvent;
 use Illuminate\Filesystem\Filesystem;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
@@ -292,7 +293,9 @@ class SitemapWriter
                     $pulse($element);
                 }
                 if ($dispatchElementReady) {
-                    $this->director->dispatch(static::EVENTNAME_ELEMENTREADY, new GenericEvent(['sitemapPage' => $element]));
+                    $event = new SitemapXmlElementEvent();
+                    $event->setElement($element);
+                    $this->director->dispatch(static::EVENTNAME_ELEMENTREADY, $event);
                 }
                 if ($mode === static::MODE_HIGHMEMORY) {
                     if ($element instanceof SitemapHeader) {
