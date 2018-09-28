@@ -3,19 +3,16 @@
 namespace Concrete\Core\Cache\Page;
 
 use Concrete\Core\Cache\FlushableInterface;
-use Concrete\Core\Http\Response;
-use Config;
 use Concrete\Core\Http\Request;
+use Concrete\Core\Http\Response;
 use Concrete\Core\Page\Page as ConcretePage;
-use \Concrete\Core\Page\View\PageView;
-use Concrete\Core\User\User;
-use Session;
-use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Page\View\PageView;
 use Concrete\Core\Permission\Checker;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\User\User;
 
 abstract class PageCache implements FlushableInterface
 {
-
     /**
      * @var \Concrete\Core\Cache\Page\PageCache|null
      */
@@ -24,21 +21,22 @@ abstract class PageCache implements FlushableInterface
     /**
      * Build a Response object starting from a cached page.
      *
-     * @param \Concrete\Core\Cache\Page\PageCacheRecord $record The cache record containing the cached page data.
+     * @param \Concrete\Core\Cache\Page\PageCacheRecord $record the cache record containing the cached page data
      *
      * @return \Concrete\Core\Http\Response
      */
     public function deliver(PageCacheRecord $record)
     {
         $response = new Response();
-        $headers = array();
+        $headers = [];
         if (defined('APP_CHARSET')) {
-            $headers["Content-Type"] = "text/html; charset=" . APP_CHARSET;
+            $headers['Content-Type'] = 'text/html; charset=' . APP_CHARSET;
         }
         $headers = array_merge($headers, $record->getCacheRecordHeaders());
 
         $response->headers->add($headers);
         $response->setContent($record->getCacheRecordContent());
+
         return $response;
     }
 
@@ -49,7 +47,7 @@ abstract class PageCache implements FlushableInterface
      */
     public static function getLibrary()
     {
-        if (!PageCache::$library) {
+        if (!self::$library) {
             $app = Application::getFacadeApplication();
             $config = $app->make('config');
             $adapter = $config->get('concrete.cache.page.adapter');
@@ -57,9 +55,10 @@ abstract class PageCache implements FlushableInterface
                 'Core\\Cache\\Page\\' . camelcase($adapter) . 'PageCache',
                 DIRNAME_CLASSES . '/Cache/Page/' . camelcase($adapter) . 'PageCache.php'
             );
-            PageCache::$library = $app->build($class);
+            self::$library = $app->build($class);
         }
-        return PageCache::$library;
+
+        return self::$library;
     }
 
     /**
@@ -74,7 +73,7 @@ abstract class PageCache implements FlushableInterface
         if ($req->getMethod() === $req::METHOD_POST) {
             return false;
         }
-        
+
         $app = Application::getFacadeApplication();
         $config = $app->make('config');
         $cookie = $app->make('cookie');
@@ -82,13 +81,14 @@ abstract class PageCache implements FlushableInterface
         if ($cookie->has($loginCookie) && $cookie->get($loginCookie)) {
             return false;
         }
+
         return true;
     }
 
     /**
      * Send the cache-related HTTP headers for a page to the current response.
      *
-     * @deprecated Response headers should be set by the deliver method.
+     * @deprecated response headers should be set by the deliver method
      *
      * @param \Concrete\Core\Page\Page $c
      */
@@ -111,11 +111,11 @@ abstract class PageCache implements FlushableInterface
         $lifetime = $c->getCollectionFullPageCachingLifetimeValue();
         $expires = gmdate('D, d M Y H:i:s', time() + $lifetime) . ' GMT';
 
-        $headers = array(
+        $headers = [
             'Pragma' => 'public',
             'Cache-Control' => 'max-age=' . $lifetime . ',s-maxage=' . $lifetime,
-            'Expires' => $expires
-        );
+            'Expires' => $expires,
+        ];
 
         return $headers;
     }
@@ -140,14 +140,13 @@ abstract class PageCache implements FlushableInterface
         }
 
         if (is_object($v->controller)) {
-            $allowedControllerActions = array('view');
+            $allowedControllerActions = ['view'];
             if (!in_array($v->controller->getAction(), $allowedControllerActions)) {
                 return false;
             }
             if ($c->isGeneratedCollection() && !$v->controller->supportsPageCache()) {
                 return false;
             }
-            
         }
 
         if (!$c->getCollectionFullPageCaching()) {
@@ -161,7 +160,7 @@ abstract class PageCache implements FlushableInterface
         }
 
         $u = $app->make(User::class);
-        if ($u->isRegistered())  {
+        if ($u->isRegistered()) {
             return false;
         }
 
@@ -185,6 +184,7 @@ abstract class PageCache implements FlushableInterface
                 return false;
             }
         }
+
         return true;
     }
 
@@ -203,7 +203,7 @@ abstract class PageCache implements FlushableInterface
                 return urlencode($collectionPath);
             }
             $cID = $mixed->getCollectionID();
-            if ($cID  && $cID == ConcretePage::getHomePageID()) {
+            if ($cID && $cID == ConcretePage::getHomePageID()) {
                 return '!' . $cID;
             }
         } elseif ($mixed instanceof \Concrete\Core\Http\Request) {
@@ -211,6 +211,7 @@ abstract class PageCache implements FlushableInterface
             if ($path !== '') {
                 return urlencode($path);
             }
+
             return '!' . ConcretePage::getHomePageID();
         } elseif ($mixed instanceof PageCacheRecord) {
             return $mixed->getCacheRecordKey();
@@ -245,14 +246,14 @@ abstract class PageCache implements FlushableInterface
      * Remove a cache entry given the page.
      *
      * @param \Concrete\Core\Cache\Page\PageCacheRecord $rec
+     * @param ConcretePage $c
      */
     abstract public function purge(ConcretePage $c);
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * @see \Concrete\Core\Cache\FlushableInterface::flush()
      */
     abstract public function flush();
-
 }
