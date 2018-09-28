@@ -30,18 +30,20 @@ class AddBlockBlockTypeKey extends BlockTypeKey
                 $allBTIDs = $db->GetCol('select btID from BlockTypes where btIsInternal = 0');
             }
             foreach ($list as $l) {
-                if ($l->getBlockTypesAllowedPermission() == 'N') {
-                    $btIDs = array();
-                }
-                if ($l->getBlockTypesAllowedPermission() == 'C') {
-                    if ($l->getAccessType() == PermissionKey::ACCESS_TYPE_EXCLUDE) {
-                        $btIDs = array_values(array_diff($btIDs, $l->getBlockTypesAllowedArray()));
-                    } else {
-                        $btIDs = array_unique(array_merge($btIDs, $l->getBlockTypesAllowedArray()));
-                    }
-                }
-                if ($l->getBlockTypesAllowedPermission() == 'A') {
-                    $btIDs = $allBTIDs;
+                switch ($l->getBlockTypesAllowedPermission()) {
+                    case 'N':
+                        $btIDs = array();
+                        break;
+                    case 'C':
+                        if ($l->getAccessType() == PermissionKey::ACCESS_TYPE_EXCLUDE) {
+                            $btIDs = array_values(array_diff($btIDs, $l->getBlockTypesAllowedArray()));
+                        } else {
+                            $btIDs = array_unique(array_merge($btIDs, $l->getBlockTypesAllowedArray()));
+                        }
+                        break;
+                    case 'A':
+                        $btIDs = $allBTIDs;
+                        break;
                 }
             }
         }
