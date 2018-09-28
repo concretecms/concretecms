@@ -139,29 +139,30 @@ abstract class PageCache implements FlushableInterface
             return false;
         }
 
-        $app = Application::getFacadeApplication();
-        $u = $app->make(User::class);
-
-        $allowedControllerActions = array('view');
         if (is_object($v->controller)) {
-            if (!in_array($v->controller->getTask(), $allowedControllerActions)) {
+            $allowedControllerActions = array('view');
+            if (!in_array($v->controller->getAction(), $allowedControllerActions)) {
                 return false;
             }
+            if ($c->isGeneratedCollection() && !$v->controller->supportsPageCache()) {
+                return false;
+            }
+            
         }
 
         if (!$c->getCollectionFullPageCaching()) {
             return false;
         }
 
+        $app = Application::getFacadeApplication();
         $request = $app->make(Request::class);
-        if ($u->isRegistered() || $request->getMethod() === $request::METHOD_POST) {
+        if ($request->getMethod() === $request::METHOD_POST) {
             return false;
         }
 
-        if ($c->isGeneratedCollection()) {
-            if ((is_object($v->controller) && (!$v->controller->supportsPageCache())) || (!is_object($v->controller))) {
-                return false;
-            }
+        $u = $app->make(User::class);
+        if ($u->isRegistered())  {
+            return false;
         }
 
         $config = $app->make('config');
