@@ -191,33 +191,29 @@ abstract class PageCache implements FlushableInterface
     /**
      * Get the key that identifies the cache entry for a page or a request.
      *
-     * @param \Concrete\Core\Page\Page|\Concrete\Core\Http\Request|mixed $mixed
+     * @param \Concrete\Core\Page\Page|\Concrete\Core\Http\Request|\Concrete\Core\Cache\Page\PageCacheRecord|mixed $mixed
      *
      * @return string|null Returns NULL if $mixed is not a recognized type, a string otherwise
      */
     public function getCacheKey($mixed)
     {
-        $homeCID = 1;
         if ($mixed instanceof ConcretePage) {
-            if ($mixed->getCollectionPath() != '') {
-                return urlencode(trim($mixed->getCollectionPath(), '/'));
-            } else {
-                if ($mixed->getCollectionID() == $homeCID) {
-                    return '!' . $homeCID;
-                }
+            $collectionPath = trim((string) $mixed->getCollectionPath(), '/');
+            if ($collectionPath !== '') {
+                return urlencode($collectionPath);
             }
-        } else {
-            if ($mixed instanceof \Concrete\Core\Http\Request) {
-                if ($mixed->getPath() != '') {
-                    return urlencode(trim($mixed->getPath(), '/'));
-                } else {
-                    return '!' . $homeCID;
-                }
-            } else {
-                if ($mixed instanceof PageCacheRecord) {
-                    return $mixed->getCacheRecordKey();
-                }
+            $cID = $mixed->getCollectionID();
+            if ($cID  && $cID == ConcretePage::getHomePageID()) {
+                return '!' . $cID;
             }
+        } elseif ($mixed instanceof \Concrete\Core\Http\Request) {
+            $path = trim((string) $mixed->getPath(), '/');
+            if ($path !== '') {
+                return urlencode($path);
+            }
+            return '!' . ConcretePage::getHomePageID();
+        } elseif ($mixed instanceof PageCacheRecord) {
+            return $mixed->getCacheRecordKey();
         }
     }
 
