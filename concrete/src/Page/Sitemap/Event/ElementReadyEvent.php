@@ -52,6 +52,8 @@ class ElementReadyEvent extends GenericEvent
      *
      * @param \Concrete\Core\Page\Sitemap\Element\SitemapElement|null $newElement
      *
+     * @throws \InvalidArgumentException throws an InvalidArgumentException exception if you are setting to NULL the sitemap header or footer (just sitemap pages can be set to NULL)
+     *
      * @return $this
      */
     public function setElement(SitemapElement $newElement = null)
