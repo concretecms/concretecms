@@ -240,7 +240,7 @@ abstract class PageCache implements FlushableInterface
      *
      * @param \Concrete\Core\Cache\Page\PageCacheRecord $rec
      */
-    abstract public function purgeByRecord(\Concrete\Core\Cache\Page\PageCacheRecord $rec);
+    abstract public function purgeByRecord(PageCacheRecord $rec);
 
     /**
      * Remove a cache entry given the page.
