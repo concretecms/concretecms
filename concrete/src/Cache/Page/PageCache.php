@@ -19,7 +19,7 @@ abstract class PageCache implements FlushableInterface
     /**
      * @var \Concrete\Core\Cache\Page\PageCache|null
      */
-    static $library;
+    protected static $library;
 
     /**
      * Build a Response object starting from a cached page.
