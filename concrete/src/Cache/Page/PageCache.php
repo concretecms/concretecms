@@ -14,7 +14,7 @@ use Concrete\Core\User\User;
 abstract class PageCache implements FlushableInterface
 {
     /**
-     * @deprecated What's deprecated is the "public" part: use the getLibrary() method to retrieve the library.
+     * @deprecated what's deprecated is the "public" part: use the getLibrary() method to retrieve the library
      *
      * @var \Concrete\Core\Cache\Page\PageCache|null
      */
@@ -90,7 +90,10 @@ abstract class PageCache implements FlushableInterface
     /**
      * Send the cache-related HTTP headers for a page to the current response.
      *
-     * @deprecated response headers should be set by the deliver method
+     * @deprecated Headers are no longer set directly. Instead, use the
+     * <code>$pageCache->deliver()</code>
+     * method to retrieve a response object and either return it from a controller method or, if you must, use
+     * <code>$response->prepare($request)->send()</code>
      *
      * @param \Concrete\Core\Page\Page $c
      */
