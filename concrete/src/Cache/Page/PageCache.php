@@ -16,8 +16,18 @@ use Concrete\Core\Support\Facade\Application;
 abstract class PageCache implements FlushableInterface
 {
 
+    /**
+     * @var \Concrete\Core\Cache\Page\PageCache|null
+     */
     static $library;
 
+    /**
+     * Build a Response object starting from a cached page.
+     *
+     * @param \Concrete\Core\Cache\Page\PageCacheRecord $record The cache record containing the cached page data.
+     *
+     * @return \Concrete\Core\Http\Response
+     */
     public function deliver(PageCacheRecord $record)
     {
         $response = new Response();
@@ -33,6 +43,8 @@ abstract class PageCache implements FlushableInterface
     }
 
     /**
+     * Get the page cache library.
+     *
      * @return \Concrete\Core\Cache\Page\PageCache
      */
     public static function getLibrary()
@@ -50,6 +62,13 @@ abstract class PageCache implements FlushableInterface
         return PageCache::$library;
     }
 
+    /**
+     * Determine if we should check if a page is in the cache.
+     *
+     * @param \Concrete\Core\Http\Request $req
+     *
+     * @return bool
+     */
     public function shouldCheckCache(Request $req)
     {
         if ($req->isPost()) {
@@ -66,6 +85,13 @@ abstract class PageCache implements FlushableInterface
         return true;
     }
 
+    /**
+     * Send the cache-related HTTP headers for a page to the current response.
+     *
+     * @deprecated Response headers should be set by the deliver method.
+     *
+     * @param \Concrete\Core\Page\Page $c
+     */
     public function outputCacheHeaders(ConcretePage $c)
     {
         foreach ($this->getCacheHeaders($c) as $header) {
@@ -73,6 +99,13 @@ abstract class PageCache implements FlushableInterface
         }
     }
 
+    /**
+     * Get the cache-related HTTP headers for a page.
+     *
+     * @param \Concrete\Core\Page\Page $c
+     *
+     * @return array Keys are the header names; values are the header values
+     */
     public function getCacheHeaders(ConcretePage $c)
     {
         $lifetime = $c->getCollectionFullPageCachingLifetimeValue();
@@ -87,6 +120,13 @@ abstract class PageCache implements FlushableInterface
         return $headers;
     }
 
+    /**
+     * Check if a page contained in a PageView should be stored in the cache.
+     *
+     * @param \Concrete\Core\Page\View\PageView $v
+     *
+     * @return bool
+     */
     public function shouldAddToCache(PageView $v)
     {
         $c = $v->getCollectionObject();
@@ -144,6 +184,13 @@ abstract class PageCache implements FlushableInterface
         return true;
     }
 
+    /**
+     * Get the key that identifies the cache entry for a page or a request.
+     *
+     * @param \Concrete\Core\Page\Page|\Concrete\Core\Http\Request|mixed $mixed
+     *
+     * @return string|null Returns NULL if $mixed is not a recognized type, a string otherwise
+     */
     public function getCacheKey($mixed)
     {
         $homeCID = 1;
@@ -170,14 +217,42 @@ abstract class PageCache implements FlushableInterface
         }
     }
 
+    /**
+     * Get the cached item for a page or a request.
+     *
+     * @param \Concrete\Core\Page\Page|\Concrete\Core\Http\Request|mixed $mixed
+     *
+     * @return \Concrete\Core\Cache\Page\PageCacheRecord|null Return NULL if $mixed is not a recognized type, or if it's the record is not in the cache
+     */
     abstract public function getRecord($mixed);
 
+    /**
+     * Store a page in the cache.
+     *
+     * @param \Concrete\Core\Page\Page $c The page to be stored in the cache
+     * @param string $content The whole HTML of the page to be stored in the cache
+     */
     abstract public function set(ConcretePage $c, $content);
 
+    /**
+     * Remove a cache entry given the record retrieved from the cache.
+     *
+     * @param \Concrete\Core\Cache\Page\PageCacheRecord $rec
+     */
     abstract public function purgeByRecord(\Concrete\Core\Cache\Page\PageCacheRecord $rec);
 
+    /**
+     * Remove a cache entry given the page.
+     *
+     * @param \Concrete\Core\Cache\Page\PageCacheRecord $rec
+     */
     abstract public function purge(ConcretePage $c);
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see \Concrete\Core\Cache\FlushableInterface::flush()
+     */
     abstract public function flush();
 
 }
