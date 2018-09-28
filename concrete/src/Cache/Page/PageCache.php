@@ -11,6 +11,7 @@ use \Concrete\Core\Page\View\PageView;
 use Permissions;
 use User;
 use Session;
+use Concrete\Core\Support\Facade\Application;
 
 abstract class PageCache implements FlushableInterface
 {
@@ -31,15 +32,20 @@ abstract class PageCache implements FlushableInterface
         return $response;
     }
 
+    /**
+     * @return \Concrete\Core\Cache\Page\PageCache
+     */
     public static function getLibrary()
     {
         if (!PageCache::$library) {
-            $adapter = Config::get('concrete.cache.page.adapter');
+            $app = Application::getFacadeApplication();
+            $config = $app->make('config');
+            $adapter = $config->get('concrete.cache.page.adapter');
             $class = overrideable_core_class(
                 'Core\\Cache\\Page\\' . camelcase($adapter) . 'PageCache',
                 DIRNAME_CLASSES . '/Cache/Page/' . camelcase($adapter) . 'PageCache.php'
             );
-            PageCache::$library = new $class();
+            PageCache::$library = $app->build($class);
         }
         return PageCache::$library;
     }
