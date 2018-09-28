@@ -206,7 +206,7 @@ abstract class PageCache implements FlushableInterface
             if ($cID && $cID == ConcretePage::getHomePageID()) {
                 return '!' . $cID;
             }
-        } elseif ($mixed instanceof \Concrete\Core\Http\Request) {
+        } elseif ($mixed instanceof Request) {
             $path = trim((string) $mixed->getPath(), '/');
             if ($path !== '') {
                 return urlencode($path);
