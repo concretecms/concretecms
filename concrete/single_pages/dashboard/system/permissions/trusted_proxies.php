@@ -17,7 +17,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
         <div class="text-muted">
             <?= t('Separate IP addresses with spaces or new lines.') ?><br />
             <?= t(
-                'Accepted values are single addresses (IPv4 like %1s, and IPv6 like %2s) and ranges in subnet format (IPv4 like %3s, and IPv6 like %4s).',
+                'Accepted values are single addresses (IPv4 like %1$s, and IPv6 like %2$s) and ranges in subnet format (IPv4 like %3$s, and IPv6 like %4$s).',
                 '<code>127.0.0.1</code>',
                 '<code>::1</code>',
                 '<code>127.0.0.1/24</code>',
