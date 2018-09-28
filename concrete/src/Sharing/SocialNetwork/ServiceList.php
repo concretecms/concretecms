@@ -35,13 +35,11 @@ class ServiceList
                 $keyArray[$service[0]] = $service;
             }
 
-            if (!empty($additionalSocialNetworks)) {
-                foreach($additionalSocialNetworks as $service) {
-                    $additionalKeyArray[$service[0]] = $service;
-                }
-
-                $services = array_values($additionalKeyArray + $services);
+            foreach($additionalSocialNetworks as $service) {
+                $additionalKeyArray[$service[0]] = $service;
             }
+
+            $services = array_values($additionalKeyArray + $services);
         }
 
         return $services;
