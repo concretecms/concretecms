@@ -1,24 +1,37 @@
 <?php
+
 namespace Concrete\Controller\Search;
 
+use Concrete\Controller\Dialog\User\AdvancedSearch;
+use Concrete\Core\Entity\Search\SavedUserSearch;
 use Concrete\Core\Search\Field\Field\KeywordsField;
-use Concrete\Core\User\Group\GroupList;
+use Doctrine\ORM\EntityManagerInterface;
 
 class Users extends Standard
 {
-
+    /**
+     * @return \Concrete\Controller\Dialog\Search\AdvancedSearch
+     */
     protected function getAdvancedSearchDialogController()
     {
-        return $this->app->make('\Concrete\Controller\Dialog\User\AdvancedSearch');
+        return $this->app->make(AdvancedSearch::class);
     }
 
+    /**
+     * @param int $presetID
+     *
+     * @return \Concrete\Core\Entity\Search\SavedUserSearch|null
+     */
     protected function getSavedSearchPreset($presetID)
     {
-        $em = \Database::connection()->getEntityManager();
-        $preset = $em->find('Concrete\Core\Entity\Search\SavedUserSearch', $presetID);
-        return $preset;
+        $em = $this->app->make(EntityManagerInterface::class);
+
+        return $em->find(SavedUserSearch::class, $presetID);
     }
 
+    /**
+     * @return KeywordsField[]
+     */
     protected function getBasicSearchFieldsFromRequest()
     {
         $fields = parent::getBasicSearchFieldsFromRequest();
@@ -26,17 +39,17 @@ class Users extends Standard
         if ($keywords) {
             $fields[] = new KeywordsField($keywords);
         }
+
         return $fields;
     }
 
+    /**
+     * @return bool
+     */
     protected function canAccess()
     {
         $dh = $this->app->make('helper/concrete/user');
-        if ($dh->canAccessUserSearchInterface()) {
-            return true;
-        }
-        return false;
+
+        return $dh->canAccessUserSearchInterface();
     }
-
-
 }
