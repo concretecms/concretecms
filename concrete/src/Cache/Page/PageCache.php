@@ -8,10 +8,10 @@ use Config;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Page\Page as ConcretePage;
 use \Concrete\Core\Page\View\PageView;
-use Permissions;
-use User;
+use Concrete\Core\User\User;
 use Session;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Permission\Checker;
 
 abstract class PageCache implements FlushableInterface
 {
@@ -71,13 +71,13 @@ abstract class PageCache implements FlushableInterface
      */
     public function shouldCheckCache(Request $req)
     {
-        if ($req->isPost()) {
+        if ($req->getMethod() === $req::METHOD_POST) {
             return false;
         }
         
-        $app = \Core::make('app');
-        $config = $app['config'];
-        $cookie = $app['cookie'];
+        $app = Application::getFacadeApplication();
+        $config = $app->make('config');
+        $cookie = $app->make('cookie');
         $loginCookie = sprintf('%s_LOGIN', $config->get('concrete.session.name'));
         if ($cookie->has($loginCookie) && $cookie->get($loginCookie)) {
             return false;
@@ -129,17 +129,18 @@ abstract class PageCache implements FlushableInterface
      */
     public function shouldAddToCache(PageView $v)
     {
-        $c = $v->getCollectionObject();
+        $c = $v->getPageObject();
         if (!is_object($c)) {
             return false;
         }
 
-        $cp = new Permissions($c);
+        $cp = new Checker($c);
         if (!$cp->canViewPage()) {
             return false;
         }
 
-        $u = new User();
+        $app = Application::getFacadeApplication();
+        $u = $app->make(User::class);
 
         $allowedControllerActions = array('view');
         if (is_object($v->controller)) {
@@ -152,7 +153,8 @@ abstract class PageCache implements FlushableInterface
             return false;
         }
 
-        if ($u->isRegistered() || $_SERVER['REQUEST_METHOD'] == 'POST') {
+        $request = $app->make(Request::class);
+        if ($u->isRegistered() || $request->getMethod() === $request::METHOD_POST) {
             return false;
         }
 
@@ -162,13 +164,14 @@ abstract class PageCache implements FlushableInterface
             }
         }
 
-        if ($c->getCollectionFullPageCaching() == 1 || Config::get('concrete.cache.pages') === 'all') {
+        $config = $app->make('config');
+        if ($c->getCollectionFullPageCaching() == 1 || $config->get('concrete.cache.pages') === 'all') {
             // this cache page at the page level
             // this overrides any global settings
             return true;
         }
 
-        if (Config::get('concrete.cache.pages') !== 'blocks') {
+        if ($config->get('concrete.cache.pages') !== 'blocks') {
             // we are NOT specifically caching this page, and we don't
             return false;
         }
