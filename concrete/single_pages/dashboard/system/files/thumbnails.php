@@ -76,38 +76,42 @@ if (isset($type)) {
                 <label>
                     <?= $form->checkbox('ftKeepAnimations', '1', $type->isKeepAnimations()) ?>
                     <?= t('Create animated thumbnails for animated images') ?>
-                    <?php
-                    if (!$manipulationLibrarySupportsAnimations) {
-                        $optionsPageName = t('Image Options');
-                        $optionsPage = Page::getByPath('/dashboard/system/files/image_uploading');
-                        if ($optionsPage && !$optionsPage->isError()) {
-                            $optionsPageName = h(t($optionsPage->getCollectionName()));
-                            $optionsPagePermissions = new Checker($optionsPage);
-                            if ($optionsPagePermissions->canViewPage()) {
-                                $optionsPageName = '<a href="' . h($optionsPage->getCollectionLink()) . '" target="_blank">' . $optionsPageName . '</a>';
+                    <span class="small text-muted" id="ftKeepAnimations-warning" <?= $type->isKeepAnimations() ? '' : ' style="display: none"' ?>>
+                        <br />
+                        <i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red"></i>
+                        <?php
+                        if ($manipulationLibrarySupportsAnimations) {
+                            ?>
+                            <?= t('Creating animated thumbnails may require a lot of memory and may require more processing time.') ?>
+                            <?php
+                        } else {
+                            $optionsPageName = t('Image Options');
+                            $optionsPage = Page::getByPath('/dashboard/system/files/image_uploading');
+                            if ($optionsPage && !$optionsPage->isError()) {
+                                $optionsPageName = h(t($optionsPage->getCollectionName()));
+                                $optionsPagePermissions = new Checker($optionsPage);
+                                if ($optionsPagePermissions->canViewPage()) {
+                                    $optionsPageName = '<a href="' . h($optionsPage->getCollectionLink()) . '" target="_blank">' . $optionsPageName . '</a>';
+                                }
                             }
-                        }
-                        ?>
-                        <span class="small text-muted" id="ftKeepAnimations-warning" <?= $type->isKeepAnimations() ? '' : ' style="display: none"' ?>>
-                            <br />
-                            <i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red"></i>
+                            ?>
                             <?= t('This requires that concrete5 is configured to use the ImageMagick manipulation library.') ?>
                             <br />
                             <?= t(/*i18n: %s is the name of a page*/ 'You can configure it in the %s page.', $optionsPageName) ?>
-                        </span>
-                        <script>
-                        $(document).ready(function() {
-                            $('#ftKeepAnimations')
-                                .on('change', function() {
-                                    $('#ftKeepAnimations-warning').toggle(this.checked);
-                                })
-                                .trigger('change')
-                            ;
-                        });
-                        </script>
-                        <?php
-                    }
-                    ?>
+                            <?php
+                        }
+                        ?>
+                    </span>
+                    <script>
+                    $(document).ready(function() {
+                        $('#ftKeepAnimations')
+                            .on('change', function() {
+                                $('#ftKeepAnimations-warning').toggle(this.checked);
+                            })
+                            .trigger('change')
+                        ;
+                    });
+                    </script>
                 </label>
             </div>
         </div>
