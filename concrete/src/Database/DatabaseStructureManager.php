@@ -3,7 +3,7 @@ namespace Concrete\Core\Database;
 
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\Schema\SchemaDiff;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Core;
 use Doctrine\ORM\Tools\SchemaTool;
 
@@ -12,7 +12,7 @@ class DatabaseStructureManager
     /**
      * The entity manager instance.
      *
-     * @var \Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManagerInterface
      */
     protected $entityManager;
 
@@ -26,9 +26,9 @@ class DatabaseStructureManager
     /**
      * Create a new structure manager.
      * 
-     * @param \Doctrine\ORM\EntityManager $em
+     * @param \Doctrine\ORM\EntityManagerInterface $em
      */
-    public function __construct(EntityManager $em)
+    public function __construct(EntityManagerInterface $em)
     {
         $this->entityManager = $em;
     }
@@ -36,7 +36,7 @@ class DatabaseStructureManager
     /**
      * Get the entity manager object for this structure manager.
      * 
-     * @return \Doctrine\ORM\EntityManager
+     * @return \Doctrine\ORM\EntityManagerInterface
      */
     public function getEntityManager()
     {
@@ -381,10 +381,7 @@ class DatabaseStructureManager
         }
     }
 
-    /**
-     * Clears cache, regenerates all proxy classes, and updates metadatas in all entity managers
-     */
-    public function refreshEntities()
+    public function clearCacheAndProxies()
     {
         $config = $this->entityManager->getConfiguration();
 
@@ -396,6 +393,16 @@ class DatabaseStructureManager
         // Next, we regnerate proxies
         $metadatas = $this->entityManager->getMetadataFactory()->getAllMetadata();
         $this->entityManager->getProxyFactory()->generateProxyClasses($metadatas, \Config::get('database.proxy_classes'));
+        return $metadatas;
+    }
+
+    /**
+     * Clears cache, regenerates all proxy classes, and updates metadatas in all entity managers
+     */
+    public function refreshEntities()
+    {
+
+        $metadatas = $this->clearCacheAndProxies();
 
         // Finally, we update the schema
         $tool = new SchemaTool($this->entityManager);

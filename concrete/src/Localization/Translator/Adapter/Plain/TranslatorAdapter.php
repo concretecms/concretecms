@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Localization\Translator\Adapter\Plain;
 
 use Concrete\Core\Localization\Translator\TranslatorAdapterInterface;
@@ -12,7 +11,6 @@ use Concrete\Core\Localization\Translator\TranslatorAdapterInterface;
  */
 class TranslatorAdapter implements TranslatorAdapterInterface
 {
-
     /** @var string */
     protected $locale;
 
@@ -28,7 +26,7 @@ class TranslatorAdapter implements TranslatorAdapterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getLocale()
     {
@@ -36,7 +34,7 @@ class TranslatorAdapter implements TranslatorAdapterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setLocale($locale)
     {
@@ -81,6 +79,7 @@ class TranslatorAdapter implements TranslatorAdapterInterface
             return '';
         }
         $text = $number == 1 ? $singular : $plural;
+
         return $this->formatString($text, array_slice(func_get_args(), 2));
     }
 
@@ -101,7 +100,7 @@ class TranslatorAdapter implements TranslatorAdapterInterface
      */
     public function translateContext($context, $text)
     {
-        return call_user_func_array(array($this, 'translate'), array_slice(func_get_args(), 1));
+        return call_user_func_array([$this, 'translate'], array_slice(func_get_args(), 1));
     }
 
     /**
@@ -116,7 +115,7 @@ class TranslatorAdapter implements TranslatorAdapterInterface
         if (count($args) > 0) {
             return vsprintf($string, $args);
         }
+
         return $string;
     }
-
 }

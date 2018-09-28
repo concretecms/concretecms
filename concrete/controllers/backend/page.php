@@ -16,25 +16,21 @@ class Page extends Controller
     public function create($ptID, $parentID = false)
     {
         $pagetype = PageType::getByID(Loader::helper('security')->sanitizeInt($ptID));
-        if ($parentID) {
-            $parent = ConcretePage::getByID($parentID);
-        }
         if (is_object($pagetype)) {
             $proceed = false;
+            $parent = $parentID ? ConcretePage::getByID($parentID) : null;
             if (is_object($parent) && !$parent->isError()) {
                 $pp = new Permissions($parent);
                 $proceed = $pp->canAddSubCollection($pagetype);
             } else {
                 $ptp = new Permissions($pagetype);
                 $proceed = $ptp->canAddPageType();
-                if (isset($parent)) {
-                    unset($parent);
-                }
+                $parent = null;
             }
             if ($proceed) {
                 $pt = $pagetype->getPageTypeDefaultPageTemplateObject();
                 $d = $pagetype->createDraft($pt);
-                if (is_object($parent)) {
+                if ($parent !== null) {
                     $d->setPageDraftTargetParentPageID($parent->getCollectionID());
                 }
 
@@ -61,9 +57,9 @@ class Page extends Controller
 
     public function getJSON()
     {
-        $h = \Core::make('helper/concrete/dashboard/sitemap');
+        $h = $this->app->make('helper/concrete/dashboard/sitemap');
         if ($h->canRead()) {
-            $c = ConcretePage::getByID(intval($_POST['cID']));
+            $c = ConcretePage::getByID((int) $this->request->request->get('cID'));
             $cp = new Permissions($c);
             if ($cp->canViewPage()) {
                 $r = new PageEditResponse();

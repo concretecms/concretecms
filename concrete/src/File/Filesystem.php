@@ -1,13 +1,11 @@
 <?php
+
 namespace Concrete\Core\File;
 
-use Concrete\Core\File\Search\ColumnSet\DefaultSet;
-use Concrete\Core\File\Search\ColumnSet\FolderSet;
-use Concrete\Core\File\Search\Result\Result;
 use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Permission\Access\Entity\GroupEntity;
 use Concrete\Core\Permission\Key\CategoryTreeNodeKey;
-use Concrete\Core\File\FolderItemList;
+use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\NodeType;
 use Concrete\Core\Tree\Node\Type\FileFolder;
 use Concrete\Core\Tree\TreeType;
@@ -18,6 +16,8 @@ class Filesystem
 {
     /**
      * Creates everything necessary to store files in folders.
+     *
+     * @return \Concrete\Core\Tree\Type\FileManager
      */
     public function create()
     {
@@ -58,17 +58,44 @@ class Filesystem
         $pt->assignPermissionAccess($pa);
     }
 
+    /**
+     * Get a folder given its ID.
+     *
+     * @param mixed $folderID
+     *
+     * @return \Concrete\Core\Tree\Node\Type\FileFolder|null
+     */
+    public function getFolder($folderID)
+    {
+        $node = Node::getByID($folderID);
+        if ($node instanceof FileFolder) {
+            return $node;
+        }
+    }
+
+    /**
+     * Get the root folder.
+     *
+     * @return \Concrete\Core\Tree\Node\Type\FileFolder|null
+     */
     public function getRootFolder()
     {
         $tree = FileManager::get();
-        if (is_object($tree)) {
+        if ($tree !== null) {
             return $tree->getRootTreeNodeObject();
         }
     }
 
+    /**
+     * Create a new folder.
+     *
+     * @param FileFolder $folder The parent folder
+     * @param string $name The name of the new folder
+     *
+     * @return \Concrete\Core\Tree\Node\Type\FileFolder
+     */
     public function addFolder(FileFolder $folder, $name)
     {
         return $folder->add($name, $folder);
     }
-
 }

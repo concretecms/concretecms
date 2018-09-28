@@ -53,12 +53,13 @@ im.save = function saveImage() {
 
                     $.post(im.saveUrl, _.extend(im.saveData, {
                         fID: im.fileId,
-                        imgData: url
+                        imgData: url,
+                        ccm_token: im.token
                     }), function (res) {
                         $.fn.dialog.hideLoader();
                         var result = JSON.parse(res);
                         if (result.error === 1) {
-                            alert(result.message);
+                            window.alert(result.message);
                             $('button.save[disabled]').attr('disabled', false);
                         } else if (result.error === 0) {
                             im.fire('ImageEditorDidSave', _.extend(im.saveData, {
@@ -98,7 +99,7 @@ im.adjustSavers = function AdjustingSavers(fire) {
     if (im.activeElement.nodeType === 'Stage') return;
     im.foreground.autoCrop = false;
     im.background.autoCrop = false;
-    var i, e, u, score = {min: {x: false, y: false}, max: {x: false, y: false}};
+    var u, score = {min: {x: false, y: false}, max: {x: false, y: false}};
     /*
      for (var i = im.stage.children.length - 1; i >= 0; i--) {
      var layer = im.stage.children[i];
@@ -106,7 +107,7 @@ im.adjustSavers = function AdjustingSavers(fire) {
      for (var e = layer.children.length - 1; e >= 0; e--) {
      var child = layer.children[e],
      rect = im.getActualRect(0, 0, child);
-     console.log(child);
+     window.console.log(child);
 
      for (var u = rect.length - 1; u >= 0; u--) {
      var point = rect[u], x = point[0] + layer.getX(), y = point[1] + layer.getY();
@@ -121,7 +122,7 @@ im.adjustSavers = function AdjustingSavers(fire) {
     var child = im.activeElement,
         layer = child.parent,
         rect = im.getActualRect(0, 0, child),
-        u, size;
+        size;
 
     for (u = rect.length - 1; u >= 0; u--) {
         var point = rect[u], x = point[0] + layer.getX(), y = point[1] + layer.getY();

@@ -30,6 +30,10 @@ class Set
     {
         $i = 0;
         foreach ($this->columns as $col) {
+            if (!$col) {
+                unset($this->columns[$i]); // Somehow a null column was saved in the result set.
+            }
+            
             if ($col instanceof AttributeKeyColumn) {
                 $ak = $this->getAttributeKeyColumn(substr($col->getColumnKey(), 3));
                 if (!is_object($ak)) {
@@ -66,11 +70,19 @@ class Set
         return $this->defaultSortColumn;
     }
 
+    /**
+     * @param string $akHandle
+     *
+     * @return AttributeKeyColumn|null
+     */
     public function getAttributeKeyColumn($akHandle)
     {
+        $result = null;
         $ak = call_user_func(array($this->attributeClass, 'getByHandle'), $akHandle);
-        $col = new AttributeKeyColumn($ak);
-        return $col;
+        if ($ak !== null) {
+            $result = new AttributeKeyColumn($ak);
+        }
+        return $result;
     }
 
     public function getColumnByKey($key)
@@ -94,7 +106,7 @@ class Set
     public function contains($col)
     {
         foreach ($this->columns as $_col) {
-            if ($col instanceof Column) {
+            if ($col instanceof ColumnInterface) {
                 if ($_col->getColumnKey() == $col->getColumnKey()) {
                     return true;
                 }

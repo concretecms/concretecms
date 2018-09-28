@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema
+        xmlns="http://www.concrete5.org/doctrine-xml/0.5"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.concrete5.org/doctrine-xml/0.5 http://concrete5.github.io/doctrine-xml/doctrine-xml-0.5.xsd">
+
+    <table name="btCalendarEvent">
+        <field name="bID" type="integer">
+            <unsigned/>
+            <key/>
+        </field>
+        <field name="mode" type="string" size="1" comment="S = Specify, P = Page, R = Request">
+            <default value="S"/>
+            <notnull/>
+        </field>
+        <field name="calendarEventAttributeKeyHandle" type="string" size="255">
+            <default value=""/>
+            <notnull/>
+        </field>
+        <field name="calendarID" type="integer" size="10">
+            <unsigned/>
+            <default value="0"/>
+            <notnull/>
+        </field>
+        <field name="eventID" type="integer" size="10">
+            <unsigned/>
+            <default value="0"/>
+            <notnull/>
+        </field>
+        <field name="displayEventAttributes" type="text">
+        </field>
+        <field name="enableLinkToPage" type="boolean">
+            <default value="0"/>
+        </field>
+        <field name="displayEventName" type="boolean">
+            <default value="0"/>
+        </field>
+        <field name="displayEventDate" type="boolean">
+            <default value="0"/>
+        </field>
+        <field name="displayEventDescription" type="boolean">
+            <default value="0"/>
+        </field>
+
+
+    </table>
+</schema>

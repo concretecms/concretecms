@@ -40,7 +40,7 @@ $uninstallToken = $token->generate('uninstall_job');
 
 <?=Loader::helper('concrete/ui')->tabs(array(
     array($view->action('view'), t('Jobs'), $jobListSelected),
-    array($view->action('view_sets'), t('Job Sets'), $jobSetsSelected),
+    array($view->action('view_sets'), t('Job Sets'), isset($jobSetsSelected) ? $jobSetsSelected : null),
 ), false);?>
 
 <?php if (in_array($this->controller->getTask(), array('view', 'install', 'uninstall', 'job_installed', 'job_uninstalled', 'reset', 'reset_complete', 'job_scheduled'))) {
@@ -58,8 +58,7 @@ $uninstallToken = $token->generate('uninstall_job');
     		<th style="width: 250px"><?=t('Name')?></th>
     		<th><?=t('Last Run')?></th>
     		<th style="width: 200px"><?=t('Results of Last Run')?></th>
-    		<th><a href="<?=$view->action('reset', $token->generate('reset_jobs'))?>" class="btn btn-default pull-right btn-xs"><?=t('Reset All Jobs')?></a></th>
-    		<th></th>
+    		<th colspan="3"><a href="<?=$view->action('reset', $token->generate('reset_jobs'))?>" class="btn btn-default pull-right btn-xs"><?=t('Reset All Jobs')?></a></th>
     	</tr>
 	</thead>
 
@@ -103,15 +102,17 @@ $uninstallToken = $token->generate('uninstall_job');
     				<button data-jID="<?=$j->getJobID()?>" data-jSupportsQueue="<?=$j->supportsQueue()?>" data-jName="<?=$j->getJobName()?>" class="btn-run-job btn btn-default btn-xs"><i class="fa fa-play"></i> <?=t('Run')?></button>
     			</td>
 
-    			<td style="width: 50px">
+    			<td style="width: 25px">
     				<a href="javascript:void(0)" class="ccm-automate-job-instructions icon-link launch-tooltip" data-jSupportsQueue="<?=$j->supportsQueue()?>" data-jID="<?=$j->getJobID()?>" title="<?=t('Automate this Job')?>"><i class="fa fa-clock-o"></i></a>
-    				<?php if ($j->canUninstall()) {
-    ?>
-    					<a href="<?=$view->action('uninstall', $j->getJobID(), $uninstallToken)?>" class="icon-link launch-tooltip" title="<?=t('Remove this Job')?>"><i class="fa fa-trash-o"></i></a>
-    				<?php
-}
-    ?>
     			</td>
+                <td style="width: 25px">
+                    <?php if ($j->canUninstall()) {
+                        ?>
+                        <a href="<?=$view->action('uninstall', $j->getJobID(), $uninstallToken)?>" class="icon-link launch-tooltip btn-uninstall-job" title="<?=t('Remove this Job')?>"><i class="fa fa-trash-o"></i></a>
+                        <?php
+                    }
+                    ?>
+                </td>
 
     		</tr>
     	<?php
@@ -212,9 +213,8 @@ $uninstallToken = $token->generate('uninstall_job');
     			</fieldset>
 
     			<div class="dialog-buttons">
-                    <button type="button" onclick="$('form[data-schedule-form=<?=$j->getJobID()?>]').submit()" class="btn btn-primary pull-right">
-                        <?=t('Save')?>
-                    </button>
+                    <button href="javascript:void(0)" class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
+                    <button type="button" onclick="$('form[data-schedule-form=<?=$j->getJobID()?>]').submit()" class="btn btn-primary pull-right"><?=t('Save')?></button>
                 </div>
     		</form>
     	</div>
@@ -265,7 +265,7 @@ $djs = JobSet::getDefault();
     <h4><?=t('Automation Instructions')?></h4>
     <p><?=t('To run all the jobs in the <a href="%s">%s</a> Job Set, schedule this URL using cron or a similar system:', $view->url('/dashboard/system/optimization/jobs', 'edit_set', $djs->getJobSetID()), $djs->getJobSetDisplayName())?></p>
     <div>
-        <input type="text" style="width: 700px" class="ccm-default-jobs-url" value="<?=$view->url('/ccm/system/jobs?auth=' . $auth)?>" />
+        <input type="text" class="ccm-default-jobs-url form-control ccm-input-text" value="<?=$view->url('/ccm/system/jobs?auth=' . $auth)?>" />
     </div>
 </div>
 <?php
@@ -616,5 +616,9 @@ $(function() {
 			$(this).parent().parent().siblings('.ccm-jobs-automation-schedule-cron').show();
 		}
 	});
+
+    $('.btn-uninstall-job').on('click', function (e) {
+        return confirm('<?=t("Are you sure you want to uninstall this job?")?>');
+    });
 });
 </script>

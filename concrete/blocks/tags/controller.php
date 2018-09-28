@@ -101,13 +101,13 @@ class Controller extends BlockController
         }
 
         // grab selected tag, if we're linking to a page with a tag block on it.
-        if (is_array($_REQUEST['akID'])) {
+        if (isset($_REQUEST['akID']) && is_array($_REQUEST['akID'])) {
             $res = $_REQUEST['akID'][$ak->getAttributeKeyID()]['atSelectOptionID'][0];
             if (is_numeric($res) && $res > 0) {
                 $selectedOptionID = $res;
             }
         }
-        $this->set('selectedOptionID', $selectedOptionID);
+        $this->set('selectedOptionID', isset($selectedOptionID) ? $selectedOptionID : '');
         $this->set('options', $options);
         $this->set('akc', $controller);
         $this->set('ak', $ak);
@@ -116,8 +116,12 @@ class Controller extends BlockController
     public function save($args)
     {
         $ak = $this->loadAttribute();
-        if ($_REQUEST['cID']) {
-            $c = Page::getByID($_REQUEST['cID'], 'RECENT');
+        $cID = $this->request->request->get('cID');
+        if (!$cID) {
+            $cID = $this->request->query->get('cID');
+        }
+        if ($cID) {
+            $c = Page::getByID((int) $cID, 'RECENT');
             // We cannot save the attribute in the Stack Dashboard page
             // as there is nothing to attach it to
             if (!$this->isValidStack($c)) {
@@ -149,5 +153,13 @@ class Controller extends BlockController
     protected function isValidStack($stack)
     {
         return $stack->getCollectionParentID() == Page::getByPath(STACKS_PAGE_PATH)->getCollectionID();
+    }
+
+    public function action_tag($tag = false)
+    {
+        if ($tag) {
+            $this->set('selectedTag', $tag);
+        }
+        $this->view();
     }
 }

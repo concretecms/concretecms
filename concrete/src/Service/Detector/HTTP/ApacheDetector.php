@@ -29,18 +29,30 @@ class ApacheDetector implements DetectorInterface
     public function detect()
     {
         $result = null;
-        if ($result === null && $this->request->server->has('SERVER_SOFTWARE')) {
-            $result = $this->detectFromServer($this->request->server->get('SERVER_SOFTWARE'));
+        if (($result === null || $result === '') && $this->request->server->has('SERVER_SOFTWARE')) {
+            $version = $this->detectFromServer($this->request->server->get('SERVER_SOFTWARE'));
+            if ($version !== null) {
+                $result = $version;
+            }
         }
-        if ($result === null && function_exists('apache_get_version')) {
-            $result = $this->detectFromSPL(@apache_get_version());
+        if (($result === null || $result === '') && function_exists('apache_get_version')) {
+            $version = $this->detectFromSPL(@apache_get_version());
+            if ($version !== null) {
+                $result = $version;
+            }
         }
-        if ($result === null) {
+        if ($result === null || $result === '') {
             ob_start();
             phpinfo(INFO_MODULES);
             $info = ob_get_contents();
             ob_end_clean();
             $result = $this->detectFromPHPInfo($info);
+        }
+        if (($result === null || $result === '')) {
+            $version = $this->detectFromSapiName(PHP_SAPI);
+            if ($version !== null) {
+                $result = $version;
+            }
         }
 
         return $result;
@@ -56,8 +68,12 @@ class ApacheDetector implements DetectorInterface
     private function detectFromServer($value)
     {
         $result = null;
-        if (is_string($value) && preg_match('/\bApache\/(\d+(\.\d+)+)/i', $value, $m)) {
-            $result = $m[1];
+        if (is_string($value)) {
+            if (preg_match('/\bApache\/(\d+(\.\d+)+)/i', $value, $m)) {
+                $result = $m[1];
+            } elseif ($value === 'Apache') {
+                $result = '';
+            }
         }
 
         return $result;
@@ -73,8 +89,12 @@ class ApacheDetector implements DetectorInterface
     private function detectFromSPL($value)
     {
         $result = null;
-        if (is_string($value) && preg_match('/\bApache\/(\d+(\.\d+)+)/i', $value, $m)) {
-            $result = $m[1];
+        if (is_string($value)) {
+            if (preg_match('/\bApache\/(\d+(\.\d+)+)/i', $value, $m)) {
+                $result = $m[1];
+            } elseif ($value === 'Apache') {
+                $result = '';
+            }
         }
 
         return $result;
@@ -91,6 +111,23 @@ class ApacheDetector implements DetectorInterface
     {
         $result = null;
         if (is_string($value) && preg_match('/\bApache\/(\d+(\.\d+)+)/i', $value, $m)) {
+            $result = $m[1];
+        }
+
+        return $result;
+    }
+
+    /**
+     * Detect using PHP_SAPI/php_sapi_name.
+     *
+     * @param string $value
+     *
+     * @return null|string
+     */
+    private function detectFromSapiName($sapiName)
+    {
+        $result = null;
+        if (is_string($sapiName) && preg_match('/^apache(\d)handler$/', $sapiName, $m)) {
             $result = $m[1];
         }
 

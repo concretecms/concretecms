@@ -1,18 +1,22 @@
 <?php
 
-class TextValueTest extends \AttributeValueTestCase
+namespace Concrete\Tests\Attribute\Value;
+
+use Concrete\TestHelpers\Attribute\AttributeValueTestCase;
+
+class TextValueTest extends AttributeValueTestCase
 {
-
-    protected function setUp()
+    public function __construct($name = null, array $data = [], $dataName = '')
     {
-        $this->tables = array_merge($this->tables, array(
-        ));
+        parent::__construct($name, $data, $dataName);
 
-        $this->metadatas = array_merge($this->metadatas, array(
+        $this->tables = array_merge($this->tables, [
+        ]);
+
+        $this->metadatas = array_merge($this->metadatas, [
             'Concrete\Core\Entity\Attribute\Key\Settings\TextSettings',
             'Concrete\Core\Entity\Attribute\Value\Value\TextValue',
-        ));
-        parent::setUp();
+        ]);
     }
 
     public function getAttributeKeyHandle()
@@ -47,45 +51,41 @@ class TextValueTest extends \AttributeValueTestCase
 
     public function baseAttributeValues()
     {
-        return array(
-            array(
+        return [
+            [
                 'This is my fun input',
                 'This is my fun input',
-            )
-        );
+            ],
+        ];
     }
 
     public function displayAttributeValues()
     {
-        return array(
-            array(
+        return [
+            [
                 'This is my fun input',
-                'This is my fun input'
-            )
-        );
+                'This is my fun input',
+            ],
+        ];
     }
 
     public function plaintextAttributeValues()
     {
-        return array(
-            array(
+        return [
+            [
                 'This is my fun input',
-                'This is my fun input'
-            )
-        );
+                'This is my fun input',
+            ],
+        ];
     }
 
     public function searchIndexAttributeValues()
     {
-        return array(
-            array(
+        return [
+            [
                 'This is my fun input',
-                'This is my fun input'
-            )
-        );
+                'This is my fun input',
+            ],
+        ];
     }
-
-
-
-
 }

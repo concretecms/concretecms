@@ -39,10 +39,27 @@ class DragRequest extends UserInterface
     protected function canAccess()
     {
         list($sourceNodes, $destNode) = $this->getNodes();
+        if (!$sourceNodes || (is_array($sourceNodes) && count($sourceNodes) == 0)) {
+            return false;
+        }
+
         if (is_object($destNode)) {
             $dp = new \Permissions($destNode);
-            return $dp->canAddTreeSubNode();
+            if (!$dp->canAddTreeSubNode()) {
+                return false;
+            }
+        } else {
+            return false;
         }
+
+        foreach($sourceNodes as $sourceNode) {
+            $dp = new \Permissions($sourceNode);
+            if (!$dp->canEditTreeNode()) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public function execute()
@@ -67,5 +84,21 @@ class DragRequest extends UserInterface
 
         $message->setAdditionalDataAttribute('destination', $destNode->getTreeNodeJSON());
         return new JsonResponse($message);
+    }
+
+    public function updateChildren() {
+
+        $message = new EditResponse();
+        list($sourceNodes, $destNode) = $this->getNodes();
+
+        if (isset($_POST['treeNodeID']) && $this->canAccess()) {
+            $destNode->saveChildOrder($_POST['treeNodeID']);
+            $message->setMessage(t('Order Updated'));
+            return new JsonResponse($message);
+        } else {
+            $message->setMessage(t('Error updating order'));
+            return new JsonResponse($message, 400);
+        }
+
     }
 }

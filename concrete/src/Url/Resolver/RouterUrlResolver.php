@@ -2,6 +2,7 @@
 namespace Concrete\Core\Url\Resolver;
 
 use Concrete\Core\Routing\RouterInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class RouterUrlResolver implements UrlResolverInterface
 {
@@ -95,7 +96,7 @@ class RouterUrlResolver implements UrlResolverInterface
         $generator = $this->getGenerator();
 
         if ($route = $list->get($route_handle)) {
-            if ($path = $generator->generate($route_handle, $route_parameters, UrlGenerator::ABSOLUTE_PATH)) {
+            if ($path = $generator->generate($route_handle, $route_parameters, UrlGeneratorInterface::ABSOLUTE_PATH)) {
                 return $this->pathUrlResolver->resolve(array($path));
             }
         }

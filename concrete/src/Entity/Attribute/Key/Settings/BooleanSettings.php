@@ -15,6 +15,27 @@ class BooleanSettings extends Settings
      */
     protected $akCheckedByDefault = false;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $checkboxLabel;
+
+    /**
+     * @return mixed
+     */
+    public function getCheckboxLabel()
+    {
+        return $this->checkboxLabel;
+    }
+
+    /**
+     * @param mixed $checkboxLabel
+     */
+    public function setCheckboxLabel($checkboxLabel)
+    {
+        $this->checkboxLabel = $checkboxLabel;
+    }
+
     public function getAttributeTypeHandle()
     {
         return 'boolean';

@@ -6,6 +6,7 @@ __MACOSX
 ._*
 .*swp
 .*swo
+*.iml
 
 # ignore composer files
 composer.phar
@@ -17,6 +18,7 @@ composer.phar
 /application/files/*
 !/application/files/index.html
 
+/concrete/composer.lock
 /concrete/vendor
 
 # ignore updates folder
@@ -49,12 +51,14 @@ error_log
 # ignore JavaScript source maps
 /concrete/js/*.js.map
 /concrete/js/bootstrap/*.js.map
+/concrete/js/mix-manifest.json
 
 # ignore node modules used for building
 /build/node_modules
 /build/release
 /build/Gruntfile.parameters.js
 /build/npm-debug.log
+/build/package-lock.json
 
 # ignore PHP symbol map
 __IDE_SYMBOLS__.php
@@ -66,3 +70,5 @@ __IDE_SYMBOLS__.php
 # ignore php-cs-fixer cache file
 /.php_cs.cache
 
+# ignore Visual Code project files
+.vscode

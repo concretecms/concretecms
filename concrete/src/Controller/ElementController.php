@@ -1,8 +1,10 @@
 <?php
 namespace Concrete\Core\Controller;
 
-use Concrete\Core\View\ElementView;
-use View;
+use Concrete\Core\Filesystem\FileLocator;
+use Concrete\Core\Support\Facade\Facade;
+use Concrete\Core\View\BasicFileView;
+use Illuminate\Filesystem\Filesystem;
 
 abstract class ElementController extends AbstractController
 {
@@ -14,7 +16,15 @@ abstract class ElementController extends AbstractController
     public function getViewObject()
     {
         if (!isset($this->view)) {
-            $this->view = new ElementView($this->getElement(), $this->getPackageHandle());
+            /**
+             * @var $locator FileLocator
+             */
+            $locator = new FileLocator(new Filesystem(), Facade::getFacadeApplication());
+            if ($this->pkgHandle) {
+                $locator->addPackageLocation($this->pkgHandle);
+            }
+            $r = $locator->getRecord(DIRNAME_ELEMENTS . '/' . $this->getElement() . '.php');
+            $this->view = new BasicFileView($r->getFile());
             $this->view->setController($this);
         }
 
@@ -37,16 +47,13 @@ abstract class ElementController extends AbstractController
         $this->pkgHandle = $pkgHandle;
     }
 
+    /**
+     * @deprecated
+     * Consider using the Element class instead.
+     */
     public function render()
     {
         return $this->getViewObject()->render();
     }
 
-    public function elementExists()
-    {
-        $env = \Environment::get();
-        $r = $env->getRecord(DIRNAME_ELEMENTS . '/' . $this->getElement() . '.php', $this->getPackageHandle());
-
-        return $r->exists();
-    }
 }

@@ -1,36 +1,31 @@
 <?php
 
-use Concrete\Core\Attribute\Key\Category;
+namespace Concrete\Tests\Attribute;
 
-class FileAttributeTest extends \AttributeTestCase
+use Concrete\Core\Attribute\Key\Category;
+use Concrete\TestHelpers\Attribute\AttributeTestCase;
+
+class FileAttributeTest extends AttributeTestCase
 {
-    protected $fixtures = array();
+    protected $fixtures = [];
     protected $category;
-    protected $keys = array(
-        'width' => array('akName' => 'Width', 'type' => 'number'),
-        'height' => array('akName' => 'Height', 'type' => 'number'),
-    );
+    protected $keys = [
+        'width' => ['akName' => 'Width', 'type' => 'number'],
+        'height' => ['akName' => 'Height', 'type' => 'number'],
+    ];
 
     protected $indexQuery = 'select * from FileSearchIndexAttributes where fID = 1';
 
-    protected function getAttributeKeyClass()
+    public function __construct($name = null, array $data = [], $dataName = '')
     {
-        return '\Concrete\Core\Attribute\Key\FileKey';
-    }
+        parent::__construct($name, $data, $dataName);
 
-    protected function getAttributeObjectForGet()
-    {
-        return $this->object;
-    }
-
-    protected function setUp()
-    {
-        $this->tables = array_merge($this->tables, array(
+        $this->tables = array_merge($this->tables, [
                 'FileStorageLocationTypes',
                 'FileVersionLog',
-            )
+            ]
         );
-        $this->metadatas = array_merge($this->metadatas, array(
+        $this->metadatas = array_merge($this->metadatas, [
             'Concrete\Core\Entity\File\Version',
             'Concrete\Core\Entity\File\File',
             'Concrete\Core\Entity\Attribute\Key\Settings\NumberSettings',
@@ -40,8 +35,58 @@ class FileAttributeTest extends \AttributeTestCase
             'Concrete\Core\Entity\Attribute\Value\FileValue',
             'Concrete\Core\Entity\File\StorageLocation\Type\Type',
             'Concrete\Core\Entity\File\StorageLocation\StorageLocation',
-        ));
-        parent::setUp();
+        ]);
+    }
+
+    public function attributeValues()
+    {
+        return [
+            [
+                'width',
+                '200',
+                '0',
+                '200',
+                '0',
+            ],
+            [
+                'height',
+                '500',
+                '0',
+                '500',
+                '0',
+            ],
+        ];
+    }
+
+    public function attributeIndexTableValues()
+    {
+        return [
+            [
+                'width',
+                (float) 200,
+                [
+                    'ak_width' => 200.0000,
+                ],
+            ],
+        ];
+    }
+
+    public function attributeHandles()
+    {
+        return [
+            ['width'],
+            ['height'],
+        ];
+    }
+
+    protected function getAttributeKeyClass()
+    {
+        return '\Concrete\Core\Attribute\Key\FileKey';
+    }
+
+    protected function getAttributeObjectForGet()
+    {
+        return $this->object;
     }
 
     protected function installAttributeCategoryAndObject()
@@ -71,46 +116,5 @@ class FileAttributeTest extends \AttributeTestCase
 
         $em->flush();
         $this->object = $file;
-    }
-
-    public function attributeValues()
-    {
-        return array(
-            array(
-                'width',
-                '200',
-                '0',
-                '200',
-                '0',
-            ),
-            array(
-                'height',
-                '500',
-                '0',
-                '500',
-                '0',
-            ),
-        );
-    }
-
-    public function attributeIndexTableValues()
-    {
-        return array(
-            array(
-                'width',
-                (float) 200,
-                array(
-                    'ak_width' => 200.0000,
-                ),
-            ),
-        );
-    }
-
-    public function attributeHandles()
-    {
-        return array(
-            array('width'),
-            array('height'),
-        );
     }
 }

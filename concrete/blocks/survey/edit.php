@@ -2,8 +2,12 @@
 <style type="text/css">
     div.survey-block-option {
         position: relative;
-        border-bottom: 1px solid #ddd;
-        margin-bottom: 3px;
+        padding: 6px;
+    }
+
+    div.survey-block-option:hover {
+        background: #e7e7e7;
+        border-radius: 4px;
     }
 
     div.survey-block-option img {
@@ -77,9 +81,11 @@
 
         <div class="input-group">
             <input type="text" name="optionValue" class="option-value form-control"/>
-            <button class="add-option btn btn-default" type="button">
-                <?php echo t('Add'); ?>
-            </button>
+            <span class="input-group-btn">
+                <button class="add-option btn btn-primary" type="button">
+                    <?php echo t('Add'); ?>
+                </button>
+            </span>
         </div>
     </div>
     <script type="text/template" role="option">

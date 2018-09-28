@@ -1,57 +1,78 @@
-[![Build Status](https://travis-ci.org/concrete5/concrete5.svg?branch=master)](https://travis-ci.org/concrete5/concrete5-tests)
-
-
-## Step 1: Install PHPUnit
-
-Install PHPUnit through Pear, MacPorts, or whatever system you use. It is available for [many packaging systems](http://phpunit.de/manual/current/en/installation.html). When done, you should be able to run "phpunit" from your command line and get a help response.
-
-
-## Step 2: Clone this repository.
+## Step 1: Clone this repository.
 
 Or download it.
 
 
-## Step 3: Setup concrete5
+## Step 2: Setup concrete5
 
 As described [here](../README.md#installation)
 
 
-## Step 4: Setup the database
+## Step 3: Setup the database
 
 The test system expects to have access to a MySQL installation on the same computer where the tests will be executed.
 The tests needs to have administration rights on MySQL in order to create and drop the test database and the tables inside it.
-You need to create a MySQL account with login `travis` and an empty password:
+You need to create a MySQL account with login `travis` and an empty password, and give the testing database access to it:
 
 ```sql
 CREATE USER 'travis'@'localhost' IDENTIFIED BY '';
-GRANT ALL ON *.* TO 'travis'@'localhost' WITH GRANT OPTION;
+CREATE USER 'travis'@'::1' IDENTIFIED BY '';
+GRANT ALL ON concrete5_tests.* TO 'travis'@'localhost' WITH GRANT OPTION;
+GRANT ALL ON concrete5_tests.* TO 'travis'@'::1' WITH GRANT OPTION;
 FLUSH PRIVILEGES;
 ```
 
 
-## Step 5: Run the tests!
+## Step 4: Run the tests!
 
-For example
+Run
 
-	cd tests
-	phpunit
+	composer test
+
+from within the root directory (not the tests folder).
 
 Expected output is something like
 
-	PHPUnit 3.7.28 by Sebastian Bergmann.
+	PHPUnit 4.8.35 by Sebastian Bergmann and contributors.
 
-	Configuration read from .../tests/phpunit.xml
+	.............................................................   61 / 1366 (  4%)
+	.............................................................  122 / 1366 (  8%)
+	.............................................................  183 / 1366 ( 13%)
+	.............................................................  244 / 1366 ( 17%)
+	.............................................................  305 / 1366 ( 22%)
+	.............................................................  366 / 1366 ( 26%)
+	.............................................................  427 / 1366 ( 31%)
+	.............................................................  488 / 1366 ( 35%)
+	.............................................................  549 / 1366 ( 40%)
+	................SSSSSS.......................................  610 / 1366 ( 44%)
+	.............................................................  671 / 1366 ( 49%)
+	.............................................................  732 / 1366 ( 53%)
+	.............................................................  793 / 1366 ( 58%)
+	.............................................................  854 / 1366 ( 62%)
+	.............................................................  915 / 1366 ( 66%)
+	...............................................IIII..........  976 / 1366 ( 71%)
+	............................................................. 1037 / 1366 ( 75%)
+	.II.......................................................... 1098 / 1366 ( 80%)
+	............................................................. 1159 / 1366 ( 84%)
+	............................................................. 1220 / 1366 ( 89%)
+	............................................................. 1281 / 1366 ( 93%)
+	............................................................. 1342 / 1366 ( 98%)
+	........................
 
-	....................IIIIIII.IIIIIIIII..IIIIIIIII.IIIII.IIIIIIII  63 / 177 ( 35%)
-	II.IIII.IIIIIIIIIII.IIIII.IIIIIII.II....II..II.........IIIIIIII 126 / 177 ( 71%)
-	IIIIIIIIII.........................................
+	Time: 1.65 minutes, Memory: 106.00MB
 
-	Time: 12.2 seconds, Memory: 29.25Mb
+	OK, but incomplete, skipped, or risky tests!
+	Tests: 1366, Assertions: 3413, Skipped: 6, Incomplete: 6.
 
-	OK, but incomplete or skipped tests!
-	Tests: 177, Assertions: 457, Incomplete: 91.
 
+To run a single tests, you can run for example
+```bash
+composer test -- --filter testCoreBlockView
+```
 
 # Write Tests!
 
-Send us tests via pull request.
+Send us tests via pull request:
+- actual test classes must go to the /tests/tests folder (classes must be defined in a namespace starting with Concrete\Tests\...)
+- helper classes must go to the /tests/helpers folder (classes must be defined in a namespace starting with Concrete\TestHelpers\...)
+- other files must go to the /tests/assets filder (images, fake classes, ...)

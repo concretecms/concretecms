@@ -6,6 +6,7 @@ use Concrete\Core\Attribute\DefaultController;
 
 class Controller extends DefaultController
 {
+    public $helpers = ['form'];
 
     public function form()
     {
@@ -13,16 +14,12 @@ class Controller extends DefaultController
         if (is_object($this->attributeValue)) {
             $value = $this->app->make('helper/text')->entities($this->getAttributeValue()->getValue());
         }
-        echo $this->app->make('helper/form')->telephone($this->field('value'), $value);
+        $this->set('value',$value);
     }
 
     public function composer()
     {
-        $value = null;
-        if (is_object($this->attributeValue)) {
-            $value = $this->app->make('helper/text')->entities($this->getAttributeValue()->getValue());
-        }
-        echo $this->app->make('helper/form')->telephone($this->field('value'), $value, array('class' => 'span5'));
+        $this->form();
     }
 
     public function getIconFormatter()

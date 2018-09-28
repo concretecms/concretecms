@@ -53,7 +53,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
             <?php if (is_object($entity)) { ?>
                 <select name="exFormID" class="form-control">
                     <?php foreach($entity->getForms() as $form) { ?>
-                        <option <?php if ($exFormID == $form->getID()) { ?>selected="selected" <?php } ?> value="<?=$form->getID()?>"><?=$form->getName()?></option>
+                        <option <?php if ($exFormID == $form->getID()) { ?>selected="selected" <?php } ?> value="<?=$form->getID()?>"><?=h($form->getName())?></option>
                     <?php } ?>
                 </select>
             <?php } else { ?>

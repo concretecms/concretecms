@@ -1,17 +1,23 @@
 <?php
 
+namespace Concrete\Tests\Block;
+
+use Concrete\Core\Attribute\Key\Category;
+use Concrete\Core\Attribute\Key\FileKey;
+use Concrete\Core\Attribute\Type as AttributeType;
 use Concrete\Core\Cache\CacheLocal;
-use \Concrete\Core\Attribute\Type as AttributeType;
-use \Concrete\Core\Attribute\Key\FileKey;
-use \Concrete\Core\Attribute\Key\Category;
+use Concrete\TestHelpers\File\FileStorageTestCase;
+use SimpleXMLElement;
 
 class ContentFileTranslateTest extends FileStorageTestCase
 {
-    protected $fixtures = array();
+    protected $fixtures = [];
 
-    protected function setUp()
+    public function __construct($name = null, array $data = [], $dataName = '')
     {
-        $this->tables = array_merge($this->tables, array(
+        parent::__construct($name, $data, $dataName);
+
+        $this->tables = array_merge($this->tables, [
             'Users',
             'PermissionAccessEntityTypes',
             'FileImageThumbnailTypes',
@@ -22,8 +28,8 @@ class ContentFileTranslateTest extends FileStorageTestCase
             'AttributeValues',
             'atNumber',
             'FileVersionLog',
-        ));
-        $this->metadatas = array_merge($this->metadatas, array(
+        ]);
+        $this->metadatas = array_merge($this->metadatas, [
             'Concrete\Core\Entity\File\File',
             'Concrete\Core\Entity\File\Version',
             'Concrete\Core\Entity\Attribute\Key\Settings\EmptySettings',
@@ -38,14 +44,18 @@ class ContentFileTranslateTest extends FileStorageTestCase
             'Concrete\Core\Entity\Attribute\Key\Settings\Settings',
             'Concrete\Core\Entity\Attribute\Type',
             'Concrete\Core\Entity\Attribute\Category',
-        ));
+        ]);
+    }
+
+    public function setUp()
+    {
         parent::setUp();
         \Config::set('concrete.upload.extensions', '*.txt;*.jpg;*.jpeg;*.png');
 
         Category::add('file');
         $number = AttributeType::add('number', 'Number');
-        FileKey::add($number, array('akHandle' => 'width', 'akName' => 'Width'));
-        FileKey::add($number, array('akHandle' => 'height', 'akName' => 'Height'));
+        FileKey::add($number, ['akHandle' => 'width', 'akName' => 'Width']);
+        FileKey::add($number, ['akHandle' => 'height', 'akName' => 'Height']);
 
         CacheLocal::flush();
     }
@@ -58,7 +68,7 @@ class ContentFileTranslateTest extends FileStorageTestCase
         $this->getStorageLocation();
 
         $fi = new \Concrete\Core\File\Importer();
-        $file = dirname(__FILE__) . '/fixtures/background-slider-blue-sky.png';
+        $file = DIR_TESTS . '/assets/Block/background-slider-blue-sky.png';
         $r = $fi->import($file, 'background-slider-blue-sky.png');
         $path = $r->getRelativePath();
 
@@ -75,6 +85,7 @@ class ContentFileTranslateTest extends FileStorageTestCase
         $c->export($sx);
 
         $content = (string) $sx->data->record->content;
-        $this->assertEquals('<p>This is really nice.</p><concrete-picture alt="Happy Cat" file="background-slider-blue-sky.png" />', $content);
+        $prefix = $r->getPrefix();
+        $this->assertEquals('<p>This is really nice.</p><concrete-picture alt="Happy Cat" file="' . $prefix . ':background-slider-blue-sky.png" />', $content);
     }
 }

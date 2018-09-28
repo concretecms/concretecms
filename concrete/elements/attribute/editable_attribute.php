@@ -34,26 +34,34 @@ if (isset($objects)) {
 $canEdit = $permissionsCallback($ak, $permissionsArguments);
 ?>
 <div class="row">
-    <div class="col-md-2"><p><?= $ak->getAttributeKeyDisplayName() ?></p></div>
-    <div class="col-md-10"<?php if ($canEdit) { ?> data-editable-field-inline-commands="true"<?php } ?>>
-        <?php if ($canEdit) { ?>
-            <ul class="ccm-edit-mode-inline-commands">
-                <li><a href="#" data-key-id="<?= $ak->getAttributeKeyID() ?>" data-url="<?= $clearAction ?>" data-editable-field-command="clear_attribute">
-                    <i class="fa fa-trash-o"></i>
-                </a></li>
-            </ul>
-        <?php } ?>
-        <span
-            <?php if ($canEdit) { ?>
-                data-title="<?= $ak->getAttributeKeyDisplayName() ?>"
-                data-key-id="<?= $ak->getAttributeKeyID() ?>"
-                data-name="<?= $ak->getAttributeKeyID() ?>"
-                data-editable-field-type="xeditableAttribute"
-                data-url="<?= $saveAction ?>"
-                data-type="concreteattribute"
-                <?php echo $ak->getAttributeTypeHandle() === 'textarea' ? "data-editableMode='inline'" : ''; ?>
-            <?php } ?>
-            ><?= $display ?></span>
+    <div class="editable-attribute-wrapper">
+        <div class="col-md-3">
+            <p class="editable-attribute-display-name"><?= $ak->getAttributeKeyDisplayName() ?></p>
+        </div>
+        <div class="col-md-9"<?php if ($canEdit) { ?> data-editable-field-inline-commands="true"<?php } ?>>
+            <div class="editable-attribute-field-inline">
+                <?php if ($canEdit) { ?>
+                    <ul class="ccm-edit-mode-inline-commands">
+                        <li>
+                            <a href="#" data-key-id="<?= $ak->getAttributeKeyID() ?>" data-url="<?= $clearAction ?>" data-editable-field-command="clear_attribute">
+                                <i class="fa fa-trash-o"></i>
+                            </a>
+                        </li>
+                    </ul>
+                <?php } ?>
+                <span
+                    <?php if ($canEdit) { ?>
+                        data-title="<?= $ak->getAttributeKeyDisplayName() ?>"
+                        data-key-id="<?= $ak->getAttributeKeyID() ?>"
+                        data-name="<?= $ak->getAttributeKeyID() ?>"
+                        data-editable-field-type="xeditableAttribute"
+                        data-url="<?= $saveAction ?>"
+                        data-type="concreteattribute"
+                        <?php echo $ak->getAttributeTypeHandle() === 'textarea' ? "data-editableMode='inline'" : ''; ?>
+                    <?php } ?>
+                    ><?= $display ?></span>
+            </div>
+        </div>
     </div>
 </div>
 <?php

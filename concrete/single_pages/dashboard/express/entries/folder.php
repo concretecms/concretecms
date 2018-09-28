@@ -18,6 +18,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
             <?php
             foreach ($nodes as $node) {
                 $formatter = $node->getListFormatter();
+                $np = new Permissions($node);
+                if ($np->canViewExpressEntries()) {
                 ?>
                 <tr data-details-url="<?=$view->action('view', $node->getTreeNodeID())?>"
                     class="<?=$formatter->getSearchResultsClass()?>">
@@ -25,7 +27,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
                     <td class="ccm-search-results-name"><?=$node->getTreeNodeDisplayName()?></td>
                     <td></td>
                 </tr>
-            <?php } ?>
+            <?php }
+            } ?>
             </tbody>
         </table>
     </div>

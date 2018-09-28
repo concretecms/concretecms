@@ -40,7 +40,8 @@ class ContentImporter
         $manager = Core::make('import/item/manager');
         foreach ($manager->getImporterRoutines() as $routine) {
             if (isset($this->home) && $routine instanceof SpecifiableHomePageRoutineInterface) {
-                $routine->setHomePage($this->home);
+                $home = \Page::getByID($this->home->getCollectionID()); // we always need the most recent version.
+                $routine->setHomePage($home);
             }
             $routine->import($element);
             if (isset($this->home) && $routine instanceof SpecifiableHomePageRoutineInterface) {
@@ -89,8 +90,20 @@ class ContentImporter
         }
         $contents = Core::make('helper/file')->getDirectoryContents($fromPath);
         foreach ($contents as $filename) {
-            if (!is_dir($filename)) {
-                $fv = $fh->import($fromPath . '/' . $filename, $filename);
+            if (!is_dir($fromPath . '/' . $filename)) {
+                if (preg_match("/([0-9]{12}]*)\_(.*)/", $filename, $matches)) {
+                    // a prefix is already present in the filename.
+                    $fvPrefix = $matches[1];
+                    $fvFilename = $matches[2];
+                } else {
+                    $fvPrefix = null;
+                    $fvFilename = $filename;
+                }
+
+                $fv = $fh->import($fromPath . '/' . $filename, $fvFilename, null, $fvPrefix);
+                if (!is_object($fv)) {
+                    throw new \Exception(Importer::getErrorMessage($fv));
+                }
                 if (!$computeThumbnails) {
                     $types = \Concrete\Core\File\Image\Thumbnail\Type\Type::getVersionList();
                     foreach ($types as $type) {

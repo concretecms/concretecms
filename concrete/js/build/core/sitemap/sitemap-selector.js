@@ -1,17 +1,20 @@
-!function(global, $) {
+/* jshint unused:vars, undef:true, browser:true, jquery:true */
+/* global CCM_DISPATCHER_FILENAME */
+
+;(function(global, $) {
     'use strict';
 
     function ConcretePageSitemapSelector($element, options) {
-        'use strict';
-        var my = this,
-            options = $.extend({
-                'mode': 'single',
-                'inputName': 'cID',
-                'selected': 0,
-                'startingPoint': 1,
-                'token': '',
-                filters: {}
-            }, options);
+        var my = this;
+        options = $.extend({
+            'mode': 'single',
+            'inputName': 'cID',
+            'selected': 0,
+            'startingPoint': 1,
+            'siteTreeID': 0,
+            'token': '',
+            filters: {}
+        }, options);
 
         my.$element = $('<div />', {'class': 'ccm-page-sitemap-selector-inner'});
         my.$element.appendTo($element);
@@ -20,6 +23,7 @@
         my.$element.concreteSitemap({
             selectMode: my.options.mode,
             minExpandLevel: 0,
+            siteTreeID: my.options.siteTreeID,
             dataSource: CCM_DISPATCHER_FILENAME + '/ccm/system/page/select_sitemap',
             ajaxData: {
                 'startingPoint': my.options.startingPoint,
@@ -31,13 +35,13 @@
                 if (options.selected) {
                     if (options.mode == 'multiple') {
                         $.each(options.selected, function(i, cID) {
-                            var node = my.$element.fancytree('getTree').getNodeByKey(String(cID));
+                            var node = my.$element.find('.ccm-sitemap-tree').fancytree('getTree').getNodeByKey(String(cID));
                             if (node) {
                                 node.setSelected(true);
                             }
                         });
                     } else {
-                        var tree = my.$element.fancytree('getTree');
+                        var tree = my.$element.find('.ccm-sitemap-tree').fancytree('getTree');
                         var node = tree.getNodeByKey(String(options.selected));
                         if (node) {
                             node.setSelected(true);
@@ -89,18 +93,18 @@
                 'data-sitemap-selector-page-id': node.data.cID,
                 'type': 'hidden', 'name': name
             });
-            $input.val(node.data.cID)
+            $input.val(node.data.cID);
             $input.appendTo(my.$element);
         }
-    }
+    };
 
     // jQuery Plugin
     $.fn.concretePageSitemapSelector = function(options) {
         return $.each($(this), function(i, obj) {
             new ConcretePageSitemapSelector($(this), options);
         });
-    }
+    };
 
     global.ConcretePageSitemapSelector = ConcretePageSitemapSelector;
 
-}(this, $);
+})(this, jQuery);

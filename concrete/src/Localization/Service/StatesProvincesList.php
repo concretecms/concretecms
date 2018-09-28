@@ -5,7 +5,7 @@ use Events;
 
 class StatesProvincesList
 {
-    protected $localizedStatesProvinces = array();
+    protected $localizedStatesProvinces = [];
 
     /**
      * Returns the list of States/Provinces for some countries (States/Provinces are sorted alphabetically).
@@ -16,9 +16,8 @@ class StatesProvincesList
     {
         $locale = \Localization::activeLocale();
         if (!isset($this->localizedStatesProvinces[$locale])) {
-            $provinces = array(
-
-                'US' => array(
+            $provinces = [
+                'US' => [
                     'AK' => tc('US State', 'Alaska'),
                     'AL' => tc('US State', 'Alabama'),
                     'AR' => tc('US State', 'Arkansas'),
@@ -70,9 +69,9 @@ class StatesProvincesList
                     'WI' => tc('US State', 'Wisconsin'),
                     'WV' => tc('US State', 'West Virginia'),
                     'WY' => tc('US State', 'Wyoming'),
-                ),
+                ],
 
-                'CA' => array(
+                'CA' => [
                     'AB' => tc('Canadian Province', 'Alberta'),
                     'BC' => tc('Canadian Province', 'British Columbia'),
                     'MB' => tc('Canadian Province', 'Manitoba'),
@@ -86,9 +85,9 @@ class StatesProvincesList
                     'QC' => tc('Canadian Province', 'Quebec'),
                     'SK' => tc('Canadian Province', 'Saskatchewan'),
                     'YT' => tc('Canadian Province', 'Yukon'),
-                ),
+                ],
 
-                'AU' => array(
+                'AU' => [
                     'ACT' => tc('Australian State', 'Australian Capital Territory'),
                     'NSW' => tc('Australian State', 'New South Wales'),
                     'NT' => tc('Australian State', 'Northern Territory'),
@@ -97,9 +96,9 @@ class StatesProvincesList
                     'TAS' => tc('Australian State', 'Tasmania'),
                     'VIC' => tc('Australian State', 'Victoria'),
                     'WA' => tc('Australian State', 'Western Australia'),
-                ),
+                ],
 
-                'DE' => array(
+                'DE' => [
                     'BB' => tc('German State', 'Brandenburg'),
                     'BE' => tc('German State', 'Berlin'),
                     'BW' => tc('German State', 'Baden-Württemberg'),
@@ -116,9 +115,9 @@ class StatesProvincesList
                     'SN' => tc('German State', 'Saxony'),
                     'ST' => tc('German State', 'Saxony-Anhalt'),
                     'TH' => tc('German State', 'Thuringia'),
-                ),
+                ],
 
-                'FR' => array(
+                'FR' => [
                     '01' => tc('French Department', 'Ain'),
                     '02' => tc('French Department', 'Aisne'),
                     '03' => tc('French Department', 'Allier'),
@@ -221,9 +220,9 @@ class StatesProvincesList
                     '973' => tc('French Department', 'Guyane'),
                     '974' => tc('French Department', 'La Réunion'),
                     '976' => tc('French Department', 'Mayotte'),
-                ),
+                ],
 
-                'GB' => array(
+                'GB' => [
                     'ANGLES' => tc('British Region', 'Anglesey'),
                     'ANGUS' => tc('British Region', 'Angus'),
                     'ARBERD' => tc('British Region', 'Aberdeenshire'),
@@ -312,9 +311,9 @@ class StatesProvincesList
                     'WILTS' => tc('British Region', 'Wiltshire'),
                     'WORCES' => tc('British Region', 'Worcestershire'),
                     'YORK' => tc('British Region', 'Yorkshire'),
-                ),
+                ],
 
-                'IE' => array(
+                'IE' => [
                     'CO ANTRIM' => tc('Irish County', 'County Antrim'),
                     'CO ARMAGH' => tc('Irish County', 'County Armagh'),
                     'CO CARLOW' => tc('Irish County', 'County Carlow'),
@@ -347,9 +346,9 @@ class StatesProvincesList
                     'CO WESTMEATH' => tc('Irish County', 'County Westmeath'),
                     'CO WEXFORD' => tc('Irish County', 'County Wexford'),
                     'CO WICKLOW' => tc('Irish County', 'County Wicklow'),
-                ),
+                ],
 
-                'NL' => array(
+                'NL' => [
                     'DR' => tc('Dutch Province', 'Drente'),
                     'FL' => tc('Dutch Province', 'Flevoland'),
                     'FR' => tc('Dutch Province', 'Fryslân'),
@@ -362,9 +361,9 @@ class StatesProvincesList
                     'UT' => tc('Dutch Province', 'Utrecht'),
                     'ZH' => tc('Dutch Province', 'South Holland'),
                     'ZL' => tc('Dutch Province', 'Zeeland'),
-                ),
+                ],
 
-                'BR' => array(
+                'BR' => [
                     'AC' => tc('Brazilian State', 'Acre'),
                     'AL' => tc('Brazilian State', 'Alagoas'),
                     'AM' => tc('Brazilian State', 'Amazonas'),
@@ -393,9 +392,9 @@ class StatesProvincesList
                     'SE' => tc('Brazilian State', 'Sergipe'),
                     'SP' => tc('Brazilian State', 'São Paulo'),
                     'TO' => tc('Brazilian State', 'Tocantins'),
-                ),
+                ],
 
-                'IT' => array(
+                'IT' => [
                     'AG' => tc('Italian Provinces', 'Agrigento'),
                     'AL' => tc('Italian Provinces', 'Alessandria'),
                     'AN' => tc('Italian Provinces', 'Ancona'),
@@ -506,9 +505,9 @@ class StatesProvincesList
                     'VS' => tc('Italian Provinces', 'Medio Campidano'),
                     'VT' => tc('Italian Provinces', 'Viterbo'),
                     'VV' => tc('Italian Provinces', 'Vibo Valentia'),
-                ),
+                ],
 
-                'JP' => array(
+                'JP' => [
                     '01' => tc('Japanese Prefecture', 'Hokkaido'),
                     '02' => tc('Japanese Prefecture', 'Aomori'),
                     '03' => tc('Japanese Prefecture', 'Iwate'),
@@ -556,9 +555,9 @@ class StatesProvincesList
                     '45' => tc('Japanese Prefecture', 'Miyazaki'),
                     '46' => tc('Japanese Prefecture', 'Kagoshima'),
                     '47' => tc('Japanese Prefecture', 'Okinawa'),
-                ),
+                ],
 
-                'CH' => array(
+                'CH' => [
                     'AG' => tc('Swiss Canton', 'Aargau'),
                     'AI' => tc('Swiss Canton', 'Appenzell I. Rh.'),
                     'AR' => tc('Swiss Canton', 'Appenzell A. Rh.'),
@@ -585,12 +584,11 @@ class StatesProvincesList
                     'VS' => tc('Swiss Canton', 'Valais'),
                     'ZG' => tc('Swiss Canton', 'Zug'),
                     'ZH' => tc('Swiss Canton', 'Zurich'),
-                ),
-
-            );
+                ],
+            ];
             $comparer = new \Punic\Comparer($locale);
             foreach (array_keys($provinces) as $country) {
-                switch ($locale.'@'.$country) {
+                switch ($locale . '@' . $country) {
                     case 'ja_JP@JP':
                         break;
                     default:
@@ -611,10 +609,10 @@ class StatesProvincesList
     /**
      * Returns the name of a specified State/Province in a specified Country.
      *
-     * @param string $code The State/Province code.
-     * @param string $country The Country code.
+     * @param string $code the State/Province code
+     * @param string $country the Country code
      *
-     * @return string|null Returns the State/Province name (if found), or null if not found.
+     * @return string|null returns the State/Province name (if found), or null if not found
      */
     public function getStateProvinceName($code, $country)
     {
@@ -629,9 +627,9 @@ class StatesProvincesList
     /**
      * Returns a list of States/Provinces for a country.
      *
-     * @param string $country The country code.
+     * @param string $country the country code
      *
-     * @return array|null If the Country is supported, the function returns an array (whose keys are the States/Provinces codes and the values are their names); returns null if $country is not supported.
+     * @return array|null if the Country is supported, the function returns an array (whose keys are the States/Provinces codes and the values are their names); returns null if $country is not supported
      */
     public function getStateProvinceArray($country)
     {
@@ -648,7 +646,7 @@ class StatesProvincesList
      *
      * @deprecated Use getStateProvinceArray('US')
      *
-     * @return array Returns an array whose keys are the US State codes and the values are their names.
+     * @return array returns an array whose keys are the US State codes and the values are their names
      */
     public function getStates()
     {
@@ -658,7 +656,7 @@ class StatesProvincesList
     /** Returns the list of Canadian provinces.
      * @deprecated Use getStateProvinceArray('CA')
      *
-     * @return array Returns an array whose keys are the Canadian Provinces codes and the values are their names.
+     * @return array returns an array whose keys are the Canadian Provinces codes and the values are their names
      */
     public function getCanadianProvinces()
     {

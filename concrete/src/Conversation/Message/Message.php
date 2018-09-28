@@ -10,17 +10,18 @@ use Core;
 use Loader;
 use Concrete\Core\Conversation\Conversation;
 use Concrete\Core\Conversation\Editor\Editor as ConversationEditor;
-use \Concrete\Core\Foundation\Object;
+use \Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\User\User;
 use Concrete\Core\User\UserInfo;
 use Concrete\Core\Utility\IPAddress;
 use Events;
 
-class Message extends Object implements \Concrete\Core\Permission\ObjectInterface
+class Message extends ConcreteObject implements \Concrete\Core\Permission\ObjectInterface
 {
     public $cnvMessageID;
     protected $cnvMessageDateCreated;
     public $cnvMessageFlagTypes;
+    public $cnvMessageReview;
 
     public function getConversationMessageID()
     {
@@ -65,6 +66,14 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
     public function getConversationMessageSubmitIP()
     {
         return new IPAddress($this->cnvMessageSubmitIP, true);
+    }
+
+    /**
+     * @return int Number between 0 and 5
+     */
+    public function getConversationMessageReview()
+    {
+        return intval($this->cnvMessageReview);
     }
 
     public function getConversationMessageSubmitUserAgent()
@@ -147,6 +156,23 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
         }
 
         return false;
+    }
+
+    /**
+     * @param int $review A number between 1 and 5
+     */
+    public function setReview($review)
+    {
+        if ($review < 1 || $review > 5) {
+            throw new \InvalidArgumentException('A review must be between 1 and 5.');
+        }
+
+        $this->cnvMessageReview = $review;
+        $db = Loader::db();
+        $db->Execute('update ConversationMessages set cnvMessageReview = ? where cnvMessageID = ?', array(
+            $review,
+            $this->getConversationMessageID()
+        ));
     }
 
     public function setMessageDateCreated($cnvMessageDateCreated)

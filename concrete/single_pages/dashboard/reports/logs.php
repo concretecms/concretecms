@@ -1,10 +1,26 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die('Access Denied.');
 
-$valt = Loader::helper('validation/token');
-$th = Loader::helper('text');
+$app = Concrete\Core\Support\Facade\Application::getFacadeApplication();
+$valt = $app->make('helper/validation/token');
+$th = $app->make('helper/text');
 ?>
 
 <div class="ccm-dashboard-header-buttons">
+    <?php if (!isset($selectedChannel)) { ?>
+        <a href="javascript:void(0)" class="btn btn-default btn-danger" onclick="clearAllChannelLogs()" ><?=t('Delete all')?></a>
+        <script>
+            clearAllChannelLogs = function() {
+                ConcreteAlert.confirm(
+                    <?= json_encode(t('Are you sure you want to clear all channel logs?')); ?>,
+                    function() {
+                        location.href = "<?= $controller->action('clear', $valt->generate()); ?>";
+                    },
+                    'btn-danger',
+                    <?= json_encode(t('Delete')); ?>
+                );
+            };
+        </script>
+    <?php } ?>
     <a id="ccm-export-results" class="btn btn-success" href="<?= $view->action('csv', $valt->generate())?>?<?=$query ?>">
         <i class='fa fa-download'></i> <?= t('Export to CSV') ?>
     </a>
@@ -16,7 +32,7 @@ $th = Loader::helper('text');
         <div class="ccm-search-field-content">
             <div class="ccm-search-main-lookup-field">
                 <i class="fa fa-search"></i>
-                <?=$form->search('keywords', array('placeholder' => t('Keywords')))?>
+                <?=$form->search('keywords', ['placeholder' => t('Keywords')])?>
                 <button type="submit" class="ccm-search-field-hidden-submit" tabindex="-1"><?=t('Search')?></button>
             </div>
         </div>
@@ -27,10 +43,20 @@ $th = Loader::helper('text');
         <div class="ccm-search-field-content">
             <?=$form->select('channel', $channels)?>
             <?php if (isset($selectedChannel)) { ?>
-            <a href="<?=$controller->action('clear', $valt->generate(), $selectedChannel)?>" class="btn btn-default btn-danger pull-right" style="margin-top: 30px;"><?=tc('%s is a channel', 'Clear all in %s', Log::getChannelDisplayName($selectedChannel))?></a>
-            <?php } else { ?>
-            <a href="<?=$controller->action('clear', $valt->generate())?>" class="btn btn-default btn-danger pull-right" style="margin-top: 30px;"><?=t('Clear all')?></a>
-            <?php } ?>
+            <a href="javascript:void(0)" class="btn btn-default btn-danger pull-right" onclick="clearSelectedChannelLogs()" style="margin-top: 30px;"><?=tc('%s is a channel', 'Clear all in %s', Log::getChannelDisplayName($selectedChannel))?></a>
+            <script>
+                clearSelectedChannelLogs = function() {
+                    ConcreteAlert.confirm(
+                        <?= json_encode(t('Are you sure you want to clear the %s channel logs?', Log::getChannelDisplayName($selectedChannel))); ?>,
+                        function() {
+                            location.href = "<?= $controller->action('clear', $valt->generate(), $selectedChannel); ?>";
+                        },
+                        'btn-danger',
+                        <?= json_encode(t('Delete')); ?>
+                    );
+                };
+            </script>
+            <?php }?>
         </div>
     </div>
 
@@ -48,7 +74,7 @@ $th = Loader::helper('text');
 
 <div class="ccm-dashboard-content-full">
     <div class="table-responsive">
-        <table class="ccm-search-results-table">
+        <table class="ccm-search-results-table selectable">
             <thead>
                 <tr>
                     <th class="<?=$list->getSearchResultsClass('logID')?>"><a href="<?=$list->getSortByURL('logID', 'desc')?>"><?=t('Date/Time')?></a></th>
@@ -56,6 +82,7 @@ $th = Loader::helper('text');
                     <th><span><?=t('Channel')?></span></th>
                     <th><span><?=t('User')?></span></th>
                     <th><span><?=t('Message')?></span></th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -67,7 +94,7 @@ $th = Loader::helper('text');
                     <td valign="top"><strong><?php
                     $uID = $ent->getUserID();
                     if (empty($uID)) {
-                        echo t("Guest");
+                        echo t('Guest');
                     } else {
                         $u = User::getByUserID($uID);
                         if (is_object($u)) {
@@ -78,6 +105,7 @@ $th = Loader::helper('text');
                     }
                     ?></strong></td>
                     <td style="width: 100%"><?=$th->makenice($ent->getMessage())?></td>
+                    <td valign="top" style="text-align: center; padding: 15px;"><a href="javascript:void(0)" class="btn btn-default btn-xs btn-danger" onclick="deleteLog(<?=$ent->getID()?>)"><?=t('Delete')?></a></td>
                 </tr>
             <?php } ?>
             </tbody>
@@ -89,9 +117,20 @@ $th = Loader::helper('text');
 </div>
 
 <script>
-$(function() {
-    $('#level').selectize({
-        plugins: ['remove_button']
+    $(function() {
+        $('#level').selectize({
+            plugins: ['remove_button']
+        });
     });
-});
+
+    deleteLog = function(logID) {
+        ConcreteAlert.confirm(
+            <?= json_encode(t('Are you sure you want to delete this log?')); ?>,
+            function() {
+                location.href = "<?= $controller->action('deleteLog'); ?>/" + logID + "/<?= $valt->generate(); ?>";
+            },
+            'btn-danger',
+            <?= json_encode(t('Delete')); ?>
+        );
+    };
 </script>

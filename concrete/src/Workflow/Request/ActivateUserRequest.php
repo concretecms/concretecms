@@ -3,10 +3,10 @@ namespace Concrete\Core\Workflow\Request;
 
 use Concrete\Core\User\UserInfo;
 use PermissionKey;
-use URL;
 use Loader;
 use Config;
-use \Concrete\Core\Workflow\Description as WorkflowDescription;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Workflow\Description as WorkflowDescription;
 use Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
 use Concrete\Core\Workflow\Progress\Action\Action as WorkflowProgressAction;
 
@@ -14,7 +14,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class ActivateUserRequest extends UserRequest
 {
-
     protected $requestAction = 'activate';
 
     public function __construct()
@@ -47,13 +46,41 @@ class ActivateUserRequest extends UserRequest
     {
         $d = new WorkflowDescription();
         $ui = UserInfo::getByID($this->getRequestedUserID());
-        $d->setEmailDescription(t("User account \"%s\" has pending activation request which needs to be approved.",
-            $ui->getUserName()));
-        $d->setDescription(t("User %s Submitted for Approval.", $ui->getUserName()));
+        if (!is_object($ui)) {
+            $d->setEmailDescription(t("Invalid user."));
+            $d->setDescription(t("Invalid user."));
+            $d->setInContextDescription(t("Invalid user."));
+            return $d;
+        }
+
+        $app = Application::getFacadeApplication();
+        $url = $app['url/manager'];
+        $link = (string) $url->resolve([
+            '/dashboard/users/search/view',
+            $ui->getUserID()
+        ]);
         if ($this->isDeactivationRequest()) {
-            $d->setInContextDescription(t("User Submitted for Deactivation."));
+            $d->setEmailDescription(t(
+                "User account \"%s\" has pending deactivation request which needs to be approved.",
+                $ui->getUserName()
+            ));
+            $d->setDescription(t(
+                "User <a target=\"_blank\" href=\"%s\">%s</a> submitted for Deactivation.",
+                $link,
+                $ui->getUserName()
+            ));
+            $d->setInContextDescription(t("User submitted for Deactivation."));
         } else {
-            $d->setInContextDescription(t("User Submitted for Approval."));
+            $d->setEmailDescription(t(
+                "User account \"%s\" has pending activation request which needs to be approved.",
+                $ui->getUserName()
+            ));
+            $d->setDescription(t(
+                "User <a target=\"_blank\" href=\"%s\">%s</a> submitted for Approval.",
+                $link,
+                $ui->getUserName()
+            ));
+            $d->setInContextDescription(t("User submitted for Approval."));
         }
         $d->setShortStatus(t("Pending"));
 
@@ -64,14 +91,25 @@ class ActivateUserRequest extends UserRequest
     {
         $ui = UserInfo::getByID($this->getRequestedUserID());
         $wpr = parent::approve($wp);
+
+        $app = Application::getFacadeApplication();
+        $urlm = $app['url/manager'];
         if ($this->isDeactivationRequest()) {
             $wpr->message = t("User %s has been deactivated.", $ui->getUserName());
-            $url = (string) URL::to('/dashboard/users/search/view', $this->getRequestedUserID(), 'deactivated');
+            $url = (string) $urlm->resolve([
+                '/dashboard/users/search/view',
+                $this->getRequestedUserID(),
+                'deactivated'
+            ]);
             $wpr->setWorkflowProgressResponseURL($url);
             $ui->deactivate();
         } else {
             $wpr->message = t("User %s has been activated.", $ui->getUserName());
-            $url = (string) URL::to('/dashboard/users/search/view', $this->getRequestedUserID(), 'activated');
+            $url = (string) $urlm->resolve([
+                '/dashboard/users/search/view',
+                $this->getRequestedUserID(),
+                'activated'
+            ]);
             $wpr->setWorkflowProgressResponseURL($url);
             $ui->activate();
             $this->sendActivationEmail($ui);
@@ -84,11 +122,8 @@ class ActivateUserRequest extends UserRequest
     {
         $mh = Loader::helper('mail');
         $mh->to($ui->getUserEmail());
-        if (Config::get('concrete.user.registration.notification_email')) {
-            $mh->from(
-                Config::get('concrete.user.registration.notification_email'),
-                t('Website Registration Notification')
-            );
+        if (Config::get('concrete.email.register_notification.address')) {
+            $mh->from(Config::get('concrete.email.register_notification.address'), t('Website Registration Notification'));
         } else {
             $adminUser = UserInfo::getByID(USER_SUPER_ID);
             $mh->from($adminUser->getUserEmail(), t('Website Registration Notification'));
@@ -126,7 +161,7 @@ class ActivateUserRequest extends UserRequest
 
     public function getWorkflowRequestApproveButtonClass()
     {
-        return 'btn-success';
+        return '';
     }
 
     public function getWorkflowRequestApproveButtonInnerButtonRightHTML()
@@ -141,7 +176,6 @@ class ActivateUserRequest extends UserRequest
         } else {
             return t('Activate');
         }
-
     }
 
     public function getWorkflowRequestAdditionalActions(WorkflowProgress $wp)
@@ -152,9 +186,8 @@ class ActivateUserRequest extends UserRequest
         $button->addWorkflowProgressActionButtonParameter('dialog-title', t('User Details'));
         $button->addWorkflowProgressActionButtonParameter('dialog-width', '420');
         $button->addWorkflowProgressActionButtonParameter('dialog-height', '310');
-        $button->setWorkflowProgressActionStyleInnerButtonLeftHTML('<i class="fa fa-eye"></i>');
         $button->setWorkflowProgressActionURL(REL_DIR_FILES_TOOLS_REQUIRED . '/workflow/dialogs/user_details?uID=' . $this->getRequestedUserID());
-        $button->setWorkflowProgressActionStyleClass('btn-default dialog-launch');
+        $button->setWorkflowProgressActionStyleClass('dialog-launch');
         $buttons[] = $button;
 
         return $buttons;

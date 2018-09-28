@@ -5,6 +5,8 @@ use Concrete\Core\Tree\Node\Node as TreeNode;
 use Concrete\Core\Tree\Node\Type\Formatter\CategoryListFormatter;
 use Concrete\Core\Tree\Node\Type\Formatter\ExpressEntryResultsListFormatter;
 use Concrete\Core\Tree\Node\Type\Menu\CategoryMenu;
+use Concrete\Core\Tree\Node\Type\Menu\ExpressEntryCategoryMenu;
+use Concrete\Core\Tree\Node\Type\Menu\ExpressEntryLocationMenu;
 use Loader;
 
 class ExpressEntryCategory extends Category
@@ -25,7 +27,7 @@ class ExpressEntryCategory extends Category
 
     public function getTreeNodeMenu()
     {
-        return new CategoryMenu($this);
+        return new ExpressEntryCategoryMenu($this);
     }
 
     public function getTreeNodeTypeName()

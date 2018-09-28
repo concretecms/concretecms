@@ -2,6 +2,7 @@
 namespace Concrete\Controller\SinglePage\Dashboard\System\Attributes;
 
 use Concrete\Core\Attribute\SetManagerInterface;
+use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Loader;
 use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
@@ -151,6 +152,10 @@ class Sets extends DashboardPageController
                 if (is_array($this->post('akID'))) {
                     foreach ($unassigned as $ak) {
                         if (in_array($ak->getAttributeKeyID(), $this->post('akID'))) {
+                            // This is a lame hack but our legacy support is biting us here:
+                            if (!($ak instanceof Key)) {
+                                $ak = \Concrete\Core\Attribute\Key\Key::getByID($ak->getAttributeKeyID());
+                            }
                             $as->addKey($ak);
                         }
                     }

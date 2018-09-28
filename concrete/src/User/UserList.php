@@ -2,13 +2,64 @@
 namespace Concrete\Core\User;
 
 use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemList;
+use Concrete\Core\Search\ItemList\Pager\Manager\UserListPagerManager;
+use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
+use Concrete\Core\Search\ItemList\Pager\QueryString\VariableFactory;
+use Concrete\Core\Search\Pagination\PaginationProviderInterface;
+use Concrete\Core\Search\StickyRequest;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\Group\Group;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
-use Concrete\Core\Search\Pagination\Pagination;
-use UserInfo as CoreUserInfo;
 
-class UserList extends DatabaseItemList
+class UserList extends DatabaseItemList implements PagerProviderInterface, PaginationProviderInterface
 {
+
+    public function __construct(StickyRequest $req = null)
+    {
+        $u = new \User();
+        if ($u->isSuperUser()) {
+            $this->ignorePermissions();
+        }
+        parent::__construct($req);
+    }
+
+    /**
+     * @return \Closure|int|null
+     */
+    public function getPermissionsChecker()
+    {
+        return $this->permissionsChecker;
+    }
+
+    public function getPagerVariableFactory()
+    {
+        return new VariableFactory($this, $this->getSearchRequest());
+    }
+
+    public function getPagerManager()
+    {
+        return new UserListPagerManager($this);
+    }
+
+    /** @var  \Closure | integer | null */
+    protected $permissionsChecker;
+
+    public function setPermissionsChecker(\Closure $checker = null)
+    {
+        $this->permissionsChecker = $checker;
+    }
+
+    public function ignorePermissions()
+    {
+        $this->permissionsChecker = -1;
+    }
+
+    public function enablePermissions()
+    {
+        unset($this->permissionsChecker);
+    }
+
+
     protected function getAttributeKeyClassName()
     {
         return '\\Concrete\\Core\\Attribute\\Key\\UserKey';
@@ -49,38 +100,82 @@ class UserList extends DatabaseItemList
             // When uStatus column is selected, we also get the "status" column for
             // multilingual sorting purposes.
             $sql =
-                ", CASE WHEN u.uIsActive = 1 THEN '" . t("Active") . "' " .
-                "WHEN u.uIsValidated = 1 AND u.uIsActive = 0 THEN '". t("Inactive") . "' " .
-                "ELSE '". t("Unvalidated") . "' END AS uStatus";
+                ", CASE WHEN u.uIsActive = 1 THEN '" . t('Active') . "' " .
+                "WHEN u.uIsValidated = 1 AND u.uIsActive = 0 THEN '" . t('Inactive') . "' " .
+                "ELSE '" . t('Unvalidated') . "' END AS uStatus";
         }
         $this->setQuery('SELECT DISTINCT u.uID, u.uName' . $sql . ' FROM Users u ');
     }
 
-    /**
-     * The total results of the query.
-     *
-     * @return int
-     */
     public function getTotalResults()
     {
-        $query = $this->deliverQueryObject();
+        $u = new \User();
+        if ($this->permissionsChecker === -1) {
+            $query = $this->deliverQueryObject();
+            // We need to reset the potential custom order by here because otherwise, if we've added
+            // items to the select parts, and we're ordering by them, we get a SQL error
+            // when we get total results, because we're resetting the select
+            return $query->resetQueryParts([
+                'groupBy',
+                'orderBy'
+            ])->select('count(distinct u.uID)')->setMaxResults(1)->execute()->fetchColumn();
+        } else {
+            return -1; // unknown
+        }
+    }
 
-        return $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct u.uID)')->setMaxResults(1)->execute()->fetchColumn();
+    public function getPaginationAdapter()
+    {
+        $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
+            // We need to reset the potential custom order by here because otherwise, if we've added
+            // items to the select parts, and we're ordering by them, we get a SQL error
+            // when we get total results, because we're resetting the select
+            $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct u.uID)')->setMaxResults(1);
+        });
+        return $adapter;
+    }
+
+    public function checkPermissions($mixed)
+    {
+        if (isset($this->permissionsChecker)) {
+            if ($this->permissionsChecker === -1) {
+                return true;
+            } else {
+                return call_user_func_array($this->permissionsChecker, [$mixed]);
+            }
+        }
+
+        $cp = new \Permissions($mixed);
+        return $cp->canViewUser();
     }
 
     /**
-     * Gets the pagination object for the query.
-     *
-     * @return Pagination
+     * @var UserInfoRepository|null
      */
-    protected function createPaginationObject()
-    {
-        $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
-            $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct u.uID)')->setMaxResults(1);
-        });
-        $pagination = new Pagination($this, $adapter);
+    private $userInfoRepository = null;
 
-        return $pagination;
+    /**
+     * @param UserInfoRepository $value
+     *
+     * @return $this;
+     */
+    public function setUserInfoRepository(UserInfoRepository $value)
+    {
+        $this->userInfoRepository = $value;
+
+        return $this;
+    }
+
+    /**
+     * @return UserInfoRepository
+     */
+    public function getUserInfoRepository()
+    {
+        if ($this->userInfoRepository === null) {
+            $this->userInfoRepository = Application::getFacadeApplication()->make(UserInfoRepository::class);
+        }
+
+        return $this->userInfoRepository;
     }
 
     /**
@@ -90,9 +185,7 @@ class UserList extends DatabaseItemList
      */
     public function getResult($queryRow)
     {
-        $ui = CoreUserInfo::getByID($queryRow['uID']);
-
-        return $ui;
+        return $this->getUserInfoRepository()->getByID($queryRow['uID']);
     }
 
     /**
@@ -116,7 +209,8 @@ class UserList extends DatabaseItemList
     {
         $this->query->select('u.uID')
             ->from('Users', 'u')
-            ->leftJoin('u', 'UserSearchIndexAttributes', 'ua', 'u.uID = ua.uID');
+            ->leftJoin('u', 'UserSearchIndexAttributes', 'ua', 'u.uID = ua.uID')
+            ->groupBy('u.uID');
     }
 
     public function finalizeQuery(\Doctrine\DBAL\Query\QueryBuilder $query)
@@ -156,7 +250,22 @@ class UserList extends DatabaseItemList
         $this->query->setParameter('uIsActive', $isActive);
     }
 
-    public function sortByStatus($dir = "asc")
+    /**
+     * Filter list by whether a user is validated or not.
+     *
+     * @param bool $isValidated
+     */
+    public function filterByIsValidated($isValidated)
+    {
+        $this->includeInactiveUsers();
+        if (!$isValidated) {
+            $this->includeUnvalidatedUsers();
+            $this->query->andWhere('u.uIsValidated = :uIsValidated');
+            $this->query->setParameter('uIsValidated', $isValidated);
+        }
+    }
+
+    public function sortByStatus($dir = 'asc')
     {
         $this->sortUserStatus = 1;
         parent::sortBy('uStatus', $dir);
@@ -219,14 +328,78 @@ class UserList extends DatabaseItemList
         if (!($group instanceof \Concrete\Core\User\Group\Group)) {
             $group = \Concrete\Core\User\Group\Group::getByName($group);
         }
-
-        $table = 'ug' . $group->getGroupID();
-        $this->query->leftJoin('u', 'UserGroups', $table, 'u.uID = ' . $table . '.uID AND ' . $table . '.gID = ' . $group->getGroupID());
+        $this->checkGroupJoin();
+        $query = $this->getQueryObject()->getConnection()->createQueryBuilder();
+        $orX = $this->getQueryObject()->expr()->orX();
+        $query->select('u.uID')->from('Users','u')->leftJoin('u','UserGroups','ug','u.uID=ug.uID')->leftJoin('ug', $query->getConnection()->getDatabasePlatform()->quoteSingleIdentifier('Groups'), 'g', 'ug.gID=g.gID');
+        $orX->add($this->getQueryObject()->expr()->like('g.gPath', "'" . $group->getGroupPath() . "/%'"));
+        $orX->add($this->getQueryObject()->expr()->eq('g.gID', $group->getGroupID()));
+        $query->where($orX);
         if ($inGroup) {
-            $this->query->andWhere($table . '.gID = :gID' . $group->getGroupID());
-            $this->query->setParameter('gID' . $group->getGroupID(), $group->getGroupID());
+            $this->getQueryObject()->andWhere($this->getQueryObject()->expr()->in('u.uID', $query->getSQL()));
         } else {
-            $this->query->andWhere($table . '.gID is null');
+            $this->getQueryObject()->andWhere($this->getQueryObject()->expr()->notIn('u.uID', $query->getSQL()));
+        }
+
+    }
+
+    /**
+     * Function used to check if a group join has already been set
+     */
+    private function checkGroupJoin() {
+        $query = $this->getQueryObject();
+        $params = $query->getQueryPart('join');
+        $isGroupSet = false;
+        $isUserGroupSet = false;
+        // Loop twice as params returns an array of arrays
+        foreach ($params as $param) {
+            foreach ($param as $setTable)
+                if (in_array('ug', $setTable)) {
+                    $isUserGroupSet = true;
+                }
+            if (in_array('g', $setTable)) {
+                $isGroupSet = true;
+            }
+        }
+        if ($isUserGroupSet === false) {
+            $query->leftJoin('u', 'UserGroups', 'ug', 'ug.uID = u.uID');
+        }
+        if ($isGroupSet === false) {
+            $query->leftJoin('ug', $query->getConnection()->getDatabasePlatform()->quoteSingleIdentifier('Groups'),'g', 'ug.gID = g.gID');
+        }
+    }
+
+    /**
+     * Filters the user list for only users within at least one of the provided groups.
+     *
+     * @param \Concrete\Core\User\Group\Group[]|\Generator $groups
+     * @param bool $inGroups Set to true to search users that are in at least in one of the specified groups, false to search users that aren't in any of the specified groups
+     */
+    public function filterByInAnyGroup($groups, $inGroups = true)
+    {
+        $this->checkGroupJoin();
+        $groupIDs = [];
+        $orX = $this->getQueryObject()->expr()->orX();
+
+        foreach ($groups as $group) {
+            if ($group instanceof \Concrete\Core\User\Group\Group) {
+                if ($inGroups) {
+                    $orX->add($this->getQueryObject()->expr()->like('g.gPath', "'" . $group->getGroupPath() . "/%'"));
+                } else {
+                    $orX->add($this->getQueryObject()->expr()->notLike('g.gPath', "'" . $group->getGroupPath() . "/%'"));
+                }
+                $groupIDs[] = $group->getGroupID();
+            }
+        }
+        if (is_array($groups) && count($groups) > 0) {
+            if ($inGroups) {
+                $orX->add($this->getQueryObject()->expr()->in('g.gID', $groupIDs));
+                $this->getQueryObject()->andWhere($orX, $this->getQueryObject()->expr()->isNotNull('g.gID'));
+            } else {
+                $orX->add($this->getQueryObject()->expr()->notIn('g.gID', $groupIDs));
+                $orX->add($this->getQueryObject()->expr()->isNull('g.gID'));
+                $this->getQueryObject()->andWhere($orX);
+            }
         }
     }
 
@@ -237,7 +410,8 @@ class UserList extends DatabaseItemList
      */
     public function filterByDateAdded($date, $comparison = '=')
     {
-        $this->query->andWhere($this->query->expr()->comparison('u.uDateAdded', $comparison, $this->query->createNamedParameter($date)));
+        $this->query->andWhere($this->query->expr()->comparison('u.uDateAdded', $comparison,
+            $this->query->createNamedParameter($date)));
     }
 
     /**
@@ -262,11 +436,13 @@ class UserList extends DatabaseItemList
 
     public function sortByUserName()
     {
+        $this->query->addGroupBy('u.uName');
         $this->query->orderBy('u.uName', 'asc');
     }
 
     public function sortByDateAdded()
     {
+        $this->query->addGroupBy('u.uDateAdded');
         $this->query->orderBy('u.uDateAdded', 'desc');
     }
 }

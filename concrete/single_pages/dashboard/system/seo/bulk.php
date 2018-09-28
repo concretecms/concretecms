@@ -116,6 +116,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
     <?php if (count($pages) > 0) { ?>
         <div class="ccm-search-results-table container-fluid">
         <?php $i = 0;
+        $homeCID = Page::getHomePageID();
         foreach ($pages as $cobj) {
             $cpobj = new Permissions($cobj);
             ++$i;
@@ -149,10 +150,10 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                         $autoTitle = sprintf(Config::get('concrete.seo.title_format'), $controller->getSiteNameForPage($cobj), $seoPageTitle);
                         $titleInfo = array('title' => $cID);
                         if(strlen($cobj->getAttribute('meta_title')) <= 0) {
-                            $titleInfo[style] = 'background: whiteSmoke';
+                            $titleInfo['style'] = 'background: whiteSmoke';
                         }
                         echo $form->text('meta_title', $cobj->getAttribute('meta_title') ? $cobj->getAttribute('meta_title') : $autoTitle, $titleInfo);
-                        echo $titleInfo[style] ? '<span class="help-inline">' . t('Default value. Click to edit.') . '</span>' : '' ?>
+                        echo $titleInfo['style'] ? '<span class="help-inline">' . t('Default value. Click to edit.') . '</span>' : '' ?>
                     </div>
 
                     <div class="form-group">
@@ -161,14 +162,14 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                         $autoDesc = htmlspecialchars($pageDescription, ENT_COMPAT, APP_CHARSET);
                         $descInfo = array('title' => $cID);
                         if (strlen($cobj->getAttribute('meta_description')) <= 0) {
-                            $descInfo[style] = 'background: whiteSmoke';
+                            $descInfo['style'] = 'background: whiteSmoke';
                         }
-                        echo $form->textarea('meta_description', $cobj->getAttribute('meta_description') ? $cobj->getAttribute('meta_description') : $autoDesc, $descInfo);
-                        echo $descInfo[style] ? '<span class="help-inline">' . t('Default value. Click to edit.') . '</span>' : '';
+                        echo $form->textarea('meta_description', h($cobj->getAttribute('meta_description')) ?: $autoDesc, $descInfo);
+                        echo $descInfo['style'] ? '<span class="help-inline">' . t('Default value. Click to edit.') . '</span>' : '';
                         ?>
                     </div>
 
-                    <?php if ($cobj->getCollectionID() != HOME_CID) { ?>
+                    <?php if ($cobj->getCollectionID() != $homeCID) { ?>
                     <div class="form-group">
                         <label class="control-label"><?php echo t('Slug'); ?></label>
                         <?php echo $form->text('collection_handle', $cobj->getCollectionHandle(), array('title' => $cID, 'class' => 'collectionHandle')); ?>

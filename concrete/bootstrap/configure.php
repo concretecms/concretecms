@@ -1,15 +1,20 @@
 <?php
 
-if (version_compare(phpversion(), '5.5.9') < 0) {
-    die("concrete5 requires PHP 5.5.9+ to run.\n");
-}
-
 /*
  * ----------------------------------------------------------------------------
  * Ensure that all subsequent procedural pages are running inside concrete5.
  * ----------------------------------------------------------------------------
  */
 defined('C5_EXECUTE') or define('C5_EXECUTE', md5(uniqid()));
+
+/*
+ * ----------------------------------------------------------------------------
+ * Ensure that we have a currently defined time zone.
+ * This needs to be done very early in order to avoid Whoops quitting with
+ * "It is not safe to rely on the system's timezone settings."
+ * ----------------------------------------------------------------------------
+ */
+@date_default_timezone_set(@date_default_timezone_get() ?: 'UTC');
 
 /*
  * ----------------------------------------------------------------------------
@@ -26,7 +31,7 @@ defined('DISPATCHER_FILENAME_CORE') or define('DISPATCHER_FILENAME_CORE', 'dispa
 defined('DIRNAME_APPLICATION') or define('DIRNAME_APPLICATION', 'application');
 defined('DIRNAME_UPDATES') or define('DIRNAME_UPDATES', 'updates');
 defined('DIRNAME_CORE') or define('DIRNAME_CORE', 'concrete');
-defined('DIR_BASE') or define('DIR_BASE', dirname($_SERVER['SCRIPT_FILENAME']));
+defined('DIR_BASE') or define('DIR_BASE', str_replace(DIRECTORY_SEPARATOR, '/', dirname($_SERVER['SCRIPT_FILENAME'])));
 defined('DIR_APPLICATION') or define('DIR_APPLICATION', DIR_BASE . '/' . DIRNAME_APPLICATION);
 defined('DIR_CONFIG_SITE') or define('DIR_CONFIG_SITE', DIR_APPLICATION . '/config');
 
@@ -56,6 +61,7 @@ if (!defined('APP_UPDATED_PASSTHRU')) {
             exit;
         }
     }
+    unset($update_file);
     define('APP_UPDATED_PASSTHRU', false);
 }
 
@@ -84,6 +90,7 @@ const DIRNAME_PAGES = 'single_pages';
 const DIRNAME_VIEWS = 'views';
 const DIRNAME_PACKAGES = 'packages';
 const DIRNAME_MODELS = 'models';
+const DIRNAME_ATTRIBUTE = 'attribute';
 const DIRNAME_ATTRIBUTES = 'attributes';
 const DIRNAME_MENU_ITEMS = 'menu_items';
 const DIRNAME_AUTHENTICATION = 'authentication';
@@ -149,14 +156,17 @@ const DIRNAME_FILE_STORAGE_LOCATION_TYPES = 'storage_location_types';
 const DIRNAME_EXPRESS = 'express';
 const DIRNAME_EXPRESS_VIEW_CONTROLS = 'view';
 const DIRNAME_EXPRESS_CONTROL_OPTIONS = 'control';
+const DIRNAME_FORM_CONTROL_WRAPPER_TEMPLATES = 'form';
 const DIRNAME_EXPRESS_FORM_CONTROLS = 'form';
 const DIRNAME_EXPRESS_FORM_CONTROLS_ASSOCIATION = 'association';
 const DIRNAME_METADATA_XML = 'xml';
 const DIRNAME_METADATA_YAML = 'yaml';
+const DIRNAME_GEOLOCATION = 'geolocation';
+const DIRNAME_ROUTES = 'routes';
 const REL_DIR_FILES_INCOMING = '/incoming';
 const REL_DIR_FILES_THUMBNAILS = '/thumbnails';
-define('REL_DIR_METADATA_XML', DIRNAME_CONFIG . DIRECTORY_SEPARATOR . DIRNAME_METADATA_XML);
-define('REL_DIR_METADATA_YAML', DIRNAME_CONFIG . DIRECTORY_SEPARATOR . DIRNAME_METADATA_YAML);
+define('REL_DIR_METADATA_XML', DIRNAME_CONFIG . '/' . DIRNAME_METADATA_XML);
+define('REL_DIR_METADATA_YAML', DIRNAME_CONFIG . '/' . DIRNAME_METADATA_YAML);
 
 /*
  * ----------------------------------------------------------------------------
@@ -164,12 +174,12 @@ define('REL_DIR_METADATA_YAML', DIRNAME_CONFIG . DIRECTORY_SEPARATOR . DIRNAME_M
  * ----------------------------------------------------------------------------
  */
 const CONFIG_ORM_METADATA_BASE = 'database.metadatadriver';
-define('CONFIG_ORM_METADATA_PACKAGES_BASE', CONFIG_ORM_METADATA_BASE.'.packages');
-define('CONFIG_ORM_METADATA_ANNOTATION_LEGACY', CONFIG_ORM_METADATA_PACKAGES_BASE.'.annotation.legacy');
-define('CONFIG_ORM_METADATA_ANNOTATION_DEFAULT', CONFIG_ORM_METADATA_PACKAGES_BASE.'.annotation.default');
-define('CONFIG_ORM_METADATA_XML', CONFIG_ORM_METADATA_PACKAGES_BASE.'.xml');
-define('CONFIG_ORM_METADATA_YAML', CONFIG_ORM_METADATA_PACKAGES_BASE.'.yaml');
-define('CONFIG_ORM_METADATA_APPLICATION', CONFIG_ORM_METADATA_BASE.'.application');
+define('CONFIG_ORM_METADATA_PACKAGES_BASE', CONFIG_ORM_METADATA_BASE . '.packages');
+define('CONFIG_ORM_METADATA_ANNOTATION_LEGACY', CONFIG_ORM_METADATA_PACKAGES_BASE . '.annotation.legacy');
+define('CONFIG_ORM_METADATA_ANNOTATION_DEFAULT', CONFIG_ORM_METADATA_PACKAGES_BASE . '.annotation.default');
+define('CONFIG_ORM_METADATA_XML', CONFIG_ORM_METADATA_PACKAGES_BASE . '.xml');
+define('CONFIG_ORM_METADATA_YAML', CONFIG_ORM_METADATA_PACKAGES_BASE . '.yaml');
+define('CONFIG_ORM_METADATA_APPLICATION', CONFIG_ORM_METADATA_BASE . '.application');
 
 /*
  * ----------------------------------------------------------------------------
@@ -212,8 +222,6 @@ const FILENAME_EXPRESS_CONTROL_OPTIONS = 'options.php';
 const FILENAME_GATHERING_DATA_SOURCE_OPTIONS = 'options.php';
 const FILENAME_GATHERING_ITEM_TEMPLATE_ICON = 'icon.png';
 const FILENAME_CONVERSATION_EDITOR_OPTIONS = 'options.php';
-const FILENAME_CONVERSATION_EDITOR_FORM_MESSAGE = 'message.php';
-const FILENAME_CONVERSATION_EDITOR_FORM_REPLY = 'reply.php';
 const FILENAME_STYLE_CUSTOMIZER_STYLES = 'styles.xml';
 const FILENAME_STYLE_CUSTOMIZER_DEFAULT_PRESET_NAME = 'defaults.less';
 
@@ -222,14 +230,14 @@ const FILENAME_STYLE_CUSTOMIZER_DEFAULT_PRESET_NAME = 'defaults.less';
  * Directory constants
  * ----------------------------------------------------------------------------
  */
-define('DIR_BASE_CORE', realpath(dirname(__FILE__) . '/..'));
+define('DIR_BASE_CORE', str_replace(DIRECTORY_SEPARATOR, '/', realpath(dirname(__FILE__) . '/..')));
 define('DIR_PACKAGES', DIR_BASE . '/packages');
 define('DIR_FILES_BLOCK_TYPES', DIR_APPLICATION . '/' . DIRNAME_BLOCKS);
 define('DIR_FILES_BLOCK_TYPES_CORE', DIR_BASE_CORE . '/' . DIRNAME_BLOCKS);
 define('DIR_FILES_TOOLS', DIR_APPLICATION . '/tools');
 define('DIR_FILES_TOOLS_REQUIRED', DIR_BASE_CORE . '/tools');
 define('DIR_PACKAGES_CORE', DIR_BASE_CORE . '/packages');
-define('DIR_STARTING_POINT_PACKAGES', DIR_APPLICATION . '/config/install/packages');
+defined('DIR_STARTING_POINT_PACKAGES') or define('DIR_STARTING_POINT_PACKAGES', DIR_CONFIG_SITE . '/install/packages');
 define('DIR_STARTING_POINT_PACKAGES_CORE', DIR_BASE_CORE . '/config/install/packages');
 define('DIR_CORE_UPDATES', DIR_BASE . '/' . DIRNAME_UPDATES);
 define('DIR_FILES_PAGE_TEMPLATE_ICONS', DIR_BASE_CORE . '/images/icons/page_templates');
@@ -303,11 +311,13 @@ const ONLINE_NOW_TIMEOUT = 300;
 const UVTYPE_REGISTER = 0;
 const UVTYPE_CHANGE_PASSWORD = 1;
 const UVTYPE_LOGIN_FOREVER = 2;
-const NEWSFLOW_VIEWED_THRESHOLD = 86400; // once a day
 
 /* -- Pages -- */
 const CHECKOUT_TIMEOUT = 300; // # in seconds.
 const VERSION_INITIAL_COMMENT = 'Initial Version';
+/**
+ * @deprecated Use Page::getHomePageID()
+ */
 const HOME_CID = 1;
 const HOME_NAME = 'Home';
 const HOME_UID = USER_SUPER_ID;
@@ -327,6 +337,7 @@ const COLLECTION_PRIVATE = 40;
 const BLOCK_NOT_AVAILABLE = 50;
 
 /* -- Debugging and Logging -- */
+defined('DEFAULT_ERROR_REPORTING') or define('DEFAULT_ERROR_REPORTING', E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
 const DEBUG_DISPLAY_PRODUCTION = 0;
 const DEBUG_DISPLAY_ERRORS = 1;
 const DEBUG_DISPLAY_ERRORS_SQL = 2; // not used
@@ -338,7 +349,7 @@ const LOG_TYPE_EXCEPTIONS = 'exceptions';
  * concrete5 depends on some more forgiving error handling.
  * ----------------------------------------------------------------------------
  */
-error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
+error_reporting(DEFAULT_ERROR_REPORTING);
 
 /*
  * ----------------------------------------------------------------------------
@@ -356,16 +367,18 @@ foreach (str_split(decoct($DIRECTORY_PERMISSIONS_MODE), 1) as $p) {
     }
     $FILE_PERMISSIONS_MODE .= intval($p) - 1;
 }
+unset($p);
 $FILE_PERMISSIONS_MODE = octdec($FILE_PERMISSIONS_MODE);
 define('DIRECTORY_PERMISSIONS_MODE_COMPUTED', $DIRECTORY_PERMISSIONS_MODE);
+unset($DIRECTORY_PERMISSIONS_MODE);
 define('FILE_PERMISSIONS_MODE_COMPUTED', $FILE_PERMISSIONS_MODE);
-
+unset($FILE_PERMISSIONS_MODE);
 /*
  * ----------------------------------------------------------------------------
  * We need our include path to be set here for libraries like Zend Framework
  * ----------------------------------------------------------------------------
  */
-ini_set('include_path', DIR_BASE_CORE . DIRECTORY_SEPARATOR . DIRNAME_VENDOR . PATH_SEPARATOR . get_include_path());
+ini_set('include_path', DIR_BASE_CORE . '/' . DIRNAME_VENDOR . PATH_SEPARATOR . get_include_path());
 
 /**
  * ----------------------------------------------------------------------------

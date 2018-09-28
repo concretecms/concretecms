@@ -3,13 +3,13 @@ namespace Concrete\Core\Page\Type\Composer;
 
 use Concrete\Core\Entity\Page\Template;
 use Concrete\Core\Backup\ContentExporter;
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Page\Type\Composer\OutputControl as PageTypeComposerOutputControl;
 use Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayoutSet;
 use Concrete\Core\Page\Type\Composer\Control\Type\Type as PageTypeComposerControlType;
 use Concrete\Core\Support\Facade\Application;
 
-class FormLayoutSetControl extends Object
+class FormLayoutSetControl extends ConcreteObject
 {
     protected $ptTargetParentPageID = 0;
 
@@ -96,6 +96,7 @@ class FormLayoutSetControl extends Object
         $control->setPageTypeComposerFormLayoutSetControlObject($this);
         $control->setPageObject(isset($this->page) ? $this->page : null);
         $control->setTargetParentPageID($this->ptTargetParentPageID);
+        $control->setPageTypeComposerFormControlRequired($this->isPageTypeComposerFormLayoutSetControlRequired());
         $control->render($this->getPageTypeComposerControlDisplayLabel(), $this->getPageTypeComposerFormLayoutSetControlCustomTemplate(), $this->getPageTypeComposerFormLayoutSetControlDisplayDescription());
     }
 
@@ -183,8 +184,8 @@ class FormLayoutSetControl extends Object
         if ($r && $r['ptComposerFormLayoutSetControlID']) {
             $control = new static();
             $control->setPropertiesFromArray($r);
-            $control->ptComposerControlObject = unserialize($r['ptComposerControlObject']);
-            if (!$control->ptComposerControlObject->objectExists()) {
+            $control->ptComposerControlObject = @unserialize($r['ptComposerControlObject']);
+            if ($control->ptComposerControlObject === false || !$control->ptComposerControlObject->objectExists()) {
                 $control->delete();
 
                 return null;

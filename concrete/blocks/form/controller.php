@@ -2,18 +2,19 @@
 namespace Concrete\Block\Form;
 
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Entity\File\Version;
+use Config;
 use Core;
 use Database;
-use User;
-use Page;
-use UserInfo;
+use Events;
 use Exception;
+use File;
 use FileImporter;
 use FileSet;
-use File;
-use Config;
-use Concrete\Core\Entity\File\Version;
-use Events;
+use Page;
+use User;
+use UserInfo;
+use Concrete\Core\Validator\String\EmailValidator;
 
 class Controller extends BlockController
 {
@@ -39,12 +40,12 @@ class Controller extends BlockController
      */
     public function getBlockTypeDescription()
     {
-        return t("Build simple forms and surveys.");
+        return t('Build simple forms and surveys.');
     }
 
     public function getBlockTypeName()
     {
-        return t("Legacy Form");
+        return t('Legacy Form');
     }
 
     public function getJavaScriptStrings()
@@ -114,17 +115,17 @@ class Controller extends BlockController
     public function view()
     {
         if ($this->viewRequiresJqueryUI()) {
-            $this->requireAsset('css', 'jquery/ui');
-            $this->requireAsset('javascript', 'jquery/ui');
+            $this->requireAsset('jquery/ui');
         }
         $this->requireAsset('css', 'core/frontend/errors');
         if ($this->displayCaptcha) {
             $this->requireAsset('css', 'core/frontend/captcha');
         }
     }
+
     public function getDefaultThankYouMsg()
     {
-        return t("Thanks!");
+        return t('Thanks!');
     }
 
     public function getDefaultSubmitText()
@@ -152,7 +153,7 @@ class Controller extends BlockController
 
         $db = Database::connection();
         if (intval($this->bID) > 0) {
-            $q = "select count(*) as total from {$this->btTable} where bID = ".intval($this->bID);
+            $q = "select count(*) as total from {$this->btTable} where bID = " . intval($this->bID);
             $total = $db->getOne($q);
         } else {
             $total = 0;
@@ -164,6 +165,12 @@ class Controller extends BlockController
         if (!$data['qsID']) {
             $data['qsID'] = time();
         }
+
+        if (isset($data['questionSetId'])) {
+            // This is specifically set when using the migration tool
+            $data['qsID'] = $data['questionSetId'];
+        }
+
         if (!$data['oldQsID']) {
             $data['oldQsID'] = $data['qsID'];
         }
@@ -270,7 +277,7 @@ class Controller extends BlockController
         }
         $vals = [$this->bID, intval($data['qsID'])];
         $pendingDeleteQIDs = implode(',', $pendingDeleteQIDs);
-        $unchangedQuestions = $db->query('DELETE FROM btFormQuestions WHERE bID=? AND questionSetId=? AND msqID IN ('.$pendingDeleteQIDs.')', $vals);
+        $unchangedQuestions = $db->query('DELETE FROM btFormQuestions WHERE bID=? AND questionSetId=? AND msqID IN (' . $pendingDeleteQIDs . ')', $vals);
     }
 
     /**
@@ -293,8 +300,8 @@ class Controller extends BlockController
 
             //It should only generate a new question set id if the block is copied to a new page,
             //otherwise it will loose all of its answer sets (from all the people who've used the form on this page)
-            $questionSetCIDs = $db->getCol("SELECT distinct cID FROM {$this->btTable} AS f, CollectionVersionBlocks AS cvb ".
-                        "WHERE f.bID=cvb.bID AND questionSetId=".intval($row['questionSetId']));
+            $questionSetCIDs = $db->getCol("SELECT distinct cID FROM {$this->btTable} AS f, CollectionVersionBlocks AS cvb " .
+                        'WHERE f.bID=cvb.bID AND questionSetId=' . intval($row['questionSetId']));
 
             //this question set id is used on other pages, so make a new one for this page block
             if (count($questionSetCIDs) > 1 || !in_array($c->cID, $questionSetCIDs)) {
@@ -311,7 +318,7 @@ class Controller extends BlockController
             $q = "insert into {$this->btTable} ( questionSetId, surveyName, submitText, bID,thankyouMsg,notifyMeOnSubmission,recipientEmail,displayCaptcha,addFilesToSet) values (?, ?, ?, ?, ?, ?, ?, ?,?)";
             $result = $db->Execute($q, $v);
 
-            $rs = $db->query("SELECT * FROM {$this->btQuestionsTablename} WHERE questionSetId=$oldQuestionSetId AND bID=".intval($this->bID));
+            $rs = $db->query("SELECT * FROM {$this->btQuestionsTablename} WHERE questionSetId=$oldQuestionSetId AND bID=" . intval($this->bID));
             while ($row = $rs->fetchRow()) {
                 $v = [$newQuestionSetId, intval($row['msqID']), intval($newBID), $row['question'], $row['inputType'], $row['options'], $row['position'], $row['width'], $row['height'], $row['required'], $row['defaultDate']];
                 $sql = "INSERT INTO {$this->btQuestionsTablename} (questionSetId,msqID,bID,question,inputType,options,position,width,height,required,defaultDate) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
@@ -338,7 +345,7 @@ class Controller extends BlockController
         $ip = Core::make('helper/validation/ip');
         $this->view();
 
-        if ($ip->isBanned()) {
+        if ($ip->isBlacklisted()) {
             $this->set('invalidIP', $ip->getErrorMessage());
 
             return;
@@ -352,10 +359,11 @@ class Controller extends BlockController
         if ($qsID == 0) {
             throw new Exception(t("Oops, something is wrong with the form you posted (it doesn't have a question set id)."));
         }
+        $errors = [];
 
         $token = Core::make('token');
-        if (!$token->validate('form_block_submit_qs_'.$qsID)) {
-            throw new Exception(t("Invalid Request"));
+        if (!$token->validate('form_block_submit_qs_' . $qsID)) {
+            $errors[] = $token->getErrorMessage();
         }
 
         //get all questions for this question set
@@ -371,34 +379,37 @@ class Controller extends BlockController
         if ($this->displayCaptcha) {
             $captcha = Core::make('helper/validation/captcha');
             if (!$captcha->check()) {
-                $errors['captcha'] = t("Incorrect captcha code");
+                $errors['captcha'] = t('Incorrect captcha code');
                 $_REQUEST['ccmCaptchaCode'] = '';
             }
         }
-
         //checked required fields
         foreach ($rows as $row) {
             if ($row['inputType'] == 'datetime') {
                 if (!isset($datetime)) {
                     $datetime = Core::make('helper/form/date_time');
                 }
-                $translated = $datetime->translate('Question'.$row['msqID']);
+                $translated = $datetime->translate('Question' . $row['msqID']);
                 if ($translated) {
-                    $_POST['Question'.$row['msqID']] = $translated;
+                    $_POST['Question' . $row['msqID']] = $translated;
                 }
             }
             if (intval($row['required']) == 1) {
                 $notCompleted = 0;
                 if ($row['inputType'] == 'email') {
-                    if (!Core::make('helper/validation/strings')->email($_POST['Question' . $row['msqID']])) {
-                        $errors['emails'] = t('You must enter a valid email address.');
+                    if (!isset($emailValidator)) {
+                        $emailValidator = $this->app->make(EmailValidator::class);
+                    }
+                    $e = $this->app->make('error');
+                    if (!$emailValidator->isValid($_POST['Question' . $row['msqID']], $e)) {
+                        $errors['emails'] = $e->toText();
                         $errorDetails[$row['msqID']]['emails'] = $errors['emails'];
                     }
                 }
                 if ($row['inputType'] == 'checkboxlist') {
                     $answerFound = 0;
                     foreach ($_POST as $key => $val) {
-                        if (strstr($key, 'Question'.$row['msqID'].'_') && strlen($val)) {
+                        if (strstr($key, 'Question' . $row['msqID'] . '_') && strlen($val)) {
                             $answerFound = 1;
                         }
                     }
@@ -406,14 +417,14 @@ class Controller extends BlockController
                         $notCompleted = 1;
                     }
                 } elseif ($row['inputType'] == 'fileupload') {
-                    if (!isset($_FILES['Question'.$row['msqID']]) || !is_uploaded_file($_FILES['Question'.$row['msqID']]['tmp_name'])) {
+                    if (!isset($_FILES['Question' . $row['msqID']]) || !is_uploaded_file($_FILES['Question' . $row['msqID']]['tmp_name'])) {
                         $notCompleted = 1;
                     }
-                } elseif (!strlen(trim($_POST['Question'.$row['msqID']]))) {
+                } elseif (!strlen(trim($_POST['Question' . $row['msqID']]))) {
                     $notCompleted = 1;
                 }
                 if ($notCompleted) {
-                    $errors['CompleteRequired'] = t("Complete required fields *");
+                    $errors['CompleteRequired'] = t('Complete required fields *');
                     $errorDetails[$row['msqID']]['CompleteRequired'] = $errors['CompleteRequired'];
                 }
             }
@@ -426,7 +437,7 @@ class Controller extends BlockController
                 if ($row['inputType'] != 'fileupload') {
                     continue;
                 }
-                $questionName = 'Question'.$row['msqID'];
+                $questionName = 'Question' . $row['msqID'];
                 if (!intval($row['required']) &&
                     (
                     !isset($_FILES[$questionName]['tmp_name']) || !is_uploaded_file($_FILES[$questionName]['tmp_name'])
@@ -446,7 +457,6 @@ class Controller extends BlockController
                         $errors['fileupload'] = t('Invalid file.');
                         $errorDetails[$row['msqID']]['fileupload'] = $errors['fileupload'];
                         break;
-
                 }
                 } else {
                     $tmpFileIds[intval($row['msqID'])] = $resp->getFileID();
@@ -492,30 +502,43 @@ class Controller extends BlockController
                 $answerDisplay = '';
                 if ($row['inputType'] == 'checkboxlist') {
                     $answer = [];
-                    $answerLong = "";
+                    $answerLong = '';
                     $keys = array_keys($_POST);
                     foreach ($keys as $key) {
-                        if (strpos($key, 'Question'.$row['msqID'].'_') === 0) {
+                        if (strpos($key, 'Question' . $row['msqID'] . '_') === 0) {
                             $answer[] = $txt->sanitize($_POST[$key]);
                         }
                     }
                 } elseif ($row['inputType'] == 'text') {
-                    $answerLong = $txt->sanitize($_POST['Question'.$row['msqID']]);
+                    $answerLong = $txt->sanitize($_POST['Question' . $row['msqID']]);
                     $answer = '';
                 } elseif ($row['inputType'] == 'fileupload') {
-                    $answerLong = "";
+                    $answerLong = '';
                     $answer = intval($tmpFileIds[intval($row['msqID'])]);
                     if ($answer > 0) {
                         $answerDisplay = File::getByID($answer)->getVersion()->getDownloadURL();
                     } else {
                         $answerDisplay = t('No file specified');
                     }
+                } else if ($row['inputType'] == 'datetime') {
+
+                    $formPage = $this->getCollectionObject();
+                    $answer = $txt->sanitize($_POST['Question' . $row['msqID']]);
+                    if ($formPage) {
+                        $site = $formPage->getSite();
+                        $timezone = $site->getTimezone();
+                        $date = $this->app->make('date');
+                        $answerDisplay = $date->formatDateTime($txt->sanitize($_POST['Question' . $row['msqID']]), false, false, $timezone);
+                    } else {
+                        $answerDisplay = $txt->sanitize($_POST['Question' . $row['msqID']]);
+                    }
+
                 } elseif ($row['inputType'] == 'url') {
-                    $answerLong = "";
-                    $answer = $txt->sanitize($_POST['Question'.$row['msqID']]);
+                    $answerLong = '';
+                    $answer = $txt->sanitize($_POST['Question' . $row['msqID']]);
                 } elseif ($row['inputType'] == 'email') {
-                    $answerLong = "";
-                    $answer = $txt->sanitize($_POST['Question'.$row['msqID']]);
+                    $answerLong = '';
+                    $answer = $txt->sanitize($_POST['Question' . $row['msqID']]);
                     if (!empty($row['options'])) {
                         $settings = unserialize($row['options']);
                         if (is_array($settings) && array_key_exists('send_notification_from', $settings) && $settings['send_notification_from'] == 1) {
@@ -526,11 +549,11 @@ class Controller extends BlockController
                         }
                     }
                 } elseif ($row['inputType'] == 'telephone') {
-                    $answerLong = "";
-                    $answer = $txt->sanitize($_POST['Question'.$row['msqID']]);
+                    $answerLong = '';
+                    $answer = $txt->sanitize($_POST['Question' . $row['msqID']]);
                 } else {
-                    $answerLong = "";
-                    $answer = $txt->sanitize($_POST['Question'.$row['msqID']]);
+                    $answerLong = '';
+                    $answer = $txt->sanitize($_POST['Question' . $row['msqID']]);
                 }
 
                 if (is_array($answer)) {
@@ -538,7 +561,7 @@ class Controller extends BlockController
                 }
 
                 $questionAnswerPairs[$row['msqID']]['question'] = $row['question'];
-                $questionAnswerPairs[$row['msqID']]['answer'] = $txt->sanitize($answer.$answerLong);
+                $questionAnswerPairs[$row['msqID']]['answer'] = $txt->sanitize($answer . $answerLong);
                 $questionAnswerPairs[$row['msqID']]['answerDisplay'] = strlen($answerDisplay) ? $answerDisplay : $questionAnswerPairs[$row['msqID']]['answer'];
 
                 $v = [$row['msqID'], $answerSetID, $answer, $answerLong];
@@ -549,7 +572,7 @@ class Controller extends BlockController
 
             $submittedData = '';
             foreach ($questionAnswerPairs as $questionAnswerPair) {
-                $submittedData .= $questionAnswerPair['question']."\r\n".$questionAnswerPair['answer']."\r\n"."\r\n";
+                $submittedData .= $questionAnswerPair['question'] . "\r\n" . $questionAnswerPair['answer'] . "\r\n" . "\r\n";
             }
             $antispam = Core::make('helper/validation/antispam');
             if (!$antispam->check($submittedData, 'form_block')) {
@@ -577,7 +600,9 @@ class Controller extends BlockController
                 $mh->addParameter('questionSetId', $this->questionSetId);
                 $mh->addParameter('questionAnswerPairs', $questionAnswerPairs);
                 $mh->load('block_form_submission');
-                $mh->setSubject(t('%s Form Submission', $this->surveyName));
+                if (empty($mh->getSubject())) {
+                    $mh->setSubject(t('%s Form Submission', $this->surveyName));
+                }
                 //echo $mh->body.'<br>';
                 @$mh->sendMail();
             }
@@ -595,9 +620,7 @@ class Controller extends BlockController
 
             if (!$this->noSubmitFormRedirect) {
                 $targetPage = null;
-                if ($this->redirectCID == HOME_CID) {
-                    $targetPage = Page::getByID(HOME_CID);
-                } elseif ($this->redirectCID > 0) {
+                if ($this->redirectCID > 0) {
                     $pg = Page::getByID($this->redirectCID);
                     if (is_object($pg) && $pg->cID) {
                         $targetPage = $pg;
@@ -607,7 +630,7 @@ class Controller extends BlockController
                     $response = \Redirect::page($targetPage);
                 } else {
                     $response = \Redirect::page(Page::getCurrentPage());
-                    $url = $response->getTargetUrl() . "?surveySuccess=1&qsid=".$this->questionSetId."#formblock".$this->bID;
+                    $url = $response->getTargetUrl() . '?surveySuccess=1&qsid=' . $this->questionSetId . '#formblock' . $this->bID;
                     $response->setTargetUrl($url);
                 }
                 $response->send();
@@ -627,25 +650,25 @@ class Controller extends BlockController
         $info = $miniSurvey->getMiniSurveyBlockInfo($this->bID);
 
         //get all answer sets
-        $q = "SELECT asID FROM {$this->btAnswerSetTablename} WHERE questionSetId = ".intval($info['questionSetId']);
+        $q = "SELECT asID FROM {$this->btAnswerSetTablename} WHERE questionSetId = " . intval($info['questionSetId']);
         $answerSetsRS = $db->query($q);
 
         //delete the questions
-        $deleteData['questionsIDs'] = $db->getAll("SELECT qID FROM {$this->btQuestionsTablename} WHERE questionSetId = ".intval($info['questionSetId']).' AND bID='.intval($this->bID));
+        $deleteData['questionsIDs'] = $db->getAll("SELECT qID FROM {$this->btQuestionsTablename} WHERE questionSetId = " . intval($info['questionSetId']) . ' AND bID=' . intval($this->bID));
         foreach ($deleteData['questionsIDs'] as $questionData) {
-            $db->query("DELETE FROM {$this->btQuestionsTablename} WHERE qID=".intval($questionData['qID']));
+            $db->query("DELETE FROM {$this->btQuestionsTablename} WHERE qID=" . intval($questionData['qID']));
         }
 
         //delete left over answers
         $strandedAnswerIDs = $db->getAll('SELECT fa.aID FROM `btFormAnswers` AS fa LEFT JOIN btFormQuestions as fq ON fq.msqID=fa.msqID WHERE fq.msqID IS NULL');
         foreach ($strandedAnswerIDs as $strandedAnswer) {
-            $db->query('DELETE FROM `btFormAnswers` WHERE aID='.intval($strandedAnswer['aID']));
+            $db->query('DELETE FROM `btFormAnswers` WHERE aID=' . intval($strandedAnswer['aID']));
         }
 
         //delete the left over answer sets
         $deleteData['strandedAnswerSetIDs'] = $db->getAll('SELECT aset.asID FROM btFormAnswerSet AS aset LEFT JOIN btFormAnswers AS fa ON aset.asID=fa.asID WHERE fa.asID IS NULL');
         foreach ($deleteData['strandedAnswerSetIDs'] as $strandedAnswerSetIDs) {
-            $db->query('DELETE FROM btFormAnswerSet WHERE asID='.intval($strandedAnswerSetIDs['asID']));
+            $db->query('DELETE FROM btFormAnswerSet WHERE asID=' . intval($strandedAnswerSetIDs['asID']));
         }
 
         //delete the form block

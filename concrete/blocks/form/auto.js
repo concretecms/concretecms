@@ -185,7 +185,7 @@ var miniSurvey = {
             url: this.serviceURL + "mode=getQuestion&qsID=" + parseInt(this.qsID) + '&qID=' + parseInt(qID),
             success: function (msg) {
                 eval('var jsonObj=' + msg);
-                $('#editQuestionForm').css('display', 'block')
+                $('#editQuestionForm').css('display', 'block');
                 $('#questionEdit').val(jsonObj.question);
                 $('#answerOptionsEdit').val(jsonObj.optionVals.replace(/%%/g, "\r\n"));
                 $('#widthEdit').val(jsonObj.width);

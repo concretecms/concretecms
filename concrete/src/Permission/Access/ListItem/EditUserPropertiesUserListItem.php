@@ -3,7 +3,7 @@ namespace Concrete\Core\Permission\Access\ListItem;
 
 class EditUserPropertiesUserListItem extends UserListItem
 {
-    protected $customAttributeKeyArray = array();
+    protected $customAttributeKeyArray = [];
     protected $attributesAllowedPermission = 'N';
     protected $allowEditUName = 0;
     protected $allowEditUEmail = 0;
@@ -16,14 +16,17 @@ class EditUserPropertiesUserListItem extends UserListItem
     {
         $this->attributesAllowedPermission = $permission;
     }
+
     public function getAttributesAllowedPermission()
     {
         return $this->attributesAllowedPermission;
     }
+
     public function setAttributesAllowedArray($akIDs)
     {
         $this->customAttributeKeyArray = $akIDs;
     }
+
     public function getAttributesAllowedArray()
     {
         return $this->customAttributeKeyArray;
@@ -76,7 +79,7 @@ class EditUserPropertiesUserListItem extends UserListItem
 
     public function allowEditTimezone()
     {
-        return $this->allowEditUTimezone;
+        return isset($this->allowEditUTimezone) ? $this->allowEditUTimezone : null;
     }
 
     public function setAllowEditDefaultLanguage($allow)
@@ -86,6 +89,6 @@ class EditUserPropertiesUserListItem extends UserListItem
 
     public function allowEditDefaultLanguage()
     {
-        return $this->allowEditUDefaultLanguage;
+        return isset($this->allowEditUDefaultLanguage) ? $this->allowEditUDefaultLanguage : null;
     }
 }

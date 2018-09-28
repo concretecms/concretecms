@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Workflow;
 
-use \Concrete\Core\Foundation\Object;
+use \Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Package\Package;
 use \Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
 use Loader;
@@ -15,7 +15,7 @@ use Concrete\Core\Workflow\Request\Request as WorkflowRequest;
  * @copyright  Copyright (c) 2003-2012 concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License
  */
-abstract class Workflow extends Object implements \Concrete\Core\Permission\ObjectInterface
+abstract class Workflow extends ConcreteObject implements \Concrete\Core\Permission\ObjectInterface
 {
     protected $wfID = 0;
     protected $allowedTasks = array('cancel', 'approve');
@@ -79,7 +79,7 @@ abstract class Workflow extends Object implements \Concrete\Core\Permission\Obje
 
     public function getPermissionObjectKeyCategoryHandle()
     {
-        return 'page';
+        return 'basic_workflow';
     }
 
     public function getPermissionObjectIdentifier()
@@ -177,6 +177,7 @@ abstract class Workflow extends Object implements \Concrete\Core\Permission\Obje
         $r = $db->GetRow('select WorkflowTypes.wftHandle, WorkflowTypes.pkgID from Workflows inner join WorkflowTypes on Workflows.wftID = WorkflowTypes.wftID where Workflows.wfID = ?',
             array($wfID));
         if ($r['wftHandle']) {
+            $prefix = null;
             $class = '\\Core\\Workflow\\' . Loader::helper('text')->camelcase($r['wftHandle']) . 'Workflow';
             if ($r['pkgID']) {
                 $pkg = Package::getByID($r['pkgID']);
@@ -227,7 +228,7 @@ abstract class Workflow extends Object implements \Concrete\Core\Permission\Obje
 
     abstract public function getWorkflowProgressActions(WorkflowProgress $wp);
 
-    abstract public function getWorkflowProgressCurrentDescription(WorkflowProgress $wp);
+    abstract public function getWorkflowProgressCurrentComment(WorkflowProgress $wp);
 
     abstract public function getWorkflowProgressStatusDescription(WorkflowProgress $wp);
 

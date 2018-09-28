@@ -2,9 +2,9 @@
 namespace Concrete\Core\Service\Configuration\HTTP;
 
 use Concrete\Core\Service\Configuration\GeneratorInterface;
+use Concrete\Core\Service\Rule\Option as RuleOption;
 use Concrete\Core\Service\Rule\Rule;
 use Concrete\Core\Service\Rule\RuleInterface;
-use Concrete\Core\Service\Rule\Option as RuleOption;
 use Exception;
 
 class NginxGenerator extends Generator implements GeneratorInterface
@@ -38,25 +38,13 @@ class NginxGenerator extends Generator implements GeneratorInterface
                 }
                 $DIR_REL = trim((string) $DIR_REL, '/');
                 if ($DIR_REL !== '') {
-                    $DIR_REL = '/'.$DIR_REL;
+                    $DIR_REL = '/' . $DIR_REL;
                 }
                 $DISPATCHER_FILENAME = DISPATCHER_FILENAME;
 
                 return <<<EOT
-location $DIR_REL/ {
-	set \$do_rewrite 1;
-	if (-f \$request_filename) {
-		set \$do_rewrite 0;
-	}
-	if (-f \$request_filename/index.html) {
-		set \$do_rewrite 0;
-	}
-	if (-f \$request_filename/index.php) {
-		set \$do_rewrite 0;
-	}
-	if (\$do_rewrite = "1") {
-		rewrite ^/(.*)\$ /$DISPATCHER_FILENAME/\$1 last;
-	}
+location {$DIR_REL}/ {
+	try_files \$uri \$uri/ {$DIR_REL}/{$DISPATCHER_FILENAME}?\$query_string;
 }
 EOT
                 ;
@@ -64,8 +52,8 @@ EOT
             function () {
                 return (bool) \Config::get('concrete.seo.url_rewriting');
             },
-            "# -- concrete5 urls start --",
-            "# -- concrete5 urls end --"
+            '# -- concrete5 urls start --',
+            '# -- concrete5 urls end --'
         );
 
         $option = new RuleOption(

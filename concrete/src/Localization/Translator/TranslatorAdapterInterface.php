@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Localization\Translator;
 
 /**
@@ -10,7 +9,6 @@ namespace Concrete\Core\Localization\Translator;
  */
 interface TranslatorAdapterInterface
 {
-
     /**
      * Returns an instance of a translator object.
      *
@@ -64,5 +62,4 @@ interface TranslatorAdapterInterface
      * @return string
      */
     public function translateContext($context, $text);
-
 }

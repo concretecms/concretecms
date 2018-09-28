@@ -45,7 +45,11 @@ class GroupEntity extends Entity
         $ingids = array();
         $db = Loader::db();
         foreach ($user->getUserGroups() as $key => $val) {
-            $ingids[] = $key;
+            $group = Group::getByID($key);
+            foreach($group->getParentGroups() as $parentGroup) {
+                $ingids[] = $parentGroup->getGroupID();
+            }
+            $ingids[] = $group->getGroupID();
         }
         $instr = implode(',', $ingids);
         $peIDs = $db->GetCol('select pae.peID from PermissionAccessEntities pae inner join PermissionAccessEntityTypes paet on pae.petID = paet.petID inner join PermissionAccessEntityGroups paeg on pae.peID = paeg.peID where petHandle = \'group\' and paeg.gID in (' . $instr . ')');

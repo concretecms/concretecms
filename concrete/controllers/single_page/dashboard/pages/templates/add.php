@@ -33,6 +33,12 @@ class Add extends DashboardPageController
             $this->error->add(t('Invalid characters in page template name.'));
         }
 
+        if (!$pTemplateIcon) {
+            $this->error->add(t("Icon required."));
+        } elseif (preg_match('/[<>;{}?"`]/i', $pTemplateIcon)) {
+            $this->error->add(t('Invalid characters in icon template name.'));
+        }
+
         $valt = Loader::helper('validation/token');
         if (!$valt->validate('add_page_template')) {
             $this->error->add($valt->getErrorMessage());

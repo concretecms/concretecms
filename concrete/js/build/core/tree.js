@@ -1,5 +1,7 @@
+/* jshint unused:vars, undef:true, browser:true, jquery:true */
+/* global ccmi18n, ccmi18n_tree, CCM_DISPATCHER_FILENAME, ConcreteAlert, ConcreteEvent, ConcreteMenu */
 
-!function(global, $, _) {
+;(function(global, $) {
 	'use strict';
 
 	function ConcreteTree($element, options) {
@@ -20,31 +22,31 @@
 		my.options = options;
 		my.$element = $element;
 		my.setupTree();
-		ConcreteTree.setupTreeEvents(my);
+		if (!options.chooseNodeInForm && !options.onClick) {
+			ConcreteTree.setupTreeEvents(my);
+		}
 		return my.$element;
 	}
 
 
 	ConcreteTree.prototype = {
 
-		dragRequest: function(sourceNode, node, hitMode) {
+		dragRequest: function(sourceNode, node, hitMode, onSuccess) {
 			var treeNodeParentID = node.parent.data.treeNodeID;
 			if (hitMode == 'over') {
 				treeNodeParentID = node.data.treeNodeID;
 			}
 			jQuery.fn.dialog.showLoader();
 			var params = [{'name': 'sourceTreeNodeID', 'value': sourceNode.data.treeNodeID}, {'name': 'treeNodeParentID', 'value': treeNodeParentID}];
-			var childNodes = node.parent.getChildren();
-			if (childNodes) {
-				for (var i = 0; i < childNodes.length; i++) {
-					var childNode = childNodes[i];
-					params.push({'name': 'treeNodeID[]', 'value': childNode.data.treeNodeID});
-				}
-			}
 
 			$.concreteAjax({
 				data: params,
-				url: CCM_DISPATCHER_FILENAME + '/ccm/system/tree/node/drag_request'
+				url: CCM_DISPATCHER_FILENAME + '/ccm/system/tree/node/drag_request',
+				success: function (r) {
+					if (onSuccess) {
+						onSuccess();
+					}
+				}
 			});
 		},
 
@@ -102,13 +104,16 @@
 				minExpandLevel = options.minExpandLevel;
 			}
 
+			var ajaxURL;
 			if (!options.treeNodeParentID) {
-				var ajaxURL = CCM_DISPATCHER_FILENAME + '/ccm/system/tree/load';
+				ajaxURL = CCM_DISPATCHER_FILENAME + '/ccm/system/tree/load';
 			} else {
-				var ajaxURL = CCM_DISPATCHER_FILENAME + '/ccm/system/tree/node/load_starting';
+				ajaxURL = CCM_DISPATCHER_FILENAME + '/ccm/system/tree/node/load_starting';
 			}
 
 			$(my.$element).fancytree({
+				tabindex: null,
+				titlesTabbable: false,
 				extensions: ["glyph", "dnd"],
 				glyph: {
 					map: {
@@ -165,8 +170,9 @@
 						$tree.fancytree('disable');
 					}
 
+					var selectedNodes;
 					if (options.chooseNodeInForm) {
-						var selectedNodes = $tree.fancytree('getTree');
+						selectedNodes = $tree.fancytree('getTree');
 						selectedNodes = selectedNodes.getSelectedNodes();
 						if (selectedNodes.length) {
 							var keys = $.map(selectedNodes, function(node) {
@@ -176,7 +182,7 @@
 						}
 					}
 					if (selectedNodes) {
-						var selKeys = $.map(selectedNodes, function(node){
+						$.map(selectedNodes, function(node){
 							node.makeVisible();
 						});
 					}
@@ -186,6 +192,10 @@
 
 					if (data.targetType == 'expander') {
 						return true;
+					}
+
+					if (data.targetType == 'icon') {
+						return false;
 					}
 
 					if (options.onClick) {
@@ -256,8 +266,25 @@
 						return true;
 					},
 					dragDrop: function(targetNode, data) {
-						data.otherNode.moveTo(targetNode, data.hitMode);
-						my.dragRequest(data.otherNode, targetNode, data.hitMode);
+						my.dragRequest(data.otherNode, targetNode, data.hitMode, function() {
+							data.otherNode.moveTo(targetNode, data.hitMode);
+                            var treeNodeParentID = data.otherNode.parent.data.treeNodeID;
+                            if (data.hitMode == 'over') {
+                                treeNodeParentID = targetNode.data.treeNodeID;
+                            }
+                            var params = [{'name': 'sourceTreeNodeID', 'value': data.otherNode.data.treeNodeID}, {'name': 'treeNodeParentID', 'value': treeNodeParentID}];
+                            var childNodes = targetNode.parent.getChildren();
+                            if (childNodes) {
+                                for (var i = 0; i < childNodes.length; i++) {
+                                    var childNode = childNodes[i];
+                                    params.push({'name': 'treeNodeID[]', 'value': childNode.data.treeNodeID});
+                                }
+                            }
+                            $.concreteAjax({
+                                data: params,
+                                url: CCM_DISPATCHER_FILENAME + '/ccm/system/tree/node/update_order'
+                            });
+						});
 					}
 				}
 			});
@@ -265,7 +292,6 @@
 
 		getLoadNodePromise: function(node) {
 			var my = this,
-				options = my.options,
 				ajaxData = my.options.ajaxData != false ? my.options.ajaxData : {};
 
 			ajaxData.treeNodeParentID = node.data.treeNodeID;
@@ -321,6 +347,7 @@
 	};
 
 	ConcreteTree.setupTreeEvents = function(my) {
+        ConcreteEvent.unsubscribe('ConcreteMenuShow');
 		ConcreteEvent.subscribe('ConcreteMenuShow', function(e, data) {
 			var $menu = data.menuElement;
 			$menu.find('a[data-tree-action]').on('click.concreteMenu', function(e) {
@@ -371,14 +398,15 @@
 
 		ConcreteEvent.subscribe('ConcreteTreeAddTreeNode.concreteTree', function(e, r) {
 			var $tree = $('[data-tree=' + my.options.treeID + ']'),
-				nodes = r.node;
+				nodes = r.node,
+				node;
 			if (nodes.length) {
 				for (var i = 0; i < nodes.length; i++) {
-					var node = $tree.fancytree('getTree').getNodeByKey(nodes[i].treeNodeParentID);
+					node = $tree.fancytree('getTree').getNodeByKey(nodes[i].treeNodeParentID);
 					node.addChildren(nodes);
 				}
 			} else {
-				var node = $tree.fancytree('getTree').getNodeByKey(nodes.treeNodeParentID);
+				node = $tree.fancytree('getTree').getNodeByKey(nodes.treeNodeParentID);
 				node.addChildren(nodes);
 			}
 		});
@@ -404,4 +432,4 @@
 
 	global.ConcreteTree = ConcreteTree;
 
-}(this, $, _);
+})(this, jQuery);

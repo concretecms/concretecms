@@ -24,14 +24,18 @@ class Site extends DashboardPageController
         $pk = PermissionKey::getByHandle('view_page');
         $pk->setPermissionObject($home);
         $assignments = $pk->getAccessListItems();
+        $guestCanRead = false;
+        $registeredCanRead = false;
         foreach ($assignments as $asi) {
             $ae = $asi->getAccessEntityObject();
             if ($ae->getAccessEntityTypeHandle() == 'group' && $ae->getGroupObject()->getGroupID() == GUEST_GROUP_ID) {
-                $this->set('guestCanRead', true);
+                $guestCanRead = true;
             } elseif ($ae->getAccessEntityTypeHandle() == 'group' && $ae->getGroupObject()->getGroupID() == REGISTERED_GROUP_ID) {
-                $this->set('registeredCanRead', true);
+                $registeredCanRead = true;
             }
         }
+        $this->set('guestCanRead', $guestCanRead);
+        $this->set('registeredCanRead', $registeredCanRead);
 
         $gl = new GroupList();
         $gl->filter('gID', REGISTERED_GROUP_ID, '>');

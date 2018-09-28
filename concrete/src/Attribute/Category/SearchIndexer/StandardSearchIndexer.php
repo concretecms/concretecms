@@ -5,7 +5,6 @@ use Concrete\Core\Attribute\AttributeKeyInterface;
 use Concrete\Core\Attribute\AttributeValueInterface;
 use Concrete\Core\Attribute\Category\CategoryInterface;
 use Concrete\Core\Database\Connection\Connection;
-use Concrete\Core\Entity\Attribute\Value\Value;
 use Doctrine\DBAL\Schema\Schema;
 
 class StandardSearchIndexer implements SearchIndexerInterface
@@ -42,7 +41,6 @@ class StandardSearchIndexer implements SearchIndexerInterface
         }
     }
 
-
     public function createRepository(CategoryInterface $category)
     {
         $schema = new Schema();
@@ -56,6 +54,18 @@ class StandardSearchIndexer implements SearchIndexerInterface
                 if (isset($details['columns'])) {
                     foreach ($details['columns'] as $column) {
                         $table->addColumn($column['name'], $column['type'], $column['options']);
+                    }
+                }
+                if (isset($details['foreignKeys'])) {
+                    foreach ($details['foreignKeys'] as $foreignKey) {
+                        $options = [];
+                        if (!empty($foreignKey['onUpdate'])) {
+                            $options['onUpdate'] = $foreignKey['onUpdate'];
+                        }
+                        if (!empty($foreignKey['onDelete'])) {
+                            $options['onDelete'] = $foreignKey['onDelete'];
+                        }
+                        $table->addForeignKeyConstraint($foreignKey['foreignTable'], $foreignKey['localColumns'], $foreignKey['foreignColumns'], $options);
                     }
                 }
 
@@ -76,6 +86,14 @@ class StandardSearchIndexer implements SearchIndexerInterface
         if ($this->isValid($category)) {
             $attributeIndexer = $key->getSearchIndexer();
             $attributeIndexer->updateSearchIndexKeyColumns($category, $key, $previousHandle);
+        }
+    }
+
+    public function refreshRepositoryColumns(CategoryInterface $category, AttributeKeyInterface $key)
+    {
+        if ($this->isValid($category)) {
+            $attributeIndexer = $key->getSearchIndexer();
+            $attributeIndexer->refreshSearchIndexKeyColumns($category, $key);
         }
     }
 }

@@ -10,7 +10,7 @@ class Cache extends BackendInterfaceBlockController
 
     public function view()
     {
-        $this->set('bName', $this->block->getBlockName());
+        $this->set('bName', h($this->block->getBlockName()));
         $this->set('form', \Core::make('helper/form'));
         $this->set('cbOverrideBlockTypeCacheSettings', $this->block->overrideBlockTypeCacheSettings());
         $this->set('btCacheBlockOutput', $this->block->cacheBlockOutput());

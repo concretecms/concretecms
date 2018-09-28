@@ -1,33 +1,56 @@
 <?php
 namespace Concrete\Core\Validation\CSRF;
 
-use Config;
-use User;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\User\User;
+use Concrete\Core\Http\Request;
+use Concrete\Core\Http\Service\Ajax;
 
 class Token
 {
-    const VALID_HASH_TIME_THRESHOLD = 86400; // 24 hours (in seconds)
+    /**
+     * Duration (in seconds) of a token.
+     *
+     * @var int
+     */
+    const VALID_HASH_TIME_THRESHOLD = 86400; // 24 hours
 
     /**
-     * For localization we can't just store this as a constant, unfortunately.
+     * The default name of the token parameters.
+     *
+     * @var string
+     */
+    const DEFAULT_TOKEN_NAME = 'ccm_token';
+
+    /**
+     * Get the error message to be shown to the users when a token is not valid.
+     *
+     * @return string
      */
     public function getErrorMessage()
     {
-        return t("Invalid form token. Please reload this form and submit again.");
+        $app = Application::getFacadeApplication();
+        $request = $app->make(Request::class);
+        $ajax = $app->make(Ajax::class);
+        if ($ajax->isAjaxRequest($request)) {
+            return t("Invalid token. Please reload the page and retry.");
+        } else {
+            return t("Invalid form token. Please reload this form and submit again.");
+        }
     }
 
     /**
-     * Prints out a generated token as a hidden form field.
+     * Create the HTML code of a token.
      *
-     * @param string $action
-     * @param bool   $return
+     * @param string $action An optional identifier of the token
+     * @param bool $return Set to true to return the generated code, false to print it out
      *
-     * @return string
+     * @return string|void
      */
     public function output($action = '', $return = false)
     {
         $hash = $this->generate($action);
-        $token = '<input type="hidden" name="ccm_token" value="' . $hash . '" />';
+        $token = '<input type="hidden" name="' . static::DEFAULT_TOKEN_NAME . '" value="' . $hash . '" />';
         if (!$return) {
             echo $token;
         } else {
@@ -36,11 +59,10 @@ class Token
     }
 
     /**
-     * Generates a unique token for a given action. This is a token in the form of
-     * time:hash, where hash is md5(time:userID:action:pepper).
+     * Generates a token for a given action. This is a token in the form of time:hash, where hash is md5(time:userID:action:pepper).
      *
-     * @param string $action
-     * @param int    $time
+     * @param string $action An optional identifier of the token
+     * @param int $time The UNIX timestamp to be used to determine the token expiration
      *
      * @return string
      */
@@ -51,17 +73,18 @@ class Token
         if (!$uID) {
             $uID = 0;
         }
-        if ($time == null) {
+        if (!$time) {
             $time = time();
         }
-        $config = \Core::make('config/database');
+        $app = Application::getFacadeApplication();
+        $config = $app->make('config/database');
         $hash = $time . ':' . md5($time . ':' . $uID . ':' . $action . ':' . $config->get('concrete.security.token.validation'));
 
         return $hash;
     }
 
     /**
-     * Returns a generated token as a query string variable.
+     * Generate a token and return it as a query string variable (eg 'ccm_token=...').
      *
      * @param string $action
      *
@@ -71,35 +94,44 @@ class Token
     {
         $hash = $this->generate($action);
 
-        return 'ccm_token=' . $hash;
+        return static::DEFAULT_TOKEN_NAME . '=' . $hash;
     }
 
     /**
-     * Validates against a given action. Basically, we check the passed hash to see if
+     * Validate a token against a given action.
+     *
+     * Basically, we check the passed hash to see if:
      * a. the hash is valid. That means it computes in the time:action:pepper format
      * b. the time included next to the hash is within the threshold.
      *
-     * @param string $action
-     * @param string $token
+     * @param string $action The action that should be associated to the token
+     * @param string $token The token to be validated (if empty we'll retrieve it from the current request)
      *
      * @return bool
      */
     public function validate($action = '', $token = null)
     {
         if ($token == null) {
-            $token = isset($_REQUEST['ccm_token']) ? $_REQUEST['ccm_token'] : '';
+            $app = Application::getFacadeApplication();
+            $request = $app->make(Request::class);
+            $token = $request->request->get(static::DEFAULT_TOKEN_NAME);
+            if ($token === null) {
+                $token = $request->query->get(static::DEFAULT_TOKEN_NAME);
+            }
         }
-        $parts = explode(':', $token);
-        if ($parts[0]) {
-            $time = $parts[0];
-            $hash = $parts[1];
-            $compHash = $this->generate($action, $time);
-            $now = time();
+        if (is_string($token)) {
+            $parts = explode(':', $token);
+            if ($parts[0] && isset($parts[1])) {
+                $time = $parts[0];
+                $hash = $parts[1];
+                $compHash = $this->generate($action, $time);
+                $now = time();
 
-            if (substr($compHash, strpos($compHash, ':') + 1) == $hash) {
-                $diff = $now - $time;
-                //hash is only valid if $diff is less than VALID_HASH_TIME_RECORD
-                return $diff <= static::VALID_HASH_TIME_THRESHOLD;
+                if (substr($compHash, strpos($compHash, ':') + 1) == $hash) {
+                    $diff = $now - $time;
+                    //hash is only valid if $diff is less than VALID_HASH_TIME_RECORD
+                    return $diff <= static::VALID_HASH_TIME_THRESHOLD;
+                }
             }
         }
 

@@ -140,7 +140,7 @@ class Html
             }
         }
 
-        if (!$asset->getAssetURL()) {
+        if (!$asset->hasAssetBeenMapped()) {
             $asset->setAssetURL(ASSETS_URL_JAVASCRIPT . '/' . $file);
             $asset->setAssetPath(DIR_BASE_CORE . '/' . DIRNAME_JAVASCRIPT . '/' . $file);
         }

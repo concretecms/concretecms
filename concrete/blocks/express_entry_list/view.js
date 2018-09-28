@@ -5,6 +5,7 @@
         options = options || {};
         options = $.extend({
             'bID': 0,
+            'hideFields': true
         }, options);
 
         this.options = options;
@@ -12,10 +13,10 @@
     }
 
     ConcreteExpressEntryList.prototype.setupAdvancedSearch = function() {
+        var bID = this.options.bID;
+        var $details = $('div[data-express-entry-list-advanced-search-fields=' + bID + ']');
         $('a[data-express-entry-list-advanced-search]').on('click', function(e) {
             e.preventDefault();
-            var bID = $(this).attr('data-express-entry-list-advanced-search');
-            var $details = $('div[data-express-entry-list-advanced-search-fields=' + bID + ']');
             if ($details.is(':visible')) {
                 $(this).removeClass('ccm-block-express-entry-list-advanced-search-open');
                 $details.find('input[name=advancedSearchDisplayed]').val('');
@@ -26,6 +27,11 @@
                 $details.show();
             }
         });
+        if (this.options.hideFields) {
+            $details.hide();
+        } else {
+            $details.show();
+        }
     }
 
     // jQuery Plugin

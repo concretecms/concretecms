@@ -1,12 +1,10 @@
-/**
- * block ajax
- */
+/* jshint unused:vars, undef:true, browser:true, jquery:true */
+/* global ccmi18n, ccmi18n_express, CCM_DISPATCHER_FILENAME, ConcreteAlert, ConcreteAjaxSearch, ConcreteEvent */
 
-!function(global, $) {
+;(function(global, $) {
     'use strict';
 
     function ConcreteExpressEntryAjaxSearch($element, options) {
-        'use strict';
         var my = this;
         options = $.extend({
 
@@ -28,7 +26,7 @@
         $.fn.dialog.open({
             width: w,
             height: '100%',
-            href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/express/entry/search/' + entityID,
+            href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/express/entry/search?exEntityID=' + entityID,
             modal: true,
             title: ccmi18n_express.entriesTitle,
             onClose: function() {
@@ -37,7 +35,7 @@
             onOpen: function() {
                 ConcreteEvent.unsubscribe('SelectExpressEntry');
                 ConcreteEvent.subscribe('SelectExpressEntry', function(e, data) {
-                    jQuery.fn.dialog.closeTop();
+                    $.fn.dialog.closeTop();
                     callback(data);
                 });
             }
@@ -51,7 +49,7 @@
             url: CCM_DISPATCHER_FILENAME + '/ccm/system/express/entry/get_json',
             data: {'exEntryID': exEntryID},
             error: function(r) {
-                ConcreteAlert.dialog('Error', r.responseText);
+                ConcreteAlert.dialog(ccmi18n.error, r.responseText);
             },
             success: function(r) {
                 callback(r);
@@ -68,4 +66,4 @@
 
     global.ConcreteExpressEntryAjaxSearch = ConcreteExpressEntryAjaxSearch;
 
-}(window, $);
+})(window, jQuery);

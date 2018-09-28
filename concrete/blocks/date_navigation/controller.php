@@ -56,7 +56,7 @@ class Controller extends BlockController
 
     public function getDateLabel($dateArray)
     {
-        return \Punic\Calendar::getMonthName($dateArray['month']).' '.$dateArray['year'];
+        return \Punic\Calendar::getMonthName($dateArray['month'], 'wide', '', true).' '.$dateArray['year'];
     }
 
     public function getPassThruActionAndParameters($parameters)
@@ -112,6 +112,13 @@ class Controller extends BlockController
 
     public function save($data)
     {
+        $data += [
+            'redirectToResults' => 0,
+            'cTargetID' => 0,
+            'filterByParent' => 0,
+            'cParentID' => 0,
+            'ptID' => 0,
+        ];
         if ($data['redirectToResults']) {
             $data['cTargetID'] = intval($data['cTargetID']);
         } else {

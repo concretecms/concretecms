@@ -62,11 +62,12 @@ class BlockControl extends Control
         if (!is_object($this->b)) {
             $setControl = $this->getPageTypeComposerFormLayoutSetControlObject();
             $r = $db->fetchAssoc(
-                $q = 'select cdb.bID, cdb.arHandle from PageTypeComposerOutputBlocks cdb inner join CollectionVersionBlocks cvb on (cdb.bID = cvb.bID and cvb.cID = cdb.cID and cvb.cvID = ?) where cdb.ptComposerFormLayoutSetControlID = ? and cdb.cID = ?',
+                $q = 'select cdb.bID, cdb.arHandle from PageTypeComposerOutputBlocks cdb inner join CollectionVersionBlocks cvb on (cdb.bID = cvb.bID and cvb.cID = cdb.cID and cvb.cvID = ?) where cdb.ptComposerFormLayoutSetControlID = ? and cvb.cID = ? and cvb.cvID = ?',
                 [
                     $c->getVersionID(),
                     $setControl->getPageTypeComposerFormLayoutSetControlID(),
                     $c->getCollectionID(),
+                    $c->getVersionID(),
                 ]
             );
             if (!$r) {
@@ -343,13 +344,13 @@ class BlockControl extends Control
         // we are going to replace it with a new one.
         $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
-        $q = 'select cvb.arHandle, cdb.bID, cdb.cbDisplayOrder from PageTypeComposerOutputBlocks cdb inner join CollectionVersionBlocks cvb on (cdb.bID = cvb.bID and cvb.cID = cdb.cID and cvb.cvID = ?) where cdb.ptComposerFormLayoutSetControlID = ? and cdb.cID = ?';
-        $v = [$c->getVersionID(), $setControl->getPageTypeComposerFormLayoutSetControlID(), $c->getCollectionID()];
+        $q = 'select cvb.arHandle, cdb.bID, cvb.cvID, cdb.cbDisplayOrder from PageTypeComposerOutputBlocks cdb inner join CollectionVersionBlocks cvb on (cdb.bID = cvb.bID and cvb.cID = cdb.cID and cvb.cvID = ?) where cdb.ptComposerFormLayoutSetControlID = ? and cvb.cID = ? and cvb.cvID = ?';
+        $v = [$c->getVersionID(), $setControl->getPageTypeComposerFormLayoutSetControlID(), $c->getCollectionID(), $c->getVersionID()];
         $row = $db->fetchAssoc($q, $v);
         if ($row && $row['bID'] && $row['arHandle']) {
             $db->executeQuery(
-                'delete from PageTypeComposerOutputBlocks where ptComposerFormLayoutSetControlID = ? and cID = ?',
-                [$setControl->getPageTypeComposerFormLayoutSetControlID(), $c->getCollectionID()]
+                'delete from PageTypeComposerOutputBlocks where ptComposerFormLayoutSetControlID = ? and cID = ? and cvID = ?',
+                [$setControl->getPageTypeComposerFormLayoutSetControlID(), $c->getCollectionID(), $c->getVersionID()]
             );
         }
 
@@ -379,10 +380,15 @@ class BlockControl extends Control
         $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
         $setControl = $this->getPageTypeComposerFormLayoutSetControlObject();
+        $oc = $block->getBlockCollectionObject();
+        $ocID = $oc->getCollectionID();
+        $ovID = $oc->getVersionID();
+
         $db->executeQuery(
-            'insert into PageTypeComposerOutputBlocks (cID, arHandle, ptComposerFormLayoutSetControlID, cbDisplayOrder, bID) values (?, ?, ?, ?, ?)',
+            'insert into PageTypeComposerOutputBlocks (cID, cvID, arHandle, ptComposerFormLayoutSetControlID, cbDisplayOrder, bID) values (?, ?, ?, ?, ?, ?)',
             [
-                $block->getBlockCollectionID(),
+                $ocID,
+                $ovID,
                 $block->getAreaHandle(),
                 $setControl->getPageTypeComposerFormLayoutSetControlID(),
                 $block->getBlockDisplayOrder(),

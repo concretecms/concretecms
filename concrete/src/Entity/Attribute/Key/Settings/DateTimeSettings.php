@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Core\Entity\Attribute\Key\Settings;
 
-use Concrete\Core\Entity\Attribute\Value\Value\DateTimeValue;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -11,12 +10,43 @@ use Doctrine\ORM\Mapping as ORM;
 class DateTimeSettings extends Settings
 {
     /**
+     * @ORM\Column(type="boolean", nullable=false, options={"default": false})
+     */
+    protected $akUseNowIfEmpty = false;
+
+    /**
      * @ORM\Column(type="string")
      */
     protected $akDateDisplayMode = '';
 
     /**
-     * @return mixed
+     * @ORM\Column(type="text", nullable=false, options={"default": "", "comment": "Custom format for text inputs"})
+     */
+    protected $akTextCustomFormat = '';
+
+    /**
+     * @ORM\Column(type="integer", nullable=false, options={"default": 60, "unsigned": true, "comment": "Time resolution (in seconds)"})
+     */
+    protected $akTimeResolution = 60;
+
+    /**
+     * @return bool
+     */
+    public function getUseNowIfEmpty()
+    {
+        return $this->akUseNowIfEmpty;
+    }
+
+    /**
+     * @param bool $value
+     */
+    public function setUseNowIfEmpty($value)
+    {
+        $this->akUseNowIfEmpty = (bool) $value;
+    }
+
+    /**
+     * @return string
      */
     public function getMode()
     {
@@ -28,7 +58,45 @@ class DateTimeSettings extends Settings
      */
     public function setMode($mode)
     {
-        $this->akDateDisplayMode = $mode;
+        $this->akDateDisplayMode = (string) $mode;
     }
 
+    /**
+     * @return string
+     */
+    public function getTextCustomFormat()
+    {
+        return $this->akTextCustomFormat;
+    }
+
+    /**
+     * @param string $textCustomFormat
+     */
+    public function setTextCustomFormat($textCustomFormat)
+    {
+        $this->akTextCustomFormat = (string) $textCustomFormat;
+    }
+
+    /**
+     * Get the time resolution (in seconds).
+     *
+     * @return int
+     */
+    public function getTimeResolution()
+    {
+        return $this->akTimeResolution;
+    }
+
+    /**
+     * Set the time resolution (in seconds).
+     *
+     * @param int $value
+     */
+    public function setTimeResolution($value)
+    {
+        $value = (int) $value;
+        if ($value > 0) {
+            $this->akTimeResolution = $value;
+        }
+    }
 }

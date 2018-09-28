@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\System\Basics;
 
+use Concrete\Core\Attribute\Context\DashboardFormContext;
+use Concrete\Core\Attribute\Form\Renderer;
 use Concrete\Core\Attribute\Key\SiteKey;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Concrete\Core\Site\Service;
@@ -22,6 +24,7 @@ class Name extends DashboardSitePageController
         $attributes = SiteKey::getList();
         $this->set('attributes', $attributes);
         $this->set('site', $this->getSite());
+        $this->set('renderer', new Renderer(new DashboardFormContext(), $this->getSite()));
     }
 
     public function sitename_saved()
@@ -50,5 +53,6 @@ class Name extends DashboardSitePageController
         } else {
             $this->set('error', array($this->token->getErrorMessage()));
         }
+        $this->view();
     }
 }

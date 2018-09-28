@@ -22,14 +22,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			<% if (cvIsApproved) { %>
 				<p><span class="label label-info"><?=t('Live')?></span></p>
 			<% } %>
-			<p><span class="ccm-panel-page-versions-version-timestamp"><%-cvDateVersionCreated%></span></p>
+			<p><span class="ccm-panel-page-versions-version-timestamp"><?= t('Created on'); ?> <%-cvDateVersionCreated%></span></p>
 			<% if (cvComments) { %>
 				<p class="ccm-panel-page-versions-description"><%-cvComments%></p>
 			<% } %>
 			<div class="ccm-panel-page-versions-more-info">
 				<p><?=t('Edit by')?> <%-cvAuthorUserName%></p>
 				<% if (cvIsApproved == 1) { %>
-					<p><?=t('Approved by')?> <%-cvApproverUserName%></p>
+					<p><?=t('Approved on')?> <%-cvApprovedDate%> <?= t('by'); ?> <%-cvApproverUserName%></p>
 				<% } %>
 				<% if (cvIsScheduled == 1) { %>
 				<p><?=t('Scheduled by')?> <%-cvApproverUserName%> <?=tc(/*i18n: In the sentence Scheduled by USERNAME for DATE/TIME*/'ScheduledByFor', ' for ')?> <%-cvPublishDate%></p>
@@ -44,6 +44,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 						<% if ( ! cIsStack) { %>
 						<li><a href="#" data-version-menu-task="new-page" data-version-id="<%-cvID%>"><?=t('New Page')?></a></li>
 						<% } %>
+						<li><% if (!cvIsApproved) { %><span><?=t('Unapprove')?></span><% } else { %><a href="#" data-version-menu-task="unapprove" data-version-id="<%-cvID%>"><?=t('Unapprove')?></a><% } %></li>
+
 						<% if (cpCanDeletePageVersions) { %>
 						<li class="ccm-menu-item-delete">
 							<span <% if (cvIsApproved != 1) { %>style="display:none"<% } %>><?=t('Delete')?></span>
@@ -195,6 +197,14 @@ var ConcretePageVersionList = {
 						ConcretePageVersionList.handleVersionUpdateResponse(r);
 					});
 					break;
+				case 'unapprove':
+					ConcretePageVersionList.sendRequest('<?=$controller->action("unapprove")?>', [{'name': 'cvID', 'value': cvID}], function(r) {
+						ConcreteAlert.notify({
+							'message': r.message
+						});
+						ConcretePageVersionList.handleVersionUpdateResponse(r);
+					});
+					break;
 				case 'duplicate':
 					ConcretePageVersionList.sendRequest('<?=$controller->action("duplicate")?>', [{'name': 'cvID', 'value': cvID}], function(r) {
 						ConcreteAlert.notify({
@@ -297,7 +307,7 @@ $(function() {
 		e.preventDefault();
 		e.stopPropagation();
 		var $parent = $(this).parent();
-		$parent.find('.ccm-panel-page-versions-more-info').show().addClass('animated fadeInDown');
+		$parent.find('.ccm-panel-page-versions-more-info').slideToggle();
 	});
 
 	$('button[data-version-action=delete]').on('click', function() {

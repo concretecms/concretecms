@@ -11,7 +11,7 @@ $u = new User();
 	<?php if ($addMessageLabel) {
     ?>
 		<h4><?=$addMessageLabel?></h4>
-	<?php 
+	<?php
 }
     ?>
 
@@ -24,6 +24,10 @@ $u = new User();
 				<div class="ccm-conversation-message-form">
 					<div class="ccm-conversation-errors alert alert-danger"></div>
 					<?php $editor->outputConversationEditorAddMessageForm();
+
+                    if ($enableTopCommentReviews) {
+                        Loader::element('conversation/message/review');
+                    }
     ?>
 					<?php echo $form->hidden('blockAreaHandle', $blockAreaHandle) ?>
 					<?php echo $form->hidden('cID', $cID) ?>
@@ -33,20 +37,20 @@ $u = new User();
     ?>
 						<button type="button" class="pull-right btn btn-default ccm-conversation-attachment-toggle" href="#" title="<?php echo t('Attach Files');
     ?>"><i class="fa fa-image"></i></button>
-					<?php 
+					<?php
 }
     ?>
 					<?php if ($conversation->getConversationSubscriptionEnabled() && $u->isRegistered()) {
     ?>
 						<a href="<?=URL::to('/ccm/system/dialogs/conversation/subscribe', $conversation->getConversationID())?>" data-conversation-subscribe="unsubscribe" <?php if (!$conversation->isUserSubscribed($u)) {
-    ?>style="display: none"<?php 
+    ?>style="display: none"<?php
 }
     ?> class="btn pull-right btn-default"><?=t('Un-Subscribe')?></a>
 						<a href="<?=URL::to('/ccm/system/dialogs/conversation/subscribe', $conversation->getConversationID())?>" data-conversation-subscribe="subscribe" <?php if ($conversation->isUserSubscribed($u)) {
-    ?>style="display: none"<?php 
+    ?>style="display: none"<?php
 }
     ?> class="btn pull-right btn-default"><?=t('Subscribe to Conversation')?></a>
-					<?php 
+					<?php
 }
     ?>
 				</div>
@@ -64,7 +68,7 @@ $u = new User();
 						<?php echo $form->hidden('bID', $bID) ?>
 					</form>
 				</div>
-			<?php 
+			<?php
 }
     ?>
 		</div>
@@ -85,7 +89,7 @@ $u = new User();
     ?>
 						<button type="button" class="pull-right btn btn-default ccm-conversation-attachment-toggle" href="#" title="<?php echo t('Attach Files');
     ?>"><i class="fa fa-image"></i></button>
-					<?php 
+					<?php
 }
     ?>
 				</div>
@@ -103,11 +107,11 @@ $u = new User();
 						<?php echo $form->hidden('bID', $bID) ?>
 					</form>
 				</div>
-			<?php 
+			<?php
 }
     ?>
 		</div>
-	<?php 
+	<?php
 } else {
     ?>
 		<?php switch ($enablePosting) {
@@ -126,9 +130,9 @@ $u = new User();
                 break;
         }
     ?>
-	<?php 
+	<?php
 }
     ?>
 
-<?php 
+<?php
 } ?>

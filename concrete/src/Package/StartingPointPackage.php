@@ -2,14 +2,18 @@
 namespace Concrete\Core\Package;
 
 use AuthenticationType;
+use Concrete\Block\ExpressForm\Controller as ExpressFormBlockController;
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Config\Renderer;
 use Concrete\Core\Database\DatabaseStructureManager;
+use Concrete\Core\Entity\OAuth\Scope;
 use Concrete\Core\Entity\Site\Locale;
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Service\File;
+use Concrete\Core\Localization\Localization;
 use Concrete\Core\Mail\Importer\MailImporter;
 use Concrete\Core\Package\Routine\AttachModeInstallRoutine;
+use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use Concrete\Core\Permission\Access\Entity\ConversationMessageAuthorEntity;
 use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
 use Concrete\Core\Permission\Access\Entity\UserEntity;
@@ -18,21 +22,25 @@ use Concrete\Core\Tree\Node\Type\ExpressEntryCategory;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
 use Concrete\Core\Updater\Migrations\Configuration;
 use Concrete\Core\User\Point\Action\Action as UserPointAction;
-use Concrete\Block\ExpressForm\Controller as ExpressFormBlockController;
 use Config;
 use Core;
 use Database;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
+use Exception;
 use Group;
 use GroupTree;
 use Hautelook\Phpass\PasswordHash;
+use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 use Package as BasePackage;
 use Page;
-use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use PermissionKey;
+use Throwable;
 use User;
 use UserInfo;
+use Concrete\Core\Install\InstallerOptions;
+use Concrete\Core\Foundation\Environment\FunctionInspector;
+use Concrete\Core\Application\Application;
 
 class StartingPointPackage extends BasePackage
 {
@@ -43,8 +51,14 @@ class StartingPointPackage extends BasePackage
 
     protected $routines = [];
 
-    public function __construct()
+    /**
+     * @var InstallerOptions|null
+     */
+    protected $installerOptions = null;
+
+    public function __construct(Application $app)
     {
+        parent::__construct($app);
         $this->routines = [
             new StartingPointInstallRoutine(
                 'make_directories',
@@ -72,9 +86,15 @@ class StartingPointPackage extends BasePackage
             new StartingPointInstallRoutine('import_files', 65, t('Importing files.')),
             new StartingPointInstallRoutine('install_content', 70, t('Adding pages and content.')),
             new StartingPointInstallRoutine('install_desktops', 85, t('Adding desktops.')),
+            new StartingPointInstallRoutine('install_api', 88, t('Installing API.')),
             new StartingPointInstallRoutine('install_site_permissions', 90, t('Setting site permissions.')),
             new AttachModeInstallRoutine('finish', 95, t('Finishing.')),
         ];
+    }
+
+    public function setInstallerOptions(InstallerOptions $installerOptions = null)
+    {
+        $this->installerOptions = $installerOptions;
     }
 
     // default routines
@@ -127,7 +147,7 @@ class StartingPointPackage extends BasePackage
             $class = '\\Concrete\\StartingPointPackage\\' . camelcase($pkgHandle) . '\\Controller';
         }
         if (class_exists($class, true)) {
-            $cl = new $class();
+            $cl = Core::build($class);
         } else {
             $cl = null;
         }
@@ -143,25 +163,42 @@ class StartingPointPackage extends BasePackage
         return $this->routines;
     }
 
-    public function add_home_page()
+    /**
+     * @param string $routineName
+     *
+     * @throws Exception
+     * @throws Throwable
+     */
+    public function executeInstallRoutine($routineName)
+    {
+        if (!@ini_get('safe_mode') && $this->app->make(FunctionInspector::class)->functionAvailable('set_time_limit')) {
+            @set_time_limit(1000);
+        }
+        $timezone = $this->installerOptions->getServerTimeZone(true);
+        date_default_timezone_set($timezone->getName());
+        $this->app->make('config')->set('app.server_timezone', $timezone->getName());
+        $localization = Localization::getInstance();
+        $localization->pushActiveContext(Localization::CONTEXT_SYSTEM);
+        $error = null;
+        try {
+            $this->$routineName();
+        } catch (Exception $x) {
+            $error = $x;
+        } catch (Throwable $x) {
+            $error = $x;
+        }
+        $localization->popActiveContext();
+        if ($error !== null) {
+            throw $error;
+        }
+    }
+
+    protected function add_home_page()
     {
         Page::addHomePage();
     }
 
-    /*
-    public function precache()
-    {
-        $c = Page::getByPath('/dashboard/home');
-        $blocks = $c->getBlocks();
-        foreach ($blocks as $b) {
-            $bi = $b->getInstance();
-            $bi->setupAndRun('view');
-        }
-        Core::make('helper/concrete/ui')->cacheInterfaceItems();
-    }
-    */
-
-    public function install_data_objects()
+    protected function install_data_objects()
     {
         \Concrete\Core\Tree\Node\NodeType::add('category');
         \Concrete\Core\Tree\Node\NodeType::add('express_entry_category');
@@ -188,7 +225,7 @@ class StartingPointPackage extends BasePackage
         );
     }
 
-    public function install_attributes()
+    protected function install_attributes()
     {
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/attributes.xml');
@@ -197,50 +234,44 @@ class StartingPointPackage extends BasePackage
         $topicNodeType = \Concrete\Core\Tree\Node\NodeType::add('topic');
     }
 
-    public function install_dashboard()
+    protected function install_dashboard()
     {
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/single_pages/dashboard.xml');
     }
 
-    public function install_gathering()
+    protected function install_gathering()
     {
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/gathering.xml');
     }
 
-    public function install_page_types()
+    protected function install_page_types()
     {
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/page_types.xml');
     }
 
-    public function install_page_templates()
-    {
-        $ci = new ContentImporter();
-        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/page_templates.xml');
-    }
-
-    public function install_required_single_pages()
+    protected function install_required_single_pages()
     {
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/single_pages/global.xml');
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/single_pages/root.xml');
     }
 
-    public function install_image_editor()
+    protected function install_image_editor()
     {
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/image_editor.xml');
     }
 
-    public function install_blocktypes()
+    protected function install_blocktypes()
     {
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes.xml');
     }
 
-    public function install_themes()
+    protected function install_themes()
     {
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/themes.xml');
@@ -249,19 +280,19 @@ class StartingPointPackage extends BasePackage
         }
     }
 
-    public function install_jobs()
+    protected function install_jobs()
     {
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/jobs.xml');
     }
 
-    public function install_config()
+    protected function install_config()
     {
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/config.xml');
     }
 
-    public function import_files()
+    protected function import_files()
     {
         $type = \Concrete\Core\File\StorageLocation\Type\Type::add('default', t('Default'));
         \Concrete\Core\File\StorageLocation\Type\Type::add('local', t('Local'));
@@ -276,6 +307,8 @@ class StartingPointPackage extends BasePackage
         $thumbnailType->requireType();
         $thumbnailType->setName(tc('ThumbnailTypeName', 'File Manager Thumbnails'));
         $thumbnailType->setHandle(Config::get('concrete.icons.file_manager_listing.handle'));
+        $thumbnailType->setSizingMode($thumbnailType::RESIZE_EXACT);
+        $thumbnailType->setIsUpscalingEnabled(true);
         $thumbnailType->setWidth(Config::get('concrete.icons.file_manager_listing.width'));
         $thumbnailType->setHeight(Config::get('concrete.icons.file_manager_listing.height'));
         $thumbnailType->save();
@@ -284,7 +317,10 @@ class StartingPointPackage extends BasePackage
         $thumbnailType->requireType();
         $thumbnailType->setName(tc('ThumbnailTypeName', 'File Manager Detail Thumbnails'));
         $thumbnailType->setHandle(Config::get('concrete.icons.file_manager_detail.handle'));
+        $thumbnailType->setSizingMode($thumbnailType::RESIZE_EXACT);
+        $thumbnailType->setIsUpscalingEnabled(false);
         $thumbnailType->setWidth(Config::get('concrete.icons.file_manager_detail.width'));
+        $thumbnailType->setHeight(Config::get('concrete.icons.file_manager_detail.height'));
         $thumbnailType->save();
 
         if (is_dir($this->getPackagePath() . '/files')) {
@@ -297,22 +333,34 @@ class StartingPointPackage extends BasePackage
         }
     }
 
-    public function install_content()
+    protected function install_content()
     {
         $ci = new ContentImporter();
         $ci->importContentFile($this->getPackagePath() . '/content.xml');
     }
 
-    public function install_desktops()
+    protected function install_desktops()
     {
         $desktop = \Page::getByPath('/dashboard/welcome');
         $desktop->movePageDisplayOrderToTop();
     }
 
-    public function install_database()
+    protected function install_api()
+    {
+        $scopes = $this->app->make('config')->get('app.api.scopes');
+        $em = $this->app->make(EntityManager::class);
+        foreach($scopes as $scope) {
+            $s = new Scope();
+            $s->setIdentifier($scope);
+            $em->persist($s);
+            $em->flush();
+        }
+    }
+
+    protected function install_database()
     {
         $db = Database::get();
-        $num = $db->GetCol("show tables");
+        $num = $db->GetCol('show tables');
 
         if (count($num) > 0) {
             throw new \Exception(
@@ -322,16 +370,16 @@ class StartingPointPackage extends BasePackage
         }
         $installDirectory = DIR_BASE_CORE . '/config';
         try {
-            // Retrieving metadata from the entityManager created with \ORM::entityManager() 
+            // Retrieving metadata from the entityManager created with \ORM::entityManager()
             // will result in a empty metadata array. Because all drivers are wrapped in a driverChain
             // the method getAllMetadata() of Doctrine\Common\Persistence\Mapping\AbstractClassMetadataFactory
             // is going to return a empty array. To overcome this issue a new EntityManager is create with the
-            // only purpose to be used during the installation. 
+            // only purpose to be used during the installation.
             $config = Setup::createConfiguration(true, \Config::get('database.proxy_classes'));
             \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('subpackages');
             \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('package');
             // Use default AnnotationReader
-            $driverImpl = $config->newDefaultAnnotationDriver(DIR_BASE_CORE . DIRECTORY_SEPARATOR . DIRNAME_CLASSES . DIRECTORY_SEPARATOR . DIRNAME_ENTITIES, false);
+            $driverImpl = $config->newDefaultAnnotationDriver(DIR_BASE_CORE . '/' . DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES, false);
             $config->setMetadataDriverImpl($driverImpl);
             $em = EntityManager::create(\Database::connection(), $config);
             $dbm = new DatabaseStructureManager($em);
@@ -356,13 +404,11 @@ class StartingPointPackage extends BasePackage
     {
         $db = Database::get();
 
-        $db->Execute('ALTER TABLE PagePaths ADD INDEX (`cPath` (255))');
-        $db->Execute('ALTER TABLE Groups ADD INDEX (`gPath` (255))');
-        $db->Execute('ALTER TABLE SignupRequests ADD INDEX (`ipFrom` (32))');
-        $db->Execute('ALTER TABLE UserBannedIPs ADD UNIQUE INDEX (ipFrom (32), ipTo(32))');
+        $textIndexes = $this->app->make('config')->get('database.text_indexes');
+        $db->createTextIndexes($textIndexes);
     }
 
-    public function add_users()
+    protected function add_users()
     {
         // Firstly, install the core authentication types
         $cba = AuthenticationType::add('concrete', 'Standard');
@@ -385,31 +431,20 @@ class StartingPointPackage extends BasePackage
         // create the groups our site users
         // specify the ID's since auto increment may not always be +1
         $g1 = Group::add(
-            tc("GroupName", "Guest"),
-            tc("GroupDescription", "The guest group represents unregistered visitors to your site."),
+            tc('GroupName', 'Guest'),
+            tc('GroupDescription', 'The guest group represents unregistered visitors to your site.'),
             false,
             false,
             GUEST_GROUP_ID);
         $g2 = Group::add(
-            tc("GroupName", "Registered Users"),
-            tc("GroupDescription", "The registered users group represents all user accounts."),
+            tc('GroupName', 'Registered Users'),
+            tc('GroupDescription', 'The registered users group represents all user accounts.'),
             false,
             false,
             REGISTERED_GROUP_ID);
-        $g3 = Group::add(tc("GroupName", "Administrators"), "", false, false, ADMIN_GROUP_ID);
+        $g3 = Group::add(tc('GroupName', 'Administrators'), '', false, false, ADMIN_GROUP_ID);
 
-        // insert admin user into the user table
-        if (defined('INSTALL_USER_PASSWORD')) {
-            $hasher = new PasswordHash(
-                Config::get('concrete.user.password.hash_cost_log2'),
-                Config::get('concrete.user.password.hash_portable'));
-            $uPassword = INSTALL_USER_PASSWORD;
-            $uPasswordEncrypted = $hasher->HashPassword($uPassword);
-        } else {
-            $uPasswordEncrypted = INSTALL_USER_PASSWORD_HASH;
-        }
-        $uEmail = INSTALL_USER_EMAIL;
-        $superuser = UserInfo::addSuperUser($uPasswordEncrypted, $uEmail);
+        $superuser = UserInfo::addSuperUser($this->installerOptions->getUserPasswordHash(), $this->installerOptions->getUserEmail());
         $u = User::getByUserID(USER_SUPER_ID, true, false);
 
         MailImporter::add(['miHandle' => 'private_message']);
@@ -421,13 +456,12 @@ class StartingPointPackage extends BasePackage
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/conversation.xml');
     }
 
-    public function make_directories()
+    protected function make_directories()
     {
-
         // Delete generated overrides and doctrine
         $fh = new File();
-        if (is_dir(DIR_CONFIG_SITE.'/generated_overrides')) {
-            $fh->removeAll(DIR_CONFIG_SITE.'/generated_overrides');
+        if (is_dir(DIR_CONFIG_SITE . '/generated_overrides')) {
+            $fh->removeAll(DIR_CONFIG_SITE . '/generated_overrides');
         }
         if (is_dir(Config::get('database.proxy_classes'))) {
             $fh->removeAll(Config::get('database.proxy_classes'));
@@ -448,69 +482,73 @@ class StartingPointPackage extends BasePackage
         }
     }
 
-    public function finish()
+    protected function finish()
     {
-        $config = \Core::make('config');
-        $site_install = $config->getLoader()->load(null, 'site_install');
+        $config = $this->app->make('config');
+        $installConfiguration = $this->installerOptions->getConfiguration();
 
         // Extract database config, and save it to database.php
-        $database = $site_install['database'];
-        unset($site_install['database']);
+        $database = $installConfiguration['database'];
+        unset($installConfiguration['database']);
 
         $renderer = new Renderer($database);
 
         file_put_contents(DIR_CONFIG_SITE . '/database.php', $renderer->render());
-        @chmod(DIR_CONFIG_SITE . '/database.php', Config::get('concrete.filesystem.permissions.file'));
-
-        if (isset($site_install['session-handler']) && $site_install['session-handler']) {
-            $config->save('concrete.session.handler', $site_install['session-handler']);
-        }
-
-        unset($site_install['session-handler']);
-
-        $renderer = new Renderer($site_install);
-
-        if (!file_exists(DIR_CONFIG_SITE . '/app.php')) {
-            file_put_contents(DIR_CONFIG_SITE . '/app.php', $renderer->render());
-            @chmod(DIR_CONFIG_SITE . '/app.php', Config::get('concrete.filesystem.permissions.file'));
-        }
+        @chmod(DIR_CONFIG_SITE . '/database.php', $config->get('concrete.filesystem.permissions.file'));
 
         $siteConfig = \Site::getDefault()->getConfigRepository();
-        if (isset($site_install['canonical-url']) && $site_install['canonical-url']) {
-            $siteConfig->save('seo.canonical_url', $site_install['canonical-url']);
+        if (isset($installConfiguration['canonical-url']) && $installConfiguration['canonical-url']) {
+            $siteConfig->save('seo.canonical_url', $installConfiguration['canonical-url']);
         }
-        if (isset($site_install['canonical-ssl-url']) && $site_install['canonical-ssl-url']) {
-            $siteConfig->save('seo.canonical_ssl_url', $site_install['canonical-ssl-url']);
+        unset($installConfiguration['canonical-url']);
+        if (isset($installConfiguration['canonical-url-alternative']) && $installConfiguration['canonical-url-alternative']) {
+            $siteConfig->save('seo.canonical_url_alternative', $installConfiguration['canonical-url-alternative']);
         }
+        unset($installConfiguration['canonical-url-alternative']);
+        
+        if (isset($installConfiguration['session-handler']) && $installConfiguration['session-handler']) {
+            $config->save('concrete.session.handler', $installConfiguration['session-handler']);
+        }
+        unset($installConfiguration['session-handler']);
 
-        @unlink(DIR_CONFIG_SITE . '/site_install.php');
-        @unlink(DIR_CONFIG_SITE . '/site_install_user.php');
+        $renderer = new Renderer($installConfiguration);
+        if (!file_exists(DIR_CONFIG_SITE . '/app.php')) {
+            file_put_contents(DIR_CONFIG_SITE . '/app.php', $renderer->render());
+            @chmod(DIR_CONFIG_SITE . '/app.php', $config->get('concrete.filesystem.permissions.file'));
+        }
+        $config->save('app.server_timezone', $this->installerOptions->getServerTimeZone(true)->getName());
+
+        $this->installerOptions->deleteFiles();
 
         $config->clearCache();
-        Core::make('cache')->flush();
+        $this->app->make('cache')->flush();
     }
 
-    public function install_permissions()
+    protected function install_permissions()
     {
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/permissions.xml');
     }
 
-    public function install_site()
+    protected function install_site()
     {
         \Core::make('site/type')->installDefault();
-        $site = \Site::installDefault(SITE_INSTALL_LOCALE);
-        $site->getConfigRepository()->save('name', SITE);
+        $site = \Site::installDefault($this->installerOptions->getSiteLocaleId());
+        $site->getConfigRepository()->save('name', $this->installerOptions->getSiteName());
 
-        if (defined('APP_INSTALL_LANGUAGE') && APP_INSTALL_LANGUAGE != '' && APP_INSTALL_LANGUAGE != 'en_US') {
-            Config::save('concrete.locale', APP_INSTALL_LANGUAGE);
+        $uiLocaleId = $this->installerOptions->getUiLocaleId();
+        if ($uiLocaleId && $uiLocaleId !== Localization::BASE_LOCALE) {
+            Config::save('concrete.locale', $uiLocaleId);
         }
 
         Config::save('concrete.version_installed', APP_VERSION);
         Config::save('concrete.misc.login_redirect', 'DESKTOP');
+
+        $dbConfig = \Core::make('config/database');
+        $dbConfig->save('app.privacy_policy_accepted', $this->installerOptions->isPrivacyPolicyAccepted());
     }
 
-    public function install_site_permissions()
+    protected function install_site_permissions()
     {
         $g1 = Group::getByID(GUEST_GROUP_ID);
         $g2 = Group::getByID(REGISTERED_GROUP_ID);
@@ -535,23 +573,28 @@ class StartingPointPackage extends BasePackage
             ]
         );
 
-        $u = new User();
-        $u->saveConfig('NEWSFLOW_LAST_VIEWED', 'FIRSTRUN');
-
         // login
-        $login = Page::getByPath('/login', "RECENT");
+        $login = Page::getByPath('/login', 'RECENT');
         $login->assignPermissions($g1, ['view_page']);
 
         // register
-        $register = Page::getByPath('/register', "RECENT");
+        $register = Page::getByPath('/register', 'RECENT');
         $register->assignPermissions($g1, ['view_page']);
 
+        // Page Forbidden
+        $page_forbidden = Page::getByPath('/page_forbidden', "RECENT");
+        $page_forbidden->assignPermissions($g1, ['view_page']);
+
+        // Page Not Found
+        $page_not_found = Page::getByPath('/page_not_found', "RECENT");
+        $page_not_found->assignPermissions($g1, ['view_page']);
+
         // dashboard
-        $dashboard = Page::getByPath('/dashboard', "RECENT");
+        $dashboard = Page::getByPath('/dashboard', 'RECENT');
         $dashboard->assignPermissions($g3, ['view_page']);
 
         // drafts
-        $drafts = Page::getByPath('/!drafts', "RECENT");
+        $drafts = Page::getByPath('/!drafts', 'RECENT');
         $drafts->assignPermissions(
             $g3,
             [
@@ -576,7 +619,7 @@ class StartingPointPackage extends BasePackage
             ]
         );
 
-        $home = Page::getByID(1, "RECENT");
+        $home = Page::getByID(1, 'RECENT');
         $home->assignPermissions($g1, ['view_page']);
         $home->assignPermissions(
             $g3,
@@ -687,7 +730,7 @@ class StartingPointPackage extends BasePackage
         $pt->assignPermissionAccess($pa);
 
         try {
-            Core::make('helper/file')->makeExecutable(DIR_BASE_CORE.'/bin/concrete5', 'all');
+            Core::make('helper/file')->makeExecutable(DIR_BASE_CORE . '/bin/concrete5', 'all');
         } catch (\Exception $x) {
         }
     }

@@ -58,13 +58,13 @@ class Limit
 
         $admin = UserInfo::getByID(USER_SUPER_ID);
 
-        Log::addEntry(t("User: %s has tried to send more than %s private messages within %s minutes", $offender->getUserName(), Config::get('concrete.user.private_messages.throttle_max'), Config::get('concrete.user.private_messages.throttle_max_timespan')), t('warning'));
+        \Log::addEntry(t("User: %s has tried to send more than %s private messages within %s minutes", $offender->getUserName(), Config::get('concrete.user.private_messages.throttle_max'), Config::get('concrete.user.private_messages.throttle_max_timespan')), t('warning'));
 
         $mh = Loader::helper('mail');
 
         $mh->addParameter('offenderUname', $offender->getUserName());
-        $mh->addParameter('profileURL', View::url('/profile', 'view', $offender->getUserID()));
-        $mh->addParameter('profilePreferencesURL', View::url('/profile/edit'));
+        $mh->addParameter('profileURL', $offender->getUserPublicProfileUrl());
+        $mh->addParameter('profilePreferencesURL', View::url('/account/edit_profile'));
 
         $mh->to($admin->getUserEmail());
         $mh->addParameter('siteName', tc('SiteName', \Core::make('site')->getSite()->getSiteName()));

@@ -1,5 +1,5 @@
 
-#  How to Contribute to Concrete5 Core Code
+#  How to Contribute to concrete5 Core Code
 
 Community contributions are one of the key points that make open source software so great.
 And concrete5 is no exception, so we'd like to thank you for your help.

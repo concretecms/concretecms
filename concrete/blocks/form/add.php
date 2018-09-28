@@ -5,7 +5,7 @@ $ui = UserInfo::getByID($u->uID);
 ?>
 
 <script type="text/javascript">
-var thisbID=parseInt(<?php echo intval($_REQUEST['bID'])?>); 
+var thisbID=parseInt(<?php echo empty($_REQUEST['bID']) ? 0 : intval($_REQUEST['bID'])?>); 
 var thisbtID=parseInt(<?php echo $bt->getBlockTypeID()?>); 
 </script>
 

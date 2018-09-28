@@ -3,7 +3,10 @@ namespace Concrete\Block\PageAttributeDisplay;
 
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
+use Concrete\Core\Entity\Attribute\Value\Value\SelectValue;
+use Database;
 use Core;
+use Concrete\Core\Localization\Service\Date;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
@@ -40,6 +43,11 @@ class Controller extends BlockController
         return t("Page Attribute Display");
     }
 
+    public function add()
+    {
+        $this->dateFormat = $this->app->make('date')->getPHPDateTimePattern();
+    }
+
     /**
      * @return mixed AttributeValue
      */
@@ -65,22 +73,32 @@ class Controller extends BlockController
                 break;
             default:
                 $content = $c->getAttribute($this->attributeHandle);
-                $content_alt = $c->getAttributeValue($this->attributeHandle);
-                if (is_object($content) && $content instanceof \Concrete\Core\Entity\File\File) {
-                    if ($this->thumbnailWidth > 0 || $this->thumbnailHeight > 0) {
-                        $im = Core::make('helper/image');
-                        $thumb = $im->getThumbnail(
-                            $content,
-                            $this->thumbnailWidth,
-                            $this->thumbnailHeight
-                        ); //<-- set these 2 numbers to max width and height of thumbnails
-                        $content = "<img src=\"{$thumb->src}\" width=\"{$thumb->width}\" height=\"{$thumb->height}\" alt=\"\" />";
-                    } else {
-                        $image = Core::make('html/image', array($content));
-                        $content = (string) $image->getTag();
+                if ($content instanceof \DateTime) {
+                    $content = $content->format(Date::DB_FORMAT);
+                } else {
+                    $content_alt = $c->getAttributeValue($this->attributeHandle);
+                    if (is_object($content) && $content instanceof \Concrete\Core\Entity\File\File) {
+                        if ($this->thumbnailWidth > 0 || $this->thumbnailHeight > 0) {
+                            $im = Core::make('helper/image');
+                            $thumb = $im->getThumbnail(
+                                $content,
+                                $this->thumbnailWidth,
+                                $this->thumbnailHeight
+                            ); //<-- set these 2 numbers to max width and height of thumbnails
+                            $content = "<img src=\"{$thumb->src}\" width=\"{$thumb->width}\" height=\"{$thumb->height}\" alt=\"\" />";
+                        } else {
+                            $image = Core::make('html/image', [$content]);
+                            $content = (string) $image->getTag();
+                        }
+                    } elseif (is_object($content_alt)) {
+                        if (is_array($content) && $content[0] instanceof \Concrete\Core\Tree\Node\Type\Topic) {
+                            $content = str_replace(', ', "\n", $content_alt->getDisplayValue());
+                        } elseif ($content instanceof SelectValue) {
+                            $content = (string) $content;
+                        } else {
+                            $content = $content_alt->getDisplayValue();
+                        }
                     }
-                } else if (is_object($content_alt)) {
-                    $content = $content_alt->getDisplayValue();
                 }
                 break;
         }
@@ -89,10 +107,10 @@ class Controller extends BlockController
         if (!strlen(trim(strip_tags($content))) && ($c->isMasterCollection() || $is_stack)) {
             $content = $this->getPlaceHolderText($this->attributeHandle);
         }
-        
-        if(!empty($this->delimiter)) {
+
+        if (!empty($this->delimiter)) {
             $parts = explode("\n", $content);
-            if(count($parts)>1){
+            if (count($parts) > 1) {
                 switch ($this->delimiter) {
                     case 'comma':
                         $delimiter = ',';
@@ -160,13 +178,13 @@ class Controller extends BlockController
 
     public function getAvailablePageValues()
     {
-        return array(
+        return [
             'rpv_pageName' => t('Page Name'),
             'rpv_pageDescription' => t('Page Description'),
             'rpv_pageDateCreated' => t('Page Date Created'),
             'rpv_pageDatePublic' => t('Page Date Published'),
             'rpv_pageDateLastModified' => t('Page Date Modified'),
-        );
+        ];
     }
 
     public function getAvailableAttributes()
@@ -227,9 +245,15 @@ class Controller extends BlockController
 
     public function view()
     {
+      // only use the type specific template if there is NOT a custom template defined
+      $b = $this->getBlockObject();
+      if ($b->getBlockFilename()) {      
+        // custom template  
+      } else {
         $templateHandle = $this->getTemplateHandle();
-        if (in_array($templateHandle, array('date_time', 'boolean'))) {
+        if (in_array($templateHandle, ['date_time', 'boolean'])) {
             $this->render('templates/' . $templateHandle);
         }
+      }
     }
 }

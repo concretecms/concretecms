@@ -12,8 +12,7 @@
  }
 
 .ccm-block-express-entry-list-table th.ccm-results-list-active-sort-asc a:after,
-.ccm-block-express-entry-list-table th.ccm-results-list-active-sort-asc span:after
-{
+.ccm-block-express-entry-list-table th.ccm-results-list-active-sort-asc span:after {
     border-width: 0px 4px 4px 4px;
     border-style: solid;
     border-color: transparent transparent #000 transparent;
@@ -44,8 +43,7 @@ a.ccm-block-express-entry-list-advanced-search:after {
     margin-left: 10px;
 }
 
-a.ccm-block-express-entry-list-advanced-search-open:after
-{
+a.ccm-block-express-entry-list-advanced-search-open:after {
     border-width: 4px 4px 0px 4px;
     border-style: solid;
     border-color: #000 transparent transparent transparent;
@@ -58,6 +56,5 @@ a.ccm-block-express-entry-list-advanced-search-open:after
 }
 
 div.ccm-block-express-entry-list-advanced-search-fields {
-    display: none;
     margin-bottom: 20px;
 }

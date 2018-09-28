@@ -2,6 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\ImageEditor\ImageEditor;
+use Concrete\Core\File\Image\BitmapFormat;
 use Whoops\Exception\ErrorException;
 
 $editorid = substr(sha1(time()), 0, 5); // Just enough entropy.
@@ -14,6 +15,7 @@ $fp = new Permissions($f);
 if (!$fp->canEditFileContents()) {
     die(t("Access Denied."));
 }
+$token = Core::make('token')->generate();
 
 $req = ResponseAssetGroup::get();
 $req->requireAsset('core/imageeditor');
@@ -85,7 +87,7 @@ $controls = $editor->getControlList()
     </div>
 
 <?php
-if (!$settings) {
+if (empty($settings)) {
     $settings = array();
 }
 $fnames = array();
@@ -105,20 +107,26 @@ foreach ($filters as $filter) {
         "selector" => ".filter.filter-{$filter_handle}",
     );
 }
+$url = $fv->getRelativePath();
 ?>
     <script>
         $(function () {
             _.defer(function () {
                 var defaults = {
-                        saveUrl: CCM_DISPATCHER_FILENAME + '/tools/required/files/importers/imageeditor',
-                        src: '<?=$fv->getURL()?>',
-                        fID: <?= $fv->getFileID() ?>,
-                        controlsets: {},
-                        filters: {},
-                        debug: false,
-                        jpegCompression: <?= Config::get('concrete.misc.default_jpeg_image_compression') / 100 ?>,
-                        mime: '<?= $fv->getMimeType() ?>'
-                    },
+                    saveUrl: CCM_DISPATCHER_FILENAME + '/tools/required/files/importers/imageeditor',
+                    src: '<?=$url?>',
+                    fID: <?= $fv->getFileID() ?>,
+                    token: '<?= $token ?>',
+                    controlsets: {},
+                    filters: {},
+                    debug: false,
+                    jpegCompression: <?= Core::make(BitmapFormat::class)->getDefaultJpegQuality() / 100 ?>,
+                    mime: '<?= $fv->getMimeType() ?>'<?php
+                    if (\Core::make('config')->get('concrete.misc.image_editor_cors_policy.enable_cross_origin', false) && preg_match('/^http[s]?:\/\/.*$/', $url)) {
+                        echo ",\n                    crossOrigin: '" . (\Core::make('config')->get('concrete.misc.image_editor_cors_policy.anonymous_request', true) ? 'anonymous' : 'use-credentials') . "'";
+                    }
+                    ?>
+                },
                     settings = _.extend(defaults, <?= json_encode($settings) ?>);
                 $('div.controlset', 'div.controls').each(function () {
                     settings.controlsets[$(this).attr('data-namespace')] = {

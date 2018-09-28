@@ -6,7 +6,7 @@
         <a href="<?=$editURL?>" class="btn btn-default"><?=t("Edit")?></a>
     <?php } ?>
     <?php foreach($subEntities as $entity) { ?>
-        <a href="<?=URL::to($c->getCollectionPath(), 'create_entry', $entity->getID(), $entry->getID())?>" class="btn btn-default"><?=t('Add %s', $entity->getName())?></a>
+        <a href="<?=URL::to($c->getCollectionPath(), 'create_entry', $entity->getID(), $entry->getID())?>" class="btn btn-default"><?=t('Add %s', $entity->getEntityDisplayName())?></a>
     <?php } ?>
     <?php if ($allowDelete) { ?>
         <button type="button" class="btn btn-danger" data-dialog="delete-entry"><?= t('Delete') ?></button>

@@ -5,12 +5,12 @@ use Concrete\Controller\Element\Dashboard\Express\Control\Options;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Export\ExportableInterface;
-use Concrete\Core\Express\Form\Context\ContextInterface;
-use Concrete\Core\Express\Form\Control\Template\Template;
 use Concrete\Core\Express\Form\Control\Type\SaveHandler\ControlSaveHandler;
 use Concrete\Core\Export\Item\Express\Control as ControlExporter;
 use Concrete\Core\Express\Form\Control\Type\TypeInterface;
 use Concrete\Core\Express\ObjectBuilder;
+use Concrete\Core\Form\Context\ContextInterface;
+use Concrete\Core\Form\Control\ControlInterface;
 use Concrete\Core\Import\ImportableInterface;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -20,7 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\Table(name="ExpressFormFieldSetControls")
  */
-abstract class Control implements \JsonSerializable, ExportableInterface
+abstract class Control implements \JsonSerializable, ExportableInterface, ControlInterface
 {
     /**
      * @ORM\Id @ORM\Column(type="guid")
@@ -110,11 +110,6 @@ abstract class Control implements \JsonSerializable, ExportableInterface
     {
         $this->field_set = $field_set;
     }
-
-    /**
-     * @return \Concrete\Core\Express\Form\Control\RendererInterface
-     */
-    abstract public function getControlRenderer(ContextInterface $context);
 
     public function getControlOptionsController()
     {

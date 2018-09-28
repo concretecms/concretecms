@@ -5,10 +5,17 @@ use Concrete\Core\Entity\Block\BlockType\BlockType;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Entity\Site\Tree;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemList;
+use Concrete\Core\Search\ItemList\Pager\Manager\PageListPagerManager;
+use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
+use Concrete\Core\Search\ItemList\Pager\QueryString\VariableFactory;
+use Concrete\Core\Search\Pagination\PagerPagination;
 use Concrete\Core\Search\Pagination\Pagination;
+use Concrete\Core\Search\Pagination\PaginationProviderInterface;
 use Concrete\Core\Search\Pagination\PermissionablePagination;
 use Concrete\Core\Search\PermissionableListItemInterface;
 use Concrete\Core\Entity\Package;
+use Concrete\Core\Search\StickyRequest;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Page as ConcretePage;
 use Concrete\Core\Entity\Page\Template as TemplateEntity;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
@@ -17,11 +24,41 @@ use Concrete\Core\Site\Tree\TreeInterface;
 /**
  * An object that allows a filtered list of pages to be returned.
  */
-class PageList extends DatabaseItemList implements PermissionableListItemInterface
+class PageList extends DatabaseItemList implements PagerProviderInterface, PaginationProviderInterface
 {
     const PAGE_VERSION_ACTIVE = 1;
     const PAGE_VERSION_RECENT = 2;
     const PAGE_VERSION_RECENT_UNAPPROVED = 3;
+
+    const SITE_TREE_CURRENT = -1;
+    const SITE_TREE_ALL = 0;
+
+    public function getPagerManager()
+    {
+        return new PageListPagerManager($this);
+    }
+
+    public function __construct(StickyRequest $req = null)
+    {
+        $u = new \User();
+        if ($u->isSuperUser()) {
+            $this->ignorePermissions();
+        }
+        parent::__construct($req);
+    }
+
+    /**
+     * @return \Closure|int|null
+     */
+    public function getPermissionsChecker()
+    {
+        return $this->permissionsChecker;
+    }
+
+    public function getPagerVariableFactory()
+    {
+        return new VariableFactory($this, $this->getSearchRequest());
+    }
 
     protected function getAttributeKeyClassName()
     {
@@ -32,14 +69,14 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     protected $permissionsChecker;
 
     /** @var Tree */
-    protected $siteTree;
+    protected $siteTree = self::SITE_TREE_CURRENT;
 
     /**
      * Columns in this array can be sorted via the request.
      *
      * @var array
      */
-    protected $autoSortColumns = ['cv.cvName', 'cv.cvDatePublic', 'c.cDateAdded', 'c.cDateModified'];
+    protected $autoSortColumns = ['p.cDisplayOrder', 'cv.cvName', 'cv.cvDatePublic', 'c.cDateAdded', 'c.cDateModified'];
 
     /**
      * Which version to attempt to retrieve.
@@ -79,6 +116,17 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
         $this->siteTree = $tree;
     }
 
+    public function setSiteTreeToAll()
+    {
+        $this->siteTree = self::SITE_TREE_ALL;
+    }
+
+    public function setSiteTreeToCurrent()
+    {
+        $this->siteTree = self::SITE_TREE_CURRENT;
+    }
+
+
     /**
      * @param boolean $includeSystemPages
      */
@@ -87,7 +135,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
         $this->includeSystemPages = true;
     }
 
-    public function setPermissionsChecker(\Closure $checker)
+    public function setPermissionsChecker(\Closure $checker = null)
     {
         $this->permissionsChecker = $checker;
     }
@@ -95,6 +143,11 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     public function ignorePermissions()
     {
         $this->permissionsChecker = -1;
+    }
+
+    public function enablePermissions()
+    {
+        unset($this->permissionsChecker);
     }
 
     public function includeAliases()
@@ -120,6 +173,14 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     public function createQuery()
     {
         $this->query->select('p.cID');
+    }
+
+    public function filterBySite(Site $site)
+    {
+        $this->siteTree = array();
+        foreach($site->getLocales() as $locale) {
+            $this->siteTree[] = $locale->getSiteTree();
+        }
     }
 
     public function finalizeQuery(\Doctrine\DBAL\Query\QueryBuilder $query)
@@ -148,21 +209,19 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
 
         switch ($this->pageVersionToRetrieve) {
             case self::PAGE_VERSION_RECENT:
-                $query->andWhere('cvID = (select max(cvID) from CollectionVersions where cID = cv.cID)');
+                $query->andWhere('cv.cvID = (select max(cvID) from CollectionVersions where cID = cv.cID)');
                 break;
             case self::PAGE_VERSION_RECENT_UNAPPROVED:
                 $query
-                    ->andWhere('cvID = (select max(cvID) from CollectionVersions where cID = cv.cID)')
+                    ->andWhere('cv.cvID = (select max(cvID) from CollectionVersions where cID = cv.cID)')
                     ->andWhere('cvIsApproved = 0');
                 break;
             case self::PAGE_VERSION_ACTIVE:
             default:
-                $query->andWhere('cvIsApproved = 1');
+                $now = new \DateTime();
+                $query->andWhere('cv.cvID = (select cvID from CollectionVersions where cID = cv.cID and cvIsApproved = 1 and ((cvPublishDate <= :cvPublishDate or cvPublishDate is null) and (cvPublishEndDate >= :cvPublishDate or cvPublishEndDate is null)) order by cvPublishDate desc limit 1)');
+                $query->setParameter('cvPublishDate', $now->format('Y-m-d H:i:s'));
                 break;
-        }
-
-        if ($this->isFulltextSearch) {
-            $query->addSelect('match(psi.cName, psi.cDescription, psi.content) against (:fulltext) as cIndexScore');
         }
 
         if (!$this->includeInactivePages) {
@@ -170,28 +229,66 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
             $query->setParameter('cIsActive', true);
         }
 
-
-        if (is_object($this->siteTree)) {
-            $tree = $this->siteTree;
-        } else {
-            $site = \Core::make("site")->getSite();
-            $tree = $site->getSiteTreeObject();
-        }
-
-        // Note, we might not use this. We have to set the parameter even if we don't use it because
-        // StackList (which extends PageList) needs to have it available.
-        $query->setParameter('siteTreeID', $tree->getSiteTreeID());
-
         if ($this->query->getParameter('cParentID') < 1) {
 
-            if (!$this->includeSystemPages) {
-                $query->andWhere('p.siteTreeID = :siteTreeID');
-                $query->andWhere('p.cIsSystemPage = :cIsSystemPage');
-                $query->setParameter('cIsSystemPage', false);
+            // The code above is set up to make it so that we don't filter by site tree
+            // if we have a defined parent.
+
+            if (is_object($this->siteTree) || is_array($this->siteTree)) {
+                $tree = $this->siteTree;
             } else {
-                $query->andWhere('(p.siteTreeID = :siteTreeID or p.siteTreeID = 0)');
+                switch($this->siteTree) {
+                    case self::SITE_TREE_CURRENT:
+                        $c = \Page::getCurrentPage();
+                        $tree = false;
+                        if (is_object($c) && !$c->isError()) {
+                            $tree = $c->getSiteTreeObject();
+                        }
+                        if (!is_object($tree)) {
+                            $site = \Core::make("site")->getSite();
+                            $tree = $site->getSiteTreeObject();
+                        }
+                        break;
+                    default:
+                        $tree = null;
+                        break;
+                }
             }
 
+            if ($tree !== null) {
+                if (!is_array($tree)) {
+                    $tree = [$tree];
+                }
+                $treeIDs = [];
+                foreach ($tree as $siteTree) {
+                    if ($siteTree instanceof Site) {
+                        foreach ($siteTree->getLocales() as $locale) {
+                            $treeIDs[] = $locale->getSiteTreeID();
+                        }
+                    } else {
+                        $treeIDs[] = $siteTree->getSiteTreeID();
+                    }
+                }
+                if (count($treeIDs) === 0) {
+                    if (!$this->includeSystemPages) {
+                        $query->andWhere($query->expr()->neq('p.siteTreeID', 0));
+                    }
+                } else {
+                    $or = $query->expr()->orX();
+                    foreach ($treeIDs as $treeID) {
+                        $or->add($query->expr()->eq('p.siteTreeID', $treeID));
+                    }
+                    if ($this->includeSystemPages) {
+                        $or->add($query->expr()->eq('p.siteTreeID', 0));
+                    }
+                    $query->andWhere($or);
+                }
+            }
+
+        }
+
+        if (!$this->includeSystemPages) {
+            $query->andWhere($query->expr()->eq('p.cIsSystemPage', 0));
         }
 
         return $query;
@@ -211,22 +308,15 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
         }
     }
 
-    protected function createPaginationObject()
+    public function getPaginationAdapter()
     {
-        $u = new \User();
-        if ($this->permissionsChecker === -1) {
-            $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
-                // We need to reset the potential custom order by here because otherwise, if we've added
-                // items to the select parts, and we're ordering by them, we get a SQL error
-                // when we get total results, because we're resetting the select
-                $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct p.cID)')->setMaxResults(1);
-            });
-            $pagination = new Pagination($this, $adapter);
-        } else {
-            $pagination = new PermissionablePagination($this);
-        }
-
-        return $pagination;
+        $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
+            // We need to reset the potential custom order by here because otherwise, if we've added
+            // items to the select parts, and we're ordering by them, we get a SQL error
+            // when we get total results, because we're resetting the select
+            $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct p.cID)')->setMaxResults(1);
+        });
+        return $adapter;
     }
 
     /**
@@ -480,6 +570,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     {
         $this->isFulltextSearch = true;
         $this->autoSortColumns[] = 'cIndexScore';
+        $this->query->addSelect('match(psi.cName, psi.cDescription, psi.content) against (:fulltext) as cIndexScore');
         $this->query->where('match(psi.cName, psi.cDescription, psi.content) against (:fulltext)');
         $this->query->orderBy('cIndexScore', 'desc');
         $this->query->setParameter('fulltext', $keywords);
@@ -495,22 +586,39 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
         } else {
             $treeNodeID = $topic;
         }
-        $this->query->innerJoin('cv', 'CollectionAttributeValues', 'cavTopics',
-            'cv.cID = cavTopics.cID and cv.cvID = cavTopics.cvID');
-        $this->query->innerJoin('cavTopics', 'AttributeValues', 'av', 'cavTopics.avID = av.avID');
-        $this->query->innerJoin('av', 'atSelectedTopics', 'atst', 'av.avID = atst.avID');
-        $this->query->andWhere('atst.treeNodeID = :TopicNodeID');
-        $this->query->setParameter('TopicNodeID', $treeNodeID);
+        $paramName = $this->query->createNamedParameter($treeNodeID, \PDO::PARAM_INT);
+        $query = $this->query->getConnection()->createQueryBuilder();
+        $query
+            ->select('cavTopics.cID', 'cavTopics.cvID')
+            ->from('CollectionAttributeValues', 'cavTopics')
+            ->innerJoin('cavTopics', 'AttributeValues', 'av', 'cavTopics.avID = av.avID')
+            ->innerJoin('av', 'atSelectedTopics', 'atst', 'av.avID = atst.avID')
+            ->where('atst.treeNodeID = ' . $paramName)
+        ;
+        $this->query
+            ->andWhere(
+                $this->query->expr()->in('(cv.cID,cv.cvID)', $query->getSQL())
+            )
+        ;
     }
 
     public function filterByBlockType(BlockType $bt)
     {
-        $this->query->select('distinct p.cID');
         $btID = $bt->getBlockTypeID();
-        $this->query->innerJoin('cv', 'CollectionVersionBlocks', 'cvb',
-            'cv.cID = cvb.cID and cv.cvID = cvb.cvID');
-        $this->query->innerJoin('cvb', 'Blocks', 'b', 'cvb.bID = b.bID');
-        $this->query->andWhere('b.btID = :btID');
+
+        $query = $this->query->getConnection()->createQueryBuilder();
+        $query->select('distinct p2.cID')
+            ->from('Pages', 'p2')
+            ->innerJoin('p2', 'CollectionVersions', 'cv2', 'cv2.cID = p2.cID')
+            ->innerJoin('cv2', 'CollectionVersionBlocks', 'cvb2',
+                'cv2.cID = cvb2.cID and cv2.cvID = cvb2.cvID')
+            ->innerJoin('cvb2', 'Blocks', 'b', 'cvb2.bID = b.bID')
+            ->andWhere('b.btID = :btID');
+
+
+        $this->query->andWhere(
+            $this->query->expr()->in('p.cID', $query->getSQL())
+        );
         $this->query->setParameter('btID', $btID);
     }
 
@@ -528,6 +636,22 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     public function sortByDisplayOrderDescending()
     {
         $this->query->orderBy('p.cDisplayOrder', 'desc');
+    }
+
+    /**
+     * Sorts this list by date modified ascending.
+     */
+    public function sortByDateModified()
+    {
+        $this->query->orderBy('c.cDateModified', 'asc');
+    }
+
+    /**
+     * Sorts this list by date modified descending.
+     */
+    public function sortByDateModifiedDescending()
+    {
+        $this->query->orderBy('c.cDateModified', 'desc');
     }
 
     /**
@@ -577,6 +701,15 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     {
         if ($this->isFulltextSearch) {
             $this->sortBy('cIndexScore', 'desc');
+        }
+    }
+
+    protected function selectDistinct()
+    {
+        $selects = $this->query->getQueryPart('select');
+        if ($selects[0] === 'p.cID') {
+            $selects[0] = 'distinct p.cID';
+            $this->query->select($selects);
         }
     }
 

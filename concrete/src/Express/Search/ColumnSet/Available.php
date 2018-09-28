@@ -2,19 +2,34 @@
 namespace Concrete\Core\Express\Search\ColumnSet;
 
 use Concrete\Core\Attribute\Category\ExpressCategory;
+use Concrete\Core\Entity\Express\Entry;
+use Concrete\Core\Express\Search\Column\AssociationColumn;
 use Concrete\Core\Search\Column\Column;
 
-class Available extends ColumnSet
+class Available extends DefaultSet
 {
+
+    public function getAuthor(Entry $entry)
+    {
+        $author = $entry->getAuthor();
+        if ($author) {
+            $ui = $author->getUserInfoObject();
+            if ($ui) {
+                return $ui->getUserDisplayName();
+            }
+        }
+    }
 
     public function __construct(ExpressCategory $category)
     {
         parent::__construct($category);
-        $this->addColumn(new Column('e.exEntryDateCreated', t('Date Added'), array('\Concrete\Core\Express\Search\ColumnSet\DefaultSet', 'getDateAdded')));
 
-        $entity = $category->getExpressEntity();
-        if ($entity->supportsCustomDisplayOrder()) {
-            $this->addColumn(new Column('e.exEntryDisplayOrder', t('Custom Display Order'), array('\Concrete\Core\Express\Search\ColumnSet\DefaultSet', 'getDisplayOrder')));
+        $this->addColumn(new Column('e.uID', t('Author'), array('\Concrete\Core\Express\Search\ColumnSet\Available', 'getAuthor'), false));
+
+        $associations = $category->getExpressEntity()->getAssociations();
+        foreach($associations as $association) {
+            $column = new AssociationColumn($association);
+            $this->addColumn($column);
         }
     }
 

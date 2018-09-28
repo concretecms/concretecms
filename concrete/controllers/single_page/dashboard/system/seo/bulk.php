@@ -6,6 +6,7 @@ use Page;
 use Concrete\Core\Page\PageList;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Concrete\Core\Localization\Localization;
 
 class Bulk extends DashboardPageController
 {
@@ -52,7 +53,7 @@ class Bulk extends DashboardPageController
         }
         if ($multilingual) {
             if (!isset($defaultLocale)) {
-                $defaultLocale = $this->app->make('config')->get('concrete.locale') ?: 'en_US';
+                $defaultLocale = $this->app->make('config')->get('concrete.locale') ?: Localization::BASE_LOCALE;
             }
             $section = Section::getBySectionOfSite($page);
             if ($section) {

@@ -1,27 +1,45 @@
 <?php
+
 namespace Concrete\Core\Permission\Assignment;
 
-use Concrete\Core\Permission\Key\Key;
+use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Permission\Access\Access;
-use Core;
-use Loader;
+use Concrete\Core\Permission\Key\Key;
+use Concrete\Core\Support\Facade\Application;
 
+/**
+ * @property \Concrete\Core\Permission\Key\PageKey $pk
+ *
+ * @method \Concrete\Core\Page\Page getPermissionObject()
+ */
 class PageAssignment extends Assignment
 {
-
-    // These are permissions that come from "Edit Page Type Draft" permissions
-    protected $inheritedPageTypeDraftPermissions = array(
+    /**
+     * Permissions that come from "Edit Page Type Draft" permissions.
+     *
+     * @var array
+     */
+    protected $inheritedPageTypeDraftPermissions = [
         'view_page' => 'edit_page_type_drafts',
         'view_page_versions' => 'edit_page_type_drafts',
         'view_page_in_sitemap' => 'edit_page_type_drafts',
         'edit_page_contents' => 'edit_page_type_drafts',
         'edit_page_properties' => 'edit_page_type_drafts',
-    );
+    ];
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\Assignment\Assignment::getPermissionAccessObject()
+     *
+     * @return \Concrete\Core\Permission\Access\PageAccess|null
+     */
     public function getPermissionAccessObject()
     {
-        $cache = Core::make('cache/request');
-        $identifier = sprintf('permission/assignment/access/%s/%s',
+        $app = Application::getFacadeApplication();
+        $cache = $app->make('cache/request');
+        $identifier = sprintf(
+            'permission/assignment/access/%s/%s',
             $this->pk->getPermissionKeyHandle(),
             $this->getPermissionObject()->getPermissionObjectIdentifier()
         );
@@ -29,67 +47,92 @@ class PageAssignment extends Assignment
         if (!$item->isMiss()) {
             return $item->get();
         }
-
-        $db = Loader::db();
-        $r = $db->GetOne('select paID from PagePermissionAssignments where cID = ? and pkID = ?', array($this->getPermissionObject()->getPermissionsCollectionID(), $this->pk->getPermissionKeyID()));
+        $db = $app->make(Connection::class);
+        $r = $db->fetchColumn('select paID from PagePermissionAssignments where cID = ? and pkID = ?', [$this->getPermissionObject()->getPermissionsCollectionID(), $this->pk->getPermissionKeyID()]);
         $pa = $r ? Access::getByID($r, $this->pk, false) : null;
-
-        if (is_object($pa)) {
-            if ($this->getPermissionObject()->isPageDraft() && $this->getPermissionObject()->getCollectionInheritance() == 'PARENT' && is_object($pageType = $this->getPermissionObject()->getPageTypeObject()) && isset($this->inheritedPageTypeDraftPermissions[$this->pk->getPermissionKeyHandle()])) {
-                $pk = Key::getByHandle($this->inheritedPageTypeDraftPermissions[$this->pk->getPermissionKeyHandle()]);
-                $pk->setPermissionObject($pageType);
-                $access = $pk->getPermissionAccessObject();
-                if (is_object($access)) {
-                    $list_items = $access->getAccessListItems();
-                    $pa->setListItems($list_items);
+        if ($pa) {
+            $permissionObject = $this->getPermissionObject();
+            if ($permissionObject->isPageDraft() && $permissionObject->getCollectionInheritance() == 'PARENT' && isset($this->inheritedPageTypeDraftPermissions[$this->pk->getPermissionKeyHandle()])) {
+                $pageType = $permissionObject->getPageTypeObject();
+                if (is_object($pageType)) {
+                    $pk = Key::getByHandle($this->inheritedPageTypeDraftPermissions[$this->pk->getPermissionKeyHandle()]);
+                    $pk->setPermissionObject($pageType);
+                    $access = $pk->getPermissionAccessObject();
+                    if (is_object($access)) {
+                        $list_items = $access->getAccessListItems();
+                        $pa->setListItems($list_items);
+                    }
                 }
             }
         }
-
         $cache->save($item->set($pa));
 
         return $pa;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\Assignment\Assignment::clearPermissionAssignment()
+     */
     public function clearPermissionAssignment()
     {
-        $db = Loader::db();
-        $db->Execute('update PagePermissionAssignments set paID = 0 where pkID = ? and cID = ?', array($this->pk->getPermissionKeyID(), $this->getPermissionObject()->getPermissionsCollectionID()));
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $db->executeQuery('update PagePermissionAssignments set paID = 0 where pkID = ? and cID = ?', [$this->pk->getPermissionKeyID(), $this->getPermissionObject()->getPermissionsCollectionID()]);
 
-        $cache = Core::make('cache/request');
-        $identifier = sprintf('permission/assignment/access/%s/%s',
+        $cache = $app->make('cache/request');
+        $identifier = sprintf(
+            'permission/assignment/access/%s/%s',
             $this->pk->getPermissionKeyHandle(),
             $this->getPermissionObject()->getPermissionObjectIdentifier()
         );
         $cache->delete($identifier);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\Assignment\Assignment::assignPermissionAccess()
+     */
     public function assignPermissionAccess(Access $pa)
     {
-        $db = Loader::db();
-        $db->Replace('PagePermissionAssignments', array('cID' => $this->getPermissionObject()->getPermissionsCollectionID(), 'paID' => $pa->getPermissionAccessID(), 'pkID' => $this->pk->getPermissionKeyID()), array('cID', 'pkID'), true);
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $db->replace(
+            'PagePermissionAssignments',
+            ['cID' => $this->getPermissionObject()->getPermissionsCollectionID(), 'paID' => $pa->getPermissionAccessID(), 'pkID' => $this->pk->getPermissionKeyID()],
+            ['cID', 'pkID'],
+            true
+        );
         $pa->markAsInUse();
 
-        $cache = Core::make('cache/request');
-        $identifier = sprintf('permission/assignment/access/%s/%s',
+        $cache = $app->make('cache/request');
+        $identifier = sprintf(
+            'permission/assignment/access/%s/%s',
             $this->pk->getPermissionKeyHandle(),
             $this->getPermissionObject()->getPermissionObjectIdentifier()
         );
         $cache->delete($identifier);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\Assignment\Assignment::getPermissionKeyToolsURL()
+     */
     public function getPermissionKeyToolsURL($task = false)
     {
         $pageArray = $this->pk->getMultiplePageArray();
         if (is_array($pageArray) && count($pageArray) > 0) {
             $cIDStr = '';
             foreach ($pageArray as $sc) {
-                $cIDStr .= '&cID[]='.$sc->getCollectionID();
+                $cIDStr .= '&cID[]=' . $sc->getCollectionID();
             }
 
-            return parent::getPermissionKeyToolsURL($task).$cIDStr;
+            return parent::getPermissionKeyToolsURL($task) . $cIDStr;
         } else {
-            return parent::getPermissionKeyToolsURL($task).'&cID='.$this->getPermissionObject()->getCollectionID();
+            return parent::getPermissionKeyToolsURL($task) . '&cID=' . $this->getPermissionObject()->getCollectionID();
         }
     }
 }

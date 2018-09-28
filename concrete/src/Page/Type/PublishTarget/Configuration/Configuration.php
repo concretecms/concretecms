@@ -4,10 +4,10 @@ namespace Concrete\Core\Page\Type\PublishTarget\Configuration;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Type\PublishTarget\Type\Type;
 use Loader;
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Page\Type\PublishTarget\Type\Type as PageTypePublishTargetType;
 
-abstract class Configuration extends Object
+abstract class Configuration extends ConcreteObject
 {
     abstract public function canPublishPageTypeBeneathTarget(\Concrete\Core\Page\Type\Type $pagetype, Page $page);
 
@@ -47,12 +47,12 @@ abstract class Configuration extends Object
         return 0;
     }
 
-    public function includeChooseTargetForm($pagetype = false, $target = false)
+    public function includeChooseTargetForm($control, $pagetype = false, $target = false)
     {
         Loader::element(
             DIRNAME_PAGE_TYPES . '/' . DIRNAME_ELEMENTS_PAGE_TYPES_PUBLISH_TARGET_TYPES . '/' . DIRNAME_ELEMENTS_PAGE_TYPES_PUBLISH_TARGET_TYPES_FORM . '/' . $this->getPageTypePublishTargetTypeHandle(
             ),
-            array('configuration' => $this, 'target' => $target, 'pagetype' => $pagetype),
+            array('configuration' => $this, 'target' => $target, 'pagetype' => $pagetype, 'control' => $control),
             $this->pkgHandle
         );
     }

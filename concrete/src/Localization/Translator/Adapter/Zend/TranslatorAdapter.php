@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Localization\Translator\Adapter\Zend;
 
 use Concrete\Core\Localization\Translator\TranslatorAdapterInterface;
@@ -13,7 +12,6 @@ use Zend\I18n\Translator\Translator;
  */
 class TranslatorAdapter implements TranslatorAdapterInterface
 {
-
     protected $translator;
 
     /**
@@ -45,7 +43,7 @@ class TranslatorAdapter implements TranslatorAdapterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getLocale()
     {
@@ -53,7 +51,7 @@ class TranslatorAdapter implements TranslatorAdapterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setLocale($locale)
     {
@@ -61,7 +59,7 @@ class TranslatorAdapter implements TranslatorAdapterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function translate($text)
     {
@@ -81,7 +79,7 @@ class TranslatorAdapter implements TranslatorAdapterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function translatePlural($singular, $plural, $number)
     {
@@ -89,11 +87,12 @@ class TranslatorAdapter implements TranslatorAdapterInterface
             return '';
         }
         $text = $this->translator->translatePlural($singular, $plural, $number);
+
         return $this->formatString($text, array_slice(func_get_args(), 2));
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function translateContext($context, $text)
     {
@@ -105,6 +104,7 @@ class TranslatorAdapter implements TranslatorAdapterInterface
         if ($msgtxt != $msgid) {
             $text = $msgtxt;
         }
+
         return $this->formatString($text, array_slice(func_get_args(), 2));
     }
 
@@ -120,7 +120,7 @@ class TranslatorAdapter implements TranslatorAdapterInterface
         if (count($args) > 0) {
             return vsprintf($string, $args);
         }
+
         return $string;
     }
-
 }

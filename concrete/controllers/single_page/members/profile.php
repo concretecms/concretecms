@@ -18,13 +18,13 @@ class Profile extends PublicProfilePageController
         if ($userID > 0) {
             $profile = UserInfo::getByID($userID);
             if (!is_object($profile)) {
-                throw new Exception('Invalid User ID.');
+                return $this->replace('/page_not_found');
             }
         } elseif ($u->isRegistered()) {
             $profile = UserInfo::getByID($u->getUserID());
         } else {
             $this->set('intro_msg', t('You must sign in order to access this page!'));
-            $this->replace('/login');
+            return $this->replace('/login');
         }
         if (is_object($profile) && $profile->getUserID() == $u->getUserID()) {
             $canEdit = true;

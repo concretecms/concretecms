@@ -24,7 +24,7 @@ $txt = Loader::helper('text');?>
                                 $('#asHandle').attr('disabled','disabled');
                             });
                         </script>
-                    <?php 
+                    <?php
 }
     ?>
 
@@ -33,11 +33,11 @@ $txt = Loader::helper('text');?>
                         <?php if ($set->isAttributeSetLocked()) {
     ?>
                             <?php echo $form->text('asHandle', $set->getAttributeSetHandle(), array('disabled' => 'disabled'))?>
-                        <?php 
+                        <?php
 } else {
     ?>
                             <?php echo $form->text('asHandle', $set->getAttributeSetHandle())?>
-                        <?php 
+                        <?php
 }
     ?>
                     </div>
@@ -70,7 +70,7 @@ $txt = Loader::helper('text');?>
                         </div>
                     </fieldset>
                 </form>
-            <?php 
+            <?php
 }
     ?>
         </div>
@@ -108,7 +108,7 @@ $txt = Loader::helper('text');?>
                                         <span class="help-inline"><?php echo $key->getAttributeKeyHandle()?></span>
                                     </label>
                                 </div>
-                            <?php 
+                            <?php
 }
         ?>
                         </div>
@@ -116,11 +116,11 @@ $txt = Loader::helper('text');?>
                         <div class="form-group">
                             <?php echo $form->submit('submit', t('Update Attributes'), array('class' => 'btn btn-primary'))?>
                         </div>
-                    <?php 
+                    <?php
     } else {
         ?>
                         <p><?php echo t('No attributes found.')?></p>
-                    <?php 
+                    <?php
     }
     ?>
                 </fieldset>
@@ -128,7 +128,7 @@ $txt = Loader::helper('text');?>
         </div>
 	</div>
 
-<?php 
+<?php
 } elseif ($this->controller->getTask() == 'category' || $this->controller->getTask() == 'add_set') {
     ?>
 
@@ -147,16 +147,16 @@ $txt = Loader::helper('text');?>
                     </a>
                     <i class="ccm-item-select-list-sort"></i>
 				</li>
-			<?php 
+			<?php
 }
     ?>
 		</ul>
 
-	<?php 
+	<?php
 } else {
     ?>
 		<?php echo t('No attribute sets currently defined.')?>
-	<?php 
+	<?php
 }
     ?>
 
@@ -177,22 +177,23 @@ $txt = Loader::helper('text');?>
                 <?php echo $form->text('asName')?>
             </div>
 
-            <div class="form-group">
-                <label class="control-label"></label>
-                <?php echo $form->submit('submit', t('Add Set'), array('class' => 'btn'))?>
+            <div class="ccm-dashboard-form-actions-wrapper">
+                <div class="ccm-dashboard-form-actions">
+                    <?php echo $form->submit('submit', t('Add Set'), array('class' => 'btn btn-primary pull-right'))?>
+                </div>
             </div>
         </fieldset>
 
 	</form>
-	
 
-<?php 
+
+<?php
 } else { // Attribute Category List  ?>
 
         <h3><?=t('Attribute Categories')?></h3>
 		<span class="help-block"><?php echo t('Attribute Categories are used to group different types of sets.')?></span>
 		<ul class="item-select-list">
-			<?php 
+			<?php
             if (count($categories) > 0) {
                 foreach ($categories as $cat) {
                     ?>
@@ -203,7 +204,7 @@ $txt = Loader::helper('text');?>
                             <?php echo $txt->unhandle($cat->getAttributeKeyCategoryHandle())?>
                         </a>
 					</li>
-				<?php 
+				<?php
                 }
             } else {
                 echo t('No attribute categories currently defined.');
@@ -211,6 +212,6 @@ $txt = Loader::helper('text');?>
     ?>
 		</ul>
 
-<?php 
+<?php
 } ?>
 

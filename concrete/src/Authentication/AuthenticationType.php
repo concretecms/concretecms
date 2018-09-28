@@ -2,7 +2,7 @@
 namespace Concrete\Core\Authentication;
 
 use Concrete\Authentication\Concrete\Controller;
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Package\PackageList;
 use Core;
 use Environment;
@@ -10,7 +10,7 @@ use Exception;
 use Loader;
 use Package;
 
-class AuthenticationType extends Object
+class AuthenticationType extends ConcreteObject
 {
     /** @var Controller */
     public $controller;
@@ -36,11 +36,11 @@ class AuthenticationType extends Object
      */
     public static function getList($sorted = false, $activeOnly = false)
     {
-        $list = array();
+        $list = [];
         $db = Loader::db();
-        $q = $db->query("SELECT * FROM AuthenticationTypes"
-            . ($activeOnly ? " WHERE authTypeIsEnabled=1 " : "")
-            . " ORDER BY " . ($sorted ? "authTypeDisplayOrder" : "authTypeID"));
+        $q = $db->query('SELECT * FROM AuthenticationTypes'
+            . ($activeOnly ? ' WHERE authTypeIsEnabled=1 ' : '')
+            . ' ORDER BY ' . ($sorted ? 'authTypeDisplayOrder' : 'authTypeID'));
         while ($row = $q->fetchRow()) {
             $list[] = self::load($row);
         }
@@ -67,14 +67,14 @@ class AuthenticationType extends Object
      */
     public static function load($arr)
     {
-        $extract = array(
+        $extract = [
             'authTypeID',
             'authTypeName',
             'authTypeHandle',
             'authTypeDisplayOrder',
             'authTypeIsEnabled',
             'pkgID',
-        );
+        ];
         $obj = new self();
         foreach ($extract as $key) {
             if (!isset($arr[$key])) {
@@ -97,7 +97,7 @@ class AuthenticationType extends Object
         $prefix = $r->override ? true : $this->getPackageHandle();
         $authTypeHandle = Core::make('helper/text')->camelcase($this->authTypeHandle);
         $class = core_class('Authentication\\' . $authTypeHandle . '\\Controller', $prefix);
-        $this->controller = Core::make($class, array($this));
+        $this->controller = Core::make($class, [$this]);
     }
 
     /**
@@ -119,9 +119,9 @@ class AuthenticationType extends Object
     public static function getListByPackage($pkg)
     {
         $db = Loader::db();
-        $list = array();
+        $list = [];
 
-        $q = $db->query('SELECT * FROM AuthenticationTypes WHERE pkgID=?', array($pkg->getPackageID()));
+        $q = $db->query('SELECT * FROM AuthenticationTypes WHERE pkgID=?', [$pkg->getPackageID()]);
         while ($row = $q->FetchRow()) {
             $list[] = self::load($row);
         }
@@ -133,11 +133,11 @@ class AuthenticationType extends Object
      * @param string $atHandle New AuthenticationType handle
      * @param string $atName New AuthenticationType name, expect this to be presented with "%s Authentication Type"
      * @param int $order Order int, used to order the display of AuthenticationTypes
-     * @param bool|\Package $pkg Package object to which this AuthenticationType is associated.
+     * @param bool|\Package $pkg package object to which this AuthenticationType is associated
      *
      * @throws \Exception
      *
-     * @return AuthenticationType Returns a loaded authentication type.
+     * @return AuthenticationType returns a loaded authentication type
      */
     public static function add($atHandle, $atName, $order = 0, $pkg = false)
     {
@@ -158,7 +158,7 @@ class AuthenticationType extends Object
         $db = Loader::db();
         $db->Execute(
            'INSERT INTO AuthenticationTypes (authTypeHandle, authTypeName, authTypeIsEnabled, authTypeDisplayOrder, pkgID) values (?, ?, ?, ?, ?)',
-           array($atHandle, $atName, 1, intval($order), $pkgID));
+           [$atHandle, $atName, 1, intval($order), $pkgID]);
         $est = self::getByHandle($atHandle);
         $r = $est->mapAuthenticationTypeFilePath(FILENAME_AUTHENTICATION_DB);
         if ($r->exists()) {
@@ -171,7 +171,7 @@ class AuthenticationType extends Object
     /**
      * Return loaded AuthenticationType with the given handle.
      *
-     * @param string $atHandle AuthenticationType handle.
+     * @param string $atHandle authenticationType handle
      *
      * @throws \Exception when an invalid handle is provided
      *
@@ -180,7 +180,7 @@ class AuthenticationType extends Object
     public static function getByHandle($atHandle)
     {
         $db = Loader::db();
-        $row = $db->GetRow('SELECT * FROM AuthenticationTypes WHERE authTypeHandle=?', array($atHandle));
+        $row = $db->GetRow('SELECT * FROM AuthenticationTypes WHERE authTypeHandle=?', [$atHandle]);
         if (!$row) {
             throw new Exception(t('Invalid Authentication Type Handle'));
         }
@@ -201,7 +201,7 @@ class AuthenticationType extends Object
     public static function getByID($authTypeID)
     {
         $db = Loader::db();
-        $row = $db->GetRow('SELECT * FROM AuthenticationTypes where authTypeID=?', array($authTypeID));
+        $row = $db->GetRow('SELECT * FROM AuthenticationTypes where authTypeID=?', [$authTypeID]);
         if (!$row) {
             throw new Exception(t('Invalid Authentication Type ID'));
         }
@@ -214,6 +214,25 @@ class AuthenticationType extends Object
     public function getAuthenticationTypeName()
     {
         return $this->authTypeName;
+    }
+
+    /**
+     * Returns the display name for this instance (localized and escaped accordingly to $format)
+     *
+     * @param string $format = 'html' Escape the result in html format (if $format is 'html'). If $format is 'text' or any other value, the display name won't be escaped.
+     *
+     * @return string
+     */
+    public function getAuthenticationTypeDisplayName($format = 'html')
+    {
+        $value = tc('AuthenticationType', $this->getAuthenticationTypeName());
+        switch ($format) {
+            case 'html':
+                return h($value);
+            case 'text':
+            default:
+                return $value;
+        }
     }
 
     public function getAuthenticationTypeDisplayOrder()
@@ -246,21 +265,21 @@ class AuthenticationType extends Object
         $db = Loader::db();
         $db->Execute(
            'UPDATE AuthenticationTypes SET authTypeName=? WHERE authTypeID=?',
-           array($authTypeName, $this->getAuthenticationTypeID()));
+           [$authTypeName, $this->getAuthenticationTypeID()]);
     }
 
     /**
      * AuthenticationType::setAuthenticationTypeDisplayOrder
      * Update the order for display.
      *
-     * @param int $order value from 0-n to signify order.
+     * @param int $order value from 0-n to signify order
      */
     public function setAuthenticationTypeDisplayOrder($order)
     {
         $db = Loader::db();
         $db->Execute(
            'UPDATE AuthenticationTypes SET authTypeDisplayOrder=? WHERE authTypeID=?',
-           array($order, $this->getAuthenticationTypeID()));
+           [$order, $this->getAuthenticationTypeID()]);
     }
 
     public function getAuthenticationTypeID()
@@ -299,7 +318,7 @@ class AuthenticationType extends Object
         $db = Loader::db();
         $db->Execute(
            'UPDATE AuthenticationTypes SET authTypeIsEnabled=0 WHERE AuthTypeID=?',
-           array($this->getAuthenticationTypeID()));
+           [$this->getAuthenticationTypeID()]);
     }
 
     /**
@@ -311,7 +330,7 @@ class AuthenticationType extends Object
         $db = Loader::db();
         $db->Execute(
            'UPDATE AuthenticationTypes SET authTypeIsEnabled=1 WHERE AuthTypeID=?',
-           array($this->getAuthenticationTypeID()));
+           [$this->getAuthenticationTypeID()]);
     }
 
     /**
@@ -325,13 +344,13 @@ class AuthenticationType extends Object
             $this->controller->deleteType();
         }
 
-        $db->Execute("DELETE FROM AuthenticationTypes WHERE authTypeID=?", array($this->authTypeID));
+        $db->Execute('DELETE FROM AuthenticationTypes WHERE authTypeID=?', [$this->authTypeID]);
     }
 
     /**
      * Return the path to a file.
      *
-     * @param string $_file the relative path to the file.
+     * @param string $_file the relative path to the file
      *
      * @return bool|string
      */
@@ -352,16 +371,16 @@ class AuthenticationType extends Object
      *  - /concrete/models/authentication/types/HANDLE
      *  - /concrete/core/models/authentication/types/HANDLE.
      *
-     * @param string $_file The filename you want.
+     * @param string $_file the filename you want
      *
-     * @return string This will return false if the file is not found.
+     * @return string this will return false if the file is not found
      */
     protected function mapAuthenticationTypeFilePath($_file)
     {
         $atHandle = $this->getAuthenticationTypeHandle();
         $env = Environment::get();
         $pkgHandle = PackageList::getHandle($this->pkgID);
-        $r = $env->getRecord(implode('/', array(DIRNAME_AUTHENTICATION, $atHandle, $_file)), $pkgHandle);
+        $r = $env->getRecord(implode('/', [DIRNAME_AUTHENTICATION, $atHandle, $_file]), $pkgHandle);
 
         return $r;
     }
@@ -389,7 +408,7 @@ class AuthenticationType extends Object
             ob_end_clean();
             echo $out;
         } else {
-            echo "<p>" . t("This authentication type does not require any customization.") . "</p>";
+            echo '<p>' . t('This authentication type does not require any customization.') . '</p>';
         }
     }
 
@@ -399,17 +418,20 @@ class AuthenticationType extends Object
      * @param string $element
      * @param array  $params
      */
-    public function renderForm($element = 'form', $params = array())
+    public function renderForm($element = 'form', $params = [])
     {
         $this->controller->requireAsset('javascript', 'backstretch');
 
         $form_element = $this->mapAuthenticationTypeFilePath($element . '.php');
         if (!$form_element->exists()) {
             $form_element = $this->mapAuthenticationTypeFilePath('form.php');
+            if (method_exists($this->controller, 'form')) {
+                call_user_func_array([$this->controller, 'form'], $params);
+            }
         }
         ob_start();
         if (method_exists($this->controller, $element)) {
-            call_user_func_array(array($this->controller, $element), $params);
+            call_user_func_array([$this->controller, $element], $params);
         } else {
             $this->controller->view();
         }
@@ -427,13 +449,16 @@ class AuthenticationType extends Object
     public function renderHook()
     {
         $form_hook = $this->mapAuthenticationTypeFilePath('hook.php');
-        if ($form_hook->exists()) {
+        if (method_exists($this->controller, 'hook') || $form_hook->exists()) {
             ob_start();
             if (method_exists($this->controller, 'hook')) {
                 $this->controller->hook();
             }
-            extract($this->controller->getSets());
-            require_once $form_hook->file;
+            if ($form_hook->exists()) {
+                $controller = $this->controller;
+                extract($this->controller->getSets());
+                require_once $form_hook->file;
+            }
             $out = ob_get_contents();
             ob_end_clean();
             echo $out;
@@ -445,5 +470,59 @@ class AuthenticationType extends Object
         $form_hook = $this->mapAuthenticationTypeFilePath('hook.php');
 
         return method_exists($this->controller, 'hook') || $form_hook->exists();
+    }
+
+    /**
+     * Render the a form to be displayed when the authentication type is already hooked.
+     * All settings are expected to be saved by each individual authentication type.
+     */
+    public function renderHooked()
+    {
+        $form_hooked = $this->mapAuthenticationTypeFilePath('hooked.php');
+        if (method_exists($this->controller, 'hooked') || $form_hooked->exists()) {
+            ob_start();
+            if (method_exists($this->controller, 'hooked')) {
+                $this->controller->hooked();
+            }
+            if ($form_hooked->exists()) {
+                $controller = $this->controller;
+                extract($this->controller->getSets());
+                require_once $form_hooked->file;
+            }
+            $out = ob_get_contents();
+            ob_end_clean();
+            echo $out;
+        }
+    }
+
+    /**
+     * Does this authentication type support rendering a form when it has already been hooked?
+     *
+     * @return bool
+     */
+    public function hasHooked()
+    {
+        $form_hooked = $this->mapAuthenticationTypeFilePath('hooked.php');
+
+        return method_exists($this->controller, 'hooked') || $form_hooked->exists();
+    }
+
+    /**
+     * Is this authentication type already hooked for a specific user?
+     *
+     * @param \Concrete\Core\User\User|\Concrete\Core\User\UserInfo|\Concrete\Core\Entity\User\User|int $user
+     *
+     * @return bool|null returns null if the controller does not implement a way to determine if a user is already hooked or not
+     */
+    public function isHooked($user)
+    {
+        $result = null;
+        if (is_callable([$this->controller, 'getBindingForUser'])) {
+            $result = $this->controller->getBindingForUser($user) !== null;
+        } else {
+            $result = null;
+        }
+
+        return $result;
     }
 }

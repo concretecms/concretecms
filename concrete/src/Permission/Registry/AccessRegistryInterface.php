@@ -12,4 +12,9 @@ interface AccessRegistryInterface extends RegistryInterface
      */
     function getEntries();
 
+    /**
+     * @return EntryInterface[]
+     */
+    function getEntriesToRemove();
+
 }

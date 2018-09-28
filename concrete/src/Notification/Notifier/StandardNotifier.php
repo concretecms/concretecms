@@ -38,7 +38,7 @@ class StandardNotifier implements NotifierInterface
                  */
                 foreach($items as $item) {
                     if ($item->getSubscriptionsAllowedPermission() == 'A' ||
-                        ($item->getSubscriptionsAllowedPermission() == 'C' && in_array($subscription, $item->getSubscriptionsAllowedArray()))) {
+                        ($item->getSubscriptionsAllowedPermission() == 'C' && in_array($subscription->getSubscriptionIdentifier(), $item->getSubscriptionsAllowedArray()))) {
                         /**
                          * @var $entity Entity
                          */
@@ -58,7 +58,7 @@ class StandardNotifier implements NotifierInterface
                 }
                 foreach($items as $item) {
                     if ($item->getSubscriptionsAllowedPermission() == 'N' ||
-                        ($item->getSubscriptionsAllowedPermission() == 'C' && in_array($subscription, $item->getSubscriptionsAllowedArray()))) {
+                        ($item->getSubscriptionsAllowedPermission() == 'C' && in_array($subscription->getSubscriptionIdentifier(), $item->getSubscriptionsAllowedArray()))) {
                         /**
                          * @var $entity Entity
                          */

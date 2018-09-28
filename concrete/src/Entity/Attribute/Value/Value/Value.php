@@ -21,7 +21,7 @@ class Value
      * This is needed for backward compatibility –but it also might be handy if you need to figure out what kind of
      * attribute something is but we don't want a direct association due to performance concerns
      * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Attribute\Key\Key")
-     * @ORM\JoinColumn(name="akID", referencedColumnName="akID")
+     * @ORM\JoinColumn(name="akID", referencedColumnName="akID", onDelete="CASCADE")
      **/
     protected $attribute_key;
 

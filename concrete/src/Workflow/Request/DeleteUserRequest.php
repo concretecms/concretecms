@@ -2,11 +2,12 @@
 namespace Concrete\Core\Workflow\Request;
 
 use Concrete\Core\User\UserInfo;
+use Concrete\Core\Workflow\Description as WorkflowDescription;
+use Concrete\Core\Workflow\Progress\Action\Action as WorkflowProgressAction;
 use Concrete\Core\Workflow\Progress\Progress;
+use Concrete\Core\Workflow\Progress\UserProgress;
 use PermissionKey;
 use URL;
-use \Concrete\Core\Workflow\Description as WorkflowDescription;
-use Concrete\Core\Workflow\Progress\Action\Action as WorkflowProgressAction;
 
 class DeleteUserRequest extends UserRequest
 {
@@ -37,6 +38,22 @@ class DeleteUserRequest extends UserRequest
         $ui = UserInfo::getByID($this->getRequestedUserID());
         $ui->delete();
         $wpr = parent::cancel($wp);
+
+        // Make sure any workflow progress objects tied to this user are not
+        // left lying around to mess up the waiting for me view.
+        $workflowProgress = UserProgress::getList($this->getRequestedUserID(), [
+            'wpIsCompleted' => 0,
+            'wpApproved' => 0,
+        ]);
+        foreach ($workflowProgress as $wp) {
+            // Skip the deletion of the current progress object as that would
+            // cause problems in the code that follows.
+            $wr = $wp->getWorkflowRequestObject();
+            if ($wr->getWorkflowRequestID() !== $this->getWorkflowRequestID()) {
+                $wp->delete();
+            }
+        }
+
         $url = (string) URL::to('/dashboard/users/search/view', $this->getRequestedUserID(), 'deleted');
         $wpr->setWorkflowProgressResponseURL($url);
         $wpr->message = t("User %s has been deleted.", $ui->getUserName());
@@ -63,7 +80,7 @@ class DeleteUserRequest extends UserRequest
 
     public function getWorkflowRequestApproveButtonClass()
     {
-        return 'btn-success';
+        return '';
     }
 
     public function getWorkflowRequestApproveButtonInnerButtonRightHTML()
@@ -84,9 +101,8 @@ class DeleteUserRequest extends UserRequest
         $button->addWorkflowProgressActionButtonParameter('dialog-title', t('User Details'));
         $button->addWorkflowProgressActionButtonParameter('dialog-width', '420');
         $button->addWorkflowProgressActionButtonParameter('dialog-height', '310');
-        $button->setWorkflowProgressActionStyleInnerButtonLeftHTML('<i class="fa fa-eye"></i>');
         $button->setWorkflowProgressActionURL(REL_DIR_FILES_TOOLS_REQUIRED . '/workflow/dialogs/user_details?uID=' . $this->getRequestedUserID());
-        $button->setWorkflowProgressActionStyleClass('btn-default dialog-launch');
+        $button->setWorkflowProgressActionStyleClass('dialog-launch');
         $buttons[] = $button;
 
         return $buttons;

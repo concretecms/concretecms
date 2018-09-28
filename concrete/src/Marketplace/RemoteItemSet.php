@@ -1,9 +1,9 @@
 <?php
 namespace Concrete\Core\Marketplace;
 
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 
-class RemoteItemSet extends Object
+class RemoteItemSet extends ConcreteObject
 {
     public function getMarketplaceRemoteSetName()
     {

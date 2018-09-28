@@ -27,6 +27,8 @@
         <category handle="conversation" package=""/>
         <category handle="conversation_message" package=""/>
         <category handle="multilingual_section" package=""/>
+        <category handle="calendar_admin" package=""/>
+        <category handle="calendar" package=""/>
     </permissioncategories>
 
     <permissionkeys>
@@ -51,12 +53,12 @@
         <!-- block types //-->
         <permissionkey handle="add_block" has-custom-class="true" name="Add Block" description="Can add a block to any area on the site. If someone is added here they can add blocks to any area (unless that area has permissions that override these global permissions.)" package="" category="block_type">
             <access>
-                <group name="Administrators"/>
+                <group name="Administrators" description=""/>
             </access>
         </permissionkey>
         <permissionkey handle="add_stack" name="Add Stack" package="" description="Can add a stack or block from a stack to any area on the site. If someone is added here they can add stacks to any area (unless that area has permissions that override these global permissions.)" category="block_type">
             <access>
-                <group name="Administrators"/>
+                <group name="Administrators" description=""/>
             </access>
         </permissionkey>
 
@@ -134,19 +136,19 @@
         <!-- users //-->
         <permissionkey handle="edit_user_properties" has-custom-class="true" name="Edit User Details" package="" category="user">
             <access>
-                <group name="Administrators"/>
+                <group name="Administrators" description=""/>
             </access>
         </permissionkey>
 
         <permissionkey handle="view_user_attributes" has-custom-class="true" name="View User Attributes" package="" category="user">
             <access>
-                <group name="Administrators"/>
+                <group name="Administrators" description=""/>
             </access>
         </permissionkey>
 
         <permissionkey handle="activate_user" name="Activate/Deactivate User" package="" category="user" can-trigger-workflow="true">
             <access>
-                <group name="Administrators"/>
+                <group name="Administrators" description=""/>
             </access>
         </permissionkey>
 
@@ -155,23 +157,76 @@
 
         <permissionkey handle="upgrade" name="Upgrade concrete5" package="" category="admin">
             <access>
-                <group name="Administrators"/>
+                <group name="Administrators" description=""/>
             </access>
         </permissionkey>
 
         <permissionkey handle="access_group_search" name="Access Group Search" package="" category="user">
             <access>
-                <group name="Administrators"/>
+                <group name="Administrators" description=""/>
             </access>
         </permissionkey>
 
         <permissionkey handle="delete_user" name="Delete User" package="" category="user" can-trigger-workflow="true">
             <access>
-                <group name="Administrators"/>
+                <group name="Administrators" description=""/>
             </access>
         </permissionkey>
 
         <permissionkey handle="notify_in_notification_center" has-custom-class="true" name="Notify in Notification Center" description="Controls who receives updates in the notification center." package="" category="notification"/>
+
+        <!-- calendar //-->
+        <permissionkey handle="add_calendar" name="Add Calendar" description="" package="" category="calendar_admin">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="view_calendars" name="View Calendars" description="" package="" category="calendar_admin">
+            <access>
+                <entity type="group" name="Guest"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="edit_calendars" name="Edit Calendars" description="" package="" category="calendar_admin">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="edit_calendars_permissions" name="Edit Permissions" description="" package="" category="calendar_admin">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="add_calendar_events" name="Add Calendar Events" description="" package="" category="calendar_admin">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="approve_calendar_events" name="Approve Calendar Events" can-trigger-workflow="true" description="" package="" category="calendar_admin">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="delete_calendars" name="Delete Calendars" description="" package="" category="calendar_admin">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="access_calendar_rss_feeds" name="Access RSS Feeds" description="" package="" category="calendar_admin">
+            <access>
+                <entity type="group" name="Guest"/>
+            </access>
+        </permissionkey>
+
+        <permissionkey handle="view_calendar" name="View Calendar" description="" package="" category="calendar"/>
+        <permissionkey handle="view_calendar_in_edit_interface" name="View in Edit Interface" description="" package="" category="calendar"/>
+        <permissionkey handle="edit_calendar_permissions" name="Edit Permissions" description="" package="" category="calendar"/>
+        <permissionkey handle="edit_calendar" name="Edit Calendar" description="" package="" category="calendar"/>
+        <permissionkey handle="add_calendar_event" name="Add Calendar Event" description="" package="" category="calendar"/>
+        <permissionkey handle="approve_calendar_event" name="Approve Calendar Event" can-trigger-workflow="true" description="" package="" category="calendar"/>
+        <permissionkey handle="edit_calendar_event_more_details_location" name="Modify More Details Location" description="" package="" category="calendar"/>
+        <permissionkey handle="edit_calendar_events" name="Edit Calendar Events" description="" package="" category="calendar"/>
+        <permissionkey handle="access_calendar_rss_feed" name="Access RSS Feed" description="" package="" category="calendar"/>
+        <permissionkey handle="delete_calendar" name="Delete Calendar" description="" package="" category="calendar"/>
 
         <!-- express //-->
 
@@ -205,7 +260,7 @@
 
         <permissionkey handle="access_page_type_permissions" name="Access Page Type Permissions" package="" category="admin">
             <access>
-                <group name="Administrators"/>
+                <group name="Administrators" description=""/>
             </access>
         </permissionkey>
 
@@ -214,79 +269,85 @@
 
         <permissionkey handle="access_sitemap" name="Access Sitemap" package="" category="sitemap">
             <access>
-                <group name="Administrators"/>
+                <group name="Administrators" description=""/>
             </access>
         </permissionkey>
 
         <permissionkey handle="access_page_defaults" name="Access Page Type Defaults" package="" category="admin">
             <access>
-                <group name="Administrators"/>
+                <group name="Administrators" description=""/>
             </access>
         </permissionkey>
 
         <permissionkey handle="customize_themes" name="Customize Themes" package="" category="admin">
             <access>
-                <group name="Administrators"/>
+                <group name="Administrators" description=""/>
             </access>
         </permissionkey>
 
         <permissionkey handle="manage_layout_presets" name="Manage Layout Presets" package="" category="admin">
             <access>
-                <group name="Administrators"/>
+                <group name="Administrators" description=""/>
             </access>
         </permissionkey>
 
         <permissionkey handle="empty_trash" name="Empty Trash" package="" category="admin">
             <access>
-                <group name="Administrators"/>
+                <group name="Administrators" description=""/>
             </access>
         </permissionkey>
 
         <permissionkey handle="add_topic_tree" name="Add Topic Tree" package="" category="admin">
             <access>
-                <group name="Administrators"/>
+                <group name="Administrators" description=""/>
             </access>
         </permissionkey>
 
         <permissionkey handle="remove_topic_tree" name="Remove Topic Tree" package="" category="admin">
             <access>
-                <group name="Administrators"/>
+                <group name="Administrators" description=""/>
             </access>
         </permissionkey>
 
         <permissionkey handle="view_in_maintenance_mode" name="View Site in Maintenance Mode" description="Ability to see and use the website when concrete5 is in maintenance mode." package="" category="admin">
             <access>
-                <group name="Administrators"/>
+                <group name="Administrators" description=""/>
             </access>
         </permissionkey>
 
         <permissionkey handle="uninstall_packages" name="Uninstall Packages" package="" category="marketplace_newsflow">
             <access>
-                <group name="Administrators"/>
+                <group name="Administrators" description=""/>
             </access>
         </permissionkey>
 
         <permissionkey handle="install_packages" name="Install Packages" package="" category="marketplace_newsflow">
             <access>
-                <group name="Administrators"/>
+                <group name="Administrators" description=""/>
             </access>
         </permissionkey>
 
         <permissionkey handle="view_newsflow" name="View Newsflow" package="" category="marketplace_newsflow">
             <access>
-                <group name="Administrators"/>
+                <group name="Administrators" description=""/>
             </access>
         </permissionkey>
 
         <permissionkey handle="access_user_search_export" name="Export Site Users" description="Controls whether a user can export site users or not" package="" category="user">
             <access>
-                <group name="Administrators"/>
+                <group name="Administrators" description=""/>
             </access>
         </permissionkey>
 
         <permissionkey handle="access_user_search" name="Access User Search" description="Controls whether a user can view the search user interface." package="" category="user">
             <access>
-                <group name="Administrators"/>
+                <group name="Administrators" description=""/>
+            </access>
+        </permissionkey>
+
+        <permissionkey handle="edit_topic_tree" name="Edit Topic Tree" package="" category="admin">
+            <access>
+                <group name="Administrators" description=""/>
             </access>
         </permissionkey>
 
@@ -324,6 +385,8 @@
                 <category handle="conversation" />
                 <category handle="conversation_message" />
                 <category handle="multilingual_section" />
+                <category handle="calendar_admin" />
+                <category handle="calendar" />
 			</categories>
         </permissionaccessentitytype>
         <permissionaccessentitytype handle="user" name="User" package="">
@@ -349,6 +412,8 @@
                 <category handle="conversation" />
                 <category handle="conversation_message" />
                 <category handle="multilingual_section" />
+                <category handle="calendar_admin" />
+                <category handle="calendar" />
 			</categories>
         </permissionaccessentitytype>
         <permissionaccessentitytype handle="group_set" name="Group Set" package="">
@@ -373,6 +438,8 @@
                 <category handle="topic_tree_node" />
                 <category handle="conversation" />
                 <category handle="conversation_message" />
+                <category handle="calendar_admin" />
+                <category handle="calendar" />
 			</categories>
         </permissionaccessentitytype>
         <permissionaccessentitytype handle="group_combination" name="Group Combination" package="">
@@ -398,6 +465,8 @@
                 <category handle="conversation" />
                 <category handle="conversation_message" />
                 <category handle="multilingual_section" />
+                <category handle="calendar_admin" />
+                <category handle="calendar" />
 			</categories>
 
         </permissionaccessentitytype>
@@ -425,6 +494,7 @@
         <category handle="page" package=""/>
         <category handle="file" package=""/>
         <category handle="user" package=""/>
+        <category handle="calendar_event" package=""/>
     </workflowprogresscategories>
 
 </concrete5-cif>

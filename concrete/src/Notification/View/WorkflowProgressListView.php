@@ -9,6 +9,7 @@ use Concrete\Core\Entity\Notification\UserSignupNotification;
 use Concrete\Core\Entity\Notification\WorkflowProgressNotification;
 use Concrete\Core\Notification\View\Menu\WorkflowProgressListViewMenu;
 use Concrete\Core\Workflow\Progress\Progress;
+use Concrete\Core\Workflow\Progress\SiteProgressInterface;
 use HtmlObject\Element;
 
 class WorkflowProgressListView extends StandardListView
@@ -64,18 +65,21 @@ class WorkflowProgressListView extends StandardListView
 
     public function getActionDescription()
     {
-        $description = $this->request->getWorkflowRequestDescriptionObject();
-        return $description->getDescription();
+        $req = $this->progress->getWorkflowRequestObject();
+        $description = $req->getWorkflowRequestDescriptionObject();
+        if ($description) {
+            return $description->getDescription();
+        }
     }
 
     public function getInitiatorComment()
     {
-        return $this->request->getRequesterComment();
+        return $this->workflow->getWorkflowProgressCurrentComment($this->progress);
     }
 
     protected function getRequestedByElement()
     {
-        return new Element('span', t('Requested By '));
+        return new Element('span', t('Submitted By '));
     }
 
     public function getFormAction()
@@ -83,12 +87,26 @@ class WorkflowProgressListView extends StandardListView
         return $this->progress->getWorkflowProgressFormAction();
     }
 
+    public function getNotificationDateTimeZone()
+    {
+        if ($this->progress instanceof SiteProgressInterface) {
+            $site = $this->progress->getSite();
+            if ($site) {
+                return $site->getTimezone();
+            }
+        }
+    }
+
     public function getMenu()
     {
         $menu = new WorkflowProgressListViewMenu();
         foreach($this->actions as $action) {
             if ($action->getWorkflowProgressActionURL() != '') {
-                $parameters = array_merge(array('class' => $action->getWorkflowProgressActionStyleClass()), $action->getWorkflowProgressActionExtraButtonParameters());
+                $class = '';
+                if (strpos($action->getWorkflowProgressActionStyleClass(), 'dialog-launch') > -1) {
+                    $class = 'dialog-launch';
+                }
+                $parameters = array_merge(array('class' => $class), $action->getWorkflowProgressActionExtraButtonParameters());
                 $item = new LinkItem(
                     $action->getWorkflowProgressActionURL() . '&source=dashboard',
                     $action->getWorkflowProgressActionLabel(),

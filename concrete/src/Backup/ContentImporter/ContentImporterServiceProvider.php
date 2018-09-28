@@ -8,6 +8,7 @@ use Concrete\Core\Backup\ContentImporter\ValueInspector\InspectionRoutine\PageRo
 use Concrete\Core\Backup\ContentImporter\ValueInspector\InspectionRoutine\PageTypeRoutine;
 use Concrete\Core\Backup\ContentImporter\ValueInspector\InspectionRoutine\PictureRoutine;
 use Concrete\Core\Backup\ContentImporter\ValueInspector\ValueInspector;
+use Concrete\Core\Export\Item\Express\EntryStore;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 use Concrete\Core\Backup\ContentImporter\Importer\Manager as ImporterManager;
 
@@ -52,6 +53,8 @@ class ContentImporterServiceProvider extends ServiceProvider
                 return $importer;
             }
         );
+
+        $this->app->singleton(EntryStore::class);
 
     }
 }

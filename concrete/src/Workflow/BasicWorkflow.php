@@ -9,15 +9,17 @@ use Concrete\Core\Workflow\Progress\Action\ApprovalAction as WorkflowProgressApp
 use Concrete\Core\Workflow\Progress\Action\CancelAction as WorkflowProgressCancelAction;
 use Concrete\Core\Workflow\Progress\BasicData as BasicWorkflowProgressData;
 use Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
+use Concrete\Core\Workflow\Progress\SkippedResponse;
 use Core;
 use Concrete\Core\Permission\Access\Access as PermissionAccess;
+use Config;
 use PermissionKey;
 use User;
 use UserInfo;
+use Concrete\Core\Localization\Localization;
 
 class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements AssignableObjectInterface
 {
-
     use AssignableObjectTrait;
 
     public function executeBeforePermissionAssignment($cascadeToChildren = true)
@@ -33,6 +35,14 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
     public function setPermissionsToOverride()
     {
         return false;
+    }
+
+    public function getWorkflowProgressCurrentComment(WorkflowProgress $wp)
+    {
+        $req = $wp->getWorkflowRequestObject();
+        if ($req) {
+            return $req->getRequesterComment();
+        }
     }
 
     public function getPermissionAssignmentClassName()
@@ -62,22 +72,22 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
         $pk = Key::getByHandle('approve_basic_workflow_action');
         $pk->setPermissionObject($this);
         $access = $pk->getPermissionAssignmentObject()->getPermissionAccessObject();
-        $users = array(\UserInfo::getByID(USER_SUPER_ID));
-        $usersToRemove = array();
+        $users = [\UserInfo::getByID(USER_SUPER_ID)];
+        $usersToRemove = [];
 
         if (is_object($access)) {
             // Loop through all items and get the relevant users.
             $items = $access->getAccessListItems(Key::ACCESS_TYPE_INCLUDE);
-            foreach($items as $item) {
+            foreach ($items as $item) {
                 $entity = $item->getAccessEntityObject();
                 $users = array_merge($entity->getAccessEntityUsers($access), $users);
             }
 
             // Now we loop through the array and remove
             $items = $access->getAccessListItems(Key::ACCESS_TYPE_EXCLUDE);
-            foreach($items as $item) {
+            foreach ($items as $item) {
                 $entity = $item->getAccessEntityObject();
-                foreach($entity->getAccessEntityUsers($access) as $user) {
+                foreach ($entity->getAccessEntityUsers($access) as $user) {
                     $usersToRemove[] = $user->getUserID();
                 }
             }
@@ -85,10 +95,11 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
             $users = array_unique($users);
             $usersToRemove = array_unique($usersToRemove);
 
-            $users = array_filter($users, function($element) use ($usersToRemove) {
+            $users = array_filter($users, function ($element) use ($usersToRemove) {
                 if (in_array($element->getUserID(), $usersToRemove)) {
                     return false;
                 }
+
                 return true;
             });
         }
@@ -97,12 +108,13 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
     }
 
     /**
-     * Returns true if the logged-in user can approve the current workflow
+     * Returns true if the logged-in user can approve the current workflow.
      */
     public function canApproveWorkflow()
     {
         $pk = Key::getByHandle('approve_basic_workflow_action');
         $pk->setPermissionObject($this);
+
         return $pk->validate();
     }
 
@@ -113,7 +125,7 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
     public function delete()
     {
         $db = Core::make('database')->connection();
-        $db->executeQuery('DELETE FROM BasicWorkflowPermissionAssignments WHERE wfID = ?', array($this->wfID));
+        $db->executeQuery('DELETE FROM BasicWorkflowPermissionAssignments WHERE wfID = ?', [$this->wfID]);
         parent::delete();
     }
 
@@ -124,54 +136,64 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
 
         // Check if the workflow is not already approved
         if (is_object($req)) {
-
             if ($this->canApproveWorkflow()) {
-                // Then that means we have the ability to approve the workflow we just started.
-                // In that case, we transparently approve it, and skip the entry notification step.
-                $wpr = $req->approve($wp);
-                $wp->delete();
-                return $wpr;
-
+                return new SkippedResponse();
             } else {
-
                 $db = Core::make('database')->connection();
                 $db->executeQuery(
                     'INSERT INTO BasicWorkflowProgressData (wpID, uIDStarted) VALUES (?, ?)',
-                    array($wp->getWorkflowProgressID(), $req->getRequesterUserID()));
+                    [$wp->getWorkflowProgressID(), $req->getRequesterUserID()]);
 
                 $ui = UserInfo::getByID($req->getRequesterUserID());
 
                 // let's get all the people who are set to be notified on entry
-                $message = t(
-                    'On %s, user %s submitted the following request: %s',
-                    Core::make('helper/date')->formatDateTime($wp->getWorkflowProgressDateAdded(), true),
+                $message = [
+                    "start",
                     $ui->getUserName(),
-                    $req->getWorkflowRequestDescriptionObject()->getEmailDescription());
+                    $req];
                 $this->notify($wp, $message, 'notify_on_basic_workflow_entry');
             }
-
         }
-
     }
 
     protected function notify(
         WorkflowProgress $wp,
         $message,
         $permission = 'notify_on_basic_workflow_entry',
-        $parameters = array()
-    )
-    {
+        $parameters = []
+    ) {
         $nk = PermissionKey::getByHandle($permission);
         $nk->setPermissionObject($this);
         $users = $nk->getCurrentlyActiveUsers($wp);
+        $loc = Localization::getInstance();
+        $loc->pushActiveContext('email');
+        $dt = $wp->getWorkflowProgressDateAdded();
+        $dh = Core::make('helper/date');
+
+        if (Config::get('concrete.email.workflow_notification.address')){
+            $fromAddress = Config::get('concrete.email.workflow_notification.address');
+        } else {
+            $adminUser = UserInfo::getByID(USER_SUPER_ID);
+            $fromAddress = $adminUser->getUserEmail();
+        }
+        if (Config::get('concrete.email.workflow_notification.name')) {
+            $fromName = Config::get('concrete.email.workflow_notification.name');
+        } else {
+            $fromName = t('Basic Workflow');
+        }
 
         foreach ($users as $ui) {
+            // Get user object of the receiver and set locale to their language
+            $user = $ui->getUserObject();
+            $lan = $user->getUserLanguageToDisplay();
+            $loc->setLocale($lan);
             $mh = Core::make('helper/mail');
             $mh->addParameter('uName', $ui->getUserName());
             $mh->to($ui->getUserEmail());
-            $adminUser = UserInfo::getByID(USER_SUPER_ID);
-            $mh->from($adminUser->getUserEmail(), t('Basic Workflow'));
-            $mh->addParameter('message', $message);
+            $mh->from($fromAddress, $fromName);
+            $date = $dh->formatDateTime($dt, true); // Call here to translate datetime into users language
+            $translatedMessage = $this->getTranslatedMessage($message, $date);
+            $mh->addParameter('message', $translatedMessage);
             foreach ($parameters as $key => $value) {
                 $mh->addParameter($key, $value);
             }
@@ -180,23 +202,9 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
             $mh->sendMail();
             unset($mh);
         }
+        $loc->popActiveContext();
     }
-
-    public function getWorkflowProgressCurrentDescription(WorkflowProgress $wp)
-    {
-        $bdw = new BasicWorkflowProgressData($wp);
-        $ux = UserInfo::getByID($bdw->getUserStartedID());
-        $req = $wp->getWorkflowRequestObject();
-        $description = $req->getWorkflowRequestDescriptionObject()->getInContextDescription();
-
-        return t(
-            '%s Submitted by <strong>%s</strong> on %s.',
-            $description,
-            $ux->getUserName(),
-            Core::make('helper/date')->formatDateTime($wp->getWorkflowProgressDateAdded(), true)
-        );
-    }
-
+    
     public function getWorkflowProgressStatusDescription(WorkflowProgress $wp)
     {
         $req = $wp->getWorkflowRequestObject();
@@ -207,7 +215,6 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
     public function cancel(WorkflowProgress $wp)
     {
         if ($this->canApproveWorkflowProgressObject($wp)) {
-
             $req = $wp->getWorkflowRequestObject();
             $bdw = new BasicWorkflowProgressData($wp);
             $u = new User();
@@ -215,12 +222,11 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
 
             $ux = UserInfo::getByID($bdw->getUserCompletedID());
 
-            $message = t(
-                "On %s, user %s cancelled the following request: \n\n---\n%s\n---\n\n",
-                Core::make('helper/date')->formatDateTime($bdw->getDateCompleted(), true),
+            $message = [
+                "cancel",
                 $ux->getUserName(),
-                $req->getWorkflowRequestDescriptionObject()->getEmailDescription()
-            );
+                $req
+            ];
             $this->notify($wp, $message, 'notify_on_basic_workflow_deny');
 
             $hist = new BasicWorkflowHistoryEntry();
@@ -236,6 +242,7 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
 
             return $wpr;
         }
+
         return null;
     }
 
@@ -254,12 +261,11 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
 
             $ux = UserInfo::getByID($bdw->getUserCompletedID());
 
-            $message = t(
-                "On %s, user %s approved the following request: \n\n---\n%s\n---\n\n",
-                Core::make('helper/date')->formatDateTime($bdw->getDateCompleted(), true),
+            $message = [
+                "approve",
                 $ux->getUserName(),
-                $req->getWorkflowRequestDescriptionObject()->getEmailDescription()
-            );
+                $req
+            ];
             $this->notify($wp, $message, 'notify_on_basic_workflow_approve');
 
             $wpr = $req->runTask('approve', $wp);
@@ -275,6 +281,7 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
 
             return $wpr;
         }
+
         return null;
     }
 
@@ -282,7 +289,7 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
     {
         $pk = PermissionKey::getByHandle('approve_basic_workflow_action');
         $pk->setPermissionObject($this);
-        $buttons = array();
+        $buttons = [];
         if ($this->canApproveWorkflowProgressObject($wp)) {
             $req = $wp->getWorkflowRequestObject();
             $button1 = new WorkflowProgressCancelAction();
@@ -301,4 +308,37 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
         return $buttons;
     }
 
+    private function getTranslatedMessage($message = null, $date)
+    {
+
+        if (is_array($message)) {
+            switch ($message[0]) {
+                case 'approve':
+                    $message = t("On %s, user %s approved the following request: \n\n---\n%s\n---\n\n",
+                        $date, // Date
+                        $message[1], // UserName
+                        $message[2]->getWorkflowRequestDescriptionObject()->getEmailDescription() // We get the Description Object here as it gets translated when called
+                    );
+                    break;
+                case 'cancel':
+                    $message = t(
+                        "On %s, user %s cancelled the following request: \n\n---\n%s\n---\n\n",
+                        $date,
+                        $message[1],
+                        $message[2]->getWorkflowRequestDescriptionObject()->getEmailDescription()
+                    );
+                    break;
+                default:
+                    $message = t(
+                        "On %s, user %s submitted the following request: %s",
+                        $date,
+                        $message[1],
+                        $message[2]->getWorkflowRequestDescriptionObject()->getEmailDescription()
+                    );
+
+            }
+        }
+
+        return $message;
+    }
 }

@@ -18,7 +18,7 @@ class TranslatorAdapterRepository implements TranslatorAdapterRepositoryInterfac
     protected $app;
 
     /** @var array */
-    protected $adapters = array();
+    protected $adapters = [];
 
     /**
      * @param TranslatorFactoryInterface $translatorFactory

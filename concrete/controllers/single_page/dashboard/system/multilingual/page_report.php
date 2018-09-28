@@ -49,7 +49,7 @@ class PageReport extends DashboardSitePageController
                 ++$i;
             }
         } else {
-            $targets = $_REQUEST['targets'];
+            $targets = isset($_REQUEST['targets']) ? $_REQUEST['targets'] : null;
         }
         if (!isset($targets) || (!is_array($targets))) {
             $targets = array();
@@ -67,17 +67,18 @@ class PageReport extends DashboardSitePageController
         if (isset($sectionID) && $sectionID > 0) {
             $pl = new MultilingualPageList();
             $pc = \Page::getByID($sectionID);
+            $pl->setSiteTreeObject($pc->getSiteTreeObject());
             $path = $pc->getCollectionPath();
             if (strlen($path) > 1) {
                 $pl->filterByPath($path);
             }
 
-            if ($_REQUEST['keywords']) {
+            if (isset($_REQUEST['keywords']) && $_REQUEST['keywords']) {
                 $pl->filterByName($_REQUEST['keywords']);
             }
 
             $pl->setItemsPerPage(25);
-            if (!$_REQUEST['showAllPages']) {
+            if (!isset($_REQUEST['showAllPages']) || !$_REQUEST['showAllPages']) {
                 $pl->filterByMissingTargets($targetList);
             }
             $pagination = $pl->getPagination();

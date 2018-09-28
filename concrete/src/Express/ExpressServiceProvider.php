@@ -1,6 +1,10 @@
 <?php
 namespace Concrete\Core\Express;
 
+use Concrete\Core\Express\Entry\Formatter\EntryFormatterInterface;
+use Concrete\Core\Express\Entry\Formatter\LabelFormatter as EntryLabelFormatter;
+use Concrete\Core\Express\Formatter\FormatterInterface;
+use Concrete\Core\Express\Formatter\LabelFormatter;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 
 class ExpressServiceProvider extends ServiceProvider
@@ -18,5 +22,9 @@ class ExpressServiceProvider extends ServiceProvider
         $this->app->singleton('express', function() use ($app) {
            return $app->make('Concrete\Core\Express\ObjectManager');
         });
+        $this->app->singleton('Concrete\Core\Express\Controller\Manager');
+
+        $this->app->bind(FormatterInterface::class, LabelFormatter::class);
+        $this->app->bind(EntryFormatterInterface::class, EntryLabelFormatter::class);
     }
 }

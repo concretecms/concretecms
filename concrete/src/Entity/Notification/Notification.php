@@ -60,6 +60,14 @@ abstract class Notification
         return $this->nDate;
     }
 
+    public function getNotificationDateTimeZone()
+    {
+        $site = \Core::make('site')->getSite();
+        if ($site) {
+            return $site->getTimezone();
+        }
+    }
+
     /**
      * @param mixed $nDate
      */
@@ -69,5 +77,15 @@ abstract class Notification
     }
 
     abstract public function getListView();
+
+    /**
+     * @return mixed
+     */
+    public function getAlerts()
+    {
+        return $this->alerts;
+    }
+
+
 
 }

@@ -1,14 +1,10 @@
 <?php
+
 namespace Concrete\Core\Application;
 
-use Concrete\Core\Block\BlockType\BlockType;
+use Concrete\Core\Cache\CacheClearer;
 use Concrete\Core\Cache\Page\PageCache;
 use Concrete\Core\Cache\Page\PageCacheRecord;
-use Concrete\Core\Cache\OpCache;
-use Concrete\Core\Database\Connection\Connection;
-use Concrete\Core\Database\EntityManager\Driver\DriverInterface;
-use Concrete\Core\Database\EntityManager\Provider\PackageProvider;
-use Concrete\Core\Database\EntityManager\Provider\PackageProviderFactory;
 use Concrete\Core\Database\EntityManagerConfigUpdater;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Foundation\ClassLoader;
@@ -16,38 +12,35 @@ use Concrete\Core\Foundation\EnvironmentDetector;
 use Concrete\Core\Foundation\Runtime\DefaultRuntime;
 use Concrete\Core\Foundation\Runtime\RuntimeInterface;
 use Concrete\Core\Http\DispatcherInterface;
+use Concrete\Core\Http\Request;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Logging\Query\Logger;
-use Concrete\Core\Routing\DispatcherRouteCallback;
+use Concrete\Core\Package\PackageService;
 use Concrete\Core\Routing\RedirectResponse;
+use Concrete\Core\Support\Facade\Package;
+use Concrete\Core\System\Mutex\MutexInterface;
 use Concrete\Core\Updater\Update;
 use Concrete\Core\Url\Url;
 use Concrete\Core\Url\UrlImmutable;
 use Config;
-use Core;
 use Database;
 use Environment;
+use Exception;
 use Illuminate\Container\Container;
 use Job;
 use JobSet;
 use Log;
-use Concrete\Core\Support\Facade\Package;
 use Page;
 use Redirect;
-use Concrete\Core\Http\Request;
-use Route;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
-use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
-use User;
+use Symfony\Component\HttpFoundation\Response;
 use View;
 
 class Application extends Container
 {
     protected $installed = null;
     protected $environment = null;
-    protected $packages = array();
+    protected $packages = [];
 
     /**
      * Turns off the lights.
@@ -56,7 +49,7 @@ class Application extends Container
      *      Add `'jobs' => true` to disable scheduled jobs
      *      Add `'log_queries' => true` to disable query logging
      */
-    public function shutdown($options = array())
+    public function shutdown($options = [])
     {
         \Events::dispatch('on_shutdown');
 
@@ -74,7 +67,7 @@ class Application extends Container
                 (!isset($options['log_queries']) || $options['log_queries'] == false)) {
                 $connection = Database::getActiveConnection();
                 if ($logger->shouldLogQueries($r)) {
-                    $loggers = array();
+                    $loggers = [];
                     $configuration = $connection->getConfiguration();
                     $loggers[] = $configuration->getSQLLogger();
                     $configuration->setSQLLogger(null);
@@ -90,17 +83,12 @@ class Application extends Container
                 $connection->close();
             }
         }
-        if ($config->get('concrete.cache.overrides')) {
-            Environment::saveCachedEnvironmentObject();
-        } else {
-            $env = Environment::get();
-            $env->clearOverrideCache();
-        }
         exit;
     }
 
     /**
      * @param \Concrete\Core\Http\Request $request
+     *
      * @deprecated Use the dispatcher object to dispatch
      */
     public function dispatch(Request $request)
@@ -116,47 +104,7 @@ class Application extends Container
      */
     public function clearCaches()
     {
-        \Events::dispatch('on_cache_flush');
-
-        $this['cache']->flush();
-        $this['cache/expensive']->flush();
-
-        $config = $this['config'];
-
-        // Delete and re-create the cache directory
-        $cacheDir = $config->get('concrete.cache.directory');
-        if (is_dir($cacheDir)) {
-            $fh = Core::make('helper/file');
-            $fh->removeAll($cacheDir, true);
-        }
-        $this->setupFilesystem();
-
-        $pageCache = PageCache::getLibrary();
-        if (is_object($pageCache)) {
-            $pageCache->flush();
-        }
-
-        // Clear the file thumbnail path cache
-        $connection = $this['database'];
-        $sql = $connection->getDatabasePlatform()->getTruncateTableSQL('FileImageThumbnailPaths');
-        try {
-            $connection->executeUpdate($sql);
-        } catch(\Exception $e) {}
-
-        // clear the environment overrides cache
-        $env = \Environment::get();
-        $env->clearOverrideCache();
-
-        // Clear localization cache
-        Localization::clearCache();
-
-        // clear block type cache
-        BlockType::clearCache();
-
-        // Clear precompiled script bytecode caches
-        OpCache::clear();
-
-        \Events::dispatch('on_cache_flush_end');
+        $this->make(CacheClearer::class)->flush();
     }
 
     /**
@@ -172,7 +120,7 @@ class Application extends Container
                 // check for non dashboard page
                 $jobs = Job::getList(true);
                 $auth = Job::generateAuth();
-                $url = "";
+                $url = '';
                 // jobs
                 if (count($jobs)) {
                     foreach ($jobs as $j) {
@@ -203,13 +151,10 @@ class Application extends Container
                 }
 
                 if (strlen($url)) {
-                    $ch = curl_init($url);
-                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                    curl_setopt($ch, CURLOPT_HEADER, 0);
-                    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1);
-                    curl_setopt($ch, CURLOPT_TIMEOUT, 1);
-                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $config->get('app.curl.verifyPeer'));
-                    $res = curl_exec($ch);
+                    try {
+                        $this->make('http/client')->setUri($url)->send();
+                    } catch (Exception $x) {
+                    }
                 }
             }
         }
@@ -222,7 +167,7 @@ class Application extends Container
     {
         if ($this->installed === null) {
             if (!$this->isShared('config')) {
-                throw new \Exception('Attempting to check install status before application initialization.');
+                throw new Exception('Attempting to check install status before application initialization.');
             }
 
             $this->installed = $this->make('config')->get('concrete.installed');
@@ -240,7 +185,7 @@ class Application extends Container
         if ($library->shouldCheckCache($request)) {
             $record = $library->getRecord($request);
             if ($record instanceof PageCacheRecord) {
-                if ($record->validate()) {
+                if ($record->validate($request)) {
                     return $library->deliver($record);
                 }
             }
@@ -249,13 +194,21 @@ class Application extends Container
         return false;
     }
 
+    /**
+     * Check if the core needs to be updated, and if so, updates it.
+     *
+     * @throws \Concrete\Core\System\Mutex\MutexBusyException throws a MutexBusyException exception if there upgrade process is already running
+     * @throws \Concrete\Core\Updater\Migrations\MigrationIncompleteException throws a MigrationIncompleteException exception if there's still some migration pending
+     */
     public function handleAutomaticUpdates()
     {
         $config = $this['config'];
         $installed = $config->get('concrete.version_db_installed');
         $core = $config->get('concrete.version_db');
         if ($installed < $core) {
-            Update::updateToCurrentVersion();
+            $this->make(MutexInterface::class)->execute(Update::MUTEX_KEY, function () {
+                Update::updateToCurrentVersion();
+            });
         }
     }
 
@@ -285,8 +238,6 @@ class Application extends Container
      */
     public function setupPackages()
     {
-        $checkAfterStart = false;
-
         $config = $this['config'];
 
         $loc = Localization::getInstance();
@@ -299,40 +250,26 @@ class Application extends Container
                 $pkgInstalledVersion = $dbPkg->getPackageVersion();
                 $pkgFileVersion = $pkg->getPackageVersion();
                 if (version_compare($pkgFileVersion, $pkgInstalledVersion, '>')) {
-                    $loc->pushActiveContext('system');
+                    $loc->pushActiveContext(Localization::CONTEXT_SYSTEM);
                     $dbPkg->upgradeCoreData();
                     $dbPkg->upgrade();
                     $loc->popActiveContext();
                 }
             }
-
-            $service = $this->make('Concrete\Core\Package\PackageService');
-            $service->setupLocalization($pkg);
-
+        }
+        $packagesWithOnAfterStart = [];
+        $service = $this->make(PackageService::class);
+        foreach ($this->packages as $pkg) {
             if (method_exists($pkg, 'on_start')) {
                 $pkg->on_start();
             }
-
             $service->bootPackageEntityManager($pkg);
-
             if (method_exists($pkg, 'on_after_packages_start')) {
-                $checkAfterStart = true;
+                $packagesWithOnAfterStart[] = $pkg;
             }
         }
-
-        $config->set('app.bootstrap.packages_loaded', true);
-
-        // After package initialization, the translations adapters need to be
-        // reinitialized when accessed the next time because new translations
-        // are now available.
-        $loc->removeLoadedTranslatorAdapters();
-
-        if ($checkAfterStart) {
-            foreach ($this->packages as $pkg) {
-                if (method_exists($pkg, 'on_after_packages_start')) {
-                    $pkg->on_after_packages_start();
-                }
-            }
+        foreach ($packagesWithOnAfterStart as $pkg) {
+            $pkg->on_after_packages_start();
         }
     }
 
@@ -365,17 +302,14 @@ class Application extends Container
      */
     public function handleURLSlashes(SymfonyRequest $request, Site $site)
     {
-        $siteConfig = $site->getConfigRepository();
-        $trailing_slashes = $siteConfig->get('seo.trailing_slash');
         $path = $request->getPathInfo();
-
         // If this isn't the homepage
         if ($path && $path != '/') {
-
+            $config = $this->make('config');
+            $trailing_slashes = $config->get('concrete.seo.trailing_slash');
             // If the trailing slash doesn't match the config, return a redirect response
             if (($trailing_slashes && substr($path, -1) != '/') ||
                 (!$trailing_slashes && substr($path, -1) == '/')) {
-
                 $parsed_url = Url::createFromUrl($request->getUri(),
                 $trailing_slashes ? Url::TRAILING_SLASHES_ENABLED : Url::TRAILING_SLASHES_DISABLED);
 
@@ -390,7 +324,7 @@ class Application extends Container
     /**
      * If we have redirect to canonical host enabled, we need to honor it here.
      *
-     * @return \Concrete\Core\Routing\RedirectResponse
+     * @return \Concrete\Core\Routing\RedirectResponse|null
      */
     public function handleCanonicalURLRedirection(SymfonyRequest $r, Site $site)
     {
@@ -405,39 +339,34 @@ class Application extends Container
 
             $url = UrlImmutable::createFromUrl($requestUri, $trailingSlash);
 
-            $canonical = UrlImmutable::createFromUrl($siteConfig->get('seo.canonical_url'),
-                (bool) $siteConfig->get('seo.trailing_slash')
-            );
-
-            // Set the parts of the current URL that are specified in the canonical URL, including host,
-            // port, scheme. Set scheme first so that our port can use the magic "set if necessary" method.
-            $new = $url->setScheme($canonical->getScheme()->get());
-            $new = $new->setHost($canonical->getHost()->get());
-            $new = $new->setPort($canonical->getPort()->get());
-
-            // Now we have our current url, swapped out with the important parts of the canonical URL.
-            // If it matches, we're good.
-            if ($new == $url) {
-                return null;
-            }
-
-            // Uh oh, it didn't match. before we redirect to the canonical URL, let's check to see if we have an SSL
-            // URL
-            if ($siteConfig->get('seo.canonical_ssl_url')) {
-                $ssl = UrlImmutable::createFromUrl($siteConfig->get('seo.canonical_ssl_url'));
-
-                $new = $url->setScheme($ssl->getScheme()->get());
-                $new = $new->setHost($ssl->getHost()->get());
-                $new = $new->setPort($ssl->getPort()->get());
-
+            $mainCanonical = null;
+            foreach (['seo.canonical_url', 'seo.canonical_url_alternative'] as $key) {
+                $canonicalUrlString = $siteConfig->get($key);
+                if (!$canonicalUrlString) {
+                    continue;
+                }
+                $canonicalUrl = UrlImmutable::createFromUrl(
+                    $canonicalUrlString,
+                    (bool) $globalConfig->get('concrete.seo.trailing_slash')
+                );
+                // Set the parts of the current URL that are specified in the canonical URL, including host,
+                // scheme, port. Set scheme first so that our port can use the magic "set if necessary" method.
+                $canonical = $url
+                    ->setScheme($canonicalUrl->getScheme()->get())
+                    ->setHost($canonicalUrl->getHost()->get())
+                    ->setPort($canonicalUrl->getPort()->get())
+                ;
                 // Now we have our current url, swapped out with the important parts of the canonical URL.
                 // If it matches, we're good.
-                if ($new == $url) {
+                if ($canonical == $url) {
                     return null;
+                }
+                if ($mainCanonical === null) {
+                    $mainCanonical = $canonical;
                 }
             }
 
-            $response = new RedirectResponse($new, '301');
+            $response = new RedirectResponse($mainCanonical, '301');
 
             return $response;
         }
@@ -462,7 +391,7 @@ class Application extends Container
     /**
      * Detect the application's current environment.
      *
-     * @param  array|string|Callable  $environments
+     * @param  array|string|callable  $environments
      *
      * @return string
      */
@@ -475,7 +404,7 @@ class Application extends Container
             $pos = $pos - 1;
         }
         $home = substr($r->server->get('SCRIPT_NAME'), 0, $pos);
-        $this['app_relative_path'] = rtrim($home, '/');
+        $this['app_relative_path'] = rtrim(str_replace(DIRECTORY_SEPARATOR, '/', $home), '/');
 
         $args = isset($_SERVER['argv']) ? $_SERVER['argv'] : null;
 
@@ -489,11 +418,12 @@ class Application extends Container
      *
      * @param  string $concrete
      * @param  array $parameters
+     *
      * @return mixed
      *
-     * @throws BindingResolutionException
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    public function build($concrete, array $parameters = array())
+    public function build($concrete, array $parameters = [])
     {
         $object = parent::build($concrete, $parameters);
         if (is_object($object) && $object instanceof ApplicationAwareInterface) {
@@ -523,6 +453,26 @@ class Application extends Container
         }
 
         return $runtime;
+    }
+
+    /**
+     * Get the list of registered aliases.
+     *
+     * @return string[]
+     */
+    public function getRegisteredAliases()
+    {
+        return array_keys($this->aliases);
+    }
+
+    /**
+     * Get the list of registered instances.
+     *
+     * @return string[]
+     */
+    public function getRegisteredInstances()
+    {
+        return array_keys($this->instances);
     }
 
     /**

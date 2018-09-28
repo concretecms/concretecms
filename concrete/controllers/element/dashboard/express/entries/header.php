@@ -5,10 +5,10 @@ use Concrete\Core\Controller\ElementController;
 
 class Header extends ElementController
 {
-
     protected $entity;
     protected $page;
     protected $createURL;
+    protected $exportURL;
 
     /**
      * @return mixed
@@ -19,6 +19,14 @@ class Header extends ElementController
     }
 
     /**
+     * @return string
+     */
+    public function getExportURL()
+    {
+        return $this->exportURL;
+    }
+
+    /**
      * @param mixed $createURL
      */
     public function setCreateURL($createURL)
@@ -26,12 +34,24 @@ class Header extends ElementController
         $this->createURL = $createURL;
     }
 
-    public function __construct($entity, $page)
+    /**
+     * @param string $exportURL
+     */
+    public function setExportURL($exportURL)
+    {
+        $this->exportURL = $exportURL;
+    }
+
+    public function __construct($entity, $page = null)
     {
         parent::__construct();
         $this->entity = $entity;
-        $this->page = $page;
-        $this->setCreateURL(\URL::to($page->getCollectionPath(), 'create_entry', $entity->getID()));
+        
+        if ($page != null) {
+            $this->page = $page;
+            $this->setCreateURL(\URL::to($page->getCollectionPath(), 'create_entry', $entity->getID()));
+            $this->setExportURL(\URL::to($page->getCollectionPath(), 'csv_export', $entity->getEntityResultsNodeId()));
+        }
     }
 
     /**
@@ -50,7 +70,6 @@ class Header extends ElementController
         $this->entity = $entity;
     }
 
-
     public function getElement()
     {
         return 'dashboard/express/entries/header';
@@ -60,6 +79,6 @@ class Header extends ElementController
     {
         $this->set('entity', $this->getEntity());
         $this->set('createURL', $this->getCreateURL());
+        $this->set('exportURL', $this->getExportURL());
     }
-
 }

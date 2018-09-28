@@ -1,14 +1,14 @@
 <?php
 namespace Concrete\Core\Permission\Access\Entity;
 
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Database;
 use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use CacheLocal;
 use Core;
 use RuntimeException;
 
-abstract class Entity extends Object
+abstract class Entity extends ConcreteObject
 {
     public function getAccessEntityTypeID()
     {
@@ -57,7 +57,7 @@ abstract class Entity extends Object
     final public static function getByID($peID)
     {
         $obj = CacheLocal::getEntry('permission_access_entity', $peID);
-        if ($obj instanceof PermissionAccessEntity) {
+        if ($obj instanceof self) {
             return $obj;
         }
         $db = Database::connection();

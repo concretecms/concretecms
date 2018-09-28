@@ -21,7 +21,7 @@ concrete5 can also be installed with one click on other web hosts by using Softa
 
 If you want to minimize disk space usage and don't need to use the web interface for update concrete5, you can replace the original concrete directory with a new version, and then upgrade through a particular route.
 
-1. Login as the super user or someone in the Administrators group. You must do this because upgrading a concrete5 site requires that the user attempting to do so have access to the "Upgrade Concrete5" permission. By default this is people in the Administrators group (or the super user.)
+1. Login as the super user or someone in the Administrators group. You must do this because upgrading a concrete5 site requires that the user attempting to do so have access to the "Upgrade concrete5" permission. By default this is people in the Administrators group (or the super user.)
 2. Download the latest core from http://www.concrete5.org/download
 3. Unzip the file.
 4. Replace the concrete directory in the web root with the concrete directory you downloaded.

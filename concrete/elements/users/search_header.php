@@ -10,16 +10,25 @@
                 <input type="text" class="form-control" autocomplete="off" name="uKeywords" placeholder="<?=t('Search')?>">
             </div>
 
-              <span class="input-group-btn">'
+              <span class="input-group-btn">
                 <button class="btn btn-info" type="submit"><i class="fa fa-search"></i></button>
               </span>
         </div>
 
-        <?php if ($showAddButton) { ?>
+        <?php if ($showAddButton) {
+    ?>
         <ul class="ccm-header-search-navigation">
+            <?php if ($canExportUsers): ?>
+                <li>
+                    <a href="<?php echo URL::to('/dashboard/users/search/csv_export')?>" class="link-primary">
+                        <i class="fa fa-download"></i> <?=t('Export to CSV') ?>
+                    </a>
+                </li>
+            <?php endif ?>
             <li><a href="<?php echo View::url('/dashboard/users/add') ?>" class="link-primary"><i class="fa fa-user"></i> <?php echo t("Add User") ?></a></li>
         </ul>
-        <?php } ?>
+        <?php 
+} ?>
 
     </form>
 </div>

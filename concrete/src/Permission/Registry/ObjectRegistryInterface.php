@@ -11,4 +11,9 @@ interface ObjectRegistryInterface extends RegistryInterface
      */
     function getEntries();
 
+    /**
+     * @return EntryInterface[]
+     */
+    function getEntriesToRemove();
+
 }

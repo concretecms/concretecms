@@ -11,10 +11,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	<div class="form-group">
 		<label class="control-label" for="cName"><?=t('Name')?></label>
 		<div>
-			<input type="text" class="form-control" name="cName" id="cName" value="<?php echo $c->getCollectionName()?>">
+			<input type="text" class="form-control" name="cName" id="cName" value="<?php echo h($c->getCollectionName())?>">
     	</div>
 	</div>
-	<?php 
+	<?php
 } ?>
 
 	<?php if ($allowEditPaths && !$c->isGeneratedCollection()) {
@@ -25,27 +25,24 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			<input type="text" class="form-control" name="cHandle" value="<?php echo $c->getCollectionHandle()?>" id="cHandle"><input type="hidden" name="oldCHandle" id="oldCHandle" value="<?php echo $c->getCollectionHandle()?>">
 		</div>
 	</div>
-	<?php 
+	<?php
 } ?>
 
 	<?php foreach ($attributes as $ak) {
+		$av = $c->getAttributeValueObject($ak);
+		$view = $ak->getControlView(new \Concrete\Core\Attribute\Context\ComposerContext());
+		$renderer = $view->getControlRenderer();
+		$view->setValue($av);
+		print $renderer->render();
+
     ?>
-		<?php $av = $c->getAttributeValueObject($ak);
-    ?>
-		<div class="form-group">
-			<label class="control-label"><?=$ak->getAttributeKeyDisplayName()?></label>
-			<div>
-			<?=$ak->render(new \Concrete\Core\Attribute\Context\ComposerContext(), $av);
-    ?>
-			</div>
-		</div>
-	<?php 
+	<?php
 } ?>
 
         <?php if (isset($sitemap) && $sitemap) {
     ?>
             <input type="hidden" name="sitemap" value="1" />
-        <?php 
+        <?php
 } ?>
 
 	</form>

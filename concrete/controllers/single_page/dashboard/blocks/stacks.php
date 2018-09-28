@@ -12,7 +12,7 @@ use Concrete\Core\View\AbstractView;
 use Config;
 use Concrete\Core\Page\Stack\StackList;
 use Doctrine\ORM\EntityManagerInterface;
-use Stack;
+use Concrete\Core\Page\Stack\Stack;
 use Page;
 use Permissions;
 use User;
@@ -24,7 +24,7 @@ use Exception;
 use Redirect;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class Stacks extends DashboardSitePageController
+class Stacks extends DashboardPageController
 {
     public function view_global_areas()
     {
@@ -96,17 +96,21 @@ class Stacks extends DashboardSitePageController
                 $localeCrumbs[] = array(
                     'id' => $neutralStack->getCollectionID(),
                     'active' => $locale === '',
-                    'name' => h(tc('Locale', 'default')),
+                    'name' => '<strong>'.h(tc('Locale', 'default')).'</strong>',
                     'url' => \URL::to('/dashboard/blocks/stacks', 'view_details', $neutralStack->getCollectionID()),
                 );
                 $mif = $this->app->make('multilingual/interface/flag');
                 /* @var \Concrete\Core\Multilingual\Service\UserInterface\Flag $mif */
                 foreach ($sections as $sectionLocale => $section) {
                     /* @var Section $section */
+                    $localizedStackName = $mif->getSectionFlagIcon($section).' '.h($section->getLanguageText());
+                    if ($neutralStack->getLocalizedStack($section) !== null) {
+                        $localizedStackName = '<strong>' . $localizedStackName . '</strong>';
+                    }
                     $localeCrumbs[] = array(
                         'id' => $neutralStack->getCollectionID().'@'.$sectionLocale,
                         'active' => $locale === $sectionLocale,
-                        'name' => $mif->getSectionFlagIcon($section).' '.h($section->getLanguageText()).' <span class="text-muted">'.h($sectionLocale).'</span>',
+                        'name' => $localizedStackName .' <span class="text-muted">'.h($sectionLocale).'</span>',
                         'url' => \URL::to('/dashboard/blocks/stacks', 'view_details', $neutralStack->getCollectionID().rawurlencode('@'.$sectionLocale)),
                     );
                 }
@@ -188,10 +192,10 @@ class Stacks extends DashboardSitePageController
                 $this->set('flashMessage', t('Rename request saved. You must complete the approval workflow before the name will be updated.'));
                 break;
             case 'stack_deleted':
-                $this->set('flashMessage', t('Stack deleted successfully'));
+                $this->flash('success', t('Stack deleted successfully'));
                 break;
             case 'global_area_cleared':
-                $this->set('flashMessage', t('Global area cleared successfully'));
+                $this->flash('success', t('Global area cleared successfully'));
                 break;
             case 'localized_stack_deleted':
                 $this->set('flashMessage', t('Localized version of stack deleted successfully'));
@@ -239,15 +243,16 @@ class Stacks extends DashboardSitePageController
             'name' => t('Stacks & Global Areas'),
             'url' => \URL::to('/dashboard/blocks/stacks'),
         ]];
-        $nav = $this->app->make('helper/navigation');
-        if ($page === null) {
+        if ($this->getTask() == 'view_global_areas' || ($page instanceof Stack && $page->getStackType() == Stack::ST_TYPE_GLOBAL_AREA)) {
             $breadcrumb[] = [
                 'id' => '',
-                'active' => true,
+                'active' => $this->getTask() == 'view_global_areas',
                 'name' => t('Global Areas'),
                 'url' => \URL::to('/dashboard/blocks/stacks', 'view_global_areas'),
             ];
-        } else {
+        }
+        if ($page !== null) {
+            $nav = $this->app->make('helper/navigation');
             $pages = array_reverse($nav->getTrailToCollection($page));
             $pages[] = $page;
             for ($i = 1; $i < count($pages); ++$i) {
@@ -260,21 +265,21 @@ class Stacks extends DashboardSitePageController
                 ];
             }
         }
-
         return $breadcrumb;
     }
 
     protected function deliverStackList(StackList $list)
     {
         $list->setFoldersFirst(true);
-        $list->setSiteTreeObject($this->getSite()->getSiteTreeObject());
+//        $list->setSiteTreeObject($this->getSite()->getSiteTreeObject());
         $this->set('list', $list);
         $this->set('stacks', $list->getResults());
     }
 
     public function view()
     {
-        $parent = Page::getByPath(STACKS_PAGE_PATH, 'RECENT', $this->getSite());
+        //$parent = Page::getByPath(STACKS_PAGE_PATH, 'RECENT', $this->getSite());
+        $parent = Page::getByPath(STACKS_PAGE_PATH);
         $stm = new StackList();
         $stm->filterByParentID($parent->getCollectionID());
         $stm->excludeGlobalAreas();
@@ -380,11 +385,10 @@ class Stacks extends DashboardSitePageController
                 $neutralStack = $s->getNeutralStack();
                 $locale = '';
                 if ($neutralStack === null) {
+                    $nextID = $s->getCollectionParentID();
                     if ($isGlobalArea) {
                         $msg = 'global_area_cleared';
-                        $nextID = $s->getCollectionID();
                     } else {
-                        $nextID = $s->getCollectionParentID();
                         $msg = 'stack_deleted';
                     }
                 } else {
@@ -398,7 +402,7 @@ class Stacks extends DashboardSitePageController
                 if (!$this->error->has()) {
                     $sps = new Permissions($s);
                     if ($sps->canDeletePage()) {
-                        $u = new User();
+                        $u = new \User();
                         $pkr = new DeletePageRequest();
                         $pkr->setRequestedPage($s);
                         $pkr->setRequesterUserID($u->getUserID());

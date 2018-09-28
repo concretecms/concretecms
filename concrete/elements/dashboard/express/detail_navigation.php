@@ -53,7 +53,7 @@ $c = Page::getCurrentPage();
             href="<?=URL::to('/dashboard/express/entries', $entity->getId())?>"
         >
             <i class="fa fa-share pull-right" style="margin-top: 4px"></i>
-            <?=tc(/*i18n: %s is an entity name*/'Express', 'View %s Entries', $entity->getName())?>
+            <?=tc(/*i18n: %s is an entity name*/'Express', 'View %s Entries', $entity->getEntityDisplayName())?>
         </a>
     </div>
 </div>

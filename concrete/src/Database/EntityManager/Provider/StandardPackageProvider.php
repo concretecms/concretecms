@@ -41,7 +41,7 @@ class StandardPackageProvider extends AbstractPackageProvider
         $reader = $this->getAnnotationReader();
         foreach($this->locations as $path => $prefix) {
             $drivers[] = new Driver(trim($prefix, '\\'),
-                new AnnotationDriver($reader, $this->pkg->getPackagePath() . DIRECTORY_SEPARATOR . $path));
+                new AnnotationDriver($reader, $this->pkg->getPackagePath() . '/' . $path));
         }
         return $drivers;
     }

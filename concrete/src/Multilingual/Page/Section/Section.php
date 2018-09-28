@@ -96,9 +96,26 @@ class Section extends Page
         if (!$item->isMiss()) {
             $returnID = $item->get();
         } else {
+
             $item->lock();
-            $tree = $page->getSiteTreeObject();
+
             $returnID = false;
+
+            if ($page->isPageDraft()) {
+                $tree = false;
+                if ($page->getPageDraftTargetParentPageID()) {
+                    $cParentID = $page->getPageDraftTargetParentPageID();
+                    if ($cParentID) {
+                        $parent = Page::getByID($cParentID);
+                        $tree = $parent->getSiteTreeObject();
+                    }
+                }
+            }
+
+            if (!isset($tree)) {
+                $tree = $page->getSiteTreeObject();
+            }
+
             if ($tree instanceof SiteTree) {
                 $returnID = $tree->getSiteHomePageID();
             }
@@ -311,9 +328,7 @@ class Section extends Page
                 }
             }
 
-            $v = [$mpRelationID, $newPage->getCollectionID(), $ms->getLocale()];
-
-            if (!$isNew) {
+            if ($isNew) {
                 $cID = self::getCollectionIDForLocale($mpRelationID, $ms->getLocale());
 
                 if ($cID > 0) {
@@ -324,7 +339,12 @@ class Section extends Page
                 }
             }
 
-            $v[] = $ms->getLanguage();
+            $v = [
+                $mpRelationID,
+                $newPage->getCollectionID(),
+                $ms->getLocale(),
+                $ms->getLanguage()
+            ];
 
             $db->Execute('insert into MultilingualPageRelations (mpRelationID, cID, mpLocale, mpLanguage) values (?, ?, ?, ?)', $v);
 
@@ -339,10 +359,10 @@ class Section extends Page
      *
      * @return Section|false
      */
-    public static function getByLanguage($language, TreeInterface $treeInterface = null)
+    public static function getByLanguage($language, Site $site = null)
     {
-        if (!is_object($treeInterface)) {
-            $treeInterface = \Site::getSite();
+        if (!$site) {
+            $site = \Core::make('site')->getSite();
         }
 
         $em = Database::get()->getEntityManager();
@@ -350,7 +370,7 @@ class Section extends Page
          * @var $section Locale
          */
         $section = $em->getRepository('Concrete\Core\Entity\Site\Locale')
-            ->findOneBy(['tree' => $treeInterface->getSiteTreeObject(), 'msLanguage' => $language]);
+            ->findOneBy(['site' => $site, 'msLanguage' => $language]);
 
         if (is_object($section)) {
             $obj = parent::getByID($section->getSiteTree()->getSiteHomePageID(), 'RECENT');
@@ -451,12 +471,18 @@ class Section extends Page
 
     public static function unregisterPage($page)
     {
+        if ($page->isAlias()) {
+            return;
+        }
         $db = Database::get();
         $db->Execute('delete from MultilingualPageRelations where cID = ?', [$page->getCollectionID()]);
     }
 
     public static function registerPage($page)
     {
+        if ($page->isAlias()) {
+            return;
+        }
         if (\Core::make('multilingual/detector')->isEnabled()) {
             $db = Database::get();
             $ms = static::getBySectionOfSite($page);
@@ -492,6 +518,10 @@ class Section extends Page
 
     public static function registerMove($page, $oldParent, $newParent)
     {
+        if ($page->isAlias()) {
+            return;
+        }
+
         if (static::isMultilingualSection($newParent)) {
             $ms = static::getByID($newParent->getCollectionID());
         } else {

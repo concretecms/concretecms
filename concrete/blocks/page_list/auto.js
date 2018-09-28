@@ -158,3 +158,9 @@ Concrete.event.bind('SitemapSelectPage', function(event) {
         pageList.loadPreview();
     });
 });
+Concrete.event.bind('pagelist.topictree.select', function() {
+  _.defer(function() {
+    pageList.loadPreview();
+  });
+});
+

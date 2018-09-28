@@ -30,9 +30,12 @@ defined('C5_EXECUTE') or die('Access Denied.');
             </label>
             <div>
                 <?php if (!$dbTimezoneOk) { ?>
-                    <div class="text-warning"><i class="fa fa-warning"></i>
+                    <p class="text-warning"><i class="fa fa-warning"></i>
                         <?= $dbDeltaDescription ?>
-                    </div>
+                    </p>
+                    <p>
+                        <a href="#" id="user-timezone-autofix" class="btn btn-warning btn-sm"><?=t('Fix PHP timezone')?></a>
+                    </p>
                 <?php } else { ?>
                     <div class="text-success"><i class="fa fa-check"></i>
                         <?=t('Success. These time zone values match.')?>
@@ -49,16 +52,22 @@ defined('C5_EXECUTE') or die('Access Denied.');
             ) ?>">
                 <?php echo t('Default Timezone') ?>
             </label>
-            <select class="form-control" name="timezone">
+            <select name="timezone">
                 <?php
                 foreach ($timezones as $areaName => $namedTimezones) {
                     ?>
                     <optgroup label="<?= h($areaName) ?>">
                         <?php
                         foreach ($namedTimezones as $tzID => $tzName) {
+
+                            $zone = new DateTimeZone($tzID);
+                            $zoneName = Punic\Calendar::getTimezoneNameNoLocationSpecific($zone);
+                            if ($zoneName) {
+                                $zoneName = '(' .$zoneName . ')';
+                            }
                             ?>
                             <option value="<?= h($tzID) ?>"<?= strcasecmp($tzID, $timezone) === 0 ? ' selected="selected"' : '' ?>>
-                                <?= h($tzName) ?>
+                                <?= h($tzName) ?> <?=$zoneName?>
                             </option>
                             <?php
                         } ?>
@@ -67,6 +76,11 @@ defined('C5_EXECUTE') or die('Access Denied.');
                 }
                 ?>
             </select>
+            <script type="text/javascript">
+                $(function() {
+                    $('select[name=timezone]').selectize();
+                });
+            </script>
         </div>
         <div class="form-group">
             <label class="control-label">
@@ -91,3 +105,44 @@ defined('C5_EXECUTE') or die('Access Denied.');
     </div>
 
 </form>
+<?php
+if (isset($compatibleTimezones) && !empty($compatibleTimezones)) {
+    ?>
+    <div id="user-timezone-autofix-dialog" style="display: none" class="ccm-ui" title="<?=t('Select time zone')?>">
+        <form method="POST" action="<?= $view->action('setSystemTimezone') ?>" class="ccm-ui" id="user-timezone-autofix-form">
+            <?php $token->output('set_system_timezone') ?>
+            <div class="form-group">
+                <select class="form-control" size="15" name="new-timezone">
+                    <?php
+                    foreach ($compatibleTimezones as $timezoneID => $timezoneName) {
+                        ?><option value="<?=h($timezoneID)?>"><?=h($timezoneName)?></option><?php
+                    }
+                    ?>
+                </select>
+            </div>
+        </form>
+        <div class="dialog-buttons">
+            <button type="button" onclick="jQuery.fn.dialog.closeTop()" class="btn btn-default pull-left"><?=t('Cancel')?></button>
+            <button type="button" onclick="$('#user-timezone-autofix-form').submit()" class="btn btn-primary pull-right"><?=t('Save')?></button>
+        </div>
+    </div>
+    <?php
+}
+?>
+<script>
+$(document).ready(function() {
+    $('#user-timezone-autofix').on('click', function(e) {
+        e.preventDefault();
+        var $dlg = $('#user-timezone-autofix-dialog');
+        if ($dlg.length === 0) {
+            window.alert(<?=json_encode("No PHP compatible time zone is compatible with the database time zone.\nYou should change the database default timezone.")?>);
+            return;
+        }
+        jQuery.fn.dialog.open({
+            element: $dlg,
+            resizable: false,
+            height: 370
+        });
+    });
+});
+</script>

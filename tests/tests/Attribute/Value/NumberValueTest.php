@@ -1,17 +1,21 @@
 <?php
 
-class NumberValueTest extends \AttributeValueTestCase
+namespace Concrete\Tests\Attribute\Value;
+
+use Concrete\TestHelpers\Attribute\AttributeValueTestCase;
+
+class NumberValueTest extends AttributeValueTestCase
 {
-
-    protected function setUp()
+    public function __construct($name = null, array $data = [], $dataName = '')
     {
-        $this->tables = array_merge($this->tables, array());
+        parent::__construct($name, $data, $dataName);
 
-        $this->metadatas = array_merge($this->metadatas, array(
+        $this->tables = array_merge($this->tables, []);
+
+        $this->metadatas = array_merge($this->metadatas, [
             'Concrete\Core\Entity\Attribute\Key\Settings\EmptySettings',
             'Concrete\Core\Entity\Attribute\Value\Value\NumberValue',
-        ));
-        parent::setUp();
+        ]);
     }
 
     public function getAttributeKeyHandle()
@@ -46,52 +50,49 @@ class NumberValueTest extends \AttributeValueTestCase
 
     public function baseAttributeValues()
     {
-        return array(
-            array(
+        return [
+            [
                 5,
                 5,
-            ),
-            array(
+            ],
+            [
                 12.5,
-                12.5
-            ),
-            array(
+                12.5,
+            ],
+            [
                 12.505,
-                12.505
-            )
-        );
+                12.505,
+            ],
+        ];
     }
 
     public function displayAttributeValues()
     {
-        return array(
-            array(
+        return [
+            [
                 5,
-                5
-            )
-        );
+                5,
+            ],
+        ];
     }
 
     public function plaintextAttributeValues()
     {
-        return array(
-            array(
+        return [
+            [
                 5,
                 5,
-            )
-        );
+            ],
+        ];
     }
 
     public function searchIndexAttributeValues()
     {
-        return array(
-            array(
+        return [
+            [
                 5,
                 5,
-            )
-        );
+            ],
+        ];
     }
-
-
-
 }

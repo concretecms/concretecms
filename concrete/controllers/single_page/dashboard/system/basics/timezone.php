@@ -1,64 +1,56 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\System\Basics;
 
-use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Database\Connection\Connection;
-use DateTime;
+use Concrete\Core\Database\Connection\Timezone as ConnectionTimezone;
+use Concrete\Core\Page\Controller\DashboardSitePageController;
+use DateTimeZone;
+use Exception;
 
-class Timezone extends DashboardPageController
+class Timezone extends DashboardSitePageController
 {
+    /**
+     * @var ConnectionTimezone|null
+     */
+    private $connectionTimezone;
+
+    /**
+     * @return ConnectionTimezone
+     */
+    protected function getConnectionTimezone()
+    {
+        if ($this->connectionTimezone === null) {
+            $this->connectionTimezone = $this->app->make(ConnectionTimezone::class);
+        }
+
+        return $this->connectionTimezone;
+    }
+
     public function view()
     {
-        $dh = $this->app->make('helper/date');
+        $this->requireAsset('selectize');
+        $dh = $this->app->make('date');
+        $siteConfig = $this->getSite()->getConfigRepository();
         $config = $this->app->make('config');
         $this->set('user_timezones', $config->get('concrete.misc.user_timezones'));
-        $this->set('timezone', $config->get('app.timezone'));
+        $this->set('timezone', $siteConfig->get('timezone'));
         $this->set('timezones', $dh->getGroupedTimezones());
         $phpTimezone = $config->get('app.server_timezone');
         $this->set('serverTimezonePHP', $dh->getTimezoneName($phpTimezone));
-        $deltaError = null;
+
+        $ctz = $this->getConnectionTimezone();
+
         $db = $this->app->make(Connection::class);
-        /* @var Connection $db */
-        $this->set('serverTimezoneDB', $db->fetchColumn('select @@time_zone'));
-        $tsNow = time();
-        $ts180Days = $tsNow + 180 * 24 * 60 * 60;
-        $rs = $db->executeQuery("select FROM_UNIXTIME($tsNow) as d0, FROM_UNIXTIME($ts180Days) as d1");
-        $row = $rs->fetch();
-        $rs->closeCursor();
-        $dbNow = new DateTime($row['d0']);
-        $db180Days = new DateTime($row['d1']);
-        $phpNow = DateTime::createFromFormat('U', $tsNow);
-        $php180Days = DateTime::createFromFormat('U', $ts180Days);
-        $delta = (int) floor(($phpNow->getTimestamp() - $dbNow->getTimestamp()) / 60);
-        if ($delta !== 0) {
-            $interval = $dh->describeInterval(60 * abs($delta), true);
-            if ($delta > 0) {
-                $deltaError = t(/*i18n: %s is an interval, like "3 hours and 30 minutes"*/'The database timezone has times greater by %s compared to the PHP timezone.', $interval);
-            } else {
-                $deltaError = t(/*i18n: %s is an interval, like "3 hours and 30 minutes"*/'The database timezone has times smaller by %s compared to the PHP timezone.', $interval);
-            }
-        } else {
-            $delta = (int) floor(($php180Days->getTimestamp() - $db180Days->getTimestamp()) / 60);
-            if ($delta !== 0) {
-                $interval = $dh->describeInterval(60 * abs($delta), true);
-                $deltaError = t(/*i18n: %s is an interval, like "3 hours and 30 minutes"*/'The way PHP and database handle daylight saving times differs by %s.', $interval);
-            }
-        }
+        $this->set('serverTimezoneDB', $ctz->getDatabaseTimezoneName());
+        $deltaError = $ctz->getDeltaTimezone($phpTimezone);
         if ($deltaError === null) {
             $this->set('dbTimezoneOk', true);
         } else {
+            $deltaError = $ctz->describeDeltaTimezone($deltaError);
             $this->set('dbTimezoneOk', false);
             $this->set('dbDeltaDescription', $deltaError);
+            $this->set('compatibleTimezones', $ctz->getCompatibleTimezones());
         }
-    }
-
-    protected function describeDeltaMinutes($delta)
-    {
-        $negative = ($delta < 0) ? true : false;
-        $dh = $this->app->make('helper/date');
-        $interval = $dh->describeInterval(60 * abs($delta));
-
-        return $interval;
     }
 
     public function update()
@@ -66,6 +58,7 @@ class Timezone extends DashboardPageController
         if ($this->token->validate('update_timezone')) {
             if ($this->request->isPost()) {
                 $config = $this->app->make('config');
+                $siteConfig = $this->getSite()->getConfigRepository();
                 $oldValue = $config->get('concrete.misc.user_timezones') ? true : false;
                 $newValue = $this->request->request->get('user_timezones') ? true : false;
                 $messages = [];
@@ -73,10 +66,10 @@ class Timezone extends DashboardPageController
                     $config->save('concrete.misc.user_timezones', $newValue);
                     $messages[] = $newValue ? t('User time zones have been enabled') : t('User time zones have been disabled.');
                 }
-                $oldValue = (string) $config->get('app.timezone');
+                $oldValue = (string) $siteConfig->get('timezone');
                 $newValue = $this->request->request->get('timezone');
                 if (is_string($newValue) && strcasecmp($newValue, $oldValue) !== 0) {
-                    $config->save('app.timezone', $newValue);
+                    $siteConfig->save('timezone', $newValue);
                     $messages[] .= t('Default application timezone has been updated.');
                 }
                 if (!empty($messages)) {
@@ -87,6 +80,33 @@ class Timezone extends DashboardPageController
         } else {
             $this->error->add($this->token->getErrorMessage());
             $this->view();
+        }
+    }
+
+    public function setSystemTimezone()
+    {
+        if ($this->token->validate('set_system_timezone')) {
+            $timezoneName = $this->post('new-timezone');
+            $timezone = null;
+            if (is_string($timezoneName) && $timezoneName !== '') {
+                try {
+                    $timezone = new DateTimeZone($timezoneName);
+                } catch (Exception $x) {
+                }
+            }
+            if ($timezone === null) {
+                $this->error->add(t('Invalid time zone specified.'));
+            } else {
+                $this->app->make('config')->save('app.server_timezone', $timezoneName);
+            }
+        } else {
+            $this->error->add($this->token->getErrorMessage());
+        }
+        if ($this->error->has()) {
+            $this->view();
+        } else {
+            $this->flash('message', t('The system PHP time zone has been updated.'));
+            $this->redirect($this->action(''));
         }
     }
 }

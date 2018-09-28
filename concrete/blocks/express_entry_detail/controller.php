@@ -6,6 +6,10 @@ use Concrete\Core\Attribute\Key\CollectionKey;
 use \Concrete\Core\Block\BlockController;
 use Concrete\Core\Express\Entry\Search\Result\Result;
 use Concrete\Core\Express\EntryList;
+use Concrete\Core\Express\Form\Context\FrontendViewContext;
+use Concrete\Core\Express\Form\Renderer;
+use Concrete\Core\Form\Context\ContextFactory;
+use Concrete\Core\Html\Service\Seo;
 use Concrete\Core\Search\Result\ItemColumn;
 use Concrete\Core\Support\Facade\Express;
 use Concrete\Core\Support\Facade\Facade;
@@ -63,12 +67,14 @@ class Controller extends BlockController
     public function view()
     {
         $c = \Page::getCurrentPage();
+        $entity = null;
         if ($this->entryMode == 'A') {
             $ak = CollectionKey::getByHandle($this->exEntryAttributeKeyHandle);
             if (is_object($ak)) {
                 $settings = $ak->getAttributeKeySettings();
                 $value = $c->getAttribute($ak);
                 if (is_object($settings)) {
+                    $entity = $settings->getEntity();
                     $this->set('entity', $settings->getEntity());
                 }
                 if (is_object($value)) {
@@ -87,8 +93,19 @@ class Controller extends BlockController
             }
         }
         $form = $this->entityManager->find('Concrete\Core\Entity\Express\Form', $this->exFormID);
-        $renderer = $this->app->make('Concrete\Core\Express\Form\StandardViewRenderer', ['form' => $form]);
-        $this->set('renderer', $renderer);
+
+        if ($form) {
+            $express = \Core::make('express');
+            $controller = $express->getEntityController($entity);
+            $factory = new ContextFactory($controller);
+            $context = $factory->getContext(new FrontendViewContext());
+            $renderer = new Renderer(
+                $context,
+                $form
+            );
+
+            $this->set('renderer', $renderer);
+        }
 
     }
 
@@ -98,6 +115,9 @@ class Controller extends BlockController
         if (is_object($entry)) {
             $entity = $this->entityManager->find('Concrete\Core\Entity\Express\Entity', $this->exEntityID);
             if ($entry->getEntity()->getID() == $entity->getID()) {
+                /** @var Seo $seo */
+                $seo = $this->app->make('helper/seo');
+                $seo->addTitleSegmentBefore($entry->getLabel());
                 $this->set('entry', $entry);
                 $this->view();
             }
@@ -136,9 +156,10 @@ class Controller extends BlockController
         $entityObjects = $r->findAll();
         $entities = array('' => t("** Choose Entity"));
         foreach($entityObjects as $entity) {
-            $entities[$entity->getID()] = $entity->getName();
+            $entities[$entity->getID()] = $entity->getEntityDisplayName();
         }
         $this->set('entities', $entities);
+        $attributeKeys = [];
         $keys = CollectionKey::getList();
         foreach ($keys as $ak) {
             if ($ak->getAttributeTypeHandle() == 'express') {

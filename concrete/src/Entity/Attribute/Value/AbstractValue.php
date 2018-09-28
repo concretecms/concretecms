@@ -2,7 +2,9 @@
 namespace Concrete\Core\Entity\Attribute\Value;
 
 use Concrete\Core\Attribute\AttributeValueInterface;
+use Concrete\Core\Attribute\View;
 use Concrete\Core\Entity\Attribute\Key\Key;
+use Concrete\Core\Form\Control\ValueInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -25,6 +27,21 @@ abstract class AbstractValue implements AttributeValueInterface
     protected $generic_value;
 
     /**
+     * This is NOT an ORM association. It is a pointer to the attributevalue
+     * object that is retrieved via the generic_value join column above.
+     * We would normally just join these things via Doctrine but it is
+     * prohibitively expensive in terms of speed. So we use the generic value
+     * Unfortunately sometimes you need to set these attribute values
+     * at runtime for something like a preview operation, but you're not
+     * actually saving attributes against an object. So you won't have a
+     * generic value to retrieve this value against. So we make it possible
+     * to set this via runtime. Do NOT set this if you are trying to actually
+     * persist the attribute value object.
+     * @var \Concrete\Core\Entity\Attribute\Value\Value\AbstractValue
+     */
+    protected $attribute_value;
+
+    /**
      * @return Key
      */
     public function getAttributeKey()
@@ -45,6 +62,12 @@ abstract class AbstractValue implements AttributeValueInterface
         $this->attribute_key = $attribute_key;
     }
 
+
+    public function setAttributeValueObject($attributeValueObject)
+    {
+        $this->attribute_value = $attributeValueObject;
+    }
+
     public function getAttributeTypeObject()
     {
         return $this->getAttributeKey()->getAttributeType();
@@ -58,11 +81,20 @@ abstract class AbstractValue implements AttributeValueInterface
         return $controller;
     }
 
+    public function __destruct()
+    {
+        unset($this->attribute_key);
+    }
+
     /**
      * @return \Concrete\Core\Entity\Attribute\Value\Value\Value
      */
     final public function getValueObject()
     {
+        if (isset($this->attribute_value)) {
+            return $this->attribute_value;
+        }
+
         if ($this->generic_value) {
             return $this->getController()->getAttributeValueObject();
         }
@@ -70,7 +102,7 @@ abstract class AbstractValue implements AttributeValueInterface
 
     public function getValue($mode = false)
     {
-        if (!is_object($this->generic_value)) {
+        if (!is_object($this->generic_value) && !isset($this->attribute_value)) {
             return null;
         }
 
@@ -94,7 +126,6 @@ abstract class AbstractValue implements AttributeValueInterface
         if (is_object($value)) {
             return $value->getValue();
         }
-
     }
 
     /**
@@ -142,7 +173,11 @@ abstract class AbstractValue implements AttributeValueInterface
         }
 
         // Legacy support.
-        return $controller->getValue();
+        if (method_exists($controller, 'getValue')) {
+            return $controller->getValue();
+        }
+
+        return '';
     }
 
     /**

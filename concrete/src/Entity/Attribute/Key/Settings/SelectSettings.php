@@ -51,9 +51,19 @@ class SelectSettings extends Settings
     protected $akSelectAllowOtherValues = false;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $akHideNoneOption = false;
+
+    /**
      * @ORM\Column(type="string")
      */
     protected $akSelectOptionDisplayOrder = 'display_asc';
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $akDisplayMultipleValuesOnSelect = false;
 
     /**
      * @return mixed
@@ -80,6 +90,22 @@ class SelectSettings extends Settings
     }
 
     /**
+     * @param bool $akHideNoneOption
+     */
+    public function setHideNoneOption($akHideNoneOption)
+    {
+        $this->akHideNoneOption = $akHideNoneOption;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHideNoneOption()
+    {
+        return $this->akHideNoneOption;
+    }
+
+    /**
      * @param mixed $allowOtherValues
      */
     public function setAllowOtherValues($allowOtherValues)
@@ -101,6 +127,22 @@ class SelectSettings extends Settings
     public function setDisplayOrder($displayOrder)
     {
         $this->akSelectOptionDisplayOrder = $displayOrder;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDisplayMultipleValuesOnSelect()
+    {
+        return $this->akDisplayMultipleValuesOnSelect;
+    }
+
+    /**
+     * @param mixed $displayMultipleValuesOnSelect
+     */
+    public function setDisplayMultipleValuesOnSelect($displayMultipleValuesOnSelect)
+    {
+        $this->akDisplayMultipleValuesOnSelect = $displayMultipleValuesOnSelect;
     }
 
     public function mergeAndPersist(EntityManagerInterface $entityManager)

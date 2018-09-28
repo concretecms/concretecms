@@ -14,13 +14,13 @@
     <?php View::element('dashboard/express/detail_navigation', array('entity' => $entity))?>
     <div class="col-md-8">
         <h3><?=t('Name')?></h3>
-        <p><?=$entity->getName()?></p>
+        <p><?=$entity->getEntityDisplayName()?></p>
 
         <h3><?=t('Handle')?></h3>
         <p><?=$entity->getHandle()?></p>
 
         <h3><?=t('Description')?></h3>
-        <p><?=$entity->getDescription()?></p>
+        <p><?=$entity->getEntityDisplayDescription()?></p>
 
         <?php if ($owned_by = $entity->getOwnedBy()) { ?>
             <h3><?=t('Owned By')?></h3>

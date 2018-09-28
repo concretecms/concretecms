@@ -1,17 +1,20 @@
 <?php
 namespace Concrete\Core\Authentication\Type\OAuth;
 
-use Concrete\Core\Authentication\AuthenticationTypeController;
 use Concrete\Core\Authentication\AuthenticationType;
+use Concrete\Core\Authentication\AuthenticationTypeController;
+use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\User\User;
 use OAuth\Common\Exception\Exception;
 use OAuth\Common\Service\AbstractService;
 use OAuth\Common\Token\TokenInterface;
 use OAuth\UserData\Extractor\Extractor;
-use Concrete\Core\User\User;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Concrete\Core\Validation\CSRF\Token;
 
 abstract class GenericOauthTypeController extends AuthenticationTypeController
 {
-    public $apiMethods = array('handle_error', 'handle_success');
+    public $apiMethods = ['handle_error', 'handle_success', 'handle_register'];
 
     /**
      * @var \OAuth\Common\Service\AbstractService
@@ -28,20 +31,32 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
      */
     protected $token;
 
+
+    /* @var string $username */
+    protected $username;
+    /* @var string $email */
+    protected $email;
+    /* @var string $firstName */
+    protected $firstName;
+    /* @var string $lastName */
+    protected $lastName;
+    /* @var string $fullName */
+    protected $fullName;
+
     public function __construct(AuthenticationType $type = null)
     {
         parent::__construct($type);
-        $manager = \Database::connection()->getSchemaManager();
+        $manager = $this->app->make(Connection::class)->getSchemaManager();
 
         if (!$manager->tablesExist('OauthUserMap')) {
             $schema = new \Doctrine\DBAL\Schema\Schema();
             $table = $schema->createTable('OauthUserMap');
-            $table->addColumn('user_id', 'integer', array('unsigned' => true));
-            $table->addColumn('binding', 'string', array('length' => 255));
-            $table->addColumn('namespace', 'string', array('length' => 255));
+            $table->addColumn('user_id', 'integer', ['unsigned' => true]);
+            $table->addColumn('binding', 'string', ['length' => 255]);
+            $table->addColumn('namespace', 'string', ['length' => 255]);
 
-            $table->setPrimaryKey(array('user_id', 'namespace'));
-            $table->addUniqueIndex(array('binding', 'namespace'), 'oauth_binding');
+            $table->setPrimaryKey(['user_id', 'namespace']);
+            $table->addUniqueIndex(['binding', 'namespace'], 'oauth_binding');
 
             $manager->createTable($table);
         }
@@ -52,14 +67,14 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
      */
     public function getAdditionalRequestParameters()
     {
-        return array();
+        return [];
     }
 
     public function handle_error($error = false)
     {
         if (!$error) {
-            $error = \Session::get('oauth_last_error');
-            \Session::set('oauth_last_error', null);
+            $error = $this->app->make('session')->get('oauth_last_error');
+            $this->app->make('session')->set('oauth_last_error', null);
         }
         if (!$error) {
             $error = 'An unexpected error occurred.';
@@ -78,14 +93,14 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
 
     public function markError($error)
     {
-        \Session::set('oauth_last_error', $error);
+        $this->app->make('session')->set('oauth_last_error', $error);
     }
 
     public function handle_success($message = false)
     {
         if (!$message) {
-            $message = \Session::get('oauth_last_message');
-            \Session::set('oauth_last_message', null);
+            $message = $this->app->make('session')->get('oauth_last_message');
+            $this->app->make('session')->set('oauth_last_message', null);
         }
         if ($message) {
             $this->set('message', $message);
@@ -102,7 +117,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
 
     public function markSuccess($message)
     {
-        \Session::set('oauth_last_message', $message);
+        $this->app->make('session')->set('oauth_last_message', $message);
     }
 
     /**
@@ -127,7 +142,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
     /**
      * Hash authentication disabled for oauth.
      *
-     * @param User  $u    object requesting verification.
+     * @param User  $u    object requesting verification
      * @param string $hash
      *
      * @return bool returns true if the hash is valid, false if not
@@ -154,6 +169,8 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
     }
 
     /**
+     * We now check if the user allows access to email address as twitter does not provide this and users can deny access to  on facebook).
+     *
      * @return null|\User
      *
      * @throws Exception
@@ -170,7 +187,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
         $user_id = $this->getBoundUserID($extractor->getUniqueId());
 
         if ($user_id && $user_id > 0) {
-            $user = \User::loginByUserID($user_id);
+            $user = User::loginByUserID($user_id);
             if ($user && !$user->isError()) {
                 return $user;
             }
@@ -178,18 +195,74 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
 
         if ($extractor->supportsEmail() && $user = \UserInfo::getByEmail($extractor->getEmail())) {
             if ($user && !$user->isError()) {
-                throw new Exception(
-                    'A user account already exists for this email, please log in and attach from your account page.');
+                throw new Exception('A user account already exists for this email, please log in and attach from your account page.');
             }
         }
 
         if ($this->supportsRegistration()) {
-            $user = $this->createUser();
+            if ($extractor->getEmail() === null || empty($extractor->getEmail())) {
 
-            return $user;
+                /** @var FlashBagInterface $flashbag */
+                $flashbag = $this->app->make('session')->getFlashBag();
+                if ($this->supportsFullName()) {
+                    $flashbag->set('fullName', $this->getFullName());
+                } else {
+                    $flashbag->set('firstName', $this->getFirstName());
+                    $flashbag->set('lastName', $this->getLastName());
+                }
+                $flashbag->set('username', $this->getUsername());
+                $flashbag->set('token', $this->getToken());
+
+
+                $response = \Redirect::to('/login/callback/' . $this->getHandle() . '/handle_register/', id(new Token())->generate($this->getHandle() . '_register'));
+                $response->send();
+                exit;
+
+            } else {
+                $user = $this->createUser();
+
+                return $user;
+            }
         }
 
         return null;
+    }
+
+    public function handle_register($token = null)
+    {
+
+        /** @var FlashBagInterface $flashbag */
+        $flashbag = $this->app->make('session')->getFlashBag();
+        if ($this->supportsFullName()) {
+            $this->fullName = array_shift($flashbag->peek('fullName'));
+        } else {
+            $this->firstName = array_shift($flashbag->peek('firstName'));
+            $this->lastName = array_shift($flashbag->peek('lastName'));
+        }
+        $this->username = array_shift($flashbag->peek('username'));
+        $this->token = array_shift($flashbag->peek('token'));
+
+        $token_helper = new Token();
+
+        if (!$token_helper->validate($this->getHandle().'_register', $token) && !$token_helper->validate($this->getHandle().'_register') ||
+            !$this->token) {
+            $this->redirect('/login/');
+            exit;
+        }
+        if (\Request::request('uEmail', false)) {
+            $this->email = \Request::request('uEmail');
+
+            $user = $this->createUser();
+            if ($user && !$user->isError()) {
+                return $this->completeAuthentication($user);
+            }
+        }
+        if ($this->supportsFullName()) {
+            $this->set('fullName', $this->fullName);
+        }
+        $this->set('token', $token_helper);
+        $this->set('username', $this->username);
+        $this->set('show_email', true);
     }
 
     /**
@@ -200,10 +273,16 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
     public function getExtractor($new = false)
     {
         if ($new || !$this->extractor) {
-            $this->extractor = \Core::make('oauth_extractor', array($this->getService()));
+            $this->extractor = $this->app->make('oauth_extractor', [$this->getService()]);
         }
 
         return $this->extractor;
+    }
+
+    public function form()
+    {
+        $this->set('user', new User());
+        $this->set('authenticationType', $this->getAuthenticationType());
     }
 
     /**
@@ -225,12 +304,12 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
      */
     public function getBoundUserID($binding)
     {
-        $result = \Database::connection()->executeQuery(
+        $result = $this->app->make(Connection::class)->executeQuery(
             'SELECT user_id FROM OauthUserMap WHERE namespace=? AND binding=?',
-            array(
+            [
                 $this->getHandle(),
                 $binding,
-            ));
+            ]);
 
         return $result->fetchColumn();
     }
@@ -266,14 +345,14 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
             throw new Exception('Email is already in use.');
         }
 
-        $first_name = "";
-        $last_name = "";
+        $first_name = '';
+        $last_name = '';
 
-        $name_support = array(
+        $name_support = [
             'full' => $this->supportsFullName(),
             'first' => $this->supportsFirstName(),
             'last' => $this->supportsLastName(),
-        );
+        ];
 
         if ($name_support['first'] && $name_support['last']) {
             $first_name = $this->getFirstName();
@@ -286,38 +365,21 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
             $last_name = strrev($reversed_last_name);
         }
 
+        $userRegistration = $this->app->make('user/registration');
+
         $username = null;
         if ($this->supportsUsername()) {
             $username = $this->getUsername();
         }
+        $username = $userRegistration->getNewUsernameFromUserDetails($email, $username, $first_name, $last_name);
 
-        if ($username === null) {
-            if ($first_name || $last_name) {
-                $username = preg_replace('/[^a-z0-9\_]/', '_', strtolower($first_name . ' ' . $last_name));
-                $username = trim(preg_replace('/_{2,}/', '_', $username), '_');
-            } else {
-                $username = preg_replace('/[^a-zA-Z0-9\_]/i', '_', strtolower(substr($email, 0, strpos($email, '@'))));
-                $username = trim(preg_replace('/_{2,}/', '_', $username), '_');
-            }
-        }
-
-        $unique_username = $username;
-        $append = 1;
-
-        while (\UserInfo::getByUserName($unique_username)) {
-            // This is a heavy handed way to do this, but it must be done.
-            $unique_username = $username . '_' . $append++;
-        }
-
-        $username = $unique_username;
-
-        $data = array();
+        $data = [];
         $data['uName'] = $username;
         $data['uPassword'] = \Illuminate\Support\Str::random(256);
         $data['uEmail'] = $email;
         $data['uIsValidated'] = 1;
 
-        $user_info = \UserInfo::add($data);
+        $user_info = $userRegistration->create($data);
 
         if (!$user_info) {
             throw new Exception('Unable to create new account.');
@@ -326,9 +388,14 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
         if ($group_id = intval($this->registrationGroupID(), 10)) {
             $group = \Group::getByID($group_id);
             if ($group && is_object($group) && !$group->isError()) {
-                $user = \User::getByUserID($user_info->getUserID());
+                $user = User::getByUserID($user_info->getUserID());
                 $user->enterGroup($group);
             }
+        }
+
+        $attribs = \UserAttributeKey::getRegistrationList();
+        if (!empty($attribs)) {
+            $user_info->saveUserAttributesDefault($attribs);
         }
 
         $key = \UserAttributeKey::getByHandle('first_name');
@@ -341,9 +408,9 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
             $user_info->setAttribute($key, $last_name);
         }
 
-        \User::loginByUserID($user_info->getUserID());
+        User::loginByUserID($user_info->getUserID());
 
-        $this->bindUser($user = \User::getByUserID($user_info->getUserID()), $this->getUniqueId());
+        $this->bindUser($user = User::getByUserID($user_info->getUserID()), $this->getUniqueId());
 
         return $user;
     }
@@ -370,6 +437,9 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
 
     public function getEmail()
     {
+        if ($this->email) {
+            return $this->email;
+        }
         return $this->getExtractor()->getEmail();
     }
 
@@ -414,12 +484,12 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
     }
 
     /**
-     * @param \User $user
+     * @param User $user
      * @param       $binding
      *
      * @return int|null
      */
-    public function bindUser(\User $user, $binding)
+    public function bindUser(User $user, $binding)
     {
         return $this->bindUserID(intval($user->getUserID(), 10), $binding);
     }
@@ -435,7 +505,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
         if (!$binding || !$user_id) {
             return null;
         }
-        $qb = \Database::connection()->createQueryBuilder();
+        $qb = $this->app->make(Connection::class)->createQueryBuilder();
 
         $or = $qb->expr()->orX();
         $or->add($qb->expr()->eq('user_id', intval($user_id, 10)));
@@ -450,13 +520,48 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
            ->setParameter(':binding', $binding)
            ->execute();
 
-        return \Database::connection()->insert(
+        return $this->app->make(Connection::class)->insert(
             'OauthUserMap',
-            array(
+            [
                 'user_id' => $user_id,
                 'binding' => $binding,
                 'namespace' => $this->getHandle(),
-            ));
+            ]);
+    }
+
+    /**
+     * Get the binding associated to a specific user.
+     *
+     * @param \Concrete\Core\User\User|\Concrete\Core\User\UserInfo|\Concrete\Core\Entity\User\User|int $user
+     *
+     * @return string|null
+     */
+    public function getBindingForUser($user)
+    {
+        $result = null;
+        if (is_object($user)) {
+            $userID = $user->getUserID();
+        } else {
+            $userID = (int) $user;
+        }
+        if ($userID) {
+            $db = $this->app->make(Connection::class);
+            $qb = $db->createQueryBuilder();
+            $qb->select('oum.binding')
+                ->from('OauthUserMap', 'oum')
+                ->where($qb->expr()->eq('oum.user_id', ':user_id'))->setParameter('user_id', $userID)
+                ->andWhere($qb->expr()->eq('oum.namespace', ':namespace'))->setParameter('namespace', $this->getHandle())
+                ->setMaxResults(1);
+            $rs = $qb->execute();
+            /* @var \Concrete\Core\Database\Driver\PDOStatement $rs */
+            $row = $rs->fetch();
+            $rs->closeCursor();
+            if ($row !== false) {
+                $result = array_pop($row);
+            }
+        }
+
+        return $result;
     }
 
     public function getUniqueId()
@@ -465,7 +570,36 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
     }
 
     abstract public function handle_authentication_attempt();
+
     abstract public function handle_authentication_callback();
+
     abstract public function handle_attach_attempt();
+
     abstract public function handle_attach_callback();
+
+    public function handle_detach_attempt()
+    {
+        if (!User::isLoggedIn()) {
+            $response = new RedirectResponse(\URL::to('/login'), 302);
+            $response->send();
+            exit;
+        }
+        $user = new User();
+        $uID = $user->getUserID();
+        $namespace = $this->getHandle();
+        $binding = $this->getBindingForUser($user);
+
+        $this->getService()->request('/' . $binding . '/permissions', 'DELETE');
+        try {
+            /* @var \Concrete\Core\Database\Connection\Connection $database */
+            $database = $this->app->make(Connection::class);
+            $database->delete('OauthUserMap', ['user_id' => $uID, 'namespace' => $namespace, 'binding' => $binding]);
+            $this->showSuccess(t('Successfully detached.'));
+            exit;
+        } catch (\Exception $e) {
+            \Log::error(t('Deattach Error %s', $e->getMessage()));
+            $this->showError(t('Unable to detach account.'));
+            exit;
+        }
+    }
 }

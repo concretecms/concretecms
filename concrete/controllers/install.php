@@ -1,59 +1,78 @@
 <?php
+
 namespace Concrete\Controller;
 
 use Concrete\Core\Cache\Cache;
-use Concrete\Core\Config\Renderer;
-use Concrete\Core\Error\ErrorList\ErrorList;
-use Concrete\Core\Localization\Localization as Localization;
-use Controller;
+use Concrete\Core\Controller\Controller;
+use Concrete\Core\Error\UserMessageException;
+use Concrete\Core\Http\ResponseFactoryInterface;
+use Concrete\Core\Install\ConnectionOptionsPreconditionInterface;
+use Concrete\Core\Install\Installer;
+use Concrete\Core\Install\InstallerOptions;
+use Concrete\Core\Install\PreconditionResult;
+use Concrete\Core\Install\PreconditionService;
+use Concrete\Core\Install\WebPreconditionInterface;
+use Concrete\Core\Localization\Localization;
+use Concrete\Core\Localization\Service\TranslationsInstaller;
+use Concrete\Core\Localization\Translation\Remote\ProviderInterface as RemoteTranslationsProvider;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+use Concrete\Core\View\View;
 use Exception;
 use Hautelook\Phpass\PasswordHash;
-use StartingPointPackage;
-use View;
-use Database;
-use ReflectionObject;
+use Punic\Comparer as PunicComparer;
 use stdClass;
-use Concrete\Core\Url\UrlImmutable;
 
-defined('C5_EXECUTE') or die("Access Denied.");
-
-if (!ini_get('safe_mode')) {
-    @set_time_limit(1000);
-}
+defined('C5_EXECUTE') or die('Access Denied.');
 
 class Install extends Controller
 {
     /**
-     * This is to check if comments are being stripped
-     * Doctrine ORM depends on comments not being stripped.
+     * Install step: choose locale.
      *
      * @var int
      */
-    protected $docCommentCanary = 1;
+    const STEP_CHOOSELOCALE = 1;
 
     /**
-     * If the database already exists and is valid, lets just attach to it rather than installing over it.
+     * Install step: precondition checks.
      *
-     * @var bool
+     * @var int
      */
-    protected $auto_attach = false;
+    const STEP_PRECONDITIONS = 2;
 
     /**
-     * Handle of the site_install.php file.
+     * Install step: precondition checks.
      *
-     * @var resource|null|false
+     * @var int
      */
-    protected $fp;
+    const STEP_CONFIGURATION = 3;
 
     /**
-     * Handle of the site_install_user.php file.
+     * Install step: installing/installed.
      *
-     * @var resource|null|false
+     * @var int
      */
-    protected $fpu;
+    const STEP_INSTALL = 4;
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Controller\AbstractController::$helpers
+     */
     public $helpers = ['form', 'html'];
 
+    /**
+     * The installer instance.
+     *
+     * @var Installer|null
+     */
+    private $installer = null;
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Controller\Controller::getViewObject()
+     */
     public function getViewObject()
     {
         $v = new View('/frontend/install');
@@ -62,110 +81,94 @@ class Install extends Controller
         return $v;
     }
 
-    public function view()
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Controller\AbstractController::on_start()
+     */
+    public function on_start()
     {
-        $locales = $this->getLocales();
-        $this->set('locales', $locales);
-        $this->set('backgroundFade', 500);
-        $this->testAndRunInstall();
-    }
+        $this->addHeaderItem('<link href="' . ASSETS_URL_CSS . '/views/install.css" rel="stylesheet" type="text/css" media="all" />');
+        $this->requireAsset('core/app');
+        $this->requireAsset('javascript', 'backstretch');
+        $this->requireAsset('javascript', 'bootstrap/collapse');
+        $this->set('urlResolver', $this->app->make(ResolverManagerInterface::class));
 
-    protected function getLocales()
-    {
-        return Localization::getAvailableInterfaceLanguageDescriptions(null);
-    }
+        $config = $this->app->make('config');
+        $this->set('backgroundFade', 0);
+        $this->set('pageTitle', t('Install concrete5'));
+        $image = date('Ymd') . '.jpg';
+        $this->set('image', date('Ymd') . '.jpg');
+        $this->set('imagePath', $config->get('concrete.urls.background_feed') . '/' . $image);
+        $this->set('concreteVersion', $config->get('concrete.version'));
 
-    protected function testAndRunInstall()
-    {
-        if (file_exists(DIR_CONFIG_SITE . '/site_install_user.php')) {
-            $this->set('backgroundFade', 0);
-            require DIR_CONFIG_SITE . '/site_install.php';
-            @include DIR_CONFIG_SITE . '/site_install_user.php';
-            if (defined('APP_INSTALL_LANGUAGE') && APP_INSTALL_LANGUAGE) {
-                Localization::changeLocale(APP_INSTALL_LANGUAGE);
-            }
-            $e = $this->app->make('helper/validation/error');
-            $e = $this->validateDatabase($e);
-            if (defined('INSTALL_STARTING_POINT') && INSTALL_STARTING_POINT) {
-                $spName = INSTALL_STARTING_POINT;
-            } else {
-                $spName = 'elemental_full';
-            }
-            $spl = StartingPointPackage::getClass($spName);
-            if ($spl === null) {
-                $e->add(t('Invalid starting point: %s', $spName));
-            }
-            if ($e->has()) {
-                $this->set('error', $e);
-            } else {
-                $this->set('installPackage', $spl->getPackageHandle());
-                $this->set('installRoutines', $spl->getInstallRoutines());
-                $this->set(
-                    'successMessage',
-                    t(
-                        'concrete5 has been installed. You have been logged in as <b>%s</b> with the password you chose. If you wish to change this password, you may do so from the users area of the dashboard.',
-                        USER_SUPER
-                    )
-                );
-            }
+        $locale = $this->request->request->get('locale');
+        if ($locale) {
+            $loc = Localization::changeLocale($locale);
+            $this->set('locale', $locale);
+        }
+        Cache::disableAll();
+
+        if ($this->app->isInstalled()) {
+            throw new UserMessageException(t('concrete5 is already installed.'));
         }
     }
 
-    protected function validateDatabase(ErrorList $e)
+    public function view()
     {
-        if (!extension_loaded('pdo')) {
-            $e->add($this->getDBErrorMsg());
+        $this->set('backgroundFade', 500);
+        if ($this->getInstallerOptions()->hasConfigurationFiles()) {
+            $this->testAndRunInstall();
         } else {
-            $DB_SERVER = isset($_POST['DB_SERVER']) ? $_POST['DB_SERVER'] : null;
-            $DB_DATABASE = isset($_POST['DB_DATABASE']) ? $_POST['DB_DATABASE'] : null;
-            $db = Database::getFactory()->createConnection(
-                [
-                    'host' => $DB_SERVER,
-                    'user' => isset($_POST['DB_USERNAME']) ? $_POST['DB_USERNAME'] : null,
-                    'password' => isset($_POST['DB_PASSWORD']) ? $_POST['DB_PASSWORD'] : null,
-                    'database' => $DB_DATABASE,
-                ]
-            );
+            list($locales, $onlineLocales) = $this->getLocales();
+            $this->set('locales', $locales);
+            $this->set('onlineLocales', $onlineLocales);
+        }
+        $this->setInstallStep();
+    }
 
-            if ($DB_SERVER && $DB_DATABASE) {
-                if (!$db) {
-                    $e->add(t('Unable to connect to database.'));
-                } elseif (!$this->isAutoAttachEnabled()) {
-                    $num = $db->GetCol("show tables");
-                    if (count($num) > 0) {
-                        $e->add(
-                            t(
-                                'There are already %s tables in this database. concrete5 must be installed in an empty database.',
-                                count($num)
-                            )
-                        );
-                    }
-
+    public function select_language()
+    {
+        $localeID = $this->request->request->get('wantedLocale');
+        if ($localeID) {
+            if ($localeID !== Localization::BASE_LOCALE) {
+                $localLocales = Localization::getAvailableInterfaceLanguageDescriptions(null);
+                if (!isset($localLocales[$localeID])) {
+                    $ti = $this->app->make(TranslationsInstaller::class);
                     try {
-                        $support = $db->fetchAll('show engines');
-                        $supported = false;
-                        foreach ($support as $engine) {
-                            $engine = array_change_key_case($engine, CASE_LOWER);
-                            if (isset($engine['engine']) && strtolower($engine['engine']) == 'innodb') {
-                                $supported = true;
-                            }
-                        }
-                        if (!$supported) {
-                            $e->add(t('Your MySQL database does not support InnoDB database tables. These are required.'));
-                        }
-                    } catch (Exception $exception) {
-                        // we're going to just proceed and hope for the best.
+                        $ti->installCoreTranslations($localeID);
+                    } catch (Exception $x) {
+                        $this->set('error', $x);
+                        $this->view();
+                        $localeID = null;
                     }
                 }
             }
+            if ($localeID) {
+                $this->set('locale', $localeID);
+                Localization::changeLocale($localeID);
+            }
         }
-
-        return $e;
+        $this->setInstallStep();
     }
 
-    public function getDBErrorMsg()
+    /**
+     * @return \Concrete\Core\Install\PreconditionInterface[][]
+     */
+    public function getPreconditions()
     {
-        return t('The PDO extension is not loaded.');
+        $service = $this->app->make(PreconditionService::class);
+        $required = [];
+        $optional = [];
+        foreach ($service->getPreconditions() as $precondition) {
+            if ($precondition->isOptional()) {
+                $optional[] = $precondition;
+            } else {
+                $required[] = $precondition;
+            }
+        }
+
+        return [$required, $optional];
     }
 
     public function setup()
@@ -180,235 +183,85 @@ class Install extends Controller
             $passwordAttributes['required'] = 'required';
             if ($passwordMaxLength > 0) {
                 $passwordAttributes['placeholder'] = t('Between %1$s and %2$s Characters', $passwordMinLength, $passwordMaxLength);
-                $passwordAttributes['pattern'] = '.{'.$passwordMinLength.','.$passwordMaxLength.'}';
+                $passwordAttributes['pattern'] = '.{' . $passwordMinLength . ',' . $passwordMaxLength . '}';
             } else {
                 $passwordAttributes['placeholder'] = t('at least %s characters', $passwordMinLength);
-                $passwordAttributes['pattern'] = '.{'.$passwordMinLength.',}';
+                $passwordAttributes['pattern'] = '.{' . $passwordMinLength . ',}';
             }
         } elseif ($passwordMaxLength > 0) {
             $passwordAttributes['placeholder'] = t('up to %s characters', $passwordMaxLength);
-            $passwordAttributes['pattern'] = '.{0,'.$passwordMaxLength.'}';
+            $passwordAttributes['pattern'] = '.{0,' . $passwordMaxLength . '}';
         }
         $this->set('passwordAttributes', $passwordAttributes);
         $canonicalUrl = '';
         $canonicalUrlChecked = false;
-        $canonicalSSLUrl = '';
-        $canonicalSSLUrlChecked = false;
+        $canonicalUrlAlternative = '';
+        $canonicalUrlAlternativeChecked = false;
         $uri = $this->request->getUri();
-        if (preg_match('/^(https?)(:.+?)(?:\/'.preg_quote(DISPATCHER_FILENAME, '%').')?\/install(?:$|\/|\?)/i', $uri, $m)) {
-            $canonicalUrl = 'http'.rtrim($m[2], '/');
-            $canonicalSSLUrl = 'https'.rtrim($m[2], '/');
-            /*switch (strtolower($m[1])) {
+        if (preg_match('/^(https?)(:.+?)(?:\/' . preg_quote(DISPATCHER_FILENAME, '%') . ')?\/install(?:$|\/|\?)/i', $uri, $m)) {
+            switch (strtolower($m[1])) {
                 case 'http':
-                    $canonicalUrlChecked = true;
+                    $canonicalUrl = 'http' . rtrim($m[2], '/');
+                    $canonicalUrlAlternative = 'https' . rtrim($m[2], '/');
+                    //$canonicalUrlChecked = true;
                     break;
-                case 'http':
-                    $canonicalSSLUrlChecked = true;
+                case 'https':
+                    $canonicalUrl = 'https' . rtrim($m[2], '/');
+                    $canonicalUrlAlternative = 'http' . rtrim($m[2], '/');
+                    //$canonicalUrlChecked = true;
                     break;
-            }*/
+            }
         }
         $countries = [];
         $ll = $this->app->make('localization/languages');
-        $cl = $this->app->make('lists/countries');
-        $computedSiteLocaleLanguage = Localization::activeLanguage();
-        $computedSiteLocaleCountry = null;
-        $recommendedCountryValues = $cl->getCountriesForLanguage($computedSiteLocaleLanguage);
-        $otherCountries = [];
-        foreach ($cl->getCountries() as $code => $country) {
-            if (!in_array($code, $recommendedCountryValues)) {
-                $otherCountries[$code] = $country;
-            }
-        }
-        $recommendedCountries = [];
-        foreach ($recommendedCountryValues as $country) {
-            if (!$computedSiteLocaleCountry) {
-                $computedSiteLocaleCountry = $country;
-            }
-            $recommendedCountries[$country] = $cl->getCountryName($country);
-        }
+        $chunks = explode('_', Localization::activeLocale());
+        $computedSiteLocaleLanguage = $chunks[0];
         $languages = $ll->getLanguageList();
         $this->set('languages', $languages);
+        $countries = $this->getCountriesForLanguage($computedSiteLocaleLanguage);
         $this->set('countries', $countries);
         $this->set('computedSiteLocaleLanguage', $computedSiteLocaleLanguage);
+        if (isset($chunks[1])) {
+            $computedSiteLocaleCountry = $chunks[1];
+        } else {
+            if (is_array(current($countries))) {
+                $computedSiteLocaleCountry = key(current($countries));
+            } else {
+                $computedSiteLocaleCountry = key($countries);
+            }
+        }
         $this->set('computedSiteLocaleCountry', $computedSiteLocaleCountry);
-        $this->set('recommendedCountries', $recommendedCountries);
-        $this->set('otherCountries', $otherCountries);
         $this->set('setInitialState', $this->request->post('SITE') === null);
         $this->set('canonicalUrl', $canonicalUrl);
         $this->set('canonicalUrlChecked', $canonicalUrlChecked);
-        $this->set('canonicalSSLUrl', $canonicalSSLUrl);
-        $this->set('canonicalSSLUrlChecked', $canonicalSSLUrlChecked);
+        $this->set('canonicalUrlAlternative', $canonicalUrlAlternative);
+        $this->set('canonicalUrlAlternativeChecked', $canonicalUrlAlternativeChecked);
+        $this->set('SERVER_TIMEZONE', @date_default_timezone_get() ?: 'UTC');
+        $this->set('availableTimezones', $this->app->make('date')->getGroupedTimezones());
+        $this->setInstallStep();
     }
 
-    public function select_language()
+    public function get_site_locale_countries($viewLocaleID, $languageID, $preselectedCountryID)
     {
+        Localization::changeLocale($viewLocaleID);
+        $countries = $this->getCountriesForLanguage($languageID);
+        $form = $this->app->make('helper/form');
+        $rf = $this->app->make(ResponseFactoryInterface::class);
+
+        return $rf->json($form->select('siteLocaleCountry', $countries, $preselectedCountryID));
     }
 
-    /**
-     * Testing.
-     */
-    public function on_start()
+    public function web_precondition($handle, $argument = '')
     {
-        $this->addHeaderItem('<link href="'.ASSETS_URL_CSS.'/views/install.css" rel="stylesheet" type="text/css" media="all" />');
-        $this->requireAsset('core/app');
-        $this->requireAsset('javascript', 'backstretch');
-        $this->requireAsset('javascript', 'bootstrap/collapse');
-        if (isset($_POST['locale']) && $_POST['locale']) {
-            $loc = Localization::changeLocale($_POST['locale']);
-            $this->set('locale', $_POST['locale']);
+        $service = $this->app->make(PreconditionService::class);
+        $precondition = $service->getPreconditionByHandle($handle);
+        if (!$precondition instanceof WebPreconditionInterface) {
+            throw new Exception(sprintf('%s is not a valid precondition handle', $handle));
         }
-        Cache::disableAll();
-        $this->setRequiredItems();
-        $this->setOptionalItems();
+        $result = $precondition->getAjaxAnswer($argument);
+        $rf = $this->app->make(ResponseFactoryInterface::class);
 
-        if ($this->app->isInstalled()) {
-            throw new Exception(t('concrete5 is already installed.'));
-        }
-        if (!isset($_COOKIE['CONCRETE5_INSTALL_TEST'])) {
-            setcookie('CONCRETE5_INSTALL_TEST', '1', 0, DIR_REL . '/');
-        }
-        $this->set('backgroundFade', 0);
-        $this->set('pageTitle', t('Install concrete5'));
-    }
-
-    private function setRequiredItems()
-    {
-        //        $this->set('imageTest', function_exists('imagecreatetruecolor') || class_exists('Imagick'));
-        $this->set('imageTest', function_exists('imagecreatetruecolor')
-            && function_exists('imagepng')
-            && function_exists('imagegif')
-            && function_exists('imagejpeg'));
-        $this->set('mysqlTest', extension_loaded('pdo_mysql'));
-        $this->set('i18nTest', function_exists('ctype_lower') && function_exists('iconv') && extension_loaded('mbstring'));
-        $this->set('domTest', extension_loaded('dom'));
-        $this->set('jsonTest', extension_loaded('json'));
-        $this->set('xmlTest', function_exists('xml_parse') && function_exists('simplexml_load_file'));
-        $this->set('fileWriteTest', $this->testFileWritePermissions());
-        $this->set('aspTagsTest', ini_get('asp_tags') == false);
-        $this->set('finfoTest', function_exists('finfo_open'));
-        $rf = new ReflectionObject($this);
-        $rp = $rf->getProperty('docCommentCanary');
-        $this->set('docCommentTest', (bool) $rp->getDocComment());
-
-        $memoryThresoldMin = 24 * 1024 * 1024;
-        $memoryThresold = 64 * 1024 * 1024;
-        $this->set('memoryThresoldMin', $memoryThresoldMin);
-        $this->set('memoryThresold', $memoryThresold);
-        $memoryLimit = ini_get('memory_limit');
-        if ($memoryLimit == -1) {
-            $this->set('memoryTest', 1);
-            $this->set('memoryBytes', 0);
-        } else {
-            $val = $this->app->make('helper/number')->getBytes($memoryLimit);
-            $this->set('memoryBytes', $val);
-            if ($val < $memoryThresoldMin) {
-                $this->set('memoryTest', -1);
-            } elseif ($val >= $memoryThresold) {
-                $this->set('memoryTest', 1);
-            } else {
-                $this->set('memoryTest', 0);
-            }
-        }
-
-        $phpVmin = $this->getMinimumPhpVersion();
-        if (version_compare(PHP_VERSION, $phpVmin, '>=')) {
-            $phpVtest = true;
-        } else {
-            $phpVtest = false;
-        }
-        $this->set('phpVmin', $phpVmin);
-        $this->set('phpVtest', $phpVtest);
-    }
-
-    private function testFileWritePermissions()
-    {
-        $e = $this->app->make('helper/validation/error');
-        if (!is_writable(DIR_CONFIG_SITE)) {
-            $e->add(t('Your configuration directory config/ does not appear to be writable by the web server.'));
-        }
-
-        if (!is_writable(DIR_FILES_UPLOADED_STANDARD)) {
-            $e->add(t('Your files directory files/ does not appear to be writable by the web server.'));
-        }
-
-        if (!is_writable(DIR_PACKAGES)) {
-            $e->add(t('Your packages directory packages/ does not appear to be writable by the web server.'));
-        }
-
-        $this->fileWriteErrors = $e;
-        if ($this->fileWriteErrors->has()) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    private function setOptionalItems()
-    {
-        // no longer need lucene
-        //$this->set('searchTest', function_exists('iconv') && function_exists('mb_strtolower') && (@preg_match('/\pL/u', 'a') == 1));
-        $this->set('remoteFileUploadTest', function_exists('iconv'));
-        $this->set('fileZipTest', class_exists('ZipArchive'));
-    }
-
-    public function passedRequiredItems()
-    {
-        if ($this->get('imageTest') && $this->get('mysqlTest') && $this->get('fileWriteTest') &&
-            $this->get('xmlTest') && $this->get('phpVtest') && $this->get('i18nTest') &&
-            $this->get('memoryTest') !== -1 && $this->get('docCommentTest') && $this->get('aspTagsTest') &&
-            $this->get('domTest')
-        ) {
-            return true;
-        }
-    }
-
-    public function test_url($num1, $num2)
-    {
-        $js = $this->app->make('helper/json');
-        $num = $num1 + $num2;
-        echo $js->encode(['response' => $num]);
-        exit;
-    }
-
-    public function run_routine($pkgHandle, $routine)
-    {
-        $spl = StartingPointPackage::getClass($pkgHandle);
-        require DIR_CONFIG_SITE . '/site_install.php';
-        @include DIR_CONFIG_SITE . '/site_install_user.php';
-        if (defined('APP_INSTALL_LANGUAGE') && APP_INSTALL_LANGUAGE) {
-            Localization::changeLocale(APP_INSTALL_LANGUAGE);
-        }
-        $jsx = $this->app->make('helper/json');
-        $js = new stdClass();
-
-        try {
-            if ($spl === null) {
-                throw new Exception(t('Invalid starting point: %s', $pkgHandle));
-            }
-            call_user_func([$spl, $routine]);
-            $js->error = false;
-        } catch (Exception $e) {
-            $js->error = true;
-            $js->message = tc('InstallError', '%s.<br><br>Trace:<br>%s', $e->getMessage(), $e->getTraceAsString());
-            $this->reset();
-        }
-        echo $jsx->encode($js);
-        exit;
-    }
-
-    public function reset()
-    {
-        // remove site.php so that we can try again ?
-
-        if (is_resource($this->fp)) {
-            fclose($this->fp);
-        }
-        if (file_exists(DIR_CONFIG_SITE . '/site_install.php')) {
-            unlink(DIR_CONFIG_SITE . '/site_install.php');
-        }
-        if (file_exists(DIR_CONFIG_SITE . '/site_install_user.php')) {
-            unlink(DIR_CONFIG_SITE . '/site_install_user.php');
-        }
+        return $rf->json($result);
     }
 
     /**
@@ -416,19 +269,22 @@ class Install extends Controller
      */
     public function configure()
     {
+        $post = $this->request->request;
         $error = $this->app->make('helper/validation/error');
-        /* @var $error \Concrete\Core\Error\ErrorList\ErrorList */
+        $warnings = $this->app->make('helper/validation/error');
+        $ignoreWarnings = !empty($post->get('ignore-warnings'));
         try {
             $val = $this->app->make('helper/validation/form');
-            /* @var \Concrete\Core\Form\Service\Validation $val */
             $val->setData($this->post());
-            $val->addRequired("SITE", t("Please specify your site's name"));
-            $val->addRequiredEmail("uEmail", t('Please specify a valid email address'));
-            $val->addRequired("DB_DATABASE", t('You must specify a valid database name'));
-            $val->addRequired("DB_SERVER", t('You must specify a valid database server'));
+            $val->addRequired('SITE', t("Please specify your site's name"));
+            $val->addRequiredEmail('uEmail', t('Please specify a valid email address'));
+            $val->addRequired('DB_DATABASE', t('You must specify a valid database name'));
+            $val->addRequired('DB_SERVER', t('You must specify a valid database server'));
+            $val->addRequired('SERVER_TIMEZONE', t('You must specify the system time zone'));
+            $val->addRequired('privacy', t('You must agree to the privacy policy'));
 
-            $password = $_POST['uPassword'];
-            $passwordConfirm = $_POST['uPasswordConfirm'];
+            $password = $post->get('uPassword');
+            $passwordConfirm = $post->get('uPasswordConfirm');
 
             $this->app->make('validator/password')->isValid($password, $error);
 
@@ -438,138 +294,269 @@ class Install extends Controller
                 }
             }
 
-            if (is_object($this->fileWriteErrors)) {
-                foreach ($this->fileWriteErrors->getList() as $msg) {
-                    $error->add($msg);
+            if (!$val->test()) {
+                $error->add($val->getError());
+            } elseif (!$error->has()) {
+                /**
+                 * @var $options InstallerOptions
+                 */
+                $options = $this->app->make(InstallerOptions::class);
+                $configuration = $post->get('SITE_CONFIG');
+                if (!is_array($configuration)) {
+                    $configuration = [];
                 }
-            }
-
-            $error = $this->validateDatabase($error);
-            $error = $this->validateSampleContent($error);
-
-            if ($this->post('canonicalUrlChecked') === '1') {
-                try {
-                    $url = UrlImmutable::createFromUrl($this->post('canonicalUrl'));
-                    if (strcasecmp('http', $url->getScheme()) !== 0) {
-                        throw new Exception('The HTTP canonical URL must have the http:// scheme');
-                    }
-                    $canonicalUrl = (string) $url;
-                } catch (Exception $x) {
-                    $error->add($x);
-                }
-            } else {
-                $canonicalUrl = '';
-            }
-            if ($this->post('canonicalSSLUrlChecked') === '1') {
-                $url = UrlImmutable::createFromUrl($this->post('canonicalSSLUrl'));
-                if (strcasecmp('https', $url->getScheme()) !== 0) {
-                    throw new Exception('The SSL canonical URL must have the https:// scheme');
-                }
-                $canonicalSSLUrl = (string) $url;
-            } else {
-                $canonicalSSLUrl = '';
-            }
-            if ($val->test() && (!$error->has())) {
-
-                // write the config file
-                $vh = $this->app->make('helper/validation/identifier');
-                $this->fp = @fopen(DIR_CONFIG_SITE . '/site_install.php', 'w+');
-                $this->fpu = @fopen(DIR_CONFIG_SITE . '/site_install_user.php', 'w+');
-                if ($this->fp) {
-                    $config = isset($_POST['SITE_CONFIG']) ? ((array) $_POST['SITE_CONFIG']) : [];
-                    $config['database'] = [
-                        'default-connection' => 'concrete',
-                        'connections' => [
-                            'concrete' => [
-                                'driver' => 'c5_pdo_mysql',
-                                'server' => $_POST['DB_SERVER'],
-                                'database' => $_POST['DB_DATABASE'],
-                                'username' => $_POST['DB_USERNAME'],
-                                'password' => $_POST['DB_PASSWORD'],
-                                'charset' => 'utf8',
-                            ],
+                $configuration['database'] = [
+                    'default-connection' => 'concrete',
+                    'connections' => [
+                        'concrete' => [
+                            'driver' => 'c5_pdo_mysql',
+                            'server' => $post->get('DB_SERVER'),
+                            'database' => $post->get('DB_DATABASE'),
+                            'username' => $post->get('DB_USERNAME'),
+                            'password' => $post->get('DB_PASSWORD'),
+                            'charset' => 'utf8',
                         ],
-                    ];
-                    $config['canonical-url'] = $canonicalUrl;
-                    $config['canonical-ssl-url'] = $canonicalSSLUrl;
-                    $config['session-handler'] = isset($_POST['sessionHandler']) ? $_POST['sessionHandler'] : null;
+                    ],
+                ];
+                $configuration['canonical-url'] = $post->get('canonicalUrlChecked') === '1' ? $post->get('canonicalUrl') : '';
+                $configuration['canonical-url-alternative'] = $post->get('canonicalUrlAlternativeChecked') === '1' ? $post->get('canonicalUrlAlternative') : '';
+                $configuration['session-handler'] = $post->get('sessionHandler');
+                $options->setConfiguration($configuration);
 
-                    $renderer = new Renderer($config);
-                    fwrite($this->fp, $renderer->render());
-
-                    fclose($this->fp);
-                    chmod(DIR_CONFIG_SITE . '/site_install.php', 0700);
-                } else {
-                    throw new Exception(t('Unable to open config/app.php for writing.'));
+                $config = $this->app->make('config');
+                $hasher = new PasswordHash($config->get('concrete.user.password.hash_cost_log2'), $config->get('concrete.user.password.hash_portable'));
+                $options
+                    ->setPrivacyPolicyAccepted($post->get('privacy') == '1' ? true : false)
+                    ->setUserEmail($post->get('uEmail'))
+                    ->setUserPasswordHash($hasher->HashPassword($post->get('uPassword')))
+                    ->setStartingPointHandle($post->get('SAMPLE_CONTENT'))
+                    ->setSiteName($post->get('SITE'))
+                    ->setSiteLocaleId($post->get('siteLocaleLanguage') . '_' . $post->get('siteLocaleCountry'))
+                    ->setUiLocaleId($post->get('locale'))
+                    ->setServerTimeZoneId($post->get('SERVER_TIMEZONE'))
+                ;
+                $installer = $this->app->make(Installer::class);
+                $installer->setOptions($options);
+                try {
+                    $connection = $installer->createConnection();
+                } catch (UserMessageException $x) {
+                    $error->add($x);
+                    $connection = null;
                 }
-
-                if ($this->fpu) {
-                    $config = $this->app->make('config');
-                    $hasher = new PasswordHash($config->get('concrete.user.password.hash_cost_log2'), $config->get('concrete.user.password.hash_portable'));
-                    $configuration = "<?php\n";
-                    $configuration .= "define('INSTALL_USER_EMAIL', " . var_export((string) $_POST['uEmail'], true) . ");\n";
-                    $configuration .= "define('INSTALL_USER_PASSWORD_HASH', " . var_export((string) $hasher->HashPassword($_POST['uPassword']), true) . ");\n";
-                    $configuration .= "define('INSTALL_STARTING_POINT', " . var_export((string) $this->post('SAMPLE_CONTENT'), true) . ");\n";
-                    $configuration .= "define('SITE', " . var_export((string) $_POST['SITE'], true) . ");\n";
-                    $locale = $this->post('siteLocaleLanguage') . '_' . $this->post('siteLocaleCountry');
-                    $configuration .= "define('SITE_INSTALL_LOCALE', " . var_export($locale, true) . ");\n";
-                    $configuration .= "define('APP_INSTALL_LANGUAGE', " . var_export($this->post('locale'), true) . ");\n";
-                    $res = fwrite($this->fpu, $configuration);
-                    fclose($this->fpu);
-                    chmod(DIR_CONFIG_SITE . '/site_install_user.php', 0700);
-                    if (PHP_SAPI != 'cli') {
-                        $this->redirect('/');
+                $preconditions = $this->app->make(PreconditionService::class)->getOptionsPreconditions();
+                foreach ($preconditions as $precondition) {
+                    if ($precondition instanceof ConnectionOptionsPreconditionInterface) {
+                        if ($connection === null) {
+                            continue;
+                        }
+                        $precondition->setConnection($connection);
                     }
-                } else {
-                    throw new Exception(t('Unable to open config/site_user.php for writing.'));
+                    $precondition->setInstallerOptions($options);
+                    $check = $precondition->performCheck();
+                    switch ($check->getState()) {
+                        case PreconditionResult::STATE_SKIPPED:
+                        case PreconditionResult::STATE_PASSED:
+                            break;
+                        case PreconditionResult::STATE_WARNING:
+                            $warnings->add($precondition->getName() . ': ' . $check->getMessage());
+                            break;
+                        case PreconditionResult::STATE_FAILED:
+                        default:
+                            if ($precondition->isOptional()) {
+                                $warnings->add($precondition->getName() . ': ' . $check->getMessage());
+                            } else {
+                                $error->add($precondition->getName() . ': ' . $check->getMessage());
+                            }
+                            break;
+                    }
                 }
-            } else {
-                if ($error->has()) {
-                    $this->set('error', $error);
-                } else {
-                    $error = $val->getError();
-                    $this->set('error', $val->getError());
+                if (!$error->has() && ($ignoreWarnings || !$warnings->has())) {
+                    $options->save();
+                    $this->redirect('/');
                 }
             }
         } catch (Exception $ex) {
-            $this->reset();
-            $this->set('error', $ex);
             $error->add($ex);
         }
+        $this->getInstallerOptions()->deleteFiles();
+        $this->set('error', $error);
+        $this->set('warnings', $warnings);
         $this->setup();
-
-        return $error;
+        $this->setInstallStep();
     }
 
-    protected function validateSampleContent($e)
+    public function run_routine($pkgHandle, $routine)
     {
-        $pkg = StartingPointPackage::getClass($this->post('SAMPLE_CONTENT'));
-
-        if ($pkg === null) {
-            $e->add(t("You must select a valid sample content starting point."));
+        $options = $this->getInstallerOptions();
+        $options->load();
+        $options->setStartingPointHandle($pkgHandle);
+        $jsx = $this->app->make('helper/json');
+        $js = new stdClass();
+        try {
+            $spl = $this->installer->getStartingPoint(false);
+            $spl->executeInstallRoutine($routine);
+            $js->error = false;
+        } catch (Exception $e) {
+            $js->error = true;
+            $js->message = tc('InstallError', '%s.<br><br>Trace:<br>%s', $e->getMessage(), $e->getTraceAsString());
+            $options->deleteFiles();
         }
 
-        return $e;
-    }
-
-    public function getMinimumPhpVersion()
-    {
-        return '5.5.9';
+        return $this->app->make(ResponseFactoryInterface::class)->json($js);
     }
 
     /**
-     * @return bool
+     * Get the installer instance.
+     *
+     * @return Installer
      */
-    public function isAutoAttachEnabled()
+    protected function getInstaller()
     {
-        return $this->auto_attach;
+        if ($this->installer === null) {
+            $this->installer = $this->app->make(Installer::class);
+        }
+
+        return $this->installer;
     }
 
     /**
-     * @param bool $auto_attach
+     * Get the options used by the installer.
+     *
+     * @return \Concrete\Core\Install\InstallerOptions
      */
-    public function setAutoAttach($auto_attach)
+    protected function getInstallerOptions()
     {
-        $this->auto_attach = $auto_attach;
+        return $this->getInstaller()->getOptions();
+    }
+
+    /**
+     * @return array
+     */
+    protected function getLocales()
+    {
+        $localLocales = Localization::getAvailableInterfaceLanguageDescriptions(null);
+
+        $coreVersion = $this->app->make('config')->get('concrete.version_installed');
+        $rtp = $this->app->make(RemoteTranslationsProvider::class);
+        // We may be offline, so let's ignore connection issues
+        try {
+            $remoteLocaleStats = $rtp->getAvailableCoreStats($coreVersion);
+        } catch (Exception $x) {
+            $remoteLocaleStats = [];
+        }
+        $remoteLocales = [];
+        foreach (array_keys($remoteLocaleStats) as $remoteLocaleID) {
+            if (!isset($localLocales[$remoteLocaleID])) {
+                $remoteLocales[$remoteLocaleID] = Localization::getLanguageDescription($remoteLocaleID, null);
+            }
+        }
+        $comparer = new PunicComparer();
+        $comparer->sort($remoteLocales, true);
+        if (empty($localLocales) && !empty($remoteLocales)) {
+            $localLocales = [
+                Localization::BASE_LOCALE => Localization::getLanguageDescription(Localization::BASE_LOCALE, null),
+            ];
+        }
+
+        return [$localLocales, $remoteLocales];
+    }
+
+    protected function testAndRunInstall()
+    {
+        $e = $this->app->make('helper/validation/error');
+        try {
+            $installerOptions = $this->getInstallerOptions();
+            $installerOptions->load();
+            $uiLocaleId = $installerOptions->getUiLocaleId();
+            if ($uiLocaleId !== '') {
+                Localization::changeLocale($uiLocaleId);
+            }
+            $connection = $this->getInstaller()->createConnection();
+            $preconditions = $this->app->make(PreconditionService::class)->getOptionsPreconditions();
+            foreach ($preconditions as $precondition) {
+                if ($precondition->isOptional()) {
+                    continue;
+                }
+                if ($precondition instanceof ConnectionOptionsPreconditionInterface) {
+                    $precondition->setConnection($connection);
+                }
+                $precondition->setInstallerOptions($installerOptions);
+                $check = $precondition->performCheck();
+                switch ($check->getState()) {
+                    case PreconditionResult::STATE_SKIPPED:
+                    case PreconditionResult::STATE_PASSED:
+                    case PreconditionResult::STATE_WARNING:
+                        break;
+                    case PreconditionResult::STATE_FAILED:
+                    default:
+                        $e->add($precondition->getName() . ': ' . $check->getMessage());
+                        break;
+                }
+            }
+        } catch (UserMessageException $x) {
+            $e->add($x);
+        }
+        if ($e->has()) {
+            $this->set('error', $e);
+        } else {
+            $this->set('backgroundFade', 0);
+            $spl = $this->getInstaller()->getStartingPoint(true);
+            $this->set('installPackage', $spl->getPackageHandle());
+            $this->set('installRoutines', $spl->getInstallRoutines());
+            $this->set(
+                'successMessage',
+                t(
+                    'concrete5 has been installed. You have been logged in as <b>%s</b> with the password you chose. If you wish to change this password, you may do so from the users area of the dashboard.',
+                    USER_SUPER
+                )
+            );
+        }
+    }
+
+    private function setInstallStep()
+    {
+        $sets = $this->getSets();
+        if (isset($sets['successMessage'])) {
+            $installStep = static::STEP_INSTALL;
+        } elseif ($this->getAction() == 'setup' || $this->getAction() == 'configure') {
+            $installStep = static::STEP_CONFIGURATION;
+        } elseif (isset($sets['locale']) || (empty($sets['locales']) && empty($sets['onlineLocales']))) {
+            $installStep = static::STEP_PRECONDITIONS;
+        } else {
+            $installStep = static::STEP_CHOOSELOCALE;
+        }
+        $this->set('installStep', $installStep);
+    }
+
+    /**
+     * @param string $languageID
+     *
+     * @return array
+     */
+    private function getCountriesForLanguage($languageID)
+    {
+        $cl = $this->app->make('lists/countries');
+        $recommendedCountries = [];
+        foreach ($cl->getCountriesForLanguage($languageID) as $countryID) {
+            $recommendedCountries[$countryID] = $cl->getCountryName($countryID);
+        }
+        $otherCountries = [];
+        foreach ($cl->getCountries() as $countryID => $countryName) {
+            if (!isset($recommendedCountries[$countryID])) {
+                $otherCountries[$countryID] = $countryName;
+            }
+        }
+        if (count($recommendedCountries) === 0) {
+            $result = $otherCountries;
+        } elseif (count($otherCountries) === 0) {
+            $result = $recommendedCountries;
+        } else {
+            $result = [
+                t('** Recommended Countries') => $recommendedCountries,
+                t('** Other Countries') => $otherCountries,
+            ];
+        }
+
+        return $result;
     }
 }

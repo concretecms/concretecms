@@ -3,6 +3,7 @@
 <div class="required-password-upgrade">
     <form method="post"
           action="<?= URL::to('/login', 'callback', $authType->getAuthenticationTypeHandle(), 'required_password_upgrade') ?>">
+	    <?php $token->output(); ?>
         <h4><?= t('Required password upgrade') ?></h4>
         <div class="ccm-message"></div>
         <div class='help-block'>

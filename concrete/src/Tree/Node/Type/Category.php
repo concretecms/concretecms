@@ -1,10 +1,10 @@
 <?php
+
 namespace Concrete\Core\Tree\Node\Type;
 
 use Concrete\Core\Tree\Node\Node as TreeNode;
 use Concrete\Core\Tree\Node\Type\Formatter\CategoryListFormatter;
 use Concrete\Core\Tree\Node\Type\Menu\CategoryMenu;
-use Loader;
 
 class Category extends TreeNode
 {
@@ -22,6 +22,7 @@ class Category extends TreeNode
     {
         return '\\Concrete\\Core\\Permission\\Assignment\\CategoryTreeNodeAssignment';
     }
+
     public function getPermissionObjectKeyCategoryHandle()
     {
         return 'category_tree_node';
@@ -78,7 +79,7 @@ class Category extends TreeNode
             $obj->folder = true;
             $p = new \Permissions($this);
             $data = $this->getTreeObject()->getRequestData();
-            if (is_array($data) && $data['allowFolderSelection']) {
+            if (is_array($data) && !empty($data['allowFolderSelection'])) {
                 $obj->hideCheckbox = false;
             } else {
                 $obj->hideCheckbox = true;

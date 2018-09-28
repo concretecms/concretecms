@@ -31,7 +31,7 @@ if (is_array($image)) {
 			<div class="ccm-conversation-attachment-container" style="display: none;">
 				<form action="/index.php/tools/required/conversations/add_file" class="dropzone clickable" id="file-upload" data-dropzone-applied="true">
 					<div class="ccm-conversation-errors alert alert-danger"></div>
-					<input type="hidden" name="ccm_token" value="1390605625:07adc131bb627d0810ca52b3d87a8453">					<input type="hidden" name="blockAreaHandle" id="blockAreaHandle" value="Column One">					<input type="hidden" name="cID" id="cID" value="1">					<input type="hidden" name="bID" id="bID" value="19">				<div class="default message"><span>Drop files here to upload</span></div></form>
+					<input type="hidden" name="ccm_token" value="1390605625:07adc131bb627d0810ca52b3d87a8453">					<input type="hidden" name="blockAreaHandle" id="blockAreaHandle" value="Column One">					<input type="hidden" name="cID" id="cID" value="1">					<input type="hidden" name="bID" id="bID" value="19">				<div class="default message"><span>Drop files here or click to upload.</span></div></form>
 			</div>
 		</div>
 			<div class="ccm-conversation-messages">

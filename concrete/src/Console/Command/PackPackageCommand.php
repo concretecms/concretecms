@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Console\Command;
 
-use Symfony\Component\Console\Command\Command;
+use Concrete\Core\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -36,14 +36,20 @@ final class PackPackageCommand extends Command
         $zipAuto = static::ZIPOUT_AUTO;
         $keepDot = static::KEEP_DOT;
         $keepSources = static::KEEP_SOURCES;
+        $errExitCode = static::RETURN_CODE_ON_FAILURE;
         $this
-            ->setName('c5:package-pack')
+            ->setName('c5:package:pack')
+            ->setAliases([
+                'c5:package-pack',
+                'c5:pack-package',
+            ])
             ->setDescription('Process a package (expand PHP short tags, compile icons and translations, create zip archive)')
             ->addArgument('package', InputArgument::REQUIRED, 'The handle of the package to work on (or the path to a directory containing a concrete5 package)')
-            ->addOption('short-tags', 's', InputOption::VALUE_REQUIRED, 'Expand PHP short tags ['.static::SHORTTAGS_ALL.'|'.static::SHORTTAGS_KEEPECHO.'|'.static::SHORTTAGS_NO.']', static::SHORTTAGS_ALL)
-            ->addOption('compile-icons', 'i', InputOption::VALUE_REQUIRED, 'Compile SVG icons to PNG icons ['.static::YNA_YES.'|'.static::YNA_NO.'|'.static::YNA_AUTO.']?', static::YNA_AUTO)
-            ->addOption('compile-translations', 't', InputOption::VALUE_REQUIRED, 'Compile source .po translation files to the .mo binary format ['.static::YNA_YES.'|'.static::YNA_NO.'|'.static::YNA_AUTO.']?', static::YNA_AUTO)
-            ->addOption('keep', 'k', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Which files should be stored in the zip archive ['.static::KEEP_DOT.'|'.static::KEEP_SOURCES.']')
+            ->addEnvOption()
+            ->addOption('short-tags', 's', InputOption::VALUE_REQUIRED, 'Expand PHP short tags [' . static::SHORTTAGS_ALL . '|' . static::SHORTTAGS_KEEPECHO . '|' . static::SHORTTAGS_NO . ']', static::SHORTTAGS_ALL)
+            ->addOption('compile-icons', 'i', InputOption::VALUE_REQUIRED, 'Compile SVG icons to PNG icons [' . static::YNA_YES . '|' . static::YNA_NO . '|' . static::YNA_AUTO . ']?', static::YNA_AUTO)
+            ->addOption('compile-translations', 't', InputOption::VALUE_REQUIRED, 'Compile source .po translation files to the .mo binary format [' . static::YNA_YES . '|' . static::YNA_NO . '|' . static::YNA_AUTO . ']?', static::YNA_AUTO)
+            ->addOption('keep', 'k', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Which files should be stored in the zip archive [' . static::KEEP_DOT . '|' . static::KEEP_SOURCES . ']')
             ->addOption('update-source-directory', 'u', InputOption::VALUE_NONE, 'Update the files of the source directory (otherwise it remains untouched)')
             ->addOption('zip', 'z', InputOption::VALUE_OPTIONAL, 'Create a zip archive of the package (and optionally set its path)', static::ZIPOUT_AUTO)
             ->setHelp(<<<EOT
@@ -61,7 +67,7 @@ Please remark that this command can also parse legacy (pre-5.7) packages.
 
 Returns codes:
   0 operation completed successfully
-  1 errors occurred
+  $errExitCode errors occurred
 
 More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-package-pack
 EOT
@@ -71,7 +77,6 @@ EOT
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $rc = 0;
         try {
             $state = static::parseInput($input);
             if ($state->updateSourceDirectory === false && $state->zipFilename === null) {
@@ -103,7 +108,7 @@ EOT
                 $output->writeln('Package folder has been updated');
             }
             if ($state->zipFilename !== null) {
-                $output->writeln('Zip archive created: '.$state->zipFilename);
+                $output->writeln('Zip archive created: ' . $state->zipFilename);
             }
         } catch (Exception $x) {
             if ($state->zip !== null) {
@@ -111,11 +116,8 @@ EOT
                 $state->zip = null;
                 @unlink($state->zipFilename);
             }
-            $output->writeln('<error>'.$x->getMessage().'</error>');
-            $rc = 1;
+            throw $x;
         }
-
-        return $rc;
     }
 
     /**
@@ -154,7 +156,8 @@ EOT
             if ($result->packageDirectory === false) {
                 throw new Exception("Unable to find the directory '$p'");
             }
-            $controllerFile = $result->packageDirectory.'/'.FILENAME_CONTROLLER;
+            $result->packageDirectory = str_replace(DIRECTORY_SEPARATOR, '/', $result->packageDirectory);
+            $controllerFile = $result->packageDirectory . '/' . FILENAME_CONTROLLER;
             if (!is_file($controllerFile)) {
                 throw new Exception("The directory '{$result->packageDirectory}' does not seems to contain a valid concrete5 package");
             }
@@ -171,7 +174,7 @@ EOT
                                     switch ($token[0]) {
                                         case T_DOC_COMMENT:
                                         case T_WHITESPACE:
-                                        case T_COMMENT;
+                                        case T_COMMENT:
                                         $keep = false;
                                         break;
                                     }
@@ -190,7 +193,7 @@ EOT
                             && is_string($tokens[$i + 1]) && $tokens[$i + 1] === '='
                             && is_array($tokens[$i + 2]) && $tokens[$i + 2][0] === T_CONSTANT_ENCAPSED_STRING
                         ) {
-                            $result->packageHandle = @eval('return '.$tokens[$i + 2][1].';');
+                            $result->packageHandle = @eval('return ' . $tokens[$i + 2][1] . ';');
                             if (!is_string($result->packageHandle) || $result->packageHandle === '') {
                                 $result->packageHandle = null;
                             }
@@ -201,7 +204,7 @@ EOT
                             && is_string($tokens[$i + 1]) && $tokens[$i + 1] === '='
                             && is_array($tokens[$i + 2]) && $tokens[$i + 2][0] === T_CONSTANT_ENCAPSED_STRING
                         ) {
-                            $result->packageVersion = @eval('return '.$tokens[$i + 2][1].';');
+                            $result->packageVersion = @eval('return ' . $tokens[$i + 2][1] . ';');
                             if (!is_string($result->packageVersion) || $result->packageVersion === '') {
                                 $result->packageVersion = null;
                             }
@@ -212,7 +215,7 @@ EOT
                             && is_string($tokens[$i + 1]) && $tokens[$i + 1] === '='
                             && is_array($tokens[$i + 2]) && $tokens[$i + 2][0] === T_CONSTANT_ENCAPSED_STRING
                         ) {
-                            $packageAppVersionRequired = @eval('return '.$tokens[$i + 2][1].';');
+                            $packageAppVersionRequired = @eval('return ' . $tokens[$i + 2][1] . ';');
                             if (!is_string($packageAppVersionRequired) || $packageAppVersionRequired === '') {
                                 $packageAppVersionRequired = null;
                             }
@@ -253,7 +256,7 @@ EOT
                 $result->shortTags = $v;
                 break;
             default:
-                throw new Exception('Invalid value of the --short-tags option: '.$v);
+                throw new Exception('Invalid value of the --short-tags option: ' . $v);
         }
         $v = $input->getOption('compile-icons');
         switch ($v) {
@@ -263,7 +266,7 @@ EOT
                 $result->compileIcons = $v;
                 break;
             default:
-                throw new Exception('Invalid value of the --compile-icons option: '.$v);
+                throw new Exception('Invalid value of the --compile-icons option: ' . $v);
         }
         $v = $input->getOption('compile-translations');
         switch ($v) {
@@ -273,9 +276,9 @@ EOT
                 $result->compileTranslations = $v;
                 break;
             default:
-                throw new Exception('Invalid value of the --compile-translations option: '.$v);
+                throw new Exception('Invalid value of the --compile-translations option: ' . $v);
         }
-        $result->keep = array();
+        $result->keep = [];
         foreach ($input->getOption('keep') as $keep) {
             if (!in_array($keep, $result->keep)) {
                 switch ($keep) {
@@ -284,7 +287,7 @@ EOT
                         $result->keep[] = $keep;
                         break;
                     default:
-                        throw new Exception('Invalid value of the --keep option: '.$keep);
+                        throw new Exception('Invalid value of the --keep option: ' . $keep);
                 }
             }
         }
@@ -293,7 +296,7 @@ EOT
         $result->zipFilename = null;
         $zipOption = $input->getOption('zip');
         if ($zipOption === static::ZIPOUT_AUTO) {
-            if ($input->getParameterOption(array('--zip', '-z')) === false) {
+            if ($input->getParameterOption(['--zip', '-z']) === false) {
                 $zipOption = null;
             }
         }
@@ -304,9 +307,10 @@ EOT
             if (is_dir($zipOption)) {
                 $dir = @realpath($zipOption);
                 if ($dir === false) {
-                    throw new Exception('Unable to normalize the directory '.$zipOption);
+                    throw new Exception('Unable to normalize the directory ' . $zipOption);
                 }
-                $result->zipFilename = $dir.DIRECTORY_SEPARATOR.$result->packageHandle;
+                $dir = str_replace(DIRECTORY_SEPARATOR, '/', $dir);
+                $result->zipFilename = $dir . '/' . $result->packageHandle;
                 if ($result->packageVersion !== null) {
                     $result->zipFilename .= '-' . $result->packageVersion;
                 }
@@ -340,8 +344,8 @@ EOT
                     throw new Exception($err);
                 }
             }
-            $store = array();
-            $subDirs = array();
+            $store = [];
+            $subDirs = [];
             while (($item = readdir($hDir)) !== false) {
                 if (($item === '.') || ($item === '..')) {
                     continue;
@@ -349,7 +353,7 @@ EOT
                 if ($item[0] === '.' && !in_array(static::KEEP_DOT, $state->keep)) {
                     continue;
                 }
-                $itemAbs = $dirAbs.DIRECTORY_SEPARATOR.$item;
+                $itemAbs = $dirAbs . '/' . $item;
                 if (is_dir($itemAbs)) {
                     $subDirs[] = $item;
                     continue;
@@ -357,7 +361,7 @@ EOT
                 if (isset($store[$item])) {
                     continue;
                 }
-                $store[$item] = array('kind' => 'file', 'file' => $itemAbs);
+                $store[$item] = ['kind' => 'file', 'file' => $itemAbs];
                 $p = strrpos($item, '.');
                 $ext = ($p === false || $p === 0) ? '' : strtolower(substr($item, $p + 1));
                 switch ($ext) {
@@ -370,7 +374,7 @@ EOT
                                         throw new Exception("Failed to update PHP file $itemAbs");
                                     }
                                 } elseif ($state->zip !== null) {
-                                    $store[$item] = array('kind' => 'contents', 'contents' => $newContents);
+                                    $store[$item] = ['kind' => 'contents', 'contents' => $newContents];
                                 }
                                 $output->writeln("Expanded short tags in: $dirRel/$item");
                             }
@@ -391,7 +395,7 @@ EOT
                                 unset($store[$item]);
                             }
                             $compile = false;
-                            $compiledAbs = substr($itemAbs, 0, -2).'mo';
+                            $compiledAbs = substr($itemAbs, 0, -2) . 'mo';
                             switch ($state->compileTranslations) {
                                 case static::YNA_YES:
                                     $compile = true;
@@ -409,16 +413,16 @@ EOT
                                     break;
                             }
                             if ($compile) {
-                                $compiledItem = substr($item, 0, -2).'mo';
+                                $compiledItem = substr($item, 0, -2) . 'mo';
                                 $output->writeln("Compiling language : $dirRel/$item => $dirRel/$compiledItem");
                                 $translations = Translations::fromPoFile($itemAbs);
                                 if ($state->updateSourceDirectory) {
                                     if ($translations->toMoFile($compiledAbs) === false) {
                                         throw new Exception("Failed to write compiled translations file to $compiledAbs");
                                     }
-                                    $store[$compiledItem] = array('kind' => 'file', 'file' => $compiledAbs);
+                                    $store[$compiledItem] = ['kind' => 'file', 'file' => $compiledAbs];
                                 } elseif ($state->zip !== null) {
-                                    $store[$compiledItem] = array('kind' => 'contents', 'contents' => $translations->toMoString());
+                                    $store[$compiledItem] = ['kind' => 'contents', 'contents' => $translations->toMoString()];
                                 }
                             }
                         }
@@ -428,9 +432,9 @@ EOT
                             $iconSize = null;
                             if ($dirRel === '') {
                                 // Package icon
-                                $iconSize = ($state->packageFormat === static::PACKAGEFORMAT_CURRENT) ? array('width' => 200, 'height' => 200) : array('width' => 97, 'height' => 97);
+                                $iconSize = ($state->packageFormat === static::PACKAGEFORMAT_CURRENT) ? ['width' => 200, 'height' => 200] : ['width' => 97, 'height' => 97];
                             } elseif (preg_match('%^blocks/[^/]+$%', $dirRel)) {
-                                $iconSize = ($state->packageFormat === static::PACKAGEFORMAT_CURRENT) ? array('width' => 50, 'height' => 50) : array('width' => 16, 'height' => 16);
+                                $iconSize = ($state->packageFormat === static::PACKAGEFORMAT_CURRENT) ? ['width' => 50, 'height' => 50] : ['width' => 16, 'height' => 16];
                             }
                             if ($iconSize !== null) {
                                 if ($state->zip !== null && !in_array(static::KEEP_SOURCES, $state->keep)) {
@@ -438,7 +442,7 @@ EOT
                                     unset($store[$item]);
                                 }
                                 $compile = false;
-                                $compiledAbs = substr($itemAbs, 0, -3).'png';
+                                $compiledAbs = substr($itemAbs, 0, -3) . 'png';
                                 switch ($state->compileIcons) {
                                     case static::YNA_YES:
                                         $compile = true;
@@ -456,7 +460,7 @@ EOT
                                         break;
                                 }
                                 if ($compile) {
-                                    $compiledItem = substr($item, 0, -3).'png';
+                                    $compiledItem = substr($item, 0, -3) . 'png';
                                     $output->writeln("Generating png icon: $dirRel/$item => $dirRel/$compiledItem");
                                     $tmpDir = Core::make('helper/file')->getTemporaryDirectory();
                                     if (!is_dir($tmpDir)) {
@@ -464,17 +468,17 @@ EOT
                                     }
                                     $tmpFile = @tempnam($tmpDir, 'c5p');
                                     if ($tmpFile === false) {
-                                        throw new Exception('Failed to create a temporary file in directory '.$tmpDir);
+                                        throw new Exception('Failed to create a temporary file in directory ' . $tmpDir);
                                     }
                                     try {
                                         $cmd = 'inkscape';
                                         $cmd .= ' --file=' . escapeshellarg($itemAbs);
                                         $cmd .= ' --export-png=' . escapeshellarg($tmpFile);
                                         $cmd .= ' --export-area-page';
-                                        $cmd .= ' --export-width='.$iconSize['width'];
-                                        $cmd .= ' --export-height='.$iconSize['height'];
+                                        $cmd .= ' --export-width=' . $iconSize['width'];
+                                        $cmd .= ' --export-height=' . $iconSize['height'];
                                         $cmd .= ' 2>&1';
-                                        $execOutput = array();
+                                        $execOutput = [];
                                         @exec($cmd, $execOutput, $rc);
                                         if (!is_int($rc)) {
                                             $rc = -1;
@@ -492,15 +496,15 @@ EOT
                                     }
                                     @unlink($tmpFile);
                                     if ($pngData === '') {
-                                        throw new Exception("Inkscape failed to generate the PNG file:\n".implode("\n", $execOutput));
+                                        throw new Exception("Inkscape failed to generate the PNG file:\n" . implode("\n", $execOutput));
                                     }
                                     if ($state->updateSourceDirectory) {
                                         if (@file_put_contents($compiledAbs, $pngData) === false) {
                                             throw new Exception("Failed to write rendered SVN icon to $compiledAbs");
                                         }
-                                        $store[$compiledItem] = array('kind' => 'file', 'file' => $compiledAbs);
+                                        $store[$compiledItem] = ['kind' => 'file', 'file' => $compiledAbs];
                                     } elseif ($state->zip !== null) {
-                                        $store[$compiledItem] = array('kind' => 'contents', 'contents' => $pngData);
+                                        $store[$compiledItem] = ['kind' => 'contents', 'contents' => $pngData];
                                     }
                                 }
                             }
@@ -511,7 +515,7 @@ EOT
             @closedir($hDir);
             if ($state->zip !== null) {
                 foreach ($store as $storeItem => $storeWhat) {
-                    $storeName = $storePrefix.'/'.$storeItem;
+                    $storeName = $storePrefix . '/' . $storeItem;
                     switch ($storeWhat['kind']) {
                         case 'file':
                             if ($state->zip->addFile($storeWhat['file'], $storeName) === false) {
@@ -540,7 +544,7 @@ EOT
             }
             unset($store);
             foreach ($subDirs as $subDir) {
-                static::processDirectory($state, $output, $dirAbs.DIRECTORY_SEPARATOR.$subDir, ($dirRel === '') ? $subDir : "$dirRel/$subDir");
+                static::processDirectory($state, $output, $dirAbs . '/' . $subDir, ($dirRel === '') ? $subDir : "$dirRel/$subDir");
             }
         } catch (Exception $x) {
             @closedir($hDir);

@@ -1,12 +1,12 @@
 <?php
 namespace Concrete\Core\Feature;
 
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Loader;
 use Concrete\Core\Package\PackageList;
 use Core;
 
-class Feature extends Object
+class Feature extends ConcreteObject
 {
     public function getFeatureDetailObject($mixed)
     {

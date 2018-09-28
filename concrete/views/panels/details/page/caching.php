@@ -31,9 +31,6 @@ switch (Config::get('concrete.cache.full_page_lifetime')) {
 <section class="ccm-ui">
 	<header><?=t('Page Caching')?></header>
 	<form method="post" action="<?=$controller->action('submit')?>" data-dialog-form="caching" data-panel-detail-form="caching">
-
-	<?=Loader::helper('concrete/ui/help')->display('panel', '/page/caching')?>
-
 		<label class="control-label"><?=t('Enable Cache')?></label>
 
 		<div class="radio">
@@ -67,7 +64,7 @@ switch (Config::get('concrete.cache.full_page_lifetime')) {
 		<div class="radio">
 		<label>
 			<input type="radio" name="cCacheFullPageContentOverrideLifetime" value="0" <?php if ($c->getCollectionFullPageCachingLifetime() == '0') {
-    ?> checked="checked" <?php 
+    ?> checked="checked" <?php
 } ?> />
 			<?=t('Use global setting - %s', $globalSettingLifetime)?>
 		</label>
@@ -87,7 +84,7 @@ switch (Config::get('concrete.cache.full_page_lifetime')) {
 		</label>
 		</div>
 
-		<div class="form-inline"><?=$form->text('cCacheFullPageContentLifetimeCustom', $val, array('style' => 'width: 40px'))?> <?=t('minutes')?></div>
+		<div class="form-inline"><?=$form->number('cCacheFullPageContentLifetimeCustom', $val, array('style' => 'width: 110px', 'min' => 1))?> <?=t('minutes')?></div>
 
 		</div>
 
@@ -100,23 +97,23 @@ switch (Config::get('concrete.cache.full_page_lifetime')) {
         if ($rec instanceof \Concrete\Core\Cache\Page\PageCacheRecord) {
             ?>
 			<div class="alert alert-success">
-				<?=t('This page currently exists in the full page cache. It expires %s.', Loader::helper('date')->date('m/d/Y g:i a', $rec->getCacheRecordExpiration()))?>
+				<?=t('This page currently exists in the full page cache. It expires %s.', Core::make('date')->formatDateTime($rec->getCacheRecordExpiration()))?>
 				&nbsp;&nbsp;<button type="button" class="btn btn-xs btn-default pull-right" id="ccm-button-remove-page-from-cache"><?=t('Purge')?></button>
 			</div>
-		<?php 
+		<?php
         } elseif ($rec instanceof \Concrete\Core\Cache\Page\UnknownPageCacheRecord) {
             ?>
 			<div class="alert alert-info">
 				<?=t('This page <strong>may</strong> exist in the page cache.')?>
 				&nbsp;&nbsp;<button type="button" class="btn btn-xs btn-default pull-right" id="ccm-button-remove-page-from-cache"><?=t('Purge')?></button>
 			</div>
-			<?php 
+			<?php
         } else {
             ?>
 			<div class="alert alert-info"><?=t('This page is not currently in the full page cache.')?></div>
-		<?php 
+		<?php
         } ?>
-        
+
   		<span class="help-block"><?=t('Note: You can enable site-wide caching from the System & Settings area of the Dashboard.')?></span>
 
 	</form>

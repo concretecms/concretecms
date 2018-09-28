@@ -40,7 +40,7 @@ class ImportPageContentRoutine extends AbstractPageContentRoutine implements Spe
                     if (isset($this->home)) {
                         $page = $this->home;
                     } else {
-                        $page = Page::getByID(HOME_CID, 'RECENT');
+                        $page = Page::getByID(Page::getHomePageID(), 'RECENT');
                     }
                 }
                 if (isset($px->area)) {

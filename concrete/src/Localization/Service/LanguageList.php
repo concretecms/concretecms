@@ -3,7 +3,7 @@ namespace Concrete\Core\Localization\Service;
 
 use Punic\Language;
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
 class LanguageList
 {

@@ -58,7 +58,7 @@ class GroupList extends DatabaseItemList
             // there's gotta be a more reasonable way than this but right now i'm not sure what that is.
             $excludeGroupIDs = [GUEST_GROUP_ID, REGISTERED_GROUP_ID];
             $db = Loader::db();
-            $r = $db->Execute('select gID from Groups where gID > ?', [REGISTERED_GROUP_ID]);
+            $r = $db->executeQuery('select gID from ' . $db->getDatabasePlatform()->quoteSingleIdentifier('Groups') . ' where gID > ?', [REGISTERED_GROUP_ID]);
             while ($row = $r->FetchRow()) {
                 $g = Group::getByID($row['gID']);
                 $gp = new Permissions($g);
@@ -82,7 +82,7 @@ class GroupList extends DatabaseItemList
     public function createQuery()
     {
         $this->query->select('g.gID')
-            ->from('Groups', 'g');
+            ->from($this->query->getConnection()->getDatabasePlatform()->quoteSingleIdentifier('Groups'), 'g');
     }
 
     public function finalizeQuery(\Doctrine\DBAL\Query\QueryBuilder $query)

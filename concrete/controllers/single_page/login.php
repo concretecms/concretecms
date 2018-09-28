@@ -3,23 +3,20 @@ namespace Concrete\Controller\SinglePage;
 
 use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Authentication\AuthenticationTypeFailureException;
-use Concrete\Core\Page\Desktop\DesktopList;
-use Concrete\Core\Routing\Redirect;
+use Concrete\Core\Http\ResponseFactoryInterface;
+use Concrete\Core\Localization\Localization;
 use Concrete\Core\Routing\RedirectResponse;
-use Concrete\Core\Url\Url;
-use Localization;
-use Page;
+use Concrete\Core\User\PostLoginLocation;
+use Exception;
 use PageController;
-use Permissions;
-use User;
+use Concrete\Core\User\User;
 use UserAttributeKey;
 use UserInfo;
-use View;
 
 class Login extends PageController
 {
-    public $helpers = array('form');
-    protected $locales = array();
+    public $helpers = ['form'];
+    protected $locales = [];
 
     public function on_before_render()
     {
@@ -33,7 +30,8 @@ class Login extends PageController
 
     public function account_deactivated()
     {
-        $this->error->add(t('This user is inactive. Please contact us regarding this account.'));
+        $config = $this->app->make('config');
+        $this->error->add(t($config->get('concrete.user.deactivation.message')));
     }
 
     public function session_invalidated()
@@ -87,7 +85,7 @@ class Login extends PageController
             $this->view();
             $this->set('authTypeParams', $params);
             $this->set('authTypeElement', $method);
-        } catch (\exception $e) {
+        } catch (Exception $e) {
             if ($e instanceof AuthenticationTypeFailureException) {
                 // Throw again if this is a big`n
                 throw $e;
@@ -111,10 +109,10 @@ class Login extends PageController
             try {
                 $at = AuthenticationType::getByHandle($type);
                 $user = $at->controller->authenticate();
-                if ($user && $user->isLoggedIn()) {
-                    return $this->finishAuthentication($at);
+                if ($user && $user->isRegistered()) {
+                    return $this->finishAuthentication($at, $user);
                 }
-            } catch (\exception $e) {
+            } catch (Exception $e) {
                 $this->error->add($e->getMessage());
             }
         }
@@ -129,20 +127,20 @@ class Login extends PageController
     /**
      * @param AuthenticationType $type Required
      *
-     * @throws \Exception
+     * @throws Exception
      */
-    public function finishAuthentication(/* AuthenticationType */
-        $type = null
+    public function finishAuthentication(
+        AuthenticationType $type,
+        User $u
     ) {
         if (!$type || !($type instanceof AuthenticationType)) {
             return $this->view();
         }
-        $u = new User();
         $config = $this->app->make('config');
         if ($config->get('concrete.i18n.choose_language_login')) {
             $userLocale = $this->post('USER_LOCALE');
             if (is_string($userLocale) && ($userLocale !== '')) {
-                if ($userLocale !== 'en_US') {
+                if ($userLocale !== Localization::BASE_LOCALE) {
                     $availableLocales = Localization::getAvailableInterfaceLanguages();
                     if (!in_array($userLocale, $availableLocales)) {
                         $userLocale = '';
@@ -182,6 +180,7 @@ class Login extends PageController
             $session->set('uRequiredAttributeUserAuthenticationType', $type->getAuthenticationTypeHandle());
 
             $this->view();
+
             return $this->getViewObject()->render();
         }
 
@@ -190,118 +189,23 @@ class Login extends PageController
         $ue = new \Concrete\Core\User\Event\User($u);
         $this->app->make('director')->dispatch('on_user_login', $ue);
 
-        return $this->chooseRedirect();
+        return new RedirectResponse(
+            $this->app->make('url/manager')->resolve(['/login', 'login_complete'])
+        );
     }
 
-    public function on_start()
+    public function login_complete()
     {
-        $config = $this->app->make('config');
-        $this->error = $this->app->make('helper/validation/error');
-        $this->set('valt', $this->app->make('helper/validation/token'));
-        if ($config->get('concrete.user.registration.email_registration')) {
-            $this->set('uNameLabel', t('Email Address'));
-        } else {
-            $this->set('uNameLabel', t('Username'));
-        }
-
-        $txt = $this->app->make('helper/text');
-        if (isset($_GET['uName']) && strlen($_GET['uName'])
-        ) { // pre-populate the username if supplied, if its an email address with special characters the email needs to be urlencoded first,
-            $this->set("uName", trim($txt->email($_GET['uName'])));
-        }
-
-        $languages = array();
-        $locales = array();
-        if ($config->get('concrete.i18n.choose_language_login')) {
-            $languages = Localization::getAvailableInterfaceLanguages();
-            if (count($languages) > 0) {
-                array_unshift($languages, 'en_US');
-            }
-            $locales = array();
-            foreach ($languages as $lang) {
-                $locales[$lang] = \Punic\Language::getName($lang, $lang);
-            }
-            asort($locales);
-            $locales = array_merge(array('' => tc('Default locale', '** Default')), $locales);
-        }
-        $this->locales = $locales;
-        $this->set('locales', $locales);
-    }
-
-    public function chooseRedirect()
-    {
-        $config = $this->app->make('config');
-        $session = $this->app->make('session');
-
+        // Move this functionality to a redirected endpoint rather than from within the previous method because
+        // session isn't set until we redirect and reload.
+        $u = new User();
         if (!$this->error) {
             $this->error = $this->app->make('helper/validation/error');
         }
 
-        $nh = $this->app->make('helper/validation/numbers');
-        $navigation = $this->app->make('helper/navigation');
-        $rUrl = false;
-
-        $u = new User(); // added for the required registration attribute change above. We recalc the user and make sure they're still logged in
         if ($u->isRegistered()) {
-            if ($u->config('NEWSFLOW_LAST_VIEWED') == 'FIRSTRUN') {
-                $u->saveConfig('NEWSFLOW_LAST_VIEWED', 0);
-            }
-            do {
-                // redirect to original destination
-                if ($session->has('rUri')) {
-                    $rUrl = $session->get('rUri');
-                    $session->remove('rUri');
-                    if ($rUrl) {
-                        break;
-                    }
-                }
-                if ($session->has('rcID')) {
-                    $rcID = $session->get('rcID');
-                    if ($nh->integer($rcID)) {
-                        $rc = Page::getByID($rcID);
-                    } elseif (strlen($rcID)) {
-                        $rcID = trim($rcID, '/');
-                        $rc = Page::getByPath('/' . $rcID);
-                    }
-                    if ($rc instanceof Page && !$rc->isError()) {
-                        $rUrl = $navigation->getLinkToCollection($rc);
-                        break;
-                    }
-                }
-
-                $login_redirect_mode = $config->get('concrete.misc.login_redirect');
-
-                //redirect to custom page
-                $login_redirect_cid = intval($config->get('concrete.misc.login_redirect_cid'));
-                if ($login_redirect_mode == 'CUSTOM' && $login_redirect_cid > 0) {
-                    $rc = Page::getByID($login_redirect_cid);
-                    if ($rc instanceof Page && !$rc->isError()) {
-                        $rUrl = $navigation->getLinkToCollection($rc);
-                        break;
-                    }
-                }
-
-                if ($login_redirect_mode == 'DESKTOP') {
-
-                    $desktop = DesktopList::getMyDesktop();
-                    if (is_object($desktop)) {
-                        $rUrl = $navigation->getLinkToCollection($desktop);
-                    }
-                }
-
-                break;
-            } while (false);
-
-            if (!$rUrl) {
-                $rUrl = $navigation->getLinkToCollection(Page::getByID(HOME_CID));
-            }
-
-            $response = new RedirectResponse((string) $rUrl);
-
-            // Disable caching for response
-            $response = $response->setMaxAge(0)->setSharedMaxAge(0)->setPrivate();
-            $response->headers->addCacheControlDirective('must-revalidate', true);
-            $response->headers->addCacheControlDirective('no-store', true);
+            $pll = $this->app->make(PostLoginLocation::class);
+            $response = $pll->getPostLoginRedirectResponse(true);
 
             return $response;
         } else {
@@ -310,14 +214,87 @@ class Login extends PageController
         }
     }
 
+    public function on_start()
+    {
+        $config = $this->app->make('config');
+        $this->error = $this->app->make('helper/validation/error');
+        $this->set('valt', $this->app->make('helper/validation/token'));
+
+        $txt = $this->app->make('helper/text');
+        if (isset($_GET['uName']) && strlen($_GET['uName'])
+        ) { // pre-populate the username if supplied, if its an email address with special characters the email needs to be urlencoded first,
+            $this->set('uName', trim($txt->email($_GET['uName'])));
+        }
+
+        $loc = Localization::getInstance();
+        $loc->pushActiveContext(Localization::CONTEXT_SITE);
+        if ($config->get('concrete.user.registration.email_registration')) {
+            $this->set('uNameLabel', t('Email Address'));
+        } else {
+            $this->set('uNameLabel', t('Username'));
+        }
+        $languages = [];
+        $locales = [];
+
+        if ($config->get('concrete.i18n.choose_language_login')) {
+            $languages = Localization::getAvailableInterfaceLanguages();
+            if (count($languages) > 0) {
+                array_unshift($languages, Localization::BASE_LOCALE);
+            }
+            $locales = [];
+            foreach ($languages as $lang) {
+                $locales[$lang] = \Punic\Language::getName($lang, $lang);
+            }
+            asort($locales);
+            $locales = array_merge(['' => tc('Default locale', '** Default')], $locales);
+        }
+        $loc->popActiveContext();
+        $this->locales = $locales;
+        $this->set('locales', $locales);
+    }
+
+    /**
+     * @deprecated Use the getPostLoginUrl method of \Concrete\Core\User\PostLoginLocation
+     *
+     * @see \Concrete\Core\User\PostLoginLocation::getPostLoginUrl()
+     *
+     * @return string
+     */
+    public function getRedirectUrl()
+    {
+        $pll = $this->app->make(PostLoginLocation::class);
+        $url = $pll->getPostLoginUrl(true);
+        
+        return $url;
+    }
+
+    /**
+     * @deprecated Use the getSessionPostLoginUrl method of \Concrete\Core\User\PostLoginLocation
+     *
+     * @see \Concrete\Core\User\PostLoginLocation::getSessionPostLoginUrl()
+     *
+     * @return string|false
+     */
+    public function getRedirectUrlFromSession()
+    {
+        $pll = $this->app->make(PostLoginLocation::class);
+        $url = $pll->getSessionPostLoginUrl(true);
+
+        return $url === '' ? false : $url;
+    }
+
     public function view($type = null, $element = 'form')
     {
         $this->requireAsset('javascript', 'backstretch');
         $this->set('authTypeParams', $this->getSets());
         if (strlen($type)) {
-            $at = AuthenticationType::getByHandle($type);
-            $this->set('authType', $at);
-            $this->set('authTypeElement', $element);
+            try {
+                $at = AuthenticationType::getByHandle($type);
+                $this->set('authType', $at);
+                $this->set('authTypeElement', $element);
+            } catch (\Exception $e) {
+                // Don't fail loudly
+            }
         }
     }
 
@@ -332,7 +309,7 @@ class Login extends PageController
             ) {
                 $session->remove('uRequiredAttributeUser');
                 $session->remove('uRequiredAttributeUserAuthenticationType');
-                throw new \Exception(t('Invalid Request, please attempt login again.'));
+                throw new Exception(t('Invalid Request, please attempt login again.'));
             }
             User::loginByUserID($session->get('uRequiredAttributeUser'));
             $session->remove('uRequiredAttributeUser');
@@ -340,7 +317,7 @@ class Login extends PageController
             $at = AuthenticationType::getByHandle($session->get('uRequiredAttributeUserAuthenticationType'));
             $session->remove('uRequiredAttributeUserAuthenticationType');
             if (!$at) {
-                throw new \Exception(t("Invalid Authentication Type"));
+                throw new Exception(t('Invalid Authentication Type'));
             }
 
             $ui = UserInfo::getByID($u->getUserID());
@@ -353,14 +330,12 @@ class Login extends PageController
                         return $ak->isAttributeKeyRequiredOnRegister() && !is_object($ui->getAttributeValueObject($ak));
                     }));
 
-            $saveAttributes = array();
+            $saveAttributes = [];
             foreach ($unfilled as $attribute) {
                 $controller = $attribute->getController();
                 $validator = $controller->getValidator();
                 $response = $validator->validateSaveValueRequest($controller, $this->request);
-                /**
-                 * @var $response ResponseInterface
-                 */
+                /* @var \Concrete\Core\Validation\ResponseInterface $response */
                 if ($response->isValid()) {
                     $saveAttributes[] = $attribute;
                 } else {
@@ -372,12 +347,16 @@ class Login extends PageController
             if (count($saveAttributes) > 0) {
                 $ui->saveUserAttributesForm($saveAttributes);
             }
-            return $this->finishAuthentication($at);
-        } catch (\Exception $e) {
+
+            return $this->finishAuthentication($at, $u);
+        } catch (Exception $e) {
             $this->error->add($e->getMessage());
         }
     }
 
+    /**
+     * @deprecated
+     */
     public function logout($token = false)
     {
         if ($this->app->make('token')->validate('logout', $token)) {
@@ -387,12 +366,40 @@ class Login extends PageController
         }
     }
 
+    /**
+     * @param $token
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function do_logout($token = false)
+    {
+        $factory = $this->app->make(ResponseFactoryInterface::class);
+        /* @var ResponseFactoryInterface $factory */
+        $valt = $this->app->make('token');
+        /* @var \Concrete\Core\Validation\CSRF\Token $valt */
+
+        if ($valt->validate('do_logout', $token)) {
+            // Resolve the current logged in user and log them out
+            $this->app->make(User::class)->logout();
+
+            // Determine the destination URL
+            $url = $this->app->make('url/manager')->resolve(['/']);
+
+            // Return a new redirect to the homepage.
+            return $factory->redirect((string) $url, 302);
+        }
+
+        return $factory->error($valt->getErrorMessage());
+    }
+
     public function forward($cID = 0)
     {
         $nh = $this->app->make('helper/validation/numbers');
-        if ($nh->integer($cID) && intval($cID) > 0) {
-            $this->set('rcID', intval($cID));
-            $this->app->make('session')->set('rcID', intval($cID));
+        if ($nh->integer($cID, 1)) {
+            $rcID = (int) $cID;
+            $this->set('rcID', $rcID);
+            $pll = $this->app->make(PostLoginLocation::class);
+            $pll->setSessionPostLoginUrl($rcID);
         }
     }
 }

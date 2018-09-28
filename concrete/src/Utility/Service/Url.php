@@ -12,7 +12,7 @@ class Url
         if ($url == false) {
             $url = Loader::helper('security')->sanitizeString($_SERVER['REQUEST_URI']);
         } elseif (!strstr($url, '?')) {
-            $url = $url . '?' . Loader::helper('security')->sanitizeString($_SERVER['QUERY_STRING']);
+            $url = $url . '?' . Loader::helper('security')->sanitizeString(isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : '');
         }
 
         $vars = array();
@@ -23,7 +23,7 @@ class Url
         }
 
         foreach ($vars as $variable => $value) {
-            $url = preg_replace('/(.*)(\?|&)' . $variable . '=[^&]+?(&)(.*)/i', '$1$2$4', $url . '&');
+            $url = preg_replace('/(.*)(\?|&)' . $variable . '=[^&]*?(&)(.*)/i', '$1$2$4', $url . '&');
             $url = substr($url, 0, -1);
             if (strpos($url, '?') === false) {
                 $url = $url . '?' . $variable . '=' . $value;
@@ -55,7 +55,7 @@ class Url
         }
 
         foreach ($vars as $variable) {
-            $url = preg_replace('/(.*)(\?|&)' . $variable . '=[^&]+?(&)(.*)/i', '$1$2$4', $url . '&');
+            $url = preg_replace('/(.*)(\?|&)' . $variable . '=[^&]*?(&)(.*)/i', '$1$2$4', $url . '&');
             $url = substr($url, 0, -1);
         }
 

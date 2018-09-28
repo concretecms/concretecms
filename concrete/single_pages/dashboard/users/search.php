@@ -16,10 +16,11 @@ if (isset($user) && is_object($user)) {
     <div data-container="editable-fields">
 
         <section>
+            <h3><?=t('Basic Details')?></h3>
             <div class="row">
 
                 <div class="col-md-6">
-                    <h4><?= t('Basic Details') ?></h4>
+                    <h4><?= t('Login &amp; Email') ?></h4>
                     <div class="row">
                         <div class="col-md-4"><p><?= t('Username') ?></p></div>
                         <div class="col-md-8"><p><span
@@ -148,7 +149,7 @@ if (isset($user) && is_object($user)) {
                         ?>
                         <div class="row">
                             <div class="col-md-4"><p><?= t('Full Record') ?></p></div>
-                            <div class="col-md-8"><p><?= ($user->isFullRecord()) ? "Yes" : "No" ?></p></div>
+                            <div class="col-md-8"><p><?= ($user->isFullRecord()) ? t('Yes') : t('No') ?></p></div>
                         </div>
                         <div class="row">
                             <div class="col-md-4"><p><?= t('Email Validated') ?></p></div>
@@ -191,20 +192,41 @@ if (isset($user) && is_object($user)) {
         </section>
 
         <section>
-            <h4><?= t('Other Attributes') ?></h4>
-            <?php
-            View::element('attribute/editable_list', [
-                'attributes' => $attributes,
-                'object' => $user,
-                'saveAction' => $view->action('update_attribute', $user->getUserID()),
-                'clearAction' => $view->action('clear_attribute', $user->getUserID()),
-                'permissionsArguments' => ['attributes' => $allowedEditAttributes],
-                'permissionsCallback' => function ($ak, $permissionsArguments) {
-                    return is_array($permissionsArguments['attributes']) && in_array($ak->getAttributeKeyID(), $permissionsArguments['attributes']);
-                },
-            ]);
-            ?>
+            <h3><?=t('Custom Attributes')?></h3>
+
+            <?php foreach ($attributeSets as $set) : ?>
+                <h4><?php echo $set->getAttributeSetDisplayName()?></h4>
+                <?php
+                    View::element('attribute/editable_list', [
+                        'attributes' => $set->getAttributeKeys(),
+                        'object' => $user,
+                        'saveAction' => $view->action('update_attribute', $user->getUserID()),
+                        'clearAction' => $view->action('clear_attribute', $user->getUserID()),
+                        'permissionsArguments' => ['attributes' => $allowedEditAttributes],
+                        'permissionsCallback' => function ($ak, $permissionsArguments) {
+                            return is_array($permissionsArguments['attributes']) && in_array($ak->getAttributeKeyID(), $permissionsArguments['attributes']);
+                        },
+                    ]); ?>
+            <?php endforeach; ?>
+
+            <?php if (count($unassigned)) :
+                if (count($attributeSets)) { ?>
+                    <h4><?php echo t('Other')?></h4>
+                <?php
+                }
+                View::element('attribute/editable_list', [
+                    'attributes' => $unassigned,
+                    'object' => $user,
+                    'saveAction' => $view->action('update_attribute', $user->getUserID()),
+                    'clearAction' => $view->action('clear_attribute', $user->getUserID()),
+                    'permissionsArguments' => ['attributes' => $allowedEditAttributes],
+                    'permissionsCallback' => function ($ak, $permissionsArguments) {
+                        return is_array($permissionsArguments['attributes']) && in_array($ak->getAttributeKeyID(), $permissionsArguments['attributes']);
+                    },
+                ]); ?>
+            <?php endif; ?>
         </section>
+
 
     </div>
 
@@ -331,6 +353,13 @@ if (isset($user) && is_object($user)) {
 
         });
     </script>
+    <?php
+    if (is_array($workflowList)) {
+        View::element('workflow/notifications', [
+            'workflowList' => $workflowList,
+        ]);
+    }
+    ?>
     <?php
 } else {
     $tp = Core::make('helper/concrete/user');

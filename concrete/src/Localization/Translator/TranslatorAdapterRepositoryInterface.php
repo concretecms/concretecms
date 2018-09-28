@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Localization\Translator;
 
 /**
@@ -11,7 +10,6 @@ namespace Concrete\Core\Localization\Translator;
  */
 interface TranslatorAdapterRepositoryInterface
 {
-
     /**
      * Registers the translator for the given handle and locale to be the
      * object provided as the third parameter. The passed adapter needs to
@@ -59,5 +57,4 @@ interface TranslatorAdapterRepositoryInterface
      * @param $handle
      */
     public function removeTranslatorAdaptersWithHandle($handle);
-
 }

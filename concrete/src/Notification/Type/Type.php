@@ -2,6 +2,7 @@
 namespace Concrete\Core\Notification\Type;
 
 
+use Concrete\Core\Notification\Alert\Filter\StandardFilterFactory;
 use Concrete\Core\Notification\Notifier\StandardNotifier;
 use Concrete\Core\Notification\Subscription\StandardSubscription;
 use Doctrine\ORM\EntityManagerInterface;
@@ -20,4 +21,5 @@ abstract class Type implements TypeInterface
     {
         return new StandardNotifier($this->entityManager);
     }
+
 }

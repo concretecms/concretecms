@@ -13,16 +13,7 @@ class OneToManyAssociationSaveHandler extends ManyAssociationSaveHandler
         $associatedEntries = $this->getAssociatedEntriesFromRequest($control, $request);
         $association = $control->getAssociation();
         if ($association->isOwningAssociation()) {
-            // If the owned entity supports display order, we save display order here. Otherwise we return.
-            if ($association->getTargetEntity()->supportsCustomDisplayOrder()) {
-                $i = 0;
-                foreach($associatedEntries as $entry) {
-                    $entry->setEntryDisplayOrder($i);
-                    $this->entityManager->persist($entry);
-                    $i++;
-                }
-                $this->entityManager->flush();
-            }
+            // If this is an owned entity, we return because we don't need to remove associate or associate
             return;
         }
 

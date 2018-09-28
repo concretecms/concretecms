@@ -11,19 +11,25 @@ module.exports = {
 	// The path to the cli folder, relative to this Gruntfile
 	DIR_CLI: '../cli',
 
-	// Your Transifex login.
+	// The entry point URI of the API of the Community Translation server containing the translations.
+	// It's needed only if you have to run tasks that interact with a Community Translation server.
+	ctEntryPoint: 'https://translate.concrete5.org/api',
+	// The API Token to be used to authenticate yourself on a Community Translation server (may not be required).
+	// It's needed only if you have to run tasks that interact with a Community Translation server.
+	ctAPIToken: '',
+	// The handle of the package on the Community Translation server.
 	// It's needed only if you have to run tasks that interact with Transifex.
-	txUsername: '',
-	// Your Transifex password.
-	// It's needed only if you have to run tasks that interact with Transifex.
-	txPassword: '',
-	// The identifier of the Transifex resource, for instance 'core-5621'.
-	// It's needed only if you have to run tasks that interact with Transifex.
-	txResource: '',
-	// A list of locales. If empty then all the Transifex locales are retrieved.
-	txLocales: [],
+	ctPackage: 'concrete5',
+	// The version of the package on the Community Translation server
+    // It's needed only if you have to run tasks that interact with Transifex.
+	ctPackageVersion: 'dev-8',
+	// A list of locales. If empty then all the Community Translation locales are retrieved.
+	ctLocales: [],
 	// The minimum translation progress of locales (percentage).
 	// Default value: 90%
-	txProgressLimit: 90
+	ctProgressLimit: 90,
+
+	// Keep the short echo tags? Otherwise they'll be expanded [default: true]
+	keepShortEcho: true
 
 };

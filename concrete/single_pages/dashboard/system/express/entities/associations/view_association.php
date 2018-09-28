@@ -42,13 +42,13 @@
 <p><?=$formatter->getTypeDisplayName()?></p>
 
 <h4><?=t('Source Object')?></h4>
-<p><a href="<?=URL::to('/dashboard/system/express/entities', 'view_entity', $entity->getID())?>"><?=$entity->getName()?></a></p>
+<p><a href="<?=URL::to('/dashboard/system/express/entities', 'view_entity', $entity->getID())?>"><?=$entity->getEntityDisplayName()?></a></p>
 
 <h4><?=t('Inversed Property Name')?></h4>
 <p><?=$association->getInversedByPropertyName()?></p>
 
 <h4><?=t('Target Object')?></h4>
-<p><a href="<?=URL::to('/dashboard/system/express/entities', 'view_entity', $association->getTargetEntity()->getID())?>"><?=$association->getTargetEntity()->getName()?></a></p>
+<p><a href="<?=URL::to('/dashboard/system/express/entities', 'view_entity', $association->getTargetEntity()->getID())?>"><?=$association->getTargetEntity()->getEntityDisplayName()?></a></p>
 
 <h4><?=t('Target Property Name')?></h4>
 <p><?=$association->getTargetPropertyName()?></p>

@@ -1,11 +1,14 @@
 <?php
 namespace Concrete\Core\File\Search\ColumnSet;
 
+use Concrete\Core\File\Search\ColumnSet\Column\FileVersionDateAddedColumn;
+use Concrete\Core\File\Search\ColumnSet\Column\FileVersionSizeColumn;
+use Concrete\Core\File\Search\ColumnSet\Column\FileVersionTitleColumn;
 use Core;
 use Concrete\Core\Search\Column\Column;
 use Concrete\Core\Search\Column\Set;
 
-class DefaultSet extends Set
+class DefaultSet extends ColumnSet
 {
     protected $attributeClass = 'FileAttributeKey';
 
@@ -23,10 +26,10 @@ class DefaultSet extends Set
 
     public function __construct()
     {
-        $this->addColumn(new Column('fv.fvTitle', t('Name'), 'getTitle'));
+        $this->addColumn(new FileVersionTitleColumn());
         $this->addColumn(new Column('fv.fvType', t('Type'), 'getType', false));
-        $this->addColumn(new Column('fv.fvDateAdded', t('Modified'), array('\Concrete\Core\File\Search\ColumnSet\DefaultSet', 'getFileDateActivated')));
-        $this->addColumn(new Column('fv.fvSize', t('Size'), 'getSize'));
+        $this->addColumn(new FileVersionDateAddedColumn());
+        $this->addColumn(new FileVersionSizeColumn());
         $title = $this->getColumnByKey('fv.fvDateAdded');
         $this->setDefaultSortColumn($title, 'desc');
     }

@@ -1,10 +1,13 @@
 <?php
 namespace Concrete\Core\Entity\File\StorageLocation;
 
-use Concrete\Core\File\StorageLocation\Configuration\ConfigurationInterface;
+use Concrete\Core\Cache\Level\ExpensiveCache;
 use Concrete\Core\File\StorageLocation\StorageLocationInterface;
+use Concrete\Core\Filesystem\FlysystemCache;
 use Database;
 use Doctrine\ORM\Mapping as ORM;
+use League\Flysystem\Cached\CachedAdapter;
+use League\Flysystem\Cached\Storage\Psr6Cache;
 
 /**
  * @ORM\Entity
@@ -56,8 +59,8 @@ class StorageLocation implements StorageLocationInterface
 
     /** Returns the display name for this storage location (localized and escaped accordingly to $format)
      * @param string $format = 'html'
-     *    Escape the result in html format (if $format is 'html').
-     *    If $format is 'text' or any other value, the display name won't be escaped.
+     *                       Escape the result in html format (if $format is 'html').
+     *                       If $format is 'text' or any other value, the display name won't be escaped.
      *
      * @return string
      */
@@ -86,7 +89,7 @@ class StorageLocation implements StorageLocationInterface
      */
     public function setIsDefault($fslIsDefault)
     {
-        $this->fslIsDefault = $fslIsDefault;
+        $this->fslIsDefault = (bool) $fslIsDefault;
     }
 
     /**
@@ -127,9 +130,33 @@ class StorageLocation implements StorageLocationInterface
     public function getFileSystemObject()
     {
         $adapter = $this->getConfigurationObject()->getAdapter();
+        /*
+         * This is currently broken. The cache implementation in the file system
+         * causes problems under high load because the files that are written
+         * are huge.
+         * @TODO - perhaps make this configurable and default to off? That way
+         * we can reenable it if we're using a backend like memcache?
+        $pool = \Core::make(ExpensiveCache::class)->pool;
+        $cache = new Psr6Cache($pool, 'flysystem-id-' . $this->getID());
+        $cachedAdapter = new FlysystemCache($adapter, $cache);
+        $filesystem = new \League\Flysystem\Filesystem($cachedAdapter);
+        */
         $filesystem = new \League\Flysystem\Filesystem($adapter);
-
         return $filesystem;
+    }
+
+    /**
+     * Clear the Flysystem cache.
+     */
+    public function clearCache()
+    {
+        /*
+         * Disabled until the cache is re-enabled.
+        $pool = \Core::make(ExpensiveCache::class)->pool;
+        $cache = new Psr6Cache($pool, 'flysystem-id-' . $this->getID());
+        $cache->flush();
+        */
+        return;
     }
 
     public function delete()
@@ -137,7 +164,7 @@ class StorageLocation implements StorageLocationInterface
         $default = \Concrete\Core\File\StorageLocation\StorageLocation::getDefault();
         $db = Database::get();
 
-        $fIDs = $db->GetCol('select fID from Files where fslID = ?', array($this->getID()));
+        $fIDs = $db->GetCol('select fID from Files where fslID = ?', [$this->getID()]);
         foreach ($fIDs as $fID) {
             $file = \File::getByID($fID);
             if (is_object($file)) {

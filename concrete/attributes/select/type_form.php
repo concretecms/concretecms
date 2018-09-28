@@ -58,6 +58,25 @@ function getAttributeOptionHTML($v)
     </div>
 </div>
 
+<div class="form-group" data-group="single-value">
+	<label><?=t("Single Value")?></label>
+	<div class="checkbox">
+		<label>
+			<?=$form->checkbox('akDisplayMultipleValuesOnSelect', 1, $akDisplayMultipleValuesOnSelect)?> <span><?=t('Display full option list when selecting.')?></span>
+		</label>
+	</div>
+	<div class="help-block"><?=t('Enabling this will typically display the list with radio buttons.')?></div>
+</div>
+
+<div class="form-group" data-group="single-value">
+    <label><?=t("Hide None Option")?></label>
+    <div class="checkbox">
+        <label>
+            <?=$form->checkbox('akHideNoneOption', 1, $akHideNoneOption)?> <span><?=t('Hide none option from the list.')?></span>
+        </label>
+    </div>
+</div>
+
 <div class="form-group">
     <label><?=t("User Submissions")?></label>
     <div class="checkbox">
@@ -231,7 +250,39 @@ function getAttributeOptionHTML($v)
 	}
 
 	$(function() {
+		$('input[name=akSelectAllowMultipleValues]').on('change', function() {
+			if ($(this).is(':checked')) {
+				$('div[data-group=single-value]').hide();
+			} else {
+				$('div[data-group=single-value]').show();
+			}
+		}).trigger('change');
 		ccmAttributesHelper.makeSortable();
+        <?php
+        $max_input_vars = (int) @ini_get('max_input_vars');
+        if ($max_input_vars > 0) {
+            ?>
+            var $form = $("#ccm-attribute-key-form");
+            $form.on('submit', function(e) {
+                var numFields = $form.find(':input').length;
+                if (numFields > <?=$max_input_vars?>) {
+                    alert(
+                        <?=json_encode(t(
+<<<'EOT'
+Your current PHP configuration does not allow to save so many tags.
+
+You should increase the value of the %1$s option in your php.ini.
+
+The current value of this option is %2$s, but this form requires at least a value of %3$s.
+EOT
+                        , 'max_input_vars', $max_input_vars, '[[CURRENT_NUMBER_OF_FIELDS]]'))?>.replace('[[CURRENT_NUMBER_OF_FIELDS]]', numFields.toString())
+                    );
+                    e.preventDefault();
+                }
+            });
+            <?php
+        }
+        ?> 
 	});
 
 </script>

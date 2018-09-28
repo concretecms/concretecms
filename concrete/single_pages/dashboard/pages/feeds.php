@@ -24,7 +24,7 @@
     $button = t('Add');
     if (is_object($feed)) {
         $pfTitle = $feed->getTitle();
-        $pfDescription = $feed->getDescription();
+        $pfDescription = h($feed->getDescription());
         $pfHandle = $feed->getHandle();
         $cParentID = $feed->getParentID();
         $ptID = $feed->getPageTypeID();
@@ -261,7 +261,7 @@
         <ul class="item-select-list">
             <?php foreach ($feeds as $feed) {
     ?>
-                <li><a href="<?=$view->action('edit', $feed->getID())?>"><i class="fa fa-rss"></i> <?=$feed->getTitle()?></a></li>
+                <li><a href="<?=$view->action('edit', $feed->getID())?>"><i class="fa fa-rss"></i> <?=$feed->getFeedDisplayTitle()?></a></li>
             <?php 
 }
     ?>

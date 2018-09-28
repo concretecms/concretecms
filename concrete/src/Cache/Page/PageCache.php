@@ -2,16 +2,17 @@
 
 namespace Concrete\Core\Cache\Page;
 
+use Concrete\Core\Cache\FlushableInterface;
 use Concrete\Core\Http\Response;
 use Config;
-use Request;
+use Concrete\Core\Http\Request;
 use Concrete\Core\Page\Page as ConcretePage;
 use \Concrete\Core\Page\View\PageView;
 use Permissions;
 use User;
 use Session;
 
-abstract class PageCache
+abstract class PageCache implements FlushableInterface
 {
 
     static $library;
@@ -45,6 +46,10 @@ abstract class PageCache
 
     public function shouldCheckCache(Request $req)
     {
+        if ($req->isPost()) {
+            return false;
+        }
+        
         $app = \Core::make('app');
         $config = $app['config'];
         $cookie = $app['cookie'];
@@ -135,12 +140,13 @@ abstract class PageCache
 
     public function getCacheKey($mixed)
     {
+        $homeCID = 1;
         if ($mixed instanceof ConcretePage) {
             if ($mixed->getCollectionPath() != '') {
                 return urlencode(trim($mixed->getCollectionPath(), '/'));
             } else {
-                if ($mixed->getCollectionID() == HOME_CID) {
-                    return '!' . HOME_CID;
+                if ($mixed->getCollectionID() == $homeCID) {
+                    return '!' . $homeCID;
                 }
             }
         } else {
@@ -148,7 +154,7 @@ abstract class PageCache
                 if ($mixed->getPath() != '') {
                     return urlencode(trim($mixed->getPath(), '/'));
                 } else {
-                    return '!' . HOME_CID;
+                    return '!' . $homeCID;
                 }
             } else {
                 if ($mixed instanceof PageCacheRecord) {

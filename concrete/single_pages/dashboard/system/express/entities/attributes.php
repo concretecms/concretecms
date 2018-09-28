@@ -1,7 +1,7 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");?>
 
 <?php
-if (!isset($headerMenu)) { ?>
+if (!isset($headerMenu) || !is_object($headerMenu)) { ?>
 
 <div class="ccm-dashboard-header-buttons">
 

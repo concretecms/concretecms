@@ -89,6 +89,11 @@
       <default value="0"/>
       <notnull/>
     </field>
+    <field name="cvID" type="integer" size="10">
+      <unsigned/>
+      <default value="0"/>
+      <notnull/>
+    </field>
     <field name="arHandle" type="string" size="255"/>
     <field name="cbDisplayOrder" type="integer" size="10">
       <unsigned/>
@@ -802,6 +807,11 @@
       <default value="0"/>
       <notnull/>
     </field>
+    <field name="cnvMessageReview" type="integer" size="1">
+      <unsigned/>
+      <default value="0"/>
+      <notnull/>
+    </field>
     <field name="uID" type="integer" size="10">
       <unsigned/>
       <default value="0"/>
@@ -1279,6 +1289,9 @@
       <default value=""/>
       <notnull/>
     </field>
+    <references table="AreaLayouts" ondelete="cascade" onupdate="cascade">
+    	<column local="arLayoutID" foreign="arLayoutID"/>
+    </references>
   </table>
 
   <table name="AreaLayoutPresets">
@@ -1836,7 +1849,9 @@
       <notnull/>
     </field>
     <field name="cvActivateDatetime" type="datetime"/>
-    <field name="cvPublishDate" type="datetime"/>
+    <field name="cvPublishDate" type="datetime" />
+    <field name="cvPublishEndDate" type="datetime" />
+    <field name="cvDateApproved" type="datetime" />
     <index name="cvIsApproved">
       <col>cvIsApproved</col>
     </index>
@@ -3262,6 +3277,10 @@
       <default value="0"/>
       <notnull/>
     </field>
+    <field name="cIsDraft" type="boolean">
+      <default value="0"/>
+      <notnull/>
+    </field>
     <field name="cCacheFullPageContent" type="smallint">
       <default value="-1"/>
       <notnull/>
@@ -3466,28 +3485,29 @@
     </index>
   </table>
 
-  <table name="UserBannedIPs">
-    <field name="id" type="integer" size="11">
+  <table name="LoginControlIpRanges" comment="IP ranges used to control login attempts">
+    <field name="lcirID" type="integer" comment="Record identifier">
       <unsigned/>
       <autoincrement/>
       <key/>
     </field>
-    <field name="ipFrom" type="blob" size="32">
-    </field>
-    <field name="ipTo" type="blob" size="32">
-    </field>
-    <field name="banCode" type="boolean">
-      <default value="1"/>
+    <field name="lcirIpFrom" type="string" size="40" comment="Start of the range">
       <notnull/>
     </field>
-    <field name="expires" type="datetime">
-      <default value="1000-01-01 00:00:00"/>
+    <field name="lcirIpTo" type="string" size="40" comment="End of the range">
       <notnull/>
     </field>
-    <field name="isManual" type="boolean">
-      <default value="0"/>
+    <field name="lcirType" type="smallint" comment="Type of the record">
+      <unsigned/>
       <notnull/>
     </field>
+    <field name="lcirExpires" type="datetime" comment="Record end-of-life timestamp">
+    </field>
+    <index name="IX_LoginControlIpRanges_Search">
+      <col>lcirIpFrom</col>
+      <col>lcirIpTo</col>
+      <col>lcirExpires</col>
+    </index>
   </table>
 
   <table name="UserGroups">
@@ -3656,13 +3676,16 @@
     </index>
   </table>
 
-  <table name="SignupRequests">
-    <field name="id" type="integer" size="11">
+  <table name="FailedLoginAttempts" comment="Records failed login attempts">
+    <field name="lcirID" type="integer" comment="Record identifier">
+      <unsigned/>
       <autoincrement/>
       <key/>
     </field>
-    <field name="ipFrom" type="blob" size="32"/>
-    <field name="date_access" type="timestamp">
+    <field name="flaIp" type="string" size="40" comment="IP address of the failed login attempt">
+      <notnull/>
+    </field>
+    <field name="flaTimestamp" type="timestamp" comment="Timestamp of the failed login attempt">
       <deftimestamp/>
       <notnull/>
     </field>
@@ -3786,10 +3809,6 @@
       <unsigned/>
       <default value="0"/>
       <notnull/>
-    </field>
-    <field name="siteTreeID" type="integer" size="10">
-      <unsigned/>
-      <default value="0"/>
     </field>
     <index name="stType">
       <col>stType</col>
@@ -4324,8 +4343,7 @@
       <key/>
       <notnull/>
     </field>
-    <field name="sessionValue" type="text" size="65535">
-      <notnull/>
+    <field name="sessionValue" type="text">
     </field>
     <field name="sessionTime" type="integer" size="11">
       <unsigned/>
@@ -4340,17 +4358,25 @@
   <table name="FileImageThumbnailPaths">
     <field name="fileID" type="integer">
       <unsigned/>
+      <key/>
       <notnull/>
     </field>
     <field name="fileVersionID" type="integer">
       <unsigned/>
+      <key/>
       <notnull/>
     </field>
     <field name="thumbnailTypeHandle" type="string" size="255">
+      <key/>
       <notnull/>
     </field>
     <field name="storageLocationID" type="integer">
       <unsigned/>
+      <key/>
+      <notnull/>
+    </field>
+    <field name="thumbnailFormat" type="string" size="5">
+      <key/>
       <notnull/>
     </field>
     <field name="path" type="text">
@@ -4359,14 +4385,8 @@
     <field name="isBuilt" type="boolean">
       <notnull/>
     </field>
-
-    <index name="thumbnailPathID">
-      <unique/>
-      <col>fileID</col>
-      <col>fileVersionID</col>
-      <col>thumbnailTypeHandle</col>
-      <col>storageLocationID</col>
-    </index>
+    <field name="lockID" type="string" size="255"/>
+    <field name="lockExpires" type="datetime"/>
   </table>
 
 </schema>

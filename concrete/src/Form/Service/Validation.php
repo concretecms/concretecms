@@ -2,6 +2,8 @@
 namespace Concrete\Core\Form\Service;
 
 use Loader;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Validator\String\EmailValidator;
 
 /**
  * \@package    Helpers
@@ -157,34 +159,36 @@ class Validation
      */
     public function test()
     {
-        $val = Loader::helper('validation/strings');
-        $num = Loader::helper('validation/numbers');
-        $fil = Loader::helper('validation/file');
+        $app = Application::getFacadeApplication();
+        $val = $app->make('helper/validation/strings');
+        $num = $app->make('helper/validation/numbers');
+        $fil = $app->make('helper/validation/file');
 
         // loop through all the fields in the array, and run whatever validation
         // the validate parameter says is required
         foreach ($this->fields as $f) {
             $validate = $f->validate;
             $field = $f->field;
+            $fieldValue = isset($this->data[$field]) ? $this->data[$field] : null;
             switch ($validate) {
                 case self::VALID_NOT_EMPTY:
-                    if (!$val->notempty($this->data[$field])) {
+                    if (!$val->notempty($fieldValue)) {
                         $this->fieldsInvalid[] = $f;
                     }
                     break;
                 case self::VALID_TOKEN:
-                    $vt = Loader::helper('validation/token');
+                    $vt = $app->make('helper/validation/token');
                     if (!$vt->validate($f->value)) {
                         $this->fieldsInvalid[] = $f;
                     }
                     break;
                 case self::VALID_INTEGER:
-                    if ((!$num->integer($this->data[$field])) && ($val->notempty($this->data[$field]))) {
+                    if ((!$num->integer($fieldValue)) && ($val->notempty($fieldValue))) {
                         $this->fieldsInvalid[] = $f;
                     }
                     break;
                 case self::VALID_INTEGER_REQUIRED:
-                    if (!$num->integer($this->data[$field])) {
+                    if (!$num->integer($fieldValue)) {
                         $this->fieldsInvalid[] = $f;
                     }
                     break;
@@ -209,7 +213,7 @@ class Validation
                     }
                     break;
                 case self::VALID_EMAIL:
-                    if (!$val->email($this->data[$field])) {
+                    if (!$app->make(EmailValidator::class)->isValid($fieldValue)) {
                         $this->fieldsInvalid[] = $f;
                     }
                     break;
@@ -226,7 +230,11 @@ class Validation
     protected function setErrorsFromInvalidFields()
     {
         foreach ($this->fieldsInvalid as $f) {
-            $this->error->add($f->message);
+            if (isset($f->field)) {
+                $this->error->add($f->message, $f->field);
+            } else {
+                $this->error->add($f->message);
+            }
         }
     }
 

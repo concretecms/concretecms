@@ -3,6 +3,7 @@ namespace Concrete\Controller\Dialog\Express;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Concrete\Controller\Search\Express\Entries;
+use Concrete\Controller\Element\Dashboard\Express\Entries\Header;
 
 class Search extends BackendInterfaceController
 {
@@ -10,20 +11,28 @@ class Search extends BackendInterfaceController
 
     protected function canAccess()
     {
-        $c = \Page::getByPath('/dashboard/express/entities');
-        $cp = new \Permissions($c);
-        return $cp->canViewPage();
+        $entity = $this->getEntity();
+        if (is_object($entity)) {
+            $ep = new \Permissions($entity);
+            return $ep->canViewExpressEntries();
+        }
+        return false;
     }
 
-    public function entries($entityID)
+    protected function getEntity()
     {
         $em = \Database::connection()->getEntityManager();
-        $entity = $em->getRepository('Concrete\Core\Entity\Express\Entity')
-            ->findOneById($entityID);
-        $search = new Entries();
-        $search->search($entity);
+        return $em->getRepository('Concrete\Core\Entity\Express\Entity')
+            ->findOneById($this->request->get('exEntityID'));
+    }
 
+    public function entries()
+    {
+        $search = new Entries();
+        $search->search($this->getEntity());
         $result = json_encode($search->getSearchResultObject()->getJSONObject());
+        $header = new Header($this->getEntity());
+        $this->set('headerMenu', $header);
         $this->set('result', $result);
         $this->set('searchController', $search);
     }

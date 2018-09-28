@@ -79,9 +79,6 @@ if (!$tp->canInstallPackages()) {
 								<h6><?=t('Version History')?></h6>
 								<?=$versionHistory?>
 							</div>
-							<div class="ccm-marketplace-item-information-more">
-								<a href="javascript:void(0)" onclick="ConcreteMarketplace.updatesShowMore(this)"><?=t('More Details')?></a>
-							</div>
 						<?php 
 }
     ?>
@@ -121,9 +118,6 @@ if (!$tp->canInstallPackages()) {
 							<div class="ccm-marketplace-update-changelog">
 								<h6><?=t('Version History')?></h6>
 								<?=$versionHistory?>
-							</div>
-							<div class="ccm-marketplace-item-information-more">
-								<a href="javascript:void(0)" onclick="ConcreteMarketplace.updatesShowMore(this)"><?=t('More Details')?></a>
 							</div>
 						<?php 
 }
@@ -166,7 +160,7 @@ if (!$tp->canInstallPackages()) {
 			<div class="well" style="padding:10px 20px;">
 				<h3><?=t('Connect to Community')?></h3>
 				<p><?=t('Your site is not connected to the concrete5 community. Connecting lets you easily extend a site with themes and add-ons. Connecting enables automatic updates.')?></p>
-				<p><a class="btn success" href="<?=$view->url('/dashboard/extend/connect', 'register_step1')?>"><?=t("Connect to Community")?></a></p>
+				<p><a class="btn btn-primary" href="<?=$view->url('/dashboard/extend/connect', 'register_step1')?>"><?=t("Connect to Community")?></a></p>
 			</div>
 
 		<?php 

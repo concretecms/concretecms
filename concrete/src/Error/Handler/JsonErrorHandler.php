@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Error\Handler;
 
+use Concrete\Core\Error\UserMessageException;
 use Config;
 use Whoops\Exception\Formatter;
 use Whoops\Handler\Handler;
@@ -14,15 +15,23 @@ class JsonErrorHandler extends Handler
             return Handler::DONE;
         }
 
-        $display = Config::get('concrete.debug.display_errors');
-
-        if (!$display) {
-            $error = array('message' => t('An error occurred while processing this request.'));
+        $e = $this->getInspector()->getException();
+        $detail = 'message';
+        if ($e instanceof UserMessageException) {
+            $display = true;
+            $canBeLogged = $e->canBeLogged();
         } else {
-            $detail = Config::get('concrete.debug.detail', 'message');
+            $display = (bool) Config::get('concrete.debug.display_errors');
+            if ($display === true) {
+                $detail = Config::get('concrete.debug.detail');
+            }
+            $canBeLogged = true;
+        }
+        if ($display === false) {
+            $error = ['message' => t('An error occurred while processing this request.')];
+        } else {
             if ($detail !== 'debug') {
-                $e = $this->getInspector()->getException();
-                $error = array('message' => $e->getMessage());
+                $error = ['message' => $e->getMessage()];
             } else {
                 $error = Formatter::formatExceptionAsDataArray(
                     $this->getInspector(),
@@ -31,13 +40,31 @@ class JsonErrorHandler extends Handler
             }
         }
 
-        $response = array(
+        if ($canBeLogged && Config::get('concrete.log.errors')) {
+            try {
+                $e = $this->getInspector()->getException();
+                $l = \Core::make('log/exceptions');
+                $l->emergency(
+                    sprintf(
+                        "Exception Occurred: %s:%d %s (%d)\n",
+                        $e->getFile(),
+                        $e->getLine(),
+                        $e->getMessage(),
+                        $e->getCode()
+                    ),
+                    [$e]
+                );
+            } catch (\Exception $e) {
+            }
+        }
+
+        $response = [
             'error' => $error,
-            'errors' => array($error['message']),
-        );
+            'errors' => [$error['message']],
+        ];
 
         if (Misc::canSendHeaders()) {
-            if (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false) {
+            if (isset($_SERVER['HTTP_ACCEPT']) && preg_match('%^(application|\*)/(json|\*)$%', $_SERVER['HTTP_ACCEPT'])) {
                 header('Content-Type: application/json; charset=' . APP_CHARSET, true);
             } else {
                 header('Content-Type: text/plain; charset=' . APP_CHARSET, true);

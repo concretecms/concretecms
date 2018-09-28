@@ -5,6 +5,7 @@ use BlockType;
 use CollectionAttributeKey;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Page\Feed;
+use Concrete\Core\Tree\Node\Node;
 use Database;
 use Page;
 use Core;
@@ -15,8 +16,8 @@ use Concrete\Core\Tree\Node\Type\Topic;
 class Controller extends BlockController
 {
     protected $btTable = 'btPageList';
-    protected $btInterfaceWidth = "800";
-    protected $btInterfaceHeight = "350";
+    protected $btInterfaceWidth = 700;
+    protected $btInterfaceHeight = 525;
     protected $btExportPageColumns = ['cParentID'];
     protected $btExportPageTypeColumns = ['ptID'];
     protected $btExportPageFeedColumns = ['pfID'];
@@ -50,7 +51,7 @@ class Controller extends BlockController
     {
         $this->list = new PageList();
         $this->list->disableAutomaticSorting();
-        //$pl->setNameSpace('b' . $this->bID);
+        $this->list->setNameSpace('b' . $this->bID);
 
         $cArray = [];
 
@@ -63,6 +64,9 @@ class Controller extends BlockController
                 break;
             case 'chrono_asc':
                 $this->list->sortByPublicDate();
+                break;
+            case 'modified_desc':
+                $this->list->sortByDateModifiedDescending();
                 break;
             case 'random':
                 $this->list->sortBy('RAND()');
@@ -78,17 +82,17 @@ class Controller extends BlockController
                 break;
         }
 
-        $today = date('Y-m-d');
+        $now = Core::make('helper/date')->toDB();
         $end = $start = null;
 
         switch ($this->filterDateOption) {
             case 'now':
-                $start = "$today 00:00:00";
-                $end = "$today 23:59:59";
+                $start = date('Y-m-d').' 00:00:00';
+                $end = $now;
                 break;
 
             case 'past':
-                $end = "$today 23:59:59";
+                $end = $now;
 
                 if ($this->filterDateDays > 0) {
                     $past = date('Y-m-d', strtotime("-{$this->filterDateDays} days"));
@@ -97,7 +101,7 @@ class Controller extends BlockController
                 break;
 
             case 'future':
-                $start = "$today 00:00:00";
+                $start = $now;
 
                 if ($this->filterDateDays > 0) {
                     $future = date('Y-m-d', strtotime("+{$this->filterDateDays} days"));
@@ -151,7 +155,7 @@ class Controller extends BlockController
             $ak = CollectionKey::getByHandle($this->relatedTopicAttributeKeyHandle);
             if (is_object($ak)) {
                 $topics = $c->getAttribute($ak->getAttributeKeyHandle());
-                if (count($topics) > 0 && is_array($topics)) {
+                if (is_array($topics) && count($topics) > 0) {
                     $topic = $topics[array_rand($topics)];
                     $this->list->filter('p.cID', $c->getCollectionID(), '<>');
                     $this->list->filterByTopic($topic);
@@ -160,7 +164,13 @@ class Controller extends BlockController
         }
 
         if ($this->filterByCustomTopic) {
-            $this->list->filterByTopic(intval($this->customTopicTreeNodeID));
+            $ak = CollectionKey::getByHandle($this->customTopicAttributeKeyHandle);
+            if (is_object($ak)) {
+                $topic = Node::getByID($this->customTopicTreeNodeID);
+                if ($topic) {
+                    $ak->getController()->filterByAttribute($this->list, $this->customTopicTreeNodeID);
+                }
+            }
         }
 
         $this->list->filterByExcludePageList(false);
@@ -199,7 +209,7 @@ class Controller extends BlockController
             $list->setItemsPerPage($this->num);
             $pagination = $list->getPagination();
             $pages = $pagination->getCurrentPageResults();
-            if ($pagination->getTotalPages() > 1 && $this->paginate) {
+            if ($pagination->haveToPaginate() && $this->paginate) {
                 $showPagination = true;
                 $pagination = $pagination->renderDefaultView();
                 $this->set('pagination', $pagination);
@@ -313,7 +323,8 @@ class Controller extends BlockController
             $this->list->filterByPublicDate($end, '<=');
 
             $seo = Core::make('helper/seo');
-            $seo->addTitleSegment($dh->date('F Y', $start));
+            $date = ucfirst(\Punic\Calendar::getMonthName($month, 'wide', '', true).' '.$year);
+            $seo->addTitleSegment($date);
         }
         $this->view();
     }
@@ -406,7 +417,7 @@ class Controller extends BlockController
         $args['num'] = ($args['num'] > 0) ? $args['num'] : 0;
         $args['cThis'] = ($args['cParentID'] == $this->cID) ? '1' : '0';
         $args['cThisParent'] = ($args['cParentID'] == $this->cPID) ? '1' : '0';
-        $args['cParentID'] = ($args['cParentID'] == 'OTHER') ? $args['cParentIDValue'] : $args['cParentID'];
+        $args['cParentID'] = ($args['cParentID'] == 'OTHER') ? (empty($args['cParentIDValue']) ? null : $args['cParentIDValue']) : $args['cParentID'];
         if (!$args['cParentID']) {
             $args['cParentID'] = 0;
         }
@@ -488,7 +499,7 @@ class Controller extends BlockController
         if (isset($this->pageListTitle) && $this->pageListTitle) {
             return false;
         }
-        if (count($pages) == 0) {
+        if (empty($pages)) {
             if ($this->noResultsMessage) {
                 return false;
             } else {

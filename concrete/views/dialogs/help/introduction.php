@@ -1,4 +1,5 @@
 <?php
 
 defined('C5_EXECUTE') or die("Access Denied.");
-Loader::element('help/dialog/introduction');
+$element = Element::get('help/dialog/introduction');
+$element->render();

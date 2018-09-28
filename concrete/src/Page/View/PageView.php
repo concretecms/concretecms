@@ -131,14 +131,15 @@ class PageView extends View
                         DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $pt->getPageTemplateHandle() . '.php',
                         $this->themePkgHandle));
             } else {
+                $pTemplatePkgHandle = isset($this->pTemplatePkgHandle) ? $this->pTemplatePkgHandle : null;
                 $rec = $env->getRecord(
-                    DIRNAME_PAGE_TEMPLATES . '/' . $this->c->getPageTypeHandle() . '.php',
-                    $this->pTemplatePkgHandle);
+                    DIRNAME_PAGE_TEMPLATES . '/' . $this->c->getPageTemplateHandle() . '.php',
+                    $pTemplatePkgHandle);
                 if ($rec->exists()) {
                     $this->setInnerContentFile(
                         $env->getPath(
-                            DIRNAME_PAGE_TEMPLATES . '/' . $this->c->getPageTypeHandle() . '.php',
-                            $this->pTemplatePkgHandle));
+                            DIRNAME_PAGE_TEMPLATES . '/' . $this->c->getPageTemplateHandle() . '.php',
+                            $pTemplatePkgHandle));
                     $this->setViewTemplate(
                         $env->getPath(
                             DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $this->controller->getThemeViewTemplate(),
@@ -230,6 +231,7 @@ class PageView extends View
             if (!$dh->inDashboard()
                 && $this->c->getCollectionPath() != '/page_not_found'
                 && $this->c->getCollectionPath() != '/download_file'
+                && !$this->c->isPageDraft()
                 && !$this->c->isMasterCollection()) {
                 $u = new User();
                 $u->markPreviousFrontendPage($this->c);
@@ -278,7 +280,7 @@ class PageView extends View
         }
     }
 
-    protected function constructView($page)
+    protected function constructView($page = false)
     {
         $this->c = $page;
         parent::constructView($page->getCollectionPath());

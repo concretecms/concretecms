@@ -1,32 +1,45 @@
 <?php
+
 namespace Concrete\Controller\SinglePage;
 
+use Concrete\Core\Attribute\Context\FrontendFormContext;
+use Concrete\Core\Attribute\Form\Renderer;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Page\Controller\PageController;
-use Concrete\Core\Validation\ResponseInterface;
 use Config;
 use Loader;
 use User;
-use UserInfo;
 use UserAttributeKey;
+use UserInfo;
 
 class Register extends PageController
 {
-    public $helpers = array('form', 'html');
+    public $helpers = ['form', 'html'];
 
     protected $displayUserName = true;
 
-    public function on_start() {
-        $allowedTypes = ['validate_email', 'enabled', 'manual_approve'];
-        $currentType = $this->app->make(Repository::class)->get('concrete.user.registration.type');
+    public function on_start()
+    {
+        $allowedTypes = ['validate_email', 'enabled'];
+        $config = $this->app->make(Repository::class);
+        $currentType = $config->get('concrete.user.registration.type');
 
-        if(!in_array($currentType, $allowedTypes)) {
+        if (!in_array($currentType, $allowedTypes)) {
             return $this->replace('/page_not_found');
         }
         $u = new User();
         $this->set('u', $u);
-        $this->set('displayUserName', $this->displayUserName);
+        if (!$this->displayUserName) {
+            // something has overridden this controller and we want to honor that
+            $displayUserName = false;
+        } else {
+            $displayUserName = $config->get('concrete.user.registration.display_username_field');
+        }
+
+        $this->displayUserName = $displayUserName;
+        $this->set('displayUserName', $displayUserName);
         $this->requireAsset('css', 'core/frontend/captcha');
+        $this->set('renderer', new Renderer(new FrontendFormContext()));
     }
 
     public function forward($cID = 0)
@@ -50,55 +63,29 @@ class Register extends PageController
 
             // clean the username
             $username = trim($username);
-            $username = preg_replace("/ +/", " ", $username);
+            $username = preg_replace('/ +/', ' ', $username);
 
-            if ($ip->isBanned()) {
+            if ($ip->isBlacklisted()) {
                 $e->add($ip->getErrorMessage());
             }
 
             if ($config->get('concrete.user.registration.captcha')) {
                 $captcha = $this->app->make('helper/validation/captcha');
                 if (!$captcha->check()) {
-                    $e->add(t("Incorrect image validation code. Please check the image and re-enter the letters or numbers as necessary."));
+                    $e->add(t('Incorrect image validation code. Please check the image and re-enter the letters or numbers as necessary.'));
                 }
-            }
-
-            if (!$vals->email($_POST['uEmail'])) {
-                $e->add(t('Invalid email address provided.'));
-            } elseif (!$valc->isUniqueEmail($_POST['uEmail'])) {
-                $e->add(t("The email address %s is already in use. Please choose another.", $_POST['uEmail']));
             }
 
             if ($this->displayUserName) {
-                if (strlen($username) < $config->get('concrete.user.username.minimum')) {
-                    $e->add(t('A username must be at least %s characters long.',
-                        $config->get('concrete.user.username.minimum')));
-                }
-
-                if (strlen($username) > $config->get('concrete.user.username.maximum')) {
-                    $e->add(t('A username cannot be more than %s characters long.',
-                        $config->get('concrete.user.username.maximum')));
-                }
-
-                if (strlen($username) >= $config->get('concrete.user.username.minimum') && strlen($username) <= $config->get('concrete.user.username.maximum') && !$valc->username($username)) {
-                    if ($config->get('concrete.user.username.allow_spaces')) {
-                        $e->add(t('A username may only contain letters, numbers, spaces (not at the beginning/end), dots (not at the beginning/end), underscores (not at the beginning/end).'));
-                    } else {
-                        $e->add(t('A username may only contain letters, numbers, dots (not at the beginning/end), underscores (not at the beginning/end).'));
-                    }
-                }
-                if (!$valc->isUniqueUsername($username)) {
-                    $e->add(t("The username %s already exists. Please choose another", $username));
-                }
+                $this->app->make('validator/user/name')->isValid($username, $e);
             }
+            
+            $this->app->make('validator/user/email')->isValid($_POST['uEmail'], $e);
 
-            if ($username == USER_SUPER) {
-                $e->add(t('Invalid Username'));
-            }
+            $this->app->make('validator/password')->isValid($password, $e);
 
-            \Core::make('validator/password')->isValid($password, $e);
-
-            if ($password) {
+            $displayConfirmPasswordField = $config->get('concrete.user.registration.display_confirm_password_field');
+            if ($password && $displayConfirmPasswordField) {
                 if ($password != $passwordConfirm) {
                     $e->add(t('The two passwords provided do not match.'));
                 }
@@ -110,11 +97,10 @@ class Register extends PageController
                 $controller = $uak->getController();
                 $validator = $controller->getValidator();
                 $response = $validator->validateSaveValueRequest(
-                    $controller, $this->request, $uak->isAttributeKeyRequiredOnRegister()
+                    $controller,
+                    $this->request,
+                    $uak->isAttributeKeyRequiredOnRegister()
                 );
-                /**
-                 * @var $response ResponseInterface
-                 */
                 if (!$response->isValid()) {
                     $error = $response->getErrorObject();
                     $e->add($error);
@@ -125,10 +111,14 @@ class Register extends PageController
         }
 
         if (!$e->has()) {
-
             // do the registration
             $data = $_POST;
-            $data['uName'] = $username;
+            if ($this->displayUserName) {
+                $data['uName'] = $username;
+            } else {
+                $userService = $this->app->make(\Concrete\Core\Application\Service\User::class);
+                $data['uName'] = $userService->generateUsernameFromEmail($_POST['uEmail']);
+            }
             $data['uPassword'] = $password;
             $data['uPasswordConfirm'] = $passwordConfirm;
 
@@ -147,32 +137,29 @@ class Register extends PageController
                         }
                     }
 
-                    $mh->addParameter('uID',    $process->getUserID());
-                    $mh->addParameter('user',   $process);
-                    $mh->addParameter('uName',  $process->getUserName());
+                    $mh->addParameter('uID', $process->getUserID());
+                    $mh->addParameter('user', $process);
+                    $mh->addParameter('uName', $process->getUserName());
                     $mh->addParameter('uEmail', $process->getUserEmail());
                     $attribs = UserAttributeKey::getRegistrationList();
-                    $attribValues = array();
+                    $attribValues = [];
                     foreach ($attribs as $ak) {
-                        $attribValues[] = $ak->getAttributeKeyDisplayName('text') . ': ' . $process->getAttribute($ak->getAttributeKeyHandle(), 'display');
+                        $attribValues[] = $ak->getAttributeKeyDisplayName('text') . ': ' . $process->getAttribute($ak->getAttributeKeyHandle(),
+                                'display');
                     }
                     $mh->addParameter('attribs', $attribValues);
                     $mh->addParameter('siteName', tc('SiteName', \Core::make('site')->getSite()->getSiteName()));
 
-                    if ($config->get('concrete.user.registration.notification_email')) {
-                        $mh->from(Config::get('concrete.user.registration.notification_email'),  t('Website Registration Notification'));
+                    if ($config->get('concrete.email.register_notification.address')) {
+                        $mh->from(Config::get('concrete.email.register_notification.address'), t('Website Registration Notification'));
                     } else {
                         $adminUser = UserInfo::getByID(USER_SUPER_ID);
                         if (is_object($adminUser)) {
-                            $mh->from($adminUser->getUserEmail(),  t('Website Registration Notification'));
+                            $mh->from($adminUser->getUserEmail(), t('Website Registration Notification'));
                         }
                     }
 
-                    if ($config->get('concrete.user.registration.type') == 'manual_approve') {
-                        $mh->load('user_register_approval_required');
-                    } else {
-                        $mh->load('user_register');
-                    }
+                    $mh->load('user_register');
 
                     $mh->sendMail();
                 }
@@ -199,41 +186,10 @@ class Register extends PageController
 
                 // now we check whether we need to validate this user's email address
                 if ($config->get('concrete.user.registration.validate_email')) {
-                    $uHash = $process->setupValidation();
-
-                    $mh = $this->app->make('mail');
-                    $fromEmail = (string) $config->get('concrete.email.validate_registration.address');
-                    if (strpos($fromEmail, '@')) {
-                        $fromName = (string) $config->get('concrete.email.validate_registration.name');
-                        if ($fromName === '') {
-                            $fromName = t('Validate Email Address');
-                        }
-                        $mh->from($fromEmail,  $fromName);
-                    }
-                    $mh->addParameter('uEmail', $_POST['uEmail']);
-                    $mh->addParameter('uHash', $uHash);
-                    $mh->addParameter('site', tc('SiteName', $config->get('concrete.site')));
-                    $mh->to($this->post('uEmail'));
-                    $mh->load('validate_user_email');
-                    $mh->sendMail();
+                    $this->app->make('user/status')->sendEmailValidation($process);
 
                     //$this->redirect('/register', 'register_success_validate', $rcID);
                     $redirectMethod = 'register_success_validate';
-                    $u->logout();
-                } elseif ($config->get('concrete.user.registration.approval')) {
-                    $ui = UserInfo::getByID($u->getUserID());
-                    $ui->deactivate();
-                    // Email to the user when he/she registered but needs approval
-                    $mh = $this->app->make('mail');
-                    $mh->addParameter('uEmail', $this->post('uEmail'));
-                    $mh->addParameter('site', tc('SiteName', $config->get('concrete.site')));
-                    $mh->to($this->post('uEmail'));
-                    $mh->load('user_register_approval_required_to_user');
-                    $mh->sendMail();
-
-                    //$this->redirect('/register', 'register_pending', $rcID);
-                    $redirectMethod = 'register_pending';
-                    $this->set('message', $this->getRegisterPendingMsg());
                     $u->logout();
                 } else {
                     $process->markValidated();
@@ -288,7 +244,7 @@ class Register extends PageController
 
     public function getRegisterSuccessValidateMsgs()
     {
-        $msgs = array();
+        $msgs = [];
         $msgs[] = t('You are registered but you need to validate your email address. Some or all functionality on this site will be limited until you do so.');
         $msgs[] = t('An email has been sent to your email address. Click on the URL contained in the email to validate your email address.');
 

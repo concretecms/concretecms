@@ -1,15 +1,22 @@
 <?php
+
 namespace Concrete\Core\Entity\Site;
 
-use Concrete\Core\Multilingual\Service\UserInterface\Flag;
+use Concrete\Core\Entity\LocaleTrait;
+use Concrete\Core\Localization\Locale\LocaleInterface;
+use Concrete\Core\Site\Tree\TreeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * Represents a site locale.
+ *
  * @ORM\Entity
  * @ORM\Table(name="SiteLocales")
+ * @ORM\EntityListeners({"\Concrete\Core\Site\Locale\Listener"})
  */
-class Locale
+class Locale implements LocaleInterface, TreeInterface
 {
+    use LocaleTrait;
 
     /**
      * @ORM\Id @ORM\Column(type="integer", options={"unsigned":true})
@@ -35,64 +42,19 @@ class Locale
     public $msIsDefault = false;
 
     /**
-     * @ORM\Column(type="string", length=32)
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Localization\Locale\LocaleInterface::getLocaleID()
      */
-    protected $msLanguage;
-
-    /**
-     * @ORM\Column(type="string", length=32)
-     */
-    protected $msCountry;
-
-    /**
-     * @ORM\Column(type="integer", length=10)
-     */
-    protected $msNumPlurals = 2;
-
-    /**
-     * @ORM\Column(type="string", length=400)
-     */
-    protected $msPluralRule = "(n != 1)";
-
-    /**
-     * @ORM\Column(type="string", length=1000)
-     */
-    protected $msPluralCases = "one@1\nother@0, 2~16, 100, 1000, 10000, 100000, 1000000, …";
-
-    /**
-     * @return mixed
-     */
-    public function getSiteLocaleID()
+    public function getLocaleID()
     {
         return $this->siteLocaleID;
     }
 
     /**
-     * @return mixed
-     */
-    public function getLanguage()
-    {
-        return $this->msLanguage;
-    }
-
-    /**
-     * @param mixed $msLanguage
-     */
-    public function setLanguage($msLanguage)
-    {
-        $this->msLanguage = $msLanguage;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCountry()
-    {
-        return $this->msCountry;
-    }
-
-    /**
-     * @return mixed
+     * Is this the default locale?
+     *
+     * @return bool
      */
     public function getIsDefault()
     {
@@ -100,68 +62,19 @@ class Locale
     }
 
     /**
-     * @param mixed $msIsDefault
+     * Is this the default locale?
+     *
+     * @param bool $msIsDefault
      */
     public function setIsDefault($msIsDefault)
     {
-        $this->msIsDefault = $msIsDefault;
+        $this->msIsDefault = (bool) $msIsDefault;
     }
 
     /**
-     * @param mixed $msCountry
-     */
-    public function setCountry($msCountry)
-    {
-        $this->msCountry = $msCountry;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getNumPlurals()
-    {
-        return $this->msNumPlurals;
-    }
-
-    /**
-     * @param mixed $msNumPlurals
-     */
-    public function setNumPlurals($msNumPlurals)
-    {
-        $this->msNumPlurals = $msNumPlurals;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPluralRule()
-    {
-        return $this->msPluralRule;
-    }
-
-    /**
-     * @param mixed $msPluralRule
-     */
-    public function setPluralRule($msPluralRule)
-    {
-        $this->msPluralRule = $msPluralRule;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPluralCases()
-    {
-        $msPluralCases = array();
-        foreach (explode("\n", $this->msPluralCases) as $line) {
-            list($key, $examples) = explode('@', $line);
-            $msPluralCases[$key] = $examples;
-        }
-        return $msPluralCases;
-    }
-
-    /**
-     * @return mixed
+     * Get the site associated to this locale.
+     *
+     * @return Site|null
      */
     public function getSite()
     {
@@ -169,24 +82,19 @@ class Locale
     }
 
     /**
-     * @param mixed $site
+     * Set the site associated to this locale.
+     *
+     * @param Site|null $site
      */
-    public function setSite($site)
+    public function setSite(Site $site = null)
     {
         $this->site = $site;
     }
 
-
     /**
-     * @param mixed $msPluralCases
-     */
-    public function setPluralCases($msPluralCases)
-    {
-        $this->msPluralCases = $msPluralCases;
-    }
-
-    /**
-     * @return mixed
+     * Get the site tree associated to this locale.
+     *
+     * @return SiteTree|null
      */
     public function getSiteTree()
     {
@@ -194,30 +102,34 @@ class Locale
     }
 
     /**
-     * @param mixed $tree
+     * Set the site tree associated to this locale.
+     *
+     * @param SiteTree|null $tree
      */
-    public function setSiteTree($tree)
+    public function setSiteTree(SiteTree $tree = null)
     {
         $this->tree = $tree;
     }
 
-    public function getLocale()
+    /**
+     * {@inheritdoc}
+     *
+     * @see TreeInterface::getSiteTreeID()
+     */
+    public function getSiteTreeID()
     {
-        return sprintf('%s_%s', $this->getLanguage(), $this->getCountry());
+        $tree = $this->getSiteTree();
+
+        return $tree === null ? null : $tree->getSiteTreeID();
     }
 
-    public function getLanguageText($locale = null)
+    /**
+     * {@inheritdoc}
+     *
+     * @see TreeInterface::getSiteTreeObject()
+     */
+    public function getSiteTreeObject()
     {
-        try {
-            if (!$locale) {
-                $locale = \Localization::activeLocale();
-            }
-            $text = \Punic\Language::getName($this->getLanguage(), $locale);
-        } catch (\Exception $e) {
-            $text = $this->getLanguage();
-        }
-
-        return $text;
+        return $this->getSiteTree();
     }
-
 }

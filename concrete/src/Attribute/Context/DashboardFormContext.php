@@ -1,7 +1,8 @@
 <?php
 namespace Concrete\Core\Attribute\Context;
 
-class DashboardFormContext extends StandardFormContext
+class DashboardFormContext extends BasicFormContext
 {
+
 
 }

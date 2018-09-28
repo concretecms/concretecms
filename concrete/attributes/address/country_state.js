@@ -1,3 +1,9 @@
+/*
+ * This whole script is deprecated.
+ * Use
+ * $app->make(\Concrete\Core\Form\Service\Form::class')->selectCountry()
+ * to link a Country field and a State/Province field
+ */
 var ccm_attributeTypeAddressStates;
 
 $(function() {

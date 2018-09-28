@@ -39,8 +39,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 'objects' => $files,
                 'saveAction' => $bulkPropertiesController->action('update_attribute'),
                 'clearAction' => $bulkPropertiesController->action('clear_attribute'),
-                'permissionsCallback' => function ($ak, $permissionsArguments) {
-                    return true; // this is fine because you can't even access this interface without being able to edit every file.
+                'permissionsCallback' => function ($ak, $permissionsArguments) use ($canEditFiles) {
+                    return $canEditFiles; // this is fine because you can't even access this interface without being able to edit every file.
                 },
             ));?>
 		</section>

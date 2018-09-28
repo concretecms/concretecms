@@ -22,6 +22,10 @@ class Points extends DashboardPageController
         $entries = new UserPointEntryList();
         $entries->setItemsPerPage(100);
 
+        if ($_REQUEST['uID']) {
+            $entries->filterByUserID($_REQUEST['uID']);
+        }
+        
         if ($_REQUEST['uName']) {
             $entries->filterByUserName($_REQUEST['uName']);
         }

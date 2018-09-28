@@ -7,9 +7,15 @@ use Page;
 use Concrete\Core\Workflow\Workflow;
 use Concrete\Core\Workflow\Request\PageRequest as PageWorkflowRequest;
 
-class PageProgress extends Progress
+class PageProgress extends Progress implements SiteProgressInterface
 {
     protected $cID;
+
+    public function getSite()
+    {
+        $page = \Page::getByID($this->cID);
+        return $page->getSite();
+    }
 
     public static function add(Workflow $wf, PageWorkflowRequest $wr)
     {

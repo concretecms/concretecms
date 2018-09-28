@@ -1,6 +1,7 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die('Access Denied.');
 
-$al = Core::make('helper/concrete/asset_library');
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+$al = $app->make('helper/concrete/asset_library');
 $bf = null;
 
 if ($controller->getFileID() > 0) {
@@ -15,9 +16,9 @@ $fieldName = 'ccm-b-image-'.$setcontrol->getPageTypeComposerFormLayoutSetControl
     <?php
     echo $form->label($fieldName, $label);
 
-    if ($description): ?>
+    if ($description) { ?>
         <i class="fa fa-question-circle launch-tooltip" title="" data-original-title="<?php echo $description ?>"></i>
-    <?php endif; ?>
+    <?php } ?>
 
     <div class="controls">
         <?php echo $al->image($fieldName, $view->field('fID'), t('Choose Image'), $bf); ?>

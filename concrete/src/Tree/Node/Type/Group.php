@@ -5,6 +5,7 @@ use Concrete\Core\Tree\Node\Node as TreeNode;
 use Concrete\Core\Tree\Node\Type\Menu\GroupMenu;
 use Loader;
 use Concrete\Core\User\Group\Group as UserGroup;
+use Exception;
 
 class Group extends TreeNode
 {
@@ -77,6 +78,14 @@ class Group extends TreeNode
 
     public function move(TreeNode $newParent)
     {
+        switch ($this->gID) {
+            case GUEST_GROUP_ID:
+                throw new Exception(t("The guest users group can't be moved."));
+            case REGISTERED_GROUP_ID:
+                throw new Exception(t("The registered users group can't be moved."));
+            case ADMIN_GROUP_ID:
+                throw new Exception(t("The administrators group can't be moved."));
+        }
         parent::move($newParent);
         $g = $this->getTreeNodeGroupObject();
         if (is_object($g)) {
@@ -106,7 +115,7 @@ class Group extends TreeNode
         $obj = parent::getTreeNodeJSON();
         if (is_object($obj)) {
             $obj->gID = $this->gID;
-            $obj->iconClass = 'fa fa-users';
+            $obj->icon = 'fa fa-users';
             if (isset($this->gID)) {
                 $obj->title = $this->getTreeNodeDisplayName('text');
             }

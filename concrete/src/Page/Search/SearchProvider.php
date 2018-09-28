@@ -10,6 +10,7 @@ use Concrete\Core\Search\ProviderInterface;
 use Concrete\Core\Page\Search\ColumnSet\Available;
 use Concrete\Core\Page\Search\ColumnSet\ColumnSet;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Concrete\Core\Entity\Search\SavedPageSearch;
 
 class SearchProvider extends AbstractSearchProvider
 {
@@ -55,12 +56,20 @@ class SearchProvider extends AbstractSearchProvider
 
     public function getItemList()
     {
-        return new PageList();
+        $site = \Core::make('site')->getActiveSiteForEditing();
+        $list = new PageList();
+        $list->setSiteTreeObject($site);
+        return $list;
     }
 
     public function getDefaultColumnSet()
     {
         return new DefaultSet();
+    }
+    
+    public function getSavedSearch()
+    {
+        return new SavedPageSearch();
     }
 
 }

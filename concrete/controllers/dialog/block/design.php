@@ -40,6 +40,8 @@ class Design extends BackendInterfaceBlockController
             $oldStyle = $b->getCustomStyle();
             if (is_object($oldStyle)) {
                 $oldStyleSet = $oldStyle->getStyleSet();
+            } else {
+                $oldStyleSet = null;
             }
 
             $r = $this->request->request->all();
@@ -62,7 +64,7 @@ class Design extends BackendInterfaceBlockController
             }
 
             if ($this->permissions->canEditBlockCustomTemplate()) {
-                $data = array();
+                $data = [];
                 $data['bFilename'] = $r['bFilename'];
                 $b->updateBlockInformation($data);
             }
@@ -79,6 +81,9 @@ class Design extends BackendInterfaceBlockController
 
             if (is_object($set)) {
                 $pr->setAdditionalDataAttribute('issID', $set->getID());
+                if ($this->area->isGlobalArea()) {
+                    $b->setBlockAreaObject($this->area); // We need this for CSS: https://github.com/concrete5/concrete5/issues/3135
+                }
                 $style = new CustomStyle($set, $b, $this->page->getCollectionThemeObject());
                 $css = $style->getCSS();
                 if ($css !== '') {
@@ -97,7 +102,7 @@ class Design extends BackendInterfaceBlockController
         $btc = $this->block->getInstance();
         $btc->outputAutoHeaderItems();
         $bv = new BlockView($this->block);
-        $bv->addScopeItems(array('c' => $this->page, 'a' => $this->area, 'dialogController' => $this));
+        $bv->addScopeItems(['c' => $this->page, 'a' => $this->area, 'dialogController' => $this]);
         $this->set('bv', $bv);
 
         $canEditCustomTemplate = false;
@@ -125,9 +130,9 @@ class Design extends BackendInterfaceBlockController
                     $bFilename = $this->block->getBlockFilename();
                     break;
             }
-            $templates = array();
+            $templates = [];
             if (is_object($bt)) {
-                $templates = $bt->getBlockTypeCustomTemplates();
+                $templates = $bt->getBlockTypeCustomTemplates($this->block);
             }
             $this->set('bFilename', $bFilename);
             $this->set('templates', $templates);

@@ -31,6 +31,14 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
 ?>
 
 <div class="login-page">
+
+    <?php
+    $disclaimer = new Area('Disclaimer');
+    if ($disclaimer->getTotalBlocksInArea($c) || $c->isEditMode()) { ?>
+        <div class="ccm-login-disclaimer">
+            <?=$disclaimer->display($c);?>
+        </div>
+    <?php } ?>
     <div class="col-sm-6 col-sm-offset-3">
         <h1><?= !$attribute_mode ? t('Sign In.') : t('Required Attributes') ?></h1>
     </div>
@@ -51,7 +59,7 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
                         foreach ($activeAuths as $auth) {
                             ?>
                             <option value="<?= $auth->getAuthenticationTypeHandle() ?>">
-                                <?= $auth->getAuthenticationTypeName() ?>
+                                <?= $auth->getAuthenticationTypeDisplayName() ?>
                             </option>
                         <?php
 
@@ -86,7 +94,7 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
                             ?>
                             <li data-handle="<?= $auth->getAuthenticationTypeHandle() ?>">
                                 <?= $auth->getAuthenticationTypeIconHTML() ?>
-                                <span><?= $auth->getAuthenticationTypeName() ?></span>
+                                <span><?= $auth->getAuthenticationTypeDisplayName() ?></span>
                             </li>
                         <?php
 

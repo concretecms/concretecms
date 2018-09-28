@@ -3,7 +3,6 @@ namespace Concrete\Core\Entity\Express;
 
 use Concrete\Core\Express\Association\Builder\ManyToManyAssociationBuilder;
 use Concrete\Core\Express\Association\Formatter\ManyToManyFormatter;
-use Concrete\Core\Express\Form\Context\ContextInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**

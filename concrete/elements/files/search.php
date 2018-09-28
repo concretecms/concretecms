@@ -29,7 +29,7 @@ $list = $result->getItemListObject();
 <div data-search-element="wrapper"></div>
 
 <div data-search-element="results">
-    <div class="table-responsive">
+    <div class="table-responsive ccm-file-manager-list-wrapper">
         <table class="ccm-file-manager-list ccm-search-results-table ccm-search-results-table-icon">
         <thead>
         </thead>

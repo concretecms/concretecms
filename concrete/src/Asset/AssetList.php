@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Asset;
 
-use Concrete\Core\Foundation\Object as Object;
+use Concrete\Core\Foundation\ConcreteObject;
 
 class AssetList
 {
@@ -66,7 +66,7 @@ class AssetList
         // overwrite all the defaults with the arguments
         $args = array_merge($defaults, $args);
 
-        $class = '\\Concrete\\Core\\Asset\\' . Object::camelcase($assetType) . 'Asset';
+        $class = '\\Concrete\\Core\\Asset\\' . ConcreteObject::camelcase($assetType) . 'Asset';
         $o = new $class($assetHandle);
         $o->register($filename, $args, $pkg);
         $this->registerAsset($o);
@@ -114,7 +114,7 @@ class AssetList
     public function registerGroup($assetGroupHandle, $assetHandles, $customClass = false)
     {
         if ($customClass) {
-            $class = '\\Concrete\\Core\\Asset\\Group\\' . Object::camelcase($assetGroupHandle) . 'AssetGroup';
+            $class = '\\Concrete\\Core\\Asset\\Group\\' . ConcreteObject::camelcase($assetGroupHandle) . 'AssetGroup';
         } else {
             $class = '\\Concrete\\Core\\Asset\\AssetGroup';
         }

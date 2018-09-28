@@ -41,8 +41,13 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label for="name" class="control-label"><?= t('Name Mask') ?></label>
+                    <?= $form->text('label_mask', $entity->getLabelMask()) ?>
+                    <p class="help-block"><?= t('Example <code>Entry %name%</code> or <code>Complaint %date% at %hotel%</code>') ?></p>
+                </div>
+                <div class="form-group">
                     <label for="name" class="control-label"><?=t('Description')?></label>
-                    <?=$form->textarea('description', $entity->getDescription(), array('rows' => 5))?>
+                    <?=$form->textarea('description', $entity->getEntityDisplayDescription(), array('rows' => 5))?>
                 </div>
             </fieldset>
 
@@ -69,7 +74,7 @@
 
             </fieldset>
             <fieldset>
-                <legend><?=t('Results Folder')?></legend>
+                <legend><?=t('Results Folder Location')?></legend>
                 <input type="hidden" name="entity_results_node_id" value="<?=$folder->getTreeNodeID()?>">
 
                 <div data-tree="<?=$tree->getTreeID()?>">
@@ -133,7 +138,7 @@
         <form method="post" action="<?=$view->action('delete')?>">
             <?=Core::make("token")->output('delete_entity')?>
             <input type="hidden" name="entity_id" value="<?=$entity->getID()?>">
-            <p><?=t('Are you sure you want to delete this entity? All data entries for it will be removed. This cannot be undone.')?></p>
+            <p><?=t('Are you sure you want to delete this entity? All data entries and all its associations to other entities will be removed. This cannot be undone.')?></p>
             <div class="dialog-buttons">
                 <button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
                 <button class="btn btn-danger pull-right" onclick="$('#ccm-dialog-delete-entity form').submit()"><?=t('Delete Entity')?></button>

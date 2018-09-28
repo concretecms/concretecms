@@ -3,24 +3,42 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $form = Loader::helper('form');
 $cParentID = false;
+$tree = null;
 if (is_object($target)) {
     $cParentID = $target->getCollectionID();
 }
+
+$relevantPage = null;
+
+if (is_object($control->getPageObject())) {
+    $relevantPage = $control->getPageObject();
+} else if ($control->getTargetParentPageID()) {
+    $relevantPage = \Page::getByID($control->getTargetParentPageID());
+}
+
+if (is_object($relevantPage) && !$relevantPage->isError()) {
+    $site = $relevantPage->getSite();
+    $tree = $relevantPage->getSiteTreeObject();
+}
+
 if (is_object($pagetype) && $pagetype->getPageTypePublishTargetTypeID() == $configuration->getPageTypePublishTargetTypeID()) {
     $configuredTarget = $pagetype->getPageTypePublishTargetObject();
 
     if ($configuredTarget->getSelectorFormFactor() == 'sitemap_in_page') {
-        $siteMapParentID = HOME_CID;
         if ($configuredTarget->getStartingPointPageID()) {
             $siteMapParentID = $configuredTarget->getStartingPointPageID();
+        } else {
+            $siteMapParentID = Page::getHomePageID($relevantPage);
         }
         $ps = Loader::helper('form/page_selector');
-        echo $ps->selectFromSitemap('cParentID', $cParentID, $siteMapParentID, array('ptID' => $configuredTarget->getPageTypeID()));
+        $args = array('ptID' => $configuredTarget->getPageTypeID());
+        echo $ps->selectFromSitemap('cParentID', $cParentID, $siteMapParentID, $tree, $args);
     } else {
         $pl = new PageList();
         $pl->sortByName();
         $pl->filterByPageTypeID($configuredTarget->getPageTypeID());
         $pl->sortByName();
+        $pl->filterBySite($site);
         $pages = $pl->get();
         if (count($pages) > 1) {
             $navigation = \Core::make('helper/navigation');

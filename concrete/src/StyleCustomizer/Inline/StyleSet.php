@@ -3,6 +3,7 @@ namespace Concrete\Core\StyleCustomizer\Inline;
 
 use Concrete\Core\Page\Theme\GridFramework\GridFramework;
 use Database;
+use Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -16,6 +17,7 @@ class StyleSet
     public static function getByID($issID)
     {
         $em = \ORM::entityManager();
+
         return $em->find('\Concrete\Core\Entity\StyleCustomizer\Inline\StyleSet', $issID);
     }
 
@@ -60,6 +62,7 @@ class StyleSet
         $o->setBoxShadowColor((string) $node->boxShadowColor);
         $o->setCustomClass((string) $node->customClass);
         $o->setCustomID((string) $node->customID);
+        $o->setCustomElementAttribute((string) $node->customElementAttribute);
 
         $o->save();
 
@@ -192,14 +195,21 @@ class StyleSet
             $return = true;
         }
 
-        if (isset($r['boxShadowHorizontal'])) {
-            if ((trim($r['boxShadowHorizontal']) && trim($r['boxShadowHorizontal']) != '0px')
-            || (trim($r['boxShadowVertical']) && trim($r['boxShadowVertical']) != '0px')) {
-                $set->setBoxShadowBlur($r['boxShadowBlur']);
+        $boxShadowHorizontal = isset($r['boxShadowHorizontal']) && trim($r['boxShadowHorizontal']) ? trim($r['boxShadowHorizontal']) : '0px';
+        $boxShadowVertical = isset($r['boxShadowVertical']) && trim($r['boxShadowVertical']) ? trim($r['boxShadowVertical']) : '0px';
+        $boxShadowBlur = isset($r['boxShadowBlur']) && trim($r['boxShadowBlur']) ? trim($r['boxShadowBlur']) : '0px';
+        $boxShadowSpread = isset($r['boxShadowSpread']) && trim($r['boxShadowSpread']) ? trim($r['boxShadowSpread']) : '0px';
+
+        if (isset($r['boxShadowColor'])) {
+            if ($boxShadowHorizontal != '0px'
+            || $boxShadowVertical != '0px'
+            || $boxShadowBlur != '0px'
+            || $boxShadowSpread != '0px') {
                 $set->setBoxShadowColor($r['boxShadowColor']);
-                $set->setBoxShadowHorizontal($r['boxShadowHorizontal']);
-                $set->setBoxShadowVertical($r['boxShadowVertical']);
-                $set->setBoxShadowSpread($r['boxShadowSpread']);
+                $set->setBoxShadowBlur($boxShadowBlur);
+                $set->setBoxShadowHorizontal($boxShadowHorizontal);
+                $set->setBoxShadowVertical($boxShadowVertical);
+                $set->setBoxShadowSpread($boxShadowSpread);
                 $return = true;
             }
         }
@@ -212,6 +222,25 @@ class StyleSet
         if (isset($r['customID']) && trim($r['customID'])) {
             $set->setCustomID(trim($r['customID']));
             $return = true;
+        }
+
+        if (isset($r['customElementAttribute']) && trim($r['customElementAttribute'])) {
+            // strip class attributes
+            $pattern = '/(class\s*=\s*["\'][^\'"]*["\'])/i';
+            $customElementAttribute = preg_replace($pattern, '', $r['customElementAttribute']);
+            // strip ID attributes
+            $pattern = '/(id\s*=\s*["\'][^\'"]*["\'])/i';
+            $customElementAttribute = preg_replace($pattern, '', $customElementAttribute);
+            // don't save if there are odd numbers of single/double quotes
+            $singleQuoteCount = preg_match_all('/([\'])/i', $customElementAttribute);
+            $doubleQuoteCount = preg_match_all('/(["])/i', $customElementAttribute);
+
+            if ($singleQuoteCount % 2 == 0 && $doubleQuoteCount % 2 == 0) {
+                $set->setCustomElementAttribute(trim($customElementAttribute));
+                $return = true;
+            } else {
+                throw new Exception(t('Custom Element Attribute input: unclosed quote(s)'));
+            }
         }
 
         if ($return) {

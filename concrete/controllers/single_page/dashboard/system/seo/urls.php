@@ -19,9 +19,10 @@ class Urls extends DashboardSitePageController
         $urlRewriting = (bool) $globalConfig->get('concrete.seo.url_rewriting');
         $this->set('fh', $this->app->make('helper/form'));
         $this->set('canonical_url', $siteConfig->get('seo.canonical_url'));
-        $this->set('canonical_ssl_url', $siteConfig->get('seo.canonical_ssl_url'));
+        $this->set('canonical_url_alternative', $siteConfig->get('seo.canonical_url_alternative'));
         $this->set('redirect_to_canonical_url', $globalConfig->get('concrete.seo.redirect_to_canonical_url'));
         $this->set('urlRewriting', $urlRewriting);
+        $this->set('canonical_tag', $siteConfig->get('seo.canonical_tag.enabled'));
 
         $strStatus = (string) $strStatus;
         if ($strStatus === 'saved') {
@@ -128,18 +129,20 @@ class Urls extends DashboardSitePageController
                 )) {
                 $this->error->add(t('The canonical URL provided must start with "http://" or "https://".'));
             }
-            if ($this->post('canonical_ssl_url') && strpos(strtolower($this->post('canonical_ssl_url')), 'https://') !== 0) {
-                $this->error->add(t('The SSL canonical URL provided must start with "https://".'));
-            }
-            if ($this->post('canonical_ssl_url') && strpos(strtolower($this->post('canonical_url')), 'https://') === 0) {
-                $this->error->add(t('If your canonical URL is an SSL URL, you may not specify a separate SSL URL.'));
+            if ($this->post('canonical_url_alternative') &&
+                !(
+                    strpos(strtolower($this->post('canonical_url_alternative')), 'http://') === 0 ||
+                    strpos(strtolower($this->post('canonical_url_alternative')), 'https://') === 0
+                )) {
+                $this->error->add(t('The alternative canonical URL provided must start with "http://" or "https://".'));
             }
             if (!$this->error->has()) {
                 $globalConfig = $this->app->make('config');
                 $siteConfig = $this->getSite()->getConfigRepository();
                 $siteConfig->save('seo.canonical_url', $this->post('canonical_url'));
-                $siteConfig->save('seo.canonical_ssl_url', $this->post('canonical_ssl_url'));
+                $siteConfig->save('seo.canonical_url_alternative', $this->post('canonical_url_alternative'));
                 $globalConfig->save('concrete.seo.redirect_to_canonical_url', $this->post('redirect_to_canonical_url') ? 1 : 0);
+                $siteConfig->save('seo.canonical_tag.enabled', (bool) $this->post('canonical_tag'));
 
                 $urlRewriting = (bool) $this->post('URL_REWRITING');
                 $globalConfig->save('concrete.seo.url_rewriting', $urlRewriting);

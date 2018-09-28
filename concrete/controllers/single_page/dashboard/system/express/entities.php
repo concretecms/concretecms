@@ -43,6 +43,7 @@ class Entities extends DashboardPageController
                 $entity->setName($this->request->request->get('name'));
                 $entity->setHandle($this->request->request->get('handle'));
                 $entity->setPluralHandle($this->request->request->get('plural_handle'));
+                $entity->setLabelMask($this->request->request->get('label_mask'));
                 $entity->setDescription($this->request->request->get('description'));
 
                 if ($this->request->request->get('supports_custom_display_order')) {
@@ -86,7 +87,7 @@ class Entities extends DashboardPageController
         $entities = $r->findAll(array(), array('name' => 'asc'));
         $select = ['' => t('** Choose Entity')];
         foreach($entities as $entity) {
-            $select[$entity->getID()] = $entity->getName();
+            $select[$entity->getID()] = $entity->getEntityDisplayName();
         }
         $this->set('entities', $select);
         $this->render('/dashboard/system/express/entities/add');
@@ -196,8 +197,8 @@ class Entities extends DashboardPageController
         if (!$vs->handle($handle)) {
             $this->error->add(t('You must create a handle for your data object. It may contain only lowercase letters and underscores.'), 'handle');
         } else {
-            $entity = Express::getObjectByHandle($handle);
-            if (is_object($entity) && $entity->getID() != $id) {
+            $exist = Express::getObjectByHandle($handle);
+            if (is_object($exist) && $exist->getID() != $id) {
                 $this->error->add(t('An express object with this handle already exists.'));
             }
         }
@@ -236,6 +237,7 @@ class Entities extends DashboardPageController
             $entity->setName($name);
             $entity->setHandle($handle);
             $entity->setPluralHandle($this->request->request->get('plural_handle'));
+            $entity->setLabelMask($this->request->request->get('label_mask'));
             $entity->setDescription($this->request->request->get('description'));
             $entity->setDefaultViewForm($viewForm);
             $entity->setDefaultEditForm($editForm);

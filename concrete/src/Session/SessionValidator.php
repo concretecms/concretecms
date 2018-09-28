@@ -4,6 +4,7 @@ namespace Concrete\Core\Session;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Http\Request;
+use Concrete\Core\Permission\IPService;
 use Concrete\Core\Utility\IPAddress;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
@@ -26,24 +27,28 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
     /** @var \Concrete\Core\Http\Request */
     private $request;
 
+    /** @var \Concrete\Core\Permission\IPService */
+    private $ipService;
+    
     /** @var \Psr\Log\LoggerInterface */
     private $logger;
 
-    public function __construct(Application $app, Repository $config, Request $request, LoggerInterface $logger = null)
+    public function __construct(Application $app, Repository $config, Request $request, IPService $ipService, LoggerInterface $logger = null)
     {
         $this->app = $app;
         $this->config = $config;
         $this->request = $request;
+        $this->ipService = $ipService;
         $this->logger = $logger;
     }
 
     /**
      * @param \Symfony\Component\HttpFoundation\Session\Session $session
+     * @return bool True if the session invalidated, false otherwise.
      */
     public function handleSessionValidation(SymfonySession $session)
     {
-        $ip_address = new IPAddress($this->request->getClientIp());
-        $request_ip = $ip_address->getIp(IPAddress::FORMAT_IP_STRING);
+        $request_ip = (string) $this->ipService->getRequestIPAddress();
 
         $invalidate = false;
 
@@ -86,6 +91,14 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
                 $session->set('CLIENT_HTTP_USER_AGENT', $request_agent);
             }
         }
+
+        return $invalidate;
+    }
+
+    public function hasActiveSession()
+    {
+        $cookie = $this->app['cookie'];
+        return $cookie->has($this->config->get('concrete.session.name'));
     }
 
     /**

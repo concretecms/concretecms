@@ -1,14 +1,12 @@
 <?php
-
 namespace Concrete\Core\Localization\Translator\Adapter\Core;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Config\Repository\Repository as Config;
 use Concrete\Core\Localization\Localization;
-use Concrete\Core\Localization\Translator\TranslatorAdapterFactoryInterface;
 use Concrete\Core\Localization\Translator\Adapter\Plain\TranslatorAdapterFactory as PlainTranslatorAdapterFactory;
 use Concrete\Core\Localization\Translator\Adapter\Zend\TranslatorAdapterFactory as ZendTranslatorAdapterFactory;
-use Concrete\Core\Localization\Translator\Translation\TranslationLoaderRepositoryInterface;
+use Concrete\Core\Localization\Translator\TranslatorAdapterFactoryInterface;
 
 /**
  * The core translator adapter factory is a wrapper factory that abstracts the
@@ -23,7 +21,6 @@ use Concrete\Core\Localization\Translator\Translation\TranslationLoaderRepositor
  */
 class TranslatorAdapterFactory implements TranslatorAdapterFactoryInterface
 {
-
     /** @var Config */
     protected $config;
     /** @var PlainTranslatorAdapterFactory */
@@ -44,7 +41,7 @@ class TranslatorAdapterFactory implements TranslatorAdapterFactoryInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function createTranslatorAdapter($locale)
     {
@@ -63,7 +60,7 @@ class TranslatorAdapterFactory implements TranslatorAdapterFactoryInterface
         if ($this->config->get('concrete.misc.enable_translate_locale_en_us')) {
             return true;
         }
+
         return $this->config->get('concrete.misc.enable_translate_locale_base_locale');
     }
-
 }

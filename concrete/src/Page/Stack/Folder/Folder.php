@@ -5,8 +5,10 @@ use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Export\ExportableInterface;
 use Concrete\Core\Export\Item\StackFolder;
 use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\AssignableObjectInterface;
+use Concrete\Core\Permission\Key\Key;
 
-class Folder implements ExportableInterface
+class Folder implements ExportableInterface, AssignableObjectInterface
 {
 
     protected $connection;
@@ -16,6 +18,25 @@ class Folder implements ExportableInterface
     {
         $this->connection = $connection;
         $this->page = $page;
+    }
+
+    public function setChildPermissionsToOverride()
+    {
+        $this->page->setChildPermissionsToOverride();
+    }
+
+    public function setPermissionsToOverride()
+    {
+        $this->page->setPermissionsToOverride();
+    }
+
+    public function assignPermissions(
+        $userOrGroup,
+        $permissions,
+        $accessType = Key::ACCESS_TYPE_INCLUDE,
+        $cascadeToChildren = true
+    ) {
+        $this->page->assignPermissions($userOrGroup, $permissions,$accessType, $cascadeToChildren);
     }
 
     public function getExporter()

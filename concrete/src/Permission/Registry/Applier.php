@@ -14,6 +14,9 @@ class Applier
         foreach($registry->getEntries() as $entry) {
             $entry->apply($subject);
         }
+        foreach($registry->getEntriesToRemove() as $entry) {
+            $entry->remove($subject);
+        }
         Core::make('cache/request')->enable();
     }
 

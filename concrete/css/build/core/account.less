@@ -50,10 +50,15 @@ table.ccm-profile-messages-list td {
   vertical-align: middle !important;
 }
 
-td.ccm-profile-messages-item-name {
-  width: 100%;
+td.ccm-profile-messages-item-mailbox, td.ccm-profile-messages-item-name {
   font-size: 16px;
   font-weight: bold;
+}
+td.ccm-profile-messages-item-mailbox {
+  white-space: nowrap;
+}
+td.ccm-profile-messages-item-name, td.ccm-profile-mailbox-last-message {
+  width: 100%;
 }
 
 table.ccm-profile-messages-list td.ccm-profile-message-from {
@@ -67,15 +72,16 @@ table.ccm-profile-messages-list td.ccm-profile-message-from img {
 }
 
 div#ccm-private-message-detail {
-  padding-left: 30px;
+  padding-left: 45px;
+  padding-top: 9px;
   position: relative;
 }
 
 div#ccm-private-message-detail img.u-avatar {
-  width: 20px;
-  height: 20px;
+  width: 30px;
+  height: 30px;
   position: absolute;
-  top: -2px;
+  top: 9px;
   left: 2px;
 }
 
@@ -88,6 +94,10 @@ div#ccm-private-message-detail .btn-toolbar {
 
 div#ccm-private-message-detail {
   position: relative;
+}
+
+div#ccm-private-message-subject-time {
+  margin-top: 20px;
 }
 
 #ccm-members-directory td.ccm-members-directory-avatar {

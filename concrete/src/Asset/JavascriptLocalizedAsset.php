@@ -1,8 +1,10 @@
 <?php
+
 namespace Concrete\Core\Asset;
 
-use URL;
+use Concrete\Core\Support\Facade\Application;
 use Localization;
+use URL;
 
 class JavascriptLocalizedAsset extends JavascriptAsset
 {
@@ -24,9 +26,15 @@ class JavascriptLocalizedAsset extends JavascriptAsset
         return 'javascript';
     }
 
-    public function getAssetURL()
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Asset\Asset::mapAssetLocation()
+     */
+    public function mapAssetLocation($path)
     {
-        return URL::to($this->assetURL)->getRelativeUrl();
+        $url = URL::to('/' . ltrim($path, '/'))->getRelativeUrl();
+        $this->setAssetURL($url);
     }
 
     /**
@@ -34,7 +42,7 @@ class JavascriptLocalizedAsset extends JavascriptAsset
      */
     public function getAssetHashKey()
     {
-        return $this->assetURL.'::'.Localization::activeLocale().'::'.sha1($this->getAssetContents());
+        return $this->assetURL . '::' . Localization::activeLocale() . '::' . sha1($this->getAssetContents());
     }
 
     public function isAssetLocal()
@@ -47,6 +55,17 @@ class JavascriptLocalizedAsset extends JavascriptAsset
      */
     public function getAssetContents()
     {
-        return parent::getAssetContentsByRoute($this->assetURL);
+        $app = Application::getFacadeApplication();
+        $assetRoute = $this->getAssetURL();
+        $relativePath = $app->make('app_relative_path');
+        if ($relativePath !== '' && strpos($assetRoute, $relativePath . '/') === 0) {
+            $assetRoute = substr($assetRoute, strlen($relativePath));
+        }
+        $prefix = '/' . DISPATCHER_FILENAME . '/';
+        if (strpos($assetRoute, $prefix) === 0) {
+            $assetRoute = substr($assetRoute, strlen($prefix) - 1);
+        }
+
+        return parent::getAssetContentsByRoute($assetRoute);
     }
 }

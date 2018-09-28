@@ -9,7 +9,6 @@ if (!$sh->canRead()) {
 $v = View::getInstance();
 $v->requireAsset('core/sitemap');
 
-$site = \Core::make("site")->getActiveSiteForEditing();
 ?>
 
 <div class="ccm-sitemap-overlay"></div>
@@ -18,7 +17,6 @@ $site = \Core::make("site")->getActiveSiteForEditing();
 <script type="text/javascript">
     $(function () {
         $('.ccm-sitemap-overlay').concreteSitemap({
-            siteTreeID: <?=$site->getSiteTreeID()?>,
             onClickNode: function (node) {
                 ConcreteEvent.publish('SitemapSelectPage', {
                     cID: node.data.cID,
@@ -26,7 +24,7 @@ $site = \Core::make("site")->getActiveSiteForEditing();
                     instance: this
                 });
             },
-            displaySingleLevel: <?= $_REQUEST['display'] == 'flat' ? 'true' : 'false' ?>,
+            displaySingleLevel: <?= (isset($_REQUEST['display']) && $_REQUEST['display'] === 'flat') ? 'true' : 'false' ?>,
         });
     });
 </script>

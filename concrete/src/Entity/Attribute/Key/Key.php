@@ -2,6 +2,8 @@
 namespace Concrete\Core\Entity\Attribute\Key;
 
 use Concrete\Core\Attribute\AttributeKeyInterface;
+use Concrete\Core\Attribute\View;
+use Concrete\Core\Form\Context\ContextInterface;
 use Concrete\Core\Attribute\Key\SearchIndexer\StandardSearchIndexer;
 use Concrete\Core\Attribute\Type;
 use Concrete\Core\Entity\Attribute\Category;
@@ -9,6 +11,7 @@ use Concrete\Core\Entity\Attribute\Set;
 use Concrete\Core\Entity\PackageTrait;
 use Concrete\Core\Export\ExportableInterface;
 use Concrete\Core\Export\Item\AttributeKey;
+use Concrete\Core\Form\Control\ControlInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -23,7 +26,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     }
  * )
  */
-class Key implements AttributeKeyInterface, ExportableInterface
+class Key implements AttributeKeyInterface, ExportableInterface, ControlInterface
 {
     use PackageTrait;
 
@@ -74,7 +77,7 @@ class Key implements AttributeKeyInterface, ExportableInterface
     protected $type;
 
     /**
-     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Attribute\Category")
+     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Attribute\Category", inversedBy="keys")
      * @ORM\JoinColumn(name="akCategoryID", referencedColumnName="akCategoryID")
      **/
     protected $category;
@@ -249,6 +252,11 @@ class Key implements AttributeKeyInterface, ExportableInterface
     public function getExporter()
     {
         return new AttributeKey();
+    }
+
+    public function getControlView(ContextInterface $context)
+    {
+        return $this->getController()->getControlView($context);
     }
 
     /**

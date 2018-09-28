@@ -17,7 +17,14 @@ class DashboardMobileMenu extends Menu
 
     public function displayChildPages(Page $page)
     {
-        return false;
+        return true;
+    }
+
+    protected function getPageList($parent)
+    {
+        $list = parent::getPageList($parent);
+        $list->includeSystemPages();
+        return $list;
     }
 
     public function getElement()

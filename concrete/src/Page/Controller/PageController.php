@@ -12,6 +12,7 @@ use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Page\View\PageView;
 use Symfony\Component\HttpFoundation\Response;
+use Concrete\Core\Session\SessionValidator;
 
 class PageController extends Controller
 {
@@ -20,6 +21,7 @@ class PageController extends Controller
     protected $passThruBlocks = array();
     protected $parameters = array();
     protected $replacement = null;
+    protected $requestValidated;
 
     /**
      * array of method names that can't be called through the url
@@ -110,13 +112,17 @@ class PageController extends Controller
 
     public function getSets()
     {
+        $app = $this->app;
         $sets = parent::getSets();
+        $validator = $app->make(SessionValidator::class);
         $session = Application::getFacadeApplication()->make('session');
-        if ($session->getFlashBag()->has('page_message')) {
-            $value = $session->getFlashBag()->get('page_message');
-            foreach ($value as $message) {
-                $sets[$message[0]] = $message[1];
-                $sets[$message[0].'IsHTML'] = isset($message[2]) && $message[2];
+        if ($validator->hasActiveSession()) {
+            if ($session->getFlashBag()->has('page_message')) {
+                $value = $session->getFlashBag()->get('page_message');
+                foreach ($value as $message) {
+                    $sets[$message[0]] = $message[1];
+                    $sets[$message[0].'IsHTML'] = isset($message[2]) && $message[2];
+                }
             }
         }
 
@@ -152,12 +158,6 @@ class PageController extends Controller
     public function getPageObject()
     {
         return $this->c;
-    }
-
-    public function flash($key, $value, $isHTML = false)
-    {
-        $session = Application::getFacadeApplication()->make('session');
-        $session->getFlashBag()->add('page_message', array($key, $value, $isHTML));
     }
 
     public function getTheme()
@@ -261,7 +261,7 @@ class PageController extends Controller
             $valid = false;
         }
 
-        if (is_callable(array($this, $this->action))  && (get_class($this) != '\Concrete\Controller\PageForbidden')) {
+        if ($valid && is_callable(array($this, $this->action))  && !($this instanceof \Concrete\Controller\SinglePage\PageForbidden)) {
             // we use reflection to see if the task itself, which now much exist, takes fewer arguments than
             // what is specified
             $r = new \ReflectionMethod(get_class($this), $this->action);
@@ -291,6 +291,11 @@ class PageController extends Controller
 
     public function validateRequest()
     {
+
+        if (isset($this->requestValidated)) {
+            return $this->requestValidated;
+        }
+
         $valid = true;
 
         if (!$this->isValidControllerTask($this->action, $this->parameters)) {
@@ -331,6 +336,18 @@ class PageController extends Controller
             }
         }
 
+        $this->requestValidated = $valid;
+
         return $valid;
+    }
+
+    /**
+     * Should this page be displayed using the user's language?
+     *
+     * @return bool
+     */
+    public function useUserLocale()
+    {
+        return false;
     }
 }

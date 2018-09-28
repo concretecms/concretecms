@@ -2,7 +2,9 @@
 namespace Concrete\Controller\Dialog\Tree\Node\Category;
 
 use Concrete\Controller\Dialog\Tree\Node;
+use Concrete\Core\Tree\Node\NodeType;
 use Concrete\Core\Tree\Node\Type\Category;
+use Concrete\Core\Tree\Node\Type\ExpressEntryCategory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Add extends Node
@@ -20,6 +22,17 @@ class Add extends Node
     {
         $node = $this->getNode();
         $this->set('node', $node);
+        if ($this->request->query->has('treeNodeTypeHandle')) {
+            $this->set('treeNodeTypeHandle', h($this->request->query->get('treeNodeTypeHandle')));
+        }
+    }
+
+    protected function getCategoryClass(Category $category)
+    {
+        if ($category instanceof ExpressEntryCategory) {
+            return ExpressEntryCategory::class;
+        }
+        return Category::class;
     }
 
     public function add_category_node()
@@ -31,7 +44,6 @@ class Add extends Node
             $error->add($token->getErrorMessage());
         }
 
-
         $title = $_POST['treeNodeCategoryName'];
         if (!$title) {
             $error->add(t('Invalid title for category'));
@@ -42,7 +54,18 @@ class Add extends Node
         }
 
         if (!$error->has()) {
-            $category = Category::add($title, $parent);
+            $class = false;
+            if ($this->request->request->has('treeNodeTypeHandle')) {
+                $type = NodeType::getByHandle($this->request->request->get('treeNodeTypeHandle'));
+                if (!$type) {
+                    throw new \Exception(t('Unable to get class for node type: %s', $this->request->request->get('treeNodeTypeHandle')));
+                }
+                $class = $type->getTreeNodeTypeClass();
+            }
+            if (!$class) {
+                $class = Category::class;
+            }
+            $category = $class::add($title, $parent);
             $r = $category->getTreeNodeJSON();
             return new JsonResponse($r);
         } else {

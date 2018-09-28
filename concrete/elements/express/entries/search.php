@@ -1,10 +1,4 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
-/**
- * @var $controller \Concrete\Controller\Search\Express\Entries
- */
-$result = $controller->getSearchResultObject()->getJSONObject();
-$result = json_encode($result);
-?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <div data-search="express_entries">
 
@@ -50,34 +44,6 @@ $result = json_encode($result);
             <% } %>
             <% } %>
         </tr>
-    </script>
-
-    <script type="text/javascript">
-        $(function() {
-            $('div[data-search=express_entries]').concreteAjaxSearch({
-                result: <?=$result?>,
-                onUpdateResults: function(concreteSearch) {
-                    concreteSearch.$element.on('mouseover', 'tr[data-entity-id]', function(e) {
-                        e.stopPropagation();
-                        $(this).addClass('ccm-search-select-hover');
-                    });
-                    concreteSearch.$element.on('mouseout', 'tr[data-entity-id]', function(e) {
-                        e.stopPropagation();
-                        $(this).removeClass('ccm-search-select-hover');
-                    });
-
-                    concreteSearch.$element.unbind('click.expressEntries');
-                    concreteSearch.$element.on('click.expressEntries', 'tr[data-entity-id]', function(e) {
-                        e.stopPropagation();
-                        ConcreteEvent.publish('SelectExpressEntry', {
-                            exEntryID: $(this).attr('data-entity-id'),
-                            event: e
-                        });
-                        return false;
-                    });
-                }
-            });
-        });
     </script>
 
 </div>

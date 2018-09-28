@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Permission\Access\Entity;
 
+use Concrete\Core\User\UserList;
 use Loader;
 use Config;
 use Concrete\Core\Permission\Access\Access as PermissionAccess;
@@ -84,6 +85,7 @@ class GroupCombinationEntity extends Entity
     public function getAccessEntityUsers(PermissionAccess $pa)
     {
         $gl = new UserList();
+        $gl->ignorePermissions();
         foreach ($this->groups as $g) {
             $gl->filterByGroupID($g->getGroupID());
         }

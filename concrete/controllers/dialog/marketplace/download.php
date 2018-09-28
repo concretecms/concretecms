@@ -18,15 +18,14 @@ class Download extends MarketplaceItem
         }
 
         if (!$error->has()) {
-            $pkg = PackageService::getByHandle($this->item->getHandle());
-            if (is_object($pkg)) {
-                $tests = $pkg->testForInstall();
+            $p = PackageService::getClass($this->item->getHandle());
+            if (is_object($p)) {
+                $tests = $p->testForInstall();
                 if (is_object($tests)) {
                     $error->add($tests);
                 } else {
-                    $p = PackageService::getClass($this->item->getHandle());
                     try {
-                        $p->install();
+                        PackageService::install($p, []);
                     } catch (\Exception $e) {
                         $error->add($e->getMessage());
                     }

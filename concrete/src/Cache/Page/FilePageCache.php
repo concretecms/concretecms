@@ -63,10 +63,11 @@ class FilePageCache extends PageCache
             @mkdir(Config::get('concrete.cache.page.directory'));
             @touch(Config::get('concrete.cache.page.directory') . '/index.html');
         }
+        $url = $c->getSite()->getSiteCanonicalURL();
         $lifetime = $c->getCollectionFullPageCachingLifetimeValue();
         $file = $this->getCacheFile($c);
         if ($file) {
-            $response = new PageCacheRecord($c, $content, $lifetime);
+            $response = new PageCacheRecord($c, $content, $lifetime, $url);
             if ($content) {
                 file_put_contents($file, serialize($response));
             }

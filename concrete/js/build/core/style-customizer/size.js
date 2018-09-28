@@ -1,11 +1,8 @@
-/**
- * block ajax
- */
+/* jshint unused:vars, undef:true, browser:true, jquery:true */
 
-/* jshint unused:vars, undef:true, browser:true */
-/* global $, ConcreteEvent, ConcreteStyleCustomizerPalette */
+/* global ConcreteEvent, ConcreteStyleCustomizerPalette */
 
-(function(global, $) {
+;(function(global, $) {
     'use strict';
 
     function ConcreteSizeSelector($element, options) {
@@ -25,7 +22,7 @@
         }
         my.$slider.slider({
             min: 0,
-            max: 400,
+            max: 1000,
             step: step,
             value: my.options.value,
             create: function (e, ui) {
@@ -73,4 +70,4 @@
 
     global.ConcreteSizeSelector = ConcreteSizeSelector;
 
-})(this, $);
+})(this, jQuery);

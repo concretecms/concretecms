@@ -1,6 +1,9 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
 
 $json = Loader::helper('json');
+if (!isset($editmode)) {
+    $editmode = null;
+}
 ?>
 <style>
     .table.authentication-types i.handle {
@@ -17,11 +20,12 @@ $json = Loader::helper('json');
 <?php
 
 if ($editmode) {
-    $pageTitle = t('Edit %s Authentication Type', $at->getAuthenticationTypeName());
+    $pageTitle = t('Edit %s Authentication Type', $at->getAuthenticationTypeDisplayName());
     ?><form class="form-stacked" method="post" action="<?=$view->action('save', $at->getAuthenticationTypeID())?>"><?php
 
     $token = \Core::make('token');
     $token->output("auth_type_save.{$at->getAuthenticationTypeID()}");
+    echo $form->getAutocompletionDisabler();
 }
 if (!$editmode) {
     ?>
@@ -49,7 +53,7 @@ if (!$editmode) {
                         </td>
                         <td style="width: 100px"><?=$at->getAuthenticationTypeID()?></td>
                         <td><?=$at->getAuthenticationTypeHandle()?></td>
-                        <td><?=$at->getAuthenticationTypeName()?></td>
+                        <td><?=$at->getAuthenticationTypeDisplayName()?></td>
                         <td style="text-align:right"><i style="cursor: move" class="fa fa-arrows"></i></td>
                     </tr><?php
 

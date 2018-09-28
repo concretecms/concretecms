@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Localization\Translator\Adapter\Zend\Translation\Loader\Gettext;
 
 use Concrete\Core\Localization\Translator\Translation\Loader\AbstractTranslationLoader;
@@ -13,19 +12,50 @@ use Concrete\Core\Localization\Translator\TranslatorAdapterInterface;
  */
 class SiteTranslationLoader extends AbstractTranslationLoader
 {
-
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function loadTranslations(TranslatorAdapterInterface $translatorAdapter)
     {
-        if ($this->app->make('multilingual/detector')->isEnabled()) {
-            $languageFile = DIR_LANGUAGES_SITE_INTERFACE . "/" . $translatorAdapter->getLocale() . ".mo";
-            if (is_file($languageFile)) {
-                $translator = $translatorAdapter->getTranslator();
-                $translator->addTranslationFile('gettext', $languageFile);
-            }
+        $locale = $translatorAdapter->getLocale();
+        $languageFile = $this->locateLanguageFile($locale);
+        if ($languageFile !== null) {
+            $translator = $translatorAdapter->getTranslator();
+            $translator->addTranslationFile('gettext', $languageFile);
         }
     }
 
+    /**
+     * Get the full path to the file containing the localized strings for a specific locale.
+     *
+     * @param string $localeID The ID of the locale
+     *
+     * @return string|null Returns the full path of the file if it exists, null otherwise
+     */
+    private function locateLanguageFile($localeID)
+    {
+        $localeIDAlternatives = $this->getLocaleIDAlternatives($localeID);
+        $result = null;
+        foreach ($localeIDAlternatives as $localeIDAlternative) {
+            $languageFile = $this->getLanguageFilePath($localeIDAlternative);
+            if (is_file($languageFile)) {
+                $result = $languageFile;
+                break;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get the full path to the file containing the localized strings for a specific locale.
+     *
+     * @param string $localeID The ID of the locale
+     *
+     * @return string
+     */
+    private function getLanguageFilePath($localeID)
+    {
+        return DIR_LANGUAGES_SITE_INTERFACE . '/' . $localeID . '.mo';
+    }
 }

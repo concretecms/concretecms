@@ -6,7 +6,15 @@ use Concrete\Core\Entity\Attribute\Value\ExpressValue;
 use Concrete\Core\Entity\Express\Entry\Association as EntryAssociation;
 use Concrete\Core\Entity\Express\Entry\ManyAssociation;
 use Concrete\Core\Entity\Express\Entry\OneAssociation;
-use Concrete\Core\Permission\ObjectInterface;
+use Concrete\Core\Export\ExportableInterface;
+use Concrete\Core\Express\Entry\Formatter\EntryFormatterInterface;
+use Concrete\Core\Express\EntryBuilder\AssociationBuilder;
+use Concrete\Core\Export\Item\Express\Entry as EntryExporter;
+use Concrete\Core\Express\EntryBuilder\AssociationUpdater;
+use Concrete\Core\Permission\ObjectInterface as PermissionObjectInterface;
+use Concrete\Core\Attribute\ObjectInterface as AttributeObjectInterface;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Utility\Service\Identifier;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -15,10 +23,12 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="ExpressEntityEntries")
  * @ORM\EntityListeners({"\Concrete\Core\Express\Entry\Listener"})
  */
-class Entry implements \JsonSerializable, ObjectInterface
+class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeObjectInterface, ExportableInterface
 {
 
     use ObjectTrait;
+
+    protected $entryFormatter;
 
     /**
      * Returns either an attribute (if passed an attribute handle) or the content
@@ -50,35 +60,78 @@ class Entry implements \JsonSerializable, ObjectInterface
             // Assume attribute otherwise
             return $this->getAttribute($identifier);
         }
+
+        if (substr($nm, 0, 3) == 'set') {
+            $nm = preg_replace('/(?!^)[[:upper:]]/', '_\0', $nm);
+            $nm = strtolower($nm);
+            $identifier = substr($nm, 4);
+
+            // Assume attribute otherwise
+            $this->setAttribute($identifier, $a[0]);
+        }
+
         return null;
     }
 
+    /**
+     * Checks if this Entry's entity handle is the same as the one specified
+     *
+     * @param $entityHandle
+     * @return bool
+     */
+    public function is($entityHandle)
+    {
+        return $this->getEntity()->getHandle() == $entityHandle;
+    }
+
+    /**
+     * Returns the ID of this Entry
+     *
+     * @return mixed
+     */
     public function getPermissionObjectIdentifier()
     {
         return $this->exEntryID;
     }
 
+    /**
+     * @return string
+     */
     public function getPermissionResponseClassName()
     {
         return '\\Concrete\\Core\\Permission\\Response\\ExpressEntryResponse';
     }
 
+    /**
+     * @return bool
+     */
     public function getPermissionAssignmentClassName()
     {
         return false;
     }
 
+    /**
+     * @return bool
+     */
     public function getPermissionObjectKeyCategoryHandle()
     {
         return false;
     }
 
+    /**
+     * @return \Concrete\Core\Attribute\Category\CategoryInterface
+     */
     public function getObjectAttributeCategory()
     {
         $category = \Core::make('\Concrete\Core\Attribute\Category\ExpressCategory', [$this->getEntity()]);
         return $category;
     }
 
+    /**
+     * @param \Concrete\Core\Attribute\AttributeKeyInterface|string $ak
+     * @param bool $createIfNotExists
+     * @return \Concrete\Core\Attribute\AttributeValueInterface|ExpressValue|null
+     */
     public function getAttributeValueObject($ak, $createIfNotExists = false)
     {
         if (!is_object($ak)) {
@@ -108,6 +161,12 @@ class Entry implements \JsonSerializable, ObjectInterface
     protected $exEntryID;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Concrete\Core\Entity\User\User")
+     * @ORM\JoinColumn(name="uID", referencedColumnName="uID")
+     */
+    protected $author;
+
+    /**
      * @ORM\Column(type="integer")
      */
     protected $exEntryDisplayOrder = 0;
@@ -122,6 +181,11 @@ class Entry implements \JsonSerializable, ObjectInterface
      * @ORM\JoinColumn(name="exEntryEntityID", referencedColumnName="id")
      */
     protected $entity;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $exEntryDateModified;
 
     /**
      * @return Entity
@@ -139,9 +203,20 @@ class Entry implements \JsonSerializable, ObjectInterface
         $this->entity = $entity;
     }
 
+    /**
+     * @return mixed
+     */
     public function getID()
     {
         return $this->exEntryID;
+    }
+
+    /**
+     * @param mixed $exEntryID
+     */
+    public function setID($exEntryID)
+    {
+        $this->exEntryID = $exEntryID;
     }
 
     /**
@@ -188,15 +263,6 @@ class Entry implements \JsonSerializable, ObjectInterface
     protected $associations;
 
     /**
-     * @ORM\ManyToMany(targetEntity="\Concrete\Core\Entity\Express\Entry\Association", mappedBy="selectedEntries")
-     * @ORM\JoinTable(name="ExpressEntityAssociationSelectedEntries",
-     * joinColumns={@ORM\JoinColumn(name="exSelectedEntryID", referencedColumnName="exEntryID")},
-     * inverseJoinColumns={@ORM\JoinColumn(name="id", referencedColumnName="id")  }
-     * )
-     */
-    protected $containing_associations;
-
-    /**
      * @return mixed
      */
     public function getAssociations()
@@ -212,22 +278,52 @@ class Entry implements \JsonSerializable, ObjectInterface
         $this->associations = $associations;
     }
 
+
+    /**
+     * @param $handle
+     * @return EntryAssociation|null
+     */
     public function getAssociation($handle)
     {
         if ($handle instanceof Association) {
-            $handle = $handle->getTargetPropertyName();
+            return $this->getEntryAssociation($handle);
         }
 
         /**
-         * @var $association EntryAssociation
+         * @var $entryAssociation EntryAssociation
          */
-        foreach($this->associations as $association) {
-            if ($association->getAssociation()->getTargetPropertyName() == $handle) {
-                return $association;
+        foreach ($this->associations as $entryAssociation) {
+            if ($entryAssociation->getAssociation()->getTargetPropertyName() === $handle) {
+                return $entryAssociation;
             }
         }
     }
 
+    /**
+     * Get the EntryAssociation for a given association
+     *
+     * @param \Concrete\Core\Entity\Express\Association $association
+     * @return \Concrete\Core\Entity\Express\Entry\Association|null
+     */
+    public function getEntryAssociation(Association $association)
+    {
+        $id = $association->getId();
+
+        /**
+         * @var $entryAssociation EntryAssociation
+         */
+        foreach ($this->associations as $entryAssociation) {
+            if ($entryAssociation->getAssociation()->getId() === $id) {
+                return $entryAssociation;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getOwnedByEntry()
     {
         foreach($this->associations as $association) {
@@ -236,22 +332,52 @@ class Entry implements \JsonSerializable, ObjectInterface
             }
         }
     }
+
+    /**
+     * Entry constructor.
+     */
     public function __construct()
     {
         $this->attributes = new ArrayCollection();
         $this->associations = new ArrayCollection();
         $this->containing_associations = new ArrayCollection();
         $this->exEntryDateCreated = new \DateTime();
+        $this->exEntryDateModified = new \DateTime();
     }
 
+    /**
+     * Updates the entity dateModified field
+     * Normally called by ExpressValue Entity
+     */
+    public function updateDateModified() {
+        $this->exEntryDateModified = new \DateTime();
+    }
+
+    /**
+     * Formats the label of this entry to the mask (e.g. %product-name%) or the standard format
+     *
+     * @return mixed
+     */
     public function getLabel()
     {
-        $firstAttribute = $this->getEntity()->getAttributes()[0];
-        if (is_object($firstAttribute)) {
-            return $this->getAttribute($firstAttribute);
+        if (!$this->entryFormatter) {
+            $this->entryFormatter = Application::getFacadeApplication()->make(EntryFormatterInterface::class);
         }
+
+        if ($mask = $this->getEntity()->getLabelMask()) {
+            $name = $this->entryFormatter->format($mask, $this);
+        }
+
+        if (!$name) {
+            $name = $this->entryFormatter->getLabel($this);
+        }
+
+        return $name;
     }
 
+    /**
+     * @return array|mixed
+     */
     public function jsonSerialize()
     {
         $data = array(
@@ -262,7 +388,23 @@ class Entry implements \JsonSerializable, ObjectInterface
     }
 
     /**
-     * @return mixed
+     * @return \DateTime
+     */
+    public function getDateModified()
+    {
+        return $this->exEntryDateModified;
+    }
+
+    /**
+     * @param mixed $exEntryDateModified
+     */
+    public function setDateModified($exEntryDateModified)
+    {
+        $this->exEntryDateModified = $exEntryDateModified;
+    }
+
+    /**
+     * @return \DateTime
      */
     public function getDateCreated()
     {
@@ -276,6 +418,39 @@ class Entry implements \JsonSerializable, ObjectInterface
     {
         $this->exEntryDateCreated = $exEntryDateCreated;
     }
+
+    /**
+     * @return mixed
+     */
+    public function associateEntries()
+    {
+        return \Core::make(AssociationUpdater::class, ['entry' => $this]);
+    }
+
+    /**
+     * @return \Concrete\Core\Export\Item\ItemInterface
+     */
+    public function getExporter()
+    {
+        return \Core::make(EntryExporter::class);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAuthor()
+    {
+        return $this->author;
+    }
+
+    /**
+     * @param mixed $author
+     */
+    public function setAuthor($author)
+    {
+        $this->author = $author;
+    }
+
 
 
 }

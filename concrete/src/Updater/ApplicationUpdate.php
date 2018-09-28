@@ -1,15 +1,15 @@
 <?php
+
 namespace Concrete\Core\Updater;
 
+use Concrete\Core\Cache\OpCache;
 use Concrete\Core\Config\Renderer;
 use Concrete\Core\Foundation\Environment;
 use Concrete\Core\Marketplace\Marketplace;
 use Concrete\Core\Package\Package;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Updater\ApplicationUpdate\DiagnosticFactory;
-use Zend\Http\Client;
 use Config;
-use Zend\Http\Request;
-use Concrete\Core\Cache\OpCache;
 
 class ApplicationUpdate
 {
@@ -42,6 +42,7 @@ class ApplicationUpdate
     {
         return $this->version;
     }
+
     /**
      * Returns the version identifier (equals to the name of the directory under the updates directory).
      *
@@ -57,7 +58,7 @@ class ApplicationUpdate
      *
      * @param string $version
      *
-     * @return ApplicationUpdate|null Returns null if there's no update with $version, or an ApplicationUpdate instance if $version is ok.
+     * @return ApplicationUpdate|null Returns null if there's no update with $version, or an ApplicationUpdate instance if $version is ok
      */
     public static function getByVersionNumber($version)
     {
@@ -71,12 +72,12 @@ class ApplicationUpdate
 
     /**
      * Writes the core pointer into config/update.php.
-     * 
+     *
      * @return true|int Returns true if the configuration file was updated, otherwise it returns the error code (one of the ApplicationUpdate::E_... constants)
      */
     public function apply()
     {
-        $updates = array();
+        $updates = [];
         $update_file = DIR_CONFIG_SITE . '/update.php';
         if (file_exists($update_file)) {
             if (!is_writable($update_file)) {
@@ -96,11 +97,11 @@ class ApplicationUpdate
     }
 
     /**
-     * Parse an update dir and returns an ApplicationUpdate instance. 
-     * 
-     * @param $dir The base name of the directory under the updates directory.
+     * Parse an update dir and returns an ApplicationUpdate instance.
      *
-     * @return ApplicationUpdate|null Returns null if there's no update in the $dir directory, or an ApplicationUpdate instance if $dir is ok.
+     * @param string $dir The base name of the directory under the updates directory
+     *
+     * @return ApplicationUpdate|null Returns null if there's no update in the $dir directory, or an ApplicationUpdate instance if $dir is ok
      */
     public static function get($dir)
     {
@@ -129,11 +130,13 @@ class ApplicationUpdate
     /**
      * Given the current update object, sends information to concrete5.org to determine updatability.
      *
-     * @return \Concrete\Core\Updater\ApplicationUpdateDiagnostic
+     * @return \Concrete\Core\Updater\ApplicationUpdate\Diagnostic
      */
     public function getDiagnosticObject()
     {
-        $request = new Request();
+        $app = Application::getFacadeApplication();
+        $client = $app->make('http/client');
+        $request = $client->getRequest();
         $request->setUri(Config::get('concrete.updates.services.inspect_update'));
         $request->setMethod('POST');
         $request->getPost()->set('current_version', Config::get('concrete.version_installed'));
@@ -145,21 +148,20 @@ class ApplicationUpdate
             $config = \Core::make('config/database');
             $request->getPost()->set('marketplace_token', $config->get('concrete.marketplace.token'));
             $list = Package::getInstalledList();
-            $packages = array();
+            $packages = [];
             foreach ($list as $pkg) {
-                $packages[] = array('version' => $pkg->getPackageVersion(), 'handle' => $pkg->getPackageHandle());
+                $packages[] = ['version' => $pkg->getPackageVersion(), 'handle' => $pkg->getPackageHandle()];
             }
             $request->getPost()->set('packages', $packages);
         }
-        $overrides = id(Environment::get())->getOverrideList();
-        $request->getPost()->set('overrides', $overrides);
         $info = \Core::make('\Concrete\Core\System\Info');
+        $overrides = $info->getOverrideList();
+        $request->getPost()->set('overrides', $overrides);
         $info = $info->getJSONOBject();
         $request->getPost()->set('environment', json_encode($info));
 
-        $client = new Client();
         $client->setMethod('POST');
-        $response = $client->send($request);
+        $response = $client->send();
         $body = $response->getBody();
 
         $diagnostic = DiagnosticFactory::getFromJSON($body);

@@ -2,27 +2,47 @@
 namespace Concrete\Controller\Dialog\Search;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
+use Concrete\Controller\Element\Search\SearchFieldSelector;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Controller\Element\Search\CustomizeResults;
 use Concrete\Core\Entity\Search\Query;
-use Concrete\Core\Entity\Search\SavedFileSearch;
 use Concrete\Core\Entity\Search\SavedSearch;
 use Concrete\Core\Search\Field\Field\KeywordsField;
 use Concrete\Core\Search\ProviderInterface;
-use FilePermissions;
-use Loader;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Doctrine\ORM\EntityManager;
+use Exception;
 
 abstract class AdvancedSearch extends BackendInterfaceController
 {
-
     protected $viewPath = '/dialogs/search/advanced_search';
     protected $supportsSavedSearch = true;
+    public $objectID = null;
+
+    public function getObjectID()
+    {
+        return (string) $this->objectID;
+    }
 
     abstract public function getFieldManager();
 
     abstract public function getSavedSearchBaseURL(SavedSearch $search);
+
     abstract public function getBasicSearchBaseURL();
+
     abstract public function getCurrentSearchBaseURL();
+
+    abstract public function getSavedSearchEntity();
+
+    public function getAddFieldAction()
+    {
+        return $this->action('add_field');
+    }
+
+    public function getSubmitAction()
+    {
+        return $this->action('submit');
+    }
 
     /**
      * @return ProviderInterface
@@ -38,6 +58,7 @@ abstract class AdvancedSearch extends BackendInterfaceController
     {
         $query = new Query();
         $query->setFields([new KeywordsField()]);
+
         return $query;
     }
 
@@ -51,17 +72,42 @@ abstract class AdvancedSearch extends BackendInterfaceController
         return $this->request->request->get('fSearchDefaultSortDirection');
     }
 
-    public function view()
+    protected function getSearchFieldSelectorElement()
     {
-        $manager = $this->getFieldManager();
+        $element = new SearchFieldSelector($this->getFieldManager(), $this->getAddFieldAction(), $this->getSearchQuery());
+        return $element;
+    }
+
+    protected function getCustomizeResultsElement()
+    {
         $provider = $this->getSearchProvider();
-        $query = $this->getSearchQuery();
         $element = new CustomizeResults($provider);
 
-        $this->set('defaultQuery', json_encode($query));
-        $this->set('customizeElement', $element);
-        $this->set('manager', $manager);
+        return $element;
+    }
+
+    protected function getSearchPresets()
+    {
+        $searchPresets = [];
+        $app = Application::getFacadeApplication();
+        $searchEntity = $this->getSavedSearchEntity();
+        if (!empty($searchEntity)) {
+            $searchPresets = $searchEntity->findAll();
+        }
+
+        return $searchPresets;
+    }
+
+    public function view()
+    {
+        $app = Application::getFacadeApplication();
+        $this->set('customizeElement', $this->getCustomizeResultsElement());
+        $this->set('searchFieldSelectorElement', $this->getSearchFieldSelectorElement());
+        if ($this->supportsSavedSearch) {
+            $this->set('searchPresets', $this->getSearchPresets());
+        }
         $this->set('supportsSavedSearch', $this->supportsSavedSearch);
+        $this->set('form', $app->make('helper/form'));
     }
 
     public function addField()
@@ -93,29 +139,40 @@ abstract class AdvancedSearch extends BackendInterfaceController
 
         $query->setFields($fields);
         $query->setColumns($set);
+
+        $itemsPerPage = $this->getItemsPerPage();
+        $query->setItemsPerPage($itemsPerPage);
+
         return $query;
     }
 
     public function savePreset()
     {
         if ($this->validateAction() && $this->supportsSavedSearch) {
+            $app = Application::getFacadeApplication();
             $query = $this->getQueryFromRequest();
+            if (is_object($query)) {
+                $provider = $this->getSearchProvider();
+                if (is_object($provider)) {
+                    $em = $app->make(EntityManager::class);
+                    $search = $provider->getSavedSearch();
+                    if (is_object($search)) {
+                        $search->setQuery($query);
+                        $search->setPresetName($this->request->request->get('presetName'));
+                        $em->persist($search);
+                        $em->flush();
 
-            $em = \Database::connection()->getEntityManager();
-            $search = new SavedFileSearch();
-            $search->setQuery($query);
-            $search->setPresetName($this->request->request->get('presetName'));
-            $em->persist($search);
-            $em->flush();
+                        $this->onAfterSavePreset($search);
 
-            $this->onAfterSavePreset($search);
+                        $result = $provider->getSearchResultFromQuery($query);
+                        $result->setBaseURL($this->getSavedSearchBaseURL($search));
 
-            $provider = $this->getSearchProvider();
-            $result = $provider->getSearchResultFromQuery($query);
-            $result->setBaseURL($this->getSavedSearchBaseURL($search));
-
-            return new JsonResponse($result->getJSONObject());
+                        return new JsonResponse($result->getJSONObject());
+                    }
+                }
+            }
         }
+        throw new Exception(t('An error occurred while saving the search preset.'));
     }
 
     public function submit()
@@ -127,8 +184,17 @@ abstract class AdvancedSearch extends BackendInterfaceController
             $provider->setSessionCurrentQuery($query);
 
             $result = $provider->getSearchResultFromQuery($query);
-            $result->setBaseURL($this->getBasicSearchBaseURL());
+            $result->setBaseURL($this->getCurrentSearchBaseURL());
+
             return new JsonResponse($result->getJSONObject());
         }
+    }
+
+    /**
+     * @return int
+     */
+    private function getItemsPerPage()
+    {
+        return $this->request->request->get('fSearchItemsPerPage');
     }
 }

@@ -29,6 +29,19 @@ class WorkflowEntry implements EntryInterface
         }
     }
 
+    public function remove($mixed)
+    {
+        $workflow = Workflow::getByName($this->workflowName);
+        $key = Key::getByHandle($this->pkHandle);
+        $key->setPermissionObject($mixed->getPermissionObject());
+        $assignment = $key->getPermissionAssignmentObject();
+        $access = $assignment->getPermissionAccessObject();
+        if (is_object($access)) {
+            $access->removeWorkflow($workflow);
+        }
+    }
+
+
 
 }
 

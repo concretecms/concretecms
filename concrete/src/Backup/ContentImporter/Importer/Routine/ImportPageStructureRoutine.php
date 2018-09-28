@@ -38,12 +38,12 @@ class ImportPageStructureRoutine extends AbstractPageStructureRoutine implements
                 ++$i;
             }
             usort($nodes, array('static', 'setupPageNodeOrder'));
-            $siteTree = null;
             if (isset($this->home)) {
                 $home = $this->home;
                 $siteTree = $this->home->getSiteTreeObject();
             } else {
-                $home = Page::getByID(HOME_CID, 'RECENT');
+                $home = Page::getByID(Page::getHomePageID(), 'RECENT');
+                $siteTree = null;
             }
 
             foreach ($nodes as $px) {
@@ -88,13 +88,27 @@ class ImportPageStructureRoutine extends AbstractPageStructureRoutine implements
                     $page = $home;
                 }
 
-                $args['cName'] = $px['name'];
-                $args['cDescription'] = $px['description'];
+                $cName = (string) $px['name'];
+                if ($cName) {
+                    $args['cName'] = $cName;
+                }
+
+                $cDescription = (string) $px['description'];
+                if ($cDescription) {
+                    $args['cDescription'] = $cDescription;
+                }
+
                 if (is_object($ct)) {
                     $args['ptID'] = $ct->getPageTypeID();
                 }
-                $args['pTemplateID'] = $template->getPageTemplateID();
-                $page->update($args);
+
+                if ($template) {
+                    $args['pTemplateID'] = $template->getPageTemplateID();
+                }
+
+                if (count($args)) {
+                    $page->update($args);
+                }
             }
         }
     }
