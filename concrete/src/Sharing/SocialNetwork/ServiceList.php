@@ -28,7 +28,18 @@ class ServiceList
         );
 
         if ($additionalSocialNetworks = \Config::get('concrete.social.additional_services')) {
-            $services = $additionalSocialNetworks + $services;
+            $keyArray = [];
+            $additionalKeyArray = [];
+
+            foreach($services as $service) {
+                $keyArray[$service[0]] = $service;
+            }
+
+            foreach($additionalSocialNetworks as $service) {
+                $additionalKeyArray[$service[0]] = $service;
+            }
+
+            $services = array_values($additionalKeyArray + $services);
         }
 
         return $services;
