@@ -16,6 +16,7 @@ env:
   - DO_PHPUNIT=1
   - DO_CS_PHP=0
   - DO_CS_JS=0
+  - DO_BUILDASSETS=0
 
 matrix:
   fast_finish: true
@@ -33,17 +34,19 @@ matrix:
     env:
     - DO_PHPUNIT=0
     - DO_CS_JS=1
+    - DO_BUILDASSETS=1
   allow_failures:
   - php: nightly
 
 before_script:
-- if test $DO_CS_JS -ne 0; then ./.travis/setup-build.sh; fi
+- if test $DO_CS_JS -ne 0 || test $DO_BUILDASSETS -ne 0; then ./.travis/setup-build.sh; fi
 - if test $DO_PHPUNIT -ne 0 || test $DO_CS_PHP -ne 0; then ./.travis/composer-deps.sh; fi
 
 script:
 - if test $DO_CS_PHP -ne 0; then echo 'Testing PHP coding style'; composer phpcs; fi
 - if test $DO_CS_JS -ne 0; then echo 'Testing JS coding style'; cd build && grunt js:check; fi
 - if test $DO_PHPUNIT -ne 0; then echo 'Running tests'; composer test; fi
+- if test $DO_BUILDASSETS -ne 0; then ./.travis/rebuild-assets.sh; fi
 
 cache:
   yarn: true
