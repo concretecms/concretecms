@@ -2,6 +2,8 @@
 
 set -o errexit
 
+source "$( dirname "${BASH_SOURCE[0]}" )/travis_retry.sh"
+
 echo 'Installing Yarn'
 travis_retry npm install yarn -g
 

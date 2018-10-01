@@ -2,6 +2,8 @@
 
 set -o errexit
 
+source "$( dirname "${BASH_SOURCE[0]}" )/travis_retry.sh"
+
 echo 'Configuring PHP'
 phpenv config-add "$( dirname "${BASH_SOURCE[0]}" )/php.ini"
 phpenv config-rm xdebug.ini || true
