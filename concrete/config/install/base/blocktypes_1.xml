@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <blocktypes>
+        <blocktype handle="core_area_layout" package=""/>
+        <blocktype handle="core_page_type_composer_control_output" package=""/>
+        <blocktype handle="core_scrapbook_display" package=""/>
+        <blocktype handle="core_stack_display" package=""/>
+        <!--
+        <blocktype handle="core_gathering_display" package=""/>
+        <blocktype handle="core_gathering" package=""/>
+        //-->
+        <blocktype handle="core_conversation" package=""/>
+        <blocktype handle="desktop_app_status" package=""/>
+        <!--
+        <blocktype handle="core_conversation_message" package=""/>
+        //-->
+        <blocktype handle="desktop_newsflow_latest" package=""/>
+        <blocktype handle="desktop_site_activity" package=""/>
+        <blocktype handle="desktop_featured_addon" package=""/>
+        <blocktype handle="desktop_featured_theme" package=""/>
+        <blocktype handle="desktop_latest_form" package=""/>
+        <blocktype handle="desktop_waiting_for_me" package=""/>
+        <blocktype handle="desktop_draft_list" package=""/>
+        <blocktype handle="autonav" package=""/>
+        <blocktype handle="content" package=""/>
+        <blocktype handle="date_navigation" package=""/>
+    </blocktypes>
+
+</concrete5-cif>

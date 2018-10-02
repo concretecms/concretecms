@@ -68,7 +68,10 @@ class StartingPointPackage extends BasePackage
             new StartingPointInstallRoutine('install_data_objects', 22, t('Installing Custom Data Objects.')),
             new StartingPointInstallRoutine('add_home_page', 23, t('Creating home page.')),
             new StartingPointInstallRoutine('install_attributes', 24, t('Installing attributes.')),
-            new StartingPointInstallRoutine('install_blocktypes', 25, t('Adding block types.')),
+            new StartingPointInstallRoutine('install_blocktypes_1', 25, t('Adding block types.')),
+            new StartingPointInstallRoutine('install_blocktypes_2', 38, t('Adding block types.')),
+            new StartingPointInstallRoutine('install_blocktypes_3', 51, t('Adding block types.')),
+            new StartingPointInstallRoutine('install_blocktypes_4', 64, t('Adding block types.')),
             new StartingPointInstallRoutine('install_gathering', 65, t('Adding gathering data sources.')),
             new StartingPointInstallRoutine('install_page_types', 66, t('Page type basic setup.')),
             new StartingPointInstallRoutine('install_themes', 67, t('Adding themes.')),
@@ -259,10 +262,40 @@ class StartingPointPackage extends BasePackage
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/image_editor.xml');
     }
 
+    /**
+     * @deprecated This method has been splitted in smaller chunks
+     */
     protected function install_blocktypes()
     {
         $ci = new ContentImporter();
-        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes.xml');
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_1.xml');
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_2.xml');
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_3.xml');
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_4.xml');
+    }
+
+    protected function install_blocktypes_1()
+    {
+        $ci = new ContentImporter();
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_1.xml');
+    }
+
+    protected function install_blocktypes_2()
+    {
+        $ci = new ContentImporter();
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_2.xml');
+    }
+
+    protected function install_blocktypes_3()
+    {
+        $ci = new ContentImporter();
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_3.xml');
+    }
+
+    protected function install_blocktypes_4()
+    {
+        $ci = new ContentImporter();
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_4.xml');
     }
 
     protected function install_themes()

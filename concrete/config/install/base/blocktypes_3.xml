@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <blocktypes>
+        <blocktype handle="horizontal_rule" package=""/>
+        <!-- <blocktype handle="discussion" package=""/>//-->
+        <blocktype handle="image" package=""/>
+        <blocktype handle="faq" package=""/>
+        <blocktype handle="next_previous" package=""/>
+        <blocktype handle="page_list" package=""/>
+        <blocktype handle="rss_displayer" package=""/>
+        <blocktype handle="search" package=""/>
+        <blocktype handle="image_slider" package=""/>
+        <blocktype handle="survey" package=""/>
+        <blocktype handle="switch_language" package=""/>
+        <blocktype handle="tags" package=""/>
+        <blocktype handle="video" package=""/>
+        <blocktype handle="youtube" package=""/>
+        <blocktype handle="calendar" package=""/>
+        <blocktype handle="event_list" package=""/>
+        <blocktype handle="calendar_event" package=""/>
+    </blocktypes>
+
+</concrete5-cif>
