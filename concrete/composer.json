@@ -73,7 +73,7 @@
     "mlocati/concrete5-translation-library": "1.5.*",
     "mlocati/ip-lib": "^1.3.0",
     "league/url": "~3.3.5",
-    "concrete5/doctrine-xml": "1.*",
+    "concrete5/doctrine-xml": "^1.1.0",
     "symfony/yaml":"3.*",
     "ocramius/proxy-manager": "^1.0",
     "paragonie/random_compat": "^2.0",
