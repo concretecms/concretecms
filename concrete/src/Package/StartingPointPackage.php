@@ -60,10 +60,7 @@ class StartingPointPackage extends BasePackage
     {
         parent::__construct($app);
         $this->routines = [
-            new StartingPointInstallRoutine(
-                'make_directories',
-                5,
-                t('Starting installation and creating directories.')),
+            new StartingPointInstallRoutine('make_directories', 5, t('Starting installation and creating directories.')),
             new StartingPointInstallRoutine('install_database', 10, t('Creating database tables.')),
             new StartingPointInstallRoutine('install_site', 12, t('Creating site.')),
             new StartingPointInstallRoutine('add_users', 15, t('Adding admin user.')),
@@ -77,10 +74,7 @@ class StartingPointPackage extends BasePackage
             new StartingPointInstallRoutine('install_themes', 45, t('Adding themes.')),
             new StartingPointInstallRoutine('install_jobs', 47, t('Installing automated jobs.')),
             new StartingPointInstallRoutine('install_dashboard', 50, t('Installing dashboard.')),
-            new StartingPointInstallRoutine(
-                'install_required_single_pages',
-                55,
-                t('Installing login and registration pages.')),
+            new StartingPointInstallRoutine('install_required_single_pages', 55, t('Installing login and registration pages.')),
             new StartingPointInstallRoutine('install_image_editor', 57, t('Adding image editor functionality.')),
             new StartingPointInstallRoutine('install_config', 60, t('Configuring site.')),
             new StartingPointInstallRoutine('import_files', 65, t('Importing files.')),
