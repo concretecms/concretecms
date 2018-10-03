@@ -45,7 +45,11 @@ class CacheLocal
         if ($cache->isEnabled()) {
             $item = $cache->getItem(self::key($type, $id));
             if (!$item->isMiss()) {
-                return $item->get();
+                $return = $item->get();
+                if (is_object($return)) {
+                    return clone $return;
+                }
+                return $return;
             }
         }
     }
