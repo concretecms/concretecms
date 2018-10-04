@@ -3,7 +3,6 @@ namespace Concrete\Block\SocialLinks;
 
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Sharing\SocialNetwork\Link;
-use Concrete\Core\Sharing\SocialNetwork\Service;
 use Database;
 use Core;
 
@@ -11,7 +10,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class Controller extends BlockController
 {
-    public $helpers = array('form');
+    public $helpers = ['form'];
 
     protected $btInterfaceWidth = 400;
     protected $btCacheBlockOutput = true;
@@ -53,10 +52,10 @@ class Controller extends BlockController
 
     protected function getSelectedLinks()
     {
-        $links = array();
+        $links = [];
         $db = Database::get();
         $slIDs = $db->GetCol('select slID from btSocialLinks where bID = ? order by displayOrder asc',
-            array($this->bID)
+            [$this->bID]
         );
         foreach ($slIDs as $slID) {
             $link = Link::getByID($slID);
@@ -78,7 +77,7 @@ class Controller extends BlockController
 
     public function getImportData($blockNode, $page)
     {
-        $args = array();
+        $args = [];
         foreach ($blockNode->link as $link) {
             $link = Link::getByServiceHandle((string) $link['service']);
             $args['slID'][] = $link->getID();
@@ -101,14 +100,14 @@ class Controller extends BlockController
     {
         $db = Database::get();
         foreach ($this->getSelectedLinks() as $link) {
-            $db->insert('btSocialLinks', array('bID' => $newBlockID, 'slID' => $link->getID(), 'displayOrder' => $this->displayOrder));
+            $db->insert('btSocialLinks', ['bID' => $newBlockID, 'slID' => $link->getID(), 'displayOrder' => $this->displayOrder]);
         }
     }
 
     public function save($args)
     {
         $db = Database::get();
-        $db->delete('btSocialLinks', array('bID' => $this->bID));
+        $db->delete('btSocialLinks', ['bID' => $this->bID]);
         $slIDs = $args['slID'];
 
         $statement = $db->prepare('insert into btSocialLinks (bID, slID, displayOrder) values (?, ?, ?)');
@@ -125,7 +124,7 @@ class Controller extends BlockController
     public function delete()
     {
         $db = Database::get();
-        $db->delete('btSocialLinks', array('bID' => $this->bID));
+        $db->delete('btSocialLinks', ['bID' => $this->bID]);
     }
 
     public function view()
