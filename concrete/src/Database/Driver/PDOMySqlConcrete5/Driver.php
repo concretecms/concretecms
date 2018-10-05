@@ -3,6 +3,7 @@ namespace Concrete\Core\Database\Driver\PDOMySqlConcrete5;
 
 use Concrete\Core\Database\Connection\PDOConnection;
 use Concrete\Core\Database\Platforms\MySQL80Platform;
+use Concrete\Core\Database\Schema\MySqlSchemaManager;
 
 /**
  * PDO MySql driver.
@@ -39,6 +40,16 @@ class Driver extends \Doctrine\DBAL\Driver\PDOMySql\Driver
         }
 
         return parent::createDatabasePlatformForVersion($version);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see \Doctrine\DBAL\Driver\AbstractMySQLDriver::getSchemaManager()
+     */
+    public function getSchemaManager(\Doctrine\DBAL\Connection $conn)
+    {
+        return new MySqlSchemaManager($conn);
     }
 
     /**

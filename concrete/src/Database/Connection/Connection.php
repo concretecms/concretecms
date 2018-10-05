@@ -16,14 +16,14 @@ class Connection extends \Doctrine\DBAL\Connection
     /**
      * The supported character sets and associated default collation.
      *
-     * @var null|array NULL if not yet initialized; an array with keys (character set - always lower case) and values (default collation for the character set - always lower case) otherwise.
+     * @var null|array NULL if not yet initialized; an array with keys (character set - always lower case) and values (default collation for the character set - always lower case) otherwise
      */
     protected $supportedCharsets;
 
     /**
      * The supported collations and the associated character sets.
      *
-     * @var null|array NULL if not yet initialized; an array with keys (collation) and values (associated character set) otherwise.
+     * @var null|array NULL if not yet initialized; an array with keys (collation) and values (associated character set) otherwise
      */
     protected $supportedCollations;
 
@@ -425,9 +425,9 @@ class Connection extends \Doctrine\DBAL\Connection
     /**
      * Get the supported character sets and associated default collation.
      *
-     * @throws \Exception Throws an exception in case of errors.
+     * @throws \Exception throws an exception in case of errors
      *
-     * @return array keys: character set (always lower case); array values: default collation for the character set (always lower case).
+     * @return array keys: character set (always lower case); array values: default collation for the character set (always lower case)
      */
     public function getSupportedCharsets()
     {
@@ -449,9 +449,9 @@ class Connection extends \Doctrine\DBAL\Connection
     /**
      * Get the supported collations and the associated character sets.
      *
-     * @throws \Exception Throws an exception in case of errors.
+     * @throws \Exception throws an exception in case of errors
      *
-     * @return array keys: collation (always lower case); array values: associated character set (always lower case).
+     * @return array keys: collation (always lower case); array values: associated character set (always lower case)
      */
     public function getSupportedCollations()
     {
@@ -471,7 +471,7 @@ class Connection extends \Doctrine\DBAL\Connection
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * @see \Doctrine\DBAL\Connection::getParams()
      */
@@ -488,7 +488,7 @@ class Connection extends \Doctrine\DBAL\Connection
                 $result['defaultTableOptions']['collate'] = $result['collation'];
             }
         }
-        
+
         return $result;
     }
 }
