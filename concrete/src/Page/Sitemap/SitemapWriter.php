@@ -6,10 +6,8 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Page\Sitemap\Element\SitemapHeader;
 use Concrete\Core\Page\Sitemap\Element\SitemapPage;
-use Concrete\Core\Page\Sitemap\Event\SitemapXmlElementEvent;
 use Illuminate\Filesystem\Filesystem;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\EventDispatcher\GenericEvent;
 
 class SitemapWriter
 {
@@ -293,9 +291,13 @@ class SitemapWriter
                     $pulse($element);
                 }
                 if ($dispatchElementReady) {
-                    $event = new SitemapXmlElementEvent();
-                    $event->setElement($element);
+                    $event = new Event\ElementReadyEvent($element);
                     $this->director->dispatch(static::EVENTNAME_ELEMENTREADY, $event);
+                    $element = $event->getElement();
+                    unset($event);
+                    if ($element === null) {
+                        continue;
+                    }
                 }
                 if ($mode === static::MODE_HIGHMEMORY) {
                     if ($element instanceof SitemapHeader) {
@@ -303,7 +305,13 @@ class SitemapWriter
                     } else {
                         $xmlNode = $element->toXmlElement($xmlDocument);
                         if ($dispatchPageReadyDeprecated && $element instanceof SitemapPage) {
-                            $this->director->dispatch(static::EVENTNAME_PAGEREADY_DEPRECATED, new GenericEvent(['page' => $element->getPage(), 'xmlNode' => $xmlNode]));
+                            $event = new Event\DeprecatedPageReadyEvent($element->getPage(), $xmlNode);
+                            $this->director->dispatch(static::EVENTNAME_PAGEREADY_DEPRECATED, $event);
+                            $xmlNode = $event->getNode();
+                            unset($event);
+                            if ($xmlNode === null) {
+                                continue;
+                            }
                         }
                     }
                 } else {
@@ -318,7 +326,10 @@ class SitemapWriter
             }
             if ($mode === static::MODE_HIGHMEMORY) {
                 if ($dispatchXmlReady) {
-                    $this->director->dispatch(static::EVENTNAME_XMLREADY, new GenericEvent(['xmlDoc' => $xmlDocument]));
+                    $event = new Event\XmlReadyEvent($xmlDocument);
+                    $this->director->dispatch(static::EVENTNAME_XMLREADY, $event);
+                    $xmlDocument = $event->getDocument();
+                    unset($event);
                 }
                 $dom = dom_import_simplexml($xmlDocument)->ownerDocument;
                 unset($xmlDocument);
@@ -353,7 +364,6 @@ class SitemapWriter
             }
             $this->filesystem->delete([$tempFilename]);
         }
-        
     }
 
     /**
