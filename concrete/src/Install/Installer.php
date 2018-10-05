@@ -3,6 +3,7 @@
 namespace Concrete\Core\Install;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Database\DatabaseManager;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Install\Preconditions\PdoMysqlExtension;
@@ -88,12 +89,16 @@ class Installer
         }
         $databaseManager = $this->application->make(DatabaseManager::class);
         try {
-            return $databaseManager->getFactory()->createConnection($databaseConfiguration);
+            $connection = $databaseManager->getFactory()->createConnection($databaseConfiguration);
         } catch (Exception $x) {
             throw new UserMessageException($x->getMessage(), $x->getCode(), $x);
         } catch (Throwable $x) {
             throw new UserMessageException($x->getMessage(), $x->getCode());
         }
+
+        $connection = $this->checkUnicodeCharset($connection, $databaseConfiguration);
+
+        return $connection;
     }
 
     /**
@@ -175,6 +180,48 @@ class Installer
             }
         }
 
+        return $result;
+    }
+
+    /**
+     * @param \Concrete\Core\Database\Connection\Connection $connection
+     * @param array $configuration
+     *
+     * @return \Concrete\Core\Database\Connection\Connection
+     */
+    private function checkUnicodeCharset(Connection $connection, array $configuration)
+    {
+        $result = $connection;
+        $charset = isset($configuration['charset']) ? (string) $configuration['charset'] : '';
+        if (strcasecmp($charset, 'utf8') === 0) {
+            try {
+                $hasUtf8Mb4 = false;
+                $rs = $connection->executeQuery('SHOW CHARACTER SET');
+                while (($charset = $rs->fetchColumn()) !== false) {
+                    if (strcasecmp($charset, 'utf8mb4') === 0) {
+                        $hasUtf8Mb4 = true;
+                        break;
+                    }
+                }
+                if ($hasUtf8Mb4) {
+                    $configuration = $this->getOptions()->getConfiguration();
+                    $defaultConnectionName = isset($configuration['database']['default-connection']) ? $configuration['database']['default-connection'] : '';
+                    if ($defaultConnectionName) {
+                        $defaultConnectionConfiguration = isset($configuration['database']['connections'][$defaultConnectionName]) ? $configuration['database']['connections'][$defaultConnectionName] : null;
+                        if (is_array($defaultConnectionConfiguration)) {
+                            $configuration['database']['connections'][$defaultConnectionName]['charset'] = 'utf8mb4';
+                            $this->getOptions()->setConfiguration($configuration);
+                            $result = $this->createConnection();
+                        }
+                    }
+                }
+            } catch (Exception $x) {
+            }
+        }
+
+        if ($result !== $connection) {
+            $connection->close();
+        }
         return $result;
     }
 }
