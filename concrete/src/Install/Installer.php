@@ -219,6 +219,9 @@ class Installer
             }
         }
 
+        if ($result !== $connection) {
+            $connection->close();
+        }
         return $result;
     }
 }
