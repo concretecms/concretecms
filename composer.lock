@@ -50,16 +50,16 @@
         },
         {
             "name": "concrete5/doctrine-xml",
-            "version": "1.0.1",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/concrete5/doctrine-xml.git",
-                "reference": "11f32dc982352930f990bc28bca466564ff49537"
+                "reference": "06f8ed1fd88d5882968cfac35ee789f8c85a4b05"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/concrete5/doctrine-xml/zipball/11f32dc982352930f990bc28bca466564ff49537",
-                "reference": "11f32dc982352930f990bc28bca466564ff49537",
+                "url": "https://api.github.com/repos/concrete5/doctrine-xml/zipball/06f8ed1fd88d5882968cfac35ee789f8c85a4b05",
+                "reference": "06f8ed1fd88d5882968cfac35ee789f8c85a4b05",
                 "shasum": ""
             },
             "require": {
@@ -87,7 +87,7 @@
                 "structure",
                 "xml"
             ],
-            "time": "2016-06-22T13:39:14+00:00"
+            "time": "2018-10-02T14:24:11+00:00"
         },
         {
             "name": "concrete5/less.php",
