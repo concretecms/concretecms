@@ -212,8 +212,3 @@ body .cke_dialog_background_cover {
 .cke_dialog .cke_dialog_footer .cke_resizer {
     margin-top: 54px;
 }
-
-/*Fix for wrong z-index on dialogs opened from Full Sitemap  */
-.cke_reset_all .cke_dialog {
-    z-index: 2002!important;
-}
