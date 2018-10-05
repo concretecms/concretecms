@@ -57,6 +57,8 @@ class EditorServiceProvider extends ServiceProvider
                 'about' => [t('About'), t('This plugin displays the editor version, online documentation links, and licensing information.')],
                 // https://ckeditor.com/cke4/addon/autogrow
                 'autogrow' => [t('Auto Grow'), t('The editor will automatically expand and shrink vertically depending on its content.')],
+                // https://ckeditor.com/cke4/addon/autolink
+                'autolink' => [t('Auto Link'), t('This plugin turns pasted URL text into links. The URL text must include the protocol type such as HTTP and HTTPS.')],
                 // https://ckeditor.com/cke4/addon/a11yhelp
                 'a11yhelp' => [t('Accessibility Help'), t('This plugin displays information about the keyboard usage using the ALT+0 combination.')],
                 // https://ckeditor.com/cke4/addon/basicstyles
