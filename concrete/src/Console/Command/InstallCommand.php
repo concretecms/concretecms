@@ -220,7 +220,13 @@ EOT
                 }
 
                 $installer = $this->buildInstaller($this->getFinalOptions($input));
-                switch ($this->checkOptionPreconditions($app, $installer, $input, $output)) {
+                try {
+                    $preconditionsResult = $this->checkOptionPreconditions($app, $installer, $input, $output);
+                } catch (Exception $x) {
+                    $output->writeln('<error>' . $x->getMessage() . '</error>');
+                    $preconditionsResult = self::OPTIONPRECONDITIONS_ERROR;
+                }
+                switch ($preconditionsResult) {
                     case self::OPTIONPRECONDITIONS_ERROR:
                         $confirm = new Question('Errors detected! Would you like to change the above settings? [Y]es / [N]o: ', false);
                         $confirm->setValidator(function ($given) {
