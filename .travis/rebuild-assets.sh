@@ -26,6 +26,9 @@ if test "${TRAVIS_REPO_SLUG:-}" != "${AUTO_REPOSITORY_OWNER}/${AUTO_REPOSITORY_N
     exit 0
 fi
 
+printf 'Checking out %s.\n' "${AUTO_PROCESS_BRANCH}" 
+git checkout "${AUTO_PROCESS_BRANCH}"
+
 if test "${TRAVIS_COMMIT_MESSAGE:-}" = "${AUTO_COMMIT_NAME}"; then
     printf '%s: skipping because commit is already "%s".\n' "${AUTO_COMMIT_NAME_BASE}" "${AUTO_COMMIT_NAME}"
     exit 0
@@ -83,6 +86,6 @@ git add --all .
 git config user.name "${AUTO_COMMIT_AUTHOR_NAME}"
 git config user.email "${AUTO_COMMIT_AUTHOR_EMAIL}"
 git commit -m "${AUTO_COMMIT_NAME}"
-git remote add deploy "https://${GITHUB_ACCESS_TOKEN}@github.com/${AUTO_REPOSITORY_OWNER}/${AUTO_REPOSITORY_NAME}.git"  
+git remote add deploy "https://${GITHUB_ACCESS_TOKEN}@github.com/${AUTO_REPOSITORY_OWNER}/${AUTO_REPOSITORY_NAME}.git"
 git push deploy "${AUTO_PROCESS_BRANCH}" -vvv
 printf '%s: repository updated.\n' "${AUTO_COMMIT_NAME_BASE}"
