@@ -20,6 +20,20 @@ class Installer
     const DEFAULT_STARTING_POINT = 'elemental_full';
 
     /**
+     * The default database character set to be used before checking that the preferred charset is available.
+     *
+     * @var string
+     */
+    const DEFAULT_DATABASE_CHARSET = 'utf8';
+
+    /**
+     * The default database collation to be used before checking that the preferred charset is available.
+     *
+     * @var string
+     */
+    const DEFAULT_DATABASE_COLLATION = 'utf8_general_ci';
+
+    /**
      * The application instance.
      *
      * @var Application
