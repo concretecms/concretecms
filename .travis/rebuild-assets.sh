@@ -78,10 +78,11 @@ if test ${CHANGES_DETECTED} -eq 0; then
 fi
 
 printf '%s: commiting and pushing changes.\n' "${AUTO_COMMIT_NAME_BASE}"
+git status
 git add --all .
 git config user.name "${AUTO_COMMIT_AUTHOR_NAME}"
 git config user.email "${AUTO_COMMIT_AUTHOR_EMAIL}"
 git commit -m "${AUTO_COMMIT_NAME}"
-git remote add deploy "https://${GITHUB_ACCESS_TOKEN}@github.com/${AUTO_REPOSITORY_OWNER}/${AUTO_REPOSITORY_NAME}.git"
-git push deploy "${AUTO_PROCESS_BRANCH}"
+git remote add deploy "https://${GITHUB_ACCESS_TOKEN}@github.com/${AUTO_REPOSITORY_OWNER}/${AUTO_REPOSITORY_NAME}.git"  
+git push deploy "${AUTO_PROCESS_BRANCH}" -vvv
 printf '%s: repository updated.\n' "${AUTO_COMMIT_NAME_BASE}"
