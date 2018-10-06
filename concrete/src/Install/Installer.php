@@ -271,7 +271,7 @@ class Installer
                 return $connection;
             }
             $configuration['database']['connections'][$defaultConnectionName]['charset'] = $preferredCharset;
-            $configuration['database']['connections'][$defaultConnectionName]['collation'] = $connectionCollation;
+            $configuration['database']['connections'][$defaultConnectionName]['collation'] = $preferredCollation;
             $this->getOptions()->setConfiguration($configuration);
             $connection->close();
 
