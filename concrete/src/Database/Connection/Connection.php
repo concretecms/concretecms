@@ -469,4 +469,26 @@ class Connection extends \Doctrine\DBAL\Connection
 
         return $this->supportedCollations;
     }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see \Doctrine\DBAL\Connection::getParams()
+     */
+    public function getParams()
+    {
+        $result = parent::getParams();
+        // Forward the connection charset/collate to the default table options
+        if (!isset($result['defaultTableOptions']['charset']) && !isset($result['defaultTableOptions']['collate'])) {
+            if (isset($result['charset']) && isset($result['collation'])) {
+                if (!isset($result['defaultTableOptions'])) {
+                    $result['defaultTableOptions'] = [];
+                }
+                $result['defaultTableOptions']['charset'] = $result['charset'];
+                $result['defaultTableOptions']['collate'] = $result['collation'];
+            }
+        }
+        
+        return $result;
+    }
 }
