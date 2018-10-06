@@ -140,13 +140,8 @@ EOT
         $spl = $installer->getStartingPoint(false);
         $installer->getOptions()->save();
         try {
-            Database::extend('install', function () use ($options) {
-                return Database::getFactory()->createConnection([
-                    'host' => $options['db-server'],
-                    'user' => $options['db-username'],
-                    'password' => $options['db-password'],
-                    'database' => $options['db-database'],
-                ]);
+            Database::extend('install', function () use ($installer) {
+                return $installer->createConnection();
             });
             Database::setDefaultConnection('install');
             $config->set('database.connections.install', []);
