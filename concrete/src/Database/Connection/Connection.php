@@ -4,12 +4,28 @@ namespace Concrete\Core\Database\Connection;
 
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManager;
+use Exception;
 use ORM;
+use PDO;
 
 class Connection extends \Doctrine\DBAL\Connection
 {
     /** @var EntityManager */
     protected $entityManager;
+
+    /**
+     * The supported character sets and associated default collation.
+     *
+     * @var null|array NULL if not yet initialized; an array with keys (character set - always lower case) and values (default collation for the character set - always lower case) otherwise.
+     */
+    protected $supportedCharsets;
+
+    /**
+     * The supported collations and the associated character sets.
+     *
+     * @var null|array NULL if not yet initialized; an array with keys (collation) and values (associated character set) otherwise.
+     */
+    protected $supportedCollations;
 
     /**
      * @deprecated Please use the ORM facade instead of this method:
@@ -404,5 +420,53 @@ class Connection extends \Doctrine\DBAL\Connection
         $this->rollBack();
 
         return true;
+    }
+
+    /**
+     * Get the supported character sets and associated default collation.
+     *
+     * @throws \Exception Throws an exception in case of errors.
+     *
+     * @return array keys: character set (always lower case); array values: default collation for the character set (always lower case).
+     */
+    public function getSupportedCharsets()
+    {
+        if ($this->supportedCharsets === null) {
+            $supportedCharsets = [];
+            $rs = $this->executeQuery('SHOW CHARACTER SET');
+            while (($row = $rs->fetch(PDO::FETCH_ASSOC)) !== false) {
+                if (!isset($row['Charset']) || !isset($row['Default collation'])) {
+                    throw new Exception(t('Unrecognized result of the "%s" database query.', 'SHOW CHARACTER SET'));
+                }
+                $supportedCharsets[strtolower($row['Charset'])] = strtolower($row['Default collation']);
+            }
+            $this->supportedCharsets = $supportedCharsets;
+        }
+
+        return $this->supportedCharsets;
+    }
+
+    /**
+     * Get the supported collations and the associated character sets.
+     *
+     * @throws \Exception Throws an exception in case of errors.
+     *
+     * @return array keys: collation (always lower case); array values: associated character set (always lower case).
+     */
+    public function getSupportedCollations()
+    {
+        if ($this->supportedCollations === null) {
+            $supportedCollations = [];
+            $rs = $this->executeQuery('SHOW COLLATION');
+            while (($row = $rs->fetch(PDO::FETCH_ASSOC)) !== false) {
+                if (!isset($row['Collation']) || !isset($row['Charset'])) {
+                    throw new Exception(t('Unrecognized result of the "%s" database query.', 'SHOW COLLATION'));
+                }
+                $supportedCollations[strtolower($row['Collation'])] = strtolower($row['Charset']);
+            }
+            $this->supportedCollations = $supportedCollations;
+        }
+
+        return $this->supportedCollations;
     }
 }
