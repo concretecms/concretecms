@@ -3,6 +3,8 @@
 namespace Concrete\Core\Install;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Config\Repository\Repository;
+use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Database\DatabaseManager;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Install\Preconditions\PdoMysqlExtension;
@@ -48,15 +50,22 @@ class Installer
     protected $options;
 
     /**
+     * @var \Concrete\Core\Config\Repository\Repository
+     */
+    protected $config;
+
+    /**
      * Initialize the instance.
      *
      * @param Application $application the application instance
      * @param InstallerOptions $options the options to be used by the installer
+     * @param \Concrete\Core\Config\Repository\Repository $config
      */
-    public function __construct(Application $application, InstallerOptions $options)
+    public function __construct(Application $application, InstallerOptions $options, Repository $config)
     {
         $this->application = $application;
         $this->options = $options;
+        $this->config = $config;
     }
 
     /**
@@ -102,12 +111,16 @@ class Installer
         }
         $databaseManager = $this->application->make(DatabaseManager::class);
         try {
-            return $databaseManager->getFactory()->createConnection($databaseConfiguration);
+            $connection = $databaseManager->getFactory()->createConnection($databaseConfiguration);
         } catch (Exception $x) {
             throw new UserMessageException($x->getMessage(), $x->getCode(), $x);
         } catch (Throwable $x) {
             throw new UserMessageException($x->getMessage(), $x->getCode());
         }
+
+        $connection = $this->setPreferredCharsetCollation($connection, $databaseConfiguration);
+
+        return $connection;
     }
 
     /**
@@ -190,5 +203,82 @@ class Installer
         }
 
         return $result;
+    }
+
+    /**
+     * @param \Concrete\Core\Database\Connection\Connection $connection
+     *
+     * @return \Concrete\Core\Database\Connection\Connection
+     */
+    private function setPreferredCharsetCollation(Connection $connection)
+    {
+        // Let's get the currently configured connection charset and collation
+        $connectionParams = $connection->getParams();
+        $connectionCharset = isset($connectionParams['charset']) ? strtolower((string) $connectionParams['charset']) : '';
+        $connectionCollation = isset($connectionParams['collation']) ? strtolower((string) $connectionParams['collation']) : '';
+        if ($connectionCharset !== self::DEFAULT_DATABASE_CHARSET || $connectionCollation !== self::DEFAULT_DATABASE_COLLATION) {
+            // Connection character set and collation have already been configured
+            return $connection;
+        }
+        $preferredCharset = strtolower((string) $this->config->get('database.preferred_charset', ''));
+        if ($preferredCharset === '') {
+            $preferredCharset = self::DEFAULT_DATABASE_CHARSET;
+        }
+        $preferredCollation = strtolower((string) $this->config->get('database.preferred_collation', ''));
+        try {
+            if ($preferredCharset !== self::DEFAULT_DATABASE_CHARSET) {
+                // We have a preferred charset that differs from the default one
+                $availableCharsets = $connection->getSupportedCharsets();
+                if (!isset($availableCharsets[$preferredCharset])) {
+                    // The preferred charset is not available
+                    return $connection;
+                }
+                if ($preferredCollation === '') {
+                    // No preferred collation specified: let's use the one associated to the preferred charset
+                    $preferredCollation = $availableCharsets[$preferredCharset];
+                }
+            }
+            if ($preferredCollation === '') {
+                $preferredCollation = self::DEFAULT_DATABASE_COLLATION;
+            }
+            if ($preferredCollation !== self::DEFAULT_DATABASE_CHARSET) {
+                // We have a preferred charset that differs from the default one
+                $availableCollations = $connection->getSupportedCollations();
+                if (!isset($availableCollations[$preferredCollation])) {
+                    // The preferred collation is not available: let's use the charset default one
+                    $availableCharsets = $connection->getSupportedCharsets();
+                    if (!isset($availableCharsets[$preferredCharset])) {
+                        // Default charset is not available
+                        return $connection;
+                    }
+                    $preferredCollation = $availableCharsets[$preferredCharset];
+                }
+            }
+            if ($connectionCharset === $preferredCharset && $connectionCollation === $preferredCharset) {
+                // No changes in charset/collation
+                return $connection;
+            }
+            // We have charset and/or collation that differ from the default ones: let's save the new params and reopen the connection
+            $configuration = $this->getOptions()->getConfiguration();
+            $defaultConnectionName = isset($configuration['database']['default-connection']) ? $configuration['database']['default-connection'] : '';
+            if (!$defaultConnectionName) {
+                // We should always have a default connection name, but don't break the process if it's not so
+                return $connection;
+            }
+            $defaultConnectionConfiguration = isset($configuration['database']['connections'][$defaultConnectionName]) ? $configuration['database']['connections'][$defaultConnectionName] : null;
+            if (!is_array($defaultConnectionConfiguration)) {
+                // We should always have the configuration of the default connection name, but don't break the process if it's not so
+                return $connection;
+            }
+            $configuration['database']['connections'][$defaultConnectionName]['charset'] = $preferredCharset;
+            $configuration['database']['connections'][$defaultConnectionName]['collation'] = $connectionCollation;
+            $this->getOptions()->setConfiguration($configuration);
+            $connection->close();
+
+            return $this->createConnection();
+        } catch (Exception $x) {
+            // Problems retrieving database supported charsets/collations
+            return $connection;
+        }
     }
 }
