@@ -241,7 +241,7 @@ class Installer
             if ($preferredCollation === '') {
                 $preferredCollation = self::DEFAULT_DATABASE_COLLATION;
             }
-            if ($preferredCollation !== self::DEFAULT_DATABASE_CHARSET) {
+            if ($preferredCharset !== self::DEFAULT_DATABASE_CHARSET && $preferredCollation !== self::DEFAULT_DATABASE_CHARSET) {
                 // We have a preferred charset that differs from the default one
                 $availableCollations = $connection->getSupportedCollations();
                 if (!isset($availableCollations[$preferredCollation])) {
@@ -252,6 +252,10 @@ class Installer
                         return $connection;
                     }
                     $preferredCollation = $availableCharsets[$preferredCharset];
+                }
+                if ($availableCollations[$preferredCollation] !== $preferredCharset) {
+                    // The preferred collation is not associated to the preferred charset
+                    return $connection;
                 }
             }
             if ($connectionCharset === $preferredCharset && $connectionCollation === $preferredCharset) {
