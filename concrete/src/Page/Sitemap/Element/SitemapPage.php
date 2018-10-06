@@ -293,7 +293,7 @@ class SitemapPage extends SitemapElement
                 $prefix2 = $indenter . $indenter;
             } else {
                 $prefix = '';
-                $prefix = '';
+                $prefix2 = '';
             }
             $loc = h((string) $this->getUrl());
             $result = [
