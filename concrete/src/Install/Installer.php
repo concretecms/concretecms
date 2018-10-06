@@ -118,7 +118,7 @@ class Installer
             throw new UserMessageException($x->getMessage(), $x->getCode());
         }
 
-        $connection = $this->setPreferredCharsetCollation($connection, $databaseConfiguration);
+        $connection = $this->setPreferredCharsetCollation($connection);
 
         return $connection;
     }
