@@ -46,6 +46,9 @@ To create it:
     exit 0
 fi
 
+printf '%s: checking out %s\n' "${AUTO_COMMIT_NAME_BASE}" "${TRAVIS_BRANCH}"
+git checkout -qf "${TRAVIS_BRANCH}"
+
 printf '%s: building assets\n' "${AUTO_COMMIT_NAME_BASE}"
 cd "${TRAVIS_BUILD_DIR}/build"
 printf -- '- CSS\n'
