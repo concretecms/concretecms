@@ -91,7 +91,7 @@ class DatabaseCharsetCollation implements ConnectionOptionsPreconditionInterface
      */
     public function performCheck()
     {
-        $charset = strtolower((string) $this->config->get('database.preferred_charset', ''));
+        $charset = strtolower((string) $this->config->get('database.preferred_character_set', ''));
         if ($charset === '') {
             return new PreconditionResult(PreconditionResult::STATE_SKIPPED, t('preferred database character set is not configured.'));
         }

@@ -214,13 +214,13 @@ class Installer
     {
         // Let's get the currently configured connection charset and collation
         $connectionParams = $connection->getParams();
-        $connectionCharset = isset($connectionParams['charset']) ? strtolower((string) $connectionParams['charset']) : '';
+        $connectionCharset = isset($connectionParams['character_set']) ? strtolower((string) $connectionParams['character_set']) : '';
         $connectionCollation = isset($connectionParams['collation']) ? strtolower((string) $connectionParams['collation']) : '';
         if ($connectionCharset !== self::DEFAULT_DATABASE_CHARSET || $connectionCollation !== self::DEFAULT_DATABASE_COLLATION) {
             // Connection character set and collation have already been configured
             return $connection;
         }
-        $preferredCharset = strtolower((string) $this->config->get('database.preferred_charset', ''));
+        $preferredCharset = strtolower((string) $this->config->get('database.preferred_character_set', ''));
         if ($preferredCharset === '') {
             $preferredCharset = self::DEFAULT_DATABASE_CHARSET;
         }
@@ -274,7 +274,7 @@ class Installer
                 // We should always have the configuration of the default connection name, but don't break the process if it's not so
                 return $connection;
             }
-            $configuration['database']['connections'][$defaultConnectionName]['charset'] = $preferredCharset;
+            $configuration['database']['connections'][$defaultConnectionName]['character_set'] = $preferredCharset;
             $configuration['database']['connections'][$defaultConnectionName]['collation'] = $preferredCollation;
             $this->getOptions()->setConfiguration($configuration);
             $connection->close();

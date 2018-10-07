@@ -721,7 +721,7 @@ EOT
                             'database' => $options['db-database'],
                             'username' => $options['db-username'],
                             'password' => (string) $options['db-password'],
-                            'charset' => Installer::DEFAULT_DATABASE_CHARSET,
+                            'character_set' => Installer::DEFAULT_DATABASE_CHARSET,
                             'collation' => Installer::DEFAULT_DATABASE_COLLATION,
                         ],
                     ],

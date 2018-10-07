@@ -480,11 +480,11 @@ class Connection extends \Doctrine\DBAL\Connection
         $result = parent::getParams();
         // Forward the connection charset/collate to the default table options
         if (!isset($result['defaultTableOptions']['charset']) && !isset($result['defaultTableOptions']['collate'])) {
-            if (isset($result['charset']) && isset($result['collation'])) {
+            if (isset($result['character_set']) && isset($result['collation'])) {
                 if (!isset($result['defaultTableOptions'])) {
                     $result['defaultTableOptions'] = [];
                 }
-                $result['defaultTableOptions']['charset'] = $result['charset'];
+                $result['defaultTableOptions']['charset'] = $result['character_set'];
                 $result['defaultTableOptions']['collate'] = $result['collation'];
             }
         }
