@@ -2,7 +2,9 @@
 
 namespace Concrete\Core\Install\Preconditions;
 
-use Concrete\Core\Config\Repository\Repository;
+use Concrete\Core\Database\CharacterSetCollation\Exception as CharacterSetCollationException;
+use Concrete\Core\Database\CharacterSetCollation\Exception\NoCharacterSetCollationDefinedException;
+use Concrete\Core\Database\CharacterSetCollation\Resolver;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Install\ConnectionOptionsPreconditionInterface;
 use Concrete\Core\Install\InstallerOptions;
@@ -12,9 +14,9 @@ use Exception;
 class DatabaseCharsetCollation implements ConnectionOptionsPreconditionInterface
 {
     /**
-     * @var \Concrete\Core\Config\Repository\Repository
+     * @var \Concrete\Core\Database\CharacterSetCollation\Resolver
      */
-    protected $config;
+    protected $characterSetCollationResolver;
 
     /**
      * @var \Concrete\Core\Install\InstallerOptions|null
@@ -27,11 +29,11 @@ class DatabaseCharsetCollation implements ConnectionOptionsPreconditionInterface
     protected $connection;
 
     /**
-     * @param \Concrete\Core\Config\Repository\Repository $config
+     * @param \Concrete\Core\Database\CharacterSetCollation\Resolver $characterSetCollationResolver
      */
-    public function __construct(Repository $config)
+    public function __construct(Resolver $characterSetCollationResolver)
     {
-        $this->config = $config;
+        $this->characterSetCollationResolver = $characterSetCollationResolver;
     }
 
     /**
@@ -41,7 +43,7 @@ class DatabaseCharsetCollation implements ConnectionOptionsPreconditionInterface
      */
     public function getName()
     {
-        return t('Database should support preferred character set and collation');
+        return t('Database should support the configured character set and collation');
     }
 
     /**
@@ -91,31 +93,14 @@ class DatabaseCharsetCollation implements ConnectionOptionsPreconditionInterface
      */
     public function performCheck()
     {
-        $charset = strtolower((string) $this->config->get('database.preferred_character_set', ''));
-        if ($charset === '') {
-            return new PreconditionResult(PreconditionResult::STATE_SKIPPED, t('preferred database character set is not configured.'));
-        }
         try {
-            $availableCharsets = $this->connection->getSupportedCharsets();
+            list($charset, $collation) = $this->characterSetCollationResolver->resolveCharacterSetAndCollation($this->connection);
+        } catch (NoCharacterSetCollationDefinedException $x) {
+            return new PreconditionResult(PreconditionResult::STATE_SKIPPED, t('preferred database character set and collation are not configured.'));
+        } catch (CharacterSetCollationException $x) {
+            return new PreconditionResult(PreconditionResult::STATE_FAILED, $x->getMessage());
         } catch (Exception $x) {
-            return new PreconditionResult(PreconditionResult::STATE_SKIPPED, t('Failed to retrieve the available database character sets.'));
-        }
-        if (!isset($availableCharsets[$charset])) {
-            return new PreconditionResult(PreconditionResult::STATE_FAILED, t('The database character set "%s" is not available.', $charset));
-        }
-        $collation = strtolower((string) $this->config->get('database.preferred_collation', ''));
-        if ($collation === '') {
-            return new PreconditionResult(PreconditionResult::STATE_PASSED, t('The database supports the "%s" character set.', $charset));
-        }
-        if ($collation !== $availableCharsets[$charset]) {
-            try {
-                $availableCollations = $this->connection->getSupportedCollations();
-            } catch (Exception $x) {
-                return new PreconditionResult(PreconditionResult::STATE_SKIPPED, t('Failed to retrieve the available database collations.'));
-            }
-            if (!isset($availableCollations[$collation])) {
-                return new PreconditionResult(PreconditionResult::STATE_FAILED, t('The database collation "%s" is not available.', $collation));
-            }
+            return new PreconditionResult(PreconditionResult::STATE_SKIPPED, $x->getMessage());
         }
 
         return new PreconditionResult(PreconditionResult::STATE_PASSED, t('The database supports the "%1$s" character set and the "%2$s" collation.', $charset, $collation));

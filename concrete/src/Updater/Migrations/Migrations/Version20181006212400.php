@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
+use Concrete\Core\Database\CharacterSetCollation\Resolver;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\LongRunningMigrationInterface;
@@ -21,8 +22,9 @@ class Version20181006212400 extends AbstractMigration implements RepeatableMigra
         if (!isset($params['charset']) || isset($params['character_set']) || isset($params['collation'])) {
             return;
         }
+        $resolver = $this->app->make(Resolver::class);
         try {
-            list($charset, $collation) = $this->getPreferredCharsetCollation($this->connection);
+            list($charset, $collation) = $resolver->resolveCharacterSetAndCollation($this->connection);
             $this->output(t('Migrating database character set from "%1$s" to "%2$s" with collation "%3$s"...', $params['charset'], $charset, $collation));
             $this->connection->executeQuery('SET foreign_key_checks = 0');
             $sm = $this->connection->getSchemaManager();
@@ -43,51 +45,18 @@ class Version20181006212400 extends AbstractMigration implements RepeatableMigra
             unset($connectionConfig['charset']);
             $connectionConfig['character_set'] = $charset;
             $connectionConfig['collation'] = $collation;
-            $config->set("database.connections.{$connectionName}", $connectionConfig);
-            $config->save("database.connections.{$connectionName}", $connectionConfig);
+            $config->set("database.connections.{$connectionName}.character_set", $charset);
+            $config->save("database.connections.{$connectionName}.character_set", $charset);
+            $config->set("database.connections.{$connectionName}.collation", $collation);
+            $config->save("database.connections.{$connectionName}.collation", $collation);
         } catch (Exception $x) {
             $this->output(t('Failed to set character sets: %s', $x->getMessage()));
-        }
-        finally {
+        } finally {
             try {
                 $this->connection->executeQuery('SET foreign_key_checks = 1');
             } catch (Exception $x) {
             }
         }
-    }
-
-    /**
-     * @param \Concrete\Core\Database\Connection\Connection $connection
-     *
-     * @throws \Exception
-     *
-     * @return string[]
-     */
-    protected function getPreferredCharsetCollation(Connection $connection)
-    {
-        $config = $this->app->make('config');
-        $charset = strtolower((string) $config->get('database.preferred_character_set'));
-        if ($charset === '') {
-            throw new Exception(t('no preferred character set defined.'));
-        }
-        $supportedCharsets = $this->connection->getSupportedCharsets();
-        if (!isset($supportedCharsets[$charset])) {
-            throw new Exception(t('the character set "%s" is not supported by the database.', $charset));
-        }
-        $collation = strtolower((string) $config->get('database.preferred_collation'));
-        if ($collation === '' || $collation === $supportedCharsets[$charset]) {
-            $collation = $supportedCharsets[$charset];
-        } else {
-            $supportedCollations = $this->connection->getSupportedCollations();
-            if (!isset($supportedCollations[$collation])) {
-                throw new Exception(t('the collation "%s" is not supported by the database.', $collation));
-            }
-            if ($supportedCollations[$collation] !== $charset) {
-                throw new Exception(t('the collation "%1$s" is associated to the character set "%2%s" and not to "%3%s".', $collation, $supportedCollations[$collation], $charset));
-            }
-        }
-
-        return [$charset, $collation];
     }
 
     /**
