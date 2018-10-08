@@ -179,5 +179,17 @@ class EntryList extends DatabaseItemList implements PermissionableListItemInterf
         }
     }
 
+    /**
+     * Filters by a user ID.
+     *
+     * @param integer $userID
+     */
+    public function filterByAuthorUserID($userID)
+    {
+        $this->query->andWhere('e.uID = :userID');
+        $this->query->setParameter('userID', $userID);
+    }
+    
+
 
 }
