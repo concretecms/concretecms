@@ -850,6 +850,7 @@ return [
      * ------------------------------------------------------------------------
      */
     'security' => [
+        'generator_tag' => true,
         'session' => [
             'invalidate_on_user_agent_mismatch' => true,
 

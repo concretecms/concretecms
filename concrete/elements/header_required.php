@@ -96,7 +96,9 @@ if ($pageMetaKeywords) {
 if ($c !== null && $c->getAttribute('exclude_search_index')) {
     $metaTags['robots'] = sprintf('<meta name="robots" content="%s"/>', 'noindex');
 }
-$metaTags['generator'] = sprintf('<meta name="generator" content="%s"/>', 'concrete5' . ($appConfig->get('concrete.misc.app_version_display_in_header') ? ' - ' . APP_VERSION : null));
+if ($appConfig->get('concrete.security.generator_tag')) {
+    $metaTags['generator'] = sprintf('<meta name="generator" content="%s"/>', 'concrete5' . ($appConfig->get('concrete.misc.app_version_display_in_header') ? ' - ' . APP_VERSION : null));
+}
 if (($modernIconFID = (int) $config->get('misc.modern_tile_thumbnail_fid')) && ($modernIconFile = File::getByID($modernIconFID))) {
     $metaTags['msapplication-TileImage'] = sprintf('<meta name="msapplication-TileImage" content="%s"/>', $modernIconFile->getURL());
     $modernIconBGColor = (string) $config->get('misc.modern_tile_thumbnail_bgcolor');
