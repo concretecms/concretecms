@@ -68,10 +68,15 @@ class StartingPointPackage extends BasePackage
             new StartingPointInstallRoutine('install_data_objects', 23, t('Installing Custom Data Objects.')),
             new StartingPointInstallRoutine('add_home_page', 24, t('Creating home page.')),
             new StartingPointInstallRoutine('install_attributes', 25, t('Installing attributes.')),
-            new StartingPointInstallRoutine('install_blocktypes_1', 38, t('Adding block types.')),
-            new StartingPointInstallRoutine('install_blocktypes_2', 51, t('Adding block types.')),
-            new StartingPointInstallRoutine('install_blocktypes_3', 64, t('Adding block types.')),
-            new StartingPointInstallRoutine('install_blocktypes_4', 65, t('Adding block types.')),
+            new StartingPointInstallRoutine('install_blocktypes_basic', 38, t('Adding Basic block types.')),
+            new StartingPointInstallRoutine('install_blocktypes_navigation', 42, t('Adding Navigation block types.')),
+            new StartingPointInstallRoutine('install_blocktypes_form', 45, t('Adding Form block types.')),
+            new StartingPointInstallRoutine('install_blocktypes_express', 48, t('Adding Express block types.')),
+            new StartingPointInstallRoutine('install_blocktypes_social', 51, t('Adding Social block types.')),
+            new StartingPointInstallRoutine('install_blocktypes_calendar', 54, t('Adding Calendar block types.')),
+            new StartingPointInstallRoutine('install_blocktypes_multimedia', 57, t('Adding Multimedia block types.')),
+            new StartingPointInstallRoutine('install_blocktypes_core_desktop', 61, t('Adding Desktop block types.')),
+            new StartingPointInstallRoutine('install_blocktypes_other', 64, t('Adding other block types.')),
             new StartingPointInstallRoutine('install_gathering', 66, t('Adding gathering data sources.')),
             new StartingPointInstallRoutine('install_page_types', 67, t('Page type basic setup.')),
             new StartingPointInstallRoutine('install_themes', 68, t('Adding themes.')),
@@ -268,34 +273,69 @@ class StartingPointPackage extends BasePackage
     protected function install_blocktypes()
     {
         $ci = new ContentImporter();
-        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_1.xml');
-        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_2.xml');
-        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_3.xml');
-        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_4.xml');
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_basic.xml');
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_navigation.xml');
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_form.xml');
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_express.xml');
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_social.xml');
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_calendar.xml');
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_multimedia.xml');
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_core_desktop.xml');
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_other.xml');
     }
 
-    protected function install_blocktypes_1()
+    protected function install_blocktypes_basic()
     {
         $ci = new ContentImporter();
-        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_1.xml');
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_basic.xml');
     }
 
-    protected function install_blocktypes_2()
+    protected function install_blocktypes_navigation()
     {
         $ci = new ContentImporter();
-        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_2.xml');
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_navigation.xml');
     }
 
-    protected function install_blocktypes_3()
+    protected function install_blocktypes_form()
     {
         $ci = new ContentImporter();
-        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_3.xml');
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_form.xml');
     }
 
-    protected function install_blocktypes_4()
+    protected function install_blocktypes_express()
     {
         $ci = new ContentImporter();
-        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_4.xml');
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_express.xml');
+    }
+
+    protected function install_blocktypes_social()
+    {
+        $ci = new ContentImporter();
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_social.xml');
+    }
+
+    protected function install_blocktypes_calendar()
+    {
+        $ci = new ContentImporter();
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_calendar.xml');
+    }
+
+    protected function install_blocktypes_multimedia()
+    {
+        $ci = new ContentImporter();
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_multimedia.xml');
+    }
+
+    protected function install_blocktypes_core_desktop()
+    {
+        $ci = new ContentImporter();
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_core_desktop.xml');
+    }
+
+    protected function install_blocktypes_other()
+    {
+        $ci = new ContentImporter();
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_other.xml');
     }
 
     protected function install_themes()
@@ -532,7 +572,7 @@ class StartingPointPackage extends BasePackage
             $siteConfig->save('seo.canonical_url_alternative', $installConfiguration['canonical-url-alternative']);
         }
         unset($installConfiguration['canonical-url-alternative']);
-        
+
         if (isset($installConfiguration['session-handler']) && $installConfiguration['session-handler']) {
             $config->save('concrete.session.handler', $installConfiguration['session-handler']);
         }

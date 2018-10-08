@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <blocktypes>
+        <blocktype handle="survey" package=""/>
+        <blocktype handle="core_conversation" package=""/>
+        <blocktype handle="social_links" package=""/>
+        <blocktype handle="testimonial" package=""/>
+        <!-- <blocktype handle="discussion" package=""/> -->
+        <blocktype handle="share_this_page" package=""/>
+        <!-- <blocktype handle="core_conversation_message" package=""/> -->
+    </blocktypes>
+
+    <blocktypesets>
+        <blocktypeset handle="social" name="Social Networking" package="">
+            <blocktype handle="survey"/>
+            <blocktype handle="core_conversation"/>
+            <blocktype handle="social_links"/>
+            <blocktype handle="testimonial"/>
+            <!-- <blocktype handle="discussion"/> -->
+            <blocktype handle="share_this_page"/>
+            <!-- <blocktype handle="core_conversation_message"/> -->
+        </blocktypeset>
+    </blocktypesets>
+
+</concrete5-cif>
