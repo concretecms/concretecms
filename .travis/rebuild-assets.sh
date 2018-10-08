@@ -46,6 +46,9 @@ To create it:
     exit 0
 fi
 
+printf '%s: checking out %s\n' "${AUTO_COMMIT_NAME_BASE}" "${TRAVIS_BRANCH}"
+git checkout -qf "${TRAVIS_BRANCH}"
+
 printf '%s: building assets\n' "${AUTO_COMMIT_NAME_BASE}"
 cd "${TRAVIS_BUILD_DIR}/build"
 printf -- '- CSS\n'
@@ -78,10 +81,11 @@ if test ${CHANGES_DETECTED} -eq 0; then
 fi
 
 printf '%s: commiting and pushing changes.\n' "${AUTO_COMMIT_NAME_BASE}"
+git status
 git add --all .
 git config user.name "${AUTO_COMMIT_AUTHOR_NAME}"
 git config user.email "${AUTO_COMMIT_AUTHOR_EMAIL}"
 git commit -m "${AUTO_COMMIT_NAME}"
 git remote add deploy "https://${GITHUB_ACCESS_TOKEN}@github.com/${AUTO_REPOSITORY_OWNER}/${AUTO_REPOSITORY_NAME}.git"
-git push deploy "${AUTO_PROCESS_BRANCH}"
+git push deploy "${AUTO_PROCESS_BRANCH}" -vvv
 printf '%s: repository updated.\n' "${AUTO_COMMIT_NAME_BASE}"
