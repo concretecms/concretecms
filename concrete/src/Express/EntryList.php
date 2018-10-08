@@ -144,6 +144,11 @@ class EntryList extends DatabaseItemList implements PermissionableListItemInterf
             ->leftJoin('e', $table, 'ea', 'e.exEntryID = ea.exEntryID');
     }
 
+    public function filterByAuthorUserID($uID)
+    {
+        $this->query->andWhere('e.uID = :uID');
+        $this->query->setParameter('uID', $uID);
+    }
 
     public function finalizeQuery(\Doctrine\DBAL\Query\QueryBuilder $query)
     {
