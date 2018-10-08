@@ -117,7 +117,7 @@ $browserToolbarColor = (string) $config->get('misc.browser_toolbar_color');
 if ($browserToolbarColor !== '') {
     $metaTags['browserToolbarColor'] = sprintf('<meta name="theme-color" content="%s"/>', h($browserToolbarColor));
 }
-if ($config->get('seo.canonical_tag')) {
+if ($config->get('seo.canonical_tag.enabled')) {
     if (($canonicalLink = $app->make(SeoCanonical::class)->getPageCanonicalURLTag($c, Request::getInstance())) !== null) {
         $linkTags['canonical'] = (string) $canonicalLink;
     }
