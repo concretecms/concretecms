@@ -5,6 +5,9 @@ environment:
     - PHP_VERSION: '7.1'
       PHP_ARCHITECTURE: x86
       PREFER_LOWEST: 
+    - PHP_VERSION: '7.2'
+      PHP_ARCHITECTURE: x64
+      PREFER_LOWEST: 
 
 matrix:
   fast_finish: true
@@ -12,9 +15,8 @@ matrix:
 clone_depth: 50
 
 cache:
-  - C:\tools\downloads -> .appveyor.yml
-  - '%ProgramFiles%\WindowsPowerShell\Modules\VcRedist -> .appveyor.yml'
-  - '%ProgramFiles%\WindowsPowerShell\Modules\PhpManager -> .appveyor.yml'
+  - C:\tools\downloads -> .appveyor\configure.ps1
+  - '%ProgramFiles%\WindowsPowerShell\Modules\VcRedist -> .appveyor\configure.ps1'
   - '%LOCALAPPDATA%\Composer\files'
 
 services:
@@ -25,66 +27,7 @@ init:
   - set MYSQL_PWD=Password12!
 
 install:
-  - ps: |
-      # Setup a sane environment
-      $ProgressPreference = 'SilentlyContinue'
-      $ErrorActionPreference = 'Stop'
-      $ConfirmPreference = 'None'
-      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 + [Net.SecurityProtocolType]::Tls11 + [Net.SecurityProtocolType]::Tls
-      # Setup the directory structure
-      If (-Not(Test-Path -PathType Container -Path C:\tools)) {
-          Write-Output -InputObject 'Creating tools directory'
-          New-Item -ItemType Directory -Path C:\tools | Out-Null
-      }
-      If (-Not(Test-Path -PathType Container -Path C:\tools\downloads)) {
-          Write-Output -InputObject 'Creating download directory'
-          New-Item -ItemType Directory -Path 'C:\tools\downloads' | Out-Null
-      }
-      # Setup gettext & iconv
-      If (-Not(Test-Path -PathType Leaf -Path C:\tools\gettext\bin\msgen.exe)) {
-          If (-Not(Test-Path -PathType Container -Path C:\tools\gettext)) {
-              Write-Output -InputObject 'Creating gettext directory'
-              New-Item -ItemType Directory -Path C:\tools\gettext | Out-Null
-          }
-          If (-Not(Test-Path -PathType Leaf -Path C:\tools\downloads\gettext-iconv.zip)) {
-              Write-Output -InputObject 'Downloading gettext & iconv'
-              Invoke-WebRequest -Uri https://github.com/mlocati/gettext-iconv-windows/releases/download/v0.19.8.1-v1.15/gettext0.19.8.1-iconv1.15-shared-32.zip -OutFile C:\tools\downloads\gettext-iconv.zip
-          }
-          Write-Output -InputObject 'Extracting gettext & iconv'
-          Expand-Archive -Path C:\tools\downloads\gettext-iconv.zip -DestinationPath C:\tools\gettext -Force
-      }
-      $Env:Path = 'C:\tools\gettext\bin;' + $Env:Path
-      # Setup composer
-      If (-Not(Test-Path -PathType Leaf -Path C:\tools\downloads\composer.phar)) {
-          Write-Output -InputObject 'Downloading composer'
-          Invoke-WebRequest -Uri https://getcomposer.org/download/1.6.4/composer.phar -OutFile C:\tools\downloads\composer.phar
-      }
-      If (-Not(Test-Path -PathType Leaf -Path C:\tools\composer.bat)) {
-          Write-Output -InputObject 'Creating composer.bat'
-          Add-Content -Path C:\tools\composer.bat -Value '@php C:\tools\downloads\composer.phar %*'
-      }
-      $Env:Path = 'C:\tools;' + $Env:Path
-      # Setup PHP
-      $phpInstallPath = 'C:\tools\php-' + $Env:PHP_VERSION
-      If (Test-Path -PathType Leaf -Path "$phpInstallPath\php-installed.txt") {
-          $Env:Path = $phpInstallPath + $Env:Path
-      } Else {
-          If (-Not(Get-Module -Name VcRedist) -and -Not(Get-Module -ListAvailable | Where-Object { $_.Name -eq 'VcRedist' })) {
-              Write-Output -InputObject 'Installing VcRedist PowerShell module'
-              Install-Module -Name VcRedist -Repository PSGallery -Scope AllUsers -Force
-          }
-          If (-Not(Get-Module -Name PhpManager) -and -Not(Get-Module -ListAvailable | Where-Object { $_.Name -eq 'PhpManager' })) {
-              Write-Output -InputObject 'Installing PhpManager PowerShell module'
-              Install-Module -Name PhpManager -Repository PSGallery -Scope AllUsers -Force
-          }
-          Set-PhpDownloadCache -Path C:\tools\downloads
-          Install-Php -Version $Env:PHP_VERSION -Architecture $Env:PHP_ARCHITECTURE -ThreadSafe $false -Path $phpInstallPath -TimeZone UTC -AddToPath System -InitialPhpIni Production -InstallVC -Force
-          Set-PhpIniKey -Key date.timezone -Value UTC
-          Set-PhpIniKey -Key zend.assertions -Value 1
-          Set-PhpIniKey -Key assert.exception -Value On
-          Enable-PhpExtension -Extension mbstring,bz2,mysqli,curl,gd,intl,pdo_mysql,xsl,fileinfo,openssl
-          New-Item -ItemType File -Path "$phpInstallPath\php-installed.txt" | Out-Null
-      }
+  - ps: .\.appveyor\configure.ps1
   - composer install --no-progress --no-suggest --optimize-autoloader --no-ansi --no-interaction %PREFER_LOWEST%
 
 build: off
