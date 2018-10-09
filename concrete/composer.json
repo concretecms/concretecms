@@ -89,6 +89,20 @@
     "frankkessler/guzzle-oauth2-middleware": "^0.1.1",
     "league/fractal": "^0.17.0"
   },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/concrete5-forks/doctrine2"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/concrete5-forks/php-simple-html-dom-parser"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/concrete5-forks/zend-stdlib"
+    }
+  ],
   "extra": {
     "branch-alias": {
       "dev-develop": "8.x-dev"
