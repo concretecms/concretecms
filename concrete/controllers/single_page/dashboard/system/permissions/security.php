@@ -13,7 +13,7 @@ class Security extends DashboardPageController
         $config = $this->app->make('config');
         $this->set('invalidateOnIPMismatch', (bool) $config->get('concrete.security.session.invalidate_on_ip_mismatch'));
         $this->set('invalidateOnUserAgentMismatch', (bool) $config->get('concrete.security.session.invalidate_on_user_agent_mismatch'));
-        $this->set('generatorTag', (bool) $config->get('concrete.security.generator_tag'));
+        $this->set('generatorTag', (bool) $config->get('concrete.misc.generator_tag'));
     }
 
     public function save()
@@ -25,7 +25,7 @@ class Security extends DashboardPageController
             $post = $this->request->request;
             $config->save('concrete.security.session.invalidate_on_ip_mismatch', (bool) $post->get('invalidateOnIPMismatch'));
             $config->save('concrete.security.session.invalidate_on_user_agent_mismatch', (bool) $post->get('invalidateOnUserAgentMismatch'));
-            $config->save('concrete.security.generator_tag', (bool) $post->get('generatorTag'));
+            $config->save('concrete.misc.generator_tag', (bool) $post->get('generator_tag'));
         }
         if ($this->error->has()) {
             $this->view();
