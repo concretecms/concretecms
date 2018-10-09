@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Application\UserInterface\Sitemap;
 
 use Concrete\Core\Application\Application;
@@ -143,21 +142,30 @@ class StandardSitemapProvider implements ProviderInterface
             $this->cookieJar->getResponseCookies()->addCookie($cookieKey, $query->get('siteTreeID'));
 
             return $this->siteService->getSiteTreeByID($query->get('siteTreeID'));
-        } elseif ($this->cookieJar->has($cookieKey)) {
-            return $this->siteService->getSiteTreeByID($this->cookieJar->get($cookieKey));
         } else {
-            $site = $this->siteService->getActiveSiteForEditing();
-            $locale = $site->getDefaultLocale();
-            if ($locale && $this->checkPermissions($locale)) {
-                return $locale->getSiteTreeObject();
+            // Check if the site id in $cookieKey is valid
+            if ($this->cookieJar->has($cookieKey)) {
+                $site = $this->siteService->getSiteTreeByID($this->cookieJar->get($cookieKey));
             }
+            if (is_object($site)) {
+                return $site;
+            } else {
+                $site = $this->siteService->getActiveSiteForEditing();
 
-            // This means we don't have permission to view the default locale.
-            // So instead we just grab the first we can find that we DO have permission
-            // to view.
-            foreach ($site->getLocales() as $locale) {
-                if ($this->checkPermissions($locale)) {
+                // update $cookieKey to use a valid site id
+                $this->cookieJar->getResponseCookies()->addCookie($cookieKey, $site->getSiteID());
+                $locale = $site->getDefaultLocale();
+                if ($locale && $this->checkPermissions($locale)) {
                     return $locale->getSiteTreeObject();
+                }
+
+                // This means we don't have permission to view the default locale.
+                // So instead we just grab the first we can find that we DO have permission
+                // to view.
+                foreach ($site->getLocales() as $locale) {
+                    if ($this->checkPermissions($locale)) {
+                        return $locale->getSiteTreeObject();
+                    }
                 }
             }
         }
