@@ -24,8 +24,14 @@
 			<% } %>
 			<div class="ccm-panel-page-versions-more-info">
 				<p><?=t('Edit by')?> <%-cvAuthorUserName%></p>
-				<% if (cvIsApproved == 1 && cvApprovedDate && cvApproverUserName) { %>
-					<p><?=t('Approved on')?> <%-cvApprovedDate%> <?= t('by'); ?> <%-cvApproverUserName%></p>
+				<% if (cvIsApproved == 1) { %>
+					<% if (cvApprovedDate && cvApproverUserName) { %>
+						<p><?= t('Approved on'); ?> <%-cvApprovedDate%> <?= t('by'); ?> <%-cvApproverUserName%></p>
+					<% } else if (cvApprovedDate) { %>
+						<p><?= t('Approved on'); ?> <%-cvApprovedDate%></p>
+					<% } else if (cvApproverUserName) { %>
+						<p><?= t('Approved by'); ?> <%-cvApproverUserName%></p>
+					<% } %>
 				<% } %>
 				<% if (cvIsScheduled == 1) { %>
 					<p><?=t('Scheduled by')?> <%-cvApproverUserName%> <?=tc(/*i18n: In the sentence Scheduled by USERNAME for DATE/TIME*/'ScheduledByFor', ' for ')?> <%-cvPublishDate%></p>
