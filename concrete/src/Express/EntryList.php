@@ -6,11 +6,12 @@ use Concrete\Core\Entity\Express\Association;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemList;
+use Concrete\Core\Search\Pagination\PaginationProviderInterface;
 use Concrete\Core\Search\PermissionableListItemInterface;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use Concrete\Core\Search\Pagination\Pagination;
 
-class EntryList extends DatabaseItemList implements PermissionableListItemInterface
+class EntryList extends DatabaseItemList implements PermissionableListItemInterface, PaginationProviderInterface
 {
 
     protected $category;
@@ -75,19 +76,12 @@ class EntryList extends DatabaseItemList implements PermissionableListItemInterf
     }
 
 
-    /**
-     * Gets the pagination object for the query.
-     *
-     * @return Pagination
-     */
-    protected function createPaginationObject()
+    public function getPaginationAdapter()
     {
         $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
             $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct e.exEntryID)')->setMaxResults(1);
         });
-        $pagination = new Pagination($this, $adapter);
-
-        return $pagination;
+        return $adapter;
     }
 
     public function getResult($queryRow)
@@ -189,7 +183,7 @@ class EntryList extends DatabaseItemList implements PermissionableListItemInterf
         $this->query->andWhere('e.uID = :userID');
         $this->query->setParameter('userID', $userID);
     }
-    
+
 
 
 }
