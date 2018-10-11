@@ -126,6 +126,7 @@ class CkeditorEditor implements EditorInterface
             'toolbarGroups' => $this->config->get('editor.ckeditor4.toolbar_groups'),
             'snippets' => $snippetsAndClasses->snippets,
             'classes' => $snippetsAndClasses->classes,
+            'sitemap' => $this->allowSitemap()
         ];
 
         $customOptions = $this->config->get('editor.ckeditor4.custom_config_options');
