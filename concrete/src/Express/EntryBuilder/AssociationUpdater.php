@@ -24,6 +24,28 @@ class AssociationUpdater
             $identifier = substr($method, 4);
             $this->associate($identifier, $arguments[0]);
         }
+        if (substr($method, 0, 6) == 'remove') {
+            $method = preg_replace('/(?!^)[[:upper:]]/', '_\0', $method);
+            $method = strtolower($method);
+            $identifier = substr($method, 7);
+            $entriesToRemove = (array) $arguments[0];
+            $newList = [];
+            $entryIdsToRemove = [];
+            foreach($entriesToRemove as $entryToRemove) {
+                $entryIdsToRemove[] = $entryToRemove->getID();
+            }
+
+            // Now we get the list of currently associated items
+            $entryAssociation = $this->entry->getAssociation($identifier);
+            $selectedEntries = $entryAssociation->getSelectedEntries();
+            foreach($selectedEntries as $selectedEntry) {
+                if (!in_array($selectedEntry->getId(), $entryIdsToRemove)) {
+                    $newList[] = $selectedEntry;
+                }
+            }
+            $this->associate($identifier, $newList);
+        }
+
         return $this;
     }
 
