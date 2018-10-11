@@ -130,6 +130,22 @@ class EntryList extends DatabaseItemList implements PermissionableListItemInterf
         $this->permissionsChecker = -1;
     }
 
+    /**
+     * Sorts this list by date added ascending.
+     */
+    public function sortByDateAdded()
+    {
+        $this->query->orderBy('e.exEntryDateCreated', 'asc');
+    }
+
+    /**
+     * Sorts this list by date added descending.
+     */
+    public function sortByDateAddedDescending()
+    {
+        $this->query->orderBy('e.exEntryDateCreated', 'desc');
+    }
+
     public function createQuery()
     {
         $table = $this->category->getIndexedSearchTable();
