@@ -128,8 +128,10 @@ class Applier
             $manyAssociation->setEntry($entry);
         }
 
+        // Locate the inverse association
+        $inversedAssociation = $this->getInverseAssociation($association);
+
         foreach($associatedEntries as $selectedEntry) {
-            $inversedAssociation = $this->getInverseAssociation($association);
             $oneAssociation = $selectedEntry->getEntryAssociation($inversedAssociation);
             if ($oneAssociation) {
                 // Let's see if THAT entry relates back to this.
@@ -176,8 +178,11 @@ class Applier
         $list = new EntryList($entity);
         $list->ignorePermissions();
         $possibleResults = $list->getResults();
+
+        // Locate the inverse association
+        $inversedAssociation = $this->getInverseAssociation($association);
+
         foreach($possibleResults as $possibleResult) {
-            $inversedAssociation = $this->getInverseAssociation($association);
             $oneAssociation = $possibleResult->getEntryAssociation($inversedAssociation);
             if (!is_object($oneAssociation)) {
                 $oneAssociation = new Entry\OneAssociation();
@@ -262,8 +267,11 @@ class Applier
         $list = new EntryList($entity);
         $list->ignorePermissions();
         $possibleResults = $list->getResults();
+
+        // Locate the inverse association
+        $inversedAssociation = $this->getInverseAssociation($association);
+
         foreach($possibleResults as $possibleResult) {
-            $inversedAssociation = $this->getInverseAssociation($association);
             $manyAssociation = $possibleResult->getEntryAssociation($inversedAssociation);
             if (!is_object($manyAssociation)) {
                 $manyAssociation = new Entry\ManyAssociation();
@@ -300,6 +308,9 @@ class Applier
 
     public function associateOneToOne(Association $association, Entry $entry, Entry $associatedEntry)
     {
+        // Locate the inverse association
+        $inversedAssociation = $this->getInverseAssociation($association);
+
         $oneAssociation = $entry->getEntryAssociation($association);
         if (!is_object($oneAssociation)) {
             $oneAssociation = new Entry\OneAssociation();
@@ -314,7 +325,6 @@ class Applier
             }
             if ($selectedEntry) {
                 // let's loop through the inverse association and remove this one from it.
-                $inversedAssociation = $this->getInverseAssociation($association);
                 $otherOneAssociation = $selectedEntry->getEntryAssociation($inversedAssociation);
                 if ($otherOneAssociation) {
                     $otherOneAssociationCollection = $otherOneAssociation->getSelectedEntriesCollection();
@@ -333,7 +343,6 @@ class Applier
         $this->entityManager->persist($oneAssociation);
         $this->entityManager->flush();
 
-        $inversedAssociation = $this->getInverseAssociation($association);
         $oneAssociation = $associatedEntry->getEntryAssociation($inversedAssociation);
 
         if (!is_object($oneAssociation)) {
