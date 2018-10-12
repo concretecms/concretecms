@@ -611,6 +611,16 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
         return $this->btCacheBlockOutputLifetime;
     }
 
+    /**
+     * Provides the current page (<code>getCollectionID()</code>, etc) from within a block controller
+     *
+     * <code>
+     * $c = $this->getCollectionObject();
+     * $cID = $c->getCollectionID();
+     * </code>
+     *
+     * @return Page
+     */
     public function getCollectionObject()
     {
         if (!$this->block) {
