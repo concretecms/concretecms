@@ -510,6 +510,9 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
         return $this->validateEditBlockPassThruAction($b);
     }
 
+    /**
+     *
+     */
     public function getPassThruActionAndParameters($parameters)
     {
         $method = 'action_' . $parameters[0];
@@ -619,7 +622,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
      * $cID = $c->getCollectionID();
      * </code>
      *
-     * @return Page
+     * @return false|Page
      */
     public function getCollectionObject()
     {
