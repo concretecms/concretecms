@@ -152,6 +152,7 @@ class StandardSitemapProvider implements ProviderInterface
                 return $site;
             }
 
+            // the site id is not valid, let's get the default site
             $site = $this->siteService->getActiveSiteForEditing();
 
             // update $cookieKey to use a valid site id
