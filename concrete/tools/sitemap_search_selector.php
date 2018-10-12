@@ -58,7 +58,7 @@ if ($callback) {
 
     $(function() {
         var sst = jQuery.cookie('ccm-sitemap-selector-tab');
-        if (sst != 'explore' && sst != 'search') {
+        if (sst !== 'explore' && sst !== 'search') {
             sst = 'sitemap';
         }
         $('a[data-tab=' + sst + ']').parent().addClass('active');
