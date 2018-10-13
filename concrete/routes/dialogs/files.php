@@ -16,6 +16,7 @@ $router->all('/bulk/properties/clear_attribute', 'Bulk\Properties::clearAttribut
 $router->all('/bulk/properties/update_attribute', 'Bulk\Properties::updateAttribute');
 $router->all('/bulk/storage', 'Bulk\Storage::view');
 $router->all('/bulk/storage/submit', 'Bulk\Storage::submit');
+$router->all('/bulk/storage/change_files_storage_location', 'Bulk\Storage::doChangeStorageLocation');
 $router->all('/sets', 'Sets::view');
 $router->all('/sets/submit', 'Sets::submit');
 $router->all('/folder', 'Folder::view');
