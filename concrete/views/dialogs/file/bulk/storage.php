@@ -3,19 +3,32 @@
     use Concrete\Core\File\StorageLocation\StorageLocation as FileStorageLocation;
 
     $locations = FileStorageLocation::getList();
+
+    // let's check the storage locations to see if all the files use the same and check the correct checkbox
+    $usedStorageLocations = [];
+    $currentStorageLocation = null;
+    foreach ($files as $file) {
+        $fileStorageLocationID = $file->getStorageLocationID();
+        if (!in_array($fileStorageLocationID, $usedStorageLocations)) {
+            $usedStorageLocations[] = $fileStorageLocationID;
+        }
+    }
+    if (count($usedStorageLocations) === 1) {
+        $currentStorageLocation = $usedStorageLocations[0];
+    }
 ?>
 
 <form data-dialog-form="bulk-file-storage" method="post" action="<?= $controller->action('submit'); ?>">
 
-    <?php foreach ($files as $f) { ?>
-        <input type="hidden" name="fID[]" value="<?= $f->getFileID(); ?>" />
+    <?php foreach ($files as $file) { ?>
+        <input type="hidden" name="fID[]" value="<?= $file->getFileID(); ?>" />
     <?php } ?>
 
     <div class="ccm-ui">
         <?php foreach ($locations as $fsl) { ?>
             <div class="radio">
                 <label>
-                    <?= $form->radio('fslID', $fsl->getID()); ?> <?= $fsl->getDisplayName(); ?>
+                    <?= $form->radio('fslID', $fsl->getID(), $currentStorageLocation); ?> <?= $fsl->getDisplayName(); ?>
                 </label>
             </div>
         <?php } ?>
