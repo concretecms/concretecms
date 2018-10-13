@@ -160,6 +160,17 @@ class FileList extends DatabaseItemList implements PagerProviderInterface, Pagin
     }
 
     /**
+     * Filter the files by their storage location.
+     *
+     * @param int $fslID storage location id
+     */
+    public function filterByStorageLocation($fslID)
+    {
+        $this->query->andWhere('f.fslID = :fslID');
+        $this->query->setParameter('fslID', $fslID);
+    }
+
+    /**
      * Filters by "keywords" (which searches everything including filenames,
      * title, users who uploaded the file, tags).
      *
