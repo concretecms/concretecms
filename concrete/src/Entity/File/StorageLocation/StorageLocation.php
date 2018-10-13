@@ -170,11 +170,12 @@ class StorageLocation implements StorageLocationInterface
         $app = Application::getFacadeApplication();
         $db = $app->make('database');
 
+        // let's check if there is any file in this storage location and throw an exception if yes
         $fIDs = $db->fetchAll('SELECT fID FROM Files WHERE fslID = ?', [$this->getID()]);
         foreach ($fIDs as $fID) {
             $file = File::getByID($fID);
             if (is_object($file)) {
-                $file->setFileStorageLocation($default);
+                throw new Exception(t('You can not delete this storage location because it contains files.'));
             }
         }
 
