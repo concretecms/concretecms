@@ -32,7 +32,7 @@ switch ($controller->getTask()) {
                     </form>
                 </div>
             <?php } ?>
-            <?php if ($hasFiles) { ?>
+            <?php if (!$fslIsDefault && $hasFiles) { ?>
                 <div class="alert alert-info">
                     <?= t('You can not delete this storage location because it contains files.'); ?>
                 </div>
