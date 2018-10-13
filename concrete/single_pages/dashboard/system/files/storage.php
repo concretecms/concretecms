@@ -66,7 +66,7 @@ switch ($controller->getTask()) {
                 }
                 ?>
                 <div class="form-group">
-                    <label><?= t('Default'); ?></label>
+                    <?= $form->label('fslIsDefault', t('Default Location')); ?>
                     <div class="radio">
                         <label>
                             <?= $form->radio('fslIsDefault', 1, $fslIsDefault, $args); ?>
