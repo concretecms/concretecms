@@ -488,6 +488,8 @@
         $('a[data-launch-dialog=add-file-manager-folder]').on('click', function(e) {
             $('div[data-dialog=add-file-manager-folder] input[name=currentFolder]').val(my.currentFolder);
             $('div[data-dialog=add-file-manager-folder] input[name=folderName]').val('');
+            var firstStorageLocation = $("div[data-dialog=add-file-manager-folder] select[name=folderStorageLocationID] option:first").val();
+            $('div[data-dialog=add-file-manager-folder] select[name=folderStorageLocationID]').val(firstStorageLocation);
 
             $.fn.dialog.open({
                 element: 'div[data-dialog=add-file-manager-folder]',

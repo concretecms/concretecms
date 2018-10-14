@@ -91,11 +91,12 @@ class Filesystem
      *
      * @param FileFolder $folder The parent folder
      * @param string $name The name of the new folder
+     * @param int $storageLocationID Id of the storage location object of the new folder
      *
      * @return \Concrete\Core\Tree\Node\Type\FileFolder
      */
-    public function addFolder(FileFolder $folder, $name)
+    public function addFolder(FileFolder $folder, $name, $storageLocationID)
     {
-        return $folder->add($name, $folder);
+        return $folder->add($name, $folder, $storageLocationID);
     }
 }

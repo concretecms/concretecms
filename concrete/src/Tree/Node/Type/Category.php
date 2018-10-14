@@ -97,10 +97,11 @@ class Category extends TreeNode
         return new CategoryListFormatter();
     }
 
-    public static function add($treeNodeCategoryName = '', $parent = false)
+    public static function add($treeNodeCategoryName = '', $parent = false, $storageLocationID = 1)
     {
         $node = parent::add($parent);
         $node->setTreeNodeName($treeNodeCategoryName);
+        $node->setTreeNodeStorageLocation($storageLocationID);
 
         return $node;
     }

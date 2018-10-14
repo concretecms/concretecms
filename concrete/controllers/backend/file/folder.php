@@ -3,6 +3,7 @@ namespace Concrete\Controller\Backend\File;
 
 use Concrete\Core\Application\EditResponse;
 use Concrete\Core\Controller\AbstractController;
+use Concrete\Core\Entity\File\StorageLocation\StorageLocation as StorageLocationEntity;
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\FolderItemList;
 use Concrete\Core\File\Search\ColumnSet\FolderSet;
@@ -38,8 +39,18 @@ class Folder extends AbstractController
         if (!is_string($folderName) || trim($folderName) === '') {
             $error->add(t('Folder Name can not be empty.'));
         }
+        $fslID = $this->request->request->get('folderStorageLocationID');
+        if (!$fslID) {
+            $error->add(t('Please select a storage location'));
+        } else {
+            $em = $this->app->make('database/orm')->entityManager();
+            $storageLocation = $em->find(StorageLocationEntity::class, (int) $fslID);
+            if (!is_object($storageLocation)) {
+                $error->add(t('Please select a valid storage location'));
+            }
+        }
         if (!$error->has()) {
-            $folder = $filesystem->addFolder($folder, $folderName);
+            $folder = $filesystem->addFolder($folder, $folderName, $fslID);
             $response->setMessage(t('Folder added.'));
             $response->setAdditionalDataAttribute('folder', $folder);
         }
