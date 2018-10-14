@@ -52,8 +52,14 @@ class LocalConfiguration extends Configuration implements ConfigurationInterface
             return $rel;
         }
 
-        $url = \Core::getApplicationURL(true);
-        $url = $url->setPath($rel);
+        $url = Application::getApplicationURL(true);
+
+        // check if the URL already uses a path that must be kept in the final URL
+        if (!empty($url->getPath())) {
+            $url = $url->setPath(rtrim((string) $url->getPath(), '/') . '/' . ltrim((string) $rel, '/'));
+        } else {
+            $url = $url->setPath($rel);
+        }
 
         return rtrim((string) $url, '/');
     }
