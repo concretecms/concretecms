@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Tree\Node;
 
+use Concrete\Core\Entity\File\StorageLocation\StorageLocation;
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Permission\AssignableObjectInterface;
 use Concrete\Core\Permission\AssignableObjectTrait;
@@ -144,6 +145,36 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
     }
 
     /**
+     * @param int $fslID Storage location id
+     */
+    public function setTreeNodeStorageLocation($fslID)
+    {
+        $app = Facade::getFacadeApplication();
+        $db = $app->make('database');
+        $db->executeQuery('UPDATE TreeNodes SET fslID = ? WHERE treeNodeID = ?', [$fslID, $this->treeNodeID]);
+        $this->fslID = $fslID;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTreeNodeStorageLocationID()
+    {
+        return $this->fslID;
+    }
+
+    /**
+     * @return \Concrete\Core\Entity\File\StorageLocation\StorageLocation|null
+     */
+    public function getTreeNodeStorageLocationObject()
+    {
+        $app = Facade::getFacadeApplication();
+        $em = $app->make('database/orm')->entityManager();
+
+        return $em->find(StorageLocation::class, (int) $this->fslID);
+    }
+
+    /**
      * Return the list of child nodes (call populateDirectChildrenOnly() before calling this method).
      *
      * @return static[]
@@ -220,7 +251,7 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
     /**
      * Recursively searches for a children node and marks it as selected.
      *
-     * @param int $nodeID ID of the children to be selected
+     * @param int  $nodeID              ID of the children to be selected
      * @param bool $loadMissingChildren if set to true, it will fetch, as needed, the children of the current node, that have not been loaded yet
      */
     public function selectChildrenNodesByID($nodeID, $loadMissingChildren = false)
@@ -334,7 +365,7 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
                 continue;
             }
             $n = $nodes[$i];
-            $path .= $n->getTreeNodeName() . '/';
+            $path .= $n->getTreeNodeName().'/';
         }
         if (count($nodes) > 0) {
             $path .= $this->getTreeNodeName();
@@ -399,7 +430,7 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
 
             if (count($childNodeIDs) > 0) {
                 $db->executeQuery(
-                    'update TreeNodes set inheritPermissionsFromTreeNodeID = ? where treeNodeID in (' . implode(',', $childNodeIDs) . ') and treeNodeOverridePermissions = 0',
+                    'update TreeNodes set inheritPermissionsFromTreeNodeID = ? where treeNodeID in ('.implode(',', $childNodeIDs).') and treeNodeOverridePermissions = 0',
                     [
                         $this->treeNodeID,
                     ]

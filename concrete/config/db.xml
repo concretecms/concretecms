@@ -4245,6 +4245,10 @@
       <unsigned/>
       <default value="0"/>
     </field>
+    <field name="fslID" type="integer" size="11">
+      <unsigned/>
+      <default value="1"/>
+    </field>
     <index name="treeNodeParentID">
       <col>treeNodeParentID</col>
     </index>
