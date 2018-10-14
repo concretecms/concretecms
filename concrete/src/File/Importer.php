@@ -269,7 +269,12 @@ class Importer
         if ($fr instanceof FileEntity) {
             $fsl = $fr->getFileStorageLocationObject();
         } else {
-            $fsl = $this->app->make(StorageLocationFactory::class)->fetchDefault();
+
+            // get the storage location of the folder
+            $fsl = $fr->getTreeNodeStorageLocationObject();
+            if (!is_object($fsl)) {
+                $fsl = $this->app->make(StorageLocationFactory::class)->fetchDefault();
+            }
         }
         if (!($fsl instanceof StorageLocation)) {
             return self::E_FILE_INVALID_STORAGE_LOCATION;
