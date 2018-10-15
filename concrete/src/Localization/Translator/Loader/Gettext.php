@@ -75,8 +75,9 @@ class Gettext extends ZendGettext
                 }
                 // Don't translate the message, otherwise we may have an infinite loop (t() -> load translations -> t() -> load translations -> ...)
                 throw new RuntimeException(sprintf(
-                    'The language file %1$s has %2$s plural forms instead of %3$s.',
+                    'The language file %1$s for %2$s has %3$s plural forms instead of %4$s.',
                     $filename,
+                    $localeInfo->name,
                     $readNumPlurals,
                     $expectedNumPlurals
                 ));
