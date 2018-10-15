@@ -166,17 +166,12 @@ class StorageLocation implements StorageLocationInterface
 
     public function delete()
     {
-        $default = \Concrete\Core\File\StorageLocation\StorageLocation::getDefault();
         $app = Application::getFacadeApplication();
         $db = $app->make('database');
 
         // let's check if there is any file in this storage location and throw an exception if yes
-        $fIDs = $db->fetchAll('SELECT fID FROM Files WHERE fslID = ?', [$this->getID()]);
-        foreach ($fIDs as $fID) {
-            $file = File::getByID($fID);
-            if (is_object($file)) {
-                throw new Exception(t('You can not delete this storage location because it contains files.'));
-            }
+        if ($this->hasFiles()) {
+            throw new Exception(t('You can not delete this storage location because it contains files.'));
         }
 
         $em = \ORM::entityManager();
@@ -208,7 +203,7 @@ class StorageLocation implements StorageLocationInterface
     {
         $app = Application::getFacadeApplication();
         $db = $app->make('database');
-        $fIDs = $db->fetchAll('SELECT fID FROM Files WHERE fslID = ?', [$this->getID()]);
+        $fIDs = $db->fetchColumn('SELECT fID FROM Files WHERE fslID = ?', [$this->getID()]);
         return (!empty($fIDs));
     }
 }
