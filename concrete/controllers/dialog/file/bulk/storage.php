@@ -59,7 +59,9 @@ class Storage extends BackendInterfaceController
 
     public function view()
     {
+        $locations = $this->app->make(StorageLocationFactory::class)->fetchList();
         $this->set('files', $this->files);
+        $this->set('locations', $locations);
     }
 
     public function submit()
