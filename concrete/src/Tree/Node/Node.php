@@ -2,7 +2,6 @@
 
 namespace Concrete\Core\Tree\Node;
 
-use Concrete\Core\Entity\File\StorageLocation\StorageLocation;
 use Concrete\Core\File\StorageLocation\StorageLocationFactory;
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Permission\AssignableObjectInterface;
@@ -165,13 +164,13 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
     public function setTreeNodeStorageLocationID($fslID)
     {
         $app = Facade::getFacadeApplication();
-        $db = $app->make('database');
-        $location = $app->make(StorageLocationFactory::class)->fetchByID($fslID);
+        $location = $app->make(StorageLocationFactory::class)->fetchByID((int) $fslID);
         if (!is_object($location)) {
             throw new Exception(t('Invalid file storage location.'));
         }
-        $db->executeQuery('UPDATE TreeNodes SET fslID = ? WHERE treeNodeID = ?', [$fslID, $this->treeNodeID]);
-        $this->fslID = $fslID;
+        $db = $app->make('database');
+        $db->executeQuery('UPDATE TreeNodes SET fslID = ? WHERE treeNodeID = ?', [(int) $fslID, $this->treeNodeID]);
+        $this->fslID = (int) $fslID;
     }
 
     /**
@@ -179,7 +178,7 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
      */
     public function getTreeNodeStorageLocationID()
     {
-        return $this->fslID;
+        return (int) $this->fslID;
     }
 
     /**
@@ -188,9 +187,7 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
     public function getTreeNodeStorageLocationObject()
     {
         $app = Facade::getFacadeApplication();
-        $em = $app->make('database/orm')->entityManager();
-
-        return $em->find(StorageLocation::class, (int) $this->fslID);
+        return $app->make(StorageLocationFactory::class)->fetchByID((int) $this->fslID);
     }
 
     /**
