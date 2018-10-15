@@ -40,7 +40,7 @@ class StorageLocationField extends AbstractField
     public function filterList(ItemList $list)
     {
         $storageLocation = $this->data['fslID'];
-        $list->filterByStorageLocation($storageLocation);
+        $list->filterByStorageLocationID($storageLocation);
     }
 
     /**

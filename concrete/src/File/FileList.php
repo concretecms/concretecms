@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\File;
 
+use Concrete\Core\File\StorageLocation\StorageLocationFactory;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemList;
 use Concrete\Core\Search\ItemList\Pager\Manager\FileListPagerManager;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
@@ -162,10 +163,16 @@ class FileList extends DatabaseItemList implements PagerProviderInterface, Pagin
     /**
      * Filter the files by their storage location.
      *
-     * @param int $fslID storage location id
+     * @param int|\Concrete\Core\Entity\File\StorageLocation\StorageLocation $fslID storage location id or object
      */
-    public function filterByStorageLocation($fslID)
+    public function filterByStorageLocationID($fslID)
     {
+        if (is_object($fslID)) {
+            $fsl = $this->app->make(StorageLocationFactory::class)->fetchByID($fslID);
+            if (is_object($fsl)) {
+                $fslID = $fsl->getID();
+            }
+        }
         $this->query->andWhere('f.fslID = :fslID');
         $this->query->setParameter('fslID', $fslID);
     }
