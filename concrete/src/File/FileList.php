@@ -166,11 +166,11 @@ class FileList extends DatabaseItemList implements PagerProviderInterface, Pagin
      *
      * @param \Concrete\Core\Entity\File\StorageLocation\StorageLocation|int $storageLocation storage location object
      */
-    function filterByStorageLocation($storageLocation) {
+    public function filterByStorageLocation($storageLocation) {
         if ($storageLocation instanceof \Concrete\Core\Entity\File\StorageLocation\StorageLocation) {
             $this->filterByStorageLocationID($storageLocation->getID());
         } elseif (!is_object($storageLocation)) {
-            $this->filterByStorageLocationID($fslID);
+            $this->filterByStorageLocationID($storageLocation);
         } else {
             throw new Exception(t('Invalid file storage location.'));
         }

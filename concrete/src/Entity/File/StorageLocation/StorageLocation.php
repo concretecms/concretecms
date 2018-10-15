@@ -166,8 +166,6 @@ class StorageLocation implements StorageLocationInterface
 
     public function delete()
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make('database');
 
         // let's check if there is any file in this storage location and throw an exception if yes
         if ($this->hasFiles()) {
