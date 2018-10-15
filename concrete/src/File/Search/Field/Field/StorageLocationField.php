@@ -4,7 +4,7 @@ namespace Concrete\Core\File\Search\Field\Field;
 
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\File\FileList;
-use Concrete\Core\File\StorageLocation\StorageLocation;
+use Concrete\Core\File\StorageLocation\StorageLocationFactory;
 use Concrete\Core\Search\Field\AbstractField;
 use Concrete\Core\Search\ItemList\ItemList;
 
@@ -50,7 +50,7 @@ class StorageLocationField extends AbstractField
     {
         $app = Application::getFacadeApplication();
         $form = $app->make('helper/form');
-        $locations = StorageLocation::getList();
+        $locations = $app->make(StorageLocationFactory::class)->fetchList();
         $storageLocations = [];
         foreach ($locations as $location) {
             $locationID = $location->getID();

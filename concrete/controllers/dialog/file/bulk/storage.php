@@ -5,7 +5,7 @@ use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Concrete\Core\File\EditResponse;
 use Concrete\Core\File\File;
 use Concrete\Core\File\Set\Set;
-use Concrete\Core\File\StorageLocation\StorageLocation as FileStorageLocation;
+use Concrete\Core\File\StorageLocation\StorageLocationFactory;
 use Concrete\Core\Foundation\Queue\QueueService;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\View\View;
@@ -68,7 +68,7 @@ class Storage extends BackendInterfaceController
         $err = $this->app->make('error');
         if ($this->validateAction()) {
             $post = $this->request->request->all();
-            $fsl = FileStorageLocation::getByID($post['fslID']);
+            $fsl = $this->app->make(StorageLocationFactory::class)->fetchByID($post['fslID']);
             if (!is_object($fsl)) {
                 $err->add(t('Please select valid file storage location.'));
             }
@@ -81,7 +81,7 @@ class Storage extends BackendInterfaceController
     {
         if ($this->validateAction()) {
             $post = $this->request->request->all();
-            $fsl = FileStorageLocation::getByID($post['fslID']);
+            $fsl = $this->app->make(StorageLocationFactory::class)->fetchByID($post['fslID']);
             if (is_object($fsl)) {
                 $fIDs = $post['fID'];
                 $q = $this->app->make(QueueService::class)->get('change_files_storage_location');
