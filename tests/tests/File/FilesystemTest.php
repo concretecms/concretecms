@@ -39,7 +39,7 @@ class FilesystemTest extends ConcreteDatabaseTestCase
 
     public function testAdd()
     {
-        $folder = $this->filesystem->addFolder($this->filesystem->getRootFolder(), 'Test Sub Folder', $this->filesystem->getRootFolder()->getTreeNodeStorageLocationID());
+        $folder = $this->filesystem->addFolder($this->filesystem->getRootFolder(), 'Test Sub Folder');
         $this->assertInstanceOf('Concrete\Core\Tree\Node\Type\FileFolder', $folder);
         $this->assertEquals(1, $folder->getTreeNodeParentID());
         $this->assertEquals('Test Sub Folder', $folder->getTreeNodeDisplayName());
@@ -49,16 +49,15 @@ class FilesystemTest extends ConcreteDatabaseTestCase
     {
         $rootFolder = $this->filesystem->getRootFolder();
         $uniqueID = microtime(true) . '-' . mt_rand();
-        $rootFolderStorageLocationID = $rootFolder->getTreeNodeStorageLocationID();
         // Create these folders:
         // |- Folder 1
         // |   |- Folder 1.1
         // |- Folder 2
         // |   |- Folder 1.2
-        $folder_1 = $this->filesystem->addFolder($rootFolder, "Folder 1 {$uniqueID}", $rootFolderStorageLocationID);
-        $folder_1_1 = $this->filesystem->addFolder($folder_1, "Folder 1.1 {$uniqueID}", $rootFolderStorageLocationID);
-        $folder_2 = $this->filesystem->addFolder($rootFolder, "Folder 2 {$uniqueID}", $rootFolderStorageLocationID);
-        $folder_2_1 = $this->filesystem->addFolder($folder_2, "Folder 2.1 {$uniqueID}", $rootFolderStorageLocationID);
+        $folder_1 = $this->filesystem->addFolder($rootFolder, "Folder 1 {$uniqueID}");
+        $folder_1_1 = $this->filesystem->addFolder($folder_1, "Folder 1.1 {$uniqueID}");
+        $folder_2 = $this->filesystem->addFolder($rootFolder, "Folder 2 {$uniqueID}");
+        $folder_2_1 = $this->filesystem->addFolder($folder_2, "Folder 2.1 {$uniqueID}");
         // Folder A should not be found
         $folderA = $rootFolder->getNodeByName("Folder A {$uniqueID}");
         $this->assertNull($folderA);
@@ -69,8 +68,8 @@ class FilesystemTest extends ConcreteDatabaseTestCase
         // |- Folder 2
         // |   |- Folder 1.2
         // |       |- Folder A
-        $folderA_1_1 = $this->filesystem->addFolder($folder_1_1, "Folder A {$uniqueID}", $rootFolderStorageLocationID);
-        $folderA_2_1 = $this->filesystem->addFolder($folder_2_1, "Folder A {$uniqueID}", $rootFolderStorageLocationID);
+        $folderA_1_1 = $this->filesystem->addFolder($folder_1_1, "Folder A {$uniqueID}");
+        $folderA_2_1 = $this->filesystem->addFolder($folder_2_1, "Folder A {$uniqueID}");
         // Now Folder A can be one of the two Folder A created (we don't know which one)
         $folderA = $rootFolder->getNodeByName("Folder A {$uniqueID}");
         $this->assertNotNull($folderA);
