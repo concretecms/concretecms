@@ -3,6 +3,7 @@
 namespace Concrete\Core\Tree\Node;
 
 use Concrete\Core\Entity\File\StorageLocation\StorageLocation;
+use Concrete\Core\File\StorageLocation\StorageLocationFactory;
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Permission\AssignableObjectInterface;
 use Concrete\Core\Permission\AssignableObjectTrait;
@@ -15,6 +16,7 @@ use Database;
 use Gettext\Translations;
 use PermissionKey;
 use Permissions;
+use Exception;
 use stdClass;
 
 abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\ObjectInterface, AssignableObjectInterface
@@ -145,12 +147,29 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
     }
 
     /**
+     * @param \Concrete\Core\Entity\File\StorageLocation\StorageLocation $storageLocation Storage location object
+     */
+    public function setTreeNodeStorageLocation($storageLocation) {
+        if ($storageLocation instanceof \Concrete\Core\Entity\File\StorageLocation\StorageLocation) {
+            $this->setTreeNodeStorageLocationID($storageLocation->getID());
+        } elseif (!is_object($storageLocation)) {
+            $this->setTreeNodeStorageLocationID($storageLocation);
+        } else {
+            throw new Exception(t('Invalid file storage location.'));
+        }
+    }
+
+    /**
      * @param int $fslID Storage location id
      */
-    public function setTreeNodeStorageLocation($fslID)
+    public function setTreeNodeStorageLocationID($fslID)
     {
         $app = Facade::getFacadeApplication();
         $db = $app->make('database');
+        $location = $app->make(StorageLocationFactory::class)->fetchByID($fslID);
+        if (!is_object($location)) {
+            throw new Exception(t('Invalid file storage location.'));
+        }
         $db->executeQuery('UPDATE TreeNodes SET fslID = ? WHERE treeNodeID = ?', [$fslID, $this->treeNodeID]);
         $this->fslID = $fslID;
     }
