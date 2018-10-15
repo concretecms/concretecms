@@ -11,6 +11,7 @@ use Concrete\Core\Search\Pagination\PaginationProviderInterface;
 use Concrete\Core\Search\StickyRequest;
 use FileAttributeKey;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
+use Exception;
 
 class FileList extends DatabaseItemList implements PagerProviderInterface, PaginationProviderInterface
 {
@@ -161,18 +162,28 @@ class FileList extends DatabaseItemList implements PagerProviderInterface, Pagin
     }
 
     /**
-     * Filter the files by their storage location.
+     * Filter the files by their storage location using a storage location object.
      *
-     * @param int|\Concrete\Core\Entity\File\StorageLocation\StorageLocation $fslID storage location id or object
+     * @param \Concrete\Core\Entity\File\StorageLocation\StorageLocation|int $storageLocation storage location object
+     */
+    function filterByStorageLocation($storageLocation) {
+        if ($storageLocation instanceof \Concrete\Core\Entity\File\StorageLocation\StorageLocation) {
+            $this->filterByStorageLocationID($storageLocation->getID());
+        } elseif (!is_object($storageLocation)) {
+            $this->filterByStorageLocationID($fslID);
+        } else {
+            throw new Exception(t('Invalid file storage location.'));
+        }
+    }
+
+    /**
+     * Filter the files by their storage location using a storage location id.
+     *
+     * @param int $fslID storage location id
      */
     public function filterByStorageLocationID($fslID)
     {
-        if (is_object($fslID)) {
-            $fsl = $this->app->make(StorageLocationFactory::class)->fetchByID($fslID);
-            if (is_object($fsl)) {
-                $fslID = $fsl->getID();
-            }
-        }
+        $fslID = (int) $fslID;
         $this->query->andWhere('f.fslID = :fslID');
         $this->query->setParameter('fslID', $fslID);
     }
