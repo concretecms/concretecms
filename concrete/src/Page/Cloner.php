@@ -85,19 +85,8 @@ class Cloner
         $uID = $newAuthor === null ? $page->getCollectionUserID() : $newAuthor->getUserID();
         $cParentID = $newParentPage === null ? 0 : $newParentPage->getCollectionID();
 
-        $newCollectionName = $page->getCollectionName();
-        $nameIndex = 1;
-        for (; ;) {
-            $pageWithSameName = $this->connection->fetchColumn(
-                'select Pages.cID from CollectionVersions inner join Pages on (CollectionVersions.cID = Pages.cID and CollectionVersions.cvIsApproved = 1) where Pages.cParentID = ? and CollectionVersions.cvName = ? limit 1',
-                [$cParentID, $newCollectionName]
-            );
-            if ($pageWithSameName === false) {
-                break;
-            }
-            ++$nameIndex;
-            $newCollectionName = $page->getCollectionName() . ' ' . $nameIndex;
-        }
+        $newCollectionName = $this->getUniquePageName($page->getCollectionName(), $cParentID);
+        $newCollectionHandle = $this->getUniquePageHandle($page->getCollectionHandle(), $cParentID);
 
         $newC = $this->cloneCollection(Collection::getByID($cID));
         $newCID = $newC->getCollectionID();
@@ -154,13 +143,14 @@ class Cloner
             $newPage->acquireAreaPermissions($page->getPermissionsCollectionID());
         }
 
-        if ($nameIndex > 1) {
-            $args = ['cName' => $newCollectionName];
-            if ($newPage->getCollectionHandle()) {
-                $args['cHandle'] = $newPage->getCollectionHandle() . '-' . $nameIndex;
-            }
-            $newPage->update($args);
+        $args = [];
+        if ($newCollectionName !== $page->getCollectionName()) {
+            $args['cName'] = $newCollectionName;
         }
+        if ($newCollectionHandle !== $page->getCollectionHandle()) {
+            $args['cHandle'] = $newCollectionHandle;
+        }
+        $newPage->update($args);
 
         Section::registerDuplicate($newPage, $page);
 
@@ -395,5 +385,57 @@ EOT
         }
 
         return $cvDestination;
+    }
+
+    /**
+     * Get the name of a page that's unique for the parent.
+     *
+     * @param string $pageName
+     * @param int $parentID
+     *
+     * @return string
+     */
+    protected function getUniquePageName($pageName, $parentID)
+    {
+        $uniquePageName = $pageName;
+        $parentID = (int) $parentID;
+        $index = 1;
+        for (; ;) {
+            $pageWithSameName = $this->connection->fetchColumn(
+                'select Pages.cID from CollectionVersions inner join Pages on (CollectionVersions.cID = Pages.cID and CollectionVersions.cvIsApproved = 1) where Pages.cParentID = ? and CollectionVersions.cvName = ? limit 1',
+                [$parentID, $uniquePageName]
+            );
+            if ($pageWithSameName === false) {
+                return $uniquePageName;
+            }
+            ++$index;
+            $uniquePageName = $pageName . ' ' . $index;
+        }
+    }
+
+    /**
+     * Get the handle of a page that's unique for the parent.
+     *
+     * @param string $handle
+     * @param int $parentID
+     *
+     * @return string
+     */
+    protected function getUniquePageHandle($handle, $parentID)
+    {
+        $uniqueHandle = $handle;
+        $parentID = (int) $parentID;
+        $index = 1;
+        for (; ;) {
+            $pageWithSameHandle = $this->connection->fetchColumn(
+                'select Pages.cID from CollectionVersions inner join Pages on (CollectionVersions.cID = Pages.cID and CollectionVersions.cvIsApproved = 1) where Pages.cParentID = ? and CollectionVersions.cvHandle = ? limit 1',
+                [$parentID, $uniqueHandle]
+            );
+            if ($pageWithSameHandle === false) {
+                return $uniqueHandle;
+            }
+            ++$index;
+            $uniqueHandle = $handle . '-' . $index;
+        }
     }
 }
