@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Page;
 
+use Concrete\Core\Area\Area;
 use Concrete\Core\Block\Block;
 use Concrete\Core\Entity\Attribute\Value\PageValue;
 use Concrete\Core\Localization\Service\Date as DateHelper;
@@ -9,6 +10,7 @@ use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Collection\Collection;
 use Concrete\Core\Page\Collection\Version\Event as CollectionVersionEvent;
 use Concrete\Core\Page\Collection\Version\Version;
+use Concrete\Core\Page\Stack\Stack;
 use Concrete\Core\Page\Statistics as PageStatistics;
 use Concrete\Core\Site\Service as SiteService;
 use Concrete\Core\Site\Tree\TreeInterface;
@@ -61,15 +63,24 @@ class Cloner
     /**
      * Duplicate a page and return the newly created page.
      *
+     * @param \Concrete\Core\Page\Page|\Concrete\Core\Page\Stack\Stack $page The page (or the stack) to be copied
      * @param \Concrete\Core\Page\Page|null $newParentPage The page under which this page should be copied to
      * @param \Concrete\Core\User\User|null $newAuthor Override the original page authors
      * @param \Concrete\Core\Site\Tree\TreeInterface|null $site the destination site (used if $toParentPage is NULL)
-     * @param Page $page
+     * @param Page
      *
-     * @return \Concrete\Core\Page\Page
+     * @return \Concrete\Core\Page\Page||\Concrete\Core\Page\Stack\Stack
      */
     public function clonePage(Page $page, Page $newParentPage = null, User $newAuthor = null, TreeInterface $site = null)
     {
+        if ($page->getPageTypeHandle() === STACKS_PAGE_TYPE) {
+            if (!$page instanceof Stack) {
+                $page = Stack::getByID($page->getCollectionID(), $page->getVersionID());
+            }
+            if ($newParentPage === null) {
+                $newParentPage = Page::getByID($page->getCollectionParentID());
+            }
+        }
         $cID = $page->getCollectionID();
         $uID = $newAuthor === null ? $page->getCollectionUserID() : $newAuthor->getUserID();
         $cParentID = $newParentPage === null ? 0 : $newParentPage->getCollectionID();
@@ -159,6 +170,25 @@ class Cloner
 
         $newPage->rescanCollectionPath();
         $newPage->movePageDisplayOrderToBottom();
+
+        if ($page instanceof Stack) {
+            Area::getOrCreate($newPage, STACKS_AREA_NAME);
+            $this->connection->insert('Stacks', [
+                'stName' => $newPage->getCollectionName(),
+                'cID' => $newPage->getCollectionID(),
+                'stType' => $page->getStackType(),
+                'stMultilingualSection' => $page->getMultilingualSectionID(),
+            ]);
+            $newPage = Stack::getByID($newPage->getCollectionID());
+            if ($page->isNeutralStack()) {
+                foreach (Section::getList() as $section) {
+                    $localized = $page->getLocalizedStack($section);
+                    if ($localized !== null) {
+                        $this->clonePage($localized, $newPage, $newAuthor, $site);
+                    }
+                }
+            }
+        }
 
         return $newPage;
     }
