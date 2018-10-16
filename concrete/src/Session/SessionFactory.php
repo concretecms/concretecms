@@ -116,7 +116,8 @@ class SessionFactory implements SessionFactoryInterface
                 } else {
                     $port = isset($server['port']) ? $server['port'] : 6379;
                     $ttl = isset($server['ttl']) ? $server['ttl'] : 0.5;
-                    $redis->connect($server['server'], $port, $ttl);
+                    $server = !empty($server['server']) ? $server['server'] : '127.0.0.1';
+                    $redis->connect($server, $port, $ttl);
                 }
 
                 // Authorisation is handled by just a password

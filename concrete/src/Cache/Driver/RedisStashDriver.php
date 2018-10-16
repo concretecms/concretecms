@@ -105,9 +105,6 @@ class RedisStashDriver extends AbstractDriver
             $servers = array(array('server' => '127.0.0.1', 'port' => '6379', 'ttl' => 0.5));
         }
 
-        // this will have to be revisited to support multiple servers, using
-        // the RedisArray object. That object acts as a proxy object, meaning
-        // most of the class will be the same even after the changes.
 
         if (count($servers) == 1) {
             $server = $servers[0];
@@ -149,7 +146,7 @@ class RedisStashDriver extends AbstractDriver
             $redis = new \RedisArray($serverArray, $redisArrayOptions);
         }
 
-        // select database
+        // select database - we use isset because the database can be 0
         if (isset($options['database'])) {
             $redis->select($options['database']);
         }
