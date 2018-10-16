@@ -3,6 +3,7 @@
 namespace Concrete\Core\Page;
 
 use Concrete\Core\Block\Block;
+use Concrete\Core\Entity\Attribute\Value\PageValue;
 use Concrete\Core\Localization\Service\Date as DateHelper;
 use Concrete\Core\Page\Collection\Collection;
 use Concrete\Core\Page\Collection\Version\Event as CollectionVersionEvent;
@@ -45,6 +46,103 @@ class Cloner
         $this->entityManager = $entityManager;
         $this->dateHelper = $dateHelper;
         $this->eventDispatcher = $eventDispatcher;
+    }
+
+    /**
+     * Create a clone of a collection, and all its versions, contents and attributes.
+     *
+     * @param Collection $c
+     *
+     * @return \Concrete\Core\Page\Collection\Collection
+     */
+    public function cloneCollection(Collection $c)
+    {
+        $cDate = $this->dateHelper->getOverridableNow();
+        $this->connection->insert('Collections', [
+            'cDateAdded' => $cDate,
+            'cDateModified' => $cDate,
+            'cHandle' => $c->getCollectionHandle(),
+        ]);
+        $cID = $c->getCollectionID();
+        $newCID = $this->connection->lastInsertId();
+        $rs = $this->connection->executeQuery('select * from CollectionVersions where cID = ? order by cvDateCreated asc', [$cID]);
+        while (($row = $rs->fetch(PDO::FETCH_ASSOC)) !== false) {
+            $cDate = date('Y-m-d H:i:s', strtotime($cDate) + 1);
+            $this->connection->insert('CollectionVersions', [
+                'cID' => $newCID,
+                'cvID' => $row['cvID'],
+                'cvName' => $row['cvName'],
+                'cvHandle' => $row['cvHandle'],
+                'cvDescription' => $row['cvDescription'],
+                'cvDatePublic' => $row['cvDatePublic'],
+                'cvDateCreated' => $cDate,
+                'cvComments' => $row['cvComments'],
+                'cvAuthorUID' => $row['cvAuthorUID'],
+                'cvIsApproved' => $row['cvIsApproved'],
+                'pThemeID' => $row['pThemeID'],
+                'pTemplateID' => $row['pTemplateID'],
+            ]);
+        }
+
+        $copyFields = 'cvID, bID, arHandle, issID';
+        $this->connection->executeQuery(
+            "insert into CollectionVersionBlockStyles (cID, {$copyFields}) select ?, {$copyFields} from CollectionVersionBlockStyles where cID = ?",
+            [$newCID, $cID]
+        );
+
+        $copyFields = 'cvID, arHandle, issID';
+        $this->connection->executeQuery(
+            "insert into CollectionVersionAreaStyles (cID, {$copyFields}) select ?, {$copyFields} from CollectionVersionAreaStyles where cID = ?",
+            [$newCID, $cID]
+        );
+
+        $copyFields = 'cvID, pThemeID, scvlID, preset, sccRecordID';
+        $this->connection->executeQuery(
+            "insert into CollectionVersionThemeCustomStyles (cID, {$copyFields}) select ?, {$copyFields} from CollectionVersionThemeCustomStyles where cID = ?",
+            [$newCID, $cID]
+        );
+
+        $copyFields = 'cvID, bID, arHandle, btCacheBlockOutput, btCacheBlockOutputOnPost, btCacheBlockOutputForRegisteredUsers, btCacheBlockOutputLifetime';
+        $this->connection->executeQuery(
+            "insert into CollectionVersionBlocksCacheSettings (cID, {$copyFields}) select ?, {$copyFields} from CollectionVersionBlocksCacheSettings where cID = ?",
+            [$newCID, $cID]
+        );
+
+        $copyFields = 'cvID, bID, arHandle, cbDisplayOrder, cbRelationID, cbOverrideAreaPermissions, cbIncludeAll, cbOverrideBlockTypeCacheSettings, cbOverrideBlockTypeContainerSettings, cbEnableBlockContainer';
+        $this->connection->executeQuery(
+            "insert into CollectionVersionBlocks (cID, isOriginal, {$copyFields}) select ?, ?, {$copyFields} from CollectionVersionBlocks where cID = ?",
+            [$newCID, 0, $cID]
+        );
+
+        $copyFields = 'cvID, bID, paID, pkID';
+        $copyFieldsSource = 'BlockPermissionAssignments.' . str_replace(', ', ', BlockPermissionAssignments.', $copyFields);
+        $this->connection->executeQuery(
+            <<<EOT
+insert into BlockPermissionAssignments (cID, {$copyFields})
+    select ?, {$copyFieldsSource}
+    from BlockPermissionAssignments
+    inner join CollectionVersionBlocks on BlockPermissionAssignments.cID = CollectionVersionBlocks.cID and BlockPermissionAssignments.bID = CollectionVersionBlocks.bID and BlockPermissionAssignments.cvID = CollectionVersionBlocks.cvID
+where
+    CollectionVersionBlocks.cID = ?
+    and cbOverrideAreaPermissions is not null and cbOverrideAreaPermissions <> 0
+EOT
+            ,
+            [$newCID, $cID]
+        );
+
+        // duplicate any attributes belonging to the collection
+        $attributesRepository = $this->entityManager->getRepository(PageValue::class);
+        foreach ($attributesRepository->findBy(['cID' => $cID]) as $pageValue) {
+            $newPageValue = new PageValue();
+            $newPageValue->setPageID($newCID);
+            $newPageValue->setVersionID($pageValue->getVersionID());
+            $newPageValue->setGenericValue($pageValue->getGenericValue());
+            $newPageValue->setAttributeKey($pageValue->getAttributeKey());
+            $this->entityManager->persist($newPageValue);
+        }
+        $this->entityManager->flush();
+
+        return Collection::getByID($newCID);
     }
 
     /**
