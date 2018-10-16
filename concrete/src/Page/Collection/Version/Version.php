@@ -595,7 +595,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         $cloner = $app->make(Cloner::class);
         $author = $app->make(\Concrete\Core\User\User::class);
         $myCollection = Page::getByID($this->getCollectionID());
-        $newVersion = $cloner->cloneCollectionVersion($this, $myCollection, $versionComments, $author);
+        $newVersion = $cloner->cloneCollectionVersion($this, $myCollection, $versionComments, $author, false);
 
         return $newVersion;
     }

@@ -1197,8 +1197,10 @@ class Collection extends ConcreteObject implements TrackableInterface
     {
         $app = Application::getFacadeApplication();
         $author = $app->make(\Concrete\Core\User\User::class);
+        $cloner = $app->make(Cloner::class);
+        $newVersion = $cloner->cloneCollectionVersion($this->getVersionObject(), $this, $versionComments, $author, $createEmpty ? false : true);
 
-        return $app->make(Cloner::class)->cloneLoadedCollection($this, $this, $versionComments, $author, $createEmpty);
+        return Page::getByID($newVersion->getCollectionID(), $newVersion->getVersionID());
     }
 
     /**

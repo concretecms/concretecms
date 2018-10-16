@@ -291,59 +291,17 @@ EOT
     }
 
     /**
-     * Clone the currently loaded collection version to another collection, and returns a Page instance containing the new version.
-     *
-     * @param \Concrete\Core\Page\Collection\Collection $cSource
-     * @param \Concrete\Core\Page\Collection\Collection $cDestination
-     * @param string $versionComments
-     * @param \Concrete\Core\User\User $author
-     * @param bool $createEmpty
-     *
-     * @return \Concrete\Core\Page\Page
-     */
-    public function cloneLoadedCollection(Collection $cSource, Collection $cDestination, $versionComments, User $author, $createEmpty = false)
-    {
-        $cvSource = $cSource->getVersionObject();
-        $cvDestination = $this->cloneCollectionVersion($cvSource, $cDestination, $versionComments, $author);
-        $cDestinationID = $cDestination->getCollectionID();
-        $cDestination = Page::getByID($cDestinationID, $cvDestination->getVersionID());
-        if (!$createEmpty) {
-            $cSourceID = $cSource->getCollectionID();
-            $cvSourceID = $cvSource->getVersionID();
-            $cvDestinationID = $cvDestination->getVersionID();
-            // Dublicate block objects
-            $rs = $this->connection->executeQuery(
-                'select bID, arHandle from CollectionVersionBlocks where cID = ? and cvID = ? and cbIncludeAll = 0 order by cbDisplayOrder asc',
-                [$cSourceID, $cvSourceID]
-            );
-            while (($row = $rs->fetch(PDO::FETCH_ASSOC)) !== false) {
-                $b = Block::getByID($row['bID'], $cSource, $row['arHandle']);
-                if ($b) {
-                    $b->alias($cDestination);
-                }
-            }
-            // Duplicate area styles
-            $copyFields = 'arHandle, issID';
-            $this->connection->executeQuery(
-                "insert into CollectionVersionAreaStyles (cID, cvID, {$copyFields}) select ?, ?, {$copyFields} from CollectionVersionAreaStyles where cID = ? and cvID = ?",
-                [$cDestinationID, $cvDestinationID, $cSourceID, $cvSourceID]
-            );
-        }
-
-        return $cDestination;
-    }
-
-    /**
      * Create a copy of a collection version to another collection.
      *
      * @param \Concrete\Core\Page\Collection\Version\Version $cvSource
      * @param \Concrete\Core\Page\Collection\Collection $cDestination
      * @param string $versionComments
      * @param \Concrete\Core\User\User $author
+     * @param bool $copyContents
      *
      * @return \Concrete\Core\Page\Collection\Version\Version
      */
-    public function cloneCollectionVersion(Version $cvSource, Collection $cDestination, $versionComments, User $author)
+    public function cloneCollectionVersion(Version $cvSource, Collection $cDestination, $versionComments, User $author, $copyContents)
     {
         $attributesCategory = $cvSource->getObjectAttributeCategory();
         $cSourceID = $cvSource->getCollectionID();
@@ -415,6 +373,26 @@ EOT
         $this->eventDispatcher->dispatch('on_page_version_add', $ev);
 
         $cvDestination->refreshCache();
+
+        if ($copyContents) {
+            // Dublicate block objects
+            $rs = $this->connection->executeQuery(
+                'select bID, arHandle from CollectionVersionBlocks where cID = ? and cvID = ? and cbIncludeAll = 0 order by cbDisplayOrder asc',
+                [$cSourceID, $cvSourceID]
+            );
+            while (($row = $rs->fetch(PDO::FETCH_ASSOC)) !== false) {
+                $b = Block::getByID($row['bID'], $cSource, $row['arHandle']);
+                if ($b) {
+                    $b->alias($cDestination);
+                }
+            }
+            // Duplicate area styles
+            $copyFields = 'arHandle, issID';
+            $this->connection->executeQuery(
+                "insert into CollectionVersionAreaStyles (cID, cvID, {$copyFields}) select ?, ?, {$copyFields} from CollectionVersionAreaStyles where cID = ? and cvID = ?",
+                [$cDestinationID, $cvDestinationID, $cSourceID, $cvSourceID]
+            );
+        }
 
         return $cvDestination;
     }
