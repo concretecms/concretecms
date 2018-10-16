@@ -80,7 +80,7 @@ class RedisSessionHandler extends NativeSessionHandler
     /**
      * {@inheritdoc}
      */
-    protected function doWrite($sessionId, $data): bool
+    protected function doWrite($sessionId, $data)
     {
         $result = $this->redis->setEx($this->prefix.$sessionId, (int) ini_get('session.gc_maxlifetime'), $data);
 
@@ -106,7 +106,7 @@ class RedisSessionHandler extends NativeSessionHandler
     /**
      * {@inheritdoc}
      */
-    protected function doDestroy($sessionId): bool
+    protected function doDestroy($sessionId)
     {
         $this->redis->del($this->prefix.$sessionId);
 
@@ -116,7 +116,7 @@ class RedisSessionHandler extends NativeSessionHandler
     /**
      * {@inheritdoc}
      */
-    public function close(): bool
+    public function close()
     {
         return true;
     }
@@ -124,7 +124,7 @@ class RedisSessionHandler extends NativeSessionHandler
     /**
      * {@inheritdoc}
      */
-    public function gc($maxlifetime): bool
+    public function gc($maxlifetime)
     {
         return true;
     }
