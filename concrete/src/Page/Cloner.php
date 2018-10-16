@@ -3,7 +3,6 @@
 namespace Concrete\Core\Page;
 
 use Concrete\Core\Area\Area;
-use Concrete\Core\Block\Block;
 use Concrete\Core\Entity\Attribute\Value\PageValue;
 use Concrete\Core\Localization\Service\Date as DateHelper;
 use Concrete\Core\Multilingual\Page\Section\Section;
@@ -128,11 +127,7 @@ class Cloner
             'pkgID' => $page->getPackageID(),
         ]);
 
-        $copyFields = 'cvID, arHandle, cbDisplayOrder, ptComposerFormLayoutSetControlID, bID';
-        $this->connection->executeQuery(
-            "insert into PageTypeComposerOutputBlocks (cID, {$copyFields}) select ?, {$copyFields} from PageTypeComposerOutputBlocks where cID = ?",
-            [$newCID, $cID]
-        );
+        $this->directCopy('PageTypeComposerOutputBlocks', 'arHandle, cbDisplayOrder, ptComposerFormLayoutSetControlID, bID', $cID, $newCID);
 
         PageStatistics::incrementParents($newCID);
 
@@ -218,64 +213,8 @@ class Cloner
                 'pTemplateID' => $row['pTemplateID'],
             ]);
         }
-
-        $copyFields = 'cvID, bID, arHandle, issID';
-        $this->connection->executeQuery(
-            "insert into CollectionVersionBlockStyles (cID, {$copyFields}) select ?, {$copyFields} from CollectionVersionBlockStyles where cID = ?",
-            [$newCID, $cID]
-        );
-
-        $copyFields = 'cvID, arHandle, issID';
-        $this->connection->executeQuery(
-            "insert into CollectionVersionAreaStyles (cID, {$copyFields}) select ?, {$copyFields} from CollectionVersionAreaStyles where cID = ?",
-            [$newCID, $cID]
-        );
-
-        $copyFields = 'cvID, pThemeID, scvlID, preset, sccRecordID';
-        $this->connection->executeQuery(
-            "insert into CollectionVersionThemeCustomStyles (cID, {$copyFields}) select ?, {$copyFields} from CollectionVersionThemeCustomStyles where cID = ?",
-            [$newCID, $cID]
-        );
-
-        $copyFields = 'cvID, bID, arHandle, btCacheBlockOutput, btCacheBlockOutputOnPost, btCacheBlockOutputForRegisteredUsers, btCacheBlockOutputLifetime';
-        $this->connection->executeQuery(
-            "insert into CollectionVersionBlocksCacheSettings (cID, {$copyFields}) select ?, {$copyFields} from CollectionVersionBlocksCacheSettings where cID = ?",
-            [$newCID, $cID]
-        );
-
-        $copyFields = 'cvID, bID, arHandle, cbDisplayOrder, cbRelationID, cbOverrideAreaPermissions, cbIncludeAll, cbOverrideBlockTypeCacheSettings, cbOverrideBlockTypeContainerSettings, cbEnableBlockContainer';
-        $this->connection->executeQuery(
-            "insert into CollectionVersionBlocks (cID, isOriginal, {$copyFields}) select ?, ?, {$copyFields} from CollectionVersionBlocks where cID = ?",
-            [$newCID, 0, $cID]
-        );
-
-        $copyFields = 'cvID, bID, paID, pkID';
-        $copyFieldsSource = 'BlockPermissionAssignments.' . str_replace(', ', ', BlockPermissionAssignments.', $copyFields);
-        $this->connection->executeQuery(
-            <<<EOT
-insert into BlockPermissionAssignments (cID, {$copyFields})
-    select ?, {$copyFieldsSource}
-    from BlockPermissionAssignments
-    inner join CollectionVersionBlocks on BlockPermissionAssignments.cID = CollectionVersionBlocks.cID and BlockPermissionAssignments.bID = CollectionVersionBlocks.bID and BlockPermissionAssignments.cvID = CollectionVersionBlocks.cvID
-where
-    CollectionVersionBlocks.cID = ?
-    and cbOverrideAreaPermissions is not null and cbOverrideAreaPermissions <> 0
-EOT
-            ,
-            [$newCID, $cID]
-        );
-
-        // duplicate any attributes belonging to the collection
-        $attributesRepository = $this->entityManager->getRepository(PageValue::class);
-        foreach ($attributesRepository->findBy(['cID' => $cID]) as $pageValue) {
-            $newPageValue = new PageValue();
-            $newPageValue->setPageID($newCID);
-            $newPageValue->setVersionID($pageValue->getVersionID());
-            $newPageValue->setGenericValue($pageValue->getGenericValue());
-            $newPageValue->setAttributeKey($pageValue->getAttributeKey());
-            $this->entityManager->persist($newPageValue);
-        }
-        $this->entityManager->flush();
+        $this->copyCollectionVersionBasicData($cID, $newCID);
+        $this->copyCollectionVersionContents($cID, $newCID);
 
         return Collection::getByID($newCID);
     }
@@ -293,7 +232,6 @@ EOT
      */
     public function cloneCollectionVersion(Version $cvSource, Collection $cDestination, $versionComments, User $author, $copyContents)
     {
-        $attributesCategory = $cvSource->getObjectAttributeCategory();
         $cSourceID = $cvSource->getCollectionID();
         $cvSourceID = $cvSource->getVersionID();
 
@@ -333,56 +271,18 @@ EOT
             'cvPublishDate' => null,
         ]);
 
-        $values = $attributesCategory->getAttributeValues($cvSource);
-        foreach ($values as $value) {
-            $value = clone $value;
-            /* @var \Concrete\Core\Entity\Attribute\Value\PageValue $value */
-            $value->setPageID($cDestinationID);
-            $value->setVersionID($cvDestinationID);
-            $this->entityManager->persist($value);
+        $this->copyCollectionVersionBasicData($cSourceID, $cDestinationID, $cvSourceID, $cvDestinationID);
+        if ($copyContents) {
+            $this->copyCollectionVersionContents($cSourceID, $cDestinationID, $cvSourceID, $cvDestinationID);
         }
-        $this->entityManager->flush();
-
-        $copyFields = 'faID';
-        $this->connection->executeQuery(
-            "insert into CollectionVersionFeatureAssignments (cID, cvID, {$copyFields}) select ?, ?, {$copyFields} from CollectionVersionFeatureAssignments where cID = ? and cvID = ?",
-            [$cDestinationID, $cvDestinationID, $cSourceID, $cvSourceID]
-        );
-
-        $copyFields = 'pThemeID, scvlID, preset, sccRecordID';
-        $this->connection->executeQuery(
-            "insert into CollectionVersionThemeCustomStyles (cID, cvID, {$copyFields}) select ?, ?, {$copyFields} from CollectionVersionThemeCustomStyles where cID = ? and cvID = ?",
-            [$cDestinationID, $cvDestinationID, $cSourceID, $cvSourceID]
-        );
 
         $cvDestination = Version::get($cSource, $cvDestinationID);
 
         $ev = new CollectionVersionEvent($cSource);
         $ev->setCollectionVersionObject($cvDestination);
-
         $this->eventDispatcher->dispatch('on_page_version_add', $ev);
 
         $cvDestination->refreshCache();
-
-        if ($copyContents) {
-            // Dublicate block objects
-            $rs = $this->connection->executeQuery(
-                'select bID, arHandle from CollectionVersionBlocks where cID = ? and cvID = ? and cbIncludeAll = 0 order by cbDisplayOrder asc',
-                [$cSourceID, $cvSourceID]
-            );
-            while (($row = $rs->fetch(PDO::FETCH_ASSOC)) !== false) {
-                $b = Block::getByID($row['bID'], $cSource, $row['arHandle']);
-                if ($b) {
-                    $b->alias($cDestination);
-                }
-            }
-            // Duplicate area styles
-            $copyFields = 'arHandle, issID';
-            $this->connection->executeQuery(
-                "insert into CollectionVersionAreaStyles (cID, cvID, {$copyFields}) select ?, ?, {$copyFields} from CollectionVersionAreaStyles where cID = ? and cvID = ?",
-                [$cDestinationID, $cvDestinationID, $cSourceID, $cvSourceID]
-            );
-        }
 
         return $cvDestination;
     }
@@ -437,5 +337,183 @@ EOT
             ++$index;
             $uniqueHandle = $handle . '-' . $index;
         }
+    }
+
+    /**
+     * Copy the basic data from one collection version (or all versions of a collection) to another collection version (or all versions of a collection).
+     *
+     * @param int $fromCID The ID of the source collection
+     * @param int $toCID The ID of the destination collection
+     * @param int|null $fromVID the version ID of the source collection (if NULL we'll copy the data of all the collection versions)
+     * @param int|null $toVID the version ID of the destination collection (if NULL we'll assume $fromVID)
+     */
+    protected function copyCollectionVersionBasicData($fromCID, $toCID, $fromVID = null, $toVID = null)
+    {
+        $this->copyCollectionVersionAttributes($fromCID, $toCID, $fromVID, $toVID);
+        $this->copyCollectionVersionFeatureAssignments($fromCID, $toCID, $fromVID, $toVID);
+        $this->copyCollectionVersionCustomStyles($fromCID, $toCID, $fromVID, $toVID);
+    }
+
+    /**
+     * Copy the contents from one collection version (or all versions of a collection) to another collection version (or all versions of a collection).
+     *
+     * @param int $fromCID The ID of the source collection
+     * @param int $toCID The ID of the destination collection
+     * @param int|null $fromVID the version ID of the source collection (if NULL we'll copy the data of all the collection versions)
+     * @param int|null $toVID the version ID of the destination collection (if NULL we'll assume $fromVID)
+     */
+    protected function copyCollectionVersionContents($fromCID, $toCID, $fromVID = null, $toVID = null)
+    {
+        $this->copyCollectionVersionBlocks($fromCID, $toCID, $fromVID, $toVID);
+        $this->copyCollectionVersionAreaStyles($fromCID, $toCID, $fromVID, $toVID);
+        $this->copyCollectionVersionCustomStyles($fromCID, $toCID, $fromVID, $toVID);
+    }
+
+    /**
+     * Copy the attributes from one collection version (or all versions of a collection) to another collection version (or all versions of a collection).
+     *
+     * @param int $fromCID The ID of the source collection
+     * @param int $toCID The ID of the destination collection
+     * @param int|null $fromVID the version ID of the source collection (if NULL we'll copy the data of all the collection versions)
+     * @param int|null $toVID the version ID of the destination collection (if NULL we'll assume $fromVID)
+     */
+    protected function copyCollectionVersionAttributes($fromCID, $toCID, $fromVID = null, $toVID = null)
+    {
+        if ($toVID === null) {
+            $toVID = $fromVID;
+        }
+        $query = ['cID' => $fromCID];
+        if ($fromVID !== null) {
+            $query['cvID'] = $fromVID;
+        }
+        $attributesRepository = $this->entityManager->getRepository(PageValue::class);
+        foreach ($attributesRepository->findBy($query) as $pageValue) {
+            $newPageValue = clone $pageValue;
+            $newPageValue->setPageID($toCID);
+            if ($toVID !== null) {
+                $newPageValue->setVersionID($toVID);
+            }
+            $this->entityManager->persist($newPageValue);
+        }
+        $this->entityManager->flush();
+    }
+
+    /**
+     * Copy the feature assignments from one collection version (or all versions of a collection) to another collection version (or all versions of a collection).
+     *
+     * @param int $fromCID The ID of the source collection
+     * @param int $toCID The ID of the destination collection
+     * @param int|null $fromVID the version ID of the source collection (if NULL we'll copy the data of all the collection versions)
+     * @param int|null $toVID the version ID of the destination collection (if NULL we'll assume $fromVID)
+     */
+    protected function copyCollectionVersionFeatureAssignments($fromCID, $toCID, $fromVID = null, $toVID = null)
+    {
+        $this->directCopy('CollectionVersionFeatureAssignments', 'faID', $fromCID, $toCID, $fromVID, $toVID);
+    }
+
+    /**
+     * Copy the custom theme styles from one collection version (or all versions of a collection) to another collection version (or all versions of a collection).
+     *
+     * @param int $fromCID The ID of the source collection
+     * @param int $toCID The ID of the destination collection
+     * @param int|null $fromVID the version ID of the source collection (if NULL we'll copy the data of all the collection versions)
+     * @param int|null $toVID the version ID of the destination collection (if NULL we'll assume $fromVID)
+     */
+    protected function copyCollectionVersionCustomStyles($fromCID, $toCID, $fromVID = null, $toVID = null)
+    {
+        $this->directCopy('CollectionVersionThemeCustomStyles', 'pThemeID, scvlID, preset, sccRecordID', $fromCID, $toCID, $fromVID, $toVID);
+    }
+
+    /**
+     * Copy the blocks from one collection version (or all versions of a collection) to another collection version (or all versions of a collection).
+     *
+     * @param int $fromCID The ID of the source collection
+     * @param int $toCID The ID of the destination collection
+     * @param int|null $fromVID the version ID of the source collection (if NULL we'll copy the data of all the collection versions)
+     * @param int|null $toVID the version ID of the destination collection (if NULL we'll assume $fromVID)
+     */
+    protected function copyCollectionVersionBlocks($fromCID, $toCID, $fromVID = null, $toVID = null)
+    {
+        $copyFields = 'bID, arHandle, cbDisplayOrder, cbRelationID, cbOverrideAreaPermissions, cbIncludeAll, cbOverrideBlockTypeCacheSettings, cbOverrideBlockTypeContainerSettings, cbEnableBlockContainer';
+        $this->directCopy(
+            'CollectionVersionBlocks',
+            ["{$copyFields}, 0", "{$copyFields}, isOriginal"],
+            $fromCID, $toCID, $fromVID, $toVID
+        );
+        $this->directCopy(
+            'CollectionVersionBlockStyles',
+            'bID, arHandle, issID',
+            $fromCID, $toCID, $fromVID, $toVID
+        );
+        $this->directCopy(
+            'CollectionVersionBlocksCacheSettings',
+            'bID, arHandle, btCacheBlockOutput, btCacheBlockOutputOnPost, btCacheBlockOutputForRegisteredUsers, btCacheBlockOutputLifetime',
+            $fromCID, $toCID, $fromVID, $toVID
+        );
+        $this->directCopy(
+            'BlockFeatureAssignments',
+            'bID, faID',
+            $fromCID, $toCID, $fromVID, $toVID
+        );
+
+        $copyFields = 'bID, paID, pkID';
+        $this->directCopy(
+            'BlockPermissionAssignments',
+            [preg_replace('/(^|,\s*)/', '\\1BlockPermissionAssignments.', $copyFields), $copyFields],
+            $fromCID, $toCID, $fromVID, $toVID,
+            <<<'EOT'
+BlockPermissionAssignments
+inner join CollectionVersionBlocks
+on BlockPermissionAssignments.cID = CollectionVersionBlocks.cID
+and BlockPermissionAssignments.bID = CollectionVersionBlocks.bID
+and BlockPermissionAssignments.cvID = CollectionVersionBlocks.cvID
+and CollectionVersionBlocks.cbOverrideAreaPermissions is not null and CollectionVersionBlocks.cbOverrideAreaPermissions <> 0
+EOT
+        );
+    }
+
+    /**
+     * Copy the area styles from one collection version (or all versions of a collection) to another collection version (or all versions of a collection).
+     *
+     * @param int $fromCID The ID of the source collection
+     * @param int $toCID The ID of the destination collection
+     * @param int|null $fromVID the version ID of the source collection (if NULL we'll copy the data of all the collection versions)
+     * @param int|null $toVID the version ID of the destination collection (if NULL we'll assume $fromVID)
+     */
+    protected function copyCollectionVersionAreaStyles($fromCID, $toCID, $fromVID = null, $toVID = null)
+    {
+        $this->directCopy('CollectionVersionAreaStyles', 'arHandle, issID', $fromCID, $toCID, $fromVID, $toVID);
+    }
+
+    /**
+     * @param string $table
+     * @param string|string[] $copyFields
+     * @param int $fromCID
+     * @param int $toCID
+     * @param int|null $fromVID
+     * @param int|null $toVID
+     * @param string|null $from
+     */
+    private function directCopy($table, $copyFields, $fromCID, $toCID, $fromVID = null, $toVID = null, $from = null)
+    {
+        if (is_array($copyFields)) {
+            list($copyFieldsFrom, $copyFieldsTo) = $copyFields;
+        } else {
+            $copyFieldsTo = $copyFieldsFrom = $copyFields;
+        }
+        if ($from === null) {
+            $from = $table;
+        }
+        if ($fromVID === null) {
+            $query = "insert into {$table} (cID, cvID, {$copyFieldsTo}) select ?, {$table}.cvID, {$copyFieldsFrom} from {$from} where {$table}.cID = ?";
+            $params = [$toCID, $fromCID];
+        } else {
+            if ($toVID === null) {
+                $toVID = $fromVID;
+            }
+            $query = "insert into {$table} (cID, cvID, {$copyFieldsTo}) select ?, ?, {$copyFieldsFrom} from {$from} where {$table}.cID = ? and {$table}.cvID = ?";
+            $params = [$toCID, $toVID, $fromCID, $fromVID];
+        }
+        $this->connection->executeQuery($query, $params);
     }
 }
