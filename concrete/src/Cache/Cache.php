@@ -65,14 +65,13 @@ abstract class Cache implements FlushableInterface
                 if (isset($implements['Stash\Interfaces\DriverInterface'])) {
                     /** @var \Stash\Interfaces\DriverInterface $temp_driver */
 
-
-                    if ($options = array_get($driver_build, 'options', null)) {
-                        $temp_driver = new $class($options);
-                    } else {
-                        $temp_driver = new $class;
-                    }
                     // Only add if the driver is available
                     if ($class::isAvailable()) {
+                        if ($options = array_get($driver_build, 'options', null)) {
+                            $temp_driver = new $class($options);
+                        } else {
+                            $temp_driver = new $class;
+                        }
                         $drivers[$driver_name] = $temp_driver;
                     }
 
