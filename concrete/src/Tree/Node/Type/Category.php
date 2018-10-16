@@ -99,6 +99,13 @@ class Category extends TreeNode
         return new CategoryListFormatter();
     }
 
+    /**
+     * @param string $treeNodeCategoryName Node name
+     * @param \Concrete\Core\Tree\Node\Node|boolean $parent Node's parent folder
+     * @param int|\Concrete\Core\Entity\File\StorageLocation\StorageLocation|null $storageLocationID Id or object of the storage location, if null the default one will be used
+     *
+     * @return \Concrete\Core\Tree\Node\Node
+     */
     public static function add($treeNodeCategoryName = '', $parent = false, $storageLocationID = null)
     {
 
