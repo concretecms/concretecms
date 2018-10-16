@@ -101,38 +101,22 @@ class Category extends TreeNode
 
     public static function add($treeNodeCategoryName = '', $parent = false, $storageLocationID = null)
     {
-        $app = Application::getFacadeApplication();
-        $storageLocationFactory = $app->make(StorageLocationFactory::class);
 
         // get the storage location id if we have an object
         if (is_object($storageLocationID) && $storageLocationID instanceof \Concrete\Core\Entity\File\StorageLocation\StorageLocation) {
             $storageLocationID = $storageLocationID->getID();
-        }
-
-        // get the storage location object to check if it is valid
-        $storageLocation = $storageLocationFactory->fetchByID($storageLocationID);
-
-        // get the parent storage location recursively if we don't have a valid one
-        if (is_object($parent) && !is_object($storageLocation)) {
-            $storageLocation = $storageLocationFactory->fetchByID($parent->getTreeNodeStorageLocationID());
-            if (!is_object($storageLocation)) {
-                $parents = $parent->getTreeNodeParentArray();
-                foreach ($parents as $parentNode) {
-                    $storageLocation = $storageLocationFactory->fetchByID($parentNode->getTreeNodeStorageLocationID());
-                    if (is_object($storageLocation)) {
-                        $storageLocationID = $storageLocation->getID();
-                        break;
-                    }
-                }
-            }
-        }
-
-        // if we still have a valid storage location, use the default one
-        if (empty($storageLocationID) || !is_object($storageLocation)) {
-            $storageLocation = $storageLocationFactory->fetchDefault();
+            // If its not empty verify its a real location
+        } elseif (!empty($storageLocationID)) {
+            $app = Application::getFacadeApplication();
+            $storageLocationFactory = $app->make(StorageLocationFactory::class);
+            $storageLocation = $storageLocationFactory->fetchByID($storageLocationID);
             if (is_object($storageLocation)) {
                 $storageLocationID = $storageLocation->getID();
+            } else {
+                $storageLocationID = null;
             }
+        } else {
+            $storageLocationID = null;
         }
 
         $node = parent::add($parent);

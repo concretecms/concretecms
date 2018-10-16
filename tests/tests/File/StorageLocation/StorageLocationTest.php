@@ -2,6 +2,7 @@
 
 namespace Concrete\Tests\File\StorageLocation;
 
+use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\StorageLocation\StorageLocation;
 use Concrete\Core\File\StorageLocation\Type\Type;
 use Concrete\TestHelpers\File\FileStorageTestCase;
@@ -111,5 +112,57 @@ class StorageLocationTest extends FileStorageTestCase
         $this->assertInstanceOf('\Concrete\Core\Entity\File\StorageLocation\StorageLocation', $alternate);
         $this->assertEquals(false, $alternate->isDefault());
         $this->assertEquals('Other Storage', $alternate->getName());
+    }
+
+    public function testAddFolderWithLocation() {
+
+        //Get a default storageLocation
+        $fsl = $this->getStorageLocation();
+        $storageLocationOne = StorageLocation::getByID($fsl->getID());
+        // Add A non Default Storage Location
+        $fsl = StorageLocation::add($fsl->getConfigurationObject(), 'NotDefault', false);
+        $storageLocationTwo = StorageLocation::getByID($fsl->getID());
+        // Get our filesystem
+        $filesystem = new Filesystem();
+
+        $folderOne = $filesystem->addFolder($filesystem->getRootFolder(), 'Test Default Storage Folder', $storageLocationOne);
+        $this->assertInstanceOf('Concrete\Core\Tree\Node\Type\FileFolder', $folderOne);
+        $this->assertNotEquals($storageLocationTwo->getID(), $folderOne->getTreeNodeStorageLocationID());
+        $this->assertEquals($storageLocationOne->getID(), $folderOne->getTreeNodeStorageLocationID());
+
+
+    }
+
+
+    public function testMultipleFoldersWithLocations() {
+        //Get a default storageLocation
+        $fsl = $this->getStorageLocation();
+        // This is just to make sure it loads from the DB
+        $storageLocationOne = StorageLocation::getByID($fsl->getID());
+        // Add A non Default Storage Location
+        $fsl = StorageLocation::add($fsl->getConfigurationObject(), 'NotDefault', false);
+        $storageLocationTwo = StorageLocation::getByID($fsl->getID());
+        // Get our filesystem
+        $filesystem = new Filesystem();
+
+        // Add a folder with the default storage object
+        $folderOne = $filesystem->addFolder($filesystem->getRootFolder(), 'Test Default Storage Folder', $storageLocationOne);
+        $this->assertInstanceOf('Concrete\Core\Tree\Node\Type\FileFolder', $folderOne);
+        $this->assertNotEquals($storageLocationTwo->getID(), $folderOne->getTreeNodeStorageLocationID());
+        $this->assertEquals($storageLocationOne->getID(), $folderOne->getTreeNodeStorageLocationID());
+        $this->assertTrue($folderOne->getTreeNodeStorageLocationObject()->isDefault());
+
+
+        // Add a folder with the secondary non default storage object
+        $folderTwo = $filesystem->addFolder($filesystem->getRootFolder(), 'Test Non Default Storage Folder', $storageLocationTwo);
+        $this->assertInstanceOf('Concrete\Core\Tree\Node\Type\FileFolder', $folderTwo);
+        $this->assertNotEquals($storageLocationOne->getID(), $folderTwo->getTreeNodeStorageLocationID());
+        $this->assertEquals($storageLocationTwo->getID(), $folderTwo->getTreeNodeStorageLocationID());
+        $this->assertNotTrue($folderTwo->getTreeNodeStorageLocationObject()->isDefault());
+
+        // Add a folder without any storage Object
+        $folderThree= $filesystem->addFolder($filesystem->getRootFolder(), 'Test Default Folder');
+        $this->assertInstanceOf('Concrete\Core\Tree\Node\Type\FileFolder', $folderThree);
+        $this->assertNull($folderThree->getTreeNodeStorageLocationObject());
     }
 }

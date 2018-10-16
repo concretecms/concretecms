@@ -16,8 +16,11 @@ class Version20181014000000 extends AbstractMigration implements RepeatableMigra
         $table = $schema->getTable('TreeNodes');
         if (is_object($table) && !$table->hasColumn('fslID')) {
             $table->addColumn('fslID', 'integer', [
-                'unsigned' => true, 'notnull' => true, 'default' => 1,
+                'unsigned' => true, 'notnull' => false,
             ]);
+        } elseif (is_object($table) && $table->hasColumn('fslID')) {
+            $table->changeColumn('fslID',['unsigned' => true, 'notnull' => false,'default'=>null]);
+
         }
     }
 }
