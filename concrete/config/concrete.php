@@ -238,7 +238,28 @@ return [
                             'filePermissions' => FILE_PERMISSIONS_MODE_COMPUTED,
                         ],
                     ],
+                    'redis' => [
+                        'class' => \Concrete\Core\Cache\Driver\RedisStashDriver::class,
+                        'options' => [
+                            /* Example configuration for servers
+                            'servers' => [
+                                [
+                                    'server' => 'localhost',
+                                    'port' => 6379,
+                                    'ttl' => 10 //Connection Timeout - not TTL for objects
+                                ],
+                                [
+                                    'server' => 'outside.server',
+                                    'port' => 6379,
+                                    'ttl' => 10
+                                ],
+                            ],*/
+                            'prefix'=>'c5_overrides',
+                            'database'=>0 // Use different Redis Databases - optional
+                        ],
+                    ],
                 ],
+                'preferred_driver' => ''// Use this to specify a preferred driver
             ],
             'expensive' => [
                 'drivers' => [
@@ -246,7 +267,6 @@ return [
                         'class' => '\Stash\Driver\Ephemeral',
                         'options' => [],
                     ],
-
                     'core_filesystem' => [
                         'class' => \Concrete\Core\Cache\Driver\FileSystemStashDriver::class,
                         'options' => [
@@ -255,7 +275,15 @@ return [
                             'filePermissions' => FILE_PERMISSIONS_MODE_COMPUTED,
                         ],
                     ],
+                    'redis' => [
+                        'class' => \Concrete\Core\Cache\Driver\RedisStashDriver::class,
+                        'options' => [
+                            'prefix'=>'c5_expensive',
+                            'database'=>0 // Use different Redis Databases - optional
+                        ],
+                    ],
                 ],
+                'preferred_driver' => ''// Use this to specify a preferred driver
             ],
             'object' => [
                 'drivers' => [
@@ -263,7 +291,15 @@ return [
                         'class' => '\Stash\Driver\Ephemeral',
                         'options' => [],
                     ],
+                    'redis' => [
+                        'class' => \Concrete\Core\Cache\Driver\RedisStashDriver::class,
+                        'options' => [
+                            'prefix'=>'c5_object',
+                            'database'=>0 // Use different Redis Databases - optional
+                        ],
+                    ],
                 ],
+                'preferred_driver' => ''// Use this to specify a preferred driver
             ],
         ],
 
@@ -682,6 +718,10 @@ return [
     'session' => [
         'name' => 'CONCRETE5',
         'handler' => 'file',
+        'redis' => [
+            'prefix' => 'c5_session',
+            'database'=>1 // Use different Redis Databases - optional
+        ],
         'save_path' => null,
         'max_lifetime' => 7200,
         'cookie' => [

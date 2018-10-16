@@ -50,8 +50,9 @@ abstract class Cache implements FlushableInterface
     {
         $drivers = array();
         $driver_configs = Config::get("concrete.cache.levels.{$level}.drivers", array());
+        $preferred_driver = Config::get("concrete.cache.levels.{$level}.preferred_driver", null);
 
-        foreach ($driver_configs as $driver_build) {
+        foreach ($driver_configs as $driver_name => $driver_build) {
             if (!$driver_build) {
                 continue;
             }
@@ -70,8 +71,11 @@ abstract class Cache implements FlushableInterface
                     } else {
                         $temp_driver = new $class;
                     }
+                    // Only add if the driver is available
+                    if ($class::isAvailable()) {
+                        $drivers[$driver_name] = $temp_driver;
+                    }
 
-                    $drivers[] = $temp_driver;
                 } else {
                     throw new \RuntimeException('Cache driver class must implement \Stash\Interfaces\DriverInterface.');
                 }
@@ -80,9 +84,15 @@ abstract class Cache implements FlushableInterface
 
         $count = count($drivers);
         if ($count > 1) {
-            $driver = new Composite(['drivers' => $drivers]);
+            if (!empty($preferred_driver) && !empty($drivers[$preferred_driver])) {
+                $driver = $drivers[$preferred_driver];
+            } else {
+                $driver = new Composite(['drivers' => $drivers]);
+            }
+
         } elseif ($count === 1) {
-            $driver = $drivers[0];
+            reset($drivers);
+            $driver = current($drivers);
         } else {
             $driver = new BlackHole();
         }
