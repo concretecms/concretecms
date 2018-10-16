@@ -14,7 +14,7 @@
 namespace Concrete\Core\Session\Storage\Handler;
 
 
-use Symfony\Component\HttpFoundation\Session\Storage\Handler\AbstractSessionHandler;
+use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeSessionHandler;
 
 /**
  * Redis based session storage handler based on the Redis class
@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Session\Storage\Handler\AbstractSessionHand
  * @author Dalibor Karlović <dalibor@flexolabs.io>
  * modified by Derek Cameron <derek@concrete5.co.jp> for concrete5 from symfony 4.1
  */
-class RedisSessionHandler extends AbstractSessionHandler
+class RedisSessionHandler extends NativeSessionHandler
 {
 
     private $redis;
@@ -58,7 +58,7 @@ class RedisSessionHandler extends AbstractSessionHandler
         }
 
         $this->redis = $redis;
-        $this->prefix = $options['prefix'] ?? 'sf_s';
+        $this->prefix = $options['prefix'] ? $options['prefix']: 'sf_s';
     }
 
     /**
@@ -72,11 +72,35 @@ class RedisSessionHandler extends AbstractSessionHandler
     /**
      * {@inheritdoc}
      */
+    public function read($session_id)
+    {
+        return $this->doRead($session_id);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function doWrite($sessionId, $data): bool
     {
         $result = $this->redis->setEx($this->prefix.$sessionId, (int) ini_get('session.gc_maxlifetime'), $data);
 
         return $result;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function write($session_id, $session_data)
+    {
+        return $this->doWrite($session_id, $session_data);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function destroy($session_id)
+    {
+        return $this->doDestroy($session_id);
     }
 
     /**
