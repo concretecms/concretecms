@@ -1711,13 +1711,37 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
+     * Is this page an alias page of another page?
+     *
+     * @return bool
+     *
+     * @since concrete5 8.5.0a2
+     */
+    public function isAliasPage()
+    {
+        return $this->getCollectionPointerID() > 0;
+    }
+    
+    /**
      * Is this page an alias page or an external link?
+     *
+     * @return bool
+     *
+     * @since concrete5 8.5.0a2
+     */
+    public function isAliasPageOrExternalLink()
+    {
+        return $this->isAliasPage() || $this->isExternalLink();
+    }
+    
+    /**
+     * @deprecated This method has been replaced with isAliasPageOrExternalLink() in concrete5 8.5.0a2 (same syntax and same result)
      *
      * @return bool
      */
     public function isAlias()
     {
-        return $this->getCollectionPointerID() > 0 || $this->cPointerExternalLink != null;
+        return $this->isAliasPageOrExternalLink();
     }
 
     /**
