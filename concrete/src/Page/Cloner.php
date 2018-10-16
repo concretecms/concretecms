@@ -5,9 +5,13 @@ namespace Concrete\Core\Page;
 use Concrete\Core\Block\Block;
 use Concrete\Core\Entity\Attribute\Value\PageValue;
 use Concrete\Core\Localization\Service\Date as DateHelper;
+use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Collection\Collection;
 use Concrete\Core\Page\Collection\Version\Event as CollectionVersionEvent;
 use Concrete\Core\Page\Collection\Version\Version;
+use Concrete\Core\Page\Statistics as PageStatistics;
+use Concrete\Core\Site\Service as SiteService;
+use Concrete\Core\Site\Tree\TreeInterface;
 use Concrete\Core\User\User;
 use Doctrine\ORM\EntityManagerInterface;
 use PDO;
@@ -31,6 +35,11 @@ class Cloner
     protected $entityManager;
 
     /**
+     * @var \Concrete\Core\Site\Service
+     */
+    protected $siteService;
+
+    /**
      * @var \Concrete\Core\Localization\Service\Date
      */
     protected $dateHelper;
@@ -40,12 +49,118 @@ class Cloner
      */
     protected $eventDispatcher;
 
-    public function __construct(EntityManagerInterface $entityManager, DateHelper $dateHelper, EventDispatcherInterface $eventDispatcher)
+    public function __construct(EntityManagerInterface $entityManager, SiteService $siteService, DateHelper $dateHelper, EventDispatcherInterface $eventDispatcher)
     {
         $this->connection = $entityManager->getConnection();
         $this->entityManager = $entityManager;
+        $this->siteService = $siteService;
         $this->dateHelper = $dateHelper;
         $this->eventDispatcher = $eventDispatcher;
+    }
+
+    /**
+     * Duplicate a page and return the newly created page.
+     *
+     * @param \Concrete\Core\Page\Page|null $newParentPage The page under which this page should be copied to
+     * @param \Concrete\Core\User\User|null $newAuthor Override the original page authors
+     * @param \Concrete\Core\Site\Tree\TreeInterface|null $site the destination site (used if $toParentPage is NULL)
+     * @param Page $page
+     *
+     * @return \Concrete\Core\Page\Page
+     */
+    public function clonePage(Page $page, Page $newParentPage = null, User $newAuthor = null, TreeInterface $site = null)
+    {
+        $cID = $page->getCollectionID();
+        $uID = $newAuthor === null ? $page->getCollectionUserID() : $newAuthor->getUserID();
+        $cParentID = $newParentPage === null ? 0 : $newParentPage->getCollectionID();
+
+        $newCollectionName = $page->getCollectionName();
+        $nameIndex = 1;
+        for (; ;) {
+            $pageWithSameName = $this->connection->fetchColumn(
+                'select Pages.cID from CollectionVersions inner join Pages on (CollectionVersions.cID = Pages.cID and CollectionVersions.cvIsApproved = 1) where Pages.cParentID = ? and CollectionVersions.cvName = ? limit 1',
+                [$cParentID, $newCollectionName]
+            );
+            if ($pageWithSameName === false) {
+                break;
+            }
+            ++$nameIndex;
+            $newCollectionName = $page->getCollectionName() . ' ' . $nameIndex;
+        }
+
+        $newC = $this->cloneCollection(Collection::getByID($cID));
+        $newCID = $newC->getCollectionID();
+
+        if ($newParentPage !== null) {
+            $siteTreeID = $newParentPage->getSiteTreeID();
+        } elseif ($site !== null) {
+            $siteTreeID = $site->getSiteTreeID();
+        } else {
+            $siteTreeID = $this->siteService->getSite()->getSiteTreeID();
+        }
+
+        switch ($page->getCollectionInheritance()) {
+            case 'OVERRIDE':
+                $cInheritPermissionsFromCID = $newCID;
+                break;
+            case 'PARENT':
+                $cInheritPermissionsFromCID = $newParentPage ? $newParentPage->getPermissionsCollectionID() : $page->getPermissionsCollectionID();
+                break;
+            default:
+                $cInheritPermissionsFromCID = $page->getPermissionsCollectionID();
+                break;
+        }
+        $cInheritPermissionsFromCID =
+        $this->connection->insert('Pages', [
+            'cID' => $newCID,
+            'siteTreeID' => $siteTreeID,
+            'ptID' => $page->getPageTypeID(),
+            'cParentID' => $cParentID,
+            'uID' => $uID,
+            'cOverrideTemplatePermissions' => $page->overrideTemplatePermissions(),
+            'cInheritPermissionsFromCID' => $cInheritPermissionsFromCID,
+            'cInheritPermissionsFrom' => $page->getCollectionInheritance(),
+            'cFilename' => $page->getCollectionFilename(),
+            'cPointerID' => $page->getCollectionPointerID(),
+            'cPointerExternalLink' => $page->getCollectionPointerExternalLink(),
+            'cPointerExternalLinkNewWindow' => $page->openCollectionPointerExternalLinkInNewWindow(),
+            'cDisplayOrder' => $page->getCollectionDisplayOrder(),
+            'pkgID' => $page->getPackageID(),
+        ]);
+
+        $copyFields = 'cvID, arHandle, cbDisplayOrder, ptComposerFormLayoutSetControlID, bID';
+        $this->connection->executeQuery(
+            "insert into PageTypeComposerOutputBlocks (cID, {$copyFields}) select ?, {$copyFields} from PageTypeComposerOutputBlocks where cID = ?",
+            [$newCID, $cID]
+        );
+
+        PageStatistics::incrementParents($newCID);
+
+        $newPage = Page::getByID($newCID);
+
+        if ($newPage->getCollectionInheritance() === 'OVERRIDE') {
+            $newPage->acquirePagePermissions($page->getPermissionsCollectionID());
+            $newPage->acquireAreaPermissions($page->getPermissionsCollectionID());
+        }
+
+        if ($nameIndex > 1) {
+            $args = ['cName' => $newCollectionName];
+            if ($newPage->getCollectionHandle()) {
+                $args['cHandle'] = $newPage->getCollectionHandle() . '-' . $nameIndex;
+            }
+            $newPage->update($args);
+        }
+
+        Section::registerDuplicate($newPage, $page);
+
+        $pe = new DuplicatePageEvent($page);
+        $pe->setNewPageObject($newPage);
+        $this->eventDispatcher->dispatch('on_page_duplicate', $pe);
+
+        $newPage->rescanCollectionPath();
+        $newPage->movePageDisplayOrderToBottom();
+
+        return $newPage;
     }
 
     /**
