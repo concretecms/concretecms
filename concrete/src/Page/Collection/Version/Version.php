@@ -14,6 +14,7 @@ use Concrete\Core\Attribute\ObjectInterface as AttributeObjectInterface;
 use Concrete\Core\Permission\ObjectInterface as PermissionObjectInterface;
 use Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVersionFeatureAssignment;
 use Concrete\Core\Support\Facade\Facade;
+use Concrete\Core\Page\Cloner;
 
 class Version extends ConcreteObject implements PermissionObjectInterface, AttributeObjectInterface
 {
@@ -591,102 +592,12 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
     public function createNew($versionComments)
     {
         $app = Facade::getFacadeApplication();
-        $db = $app->make('database')->connection();
-        $highestVID = $db->fetchColumn('select max(cvID) from CollectionVersions where cID = ?', array(
-            $this->cID,
-        ));
-        $newVID = ($highestVID === false) ? 1 : ($highestVID + 1);
-        $c = Page::getByID($this->cID, $this->cvID);
+        $cloner = $app->make(Cloner::class);
+        $author = $app->make(\Concrete\Core\User\User::class);
+        $myCollection = Page::getByID($this->getCollectionID());
+        $newVersion = $cloner->cloneCollectionVersion($this, $myCollection, $versionComments, $author);
 
-        $u = new User();
-        $versionComments = (!$versionComments) ? t("New Version %s", $newVID) : $versionComments;
-        $cvIsNew = 1;
-        if ($c->getPageTypeHandle() === STACKS_PAGE_TYPE) {
-            $cvIsNew = 0;
-        }
-        $dh = $app->make('helper/date');
-        $v = array(
-            $this->cID,
-            $newVID,
-            $c->getCollectionName(),
-            $c->getCollectionHandle(),
-            $c->getCollectionDescription(),
-            $c->getCollectionDatePublic(),
-            $dh->getOverridableNow(),
-            $versionComments,
-            $u->getUserID(),
-            $cvIsNew,
-            $this->pThemeID,
-            $this->pTemplateID,
-            null,
-        );
-        // important: cvPublishDate used to be the same for the new version as it is for the current , but it made it
-        // impossible to create a version that wasn't scheduled once you scheduled a version so I'm turning it off for
-        // now - AE
-
-       $q = "insert into CollectionVersions (cID, cvID, cvName, cvHandle, cvDescription, cvDatePublic, " .
-            "cvDateCreated, cvComments, cvAuthorUID, cvIsNew, pThemeID, pTemplateID, cvPublishDate) " .
-            "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-       $db->executeQuery($q, $v);
-
-       $category = $this->getObjectAttributeCategory();
-       $values = $category->getAttributeValues($this);
-       $em = $app->make('Doctrine\ORM\EntityManagerInterface');
-
-       foreach ($values as $value) {
-           $value = clone $value;
-           /*
-            * @var $value PageValue
-            */
-            $value->setVersionID($newVID);
-            $em->persist($value);
-        }
-        $em->flush();
-
-        $q3 = "select faID from CollectionVersionFeatureAssignments where cID = ? and cvID = ?";
-        $v3 = array(
-            $c->getCollectionID(),
-            $this->getVersionID(),
-        );
-        $r3 = $db->executeQuery($q3, $v3);
-        while ($row3 = $r3->fetch()) {
-            $v3 = array(
-                intval($c->getCollectionID()),
-                $newVID,
-                $row3['faID'],
-            );
-            $db->query("insert into CollectionVersionFeatureAssignments (cID, cvID, faID) values (?, ?, ?)", $v3);
-        }
-
-        $q4 = "select pThemeID, scvlID, preset, sccRecordID from CollectionVersionThemeCustomStyles where cID = ? and cvID = ?";
-        $v4 = array(
-            $c->getCollectionID(),
-            $this->getVersionID(),
-        );
-        $r4 = $db->executeQuery($q4, $v4);
-        while ($row4 = $r4->fetch()) {
-            $v4 = array(
-                (int) $c->getCollectionID(),
-                $newVID,
-                $row4['pThemeID'],
-                $row4['scvlID'],
-                $row4['preset'],
-                $row4['sccRecordID'],
-            );
-            $db->executeQuery("insert into CollectionVersionThemeCustomStyles (cID, cvID, pThemeID, scvlID, preset, sccRecordID) values (?, ?, ?, ?, ?, ?)", $v4);
-        }
-
-        $nv = static::get($c, $newVID);
-
-        $ev = new Event($c);
-        $ev->setCollectionVersionObject($nv);
-
-        $app->make('director')->dispatch('on_page_version_add', $ev);
-
-        $nv->refreshCache();
-        // now we return it
-        return $nv;
+        return $newVersion;
     }
 
     /**

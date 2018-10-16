@@ -28,6 +28,7 @@ use PageCache;
 use Permissions;
 use Stack;
 use User;
+use Concrete\Core\Page\Cloner;
 
 class Collection extends ConcreteObject implements TrackableInterface
 {
@@ -1320,53 +1321,10 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     public function cloneVersion($versionComments, $createEmpty = false)
     {
-        // first, we run the version object's createNew() command, which returns a new
-        // version object, which we can combine with our collection object, so we'll have
-        // our original collection object ($this), and a new collection object, consisting
-        // of our collection + the new version
-        $vObj = $this->getVersionObject();
-        $nvObj = $vObj->createNew($versionComments);
-        $nc = Page::getByID($this->getCollectionID());
-        $nc->vObj = $nvObj;
-        // now that we have the original version object and the cloned version object,
-        // we're going to select all the blocks that exist for this page, and we're going
-        // to copy them to the next version
-        // unless btIncludeAll is set -- as that gets included no matter what
+        $app = Application::getFacadeApplication();
+        $author = $app->make(\Concrete\Core\User\User::class);
 
-        $db = Loader::db();
-        $cID = $this->getCollectionID();
-        $cvID = $vObj->getVersionID();
-        if (!$createEmpty) {
-            $q = "select bID, arHandle from CollectionVersionBlocks where cID = '$cID' and cvID = '$cvID' and cbIncludeAll=0 order by cbDisplayOrder asc";
-            $r = $db->query($q);
-            if ($r) {
-                while ($row = $r->fetchRow()) {
-                    // now we loop through these, create block objects for all of them, and
-                    // duplicate them to our collection object (which is actually the same collection,
-                    // but different version)
-                    $b = Block::getByID($row['bID'], $this, $row['arHandle']);
-                    if (is_object($b)) {
-                        $b->alias($nc);
-                    }
-                }
-            }
-            // duplicate any area styles
-            $q = "select issID, arHandle from CollectionVersionAreaStyles where cID = '$cID' and cvID = '$cvID'";
-            $r = $db->query($q);
-            while ($row = $r->FetchRow()) {
-                $db->Execute(
-                    'insert into CollectionVersionAreaStyles (cID, cvID, arHandle, issID) values (?, ?, ?, ?)',
-                    [
-                        $this->getCollectionID(),
-                        $nvObj->getVersionID(),
-                        $row['arHandle'],
-                        $row['issID'],
-                    ]
-                    );
-            }
-        }
-
-        return $nc;
+        return $app->make(Cloner::class)->cloneLoadedCollection($this, $this, $versionComments, $author, $createEmpty);
     }
 
     /**
