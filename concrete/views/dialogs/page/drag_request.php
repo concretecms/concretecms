@@ -19,7 +19,7 @@ if (isset($showProgressBar) && $showProgressBar) {
 
     return;
 }
-if (!$dragRequestData->canDoAnyOf([$dragRequestData::OPERATION_MOVE, $dragRequestData::OPERATION_ALIAS, $dragRequestData::OPERATION_COPY])) {
+if (!$dragRequestData->canDoAnyOf([$dragRequestData::OPERATION_MOVE, $dragRequestData::OPERATION_ALIAS, $dragRequestData::OPERATION_COPY, $dragRequestData::OPERATION_COPYVERSION])) {
     ?>
     <div class="alert alert-danger">
         <?= t('You are not allowed to perform any operation with the selected pages.') ?>
@@ -143,6 +143,22 @@ $singleOriginalPage = $dragRequestData->getSingleOriginalPage();
         </div>
         <?php
     }
+
+    if ($dragRequestData->canDo($dragRequestData::OPERATION_COPYVERSION)) {
+        ?>
+        <div class="form-group">
+            <div class="radio">
+                <label>
+                    <input type="radio" id="ctaskCopyVersion" name="ctask" value="<?= $dragRequestData::OPERATION_COPYVERSION ?>" />
+                    <?= t('<strong>Copy Contents</strong> of "%1$s" to "%2$s"', h($singleOriginalPage->getCollectionName()), h($dragRequestData->getDestinationPage()->getCollectionName())) ?>
+                </label>
+                <div class="text-muted" style="margin: 0 0 0 20px">
+                    <?= t('A new page version will be added to "%1$s", with the contents of the most recent version of "%2$s".', h($dragRequestData->getDestinationPage()->getCollectionName()), h($singleOriginalPage->getCollectionName())) ?>
+                </div>
+            </div>
+        </div>
+        <?php
+    }
     ?>
 
     <div class="dialog-buttons">
@@ -164,7 +180,7 @@ $(function() {
             $label.removeClass('text-muted');
         }
     }
-    $('#ctaskMove').add('#ctaskAlias').add('#ctaskCopy').on('click', function() {
+    $('#ctaskMove,#ctaskAlias,#ctaskCopy,#ctaskCopyVersion').on('click', function() {
         setDisabled('saveOldPagePath', this.id !== 'ctaskMove');
         setDisabled('copyThisPage', this.id !== 'ctaskCopy');
         setDisabled('copyChildren', this.id !== 'ctaskCopy');
