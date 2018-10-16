@@ -58,7 +58,7 @@ class RedisSessionHandler extends NativeSessionHandler
         }
 
         $this->redis = $redis;
-        $this->prefix = $options['prefix'] ? $options['prefix']: 'sf_s';
+        $this->prefix = $options['prefix'] ? $options['prefix'] : 'sf_s';
     }
 
     /**
