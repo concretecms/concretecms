@@ -1,19 +1,19 @@
 <?php
+
 namespace Concrete\Controller\Element\Search\Files;
 
 use Concrete\Core\Controller\ElementController;
 use Concrete\Core\Entity\Search\Query;
 use Concrete\Core\File\Image\BitmapFormat;
-use Concrete\Core\Search\ProviderInterface;
+use Concrete\Core\File\StorageLocation\StorageLocation;
 
 class Header extends ElementController
 {
-
     protected $query;
     protected $includeBreadcrumb = false;
 
     /**
-     * @param boolean $includeBreadcrumb
+     * @param bool $includeBreadcrumb
      */
     public function setIncludeBreadcrumb($includeBreadcrumb)
     {
@@ -35,9 +35,15 @@ class Header extends ElementController
     {
         $config = $this->app->make('config');
         $bitmapFormat = $this->app->make(BitmapFormat::class);
+        $storageLocations = StorageLocation::getList();
+        $locations = [];
+        foreach ($storageLocations as $location) {
+            $locations[$location->getID()] = $location->getName();
+        }
         $this->set('currentFolder', 0);
         $this->set('includeBreadcrumb', $this->includeBreadcrumb);
         $this->set('addFolderAction', \URL::to('/ccm/system/file/folder/add'));
+        $this->set('locations', $locations);
         $this->set('query', $this->query);
         $this->set('form', \Core::make('helper/form'));
         $this->set('token', \Core::make('token'));
@@ -48,5 +54,4 @@ class Header extends ElementController
         $this->set('imageMaxHeight', $imageMaxHeight > 0 ? $imageMaxHeight : null);
         $this->set('jpegQuality', $bitmapFormat->getDefaultJpegQuality());
     }
-
 }

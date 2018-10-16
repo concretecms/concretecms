@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Tree\Node;
 
+use Concrete\Core\File\StorageLocation\StorageLocationFactory;
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Permission\AssignableObjectInterface;
 use Concrete\Core\Permission\AssignableObjectTrait;
@@ -14,6 +15,7 @@ use Database;
 use Gettext\Translations;
 use PermissionKey;
 use Permissions;
+use Exception;
 use stdClass;
 
 abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\ObjectInterface, AssignableObjectInterface
@@ -144,6 +146,51 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
     }
 
     /**
+     * @param \Concrete\Core\Entity\File\StorageLocation\StorageLocation $storageLocation Storage location object
+     */
+    public function setTreeNodeStorageLocation($storageLocation) {
+        if ($storageLocation instanceof \Concrete\Core\Entity\File\StorageLocation\StorageLocation) {
+            $this->setTreeNodeStorageLocationID($storageLocation->getID());
+        } elseif (!is_object($storageLocation)) {
+            $this->setTreeNodeStorageLocationID($storageLocation);
+        } else {
+            throw new Exception(t('Invalid file storage location.'));
+        }
+    }
+
+    /**
+     * @param int $fslID Storage location id
+     */
+    public function setTreeNodeStorageLocationID($fslID)
+    {
+        $app = Facade::getFacadeApplication();
+        $location = $app->make(StorageLocationFactory::class)->fetchByID((int) $fslID);
+        if (!is_object($location)) {
+            throw new Exception(t('Invalid file storage location.'));
+        }
+        $db = $app->make('database');
+        $db->executeQuery('UPDATE TreeNodes SET fslID = ? WHERE treeNodeID = ?', [(int) $fslID, $this->treeNodeID]);
+        $this->fslID = (int) $fslID;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTreeNodeStorageLocationID()
+    {
+        return (int) $this->fslID;
+    }
+
+    /**
+     * @return \Concrete\Core\Entity\File\StorageLocation\StorageLocation|null
+     */
+    public function getTreeNodeStorageLocationObject()
+    {
+        $app = Facade::getFacadeApplication();
+        return $app->make(StorageLocationFactory::class)->fetchByID((int) $this->fslID);
+    }
+
+    /**
      * Return the list of child nodes (call populateDirectChildrenOnly() before calling this method).
      *
      * @return static[]
@@ -220,7 +267,7 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
     /**
      * Recursively searches for a children node and marks it as selected.
      *
-     * @param int $nodeID ID of the children to be selected
+     * @param int  $nodeID              ID of the children to be selected
      * @param bool $loadMissingChildren if set to true, it will fetch, as needed, the children of the current node, that have not been loaded yet
      */
     public function selectChildrenNodesByID($nodeID, $loadMissingChildren = false)
@@ -334,7 +381,7 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
                 continue;
             }
             $n = $nodes[$i];
-            $path .= $n->getTreeNodeName() . '/';
+            $path .= $n->getTreeNodeName().'/';
         }
         if (count($nodes) > 0) {
             $path .= $this->getTreeNodeName();
@@ -399,7 +446,7 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
 
             if (count($childNodeIDs) > 0) {
                 $db->executeQuery(
-                    'update TreeNodes set inheritPermissionsFromTreeNodeID = ? where treeNodeID in (' . implode(',', $childNodeIDs) . ') and treeNodeOverridePermissions = 0',
+                    'update TreeNodes set inheritPermissionsFromTreeNodeID = ? where treeNodeID in ('.implode(',', $childNodeIDs).') and treeNodeOverridePermissions = 0',
                     [
                         $this->treeNodeID,
                     ]
