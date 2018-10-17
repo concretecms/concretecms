@@ -388,7 +388,7 @@ EOT
         $db = $app->make(Connection::class);
 
         $kina = ['-1'];
-        $rs = $db->executeQuery('select pkCategoryID from PermissionKeyCategories where pkgID = ?', $pkg->getPackageID());
+        $rs = $db->executeQuery('select pkCategoryID from PermissionKeyCategories where pkgID = ?', [$pkg->getPackageID()]);
         while (($pkCategoryID = $rs->fetchColumn()) !== false) {
             $kina[] = $pkCategoryID;
         }
