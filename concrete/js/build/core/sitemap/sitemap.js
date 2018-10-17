@@ -468,20 +468,26 @@
 
 			ConcreteEvent.unsubscribe('SitemapDragRequestComplete.sitemap');
 			ConcreteEvent.subscribe('SitemapDragRequestComplete.sitemap', function(e, data) {
-				var reloadNode = destNode.parent;
-				if (dragMode == 'over') {
-					reloadNode = destNode;
+				switch (data.task) {
+					case 'COPY_VERSION':
+						my.reloadSelfNode(destNode);
+						break;
+					default:
+						var reloadNode = destNode.parent;
+						if (dragMode == 'over') {
+							reloadNode = destNode;
+						}
+						if (data.task == 'MOVE') {
+							node.remove();
+						}
+						reloadNode.removeChildren();
+		
+						my.reloadNode(reloadNode, function() {
+							if (!destNode.bExpanded) {
+								destNode.setExpanded(true, {noAnimation: true});
+							}
+						});
 				}
-				if (data.task == 'MOVE') {
-					node.remove();
-				}
-				reloadNode.removeChildren();
-
-				my.reloadNode(reloadNode, function() {
-					if (!destNode.bExpanded) {
-						destNode.setExpanded(true, {noAnimation: true});
-					}
-				});
 			});
 
 		},
@@ -568,6 +574,28 @@
 				node.removeChildren();
 				node.addChildren(data);
 				node.setExpanded(true, {noAnimation: true});
+				if (onComplete) {
+					onComplete();
+				}
+			});
+		},
+
+		getLoadSelfNodePromise: function(node) {
+			return $.ajax({
+				dataType: 'json',
+				url: this.options.dataSource,
+				data: $.extend({
+					cID: node.data.cID,
+					reloadNode: 1,
+					reloadSelfNode: 1
+				}, this.options.ajaxData)
+			});
+		},
+
+		reloadSelfNode: function(node, onComplete) {
+			this.getLoadSelfNodePromise(node).done(function(data) {
+				var nodeData = data[0];
+				node.setTitle(nodeData.title);
 				if (onComplete) {
 					onComplete();
 				}
