@@ -150,10 +150,10 @@ $singleOriginalPage = $dragRequestData->getSingleOriginalPage();
             <div class="radio">
                 <label>
                     <input type="radio" id="ctaskCopyVersion" name="ctask" value="<?= $dragRequestData::OPERATION_COPYVERSION ?>" />
-                    <?= t('<strong>Copy Contents</strong> of "%1$s" to "%2$s"', h($singleOriginalPage->getCollectionName()), h($dragRequestData->getDestinationPage()->getCollectionName())) ?>
+                    <?= t('<strong>Copy Version</strong> of "%1$s" to "%2$s"', h($singleOriginalPage->getCollectionName()), h($dragRequestData->getDestinationPage()->getCollectionName())) ?>
                 </label>
                 <div class="text-muted" style="margin: 0 0 0 20px">
-                    <?= t('A new page version will be added to "%1$s", with the contents of the most recent version of "%2$s".', h($dragRequestData->getDestinationPage()->getCollectionName()), h($singleOriginalPage->getCollectionName())) ?>
+                    <?= t('The most recent page version of "%1$s" will be copied to "%2$s".', h($singleOriginalPage->getCollectionName()), h($dragRequestData->getDestinationPage()->getCollectionName())) ?>
                 </div>
             </div>
         </div>

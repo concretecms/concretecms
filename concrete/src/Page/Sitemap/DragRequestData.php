@@ -40,7 +40,7 @@ class DragRequestData
     const OPERATION_COPYALL = 'COPY_ALL';
 
     /**
-     * Drag operation: copy contents of a page.
+     * Drag operation: copy most recent version of a page to another page.
      *
      * @var string
      */
