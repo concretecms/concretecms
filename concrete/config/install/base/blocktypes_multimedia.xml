@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <blocktypes>
+        <blocktype handle="page_attribute_display" package=""/>
+        <blocktype handle="image_slider" package=""/>
+        <blocktype handle="video" package=""/>
+        <blocktype handle="document_library" package=""/>
+        <blocktype handle="youtube" package=""/>
+        <blocktype handle="google_map" package=""/>
+    </blocktypes>
+
+    <blocktypesets>
+        <blocktypeset handle="multimedia" name="Multimedia" package="">
+            <blocktype handle="page_attribute_display"/>
+            <blocktype handle="image_slider"/>
+            <blocktype handle="video"/>
+            <blocktype handle="document_library"/>
+            <blocktype handle="youtube"/>
+            <blocktype handle="google_map"/>
+        </blocktypeset>
+    </blocktypesets>
+
+</concrete5-cif>

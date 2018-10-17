@@ -316,7 +316,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     {
         $r = new \stdClass();
         $r->name = $this->getCollectionName();
-        if ($this->isAlias() && !$this->isExternalLink()) {
+        if ($this->isAliasPage()) {
             $r->cID = $this->getCollectionPointerOriginalID();
         } else {
             $r->cID = $this->getCollectionID();
@@ -932,7 +932,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function updateCollectionAliasExternal($cName, $cLink, $newWindow = 0)
     {
-        if ($this->cPointerExternalLink != '') {
+        if ($this->isExternalLink()) {
             $db = Database::connection();
             $this->markModified();
             if ($newWindow) {
@@ -1065,12 +1065,10 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function removeThisAlias()
     {
-        $cIDRedir = $this->getCollectionPointerID();
-        $cPointerExternalLink = $this->getCollectionPointerExternalLink();
-
-        if ($cPointerExternalLink != '') {
+        if ($this->isExternalLink()) {
             $this->delete();
-        } elseif ($cIDRedir > 0) {
+        } elseif ($this->isAliasPage()) {
+            $cIDRedir = $this->getCollectionPointerID();
             $db = Database::connection();
 
             PageStatistics::decrementParents($this->getCollectionPointerOriginalID());
@@ -1711,13 +1709,37 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
+     * Is this page an alias page of another page?
+     *
+     * @return bool
+     *
+     * @since concrete5 8.5.0a2
+     */
+    public function isAliasPage()
+    {
+        return $this->getCollectionPointerID() > 0;
+    }
+    
+    /**
      * Is this page an alias page or an external link?
+     *
+     * @return bool
+     *
+     * @since concrete5 8.5.0a2
+     */
+    public function isAliasPageOrExternalLink()
+    {
+        return $this->isAliasPage() || $this->isExternalLink();
+    }
+    
+    /**
+     * @deprecated This method has been replaced with isAliasPageOrExternalLink() in concrete5 8.5.0a2 (same syntax and same result)
      *
      * @return bool
      */
     public function isAlias()
     {
-        return $this->getCollectionPointerID() > 0 || $this->cPointerExternalLink != null;
+        return $this->isAliasPageOrExternalLink();
     }
 
     /**
@@ -2980,7 +3002,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     {
         $cID = $this->getCollectionID();
 
-        if ($this->isAlias() && !$this->isExternalLink()) {
+        if ($this->isAliasPage()) {
             $this->removeThisAlias();
 
             return;

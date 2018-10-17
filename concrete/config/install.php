@@ -27,5 +27,6 @@ return [
         'innodb' => Concrete\Core\Install\Preconditions\InnoDB::class,
         'starting_point' => Concrete\Core\Install\Preconditions\StartingPoint::class,
         'table_case' => Concrete\Core\Install\Preconditions\TableCase::class,
+        'database_charset_collation' => Concrete\Core\Install\Preconditions\DatabaseCharsetCollation::class,
     ],
 ];

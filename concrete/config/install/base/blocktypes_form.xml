@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <blocktypes>
+        <blocktype handle="express_form" package=""/>
+        <blocktype handle="search" package=""/>
+        <blocktype handle="external_form" package=""/>
+    </blocktypes>
+
+    <blocktypesets>
+        <blocktypeset handle="form" name="Forms" package="">
+            <blocktype handle="express_form"/>
+            <blocktype handle="search"/>
+            <blocktype handle="external_form"/>
+        </blocktypeset>
+    </blocktypesets>
+
+</concrete5-cif>
