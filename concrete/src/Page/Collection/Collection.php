@@ -15,6 +15,8 @@ use Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVe
 use Concrete\Core\Feature\Feature;
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Gathering\Item\Page as PageGatheringItem;
+use Concrete\Core\Page\Cloner;
+use Concrete\Core\Page\ClonerOptions;
 use Concrete\Core\Page\Collection\Version\VersionList;
 use Concrete\Core\Page\Search\IndexedSearch;
 use Concrete\Core\Search\Index\IndexManagerInterface;
@@ -28,7 +30,6 @@ use PageCache;
 use Permissions;
 use Stack;
 use User;
-use Concrete\Core\Page\Cloner;
 
 class Collection extends ConcreteObject implements TrackableInterface
 {
@@ -1180,7 +1181,8 @@ class Collection extends ConcreteObject implements TrackableInterface
     {
         $app = Application::getFacadeApplication();
         $cloner = $app->make(Cloner::class);
-        $newCollection = $cloner->cloneCollection($this);
+        $clonerOptions = $app->build(ClonerOptions::class)->setKeepOriginalAuthor(true);
+        $newCollection = $cloner->cloneCollection($this, $clonerOptions);
 
         return $newCollection;
     }
@@ -1196,9 +1198,12 @@ class Collection extends ConcreteObject implements TrackableInterface
     public function cloneVersion($versionComments, $createEmpty = false)
     {
         $app = Application::getFacadeApplication();
-        $author = $app->make(\Concrete\Core\User\User::class);
         $cloner = $app->make(Cloner::class);
-        $newVersion = $cloner->cloneCollectionVersion($this->getVersionObject(), $this, $versionComments, $author, $createEmpty ? false : true);
+        $clonerOptions = $app->make(ClonerOptions::class)
+            ->setVersionComments($versionComments)
+            ->setCopyContents($createEmpty ? false : true)
+        ;
+        $newVersion = $cloner->cloneCollectionVersion($this->getVersionObject(), $this, $clonerOptions);
 
         return Page::getByID($newVersion->getCollectionID(), $newVersion->getVersionID());
     }

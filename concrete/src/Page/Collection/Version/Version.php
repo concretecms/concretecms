@@ -15,6 +15,7 @@ use Concrete\Core\Permission\ObjectInterface as PermissionObjectInterface;
 use Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVersionFeatureAssignment;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Page\Cloner;
+use Concrete\Core\Page\ClonerOptions;
 
 class Version extends ConcreteObject implements PermissionObjectInterface, AttributeObjectInterface
 {
@@ -593,9 +594,12 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
     {
         $app = Facade::getFacadeApplication();
         $cloner = $app->make(Cloner::class);
-        $author = $app->make(\Concrete\Core\User\User::class);
+        $clonerOptions = $app->build(ClonerOptions::class)
+            ->setCopyContents(false)
+            ->setVersionComments($versionComments)
+        ;
         $myCollection = Page::getByID($this->getCollectionID());
-        $newVersion = $cloner->cloneCollectionVersion($this, $myCollection, $versionComments, $author, false);
+        $newVersion = $cloner->cloneCollectionVersion($this, $myCollection, $clonerOptions);
 
         return $newVersion;
     }

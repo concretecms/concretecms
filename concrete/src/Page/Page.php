@@ -2888,9 +2888,11 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     {
         $app = Application::getFacadeApplication();
         $cloner = $app->make(Cloner::class);
-        $author = $preserveUserID ? null : $app->make(\Concrete\Core\User\User::class);
+        $clonerOptions = $app->build(ClonerOptions::class)
+            ->setKeepOriginalAuthor($preserveUserID)
+        ;
 
-        return $cloner->clonePage($this, $nc ? $nc : null, $author, $site);
+        return $cloner->clonePage($this, $clonerOptions, $nc ? $nc : null, $site);
     }
 
     /**

@@ -8,12 +8,13 @@ use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Foundation\Queue\QueueService;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Multilingual\Page\Section\Section;
+use Concrete\Core\Page\Cloner;
+use Concrete\Core\Page\ClonerOptions;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Sitemap\DragRequestData;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\User\User;
 use Concrete\Core\Workflow\Request\MovePageRequest as MovePagePageWorkflowRequest;
-use Concrete\Core\Page\Cloner;
 
 class DragRequest extends UserInterfaceController
 {
@@ -249,11 +250,13 @@ class DragRequest extends UserInterfaceController
         if ($error !== '') {
             throw new UserMessageException($error);
         }
-        $cloner = $this->app->make(Cloner::class);
         $originalPage = $dragRequestData->getSingleOriginalPage();
         $originalVersion = $originalPage->getVersionObject();
-        $author = $this->app->make(User::class);
-        $newVersion = $cloner->cloneCollectionVersion($originalVersion, $dragRequestData->getDestinationPage(), t('Contents copied from %s', $originalPage->getCollectionName()), $author, true);
+        $cloner = $this->app->make(Cloner::class);
+        $clonerOptions = $this->app->build(ClonerOptions::class)
+            ->setVersionComments(t('Contents copied from %s', $originalPage->getCollectionName()))
+        ;
+        $newVersion = $cloner->cloneCollectionVersion($originalVersion, $dragRequestData->getDestinationPage(), $clonerOptions);
 
         return $this->buildOperationCompletedResponse(
             [$newVersion->getCollectionID()],
