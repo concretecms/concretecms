@@ -421,6 +421,11 @@
 					}
 				} catch(ex) {}
 			});
+			ConcreteEvent.unsubscribe('PageVersionChanged.deleted');
+			ConcreteEvent.unsubscribe('PageVersionChanged.duplicated');
+			Concrete.event.subscribe(['PageVersionChanged.deleted', 'PageVersionChanged.duplicated'], function(e, data) {
+				my.reloadSelfNodeByCID(data.cID);
+			});
 		},
 
 		rescanDisplayOrder: function(node) {
@@ -600,6 +605,13 @@
 					onComplete();
 				}
 			});
+		},
+
+		reloadSelfNodeByCID: function(cID, onComplete) {
+			var node = cID ? this.getTree().getNodeByKey(cID.toString()) : null;
+			if (node) {
+				this.reloadSelfNode(node, onComplete);
+			}
 		}
 	};
 
