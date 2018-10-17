@@ -455,7 +455,7 @@
 				dragMode = '';
 			}
 			var dialog_url = CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/drag_request?origCID=' + node.data.cID + '&destCID=' + destNode.data.cID + '&dragMode=' + dragMode;
-			var dialog_height = 400;
+			var dialog_height = 'auto';
 			var dialog_width = 520;
 
 			$.fn.dialog.open({
