@@ -26,6 +26,13 @@ class ClonerOptions
     private $keepOriginalAuthor = false;
 
     /**
+     * Mark the copied data as not approved?
+     *
+     * @var bool
+     */
+    private $forceUnapproved = false;
+
+    /**
      * Should the collection version attributes be copied?
      *
      * @var bool
@@ -105,6 +112,30 @@ class ClonerOptions
     }
 
     /**
+     * Mark the copied data as not approved?
+     *
+     * @return bool
+     */
+    public function forceUnapproved()
+    {
+        return $this->forceUnapproved;
+    }
+
+    /**
+     * Mark the copied data as not approved?
+     *
+     * @param bool $value
+     *
+     * @return $this
+     */
+    public function setForceUnapproved($value)
+    {
+        $this->forceUnapproved = (bool) $value;
+
+        return $this;
+    }
+
+    /**
      * Should the collection version attributes be copied?
      *
      * @return bool
@@ -129,7 +160,7 @@ class ClonerOptions
     }
 
     /**
-     * Should the feature assignments be copied.
+     * Should the feature assignments be copied?
      *
      * @return bool
      */
@@ -139,7 +170,7 @@ class ClonerOptions
     }
 
     /**
-     * Should the feature assignments be copied.
+     * Should the feature assignments be copied?
      *
      * @param bool $value
      *

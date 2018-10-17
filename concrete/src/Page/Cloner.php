@@ -208,7 +208,7 @@ class Cloner
                 'cvDateCreated' => $cDate,
                 'cvComments' => $row['cvComments'],
                 'cvAuthorUID' => $options->keepOriginalAuthor() ? $row['cvAuthorUID'] : $options->getCurrentUser()->getUserID(),
-                'cvIsApproved' => $row['cvIsApproved'],
+                'cvIsApproved' => $options->forceUnapproved() ? 0 : $row['cvIsApproved'],
                 'pThemeID' => $row['pThemeID'],
                 'pTemplateID' => $row['pTemplateID'],
             ]);

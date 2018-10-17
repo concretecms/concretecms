@@ -254,6 +254,7 @@ class DragRequest extends UserInterfaceController
         $originalVersion = $originalPage->getVersionObject();
         $cloner = $this->app->make(Cloner::class);
         $clonerOptions = $this->app->build(ClonerOptions::class)
+            ->setForceUnapproved(true)
             ->setVersionComments(t('Contents copied from %s', $originalPage->getCollectionName()))
         ;
         $newVersion = $cloner->cloneCollectionVersion($originalVersion, $dragRequestData->getDestinationPage(), $clonerOptions);
