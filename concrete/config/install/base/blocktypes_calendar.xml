@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <blocktypes>
+        <blocktype handle="calendar" package=""/>
+        <blocktype handle="event_list" package=""/>
+        <blocktype handle="calendar_event" package=""/>
+    </blocktypes>
+
+    <blocktypesets>
+        <blocktypeset handle="calendar" name="Calendar &amp; Events" package="">
+            <blocktype handle="calendar"/>
+            <blocktype handle="event_list"/>
+            <blocktype handle="calendar_event"/>
+        </blocktypeset>
+    </blocktypesets>
+
+</concrete5-cif>
