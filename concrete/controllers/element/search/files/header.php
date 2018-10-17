@@ -5,7 +5,7 @@ namespace Concrete\Controller\Element\Search\Files;
 use Concrete\Core\Controller\ElementController;
 use Concrete\Core\Entity\Search\Query;
 use Concrete\Core\File\Image\BitmapFormat;
-use Concrete\Core\File\StorageLocation\StorageLocation;
+use Concrete\Core\File\StorageLocation\StorageLocationFactory;
 
 class Header extends ElementController
 {
@@ -35,7 +35,7 @@ class Header extends ElementController
     {
         $config = $this->app->make('config');
         $bitmapFormat = $this->app->make(BitmapFormat::class);
-        $storageLocations = StorageLocation::getList();
+        $storageLocations = $this->app->make(StorageLocationFactory::class)->fetchList();
         $locations = [];
         foreach ($storageLocations as $location) {
             $locations[$location->getID()] = $location->getName();
@@ -45,8 +45,8 @@ class Header extends ElementController
         $this->set('addFolderAction', \URL::to('/ccm/system/file/folder/add'));
         $this->set('locations', $locations);
         $this->set('query', $this->query);
-        $this->set('form', \Core::make('helper/form'));
-        $this->set('token', \Core::make('token'));
+        $this->set('form', $this->app->make('helper/form'));
+        $this->set('token', $this->app->make('token'));
         $this->set('breadcrumbClass', 'ccm-file-manager-breadcrumb');
         $imageMaxWidth = (int) $config->get('concrete.file_manager.restrict_max_width');
         $this->set('imageMaxWidth', $imageMaxWidth > 0 ? $imageMaxWidth : null);

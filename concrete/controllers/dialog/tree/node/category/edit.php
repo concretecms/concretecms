@@ -3,7 +3,7 @@ namespace Concrete\Controller\Dialog\Tree\Node\Category;
 
 use Concrete\Controller\Dialog\Tree\Node;
 use Concrete\Core\Entity\File\StorageLocation\StorageLocation as StorageLocationEntity;
-use Concrete\Core\File\StorageLocation\StorageLocation;
+use Concrete\Core\File\StorageLocation\StorageLocationFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Edit extends Node
@@ -21,7 +21,7 @@ class Edit extends Node
     public function view()
     {
         $node = $this->getNode();
-        $storageLocations = StorageLocation::getList();
+        $storageLocations = $this->app->make(StorageLocationFactory::class)->fetchList();
         $locations = [];
         foreach ($storageLocations as $location) {
             $locations[$location->getID()] = $location->getName();
