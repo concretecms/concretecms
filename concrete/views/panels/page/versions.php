@@ -1,5 +1,9 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
+/* @var Concrete\Controller\Panel\Page\Versions $controller */
+/* @var Concrete\Core\View\DialogView $view */
+/* @var Concrete\Core\Page\Collection\Version\EditResponse $response */
+/* @var Concrete\Core\Page\Page $c */
 ?>
 <script type="text/javascript">
 
@@ -142,7 +146,7 @@ var ConcretePageVersionList = {
             return;
         }
 		if (checkboxes.length > 0) {
-			var src = '<?=URL::to("/ccm/system/panels/details/page/versions")?>';
+			var src = <?= json_encode((string) URL::to("/ccm/system/panels/details/page/versions")) ?>;
 			var data = '';
 			$.each(checkboxes, function(i, cb) {
 				data += '&cvID[]=' + $(cb).val();
@@ -182,39 +186,43 @@ var ConcretePageVersionList = {
 			switch($(this).attr('data-version-menu-task')) {
 				case 'delete':
 
-					ConcretePageVersionList.sendRequest('<?=$controller->action("delete")?>', [{'name': 'cvID[]', 'value': cvID}], function(r) {
+					ConcretePageVersionList.sendRequest(<?= json_encode((string) $controller->action("delete")) ?>, [{'name': 'cvID[]', 'value': cvID}], function(r) {
 						ConcreteAlert.notify({
 						'message': r.message
 						});
 						ConcretePageVersionList.handleVersionRemovalResponse(r);
+						ConcreteEvent.publish('PageVersionChanged.deleted', {cID: <?= (int) $c->getCollectionID() ?>, cvID: cvID});
 					});
 					break;
 				case 'approve':
-					ConcretePageVersionList.sendRequest('<?=$controller->action("approve")?>', [{'name': 'cvID', 'value': cvID}], function(r) {
+					ConcretePageVersionList.sendRequest(<?= json_encode((string) $controller->action("approve")) ?>, [{'name': 'cvID', 'value': cvID}], function(r) {
 						ConcreteAlert.notify({
 						'message': r.message
 						});
 						ConcretePageVersionList.handleVersionUpdateResponse(r);
+						ConcreteEvent.publish('PageVersionChanged.approved', {cID: <?= (int) $c->getCollectionID() ?>, cvID: cvID});
 					});
 					break;
 				case 'unapprove':
-					ConcretePageVersionList.sendRequest('<?=$controller->action("unapprove")?>', [{'name': 'cvID', 'value': cvID}], function(r) {
+					ConcretePageVersionList.sendRequest(<?= json_encode((string) $controller->action("unapprove")) ?>, [{'name': 'cvID', 'value': cvID}], function(r) {
 						ConcreteAlert.notify({
 							'message': r.message
 						});
 						ConcretePageVersionList.handleVersionUpdateResponse(r);
+						ConcreteEvent.publish('PageVersionChanged.unapproved', {cID: <?= (int) $c->getCollectionID() ?>, cvID: cvID});
 					});
 					break;
 				case 'duplicate':
-					ConcretePageVersionList.sendRequest('<?=$controller->action("duplicate")?>', [{'name': 'cvID', 'value': cvID}], function(r) {
+					ConcretePageVersionList.sendRequest(<?= json_encode((string) $controller->action("duplicate")) ?>, [{'name': 'cvID', 'value': cvID}], function(r) {
 						ConcreteAlert.notify({
 						'message': r.message
 						});
 						ConcretePageVersionList.handleVersionUpdateResponse(r);
+						ConcreteEvent.publish('PageVersionChanged.duplicated', {cID: <?= (int) $c->getCollectionID() ?>, cvID: cvID});
 					});
 					break;
 				case 'new-page':
-					ConcretePageVersionList.sendRequest('<?=$controller->action("new_page")?>', [{'name': 'cvID', 'value': cvID}], function(r) {
+					ConcretePageVersionList.sendRequest(<?= json_encode((string) $controller->action("new_page")) ?>, [{'name': 'cvID', 'value': cvID}], function(r) {
 						window.location.href = r.redirectURL;
 					});
 					break;
@@ -291,7 +299,7 @@ $(function() {
 	$('#ccm-panel-page-versions tfoot').on('click', 'a', function() {
 		var pageNum = $(this).attr('data-version-navigation');
 		if (pageNum) {
-			ConcretePageVersionList.sendRequest('<?=$controller->action("get_json")?>', [{'name': 'currentPage', 'value': $(this).attr('data-version-navigation')}], function(r) {
+			ConcretePageVersionList.sendRequest(<?= json_encode((string) $controller->action("get_json")) ?>, [{'name': 'currentPage', 'value': $(this).attr('data-version-navigation')}], function(r) {
 				$('#ccm-panel-page-versions table tbody').html(
 					templateBody(r)
 		    	);
@@ -318,8 +326,9 @@ $(function() {
                 cvIDs.push({'name': 'cvID[]', 'value': $(cb).val()});
             });
             if(cvIDs.length > 0) {
-                ConcretePageVersionList.sendRequest('<?=$controller->action("delete")?>', cvIDs, function (r) {
+                ConcretePageVersionList.sendRequest(<?= json_encode((string) $controller->action("delete")) ?>, cvIDs, function (r) {
                     ConcretePageVersionList.handleVersionRemovalResponse(r);
+                    ConcreteEvent.publish('PageVersionChanged.deleted', {cID: <?= (int) $c->getCollectionID() ?>, cvID: cvIDs});
                 });
             }
         }
