@@ -5,10 +5,20 @@
         convertNoticesToExceptions="true"
         convertWarningsToExceptions="true"
         backupGlobals="false"
-        backupStaticAttributes="false">
+        backupStaticAttributes="false"
+        verbose="true"
+        processIsolation="false">
     <testsuites>
         <testsuite name="Tests">
             <directory>tests/tests/</directory>
         </testsuite>
     </testsuites>
+    <filter>
+        <whitelist>
+            <directory suffix=".php">concrete/src/</directory>
+            <directory suffix=".php">concrete/controllers/</directory>
+            <directory suffix="controller.php">concrete/</directory>
+            <directory suffix="page_theme.php">concrete/themes/</directory>
+        </whitelist>
+    </filter>
 </phpunit>
