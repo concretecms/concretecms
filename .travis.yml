@@ -1,3 +1,4 @@
+dist: trusty
 language: php
 sudo: false
 
@@ -59,7 +60,7 @@ notifications:
 
 after_script:
 - |
-  if [[ "$TRAVIS_PHP_VERSION" == '7.2' ]]; then
+  if [[ "$TRAVIS_PHP_VERSION" != 'nightly' ]]; then
     wget https://scrutinizer-ci.com/ocular.phar
     php ocular.phar code-coverage:upload --format=php-clover coverage.clover
   fi
