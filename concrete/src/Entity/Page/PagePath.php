@@ -17,7 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
 class PagePath
 {
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", options={"collation": "utf8_general_ci"})
      */
     protected $cPath;
 

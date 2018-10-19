@@ -126,7 +126,9 @@
       <autoincrement/>
       <key/>
     </field>
-    <field name="ptPublishTargetTypeHandle" type="string" size="255"/>
+    <field name="ptPublishTargetTypeHandle" type="string" size="255">
+      <opt for="mysql" collation="utf8_general_ci" />
+    </field>
     <field name="ptPublishTargetTypeName" type="string" size="255"/>
     <field name="pkgID" type="integer" size="10">
       <unsigned/>
@@ -147,7 +149,9 @@
       <autoincrement/>
       <key/>
     </field>
-    <field name="ptComposerControlTypeHandle" type="string" size="255"/>
+    <field name="ptComposerControlTypeHandle" type="string" size="255">
+      <opt for="mysql" collation="utf8_general_ci" />
+    </field>
     <field name="ptComposerControlTypeName" type="string" size="255"/>
     <field name="pkgID" type="integer" size="10">
       <unsigned/>
@@ -323,6 +327,7 @@
     </field>
     <field name="feHandle" type="string" size="255">
       <notnull/>
+      <opt for="mysql" collation="utf8_general_ci" />
     </field>
     <field name="feScore" type="integer" size="10">
       <default value="1"/>
@@ -353,6 +358,7 @@
     </field>
     <field name="fcHandle" type="string" size="255">
       <notnull/>
+      <opt for="mysql" collation="utf8_general_ci" />
     </field>
     <field name="pkgID" type="integer" size="10">
       <unsigned/>
@@ -475,6 +481,7 @@
     </field>
     <field name="gaiKey" type="string" size="255">
       <notnull/>
+      <opt for="mysql" collation="utf8_general_ci" />
     </field>
     <field name="gaiBatchDisplayOrder" type="integer" size="10">
       <unsigned/>
@@ -580,6 +587,7 @@
     </field>
     <field name="gatHandle" type="string" size="255">
       <notnull/>
+      <opt for="mysql" collation="utf8_general_ci" />
     </field>
     <field name="gatName" type="text" size="65535"/>
     <field name="gatHasCustomClass" type="boolean">
@@ -648,6 +656,7 @@
     <field name="gasName" type="string" size="255"/>
     <field name="gasHandle" type="string" size="255">
       <notnull/>
+      <opt for="mysql" collation="utf8_general_ci" />
     </field>
     <field name="pkgID" type="integer" size="10">
       <unsigned/>
@@ -964,7 +973,9 @@
       <autoincrement/>
       <key/>
     </field>
-    <field name="cnvRatingTypeHandle" type="string" size="255"/>
+    <field name="cnvRatingTypeHandle" type="string" size="255">
+      <opt for="mysql" collation="utf8_general_ci" />
+    </field>
     <field name="cnvRatingTypeName" type="string" size="10"/>
     <field name="cnvRatingTypeCommunityPoints" type="integer" size="10"/>
     <field name="pkgID" type="integer" size="10">
@@ -1147,6 +1158,7 @@
     </field>
     <field name="arHandle" type="string" size="255">
       <key/>
+      <opt for="mysql" collation="utf8_general_ci" />
     </field>
     <field name="pkID" type="integer" size="10">
       <unsigned/>
@@ -1216,6 +1228,7 @@
     </field>
     <field name="arHandle" type="string" size="255">
       <notnull/>
+      <opt for="mysql" collation="utf8_general_ci" />
     </field>
     <field name="arOverrideCollectionPermissions" type="boolean">
       <default value="0"/>
@@ -1290,7 +1303,7 @@
       <notnull/>
     </field>
     <references table="AreaLayouts" ondelete="cascade" onupdate="cascade">
-    	<column local="arLayoutID" foreign="arLayoutID"/>
+      <column local="arLayoutID" foreign="arLayoutID"/>
     </references>
   </table>
 
@@ -1305,7 +1318,9 @@
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="arLayoutPresetName" type="string" size="255"/>
+    <field name="arLayoutPresetName" type="string" size="255">
+        <opt for="mysql" collation="utf8_general_ci" />
+    </field>
     <index name="arLayoutID">
       <col>arLayoutID</col>
     </index>
@@ -1385,6 +1400,7 @@
     </field>
     <field name="authTypeHandle" type="string" size="255">
       <notnull/>
+      <opt for="mysql" collation="utf8_general_ci" />
     </field>
     <field name="authTypeName" type="string" size="255">
       <notnull/>
@@ -1438,6 +1454,7 @@
     <field name="btsName" type="string" size="255"/>
     <field name="btsHandle" type="string" size="255">
       <notnull/>
+      <opt for="mysql" collation="utf8_general_ci" />
     </field>
     <field name="pkgID" type="integer" size="10">
       <unsigned/>
@@ -1516,6 +1533,7 @@
     </field>
     <field name="arHandle" type="string" size="255">
       <key/>
+      <opt for="mysql" collation="utf8_general_ci" />
     </field>
     <field name="btCachedBlockOutput" type="text"/>
     <field name="btCachedBlockOutputExpires" type="integer" size="10">
@@ -1549,6 +1567,7 @@
     </field>
     <field name="arHandle" type="string" size="255">
       <key/>
+      <opt for="mysql" collation="utf8_general_ci" />
     </field>
     <field name="btCacheBlockOutput" type="boolean">
       <default value="0"/>
@@ -1704,6 +1723,7 @@
     </field>
     <field name="arHandle" type="string" size="255">
       <key/>
+      <opt for="mysql" collation="utf8_general_ci" />
     </field>
     <field name="cbRelationID" type="integer" size="10">
       <unsigned/>
@@ -1765,6 +1785,7 @@
     </field>
     <field name="arHandle" type="string" size="255">
       <key/>
+      <opt for="mysql" collation="utf8_general_ci" />
     </field>
     <field name="issID" type="integer" size="10">
       <unsigned/>
@@ -1793,6 +1814,7 @@
     </field>
     <field name="arHandle" type="string" size="255">
       <key/>
+      <opt for="mysql" collation="utf8_general_ci" />
     </field>
     <field name="issID" type="integer" size="10">
       <unsigned/>
@@ -1901,12 +1923,15 @@
       <key/>
       <default value=""/>
       <notnull/>
+      <opt for="mysql" collation="utf8_general_ci" />
     </field>
     <field name="configGroup" type="string" size="255">
       <key/>
+      <opt for="mysql" collation="utf8_general_ci" />
     </field>
     <field name="configItem" type="string" size="255">
       <key/>
+      <opt for="mysql" collation="utf8_general_ci" />
     </field>
     <field name="configValue" type="text"/>
     <index name="configGroup">
@@ -2066,6 +2091,7 @@
     </field>
     <field name="pkHandle" type="string" size="255">
       <notnull/>
+      <opt for="mysql" collation="utf8_general_ci" />
     </field>
     <field name="pkName" type="string" size="255">
       <notnull/>
@@ -2105,6 +2131,7 @@
     </field>
     <field name="pkCategoryHandle" type="string" size="255">
       <notnull/>
+      <opt for="mysql" collation="utf8_general_ci" />
     </field>
     <field name="pkgID" type="integer" size="10">
       <unsigned/>
@@ -2126,6 +2153,7 @@
     </field>
     <field name="petHandle" type="string" size="255">
       <notnull/>
+      <opt for="mysql" collation="utf8_general_ci" />
     </field>
     <field name="petName" type="string" size="255">
       <notnull/>
@@ -2364,6 +2392,7 @@
     </field>
     <field name="nSubscriptionIdentifier" type="string">
       <key/>
+      <opt for="mysql" collation="utf8_general_ci" />
     </field>
     <index name="peID">
       <col>peID</col>
@@ -2726,7 +2755,9 @@
       <autoincrement/>
       <key/>
     </field>
-    <field name="gsName" type="string" size="255"/>
+    <field name="gsName" type="string" size="255">
+      <opt for="mysql" collation="utf8_general_ci" />
+    </field>
     <field name="pkgID" type="integer" size="10">
       <unsigned/>
       <default value="0"/>
@@ -2795,7 +2826,9 @@
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="gPath" type="text" size="65535"/>
+    <field name="gPath" type="text" size="65535">
+      <opt for="mysql" collation="utf8_general_ci" />
+    </field>
     <field name="pkgID" type="integer" size="10">
       <unsigned/>
       <default value="0"/>
@@ -2842,6 +2875,7 @@
     </field>
     <field name="jHandle" type="string" size="255">
       <notnull/>
+      <opt for="mysql" collation="utf8_general_ci" />
     </field>
     <field name="jNotUninstallable" type="smallint" size="4">
       <default value="0"/>
@@ -2992,7 +3026,9 @@
       <autoincrement/>
       <key/>
     </field>
-    <field name="upaHandle" type="string" size="255"/>
+    <field name="upaHandle" type="string" size="255">
+      <opt for="mysql" collation="utf8_general_ci" />
+    </field>
     <field name="upaName" type="string" size="255"/>
     <field name="upaDefaultPoints" type="integer" size="11">
       <default value="0"/>
@@ -3400,7 +3436,9 @@
       <deftimestamp/>
       <notnull/>
     </field>
-    <field name="name" type="string" size="255"/>
+    <field name="name" type="string" size="255">
+      <opt for="mysql" collation="utf8_general_ci" />
+    </field>
     <field name="state" type="string" size="64">
       <notnull/>
     </field>
@@ -3580,7 +3618,9 @@
       <autoincrement/>
       <key/>
     </field>
-    <field name="channel" type="string" size="255"/>
+    <field name="channel" type="string" size="255">
+      <opt for="mysql" collation="utf8_general_ci" />
+    </field>
     <field name="time" type="integer" size="10">
       <unsigned/>
       <notnull/>
@@ -3794,6 +3834,7 @@
     </field>
     <field name="stName" type="string" size="255">
       <notnull/>
+      <opt for="mysql" collation="utf8_general_ci" />
     </field>
     <field name="stType" type="integer" size="10">
       <unsigned/>
@@ -3829,6 +3870,7 @@
     </field>
     <field name="wpCategoryHandle" type="string" size="255">
       <notnull/>
+      <opt for="mysql" collation="utf8_general_ci" />
     </field>
     <field name="pkgID" type="integer" size="10">
       <unsigned/>
@@ -3941,7 +3983,9 @@
       <autoincrement/>
       <key/>
     </field>
-    <field name="wfName" type="string" size="255"/>
+    <field name="wfName" type="string" size="255">
+      <opt for="mysql" collation="utf8_general_ci" />
+    </field>
     <field name="wftID" type="integer" size="10">
       <unsigned/>
       <default value="0"/>
@@ -4127,6 +4171,7 @@
   <table name="QueuePageDuplicationRelations">
     <field name="queue_name" type="string" size="255">
       <notnull/>
+      <opt for="mysql" collation="utf8_general_ci" />
     </field>
     <field name="cID" type="integer" size="10">
       <unsigned/>
@@ -4173,6 +4218,7 @@
     </field>
     <field name="treeTypeHandle" type="string" size="255">
       <default value=""/>
+      <opt for="mysql" collation="utf8_general_ci" />
     </field>
     <field name="pkgID" type="integer" size="11">
       <unsigned/>
@@ -4195,6 +4241,7 @@
     </field>
     <field name="treeNodeTypeHandle" type="string" size="255">
       <default value=""/>
+      <opt for="mysql" collation="utf8_general_ci" />
     </field>
     <field name="pkgID" type="integer" size="11">
       <unsigned/>
@@ -4321,6 +4368,7 @@
       <key/>
     </field>
     <field name="savedSearchID" type="string">
+      <opt for="mysql" collation="utf8_general_ci" />
     </field>
     <index name="savedSearchID">
       <col>savedSearchID</col>
@@ -4342,6 +4390,7 @@
     <field name="sessionID" type="string" size="255">
       <key/>
       <notnull/>
+      <opt for="mysql" collation="utf8_general_ci" />
     </field>
     <field name="sessionValue" type="text">
     </field>
@@ -4369,6 +4418,7 @@
     <field name="thumbnailTypeHandle" type="string" size="255">
       <key/>
       <notnull/>
+      <opt for="mysql" collation="utf8_general_ci" />
     </field>
     <field name="storageLocationID" type="integer">
       <unsigned/>
@@ -4387,6 +4437,14 @@
     </field>
     <field name="lockID" type="string" size="255"/>
     <field name="lockExpires" type="datetime"/>
+  </table>
+
+  <table name="SystemDatabaseMigrations">
+    <field name="version" type="string" size="255">
+      <key/>
+      <notnull/>
+      <opt for="mysql" collation="utf8_general_ci" />
+    </field>
   </table>
 
 </schema>

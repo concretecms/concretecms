@@ -29,7 +29,7 @@ class Category implements CategoryObjectInterface
     protected $akCategoryID;
 
     /**
-     * @ORM\Column(type="string", unique=true)
+     * @ORM\Column(type="string", unique=true, options={"collation": "utf8_general_ci"})
      */
     protected $akCategoryHandle;
 

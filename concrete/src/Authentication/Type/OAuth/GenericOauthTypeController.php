@@ -52,8 +52,8 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
             $schema = new \Doctrine\DBAL\Schema\Schema();
             $table = $schema->createTable('OauthUserMap');
             $table->addColumn('user_id', 'integer', ['unsigned' => true]);
-            $table->addColumn('binding', 'string', ['length' => 255]);
-            $table->addColumn('namespace', 'string', ['length' => 255]);
+            $table->addColumn('binding', 'string', ['length' => 255])->setPlatformOption('collation', 'utf8_general_ci');
+            $table->addColumn('namespace', 'string', ['length' => 255])->setPlatformOption('collation', 'utf8_general_ci');
 
             $table->setPrimaryKey(['user_id', 'namespace']);
             $table->addUniqueIndex(['binding', 'namespace'], 'oauth_binding');

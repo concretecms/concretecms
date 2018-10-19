@@ -30,7 +30,7 @@ class Type implements ExportableInterface
     protected $atID;
 
     /**
-     * @ORM\Column(type="string", unique=true)
+     * @ORM\Column(type="string", unique=true, options={"collation": "utf8_general_ci"})
      */
     protected $atHandle;
 
