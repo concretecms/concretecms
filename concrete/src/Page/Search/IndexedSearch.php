@@ -57,7 +57,7 @@ class IndexedSearch
 
     public function matchesArea($arHandle)
     {
-        if (!isset($this->arHandles)) {
+        if (!isset($this->searchableAreaNames)) {
             $searchableAreaNamesInitial = $this->getSavedSearchableAreas();
             if ($this->getSearchableAreaAction() == 'blacklist') {
                 $areas = Area::getHandleList();
