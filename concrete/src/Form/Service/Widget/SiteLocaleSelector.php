@@ -98,4 +98,100 @@ EOL;
 
         return $html;
     }
+
+    /**
+     * Creates form fields and JavaScript page chooser for choosing a locale.
+     *
+     * @param string $fieldName
+     * @param \Concrete\Core\Entity\Site\Site $site
+     * @param \Concrete\Core\Entity\Site\Locale[]|string[]|int[] $selectedLocales
+     * @param array $options Supported options are:
+     *     string $noLocaleText The string to represent "no locale" [default: t('No Locale')]
+     *     bool $displayLocaleCode Set to a non falsy value to display the locale ID [default: false]
+     *
+     * @return string
+     */
+    public function selectLocaleMultiple($fieldName, Site $site, array $selectedLocales = [], array $options = [])
+    {
+        $v = View::getInstance();
+        $v->requireAsset('selectize');
+
+        $siteLocales = $site->getLocales()->toArray();
+        $actuallySelectedLocales = [];
+        foreach ($selectedLocales as $selectedLocale) {
+            $localeID = null;
+            $localeCode = null;
+            if ($selectedLocale instanceof Locale) {
+                $localeID = $selectedLocale->getLocaleID();
+            } elseif (is_numeric($selectedLocale)) {
+                $localeID = (int) $selectedLocale;
+            } else {
+                $localeCode = (string) $localeCode;
+            }
+            foreach ($siteLocales as $siteLocale) {
+                if ($localeID === $siteLocale->getLocaleID() || $localeCode === $siteLocale->getLocale()) {
+                    $actuallySelectedLocales[] = $siteLocale;
+                }
+            }
+        }
+        $htmlOptions = '';
+        foreach ($siteLocales as $siteLocale) {
+            $htmlOptions .= '<option';
+            $htmlOptions .= ' data-locale="' . h(json_encode([
+                'localeID' => $siteLocale->getLocaleID(),
+                'localeCode' => $siteLocale->getLocale(),
+                'localeName' => $siteLocale->getLanguageText(),
+                'localeIcon' => (string) Flag::getLocaleFlagIcon($siteLocale),
+            ])) . '"';
+            $htmlOptions .= ' value="' . $siteLocale->getLocaleID() . '"';
+            if (in_array($siteLocale, $actuallySelectedLocales, true)) {
+                $htmlOptions .= ' selected="selected"';
+            }
+            $htmlOptions .= '>' . h($siteLocale->getLanguageText()) . '</option>';
+        }
+        
+        $fieldNameHtml = h($fieldName . (substr($fieldName, -2) === '[]' ? '' : '[]'));
+        $placeholderHtml = h(isset($options['noLocaleText']) ? $options['noLocaleText'] : t('No Locale'));
+        $jsDisplayLocaleCode = json_encode(!empty($options['displayLocaleCode']));
+        
+        $identifier = 'ccm-sitelocaleselector-' . trim(preg_replace('/\W+/', '_', $fieldName), '_') . '-' . (new Identifier())->getString(32);
+        $identifierHtml = h($identifier);
+        $identifierJS = json_encode($identifier);
+        
+return <<<EOL
+
+<select id="{$identifierHtml}" name="{$fieldNameHtml}" placeholder="{$placeholderHtml}" multiple="multiple" class="ccm-sitelocaleselector">
+    $htmlOptions
+</select>
+<script type="text/javascript">
+$(document).ready(function() {
+    var displayLocaleCode = {$jsDisplayLocaleCode};
+    function render(data, escape) {
+        var html = '<div>' + data.localeIcon + ' ' + escape(data.localeName);
+        if (displayLocaleCode) {
+            html += ' <span class="text-muted small">' + escape(data.localeCode) + '</span>';
+        }
+        html += '</div>';
+        return html;
+    }
+    $('#' + {$identifierJS}).selectize({
+        plugins: ['remove_button'],
+        valueField: 'localeID',
+        searchField: displayLocaleCode ? ['localeName', 'localeCode'] : ['localeName'],
+        persist: false,
+        dataAttr: 'data-locale',
+        sortField: [
+            {field: 'localeName'},
+            {field: 'localeCode'},
+        ],
+        render: {
+            item: render,
+            option: render
+        }
+    });
+});
+</script>
+
+EOL;
+    }
 }
