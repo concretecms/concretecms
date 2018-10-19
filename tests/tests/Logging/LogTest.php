@@ -2,19 +2,17 @@
 
 namespace Concrete\Tests\Logging;
 
-use Concrete\Core\Logging\GroupLogger;
-use Concrete\Core\Logging\LogEntry;
-use Concrete\Core\Logging\Logger;
+use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Logging\LoggerFactory;
+use Concrete\Core\Support\Facade\Facade;
 use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
-use Database;
-use Events;
-use Log;
-use stdClass;
+use Monolog\Logger;
 
 class LogTest extends ConcreteDatabaseTestCase
 {
     protected $fixtures = [];
     protected $tables = ['Logs'];
+    protected $app;
 
     public function setUp()
     {
@@ -22,13 +20,52 @@ class LogTest extends ConcreteDatabaseTestCase
 
         // Clear log every time
         $this->truncateTables();
+
+        $this->app = Facade::getFacadeApplication();
+        $this->db = $this->app->make(Connection::class);
     }
+
+    public function testStandardDatabaseLogging()
+    {
+        $factory = $this->app->make(LoggerFactory::class);
+        $logger = $factory->createLog('sample-channel');
+        $this->assertInstanceOf(Logger::class, $logger);
+
+        $logger->debug('This is a debug line.');
+        $logger->emergency('This is an emergency!');
+        $logger->info('This is an info line.');
+        $logger->notice('This is a notice line.');
+        $logger->warning('This is a warning line.');
+
+        // now we determine if writing occurred successfully.
+        // Note, by default we now no longer log anything below warning, so our tests should show this.
+        $r = $this->db->GetAll('select * from Logs');
+        $this->assertEquals(1, $r[0]['logID']);
+        $this->assertEquals('sample-channel', $r[0]['channel']);
+        $this->assertEquals('This is an emergency!', $r[0]['message']);
+        $this->assertEquals('sample-channel', $r[1]['channel']);
+        $this->assertEquals('This is a warning line.', $r[1]['message']);
+        $this->assertCount(2, $r);
+    }
+
+    public function testMoreVerboseDatabaseLogging()
+    {
+        $factory = $this->app->make(LoggerFactory::class);
+        $logger = $factory->createLog('verbose-channel');
+        $this->assertInstanceOf(Logger::class, $logger);
+
+        $logger->debug('This is a debug line.');
+        $logger->emergency('This is an emergency!');
+        $logger->info('This is an info line.');
+        $logger->notice('This is a notice line.');
+        $logger->warning('This is a warning line.');
+    }
+
+
+    /*
 
     public function testBasicWrite()
     {
-        $l = new Logger('sample-channel');
-        $l->debug('This is a debug line.');
-        $l->emergency('This is an emergency');
 
         Log::critical('Critical error found.');
 
@@ -48,10 +85,6 @@ class LogTest extends ConcreteDatabaseTestCase
         $this->assertEquals(Log::getLevelCode('critical'), $r[2]['level']);
     }
 
-    /**
-     * Attempts to change the default database logging functionality
-     * into a file stream.
-     */
     public function testOverridingDefaultLogFunctionalityWithFileHandler()
     {
         if (file_exists(__DIR__ . '/test.log')) {
@@ -158,14 +191,6 @@ class LogTest extends ConcreteDatabaseTestCase
         $this->assertEquals($le->getLevelName(), 'DEBUG');
         $this->assertEquals($le->getMessage(), 'this is my log entry.');
 
-        /*
-         * old format here:
-        $l = new Log(LOG_TYPE_EMAILS, true, true);
-        $l->write('This is line one.');
-        $l->write('This is line two');
-        $l->close();
-        */
-
         $l = new GroupLogger(LOG_TYPE_EMAILS, Logger::DEBUG);
         $l->write('This is line one.');
         $l->write('This is line two.');
@@ -183,4 +208,5 @@ class LogTest extends ConcreteDatabaseTestCase
         $this->assertEquals($le3->getMessage(), "This is line one.\nThis is line two.");
         $this->assertEquals($le2->getMessage(), 'OMG!');
     }
+    */
 }

@@ -284,21 +284,21 @@ return [
      */
     'log' => [
         /*
-         * Log emails
+         * Whether to log emails
          *
          * @var bool
          */
         'emails' => true,
 
         /*
-         * Log Errors
+         * Whether to log Errors
          *
          * @var bool
          */
         'errors' => true,
 
         /*
-         * Log Spam
+         * Whether to log Spam
          *
          * @var bool
          */
@@ -313,6 +313,15 @@ return [
             'log' => false,
 
             'clear_on_reload' => false,
+        ],
+
+        'configurations' => [
+
+            'simple' => [
+                'enabled' => true,
+                'level' => 'WARNING'
+            ],
+
         ],
     ],
     'jobs' => [

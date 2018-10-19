@@ -7,7 +7,10 @@ class LoggingServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        // Bind the logger singleton
+
+
+
+        /*
         $this->app->singleton(Logger::class, function ($app) {
             $logger = new Logger(Logger::CHANNEL_APPLICATION);
             return $logger;
@@ -22,5 +25,6 @@ class LoggingServiceProvider extends ServiceProvider
             $logger = new Logger(LOG_TYPE_EXCEPTIONS);
             return $logger;
         });
+        */
     }
 }

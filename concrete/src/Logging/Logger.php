@@ -9,6 +9,12 @@ use Events;
 use Core;
 use Monolog\Processor\PsrLogMessageProcessor;
 
+/**
+ * This file will only ever log to the database.
+ * @deprecated – use Monolog + Cascade for configuration instead. Much more flexible.
+ * Class Logger
+ * @package Concrete\Core\Logging
+ */
 class Logger extends MonologLogger
 {
     const CHANNEL_APPLICATION = 'application';
