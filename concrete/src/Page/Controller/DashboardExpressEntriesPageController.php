@@ -296,7 +296,13 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
             }
 
             $this->error = $validator->getErrorList();
-            if (!$this->error->has()) {
+            if ($this->error->has()) {
+                if ($entry === null) {
+                    $this->create_entry($entity->getID());
+                } else {
+                    $this->edit_entry($entry->getID());
+                }
+            } else {
 
                 $notifier = $controller->getNotifier();
                 $notifications = $notifier->getNotificationList();
