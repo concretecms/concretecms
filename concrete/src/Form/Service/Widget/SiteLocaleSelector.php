@@ -19,6 +19,7 @@ class SiteLocaleSelector
      * @param array $options Supported options are:
      *     bool $allowNull Set to a non falsy value to allow users to choose "no" locale [default: false]
      *     string $noLocaleText The string to represent "no locale" [default: t('No Locale')]
+     *     bool $displayLocaleCode Set to a non falsy value to display the locale ID [default: false]
      *
      * @return string
      */
@@ -29,6 +30,7 @@ class SiteLocaleSelector
 
         $allowNull = !empty($options['allowNull']);
         $nullText = isset($options['noLocaleText']) ? $options['noLocaleText'] : t('No Locale');
+        $displayLocaleCode = !empty($options['displayLocaleCode']);
 
         if ($selectedLocale === null && !$allowNull) {
             $selectedLocale = $site->getDefaultLocale();
@@ -40,7 +42,14 @@ class SiteLocaleSelector
 
         $flag = $selectedLocale ? Flag::getLocaleFlagIcon($selectedLocale) : '';
 
-        $label = $selectedLocale ? $selectedLocale->getLanguageText() : $nullText;
+        if ($selectedLocale) {
+            $label = h($selectedLocale->getLanguageText());
+            if ($displayLocaleCode) {
+                $label .= ' <span class="text-muted small">' . h($selectedLocale->getLocale()) . '</span>';
+            }
+        } else {
+            $label = $nullText;
+        }
 
         $localeHTML = '';
         if ($allowNull) {
@@ -52,7 +61,11 @@ class SiteLocaleSelector
                 $localeHTML .= 'data-locale="default"';
             }
             $localeHTML .= 'data-select-locale="' . $locale->getLocaleID() . '">';
-            $localeHTML .= Flag::getLocaleFlagIcon($locale) . ' ' . $locale->getLanguageText() . '</a></li>';
+            $localeHTML .= Flag::getLocaleFlagIcon($locale) . ' ' . $locale->getLanguageText();
+            if ($displayLocaleCode) {
+                $localeHTML .= ' <span class="text-muted small">' . h($locale->getLocale()) . '</span>';
+            }
+            $localeHTML .= '</a></li>';
         }
 
         $html = <<<EOL
