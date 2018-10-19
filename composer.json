@@ -50,6 +50,7 @@
   },
   "scripts": {
     "test": "phpunit",
+    "test-coverage": "phpunit --coverage-text --coverage-clover=coverage.clover",
     "phpcs": [
       "phpcs -p -s --report=full --standard=psr2 --sniffs=Generic.WhiteSpace.DisallowTabIndent,Generic.PHP.DisallowShortOpenTag concrete/src concrete/controllers",
       "phpcs -p -s --report=full --standard=psr2 --sniffs=Generic.PHP.DisallowShortOpenTag --ignore=\"*.js,*.css,*.less,concrete/vendor/*,concrete/src/*,concrete/controllers/*\" concrete"
