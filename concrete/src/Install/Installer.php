@@ -227,6 +227,10 @@ class Installer
             // Unsupported character set and/or collation
             return $connection;
         }
+        if ($connectionCharset === $characterSet && $connectionCollation === $collation) {
+            // No changes required
+            return $connection;
+        }
 
         return $this->reconfigureCharacterSetCollation($connection, $characterSet, $collation);
     }
