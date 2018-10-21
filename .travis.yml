@@ -60,7 +60,7 @@ notifications:
 
 after_script:
 - |
-  if [[ "$TRAVIS_PHP_VERSION" != 'nightly' ]]; then
+  if [ "$TRAVIS_PHP_VERSION" != 'nightly' ] && [ "$DO_PHPUNIT" -ne 0 ]; then
     wget https://scrutinizer-ci.com/ocular.phar
     php ocular.phar code-coverage:upload --format=php-clover coverage.clover
   fi
