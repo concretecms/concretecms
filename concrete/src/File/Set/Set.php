@@ -102,7 +102,7 @@ class Set
                     $queryBuilder->expr()->in('fsType',[self::TYPE_PRIVATE, self::TYPE_STARRED, self::TYPE_PUBLIC]),
                     $queryBuilder->expr()->eq('uID', $user->getUserID())
                 )
-            )->execute();
+            )->orderBy('fsName', 'ASC')->execute();
 
 
         while ($row = $results->fetch()) {
