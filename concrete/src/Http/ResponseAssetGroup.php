@@ -240,7 +240,7 @@ class ResponseAssetGroup
      * when a view is rendered.
      *
      * @param \Concrete\Core\Asset\AssetGroup|\Concrete\Core\Asset\Asset|string $assetType
-     * @param string|false $assetHandle E.g. 'jquery/ui'.
+     * @param string|false $assetHandle used when $assetType is a string, to form the group $assetType/$assetHandle to define a new AssetPointer instance
      */
     public function requireAsset($assetType, $assetHandle = false)
     {
