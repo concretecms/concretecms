@@ -44,19 +44,6 @@ class Logger extends MonologLogger
     }
 
     /**
-     * When given a PSR-3 standard log level, returns the
-     * internal code for that level.
-     */
-    public static function getLevelCode($level)
-    {
-        $levels = static::getLevels();
-        $level = strtoupper($level);
-        if (isset($levels[$level])) {
-            return $levels[$level];
-        }
-    }
-
-    /**
      * Returns an array of handlers. Mostly for testing.
      */
     public function getHandlers()
