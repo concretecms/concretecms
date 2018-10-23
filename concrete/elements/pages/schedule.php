@@ -42,3 +42,7 @@ $timezone = $dateService->getTimezoneDisplayName($timezone);
         float: right;
     }
 </style>
+
+<script>
+    $('#cvPublishDate_dt_pub, #cvPublishEndDate_dt_pub').attr('autocomplete', 'nope');
+</script>
