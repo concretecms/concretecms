@@ -155,8 +155,8 @@ EOL;
         }
 
         $fieldNameHtml = h($fieldName . (substr($fieldName, -2) === '[]' ? '' : '[]'));
-        $placeholderHtml = h(isset($options['noLocaleText']) ? $options['noLocaleText'] : t('No Locale'));
-        $jsDisplayLocaleCode = json_encode($displayLocaleCode);
+        $placeholderJS = json_encode(isset($options['noLocaleText']) ? (string) $options['noLocaleText'] : t('No Locale'));
+        $displayLocaleCodeJS = json_encode($displayLocaleCode);
 
         $identifier = 'ccm-sitelocaleselector-' . trim(preg_replace('/\W+/', '_', $fieldName), '_') . '-' . (new Identifier())->getString(32);
         $identifierHtml = h($identifier);
@@ -164,12 +164,12 @@ EOL;
 
         return <<<EOL
 
-<select id="{$identifierHtml}" name="{$fieldNameHtml}" placeholder="{$placeholderHtml}" multiple="multiple" class="ccm-sitelocaleselector">
+<select id="{$identifierHtml}" name="{$fieldNameHtml}" multiple="multiple" class="ccm-sitelocaleselector">
     $htmlOptions
 </select>
 <script type="text/javascript">
 $(document).ready(function() {
-    var displayLocaleCode = {$jsDisplayLocaleCode};
+    var displayLocaleCode = {$displayLocaleCodeJS};
     function render(data, escape) {
         var html = '<div>' + data.localeIcon + ' ' + escape(data.localeName);
         if (displayLocaleCode) {
@@ -179,6 +179,7 @@ $(document).ready(function() {
         return html;
     }
     $('#' + {$identifierJS}).selectize({
+        placeholder: {$placeholderJS},
         plugins: ['remove_button'],
         valueField: 'localeID',
         searchField: displayLocaleCode ? ['localeName', 'localeCode'] : ['localeName'],
