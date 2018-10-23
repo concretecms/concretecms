@@ -2048,8 +2048,27 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function getFirstChild($sortColumn = 'cDisplayOrder asc')
     {
-        $db = Database::connection();
-        $cID = $db->fetchColumn("select Pages.cID from Pages inner join CollectionVersions on Pages.cID = CollectionVersions.cID where cvIsApproved = 1 and cParentID = ? order by {$sortColumn}", [$this->cID]);
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $now = $app->make('date')->getOverridableNow();
+        $cID = $db->fetchColumn(
+            <<<EOT
+select
+    Pages.cID
+from
+    Pages
+    inner join CollectionVersions
+        on Pages.cID = CollectionVersions.cID
+where
+    cParentID = ?
+    and cvIsApproved = 1 and (cvPublishDate is null or cvPublishDate <= ?) and (cvPublishEndDate is null or cvPublishEndDate >= ?)
+    and 
+order by
+    {$sortColumn}
+EOT
+            ,
+            [$this->cID, $now, $now]
+        );
         if ($cID && $cID != $this->getSiteHomePageID()) {
             return self::getByID($cID, 'ACTIVE');
         }

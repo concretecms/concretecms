@@ -32,7 +32,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
     public $cvID;
 
     /**
-     * @deprecated what's deprecated is the public part of this property: use the isApproved() method instead
+     * @deprecated what's deprecated is the public part of this property: use the isApproved() or the isInShowTime() methods instead
      *
      * @var bool|int|string
      */
@@ -233,6 +233,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
     {
         $app = Facade::getFacadeApplication();
         $db = $app->make('database')->connection();
+        $now = $app->make('date')->getOverridableNow();
 
         $cID = false;
         if ($c instanceof \Concrete\Core\Page\Page) {
@@ -245,15 +246,15 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
 
         $q = "select * from CollectionVersions where cID = ?";
 
-        $now = new \DateTime();
-
         switch ($cvID) {
             case 'ACTIVE':
-                $q .= ' and cvIsApproved = 1 and (cvPublishDate <= ? or cvPublishDate is null) order by cvPublishDate desc limit 1';
-                $v[] = $now->format('Y-m-d H:i:s');
+                $q .= ' and cvIsApproved = 1 and (cvPublishDate is null or cvPublishDate <= ?) and (cvPublishEndDate is null or cvPublishEndDate >= ? or cvPublishDate is null) order by cvPublishDate desc limit 1';
+                $v[] = $now;
+                $v[] = $now;
                 break;
             case 'SCHEDULED':
-                $q .= ' and cvIsApproved = 1 and (cvPublishDate is not NULL or cvPublishEndDate is not null) limit 1';
+                $q .= ' and cvIsApproved = 1 and (cvPublishDate is not null and cvPublishDate > ?) order by cvPublishDate limit 1';
+                $v[] = $now;
                 break;
             case 'RECENT':
                 $q .= ' order by cvID desc limit 1';
@@ -323,10 +324,45 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
      * Is this version approved?
      *
      * @return bool|int|string
+     *
+     * @see isInShowTime()
      */
     public function isApproved()
     {
         return $this->cvIsApproved;
+    }
+
+    /**
+     * Is this version approved and in the publish interval?
+     *
+     * @var string|int|\DateTime|null $when a date/time representation (empty: now)
+     * @return bool
+     */
+    public function isInShowTime($when = null)
+    {
+        if (!$this->isApproved()) {
+            return false;
+        }
+        $start = $this->getPublishDate();
+        $end = $this->getPublishEndDate();
+        if (!$start && !$end) {
+            return true;
+        }
+        $dh = Facade::getFacadeApplication()->make('date');
+        if ($when) {
+            $when = $dh->toDB($when);
+        }
+        if (!$when) {
+            $when = $dh->getOverridableNow();
+        }
+        if ($start && $start > $now) {
+            return false;
+        }
+        if ($end && $end < $now) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
