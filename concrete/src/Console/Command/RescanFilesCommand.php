@@ -11,6 +11,7 @@ use Concrete\Core\File\Importer;
 use Concrete\Core\File\ImportProcessor\AutorotateImageProcessor;
 use Concrete\Core\File\ImportProcessor\ConstrainImageProcessor;
 use Concrete\Core\File\Type\Type as FileType;
+use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Support\Facade\Facade;
 use Doctrine\ORM\EntityManager;
@@ -44,10 +45,13 @@ class RescanFilesCommand extends Command
         $app = Facade::getFacadeApplication();
         $config = $app->make('config');
         $em = $app->make(EntityManager::class);
+        $paginationFactory = $app->make(PaginationFactory::class);
+        $currentFilename = null;
+        $currentID = 0;
         try {
             \Cache::disableAll();
             if ($input->getOption('limit') !== null) {
-                $pagination = $list->getPagination();
+                $pagination = $paginationFactory->createPaginationObject($list);
                 $pagination->setMaxPerPage($input->getOption('limit'));
                 $results = $pagination->getCurrentPageResults();
             } else {
@@ -61,7 +65,7 @@ class RescanFilesCommand extends Command
                 $resp = $fv->refreshAttributes(false);
                 switch ($resp) {
                     case Importer::E_FILE_INVALID:
-                        $errorMessage = t('File %s could not be found.');
+                        $errorMessage = t('File could not be found.');
                         throw new \Exception($errorMessage);
                 }
                 $newFileVersion = null;
