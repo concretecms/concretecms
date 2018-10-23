@@ -16,6 +16,7 @@ use Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVe
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Permission\Checker;
+use Concrete\Core\Error\UserMessageException;
 
 class Version extends ConcreteObject implements PermissionObjectInterface, AttributeObjectInterface
 {
@@ -117,14 +118,14 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
     public $pThemeID;
 
     /**
-     * @deprecated what's deprecated is the public part of this property: use the getPublishDate() / setPublishDate() methods instead
+     * @deprecated what's deprecated is the public part of this property: use the getPublishDate() / setPublishDate() / setPublishInterval() methods instead
      *
      * @var string|null
      */
     public $cvPublishDate;
 
     /**
-     * @deprecated what's deprecated is the public part of this property: use the getPublishEndDate() / setPublishEndDate() methods instead
+     * @deprecated what's deprecated is the public part of this property: use the getPublishEndDate() / setPublishEndDate() / setPublishInterval() methods instead
      *
      * @var string|null
      */
@@ -544,45 +545,59 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
     /**
      * Set the scheduled date/time when the collection is published: start.
      *
-     * @param string|null $publishDate Date/time in format like '2018-21-31 23:59:59'
+     * @param string|\DateTime|int|null $publishDate the scheduled date/time when the collection is published (start)
+     *
+     * @throws \Concrete\Core\Error\UserMessageException if the start of the publish date/time is its end.
      */
     public function setPublishDate($publishDate)
     {
-        $app = Facade::getFacadeApplication();
-        $db = $app->make(Connection::class);
-        $db->update(
-            'CollectionVersions',
-            [
-                'cvPublishDate' => $publishDate,
-            ],
-            [
-                'cID' => $this->getCollectionID(),
-                'cvID' => $this->getVersionID(),
-            ]
-        );
-        $this->cvPublishDate = $publishDate;
+        $this->setPublishInterval($publishDate, $this->getPublishEndDate());
     }
 
     /**
      * Set the scheduled date/time when the collection is published: end.
      *
-     * @param string|null $publishEndDate Date/time in format like '2018-21-31 23:59:59'
+     * @param string|\DateTime|int|null $publishEndDate the scheduled date/time when the collection is published (end)
+     *
+     * @throws \Concrete\Core\Error\UserMessageException if the start of the publish date/time is its end.
      */
     public function setPublishEndDate($publishEndDate)
     {
+        $this->setPublishInterval($this->getPublishDate(), $publishEndDate);
+    }
+
+    /**
+     * Set the scheduled date/time when the collection is published.
+     *
+     * @param string|\DateTime|int|null $startDateTime the scheduled date/time when the collection is published (start)
+     * @param string|\DateTime|int|null $endDateTime the scheduled date/time when the collection is published (end)
+     *
+     * @throws \Concrete\Core\Error\UserMessageException if the start of the publish date/time is its end.
+     */
+    public function setPublishInterval($startDateTime, $endDateTime)
+    {
         $app = Facade::getFacadeApplication();
+        $dh = $app->make('helper/date');
+        $startDateTime = $dh->toDB($startDateTime) ?: null;
+        $endDateTime = $dh->toDB($endDateTime) ?: null;
+        if ($startDateTime && $endDateTime && $startDateTime > $endDateTime) {
+            throw new UserMessageException(t('The initial date/time must be before the final date/time.'));
+        }
         $db = $app->make(Connection::class);
         $db->update(
             'CollectionVersions',
             [
-                'cvPublishEndDate' => $publishEndDate,
+                'cvPublishDate' => $startDateTime,
+                'cvPublishEndDate' => $endDateTime,
             ],
             [
                 'cID' => $this->getCollectionID(),
                 'cvID' => $this->getVersionID(),
             ]
         );
-        $this->cvPublishEndDate = $publishEndDate;
+        $this->cvPublishDate = $startDateTime;
+        $this->cvPublishEndDate = $endDateTime;
+        $this->avoidApprovalOverlapping();
     }
 
     /**
@@ -697,8 +712,10 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
      * Approve this collection version.
      *
      * @param bool $doReindexImmediately reindex the collection contents now? Otherwise it's reindexing will just be scheduled
-     * @param string|null $cvPublishDate the scheduled date/time when the collection is published (start)
-     * @param string|null $cvPublishEndDate the scheduled date/time when the collection is published (end)
+     * @param string|\DateTime|int|null $cvPublishDate the scheduled date/time when the collection is published (start)
+     * @param string|\DateTime|int|null $cvPublishEndDate the scheduled date/time when the collection is published (end)
+     *
+     * @throws \Concrete\Core\Error\UserMessageException if the start of the publish date/time is its end.
      */
     public function approve($doReindexImmediately = true, $cvPublishDate = null, $cvPublishEndDate = null)
     {
@@ -710,6 +727,14 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         $cvID = $this->getVersionID();
         $cID = $this->getCollectionID();
         $c = Page::getByID($cID, $cvID);
+        $now = $dh->getOverridableNow();
+
+        $cvPublishDate = $dh->toDB($cvPublishDate) ?: null;
+        $cvPublishEndDate = $dh->toDB($cvPublishEndDate) ?: null;
+
+        if ($cvPublishDate !== null && $cvPublishEndDate !== null && $cvPublishDate > $cvPublishEndDate) {
+            throw new UserMessageException(t('The initial date/time must be before the final date/time.'));
+        }
 
         $pageWithActiveVersion = Page::getByID($cID, 'ACTIVE');
 
@@ -719,35 +744,9 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         // update a collection updated record
         $db->executeQuery(
             'update Collections set cDateModified = ? where cID = ?',
-            [$dh->getOverridableNow(), $cID]
+            [$now, $cID]
         );
 
-        // Remove all publish dates before setting the new ones, if any
-        $this->clearPublishStartDate();
-
-        if ($this->getPublishEndDate()) {
-            $now = $dh->date('Y-m-d G:i:s');
-            if (strtotime($now) >= strtotime($this->getPublishEndDate())) {
-                $this->clearPublishEndDate();
-            }
-        }
-
-        if ($cvPublishDate || $cvPublishEndDate) {
-            // remove approval for all versions except the current one because a scheduled version is being processed
-            $oldVersion = $pageWithActiveVersion->getVersionObject();
-            $this->setPublishDate($cvPublishDate);
-            $this->setPublishEndDate($cvPublishEndDate);
-            $db->executeQuery(
-                'update CollectionVersions set cvIsApproved = 0 where cID = ? and cvID != ?',
-                [$cID, $oldVersion->getVersionID()]
-            );
-        } else {
-            // remove approval for the other version of this collection
-            $db->executeQuery(
-                'update CollectionVersions set cvIsApproved = 0 where cID = ?',
-                [$cID]
-            );
-        }
         $pageWithActiveVersion->refreshCache();
 
         // now we approve our version
@@ -757,13 +756,22 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
                 'cvIsNew' => 0,
                 'cvIsApproved' => 1,
                 'cvApproverUID' => $uID,
-                'cvDateApproved' => $dh->getOverridableNow(),
+                'cvDateApproved' => $now,
+                'cvPublishDate' => $cvPublishDate,
+                'cvPublishEndDate' => $cvPublishEndDate,
             ],
             [
                 'cID' => $cID,
                 'cvID' => $cvID,
             ]
         );
+        $this->cvIsNew = 0;
+        $this->cvIsApproved = 1;
+        $this->cvApproverUID = $uID;
+        $this->cvDateApproved = $now;
+        $this->cvPublishDate = $cvPublishDate;
+        $this->cvPublishEndDate = $cvPublishEndDate;
+        $this->avoidApprovalOverlapping();
 
         // next, we rescan our collection paths for the particular collection, but only if this isn't a generated collection
         if ($oldHandle != $newHandle && !$c->isGeneratedCollection()) {
@@ -903,6 +911,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         );
         $q = "update CollectionVersions set cvIsApproved = 0 where cID = ?";
         $db->executeQuery($q, $v);
+        $this->cvIsApproved = 0;
 
         // now we deny our version
         $v2 = array(
@@ -980,27 +989,109 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
     }
 
     /**
-     * Clear the publish start date and mark this version as unapproved.
+     * Make sure that other collection versions aren't approved and valid at the same time as this version.
      */
-    private function clearPublishStartDate()
+    private function avoidApprovalOverlapping()
     {
+        if (!$this->isApproved()) {
+            return;
+        }
         $app = Facade::getFacadeApplication();
         $db = $app->make('database')->connection();
-        $q = "update CollectionVersions set cvPublishDate = NULL , cvIsApproved = 0 where cID = ? AND cvPublishDate IS NOT NULL";
+        $dh = $app->make('helper/date');
+        $qbBase = $db->createQueryBuilder();
+        $x = $qbBase->expr();
+        $qbBase->update('CollectionVersions', 'cv')
+            ->andWhere($x->eq('cv.cvIsApproved', 1))
+            ->andWhere($x->eq('cv.cID', $qbBase->createNamedParameter($this->getCollectionID())))
+            ->andWhere($x->neq('cv.cvID', $qbBase->createNamedParameter($this->getVersionID())))
+        ;
+        $startDate = $this->getPublishDate() ?: null;
+        $endDate = $this->getPublishEndDate() ?: null;
+        $changes = [];
 
-        $db->executeQuery($q, array($this->cID));
+        // Let's unapprove other approved collection versions whose approval time is all within this collection version
+        if ($startDate !== null && $endDate !== null) {
+            // This collection version is published from $startDate until $endDate:
+            // let's unapprove the other collection versions that start at or after $startDate and end at or before $endDate
+            $qb = clone $qbBase;
+            $changes[] = $qb
+                ->set('cv.cvIsApproved', 0)
+                ->andWhere($x->isNotNull('cv.cvPublishDate'))
+                ->andWhere($x->gte('cv.cvPublishDate', $qb->createNamedParameter($startDate)))
+                ->andWhere($x->isNotNull('cv.cvPublishEndDate'))
+                ->andWhere($x->lte('cv.cvPublishEndDate', $qb->createNamedParameter($endDate)))
+                ->execute()
+            ;
+        } elseif ($startDate !== null) {
+            // This collection version is published from $startDate until forever:
+            // let's unapprove the other collection versions that start at or after $startDate
+            $qb = clone $qbBase;
+            $changes[] = $qb
+                ->set('cv.cvIsApproved', 0)
+                ->andWhere($x->isNotNull('cv.cvPublishDate'))
+                ->andWhere($x->gte('cv.cvPublishDate', $qb->createNamedParameter($startDate)))
+                ->execute()
+            ;
+        } elseif ($endDate !== null) {
+            // This collection version is published from ever until $endDate:
+            // let's unapprove the other collection versions that end at or before $endDate
+            $qb = clone $qbBase;
+            $changes[] = $qb
+                ->set('cv.cvIsApproved', 0)
+                ->andWhere($x->isNotNull('cv.cvPublishEndDate'))
+                ->andWhere($x->lte('cv.cvPublishEndDate', $qb->createNamedParameter($endDate)))
+                ->execute()
+            ;
+        } else {
+            // This collection version is published from ever and until forever:
+            // let's unapprove all the other collection versions
+            $qb = clone $qbBase;
+            $changes[] = $qb
+                ->set('cv.cvIsApproved', 0)
+                ->execute()
+            ;
+        }
+
+        if ($endDate != null) {
+            // This collection version is published until $endDate:
+            // set the initial date/time of the other collection versions that start and end at or before $endDate
+            $minOthersStartDate = $endDate ? $dh->toDB(strtotime($endDate) + 1) : null;
+            $qb = clone $qbBase;
+            $changes[] = $qb
+                ->set('cv.cvPublishDate', $qb->createNamedParameter($minOthersStartDate))
+                ->andWhere($x->orX(
+                    $x->isNull('cv.cvPublishDate'),
+                    $x->lte('cv.cvPublishDate', $qb->createNamedParameter($endDate))
+                ))
+                ->andWhere($x->orX(
+                    $x->isNull('cv.cvPublishEndDate'),
+                    $x->gte('cv.cvPublishEndDate', $qb->createNamedParameter($minOthersStartDate))
+                ))
+                ->execute()
+            ;
+        }
+
+        if ($startDate !== null) {
+            // This collection version is published from $startDate
+            // set the final date/time of the other collection versions that end at or after $startDate
+            $maxOthersEndDate = $startDate ? $dh->toDB(strtotime($startDate) - 1) : null;
+            $qb = clone $qbBase;
+            $changes[] = $qb
+                ->set('cv.cvPublishEndDate', $qb->createNamedParameter($maxOthersEndDate))
+                ->andWhere($x->orX(
+                    $x->isNull('cv.cvPublishEndDate'),
+                    $x->gte('cv.cvPublishEndDate', $qb->createNamedParameter($startDate))
+                ))
+                ->andWhere($x->orX(
+                    $x->isNull('cv.cvPublishDate'),
+                    $x->lte('cv.cvPublishDate', $qb->createNamedParameter($maxOthersEndDate))
+                ))
+                ->execute()
+            ;
+        }
+        if (count(array_filter($changes)) > 0) {
+            $this->refreshCache();
+        }
     }
-
-    /**
-     * Clear the publish end date.
-     */
-    private function clearPublishEndDate()
-    {
-        $app = Facade::getFacadeApplication();
-        $db = $app->make('database')->connection();
-        $q = "update CollectionVersions set cvPublishEndDate = NULL where cID = ?";
-
-        $db->executeQuery($q, array($this->cID));
-    }
-
 }
