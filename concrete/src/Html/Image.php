@@ -16,7 +16,7 @@ class Image
     protected $usePictureTag = false;
 
     /**
-     * @var Picture|HtmlObjectImage
+     * @var \Concrete\Core\Html\Object\Picture|\HtmlObject\Image
      */
     protected $tag;
 
@@ -78,8 +78,8 @@ class Image
      * Returns an object that represents the HTML tag.
      *
      * @see https://github.com/Anahkiasen/html-object
-     * 
-     * @return Picture|HtmlObjectImage
+     *
+     * @return \Concrete\Core\Html\Object\Picture|\HtmlObject\Image
      */
     public function getTag()
     {
