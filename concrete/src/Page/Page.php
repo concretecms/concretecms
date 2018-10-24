@@ -269,7 +269,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                 $this->cPointerID = $originalRow['cPointerID'];
                 $this->cIsActive = $originalRow['cIsActive'];
                 $this->cPointerOriginalID = $originalRow['cID'];
-                $this->cPointerOriginalSiteTreeID = $row['siteTreeID'];
+                $this->cPointerOriginalSiteTreeID = $originalRow['siteTreeID'];
                 $this->cPath = $originalRow['cPath'];
                 $this->cParentID = $originalRow['cParentID'];
                 $this->cDisplayOrder = $originalRow['cDisplayOrder'];
