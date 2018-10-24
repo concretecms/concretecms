@@ -77,6 +77,8 @@ class Image
     /**
      * Returns an object that represents the HTML tag.
      *
+     * @see https://github.com/Anahkiasen/html-object
+     * 
      * @return Picture|HtmlObjectImage
      */
     public function getTag()
