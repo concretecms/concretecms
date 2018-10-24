@@ -28,10 +28,10 @@ defined('C5_EXECUTE') or die('Access Denied.');
     </div>
 
     <div class="form-group">
-        <?= $form->label('generator_tag', t('Generator Tag')); ?>
+        <?= $form->label('generator_tag_display_in_header', t('Generator Tag')); ?>
         <div class="checkbox">
             <label>
-                <?= $form->checkbox('generator_tag', 1, $generatorTag); ?>
+                <?= $form->checkbox('generator_tag_display_in_header', 1, $generatorTag); ?>
                 <?= t('Add a %s tag with the concrete5 version to the site pages.', '<code>' . h('<meta name="generator" content="...">') . '</code>'); ?>
             </label>
         </div>
