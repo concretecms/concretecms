@@ -11,7 +11,7 @@ use HtmlObject\Image as HtmlObjectImage;
 class Image
 {
     /**
-     * @var bool|null If true, this object will return a Picture tag instead of an Image tag.
+     * @var bool|null if true, this object will return a Picture tag instead of an Image tag
      */
     protected $usePictureTag = false;
 
@@ -46,7 +46,7 @@ class Image
                 $c = Page::getCurrentPage();
                 $this->theme = $c->getCollectionThemeObject();
             }
-            $sources = array();
+            $sources = [];
             $fallbackSrc = $f->getRelativePath();
             if (!$fallbackSrc) {
                 $fallbackSrc = $f->getURL();
@@ -55,7 +55,7 @@ class Image
                 $type = Type::getByHandle($thumbnail);
                 if ($type != null) {
                     $src = $f->getThumbnailURL($type->getBaseVersion());
-                    $sources[] = array('src' => $src, 'width' => $width);
+                    $sources[] = ['src' => $src, 'width' => $width];
                     if ($width == 0) {
                         $fallbackSrc = $src;
                     }
