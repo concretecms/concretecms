@@ -2,7 +2,11 @@
 namespace Concrete\Core\Html;
 
 use Concrete\Core\Entity\File\File;
-use PageTheme;
+use Concrete\Core\File\Image\Thumbnail\Type\Type;
+use Concrete\Core\Html\Object\Picture;
+use Concrete\Core\Page\Theme\Theme;
+use Concrete\Core\Page\Page;
+use HtmlObject\Image as HtmlObjectImage;
 
 class Image
 {
@@ -12,7 +16,7 @@ class Image
     protected $usePictureTag = false;
 
     /**
-     * @var \Concrete\Core\Html\Object\Picture|\HTMLObject\Image
+     * @var Picture|HtmlObjectImage
      */
     protected $tag;
 
@@ -39,7 +43,7 @@ class Image
 
         if ($this->usePictureTag) {
             if (!isset($this->theme)) {
-                $c = \Page::getCurrentPage();
+                $c = Page::getCurrentPage();
                 $this->theme = $c->getCollectionThemeObject();
             }
             $sources = array();
@@ -48,7 +52,7 @@ class Image
                 $fallbackSrc = $f->getURL();
             }
             foreach ($this->theme->getThemeResponsiveImageMap() as $thumbnail => $width) {
-                $type = \Concrete\Core\File\Image\Thumbnail\Type\Type::getByHandle($thumbnail);
+                $type = Type::getByHandle($thumbnail);
                 if ($type != null) {
                     $src = $f->getThumbnailURL($type->getBaseVersion());
                     $sources[] = array('src' => $src, 'width' => $width);
@@ -57,14 +61,14 @@ class Image
                     }
                 }
             }
-            $this->tag = \Concrete\Core\Html\Object\Picture::create($sources, $fallbackSrc);
+            $this->tag = Picture::create($sources, $fallbackSrc);
         } else {
             // Return a simple image tag.
             $path = $f->getRelativePath();
             if (!$path) {
                 $path = $f->getURL();
             }
-            $this->tag = \HtmlObject\Image::create($path);
+            $this->tag = HtmlObjectImage::create($path);
             $this->tag->width((string) $f->getAttribute('width'));
             $this->tag->height((string) $f->getAttribute('height'));
         }
@@ -73,7 +77,7 @@ class Image
     /**
      * Returns an object that represents the HTML tag.
      *
-     * @return \Concrete\Core\Html\Object\Picture|\HTMLObject\Image
+     * @return Picture|HtmlObjectImage
      */
     public function getTag()
     {
@@ -88,13 +92,13 @@ class Image
      */
     protected function loadPictureSettingsFromTheme()
     {
-        $c = \Page::getCurrentPage();
+        $c = Page::getCurrentPage();
         if (is_object($c)) {
             $pt = $c->getPageController()->getTheme();
             if (is_object($pt)) {
                 $pt = $pt->getThemeHandle();
             }
-            $th = PageTheme::getByHandle($pt);
+            $th = Theme::getByHandle($pt);
             if (is_object($th)) {
                 $this->theme = $th;
                 $this->usePictureTag = count($th->getThemeResponsiveImageMap()) > 0;
