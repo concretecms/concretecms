@@ -537,7 +537,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
                     foreach($existingControls as $existingControl) {
                         if ($existingControl->getId() == $id) {
                             if ($control instanceof AttributeKeyControl) {
-                                $control->getAttributeKey()->getAttributeKeySettings();
+                                $settings = $control->getAttributeKey()->getAttributeKeySettings();
                                 $key = $existingControl->getAttributeKey();
                                 $type = $key->getAttributeType();
                                 $type = $entityManager->merge($type);
@@ -555,7 +555,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
                                 $key->setAttributeType($type);
                                 $settings = $control->getAttributeKey()->getAttributeKeySettings();
                                 $settings->setAttributeKey($key);
-                                $settings->mergeAndPersist($entityManager);
+                                $settings = $settings->mergeAndPersist($entityManager);
 
                                 // Required
                                 $existingControl->setIsRequired($control->isRequired());
