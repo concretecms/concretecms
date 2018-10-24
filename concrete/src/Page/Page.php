@@ -84,6 +84,13 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     protected $cPointerOriginalID = null;
 
     /**
+     * The original siteTreeID of a page (if it's a page alias).
+     *
+     * @var int|null
+     */
+    protected $cPointerOriginalSiteTreeID = null;
+
+    /**
      * The link for the aliased page.
      *
      * @var string|null
@@ -262,6 +269,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                 $this->cPointerID = $originalRow['cPointerID'];
                 $this->cIsActive = $originalRow['cIsActive'];
                 $this->cPointerOriginalID = $originalRow['cID'];
+                $this->cPointerOriginalSiteTreeID = $row['siteTreeID'];
                 $this->cPath = $originalRow['cPath'];
                 $this->cParentID = $originalRow['cParentID'];
                 $this->cDisplayOrder = $originalRow['cDisplayOrder'];
@@ -1399,7 +1407,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function getSiteTreeID()
     {
-        return $this->siteTreeID;
+        return $this->cPointerOriginalSiteTreeID ?: $this->siteTreeID;
     }
 
     /**
