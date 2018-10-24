@@ -6,11 +6,27 @@ use PageTheme;
 
 class Image
 {
+    /**
+     * @var bool|null If true, this object will return a Picture tag instead of an Image tag.
+     */
     protected $usePictureTag = false;
+
+    /**
+     * @var \Concrete\Core\Html\Object\Picture|\HTMLObject\Image
+     */
     protected $tag;
 
+    /**
+     * @var \Concrete\Core\Page\Theme\Theme
+     */
     protected $theme;
 
+    /**
+     * Load picture settings from the theme.
+     *
+     * If the theme uses responsive image maps,
+     * the getTag method will return a Picture object.
+     */
     protected function loadPictureSettingsFromTheme()
     {
         $c = \Page::getCurrentPage();
@@ -28,8 +44,8 @@ class Image
     }
 
     /**
-     * @param \File $f
-     * @param null $usePictureTag
+     * @param \Concrete\Core\Entity\File $f
+     * @param bool|null $usePictureTag
      */
     public function __construct(File $f = null, $usePictureTag = null)
     {
@@ -77,7 +93,9 @@ class Image
     }
 
     /**
-     * @return \HTMLObject\Element\Tag
+     * Returns an object that represents the HTML tag.
+     *
+     * @return \Concrete\Core\Html\Object\Picture|\HTMLObject\Image
      */
     public function getTag()
     {
