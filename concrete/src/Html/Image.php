@@ -22,28 +22,6 @@ class Image
     protected $theme;
 
     /**
-     * Load picture settings from the theme.
-     *
-     * If the theme uses responsive image maps,
-     * the getTag method will return a Picture object.
-     */
-    protected function loadPictureSettingsFromTheme()
-    {
-        $c = \Page::getCurrentPage();
-        if (is_object($c)) {
-            $pt = $c->getPageController()->getTheme();
-            if (is_object($pt)) {
-                $pt = $pt->getThemeHandle();
-            }
-            $th = PageTheme::getByHandle($pt);
-            if (is_object($th)) {
-                $this->theme = $th;
-                $this->usePictureTag = count($th->getThemeResponsiveImageMap()) > 0;
-            }
-        }
-    }
-
-    /**
      * @param \Concrete\Core\Entity\File $f
      * @param bool|null $usePictureTag
      */
@@ -100,5 +78,27 @@ class Image
     public function getTag()
     {
         return $this->tag;
+    }
+
+    /**
+     * Load picture settings from the theme.
+     *
+     * If the theme uses responsive image maps,
+     * the getTag method will return a Picture object.
+     */
+    protected function loadPictureSettingsFromTheme()
+    {
+        $c = \Page::getCurrentPage();
+        if (is_object($c)) {
+            $pt = $c->getPageController()->getTheme();
+            if (is_object($pt)) {
+                $pt = $pt->getThemeHandle();
+            }
+            $th = PageTheme::getByHandle($pt);
+            if (is_object($th)) {
+                $this->theme = $th;
+                $this->usePictureTag = count($th->getThemeResponsiveImageMap()) > 0;
+            }
+        }
     }
 }
