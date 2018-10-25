@@ -5,7 +5,8 @@ use Concrete\Core\User\UserList;
 use Loader;
 use Config;
 use Concrete\Core\Permission\Access\Access as PermissionAccess;
-use Group;
+use Concrete\Core\User\Group\Group;
+use Concrete\Core\Support\Facade\Facade;
 
 class GroupCombinationEntity extends Entity
 {
@@ -53,33 +54,57 @@ class GroupCombinationEntity extends Entity
         return $entities;
     }
 
+    /**
+     * Function used to get or create a GroupCombination Permission Access Entity
+     *
+     * @param $groups Group[]
+     * @return self
+     */
     public static function getOrCreate($groups)
     {
-        $db = Loader::db();
-        $petID = $db->GetOne('select petID from PermissionAccessEntityTypes where petHandle = \'group_combination\'');
-        $q = 'select pae.peID from PermissionAccessEntities pae ';
+
+        $app = Facade::getFacadeApplication();
+        /** @var $database \Concrete\Core\Database\Connection\Connection */
+        $database = $app->make('database')->connection();
+        $petID = $database->fetchColumn('select petID from PermissionAccessEntityTypes where petHandle = \'group_combination\'');
+        $query = $database->createQueryBuilder();
+        $query->select('pae.peID')->from('PermissionAccessEntities', 'pae');
         $i = 1;
-        foreach ($groups as $g) {
-            $q .= 'left join PermissionAccessEntityGroups paeg' . $i . ' on pae.peID = paeg' . $i . '.peID ';
+        $query->where('petid = :entityTypeID')->setParameter('entityTypeID',$petID);
+        foreach ($groups as $group) {
+            $query
+                ->leftJoin('pae','PermissionAccessEntityGroups','paeg'.$i, 'pae.peID = paeg'.$i.'.peID')
+                ->andWhere('paeg'.$i.'.gID = :group'.$i)
+                ->setParameter('group'.$i, $group->getGroupID());
             ++$i;
         }
-        $q .= 'where petID = ? ';
-        $i = 1;
-        foreach ($groups as $g) {
-            $q .= 'and paeg' . $i . '.gID = ' . $g->getGroupID() . ' ';
-            ++$i;
+
+        $peIDs = $query->execute()->fetchAll();
+        $peID = 0;
+
+        // Check for all the groups belonging to this AccessEntity
+        if (!empty($peIDs)) {
+            foreach ($peIDs as $peID) {
+                $allGroups = $database->fetchColumn('select count(gID) from PermissionAccessEntityGroups WHERE peID = '. $peID['peID']);
+                if ($allGroups == count($groups)) {
+                    $peID = $peID['peID'];
+                    break;
+                }
+            }
+        } else {
+            $peID = 0;
         }
-        $peID = $db->GetOne($q, array($petID));
-        if (!$peID) {
-            $db->Execute("insert into PermissionAccessEntities (petID) values (?)", array($petID));
-            $peID = $db->Insert_ID();
-            Config::save('concrete.misc.access_entity_updated', time());
-            foreach ($groups as $g) {
-                $db->Execute('insert into PermissionAccessEntityGroups (peID, gID) values (?, ?)', array($peID, $g->getGroupID()));
+        // If the accessEntity doesnt exist then create a new one
+        if (empty($peID)) {
+            $database->insert('PermissionAccessEntities',['petID'=>$petID]);
+            $peID = $database->lastInsertId();
+            $app->make('config')->save('concrete.misc.access_entity_updated', time());
+            foreach ($groups as $group) {
+                $database->insert('PermissionAccessEntityGroups', ['peID'=>$peID, 'gID'=>$group->getGroupID()]);
             }
         }
 
-        return \Concrete\Core\Permission\Access\Entity\Entity::getByID($peID);
+        return self::getByID($peID);
     }
 
     public function getAccessEntityUsers(PermissionAccess $pa)
