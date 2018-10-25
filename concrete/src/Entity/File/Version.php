@@ -1390,6 +1390,7 @@ class Version implements ObjectInterface
                 $image = $this->getImagineImage();
                 if ($image) {
                     $imageSize = $image->getSize();
+                    unset($image);
                     $types = Type::getVersionList();
                     $file = $this->getFile();
                     $fsl = null;
@@ -1437,7 +1438,17 @@ class Version implements ObjectInterface
         $app = Application::getFacadeApplication();
         $config = $app->make('config');
         $image = $this->getImagineImage();
+        $imageSize = $image->getSize();
         $bitmapFormat = $app->make(BitmapFormat::class);
+        $inplaceOperations = false;
+        $inplacePixelsLimit = (float) $config->get('concrete.misc.inplace_image_operations_limit');
+        if ($inplacePixelsLimit >= 1) {
+            $totalImagePixels = $imageSize->getWidth() * $imageSize->getHeight() * max($image->layers()->count(), 1);
+            if ($totalImagePixels > $inplacePixelsLimit) {
+                $inplaceOperations = true;
+                $this->releaseImagineImage();
+            }
+        }
 
         $filesystem = $this->getFile()
             ->getFileStorageLocationObject()
@@ -1448,9 +1459,9 @@ class Version implements ObjectInterface
         if ($height && $width) {
             $size = new Box($width, $height);
         } elseif ($width) {
-            $size = $image->getSize()->widen($width);
+            $size = $imageSize->widen($width);
         } else {
-            $size = $image->getSize()->heighten($height);
+            $size = $imageSize->heighten($height);
         }
 
         // isCropped only exists on the CustomThumbnail type
@@ -1467,21 +1478,26 @@ class Version implements ObjectInterface
                     break;
             }
         }
+        if ($inplaceOperations) {
+            $thumbnailMode |= ImageInterface::THUMBNAIL_FLAG_NOCLONE;
+        }
 
-        $imageForThumbnail = $image;
         if ($type->isUpscalingEnabled()) {
-            $imageSize = $image->getSize();
             if ($size->contains($imageSize) && $imageSize->getWidth() !== $size->getWidth() && $imageSize->getHeight() !== $size->getHeight()) {
                 if (($imageSize->getWidth() / $imageSize->getHeight()) >= ($size->getWidth() / $size->getHeight())) {
                     $newImageSize = $imageSize->heighten($size->getHeight());
                 } else {
                     $newImageSize = $imageSize->widen($size->getWidth());
                 }
-                $imageForThumbnail = $image->copy()->resize($newImageSize);
+                if ($inplaceOperations) {
+                    $image->resize($newImageSize);
+                } else {
+                    $image = $image->copy()->resize($newImageSize);
+                }
             }
         }
-        $thumbnail = $imageForThumbnail->thumbnail($size, $thumbnailMode);
-        unset($imageForThumbnail);
+        $thumbnail = $image->thumbnail($size, $thumbnailMode);
+        unset($image);
         $thumbnailPath = $type->getFilePath($this);
         if ($type->isKeepAnimations() && $thumbnail->layers()->count() > 1) {
             $isAnimation = true;
@@ -1505,6 +1521,8 @@ class Version implements ObjectInterface
                 'mimetype' => $mimetype,
             ]
         );
+        unset($thumbnail);
+        gc_collect_cycles();
 
         $app['director']->dispatch('on_thumbnail_generate',
             new \Concrete\Core\File\Event\ThumbnailGenerate($thumbnailPath, $type)
@@ -1518,10 +1536,6 @@ class Version implements ObjectInterface
             $this->fvHasDetailThumbnail = true;
             $this->save();
         }
-
-        unset($size);
-        unset($thumbnail);
-        unset($filesystem);
     }
 
     /**
