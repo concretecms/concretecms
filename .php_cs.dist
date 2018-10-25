@@ -6,35 +6,38 @@ if (!class_exists('PhpCsFixer\Config', true)) {
 }
 
 return PhpCsFixer\Config::create()
-    ->setCacheFile(__DIR__.'/.php_cs.cache')
     ->setRules([
-        // Let's start with the standard Symfony rules
         '@Symfony' => true,
-
-        // Force short array syntax
         'array_syntax' => ['syntax' => 'short'],
-
-        // A single space between cast and variable
-        'cast_spaces' => true,
-
-        // Concatenation should be spaced with a space
-        'concat_space' => [
-            'spacing' => 'one',
-        ],
-
-        // Don't force an empty line before namespace declaration
-        'single_blank_line_before_namespace' => false,
-        'no_blank_lines_before_namespace' => true,
         'blank_line_after_opening_tag' => false,
-
-        // Don't vertically align phpdoc tags
+        'concat_space' => ['spacing' => 'one'],
+        'no_blank_lines_before_namespace' => true,
         'phpdoc_align' => false,
-
-        // Allow double-quoted strings, don't force single-quoted strings
-        'single_quote' => false,
+        'single_blank_line_before_namespace' => false,
     ])
-    ->setFinder(
-        PhpCsFixer\Finder::create()
-            ->in(__DIR__)
+    ->setFinder(PhpCsFixer\Finder::create()
+        ->exclude('vendor')
+        ->in(__DIR__)
     )
 ;
+
+/*
+This document has been generated with
+https://mlocati.github.io/php-cs-fixer-configurator/?version=2.2#configurator
+you can change this configuration by importing this YAML code:
+
+version: 2.2.20
+expandSets: false
+fixerSets:
+  - '@Symfony'
+fixers:
+  array_syntax:
+    syntax: short
+  blank_line_after_opening_tag: false
+  concat_space:
+    spacing: one
+  no_blank_lines_before_namespace: true
+  phpdoc_align: false
+  single_blank_line_before_namespace: false
+
+*/
