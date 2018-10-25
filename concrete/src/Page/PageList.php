@@ -253,7 +253,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
                 }
             }
 
-            if (null !== $tree) {
+            if ($tree !== null) {
                 if (!is_array($tree)) {
                     $tree = [$tree];
                 }
@@ -267,7 +267,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
                         $treeIDs[] = $siteTree->getSiteTreeID();
                     }
                 }
-                if (0 === count($treeIDs)) {
+                if (count($treeIDs) === 0) {
                     if (!$this->includeSystemPages) {
                         $query->andWhere($query->expr()->neq('p.siteTreeID', 0));
                     }
@@ -294,7 +294,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
     public function getTotalResults()
     {
         $u = new \User();
-        if (-1 === $this->permissionsChecker) {
+        if ($this->permissionsChecker === -1) {
             $query = $this->deliverQueryObject();
             // We need to reset the potential custom order by here because otherwise, if we've added
             // items to the select parts, and we're ordering by them, we get a SQL error
@@ -326,14 +326,14 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
     {
         $c = Page::getByID($queryRow['cID'], 'ACTIVE');
         if (is_object($c) && $this->checkPermissions($c)) {
-            if (self::PAGE_VERSION_RECENT == $this->pageVersionToRetrieve) {
+            if ($this->pageVersionToRetrieve == self::PAGE_VERSION_RECENT) {
                 $cp = new \Permissions($c);
-                if ($cp->canViewPageVersions() || -1 === $this->permissionsChecker) {
+                if ($cp->canViewPageVersions() || $this->permissionsChecker === -1) {
                     $c->loadVersionObject('RECENT');
                 }
-            } elseif (self::PAGE_VERSION_SCHEDULED == $this->pageVersionToRetrieve) {
+            } elseif ($this->pageVersionToRetrieve == self::PAGE_VERSION_SCHEDULED) {
                 $cp = new \Permissions($c);
-                if ($cp->canViewPageVersions() || -1 === $this->permissionsChecker) {
+                if ($cp->canViewPageVersions() || $this->permissionsChecker === -1) {
                     $c->loadVersionObject('SCHEDULED');
                 }
             }
@@ -348,7 +348,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
     public function checkPermissions($mixed)
     {
         if (isset($this->permissionsChecker)) {
-            if (-1 === $this->permissionsChecker) {
+            if ($this->permissionsChecker === -1) {
                 return true;
             } else {
                 return call_user_func_array($this->permissionsChecker, [$mixed]);
@@ -456,8 +456,12 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
      */
     public function filterByPagesWithCustomStyles()
     {
-        $this->query->innerJoin('cv', 'CollectionVersionThemeCustomStyles', 'cvStyles',
-            'cv.cID = cvStyles.cID');
+        $this->query->innerJoin(
+            'cv',
+            'CollectionVersionThemeCustomStyles',
+            'cvStyles',
+            'cv.cID = cvStyles.cID'
+        );
     }
 
     /**
@@ -613,8 +617,12 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
         $query->select('distinct p2.cID')
             ->from('Pages', 'p2')
             ->innerJoin('p2', 'CollectionVersions', 'cv2', 'cv2.cID = p2.cID')
-            ->innerJoin('cv2', 'CollectionVersionBlocks', 'cvb2',
-                'cv2.cID = cvb2.cID and cv2.cvID = cvb2.cvID')
+            ->innerJoin(
+                'cv2',
+                'CollectionVersionBlocks',
+                'cvb2',
+                'cv2.cID = cvb2.cID and cv2.cvID = cvb2.cvID'
+            )
             ->innerJoin('cvb2', 'Blocks', 'b', 'cvb2.bID = b.bID')
             ->andWhere('b.btID = :btID');
 
@@ -709,7 +717,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
     protected function selectDistinct()
     {
         $selects = $this->query->getQueryPart('select');
-        if ('p.cID' === $selects[0]) {
+        if ($selects[0] ==='p.cID') {
             $selects[0] = 'distinct p.cID';
             $this->query->select($selects);
         }
