@@ -452,25 +452,9 @@ class AssociationApplierTest extends ConcreteDatabaseTestCase
 
     protected function debugAndExit()
     {
-        fwrite(STDERR, "Current status:\n");
-
         $db = Database::connection();
-        $project = Express::getObjectByHandle('project');
-        $list = new \Concrete\Core\Express\EntryList($project);
-        $list->ignorePermissions();
-        foreach ($list->getResults() as $project) {
-            Express::refresh($project);
-            fwrite(STDERR, "Project: {$project->getProjectName()} ({$project->getId()})\n");
-            $categoryAssociation = $project->getAssociations()[0];
-            if ($categoryAssociation) {
-                $entries = $db->GetCol('select exEntryID from ExpressEntityAssociationEntries where association_id = ? order by displayOrder asc ', [$categoryAssociation->getId()]);
-                foreach ($entries as $entry) {
-                    fwrite(STDERR, "Found Related Category ID: {$entry}\n");
-                }
-            }
-        }
 
-        fwrite(STDERR, "-----------------------------------\n");
+        fwrite(STDERR, "Current status:\n");
 
         $category = Express::getObjectByHandle('category');
         $list = new \Concrete\Core\Express\EntryList($category);
@@ -486,6 +470,26 @@ class AssociationApplierTest extends ConcreteDatabaseTestCase
                 }
             }
         }
+
+
+        fwrite(STDERR, "-----------------------------------\n");
+
+
+        $project = Express::getObjectByHandle('project');
+        $list = new \Concrete\Core\Express\EntryList($project);
+        $list->ignorePermissions();
+        foreach ($list->getResults() as $project) {
+            Express::refresh($project);
+            fwrite(STDERR, "Project: {$project->getProjectName()} ({$project->getId()})\n");
+            $categoryAssociation = $project->getAssociations()[0];
+            if ($categoryAssociation) {
+                $entries = $db->GetCol('select exEntryID from ExpressEntityAssociationEntries where association_id = ? order by displayOrder asc ', [$categoryAssociation->getId()]);
+                foreach ($entries as $entry) {
+                    fwrite(STDERR, "Found Related Category ID: {$entry}\n");
+                }
+            }
+        }
+
 
         exit;
     }
