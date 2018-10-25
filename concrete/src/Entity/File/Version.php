@@ -1389,13 +1389,12 @@ class Version implements ObjectInterface
             try {
                 $image = $this->getImagineImage();
                 if ($image) {
-                    $imageWidth = (int) $this->getAttribute('width') ?: (int) $image->getSize()->getWidth();
-                    $imageHeight = (int) $this->getAttribute('height') ?: (int) $image->getSize()->getHeight();
+                    $imageSize = $image->getSize();
                     $types = Type::getVersionList();
                     $file = $this->getFile();
                     $fsl = null;
                     foreach ($types as $type) {
-                        if ($type->shouldExistFor($imageWidth, $imageHeight, $file)) {
+                        if ($type->shouldExistFor($imageSize->getWidth(), $imageSize->getHeight(), $file)) {
                             if ($deleteExistingThumbnails) {
                                 $this->deleteThumbnail($type);
                             } else {
