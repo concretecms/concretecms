@@ -1481,21 +1481,10 @@ class Version implements ObjectInterface
         if ($inplaceOperations) {
             $thumbnailMode |= ImageInterface::THUMBNAIL_FLAG_NOCLONE;
         }
-
         if ($type->isUpscalingEnabled()) {
-            if ($size->contains($imageSize) && $imageSize->getWidth() !== $size->getWidth() && $imageSize->getHeight() !== $size->getHeight()) {
-                if (($imageSize->getWidth() / $imageSize->getHeight()) >= ($size->getWidth() / $size->getHeight())) {
-                    $newImageSize = $imageSize->heighten($size->getHeight());
-                } else {
-                    $newImageSize = $imageSize->widen($size->getWidth());
-                }
-                if ($inplaceOperations) {
-                    $image->resize($newImageSize);
-                } else {
-                    $image = $image->copy()->resize($newImageSize);
-                }
-            }
+            $thumbnailMode |= ImageInterface::THUMBNAIL_FLAG_UPSCALE;
         }
+
         $thumbnail = $image->thumbnail($size, $thumbnailMode);
         unset($image);
         $thumbnailPath = $type->getFilePath($this);
