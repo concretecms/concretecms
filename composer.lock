@@ -1959,16 +1959,16 @@
         },
         {
             "name": "imagine/imagine",
-            "version": "1.0.1",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/avalanche123/Imagine.git",
-                "reference": "f2f39f5900ed69480dfc2f23cb56b591b282d501"
+                "reference": "05c37ac994e620646b376633c14e6377c35e3399"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/avalanche123/Imagine/zipball/f2f39f5900ed69480dfc2f23cb56b591b282d501",
-                "reference": "f2f39f5900ed69480dfc2f23cb56b591b282d501",
+                "url": "https://api.github.com/repos/avalanche123/Imagine/zipball/05c37ac994e620646b376633c14e6377c35e3399",
+                "reference": "05c37ac994e620646b376633c14e6377c35e3399",
                 "shasum": ""
             },
             "require": {
@@ -2013,7 +2013,7 @@
                 "image manipulation",
                 "image processing"
             ],
-            "time": "2018-09-27T12:22:55+00:00"
+            "time": "2018-10-25T06:45:38+00:00"
         },
         {
             "name": "indigophp/hash-compat",
