@@ -35,14 +35,14 @@ class GroupCombinationEntity extends Entity
     }
 
     /**
-     * Returns all GroupCombination Access Entities for the provided user
+     * Returns all GroupCombination Access Entities for the provided user.
      *
      * @param User | UserEntity $user
+     *
      * @return Entity[] | array
      */
     public static function getAccessEntitiesForUser($user)
     {
-
         $entities = [];
         // if the user isnt registered no need to do this anymore
         if ($user->isRegistered()) {
@@ -58,32 +58,32 @@ class GroupCombinationEntity extends Entity
             }
             $instr = implode(',', $ingids);
 
-                $peIDs = $database->fetchAll('select distinct pae.peID from PermissionAccessEntities pae inner join PermissionAccessEntityTypes paet on pae.petID = paet.petID inner join PermissionAccessEntityGroups paeg on pae.peID = paeg.peID where petHandle = \'group_combination\' and paeg.gID in (' . $instr . ')');
-                // now for each one we check to see if it applies
-                foreach ($peIDs as $peID) {
-                    $r = $database->fetchAssoc('select count(gID) as peGroups, (select count(UserGroups.gID) from UserGroups where uID = ? and gID in (select gID from PermissionAccessEntityGroups where peID = ?)) as uGroups from PermissionAccessEntityGroups where peID = ?', [
+            $peIDs = $database->fetchAll('select distinct pae.peID from PermissionAccessEntities pae inner join PermissionAccessEntityTypes paet on pae.petID = paet.petID inner join PermissionAccessEntityGroups paeg on pae.peID = paeg.peID where petHandle = \'group_combination\' and paeg.gID in (' . $instr . ')');
+            // now for each one we check to see if it applies
+            foreach ($peIDs as $peID) {
+                $r = $database->fetchAssoc('select count(gID) as peGroups, (select count(UserGroups.gID) from UserGroups where uID = ? and gID in (select gID from PermissionAccessEntityGroups where peID = ?)) as uGroups from PermissionAccessEntityGroups where peID = ?', [
                         $user->getUserID(), $peID['peID'], $peID['peID'], ]);
-                    if ($r['peGroups'] == $r['uGroups'] && $r['peGroups'] > 1) {
-                        $entity = Entity::getByID($peID['peID']);
-                        if (is_object($entity)) {
-                            $entities[] = $entity;
-                        }
+                if ($r['peGroups'] == $r['uGroups'] && $r['peGroups'] > 1) {
+                    $entity = Entity::getByID($peID['peID']);
+                    if (is_object($entity)) {
+                        $entities[] = $entity;
                     }
                 }
+            }
         }
 
         return $entities;
     }
 
     /**
-     * Function used to get or create a GroupCombination Permission Access Entity
+     * Function used to get or create a GroupCombination Permission Access Entity.
      *
      * @param $groups Group[]
+     *
      * @return self
      */
     public static function getOrCreate($groups)
     {
-
         $app = Facade::getFacadeApplication();
         /** @var $database \Concrete\Core\Database\Connection\Connection */
         $database = $app->make('database')->connection();
@@ -91,12 +91,12 @@ class GroupCombinationEntity extends Entity
         $query = $database->createQueryBuilder();
         $query->select('pae.peID')->from('PermissionAccessEntities', 'pae');
         $i = 1;
-        $query->where('petid = :entityTypeID')->setParameter('entityTypeID',$petID);
+        $query->where('petid = :entityTypeID')->setParameter('entityTypeID', $petID);
         foreach ($groups as $group) {
             $query
-                ->leftJoin('pae','PermissionAccessEntityGroups','paeg'.$i, 'pae.peID = paeg'.$i.'.peID')
-                ->andWhere('paeg'.$i.'.gID = :group'.$i)
-                ->setParameter('group'.$i, $group->getGroupID());
+                ->leftJoin('pae', 'PermissionAccessEntityGroups', 'paeg' . $i, 'pae.peID = paeg' . $i . '.peID')
+                ->andWhere('paeg' . $i . '.gID = :group' . $i)
+                ->setParameter('group' . $i, $group->getGroupID());
             ++$i;
         }
 
@@ -115,11 +115,11 @@ class GroupCombinationEntity extends Entity
         }
         // If the accessEntity doesnt exist then create a new one
         if (empty($peID)) {
-            $database->insert('PermissionAccessEntities',['petID'=>$petID]);
+            $database->insert('PermissionAccessEntities', ['petID' => $petID]);
             $peID = $database->lastInsertId();
             $app->make('config')->save('concrete.misc.access_entity_updated', time());
             foreach ($groups as $group) {
-                $database->insert('PermissionAccessEntityGroups', ['peID'=>$peID, 'gID'=>$group->getGroupID()]);
+                $database->insert('PermissionAccessEntityGroups', ['peID' => $peID, 'gID' => $group->getGroupID()]);
             }
         }
 
@@ -127,9 +127,10 @@ class GroupCombinationEntity extends Entity
     }
 
     /**
-     * Get the users who have access to this GroupCombination
+     * Get the users who have access to this GroupCombination.
      *
      * @param PermissionAccess $pa
+     *
      * @return array
      */
     public function getAccessEntityUsers(PermissionAccess $pa)
@@ -144,7 +145,7 @@ class GroupCombinationEntity extends Entity
     }
 
     /**
-     * Function used to load the properties for this GroupCombinationEntity from the database
+     * Function used to load the properties for this GroupCombinationEntity from the database.
      */
     public function load()
     {
