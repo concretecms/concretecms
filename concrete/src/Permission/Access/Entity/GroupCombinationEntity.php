@@ -91,8 +91,6 @@ class GroupCombinationEntity extends Entity
                     break;
                 }
             }
-        } else {
-            $peID = 0;
         }
         // If the accessEntity doesnt exist then create a new one
         if (empty($peID)) {
