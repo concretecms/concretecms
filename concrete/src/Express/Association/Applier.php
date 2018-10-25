@@ -139,7 +139,7 @@ class Applier
         $this->entityManager->persist($manyAssociation);
 
         $existingSelectedEntryIDs = [];
-        $displayOrder = null;
+        $displayOrder = 0;
         foreach ($manyAssociation->getSelectedEntriesCollection() as $manyAssociationSelectedEntry) {
             $manyAssociationSelectedEntryID = $manyAssociationSelectedEntry->getEntry()->getID();
             $existingSelectedEntryIDs[] = $manyAssociationSelectedEntryID;
@@ -155,8 +155,9 @@ class Applier
         $this->entityManager->flush();
 
         // Prepare to add new entries.
-        $displayOrder++;
-
+        if ($displayOrder > 0) {
+            $displayOrder++;
+        }
 
         // Now, let's add entries to the owning side that don't currently exist in the owning side.
         foreach($associatedEntries as $associatedEntry) {
@@ -246,7 +247,7 @@ class Applier
         $this->entityManager->persist($manyAssociation);
 
         $existingSelectedEntryIDs = [];
-        $displayOrder = null;
+        $displayOrder = 0;
         foreach ($manyAssociation->getSelectedEntriesCollection() as $manyAssociationSelectedEntry) {
             $manyAssociationSelectedEntryID = $manyAssociationSelectedEntry->getEntry()->getID();
             $existingSelectedEntryIDs[] = $manyAssociationSelectedEntryID;
@@ -262,7 +263,9 @@ class Applier
         $this->entityManager->flush();
 
         // Prepare to add new entries.
-        $displayOrder++;
+        if ($displayOrder > 0) {
+            $displayOrder++;
+        }
 
         // Now, let's add entries to the owning side that don't currently exist in the owning side.
         foreach($associatedEntries as $associatedEntry) {
