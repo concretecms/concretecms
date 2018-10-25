@@ -139,7 +139,7 @@ class GroupCombinationEntity extends Entity
             $userList->filterByGroupID($g->getGroupID());
         }
 
-        return $userList->get();
+        return $userList->getResults();
     }
 
     /**
