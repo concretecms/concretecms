@@ -32,6 +32,9 @@ return PhpCsFixer\Config::create()
 
         // Allow double-quoted strings, don't force single-quoted strings
         'single_quote' => false,
+
+        // Disable Yoda Style from Symfony configuration
+        'yoda_style' => false,
     ])
     ->setFinder(
         PhpCsFixer\Finder::create()
