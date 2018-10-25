@@ -84,10 +84,10 @@ class GroupCombinationEntity extends Entity
 
         // Check for all the groups belonging to this AccessEntity
         if (!empty($peIDs)) {
-            foreach ($peIDs as $peID) {
-                $allGroups = $database->fetchColumn('select count(gID) from PermissionAccessEntityGroups WHERE peID = '. $peID['peID']);
+            foreach ($peIDs as $result) {
+                $allGroups = $database->fetchColumn('select count(gID) from PermissionAccessEntityGroups WHERE peID = '. $result['peID']);
                 if ($allGroups == count($groups)) {
-                    $peID = $peID['peID'];
+                    $peID = $result['peID'];
                     break;
                 }
             }
