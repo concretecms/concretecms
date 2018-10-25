@@ -1,8 +1,6 @@
 <?php
 namespace Concrete\Core\Permission\Access\Entity;
 
-use Concrete\Core\User\User;
-use Concrete\Core\Entity\User\User as UserEntity;
 use Concrete\Core\User\UserList;
 use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use Concrete\Core\User\Group\Group;
@@ -37,7 +35,7 @@ class GroupCombinationEntity extends Entity
     /**
      * Returns all GroupCombination Access Entities for the provided user.
      *
-     * @param User | UserEntity $user
+     * @param \Concrete\Core\User\User | \Concrete\Core\Entity\User\User $user
      *
      * @return Entity[] | array
      */
