@@ -1372,7 +1372,11 @@ class Version implements ObjectInterface
      */
     public function releaseImagineImage()
     {
+        $doGarbageCollection = $this->imagineImage ? true : false;
         $this->imagineImage = null;
+        if ($doGarbageCollection) {
+            gc_collect_cycles();
+        }
     }
 
     /**
