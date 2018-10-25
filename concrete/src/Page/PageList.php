@@ -29,6 +29,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
     const PAGE_VERSION_ACTIVE = 1;
     const PAGE_VERSION_RECENT = 2;
     const PAGE_VERSION_RECENT_UNAPPROVED = 3;
+    const PAGE_VERSION_SCHEDULED = 4;
 
     const SITE_TREE_CURRENT = -1;
     const SITE_TREE_ALL = 0;
@@ -216,6 +217,11 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
                     ->andWhere('cv.cvID = (select max(cvID) from CollectionVersions where cID = cv.cID)')
                     ->andWhere('cvIsApproved = 0');
                 break;
+            case self::PAGE_VERSION_SCHEDULED:
+                $now = new \DateTime();
+                $query->andWhere('cv.cvID = (select cvID from CollectionVersions where cID = cv.cID and cvIsApproved = 1 and ((cvPublishDate > :cvPublishDate) and (cvPublishEndDate >= :cvPublishDate or cvPublishEndDate is null)) order by cvPublishDate desc limit 1)');
+                $query->setParameter('cvPublishDate', $now->format('Y-m-d H:i:s'));
+                break;
             case self::PAGE_VERSION_ACTIVE:
             default:
                 $now = new \DateTime();
@@ -332,6 +338,11 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
                 $cp = new \Permissions($c);
                 if ($cp->canViewPageVersions() || $this->permissionsChecker === -1) {
                     $c->loadVersionObject('RECENT');
+                }
+            } elseif ($this->pageVersionToRetrieve == self::PAGE_VERSION_SCHEDULED) {
+                $cp = new \Permissions($c);
+                if ($cp->canViewPageVersions() || $this->permissionsChecker === -1) {
+                    $c->loadVersionObject('SCHEDULED');
                 }
             }
             if (isset($queryRow['cIndexScore'])) {
