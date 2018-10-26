@@ -137,7 +137,7 @@ class Version implements ObjectInterface
     /**
      * The name of the file.
      *
-     * @ORM\Column(type="string", options={"collation": "utf8_general_ci"})
+     * @ORM\Column(type="string")
      *
      * @var string
      */
@@ -227,7 +227,7 @@ class Version implements ObjectInterface
     /**
      * The extension of the file version.
      *
-     * @ORM\Column(type="string", nullable=true, options={"collation": "utf8_general_ci"})
+     * @ORM\Column(type="string", nullable=true)
      *
      * @var string|null
      */

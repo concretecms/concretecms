@@ -15,7 +15,7 @@ class Scope implements ScopeEntityInterface
 {
     /**
      * @var string
-     * @ORM\Id @ORM\Column(type="string", options={"collation": "utf8_general_ci"})
+     * @ORM\Id @ORM\Column(type="string")
      */
     protected $identifier;
 

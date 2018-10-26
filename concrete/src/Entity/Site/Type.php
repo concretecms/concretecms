@@ -23,12 +23,12 @@ class Type
     protected $siteTypeID;
 
     /**
-     * @ORM\Column(type="string", unique=true, options={"collation": "utf8_general_ci"})
+     * @ORM\Column(type="string", unique=true)
      */
     protected $siteTypeHandle;
 
     /**
-     * @ORM\Column(type="string", unique=true, options={"collation": "utf8_general_ci"})
+     * @ORM\Column(type="string", unique=true)
      */
     protected $siteTypeName;
 

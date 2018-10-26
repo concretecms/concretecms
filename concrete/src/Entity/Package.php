@@ -21,7 +21,7 @@ class Package implements LocalizablePackageInterface
     protected $pkgID;
 
     /**
-     * @ORM\Column(type="string", unique=true, options={"collation": "utf8_general_ci"})
+     * @ORM\Column(type="string", unique=true)
      */
     protected $pkgHandle;
 

@@ -46,7 +46,7 @@ class Set implements ExportableInterface
     protected $asID;
 
     /**
-     * @ORM\Column(type="string", options={"collation": "utf8_general_ci"})
+     * @ORM\Column(type="string")
      */
     protected $asHandle;
 
