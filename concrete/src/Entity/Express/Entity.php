@@ -36,7 +36,7 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
     protected $name;
 
     /**
-     * @ORM\Column(type="string", unique=true)
+     * @ORM\Column(type="string", unique=true, options={"collation": "utf8_general_ci"})
      */
     protected $handle;
 

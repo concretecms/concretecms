@@ -61,7 +61,7 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
     /**
      * The site handle.
      *
-     * @ORM\Column(type="string", unique=true)
+     * @ORM\Column(type="string", unique=true, options={"collation": "utf8_general_ci"})
      *
      * @var string
      */

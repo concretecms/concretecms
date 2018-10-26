@@ -34,13 +34,13 @@ class Client implements ClientEntityInterface
 
     /**
      * @var string
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", options={"collation": "utf8_general_ci"})
      */
     protected $clientKey;
 
     /**
      * @var string
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", options={"collation": "utf8_general_ci"})
      */
     protected $clientSecret;
 

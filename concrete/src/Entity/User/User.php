@@ -44,7 +44,7 @@ class User implements UserEntityInterface
     protected $uName;
 
     /**
-     * @ORM\Column(type="string", length=254)
+     * @ORM\Column(type="string", length=254, options={"collation": "utf8_general_ci"})
      */
     protected $uEmail;
 
