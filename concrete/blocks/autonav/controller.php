@@ -164,7 +164,7 @@ class Controller extends BlockController
             $c = $this->collection;
 
             // let's use the ID of the collection passed in $this->collection
-            if ($this->collection instanceof Page) {
+            if ($this->collection instanceof \Concrete\Core\Page\Page) {
                 $this->cID = $this->collection->getCollectionID();
             }
         }
