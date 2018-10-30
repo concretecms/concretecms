@@ -3,7 +3,7 @@
 namespace Concrete\Core\Page;
 
 use Concrete\Core\Area\Area;
-use Concrete\Core\Block;
+use Concrete\Core\Block\Block;
 use Concrete\Core\Entity\Attribute\Value\PageValue;
 use Concrete\Core\Localization\Service\Date as DateHelper;
 use Concrete\Core\Multilingual\Page\Section\Section;
@@ -285,7 +285,7 @@ class Cloner
     /**
      * Create an alias of a block to another collection.
      *
-     * @param \Concrete\Core\Block $block
+     * @param \Concrete\Core\Block\Block $block
      * @param \Concrete\Core\Page\Collection\Collection $destinationCollection
      *
      * @return bool returns FALSE if $block is not cloned because it's already present in $destinationCollection, TRUE otherwise
