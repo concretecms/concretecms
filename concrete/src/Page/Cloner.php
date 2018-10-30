@@ -3,6 +3,7 @@
 namespace Concrete\Core\Page;
 
 use Concrete\Core\Area\Area;
+use Concrete\Core\Block;
 use Concrete\Core\Entity\Attribute\Value\PageValue;
 use Concrete\Core\Localization\Service\Date as DateHelper;
 use Concrete\Core\Multilingual\Page\Section\Section;
@@ -126,7 +127,7 @@ class Cloner
             'pkgID' => $page->getPackageID(),
         ]);
 
-        $this->directCopy('PageTypeComposerOutputBlocks', 'arHandle, cbDisplayOrder, ptComposerFormLayoutSetControlID, bID', [$cID, $newCID]);
+        $this->directCopy('PageTypeComposerOutputBlocks', 'arHandle, cbDisplayOrder, ptComposerFormLayoutSetControlID, cvID, bID', ['cID' => [$cID, $newCID]]);
 
         PageStatistics::incrementParents($newCID);
 
@@ -282,6 +283,58 @@ class Cloner
     }
 
     /**
+     * Create an alias of a block to another collection.
+     *
+     * @param \Concrete\Core\Block $block
+     * @param \Concrete\Core\Page\Collection\Collection $destinationCollection
+     *
+     * @return bool returns FALSE if $block is not cloned because it's already present in $destinationCollection, TRUE otherwise
+     */
+    public function cloneBlock(Block $block, Collection $destinationCollection)
+    {
+        $bID = $block->getBlockID();
+        $aHandle = $block->getAreaHandle();
+        $toID = $destinationCollection->getCollectionID();
+        $toCVID = $destinationCollection->getVersionID();
+        $already = (int) $this->connection->fetchColumn(
+            'select bID from CollectionVersionBlocks where cID = ? and cvID = ? and bID = ? and arHandle = ? limit 1',
+            [$toID, $toCVID, $bID, $aHandle]
+        );
+        if ($already !== false) {
+            return false;
+        }
+        $newBlockDisplayOrder = (int) $destinationCollection->getCollectionAreaDisplayOrder($aHandle);
+        $sourceCollection = $block->getBlockCollectionID() ? $block->getBlockCollectionObject() : null;
+        if ($sourceCollection) {
+            $this->copyBlocks(
+                [$sourceCollection->getCollectionID(), $destinationCollection->getCollectionID()],
+                [$sourceCollection->getVersionID(), $destinationCollection->getVersionID()],
+                [$bID, $bID],
+                $newBlockDisplayOrder
+            );
+        } else {
+            $this->connection->insert(
+                'CollectionVersionBlocks',
+                [
+                    'cID' => $toID,
+                    'cvID' => $toCVID,
+                    'bID' => $bID,
+                    'arHandle' => $aHandle,
+                    'cbRelationID' => $block->getBlockRelationID(),
+                    'cbDisplayOrder' => $newBlockDisplayOrder,
+                    'isOriginal' => 0,
+                    'cbOverrideAreaPermissions' => $block->overrideAreaPermissions(),
+                    'cbOverrideBlockTypeCacheSettings' => $block->overrideBlockTypeCacheSettings(),
+                    'cbOverrideBlockTypeContainerSettings' => $block->overrideBlockTypeContainerSettings(),
+                    'cbEnableBlockContainer' => $block->enableBlockContainer() ? 1 : 0,
+                ]
+            );
+        }
+
+        return true;
+    }
+
+    /**
      * Get the name of a page that's unique for the parent.
      *
      * @param string $pageName
@@ -389,7 +442,7 @@ class Cloner
      */
     protected function copyFeatureAssignments(array $cIDs, array $cvIDs = null)
     {
-        $this->directCopy('CollectionVersionFeatureAssignments', 'faID', $cIDs, $cvIDs);
+        $this->directCopy('CollectionVersionFeatureAssignments', 'faID', ['cID' => $cIDs, 'cvID' => $cvIDs]);
     }
 
     /**
@@ -400,7 +453,7 @@ class Cloner
      */
     protected function copyCustomStyles(array $cIDs, array $cvIDs = null)
     {
-        $this->directCopy('CollectionVersionThemeCustomStyles', 'pThemeID, scvlID, preset, sccRecordID', $cIDs, $cvIDs);
+        $this->directCopy('CollectionVersionThemeCustomStyles', 'pThemeID, scvlID, preset, sccRecordID', ['cID' => $cIDs, 'cvID' => $cvIDs]);
     }
 
     /**
@@ -408,36 +461,67 @@ class Cloner
      *
      * @param int[] $cIDs An array with the ID of the source and destination collections
      * @param int[]|null $cvIDs An array with the source and destination collection versions, or NULL to copy the data of all the collection versions
+     * @param int[]|null $bIDs An array with the source and destination block IDs, or NULL to copy all the blocks
+     * @param int|null $newBlockDisplayOrder The display order of the new blocks (NULL: copy)
      */
-    protected function copyBlocks($cIDs, array $cvIDs = null)
+    protected function copyBlocks($cIDs, array $cvIDs = null, array $bIDs = null, $newBlockDisplayOrder = null)
     {
-        $copyFields = 'bID, arHandle, cbDisplayOrder, cbRelationID, cbOverrideAreaPermissions, cbIncludeAll, cbOverrideBlockTypeCacheSettings, cbOverrideBlockTypeContainerSettings, cbEnableBlockContainer';
+        $copyFields = 'arHandle, cbRelationID, cbOverrideAreaPermissions, cbIncludeAll, cbOverrideBlockTypeCacheSettings, cbOverrideBlockTypeContainerSettings, cbEnableBlockContainer';
+        $copyFieldsFrom = "{$copyFields}, 0";
+        $copyFieldsTo = "{$copyFields}, isOriginal";
+        if ($newBlockDisplayOrder === null) {
+            $copyFieldsFrom = "{$copyFieldsFrom}, cbDisplayOrder";
+            $copyFieldsTo = "{$copyFieldsTo}, cbDisplayOrder";
+        } else {
+            $copyFieldsFrom = "{$copyFieldsFrom}, " . (int) $newBlockDisplayOrder;
+            $copyFieldsTo = "{$copyFieldsTo}, cbDisplayOrder";
+        }
         $this->directCopy(
             'CollectionVersionBlocks',
-            ["{$copyFields}, 0", "{$copyFields}, isOriginal"],
-            $cIDs, $cvIDs
+            [$copyFieldsFrom, $copyFieldsTo],
+            [
+                'cID' => $cIDs,
+                'cvID' => $cvIDs,
+                'bID' => $bIDs,
+            ]
         );
         $this->directCopy(
             'CollectionVersionBlockStyles',
-            'bID, arHandle, issID',
-            $cIDs, $cvIDs
+            'arHandle, issID',
+            [
+                'cID' => $cIDs,
+                'cvID' => $cvIDs,
+                'bID' => $bIDs,
+            ]
         );
         $this->directCopy(
             'CollectionVersionBlocksCacheSettings',
-            'bID, arHandle, btCacheBlockOutput, btCacheBlockOutputOnPost, btCacheBlockOutputForRegisteredUsers, btCacheBlockOutputLifetime',
-            $cIDs, $cvIDs
+            'arHandle, btCacheBlockOutput, btCacheBlockOutputOnPost, btCacheBlockOutputForRegisteredUsers, btCacheBlockOutputLifetime',
+            [
+                'cID' => $cIDs,
+                'cvID' => $cvIDs,
+                'bID' => $bIDs,
+            ]
         );
         $this->directCopy(
             'BlockFeatureAssignments',
-            'bID, faID',
-            $cIDs, $cvIDs
+            'faID',
+            [
+                'cID' => $cIDs,
+                'cvID' => $cvIDs,
+                'bID' => $bIDs,
+            ]
         );
 
-        $copyFields = 'bID, paID, pkID';
+        $copyFields = 'paID, pkID';
         $this->directCopy(
             'BlockPermissionAssignments',
             [preg_replace('/(^|,\s*)/', '\\1BlockPermissionAssignments.', $copyFields), $copyFields],
-            $cIDs, $cvIDs,
+            [
+                'cID' => $cIDs,
+                'cvID' => $cvIDs,
+                'bID' => $bIDs,
+            ],
             <<<'EOT'
 BlockPermissionAssignments
 inner join CollectionVersionBlocks
@@ -457,17 +541,16 @@ EOT
      */
     protected function copyAreaStyles(array $cIDs, array $cvIDs = null)
     {
-        $this->directCopy('CollectionVersionAreaStyles', 'arHandle, issID', $cIDs, $cvIDs);
+        $this->directCopy('CollectionVersionAreaStyles', 'arHandle, issID', ['cID' => $cIDs, 'cvID' => $cvIDs]);
     }
 
     /**
      * @param string $table
      * @param string|string[] $copyFields
-     * @param int[] $cIDs An array with the ID of the source and destination collections
-     * @param int[]|null $cvIDs An array with the source and destination collection versions, or NULL to copy the data of all the collection versions
+     * @param array $keyFields An array with key fields; keys are the field names; values are: NULL (to copy the data), mixed[] to change the value
      * @param string|null $from
      */
-    private function directCopy($table, $copyFields, array $cIDs, array $cvIDs = null, $from = null)
+    private function directCopy($table, $copyFields, array $keyFields, $from = null)
     {
         if (is_array($copyFields)) {
             list($copyFieldsFrom, $copyFieldsTo) = $copyFields;
@@ -477,13 +560,24 @@ EOT
         if ($from === null) {
             $from = $table;
         }
-        if ($cvIDs === null) {
-            $query = "insert into {$table} (cID, cvID, {$copyFieldsTo}) select ?, {$table}.cvID, {$copyFieldsFrom} from {$from} where {$table}.cID = ?";
-            $params = [$cIDs[1], $cIDs[0]];
-        } else {
-            $query = "insert into {$table} (cID, cvID, {$copyFieldsTo}) select ?, ?, {$copyFieldsFrom} from {$from} where {$table}.cID = ? and {$table}.cvID = ?";
-            $params = [$cIDs[1], $cvIDs[1], $cIDs[0], $cvIDs[0]];
+        $wheres = [];
+        $insertParams = [];
+        $whereParams = [];
+        foreach ($keyFields as $keyField => $keyValues) {
+            $copyFieldsTo .= ", {$keyField}";
+            if ($keyValues === null) {
+                $copyFieldsFrom .= ", {$table}.{$keyField}";
+            } else {
+                $copyFieldsFrom .= ', ?';
+                $insertParams[] = $keyValues[1];
+                $wheres[] = "{$table}.{$keyField} = ?";
+                $whereParams[] = $keyValues[0];
+            }
         }
-        $this->connection->executeQuery($query, $params);
+        $query = "insert into {$table} ($copyFieldsTo) select {$copyFieldsFrom} from {$from}";
+        if (count($wheres) > 0) {
+            $query .= ' where ' . implode(' and ', $wheres);
+        }
+        $this->connection->executeQuery($query, array_merge($insertParams, $whereParams));
     }
 }
