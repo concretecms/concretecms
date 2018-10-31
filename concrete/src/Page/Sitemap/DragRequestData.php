@@ -492,7 +492,7 @@ class DragRequestData
         if ($originalPage->isExternalLink()) {
             return t("It's not possible to copy the page version of an external URL.");
         }
-        if ($originalPage->isAlias()) {
+        if ($originalPage->isAliasPage()) {
             return t("It's not possible to copy the page version of aliases.");
         }
         $destinationPage = $this->getDestinationPage();

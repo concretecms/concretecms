@@ -66,9 +66,8 @@ class Cloner
      * @param \Concrete\Core\Page\ClonerOptions $options The options for the cloning process
      * @param \Concrete\Core\Page\Page|null $newParentPage The page under which this page should be copied to
      * @param \Concrete\Core\Site\Tree\TreeInterface|null $site the destination site (used if $newParentPage is NULL)
-     * @param Page
      *
-     * @return \Concrete\Core\Page\Page||\Concrete\Core\Page\Stack\Stack
+     * @return \Concrete\Core\Page\Page|\Concrete\Core\Page\Stack\Stack
      */
     public function clonePage(Page $page, ClonerOptions $options, Page $newParentPage = null, TreeInterface $site = null)
     {
@@ -109,7 +108,6 @@ class Cloner
                 $cInheritPermissionsFromCID = $page->getPermissionsCollectionID();
                 break;
         }
-        $cInheritPermissionsFromCID =
         $this->connection->insert('Pages', [
             'cID' => $newCID,
             'siteTreeID' => $siteTreeID,
@@ -391,9 +389,9 @@ class Cloner
      *
      * @param \Concrete\Core\Page\ClonerOptions $options
      * @param int[] $cIDs An array with the ID of the source and destination collections
-     * @param int[]|int|null $cvIDs NULL to copy the data of all the collection versions; int to copy data assuming the same collection version; an array with the source and destination collection versions
+     * @param int[]|null $cvIDs An array with the source and destination collection versions, or NULL to copy the data of all the collection versions
      */
-    protected function copyData(ClonerOptions $options, array $cIDs, $cvIDs = null)
+    protected function copyData(ClonerOptions $options, array $cIDs, array $cvIDs = null)
     {
         if ($options->copyAttributes()) {
             $this->copyAttributes($cIDs, $cvIDs);
