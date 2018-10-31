@@ -808,7 +808,7 @@ return [
                 'threshold' => 120, // in days
             ],
             'authentication_failure' => [
-                'enabled' => true,
+                'enabled' => false,
                 'amount' => 5, // The number of failures
                 'duration' => 300 // In so many seconds
             ],
