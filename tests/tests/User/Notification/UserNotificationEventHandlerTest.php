@@ -33,7 +33,7 @@ class UserNotificationEventHandlerTest extends PHPUnit_Framework_TestCase
         $event->shouldReceive('getNotificationDate')->atLeast()->once()->andReturn($now);
 
         $notifier = M::mock(StandardNotifier::class);
-        $notifier->shouldReceive('notify')->once()->withArgs([['foo'], equalTo(new UserDeactivatedNotification($event))]);
+        $notifier->shouldReceive('notify')->once()->withArgs([['foo'], \Hamcrest_Core_IsEqual::equalTo(new UserDeactivatedNotification($event))]);
         $notifier->shouldReceive('getUsersToNotify')->once()->andReturn(['foo']);
 
         $type = M::mock(UserDeactivatedType::class)->shouldIgnoreMissing();
