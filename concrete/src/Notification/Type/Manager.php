@@ -13,6 +13,16 @@ class Manager extends CoreManager
         return $this->app->make('Concrete\Core\Notification\Type\CoreUpdateType');
     }
 
+    /**
+     * Create a user deactivated type
+     *
+     * @return \Concrete\Core\Notification\Type\UserDeactivatedType
+     */
+    public function createUserDeactivatedDriver()
+    {
+        return $this->app->make(UserDeactivatedType::class);
+    }
+
     public function createNewConversationMessageDriver()
     {
         return $this->app->make('Concrete\Core\Notification\Type\NewConversationMessageType');

@@ -3,6 +3,11 @@
 use Concrete\Core\Http\Request;
 use Illuminate\Filesystem\Filesystem;
 
+// Fix for phpstorm + tests run in separate processes
+if (!defined('PHPUNIT_COMPOSER_INSTALL')) {
+    define('PHPUNIT_COMPOSER_INSTALL', __DIR__ . '/../concrete/vendor/autoload.php');
+}
+
 // Define test constants
 putenv('CONCRETE5_ENV=travis');
 define('DIR_TESTS', str_replace(DIRECTORY_SEPARATOR, '/', __DIR__));
