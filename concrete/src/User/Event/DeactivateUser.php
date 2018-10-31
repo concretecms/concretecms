@@ -3,7 +3,7 @@
 namespace Concrete\Core\User\Event;
 
 use Carbon\Carbon;
-use Concrete\Core\Entity\User\User;
+use Concrete\Core\Entity\User\User as UserEntity;
 use Concrete\Core\Notification\Subject\SubjectInterface;
 use Concrete\Core\User\Event\UserInfo as UserInfoEvent;
 use DateTime;
@@ -39,7 +39,7 @@ class DeactivateUser extends UserInfoEvent implements SubjectInterface
      * @param \Concrete\Core\Entity\User\User|null $actorEntity
      * @param \DateTime|null $dateCreated
      */
-    public function __construct(User $user, User $actorEntity = null, DateTime $dateCreated = null)
+    public function __construct(UserEntity $user, UserEntity $actorEntity = null, DateTime $dateCreated = null)
     {
         $this->user = $user;
         $this->actor = $actorEntity;
@@ -55,6 +55,7 @@ class DeactivateUser extends UserInfoEvent implements SubjectInterface
     {
         return $this->created;
     }
+
     /**
      * Get the users that should be excluded from notifications
      * Expected return value would be users involved in the creation of the notification, they may not need to be
@@ -106,7 +107,7 @@ class DeactivateUser extends UserInfoEvent implements SubjectInterface
      *
      * @return \Concrete\Core\User\Event\DeactivateUser
      */
-    public static function create(User $userEntity, User $actorEntity = null, DateTime $dateCreated = null)
+    public static function create(UserEntity $userEntity, UserEntity $actorEntity = null, DateTime $dateCreated = null)
     {
         return new self($userEntity, $actorEntity, $dateCreated);
     }
