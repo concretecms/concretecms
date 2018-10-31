@@ -12,6 +12,8 @@ use Concrete\Core\Notification\Type\Manager;
 use Concrete\Core\Notification\Type\UserDeactivatedType;
 use Concrete\Core\User\Event\DeactivateUser;
 use Concrete\Core\User\Notification\UserNotificationEventHandler;
+use Hamcrest\Core\IsEqual;
+use Hamcrest_Core_IsEqual;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit_Framework_TestCase;
 use Mockery as M;
@@ -23,6 +25,15 @@ class UserNotificationEventHandlerTest extends PHPUnit_Framework_TestCase
 
     public function testHandlingEvent()
     {
+        if (!class_exists(IsEqual::class)) {
+            if (class_exists(Hamcrest_Core_IsEqual::class)) {
+                // Oh merciful lord, why??
+                class_alias(Hamcrest_Core_IsEqual::class, IsEqual::class);
+            } else {
+                $this->markTestSkipped('Unable to detect proper hamcrest IsEqual class');
+            }
+        }
+
         $user = M::mock(User::class);
         $user->shouldReceive('getUserID')->atLeast()->once()->andReturn(44); // This is called once when we create a new UserDeactivatedNotification below
 
@@ -33,7 +44,7 @@ class UserNotificationEventHandlerTest extends PHPUnit_Framework_TestCase
         $event->shouldReceive('getNotificationDate')->atLeast()->once()->andReturn($now);
 
         $notifier = M::mock(StandardNotifier::class);
-        $notifier->shouldReceive('notify')->once()->withArgs([['foo'], \Hamcrest_Core_IsEqual::equalTo(new UserDeactivatedNotification($event))]);
+        $notifier->shouldReceive('notify')->once()->withArgs([['foo'], IsEqual::equalTo(new UserDeactivatedNotification($event))]);
         $notifier->shouldReceive('getUsersToNotify')->once()->andReturn(['foo']);
 
         $type = M::mock(UserDeactivatedType::class)->shouldIgnoreMissing();
