@@ -488,6 +488,43 @@ class PageTest extends PageTestCase
     }
 
     /**
+     * Test if the on_page_display_order_update event works OK.
+     */
+    public function testPageDisplayOrderUpdateFiresEvent()
+    {
+        $parent = self::createPage('DisplayParent');
+        $page1 = self::createPage('Display1', $parent);
+        $page2 = self::createPage('Display2', $parent);
+        $page3 = self::createPage('Display3', $parent);
+
+        /** @var \Symfony\Component\EventDispatcher\EventDispatcherInterface $director */
+        $director = $this->app->make('director');
+
+        $listener = function ($event) {
+            $page = $event->getPageObject();
+
+            if ($page->getCollectionName() === 'Display1') {
+                $this->assertEquals(0, $event->getOldDisplayOrder(), 'First page should always be index 0.');
+                $this->assertEquals(10, $event->getNewDisplayOrder());
+            } elseif ($page->getCollectionName() === 'Display2') {
+                $this->assertEquals(1, $event->getOldDisplayOrder(), 'Second page should always be index 1.');
+                $this->assertEquals(5, $event->getNewDisplayOrder());
+            } elseif ($page->getCollectionName() === 'Display3') {
+                $this->assertEquals(2, $event->getOldDisplayOrder(), 'Third page should always be index 2.');
+                $this->assertEquals(99, $event->getNewDisplayOrder());
+            }
+        };
+
+        $director->addListener('on_page_display_order_update', $listener);
+
+        $page1->updateDisplayOrder(10);
+        $page2->updateDisplayOrder(5);
+        $page1->updateDisplayOrder(99, $page3->getCollectionID());
+
+        $director->removeListener('on_page_display_order_update', $listener);
+    }
+
+    /**
      * @return \Concrete\Core\Page\Page[]
      */
     protected function setupAliases()
