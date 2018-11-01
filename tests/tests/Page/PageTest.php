@@ -492,10 +492,10 @@ class PageTest extends PageTestCase
      */
     public function testPageDisplayOrderUpdateFiresEvent()
     {
-        $parent = self::createPage('DisplayParent');
-        $page1 = self::createPage('Display1', $parent);
-        $page2 = self::createPage('Display2', $parent);
-        $page3 = self::createPage('Display3', $parent);
+        $parent = self::createPage('Parent page to test display order of sub pages');
+        $page1 = self::createPage('Page1', $parent);
+        $page2 = self::createPage('Page2', $parent);
+        $page3 = self::createPage('Page3', $parent);
 
         /** @var \Symfony\Component\EventDispatcher\EventDispatcherInterface $director */
         $director = $this->app->make('director');
@@ -509,16 +509,16 @@ class PageTest extends PageTestCase
         $director->addListener('on_page_display_order_update', $listener);
 
         $page1->updateDisplayOrder(10);
-        $this->assertEquals(0, $map['Display1']['old'], 'First page should always be index 0.');
-        $this->assertEquals(10, $map['Display1']['new']);
+        $this->assertEquals(0, $map[$page1->getCollectionName()]['old'], 'First page should always be index 0.');
+        $this->assertEquals(10, $map[$page1->getCollectionName()]['new']);
 
         $page2->updateDisplayOrder(5);
-        $this->assertEquals(1, $map['Display2']['old'], 'Second page should always be index 1.');
-        $this->assertEquals(5, $map['Display2']['new']);
+        $this->assertEquals(1, $map[$page2->getCollectionName()]['old'], 'Second page should always be index 1.');
+        $this->assertEquals(5, $map[$page2->getCollectionName()]['new']);
 
         $page1->updateDisplayOrder(99, $page3->getCollectionID());
-        $this->assertEquals(2, $map['Display3']['old'], 'Third page should always be index 2.');
-        $this->assertEquals(99, $map['Display3']['new']);
+        $this->assertEquals(2, $map[$page3->getCollectionName()]['old'], 'Third page should always be index 2.');
+        $this->assertEquals(99, $map[$page3->getCollectionName()]['new']);
 
         $director->removeListener('on_page_display_order_update', $listener);
     }
