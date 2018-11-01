@@ -276,7 +276,7 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     public function getCollectionID()
     {
-        return $this->cID;
+        return $this->cID ? (int) $this->cID : null;
     }
 
     /**
