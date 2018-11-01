@@ -500,26 +500,25 @@ class PageTest extends PageTestCase
         /** @var \Symfony\Component\EventDispatcher\EventDispatcherInterface $director */
         $director = $this->app->make('director');
 
-        $listener = function ($event) {
-            $page = $event->getPageObject();
-
-            if ($page->getCollectionName() === 'Display1') {
-                $this->assertEquals(0, $event->getOldDisplayOrder(), 'First page should always be index 0.');
-                $this->assertEquals(10, $event->getNewDisplayOrder());
-            } elseif ($page->getCollectionName() === 'Display2') {
-                $this->assertEquals(1, $event->getOldDisplayOrder(), 'Second page should always be index 1.');
-                $this->assertEquals(5, $event->getNewDisplayOrder());
-            } elseif ($page->getCollectionName() === 'Display3') {
-                $this->assertEquals(2, $event->getOldDisplayOrder(), 'Third page should always be index 2.');
-                $this->assertEquals(99, $event->getNewDisplayOrder());
-            }
+        $map = [];
+        $listener = function ($event) use (&$map) {
+            $map[$event->getPageObject()->getCollectionName()]['old'] = $event->getOldDisplayOrder();
+            $map[$event->getPageObject()->getCollectionName()]['new'] = $event->getNewDisplayOrder();
         };
 
         $director->addListener('on_page_display_order_update', $listener);
 
         $page1->updateDisplayOrder(10);
+        $this->assertEquals(0, $map['Display1']['old'], 'First page should always be index 0.');
+        $this->assertEquals(10, $map['Display1']['new']);
+
         $page2->updateDisplayOrder(5);
+        $this->assertEquals(1, $map['Display2']['old'], 'Second page should always be index 1.');
+        $this->assertEquals(5, $map['Display2']['new']);
+
         $page1->updateDisplayOrder(99, $page3->getCollectionID());
+        $this->assertEquals(2, $map['Display3']['old'], 'Third page should always be index 2.');
+        $this->assertEquals(99, $map['Display3']['new']);
 
         $director->removeListener('on_page_display_order_update', $listener);
     }
