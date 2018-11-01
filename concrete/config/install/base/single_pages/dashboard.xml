@@ -875,13 +875,6 @@
                 </attributekey>
             </attributes>
         </page>
-        <page name="Security Options" path="/dashboard/system/permissions/security" filename="/dashboard/system/permissions/security.php" pagetype="" description="" package="">
-            <attributes>
-                <attributekey handle="meta_keywords">
-                    <value>login, logout, user, agent, ip, change</value>
-                </attributekey>
-            </attributes>
-        </page>
 
         <page name="Login &amp; Registration" path="/dashboard/system/registration"
               filename="/dashboard/system/registration/view.php" pagetype=""
@@ -932,6 +925,13 @@
 
         <page name="User Deactivation Settings" path="/dashboard/system/registration/deactivation"
               filename="/dashboard/system/registration/deactivation.php" pagetype="" description="" package="">
+        </page>
+        <page name="Automated Logout" path="/dashboard/system/registration/automated_logout" filename="/dashboard/system/registration/automated_logout.php" pagetype="" description="Automate when users are logged out, or do it manually" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>login, logout, user, agent, ip, change, security, login, session, invalidation, invalid</value>
+                </attributekey>
+            </attributes>
         </page>
 
         <page name="Email" path="/dashboard/system/mail" filename="/dashboard/system/mail/view.php" pagetype=""

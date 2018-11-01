@@ -27,7 +27,8 @@ class DoctrineXml05 extends XmlParser
             true,
             false,
             $filter,
-            $this->getDatabaseVersion($db)
+            $this->getDatabaseVersion($db),
+            $db->getSchemaManager()->createSchemaConfig()
         );
     }
 }

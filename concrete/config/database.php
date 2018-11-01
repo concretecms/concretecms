@@ -33,4 +33,11 @@ return [
             ],
         ],
     ],
+
+    // The preferred database character set (will fallback to 'utf8' if unavailable)
+    'preferred_character_set' => 'utf8mb4',
+
+    // The preferred database collation - leave empty to use the default collation associated to the character set
+    // (will fallback to 'utf8_general_ci' preferred_character_set is unavailable)
+    'preferred_collation' => '',
 ];

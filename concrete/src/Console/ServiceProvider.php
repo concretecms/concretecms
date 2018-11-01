@@ -53,6 +53,7 @@ class ServiceProvider extends Provider
         Command\RefreshEntitiesCommand::class,
         Command\GenerateSitemapCommand::class,
         Command\FillThumbnailsTableCommand::class,
+        Command\RescanFilesCommand::class,
         Command\UpdateCommand::class,
     ];
 
