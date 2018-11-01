@@ -29,7 +29,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
             <div class="checkbox">
                 <label>
                     <?= $form->checkbox('invalidateOnUserAgentMismatch', '1', $invalidateOnUserAgentMismatch) ?>
-                    <?= t('Log users out if their browser\'s user agent changes') ?>
+                    <?= t("Log users out if their browser's user agent changes") ?>
                 </label>
             </div>
 
