@@ -3333,6 +3333,20 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         }
         $db = Database::connection();
         $db->executeQuery('update Pages set cDisplayOrder = ? where cID = ?', [$do, $cID]);
+
+        // Because the display order of another page can be changed,
+        // the page object is retrieved first in order to pass it to the event.
+        $page = $this;
+        if ($cID !== $this->getCollectionID()) {
+            $page = static::getByID($cID);
+        }
+
+        if (!$page->isError()) {
+            $event = new DisplayOrderUpdateEvent($page);
+            $event->setOldDisplayOrder($page->getCollectionDisplayOrder());
+            $event->setNewDisplayOrder($do);
+            Events::dispatch('on_page_display_order_update', $event);
+        }
     }
 
     /**
