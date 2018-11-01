@@ -2,6 +2,9 @@
 
 namespace Concrete\Core\Page;
 
+/**
+ * @since 8.5.0
+ */
 class DisplayOrderUpdateEvent extends Event
 {
     /**
