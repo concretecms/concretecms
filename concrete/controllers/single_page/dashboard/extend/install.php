@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Controller\SinglePage\Dashboard\Extend;
 
 use Concrete\Core\Entity\Package as PackageEntity;
@@ -13,13 +12,14 @@ use Concrete\Core\Package\BrokenPackage;
 use Concrete\Core\Package\ItemCategory\Manager;
 use Concrete\Core\Package\PackageService;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Permission\Checker as Permissions;
 use Concrete\Core\Support\Facade\Package;
 use Exception;
-use Loader;
-use TaskPermission;
 
 class Install extends DashboardPageController
 {
+    public $helpers = ['form', 'validation/token', 'concrete/urls', 'concrete/ui'];
+
     public function on_start()
     {
         parent::on_start();
@@ -28,7 +28,7 @@ class Install extends DashboardPageController
 
     public function uninstall($pkgID)
     {
-        $tp = new TaskPermission();
+        $tp = new Permissions();
         if (!$tp->canUninstallPackages()) {
             return false;
         }
@@ -38,7 +38,6 @@ class Install extends DashboardPageController
             $this->redirect('/dashboard/extend/install');
         }
         $manager = new Manager($this->app);
-        $this->set('text', Loader::helper('text'));
         $this->set('pkg', $pkg);
         $this->set('categories', $manager->getPackageItemCategories());
     }
@@ -47,7 +46,7 @@ class Install extends DashboardPageController
     {
         $pkgID = $this->post('pkgID');
 
-        $valt = Loader::helper('validation/token');
+        $valt = $this->app->make('helper/validation/token');
 
         if ($pkgID > 0) {
             $pkg = Package::getByID($pkgID);
@@ -57,7 +56,7 @@ class Install extends DashboardPageController
             $this->error->add($valt->getErrorMessage());
         }
 
-        $tp = new TaskPermission();
+        $tp = new Permissions();
         if (!$tp->canUninstallPackages()) {
             $this->error->add(t('You do not have permission to uninstall packages.'));
         }
@@ -111,7 +110,7 @@ class Install extends DashboardPageController
 
     public function install_package($package)
     {
-        $tp = new TaskPermission();
+        $tp = new Permissions();
         if ($tp->canInstallPackages()) {
             $packageService = $this->app->make(PackageService::class);
             $p = $packageService->getClass($package);
@@ -134,7 +133,7 @@ class Install extends DashboardPageController
                 $loader->registerPackageCustomAutoloaders($p);
                 if (
                     (!$p->showInstallOptionsScreen()) ||
-                    Loader::helper('validation/token')->validate('install_options_selected')
+                    $this->app->make('helper/validation/token')->validate('install_options_selected')
                 ) {
                     $tests = $p->testForInstall();
                     if (is_object($tests)) {
@@ -171,7 +170,7 @@ class Install extends DashboardPageController
 
     public function download($remoteMPID = null)
     {
-        $tp = new TaskPermission();
+        $tp = new Permissions();
         if ($tp->canInstallPackages()) {
             $mri = MarketplaceRemoteItem::getByID($remoteMPID);
 
