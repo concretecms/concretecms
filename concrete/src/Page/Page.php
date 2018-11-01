@@ -3331,22 +3331,30 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         if (!intval($cID)) {
             $cID = ($this->getCollectionPointerOriginalID() > 0) ? $this->getCollectionPointerOriginalID() : $this->cID;
         }
-        $db = Database::connection();
-        $db->executeQuery('update Pages set cDisplayOrder = ? where cID = ?', [$do, $cID]);
 
         // Because the display order of another page can be changed,
         // the page object is retrieved first in order to pass it to the event.
         $page = $this;
-        if ($cID !== $this->getCollectionID()) {
+        if ($cID && (int) $cID !== (int) $this->getCollectionID()) {
             $page = static::getByID($cID);
         }
 
-        if (!$page->isError()) {
-            $event = new DisplayOrderUpdateEvent($page);
-            $event->setOldDisplayOrder($page->getCollectionDisplayOrder());
-            $event->setNewDisplayOrder($do);
-            Events::dispatch('on_page_display_order_update', $event);
+        if ($page->isError()) {
+            return;
         }
+
+        // Exit out if the display order for this page doesn't change.
+        if ($do === $page->getCollectionDisplayOrder()) {
+            return;
+        }
+
+        $db = Database::connection();
+        $db->executeQuery('update Pages set cDisplayOrder = ? where cID = ?', [$do, $cID]);
+
+        $event = new DisplayOrderUpdateEvent($page);
+        $event->setOldDisplayOrder($page->getCollectionDisplayOrder());
+        $event->setNewDisplayOrder($do);
+        Events::dispatch('on_page_display_order_update', $event);
     }
 
     /**
