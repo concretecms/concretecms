@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Application\UserInterface\Sitemap;
 
 use Concrete\Core\Application\Application;
@@ -143,10 +142,21 @@ class StandardSitemapProvider implements ProviderInterface
             $this->cookieJar->getResponseCookies()->addCookie($cookieKey, $query->get('siteTreeID'));
 
             return $this->siteService->getSiteTreeByID($query->get('siteTreeID'));
-        } elseif ($this->cookieJar->has($cookieKey)) {
-            return $this->siteService->getSiteTreeByID($this->cookieJar->get($cookieKey));
         } else {
+            // Check if the site id in $cookieKey is valid
+            $site = null;
+            if ($this->cookieJar->has($cookieKey)) {
+                $site = $this->siteService->getSiteTreeByID($this->cookieJar->get($cookieKey));
+            }
+            if (is_object($site)) {
+                return $site;
+            }
+
+            // the site id is not valid, let's get the default site
             $site = $this->siteService->getActiveSiteForEditing();
+
+            // update $cookieKey to use a valid site id
+            $this->cookieJar->getResponseCookies()->addCookie($cookieKey, $site->getSiteID());
             $locale = $site->getDefaultLocale();
             if ($locale && $this->checkPermissions($locale)) {
                 return $locale->getSiteTreeObject();
