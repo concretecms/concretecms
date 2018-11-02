@@ -558,14 +558,6 @@
             </attributes>
         </page>
 
-        <page name="Security Options" path="/dashboard/system/basics/security" filename="/dashboard/system/basics/security.php" pagetype="" description="" package="">
-            <attributes>
-                <attributekey handle="meta_keywords">
-                    <value>security options</value>
-                </attributekey>
-            </attributes>
-        </page>
-
 
         <page name="Express" path="/dashboard/system/express" filename="/dashboard/system/express/view.php" pagetype=""
               description="Express" package=""/>
