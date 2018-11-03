@@ -199,7 +199,7 @@ if (($this->controller->getTask() == 'install_package' || $this->controller->get
         <script>
             $(function() {
 
-                Dropzone.options.installPackageDropzone = false;
+                Dropzone.autoDiscover = false;
                 var targetPage = null;
                 var installPackageDropzone = new Dropzone('#install-update-package-dropzone', {
                     processing: function(file) {
