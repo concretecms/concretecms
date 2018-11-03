@@ -45,15 +45,12 @@ class Install extends DashboardPageController
     public function do_uninstall_package()
     {
         $pkgID = $this->post('pkgID');
-
-        $valt = $this->app->make('helper/validation/token');
-
         if ($pkgID > 0) {
             $pkg = Package::getByID($pkgID);
         }
 
-        if (!$valt->validate('uninstall')) {
-            $this->error->add($valt->getErrorMessage());
+        if (!$this->token->validate('uninstall')) {
+            $this->error->add($this->token->getErrorMessage());
         }
 
         $tp = new Permissions();

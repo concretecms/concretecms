@@ -1,27 +1,24 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\Extend;
 
-use Concrete\Core\Page\Controller\DashboardPageController;
-use TaskPermission;
-use Package;
-use Marketplace;
+use Concrete\Core\Localization\Localization;
+use Concrete\Core\Marketplace\Marketplace;
 use Concrete\Core\Marketplace\RemoteItem as MarketplaceRemoteItem;
-use Localization;
-use Loader;
+use Concrete\Core\Package\PackageService;
+use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Permission\Checker as Permissions;
+use Concrete\Core\Support\Facade\Package;
 use Exception;
 
 class Update extends DashboardPageController
 {
-    public function on_start()
-    {
-        $this->error = Loader::helper('validation/error');
-    }
     public function do_update($pkgHandle = false)
     {
         $tp = new TaskPermission();
         if ($tp->canInstallPackages()) {
             if ($pkgHandle) {
-                $pkg = \Concrete\Core\Support\Facade\Package::getClass($pkgHandle);
+                $packageService = $this->app->make(PackageService::class);
+                $pkg = $packageService->getClass($pkgHandle);
                 $r = $pkg->testForUpgrade();
                 if ($r !== true) {
                     $this->error->add($r);
@@ -46,7 +43,7 @@ class Update extends DashboardPageController
 
     public function view()
     {
-        $tp = new TaskPermission();
+        $tp = new Permissions();
         if ($tp->canInstallPackages()) {
             $mi = Marketplace::getInstance();
             if ($mi->isConnected()) {
@@ -57,7 +54,7 @@ class Update extends DashboardPageController
 
     public function prepare_remote_upgrade($remoteMPID = 0)
     {
-        $tp = new TaskPermission();
+        $tp = new Permissions();
         if ($tp->canInstallPackages()) {
             $mri = MarketplaceRemoteItem::getByID($remoteMPID);
 
@@ -70,6 +67,7 @@ class Update extends DashboardPageController
             $local = Package::getbyHandle($mri->getHandle());
             if (!is_object($local) || $local->isPackageInstalled() == false) {
                 $this->error->add(t('Package Not Found.'));
+
                 return;
             }
 
