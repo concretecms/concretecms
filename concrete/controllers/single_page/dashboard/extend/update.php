@@ -21,7 +21,7 @@ class Update extends DashboardPageController
                 $pkg = $packageService->getClass($pkgHandle);
                 $r = $pkg->testForUpgrade();
                 if ($r !== true) {
-                    if (is_object($errorList)) {
+                    if (is_object($errorList) && $errorList instanceof \Concrete\Core\Error\ErrorList\ErrorList) {
                         $errorList->add($r);
                     } else {
                         $this->error->add($r);
@@ -37,7 +37,7 @@ class Update extends DashboardPageController
                         $this->set('message', t('The package has been updated successfully.'));
                     } catch (Exception $e) {
                         $loc->popActiveContext();
-                        if (is_object($errorList)) {
+                        if (is_object($errorList) && $errorList instanceof \Concrete\Core\Error\ErrorList\ErrorList) {
                             $errorList->add($e);
                         } else {
                             $this->error->add($e);
