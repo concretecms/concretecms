@@ -1,0 +1,41 @@
+.dropzone#install-update-package-dropzone {
+    display: flex;
+    flex-wrap: wrap;
+    height: 100%;
+    overflow: auto;
+
+    .dz-preview {
+        width: ~"calc(50% - 28px)";
+        height: 150px;
+
+        .dz-details {
+            width: 100%;
+            height: 100%;
+        }
+
+        .dz-error-message {
+            word-break: break-word;
+        }
+
+        .dz-success-message {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            background-color: #8cc657;
+            padding: 8px 10px;
+            color: #ffffff;
+            min-width: 100%;
+            max-width: 100%;
+            min-height: 100%;
+            max-height: 100%;
+            display: block;
+            .opacity(0);
+            .transition(opacity 0.3s ease-in-out);
+        }
+
+        &:hover.dz-success .dz-success-message {
+            display: block;
+            .opacity(1);
+        }
+    }
+}

@@ -12,16 +12,20 @@ use Exception;
 
 class Update extends DashboardPageController
 {
-    public function do_update($pkgHandle = false)
+    public function do_update($pkgHandle = false, $errorList = null)
     {
-        $tp = new TaskPermission();
+        $tp = new Permissions();
         if ($tp->canInstallPackages()) {
             if ($pkgHandle) {
                 $packageService = $this->app->make(PackageService::class);
                 $pkg = $packageService->getClass($pkgHandle);
                 $r = $pkg->testForUpgrade();
                 if ($r !== true) {
-                    $this->error->add($r);
+                    if (is_object($errorList)) {
+                        $errorList->add($r);
+                    } else {
+                        $this->error->add($r);
+                    }
                 } else {
                     $p = Package::getByHandle($pkgHandle);
                     $loc = Localization::getInstance();
@@ -33,7 +37,11 @@ class Update extends DashboardPageController
                         $this->set('message', t('The package has been updated successfully.'));
                     } catch (Exception $e) {
                         $loc->popActiveContext();
-                        $this->error->add($e);
+                        if (is_object($errorList)) {
+                            $errorList->add($e);
+                        } else {
+                            $this->error->add($e);
+                        }
                     }
                 }
             }

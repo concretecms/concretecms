@@ -8,6 +8,8 @@
 use Concrete\Core\Attribute\Key\Category as AttributeCategory;
 use Concrete\Core\Permission\Checker as Permissions;
 
+$this->requireAsset('dropzone');
+
 $tp = new Permissions();
 $canInstallPackages = $tp->canInstallPackages();
 $canUninstallPackages = $tp->canUninstallPackages();
@@ -17,7 +19,7 @@ if ($tp->canInstallPackages()) {
     $mi = Marketplace::getInstance();
 }
 
-if ($this->controller->getTask() == 'install_package' && isset($showInstallOptionsScreen) && $showInstallOptionsScreen && $canInstallPackages) { ?>
+if (($this->controller->getTask() == 'install_package' || $this->controller->getTask() == 'configure_package') && isset($showInstallOptionsScreen) && $showInstallOptionsScreen && $canInstallPackages) { ?>
     <form method="post" action="<?= $this->action('install_package', $pkg->getPackageHandle()); ?>">
         <?php
         echo $validation_token->output('install_options_selected');
@@ -179,6 +181,104 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
             </div>
         </div>
     <?php } else { ?>
+
+        <div class="ccm-dashboard-header-buttons">
+            <button class="btn btn-default" id="open-install-update-package-dialog"><?= t('Install/Update Packages'); ?></button>
+        </div>
+        <div style="display: none">
+            <div id="ccm-dialog-install-update-package" class="ccm-ui">
+                <form id="install-update-package-dropzone" class="dropzone" action="<?= $view->action('drop_package'); ?>">
+                    <?php $validation_token->output('drop_package'); ?>
+
+                    <div class="dialog-buttons">
+                        <button class="btn btn-default pull-right" id="close-install-update-package-dialog" onclick="jQuery.fn.dialog.closeTop()"><?= t('Close'); ?></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <script>
+            $(function() {
+
+                Dropzone.options.installPackageDropzone = false;
+                var targetPage = null;
+                var installPackageDropzone = new Dropzone('#install-update-package-dropzone', {
+                    processing: function(file) {
+                        $('#close-install-update-package-dialog').attr('disabled', 'disabled').html(<?= json_encode(t('Processing package')); ?> + ' <i class="fa fa-spinner fa-spin"></i>');
+                    },
+                    complete: function(file) {
+                        if (installPackageDropzone.getUploadingFiles().length === 0 && installPackageDropzone.getQueuedFiles().length === 0) {
+                            $('#close-install-update-package-dialog').removeAttr('disabled').html(<?= json_encode(t('Close')); ?>);
+                        }
+                    },
+                    error: function(file, response) {
+                        if (response.error) {
+                            $(file.previewElement).addClass('dz-error');
+                            var errorElement = $(file.previewElement).find('[data-dz-errormessage]');
+                            if (errorElement) {
+                                var message = (typeof response.error.message === 'string') ? response.error.message : response.message;
+                                errorElement.html(message);
+                            }
+                        }
+                    },
+                    success: function(file, response) {
+                        targetPage = response.targetPage;
+                        if (response.error) {
+                            $(file.previewElement).addClass('dz-error');
+                            var errorElement = $(file.previewElement).find('[data-dz-errormessage]');
+                            if (errorElement) {
+                                var message = (typeof response.error.message === 'string') ? response.error.message : response.message;
+                                errorElement.html(message);
+                            }
+                        } else {
+                            $(file.previewElement).addClass('dz-success');
+                            var successElement = $(file.previewElement).find('[data-dz-successmessage]');
+                            if (successElement) {
+                                successElement.html(response.message);
+                            }
+                        }
+                    },
+                    dictDefaultMessage: <?= json_encode(t('Drop your package here or click to upload, you can also upload multiple packages.')); ?>,
+                    acceptedFiles: 'application/zip',
+                    previewTemplate: `
+                        <div class="dz-preview dz-file-preview">
+                            <div class="dz-details">
+                                <div class="dz-filename">
+                                    <span data-dz-name></span>
+                                </div>
+                                <div class="dz-size" data-dz-size></div>
+                            </div>
+                            <div class="dz-progress">
+                                <span class="dz-upload" data-dz-uploadprogress></span>
+                            </div>
+                            <div class="dz-error-message">
+                                <span data-dz-errormessage></span>
+                            </div>
+                            <div class="dz-success-message">
+                                <span data-dz-successmessage></span>
+                            </div>
+                        </div>
+                    `
+                });
+
+                $('#open-install-update-package-dialog').on('click', function() {
+                    jQuery.fn.dialog.open({
+                        element: $('#ccm-dialog-install-update-package'),
+                        modal: true,
+                        width: 650,
+                        height: 400,
+                        title: <?= json_encode(t('Install/Update Packages')) ?>,
+                        close: function() {
+                            installPackageDropzone.removeAllFiles();
+                            if (targetPage) {
+                                window.location.replace(targetPage);
+                            }
+                        }
+                    });
+                });
+
+            });
+        </script>
+
         <?php if (isset($installedPKG) && is_object($installedPKG) && $installedPKG->hasInstallPostScreen()) { ?>
             <div style="display: none">
                 <div id="ccm-install-post-notes">
