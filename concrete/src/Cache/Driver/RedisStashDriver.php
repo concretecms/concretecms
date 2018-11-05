@@ -14,7 +14,10 @@
 namespace Concrete\Core\Cache\Driver;
 
 
+use Concrete\Core\Support\Facade\Facade;
 use Stash\Driver\AbstractDriver;
+use Redis;
+use RedisArray;
 
 
 class RedisStashDriver extends AbstractDriver
@@ -59,92 +62,19 @@ class RedisStashDriver extends AbstractDriver
      *
      * The "password" option is used for clusters which required authentication.
      *
-     * @param array $options
+     * @param array $options The `concrete.cache.levels.{level}.drivers.redis.options` config item
      */
-    protected function setOptions(array $options = array())
+    protected function setOptions(array $options = [])
     {
         $options += $this->getDefaultOptions();
         $this->prefix = !empty($options['prefix']) ? $options['prefix']:null;
         // Normalize Server Options
-        if (isset($options['servers'])) {
-            $unprocessedServers = (is_array($options['servers']))
-                ? $options['servers']
-                : array($options['servers']);
-            unset($options['servers']);
-
-            $servers = array();
-            foreach ($unprocessedServers as $server) {
-                $ttl = '0.5'; // Connection time to server in seconds not for storage
-                if (isset($server['ttl'])) {
-                    $ttl = $server['ttl'];
-                } elseif (isset($server[2])) {
-                    $ttl = $server[2];
-                }
-
-                if (isset($server['socket'])) {
-                    $servers[] = array('socket' => $server['socket'], 'ttl' => $ttl);
-                } else {
-                    $host = '127.0.0.1';
-                    if (isset($server['server'])) {
-                        $host = $server['server'];
-                    } elseif (isset($server[0])) {
-                        $host = $server[0];
-                    }
-
-                    $port = '6379';
-                    if (isset($server['port'])) {
-                        $port = $server['port'];
-                    } elseif (isset($server[1])) {
-                        $port = $server[1];
-                    }
-
-                    $servers[] = array('server' => $host, 'port' => $port, 'ttl' => $ttl);
-                }
-            }
-        } else {
-            $servers = array(array('server' => '127.0.0.1', 'port' => '6379', 'ttl' => 0.5));
+        $servers = [];
+        foreach ($this->getRedisServers(array_get($options, 'servers', [])) as $server) {
+            $servers[] = $server;
         }
-
-
-        if (count($servers) == 1) {
-            $server = $servers[0];
-            $redis = new \Redis();
-
-            if (isset($server['socket']) && $server['socket']) {
-                $redis->connect($server['socket']);
-            } else {
-                $port = isset($server['port']) ? $server['port'] : 6379;
-                $ttl = isset($server['ttl']) ? $server['ttl'] : 0.5;
-                $redis->connect($server['server'], $port, $ttl);
-            }
-
-            // auth - just password
-            if (isset($options['password'])) {
-                $redis->auth($options['password']);
-            }
-
-
-        } else {
-            $redisArrayOptions = array();
-            foreach ($this->redisArrayOptionNames as $optionName) {
-                if (array_key_exists($optionName, $options)) {
-                    $redisArrayOptions[$optionName] = $options[$optionName];
-                }
-            }
-
-
-            $serverArray = array();
-            foreach ($servers as $server) {
-                $serverString = $server['server'];
-                if (isset($server['port'])) {
-                    $serverString .= ':' . $server['port'];
-                }
-
-                $serverArray[] = $serverString;
-            }
-
-            $redis = new \RedisArray($serverArray, $redisArrayOptions);
-        }
+        // Get Redis Instance
+        $redis = $this->getRedisInstance($servers);
 
         // select database - we use isset because the database can be 0
         if (isset($options['database'])) {
@@ -153,6 +83,97 @@ class RedisStashDriver extends AbstractDriver
         if (!empty($options['prefix'])) $redis->setOption(\Redis::OPT_PREFIX,$options['prefix'] .":");
 
         $this->redis = $redis;
+    }
+
+
+    /**
+     *  Decides whether to return a Redis Instance or RedisArray Instance depending on the number of servers passed to it
+     *
+     * @param array $servers The `concrete.cache.levels.{level}.drivers.redis.options` config item
+     *
+     * @return \Redis | \RedisArray
+     */
+    private function getRedisInstance(array $servers)
+    {
+
+        if (count($servers) == 1 ) {
+            // If we only have one server in our array then we just reconnect to it
+            $server = $servers[0];
+            $redis = new Redis();
+
+            if (isset($server['socket']) && $server['socket']) {
+                $redis->connect($server['socket']);
+            } else {
+
+                $host = array_get($server, 'host', '');
+                $port = array_get($server, 'port', 6379);
+                $ttl = array_get($server, 'ttl', 0.5);
+                // Check for both server/host - fallback due to cache using server
+                $host = !empty($host) ? $host : array_get($server, 'server', '127.0.0.1');
+
+                $redis->connect($host, $port, $ttl);
+            }
+
+            // Authorisation is handled by just a password
+            if (isset($server['password'])) {
+                $redis->auth($server['password']);
+            }
+        } else {
+            $serverArray = [];
+            $ttl = 0.5;
+            foreach ($this->getRedisServers($servers) as $server) {
+                $serverString = $server['server'];
+                if (isset($server['port'])) {
+                    $serverString .= ':' . $server['port'];
+                }
+                // We can only use one ttl for connection timeout so use the last set ttl
+                // isset allows for 0 - unlimited
+                if (!isset($server['ttl'])) {
+                    $ttl = $server['ttl'];
+                }
+
+                $serverArray[] = $serverString;
+            }
+            $redis = new RedisArray($serverArray, ['connect_timeout'=>$ttl]);
+        }
+
+        return $redis;
+    }
+
+    /**
+     * Generator for Redis Array
+     *
+     * @param array $servers The `concrete.cache.{level}.redis.options.servers` config item
+     *
+     * @return \Generator| string[] [ $server, $port, $ttl ]
+     */
+    private function getRedisServers(array $servers)
+    {
+        if (!empty($servers)) {
+
+            foreach ($servers as $server) {
+
+                if (isset($server['socket'])) {
+                    $server= [
+                        'server' => array_get($server, 'socket', ''),
+                        'ttl' => array_get($server, 'ttl', null),
+                    ];
+                } else {
+                    $host = array_get($server, 'host', '');
+                    // Check for both server/host - fallback due to cache using server
+                    $host = !empty($host) ?: array_get($server, 'server', '127.0.0.1');
+                    $server = [
+                        'server' => $host,
+                        'port' => array_get($server, 'port', 11211),
+                        'ttl' => array_get($server, 'ttl', null),
+                    ];
+                }
+                yield $server;
+            }
+        } else {
+            yield ['server' => '127.0.0.1', 'port' => '6379', 'ttl' => 0.5];
+        }
+
     }
 
     /**
@@ -207,12 +228,15 @@ class RedisStashDriver extends AbstractDriver
     public function clear($key = null)
     {
         if (is_null($key)) {
-
+            // If we have a prefix delete only the prefix keys
             if (!empty($this->prefix)) {
-                //This attaches the prefix anyway
+                // This attaches the prefix to the keys
                 $keys = $this->redis->getKeys('*');
+                // Remove the prefix
                 $this->redis->setOption(\Redis::OPT_PREFIX, null);
+                // Delete all keys
                 $this->redis->del($keys);
+                // Reset the prefix
                 $this->redis->setOption(\Redis::OPT_PREFIX,$this->prefix .":");
             } else {
                 $this->redis->flushDB();

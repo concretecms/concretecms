@@ -259,7 +259,7 @@ return [
                         ],
                     ],
                 ],
-                'preferred_driver' => ''// Use this to specify a preferred driver
+                'preferred_driver' => 'core_filesystem'// Use this to specify a preferred driver
             ],
             'expensive' => [
                 'drivers' => [
@@ -283,7 +283,7 @@ return [
                         ],
                     ],
                 ],
-                'preferred_driver' => ''// Use this to specify a preferred driver
+                'preferred_driver' => 'core_filesystem'// Use this to specify a preferred driver
             ],
             'object' => [
                 'drivers' => [
@@ -299,7 +299,7 @@ return [
                         ],
                     ],
                 ],
-                'preferred_driver' => ''// Use this to specify a preferred driver
+                'preferred_driver' => 'core_ephemeral'// Use this to specify a preferred driver
             ],
         ],
 
@@ -719,7 +719,6 @@ return [
         'name' => 'CONCRETE5',
         'handler' => 'file',
         'redis' => [
-            'prefix' => 'c5_session',
             'database'=>1 // Use different Redis Databases - optional
         ],
         'save_path' => null,

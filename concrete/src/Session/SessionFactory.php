@@ -14,6 +14,8 @@ use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 use Concrete\Core\Session\Storage\Handler\RedisSessionHandler;
+use Redis;
+use RedisArray;
 
 /**
  * Class SessionFactory
@@ -244,6 +246,132 @@ class SessionFactory implements SessionFactoryInterface
                 yield $server;
             }
         }
+    }
+
+    /**
+     * Return a built Redis session handler
+     *
+     * @param array $config The `concrete.session` config item
+     *
+     * @return \Concrete\Core\Session\Storage\Handler\RedisSessionHandler
+     */
+    protected function getRedisHandler(array $config)
+    {
+
+        $options = array_get($config, 'redis', []);
+        // In case anyone puts the servers under redis configuration - similar to how we handle cache
+        $servers = array_get($options, 'servers', []);
+        if (empty($servers)) {
+            $servers = array_get($config, 'servers', []);
+        }
+
+
+
+        $redis = $this->getRedisInstance($servers);
+        if (!empty($options['database'])) {
+            $redis->select((int) $options['database']);
+        }
+
+
+        // In case of anyone setting prefix on the redis server directly
+        // Similar to how we do it on cache
+        $prefix = array_get($options, 'prefix', 'CCM_SESSION');
+
+        // We pass the prefix to the Redis Handler when we build it
+        return $this->app->make(RedisSessionHandler::class, [$redis, ['prefix' => array_get($config, 'name') ?: $prefix]]);
+
+    }
+
+
+    /**
+     *  Decides whether to return a Redis Instance or RedisArray Instance depending on the number of servers passed to it
+     *
+     * @param array $servers The `concrete.session.servers` or `concrete.session.redis.servers` config item
+     *
+     * @return \Redis | \RedisArray
+     */
+    private function getRedisInstance(array $servers)
+    {
+
+        if (count($servers) == 1 ) {
+            // If we only have one server in our array then we just reconnect to it
+            $server = $servers[0];
+            $redis = $this->app->make(Redis::class);
+
+            if (isset($server['socket']) && $server['socket']) {
+                $redis->connect($server['socket']);
+            } else {
+
+                $host = array_get($server, 'host', '');
+                $port = array_get($server, 'port', 6379);
+                $ttl = array_get($server, 'ttl', 0.5);
+                // Check for both server/host - fallback due to cache using server
+                $host = !empty($host) ? $host: array_get($server, 'server', '127.0.0.1');
+
+                $redis->connect($host, $port, $ttl);
+            }
+
+            // Authorisation is handled by just a password
+            if (isset($server['password'])) {
+                $redis->auth($server['password']);
+            }
+        } else {
+            $serverArray = [];
+            $ttl = 0.5;
+            foreach ($this->getRedisServers($servers) as $server) {
+                $serverString = $server['server'];
+                if (isset($server['port'])) {
+                    $serverString .= ':' . $server['port'];
+                }
+                // We can only use one ttl for connection timeout so use the last set ttl
+                // isset allows for 0 - unlimited
+                if (!isset($server['ttl'])) {
+                    $ttl = $server['ttl'];
+                }
+
+                $serverArray[] = $serverString;
+            }
+            $redis = $this->app->make(RedisArray::class, [$serverArray, ['connect_timeout'=>$ttl]]);
+        }
+
+        return $redis;
+    }
+
+
+    /**
+     * Generator for Redis Array
+     *
+     * @param array $servers The `concrete.session.servers` or `concrete.session.redis.servers` config item
+     *
+     * @return \Generator| string[] [ $server, $port, $ttl ]
+     */
+    private function getRedisServers(array $servers)
+    {
+        if (!empty($servers)) {
+
+            foreach ($servers as $server) {
+
+                if (isset($server['socket'])) {
+                    $server= [
+                        'server' => array_get($server, 'socket', ''),
+                        'ttl' => array_get($server, 'ttl', null),
+                    ];
+                } else {
+                    $host = array_get($server, 'host', '');
+                    // Check for both server/host - fallback due to cache using server
+                    $host = !empty($host) ?: array_get($server, 'server', '127.0.0.1');
+                    $server = [
+                        'server' => $host,
+                        'port' => array_get($server, 'port', 11211),
+                        'ttl' => array_get($server, 'ttl', null),
+                    ];
+                }
+                yield $server;
+            }
+        } else {
+            yield ['server' => '127.0.0.1', 'port' => '6379', 'ttl' => 0.5];
+        }
+
     }
 
 }
