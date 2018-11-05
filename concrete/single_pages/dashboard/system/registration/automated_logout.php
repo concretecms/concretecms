@@ -10,6 +10,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 /* @var string $trustedProxyUrl */
 /* @var string $invalidateAction */
 /* @var string $saveAction */
+/* @var string $confirmInvalidateString */
 ?>
 <form action="<?= $saveAction ?>" method="POST">
     <?php $token->output('save_automated_logout') ?>
@@ -41,14 +42,14 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
         <div class="form-group">
             <p>
-                <?=t('Type %s in the following box to proceed.', '<code>invalidate</code>')?>
+                <?=t('Type %s in the following box to proceed.', "<code>{$confirmInvalidateString}</code>")?>
             </p>
             <div class="input">
                 <?= $form->text('confirmation', [
                     'data-submit' => $invalidateAction
                 ]) ?>
                 <div class="invalid-feedback text-danger help-text">
-                    <?= t('Please type %s to proceed.', '<code>invalidate</code>') ?>
+                    <?= t('Please type %s to proceed.', "<code>{$confirmInvalidateString}</code>") ?>
                 </div>
             </div>
         </div>
@@ -80,7 +81,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
         // Bind running feedback on the input
         confirmation.keyup(function() {
-            if (confirmation.val().toLowerCase() == 'invalidate') {
+            if (confirmation.val().toLowerCase() === <?= json_encode($confirmInvalidateString)?>.toLowerCase()) {
                 confirmation.parent().removeClass('has-warning').addClass('has-success');
             } else {
                 confirmation.parent().removeClass('has-success').addClass('has-warning');
@@ -90,7 +91,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
         // Bind clicking functionality on the button
         button.click(function() {
-            if (confirmation.val().toLowerCase() == 'invalidate') {
+            if (confirmation.val().toLowerCase() == <?= json_encode($confirmInvalidateString)?>.toLowerCase()) {
                 confirmation.parent().find('.invalid-feedback').slideUp().parent().removeClass('has-error');
                 window.location = confirmation.data('submit');
             } else {

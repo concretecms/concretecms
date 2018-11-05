@@ -59,6 +59,7 @@ class AutomatedLogout extends DashboardPageController
 
         $this->set('saveAction', $this->action('save'));
         $this->set('invalidateAction', $this->action('invalidate_sessions', $this->token->generate('invalidate_sessions')));
+        $this->set('confirmInvalidateString', t('invalidate'));
     }
 
     /**
