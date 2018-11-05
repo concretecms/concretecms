@@ -1,8 +1,10 @@
 <?php
+
 namespace Concrete\Core\Http\Middleware;
 
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\File\File;
 use Concrete\Core\File\Image\BasicThumbnailer;
@@ -18,7 +20,7 @@ use League\Flysystem\FileExistsException;
 use League\Flysystem\Filesystem;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Concrete\Core\Config\Repository\Repository;
+
 /**
  * Class ThumbnailMiddleware
  * Middleware used to populate thumbnails at the end of each request.
@@ -50,7 +52,6 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
      * @var Connection
      */
     private $connection;
-
 
     /**
      * @var \Concrete\Core\Config\Repository\Repository
@@ -98,6 +99,42 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
         }
 
         return $response;
+    }
+
+    /**
+     * @return \Concrete\Core\File\Image\BasicThumbnailer
+     */
+    protected function getThumbnailer()
+    {
+        if (!$this->thumbnailer) {
+            $this->thumbnailer = $this->app->make(BasicThumbnailer::class);
+        }
+
+        return $this->thumbnailer;
+    }
+
+    /**
+     * @return \Doctrine\ORM\EntityManagerInterface
+     */
+    protected function getEntityManager()
+    {
+        if (!$this->entityManager) {
+            $this->entityManager = $this->app->make(EntityManagerInterface::class);
+        }
+
+        return $this->entityManager;
+    }
+
+    /**
+     * @return Connection
+     */
+    protected function getConnection()
+    {
+        if (!$this->connection) {
+            $this->connection = $this->app->make(Connection::class);
+        }
+
+        return $this->connection;
     }
 
     /**
@@ -252,44 +289,6 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
                 return $thumbnailerLocation;
             }
         }
-
-        return;
-    }
-
-    /**
-     * @return \Concrete\Core\File\Image\BasicThumbnailer
-     */
-    protected function getThumbnailer()
-    {
-        if (!$this->thumbnailer) {
-            $this->thumbnailer = $this->app->make(BasicThumbnailer::class);
-        }
-
-        return $this->thumbnailer;
-    }
-
-    /**
-     * @return \Doctrine\ORM\EntityManagerInterface
-     */
-    protected function getEntityManager()
-    {
-        if (!$this->entityManager) {
-            $this->entityManager = $this->app->make(EntityManagerInterface::class);
-        }
-
-        return $this->entityManager;
-    }
-
-    /**
-     * @return Connection
-     */
-    protected function getConnection()
-    {
-        if (!$this->connection) {
-            $this->connection = $this->app->make(Connection::class);
-        }
-
-        return $this->connection;
     }
 
     /**
