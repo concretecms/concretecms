@@ -635,31 +635,28 @@
 		);
 	};
 
-	ConcreteSitemap.submitDragRequest = function() {
+	ConcreteSitemap.submitDragRequest = function($form) {
 		var params = {
-			ccm_token: $('#validationToken').val(),
-			dragMode: $('#dragMode').val(),
-			destCID: $('#destCID').val(),
-			destSibling: $('#destSibling').val() || '',
-			origCID: $('#origCID').val(),
+			ccm_token: $form.find('input[name="validationToken"]').val(),
+			dragMode: $form.find('input[name="dragMode"]').val(),
+			destCID: $form.find('input[name="destCID"]').val(),
+			destSibling: $form.find('input[name="destSibling"]').val() || '',
+			origCID: $form.find('input[name="origCID"]').val(),
 			ctask: $("input[name=ctask]:checked").val()
 		};
-		var isCopyAll = false;
 		switch (params.ctask) {
 			case 'MOVE':
-				params.saveOldPagePath = $('#saveOldPagePath').is(':checked') ? 1 : 0;
+				params.saveOldPagePath = $form.find('input[name="saveOldPagePath"]').is(':checked') ? 1 : 0;
 				break;
-			case 'COPY':
-				if ($('#copyChildren').is(':checked')) {
-					isCopyAll = true;
-				}
+			case 'a-copy-operation':
+				params.ctask = $('input[name="dtask"]:checked').val()
 				break;
 		}
 		var paramsArray = [];
 		$.each(params, function (name, value) {
 			paramsArray.push({name: name, value: value});
 		});
-		if (isCopyAll) {
+		if (params.ctask === 'COPY_ALL') {
 			ccm_triggerProgressiveOperation(
 				CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/drag_request/copy_all',
 				paramsArray,
