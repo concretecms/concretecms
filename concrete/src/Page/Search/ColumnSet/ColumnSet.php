@@ -1,24 +1,37 @@
 <?php
 namespace Concrete\Core\Page\Search\ColumnSet;
 
+use Concrete\Core\Page\Search\SearchProvider;
+use Concrete\Core\Search\Column\CollectionAttributeKeyColumn;
 use Concrete\Core\Search\Column\Set;
+use Concrete\Core\Support\Facade\Facade;
 use User;
 
 class ColumnSet extends Set
 {
     protected $attributeClass = 'CollectionAttributeKey';
 
+    public function getAttributeKeyColumn($akHandle)
+    {
+        $ak = call_user_func(array($this->attributeClass, 'getByHandle'), $akHandle);
+        $col = new CollectionAttributeKeyColumn($ak);
+        return $col;
+    }
+
     public static function getCurrent()
     {
-        $u = new User();
-        $fldc = $u->config('PAGE_LIST_DEFAULT_COLUMNS');
-        if ($fldc != '') {
-            $fldc = @unserialize($fldc);
-        }
-        if (!($fldc instanceof Set)) {
-            $fldc = new DefaultSet();
+
+        $app = Facade::getFacadeApplication();
+        /**
+         * @var $provider SearchProvider
+         */
+        $provider = $app->make(SearchProvider::class);
+        $query = $provider->getSessionCurrentQuery();
+        if ($query) {
+            $columns = $query->getColumns();
+            return $columns;
         }
 
-        return $fldc;
+        return new DefaultSet();
     }
 }

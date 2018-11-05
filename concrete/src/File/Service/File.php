@@ -279,20 +279,20 @@ class File
         }
 
         if ($temp = getenv('TMP')) {
-            return $temp;
+            return str_replace(DIRECTORY_SEPARATOR, '/', $temp);
         }
         if ($temp = getenv('TEMP')) {
-            return $temp;
+            return str_replace(DIRECTORY_SEPARATOR, '/', $temp);
         }
         if ($temp = getenv('TMPDIR')) {
-            return $temp;
+            return str_replace(DIRECTORY_SEPARATOR, '/', $temp);
         }
 
-        $temp = tempnam(__FILE__, '');
+        $temp = @tempnam(__FILE__, '');
         if (file_exists($temp)) {
             unlink($temp);
 
-            return dirname($temp);
+            return str_replace(DIRECTORY_SEPARATOR, '/', dirname($temp));
         }
     }
 
@@ -326,6 +326,9 @@ class File
         if (isset($url['scheme']) && isset($url['host'])) {
             $app = CoreApplication::getFacadeApplication();
             $client = $app->make('http/client')->setUri($file);
+            if (!empty($timeout) && $timeout > 0) {
+                $client->setOptions(['timeout' => $timeout]);
+            }
             try {
                 $response = $client->send();
             } catch (TimeoutException $x) {

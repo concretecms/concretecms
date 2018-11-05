@@ -1,14 +1,26 @@
 <?php
+
 namespace Concrete\Core\Validator\String;
 
+use ArrayAccess;
 use Concrete\Core\Validator\AbstractTranslatableValidator;
+use InvalidArgumentException;
+use RuntimeException;
 
 class RegexValidator extends AbstractTranslatableValidator
 {
-    /** Passed string doesn't match */
+    /**
+     * Passed string doesn't match.
+     *
+     * @var int
+     */
     const E_DOES_NOT_MATCH = 1;
 
-    /** @var string Regex pattern */
+    /**
+     * Regex pattern.
+     *
+     * @var string
+     */
     protected $pattern;
 
     /**
@@ -19,16 +31,21 @@ class RegexValidator extends AbstractTranslatableValidator
     public function __construct($pattern)
     {
         $this->pattern = $pattern;
-
-        $this->setRequirementString(self::E_DOES_NOT_MATCH, 'Must match pattern.');
-        $this->setErrorString(self::E_DOES_NOT_MATCH, function ($validator, $code, $mixed) {
-            return sprintf(
-                'RegexError: String \"%s\" does not match expected pattern.',
-                $mixed);
-        });
+        $this->setRequirementString(
+            self::E_DOES_NOT_MATCH,
+            t('Must match pattern.')
+        );
+        $this->setErrorString(
+            self::E_DOES_NOT_MATCH,
+            function ($validator, $code, $mixed) {
+                return t('RegexError: String "%s" does not match expected pattern.', $mixed);
+            }
+        );
     }
 
     /**
+     * Get the regex pattern.
+     *
      * @return string
      */
     public function getPattern()
@@ -37,6 +54,8 @@ class RegexValidator extends AbstractTranslatableValidator
     }
 
     /**
+     * Set the regex pattern.
+     *
      * @param string $pattern
      */
     public function setPattern($pattern)
@@ -45,25 +64,21 @@ class RegexValidator extends AbstractTranslatableValidator
     }
 
     /**
-     * Is this mixed value valid.
+     * {@inheritdoc}
      *
-     * @param mixed             $mixed Can be any value
-     * @param \ArrayAccess|null $error
+     * @see \Concrete\Core\Validator\ValidatorInterface::isValid()
      *
-     * @return bool
-     *
-     * @throws \InvalidArgumentException Invalid mixed value type passed.
-     * @throws \RuntimeException         Invalid regex pattern.
+     * @throws \RuntimeException invalid regex pattern
      */
-    public function isValid($mixed, \ArrayAccess $error = null)
+    public function isValid($mixed, ArrayAccess $error = null)
     {
         if (!is_string($mixed)) {
-            throw new \InvalidArgumentException('\Concrete\Core\Validator\String\TooShortValidator only validates string length');
+            throw new InvalidArgumentException(t(/*i18n: %s is the name of a PHP class*/'%s only validates string length', __CLASS__));
         }
 
         $result = @preg_match($this->getPattern(), $mixed);
         if ($result === false) {
-            throw new \RuntimeException(sprintf('Regex Error: %i', preg_last_error()));
+            throw new RuntimeException(sprintf('Regex Error: %i', preg_last_error()));
         }
 
         if (!$result) {

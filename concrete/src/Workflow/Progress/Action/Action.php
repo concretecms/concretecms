@@ -1,9 +1,9 @@
 <?php
 namespace Concrete\Core\Workflow\Progress\Action;
 
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 
-class Action extends Object
+class Action extends ConcreteObject
 {
     protected $wrActionStyleClass = '';
     protected $wrActionStyleInnerButtonLeft = '';

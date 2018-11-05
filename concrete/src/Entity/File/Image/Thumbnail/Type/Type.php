@@ -1,75 +1,162 @@
 <?php
+
 namespace Concrete\Core\Entity\File\Image\Thumbnail\Type;
 
-use Database;
 use Concrete\Core\File\Image\Thumbnail\Type\Version;
-
+use Concrete\Core\Support\Facade\Application;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * Entity representing a thumbnail type.
+ *
  * @ORM\Entity
  * @ORM\Table(name="FileImageThumbnailTypes")
  */
 class Type
 {
+    /**
+     * Thumbnail sizing mode: proportional.
+     *
+     * @var string
+     */
     const RESIZE_PROPORTIONAL = 'proportional';
+
+    /**
+     * Thumbnail sizing mode: exact dimensions.
+     *
+     * @var string
+     */
     const RESIZE_EXACT = 'exact';
+
+    /**
+     * Default thumbnail sizing mode.
+     *
+     * @var string
+     */
     const RESIZE_DEFAULT = self::RESIZE_PROPORTIONAL;
 
     /**
-     * @ORM\Column(type="string")
+     * Suffix for high DPI thumbnails (eg. Retina).
+     *
+     * @var string
      */
-    protected $ftTypeHandle;
+    const HIGHDPI_SUFFIX = '_2x';
 
     /**
-     * @ORM\Column(type="string")
+     * The thumbnail unique identifier.
+     *
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
+     *
+     * @var int|null
      */
-    protected $ftTypeName;
+    protected $ftTypeID = null;
 
     /**
+     * The handle that identifies the thumbnail type.
+     *
+     * @ORM\Column(type="string")
+     *
+     * @var string
+     */
+    protected $ftTypeHandle = '';
+
+    /**
+     * The name of the thumbnail type.
+     *
+     * @ORM\Column(type="string")
+     *
+     * @var string
+     */
+    protected $ftTypeName = '';
+
+    /**
+     * The width of the thumbnails (or the maximum width in case of proportional sizing).
+     *
      * @ORM\Column(type="integer", nullable=true)
+     *
+     * @var int|null
      */
     protected $ftTypeWidth = null;
 
     /**
+     * The height of the thumbnails (or the maximum height in case of proportional sizing).
+     *
      * @ORM\Column(type="integer", nullable=true)
+     *
+     * @var int|null
      */
     protected $ftTypeHeight = null;
 
     /**
-     * @ORM\Column(type="string")
-     */
-    protected $ftTypeSizingMode = self::RESIZE_DEFAULT;
-
-    /**
+     * Is this thumbnail type required? If yes, it can't be deleted.
+     *
      * @ORM\Column(type="boolean")
+     *
+     * @var bool
      */
     protected $ftTypeIsRequired = false;
 
     /**
-     * @ORM\Id @ORM\Column(type="integer")
-     * @ORM\GeneratedValue
+     * The thumbnail sizing mode (one of the Type::RESIZE_... constants).
+     *
+     * @ORM\Column(type="string")
+     *
+     * @var string
      */
-    protected $ftTypeID;
+    protected $ftTypeSizingMode = self::RESIZE_DEFAULT;
 
     /**
-     * @param mixed $ftTypeHandle
+     * Upscaling is enabled?
+     *
+     * @ORM\Column(type="boolean")
+     *
+     * @var bool
      */
-    public function setHandle($ftTypeHandle)
+    protected $ftUpscalingEnabled = false;
+
+    /**
+     * Should the thumbnails be build for every file that ARE NOT in the file sets (false), or only for files that ARE in the specified file sets (true)?
+     *
+     * @ORM\Column(type="boolean", nullable=false)
+     *
+     * @var bool
+     */
+    protected $ftLimitedToFileSets = false;
+
+    /**
+     * Associated file sets (whose meaning depends on the value of ftLimitedToFileSets).
+     *
+     * @ORM\OneToMany(targetEntity="TypeFileSet", mappedBy="ftfsThumbnailType", cascade={"all"}, orphanRemoval=true)
+     *
+     * @var ArrayCollection|TypeFileSet[]
+     */
+    protected $ftAssociatedFileSets;
+
+    /**
+     * Should we create animated thumbnails for animated images?
+     *
+     * @ORM\Column(type="boolean")
+     *
+     * @var bool
+     */
+    protected $ftKeepAnimations = false;
+
+    /**
+     * Initialize the instance.
+     */
+    public function __construct()
     {
-        $this->ftTypeHandle = $ftTypeHandle;
+        $this->ftAssociatedFileSets = new ArrayCollection();
     }
 
     /**
-     * @return mixed
-     */
-    public function getHandle()
-    {
-        return $this->ftTypeHandle;
-    }
-
-    /**
-     * @return mixed
+     * Get the thumbnail unique identifier.
+     *
+     * @return int|null
      */
     public function getID()
     {
@@ -77,31 +164,39 @@ class Type
     }
 
     /**
-     * @param mixed $ftTypeIsRequired
+     * Set the handle that identifies the thumbnail type.
+     *
+     * @param string $ftTypeHandle
      */
-    public function requireType()
+    public function setHandle($ftTypeHandle)
     {
-        $this->ftTypeIsRequired = true;
+        $this->ftTypeHandle = (string) $ftTypeHandle;
     }
 
     /**
-     * @return mixed
+     * Get the handle that identifies the thumbnail type.
+     *
+     * @return string
      */
-    public function isRequired()
+    public function getHandle()
     {
-        return $this->ftTypeIsRequired;
+        return $this->ftTypeHandle;
     }
 
     /**
-     * @param mixed $ftTypeName
+     * Set the name of the thumbnail type.
+     *
+     * @param string $ftTypeName
      */
     public function setName($ftTypeName)
     {
-        $this->ftTypeName = $ftTypeName;
+        $this->ftTypeName = (string) $ftTypeName;
     }
 
     /**
-     * @return mixed
+     * Get the name of the thumbnail type.
+     *
+     * @return string
      */
     public function getName()
     {
@@ -109,32 +204,8 @@ class Type
     }
 
     /**
-     * @param mixed $sizingMode
-     */
-    public function setSizingMode($ftTypeSizingMode = self::RESIZE_DEFAULT)
-    {
-        $this->ftTypeSizingMode = $ftTypeSizingMode;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSizingMode()
-    {
-        return $this->ftTypeSizingMode ? $this->ftTypeSizingMode : self::RESIZE_DEFAULT;
-    }
-
-    public function getSizingModeDisplayName()
-    {
-        $sizingModeDisplayNames = [
-            self::RESIZE_PROPORTIONAL => t("Proportional"),
-            self::RESIZE_EXACT => t("Exact"),
-        ];
-
-        return $sizingModeDisplayNames[$this->getSizingMode()];
-    }
-
-    /** Returns the display name for this thumbnail type (localized and escaped accordingly to $format)
+     * Get the display name for this thumbnail type (localized and escaped accordingly to $format).
+     *
      * @param string $format = 'html'
      *    Escape the result in html format (if $format is 'html').
      *    If $format is 'text' or any other value, the display name won't be escaped.
@@ -154,23 +225,25 @@ class Type
     }
 
     /**
-     * @param mixed $ftTypeWidth
+     * Set the width of the thumbnails (or the maximum width in case of proportional sizing).
+     *
+     * @param int|null $ftTypeWidth
      */
     public function setWidth($ftTypeWidth)
     {
-        $this->ftTypeWidth = is_numeric($ftTypeWidth) ? $ftTypeWidth : null;
+        $this->ftTypeWidth = null;
+        if (is_numeric($ftTypeWidth)) {
+            $v = (int) $ftTypeWidth;
+            if ($v > 0) {
+                $this->ftTypeWidth = $v;
+            }
+        }
     }
 
     /**
-     * @param mixed $ftTypeHeight
-     */
-    public function setHeight($ftTypeHeight)
-    {
-        $this->ftTypeHeight = is_numeric($ftTypeHeight) ? $ftTypeHeight : null;
-    }
-
-    /**
-     * @return mixed
+     * Get the width of the thumbnails (or the maximum width in case of proportional sizing).
+     *
+     * @return int|null
      */
     public function getWidth()
     {
@@ -178,44 +251,230 @@ class Type
     }
 
     /**
-     * @return mixed
+     * Set the height of the thumbnails (or the maximum height in case of proportional sizing).
+     *
+     * @param int|null $ftTypeHeight
+     */
+    public function setHeight($ftTypeHeight)
+    {
+        $this->ftTypeHeight = null;
+        if (is_numeric($ftTypeHeight)) {
+            $v = (int) $ftTypeHeight;
+            if ($v > 0) {
+                $this->ftTypeHeight = $v;
+            }
+        }
+    }
+
+    /**
+     * Get the height of the thumbnails (or the maximum height in case of proportional sizing).
+     *
+     * @return int|null
      */
     public function getHeight()
     {
         return $this->ftTypeHeight;
     }
 
+    /**
+     * Mark this this thumbnail type as required (that is, it can't be deleted).
+     */
+    public function requireType()
+    {
+        $this->ftTypeIsRequired = true;
+    }
+
+    /**
+     * Is this thumbnail type required? If yes, it can't be deleted.
+     *
+     * @return bool
+     */
+    public function isRequired()
+    {
+        return $this->ftTypeIsRequired;
+    }
+
+    /**
+     * Set the thumbnail sizing mode.
+     *
+     * @param string $ftTypeSizingMode one of the Type::RESIZE_... constants
+     */
+    public function setSizingMode($ftTypeSizingMode = self::RESIZE_DEFAULT)
+    {
+        $this->ftTypeSizingMode = (string) $ftTypeSizingMode;
+    }
+
+    /**
+     * Get the thumbnail sizing mode.
+     *
+     * @return string One of the Type::RESIZE_... constants.
+     */
+    public function getSizingMode()
+    {
+        return $this->ftTypeSizingMode ? $this->ftTypeSizingMode : self::RESIZE_DEFAULT;
+    }
+
+    /**
+     * Upscaling is enabled?
+     *
+     * @return bool
+     */
+    public function isUpscalingEnabled()
+    {
+        return (bool) $this->ftUpscalingEnabled;
+    }
+
+    /**
+     * Upscaling is enabled?
+     *
+     * @param bool $value
+     */
+    public function setIsUpscalingEnabled($value)
+    {
+        $this->ftUpscalingEnabled = (bool) $value;
+    }
+
+    /**
+     * Get the display name of the thumbnail sizing mode.
+     *
+     * @return string
+     */
+    public function getSizingModeDisplayName()
+    {
+        $sizingModeDisplayNames = [
+            self::RESIZE_PROPORTIONAL => t('Proportional'),
+            self::RESIZE_EXACT => t('Exact'),
+        ];
+
+        return $sizingModeDisplayNames[$this->getSizingMode()];
+    }
+
+    /**
+     * Should the thumbnails be build for every file that ARE NOT in the file sets (false), or only for files that ARE in the specified file sets (true)?
+     *
+     * @param bool $value
+     *
+     * @return $this
+     */
+    public function setLimitedToFileSets($value)
+    {
+        $this->ftLimitedToFileSets = (bool) $value;
+
+        return $this;
+    }
+
+    /**
+     * Should the thumbnails be build for every file that ARE NOT in the file sets (false), or only for files that ARE in the specified file sets (true)?
+     *
+     * @return bool
+     */
+    public function isLimitedToFileSets()
+    {
+        return $this->ftLimitedToFileSets;
+    }
+
+    /**
+     * Get the associated file sets (whose meaning depends on the value of ftLimitedToFileSets).
+     *
+     * @return ArrayCollection|TypeFileSet[]
+     */
+    public function getAssociatedFileSets()
+    {
+        return $this->ftAssociatedFileSets;
+    }
+
+    /**
+     * Should we create animated thumbnails for animated images?
+     *
+     * @param bool $value
+     *
+     * @return $this
+     */
+    public function setKeepAnimations($value)
+    {
+        $this->ftKeepAnimations = (bool) $value;
+
+        return $this;
+    }
+
+    /**
+     * Should we create animated thumbnails for animated images?
+     *
+     * @return bool
+     */
+    public function isKeepAnimations()
+    {
+        return (bool) $this->ftKeepAnimations;
+    }
+
+    /**
+     * Save this instance to the database.
+     */
     public function save()
     {
-        $em = \ORM::entityManager();
+        $em = Application::getFacadeApplication()->make(EntityManagerInterface::class);
         $em->persist($this);
         $em->flush();
     }
 
+    /**
+     * Delete this instance from the database.
+     */
     public function delete()
     {
-        $em = \ORM::entityManager();
+        $em = Application::getFacadeApplication()->make(EntityManagerInterface::class);
         $em->remove($this);
         $em->flush();
     }
 
+    /**
+     * Get a thumbnail type version instance representing this thumbnail type (normal-DPI).
+     *
+     * @return \Concrete\Core\File\Image\Thumbnail\Type\Version
+     */
     public function getBaseVersion()
     {
-        return new Version($this->getHandle(), $this->getHandle(), $this->getName(), $this->getWidth(), $this->getHeight(), false, $this->getSizingMode());
+        return $this->getVersion(false);
     }
 
+    /**
+     * Get a thumbnail type version instance representing this thumbnail type (high-DPI).
+     *
+     * @return \Concrete\Core\File\Image\Thumbnail\Type\Version
+     */
     public function getDoubledVersion()
     {
-        $width = null;
-        $height = null;
-        if ($this->getWidth()) {
-            $width = $this->getWidth() * 2;
-        }
-        if ($this->getHeight()) {
-            $height = $this->getHeight() * 2;
-        }
-
-        return new Version($this->getHandle() . '_2x', $this->getHandle() . '_2x', $this->getName(), $width, $height, true, $this->getSizingMode());
+        return $this->getVersion(true);
     }
 
+    /**
+     * @param bool $doubled
+     *
+     * @return \Concrete\Core\File\Image\Thumbnail\Type\Version
+     */
+    private function getVersion($doubled)
+    {
+        $suffix = $doubled ? static::HIGHDPI_SUFFIX : '';
+        $handle = $this->getHandle();
+        $width = $this->getWidth();
+        if ($width && $doubled) {
+            $width *= 2;
+        }
+        $height = $this->getHeight();
+        if ($height && $doubled) {
+            $height *= 2;
+        }
+        if ($this->isRequired()) {
+            $limitedToFileSets = false;
+            $filesetIDs = [];
+        } else {
+            $limitedToFileSets = $this->isLimitedToFileSets();
+            $filesetIDs = [];
+            foreach ($this->getAssociatedFileSets() as $afs) {
+                $filesetIDs[] = $afs->getFileSetID();
+            }
+        }
+
+        return new Version($handle . $suffix, $handle . $suffix, $this->getName(), $width, $height, $doubled, $this->getSizingMode(), $limitedToFileSets, $filesetIDs, $this->isUpscalingEnabled(), $this->isKeepAnimations());
+    }
 }

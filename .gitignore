@@ -30,6 +30,7 @@ composer.phar
 
 # more stuff
 /application/languages/*
+/coverage.clover
 
 # ignore sitemap.xml
 /sitemap.xml
@@ -51,12 +52,14 @@ error_log
 # ignore JavaScript source maps
 /concrete/js/*.js.map
 /concrete/js/bootstrap/*.js.map
+/concrete/js/mix-manifest.json
 
 # ignore node modules used for building
 /build/node_modules
 /build/release
 /build/Gruntfile.parameters.js
 /build/npm-debug.log
+/build/package-lock.json
 
 # ignore PHP symbol map
 __IDE_SYMBOLS__.php

@@ -1,16 +1,16 @@
 <?php
 namespace Concrete\Core\Conversation\Editor;
 
-use Conversation;
+use Concrete\Core\Conversation\Conversation;
 use Core;
 use Database;
 use Environment;
 use Concrete\Core\Conversation\Message\Message;
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Package;
 use Concrete\Core\Package\PackageList;
 
-abstract class Editor extends Object
+abstract class Editor extends ConcreteObject
 {
     /** @var string */
     protected $cnvEditorHandle;
@@ -80,9 +80,9 @@ abstract class Editor extends Object
         if (!is_object($this->cnvMessage)) {
             return '';
         }
+        $text = \Core::make('helper/text');
         $cnv = $this->cnvMessage->getConversationObject();
-
-        return $this->cnvMessage->getConversationMessageBody();
+        return $text->entities($this->cnvMessage->getConversationMessageBody());
     }
 
     public function getConversationEditorHandle()
@@ -214,14 +214,8 @@ abstract class Editor extends Object
      */
     public function outputConversationEditorAddMessageForm()
     {
-        $env = Environment::get();
-        $path = $env->getPath(
-            DIRNAME_ELEMENTS . '/' . DIRNAME_CONVERSATIONS . '/' . DIRNAME_CONVERSATION_EDITOR . '/' .
-            $this->cnvEditorHandle . '/' . FILENAME_CONVERSATION_EDITOR_FORM_MESSAGE,
-            $this->getPackageHandle()
-        );
-        $editor = $this; //$editor used in the element
-        include $path;
+        \View::element(DIRNAME_CONVERSATIONS . '/' . DIRNAME_CONVERSATION_EDITOR . '/' .
+            $this->cnvEditorHandle . '/message', ['editor' => $this], $this->getPackageHandle());
     }
 
     /**
@@ -229,14 +223,8 @@ abstract class Editor extends Object
      */
     public function outputConversationEditorReplyMessageForm()
     {
-        $env = Environment::get();
-        $path = $env->getPath(
-            DIRNAME_ELEMENTS . '/' . DIRNAME_CONVERSATIONS . '/' . DIRNAME_CONVERSATION_EDITOR . '/' .
-            $this->cnvEditorHandle . '/' . FILENAME_CONVERSATION_EDITOR_FORM_REPLY,
-            $this->getPackageHandle()
-        );
-        $editor = $this; //$editor used in the element
-        include $path;
+        \View::element(DIRNAME_CONVERSATIONS . '/' . DIRNAME_CONVERSATION_EDITOR . '/' .
+            $this->cnvEditorHandle . '/reply', ['editor' => $this], $this->getPackageHandle());
     }
 
     /**
@@ -256,11 +244,11 @@ abstract class Editor extends Object
         if (isset($config['htmlawed'])) {
             $default = array('safe' => 1, 'elements' => 'p, br, strong, em, strike, a');
             $conf = array_merge($default, (array) $config['htmlawed']);
-            $lawed = htmLawed($cnvMessageBody, $conf);
+            $result = htmLawed($cnvMessageBody, $conf);
         } else {
-            $lawed = $cnvMessageBody;
+            $result = $cnvMessageBody;
         }
-        if ($config['mention'] !== false) {
+        if (isset($config['mention']) && $config['mention'] !== false) {
             $users = $cnv->getConversationMessageUsers();
             $needle = array();
             $haystack = array();
@@ -269,10 +257,26 @@ abstract class Editor extends Object
                 $haystack[] = "<a href='" . $user->getUserPublicProfileURL() . "'>'@" . $user->getUserName() . "</a>";
             }
 
-            return str_ireplace($needle, $haystack, $lawed);
+            $result = str_ireplace($needle, $haystack, $result);
         }
 
-        return $lawed;
+        // Replace any potential XSS
+        $result = $this->removeJavascriptLinks($result);
+        return $result;
+    }
+
+    /**
+     * Replace javascript links with dummy links
+     *
+     * @param string $html
+     * @return string 
+     */
+    protected function removeJavascriptLinks($html)
+    {
+        // Use regex to replace javascript links with javascript:void
+        $html = preg_replace('/\bhref\s*=\s*["\']?\s*(javascript|data)\s*:/i', 'data-blocked-$0/', $html);
+
+        return $html;
     }
 
     /**

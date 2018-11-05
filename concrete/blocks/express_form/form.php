@@ -97,7 +97,7 @@
             <?php foreach($entities as $entity) { ?>
                 <optgroup label="<?=t('Entity: %s', $entity->getName())?>">
                     <?php foreach($entity->getForms() as $entityForm) { ?>
-                        <option value="<?=$entityForm->getID()?>" <?php if ($entityForm->getID() == $exFormID) { ?>selected<?php } ?>><?=$entityForm->getName()?></option>
+                        <option value="<?=$entityForm->getID()?>" <?php if ($entityForm->getID() == $exFormID) { ?>selected<?php } ?>><?=h($entityForm->getName())?></option>
                     <?php } ?>
                 </optgroup>
             <?php } ?>
@@ -181,9 +181,9 @@
             <div class="input-group">
 				<span class="input-group-addon" style="z-index: 2000">
 				<?=$form->checkbox('notifyMeOnSubmission', 1, $notifyMeOnSubmission == 1)?>
-				</span><?=$form->text('recipientEmail', $recipientEmail, array('style' => 'z-index:2000;'))?>
+				</span><?=$form->text('recipientEmail', $recipientEmail, array('autocomplete' => 'off', 'style' => 'z-index:2000;'))?>
             </div>
-            <span class="help-block"><?=t('(Seperate multiple emails with a comma)')?></span>
+            <span class="help-block"><?=t('(Separate multiple emails with a comma)')?></span>
         </div>
         <div data-view="form-options-email-reply-to"></div>
     </fieldset>

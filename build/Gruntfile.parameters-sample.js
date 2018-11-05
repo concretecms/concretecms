@@ -27,6 +27,9 @@ module.exports = {
 	ctLocales: [],
 	// The minimum translation progress of locales (percentage).
 	// Default value: 90%
-	ctProgressLimit: 90
+	ctProgressLimit: 90,
+
+	// Keep the short echo tags? Otherwise they'll be expanded [default: true]
+	keepShortEcho: true
 
 };

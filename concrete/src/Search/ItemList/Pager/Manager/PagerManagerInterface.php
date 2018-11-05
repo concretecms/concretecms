@@ -19,9 +19,10 @@ interface PagerManagerInterface
      * Adds a secondary sort query to an item list so that items that are sorted by
      * text criteria will paginate properly.
      * @param PagerProviderInterface $itemList
+     * @param string $direction
      * @return void
      */
-    function sortListByCursor(PagerProviderInterface $itemList);
+    function sortListByCursor(PagerProviderInterface $itemList, $direction);
 
 
     /**

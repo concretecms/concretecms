@@ -181,7 +181,7 @@ function overrideable_core_class($class, $path, $pkgHandle = null)
         // So let's strip DIRNAME_CLASSES off the front, place /Concrete/ between DIRNAME_CLASSES
         // and the rest of the path.
         $newPath = substr($path, strlen(DIRNAME_CLASSES));
-        $newPath = DIRNAME_CLASSES . DIRECTORY_SEPARATOR . 'Concrete' . $newPath;
+        $newPath = DIRNAME_CLASSES . '/Concrete' . $newPath;
         $r = $env->getRecord($newPath);
         if ($r->override) {
             return core_class($class, true);
@@ -281,4 +281,28 @@ function array_to_object($o, $array)
 function var_dump_safe($o, $echo = true, $maxDepth = true)
 {
     return Doctrine\Common\Util\Debug::dump($o, $maxDepth, true, $echo);
+}
+
+/**
+ * Generate the PHPDoc for a set of defined variables.
+ *
+ * @param array $get_defined_vars The result of the get_defined_vars() function
+ * @param object|null $valueOfThis The value of $this
+ * @param bool $return Set to true to return the generated PHPDoc, false to return it
+ *
+ * @example output_vars(get_defined_vars(), isset($this) ? $this : null);
+ */
+function output_vars(array $get_defined_vars, $valueOfThis = null, $return = false)
+{
+    if (!array_key_exists('this', $get_defined_vars) && $valueOfThis && is_object($valueOfThis)) {
+        $get_defined_vars['this'] = $valueOfThis;
+    }
+    $generator = new Concrete\Core\Support\Symbol\PhpDocGenerator();
+    $phpDoc = $generator->describeVars($get_defined_vars);
+    if (!$return) {
+        echo '</script><pre>', $phpDoc;
+        die();
+    }
+
+    return $phpDoc;
 }

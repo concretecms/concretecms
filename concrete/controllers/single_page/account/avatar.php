@@ -2,13 +2,55 @@
 namespace Concrete\Controller\SinglePage\Account;
 
 use Concrete\Controller\SinglePage\Account\EditProfile as AccountProfileEditPageController;
+use Concrete\Core\User\UserInfo;
+use Imagine\Image\Palette\Color\RGB;
+use Imagine\Image\Point;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Avatar extends AccountProfileEditPageController
 {
     public function view()
     {
         parent::view();
-        $this->requireAsset('javascript', 'swfobject');
+        $this->set('token', $this->app->make('token'));
+        $this->requireAsset('core/avatar');
+    }
+
+    public function save_avatar()
+    {
+        $result = [
+            'success' => false,
+            'avatar' => null
+        ];
+        $this->view();
+        $token = $this->app->make('token');
+        if (!$token->validate('avatar/save_avatar')) {
+            $this->redirect('/profile/avatar', 'token');
+        }
+
+        /** @var UserInfo $profile */
+        $profile = $this->get('profile');
+
+        /** @var \Symfony\Component\HttpFoundation\File\UploadedFile $file */
+        $file = $this->request->files->get('file');
+        if ($file) {
+            $image = \Image::open($file->getPathname());
+
+            $palette = new \Imagine\Image\Palette\RGB();
+
+            // Give our image a white background
+            $canvas = \Image::create($image->getSize(), $palette->color('fff'));
+            $canvas->paste($image, new Point(0, 0));
+
+            // Update the avatar
+            $profile->updateUserAvatar($canvas);
+
+            // Update the result
+            $result['success'] = true;
+            $result['avatar'] = $profile->getUserAvatar()->getPath() . '?' . time();
+        }
+
+        return new JsonResponse($result, $result['success'] ? 200 : 400);
     }
 
     public function save_thumb()

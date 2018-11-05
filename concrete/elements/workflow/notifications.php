@@ -8,35 +8,47 @@ if (is_array($workflowList) && !empty($workflowList)) {
         $wr = $wl->getWorkflowRequestObject();
         $wf = $wl->getWorkflowObject();
         $form = '<form data-form="workflow" method="post" action="' . $wl->getWorkflowProgressFormAction() . '">';
-        $text = $wf->getWorkflowProgressCurrentDescription($wl);
+        $text = '';
+        $description = $wr->getWorkflowRequestDescriptionObject();
+        if ($description) {
+            $text = '<p>' . $description->getInContextDescription() . '</p>';
+        }
+        $requester = $wr->getRequesterUserObject();
+        $dateAdded = $wl->getWorkflowProgressDateAdded();
+        if ($requester && $dateAdded) {
+            $text .= '<p><small>' . t(/*i18n: %1$s is a user name, %2$s is a date/time*/'Submitted by %1$s on %2$s', $requester->getUserDisplayName(), $app->make('date')->formatPrettyDateTime($dateAdded)) . '</small></p>';
+        }
 
         $actions = $wl->getWorkflowProgressActions();
         $buttons = [];
 
         if (!empty($actions)) {
             foreach ($actions as $act) {
-                $parameters = 'class="btn btn-xs ' . $act->getWorkflowProgressActionStyleClass() . '" ';
+
+                $inner = $act->getWorkflowProgressActionStyleInnerButtonLeftHTML() . ' ' . $act->getWorkflowProgressActionLabel() . ' ' . $act->getWorkflowProgressActionStyleInnerButtonRightHTML();
+
+                if ($act->getWorkflowProgressActionURL() != '') {
+                    $button = new \HtmlObject\Link($act->getWorkflowProgressActionURL(), $inner);
+                } else {
+                    $button = new \HtmlObject\Link('#', $inner);
+                    $button->setAttribute('data-workflow-task', $act->getWorkflowProgressActionTask());
+                }
+
                 if (!empty($act->getWorkflowProgressActionExtraButtonParameters())) {
                     foreach ($act->getWorkflowProgressActionExtraButtonParameters() as $key => $value) {
-                        $parameters .= $key . '="' . $value . '" ';
+                        $button->setAttribute($key, $value);
                     }
                 }
 
-                $inner = $act->getWorkflowProgressActionStyleInnerButtonLeftHTML() . ' ' .
-                $act->getWorkflowProgressActionLabel() . ' ' .
-                $act->getWorkflowProgressActionStyleInnerButtonRightHTML();
-
-                if ($act->getWorkflowProgressActionURL() != '') {
-                    $button = '<a href="' . $act->getWorkflowProgressActionURL() . '" ' . $parameters . '>' . $inner . '</a>';
-                } else {
-                    $button = '<button type="submit" name="action_' . $act->getWorkflowProgressActionTask() . '" ' . $parameters . '>' . $inner . '</button>';
+                // sigh. le hack
+                if (strpos($act->getWorkflowProgressActionStyleClass(), 'dialog-launch') > -1) {
+                    $button->addClass('dialog-launch');
                 }
-
                 $buttons[] = $button;
             }
         }
 
-        if ($displayInline) {
+        if (!empty($displayInline)) {
             echo $form;
             echo implode("\n", $buttons);
             echo '</form>';

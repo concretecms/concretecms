@@ -5,6 +5,20 @@
 
 
 /**
+ * Preview Image Popover
+ */
+@import "../vendor/bootstrap/popovers.less";
+//since the popover must be placed in body to prevent clipping in a modal situation we need to include not namespaced
+// styles here and adjust the z-Index
+.popover {
+  z-index: @index-level-dialog-content-click-proxy;
+  max-width: none;
+  img {
+    max-width: 75vw;
+  }
+}
+
+/**
  * File Results List Wrapper
  */
 .ccm-ui .ccm-file-manager-list-wrapper {
@@ -18,8 +32,14 @@
 table.ccm-file-manager-list {
   img.ccm-file-manager-list-thumbnail,
   img.ccm-generic-thumbnail {
-    width: 30px;
-    height: 30px;
+    &.ccm-thumbnail-small {
+      width: 30px;
+      height: 30px;
+    }
+    &.ccm-thumbnail-full{
+      width: auto;
+      height: auto;
+    }
   }
   td.ccm-search-results-icon {
     i {
@@ -129,7 +149,7 @@ div#ccm-file-manager-import-files {
       }
     }
 
-    height: 340px;
+    min-height: 340px;
     border: 2px dashed #09f;
   }
 }

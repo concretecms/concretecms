@@ -17,6 +17,7 @@ if (is_object($control->getPageObject())) {
 }
 
 if (is_object($relevantPage) && !$relevantPage->isError()) {
+    $site = $relevantPage->getSite();
     $tree = $relevantPage->getSiteTreeObject();
 }
 
@@ -24,9 +25,10 @@ if (is_object($pagetype) && $pagetype->getPageTypePublishTargetTypeID() == $conf
     $configuredTarget = $pagetype->getPageTypePublishTargetObject();
 
     if ($configuredTarget->getSelectorFormFactor() == 'sitemap_in_page') {
-        $siteMapParentID = HOME_CID;
         if ($configuredTarget->getStartingPointPageID()) {
             $siteMapParentID = $configuredTarget->getStartingPointPageID();
+        } else {
+            $siteMapParentID = Page::getHomePageID($relevantPage);
         }
         $ps = Loader::helper('form/page_selector');
         $args = array('ptID' => $configuredTarget->getPageTypeID());
@@ -36,9 +38,7 @@ if (is_object($pagetype) && $pagetype->getPageTypePublishTargetTypeID() == $conf
         $pl->sortByName();
         $pl->filterByPageTypeID($configuredTarget->getPageTypeID());
         $pl->sortByName();
-        if (isset($tree)) {
-            $pl->setSiteTreeObject($tree);
-        }
+        $pl->filterBySite($site);
         $pages = $pl->get();
         if (count($pages) > 1) {
             $navigation = \Core::make('helper/navigation');

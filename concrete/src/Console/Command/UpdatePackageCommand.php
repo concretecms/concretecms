@@ -2,6 +2,7 @@
 namespace Concrete\Core\Console\Command;
 
 use Concrete\Core\Console\Command;
+use Concrete\Core\Console\ConsoleAwareInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
@@ -15,8 +16,13 @@ class UpdatePackageCommand extends Command
     {
         $errExitCode = static::RETURN_CODE_ON_FAILURE;
         $this
-            ->setName('c5:package-update')
+            ->setName('c5:package:update')
+            ->setAliases([
+                'c5:package-update',
+                'c5:update-package',
+            ])
             ->addEnvOption()
+            ->setCanRunAsRoot(false)
             ->addOption('all', 'a', InputOption::VALUE_NONE, 'Update all the installed packages')
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force update even if the package is already at last version')
             ->addArgument('packages', InputArgument::IS_ARRAY, 'The handle of the package to be updated (multiple values allowed)')
@@ -64,7 +70,7 @@ EOT
         }
         foreach ($updatableHandles as $updatableHandle) {
             try {
-                $this->updatePackage($updatableHandle, $output, $force);
+                $this->updatePackage($updatableHandle, $output, $input, $force);
             } catch (Exception $x) {
                 $this->writeError($output, $x);
                 $rc = 1;
@@ -74,7 +80,7 @@ EOT
         return $rc;
     }
 
-    protected function updatePackage($pkgHandle, OutputInterface $output, $force)
+    protected function updatePackage($pkgHandle, OutputInterface $output, InputInterface $input, $force)
     {
         $output->write("Looking for package '$pkgHandle'... ");
         $pkg = null;
@@ -87,6 +93,12 @@ EOT
         if ($pkg === null) {
             throw new Exception(sprintf("No package with handle '%s' is installed", $pkgHandle));
         }
+
+        // Provide the console objects to objects that are aware of the console
+        if ($pkg instanceof ConsoleAwareInterface) {
+            $pkg->setConsole($this->getApplication(), $output, $input);
+        }
+
         $output->writeln(sprintf('<info>found (%s).</info>', $pkg->getPackageName()));
 
         $output->write('Checking preconditions... ');
@@ -100,11 +112,8 @@ EOT
         if ($upPkg === null && $force !== true) {
             $output->writeln(sprintf("<info>the package is already up-to-date (v%s)</info>", $pkg->getPackageVersion()));
         } else {
-            $test = $pkg->testForInstall(false);
-            if (is_object($test)) {
-                /*
-                 * @var Error $test
-                 */
+            $test = $pkg->testForUpgrade();
+            if ($test !== true) {
                 throw new Exception(implode("\n", $test->getList()));
             }
             $output->writeln('<info>good.</info>');

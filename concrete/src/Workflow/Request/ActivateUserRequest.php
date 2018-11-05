@@ -122,11 +122,8 @@ class ActivateUserRequest extends UserRequest
     {
         $mh = Loader::helper('mail');
         $mh->to($ui->getUserEmail());
-        if (Config::get('concrete.user.registration.notification_email')) {
-            $mh->from(
-                Config::get('concrete.user.registration.notification_email'),
-                t('Website Registration Notification')
-            );
+        if (Config::get('concrete.email.register_notification.address')) {
+            $mh->from(Config::get('concrete.email.register_notification.address'), t('Website Registration Notification'));
         } else {
             $adminUser = UserInfo::getByID(USER_SUPER_ID);
             $mh->from($adminUser->getUserEmail(), t('Website Registration Notification'));
@@ -164,7 +161,7 @@ class ActivateUserRequest extends UserRequest
 
     public function getWorkflowRequestApproveButtonClass()
     {
-        return 'btn-success';
+        return '';
     }
 
     public function getWorkflowRequestApproveButtonInnerButtonRightHTML()
@@ -189,9 +186,8 @@ class ActivateUserRequest extends UserRequest
         $button->addWorkflowProgressActionButtonParameter('dialog-title', t('User Details'));
         $button->addWorkflowProgressActionButtonParameter('dialog-width', '420');
         $button->addWorkflowProgressActionButtonParameter('dialog-height', '310');
-        $button->setWorkflowProgressActionStyleInnerButtonLeftHTML('<i class="fa fa-eye"></i>');
         $button->setWorkflowProgressActionURL(REL_DIR_FILES_TOOLS_REQUIRED . '/workflow/dialogs/user_details?uID=' . $this->getRequestedUserID());
-        $button->setWorkflowProgressActionStyleClass('btn-default dialog-launch');
+        $button->setWorkflowProgressActionStyleClass('dialog-launch');
         $buttons[] = $button;
 
         return $buttons;

@@ -29,7 +29,7 @@ class CoreDriver implements DriverInterface
     public function getDriver()
     {
         $annotationDriver = new AnnotationDriver($this->app->make('orm/cachedAnnotationReader'), [
-            DIR_BASE_CORE.DIRECTORY_SEPARATOR.DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES,
+            DIR_BASE_CORE . '/' . DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES,
         ]);
         return $annotationDriver;
     }

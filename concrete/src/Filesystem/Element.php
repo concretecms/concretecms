@@ -94,7 +94,7 @@ class Element implements LocatableFileInterface
         } else {
             $element = $this->element;
         }
-        return DIRNAME_ELEMENTS . DIRECTORY_SEPARATOR . $element . '.php';
+        return DIRNAME_ELEMENTS . '/' . $element . '.php';
     }
 
     public function exists()
@@ -120,7 +120,7 @@ class Element implements LocatableFileInterface
     public function getElementController()
     {
         if (!isset($this->controller)) {
-            $path = DIRNAME_CONTROLLERS . DIRECTORY_SEPARATOR . 'element' . DIRECTORY_SEPARATOR . $this->element
+            $path = DIRNAME_CONTROLLERS . '/element/' . $this->element
                 . '.php';
             $class = 'Controller\\Element';
             $segments = explode('/', $this->element);

@@ -5,6 +5,12 @@
     }
     var clonedNavigation = originalNav.clone();
     $(clonedNavigation).removeClass('original');
+    $(clonedNavigation).find("*").each(function(){
+        var t=$(this).attr('id');
+        if (t!==undefined && t !==null &&t !=="") {
+            $(this).attr('id',"cloned-ccm-ro_"+t)
+        }
+    });
     $('.ccm-responsive-overlay').append(clonedNavigation);
     $('.ccm-responsive-menu-launch').click(function(){
         $('.ccm-responsive-menu-launch').toggleClass('responsive-button-close');   // slide out mobile nav

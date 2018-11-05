@@ -1,14 +1,19 @@
 <?php
-namespace Concrete\Core\Application\UserInterface\Sitemap;
 
+namespace Concrete\Core\Application\UserInterface\Sitemap;
 
 class FlatSitemapProvider extends StandardSitemapProvider
 {
-
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Application\UserInterface\Sitemap\ProviderInterface::getRequestedNodes()
+     */
     public function getRequestedNodes()
     {
         $dh = $this->getSitemapDataProvider();
         $cParentID = 0;
+        $parent = null;
         if ($this->request->query->has('cParentID')) {
             $cParentID = $this->request->query->get('cParentID');
         }
@@ -26,7 +31,7 @@ class FlatSitemapProvider extends StandardSitemapProvider
             $p = $dh->getNode($this->request->query->get('cParentID'));
             $p->expanded = true;
             $p->children = $dh->getSubNodes($this->request->query->get('cParentID'));
-            $n->children = array($p);
+            $n->children = [$p];
             $nodes[] = $n;
         } else {
             if ($cParentID > 0) {
@@ -38,10 +43,6 @@ class FlatSitemapProvider extends StandardSitemapProvider
             }
         }
 
-
         return $nodes;
     }
-
-
-
 }

@@ -17,6 +17,7 @@ class AssociationControl extends Control
     {
         $node = parent::export($control, $xml);
         $node->addAttribute('association', $control->getAssociation()->getID());
+        $node->addAttribute('label-mask', $control->getAssociationEntityLabelMask());
 
     }
 

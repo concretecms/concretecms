@@ -43,7 +43,7 @@ class StandardSearchIndexer implements SearchIndexerInterface
 
     public function createRepository(CategoryInterface $category)
     {
-        $schema = new Schema();
+        $schema = new Schema([], [], $this->connection->getSchemaManager()->createSchemaConfig());
         if ($this->isValid($category)) {
             /**
              * @var $category StandardSearchIndexerInterface
@@ -54,6 +54,18 @@ class StandardSearchIndexer implements SearchIndexerInterface
                 if (isset($details['columns'])) {
                     foreach ($details['columns'] as $column) {
                         $table->addColumn($column['name'], $column['type'], $column['options']);
+                    }
+                }
+                if (isset($details['foreignKeys'])) {
+                    foreach ($details['foreignKeys'] as $foreignKey) {
+                        $options = [];
+                        if (!empty($foreignKey['onUpdate'])) {
+                            $options['onUpdate'] = $foreignKey['onUpdate'];
+                        }
+                        if (!empty($foreignKey['onDelete'])) {
+                            $options['onDelete'] = $foreignKey['onDelete'];
+                        }
+                        $table->addForeignKeyConstraint($foreignKey['foreignTable'], $foreignKey['localColumns'], $foreignKey['foreignColumns'], $options);
                     }
                 }
 

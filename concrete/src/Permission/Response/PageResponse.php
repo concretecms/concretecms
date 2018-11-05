@@ -10,6 +10,7 @@ use Block;
 use Config;
 use Session;
 use TaskPermission;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Permission\Key\PageKey as PagePermissionKey;
 use Concrete\Core\Permission\Key\AreaKey as AreaPermissionKey;
 use Concrete\Core\Permission\Key\BlockKey as BlockPermissionKey;
@@ -164,9 +165,13 @@ class PageResponse extends Response
             $this->canMoveOrCopyPage()
         ) {
             return true;
-        } else {
-            return false;
         }
+        $c = Page::getCurrentPage();
+        if ($c && $c->getCollectionPath() == STACKS_LISTING_PAGE_PATH) {
+            return true;
+        }
+
+        return false;
     }
 
     public function testForErrors()

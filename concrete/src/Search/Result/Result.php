@@ -3,6 +3,7 @@ namespace Concrete\Core\Search\Result;
 
 use Concrete\Core\Search\Column\Set;
 use Concrete\Core\Search\ItemList\ItemList;
+use Concrete\Core\Search\Pagination\PaginationFactory;
 use Pagerfanta\View\TwitterBootstrap3View;
 use stdClass;
 
@@ -105,7 +106,8 @@ class Result
         $this->list = $il;
         $this->baseURL = $url;
         $this->fields = $fields;
-        $this->pagination = $il->getPagination();
+        $factory = new PaginationFactory(\Request::createFromGlobals());
+        $this->pagination = $factory->createPaginationObject($il, PaginationFactory::PERMISSIONED_PAGINATION_STYLE_PAGER);
     }
 
     public function getItems()

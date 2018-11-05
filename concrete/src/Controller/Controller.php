@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Controller;
 
+use Concrete\Core\Application\Application;
+use Concrete\Core\Page\Theme\ThemeRouteCollection;
+use Concrete\Core\Support\Facade\Facade;
 use Request;
 use PageTheme;
 use View;
@@ -31,7 +34,8 @@ class Controller extends AbstractController
     public function getTheme()
     {
         if (is_object($this->view)) {
-            $tmpTheme = Route::getThemeByRoute($this->view->getViewPath());
+            $tmpTheme = $this->app->make(ThemeRouteCollection::class)
+                ->getThemeByRoute($this->view->getViewPath());
             if ($tmpTheme) {
                 return $tmpTheme[0];
             }
@@ -53,7 +57,8 @@ class Controller extends AbstractController
         }
 
         if (is_object($this->view)) {
-            $tmpTheme = Route::getThemeByRoute($this->view->getViewPath());
+            $tmpTheme = $this->app->make(ThemeRouteCollection::class)
+                ->getThemeByRoute($this->view->getViewPath());
             if ($tmpTheme && isset($tmpTheme[1])) {
                 return $tmpTheme[1];
             }
@@ -84,6 +89,12 @@ class Controller extends AbstractController
             }
             $this->view->setController($this);
         }
+    }
+
+    public function flash($key, $value, $isHTML = false)
+    {
+        $session = Facade::getFacadeApplication()->make('session');
+        $session->getFlashBag()->add('page_message', array($key, $value, $isHTML));
     }
 
     public function getViewObject()

@@ -1,11 +1,11 @@
 <?php
+
 namespace Concrete\Controller\SinglePage;
 
 use Concrete\Core\Attribute\Context\FrontendFormContext;
 use Concrete\Core\Attribute\Form\Renderer;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Page\Controller\PageController;
-use Concrete\Core\Validation\ResponseInterface;
 use Config;
 use Loader;
 use User;
@@ -21,16 +21,24 @@ class Register extends PageController
     public function on_start()
     {
         $allowedTypes = ['validate_email', 'enabled'];
-        $currentType = $this->app->make(Repository::class)->get('concrete.user.registration.type');
+        $config = $this->app->make(Repository::class);
+        $currentType = $config->get('concrete.user.registration.type');
 
         if (!in_array($currentType, $allowedTypes)) {
             return $this->replace('/page_not_found');
         }
         $u = new User();
         $this->set('u', $u);
-        $this->set('displayUserName', $this->displayUserName);
-        $this->requireAsset('css', 'core/frontend/captcha');
+        if (!$this->displayUserName) {
+            // something has overridden this controller and we want to honor that
+            $displayUserName = false;
+        } else {
+            $displayUserName = $config->get('concrete.user.registration.display_username_field');
+        }
 
+        $this->displayUserName = $displayUserName;
+        $this->set('displayUserName', $displayUserName);
+        $this->requireAsset('css', 'core/frontend/captcha');
         $this->set('renderer', new Renderer(new FrontendFormContext()));
     }
 
@@ -68,46 +76,16 @@ class Register extends PageController
                 }
             }
 
-            if (!$vals->email($_POST['uEmail'])) {
-                $e->add(t('Invalid email address provided.'));
-            } elseif (!$valc->isUniqueEmail($_POST['uEmail'])) {
-                $e->add(t('The email address %s is already in use. Please choose another.', $_POST['uEmail']));
-            }
-
             if ($this->displayUserName) {
-                if (strlen($username) < $config->get('concrete.user.username.minimum')) {
-                    $e->add(t(
-                        'A username must be at least %s characters long.',
-                        $config->get('concrete.user.username.minimum')
-                    ));
-                }
-
-                if (strlen($username) > $config->get('concrete.user.username.maximum')) {
-                    $e->add(t(
-                        'A username cannot be more than %s characters long.',
-                        $config->get('concrete.user.username.maximum')
-                    ));
-                }
-
-                if (strlen($username) >= $config->get('concrete.user.username.minimum') && strlen($username) <= $config->get('concrete.user.username.maximum') && !$valc->username($username)) {
-                    if ($config->get('concrete.user.username.allow_spaces')) {
-                        $e->add(t('A username may only contain letters, numbers, spaces (not at the beginning/end), dots (not at the beginning/end), underscores (not at the beginning/end).'));
-                    } else {
-                        $e->add(t('A username may only contain letters, numbers, dots (not at the beginning/end), underscores (not at the beginning/end).'));
-                    }
-                }
-                if (!$valc->isUniqueUsername($username)) {
-                    $e->add(t('The username %s already exists. Please choose another', $username));
-                }
+                $this->app->make('validator/user/name')->isValid($username, $e);
             }
+            
+            $this->app->make('validator/user/email')->isValid($_POST['uEmail'], $e);
 
-            if ($username == USER_SUPER) {
-                $e->add(t('Invalid Username'));
-            }
+            $this->app->make('validator/password')->isValid($password, $e);
 
-            \Core::make('validator/password')->isValid($password, $e);
-
-            if ($password) {
+            $displayConfirmPasswordField = $config->get('concrete.user.registration.display_confirm_password_field');
+            if ($password && $displayConfirmPasswordField) {
                 if ($password != $passwordConfirm) {
                     $e->add(t('The two passwords provided do not match.'));
                 }
@@ -123,9 +101,6 @@ class Register extends PageController
                     $this->request,
                     $uak->isAttributeKeyRequiredOnRegister()
                 );
-                /**
-                 * @var ResponseInterface
-                 */
                 if (!$response->isValid()) {
                     $error = $response->getErrorObject();
                     $e->add($error);
@@ -138,7 +113,12 @@ class Register extends PageController
         if (!$e->has()) {
             // do the registration
             $data = $_POST;
-            $data['uName'] = $username;
+            if ($this->displayUserName) {
+                $data['uName'] = $username;
+            } else {
+                $userService = $this->app->make(\Concrete\Core\Application\Service\User::class);
+                $data['uName'] = $userService->generateUsernameFromEmail($_POST['uEmail']);
+            }
             $data['uPassword'] = $password;
             $data['uPasswordConfirm'] = $passwordConfirm;
 
@@ -170,8 +150,8 @@ class Register extends PageController
                     $mh->addParameter('attribs', $attribValues);
                     $mh->addParameter('siteName', tc('SiteName', \Core::make('site')->getSite()->getSiteName()));
 
-                    if ($config->get('concrete.user.registration.notification_email')) {
-                        $mh->from(Config::get('concrete.user.registration.notification_email'), t('Website Registration Notification'));
+                    if ($config->get('concrete.email.register_notification.address')) {
+                        $mh->from(Config::get('concrete.email.register_notification.address'), t('Website Registration Notification'));
                     } else {
                         $adminUser = UserInfo::getByID(USER_SUPER_ID);
                         if (is_object($adminUser)) {

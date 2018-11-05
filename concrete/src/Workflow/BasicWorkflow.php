@@ -9,8 +9,10 @@ use Concrete\Core\Workflow\Progress\Action\ApprovalAction as WorkflowProgressApp
 use Concrete\Core\Workflow\Progress\Action\CancelAction as WorkflowProgressCancelAction;
 use Concrete\Core\Workflow\Progress\BasicData as BasicWorkflowProgressData;
 use Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
+use Concrete\Core\Workflow\Progress\SkippedResponse;
 use Core;
 use Concrete\Core\Permission\Access\Access as PermissionAccess;
+use Config;
 use PermissionKey;
 use User;
 use UserInfo;
@@ -33,6 +35,14 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
     public function setPermissionsToOverride()
     {
         return false;
+    }
+
+    public function getWorkflowProgressCurrentComment(WorkflowProgress $wp)
+    {
+        $req = $wp->getWorkflowRequestObject();
+        if ($req) {
+            return $req->getRequesterComment();
+        }
     }
 
     public function getPermissionAssignmentClassName()
@@ -127,12 +137,7 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
         // Check if the workflow is not already approved
         if (is_object($req)) {
             if ($this->canApproveWorkflow()) {
-                // Then that means we have the ability to approve the workflow we just started.
-                // In that case, we transparently approve it, and skip the entry notification step.
-                $wpr = $req->approve($wp);
-                $wp->delete();
-
-                return $wpr;
+                return new SkippedResponse();
             } else {
                 $db = Core::make('database')->connection();
                 $db->executeQuery(
@@ -165,6 +170,18 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
         $dt = $wp->getWorkflowProgressDateAdded();
         $dh = Core::make('helper/date');
 
+        if (Config::get('concrete.email.workflow_notification.address')){
+            $fromAddress = Config::get('concrete.email.workflow_notification.address');
+        } else {
+            $adminUser = UserInfo::getByID(USER_SUPER_ID);
+            $fromAddress = $adminUser->getUserEmail();
+        }
+        if (Config::get('concrete.email.workflow_notification.name')) {
+            $fromName = Config::get('concrete.email.workflow_notification.name');
+        } else {
+            $fromName = t('Basic Workflow');
+        }
+
         foreach ($users as $ui) {
             // Get user object of the receiver and set locale to their language
             $user = $ui->getUserObject();
@@ -173,8 +190,7 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
             $mh = Core::make('helper/mail');
             $mh->addParameter('uName', $ui->getUserName());
             $mh->to($ui->getUserEmail());
-            $adminUser = UserInfo::getByID(USER_SUPER_ID);
-            $mh->from($adminUser->getUserEmail(), t('Basic Workflow'));
+            $mh->from($fromAddress, $fromName);
             $date = $dh->formatDateTime($dt, true); // Call here to translate datetime into users language
             $translatedMessage = $this->getTranslatedMessage($message, $date);
             $mh->addParameter('message', $translatedMessage);
@@ -188,27 +204,7 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
         }
         $loc->popActiveContext();
     }
-
-    public function getWorkflowProgressCurrentDescription(WorkflowProgress $wp)
-    {
-        $bdw = new BasicWorkflowProgressData($wp);
-        $ux = UserInfo::getByID($bdw->getUserStartedID());
-        if (is_object($ux)) {
-            $userName = $ux->getUserName();
-        } else {
-            $userName = t('(Deleted User)');
-        }
-        $req = $wp->getWorkflowRequestObject();
-        $description = $req->getWorkflowRequestDescriptionObject()->getInContextDescription();
-
-        return t(
-            '%s Submitted by <strong>%s</strong> on %s.',
-            $description,
-            $userName,
-            Core::make('helper/date')->formatDateTime($wp->getWorkflowProgressDateAdded(), true)
-        );
-    }
-
+    
     public function getWorkflowProgressStatusDescription(WorkflowProgress $wp)
     {
         $req = $wp->getWorkflowRequestObject();

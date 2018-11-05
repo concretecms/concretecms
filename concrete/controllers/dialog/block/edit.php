@@ -5,12 +5,11 @@ use Concrete\Controller\Backend\UserInterface\Block as BackendInterfaceBlockCont
 use Concrete\Core\Block\Block;
 use Concrete\Core\Block\Events\BlockEdit;
 use Concrete\Core\Block\View\BlockView;
-use BlockType;
-use Area;
-use Concrete\Core\Foundation\Queue\Queue;
-use Concrete\Core\Page\Page;
-use Concrete\Core\View\View;
-use Events;
+use Concrete\Core\Support\Facade\Events;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Error\ErrorList\ErrorList;
+use Concrete\Core\Error\ErrorList\Formatter\JsonFormatter;
+use Concrete\Core\Http\ResponseFactoryInterface;
 
 class Edit extends BackendInterfaceBlockController
 {
@@ -33,7 +32,7 @@ class Edit extends BackendInterfaceBlockController
     {
         $bi = $b->getInstance();
         if ($b->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY) {
-            $_b = \Block::getByID($bi->getOriginalBlockID());
+            $_b = Block::getByID($bi->getOriginalBlockID());
             $bi = $_b->getInstance(); // for validation
         }
 
@@ -49,11 +48,20 @@ class Edit extends BackendInterfaceBlockController
             $e = $this->validateBlock($b);
             $pr = $this->getEditResponse($b, $e);
 
-            if (!is_object($e) || ($e instanceof \Concrete\Core\Error\ErrorList\ErrorList && !$e->has())) {
+            if (!is_object($e) || ($e instanceof ErrorList && !$e->has())) {
                 // we can update the block that we're submitting
                 $b->update($_POST);
                 $event = new BlockEdit($b, $this->page);
                 Events::dispatch('on_block_edit', $event);
+            }
+
+            // the block has a new id at this point, we have to pass it to the view
+            if ($e instanceof ErrorList && $e->has()) {
+                $formatter = new JsonFormatter($e);
+                $response = $formatter->asArray();
+                $response['newbID'] = intval($b->getBlockID());
+                $app = Application::getFacadeApplication();
+                return $app->make(ResponseFactoryInterface::class)->create(json_encode($response));
             }
 
             $pr->outputJSON();

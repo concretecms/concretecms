@@ -267,7 +267,7 @@ class IPService
      * @param int $type (one of the IPService::IPRANGETYPE_... constants)
      * @param bool $includeExpired Include expired records?
      *
-     * @return IPRange[]|Generator
+     * @return IPRange[]|\Generator
      */
     public function getRanges($type, $includeExpired = false)
     {
@@ -360,11 +360,46 @@ class IPService
     }
 
     /**
+     * Delete the failed login attempts.
+     *
+     * @param int|null $maxAge the maximum age (in seconds) of the records (specify an empty value do delete all records)
+     *
+     * @return int return the number of records deleted
+     */
+    public function deleteFailedLoginAttempts($maxAge = null)
+    {
+        $sql = 'DELETE FROM FailedLoginAttempts';
+        if ($maxAge) {
+            $platform = $this->connection->getDatabasePlatform();
+            $sql .= ' WHERE flaTimestamp <= ' . $platform->getDateSubSecondsExpression($platform->getNowExpression(), (int) $maxAge);
+        }
+
+        return (int) $this->connection->executeQuery($sql)->rowCount();
+    }
+
+    /**
+     * Clear the IP addresses automatically blacklisted.
+     *
+     * @param bool $onlyExpired Clear only the expired bans?
+     */
+    public function deleteAutomaticBlacklist($onlyExpired = true)
+    {
+        $sql = 'DELETE FROM LoginControlIpRanges WHERE lcirType = ' . (int) static::IPRANGETYPE_BLACKLIST_AUTOMATIC;
+        if ($onlyExpired) {
+            $platform = $this->connection->getDatabasePlatform();
+            $sql .= ' AND lcirExpires <= ' . $platform->getNowExpression();
+        }
+
+        return (int) $this->connection->executeQuery($sql)->rowCount();
+    }
+
+    /**
      * @deprecated Use \Core::make('ip')->getRequestIPAddress()
      */
     public function getRequestIP()
     {
-        return new IPAddress(Request::getInstance()->getClientIp());
+        $ip = $this->getRequestIPAddress();
+        return new IPAddress($ip === null ? null : (string) $ip);
     }
 
     /**

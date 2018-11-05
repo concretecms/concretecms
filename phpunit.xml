@@ -1,20 +1,24 @@
 <phpunit
-        bootstrap="./tests/tests/bootstrap.php"
+        bootstrap="./tests/bootstrap.php"
         colors="true"
         convertErrorsToExceptions="true"
         convertNoticesToExceptions="true"
         convertWarningsToExceptions="true"
         backupGlobals="false"
-        backupStaticAttributes="false">
+        backupStaticAttributes="false"
+        verbose="true"
+        processIsolation="false">
     <testsuites>
         <testsuite name="Tests">
-            <directory>tests/tests/Asset/</directory>
-            <directory>tests/tests/Attribute/</directory>
-            <directory>tests/tests/AttributeValue/</directory>
-            <directory>tests/tests/Block/</directory>
-            <directory>tests/tests/CodingStyle/</directory>
-            <directory>tests/tests/Core/</directory>
-            <directory>tests/tests/Localization/</directory>
+            <directory>tests/tests/</directory>
         </testsuite>
     </testsuites>
+    <filter>
+        <whitelist>
+            <directory suffix=".php">concrete/src/</directory>
+            <directory suffix=".php">concrete/controllers/</directory>
+            <directory suffix="controller.php">concrete/</directory>
+            <directory suffix="page_theme.php">concrete/themes/</directory>
+        </whitelist>
+    </filter>
 </phpunit>

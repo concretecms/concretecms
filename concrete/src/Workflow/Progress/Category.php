@@ -1,11 +1,11 @@
 <?php
 namespace Concrete\Core\Workflow\Progress;
 
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Loader;
 use Concrete\Core\Package\PackageList;
 
-class Category extends Object
+class Category extends ConcreteObject
 {
     public static function getByID($wpCategoryID)
     {

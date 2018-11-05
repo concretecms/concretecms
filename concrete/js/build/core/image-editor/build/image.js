@@ -32,7 +32,6 @@ if (settings.src) {
                 im.buildBackground();
             }
         }
-        debugger;
         var center = {
             x: Math.floor(im.center.x - (img.width / 2)),
             y: Math.floor(im.center.y - (img.height / 2))
@@ -62,6 +61,10 @@ if (settings.src) {
         }
     }, img);
 
+    if ('crossOrigin' in settings) {
+        var credentials = settings.crossOrigin.toString().toLowerCase();
+        img.crossOrigin = credentials;
+    }
     img.src = settings.src;
 } else {
     im.fire('imageload');

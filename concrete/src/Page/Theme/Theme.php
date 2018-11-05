@@ -10,7 +10,7 @@ use Environment;
 use Core;
 use Concrete\Core\Page\Theme\File as PageThemeFile;
 use Concrete\Core\Package\PackageList;
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use PageTemplate;
 use Concrete\Core\Page\Theme\GridFramework\GridFramework;
 use Concrete\Core\Page\Single as SinglePage;
@@ -22,7 +22,7 @@ use Localization;
  * A page's theme is a pointer to a directory containing templates, CSS files and optionally PHP includes, images and JavaScript files.
  * Themes inherit down the tree when a page is added, but can also be set at the site-wide level (thereby overriding any previous choices.).
  */
-class Theme extends Object
+class Theme extends ConcreteObject
 {
     const E_THEME_INSTALLED = 1;
     const THEME_EXTENSION = '.php';
@@ -872,10 +872,20 @@ class Theme extends Object
         $entityManager->persist($site);
         $entityManager->flush();
 
+        $treeIDs = [0];
+        foreach($site->getLocales() as $locale) {
+            $tree = $locale->getSiteTree();
+            if (is_object($tree)) {
+                $treeIDs[] = $tree->getSiteTreeID();
+            }
+        }
+
+        $treeIDs = implode(',', $treeIDs);
+
         $db = Loader::db();
         $r = $db->query(
-            "update CollectionVersions inner join Pages on CollectionVersions.cID = Pages.cID left join Packages on Pages.pkgID = Packages.pkgID set CollectionVersions.pThemeID = ? where cIsTemplate = 0 and siteTreeID = ? and (Packages.pkgHandle <> 'core' or pkgHandle is null or Pages.ptID > 0)",
-            array($this->pThemeID, $site->getSiteTreeID())
+            "update CollectionVersions inner join Pages on CollectionVersions.cID = Pages.cID left join Packages on Pages.pkgID = Packages.pkgID set CollectionVersions.pThemeID = ? where cIsTemplate = 0 and siteTreeID in ({$treeIDs}) and (Pages.ptID > 0 or CollectionVersions.pTemplateID > 0)",
+            array($this->pThemeID)
         );
     }
 

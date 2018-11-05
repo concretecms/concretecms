@@ -1289,6 +1289,9 @@
       <default value=""/>
       <notnull/>
     </field>
+    <references table="AreaLayouts" ondelete="cascade" onupdate="cascade">
+    	<column local="arLayoutID" foreign="arLayoutID"/>
+    </references>
   </table>
 
   <table name="AreaLayoutPresets">
@@ -1846,7 +1849,9 @@
       <notnull/>
     </field>
     <field name="cvActivateDatetime" type="datetime"/>
-    <field name="cvPublishDate" type="datetime"/>
+    <field name="cvPublishDate" type="datetime" />
+    <field name="cvPublishEndDate" type="datetime" />
+    <field name="cvDateApproved" type="datetime" />
     <index name="cvIsApproved">
       <col>cvIsApproved</col>
     </index>
@@ -3133,7 +3138,7 @@
     <index name="cRequiresReindex">
       <col>cRequiresReindex</col>
     </index>
-    <opt for="MySQL" engine="MYISAM"/>
+    <opt for="MySQL&lt;5.6.4" engine="MYISAM"/>
   </table>
 
   <table name="PageThemes">
@@ -3269,6 +3274,10 @@
     </field>
     <field name="cDraftTargetParentPageID" type="integer" size="10">
       <unsigned/>
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="cIsDraft" type="boolean">
       <default value="0"/>
       <notnull/>
     </field>
@@ -3677,6 +3686,7 @@
       <notnull/>
     </field>
     <field name="flaTimestamp" type="timestamp" comment="Timestamp of the failed login attempt">
+      <deftimestamp/>
       <notnull/>
     </field>
   </table>
@@ -4333,8 +4343,7 @@
       <key/>
       <notnull/>
     </field>
-    <field name="sessionValue" type="text" size="65535">
-      <notnull/>
+    <field name="sessionValue" type="text">
     </field>
     <field name="sessionTime" type="integer" size="11">
       <unsigned/>
@@ -4349,17 +4358,25 @@
   <table name="FileImageThumbnailPaths">
     <field name="fileID" type="integer">
       <unsigned/>
+      <key/>
       <notnull/>
     </field>
     <field name="fileVersionID" type="integer">
       <unsigned/>
+      <key/>
       <notnull/>
     </field>
     <field name="thumbnailTypeHandle" type="string" size="255">
+      <key/>
       <notnull/>
     </field>
     <field name="storageLocationID" type="integer">
       <unsigned/>
+      <key/>
+      <notnull/>
+    </field>
+    <field name="thumbnailFormat" type="string" size="5">
+      <key/>
       <notnull/>
     </field>
     <field name="path" type="text">
@@ -4368,14 +4385,8 @@
     <field name="isBuilt" type="boolean">
       <notnull/>
     </field>
-
-    <index name="thumbnailPathID">
-      <unique/>
-      <col>fileID</col>
-      <col>fileVersionID</col>
-      <col>thumbnailTypeHandle</col>
-      <col>storageLocationID</col>
-    </index>
+    <field name="lockID" type="string" size="255"/>
+    <field name="lockExpires" type="datetime"/>
     <index name="thumbnailPathIsBuilt">
     	<col>isBuilt</col>
     </index>

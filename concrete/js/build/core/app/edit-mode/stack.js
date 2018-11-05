@@ -1,4 +1,7 @@
-(function (window, $, _, Concrete) {
+/* jshint unused:vars, undef:true, browser:true, jquery:true */
+/* global _, Concrete, ConcreteAlert, ccmi18n, CCM_SECURITY_TOKEN, CCM_DISPATCHER_FILENAME */ 
+
+(function (window, $) {
     'use strict';
 
     /**
@@ -26,7 +29,7 @@
                 dragAreaBlockID = dragAreaBlock.getId();
             }
 
-            jQuery.fn.dialog.closeAll();
+            $.fn.dialog.closeAll();
 
             var settings = {
                 cID: elem.data('cid'),
@@ -55,5 +58,4 @@
 
     });
 
-
-}(window, jQuery, _, Concrete));
+})(window, jQuery);

@@ -6,9 +6,9 @@ return [
      *
      * @var string
      */
-    'version' => '8.2.0RC2',
-    'version_installed' => '8.2.0RC2',
-    'version_db' => '20170629000000', // the key of the latest database migration
+    'version' => '8.5.0a2',
+    'version_installed' => '8.5.0a2',
+    'version_db' => '20181105102800', // the key of the latest database migration
 
     /*
      * Installation status
@@ -51,6 +51,13 @@ return [
          * @var string (message|debug)
          */
         'detail' => 'message',
+
+        /*
+         * Error reporting level
+         *
+         * @var int|null
+         */
+        'error_reporting' => null,
     ],
 
     /*
@@ -79,6 +86,13 @@ return [
         'extensions' => '*.flv;*.jpg;*.gif;*.jpeg;*.ico;*.docx;*.xla;*.png;*.psd;*.swf;*.doc;*.txt;*.xls;*.xlsx;' .
             '*.csv;*.pdf;*.tiff;*.rtf;*.m4a;*.mov;*.wmv;*.mpeg;*.mpg;*.wav;*.3gp;*.avi;*.m4v;*.mp4;*.mp3;*.qt;*.ppt;' .
             '*.pptx;*.kml;*.xml;*.svg;*.webm;*.ogg;*.ogv',
+
+        'chunking' => [
+            // Enable uploading files in chunks?
+            'enabled' => true,
+            // The chunk size (if empty we'll automatically determine it)
+            'chunkSize' => null,
+        ],
     ],
 
     /*
@@ -165,7 +179,7 @@ return [
         /*
          * Cache full page
          *
-         * @var bool|string (block|all)
+         * @var bool|string (blocks|all)
          */
         'pages' => false,
 
@@ -219,7 +233,7 @@ return [
                     'core_filesystem' => [
                         'class' => \Concrete\Core\Cache\Driver\FileSystemStashDriver::class,
                         'options' => [
-                            'path' => DIR_FILES_UPLOADED_STANDARD . '/cache',
+                            'path' => DIR_FILES_UPLOADED_STANDARD . '/cache/overrides',
                             'dirPermissions' => DIRECTORY_PERMISSIONS_MODE_COMPUTED,
                             'filePermissions' => FILE_PERMISSIONS_MODE_COMPUTED,
                         ],
@@ -236,7 +250,7 @@ return [
                     'core_filesystem' => [
                         'class' => \Concrete\Core\Cache\Driver\FileSystemStashDriver::class,
                         'options' => [
-                            'path' => DIR_FILES_UPLOADED_STANDARD . '/cache',
+                            'path' => DIR_FILES_UPLOADED_STANDARD . '/cache/expensive',
                             'dirPermissions' => DIRECTORY_PERMISSIONS_MODE_COMPUTED,
                             'filePermissions' => FILE_PERMISSIONS_MODE_COMPUTED,
                         ],
@@ -316,7 +330,7 @@ return [
         ],
     ],
 
-/*
+    /*
      * ------------------------------------------------------------------------
      * Email settings
      * ------------------------------------------------------------------------
@@ -340,6 +354,10 @@ return [
             'name' => null,
         ],
         'validate_registration' => [
+            'address' => null,
+            'name' => null,
+        ],
+        'workflow_notification' => [
             'address' => null,
             'name' => null,
         ],
@@ -408,13 +426,6 @@ return [
         'intelligent_search_help' => true,
 
         /*
-         * Display an overlay with up-to-date news from concrete5
-         *
-         * @var bool concrete.external.news_overlay
-         */
-        'news_overlay' => false,
-
-        /*
          * Enable concrete5 news within your site
          *
          * @var bool concrete.external.news
@@ -449,8 +460,25 @@ return [
          * The default thumbnail format: jpeg, png, auto (if auto: we'll create a jpeg if the source image is jpeg, we'll create a png otherwise).
          */
         'default_thumbnail_format' => 'auto',
+        /*
+         * @var string (now|async)
+         */
+        'basic_thumbnailer_generation_strategy' => 'now',
         'help_overlay' => true,
         'require_version_comments' => false,
+        /*
+         * Control whether a block type can me moved to different block type sets
+         *
+         * @var bool
+         */
+        'enable_move_blocktypes_across_sets' => false,
+        /*
+         * Control whether or not the image editor should add crossOrigin when loading images from external sources (s3, etc)
+         */
+        'image_editor_cors_policy' => [
+            'enable_cross_origin' => false,
+            'anonymous_request' => true,
+        ],
     ],
 
     'theme' => [
@@ -488,6 +516,7 @@ return [
         'file_manager_detail' => [
             'handle' => 'file_manager_detail',
             'width' => 400,
+            'height' => 400,
         ],
         'user_avatar' => [
             'width' => 80,
@@ -500,6 +529,19 @@ return [
         'images' => [
             'use_exif_data_to_rotate_images' => false,
             'manipulation_library' => 'gd',
+            'create_high_dpi_thumbnails' => true,
+            /*
+             * The style of preview image used in the file_manager
+             *
+             * @var string 'small'(default,30x30), 'large(60x60)' or 'full(size of file_manager_listing)'
+             */
+            'preview_image_size' => 'small',
+            /*
+             * Show file_manager_detail thumbnail as preview image in popover
+             *
+             * @var boolean
+             */
+            'preview_image_popover' => true
         ],
         'results' => 10,
     ],
@@ -561,7 +603,8 @@ return [
          * @var bool
          */
         'choose_language_login' => false,
-
+        // Fetch language files when installing a package connected to the marketplace [boolean]
+        'auto_install_package_languages' => true,
         // Community Translation instance offering concrete5 translations
         'community_translation' => [
             // API entry point of the Community Translation instance
@@ -581,6 +624,7 @@ return [
         'concrete5_secure' => 'https://www.concrete5.org',
         'newsflow' => 'http://newsflow.concrete5.org',
         'background_feed' => '//backgroundimages.concrete5.org/wallpaper',
+        'privacy_policy' => '//www.concrete5.org/legal/privacy-policy',
         'background_feed_secure' => 'https://backgroundimages.concrete5.org/wallpaper',
         'background_info' => 'http://backgroundimages.concrete5.org/get_image_data.php',
         'videos' => 'https://www.youtube.com/user/concrete5cms/videos',
@@ -588,6 +632,7 @@ return [
             'developer' => 'http://documentation.concrete5.org/developers',
             'user' => 'http://documentation.concrete5.org/editors',
             'forum' => 'http://www.concrete5.org/community/forums',
+            'slack' => 'https://www.concrete5.org/slack',
         ],
         'paths' => [
             'menu_help_service' => '/tools/get_remote_help_list/',
@@ -598,7 +643,7 @@ return [
                 'connect_success' => '/marketplace/connect/-/connected',
                 'connect_validate' => '/marketplace/connect/-/validate',
                 'connect_new_token' => '/marketplace/connect/-/generate_token',
-                'checkout' => '/cart/-/add/',
+                'checkout' => '/cart/-/add',
                 'purchases' => '/marketplace/connect/-/get_available_licenses',
                 'item_information' => '/marketplace/connect/-/get_item_information',
                 'item_free_license' => '/marketplace/connect/-/enable_free_license',
@@ -689,6 +734,16 @@ return [
             'email_registration' => false,
 
             /*
+             * Determines whether the username field is displayed when registering
+             */
+            'display_username_field' => true,
+
+            /*
+             * Determines whether the confirm password field is displayed when registering
+             */
+            'display_confirm_password_field' => true,
+
+            /*
              * Validate emails during registration
              *
              * @var bool
@@ -724,7 +779,12 @@ return [
         'username' => [
             'maximum' => 64,
             'minimum' => 3,
-            'allow_spaces' => false,
+            'allowed_characters' => [
+                'boundary' => 'A-Za-z0-9',
+                'middle' => 'A-Za-z0-9_\.',
+                'requirement_string' => 'A username may only contain letters, numbers, dots (not at the beginning/end), underscores (not at the beginning/end).',
+                'error_string' => 'A username may only contain letters, numbers, dots (not at the beginning/end), underscores (not at the beginning/end).',
+            ],
         ],
         'password' => [
             'maximum' => 128,
@@ -733,9 +793,21 @@ return [
             'hash_cost_log2' => 12,
             'legacy_salt' => '',
         ],
+        'email' => [
+            'test_mx_record' => false,
+            'strict' => true,
+        ],
         'private_messages' => [
             'throttle_max' => 20,
             'throttle_max_timespan' => 15, // minutes
+        ],
+
+        'deactivation' => [
+            'enable_login_threshold_deactivation' => false,
+            'login' => [
+                'threshold' => 120, // in days
+            ],
+            'message' => 'This user is inactive. Please contact us regarding this account.',
         ],
     ],
 
@@ -758,6 +830,18 @@ return [
          * @var string
          */
         'notify_email' => '',
+    ],
+
+    /*
+     * ------------------------------------------------------------------------
+     * Calendar
+     * ------------------------------------------------------------------------
+     */
+    'calendar' => [
+        'colors' => [
+            'text' => '#ffffff',
+            'background' => '#3A87AD',
+        ],
     ],
 
     /*
@@ -820,21 +904,6 @@ return [
      * ------------------------------------------------------------------------
      */
     'seo' => [
-        'tracking' => [
-            /*
-             * User defined tracking code
-             *
-             * @var string
-             */
-            'code' => '',
-
-            /*
-             * Tracking code position
-             *
-             * @var string (top|bottom)
-             */
-            'code_position' => 'bottom',
-        ],
         'exclude_words' => 'a, an, as, at, before, but, by, for, from, is, in, into, like, of, off, on, onto, per, ' .
             'since, than, the, this, that, to, up, via, with',
 
@@ -892,4 +961,25 @@ return [
             'selected' => [],
         ],
     ],
+
+    'composer' => [
+        // [float] The time in seconds until idle triggers a save (set to 0 to disable autosave)
+        'idle_timeout' => 1,
+    ],
+
+    /*
+     * ------------------------------------------------------------------------
+     * API settings
+     * ------------------------------------------------------------------------
+     */
+    'api' => [
+        /*
+         * Enabled
+         *
+         * @var bool
+         */
+        'enabled' => false,
+
+    ],
+
 ];

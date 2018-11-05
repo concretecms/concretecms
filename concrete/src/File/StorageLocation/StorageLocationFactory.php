@@ -46,7 +46,13 @@ class StorageLocationFactory
     public function persist(StorageLocationEntity $storageLocation)
     {
         return $this->entityManager->transactional(function (EntityManagerInterface $em) use ($storageLocation) {
-            $em->createQueryBuilder()->update(StorageLocationEntity::class, 'l')->set('fslIsDefault', false);
+            if ($storageLocation->isDefault()) {
+                $qb = $em->createQueryBuilder()->update(StorageLocationEntity::class, 'l')->set('l.fslIsDefault', 0);
+                if ($storageLocation->getID()) {
+                    $qb->andWhere('l.fslID <> :id')->setParameter('id', $storageLocation->getID());
+                }
+                $qb->getQuery()->execute();
+            }
             $em->persist($storageLocation);
 
             return $storageLocation;

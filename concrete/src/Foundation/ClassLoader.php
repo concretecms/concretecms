@@ -134,7 +134,7 @@ class ClassLoader
     {
         $loader = new ModifiedPSR4ClassLoader();
         $loader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\StartingPointPackage',
-            DIR_BASE_CORE . '/config/install/' . DIRNAME_PACKAGES);
+            DIR_STARTING_POINT_PACKAGES_CORE);
         $loader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Attribute', DIR_BASE_CORE . '/' . DIRNAME_ATTRIBUTES);
         $loader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\MenuItem', DIR_BASE_CORE . '/' . DIRNAME_MENU_ITEMS);
         $loader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Authentication',
@@ -145,9 +145,10 @@ class ClassLoader
             DIR_BASE_CORE . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES);
         $loader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Controller', DIR_BASE_CORE . '/' . DIRNAME_CONTROLLERS);
         $loader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Job', DIR_BASE_CORE . '/' . DIRNAME_JOBS);
+        $loader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Geolocator', DIR_BASE_CORE . '/' . DIRNAME_GEOLOCATION);
 
         $loader->addPrefix($this->getApplicationNamespace() . '\\StartingPointPackage',
-            DIR_APPLICATION . '/config/install/' . DIRNAME_PACKAGES);
+            DIR_STARTING_POINT_PACKAGES);
         $loader->addPrefix($this->getApplicationNamespace() . '\\Attribute',
             DIR_APPLICATION . '/' . DIRNAME_ATTRIBUTES);
         $loader->addPrefix($this->getApplicationNamespace() . '\\MenuItem', DIR_APPLICATION . '/' . DIRNAME_MENU_ITEMS);
@@ -160,6 +161,7 @@ class ClassLoader
         $loader->addPrefix($this->getApplicationNamespace() . '\\Controller',
             DIR_APPLICATION . '/' . DIRNAME_CONTROLLERS);
         $loader->addPrefix($this->getApplicationNamespace() . '\\Job', DIR_APPLICATION . '/' . DIRNAME_JOBS);
+        $loader->addPrefix($this->getApplicationNamespace() . '\\Geolocator', DIR_APPLICATION . '/' . DIRNAME_GEOLOCATION);
         $this->loaders[] = $loader;
     }
 
@@ -207,7 +209,8 @@ class ClassLoader
             DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CONTROLLERS);
         $loader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Job',
             DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_JOBS);
-
+        $loader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Geolocator', DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_GEOLOCATION);
+        
         $this->loaders[] = $loader;
         $loader->register();
 
@@ -237,11 +240,13 @@ class ClassLoader
 
     public function registerPackageController($pkgHandle)
     {
-        $loader = new MapClassLoader(array(
-            NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Controller' => DIR_PACKAGES . '/' . $pkgHandle . '/' . FILENAME_PACKAGE_CONTROLLER,
-        ));
-        $this->loaders[] = $loader;
-        $loader->register();
+        if (file_exists(DIR_PACKAGES . '/' . $pkgHandle . '/' . FILENAME_PACKAGE_CONTROLLER)) {
+            $loader = new MapClassLoader(array(
+                NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkgHandle) . '\\Controller' => DIR_PACKAGES . '/' . $pkgHandle . '/' . FILENAME_PACKAGE_CONTROLLER,
+            ));
+            $this->loaders[] = $loader;
+            $loader->register();
+        }
     }
 
     public function registerPackageCustomAutoloaders($pkg)

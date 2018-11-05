@@ -22,7 +22,7 @@ class PageTemplate extends AbstractCategory
 
     public function getPackageItems(Package $package)
     {
-        Template::getListByPackage($package);
+        return Template::getListByPackage($package);
     }
 
 }

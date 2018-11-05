@@ -18,7 +18,7 @@ use League\Flysystem\FileExistsException;
 use League\Flysystem\Filesystem;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
-
+use Concrete\Core\Config\Repository\Repository;
 /**
  * Class ThumbnailMiddleware
  * Middleware used to populate thumbnails at the end of each request.
@@ -51,6 +51,17 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
      */
     private $connection;
 
+
+    /**
+     * @var \Concrete\Core\Config\Repository\Repository
+     */
+    private $config;
+
+    public function __construct(Repository $config)
+    {
+        $this->config = $config;
+    }
+
     /**
      * Process the request and return a response.
      *
@@ -63,7 +74,7 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
     {
         $response = $frame->next($request);
 
-        if ($this->app->isInstalled()) {
+        if ($response && $this->app->isInstalled() && $this->config->get('concrete.misc.basic_thumbnailer_generation_strategy') == 'now') {
             $responseStatusCode = (int) $response->getStatusCode();
             if ($responseStatusCode === 200 || $responseStatusCode === 404) {
                 $database = $this->tryGetConnection();
@@ -170,6 +181,7 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
                 $fv = $file->getVersion($thumbnail['fileVersionID']);
                 if ($fv->getTypeObject()->supportsThumbnails()) {
                     $fv->generateThumbnail($type);
+                    $fv->releaseImagineImage();
                 }
             } elseif ($type = Version::getByHandle($thumbnail['thumbnailTypeHandle'])) {
                 // This is a predefined thumbnail type, lets just call the version->rescan
@@ -177,6 +189,7 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
 
                 if ($fv->getTypeObject()->supportsThumbnails()) {
                     $fv->generateThumbnail($type);
+                    $fv->releaseImagineImage();
                 }
             }
         } catch (FileExistsException $e) {
@@ -301,6 +314,8 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
     private function markThumbnailAsBuilt(Connection $connection, array $thumbnail, $built = true)
     {
         $key = $thumbnail;
+        unset($key['lockID']);
+        unset($key['lockExpires']);
         unset($key['path']);
         unset($key['isBuilt']);
         $connection->update('FileImageThumbnailPaths', ['isBuilt' => $built ? 1 : 0], $key);

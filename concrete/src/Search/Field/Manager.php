@@ -1,20 +1,33 @@
 <?php
 namespace Concrete\Core\Search\Field;
 
-use Concrete\Core\Entity\Search\Query;
-use Concrete\Core\Search\ItemList\ItemList;
-use Symfony\Component\HttpFoundation\Request;
+use Concrete\Core\Attribute\SetManagerInterface;
 
 class Manager implements ManagerInterface
 {
-
+    /**
+     * The groups of fields.
+     *
+     * @var GroupInterface[]
+     */
     protected $groups = [];
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see ManagerInterface::getGroups()
+     */
     public function getGroups()
     {
         return $this->groups;
     }
 
+    /**
+     * Add a group of fields.
+     *
+     * @param string $name the group name
+     * @param FieldInterface[] $fields
+     */
     public function addGroup($name, $fields = [])
     {
         $group = new Group();
@@ -23,27 +36,39 @@ class Manager implements ManagerInterface
         $this->addGroupObject($group);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see ManagerInterface::getGroupByName()
+     */
     public function getGroupByName($name)
     {
-        /**
-         * @var $group GroupInterface
-         */
-        foreach($this->groups as $group) {
+        foreach ($this->groups as $group) {
             if ($group->getName() == $name) {
                 return $group;
             }
         }
     }
 
+    /**
+     * Add a field group.
+     *
+     * @param GroupInterface $group
+     */
     public function addGroupObject(GroupInterface $group)
     {
         $this->groups[] = $group;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see ManagerInterface::getFieldByKey()
+     */
     public function getFieldByKey($key)
     {
-        foreach($this->groups as $group) {
-            foreach($group->getFields() as $field) {
+        foreach ($this->groups as $group) {
+            foreach ($group->getFields() as $field) {
                 if ($field->getKey() == $key) {
                     return $field;
                 }
@@ -51,13 +76,18 @@ class Manager implements ManagerInterface
         }
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see ManagerInterface::getFieldsFromRequest()
+     */
     public function getFieldsFromRequest(array $request)
     {
         $keys = isset($request['field']) ? $request['field'] : null;
-        $fields = array();
+        $fields = [];
         if (is_array($keys)) {
-            foreach($this->groups as $group) {
-                foreach($group->getFields() as $field) {
+            foreach ($this->groups as $group) {
+                foreach ($group->getFields() as $field) {
                     if (in_array($field->getKey(), $keys)) {
                         $field->loadDataFromRequest($request);
                         $fields[] = $field;
@@ -65,7 +95,30 @@ class Manager implements ManagerInterface
                 }
             }
         }
+
         return $fields;
     }
 
+    protected function populateAttributeGroups(SetManagerInterface $setManager)
+    {
+        $attributeSets = $setManager->getAttributeSets();
+        $unassigned = $setManager->getUnassignedAttributeKeys();
+
+        $attributes = [];
+        foreach($attributeSets as $set) {
+            foreach($set->getAttributeKeys() as $key) {
+                $field = new AttributeKeyField($key);
+                $attributes[] = $field;
+            }
+            $this->addGroup($set->getAttributeSetDisplayName(), $attributes);
+        }
+
+        $attributes = [];
+        foreach($unassigned as $key) {
+            $field = new AttributeKeyField($key);
+            $attributes[] = $field;
+        }
+        $this->addGroup(t('Other Attributes'), $attributes);
+
+    }
 }

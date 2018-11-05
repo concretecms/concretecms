@@ -515,6 +515,16 @@ class BlockType
     }
 
     /**
+     * Get the display order of this block type when it's not assigned to any block type set.
+     *
+     * @return int
+     */
+    public function getBlockTypeDisplayOrder()
+    {
+        return $this->btDisplayOrder;
+    }
+
+    /**
      * refreshes the BlockType's database schema throws an Exception if error.
      */
     public function refresh()

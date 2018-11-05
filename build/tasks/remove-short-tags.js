@@ -153,7 +153,12 @@ module.exports = function(grunt, config, parameters, done) {
 						remover = spawn(parameters.shortTagRemover, ['--list', listFile.path]);
 					}
 					else {
-						remover = spawn('php', ['-d', 'short_open_tag=On', path.join(__dirname, '../libraries/short-tags-remover.php'), '--list', listFile.path]);
+						var args = ['-d', 'short_open_tag=On', path.join(__dirname, '../libraries/short-tags-remover.php')];
+						if (parameters.keepShortEcho) {
+							args.push('--keep-short-echo');
+						}
+						args = args.concat(['--list', listFile.path]);
+						remover = spawn('php', args);
 					}
 					remover.stdout.on('data', function (data) {
 						process.stdout.write(data);

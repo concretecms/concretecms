@@ -56,11 +56,11 @@ class ViewContext implements ContextInterface
     public function setLocation(TemplateLocator $locator)
     {
         $locator->addLocation(DIRNAME_ELEMENTS .
-            DIRECTORY_SEPARATOR .
+            '/' .
             DIRNAME_EXPRESS .
-            DIRECTORY_SEPARATOR .
+            '/' .
             DIRNAME_EXPRESS_FORM_CONTROLS .
-            DIRECTORY_SEPARATOR .
+            '/' .
             DIRNAME_EXPRESS_VIEW_CONTROLS);
         return $locator;
     }

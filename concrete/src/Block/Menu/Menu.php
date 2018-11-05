@@ -87,6 +87,8 @@ class Menu extends ContextMenu
             if ($btOriginal->supportsInlineEdit()) {
                 $editInline = true;
             }
+        } else {
+            $_bo = null;
         }
 
 
@@ -123,7 +125,7 @@ class Menu extends ContextMenu
             if (is_object($stack)) {
                 $sp = new \Permissions($stack);
                 if ($sp->canWrite()) {
-                    $this->addItem(new LinkItem(\URL::to('/dashboard/blocks/stacks', 'view_details', $stack->getCollectionID()), t('Manage Stack Contents')));
+                    $this->addItem(new LinkItem(\URL::to(STACKS_LISTING_PAGE_PATH, 'view_details', $stack->getCollectionID()), t('Manage Stack Contents')));
                 }
             }
         } else if ($p->canEditBlock() && $b->isEditable()) {
@@ -170,7 +172,13 @@ class Menu extends ContextMenu
             if ($canDesign || $canEditCustomTemplate || $canEditName || $canEditCacheSettings) {
                 $this->addItem(new DividerItem());
                 if ($canDesign || $canEditCustomTemplate) {
-                    $this->addItem(new LinkItem('#', t('Design &amp; Custom Template'), [
+                    if ($canDesign) {
+                        $menuItemText = t('Design &amp; Custom Template');
+                    }
+                    else {
+                        $menuItemText = t('Custom Template');
+                    }
+                    $this->addItem(new LinkItem('#', $menuItemText, [
                         'data-menu-action' => 'block_design',
                     ]));
                 }

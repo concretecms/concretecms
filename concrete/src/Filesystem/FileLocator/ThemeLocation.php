@@ -35,28 +35,29 @@ class ThemeLocation extends AbstractLocation
     {
         if ($this->pkgHandle) {
             return DIR_PACKAGES
-                . DIRECTORY_SEPARATOR
+                . '/'
                 . $this->pkgHandle
-                . DIRECTORY_SEPARATOR
+                . '/'
                 . DIRNAME_THEMES
-                . DIRECTORY_SEPARATOR
+                . '/'
                 . $this->themeHandle;
         } else {
-            return DIR_APPLICATION . DIRECTORY_SEPARATOR . DIRNAME_THEMES . DIRECTORY_SEPARATOR . $this->themeHandle;
+            return DIR_APPLICATION . '/' . DIRNAME_THEMES . '/' . $this->themeHandle;
         }
     }
 
     public function getURL()
     {
         if ($this->pkgHandle) {
-            return DIR_REL
-            . DIRECTORY_SEPARATOR
+            return REL_DIR_PACKAGES
+            . '/'
             . $this->pkgHandle
-            . DIRECTORY_SEPARATOR
+            . '/'
             . DIRNAME_THEMES
+            . '/'
             . $this->themeHandle;
         } else {
-            return DIR_REL . DIRECTORY_SEPARATOR . DIRNAME_THEMES . DIRECTORY_SEPARATOR . $this->themeHandle;
+            return REL_DIR_APPLICATION . '/' . DIRNAME_THEMES . '/' . $this->themeHandle;
         }
     }
 }

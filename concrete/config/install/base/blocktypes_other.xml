@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <blocktypes>
+        <blocktype handle="core_area_layout" package=""/>
+        <blocktype handle="core_page_type_composer_control_output" package=""/>
+        <blocktype handle="core_scrapbook_display" package=""/>
+        <blocktype handle="core_stack_display" package=""/>
+        <blocktype handle="form" package=""/>
+    </blocktypes>
+
+    <systemcontenteditorsnippets>
+        <snippet handle="page_name" name="Page Name" package="" activated="1"/>
+        <snippet handle="user_name" name="User Name" package="" activated="1"/>
+    </systemcontenteditorsnippets>
+
+</concrete5-cif>

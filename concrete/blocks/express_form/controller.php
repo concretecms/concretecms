@@ -46,7 +46,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
 {
     protected $btInterfaceWidth = 640;
     protected $btCacheBlockOutput = false;
-    protected $btInterfaceHeight = 480;
+    protected $btInterfaceHeight = 700;
     protected $btTable = 'btExpressForm';
     protected $entityManager;
 
@@ -110,15 +110,18 @@ class Controller extends BlockController implements NotificationProviderInterfac
     public function delete()
     {
         parent::delete();
-        $entity = $this->getFormEntity()->getEntity();
-        $entityManager = \Core::make('database/orm')->entityManager();
-        // Important – are other blocks in the system using this form? If so, we don't want to delete it!
-        $db = $entityManager->getConnection();
-        $r = $db->fetchColumn('select count(bID) from btExpressForm where bID <> ? and exFormID = ?', [$this->bID, $this->exFormID]);
-        if ($r == 0) {
-            $entityManager->remove($entity);
-            $entityManager->flush();
-        }
+	    $form = $this->getFormEntity();
+	    if (is_object($form)) {
+		    $entity = $form->getEntity();
+		    $entityManager = \Core::make('database/orm')->entityManager();
+		    // Important – are other blocks in the system using this form? If so, we don't want to delete it!
+		    $db = $entityManager->getConnection();
+		    $r = $db->fetchColumn('select count(bID) from btExpressForm where bID <> ? and exFormID = ?', [$this->bID, $this->exFormID]);
+		    if ($r == 0) {
+			    $entityManager->remove($entity);
+			    $entityManager->flush();
+		    }
+	    }
     }
 
 
@@ -158,7 +161,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
                     $antispam = \Core::make('helper/validation/antispam');
                     $submittedData = '';
                     foreach($values as $value) {
-                        $submittedData .= $value->getAttributeKey()->getAttributeKeyDisplayName() . ":\r\n";
+                        $submittedData .= $value->getAttributeKey()->getAttributeKeyDisplayName('text') . ":\r\n";
                         $submittedData .= $value->getPlainTextValue() . "\r\n\r\n";
                     }
 
@@ -383,11 +386,12 @@ class Controller extends BlockController implements NotificationProviderInterfac
         $session = \Core::make('session');
         $sessionControls = $session->get('block.express_form.new');
 
+        $name = $data['formName'] ? $data['formName'] : t('Form');
+
         if (!$this->exFormID) {
 
             // This is a new submission.
             $c = \Page::getCurrentPage();
-            $name = $data['formName'] ? $data['formName'] : t('Form');
 
             // Create a results node
             $node = ExpressEntryCategory::getNodeByName(self::FORM_RESULTS_CATEGORY_NAME);
@@ -427,6 +431,13 @@ class Controller extends BlockController implements NotificationProviderInterfac
              */
             $field_set = $form->getFieldSets()[0];
             $entity = $form->getEntity();
+            $entity->setName($name);
+            $entityManager->persist($entity);
+            $entityManager->flush();
+
+            $nodeId = $entity->getEntityResultsNodeId();
+            $node = Node::getByID($nodeId);
+            $node->setTreeNodeName($name);
         }
 
         $attributeKeyCategory = $entity->getAttributeKeyCategory();
@@ -455,24 +466,26 @@ class Controller extends BlockController implements NotificationProviderInterfac
 
                         // We have to merge entities back into the entity manager because they have been
                         // serialized. First type, because if we merge key first type gets screwed
-                        $type = $entityManager->merge($type);
+                        $mergedType = $entityManager->merge($type);
 
                         // Now key, because we need key to set as the primary key for settings.
-                        $key = $entityManager->merge($key);
-                        $key->setAttributeType($type);
-                        $key->setEntity($entity);
-                        $key->setAttributeKeyHandle((new AttributeKeyHandleGenerator($attributeKeyCategory))->generate($key));
-                        $entityManager->persist($key);
+                        // Note - we rename the objects in order to get spl_object_hash to not screw them up
+                        // Ref: https://github.com/concrete5/concrete5/issues/5584#issuecomment-403652601
+                        $mergedKey = $entityManager->merge($key);
+                        $mergedKey->setAttributeType($mergedType);
+                        $mergedKey->setEntity($entity);
+                        $mergedKey->setAttributeKeyHandle((new AttributeKeyHandleGenerator($attributeKeyCategory))->generate($mergedKey));
+                        $entityManager->persist($mergedKey);
                         $entityManager->flush();
 
                         // Now attribute settings.
-                        $settings->setAttributeKey($key);
-                        $settings = $entityManager->merge($settings);
-                        $entityManager->persist($settings);
+                        $settings->setAttributeKey($mergedKey);
+                        $mergedSettings = $entityManager->merge($settings);
+                        $entityManager->persist($mergedSettings);
                         $entityManager->flush();
 
-                        $control->setAttributeKey($key);
-                        $indexKeys[] = $key;
+                        $control->setAttributeKey($mergedKey);
+                        $indexKeys[] = $mergedKey;
                     }
 
                     $control->setFieldSet($field_set);
@@ -552,6 +565,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
         $category = new ExpressCategory($entity, \Core::make('app'), $entityManager);
         $indexer = $category->getSearchIndexer();
         foreach($indexKeys as $key) {
+            $entityManager->refresh($key->getAttributeType()); // The key might not be fully initialized and it might be coming from session and might not have all the right info in it. This is to fix a bug where packaged attribute types weren't being seen as being in a package because the package handle property on the object wasn't set.
             $indexer->updateRepositoryColumns($category, $key);
         }
 
@@ -783,6 +797,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
                     $this->set('expressForm', $form);
                 }
                 if ($this->displayCaptcha) {
+                    $this->set('captcha', $this->app->make('helper/validation/captcha'));
                     $this->requireAsset('css', 'core/frontend/captcha');
                 }
                 $this->requireAsset('css', 'core/frontend/errors');

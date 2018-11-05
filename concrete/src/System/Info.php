@@ -58,6 +58,22 @@ class Info
      */
     protected $phpVersion;
 
+    /**
+     * @var string
+     */
+    protected $versionInstalled;
+
+    /**
+     * @var string
+     */
+    protected $codeVersion;
+
+    /**
+     * @var string
+     */
+    protected $dbVersion;
+
+
     public function __construct()
     {
         $loc = Localization::getInstance();
@@ -74,12 +90,17 @@ class Info
 
             $this->coreRootDirectory = DIR_BASE_CORE;
 
-            $versions = ['Core Version - '.$config->get('concrete.version')];
+            $this->codeVersion = $config->get('concrete.version');
+            $this->dbVersion = $config->get('concrete.version_db');
+            $this->versionInstalled = $config->get('concrete.version_installed');
+
+            $versions = ['Core Version - '. $this->codeVersion];
             if ($this->installed) {
-                $versions[] = 'Version Installed - '.$config->get('concrete.version_installed');
+                $versions[] = 'Version Installed - ' . $this->versionInstalled;
             }
-            $versions[] = 'Database Version - '.$config->get('concrete.version_db');
+            $versions[] = 'Database Version - ' . $this->dbVersion;
             $this->coreVersions = implode("\n", $versions);
+
 
             $packages = [];
             if ($this->installed) {
@@ -104,28 +125,28 @@ class Info
                 sprintf('Overrides Cache - %s', $config->get('concrete.cache.overrides') ? 'On' : 'Off'),
                 sprintf('Full Page Caching - %s',
                     $config->get('concrete.cache.pages') == 'blocks' ?
-                    'On - If blocks on the particular page allow it.'
-                    :
-                    (
-                        $config->get('concrete.cache.pages') == 'all' ?
-                        'On - In all cases.'
+                        'On - If blocks on the particular page allow it.'
                         :
-                        'Off'
+                        (
+                        $config->get('concrete.cache.pages') == 'all' ?
+                            'On - In all cases.'
+                            :
+                            'Off'
                         )
-                    ),
+                ),
             ];
             if ($config->get('concrete.cache.full_page_lifetime')) {
                 $cache[] = sprintf("Full Page Cache Lifetime - %s",
                     $config->get('concrete.cache.full_page_lifetime') == 'default' ?
-                    sprintf('Every %s (default setting).', $app->make('helper/date')->describeInterval($config->get('concrete.cache.lifetime')))
-                    :
-                    (
-                        $config->get('concrete.cache.full_page_lifetime') == 'forever' ?
-                        'Only when manually removed or the cache is cleared.'
+                        sprintf('Every %s (default setting).', $app->make('helper/date')->describeInterval($config->get('concrete.cache.lifetime')))
                         :
-                        sprintf('Every %s minutes.', $config->get('concrete.cache.full_page_lifetime_value'))
+                        (
+                        $config->get('concrete.cache.full_page_lifetime') == 'forever' ?
+                            'Only when manually removed or the cache is cleared.'
+                            :
+                            sprintf('Every %s minutes.', $config->get('concrete.cache.full_page_lifetime_value'))
                         )
-                    );
+                );
             }
             $this->cache = implode("\n", $cache);
 
@@ -158,7 +179,7 @@ class Info
                     switch (count($chunks)) {
                         case 1:
                             if ($chunks[0] === '') {
-                                continue;
+                                continue 2;
                             }
                             $section = $chunks[0];
                             break;
@@ -219,7 +240,7 @@ class Info
         }
     }
 
-    protected function getOverrideList()
+    public function getOverrideList()
     {
         $overrides = [];
         $fh = \Core::make("helper/file");
@@ -375,5 +396,30 @@ class Info
         $o->coreVersions = $this->coreVersions;
         return $o;
     }
+
+    /**
+     * @return string
+     */
+    public function getVersionInstalled()
+    {
+        return $this->versionInstalled;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCodeVersion()
+    {
+        return $this->codeVersion;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDbVersion()
+    {
+        return $this->dbVersion;
+    }
+
 
 }

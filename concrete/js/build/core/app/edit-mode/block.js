@@ -1,4 +1,7 @@
-(function (window, $, _, Concrete) {
+/* jshint unused:vars, undef:true, browser:true, jquery:true */
+/* global Concrete, CCM_DISPATCHER_FILENAME, ConcreteAlert, ccmi18n, CCM_SECURITY_TOKEN, ConcreteToolbar, ConcreteMenu, _ */
+
+;(function(window, $) {
     'use strict';
 
     /**
@@ -186,7 +189,6 @@
 
             var my = this, bID = my.getId(),
                 area = my.getArea(),
-                block = area.getBlockByID(bID),
                 cID = my.getCID(),
                 arHandle = area.getHandle();
 
@@ -198,7 +200,7 @@
                 href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/block/delete',
                 modal: true,
                 data: data,
-                title: ccmi18n.deleteBlockConfirm
+                title: ccmi18n.deleteBlockTitle
             });
 
         },
@@ -208,9 +210,7 @@
             ConcreteToolbar.disableDirectExit();
             var my = this, bID = my.getId(),
                 area = my.getArea(),
-                block = area.getBlockByID(bID),
-                cID = my.getCID(),
-                arHandle = area.getHandle();
+                block = area.getBlockByID(bID);
 
              area.removeBlock(block);
         },
@@ -228,7 +228,6 @@
         },
 
         getMenuElem: function blockGetMenuElem() {
-            var my = this;
             return $('div.ccm-edit-mode-block-menu', this.getElem()).first();
         },
 
@@ -608,4 +607,4 @@
     };
 
 
-}(window, jQuery, _, Concrete));
+})(window, jQuery);

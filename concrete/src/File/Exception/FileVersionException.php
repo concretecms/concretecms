@@ -28,6 +28,6 @@ class FileVersionException extends FileException
      */
     public function getFileVersionObject()
     {
-        return $this->$fileVersionObject;
+        return $this->fileVersionObject;
     }
 }

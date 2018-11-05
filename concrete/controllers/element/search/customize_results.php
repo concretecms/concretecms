@@ -8,6 +8,24 @@ class CustomizeResults extends ElementController
 {
     protected $provider;
 
+    protected $includeNumberOfResults = true;
+
+    /**
+     * @return boolean
+     */
+    public function includeNumberOfResults()
+    {
+        return $this->includeNumberOfResults;
+    }
+
+    /**
+     * @param boolean $includeNumberOfResults
+     */
+    public function setIncludeNumberOfResults($includeNumberOfResults)
+    {
+        $this->includeNumberOfResults = $includeNumberOfResults;
+    }
+
     public function __construct(ProviderInterface $provider)
     {
         parent::__construct();
@@ -22,5 +40,6 @@ class CustomizeResults extends ElementController
     public function view()
     {
         $this->set('provider', $this->provider);
+        $this->set('includeNumberOfResults', $this->includeNumberOfResults());
     }
 }

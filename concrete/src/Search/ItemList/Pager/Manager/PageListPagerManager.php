@@ -29,9 +29,9 @@ class PageListPagerManager extends AbstractPagerManager
         return new Available();
     }
 
-    public function sortListByCursor(PagerProviderInterface $itemList)
+    public function sortListByCursor(PagerProviderInterface $itemList, $direction)
     {
-        $itemList->getQueryObject()->addOrderBy('p.cID', 'asc');
+        $itemList->getQueryObject()->addOrderBy('p.cID', $direction);
     }
 
 

@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Page\Controller;
 
+use Concrete\Core\Csv\WriterFactory;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Express\Entry\Notifier\NotificationInterface;
@@ -12,6 +13,7 @@ use Concrete\Core\Express\Form\Renderer;
 use Concrete\Core\Express\EntryList;
 use Concrete\Core\Express\Form\Validator\ValidatorInterface;
 use Concrete\Core\Form\Context\ContextFactory;
+use Concrete\Core\Localization\Service\Date;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
 use Core;
@@ -66,6 +68,10 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
 
         if (isset($parent) && $parent instanceof \Concrete\Core\Tree\Node\Type\ExpressEntryResults) {
             $entity = $this->getEntity($parent);
+            $permissions = new \Permissions($entity);
+            if (!$permissions->canViewExpressEntries()) {
+                throw new \Exception(t('Access Denied'));
+            }
             $search = new \Concrete\Controller\Search\Express\Entries();
             $search->search($entity);
             $this->set('list', $search->getListObject());
@@ -90,16 +96,20 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
         $me = $this;
         $parent = $me->getParentNode($treeNodeParentID);
         $entity = $me->getEntity($parent);
+        $permissions = new \Permissions($entity);
+        if (!$permissions->canViewExpressEntries()) {
+            throw new \Exception(t('Access Denied'));
+        }
 
         $headers = [
             'Content-Type' => 'text/csv',
-            'Content-Disposition' => 'attachment; filename=' . $entity->getPluralHandle() . '.csv'
+            'Content-Disposition' => 'attachment; filename=' . $entity->getHandle() . '.csv'
         ];
 
         return StreamedResponse::create(function() use ($entity, $me) {
             $entryList = new EntryList($entity);
 
-            $writer = new CsvWriter(Writer::createFromPath('php://output', 'w'));
+            $writer = new CsvWriter($this->app->make(WriterFactory::class)->createFromPath('php://output', 'w'), new Date());
             $writer->insertHeaders($entity);
             $writer->insertEntryList($entryList);
         }, 200, $headers);
@@ -110,7 +120,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
      *
      * @return \Concrete\Core\Entity\Express\Entity
      */
-    private function getEntity(\Concrete\Core\Tree\Node\Type\ExpressEntryResults $parent)
+    protected function getEntity(\Concrete\Core\Tree\Node\Type\ExpressEntryResults $parent)
     {
         return $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entity')
             ->findOneByResultsNode($parent);
@@ -222,6 +232,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
             }
         }
         $this->set('subEntities', $subEntities);
+        $this->set('pageTitle', t('View %s Entry', $entity->getName()));
         $this->render('/dashboard/express/entries/view_entry', false);
     }
 
@@ -248,11 +259,12 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
 
         $renderer = new Renderer(
             $context,
-            $entity->getDefaultViewForm()
+            $entity->getDefaultEditForm()
         );
 
         $this->set('renderer', $renderer);
         $this->set('backURL', $this->getBackURL($entry->getEntity()));
+        $this->set('pageTitle', t('Edit %s Entry', $entity->getName()));
         $this->render('/dashboard/express/entries/update', false);
     }
 
@@ -293,7 +305,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
                 if ($entry === null) {
                     // create
                     $entry = $manager->addEntry($entity);
-                    $manager->saveEntryAttributesForm($form, $entry);
+                    $entry = $manager->saveEntryAttributesForm($form, $entry);
                     $notifier->sendNotifications($notifications, $entry, ProcessorInterface::REQUEST_TYPE_ADD);
 
                     $this->flash(
@@ -303,7 +315,11 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
                         . '<a class="btn btn-default" href="' . \URL::to(\Page::getCurrentPage(), 'view_entry', $entry->getID()) . '">' . t('View Record Here') . '</a>',
                         true
                     );
-                    $this->redirect(\URL::to(\Page::getCurrentPage(), 'create_entry', $entity->getID()));
+                    if (is_object($entry->getOwnedByEntry())) {
+                        $this->redirect(\URL::to(\Page::getCurrentPage(), 'create_entry', $entity->getID(), $entry->getOwnedByEntry()->getID()));
+                    } else {
+                        $this->redirect(\URL::to(\Page::getCurrentPage(), 'create_entry', $entity->getID()));
+                    }
                 } else {
                     // update
                     $manager->saveEntryAttributesForm($form, $entry);
@@ -320,7 +336,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
     /**
      * @param $treeNodeParentID
      */
-    private function getParentNode($treeNodeParentID)
+    protected function getParentNode($treeNodeParentID)
     {
         $parent = null;
         if ($treeNodeParentID) {

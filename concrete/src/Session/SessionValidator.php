@@ -1,9 +1,12 @@
 <?php
 namespace Concrete\Core\Session;
 
+use Carbon\Carbon;
+use Concrete\Controller\SinglePage\Dashboard\System\Registration\AutomatedLogout;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Http\Request;
+use Concrete\Core\Permission\IPService;
 use Concrete\Core\Utility\IPAddress;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
@@ -26,14 +29,18 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
     /** @var \Concrete\Core\Http\Request */
     private $request;
 
+    /** @var \Concrete\Core\Permission\IPService */
+    private $ipService;
+
     /** @var \Psr\Log\LoggerInterface */
     private $logger;
 
-    public function __construct(Application $app, Repository $config, Request $request, LoggerInterface $logger = null)
+    public function __construct(Application $app, Repository $config, Request $request, IPService $ipService, LoggerInterface $logger = null)
     {
         $this->app = $app;
         $this->config = $config;
         $this->request = $request;
+        $this->ipService = $ipService;
         $this->logger = $logger;
     }
 
@@ -43,14 +50,26 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
      */
     public function handleSessionValidation(SymfonySession $session)
     {
-        $ip_address = new IPAddress($this->request->getClientIp());
-        $request_ip = $ip_address->getIp(IPAddress::FORMAT_IP_STRING);
+        $request_ip = (string) $this->ipService->getRequestIPAddress();
 
         $invalidate = false;
 
         $ip = $session->get('CLIENT_REMOTE_ADDR');
         $agent = $session->get('CLIENT_HTTP_USER_AGENT');
         $request_agent = $this->request->server->get('HTTP_USER_AGENT');
+
+        // Validate against the `valid_since` config item
+        $validSinceTimestamp = (int) $this->config->get(AutomatedLogout::ITEM_SESSION_INVALIDATE);
+
+        if ($validSinceTimestamp) {
+            $validSince = Carbon::createFromTimestamp($validSinceTimestamp, 'utc');
+            $created = Carbon::createFromTimestamp($session->getMetadataBag()->getCreated());
+
+            if ($created->lessThan($validSince)) {
+                $this->logger->debug('Session Invalidated. Session was created before "valid_since" setting.');
+                $invalidate = true;
+            }
+        }
 
         // Validate the request IP
         if ($this->shouldCompareIP() && $ip && $ip != $request_ip) {
@@ -89,6 +108,12 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
         }
 
         return $invalidate;
+    }
+
+    public function hasActiveSession()
+    {
+        $cookie = $this->app['cookie'];
+        return $cookie->has($this->config->get('concrete.session.name'));
     }
 
     /**

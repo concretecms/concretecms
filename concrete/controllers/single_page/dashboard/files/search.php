@@ -15,9 +15,9 @@ class Search extends DashboardPageController
 {
     public function view()
     {
-
-        $header = new Header();
+        $header = $this->app->build(Header::class);
         $this->set('headerMenu', $header);
+        $this->set('breadcrumbClass', 'ccm-file-manager-breadcrumb');
         $this->requireAsset('core/file-manager');
         $this->requireAsset('core/imageeditor');
 

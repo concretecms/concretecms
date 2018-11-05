@@ -10,7 +10,7 @@ use Concrete\Core\Permission\AssignableObjectInterface;
 use Concrete\Core\Permission\AssignableObjectTrait;
 use Concrete\Core\Permission\Key\Key;
 use Loader;
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use PageTemplate;
 use PermissionKey;
 use Concrete\Core\Permission\Access\Access as PermissionAccess;
@@ -34,7 +34,7 @@ use Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFor
 use Concrete\Core\Page\Collection\Version\VersionList;
 use Concrete\Core\Page\Type\Composer\Control\CorePageProperty\CorePageProperty as CorePagePropertyPageTypeComposerControl;
 
-class Type extends Object implements \Concrete\Core\Permission\ObjectInterface, AssignableObjectInterface
+class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInterface, AssignableObjectInterface
 {
     protected $ptDefaultPageTemplateID = 0;
 
@@ -176,7 +176,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface, 
         }
     }
 
-    public function publish(Page $c, $requestOrDateTime = null)
+    public function publish(Page $c, $requestOrDateTime = null, $cvPublishEndDate = null)
     {
         $this->stripEmptyPageTypeComposerControls($c);
         $parent = Page::getByID($c->getPageDraftTargetParentPageID());
@@ -184,6 +184,8 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface, 
             // so we need to move it, check its permissions, etc...
             Section::registerPage($c);
             $c->move($parent);
+            $db = \Database::connection();
+            $db->executeQuery('update Pages set cIsDraft = 0 where cID = ?', [$c->getCollectionID()]);
             if (!$parent->overrideTemplatePermissions()) {
                 // that means the permissions of pages added beneath here inherit from page type permissions
                 // this is a very poorly named method. Template actually used to mean Type.
@@ -202,9 +204,9 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface, 
             $pkr->setRequestedPage($c);
             $pkr->setRequestedVersionID($v->getVersionID());
             $pkr->setRequesterUserID($u->getUserID());
-            if ($requestOrDateTime) {
+            if ($requestOrDateTime || $cvPublishEndDate) {
                 // That means it's a date time
-                $pkr->scheduleVersion($requestOrDateTime);
+                $pkr->scheduleVersion($requestOrDateTime, $cvPublishEndDate);
             }
         } else {
             $pkr = $requestOrDateTime;
@@ -614,7 +616,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface, 
         // now copy the master pages for defaults and attributes
         $db = \Database::get();
         $r = $db->Execute('select cID from Pages where cIsTemplate = 1 and ptID = ?', array($this->getPageTypeID()));
-        $home = Page::getByID(HOME_CID);
+        $home = Page::getByID(Page::getHomePageID());
         while ($row = $r->FetchRow()) {
             $c = Page::getByID($row['cID']);
             if (is_object($c)) {
@@ -1158,9 +1160,8 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface, 
         }
         $db = Loader::db();
         $ptID = $this->getPageTypeID();
-        $site = \Core::make('site')->getSite();
-        $parent = Page::getByPath(Config::get('concrete.paths.drafts'), 'RECENT', $site);
-        $data = array('cvIsApproved' => 0, 'cIsActive' => false, 'cAcquireComposerOutputControls' => true);
+        $parent = Page::getDraftsParentPage();
+        $data = array('cvIsApproved' => 0, 'cIsDraft' => 1, 'cIsActive' => false, 'cAcquireComposerOutputControls' => true);
         $p = $parent->add($this, $data, $pt);
 
         // now we setup in the initial configurated page target

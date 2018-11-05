@@ -23,10 +23,13 @@ class Association implements ItemInterface
         $type = uncamelcase(substr($class, 0, strpos($class, 'Association')));
 
         $node->addAttribute('type', $type);
+        $node->addAttribute('id', $association->getID());
         $node->addAttribute('source-entity', $association->getSourceEntity()->getID());
         $node->addAttribute('target-entity', $association->getTargetEntity()->getID());
         $node->addAttribute('target-property-name', $association->getTargetPropertyName());
         $node->addAttribute('inversed-by-property-name', $association->getInversedByPropertyName());
+        $node->addAttribute('is-owned', $association->isOwnedByAssociation() ? '1' : '');
+        $node->addAttribute('is-owner', $association->isOwningAssociation() ? '1' : '');
 
         return $node;
 

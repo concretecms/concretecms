@@ -1,47 +1,19 @@
 <?php
+
 namespace Concrete\Core\Foundation\Queue;
 
-use Loader;
-use Database;
-use ZendQueue\Queue as ZendQueue;
+use Concrete\Core\Support\Facade\Facade;
 
-class Queue
+/**
+ * @deprecated Use $app->make(\Concrete\Core\Foundation\Queue\QueueService::class)
+ */
+class Queue extends Facade
 {
-    public static function get($name, $additionalConfig = array())
+    /**
+     * @return string
+     */
+    public static function getFacadeAccessor()
     {
-        $config = array(
-            'name' => $name,
-        );
-
-        $db = Database::get();
-
-        $adapterOptions = array(
-            'connection' => $db,
-        );
-
-        $adapter = new DatabaseQueueAdapter($adapterOptions);
-        $config = array_merge($config, $additionalConfig);
-
-        return new ZendQueue($adapter, $config);
-    }
-
-    public static function exists($name)
-    {
-        // probably should use the Zend Queue for this but it's just such overhead for a quick
-        // DB call.
-        $db = Loader::db();
-        $r = $db->GetOne('select queue_id from Queues where queue_name = ?', array($name));
-
-        return $r > 0;
-
-        /*
-        $q = Queue::get($name);
-        if ($q->count() > 0) {
-            return true;
-        } else {
-            $q->deleteQueue($name);
-            return false;
-        }
-        */
+        return QueueService::class;
     }
 }

@@ -17,7 +17,8 @@
   "require-dev": {
     "squizlabs/php_codesniffer": "^2.7",
     "phpunit/phpunit": "^4",
-    "phpunit/dbunit": "^2.0"
+    "phpunit/dbunit": "^2.0",
+    "mockery/mockery": "^0.9.9"
   },
   "config": {
     "process-timeout": 0,
@@ -43,11 +44,13 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Concrete\\Tests\\": "tests/tests"
+      "Concrete\\Tests\\": "tests/tests/",
+      "Concrete\\TestHelpers\\": "tests/helpers/"
     }
   },
   "scripts": {
     "test": "phpunit",
+    "test-coverage": "phpunit --coverage-text --coverage-clover=coverage.clover",
     "phpcs": [
       "phpcs -p -s --report=full --standard=psr2 --sniffs=Generic.WhiteSpace.DisallowTabIndent,Generic.PHP.DisallowShortOpenTag concrete/src concrete/controllers",
       "phpcs -p -s --report=full --standard=psr2 --sniffs=Generic.PHP.DisallowShortOpenTag --ignore=\"*.js,*.css,*.less,concrete/vendor/*,concrete/src/*,concrete/controllers/*\" concrete"

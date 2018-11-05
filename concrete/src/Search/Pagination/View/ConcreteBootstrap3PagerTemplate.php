@@ -8,7 +8,7 @@ class ConcreteBootstrap3PagerTemplate extends Template
 {
 
     static protected $defaultOptions = array(
-        'css_container_class' => 'pager',
+        'css_container_class' => 'pagination',
     );
 
     public function container()
@@ -62,7 +62,17 @@ class ConcreteBootstrap3PagerTemplate extends Template
 
     public function current($page)
     {
-        return null;
+        $href = $this->generateRoute($page);
+        $pageNumber = 1;
+        $pageResult = '/ccm_cursor=([\d\|]+)/';
+        if (preg_match_all($pageResult, $href, $pageResultMatches)) {
+            $page = '/(\d+)/';
+            if (preg_match_all($page, $pageResultMatches[1][0], $pageMatches)) {
+                $pageNumber = count($pageMatches[1]) + 1;
+            }
+        }
+
+        return '<li class="active"><span>' . $pageNumber . '</span></li>';
     }
 
     public function first()

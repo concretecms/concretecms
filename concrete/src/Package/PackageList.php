@@ -1,11 +1,11 @@
 <?php
 namespace Concrete\Core\Package;
 
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\Foundation\ConcreteObject;
 use Loader;
 use CacheLocal;
 
-class PackageList extends Object
+class PackageList extends ConcreteObject
 {
     protected $packages = array();
 

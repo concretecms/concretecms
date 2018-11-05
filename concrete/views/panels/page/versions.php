@@ -1,9 +1,5 @@
-<?php
-defined('C5_EXECUTE') or die("Access Denied.");
-?>
-<script type="text/javascript">
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-</script>
 <script type="text/template" class="tbody">
 <% _.each(versions, function(cv) { %>
 	 <%=templateRow(cv) %>
@@ -22,17 +18,23 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			<% if (cvIsApproved) { %>
 				<p><span class="label label-info"><?=t('Live')?></span></p>
 			<% } %>
-			<p><span class="ccm-panel-page-versions-version-timestamp"><%-cvDateVersionCreated%></span></p>
+			<p><span class="ccm-panel-page-versions-version-timestamp"><?= t('Created on'); ?> <%-cvDateVersionCreated%></span></p>
 			<% if (cvComments) { %>
 				<p class="ccm-panel-page-versions-description"><%-cvComments%></p>
 			<% } %>
 			<div class="ccm-panel-page-versions-more-info">
 				<p><?=t('Edit by')?> <%-cvAuthorUserName%></p>
 				<% if (cvIsApproved == 1) { %>
-					<p><?=t('Approved by')?> <%-cvApproverUserName%></p>
+					<% if (cvApprovedDate && cvApproverUserName) { %>
+						<p><?= t('Approved on'); ?> <%-cvApprovedDate%> <?= t('by'); ?> <%-cvApproverUserName%></p>
+					<% } else if (cvApprovedDate) { %>
+						<p><?= t('Approved on'); ?> <%-cvApprovedDate%></p>
+					<% } else if (cvApproverUserName) { %>
+						<p><?= t('Approved by'); ?> <%-cvApproverUserName%></p>
+					<% } %>
 				<% } %>
 				<% if (cvIsScheduled == 1) { %>
-				<p><?=t('Scheduled by')?> <%-cvApproverUserName%> <?=tc(/*i18n: In the sentence Scheduled by USERNAME for DATE/TIME*/'ScheduledByFor', ' for ')?> <%-cvPublishDate%></p>
+					<p><?=t('Scheduled by')?> <%-cvApproverUserName%> <?=tc(/*i18n: In the sentence Scheduled by USERNAME for DATE/TIME*/'ScheduledByFor', ' for ')?> <%-cvPublishDate%></p>
 				<% } %>
 			</div>
 			<div class="ccm-popover-inverse popover fade" data-menu="ccm-panel-page-versions-version-menu-<%-cvID%>">
@@ -42,8 +44,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 						<li><a href="#" data-version-menu-task="duplicate" data-version-id="<%-cvID%>"><?=t('Duplicate')?></a></li>
 						<li class="divider"></li>
 						<% if ( ! cIsStack) { %>
-						<li><a href="#" data-version-menu-task="new-page" data-version-id="<%-cvID%>"><?=t('New Page')?></a></li>
+							<li><a href="#" data-version-menu-task="new-page" data-version-id="<%-cvID%>"><?=t('New Page')?></a></li>
 						<% } %>
+						<li><% if (!cvIsApproved) { %><span><?=t('Unapprove')?></span><% } else { %><a href="#" data-version-menu-task="unapprove" data-version-id="<%-cvID%>"><?=t('Unapprove')?></a><% } %></li>
+
 						<% if (cpCanDeletePageVersions) { %>
 						<li class="ccm-menu-item-delete">
 							<span <% if (cvIsApproved != 1) { %>style="display:none"<% } %>><?=t('Delete')?></span>
@@ -195,6 +199,14 @@ var ConcretePageVersionList = {
 						ConcretePageVersionList.handleVersionUpdateResponse(r);
 					});
 					break;
+				case 'unapprove':
+					ConcretePageVersionList.sendRequest('<?=$controller->action("unapprove")?>', [{'name': 'cvID', 'value': cvID}], function(r) {
+						ConcreteAlert.notify({
+							'message': r.message
+						});
+						ConcretePageVersionList.handleVersionUpdateResponse(r);
+					});
+					break;
 				case 'duplicate':
 					ConcretePageVersionList.sendRequest('<?=$controller->action("duplicate")?>', [{'name': 'cvID', 'value': cvID}], function(r) {
 						ConcreteAlert.notify({
@@ -270,7 +282,7 @@ $(function() {
 		if (checkboxes.length > 1) {
 			$('button[data-version-action=compare]').removeClass('disabled');
 		}
-		if (checkboxes.length > 0  && notChecked.length > 0 && !checkboxes.filter('[data-version-active=true]').length) {
+		if (checkboxes.length > 0  && notChecked.length > 0 && !checkboxes.filter('[data-version-active=true]').length && $('#ccm-panel-page-versions tbody [data-version-menu-task=delete]').length) {
 			$('button[data-version-action=delete]').removeClass('disabled');
 		}
 
@@ -297,7 +309,7 @@ $(function() {
 		e.preventDefault();
 		e.stopPropagation();
 		var $parent = $(this).parent();
-		$parent.find('.ccm-panel-page-versions-more-info').show().addClass('animated fadeInDown');
+		$parent.find('.ccm-panel-page-versions-more-info').slideToggle();
 	});
 
 	$('button[data-version-action=delete]').on('click', function() {

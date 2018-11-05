@@ -1,4 +1,4 @@
-<?php  
+<?php
 defined('C5_EXECUTE') or die(_("Access Denied."));
 ?>
 
@@ -6,6 +6,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 $color = Core::make('helper/form/color');
 echo Core::make('helper/concrete/ui')->tabs(array(
     array('search', t('Source & Search'), true),
+    array('filtering', t('Filtering')),
     array('results', t('Results')),
     array('design', t('Design'))
 ));
@@ -46,7 +47,28 @@ echo Core::make('helper/concrete/ui')->tabs(array(
 
             </div>
         </div>
+
+        <div class="form-group">
+            <label class="control-label"><?=t("Enable Searching by Associations")?></label>
+
+            <div data-container="search-associations">
+
+            </div>
+        </div>
     </fieldset>
+
+</div>
+
+<div class="ccm-tab-content" id="ccm-tab-content-filtering">
+
+    <div data-container="search-field-selector">
+        <?php if ($searchFieldSelectorElement) { ?>
+            <?php $searchFieldSelectorElement->render() ?>
+        <?php } else {  ?>
+            <?=t('You must choose an entity before you can customize its filtering.') ?>
+        <?php } ?>
+    </div>
+
 
 </div>
 
@@ -125,7 +147,7 @@ echo Core::make('helper/concrete/ui')->tabs(array(
             </div>
         </div>
 
-        <div class="form-group" data-options="table-striped">
+        <div class="form-group" data-options="table-striped" style="margin-bottom: 150px;">
             <?=$form->label('rowBackgroundColorAlternate', t('Alternate Row Background Color'))?>
             <div>
                 <?=$color->output('rowBackgroundColorAlternate', $rowBackgroundColorAlternate)?>
@@ -142,6 +164,18 @@ echo Core::make('helper/concrete/ui')->tabs(array(
            <% var akID = attribute.akID + ''; %>
             <% if (_.contains(selected, akID)) { %> checked<% } %>>
         <%=attribute.akName%>
+        </label>
+    </div>
+    <% }); %>
+</script>
+
+<script type="text/template" data-template="express-association-search-list">
+    <% _.each(associations, function(association) { %>
+    <div class="checkbox"><label>
+            <input type="checkbox" name="searchAssociations[]" value="<%=association.associationID%>"
+            <% var associationID = association.associationID + ''; %>
+            <% if (_.contains(selected, associationID)) { %> checked<% } %>>
+            <%=association.associationName%>
         </label>
     </div>
     <% }); %>
@@ -164,6 +198,8 @@ echo Core::make('helper/concrete/ui')->tabs(array(
     Concrete.event.publish('block.express_entry_list.open', {
         'searchProperties': <?=json_encode($searchProperties)?>,
         'searchPropertiesSelected': <?=json_encode($searchPropertiesSelected)?>,
+        'searchAssociations': <?=json_encode($searchAssociations)?>,
+        'searchAssociationsSelected': <?=json_encode($searchAssociationsSelected)?>,
         'linkedPropertiesSelected': <?=json_encode($linkedPropertiesSelected)?>
     });
 </script>
