@@ -211,22 +211,34 @@ if (($this->controller->getTask() == 'install_package' || $this->controller->get
                         }
                     },
                     error: function(file, response) {
-                        if (response.error) {
+                        if (response.error || file.status === 'error') {
                             $(file.previewElement).addClass('dz-error');
                             var errorElement = $(file.previewElement).find('[data-dz-errormessage]');
                             if (errorElement) {
-                                var message = (typeof response.error.message === 'string') ? response.error.message : response.message;
+                                var message = response;
+                                if (response.error && typeof response.error.message === 'string') {
+                                    message = response.error.message;
+                                }
+                                if (typeof response.message === 'string') {
+                                    message = response.message;
+                                }
                                 errorElement.html(message);
                             }
                         }
                     },
                     success: function(file, response) {
                         targetPage = response.targetPage;
-                        if (response.error) {
+                        if (response.error || file.status === 'error') {
                             $(file.previewElement).addClass('dz-error');
                             var errorElement = $(file.previewElement).find('[data-dz-errormessage]');
                             if (errorElement) {
-                                var message = (typeof response.error.message === 'string') ? response.error.message : response.message;
+                                var message = response;
+                                if (response.error && typeof response.error.message === 'string') {
+                                    message = response.error.message;
+                                }
+                                if (typeof response.message === 'string') {
+                                    message = response.message;
+                                }
                                 errorElement.html(message);
                             }
                         } else {
