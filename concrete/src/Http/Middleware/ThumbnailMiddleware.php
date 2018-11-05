@@ -15,11 +15,11 @@ use Concrete\Core\Http\ResponseFactoryInterface;
 use Doctrine\DBAL\Exception\InvalidFieldNameException;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
-use InvalidArgumentException;
 use League\Flysystem\FileExistsException;
 use League\Flysystem\Filesystem;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Throwable;
 
 /**
  * Class ThumbnailMiddleware
@@ -297,10 +297,15 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
     private function tryGetConnection()
     {
         try {
-            return $this->getConnection();
-        } catch (InvalidArgumentException $e) {
+            $connection = $this->getConnection();
+            $connection->connect();
+        } catch (Exception $e) {
+            return null;
+        } catch (Throwable $e) {
             return null;
         }
+
+        return $connection;
     }
 
     /**
