@@ -73,7 +73,6 @@ abstract class Cache implements FlushableInterface
 
                 $drivers[] = $this->buildDriver($driverConfig);
             }
-
         }
 
         // Remove any empty arrays for an accurate count
@@ -92,7 +91,7 @@ abstract class Cache implements FlushableInterface
     }
 
     /**
-     * Function used to build a driver from a driverConfig array
+     * Function used to build a driver from a driverConfig array.
      *
      * @param array $driverConfig The config item belonging to the driver
      *
@@ -100,27 +99,25 @@ abstract class Cache implements FlushableInterface
      */
     private function buildDriver(array $driverConfig)
     {
-
         $class = array_get($driverConfig, 'class', '');
         if ($class && class_exists($class)) {
             $implements = class_implements($class);
 
             // Make sure that the provided class implements the DriverInterface
             if (isset($implements['Stash\Interfaces\DriverInterface'])) {
-                /** @var \Stash\Interfaces\DriverInterface $tempDriver */
+                /* @var \Stash\Interfaces\DriverInterface $tempDriver */
 
                 // Only add if the driver is available
                 if ($class::isAvailable()) {
-
                     $tempDriver = new $class(array_get($driverConfig, 'options', null));
 
                     return $tempDriver;
                 }
-
             } else {
                 throw new \RuntimeException('Cache driver class must implement \Stash\Interfaces\DriverInterface.');
             }
         }
+
         return null;
     }
 

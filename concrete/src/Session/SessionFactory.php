@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Session;
 
 use Concrete\Core\Application\Application;
@@ -26,7 +25,6 @@ use RedisArray;
  */
 class SessionFactory implements SessionFactoryInterface
 {
-
     protected $app;
 
     /**
@@ -37,6 +35,7 @@ class SessionFactory implements SessionFactoryInterface
      * Ideally neither would be required, as the operation creating the session would manage associating the two.
      *
      * @var \Concrete\Core\Session\Request
+     *
      * @deprecated
      */
     protected $request;
@@ -58,6 +57,7 @@ class SessionFactory implements SessionFactoryInterface
      * This method MUST NOT start the session.
      *
      * @return \Symfony\Component\HttpFoundation\Session\Session
+     *
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function createSession()
@@ -69,15 +69,15 @@ class SessionFactory implements SessionFactoryInterface
         $session = $this->app->build(SymfonySession::class, [$storage]);
         $session->setName(array_get($config, 'name'));
 
-        /** @TODO Remove this call. We should be able to set this against the request somewhere much higher than this */
-        /**       At the very least we should have an observer that can track the session status and set this */
+        /* @TODO Remove this call. We should be able to set this against the request somewhere much higher than this */
+        /*       At the very least we should have an observer that can track the session status and set this */
         $this->app->make(\Concrete\Core\Http\Request::class)->setSession($session);
 
         return $session;
     }
 
     /**
-     * Create and return a newly built file session handler
+     * Create and return a newly built file session handler.
      *
      * @param array $config The `concrete.session` config item
      *
@@ -86,12 +86,12 @@ class SessionFactory implements SessionFactoryInterface
     protected function getFileHandler(array $config)
     {
         return $this->app->make(NativeFileSessionHandler::class, [
-            array_get($config, 'save_path')
+            array_get($config, 'save_path'),
         ]);
     }
 
     /**
-     * Create a new database session handler to handle session
+     * Create a new database session handler to handle session.
      *
      * @param array $config The `concrete.session` config item
      *
@@ -107,13 +107,13 @@ class SessionFactory implements SessionFactoryInterface
                 'db_data_col' => 'sessionValue',
                 'db_time_col' => 'sessionTime',
                 'db_lifetime_col' => 'sessionLifeTime',
-                'lock_mode' => PdoSessionHandler::LOCK_ADVISORY
-            ]
+                'lock_mode' => PdoSessionHandler::LOCK_ADVISORY,
+            ],
         ]);
     }
 
     /**
-     * Return a built Memcached session handler
+     * Return a built Memcached session handler.
      *
      * @param array $config The `concrete.session` config item
      *
@@ -124,7 +124,7 @@ class SessionFactory implements SessionFactoryInterface
         // Create new memcached instance
         $memcached = $this->app->make(Memcached::class, [
             'CCM_SESSION',
-            null
+            null,
         ]);
 
         $servers = array_get($config, 'servers', []);
@@ -141,12 +141,12 @@ class SessionFactory implements SessionFactoryInterface
         // Return a newly built handler
         return $this->app->make(MemcachedSessionHandler::class, [
             $memcached,
-            ['prefix' => array_get($config, 'name') ?: 'CCM_SESSION']
+            ['prefix' => array_get($config, 'name') ?: 'CCM_SESSION'],
         ]);
     }
 
     /**
-     * Return the default session handler
+     * Return the default session handler.
      *
      * @param array $config The `concrete.session` config item
      *
@@ -158,7 +158,7 @@ class SessionFactory implements SessionFactoryInterface
     }
 
     /**
-     * Get a session storage object based on configuration
+     * Get a session storage object based on configuration.
      *
      * @param array $config
      *
@@ -186,11 +186,12 @@ class SessionFactory implements SessionFactoryInterface
         }
 
         $storage->setOptions($options);
+
         return $storage;
     }
 
     /**
-     * Get a new session handler
+     * Get a new session handler.
      *
      * @param array $config The config from our config repository
      *
@@ -208,7 +209,7 @@ class SessionFactory implements SessionFactoryInterface
             return $this->{$method}($config);
         }
 
-        /**
+        /*
          * @todo Change this to return an exception if an unsupported handler is configured. This makes it easier to get
          * configuration dialed in properly
          */
@@ -219,7 +220,7 @@ class SessionFactory implements SessionFactoryInterface
     }
 
     /**
-     * Generator for only returning hosts that aren't already added to the memcache instance
+     * Generator for only returning hosts that aren't already added to the memcache instance.
      *
      * @param \Memcached $memcached
      * @param array $servers The servers as described in config
@@ -249,7 +250,7 @@ class SessionFactory implements SessionFactoryInterface
     }
 
     /**
-     * Return a built Redis session handler
+     * Return a built Redis session handler.
      *
      * @param array $config The `concrete.session` config item
      *
@@ -257,7 +258,6 @@ class SessionFactory implements SessionFactoryInterface
      */
     protected function getRedisHandler(array $config)
     {
-
         $options = array_get($config, 'redis', []);
         // In case anyone puts the servers under redis configuration - similar to how we handle cache
         $servers = array_get($options, 'servers', []);
@@ -265,13 +265,10 @@ class SessionFactory implements SessionFactoryInterface
             $servers = array_get($config, 'servers', []);
         }
 
-
-
         $redis = $this->getRedisInstance($servers);
         if (!empty($options['database'])) {
             $redis->select((int) $options['database']);
         }
-
 
         // In case of anyone setting prefix on the redis server directly
         // Similar to how we do it on cache
@@ -279,12 +276,10 @@ class SessionFactory implements SessionFactoryInterface
 
         // We pass the prefix to the Redis Handler when we build it
         return $this->app->make(RedisSessionHandler::class, [$redis, ['prefix' => array_get($config, 'name') ?: $prefix]]);
-
     }
 
-
     /**
-     *  Decides whether to return a Redis Instance or RedisArray Instance depending on the number of servers passed to it
+     *  Decides whether to return a Redis Instance or RedisArray Instance depending on the number of servers passed to it.
      *
      * @param array $servers The `concrete.session.servers` or `concrete.session.redis.servers` config item
      *
@@ -292,8 +287,7 @@ class SessionFactory implements SessionFactoryInterface
      */
     private function getRedisInstance(array $servers)
     {
-
-        if (count($servers) == 1 ) {
+        if (count($servers) == 1) {
             // If we only have one server in our array then we just reconnect to it
             $server = $servers[0];
             $redis = $this->app->make(Redis::class);
@@ -301,12 +295,11 @@ class SessionFactory implements SessionFactoryInterface
             if (isset($server['socket']) && $server['socket']) {
                 $redis->connect($server['socket']);
             } else {
-
                 $host = array_get($server, 'host', '');
                 $port = array_get($server, 'port', 6379);
                 $ttl = array_get($server, 'ttl', 0.5);
                 // Check for both server/host - fallback due to cache using server
-                $host = !empty($host) ? $host: array_get($server, 'server', '127.0.0.1');
+                $host = !empty($host) ? $host : array_get($server, 'server', '127.0.0.1');
 
                 $redis->connect($host, $port, $ttl);
             }
@@ -331,15 +324,14 @@ class SessionFactory implements SessionFactoryInterface
 
                 $serverArray[] = $serverString;
             }
-            $redis = $this->app->make(RedisArray::class, [$serverArray, ['connect_timeout'=>$ttl]]);
+            $redis = $this->app->make(RedisArray::class, [$serverArray, ['connect_timeout' => $ttl]]);
         }
 
         return $redis;
     }
 
-
     /**
-     * Generator for Redis Array
+     * Generator for Redis Array.
      *
      * @param array $servers The `concrete.session.servers` or `concrete.session.redis.servers` config item
      *
@@ -348,11 +340,9 @@ class SessionFactory implements SessionFactoryInterface
     private function getRedisServers(array $servers)
     {
         if (!empty($servers)) {
-
             foreach ($servers as $server) {
-
                 if (isset($server['socket'])) {
-                    $server= [
+                    $server = [
                         'server' => array_get($server, 'socket', ''),
                         'ttl' => array_get($server, 'ttl', null),
                     ];
@@ -371,7 +361,5 @@ class SessionFactory implements SessionFactoryInterface
         } else {
             yield ['server' => '127.0.0.1', 'port' => '6379', 'ttl' => 0.5];
         }
-
     }
-
 }

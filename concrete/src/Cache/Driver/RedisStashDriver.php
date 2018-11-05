@@ -10,15 +10,11 @@
  * file that was distributed with this source code.
  * Can be found in vendor/tedivm/stash
  */
-
 namespace Concrete\Core\Cache\Driver;
 
-
-use Concrete\Core\Support\Facade\Facade;
 use Stash\Driver\AbstractDriver;
 use Redis;
 use RedisArray;
-
 
 class RedisStashDriver extends AbstractDriver
 {
@@ -29,7 +25,6 @@ class RedisStashDriver extends AbstractDriver
      */
     protected $redis;
 
-
     protected $prefix;
 
     /**
@@ -37,22 +32,22 @@ class RedisStashDriver extends AbstractDriver
      *
      * @var array
      */
-    protected $keyCache = array();
+    protected $keyCache = [];
 
-    protected $redisArrayOptionNames = array(
-        "previous",
-        "function",
-        "distributor",
-        "index",
-        "autorehash",
-        "pconnect",
-        "retry_interval",
-        "lazy_connect",
-        "connect_timeout",
-    );
+    protected $redisArrayOptionNames = [
+        'previous',
+        'function',
+        'distributor',
+        'index',
+        'autorehash',
+        'pconnect',
+        'retry_interval',
+        'lazy_connect',
+        'connect_timeout',
+    ];
 
     /**
-     * The options array should contain an array of servers,
+     * The options array should contain an array of servers,.
      *
      * The "server" option expects an array of servers, with each server being represented by an associative array. Each
      * redis config must have either a "socket" or a "server" value, and optional "port" and "ttl" values (with the ttl
@@ -67,7 +62,7 @@ class RedisStashDriver extends AbstractDriver
     protected function setOptions(array $options = [])
     {
         $options += $this->getDefaultOptions();
-        $this->prefix = !empty($options['prefix']) ? $options['prefix']:null;
+        $this->prefix = !empty($options['prefix']) ? $options['prefix'] : null;
         // Normalize Server Options
         $servers = [];
         foreach ($this->getRedisServers(array_get($options, 'servers', [])) as $server) {
@@ -80,14 +75,15 @@ class RedisStashDriver extends AbstractDriver
         if (isset($options['database'])) {
             $redis->select($options['database']);
         }
-        if (!empty($options['prefix'])) $redis->setOption(\Redis::OPT_PREFIX,$options['prefix'] .":");
+        if (!empty($options['prefix'])) {
+            $redis->setOption(\Redis::OPT_PREFIX, $options['prefix'] . ':');
+        }
 
         $this->redis = $redis;
     }
 
-
     /**
-     *  Decides whether to return a Redis Instance or RedisArray Instance depending on the number of servers passed to it
+     *  Decides whether to return a Redis Instance or RedisArray Instance depending on the number of servers passed to it.
      *
      * @param array $servers The `concrete.cache.levels.{level}.drivers.redis.options` config item
      *
@@ -95,8 +91,7 @@ class RedisStashDriver extends AbstractDriver
      */
     private function getRedisInstance(array $servers)
     {
-
-        if (count($servers) == 1 ) {
+        if (count($servers) == 1) {
             // If we only have one server in our array then we just reconnect to it
             $server = $servers[0];
             $redis = new Redis();
@@ -104,7 +99,6 @@ class RedisStashDriver extends AbstractDriver
             if (isset($server['socket']) && $server['socket']) {
                 $redis->connect($server['socket']);
             } else {
-
                 $host = array_get($server, 'host', '');
                 $port = array_get($server, 'port', 6379);
                 $ttl = array_get($server, 'ttl', 0.5);
@@ -134,14 +128,14 @@ class RedisStashDriver extends AbstractDriver
 
                 $serverArray[] = $serverString;
             }
-            $redis = new RedisArray($serverArray, ['connect_timeout'=>$ttl]);
+            $redis = new RedisArray($serverArray, ['connect_timeout' => $ttl]);
         }
 
         return $redis;
     }
 
     /**
-     * Generator for Redis Array
+     * Generator for Redis Array.
      *
      * @param array $servers The `concrete.cache.{level}.redis.options.servers` config item
      *
@@ -150,11 +144,9 @@ class RedisStashDriver extends AbstractDriver
     private function getRedisServers(array $servers)
     {
         if (!empty($servers)) {
-
             foreach ($servers as $server) {
-
                 if (isset($server['socket'])) {
-                    $server= [
+                    $server = [
                         'server' => array_get($server, 'socket', ''),
                         'ttl' => array_get($server, 'ttl', null),
                     ];
@@ -173,7 +165,6 @@ class RedisStashDriver extends AbstractDriver
         } else {
             yield ['server' => '127.0.0.1', 'port' => '6379', 'ttl' => 0.5];
         }
-
     }
 
     /**
@@ -206,7 +197,7 @@ class RedisStashDriver extends AbstractDriver
      */
     public function storeData($key, $data, $expiration)
     {
-        $store = serialize(array('data' => $data, 'expiration' => $expiration));
+        $store = serialize(['data' => $data, 'expiration' => $expiration]);
         if (is_null($expiration)) {
             return $this->redis->set($this->makeKeyString($key), $store);
         } else {
@@ -237,11 +228,10 @@ class RedisStashDriver extends AbstractDriver
                 // Delete all keys
                 $this->redis->del($keys);
                 // Reset the prefix
-                $this->redis->setOption(\Redis::OPT_PREFIX,$this->prefix .":");
+                $this->redis->setOption(\Redis::OPT_PREFIX, $this->prefix . ':');
             } else {
                 $this->redis->flushDB();
             }
-
 
             return true;
         }
@@ -250,7 +240,7 @@ class RedisStashDriver extends AbstractDriver
         $keyReal = $this->makeKeyString($key);
         $this->redis->incr($keyString); // increment index for children items
         $this->redis->delete($keyReal); // remove direct item.
-        $this->keyCache = array();
+        $this->keyCache = [];
 
         return true;
     }
@@ -279,6 +269,7 @@ class RedisStashDriver extends AbstractDriver
      *
      * @param  array  $key
      * @param  bool   $path
+     *
      * @return string
      */
     protected function makeKeyString($key, $path = false)
