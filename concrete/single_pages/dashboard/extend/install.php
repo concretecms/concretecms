@@ -250,7 +250,7 @@ if (($this->controller->getTask() == 'install_package' || $this->controller->get
                         }
                     },
                     dictDefaultMessage: <?= json_encode(t('Drop your package here or click to upload, you can also upload multiple packages.')); ?>,
-                    acceptedFiles: 'application/zip',
+                    acceptedFiles: '.zip',
                     previewTemplate: `
                         <div class="dz-preview dz-file-preview">
                             <div class="dz-details">
