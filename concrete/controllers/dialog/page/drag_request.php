@@ -73,7 +73,6 @@ class DragRequest extends UserInterfaceController
 
     public function doCopyAll()
     {
-        $this->validationToken = 'ccm-copy-multilingual-tree';
         if ($this->request->request->get('process', $this->request->query->get('process'))) {
             return $this->continueCopyAll();
         }
