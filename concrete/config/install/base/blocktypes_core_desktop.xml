@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <blocktypes>
+        <blocktype handle="desktop_app_status" package=""/>
+        <blocktype handle="desktop_site_activity" package=""/>
+        <blocktype handle="desktop_featured_addon" package=""/>
+        <blocktype handle="desktop_featured_theme" package=""/>
+        <blocktype handle="desktop_latest_form" package=""/>
+        <blocktype handle="desktop_waiting_for_me" package=""/>
+        <blocktype handle="desktop_draft_list" package=""/>
+        <blocktype handle="desktop_newsflow_latest" package=""/>
+    </blocktypes>
+
+    <blocktypesets>
+        <blocktypeset handle="core_desktop" name="Desktop" package="">
+            <blocktype handle="desktop_app_status"/>
+            <blocktype handle="desktop_site_activity"/>
+            <blocktype handle="desktop_featured_addon"/>
+            <blocktype handle="desktop_featured_theme"/>
+            <blocktype handle="desktop_latest_form"/>
+            <blocktype handle="desktop_waiting_for_me"/>
+            <blocktype handle="desktop_draft_list"/>
+            <blocktype handle="desktop_newsflow_latest"/>
+        </blocktypeset>
+    </blocktypesets>
+
+</concrete5-cif>

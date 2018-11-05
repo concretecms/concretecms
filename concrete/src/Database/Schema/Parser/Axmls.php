@@ -10,7 +10,7 @@ class Axmls extends XmlParser
     public function parse(\Concrete\Core\Database\Connection\Connection $db)
     {
         $x = $this->rawXML;
-        $schema = new \Doctrine\DBAL\Schema\Schema();
+        $schema = new \Doctrine\DBAL\Schema\Schema([], [], $db->getSchemaManager()->createSchemaConfig());
         foreach ($x->table as $t) {
             if ($this->ignoreExistingTables && $db->tableExists($t['name'])) {
                 continue;

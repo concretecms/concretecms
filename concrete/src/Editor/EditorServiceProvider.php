@@ -21,7 +21,15 @@ class EditorServiceProvider extends ServiceProvider
                 $pluginManager = new PluginManager();
                 $selectedPlugins = $config->get('editor.ckeditor4.plugins.selected');
                 if (!is_array($selectedPlugins)) {
-                    $selectedPlugins = array_merge($config->get('editor.ckeditor4.plugins.selected_default'), $config->get('editor.ckeditor4.plugins.selected_hidden'));
+                    $defaultPlugins = [];
+                    $selectedHiddenPlugins = [];
+                    if (is_array($config->get('editor.ckeditor4.plugins.selected_default'))) {
+                        $defaultPlugins = $config->get('editor.ckeditor4.plugins.selected_default');
+                    }
+                    if (is_array($config->get('editor.ckeditor4.plugins.selected_hidden'))) {
+                        $selectedHiddenPlugins = $config->get('editor.ckeditor4.plugins.selected_hidden');
+                    }
+                    $selectedPlugins = array_merge($defaultPlugins, $selectedHiddenPlugins);
                 }
                 $pluginManager->select($selectedPlugins);
                 $this->registerCkeditorPlugins($pluginManager);
@@ -160,7 +168,7 @@ class EditorServiceProvider extends ServiceProvider
                 // https://ckeditor.com/cke4/addon/tableresize
                 'tableresize' => [t('Table Resize'), t('This plugin adds support for table column resizing with the mouse.')],
                 // https://ckeditor.com/cke4/addon/tableselection
-                'tableselection' => [t('Table Selection'), t('This plugin allows selecting arbitrary rectangular table fragments, appling formatting or adding links to all selected cells, cut/copy/paste entire rows or columns.')],
+                'tableselection' => [t('Table Selection'), t('This plugin allows selecting arbitrary rectangular table fragments, applying formatting or adding links to all selected cells, cut/copy/paste entire rows or columns.')],
                 // https://ckeditor.com/cke4/addon/tabletools
                 'tabletools' => [t('Table Tools'), t('This plugin adds a more advanced context menu for table items and the Cell Properties dialog window.')],
                 // https://ckeditor.com/cke4/addon/toolbar

@@ -30,6 +30,7 @@ composer.phar
 
 # more stuff
 /application/languages/*
+/coverage.clover
 
 # ignore sitemap.xml
 /sitemap.xml

@@ -43,7 +43,7 @@ class StandardSearchIndexer implements SearchIndexerInterface
 
     public function createRepository(CategoryInterface $category)
     {
-        $schema = new Schema();
+        $schema = new Schema([], [], $this->connection->getSchemaManager()->createSchemaConfig());
         if ($this->isValid($category)) {
             /**
              * @var $category StandardSearchIndexerInterface
