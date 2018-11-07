@@ -320,7 +320,7 @@ class Form
      *  'checked'   => true/false (default: false),
      * ],
      *
-     * @return $html
+     * @return $str
      */
     public function radioList($key, $optionValues, $valueOrMiscFields = '', $miscFields = [])
     {
@@ -360,7 +360,7 @@ class Form
                         . '</label></div>';
             }
         }
-         if ($inputClass !== '') {
+        if ($inputClass !== '') {
             $str = str_replace('<input', '<input class="' . $inputClass . '"', $str);
         }
         return $str;
@@ -383,7 +383,7 @@ class Form
      *  'class'         => 'class-names-for-surrounding-div-tag' (default: 'checkbox')
      *  'inputClass'    => 'class-name-for-input-tag' (default: none)
      *
-     * @return $html
+     * @return $str
      */
     public function checkboxList($optionValues = [], $miscFields = [])
     {
