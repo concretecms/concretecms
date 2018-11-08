@@ -3,6 +3,7 @@
 namespace Concrete\Core\Entity\OAuth;
 
 use Concrete\Core\Entity\Express\EntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
 use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
 
@@ -44,7 +45,7 @@ class RefreshTokenRepository extends EntityRepository implements RefreshTokenRep
             $token = $this->find($tokenId);
 
             if ($token) {
-                $em->detach($token);
+                $em->remove($token);
             }
         });
     }
@@ -58,6 +59,6 @@ class RefreshTokenRepository extends EntityRepository implements RefreshTokenRep
      */
     public function isRefreshTokenRevoked($tokenId)
     {
-        return (bool) $this->find($tokenId);
+        return $this->find($tokenId) === null;
     }
 }

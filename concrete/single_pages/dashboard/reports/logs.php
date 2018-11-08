@@ -6,6 +6,21 @@ $th = $app->make('helper/text');
 ?>
 
 <div class="ccm-dashboard-header-buttons">
+    <?php if (!isset($selectedChannel)) { ?>
+        <a href="javascript:void(0)" class="btn btn-default btn-danger" onclick="clearAllChannelLogs()" ><?=t('Delete all')?></a>
+        <script>
+            clearAllChannelLogs = function() {
+                ConcreteAlert.confirm(
+                    <?= json_encode(t('Are you sure you want to clear all channel logs?')); ?>,
+                    function() {
+                        location.href = "<?= $controller->action('clear', $valt->generate()); ?>";
+                    },
+                    'btn-danger',
+                    <?= json_encode(t('Delete')); ?>
+                );
+            };
+        </script>
+    <?php } ?>
     <a id="ccm-export-results" class="btn btn-success" href="<?= $view->action('csv', $valt->generate())?>?<?=$query ?>">
         <i class='fa fa-download'></i> <?= t('Export to CSV') ?>
     </a>
@@ -41,21 +56,7 @@ $th = $app->make('helper/text');
                     );
                 };
             </script>
-            <?php } else { ?>
-            <a href="javascript:void(0)" class="btn btn-default btn-danger pull-right" onclick="clearAllChannelLogs()" style="margin-top: 30px;"><?=t('Clear all')?></a>
-            <script>
-                clearAllChannelLogs = function() {
-                    ConcreteAlert.confirm(
-                        <?= json_encode(t('Are you sure you want to clear all channel logs?')); ?>,
-                        function() {
-                            location.href = "<?= $controller->action('clear', $valt->generate()); ?>";
-                        },
-                        'btn-danger',
-                        <?= json_encode(t('Delete')); ?>
-                    );
-                };
-            </script>
-            <?php } ?>
+            <?php }?>
         </div>
     </div>
 

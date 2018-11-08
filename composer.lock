@@ -50,16 +50,16 @@
         },
         {
             "name": "concrete5/doctrine-xml",
-            "version": "1.0.1",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/concrete5/doctrine-xml.git",
-                "reference": "11f32dc982352930f990bc28bca466564ff49537"
+                "reference": "03f1209d42477070a58d29e5af15688b96c66b56"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/concrete5/doctrine-xml/zipball/11f32dc982352930f990bc28bca466564ff49537",
-                "reference": "11f32dc982352930f990bc28bca466564ff49537",
+                "url": "https://api.github.com/repos/concrete5/doctrine-xml/zipball/03f1209d42477070a58d29e5af15688b96c66b56",
+                "reference": "03f1209d42477070a58d29e5af15688b96c66b56",
                 "shasum": ""
             },
             "require": {
@@ -87,69 +87,7 @@
                 "structure",
                 "xml"
             ],
-            "time": "2016-06-22T13:39:14+00:00"
-        },
-        {
-            "name": "concrete5/less.php",
-            "version": "2.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/concrete5-forks/less.php.git",
-                "reference": "eebead5849b7dd21f450905007cd65a385b894e3"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/concrete5-forks/less.php/zipball/eebead5849b7dd21f450905007cd65a385b894e3",
-                "reference": "eebead5849b7dd21f450905007cd65a385b894e3",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~4.8.21"
-            },
-            "bin": [
-                "bin/lessc"
-            ],
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Less": "lib/"
-                },
-                "classmap": [
-                    "lessc.inc.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "Matt Agar",
-                    "homepage": "https://github.com/agar"
-                },
-                {
-                    "name": "Martin Jantošovič",
-                    "homepage": "https://github.com/Mordred"
-                },
-                {
-                    "name": "Josh Schmidt",
-                    "homepage": "https://github.com/oyejorge"
-                }
-            ],
-            "description": "Fork of Oyejorge's PHP port of the Javascript version of LESS http://lesscss.org",
-            "homepage": "http://lessphp.gpeasy.com",
-            "keywords": [
-                "css",
-                "less",
-                "less.js",
-                "lesscss",
-                "php",
-                "stylesheet"
-            ],
-            "time": "2017-02-02T17:13:13+00:00"
+            "time": "2018-10-05T16:44:04+00:00"
         },
         {
             "name": "concrete5/oauth-user-data",
@@ -1959,24 +1897,24 @@
         },
         {
             "name": "imagine/imagine",
-            "version": "v0.7.1",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/avalanche123/Imagine.git",
-                "reference": "a9a702a946073cbca166718f1b02a1e72d742daa"
+                "reference": "f2f39f5900ed69480dfc2f23cb56b591b282d501"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/avalanche123/Imagine/zipball/a9a702a946073cbca166718f1b02a1e72d742daa",
-                "reference": "a9a702a946073cbca166718f1b02a1e72d742daa",
+                "url": "https://api.github.com/repos/avalanche123/Imagine/zipball/f2f39f5900ed69480dfc2f23cb56b591b282d501",
+                "reference": "f2f39f5900ed69480dfc2f23cb56b591b282d501",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2"
             },
             "require-dev": {
-                "sami/sami": "^3.3",
-                "symfony/phpunit-bridge": "^3.2"
+                "friendsofphp/php-cs-fixer": "2.2.*",
+                "symfony/phpunit-bridge": "^3.2 || ^4.0"
             },
             "suggest": {
                 "ext-gd": "to use the GD implementation",
@@ -1990,8 +1928,8 @@
                 }
             },
             "autoload": {
-                "psr-0": {
-                    "Imagine": "lib/"
+                "psr-4": {
+                    "Imagine\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -2013,7 +1951,7 @@
                 "image manipulation",
                 "image processing"
             ],
-            "time": "2017-05-16T10:31:22+00:00"
+            "time": "2018-09-27T12:22:55+00:00"
         },
         {
             "name": "indigophp/hash-compat",
@@ -4978,6 +4916,67 @@
             ],
             "description": "Composer plugin to merge multiple composer.json files",
             "time": "2017-04-25T02:31:25+00:00"
+        },
+        {
+            "name": "wikimedia/less.php",
+            "version": "v1.8.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/wikimedia/less.php.git",
+                "reference": "eb783ddc912266f2106fee4684b24f178d7d4d06"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/wikimedia/less.php/zipball/eb783ddc912266f2106fee4684b24f178d7d4d06",
+                "reference": "eb783ddc912266f2106fee4684b24f178d7d4d06",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.8.24"
+            },
+            "bin": [
+                "bin/lessc"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Less": "lib/"
+                },
+                "classmap": [
+                    "lessc.inc.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Matt Agar",
+                    "homepage": "https://github.com/agar"
+                },
+                {
+                    "name": "Martin Jantošovič",
+                    "homepage": "https://github.com/Mordred"
+                },
+                {
+                    "name": "Josh Schmidt",
+                    "homepage": "https://github.com/oyejorge"
+                }
+            ],
+            "description": "PHP port of the Javascript version of LESS http://lesscss.org (Originally maintained by Josh Schmidt)",
+            "keywords": [
+                "css",
+                "less",
+                "less.js",
+                "lesscss",
+                "php",
+                "stylesheet"
+            ],
+            "time": "2018-10-16T05:21:24+00:00"
         },
         {
             "name": "zendframework/zend-cache",

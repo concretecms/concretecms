@@ -233,16 +233,22 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
         $this->connection->executeQuery('DELETE FROM PermissionAccessEntityUsers WHERE uID = ?', [(int) $this->getUserID()]);
         $this->connection->executeQuery('DELETE FROM authTypeConcreteCookieMap WHERE uID = ?', [(int) $this->getUserID()]);
 
-        // Delete private file sets from this user
-        foreach (\Concrete\Core\File\Set\Set::getMySets($this) as $set) {
-            $set->delete();
-        }
+        // Conversation messages and ratings should be detached from the user
+        $this->connection->executeQuery('UPDATE ConversationMessages SET uID = 0, cnvMessageAuthorName = NULL, cnvMessageAuthorEmail = NULL, cnvMessageAuthorWebsite = NULL, cnvMessageSubmitIP = NULL, cnvMessageSubmitUserAgent = NULL WHERE uID = ?', [(int) $this->getUserID()]);
+        $this->connection->executeQuery('UPDATE ConversationMessageRatings SET cnvMessageRatingIP = NULL, uID = 0 WHERE uID = ?', [(int) $this->getUserID()]);
 
         // Public file sets should be detached from the user
         $this->connection->executeQuery('UPDATE FileSets SET uID = 0 WHERE uID = ? AND fsType = ?', [
             (int) $this->getUserID(),
             \Concrete\Core\File\Set\Set::TYPE_PUBLIC,
         ]);
+
+        // Delete private file sets from this user
+        foreach (\Concrete\Core\File\Set\Set::getOwnedSets($this) as $set) {
+            $set->delete();
+        }
+
+
 
         $this->connection->executeQuery('UPDATE Blocks set uID = ? WHERE uID = ?', [(int) USER_SUPER_ID, (int) $this->getUserID()]);
         $this->connection->executeQuery('UPDATE Pages set uID = ? WHERE uID = ?', [(int) USER_SUPER_ID, (int) $this->getUserID()]);

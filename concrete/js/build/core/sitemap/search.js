@@ -76,10 +76,10 @@
 
             var subscription = function (e, data) {
                 Concrete.event.unsubscribe(e);
-                url = CCM_TOOLS_PATH + '/dashboard/sitemap_drag_request?origCID=' + itemIDs.join(',') + '&destCID=' + data.cID;
+                url = CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/drag_request?origCID=' + itemIDs.join(',') + '&destCID=' + data.cID;
                 $.fn.dialog.open({
-                    width: 350,
-                    height: 350,
+                    width: 520,
+                    height: 400,
                     href: url,
                     title: ccmi18n_sitemap.moveCopyPage,
                     onDirectClose: function() {

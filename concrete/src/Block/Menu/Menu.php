@@ -125,7 +125,7 @@ class Menu extends ContextMenu
             if (is_object($stack)) {
                 $sp = new \Permissions($stack);
                 if ($sp->canWrite()) {
-                    $this->addItem(new LinkItem(\URL::to('/dashboard/blocks/stacks', 'view_details', $stack->getCollectionID()), t('Manage Stack Contents')));
+                    $this->addItem(new LinkItem(\URL::to(STACKS_LISTING_PAGE_PATH, 'view_details', $stack->getCollectionID()), t('Manage Stack Contents')));
                 }
             }
         } else if ($p->canEditBlock() && $b->isEditable()) {

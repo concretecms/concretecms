@@ -2,13 +2,11 @@
 
 namespace Concrete\Core\Entity\OAuth;
 
+use Doctrine\ORM\Mapping as ORM;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\Entities\Traits\AccessTokenTrait;
-use League\OAuth2\Server\Entities\Traits\EntityTrait;
-use League\OAuth2\Server\Entities\Traits\TokenEntityTrait;
-use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="AccessTokenRepository")
@@ -18,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class AccessToken implements AccessTokenEntityInterface
 {
-    use AccessTokenTrait, EntityTrait;
+    use AccessTokenTrait;
 
     /**
      * @ORM\Id @ORM\Column(type="guid")
@@ -43,36 +41,56 @@ class AccessToken implements AccessTokenEntityInterface
     protected $scopes = [];
 
     /**
-     * @var ScopeEntityInterface[]
+     * @var \League\OAuth2\Server\Entities\ScopeEntityInterface[]
      * @ORM\ManyToOne(targetEntity="Client")
      * @ORM\JoinColumn(name="client", referencedColumnName="identifier")
      */
     protected $client;
 
     /**
-     * Associate a scope with the token.
+     * {@inheritdoc}
      *
-     * @param ScopeEntityInterface $scope
+     * @see \League\OAuth2\Server\Entities\TokenInterface::getIdentifier()
+     */
+    public function getIdentifier()
+    {
+        return $this->identifier;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \League\OAuth2\Server\Entities\TokenInterface::setIdentifier()
+     */
+    public function setIdentifier($identifier)
+    {
+        $this->identifier = $identifier;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \League\OAuth2\Server\Entities\TokenInterface::addScope()
      */
     public function addScope(ScopeEntityInterface $scope)
     {
-        $this->scopes[$scope->getIdentifier()] = $scope;
+        $this->scopes[] = $scope;
     }
 
     /**
-     * Return an array of scopes associated with the token.
+     * {@inheritdoc}
      *
-     * @return ScopeEntityInterface[]
+     * @see \League\OAuth2\Server\Entities\TokenInterface::getScopes()
      */
     public function getScopes()
     {
-        return array_values($this->scopes);
+        return $this->scopes;
     }
 
     /**
-     * Get the token's expiry date time.
+     * {@inheritdoc}
      *
-     * @return \DateTime
+     * @see \League\OAuth2\Server\Entities\TokenInterface::getExpiryDateTime()
      */
     public function getExpiryDateTime()
     {
@@ -80,9 +98,9 @@ class AccessToken implements AccessTokenEntityInterface
     }
 
     /**
-     * Set the date time when the token expires.
+     * {@inheritdoc}
      *
-     * @param \DateTime $dateTime
+     * @see \League\OAuth2\Server\Entities\TokenInterface::setExpiryDateTime()
      */
     public function setExpiryDateTime(\DateTime $dateTime)
     {
@@ -90,9 +108,9 @@ class AccessToken implements AccessTokenEntityInterface
     }
 
     /**
-     * Set the identifier of the user associated with the token.
+     * {@inheritdoc}
      *
-     * @param string|int $identifier The identifier of the user
+     * @see \League\OAuth2\Server\Entities\TokenInterface::setUserIdentifier()
      */
     public function setUserIdentifier($identifier)
     {
@@ -100,9 +118,9 @@ class AccessToken implements AccessTokenEntityInterface
     }
 
     /**
-     * Get the token user's identifier.
+     * {@inheritdoc}
      *
-     * @return string|int
+     * @see \League\OAuth2\Server\Entities\TokenInterface::getUserIdentifier()
      */
     public function getUserIdentifier()
     {
@@ -110,9 +128,9 @@ class AccessToken implements AccessTokenEntityInterface
     }
 
     /**
-     * Get the client that the token was issued to.
+     * {@inheritdoc}
      *
-     * @return ClientEntityInterface
+     * @see \League\OAuth2\Server\Entities\TokenInterface::getClient()
      */
     public function getClient()
     {
@@ -120,13 +138,12 @@ class AccessToken implements AccessTokenEntityInterface
     }
 
     /**
-     * Set the client that the token was issued to.
+     * {@inheritdoc}
      *
-     * @param ClientEntityInterface $client
+     * @see \League\OAuth2\Server\Entities\TokenInterface::setClient()
      */
     public function setClient(ClientEntityInterface $client)
     {
         $this->client = $client;
     }
-
 }

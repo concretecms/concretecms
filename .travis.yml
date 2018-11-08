@@ -1,74 +1,69 @@
+dist: trusty
 language: php
 sudo: false
 
 php:
-  - 5.5
-  - 5.6
-  - 7.0
-  - 7.1
-  - 7.2
-  - nightly
+- 5.5
+- 5.6
+- 7.0
+- 7.2
+- nightly
+
 env:
   global:
-    - COMPOSER_DISABLE_XDEBUG_WARN=1
-    - PREFER_LOWEST=""
+  - COMPOSER_DISABLE_XDEBUG_WARN=1
+  - PREFER_LOWEST=""
+  - DO_PHPUNIT=1
+  - DO_CS_PHP=0
+  - DO_CS_JS=0
+  - DO_BUILDASSETS=0
 
 matrix:
   fast_finish: true
   include:
-    - php: 7.1
-      env: ACTION="php_codestyle"
-    - php: 7.1
-      env: PREFER_LOWEST="--prefer-lowest"
-    - language: node_js
-      dist: trusty
-      node_js: lts/*
-      env: ACTION="js_check"
+  - php: 7.1
+    env:
+    - DO_PHPUNIT=2
+  - php: 7.1
+    env:
+    - DO_CS_PHP=1
+    - DO_PHPUNIT=0
+  - php: 7.1
+    env:
+    - PREFER_LOWEST="--prefer-lowest"
+  - language: node_js
+    dist: trusty
+    node_js: lts/*
+    env:
+    - DO_PHPUNIT=0
+    - DO_CS_JS=1
+    - DO_BUILDASSETS=1
   allow_failures:
-    - php: nightly
+  - php: nightly
 
 before_script:
-  - |
-    set -o errexit
-    case $ACTION in
-      js_check)
-        travis_retry npm install yarn -g
-        travis_retry yarn global add grunt
-        cd build
-        travis_retry yarn
-        ;;
-      *)
-        if [[ $TRAVIS_PHP_VERSION = hhvm ]]; then
-          cat tests/travis.hhvm.ini >> /etc/hhvm/php.ini
-        else
-          phpenv config-add tests/travis.php.ini
-          phpenv config-rm xdebug.ini || true
-        fi
-        travis_retry composer update --no-suggest --no-interaction $PREFER_LOWEST # Run once to install magento's composer merger
-        travis_retry composer update --no-suggest --no-interaction $PREFER_LOWEST # Run twice to install merged dependencies
-        ;;
-    esac
+- if test $DO_CS_JS -ne 0 || test $DO_BUILDASSETS -ne 0; then ./.travis/setup-build.sh; fi
+- if test $DO_PHPUNIT -ne 0 || test $DO_CS_PHP -ne 0; then ./.travis/composer-deps.sh; fi
 
 script:
-  - |
-    set -o errexit
-    case $ACTION in
-      php_codestyle)
-        composer phpcs
-        ;;
-      js_check)
-        grunt js:check
-        ;;
-      *)
-        composer test
-        ;;
-    esac
+- if test $DO_CS_PHP -ne 0; then echo 'Testing PHP coding style'; composer phpcs; fi
+- if test $DO_CS_JS -ne 0; then echo 'Testing JS coding style'; pushd build && grunt js:check && popd; fi
+- if test $DO_PHPUNIT -eq 1; then echo 'Running tests'; composer test; fi
+- if test $DO_PHPUNIT -gt 1; then echo 'Running tests (with coverage)'; composer test-coverage; fi
+- if test $DO_BUILDASSETS -ne 0; then ./.travis/rebuild-assets.sh; fi
 
 cache:
   yarn: true
   directories:
-    - $HOME/.composer/cache
-    - build/node_modules
+  - "$HOME/.composer/cache"
+  - build/node_modules
 
 notifications:
   email: false
+
+after_script:
+- |
+  if test $DO_PHPUNIT -gt 1; then
+    wget https://scrutinizer-ci.com/ocular.phar
+    php ocular.phar code-coverage:upload --format=php-clover coverage.clover
+  fi

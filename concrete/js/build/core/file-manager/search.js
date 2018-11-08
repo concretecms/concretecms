@@ -31,7 +31,6 @@
         my.setupFolderNavigation();
         my.setupFileUploads();
         my.setupFileDownloads();
-
     }
 
     ConcreteFileManager.prototype = Object.create(ConcreteAjaxSearch.prototype);
@@ -218,10 +217,9 @@
     ConcreteFileManager.prototype.setupFileUploads = function() {
         var my = this,
             $fileUploader = $('#ccm-file-manager-upload'),
-            $maxWidth = $fileUploader.data('image-max-width'),
-            $maxHeight = $fileUploader.data('image-max-height'),
-            $imageResize = ($maxWidth > 0 && $maxHeight > 0),
-            $quality = $fileUploader.data('image-quality'),
+            imageMaxWidth = parseInt($fileUploader.data('image-max-width'), 10) || null,
+            imageMaxHeight = parseInt($fileUploader.data('image-max-height'), 10) || null,
+            imageQuality = parseInt($fileUploader.data('image-quality'), 10) || 85,
             errors = [],
             files = [],
             error_template = _.template(
@@ -231,10 +229,10 @@
             args = {
                 url: CCM_DISPATCHER_FILENAME + '/ccm/system/file/upload',
                 dataType: 'json',
-                disableImageResize: !$imageResize,
-                imageQuality: ($quality > 0 ? $quality : 85),
-                imageMaxWidth: ($maxWidth > 0 ? $maxWidth : 1920),
-                imageMaxHeight: ($maxHeight > 0 ? $maxHeight : 1080),
+                disableImageResize: imageMaxWidth === null && imageMaxHeight === null,
+                imageQuality: imageQuality,
+                imageMaxWidth: imageMaxWidth,
+                imageMaxHeight: imageMaxHeight,
                 error: function(r) {
                     var message = r.responseText,
                         name = this.files[0].name;
@@ -379,6 +377,32 @@
 
     };
 
+    ConcreteFileManager.prototype.setupImageThumbnails = function() {
+        $('.ccm-file-manager-list-thumbnail[data-hover-image]').each(function( e ){
+            var my = $(this);
+            my.popover({
+                animation: true,
+                html: true,
+                content: '<img class="img-responsive" src="'+my.data('hover-image')+'" alt="Thumbnail"/>',
+                container: 'body',
+                placement: 'auto',
+                trigger: 'manual'
+            });
+            $(this).hover(function(){
+                var image = new Image();
+                image.src = my.data('hover-image');
+                if (image.complete) {
+                    my.popover('toggle');
+                }
+                else {
+                    image.addEventListener('load', function() {
+                        my.popover('toggle');
+                    });
+                }
+            });
+        });
+    };
+
     ConcreteFileManager.prototype.showMenu = function($element, $menu, event) {
         var my = this;
         var concreteMenu = new ConcreteFileMenu($element, {
@@ -388,7 +412,6 @@
         });
         concreteMenu.show(event);
     };
-
 
     ConcreteFileManager.prototype.activateMenu = function($menu) {
         var my = this;
@@ -508,7 +531,7 @@
         my.setupFolders(result);
         my.setupBreadcrumb(result);
         my.setupRowDragging();
-
+        my.setupImageThumbnails();
         if (my.options.selectMode == 'choose') {
             my.$element.unbind('.concreteFileManagerHoverFile');
             my.$element.on('mouseover.concreteFileManagerHoverFile', 'tr[data-file-manager-tree-node-type]', function() {

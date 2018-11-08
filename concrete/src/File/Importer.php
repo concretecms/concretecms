@@ -418,7 +418,7 @@ class Importer
     public function importUploadedFile(UploadedFile $uploadedFile = null, $fr = false)
     {
         if ($uploadedFile === null) {
-            $result = E_PHP_NO_FILE;
+            $result = self::E_PHP_NO_FILE;
         } elseif (!$uploadedFile->isValid()) {
             $result = $uploadedFile->getError();
         } else {

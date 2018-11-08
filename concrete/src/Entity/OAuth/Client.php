@@ -2,10 +2,8 @@
 
 namespace Concrete\Core\Entity\OAuth;
 
-use League\OAuth2\Server\Entities\ClientEntityInterface;
-use League\OAuth2\Server\Entities\Traits\ClientTrait;
-use League\OAuth2\Server\Entities\Traits\EntityTrait;
 use Doctrine\ORM\Mapping as ORM;
+use League\OAuth2\Server\Entities\ClientEntityInterface;
 
 /**
  * @ORM\Entity(repositoryClass="ClientRepository")
@@ -16,9 +14,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Client implements ClientEntityInterface
 {
-
-    use EntityTrait, ClientTrait;
-
     /**
      * @ORM\Id @ORM\Column(type="guid")
      * @ORM\GeneratedValue(strategy="UUID")
@@ -50,6 +45,38 @@ class Client implements ClientEntityInterface
     protected $clientSecret;
 
     /**
+     * {@inheritdoc}
+     *
+     * @see \League\OAuth2\Server\Entities\ClientEntityInterface::getIdentifier()
+     */
+    public function getIdentifier()
+    {
+        return $this->identifier;
+    }
+
+    /**
+     * Set the client's identifier.
+     *
+     * @param string $identifier
+     */
+    public function setIdentifier($identifier)
+    {
+        $this->identifier = $identifier;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \League\OAuth2\Server\Entities\ClientEntityInterface::getName()
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set the client's name.
+     *
      * @param string $name
      */
     public function setName($name)
@@ -90,6 +117,18 @@ class Client implements ClientEntityInterface
     }
 
     /**
+     * {@inheritdoc}
+     *
+     * @see \League\OAuth2\Server\Entities\ClientEntityInterface::getRedirectUri()
+     */
+    public function getRedirectUri()
+    {
+        return $this->redirectUri;
+    }
+
+    /**
+     * Set the registered redirect URI (as a string), or an indexed array of redirect URIs.
+     *
      * @param string|string[] $redirectUri
      */
     public function setRedirectUri($redirectUri)

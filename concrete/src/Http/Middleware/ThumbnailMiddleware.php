@@ -73,8 +73,7 @@ class ThumbnailMiddleware implements MiddlewareInterface, ApplicationAwareInterf
         // if the thumbnail generator is async, we do not use the thumbnail middleware.
 
         if ($this->app->isInstalled() && $this->config->get('concrete.misc.basic_thumbnailer_generation_strategy') == 'now') {
-            if ($response->getStatusCode() == 200) {
-                /* @var Connection $database */
+            if ($response && $response->getStatusCode() == 200) {
                 try {
                     $database = $this->getConnection();
                 } catch (\InvalidArgumentException $e) {

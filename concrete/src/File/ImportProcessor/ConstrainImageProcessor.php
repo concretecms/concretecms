@@ -259,6 +259,7 @@ class ConstrainImageProcessor implements ProcessorInterface
         } elseif ($this->maxHeight !== null) {
             if ($imageSize->getHeight() > $this->maxHeight) {
                 $width = $this->maxHeight * $imageSize->getWidth() / $imageSize->getHeight();
+                $newBox = new Box($width, $this->maxHeight);
             }
         }
         if ($newBox !== null) {
@@ -268,6 +269,9 @@ class ConstrainImageProcessor implements ProcessorInterface
             $bitmapFormat = $this->app->make(BitmapFormat::class);
             $thumbnailType = $bitmapFormat->getFormatFromMimeType($mimetype, BitmapFormat::FORMAT_PNG);
             $thumbnailOptions = $bitmapFormat->getFormatImagineSaveOptions($thumbnailType);
+            if ($thumbnailType === BitmapFormat::FORMAT_GIF && $thumbnail->layers()->count() > 1) {
+                $thumbnailOptions['animated'] = true;
+            }
             $version->updateContents($thumbnail->get($thumbnailType, $thumbnailOptions), $this->rescanThumbnails);
         }
     }

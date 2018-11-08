@@ -34,6 +34,7 @@ class ImportFileImportantThumbnailTypesRoutine extends AbstractRoutine
                     $type->setSizingMode((string) $l['sizingMode']);
                 }
                 $type->setIsUpscalingEnabled(isset($l['upscalingEnabled']) && $l['upscalingEnabled']);
+                $type->setKeepAnimations(isset($l['keepAnimations']) && $l['keepAnimations']);
                 if (isset($l['width'])) {
                     $type->setWidth((string) $l['width']);
                 }

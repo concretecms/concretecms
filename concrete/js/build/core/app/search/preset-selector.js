@@ -15,7 +15,7 @@
         $('[data-search-preset-id]').on('click', function(e) {
             e.preventDefault();
             if (!$(e.target).is('button') && $(this).data('action')) {
-                $.fn.dialog.closeAll();
+                $.fn.dialog.closeTop();
                 my.ajaxUpdate($(this).data('action'));
                 my.$resetSearchButton.show();
                 my.$headerSearch.find('div.btn-group').hide();

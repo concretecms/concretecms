@@ -78,7 +78,7 @@ class SitemapHeader extends SitemapElement
     /**
      * @param bool $selfClosing
      *
-     * @return string[]
+     * @return string
      */
     protected function getUrlset($selfClosing)
     {

@@ -551,7 +551,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
                     $arguments = array_merge(array('/ccm/system/block/action/edit',
                         $c->getCollectionID(),
                         urlencode($this->getAreaObject()->getAreaHandle()),
-                        $this->block->getBLockID(),
+                        $this->block->getBlockID(),
                     ), func_get_args());
 
                     return call_user_func_array(array('\URL', 'to'), $arguments);

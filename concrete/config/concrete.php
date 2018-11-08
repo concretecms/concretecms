@@ -8,7 +8,7 @@ return [
      */
     'version' => '8.5.0a2',
     'version_installed' => '8.5.0a2',
-    'version_db' => '20180910000000', // the key of the latest database migration
+    'version_db' => '20181006212400', // the key of the latest database migration
 
     /*
      * Installation status
@@ -86,6 +86,13 @@ return [
         'extensions' => '*.flv;*.jpg;*.gif;*.jpeg;*.ico;*.docx;*.xla;*.png;*.psd;*.swf;*.doc;*.txt;*.xls;*.xlsx;' .
             '*.csv;*.pdf;*.tiff;*.rtf;*.m4a;*.mov;*.wmv;*.mpeg;*.mpg;*.wav;*.3gp;*.avi;*.m4v;*.mp4;*.mp3;*.qt;*.ppt;' .
             '*.pptx;*.kml;*.xml;*.svg;*.webm;*.ogg;*.ogv',
+
+        'chunking' => [
+            // Enable uploading files in chunks?
+            'enabled' => true,
+            // The chunk size (if empty we'll automatically determine it)
+            'chunkSize' => null,
+        ],
     ],
 
     /*
@@ -523,6 +530,18 @@ return [
             'use_exif_data_to_rotate_images' => false,
             'manipulation_library' => 'gd',
             'create_high_dpi_thumbnails' => true,
+            /*
+             * The style of preview image used in the file_manager
+             *
+             * @var string 'small'(default,30x30), 'large(60x60)' or 'full(size of file_manager_listing)'
+             */
+            'preview_image_size' => 'small',
+            /*
+             * Show file_manager_detail thumbnail as preview image in popover
+             *
+             * @var boolean
+             */
+            'preview_image_popover' => true
         ],
         'results' => 10,
     ],

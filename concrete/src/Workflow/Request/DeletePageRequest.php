@@ -65,7 +65,7 @@ class DeletePageRequest extends PageRequest
             $c = Stack::getByID($this->getRequestedPageID());
             $c->delete();
             $wpr = new WorkflowProgressResponse();
-            $wpr->setWorkflowProgressResponseURL(URL::to('/dashboard/blocks/stacks', 'stack_deleted'));
+            $wpr->setWorkflowProgressResponseURL(URL::to(STACKS_LISTING_PAGE_PATH, 'stack_deleted'));
 
             return $wpr;
         }

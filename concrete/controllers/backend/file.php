@@ -308,32 +308,110 @@ class File extends Controller
             throw new UserMessageException(Importer::getErrorMessage($file->getError()));
         }
         $cf = $this->app->make('helper/file');
-        $name = $file->getClientOriginalName();
-        $tmp_name = $file->getPathname();
 
+        $file = $this->getFileToImport($file, $deleteFile);
         $files = [];
-        if (is_object($folder)) {
-            $fp = new ConcretePermissions($folder);
-        } else {
-            $fp = FilePermissions::getGlobal();
-        }
-        if (!$fp->canAddFileType($cf->getExtension($name))) {
-            throw new UserMessageException(Importer::getErrorMessage(Importer::E_FILE_INVALID_EXTENSION), 403);
-        } else {
-            $importer = new Importer();
-            $response = $importer->import($tmp_name, $name, $folder);
-        }
-        if (!$response instanceof FileVersionEntity) {
-            throw new UserMessageException(Importer::getErrorMessage($response), 400);
-        } else {
-            $file = $response->getFile();
-            if ($this->request->request->has('ocID')) {
-                // we check $fr because we don't want to set it if we are replacing an existing file
-                $file->setOriginalPage($this->request->request->get('ocID'));
-            }
-            $files[] = $file->getJSONObject();
+        if ($file === null) {
+            return $files;
         }
 
-        return $files;
+        try {
+            $name = $file->getClientOriginalName();
+            $tmp_name = $file->getPathname();
+    
+            if (is_object($folder)) {
+                $fp = new ConcretePermissions($folder);
+            } else {
+                $fp = FilePermissions::getGlobal();
+            }
+            if (!$fp->canAddFileType($cf->getExtension($name))) {
+                throw new UserMessageException(Importer::getErrorMessage(Importer::E_FILE_INVALID_EXTENSION), 403);
+            } else {
+                $importer = new Importer();
+                $response = $importer->import($tmp_name, $name, $folder);
+            }
+            if (!$response instanceof FileVersionEntity) {
+                throw new UserMessageException(Importer::getErrorMessage($response), 400);
+            } else {
+                $fileEntity = $response->getFile();
+                if ($this->request->request->has('ocID')) {
+                    // we check $fr because we don't want to set it if we are replacing an existing file
+                    $fileEntity->setOriginalPage($this->request->request->get('ocID'));
+                }
+                $files[] = $fileEntity->getJSONObject();
+            }
+    
+            return $files;
+        } finally {
+            if ($deleteFile) {
+                @unlink($file->getPathname());
+            }
+        }
+    }
+
+    /**
+     * @param \Symfony\Component\HttpFoundation\File\UploadedFile $file
+     * @param bool $deleteFile output parameter that's set to true if the uploaded file should be deleted manually
+     *
+     * @return \Symfony\Component\HttpFoundation\File\UploadedFile|null
+     */
+    private function getFileToImport(UploadedFile $file, &$deleteFile)
+    {
+        $deleteFile = false;
+        $post = $this->request->request;
+        $dzuuid = $post->get('dzuuid');
+        $dzIndex = $post->get('dzchunkindex');
+        $dzTotalChunks = $post->get('dztotalchunkcount');
+        if ($dzuuid !== null && $dzIndex !== null && $dzTotalChunks !== null) {
+            $file->move($file->getPath(), $dzuuid.$dzIndex);
+            if ($this->isFullChunkFilePresent($dzuuid, $file->getPath(), $dzTotalChunks)) {
+                $deleteFile = true;
+                return $this->combineFileChunks($dzuuid, $file->getPath(), $dzTotalChunks, $file);
+            } else {
+                return null;
+            }
+        } else {
+            return $file;
+        }
+    }
+
+    /**
+     * @param string $fileUuid
+     * @param string $tempPath
+     * @param int $totalChunks
+     *
+     * @return boolean
+     */
+    private function isFullChunkFilePresent($fileUuid, $tempPath, $totalChunks)
+    {
+        for ($i = 0; $i < $totalChunks; $i++) {
+            if (!file_exists($tempPath . DIRECTORY_SEPARATOR . $fileUuid . $i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * @param string $fileUuid
+     * @param string $tempPath
+     * @param int $totalChunks
+     * @param \Symfony\Component\HttpFoundation\File\UploadedFile $originalFile
+     *
+     * @return \Symfony\Component\HttpFoundation\File\UploadedFile
+     */
+    private function combineFileChunks($fileUuid, $tempPath, $totalChunks, UploadedFile $originalFile)
+    {
+        $finalFilePath = $tempPath . DIRECTORY_SEPARATOR . $fileUuid;
+        $finalFile = fopen($finalFilePath, 'wb');
+        for ($i = 0; $i < $totalChunks; $i++) {
+            $chunkFile = $tempPath . DIRECTORY_SEPARATOR . $fileUuid . $i;
+            $addition = fopen($chunkFile, 'rb');
+            stream_copy_to_stream($addition, $finalFile);
+            fclose($addition);
+            unlink($chunkFile);
+        }
+        fclose($finalFile);
+        return new UploadedFile($finalFilePath, $originalFile->getClientOriginalName());
     }
 }

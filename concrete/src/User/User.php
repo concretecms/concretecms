@@ -89,7 +89,7 @@ class User extends ConcreteObject
 
         $aeu = $config->get('concrete.misc.access_entity_updated');
         if ($aeu && $aeu > $session->get('accessEntitiesUpdated')) {
-            self::refreshUserGroups();
+            $this->refreshUserGroups();
         }
 
         $invalidate = $app->make('Concrete\Core\Session\SessionValidatorInterface')->handleSessionValidation($session);

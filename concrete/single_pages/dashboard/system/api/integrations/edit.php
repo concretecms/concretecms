@@ -1,5 +1,9 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
-
+<?php
+/**
+ * @var \Concrete\Core\Entity\OAuth\Client $client
+ */
+?>
 
 <form method="post" class="ccm-dashboard-content-form" action="<?=$view->action('update', $client->getIdentifier())?>">
     <?=$this->controller->token->output('update')?>
@@ -9,6 +13,14 @@
             <label for="name" class="control-label"><?php echo t('Name'); ?></label>
             <div class="input-group">
                 <?php echo $form->text('name', $client->getName(), array('autofocus' => 'autofocus', 'autocomplete' => 'off')); ?>
+                <span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="redirect" class="control-label"><?php echo t('Redirect'); ?></label>
+            <div class="input-group">
+                <?php echo $form->text('redirect', $client->getRedirectUri(), array('autofocus' => 'autofocus', 'autocomplete' => 'off')); ?>
                 <span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
             </div>
         </div>

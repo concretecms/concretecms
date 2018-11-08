@@ -983,7 +983,6 @@ class Version implements ObjectInterface
      */
     public function buildForceDownloadResponse()
     {
-        $app = Application::getFacadeApplication();
         $fre = $this->getFileResource();
 
         $fs = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
@@ -1069,7 +1068,6 @@ class Version implements ObjectInterface
     {
         $app = Application::getFacadeApplication();
         $importer = new Importer();
-        $fi = $app->make('helper/file');
         $cf = $app->make('helper/concrete/file');
         $filesystem = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
         $fileName = $this->getFileName();
@@ -1486,10 +1484,19 @@ class Version implements ObjectInterface
         $thumbnail = $imageForThumbnail->thumbnail($size, $thumbnailMode);
         unset($imageForThumbnail);
         $thumbnailPath = $type->getFilePath($this);
-        $thumbnailFormat = $app->make(ThumbnailFormatService::class)->getFormatForFile($this);
+        if ($type->isKeepAnimations() && $thumbnail->layers()->count() > 1) {
+            $isAnimation = true;
+            $thumbnailFormat = BitmapFormat::FORMAT_GIF;
+        } else {
+            $thumbnailFormat = $app->make(ThumbnailFormatService::class)->getFormatForFile($this);
+            $isAnimation = false;
+        }
 
         $mimetype = $bitmapFormat->getFormatMimeType($thumbnailFormat);
         $thumbnailOptions = $bitmapFormat->getFormatImagineSaveOptions($thumbnailFormat);
+        if ($isAnimation) {
+            $thumbnailOptions['animated'] = true;
+        }
 
         $filesystem->write(
             $thumbnailPath,
@@ -1663,10 +1670,14 @@ class Version implements ObjectInterface
         if ($this->fvHasListingThumbnail) {
             $app = Application::getFacadeApplication();
             $config = $app->make('config');
-            $type = Type::getByHandle($config->get('concrete.icons.file_manager_listing.handle'));
-            $result = '<img class="ccm-file-manager-list-thumbnail" src="' . $this->getThumbnailURL($type->getBaseVersion()) . '"';
+            $listingType = Type::getByHandle($config->get('concrete.icons.file_manager_listing.handle'));
+            $detailType = Type::getByHandle($config->get('concrete.icons.file_manager_detail.handle'));
+            $result = '<img class="ccm-file-manager-list-thumbnail ccm-thumbnail-'.$config->get('concrete.file_manager.images.preview_image_size').'" src="' . $this->getThumbnailURL($listingType->getBaseVersion()) . '"';
             if ($config->get('concrete.file_manager.images.create_high_dpi_thumbnails')) {
-                $result .= '  data-at2x="' . $this->getThumbnailURL($type->getDoubledVersion()) . '"';
+                $result .= ' data-at2x="' . $this->getThumbnailURL($listingType->getDoubledVersion()) . '"';
+            }
+            if($config->get('concrete.file_manager.images.preview_image_popover')){
+                $result .= ' data-hover-image="'.$this->getThumbnailURL($detailType->getBaseVersion()).'"';
             }
             $result .= ' />';
         } else {

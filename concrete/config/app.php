@@ -140,6 +140,7 @@ return [
         'core_oauth' => '\Concrete\Core\Authentication\Type\OAuth\ServiceProvider',
         'core_auth_community' => '\Concrete\Core\Authentication\Type\Community\ServiceProvider',
         'core_auth_google' => '\Concrete\Core\Authentication\Type\Google\ServiceProvider',
+        'core_auth_external_concrete5' => '\Concrete\Core\Authentication\Type\ExternalConcrete5\ServiceProvider',
 
         // Validator
         'core_validator' => '\Concrete\Core\Validator\ValidatorServiceProvider',
@@ -1169,11 +1170,10 @@ return [
     ],
 
     'api' => [
-
         'scopes' => [
-
             'system',
-            'site'
+            'site',
+            'account'
         ]
     ],
 

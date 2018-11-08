@@ -5,6 +5,7 @@ use Concrete\Core\Cache\Adapter\ZendCacheDriver;
 use Concrete\Core\Localization\Translator\Translation\TranslationLoaderRepositoryInterface;
 use Concrete\Core\Localization\Translator\TranslatorAdapterFactoryInterface;
 use Zend\I18n\Translator\Translator;
+use Zend\I18n\Translator\LoaderPluginManager;
 
 /**
  * Provides a factory method to create translator objects for the Zend
@@ -18,11 +19,17 @@ class TranslatorAdapterFactory implements TranslatorAdapterFactoryInterface
     protected $translationLoaderRepository;
 
     /**
+     * @var \Zend\I18n\Translator\LoaderPluginManager|null
+     */
+    protected $loaderPluginManager;
+
+    /**
      * {@inheritdoc}
      */
-    public function __construct(TranslationLoaderRepositoryInterface $translationLoaderRepository = null)
+    public function __construct(TranslationLoaderRepositoryInterface $translationLoaderRepository = null, LoaderPluginManager $loaderPluginManager = null)
     {
         $this->translationLoaderRepository = $translationLoaderRepository;
+        $this->loaderPluginManager = $loaderPluginManager;
     }
 
     /**
@@ -33,6 +40,9 @@ class TranslatorAdapterFactory implements TranslatorAdapterFactoryInterface
         $cache = new ZendCacheDriver('cache/expensive');
 
         $t = new Translator();
+        if ($this->loaderPluginManager !== null) {
+            $t->setPluginManager($this->loaderPluginManager);
+        }
         $t->setCache($cache);
 
         $adapter = new TranslatorAdapter($t);

@@ -2,9 +2,8 @@
 
 namespace Concrete\Core\Entity\OAuth;
 
-use League\OAuth2\Server\Entities\ScopeEntityInterface;
-use League\OAuth2\Server\Entities\Traits\EntityTrait;
 use Doctrine\ORM\Mapping as ORM;
+use League\OAuth2\Server\Entities\ScopeEntityInterface;
 
 /**
  * @ORM\Entity(repositoryClass="ScopeRepository")
@@ -14,14 +13,17 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Scope implements ScopeEntityInterface
 {
-
-    use EntityTrait;
-
     /**
      * @var string
      * @ORM\Id @ORM\Column(type="string")
      */
     protected $identifier;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string")
+     */
+    protected $description = '';
 
     /**
      * @ORM\ManyToMany(targetEntity="AuthCode", mappedBy="scopes")
@@ -34,7 +36,44 @@ class Scope implements ScopeEntityInterface
     protected $tokens;
 
     /**
-     * Serialize into a string
+     * {@inheritdoc}
+     *
+     * @see \League\OAuth2\Server\Entities\ScopeEntityInterface::getIdentifier()
+     */
+    public function getIdentifier()
+    {
+        return $this->identifier;
+    }
+
+    /**
+     * @param string $identifier
+     */
+    public function setIdentifier($identifier)
+    {
+        $this->identifier = $identifier;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string $description
+     */
+    public function setDescription($description)
+    {
+        $this->description = (string) $description;
+    }
+
+    /**
+     * Serialize this scope into a string.
+     * This method MUST return a string and must match the scope ID that clients will request
+     *
+     * @return string
      */
     public function jsonSerialize()
     {

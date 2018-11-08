@@ -1,5 +1,32 @@
 # 8.5.0
 
+# 8.4.3 
+
+## Behavioral Improvements
+
+* The word ‘Action’ is now properly localized in in-page notifications (thanks mlocati)
+* The icon of external links now more clearly distinguishes them from page aliases (thanks mlocati)
+* Create collection handle when aliasing the homepage (thanks mlocati)
+
+## Bug Fixes
+
+* Bug Fix: Tags block - support mixed case tag names when setting selected tag class (thanks MrKarlDilkington)
+* Fixed bug where archived notification alerts were showing up in Waiting for Me.
+* Fix PHP 7.2 count error in Calendar Dashboard Colors system page (thanks altinkonline)
+* Fix Page::movePageDisplayOrderToSibling() when working with aliases (thanks mlocati)
+* Fixed incorrectly returning object instead of text string when working with textarea attributes under some circumstances.
+* Fixed Exception in Marketplace.php after site/project has been removed from community account
+* Fixed accidentally deleting all FileSets when deleting a user (thanks deek87)
+* Fix alternative canonical URL not installing properly when set during installation (thanks a3020)
+* Fixed: Deactivating users in bulk fails in 8.4.2 when a workflow is attached to the permission.
+* Fixed Express Entry association view on owned element when creating elements showing a list of all entries instead of none.
+* Fixing permission checker on image_uploading / thumbnail options page (thanks deek87)
+* Fix package installer not checking dependencies on other packages (thanks acohin)
+* Avoid errors in editing express entry detail block on PHP 7.2 under certain circumstances (thanks hissy)
+* Fixed: Datepicker options has no effect in 8.4.2 (thanks alexeytrusov)
+* Require pagination asset from express entry list block (thanks hissy)
+
+
 # 8.4.2
 
 ## Feature Updates
@@ -24,7 +51,7 @@
 * Fixed inability to upgrade to 8.4.1 from 5.7.5.13.
 * Fix JavascriptLocalizedAsset::getAssetContents when concrete5 is installed in subdirectory (thanks mlocati)
 * Fix infinite redirection visiting existing dirs when seo.trailing_slash is false (thanks mlocati)
-* Fixed: Duplicated seo.trailing_slash definition (thanks mlocati)
+* Fixed: Duplicated seo.trailing\_slash definition (thanks mlocati)
 * Made it impossible to store XSS in calendar event names.
 
 ## Developer Updates
