@@ -479,6 +479,12 @@ return [
             'enable_cross_origin' => false,
             'anonymous_request' => true,
         ],
+        /*
+         * Check whether to add a "generator" tag with the concrete5 version to the site pages
+         *
+         * @var bool
+         */
+        'generator_tag_display_in_header' => true,
     ],
 
     'theme' => [
