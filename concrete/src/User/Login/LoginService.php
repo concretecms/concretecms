@@ -182,7 +182,7 @@ class LoginService
     /**
      * Change the user class used to validate the given credentials
      *
-     * @param $userClass
+     * @param string $userClass
      *
      * @deprecated This will be removed once the User class is no longer in charge of negotiating login ~9.0
      */

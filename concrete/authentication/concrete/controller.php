@@ -2,12 +2,10 @@
 namespace Concrete\Authentication\Concrete;
 
 use Concrete\Core\Authentication\AuthenticationTypeController;
-use Concrete\Core\Authentication\LoginException;
+use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\Exception\FailedLoginThresholdExceededException;
 use Concrete\Core\User\Exception\InvalidCredentialsException;
-use Concrete\Core\User\Exception\NotActiveException;
-use Concrete\Core\User\Exception\NotValidatedException;
 use Concrete\Core\User\Exception\UserDeactivatedException;
 use Concrete\Core\User\Exception\UserException;
 use Concrete\Core\User\Login\LoginService;
@@ -340,7 +338,7 @@ class Controller extends AuthenticationTypeController
         }
 
         if ($user->isError()) {
-            throw new \RuntimeException(t('Unknown login error occurred. Please try again.'));
+            throw new UserMessageException(t('Unknown login error occurred. Please try again.'));
         }
 
         if (isset($post['uMaintainLogin']) && $post['uMaintainLogin']) {

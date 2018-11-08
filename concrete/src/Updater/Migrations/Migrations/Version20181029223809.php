@@ -13,10 +13,8 @@ use Doctrine\DBAL\Schema\Schema;
  */
 class Version20181029223809 extends AbstractMigration implements RepeatableMigrationInterface
 {
-    /**
-     * @param Schema $schema
-     */
-    public function upgradeSchema(Schema $schema)
+
+    public function upgradeDatabase()
     {
         $this->refreshEntities([
             LoginAttempt::class,
@@ -24,10 +22,7 @@ class Version20181029223809 extends AbstractMigration implements RepeatableMigra
         ]);
     }
 
-    /**
-     * @param Schema $schema
-     */
-    public function downgradeSchema(Schema $schema)
+    public function downgradeDatabase()
     {
         $this->refreshEntities();
     }

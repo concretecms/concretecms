@@ -58,9 +58,14 @@ class UserServiceProvider extends ServiceProvider
      */
     public function handleEvent(Event $event, UserNotificationEventHandler $service)
     {
+        // If our event is the wrong type, just do a null/void return
+        if (!$event instanceof DeactivateUser) {
+            return;
+        }
+
         $entity = $event->getUserEntity();
 
-        if ($event instanceof DeactivateUser && $entity) {
+        if ($entity) {
             $service->deactivated($event);
         }
     }

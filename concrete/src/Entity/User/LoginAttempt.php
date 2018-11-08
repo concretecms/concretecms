@@ -1,6 +1,8 @@
 <?php
 
 namespace Concrete\Core\Entity\User;
+use Carbon\Carbon;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -30,7 +32,7 @@ class LoginAttempt
     /**
      * The datetime of the time the login happened. This date must be in UTC
      *
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="integer")
      */
     protected $utcDate;
 
@@ -73,11 +75,11 @@ class LoginAttempt
     }
 
     /**
-     * @return mixed
+     * @return \DateTime
      */
     public function getUtcDate()
     {
-        return $this->utcDate;
+        return Carbon::createFromTimestampUTC($this->utcDate);
     }
 
     /**
@@ -85,9 +87,9 @@ class LoginAttempt
      *
      * @return LoginAttempt
      */
-    public function setUtcDate($utcDate)
+    public function setUtcDate(DateTime $utcDate)
     {
-        $this->utcDate = $utcDate;
+        $this->utcDate = $utcDate->getTimestamp();
         return $this;
     }
 
