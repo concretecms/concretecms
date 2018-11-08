@@ -19,6 +19,7 @@ class LoginAttempt
      *
      * @ORM\Id @ORM\Column(type="guid")
      * @ORM\GeneratedValue(strategy="UUID")
+     * @var string
      */
     protected $id;
 
@@ -26,6 +27,7 @@ class LoginAttempt
      * The user ID that a login was attempted for
      *
      * @ORM\Column(type="integer", options={"unsigned": true})
+     * @var int
      */
     protected $userId;
 
@@ -33,11 +35,12 @@ class LoginAttempt
      * The datetime of the time the login happened. This date must be in UTC
      *
      * @ORM\Column(type="integer")
+     * @var int
      */
     protected $utcDate;
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getId()
     {
@@ -45,7 +48,7 @@ class LoginAttempt
     }
 
     /**
-     * @param mixed $id
+     * @param string $id
      *
      * @return LoginAttempt
      */
@@ -56,7 +59,7 @@ class LoginAttempt
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getUserId()
     {
@@ -64,7 +67,7 @@ class LoginAttempt
     }
 
     /**
-     * @param mixed $userId
+     * @param int $userId
      *
      * @return LoginAttempt
      */
@@ -83,7 +86,7 @@ class LoginAttempt
     }
 
     /**
-     * @param mixed $utcDate
+     * @param \DateTime $utcDate
      *
      * @return LoginAttempt
      */
