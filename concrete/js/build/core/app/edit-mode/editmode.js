@@ -135,6 +135,7 @@
                 // need the file manager menu when editing block design.
 //              ConcreteMenuManager.disable();
                 ConcreteToolbar.disable();
+                ConcreteMenuManager.$clickProxy.hide();
                 $('div.ccm-area').addClass('ccm-area-inline-edit-disabled');
                 block.getElem().addClass('ccm-block-edit-inline-active');
 
@@ -199,6 +200,7 @@
                 ConcreteToolbar.disable();
                 $.fn.dialog.closeAll();
 
+                ConcreteMenuManager.$clickProxy.hide();
                 $('div.ccm-area').addClass('ccm-area-inline-edit-disabled');
 
                 $.fn.dialog.showLoader();
@@ -625,6 +627,7 @@
             ConcreteMenuManager.enable();
             $('div.ccm-area-edit-inline-active').removeClass('ccm-area-edit-inline-active');
             $('div.ccm-block-edit-inline-active').remove();
+            ConcreteMenuManager.$clickProxy.show();
             $('div.ccm-area').removeClass('ccm-area-inline-edit-disabled');
             $('#ccm-toolbar').css('opacity', 1);
             $('#ccm-inline-toolbar-container').remove();
