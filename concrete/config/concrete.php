@@ -548,8 +548,8 @@ return [
              * @var boolean
              */
             'preview_image_popover' => true,
-            // SVG sanification
-            'svg_sanification' => [
+            // SVG sanitization
+            'svg_sanitization' => [
                 // Enable the SVG sanitification?
                 'enabled' => true,
                 // Space-separated list of tags to be kept
