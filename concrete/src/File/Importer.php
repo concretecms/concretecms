@@ -151,13 +151,10 @@ class Importer
             $this->addImportProcessor($processor);
         }
         if ($config->get('concrete.file_manager.images.svg_sanification.enabled')) {
-            $processor = $this->app->build(
-                SvgSanitizerProcessor::class,
-                [
-                    'sanitizerOptions' => SanitizerOptions::create()
-                        ->setElementWhitelist($config->get('concrete.file_manager.images.svg_sanification.allowed-tags'))
-                        ->setAttributeWhitelist($config->get('concrete.file_manager.images.svg_sanification.allowed-attributes')),
-                ]
+            $processor = $this->app->build(SvgSanitizerProcessor::class);
+            $processor->setSanitizerOptions(SanitizerOptions::create()
+                ->setElementWhitelist($config->get('concrete.file_manager.images.svg_sanification.allowed-tags'))
+                ->setAttributeWhitelist($config->get('concrete.file_manager.images.svg_sanification.allowed-attributes'))
             );
             $this->addImportProcessor($processor);
         }
