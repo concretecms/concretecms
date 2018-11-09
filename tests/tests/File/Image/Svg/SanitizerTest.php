@@ -22,7 +22,8 @@ class SanitizerTest extends PHPUnit_Framework_TestCase
     {
         parent::setUpBeforeClass();
         self::$sanitizer = new Sanitizer();
-        self::$sanitizerOptions = SanitizerOptions::create()
+        self::$sanitizerOptions = new SanitizerOptions();
+        self::$sanitizerOptions
             ->setUnsafeElements('script script2')
             ->setElementWhitelist('script2')
             ->setUnsafeAttributes('onload onload2 onclick')

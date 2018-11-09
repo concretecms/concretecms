@@ -60,16 +60,6 @@ class SanitizerOptions
     }
 
     /**
-     * Create a new instance.
-     *
-     * @return static
-     */
-    public static function create()
-    {
-        return new static();
-    }
-
-    /**
      * Get the list of unsafe XML elements.
      *
      * @return string[]
