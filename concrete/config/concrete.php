@@ -858,6 +858,11 @@ return [
             'login' => [
                 'threshold' => 120, // in days
             ],
+            'authentication_failure' => [
+                'enabled' => false,
+                'amount' => 5, // The number of failures
+                'duration' => 300 // In so many seconds
+            ],
             'message' => 'This user is inactive. Please contact us regarding this account.',
         ],
     ],
