@@ -19,47 +19,20 @@ class SvgSanitizerProcessor implements ProcessorInterface
     /**
      * SVG sanitizer options.
      *
-     * @var \Concrete\Core\File\Image\Svg\SanitizerOptions|null
+     * @var \Concrete\Core\File\Image\Svg\SanitizerOptions
      */
-    private $sanitizerOptions;
+    protected $sanitizerOptions;
 
     /**
      * Initialize the instance.
      *
      * @param \Concrete\Core\File\Image\Svg\Sanitizer $sanitizer
+     * @param SanitizerOptions $sanitizerOptions
      */
-    public function __construct(Sanitizer $sanitizer)
+    public function __construct(Sanitizer $sanitizer, SanitizerOptions $sanitizerOptions)
     {
         $this->sanitizer = $sanitizer;
-    }
-
-    /**
-     * Set the sanitizer options.
-     *
-     * @param \Concrete\Core\File\Image\Svg\SanitizerOptions $options
-     *
-     * @return $this
-     */
-    public function setSanitizerOptions(SanitizerOptions $options)
-    {
-        $this->sanitizerOptions = $options;
-
-        return $this;
-    }
-
-    /**
-     * Get the sanitizer options.
-     * If the options weren't previously set, we'll create a new options instance with the default values.
-     *
-     * @return \Concrete\Core\File\Image\Svg\SanitizerOptions
-     */
-    public function getSanitizerOptions()
-    {
-        if ($this->sanitizerOptions === null) {
-            $this->sanitizerOptions = SanitizerOptions::create();
-        }
-
-        return $this->sanitizerOptions;
+        $this->sanitizerOptions = $sanitizerOptions;
     }
 
     /**
@@ -87,7 +60,7 @@ class SvgSanitizerProcessor implements ProcessorInterface
     {
         $resource = $version->getFileResource();
         $originalData = $resource->read();
-        $sanitizedData = $this->sanitizer->sanitizeData($originalData, $this->getSanitizerOptions());
+        $sanitizedData = $this->sanitizer->sanitizeData($originalData, $this->sanitizerOptions);
         if ($sanitizedData !== $originalData) {
             $version->updateContents($sanitizedData);
         }
