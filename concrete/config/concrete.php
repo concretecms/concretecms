@@ -461,6 +461,12 @@ return [
          */
         'default_thumbnail_format' => 'auto',
         /*
+         * The threshold (total number of pixels - width x height x number of frames)
+         * after which we'll reload images instead of creating in-memory clones.
+         * If empty: unlimited 
+         */
+        'inplace_image_operations_limit' => 4194304,
+        /*
          * @var string (now|async)
          */
         'basic_thumbnailer_generation_strategy' => 'now',
