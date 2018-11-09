@@ -49,6 +49,7 @@ class SvgSanitizerProcessor implements ProcessorInterface
 
     /**
      * Get the sanitizer options.
+     * If the options weren't previously set, we'll create a new options instance with the default values.
      *
      * @return \Concrete\Core\File\Image\Svg\SanitizerOptions
      */
@@ -62,6 +63,8 @@ class SvgSanitizerProcessor implements ProcessorInterface
     }
 
     /**
+     * Check if a file version should be processed (it must be an SVG image).
+     *
      * {@inheritdoc}
      *
      * @see \Concrete\Core\File\ImportProcessor\ProcessorInterface::shouldProcess()
@@ -74,6 +77,8 @@ class SvgSanitizerProcessor implements ProcessorInterface
     }
 
     /**
+     * Remove potentially harmful elements and attributes from the SVG image.
+     *
      * {@inheritdoc}
      *
      * @see \Concrete\Core\File\ImportProcessor\ProcessorInterface::process()

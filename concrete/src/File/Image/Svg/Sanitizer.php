@@ -73,6 +73,8 @@ class Sanitizer
     }
 
     /**
+     * Create a DOMDocument instance from a string.
+     *
      * @param string $data
      *
      * @throws \Concrete\Core\File\Image\Svg\SanitizerException in case of errors
