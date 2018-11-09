@@ -122,7 +122,7 @@ $singleOriginalPage = $dragRequestData->getSingleOriginalPage();
                                 if ($singleOriginalPage !== null) {
                                     echo h(t('Copy "%1$s" beneath "%2$s"', $singleOriginalPage->getCollectionName(), $dragRequestData->getDestinationPage()->getCollectionName()));
                                 } else {
-                                    echo h(t('Copy pages beneath "$s"', $dragRequestData->getDestinationPage()->getCollectionName()));
+                                    echo h(t('Copy pages beneath "%s"', $dragRequestData->getDestinationPage()->getCollectionName()));
                                 }
                                 ?>
                             </label>
