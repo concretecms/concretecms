@@ -276,7 +276,6 @@ return [
     'routes' => [
     ],
 
-
 /*
  * Route themes
  */
@@ -635,9 +634,9 @@ return [
         'core/calendar/admin' => [
             ['javascript', 'js/calendar/admin.js', ['minify' => false]],
         ],
-		'core/avatar' => [
-			['javascript', 'js/components/avatar.bundle.js', ['minify' => false]],
-		],
+        'core/avatar' => [
+            ['javascript', 'js/components/avatar.bundle.js', ['minify' => false]],
+        ],
         'core/notification' => [
             ['javascript', 'js/notification.js', ['minify' => false]],
         ],
@@ -717,7 +716,7 @@ return [
                 ['javascript', 'moment'],
                 ['javascript', 'fullcalendar'],
                 ['javascript', 'fullcalendar/localization'],
-                ['css', 'fullcalendar']
+                ['css', 'fullcalendar'],
             ],
         ],
         'dropzone' => [
@@ -738,11 +737,11 @@ return [
                 ['javascript', 'ace'],
             ],
         ],
-		'core/avatar' => [
-			[
-				['javascript', 'core/avatar'],
-			],
-		],
+        'core/avatar' => [
+            [
+                ['javascript', 'core/avatar'],
+            ],
+        ],
         'core/notification' => [
             [
                 ['javascript', 'core/notification'],
@@ -1123,7 +1122,7 @@ return [
             [
                 ['javascript', 'jquery'],
                 ['javascript', 'core/country-stateprovince-link'],
-            ]
+            ],
         ],
         /* @deprecated keeping this around because certain themes reference it and we don't want to break them. */
         'core/legacy' => [
@@ -1181,8 +1180,8 @@ return [
         'scopes' => [
             'system',
             'site',
-            'account'
-        ]
+            'account',
+        ],
     ],
 
     // HTTP middleware for processing http requests
