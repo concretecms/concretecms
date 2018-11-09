@@ -114,10 +114,14 @@ class Sanitizer
                     $element->removeAttribute($attribute->name);
                 }
             }
-            foreach ($element->childNodes as $childElement) {
-                if ($childElement instanceof DOMElement) {
-                    $this->processNode($childElement, $options);
+            $childElements = [];
+            foreach ($element->childNodes as $childNode) {
+                if ($childNode instanceof DOMElement) {
+                    $childElements[] = $childNode;
                 }
+            }
+            foreach ($childElements as $childElement) {
+                $this->processNode($childElement, $options);
             }
         }
     }

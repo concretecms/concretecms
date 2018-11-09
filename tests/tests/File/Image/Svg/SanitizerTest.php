@@ -29,6 +29,7 @@ class SanitizerTest extends PHPUnit_Framework_TestCase
             ['<svg><script>alert(1);</script></svg>', '<svg/>'],
             ['<svg onload="alert(1)" />', '<svg/>'],
             ['<svg foo="1" onload="alert(1)" bar="2" />', '<svg foo="1" bar="2"/>'],
+            ['<svg><script></script><g onLoad="alert(1)"><rect /></g></svg>', '<svg><g><rect/></g></svg>'],
         ];
     }
 
@@ -60,12 +61,13 @@ class SanitizerTest extends PHPUnit_Framework_TestCase
     public function provideInvalidData()
     {
         return [
-            ['<svg']
+            ['<svg'],
         ];
     }
-    
+
     /**
      * @expectedException Concrete\Core\File\Image\Svg\SanitizerException
+     *
      * @param mixed $invalidSvgData
      * @dataProvider provideInvalidData
      */
