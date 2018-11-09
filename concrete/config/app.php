@@ -307,7 +307,7 @@ return [
         'HTML' => ['htm,html', FileType::T_IMAGE],
         'Flash' => ['swf', FileType::T_IMAGE, 'image'],
         'Icon' => ['ico', FileType::T_IMAGE],
-        'SVG' => ['svg', FileType::T_IMAGE],
+        'SVG' => ['svg', FileType::T_IMAGE, false, 'image'],
         'Windows Video' => ['asf,wmv', FileType::T_VIDEO, false, 'video'],
         'Quicktime' => ['mov,qt', FileType::T_VIDEO, false, 'video'],
         'AVI' => ['avi', FileType::T_VIDEO, false, 'video'],
