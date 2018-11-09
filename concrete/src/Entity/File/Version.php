@@ -1685,6 +1685,16 @@ class Version implements ObjectInterface
             if($config->get('concrete.file_manager.images.preview_image_popover')){
                 $result .= ' data-hover-image="'.$this->getThumbnailURL($detailType->getBaseVersion()).'"';
             }
+            if ($this->getTypeObject()->isSVG()) {
+                $maxWidth = $detailType->getWidth();
+                if ($maxWidth) {
+                    $result .= ' data-hover-maxwidth="'.$maxWidth.'px"';
+                }
+                $maxHeight = $detailType->getHeight();
+                if ($maxHeight) {
+                    $result .= ' data-hover-maxheight="'.$maxHeight.'px"';
+                }
+            }
             $result .= ' />';
         } else {
             return $this->getTypeObject()->getThumbnail();
