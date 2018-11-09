@@ -297,6 +297,14 @@ return [
 
     /*
      * File Types
+     * Keys are the type name
+     * Values are arrays with:
+     * - comma-separated extensions
+     * - file type
+     * - handle of an importer (or false)
+     * - handle of the inline viewer (of false)
+     * - handle of the editor
+     * - handle of the package
      */
     'file_types' => [
         'JPEG' => ['jpg,jpeg,jpe', FileType::T_IMAGE, 'image', 'image', 'image'],
