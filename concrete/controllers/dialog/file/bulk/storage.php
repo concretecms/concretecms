@@ -5,8 +5,13 @@ use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Concrete\Core\File\EditResponse;
 use Concrete\Core\File\File;
 use Concrete\Core\File\Set\Set;
-use Concrete\Core\File\StorageLocation\StorageLocation as FileStorageLocation;
+use Concrete\Core\File\StorageLocation\StorageLocationFactory;
+use Concrete\Core\Foundation\Queue\QueueService;
+use Concrete\Core\Http\ResponseFactoryInterface;
+use Concrete\Core\View\View;
 use Permissions;
+use Exception;
+use stdClass;
 
 class Storage extends BackendInterfaceController
 {
@@ -54,47 +59,66 @@ class Storage extends BackendInterfaceController
 
     public function view()
     {
+        $locations = $this->app->make(StorageLocationFactory::class)->fetchList();
         $this->set('files', $this->files);
+        $this->set('locations', $locations);
     }
 
     public function submit()
     {
+        $json = new \Concrete\Core\Application\EditResponse();
+        $err = $this->app->make('error');
         if ($this->validateAction()) {
             $post = $this->request->request->all();
-            $fsl = FileStorageLocation::getByID($post['fslID']);
+            $fsl = $this->app->make(StorageLocationFactory::class)->fetchByID($post['fslID']);
+            if (!is_object($fsl)) {
+                $err->add(t('Please select valid file storage location.'));
+            }
+        }
+        $json->setError($err);
+        return $json->outputJSON();
+    }
+
+    public function doChangeStorageLocation()
+    {
+        if ($this->validateAction()) {
+            $post = $this->request->request->all();
+            $fsl = $this->app->make(StorageLocationFactory::class)->fetchByID($post['fslID']);
             if (is_object($fsl)) {
                 $fIDs = $post['fID'];
-                if (is_array($fIDs)) {
-                    foreach ($fIDs as $fID) {
-                        $f = File::getByID($fID);
-                        if (is_object($f)) {
-                            $fp = new Permissions($f);
-                            if ($fp->canEditFilePermissions()) {
-                                try {
-                                    $f->setFileStorageLocation($fsl);
-                                } catch (\Exception $e) {
-                                    $json = new \Concrete\Core\Application\EditResponse();
-                                    $err = \Core::make('error');
-                                    $err->add($e->getMessage());
-                                    $json->setError($err);
-                                    $json->outputJSON();
+                $q = $this->app->make(QueueService::class)->get('change_files_storage_location');
+                if ($this->request->request->get('process')) {
+                    $obj = new stdClass();
+                    $messages = $q->receive(5);
+                    foreach ($messages as $key => $msg) {
+                        $fID = $msg->body;
+                        if ($fID !== false) {
+                            $file = File::getByID($fID);
+                            if (is_object($file)) {
+                                $fp = new Permissions($file);
+                                if ($fp->canEditFilePermissions()) {
+                                    $file->setFileStorageLocation($fsl);
                                 }
                             }
                         }
+                        $q->deleteMessage($msg);
+                    }
+                    $obj->totalItems = $q->count();
+                    $obj->files = $fIDs;
+                    if ($q->count() == 0) {
+                        $q->deleteQueue();
+                    }
+
+                    return $this->app->make(ResponseFactoryInterface::class)->json($obj);
+                } elseif ($q->count() == 0) {
+                    foreach ($fIDs as $fID) {
+                        $q->send($fID);
                     }
                 }
-            } else {
-                $json = new \Concrete\Core\Application\EditResponse();
-                $err = \Core::make('error');
-                $err->add(t('Please select valid file storage location.'));
-                $json->setError($err);
-                $json->outputJSON();
-            }
 
-            $response = new EditResponse();
-            $response->setFiles($this->files);
-            $response->setMessage(t('File storage locations updated successfully.'));
-            $response->outputJSON();
+                $totalItems = $q->count();
+                View::element('progress_bar', ['totalItems' => $totalItems, 'totalItemsSummary' => t2('%d file', '%d files', $totalItems)]);
+            }
         }
     }
 }

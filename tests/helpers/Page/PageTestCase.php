@@ -38,6 +38,8 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
         'AttributeKeyCategories',
         'PageTypeComposerOutputBlocks',
         'PageTypeComposerFormLayoutSets',
+        'BlockFeatureAssignments',
+        'BlockPermissionAssignments',
     ]; // so brutal
 
     protected $metadatas = [

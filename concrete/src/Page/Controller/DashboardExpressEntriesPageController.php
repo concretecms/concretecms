@@ -4,22 +4,16 @@ namespace Concrete\Core\Page\Controller;
 use Concrete\Core\Csv\WriterFactory;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
-use Concrete\Core\Express\Entry\Notifier\NotificationInterface;
 use Concrete\Core\Express\Export\EntryList\CsvWriter;
 use Concrete\Core\Express\Form\Context\DashboardFormContext;
 use Concrete\Core\Express\Form\Context\DashboardViewContext;
 use Concrete\Core\Express\Form\Processor\ProcessorInterface;
 use Concrete\Core\Express\Form\Renderer;
 use Concrete\Core\Express\EntryList;
-use Concrete\Core\Express\Form\Validator\ValidatorInterface;
 use Concrete\Core\Form\Context\ContextFactory;
 use Concrete\Core\Localization\Service\Date;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
-use Core;
-use GuzzleHttp\Psr7\Stream;
-use League\Csv\Writer;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 abstract class DashboardExpressEntriesPageController extends DashboardPageController
@@ -89,6 +83,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
      * Export Express entries into a CSV.
      *
      * @param int|null $treeNodeParentID
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function csv_export($treeNodeParentID = null)
@@ -103,10 +98,10 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
 
         $headers = [
             'Content-Type' => 'text/csv',
-            'Content-Disposition' => 'attachment; filename=' . $entity->getHandle() . '.csv'
+            'Content-Disposition' => 'attachment; filename=' . $entity->getHandle() . '.csv',
         ];
 
-        return StreamedResponse::create(function() use ($entity, $me) {
+        return StreamedResponse::create(function () use ($entity, $me) {
             $entryList = new EntryList($entity);
 
             $writer = new CsvWriter($this->app->make(WriterFactory::class)->createFromPath('php://output', 'w'), new Date());
@@ -151,7 +146,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
             }
         }
 
-        if (count($breadcrumb) == 1) {
+        if (1 == count($breadcrumb)) {
             array_pop($breadcrumb);
         }
 
@@ -282,27 +277,31 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
                 ->findOneById($this->request->request->get('entry_id'));
         }
 
-        if ($form !== null) {
-
+        if (null !== $form) {
             $express = $this->app->make('express');
             $controller = $express->getEntityController($entity);
             $processor = $controller->getFormProcessor();
             $validator = $processor->getValidator($this->request);
 
-            if ($entry === null) {
+            if (null === $entry) {
                 $validator->validate($form, ProcessorInterface::REQUEST_TYPE_ADD);
             } else {
                 $validator->validate($form, ProcessorInterface::REQUEST_TYPE_UPDATE);
             }
 
             $this->error = $validator->getErrorList();
-            if (!$this->error->has()) {
-
+            if ($this->error->has()) {
+                if (null === $entry) {
+                    $this->create_entry($entity->getID());
+                } else {
+                    $this->edit_entry($entry->getID());
+                }
+            } else {
                 $notifier = $controller->getNotifier();
                 $notifications = $notifier->getNotificationList();
 
                 $manager = $controller->getEntryManager($this->request);
-                if ($entry === null) {
+                if (null === $entry) {
                     // create
                     $entry = $manager->addEntry($entity);
                     $entry = $manager->saveEntryAttributesForm($form, $entry);

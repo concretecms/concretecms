@@ -79,7 +79,7 @@
                 url = CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/drag_request?origCID=' + itemIDs.join(',') + '&destCID=' + data.cID;
                 $.fn.dialog.open({
                     width: 520,
-                    height: 400,
+                    height: 'auto',
                     href: url,
                     title: ccmi18n_sitemap.moveCopyPage,
                     onDirectClose: function() {
