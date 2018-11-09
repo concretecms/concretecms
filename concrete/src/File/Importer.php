@@ -4,9 +4,11 @@ namespace Concrete\Core\File;
 
 use Concrete\Core\Entity\File\File as FileEntity;
 use Concrete\Core\Entity\File\StorageLocation\StorageLocation;
+use Concrete\Core\File\Image\Svg\SanitizerOptions;
 use Concrete\Core\File\ImportProcessor\AutorotateImageProcessor;
 use Concrete\Core\File\ImportProcessor\ConstrainImageProcessor;
 use Concrete\Core\File\ImportProcessor\ProcessorInterface;
+use Concrete\Core\File\ImportProcessor\SvgSanitizerProcessor;
 use Concrete\Core\File\StorageLocation\StorageLocationFactory;
 use Concrete\Core\Support\Facade\Application;
 use Exception;
@@ -146,6 +148,17 @@ class Importer
         if ($width > 0 || $height > 0) {
             $processor = new ConstrainImageProcessor($width, $height);
             $processor->setRescanThumbnails(false);
+            $this->addImportProcessor($processor);
+        }
+        if ($config->get('concrete.file_manager.images.svg_sanification.enabled')) {
+            $processor = $this->app->build(
+                SvgSanitizerProcessor::class,
+                [
+                    'sanitizerOptions' => SanitizerOptions::create()
+                        ->setElementWhitelist($config->get('concrete.file_manager.images.svg_sanification.allowed-tags'))
+                        ->setAttributeWhitelist($config->get('concrete.file_manager.images.svg_sanification.allowed-attributes')),
+                ]
+            );
             $this->addImportProcessor($processor);
         }
     }
