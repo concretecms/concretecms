@@ -15,7 +15,8 @@ class Sanitizer
      * @param string $inputFilename The input filename
      * @param \Concrete\Core\File\Image\Svg\SanitizerOptions $options the sanitizer options (if NULL, we'll use the default ones)
      * @param string $outputFilename The output filename (if empty, we'll overwrite $inputFilename)
-     * @param throws \Concrete\Core\File\Image\Svg\SanitizerException in case of errors
+     *
+     * @throws \Concrete\Core\File\Image\Svg\SanitizerException in case of errors
      */
     public function sanitizeFile($inputFilename, SanitizerOptions $options = null, $outputFilename = '')
     {
@@ -39,7 +40,8 @@ class Sanitizer
      *
      * @param string $data The input filename
      * @param \Concrete\Core\File\Image\Svg\SanitizerOptions $options the sanitizer options (if NULL, we'll use the default ones)
-     * @param throws \Concrete\Core\File\Image\Svg\SanitizerException in case of errors
+     *
+     * @throws \Concrete\Core\File\Image\Svg\SanitizerException in case of errors
      *
      * @return string
      */
@@ -72,7 +74,8 @@ class Sanitizer
 
     /**
      * @param string $data
-     * @param throws \Concrete\Core\File\Image\Svg\SanitizerException in case of errors
+     *
+     * @throws \Concrete\Core\File\Image\Svg\SanitizerException in case of errors
      *
      * @return \DOMDocument
      */
