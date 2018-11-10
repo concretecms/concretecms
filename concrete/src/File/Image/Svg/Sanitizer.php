@@ -10,11 +10,11 @@ use Throwable;
 class Sanitizer
 {
     /**
-     * Sanitize a file containing a SVG document.
+     * Sanitize a file containing an SVG document.
      *
-     * @param string $inputFilename The input filename
+     * @param string $inputFilename the input filename
      * @param \Concrete\Core\File\Image\Svg\SanitizerOptions $options the sanitizer options (if NULL, we'll use the default ones)
-     * @param string $outputFilename The output filename (if empty, we'll overwrite $inputFilename)
+     * @param string $outputFilename the output filename (if empty, we'll overwrite $inputFilename)
      *
      * @throws \Concrete\Core\File\Image\Svg\SanitizerException in case of errors
      */
@@ -36,9 +36,9 @@ class Sanitizer
     }
 
     /**
-     * Sanitize a string containing a SVG document.
+     * Sanitize a string containing an SVG document.
      *
-     * @param string $data The input filename
+     * @param string $data the input filename
      * @param \Concrete\Core\File\Image\Svg\SanitizerOptions $options the sanitizer options (if NULL, we'll use the default ones)
      *
      * @throws \Concrete\Core\File\Image\Svg\SanitizerException in case of errors
@@ -103,8 +103,10 @@ class Sanitizer
     }
 
     /**
+     * Analyze an element (and all its children), removing selected elements/attributes.
+     *
      * @param \DOMElement $element
-     * @param SanitizerOptions $options
+     * @param \Concrete\Core\File\Image\Svg\SanitizerOptions $options
      */
     protected function processNode(DOMElement $element, SanitizerOptions $options)
     {
@@ -132,7 +134,11 @@ class Sanitizer
     }
 
     /**
+     * Render a DOMDocument instance as a string.
+     *
      * @param \DOMDocument $xml
+     *
+     * @throws \Concrete\Core\File\Image\Svg\SanitizerException in case of errors
      *
      * @return string
      */
