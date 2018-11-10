@@ -24,6 +24,7 @@ class ServiceList
             ['vine', 'Vine', 'vine'],
             ['stumbleupon', 'Stumbleupon', 'stumbleupon'],
             ['skype', 'Skype', 'skype'],
+            ['vk', 'Vkontakte', 'vk'],
             ['personal_website', 'Personal Website', 'external-link'],
         ];
 

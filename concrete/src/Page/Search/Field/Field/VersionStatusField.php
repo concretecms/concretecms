@@ -48,6 +48,7 @@ class VersionStatusField extends AbstractField
         $form = $app->make('helper/form');
         $html = '<div class="radio"><label>' . $form->radio('versionToRetrieve', PageList::PAGE_VERSION_RECENT, $versionToRetrieve) . t('All') . '</label></div>';
         $html .= '<div class="radio"><label>' . $form->radio('versionToRetrieve', PageList::PAGE_VERSION_ACTIVE, $versionToRetrieve) . t('Approved') . '</label></div>';
+        $html .= '<div class="radio"><label>' . $form->radio('versionToRetrieve', PageList::PAGE_VERSION_SCHEDULED, $versionToRetrieve) . t('Scheduled') . '</label></div>';
         $html .= '<div class="radio"><label>' . $form->radio('versionToRetrieve', PageList::PAGE_VERSION_RECENT_UNAPPROVED, $versionToRetrieve) . t('Unapproved') . '</label></div>';
 
         return $html;

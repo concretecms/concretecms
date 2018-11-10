@@ -421,6 +421,11 @@
 					}
 				} catch(ex) {}
 			});
+			ConcreteEvent.unsubscribe('PageVersionChanged.deleted');
+			ConcreteEvent.unsubscribe('PageVersionChanged.duplicated');
+			Concrete.event.subscribe(['PageVersionChanged.deleted', 'PageVersionChanged.duplicated'], function(e, data) {
+				my.reloadSelfNodeByCID(data.cID);
+			});
 		},
 
 		rescanDisplayOrder: function(node) {
@@ -455,7 +460,7 @@
 				dragMode = '';
 			}
 			var dialog_url = CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/drag_request?origCID=' + node.data.cID + '&destCID=' + destNode.data.cID + '&dragMode=' + dragMode;
-			var dialog_height = 400;
+			var dialog_height = 'auto';
 			var dialog_width = 520;
 
 			$.fn.dialog.open({
@@ -468,20 +473,26 @@
 
 			ConcreteEvent.unsubscribe('SitemapDragRequestComplete.sitemap');
 			ConcreteEvent.subscribe('SitemapDragRequestComplete.sitemap', function(e, data) {
-				var reloadNode = destNode.parent;
-				if (dragMode == 'over') {
-					reloadNode = destNode;
+				switch (data.task) {
+					case 'COPY_VERSION':
+						my.reloadSelfNode(destNode);
+						break;
+					default:
+						var reloadNode = destNode.parent;
+						if (dragMode == 'over') {
+							reloadNode = destNode;
+						}
+						if (data.task == 'MOVE') {
+							node.remove();
+						}
+						reloadNode.removeChildren();
+		
+						my.reloadNode(reloadNode, function() {
+							if (!destNode.bExpanded) {
+								destNode.setExpanded(true, {noAnimation: true});
+							}
+						});
 				}
-				if (data.task == 'MOVE') {
-					node.remove();
-				}
-				reloadNode.removeChildren();
-
-				my.reloadNode(reloadNode, function() {
-					if (!destNode.bExpanded) {
-						destNode.setExpanded(true, {noAnimation: true});
-					}
-				});
 			});
 
 		},
@@ -572,6 +583,35 @@
 					onComplete();
 				}
 			});
+		},
+
+		getLoadSelfNodePromise: function(node) {
+			return $.ajax({
+				dataType: 'json',
+				url: this.options.dataSource,
+				data: $.extend({
+					cID: node.data.cID,
+					reloadNode: 1,
+					reloadSelfNode: 1
+				}, this.options.ajaxData)
+			});
+		},
+
+		reloadSelfNode: function(node, onComplete) {
+			this.getLoadSelfNodePromise(node).done(function(data) {
+				var nodeData = data[0];
+				node.setTitle(nodeData.title);
+				if (onComplete) {
+					onComplete();
+				}
+			});
+		},
+
+		reloadSelfNodeByCID: function(cID, onComplete) {
+			var node = cID ? this.getTree().getNodeByKey(cID.toString()) : null;
+			if (node) {
+				this.reloadSelfNode(node, onComplete);
+			}
 		}
 	};
 
@@ -595,31 +635,28 @@
 		);
 	};
 
-	ConcreteSitemap.submitDragRequest = function() {
+	ConcreteSitemap.submitDragRequest = function($form) {
 		var params = {
-			ccm_token: $('#validationToken').val(),
-			dragMode: $('#dragMode').val(),
-			destCID: $('#destCID').val(),
-			destSibling: $('#destSibling').val() || '',
-			origCID: $('#origCID').val(),
+			ccm_token: $form.find('input[name="validationToken"]').val(),
+			dragMode: $form.find('input[name="dragMode"]').val(),
+			destCID: $form.find('input[name="destCID"]').val(),
+			destSibling: $form.find('input[name="destSibling"]').val() || '',
+			origCID: $form.find('input[name="origCID"]').val(),
 			ctask: $("input[name=ctask]:checked").val()
 		};
-		var isCopyAll = false;
 		switch (params.ctask) {
 			case 'MOVE':
-				params.saveOldPagePath = $('#saveOldPagePath').is(':checked') ? 1 : 0;
+				params.saveOldPagePath = $form.find('input[name="saveOldPagePath"]').is(':checked') ? 1 : 0;
 				break;
-			case 'COPY':
-				if ($('#copyChildren').is(':checked')) {
-					isCopyAll = true;
-				}
+			case 'a-copy-operation':
+				params.ctask = $('input[name="dtask"]:checked').val();
 				break;
 		}
 		var paramsArray = [];
 		$.each(params, function (name, value) {
 			paramsArray.push({name: name, value: value});
 		});
-		if (isCopyAll) {
+		if (params.ctask === 'COPY_ALL') {
 			ccm_triggerProgressiveOperation(
 				CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/drag_request/copy_all',
 				paramsArray,

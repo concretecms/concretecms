@@ -4390,6 +4390,9 @@
     </field>
     <field name="lockID" type="string" size="255"/>
     <field name="lockExpires" type="datetime"/>
+    <index name="thumbnailPathIsBuilt">
+    	<col>isBuilt</col>
+    </index>
   </table>
 
 </schema>

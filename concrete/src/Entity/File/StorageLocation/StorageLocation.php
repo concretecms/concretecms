@@ -1,13 +1,17 @@
 <?php
+
 namespace Concrete\Core\Entity\File\StorageLocation;
 
 use Concrete\Core\Cache\Level\ExpensiveCache;
+use Concrete\Core\File\File;
 use Concrete\Core\File\StorageLocation\StorageLocationInterface;
 use Concrete\Core\Filesystem\FlysystemCache;
-use Database;
+use Concrete\Core\Support\Facade\Application;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 use League\Flysystem\Cached\CachedAdapter;
 use League\Flysystem\Cached\Storage\Psr6Cache;
+use League\Flysystem\Filesystem;
 
 /**
  * @ORM\Entity
@@ -60,7 +64,7 @@ class StorageLocation implements StorageLocationInterface
     /** Returns the display name for this storage location (localized and escaped accordingly to $format)
      * @param string $format = 'html'
      *                       Escape the result in html format (if $format is 'html').
-     *                       If $format is 'text' or any other value, the display name won't be escaped.
+     *                       If $format is 'text' or any other value, the display name won't be escaped
      *
      * @return string
      */
@@ -141,7 +145,8 @@ class StorageLocation implements StorageLocationInterface
         $cachedAdapter = new FlysystemCache($adapter, $cache);
         $filesystem = new \League\Flysystem\Filesystem($cachedAdapter);
         */
-        $filesystem = new \League\Flysystem\Filesystem($adapter);
+        $filesystem = new Filesystem($adapter);
+
         return $filesystem;
     }
 
@@ -161,15 +166,10 @@ class StorageLocation implements StorageLocationInterface
 
     public function delete()
     {
-        $default = \Concrete\Core\File\StorageLocation\StorageLocation::getDefault();
-        $db = Database::get();
 
-        $fIDs = $db->GetCol('select fID from Files where fslID = ?', [$this->getID()]);
-        foreach ($fIDs as $fID) {
-            $file = \File::getByID($fID);
-            if (is_object($file)) {
-                $file->setFileStorageLocation($default);
-            }
+        // let's check if there is any file in this storage location and throw an exception if yes
+        if ($this->hasFiles()) {
+            throw new Exception(t('You can not delete this storage location because it contains files.'));
         }
 
         $em = \ORM::entityManager();
@@ -190,5 +190,18 @@ class StorageLocation implements StorageLocationInterface
         }
 
         $em->flush();
+    }
+
+    /**
+     * Check if the storage location contains files
+     *
+     * @return boolean
+     */
+    public function hasFiles()
+    {
+        $app = Application::getFacadeApplication();
+        $db = $app->make('database');
+        $fIDs = $db->fetchColumn('SELECT fID FROM Files WHERE fslID = ?', [$this->getID()]);
+        return (!empty($fIDs));
     }
 }

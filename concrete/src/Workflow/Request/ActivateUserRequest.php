@@ -1,7 +1,10 @@
 <?php
 namespace Concrete\Core\Workflow\Request;
 
+use Concrete\Core\Entity\User\User;
+use Concrete\Core\User\Event\DeactivateUser;
 use Concrete\Core\User\UserInfo;
+use Doctrine\ORM\EntityManager;
 use PermissionKey;
 use Loader;
 use Config;
@@ -102,7 +105,17 @@ class ActivateUserRequest extends UserRequest
                 'deactivated'
             ]);
             $wpr->setWorkflowProgressResponseURL($url);
+
+            $em = $app->make(EntityManager::class);
+            $requested = $em->find(User::class, $this->getRequestedUserID());
+            $requester = $em->find(User::class, $this->getRequesterUserID());
+
+            $event = DeactivateUser::create($requested, $requester);
+            $director = $app->make('director');
+
+            $director->dispatch('on_before_user_deactivate', $event);
             $ui->deactivate();
+            $director->dispatch('on_after_user_deactivate', $event);
         } else {
             $wpr->message = t("User %s has been activated.", $ui->getUserName());
             $url = (string) $urlm->resolve([

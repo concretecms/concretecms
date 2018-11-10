@@ -3,6 +3,9 @@
 namespace Concrete\Core\Database\Connection;
 
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Doctrine\DBAL\Schema\Column as DbalColumn;
+use Doctrine\DBAL\Schema\Table as DbalTable;
+use Doctrine\DBAL\Types\Type as DbalType;
 use Doctrine\ORM\EntityManager;
 use Exception;
 use ORM;
@@ -490,5 +493,41 @@ class Connection extends \Doctrine\DBAL\Connection
         }
 
         return $result;
+    }
+
+    /**
+     * Check if a collation can be used for keys of a specific length.
+     *
+     * @param string $collation the name of a collation
+     * @param int $fieldLength the length (in chars) of a field to be used as key/index
+     *
+     * @return bool
+     */
+    public function isCollationSupportedForKeys($collation, $fieldLength)
+    {
+        $sm = $this->getSchemaManager();
+        $existingTables = array_map('strtolower', $sm->listTableNames());
+        for ($i = 0; ; ++$i) {
+            $tableName = 'tmp_checkCollationFieldLength' . $i;
+            if (!in_array(strtolower($tableName), $existingTables)) {
+                break;
+            }
+        }
+        $column = new DbalColumn('ColumnName', DbalType::getType(DbalType::STRING), ['length' => (int) $fieldLength]);
+        $column->setPlatformOption('collation', (string) $collation);
+        $table = new DbalTable($tableName, [$column]);
+        $table->setPrimaryKey([$column->getName()]);
+        try {
+            $sm->createTable($table);
+        } catch (Exception $x) {
+            // SQLSTATE[42000]: Syntax error or access violation: 1071 Specified key was too long; max key length is XYZ bytes
+            return false;
+        }
+        try {
+            $sm->dropTable($tableName);
+        } catch (Exception $x) {
+        }
+
+        return true;
     }
 }

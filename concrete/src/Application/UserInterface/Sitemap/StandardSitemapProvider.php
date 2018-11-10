@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Application\UserInterface\Sitemap;
 
 use Concrete\Core\Application\Application;
@@ -9,10 +8,10 @@ use Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\Entry\SiteEnt
 use Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\StandardTreeCollection;
 use Concrete\Core\Cookie\CookieJar;
 use Concrete\Core\Entity\Site\Tree;
+use Concrete\Core\Http\Request;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Site\Service;
 use Concrete\Core\Site\Tree\TreeInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 class StandardSitemapProvider implements ProviderInterface
 {
@@ -27,7 +26,7 @@ class StandardSitemapProvider implements ProviderInterface
     protected $cookieJar;
 
     /**
-     * @var \Symfony\Component\HttpFoundation\Request
+     * @var \Concrete\Core\Http\Request
      */
     protected $request;
 
@@ -48,12 +47,12 @@ class StandardSitemapProvider implements ProviderInterface
      * @param \Concrete\Core\Site\Service $siteService
      * @param \Concrete\Core\Cookie\CookieJar $cookies
      */
-    public function __construct(Application $app, CookieJar $cookies, Service $siteService)
+    public function __construct(Application $app, CookieJar $cookies, Service $siteService, Request $request)
     {
         $this->siteService = $siteService;
         $this->cookieJar = $cookies;
         $this->app = $app;
-        $this->request = Request::createFromGlobals();
+        $this->request = $request;
     }
 
     /**
@@ -143,10 +142,21 @@ class StandardSitemapProvider implements ProviderInterface
             $this->cookieJar->getResponseCookies()->addCookie($cookieKey, $query->get('siteTreeID'));
 
             return $this->siteService->getSiteTreeByID($query->get('siteTreeID'));
-        } elseif ($this->cookieJar->has($cookieKey)) {
-            return $this->siteService->getSiteTreeByID($this->cookieJar->get($cookieKey));
         } else {
+            // Check if the site id in $cookieKey is valid
+            $site = null;
+            if ($this->cookieJar->has($cookieKey)) {
+                $site = $this->siteService->getSiteTreeByID($this->cookieJar->get($cookieKey));
+            }
+            if (is_object($site)) {
+                return $site;
+            }
+
+            // the site id is not valid, let's get the default site
             $site = $this->siteService->getActiveSiteForEditing();
+
+            // update $cookieKey to use a valid site id
+            $this->cookieJar->getResponseCookies()->addCookie($cookieKey, $site->getSiteID());
             $locale = $site->getDefaultLocale();
             if ($locale && $this->checkPermissions($locale)) {
                 return $locale->getSiteTreeObject();
@@ -178,7 +188,11 @@ class StandardSitemapProvider implements ProviderInterface
             }
         }
         if (!$this->includeMenuInResponse()) {
-            $nodes = $dh->getSubNodes($this->request->query->get('cParentID'));
+            if ($this->request->query->get('reloadSelfNode')) {
+                $nodes = [$dh->getNode($this->request->query->get('cID'))];
+            } else {
+                $nodes = $dh->getSubNodes($this->request->query->get('cParentID'));
+            }
         } else {
             $nodes = $dh->getSubNodes($this->getRequestedSiteTree());
         }

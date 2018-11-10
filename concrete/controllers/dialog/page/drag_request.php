@@ -8,10 +8,13 @@ use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Foundation\Queue\QueueService;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Multilingual\Page\Section\Section;
+use Concrete\Core\Page\Cloner;
+use Concrete\Core\Page\ClonerOptions;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Sitemap\DragRequestData;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\User\User;
+use Concrete\Core\Utility\Service\Identifier;
 use Concrete\Core\Workflow\Request\MovePageRequest as MovePagePageWorkflowRequest;
 
 class DragRequest extends UserInterfaceController
@@ -47,6 +50,7 @@ class DragRequest extends UserInterfaceController
         $this->set('validationToken', $this->app->make('token')->generate($this->validationToken));
         $this->set('dragRequestData', $dragRequestData);
         $this->set('originalPageIDs', implode(',', $originalPageIDs));
+        $this->set('formID', 'ccm-drag-request-form-' . $this->app->make(Identifier::class)->getString(32));
     }
 
     public function submit()
@@ -62,6 +66,8 @@ class DragRequest extends UserInterfaceController
                 return $this->doCopy($dragRequestData);
             case $dragRequestData::OPERATION_MOVE:
                 return $this->doMove($dragRequestData);
+            case $dragRequestData::OPERATION_COPYVERSION:
+                return $this->doCopyVersion($dragRequestData);
             default:
                 throw new UserMessageException('Invalid parameter: ctask (unrecognized)');
         }
@@ -69,7 +75,6 @@ class DragRequest extends UserInterfaceController
 
     public function doCopyAll()
     {
-        $this->validationToken = 'ccm-copy-multilingual-tree';
         if ($this->request->request->get('process', $this->request->query->get('process'))) {
             return $this->continueCopyAll();
         }
@@ -231,6 +236,34 @@ class DragRequest extends UserInterfaceController
         $this->setNewPagesDisplayOrder($dragRequestData, $newCIDs);
 
         return $this->buildOperationCompletedResponse($newCIDs, $successMessages);
+    }
+
+    /**
+     * @param \Concrete\Core\Page\Sitemap\DragRequestData $dragRequestData
+     *
+     * @throws \Concrete\Core\Error\UserMessageException
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    protected function doCopyVersion(DragRequestData $dragRequestData)
+    {
+        $error = $dragRequestData->whyCantDo($dragRequestData::OPERATION_COPYVERSION);
+        if ($error !== '') {
+            throw new UserMessageException($error);
+        }
+        $originalPage = $dragRequestData->getSingleOriginalPage();
+        $originalVersion = $originalPage->getVersionObject();
+        $cloner = $this->app->make(Cloner::class);
+        $clonerOptions = $this->app->build(ClonerOptions::class)
+            ->setForceUnapproved(true)
+            ->setVersionComments(t('Contents copied from %s', $originalPage->getCollectionName()))
+        ;
+        $newVersion = $cloner->cloneCollectionVersion($originalVersion, $dragRequestData->getDestinationPage(), $clonerOptions);
+
+        return $this->buildOperationCompletedResponse(
+            [$newVersion->getCollectionID()],
+            [t('The contents of "%1$s" has been copied to "%2$s".', $originalPage->getCollectionName(), $dragRequestData->getDestinationPage()->getCollectionName())]
+        );
     }
 
     /**
