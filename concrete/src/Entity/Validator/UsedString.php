@@ -2,6 +2,8 @@
 
 namespace Concrete\Core\Entity\Validator;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
  * @ORM\Entity
  * @ORM\Table(
