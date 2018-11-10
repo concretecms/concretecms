@@ -26,6 +26,12 @@ class Sitemap
      * @var bool
      */
     protected $displayNodePagination = false;
+
+    /**
+     * @var bool
+     */
+    protected $isSitemapOverlay = false;
+
     /**
      * @var bool
      */
@@ -81,6 +87,14 @@ class Sitemap
     }
 
     /**
+     * @param bool $isSitemapOverlay
+     */
+    public function setIsSitemapOverlay($isSitemapOverlay)
+    {
+        $this->isSitemapOverlay = $isSitemapOverlay;
+    }
+
+    /**
      * @param int $cID
      *
      * @return array
@@ -130,7 +144,7 @@ class Sitemap
             if ($this->displayNodePagination && isset($pagination)) {
                 $n = new stdClass();
                 $n->icon = false;
-                $n->addClass = 'ccm-sitemap-explore';
+                $n->extraClasses = 'ccm-sitemap-explore';
                 $n->noLink = true;
                 $n->unselectable = true;
                 $html = $pagination->renderView('dashboard');
@@ -139,13 +153,21 @@ class Sitemap
             } else {
                 $n = new stdClass();
                 $n->icon = false;
-                $n->addClass = 'ccm-sitemap-explore';
+                $n->extraClasses = 'ccm-sitemap-explore';
                 $n->noLink = true;
                 $n->active = false;
                 $n->focus = false;
                 $n->unselectable = true;
-                $n->title = ' ' . t('More Pages to Display. <strong>Next Page &gt;</strong>');
-                $n->href = (string) \URL::to('/dashboard/sitemap/explore/', $cID);
+
+                // Avoids redirecting to the flat view page in an overlay context
+                if ($this->isSitemapOverlay) {
+                    $n->extraClasses = 'ccm-sitemap-open-flat-view';
+                    $n->cParentID = (int) $cID;
+                    $n->title = ' ' . t('More Pages to Display. <strong>Use the Flat View</strong>');
+                } else {
+                    $n->title = ' ' . t('More Pages to Display. <strong>Next Page &gt;</strong>');
+                    $n->href = (string) \URL::to('/dashboard/sitemap/explore/', $cID);
+                }
                 $nodes[] = $n;
             }
         }
