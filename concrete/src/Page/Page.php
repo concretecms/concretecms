@@ -22,22 +22,22 @@ use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Support\Facade\Route;
 use Concrete\Core\Permission\Access\Entity\PageOwnerEntity;
-use Database;
-use CacheLocal;
-use Collection;
-use Request;
+use Concrete\Core\Support\Facade\Database;
+use Concrete\Core\Cache\CacheLocal;
+use Concrete\Core\Page\Collection\Collection;
+use Concrete\Core\Http\Request;
 use Concrete\Core\Page\Statistics as PageStatistics;
-use PageCache;
-use PageTemplate;
-use Events;
+use Concrete\Core\Cache\Page\PageCache;
+use Concrete\Core\Page\Template as PageTemplate;
+use Concrete\Core\Support\Facade\Events;
 use Core;
-use Config;
-use PageController;
-use User;
-use Block;
-use UserInfo;
-use PageType;
-use PageTheme;
+use Concrete\Core\Support\Facade\Config;
+use Concrete\Core\Page\Controller\PageController;
+use Concrete\Core\User\User;
+use Concrete\Core\Block\Block;
+use Concrete\Core\Support\Facade\UserInfo;
+use Concrete\Core\Page\Type\Type as PageType;
+use Concrete\Core\Page\Theme\Theme as PageTheme;
 use Concrete\Core\Localization\Locale\Service as LocaleService;
 use Concrete\Core\Permission\Key\PageKey as PagePermissionKey;
 use Concrete\Core\Permission\Access\Access as PermissionAccess;
@@ -48,13 +48,13 @@ use Concrete\Core\Permission\Access\Entity\GroupCombinationEntity as GroupCombin
 use Concrete\Core\Permission\Access\Entity\UserEntity as UserPermissionAccessEntity;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Entity\StyleCustomizer\CustomCssRecord;
-use Area;
+use Concrete\Core\Area\Area;
 use Concrete\Core\Entity\Page\PagePath;
-use Queue;
-use Log;
-use Environment;
-use Group;
-use Session;
+use Concrete\Core\Foundation\Queue\Queue;
+use Concrete\Core\Support\Facade\Log;
+use Concrete\Core\Foundation\Environment;
+use Concrete\Core\User\Group\Group;
+use Concrete\Core\Support\Facade\Session;
 use Concrete\Core\Attribute\ObjectInterface as AttributeObjectInterface;
 
 /**
@@ -1727,7 +1727,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     {
         return $this->getCollectionPointerID() > 0;
     }
-    
+
     /**
      * Is this page an alias page or an external link?
      *
@@ -1739,7 +1739,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     {
         return $this->isAliasPage() || $this->isExternalLink();
     }
-    
+
     /**
      * @deprecated This method has been replaced with isAliasPageOrExternalLink() in concrete5 8.5.0a2 (same syntax and same result)
      *
