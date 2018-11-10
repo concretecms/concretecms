@@ -62,8 +62,8 @@ class FileServiceProvider extends ServiceProvider
             $config = $app->make('config');
             $options = $app->build(SanitizerOptions::class);
             $options
-                ->setElementWhitelist($config->get('concrete.file_manager.images.svg_sanitization.allowed-tags'))
-                ->setAttributeWhitelist($config->get('concrete.file_manager.images.svg_sanitization.allowed-attributes'))
+                ->setElementWhitelist($config->get('concrete.file_manager.images.svg_sanitization.allowed_tags'))
+                ->setAttributeWhitelist($config->get('concrete.file_manager.images.svg_sanitization.allowed_attributes'))
             ;
 
             return $options;

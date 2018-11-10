@@ -553,9 +553,9 @@ return [
                 // Enable the SVG sanitification?
                 'enabled' => true,
                 // Space-separated list of tags to be kept
-                'allowed-tags' => '',
+                'allowed_tags' => '',
                 // Space-separated list of attributes to be kept
-                'allowed-attributes' => '',
+                'allowed_attributes' => '',
             ],
         ],
         'results' => 10,
