@@ -65,7 +65,7 @@ class ServiceProvider extends Provider
     protected $migrationCommands = [
         \Doctrine\DBAL\Migrations\Tools\Console\Command\DiffCommand::class,
         \Doctrine\DBAL\Migrations\Tools\Console\Command\ExecuteCommand::class,
-        \Doctrine\DBAL\Migrations\Tools\Console\Command\GenerateCommand::class,
+        Command\Orm\GenerateMigrationCommand::class,
         \Doctrine\DBAL\Migrations\Tools\Console\Command\MigrateCommand::class,
         \Doctrine\DBAL\Migrations\Tools\Console\Command\StatusCommand::class,
         \Doctrine\DBAL\Migrations\Tools\Console\Command\VersionCommand::class,
