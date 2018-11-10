@@ -19,7 +19,7 @@ use Concrete\Core\Page\Type\Type;
 use Concrete\Core\Permission\AssignableObjectInterface;
 use Concrete\Core\Permission\Access\Entity\PageOwnerEntity;
 use Concrete\Core\Cache\CacheLocal;
-use Concrete\Core\Page\Collection\Collection;
+use Collection;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Page\Statistics as PageStatistics;
 use Concrete\Core\Cache\Page\PageCache;
