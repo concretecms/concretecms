@@ -324,6 +324,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     {
         $r = new \stdClass();
         $r->name = $this->getCollectionName();
+        $r->name = ($this->getCollectionName() !== '') ? $this->getCollectionName() : '(No Title)';
         if ($this->isAliasPage()) {
             $r->cID = $this->getCollectionPointerOriginalID();
         } else {
