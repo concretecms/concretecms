@@ -27,12 +27,13 @@ class Detector
         $site = $app->make('site')->getSite();
         $siteConfig = $site->getConfigRepository();
         $session = $app->make('session');
+        $detector = $app->make(Detector::class);
 
         $result = null;
         if ($result === null) {
             $locale = false;
             // Detect locale by value stored in session or cookie
-            if (self::canSetSessionValue() && $session->has('multilingual_default_locale')) {
+            if ($detector->canSetSessionValue() && $session->has('multilingual_default_locale')) {
                 $locale = $session->get('multilingual_default_locale');
             } else {
                 $cookie = $app->make('cookie');
@@ -86,7 +87,7 @@ class Detector
             }
         }
 
-        if ($result !== null && self::canSetSessionValue()) {
+        if ($result !== null && $detector->canSetSessionValue()) {
             $session->set('multilingual_default_locale', $result[0]);
         }
 
