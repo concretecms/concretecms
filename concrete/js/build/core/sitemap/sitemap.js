@@ -406,7 +406,7 @@
 			});
 			ConcreteEvent.unsubscribe('SitemapAddPageRequestComplete.sitemap');
 			ConcreteEvent.subscribe('SitemapAddPageRequestComplete.sitemap', function(e, data) {
-				var node = my.getTree().getNodeByKey(data.cParentID);
+				var node = my.getTree().getNodeByKey(String(data.cParentID));
 				if (node) {
 					my.reloadNode(node);
 				}
@@ -414,7 +414,7 @@
 			});
 			ConcreteEvent.subscribe('SitemapUpdatePageRequestComplete.sitemap', function(e, data) {
 				try {
-					var node = my.getTree().getNodeByKey(data.cID);
+					var node = my.getTree().getNodeByKey(String(data.cID));
 					var parent = node.parent;
 					if (parent) {
 						my.reloadNode(parent);
@@ -486,7 +486,7 @@
 							node.remove();
 						}
 						reloadNode.removeChildren();
-		
+
 						my.reloadNode(reloadNode, function() {
 							if (!destNode.bExpanded) {
 								destNode.setExpanded(true, {noAnimation: true});
@@ -608,7 +608,7 @@
 		},
 
 		reloadSelfNodeByCID: function(cID, onComplete) {
-			var node = cID ? this.getTree().getNodeByKey(cID.toString()) : null;
+			var node = cID ? this.getTree().getNodeByKey(String(cID)) : null;
 			if (node) {
 				this.reloadSelfNode(node, onComplete);
 			}
