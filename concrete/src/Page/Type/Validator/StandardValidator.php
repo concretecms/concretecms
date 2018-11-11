@@ -5,7 +5,7 @@ use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Type\Composer\Control\Control;
 use Concrete\Core\Page\Type\Type;
-use Core;
+use Concrete\Core\Support\Facade\Application;
 
 class StandardValidator implements ValidatorInterface
 {
@@ -21,9 +21,10 @@ class StandardValidator implements ValidatorInterface
 
     public function validateCreateDraftRequest($template)
     {
-        $e = Core::make('error');
+        $app = Application::getFacadeApplication();
+        $e = $app->make('error');
         $availablePageTemplates = $this->type->getPageTypePageTemplateObjects();
-        $availablePageTemplateIDs = array();
+        $availablePageTemplateIDs = [];
         foreach ($availablePageTemplates as $ppt) {
             $availablePageTemplateIDs[] = $ppt->getPageTemplateID();
         }
@@ -40,7 +41,8 @@ class StandardValidator implements ValidatorInterface
 
     public function validatePublishLocationRequest(Page $target = null, Page $page = null)
     {
-        $e = Core::make('error');
+        $app = Application::getFacadeApplication();
+        $e = $app->make('error');
         if (!is_object($target) || $target->isError()) {
             if (!is_object($page) || !$page->isHomePage()) {
                 $e->add(t('You must choose a page to publish this page beneath.'));
@@ -54,15 +56,16 @@ class StandardValidator implements ValidatorInterface
 
         return $e;
     }
+
     public function validatePublishDraftRequest(Page $page = null)
     {
-        $e = Core::make('error');
+        $app = Application::getFacadeApplication();
+        $e = $app->make('error');
         $controls = Control::getList($this->type);
         foreach ($controls as $oc) {
             if (is_object($page)) {
                 $oc->setPageObject($page);
             }
-            if ($oc->isPageTypeComposerFormControlRequiredOnThisRequest()) {
                 $r = $oc->validate();
                 if ($r instanceof ErrorList) {
                     $e->add($r);
