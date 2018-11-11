@@ -66,6 +66,26 @@ class StandardValidator implements ValidatorInterface
             if (is_object($page)) {
                 $oc->setPageObject($page);
             }
+            $validateControl = $oc->isPageTypeComposerFormControlRequiredOnThisRequest();
+
+            // We also validate the control if it is a non-empty page attribute
+            if (!$validateControl && $oc instanceof \Concrete\Core\Page\Type\Composer\Control\CollectionAttributeControl) {
+                $attributeKey = $oc->getAttributeKeyObject();
+                if (is_object($attributeKey)) {
+                    $attributeController = $attributeKey->getController();
+                    if (is_object($attributeController)) {
+                        $attributeFields = $attributeController->request();
+                        if (is_array($attributeFields) && !empty($attributeFields)) {
+                            foreach ($attributeFields as $value) {
+                                if (!empty($value)) {
+                                    $validateControl = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if ($validateControl) {
                 $r = $oc->validate();
                 if ($r instanceof ErrorList) {
                     $e->add($r);
