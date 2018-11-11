@@ -126,7 +126,7 @@ class Detector
                     if ($ms) {
                         $locale = $ms->getLocale();
 
-                        if (self::canSetSessionValue()) {
+                        if ($this->canSetSessionValue()) {
                             $app->make('session')->set('multilingual_default_locale', $locale);
                         }
                     }
