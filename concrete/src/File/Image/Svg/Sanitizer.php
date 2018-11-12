@@ -4,11 +4,30 @@ namespace Concrete\Core\File\Image\Svg;
 
 use DOMDocument;
 use DOMElement;
+use Illuminate\Filesystem\Filesystem;
 use Exception;
 use Throwable;
 
+
 class Sanitizer
 {
+    /**
+     * The Filesystem instance to be used for file operations.
+     *
+     * @var \Illuminate\Filesystem\Filesystem
+     */
+    protected $filesystem;
+
+    /**
+     * Initialize the instance.
+     *
+     * @param \Illuminate\Filesystem\Filesystem $filesystem the Filesystem instance to be used for file operations
+     */
+    public function __construct(Filesystem $filesystem)
+    {
+        $this->filesystem = $filesystem;
+    }
+
     /**
      * Sanitize a file containing an SVG document.
      *
@@ -20,7 +39,7 @@ class Sanitizer
      */
     public function sanitizeFile($inputFilename, SanitizerOptions $options = null, $outputFilename = '')
     {
-        $data = is_string($inputFilename) && is_file($inputFilename) ? @file_get_contents($inputFilename) : false;
+        $data = is_string($inputFilename) && $this->filesystem->isFile($inputFilename) ? $this->filesystem->get($inputFilename) : false;
         if ($data === false) {
             throw SanitizerException::create(SanitizerException::ERROR_FAILED_TO_READ_FILE);
         }
@@ -29,7 +48,7 @@ class Sanitizer
             $outputFilename = $inputFilename;
         }
         if ($outputFilename !== $inputFilename || $data !== $sanitizedData) {
-            if (@file_put_contents($outputFilename, $sanitizedData) === false) {
+            if ($this->filesystem->put($outputFilename, $sanitizedData) === false) {
                 throw SanitizerException::create(SanitizerException::ERROR_FAILED_TO_WRITE_FILE);
             }
         }

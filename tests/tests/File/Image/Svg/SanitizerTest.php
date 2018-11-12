@@ -3,8 +3,11 @@
 namespace Concrete\Tests\File\Image\Svg;
 
 use Concrete\Core\File\Image\Svg\Sanitizer;
-use PHPUnit_Framework_TestCase;
 use Concrete\Core\File\Image\Svg\SanitizerOptions;
+use Concrete\Core\Support\Facade\Application;
+use Illuminate\Filesystem\Filesystem;
+use Mockery;
+use PHPUnit_Framework_TestCase;
 
 class SanitizerTest extends PHPUnit_Framework_TestCase
 {
@@ -17,11 +20,17 @@ class SanitizerTest extends PHPUnit_Framework_TestCase
      * @var \Concrete\Core\File\Image\Svg\SanitizerOptions
      */
     protected static $sanitizerOptions;
-    
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see PHPUnit_Framework_TestCase::setupBeforeClass()
+     */
     public static function setupBeforeClass()
     {
         parent::setUpBeforeClass();
-        self::$sanitizer = new Sanitizer();
+        $app = Application::getFacadeApplication();
+        self::$sanitizer = $app->build(Sanitizer::class);
         self::$sanitizerOptions = new SanitizerOptions();
         self::$sanitizerOptions
             ->setUnsafeElements('script script2')
@@ -29,6 +38,16 @@ class SanitizerTest extends PHPUnit_Framework_TestCase
             ->setUnsafeAttributes('onload onload2 onclick')
             ->setAttributeWhitelist('onload2')
         ;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see PHPUnit_Framework_TestCase::tearDown()
+     */
+    public function tearDown()
+    {
+        Mockery::close();
     }
 
     /**
@@ -89,5 +108,50 @@ class SanitizerTest extends PHPUnit_Framework_TestCase
     public function testInvalidData($invalidSvgData)
     {
         self::$sanitizer->sanitizeData($invalidSvgData, self::$sanitizerOptions);
+    }
+
+    /**
+     * @expectedException Concrete\Core\File\Image\Svg\SanitizerException
+     */
+    public function testShouldThrowIfFileDoesNotExist()
+    {
+        $filename = __DIR__ . '/test-file';
+        $fs = Mockery::mock(Filesystem::class);
+        $fs->shouldReceive('isFile')->once()->with($filename)->andReturn(false);
+        $fs->shouldReceive('get')->never();
+        $fs->shouldReceive('put')->never();
+        $sanitizer = new Sanitizer($fs);
+        $sanitizer->sanitizeFile($filename);
+    }
+
+    public function testShouldNotSaveIfNothingChanged()
+    {
+        $filename = __DIR__ . '/test-file';
+        $fs = Mockery::mock(Filesystem::class);
+        $fs->shouldReceive('isFile')->once()->with($filename)->andReturn(true);
+        $fs->shouldReceive('get')->once()->with($filename)->andReturn("<?xml version=\"1.0\"?>\n<svg/>\n");
+        $fs->shouldReceive('put')->never();
+        $sanitizer = new Sanitizer($fs, self::$sanitizerOptions);
+        $sanitizer->sanitizeFile($filename);
+    }
+
+    public function testShouldSaveIfNothingChangedButOtherFilename()
+    {
+        $filename = __DIR__ . '/test-file';
+        $filename2 = __DIR__ . '/test-file-2';
+        $fs = Mockery::mock(Filesystem::class);
+        $fs->shouldReceive('isFile')->once()->with($filename)->andReturn(true);
+        $fs->shouldReceive('get')->once()->with($filename)->andReturn("<?xml version=\"1.0\"?>\n<svg/>\n");
+        $fs->shouldReceive('put')->once()->with($filename2, "<?xml version=\"1.0\"?>\n<svg/>\n");
+        $sanitizer = new Sanitizer($fs);
+        $sanitizer->sanitizeFile($filename, self::$sanitizerOptions, $filename2);
+    }
+
+    public function testEncoding()
+    {
+        $input = "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\n<svg test=\"\xE0\" onload=''>\xE8</svg>\n"; // 0xE0 === 'à' in iso-8859-1; 0xE8 === 'è' in iso-8859-1
+        $output = "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\n<svg test=\"\xE0\">\xE8</svg>\n"; // 0xE0 === 'à' in iso-8859-1; 0xE8 === 'è' in iso-8859-1
+        $sanitized = self::$sanitizer->sanitizeData($input, self::$sanitizerOptions);
+        $this->assertSame($output, $sanitized);
     }
 }
