@@ -17,9 +17,9 @@ class Statistics
     {
         if ($date) {
             return static::getTotalSubmissionsBetween("$date 00:00:00", "$date 23:59:59", $dateTimezone);
-        } else {
-            return static::getTotalSubmissionsBetween();
         }
+
+        return static::getTotalSubmissionsBetween();
     }
 
     /**

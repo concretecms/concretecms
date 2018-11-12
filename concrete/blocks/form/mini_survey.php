@@ -198,7 +198,7 @@ class MiniSurvey
                     </tr>';
                 } else {
                 */
-                $requiredSymbol = ($questionRow['required']) ? '&nbsp;<span class="required">*</span>' : '';
+                $requiredSymbol = $questionRow['required'] ? '&nbsp;<span class="required">*</span>' : '';
                 echo '<div class="form-group">
                     <label class="control-label" for="Question' . (int) $questionRow['msqID'] . '">' . $questionRow['question'] . '' . $requiredSymbol . '</label></td>
                     <div>' . $this->loadInputType($questionRow, $showEdit) . '</div>
@@ -227,7 +227,7 @@ class MiniSurvey
                     continue;
                 }
 
-                $requiredSymbol = ($questionRow['required']) ? '<span class="required">*</span>' : ''; ?>
+                $requiredSymbol = $questionRow['required'] ? '<span class="required">*</span>' : ''; ?>
 					<li id="miniSurveyQuestionRow<?php echo $questionRow['msqID']; ?>" class="miniSurveyQuestionRow list-group-item">
 						<div class="miniSurveyQuestion"><?php echo $questionRow['question'] . ' ' . $requiredSymbol; ?></div>
 						<?php  /* <div class="miniSurveyResponse"><?php echo $this->loadInputType($questionRow,$showEdit)?></div> */ ?>
@@ -303,23 +303,23 @@ class MiniSurvey
                 return $html;
 
             case 'text':
-                $val = (Request::request('Question' . $msqID)) ? Core::make('helper/text')->entities(Request::request('Question' . $msqID)) : '';
+                $val = Request::request('Question' . $msqID) ? Core::make('helper/text')->entities(Request::request('Question' . $msqID)) : '';
 
                 return '<textarea name="Question' . $msqID . '" class="form-control" id="Question' . $msqID . '" cols="' . $questionData['width'] . '" rows="' . $questionData['height'] . '">' . $val . '</textarea>';
             case 'url':
-                $val = (Request::request('Question' . $msqID)) ? Request::request('Question' . $msqID) : '';
+                $val = Request::request('Question' . $msqID) ?: '';
 
                 return '<input name="Question' . $msqID . '" id="Question' . $msqID . '" class="form-control" type="url" value="' . stripslashes(htmlspecialchars($val)) . '" />';
             case 'telephone':
-                $val = (Request::request('Question' . $msqID)) ? Request::request('Question' . $msqID) : '';
+                $val = Request::request('Question' . $msqID) ?: '';
 
                 return '<input name="Question' . $msqID . '" id="Question' . $msqID . '" class="form-control" type="tel" value="' . stripslashes(htmlspecialchars($val)) . '" />';
             case 'email':
-                $val = (Request::request('Question' . $msqID)) ? Request::request('Question' . $msqID) : '';
+                $val = Request::request('Question' . $msqID) ?: '';
 
                 return '<input name="Question' . $msqID . '" id="Question' . $msqID . '" class="form-control" type="email" value="' . stripslashes(htmlspecialchars($val)) . '" />';
             case 'date':
-                $val = (Request::request('Question' . $msqID)) ? Request::request('Question' . $msqID) : $defaultDate;
+                $val = Request::request('Question' . $msqID) ?: $defaultDate;
 
                 return $datetime->date('Question' . $msqID, $val);
             case 'datetime':
@@ -339,7 +339,7 @@ class MiniSurvey
                 return $datetime->datetime('Question' . $msqID, $val);
             case 'field':
             default:
-                $val = (Request::request('Question' . $msqID)) ? Request::request('Question' . $msqID) : '';
+                $val = Request::request('Question' . $msqID) ?: '';
 
                 return '<input name="Question' . $msqID . '" id="Question' . $msqID . '" class="form-control" type="text" value="' . stripslashes(htmlspecialchars($val)) . '" />';
         }

@@ -513,7 +513,7 @@ class Controller extends BlockController
                     $answer = '';
                 } elseif ($row['inputType'] == 'fileupload') {
                     $answerLong = '';
-                    $answer = (int) $tmpFileIds[intval($row['msqID'])];
+                    $answer = (int) $tmpFileIds[(int)$row['msqID']];
                     if ($answer > 0) {
                         $answerDisplay = File::getByID($answer)->getVersion()->getDownloadURL();
                     } else {

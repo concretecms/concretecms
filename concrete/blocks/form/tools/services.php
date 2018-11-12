@@ -2,11 +2,11 @@
 
 defined('C5_EXECUTE') or die('Access Denied.');
 use Concrete\Block\Form\MiniSurvey;
+use Concrete\Core\Http\Request;
 
 $miniSurvey = new MiniSurvey();
-$bID = $_GET['bID'];
 //Permissions Check
-$bID = $_REQUEST['bID'];
+Request::request('bID');
 
 if ($_GET['cID'] && $_GET['arHandle']) {
     $badPermissions = false;
