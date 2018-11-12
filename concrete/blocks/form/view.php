@@ -10,8 +10,8 @@ $miniSurvey = new MiniSurvey($b);
 $miniSurvey->frontEndMode = true;
 
 //Clean up variables from controller so html is easier to work with...
-$bID = intval($bID);
-$qsID = intval($survey->questionSetId);
+$bID = (int)$bID;
+$qsID = (int)$survey->questionSetId;
 $formAction = $view->action('submit_form').'#formblock'.$bID;
 
 $questionsRS = $miniSurvey->loadQuestions($qsID, $bID);
@@ -40,7 +40,7 @@ while ($questionRow = $questionsRS->fetchRow()) {
 }
 
 //Prep thank-you message
-$success = (\Request::request('surveySuccess') && \Request::request('qsid') == intval($qsID));
+$success = (\Request::request('surveySuccess') && \Request::request('qsid') == (int)$qsID);
 $thanksMsg = $survey->thankyouMsg;
 
 //Collate all errors and put them into divs

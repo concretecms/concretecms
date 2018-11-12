@@ -22,9 +22,9 @@ $addSelected = true;
 <?php /* these question ids have been deleted, or edited, and so shouldn't be duplicated for block versioning */ ?>
 <input type="hidden" id="ccm-ignoreQuestionIDs" name="ignoreQuestionIDs" value="" />
 <input type="hidden" id="ccm-pendingDeleteIDs" name="pendingDeleteIDs" value="" />
-<input type="hidden" id="qsID" name="qsID" type="text" value="<?= isset($miniSurveyInfo['questionSetId']) ?  intval($miniSurveyInfo['questionSetId']) : 0 ?>" />
-<input type="hidden" id="oldQsID" name="oldQsID" type="text" value="<?= isset($miniSurveyInfo['questionSetId']) ? intval($miniSurveyInfo['questionSetId']) : 0 ?>" />
-<input type="hidden" id="msqID" name="msqID" type="text" value="<?= isset($msqID) ? intval($msqID) : 0 ?>" />
+<input type="hidden" id="qsID" name="qsID" type="text" value="<?= isset($miniSurveyInfo['questionSetId']) ? (int)$miniSurveyInfo['questionSetId'] : 0 ?>" />
+<input type="hidden" id="oldQsID" name="oldQsID" type="text" value="<?= isset($miniSurveyInfo['questionSetId']) ? (int)$miniSurveyInfo['questionSetId'] : 0 ?>" />
+<input type="hidden" id="msqID" name="msqID" type="text" value="<?= isset($msqID) ? (int)$msqID : 0 ?>" />
 	
 
 <div class="ccm-tab-content" id="ccm-tab-content-form-options">

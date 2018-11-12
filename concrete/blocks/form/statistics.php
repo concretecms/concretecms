@@ -56,7 +56,7 @@ class Statistics
         }
         $count = Loader::db()->GetOne('select count(asID) from btFormAnswerSet' . $where, $q);
 
-        return empty($count) ? 0 : intval($count);
+        return empty($count) ? 0 : (int)$count;
     }
 
     public static function loadSurveys($MiniSurvey)
