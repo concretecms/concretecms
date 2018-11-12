@@ -461,8 +461,7 @@ class Controller extends BlockController
                 } else {
                     $tmpFileIds[(int) $row['msqID']] = $resp->getFileID();
                     if ((int) $this->addFilesToSet) {
-                        $fs = new FileSet();
-                        $fs = $fs->getByID($this->addFilesToSet);
+                        $fs = FileSet::getByID($this->addFilesToSet);
                         if ($fs->getFileSetID()) {
                             $fs->addFileToSet($resp);
                         }

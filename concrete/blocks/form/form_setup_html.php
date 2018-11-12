@@ -96,8 +96,7 @@ $addSelected = true;
 			<div id="ccm-form-fileset">
 				<?php
 
-                    $fs = new FileSet();
-                    $fileSets = $fs->getMySets();
+                    $fileSets = FileSet::getMySets();
                     $sets = [0 => t('None')];
                     foreach ($fileSets as $fileSet) {
                         $sets[$fileSet->fsID] = $fileSet->fsName;
