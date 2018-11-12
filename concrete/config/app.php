@@ -276,7 +276,6 @@ return [
     'routes' => [
     ],
 
-
 /*
  * Route themes
  */
@@ -297,6 +296,14 @@ return [
 
     /*
      * File Types
+     * Keys are the type name
+     * Values are arrays with:
+     * - comma-separated extensions
+     * - file type
+     * - handle of an importer (or false)
+     * - handle of the inline viewer (of false)
+     * - handle of the editor
+     * - handle of the package
      */
     'file_types' => [
         'JPEG' => ['jpg,jpeg,jpe', FileType::T_IMAGE, 'image', 'image', 'image'],
@@ -307,7 +314,7 @@ return [
         'HTML' => ['htm,html', FileType::T_IMAGE],
         'Flash' => ['swf', FileType::T_IMAGE, 'image'],
         'Icon' => ['ico', FileType::T_IMAGE],
-        'SVG' => ['svg', FileType::T_IMAGE],
+        'SVG' => ['svg', FileType::T_IMAGE, false, 'image'],
         'Windows Video' => ['asf,wmv', FileType::T_VIDEO, false, 'video'],
         'Quicktime' => ['mov,qt', FileType::T_VIDEO, false, 'video'],
         'AVI' => ['avi', FileType::T_VIDEO, false, 'video'],
@@ -627,9 +634,9 @@ return [
         'core/calendar/admin' => [
             ['javascript', 'js/calendar/admin.js', ['minify' => false]],
         ],
-		'core/avatar' => [
-			['javascript', 'js/components/avatar.bundle.js', ['minify' => false]],
-		],
+        'core/avatar' => [
+            ['javascript', 'js/components/avatar.bundle.js', ['minify' => false]],
+        ],
         'core/notification' => [
             ['javascript', 'js/notification.js', ['minify' => false]],
         ],
@@ -709,7 +716,7 @@ return [
                 ['javascript', 'moment'],
                 ['javascript', 'fullcalendar'],
                 ['javascript', 'fullcalendar/localization'],
-                ['css', 'fullcalendar']
+                ['css', 'fullcalendar'],
             ],
         ],
         'dropzone' => [
@@ -730,11 +737,11 @@ return [
                 ['javascript', 'ace'],
             ],
         ],
-		'core/avatar' => [
-			[
-				['javascript', 'core/avatar'],
-			],
-		],
+        'core/avatar' => [
+            [
+                ['javascript', 'core/avatar'],
+            ],
+        ],
         'core/notification' => [
             [
                 ['javascript', 'core/notification'],
@@ -1115,7 +1122,7 @@ return [
             [
                 ['javascript', 'jquery'],
                 ['javascript', 'core/country-stateprovince-link'],
-            ]
+            ],
         ],
         /* @deprecated keeping this around because certain themes reference it and we don't want to break them. */
         'core/legacy' => [
@@ -1173,8 +1180,8 @@ return [
         'scopes' => [
             'system',
             'site',
-            'account'
-        ]
+            'account',
+        ],
     ],
 
     // HTTP middleware for processing http requests

@@ -649,7 +649,7 @@
 				params.saveOldPagePath = $form.find('input[name="saveOldPagePath"]').is(':checked') ? 1 : 0;
 				break;
 			case 'a-copy-operation':
-				params.ctask = $('input[name="dtask"]:checked').val()
+				params.ctask = $('input[name="dtask"]:checked').val();
 				break;
 		}
 		var paramsArray = [];

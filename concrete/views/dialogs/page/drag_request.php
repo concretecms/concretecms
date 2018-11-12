@@ -60,7 +60,7 @@ $singleOriginalPage = $dragRequestData->getSingleOriginalPage();
         <div class="form-group">
             <div class="radio">
                 <label>
-                    <input type="radio" name="ctask" value="<?= $dragRequestData::OPERATION_MOVE ?>" checked="checked" />
+                    <input type="radio" name="ctask" value="<?= $dragRequestData::OPERATION_MOVE ?>" />
                     <?php
                     if ($singleOriginalPage !== null) {
                         echo t('<strong>Move</strong> "%1$s" beneath "%2$s"', h($singleOriginalPage->getCollectionName()), h($dragRequestData->getDestinationPage()->getCollectionName()));
@@ -103,7 +103,6 @@ $singleOriginalPage = $dragRequestData->getSingleOriginalPage();
     }
 
     if ($dragRequestData->canDo($dragRequestData::OPERATION_COPY) || $dragRequestData->canDo($dragRequestData::OPERATION_COPYVERSION)) {
-        $checked = ' checked="checked"';
         ?>
         <div class="form-group">
             <div class="radio">
@@ -117,41 +116,38 @@ $singleOriginalPage = $dragRequestData->getSingleOriginalPage();
                         ?>
                         <div class="checkbox">
                             <label>
-                                <input type="radio" name="dtask" value="<?= $dragRequestData::OPERATION_COPY ?>"<?= $checked ?> />
+                                <input type="radio" name="dtask" value="<?= $dragRequestData::OPERATION_COPY ?>" />
                                 <?php
                                 if ($singleOriginalPage !== null) {
                                     echo h(t('Copy "%1$s" beneath "%2$s"', $singleOriginalPage->getCollectionName(), $dragRequestData->getDestinationPage()->getCollectionName()));
                                 } else {
-                                    echo h(t('Copy pages beneath "$s"', $dragRequestData->getDestinationPage()->getCollectionName()));
+                                    echo h(t('Copy pages beneath "%s"', $dragRequestData->getDestinationPage()->getCollectionName()));
                                 }
                                 ?>
                             </label>
                         </div>
                         <?php
-                        $checked = '';
                     }
                     if ($dragRequestData->canDo($dragRequestData::OPERATION_COPYALL)) {
                         ?>
                         <div class="checkbox">
                             <label>
-                                <input type="radio" name="dtask" value="<?= $dragRequestData::OPERATION_COPYALL ?>"<?= $checked ?> />
+                                <input type="radio" name="dtask" value="<?= $dragRequestData::OPERATION_COPYALL ?>" />
                                 <?= h(t('Copy "%1$s" and all its children beneath "%2$s"', $singleOriginalPage->getCollectionName(), $dragRequestData->getDestinationPage()->getCollectionName())) ?>
                             </label>
                         </div>
                         <?php
-                        $checked = '';
                     }
                     if ($dragRequestData->canDo($dragRequestData::OPERATION_COPYVERSION)) {
                         ?>
                         <div class="checkbox">
                             <label>
-                                <input type="radio" name="dtask" value="<?= $dragRequestData::OPERATION_COPYVERSION ?>"<?= $checked ?> />
+                                <input type="radio" name="dtask" value="<?= $dragRequestData::OPERATION_COPYVERSION ?>" />
                                 <?= h(t('Replace "%1$s" with a copy of "%2$s"', $dragRequestData->getDestinationPage()->getCollectionName(), $singleOriginalPage->getCollectionName())) ?>
                             </label>
                         </div>
                     </div>
                     <?php
-                    $checked = '';
                 }
                 ?>
             </div>
@@ -210,6 +206,8 @@ $(document).ready(function() {
             .trigger('change')
         ;
     });
+    $form.find('input[name="dtask"]:first').prop('checked', 'checked');
+    $form.find('input[name="ctask"]:first').prop('checked', 'checked');
     updateState();
 });
 </script>
