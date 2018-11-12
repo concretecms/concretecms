@@ -264,7 +264,7 @@ class MiniSurvey
                 } else {
                 */
                 $html .= '<div class="checkboxList">'."\r\n";
-                for ($i = 0; $i < count($options); ++$i) {
+                for ($i = 0, $iMax = count($options); $i < $iMax; ++$i) {
                     if (strlen(trim($options[$i])) == 0) {
                         continue;
                     }
