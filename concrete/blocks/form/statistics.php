@@ -9,7 +9,7 @@ class Statistics
     /**
      * Gets the total number of submissions.
      *
-     * @param string $date Set to a specific day (eg '2014-09-14') to retrieve the submissions in that day.
+     * @param string $date set to a specific day (eg '2014-09-14') to retrieve the submissions in that day
      * @param string $dateTimezone The timezone of the $date parameter (acceptable values: 'user', 'system', 'app' or any valid PHP timezone identifier)
      *
      * @return int
@@ -22,6 +22,7 @@ class Statistics
             return static::getTotalSubmissionsBetween();
         }
     }
+
     /**
      * Gets the total number of submissions in specific date/time ranges.
      *
@@ -42,7 +43,7 @@ class Statistics
             $toDate = $dh->toDB($toDate, $datesTimezone);
         }
         $where = '';
-        $q = array();
+        $q = [];
         if ($fromDate && $toDate) {
             $where = ' where created between ? and ?';
             $q[] = $fromDate;
@@ -56,7 +57,7 @@ class Statistics
         }
         $count = Loader::db()->GetOne('select count(asID) from btFormAnswerSet' . $where, $q);
 
-        return empty($count) ? 0 : (int)$count;
+        return empty($count) ? 0 : (int) $count;
     }
 
     public static function loadSurveys($MiniSurvey)
@@ -72,7 +73,7 @@ class Statistics
          )');
     }
 
-    public static $sortChoices = array('newest' => 'created DESC', 'chrono' => 'created');
+    public static $sortChoices = ['newest' => 'created DESC', 'chrono' => 'created'];
 
     public static function buildAnswerSetsArray($questionSet, $orderBy = '', $limit = '')
     {
@@ -92,8 +93,8 @@ class Statistics
             'WHERE aSet.questionSetId=' . $questionSet . ' ORDER BY ' . $orderBySQL . ' ' . $limit;
         $answerSetsRS = $db->query($sql);
         //load answers into a nicer multi-dimensional array
-        $answerSets = array();
-        $answerSetIds = array(0);
+        $answerSets = [];
+        $answerSetIds = [0];
         while ($answer = $answerSetsRS->fetchRow()) {
             //answer set id - question id
             $answerSets[$answer['asID']] = $answer;
