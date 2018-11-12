@@ -499,7 +499,7 @@ return [
         /*
          * The threshold (total number of pixels - width x height x number of frames)
          * after which we'll reload images instead of creating in-memory clones.
-         * If empty: unlimited 
+         * If empty: unlimited
          */
         'inplace_image_operations_limit' => 4194304,
         /*
@@ -840,6 +840,10 @@ return [
         'password' => [
             'maximum' => 128,
             'minimum' => 5,
+            'required_special_characters' => 0,
+            'required_lower_case' => 0,
+            'required_upper_case' => 0,
+            'custom_regex' => [],
             'hash_portable' => false,
             'hash_cost_log2' => 12,
             'legacy_salt' => '',
