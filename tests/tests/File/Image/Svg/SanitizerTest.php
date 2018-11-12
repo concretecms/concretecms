@@ -76,7 +76,7 @@ class SanitizerTest extends PHPUnit_Framework_TestCase
     {
         $sanitized = self::$sanitizer->sanitizeData($input, self::$sanitizerOptions);
         $lines = explode("\n", $sanitized);
-        $this->assertSame('<?xml version="1.0"?>', array_shift($lines));
+        $this->assertRegExp('/^<\?xml\b[^>]*\?>$/', array_shift($lines));
         $xml = trim(implode('', $lines));
         $this->assertSame($expectedOutput, $xml);
     }
