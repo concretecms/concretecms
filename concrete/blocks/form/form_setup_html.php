@@ -1,16 +1,23 @@
 <?php
 defined('C5_EXECUTE') or die('Access Denied.');
-$uh = Loader::helper('concrete/urls');
-$form = Loader::helper('form');
-$datetime = loader::helper('form/date_time');
-$ih = Loader::helper('concrete/ui');
+
+use Concrete\Core\Support\Facade\Application;
+
+$app = Application::getFacadeApplication();
+$uh = $app->make('helper/concrete/urls');
+$form = $app->make('helper/form');
+$datetime = $app->make('helper/form/date_time');
+$ih = $app->make('helper/concrete/ui');
+$ui = $app->make('helper/concrete/ui');
+$page_selector = $app->make('helper/form/page_selector');
+
 $a = $view->getAreaObject();
 $bt = BlockType::getByHandle('form');
 
 $addSelected = true;
 ?>
 <p>
-<?php echo Loader::helper('concrete/ui')->tabs([
+<?php echo $ui->tabs([
     ['form-add', t('Add'), $addSelected],
     ['form-edit', t('Edit')],
     ['form-preview', t('Preview')],
@@ -76,7 +83,6 @@ $addSelected = true;
 			<label class="control-label" for="ccm-form-redirect"><?=t('Redirect to another page after form submission?'); ?></label>
 			<div id="ccm-form-redirect-page">
 				<?php
-                    $page_selector = Loader::helper('form/page_selector');
                     if (!empty($miniSurveyInfo['redirectCID'])) {
                         echo $page_selector->selectPage('redirectCID', $miniSurveyInfo['redirectCID']);
                     } else {

@@ -4,6 +4,9 @@
  ************************************************************/
 defined('C5_EXECUTE') or die('Access Denied.');
 use Concrete\Block\Form\MiniSurvey;
+use Concrete\Core\Support\Facade\Application;
+
+$app = Application::getFacadeApplication();
 
 $survey = $controller;
 $miniSurvey = new MiniSurvey($b);
@@ -56,7 +59,7 @@ foreach ($errors as $error) {
 
 //Prep captcha
 $surveyBlockInfo = $miniSurvey->getMiniSurveyBlockInfoByQuestionId($qsID, $bID);
-$captcha = $surveyBlockInfo['displayCaptcha'] ? Loader::helper('validation/captcha') : false;
+$captcha = $surveyBlockInfo['displayCaptcha'] ? $app->make('helper/validation/captcha') : false;
 
 /******************************************************************************
 * DESIGNERS: CUSTOMIZE THE FORM HTML STARTING HERE...
