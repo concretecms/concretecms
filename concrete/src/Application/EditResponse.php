@@ -3,7 +3,7 @@
 namespace Concrete\Core\Application;
 
 use Concrete\Core\Error\ErrorList\ErrorList;
-use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Support\Facade\Application as ApplicationFacade;
 use Core;
 use Exception;
 use JsonSerializable;
@@ -71,7 +71,7 @@ class EditResponse implements JsonSerializable
      */
     public function __construct($e = false)
     {
-        $app = Application::getFacadeApplication();
+        $app = ApplicationFacade::getFacadeApplication();
         if ($e instanceof ErrorList) {
             $this->error = $e;
         } else {
