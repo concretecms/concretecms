@@ -435,10 +435,11 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
 
         /*
          * ----------------------------------------------------------------------------
-         * Obtain the Request object.
+         * (Re)Build the request object.
          * ----------------------------------------------------------------------------
          */
-        $request = Request::getInstance();
+        $request = Request::createFromGlobals();
+        Request::setInstance($request);
 
         return $request;
     }

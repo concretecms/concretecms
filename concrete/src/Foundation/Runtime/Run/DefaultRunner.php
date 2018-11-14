@@ -229,14 +229,13 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
     }
 
     /**
-     * Create the request object to use.
+     * @deprecated since concrete5 8.5.0a3 the request instance is initialized in an earlier stage.
+     *
+     * @return \Concrete\Core\Http\Request
      */
     protected function createRequest()
     {
-        $request = Request::createFromGlobals();
-        $request::setInstance($request);
-
-        return $request;
+        return Request::getInstance();
     }
 
     /**
