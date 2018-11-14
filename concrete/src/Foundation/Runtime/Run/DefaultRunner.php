@@ -112,8 +112,7 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
             $this->initializeSystemTimezone();
         }
 
-        // Create the request to use
-        $request = $this->createRequest();
+        $request = Request::getInstance();
 
         if (!$response) {
             $response = $this->server->handleRequest($request);
@@ -229,14 +228,13 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
     }
 
     /**
-     * Create the request object to use.
+     * @deprecated since concrete5 8.5.0a3: the request is initialized in previous steps.
+     *
+     * @return \Concrete\Core\Http\Request
      */
     protected function createRequest()
     {
-        $request = Request::createFromGlobals();
-        $request::setInstance($request);
-
-        return $request;
+        return Request::getInstance();
     }
 
     /**
