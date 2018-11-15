@@ -16,7 +16,8 @@
 			},
 			'complete': function() {
 				my.complete(my);
-			}
+			},
+			skipResponseValidation: false
 		}, options);
 		my.options = options;
 		my.execute();
@@ -89,7 +90,7 @@
 		},
 
 		success: function(r, my, callback) {
-			if (my.options.dataType != 'json' || my.validateResponse(r)) {
+			if (my.options.dataType != 'json' || my.options.skipResponseValidation || my.validateResponse(r)) {
 				if (callback) {
 					callback(r);
 				}
