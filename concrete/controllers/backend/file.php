@@ -16,7 +16,7 @@ use Concrete\Core\File\Incoming;
 use Concrete\Core\File\Service\VolatileDirectory;
 use Concrete\Core\Foundation\Queue\QueueService;
 use Concrete\Core\Http\ResponseFactoryInterface;
-use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Page as CorePage;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\FileFolder;
@@ -570,7 +570,7 @@ class File extends Controller
                 $this->importOriginalPage = null;
             } else {
                 $ocID = is_scalar($ocID) ? (int) $ocID : 0;
-                $page = $ocID === 0 ? null : Page::getByID($ocID);
+                $page = $ocID === 0 ? null : CorePage::getByID($ocID);
                 if ($page === null || $page->isError()) {
                     throw new UserMessageException(t('Unable to find the specified page.'));
                 }
