@@ -342,16 +342,17 @@ class Importer
      */
     public function importIncomingFile($filename, $fr = false)
     {
+        $incoming = $this->app->make(Incoming::class);
         $fh = $this->app->make('helper/validation/file');
         $fi = $this->app->make('helper/file');
         $cf = $this->app->make('helper/concrete/file');
 
         $sanitizedFilename = $fi->sanitize($filename);
 
-        $default = $this->app->make(StorageLocationFactory::class)->fetchDefault();
-        $storage = $default->getFileSystemObject();
+        $storage = $incoming->getIncomingFilesystem();
+        $incomingPath = $incoming->getIncomingPath();
 
-        if (!$storage->has(REL_DIR_FILES_INCOMING . '/' . $filename)) {
+        if (!$storage->has($incomingPath . '/' . $filename)) {
             return self::E_FILE_INVALID;
         }
 
@@ -363,12 +364,12 @@ class Importer
         $prefix = $this->generatePrefix();
         $destinationPath = $cf->prefix($prefix, $sanitizedFilename);
         try {
-            $copied = $storage->copy(REL_DIR_FILES_INCOMING . '/' . $filename, $destinationPath);
+            $copied = $storage->copy($incomingPath . '/' . $filename, $destinationPath);
         } catch (Exception $e) {
             $copied = false;
         }
         if (!$copied) {
-            $src = $storage->readStream(REL_DIR_FILES_INCOMING . '/' . $filename);
+            $src = $storage->readStream($incomingPath . '/' . $filename);
             if (!$src) {
                 return self::E_FILE_INVALID;
             }
