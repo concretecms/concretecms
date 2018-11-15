@@ -15,7 +15,8 @@
             'beforeSubmit': my.before,
             'complete': my.complete,
             'data': {},
-            error: null
+            error: null,
+            skipResponseValidation: false
         }, options);
         if (!options.data) {
             options.data = {};
@@ -114,7 +115,7 @@
     };
 
     ConcreteAjaxForm.prototype.success = function(resp, my, callback) {
-        if (my.validateResponse(resp)) {
+        if (my.options.skipResponseValidation || my.validateResponse(resp)) {
             if (callback) {
                 if (my.options.progressiveOperation) {
                     my.handleProgressiveOperation(resp, function(r) {
