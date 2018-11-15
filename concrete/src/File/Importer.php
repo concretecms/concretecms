@@ -349,10 +349,13 @@ class Importer
 
         $sanitizedFilename = $fi->sanitize($filename);
 
-        $storage = $incoming->getIncomingFilesystem();
+        $incomingLocation = $incoming->getIncomingStorageLocation();
+        $incomingFilesystem = $incomingLocation->getFileSystemObject();
+        $incomingPath = $incoming->getIncomingPath();
+        
         $incomingPath = $incoming->getIncomingPath();
 
-        if (!$storage->has($incomingPath . '/' . $filename)) {
+        if (!$incomingFilesystem->has($incomingPath . '/' . $filename)) {
             return self::E_FILE_INVALID;
         }
 
@@ -364,22 +367,22 @@ class Importer
         $prefix = $this->generatePrefix();
         $destinationPath = $cf->prefix($prefix, $sanitizedFilename);
         try {
-            $copied = $storage->copy($incomingPath . '/' . $filename, $destinationPath);
+            $copied = $incomingFilesystem->copy($incomingPath . '/' . $filename, $destinationPath);
         } catch (Exception $e) {
             $copied = false;
         }
         if (!$copied) {
-            $src = $storage->readStream($incomingPath . '/' . $filename);
+            $src = $incomingFilesystem->readStream($incomingPath . '/' . $filename);
             if (!$src) {
                 return self::E_FILE_INVALID;
             }
-            $storage->writeStream($destinationPath, $src);
+            $incomingFilesystem->writeStream($destinationPath, $src);
             @fclose($src);
         }
 
         if (!($fr instanceof FileEntity)) {
             // we have to create a new file object for this file version
-            $fv = File::add($sanitizedFilename, $prefix, ['fvTitle' => $filename], $default, $fr);
+            $fv = File::add($sanitizedFilename, $prefix, ['fvTitle' => $filename], $incomingLocation, $fr);
             $fv->refreshAttributes($this->rescanThumbnailsOnImport);
 
             foreach ($this->importProcessors as $processor) {
