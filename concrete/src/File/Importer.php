@@ -325,7 +325,7 @@ class Importer
             }
         }
         if ($this->rescanThumbnailsOnImport) {
-            $fv->rescanThumbnails();
+            $fv->refreshThumbnails(true);
         }
         $fv->releaseImagineImage();
 

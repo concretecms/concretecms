@@ -27,6 +27,13 @@ class Resolver
     protected $collation;
 
     /**
+     * The maximum length of string fields that should be supported using the specified collation.
+     *
+     * @var int
+     */
+    protected $maximumStringKeyLength = 255;
+
+    /**
      * @param \Concrete\Core\Config\Repository\Repository $config
      */
     public function __construct(Repository $config)
@@ -115,6 +122,30 @@ class Resolver
     }
 
     /**
+     * Get the maximum length of string fields that should be supported using the specified collation.
+     *
+     * @return int
+     */
+    public function getMaximumStringKeyLength()
+    {
+        return $this->maximumStringKeyLength;
+    }
+
+    /**
+     * Set the maximum length of string fields that should be supported using the specified collation.
+     *
+     * @param int $value
+     *
+     * @return $this
+     */
+    public function setMaximumStringKeyLength($value)
+    {
+        $this->maximumStringKeyLength = (int) $value;
+
+        return $this;
+    }
+
+    /**
      * Resolve the character set and collation.
      *
      * @param \Concrete\Core\Database\Connection\Connection $connection
@@ -123,6 +154,7 @@ class Resolver
      * @throws \Concrete\Core\Database\CharacterSetCollation\Exception\UnsupportedCharacterSetException
      * @throws \Concrete\Core\Database\CharacterSetCollation\Exception\UnsupportedCollationException
      * @throws \Concrete\Core\Database\CharacterSetCollation\Exception\InvalidCharacterSetCollationCombination
+     * @throws \Concrete\Core\Database\CharacterSetCollation\Exception\LongKeysUnsupportedByCollation
      *
      * return string[] first value is the character set; the second value is the collation
      */
@@ -148,6 +180,9 @@ class Resolver
             $collation = $characterSets[$characterSet];
         } else {
             throw new Exception\NoCharacterSetCollationDefinedException();
+        }
+        if (!$connection->isCollationSupportedForKeys($collation, $this->getMaximumStringKeyLength())) {
+            throw new Exception\LongKeysUnsupportedByCollation($collation, $this->getMaximumStringKeyLength());
         }
 
         return [$characterSet, $collation];

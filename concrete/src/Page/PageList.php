@@ -8,15 +8,9 @@ use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemLis
 use Concrete\Core\Search\ItemList\Pager\Manager\PageListPagerManager;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 use Concrete\Core\Search\ItemList\Pager\QueryString\VariableFactory;
-use Concrete\Core\Search\Pagination\PagerPagination;
-use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Search\Pagination\PaginationProviderInterface;
-use Concrete\Core\Search\Pagination\PermissionablePagination;
-use Concrete\Core\Search\PermissionableListItemInterface;
 use Concrete\Core\Entity\Package;
 use Concrete\Core\Search\StickyRequest;
-use Doctrine\DBAL\Query\QueryBuilder;
-use Page as ConcretePage;
 use Concrete\Core\Entity\Page\Template as TemplateEntity;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use Concrete\Core\Site\Tree\TreeInterface;
@@ -30,6 +24,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
     const PAGE_VERSION_ACTIVE = 1;
     const PAGE_VERSION_RECENT = 2;
     const PAGE_VERSION_RECENT_UNAPPROVED = 3;
+    const PAGE_VERSION_SCHEDULED = 4;
 
     const SITE_TREE_CURRENT = -1;
     const SITE_TREE_ALL = 0;
@@ -66,7 +61,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
         return '\\Concrete\\Core\\Attribute\\Key\\CollectionKey';
     }
 
-    /** @var  \Closure | integer | null */
+    /** @var \Closure | integer | null */
     protected $permissionsChecker;
 
     /** @var Tree */
@@ -94,7 +89,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
     /**
      * Whether to include system pages in this query. NOTE: There really isn't
      * a reason to set this to true unless you're doing something pretty custom
-     * or deep in the core
+     * or deep in the core.
      *
      * @var bool
      */
@@ -127,9 +122,8 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
         $this->siteTree = self::SITE_TREE_CURRENT;
     }
 
-
     /**
-     * @param boolean $includeSystemPages
+     * @param bool $includeSystemPages
      */
     public function includeSystemPages()
     {
@@ -178,8 +172,8 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
 
     public function filterBySite(Site $site)
     {
-        $this->siteTree = array();
-        foreach($site->getLocales() as $locale) {
+        $this->siteTree = [];
+        foreach ($site->getLocales() as $locale) {
             $this->siteTree[] = $locale->getSiteTree();
         }
     }
@@ -231,6 +225,11 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
                     ))
                 ;
                 break;
+            case self::PAGE_VERSION_SCHEDULED:
+                $now = new \DateTime();
+                $query->andWhere('cv.cvID = (select cvID from CollectionVersions where cID = cv.cID and cvIsApproved = 1 and ((cvPublishDate > :cvPublishDate) and (cvPublishEndDate >= :cvPublishDate or cvPublishEndDate is null)) order by cvPublishDate desc limit 1)');
+                $query->setParameter('cvPublishDate', $now->format('Y-m-d H:i:s'));
+                break;
             case self::PAGE_VERSION_ACTIVE:
             default:
                 $app = Application::getFacadeApplication();
@@ -255,14 +254,13 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
         }
 
         if ($this->query->getParameter('cParentID') < 1) {
-
             // The code above is set up to make it so that we don't filter by site tree
             // if we have a defined parent.
 
             if (is_object($this->siteTree) || is_array($this->siteTree)) {
                 $tree = $this->siteTree;
             } else {
-                switch($this->siteTree) {
+                switch ($this->siteTree) {
                     case self::SITE_TREE_CURRENT:
                         $c = \Page::getCurrentPage();
                         $tree = false;
@@ -309,7 +307,6 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
                     $query->andWhere($or);
                 }
             }
-
         }
 
         if (!$this->includeSystemPages) {
@@ -341,6 +338,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
             // when we get total results, because we're resetting the select
             $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct p.cID)')->setMaxResults(1);
         });
+
         return $adapter;
     }
 
@@ -351,12 +349,17 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
      */
     public function getResult($queryRow)
     {
-        $c = ConcretePage::getByID($queryRow['cID'], 'ACTIVE');
+        $c = Page::getByID($queryRow['cID'], 'ACTIVE');
         if (is_object($c) && $this->checkPermissions($c)) {
             if ($this->pageVersionToRetrieve == self::PAGE_VERSION_RECENT) {
                 $cp = new \Permissions($c);
                 if ($cp->canViewPageVersions() || $this->permissionsChecker === -1) {
                     $c->loadVersionObject('RECENT');
+                }
+            } elseif ($this->pageVersionToRetrieve == self::PAGE_VERSION_SCHEDULED) {
+                $cp = new \Permissions($c);
+                if ($cp->canViewPageVersions() || $this->permissionsChecker === -1) {
+                    $c->loadVersionObject('SCHEDULED');
                 }
             }
             if (isset($queryRow['cIndexScore'])) {
@@ -478,8 +481,12 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
      */
     public function filterByPagesWithCustomStyles()
     {
-        $this->query->innerJoin('cv', 'CollectionVersionThemeCustomStyles', 'cvStyles',
-            'cv.cID = cvStyles.cID');
+        $this->query->innerJoin(
+            'cv',
+            'CollectionVersionThemeCustomStyles',
+            'cvStyles',
+            'cv.cID = cvStyles.cID'
+        );
     }
 
     /**
@@ -635,11 +642,14 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
         $query->select('distinct p2.cID')
             ->from('Pages', 'p2')
             ->innerJoin('p2', 'CollectionVersions', 'cv2', 'cv2.cID = p2.cID')
-            ->innerJoin('cv2', 'CollectionVersionBlocks', 'cvb2',
-                'cv2.cID = cvb2.cID and cv2.cvID = cvb2.cvID')
+            ->innerJoin(
+                'cv2',
+                'CollectionVersionBlocks',
+                'cvb2',
+                'cv2.cID = cvb2.cID and cv2.cvID = cvb2.cvID'
+            )
             ->innerJoin('cvb2', 'Blocks', 'b', 'cvb2.bID = b.bID')
             ->andWhere('b.btID = :btID');
-
 
         $this->query->andWhere(
             $this->query->expr()->in('p.cID', $query->getSQL())
@@ -732,7 +742,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
     protected function selectDistinct()
     {
         $selects = $this->query->getQueryPart('select');
-        if ($selects[0] === 'p.cID') {
+        if ($selects[0] ==='p.cID') {
             $selects[0] = 'distinct p.cID';
             $this->query->select($selects);
         }
@@ -771,5 +781,4 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
     {
         $this->setPageVersionToRetrieve(self::PAGE_VERSION_RECENT);
     }
-
 }

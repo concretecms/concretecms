@@ -6,7 +6,6 @@ php:
 - 5.5
 - 5.6
 - 7.0
-- 7.1
 - 7.2
 - nightly
 
@@ -22,6 +21,9 @@ env:
 matrix:
   fast_finish: true
   include:
+  - php: 7.1
+    env:
+    - DO_PHPUNIT=2
   - php: 7.1
     env:
     - DO_CS_PHP=1
@@ -46,7 +48,8 @@ before_script:
 script:
 - if test $DO_CS_PHP -ne 0; then echo 'Testing PHP coding style'; composer phpcs; fi
 - if test $DO_CS_JS -ne 0; then echo 'Testing JS coding style'; pushd build && grunt js:check && popd; fi
-- if test $DO_PHPUNIT -ne 0; then echo 'Running tests'; composer test-coverage; fi
+- if test $DO_PHPUNIT -eq 1; then echo 'Running tests'; composer test; fi
+- if test $DO_PHPUNIT -gt 1; then echo 'Running tests (with coverage)'; composer test-coverage; fi
 - if test $DO_BUILDASSETS -ne 0; then ./.travis/rebuild-assets.sh; fi
 
 cache:
@@ -60,7 +63,7 @@ notifications:
 
 after_script:
 - |
-  if [ "$TRAVIS_PHP_VERSION" != 'nightly' ] && [ "$DO_PHPUNIT" -ne 0 ]; then
+  if test $DO_PHPUNIT -gt 1; then
     wget https://scrutinizer-ci.com/ocular.phar
     php ocular.phar code-coverage:upload --format=php-clover coverage.clover
   fi

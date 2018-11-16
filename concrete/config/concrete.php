@@ -6,9 +6,9 @@ return [
      *
      * @var string
      */
-    'version' => '8.5.0a2',
-    'version_installed' => '8.5.0a2',
-    'version_db' => '20181024083100', // the key of the latest database migration
+    'version' => '8.5.0a3',
+    'version_installed' => '8.5.0a3',
+    'version_db' => '20181112211702', // the key of the latest database migration
 
     /*
      * Installation status
@@ -238,7 +238,28 @@ return [
                             'filePermissions' => FILE_PERMISSIONS_MODE_COMPUTED,
                         ],
                     ],
+                    'redis' => [
+                        'class' => \Concrete\Core\Cache\Driver\RedisStashDriver::class,
+                        'options' => [
+                            /* Example configuration for servers
+                            'servers' => [
+                                [
+                                    'server' => 'localhost',
+                                    'port' => 6379,
+                                    'ttl' => 10 //Connection Timeout - not TTL for objects
+                                ],
+                                [
+                                    'server' => 'outside.server',
+                                    'port' => 6379,
+                                    'ttl' => 10
+                                ],
+                            ],*/
+                            'prefix'=>'c5_overrides',
+                            'database'=>0 // Use different Redis Databases - optional
+                        ],
+                    ],
                 ],
+                'preferred_driver' => 'core_filesystem'// Use this to specify a preferred driver
             ],
             'expensive' => [
                 'drivers' => [
@@ -246,7 +267,6 @@ return [
                         'class' => '\Stash\Driver\Ephemeral',
                         'options' => [],
                     ],
-
                     'core_filesystem' => [
                         'class' => \Concrete\Core\Cache\Driver\FileSystemStashDriver::class,
                         'options' => [
@@ -255,7 +275,15 @@ return [
                             'filePermissions' => FILE_PERMISSIONS_MODE_COMPUTED,
                         ],
                     ],
+                    'redis' => [
+                        'class' => \Concrete\Core\Cache\Driver\RedisStashDriver::class,
+                        'options' => [
+                            'prefix'=>'c5_expensive',
+                            'database'=>0 // Use different Redis Databases - optional
+                        ],
+                    ],
                 ],
+                'preferred_driver' => 'core_filesystem'// Use this to specify a preferred driver
             ],
             'object' => [
                 'drivers' => [
@@ -263,7 +291,15 @@ return [
                         'class' => '\Stash\Driver\Ephemeral',
                         'options' => [],
                     ],
+                    'redis' => [
+                        'class' => \Concrete\Core\Cache\Driver\RedisStashDriver::class,
+                        'options' => [
+                            'prefix'=>'c5_object',
+                            'database'=>0 // Use different Redis Databases - optional
+                        ],
+                    ],
                 ],
+                'preferred_driver' => 'core_ephemeral'// Use this to specify a preferred driver
             ],
         ],
 
@@ -461,6 +497,12 @@ return [
          */
         'default_thumbnail_format' => 'auto',
         /*
+         * The threshold (total number of pixels - width x height x number of frames)
+         * after which we'll reload images instead of creating in-memory clones.
+         * If empty: unlimited 
+         */
+        'inplace_image_operations_limit' => 4194304,
+        /*
          * @var string (now|async)
          */
         'basic_thumbnailer_generation_strategy' => 'now',
@@ -479,6 +521,12 @@ return [
             'enable_cross_origin' => false,
             'anonymous_request' => true,
         ],
+        /*
+         * Check whether to add a "generator" tag with the concrete5 version to the site pages
+         *
+         * @var bool
+         */
+        'generator_tag_display_in_header' => true,
     ],
 
     'theme' => [
@@ -682,6 +730,9 @@ return [
     'session' => [
         'name' => 'CONCRETE5',
         'handler' => 'file',
+        'redis' => [
+            'database'=>1 // Use different Redis Databases - optional
+        ],
         'save_path' => null,
         'max_lifetime' => 7200,
         'cookie' => [
@@ -806,6 +857,11 @@ return [
             'enable_login_threshold_deactivation' => false,
             'login' => [
                 'threshold' => 120, // in days
+            ],
+            'authentication_failure' => [
+                'enabled' => false,
+                'amount' => 5, // The number of failures
+                'duration' => 300 // In so many seconds
             ],
             'message' => 'This user is inactive. Please contact us regarding this account.',
         ],

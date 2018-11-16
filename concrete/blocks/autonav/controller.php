@@ -162,6 +162,11 @@ class Controller extends BlockController
             }
         } else {
             $c = $this->collection;
+
+            // let's use the ID of the collection passed in $this->collection
+            if ($this->collection instanceof \Concrete\Core\Page\Page) {
+                $this->cID = $this->collection->getCollectionID();
+            }
         }
         //Create an array of parent cIDs so we can determine the "nav path" of the current page
         $inspectC = $c;

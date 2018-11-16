@@ -84,6 +84,13 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     protected $cPointerOriginalID = null;
 
     /**
+     * The original siteTreeID of a page (if it's a page alias).
+     *
+     * @var int|null
+     */
+    protected $cPointerOriginalSiteTreeID = null;
+
+    /**
      * The link for the aliased page.
      *
      * @var string|null
@@ -262,6 +269,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                 $this->cPointerID = $originalRow['cPointerID'];
                 $this->cIsActive = $originalRow['cIsActive'];
                 $this->cPointerOriginalID = $originalRow['cID'];
+                $this->cPointerOriginalSiteTreeID = $originalRow['siteTreeID'];
                 $this->cPath = $originalRow['cPath'];
                 $this->cParentID = $originalRow['cParentID'];
                 $this->cDisplayOrder = $originalRow['cDisplayOrder'];
@@ -1399,7 +1407,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function getSiteTreeID()
     {
-        return $this->siteTreeID;
+        return $this->cPointerOriginalSiteTreeID ?: $this->siteTreeID;
     }
 
     /**
@@ -1811,9 +1819,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function getCollectionParentID()
     {
-        if (isset($this->cParentID)) {
-            return $this->cParentID;
-        }
+        return isset($this->cParentID) ? (int) $this->cParentID : null;
     }
 
     /**
@@ -2905,111 +2911,13 @@ EOT
      */
     public function duplicate($nc = null, $preserveUserID = false, TreeInterface $site = null)
     {
-        $db = Database::connection();
-        // the passed collection is the parent collection
-        $cParentID = is_object($nc) ? $nc->getCollectionID() : 0;
+        $app = Application::getFacadeApplication();
+        $cloner = $app->make(Cloner::class);
+        $clonerOptions = $app->build(ClonerOptions::class)
+            ->setKeepOriginalAuthor($preserveUserID)
+        ;
 
-        $u = new User();
-        $uID = $u->getUserID();
-        if ($preserveUserID) {
-            $uID = $this->getCollectionUserID();
-        }
-        $cobj = parent::getByID($this->cID);
-        // create new name
-
-        $newCollectionName = $this->getCollectionName();
-        $index = 1;
-        $nameCount = 1;
-
-        while ($nameCount > 0) {
-            // if we have a node at the new level with the same name, we keep incrementing til we don't
-            $nameCount = $db->fetchColumn('select count(Pages.cID) from CollectionVersions inner join Pages on (CollectionVersions.cID = Pages.cID and CollectionVersions.cvIsApproved = 1) where Pages.cParentID = ? and CollectionVersions.cvName = ?',
-                [$cParentID, $newCollectionName]
-            );
-            if ($nameCount > 0) {
-                ++$index;
-                $newCollectionName = $this->getCollectionName().' '.$index;
-            }
-        }
-
-        $newC = $cobj->duplicateCollection();
-        $newCID = $newC->getCollectionID();
-
-        if (is_object($nc)) {
-            $siteTreeID = $nc->getSiteTreeID();
-        } else {
-            $siteTreeID = is_object($site) ? $site->getSiteTreeID() : \Core::make('site')->getSite()->getSiteTreeID();
-        }
-
-        $v = [$newCID, $siteTreeID, $this->getPageTypeID(), $cParentID, $uID, $this->overrideTemplatePermissions(), (int) $this->getPermissionsCollectionID(), $this->getCollectionInheritance(), $this->cFilename, $this->getCollectionPointerID(), $this->cPointerExternalLink, $this->cPointerExternalLinkNewWindow, $this->cDisplayOrder, $this->pkgID];
-        $q = 'insert into Pages (cID, siteTreeID, ptID, cParentID, uID, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cInheritPermissionsFrom, cFilename, cPointerID, cPointerExternalLink, cPointerExternalLinkNewWindow, cDisplayOrder, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-        $res = $db->executeQuery($q, $v);
-
-        // Composer specific
-        $rows = $db->fetchAll('select cID, cvID, arHandle, cbDisplayOrder, ptComposerFormLayoutSetControlID, bID from PageTypeComposerOutputBlocks where cID = ?',
-            [$this->cID]);
-        if ($rows && is_array($rows)) {
-            foreach ($rows as $row) {
-                if (is_array($row) && $row['cID']) {
-                    $db->insert('PageTypeComposerOutputBlocks', [
-                        'cID' => $newCID,
-                        'cvID' => $row['cvID'],
-                        'arHandle' => $row['arHandle'],
-                        'cbDisplayOrder' => $row['cbDisplayOrder'],
-                        'ptComposerFormLayoutSetControlID' => $row['ptComposerFormLayoutSetControlID'],
-                        'bID' => $row['bID'],
-                        ]);
-                }
-            }
-        }
-
-        PageStatistics::incrementParents($newCID);
-
-        if ($res) {
-            // rescan the collection path
-            $nc2 = self::getByID($newCID);
-
-            // now with any specific permissions - but only if this collection is set to override
-            if ($this->getCollectionInheritance() == 'OVERRIDE') {
-                $nc2->acquirePagePermissions($this->getPermissionsCollectionID());
-                $nc2->acquireAreaPermissions($this->getPermissionsCollectionID());
-                // make sure we update the proper permissions pointer to the new page ID
-                $q = 'update Pages set cInheritPermissionsFromCID = ? where cID = ?';
-                $v = [(int) $newCID, $newCID];
-                $db->executeQuery($q, $v);
-                $nc2->cInheritPermissionsFromCID = $newCID;
-            } elseif ($this->getCollectionInheritance() == 'PARENT') {
-                // we need to clear out any lingering permissions groups (just in case), and set this collection to inherit from the parent
-                $npID = $nc->getPermissionsCollectionID();
-                $q = 'update Pages set cInheritPermissionsFromCID = ? where cID = ?';
-                $db->executeQuery($q, [(int) $npID, $newCID]);
-                $nc2->cInheritPermissionsFromCID = $npID;
-            }
-
-            $args = [];
-            if ($index > 1) {
-                $args['cName'] = $newCollectionName;
-                if ($nc2->getCollectionHandle()) {
-                    $args['cHandle'] = $nc2->getCollectionHandle().'-'.$index;
-                }
-            }
-            $nc2->update($args);
-
-            // arguments for event
-            // 1. new page
-            // 2. old page
-            $pe = new DuplicatePageEvent($this);
-            $pe->setNewPageObject($nc2);
-
-            Section::registerDuplicate($nc2, $this);
-
-            Events::dispatch('on_page_duplicate', $pe);
-
-            $nc2->rescanCollectionPath();
-            $nc2->movePageDisplayOrderToBottom();
-
-            return $nc2;
-        }
+        return $cloner->clonePage($this, $clonerOptions, $nc ? $nc : null, $site);
     }
 
     /**

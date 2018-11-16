@@ -2,6 +2,7 @@
 namespace Concrete\Core\Notification;
 
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
+use Concrete\Core\Notification\Type\UserDeactivatedType;
 
 class NotificationServiceProvider extends ServiceProvider
 {
@@ -15,6 +16,7 @@ class NotificationServiceProvider extends ServiceProvider
             $manager->driver('new_private_message');
             $manager->driver('user_signup');
             $manager->driver('workflow_progress');
+            $manager->driver(UserDeactivatedType::IDENTIFIER);
             return $manager;
         });
 

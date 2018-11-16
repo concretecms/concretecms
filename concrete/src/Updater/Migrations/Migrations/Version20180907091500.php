@@ -14,6 +14,7 @@ class Version20180907091500 extends AbstractMigration implements RepeatableMigra
      */
     public function upgradeDatabase()
     {
-        $this->createSinglePage('/dashboard/system/permissions/security', 'Security Options', ['meta_keywords' => 'login, logout, user, agent, ip, change']);
+        // We do not need to install this singlepage any longer.
+        //$this->createSinglePage('/dashboard/system/permissions/security', 'Security Options', ['meta_keywords' => 'login, logout, user, agent, ip, change']);
     }
 }
