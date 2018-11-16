@@ -7,7 +7,7 @@ use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 use PDO;
 
-class Version20181024083100 extends AbstractMigration implements RepeatableMigrationInterface
+class Version20181116072400 extends AbstractMigration implements RepeatableMigrationInterface
 {
     /**
      * {@inheritdoc}
