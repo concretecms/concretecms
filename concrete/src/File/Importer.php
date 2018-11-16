@@ -342,47 +342,48 @@ class Importer
      */
     public function importIncomingFile($filename, $fr = false)
     {
-        $incoming = $this->app->make(Incoming::class);
         $fh = $this->app->make('helper/validation/file');
-        $fi = $this->app->make('helper/file');
-        $cf = $this->app->make('helper/concrete/file');
-
-        $sanitizedFilename = $fi->sanitize($filename);
-
-        $incomingLocation = $incoming->getIncomingStorageLocation();
-        $incomingFilesystem = $incomingLocation->getFileSystemObject();
-        $incomingPath = $incoming->getIncomingPath();
-        
-        $incomingPath = $incoming->getIncomingPath();
-
-        if (!$incomingFilesystem->has($incomingPath . '/' . $filename)) {
-            return self::E_FILE_INVALID;
-        }
-
         if (!$fh->extension($filename)) {
             return self::E_FILE_INVALID_EXTENSION;
         }
-
-        // first we import the file into the storage location that is the same.
+        $incoming = $this->app->make(Incoming::class);
+        $incomingStorageLocation = $incoming->getIncomingStorageLocation();
+        $incomingFilesystem = $incomingStorageLocation->getFileSystemObject();
+        $incomingPath = $incoming->getIncomingPath();
+        if (!$incomingFilesystem->has($incomingPath . '/' . $filename)) {
+            return self::E_FILE_INVALID;
+        }
+        if ($fr instanceof FileEntity) {
+            $destinationStorageLocation = $fr->getFileStorageLocationObject();
+        } else {
+            $destinationStorageLocation = $this->app->make(StorageLocationFactory::class)->fetchDefault();
+        }
+        $destinationFilesystem = $destinationStorageLocation->getFileSystemObject();
         $prefix = $this->generatePrefix();
+        $fi = $this->app->make('helper/file');
+        $sanitizedFilename = $fi->sanitize($filename);
+        $cf = $this->app->make('helper/concrete/file');
         $destinationPath = $cf->prefix($prefix, $sanitizedFilename);
         try {
-            $copied = $incomingFilesystem->copy($incomingPath . '/' . $filename, $destinationPath);
-        } catch (Exception $e) {
-            $copied = false;
+            $stream = $incomingFilesystem->readStream($incomingPath . '/' . $filename);
+        } catch (Exception $x) {
+            $stream = false;
         }
-        if (!$copied) {
-            $src = $incomingFilesystem->readStream($incomingPath . '/' . $filename);
-            if (!$src) {
-                return self::E_FILE_INVALID;
-            }
-            $incomingFilesystem->writeStream($destinationPath, $src);
-            @fclose($src);
+        if ($stream === false) {
+            return self::E_FILE_INVALID;
         }
-
+        try {
+            $wrote = $destinationFilesystem->writeStream($destinationPath, $stream);
+        } catch (Exception $x) {
+            $wrote = false;
+        }
+        @fclose($stream);
+        if ($wrote === false) {
+            return self::E_FILE_UNABLE_TO_STORE;
+        }
         if (!($fr instanceof FileEntity)) {
             // we have to create a new file object for this file version
-            $fv = File::add($sanitizedFilename, $prefix, ['fvTitle' => $filename], $incomingLocation, $fr);
+            $fv = File::add($sanitizedFilename, $prefix, ['fvTitle' => $filename], $destinationStorageLocation, $fr);
             $fv->refreshAttributes($this->rescanThumbnailsOnImport);
 
             foreach ($this->importProcessors as $processor) {
