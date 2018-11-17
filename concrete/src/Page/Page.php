@@ -18,36 +18,44 @@ use Concrete\Core\Page\Type\Composer\Control\BlockControl;
 use Concrete\Core\Page\Type\Composer\FormLayoutSetControl;
 use Concrete\Core\Page\Type\Type;
 use Concrete\Core\Permission\AssignableObjectInterface;
+use Concrete\Core\Permission\Key\Key;
+use Concrete\Core\Support\Facade\Facade;
+use Concrete\Core\Support\Facade\Route;
 use Concrete\Core\Permission\Access\Entity\PageOwnerEntity;
-use Concrete\Core\Cache\CacheLocal;
+use Database;
+use CacheLocal;
 use Collection;
-use Concrete\Core\Http\Request;
+use Request;
 use Concrete\Core\Page\Statistics as PageStatistics;
-use Concrete\Core\Cache\Page\PageCache;
-use Concrete\Core\Page\Template as PageTemplate;
-use Concrete\Core\Support\Facade\Events;
-use Concrete\Core\User\User;
-use Concrete\Core\Block\Block;
-use Concrete\Core\Support\Facade\UserInfo;
-use Concrete\Core\Page\Type\Type as PageType;
-use Concrete\Core\Page\Theme\Theme as PageTheme;
+use PageCache;
+use PageTemplate;
+use Events;
+use Core;
+use Config;
+use PageController;
+use User;
+use Block;
+use UserInfo;
+use PageType;
+use PageTheme;
 use Concrete\Core\Localization\Locale\Service as LocaleService;
 use Concrete\Core\Permission\Key\PageKey as PagePermissionKey;
+use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use Concrete\Core\Package\PackageList;
+use Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
 use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
 use Concrete\Core\Permission\Access\Entity\GroupCombinationEntity as GroupCombinationPermissionAccessEntity;
 use Concrete\Core\Permission\Access\Entity\UserEntity as UserPermissionAccessEntity;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Entity\StyleCustomizer\CustomCssRecord;
-use Concrete\Core\Area\Area;
+use Area;
 use Concrete\Core\Entity\Page\PagePath;
-use Concrete\Core\Foundation\Queue\Queue;
-use Concrete\Core\Support\Facade\Log;
-use Concrete\Core\Foundation\Environment;
-use Concrete\Core\User\Group\Group;
-use Concrete\Core\Support\Facade\Session;
+use Queue;
+use Log;
+use Environment;
+use Group;
+use Session;
 use Concrete\Core\Attribute\ObjectInterface as AttributeObjectInterface;
-use stdClass;
 
 /**
  * The page object in Concrete encapsulates all the functionality used by a typical page and their contents including blocks, page metadata, page permissions.
@@ -125,7 +133,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     protected $siteTreeID;
 
     /**
-     * @deprecated what's deprecated is the public part: use the getSiteTreeObject() method to access this property
+     * @deprecated What's deprecated is the public part: use the getSiteTreeObject() method to access this property.
      *
      * @var \Concrete\Core\Entity\Site\Tree|null
      */
@@ -134,25 +142,24 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     use AssignableObjectTrait;
 
     /**
-     * Get a page given its path.
-     *
-     * @param string $path the page path (example: /path/to/page)
-     * @param string $version the page version ('RECENT' for the most recent version, 'ACTIVE' for the currently published version, 'SCHEDULED' for the currently scheduled version, or an integer to retrieve a specific version ID)
-     * @param \Concrete\Core\Site\Tree\TreeInterface|null $tree
-     *
-     * @return \Concrete\Core\Page\Page
-     */
+    * Get a page given its path.
+    *
+    * @param string $path the page path (example: /path/to/page)
+    * @param string $version the page version ('RECENT' for the most recent version, 'ACTIVE' for the currently published version, 'SCHEDULED' for the currently scheduled version, or an integer to retrieve a specific version ID)
+    * @param \Concrete\Core\Site\Tree\TreeInterface|null $tree
+    *
+    * @return \Concrete\Core\Page\Page
+    */
     public static function getByPath($path, $version = 'RECENT', TreeInterface $tree = null)
     {
-        $app = Application::getFacadeApplication();
         $path = rtrim($path, '/'); // if the path ends in a / remove it.
-        $cache = $app->make('cache/request');
+        $cache = \Core::make('cache/request');
 
         if ($tree) {
             $item = $cache->getItem(sprintf('site/page/path/%s/%s', $tree->getSiteTreeID(), trim($path, '/')));
             $cID = $item->get();
             if ($item->isMiss()) {
-                $db = $app->make(Connection::class);
+                $db = Database::connection();
                 $cID = $db->fetchColumn('select Pages.cID from PagePaths inner join Pages on Pages.cID = PagePaths.cID where cPath = ? and siteTreeID = ?', [$path, $tree->getSiteTreeID()]);
                 $cache->save($item->set($cID));
             }
@@ -160,7 +167,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $item = $cache->getItem(sprintf('page/path/%s', trim($path, '/')));
             $cID = $item->get();
             if ($item->isMiss()) {
-                $db = $app->make(Connection::class);
+                $db = Database::connection();
                 $cID = $db->fetchColumn('select cID from PagePaths where cPath = ?', [$path]);
                 $cache->save($item->set($cID));
             }
@@ -178,8 +185,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function getObjectAttributeCategory()
     {
-        $app = Application::getFacadeApplication();
-
+        $app = Facade::getFacadeApplication();
         return $app->make('\Concrete\Core\Attribute\Category\PageCategory');
     }
 
@@ -195,7 +201,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     {
         $class = get_called_class();
         if ($cID && $version) {
-            $c = CacheLocal::getEntry('page', $cID . '/' . $version . '/' . $class);
+            $c = CacheLocal::getEntry('page', $cID.'/'.$version.'/'.$class);
             if ($c instanceof $class) {
                 return $c;
             }
@@ -207,7 +213,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
         // must use cID instead of c->getCollectionID() because cID may be the pointer to another page
         if ($cID && $version) {
-            CacheLocal::set('page', $cID . '/' . $version . '/' . $class, $c);
+            CacheLocal::set('page', $cID.'/'.$version.'/'.$class, $c);
         }
 
         return $c;
@@ -242,8 +248,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     protected function populatePage($cInfo, $where, $cvID)
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
 
         $q0 = 'select Pages.cID, Pages.pkgID, Pages.siteTreeID, Pages.cPointerID, Pages.cPointerExternalLink, Pages.cIsDraft, Pages.cIsActive, Pages.cIsSystemPage, Pages.cPointerExternalLinkNewWindow, Pages.cFilename, Pages.ptID, Collections.cDateAdded, Pages.cDisplayOrder, Collections.cDateModified, cInheritPermissionsFromCID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cCheckedOutUID, cIsTemplate, uID, cPath, cParentID, cChildren, cCacheFullPageContent, cCacheFullPageContentOverrideLifetime, cCacheFullPageContentLifetimeCustom from Pages inner join Collections on Pages.cID = Collections.cID left join PagePaths on (Pages.cID = PagePaths.cID and PagePaths.ppIsCanonical = 1) ';
         //$q2 = "select cParentID, cPointerID, cPath, Pages.cID from Pages left join PagePaths on (Pages.cID = PagePaths.cID and PagePaths.ppIsCanonical = 1) ";
@@ -317,8 +322,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function getJSONObject()
     {
-        $r = new stdClass();
-        $r->name = $this->getCollectionName();
+        $r = new \stdClass();
         $r->name = $this->getCollectionName() !== '' ? $this->getCollectionName() : t('(No Title)');
         if ($this->isAliasPage()) {
             $r->cID = $this->getCollectionPointerOriginalID();
@@ -346,26 +350,25 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             if ($this->getPageTypeID() > 0) {
                 $pt = $this->getPageTypeObject();
                 $ptHandle = $pt->getPageTypeHandle();
-                $r = $env->getRecord(DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES . '/' . $ptHandle . '.php', $pt->getPackageHandle());
+                $r = $env->getRecord(DIRNAME_CONTROLLERS.'/'.DIRNAME_PAGE_TYPES.'/'.$ptHandle.'.php', $pt->getPackageHandle());
                 $prefix = $r->override ? true : $pt->getPackageHandle();
-                $class = core_class('Controller\\PageType\\' . camelcase($ptHandle), $prefix);
+                $class = core_class('Controller\\PageType\\'.camelcase($ptHandle), $prefix);
             } elseif ($this->isGeneratedCollection()) {
                 $file = $this->getCollectionFilename();
-                if (strpos($file, '/' . FILENAME_COLLECTION_VIEW) !== false) {
-                    $path = substr($file, 0, strpos($file, '/' . FILENAME_COLLECTION_VIEW));
+                if (strpos($file, '/'.FILENAME_COLLECTION_VIEW) !== false) {
+                    $path = substr($file, 0, strpos($file, '/'.FILENAME_COLLECTION_VIEW));
                 } else {
                     $path = substr($file, 0, strpos($file, '.php'));
                 }
-                $r = $env->getRecord(DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . $path . '.php', $this->getPackageHandle());
+                $r = $env->getRecord(DIRNAME_CONTROLLERS.'/'.DIRNAME_PAGE_CONTROLLERS.$path.'.php', $this->getPackageHandle());
                 $prefix = $r->override ? true : $this->getPackageHandle();
-                $class = core_class('Controller\\SinglePage\\' . str_replace('/', '\\', camelcase($path, true)), $prefix);
+                $class = core_class('Controller\\SinglePage\\'.str_replace('/', '\\', camelcase($path, true)), $prefix);
             }
 
-            $app = Application::getFacadeApplication();
             if (isset($class) && class_exists($class)) {
-                $this->controller = $app->make($class, [$this]);
+                $this->controller = Core::make($class, [$this]);
             } else {
-                $this->controller = $app->make('\PageController', [$this]);
+                $this->controller = Core::make('\PageController', [$this]);
             }
         }
 
@@ -446,8 +449,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function forceCheckIn()
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
         $q = 'update Pages set cIsCheckedOut = 0, cCheckedOutUID = null, cCheckedOutDatetime = null, cCheckedOutDatetimeLastEdit = null where cID = ?';
         $db->executeQuery($q, [$this->cID]);
     }
@@ -459,8 +461,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public static function forceCheckInForAllPages()
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
         $q = 'update Pages set cIsCheckedOut = 0, cCheckedOutUID = null, cCheckedOutDatetime = null, cCheckedOutDatetimeLastEdit = null';
         $db->executeQuery($q);
     }
@@ -473,7 +474,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public function isAdminArea()
     {
         if ($this->isGeneratedCollection()) {
-            $pos = strpos($this->getCollectionFilename(), '/' . DIRNAME_DASHBOARD);
+            $pos = strpos($this->getCollectionFilename(), '/'.DIRNAME_DASHBOARD);
 
             return $pos > -1;
         }
@@ -495,15 +496,14 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         if (is_object($c)) {
             return $c;
         }
-        $app = Application::getFacadeApplication();
         if ($request->getPath() != '') {
             $path = $request->getPath();
-            $db = $app->make(Connection::class);
+            $db = Database::connection();
             $cID = false;
             $ppIsCanonical = false;
-            $site = $app->make('site')->getSite();
+            $site = \Core::make('site')->getSite();
             $treeIDs = [0];
-            foreach ($site->getLocales() as $locale) {
+            foreach($site->getLocales() as $locale) {
                 $tree = $locale->getSiteTree();
                 if (is_object($tree)) {
                     $treeIDs[] = $tree->getSiteTreeID();
@@ -538,11 +538,11 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             if (!$cID) {
                 $cID = $request->request->get('cID');
             }
-            $cID = $app->make('helper/security')->sanitizeInt($cID);
+            $cID = Core::make('helper/security')->sanitizeInt($cID);
             if ($cID) {
                 $c = self::getByID($cID, 'ACTIVE');
             } else {
-                $site = $app->make('site')->getSite();
+                $site = \Core::make('site')->getSite();
                 $c = $site->getSiteHomePageObject('ACTIVE');
             }
             $c->cPathFetchIsCanonical = true;
@@ -561,8 +561,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public function processArrangement($area_id, $moved_block_id, $block_order)
     {
         $area_handle = Area::getAreaHandleFromID($area_id);
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
 
         // Remove the moved block from its old area, and all blocks from the destination area.
         $db->executeQuery('UPDATE CollectionVersionBlockStyles SET arHandle = ?  WHERE cID = ? and cvID = ? and bID = ?',
@@ -579,8 +578,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $update_values[] = $key;
         }
 
-        $update_query .= ' ' . implode(' ', $when_statements) . ' END WHERE bID in (' .
-            implode(',', array_pad([], count($block_order), '?')) . ') AND cID = ? AND cvID = ?';
+        $update_query .= ' '.implode(' ', $when_statements).' END WHERE bID in ('.
+            implode(',', array_pad([], count($block_order), '?')).') AND cID = ? AND cvID = ?';
         $values = array_merge($update_values, $block_order);
         $values = array_merge($values, [$this->getCollectionID(), $this->getVersionID()]);
 
@@ -595,20 +594,19 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public function isCheckedOut()
     {
         // function to inform us as to whether the current collection is checked out
+        $db = Database::connection();
         if (isset($this->isCheckedOutCache)) {
             return $this->isCheckedOutCache;
         }
 
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
         $q = "select cIsCheckedOut, cCheckedOutDatetimeLastEdit from Pages where cID = '{$this->cID}'";
         $r = $db->executeQuery($q);
 
         if ($r) {
             $row = $r->fetchRow();
             // If cCheckedOutDatetimeLastEdit is present, get the time span in seconds since it's last edit.
-            if (!empty($row['cCheckedOutDatetimeLastEdit'])) {
-                $dh = $app->make('helper/date');
+            if (! empty($row['cCheckedOutDatetimeLastEdit'])) {
+                $dh = Core::make('helper/date');
                 $timeSinceCheckout = ($dh->getOverridableNow(true) - strtotime($row['cCheckedOutDatetimeLastEdit']));
             }
 
@@ -636,8 +634,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function getCollectionCheckedOutUserName()
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
         $query = 'select cCheckedOutUID from Pages where cID = ?';
         $vals = [$this->cID];
         $checkedOutId = $db->fetchColumn($query, $vals);
@@ -695,7 +692,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function setChildPermissionsToOverride()
     {
-        foreach ($this->getCollectionChildren() as $child) {
+        foreach($this->getCollectionChildren() as $child) {
             $child->setPermissionsToManualOverride();
         }
     }
@@ -714,7 +711,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
         if (is_array($userOrGroup)) {
             $pe = GroupCombinationPermissionAccessEntity::getOrCreate($userOrGroup);
-        // group combination
+            // group combination
         } elseif ($userOrGroup instanceof User || $userOrGroup instanceof \Concrete\Core\User\UserInfo) {
             $pe = UserPermissionAccessEntity::getOrCreate($userOrGroup);
         } else {
@@ -746,12 +743,9 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public static function getDraftsParentPage(Site $site = null)
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
-        $config = $app->make('config');
-        $site = $site ? $site : $app->make('site')->getSite();
-        $cParentID = $db->fetchColumn('select p.cID from PagePaths pp inner join Pages p on pp.cID = p.cID inner join SiteLocales sl on p.siteTreeID = sl.siteTreeID where cPath = ? and sl.siteID = ?', [$config->get('concrete.paths.drafts'), $site->getSiteID()]);
-
+        $db = Database::connection();
+        $site = $site ? $site : \Core::make('site')->getSite();
+        $cParentID = $db->fetchColumn('select p.cID from PagePaths pp inner join Pages p on pp.cID = p.cID inner join SiteLocales sl on p.siteTreeID = sl.siteTreeID where cPath = ? and sl.siteID = ?', [Config::get('concrete.paths.drafts'), $site->getSiteID()]);
         return Page::getByID($cParentID);
     }
 
@@ -764,8 +758,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public static function getDrafts(Site $site)
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
         $nc = self::getDraftsParentPage($site);
         $r = $db->executeQuery('select Pages.cID from Pages inner join Collections c on Pages.cID = c.cID where cParentID = ? order by cDateAdded desc', [$nc->getCollectionID()]);
         $pages = [];
@@ -893,8 +886,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function addCollectionAlias($c)
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
         // the passed collection is the parent collection
         $cParentID = $c->getCollectionID();
 
@@ -903,7 +895,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
         $handle = (string) $this->getCollectionHandle();
         if ($handle === '') {
-            $handle = $app->make('helper/text')->handle($this->getCollectionName());
+            $handle = Core::make('helper/text')->handle($this->getCollectionName());
         }
         $cDisplayOrder = $c->getNextSubPageDisplayOrder();
 
@@ -925,7 +917,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $siteTreeID = $c->getSiteTreeID();
 
         $v = [$newCID, $siteTreeID, $cParentID, $uID, $this->getCollectionID(), $cDisplayOrder];
-        $q = 'insert into Pages (cID, siteTreeID, cParentID, uID, cPointerID, cDisplayOrder) values (?, ?, ?, ?, ?, ?)';
+        $q = "insert into Pages (cID, siteTreeID, cParentID, uID, cPointerID, cDisplayOrder) values (?, ?, ?, ?, ?, ?)";
         $r = $db->prepare($q);
 
         $r->execute($v);
@@ -933,7 +925,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         PageStatistics::incrementParents($newCID);
 
         $q2 = 'insert into PagePaths (cID, cPath, ppIsCanonical, ppGeneratedFromURLSlugs) values (?, ?, ?, ?)';
-        $v2 = [$newCID, $cPath . '/' . $handle, 1, 1];
+        $v2 = [$newCID, $cPath.'/'.$handle, 1, 1];
         $db->executeQuery($q2, $v2);
 
         return $newCID;
@@ -949,8 +941,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public function updateCollectionAliasExternal($cName, $cLink, $newWindow = 0)
     {
         if ($this->isExternalLink()) {
-            $app = Application::getFacadeApplication();
-            $db = $app->make(Connection::class);
+            $db = Database::connection();
             $this->markModified();
             if ($newWindow) {
                 $newWindow = 1;
@@ -973,10 +964,9 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function addCollectionAliasExternal($cName, $cLink, $newWindow = 0)
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
-        $dt = $app->make('helper/text');
-        $ds = $app->make('helper/security');
+        $db = Database::connection();
+        $dt = Core::make('helper/text');
+        $ds = Core::make('helper/security');
         $u = new User();
 
         $cParentID = $this->getCollectionID();
@@ -1003,7 +993,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $cInheritPermissionsFromCID = $this->getPermissionsCollectionID();
         $cInheritPermissionsFrom = 'PARENT';
 
-        $siteTreeID = $app->make('site')->getSite()->getSiteTreeID();
+        $siteTreeID = \Core::make('site')->getSite()->getSiteTreeID();
 
         $v = [$newCID, $siteTreeID, $cParentID, $uID, $cInheritPermissionsFrom, (int) $cInheritPermissionsFromCID, $cLink, $newWindow];
         $q = 'insert into Pages (cID, siteTreeID, cParentID, uID, cInheritPermissionsFrom, cInheritPermissionsFromCID, cPointerExternalLink, cPointerExternalLinkNewWindow) values (?, ?, ?, ?, ?, ?, ?, ?)';
@@ -1048,28 +1038,27 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             return $icon;
         }
 
-        $app = Application::getFacadeApplication();
-        if ($app->make('multilingual/detector')->isEnabled()) {
+        if (\Core::make('multilingual/detector')->isEnabled()) {
             $icon = \Concrete\Core\Multilingual\Service\UserInterface\Flag::getDashboardSitemapIconSRC($this);
         }
 
         if ($this->isGeneratedCollection()) {
             if ($this->getPackageID() > 0) {
-                if (is_dir(DIR_PACKAGES . '/' . $this->getPackageHandle())) {
+                if (is_dir(DIR_PACKAGES.'/'.$this->getPackageHandle())) {
                     $dirp = DIR_PACKAGES;
-                    $url = $app->getApplicationURL();
+                    $url = \Core::getApplicationURL();
                 } else {
                     $dirp = DIR_PACKAGES_CORE;
                     $url = ASSETS_URL;
                 }
-                $file = $dirp . '/' . $this->getPackageHandle() . '/' . DIRNAME_PAGES . $this->getCollectionPath() . '/' . FILENAME_PAGE_ICON;
+                $file = $dirp.'/'.$this->getPackageHandle().'/'.DIRNAME_PAGES.$this->getCollectionPath().'/'.FILENAME_PAGE_ICON;
                 if (file_exists($file)) {
-                    $icon = $url . '/' . DIRNAME_PACKAGES . '/' . $this->getPackageHandle() . '/' . DIRNAME_PAGES . $this->getCollectionPath() . '/' . FILENAME_PAGE_ICON;
+                    $icon = $url.'/'.DIRNAME_PACKAGES.'/'.$this->getPackageHandle().'/'.DIRNAME_PAGES.$this->getCollectionPath().'/'.FILENAME_PAGE_ICON;
                 }
-            } elseif (file_exists(DIR_FILES_CONTENT . $this->getCollectionPath() . '/' . FILENAME_PAGE_ICON)) {
-                $icon = $app->getApplicationURL() . '/' . DIRNAME_PAGES . $this->getCollectionPath() . '/' . FILENAME_PAGE_ICON;
-            } elseif (file_exists(DIR_FILES_CONTENT_REQUIRED . $this->getCollectionPath() . '/' . FILENAME_PAGE_ICON)) {
-                $icon = ASSETS_URL . '/' . DIRNAME_PAGES . $this->getCollectionPath() . '/' . FILENAME_PAGE_ICON;
+            } elseif (file_exists(DIR_FILES_CONTENT.$this->getCollectionPath().'/'.FILENAME_PAGE_ICON)) {
+                $icon = \Core::getApplicationURL().'/'.DIRNAME_PAGES.$this->getCollectionPath().'/'.FILENAME_PAGE_ICON;
+            } elseif (file_exists(DIR_FILES_CONTENT_REQUIRED.$this->getCollectionPath().'/'.FILENAME_PAGE_ICON)) {
+                $icon = ASSETS_URL.'/'.DIRNAME_PAGES.$this->getCollectionPath().'/'.FILENAME_PAGE_ICON;
             }
         } else {
         }
@@ -1088,8 +1077,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $this->delete();
         } elseif ($this->isAliasPage()) {
             $cIDRedir = $this->getCollectionPointerID();
-            $app = Application::getFacadeApplication();
-            $db = $app->make(Connection::class);
+            $db = Database::connection();
 
             PageStatistics::decrementParents($this->getCollectionPointerOriginalID());
 
@@ -1120,7 +1108,6 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      * @param bool $includeThisPage Should $pageRow itself be added to the resulting array?
      *
      * @return array Every array item contains the following keys: {
-     *
      *    @var int $cID
      *    @var int $cDisplayOrder
      *    @var int $cParentID
@@ -1130,8 +1117,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function populateRecursivePages($pages, $pageRow, $cParentID, $level, $includeThisPage = true)
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
         $children = $db->GetAll('select cID, cDisplayOrder from Pages where cParentID = ? order by cDisplayOrder asc', [$pageRow['cID']]);
         if ($includeThisPage) {
             $pages[] = [
@@ -1212,9 +1198,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     {
         $pages = [];
         $includeThisPage = true;
-        $app = Application::getFacadeApplication();
-        $config = $app->make(Connection::class);
-        if ($this->getCollectionPath() == $config->get('concrete.paths.trash')) {
+        if ($this->getCollectionPath() == Config::get('concrete.paths.trash')) {
             // we're in the trash. we can't delete the trash. we're skipping over the trash node.
             $includeThisPage = false;
         }
@@ -1309,9 +1293,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function getCollectionPathObject()
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
-        $em = $db->getEntityManager();
+        $em = \ORM::entityManager();
         $cID = ($this->getCollectionPointerOriginalID() > 0) ? $this->getCollectionPointerOriginalID() : $this->cID;
         $path = $em->getRepository('\Concrete\Core\Entity\Page\PagePath')->findOneBy(
             ['cID' => $cID, 'ppIsCanonical' => true,
@@ -1330,11 +1312,9 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function addAdditionalPagePath($cPath, $commit = true)
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
-        $em = $db->getEntityManager();
+        $em = \ORM::entityManager();
         $path = new \Concrete\Core\Entity\Page\PagePath();
-        $path->setPagePath('/' . trim($cPath, '/'));
+        $path->setPagePath('/'.trim($cPath, '/'));
         $path->setPageObject($this);
         $em->persist($path);
         if ($commit) {
@@ -1352,9 +1332,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function setCanonicalPagePath($cPath, $isAutoGenerated = false)
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
-        $em = $db->getEntityManager();
+        $em = \ORM::entityManager();
         $path = $this->getCollectionPathObject();
         if (is_object($path)) {
             $path->setPagePath($cPath);
@@ -1376,9 +1354,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function getPagePaths()
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
-        $em = $db->getEntityManager();
+        $em = \ORM::entityManager();
 
         return $em->getRepository('\Concrete\Core\Entity\Page\PagePath')->findBy(
             ['cID' => $this->getCollectionID()], ['ppID' => 'asc']
@@ -1392,9 +1368,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function getAdditionalPagePaths()
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
-        $em = $db->getEntityManager();
+        $em = \ORM::entityManager();
 
         return $em->getRepository('\Concrete\Core\Entity\Page\PagePath')->findBy(
             ['cID' => $this->getCollectionID(), 'ppIsCanonical' => false,
@@ -1406,9 +1380,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function clearPagePaths()
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
-        $em = $db->getEntityManager();
+        $em = \ORM::entityManager();
         $paths = $this->getPagePaths();
         foreach ($paths as $path) {
             $em->remove($path);
@@ -1425,9 +1397,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function getCollectionLink($appendBaseURL = false)
     {
-        $app = Application::getFacadeApplication();
-
-        return $app->make('helper/navigation')->getLinkToCollection($this, $appendBaseURL);
+        return Core::make('helper/navigation')->getLinkToCollection($this, $appendBaseURL);
     }
 
     /**
@@ -1454,19 +1424,16 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      *
      * @see \Concrete\Core\Site\Tree\TreeInterface::getSiteTreeObject()
      */
     public function getSiteTreeObject()
     {
         if (!isset($this->siteTree) && $this->getSiteTreeID()) {
-            $app = Application::getFacadeApplication();
-            $db = $app->make(Connection::class);
-            $em = $db->getEntityManager();
+            $em = \ORM::entityManager();
             $this->siteTree = $em->find('\Concrete\Core\Entity\Site\Tree', $this->getSiteTreeID());
         }
-
         return $this->siteTree;
     }
 
@@ -1479,8 +1446,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public static function getCollectionPathFromID($cID)
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
         $path = $db->fetchColumn('select cPath from PagePaths inner join CollectionVersions on (PagePaths.cID = CollectionVersions.cID and CollectionVersions.cvIsApproved = 1) where PagePaths.cID = ? order by PagePaths.ppIsCanonical desc', [$cID]);
 
         return $path;
@@ -1653,8 +1619,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         //Retrieve info for all of this page's blocks at once (and "cache" it)
         // so we don't have to query the database separately for every block on the page.
         if (is_null($this->blocksAliasedFromMasterCollection)) {
-            $app = Application::getFacadeApplication();
-            $db = $app->make(Connection::class);
+            $db = Database::connection();
             $q = 'SELECT cvb.bID FROM CollectionVersionBlocks AS cvb
                     INNER JOIN CollectionVersionBlocks AS cvb2
                         ON cvb.bID = cvb2.bID
@@ -1679,7 +1644,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public function getCollectionThemeObject()
     {
         if (!isset($this->themeObject)) {
-            $app = Application::getFacadeApplication();
+            $app = Facade::getFacadeApplication();
             $tmpTheme = $app->make(ThemeRouteCollection::class)
                 ->getThemeByRoute($this->getCollectionPath());
             if (isset($tmpTheme[0])) {
@@ -1834,9 +1799,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function getCollectionDatePublicObject()
     {
-        $app = Application::getFacadeApplication();
-
-        return $app->make('date')->toDateTime($this->getCollectionDatePublic());
+        return Core::make('date')->toDateTime($this->getCollectionDatePublic());
     }
 
     /**
@@ -1868,8 +1831,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public static function getCollectionParentIDFromChildID($cID)
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
         $q = 'select cParentID from Pages where cID = ?';
         $cParentID = $db->fetchColumn($q, [$cID]);
 
@@ -1884,8 +1846,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public function getCollectionParentIDs()
     {
         $cIDs = [$this->cParentID];
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
         $aliasedParents = $db->fetchAll('SELECT cParentID FROM Pages WHERE cPointerID = ?', [$this->cID]);
         foreach ($aliasedParents as $aliasedParent) {
             $cIDs[] = $aliasedParent['cParentID'];
@@ -1931,8 +1892,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function setTheme($pl)
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
         $db->executeQuery('update CollectionVersions set pThemeID = ? where cID = ? and cvID = ?', [$pl->getThemeID(), $this->cID, $this->vObj->getVersionID()]);
     }
 
@@ -1947,8 +1907,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         if (is_object($type)) {
             $ptID = $type->getPageTypeID();
         }
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
         $db->executeQuery('update Pages set ptID = ? where cID = ?', [$ptID, $this->cID]);
         $this->ptID = $ptID;
     }
@@ -1958,9 +1917,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function setPermissionsInheritanceToTemplate()
     {
+        $db = Database::connection();
         if ($this->cID) {
-            $app = Application::getFacadeApplication();
-            $db = $app->make(Connection::class);
             $db->executeQuery('update Pages set cOverrideTemplatePermissions = 0 where cID = ?', [$this->cID]);
         }
     }
@@ -1970,9 +1928,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function setPermissionsInheritanceToOverride()
     {
+        $db = Database::connection();
         if ($this->cID) {
-            $app = Application::getFacadeApplication();
-            $db = $app->make(Connection::class);
             $db->executeQuery('update Pages set cOverrideTemplatePermissions = 1 where cID = ?', [$this->cID]);
         }
     }
@@ -2004,8 +1961,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function getParentPermissionsCollectionID()
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
         $cParentID = $this->cParentID;
         if (!$cParentID) {
             $cParentID = $this->getSiteHomePageID();
@@ -2079,8 +2035,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public function getNumChildrenDirect()
     {
         // direct children only
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
         $v = [$this->cID];
         $num = $db->fetchColumn('select count(cID) as total from Pages where cParentID = ?', $v);
         if ($num) {
@@ -2099,8 +2054,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function getFirstChild($sortColumn = 'cDisplayOrder asc')
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
         $cID = $db->fetchColumn("select Pages.cID from Pages inner join CollectionVersions on Pages.cID = CollectionVersions.cID where cvIsApproved = 1 and cParentID = ? order by {$sortColumn}", [$this->cID]);
         if ($cID && $cID != $this->getSiteHomePageID()) {
             return self::getByID($cID, 'ACTIVE');
@@ -2132,8 +2086,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public function getCollectionChildren()
     {
         $children = [];
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
         $q = 'select cID from Pages where cParentID = ? and cIsTemplate = 0 order by cDisplayOrder asc';
         $r = $db->executeQuery($q, [$this->getCollectionID()]);
         if ($r) {
@@ -2157,8 +2110,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     protected function _getNumChildren($cID, $oneLevelOnly = 0, $sortColumn = 'cDisplayOrder asc')
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
         $q = "select cID from Pages where cParentID = {$cID} and cIsTemplate = 0 order by {$sortColumn}";
         $r = $db->query($q);
         if ($r) {
@@ -2195,18 +2147,16 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function updateCollectionName($name)
     {
+        $db = Database::connection();
         $vo = $this->getVersionObject();
         $cvID = $vo->getVersionID();
         $this->markModified();
         if (is_object($this->vObj)) {
-            $app = Application::getFacadeApplication();
-            $db = $app->make(Connection::class);
-            $config = $app->make('config');
             $this->vObj->cvName = $name;
 
-            $txt = $app->make('helper/text');
+            $txt = Core::make('helper/text');
             $cHandle = $txt->urlify($name);
-            $cHandle = str_replace('-', $config->get('concrete.seo.page_path_separator'), $cHandle);
+            $cHandle = str_replace('-', Config::get('concrete.seo.page_path_separator'), $cHandle);
 
             $db->executeQuery('update CollectionVersions set cvName = ?, cvHandle = ? where cID = ? and cvID = ?', [$name, $cHandle, $this->getCollectionID(), $cvID]);
 
@@ -2225,8 +2175,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function hasPageThemeCustomizations()
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
 
         return $db->fetchColumn('select count(cID) from CollectionVersionThemeCustomStyles where cID = ? and cvID = ?', [
             $this->cID, $this->getVersionID(),
@@ -2238,8 +2187,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function resetCustomThemeStyles()
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
         $db->executeQuery('delete from CollectionVersionThemeCustomStyles where cID = ? and cvID = ?', [$this->getCollectionID(), $this->getVersionID()]);
         $this->writePageThemeCustomizations();
     }
@@ -2256,8 +2204,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function setCustomStyleObject(\Concrete\Core\Page\Theme\Theme $pt, \Concrete\Core\StyleCustomizer\Style\ValueList $valueList, $selectedPreset = false, CustomCssRecord $customCssRecord = null)
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
         $db->delete('CollectionVersionThemeCustomStyles', ['cID' => $this->getCollectionID(), 'cvID' => $this->getVersionID()]);
         $preset = false;
         if ($selectedPreset) {
@@ -2306,10 +2253,10 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
         $classes = ['ccm-page'];
         if (is_object($pt)) {
-            $classes[] = 'page-type-' . str_replace('_', '-', $pt->getPageTypeHandle());
+            $classes[] = 'page-type-'.str_replace('_', '-', $pt->getPageTypeHandle());
         }
         if (is_object($ptm)) {
-            $classes[] = 'page-template-' . str_replace('_', '-', $ptm->getPageTemplateHandle());
+            $classes[] = 'page-template-'.str_replace('_', '-', $ptm->getPageTemplateHandle());
         }
 
         return implode(' ', $classes);
@@ -2325,10 +2272,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $style = $this->getCustomStyleObject();
             $scl = is_object($style) ? $style->getValueList() : null;
 
-            $app = Application::getFacadeApplication();
-            $config = $app->make('config');
-            $theme->setStylesheetCachePath($config->get('concrete.cache.directory') . '/pages/' . $this->getCollectionID());
-            $theme->setStylesheetCacheRelativePath(REL_DIR_FILES_CACHE . '/pages/' . $this->getCollectionID());
+            $theme->setStylesheetCachePath(Config::get('concrete.cache.directory').'/pages/'.$this->getCollectionID());
+            $theme->setStylesheetCacheRelativePath(REL_DIR_FILES_CACHE.'/pages/'.$this->getCollectionID());
             $sheets = $theme->getThemeCustomizableStyleSheets();
             foreach ($sheets as $sheet) {
                 if (is_object($scl)) {
@@ -2346,17 +2291,15 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public static function resetAllCustomStyles()
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
         $db->delete('CollectionVersionThemeCustomStyles', ['1' => 1]);
-        $app->make('app')->clearCaches();
+        Core::make('app')->clearCaches();
     }
 
     /**
      * Update the data of this page.
      *
      * @param array $data Recognized keys are {
-     *
      *     @var string $cHandle
      *     @var string $cName
      *     @var string $cDescription
@@ -2372,9 +2315,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function update($data)
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
-        $config = $app->make('config');
+        $db = Database::connection();
 
         $vo = $this->getVersionObject();
         $cvID = $vo->getVersionID();
@@ -2423,22 +2364,22 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         }
 
         if (!$cDatePublic) {
-            $cDatePublic = $app->make('helper/date')->getOverridableNow();
+            $cDatePublic = Core::make('helper/date')->getOverridableNow();
         }
-        $txt = $app->make('helper/text');
+        $txt = Core::make('helper/text');
         $isHomePage = $this->isHomePage();
         if (!isset($data['cHandle']) && ($this->getCollectionHandle() != '')) {
             // No passed cHandle, and there is an existing handle.
             $cHandle = $this->getCollectionHandle();
-        } elseif (!$isHomePage && !$app->make('helper/validation/strings')->notempty($data['cHandle'])) {
+        } elseif (!$isHomePage && !Core::make('helper/validation/strings')->notempty($data['cHandle'])) {
             // no passed cHandle, and no existing handle
             // make the handle out of the title
             $cHandle = $txt->urlify($cName);
-            $cHandle = str_replace('-', $config->get('concrete.seo.page_path_separator'), $cHandle);
+            $cHandle = str_replace('-', Config::get('concrete.seo.page_path_separator'), $cHandle);
         } else {
             // passed cHandle, no existing handle
             $cHandle = isset($data['cHandle']) ? $txt->slugSafeString($data['cHandle']) : ''; // we DON'T run urlify
-            $cHandle = str_replace('-', $config->get('concrete.seo.page_path_separator'), $cHandle);
+            $cHandle = str_replace('-', Config::get('concrete.seo.page_path_separator'), $cHandle);
         }
         $cName = $txt->sanitize($cName);
 
@@ -2532,8 +2473,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function clearPagePermissions()
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
         $db->executeQuery('delete from PagePermissionAssignments where cID = ?', [$this->cID]);
         $this->permissionAssignments = [];
     }
@@ -2543,8 +2483,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function inheritPermissionsFromParent()
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
         $cpID = $this->getParentPermissionsCollectionID();
         $this->updatePermissionsCollectionID($this->cID, $cpID);
         $v = ['PARENT', (int) $cpID, $this->cID];
@@ -2561,12 +2500,11 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function inheritPermissionsFromDefaults()
     {
+        $db = Database::connection();
         $type = $this->getPageTypeObject();
         if (is_object($type)) {
             $master = $type->getPageTypePageTemplateDefaultPageObject();
             if (is_object($master)) {
-                $app = Application::getFacadeApplication();
-                $db = $app->make(Connection::class);
                 $cpID = $master->getCollectionID();
                 $this->updatePermissionsCollectionID($this->cID, $cpID);
                 $v = ['TEMPLATE', (int) $cpID, $this->cID];
@@ -2586,8 +2524,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public function setPermissionsToManualOverride()
     {
         if ($this->cInheritPermissionsFrom != 'OVERRIDE') {
-            $app = Application::getFacadeApplication();
-            $db = $app->make(Connection::class);
+            $db = Database::connection();
             $this->acquirePagePermissions($this->getPermissionsCollectionID());
             $this->acquireAreaPermissions($this->getPermissionsCollectionID());
 
@@ -2603,12 +2540,11 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
-     * Rescan the page areas ensuring that they are inheriting permissions properly.
-     */
+    * Rescan the page areas ensuring that they are inheriting permissions properly.
+    */
     public function rescanAreaPermissions()
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
         $r = $db->executeQuery('select arHandle, arIsGlobal from Areas where cID = ?', [$this->getCollectionID()]);
         while ($row = $r->FetchRow()) {
             $a = Area::getOrCreate($this, $row['arHandle'], $row['arIsGlobal']);
@@ -2623,8 +2559,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function setOverrideTemplatePermissions($cOverrideTemplatePermissions)
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
         $v = [$cOverrideTemplatePermissions, $this->cID];
         $q = 'update Pages set cOverrideTemplatePermissions = ? where cID = ?';
         $db->executeQuery($q, $v);
@@ -2640,8 +2575,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public function updatePermissionsCollectionID($cParentIDString, $npID)
     {
         // now we iterate through
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
         $pcID = $this->getPermissionsCollectionID();
         $q = "select cID from Pages where cParentID in ({$cParentIDString}) and cInheritPermissionsFromCID = {$pcID}";
         $r = $db->query($q);
@@ -2665,8 +2599,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public function acquireAreaPermissions($permissionsCollectionID)
     {
         $v = [$this->cID];
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
         $q = 'delete from AreaPermissionAssignments where cID = ?';
         $db->executeQuery($q, $v);
 
@@ -2700,8 +2633,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public function acquirePagePermissions($permissionsCollectionID)
     {
         $v = [$this->cID];
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
         $q = 'delete from PagePermissionAssignments where cID = ?';
         $db->executeQuery($q, $v);
 
@@ -2728,8 +2660,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public function updateGroupsSubCollection($cParentIDString)
     {
         // now we iterate through
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
         $this->getPermissionsCollectionID();
         $q = "select cID from Pages where cParentID in ({$cParentIDString}) and cInheritPermissionsFrom = 'PARENT'";
         $r = $db->query($q);
@@ -2779,9 +2710,9 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             if (!is_array($themeTemplates)) {
                 $themeTemplates = [];
             } else {
-                foreach ($themeTemplates as $key => $template) {
+                foreach($themeTemplates as $key => $template) {
                     $pt = ($this->getPageTemplateHandle()) ? $this->getPageTemplateHandle() : 'default';
-                    if (is_array($template) && $key == $pt) {
+                    if(is_array($template) && $key == $pt) {
                         $pageTypeTemplates = $template;
                         unset($themeTemplates[$key]);
                     }
@@ -2804,21 +2735,18 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function getPageRelations()
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
-        $em = $db->getEntityManager();
+        $em = \Database::connection()->getEntityManager();
         $r = $em->getRepository('Concrete\Core\Entity\Page\Relation\SiblingRelation');
         $relation = $r->findOneBy(['cID' => $this->getCollectionID()]);
-        $relations = [];
+        $relations = array();
         if (is_object($relation)) {
             $allRelations = $r->findBy(['mpRelationID' => $relation->getPageRelationID()]);
-            foreach ($allRelations as $relation) {
+            foreach($allRelations as $relation) {
                 if ($relation->getPageID() != $this->getCollectionID() && $relation->getPageObject()->getSiteTreeObject() instanceof SiteTree) {
                     $relations[] = $relation;
                 }
             }
         }
-
         return $relations;
     }
 
@@ -2829,10 +2757,9 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function move($nc)
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
         $newCParentID = $nc->getCollectionID();
-        $dh = $app->make('helper/date');
+        $dh = Core::make('helper/date');
 
         $cID = ($this->getCollectionPointerOriginalID() > 0) ? $this->getCollectionPointerOriginalID() : $this->cID;
 
@@ -2900,7 +2827,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $pe->setNewParentPageObject($newParent);
         Events::dispatch('on_page_move', $pe);
 
-        $multilingual = $app->make('multilingual/detector');
+        $multilingual = \Core::make('multilingual/detector');
         if ($multilingual->isEnabled()) {
             Section::registerMove($this, $oldParent, $newParent);
         }
@@ -2936,8 +2863,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     protected function _duplicateAll($cParent, $cNewParent, $preserveUserID = false, Site $site = null)
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
         $cID = $cParent->getCollectionID();
         $q = 'select cID, ptHandle from Pages p left join PageTypes pt on p.ptID = pt.ptID where cParentID = ? order by cDisplayOrder asc';
         $r = $db->executeQuery($q, [$cID]);
@@ -2994,8 +2920,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             return false;
         }
 
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
 
         // run any internal event we have for page deletion
         $pe = new DeletePageEvent($this);
@@ -3048,7 +2973,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             }
         }
 
-        if ($app->make('multilingual/detector')->isEnabled()) {
+        if (\Core::make('multilingual/detector')->isEnabled()) {
             Section::unregisterPage($this);
         }
 
@@ -3061,15 +2986,12 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function moveToTrash()
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
-        $config = $app->make('config');
 
         // run any internal event we have for page trashing
         $pe = new Event($this);
         Events::dispatch('on_page_move_to_trash', $pe);
 
-        $trash = self::getByPath($config->get('concrete.paths.trash'));
+        $trash = self::getByPath(Config::get('concrete.paths.trash'));
         Log::addEntry(t('Page "%s" at path "%s" Moved to trash', $this->getCollectionName(), $this->getCollectionPath()), t('Page Action'));
         $this->move($trash);
         $this->deactivate();
@@ -3084,6 +3006,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $cID = ($this->getCollectionPointerOriginalID() > 0) ? $this->getCollectionPointerOriginalID() : $this->cID;
         $pages = [];
         $pages = $this->populateRecursivePages($pages, ['cID' => $cID], $this->getCollectionParentID(), 0, false);
+        $db = Database::connection();
         foreach ($pages as $page) {
             $db->executeQuery('update Pages set cIsActive = 0 where cID = ?', [$page['cID']]);
         }
@@ -3094,8 +3017,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function rescanChildrenDisplayOrder()
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
         // this should be re-run every time a new page is added, but i don't think it is yet - AE
         //$oneLevelOnly=1;
         //$children_array = $this->getCollectionChildrenArray( $oneLevelOnly );
@@ -3110,10 +3032,10 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
-     * Is this the homepage for the site tree this page belongs to?
-     *
-     * @return bool
-     */
+    * Is this the homepage for the site tree this page belongs to?
+    *
+    * @return bool
+    */
     public function isHomePage()
     {
         return $this->getSiteHomePageID() == $this->getCollectionID();
@@ -3180,7 +3102,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $path = new PagePath();
         $path->setPagePathIsAutoGenerated(true);
         //if (!$this->isHomePage()) {
-        $path->setPagePath($this->computeCanonicalPagePath());
+            $path->setPagePath($this->computeCanonicalPagePath());
         //}
 
         return $path;
@@ -3193,8 +3115,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function getNextSubPageDisplayOrder()
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
         $max = $db->fetchColumn('select max(cDisplayOrder) from Pages where cParentID = ?', [$this->getCollectionID()]);
 
         return is_numeric($max) ? ($max + 1) : 0;
@@ -3209,36 +3130,38 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     {
         $newPath = '';
         //if ($this->cParentID > 0) {
-        $pathObject = $this->getCollectionPathObject();
-        if (is_object($pathObject) && !$pathObject->isPagePathAutoGenerated()) {
-            $pathString = $pathObject->getPagePath();
-        } else {
-            $pathString = $this->computeCanonicalPagePath();
-        }
-        if (!$pathString) {
-            return ''; // We are allowed to pass in a blank path in the event of the home page being scanned.
-        }
-        // ensure that the path is unique
-        $suffix = 0;
-        $cID = ($this->getCollectionPointerOriginalID() > 0) ? $this->getCollectionPointerOriginalID() : $this->cID;
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
-        $config = $app->make('config');
-        $pagePathSeparator = $config->get('concrete.seo.page_path_separator');
-        while (true) {
-            $newPath = ($suffix === 0) ? $pathString : $pathString . $pagePathSeparator . $suffix;
-            $result = $db->fetchColumn('select p.cID from PagePaths pp inner join Pages p on pp.cID = p.cID where pp.cPath = ? and pp.cID <> ? and p.siteTreeID = ?',
+            /**
+             * @var Connection
+             */
+            $db = \Database::connection();
+            /* @var $em \Doctrine\ORM\EntityManager */
+            $pathObject = $this->getCollectionPathObject();
+            if (is_object($pathObject) && !$pathObject->isPagePathAutoGenerated()) {
+                $pathString = $pathObject->getPagePath();
+            } else {
+                $pathString = $this->computeCanonicalPagePath();
+            }
+            if (!$pathString) {
+                return ''; // We are allowed to pass in a blank path in the event of the home page being scanned.
+            }
+            // ensure that the path is unique
+            $suffix = 0;
+            $cID = ($this->getCollectionPointerOriginalID() > 0) ? $this->getCollectionPointerOriginalID() : $this->cID;
+            $pagePathSeparator = Config::get('concrete.seo.page_path_separator');
+            while (true) {
+                $newPath = ($suffix === 0) ? $pathString : $pathString.$pagePathSeparator.$suffix;
+                $result = $db->fetchColumn('select p.cID from PagePaths pp inner join Pages p on pp.cID = p.cID where pp.cPath = ? and pp.cID <> ? and p.siteTreeID = ?',
                     [
                         $newPath,
                         $cID,
                         $this->getSiteTreeID(),
                     ]
                 );
-            if (empty($result)) {
-                break;
+                if (empty($result)) {
+                    break;
+                }
+                ++$suffix;
             }
-            ++$suffix;
-        }
         //}
 
         return $newPath;
@@ -3250,24 +3173,24 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public function rescanCollectionPath()
     {
         //if ($this->cParentID > 0) {
-        $newPath = $this->generatePagePath();
+            $newPath = $this->generatePagePath();
 
-        $pathObject = $this->getCollectionPathObject();
-        $ppIsAutoGenerated = true;
-        if (is_object($pathObject) && !$pathObject->isPagePathAutoGenerated()) {
-            $ppIsAutoGenerated = false;
-        }
-        $this->setCanonicalPagePath($newPath, $ppIsAutoGenerated);
-        $this->rescanSystemPageStatus();
-        $this->cPath = $newPath;
-        $this->refreshCache();
-
-        $children = $this->getCollectionChildren();
-        if (count($children) > 0) {
-            foreach ($children as $child) {
-                $child->rescanCollectionPath();
+            $pathObject = $this->getCollectionPathObject();
+            $ppIsAutoGenerated = true;
+            if (is_object($pathObject) && !$pathObject->isPagePathAutoGenerated()) {
+                $ppIsAutoGenerated = false;
             }
-        }
+            $this->setCanonicalPagePath($newPath, $ppIsAutoGenerated);
+            $this->rescanSystemPageStatus();
+            $this->cPath = $newPath;
+            $this->refreshCache();
+
+            $children = $this->getCollectionChildren();
+            if (count($children) > 0) {
+                foreach ($children as $child) {
+                    $child->rescanCollectionPath();
+                }
+            }
         //}
     }
 
@@ -3287,12 +3210,11 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         }
         $path .= '/';
         $cID = ($this->getCollectionPointerOriginalID() > 0) ? $this->getCollectionPointerOriginalID() : $this->cID;
-        $app = Application::getFacadeApplication();
         /** @var \Concrete\Core\Utility\Service\Validation\Strings $stringValidator */
-        $stringValidator = $app->make('helper/validation/strings');
+        $stringValidator = Core::make('helper/validation/strings');
         if ($stringValidator->notempty($this->getCollectionHandle())) {
             $path .= $this->getCollectionHandle();
-        } elseif (!$this->isHomePage()) {
+        } else if (!$this->isHomePage()) {
             $path .= $cID;
         } else {
             $path = ''; // This is computing the path for the home page, which has no handle, and so shouldn't have a segment.
@@ -3317,8 +3239,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         if (!intval($cID)) {
             $cID = ($this->getCollectionPointerOriginalID() > 0) ? $this->getCollectionPointerOriginalID() : $this->cID;
         }
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
         $db->executeQuery('update Pages set cDisplayOrder = ? where cID = ?', [$do, $cID]);
     }
 
@@ -3328,8 +3249,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public function movePageDisplayOrderToTop()
     {
         // first, we take the current collection, stick it at the beginning of an array, then get all other items from the current level that aren't that cID, order by display order, and then update
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
         $nodes = [];
         $nodes[] = $this->getCollectionID();
         $r = $db->GetCol('select cID from Pages where cParentID = ? and cID <> ? order by cDisplayOrder asc', [$this->getCollectionParentID(), $this->getCollectionID()]);
@@ -3348,8 +3268,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public function movePageDisplayOrderToBottom()
     {
         // find the highest cDisplayOrder and increment by 1
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
         $mx = $db->fetchAssoc('select max(cDisplayOrder) as m from Pages where cParentID = ?', [$this->getCollectionParentID()]);
         $max = $mx ? $mx['m'] : 0;
         ++$max;
@@ -3367,8 +3286,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $myCID = $this->getCollectionPointerOriginalID() ?: $this->getCollectionID();
         $relatedCID = $c->getCollectionPointerOriginalID() ?: $c->getCollectionID();
         $pageIDs = [];
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
         $r = $db->executeQuery('select cID from Pages where cParentID = ? and cID <> ? order by cDisplayOrder asc', [$this->getCollectionParentID(), $myCID]);
         while (($cID = $r->fetchColumn()) !== false) {
             if ($cID == $relatedCID && $position == 'before') {
@@ -3395,16 +3313,16 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function rescanSystemPageStatus()
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
         $systemPage = false;
+        $db = Database::connection();
         $cID = $this->getCollectionID();
         if (!$this->isHomePage()) {
             if ($this->getSiteTreeID() == 0) {
                 $systemPage = true;
             } else {
                 $cID = ($this->getCollectionPointerOriginalID() > 0) ? $this->getCollectionPointerOriginalID() : $this->getCollectionID();
-                $path = $db->fetchColumn('select cPath from PagePaths where cID = ? and ppIsCanonical = 1', [$cID]);
+                $db = Database::connection();
+                $path = $db->fetchColumn('select cPath from PagePaths where cID = ? and ppIsCanonical = 1', array($cID));
                 if ($path) {
                     // Grab the top level parent
                     $fragments = explode('/', $path);
@@ -3420,10 +3338,10 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         }
 
         if ($systemPage) {
-            $db->executeQuery('update Pages set cIsSystemPage = 1 where cID = ?', [$cID]);
+            $db->executeQuery('update Pages set cIsSystemPage = 1 where cID = ?', array($cID));
             $this->cIsSystemPage = true;
         } else {
-            $db->executeQuery('update Pages set cIsSystemPage = 0 where cID = ?', [$cID]);
+            $db->executeQuery('update Pages set cIsSystemPage = 0 where cID = ?', array($cID));
             $this->cIsSystemPage = false;
         }
     }
@@ -3435,10 +3353,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function isInTrash()
     {
-        $app = Application::getFacadeApplication();
-        $config = $app->make('config');
-
-        return $this->getCollectionPath() != $config->get('concrete.paths.trash') && strpos($this->getCollectionPath(), $config->get('concrete.paths.trash')) === 0;
+        return $this->getCollectionPath() != Config::get('concrete.paths.trash') && strpos($this->getCollectionPath(), Config::get('concrete.paths.trash')) === 0;
     }
 
     /**
@@ -3446,8 +3361,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function moveToRoot()
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
         $db->executeQuery('update Pages set cParentID = 0 where cID = ?', [$this->getCollectionID()]);
         $this->cParentID = 0;
         $this->rescanSystemPageStatus();
@@ -3458,8 +3372,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function deactivate()
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
         $db->executeQuery('update Pages set cIsActive = 0 where cID = ?', [$this->getCollectionID()]);
     }
 
@@ -3468,8 +3381,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function setPageToDraft()
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
         $db->executeQuery('update Pages set cIsDraft = 1 where cID = ?', [$this->getCollectionID()]);
         $this->cIsDraft = true;
     }
@@ -3479,8 +3391,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function activate()
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
         $db->executeQuery('update Pages set cIsActive = 1 where cID = ?', [$this->getCollectionID()]);
     }
 
@@ -3521,8 +3432,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function getPageIndexContent()
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
 
         return $db->fetchColumn('select content from PageSearchIndex where cID = ?', [$this->cID]);
     }
@@ -3538,8 +3448,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     {
         $mc = self::getByID($masterCID, 'ACTIVE');
         $nc = self::getByID($newCID, 'RECENT');
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
 
         $mcID = $mc->getCollectionID();
         $mcvID = $mc->getVersionID();
@@ -3581,7 +3490,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $mc = self::getByID($masterCID, 'ACTIVE');
         $nc = self::getByID($newCID, 'RECENT');
         $attributes = CollectionKey::getAttributeValues($mc);
-        foreach ($attributes as $attribute) {
+        foreach($attributes as $attribute) {
             $value = $attribute->getValueObject();
             if ($value) {
                 $value = clone $value;
@@ -3600,8 +3509,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public static function addHomePage(TreeInterface $siteTree = null)
     {
         // creates the home page of the site
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
 
         $cParentID = 0;
         $uID = HOME_UID;
@@ -3614,7 +3522,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $cID = $cobj->getCollectionID();
 
         if (!is_object($siteTree)) {
-            $site = $app->make('site')->getSite();
+            $site = \Core::make('site')->getSite();
             $siteTree = $site->getSiteTreeObject();
         }
         $siteTreeID = $siteTree->getSiteTreeID();
@@ -3628,12 +3536,11 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         return $pc;
     }
 
-    /**
+        /**
      * Add a new page, child of this page.
      *
      * @param \Concrete\Core\Page\Type\Type|null $pageType
      * @param array $data Supported keys: {
-     *
      *     @var int|null $uID The ID of the page author (if unspecified or NULL: current user)
      *     @var int|null $pkgID the ID of the package that creates this page
      *     @var string $cName The page name
@@ -3658,10 +3565,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $data += [
             'cHandle' => null,
         ];
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
-        $config = $app->make('config');
-        $txt = $app->make('helper/text');
+        $db = Database::connection();
+        $txt = Core::make('helper/text');
 
         // the passed collection is the parent collection
         $cParentID = $this->getCollectionID();
@@ -3703,7 +3608,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $handle = $txt->slugSafeString($data['cHandle']); // we take it as it comes.
         }
 
-        $handle = str_replace('-', $config->get('concrete.seo.page_path_separator'), $handle);
+        $handle = str_replace('-', Config::get('concrete.seo.page_path_separator'), $handle);
         $data['handle'] = $handle;
 
         $ptID = 0;
@@ -3774,7 +3679,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $pc = self::getByID($newCID, 'RECENT');
             // if we are in the drafts area of the site, then we don't check multilingual status. Otherwise
             // we do
-            if ($this->getCollectionPath() != $config->get('concrete.paths.drafts')) {
+            if ($this->getCollectionPath() != Config::get('concrete.paths.drafts')) {
                 Section::registerPage($pc);
             }
 
@@ -3813,8 +3718,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $pt = $this->getPageTypeObject();
         if (is_object($pt)) {
             $mc = $pt->getPageTypePageTemplateDefaultPageObject($template);
-            $app = Application::getFacadeApplication();
-            $db = $app->make(Connection::class);
+            $db = Database::connection();
 
             // first, we delete any styles we currently have
             $db->delete('CollectionVersionAreaStyles', ['cID' => $this->getCollectionID(), 'cvID' => $this->getVersionID()]);
@@ -3843,8 +3747,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function getCustomStyleObject()
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
         $row = $db->FetchAssoc('select * from CollectionVersionThemeCustomStyles where cID = ? and cvID = ?', [$this->getCollectionID(), $this->getVersionID()]);
         if (isset($row['cID'])) {
             $o = new \Concrete\Core\Page\CustomStyle();
@@ -3894,21 +3797,19 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function getCollectionFullPageCachingLifetimeValue()
     {
-        $app = Application::getFacadeApplication();
-        $config = $app->make('config');
         if ($this->cCacheFullPageContentOverrideLifetime == 'default') {
-            $lifetime = $config->get('concrete.cache.lifetime');
+            $lifetime = Config::get('concrete.cache.lifetime');
         } elseif ($this->cCacheFullPageContentOverrideLifetime == 'custom') {
             $lifetime = $this->cCacheFullPageContentLifetimeCustom * 60;
         } elseif ($this->cCacheFullPageContentOverrideLifetime == 'forever') {
             $lifetime = 31536000; // 1 year
         } else {
-            if ($config->get('concrete.cache.full_page_lifetime') == 'custom') {
-                $lifetime = $config->get('concrete.cache.full_page_lifetime_value') * 60;
-            } elseif ($config->get('concrete.cache.full_page_lifetime') == 'forever') {
+            if (Config::get('concrete.cache.full_page_lifetime') == 'custom') {
+                $lifetime = Config::get('concrete.cache.full_page_lifetime_value') * 60;
+            } elseif (Config::get('concrete.cache.full_page_lifetime') == 'forever') {
                 $lifetime = 31536000; // 1 year
             } else {
-                $lifetime = $config->get('concrete.cache.lifetime');
+                $lifetime = Config::get('concrete.cache.lifetime');
             }
         }
 
@@ -3932,8 +3833,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public static function addStatic($data, TreeInterface $parent = null)
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
         if ($parent instanceof Page) {
             $cParentID = $parent->getCollectionID();
             $parent->rescanChildrenDisplayOrder();
@@ -4004,8 +3904,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function getPageDraftTargetParentPageID()
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
 
         return $db->fetchColumn('select cDraftTargetParentPageID from Pages where cID = ?', [$this->cID]);
     }
@@ -4020,8 +3919,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         if ($cParentID != $this->getPageDraftTargetParentPageID()) {
             Section::unregisterPage($this);
         }
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
+        $db = Database::connection();
         $cParentID = intval($cParentID);
         $db->executeQuery('update Pages set cDraftTargetParentPageID = ? where cID = ?', [$cParentID, $this->cID]);
         $this->cDraftTargetParentPageID = $cParentID;
