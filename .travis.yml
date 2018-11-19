@@ -49,7 +49,7 @@ script:
 - if test $DO_CS_PHP -ne 0; then echo 'Testing PHP coding style'; composer phpcs; fi
 - if test $DO_CS_JS -ne 0; then echo 'Testing JS coding style'; pushd build && grunt js:check && popd; fi
 - if test $DO_PHPUNIT -eq 1; then echo 'Running tests'; composer test; fi
-- if test $DO_PHPUNIT -gt 1; then echo 'Running tests (with coverage)'; composer test-coverage; fi
+- if test $DO_PHPUNIT -gt 1; then echo 'Running tests (with coverage)'; phpdbg -qrr ./concrete/vendor/phpunit/phpunit/phpunit --coverage-clover=coverage.clover; fi
 - if test $DO_BUILDASSETS -ne 0; then ./.travis/rebuild-assets.sh; fi
 
 cache:
