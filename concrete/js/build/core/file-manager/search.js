@@ -215,9 +215,9 @@
     };
 
     ConcreteFileManager.onDragOver = function (e) {
-    	if (ConcreteFileManager.openingFileImporter) {
-    		return;
-    	}
+        if (ConcreteFileManager.openingFileImporter) {
+            return;
+        }
         var dataTransfer = e.originalEvent && e.originalEvent.dataTransfer;
         if (dataTransfer && $.inArray('Files', dataTransfer.types) !== -1) {
             if ($('div.ccm-file-manager-import-files').length === 0) {
@@ -233,7 +233,7 @@
             .on('dragover', ConcreteFileManager.onDragOver)
         ;
         $('a[data-dialog=add-files]').on('click', function(e) {
-        	ConcreteFileManager.openingFileImporter = true;
+            ConcreteFileManager.openingFileImporter = true;
             e.preventDefault();
             $.fn.dialog.open({
                 width: 620,
@@ -242,7 +242,7 @@
                 title: ccmi18n_filemanager.addFiles,
                 href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/file/import?currentFolder=' + my.currentFolder,
                 onOpen: function() {
-                	ConcreteFileManager.openingFileImporter = false;
+                    ConcreteFileManager.openingFileImporter = false;
                 }
             });
         });
@@ -325,14 +325,14 @@
     ConcreteFileManager.prototype.setupImageThumbnails = function() {
         $('.ccm-file-manager-list-thumbnail[data-hover-image]').each(function( e ){
             var my = $(this),
-            	style = [],
-            	maxWidth = my.data('hover-maxwidth'),
-            	maxHeight = my.data('hover-maxheight');
+                style = [],
+                maxWidth = my.data('hover-maxwidth'),
+                maxHeight = my.data('hover-maxheight');
             if (maxWidth) {
-            	style.push('max-width: ' + maxWidth);
+                style.push('max-width: ' + maxWidth);
             }
             if (maxHeight) {
-            	style.push('max-height: ' + maxHeight);
+                style.push('max-height: ' + maxHeight);
             }
             style = style.length === 0 ? '' : (' style="' + style.join('; ') + '"');
             my.popover({
