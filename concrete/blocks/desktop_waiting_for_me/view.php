@@ -1,4 +1,14 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php
+defined('C5_EXECUTE') or die("Access Denied.");
+/* @var Concrete\Core\Block\View\BlockView $view */
+/* @var Concrete\Core\Form\Service\Form $form */
+
+/* @var Concrete\Core\Entity\Notification\NotificationAlert[] $items */
+/* @var array $filterValues */
+/* @var string $filter */
+/* @var Concrete\Core\Validation\CSRF\Token $token */
+/* @var Concrete\Core\Search\Pagination\Pagination $pagination */
+?>
 <div class="ccm-block-desktop-waiting-for-me" data-wrapper="desktop-waiting-for-me">
 
 
@@ -12,7 +22,7 @@
         <div data-form="notification">
             <form method="get" action="<?=$view->action('reload_results')?>">
             <div class="form-group" style="font-size: 12px">
-                <?=$form->select('filter', $filterValues, $filter)?>
+                <?=$form->select('filter', $filterValues, h($filter))?>
             </div>
             </form>
         </div>
@@ -62,7 +72,7 @@
         <p <?php if (count($items)) { ?> style="display: none"<?php }  ?> data-notification-description="empty"><?=t('There are no items that currently need your attention.')?></p>
 
         <?php if ($pagination && $pagination->haveToPaginate()) {
-            $pagination->setBaseURL($view->action('reload_results') . '?filter=' . $activeFilter);
+            $pagination->setBaseURL($view->action('reload_results') . '?filter=' . rawurlencode($filter));
             ?>
 
             <?=$pagination->renderDefaultView(); ?>
