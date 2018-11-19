@@ -10,6 +10,7 @@
 		options = options || {};
 		options.sitemapIndex = Math.max(0, parseInt(options.sitemapIndex, 10) || 0);
 		options = $.extend({
+			isSitemapOverlay: false,
 			displayNodePagination: false,
 			cParentID: 0,
 			siteTreeID: 0,
@@ -176,6 +177,7 @@
 			}
 
 			var ajaxData = $.extend({
+				'isSitemapOverlay': my.options.isSitemapOverlay ? 1 : 0,
 				'displayNodePagination': my.options.displayNodePagination ? 1 : 0,
 				'cParentID': my.options.cParentID,
 				'siteTreeID': my.options.siteTreeID,
@@ -486,7 +488,7 @@
 							node.remove();
 						}
 						reloadNode.removeChildren();
-		
+
 						my.reloadNode(reloadNode, function() {
 							if (!destNode.bExpanded) {
 								destNode.setExpanded(true, {noAnimation: true});
@@ -534,6 +536,7 @@
 			//my.$sitemap.fancytree('option', 'minExpandLevel', minExpandLevel);
 			var ajaxData = $.extend({
 				'dataType': 'json',
+				'isSitemapOverlay': options.isSitemapOverlay ? 1 : 0,
 				'displayNodePagination': options.displayNodePagination ? 1 : 0,
 				'siteTreeID': options.siteTreeID,
 				'cParentID': node.data.cID,
@@ -563,6 +566,7 @@
 					'siteTreeID': options.siteTreeID,
 					'reloadNode': 1,
 					'includeSystemPages': options.includeSystemPages ? 1 : 0,
+					'isSitemapOverlay': options.isSitemapOverlay ? 1 : 0,
 					'displayNodePagination': options.displayNodePagination ? 1 : 0
 				}, options.ajaxData),
 				params = {

@@ -27,7 +27,10 @@ $overlayID = uniqid();
                     instance: this
                 });
             },
+            cParentID: <?= (isset($_REQUEST['cParentID']) && (int) $_REQUEST['cParentID'] > 0) ? (int) $_REQUEST['cParentID'] : '0'; ?>,
+            displayNodePagination: <?= (isset($_REQUEST['display']) && $_REQUEST['display'] === 'flat') ? 'true' : 'false'; ?>,
             displaySingleLevel: <?= (isset($_REQUEST['display']) && $_REQUEST['display'] === 'flat') ? 'true' : 'false'; ?>,
+            isSitemapOverlay: true,
         });
     });
 </script>
