@@ -42,6 +42,7 @@ class FileListTest extends FileStorageTestCase
             'Concrete\Core\Entity\Attribute\Value\Value\Value',
             'Concrete\Core\Entity\Attribute\Type',
             'Concrete\Core\Entity\Attribute\Category',
+            'Concrete\Core\Entity\File\Image\Thumbnail\Type\TypeFileSet',
         ]);
     }
 
