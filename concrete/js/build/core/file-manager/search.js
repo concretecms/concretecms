@@ -224,7 +224,7 @@
                 e.stopPropagation();
                 $('a[data-dialog=add-files]').trigger('click');
             }
-        };
+        }
     };
     ConcreteFileManager.prototype.setupFileUploads = function() {
         var my = this;
