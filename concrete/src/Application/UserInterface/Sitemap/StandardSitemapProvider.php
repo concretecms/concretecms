@@ -44,8 +44,9 @@ class StandardSitemapProvider implements ProviderInterface
      * StandardSitemapProvider constructor.
      *
      * @param \Concrete\Core\Application\Application $app
-     * @param \Concrete\Core\Site\Service $siteService
      * @param \Concrete\Core\Cookie\CookieJar $cookies
+     * @param \Concrete\Core\Site\Service $siteService
+     * @param \Concrete\Core\Http\Request $request
      */
     public function __construct(Application $app, CookieJar $cookies, Service $siteService, Request $request)
     {
@@ -260,6 +261,11 @@ class StandardSitemapProvider implements ProviderInterface
             $dh->setDisplayNodePagination(true);
         } else {
             $dh->setDisplayNodePagination(false);
+        }
+        if ($this->request->query->has('isSitemapOverlay') && $this->request->query->get('isSitemapOverlay')) {
+            $dh->setIsSitemapOverlay(true);
+        } else {
+            $dh->setIsSitemapOverlay(false);
         }
 
         return $dh;
