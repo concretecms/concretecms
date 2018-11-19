@@ -287,7 +287,7 @@ class RequestMediaTypeParser
      * @param string $type
      * @param string $subType
      *
-     * @return string[];
+     * @return string[]
      */
     protected function getMediaTypeAlternatives($type, $subType)
     {
