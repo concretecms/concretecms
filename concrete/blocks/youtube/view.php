@@ -11,6 +11,12 @@ if ($vWidth && $vHeight) {
     $responsiveClass = 'youtubeBlockResponsive4by3';
 }
 
+if (isset($noCookie) && $noCookie) {
+    $src = 'www.youtube-nocookie.com';
+} else {
+    $src = 'www.youtube.com';
+}
+
 $params = array();
 
 if (isset($playlist)) {
@@ -85,9 +91,8 @@ if (Page::getCurrentPage()->isEditMode()) {
     ?>" class="youtubeBlock <?php echo $responsiveClass;
     ?>">
         <iframe class="youtube-player" <?php echo $sizeargs;
-        ?> src="//www.youtube.com/embed/<?= $videoID;
-        ?><?= $paramstring;
-        ?>" allowfullscreen></iframe>
+        ?> src="//<?= $src;?>/embed/<?= $videoID;
+        ?><?= $paramstring;?>" allowfullscreen></iframe>
     </div>
     <?php
 } ?>

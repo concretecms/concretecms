@@ -15,6 +15,7 @@
     <field name="sizing" type="string" size="10"/>
     <field name="startTimeEnabled" type="boolean" />
     <field name="startTime" type="string" size="10" />
+    <field name="noCookie" type="boolean" />
     <field name="autoplay" type="boolean">
       <default value="0"/>
       <notnull/>
