@@ -323,7 +323,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public function getJSONObject()
     {
         $r = new \stdClass();
-        $r->name = $this->getCollectionName();
+        $r->name = $this->getCollectionName() !== '' ? $this->getCollectionName() : t('(No Title)');
         if ($this->isAliasPage()) {
             $r->cID = $this->getCollectionPointerOriginalID();
         } else {
@@ -1731,7 +1731,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     {
         return $this->getCollectionPointerID() > 0;
     }
-    
+
     /**
      * Is this page an alias page or an external link?
      *
@@ -1743,7 +1743,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     {
         return $this->isAliasPage() || $this->isExternalLink();
     }
-    
+
     /**
      * @deprecated This method has been replaced with isAliasPageOrExternalLink() in concrete5 8.5.0a2 (same syntax and same result)
      *
