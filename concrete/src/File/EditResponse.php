@@ -26,7 +26,7 @@ class EditResponse extends CoreEditResponse
      */
     public function setFile(FileEntity $file)
     {
-        $this->files[] = $file->getRecentVersion();
+        $this->files[] = $file;
 
         return $this;
     }
