@@ -178,9 +178,9 @@ var $dialog = $('#' + <?= json_encode($formID) ?>).closest('.ui-dialog-content')
 $dialog.jqdialog('option', 'buttons', [{}]);
 $dialogContainer.find('.ui-dialog-buttonset').remove();
 $dialog.on('dialogclose', function() {
-	if (uploadedFiles.length === 0) {
+    if (uploadedFiles.length === 0) {
         return;
-	}
+    }
     <?php
     if ($replacingFile === null) {
         ?>
@@ -214,7 +214,7 @@ function handleImportResponse(response, isSingleUploadOperation) {
                 })
                 if (isSingleUploadOperation) {
                     $dialog.jqdialog('close');
-                }    
+                }
             }
         }
     );
@@ -244,7 +244,7 @@ function refreshDialogButtons() {
         case 'incoming':
         case 'remote':
             if (<?= $replacingFile === null ? 'true' : 'false' ?> || uploadedFiles.length === 0) {
-            	$rightButtons.append($('<button class="btn btn-success" />')
+                $rightButtons.append($('<button class="btn btn-success" />')
                     .text(<?= json_encode($replacingFile === null ? t('Add Files') : t('Replace File')) ?>)
                     .on('click', function(e) {
                         e.preventDefault();
@@ -257,27 +257,47 @@ function refreshDialogButtons() {
 }
 
 $dialog.find('ul.nav-tabs a[data-tab]').on('click', function() {
-	setTimeout(function() { refreshDialogButtons(); }, 0);
+    setTimeout(function() { refreshDialogButtons(); }, 0);
 });
 setTimeout(function() { refreshDialogButtons(); }, 0);
 
 //Setup upload tab
 var $dropzone = $dialog.find('#ccm-tab-content-local form').dropzone({
-	maxFiles: <?= $replacingFile === null ? 'null' : 1 ?>,
+    maxFiles: <?= $replacingFile === null ? 'null' : 1 ?>,
     sending: function() {
-    	$dialogContainer.find('.ui-dialog-buttonpane button').attr('disabled', 'disabled');
+        $dialogContainer.find('.ui-dialog-buttonpane button').attr('disabled', 'disabled');
     },
     success: function(data, r) {
-    	handleImportResponse(r, <?= $replacingFile ? 'true' : 'false' ?>);
+        handleImportResponse(r, <?= $replacingFile ? 'true' : 'false' ?>);
     },
+    <?php
+    if ($replacingFile) {
+        // We may need to allow people to re-try uploading a file if maxFiles === 1 and the upload of the file filed
+        ?>
+        error: function(files, message, xhr) {
+            this.defaultOptions.error.apply(this, arguments);
+            if (files) {
+                if (!(files instanceof Array)) {
+                    files = [files];
+                }
+                $.each(files, function(index, file) {
+                    if (file && file.accepted) {
+                        file.accepted = false;
+                    }
+                });
+            }
+        },
+        <?php
+    }
+    ?>
     chunksUploaded: function (file, done) {
         if (file.xhr.response) {
-        	handleImportResponse(JSON.parse(file.xhr.response), <?= $replacingFile ? 'true' : 'false' ?>);
+            handleImportResponse(JSON.parse(file.xhr.response), <?= $replacingFile ? 'true' : 'false' ?>);
         }
         done();
     },
     queuecomplete: function() {
-    	refreshDialogButtons();
+        refreshDialogButtons();
     },
     chunking: <?= $isChunkingEnabled ? 'true' : 'false' ?>,
     chunkSize: <?= $chunkSize ?>,
@@ -312,16 +332,16 @@ if ($replacingFile === null) {
 $dialog.find('#ccm-tab-content-incoming form').concreteAjaxForm({
     skipResponseValidation: true,
     success: function(r) {
-    	handleImportResponse(r, true);
+        handleImportResponse(r, true);
         refreshDialogButtons();
     }
 });
 
 // Setup incoming tab
 $dialog.find('#ccm-tab-content-remote form').concreteAjaxForm({
-	skipResponseValidation: true,
+    skipResponseValidation: true,
     success: function(r) {
-    	handleImportResponse(r, true);
+        handleImportResponse(r, true);
         refreshDialogButtons();
     }
 });
