@@ -7,7 +7,7 @@ use DOMElement;
 use Illuminate\Filesystem\Filesystem;
 use Exception;
 use Throwable;
-
+use libXMLError;
 
 class Sanitizer
 {
@@ -106,16 +106,35 @@ class Sanitizer
             throw SanitizerException::create(SanitizerException::ERROR_FAILED_TO_PARSE_XML);
         }
         $xml = new DOMDocument();
-        $error = null;
+        $loaded = false;
+        $exception = null;
+        $oldErrors = libxml_use_internal_errors(true);
+        libxml_clear_errors();
         try {
             $loaded = $xml->loadXML($data, $this->getLoadFlags());
         } catch (Exception $x) {
-            $error = $x;
+            $exception = $x;
         } catch (Throwable $x) {
-            $error = $x;
+            $exception = $x;
         }
-        if ($error !== null || $loaded === false) {
-            throw SanitizerException::create(SanitizerException::ERROR_FAILED_TO_PARSE_XML, $error ? $error->getMessage() : '');
+        $errorMessage = null;
+        if ($exception !== null) {
+            $errorMessage = (string) $exception->getMessage();
+        } elseif ($loaded === false) {
+            $errorMessage = '';
+            $xmlErrors = libxml_get_errors();
+            if ($xmlErrors) {
+                foreach ($xmlErrors as $xmlError) {
+                    if ($xmlError instanceof libXMLError) {
+                        $errorMessage .= "At line {$xmlError->line}: {$xmlError->message}\n";
+                    }
+                }
+                $errorMessage = rtrim($errorMessage);
+            }
+        }
+        libxml_use_internal_errors($oldErrors);
+        if ($errorMessage !== null) {
+            throw SanitizerException::create(SanitizerException::ERROR_FAILED_TO_PARSE_XML, $errorMessage);
         }
 
         return $xml;
