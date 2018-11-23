@@ -6,6 +6,8 @@ use Concrete\Core\Entity\File\File as FileEntity;
 use Concrete\Core\Entity\File\StorageLocation\StorageLocation;
 use Concrete\Core\File\ImportProcessor\AutorotateImageProcessor;
 use Concrete\Core\File\ImportProcessor\ConstrainImageProcessor;
+use Concrete\Core\File\ImportProcessor\ForceImageFormatProcessor;
+use Concrete\Core\File\ImportProcessor\MantatoryProcessorInterface;
 use Concrete\Core\File\ImportProcessor\ProcessorInterface;
 use Concrete\Core\File\ImportProcessor\SvgSanitizerProcessor;
 use Concrete\Core\File\StorageLocation\StorageLocationFactory;
@@ -115,6 +117,13 @@ class Importer
     const E_FILE_EXCEEDS_POST_MAX_FILE_SIZE = 20;
 
     /**
+     * concrete5 internal error: a mandatory import processor failed.
+     *
+     * @var int
+     */
+    const E_FILE_IMPORTPROCESSOR_FAILED = 30;
+
+    /**
      * Should thumbnails be scanned when importing an image?
      *
      * @var bool
@@ -196,6 +205,9 @@ class Importer
                 break;
             case self::E_FILE_UNABLE_TO_STORE_PREFIX_PROVIDED:
                 $msg = t('Unable to copy file to storage location "%s". This file already exists in your site, or there is insufficient disk space for this operation.', $defaultStorage);
+                break;
+            case self::E_FILE_IMPORTPROCESSOR_FAILED:
+                $msg = t('A mandatory import processor failed to process the file. Please check that the file is valid.');
                 break;
             case self::E_PHP_NO_TMP_DIR:
                 $msg = t('Missing a temporary folder.');
@@ -317,16 +329,33 @@ class Importer
         if (!($fr instanceof FileEntity)) {
             // we have to create a new file object for this file version
             $fv = File::add($sanitizedFilename, $prefix, ['fvTitle' => $filename], $fsl, $fr);
+            $newFileCreated = true;
         } else {
             // We get a new version to modify
+            $previouslyApprovedVersion = $fr->getApprovedVersion();
             $fv = $fr->getVersionToModify(true);
             $fv->updateFile($sanitizedFilename, $prefix);
+            $newFileCreated = false;
         }
 
         $fv->refreshAttributes(false);
         foreach ($this->importProcessors as $processor) {
             if ($processor->shouldProcess($fv)) {
-                $processor->process($fv);
+                try {
+                    $processor->process($fv);
+                } catch (Exception $x) {
+                    if ($processor instanceof MantatoryProcessorInterface) {
+                        if ($newFileCreated === true) {
+                            $fv->getFile()->delete();
+                        } else {
+                            $fv->delete(true);
+                            if ($previouslyApprovedVersion) {
+                                $previouslyApprovedVersion->approve();
+                            }
+                        }
+                        return self::E_FILE_IMPORTPROCESSOR_FAILED;
+                    }
+                }
             }
         }
         if ($this->rescanThumbnailsOnImport) {

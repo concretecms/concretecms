@@ -6,9 +6,12 @@ use Concrete\Core\Attribute\Key\Category;
 use Concrete\Core\Attribute\Key\FileKey;
 use Concrete\Core\Attribute\Type as AttributeType;
 use Concrete\Core\Cache\CacheLocal;
+use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Entity\File\Version as FileVersionEntity;
 use Concrete\Core\File\Image\BasicThumbnailer;
 use Concrete\Core\File\Image\Thumbnail\Type\Type as ThumbnailType;
 use Concrete\Core\File\Importer;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\TestHelpers\File\FileStorageTestCase;
 use Config;
 use Core;
@@ -28,6 +31,8 @@ class ImporterTest extends FileStorageTestCase
             'ConfigStore',
             'Logs',
             'FileVersionLog',
+            'FileSetFiles',
+            'DownloadStatistics',
         ]);
         $this->metadatas = array_merge($this->metadatas, [
             'Concrete\Core\Entity\Attribute\Key\Settings\NumberSettings',
@@ -42,7 +47,7 @@ class ImporterTest extends FileStorageTestCase
             'Concrete\Core\Entity\Attribute\Type',
             'Concrete\Core\Entity\Attribute\Category',
         ]);
-        Config::set('concrete.upload.extensions', '*.txt;*.jpg;*.jpeg;*.png');
+        Config::set('concrete.upload.extensions', '*.txt;*.jpg;*.jpeg;*.png;*.svg');
     }
 
     public function setUp()
@@ -57,7 +62,7 @@ class ImporterTest extends FileStorageTestCase
     {
         parent::setUpBeforeClass();
 
-        $category = Category::add('file');
+        Category::add('file');
         $number = AttributeType::add('number', 'Number');
         FileKey::add($number, ['akHandle' => 'width', 'akName' => 'Width']);
         FileKey::add($number, ['akHandle' => 'height', 'akName' => 'Height']);
@@ -409,11 +414,83 @@ class ImporterTest extends FileStorageTestCase
         $this->assertEquals($fva, $fv3);
     }
 
+    public function testBrokenSVG()
+    {
+        // create the default storage location first.
+        mkdir($this->getStorageDirectory());
+        $this->getStorageLocation();
+        $app = Application::getFacadeApplication();
+        $cn = $app->make(Connection::class);
+        $fi = new Importer();
+        $itemsCounter = function () use ($cn) {
+            return [
+                'files' => (int) $cn->fetchColumn('select count(*) from Files'),
+                'versions' => (int) $cn->fetchColumn('select count(*) from FileVersions'),
+            ];
+        };
+
+        $goodSvg = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__) . '/good.svg';
+        file_put_contents($goodSvg, <<<'EOT'
+<svg>
+ <g>
+    <script><![CDATA[
+        window.alert(1);
+    ]]></script>
+    <wont-break />
+ </g>
+</svg>
+EOT
+        );
+        $badSvg = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__) . '/bad.svg';
+        file_put_contents($badSvg, <<<'EOT'
+<svg>
+ <g>
+    <script><![CDATA[
+        window.alert(1);
+    ]]></script>
+    <will-break>
+ </g>
+</svg>
+EOT
+        );
+
+        $storedCounters = $itemsCounter();
+
+        $importedFileVersion = $fi->import($goodSvg);
+        $this->assertInstanceOf(FileVersionEntity::class, $importedFileVersion);
+        ++$storedCounters['files'];
+        ++$storedCounters['versions'];
+        $this->assertSame($storedCounters, $itemsCounter());
+
+        $r = $fi->import($badSvg);
+        $this->assertSame(Importer::E_FILE_IMPORTPROCESSOR_FAILED, $r);
+        $this->assertSame($storedCounters, $itemsCounter());
+
+        $importedFileVersion = $fi->import($goodSvg, 'good2.svg', $importedFileVersion->getFile());
+        $this->assertInstanceOf(FileVersionEntity::class, $importedFileVersion);
+        ++$storedCounters['versions'];
+        $this->assertSame($storedCounters, $itemsCounter());
+
+        $prefix = $importedFileVersion->getPrefix();
+        $r = $fi->import($badSvg, 'bad2.svg', $importedFileVersion->getFile());
+        $this->assertSame(Importer::E_FILE_IMPORTPROCESSOR_FAILED, $r);
+        $this->assertSame($storedCounters, $itemsCounter());
+        $this->assertSame($prefix, $importedFileVersion->getFile()->getRecentVersion()->getPrefix());
+        $this->assertSame('good2.svg', $importedFileVersion->getFile()->getRecentVersion()->getFileName());
+        $this->assertSame($importedFileVersion, $importedFileVersion->getFile()->getApprovedVersion());
+    }
+
     protected function cleanup()
     {
         parent::cleanup();
         if (file_exists(__DIR__ . '/test.txt')) {
             unlink(__DIR__ . '/test.txt');
+        }
+        if (file_exists(__DIR__ . '/good.svg')) {
+            unlink(__DIR__ . '/good.svg');
+        }
+        if (file_exists(__DIR__ . '/bad.svg')) {
+            unlink(__DIR__ . '/bad.svg');
         }
         if (file_exists(__DIR__ . '/test.invalid')) {
             unlink(__DIR__ . '/test.invalid');
