@@ -83,7 +83,7 @@ class Sanitizer
      */
     protected function getLoadFlags()
     {
-        $flags = LIBXML_NONET | LIBXML_NOWARNING | LIBXML_PARSEHUGE | LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD;
+        $flags = LIBXML_NOWARNING | LIBXML_PARSEHUGE | LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD;
         if (defined('LIBXML_BIGLINES')) {
             $flags |= LIBXML_BIGLINES;
         }
