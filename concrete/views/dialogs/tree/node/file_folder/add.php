@@ -8,6 +8,10 @@
 			<?= $form->label('fileFolderName', t('Name')); ?>
 			<?= $form->text('fileFolderName', ''); ?>
 		</div>
+		<div class="form-group">
+			<?= $form->label('fileFolderFileStorageLocation', t('Storage Location')); ?>
+			<?= $form->select('fileFolderFileStorageLocation', $locations); ?>
+		</div>
 		<div class="dialog-buttons">
 			<button class="btn btn-default" data-dialog-action="cancel"><?= t('Cancel'); ?></button>
 			<button class="btn btn-primary pull-right" data-dialog-action="submit" type="button"><?= t('Add'); ?></button>
