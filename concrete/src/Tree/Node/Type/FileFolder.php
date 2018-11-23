@@ -78,7 +78,7 @@ class FileFolder extends TreeNode
      */
     public function getTreeNodeStorageLocationObject()
     {
-        $app = Facade::getFacadeApplication();
+        $app = Application::getFacadeApplication();
 
         return $app->make(StorageLocationFactory::class)->fetchByID((int) $this->fslID);
     }
@@ -132,7 +132,7 @@ class FileFolder extends TreeNode
     {
         $app = Application::getFacadeApplication();
         $db = $app->make(Connection::class);
-        $db->executeQuery('DELETE FROM TreeGroupNodes WHERE treeNodeID = ?', [
+        $db->executeQuery('DELETE FROM TreeFileFolderNodes WHERE treeNodeID = ?', [
             $this->treeNodeID
         ]);
     }
@@ -183,7 +183,7 @@ class FileFolder extends TreeNode
         // If its not empty verify its a real location
         elseif (!empty($storageLocationID)) {
             $app = Application::getFacadeApplication();
-            $storageLocationFactory = $app->make(StorageLocationFactory::class)->fetchByID((int) $storageLocationID);
+            $storageLocation = $app->make(StorageLocationFactory::class)->fetchByID((int) $storageLocationID);
             if (is_object($storageLocation)) {
                 $storageLocationID = $storageLocation->getID();
             } else {
