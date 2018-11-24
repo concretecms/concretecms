@@ -33,7 +33,7 @@ class Version20181122000000 extends AbstractMigration implements RepeatableMigra
     {
         // Add any existing folder to the default storage location
         $db = $this->connection;
-        $defaultStorageLocationID = $folderTreeNodeTypeID = $db->fetchColumn('SELECT fslID FROM FileStorageLocations WHERE fslIsDefault = 1');
+        $defaultStorageLocationID = $db->fetchColumn('SELECT fslID FROM FileStorageLocations WHERE fslIsDefault = 1');
         $folderTreeNodeTypeID = $db->fetchColumn('SELECT treeNodeTypeID FROM TreeNodeTypes WHERE treeNodeTypeHandle = ?', [
             'file_folder'
         ]);
