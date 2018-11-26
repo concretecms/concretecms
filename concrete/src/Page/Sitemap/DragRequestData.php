@@ -466,6 +466,7 @@ class DragRequestData
             return t('Only the administrator can copy aliased pages.');
         }
         $destinationPageID = $this->getDestinationPage()->getCollectionID();
+        $somePageWithChildren = false;
         foreach ($this->getOriginalPages() as $originalPage) {
             if ($originalPage->getCollectionID() == $destinationPageID) {
                 return t('It\'s not possible to copy the page "%s" and its child pages under the page itself.', $originalPage->getCollectionName());
@@ -473,6 +474,12 @@ class DragRequestData
             if (in_array($destinationPageID, $originalPage->getCollectionChildrenArray())) {
                 return t('It\'s not possible to copy the page "%s" and its child pages under one of its child pages.', $originalPage->getCollectionName());
             }
+            if ($somePageWithChildren === false && !$originalPage->isAliasPageOrExternalLink() && $originalPage->getNumChildrenDirect() > 0) {
+                $somePageWithChildren = true;
+            }
+        }
+        if ($somePageWithChildren === false) {
+            return count($this->getOriginalPages()) === 1 ? t("The page doesn't have any child pages.") : t("The pages don't have any child pages.");
         }
 
         return '';
