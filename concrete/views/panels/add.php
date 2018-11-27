@@ -43,11 +43,11 @@ defined('C5_EXECUTE') or die('Access Denied.');
                         data-has-add-template="no"
                         data-supports-inline-add="no"
                         data-btID="0"
-                        data-dragging-avatar="<?= h('<p><img src="' . URL::to('/concrete/images/stack.png') . '" /><span>' . t('Stack') . '</span></p>') ?>"
-                        data-block-id="<?= (int) $stack->getCollectionID() ?>"
-                    >
+                        data-dragging-avatar="<?= h('<p><img src="' . DIR_REL . '/concrete/images/stack.png' . '" /><span>' . t('Stack') . '</span></p>') ?>"
+                        data-block-id="<?= (int) $stack->getCollectionID() ?>"                    >
                         <div class="stack-name">
-                            <span class="handle"><?= h($stack->getStackName()) ?></span>
+                            <img class="ccm-panel-add-block-stack-item-handle" src="<?=DIR_REL?>/concrete/images/stack.png" />
+                            <span class="stack-name-inner"><?= h($stack->getStackName()) ?></span>
                         </div>
                         <?php /*
                         <div class="blocks">
@@ -97,11 +97,14 @@ defined('C5_EXECUTE') or die('Access Denied.');
             <script>
             $('div.ccm-panel-add-block-stack-item').each(function () {
                 var active = false,
-                    item = $(this),
-                    count = item.find('div.block-count');
+                    item = $(this);
 
                 item.click(function (e) {
-                    e.preventDefault();
+                    jQuery.fn.dialog.showLoader();
+
+                    // load the blocks into the DIV.
+
+                    /*
                     var method;
                     if (active) {
                         method = $.fn.removeClass;
@@ -127,6 +130,9 @@ defined('C5_EXECUTE') or die('Access Denied.');
                         count.hasClass('hidden') ? count.removeClass('hidden') : count.addClass('hidden');
                     }, 250);
                     return false;
+                    */
+
+
                 });
             });
             $('div.ccm-panel-add-block-stack-item').find('a.stack-handle').toggle(function (e) {
