@@ -14,7 +14,6 @@ use Symfony\Component\Console\Command\Command;
 
 class ServiceProviderTest extends PHPUnit_Framework_TestCase
 {
-
     /** @var \Mockery\Mock|Application */
     protected $app;
 
@@ -30,6 +29,45 @@ class ServiceProviderTest extends PHPUnit_Framework_TestCase
     /** @var array The tracked command classes that get added */
     protected $addedClasses = [];
 
+    public function setUp()
+    {
+        // Setup a fake app object
+        $app = Mockery::mock(Application::class)->makePartial();
+
+        // Setup a fake database connection
+        $app->bind(EntityManagerInterface::class, function () {
+            $connection = Mockery::mock(Connection::class);
+            $em = Mockery::mock(EntityManager::class)->makePartial();
+            $em->shouldReceive('getConnection')->zeroOrMoreTimes()->andReturn($connection);
+
+            return $em;
+        });
+
+        // Setup the extend method
+        $app->shouldReceive('extend')->zeroOrMoreTimes()->andReturnUsing(function ($class, callable $binding) {
+            $this->consoleFactory = $binding;
+        });
+
+        // Setup a console object
+        $this->console = Mockery::mock(ConsoleApplication::class)->makePartial();
+        $this->console->shouldReceive('add')->andReturnUsing(function (Command $command) {
+            $this->addedClasses[] = get_class($command);
+        });
+
+        // Setup the provider
+        $this->provider = new ServiceProvider($app);
+        $this->app = $app;
+    }
+
+    public function tearDown()
+    {
+        Mockery::close();
+        $this->app = null;
+        $this->provider = null;
+        $this->consoleFactory = null;
+        $this->addedClasses = [];
+    }
+
     public function testProviderExtends()
     {
         // Run the register function
@@ -40,7 +78,7 @@ class ServiceProviderTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Make sure that the expected commands exist when concrete5 is not installed
+     * Make sure that the expected commands exist when concrete5 is not installed.
      */
     public function testUninstalledHasExpectedCommands()
     {
@@ -76,7 +114,7 @@ class ServiceProviderTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Make sure expected commands exist when concrete5 is installed
+     * Make sure expected commands exist when concrete5 is installed.
      */
     public function testInstalledHasExpectedCommands()
     {
@@ -137,51 +175,12 @@ class ServiceProviderTest extends PHPUnit_Framework_TestCase
             \Doctrine\DBAL\Migrations\Tools\Console\Command\GenerateCommand::class,
             \Doctrine\DBAL\Migrations\Tools\Console\Command\MigrateCommand::class,
             \Doctrine\DBAL\Migrations\Tools\Console\Command\StatusCommand::class,
-            \Doctrine\DBAL\Migrations\Tools\Console\Command\VersionCommand::class
+            \Doctrine\DBAL\Migrations\Tools\Console\Command\VersionCommand::class,
         ];
 
         sort($subset);
         sort($this->addedClasses);
 
         $this->assertArraySubset($subset, $this->addedClasses);
-    }
-
-    public function setUp()
-    {
-        // Setup a fake app object
-        $app = Mockery::mock(Application::class)->makePartial();
-
-        // Setup a fake database connection
-        $app->bind(EntityManagerInterface::class, function () {
-            $connection = Mockery::mock(Connection::class);
-            $em = Mockery::mock(EntityManager::class)->makePartial();
-            $em->shouldReceive('getConnection')->zeroOrMoreTimes()->andReturn($connection);
-
-            return $em;
-        });
-
-        // Setup the extend method
-        $app->shouldReceive('extend')->zeroOrMoreTimes()->andReturnUsing(function ($class, callable $binding) {
-            $this->consoleFactory = $binding;
-        });
-
-        // Setup a console object
-        $this->console = Mockery::mock(ConsoleApplication::class)->makePartial();
-        $this->console->shouldReceive('add')->andReturnUsing(function (Command $command) {
-            $this->addedClasses[] = get_class($command);
-        });
-
-        // Setup the provider
-        $this->provider = new ServiceProvider($app);
-        $this->app = $app;
-    }
-
-    public function tearDown()
-    {
-        Mockery::close();
-        $this->app = null;
-        $this->provider = null;
-        $this->consoleFactory = null;
-        $this->addedClasses = [];
     }
 }
