@@ -53,7 +53,7 @@
     }
   },
   "scripts": {
-    "test": "phpunit"
+    "test": "phpunit",
     "post-create-project-cmd": [
       "composer config --unset platform.php"
     ]
