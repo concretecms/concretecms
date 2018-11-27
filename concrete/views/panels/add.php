@@ -32,7 +32,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                     if (!$stack) {
                         continue;
                     }
-                    $blocks = $stack->getBlocks();
+                    //$blocks = $stack->getBlocks();
                     ?>
                     <div
                         class="ccm-panel-add-block-stack-item"
@@ -49,6 +49,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                         <div class="stack-name">
                             <span class="handle"><?= h($stack->getStackName()) ?></span>
                         </div>
+                        <?php /*
                         <div class="blocks">
                             <div class="block-count">
                                 <?= t2('%d Block', '%d Blocks', count($blocks)) ?>
@@ -87,7 +88,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                                 <?php
                             }
                             ?>
-                        </div>
+                        </div>*/?>
                     </div>
                     <?php
                 }
