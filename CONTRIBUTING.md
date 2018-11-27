@@ -22,11 +22,11 @@ Before submitting pull requests, please be sure to read these pages:
 
 - Adopting a common coding style makes developers life easier and may be helpful in finding some kind of bugs. Furthermore, like @aembler once said, we have to be good citizens: speaking the same dialect is useful for everybody. So, please be sure to consult the [Coding-Style Guidelines](http://documentation.concrete5.org/developers/background/coding-style-guidelines).
 
-  One easy, secure and fast way to fix coding style problems is using [php-cs-fixer](http://cs.sensiolabs.org/). To fix a file simply call
+  To fix the coding style of the files you created/modified, simply call:  
+  `./concrete/bin/concrete5 c5:phpcs fix <path>`  
+  (On Windows, replace `/` with `\`).  
+  Where `<path>` is the file you modified (you can also specify multiple files, as well as using directories).
 
-  `php-cs-fixer --config=<webroot>/.php_cs.dist fix <filename>`
-
-  Please run the above command on every PHP-only file included in your pull requests (preferably in a separated commit).
 
 - Pull requests that address existing issues are much **much** more likely to be accepted than unsolicited pull requests. 
 
