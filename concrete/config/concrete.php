@@ -254,12 +254,12 @@ return [
                                     'ttl' => 10
                                 ],
                             ],*/
-                            'prefix'=>'c5_overrides',
-                            'database'=>0 // Use different Redis Databases - optional
+                            'prefix' => 'c5_overrides',
+                            'database' => 0, // Use different Redis Databases - optional
                         ],
                     ],
                 ],
-                'preferred_driver' => 'core_filesystem'// Use this to specify a preferred driver
+                'preferred_driver' => 'core_filesystem', // Use this to specify a preferred driver
             ],
             'expensive' => [
                 'drivers' => [
@@ -278,12 +278,12 @@ return [
                     'redis' => [
                         'class' => \Concrete\Core\Cache\Driver\RedisStashDriver::class,
                         'options' => [
-                            'prefix'=>'c5_expensive',
-                            'database'=>0 // Use different Redis Databases - optional
+                            'prefix' => 'c5_expensive',
+                            'database' => 0, // Use different Redis Databases - optional
                         ],
                     ],
                 ],
-                'preferred_driver' => 'core_filesystem'// Use this to specify a preferred driver
+                'preferred_driver' => 'core_filesystem', // Use this to specify a preferred driver
             ],
             'object' => [
                 'drivers' => [
@@ -294,12 +294,12 @@ return [
                     'redis' => [
                         'class' => \Concrete\Core\Cache\Driver\RedisStashDriver::class,
                         'options' => [
-                            'prefix'=>'c5_object',
-                            'database'=>0 // Use different Redis Databases - optional
+                            'prefix' => 'c5_object',
+                            'database' => 0, // Use different Redis Databases - optional
                         ],
                     ],
                 ],
-                'preferred_driver' => 'core_ephemeral'// Use this to specify a preferred driver
+                'preferred_driver' => 'core_ephemeral', // Use this to specify a preferred driver
             ],
         ],
 
@@ -499,7 +499,7 @@ return [
         /*
          * The threshold (total number of pixels - width x height x number of frames)
          * after which we'll reload images instead of creating in-memory clones.
-         * If empty: unlimited 
+         * If empty: unlimited
          */
         'inplace_image_operations_limit' => 4194304,
         /*
@@ -819,7 +819,7 @@ EOT
         'name' => 'CONCRETE5',
         'handler' => 'file',
         'redis' => [
-            'database'=>1 // Use different Redis Databases - optional
+            'database' => 1, // Use different Redis Databases - optional
         ],
         'save_path' => null,
         'max_lifetime' => 7200,
@@ -949,7 +949,7 @@ EOT
             'authentication_failure' => [
                 'enabled' => false,
                 'amount' => 5, // The number of failures
-                'duration' => 300 // In so many seconds
+                'duration' => 300, // In so many seconds
             ],
             'message' => 'This user is inactive. Please contact us regarding this account.',
         ],
