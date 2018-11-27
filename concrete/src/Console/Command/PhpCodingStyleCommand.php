@@ -56,7 +56,7 @@ EOT
         $this->printErrors($errors, $dryRun);
         $this->printCountersTable($counters, $dryRun);
         if ($dryRun) {
-            return empty($changes) && empty($errors->isEmpty()) ? 0 : 1;
+            return empty($changes) && $errors->isEmpty() ? 0 : 1;
         }
 
         return $errors->isEmpty() ? 0 : 1;
