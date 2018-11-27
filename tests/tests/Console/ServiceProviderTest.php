@@ -65,6 +65,7 @@ class ServiceProviderTest extends PHPUnit_Framework_TestCase
             \Concrete\Core\Console\Command\ExecCommand::class,
             \Concrete\Core\Console\Command\ServiceCommand::class,
             \Concrete\Core\Console\Command\ResetCommand::class,
+            \Concrete\Core\Console\Command\PhpCodingStyleCommand::class,
         ];
 
         sort($subset);
@@ -100,6 +101,7 @@ class ServiceProviderTest extends PHPUnit_Framework_TestCase
             \Concrete\Core\Console\Command\ExecCommand::class,
             \Concrete\Core\Console\Command\ServiceCommand::class,
             \Concrete\Core\Console\Command\ResetCommand::class,
+            \Concrete\Core\Console\Command\PhpCodingStyleCommand::class,
             \Concrete\Core\Console\Command\CompareSchemaCommand::class,
             \Concrete\Core\Console\Command\ClearCacheCommand::class,
             \Concrete\Core\Console\Command\InstallPackageCommand::class,
