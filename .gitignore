@@ -69,7 +69,7 @@ __IDE_SYMBOLS__.php
 /.php_cs
 
 # ignore php-cs-fixer cache file
-/.php_cs.cache
+/.php_cs.cache*
 
 # ignore Visual Code project files
 .vscode

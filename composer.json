@@ -16,7 +16,7 @@
     "concrete5/dependency-patches": "^1.0.0"
   },
   "require-dev": {
-    "squizlabs/php_codesniffer": "^2.7",
+    "friendsofphp/php-cs-fixer": "^2.2",
     "phpunit/phpunit": "^4",
     "phpunit/dbunit": "^2.0",
     "mockery/mockery": "^0.9.9"
@@ -53,11 +53,7 @@
     }
   },
   "scripts": {
-    "test": "phpunit",
-    "phpcs": [
-      "phpcs -p -s --report=full --standard=psr2 --sniffs=Generic.WhiteSpace.DisallowTabIndent,Generic.PHP.DisallowShortOpenTag concrete/src concrete/controllers",
-      "phpcs -p -s --report=full --standard=psr2 --sniffs=Generic.PHP.DisallowShortOpenTag --ignore=\"*.js,*.css,*.less,concrete/vendor/*,concrete/src/*,concrete/controllers/*\" concrete"
-    ],
+    "test": "phpunit"
     "post-create-project-cmd": [
       "composer config --unset platform.php"
     ]
