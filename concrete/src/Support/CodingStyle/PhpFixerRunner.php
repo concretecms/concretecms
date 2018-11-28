@@ -42,6 +42,11 @@ class PhpFixerRunner
     protected $errorManager;
 
     /**
+     * @var string|null
+     */
+    private $phpCSFixerVersion;
+
+    /**
      * @param \Concrete\Core\Support\CodingStyle\PhpFixerRuleResolver $ruleResolver
      * @param EventDispatcherInterface $eventDispatcher
      */
@@ -140,17 +145,6 @@ class PhpFixerRunner
         $rules = $this->ruleResolver->getRules($flags, true);
         $fixers = $this->ruleResolver->getFixers($rules);
 
-        $cacheManager = new FileCacheManager(
-            new FileHandler($options->getWebRoot() . '/.php_cs.cache.' . $flags),
-            new Signature(
-                PHP_VERSION,
-                (new ToolInfo())->getVersion(),
-                $rules
-            ),
-            $dryRun,
-            new Directory($options->getWebRoot())
-        );
-
         $linter = new Linter();
         $runner = new Runner(
             $finder,
@@ -160,7 +154,7 @@ class PhpFixerRunner
             $this->errorManager,
             $linter,
             $dryRun,
-            $cacheManager,
+            $this->createCacheManager($options, $flags, $dryRun, $rules),
             null,
             false
         );
@@ -178,7 +172,7 @@ class PhpFixerRunner
     }
 
     /**
-     * @param @param \Concrete\Core\Support\CodingStyle\PhpFixerOptions $options
+     * @param \Concrete\Core\Support\CodingStyle\PhpFixerOptions $options
      * @param array $paths
      *
      * @return \Symfony\Component\Finder\Finder
@@ -211,9 +205,55 @@ class PhpFixerRunner
         return $finder;
     }
 
+    /**
+     * @param \Concrete\Core\Support\CodingStyle\PhpFixerOptions $options
+     * @param int $flags
+     * @param bool $dryRun
+     * @param array $rules
+     *
+     * @return \PhpCsFixer\Cache\FileCacheManager
+     */
+    protected function createCacheManager(PhpFixerOptions $options, $flags, $dryRun, array $rules)
+    {
+        return new FileCacheManager(
+            new FileHandler($this->getCacheFilename($options, $flags)),
+            new Signature(
+                PHP_VERSION,
+                $this->getPhpCSFixerVersion(),
+                $rules
+            ),
+            $dryRun,
+            new Directory($options->getWebRoot())
+        );
+    }
+
+    /**
+     * @param \Concrete\Core\Support\CodingStyle\PhpFixerOptions $options
+     * @param int $flags
+     *
+     * @return string
+     */
+    protected function getCacheFilename(PhpFixerOptions $options, $flags)
+    {
+        return $options->getWebRoot() . '/.php_cs.cache.' . $flags . '@' . trim(preg_replace('/[^\w\.\@]+/', '_', PHP_VERSION), '_');
+    }
+
     protected function resetErrors()
     {
         $this->errorManager = new ErrorsManager();
+    }
+
+    /**
+     * @return string
+     */
+    protected function getPhpCSFixerVersion()
+    {
+        if ($this->phpCSFixerVersion === null) {
+            $phpCSFixerToolInfo = new ToolInfo();
+            $this->phpCSFixerVersion = $phpCSFixerToolInfo->getVersion();
+        }
+
+        return $this->phpCSFixerVersion;
     }
 
     /**
