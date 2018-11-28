@@ -530,6 +530,12 @@ return [
 
         'coding_style' => [
             'php' => [
+                'filter' => [
+                    // Whitepace-separated list of file extensions to be parsed
+                    'extensions' => 'php',
+                    // Whitelspace-separated list of additional files (relative to the webroot) to be parsed
+                    'include' => 'concrete/bin/concrete5',
+                ],
                 'ignore_directories' => [
                     // Whitepace-separated list of directory names that should not be parsed
                     'by_name' => 'vendor',

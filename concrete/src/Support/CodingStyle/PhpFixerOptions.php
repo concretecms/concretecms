@@ -23,6 +23,20 @@ class PhpFixerOptions
     private $webRoot;
 
     /**
+     * The list of file extensions to be parsed.
+     *
+     * @var string[]|null
+     */
+    private $filterByExtensions;
+
+    /**
+     * The list of additional files (relative to the webroot) to be parsed.
+     *
+     * @var string[]|null
+     */
+    private $filterIncludeFiles;
+
+    /**
      * The directory names that should not be parsed.
      *
      * @var string[]|null
@@ -154,6 +168,70 @@ class PhpFixerOptions
             throw new RuntimeException(t('Unable to find the directory %s', $value));
         }
         $this->webRoot = $this->normalizePath($absPath, true, false);
+
+        return $this;
+    }
+
+    /**
+     * Get the list of file extensions to be parsed.
+     *
+     * @return string[] always lower case, without leading dots
+     */
+    public function getFilterByExtensions()
+    {
+        if ($this->filterByExtensions === null) {
+            $this->setFilterByExtensions(preg_split('/\s+/', $this->config->get('concrete.misc.coding_style.php.filter.extensions'), -1, PREG_SPLIT_NO_EMPTY));
+        }
+
+        return $this->filterByExtensions;
+    }
+
+    /**
+     * Set the list of file extensions to be parsed.
+     *
+     * @param string[] $value
+     *
+     * @return $this
+     */
+    public function setFilterByExtensions(array $value)
+    {
+        $filterByExtensions = [];
+        foreach ($value as $extension) {
+            $filterByExtensions[] = mb_strtolower(ltrim($extension, '.'));
+        }
+        $this->filterByExtensions = $filterByExtensions;
+
+        return $this;
+    }
+
+    /**
+     * Get the list of additional files (relative to the webroot) to be parsed.
+     *
+     * @return string[]
+     */
+    public function getFilterIncludeFiles()
+    {
+        if ($this->filterIncludeFiles === null) {
+            $this->setFilterIncludeFiles(preg_split('/\s+/', $this->config->get('concrete.misc.coding_style.php.filter.include'), -1, PREG_SPLIT_NO_EMPTY));
+        }
+
+        return $this->filterIncludeFiles;
+    }
+
+    /**
+     * Set the list of additional files (relative to the webroot) to be parsed.
+     *
+     * @param string[] $value
+     *
+     * @return $this
+     */
+    public function setFilterIncludeFiles($value)
+    {
+        $filterIncludeFiles = [];
+        foreach ($value as $path) {
+            $filterIncludeFiles[] = $this->normalizePath($path, false, true);
+        }
+        $this->filterIncludeFiles = $filterIncludeFiles;
 
         return $this;
     }
@@ -457,6 +535,9 @@ class PhpFixerOptions
     {
         if ($this->directoriesWithMixedContentsRegex === null) {
             $directoriesWithMixedContentsRegex = [];
+            foreach ($this->getFilterIncludeFiles() as $path) {
+                $this->addDirectoriesWithMixedContentsRegex($path, $directoriesWithMixedContentsRegex);
+            }
             foreach ($this->getIgnoredDirectoriesByPath() as $path) {
                 $this->addDirectoriesWithMixedContentsRegex($path, $directoriesWithMixedContentsRegex);
             }

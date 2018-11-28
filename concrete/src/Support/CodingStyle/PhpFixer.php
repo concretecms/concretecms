@@ -139,16 +139,17 @@ class PhpFixer
             // Exclude dot files
             return [];
         }
-        if (strcasecmp($file->getExtension(), 'php') !== 0) {
-            // Exclude non-php files
-            return [];
-        }
+        $isExtensionOk = in_array(mb_strtolower($file->getExtension()), $this->options->getFilterByExtensions());
         $fullPath = $this->options->normalizePath($file->getPathname(), false, false);
         if (strpos($fullPath, $this->options->getWebRoot()) !== 0) {
             // Outside the webroot: we don't know the exact rules.
-            return [0 => [$fullPath]];
+            return $isExtensionOk ? [0 => [$fullPath]] : [];
         }
         $relativePath = substr($fullPath, strlen($this->options->getWebRoot()));
+        if ($isExtensionOk === false && !in_array($relativePath, $this->options->getFilterIncludeFiles())) {
+            // Let's skip this file, since it doesn't have the allowed file extensions and it's not in the whitelist
+            return [];
+        }
         foreach ($this->options->getIgnoredDirectoriesByPath() as $check) {
             if (strpos($relativePath, $check) === 0) {
                 // The file is in a directory marked as to be ignored: no operation should be done

@@ -195,13 +195,15 @@ class PhpFixerRunner
         }
         $finder = Finder::create()
             ->files()
-            ->name('*.php')
             ->ignoreDotFiles(true)
             ->ignoreVCS(true)
             ->exclude([])
             ->in($pathsByType['dir'])
             ->append($pathsByType['file'])
         ;
+        foreach ($options->getFilterByExtensions() as $extension) {
+            $finder->name('*.' . $extension);
+        }
         foreach ($options->getIgnoredDirectoriesByName() as $notName) {
             $finder->notPath('#(^|/)' . preg_quote($notName, '#') . '(/|$)#');
         }
