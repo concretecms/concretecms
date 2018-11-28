@@ -20,5 +20,5 @@ if test -z "$CHANGED_FILES"; then
 else
     echo 'Checking the PHP coding style of the following changed files:'
     echo "$CHANGED_FILES"
-    ./concrete/bin/concrete5 c5:phpcs check ${CHANGED_FILES}
+    ./concrete/bin/concrete5 c5:phpcs --no-cache -- check ${CHANGED_FILES}
 fi

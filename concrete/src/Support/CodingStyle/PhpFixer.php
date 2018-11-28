@@ -70,6 +70,16 @@ class PhpFixer
     }
 
     /**
+     * Get the fixer options.
+     *
+     * @return \Concrete\Core\Support\CodingStyle\PhpFixerOptions
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    /**
      * @param \Symfony\Component\Console\Input\InputInterface $input
      * @param \Symfony\Component\Console\Output\OutputInterface $output
      * @param \SplFileInfo[] $paths with absolute paths

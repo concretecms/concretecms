@@ -6,6 +6,7 @@ use ArrayObject;
 use PhpCsFixer\Cache\Directory;
 use PhpCsFixer\Cache\FileCacheManager;
 use PhpCsFixer\Cache\FileHandler;
+use PhpCsFixer\Cache\NullCacheManager;
 use PhpCsFixer\Cache\Signature;
 use PhpCsFixer\Differ\SebastianBergmannDiffer;
 use PhpCsFixer\Error\ErrorsManager;
@@ -211,10 +212,14 @@ class PhpFixerRunner
      * @param bool $dryRun
      * @param array $rules
      *
-     * @return \PhpCsFixer\Cache\FileCacheManager
+     * @return \PhpCsFixer\Cache\CacheManagerInterface
      */
     protected function createCacheManager(PhpFixerOptions $options, $flags, $dryRun, array $rules)
     {
+        if ($options->isCacheDisabled()) {
+            return new NullCacheManager();
+        }
+
         return new FileCacheManager(
             new FileHandler($this->getCacheFilename($options, $flags)),
             new Signature(

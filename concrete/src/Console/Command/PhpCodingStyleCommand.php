@@ -18,6 +18,7 @@ class PhpCodingStyleCommand extends Command
 
     protected $signature = <<<'EOT'
 c5:phpcs
+{--no-cache : Specify this flag to turn off the coding style cache}
 {action : Either "fix" or "check"}
 {path*  : The path }
 EOT
@@ -48,6 +49,7 @@ EOT
             }
             $splFileInfos[] = $splFileInfo;
         }
+        $fixer->getOptions()->setIsCacheDisabled($this->input->getOption('no-cache'));
         list($counters, $changes, $errors) = $fixer->fix($this->input, $this->output, $splFileInfos, $dryRun);
         /* @var array $counters */
         /* @var array $changes */

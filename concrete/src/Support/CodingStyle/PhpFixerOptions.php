@@ -107,6 +107,13 @@ class PhpFixerOptions
     private $directoriesWithMixedContentsRegex;
 
     /**
+     * Is the fixers cache disabled?
+     *
+     * @var bool
+     */
+    private $isCacheDisabled = false;
+
+    /**
      * Initialize the instance.
      *
      * @param \Concrete\Core\Config\Repository\Repository $config
@@ -506,6 +513,30 @@ class PhpFixerOptions
         }
 
         return $this->phpOnlyPsr4Regexs;
+    }
+
+    /**
+     * Is the fixers cache disabled.
+     *
+     * @return bool
+     */
+    public function isCacheDisabled()
+    {
+        return $this->isCacheDisabled;
+    }
+
+    /**
+     * Is the fixers cache disabled.
+     *
+     * @param bool $value
+     *
+     * @return $this
+     */
+    public function setIsCacheDisabled($value)
+    {
+        $this->isCacheDisabled = (bool) $value;
+
+        return $this;
     }
 
     /**
