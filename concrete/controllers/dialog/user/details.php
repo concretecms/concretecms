@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Controller\Dialog\User;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
