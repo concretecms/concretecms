@@ -16,7 +16,7 @@ $setManager = $category->getSetManager();
 $attributeSets = $setManager->getAttributeSets();
 $unassigned = $setManager->getUnassignedAttributeKeys();
 
-$userGroup = $u->getUserGroups();
+$userGroups = $u->getUserGroups();
 ?>
 
 <div class="ccm-ui">
@@ -26,7 +26,7 @@ $userGroup = $u->getUserGroups();
 
     <div class="row">
         <div class="col-md-8">
-            <p><strong><?=t(Username)?></strong></p>
+            <p><strong><?=t('Username')?></strong></p>
         </div>
 
         <div class="col-md-4">
@@ -36,7 +36,7 @@ $userGroup = $u->getUserGroups();
 
     <div class="row">
         <div class="col-md-8">
-            <p><strong><?=t(Email)?></strong></p>
+            <p><strong><?=t('Email')?></strong></p>
         </div>
 
         <div class="col-md-4">
