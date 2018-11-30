@@ -98,6 +98,8 @@
                 }
             });
         });
+
+        my.$element.find('.dialog-launch').dialog();
     }
 
     ConcreteNotificationList.prototype = {
