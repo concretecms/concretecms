@@ -2,7 +2,6 @@
 namespace Concrete\Block\Form;
 
 use Concrete\Core\Block\BlockController;
-use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\File\Version;
 use Config;
 use Core;
@@ -86,10 +85,10 @@ class Controller extends BlockController
         }
     }
 
-    public function __construct($b = null, Connection $db)
+    public function __construct($b = null)
     {
         parent::__construct($b);
-        $this->db = $db;
+        $this->db = Database::connection();
         if (is_string($this->thankyouMsg) && !strlen($this->thankyouMsg)) {
             $this->thankyouMsg = $this->getDefaultThankYouMsg();
         }
