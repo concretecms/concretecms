@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Page;
 
+use Concrete\Block\ExpressForm\Controller;
 use Concrete\Core\Area\Area;
 use Concrete\Core\Block\Block;
 use Concrete\Core\Entity\Attribute\Value\PageValue;
@@ -146,6 +147,7 @@ class Cloner
         $newPage->update($args);
 
         Section::registerDuplicate($newPage, $page);
+        $this->duplicateExpressEntitiesOnPageDuplicate($newPage, $options);
 
         $pe = new DuplicatePageEvent($page);
         $pe->setNewPageObject($newPage);
@@ -577,5 +579,57 @@ EOT
             $query .= ' where ' . implode(' and ', $wheres);
         }
         $this->connection->executeQuery($query, array_merge($insertParams, $whereParams));
+    }
+
+    /**
+     * When duplicate page if page contains  express form blocks we duplicate theirs attached entities for having full duplication express form blocks
+     * @param Page $newPage
+     * @param ClonerOptions $options
+     */
+    private function duplicateExpressEntitiesOnPageDuplicate(Page $newPage, ClonerOptions $options)
+    {
+        $env = \Config::getEnvironment();
+        if ($env !== "travis") {
+            if ($options->duplicateExpressEntity()) {
+                $newPage->loadVersionObject("RECENT");
+                $expressFormBlocks = [];
+                foreach ($newPage->getBlocks() as $block) {
+                    /**
+                     * @var $block Block
+                     */
+                    if ($block->getBlockTypeHandle() === "express_form") {
+                        $expressFormBlocks[] = $block;
+                    }
+                }
+                /**
+                 * @var $expressFormBlocks Block[]
+                 */
+                //if recent page contains express block we must duplicate express entity attached to every express form bloc
+                if (count($expressFormBlocks) > 0) {
+                    $nvc = $newPage->getVersionToModify();
+                    foreach ($expressFormBlocks as $expressFormBlock) {
+                        $area = $expressFormBlock->getBlockAreaObject();
+                        if ($area->isGlobalArea()) {
+                            $xvc = $newPage->getVersionToModify(); // we need to create a new version of THIS page as well.
+                            $xvc->relateVersionEdits($nvc);
+                        }
+                        $b = \Block::getByID($expressFormBlock->getBlockID(), $nvc, $area);
+                        if ($b->isAlias()) {
+
+                            // then this means that the block we're updating is an alias. If you update an alias, you're actually going
+                            // to duplicate the original block, and update the newly created block. If you update an original, your changes
+                            // propagate to the aliases
+                            $nb = $b->duplicate($nvc);
+                            $b->deleteBlock();
+                            /**
+                             * @var $controller Controller
+                             */
+                            $controller = $nb->getController();
+                            $controller->duplicateEntityExpress(true);
+                        }
+                    }
+                }
+            }
+        }
     }
 }

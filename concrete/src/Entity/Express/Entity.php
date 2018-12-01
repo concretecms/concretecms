@@ -19,7 +19,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInterface
 {
-
     const DEFAULT_ITEMS_PER_PAGE = 10;
 
     use PackageTrait;
@@ -194,7 +193,7 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
      */
     public function getOwnedBy()
     {
-        foreach($this->associations as $association) {
+        foreach ($this->associations as $association) {
             if ($association->isOwnedByAssociation()) {
                 return $association->getTargetEntity();
             }
@@ -450,7 +449,7 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
 
     public function getForm($name)
     {
-        foreach($this->getForms() as $form) {
+        foreach ($this->getForms() as $form) {
             if ($form->getName() == $name) {
                 return $form;
             }
@@ -490,7 +489,7 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
 
     public function getAssociation($handle)
     {
-        foreach($this->associations as $association) {
+        foreach ($this->associations as $association) {
             if ($association->getTargetPropertyName() == $handle) {
                 return $association;
             }
@@ -514,6 +513,18 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
 
     public function getController()
     {
+    }
 
+
+    public function __clone()
+    {
+        $this->attributes= new ArrayCollection();
+        $this->associations=new ArrayCollection();
+        $this->entries=new ArrayCollection();
+        $this->forms=new ArrayCollection();
+        $this->created_date = new \DateTime();
+        $this->default_edit_form=null;
+        $this->default_view_form=null;
+        $this->id=null;
     }
 }

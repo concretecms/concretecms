@@ -27,8 +27,8 @@ class ObjectBuilder
     public function __construct(
         AttributeKeyHandleGenerator $generator,
         EntityManagerInterface $entityManager,
-        TypeFactory $attributeTypeFactory)
-    {
+        TypeFactory $attributeTypeFactory
+    ) {
         $this->attributeTypeFactory = $attributeTypeFactory;
         $this->generator = $generator;
         $this->entityManager = $entityManager;
@@ -74,7 +74,7 @@ class ObjectBuilder
 
         // grab and persist all attribute key settings object
         $category = $this->entity->getAttributeKeyCategory();
-        foreach($this->entity->getAttributes() as $key) {
+        foreach ($this->entity->getAttributes() as $key) {
             $settings = $key->getAttributeKeySettings();
             $this->entityManager->persist($settings);
             $this->entityManager->flush();
@@ -115,6 +115,7 @@ class ObjectBuilder
         $this->entity->getAttributes()->add($key);
         return $this;
     }
+
 
     public function getObject()
     {

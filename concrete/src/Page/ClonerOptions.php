@@ -61,6 +61,12 @@ class ClonerOptions
     private $copyContents = true;
 
     /**
+     * Should duplicate express entity when copy express block form
+     * @var bool
+     */
+    private $duplicateExpressEntity=true;
+
+    /**
      * The version comments (if empty string, automatically build them).
      *
      * @var string
@@ -252,6 +258,24 @@ class ClonerOptions
     {
         $this->versionComments = (string) $value;
 
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function duplicateExpressEntity()
+    {
+        return $this->duplicateExpressEntity;
+    }
+
+    /**
+     * @param bool $duplicateExpressEntity
+     * @return ClonerOptions
+     */
+    public function setDuplicateExpressEntity(bool $duplicateExpressEntity)
+    {
+        $this->duplicateExpressEntity = $duplicateExpressEntity;
         return $this;
     }
 }

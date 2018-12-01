@@ -9,11 +9,12 @@
     array('form-options', t('Options')),
 ));?>
 </div>
-
+<?php if (isset($bOriginalID)):?>
+    <?= $form->hidden('submit_form_scrapbook_display', true);?>
+<?php endif;?>
 <div id="ccm-block-express-form-choose-type">
 
     <div class="spacer-row-6"></div>
-
     <fieldset>
         <legend><?=t('Form Type')?></legend>
 
@@ -94,13 +95,19 @@
             <?=$form->label('exEntityID', t('Choose Entity Form'))?>
             <select name="exFormID" class="form-control">
                 <option value=""><?=t('** Choose Entity Form')?></option>
-            <?php foreach($entities as $entity) { ?>
+            <?php foreach ($entities as $entity) {
+    ?>
                 <optgroup label="<?=t('Entity: %s', $entity->getName())?>">
-                    <?php foreach($entity->getForms() as $entityForm) { ?>
-                        <option value="<?=$entityForm->getID()?>" <?php if ($entityForm->getID() == $exFormID) { ?>selected<?php } ?>><?=h($entityForm->getName())?></option>
-                    <?php } ?>
+                    <?php foreach ($entity->getForms() as $entityForm) {
+        ?>
+                        <option value="<?=$entityForm->getID()?>" <?php if ($entityForm->getID() == $exFormID) {
+            ?>selected<?php
+        } ?>><?=h($entityForm->getName())?></option>
+                    <?php
+    } ?>
                 </optgroup>
-            <?php } ?>
+            <?php
+} ?>
             </select>
         </div>
 
@@ -120,7 +127,8 @@
         ?>
         <div data-root-tree-node-id="<?=$formResultsRootFolderNodeID?>" data-tree="<?=$tree->getTreeID()?>">
         </div>
-        <?php } ?>
+        <?php
+    } ?>
 
 
     </fieldset>
@@ -297,13 +305,19 @@
 <script type="application/javascript">
     Concrete.event.publish('open.block_express_form', {
         task: '<?=$controller->getTask()?>',
-        <?php if ($controller->getTask() == 'edit') { ?>
-            <?php if (isset($expressEntity) && is_object($expressEntity) && $expressEntity->getIncludeInPublicList()) { ?>
+        <?php if ($controller->getTask() == 'edit') {
+                ?>
+            <?php if (isset($expressEntity) && is_object($expressEntity) && $expressEntity->getIncludeInPublicList()) {
+                    ?>
                 mode: 'existing',
-            <?php } else { ?>
+            <?php
+                } else {
+                    ?>
                 mode: 'new',
-            <?php } ?>
-        <?php } ?>
+            <?php
+                } ?>
+        <?php
+            } ?>
         controls: <?=json_encode($controls)?>,
         types: <?=json_encode($types_select)?>,
         settings: {
