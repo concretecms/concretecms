@@ -3237,14 +3237,44 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      * @param int $displayOrder
      * @param int|null $cID The page ID to set the display order for (if empty, we'll use this page)
      */
-    public function updateDisplayOrder($do, $cID = 0)
+    public function updateDisplayOrder($displayOrder, $cID = 0)
     {
+        $displayOrder = (int) $displayOrder;
+
         //this line was added to allow changing the display order of aliases
         if (!intval($cID)) {
             $cID = ($this->getCollectionPointerOriginalID() > 0) ? $this->getCollectionPointerOriginalID() : $this->cID;
         }
-        $db = Database::connection();
-        $db->executeQuery('update Pages set cDisplayOrder = ? where cID = ?', [$do, $cID]);
+
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+
+        $oldDisplayOrder = $db->fetchColumn('SELECT cDisplayOrder FROM Pages WHERE cID = ?', [$cID]);
+
+        // Exit out if the display order for this page doesn't change.
+        if ($oldDisplayOrder === null || $displayOrder === (int) $oldDisplayOrder) {
+            return;
+        }
+
+        // Store the new display order.
+        $db->executeQuery('update Pages set cDisplayOrder = ? where cID = ?', [$displayOrder, $cID]);
+
+        // Because the display order of another page can be changed,
+        // the page object is retrieved first in order to pass it to the event.
+        $page = $this;
+        if ($cID && (int) $cID !== (int) $this->getCollectionID()) {
+            $page = static::getByID($cID);
+        }
+
+        if ($page->isError()) {
+            return;
+        }
+
+        // Fire an event that the page display order has changed.
+        $event = new DisplayOrderUpdateEvent($page);
+        $event->setOldDisplayOrder($oldDisplayOrder);
+        $event->setNewDisplayOrder($displayOrder);
+        Events::dispatch('on_page_display_order_update', $event);
     }
 
     /**
