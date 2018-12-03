@@ -67,8 +67,9 @@ class PhpFixerRuleResolver
             return ($flags & $flag) === $flag;
         };
 
-        $rules = [
-
+        // Invariant rules (paste the array in https://mlocati.github.io/php-cs-fixer-configurator/#configurator to view/edit them)
+        // We could move it to a class constant when we get rid of PHP 5.5 compatibility
+        static $invariantRules = [
             // Each line of multi-line DocComments must have an asterisk [PSR-5] and must be aligned with the first one.
             'align_multiline_comment' => [
                 'comment_type' => 'phpdocs_like',
@@ -76,11 +77,6 @@ class PhpFixerRuleResolver
 
             // Each element of an array must be indented exactly once.
             'array_indentation' => true,
-
-            // PHP arrays should be declared using the configured syntax.
-            'array_syntax' => [
-                'syntax' => $hasFlag(PhpFixer::FLAG_OLDPHP) ? 'long' : 'short',
-            ],
 
             // Binary operators should be surrounded by space as configured.
             'binary_operator_spaces' => [
@@ -91,17 +87,9 @@ class PhpFixerRuleResolver
             // There MUST be one blank line after the namespace declaration.
             'blank_line_after_namespace' => true,
 
-            // Ensure there is no code on the same line as the PHP open tag and it is followed by a blank line.
-            'blank_line_after_opening_tag' => $hasFlag(PhpFixer::FLAG_PHPONLY) ? true : false,
-
             // An empty line feed should precede a return statement.
             // @deprecated: same as 'blank_line_before_statement' => ['statements' => ['return']],
             'blank_line_before_return' => true,
-
-            // The body of each structure MUST be enclosed by braces.
-            // Braces should be properly placed.
-            // Body of braces should be properly indented.
-            'braces' => $hasFlag(PhpFixer::FLAG_PHPONLY) ? ['allow_single_line_closure' => true] : false,
 
             // A single space or none should be between cast and variable.
             'cast_spaces' => true,
@@ -124,9 +112,6 @@ class PhpFixerRuleResolver
                 'space' => 'single',
             ],
 
-            // Replaces `dirname(__FILE__)` expression with equivalent `__DIR__` constant.
-            'dir_constant' => $hasFlag(PhpFixer::FLAG_OLDPHP) ? false : true,
-
             // The keyword `elseif` should be used instead of `else if` so that all control keywords look like single words.
             'elseif' => true,
 
@@ -136,7 +121,7 @@ class PhpFixerRuleResolver
             // Replace deprecated `ereg` regular expression functions with `preg`.
             'ereg_to_preg' => true,
 
-            // PHP code must use the long `<?php` tags or short-echo `<?=` tags and not other tag variations.
+            // PHP code must use the long PHP open tags or short echo tags and not other tag variations.
             'full_opening_tag' => true,
 
             // Spaces should be properly placed in a function declaration.
@@ -159,9 +144,6 @@ class PhpFixerRuleResolver
             // File path should not be placed under brackets.
             'include' => true,
 
-            // Code MUST use configured indentation type.
-            'indentation_type' => $hasFlag(PhpFixer::FLAG_PHPONLY) ? true : false,
-
             // Replaces `is_null($var)` expression with `null === $var`.
             'is_null' => [
                 'use_yoda_style' => false,
@@ -169,9 +151,6 @@ class PhpFixerRuleResolver
 
             // All PHP files must use same line ending.
             'line_ending' => true,
-
-            // Ensure there is no code on the same line as the PHP open tag.
-            'linebreak_after_opening_tag' => $hasFlag(PhpFixer::FLAG_PHPONLY) ? true : false,
 
             // Cast should be written in lower case.
             'lowercase_cast' => true,
@@ -260,9 +239,6 @@ class PhpFixerRuleResolver
 
             // Short cast `bool` using double exclamation mark should not be used.
             'no_short_bool_cast' => true,
-
-            // Replace short-echo `<?=` with long format `<?php echo` syntax.
-            'no_short_echo_tag' => $hasFlag(PhpFixer::FLAG_OLDPHP) ? true : false,
 
             // Single-line whitespace before closing semicolon are prohibited.
             'no_singleline_whitespace_before_semicolons' => true,
@@ -390,9 +366,6 @@ class PhpFixerRuleResolver
             // `@var` and `@type` annotations should not contain the variable name.
             'phpdoc_var_without_name' => true,
 
-            // Class names should match the file name.
-            'psr4' => $hasFlag(PhpFixer::FLAG_PSR4CLASS) ? true : false,
-
             // Replaces `rand`, `srand`, `getrandmax` functions calls with their `mt_*` analogs.
             'random_api_migration' => true,
 
@@ -455,6 +428,36 @@ class PhpFixerRuleResolver
 
             // In array declaration, there MUST be a whitespace after each comma.
             'whitespace_after_comma_in_array' => true,
+        ];
+
+        $rules = $invariantRules + [
+            // PHP arrays should be declared using the configured syntax.
+            'array_syntax' => [
+                'syntax' => $hasFlag(PhpFixer::FLAG_OLDPHP) ? 'long' : 'short',
+            ],
+
+            // Ensure there is no code on the same line as the PHP open tag and it is followed by a blank line.
+            'blank_line_after_opening_tag' => $hasFlag(PhpFixer::FLAG_PHPONLY) ? true : false,
+
+            // The body of each structure MUST be enclosed by braces.
+            // Braces should be properly placed.
+            // Body of braces should be properly indented.
+            'braces' => $hasFlag(PhpFixer::FLAG_PHPONLY) ? ['allow_single_line_closure' => true] : false,
+
+            // Replaces `dirname(__FILE__)` expression with equivalent `__DIR__` constant.
+            'dir_constant' => $hasFlag(PhpFixer::FLAG_OLDPHP) ? false : true,
+
+            // Code MUST use configured indentation type.
+            'indentation_type' => $hasFlag(PhpFixer::FLAG_PHPONLY) ? true : false,
+
+            // Ensure there is no code on the same line as the PHP open tag.
+            'linebreak_after_opening_tag' => $hasFlag(PhpFixer::FLAG_PHPONLY) ? true : false,
+
+            // Replace short-echo `<?=` with long format `<?php echo` syntax.
+            'no_short_echo_tag' => $hasFlag(PhpFixer::FLAG_OLDPHP) ? true : false,
+
+            // Class names should match the file name.
+            'psr4' => $hasFlag(PhpFixer::FLAG_PSR4CLASS) ? true : false,
         ];
 
         if ($onlyAvailableOnes) {
