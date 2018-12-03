@@ -40,13 +40,14 @@ class DatabaseServiceProvider extends ServiceProvider
             'Concrete\Core\Database\Connection\Connection');
 
 
-        // Bind EntityManager factory
+        // Bind EntityManagerConfigFactory
         $this->app->bind('Concrete\Core\Database\EntityManagerConfigFactory',
             function($app) {
-            $config = $app->make('Doctrine\ORM\Configuration');
-            $configRepository = $app->make('config');
-            return new EntityManagerConfigFactory($app, $config, $configRepository);
-        });
+                $config = $app->make('Doctrine\ORM\Configuration');
+                $configRepository = $app->make('config');
+                return new EntityManagerConfigFactory($app, $config, $configRepository);
+            }
+        );
         $this->app->bind('Concrete\Core\Database\EntityManagerConfigFactoryInterface',
             'Concrete\Core\Database\EntityManagerConfigFactory');
 
