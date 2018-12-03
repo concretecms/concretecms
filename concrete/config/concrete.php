@@ -589,7 +589,16 @@ return [
              *
              * @var boolean
              */
-            'preview_image_popover' => true
+            'preview_image_popover' => true,
+            // SVG sanitization
+            'svg_sanitization' => [
+                // Enable the SVG sanitification?
+                'enabled' => true,
+                // Space-separated list of tags to be kept
+                'allowed_tags' => '',
+                // Space-separated list of attributes to be kept
+                'allowed_attributes' => '',
+            ],
         ],
         'results' => 10,
     ],
@@ -1035,7 +1044,5 @@ return [
          * @var bool
          */
         'enabled' => false,
-
     ],
-
 ];
