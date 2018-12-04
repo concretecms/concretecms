@@ -33,16 +33,22 @@ class Version20180926070300 extends AbstractMigration implements RepeatableMigra
     private function fixAttributeIndexTable(Schema $schema, $indexTableName, $indexColumnName, $foreignTableName, $foreignColumn)
     {
         $this->output("Fixing attribute index table {$indexTableName}...");
-        $this->deleteInvalidForeignKey($indexTableName, $indexColumnName, $foreignTableName, $foreignColumn);
-        $indexTable = $schema->getTable($indexTableName);
-        $indexColumn = $indexTable->getColumn($indexColumnName);
-        $indexColumn->setDefault(null);
-        $indexTable->addForeignKeyConstraint(
-            $foreignTableName,
-            [$indexColumnName],
-            [$foreignColumn],
-            ['onUpdate' => 'CASCADE', 'onDelete' => 'CASCADE']
-        );
+        $sm = $this->connection->getSchemaManager();
+        $schemaTables = $sm->listTableNames();
+        if (in_array($indexTableName, $schemaTables)) {
+            $this->deleteInvalidForeignKey($indexTableName, $indexColumnName, $foreignTableName, $foreignColumn);
+            $indexTable = $schema->getTable($indexTableName);
+            $indexColumn = $indexTable->getColumn($indexColumnName);
+            $indexColumn->setDefault(null);
+            $indexTable->addForeignKeyConstraint(
+                $foreignTableName,
+                [$indexColumnName],
+                [$foreignColumn],
+                ['onUpdate' => 'CASCADE', 'onDelete' => 'CASCADE']
+            );
+        } else {
+            $this->output(t('Could not locate table %s, skipping...', $indexTableName));
+        }
     }
 
     /**

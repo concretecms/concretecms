@@ -199,7 +199,7 @@ class ActivateUserRequest extends UserRequest
         $button->addWorkflowProgressActionButtonParameter('dialog-title', t('User Details'));
         $button->addWorkflowProgressActionButtonParameter('dialog-width', '420');
         $button->addWorkflowProgressActionButtonParameter('dialog-height', '310');
-        $button->setWorkflowProgressActionURL(REL_DIR_FILES_TOOLS_REQUIRED . '/workflow/dialogs/user_details?uID=' . $this->getRequestedUserID());
+        $button->setWorkflowProgressActionURL(\URL::to('/ccm/system/dialogs/user/details') . '?uID=' . $this->getRequestedUserID());
         $button->setWorkflowProgressActionStyleClass('dialog-launch');
         $buttons[] = $button;
 
