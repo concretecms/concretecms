@@ -62,8 +62,9 @@ class GlobalVersionList extends DatabaseItemList
      */
     public function filterByApprovedAfter(\DateTime $date)
     {
-        $this->query->andWhere('cv.cvDateApproved >= :cvDateApprovedAfter');
-        $this->query->setParameter('cvDateApprovedAfter', $date->format('Y-m-d H:i-s'));
+        $this->query->andWhere(
+             'cv.cvDateApproved >= ' . $this->query->createNamedParameter($date->format('Y-m-d H:i-s'))
+        );
     }
 
     /**
@@ -73,8 +74,9 @@ class GlobalVersionList extends DatabaseItemList
      */
     public function filterByApprovedBefore(\DateTime $date)
     {
-        $this->query->andWhere('cv.cvDateApproved <= :cvDateApprovedBefore');
-        $this->query->setParameter('cvDateApprovedBefore', $date->format('Y-m-d H:i-s'));
+        $this->query->andWhere(
+             'cv.cvDateApproved <= ' . $this->query->createNamedParameter($date->format('Y-m-d H:i-s'))
+        );
     }
 
     /**
