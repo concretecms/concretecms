@@ -45,7 +45,9 @@ class GlobalVersionList extends DatabaseItemList
      */
     public function getTotalResults()
     {
-        return (int) $this->query
+        $query = $this->deliverQueryObject();
+
+        return (int) $query
             ->resetQueryParts(['groupBy', 'orderBy'])
             ->select('count(1)')
             ->setMaxResults(1)
