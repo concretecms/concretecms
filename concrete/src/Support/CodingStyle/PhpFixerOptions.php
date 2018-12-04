@@ -187,7 +187,7 @@ class PhpFixerOptions
     public function getFilterByExtensions()
     {
         if ($this->filterByExtensions === null) {
-            $this->setFilterByExtensions(preg_split('/\s+/', $this->config->get('concrete.misc.coding_style.php.filter.extensions'), -1, PREG_SPLIT_NO_EMPTY));
+            $this->setFilterByExtensions(preg_split('/\s+/', $this->config->get('coding_style.php.filter.extensions'), -1, PREG_SPLIT_NO_EMPTY));
         }
 
         return $this->filterByExtensions;
@@ -219,7 +219,7 @@ class PhpFixerOptions
     public function getFilterIncludeFiles()
     {
         if ($this->filterIncludeFiles === null) {
-            $this->setFilterIncludeFiles(preg_split('/\s+/', $this->config->get('concrete.misc.coding_style.php.filter.include'), -1, PREG_SPLIT_NO_EMPTY));
+            $this->setFilterIncludeFiles(preg_split('/\s+/', $this->config->get('coding_style.php.filter.include'), -1, PREG_SPLIT_NO_EMPTY));
         }
 
         return $this->filterIncludeFiles;
@@ -251,7 +251,7 @@ class PhpFixerOptions
     public function getIgnoredDirectoriesByName()
     {
         if ($this->ignoredDirectoriesByName === null) {
-            $this->setIgnoredDirectoriesByName(preg_split('/\s+/', $this->config->get('concrete.misc.coding_style.php.ignore_directories.by_name'), -1, PREG_SPLIT_NO_EMPTY));
+            $this->setIgnoredDirectoriesByName(preg_split('/\s+/', $this->config->get('coding_style.php.ignore_directories.by_name'), -1, PREG_SPLIT_NO_EMPTY));
         }
 
         return $this->ignoredDirectoriesByName;
@@ -279,7 +279,7 @@ class PhpFixerOptions
     public function getIgnoredDirectoriesByPath()
     {
         if ($this->ignoredDirectoriesByPath === null) {
-            $this->setIgnoredDirectoriesByPath(preg_split('/\s+/', $this->config->get('concrete.misc.coding_style.php.ignore_directories.by_path'), -1, PREG_SPLIT_NO_EMPTY));
+            $this->setIgnoredDirectoriesByPath(preg_split('/\s+/', $this->config->get('coding_style.php.ignore_directories.by_path'), -1, PREG_SPLIT_NO_EMPTY));
         }
 
         return $this->ignoredDirectoriesByPath;
@@ -312,7 +312,7 @@ class PhpFixerOptions
     public function getBootstrapFiles()
     {
         if ($this->bootstrapFiles === null) {
-            $this->setBootstrapFiles(preg_split('/\s+/', $this->config->get('concrete.misc.coding_style.php.bootstrap_files'), -1, PREG_SPLIT_NO_EMPTY));
+            $this->setBootstrapFiles(preg_split('/\s+/', $this->config->get('coding_style.php.bootstrap_files'), -1, PREG_SPLIT_NO_EMPTY));
         }
 
         return $this->bootstrapFiles;
@@ -345,7 +345,7 @@ class PhpFixerOptions
     public function getPhpOnlyNonPsr4Files()
     {
         if ($this->phpOnlyNonPsr4Files === null) {
-            $this->setPhpOnlyNonPsr4Files(preg_split('/\s+/', $this->config->get('concrete.misc.coding_style.php.php_only.non_psr4.files'), -1, PREG_SPLIT_NO_EMPTY));
+            $this->setPhpOnlyNonPsr4Files(preg_split('/\s+/', $this->config->get('coding_style.php.php_only.non_psr4.files'), -1, PREG_SPLIT_NO_EMPTY));
         }
 
         return $this->phpOnlyNonPsr4Files;
@@ -379,7 +379,7 @@ class PhpFixerOptions
     public function getPhpOnlyNonPsr4Directories()
     {
         if ($this->phpOnlyNonPsr4Directories === null) {
-            $this->setPhpOnlyNonPsr4Directories(preg_split('/\s+/', $this->config->get('concrete.misc.coding_style.php.php_only.non_psr4.directories'), -1, PREG_SPLIT_NO_EMPTY));
+            $this->setPhpOnlyNonPsr4Directories(preg_split('/\s+/', $this->config->get('coding_style.php.php_only.non_psr4.directories'), -1, PREG_SPLIT_NO_EMPTY));
         }
 
         return $this->phpOnlyNonPsr4Directories;
@@ -434,7 +434,7 @@ class PhpFixerOptions
     public function getPhpOnlyPsr4Files()
     {
         if ($this->phpOnlyPsr4Files === null) {
-            $this->setPhpOnlyPsr4Files(preg_split('/\s+/', $this->config->get('concrete.misc.coding_style.php.php_only.psr4.files'), -1, PREG_SPLIT_NO_EMPTY));
+            $this->setPhpOnlyPsr4Files(preg_split('/\s+/', $this->config->get('coding_style.php.php_only.psr4.files'), -1, PREG_SPLIT_NO_EMPTY));
         }
 
         return $this->phpOnlyPsr4Files;
@@ -468,7 +468,7 @@ class PhpFixerOptions
     public function getPhpOnlyPsr4Directories()
     {
         if ($this->phpOnlyPsr4Directories === null) {
-            $this->setPhpOnlyPsr4Directories(preg_split('/\s+/', $this->config->get('concrete.misc.coding_style.php.php_only.psr4.directories'), -1, PREG_SPLIT_NO_EMPTY));
+            $this->setPhpOnlyPsr4Directories(preg_split('/\s+/', $this->config->get('coding_style.php.php_only.psr4.directories'), -1, PREG_SPLIT_NO_EMPTY));
         }
 
         return $this->phpOnlyPsr4Directories;
