@@ -161,7 +161,8 @@ class PhpFixerRunner
         );
 
         $changes = [];
-        foreach ($runner->fix() as $file => &$data) {
+        $fixResult = $runner->fix();
+        foreach ($fixResult as $file => &$data) {
             $file = str_replace(DIRECTORY_SEPARATOR, '/', $file);
             if (strpos($file, $options->getWebRoot()) === 0) {
                 $file = substr($file, strlen($options->getWebRoot()));

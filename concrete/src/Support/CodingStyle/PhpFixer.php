@@ -187,8 +187,7 @@ class PhpFixer
     }
 
     /**
-     * @param \SplFileInfo $file
-     * @param SplFileInfo $directory
+     * @param \SplFileInfo $directory
      *
      * @return array
      */
