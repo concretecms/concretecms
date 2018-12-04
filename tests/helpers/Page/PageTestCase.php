@@ -2,6 +2,7 @@
 
 namespace Concrete\TestHelpers\Page;
 
+use Concrete\Core\Support\Facade\Application;
 use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 use Core;
 use Page;
@@ -10,6 +11,9 @@ use PageType;
 
 abstract class PageTestCase extends ConcreteDatabaseTestCase
 {
+    /** @var \Concrete\Core\Application\Application */
+    protected $app;
+
     protected $fixtures = [];
     protected $tables = [
         'Pages',
@@ -78,6 +82,13 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
             'handle' => 'basic',
             'name' => 'Basic',
         ]);
+    }
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->app = Application::getFacadeApplication();
     }
 
     /**

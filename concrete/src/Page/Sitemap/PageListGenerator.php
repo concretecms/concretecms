@@ -366,7 +366,7 @@ class PageListGenerator
         $pubDate = $page->getCollectionDatePublic();
         if ($pubDate !== null && (new DateTime($pubDate)) <= $this->getNow()) {
             $pageVersion = $page->getVersionObject();
-            if ($pageVersion && $pageVersion->isInShowTime($this->getNow())) {
+            if ($pageVersion && $pageVersion->isApprovedNow($this->getNow())) {
                 $result = true;
             }
         }

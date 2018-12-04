@@ -159,7 +159,7 @@
 					if (options.removeNodesByKey.length) {
 						for (var i = 0; i < options.removeNodesByKey.length; i++) {
 							var nodeID = options.removeNodesByKey[i];
-							var node = $tree.fancytree('getTree').getNodeByKey(nodeID);
+							var node = $tree.fancytree('getTree').getNodeByKey(String(nodeID));
 							if (node) {
 								node.remove();
 							}
@@ -327,7 +327,7 @@
 						ConcreteAlert.dialog(ccmi18n.error, r.errors.join("<br>"));
 					} else {
 						jQuery.fn.dialog.closeTop();
-						var node = $tree.fancytree('getTree').getNodeByKey(r.treeNodeParentID);
+						var node = $tree.fancytree('getTree').getNodeByKey(String(r.treeNodeParentID));
 						jQuery.fn.dialog.showLoader();
 						my.reloadNode(node, function() {
 							jQuery.fn.dialog.hideLoader();
@@ -402,23 +402,23 @@
 				node;
 			if (nodes.length) {
 				for (var i = 0; i < nodes.length; i++) {
-					node = $tree.fancytree('getTree').getNodeByKey(nodes[i].treeNodeParentID);
+					node = $tree.fancytree('getTree').getNodeByKey(String(nodes[i].treeNodeParentID));
 					node.addChildren(nodes);
 				}
 			} else {
-				node = $tree.fancytree('getTree').getNodeByKey(nodes.treeNodeParentID);
+				node = $tree.fancytree('getTree').getNodeByKey(String(nodes.treeNodeParentID));
 				node.addChildren(nodes);
 			}
 		});
 		ConcreteEvent.subscribe('ConcreteTreeUpdateTreeNode.concreteTree', function(e, r) {
 			var $tree = $('[data-tree=' + my.options.treeID + ']'),
-				node = $tree.fancytree('getTree').getNodeByKey(r.node.key);
+				node = $tree.fancytree('getTree').getNodeByKey(String(r.node.key));
 			node.fromDict(r.node);
 			node.render();
 		});
 		ConcreteEvent.subscribe('ConcreteTreeDeleteTreeNode.concreteTree', function(e, r) {
 			var $tree = $('[data-tree=' + my.options.treeID + ']'),
-				node = $tree.fancytree('getTree').getNodeByKey(r.node.treeNodeID);
+				node = $tree.fancytree('getTree').getNodeByKey(String(r.node.treeNodeID));
 			node.remove();
 		});
 	};

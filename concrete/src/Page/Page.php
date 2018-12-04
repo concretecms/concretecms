@@ -323,7 +323,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public function getJSONObject()
     {
         $r = new \stdClass();
-        $r->name = $this->getCollectionName();
+        $r->name = $this->getCollectionName() !== '' ? $this->getCollectionName() : t('(No Title)');
         if ($this->isAliasPage()) {
             $r->cID = $this->getCollectionPointerOriginalID();
         } else {
@@ -349,6 +349,10 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $env = Environment::get();
             if ($this->getPageTypeID() > 0) {
                 $pt = $this->getPageTypeObject();
+                // return null if page type doesn't exist anymore
+                if (!$pt) {
+                    return;
+                }
                 $ptHandle = $pt->getPageTypeHandle();
                 $r = $env->getRecord(DIRNAME_CONTROLLERS.'/'.DIRNAME_PAGE_TYPES.'/'.$ptHandle.'.php', $pt->getPackageHandle());
                 $prefix = $r->override ? true : $pt->getPackageHandle();
@@ -1727,7 +1731,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     {
         return $this->getCollectionPointerID() > 0;
     }
-    
+
     /**
      * Is this page an alias page or an external link?
      *
@@ -1739,7 +1743,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     {
         return $this->isAliasPage() || $this->isExternalLink();
     }
-    
+
     /**
      * @deprecated This method has been replaced with isAliasPageOrExternalLink() in concrete5 8.5.0a2 (same syntax and same result)
      *
@@ -3252,14 +3256,44 @@ EOT
      * @param int $displayOrder
      * @param int|null $cID The page ID to set the display order for (if empty, we'll use this page)
      */
-    public function updateDisplayOrder($do, $cID = 0)
+    public function updateDisplayOrder($displayOrder, $cID = 0)
     {
+        $displayOrder = (int) $displayOrder;
+
         //this line was added to allow changing the display order of aliases
         if (!intval($cID)) {
             $cID = ($this->getCollectionPointerOriginalID() > 0) ? $this->getCollectionPointerOriginalID() : $this->cID;
         }
-        $db = Database::connection();
-        $db->executeQuery('update Pages set cDisplayOrder = ? where cID = ?', [$do, $cID]);
+
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+
+        $oldDisplayOrder = $db->fetchColumn('SELECT cDisplayOrder FROM Pages WHERE cID = ?', [$cID]);
+
+        // Exit out if the display order for this page doesn't change.
+        if ($oldDisplayOrder === null || $displayOrder === (int) $oldDisplayOrder) {
+            return;
+        }
+
+        // Store the new display order.
+        $db->executeQuery('update Pages set cDisplayOrder = ? where cID = ?', [$displayOrder, $cID]);
+
+        // Because the display order of another page can be changed,
+        // the page object is retrieved first in order to pass it to the event.
+        $page = $this;
+        if ($cID && (int) $cID !== (int) $this->getCollectionID()) {
+            $page = static::getByID($cID);
+        }
+
+        if ($page->isError()) {
+            return;
+        }
+
+        // Fire an event that the page display order has changed.
+        $event = new DisplayOrderUpdateEvent($page);
+        $event->setOldDisplayOrder($oldDisplayOrder);
+        $event->setNewDisplayOrder($displayOrder);
+        Events::dispatch('on_page_display_order_update', $event);
     }
 
     /**

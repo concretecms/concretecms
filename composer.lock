@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4663ef72b4663b98817f706682580dff",
+    "content-hash": "ae2f07efaafd2178b330902442722f93",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -47,6 +47,56 @@
             ],
             "description": "A set of classes to create and manipulate HTML objects abstractions",
             "time": "2017-05-31T07:52:45+00:00"
+        },
+        {
+            "name": "concrete5/dependency-patches",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/concrete5/dependency-patches.git",
+                "reference": "d3193053a311cfe3d1a19bc978a873535a29b93e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/concrete5/dependency-patches/zipball/d3193053a311cfe3d1a19bc978a873535a29b93e",
+                "reference": "d3193053a311cfe3d1a19bc978a873535a29b93e",
+                "shasum": ""
+            },
+            "require": {
+                "mlocati/composer-patcher": "^1.0.0"
+            },
+            "type": "library",
+            "extra": {
+                "patches": {
+                    "doctrine/orm:2.5.14": {
+                        "Fix UnitOfWork::createEntity()": "doctrine/orm/UnitOfWork-createEntity-continue.patch"
+                    },
+                    "zendframework/zend-stdlib:2.7.7": {
+                        "Fix ArrayObject::unserialize()": "zendframework/zend-stdlib/ArrayObject-unserialize-continue.patch"
+                    },
+                    "sunra/php-simple-html-dom-parser:1.5.2": {
+                        "Fix minus in regular expressions": "sunra/php-simple-html-dom-parser/minus-in-regular-expressions.patch"
+                    },
+                    "phpunit/phpunit:4.8.36": {
+                        "Avoid each() in Getopt": "phpunit/phpunit/Getopt-each.patch"
+                    }
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michele Locati",
+                    "email": "michele@locati.it",
+                    "homepage": "https://mlocati.github.io",
+                    "role": "author"
+                }
+            ],
+            "description": "Patches required for concrete5 dependencies",
+            "homepage": "https://github.com/concrete5/dependency-patches",
+            "time": "2018-11-09T19:16:04+00:00"
         },
         {
             "name": "concrete5/doctrine-xml",
@@ -969,6 +1019,16 @@
             "extra": {
                 "branch-alias": {
                     "dev-master": "2.6.x-dev"
+                },
+                "patches_applied": {
+                    "hash": "f03553f596500df8083abdd1cd87cd1916d1a3f4",
+                    "list": [
+                        {
+                            "from-package": "concrete5/dependency-patches 1.0.0",
+                            "path": "doctrine/orm/UnitOfWork-createEntity-continue.patch",
+                            "description": "Fix UnitOfWork::createEntity()"
+                        }
+                    ]
                 }
             },
             "autoload": {
@@ -2610,6 +2670,64 @@
             "time": "2018-01-15T00:49:33+00:00"
         },
         {
+            "name": "mlocati/composer-patcher",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mlocati/composer-patcher.git",
+                "reference": "d8ba45c10b5cf8ac8da3591e09b6afd47fc10667"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mlocati/composer-patcher/zipball/d8ba45c10b5cf8ac8da3591e09b6afd47fc10667",
+                "reference": "d8ba45c10b5cf8ac8da3591e09b6afd47fc10667",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^1.1.0",
+                "php": "^5.3.2 || ^7.0"
+            },
+            "conflict": {
+                "cweagans/composer-patches": "*"
+            },
+            "require-dev": {
+                "composer/composer": "^1.1.0",
+                "friendsofphp/php-cs-fixer": "2.2.*",
+                "symfony/phpunit-bridge": "^3.2 || ^4.0"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "ComposerPatcher\\Plugin"
+            },
+            "autoload": {
+                "psr-4": {
+                    "ComposerPatcher\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michele Locati",
+                    "email": "michele@locati.it",
+                    "homepage": "https://mlocati.github.io",
+                    "role": "author"
+                }
+            ],
+            "description": "A Composer plugin to patch Composer packages.",
+            "homepage": "https://github.com/mlocati/composer-patcher",
+            "keywords": [
+                "composer",
+                "patch",
+                "patcher",
+                "patches",
+                "plugin"
+            ],
+            "time": "2018-10-15T07:27:38+00:00"
+        },
+        {
             "name": "mlocati/concrete5-translation-library",
             "version": "1.5.12",
             "source": {
@@ -3517,16 +3635,16 @@
         },
         {
             "name": "punic/punic",
-            "version": "3.1.0",
+            "version": "3.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/punic/punic.git",
-                "reference": "bd49ff54ea6ee8a902a567905664ecc7840037d6"
+                "reference": "d31ec0bec7bad65105876812cc5b0106ae095e34"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/punic/punic/zipball/bd49ff54ea6ee8a902a567905664ecc7840037d6",
-                "reference": "bd49ff54ea6ee8a902a567905664ecc7840037d6",
+                "url": "https://api.github.com/repos/punic/punic/zipball/d31ec0bec7bad65105876812cc5b0106ae095e34",
+                "reference": "d31ec0bec7bad65105876812cc5b0106ae095e34",
                 "shasum": ""
             },
             "require": {
@@ -3538,7 +3656,7 @@
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "2.2.*",
-                "phpunit/phpunit": "^4"
+                "phpunit/phpunit": "^4.8 || ^5.7 || ^6.5 || ^7.4"
             },
             "bin": [
                 "bin/punic-data"
@@ -3563,6 +3681,11 @@
                     "name": "Remo Laubacher",
                     "email": "remo.laubacher@gmail.com",
                     "role": "Collaborator, motivator and perfectionist supporter"
+                },
+                {
+                    "name": "Christian Schmidt",
+                    "email": "github@chsc.dk",
+                    "role": "Developer"
                 }
             ],
             "description": "PHP-Unicode CLDR",
@@ -3582,7 +3705,7 @@
                 "translations",
                 "unicode"
             ],
-            "time": "2018-02-09T15:54:34+00:00"
+            "time": "2018-11-23T10:02:50+00:00"
         },
         {
             "name": "sunra/php-simple-html-dom-parser",
@@ -3603,6 +3726,18 @@
                 "php": ">=5.3.2"
             },
             "type": "library",
+            "extra": {
+                "patches_applied": {
+                    "hash": "43699395013691839330f8406ee49fa752c163fb",
+                    "list": [
+                        {
+                            "from-package": "concrete5/dependency-patches 1.0.0",
+                            "path": "sunra/php-simple-html-dom-parser/minus-in-regular-expressions.patch",
+                            "description": "Fix minus in regular expressions"
+                        }
+                    ]
+                }
+            },
             "autoload": {
                 "psr-0": {
                     "Sunra\\PhpSimple\\HtmlDomParser": "Src/"
@@ -5682,6 +5817,16 @@
                     "dev-release-2.7": "2.7-dev",
                     "dev-master": "3.0-dev",
                     "dev-develop": "3.1-dev"
+                },
+                "patches_applied": {
+                    "hash": "f247c9d47f2ba4ae8d9dfe6d1a25c8627e377753",
+                    "list": [
+                        {
+                            "from-package": "concrete5/dependency-patches 1.0.0",
+                            "path": "zendframework/zend-stdlib/ArrayObject-unserialize-continue.patch",
+                            "description": "Fix ArrayObject::unserialize()"
+                        }
+                    ]
                 }
             },
             "autoload": {
@@ -6487,6 +6632,16 @@
             "extra": {
                 "branch-alias": {
                     "dev-master": "4.8.x-dev"
+                },
+                "patches_applied": {
+                    "hash": "b230cedd50b7175de81a87b2ec86ad380ee748f9",
+                    "list": [
+                        {
+                            "from-package": "concrete5/dependency-patches 1.0.0",
+                            "path": "phpunit/phpunit/Getopt-each.patch",
+                            "description": "Avoid each() in Getopt"
+                        }
+                    ]
                 }
             },
             "autoload": {

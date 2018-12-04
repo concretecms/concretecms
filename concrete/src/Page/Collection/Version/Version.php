@@ -34,7 +34,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
     public $cvID;
 
     /**
-     * @deprecated what's deprecated is the public part of this property: use the isApproved() or the isInShowTime() methods instead
+     * @deprecated what's deprecated is the public part of this property: use the isApproved() or the isApprovedNow() methods instead
      *
      * @var bool|int|string
      */
@@ -327,7 +327,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
      *
      * @return bool|int|string
      *
-     * @see isInShowTime()
+     * @see isApprovedNow()
      */
     public function isApproved()
     {
@@ -340,7 +340,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
      * @var string|int|\DateTime|null $when a date/time representation (empty: now)
      * @return bool
      */
-    public function isInShowTime($when = null)
+    public function isApprovedNow($when = null)
     {
         if (!$this->isApproved()) {
             return false;

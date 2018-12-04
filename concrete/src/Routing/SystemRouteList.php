@@ -67,6 +67,8 @@ class SystemRouteList implements RouteListInterface
 
         $router->buildGroup()->setRequirements(['identifier' => '[A-Za-z0-9_/.]+'])->routes('rss.php');
 
+        $router->buildGroup()->routes('attributes.php');
+
         $router->buildGroup()->routes('search.php');
 
         $router->buildGroup()->routes('express.php');
