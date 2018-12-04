@@ -135,7 +135,7 @@ class Single
     {
         $pathToFile = static::getPathToNode($cPath, $pkg);
         $txt = Loader::helper('text');
-        $c = CorePage::getByPath("/" . $cPath);
+        $c = CorePage::getByPath($cPath);
         if ($c->isError() && $c->getError() == COLLECTION_NOT_FOUND) {
             // create the page at that point in the tree
 
