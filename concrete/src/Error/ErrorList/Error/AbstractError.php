@@ -4,7 +4,7 @@ namespace Concrete\Core\Error\ErrorList\Error;
 
 use Concrete\Core\Error\ErrorList\Field\FieldInterface;
 
-abstract class AbstractError implements ErrorInterface
+abstract class AbstractError implements HtmlAwareErrorInterface
 {
     /**
      * The field associated to the error.
@@ -12,6 +12,15 @@ abstract class AbstractError implements ErrorInterface
      * @var \Concrete\Core\Error\ErrorList\Field\FieldInterface
      */
     protected $field;
+
+    /**
+     * Does the message contain an HTML-formatted string?
+     *
+     * @since concrete5 8.5.0a3
+     *
+     * @var bool
+     */
+    private $messageContainsHTML = false;
 
     /**
      * Get the error message.
@@ -46,12 +55,41 @@ abstract class AbstractError implements ErrorInterface
     /**
      * {@inheritdoc}
      *
+     * @since concrete5 8.5.0a3
+     *
+     * @see \Concrete\Core\Error\ErrorList\Error\HtmlAwareErrorInterface::messageContainsHTML()
+     */
+    public function messageContainsHTML()
+    {
+        return $this->messageContainsHTML;
+    }
+
+    /**
+     * Does the message contain an HTML-formatted string?
+     *
+     * @param bool $value
+     *
+     * @since concrete5 8.5.0a3
+     *
+     * @return $this
+     */
+    public function setMessageContainsHTML($value)
+    {
+        $this->messageContainsHTML = (bool) $value;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @see \JsonSerializable::jsonSerialize()
      */
     public function jsonSerialize()
     {
         $r = [
             'message' => $this->getMessage(),
+            'messageContainsHTML' => $this->messageContainsHTML(),
         ];
         if ($this->field) {
             $r['field'] = $this->field;
