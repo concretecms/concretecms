@@ -231,6 +231,12 @@ abstract class AbstractView
     }
 
     /**
+     * Get an instance of the View.
+     *
+     * Note: In versions before 8.5.0a3, this method may
+     * return 'false' if it's called after the page
+     * is rendered (for example in middleware).
+     *
      * @return View
      */
     public static function getInstance()
