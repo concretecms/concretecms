@@ -9,7 +9,7 @@ abstract class AbstractError implements HtmlAwareErrorInterface
     /**
      * The field associated to the error.
      *
-     * @var \Concrete\Core\Error\ErrorList\Field\FieldInterface
+     * @var \Concrete\Core\Error\ErrorList\Field\FieldInterface|null
      */
     protected $field;
 
@@ -20,7 +20,7 @@ abstract class AbstractError implements HtmlAwareErrorInterface
      *
      * @var bool
      */
-    private $messageContainsHTML = false;
+    private $messageContainsHtml = false;
 
     /**
      * Get the error message.
@@ -57,11 +57,11 @@ abstract class AbstractError implements HtmlAwareErrorInterface
      *
      * @since concrete5 8.5.0a3
      *
-     * @see \Concrete\Core\Error\ErrorList\Error\HtmlAwareErrorInterface::messageContainsHTML()
+     * @see \Concrete\Core\Error\ErrorList\Error\HtmlAwareErrorInterface::messageContainsHtml()
      */
-    public function messageContainsHTML()
+    public function messageContainsHtml()
     {
-        return $this->messageContainsHTML;
+        return $this->messageContainsHtml;
     }
 
     /**
@@ -73,9 +73,9 @@ abstract class AbstractError implements HtmlAwareErrorInterface
      *
      * @return $this
      */
-    public function setMessageContainsHTML($value)
+    public function setMessageContainsHtml($value)
     {
-        $this->messageContainsHTML = (bool) $value;
+        $this->messageContainsHtml = (bool) $value;
 
         return $this;
     }
@@ -89,7 +89,7 @@ abstract class AbstractError implements HtmlAwareErrorInterface
     {
         $r = [
             'message' => $this->getMessage(),
-            'messageContainsHTML' => $this->messageContainsHTML(),
+            'messageContainsHtml' => $this->messageContainsHtml(),
         ];
         if ($this->field) {
             $r['field'] = $this->field;
