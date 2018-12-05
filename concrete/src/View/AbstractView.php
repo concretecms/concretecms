@@ -58,6 +58,12 @@ abstract class AbstractView
     {
         array_pop(View::$requestInstances);
         self::$requestInstance = last(View::$requestInstances);
+
+        if (self::$requestInstance === false) {
+            // 'last' can return false if there are no request instances.
+            // In that case a fresh instance should be retrieved.
+            self::$requestInstance = View::getInstance();
+        }
     }
 
     abstract public function start($state);
