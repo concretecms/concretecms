@@ -32,7 +32,7 @@ abstract class AbstractView
 
     public static function getRequestInstance()
     {
-        if (null === self::$requestInstance) {
+        if (!self::$requestInstance instanceof View) {
             View::setRequestInstance(new View());
         }
 
