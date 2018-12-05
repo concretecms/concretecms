@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Package\Dependency;
 
 use Concrete\Core\Package\Package;
@@ -11,22 +12,22 @@ class RequiredPackageException extends DependencyException
     /**
      * The package that can't be uninstalled.
      *
-     * @var Package
+     * @var \Concrete\Core\Package\Package
      */
     protected $uninstallablePackage;
 
     /**
      * The package that requires the package that can't be uninstalled.
      *
-     * @var Package
+     * @var \Concrete\Core\Package\Package
      */
     protected $blockingPackage;
 
     /**
      * Initialize the instance.
      *
-     * @param Package $uninstallablePackage the package that can't be uninstalled
-     * @param Package $blockingPackage the package that requires the package that can't be uninstalled
+     * @param \Concrete\Core\Package\Package $uninstallablePackage the package that can't be uninstalled
+     * @param \Concrete\Core\Package\Package $blockingPackage the package that requires the package that can't be uninstalled
      */
     public function __construct(Package $uninstallablePackage, Package $blockingPackage)
     {
@@ -42,7 +43,7 @@ class RequiredPackageException extends DependencyException
     /**
      * Get the package that can't be uninstalled.
      *
-     * @return Package
+     * @return \Concrete\Core\Package\Package
      */
     public function getUninstallablePackage()
     {
@@ -52,7 +53,7 @@ class RequiredPackageException extends DependencyException
     /**
      * Get the package that requires the package that can't be uninstalled.
      *
-     * @return Package
+     * @return \Concrete\Core\Package\Package
      */
     public function getBlockingPackage()
     {
