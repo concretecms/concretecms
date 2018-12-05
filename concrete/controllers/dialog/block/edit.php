@@ -6,7 +6,6 @@ use Concrete\Core\Block\Block;
 use Concrete\Core\Block\Events\BlockEdit;
 use Concrete\Core\Block\View\BlockView;
 use Concrete\Core\Support\Facade\Events;
-use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Error\ErrorList\Formatter\JsonFormatter;
 use Concrete\Core\Http\ResponseFactoryInterface;
@@ -24,7 +23,7 @@ class Edit extends BackendInterfaceBlockController
         if (isset($_REQUEST['arEnableGridContainer']) && $_REQUEST['arEnableGridContainer'] == 1) {
             $this->area->enableGridContainer();
         }
-        $bv->addScopeItems(array('c' => $this->page, 'a' => $this->area, 'dialogController' => $this));
+        $bv->addScopeItems(['c' => $this->page, 'a' => $this->area, 'dialogController' => $this]);
         $this->set('bv', $bv);
     }
 
@@ -46,7 +45,6 @@ class Edit extends BackendInterfaceBlockController
         return $e;
     }
 
-
     public function submit()
     {
         if ($this->validateAction() && $this->canAccess()) {
@@ -66,8 +64,8 @@ class Edit extends BackendInterfaceBlockController
                 $formatter = new JsonFormatter($e);
                 $response = $formatter->asArray();
                 $response['newbID'] = intval($b->getBlockID());
-                $app = Application::getFacadeApplication();
-                return $app->make(ResponseFactoryInterface::class)->create(json_encode($response));
+
+                return $this->app->make(ResponseFactoryInterface::class)->create(json_encode($response));
             }
 
             $pr->outputJSON();
