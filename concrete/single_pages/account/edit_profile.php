@@ -1,6 +1,6 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
 
-<h2><?=t($c->getCollectionName())?></h2>
+<h2><?= t($c->getCollectionName()); ?></h2>
 
 <form method="post" action="<?php echo $view->action('save')?>" enctype="multipart/form-data">
 	<?php
@@ -44,6 +44,29 @@
     }
     ?>
 	</fieldset>
+
+    <?php foreach ($attributeSets as $setName => $attibutes) { ?>
+        <fieldset>
+            <legend><?= $setName; ?></legend>
+            <?php
+                foreach ($attibutes as $ak) {
+                    $profileFormRenderer->buildView($ak)->setIsRequired($ak->isAttributeKeyRequiredOnProfile())->render();
+                }
+            ?>
+        </fieldset>
+    <?php } ?>
+
+    <?php if (!empty($unassignedAttributes)) { ?>
+        <fieldset>
+            <legend><?= t('Other'); ?></legend>
+            <?php
+                foreach ($unassignedAttributes as $ak) {
+                    $profileFormRenderer->buildView($ak)->setIsRequired($ak->isAttributeKeyRequiredOnProfile())->render();
+                }
+            ?>
+        </fieldset>
+    <?php } ?>
+
 	<?php
     $ats = [];
     foreach (AuthenticationType::getList(true, true) as $at) {
@@ -59,8 +82,7 @@
         }
     }
 
-    if (!empty($ats)) {
-        ?>
+    if (!empty($ats)) { ?>
 		<fieldset>
 			<legend><?=t('Authentication Types')?></legend>
 			<?php
@@ -72,26 +94,26 @@
     }
     ?>
         <br/>
+
 	<fieldset>
-    	<legend><?=t('Change Password')?></legend>
+    	<legend><?= t('Change Password'); ?></legend>
         <div class="form-group">
-            <?php echo $form->label('uPasswordNew', t('New Password'))?>
-            <?php echo $form->password('uPasswordNew', array('autocomplete' => 'off'))?>
-            <a href="javascript:void(0)" title="<?=t("Leave blank to keep current password.")?>"><i class="icon-question-sign"></i></a>
+            <?= $form->label('uPasswordNew', t('New Password')); ?>
+            <?= $form->password('uPasswordNew', ['autocomplete' => 'off']); ?>
+            <a href="javascript:void(0)" title="<?= t('Leave blank to keep current password.'); ?>"><i class="icon-question-sign"></i></a>
 		</div>
 
         <div class="form-group">
-            <?php echo $form->label('uPasswordNewConfirm', t('Confirm New Password'))?>
+            <?= $form->label('uPasswordNewConfirm', t('Confirm New Password')); ?>
             <div class="controls">
-                <?php echo $form->password('uPasswordNewConfirm', array('autocomplete' => 'off'))?>
+                <?= $form->password('uPasswordNewConfirm', ['autocomplete' => 'off']); ?>
             </div>
         </div>
-
 	</fieldset>
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-    		<input type="submit" name="save" value="<?=t('Save')?>" class="btn btn-primary pull-right" />
+    		<input type="submit" name="save" value="<?= t('Save'); ?>" class="btn btn-primary pull-right" />
         </div>
 	</div>
 

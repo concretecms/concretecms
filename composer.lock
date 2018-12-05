@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ae2f07efaafd2178b330902442722f93",
+    "content-hash": "75171bfc1a21bb5a76ca7716855a70ca",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -59,7 +59,59 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/concrete5/dependency-patches/zipball/cbf4350da5ce2713e2d55ff7fef7d73db806afcb",
-                "reference": "cbf4350da5ce2713e2d55ff7fef7d73db806afcb",
+                "reference": "cbf4350da5ce2713e2d55ff7fef7d73db806afc
+3
+        "This file locks the dependencies of your project to a known state",
+4
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+5
+        "This file is @generated automatically"
+6
+    ],
+7
+    "content-hash": "75171bfc1a21bb5a76ca7716855a70ca",
+8
+    "packages": [
+9
+        {
+10
+            "name": "anahkiasen/html-object",
+11
+            "version": "1.4.4",
+12
+            "source": {
+13
+                "type": "git",
+14
+                "url": "https://github.com/Anahkiasen/html-object.git",
+15
+                "reference": "45bb54b91112c064d3906c207259d5c8dcba798f"
+16
+            },
+17
+            "dist": {
+18
+                "type": "zip",
+19
+                "url": "https://api.github.com/repos/Anahkiasen/html-object/zipball/45bb54b91112c064d3906c207259d5c8dcba798f",
+20
+                "reference": "45bb54b91112c064d3906c207259d5c8dcba798f",
+21
+                "shasum": ""
+22
+            },
+23
+            "require": {
+24
+                "php": ">=5.3.0"
+25
+            },
+26
+            "require-dev": {
+27
+                "madewithlove/php-cs-fixer-config": "^1.3",
+28
+                "phpunit/phpunit": "^4.8",b",
                 "shasum": ""
             },
             "require": {
@@ -1030,7 +1082,7 @@
                     "hash": "f03553f596500df8083abdd1cd87cd1916d1a3f4",
                     "list": [
                         {
-                            "from-package": "concrete5/dependency-patches 1.0.0",
+                            "from-package": "concrete5/dependency-patches 1.1.0",
                             "path": "doctrine/orm/UnitOfWork-createEntity-continue.patch",
                             "description": "Fix UnitOfWork::createEntity()"
                         }
@@ -3717,46 +3769,8 @@
                 "unicode"
             ],
             "time": "2018-11-23T10:02:50+00:00"
-        },
-        {
-            "name": "ralouphie/getallheaders",
-            "version": "2.0.5",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ralouphie/getallheaders.git",
-                "reference": "5601c8a83fbba7ef674a7369456d12f1e0d0eafa"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ralouphie/getallheaders/zipball/5601c8a83fbba7ef674a7369456d12f1e0d0eafa",
-                "reference": "5601c8a83fbba7ef674a7369456d12f1e0d0eafa",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~3.7.0",
-                "satooshi/php-coveralls": ">=1.0"
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "src/getallheaders.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Ralph Khattar",
-                    "email": "ralph.khattar@gmail.com"
-                }
-            ],
-            "description": "A polyfill for getallheaders.",
-            "time": "2016-02-11T07:05:27+00:00"
+
+
         },
         {
             "name": "sunra/php-simple-html-dom-parser",
@@ -3782,7 +3796,8 @@
                     "hash": "43699395013691839330f8406ee49fa752c163fb",
                     "list": [
                         {
-                            "from-package": "concrete5/dependency-patches 1.0.0",
+
+                            "from-package": "concrete5/dependency-patches 1.1.0",
                             "path": "sunra/php-simple-html-dom-parser/minus-in-regular-expressions.patch",
                             "description": "Fix minus in regular expressions"
                         }
@@ -4797,6 +4812,18 @@
                 "satooshi/php-coveralls": "dev-master"
             },
             "type": "library",
+            "extra": {
+                "patches_applied": {
+                    "hash": "b16ca9edf74b2527c4f02cd8f69c7ad1e452545c",
+                    "list": [
+                        {
+                            "from-package": "concrete5/dependency-patches 1.1.0",
+                            "path": "tedivm/jshrink/fix-minifier-loop.patch",
+                            "description": "Fix continue switch in FileGenerator and MethodReflection"
+                        }
+                    ]
+                }
+            },
             "autoload": {
                 "psr-0": {
                     "JShrink": "src/"
@@ -5266,6 +5293,16 @@
                 "branch-alias": {
                     "dev-master": "2.6-dev",
                     "dev-develop": "2.7-dev"
+                },
+                "patches_applied": {
+                    "hash": "43aec57a6422c48c002031806c8a8ca01b6208cf",
+                    "list": [
+                        {
+                            "from-package": "concrete5/dependency-patches 1.1.0",
+                            "path": "zendframework/zend-code/switch-continue.patch",
+                            "description": "Fix continue switch in FileGenerator and MethodReflection"
+                        }
+                    ]
                 }
             },
             "autoload": {
@@ -5873,7 +5910,8 @@
                     "hash": "f247c9d47f2ba4ae8d9dfe6d1a25c8627e377753",
                     "list": [
                         {
-                            "from-package": "concrete5/dependency-patches 1.0.0",
+
+                            "from-package": "concrete5/dependency-patches 1.1.0",
                             "path": "zendframework/zend-stdlib/ArrayObject-unserialize-continue.patch",
                             "description": "Fix ArrayObject::unserialize()"
                         }
@@ -6688,7 +6726,7 @@
                     "hash": "b230cedd50b7175de81a87b2ec86ad380ee748f9",
                     "list": [
                         {
-                            "from-package": "concrete5/dependency-patches 1.0.0",
+                            "from-package": "concrete5/dependency-patches 1.1.0",
                             "path": "phpunit/phpunit/Getopt-each.patch",
                             "description": "Avoid each() in Getopt"
                         }

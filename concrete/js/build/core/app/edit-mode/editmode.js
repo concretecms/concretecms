@@ -482,17 +482,10 @@
 
 
             $(element).find('div.ccm-panel-add-block-stack-item').each(function () {
-                var stack, me = $(this), dragger = me.find('div.stack-name');
+                var stack, me = $(this), dragger = me.find('img.ccm-panel-add-block-stack-item-handle');
                 stack = new Concrete.Stack($(this), my, dragger, next_area);
 
                 stack.setPeper(dragger);
-
-                $(this).find('div.block').each(function () {
-                    var block, me = $(this), dragger = me.find('div.block-name');
-                    block = new Concrete.StackBlock($(this), stack, my, dragger, next_area);
-
-                    block.setPeper(dragger);
-                });
             });
 
             $(element).find('div.ccm-panel-add-clipboard-block-item').each(function () {

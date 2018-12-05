@@ -1,16 +1,14 @@
 <?php
-
 namespace Concrete\Controller\SinglePage;
 
+use Concrete\Core\Attribute\Category\CategoryService;
 use Concrete\Core\Attribute\Context\FrontendFormContext;
 use Concrete\Core\Attribute\Form\Renderer;
+use Concrete\Core\Attribute\Key\UserKey as UserAttributeKey;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Page\Controller\PageController;
-use Config;
-use Loader;
-use User;
-use UserAttributeKey;
-use UserInfo;
+use Concrete\Core\Support\Facade\UserInfo;
+use Concrete\Core\User\User;
 
 class Register extends PageController
 {
@@ -21,6 +19,8 @@ class Register extends PageController
     public function on_start()
     {
         $allowedTypes = ['validate_email', 'enabled'];
+        $token = $this->app->make('token');
+        $this->set('token', $token);
         $config = $this->app->make(Repository::class);
         $currentType = $config->get('concrete.user.registration.type');
 
@@ -41,11 +41,31 @@ class Register extends PageController
         $this->requireAsset('css', 'core/frontend/captcha');
         $this->set('renderer', new Renderer(new FrontendFormContext()));
         $this->set('userGroups', array(\Group::getByName("Guest")));
+        $service = $this->app->make(CategoryService::class);
+        $categoryEntity = $service->getByHandle('user');
+        $category = $categoryEntity->getController();
+        $setManager = $category->getSetManager();
+        $attributeSets = [];
+        foreach ($setManager->getAttributeSets() as $set) {
+            foreach ($set->getAttributeKeys() as $ak) {
+                if ($ak->isAttributeKeyEditableOnRegister()) {
+                    $attributeSets[$set->getAttributeSetDisplayName()][] = $ak;
+                }
+            }
+        }
+        $this->set('attributeSets', $attributeSets);
+        $unassignedAttributes = [];
+        foreach ($setManager->getUnassignedAttributeKeys() as $ak) {
+            if ($ak->isAttributeKeyEditableOnRegister()) {
+                $unassignedAttributes[] = $ak;
+            }
+        }
+        $this->set('unassignedAttributes', $unassignedAttributes);
     }
 
     public function forward($cID = 0)
     {
-        $this->set('rcID', Loader::helper('security')->sanitizeInt($cID));
+        $this->set('rcID', $this->app->make('helper/security')->sanitizeInt($cID));
     }
 
     public function do_register()
@@ -80,7 +100,7 @@ class Register extends PageController
             if ($this->displayUserName) {
                 $this->app->make('validator/user/name')->isValid($username, $e);
             }
-            
+
             $this->app->make('validator/user/email')->isValid($_POST['uEmail'], $e);
 
             $this->app->make('validator/password')->isValid($password, $e);
@@ -155,7 +175,7 @@ class Register extends PageController
                     $mh->addParameter('siteName', tc('SiteName', \Core::make('site')->getSite()->getSiteName()));
 
                     if ($config->get('concrete.email.register_notification.address')) {
-                        $mh->from(Config::get('concrete.email.register_notification.address'), t('Website Registration Notification'));
+                        $mh->from($config->get('concrete.email.register_notification.address'), t('Website Registration Notification'));
                     } else {
                         $adminUser = UserInfo::getByID(USER_SUPER_ID);
                         if (is_object($adminUser)) {
@@ -177,7 +197,7 @@ class Register extends PageController
                 // if this is successful, uID is loaded into session for this user
 
                 $rcID = $this->post('rcID');
-                $nh = Loader::helper('validation/numbers');
+                $nh = $this->app->make('helper/validation/numbers');
                 if (!$nh->integer($rcID)) {
                     $rcID = 0;
                 }
