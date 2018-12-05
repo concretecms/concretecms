@@ -12,5 +12,5 @@ interface HtmlAwareErrorInterface extends ErrorInterface
      *
      * @return bool
      */
-    public function messageContainsHTML();
+    public function messageContainsHtml();
 }

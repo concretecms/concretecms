@@ -27,6 +27,8 @@ abstract class DependencyException extends LogicException implements ErrorInterf
      */
     public function jsonSerialize()
     {
-        return ['message' => $this->getMessage()];
+        return [
+            'message' => $this->getMessage(),
+        ];
     }
 }

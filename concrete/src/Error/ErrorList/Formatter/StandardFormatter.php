@@ -16,7 +16,7 @@ class StandardFormatter extends AbstractFormatter
             $html .= '<ul class="ccm-error">';
             foreach ($this->error->getList() as $error) {
                 $html .= '<li>';
-                if ($error instanceof HtmlAwareErrorInterface && $error->messageContainsHTML()) {
+                if ($error instanceof HtmlAwareErrorInterface && $error->messageContainsHtml()) {
                     $html .= (string) $error;
                 } else {
                     $html .= h((string) $error);
