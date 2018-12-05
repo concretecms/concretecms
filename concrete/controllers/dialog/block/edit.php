@@ -38,7 +38,7 @@ class Edit extends BackendInterfaceBlockController
         $e = $bi->validate($_POST);
 
         // We need an ErrorList instance even if the block validation returns true
-        if (!$e instanceof ErrorList) {
+        if (!$e instanceof \Concrete\Core\Error\ErrorList\ErrorList) {
             $e = $this->app->make(ErrorList::class);
         }
 
@@ -52,7 +52,7 @@ class Edit extends BackendInterfaceBlockController
             $e = $this->validateBlock($b);
             $pr = $this->getEditResponse($b, $e);
 
-            if (!is_object($e) || ($e instanceof ErrorList && !$e->has())) {
+            if (!is_object($e) || ($e instanceof \Concrete\Core\Error\ErrorList\ErrorList && !$e->has())) {
                 // we can update the block that we're submitting
                 $b->update($_POST);
                 $event = new BlockEdit($b, $this->page);
@@ -60,7 +60,7 @@ class Edit extends BackendInterfaceBlockController
             }
 
             // the block has a new id at this point, we have to pass it to the view
-            if ($e instanceof ErrorList && $e->has()) {
+            if ($e instanceof \Concrete\Core\Error\ErrorList\ErrorList && $e->has()) {
                 $formatter = new JsonFormatter($e);
                 $response = $formatter->asArray();
                 $response['newbID'] = intval($b->getBlockID());
