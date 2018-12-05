@@ -3,7 +3,6 @@ namespace Concrete\Controller\SinglePage\Dashboard\Pages\Types;
 
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Loader;
 use PageType;
 use PageTemplate;
 use Concrete\Core\Page\Type\PublishTarget\Type\Type as PageTypePublishTargetType;
@@ -26,11 +25,11 @@ class Add extends DashboardPageController
 
     public function submit()
     {
-        $vs = Loader::helper('validation/strings');
-
-        $sec = Loader::helper('security');
-        $name = $sec->sanitizeString($this->post('ptName'));
-        $handle = $sec->sanitizeString($this->post('ptHandle'));
+        $post = $this->request->request;
+        $vs = $this->app->make('helper/validation/strings');
+        $sec = $this->app->make('helper/security');
+        $name = $sec->sanitizeString($post->get('ptName'));
+        $handle = $sec->sanitizeString($post->get('ptHandle'));
         if (!$this->token->validate('add_page_type')) {
             $this->error->add(t($this->token->getErrorMessage()));
         }
@@ -46,23 +45,23 @@ class Add extends DashboardPageController
             }
             unset($_pt);
         }
-        $defaultTemplate = PageTemplate::getByID($this->post('ptDefaultPageTemplateID'));
+        $defaultTemplate = PageTemplate::getByID($post->get('ptDefaultPageTemplateID'));
         if (!is_object($defaultTemplate)) {
             $this->error->add(t('You must choose a valid default page template.'));
         }
         $templates = array();
-        if (is_array($_POST['ptPageTemplateID'])) {
-            foreach ($this->post('ptPageTemplateID') as $pageTemplateID) {
+        if (is_array($post->get('ptPageTemplateID'))) {
+            foreach ($post->get('ptPageTemplateID') as $pageTemplateID) {
                 $pt = PageTemplate::getByID($pageTemplateID);
                 if (is_object($pt)) {
                     $templates[] = $pt;
                 }
             }
         }
-        if (count($templates) == 0 && $this->post('ptAllowedPageTemplates') == 'C') {
+        if (count($templates) == 0 && $post->get('ptAllowedPageTemplates') == 'C') {
             $this->error->add(t('You must specify at least one page template.'));
         }
-        $target = PageTypePublishTargetType::getByID($this->post('ptPublishTargetTypeID'));
+        $target = PageTypePublishTargetType::getByID($post->get('ptPublishTargetTypeID'));
         if (!is_object($target)) {
             $this->error->add(t('Invalid page type publish target type.'));
         } else {
@@ -74,7 +73,7 @@ class Add extends DashboardPageController
 
         $siteTypeID = null;
         if (!$this->error->has()) {
-            $siteType = $this->app->make('site/type')->getByID($this->post('siteTypeID'));
+            $siteType = $this->app->make('site/type')->getByID($post->get('siteTypeID'));
             if (!is_object($siteType)) {
                 $siteType = $this->app->make('site/type')->getDefault();
             } else {
@@ -85,14 +84,14 @@ class Add extends DashboardPageController
                 'handle' => $handle,
                 'name' => $name,
                 'defaultTemplate' => $defaultTemplate,
-                'ptLaunchInComposer' => $this->post('ptLaunchInComposer'),
-                'ptIsFrequentlyAdded' => $this->post('ptIsFrequentlyAdded'),
-                'allowedTemplates' => $this->post('ptAllowedPageTemplates'),
+                'ptLaunchInComposer' => $post->get('ptLaunchInComposer'),
+                'ptIsFrequentlyAdded' => $post->get('ptIsFrequentlyAdded'),
+                'allowedTemplates' => $post->get('ptAllowedPageTemplates'),
                 'templates' => $templates,
                 'siteType' => $siteType
             );
             $pt = PageType::add($data);
-            $configuredTarget = $target->configurePageTypePublishTarget($pt, $this->post());
+            $configuredTarget = $target->configurePageTypePublishTarget($pt, $post->all());
             $pt->setConfiguredPageTypePublishTargetObject($configuredTarget);
             $this->redirect('/dashboard/pages/types', 'page_type_added', $siteTypeID);
         }
