@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Package\Dependency;
 
 use Concrete\Core\Error\ErrorList\Error\ErrorInterface;
@@ -11,6 +12,8 @@ abstract class DependencyException extends LogicException implements ErrorInterf
 {
     /**
      * {@inheritdoc}
+     *
+     * @see \LogicException::__toString()
      */
     public function __toString()
     {
@@ -19,6 +22,8 @@ abstract class DependencyException extends LogicException implements ErrorInterf
 
     /**
      * {@inheritdoc}
+     *
+     * @see \JsonSerializable::jsonSerialize()
      */
     public function jsonSerialize()
     {

@@ -1,16 +1,23 @@
 <?php
+
 namespace Concrete\Core\Error\ErrorList\Error;
 
 use Concrete\Core\Error\ErrorList\Field\FieldInterface;
 
 class Error extends AbstractError
 {
-
+    /**
+     * The error message.
+     *
+     * @var string
+     */
     protected $message;
 
     /**
-     * Error constructor.
-     * @param $message
+     * Class constructor.
+     *
+     * @param string $message
+     * @param \Concrete\Core\Error\ErrorList\Field\FieldInterface|null $field
      */
     public function __construct($message, FieldInterface $field = null)
     {
@@ -21,7 +28,9 @@ class Error extends AbstractError
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Error\ErrorList\Error\ErrorInterface::getMessage()
      */
     public function getMessage()
     {
@@ -29,12 +38,12 @@ class Error extends AbstractError
     }
 
     /**
-     * @param mixed $message
+     * Set the error message.
+     *
+     * @param string $message
      */
     public function setMessage($message)
     {
         $this->message = $message;
     }
-
-
 }
