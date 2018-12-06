@@ -217,4 +217,51 @@ class LogTest extends ConcreteDatabaseTestCase
         $this->assertEquals($le2->getMessage(), 'OMG!');
     }
 
+    public function testAdvancedLoggingConfiguration()
+    {
+        $config = array(
+            'formatters' => array(
+                'spaced' => array(
+                    'format' => "%datetime% %channel%.%level_name%  %message%\n",
+                    'include_stacktraces' => true
+                ),
+                'dashed' => array(
+                    'format' => "%datetime%-%channel%.%level_name% - %message%\n"
+                ),
+            ),
+            'handlers' => array(
+                'console' => array(
+                    'class' => 'Monolog\Handler\StreamHandler',
+                    'level' => 'DEBUG',
+                    'formatter' => 'spaced',
+                    'stream' => 'php://stdout'
+                ),
+
+                'info_file_handler' => array(
+                    'class' => 'Monolog\Handler\StreamHandler',
+                    'level' => 'INFO',
+                    'formatter' => 'dashed',
+                    'stream' => './demo_info.log'
+                ),
+
+                'error_file_handler' => array(
+                    'class' => 'Monolog\Handler\StreamHandler',
+                    'level' => 'ERROR',
+                    'stream' => './demo_error.log',
+                    'formatter' => 'spaced'
+                )
+            ),
+            'processors' => array(
+                'tag_processor' => array(
+                    'class' => 'Monolog\Processor\TagProcessor'
+                )
+            ),
+            'loggers' => array(
+                'my_logger' => array(
+                    'handlers' => array('console', 'info_file_handler')
+                )
+            )
+        );
+
+    }
 }

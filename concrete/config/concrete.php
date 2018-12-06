@@ -315,10 +315,16 @@ return [
             'clear_on_reload' => false,
         ],
 
-        'configurations' => [
+        'configuration' => [
+
+            /*
+             * Configuration mode
+             *
+             * @var string simple|advanced
+             */
+            'mode' => 'simple',
 
             'simple' => [
-                'enabled' => true,
                 /**
                  * What log level to store core logs in the database
                  * @var string
@@ -326,6 +332,9 @@ return [
                 'core_logging_level' => 'NOTICE'
             ],
 
+            'advanced' => [
+                'configuration' => []
+            ],
         ],
     ],
     'jobs' => [
