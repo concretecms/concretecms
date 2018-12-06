@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Page\Collection\Version;
 
 use Concrete\Core\Search\ItemList\Database\ItemList as DatabaseItemList;

@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Controller\SinglePage\Dashboard\Reports;
 
 use Concrete\Core\Csv\Export\PageActivityExporter;
@@ -25,7 +24,8 @@ class PageChanges extends DashboardPageController
             return $this->view();
         }
 
-        return StreamedResponse::create(function () {
+        return StreamedResponse::create(
+            function () {
                 $writer = $this->getWriter();
                 $writer->setUnloadDoctrineEveryTick(50);
                 $writer->insertHeaders();

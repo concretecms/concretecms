@@ -5,7 +5,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 /* @var \Concrete\Core\Validation\CSRF\Token $token */
 ?>
 
-<form role="form" method="post" action="<?php echo $controller->action('csv_export')?>">
+<form role="form" method="post" action="<?php echo $controller->action('csv_export'); ?>">
     <?php
     $token->output('export_page_changes');
     ?>
@@ -14,7 +14,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
         <div class="col-sm-12 col-md-6">
             <div class="form-group">
                 <label for="startDate" class="control-label">
-                    <?php echo tc('Start date', 'From') ?>
+                    <?php echo tc('Start date', 'From'); ?>
                 </label>
                 <div>
                     <?php
@@ -26,7 +26,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
         <div class="col-sm-12 col-md-6">
             <div class="form-group">
                 <label for="endDate" class="control-label">
-                    <?php echo tc('End date', 'To') ?>
+                    <?php echo tc('End date', 'To'); ?>
                 </label>
                 <div>
                     <?php
@@ -39,7 +39,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
     <div class="ccm-search-fields-submit">
         <button type="submit" class="btn btn-primary pull-right">
-            <?php echo t('Export to CSV')?>
+            <?php echo t('Export to CSV'); ?>
         </button>
     </div>
 </form>

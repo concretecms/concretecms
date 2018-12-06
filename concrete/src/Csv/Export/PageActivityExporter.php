@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Csv\Export;
 
 use Concrete\Core\Page\Page;
