@@ -76,7 +76,7 @@ class PhpFixerOptions
      *
      * @var string[]|null
      */
-    private $phpOnlyNonPsr4Regexs;
+    private $phpOnlyNonPsr4Regexes;
 
     /**
      * The file paths (relative to the webroot) that only contain PHP and that follow PSR-4 class names (allowed placeholders: <HANDLE>).
@@ -97,7 +97,7 @@ class PhpFixerOptions
      *
      * @var string[]|null
      */
-    private $phpOnlyPsr4Regexs;
+    private $phpOnlyPsr4Regexes;
 
     /**
      * The list of regular expressions that should be used to check if a directory contains files with mixed flags.
@@ -365,7 +365,7 @@ class PhpFixerOptions
             $phpOnlyNonPsr4Files[] = $this->normalizePath($path, false, true);
         }
         $this->directoriesWithMixedContentsRegex = null;
-        $this->phpOnlyNonPsr4Regexs = null;
+        $this->phpOnlyNonPsr4Regexes = null;
         $this->phpOnlyNonPsr4Files = $phpOnlyNonPsr4Files;
 
         return $this;
@@ -399,7 +399,7 @@ class PhpFixerOptions
             $phpOnlyNonPsr4Directories[] = $this->normalizePath($path, true, true);
         }
         $this->directoriesWithMixedContentsRegex = null;
-        $this->phpOnlyNonPsr4Regexs = null;
+        $this->phpOnlyNonPsr4Regexes = null;
         $this->phpOnlyNonPsr4Directories = $phpOnlyNonPsr4Directories;
 
         return $this;
@@ -410,20 +410,20 @@ class PhpFixerOptions
      *
      * @return string[]
      */
-    public function getPhpOnlyNonPsr4Regexs()
+    public function getPhpOnlyNonPsr4Regexes()
     {
-        if ($this->phpOnlyNonPsr4Regexs === null) {
-            $phpOnlyNonPsr4Regexs = [];
+        if ($this->phpOnlyNonPsr4Regexes === null) {
+            $phpOnlyNonPsr4Regexes = [];
             foreach ($this->getPhpOnlyNonPsr4Files() as $pattern) {
-                $phpOnlyNonPsr4Regexs[] = '/^' . str_replace('\<HANDLE\>', '\w+', preg_quote($pattern, '/')) . '$/';
+                $phpOnlyNonPsr4Regexes[] = '/^' . str_replace('\<HANDLE\>', '\w+', preg_quote($pattern, '/')) . '$/';
             }
             foreach ($this->getPhpOnlyNonPsr4Directories() as $pattern) {
-                $phpOnlyNonPsr4Regexs[] = '/^' . str_replace('\<HANDLE\>', '\w+', preg_quote($pattern, '/')) . '/';
+                $phpOnlyNonPsr4Regexes[] = '/^' . str_replace('\<HANDLE\>', '\w+', preg_quote($pattern, '/')) . '/';
             }
-            $this->phpOnlyNonPsr4Regexs = $phpOnlyNonPsr4Regexs;
+            $this->phpOnlyNonPsr4Regexes = $phpOnlyNonPsr4Regexes;
         }
 
-        return $this->phpOnlyNonPsr4Regexs;
+        return $this->phpOnlyNonPsr4Regexes;
     }
 
     /**
@@ -454,7 +454,7 @@ class PhpFixerOptions
             $phpOnlyPsr4Files[] = $this->normalizePath($path, false, true);
         }
         $this->directoriesWithMixedContentsRegex = null;
-        $this->phpOnlyPsr4Regexs = null;
+        $this->phpOnlyPsr4Regexes = null;
         $this->phpOnlyPsr4Files = $phpOnlyPsr4Files;
 
         return $this;
@@ -488,7 +488,7 @@ class PhpFixerOptions
             $phpOnlyPsr4Directories[] = $this->normalizePath($path, true, true);
         }
         $this->directoriesWithMixedContentsRegex = null;
-        $this->phpOnlyPsr4Regexs = null;
+        $this->phpOnlyPsr4Regexes = null;
         $this->phpOnlyPsr4Directories = $phpOnlyPsr4Directories;
 
         return $this;
@@ -499,20 +499,20 @@ class PhpFixerOptions
      *
      * @return string[]
      */
-    public function getPhpOnlyPsr4Regexs()
+    public function getPhpOnlyPsr4Regexes()
     {
-        if ($this->phpOnlyPsr4Regexs === null) {
-            $phpOnlyPsr4Regexs = [];
+        if ($this->phpOnlyPsr4Regexes === null) {
+            $phpOnlyPsr4Regexes = [];
             foreach ($this->getPhpOnlyPsr4Files() as $pattern) {
-                $phpOnlyPsr4Regexs[] = '/^' . str_replace('\<HANDLE\>', '\w+', preg_quote($pattern, '/')) . '$/';
+                $phpOnlyPsr4Regexes[] = '/^' . str_replace('\<HANDLE\>', '\w+', preg_quote($pattern, '/')) . '$/';
             }
             foreach ($this->getPhpOnlyPsr4Directories() as $pattern) {
-                $phpOnlyPsr4Regexs[] = '/^' . str_replace('\<HANDLE\>', '\w+', preg_quote($pattern, '/')) . '/';
+                $phpOnlyPsr4Regexes[] = '/^' . str_replace('\<HANDLE\>', '\w+', preg_quote($pattern, '/')) . '/';
             }
-            $this->phpOnlyPsr4Regexs = $phpOnlyPsr4Regexs;
+            $this->phpOnlyPsr4Regexes = $phpOnlyPsr4Regexes;
         }
 
-        return $this->phpOnlyPsr4Regexs;
+        return $this->phpOnlyPsr4Regexes;
     }
 
     /**

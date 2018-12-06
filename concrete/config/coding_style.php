@@ -3,22 +3,22 @@
 return [
     'php' => [
         'filter' => [
-            // Whitepace-separated list of file extensions to be parsed
+            // Whitespace-separated list of file extensions to be parsed
             'extensions' => 'php',
-            // Whitelspace-separated list of additional files (relative to the webroot) to be parsed
+            // Whitespace-separated list of additional files (relative to the webroot) to be parsed
             'include' => 'concrete/bin/concrete5',
         ],
         'ignore_directories' => [
-            // Whitepace-separated list of directory names that should not be parsed
+            // Whitespace-separated list of directory names that should not be parsed
             'by_name' => 'vendor',
-            // Whitepace-separated list of directory paths (relative to the webroot) that should not be parsed (allowed placeholders: <HANDLE>)
+            // Whitespace-separated list of directory paths (relative to the webroot) that should not be parsed (allowed placeholders: <HANDLE>)
             'by_path' => 'application/config/doctrine application/files',
         ],
-        // Whitepace-separated list of file paths (relative to the webroot) that are executed before checking the PHP version.
+        // Whitespace-separated list of file paths (relative to the webroot) that are executed before checking the PHP version.
         'bootstrap_files' => 'index.php concrete/dispatcher.php concrete/bin/concrete5',
         'php_only' => [
             'non_psr4' => [
-                // Whitepace-separated list of file paths (relative to the webroot) that only contain PHP and that don't follow PSR-4 class names (allowed placeholders: <HANDLE>).
+                // Whitespace-separated list of file paths (relative to the webroot) that only contain PHP and that don't follow PSR-4 class names (allowed placeholders: <HANDLE>).
                 'files' => <<<'EOT'
 concrete/attributes/<HANDLE>/controller.php
 application/attributes/<HANDLE>/controller.php
@@ -43,7 +43,7 @@ application/themes/<HANDLE>/page_theme.php
 packages/<HANDLE>/themes/<HANDLE>/page_theme.php
 EOT
                 ,
-                // Whitepace-separated list of directory paths (relative to the webroot) that contain PHP-only files that don't follow PSR-4 class names (allowed placeholders: <HANDLE>).
+                // Whitespace-separated list of directory paths (relative to the webroot) that contain PHP-only files that don't follow PSR-4 class names (allowed placeholders: <HANDLE>).
                 'directories' => <<<'EOT'
 concrete/controllers
 application/controllers
@@ -56,11 +56,11 @@ EOT
                 ,
             ],
             'psr4' => [
-                // Whitepace-separated list of file paths (relative to the webroot) that only contain PHP and that follow PSR-4 class names (allowed placeholders: <HANDLE>).
+                // Whitespace-separated list of file paths (relative to the webroot) that only contain PHP and that follow PSR-4 class names (allowed placeholders: <HANDLE>).
                 'files' => <<<'EOT'
 EOT
                 ,
-                // Whitepace-separated list of directory paths (relative to the webroot) that contain PHP-only files that don't follow PSR-4 class names (allowed placeholders: <HANDLE>).
+                // Whitespace-separated list of directory paths (relative to the webroot) that contain PHP-only files that don't follow PSR-4 class names (allowed placeholders: <HANDLE>).
                 'directories' => <<<'EOT'
 concrete/bootstrap
 application/bootstrap

@@ -14,7 +14,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class PhpCodingStyleCommand extends Command
 {
-    protected $description = 'Check of fix the PHP coding style.';
+    protected $description = 'Check or fix the PHP coding style.';
 
     protected $signature = <<<'EOT'
 c5:phpcs
@@ -67,7 +67,15 @@ EOT
     protected function configure()
     {
         $this->setHelp(<<<EOT
-Check of fix the PHP coding style.
+Check or fix the PHP coding style.
+
+Return values when checking the coding style:
+- 0: the coding style is valid and no error occurred
+- 1: some fixes are needed or some error occurred
+
+Return values when applying the coding style:
+- 0: no error occurred
+- 1: some error occurred
 EOT
         );
     }

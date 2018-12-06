@@ -125,9 +125,9 @@ class ServiceProvider extends Provider
     /**
      * Add a class to the CLI application.
      *
-     * @param $param
-     * @param mixed $requireInstall
-     * @param null|callable $callback
+     * @param array|string|\Symfony\Component\Console\Command\Command $param
+     * @param bool $requireInstall
+     * @param callable|null $callback
      *
      * @return null|\Symfony\Component\Console\Command\Command
      */

@@ -13,7 +13,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class PhpFixer
 {
     /**
-     * Coding style rules flag: compatible with PHP versions prior to 5.5.9 (the mimimum PHP version required by concrete5).
+     * Coding style rules flag: compatible with PHP versions prior to 5.5.9 (the minimum PHP version required by concrete5).
      *
      * @var int
      */
@@ -34,7 +34,7 @@ class PhpFixer
     const FLAG_BOOTSTRAP = 0x03; // FLAG_OLDPHP | FLAG_PHPONLY
 
     /**
-     * Coding style rules flag: files that implements a class following the PSR-4 rules.
+     * Coding style rules flag: files that implement classes following the PSR-4 rules.
      *
      * @var int
      */
@@ -170,13 +170,13 @@ class PhpFixer
             // The file is a bootstrap file
             return [self::FLAG_BOOTSTRAP => [$fullPath]];
         }
-        foreach ($this->options->getPhpOnlyNonPsr4Regexs() as $pattern) {
+        foreach ($this->options->getPhpOnlyNonPsr4Regexes() as $pattern) {
             if (preg_match($pattern, $relativePath)) {
                 // The file is a PHP-only file that don't follow PSR-4 class name rules.
                 return [self::FLAG_PHPONLY => [$fullPath]];
             }
         }
-        foreach ($this->options->getPhpOnlyPsr4Regexs() as $pattern) {
+        foreach ($this->options->getPhpOnlyPsr4Regexes() as $pattern) {
             if (preg_match($pattern, $relativePath)) {
                 // The file is a PHP-only file that follow PSR-4 class name rules.
                 return [self::FLAG_PSR4CLASS => [$fullPath]];
@@ -229,13 +229,13 @@ class PhpFixer
                 return [];
             }
         }
-        foreach ($this->options->getPhpOnlyNonPsr4Regexs() as $pattern) {
+        foreach ($this->options->getPhpOnlyNonPsr4Regexes() as $pattern) {
             if (preg_match($pattern, $relativePath)) {
                 // The directory contains PHP-only files that don't PSR-4 class name rules.
                 return [self::FLAG_PHPONLY => [$fullPath]];
             }
         }
-        foreach ($this->options->getPhpOnlyPsr4Regexs() as $pattern) {
+        foreach ($this->options->getPhpOnlyPsr4Regexes() as $pattern) {
             if (preg_match($pattern, $relativePath)) {
                 // The directory contains PHP-only files that follow PSR-4 class name rules.
                 return [self::FLAG_PSR4CLASS => [$fullPath]];
