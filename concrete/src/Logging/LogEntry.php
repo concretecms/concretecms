@@ -4,6 +4,7 @@ namespace Concrete\Core\Logging;
 
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\User;
+use Monolog\Logger;
 
 class LogEntry
 {

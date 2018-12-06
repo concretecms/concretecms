@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Logging;
 
+use Concrete\Core\Support\Facade\Facade;
+use Monolog\Logger;
+
 class GroupLogger
 {
     protected $level;
@@ -8,7 +11,9 @@ class GroupLogger
 
     public function __construct($channel = false, $level = Logger::DEBUG)
     {
-        $this->logger = new Logger($channel);
+        $app = Facade::getFacadeApplication();
+        $loggerFactory = $app->make(LoggerFactory::class);
+        $this->logger = $loggerFactory->createLogger($channel);
         $this->level = $level;
     }
 

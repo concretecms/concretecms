@@ -4,6 +4,11 @@ namespace Concrete\Tests\Logging;
 
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\Configuration\ConfigurationFactory;
+use Concrete\Core\Logging\Configuration\SimpleConfiguration;
+use Concrete\Core\Logging\GroupLogger;
+use Concrete\Core\Logging\Handler\DatabaseHandler;
 use Concrete\Core\Logging\LoggerFactory;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Support\Facade\Log;
@@ -11,6 +16,7 @@ use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use Concrete\Core\Logging\LogEntry;
 
 class LogTest extends ConcreteDatabaseTestCase
 {
@@ -29,54 +35,88 @@ class LogTest extends ConcreteDatabaseTestCase
         $this->db = $this->app->make(Connection::class);
     }
 
-    public function testStandardDatabaseLogging()
+    // The application logger is used whenever the \Log facade is used. Consequently, the default behavior is to
+    // always ensure that it logs everything to the database.
+    public function testCreateApplicationLogger()
     {
         $factory = $this->app->make(LoggerFactory::class);
-        $logger = $factory->createLogger('sample-channel');
-        $this->assertInstanceOf(Logger::class, $logger);
+        $applicationLogger = $factory->createLogger(Channels::CHANNEL_APPLICATION);
+        $this->assertInstanceOf(Logger::class, $applicationLogger);
+        $processors = $applicationLogger->getProcessors();
+        $handlers = $applicationLogger->getHandlers();
+        $this->assertCount(1, $handlers);
+        $this->assertCount(0, $processors);
+        $this->assertInstanceOf(DatabaseHandler::class, $handlers[0]);
+        $this->assertEquals(Logger::DEBUG, $handlers[0]->getLevel());
 
-        $logger->debug('This is a debug line.');
-        $logger->emergency('This is an emergency!');
-        $logger->info('This is an info line.');
-        $logger->notice('This is a notice line.');
-        $logger->warning('This is a warning line.');
+        $applicationLogger->debug('This is a debug line.');
+        $applicationLogger->emergency('This is an emergency!');
+        $applicationLogger->info('This is an info line.');
 
-        // now we determine if writing occurred successfully.
-        // Note, by default we now no longer log anything below warning, so our tests should show this.
         $r = $this->db->GetAll('select * from Logs');
-        $this->assertEquals(1, $r[0]['logID']);
-        $this->assertEquals('sample-channel', $r[0]['channel']);
-        $this->assertEquals('This is an emergency!', $r[0]['message']);
-        $this->assertEquals('sample-channel', $r[1]['channel']);
-        $this->assertEquals('This is a warning line.', $r[1]['message']);
-        $this->assertCount(2, $r);
+        $this->assertEquals('application', $r[0]['channel']);
+        $this->assertEquals('This is a debug line.', $r[0]['message']);
+        $this->assertCount(3, $r);
     }
+
+    // This is a custom logger - by default it too should log everything because we want to be permissive like that.
+    public function testCreateCustomLogger()
+    {
+        $factory = $this->app->make(LoggerFactory::class);
+        $logger = $factory->createLogger('uploads');
+        $logger->info('File testing.jpg uploaded.');
+
+        $r = $this->db->GetAll('select * from Logs');
+        $this->assertCount(1, $r);
+    }
+
+    // Now we get to the interesting new stuff. Let's log some core stuff and see if it logs. Since this core stuff
+    // are notices, they should NOT show up.
+    public function testCoreLoggingLevels()
+    {
+        $factory = $this->app->make(LoggerFactory::class);
+        $logger = $factory->createLogger(Channels::CHANNEL_SECURITY);
+        $logger->notice('User x got some new privileges.');
+        $logger->info('User Y did something interesting.');
+        $logger->alert('User x changed permission on page Y.');
+        $logger->info('User x did something interesting.');
+
+        $r = $this->db->GetAll('select * from Logs');
+        $this->assertCount(2, $r);
+        $this->assertEquals('security', $r[0]['channel']);
+        $this->assertEquals('User x got some new privileges.', $r[0]['message']);
+        $this->assertEquals(Logger::NOTICE, $r[0]['level']);
+
+    }
+
+    public function testLoggingHelper()
+    {
+        core_log('this is my test message');
+        core_log('What is this');
+        core_log('EMERGENCY!', Logger::EMERGENCY);
+        core_log('This is some weird thing', Logger::INFO, Channels::CHANNEL_SECURITY);
+        core_log('This is some weird thing', Logger::INFO);
+        core_log('EMERGENCY 2!', Logger::EMERGENCY, Channels::CHANNEL_SECURITY);
+
+        $r = $this->db->GetAll('select * from Logs');
+        // everything makes it in except the info in the security channel.
+        $this->assertCount(5, $r);
+    }
+
 
     public function testMoreVerboseDatabaseLogging()
     {
-        $repository = $this->getMockBuilder(Repository::class)
+        $configuration = new SimpleConfiguration(Logger::INFO);
+
+        $factory = $this->getMockBuilder(ConfigurationFactory::class)
             ->disableOriginalConstructor()
             ->getMock();
+        $factory->expects($this->once())
+            ->method('createConfiguration')
+            ->willReturn($configuration);
 
-        $return = [
-            'simple' => [
-                'enabled' => true,
-                'level' => 'INFO',
-            ]
-        ];
-
-        $repository->expects($this->once())
-            ->method('get')
-            ->will(
-                $this->returnValueMap(
-                    array(
-                        array('concrete.log.configurations', null, $return),
-                    )
-                )
-            );
-
-        $factory = new LoggerFactory($repository, $this->app->make('director'));
-        $logger = $factory->createLogger('verbose-channel');
+        $factory = new LoggerFactory($factory, $this->app->make('director'));
+        $logger = $factory->createLogger(Channels::CHANNEL_SECURITY);
 
         $logger->debug('This is a debug line.');
         $logger->emergency('This is an emergency!');
@@ -96,66 +136,12 @@ class LogTest extends ConcreteDatabaseTestCase
         Log::debug('debug');
 
         $r = $this->db->GetAll('select * from Logs');
-        $this->assertCount(1, $r);
+        $this->assertCount(4, $r);
         $this->assertEquals('application', $r[0]['channel']);
-        $this->assertEquals('warning', $r[0]['message']);
+        $this->assertEquals('oh hai', $r[0]['message']);
     }
 
-    public function testOverridingDefaultLogFunctionalityWithFileHandler()
-    {
-        if (file_exists(__DIR__ . '/test.log')) {
-            unlink(__DIR__ . '/test.log');
-        }
-
-        Log::error('This should be in the database.');
-
-        // now we will add a stream handler that can handle all the different
-        // types of debug messages, but it should keep things OUT of the database
-        $r = new \stdClass();
-        $r->test = 'test';
-
-        $sh = new StreamHandler(__DIR__ . '/test.log', Logger::DEBUG, false);
-        $logger = $this->app->make(LoggerFactory::class)->getApplicationLogger();
-        $logger->pushHandler($sh);
-        Log::warning('This is a warning!');
-        Log::info('This is an interesting object', [$r]);
-
-        $r = $this->db->GetAll('select * from Logs');
-        // there should only be one item in the logs table because the first info
-        // should be in there but the rest should not be.
-        $this->assertEquals(1, $r[0]['logID']);
-        $this->assertEquals(LoggerFactory::CHANNEL_APPLICATION, $r[0]['channel'] );
-        $this->assertEquals('This should be in the database.', $r[0]['message']);
-
-        $this->assertEquals(count($r), 1);
-
-        $sh->close();
-        $contents = trim(file_get_contents(__DIR__ . '/test.log'));
-        $entries = explode("\n", $contents);
-
-        $this->assertEquals(count($entries), 2);
-
-        if (file_exists(__DIR__ . '/test.log')) {
-            unlink(__DIR__ . '/test.log');
-        }
-    }
-
-    public function testMoreElegantCustomHandlerSetup()
-    {
-        $factory = $this->app->make(LoggerFactory::class);
-        $factory->setLoggerHandlers([new NullHandler()]);
-        $logger = $factory->createLogger('testing');
-        $logger->error('This should not be written anywhere.');
-
-        $r = $this->db->GetAll('select * from Logs');
-        $this->assertEquals(count($r), 0);
-
-        $factory->setLoggerHandlers([]);
-    }
-
-
-
-    public function testOverringDefaultFunctionalityWithEvents()
+    public function testOverridingDefaultFunctionalityWithEvents()
     {
         $factory = $this->app->make(LoggerFactory::class);
         $log = $factory->createLogger('emails');
@@ -188,7 +174,10 @@ class LogTest extends ConcreteDatabaseTestCase
         $log3->emergency('Get out of bed.');
 
         $r = $this->db->GetAll('select * from Logs');
-        $this->assertEquals(count($r), 1);
+        $this->assertEquals(count($r), 4);
+        $this->assertEquals(Logger::INFO, $r[0]['level']);
+        $this->assertEquals('This is a test.', $r[2]['message']);
+        $this->assertEquals(Logger::DEBUG, $r[2]['level']);
 
         $this->assertEquals(count($handler->getRecords()), 3);
         $records = $handler->getRecords();
@@ -202,20 +191,6 @@ class LogTest extends ConcreteDatabaseTestCase
         // AND we pop the stream handler from the previous test
     }
 
-
-
-    /*
-    public function testLogEntryObject()
-    {
-        Log::info('This is an info');
-        $db = Database::get();
-        $le = LogEntry::getByID(1);
-        $this->assertEquals($le->getID(), 1);
-        $this->assertEquals($le->getLevel(), Logger::INFO);
-        $this->assertEquals($le->getLevelName(), 'INFO');
-        $this->assertEquals($le->getMessage(), 'This is an info');
-    }
-
     public function testLegacyLogSupport()
     {
         Log::addEntry('this is my log entry.');
@@ -224,7 +199,7 @@ class LogTest extends ConcreteDatabaseTestCase
         $this->assertEquals($le->getLevelName(), 'DEBUG');
         $this->assertEquals($le->getMessage(), 'this is my log entry.');
 
-        $l = new GroupLogger(LOG_TYPE_EMAILS, Logger::DEBUG);
+        $l = new GroupLogger(LOG_TYPE_EMAILS, Logger::NOTICE);
         $l->write('This is line one.');
         $l->write('This is line two.');
 
@@ -237,9 +212,9 @@ class LogTest extends ConcreteDatabaseTestCase
         $le2 = LogEntry::getByID(2);
         $le3 = LogEntry::getByID(3);
         $this->assertEquals($le2->getLevel(), Logger::CRITICAL);
-        $this->assertEquals($le3->getLevel(), Logger::DEBUG);
+        $this->assertEquals($le3->getLevel(), Logger::NOTICE);
         $this->assertEquals($le3->getMessage(), "This is line one.\nThis is line two.");
         $this->assertEquals($le2->getMessage(), 'OMG!');
     }
-    */
+
 }

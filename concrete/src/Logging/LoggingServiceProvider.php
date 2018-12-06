@@ -8,7 +8,13 @@ class LoggingServiceProvider extends ServiceProvider
     public function register()
     {
 
+        $this->app->singleton('log/application', function($app) {
+            $factory = $app->make(LoggerFactory::class);
+            return $factory->createLogger(Channels::CHANNEL_APPLICATION);
+        });
 
+
+        /*
         $this->app->singleton(LoggerFactory::class, function ($app) {
             $logger = new LoggerFactory($app->make('config'), $app->make('director'));
             return $logger;
@@ -18,7 +24,6 @@ class LoggingServiceProvider extends ServiceProvider
             return $app->make(LoggerFactory::class);
         });
 
-        /*
         $this->app->singleton(Logger::class, function ($app) {
             $logger = new Logger(Logger::CHANNEL_APPLICATION);
             return $logger;

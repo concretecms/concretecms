@@ -319,7 +319,11 @@ return [
 
             'simple' => [
                 'enabled' => true,
-                'level' => 'WARNING'
+                /**
+                 * What log level to store core logs in the database
+                 * @var string
+                 */
+                'core_logging_level' => 'NOTICE'
             ],
 
         ],
