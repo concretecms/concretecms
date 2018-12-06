@@ -2,9 +2,11 @@
 
 namespace Concrete\Tests\Logging;
 
+use Cascade\Cascade;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\Configuration\AdvancedConfiguration;
 use Concrete\Core\Logging\Configuration\ConfigurationFactory;
 use Concrete\Core\Logging\Configuration\SimpleConfiguration;
 use Concrete\Core\Logging\GroupLogger;
@@ -191,32 +193,6 @@ class LogTest extends ConcreteDatabaseTestCase
         // AND we pop the stream handler from the previous test
     }
 
-    public function testLegacyLogSupport()
-    {
-        Log::addEntry('this is my log entry.');
-        $le = LogEntry::getByID(1);
-        $this->assertEquals($le->getLevel(), Logger::DEBUG);
-        $this->assertEquals($le->getLevelName(), 'DEBUG');
-        $this->assertEquals($le->getMessage(), 'this is my log entry.');
-
-        $l = new GroupLogger(LOG_TYPE_EMAILS, Logger::NOTICE);
-        $l->write('This is line one.');
-        $l->write('This is line two.');
-
-        $l2 = new GroupLogger('test', Logger::CRITICAL);
-        $l2->write('OMG!');
-        $l2->close();
-
-        $l->close();
-
-        $le2 = LogEntry::getByID(2);
-        $le3 = LogEntry::getByID(3);
-        $this->assertEquals($le2->getLevel(), Logger::CRITICAL);
-        $this->assertEquals($le3->getLevel(), Logger::NOTICE);
-        $this->assertEquals($le3->getMessage(), "This is line one.\nThis is line two.");
-        $this->assertEquals($le2->getMessage(), 'OMG!');
-    }
-
     public function testAdvancedLoggingConfiguration()
     {
         $config = array(
@@ -263,5 +239,50 @@ class LogTest extends ConcreteDatabaseTestCase
             )
         );
 
+        $configuration = new AdvancedConfiguration($config);
+
+        $factory = $this->getMockBuilder(ConfigurationFactory::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $factory->expects($this->once())
+            ->method('createConfiguration')
+            ->willReturn($configuration);
+
+        $factory = new LoggerFactory($factory, $this->app->make('director'));
+        $logger = $factory->createLogger(Channels::CHANNEL_SECURITY);
+        $this->assertInstanceOf(Logger::class, $logger);
+        $this->assertCount(0, $logger->getHandlers());
+
+        $logger = $factory->createLogger('my_logger');
+
+        $this->assertCount(2, $logger->getHandlers());
     }
+
+    public function testLegacyLogSupport()
+    {
+        Log::addEntry('this is my log entry.');
+        $le = LogEntry::getByID(1);
+        $this->assertEquals($le->getLevel(), Logger::DEBUG);
+        $this->assertEquals($le->getLevelName(), 'DEBUG');
+        $this->assertEquals($le->getMessage(), 'this is my log entry.');
+
+        $l = new GroupLogger(LOG_TYPE_EMAILS, Logger::NOTICE);
+        $l->write('This is line one.');
+        $l->write('This is line two.');
+
+        $l2 = new GroupLogger('test', Logger::CRITICAL);
+        $l2->write('OMG!');
+        $l2->close();
+
+        $l->close();
+
+        $le2 = LogEntry::getByID(2);
+        $le3 = LogEntry::getByID(3);
+        $this->assertEquals($le2->getLevel(), Logger::CRITICAL);
+        $this->assertEquals($le3->getLevel(), Logger::NOTICE);
+        $this->assertEquals($le3->getMessage(), "This is line one.\nThis is line two.");
+        $this->assertEquals($le2->getMessage(), 'OMG!');
+    }
+
+
 }

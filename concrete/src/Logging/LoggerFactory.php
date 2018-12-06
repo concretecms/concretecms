@@ -18,19 +18,21 @@ class LoggerFactory
      */
     protected $configurationFactory;
 
+    /**
+     * @var ConfigurationInterface
+     */
+    protected $config;
+
     public function __construct(ConfigurationFactory $configurationFactory, EventDispatcher $dispatcher)
     {
         $this->configurationFactory = $configurationFactory;
         $this->dispatcher = $dispatcher;
+        $this->config = $this->configurationFactory->createConfiguration();
     }
 
     public function createLogger($channel)
     {
-        /**
-         * @var $config ConfigurationInterface
-         */
-        $config = $this->configurationFactory->createConfiguration();
-        $logger = $config->createLogger($channel);
+        $logger = $this->config->createLogger($channel);
         $event = new Event($logger);
         $this->dispatcher->dispatch('on_logger_create', $event);
         return $logger;
