@@ -343,8 +343,8 @@ const DEBUG_DISPLAY_ERRORS = 1;
 const DEBUG_DISPLAY_ERRORS_SQL = 2; // not used
 
 /* -- Deprecated - use the Channels class instead */
-const LOG_TYPE_EMAILS = \Concrete\Core\Logging\Channels::CHANNEL_EMAIL;
-const LOG_TYPE_EXCEPTIONS = \Concrete\Core\Logging\Channels::CHANNEL_EXCEPTIONS;
+const LOG_TYPE_EMAILS = 'sent_emails';
+const LOG_TYPE_EXCEPTIONS = 'exceptions';
 
 /*
  * ----------------------------------------------------------------------------
