@@ -20,6 +20,13 @@ class AddBlock extends BackendInterfacePageController
 {
     protected $viewPath = '/dialogs/page/add_block';
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Controller\Backend\UserInterface::$validationToken
+     */
+    protected $validationToken = '';
+
     public function on_start()
     {
         parent::on_start();
