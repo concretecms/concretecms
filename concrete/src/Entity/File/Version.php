@@ -19,6 +19,7 @@ use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use Concrete\Core\File\Image\Thumbnail\Type\Version as ThumbnailTypeVersion;
 use Concrete\Core\File\Importer;
 use Concrete\Core\File\Menu;
+use Concrete\Core\File\Type\Type as FileType;
 use Concrete\Core\File\Type\TypeList as FileTypeList;
 use Concrete\Core\Http\FlysystemFileResponse;
 use Concrete\Core\Http\Request;
@@ -1107,9 +1108,11 @@ class Version implements ObjectInterface
         $db->executeQuery('DELETE FROM FileVersionLog WHERE fID = ? AND fvID = ?', [$this->getFileID(), $this->fvID]);
 
         if ($deleteFilesAndThumbnails) {
-            $types = Type::getVersionList();
-            foreach ($types as $type) {
-                $this->deleteThumbnail($type);
+            if ($this->getTypeObject()->getGenericType() === FileType::T_IMAGE) {
+                $types = Type::getVersionList();
+                foreach ($types as $type) {
+                    $this->deleteThumbnail($type);
+                }
             }
             try {
                 $fsl = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
@@ -1389,7 +1392,7 @@ class Version implements ObjectInterface
     public function refreshThumbnails($deleteExistingThumbnails)
     {
         $result = false;
-        if ($this->fvType == \Concrete\Core\File\Type\Type::T_IMAGE) {
+        if ($this->fvType == FileType::T_IMAGE) {
             try {
                 $image = $this->getImagineImage();
                 if ($image) {
