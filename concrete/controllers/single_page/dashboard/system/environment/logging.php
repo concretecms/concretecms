@@ -17,14 +17,10 @@ class Logging extends DashboardPageController
         $strStatus = (string) $strStatus;
         $intLogErrors = Config::get('concrete.log.errors') == 1 ? 1 : 0;
         $intLogEmails = Config::get('concrete.log.emails') == 1 ? 1 : 0;
-        $intLogQueriesClear = Config::get('concrete.log.queries.clear_on_reload') == 1 ? 1 : 0;
-        $ingLogQueries = Config::get('concrete.log.queries.log') == 1 ? 1 : 0;
 
         $this->set('fh', Loader::helper('form'));
         $this->set('intLogErrors', $intLogErrors);
         $this->set('intLogEmails', $intLogEmails);
-        $this->set('intLogQueries', $ingLogQueries);
-        $this->set('intLogQueriesClear', $intLogQueriesClear);
 
         if ($strStatus == 'logging_saved') {
             $this->set('message', t('Logging configuration saved.'));
@@ -45,8 +41,6 @@ class Logging extends DashboardPageController
 
                 Config::save('concrete.log.errors', $intLogErrorsPost);
                 Config::save('concrete.log.emails', $intLogEmailsPost);
-                Config::save('concrete.log.queries.log', $intLogQueries);
-                Config::save('concrete.log.queries.clear_on_reload', $intLogQueriesClearOnReload);
 
                 $this->redirect('/dashboard/system/environment/logging', 'logging_saved');
             }

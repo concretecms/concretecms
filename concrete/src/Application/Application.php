@@ -53,30 +53,9 @@ class Application extends Container
     {
         \Events::dispatch('on_shutdown');
 
-        $config = $this['config'];
-
         if ($this->isInstalled()) {
             if (!isset($options['jobs']) || $options['jobs'] == false) {
                 $this->handleScheduledJobs();
-            }
-
-            $logger = new Logger();
-            $r = Request::getInstance();
-
-            if ($config->get('concrete.log.queries.log') &&
-                (!isset($options['log_queries']) || $options['log_queries'] == false)) {
-                $connection = Database::getActiveConnection();
-                if ($logger->shouldLogQueries($r)) {
-                    $loggers = [];
-                    $configuration = $connection->getConfiguration();
-                    $loggers[] = $configuration->getSQLLogger();
-                    $configuration->setSQLLogger(null);
-                    if ($config->get('concrete.log.queries.clear_on_reload')) {
-                        $logger->clearQueryLog();
-                    }
-
-                    $logger->write($loggers);
-                }
             }
 
             foreach (\Database::getConnections() as $connection) {

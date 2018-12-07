@@ -304,17 +304,6 @@ return [
          */
         'spam' => false,
 
-        'queries' => [
-            /*
-             * Whether to log database queries or not.
-             *
-             * @var bool
-             */
-            'log' => false,
-
-            'clear_on_reload' => false,
-        ],
-
         'configuration' => [
 
             /*
