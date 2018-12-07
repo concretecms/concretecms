@@ -12,6 +12,7 @@ $router->all('/rescan', 'File::rescan');
 $router->all('/rescan_multiple', 'File::rescanMultiple');
 $router->all('/star', 'File::star');
 $router->all('/upload', 'File::upload');
+$router->all('/download', 'File::download');
 $router->all('/folder/add', 'File\Folder::add');
 $router->all('/folder/contents', '\Concrete\Controller\Search\FileFolder::submit');
 $router->all('/thumbnailer', 'File\Thumbnailer::generate');
