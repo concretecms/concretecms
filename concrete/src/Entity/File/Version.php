@@ -15,7 +15,7 @@ use Concrete\Core\File\Image\BitmapFormat;
 use Concrete\Core\File\Image\Thumbnail\Path\Resolver;
 use Concrete\Core\File\Image\Thumbnail\Thumbnail;
 use Concrete\Core\File\Image\Thumbnail\ThumbnailFormatService;
-use Concrete\Core\File\Image\Thumbnail\Type\Type;
+use Concrete\Core\File\Image\Thumbnail\Type\Type as ThumbnailType;
 use Concrete\Core\File\Image\Thumbnail\Type\Version as ThumbnailTypeVersion;
 use Concrete\Core\File\Importer;
 use Concrete\Core\File\Menu;
@@ -1109,7 +1109,7 @@ class Version implements ObjectInterface
 
         if ($deleteFilesAndThumbnails) {
             if ($this->getTypeObject()->getGenericType() === FileType::T_IMAGE) {
-                $types = Type::getVersionList();
+                $types = ThumbnailType::getVersionList();
                 foreach ($types as $type) {
                     $this->deleteThumbnail($type);
                 }
@@ -1398,7 +1398,7 @@ class Version implements ObjectInterface
                 if ($image) {
                     $imageSize = $image->getSize();
                     unset($image);
-                    $types = Type::getVersionList();
+                    $types = ThumbnailType::getVersionList();
                     $file = $this->getFile();
                     $fsl = null;
                     foreach ($types as $type) {
@@ -1476,10 +1476,10 @@ class Version implements ObjectInterface
             $thumbnailMode = ImageInterface::THUMBNAIL_OUTBOUND;
         } else {
             switch ($type->getSizingMode()) {
-                case Type::RESIZE_EXACT:
+                case ThumbnailType::RESIZE_EXACT:
                     $thumbnailMode = ImageInterface::THUMBNAIL_OUTBOUND;
                     break;
-                case Type::RESIZE_PROPORTIONAL:
+                case ThumbnailType::RESIZE_PROPORTIONAL:
                 default:
                     $thumbnailMode = ImageInterface::THUMBNAIL_INSET;
                     break;
@@ -1628,7 +1628,7 @@ class Version implements ObjectInterface
         if ($imageWidth < 1 || $imageHeight < 1) {
             throw new InvalidDimensionException($this->getFile(), $this, t('Invalid dimensions.'));
         }
-        $types = Type::getVersionList();
+        $types = ThumbnailType::getVersionList();
         $file = $this->getFile();
         foreach ($types as $type) {
             if ($type->shouldExistFor($imageWidth, $imageHeight, $file)) {
@@ -1656,7 +1656,7 @@ class Version implements ObjectInterface
         if ($this->fvHasDetailThumbnail) {
             $app = Application::getFacadeApplication();
             $config = $app->make('config');
-            $type = Type::getByHandle($config->get('concrete.icons.file_manager_detail.handle'));
+            $type = ThumbnailType::getByHandle($config->get('concrete.icons.file_manager_detail.handle'));
             $result = '<img src="' . $this->getThumbnailURL($type->getBaseVersion()) . '"';
             if ($config->get('concrete.file_manager.images.create_high_dpi_thumbnails')) {
                 $result .= ' data-at2x="' . $this->getThumbnailURL($type->getDoubledVersion()) . '"';
@@ -1679,8 +1679,8 @@ class Version implements ObjectInterface
         if ($this->fvHasListingThumbnail) {
             $app = Application::getFacadeApplication();
             $config = $app->make('config');
-            $listingType = Type::getByHandle($config->get('concrete.icons.file_manager_listing.handle'));
-            $detailType = Type::getByHandle($config->get('concrete.icons.file_manager_detail.handle'));
+            $listingType = ThumbnailType::getByHandle($config->get('concrete.icons.file_manager_listing.handle'));
+            $detailType = ThumbnailType::getByHandle($config->get('concrete.icons.file_manager_detail.handle'));
             $result = '<img class="ccm-file-manager-list-thumbnail ccm-thumbnail-'.$config->get('concrete.file_manager.images.preview_image_size').'" src="' . $this->getThumbnailURL($listingType->getBaseVersion()) . '"';
             if ($config->get('concrete.file_manager.images.create_high_dpi_thumbnails')) {
                 $result .= ' data-at2x="' . $this->getThumbnailURL($listingType->getDoubledVersion()) . '"';
