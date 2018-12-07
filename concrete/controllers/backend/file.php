@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Controller\Backend;
 
 use Concrete\Core\Controller\Controller;
@@ -367,7 +366,7 @@ class File extends Controller
         try {
             $name = $file->getClientOriginalName();
             $tmp_name = $file->getPathname();
-    
+
             if (is_object($folder)) {
                 $fp = new ConcretePermissions($folder);
             } else {
@@ -389,7 +388,7 @@ class File extends Controller
                 }
                 $files[] = $fileEntity->getJSONObject();
             }
-    
+
             return $files;
         } finally {
             if ($deleteFile) {
@@ -412,9 +411,10 @@ class File extends Controller
         $dzIndex = $post->get('dzchunkindex');
         $dzTotalChunks = $post->get('dztotalchunkcount');
         if ($dzuuid !== null && $dzIndex !== null && $dzTotalChunks !== null) {
-            $file->move($file->getPath(), $dzuuid.$dzIndex);
+            $file->move($file->getPath(), $dzuuid . $dzIndex);
             if ($this->isFullChunkFilePresent($dzuuid, $file->getPath(), $dzTotalChunks)) {
                 $deleteFile = true;
+
                 return $this->combineFileChunks($dzuuid, $file->getPath(), $dzTotalChunks, $file);
             } else {
                 return null;
@@ -429,15 +429,16 @@ class File extends Controller
      * @param string $tempPath
      * @param int $totalChunks
      *
-     * @return boolean
+     * @return bool
      */
     private function isFullChunkFilePresent($fileUuid, $tempPath, $totalChunks)
     {
-        for ($i = 0; $i < $totalChunks; $i++) {
+        for ($i = 0; $i < $totalChunks; ++$i) {
             if (!file_exists($tempPath . DIRECTORY_SEPARATOR . $fileUuid . $i)) {
                 return false;
             }
         }
+
         return true;
     }
 
@@ -453,7 +454,7 @@ class File extends Controller
     {
         $finalFilePath = $tempPath . DIRECTORY_SEPARATOR . $fileUuid;
         $finalFile = fopen($finalFilePath, 'wb');
-        for ($i = 0; $i < $totalChunks; $i++) {
+        for ($i = 0; $i < $totalChunks; ++$i) {
             $chunkFile = $tempPath . DIRECTORY_SEPARATOR . $fileUuid . $i;
             $addition = fopen($chunkFile, 'rb');
             stream_copy_to_stream($addition, $finalFile);
@@ -461,6 +462,7 @@ class File extends Controller
             unlink($chunkFile);
         }
         fclose($finalFile);
+
         return new UploadedFile($finalFilePath, $originalFile->getClientOriginalName());
     }
 }
