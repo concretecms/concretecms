@@ -12,12 +12,14 @@ class Channels
     const CHANNEL_EMAIL = 'sent_emails';
     const CHANNEL_EXCEPTIONS = 'exceptions';
     const CHANNEL_SECURITY = 'security';
+    const CHANNEL_PACKAGES = 'packages';
 
     public static function getCoreChannels()
     {
         return [
             self::CHANNEL_EMAIL,
             self::CHANNEL_EXCEPTIONS,
+            self::CHANNEL_PACKAGES,
             self::CHANNEL_SECURITY,
         ];
     }

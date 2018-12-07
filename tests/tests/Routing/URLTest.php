@@ -4,6 +4,7 @@ namespace Concrete\Tests\Routing;
 
 use Config;
 use Core;
+use Monolog\Logger;
 use Page;
 use PHPUnit_Framework_TestCase;
 use URL;
@@ -61,7 +62,7 @@ class URLTest extends PHPUnit_Framework_TestCase
         $this->clearCanonicalUrl();
 
         $app = \Concrete\Core\Support\Facade\Facade::getFacadeApplication();
-        $app->bind('\Psr\Log\LoggerInterface', 'Concrete\Core\Logging\Logger');
+        $app->bind('\Psr\Log\LoggerInterface', Logger::class);
 
         parent::tearDown();
     }
