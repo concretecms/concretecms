@@ -62,7 +62,7 @@ class URLTest extends PHPUnit_Framework_TestCase
         $this->clearCanonicalUrl();
 
         $app = \Concrete\Core\Support\Facade\Facade::getFacadeApplication();
-        $app->bind('\Psr\Log\LoggerInterface', Logger::class);
+        $this->app->bind('Psr\Log\LoggerInterface', 'log/application');
 
         parent::tearDown();
     }
