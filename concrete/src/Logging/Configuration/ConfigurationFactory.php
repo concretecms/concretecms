@@ -19,7 +19,7 @@ class ConfigurationFactory
     public function createConfiguration()
     {
         $configuration = $this->config->get('concrete.log.configuration');
-        if ($configuration['mode'] == 'advanced') {
+        if ($configuration['mode'] == 'advanced' && isset($configuration['advanced']['configuration']['loggers'])) {
             return new AdvancedConfiguration($configuration['advanced']['configuration']);
         }
 
