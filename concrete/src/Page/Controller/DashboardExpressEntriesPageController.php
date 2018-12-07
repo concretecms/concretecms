@@ -100,11 +100,14 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
             'Content-Type' => 'text/csv',
             'Content-Disposition' => 'attachment; filename=' . $entity->getHandle() . '.csv',
         ];
+        $config = $this->app->make('config');
+        $bom = $config->get('concrete.export.csv.include_bom') ? $config->get('concrete.charset_bom') : '';
 
-        return StreamedResponse::create(function () use ($entity, $me) {
+        return StreamedResponse::create(function () use ($entity, $me, $bom) {
             $entryList = new EntryList($entity);
 
             $writer = new CsvWriter($this->app->make(WriterFactory::class)->createFromPath('php://output', 'w'), new Date());
+            echo $bom;
             $writer->insertHeaders($entity);
             $writer->insertEntryList($entryList);
         }, 200, $headers);
