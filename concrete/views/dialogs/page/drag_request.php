@@ -13,13 +13,14 @@ defined('C5_EXECUTE') or die('Access Denied.');
 /* @var string $validationToken */
 /* @var Concrete\Core\Page\Sitemap\DragRequestData $dragRequestData */
 /* @var string $originalPageIDs */
+/* @var string $formID */
 
 if (isset($showProgressBar) && $showProgressBar) {
     View::element('progress_bar', ['totalItems' => $totalItems, 'totalItemsSummary' => t2('%d page', '%d pages', $totalItems)]);
 
     return;
 }
-if (!$dragRequestData->canDoAnyOf([$dragRequestData::OPERATION_MOVE, $dragRequestData::OPERATION_ALIAS, $dragRequestData::OPERATION_COPY])) {
+if (!$dragRequestData->canDoAnyOf([$dragRequestData::OPERATION_MOVE, $dragRequestData::OPERATION_ALIAS, $dragRequestData::OPERATION_COPY, $dragRequestData::OPERATION_COPYVERSION])) {
     ?>
     <div class="alert alert-danger">
         <?= t('You are not allowed to perform any operation with the selected pages.') ?>
@@ -40,18 +41,18 @@ $singleOriginalPage = $dragRequestData->getSingleOriginalPage();
     ?>
 </div>
 
-<form>
-    <input type="hidden" name="validationToken" id="validationToken" value="<?= h($validationToken) ?>" />
-    <input type="hidden" name="dragMode" id="dragMode" value="<?= h($dragRequestData->getDragMode()) ?>" />
-    <input type="hidden" name="destCID" id="destCID" value="<?= $dragRequestData->getDestinationPage()->getCollectionID() ?>" />
+<form id="<?= $formID ?>">
+    <input type="hidden" name="validationToken" value="<?= h($validationToken) ?>" />
+    <input type="hidden" name="dragMode" value="<?= h($dragRequestData->getDragMode()) ?>" />
+    <input type="hidden" name="destCID" value="<?= $dragRequestData->getDestinationPage()->getCollectionID() ?>" />
     <?php
     if ($dragRequestData->getDestinationSibling() !== null) {
         ?>
-        <input type="hidden" name="destSibling" id="destSibling" value="<?= $dragRequestData->getDestinationSibling()->getCollectionID() ?>" />
+        <input type="hidden" name="destSibling" value="<?= $dragRequestData->getDestinationSibling()->getCollectionID() ?>" />
         <?php
     }
     ?>
-    <input type="hidden" name="origCID" id="origCID" value="<?= $originalPageIDs ?>" />
+    <input type="hidden" name="origCID" value="<?= $originalPageIDs ?>" />
 
     <?php
     if ($dragRequestData->canDo($dragRequestData::OPERATION_MOVE)) {
@@ -59,7 +60,7 @@ $singleOriginalPage = $dragRequestData->getSingleOriginalPage();
         <div class="form-group">
             <div class="radio">
                 <label>
-                    <input type="radio" id="ctaskMove" name="ctask" value="<?= $dragRequestData::OPERATION_MOVE ?>" checked="checked" />
+                    <input type="radio" name="ctask" value="<?= $dragRequestData::OPERATION_MOVE ?>" />
                     <?php
                     if ($singleOriginalPage !== null) {
                         echo t('<strong>Move</strong> "%1$s" beneath "%2$s"', h($singleOriginalPage->getCollectionName()), h($dragRequestData->getDestinationPage()->getCollectionName()));
@@ -70,7 +71,7 @@ $singleOriginalPage = $dragRequestData->getSingleOriginalPage();
                 </label>
                 <div class="checkbox" style="margin: 0 0 0 20px">
                     <label>
-                        <input type="checkbox" id="saveOldPagePath" name="saveOldPagePath" value="1" />
+                        <input type="checkbox" name="saveOldPagePath" value="1" />
                         <?= t('Save old page path') ?>
                     </label>
                 </div>
@@ -84,7 +85,7 @@ $singleOriginalPage = $dragRequestData->getSingleOriginalPage();
         <div class="form-group">
             <div class="radio">
                 <label>
-                    <input type="radio" id="ctaskAlias" name="ctask" value="<?= $dragRequestData::OPERATION_ALIAS ?>" />
+                    <input type="radio" name="ctask" value="<?= $dragRequestData::OPERATION_ALIAS ?>" />
                     <?php
                     if ($singleOriginalPage !== null) {
                         echo t('<strong>Alias</strong> "%1$s" beneath "%2$s"', h($singleOriginalPage->getCollectionName()), h($dragRequestData->getDestinationPage()->getCollectionName()));
@@ -101,40 +102,50 @@ $singleOriginalPage = $dragRequestData->getSingleOriginalPage();
         <?php
     }
 
-    if ($dragRequestData->canDo($dragRequestData::OPERATION_COPY)) {
+    if ($dragRequestData->canDo($dragRequestData::OPERATION_COPY) || $dragRequestData->canDo($dragRequestData::OPERATION_COPYVERSION)) {
         ?>
         <div class="form-group">
             <div class="radio">
                 <label>
-                    <input type="radio" id="ctaskCopy" name="ctask" value="<?= $dragRequestData::OPERATION_COPY ?>" />
-                    <?php
-                    if ($singleOriginalPage !== null) {
-                        echo t('<strong>Copy</strong> "%1$s" beneath "%2$s"', h($singleOriginalPage->getCollectionName()), h($dragRequestData->getDestinationPage()->getCollectionName()));
-                    } else {
-                        echo t('<strong>Copy</strong> pages beneath "%s"', h($dragRequestData->getDestinationPage()->getCollectionName()));
-                    }
-                    ?>
+                    <input type="radio" name="ctask" value="a-copy-operation" />
+                    <?= sprintf('<strong>%s</strong>', $singleOriginalPage !== null ? t('Copy Page') : t('Copy Pages')) ?>
                 </label>
-                <?php
-                if ($dragRequestData->canDo($dragRequestData::OPERATION_COPYALL)) {
-                    ?>
-                    <div class="checkbox" style="margin: 0 0 0 20px">
-                        <label class="text-muted">
-                            <input type="radio" id="copyThisPage" name="copyAll" value="0" disabled="disabled" checked="checked" />
-                            <?= t('Copy page.') ?>
-                        </label>
-                    </div>
-                    <div class="checkbox" style="margin: 0 0 0 20px">
-                        <label class="text-muted">
-                            <input type="radio" id="copyChildren" name="copyAll" value="1" disabled="disabled" />
-                            <?= t('Copy page + children.') ?>
-                        </label>
-                    </div>
+                <div style="margin: 0 0 0 20px">
                     <?php
-                } else {
-                    ?>
-                    <div class="text-muted" style="margin: 0 0 0 20px">
-                        <?= t('Your copy operation will only affect the current page - not any children.') ?>
+                    if ($dragRequestData->canDo($dragRequestData::OPERATION_COPY)) {
+                        ?>
+                        <div class="checkbox">
+                            <label>
+                                <input type="radio" name="dtask" value="<?= $dragRequestData::OPERATION_COPY ?>" />
+                                <?php
+                                if ($singleOriginalPage !== null) {
+                                    echo h(t('Copy "%1$s" beneath "%2$s"', $singleOriginalPage->getCollectionName(), $dragRequestData->getDestinationPage()->getCollectionName()));
+                                } else {
+                                    echo h(t('Copy pages beneath "%s"', $dragRequestData->getDestinationPage()->getCollectionName()));
+                                }
+                                ?>
+                            </label>
+                        </div>
+                        <?php
+                    }
+                    if ($dragRequestData->canDo($dragRequestData::OPERATION_COPYALL)) {
+                        ?>
+                        <div class="checkbox">
+                            <label>
+                                <input type="radio" name="dtask" value="<?= $dragRequestData::OPERATION_COPYALL ?>" />
+                                <?= h(t('Copy "%1$s" and all its children beneath "%2$s"', $singleOriginalPage->getCollectionName(), $dragRequestData->getDestinationPage()->getCollectionName())) ?>
+                            </label>
+                        </div>
+                        <?php
+                    }
+                    if ($dragRequestData->canDo($dragRequestData::OPERATION_COPYVERSION)) {
+                        ?>
+                        <div class="checkbox">
+                            <label>
+                                <input type="radio" name="dtask" value="<?= $dragRequestData::OPERATION_COPYVERSION ?>" />
+                                <?= h(t('Replace "%1$s" with a copy of "%2$s"', $dragRequestData->getDestinationPage()->getCollectionName(), $singleOriginalPage->getCollectionName())) ?>
+                            </label>
+                        </div>
                     </div>
                     <?php
                 }
@@ -147,34 +158,18 @@ $singleOriginalPage = $dragRequestData->getSingleOriginalPage();
 
     <div class="dialog-buttons">
         <a href="javascript:void(0)" onclick="$.fn.dialog.closeTop()" class="pull-left btn btn-default"><?= t('Cancel') ?></a>
-        <a href="javascript:void(0)" onclick="ConcreteSitemap.submitDragRequest()" class="pull-right btn btn-primary"><?= t('Go') ?></a>
+        <a href="javascript:void(0)" data-form-selector="#<?= $formID ?>" onclick="ConcreteSitemap.submitDragRequest($($(this).data('form-selector')))" class="pull-right btn btn-primary"><?= t('Go') ?></a>
     </div>
 </form>
 
 <script>
-$(function() {
-    function setDisabled(id, disabled) {
-        var $input = $('#' + id),
-            $label = $input.closest('label');
-        if (disabled) {
-            $input.attr('disabled', 'disabled');
-            $label.addClass('text-muted');
-        } else {
-            $input.removeAttr('disabled');
-            $label.removeClass('text-muted');
-        }
-    }
-    $('#ctaskMove').add('#ctaskAlias').add('#ctaskCopy').on('click', function() {
-        setDisabled('saveOldPagePath', this.id !== 'ctaskMove');
-        setDisabled('copyThisPage', this.id !== 'ctaskCopy');
-        setDisabled('copyChildren', this.id !== 'ctaskCopy');
-    });
-
+$(document).ready(function() {
+    var $form = $('#' + <?= json_encode($formID) ?>);
     if (window.localStorage && window.localStorage.getItem && window.localStorage.removeItem) {
         if (window.localStorage.getItem('ccm-sitemap-movePageSaveOldPagePath')) {
-            $('#saveOldPagePath').prop('checked', true);
+            $form.find('input[name="saveOldPagePath"]').prop('checked', true);
         }
-        $('#saveOldPagePath').on('click', function() {
+        $form.find('input[name="saveOldPagePath"]').on('change', function() {
             if (this.checked) {
                 window.localStorage.setItem('ccm-sitemap-movePageSaveOldPagePath', '1');
             } else {
@@ -182,5 +177,37 @@ $(function() {
             }
         });
     }
+    function muteInput(selector, muted) {
+        var $input = $form.find(selector),
+            $label = $input.closest('label');
+        if (muted) {
+            $label.addClass('text-muted');
+        } else {
+            $label.removeClass('text-muted');
+        }
+    }
+    function updateState() {
+        var ctask = $form.find('input[name="ctask"]:checked').val();
+        muteInput('input[name="saveOldPagePath"]', ctask !== <?= json_encode($dragRequestData::OPERATION_MOVE) ?>);
+        muteInput('input[name="dtask"]', ctask !== 'a-copy-operation');
+    }
+    $form.find('input[name="ctask"]').on('change', function() {
+    	updateState();
+    });
+    $form.find('input[name="saveOldPagePath"]').on('change click', function() {
+        $form.find('input[name="ctask"][value="' + <?= json_encode($dragRequestData::OPERATION_MOVE) ?> + '"]')
+            .prop('checked', true)
+            .trigger('change')
+        ;
+    });
+    $form.find('input[name="dtask"]').on('change click', function() {
+        $form.find('input[name="ctask"][value="a-copy-operation"]')
+            .prop('checked', true)
+            .trigger('change')
+        ;
+    });
+    $form.find('input[name="dtask"]:first').prop('checked', 'checked');
+    $form.find('input[name="ctask"]:first').prop('checked', 'checked');
+    updateState();
 });
 </script>

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4663ef72b4663b98817f706682580dff",
+    "content-hash": "75171bfc1a21bb5a76ca7716855a70ca",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -49,6 +49,62 @@
             "time": "2017-05-31T07:52:45+00:00"
         },
         {
+            "name": "concrete5/dependency-patches",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/concrete5/dependency-patches.git",
+                "reference": "cbf4350da5ce2713e2d55ff7fef7d73db806afcb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/concrete5/dependency-patches/zipball/cbf4350da5ce2713e2d55ff7fef7d73db806afcb",
+                "reference": "cbf4350da5ce2713e2d55ff7fef7d73db806afcb",
+                "shasum": ""
+            },
+            "require": {
+                "mlocati/composer-patcher": "^1.0.0"
+            },
+            "type": "library",
+            "extra": {
+                "patches": {
+                    "doctrine/orm:2.5.14": {
+                        "Fix UnitOfWork::createEntity()": "doctrine/orm/UnitOfWork-createEntity-continue.patch"
+                    },
+                    "zendframework/zend-stdlib:2.7.7": {
+                        "Fix ArrayObject::unserialize()": "zendframework/zend-stdlib/ArrayObject-unserialize-continue.patch"
+                    },
+                    "sunra/php-simple-html-dom-parser:1.5.2": {
+                        "Fix minus in regular expressions": "sunra/php-simple-html-dom-parser/minus-in-regular-expressions.patch"
+                    },
+                    "phpunit/phpunit:4.8.36": {
+                        "Avoid each() in Getopt": "phpunit/phpunit/Getopt-each.patch"
+                    },
+                    "tedivm/jshrink:1.1.0": {
+                        "Fix continue switch in FileGenerator and MethodReflection": "tedivm/jshrink/fix-minifier-loop.patch"
+                    },
+                    "zendframework/zend-code:2.6.3": {
+                        "Fix continue switch in FileGenerator and MethodReflection": "zendframework/zend-code/switch-continue.patch"
+                    }
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michele Locati",
+                    "email": "michele@locati.it",
+                    "homepage": "https://mlocati.github.io",
+                    "role": "author"
+                }
+            ],
+            "description": "Patches required for concrete5 dependencies",
+            "homepage": "https://github.com/concrete5/dependency-patches",
+            "time": "2018-12-03T07:07:31+00:00"
+        },
+        {
             "name": "concrete5/doctrine-xml",
             "version": "1.2.0",
             "source": {
@@ -88,68 +144,6 @@
                 "xml"
             ],
             "time": "2018-10-05T16:44:04+00:00"
-        },
-        {
-            "name": "concrete5/less.php",
-            "version": "2.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/concrete5-forks/less.php.git",
-                "reference": "eebead5849b7dd21f450905007cd65a385b894e3"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/concrete5-forks/less.php/zipball/eebead5849b7dd21f450905007cd65a385b894e3",
-                "reference": "eebead5849b7dd21f450905007cd65a385b894e3",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~4.8.21"
-            },
-            "bin": [
-                "bin/lessc"
-            ],
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Less": "lib/"
-                },
-                "classmap": [
-                    "lessc.inc.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "Matt Agar",
-                    "homepage": "https://github.com/agar"
-                },
-                {
-                    "name": "Martin Jantošovič",
-                    "homepage": "https://github.com/Mordred"
-                },
-                {
-                    "name": "Josh Schmidt",
-                    "homepage": "https://github.com/oyejorge"
-                }
-            ],
-            "description": "Fork of Oyejorge's PHP port of the Javascript version of LESS http://lesscss.org",
-            "homepage": "http://lessphp.gpeasy.com",
-            "keywords": [
-                "css",
-                "less",
-                "less.js",
-                "lesscss",
-                "php",
-                "stylesheet"
-            ],
-            "time": "2017-02-02T17:13:13+00:00"
         },
         {
             "name": "concrete5/oauth-user-data",
@@ -1031,6 +1025,16 @@
             "extra": {
                 "branch-alias": {
                     "dev-master": "2.6.x-dev"
+                },
+                "patches_applied": {
+                    "hash": "f03553f596500df8083abdd1cd87cd1916d1a3f4",
+                    "list": [
+                        {
+                            "from-package": "concrete5/dependency-patches 1.1.0",
+                            "path": "doctrine/orm/UnitOfWork-createEntity-continue.patch",
+                            "description": "Fix UnitOfWork::createEntity()"
+                        }
+                    ]
                 }
             },
             "autoload": {
@@ -1959,16 +1963,16 @@
         },
         {
             "name": "imagine/imagine",
-            "version": "1.0.1",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/avalanche123/Imagine.git",
-                "reference": "f2f39f5900ed69480dfc2f23cb56b591b282d501"
+                "reference": "05c37ac994e620646b376633c14e6377c35e3399"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/avalanche123/Imagine/zipball/f2f39f5900ed69480dfc2f23cb56b591b282d501",
-                "reference": "f2f39f5900ed69480dfc2f23cb56b591b282d501",
+                "url": "https://api.github.com/repos/avalanche123/Imagine/zipball/05c37ac994e620646b376633c14e6377c35e3399",
+                "reference": "05c37ac994e620646b376633c14e6377c35e3399",
                 "shasum": ""
             },
             "require": {
@@ -2013,7 +2017,7 @@
                 "image manipulation",
                 "image processing"
             ],
-            "time": "2018-09-27T12:22:55+00:00"
+            "time": "2018-10-25T06:45:38+00:00"
         },
         {
             "name": "indigophp/hash-compat",
@@ -2670,6 +2674,64 @@
                 "markdown"
             ],
             "time": "2018-01-15T00:49:33+00:00"
+        },
+        {
+            "name": "mlocati/composer-patcher",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mlocati/composer-patcher.git",
+                "reference": "d8ba45c10b5cf8ac8da3591e09b6afd47fc10667"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mlocati/composer-patcher/zipball/d8ba45c10b5cf8ac8da3591e09b6afd47fc10667",
+                "reference": "d8ba45c10b5cf8ac8da3591e09b6afd47fc10667",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^1.1.0",
+                "php": "^5.3.2 || ^7.0"
+            },
+            "conflict": {
+                "cweagans/composer-patches": "*"
+            },
+            "require-dev": {
+                "composer/composer": "^1.1.0",
+                "friendsofphp/php-cs-fixer": "2.2.*",
+                "symfony/phpunit-bridge": "^3.2 || ^4.0"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "ComposerPatcher\\Plugin"
+            },
+            "autoload": {
+                "psr-4": {
+                    "ComposerPatcher\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michele Locati",
+                    "email": "michele@locati.it",
+                    "homepage": "https://mlocati.github.io",
+                    "role": "author"
+                }
+            ],
+            "description": "A Composer plugin to patch Composer packages.",
+            "homepage": "https://github.com/mlocati/composer-patcher",
+            "keywords": [
+                "composer",
+                "patch",
+                "patcher",
+                "patches",
+                "plugin"
+            ],
+            "time": "2018-10-15T07:27:38+00:00"
         },
         {
             "name": "mlocati/concrete5-translation-library",
@@ -3579,16 +3641,16 @@
         },
         {
             "name": "punic/punic",
-            "version": "3.1.0",
+            "version": "3.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/punic/punic.git",
-                "reference": "bd49ff54ea6ee8a902a567905664ecc7840037d6"
+                "reference": "d31ec0bec7bad65105876812cc5b0106ae095e34"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/punic/punic/zipball/bd49ff54ea6ee8a902a567905664ecc7840037d6",
-                "reference": "bd49ff54ea6ee8a902a567905664ecc7840037d6",
+                "url": "https://api.github.com/repos/punic/punic/zipball/d31ec0bec7bad65105876812cc5b0106ae095e34",
+                "reference": "d31ec0bec7bad65105876812cc5b0106ae095e34",
                 "shasum": ""
             },
             "require": {
@@ -3600,7 +3662,7 @@
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "2.2.*",
-                "phpunit/phpunit": "^4"
+                "phpunit/phpunit": "^4.8 || ^5.7 || ^6.5 || ^7.4"
             },
             "bin": [
                 "bin/punic-data"
@@ -3625,6 +3687,11 @@
                     "name": "Remo Laubacher",
                     "email": "remo.laubacher@gmail.com",
                     "role": "Collaborator, motivator and perfectionist supporter"
+                },
+                {
+                    "name": "Christian Schmidt",
+                    "email": "github@chsc.dk",
+                    "role": "Developer"
                 }
             ],
             "description": "PHP-Unicode CLDR",
@@ -3644,7 +3711,7 @@
                 "translations",
                 "unicode"
             ],
-            "time": "2018-02-09T15:54:34+00:00"
+            "time": "2018-11-23T10:02:50+00:00"
         },
         {
             "name": "sunra/php-simple-html-dom-parser",
@@ -3665,6 +3732,18 @@
                 "php": ">=5.3.2"
             },
             "type": "library",
+            "extra": {
+                "patches_applied": {
+                    "hash": "43699395013691839330f8406ee49fa752c163fb",
+                    "list": [
+                        {
+                            "from-package": "concrete5/dependency-patches 1.1.0",
+                            "path": "sunra/php-simple-html-dom-parser/minus-in-regular-expressions.patch",
+                            "description": "Fix minus in regular expressions"
+                        }
+                    ]
+                }
+            },
             "autoload": {
                 "psr-0": {
                     "Sunra\\PhpSimple\\HtmlDomParser": "Src/"
@@ -4837,6 +4916,18 @@
                 "satooshi/php-coveralls": "dev-master"
             },
             "type": "library",
+            "extra": {
+                "patches_applied": {
+                    "hash": "b16ca9edf74b2527c4f02cd8f69c7ad1e452545c",
+                    "list": [
+                        {
+                            "from-package": "concrete5/dependency-patches 1.1.0",
+                            "path": "tedivm/jshrink/fix-minifier-loop.patch",
+                            "description": "Fix continue switch in FileGenerator and MethodReflection"
+                        }
+                    ]
+                }
+            },
             "autoload": {
                 "psr-0": {
                     "JShrink": "src/"
@@ -5208,6 +5299,67 @@
             "time": "2017-04-25T02:31:25+00:00"
         },
         {
+            "name": "wikimedia/less.php",
+            "version": "v1.8.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/wikimedia/less.php.git",
+                "reference": "eb783ddc912266f2106fee4684b24f178d7d4d06"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/wikimedia/less.php/zipball/eb783ddc912266f2106fee4684b24f178d7d4d06",
+                "reference": "eb783ddc912266f2106fee4684b24f178d7d4d06",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.8.24"
+            },
+            "bin": [
+                "bin/lessc"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Less": "lib/"
+                },
+                "classmap": [
+                    "lessc.inc.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Matt Agar",
+                    "homepage": "https://github.com/agar"
+                },
+                {
+                    "name": "Martin Jantošovič",
+                    "homepage": "https://github.com/Mordred"
+                },
+                {
+                    "name": "Josh Schmidt",
+                    "homepage": "https://github.com/oyejorge"
+                }
+            ],
+            "description": "PHP port of the Javascript version of LESS http://lesscss.org (Originally maintained by Josh Schmidt)",
+            "keywords": [
+                "css",
+                "less",
+                "less.js",
+                "lesscss",
+                "php",
+                "stylesheet"
+            ],
+            "time": "2018-10-16T05:21:24+00:00"
+        },
+        {
             "name": "zendframework/zend-cache",
             "version": "2.7.2",
             "source": {
@@ -5309,6 +5461,16 @@
                 "branch-alias": {
                     "dev-master": "2.6-dev",
                     "dev-develop": "2.7-dev"
+                },
+                "patches_applied": {
+                    "hash": "43aec57a6422c48c002031806c8a8ca01b6208cf",
+                    "list": [
+                        {
+                            "from-package": "concrete5/dependency-patches 1.1.0",
+                            "path": "zendframework/zend-code/switch-continue.patch",
+                            "description": "Fix continue switch in FileGenerator and MethodReflection"
+                        }
+                    ]
                 }
             },
             "autoload": {
@@ -5911,6 +6073,16 @@
                     "dev-release-2.7": "2.7-dev",
                     "dev-master": "3.0-dev",
                     "dev-develop": "3.1-dev"
+                },
+                "patches_applied": {
+                    "hash": "f247c9d47f2ba4ae8d9dfe6d1a25c8627e377753",
+                    "list": [
+                        {
+                            "from-package": "concrete5/dependency-patches 1.1.0",
+                            "path": "zendframework/zend-stdlib/ArrayObject-unserialize-continue.patch",
+                            "description": "Fix ArrayObject::unserialize()"
+                        }
+                    ]
                 }
             },
             "autoload": {
@@ -6716,6 +6888,16 @@
             "extra": {
                 "branch-alias": {
                     "dev-master": "4.8.x-dev"
+                },
+                "patches_applied": {
+                    "hash": "b230cedd50b7175de81a87b2ec86ad380ee748f9",
+                    "list": [
+                        {
+                            "from-package": "concrete5/dependency-patches 1.1.0",
+                            "path": "phpunit/phpunit/Getopt-each.patch",
+                            "description": "Avoid each() in Getopt"
+                        }
+                    ]
                 }
             },
             "autoload": {

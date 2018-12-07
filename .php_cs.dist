@@ -5,36 +5,55 @@ if (!class_exists('PhpCsFixer\Config', true)) {
     die(16);
 }
 
+$rules = [
+    '@Symfony' => true,
+    'array_syntax' => ['syntax' => 'short'],
+    'blank_line_after_opening_tag' => false,
+    'cast_spaces' => ['space' => 'single'],
+    'concat_space' => ['spacing' => 'one'],
+    'no_blank_lines_before_namespace' => true,
+    'phpdoc_align' => false,
+    'single_blank_line_before_namespace' => false,
+    'yoda_style' => false,
+];
+
+$fixerFactory = PhpCsFixer\FixerFactory::create()->registerBuiltInFixers();
+foreach (array_keys($rules) as $ruleName) {
+    if ($ruleName[0] !== '@') {
+        if (!$fixerFactory->hasRule($ruleName)) {
+            unset($rules[$ruleName]);
+        }
+    }
+}
+
 return PhpCsFixer\Config::create()
     ->setCacheFile(__DIR__.'/.php_cs.cache')
-    ->setRules([
-        // Let's start with the standard Symfony rules
-        '@Symfony' => true,
-
-        // Force short array syntax
-        'array_syntax' => ['syntax' => 'short'],
-
-        // A single space between cast and variable
-        'cast_spaces' => true,
-
-        // Concatenation should be spaced with a space
-        'concat_space' => [
-            'spacing' => 'one',
-        ],
-
-        // Don't force an empty line before namespace declaration
-        'single_blank_line_before_namespace' => false,
-        'no_blank_lines_before_namespace' => true,
-        'blank_line_after_opening_tag' => false,
-
-        // Don't vertically align phpdoc tags
-        'phpdoc_align' => false,
-
-        // Allow double-quoted strings, don't force single-quoted strings
-        'single_quote' => false,
-    ])
+    ->setRules($rules)
     ->setFinder(
         PhpCsFixer\Finder::create()
             ->in(__DIR__)
     )
 ;
+
+/*
+This document has been generated with
+https://mlocati.github.io/php-cs-fixer-configurator/#configurator
+you can change this configuration by importing this YAML code:
+
+expandSets: false
+fixerSets:
+  - '@Symfony'
+fixers:
+  array_syntax:
+    syntax: short
+  blank_line_after_opening_tag: false
+  cast_spaces:
+    space: single
+  concat_space:
+    spacing: one
+  no_blank_lines_before_namespace: true
+  phpdoc_align: false
+  single_blank_line_before_namespace: false
+  yoda_style: false
+
+*/

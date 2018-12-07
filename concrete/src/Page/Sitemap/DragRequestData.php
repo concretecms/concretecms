@@ -40,6 +40,13 @@ class DragRequestData
     const OPERATION_COPYALL = 'COPY_ALL';
 
     /**
+     * Drag operation: copy most recent version of a page to another page.
+     *
+     * @var string
+     */
+    const OPERATION_COPYVERSION = 'COPY_VERSION';
+
+    /**
      * @var \Concrete\Core\Application\Application
      */
     protected $app;
@@ -208,7 +215,7 @@ class DragRequestData
 
         return false;
     }
-    
+
     /**
      * Get the reason why an operation can't be performed.
      *
@@ -237,6 +244,9 @@ class DragRequestData
                     if ($error === '') {
                         $error = $this->whyCantCopyAll();
                     }
+                    break;
+                case static::OPERATION_COPYVERSION:
+                    $error = $this->whyCantCopyVersion();
                     break;
                 default:
                     return 'Invalid $operation';
@@ -375,7 +385,7 @@ class DragRequestData
         $destinationPageChecker = new Checker($this->getDestinationPage());
         $destinationPageID = $this->getDestinationPage()->getCollectionID();
         foreach ($this->getOriginalPages() as $originalPage) {
-            if ($originalPage->getCollectionParentID() === $destinationPageID) {
+            if ($originalPage->getCollectionParentID() == $destinationPageID) {
                 return t('"%1$s" is already the parent page of "%2$s".', $this->getDestinationPage()->getCollectionName(), $originalPage->getCollectionName());
             }
             $originalPageChecker = new Checker($originalPage);
@@ -456,6 +466,7 @@ class DragRequestData
             return t('Only the administrator can copy aliased pages.');
         }
         $destinationPageID = $this->getDestinationPage()->getCollectionID();
+        $somePageWithChildren = false;
         foreach ($this->getOriginalPages() as $originalPage) {
             if ($originalPage->getCollectionID() == $destinationPageID) {
                 return t('It\'s not possible to copy the page "%s" and its child pages under the page itself.', $originalPage->getCollectionName());
@@ -463,8 +474,43 @@ class DragRequestData
             if (in_array($destinationPageID, $originalPage->getCollectionChildrenArray())) {
                 return t('It\'s not possible to copy the page "%s" and its child pages under one of its child pages.', $originalPage->getCollectionName());
             }
+            if ($somePageWithChildren === false && !$originalPage->isAliasPageOrExternalLink() && $originalPage->getNumChildrenDirect() > 0) {
+                $somePageWithChildren = true;
+            }
         }
-        
+        if ($somePageWithChildren === false) {
+            return count($this->getOriginalPages()) === 1 ? t("The page doesn't have any child pages.") : t("The pages don't have any child pages.");
+        }
+
+        return '';
+    }
+
+    /**
+     * Get the reason why the copy-version operation can't be performed.
+     *
+     * @return string empty string if the operation CAN be performed
+     */
+    protected function whyCantCopyVersion()
+    {
+        $originalPage = $this->getSingleOriginalPage();
+        if ($originalPage === null) {
+            return t("It's possible to copy just one page version at a time.");
+        }
+        if ($originalPage->isExternalLink()) {
+            return t("It's not possible to copy the page version of an external URL.");
+        }
+        if ($originalPage->isAliasPage()) {
+            return t("It's not possible to copy the page version of aliases.");
+        }
+        $destinationPage = $this->getDestinationPage();
+        if ($destinationPage->getCollectionID() == $originalPage->getCollectionID()) {
+            return t("It's not possible to copy the page version of a page to the page itself.");
+        }
+        $pc = new Checker($destinationPage);
+        if (!$pc->canWrite()) {
+            return t('You don\'t have the permission to edit the contents of "%s".', $destinationPage->getCollectionName());
+        }
+
         return '';
     }
 }

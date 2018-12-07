@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\File\StorageLocation\Configuration;
 
+use Concrete\Core\File\StorageLocation\StorageLocationFactory;
+use Concrete\Core\Support\Facade\Application;
 use League\Flysystem\Adapter\Local;
 
 class LocalConfiguration extends Configuration implements ConfigurationInterface, DeferredConfigurationInterface
@@ -72,8 +74,19 @@ class LocalConfiguration extends Configuration implements ConfigurationInterface
      */
     public function validateRequest(\Concrete\Core\Http\Request $req)
     {
-        $e = \Core::make('error');
+        $app = Application::getFacadeApplication();
+        $e = $app->make('error');
         $data = $req->get('fslType');
+        $fslID = $req->get('fslID');
+        $locationHasFiles = false;
+        $locationRootPath = null;
+        if (!empty($fslID)) {
+            $location = $app->make(StorageLocationFactory::class)->fetchByID($fslID);
+            if (is_object($location)) {
+                $locationHasFiles = $location->hasFiles();
+                $locationRootPath = $location->getConfigurationObject()->getRootPath();
+            }
+        }
         $this->path = $data['path'];
         if (!$this->path) {
             $e->add(t("You must include a root path for this storage location."));
@@ -81,6 +94,8 @@ class LocalConfiguration extends Configuration implements ConfigurationInterface
             $e->add(t("The specified root path does not exist."));
         } elseif ($this->path == '/') {
             $e->add(t('Invalid path to file storage location. You may not choose the root directory.'));
+        } elseif ($locationHasFiles && $locationRootPath !== $this->path) {
+            $e->add(t('You can not change the root path of this storage location because it contains files.'));
         }
 
         return $e;

@@ -36,41 +36,105 @@ class Router implements RouterInterface
         return new RouteGroupBuilder($this);
     }
 
+    /**
+     * @param string $path
+     * @param string $action
+     *
+     * @since 8.5.0a2
+     *
+     * @return \Concrete\Core\Routing\RouteBuilder
+     */
     public function get($path, $action)
     {
         return $this->createRouteBuilder($path, $action, ['GET']);
     }
 
+    /**
+     * @param string $path
+     * @param string $action
+     *
+     * @since 8.5.0a2
+     *
+     * @return \Concrete\Core\Routing\RouteBuilder
+     */
     public function head($path, $action)
     {
         return $this->createRouteBuilder($path, $action, ['HEAD']);
     }
 
+    /**
+     * @param string $path
+     * @param string $action
+     *
+     * @since 8.5.0a2
+     *
+     * @return \Concrete\Core\Routing\RouteBuilder
+     */
     public function post($path, $action)
     {
         return $this->createRouteBuilder($path, $action, ['POST']);
     }
 
+    /**
+     * @param string $path
+     * @param string $action
+     *
+     * @since 8.5.0a2
+     *
+     * @return \Concrete\Core\Routing\RouteBuilder
+     */
     public function put($path, $action)
     {
         return $this->createRouteBuilder($path, $action, ['PUT']);
     }
 
+    /**
+     * @param string $path
+     * @param string $action
+     *
+     * @since 8.5.0a2
+     *
+     * @return \Concrete\Core\Routing\RouteBuilder
+     */
     public function patch($path, $action)
     {
         return $this->createRouteBuilder($path, $action, ['PATCH']);
     }
 
+    /**
+     * @param string $path
+     * @param string $action
+     *
+     * @since 8.5.0a2
+     *
+     * @return \Concrete\Core\Routing\RouteBuilder
+     */
     public function delete($path, $action)
     {
         return $this->createRouteBuilder($path, $action, ['DELETE']);
     }
 
+    /**
+     * @param string $path
+     * @param string $action
+     *
+     * @since 8.5.0a2
+     *
+     * @return \Concrete\Core\Routing\RouteBuilder
+     */
     public function options($path, $action)
     {
         return $this->createRouteBuilder($path, $action, ['OPTIONS']);
     }
 
+    /**
+     * @param string $path
+     * @param string $action
+     *
+     * @since 8.5.0a2
+     *
+     * @return \Concrete\Core\Routing\RouteBuilder
+     */
     public function all($path, $action)
     {
         return $this->createRouteBuilder($path, $action, [

@@ -173,13 +173,15 @@ class UserCategory extends AbstractStandardCategory
      */
     public function import(Type $type, \SimpleXMLElement $element, Package $package = null)
     {
-        $key = parent::import($type, $element);
+        $key = parent::import($type, $element, $package);
         $key->setAttributeKeyDisplayedOnProfile((string) $element['profile-displayed'] == 1);
         $key->setAttributeKeyEditableOnProfile((string) $element['profile-editable'] == 1);
         $key->setAttributeKeyRequiredOnProfile((string) $element['profile-required'] == 1);
         $key->setAttributeKeyEditableOnRegister((string) $element['register-editable'] == 1);
         $key->setAttributeKeyRequiredOnRegister((string) $element['register-required'] == 1);
         $key->setAttributeKeyDisplayedOnMemberList((string) $element['member-list-displayed'] == 1);
+        // Save these settings to the database
+        $this->entityManager->flush();
 
         return $key;
     }
@@ -240,7 +242,8 @@ class UserCategory extends AbstractStandardCategory
         $key->setAttributeKeyEditableOnRegister((string) $request->request->get('uakRegisterEdit') == 1);
         $key->setAttributeKeyRequiredOnRegister((string) $request->request->get('uakRegisterEditRequired') == 1);
         $key->setAttributeKeyDisplayedOnMemberList((string) $request->request->get('uakMemberListDisplay') == 1);
-
+        // Actually save the changes to the database
+        $this->entityManager->flush();
         return $key;
     }
 }

@@ -8,6 +8,7 @@ use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\LongRunningMigrationInterface;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 use Exception;
+use Throwable;
 
 class Version20181006212400 extends AbstractMigration implements RepeatableMigrationInterface, LongRunningMigrationInterface
 {
@@ -50,6 +51,8 @@ class Version20181006212400 extends AbstractMigration implements RepeatableMigra
             $config->set("database.connections.{$connectionName}.collation", $collation);
             $config->save("database.connections.{$connectionName}.collation", $collation);
         } catch (Exception $x) {
+            $this->output(t('Failed to set character sets: %s', $x->getMessage()));
+        } catch (Throwable $x) {
             $this->output(t('Failed to set character sets: %s', $x->getMessage()));
         } finally {
             try {

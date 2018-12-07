@@ -1,9 +1,14 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php
+defined('C5_EXECUTE') or die('Access Denied.');
+/* @var Concrete\Controller\Dialog\Page\DeleteAlias $controller */
+/* @var Concrete\Core\View\DialogView $view */
+/* @var Concrete\Core\Page\Page $c */
+?>
 <div class="ccm-ui">
 
     <form class="form-stacked" data-dialog-form="delete-alias" method="post" action="<?=$controller->action('submit')?>">
 
-        <p><?=t('Remove this alias or external link?')?></p>
+        <p><?= $c->isExternalLink() ? t('Remove this external link?') : t('Remove this alias?') ?></p>
 
         <div class="dialog-buttons">
             <button class="btn btn-default pull-left" data-dialog-action="cancel"><?=t('Cancel')?></button>
