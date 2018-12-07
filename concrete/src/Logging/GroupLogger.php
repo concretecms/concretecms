@@ -2,7 +2,7 @@
 namespace Concrete\Core\Logging;
 
 use Concrete\Core\Support\Facade\Facade;
-use Monolog\Logger;
+use Monolog\Logger as Monolog;
 
 class GroupLogger
 {
@@ -24,7 +24,7 @@ class GroupLogger
 
     public function close($context = array())
     {
-        $method = 'add' . ucfirst(strtolower(Logger::getLevelName($this->level)));
+        $method = 'add' . ucfirst(strtolower(Monolog::getLevelName($this->level)));
         $arguments = array(implode("\n", $this->messages), $context);
 
         return call_user_func_array(array($this->logger, $method), $arguments);

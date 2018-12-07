@@ -3,7 +3,6 @@ namespace Concrete\Core\Logging;
 
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 use Concrete\Core\Logging\Configuration\ConfigurationFactory;
-use Monolog\Logger;
 
 class LoggingServiceProvider extends ServiceProvider
 {

@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Logging;
 
-use Monolog\Logger;
+use Monolog\Logger as Monolog;
 
 class Levels
 {
@@ -15,7 +15,7 @@ class Levels
      */
     public static function getLevelDisplayName($level)
     {
-        $levels = Logger::getLevels();
+        $levels = Monolog::getLevels();
         if (in_array($level, $levels)) {
             $level = array_search($level, $levels);
             switch($level) {

@@ -2,10 +2,6 @@
 namespace Concrete\Core\Logging\Configuration;
 
 use Cascade\Cascade;
-use Concrete\Core\Logging\Channels;
-use Concrete\Core\Logging\Handler\DatabaseHandler;
-use Monolog\Formatter\LineFormatter;
-use Monolog\Logger;
 
 class AdvancedConfiguration implements ConfigurationInterface
 {
