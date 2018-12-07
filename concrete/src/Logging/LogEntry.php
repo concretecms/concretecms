@@ -35,7 +35,7 @@ class LogEntry
      */
     public function getLevelDisplayName()
     {
-        return Logger::getLevelDisplayName($this->level);
+        return Levels::getLevelDisplayName($this->level);
     }
 
     /**
@@ -65,7 +65,7 @@ class LogEntry
      */
     public function getChannelDisplayName()
     {
-        return Logger::getChannelDisplayName($this->channel);
+        return Channels::getChannelDisplayName($this->channel);
     }
 
     /**

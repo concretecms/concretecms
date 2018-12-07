@@ -59,12 +59,30 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
         </div>
     </fieldset>
 
-	<div class="ccm-dashboard-form-actions-wrapper">
+    <fieldset>
+        <legend><?=t('Reporting')?></legend>
+        <div class="form-group">
+            <div class="checkbox">
+                <label>
+                    <?php echo $fh->checkbox('enable_dashboard_report', 1, $enableDashboardReport) ?>
+
+                    <span><?php echo t('Enable Dashboard Logs Report'); ?></span>
+                </label>
+            </div>
+            <div class="help-block">
+                <?=t('Enables or disables the Dashboard Logs Page – useful if your logging configuration no longer uses database logging.')?>
+            </div>
+        </div>
+    </fieldset>
+
+    <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
 		    <?php echo $interface->submit(t('Save'), 'logging-form', 'right', 'btn-primary'); ?>
         </div>
 	</div>
 </form>
+
+
 
 <script type="text/javascript">
     $(function() {

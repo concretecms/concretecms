@@ -304,6 +304,8 @@ return [
          */
         'spam' => false,
 
+        'enable_dashboard_report' => true,
+
         'configuration' => [
 
             /*
@@ -312,7 +314,6 @@ return [
              * @var string simple|advanced
              */
             'mode' => 'simple',
-
             'simple' => [
                 /**
                  * What log level to store core logs in the database

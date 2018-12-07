@@ -37,6 +37,7 @@ class Logging extends DashboardPageController
             'ALERT' => t('Alert'),
             'EMERGENCY' => t('Emergency'),
         ];
+        $this->set('enableDashboardReport', !!$config->get('concrete.log.enable_dashboard_report'));
         $this->set('levels', $levels);
         $this->set('loggingMode', $config->get('concrete.log.configuration.mode'));
         $this->set('coreLoggingLevel', $config->get('concrete.log.configuration.simple.core_logging_level'));
@@ -63,6 +64,8 @@ class Logging extends DashboardPageController
                         $this->request->request->get('logging_level')
                     );
                 }
+                $config->save('concrete.log.enable_dashboard_report',
+                    $this->request->request->get('enable_dashboard_report') ? true : false);
                 $config->save('concrete.log.configuration.mode', $mode);
 
                 $this->redirect('/dashboard/system/environment/logging', 'logging_saved');

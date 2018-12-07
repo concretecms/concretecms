@@ -1,6 +1,10 @@
 <?php
 namespace Concrete\Core\Logging;
 
+use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Support\Facade\Facade;
+use Concrete\Core\Utility\Service\Text;
+
 class Channels
 {
 
@@ -16,6 +20,33 @@ class Channels
             self::CHANNEL_EXCEPTIONS,
             self::CHANNEL_SECURITY,
         ];
+    }
+
+    /**
+     * Returns a list of channels that have been used. Requires the database
+     *  handler.
+     */
+    public function getChannels()
+    {
+        $app = Facade::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $channels = (array) $db->GetCol('select distinct channel from Logs order by channel asc');
+        return $channels;
+    }
+
+    public static function getChannelDisplayName($channel)
+    {
+        $text = new Text();
+        switch ($channel) {
+            case 'application':
+                return tc('Log channel', 'Application');
+            case LOG_TYPE_EMAILS:
+                return tc('Log channel', 'Sent Emails');
+            case LOG_TYPE_EXCEPTIONS:
+                return tc('Log channel', 'Exceptions');
+            default:
+                return tc('Log channel', $text->unhandle($channel));
+        }
     }
 
 }
