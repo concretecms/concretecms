@@ -28,9 +28,9 @@ class Edit extends Add
         $locations = [];
         foreach ($storageLocations as $location) {
             if ($location->isDefault()) {
-                $locations[$location->getID()] = t('%s (default)', $location->getName());
+                $locations[$location->getID()] = t('%s (default)', h($location->getName()));
             } else {
-                $locations[$location->getID()] = $location->getName();
+                $locations[$location->getID()] = h($location->getName());
             }
         }
         $this->set('locations', $locations);
