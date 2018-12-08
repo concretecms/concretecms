@@ -30,10 +30,10 @@ class Add extends Node
                     $this->node = $node;
                 }
             }
+        }
 
-            if (!isset($this->node)) {
-                $this->node = $filesystem->getRootFolder();
-            }
+        if (!isset($this->node)) {
+            $this->node = $filesystem->getRootFolder();
         }
 
         return $this->node;
