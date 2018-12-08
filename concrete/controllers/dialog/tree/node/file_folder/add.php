@@ -26,7 +26,7 @@ class Add extends Node
             }
             if ($treeNodeID) {
                 $node = FileFolder::getByID($treeNodeID);
-                if (is_object($node) && $node instanceof \Concrete\Core\Tree\Node\Type\FileFolder) {
+                if ($node instanceof \Concrete\Core\Tree\Node\Type\FileFolder) {
                     $this->node = $node;
                 }
             }
@@ -97,8 +97,8 @@ class Add extends Node
             $response->setAdditionalDataAttribute('folder', $folder);
 
             return new JsonResponse($response);
-        } else {
-            return new JsonResponse($error);
         }
+
+        return new JsonResponse($this->error);
     }
 }

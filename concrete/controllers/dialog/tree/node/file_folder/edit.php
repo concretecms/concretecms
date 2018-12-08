@@ -67,8 +67,8 @@ class Edit extends Add
             $r = $node->getTreeNodeJSON();
 
             return new JsonResponse($r);
-        } else {
-            return new JsonResponse($error);
         }
+
+        return new JsonResponse($this->error);
     }
 }
