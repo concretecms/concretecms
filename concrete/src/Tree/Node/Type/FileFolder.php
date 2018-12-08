@@ -66,7 +66,7 @@ class FileFolder extends TreeNode
     /**
      * Returns the storage location id of the folder.
      *
-     * @return int|null
+     * @return int
      */
     public function getTreeNodeStorageLocationID()
     {
@@ -74,7 +74,7 @@ class FileFolder extends TreeNode
     }
 
     /**
-     * @return \Concrete\Core\Entity\File\StorageLocation\StorageLocation|null
+     * @return \Concrete\Core\Entity\File\StorageLocation\StorageLocation
      */
     public function getTreeNodeStorageLocationObject()
     {
@@ -84,7 +84,7 @@ class FileFolder extends TreeNode
     }
 
     /**
-     * @param \Concrete\Core\Entity\File\StorageLocation\StorageLocation $storageLocation Storage location object
+     * @param \Concrete\Core\Entity\File\StorageLocation\StorageLocation|int $storageLocation Storage location object or id
      */
     public function setTreeNodeStorageLocation($storageLocation)
     {
@@ -133,10 +133,15 @@ class FileFolder extends TreeNode
         $app = Application::getFacadeApplication();
         $db = $app->make(Connection::class);
         $db->executeQuery('DELETE FROM TreeFileFolderNodes WHERE treeNodeID = ?', [
-            $this->treeNodeID
+            $this->treeNodeID,
         ]);
     }
 
+    /**
+     * @param \Concrete\Core\Tree\Node\Node|bool $parent Node's parent folder
+     *
+     * @return \Concrete\Core\Tree\Node\Node
+     */
     public function duplicate($parent = false)
     {
         $node = $this::add($this->treeNodeName, $parent, $this->fslID);
