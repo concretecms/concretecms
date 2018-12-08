@@ -20,9 +20,9 @@ class Add extends Node
     {
         if (!isset($this->node)) {
             $filesystem = new Filesystem();
-            $treeNodeID = $this->app->make('helper/security')->sanitizeInt($this->request->query->get('treeNodeID'));
+            $treeNodeID = (int) $this->request->query->get('treeNodeID');
             if (empty($treeNodeID)) {
-                $treeNodeID = $this->app->make('helper/security')->sanitizeInt($this->request->request->get('treeNodeID'));
+                $treeNodeID = (int) $this->request->request->get('treeNodeID');
             }
             if ($treeNodeID) {
                 $node = FileFolder::getByID($treeNodeID);
