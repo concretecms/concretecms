@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Tree\Menu\Item\File;
 
+use Concrete\Core\Support\Facade\Url as URL;
+
 class EditFolderItem extends FolderItem
 {
     public function getDialogTitle()
@@ -20,6 +22,6 @@ class EditFolderItem extends FolderItem
 
     public function getActionURL()
     {
-        return \URL::to('/ccm/system/dialogs/tree/node/edit/file_folder?treeNodeID=' . $this->folder->getTreeNodeID());
+        return URL::to('/ccm/system/dialogs/tree/node/edit/file_folder?treeNodeID=' . $this->folder->getTreeNodeID());
     }
 }
