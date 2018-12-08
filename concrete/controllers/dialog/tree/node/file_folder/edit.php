@@ -39,28 +39,27 @@ class Edit extends Add
     public function update_file_folder_node()
     {
         $token = $this->app->make('token');
-        $error = $this->app->make('error');
         if (!$token->validate('update_file_folder_node')) {
-            $error->add($token->getErrorMessage());
+            $this->error->add($token->getErrorMessage());
         }
 
         $folderName = $this->request->request->get('fileFolderName');
         if (!is_string($folderName) || trim($folderName) === '') {
-            $error->add(t('Invalid folder name'));
+            $this->error->add(t('Folder Name cannot be empty.'));
         }
 
-        $fslID = $this->request->request->get('fileFolderFileStorageLocation');
+        $fslID = (int) $this->request->request->get('fileFolderFileStorageLocation');
         if (!$fslID) {
-            $error->add(t('Please select a storage location'));
+            $this->error->add(t('Please select a storage location'));
         } else {
             $em = $this->app->make(EntityManagerInterface::class);
             $storageLocation = $em->find(StorageLocationEntity::class, (int) $fslID);
             if (!is_object($storageLocation)) {
-                $error->add(t('Please select a valid storage location'));
+                $this->error->add(t('Please select a valid storage location'));
             }
         }
 
-        if (!$error->has()) {
+        if (!$this->error->has()) {
             $node = $this->getNode();
             $node->setTreeNodeName($folderName);
             $node->setTreeNodeStorageLocation($fslID);
