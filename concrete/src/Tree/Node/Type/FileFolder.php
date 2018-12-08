@@ -58,7 +58,7 @@ class FileFolder extends TreeNode
                 default:
                     return $name;
             }
-        } elseif ($this->treeNodeParentID == 0) {
+        } elseif ($this->getTreeNodeParentID() == 0) {
             return t('Folders');
         }
     }
@@ -80,7 +80,7 @@ class FileFolder extends TreeNode
     {
         $app = Application::getFacadeApplication();
 
-        return $app->make(StorageLocationFactory::class)->fetchByID((int) $this->fslID);
+        return $app->make(StorageLocationFactory::class)->fetchByID($this->getTreeNodeStorageLocationID());
     }
 
     /**
@@ -144,7 +144,7 @@ class FileFolder extends TreeNode
      */
     public function duplicate($parent = false)
     {
-        $node = $this::add($this->treeNodeName, $parent, $this->fslID);
+        $node = static::add($this->getTreeNodeName(), $parent, $this->getTreeNodeStorageLocationID());
         $this->duplicateChildren($node);
 
         return $node;
