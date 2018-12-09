@@ -10,7 +10,7 @@
                     instance: this
                 });
             },
-            cParentID: <?= (isset($cParentID) && (int) $cParentID > 0) ? (int) $cParentID : '0'; ?>,
+            cParentID: <?= $cParentID; ?>,
             displayNodePagination: <?= (isset($display) && $display === 'flat') ? 'true' : 'false'; ?>,
             displaySingleLevel: <?= (isset($display) && $display === 'flat') ? 'true' : 'false'; ?>,
             isSitemapOverlay: true,

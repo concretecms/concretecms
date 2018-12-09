@@ -23,10 +23,7 @@ class SitemapOverlay extends ElementController
         }
         $this->requireAsset('core/sitemap');
         $this->set('overlayID', uniqid());
-        $cParentID = $this->request->query->get('cParentID');
-        if ($cParentID !== null) {
-            $this->set('cParentID', (int) $cParentID);
-        }
+        $this->set('cParentID', (int) $this->request->query->get('cParentID'));
         $display = $this->request->query->get('display');
         if (!empty($cParentID)) {
             $this->set('display', $display);
