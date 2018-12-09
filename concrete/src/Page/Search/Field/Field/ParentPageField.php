@@ -34,16 +34,18 @@ class ParentPageField extends AbstractField
     {
         if ($this->data['cParentIDSearchField'] > 0) {
             $pc = \Page::getByID($this->data['cParentIDSearchField']);
-            if ($pc->isSystemPage()) {
-                $list->includeSystemPages();
-                $list->includeInactivePages();
-            }
-            $list->setSiteTreeObject($pc->getSiteTreeObject());
-            if ($this->data['cParentAll'] == 1) {
-                $cPath = $pc->getCollectionPath();
-                $list->filterByPath($cPath);
-            } else {
-                $list->filterByParentID($this->data['cParentIDSearchField']);
+            if ($pc && !$pc->isError()) {
+                if ($pc->isSystemPage()) {
+                    $list->includeSystemPages();
+                    $list->includeInactivePages();
+                }
+                $list->setSiteTreeObject($pc->getSiteTreeObject());
+                if ($this->data['cParentAll'] == 1) {
+                    $cPath = $pc->getCollectionPath();
+                    $list->filterByPath($cPath);
+                } else {
+                    $list->filterByParentID($this->data['cParentIDSearchField']);
+                }
             }
         }
     }
