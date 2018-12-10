@@ -134,7 +134,7 @@ class Versions extends BackendInterfacePageController
                                 $e = Loader::helper('validation/error');
                                 $e->add(t('You cannot delete all page versions.'));
                                 $r = new PageEditResponse($e);
-                            } else if ($v->isApproved() && !$v->getPublishDate()) {
+                            } else if ($v->isApprovedNow()) {
                                 $e = Loader::helper('validation/error');
                                 $e->add(t('You cannot delete the active version.'));
                                 $r = new PageEditResponse($e);

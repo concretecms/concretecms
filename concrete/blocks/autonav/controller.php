@@ -417,7 +417,7 @@ class Controller extends BlockController
                         $tc1 = Page::getByID($row['cID'], "ACTIVE");
                     }
                     $tc1v = $tc1->getVersionObject();
-                    if (!$tc1v->isApproved() && !$this->displayUnapproved) {
+                    if (!$tc1v->isApprovedNow() && !$this->displayUnapproved) {
                         $displayHeadPage = false;
                     }
                 }
@@ -755,7 +755,7 @@ class Controller extends BlockController
     protected function displayPage($tc)
     {
         $tcv = $tc->getVersionObject();
-        if ((!is_object($tcv)) || (!$tcv->isApproved() && !$this->displayUnapproved)) {
+        if ((!is_object($tcv)) || (!$tcv->isApprovedNow() && !$this->displayUnapproved)) {
             return false;
         }
 

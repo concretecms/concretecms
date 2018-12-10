@@ -366,14 +366,8 @@ class PageListGenerator
         $pubDate = $page->getCollectionDatePublic();
         if ($pubDate !== null && (new DateTime($pubDate)) <= $this->getNow()) {
             $pageVersion = $page->getVersionObject();
-            if ($pageVersion && $pageVersion->isApproved()) {
-                $startDate = $pageVersion->getPublishDate();
-                if (!$startDate || new DateTIme($startDate) >= $this->getNow()) {
-                    $endDate = $pageVersion->getPublishEndDate();
-                    if (!$endDate || new DateTIme($endDate) <= $this->getNow()) {
-                        $result = true;
-                    }
-                }
+            if ($pageVersion && $pageVersion->isApprovedNow($this->getNow())) {
+                $result = true;
             }
         }
 
