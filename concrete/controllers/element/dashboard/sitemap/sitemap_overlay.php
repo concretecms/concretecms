@@ -25,7 +25,7 @@ class SitemapOverlay extends ElementController
         $this->set('overlayID', uniqid());
         $this->set('cParentID', (int) $this->request->query->get('cParentID'));
         $display = $this->request->query->get('display');
-        if (!empty($cParentID)) {
+        if (!empty($display)) {
             $this->set('display', $display);
         }
     }
