@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ae2f07efaafd2178b330902442722f93",
+    "content-hash": "75171bfc1a21bb5a76ca7716855a70ca",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -50,16 +50,16 @@
         },
         {
             "name": "concrete5/dependency-patches",
-            "version": "1.0.0",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/concrete5/dependency-patches.git",
-                "reference": "d3193053a311cfe3d1a19bc978a873535a29b93e"
+                "reference": "cbf4350da5ce2713e2d55ff7fef7d73db806afcb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/concrete5/dependency-patches/zipball/d3193053a311cfe3d1a19bc978a873535a29b93e",
-                "reference": "d3193053a311cfe3d1a19bc978a873535a29b93e",
+                "url": "https://api.github.com/repos/concrete5/dependency-patches/zipball/cbf4350da5ce2713e2d55ff7fef7d73db806afcb",
+                "reference": "cbf4350da5ce2713e2d55ff7fef7d73db806afcb",
                 "shasum": ""
             },
             "require": {
@@ -79,6 +79,12 @@
                     },
                     "phpunit/phpunit:4.8.36": {
                         "Avoid each() in Getopt": "phpunit/phpunit/Getopt-each.patch"
+                    },
+                    "tedivm/jshrink:1.1.0": {
+                        "Fix continue switch in FileGenerator and MethodReflection": "tedivm/jshrink/fix-minifier-loop.patch"
+                    },
+                    "zendframework/zend-code:2.6.3": {
+                        "Fix continue switch in FileGenerator and MethodReflection": "zendframework/zend-code/switch-continue.patch"
                     }
                 }
             },
@@ -96,7 +102,7 @@
             ],
             "description": "Patches required for concrete5 dependencies",
             "homepage": "https://github.com/concrete5/dependency-patches",
-            "time": "2018-11-09T19:16:04+00:00"
+            "time": "2018-12-03T07:07:31+00:00"
         },
         {
             "name": "concrete5/doctrine-xml",
@@ -1019,6 +1025,16 @@
             "extra": {
                 "branch-alias": {
                     "dev-master": "2.6.x-dev"
+                },
+                "patches_applied": {
+                    "hash": "f03553f596500df8083abdd1cd87cd1916d1a3f4",
+                    "list": [
+                        {
+                            "from-package": "concrete5/dependency-patches 1.1.0",
+                            "path": "doctrine/orm/UnitOfWork-createEntity-continue.patch",
+                            "description": "Fix UnitOfWork::createEntity()"
+                        }
+                    ]
                 }
             },
             "autoload": {
@@ -3625,16 +3641,16 @@
         },
         {
             "name": "punic/punic",
-            "version": "3.1.0",
+            "version": "3.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/punic/punic.git",
-                "reference": "bd49ff54ea6ee8a902a567905664ecc7840037d6"
+                "reference": "d31ec0bec7bad65105876812cc5b0106ae095e34"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/punic/punic/zipball/bd49ff54ea6ee8a902a567905664ecc7840037d6",
-                "reference": "bd49ff54ea6ee8a902a567905664ecc7840037d6",
+                "url": "https://api.github.com/repos/punic/punic/zipball/d31ec0bec7bad65105876812cc5b0106ae095e34",
+                "reference": "d31ec0bec7bad65105876812cc5b0106ae095e34",
                 "shasum": ""
             },
             "require": {
@@ -3646,7 +3662,7 @@
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "2.2.*",
-                "phpunit/phpunit": "^4"
+                "phpunit/phpunit": "^4.8 || ^5.7 || ^6.5 || ^7.4"
             },
             "bin": [
                 "bin/punic-data"
@@ -3671,6 +3687,11 @@
                     "name": "Remo Laubacher",
                     "email": "remo.laubacher@gmail.com",
                     "role": "Collaborator, motivator and perfectionist supporter"
+                },
+                {
+                    "name": "Christian Schmidt",
+                    "email": "github@chsc.dk",
+                    "role": "Developer"
                 }
             ],
             "description": "PHP-Unicode CLDR",
@@ -3690,7 +3711,7 @@
                 "translations",
                 "unicode"
             ],
-            "time": "2018-02-09T15:54:34+00:00"
+            "time": "2018-11-23T10:02:50+00:00"
         },
         {
             "name": "sunra/php-simple-html-dom-parser",
@@ -3711,6 +3732,18 @@
                 "php": ">=5.3.2"
             },
             "type": "library",
+            "extra": {
+                "patches_applied": {
+                    "hash": "43699395013691839330f8406ee49fa752c163fb",
+                    "list": [
+                        {
+                            "from-package": "concrete5/dependency-patches 1.1.0",
+                            "path": "sunra/php-simple-html-dom-parser/minus-in-regular-expressions.patch",
+                            "description": "Fix minus in regular expressions"
+                        }
+                    ]
+                }
+            },
             "autoload": {
                 "psr-0": {
                     "Sunra\\PhpSimple\\HtmlDomParser": "Src/"
@@ -4719,6 +4752,18 @@
                 "satooshi/php-coveralls": "dev-master"
             },
             "type": "library",
+            "extra": {
+                "patches_applied": {
+                    "hash": "b16ca9edf74b2527c4f02cd8f69c7ad1e452545c",
+                    "list": [
+                        {
+                            "from-package": "concrete5/dependency-patches 1.1.0",
+                            "path": "tedivm/jshrink/fix-minifier-loop.patch",
+                            "description": "Fix continue switch in FileGenerator and MethodReflection"
+                        }
+                    ]
+                }
+            },
             "autoload": {
                 "psr-0": {
                     "JShrink": "src/"
@@ -5188,6 +5233,16 @@
                 "branch-alias": {
                     "dev-master": "2.6-dev",
                     "dev-develop": "2.7-dev"
+                },
+                "patches_applied": {
+                    "hash": "43aec57a6422c48c002031806c8a8ca01b6208cf",
+                    "list": [
+                        {
+                            "from-package": "concrete5/dependency-patches 1.1.0",
+                            "path": "zendframework/zend-code/switch-continue.patch",
+                            "description": "Fix continue switch in FileGenerator and MethodReflection"
+                        }
+                    ]
                 }
             },
             "autoload": {
@@ -5790,6 +5845,16 @@
                     "dev-release-2.7": "2.7-dev",
                     "dev-master": "3.0-dev",
                     "dev-develop": "3.1-dev"
+                },
+                "patches_applied": {
+                    "hash": "f247c9d47f2ba4ae8d9dfe6d1a25c8627e377753",
+                    "list": [
+                        {
+                            "from-package": "concrete5/dependency-patches 1.1.0",
+                            "path": "zendframework/zend-stdlib/ArrayObject-unserialize-continue.patch",
+                            "description": "Fix ArrayObject::unserialize()"
+                        }
+                    ]
                 }
             },
             "autoload": {
@@ -6595,6 +6660,16 @@
             "extra": {
                 "branch-alias": {
                     "dev-master": "4.8.x-dev"
+                },
+                "patches_applied": {
+                    "hash": "b230cedd50b7175de81a87b2ec86ad380ee748f9",
+                    "list": [
+                        {
+                            "from-package": "concrete5/dependency-patches 1.1.0",
+                            "path": "phpunit/phpunit/Getopt-each.patch",
+                            "description": "Avoid each() in Getopt"
+                        }
+                    ]
                 }
             },
             "autoload": {

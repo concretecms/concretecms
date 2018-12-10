@@ -13,7 +13,7 @@
   },
   "require": {
     "wikimedia/composer-merge-plugin": "~1.3",
-    "concrete5/dependency-patches": "^1.0.0"
+    "concrete5/dependency-patches": "^1.1.0"
   },
   "require-dev": {
     "squizlabs/php_codesniffer": "^2.7",
