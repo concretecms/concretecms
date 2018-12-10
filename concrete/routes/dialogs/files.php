@@ -1,9 +1,14 @@
 <?php
 
-defined('C5_EXECUTE') or die("Access Denied.");
-/**
- * @var $router \Concrete\Core\Routing\Router
+defined('C5_EXECUTE') or die('Access Denied.');
+
+/* @var Concrete\Core\Routing\Router $router */
+
+/*
+ * Base path: /ccm/system/dialogs/file
+ * Namespace: Concrete\Controller\Dialog\File\
  */
+
 $router->all('/upload_complete', 'UploadComplete::view');
 $router->all('/bulk/delete', 'Bulk\Delete::view');
 $router->all('/bulk/delete/delete_files', 'Bulk\Delete::deleteFiles');
@@ -40,3 +45,5 @@ $router->all('/advanced_search/preset/edit/edit_search_preset', 'Preset\Edit::ed
 $router->all('/advanced_search/preset/delete', 'Preset\Delete::view');
 $router->all('/advanced_search/preset/delete/remove_search_preset', 'Preset\Delete::remove_search_preset');
 
+$router->all('/import', 'Import::view');
+$router->all('/replace', 'Replace::view');
