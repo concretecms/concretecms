@@ -62,11 +62,9 @@ class StandardValidator implements ValidatorInterface
             if (is_object($page)) {
                 $oc->setPageObject($page);
             }
-            if ($oc->isPageTypeComposerFormControlRequiredOnThisRequest()) {
-                $r = $oc->validate();
-                if ($r instanceof ErrorList) {
-                    $e->add($r);
-                }
+            $r = $oc->validate();
+            if ($r instanceof ErrorList) {
+                $e->add($r);
             }
         }
 

@@ -184,7 +184,9 @@ class CollectionAttributeControl extends Control
                 $validator = $controller->getValidator();
                 $control = $this->getPageTypeComposerFormLayoutSetControlObject();
                 $response = $validator->validateSaveValueRequest(
-                    $controller, \Request::createFromGlobals()
+                    $controller,
+                    \Request::createFromGlobals(),
+                    $this->isPageTypeComposerFormControlRequiredOnThisRequest()
                 );
                 /**
                  * @var $response ResponseInterface
