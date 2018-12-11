@@ -257,7 +257,8 @@ abstract class Asset implements AssetInterface
                 $noCacheValue = $config->get('concrete.version_installed') . '-' . $config->get('concrete.version_db');
             }
             if (!$config->get('concrete.misc.generator_tag_display_in_header')) {
-                $noCacheValue = sha1($noCacheValue);
+                
+                $noCacheValue = $this->obfuscateNoCacheValue($noCacheValue);
             }
             $result .= (strpos($result, '?') === false ? '?' : '&') . static::OUTPUT_NOCACHE_PARAM . '=' . rawurlencode($noCacheValue);
         }
@@ -538,5 +539,17 @@ abstract class Asset implements AssetInterface
         }
 
         return $result;
+    }
+
+    /**
+     * Obfuscate the value of the query-string parameter used to avoid browser cache problems.
+     *
+     * @param string $noCacheValue
+     *
+     * @return string
+     */
+    protected function obfuscateNoCacheValue($noCacheValue)
+    {
+        return sha1($noCacheValue);
     }
 }
