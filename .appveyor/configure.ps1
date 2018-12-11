@@ -64,7 +64,7 @@ if (Test-Path -PathType Leaf -Path "$phpInstallPath\php-installed.txt") {
     New-Item -ItemType File -Path "$phpInstallPath\php-installed.txt" | Out-Null
 }
 Write-Host 'Refreshing CA Certificates for PHP'
-Update-PhpCAInfo -Path $phpInstallPath -Verbose
+Update-PhpCAInfo -Path $phpInstallPath -Source LocalMachine -Verbose
 
 # Setup composer
 $Env:Path = 'C:\tools\bin;' + $Env:Path
