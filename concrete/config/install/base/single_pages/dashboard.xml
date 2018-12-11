@@ -214,6 +214,14 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="Page Changes" path="/dashboard/reports/page_changes" filename="/dashboard/reports/page_changes.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>changes, csv, report</value>
+                </attributekey>
+            </attributes>
+        </page>
 
         <page name="Pages &amp; Themes" path="/dashboard/pages" filename="/dashboard/pages/view.php" pagetype="" description="Reskin your site." package="" />
         <page name="Themes" path="/dashboard/pages/themes" filename="/dashboard/pages/themes/view.php" pagetype=""

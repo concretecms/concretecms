@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Csv\Export;
 
 use Concrete\Core\Attribute\Category\CategoryInterface;
@@ -18,14 +19,14 @@ abstract class AbstractExporter
     /**
      * The CSV Writer instance.
      *
-     * @var Writer
+     * @var \League\Csv\Writer
      */
     private $writer;
 
     /**
      * The attribute category.
      *
-     * @var CategoryInterface
+     * @var \Concrete\Core\Attribute\Category\CategoryInterface|null
      */
     private $category;
 
@@ -53,13 +54,15 @@ abstract class AbstractExporter
     /**
      * Initialize the instance.
      *
-     * @param CategoryInterface $category the attribute category
-     * @param Writer $writer the CSV Writer instance
+     * @param \League\Csv\Writer $writer the CSV Writer instance
+     * @param \Concrete\Core\Attribute\Category\CategoryInterface|null $category the attribute category
      */
-    protected function __construct(Writer $writer, CategoryInterface $category)
+    protected function __construct(Writer $writer, CategoryInterface $category = null)
     {
         $this->setWriter($writer);
-        $this->setCategory($category);
+        if ($category !== null) {
+            $this->setCategory($category);
+        }
     }
 
     /**
@@ -177,7 +180,7 @@ abstract class AbstractExporter
     /**
      * Set the CSV Writer instance.
      *
-     * @param Writer $writer
+     * @param \League\Csv\Writer $writer
      *
      * @return $this
      */
@@ -191,7 +194,7 @@ abstract class AbstractExporter
     /**
      * Get the CSV Writer instance.
      *
-     * @return Writer
+     * @return \League\Csv\Writer
      */
     protected function getWriter()
     {
@@ -201,7 +204,7 @@ abstract class AbstractExporter
     /**
      * Set the attribute category to be used to export the data.
      *
-     * @param CategoryInterface $category
+     * @param \Concrete\Core\Attribute\Category\CategoryInterface $category
      *
      * @return $this
      */
@@ -216,7 +219,7 @@ abstract class AbstractExporter
     /**
      * Get the attribute category to be used to export the data.
      *
-     * @return CategoryInterface
+     * @return \Concrete\Core\Attribute\Category\CategoryInterface|null
      */
     protected function getCategory()
     {
@@ -304,8 +307,11 @@ abstract class AbstractExporter
     {
         if ($this->attributeKeysAndControllers === null) {
             $list = [];
-            foreach ($this->category->getList() as $attributeKey) {
-                $list[] = [$attributeKey, $attributeKey->getController()];
+            $category = $this->getCategory();
+            if ($category !== null) {
+                foreach ($category->getList() as $attributeKey) {
+                    $list[] = [$attributeKey, $attributeKey->getController()];
+                }
             }
             $this->attributeKeysAndControllers = $list;
         }
@@ -322,9 +328,12 @@ abstract class AbstractExporter
         $app = Application::getFacadeApplication();
         $entityManager = $app->make(EntityManagerInterface::class);
         $entityManager->clear();
-        $categoryClass = ClassUtils::getClass($this->category);
-        if (!$entityManager->getMetadataFactory()->isTransient($categoryClass)) {
-            $entityManager->merge($this->category);
+        $category = $this->getCategory();
+        if ($category !== null) {
+            $categoryClass = ClassUtils::getClass($category);
+            if (!$entityManager->getMetadataFactory()->isTransient($categoryClass)) {
+                $entityManager->merge($category);
+            }
         }
     }
 }
