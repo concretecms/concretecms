@@ -247,8 +247,22 @@ abstract class Asset implements AssetInterface
         if (!$this->assetHasBeenMapped) {
             $this->mapAssetLocation($this->location);
         }
+        $result = $this->assetURL;
+        if ($result && $this->isAssetLocal() && !preg_match('/(\?|\?.*&)' . preg_quote(static::OUTPUT_NOCACHE_PARAM, '/') . '=/', $result)) {
+            $app = Application::getFacadeApplication();
+            $config = $app->make('config');
+            if ($this->pkg) {
+                $noCacheValue = $this->pkg->getPackageVersion();
+            } else {
+                $noCacheValue = $config->get('concrete.version_installed') . '-' . $config->get('concrete.version_db');
+            }
+            if (!$config->get('concrete.misc.generator_tag_display_in_header')) {
+                $noCacheValue = sha1($noCacheValue);
+            }
+            $result .= (strpos($result, '?') === false ? '?' : '&') . static::OUTPUT_NOCACHE_PARAM . '=' . rawurlencode($noCacheValue);
+        }
 
-        return $this->assetURL;
+        return $result;
     }
 
     /**

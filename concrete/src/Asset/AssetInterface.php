@@ -36,6 +36,13 @@ interface AssetInterface
     const OUTPUTASSETTYPE_JAVASCRIPT = 'javascript';
 
     /**
+     * QueryString parameter to avoid browser cache problems.
+     *
+     * @var string
+     */
+    const OUTPUT_NOCACHE_PARAM = 'ccm_nocache';
+
+    /**
      * Render the HTML tag that will load this asset.
      *
      * @return string
