@@ -248,7 +248,7 @@ abstract class Asset implements AssetInterface
             $this->mapAssetLocation($this->location);
         }
         $result = $this->assetURL;
-        if ($result && $this->isAssetLocal() && !preg_match('/(\?|\?.*&)' . preg_quote(static::OUTPUT_NOCACHE_PARAM, '/') . '=/', $result)) {
+        if ($result && $this->isAssetLocal() && !preg_match('/\?(.*&)?' . preg_quote(static::OUTPUT_NOCACHE_PARAM, '/') . '=/', $result)) {
             $app = Application::getFacadeApplication();
             $config = $app->make('config');
             if ($this->pkg) {
