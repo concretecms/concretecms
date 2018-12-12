@@ -8,7 +8,7 @@ return [
      */
     'version' => '8.5.0a3',
     'version_installed' => '8.5.0a3',
-    'version_db' => '20181112211702', // the key of the latest database migration
+    'version_db' => '20181212000000', // the key of the latest database migration
 
     /*
      * Installation status
@@ -26,6 +26,11 @@ return [
      * The current Charset
      */
     'charset' => 'UTF-8',
+
+    /*
+     * The byte-order-mark for the current charset
+     */
+    'charset_bom' => "\xEF\xBB\xBF",
 
     /*
      * Maintenance mode
@@ -92,6 +97,19 @@ return [
             'enabled' => true,
             // The chunk size (if empty we'll automatically determine it)
             'chunkSize' => null,
+        ],
+    ],
+
+    /*
+     * ------------------------------------------------------------------------
+     * Export settings
+     * ------------------------------------------------------------------------
+     */
+    'export' => [
+        'csv' => [
+            // Include the BOM (byte-order mark) in generated CSV files?
+            // @var bool
+            'include_bom' => false,
         ],
     ],
 
@@ -320,35 +338,47 @@ return [
      */
     'log' => [
         /*
-         * Log emails
+         * Whether to log emails
          *
          * @var bool
          */
         'emails' => true,
 
         /*
-         * Log Errors
+         * Whether to log Errors
          *
          * @var bool
          */
         'errors' => true,
 
         /*
-         * Log Spam
+         * Whether to log Spam
          *
          * @var bool
          */
         'spam' => false,
 
-        'queries' => [
-            /*
-             * Whether to log database queries or not.
-             *
-             * @var bool
-             */
-            'log' => false,
+        'enable_dashboard_report' => true,
 
-            'clear_on_reload' => false,
+        'configuration' => [
+
+            /*
+             * Configuration mode
+             *
+             * @var string simple|advanced
+             */
+            'mode' => 'simple',
+            'simple' => [
+                /**
+                 * What log level to store core logs in the database
+                 * @var string
+                 */
+                'core_logging_level' => 'NOTICE'
+            ],
+
+            'advanced' => [
+                'configuration' => []
+            ],
         ],
     ],
     'jobs' => [
@@ -499,7 +529,7 @@ return [
         /*
          * The threshold (total number of pixels - width x height x number of frames)
          * after which we'll reload images instead of creating in-memory clones.
-         * If empty: unlimited 
+         * If empty: unlimited
          */
         'inplace_image_operations_limit' => 4194304,
         /*

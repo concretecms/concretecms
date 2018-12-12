@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Package\Dependency;
 
 use Concrete\Core\Package\Package;
@@ -11,22 +12,22 @@ class IncompatiblePackagesException extends DependencyException
     /**
      * The package that doesn't want the other package.
      *
-     * @var Package
+     * @var \Concrete\Core\Package\Package
      */
     protected $blockingPackage;
 
     /**
      * The incompatible package.
      *
-     * @var Package
+     * @var \Concrete\Core\Package\Package
      */
     protected $incompatiblePackage;
 
     /**
      * Initialize the instance.
      *
-     * @param Package $blockingPackage the package that doesn't want the other package
-     * @param Package $incompatiblePackage the incompatible package
+     * @param \Concrete\Core\Package\Package $blockingPackage the package that doesn't want the other package
+     * @param \Concrete\Core\Package\Package $incompatiblePackage the incompatible package
      */
     public function __construct(Package $blockingPackage, Package $incompatiblePackage)
     {
@@ -42,7 +43,7 @@ class IncompatiblePackagesException extends DependencyException
     /**
      * Get the package that can't be uninstalled.
      *
-     * @return Package
+     * @return \Concrete\Core\Package\Package
      */
     public function getBlockingPackage()
     {
@@ -52,7 +53,7 @@ class IncompatiblePackagesException extends DependencyException
     /**
      * Get the incompatible package.
      *
-     * @return Package
+     * @return \Concrete\Core\Package\Package
      */
     public function getIncompatiblePackage()
     {

@@ -167,30 +167,93 @@ class Controller extends BlockController
             $orderBy = $reverseMap[$orderBy];
         }
         $db = $this->app->make(Connection::class);
+        $now = $this->app->make('date')->getOverridableNow();
         for ($page = Page::getCurrentPage(); $page && !$page->isError();) {
             switch ($orderBy) {
                 case 'chrono_desc':
                     $cID = $db->fetchColumn(
-                        'select Pages.cID from Pages inner join CollectionVersions cv on Pages.cID = cv.cID where Pages.cID <> ? and cvIsApproved = 1 and ((cvDatePublic = ? and cDisplayOrder > ?) or cvDatePublic > ?) and cParentID = ?  order by cvDatePublic asc, cDisplayOrder asc',
-                        [$page->getCollectionID(), $page->getCollectionDatePublic(), $page->getCollectionDisplayOrder(), $page->getCollectionDatePublic(), $page->getCollectionParentID()]
+                        <<<'EOT'
+select
+    Pages.cID
+from
+    Pages
+    inner join CollectionVersions cv
+        on Pages.cID = cv.cID
+where
+    Pages.cID <> ?
+    and cvIsApproved = 1 and (cvPublishDate is null or cvPublishDate <= ?) and (cvPublishEndDate is null or cvPublishEndDate >= ?)
+    and ((cvDatePublic = ? and cDisplayOrder > ?) or cvDatePublic > ?)
+    and cParentID = ?
+order by
+    cvDatePublic asc,
+    cDisplayOrder asc
+EOT
+                        ,
+                        [$page->getCollectionID(), $now, $now, $page->getCollectionDatePublic(), $page->getCollectionDisplayOrder(), $page->getCollectionDatePublic(), $page->getCollectionParentID()]
                     );
                     break;
                 case 'chrono_asc':
                     $cID = $db->fetchColumn(
-                        'select Pages.cID from Pages inner join CollectionVersions cv on Pages.cID = cv.cID where Pages.cID <> ? and cvIsApproved = 1 and ((cvDatePublic = ? and cDisplayOrder < ?) or cvDatePublic < ?) and cParentID = ?  order by cvDatePublic desc, cDisplayOrder desc',
-                        [$page->getCollectionID(), $page->getCollectionDatePublic(), $page->getCollectionDisplayOrder(), $page->getCollectionDatePublic(), $page->getCollectionParentID()]
+                        <<<'EOT'
+select
+    Pages.cID
+from
+    Pages
+    inner join CollectionVersions cv
+        on Pages.cID = cv.cID
+where
+    Pages.cID <> ?
+    and cvIsApproved = 1 and (cvPublishDate is null or cvPublishDate <= ?) and (cvPublishEndDate is null or cvPublishEndDate >= ?)
+    and ((cvDatePublic = ? and cDisplayOrder < ?) or cvDatePublic < ?)
+    and cParentID = ?
+order by
+    cvDatePublic desc,
+    cDisplayOrder desc
+EOT
+                        ,
+                        [$page->getCollectionID(), $now, $now, $page->getCollectionDatePublic(), $page->getCollectionDisplayOrder(), $page->getCollectionDatePublic(), $page->getCollectionParentID()]
                     );
                     break;
                 case 'display_desc':
                     $cID = $db->fetchColumn(
-                        'select Pages.cID from Pages inner join CollectionVersions cv on Pages.cID = cv.cID where cvIsApproved = 1 and Pages.cID <> ? and cDisplayOrder < ? and cParentID = ? order by cDisplayOrder desc',
-                        [$page->getCollectionID(), $page->getCollectionDisplayOrder(), $page->getCollectionParentID()]
+                        <<<'EOT'
+select
+    Pages.cID
+from
+    Pages
+    inner join CollectionVersions cv
+        on Pages.cID = cv.cID
+where
+    and Pages.cID <> ?
+    and cvIsApproved = 1 and (cvPublishDate is null or cvPublishDate <= ?) and (cvPublishEndDate is null or cvPublishEndDate >= ?)
+    and cDisplayOrder < ?
+    and cParentID = ?
+order by
+    cDisplayOrder desc
+EOT
+                        ,
+                        [$page->getCollectionID(), $now, $now, $page->getCollectionDisplayOrder(), $page->getCollectionParentID()]
                     );
                     break;
                 case 'display_asc':
                     $cID = $db->fetchColumn(
-                        'select Pages.cID from Pages inner join CollectionVersions cv on Pages.cID = cv.cID where cvIsApproved = 1 and Pages.cID <> ? and  cDisplayOrder > ? and cParentID = ? order by cDisplayOrder asc',
-                        [$page->getCollectionID(), $page->getCollectionDisplayOrder(), $page->getCollectionParentID()]
+                        <<<'EOT'
+select
+    Pages.cID
+from
+    Pages
+    inner join CollectionVersions cv
+        on Pages.cID = cv.cID
+where
+    and Pages.cID <> ?
+    and cvIsApproved = 1 and (cvPublishDate is null or cvPublishDate <= ?) and (cvPublishEndDate is null or cvPublishEndDate >= ?)
+    and cDisplayOrder > ?
+    and cParentID = ?
+order by
+    cDisplayOrder asc
+EOT
+                        ,
+                        [$page->getCollectionID(), $now, $now, $page->getCollectionDisplayOrder(), $page->getCollectionParentID()]
                     );
                     break;
             }
