@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Package\Dependency;
 
 use Concrete\Core\Package\Package;
@@ -11,14 +12,14 @@ class VersionMismatchException extends DependencyException
     /**
      * The package that causes the dependency problem.
      *
-     * @var Package
+     * @var \Concrete\Core\Package\Package
      */
     protected $blockingPackage;
 
     /**
      * The package that fails the requirement.
      *
-     * @var Package
+     * @var \Concrete\Core\Package\Package
      */
     protected $package;
 
@@ -32,8 +33,8 @@ class VersionMismatchException extends DependencyException
     /**
      * Initialize the instance.
      *
-     * @param Package $blockingPackage the package that causes the dependency problem
-     * @param Package $package the package that fails the requirement
+     * @param \Concrete\Core\Package\Package $blockingPackage the package that causes the dependency problem
+     * @param \Concrete\Core\Package\Package $package the package that fails the requirement
      * @param string|string[] $requiredVersion the required package version
      */
     public function __construct(Package $blockingPackage, Package $package, $requiredVersion)
@@ -63,7 +64,7 @@ class VersionMismatchException extends DependencyException
     /**
      * Get the package that causes the dependency problem.
      *
-     * @return Package
+     * @return \Concrete\Core\Package\Package
      */
     public function getBlockingPackage()
     {
@@ -73,7 +74,7 @@ class VersionMismatchException extends DependencyException
     /**
      * Get the package that fails the requirement.
      *
-     * @return Package
+     * @return \Concrete\Core\Package\Package
      */
     public function getPackage()
     {
