@@ -63,7 +63,7 @@ class Edit extends BackendInterfaceBlockController
                 return $this->app->make(ResponseFactoryInterface::class)->create(json_encode($response));
             }
 
-            $pr->outputJSON();
+            return $this->app->make(ResponseFactoryInterface::class)->create($pr->getJSON());
         }
     }
 
