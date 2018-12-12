@@ -20,7 +20,7 @@
         <div class="form-group">
             <label for="redirect" class="control-label"><?php echo t('Redirect'); ?></label>
             <div class="input-group">
-                <?php echo $form->url('redirect', array('autocomplete' => 'off', 'required' => 'required')); ?>
+                <?php echo $form->url('redirect', array('autocomplete' => 'off')); ?>
                 <span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
             </div>
         </div>
