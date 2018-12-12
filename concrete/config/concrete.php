@@ -8,7 +8,7 @@ return [
      */
     'version' => '8.5.0a3',
     'version_installed' => '8.5.0a3',
-    'version_db' => '20181211000000', // the key of the latest database migration
+    'version_db' => '20181211100000', // the key of the latest database migration
 
     /*
      * Installation status
@@ -26,6 +26,11 @@ return [
      * The current Charset
      */
     'charset' => 'UTF-8',
+
+    /*
+     * The byte-order-mark for the current charset
+     */
+    'charset_bom' => "\xEF\xBB\xBF",
 
     /*
      * Maintenance mode
@@ -92,6 +97,19 @@ return [
             'enabled' => true,
             // The chunk size (if empty we'll automatically determine it)
             'chunkSize' => null,
+        ],
+    ],
+
+    /*
+     * ------------------------------------------------------------------------
+     * Export settings
+     * ------------------------------------------------------------------------
+     */
+    'export' => [
+        'csv' => [
+            // Include the BOM (byte-order mark) in generated CSV files?
+            // @var bool
+            'include_bom' => false,
         ],
     ],
 
