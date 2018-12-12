@@ -489,15 +489,18 @@ class Search extends DashboardPageController
             'Content-Disposition' => 'attachment; filename=concrete5_users.csv',
         ];
         $app = $this->app;
+        $config = $this->app->make('config');
+        $bom = $config->get('concrete.export.csv.include_bom') ? $config->get('concrete.charset_bom') : '';
 
         return StreamedResponse::create(
-            function () use ($app, $result) {
+            function () use ($app, $result, $bom) {
                 $writer = $app->build(
                     UserExporter::class,
                     [
                         'writer' => $this->app->make(WriterFactory::class)->createFromPath('php://output', 'w'),
                     ]
                 );
+                echo $bom;
                 $writer->setUnloadDoctrineEveryTick(50);
                 $writer->insertHeaders();
                 $writer->insertList($result->getItemListObject());

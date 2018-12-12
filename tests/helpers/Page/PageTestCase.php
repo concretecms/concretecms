@@ -91,6 +91,14 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
         $this->app = Application::getFacadeApplication();
     }
 
+    /**
+     * @param string $name
+     * @param \Concrete\Core\Page\Page|string|false $parent
+     * @param string|int|false $type
+     * @param string|int|false $template
+     *
+     * @return \Concrete\Core\Page\Page
+     */
     protected static function createPage($name, $parent = false, $type = false, $template = false)
     {
         if ($parent === false) {

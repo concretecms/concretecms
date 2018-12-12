@@ -540,9 +540,32 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
 
     public function getOptionUsageArray($parentPage = false, $limit = 9999)
     {
+        $now = $this->app->make('date')->getOverridableNow();
         $db = Database::get();
-        $q = 'select atSelectOptions.value, atSelectOptions.avSelectOptionID, count(atSelectOptions.avSelectOptionID) as total from Pages inner join CollectionVersions on (Pages.cID = CollectionVersions.cID and CollectionVersions.cvIsApproved = 1) inner join CollectionAttributeValues on (CollectionVersions.cID = CollectionAttributeValues.cID and CollectionVersions.cvID = CollectionAttributeValues.cvID) inner join atSelectOptionsSelected on (atSelectOptionsSelected.avID = CollectionAttributeValues.avID) inner join atSelectOptions on atSelectOptionsSelected.avSelectOptionID = atSelectOptions.avSelectOptionID where Pages.cIsActive = 1 and CollectionAttributeValues.akID = ? ';
-        $v = [$this->attributeKey->getAttributeKeyID()];
+        $q = <<<'EOT'
+select
+    atSelectOptions.value,
+    atSelectOptions.avSelectOptionID,
+    count(atSelectOptions.avSelectOptionID) as total
+from
+    Pages
+    inner join CollectionVersions
+        on Pages.cID = CollectionVersions.cID
+        and CollectionVersions.cvIsApproved = 1
+        and (CollectionVersions.cvPublishDate is null or CollectionVersions.cvPublishDate <= ?)
+        and (CollectionVersions.cvPublishEndDate is null or CollectionVersions.cvPublishEndDate >= ?)
+    inner join CollectionAttributeValues
+        on CollectionVersions.cID = CollectionAttributeValues.cID and CollectionVersions.cvID = CollectionAttributeValues.cvID
+    inner join atSelectOptionsSelected
+        on (atSelectOptionsSelected.avID = CollectionAttributeValues.avID)
+    inner join atSelectOptions
+        on atSelectOptionsSelected.avSelectOptionID = atSelectOptions.avSelectOptionID
+where
+    Pages.cIsActive = 1
+    and CollectionAttributeValues.akID = ?
+EOT
+        ;
+        $v = [$now, $now, $this->attributeKey->getAttributeKeyID()];
         if (is_object($parentPage)) {
             $v[] = $parentPage->getCollectionID();
             $q .= 'and cParentID = ?';

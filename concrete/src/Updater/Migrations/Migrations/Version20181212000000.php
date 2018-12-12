@@ -7,7 +7,7 @@ use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 use Doctrine\DBAL\Schema\Schema;
 
-class Version20181207165730 extends AbstractMigration implements RepeatableMigrationInterface
+class Version20181212000000 extends AbstractMigration implements RepeatableMigrationInterface
 {
 
     public function upgradeDatabase()
