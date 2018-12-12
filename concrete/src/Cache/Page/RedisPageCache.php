@@ -24,7 +24,7 @@ class RedisPageCache extends PageCache
     public function __construct()
     {
         $app = Facade::getFacadeApplication();
-        $driver = new Redis($app->make('facade')->get('concrete.cache.page.redis'));
+        $driver = new Redis($app['config']->get('concrete.cache.page.redis'));
 
         self::$pool = new Pool($driver);
     }
