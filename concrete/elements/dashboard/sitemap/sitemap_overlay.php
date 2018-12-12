@@ -1,3 +1,5 @@
+<?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
+
 <div class="ccm-sitemap-overlay-<?= $overlayID; ?>"></div>
 
 <script type="text/javascript">

@@ -4,9 +4,10 @@ namespace Concrete\Controller\Element\Dashboard\Sitemap;
 use Concrete\Core\Controller\ElementController;
 use Concrete\Core\Error\UserMessageException;
 
+defined('C5_EXECUTE') or die('Access Denied.');
+
 class SitemapOverlay extends ElementController
 {
-
     /**
      * @return string
      */
