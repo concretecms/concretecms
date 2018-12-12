@@ -944,7 +944,7 @@
         <page name="Automated Logout" path="/dashboard/system/registration/automated_logout" filename="/dashboard/system/registration/automated_logout.php" pagetype="" description="Automate when users are logged out, or do it manually" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
-                    <value>login, logout, user, agent, ip, change, security, login, session, invalidation, invalid</value>
+                    <value>login, logout, user, agent, ip, change, security, session, invalidation, invalid</value>
                 </attributekey>
             </attributes>
         </page>
