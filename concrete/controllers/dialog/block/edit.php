@@ -37,11 +37,6 @@ class Edit extends BackendInterfaceBlockController
 
         $e = $bi->validate($_POST);
 
-        // We need an ErrorList instance even if the block validation returns true
-        if (!$e instanceof \Concrete\Core\Error\ErrorList\ErrorList) {
-            $e = $this->app->make(ErrorList::class);
-        }
-
         return $e;
     }
 
