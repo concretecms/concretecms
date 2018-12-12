@@ -18,7 +18,7 @@ abstract class Block extends Page
         $pr->setAdditionalDataAttribute('aID', intval($this->area->getAreaID()));
         $pr->setAdditionalDataAttribute('arHandle', $this->area->getAreaHandle());
         $pr->setAdditionalDataAttribute('bID', intval($b->getBlockID()));
-        if ($e) {
+        if (is_object($e)) {
             $pr->setError($e);
         }
         return $pr;
