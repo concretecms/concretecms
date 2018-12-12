@@ -130,7 +130,7 @@ class Controller extends GenericOauth2TypeController
     {
         $config = $this->app->make(Repository::class);
         $this->set('form', $this->app->make('helper/form'));
-        $this->set('data', $config->get('auth.external_concrete5', ''));
+        $this->set('data', $config->get('auth.external_concrete5', []));
         $this->set('redirectUri', $this->urlResolver->resolve(['/ccm/system/authentication/oauth2/external_concrete5/callback']));
 
         $list = $this->app->make(GroupList::class);
