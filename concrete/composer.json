@@ -87,7 +87,8 @@
     "guzzlehttp/guzzle": "^6.3",
     "guzzlehttp/guzzle-services": "^1.1",
     "frankkessler/guzzle-oauth2-middleware": "^0.1.1",
-    "league/fractal": "^0.17.0"
+    "league/fractal": "^0.17.0",
+    "theorchard/monolog-cascade": "0.5.*"
   },
   "extra": {
     "branch-alias": {

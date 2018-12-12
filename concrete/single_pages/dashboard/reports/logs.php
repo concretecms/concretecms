@@ -3,6 +3,7 @@
 $app = Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $valt = $app->make('helper/validation/token');
 $th = $app->make('helper/text');
+if ($isReportEnabled) {
 ?>
 
 <div class="ccm-dashboard-header-buttons">
@@ -47,7 +48,7 @@ $th = $app->make('helper/text');
             <script>
                 clearSelectedChannelLogs = function() {
                     ConcreteAlert.confirm(
-                        <?= json_encode(t('Are you sure you want to clear the %s channel logs?', Log::getChannelDisplayName($selectedChannel))); ?>,
+                        <?= json_encode(t('Are you sure you want to clear the %s channel logs?', \Concrete\Core\Logging\Channels::getChannelDisplayName($selectedChannel))); ?>,
                         function() {
                             location.href = "<?= $controller->action('clear', $valt->generate(), $selectedChannel); ?>";
                         },
@@ -134,3 +135,10 @@ $th = $app->make('helper/text');
         );
     };
 </script>
+
+
+<?php } else { ?>
+
+    <p><?=t('The dashboard log report has been disabled in your logging configuration.')?></p>
+
+<?php }
