@@ -126,7 +126,8 @@ class Install extends DashboardPageController
                         try {
                             $this->app->make(TranslationsInstaller::class)->installMissingPackageTranslations($p);
                         } catch (Exception $x) {
-                            $logger = $this->app->make(LoggerFactory::class)->createLogger(Channels::CHANNEL_PACKAGES)
+                            $logger = $this->app->make(LoggerFactory::class)
+                                ->createLogger(Channels::CHANNEL_PACKAGES);
                             $logger->addError($x);
                         }
                     }
