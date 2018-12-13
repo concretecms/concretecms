@@ -4,7 +4,7 @@ namespace Concrete\Controller\Element\Search\Files;
 use Concrete\Core\Controller\ElementController;
 use Concrete\Core\Entity\Search\Query;
 use Concrete\Core\File\Image\BitmapFormat;
-use Concrete\Core\Search\ProviderInterface;
+use Concrete\Core\File\Search\SearchProvider;
 
 class Header extends ElementController
 {
@@ -33,6 +33,7 @@ class Header extends ElementController
 
     public function view()
     {
+        $provider = $this->app->make(SearchProvider::class);
         $config = $this->app->make('config');
         $bitmapFormat = $this->app->make(BitmapFormat::class);
         $this->set('currentFolder', 0);
@@ -47,6 +48,8 @@ class Header extends ElementController
         $imageMaxHeight = (int) $config->get('concrete.file_manager.restrict_max_height');
         $this->set('imageMaxHeight', $imageMaxHeight > 0 ? $imageMaxHeight : null);
         $this->set('jpegQuality', $bitmapFormat->getDefaultJpegQuality());
+        $this->set('itemsPerPageOptions', $provider->getItemsPerPageOptions());
+        $this->set('itemsPerPage', $provider->getItemsPerPage());
     }
 
 }

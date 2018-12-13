@@ -27,6 +27,7 @@
         ConcreteTree.setupTreeEvents();
 
         my.setupEvents();
+        my.setupItemsPerPageOptions();
         my.setupAddFolder();
         my.setupFolderNavigation();
         my.setupFileUploads();
@@ -534,6 +535,21 @@
         return !my.interactionIsDragging;
     };
 
+	ConcreteFileManager.prototype.setupItemsPerPageOptions = function() {
+		var my = this;
+		my.$element.on('click', '.dropdown-menu li a', function() {
+            my.ajaxUpdate($(this).attr('href'));
+            $(this).parents('.input-group-btn').removeClass('open');
+            my.updateActiveItemsPerPageOption(parseInt($(this).text()));
+			return false;
+		});
+	};
+
+	ConcreteFileManager.prototype.updateActiveItemsPerPageOption = function(itemsPerPage) {
+		var my = this;
+        my.$element.find('.dropdown-menu li').removeClass('active');
+        my.$element.find('.dropdown-menu li[data-items-per-page=' + itemsPerPage + ']').addClass('active');
+        my.$element.find('.dropdown-toggle #selected-option').text(itemsPerPage);
 
     ConcreteFileManager.prototype.updateResults = function(result) {
         var my = this;
@@ -542,6 +558,7 @@
         my.setupBreadcrumb(result);
         my.setupRowDragging();
         my.setupImageThumbnails();
+        if (result.itemsPerPage) {
         if (my.options.selectMode == 'choose') {
             my.$element.unbind('.concreteFileManagerHoverFile');
             my.$element.on('mouseover.concreteFileManagerHoverFile', 'tr[data-file-manager-tree-node-type]', function() {

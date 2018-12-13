@@ -9,6 +9,7 @@ use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\FolderItemList;
 use Concrete\Core\File\Search\ColumnSet\FolderSet;
 use Concrete\Core\File\Search\Result\Result;
+use Concrete\Core\File\Search\SearchProvider;
 use Concrete\Core\Search\Field\FieldInterface;
 use Concrete\Core\Search\Field\ManagerFactory;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
@@ -31,6 +32,7 @@ class FileFolder extends AbstractController
 
     public function search(Query $query = null)
     {
+        $app = Application::getFacadeApplication();
         $searchRequest = new StickyRequest('file_manager_folder');
 
         if ($this->request->get('folder')) {
@@ -79,6 +81,17 @@ class FileFolder extends AbstractController
             if (is_array($fields) && count($fields) > 0) { // We are passing in something like "filter by images"
                 $manager = ManagerFactory::get('file_folder');
                 $filters = $manager->getFieldsFromRequest($this->request->query->all());
+            }
+
+            $provider = $app->make(SearchProvider::class);
+            $itemsPerPage = (int) $this->request->get('fSearchItemsPerPage');
+            if (empty($itemsPerPage)) {
+                $itemsPerPage = $provider->getItemsPerPage();
+            }
+
+            if (!empty($itemsPerPage)) {
+                $list->setItemsPerPage($itemsPerPage);
+                $provider->setItemsPerPageSession($itemsPerPage);
             }
 
             if (count($filters)) {
