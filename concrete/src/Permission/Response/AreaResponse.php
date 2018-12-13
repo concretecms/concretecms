@@ -39,6 +39,9 @@ class AreaResponse extends Response
         if ($bt->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) {
             return $this->canAddLayout();
         }
+        if ($bt->getBlockTypeHandle() == BLOCK_HANDLE_PAGE_TYPE_OUTPUT_PROXY) {
+            return $this->canAddBlocks();
+        }
         $pk = $this->category->getPermissionKeyByHandle('add_block_to_area');
         $pk->setPermissionObject($this->object);
 
