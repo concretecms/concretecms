@@ -2,26 +2,30 @@
 namespace Concrete\Core\File\Search;
 
 use Concrete\Core\Attribute\Category\FileCategory;
-use Concrete\Core\Entity\Search\Query;
+use Concrete\Core\Entity\Search\SavedFileSearch;
 use Concrete\Core\File\FileList;
 use Concrete\Core\File\Search\ColumnSet\DefaultSet;
 use Concrete\Core\File\Search\Result\Result;
-use Concrete\Core\Search\AbstractSearchProvider;
-use Concrete\Core\Search\ProviderInterface;
 use Concrete\Core\File\Search\ColumnSet\Available;
 use Concrete\Core\File\Search\ColumnSet\ColumnSet;
+use Concrete\Core\Search\AbstractSearchProvider;
 use Concrete\Core\Search\QueryableInterface;
 use Concrete\Core\Search\StickyRequest;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\SearchPreset;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Concrete\Core\Entity\Search\SavedFileSearch;
 
 class SearchProvider extends AbstractSearchProvider implements QueryableInterface
 {
-
+    /**
+     * @var \Concrete\Core\Attribute\Category\FileCategory
+     */
     protected $category;
 
+    /**
+     * @return string
+     */
     public function getSessionNamespace()
     {
         return 'file';
@@ -33,41 +37,68 @@ class SearchProvider extends AbstractSearchProvider implements QueryableInterfac
         parent::__construct($session);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Category\AbstractCategory::getCustomAttributeKeys()
+     */
     public function getCustomAttributeKeys()
     {
         return $this->category->getSearchableList();
     }
 
+    /**
+     * @return \Concrete\Core\File\Search\ColumnSet\Available
+     */
     public function getAvailableColumnSet()
     {
         return new Available();
     }
 
+    /**
+     * @return string
+     */
     public function getCurrentColumnSet()
     {
         return ColumnSet::getCurrent();
     }
 
+    /**
+     * @return \Concrete\Core\File\Search\ColumnSet\ColumnSet
+     */
     public function getBaseColumnSet()
     {
         return new ColumnSet();
     }
 
+    /**
+     * @return \Concrete\Core\File\Search\ColumnSet\DefaultSet
+     */
     public function getDefaultColumnSet()
     {
         return new DefaultSet();
     }
 
+    /**
+     * @return \Concrete\Core\File\FileList
+     */
     public function getItemList()
     {
         $list = new FileList();
         $list->setPermissionsChecker(function ($file) {
             $fp = new \Permissions($file);
+
             return $fp->canViewFileInFileManager();
         });
+
         return $list;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Search\AbstractSearchProvider::getItemsPerPage()
+     */
     public function getItemsPerPage()
     {
         $searchRequest = new StickyRequest('file_manager_folder');
@@ -146,14 +177,19 @@ class SearchProvider extends AbstractSearchProvider implements QueryableInterfac
         $this->session->remove('search/' . $this->getSessionNamespace() . '/items_per_page');
     }
 
+    /**
+     * @return \Concrete\Core\File\Search\Result\Result
+     */
     public function createSearchResultObject($columns, $list)
     {
         return new Result($columns, $list);
     }
 
+    /**
+     * @return \Concrete\Core\Entity\Search\SavedFileSearch
+     */
     public function getSavedSearch()
     {
         return new SavedFileSearch();
     }
-    
 }
