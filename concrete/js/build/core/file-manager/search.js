@@ -550,6 +550,7 @@
         my.$element.find('.dropdown-menu li').removeClass('active');
         my.$element.find('.dropdown-menu li[data-items-per-page=' + itemsPerPage + ']').addClass('active');
         my.$element.find('.dropdown-toggle #selected-option').text(itemsPerPage);
+	};
 
     ConcreteFileManager.prototype.updateResults = function(result) {
         var my = this;
@@ -559,6 +560,8 @@
         my.setupRowDragging();
         my.setupImageThumbnails();
         if (result.itemsPerPage) {
+            my.updateActiveItemsPerPageOption(parseInt(result.itemsPerPage));
+        }
         if (my.options.selectMode == 'choose') {
             my.$element.unbind('.concreteFileManagerHoverFile');
             my.$element.on('mouseover.concreteFileManagerHoverFile', 'tr[data-file-manager-tree-node-type]', function() {
