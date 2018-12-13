@@ -33,7 +33,13 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
             </div>
 
             <div class="help-block">
-                <?=t('Loads a custom configuration array from <code>concrete.log.configuration.advanced.configuration</code>. Define your PHP array in the <a href="%s" target="_blank">Monolog Cascade</a> format. <b>Note:</b> unless you specify <code>loggers</code> within your advanced configuration array, siple configuration will be used.', 'https://github.com/theorchard/monolog-cascade/blob/master/README.md')?>
+                <?= t(
+                    /*i18n: %1$s and %3$s are configuration keys, %2$s is an URL */
+                    'Loads a custom configuration array from %1$s. Define your PHP array in the <a href="%2$s" target="_blank">Monolog Cascade</a> format. <b>Note:</b> unless you specify %3$s within your advanced configuration array, simple configuration will be used.',
+                    '<code>concrete.log.configuration.advanced.configuration</code>',
+                    'https://github.com/theorchard/monolog-cascade/blob/master/README.md',
+                    '<code>loggers</code>'
+                ) ?>
             </div>
 
         </div>
