@@ -499,7 +499,7 @@ return [
         /*
          * The threshold (total number of pixels - width x height x number of frames)
          * after which we'll reload images instead of creating in-memory clones.
-         * If empty: unlimited 
+         * If empty: unlimited
          */
         'inplace_image_operations_limit' => 4194304,
         /*
@@ -600,6 +600,17 @@ return [
                 'allowed_attributes' => '',
             ],
         ],
+        /*
+         * Options for the results per page dropdown
+         *
+         * @var array
+         */
+        'items_per_page_options' => [10, 25, 50, 100, 250],
+        /*
+         * Default number of results per page
+         *
+         * @var int
+         */
         'results' => 10,
     ],
 
