@@ -24,16 +24,18 @@ defined('C5_EXECUTE') or die("Access Denied.");
     <form method="get" action="<?php echo URL::to('/ccm/system/search/files/basic')?>">
 
         <div class="input-group">
-            <div class="input-group-btn">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span id="selected-option"><?= $itemsPerPage; ?></span> <span class="caret"></span></button>
-                <ul class="dropdown-menu">
-                    <?php foreach ($itemsPerPageOptions as $itemsPerPageOption) { ?>
-                        <li data-items-per-page="<?= $itemsPerPageOption; ?>" <?= ($itemsPerPageOption === $itemsPerPage) ? 'class="active"' : ''; ?>>
-                            <a href="<?= URL::to('/ccm/system/file/folder/contents') . '?fSearchItemsPerPage=' . $itemsPerPageOption; ?>"><?= $itemsPerPageOption; ?></a>
-                        </li>
-                    <?php } ?>
-                </ul>
-            </div>
+            <?php if (!empty($itemsPerPageOptions)) { ?>
+                <div class="input-group-btn">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span id="selected-option"><?= $itemsPerPage; ?></span> <span class="caret"></span></button>
+                    <ul class="dropdown-menu" data-action="<?= URL::to('/ccm/system/file/folder/contents'); ?>">
+                        <?php foreach ($itemsPerPageOptions as $itemsPerPageOption) { ?>
+                            <li data-items-per-page="<?= $itemsPerPageOption; ?>" <?= ($itemsPerPageOption === $itemsPerPage) ? 'class="active"' : ''; ?>>
+                                <a href="#"><?= $itemsPerPageOption; ?></a>
+                            </li>
+                        <?php } ?>
+                    </ul>
+                </div>
+            <?php } ?>
 
             <div class="ccm-header-search-form-input">
                 <a class="ccm-header-reset-search" href="#" data-button-action-url="<?=URL::to('/ccm/system/search/files/clear')?>" data-button-action="clear-search"><?=t('Reset Search')?></a>
