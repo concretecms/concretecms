@@ -17,6 +17,7 @@ use Database;
 use Events;
 use Package;
 use Page;
+use Concrete\Core\Error\ErrorList\ErrorList;
 
 class BlockController extends \Concrete\Core\Controller\AbstractController
 {
@@ -137,9 +138,20 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
         $this->blockViewRenderOverride = $view;
     }
 
+    /**
+     * Used to validate a blocks data before saving to the database
+     * Generally should return an empty ErrorList if valid
+     * Custom Packages may return a boolean value
+     *
+     * @param $args array|string|null
+     * @version <= 8.4.3 Method returns ErrorList|boolean
+     * @version 8.5.0a3 Method returns ErrorList
+     * @return ErrorList|boolean
+     */
     public function validate($args)
     {
-        return true;
+        $e = $this->app->make(ErrorList::class);
+        return $e;
     }
 
     public function getBlockControllerData()
