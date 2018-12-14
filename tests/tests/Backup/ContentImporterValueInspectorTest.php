@@ -2,6 +2,7 @@
 
 namespace Concrete\Tests\Backup;
 
+use Concrete\Core\File\Import\FileImporter;
 use Concrete\TestHelpers\File\FileStorageTestCase;
 use Core;
 
@@ -119,7 +120,7 @@ EOL;
         mkdir($this->getStorageDirectory());
         $this->getStorageLocation();
 
-        $importer = new \Concrete\Core\File\Importer();
+        $importer = Core::make(FileImporter::class);
         $prefix = $importer->generatePrefix();
         \Concrete\Core\File\File::add('test.jpg', $prefix);
 

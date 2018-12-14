@@ -11,6 +11,10 @@ use Imagine\Image\ImageInterface;
 use Imagine\Image\Point;
 use InvalidArgumentException;
 
+/**
+ * @deprecated Use Concrete\Core\File\Import\Processor\ImageSizeConstrain
+ * @see \Concrete\Core\File\Import\Processor\ImageSizeConstrain
+ */
 class ConstrainImageProcessor implements ProcessorInterface
 {
     /**

@@ -12,7 +12,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
 /* @var int $restrict_max_width */
 /* @var int $restrict_max_height */
 /* @var bool $use_exif_data_to_rotate_images */
-/* @var bool $allow_unsafe_svg */
+/* @var string $svg_processor_action */
+/* @var array $svg_processor_actions */
 /* @var string|null $thumbnailOptionsURL */
 ?>
 <form method="POST" action="<?= $view->action('save') ?>">
@@ -61,19 +62,16 @@ defined('C5_EXECUTE') or die('Access Denied.');
     </div>
 
     <div class="form-group">
+        <?= $form->label('svg_processor_action', t('SVG Processing'), ['class' => 'launch-tooltip', 'title' => t("SVG images may contain interactive contents. Albeit this feature may be useful, it can be used by an attacker to store malicious code in the images. Disable the SVG checks only if you trust the users that will upload images to the site.")]) ?>
+        <?= $form->select('svg_processor_action', $svg_processor_actions, $svg_processor_action, ['required' => 'required']) ?>
+    </div>
+
+    <div class="form-group">
         <?= $form->label('', t('Other Options')) ?>
         <div class="checkbox">
             <label>
                 <?= $form->checkbox('use_exif_data_to_rotate_images', 1, $use_exif_data_to_rotate_images) ?>
                 <?= t('Use EXIF metadata to auto-rotate images uploaded images.') ?>
-            </label>
-        </div>
-        <div class="checkbox">
-            <label>
-                <?= $form->checkbox('allow_unsafe_svg', 1, $allow_unsafe_svg) ?>
-                <span class="launch-tooltip" title="<?= h(t("SVG images may contain interactive contents. Albeit this feature may be useful, it can be used by an attacker to store malicious code in the images. Enable this feature only if you trust the users that will upload images to the site.")) ?>">
-                    <?= t('Allow unsafe SVG features') ?>
-                </span>
             </label>
         </div>
     </div>

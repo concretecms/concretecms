@@ -8,7 +8,7 @@ return [
      */
     'version' => '8.5.0a3',
     'version_installed' => '8.5.0a3',
-    'version_db' => '20181212221911', // the key of the latest database migration
+    'version_db' => '20181214142100', // the key of the latest database migration
 
     /*
      * Installation status
@@ -622,8 +622,9 @@ return [
             'preview_image_popover' => true,
             // SVG sanitization
             'svg_sanitization' => [
-                // Enable the SVG sanitification?
-                'enabled' => true,
+                // The operation that the SVG sanitizer should perform.
+                // This must be value of one of the Concrete\Core\File\Import\Processor\SvgProcessor::ACTION_... constants
+                'action' => 'sanitize',
                 // Space-separated list of tags to be kept
                 'allowed_tags' => '',
                 // Space-separated list of attributes to be kept

@@ -5,7 +5,8 @@ namespace Concrete\Core\File\ImportProcessor;
 use Concrete\Core\Entity\File\Version;
 
 /**
- * The interface that file processors should implement.
+ * @deprecated Use Concrete\Core\File\Import\Processor\PostProcessorInterface
+ * @see \Concrete\Core\File\Import\Processor\PostProcessorInterface
  */
 interface ProcessorInterface
 {
