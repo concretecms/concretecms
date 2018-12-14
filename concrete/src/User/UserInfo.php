@@ -254,6 +254,22 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
         $this->connection->executeQuery('UPDATE Pages set uID = ? WHERE uID = ?', [(int) USER_SUPER_ID, (int) $this->getUserID()]);
         $this->connection->executeQuery('UPDATE DownloadStatistics set uID = 0 WHERE uID = ?', [(int) $this->getUserID()]);
 
+        // We need to clear out the doctrine proxies for userSignups or we will get a Doctrine Error
+        /** @var \Concrete\Core\Entity\User\UserSignup[] $userSignups */
+        $userSignups = $this->entityManager->getRepository(\Concrete\Core\Entity\User\UserSignup::class)->findBy(['createdBy'=>(int) $this->getUserID()]);
+        $superAdminEntity = $this->entityManager->getRepository(UserEntity::class)->find((int) USER_SUPER_ID);
+
+        foreach ($userSignups as $userSignup) {
+            // If there is no SuperAdmin Just remove the relatedUserSignups
+            if (is_object($superAdminEntity)) {
+                $userSignup->setCreatedBy($superAdminEntity);
+                $this->entityManager->persist($userSignup);
+            } else {
+                $this->entityManager->remove($userSignup);
+            }
+
+        }
+
         $this->entityManager->remove($this->entity);
         $this->entityManager->flush();
 
