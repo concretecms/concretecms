@@ -53,6 +53,12 @@ class Controller extends BlockController
             }
         }
 
+        if ($this->noCookie) {
+            $this->set('youtubeDomain', 'www.youtube-nocookie.com');
+        } else {
+            $this->set('youtubeDomain', 'www.youtube.com');
+        }
+
         if (strpos($videoID, ',') !== false) {
             $this->set('playlist', $videoID);
         }
@@ -115,6 +121,8 @@ class Controller extends BlockController
             'loopEnd' => false,
             'startTimeEnabled' => false,
             'startTime' => '',
+
+            'noCookie' => false,
         ];
 
         $args = [
@@ -137,6 +145,8 @@ class Controller extends BlockController
 
             'startTimeEnabled' => $data['startTimeEnabled'] ? 1 : 0,
             'startTime' => trim($data['startTime']),
+
+            'noCookie' => $data['noCookie'] ? 1 : 0,
         ];
         if ($args['sizing'] === 'fixed') {
             $args += [
