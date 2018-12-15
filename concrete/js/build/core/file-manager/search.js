@@ -388,14 +388,14 @@
     ConcreteFileManager.prototype.setupImageThumbnails = function() {
         $('.ccm-file-manager-list-thumbnail[data-hover-image]').each(function( e ){
             var my = $(this),
-            	style = [],
-            	maxWidth = my.data('hover-maxwidth'),
-            	maxHeight = my.data('hover-maxheight');
+                style = [],
+                maxWidth = my.data('hover-maxwidth'),
+                maxHeight = my.data('hover-maxheight');
             if (maxWidth) {
-            	style.push('max-width: ' + maxWidth);
+                style.push('max-width: ' + maxWidth);
             }
             if (maxHeight) {
-            	style.push('max-height: ' + maxHeight);
+                style.push('max-height: ' + maxHeight);
             }
             style = style.length === 0 ? '' : (' style="' + style.join('; ') + '"');
             my.popover({
@@ -542,9 +542,9 @@
         return !my.interactionIsDragging;
     };
 
-	ConcreteFileManager.prototype.setupItemsPerPageOptions = function() {
-		var my = this;
-		my.$element.on('click', '.dropdown-menu li', function() {
+    ConcreteFileManager.prototype.setupItemsPerPageOptions = function() {
+        var my = this;
+        my.$element.on('click', '.dropdown-menu li', function() {
             var action = $(this).parent().attr('data-action');
             var itemsPerPage = $(this).data('items-per-page');
             if (action && itemsPerPage) {
@@ -552,16 +552,16 @@
                 $(this).parents('.input-group-btn').removeClass('open');
                 my.updateActiveItemsPerPageOption(parseInt($(this).text()));
             }
-			return false;
-		});
+            return false;
+        });
     };
 
-	ConcreteFileManager.prototype.updateActiveItemsPerPageOption = function(itemsPerPage) {
-		var my = this;
+    ConcreteFileManager.prototype.updateActiveItemsPerPageOption = function(itemsPerPage) {
+        var my = this;
         my.$element.find('.dropdown-menu li').removeClass('active');
         my.$element.find('.dropdown-menu li[data-items-per-page=' + itemsPerPage + ']').addClass('active');
         my.$element.find('.dropdown-toggle #selected-option').text(itemsPerPage);
-	};
+    };
 
     ConcreteFileManager.prototype.updateResults = function(result) {
         var my = this;
