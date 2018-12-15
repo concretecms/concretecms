@@ -376,6 +376,13 @@
 
         });
 
+        ConcreteEvent.unsubscribe('FileManagerUpdateFileProperties');
+        ConcreteEvent.subscribe('FileManagerUpdateFileProperties', function(e, r) {
+            if (r.file.fID) {
+                $('[data-file-manager-file=' + r.file.fID + ']').find('.ccm-search-results-name').text(r.file.title);
+            }
+        });
+
     };
 
     ConcreteFileManager.prototype.setupImageThumbnails = function() {

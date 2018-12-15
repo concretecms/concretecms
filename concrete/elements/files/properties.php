@@ -226,5 +226,11 @@ if ($downloadUrl !== $url) {
             jQuery.fn.dialog.closeTop();
             ConcreteEvent.publish('FileManagerJumpToFolder', {'folderID': folderID});
         });
+
+        $('[data-name=fvTitle]').on('save', function(e, params) {
+            if (params.response && params.response.files.length === 1) {
+                ConcreteEvent.publish('FileManagerUpdateFileProperties', {'file': params.response.files[0]});
+            }
+        });
     });
 </script>
