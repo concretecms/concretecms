@@ -2,15 +2,13 @@
 
 namespace Concrete\Block\ImageSlider;
 
-use Concrete\Core\Block\BlockController;
 use Concrete\Core\Editor\LinkAbstractor;
+use Concrete\Core\Block\ItemListBlockController;
 use Concrete\Core\File\Tracker\FileTrackableInterface;
 use Concrete\Core\Statistics\UsageTracker\AggregateTracker;
-use Core;
-use Database;
 use Page;
 
-class Controller extends BlockController implements FileTrackableInterface
+class Controller extends ItemListBlockController implements FileTrackableInterface
 {
     protected $btTable = 'btImageSlider';
     protected $btExportTables = ['btImageSlider', 'btImageSliderEntries'];
@@ -51,14 +49,17 @@ class Controller extends BlockController implements FileTrackableInterface
         return t('Image Slider');
     }
 
+    protected function getItemListTable()
+    {
+        return 'btImageSliderEntries';
+    }
+
     public function getSearchableContent()
     {
         $content = '';
-        $db = Database::get();
-        $v = [$this->bID];
-        $q = 'select * from btImageSliderEntries where bID = ?';
-        $r = $db->query($q, $v);
-        foreach ($r as $row) {
+
+        $rows = $this->getItems();
+        foreach ($rows as $row) {
             $content .= $row['title'] . ' ';
             $content .= $row['description'] . ' ';
         }
@@ -76,9 +77,7 @@ class Controller extends BlockController implements FileTrackableInterface
     {
         $this->requireAsset('core/file-manager');
         $this->requireAsset('core/sitemap');
-        $db = Database::get();
-        $query = $db->GetAll('SELECT * from btImageSliderEntries WHERE bID = ? ORDER BY sortOrder', [$this->bID]);
-        $this->set('rows', $query);
+        $this->set('rows', $this->getItems(['sortOrder' => 'ASC']));
     }
 
     public function composer()
@@ -88,16 +87,13 @@ class Controller extends BlockController implements FileTrackableInterface
 
     public function registerViewAssets($outputContent = '')
     {
-        $al = \Concrete\Core\Asset\AssetList::getInstance();
-
         $this->requireAsset('javascript', 'jquery');
         $this->requireAsset('responsive-slides');
     }
 
     public function getEntries()
     {
-        $db = Database::get();
-        $r = $db->GetAll('SELECT * from btImageSliderEntries WHERE bID = ? ORDER BY sortOrder', [$this->bID]);
+        $r = $this->getItems(['sortOrder' => 'ASC']);
         // in view mode, linkURL takes us to where we need to go whether it's on our site or elsewhere
         $rows = [];
         foreach ($r as $q) {
@@ -118,39 +114,15 @@ class Controller extends BlockController implements FileTrackableInterface
         $this->set('rows', $this->getEntries());
     }
 
-    public function duplicate($newBID)
-    {
-        parent::duplicate($newBID);
-        $db = Database::get();
-        $v = [$this->bID];
-        $q = 'select * from btImageSliderEntries where bID = ?';
-        $r = $db->query($q, $v);
-        while ($row = $r->FetchRow()) {
-            $db->execute('INSERT INTO btImageSliderEntries (bID, fID, linkURL, title, description, sortOrder, internalLinkCID) values(?,?,?,?,?,?,?)',
-                [
-                    $newBID,
-                    $row['fID'],
-                    $row['linkURL'],
-                    $row['title'],
-                    $row['description'],
-                    $row['sortOrder'],
-                    $row['internalLinkCID'],
-                ]
-            );
-        }
-    }
-
     public function delete()
     {
-        $db = Database::get();
-        $db->delete('btImageSliderEntries', ['bID' => $this->bID]);
         parent::delete();
         $this->getTracker()->forget($this);
     }
 
     public function validate($args)
     {
-        $error = Core::make('helper/validation/error');
+        $error = $this->app->make('helper/validation/error');
         $timeout = (int) $args['timeout'];
         $speed = (int) $args['speed'];
 
@@ -181,48 +153,42 @@ class Controller extends BlockController implements FileTrackableInterface
         $args['pause'] = isset($args['pause']) ? 1 : 0;
         $args['maxWidth'] = isset($args['maxWidth']) ? (int) $args['maxWidth'] : 0;
 
-        $db = Database::get();
-        $db->execute('DELETE from btImageSliderEntries WHERE bID = ?', [$this->bID]);
-        parent::save($args);
         if (isset($args['sortOrder'])) {
             $count = count($args['sortOrder']);
             $i = 0;
 
             while ($i < $count) {
-                $linkURL = $args['linkURL'][$i];
-                $internalLinkCID = $args['internalLinkCID'][$i];
-                switch ((int) $args['linkType'][$i]) {
+                switch ((int)$args['linkType'][$i]) {
                     case 1:
-                        $linkURL = '';
+                        $args['linkURL'][$i] = '';
                         break;
                     case 2:
-                        $internalLinkCID = 0;
+                        $args['internalLinkCID'][$i] = 0;
                         break;
                     default:
-                        $linkURL = '';
-                        $internalLinkCID = 0;
+                        $args['linkURL'][$i] = '';
+                        $args['internalLinkCID'][$i] = 0;
                         break;
                 }
-
-                if (isset($args['description'][$i])) {
-                    $args['description'][$i] = LinkAbstractor::translateTo($args['description'][$i]);
-                }
-
-                $db->execute('INSERT INTO btImageSliderEntries (bID, fID, title, description, sortOrder, linkURL, internalLinkCID) values(?, ?, ?, ?,?,?,?)',
-                    [
-                        $this->bID,
-                        (int) $args['fID'][$i],
-                        $args['title'][$i],
-                        $args['description'][$i],
-                        $args['sortOrder'][$i],
-                        $linkURL,
-                        $internalLinkCID,
-                    ]
-                );
-                ++$i;
             }
         }
+
+        parent::save($args);
+
         $this->getTracker()->track($this);
+    }
+
+    /**
+     * In which case the slide entry is valid
+     *
+     * @param array $item
+     * @return bool
+     */
+    protected function isValidItem(array $item)
+    {
+        // Skip item if fID, title and description are empty
+        $description = trim(strip_tags($item['description']));
+        return $item['fID'] > 0 || trim($item['title']) != '' || !empty($description);
     }
 
     public function getUsedFiles()
