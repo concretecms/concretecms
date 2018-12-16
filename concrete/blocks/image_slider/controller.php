@@ -170,6 +170,7 @@ class Controller extends ItemListBlockController implements FileTrackableInterfa
                         $args['internalLinkCID'][$i] = 0;
                         break;
                 }
+                ++$i;
             }
         }
 
