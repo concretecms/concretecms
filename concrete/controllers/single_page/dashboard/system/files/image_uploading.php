@@ -11,6 +11,7 @@ use Concrete\Core\Permission\Checker;
 use Concrete\Core\Url\Resolver\Manager\ResolverManager;
 use Exception;
 use Imagine\Image\Box;
+use Imagine\Image\Metadata\ExifMetadataReader;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
@@ -30,7 +31,6 @@ class ImageUploading extends DashboardPageController
         $this->set('restrict_max_width', (int) $config->get('concrete.file_manager.restrict_max_width'));
         $this->set('restrict_max_height', (int) $config->get('concrete.file_manager.restrict_max_height'));
 
-        $this->set('use_exif_data_to_rotate_images', (bool) $config->get('concrete.file_manager.images.use_exif_data_to_rotate_images'));
         $this->set('svg_processor_action', (string) $config->get('concrete.file_manager.images.svg_sanitization.action'));
         $this->set('svg_processor_actions', [
             SvgProcessor::ACTION_DISABLED => t('do not perform any check'),
@@ -38,6 +38,9 @@ class ImageUploading extends DashboardPageController
             SvgProcessor::ACTION_SANITIZE => t('remove potentially harmfull elements'),
             SvgProcessor::ACTION_REJECT => t('reject files containing potentially harmfull elements'),
         ]);
+
+        $this->set('use_exif_data_to_rotate_images', (bool) $config->get('concrete.file_manager.images.use_exif_data_to_rotate_images'));
+        $this->set('exif_reader_supported', ExifMetadataReader::isSupported());
 
         $thumbnailOptionsURL = null;
         $p = Page::getByPath('/dashboard/system/files/thumbnails/options');

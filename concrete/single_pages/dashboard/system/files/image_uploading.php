@@ -11,9 +11,10 @@ defined('C5_EXECUTE') or die('Access Denied.');
 /* @var int $png_compression */
 /* @var int $restrict_max_width */
 /* @var int $restrict_max_height */
-/* @var bool $use_exif_data_to_rotate_images */
 /* @var string $svg_processor_action */
 /* @var array $svg_processor_actions */
+/* @var bool $use_exif_data_to_rotate_images */
+/* @var bool $exif_reader_supported */
 /* @var string|null $thumbnailOptionsURL */
 ?>
 <form method="POST" action="<?= $view->action('save') ?>">
@@ -72,6 +73,27 @@ defined('C5_EXECUTE') or die('Access Denied.');
             <label>
                 <?= $form->checkbox('use_exif_data_to_rotate_images', 1, $use_exif_data_to_rotate_images) ?>
                 <?= t('Use EXIF metadata to auto-rotate images uploaded images.') ?>
+                <?php
+                if (!$exif_reader_supported) {
+                    ?>
+                    <span class="small text-muted" id="use_exif_data_to_rotate_images-warning"<?= $use_exif_data_to_rotate_images ? '' : ' style="display:none"' ?>>
+                        <br>
+                        <i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red"></i>
+                        <?= t('This feature requires the %s PHP extension, which is not currently enabled.', '<code>EXIF</code>') ?>
+                    </span>
+                    <script>
+                    $(document).ready(function() {
+                        $('#use_exif_data_to_rotate_images')
+                            .on('change', function() {
+                                $('#use_exif_data_to_rotate_images-warning').toggle(this.checked);
+                            })
+                            .trigger('change')
+                        ;
+                    });
+                    </script>
+                    <?php
+                }
+                ?>
             </label>
         </div>
     </div>
