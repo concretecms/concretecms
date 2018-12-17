@@ -192,6 +192,8 @@ class ImportingFile
         if ($this->mimeType === null) {
             $this->mimeType = (string) $this->mimeService->mimeFromExtension($this->getFileExtension());
         }
+
+        return $this->mimeType;
     }
 
     /**
