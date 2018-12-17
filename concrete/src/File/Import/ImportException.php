@@ -115,12 +115,13 @@ class ImportException extends UserMessageException
      * Create a new instance given the error code.
      *
      * @param string $code
+     * @param \Exception|\Throwable|null $innerException
      *
      * @return static
      */
-    public static function fromErrorCode($code)
+    public static function fromErrorCode($code, $innerException = null)
     {
-        return new static(static::describeErrorCode($code), $code);
+        return new static(static::describeErrorCode($code), $code, $innerException);
     }
 
     /**
