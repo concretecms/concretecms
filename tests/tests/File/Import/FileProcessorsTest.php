@@ -93,12 +93,13 @@ class FileProcessorsTest extends FileStorageTestCase
         $unrotatedWidthRange = range($unrotatedWidth - 1, $unrotatedWidth + 1);
         $unrotatedHeightRange = range($unrotatedHeight - 1, $unrotatedHeight + 1);
         $fileSHA1 = sha1_file($file);
+        $index = 0;
         foreach ([false, true] as $enableExifRotation) {
             $fv = self::$config->withKey(
                 'concrete.file_manager.images.use_exif_data_to_rotate_images',
                 $enableExifRotation,
-                function () use ($file) {
-                    return self::$app->make(FileImporter::class)->importLocalFile($file);
+                function () use ($file, $index) {
+                    return self::$app->make(FileImporter::class)->importLocalFile($file, "test-autorotator-{$index}.jpg");
                 }
             );
             // Check that the file hasn't changed
@@ -112,6 +113,7 @@ class FileProcessorsTest extends FileStorageTestCase
                 $this->assertContains($width, $unrotatedWidthRange);
                 $this->assertContains($height, $unrotatedHeightRange);
             }
+            $index++;
         }
     }
 
@@ -124,6 +126,7 @@ class FileProcessorsTest extends FileStorageTestCase
         $maxHeight = 5;
         $fileSHA1 = sha1_file($file);
         $keys = self::$config->get('concrete.file_manager');
+        $index = 0;
         foreach ([
             [false, false],
             [true, false],
@@ -133,8 +136,8 @@ class FileProcessorsTest extends FileStorageTestCase
             $fv = self::$config->withKey(
                 'concrete.file_manager',
                 ['restrict_max_width' => $restrictDimensions[0] ? $maxWidth : null, 'restrict_max_height' => $restrictDimensions[1] ? $maxHeight : null] + $keys,
-                function () use ($file) {
-                    return self::$app->make(FileImporter::class)->importLocalFile($file);
+                function () use ($file, $index) {
+                    return self::$app->make(FileImporter::class)->importLocalFile($file, "test-constrain-{$index}.jpg");
                 }
             );
             // Check that the file hasn't changed
@@ -152,6 +155,7 @@ class FileProcessorsTest extends FileStorageTestCase
                     $this->assertLessThanOrEqual($maxHeight, $height);
                 }
             }
+            $index++;
         }
     }
 
@@ -213,6 +217,8 @@ class FileProcessorsTest extends FileStorageTestCase
      */
     public function testLoadHarmfulSvg($action, $shouldImport, $shouldSanitize = null, $allowedTags = '', $allowedAttributes = '')
     {
+        static $index = 0;
+        $index++;
         $file = DIR_TESTS . '/assets/File/Import/harmful.svg';
         $fileSHA1 = sha1_file($file);
         $fileContents = file_get_contents($file);
@@ -224,8 +230,8 @@ class FileProcessorsTest extends FileStorageTestCase
                     'allowed_tags' => $allowedTags,
                     'allowed_attributes' => $allowedAttributes,
                 ] + self::$config->get('concrete.file_manager.images.svg_sanitization'),
-                function () use ($file) {
-                    return self::$app->make(FileImporter::class)->importLocalFile($file);
+                function () use ($file, $index) {
+                    return self::$app->make(FileImporter::class)->importLocalFile($file, "test-harmful-{$index}.svg");
                 }
             );
             $error = null;
