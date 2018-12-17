@@ -6,6 +6,11 @@ use Core;
 use Database;
 use Page;
 use Permissions;
+use Concrete\Core\Error\UserMessageException;
+use Concrete\Core\Block\View\BlockView;
+use Concrete\Core\Http\ResponseFactoryInterface;
+use Concrete\Core\Entity\Block\BlockType\BlockType;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * The controller for the Auto-Nav block.
@@ -31,6 +36,7 @@ class Controller extends BlockController
     public $haveRetrievedSelfPlus1 = false;
     public $displayUnapproved = false;
     public $ignoreExcludeNav = false;
+    protected $helpers = ['form', 'validation/token'];
     protected $homePageID;
     protected $btTable = 'btNavigation';
     protected $btInterfaceWidth = 700;
@@ -411,7 +417,7 @@ class Controller extends BlockController
                         $tc1 = Page::getByID($row['cID'], "ACTIVE");
                     }
                     $tc1v = $tc1->getVersionObject();
-                    if (!$tc1v->isApproved() && !$this->displayUnapproved) {
+                    if (!$tc1v->isApprovedNow() && !$this->displayUnapproved) {
                         $displayHeadPage = false;
                     }
                 }
@@ -749,7 +755,7 @@ class Controller extends BlockController
     protected function displayPage($tc)
     {
         $tcv = $tc->getVersionObject();
-        if ((!is_object($tcv)) || (!$tcv->isApproved() && !$this->displayUnapproved)) {
+        if ((!is_object($tcv)) || (!$tcv->isApprovedNow() && !$this->displayUnapproved)) {
             return false;
         }
 
@@ -766,5 +772,35 @@ class Controller extends BlockController
     public function excludeFromNavViaAttribute($c)
     {
         return $c->getAttribute('exclude_nav');
+    }
+
+    public function action_preview_pane()
+    {
+        $token = $this->app->make('token');
+        if (!$token->validate('ccm-autonav-preview')) {
+            throw new UserMessageException($token->getErrorMessage());
+        }
+        $bt = $this->app->make(EntityManagerInterface::class)->find(BlockType::class, $this->getBlockTypeID());
+        $btc = $bt->getController();
+        $post = $this->request->request;
+        $btc->collection = $this->getCollectionObject();
+        $btc->orderBy = $post->get('orderBy');
+        $btc->cID = $post->get('cID');
+        $btc->displayPages = $post->get('displayPages');
+        $btc->displaySubPages = $post->get('displaySubPages');
+        $btc->displaySubPageLevels = $post->get('displaySubPageLevels');
+        $btc->displaySubPageLevelsNum = $post->get('displaySubPageLevelsNum');
+        $btc->displayUnavailablePages = $post->get('displayUnavailablePages');
+        if ($btc->displayPages === 'custom') {
+            $btc->displayPagesCID = $post->get('displayPagesCID');
+            $btc->displayPagesIncludeSelf = $post->get('displayPagesIncludeSelf');
+        }
+        $bv = new BlockView($bt);
+        ob_start();
+        $bv->render('view');
+        $content = ob_get_contents();
+        ob_end_clean();
+
+        return $this->app->make(ResponseFactoryInterface::class)->create($content);
     }
 }

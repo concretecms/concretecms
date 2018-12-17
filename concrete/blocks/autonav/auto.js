@@ -45,46 +45,38 @@ var autonav = {
     }
 };
 
-var request = null, url = null;
+var request = null;
 function reloadPreview(event) {
-    if (!url) {
-        url = $("input[name=autonavPreviewPane]").val();
-    }
-    orderBy = $("select[name=orderBy]", container).val();
-    displayPages = $("select[name=displayPages]", container).val();
-    displaySubPages = $("select[name=displaySubPages]", container).val();
-    displaySubPageLevels = $("select[name=displaySubPageLevels]", container).val();
-    displaySubPageLevelsNum = $("input[name=displaySubPageLevelsNum]", container).val();
-    displayUnavailablePages = $("input[name=displayUnavailablePages]", container).is(':checked') ? 1 : 0;
-    displayPagesCID = $("input[name=displayPagesCID]", container).val();
-    displayPagesIncludeSelf = displayUnavailablePages;
-
-    if (displayPages == "custom" && !displayPagesCID) {
+    var requestData = {
+        orderBy: $('select[name="orderBy"]', container).val(),
+        cID: $('input[name="autonavCurrentCID"]').val(),
+        displayPages: $('select[name="displayPages"]', container).val(),
+        displaySubPages: $('select[name="displaySubPages"]', container).val(),
+        displaySubPageLevels: $('select[name="displaySubPageLevels"]', container).val(),
+        displaySubPageLevelsNum: $('input[name="displaySubPageLevelsNum"]', container).val(),
+        displayUnavailablePages: $('input[name="displayUnavailablePages"]', container).is(':checked') ? 1 : 0,
+        displayPagesCID: $('input[name="displayPagesCID"]', container).val()
+    };
+    if (requestData.displayPages == 'custom' && !requestData.displayPagesCID) {
         return false;
     }
-
+    requestData.displayPagesIncludeSelf = requestData.displayUnavailablePages;
+    requestData[$('input[name="autonavPreviewPaneTokenName"]').val()] = $('input[name="autonavPreviewPaneTokenValue"]').val();
     if (event && event.target) {
         autonav.showLoader($(event.target));
     }
-
     if (request) {
         request.abort();
     }
-    request = $.post(url, {
-        orderBy: orderBy,
-        cID: $("input[name=autonavCurrentCID]").val(),
-        displayPages: displayPages,
-        displaySubPages: displaySubPages,
-        displaySubPageLevels: displaySubPageLevels,
-        displaySubPageLevelsNum: displaySubPageLevelsNum,
-        displayUnavailablePages: displayUnavailablePages,
-        displayPagesCID: displayPagesCID,
-        displayPagesIncludeSelf: displayPagesIncludeSelf
-    }, function (resp) {
-        preview_render.empty().append($(resp));
-        autonav.hideLoader();
-        request = null;
-    });
+    request = $.post(
+        $('input[name="autonavPreviewPane"]').val(),
+        requestData,
+        function (resp) {
+            preview_render.empty().append($(resp));
+            autonav.hideLoader();
+            request = null;
+        }
+    );
 }
 
 Concrete.event.bind('autonav.edit.open', function() {

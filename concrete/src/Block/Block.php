@@ -208,15 +208,29 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         if (!$blockName) {
             return;
         }
+        $app = Application::getFacadeApplication();
+        $now = $app->make('date')->getOverridableNow();
         $db = Loader::db();
-        $sql = 'SELECT b.bID, cvb.arHandle, cvb.cID'
-            . ' FROM Blocks AS b'
-                . ' INNER JOIN CollectionVersionBlocks AS cvb ON b.bID = cvb.bID'
-                    . ' INNER JOIN CollectionVersions AS cv ON cvb.cID = cv.cID AND cvb.cvID = cv.cvID'
-                        . ' WHERE b.bName = ? AND cv.cvIsApproved = 1'
-                            . ' ORDER BY cvb.cvID DESC'
-                                . ' LIMIT 1';
-        $vals = [$blockName];
+        $sql = <<<'EOT'
+SELECT
+    b.bID,
+    cvb.arHandle,
+    cvb.cID
+FROM
+    Blocks AS b
+    INNER JOIN CollectionVersionBlocks AS cvb
+        ON b.bID = cvb.bID
+    INNER JOIN CollectionVersions AS cv
+        ON cvb.cID = cv.cID AND cvb.cvID = cv.cvID
+WHERE
+    b.bName = ?
+    AND cv.cvIsApproved = 1 AND (cv.cvPublishDate IS NULL or cv.cvPublishDate <= ?) AND (cv.cvPublishEndDate IS NULL or cv.cvPublishEndDate >= ?)
+ORDER BY
+    cvb.cvID DESC
+LIMIT 1
+EOT
+        ;
+        $vals = [$blockName, $now, $now];
         $row = $db->getRow($sql, $vals);
         if ($row != false && isset($row['bID']) && $row['bID'] > 0) {
             return self::getByID($row['bID'], Page::getByID($row['cID']), $row['arHandle']);

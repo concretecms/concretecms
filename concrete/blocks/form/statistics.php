@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Block\Form;
 
+use Loader;
+use Core;
 use Concrete\Core\Support\Facade\Application;
 
 class Statistics
@@ -8,7 +10,7 @@ class Statistics
     /**
      * Gets the total number of submissions.
      *
-     * @param string $date set to a specific day (eg '2014-09-14') to retrieve the submissions in that day
+     * @param string $date Set to a specific day (eg '2014-09-14') to retrieve the submissions in that day.
      * @param string $dateTimezone The timezone of the $date parameter (acceptable values: 'user', 'system', 'app' or any valid PHP timezone identifier)
      *
      * @return int
@@ -65,14 +67,15 @@ class Statistics
     {
         $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
-
+        $dh = $app->make('date');
+        $now = $dh->getOverridableNow();
         return $db->query('SELECT s.* FROM ' . $MiniSurvey->btTable . ' AS s, Blocks AS b, BlockTypes AS bt
             WHERE s.bID=b.bID AND b.btID=bt.btID AND bt.btHandle="form" AND EXISTS (
             SELECT 1 FROM CollectionVersionBlocks cvb
-            INNER JOIN CollectionVersions cv ON cvb.cID=cv.cID AND cvb.cvID=cv.cvID
+            INNER JOIN CollectionVersions cv ON cvb.cID=cv.cID AND cvb.cvID=cv.cvID AND 1=cv.cvIsApproved AND (cv.cvPublishDate IS NULL OR cv.cvPublishDate <= ?) AND (cv.cvPublishEndDate IS NULL OR cv.cvPublishEndDate >= ?)
             INNER JOIN Pages p ON cv.cID = p.cID
-            WHERE cvb.bID=s.bID AND p.cIsActive=1 AND cv.cvIsApproved=1
-         )');
+            WHERE cvb.bID=s.bID AND p.cIsActive=1
+         )', [$now, $now]);
     }
 
     public static $sortChoices = ['newest' => 'created DESC', 'chrono' => 'created'];

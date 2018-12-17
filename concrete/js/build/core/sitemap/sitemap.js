@@ -10,6 +10,7 @@
 		options = options || {};
 		options.sitemapIndex = Math.max(0, parseInt(options.sitemapIndex, 10) || 0);
 		options = $.extend({
+			isSitemapOverlay: false,
 			displayNodePagination: false,
 			cParentID: 0,
 			siteTreeID: 0,
@@ -176,6 +177,7 @@
 			}
 
 			var ajaxData = $.extend({
+				'isSitemapOverlay': my.options.isSitemapOverlay ? 1 : 0,
 				'displayNodePagination': my.options.displayNodePagination ? 1 : 0,
 				'cParentID': my.options.cParentID,
 				'siteTreeID': my.options.siteTreeID,
@@ -406,7 +408,7 @@
 			});
 			ConcreteEvent.unsubscribe('SitemapAddPageRequestComplete.sitemap');
 			ConcreteEvent.subscribe('SitemapAddPageRequestComplete.sitemap', function(e, data) {
-				var node = my.getTree().getNodeByKey(data.cParentID);
+				var node = my.getTree().getNodeByKey(String(data.cParentID));
 				if (node) {
 					my.reloadNode(node);
 				}
@@ -414,7 +416,7 @@
 			});
 			ConcreteEvent.subscribe('SitemapUpdatePageRequestComplete.sitemap', function(e, data) {
 				try {
-					var node = my.getTree().getNodeByKey(data.cID);
+					var node = my.getTree().getNodeByKey(String(data.cID));
 					var parent = node.parent;
 					if (parent) {
 						my.reloadNode(parent);
@@ -486,7 +488,7 @@
 							node.remove();
 						}
 						reloadNode.removeChildren();
-		
+
 						my.reloadNode(reloadNode, function() {
 							if (!destNode.bExpanded) {
 								destNode.setExpanded(true, {noAnimation: true});
@@ -534,6 +536,7 @@
 			//my.$sitemap.fancytree('option', 'minExpandLevel', minExpandLevel);
 			var ajaxData = $.extend({
 				'dataType': 'json',
+				'isSitemapOverlay': options.isSitemapOverlay ? 1 : 0,
 				'displayNodePagination': options.displayNodePagination ? 1 : 0,
 				'siteTreeID': options.siteTreeID,
 				'cParentID': node.data.cID,
@@ -563,6 +566,7 @@
 					'siteTreeID': options.siteTreeID,
 					'reloadNode': 1,
 					'includeSystemPages': options.includeSystemPages ? 1 : 0,
+					'isSitemapOverlay': options.isSitemapOverlay ? 1 : 0,
 					'displayNodePagination': options.displayNodePagination ? 1 : 0
 				}, options.ajaxData),
 				params = {
@@ -608,7 +612,7 @@
 		},
 
 		reloadSelfNodeByCID: function(cID, onComplete) {
-			var node = cID ? this.getTree().getNodeByKey(cID.toString()) : null;
+			var node = cID ? this.getTree().getNodeByKey(String(cID)) : null;
 			if (node) {
 				this.reloadSelfNode(node, onComplete);
 			}

@@ -16,7 +16,8 @@
 			},
 			'complete': function() {
 				my.complete(my);
-			}
+			},
+			skipResponseValidation: false
 		}, options);
 		my.options = options;
 		my.execute();
@@ -77,19 +78,29 @@
 			ConcreteAlert.dialog(ccmi18n.error, my.errorResponseToString(r));
 		},
 
-		validateResponse: function(r) {
+		validateResponse: function(r, callback) {
 			if (r.error) {
 				ConcreteEvent.fire('AjaxRequestError', {
 					'response': r
 				});
-				ConcreteAlert.dialog(ccmi18n.error, '<p class="text-danger">' + r.errors.join("<br/>") + '</p>');
+				ConcreteAlert.dialog(
+					ccmi18n.error,
+					'<p class="text-danger">' + r.errors.join("<br/>") + '</p>',
+					function() {
+						if (callback) {
+							callback(false, r);
+						}
+					}
+				);
 				return false;
+			} else if (callback) {
+				callback(true, r);
 			}
 			return true;
 		},
 
 		success: function(r, my, callback) {
-			if (my.options.dataType != 'json' || my.validateResponse(r)) {
+			if (my.options.dataType != 'json' || my.options.skipResponseValidation || my.validateResponse(r)) {
 				if (callback) {
 					callback(r);
 				}

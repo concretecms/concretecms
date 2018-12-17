@@ -14,21 +14,33 @@ class Logging extends DashboardPageController
      */
     public function view($strStatus = false)
     {
+        $config = $this->app->make('config');
         $strStatus = (string) $strStatus;
-        $intLogErrors = Config::get('concrete.log.errors') == 1 ? 1 : 0;
-        $intLogEmails = Config::get('concrete.log.emails') == 1 ? 1 : 0;
-        $intLogQueriesClear = Config::get('concrete.log.queries.clear_on_reload') == 1 ? 1 : 0;
-        $ingLogQueries = Config::get('concrete.log.queries.log') == 1 ? 1 : 0;
+        $intLogErrors = $config->get('concrete.log.errors') == 1 ? 1 : 0;
+        $intLogEmails = $config->get('concrete.log.emails') == 1 ? 1 : 0;
 
         $this->set('fh', Loader::helper('form'));
         $this->set('intLogErrors', $intLogErrors);
         $this->set('intLogEmails', $intLogEmails);
-        $this->set('intLogQueries', $ingLogQueries);
-        $this->set('intLogQueriesClear', $intLogQueriesClear);
 
         if ($strStatus == 'logging_saved') {
             $this->set('message', t('Logging configuration saved.'));
         }
+
+        $levels = [
+            'DEBUG' => t('Debug'),
+            'INFO' => t('Info'),
+            'NOTICE' => t('Notice'),
+            'WARNING' => t('Warning'),
+            'ERROR' => t('Error'),
+            'CRITICAL' => t('Critical'),
+            'ALERT' => t('Alert'),
+            'EMERGENCY' => t('Emergency'),
+        ];
+        $this->set('enableDashboardReport', !!$config->get('concrete.log.enable_dashboard_report'));
+        $this->set('levels', $levels);
+        $this->set('loggingMode', $config->get('concrete.log.configuration.mode'));
+        $this->set('coreLoggingLevel', $config->get('concrete.log.configuration.simple.core_logging_level'));
     }
 
     /**
@@ -36,17 +48,25 @@ class Logging extends DashboardPageController
      */
     public function update_logging()
     {
+        $config = $this->app->make('config');
         if ($this->token->validate('update_logging')) {
             if ($this->isPost()) {
                 $intLogErrorsPost = $this->post('ENABLE_LOG_ERRORS') == 1 ? 1 : 0;
                 $intLogEmailsPost = $this->post('ENABLE_LOG_EMAILS') == 1 ? 1 : 0;
-                $intLogQueries = $this->post('ENABLE_LOG_QUERIES') == 1 ? 1 : 0;
-                $intLogQueriesClearOnReload = $this->post('ENABLE_LOG_QUERIES_CLEAR') == 1 ? 1 : 0;
 
-                Config::save('concrete.log.errors', $intLogErrorsPost);
-                Config::save('concrete.log.emails', $intLogEmailsPost);
-                Config::save('concrete.log.queries.log', $intLogQueries);
-                Config::save('concrete.log.queries.clear_on_reload', $intLogQueriesClearOnReload);
+                $config->save('concrete.log.errors', $intLogErrorsPost);
+                $config->save('concrete.log.emails', $intLogEmailsPost);
+
+                $mode = $this->request->request->get('logging_mode');
+                if ($mode != 'advanced') {
+                    $mode = 'simple';
+                    $config->save('concrete.log.configuration.simple.core_logging_level',
+                        $this->request->request->get('logging_level')
+                    );
+                }
+                $config->save('concrete.log.enable_dashboard_report',
+                    $this->request->request->get('enable_dashboard_report') ? true : false);
+                $config->save('concrete.log.configuration.mode', $mode);
 
                 $this->redirect('/dashboard/system/environment/logging', 'logging_saved');
             }

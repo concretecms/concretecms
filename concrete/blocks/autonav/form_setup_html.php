@@ -1,8 +1,27 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-$form = Loader::helper('form');
+
+/* @var Concrete\Block\Autonav\Controller $controller */
+/* @var Concrete\Core\Block\View\BlockView $view */
+
+/* @var Concrete\Core\Entity\Block\BlockType\BlockType $bt */
+/* @var Concrete\Core\Form\Service\Form $form */
+/* @var Concrete\Core\Validation\CSRF\Token $validation_token */
+/* @var array $info */
 $c = Page::getCurrentPage();
 $page_selector = Loader::helper('form/page_selector');
+if (!isset($info)) {
+    $info = [];
+}
+$info += [
+    'orderBy' => null,
+    'displayUnavailablePages' => null,
+    'displayPages' => null,
+    'displayPagesCID' => null,
+    'displaySubPages' => null,
+    'displaySubPageLevels' => null,
+    'displaySubPageLevelsNum' => null,
+];
 ?>
 
 <?=Loader::helper('concrete/ui')->tabs(array(
@@ -16,8 +35,9 @@ $page_selector = Loader::helper('form/page_selector');
     <div class="autonav-form">
 
         <input type="hidden" name="autonavCurrentCID" value="<?= $c->getCollectionID() ?>"/>
-        <input type="hidden" name="autonavPreviewPane"
-               value="<?= Loader::helper('concrete/urls')->getBlockTypeToolsURL($bt) ?>/preview_pane"/>
+        <input type="hidden" name="autonavPreviewPane" value="<?= h($controller->getActionURL('preview_pane')) ?>"/>
+        <input type="hidden" name="autonavPreviewPaneTokenName" value="<?= h($validation_token::DEFAULT_TOKEN_NAME) ?>" />
+        <input type="hidden" name="autonavPreviewPaneTokenValue" value="<?= h($validation_token->generate('ccm-autonav-preview')) ?>" />
 
         <fieldset>
             <div class="form-group">

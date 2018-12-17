@@ -166,13 +166,16 @@ class Range extends DashboardPageController
         /* @var IPService $ipService */
         $ranges = $ipService->getRanges($type, $includeExpired);
         $app = $this->app;
+        $config = $this->app->make('config');
+        $bom = $config->get('concrete.export.csv.include_bom') ? $config->get('concrete.charset_bom') : '';
 
         return StreamedResponse::create(
-            function () use ($app, $type, $ranges) {
+            function () use ($app, $type, $ranges, $bom) {
                 $writer = $app->build(IPRangesCsvWriter::class, [
                     'writer' => $app->make(WriterFactory::class)->createFromPath('php://output', 'w'),
                     'type' => $type
                 ]);
+                echo $bom;
                 $writer->insertHeaders();
                 $writer->insertRanges($ranges);
             },
