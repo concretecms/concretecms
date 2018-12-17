@@ -7,7 +7,7 @@ use Concrete\Core\Validator\AbstractTranslatableValidator;
 use InvalidArgumentException;
 use RuntimeException;
 
-class RegexValidator extends AbstractTranslatableValidator
+class  RegexValidator extends AbstractTranslatableValidator
 {
     /**
      * Passed string doesn't match.
