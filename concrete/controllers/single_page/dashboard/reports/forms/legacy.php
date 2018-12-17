@@ -3,7 +3,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\Reports\Forms;
 
 use Concrete\Core\File\File;
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Loader;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use UserInfo;
 use Page;
 use Concrete\Block\Form\MiniSurvey;
@@ -24,12 +24,12 @@ class Legacy extends DashboardPageController
 
     public function csv()
     {
-        $dateHelper = Loader::helper('date');
         /* @var $dateHelper \Concrete\Core\Localization\Service\Date */
+        $dateHelper = $this->app->make('helper/date');
 
         $this->pageSize = 0;
         $this->loadSurveyResponses();
-        $textHelper = Loader::helper('text');
+        $textHelper = $this->app->make('helper/text');
 
         $questionSet = $this->get('questionSet');
         $answerSets = $this->get('answerSets');
@@ -41,11 +41,11 @@ class Legacy extends DashboardPageController
 
         $fileName = $textHelper->filterNonAlphaNum($surveys[$questionSet]['surveyName']);
 
-        header("Content-Type: text/csv");
-        header("Cache-control: private");
-        header("Pragma: public");
+        header('Content-Type: text/csv');
+        header('Cache-control: private');
+        header('Pragma: public');
         $date = date('Ymd');
-        header("Content-Disposition: attachment; filename=" . $fileName . "_form_data_{$date}.csv");
+        header('Content-Disposition: attachment; filename=' . $fileName . "_form_data_{$date}.csv");
 
         $fp = fopen('php://output', 'w');
 
@@ -56,7 +56,7 @@ class Legacy extends DashboardPageController
         ];
 
         foreach ($questions as $questionId => $question) {
-            if ($question['inputType'] == 'checkboxlist') {
+            if ($question['inputType'] === 'checkboxlist') {
                 $options = explode('%%', $question['options']);
                 foreach ($options as $opt) {
                     $row[] = $questions[$questionId]['question'] . ': ' . $opt;
@@ -83,34 +83,32 @@ class Legacy extends DashboardPageController
             }
 
             foreach ($questions as $questionId => $question) {
-                if ($question['inputType'] == 'checkboxlist') {
+                if ($question['inputType'] === 'checkboxlist') {
                     $options = explode('%%', $question['options']);
                     $subanswers = explode(',', $answerSet['answers'][$questionId]['answer']);
-                    for ($i = 1; $i <= count($options); ++$i) {
+                    for ($i = 1, $iMax = count($options); $i <= $iMax; ++$i) {
                         if (in_array(trim($options[$i - 1]), $subanswers)) {
                             $row[] = 'x';
                         } else {
                             $row[] = '';
                         }
                     }
-                } else {
-                    if ($question['inputType'] == 'fileupload') {
-                        $fID = intval($answerSet['answers'][$questionId]['answer']);
-                        $file = File::getByID($fID);
-                        if ($fID && $file) {
-                            $fileVersion = $file->getApprovedVersion();
-                            $row[] = $fileVersion->getDownloadURL();
-                        } else {
-                            $row[] = t('File not found');
-                        }
+                } else if ($question['inputType'] === 'fileupload') {
+                    $fID = (int)$answerSet['answers'][$questionId]['answer'];
+                    $file = File::getByID($fID);
+                    if ($fID && $file) {
+                        $fileVersion = $file->getApprovedVersion();
+                        $row[] = $fileVersion->getDownloadURL();
                     } else {
-                        $answer = $answerSet['answers'][$questionId]['answer'] . $answerSet['answers'][$questionId]['answerLong'];
+                        $row[] = t('File not found');
+                    }
+                } else {
+                    $answer = $answerSet['answers'][$questionId]['answer'] . $answerSet['answers'][$questionId]['answerLong'];
 
-                        if (in_array(substr($answer, 0, 1), $charactersToEscape)) {
-                            $row[] = $escapeCharacter . $answer;
-                        } else {
-                            $row[] = $answer;
-                        }
+                    if (in_array(substr($answer, 0, 1), $charactersToEscape)) {
+                        $row[] = $escapeCharacter . $answer;
+                    } else {
+                        $row[] = $answer;
                     }
                 }
             }
@@ -125,29 +123,29 @@ class Legacy extends DashboardPageController
     private function loadSurveyResponses()
     {
         $c = Page::getCurrentPage();
-        $db = Loader::db();
         $tempMiniSurvey = new MiniSurvey();
         $pageBase = \URL::to($c);
 
-        if ($this->request->get('action') == 'deleteForm') {
-            if (!Loader::helper('validation/token')->validate('deleteForm')) {
+        if ($this->request->get('action') === 'deleteForm') {
+            if (!$this->token->validate('deleteForm')) {
                 $this->error->add(t('Invalid Token.'));
             } else {
                 $this->deleteForm($this->request->get('bID'), $this->request->get('qsID'));
             }
         }
 
-        if ($this->request->get('action') == 'deleteFormAnswers') {
-            if (!Loader::helper('validation/token')->validate('deleteFormAnswers')) {
+        if ($this->request->get('action') === 'deleteFormAnswers') {
+            if (!$this->token->validate('deleteFormAnswers')) {
                 $this->error->add(t('Invalid Token.'));
             } else {
                 $this->deleteFormAnswers($this->request->get('qsID'));
-                $this->redirect('/dashboard/reports/forms');
+                RedirectResponse::create('/dashboard/reports/forms')->send();
+                $this->app->shutdown();
             }
         }
 
-        if ($this->request->get('action') == 'deleteResponse') {
-            if (!Loader::helper('validation/token')->validate('deleteResponse')) {
+        if ($this->request->get('action') === 'deleteResponse') {
+            if (!$this->token->validate('deleteResponse')) {
                 $this->error->add(t('Invalid Token.'));
             } else {
                 $this->deleteAnswers($this->request->get('asid'));
@@ -167,7 +165,7 @@ class Legacy extends DashboardPageController
 
         //load requested survey response
         if ($this->request->get('qsid')) {
-            $questionSet = intval(preg_replace('/[^[:alnum:]]/', '', $this->request->get('qsid')));
+            $questionSet = (int)preg_replace('/[^[:alnum:]]/', '', $this->request->get('qsid'));
 
             //get Survey Questions
             $questionsRS = MiniSurvey::loadQuestions($questionSet);
@@ -181,7 +179,7 @@ class Legacy extends DashboardPageController
 
             //pagination
             $pageBaseSurvey = $pageBase . '?qsid=' . $questionSet;
-            $paginator = Loader::helper('pagination');
+            $paginator = $this->app->make('helper/pagination');
             $sortBy = $this->request->get('sortBy');
             $paginator->init(
                 (int) $this->request->get('page'), $answerSetCount, $pageBaseSurvey . '&page=%pageNum%&sortBy=' . $sortBy,
@@ -211,20 +209,20 @@ class Legacy extends DashboardPageController
     // DELETE SUBMISSIONS
     private function deleteAnswers($asID)
     {
-        $db = Loader::db();
-        $v = [intval($asID)];
+        $db = $this->app->make('database')->connection();
+        $v = [(int)$asID];
         $q = 'DELETE FROM btFormAnswers WHERE asID = ?';
-        $r = $db->query($q, $v);
+        $db->query($q, $v);
 
         $q = 'DELETE FROM btFormAnswerSet WHERE asID = ?';
-        $r = $db->query($q, $v);
+        $db->query($q, $v);
     }
 
     //DELETE A FORM ANSWERS
     private function deleteFormAnswers($qsID)
     {
-        $db = Loader::db();
-        $v = [intval($qsID)];
+        $db = $this->app->make('database')->connection();
+        $v = [(int)$qsID];
         $q = 'SELECT asID FROM btFormAnswerSet WHERE questionSetId = ?';
 
         $r = $db->query($q, $v);
@@ -237,17 +235,17 @@ class Legacy extends DashboardPageController
     //DELETE FORMS AND ALL SUBMISSIONS
     private function deleteForm($bID, $qsID)
     {
-        $db = Loader::db();
+        $db = $this->app->make('database')->connection();
         $this->deleteFormAnswers($qsID);
 
-        $v = [intval($bID)];
+        $v = [(int)$bID];
         $q = 'DELETE FROM btFormQuestions WHERE bID = ?';
-        $r = $db->query($q, $v);
+        $db->query($q, $v);
 
         $q = 'DELETE FROM btForm WHERE bID = ?';
-        $r = $db->query($q, $v);
+        $db->query($q, $v);
 
         $q = 'DELETE FROM Blocks WHERE bID = ?';
-        $r = $db->query($q, $v);
+        $db->query($q, $v);
     }
 }
