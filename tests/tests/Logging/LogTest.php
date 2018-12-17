@@ -5,16 +5,21 @@ namespace Concrete\Tests\Logging;
 use Cascade\Cascade;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\Configuration\AdvancedConfiguration;
 use Concrete\Core\Logging\Configuration\ConfigurationFactory;
 use Concrete\Core\Logging\Configuration\SimpleConfiguration;
+use Concrete\Core\Logging\Configuration\SimpleDatabaseConfiguration;
+use Concrete\Core\Logging\Configuration\SimpleFileConfiguration;
 use Concrete\Core\Logging\GroupLogger;
 use Concrete\Core\Logging\Handler\DatabaseHandler;
 use Concrete\Core\Logging\LoggerFactory;
+use Concrete\Core\Site\Service;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Support\Facade\Log;
 use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
+use Illuminate\Filesystem\Filesystem;
 use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
@@ -108,7 +113,7 @@ class LogTest extends ConcreteDatabaseTestCase
 
     public function testMoreVerboseDatabaseLogging()
     {
-        $configuration = new SimpleConfiguration(Logger::INFO);
+        $configuration = new SimpleDatabaseConfiguration(Logger::INFO);
 
         $factory = $this->getMockBuilder(ConfigurationFactory::class)
             ->disableOriginalConstructor()
@@ -128,6 +133,47 @@ class LogTest extends ConcreteDatabaseTestCase
 
         $r = $this->db->GetAll('select * from Logs');
         $this->assertCount(4, $r);
+    }
+
+    public function testFileLogging()
+    {
+
+        $directory = __DIR__ . '/';
+
+        $site = $this->getMockBuilder(Site::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $site->expects($this->any())
+            ->method('getSiteName')
+            ->willReturn('My Default Site');
+
+        $configuration = new SimpleFileConfiguration($site, $directory, Logger::INFO);
+
+        $this->assertEquals($directory, $configuration->getDirectory() . '/');
+        $this->assertEquals('my-default-site.log', $configuration->getFileName());
+
+
+        $factory = $this->getMockBuilder(ConfigurationFactory::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $factory->expects($this->once())
+            ->method('createConfiguration')
+            ->willReturn($configuration);
+
+        $factory = new LoggerFactory($factory, $this->app->make('director'));
+        $logger = $factory->createLogger(Channels::CHANNEL_SECURITY);
+
+        $logger->debug('This is a debug line.');
+        $logger->emergency('This is an emergency!');
+        $logger->info('This is an info line.');
+        $logger->notice('This is a notice line.');
+        $logger->warning('This is a warning line.', ['object' => 'foo']);
+
+        $logFile = $directory . 'my-default-site.log';
+        $filesystem = new Filesystem();
+        $contents = $filesystem->get($logFile);
+        $this->assertCount(4, explode("\n", trim($contents)));
+        $filesystem->delete($logFile);
     }
 
     public function testLoggingFacade()
