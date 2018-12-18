@@ -32,7 +32,7 @@ class ConfigurationFactory
             if (isset($configuration['simple']['handler']) && $configuration['simple']['handler'] == 'file') {
                 $site = $this->siteService->getSite();
                 return new SimpleFileConfiguration($site,
-                    $configuration['simple']['file']['directory'],
+                    $configuration['simple']['directory'],
                     $configuration['simple']['core_logging_level']);
             } else {
                 return new SimpleDatabaseConfiguration($configuration['simple']['core_logging_level']);
