@@ -19,6 +19,10 @@ class LoggingServiceProvider extends ServiceProvider
             return $logger;
         });
 
+        $this->app->singleton('log/factory', function($app) {
+            return $app->make(LoggerFactory::class);
+        });
+
         $this->app->singleton('log/application', function($app) {
             if ($app->isInstalled()) {
                 $factory = $app->make(LoggerFactory::class);
