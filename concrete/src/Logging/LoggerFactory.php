@@ -1,25 +1,24 @@
 <?php
+
 namespace Concrete\Core\Logging;
 
 use Concrete\Core\Logging\Configuration\ConfigurationFactory;
-use Concrete\Core\Logging\Configuration\ConfigurationInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class LoggerFactory
 {
-
     /**
-     * @var EventDispatcher
+     * @var \Symfony\Component\EventDispatcher\EventDispatcher
      */
     protected $dispatcher;
 
     /**
-     * @var ConfigurationFactory
+     * @var \Concrete\Core\Logging\Configuration\ConfigurationFactory
      */
     protected $configurationFactory;
 
     /**
-     * @var ConfigurationInterface
+     * @var \Concrete\Core\Logging\Configuration\ConfigurationInterface
      */
     protected $config;
 
@@ -30,15 +29,19 @@ class LoggerFactory
         $this->config = $this->configurationFactory->createConfiguration();
     }
 
+    /**
+     * Create a new logger instance.
+     *
+     * @param string $channel
+     *
+     * @return \Psr\Log\LoggerInterface
+     */
     public function createLogger($channel)
     {
         $logger = $this->config->createLogger($channel);
         $event = new Event($logger);
         $this->dispatcher->dispatch('on_logger_create', $event);
+
         return $logger;
     }
-
 }
-
-
-
