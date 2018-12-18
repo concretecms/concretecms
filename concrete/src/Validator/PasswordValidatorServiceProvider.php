@@ -11,6 +11,7 @@ use Concrete\Core\Validator\String\MaximumLengthValidator;
 use Concrete\Core\Validator\String\MinimumLengthValidator;
 use Concrete\Core\Validator\String\RegexValidator;
 
+
 class PasswordValidatorServiceProvider extends Provider
 {
     /**
@@ -211,5 +212,6 @@ class PasswordValidatorServiceProvider extends Provider
         ]);
 
         return $validator;
+
     }
 }

@@ -281,7 +281,7 @@ class Search extends DashboardPageController
             $password = $this->post('uPassword');
             $passwordConfirm = $this->post('uPasswordConfirm');
 
-            $this->app->make('validator/password')->isValid($password, $this->error);
+            $this->app->make('validator/password')->isValidFor($password, $this->user, $this->error);
 
             if (!$this->app->make('helper/validation/token')->validate('change_password')) {
                 $this->error->add($this->app->make('helper/validation/token')->getErrorMessage());
