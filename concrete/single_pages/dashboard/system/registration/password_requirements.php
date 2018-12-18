@@ -22,25 +22,29 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
             <div class="checkbox">
                 <label>
-                    <?= $form->checkbox('requireSpecialCharacters', '1', $specialCharacters > 0) ?>
-                    <?= t('Require at least %s special characters', $form->number('specialCharacters', $specialCharacters ?: 5)) ?>
-            </div>
-            <div class="checkbox">
-                <label>
-                    <?= $form->checkbox('requireLowerCase', '1', $lowerCase > 0) ?>
-                    <?= t('Require at least %s lowercase characters', $form->number('lowerCase', $lowerCase ?: 1)) ?>
+                    <?= $form->checkbox('requireSpecialCharacters', '1', $specialCharacters > 0, ["style" => "position:relative; margin-right:10px;"]) ?>
+                    <?= t('Require at least %s special characters', $form->number('specialCharacters', $specialCharacters ?: 1,
+                        ["style" => "width:70px; display:inline-block;"])) ?>
                 </label>
             </div>
             <div class="checkbox">
                 <label>
-                    <?= $form->checkbox('requireUpperCase', '1', $upperCase > 0) ?>
-                    <?= t('Require at least %s uppercase characters', $form->number('upperCase', $upperCase ?: 1)) ?>
+                    <?= $form->checkbox('requireLowerCase', '1', $lowerCase > 0, ["style" => "position:relative; margin-right:10px;"]) ?>
+                    <?= t('Require at least %s lowercase characters', $form->number('lowerCase', $lowerCase ?: 1,
+                        ["style" => "width:70px; display:inline-block;"])) ?>
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <?= $form->checkbox('requireUpperCase', '1', $upperCase > 0, ["style" => "position:relative; margin-right:10px;"]) ?>
+                    <?= t('Require at least %s uppercase characters', $form->number('upperCase', $upperCase ?: 1,
+                        ["style" => "width:70px; display:inline-block;"])) ?>
                 </label>
             </div>
 
             <div class="checkbox">
                 <label>
-                    <?= $form->checkbox('passwordReuse', '1', passwordReuse > 0) ?>
+                    <?= $form->checkbox('passwordReuse', '1', passwordReuse > 0, ["style" => "position:relative; margin-right:10px;"]) ?>
                     <?= t('Prevent password reuse') ?>
                 </label>
                 <div class="hidden">

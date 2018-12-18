@@ -7,7 +7,10 @@ use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 use Doctrine\DBAL\Schema\Schema;
 
-class Version20181112001755 extends AbstractMigration implements RepeatableMigrationInterface
+/**
+ * Auto-generated Migration: Please modify to your needs!
+ */
+class Version20181218183445 extends AbstractMigration implements RepeatableMigrationInterface
 {
 
     public function upgradeDatabase()
@@ -24,6 +27,16 @@ class Version20181112001755 extends AbstractMigration implements RepeatableMigra
                 'nist',
             ])
         ]);
+
+        $sp = Page::getByPath('/dashboard/system/registration/open');
+        if (is_object($sp) && !$sp->isError()) {
+            $sp->update([
+                'cName' => 'Account Options',
+            ]);
+            if ($this->isAttributeHandleValid(PageCategory::class, 'meta_keywords')) {
+                $sp->setAttribute('meta_keywords', 'signup, new user, community, public registration, public, registration');
+            }
+        }
     }
 
     public function downgradeSchema(Schema $schema)
@@ -34,5 +47,4 @@ class Version20181112001755 extends AbstractMigration implements RepeatableMigra
             $page->delete();
         }
     }
-
 }
