@@ -149,7 +149,7 @@ class LogTest extends ConcreteDatabaseTestCase
 
         $configuration = new SimpleFileConfiguration($site, $directory, Logger::INFO);
 
-        $this->assertEquals($directory, $configuration->getDirectory() . '/');
+        $this->assertEquals($directory, $configuration->getDirectory() . DIRECTORY_SEPARATOR);
         $this->assertEquals('my-default-site.log', $configuration->getFileName());
 
 
