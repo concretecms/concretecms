@@ -6,6 +6,7 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Foundation\Service\Provider;
 use Concrete\Core\Validator\String\MaximumLengthValidator;
 use Concrete\Core\Validator\String\MinimumLengthValidator;
+use Concrete\Core\Validator\String\ReuseValidator;
 
 class PasswordValidatorServiceProvider extends Provider
 {
@@ -18,7 +19,7 @@ class PasswordValidatorServiceProvider extends Provider
     {
         $this->app->singleton('validator/password', function (Application $app) {
             $config = $app->make('config');
-            $manager = $app->make(ValidatorManagerInterface::class);
+            $manager = $app->make(ValidatorForSubjectManager::class);
 
             $minimumLengthValidator = null;
             $maximumLengthValidator = null;
@@ -59,6 +60,14 @@ class PasswordValidatorServiceProvider extends Provider
                 $maximumLengthValidator->setRequirementString($maximumLengthValidator::E_TOO_LONG, $requirements);
                 $maximumLengthValidator->setErrorString($maximumLengthValidator::E_TOO_LONG, $error);
                 $manager->setValidator('maximum_length', $maximumLengthValidator);
+            }
+
+            $trackUse = $config->get('concrete.user.password.reuse.track', 5);
+            if ($trackUse) {
+                $reuseValidator = $app->make(ReuseValidator::class, ['maxReuse' => $trackUse]);
+                $reuseValidator->setErrorString($reuseValidator::E_PASSWORD_RECENTLY_USED, t("You've recently used this password, please use a unique password."));
+                $reuseValidator->setRequirementString($reuseValidator::E_PASSWORD_RECENTLY_USED, t('Must not have been recently used by this account.'));
+                $manager->setValidator('reuse', $reuseValidator);
             }
 
             return $manager;
