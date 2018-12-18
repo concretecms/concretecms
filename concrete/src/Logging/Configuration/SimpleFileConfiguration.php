@@ -21,7 +21,7 @@ class SimpleFileConfiguration extends SimpleConfiguration
     public function __construct(Site $site, $directory, $coreLevel = Logger::DEBUG)
     {
         $this->site = $site;
-        $this->directory = rtrim($directory, DIRECTORY_SEPARATOR);
+        $this->directory = rtrim($directory, '/' . DIRECTORY_SEPARATOR);
         parent::__construct($coreLevel);
     }
 
@@ -41,7 +41,7 @@ class SimpleFileConfiguration extends SimpleConfiguration
 
     public function createHandler($level)
     {
-        $path = $this->getDirectory() . DIRECTORY_SEPARATOR . $this->getFileName();
+        $path = $this->getDirectory() . '/' . $this->getFileName();
         $handler = new StreamHandler($path, $this->coreLevel);
         return $handler;
     }

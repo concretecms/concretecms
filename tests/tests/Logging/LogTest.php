@@ -138,7 +138,7 @@ class LogTest extends ConcreteDatabaseTestCase
     public function testFileLogging()
     {
 
-        $directory = __DIR__ . DIRECTORY_SEPARATOR; // let's test with a trailing slash just to be a pain.
+        $directory = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__) . '/'; // let's test with a trailing slash just to be a pain.
 
         $site = $this->getMockBuilder(Site::class)
             ->disableOriginalConstructor()
@@ -149,7 +149,7 @@ class LogTest extends ConcreteDatabaseTestCase
 
         $configuration = new SimpleFileConfiguration($site, $directory, Logger::INFO);
 
-        $this->assertEquals($directory, $configuration->getDirectory() . DIRECTORY_SEPARATOR);
+        $this->assertEquals($directory, $configuration->getDirectory() . '/');
         $this->assertEquals('my-default-site.log', $configuration->getFileName());
 
 
