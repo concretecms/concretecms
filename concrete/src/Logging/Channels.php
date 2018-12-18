@@ -9,10 +9,14 @@ class Channels
 {
 
     const CHANNEL_APPLICATION = 'application';
+    const CHANNEL_AUTHENTICATION = 'authentication';
     const CHANNEL_EMAIL = 'sent_emails';
     const CHANNEL_EXCEPTIONS = 'exceptions';
     const CHANNEL_SECURITY = 'security';
     const CHANNEL_PACKAGES = 'packages';
+    const CHANNEL_SPAM = 'spam';
+    const CHANNEL_SITE_ORGANIZATION = 'site_organization';
+    const CHANNEL_USERS = 'users';
 
     public static function getCoreChannels()
     {
@@ -21,6 +25,10 @@ class Channels
             self::CHANNEL_EXCEPTIONS,
             self::CHANNEL_PACKAGES,
             self::CHANNEL_SECURITY,
+            self::CHANNEL_AUTHENTICATION,
+            self::CHANNEL_SPAM,
+            self::CHANNEL_SITE_ORGANIZATION,
+            self::CHANNEL_USERS,
         ];
     }
 

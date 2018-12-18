@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\User\PrivateMessage;
 
+use Concrete\Core\Logging\Channels;
 use Loader;
 use DateTime;
 use Config;
@@ -58,7 +59,12 @@ class Limit
 
         $admin = UserInfo::getByID(USER_SUPER_ID);
 
-        \Log::addEntry(t("User: %s has tried to send more than %s private messages within %s minutes", $offender->getUserName(), Config::get('concrete.user.private_messages.throttle_max'), Config::get('concrete.user.private_messages.throttle_max_timespan')), t('warning'));
+        $app = Facade::getFacadeApplication();
+        $logger = $app->make('log/factory')->createLogger(Channels::CHANNEL_SPAM);
+        $logger->warning(t("User: %s has tried to send more than %s private messages within %s minutes",
+            $offender->getUserName(),
+            Config::get('concrete.user.private_messages.throttle_max'),
+            Config::get('concrete.user.private_messages.throttle_max_timespan')));
 
         $mh = Loader::helper('mail');
 
