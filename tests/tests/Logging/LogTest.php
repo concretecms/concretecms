@@ -138,7 +138,7 @@ class LogTest extends ConcreteDatabaseTestCase
     public function testFileLogging()
     {
 
-        $directory = __DIR__ . '/';
+        $directory = __DIR__ . DIRECTORY_SEPARATOR; // let's test with a trailing slash just to be a pain.
 
         $site = $this->getMockBuilder(Site::class)
             ->disableOriginalConstructor()
