@@ -49,7 +49,7 @@ class Logging extends DashboardPageController
         $this->set('loggingMode', $config->get('concrete.log.configuration.mode'));
         $this->set('coreLoggingLevel', $config->get('concrete.log.configuration.simple.core_logging_level'));
         $this->set('handler', $config->get('concrete.log.configuration.simple.handler'));
-        $this->set('directory', $config->get('concrete.log.configuration.simple.directory'));
+        $this->set('logFile', $config->get('concrete.log.configuration.simple.file.file'));
     }
 
     /**
@@ -62,10 +62,15 @@ class Logging extends DashboardPageController
             $this->error->add($this->token->getErrorMessage());
         }
         if ($this->request->request->get('handler') == 'file' && $this->request->request->get('logging_mode')) {
-            $directory = $this->request->request->get('directory');
+            $logFile = $this->request->request->get('logFile');
             $filesystem = new Filesystem();
+            $directory = dirname($logFile);
             if (!$filesystem->isDirectory($directory) || !$filesystem->isWritable($directory)) {
-                $this->error->add(t('The directory provided must exist and be writable on the web server.'));
+                $this->error->add(t('The directory of the file provided must exist and be writable on the web server.'));
+            }
+            $filename = basename($logFile);
+            if (!$filename || substr($filename, -4) != '.log') {
+                $this->error->add(t('The filename provided must be a valid filename and end with .log'));
             }
         }
         if (!$this->error->has()) {
@@ -84,8 +89,8 @@ class Logging extends DashboardPageController
                 $config->save('concrete.log.configuration.simple.handler',
                     $this->request->request->get('handler')
                 );
-                $config->save('concrete.log.configuration.simple.directory',
-                    $this->request->request->get('directory')
+                $config->save('concrete.log.configuration.simple.file.file',
+                    $this->request->request->get('logFile')
                 );
             }
             $config->save('concrete.log.enable_dashboard_report',
