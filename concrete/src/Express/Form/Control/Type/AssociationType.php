@@ -46,7 +46,6 @@ class AssociationType implements TypeInterface
             $item = new AssociationItem($association);
             $items[] = $item;
         }
-
         return $items;
     }
 

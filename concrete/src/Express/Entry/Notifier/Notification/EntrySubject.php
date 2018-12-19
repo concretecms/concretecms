@@ -6,7 +6,6 @@ use Concrete\Core\Notification\Subject\SubjectInterface;
 
 class EntrySubject implements SubjectInterface
 {
-
     public function __construct(Entry $entry)
     {
         $this->entry = $entry;
@@ -42,7 +41,4 @@ class EntrySubject implements SubjectInterface
     {
         $this->entry = $entry;
     }
-
-
-
 }
