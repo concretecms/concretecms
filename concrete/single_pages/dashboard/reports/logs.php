@@ -44,7 +44,7 @@ if ($isReportEnabled) {
         <div class="ccm-search-field-content">
             <?=$form->select('channel', $channels)?>
             <?php if (isset($selectedChannel)) { ?>
-            <a href="javascript:void(0)" class="btn btn-default btn-danger pull-right" onclick="clearSelectedChannelLogs()" style="margin-top: 30px;"><?=tc('%s is a channel', 'Clear all in %s', Log::getChannelDisplayName($selectedChannel))?></a>
+            <a href="javascript:void(0)" class="btn btn-default btn-danger pull-right" onclick="clearSelectedChannelLogs()" style="margin-top: 30px;"><?=tc('%s is a channel', 'Clear all in %s', \Concrete\Core\Logging\Channels::getChannelDisplayName($selectedChannel))?></a>
             <script>
                 clearSelectedChannelLogs = function() {
                     ConcreteAlert.confirm(
