@@ -37,6 +37,9 @@ class Edit extends BackendInterfaceBlockController
         }
 
         $e = $bi->validate($_POST);
+        if ($e === true) {
+            $e = null;
+        }
         return $e;
     }
 

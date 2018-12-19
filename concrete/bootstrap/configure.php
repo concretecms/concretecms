@@ -341,6 +341,8 @@ defined('DEFAULT_ERROR_REPORTING') or define('DEFAULT_ERROR_REPORTING', E_ALL & 
 const DEBUG_DISPLAY_PRODUCTION = 0;
 const DEBUG_DISPLAY_ERRORS = 1;
 const DEBUG_DISPLAY_ERRORS_SQL = 2; // not used
+
+/* -- Deprecated - use the Channels class instead */
 const LOG_TYPE_EMAILS = 'sent_emails';
 const LOG_TYPE_EXCEPTIONS = 'exceptions';
 

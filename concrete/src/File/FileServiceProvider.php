@@ -3,6 +3,7 @@
 namespace Concrete\Core\File;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\File\Image\Svg\SanitizerOptions;
 use Concrete\Core\File\StorageLocation\StorageLocation;
 use Concrete\Core\File\StorageLocation\StorageLocationInterface;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
@@ -55,6 +56,17 @@ class FileServiceProvider extends ServiceProvider
                     'parentDirectory' => $app->make('helper/file')->getTemporaryDirectory(),
                 ]
             );
+        });
+
+        $this->app->bindIf(SanitizerOptions::class, function (Application $app) {
+            $config = $app->make('config');
+            $options = $app->build(SanitizerOptions::class);
+            $options
+                ->setElementWhitelist($config->get('concrete.file_manager.images.svg_sanitization.allowed_tags'))
+                ->setAttributeWhitelist($config->get('concrete.file_manager.images.svg_sanitization.allowed_attributes'))
+            ;
+
+            return $options;
         });
     }
 }

@@ -9,7 +9,6 @@ class Proxy extends DashboardPageController
     public function view()
     {
         $httpProxyHost = Config::get('concrete.proxy.host');
-        //Log::addEntry('Proxy Host view config: ' . $httpProxyHost);
         $httpProxyPort = Config::get('concrete.proxy.port');
         $httpProxyUser = Config::get('concrete.proxy.user');
         $httpProxyPwd = Config::get('concrete.proxy.password');
@@ -28,7 +27,6 @@ class Proxy extends DashboardPageController
                 Config::save('concrete.proxy.port', $this->post('http_proxy_port'));
                 Config::save('concrete.proxy.user', $this->post('http_proxy_user'));
                 Config::save('concrete.proxy.password', $this->post('http_proxy_pwd'));
-                //Log::addEntry('Proxy Host config: ' . Config::get('concrete.proxy.host'));
                 $this->redirect('/dashboard/system/environment/proxy', 'proxy_saved');
             }
         } else {

@@ -8,6 +8,7 @@ use Concrete\Core\File\Image\BitmapFormat;
 use Concrete\Core\File\Image\Thumbnail\ThumbnailFormatService;
 use Concrete\Core\File\Image\Thumbnail\Type\Type as ThumbnailType;
 use Concrete\Core\Support\Facade\Application;
+use Exception;
 
 /**
  * Handles regular and retina thumbnails. e.g. Each thumbnail type has two versions of itself
@@ -415,9 +416,16 @@ class Version
         $prefix = $fv->getPrefix();
         $filename = $fv->getFileName();
         $hadImagineImage = $fv->hasImagineImage();
-        if ($this->isKeepAnimations() && $fv->getImagineImage()->layers()->count() > 1) {
-            $thumbnailFormat = BitmapFormat::FORMAT_GIF;
-        } else {
+        $thumbnailFormat = null;
+        if ($this->isKeepAnimations()) {
+            try {
+                if ($fv->getImagineImage()->layers()->count() > 1) {
+                    $thumbnailFormat = BitmapFormat::FORMAT_GIF;
+                }
+            } catch (Exception $x) {
+            }
+        }
+        if ($thumbnailFormat === null) {
             $thumbnailFormat = $app->make(ThumbnailFormatService::class)->getFormatForFile($filename);
         }
         if (!$hadImagineImage) {

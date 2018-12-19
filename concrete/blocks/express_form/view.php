@@ -12,19 +12,23 @@ defined('C5_EXECUTE') or die('Access Denied.');
 /** @var string $submitLabel */
 ?>
 <div class="ccm-block-express-form">
-    <?php if (isset($renderer)) { ?>
+    <?php if (isset($renderer)) {
+    ?>
         <div class="ccm-form">
-            <a name="form<?=$bID?>"></a>
+            <a name="form<?=$bID; ?>"></a>
 
-            <?php if (isset($success)) { ?>
+            <?php if (isset($success)) {
+        ?>
                 <div class="alert alert-success">
-                    <?=$success?>
+                    <?=$success; ?>
                 </div>
-            <?php } ?>
+            <?php
+    } ?>
 
-            <?php if (isset($error) && is_object($error)) { ?>
+            <?php if (isset($error) && is_object($error)) {
+        ?>
                 <div class="alert alert-danger">
-                    <?=$error->output()?>
+                    <?=$error->output(); ?>
                 </div>
             <?php } ?>
 
@@ -40,20 +44,22 @@ defined('C5_EXECUTE') or die('Access Denied.');
                         if (!empty($captchaLabel)) {
                             ?>
                             <label class="control-label"><?php echo $captchaLabel; ?></label>
-                            <?php
-                        }
-                        ?>
+                            <?php } ?>
+
                         <div><?php $captcha->display(); ?></div>
                         <div><?php $captcha->showInput(); ?></div>
                     </div>
                 <?php } ?>
 
                 <div class="form-actions">
-                    <button type="submit" name="Submit" class="btn btn-primary"><?=t($submitLabel)?></button>
+                    <button type="submit" name="Submit" class="btn btn-primary"><?=t($submitLabel); ?></button>
                 </div>
             </form>
         </div>
-    <?php } else { ?>
-        <p><?=t('This form is unavailable.')?></p>
-    <?php } ?>
+    <?php
+} else {
+        ?>
+        <p><?=t('This form is unavailable.'); ?></p>
+    <?php
+    } ?>
 </div>

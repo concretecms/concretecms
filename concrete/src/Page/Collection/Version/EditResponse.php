@@ -9,6 +9,9 @@ use stdClass;
 
 class EditResponse extends PageEditResponse
 {
+    /**
+     * @var \Concrete\Core\Page\Collection\Version\Version[]
+     */
     protected $versions = array();
     protected $vl;
 
@@ -41,8 +44,8 @@ class EditResponse extends PageEditResponse
         foreach ($this->versions as $v) {
             $obj = new stdClass();
             $obj->cvID = $v->getVersionID();
-            $obj->cvIsApproved = $v->isApproved() && !$v->getPublishDate();
-            $obj->cvIsScheduled = $v->getPublishDate() != null;
+            $obj->cvIsApproved = $v->isApprovedNow();
+            $obj->cvIsScheduled = $v->getPublishDate() || $v->getPublishEndDate();
             $obj->cvPublishDate = $dateHelper->formatDateTime($v->getPublishDate());
             $obj->cvPublishEndDate = $dateHelper->formatDateTime($v->getPublishEndDate());
             $obj->cpCanDeletePageVersions = $cpCanDeletePageVersions;

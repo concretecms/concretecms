@@ -32,7 +32,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                     if (!$stack) {
                         continue;
                     }
-                    $blocks = $stack->getBlocks();
+                    //$blocks = $stack->getBlocks();
                     ?>
                     <div
                         class="ccm-panel-add-block-stack-item"
@@ -41,52 +41,14 @@ defined('C5_EXECUTE') or die('Access Denied.');
                         data-sID="<?= (int) $stack->getCollectionID() ?>"
                         data-block-type-handle="stack"
                         data-has-add-template="no"
-                        data-supports-inline-add="no"
+                        data-supports-inline-add="no",
+                        data-token="<?=Core::make('token')->generate('load_stack')?>"
                         data-btID="0"
-                        data-dragging-avatar="<?= h('<p><img src="' . URL::to('/concrete/images/stack.png') . '" /><span>' . t('Stack') . '</span></p>') ?>"
-                        data-block-id="<?= (int) $stack->getCollectionID() ?>"
-                    >
+                        data-dragging-avatar="<?= h('<p><img src="' . DIR_REL . '/concrete/images/stack.png' . '" /><span>' . t('Stack') . '</span></p>') ?>"
+                        data-block-id="<?= (int) $stack->getCollectionID() ?>"                    >
                         <div class="stack-name">
-                            <span class="handle"><?= h($stack->getStackName()) ?></span>
-                        </div>
-                        <div class="blocks">
-                            <div class="block-count">
-                                <?= t2('%d Block', '%d Blocks', count($blocks)) ?>
-                            </div>
-                            <?php
-                            foreach ($blocks as $block) {
-                                $type = $block->getBlockTypeObject();
-                                $icon = $ci->getBlockTypeIconURL($type);
-                                ?>
-                                <div
-                                    class="block ccm-panel-add-block-draggable-block-type"
-                                    data-panel-add-block-drag-item="block"
-                                    data-cID="<?= $stack->getCollectionID() ?>"
-                                    data-block-type-handle="<?= $type->getBlockTypeHandle() ?>"
-                                    data-dialog-title="<?= t('Add %s', t($type->getBlockTypeName())) ?>"
-                                    data-dialog-width="<?= $type->getBlockTypeInterfaceWidth() ?>"
-                                    data-dialog-height="<?= $type->getBlockTypeInterfaceHeight() ?>"
-                                    data-has-add-template="<?= $type->hasAddTemplate() ?>"
-                                    data-supports-inline-add="<?= $type->supportsInlineAdd() ?>"
-                                    data-btID="<?= $type->getBlockTypeID() ?>"
-                                    data-dragging-avatar="<?= h('<p><img src="' . $icon . '" /><span>' . t($type->getBlockTypeName()) . '</span></p>') ?>"
-                                    title="<?= t($type->getBlockTypeName()) ?>"
-                                    data-block-id="<?= (int) $block->getBlockID() ?>"
-                                >
-                                    <div class="block-name">
-                                        <span class="handle"><?= h($type->getBlockTypeName()) ?></span>
-                                    </div>
-                                    <div class="block-content">
-                                        <?php
-                                        $bv = new BlockView($block);
-                                        $bv->render('scrapbook');
-                                        ?>
-                                    </div>
-                                    <div class="block-handle"></div>
-                                </div>
-                                <?php
-                            }
-                            ?>
+                            <img class="ccm-panel-add-block-stack-item-handle" src="<?=DIR_REL?>/concrete/images/stack.png" />
+                            <span class="stack-name-inner"><?= h($stack->getStackName()) ?></span>
                         </div>
                     </div>
                     <?php
@@ -94,47 +56,29 @@ defined('C5_EXECUTE') or die('Access Denied.');
                 ?>
             </div>
             <script>
-            $('div.ccm-panel-add-block-stack-item').each(function () {
-                var active = false,
-                    item = $(this),
-                    count = item.find('div.block-count');
+            $('div.ccm-panel-add-block-stack-item').on('click', function () {
+                var $stack = $(this);
+                if ($stack.hasClass('ccm-panel-add-block-stack-item-expanded')) {
+                    return;
+                }
+                $.concreteAjax({
+                    dataType: 'html',
+                    type: 'POST',
+                    data: {'cID': $(this).attr('data-cID'), 'stackID': $(this).attr('data-sID'), 'ccm_token': $(this).attr('data-token')},
+                    url: '<?=URL::to('/ccm/system/panels/add/get_stack_contents')?>',
+                    success: function (r) {
+                        $stack.addClass('ccm-panel-add-block-stack-item-expanded');
+                        $stack.append(r);
+                        $stack.find('div.block').each(function () {
+                            var block, me = $(this), dragger = me.find('div.block-name');
+                            var stack = new Concrete.Stack($stack, Concrete.getEditMode(), null);
+                            block = new Concrete.StackBlock($(this), stack, stack, dragger);
 
-                item.click(function (e) {
-                    e.preventDefault();
-                    var method;
-                    if (active) {
-                        method = $.fn.removeClass;
-                    } else {
-                        method = $.fn.addClass;
+                            block.setPeper(dragger);
+                        });
                     }
-
-                    active = !active;
-
-                    method.call(item, 'active');
-
-                    var blocks = item.find('div.blocks');
-                    if (active) {
-                        blocks.height('auto');
-                        var height = blocks.height();
-                        blocks.height('');
-                        blocks.height(height);
-                    } else {
-                        blocks.height('');
-                    }
-
-                    setTimeout(function () {
-                        count.hasClass('hidden') ? count.removeClass('hidden') : count.addClass('hidden');
-                    }, 250);
-                    return false;
-                });
+                })
             });
-            $('div.ccm-panel-add-block-stack-item').find('a.stack-handle').toggle(function (e) {
-                e.preventDefault();
-                $(this).closest('div.ccm-panel-add-block-stack-item').addClass('active');
-            }, function (e) {
-                e.preventDefault();
-                $(this).closest('div.ccm-panel-add-block-stack-item').removeClass('active');
-            })
             </script>
             <?php
             break;

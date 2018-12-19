@@ -1,36 +1,43 @@
 <?php
+
 namespace Concrete\Core\Error\ErrorList;
 
+use ArrayAccess;
 use Concrete\Core\Error\ErrorList\Error\Error;
 use Concrete\Core\Error\ErrorList\Error\ErrorInterface;
 use Concrete\Core\Error\ErrorList\Error\ExceptionError;
+use Concrete\Core\Error\ErrorList\Error\ThrowableError;
 use Concrete\Core\Error\ErrorList\Field\Field;
 use Concrete\Core\Error\ErrorList\Field\FieldInterface;
 use Concrete\Core\Error\ErrorList\Formatter\JsonFormatter;
 use Concrete\Core\Error\ErrorList\Formatter\StandardFormatter;
 use Concrete\Core\Error\ErrorList\Formatter\TextFormatter;
+use Exception;
+use JsonSerializable;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Throwable;
 
-class ErrorList implements \ArrayAccess, \JsonSerializable
+class ErrorList implements ArrayAccess, JsonSerializable
 {
-
-    protected $errors = array();
+    /**
+     * @var \Concrete\Core\Error\ErrorList\Error\ErrorInterface[]
+     */
+    protected $errors = [];
 
     /**
-     * Whether a offset exists.
+     * @return string
+     */
+    public function __toString()
+    {
+        $formatter = new StandardFormatter($this);
+
+        return (string) $formatter->render();
+    }
+
+    /**
+     * {@inheritdoc}
      *
-     * @link http://php.net/manual/en/arrayaccess.offsetexists.php
-     *
-     * @param mixed $offset <p>
-     * An offset to check for.
-     * </p>
-     *
-     * @return bool true on success or false on failure.
-     * </p>
-     * <p>
-     * The return value will be casted to boolean if non-boolean was returned.
-     *
-     * @since 5.0.0
+     * @see \ArrayAccess::offsetExists()
      */
     public function offsetExists($offset)
     {
@@ -38,17 +45,11 @@ class ErrorList implements \ArrayAccess, \JsonSerializable
     }
 
     /**
-     * Offset to retrieve.
+     * {@inheritdoc}
      *
-     * @link http://php.net/manual/en/arrayaccess.offsetget.php
+     * @see \ArrayAccess::offsetGet()
      *
-     * @param mixed $offset <p>
-     * The offset to retrieve.
-     * </p>
-     *
-     * @return mixed Can return all value types.
-     *
-     * @since 5.0.0
+     * @return \Concrete\Core\Error\ErrorList\Error\ErrorInterface|null
      */
     public function offsetGet($offset)
     {
@@ -56,22 +57,13 @@ class ErrorList implements \ArrayAccess, \JsonSerializable
     }
 
     /**
-     * Offset to set.
+     * {@inheritdoc}
      *
-     * @link http://php.net/manual/en/arrayaccess.offsetset.php
-     *
-     * @param mixed $offset <p>
-     * The offset to assign the value to.
-     * </p>
-     * @param mixed $value <p>
-     * The value to set.
-     * </p>
-     *
-     * @since 5.0.0
+     * @see \ArrayAccess::offsetSet()
      */
     public function offsetSet($offset, $value)
     {
-        if (is_null($offset)) {
+        if ($offset === null) {
             $this->add($value);
         } else {
             $this->errors[$offset] = $value;
@@ -79,15 +71,9 @@ class ErrorList implements \ArrayAccess, \JsonSerializable
     }
 
     /**
-     * Offset to unset.
+     * {@inheritdoc}
      *
-     * @link http://php.net/manual/en/arrayaccess.offsetunset.php
-     *
-     * @param mixed $offset <p>
-     * The offset to unset.
-     * </p>
-     *
-     * @since 5.0.0
+     * @see \ArrayAccess::offsetUnset()
      */
     public function offsetUnset($offset)
     {
@@ -95,24 +81,34 @@ class ErrorList implements \ArrayAccess, \JsonSerializable
     }
 
     /**
-     * Adds an error object or exception to the internal error array.
+     * Add an error message/object or exception to the internal error array.
      *
-     * @param \Exception | string $e
+     * @param \Concrete\Core\Error\ErrorList\Error\ErrorInterface|\Exception|\Throwable|self|string $e the error(s) to be added
+     * @param bool $isHtml set to true if error messages are in HTML format if not otherwise specified
+     * @param string|null $fieldName
+     * @param string|null $fieldDisplayName
+     *
+     * @return $this
+     *
+     * @since concrete5 8.5.0a3
      */
-    public function add($e, $fieldName = null, $fieldDisplayName = null)
+    public function addError($e, $isHtml = false, $fieldName = null, $fieldDisplayName = null)
     {
         if ($e instanceof self) {
             foreach ($e->getList() as $error) {
-                $this->add($error);
+                $this->addError($error, $isHtml, $fieldName, $fieldDisplayName);
             }
-        } else if ($e instanceof ErrorInterface) {
+        } elseif ($e instanceof ErrorInterface) {
             $this->errors[] = $e;
         } else {
-            if (is_object($e) && ($e instanceof \Exception)) {
+            if ($e instanceof Exception) {
                 $error = new ExceptionError($e);
+            } elseif ($e instanceof Throwable) {
+                $error = new ThrowableError($e);
             } else {
                 $error = new Error($e);
             }
+            $error->setMessageContainsHtml($isHtml);
             if ($fieldName) {
                 $field = new Field($fieldName);
                 if ($fieldDisplayName) {
@@ -122,12 +118,44 @@ class ErrorList implements \ArrayAccess, \JsonSerializable
             }
             $this->add($error);
         }
+
+        return $this;
     }
 
     /**
-     * Returns a list of errors in the error helper.
+     * Add an error message/object or exception to the internal error array (error messages are in plain text if not otherwise specified).
      *
-     * @return array
+     * @param \Exception|\Throwable|self|string $e the error(s) to be added
+     * @param string|null $fieldName
+     * @param string|null $fieldDisplayName
+     *
+     * @return $this
+     */
+    public function add($e, $fieldName = null, $fieldDisplayName = null)
+    {
+        return $this->addError($e, false, $fieldName, $fieldDisplayName);
+    }
+
+    /**
+     * Add an error message/object or exception to the internal error array (error messages are in HTML if not otherwise specified).
+     *
+     * @param \Concrete\Core\Error\ErrorList\Error\ErrorInterface|\Exception|\Throwable|self|string $e the error(s) to be added
+     * @param string|null $fieldName
+     * @param string|null $fieldDisplayName
+     *
+     * @return $this
+     *
+     * @since concrete5 8.5.0a3
+     */
+    public function addHtml($e, $fieldName = null, $fieldDisplayName = null)
+    {
+        return $this->addError($e, true, $fieldName, $fieldDisplayName);
+    }
+
+    /**
+     * Get the list of errors contained in this error list.
+     *
+     * @return \Concrete\Core\Error\ErrorList\Error\ErrorInterface[]
      */
     public function getList()
     {
@@ -135,17 +163,21 @@ class ErrorList implements \ArrayAccess, \JsonSerializable
     }
 
     /**
-     * Returns whether or not this error helper has more than one error registered within it.
+     * Returns whether or not this error list has more than one error registered within it.
      *
      * @return bool
      */
     public function has()
     {
-        return count($this->errors) > 0;
+        return !empty($this->errors);
     }
 
     /**
-     * @deprecated
+     * @deprecated Use the StandardFormatter class
+     *
+     * @return string
+     *
+     * @see \Concrete\Core\Error\ErrorList\Formatter\StandardFormatter
      */
     public function output()
     {
@@ -154,7 +186,11 @@ class ErrorList implements \ArrayAccess, \JsonSerializable
     }
 
     /**
-     * @deprecated
+     * @deprecated Use the JsonFormatter class
+     *
+     * @return string
+     *
+     * @see \Concrete\Core\Error\ErrorList\Formatter\JsonFormatter
      */
     public function outputJSON()
     {
@@ -162,18 +198,25 @@ class ErrorList implements \ArrayAccess, \JsonSerializable
         echo $formatter->render();
     }
 
-    public function __toString()
-    {
-        $formatter = new StandardFormatter($this);
-        return (string) $formatter->render();
-    }
-
+    /**
+     * {@inheritdoc}
+     *
+     * @see \JsonSerializable::jsonSerialize()
+     *
+     * @return array|null
+     */
     public function jsonSerialize()
     {
         $formatter = new JsonFormatter($this);
+
         return $formatter->asArray();
     }
 
+    /**
+     * Render this error list as a plain text.
+     *
+     * @return string
+     */
     public function toText()
     {
         $formatter = new TextFormatter($this);
@@ -181,40 +224,55 @@ class ErrorList implements \ArrayAccess, \JsonSerializable
         return $formatter->getText();
     }
 
+    /**
+     * Does this list contain error associated to a field?
+     *
+     * @param \Concrete\Core\Error\ErrorList\Field\FieldInterface|string $field
+     *
+     * @return bool
+     */
     public function containsField($field)
     {
-        $identifier = ($field instanceof FieldInterface) ? $field->getFieldElementName() : $field;
-        foreach($this->getList() as $error) {
+        $identifier = $field instanceof FieldInterface ? $field->getFieldElementName() : $field;
+        foreach ($this->getList() as $error) {
             $field = $error->getField();
             if (is_object($field) && $field->getFieldElementName() == $identifier) {
                 return true;
             }
         }
+
         return false;
     }
 
     /**
-     * @param $field
-     * @return string | bool
+     * Get the error message (if any) associated to a field.
+     *
+     * @param \Concrete\Core\Error\ErrorList\Field\FieldInterface|string $field
+     *
+     * @return string|false false if no error is associated to the field, a string otherwise
      */
     public function getMessage($field)
     {
         $identifier = ($field instanceof FieldInterface) ? $field->getFieldElementName() : $field;
-        foreach($this->getList() as $error) {
+        foreach ($this->getList() as $error) {
             $field = $error->getField();
             if (is_object($field) && $field->getFieldElementName() == $identifier) {
                 return $error->getMessage();
             }
         }
+
         return false;
     }
 
     /**
-     * @return JsonResponse
+     * Create a JSON response describing the errors in this list.
+     *
+     * @param int $errorCode The HTTP response code to be sent to the client
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
     public function createResponse($errorCode = JsonResponse::HTTP_BAD_REQUEST)
     {
         return new JsonResponse($this->jsonSerialize(), $errorCode);
     }
-
 }

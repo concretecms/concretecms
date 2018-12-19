@@ -92,9 +92,6 @@ class DatabaseManager
         // set the "fetch mode" for PDO which determines the query return types.
         if (!isset($this->connections[$name])) {
             $connection = $this->makeConnection($name);
-            if (Config::get('concrete.log.queries.log')) {
-                $connection->getConfiguration()->setSQLLogger(new \Doctrine\DBAL\Logging\DebugStack());
-            }
             $this->connections[$name] = $this->prepare($connection);
         }
 

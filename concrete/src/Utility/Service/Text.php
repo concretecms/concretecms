@@ -172,7 +172,7 @@ class Text
     }
 
     /**
-     * An alias for shorten().
+     * An alias for shortText().
      *
      * @param string $textStr
      * @param int    $numChars

@@ -6,6 +6,7 @@ use Concrete\Core\Entity\File\StorageLocation\StorageLocation;
 use Concrete\Core\File\ImportProcessor\AutorotateImageProcessor;
 use Concrete\Core\File\ImportProcessor\ConstrainImageProcessor;
 use Concrete\Core\File\ImportProcessor\ProcessorInterface;
+use Concrete\Core\File\ImportProcessor\SvgSanitizerProcessor;
 use Concrete\Core\File\StorageLocation\StorageLocationFactory;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Tree\Node\Type\FileFolder;
@@ -146,6 +147,10 @@ class Importer
         if ($width > 0 || $height > 0) {
             $processor = new ConstrainImageProcessor($width, $height);
             $processor->setRescanThumbnails(false);
+            $this->addImportProcessor($processor);
+        }
+        if ($config->get('concrete.file_manager.images.svg_sanitization.enabled')) {
+            $processor = $this->app->make(SvgSanitizerProcessor::class);
             $this->addImportProcessor($processor);
         }
     }
@@ -350,42 +355,47 @@ class Importer
     public function importIncomingFile($filename, $fr = false)
     {
         $fh = $this->app->make('helper/validation/file');
-        $fi = $this->app->make('helper/file');
-        $cf = $this->app->make('helper/concrete/file');
-
-        $sanitizedFilename = $fi->sanitize($filename);
-
-        $default = $this->app->make(StorageLocationFactory::class)->fetchDefault();
-        $storage = $default->getFileSystemObject();
-
-        if (!$storage->has(REL_DIR_FILES_INCOMING . '/' . $filename)) {
-            return self::E_FILE_INVALID;
-        }
-
         if (!$fh->extension($filename)) {
             return self::E_FILE_INVALID_EXTENSION;
         }
-
-        // first we import the file into the storage location that is the same.
+        $incoming = $this->app->make(Incoming::class);
+        $incomingStorageLocation = $incoming->getIncomingStorageLocation();
+        $incomingFilesystem = $incomingStorageLocation->getFileSystemObject();
+        $incomingPath = $incoming->getIncomingPath();
+        if (!$incomingFilesystem->has($incomingPath . '/' . $filename)) {
+            return self::E_FILE_INVALID;
+        }
+        if ($fr instanceof FileEntity) {
+            $destinationStorageLocation = $fr->getFileStorageLocationObject();
+        } else {
+            $destinationStorageLocation = $this->app->make(StorageLocationFactory::class)->fetchDefault();
+        }
+        $destinationFilesystem = $destinationStorageLocation->getFileSystemObject();
         $prefix = $this->generatePrefix();
+        $fi = $this->app->make('helper/file');
+        $sanitizedFilename = $fi->sanitize($filename);
+        $cf = $this->app->make('helper/concrete/file');
         $destinationPath = $cf->prefix($prefix, $sanitizedFilename);
         try {
-            $copied = $storage->copy(REL_DIR_FILES_INCOMING . '/' . $filename, $destinationPath);
-        } catch (Exception $e) {
-            $copied = false;
+            $stream = $incomingFilesystem->readStream($incomingPath . '/' . $filename);
+        } catch (Exception $x) {
+            $stream = false;
         }
-        if (!$copied) {
-            $src = $storage->readStream(REL_DIR_FILES_INCOMING . '/' . $filename);
-            if (!$src) {
-                return self::E_FILE_INVALID;
-            }
-            $storage->writeStream($destinationPath, $src);
-            @fclose($src);
+        if ($stream === false) {
+            return self::E_FILE_INVALID;
         }
-
+        try {
+            $wrote = $destinationFilesystem->writeStream($destinationPath, $stream);
+        } catch (Exception $x) {
+            $wrote = false;
+        }
+        @fclose($stream);
+        if ($wrote === false) {
+            return self::E_FILE_UNABLE_TO_STORE;
+        }
         if (!($fr instanceof FileEntity)) {
             // we have to create a new file object for this file version
-            $fv = File::add($sanitizedFilename, $prefix, ['fvTitle' => $filename], $default, $fr);
+            $fv = File::add($sanitizedFilename, $prefix, ['fvTitle' => $filename], $destinationStorageLocation, $fr);
             $fv->refreshAttributes($this->rescanThumbnailsOnImport);
 
             foreach ($this->importProcessors as $processor) {

@@ -64,7 +64,7 @@ class Resolver
         $defer = $configuration instanceof DeferredConfigurationInterface;
 
         // Get the path from the storage
-        $path = $this->getStoredThumnbailPath(
+        $path = $this->getStoredThumbnailPath(
             $file_id,
             $version_id,
             $storage_location_id,
@@ -96,7 +96,7 @@ class Resolver
     }
 
     /**
-     * Get the stored path for a file.
+     * @deprecated Use getStoredThumbnailPath
      *
      * @param int $file_id
      * @param int $version_id
@@ -107,6 +107,22 @@ class Resolver
      * @return null|string
      */
     protected function getStoredThumnbailPath($file_id, $version_id, $storage_location_id, $thumbnail_handle, $format)
+    {
+        return $this->getStoredThumbnailPath($file_id, $version_id, $storage_location_id, $thumbnail_handle, $format);
+    }
+
+    /**
+     * Get the stored path for a file.
+     *
+     * @param int $file_id
+     * @param int $version_id
+     * @param int $storage_location_id
+     * @param string $thumbnail_handle
+     * @param string $format
+     *
+     * @return null|string
+     */
+    protected function getStoredThumbnailPath($file_id, $version_id, $storage_location_id, $thumbnail_handle, $format)
     {
         $builder = $this->connection->createQueryBuilder();
         $query = $builder
@@ -222,13 +238,13 @@ class Resolver
     }
 
     /**
-     * @deprecated Use getStoredThumnbailPath
+     * @deprecated Use getStoredThumbnailPath
      */
     protected function getStoredPath($file_id, $version_id, $storage_location_id, $thumbnail_handle)
     {
         $versionObject = $this->connection->getEntityManager()->find(Version::class, ['fID' => $file_id, 'fvID' => $version_id]);
         
-        return $this->getStoredThumnbailPath($file_id, $version_id, $storage_location_id, $thumbnail_handle, $this->formatService->getFormatForFile($versionObject));
+        return $this->getStoredThumbnailPath($file_id, $version_id, $storage_location_id, $thumbnail_handle, $this->formatService->getFormatForFile($versionObject));
     }
 
     /**

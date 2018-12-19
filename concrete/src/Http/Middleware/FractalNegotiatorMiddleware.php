@@ -13,6 +13,8 @@ use Symfony\Component\HttpFoundation\Request;
 class FractalNegotiatorMiddleware implements MiddlewareInterface
 {
 
+    protected $serializer;
+
     /**
      * @var \League\Fractal\Manager
      */
@@ -23,9 +25,17 @@ class FractalNegotiatorMiddleware implements MiddlewareInterface
         $this->fractal = $fractal;
     }
 
-    protected function getSerializer()
+    public function getSerializer()
     {
-        return new DataArraySerializer();
+        return isset($this->serializer) ? $this->serializer : new DataArraySerializer();
+    }
+
+    /**
+     * @param DataArraySerializer $serializer
+     */
+    public function setSerializer($serializer)
+    {
+        $this->serializer = $serializer;
     }
 
     /**
