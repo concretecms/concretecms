@@ -2,7 +2,6 @@
 namespace Concrete\Core\Logging\Configuration;
 
 use Concrete\Core\Config\Repository\Repository;
-use Concrete\Core\Site\Service;
 
 class ConfigurationFactory
 {
@@ -12,15 +11,9 @@ class ConfigurationFactory
      */
     protected $config;
 
-    /**
-     * @var Service
-     */
-    protected $siteService;
-
-    public function __construct(Repository $config, Service $siteService)
+    public function __construct(Repository $config)
     {
         $this->config = $config;
-        $this->siteService = $siteService;
     }
 
     public function createConfiguration()
@@ -30,10 +23,10 @@ class ConfigurationFactory
             return new AdvancedConfiguration($configuration['advanced']['configuration']);
         } else {
             if (isset($configuration['simple']['handler']) && $configuration['simple']['handler'] == 'file') {
-                $site = $this->siteService->getSite();
-                return new SimpleFileConfiguration($site,
-                    $configuration['simple']['directory'],
-                    $configuration['simple']['core_logging_level']);
+                return new SimpleFileConfiguration(
+                    $configuration['simple']['file']['file'],
+                    $configuration['simple']['core_logging_level']
+                );
             } else {
                 return new SimpleDatabaseConfiguration($configuration['simple']['core_logging_level']);
 

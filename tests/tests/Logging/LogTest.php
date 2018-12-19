@@ -138,20 +138,9 @@ class LogTest extends ConcreteDatabaseTestCase
     public function testFileLogging()
     {
 
-        $directory = __DIR__ . DIRECTORY_SEPARATOR; // let's test with a trailing slash just to be a pain.
+        $file = __DIR__ . DIRECTORY_SEPARATOR . '/testing.log';
 
-        $site = $this->getMockBuilder(Site::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $site->expects($this->any())
-            ->method('getSiteName')
-            ->willReturn('My Default Site');
-
-        $configuration = new SimpleFileConfiguration($site, $directory, Logger::INFO);
-
-        $this->assertEquals($directory, $configuration->getDirectory() . DIRECTORY_SEPARATOR);
-        $this->assertEquals('my-default-site.log', $configuration->getFileName());
-
+        $configuration = new SimpleFileConfiguration($file, Logger::INFO);
 
         $factory = $this->getMockBuilder(ConfigurationFactory::class)
             ->disableOriginalConstructor()
@@ -169,11 +158,10 @@ class LogTest extends ConcreteDatabaseTestCase
         $logger->notice('This is a notice line.');
         $logger->warning('This is a warning line.', ['object' => 'foo']);
 
-        $logFile = $directory . 'my-default-site.log';
         $filesystem = new Filesystem();
-        $contents = $filesystem->get($logFile);
+        $contents = $filesystem->get($file);
         $this->assertCount(4, explode("\n", trim($contents)));
-        $filesystem->delete($logFile);
+        $filesystem->delete($file);
     }
 
     public function testLoggingFacade()

@@ -33,8 +33,8 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
 
                 <div data-fields="simple-file">
                     <div class="form-group">
-                        <?=$form->label('directory', t('Log Directory'))?>
-                        <?=$form->text('directory', $directory)?>
+                        <?=$form->label('logFile', t('File'))?>
+                        <?=$form->text('logFile', $logFile)?>
                     </div>
                 </div>
 

@@ -385,11 +385,11 @@ return [
                 'file' => [
 
                     /**
-                     * Where to store file logs
+                     * File path to store logs
                      *
                      * @var string
                      */
-                    'directory' => null,
+                    'file' => '',
                 ],
             ],
 
