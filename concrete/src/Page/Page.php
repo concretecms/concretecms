@@ -34,7 +34,7 @@ use Events;
 use Core;
 use Config;
 use PageController;
-use User;
+use Concrete\Core\User\User;
 use Block;
 use UserInfo;
 use PageType;
@@ -660,7 +660,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function isCheckedOutByMe()
     {
-        $u = new User();
+        $app = Application::getFacadeApplication();
+        $u = $app->make(User::class);
 
         return $this->getCollectionCheckedOutUserID() > 0 && $this->getCollectionCheckedOutUserID() == $u->getUserID();
     }
@@ -891,11 +892,12 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function addCollectionAlias($c)
     {
+        $app = Application::getFacadeApplication();
         $db = Database::connection();
         // the passed collection is the parent collection
         $cParentID = $c->getCollectionID();
 
-        $u = new User();
+        $u = $app->make(User::class);
         $uID = $u->getUserID();
 
         $handle = (string) $this->getCollectionHandle();
@@ -969,10 +971,11 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     public function addCollectionAliasExternal($cName, $cLink, $newWindow = 0)
     {
+        $app = Application::getFacadeApplication();
         $db = Database::connection();
         $dt = Core::make('helper/text');
         $ds = Core::make('helper/security');
-        $u = new User();
+        $u = $app->make(User::class);
 
         $cParentID = $this->getCollectionID();
         $uID = $u->getUserID();
@@ -3631,13 +3634,14 @@ EOT
         $data += [
             'cHandle' => null,
         ];
+        $app = Application::getFacadeApplication();
         $db = Database::connection();
         $txt = Core::make('helper/text');
 
         // the passed collection is the parent collection
         $cParentID = $this->getCollectionID();
 
-        $u = new User();
+        $u = $app->make(User::class);
         if (isset($data['uID'])) {
             $uID = $data['uID'];
         } else {

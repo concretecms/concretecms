@@ -3,6 +3,7 @@ namespace Concrete\Controller\Dialog\Event;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Concrete\Core\Support\Facade\Facade;
+use Concrete\Core\User\User;
 use Concrete\Core\Workflow\Progress\Response;
 use Concrete\Core\Workflow\Request\DeleteCalendarEventRequest;
 use Core;
@@ -60,7 +61,7 @@ class Delete extends BackendInterfaceController
         );
 
         if (!$e->has()) {
-            $u = new \User();
+            $u = $this->app->make(User::class);
             $pkr = new DeleteCalendarEventRequest();
             $pkr->setCalendarEventVersionID($event->getRecentVersion()->getID());
             $pkr->setRequesterUserID($u->getUserID());

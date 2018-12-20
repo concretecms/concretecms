@@ -5,7 +5,7 @@ use Concrete\Core\Page\Search\SearchProvider;
 use Concrete\Core\Search\Column\CollectionAttributeKeyColumn;
 use Concrete\Core\Search\Column\Set;
 use Concrete\Core\Support\Facade\Facade;
-use User;
+use Concrete\Core\User\User;
 
 class ColumnSet extends Set
 {

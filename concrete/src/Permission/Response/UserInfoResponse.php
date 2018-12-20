@@ -1,7 +1,8 @@
 <?php
 namespace Concrete\Core\Permission\Response;
 
-use User;
+use Concrete\Core\User\User;
+use Concrete\Core\Support\Facade\Application;
 use Group;
 use PermissionKey;
 use Permissions;
@@ -36,8 +37,9 @@ class UserInfoResponse extends Response
 
     public function canEditUser()
     {
+        $app = Application::getFacadeApplication();
         $ui = $this->getPermissionObject();
-        $u = new User();
+        $u = $app->make(User::class);
         if ($ui->getUserID() == USER_SUPER_ID && !$u->isSuperUser()) {
             return false;
         }

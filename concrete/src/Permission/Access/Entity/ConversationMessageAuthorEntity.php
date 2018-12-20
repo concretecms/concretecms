@@ -1,11 +1,12 @@
 <?php
 namespace Concrete\Core\Permission\Access\Entity;
 
+use Concrete\Core\Support\Facade\Application;
 use Loader;
 use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use Config;
 use UserInfo;
-use User;
+use Concrete\Core\User\User;
 use Concrete\Core\Conversation\Message\Message;
 use Concrete\Core\Permission\Access\ConversationAccess;
 
@@ -26,7 +27,8 @@ class ConversationMessageAuthorEntity extends Entity
         }
 
         if ($message instanceof Message) {
-            $u = new User();
+            $app = Application::getFacadeApplication();
+            $u = $app->make(User::class);
 
             return $u->getUserID() == $message->getConversationMessageUserID();
         }

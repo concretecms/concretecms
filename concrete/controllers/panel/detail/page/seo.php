@@ -7,7 +7,7 @@ use PageEditResponse;
 use Concrete\Core\Attribute\Set as AttributeSet;
 use PermissionKey;
 use Concrete\Core\Page\Collection\Version\Version;
-use User;
+use Concrete\Core\User\User;
 
 class Seo extends BackendInterfacePageController
 {
@@ -65,7 +65,7 @@ class Seo extends BackendInterfacePageController
                 && $this->permissions->canApprovePageVersions()
                 && \Config::get('concrete.misc.sitemap_approve_immediately')) {
                 $pkr = new ApprovePageRequest();
-                $u = new User();
+                $u = $this->app->make(User::class);
                 $pkr->setRequestedPage($this->page);
                 $v = Version::get($this->page, "RECENT");
                 $pkr->setRequestedVersionID($v->getVersionID());

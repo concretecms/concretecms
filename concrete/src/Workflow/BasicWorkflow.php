@@ -14,7 +14,8 @@ use Core;
 use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use Config;
 use PermissionKey;
-use User;
+use Concrete\Core\User\User;
+use Concrete\Core\Support\Facade\Application;
 use UserInfo;
 use Concrete\Core\Localization\Localization;
 
@@ -222,9 +223,10 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
     public function cancel(WorkflowProgress $wp)
     {
         if ($this->canApproveWorkflowProgressObject($wp)) {
+            $app = Application::getFacadeApplication();
             $req = $wp->getWorkflowRequestObject();
             $bdw = new BasicWorkflowProgressData($wp);
-            $u = new User();
+            $u = $app->make(User::class);
             $bdw->markCompleted($u);
 
             $ux = UserInfo::getByID($bdw->getUserCompletedID());
@@ -261,9 +263,10 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
     public function approve(WorkflowProgress $wp)
     {
         if ($this->canApproveWorkflowProgressObject($wp)) {
+            $app = Application::getFacadeApplication();
             $req = $wp->getWorkflowRequestObject();
             $bdw = new BasicWorkflowProgressData($wp);
-            $u = new User();
+            $u = $app->make(User::class);
             $bdw->markCompleted($u);
 
             $ux = UserInfo::getByID($bdw->getUserCompletedID());

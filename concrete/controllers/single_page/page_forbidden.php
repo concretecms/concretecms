@@ -36,8 +36,8 @@ class PageForbidden extends PageController
     protected function checkRedirectToLogin()
     {
         $result = null;
-        $user = User::isLoggedIn() ? new User() : null;
-        if ($user === null || !$user->isRegistered()) {
+        $user = $this->app->make(User::class);
+        if (!$user->isRegistered()) {
             $config = $this->app->make('config');
             if ($config->get('concrete.permissions.forward_to_login')) {
                 $destination = $this->app->make(ResolverManagerInterface::class)->resolve(['/login']);

@@ -3,7 +3,8 @@ namespace Concrete\Core\Logging\Handler;
 
 use Monolog\Handler\AbstractProcessingHandler;
 use Database;
-use User;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\User\User;
 
 class DatabaseHandler extends AbstractProcessingHandler
 {
@@ -16,8 +17,9 @@ class DatabaseHandler extends AbstractProcessingHandler
             $this->initialize();
         }
 
-        $u = new User();
-        $uID = ($u->isRegistered()) ? $u->getUserID() : 0;
+        $app = Application::getFacadeApplication();
+        $u = $app->make(User::class);
+        $uID = $u->isRegistered() ? $u->getUserID() : 0;
 
         $this->statement->execute(
             array(

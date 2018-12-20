@@ -167,8 +167,9 @@ class Set
      */
     public static function createAndGetSet($fs_name, $fs_type, $fs_uid = false)
     {
+        $app = Facade::getFacadeApplication();
         if ($fs_uid === false) {
-            $u = new User();
+            $u = $app->make(User::class);
             $fs_uid = $u->uID;
         }
 
@@ -363,9 +364,10 @@ class Set
 
     public function getSavedSearches()
     {
+        $app = Facade::getFacadeApplication();
         $db = Database::connection();
         $sets = array();
-        $u = new User();
+        $u = $app->make(User::class);
         $r = $db->executeQuery(
             'SELECT * FROM FileSets WHERE fsType = ? AND uID = ? ORDER BY fsName ASC',
             array(self::TYPE_SAVED_SEARCH, $u->getUserID())

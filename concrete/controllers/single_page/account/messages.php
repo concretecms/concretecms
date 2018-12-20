@@ -8,13 +8,13 @@ use UserInfo;
 use Loader;
 use View;
 use Core;
-use User;
+use Concrete\Core\User\User;
 
 class Messages extends AccountPageController
 {
     public function view()
     {
-        $u = new User();
+        $u = $this->app->make(User::class);
         $ui = UserInfo::getByID($u->getUserID());
 
         $inbox = UserPrivateMessageMailbox::get($ui, $this->getMessageMailboxID('inbox'));
@@ -60,7 +60,7 @@ class Messages extends AccountPageController
     {
         $msgMailboxID = $this->getMessageMailboxID($box);
 
-        $u = new User();
+        $u = $this->app->make(User::class);
         $ui = UserInfo::getByID($u->getUserID());
 
         $mailbox = UserPrivateMessageMailbox::get($ui, $msgMailboxID);
@@ -80,7 +80,7 @@ class Messages extends AccountPageController
     public function view_message($box, $msgID)
     {
         $msgMailboxID = $this->getMessageMailboxID($box);
-        $u = new User();
+        $u = $this->app->make(User::class);
         $ui = UserInfo::getByID($u->getUserID());
         $mailbox = UserPrivateMessageMailbox::get($ui, $msgMailboxID);
         $msg = UserPrivateMessage::getByID($msgID, $mailbox);
@@ -110,7 +110,7 @@ class Messages extends AccountPageController
         }
 
         $msgMailboxID = $this->getMessageMailboxID($box);
-        $u = new User();
+        $u = $this->app->make(User::class);
         $ui = UserInfo::getByID($u->getUserID());
         $mailbox = UserPrivateMessageMailbox::get($ui, $msgMailboxID);
 
@@ -166,7 +166,7 @@ class Messages extends AccountPageController
         $vf->addRequired('msgBody', t("You haven't written a message!"));
         $vf->addRequiredToken("validate_send_message");
         if ($vf->test()) {
-            $u = new User();
+            $u = $this->app->make(User::class);
             $sender = UserInfo::getByID($u->getUserID());
             $r = $sender->sendPrivateMessage($this->get('recipient'), $this->post('msgSubject'), $this->post('msgBody'), $this->get('msg'));
             if ($r instanceof \Concrete\Core\Helper\Validation\Error) {

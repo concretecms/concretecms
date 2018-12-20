@@ -10,7 +10,7 @@ use Loader;
 use Page;
 use BlockType;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use User;
+use Concrete\Core\User\User;
 use UserInfo;
 
 class Dashboard extends BackendInterfacePageController
@@ -29,7 +29,7 @@ class Dashboard extends BackendInterfacePageController
         $h = \Core::make('helper/concrete/dashboard');
         if ($h->inDashboard($this->page) && $this->permissions->canViewPage()) {
             \Core::make("helper/concrete/ui")->clearInterfaceItemsCache();
-            $u = new User();
+            $u = $this->app->make(User::class);
             if (\Core::make('token')->validate('access_bookmarks', $this->request->query->get('ccm_token'))) {
                 $qn = DashboardMenu::getMine();
                 if ($action == 'add' && !$qn->contains($this->page)) {
@@ -78,7 +78,7 @@ class Dashboard extends BackendInterfacePageController
             $this->set('nav', $nav);
         }
 
-        $u = new User();
+        $u = $this->app->make(User::class);
         $ui = UserInfo::getByID($u->getUserID());
         $this->set('ui', $ui);
         $this->set('tab', $tab);

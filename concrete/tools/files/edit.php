@@ -1,7 +1,7 @@
 <?php
 
 defined('C5_EXECUTE') or die("Access Denied.");
-$u = new User();
+$u = Core::make(Concrete\Core\User\User::class);
 $form = Loader::helper('form');
 
 $ci = Loader::helper('concrete/urls');

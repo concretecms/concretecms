@@ -3,7 +3,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $valt = Loader::helper('validation/token');
 if ($valt->validate('quick_user_select_' . $_REQUEST['key'], $_REQUEST['token'])) {
-    $u = new User();
+    $u = Core::make(Concrete\Core\User\User::class);
     $db = Loader::db();
     $userList = new UserList();
     $userList->filterByFuzzyUserName($_GET['term']);

@@ -1,7 +1,7 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 // basically a stub that includes some other files
-$u = new User();
+$u = Core::make(Concrete\Core\User\User::class);
 $uID = $u->getUserID();
 $c = Page::getCurrentPage();
 

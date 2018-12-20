@@ -7,6 +7,8 @@ use Concrete\Core\File\Type\Type;
 use Concrete\Core\Search\Field\AbstractField;
 use Concrete\Core\Search\Field\FieldInterface;
 use Concrete\Core\Search\ItemList\ItemList;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\User\User;
 
 class FileSetField extends AbstractField
 {
@@ -44,9 +46,10 @@ class FileSetField extends AbstractField
 
     public function renderSearchField()
     {
-        $form = \Core::make('helper/form');
+        $app = Application::getFacadeApplication();
+        $form = $app->make('helper/form');
         $sets = array();
-        $u = new \User();
+        $u = $app->make(User::class);
         $fileSets = Set::getMySets($u);
         foreach($fileSets as $set) {
             $sets[$set->getFileSetID()] = $set->getFileSetName();

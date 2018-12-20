@@ -3,7 +3,7 @@ namespace Concrete\Core\File\Search\ColumnSet;
 
 use Concrete\Core\Search\Column\FileAttributeKeyColumn;
 use Concrete\Core\Support\Facade\Facade;
-use User;
+use Concrete\Core\User\User;
 use Concrete\Core\File\Search\SearchProvider;
 use Concrete\Core\Search\Column\Set as DatabaseItemListColumnSet;
 

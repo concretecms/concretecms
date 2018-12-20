@@ -27,7 +27,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
         <?php
         if ($user->getAttribute('profile_private_messages_enabled')) {
-            $u = new User();
+            $u = Core::make(Concrete\Core\User\User::class);
             if ($u->getUserID() != $user->getUserID()) { ?>
                 <a href="<?php echo View::url('/account/messages', 'write', $user->getUserID())?>" class="btn btn-default"><?php echo t("Send Private Message")?></a>
             <?php } ?>

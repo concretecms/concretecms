@@ -12,7 +12,7 @@ use PageEditResponse;
 use Loader;
 use Response;
 use View;
-use User;
+use Concrete\Core\User\User;
 use Concrete\Core\Workflow\Request\ApprovePageRequest;
 use Config;
 
@@ -193,7 +193,7 @@ class Design extends BackendUIPageController
                 $r->setMessage(t('Page updated successfully.'));
                 if ($this->permissions->canApprovePageVersions() && Config::get('concrete.misc.sitemap_approve_immediately')) {
                     $pkr = new ApprovePageRequest();
-                    $u = new User();
+                    $u = $this->app->make(User::class);
                     $pkr->setRequestedPage($this->page);
                     $v = Version::get($this->page, "RECENT");
                     $pkr->setRequestedVersionID($v->getVersionID());

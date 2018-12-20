@@ -18,7 +18,7 @@ abstract class GenericOauth1aTypeController extends GenericOauthTypeController
 
     public function handle_authentication_callback()
     {
-        $user = new User();
+        $user = $this->app->make(User::class);
         if ($user && !$user->isError() && $user->isLoggedIn()) {
             $this->handle_attach_callback();
         }
@@ -58,7 +58,7 @@ abstract class GenericOauth1aTypeController extends GenericOauthTypeController
 
     public function handle_attach_callback()
     {
-        $user = new User();
+        $user = $this->app->make(User::class);
         if (!$user->isLoggedIn()) {
             id(new RedirectResponse(\URL::to('')))->send();
             exit;

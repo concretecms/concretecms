@@ -80,7 +80,7 @@ class DefaultDispatcher implements DispatcherInterface
     private function validateUser()
     {
         // check to see if this is a valid user account
-        $user = new User();
+        $user = $this->app->make(User::class);
         if (!$user->checkLogin()) {
             $isActive = $user->isActive();
             $user->logout();

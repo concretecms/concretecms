@@ -7,7 +7,7 @@ if (!Loader::helper('validation/numbers')->integer($_REQUEST['fID'])) {
 
 $selectedField = Loader::helper('text')->entities($_REQUEST['ccm_file_selected_field']);
 
-$u = new User();
+$u = Core::make(Concrete\Core\User\User::class);
 $form = Loader::helper('form');
 $fp = FilePermissions::getGlobal();
 if (!$fp->canAccessFileManager()) {

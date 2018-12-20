@@ -1,7 +1,7 @@
 <?php
 
 defined('C5_EXECUTE') or die("Access Denied.");
-$u = new User();
+$u = Core::make(Concrete\Core\User\User::class);
 
 $sh = Loader::helper('concrete/dashboard/sitemap');
 if (!$sh->canRead()) {

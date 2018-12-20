@@ -2,14 +2,16 @@
 namespace Concrete\Core\Permission\Key;
 
 use Loader;
-use User;
+use Concrete\Core\User\User;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Permission\Duration as PermissionDuration;
 
 class EditUserPropertiesUserKey extends UserKey
 {
     public function getMyAssignment()
     {
-        $u = new User();
+        $app = Application::getFacadeApplication();
+        $u = $app->make(User::class);
         $asl = new \Concrete\Core\Permission\Access\ListItem\EditUserPropertiesUserListItem();
 
         $db = Loader::db();
@@ -41,7 +43,6 @@ class EditUserPropertiesUserKey extends UserKey
 
         $excluded = array();
         $akIDs = array();
-        $u = new User();
         foreach ($list as $l) {
             if ($l->allowEditUserName() && (!in_array('uName', $excluded))) {
                 $asl->setAllowEditUserName(1);
@@ -112,7 +113,8 @@ class EditUserPropertiesUserKey extends UserKey
 
     public function validate($obj = false)
     {
-        $u = new User();
+        $app = Application::getFacadeApplication();
+        $u = $app->make(User::class);
         if ($u->isSuperUser()) {
             return true;
         }

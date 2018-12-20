@@ -6,7 +6,7 @@ if (!is_array($messages)) {
     $messages = array();
 }
 
-$u = new User();
+$u = $app->make(Concrete\Core\User\User::class);
 $ui = UserInfo::getByID($u->getUserID());
 
 $page = Page::getByID($cID);

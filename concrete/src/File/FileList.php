@@ -9,6 +9,8 @@ use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 use Concrete\Core\Search\ItemList\Pager\QueryString\VariableFactory;
 use Concrete\Core\Search\Pagination\PaginationProviderInterface;
 use Concrete\Core\Search\StickyRequest;
+use Concrete\Core\User\User;
+use Concrete\Core\Support\Facade\Application;
 use FileAttributeKey;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use Exception;
@@ -37,7 +39,7 @@ class FileList extends DatabaseItemList implements PagerProviderInterface, Pagin
 
     public function __construct(StickyRequest $req = null)
     {
-        $u = new \User();
+        $u = Application::getFacadeApplication()->make(User::class);
         if ($u->isSuperUser()) {
             $this->ignorePermissions();
         }

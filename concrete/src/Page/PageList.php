@@ -15,6 +15,7 @@ use Concrete\Core\Entity\Page\Template as TemplateEntity;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use Concrete\Core\Site\Tree\TreeInterface;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\User\User;
 
 /**
  * An object that allows a filtered list of pages to be returned.
@@ -36,7 +37,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
 
     public function __construct(StickyRequest $req = null)
     {
-        $u = new \User();
+        $u = Application::getFacadeApplication()->make(User::class);
         if ($u->isSuperUser()) {
             $this->ignorePermissions();
         }
@@ -318,7 +319,6 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
 
     public function getTotalResults()
     {
-        $u = new \User();
         if ($this->permissionsChecker === -1) {
             $query = $this->deliverQueryObject();
             // We need to reset the potential custom order by here because otherwise, if we've added

@@ -122,7 +122,7 @@ EOT
         if ($bt === null) {
             $this->flash('error', t('Unable to find the block type specified.'));
         } elseif ($this->token->validate('ccm-uninstall-blocktype', $token)) {
-            $u = new User();
+            $u = $this->app->make(User::class);
             if (!$u->isSuperUser()) {
                 $this->flash('error', t('Only the super user may remove block types.'));
                 $redirectTo[] = 'inspect';

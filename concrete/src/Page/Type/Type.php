@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Page\Type;
 
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Template;
@@ -24,7 +25,7 @@ use CollectionVersion;
 use Collection;
 use Concrete\Core\Page\Page;
 use Config;
-use User;
+use Concrete\Core\User\User;
 use Package;
 use Concrete\Core\Workflow\Request\ApprovePageRequest as ApprovePagePageWorkflowRequest;
 use CacheLocal;
@@ -178,6 +179,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
 
     public function publish(Page $c, $requestOrDateTime = null, $cvPublishEndDate = null)
     {
+        $app = Application::getFacadeApplication();
         $this->stripEmptyPageTypeComposerControls($c);
         $parent = Page::getByID($c->getPageDraftTargetParentPageID());
         if ($c->isPageDraft()) { // this is still a draft, which means it has never been properly published.
@@ -197,7 +199,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
             $c->rescanCollectionPath();
         }
 
-        $u = new User();
+        $u = $app->make(User::class);
         if (!($requestOrDateTime instanceof ApprovePagePageWorkflowRequest)) {
             $v = CollectionVersion::get($c, 'RECENT');
             $pkr = new ApprovePagePageWorkflowRequest();
@@ -1155,8 +1157,9 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
 
     public function createDraft(\Concrete\Core\Entity\Page\Template $pt, $u = false)
     {
+        $app = Application::getFacadeApplication();
         if (!is_object($u)) {
-            $u = new User();
+            $u = $app->make(User::class);
         }
         $db = Loader::db();
         $ptID = $this->getPageTypeID();

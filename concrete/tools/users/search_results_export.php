@@ -9,7 +9,7 @@ if (!$tp->canAccessUserSearchExport()) {
     die(t("You have no access to user export."));
 }
 
-$u = new User();
+$u = Core::make(Concrete\Core\User\User::class);
 $cnt = Loader::controller('/dashboard/users/search');
 $userList = $cnt->getRequestedSearchResults();
 $userList->setItemsPerPage(0);

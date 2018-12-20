@@ -4,7 +4,7 @@ namespace Concrete\Attribute\UserSelector;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
-use User;
+use Concrete\Core\User\User;
 
 class Controller extends AttributeTypeController
 {

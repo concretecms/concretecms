@@ -3,6 +3,7 @@ namespace Concrete\Controller\Dialog\Conversation;
 
 use Concrete\Core\Application\EditResponse;
 use Concrete\Core\Controller\Controller;
+use Concrete\Core\User\User;
 
 class Subscribe extends Controller
 {
@@ -14,7 +15,7 @@ class Subscribe extends Controller
         if (is_object($conversation) && $conversation->getConversationSubscriptionEnabled()) {
             $cp = new \Permissions($conversation);
             if ($cp->canViewConversation()) {
-                $u = new \User();
+                $u = $this->app->make(User::class);
                 $this->user = $u;
                 $this->conversation = $conversation;
                 $this->set('conversation', $conversation);

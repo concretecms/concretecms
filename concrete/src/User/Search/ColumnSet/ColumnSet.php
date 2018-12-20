@@ -5,7 +5,7 @@ use Concrete\Core\Search\Column\UserAttributeKeyColumn;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\User\Search\SearchProvider;
 use PermissionKey;
-use User;
+use Concrete\Core\User\User;
 use Concrete\Core\Search\Column\Set;
 use Concrete\Core\Search\Column\AttributeKeyColumn;
 

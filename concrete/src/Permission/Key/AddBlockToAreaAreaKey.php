@@ -70,7 +70,8 @@ class AddBlockToAreaAreaKey extends AreaKey
      */
     public function validate($bt = false)
     {
-        $u = new User();
+        $app = Application::getFacadeApplication();
+        $u = $app->make(User::class);
         if ($u->isSuperUser()) {
             return true;
         }
@@ -87,11 +88,12 @@ class AddBlockToAreaAreaKey extends AreaKey
      */
     protected function getAllowedBlockTypeIDs()
     {
-        $u = new User();
         $pae = $this->getPermissionAccessObject();
         if (!is_object($pae)) {
             return [];
         }
+        $app = Application::getFacadeApplication();
+        $u = $app->make(User::class);
         $accessEntities = $u->getUserAccessEntityObjects();
         $accessEntities = $pae->validateAndFilterAccessEntities($accessEntities);
         $list = $this->getAccessListItems(AreaKey::ACCESS_TYPE_ALL, $accessEntities);

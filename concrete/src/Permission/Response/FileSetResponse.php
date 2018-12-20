@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Permission\Response;
 use Concrete\Core\File\Filesystem;
-use User;
+use Concrete\Core\User\User;
 use FileSet;
 
 /**

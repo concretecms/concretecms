@@ -12,7 +12,7 @@ use File;
 use FileImporter;
 use FileSet;
 use Page;
-use User;
+use Concrete\Core\User\User;
 use UserInfo;
 use Concrete\Core\Validator\String\EmailValidator;
 
@@ -477,7 +477,7 @@ class Controller extends BlockController
             $this->set('errorDetails', $errorDetails);
         } else { //no form errors
             //save main survey record
-            $u = new User();
+            $u = $this->app->make(User::class);
             $uID = 0;
             if ($u->isRegistered()) {
                 $uID = $u->getUserID();

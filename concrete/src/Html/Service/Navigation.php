@@ -1,10 +1,11 @@
 <?php
 namespace Concrete\Core\Html\Service;
 
+use Concrete\Core\Support\Facade\Application;
 use Database;
 use Page;
 use URL;
-use User;
+use Concrete\Core\User\User;
 use Concrete\Core\Validation\CSRF\Token;
 
 class Navigation
@@ -66,11 +67,13 @@ class Navigation
 
     public function getLogInOutLink()
     {
-        if (!id(new User())->isLoggedIn()) {
+        $app = Application::getFacadeApplication();
+        $u = $app->make(User::class);
+        if (!$u->isRegistered()) {
             $url = URL::to('/login');
             $label = t('Log in');
         } else {
-            $url = URL::to('/login', 'do_logout', id(new Token())->generate('do_logout'));
+            $url = URL::to('/login', 'do_logout', $app->make(Token::class)->generate('do_logout'));
             $label = t('Log out');
         }
 

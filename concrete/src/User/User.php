@@ -74,7 +74,9 @@ class User extends ConcreteObject
      */
     public static function isLoggedIn()
     {
-        $u = new User();
+        $app = Application::getFacadeApplication();
+        $u = $app->make(User::class);
+
         return $u->isRegistered();
     }
 

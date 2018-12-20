@@ -2,6 +2,7 @@
 namespace Concrete\Controller\Dialog\Help;
 
 use Concrete\Controller\Backend\UserInterface;
+use Concrete\Core\User\User;
 
 class Introduction extends UserInterface
 {
@@ -13,7 +14,7 @@ class Introduction extends UserInterface
 
     public function canAccess()
     {
-        $u = new \User();
+        $u = $this->app->make(User::class);
 
         return $u->isRegistered();
     }

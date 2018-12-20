@@ -3,7 +3,8 @@ namespace Concrete\Core\Permission\Key;
 
 use Concrete\Core\Entity\File\File;
 use Loader;
-use User;
+use Concrete\Core\User\User;
+use Concrete\Core\Support\Facade\Application;
 use \Concrete\Core\Permission\Duration as PermissionDuration;
 
 class AddFileFileFolderKey extends FileFolderKey
@@ -11,7 +12,8 @@ class AddFileFileFolderKey extends FileFolderKey
 
     public function getAllowedFileExtensions()
     {
-        $u = new User();
+        $app = Application::getFacadeApplication();
+        $u = $app->make(User::class);
 
         $extensions = array();
         if ($u->isSuperUser()) {

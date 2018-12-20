@@ -8,7 +8,7 @@ use Group;
 use Loader;
 use Log;
 use Page;
-use User;
+use Concrete\Core\User\User;
 use UserInfo;
 
 class Service
@@ -58,7 +58,7 @@ class Service
             $this->controller->report($args);
         }
 
-        $u = new User();
+        $u = Core::make(User::class);
         \Log::info(t('Content %s (author %s, %s) flagged as spam by user %s',
             $content,
             $author,
@@ -81,7 +81,7 @@ class Service
     {
         if ($this->controller) {
             if (!$user) {
-                $user = new User();
+                $user = Core::make(User::class);
             }
             $wlg = $this->getWhitelistGroup();
             if ($wlg instanceof Group && $user->inGroup($wlg)) {
@@ -101,7 +101,7 @@ class Service
             if (isset($args['user']) && is_object($args['user'])) {
                 $u = $args['user'];
             } else {
-                $u = new User();
+                $u = Core::make(User::class);
             }
             if (!isset($args['email']) && $u->isRegistered()) {
                 $ui = UserInfo::getByID($u->getUserID());

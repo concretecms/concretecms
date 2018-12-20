@@ -3,7 +3,8 @@ namespace Concrete\Core\Permission\Key;
 
 use Concrete\Core\Permission\Access\ListItem\ViewUserAttributesUserListItem;
 use Loader;
-use User;
+use Concrete\Core\User\User;
+use Concrete\Core\Support\Facade\Application;
 use \Concrete\Core\Permission\Duration as PermissionDuration;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
 
@@ -11,8 +12,9 @@ class ViewUserAttributesUserKey extends UserKey
 {
     protected function getAllowedAttributeKeyIDs($list = false)
     {
+        $app = Application::getFacadeApplication();
         if (!$list) {
-            $u = new User();
+            $u = $app->make(User::class);
             $accessEntities = $u->getUserAccessEntityObjects();
             $list = $this->getAccessListItems(UserKey::ACCESS_TYPE_ALL, $accessEntities);
             $list = PermissionDuration::filterByActive($list);
@@ -42,7 +44,8 @@ class ViewUserAttributesUserKey extends UserKey
 
     public function getMyAssignment()
     {
-        $u = new User();
+        $app = Application::getFacadeApplication();
+        $u = $app->make(User::class);
         $asl = new ViewUserAttributesUserListItem();
         if ($u->isSuperUser()) {
             $asl->setAttributesAllowedPermission('A');
@@ -81,7 +84,8 @@ class ViewUserAttributesUserKey extends UserKey
 
     public function validate($obj = false)
     {
-        $u = new User();
+        $app = Application::getFacadeApplication();
+        $u = $app->make(User::class);
         if ($u->isSuperUser()) {
             return true;
         }

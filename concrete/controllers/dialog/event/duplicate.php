@@ -7,6 +7,7 @@ use Concrete\Core\Calendar\Event\EventService;
 use Concrete\Core\Form\Service\Form;
 use Concrete\Core\Calendar\Calendar\CalendarService;
 use Concrete\Core\Calendar\Utility\Preferences;
+use Concrete\Core\User\User;
 
 class Duplicate extends BackendInterfaceController
 {
@@ -38,7 +39,7 @@ class Duplicate extends BackendInterfaceController
 
                 $service = $this->app->make(EventService::class);
                 $event = $service->getByID($_REQUEST['eventID']);
-                $u = new \User();
+                $u = $this->app->make(User::class);
 
                 $event = $service->duplicate($event, $u, $calendar);
 

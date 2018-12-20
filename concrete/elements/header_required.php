@@ -181,7 +181,7 @@ if (!empty($alternateHreflangTags)) {
 
 <?php
 $v = View::getRequestInstance();
-$u = new User();
+$u = $app->make(Concrete\Core\User\User::class);
 if ($u->isRegistered()) {
     $v->requireAsset('core/account');
     $v->addFooterItem('<script type="text/javascript">$(function() { if (window.ccm_enableUserProfileMenu) ccm_enableUserProfileMenu(); });</script>');

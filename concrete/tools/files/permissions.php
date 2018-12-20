@@ -5,7 +5,7 @@ use \Concrete\Core\File\StorageLocation\StorageLocation as FileStorageLocation;
 
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
-$u = new User();
+$u = $app->make(Concrete\Core\User\User::class);
 $form = $app->make('helper/form');
 $ih = $app->make('helper/concrete/ui');
 $config = $app->make('config');

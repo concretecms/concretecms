@@ -2,7 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $form = Core::make('helper/form');
 $val = Core::make('token');
-$u = new User();
+$u = Core::make(Concrete\Core\User\User::class);
 ?>
 
 <?php if ($displayForm && $displayPostingForm == $position) {

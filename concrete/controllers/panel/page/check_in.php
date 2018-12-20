@@ -84,7 +84,7 @@ class CheckIn extends BackendInterfacePageController
                 return $rf->create(t('Please specify the version comments'), 400);
             }
             $c = $this->page;
-            $u = new User();
+            $u = $this->app->make(User::class);
             $v = CollectionVersion::get($c, "RECENT");
             $v->setComment($comments);
             $pr = new PageEditResponse();
@@ -118,7 +118,6 @@ class CheckIn extends BackendInterfacePageController
             } else {
                 if ($this->request->request->get('action') == 'discard') {
                     if ($c->isPageDraft() && $this->permissions->canDeletePage()) {
-                        $u = new User();
                         $cID = $u->getPreviousFrontendPageID();
                         $this->page->delete();
                         $pr->setRedirectURL(DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID);

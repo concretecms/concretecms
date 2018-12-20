@@ -2,7 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Core\File\EditResponse as FileEditResponse;
 
-$u = new User();
+$u = Core::make(Concrete\Core\User\User::class);
 $form = Loader::helper('form');
 $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
 $fp = FilePermissions::getGlobal();

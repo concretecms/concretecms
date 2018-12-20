@@ -3,6 +3,7 @@ namespace Concrete\Controller\Backend\Notification;
 
 use Concrete\Core\Controller\AbstractController;
 use Concrete\Core\Validation\CSRF\Token;
+use Concrete\Core\User\User;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -23,7 +24,7 @@ class Alert extends AbstractController
     {
         $id = intval($this->request->request->get('naID'));
         if ($this->token->validate() && $id > 0) {
-            $u = new \User();
+            $u = $this->app->make(User::class);
             if ($u->isRegistered()) {
                 $r = $this->entityManager->getRepository('Concrete\Core\Entity\Notification\NotificationAlert');
                 $alert = $r->findOneById($id);

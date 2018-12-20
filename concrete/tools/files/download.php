@@ -2,7 +2,7 @@
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-$u = new User();
+$u = Core::make(Concrete\Core\User\User::class);
 $fh = Loader::helper('file');
 $vh = Loader::helper('validation/identifier');
 $form = Loader::helper('form');

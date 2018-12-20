@@ -55,7 +55,6 @@ class Composer extends BackendInterfacePageController
         if ($this->validateAction()) {
             $r = $this->save();
             $ptr = $r[0];
-            $u = new User();
             $c = Page::getCurrentPage();
             $ptr->setRedirectURL($c->getCollectionLink(true));
             $ptr->outputJSON();
@@ -109,7 +108,7 @@ class Composer extends BackendInterfacePageController
             $ptr = new PageEditResponse();
             if ($this->permissions->canDeletePage() && $this->page->isPageDraft()) {
                 $this->page->delete();
-                $u = new User();
+                $u = $this->app->make(User::class);
                 $cID = $u->getPreviousFrontendPageID();
                 $ptr->setRedirectURL(DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID);
             } else {

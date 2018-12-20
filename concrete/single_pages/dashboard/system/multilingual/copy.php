@@ -10,7 +10,7 @@ use Concrete\Core\Multilingual\Page\Section\Section as MultilingualSection;
     <fieldset>
         <legend><?php echo t('Copy Locale Tree') ?></legend>
         <?php
-        $u = new User();
+        $u = Core::make(Concrete\Core\User\User::class);
         $copyLocales = array();
         foreach ($locales as $pc) {
             $copyLocales[$pc->getSiteTree()->getSiteHomePageID()] = tc(/*i18n: %1$s is a page name, %2$s is a language name, %3$s is a locale identifier (eg en_US)*/

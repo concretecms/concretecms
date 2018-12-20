@@ -12,6 +12,7 @@ use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 use Concrete\Core\Search\ItemList\Pager\QueryString\VariableFactory;
 use Concrete\Core\Search\Pagination\PaginationProviderInterface;
 use Concrete\Core\Search\StickyRequest;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\FileFolder;
 use Concrete\Core\User\User;
@@ -32,7 +33,7 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
 
     public function __construct(StickyRequest $req = null)
     {
-        $u = new \User();
+        $u = Application::getFacadeApplication()->make(User::class);
         if ($u->isSuperUser()) {
             $this->ignorePermissions();
         }
@@ -193,7 +194,7 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
 
     public function finalizeQuery(\Doctrine\DBAL\Query\QueryBuilder $query)
     {
-        $u = new User();
+        $u = Application::getFacadeApplication()->make(User::class);
         // Super user can search any files
         if (!$u->isSuperUser()) {
             /** @var FileFolderKey $pk */

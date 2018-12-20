@@ -21,7 +21,7 @@ if ($ih->integer($_REQUEST['cID'])) {
 $ish->clearInterfaceItemsCache();
 
 if ($canAdd) {
-    $u = new User();
+    $u = Core::make(Concrete\Core\User\User::class);
     $r = new stdClass();
     if (Loader::helper('validation/token')->validate('access_quick_nav', $_REQUEST['token'])) {
         $qn = \Concrete\Core\Application\Service\DashboardMenu::getMine();

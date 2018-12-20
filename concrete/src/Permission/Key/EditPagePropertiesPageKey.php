@@ -3,7 +3,8 @@ namespace Concrete\Core\Permission\Key;
 
 use Loader;
 use Concrete\Core\Permission\Duration as PermissionDuration;
-use User;
+use Concrete\Core\User\User;
+use Concrete\Core\Support\Facade\Application;
 
 class EditPagePropertiesPageKey extends PageKey
 {
@@ -17,7 +18,8 @@ class EditPagePropertiesPageKey extends PageKey
 
     public function getMyAssignment()
     {
-        $u = new User();
+        $app = Application::getFacadeApplication();
+        $u = $app->make(User::class);
         $asl = new \Concrete\Core\Permission\Access\ListItem\EditPagePropertiesPageListItem();
 
         if ($u->isSuperUser()) {
@@ -45,7 +47,6 @@ class EditPagePropertiesPageKey extends PageKey
 
         $excluded = array();
         $akIDs = array();
-        $u = new User();
         if (count($list) > 0) {
             $allAKIDs = $this->getAllAttributeKeyIDs();
         }
@@ -114,7 +115,8 @@ class EditPagePropertiesPageKey extends PageKey
 
     public function validate($obj = false)
     {
-        $u = new User();
+        $app = Application::getFacadeApplication();
+        $u = $app->make(User::class);
         if ($u->isSuperUser()) {
             return true;
         }

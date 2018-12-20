@@ -15,7 +15,7 @@ use Concrete\Core\Page\Collection\Version\EditResponse as PageEditVersionRespons
 use PageEditResponse;
 use Concrete\Core\Workflow\Request\ApprovePageRequest as ApprovePagePageWorkflowRequest;
 use Concrete\Core\Page\Collection\Version\VersionList;
-use User;
+use Concrete\Core\User\User;
 use Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
 
 class Versions extends BackendInterfacePageController
@@ -186,7 +186,7 @@ class Versions extends BackendInterfacePageController
 
                 $r = new PageEditVersionResponse();
                 $r->setPage($c);
-                $u = new User();
+                $u = $this->app->make(User::class);
                 $pkr = new ApprovePagePageWorkflowRequest();
                 $pkr->setRequestedPage($c);
                 $v = CollectionVersion::get($c, $_REQUEST['cvID']);
@@ -223,7 +223,7 @@ class Versions extends BackendInterfacePageController
                 $cvID = $this->request->request->get('cvID');
                 $r = new PageEditVersionResponse();
                 $r->setPage($c);
-                $u = new User();
+                $u = $this->app->make(User::class);
                 $pkr = new UnapprovePageRequest();
                 $pkr->setRequestedPage($c);
                 $v = CollectionVersion::get($c, $_REQUEST['cvID']);

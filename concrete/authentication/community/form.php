@@ -12,7 +12,7 @@ if (isset($message)) {
 
 }
 
-$user = new User();
+$user = Core::make(Concrete\Core\User\User::class);
 
 if ($user->isLoggedIn()) {
     ?>

@@ -46,7 +46,7 @@ use stdClass;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Throwable;
-use User;
+use Concrete\Core\User\User;
 
 /**
  * Represents a version of a file.
@@ -321,8 +321,9 @@ class Version implements ObjectInterface
         $date = new DateTime($dh->getOverridableNow());
         $uID = (int) $data['uID'];
         if ($uID < 1) {
-            if (User::isLoggedIn()) {
-                $uID = (int) (new User())->getUserID();
+            $u = $app->make(User::class);
+            if ($u->isRegistered()) {
+                $uID = (int) $u->getUserID();
             } else {
                 $uID = 0;
             }
@@ -529,11 +530,9 @@ class Version implements ObjectInterface
 
         $this->fvIsApproved = true;
         $this->fvActivateDateTime = new DateTime();
-        if (User::isLoggedIn()) {
-            $uID = (int) (new User())->getUserID();
-            if ($uID > 0) {
-                $this->fvApproverUID = $uID;
-            }
+        $u = $app->make(User::class);
+        if ($u->isRegistered()) {
+            $this->fvApproverUID = (int) $u->getUserID();
         }
         $this->save();
 
@@ -1037,11 +1036,9 @@ class Version implements ObjectInterface
         $fv->fvID = $fvID;
         $fv->fvIsApproved = false;
         $fv->fvDateAdded = new DateTime();
-        if (User::isLoggedIn()) {
-            $uID = (int) (new User())->getUserID();
-            if ($uID !== 0) {
-                $fv->fvAuthorUID = $uID;
-            }
+        $u = $app->make(User::class);
+        if ($u->isRegistered()) {
+            $fv->fvAuthorUID = (int) $u->getUserID();
         }
 
         $em->persist($fv);

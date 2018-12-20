@@ -3,7 +3,7 @@ namespace Concrete\Controller\SinglePage\Members;
 
 use Concrete\Core\Page\Controller\PublicProfilePageController;
 use Loader;
-use User;
+use Concrete\Core\User\User;
 use UserInfo;
 use Exception;
 
@@ -13,7 +13,7 @@ class Profile extends PublicProfilePageController
     {
         $html = Loader::helper('html');
         $canEdit = false;
-        $u = new User();
+        $u = $this->app->make(User::class);
 
         if ($userID > 0) {
             $profile = UserInfo::getByID($userID);

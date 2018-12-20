@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Controller\Event;
 
+use Concrete\Core\User\User;
 use Concrete\Core\Workflow\Progress\Response;
 use Concrete\Core\Workflow\Request\UnapproveCalendarEventRequest;
 use Concrete\Core\Calendar\Event\EditResponse;
@@ -40,7 +41,7 @@ class Event extends \Concrete\Core\Controller\Controller
 
                     $r = new EditResponse();
                     $r->setEventVersion($event->getRecentVersion());
-                    $u = new \User();
+                    $u = $this->app->make(User::class);
                     $pkr = new UnapproveCalendarEventRequest();
                     $version = $event->getApprovedVersion();
                     if (!$version) {

@@ -24,5 +24,5 @@ if ($_c->getCollectionPath() != '/dashboard/news' && $_c->getCollectionPath() !=
 
 <?php
 
-$u = new User();
+$u = Core::make(Concrete\Core\User\User::class);
 $u->saveConfig('NEWSFLOW_LAST_VIEWED', time());

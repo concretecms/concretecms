@@ -8,7 +8,7 @@ use Environment;
 use Concrete\Core\Package\PackageList;
 use Group;
 use Core;
-use User;
+use Concrete\Core\User\User;
 use UserInfo;
 use \Exception;
 use Concrete\Core\User\Point\Entry as UserPointEntry;

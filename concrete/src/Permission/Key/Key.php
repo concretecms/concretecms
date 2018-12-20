@@ -13,7 +13,7 @@ use Concrete\Core\Support\Facade\Application;
 use Gettext\Translations;
 use PDO;
 use SimpleXMLElement;
-use User;
+use Concrete\Core\User\User;
 
 /**
  * @property bool|int|string $pkID
@@ -547,11 +547,11 @@ EOT
      */
     public function validate()
     {
-        $u = new User();
+        $app = Application::getFacadeApplication();
+        $u = $app->make(User::class);
         if ($u->isSuperUser()) {
             return true;
         }
-        $app = Application::getFacadeApplication();
         $cache = $app->make('cache/request');
         $object = $this->getPermissionObject();
         if (is_object($object)) {

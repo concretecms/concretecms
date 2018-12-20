@@ -18,7 +18,7 @@ use FileSet;
 use League\Flysystem\AdapterInterface;
 use Loader;
 use Core;
-use User;
+use Concrete\Core\User\User;
 use Events;
 use Page;
 use PermissionKey;
@@ -370,7 +370,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
     public function isStarred($u = false)
     {
         if (!$u) {
-            $u = new User();
+            $u = Core::make(User::class);
         }
         $db = Loader::db();
         $r = $db->GetOne(
@@ -430,7 +430,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
      */
     public function getVersionToModify($forceCreateNew = false)
     {
-        $u = new User();
+        $u = Core::make(User::class);
         $createNew = false;
 
         $fv = $this->getRecentVersion();
@@ -774,7 +774,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
      */
     public function trackDownload($rcID = null)
     {
-        $u = new User();
+        $u = Core::make(User::class);
         $uID = intval($u->getUserID());
         $fv = $this->getApprovedVersion();
         $fvID = $fv->getFileVersionID();

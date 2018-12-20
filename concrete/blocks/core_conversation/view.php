@@ -6,7 +6,7 @@ $paginate = ($paginate) ? 'true' : 'false';
 $itemsPerPage = ($paginate) ? $itemsPerPage : -1;
 $blockAreaHandle = $this->block->getAreaHandle();
 
-$u = new User();
+$u = Core::make(Concrete\Core\User\User::class);
 if ($u->isRegistered()) {
     $maxFileSize = $maxFileSizeRegistered;
     $maxFiles = $maxFilesRegistered;

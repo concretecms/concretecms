@@ -6,7 +6,7 @@ use Concrete\Controller\Search\Groups as SearchGroupsController;
 use Permissions;
 use Group;
 use Exception;
-use User;
+use Concrete\Core\User\User;
 use Loader;
 use Concrete\Core\Tree\Type\Group as GroupTree;
 use Page;
@@ -104,7 +104,7 @@ class Groups extends DashboardPageController
 
     public function delete($delGroupId, $token = '')
     {
-        $u = new User();
+        $u = $this->app->make(User::class);
         try {
             if (!$u->isSuperUser()) {
                 throw new Exception(t('You do not have permission to perform this action.'));

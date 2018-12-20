@@ -3,18 +3,20 @@ namespace Concrete\Core\Permission\Key;
 
 use Concrete\Core\Notification\Subscription\SubscriptionInterface;
 use Loader;
-use User;
+use Concrete\Core\User\User;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Permission\Duration as PermissionDuration;
 
 class NotifyInNotificationCenterNotificationKey extends NotificationKey
 {
     protected function getSelectedSubscriptions()
     {
-        $u = new User();
         $pae = $this->getPermissionAccessObject();
         if (!is_object($pae)) {
             return array();
         }
+        $app = Application::getFacadeApplication();
+        $u = $app->make(User::class);
 
         $accessEntities = $u->getUserAccessEntityObjects();
         $accessEntities = $pae->validateAndFilterAccessEntities($accessEntities);
@@ -49,7 +51,8 @@ class NotifyInNotificationCenterNotificationKey extends NotificationKey
 
     public function validate(SubscriptionInterface $subscription = null)
     {
-        $u = new User();
+        $app = Application::getFacadeApplication();
+        $u = $app->make(User::class);
         if ($u->isSuperUser()) {
             return true;
         }

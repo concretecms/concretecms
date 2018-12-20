@@ -209,7 +209,7 @@ class Login extends PageController implements LoggerAwareInterface
     {
         // Move this functionality to a redirected endpoint rather than from within the previous method because
         // session isn't set until we redirect and reload.
-        $u = new User();
+        $u = $this->app->make(User::class);
         if (!$this->error) {
             $this->error = $this->app->make('helper/validation/error');
         }
@@ -329,7 +329,7 @@ class Login extends PageController implements LoggerAwareInterface
             }
             User::loginByUserID($session->get('uRequiredAttributeUser'));
             $session->remove('uRequiredAttributeUser');
-            $u = new User();
+            $u = $this->app->make(User::class);
             $at = AuthenticationType::getByHandle($session->get('uRequiredAttributeUserAuthenticationType'));
             $session->remove('uRequiredAttributeUserAuthenticationType');
             if (!$at) {
@@ -376,7 +376,7 @@ class Login extends PageController implements LoggerAwareInterface
     public function logout($token = false)
     {
         if ($this->app->make('token')->validate('logout', $token)) {
-            $u = new User();
+            $u = $this->app->make(User::class);
             $u->logout();
             $this->redirect('/');
         }

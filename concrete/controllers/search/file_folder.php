@@ -15,6 +15,7 @@ use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 use Concrete\Core\Search\StickyRequest;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\SearchPreset;
+use Concrete\Core\User\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class FileFolder extends AbstractController
@@ -72,7 +73,7 @@ class FileFolder extends AbstractController
             if (!isset($folder)) {
                 $folder = $this->filesystem->getRootFolder();
             }
-            $u = new \User();
+            $u = $this->app->make(User::class);
             $list = $folder->getFolderItemList($u, $this->request);
             $fields = $this->request->get('field');
             $filters = array();

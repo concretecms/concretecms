@@ -9,7 +9,8 @@ use Localization;
 use Page;
 use Permissions;
 use Session;
-use User as ConcreteUser;
+use Concrete\Core\User\User as ConcreteUser;
+use Concrete\Core\Support\Facade\Application;
 use View;
 
 class Dashboard
@@ -443,7 +444,8 @@ class DashboardMenu
      */
     public static function getMine()
     {
-        $u = new ConcreteUser();
+        $app = Application::getFacadeApplication();
+        $u = $app->make(ConcreteUser::class);
         $qn = unserialize($u->config('QUICK_NAV_BOOKMARKS'));
         if (is_object($qn)) {
             return $qn;
