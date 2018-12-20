@@ -29,7 +29,7 @@ class Files extends Standard
 
     protected function getDefaultResetSearchResultObject()
     {
-        $search = new FileFolder();
+        $search = $this->app->build(FileFolder::class);
         $search->search();
         $result = $search->getSearchResultObject();
         return $result;
