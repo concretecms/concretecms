@@ -2,6 +2,9 @@
 namespace Concrete\Controller\SinglePage\Dashboard\System\Basics;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Config;
 use Loader;
 use Localization;
@@ -16,6 +19,18 @@ class Multilingual extends DashboardPageController
         $this->set('LANGUAGE_CHOOSE_ON_LOGIN', Config::get('concrete.i18n.choose_language_login'));
         $this->set('interfacelocales', $locales);
         $this->set('SITE_LOCALE', Config::get('concrete.locale'));
+        $mlLink = null;
+        $mlPage = Page::getByPath('/dashboard/system/multilingual/setup');
+        if ($mlPage && !$mlPage->isError()) {
+            $cp = new Checker($mlPage);
+            if ($cp->canViewPage()) {
+                $mlLink = [
+                    t($mlPage->getCollectionName()),
+                    $this->app->make(ResolverManagerInterface::class)->resolve([$mlPage]),
+                ];
+            }
+        }
+        $this->set('mlLink', $mlLink);
     }
 
     public function on_start()
