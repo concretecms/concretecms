@@ -144,6 +144,7 @@ class Login extends PageController implements LoggerAwareInterface
         AuthenticationType $type,
         User $u
     ) {
+        $this->app->instance(User::class, $u);
         if (!$type || !($type instanceof AuthenticationType)) {
             return $this->view();
         }

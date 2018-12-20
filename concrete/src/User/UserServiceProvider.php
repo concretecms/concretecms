@@ -41,6 +41,8 @@ class UserServiceProvider extends ServiceProvider
                 return $director;
             });
         }
+
+        $this->app->singleton(User::class);
     }
 
     protected function bindEvents(EventDispatcherInterface $dispatcher)
