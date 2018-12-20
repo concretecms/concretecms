@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Core\HTTP\Middleware;
+namespace Concrete\Core\Http\Middleware;
 
 use Concrete\Core\Http\Middleware\DelegateInterface;
 use Concrete\Core\Http\Middleware\MiddlewareInterface;
