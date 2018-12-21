@@ -261,6 +261,9 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
             case 'RECENT':
                 $q .= ' order by cvID desc limit 1';
                 break;
+            case 'RECENT_UNAPPROVED':
+                $q .= 'and (cvIsApproved = 0 or cvIsApproved IS NULL) order by cvID desc limit 1';
+                break;
             default:
                 $v[] = $cvID;
                 $q .= ' and cvID = ?';
