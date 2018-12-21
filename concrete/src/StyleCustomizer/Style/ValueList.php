@@ -1,33 +1,66 @@
 <?php
+
 namespace Concrete\Core\StyleCustomizer\Style;
 
+use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\StyleCustomizer\Style\Value\BasicValue;
+use Concrete\Core\StyleCustomizer\Style\Value\Value;
+use Concrete\Core\StyleCustomizer\StyleList;
+use Concrete\Core\Support\Facade\Application;
 use Less_Parser;
-use Database;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 class ValueList
 {
-    protected $values = array();
+    /**
+     * The identifier of this value list instance.
+     *
+     * @var int|null
+     */
     protected $scvlID;
 
-    public function getValues()
-    {
-        return $this->values;
-    }
+    /**
+     * The list of values.
+     *
+     * @var \Concrete\Core\StyleCustomizer\Style\Value\Value[]
+     */
+    protected $values = [];
 
+    /**
+     * Get the identifier of this value list instance.
+     *
+     * @return int|null
+     */
     public function getValueListID()
     {
         return $this->scvlID;
     }
 
-    public static function loadFromRequest(ParameterBag $request, \Concrete\Core\StyleCustomizer\StyleList $styles)
+    /**
+     * Get the list of values.
+     *
+     * @return \Concrete\Core\StyleCustomizer\Style\Value\Value[]
+     */
+    public function getValues()
+    {
+        return $this->values;
+    }
+
+    /**
+     * Extract the value list from a received data.
+     *
+     * @param \Symfony\Component\HttpFoundation\ParameterBag $request
+     * @param \Concrete\Core\StyleCustomizer\StyleList $styles
+     *
+     * @return static
+     */
+    public static function loadFromRequest(ParameterBag $request, StyleList $styles)
     {
         $vl = new static();
         foreach ($styles->getSets() as $set) {
             foreach ($set->getStyles() as $style) {
                 $value = $style->getValueFromRequest($request);
-                if (is_object($value)) {
+                if ($value) {
                     $vl->addValue($value);
                 }
             }
@@ -42,7 +75,15 @@ class ValueList
         return $vl;
     }
 
-    public static function loadFromLessFile($file, $urlroot = false)
+    /**
+     * Extract the value list from a LESS file.
+     *
+     * @param string $file the full path of the LESS file
+     * @param string $urlroot The url of the file
+     *
+     * @return static
+     */
+    public static function loadFromLessFile($file, $urlroot = '')
     {
         $l = new Less_Parser();
         $parser = $l->parseFile($file, $urlroot, true);
@@ -59,55 +100,92 @@ class ValueList
             }
         }
 
-        foreach (array('ColorStyle', 'TypeStyle', 'ImageStyle', 'SizeStyle') as $type) {
-            $o = '\\Concrete\\Core\\StyleCustomizer\\Style\\' . $type;
-            $values = call_user_func_array(array($o, 'getValuesFromVariables'), array($rules));
+        foreach ([
+            ColorStyle::class,
+            TypeStyle::class,
+            ImageStyle::class,
+            SizeStyle::class,
+        ] as $type) {
+            $values = call_user_func([$type, 'getValuesFromVariables'], $rules);
             $vl->addValues($values);
         }
 
         return $vl;
     }
 
+    /**
+     * Get a value list from the database.
+     *
+     * @param int $scvlID the identifier of the value list
+     *
+     * @return static|null
+     */
     public static function getByID($scvlID)
     {
-        $db = Database::get();
-        $scvlID = $db->GetOne('select scvlID from StyleCustomizerValueLists where scvlID = ?', array($scvlID));
+        $o = null;
         if ($scvlID) {
-            $o = new static();
-            $o->scvlID = $scvlID;
-            $rows = $db->fetchAll('select * from StyleCustomizerValues where scvlID = ?', array($scvlID));
-            foreach ($rows as $row) {
-                $o->addValue(unserialize($row['value']));
+            $app = Application::getFacadeApplication();
+            $db = $app->make(Connection::class);
+            $scvlID = (int) $db->fetchColumn('select scvlID from StyleCustomizerValueLists where scvlID = ?', [$scvlID]);
+            if ($scvlID !== 0) {
+                $o = new static();
+                $o->scvlID = $scvlID;
+                $rows = $db->fetchAll('select * from StyleCustomizerValues where scvlID = ?', [$scvlID]);
+                foreach ($rows as $row) {
+                    $o->addValue(unserialize($row['value']));
+                }
             }
         }
 
         return $o;
     }
 
+    /**
+     * Persist this list of values.
+     */
     public function save()
     {
-        $db = Database::get();
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
         if (!isset($this->scvlID)) {
-            $db->insert('StyleCustomizerValueLists', array());
+            $db->insert('StyleCustomizerValueLists', []);
             $this->scvlID = $db->LastInsertId();
         } else {
-            $db->delete('StyleCustomizerValues', array('scvlID' => $this->scvlID));
+            $db->delete('StyleCustomizerValues', ['scvlID' => $this->scvlID]);
         }
 
         foreach ($this->values as $value) {
-            $db->insert('StyleCustomizerValues', array('value' => serialize($value), 'scvlID' => $this->scvlID));
+            $db->insert('StyleCustomizerValues', ['value' => serialize($value), 'scvlID' => $this->scvlID]);
         }
     }
 
-    public function addValue(\Concrete\Core\StyleCustomizer\Style\Value\Value $value)
+    /**
+     * Add a value.
+     *
+     * @param \Concrete\Core\StyleCustomizer\Style\Value\Value $value
+     *
+     * @return $this
+     */
+    public function addValue(Value $value)
     {
         $this->values[] = $value;
+
+        return $this;
     }
 
+    /**
+     * Add a list of values.
+     *
+     * @param \Concrete\Core\StyleCustomizer\Style\Value\Value[]|\Traversable $values
+     *
+     * @return $this
+     */
     public function addValues($values)
     {
         foreach ($values as $value) {
             $this->addValue($value);
         }
+
+        return $this;
     }
 }

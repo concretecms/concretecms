@@ -1,33 +1,50 @@
 <?php
+
 namespace Concrete\Core\StyleCustomizer\Inline;
 
+use Concrete\Core\Entity\StyleCustomizer\Inline\StyleSet as StyleSetEntity;
+use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Page\Theme\GridFramework\GridFramework;
-use Database;
-use Exception;
+use Concrete\Core\Support\Facade\Application;
+use Doctrine\ORM\EntityManagerInterface;
+use SimpleXMLElement;
 use Symfony\Component\HttpFoundation\Request;
-use Doctrine\ORM\Mapping as ORM;
 
 class StyleSet
 {
     /**
-     * @param $issID
+     * Get a StyleSet entity given its ID.
      *
-     * @return \Concrete\Core\StyleCustomizer\Set
+     * @param int $issID
+     *
+     * @return \Concrete\Core\Entity\StyleCustomizer\Inline\StyleSet|null
      */
     public static function getByID($issID)
     {
-        $em = \ORM::entityManager();
+        if (!$issID) {
+            return null;
+        }
+        $app = Application::getFacadeApplication();
+        $em = $app->make(EntityManagerInterface::class);
 
-        return $em->find('\Concrete\Core\Entity\StyleCustomizer\Inline\StyleSet', $issID);
+        return $em->find(StyleSetEntity::class, $issID);
     }
 
-    public static function import(\SimpleXMLElement $node)
+    /**
+     * Import a StyleSet entity from an XML node.
+     *
+     * @param \SimpleXMLElement $node
+     *
+     * @return \Concrete\Core\Entity\StyleCustomizer\Inline\StyleSet
+     */
+    public static function import(SimpleXMLElement $node)
     {
-        $o = new \Concrete\Core\Entity\StyleCustomizer\Inline\StyleSet();
+        $o = new StyleSetEntity();
         $o->setBackgroundColor((string) $node->backgroundColor);
         $filename = (string) $node->backgroundImage;
         if ($filename) {
-            $inspector = \Core::make('import/value_inspector');
+            $app = Application::getFacadeApplication();
+            $inspector = $app->make('import/value_inspector');
             $result = $inspector->inspect($filename);
             $fID = $result->getReplacedValue();
             if ($fID) {
@@ -73,139 +90,153 @@ class StyleSet
      * If the request contains any fields that are valid to save as a style set, we return the style set object
      * pre-save. If it's not (e.g. there's a background repeat but no actual background image, empty strings, etc...)
      * then we return null.
-     * return \Concrete\Core\StyleCustomizer\Inline\StyleSet|null.
      *
-     * @param Request $request
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return \Concrete\Core\Entity\StyleCustomizer\Inline\StyleSet|null
      */
     public static function populateFromRequest(Request $request)
     {
-        $r = $request->request->all();
-        $set = new \Concrete\Core\Entity\StyleCustomizer\Inline\StyleSet();
+        $post = $request->request;
+        $set = new StyleSetEntity();
         $return = false;
-        if (isset($r['backgroundColor']) && trim($r['backgroundColor']) != '') {
-            $set->setBackgroundColor($r['backgroundColor']);
-            $set->setBackgroundRepeat($r['backgroundRepeat']);
-            $set->setBackgroundSize($r['backgroundSize']);
-            $set->setBackgroundPosition($r['backgroundPosition']);
+
+        if ($post->has('backgroundColor') && trim($post->get('backgroundColor')) !== '') {
+            $set->setBackgroundColor($post->get('backgroundColor'));
+            $set->setBackgroundRepeat($post->get('backgroundRepeat'));
+            $set->setBackgroundSize($post->get('backgroundSize'));
+            $set->setBackgroundPosition($post->get('backgroundPosition'));
             $return = true;
         }
 
-        if (isset($r['backgroundImageFileID'])) {
-            $fID = intval($r['backgroundImageFileID']);
-            if ($fID > 0) {
-                $set->setBackgroundImageFileID($fID);
-                $set->setBackgroundRepeat($r['backgroundRepeat']);
-                $set->setBackgroundSize($r['backgroundSize']);
-                $set->setBackgroundPosition($r['backgroundPosition']);
-                $return = true;
-            }
+        $fID = (int) $post->get('backgroundImageFileID');
+        if ($fID > 0) {
+            $set->setBackgroundImageFileID($fID);
+            $set->setBackgroundRepeat($post->get('backgroundRepeat'));
+            $set->setBackgroundSize($post->get('backgroundSize'));
+            $set->setBackgroundPosition($post->get('backgroundPosition'));
+            $return = true;
         }
 
-        if (isset($r['hideOnDevice'])) {
-            if (isset($r['hideOnDevice'][GridFramework::DEVICE_CLASSES_HIDE_ON_EXTRA_SMALL]) && $r['hideOnDevice'][GridFramework::DEVICE_CLASSES_HIDE_ON_EXTRA_SMALL] == 1) {
+        $hod = $post->get('hideOnDevice');
+        if (is_array($hod)) {
+            if (!empty($hod[GridFramework::DEVICE_CLASSES_HIDE_ON_EXTRA_SMALL])) {
                 $set->setHideOnExtraSmallDevice(true);
                 $return = true;
             }
-            if (isset($r['hideOnDevice'][GridFramework::DEVICE_CLASSES_HIDE_ON_SMALL]) && $r['hideOnDevice'][GridFramework::DEVICE_CLASSES_HIDE_ON_SMALL] == 1) {
+            if (!empty($hod[GridFramework::DEVICE_CLASSES_HIDE_ON_SMALL])) {
                 $set->setHideOnSmallDevice(true);
                 $return = true;
             }
-            if (isset($r['hideOnDevice'][GridFramework::DEVICE_CLASSES_HIDE_ON_MEDIUM]) && $r['hideOnDevice'][GridFramework::DEVICE_CLASSES_HIDE_ON_MEDIUM] == 1) {
+            if (!empty($hod[GridFramework::DEVICE_CLASSES_HIDE_ON_MEDIUM])) {
                 $set->setHideOnMediumDevice(true);
                 $return = true;
             }
-            if (isset($r['hideOnDevice'][GridFramework::DEVICE_CLASSES_HIDE_ON_LARGE]) && $r['hideOnDevice'][GridFramework::DEVICE_CLASSES_HIDE_ON_LARGE] == 1) {
+            if (!empty($hod[GridFramework::DEVICE_CLASSES_HIDE_ON_LARGE])) {
                 $set->setHideOnLargeDevice(true);
                 $return = true;
             }
         }
-        if (isset($r['linkColor']) && trim($r['linkColor']) != '') {
-            $set->setLinkColor($r['linkColor']);
+
+        $v = trim($post->get('linkColor', ''));
+        if ($v !== '') {
+            $set->setLinkColor($v);
             $return = true;
         }
 
-        if (isset($r['textColor']) && trim($r['textColor']) != '') {
-            $set->setTextColor($r['textColor']);
+        $v = trim($post->get('textColor', ''));
+        if ($v !== '') {
+            $set->setTextColor($v);
             $return = true;
         }
 
-        if (isset($r['baseFontSize']) && trim($r['baseFontSize']) && trim($r['baseFontSize']) != '0px') {
-            $set->setBaseFontSize($r['baseFontSize']);
+        $v = trim($post->get('baseFontSize', ''));
+        if (!in_array($v, ['', '0px'], true)) {
+            $set->setBaseFontSize($v);
             $return = true;
         }
 
-        if (isset($r['marginTop']) && trim($r['marginTop']) && trim($r['marginTop']) != '0px') {
-            $set->setMarginTop($r['marginTop']);
+        $v = trim($post->get('marginTop', ''));
+        if (!in_array($v, ['', '0px'], true)) {
+            $set->setMarginTop($v);
             $return = true;
         }
 
-        if (isset($r['marginRight']) && trim($r['marginRight']) && trim($r['marginRight']) != '0px') {
-            $set->setMarginRight($r['marginRight']);
+        $v = trim($post->get('marginRight', ''));
+        if (!in_array($v, ['', '0px'], true)) {
+            $set->setMarginRight($v);
             $return = true;
         }
 
-        if (isset($r['marginBottom']) && trim($r['marginBottom']) && trim($r['marginBottom']) != '0px') {
-            $set->setMarginBottom($r['marginBottom']);
+        $v = trim($post->get('marginBottom', ''));
+        if (!in_array($v, ['', '0px'], true)) {
+            $set->setMarginBottom($v);
             $return = true;
         }
 
-        if (isset($r['marginLeft']) && trim($r['marginLeft']) && trim($r['marginLeft']) != '0px') {
-            $set->setMarginLeft($r['marginLeft']);
+        $v = trim($post->get('marginLeft', ''));
+        if (!in_array($v, ['', '0px'], true)) {
+            $set->setMarginLeft($v);
             $return = true;
         }
 
-        if (isset($r['paddingTop']) && trim($r['paddingTop']) && trim($r['paddingTop']) != '0px') {
-            $set->setPaddingTop($r['paddingTop']);
+        $v = trim($post->get('paddingTop', ''));
+        if (!in_array($v, ['', '0px'], true)) {
+            $set->setPaddingTop($v);
             $return = true;
         }
 
-        if (isset($r['paddingRight']) && trim($r['paddingRight']) && trim($r['paddingRight']) != '0px') {
-            $set->setPaddingRight($r['paddingRight']);
+        $v = trim($post->get('paddingRight', ''));
+        if (!in_array($v, ['', '0px'], true)) {
+            $set->setPaddingRight($v);
             $return = true;
         }
 
-        if (isset($r['paddingBottom']) && trim($r['paddingBottom']) && trim($r['paddingBottom']) != '0px') {
-            $set->setPaddingBottom($r['paddingBottom']);
+        $v = trim($post->get('paddingBottom', ''));
+        if (!in_array($v, ['', '0px'], true)) {
+            $set->setPaddingBottom($v);
             $return = true;
         }
 
-        if (isset($r['paddingLeft']) && trim($r['paddingLeft']) && trim($r['paddingLeft']) != '0px') {
-            $set->setPaddingLeft($r['paddingLeft']);
+        $v = trim($post->get('paddingLeft', ''));
+        if (!in_array($v, ['', '0px'], true)) {
+            $set->setPaddingLeft($v);
             $return = true;
         }
 
-        if (isset($r['borderWidth']) && trim($r['borderWidth']) && trim($r['borderWidth']) != '0px') {
-            $set->setBorderWidth($r['borderWidth']);
-            $set->setBorderStyle($r['borderStyle']);
-            $set->setBorderColor($r['borderColor']);
-            $return = true;
-        }
-        if (isset($r['borderRadius']) && trim($r['borderRadius']) && trim($r['borderRadius']) != '0px') {
-            $set->setBorderRadius($r['borderRadius']);
+        $v = trim($post->get('borderWidth', ''));
+        if (!in_array($v, ['', '0px'], true)) {
+            $set->setBorderWidth($v);
+            $set->setBorderStyle($post->get('borderStyle'));
+            $set->setBorderColor($post->get('borderColor'));
             $return = true;
         }
 
-        if (isset($r['alignment']) && trim($r['alignment']) != '') {
-            $set->setAlignment($r['alignment']);
+        $v = trim($post->get('borderRadius', ''));
+        if (!in_array($v, ['', '0px'], true)) {
+            $set->setBorderRadius($v);
             $return = true;
         }
 
-        if (isset($r['rotate']) && $r['rotate']) {
-            $set->setRotate($r['rotate']);
+        $v = trim($post->get('alignment', ''));
+        if ($v !== '') {
+            $set->setAlignment($v);
             $return = true;
         }
 
-        $boxShadowHorizontal = isset($r['boxShadowHorizontal']) && trim($r['boxShadowHorizontal']) ? trim($r['boxShadowHorizontal']) : '0px';
-        $boxShadowVertical = isset($r['boxShadowVertical']) && trim($r['boxShadowVertical']) ? trim($r['boxShadowVertical']) : '0px';
-        $boxShadowBlur = isset($r['boxShadowBlur']) && trim($r['boxShadowBlur']) ? trim($r['boxShadowBlur']) : '0px';
-        $boxShadowSpread = isset($r['boxShadowSpread']) && trim($r['boxShadowSpread']) ? trim($r['boxShadowSpread']) : '0px';
+        $v = $post->get('rotate');
+        if ($v) {
+            $set->setRotate($v);
+            $return = true;
+        }
 
-        if (isset($r['boxShadowColor'])) {
-            if ($boxShadowHorizontal != '0px'
-            || $boxShadowVertical != '0px'
-            || $boxShadowBlur != '0px'
-            || $boxShadowSpread != '0px') {
-                $set->setBoxShadowColor($r['boxShadowColor']);
+        if ($post->has('boxShadowColor')) {
+            $boxShadowHorizontal = trim($post->get('boxShadowHorizontal', '')) ?: '0px';
+            $boxShadowVertical = trim($post->get('boxShadowVertical', '')) ?: '0px';
+            $boxShadowBlur = trim($post->get('boxShadowBlur', '')) ?: '0px';
+            $boxShadowSpread = trim($post->get('boxShadowSpread', '')) ?: '0px';
+            if ($boxShadowHorizontal !== '0px' || $boxShadowVertical !== '0px' || $boxShadowBlur !== '0px' || $boxShadowSpread !== '0px') {
+                $set->setBoxShadowColor($post->get('boxShadowColor'));
                 $set->setBoxShadowBlur($boxShadowBlur);
                 $set->setBoxShadowHorizontal($boxShadowHorizontal);
                 $set->setBoxShadowVertical($boxShadowVertical);
@@ -214,20 +245,23 @@ class StyleSet
             }
         }
 
-        if (isset($r['customClass']) && is_array($r['customClass'])) {
-            $set->setCustomClass(implode(' ', $r['customClass']));
+        $v = $post->get('customClass');
+        if (is_array($v)) {
+            $set->setCustomClass(implode(' ', $v));
             $return = true;
         }
 
-        if (isset($r['customID']) && trim($r['customID'])) {
-            $set->setCustomID(trim($r['customID']));
+        $v = trim($post->get('customID', ''));
+        if ($v) {
+            $set->setCustomID($v);
             $return = true;
         }
 
-        if (isset($r['customElementAttribute']) && trim($r['customElementAttribute'])) {
+        $v = trim($post->get('customElementAttribute', ''));
+        if ($v !== '') {
             // strip class attributes
             $pattern = '/(class\s*=\s*["\'][^\'"]*["\'])/i';
-            $customElementAttribute = preg_replace($pattern, '', $r['customElementAttribute']);
+            $customElementAttribute = preg_replace($pattern, '', $v);
             // strip ID attributes
             $pattern = '/(id\s*=\s*["\'][^\'"]*["\'])/i';
             $customElementAttribute = preg_replace($pattern, '', $customElementAttribute);
@@ -235,18 +269,13 @@ class StyleSet
             $singleQuoteCount = preg_match_all('/([\'])/i', $customElementAttribute);
             $doubleQuoteCount = preg_match_all('/(["])/i', $customElementAttribute);
 
-            if ($singleQuoteCount % 2 == 0 && $doubleQuoteCount % 2 == 0) {
-                $set->setCustomElementAttribute(trim($customElementAttribute));
-                $return = true;
-            } else {
-                throw new Exception(t('Custom Element Attribute input: unclosed quote(s)'));
+            if ($singleQuoteCount % 2 !== 0 || $doubleQuoteCount % 2 !== 0) {
+                throw new UserMessageException(t('Custom Element Attribute input: unclosed quote(s)'));
             }
+            $set->setCustomElementAttribute(trim($customElementAttribute));
+            $return = true;
         }
 
-        if ($return) {
-            return $set;
-        }
-
-        return null;
+        return $return ? $set : null;
     }
 }

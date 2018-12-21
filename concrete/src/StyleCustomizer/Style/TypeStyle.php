@@ -1,21 +1,32 @@
 <?php
+
 namespace Concrete\Core\StyleCustomizer\Style;
 
-use Concrete\Core\StyleCustomizer\Style\Value\TypeValue;
 use Concrete\Core\StyleCustomizer\Style\Value\ColorValue;
 use Concrete\Core\StyleCustomizer\Style\Value\SizeValue;
-use Core;
+use Concrete\Core\StyleCustomizer\Style\Value\TypeValue;
+use Concrete\Core\Support\Facade\Application;
+use Primal\Color\Parser;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 class TypeStyle extends Style
 {
+    /**
+     * @param \Concrete\Core\StyleCustomizer\Style\Value\TypeValue|null|false $style
+     *
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\StyleCustomizer\Style\Style::render()
+     */
     public function render($style = false)
     {
-        $fh = Core::make('helper/form/font');
+        $app = Application::getFacadeApplication();
+        $fh = $app->make('helper/form/font');
         $args = [];
-        if (is_object($style)) {
+        if ($style) {
             $args['fontFamily'] = $style->getFontFamily();
             $color = $style->getColor();
-            if (is_object($color)) {
+            if ($color) {
                 $args['color'] = $color->toStyleString();
             }
             $args['fontWeight'] = $style->getFontWeight();
@@ -44,74 +55,83 @@ class TypeStyle extends Style
                 $args['lineHeightUnit'] = $lineHeight->getUnit();
             }
         }
-        echo $fh->output($this->getVariable(), $args, []);
+        $fh->output($this->getVariable(), $args, []);
     }
 
-    public function getValueFromRequest(\Symfony\Component\HttpFoundation\ParameterBag $request)
+    /**
+     * @return \Concrete\Core\StyleCustomizer\Style\Value\TypeValue
+     *
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\StyleCustomizer\Style\Style::getValueFromRequest()
+     */
+    public function getValueFromRequest(ParameterBag $request)
     {
-        $type = $request->get($this->getVariable());
+        $type = $request->get($this->getVariable(), []);
         $tv = new TypeValue($this->getVariable());
-        if ($type['font-family']) {
+        if (!empty($type['font-family'])) {
             $tv->setFontFamily($type['font-family']);
         }
-        if ($type['font-weight']) {
+        if (!empty($type['font-weight'])) {
             $tv->setFontWeight($type['font-weight']);
         }
-        if ($type['italic']) {
+        if (!empty($type['italic'])) {
             $tv->setFontStyle('italic');
         } elseif (isset($type['italic'])) {
             $tv->setFontStyle('none');
         }
 
-        if ($type['underline']) {
+        if (!empty($type['underline'])) {
             $tv->setTextDecoration('underline');
         } elseif (isset($type['underline'])) {
             $tv->setTextDecoration('none');
         }
 
-        if ($type['uppercase']) {
+        if (!empty($type['uppercase'])) {
             $tv->setTextTransform('uppercase');
         } elseif (isset($type['uppercase'])) {
             $tv->setTextTransform('none');
         }
 
-        if ($type['color']) {
-            $cv = new \Primal\Color\Parser($type['color']);
+        if (!empty($type['color'])) {
+            $cv = new Parser($type['color']);
             $result = $cv->getResult();
             $alpha = false;
             if ($result->alpha && $result->alpha < 1) {
                 $alpha = $result->alpha;
             }
             $cvv = new ColorValue();
-            $cvv->setRed($result->red);
-            $cvv->setGreen($result->green);
-            $cvv->setBlue($result->blue);
-            $cvv->setAlpha($alpha);
+            $cvv
+                ->setRed($result->red)
+                ->setGreen($result->green)
+                ->setBlue($result->blue)
+                ->setAlpha($alpha)
+            ;
             $tv->setColor($cvv);
         }
 
-        if ($type['font-size']) {
+        if (!empty($type['font-size']) && isset($type['font-size']['size'])) {
             $sv = new SizeValue();
             $sv->setSize($type['font-size']['size']);
-            if ($type['font-size']['unit']) {
+            if (!empty($type['font-size']['unit'])) {
                 $sv->setUnit($type['font-size']['unit']);
             }
             $tv->setFontSize($sv);
         }
 
-        if ($type['letter-spacing']) {
+        if (!empty($type['letter-spacing']) && isset($type['letter-spacing']['size'])) {
             $sv = new SizeValue();
             $sv->setSize($type['letter-spacing']['size']);
-            if ($type['letter-spacing']['unit']) {
+            if (!empty($type['letter-spacing']['unit'])) {
                 $sv->setUnit($type['letter-spacing']['unit']);
             }
             $tv->setLetterSpacing($sv);
         }
 
-        if ($type['line-height']) {
+        if (!empty($type['line-height']) && isset($type['line-height']['size'])) {
             $sv = new SizeValue();
             $sv->setSize($type['line-height']['size']);
-            if ($type['line-height']['unit']) {
+            if (!empty($type['line-height']['unit'])) {
                 $sv->setUnit($type['line-height']['unit']);
             }
             $tv->setLineHeight($sv);
@@ -120,6 +140,13 @@ class TypeStyle extends Style
         return $tv;
     }
 
+    /**
+     * @return \Concrete\Core\StyleCustomizer\Style\Value\TypeValue[]
+     *
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\StyleCustomizer\Style\Style::getValuesFromVariables()
+     */
     public static function getValuesFromVariables($rules = [])
     {
         $values = [];

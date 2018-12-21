@@ -1,25 +1,60 @@
 <?php
+
 namespace Concrete\Core\StyleCustomizer\Style;
 
-use Environment;
+use Concrete\Core\Filesystem\FileLocator;
+use Concrete\Core\Support\Facade\Application;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
- * @method static Value[] getValuesFromVariables($rules = [])
+ * @method static \Concrete\Core\StyleCustomizer\Style\Value\Value[] getValuesFromVariables($rules = [])
  */
 abstract class Style
 {
-    protected $variable;
-    protected $name;
-
-    abstract public function render($value = false);
-    /*
-     * This is commented out only because PHP raises a "strict standards" warning,
-     * but child classes MUST implement it (see also https://bugs.php.net/bug.php?id=72993 ).
-     * abstract public static function getValuesFromVariables($rules = []);
+    /**
+     * The name of this style.
+     *
+     * @var string
      */
-    abstract public function getValueFromRequest(\Symfony\Component\HttpFoundation\ParameterBag $request);
+    protected $name = '';
 
-    public function getValueFromList(\Concrete\Core\StyleCustomizer\Style\ValueList $list)
+    /**
+     * The name of the associated CSS variable.
+     *
+     * @var string
+     */
+    protected $variable = '';
+
+    /**
+     * Render the control of this style.
+     *
+     * @param \Concrete\Core\StyleCustomizer\Style\Value\Value|null|false $value the current style value
+     */
+    abstract public function render($value = false);
+
+    /*
+     * This is commented out only because PHP raises a "strict standards" warning for PHP prior to version 7.0,
+     * but child classes MUST implement it (see also https://bugs.php.net/bug.php?id=72993 )
+     */
+    // abstract public static function getValuesFromVariables($rules = []);
+
+    /**
+     * Get the value of this style as received from a request.
+     *
+     * @param \Symfony\Component\HttpFoundation\ParameterBag $request the received data
+     *
+     * @return \Concrete\Core\StyleCustomizer\Style\Value\Value|null
+     */
+    abstract public function getValueFromRequest(ParameterBag $request);
+
+    /**
+     * Get the value of this style extracted from a list of values.
+     *
+     * @param \Concrete\Core\StyleCustomizer\Style\ValueList $list
+     *
+     * @return \Concrete\Core\StyleCustomizer\Style\Value\Value|null
+     */
+    public function getValueFromList(ValueList $list)
     {
         $type = static::getTypeFromClass($this);
         foreach ($list->getValues() as $value) {
@@ -29,6 +64,14 @@ abstract class Style
         }
     }
 
+    /**
+     * Get the type handle of a given Style instance.
+     *
+     * @param \Concrete\Core\StyleCustomizer\Style\Style|object $class
+     * @param string $suffix
+     *
+     * @return string
+     */
     protected static function getTypeFromClass($class, $suffix = 'Style')
     {
         $class = get_class($class);
@@ -38,17 +81,33 @@ abstract class Style
         return $type;
     }
 
+    /**
+     * Set the name of this style.
+     *
+     * @param string $name
+     *
+     * @return $this
+     */
     public function setName($name)
     {
-        $this->name = $name;
+        $this->name = (string) $name;
+
+        return $this;
     }
 
+    /**
+     * Get the name of this style.
+     *
+     * @return string
+     */
     public function getName()
     {
         return $this->name;
     }
 
-    /** Returns the display name for this style (localized and escaped accordingly to $format)
+    /**
+     * Get the display name for this style (localized and escaped accordingly to $format).
+     *
      * @param string $format = 'html'
      *   Escape the result in html format (if $format is 'html').
      *   If $format is 'text' or any other value, the display name won't be escaped.
@@ -67,28 +126,44 @@ abstract class Style
         }
     }
 
+    /**
+     * Set the name of the associated CSS variable.
+     *
+     * @param string $variable
+     *
+     * @return $this
+     */
     public function setVariable($variable)
     {
-        $this->variable = $variable;
+        $this->variable = (string) $variable;
+
+        return $this;
     }
 
+    /**
+     * Get the name of the associated CSS variable.
+     *
+     * @return string
+     */
     public function getVariable()
     {
         return $this->variable;
     }
 
     /**
-     * Returns a path to an elements directory for this Style. Might not be used by all styles.
+     * Get a path to an elements directory for this Style. Might not be used by all styles.
      *
      * @return string
      */
     public function getFormElementPath()
     {
+        $app = Application::getFacadeApplication();
         $className = implode('', array_slice(explode('\\', get_called_class()), -1));
         $segment = substr($className, 0, strpos($className, 'Style'));
         $element = uncamelcase($segment);
-        $env = Environment::get();
+        $locator = $app->make(FileLocator::class);
+        $record = $locator->getRecord(DIRNAME_ELEMENTS . '/' . DIRNAME_STYLE_CUSTOMIZER . '/' . DIRNAME_STYLE_CUSTOMIZER_TYPES . '/' . $element . '.php');
 
-        return $env->getPath(DIRNAME_ELEMENTS . '/' . DIRNAME_STYLE_CUSTOMIZER . '/' . DIRNAME_STYLE_CUSTOMIZER_TYPES . '/' . $element . '.php');
+        return $record->getFile();
     }
 }
