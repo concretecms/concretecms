@@ -55,7 +55,7 @@ return [
          *
          * @var string (message|debug)
          */
-        'detail' => 'message',
+        'detail' => 'debug',
 
         /*
          * Error reporting level
@@ -882,6 +882,7 @@ return [
             'required_special_characters' => 0,
             'required_lower_case' => 0,
             'required_upper_case' => 0,
+            'reuse' => 0,
             'custom_regex' => [],
             'hash_portable' => false,
             'hash_cost_log2' => 12,

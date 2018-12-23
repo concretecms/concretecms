@@ -12,16 +12,20 @@ class PasswordRequirements extends DashboardPageController
 
     public function view()
     {
+
         $config = $this->app['config'][self::CONFIG_PREFIX];
-        $this->set('max', (int) max(0, array_get($config, 'maximum', 0)));
-        $this->set('min', (int) max(0, array_get($config, 'minimum', 0)));
 
-        $this->set('specialCharacters', (int) max(0, array_get($config, 'required_special_characters', 0)));
-        $this->set('upperCase', (int) max(0, array_get($config, 'required_upper_case', 0)));
-        $this->set('lowerCase', (int) max(0, array_get($config, 'required_lower_case', 0)));
-        $this->set('customRegex', (array) array_get($config, 'custom_regex', []));
+        $this->set('max', (int)max(0, array_get($config, 'maximum', 0)));
+        $this->set('min', (int)max(0, array_get($config, 'minimum', 0)));
 
+        $this->set('specialCharacters', (int)max(0, array_get($config, 'required_special_characters', 0)));
+        $this->set('upperCase', (int)max(0, array_get($config, 'required_upper_case', 0)));
+        $this->set('lowerCase', (int)max(0, array_get($config, 'required_lower_case', 0)));
+        $this->set('passwordReuse', (int)max(0, array_get($config, 'reuse', 0)));
+        $this->set('customRegex', (array)array_get($config, 'custom_regex', []));
         $this->set('saveAction', $this->action('save'));
+
+
     }
 
     protected function validate(Request $request)
@@ -53,10 +57,43 @@ class PasswordRequirements extends DashboardPageController
         $config->save($prefix . '.required_special_characters', $this->int($args, 'specialCharacters'));
         $config->save($prefix . '.required_upper_case', $this->int($args, 'upperCase'));
         $config->save($prefix . '.required_lower_case', $this->int($args, 'lowerCase'));
+        $config->save($prefix . '.reuse', $this->int($args, 'passwordReuse'));
 
         $regex = array_get($args, 'regex', []);
+        $regexDesc = array_get($args, 'regex_desc', []);
+        $regexWidthDesc = array_combine($regex, $regexDesc);
+
         $regexRequirements = array_get($args, 'regexRequirements', []);
-        $config->save($prefix . '.custom_regex', array_combine($regex, $regexRequirements));
+        $config->save($prefix . '.custom_regex', array_merge($regexWidthDesc, $regexRequirements));
+
+        $this->flash('success', t('Password Options successfully saved.'));
+        $this->redirect('/dashboard/system/registration/password_requirements');
+    }
+
+    public function reset()
+    {
+        if (!$this->token->validate('restore_defaults')) {
+            $this->error->add(t('Invalid CSRF token. Please refresh and try again.'));
+            $this->view();
+        } else {
+            $prefix = self::CONFIG_PREFIX;
+
+            $config = $this->app->make('config');
+
+            $item = $config->get($prefix);
+            unset($item['minimum']);
+            unset($item['maximum']);
+            unset($item['required_special_characters']);
+            unset($item['required_upper_case']);
+            unset($item['required_lower_case']);
+            unset($item['reuse']);
+            unset($item['custom_regex']);
+
+            $config->save($prefix, $item);
+
+            $this->flash('success', t('Password Options successfully reset to default values.'));
+            $this->redirect('/dashboard/system/registration/password_requirements');
+        }
     }
 
     /**
@@ -69,7 +106,7 @@ class PasswordRequirements extends DashboardPageController
      */
     protected function int(array $args, $key)
     {
-        return max(0, (int) array_get($args, $key, 0));
+        return max(0, (int)array_get($args, $key, 0));
     }
 
     /**
@@ -82,7 +119,7 @@ class PasswordRequirements extends DashboardPageController
     protected function validateRegex($regex)
     {
         // If this test returns false it means we have invalid regex
-        return @preg_match($regex, null) === false;
+        return @preg_match($regex, null) !== false;
     }
 
 }

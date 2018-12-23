@@ -10,6 +10,7 @@ use Concrete\Core\Foundation\Service\Provider;
 use Concrete\Core\Validator\String\MaximumLengthValidator;
 use Concrete\Core\Validator\String\MinimumLengthValidator;
 use Concrete\Core\Validator\String\RegexValidator;
+use Concrete\Core\Validator\String\ReuseValidator;
 
 
 class PasswordValidatorServiceProvider extends Provider
@@ -35,9 +36,26 @@ class PasswordValidatorServiceProvider extends Provider
             $this->applyLengthValidators($manager);
             $this->applyStringRequirementValidators($manager);
             $this->applyRegexRequirements($manager);
+            $this->applyPasswordReuseValidator($manager);
 
             return $manager;
         });
+    }
+
+    /**
+     *
+     *
+     * @param ValidatorManagerInterface $manager
+     */
+    protected function applyPasswordReuseValidator(ValidatorManagerInterface $manager)
+    {
+        $trackUse = $this->config->get('concrete.user.password.reuse.track', 5);
+        if ($trackUse) {
+            $reuseValidator = $this->app->make(ReuseValidator::class, ['maxReuse' => $trackUse]);
+            $reuseValidator->setErrorString($reuseValidator::E_PASSWORD_RECENTLY_USED, t("You've recently used this password, please use a unique password."));
+            $reuseValidator->setRequirementString($reuseValidator::E_PASSWORD_RECENTLY_USED, t('Must not have been recently used by this account.'));
+            $manager->setValidator('reuse', $reuseValidator);
+        }
     }
 
     /**
@@ -80,7 +98,6 @@ class PasswordValidatorServiceProvider extends Provider
     protected function getMinimumRequirement()
     {
         $minimumLength = $this->config->get('concrete.user.password.minimum', 8);
-
         return $minimumLength ? $this->app->make(MinimumLengthValidator::class, [$minimumLength]) : null;
     }
 
@@ -108,7 +125,6 @@ class PasswordValidatorServiceProvider extends Provider
 
         $errorHandler = function ($validator, $code, $password) use ($errorString) { return $errorString; };
         $requirementHandler = function ($validator, $code) use (&$requirement) { return $requirement; };
-
         $minimum->setRequirementString($minimum::E_TOO_SHORT, $requirementHandler);
         $minimum->setErrorString($minimum::E_TOO_SHORT, $errorHandler);
 
@@ -135,14 +151,14 @@ class PasswordValidatorServiceProvider extends Provider
         }
 
         if ($lowerCase) {
-            $regex = "/[a-z].*{{$lowerCase},}/";
+            $regex = "/([a-z].*){{$lowerCase},}/";
             $requirement = t2('Must contain at least one lowercase character.', 'Must contain at least %d lowercase characters.', $lowerCase);
 
             $manager->setValidator('required_lower_case', $this->regexValidator($regex, $requirement));
         }
 
         if ($upperCase) {
-            $regex = "/[a-z].*{{$upperCase},}/";
+            $regex = "/([A-Z].*){{$upperCase},}/";
             $requirement = t2('Must contain at least one uppercase character.', 'Must contain at least %d uppercase characters.', $upperCase);
 
             $manager->setValidator('required_upper_case', $this->regexValidator($regex, $requirement));
@@ -191,9 +207,8 @@ class PasswordValidatorServiceProvider extends Provider
     protected function wrappedRegexValidator($regex, $requirementString)
     {
         $regexValidator = $this->regexValidator($regex, $requirementString);
-
         $validator = $this->app->make(ClosureValidator::class, [
-            function ($string, ArrayAccess $error = null) use ($regexValidator) {
+            function (ClosureValidator $validator, $string, ArrayAccess $error = null) use ($regexValidator) {
                 try {
                     $regexValidator->isValid($string, $error);
                 } catch (\RuntimeException $e) {

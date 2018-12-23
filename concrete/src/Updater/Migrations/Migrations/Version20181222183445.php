@@ -7,10 +7,8 @@ use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 use Doctrine\DBAL\Schema\Schema;
 
-/**
- * Auto-generated Migration: Please modify to your needs!
- */
-class Version20181218183445 extends AbstractMigration implements RepeatableMigrationInterface
+
+class Version20181222183445 extends AbstractMigration implements RepeatableMigrationInterface
 {
 
     public function upgradeDatabase()
@@ -37,6 +35,10 @@ class Version20181218183445 extends AbstractMigration implements RepeatableMigra
                 $sp->setAttribute('meta_keywords', 'signup, new user, community, public registration, public, registration');
             }
         }
+
+        $this->refreshEntities([
+            UsedString::class
+        ]);
     }
 
     public function downgradeSchema(Schema $schema)
@@ -46,5 +48,7 @@ class Version20181218183445 extends AbstractMigration implements RepeatableMigra
         if ($page && !$page->isError()) {
             $page->delete();
         }
+
+        $this->refreshEntities();
     }
 }
