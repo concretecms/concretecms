@@ -5,6 +5,7 @@ use Concrete\Core\Area\Layout\CustomLayout;
 use Concrete\Core\Area\Layout\PresetLayout;
 use Concrete\Core\Area\Layout\ThemeGridLayout;
 use Concrete\Core\Area\SubArea;
+use Concrete\Core\Permission\Checker;
 use Core;
 use Database;
 use Concrete\Core\Block\BlockController;
@@ -75,8 +76,18 @@ class Controller extends BlockController
         }
 
         $arrAssetBlocks = [];
-        
+
         foreach ($blocks as $b) {
+            if ($b->overrideAreaPermissions()) {
+                $checker = new Checker($b);
+                if (!$checker->canViewBlock()) {
+                    $btCacheBlockOutput = false;
+                    $btCacheBlockOutputOnPost = false;
+                    $btCacheBlockOutputLifetime = 0;
+                    break;
+                }
+            }
+
             $btCacheBlockOutput = $btCacheBlockOutput && $b->cacheBlockOutput();
             $btCacheBlockOutputOnPost = $btCacheBlockOutputOnPost && $b->cacheBlockOutputOnPost();
 
