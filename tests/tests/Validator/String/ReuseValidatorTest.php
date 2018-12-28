@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit_Framework_TestCase;
 use Mockery as M;
+use ReflectionMethod;
 
 class ReuseValidatorTest extends PHPUnit_Framework_TestCase
 {
