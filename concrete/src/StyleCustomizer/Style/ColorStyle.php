@@ -46,6 +46,21 @@ class ColorStyle extends Style
 <input type="text" name="{$inputName}[color]" value="{$color}" id="ccm-colorpicker-{$inputName}" />
 <script>
 $(function() {
+    $('#ccm-colorpicker-{$inputName}').concreteStyleCustomizerColorPicker({
+        initialColor: {$json['color']},
+        i18n: {
+            cancel: {$json['cancel']},
+            choose: {$json['choose']},
+            clear: {$json['clear']}
+        }
+    });
+});
+</script>
+
+
+
+<script>
+$(function() {
     $('#ccm-colorpicker-{$inputName}').spectrum({
         showInput: true,
         showInitial: true,

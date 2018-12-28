@@ -185,6 +185,7 @@
 
         my.updateSwatch();
 
+        $element.addClass('ccm-style-customizer-importexport').data('ccm-style-customizer-importexport', this);
     }
 
     ConcreteTypographySelector.prototype = Object.create(ConcreteStyleCustomizerPalette.prototype);
@@ -274,6 +275,110 @@
         my.updateSwatch();
         ConcreteEvent.publish('StyleCustomizerControlUpdate');
         my.closeSelector(e);
+    };
+
+    ConcreteTypographySelector.prototype.exportStyle = function (data, cb) {
+        var my = this;
+        if (!my.options.inputName) {
+            cb();
+            return;
+        }
+        if (!(my.options.inputName in data)) {
+            data[my.options.inputName] = {};
+        }
+        $.each(['font-family', 'color', 'italic', 'underline', 'uppercase', 'font-size', 'font-weight', 'letter-spacing', 'line-height'], function (index, field) {
+            var $i = my.$element.find('input[data-style-customizer-input="' + field + '"]');
+            if ($i.length !== 1) {
+                return;
+            }
+            var v;
+            switch (field) {
+                case 'color':
+                    v = $i.spectrum('get');
+                    v = v && v.toHex8String ? v.toHex8String() : $i.val();
+                    break;
+                case 'italic':
+                case 'underline':
+                case 'uppercase':
+                    v = !!parseInt($i.val());
+                    break;
+                case 'font-size':
+                case 'font-weight':
+                case 'letter-spacing':
+                case 'line-height':
+                    v = parseFloat($i.val());
+                    v = isNaN(v) ? null : v;
+                    break;
+                default:
+                    v = $i.val();
+                    break;
+            }
+            switch (field) {
+                case 'font-size':
+                    data[my.options.inputName][field] = {
+                        value: v,
+                        unit: my.options.fontSizeUnit
+                    };
+                    break;
+                case 'letter-spacing':
+                    data[my.options.inputName][field] = {
+                        value: v,
+                        unit: my.options.letterSpacingUnit
+                    };
+                    break;
+                case 'line-height':
+                    data[my.options.inputName][field] = {
+                        value: v,
+                        unit: my.options.lineHeightUnit
+                    };
+                    break;
+                default:
+                    data[my.options.inputName][field] = v;
+                    break;
+            }
+        });
+        cb();
+    };
+
+    ConcreteTypographySelector.prototype.importStyle = function (data, cb) {
+        var my = this,
+            myData = my.options.inputName ? data[my.options.inputName] : null;
+        if(!$.isPlainObject(myData)) {
+            cb();
+            return;
+        }
+        $.each(['font-family', 'color'], function (index, field) {
+            if (typeof myData[field] === 'string') {
+                my.setValue(field, myData[field]);
+            }
+        });
+        $.each(['italic', 'underline', 'uppercase'], function (index, field) {
+            if (typeof myData[field] === 'boolean') {
+                my.setValue(field, myData[field] ? '1' : '0');
+            }
+        });
+        $.each([
+            {field: 'font-size', unit: my.options.fontSizeUnit},
+            {field: 'font-weight'},
+            {field: 'letter-spacing', unit: my.options.letterSpacingUnit},
+            {field: 'line-height', unit: my.options.lineHeightUnit}
+        ], function (index, def) {
+            var value;
+            if ('unit' in def) {
+                if (!$.isPlainObject(myData[def.field]) || typeof myData[def.field].unit !== 'string' || myData[def.field].unit !== def.unit) {
+                    return;
+                }
+                value = myData[def.field].value;
+            } else {
+                value = myData[def.field];
+            }
+            if (value === null) {
+                my.setValue(def.field, '');
+            } else if (typeof value === 'number') {
+                my.setValue(def.field, value.toString());
+            }
+        });
+        cb();
     };
 
     // jQuery Plugin

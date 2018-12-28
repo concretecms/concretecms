@@ -13,6 +13,8 @@ $pk = PermissionKey::getByHandle('customize_themes');
 /* @var Concrete\Core\User\User $u */
 /* @var Concrete\Core\StyleCustomizer\Style\ValueList $valueList */
 /* @var Concrete\Core\View\DialogView $view */
+/* @var Concrete\Core\Validation\CSRF\Token $token */
+
 ?>
 <section id="ccm-panel-page-design-customize">
     <form data-form="panel-page-design-customize" target="ccm-page-preview-frame" method="post" action="<?= $controller->action("preview", $theme->getThemeID()) ?>">
@@ -86,22 +88,50 @@ $pk = PermissionKey::getByHandle('customize_themes');
                     <li>
                         <?= t('Custom CSS') ?>
                         <input type="hidden" name="sccRecordID" value="<?= $sccRecordID ?>" />
-                        <span class="ccm-style-customizer-display-swatch-wrapper" data-custom-css-selector="custom"><span class="ccm-style-customizer-display-swatch"><i class="fa fa-cog"></i></span></span>
                     </li>
                 </ul>
             </div>
         </div>
-        <div style="text-align: center">
-            <br/>
-            <button class="btn-danger btn" data-panel-detail-action="reset"><?= t('Reset Customizations') ?></button>
-            <br/>
-            <br/>
+        <div style="padding:0 30px">
+            <br />
+            <div class="btn-group">
+                <button id="ccm-style-customizer-copy" class="btn btn-sm btn-default launch-tooltip" title="<?= t('Copy') ?>" disabled="disabled"><i class="fa fa-copy"></i></button>
+                <button id="ccm-style-customizer-paste" class="btn btn-sm btn-default launch-tooltip" title="<?= t('Paste') ?>" disabled="disabled"><i class="fa fa-clipboard"></i></button>
+                <button id="ccm-style-customizer-export" class="btn btn-sm btn-default launch-tooltip" title="<?= t('Export') ?>"><i class="fa fa-sign-out"></i></button>
+                <button id="ccm-style-customizer-import" class="btn btn-sm btn-default launch-tooltip" title="<?= t('Import') ?>"><i class="fa fa-sign-in"></i></button>
+            </div>
+            <div class="pull-right">
+                <button class="btn btn-sm btn-danger launch-tooltip" data-panel-detail-action="reset" title="<?= t('Reset Customizations') ?>"><i class="fa fa-undo"></i></button>
+            </div>
+            <br />
+            <br />
         </div>
     </form>
 </section>
 
 <div class="ccm-panel-detail-form-actions">
     <button class="pull-right btn btn-success" type="button" data-panel-detail-action="customize-design-submit"><?= t('Save Changes') ?></button>
+</div>
+
+<div class="hide">
+    <div id="ccm-style-customizer-export-dialog" class="ccm-ui">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <textarea readonly="readonly" class="form-control" style="height: 450px; resize: none; cursor: text; font-family: Menlo, Monaco, Consolas, 'Courier New', monospace" onclick="this.select()"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="ccm-style-customizer-import-dialog" class="ccm-ui">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <textarea class="form-control" style="height: 450px; resize: none; font-family: Menlo, Monaco, Consolas, 'Courier New', monospace"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -224,16 +254,29 @@ $(function() {
             });
         }
     });
-    $('span[data-custom-css-selector=custom]').on('click', function() {
-        var sccRecordID = $('form[data-form=panel-page-design-customize] input[name=sccRecordID]').val();
-        jQuery.fn.dialog.open({
-            title: <?= json_encode(t('Custom CSS')) ?>,
-            href: <?= json_encode((string) URL::to('/ccm/system/dialogs/page/design/css') . '?cID=' . $c->getCollectionID()) ?> + '&sccRecordID=' + sccRecordID,
-            modal: false,
-            width: 640,
-            height: 500
-        });
+
+    $('form[data-form=panel-page-design-customize] input[name="sccRecordID"]').concreteStyleCustomizerCustomCss({
+        cID: <?= (int) $c->getCollectionID() ?>,
+        edit: {
+            tokenName: <?= json_encode($token::DEFAULT_TOKEN_NAME) ?>,
+            tokenValue: <?= json_encode($token->generate('ccm-style-customizer-customcss-edit')) ?>,
+            url: <?= json_encode((string)  URL::to('/ccm/system/dialogs/page/design/css')) ?>
+        },
+        loadCss: {
+            tokenName: <?= json_encode($token::DEFAULT_TOKEN_NAME) ?>,
+            tokenValue: <?= json_encode($token->generate('ccm-style-customizer-customcss-load')) ?>,
+            url: <?= json_encode((string)  URL::to('/ccm/system/dialogs/page/design/css/get')) ?>
+        },
+        saveCss: {
+            tokenName: <?= json_encode($token::DEFAULT_TOKEN_NAME) ?>,
+            tokenValue: <?= json_encode($token->generate('ccm-style-customizer-customcss-save')) ?>,
+            url: <?= json_encode((string)  URL::to('/ccm/system/dialogs/page/design/css/set')) ?>
+        },
+        i18n: {
+            editTitle: <?= json_encode(t('Custom CSS')) ?>
+        }
     });
+
     $('button[data-panel-detail-action=reset]').unbind().on('click', function() {
         <?php
         if ($pk->validate()) {
@@ -251,6 +294,190 @@ $(function() {
         ?>
         return false;
     });
+
+    function exportStyles(onReady) {
+        var $styles = $('#ccm-panel-page-design-customize-list .ccm-style-customizer-importexport'),
+            data = {},
+            exportNext = function (index, done) {
+                if (index >= $styles.length) {
+                    done();
+                    return;
+                }
+                var exporter = $($styles[index]).data('ccm-style-customizer-importexport');
+                exporter.exportStyle(data, function(error) {
+                    if (error) {
+                        done(error);
+                        return;
+                    }
+                    exportNext(index + 1, done);
+                });
+            };
+        exportNext(0, function(error) {
+            if (error) {
+                ConcreteAlert.dialog(ccmi18n.error, error);
+            } else {
+                onReady(data);
+            }
+        });
+    }
+
+    function importStyles(data, onCompleted) {
+        var $styles = $('#ccm-panel-page-design-customize-list .ccm-style-customizer-importexport'),
+            errors = [],
+            importNext = function (index, done) {
+                if (index >= $styles.length) {
+                    done();
+                    return;
+                }
+                var importer = $($styles[index]).data('ccm-style-customizer-importexport');
+                importer.importStyle(data, function(error) {
+                    if (error) {
+                        errors.add(error);
+                        return;
+                    }
+                    importNext(index + 1, done);
+                });
+            };
+        importNext(0, function () {
+            ConcreteEvent.publish('StyleCustomizerControlUpdate');
+            if (errors.length > 0) {
+                ConcreteAlert.dialog(ccmi18n.error, errors.join('\n'));
+            }
+            if (onCompleted) {
+                onCompleted(errors);
+            }
+        });
+    }
+
+    $('#ccm-style-customizer-export').on('click', function (e) {
+        e.preventDefault();
+        exportStyles(function(data) {
+            var $dlg = $('#ccm-style-customizer-export-dialog'),
+                $textarea = $dlg.find('textarea');
+            $textarea.val(JSON.stringify(data, null, '    '));
+            $.fn.dialog.open({
+                width: 800,
+                height: 450,
+                title: <?= json_encode(t('Export')) ?>,
+                dialogClass: 'ccm-dialog-slim ccm-dialog-help-wrapper',
+                element: $dlg,
+                open: function() {
+                    $textarea.focus();
+                    $textarea.select();
+                },
+                buttons: [
+                    {
+                        text: <?= json_encode(t('Close')) ?>,
+                        click: function (e) {
+                            e.preventDefault();
+                            $dlg.dialog('close');
+                        }
+                    }
+                ]
+            });
+        });
+    });
+
+    $('#ccm-style-customizer-import').on('click', function (e) {
+        e.preventDefault();
+        var $dlg = $('#ccm-style-customizer-import-dialog'),
+            $textarea = $dlg.find('textarea');
+        $textarea.val('');
+        $.fn.dialog.open({
+            width: 800,
+            height: 450,
+            title: <?= json_encode(t('Import')) ?>,
+            dialogClass: 'ccm-dialog-slim ccm-dialog-help-wrapper',
+            element: $dlg,
+            open: function() {
+                $textarea.focus();
+            },
+            buttons: [
+                {
+                    text: <?= json_encode(t('Cancel')) ?>,
+                    click: function (e) {
+                        e.preventDefault();
+                        $dlg.dialog('close');
+                    }
+                },
+                {
+                    text: <?= json_encode(t('Import')) ?>,
+                    click: function (e) {
+                        var json = $.trim($textarea.val());
+                        if (json === '') {
+                            $textarea.focus();
+                            return;
+                        }
+                        var data;
+                        try {
+                            data = JSON.parse(json);
+                        } catch (e) {
+                            data = null;
+                        }
+                        if (!$.isPlainObject(data)) {
+                            ConcreteAlert.dialog(
+                               ccmi18n.error,
+                               <?= json_encode(t('Invalid data.')) ?>,
+                               function() {
+                                   $textarea.focus();
+                               }
+                            );
+                            return;
+                        }
+                        importStyles(
+                            data,
+                            function(errors) {
+                                if (errors.length === 0) {
+                                    $dlg.dialog('close');
+                                }
+                            }
+                        );
+                    }
+                }
+            ]
+        });
+    });
+
+    if (window.localStorage && window.localStorage.getItem && window.localStorage.setItem) {
+        $('#ccm-style-customizer-copy')
+            .on('click', function (e) {
+                e.preventDefault();
+                exportStyles(function(data) {
+                    window.localStorage.setItem('ccm-style-customizer-data', JSON.stringify(data));
+                    checkLSPaste();
+                });
+            })
+            .removeAttr('disabled')
+        ;
+        $('#ccm-style-customizer-paste').on('click', function (e) {
+            e.preventDefault();
+            var data = getLSData();
+            if (!$.isPlainObject(data)) {
+                ConcreteAlert.dialog(ccmi18n.error, <?= json_encode(t('No custom CSS to be pasted.')) ?>);
+                return;
+            }
+            importStyles(data);
+        });
+        function getLSData() {
+            var json = window.localStorage.getItem('ccm-style-customizer-data');
+            try {
+                return json ? JSON.parse(json) : null;
+            } catch (e) {
+                return null;
+            }
+        }
+        function checkLSPaste() {
+            if (!getLSData()) {
+                $('#ccm-style-customizer-paste').attr('disabled', 'disabled');
+                return;
+            }
+            $('#ccm-style-customizer-paste').removeAttr('disabled');
+        }
+        $(window).on('storage', function() {
+            checkLSPaste();
+        });
+        checkLSPaste();
+    }
 
     ConcreteEvent.unsubscribe('StyleCustomizerControlUpdate');
     ConcreteEvent.subscribe('StyleCustomizerControlUpdate', function() {
