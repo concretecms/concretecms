@@ -134,7 +134,7 @@ abstract class ItemListBlockController extends BlockController
                 ->values($insertFields);
 
             foreach ($sanitizedData as $item) {
-                if($this->isValidItem($item)) {
+                if(!$this->isEmptyItem($item)) {
                     id(clone $qb)->setParameters($item)->execute();
                 }
             }
@@ -227,13 +227,16 @@ abstract class ItemListBlockController extends BlockController
     }
 
     /**
-     * Check whether the item is valid.
-     * if so, the item will be saved otherwise it will be ignored
+     * Check whether the item is empty.
+     * if so, the item will be ignored
      *
      * @param array $item
      * @return bool
      */
-    protected abstract function isValidItem(array $item);
+    protected function isEmptyItem(array $item)
+    {
+        return false;
+    }
 
     /**
      * Get list of Item List table items

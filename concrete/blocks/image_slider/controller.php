@@ -179,19 +179,6 @@ class Controller extends ItemListBlockController implements FileTrackableInterfa
         $this->getTracker()->track($this);
     }
 
-    /**
-     * In which case the slide entry is valid
-     *
-     * @param array $item
-     * @return bool
-     */
-    protected function isValidItem(array $item)
-    {
-        // Skip item if fID, title and description are empty
-        $description = trim(strip_tags($item['description']));
-        return $item['fID'] > 0 || trim($item['title']) != '' || !empty($description);
-    }
-
     public function getUsedFiles()
     {
         return array_map(function ($entry) {
