@@ -114,22 +114,29 @@ $pk = PermissionKey::getByHandle('customize_themes');
 </div>
 
 <div class="hide">
-    <div id="ccm-style-customizer-export-dialog" class="ccm-ui">
+    <div id="ccm-style-customizer-export-dialog" class="ccm-ui" title="<?= t('Export') ?>">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
-                    <textarea readonly="readonly" class="form-control" style="height: 450px; resize: none; cursor: text; font-family: Menlo, Monaco, Consolas, 'Courier New', monospace" onclick="this.select()"></textarea>
+                    <textarea readonly="readonly" class="form-control" style="height: 430px; resize: none; cursor: text; font-family: Menlo, Monaco, Consolas, 'Courier New', monospace" onclick="this.select()"></textarea>
                 </div>
             </div>
         </div>
+        <div class="dialog-buttons">
+            <button class="btn btn-primary pull-right" onclick="$.fn.dialog.closeTop()"><?= t('Close') ?></button>
+        </div>
     </div>
-    <div id="ccm-style-customizer-import-dialog" class="ccm-ui">
+    <div id="ccm-style-customizer-import-dialog" class="ccm-ui" title="<?= t('Import') ?>">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
-                    <textarea class="form-control" style="height: 450px; resize: none; font-family: Menlo, Monaco, Consolas, 'Courier New', monospace"></textarea>
+                    <textarea class="form-control" style="height: 430px; resize: none; font-family: Menlo, Monaco, Consolas, 'Courier New', monospace"></textarea>
                 </div>
             </div>
+        </div>
+        <div class="dialog-buttons">
+            <button class="btn btn-default pull-left" onclick="$.fn.dialog.closeTop()"><?= t('Cancel') ?></button>
+            <button class="btn btn-primary pull-right" id="ccm-style-customizer-import-dialog-go"><?= t('Import') ?></button>
         </div>
     </div>
 </div>
@@ -358,22 +365,11 @@ $(function() {
             $.fn.dialog.open({
                 width: 800,
                 height: 450,
-                title: <?= json_encode(t('Export')) ?>,
-                dialogClass: 'ccm-dialog-slim ccm-dialog-help-wrapper',
                 element: $dlg,
-                open: function() {
+                onOpen: function() {
                     $textarea.focus();
                     $textarea.select();
-                },
-                buttons: [
-                    {
-                        text: <?= json_encode(t('Close')) ?>,
-                        click: function (e) {
-                            e.preventDefault();
-                            $dlg.dialog('close');
-                        }
-                    }
-                ]
+                }
             });
         });
     });
@@ -386,55 +382,41 @@ $(function() {
         $.fn.dialog.open({
             width: 800,
             height: 450,
-            title: <?= json_encode(t('Import')) ?>,
-            dialogClass: 'ccm-dialog-slim ccm-dialog-help-wrapper',
             element: $dlg,
-            open: function() {
+            onOpen: function() {
                 $textarea.focus();
-            },
-            buttons: [
-                {
-                    text: <?= json_encode(t('Cancel')) ?>,
-                    click: function (e) {
-                        e.preventDefault();
+            }
+        });
+        $('#ccm-style-customizer-import-dialog-go').off('click').on('click', function() {
+            var json = $.trim($textarea.val());
+            if (json === '') {
+                $textarea.focus();
+                return;
+            }
+            var data;
+            try {
+                data = JSON.parse(json);
+            } catch (e) {
+                data = null;
+            }
+            if (!$.isPlainObject(data)) {
+                ConcreteAlert.dialog(
+                   ccmi18n.error,
+                   <?= json_encode(t('Invalid data.')) ?>,
+                   function() {
+                       $textarea.focus();
+                   }
+                );
+                return;
+            }
+            importStyles(
+                data,
+                function(errors) {
+                    if (errors.length === 0) {
                         $dlg.dialog('close');
                     }
-                },
-                {
-                    text: <?= json_encode(t('Import')) ?>,
-                    click: function (e) {
-                        var json = $.trim($textarea.val());
-                        if (json === '') {
-                            $textarea.focus();
-                            return;
-                        }
-                        var data;
-                        try {
-                            data = JSON.parse(json);
-                        } catch (e) {
-                            data = null;
-                        }
-                        if (!$.isPlainObject(data)) {
-                            ConcreteAlert.dialog(
-                               ccmi18n.error,
-                               <?= json_encode(t('Invalid data.')) ?>,
-                               function() {
-                                   $textarea.focus();
-                               }
-                            );
-                            return;
-                        }
-                        importStyles(
-                            data,
-                            function(errors) {
-                                if (errors.length === 0) {
-                                    $dlg.dialog('close');
-                                }
-                            }
-                        );
-                    }
                 }
-            ]
+            );
         });
     });
 
