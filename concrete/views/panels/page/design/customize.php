@@ -414,6 +414,9 @@ $(function() {
                 function(errors) {
                     if (errors.length === 0) {
                         $dlg.dialog('close');
+                        ConcreteAlert.notify({
+                            message: <?= json_encode(t('The style settings have been applied.')) ?>
+                        });
                     }
                 }
             );
@@ -427,6 +430,9 @@ $(function() {
                 exportStyles(function(data) {
                     window.localStorage.setItem('ccm-style-customizer-data', JSON.stringify(data));
                     checkLSPaste();
+                    ConcreteAlert.notify({
+                        message: <?= json_encode(t('The style settings have been copied.')) ?>
+                    });
                 });
             })
             .removeAttr('disabled')
@@ -438,7 +444,16 @@ $(function() {
                 ConcreteAlert.dialog(ccmi18n.error, <?= json_encode(t('No custom CSS to be pasted.')) ?>);
                 return;
             }
-            importStyles(data);
+            importStyles(
+                data,
+                function (errors) {
+                    if (errors.length === 0) {
+                        ConcreteAlert.notify({
+                            message: <?= json_encode(t('The style settings have been applied.')) ?>
+                        });
+                    }
+                }
+            );
         });
         function getLSData() {
             var json = window.localStorage.getItem('ccm-style-customizer-data');
