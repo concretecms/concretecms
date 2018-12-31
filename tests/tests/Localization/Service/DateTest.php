@@ -98,29 +98,31 @@ class DateTest extends \PHPUnit_Framework_TestCase
         $morningYesterday = '2018-12-29 06:00:00';
         $eveningYesterday = '2018-12-29 18:00:00';
 
-        $timezone = 'UST';
-        $this->assertEquals(0, $date->getDeltaDays($from, $morningToday, $timezone));
-        $this->assertEquals(0, $date->getDeltaDays($from, $eveningToday, $timezone));
-        $this->assertEquals(1, $date->getDeltaDays($from, $morningTomorrow, $timezone));
-        $this->assertEquals(1, $date->getDeltaDays($from, $eveningTomorrow, $timezone));
-        $this->assertEquals(-1, $date->getDeltaDays($from, $morningYesterday, $timezone));
-        $this->assertEquals(-1, $date->getDeltaDays($from, $eveningYesterday, $timezone));
+        $this->config->set('app.server_timezone', 'UTC');
+        $this->assertEquals(0, $date->getDeltaDays($from, $morningToday, 'system'));
+        $this->assertEquals(0, $date->getDeltaDays($from, $eveningToday, 'system'));
+        $this->assertEquals(1, $date->getDeltaDays($from, $morningTomorrow, 'system'));
+        $this->assertEquals(1, $date->getDeltaDays($from, $eveningTomorrow, 'system'));
+        $this->assertEquals(-1, $date->getDeltaDays($from, $morningYesterday, 'system'));
+        $this->assertEquals(-1, $date->getDeltaDays($from, $eveningYesterday, 'system'));
 
-        $timezone = 'PST';
-        $this->assertEquals(0, $date->getDeltaDays($from, $morningToday, $timezone));
-        $this->assertEquals(0, $date->getDeltaDays($from, $eveningToday, $timezone));
-        $this->assertEquals(1, $date->getDeltaDays($from, $morningTomorrow, $timezone));
-        $this->assertEquals(1, $date->getDeltaDays($from, $eveningTomorrow, $timezone));
-        $this->assertEquals(-1, $date->getDeltaDays($from, $morningYesterday, $timezone));
-        $this->assertEquals(-1, $date->getDeltaDays($from, $eveningYesterday, $timezone));
+        $this->config->set('app.server_timezone', 'PST');
+        $this->assertEquals(0, $date->getDeltaDays($from, $morningToday, 'system'));
+        $this->assertEquals(0, $date->getDeltaDays($from, $eveningToday, 'system'));
+        $this->assertEquals(1, $date->getDeltaDays($from, $morningTomorrow, 'system'));
+        $this->assertEquals(1, $date->getDeltaDays($from, $eveningTomorrow, 'system'));
+        $this->assertEquals(-1, $date->getDeltaDays($from, $morningYesterday, 'system'));
+        $this->assertEquals(-1, $date->getDeltaDays($from, $eveningYesterday, 'system'));
 
-        $timezone = 'JST';
-        $this->assertEquals(0, $date->getDeltaDays($from, $morningToday, $timezone));
-        $this->assertEquals(0, $date->getDeltaDays($from, $eveningToday, $timezone));
-        $this->assertEquals(1, $date->getDeltaDays($from, $morningTomorrow, $timezone));
-        $this->assertEquals(1, $date->getDeltaDays($from, $eveningTomorrow, $timezone));
-        $this->assertEquals(-1, $date->getDeltaDays($from, $morningYesterday, $timezone));
-        $this->assertEquals(-1, $date->getDeltaDays($from, $eveningYesterday, $timezone));
+        $this->config->set('app.server_timezone', 'JST');
+        $this->assertEquals(0, $date->getDeltaDays($from, $morningToday, 'system'));
+        $this->assertEquals(0, $date->getDeltaDays($from, $eveningToday, 'system'));
+        $this->assertEquals(1, $date->getDeltaDays($from, $morningTomorrow, 'system'));
+        $this->assertEquals(1, $date->getDeltaDays($from, $eveningTomorrow, 'system'));
+        $this->assertEquals(-1, $date->getDeltaDays($from, $morningYesterday, 'system'));
+        $this->assertEquals(-1, $date->getDeltaDays($from, $eveningYesterday, 'system'));
+
+        $this->config->set('app.server_timezone', 'UTC');
     }
 
     public function testGetTimeFormat()
