@@ -515,11 +515,6 @@ class Date
         if (is_null($dtFrom) || is_null($dtTo)) {
             return null;
         }
-        $utc = new \DateTimeZone('UTC');
-        $dtFrom->setTimezone($utc);
-        $dtFrom = new \DateTime($dtFrom->format('Y-m-d'), $utc);
-        $dtTo->setTimezone($utc);
-        $dtTo = new \DateTime($dtTo->format('Y-m-d'), $utc);
 
         $seconds = $dtTo->getTimestamp() - $dtFrom->getTimestamp();
 
