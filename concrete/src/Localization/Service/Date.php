@@ -1,14 +1,15 @@
 <?php
 namespace Concrete\Core\Localization\Service;
 
+use Concrete\Core\Config\Repository\Repository;
+use Concrete\Core\Entity\Site\Site;
+use Concrete\Core\Http\Request;
 use Concrete\Core\Localization\Localization;
-use Config;
-use Core;
+use Concrete\Core\Support\Facade\Facade;
+use Concrete\Core\User\User;
 use Punic\Calendar;
 use Punic\Comparer;
 use Punic\Misc;
-use Request;
-use User;
 
 class Date
 {
@@ -38,6 +39,10 @@ class Date
      *    <li>Other values: one of the PHP supported time zones (see http://us1.php.net/manual/en/timezones.php )</li>
      * </ul>
      * @param string Returns the date/time representation (an empty string if $value is empty)
+     *
+     * @return string
+     *
+     * @throws \Punic\Exception\BadArgumentType
      */
     public function toDB($value = 'now', $fromTimezone = 'system')
     {
@@ -55,7 +60,7 @@ class Date
      */
     public function getOverridableNow($asTimestamp = false)
     {
-        $req = Request::getInstance();
+        $req = Facade::getFacadeApplication()->make(Request::class);
         if ($req->hasCustomRequestUser() && $req->getCustomRequestDateTime()) {
             $timestamp = strtotime($req->getCustomRequestDateTime());
         } else {
@@ -81,6 +86,8 @@ class Date
      * </ul>
      *
      * @return string
+     *
+     * @throws \Punic\Exception
      *
      * @see http://php.net/manual/function.date.php
      */
@@ -162,7 +169,7 @@ class Date
                             $chunks[0] = $continentNames[$chunks[0]];
                         }
                         if (count($chunks) > 0) {
-                            $city = \Punic\Calendar::getTimezoneExemplarCity($timezoneID, false);
+                            $city = Calendar::getTimezoneExemplarCity($timezoneID, false);
                             if (!strlen($city)) {
                                 switch ($timezoneID) {
                                     case 'America/Fort_Nelson':
@@ -332,6 +339,8 @@ class Date
      * @param bool $precise = false Set to true to a more verbose and precise result, false for a more rounded result
      *
      * @return string
+     *
+     * @throws \Punic\Exception
      */
     public function timeSince($posttime, $precise = false)
     {
@@ -382,7 +391,7 @@ class Date
             $chunks[] = t2('%d second', '%d seconds', $seconds, $seconds);
         }
 
-        return Misc::join($chunks);
+        return Misc::joinAnd($chunks);
     }
 
     /**
@@ -399,20 +408,25 @@ class Date
      */
     public function getTimezoneID($timezone)
     {
+        $app = Facade::getFacadeApplication();
+        /** @var Repository $config */
+        $config = $app->make('config');
+
         switch ($timezone) {
             case 'system':
-                $timezone = Config::get('app.server_timezone', @date_default_timezone_get() ?: 'UTC');
+                $timezone = $config->get('app.server_timezone', @date_default_timezone_get() ?: 'UTC');
                 break;
             case 'app':
-                $site = \Core::make('site')->getSite();
+                /** @var Site $site */
+                $site = $app->make('site')->getSite();
                 $timezone = $site->getConfigRepository()->get('timezone', @date_default_timezone_get() ?: 'UTC');
                 break;
             case 'user':
                 $tz = null;
-                if (Config::get('concrete.misc.user_timezones')) {
+                if ($config->get('concrete.misc.user_timezones')) {
                     $u = null;
                     $request = null;
-                    if (!Core::make('app')->isRunThroughCommandLineInterface()) {
+                    if (!$app->isRunThroughCommandLineInterface()) {
                         $request = Request::getInstance();
                     }
                     if ($request && $request->hasCustomRequestUser()) {
@@ -487,6 +501,8 @@ class Date
      * @param string $fromTimezone The original timezone of $value (useful only if $value is a string like '2000-12-31 23:59'); it accepts the same values as $toTimezone
      *
      * @return \DateTime|null Returns the \DateTime instance (or null if $value couldn't be parsed)
+     *
+     * @throws \Punic\Exception\BadArgumentType
      */
     public function toDateTime($value = 'now', $toTimezone = 'system', $fromTimezone = 'system')
     {
@@ -507,6 +523,8 @@ class Date
      *
      * @return int|null Returns the difference in days (less than zero if $dateFrom if greater than $dateTo).
      * Returns null if one of both the dates can't be parsed
+     *
+     * @throws \Punic\Exception\BadArgumentType
      */
     public function getDeltaDays($from, $to, $timezone = 'user')
     {
@@ -525,7 +543,9 @@ class Date
      * Render the date part of a date/time as a localized string.
      *
      * @param mixed $value $The date/time representation (one of the values accepted by toDateTime)
-     * @param bool $longDate $Set to true for the long date format (eg 'December 31, 2000'), false (default) for the short format (eg '12/31/2000')
+     * @param string $format The format name; it can be 'full' (eg 'EEEE, MMMM d, y' - 'Wednesday, August 20, 2014'), 'long' (eg 'MMMM d, y' - 'August 20, 2014'), 'medium' (eg 'MMM d, y' - 'August 20, 2014') or 'short' (eg 'M/d/yy' - '8/20/14'),
+     *                      or a skeleton pattern prefixed by '~', e.g. '~yMd'.
+     *                      You can also append a caret ('^') or an asterisk ('*') to $width. If so, special day names may be used (like 'Today', 'Yesterday', 'Tomorrow' with '^' and 'today', 'yesterday', 'tomorrow' width '*') instead of the date.
      * @param string $toTimezone The timezone to set. Special values are:<ul>
      *     <li>'system' for the current system timezone</li>
      *     <li>'user' (default) for the user's timezone</li>
@@ -534,6 +554,8 @@ class Date
      * </ul>
      *
      * @return string Returns an empty string if $value couldn't be parsed, the localized string otherwise
+     *
+     * @throws \Punic\Exception
      */
     public function formatDate($value = 'now', $format = 'short', $toTimezone = 'user')
     {
@@ -563,6 +585,9 @@ class Date
      * </ul>
      *
      * @return string Returns an empty string if $value couldn't be parsed, the localized string otherwise
+     *
+     * @throws \Punic\Exception
+     * @throws \Punic\Exception\BadArgumentType
      */
     public function formatTime($value = 'now', $withSeconds = false, $toTimezone = 'user')
     {
@@ -586,6 +611,9 @@ class Date
      * </ul>
      *
      * @return string Returns an empty string if $value couldn't be parsed, the localized string otherwise
+     *
+     * @throws \Punic\Exception
+     * @throws \Punic\Exception\BadArgumentType
      */
     public function formatDateTime($value = 'now', $longDate = false, $withSeconds = false, $toTimezone = 'user')
     {
@@ -622,6 +650,9 @@ class Date
      * </ul>
      *
      * @return string Returns an empty string if $value couldn't be parsed, the localized string otherwise
+     *
+     * @throws \Punic\Exception
+     * @throws \Punic\Exception\BadArgumentType
      */
     public function formatPrettyDate($value, $longDate = false, $toTimezone = 'user')
     {
@@ -656,6 +687,9 @@ class Date
      * </ul>
      *
      * @return string Returns an empty string if $value couldn't be parsed, the localized string otherwise
+     *
+     * @throws \Punic\Exception
+     * @throws \Punic\Exception\BadArgumentType
      */
     public function formatPrettyDateTime($value, $longDate = false, $withSeconds = false, $timezone = 'user')
     {
@@ -699,6 +733,9 @@ class Date
      * @param string $fromTimezone The original timezone of $value (useful only if $value is a string like '2000-12-31 23:59'); it accepts the same values as $toTimezone
      *
      * @return string Returns an empty string if $value couldn't be parsed, the localized string otherwise
+     *
+     * @throws \Punic\Exception
+     * @throws \Punic\Exception\BadArgumentType
      */
     public function formatCustom($format, $value = 'now', $toTimezone = 'user', $fromTimezone = 'system')
     {
@@ -713,6 +750,8 @@ class Date
      *     If not specified we'll use the same format used by formatDate(..., false)
      *
      * @return string
+     *
+     * @throws \Punic\Exception
      */
     public function getJQueryUIDatePickerFormat($relatedPHPFormat = '')
     {
@@ -769,16 +808,23 @@ class Date
      * Returns the time format (12 or 24).
      *
      * @return int
+     *
+     * @throws \Punic\Exception
      */
     public function getTimeFormat()
     {
-        return \Punic\Calendar::has12HoursClock() ? 12 : 24;
+        return Calendar::has12HoursClock() ? 12 : 24;
     }
 
+    /**
+     * @return string
+     *
+     * @throws \Punic\Exception
+     */
     public function getPHPDatePattern()
     {
-        $isoFormat = \Punic\Calendar::getDateFormat('short');
-        $result = \Punic\Calendar::tryConvertIsoToPhpFormat($isoFormat);
+        $isoFormat = Calendar::getDateFormat('short');
+        $result = Calendar::tryConvertIsoToPhpFormat($isoFormat);
         if ($result === null) {
             $result = t(/*i18n: Short date format: see http://www.php.net/manual/en/function.date.php */ 'n/j/Y');
         }
@@ -790,11 +836,13 @@ class Date
      * Get the PHP date format string for times.
      *
      * @return string
+     *
+     * @throws \Punic\Exception
      */
     public function getPHPTimePattern()
     {
-        $isoFormat = \Punic\Calendar::getTimeFormat('short');
-        $result = \Punic\Calendar::tryConvertIsoToPhpFormat($isoFormat);
+        $isoFormat = Calendar::getTimeFormat('short');
+        $result = Calendar::tryConvertIsoToPhpFormat($isoFormat);
         if ($result === null) {
             $result = t(/*i18n: Short time format: see http://www.php.net/manual/en/function.date.php */ 'g.i A');
         }
@@ -806,11 +854,13 @@ class Date
      * Get the PHP date format string for dates/times.
      *
      * @return string
+     *
+     * @throws \Punic\Exception
      */
     public function getPHPDateTimePattern()
     {
-        $isoFormat = \Punic\Calendar::getDateTimeFormat('short');
-        $result = \Punic\Calendar::tryConvertIsoToPhpFormat($isoFormat);
+        $isoFormat = Calendar::getDateTimeFormat('short');
+        $result = Calendar::tryConvertIsoToPhpFormat($isoFormat);
         if ($result === null) {
             $result = t(/*i18n: Short date/time format: see http://www.php.net/manual/en/function.date.php */ 'n/j/Y g.i A');
         }
