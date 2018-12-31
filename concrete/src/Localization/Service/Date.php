@@ -534,9 +534,11 @@ class Date
             return null;
         }
 
-        $seconds = $dtTo->getTimestamp() - $dtFrom->getTimestamp();
+        // Re-create DateTime objects without time
+        $dtFrom = $this->toDateTime($dtFrom->format('Y-m-d'), $timezone);
+        $dtTo = $this->toDateTime($dtTo->format('Y-m-d'), $timezone);
 
-        return round($seconds / 86400);
+        return (int) $dtFrom->diff($dtTo)->format('%r%a');
     }
 
     /**
