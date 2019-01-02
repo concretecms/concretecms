@@ -34,7 +34,7 @@ class PageSelector
             }
         }
 
-        if ($selectedCID) {
+        if ($selectedCID && \Concrete\Core\Page\Page::getByID($selectedCID)->getError() !== COLLECTION_NOT_FOUND) {
             $args = "{'inputName': '{$fieldName}', 'cID': {$selectedCID}}";
         } else {
             $args = "{'inputName': '{$fieldName}'}";
