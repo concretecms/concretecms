@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Controller\Backend;
 
 use Concrete\Core\Controller\Controller;
@@ -32,6 +31,7 @@ use Permissions as ConcretePermissions;
 use RuntimeException;
 use stdClass;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use ZipArchive;
 
 class File extends Controller
 {
@@ -357,6 +357,54 @@ class File extends Controller
         $r = new FileEditResponse();
         $r->setFiles($files);
         $r->outputJSON();
+    }
+
+    public function download()
+    {
+        $fp = FilePermissions::getGlobal();
+        if (!$fp->canSearchFiles()) {
+            throw new UserMessageException(t('Unable to search file sets.'));
+        }
+
+        $files = $this->getRequestFiles('canViewFile');
+        if (count($files) > 1) {
+            $fh = $this->app->make('helper/file');
+            $vh = $this->app->make('helper/validation/identifier');
+
+            // zipem up
+            $zipFile = $fh->getTemporaryDirectory() . '/' . $vh->getString() . '.zip';
+            if (class_exists('ZipArchive', false)) {
+                $zip = new ZipArchive();
+                if ($zip->open($zipFile, ZipArchive::CREATE) !== true) {
+                    throw new UserMessageException(t('Could not open with ZipArchive::CREATE'));
+                }
+                foreach ($files as $key => $f) {
+                    $filename = $f->getFilename();
+
+                    // Change the filename if it's already in the zip
+                    if ($zip->locateName($filename) !== false) {
+                        $extension = $fh->getExtension($filename);
+                        $filename = str_replace('.' . $extension, '', $filename) . '_' . $key . '.' . $extension;
+                    }
+                    $zip->addFromString($filename, $f->getFileContents());
+                    $f->trackDownload();
+                }
+                $zip->close();
+                $fh->forceDownload($zipFile);
+            } else {
+                throw new UserMessageException('Unable to zip files using ZipArchive. Please ensure the Zip extension is installed.');
+            }
+        } else {
+            $f = $files[0];
+            $fvID = $this->request->request->get('fvID', $this->request->query->get('fvID'));
+            if (!empty($fvID)) {
+                $fv = $f->getVersion($fvID);
+            } else {
+                $fv = $f->getApprovedVersion();
+            }
+            $f->trackDownload();
+            $f->forceDownload();
+        }
     }
 
     /**
