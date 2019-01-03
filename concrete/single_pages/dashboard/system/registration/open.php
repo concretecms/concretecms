@@ -1,10 +1,5 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
-<?= $concrete_dashboard->getDashboardPaneHeaderWrapper(
-    t('Public Registration'),
-    t(
-        'Control the options available for Public Registration.'),
-    'span6 offset3',
-    false); ?>
+
 <form method="post" id="registration-type-form" action="<?= $view->action('update_registration_type'); ?>">
     <?= $token->output('update_registration_type'); ?>
 
