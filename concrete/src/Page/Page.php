@@ -2073,7 +2073,6 @@ from
 where
     cParentID = ?
     and cvIsApproved = 1 and (cvPublishDate is null or cvPublishDate <= ?) and (cvPublishEndDate is null or cvPublishEndDate >= ?)
-    and 
 order by
     {$sortColumn}
 EOT
