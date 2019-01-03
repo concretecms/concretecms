@@ -38,10 +38,16 @@ class Controller extends AbstractController
         $this->themeViewTemplate = $template;
     }
 
+    /**
+     * Returns the wrapper file that holds the content of the view. Usually view.php
+     * @return string
+     */
     public function getThemeViewTemplate()
     {
-        throw new \Exception('implement me.');
-        return FILENAME_THEMES_VIEW;
+        if (isset($this->themeViewTemplate)) {
+            return $this->themeViewTemplate;
+        }
+        return $this->view->getViewWrapperFilename();
     }
 
     public function getControllerActionPath()

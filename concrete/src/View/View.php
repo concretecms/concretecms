@@ -141,6 +141,18 @@ class View extends AbstractView
         }
     }
 
+    public function getViewWrapperFilename()
+    {
+        $app = Facade::getFacadeApplication();
+        $collection = $app->make(ThemeRouteCollection::class);
+        $tmpTheme = $collection->getThemeByRoute($this->getViewPath());
+        if ($tmpTheme) {
+            return $tmpTheme[0];
+        }
+
+        return FILENAME_THEMES_VIEW;
+    }
+
     /**
      * Load all the theme-related variables for which theme to use for this request. May update the themeHandle
      * property on the view based on themeByRoute settings.

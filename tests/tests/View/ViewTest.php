@@ -3,8 +3,13 @@
 namespace Concrete\Tests\View;
 
 use Concrete\Controller\Install;
+use Concrete\Core\Page\Controller\PageController;
+use Concrete\Core\Page\Template;
+use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\View\View;
+use Mockery;
 use PHPUnit_Framework_TestCase;
+use Concrete\Core\Page\Page;
 
 class ViewTest extends PHPUnit_Framework_TestCase
 {
@@ -35,21 +40,6 @@ class ViewTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('concrete', $view->getThemeHandle());
         $this->assertEquals($base . '/views/frontend/maintenance_mode.php', $inner);
         $this->assertEquals($base . '/themes/concrete/view.php', $template);
-    }
-
-    public function testRenderingPage()
-    {
-
-    }
-
-    public function testRenderingDashboardPage()
-    {
-
-    }
-
-    public function testRenderingDashboardPageWithCustomWrapper()
-    {
-
     }
 
 
