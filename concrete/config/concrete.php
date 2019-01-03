@@ -8,7 +8,7 @@ return [
      */
     'version' => '8.5.0a3',
     'version_installed' => '8.5.0a3',
-    'version_db' => '20181219170355', // the key of the latest database migration
+    'version_db' => '20181222183445', // the key of the latest database migration
 
     /*
      * Installation status
@@ -896,6 +896,11 @@ return [
         'password' => [
             'maximum' => 128,
             'minimum' => 5,
+            'required_special_characters' => 0,
+            'required_lower_case' => 0,
+            'required_upper_case' => 0,
+            'reuse' => 0,
+            'custom_regex' => [],
             'hash_portable' => false,
             'hash_cost_log2' => 12,
             'legacy_salt' => '',
