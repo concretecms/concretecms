@@ -1,5 +1,5 @@
 /* jshint unused:vars, undef:true, browser:true, jquery:true */
-/* global _, CCM_TOOLS_PATH, CCM_DISPATCHER_FILENAME, ConcreteMenu, ConcreteMenuManager */ 
+/* global _, CCM_DISPATCHER_FILENAME, ConcreteMenu, ConcreteMenuManager */
 
 ;(function(global, $) {
     'use strict';
@@ -42,7 +42,7 @@
 		});
 		$menu.find('a[data-file-manager-action=download]').on('click', function(e) {
 			e.preventDefault();
-			window.frames['ccm-file-manager-download-target'].location= CCM_TOOLS_PATH + '/files/download?fID=' + fID;
+			window.frames['ccm-file-manager-download-target'].location= CCM_DISPATCHER_FILENAME + '/ccm/system/file/download?fID=' + fID;
 		});
 		$menu.find('a[data-file-manager-action=duplicate]').on('click', function() {
 			$.concreteAjax({

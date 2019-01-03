@@ -40,4 +40,25 @@ class DatabaseHandler extends AbstractProcessingHandler
 
         $this->initialized = true;
     }
+
+
+    /**
+     * Clears all log entries. Requires the database handler.
+     */
+    public static function clearAll()
+    {
+        $db = Database::get();
+        $db->Execute('delete from Logs');
+    }
+
+    /**
+     * Clears log entries by channel. Requires the database handler.
+     */
+    public static function clearByChannel($channel)
+    {
+        $db = Database::get();
+        $db->delete('Logs', array('channel' => $channel));
+    }
+
+
 }

@@ -373,7 +373,24 @@ return [
                  * What log level to store core logs in the database
                  * @var string
                  */
-                'core_logging_level' => 'NOTICE'
+                'core_logging_level' => 'NOTICE',
+
+                /**
+                 * Which handle to use
+                 *
+                 * @var string (database|file)
+                 */
+                'handler' => 'database',
+
+                'file' => [
+
+                    /**
+                     * File path to store logs
+                     *
+                     * @var string
+                     */
+                    'file' => '',
+                ],
             ],
 
             'advanced' => [

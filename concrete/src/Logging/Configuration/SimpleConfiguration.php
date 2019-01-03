@@ -6,7 +6,7 @@ use Concrete\Core\Logging\Handler\DatabaseHandler;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Logger;
 
-class SimpleConfiguration implements ConfigurationInterface
+abstract class SimpleConfiguration implements ConfigurationInterface
 {
 
     /**
@@ -20,25 +20,18 @@ class SimpleConfiguration implements ConfigurationInterface
         $this->coreLevel = $coreLevel;
     }
 
-    private function createStandardDatabaseHandler($level)
-    {
-        $handler = new DatabaseHandler($level);
-        // set a more basic formatter.
-        $output = "%message%";
-        $formatter = new LineFormatter($output, null, true);
-        $handler->setFormatter($formatter);
-        return $handler;
-    }
+    abstract protected function createHandler($level);
 
     public function createLogger($channel)
     {
         $logger = new Logger($channel);
+        $level = $this->coreLevel;
         if (!in_array($channel, Channels::getCoreChannels())) {
-            // We create a logger with all channels enabled
-            $logger->pushHandler($this->createStandardDatabaseHandler(Logger::DEBUG));
-        } else {
-            $logger->pushHandler($this->createStandardDatabaseHandler($this->coreLevel));
+            $level = Logger::DEBUG;
         }
+
+        $handler = $this->createHandler($level);
+        $logger->pushHandler($handler);
         return $logger;
     }
 
