@@ -29,7 +29,7 @@ class TrustedProxies extends DashboardPageController
             }
             if (!$this->error->has()) {
                 $config = $this->app->make('config');
-                $config->save('concrete.security.trusted_proxies.ips', $trustedIPs);
+                $config->save('concrete.security.trusted_proxies.ips', $validIPs);
                 $this->flash('success', t('The trusted proxies configuration has been updated.'));
                 $this->redirect($this->action(''));
             }
