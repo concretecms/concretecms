@@ -147,7 +147,7 @@ class View extends AbstractView
         $collection = $app->make(ThemeRouteCollection::class);
         $tmpTheme = $collection->getThemeByRoute($this->getViewPath());
         if ($tmpTheme) {
-            return $tmpTheme[0];
+            return $tmpTheme[1];
         }
 
         return FILENAME_THEMES_VIEW;

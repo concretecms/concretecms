@@ -17,9 +17,15 @@ use Concrete\Core\Page\Page;
 class PageViewTest extends PageTestCase
 {
 
+    public static function setUpBeforeClass()
+    {
+        parent::setUpBeforeClass();
+        Theme::add('elemental');
+    }
+
     public function testRenderingPage()
     {
-        $elemental = Theme::add('elemental');
+        $elemental = Theme::getByHandle('elemental');
         $twoColumn = Template::add('right_sidebar', 'Right Sidebar');
 
         $base = DIR_BASE_CORE;
@@ -84,7 +90,7 @@ class PageViewTest extends PageTestCase
     {
         $base = DIR_BASE_CORE;
 
-        $elemental = Theme::add('elemental');
+        $elemental = Theme::getByHandle('elemental');
         $pageNotFound = Single::add('/page_not_found');
         $pageNotFound->setTheme($elemental);
 
@@ -116,7 +122,6 @@ class PageViewTest extends PageTestCase
     {
         $base = DIR_BASE_CORE;
 
-        Theme::add('elemental');
         $login = Single::add('/login');
         $controller = $login->getPageController();
         $view = $controller->getViewObject();
@@ -124,11 +129,11 @@ class PageViewTest extends PageTestCase
         $inner = $view->getInnerContentFile();
         $template = $view->getViewTemplate();
         $this->assertEquals($inner, $base . '/single_pages/login.php');
-        $this->assertEquals($base . '/themes/concrete/view.php', $template);
+        $this->assertEquals($base . '/themes/concrete/background_image.php', $template);
         $this->assertEquals('concrete', $view->getThemeHandle());
 
         $collection = $this->app->make(ThemeRouteCollection::class);
-        $collection->setThemeByRoute('/login', 'elemental', 'view_wrapped');
+        $collection->setThemeByRoute('/login', 'elemental', 'full.php');
 
         $login = Page::getByPath('/login');
         $controller = $login->getPageController();
@@ -137,8 +142,10 @@ class PageViewTest extends PageTestCase
         $inner = $view->getInnerContentFile();
         $template = $view->getViewTemplate();
         $this->assertEquals($inner, $base . '/single_pages/login.php');
-        $this->assertEquals($base . '/themes/elemental/view.php', $template);
+        $this->assertEquals($base . '/themes/elemental/full.php', $template);
         $this->assertEquals('elemental', $view->getThemeHandle());
+
+        $collection->setThemesByRoutes($this->app->make('config')->get('app.theme_paths'));
     }
 
     public function testRenderingThemeOverrideBasicView()
