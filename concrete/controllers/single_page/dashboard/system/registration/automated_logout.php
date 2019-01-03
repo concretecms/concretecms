@@ -15,6 +15,8 @@ class AutomatedLogout extends DashboardPageController
     const ITEM_IP = 'concrete.security.session.invalidate_on_ip_mismatch';
     const ITEM_USER_AGENT = 'concrete.security.session.invalidate_on_user_agent_mismatch';
     const ITEM_SESSION_INVALIDATE = 'concrete.session.valid_since';
+    const ITEM_INVALIDATE_INACTIVE_USERS = 'concrete.security.session.invalidate_inactive_users.enabled';
+    const ITEM_INVALIDATE_INACTIVE_USERS_TIME = 'concrete.security.session.invalidate_inactive_users.time';
 
     /**
      * The response factory we use to generate responses
@@ -24,7 +26,7 @@ class AutomatedLogout extends DashboardPageController
     protected $factory;
 
     /**
-     * The config repsository we save to
+     * The config repository we save to
      *
      * @var \Concrete\Core\Config\Repository\Repository
      */
@@ -53,9 +55,12 @@ class AutomatedLogout extends DashboardPageController
      */
     public function view()
     {
+
         $this->set('trustedProxyUrl', $this->urls->resolve(['/dashboard/system/permissions/trusted_proxies']));
         $this->set('invalidateOnIPMismatch', $this->config->get(self::ITEM_IP));
         $this->set('invalidateOnUserAgentMismatch', $this->config->get(self::ITEM_USER_AGENT));
+        $this->set('invalidateInactiveUsers', $this->config->get(self::ITEM_INVALIDATE_INACTIVE_USERS));
+        $this->set('inactiveTime', $this->config->get(self::ITEM_INVALIDATE_INACTIVE_USERS_TIME));
 
         $this->set('saveAction', $this->action('save'));
         $this->set('invalidateAction', $this->action('invalidate_sessions', $this->token->generate('invalidate_sessions')));
@@ -80,10 +85,11 @@ class AutomatedLogout extends DashboardPageController
         }
 
         $post = $this->request->request;
-
         // Save the posted settings
         $this->config->save(self::ITEM_IP, filter_var($post->get('invalidateOnIPMismatch'), FILTER_VALIDATE_BOOLEAN));
         $this->config->save(self::ITEM_USER_AGENT, filter_var($post->get('invalidateOnUserAgentMismatch'), FILTER_VALIDATE_BOOLEAN));
+        $this->config->save(self::ITEM_INVALIDATE_INACTIVE_USERS, filter_var($post->get('invalidateInactiveUsers'), FILTER_VALIDATE_BOOLEAN));
+        $this->config->save(self::ITEM_INVALIDATE_INACTIVE_USERS_TIME, filter_var($post->get('inactiveTime'), FILTER_VALIDATE_INT));
 
         $this->flash('message', t('Successfully saved Session Security settings'));
 

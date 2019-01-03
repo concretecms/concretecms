@@ -966,6 +966,13 @@ return [
             'invalidate_on_user_agent_mismatch' => true,
 
             'invalidate_on_ip_mismatch' => true,
+
+            'invalidate_inactive_users' => [
+                // Is the automatically logout inactive users setting enabled?
+                'enabled' => false,
+                // Time window (in seconds) for inactive users to be automatically logout
+                'time' => 300,
+            ]
         ],
         'ban' => [
             'ip' => [
