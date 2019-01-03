@@ -31,7 +31,7 @@ class PasswordValidatorServiceProvider extends Provider
     {
         $this->app->singleton('validator/password', function () {
             $this->config = $this->app->make('config');
-            $manager = $this->app->make(ValidatorManagerInterface::class);
+            $manager = $this->app->make(ValidatorForSubjectManager::class);
 
             $this->applyLengthValidators($manager);
             $this->applyStringRequirementValidators($manager);
@@ -49,7 +49,7 @@ class PasswordValidatorServiceProvider extends Provider
      */
     protected function applyPasswordReuseValidator(ValidatorManagerInterface $manager)
     {
-        $trackUse = $this->config->get('concrete.user.password.reuse.track', 5);
+        $trackUse = $this->config->get('concrete.user.password.reuse', 5);
         if ($trackUse) {
             $reuseValidator = $this->app->make(ReuseValidator::class, ['maxReuse' => $trackUse]);
             $reuseValidator->setErrorString($reuseValidator::E_PASSWORD_RECENTLY_USED, t("You've recently used this password, please use a unique password."));
