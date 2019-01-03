@@ -120,6 +120,9 @@ class User extends ConcreteObject
 
                 $session->set('uOnlineCheck', time());
                 if (($session->get('uOnlineCheck') - $session->get('uLastOnline') > (ONLINE_NOW_TIMEOUT / 2))) {
+                    // This code throttles the writing of uLastOnline to the database, so that we're not constantly
+                    // updating the Users table. If you need to have the exact up to date metric on when a session
+                    // last looked at a page, use uOnlineCheck.
                     $db->query("update Users set uLastOnline = ? where uID = ?", array($session->get('uOnlineCheck'), $this->uID));
                     $session->set('uLastOnline', $session->get('uOnlineCheck'));
                 }
