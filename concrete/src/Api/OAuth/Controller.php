@@ -382,7 +382,7 @@ final class Controller
     {
         $contents = new View('/oauth/authorize');
         $contents->setViewTheme('concrete');
-        $contents->setViewTemplate('background_image');
+        $contents->setViewTemplate('background_image.php');
         $contents->addScopeItems($data);
 
         return $contents;
