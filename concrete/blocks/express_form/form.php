@@ -120,15 +120,33 @@
         <input type="hidden" name="resultsFolder" value="<?=$resultsFolder; ?>">
 
         <legend><?php echo t('Results'); ?></legend>
-        <p><?=t('Store results in a folder:'); ?></p>
 
-        <?php if (is_object($tree)) {
-        ?>
-        <div data-root-tree-node-id="<?=$formResultsRootFolderNodeID; ?>" data-tree="<?=$tree->getTreeID(); ?>">
+        <div class="form-group">
+            <div class="checkbox"><label>
+                    <?php
+                    $storeFormSubmissionFormFields = [];
+                    if ($formSubmissionConfig === true || $formSubmissionConfig === false) {
+                        $storeFormSubmissionFormFields['disabled'] = 'disabled';
+                    }
+                    ?>
+                    <?=$form->checkbox('storeFormSubmission', 1, $storeFormSubmission, $storeFormSubmissionFormFields); ?>
+                    <?=t('Store submitted results of form.'); ?>
+                </label></div>
+            <?php if ($formSubmissionConfig === false) { ?>
+                <div class="alert alert-warning"><?=t('<strong>Warning!</strong> Form submissions are not allowed to be stored in the database. You must set a valid email in the Options tab.'); ?>                </div>
+            <?php } else { ?>
+                <div class="alert alert-warning"><?=t('<strong>Warning!</strong> If not checked submitted data will be only sent by email. You must set a valid email in the Options tab.'); ?></div>
+            <?php } ?>
         </div>
-        <?php
-    } ?>
 
+        <div class="form-group" data-section="form-results-folder">
+            <label class="control-label"><?=t('Express Folder to Receive Form Results')?></label>
+            <?php if ($tree) { ?>
+                <div data-root-tree-node-id="<?=$formResultsRootFolderNodeID; ?>" data-tree="<?=$tree->getTreeID(); ?>">
+
+                </div>
+            <?php } ?>
+        </div>
 
     </fieldset>
 
@@ -146,11 +164,8 @@
             <?=$form->text('submitLabel', $submitLabel); ?>
         </div>
         <div class="form-group">
-            <div class="checkbox"><label>
-                <?=$form->checkbox('storeFormSubmission', 1, $storeFormSubmission); ?>
-                <?=t('Store Form Submission.'); ?>
-            </label></div>
-            <span class="text-muted"><?=t('If not checked submitted data will be only sent by Email.'); ?></span>
+            <?=$form->label('submitLabel', t('Submit Button Label')); ?>
+            <?=$form->text('submitLabel', $submitLabel); ?>
         </div>
         <div class="form-group">
             <label class="control-label"><?=t('Solving a <a href="%s" target="_blank">CAPTCHA</a> Required to Post?', t('http://en.wikipedia.org/wiki/Captcha')); ?></label>

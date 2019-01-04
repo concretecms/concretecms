@@ -50,6 +50,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
     public $notifyMeOnSubmission;
     public $recipientEmail;
     public $replyToEmailControlID;
+    public $storeFormSubmission = 1;
 
     const FORM_RESULTS_CATEGORY_NAME = 'Forms';
 
@@ -114,13 +115,35 @@ class Controller extends BlockController implements NotificationProviderInterfac
         $this->edit();
         $this->set('resultsFolder', $this->get('formResultsRootFolderNodeID'));
         $this->set('addFilesToFolder', (new Filesystem())->getRootFolder());
+        $this->set('storeFormSubmission', $this->areFormSubmissionsStored());
+        $this->set('formSubmissionConfig', $this->getFormSubmissionConfigValue());
+    }
+
+    protected function areFormSubmissionsStored()
+    {
+        $config = $this->getFormSubmissionConfigValue();
+        if ($config === true) {
+            return true;
+        }
+        if ($config === 'auto') {
+            return $this->storeFormSubmission; // let the block decide.
+        }
+
+        // else config is false.
+        return false;
+    }
+
+    protected function getFormSubmissionConfigValue()
+    {
+        $config = $this->app->make('config');
+        return $config->get('concrete.form.store_form_submissions');
     }
 
     public function getNotifications()
     {
         $notifications = [new FormBlockSubmissionEmailNotification($this->app, $this)];
         //if we don't save data we must not use this notifier because entry is already not saved
-        if ($this->storeFormSubmission) {
+        if ($this->areFormSubmissionsStored()) {
             array_unshift($notifications, new FormBlockSubmissionNotification($this->app, $this));
         }
 
@@ -180,7 +203,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
                 $manager = $controller->getEntryManager($this->request);
                 $entry = $manager->createEntry($entity);
                 $e = $validator->getErrorList();
-                if (isset($e) && !$e->has() && $this->storeFormSubmission) {
+                if (isset($e) && !$e->has() && $this->areFormSubmissionsStored()) {
                     $entry = $manager->addEntry($entity);
                     $entry = $manager->saveEntryAttributesForm($form, $entry);
                     $values = $entity->getAttributeKeyCategory()->getAttributeValues($entry);
@@ -653,6 +676,8 @@ class Controller extends BlockController implements NotificationProviderInterfac
 
     public function edit()
     {
+        $this->set('formSubmissionConfig', $this->getFormSubmissionConfigValue());
+        $this->set('storeFormSubmission', $this->areFormSubmissionsStored());
         $this->loadResultsFolderInformation();
         $this->requireAsset('core/tree');
         $this->clearSessionControls();
@@ -836,6 +861,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
     protected function getFormEntity()
     {
         $entityManager = $this->app->make(EntityManagerInterface::class);
+
 
 
         return $entityManager->getRepository(\Concrete\Core\Entity\Express\Form::class)
