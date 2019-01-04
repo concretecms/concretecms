@@ -86,6 +86,21 @@ class PageViewTest extends PageTestCase
         $this->assertEquals('dashboard', $view->getThemeHandle());
     }
 
+    public function testRenderingEditProfilePageWithDashboardOverride()
+    {
+        $edit_profile = Single::add('/account/edit_profile');
+        $controller = $edit_profile->getPageController();
+        $controller->setTheme('dashboard');
+        $controller->setThemeViewTemplate('account.php'); // This should be ignored because the dashboard doesn't have this.
+        $view = $controller->getViewObject();
+        $view->setupRender();
+        $inner = $view->getInnerContentFile();
+        $template = $view->getViewTemplate();
+        $this->assertEquals('dashboard', $view->getThemeHandle());
+        $this->assertEquals(DIR_BASE_CORE . '/single_pages/account/edit_profile.php', $inner);
+        $this->assertEquals(null, $template);
+    }
+
     public function testRenderingRegisterWithReplacedNotFound()
     {
         $base = DIR_BASE_CORE;
