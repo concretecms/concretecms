@@ -71,10 +71,5 @@ class ViewTest extends PHPUnit_Framework_TestCase
         $collection->setThemesByRoutes($app->make('config')->get('app.theme_paths'));
     }
 
-    public function testRenderingThemeOverridesWithReplace()
-    {
-
-    }
-
 
 }

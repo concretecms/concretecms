@@ -12,7 +12,6 @@ defined('C5_EXECUTE') or die('Access denied.');
 $r = ResponseAssetGroup::get();
 $r->requireAsset('javascript', 'underscore');
 $r->requireAsset('javascript', 'core/events');
-$r->requireAsset('javascript', 'backstretch');
 
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $form = $app->make(\Concrete\Core\Form\Service\Form::class);
@@ -200,12 +199,6 @@ $image = (date('Ymd') - 7) . '.jpg';
                     } else {
                         form.addClass('active').show();
                     }
-                });
-            });
-
-            $(function() {
-                $.backstretch("<?= Config::get('concrete.urls.background_feed') . '/' . $image ?>", {
-                    fade: 500
                 });
             });
         })(jQuery);
