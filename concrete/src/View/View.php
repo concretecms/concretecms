@@ -141,13 +141,17 @@ class View extends AbstractView
         }
     }
 
-    public function getViewWrapperFilename()
+    public function getViewTemplateFile()
     {
         $app = Facade::getFacadeApplication();
         $collection = $app->make(ThemeRouteCollection::class);
         $tmpTheme = $collection->getThemeByRoute($this->getViewPath());
         if ($tmpTheme) {
             return $tmpTheme[1];
+        }
+
+        if (isset($this->template)) {
+            return $this->template;
         }
 
         return FILENAME_THEMES_VIEW;
@@ -207,9 +211,10 @@ class View extends AbstractView
             $this->setInnerContentFile($env->getPath($this->viewRootDirectoryName.'/'.trim($this->viewPath, '/').'.php', $this->viewPkgHandle));
         }
         if ($this->themeHandle) {
-            $templateFile = FILENAME_THEMES_VIEW;
             if (is_object($this->controller)) {
                 $templateFile = $this->controller->getThemeViewTemplate();
+            } else {
+                $templateFile = $this->getViewTemplateFile();
             }
             $this->setViewTemplate($env->getPath(DIRNAME_THEMES.'/'.$this->themeHandle.'/'.$templateFile, $this->themePkgHandle));
         }

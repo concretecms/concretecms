@@ -148,13 +148,4 @@ class PageViewTest extends PageTestCase
         $collection->setThemesByRoutes($this->app->make('config')->get('app.theme_paths'));
     }
 
-    public function testRenderingThemeOverrideBasicView()
-    {
-
-    }
-
-    public function testRenderingThemeOverridesWithReplace()
-    {
-
-    }
 }

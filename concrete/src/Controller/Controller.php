@@ -47,7 +47,7 @@ class Controller extends AbstractController
         if (isset($this->themeViewTemplate)) {
             return $this->themeViewTemplate;
         }
-        return $this->view->getViewWrapperFilename();
+        return $this->view->getViewTemplateFile();
     }
 
     public function getControllerActionPath()
