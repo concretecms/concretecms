@@ -86,6 +86,21 @@ class PageViewTest extends PageTestCase
         $this->assertEquals('dashboard', $view->getThemeHandle());
     }
 
+    public function testRenderingEditProfilePage()
+    {
+        $edit_profile = Single::add('/account/edit_profile');
+        $controller = $edit_profile->getPageController();
+        $controller->setThemeViewTemplate('account.php');
+        $controller->setTheme('concrete');
+        $view = $controller->getViewObject();
+        $view->setupRender();
+        $inner = $view->getInnerContentFile();
+        $template = $view->getViewTemplate();
+        $this->assertEquals('concrete', $view->getThemeHandle());
+        $this->assertEquals(DIR_BASE_CORE . '/single_pages/account/edit_profile.php', $inner);
+        $this->assertEquals(DIR_BASE_CORE . '/themes/concrete/account.php', $template);
+    }
+
     public function testRenderingEditProfilePageWithDashboardOverride()
     {
         $edit_profile = Single::add('/account/edit_profile');
@@ -98,8 +113,29 @@ class PageViewTest extends PageTestCase
         $template = $view->getViewTemplate();
         $this->assertEquals('dashboard', $view->getThemeHandle());
         $this->assertEquals(DIR_BASE_CORE . '/single_pages/account/edit_profile.php', $inner);
-        $this->assertEquals(null, $template);
+        $this->assertEquals(DIR_BASE_CORE . '/themes/dashboard/view.php', $template);
     }
+
+    public function testRenderingEditProfilePageThemePathOverride()
+    {
+        $collection = $this->app->make(ThemeRouteCollection::class);
+        $collection->setThemeByRoute('/account/*', 'elemental', 'full.php');
+
+        $edit_profile = Single::add('/account/edit_profile');
+        $controller = $edit_profile->getPageController();
+        $controller->setTheme('dashboard');
+        $controller->setThemeViewTemplate('account.php'); // This should be ignored because the dashboard doesn't have this.
+        $view = $controller->getViewObject();
+        $view->setupRender();
+        $inner = $view->getInnerContentFile();
+        $template = $view->getViewTemplate();
+        $this->assertEquals('elemental', $view->getThemeHandle());
+        $this->assertEquals(DIR_BASE_CORE . '/single_pages/account/edit_profile.php', $inner);
+        $this->assertEquals(DIR_BASE_CORE . '/themes/elemental/full.php', $template);
+
+        $collection->setThemesByRoutes($this->app->make('config')->get('app.theme_paths'));
+    }
+
 
     public function testRenderingRegisterWithReplacedNotFound()
     {
