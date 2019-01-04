@@ -358,6 +358,23 @@ return [
 
     /*
      * ------------------------------------------------------------------------
+     * Form settings
+     * ------------------------------------------------------------------------
+     */
+    'form' => [
+        /*
+         * Whether to store form submissions. Auto means form submissions will be stored, but the block
+         * will offer an option to disable on a per-block basis. True means they will always be stored,
+         * and false means they will never be stored.
+         *
+         * @var string "auto", true or false
+         */
+        'store_form_submissions' => 'auto',
+
+    ],
+
+    /*
+     * ------------------------------------------------------------------------
      * Marketplace settings
      * ------------------------------------------------------------------------
      */

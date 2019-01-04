@@ -123,10 +123,20 @@
 
         <div class="form-group">
             <div class="checkbox"><label>
-                    <?=$form->checkbox('storeFormSubmission', 1, $storeFormSubmission); ?>
+                    <?php
+                    $storeFormSubmissionFormFields = [];
+                    if ($formSubmissionConfig === true || $formSubmissionConfig === false) {
+                        $storeFormSubmissionFormFields['disabled'] = 'disabled';
+                    }
+                    ?>
+                    <?=$form->checkbox('storeFormSubmission', 1, $storeFormSubmission, $storeFormSubmissionFormFields); ?>
                     <?=t('Store submitted results of form.'); ?>
                 </label></div>
-            <div class="alert alert-warning"><?=t('<strong>Warning!</strong> If not checked submitted data will be only sent by email. You must set a valid email in the Options tab.'); ?></div>
+            <?php if ($formSubmissionConfig === false) { ?>
+                <div class="alert alert-warning"><?=t('<strong>Warning!</strong> Form submissions are not allowed to be stored in the database. You must set a valid email in the Options tab.'); ?>                </div>
+            <?php } else { ?>
+                <div class="alert alert-warning"><?=t('<strong>Warning!</strong> If not checked submitted data will be only sent by email. You must set a valid email in the Options tab.'); ?></div>
+            <?php } ?>
         </div>
 
         <div class="form-group" data-section="form-results-folder">
