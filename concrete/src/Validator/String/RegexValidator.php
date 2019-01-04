@@ -7,7 +7,7 @@ use Concrete\Core\Validator\AbstractTranslatableValidator;
 use InvalidArgumentException;
 use RuntimeException;
 
-class RegexValidator extends AbstractTranslatableValidator
+class  RegexValidator extends AbstractTranslatableValidator
 {
     /**
      * Passed string doesn't match.
@@ -75,8 +75,8 @@ class RegexValidator extends AbstractTranslatableValidator
         if (!is_string($mixed)) {
             throw new InvalidArgumentException(t(/*i18n: %s is the name of a PHP class*/'%s only validates string length', __CLASS__));
         }
-
         $result = @preg_match($this->getPattern(), $mixed);
+
         if ($result === false) {
             throw new RuntimeException(sprintf('Regex Error: %i', preg_last_error()));
         }

@@ -3,6 +3,7 @@
 namespace Concrete\Controller\SinglePage\Dashboard\Reports;
 
 use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\Handler\DatabaseHandler;
 use Concrete\Core\Logging\Levels;
 use Concrete\Core\Logging\LogEntry;
 use Concrete\Core\Logging\LogList;
@@ -26,9 +27,9 @@ class Logs extends DashboardPageController
             $valt = $this->app->make('helper/validation/token');
             if ($valt->validate('', $token)) {
                 if (!$channel) {
-                    Log::clearAll();
+                    DatabaseHandler::clearAll();
                 } else {
-                    Log::clearByChannel($channel);
+                    DatabaseHandler::clearByChannel($channel);
                 }
                 $this->redirect('/dashboard/reports/logs');
             } else {

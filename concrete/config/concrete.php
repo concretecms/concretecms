@@ -8,7 +8,7 @@ return [
      */
     'version' => '8.5.0a3',
     'version_installed' => '8.5.0a3',
-    'version_db' => '20181212221911', // the key of the latest database migration
+    'version_db' => '20181222183445', // the key of the latest database migration
 
     /*
      * Installation status
@@ -373,7 +373,24 @@ return [
                  * What log level to store core logs in the database
                  * @var string
                  */
-                'core_logging_level' => 'NOTICE'
+                'core_logging_level' => 'NOTICE',
+
+                /**
+                 * Which handle to use
+                 *
+                 * @var string (database|file)
+                 */
+                'handler' => 'database',
+
+                'file' => [
+
+                    /**
+                     * File path to store logs
+                     *
+                     * @var string
+                     */
+                    'file' => '',
+                ],
             ],
 
             'advanced' => [
@@ -879,6 +896,11 @@ return [
         'password' => [
             'maximum' => 128,
             'minimum' => 5,
+            'required_special_characters' => 0,
+            'required_lower_case' => 0,
+            'required_upper_case' => 0,
+            'reuse' => 0,
+            'custom_regex' => [],
             'hash_portable' => false,
             'hash_cost_log2' => 12,
             'legacy_salt' => '',
@@ -949,6 +971,13 @@ return [
             'invalidate_on_user_agent_mismatch' => true,
 
             'invalidate_on_ip_mismatch' => true,
+
+            'invalidate_inactive_users' => [
+                // Is the automatically logout inactive users setting enabled?
+                'enabled' => false,
+                // Time window (in seconds) for inactive users to be automatically logout
+                'time' => 300,
+            ]
         ],
         'ban' => [
             'ip' => [

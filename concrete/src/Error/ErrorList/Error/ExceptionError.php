@@ -45,6 +45,6 @@ class ExceptionError extends AbstractError
      */
     public function getMessage()
     {
-        return $this->exception->getMessage();
+        return $this->getException()->getMessage();
     }
 }

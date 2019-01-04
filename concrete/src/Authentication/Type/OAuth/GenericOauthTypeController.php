@@ -597,7 +597,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
             $this->showSuccess(t('Successfully detached.'));
             exit;
         } catch (\Exception $e) {
-            \Log::error(t('Deattach Error %s', $e->getMessage()));
+            $this->logger->notice(t('Detach Error %s', $e->getMessage()));
             $this->showError(t('Unable to detach account.'));
             exit;
         }

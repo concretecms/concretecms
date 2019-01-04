@@ -1,5 +1,5 @@
 /* jshint unused:vars, undef:true, browser:true, jquery:true */
-/* global NProgress, ccmi18n, ConcreteMenuManager */
+/* global NProgress, ccmi18n, ConcreteMenuManager, ConcreteAjaxRequest, ConcreteAlert */
 
 ;(function(global, $) {
     'use strict';
@@ -239,11 +239,8 @@
                     $('<div />').jqdialog(finalSettings).html(r).jqdialog('open');
                 },
                 error: function(xhr, status, error) {
-                    var msg = error, json = xhr ? xhr.responseJSON : null;
-                    if (json && json.error) {
-                        msg = json.errors instanceof Array ? json.errors.join('\n') : json.error;
-                    }
-                    window.alert(msg);
+                	$.fn.dialog.hideLoader();
+                	ConcreteAlert.dialog(ccmi18n.error, ConcreteAjaxRequest.renderErrorResponse(xhr, true));
                 }
             });
         }

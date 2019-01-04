@@ -35,19 +35,17 @@ class Integrations extends DashboardPageController
         }
 
         $redirect = $this->request->request->get('redirect');
-        if (!$validator->notempty($redirect)) {
-            $this->error->add(t('You must specify a redirect url for this integration'));
-        }
-
-        try {
-            $uri = Url::createFromUrl($redirect);
-
-            // Do some simple validation
-            if (!$uri->getHost() || !$uri->getScheme()) {
-                throw new \RuntimeException('Invalid URI');
+        if ($validator->notempty($redirect)) {
+            try {
+                $uri = Url::createFromUrl($redirect);
+    
+                // Do some simple validation
+                if (!$uri->getHost() || !$uri->getScheme()) {
+                    throw new \RuntimeException('Invalid URI');
+                }
+            } catch (\Exception $e) {
+                $this->error->add(t('That doesn\'t look like a valid URL.'));
             }
-        } catch (\Exception $e) {
-            $this->error->add(t('That doesn\'t look like a valid URL.'));
         }
     }
 
@@ -82,7 +80,7 @@ class Integrations extends DashboardPageController
             /** @var Client $client */
             $client = $this->get('client');
             $client->setName($this->request->request->get('name'));
-            $client->setRedirectUri($this->request->request->get('redirect'));
+            $client->setRedirectUri((string) $this->request->request->get('redirect'));
 
             $this->entityManager->persist($client);
             $this->entityManager->flush();

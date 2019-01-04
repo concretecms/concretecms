@@ -23,7 +23,7 @@ if (basename($_SERVER['PHP_SELF']) == DISPATCHER_FILENAME_CORE) {
  * Instantiate concrete5.
  * ----------------------------------------------------------------------------
  */
-/** @var \Concrete\Core\Application\Application $cms */
+/** @var \Concrete\Core\Application\Application $app */
 $app = require DIR_APPLICATION . '/bootstrap/start.php';
 $app->instance('app', $app);
 

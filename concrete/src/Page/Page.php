@@ -7,6 +7,7 @@ use Concrete\Core\Entity\Page\Template as TemplateEntity;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Entity\Site\SiteTree;
 use Concrete\Core\Export\ExportableInterface;
+use Concrete\Core\Logging\Channels;
 use Concrete\Core\Page\Stack\Stack;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Page\Theme\ThemeRouteCollection;
@@ -2073,7 +2074,6 @@ from
 where
     cParentID = ?
     and cvIsApproved = 1 and (cvPublishDate is null or cvPublishDate <= ?) and (cvPublishEndDate is null or cvPublishEndDate >= ?)
-    and 
 order by
     {$sortColumn}
 EOT
@@ -2953,7 +2953,13 @@ EOT
         if (!$pe->proceed()) {
             return false;
         }
-        Log::addEntry(t('Page "%s" at path "%s" deleted', $this->getCollectionName(), $this->getCollectionPath()), t('Page Action'));
+
+        $app = Facade::getFacadeApplication();
+        $logger = $app->make('log/factory')->createLogger(Channels::CHANNEL_SITE_ORGANIZATION);
+        $logger->notice(t('Page "%s" at path "%s" deleted',
+            $this->getCollectionName(),
+            $this->getCollectionPath()
+        ));
 
         parent::delete();
 
@@ -3016,7 +3022,13 @@ EOT
         Events::dispatch('on_page_move_to_trash', $pe);
 
         $trash = self::getByPath(Config::get('concrete.paths.trash'));
-        Log::addEntry(t('Page "%s" at path "%s" Moved to trash', $this->getCollectionName(), $this->getCollectionPath()), t('Page Action'));
+        $app = Facade::getFacadeApplication();
+        $logger = $app->make('log/factory')->createLogger(Channels::CHANNEL_SITE_ORGANIZATION);
+        $logger->notice(t('Page "%s" at path "%s" Moved to trash',
+            $this->getCollectionName(),
+            $this->getCollectionPath()
+        ));
+
         $this->move($trash);
         $this->deactivate();
 

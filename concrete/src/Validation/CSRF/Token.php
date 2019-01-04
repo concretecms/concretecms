@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Validation\CSRF;
 
+use Concrete\Core\Logging\Channels;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\User;
 use Concrete\Core\Http\Request;
@@ -111,8 +112,8 @@ class Token
      */
     public function validate($action = '', $token = null)
     {
+        $app = Application::getFacadeApplication();
         if ($token == null) {
-            $app = Application::getFacadeApplication();
             $request = $app->make(Request::class);
             $token = $request->request->get(static::DEFAULT_TOKEN_NAME);
             if ($token === null) {
@@ -131,6 +132,14 @@ class Token
                     $diff = $now - $time;
                     //hash is only valid if $diff is less than VALID_HASH_TIME_RECORD
                     return $diff <= static::VALID_HASH_TIME_THRESHOLD;
+                } else {
+                    $logger = $app->make('log/factory')->createLogger(Channels::CHANNEL_SECURITY);
+                    $u = new User();
+                    $logger->debug(t('Validation token did not match'), [
+                        'uID' => $u->getUserID(),
+                        'action' => $action,
+                        'time' => $time,
+                    ]);
                 }
             }
         }

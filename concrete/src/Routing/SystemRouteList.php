@@ -3,7 +3,7 @@ namespace Concrete\Core\Routing;
 
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Http\Middleware\APIAuthenticatorMiddleware;
-use Concrete\Core\HTTP\Middleware\OAuthErrorMiddleware;
+use Concrete\Core\Http\Middleware\OAuthErrorMiddleware;
 use Concrete\Core\Http\Middleware\ProjectorMiddleware;
 
 class SystemRouteList implements RouteListInterface
