@@ -255,16 +255,8 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
             $smm = $this->config->get('concrete.maintenance_mode');
             if ($smm == 1 && !Key::getByHandle('view_in_maintenance_mode')->validate() && ($_SERVER['REQUEST_METHOD'] != 'POST' || $this->app->make('token')->validate() == false)) {
                 $v = new View('/frontend/maintenance_mode');
-
-                $tmpTheme = $this->app->make(ThemeRouteCollection::class)
-                    ->getThemeByRoute('/frontend/maintenance_mode');
-                $v->setViewTheme($tmpTheme[0]);
                 $v->addScopeItems(['c' => $collection]);
                 $request->setCurrentPage($collection);
-                if (isset($tmpTheme[1])) {
-                    $v->setViewTemplate($tmpTheme[1]);
-                }
-
                 return $this->view($v, $code, $headers);
             }
         }

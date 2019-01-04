@@ -36,11 +36,12 @@ class ThemeRouteCollection
     }
 
     /**
-     * This grabs the theme for a particular path, if one exists in the themePaths array.
+     * This grabs the theme for a particular path, if one exists in the themePaths array. Returns an array with
+     * the theme handle as the first entry and the wrapper file for views as the second.
      *
      * @param string $path
      *
-     * @return string|bool
+     * @return array
      */
     public function getThemeByRoute($path)
     {

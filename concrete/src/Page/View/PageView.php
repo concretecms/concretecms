@@ -292,7 +292,7 @@ class PageView extends View
             }
         }
         if (!isset($this->pThemeID)) {
-            $this->pThemeID = $this->c->getPageTemplateID();
+            $this->pThemeID = $this->c->getPageTemplateID(); // @TODO kill this code? It looks completely wrong.
         }
     }
 }

@@ -1899,6 +1899,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     {
         $db = Database::connection();
         $db->executeQuery('update CollectionVersions set pThemeID = ? where cID = ? and cvID = ?', [$pl->getThemeID(), $this->cID, $this->vObj->getVersionID()]);
+        $this->themeObject = $pl;
     }
 
     /**
