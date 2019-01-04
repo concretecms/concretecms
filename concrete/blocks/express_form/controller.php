@@ -82,6 +82,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
         $c = \Page::getCurrentPage();
         $this->set('formName', $c->getCollectionName());
         $this->set('submitLabel', t('Submit'));
+        $this->set('storeFormSubmission', 1);
         $this->set('thankyouMsg', t('Thanks!'));
         $this->edit();
         $this->set('resultsFolder', $this->get('formResultsRootFolderNodeID'));

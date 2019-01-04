@@ -120,15 +120,23 @@
         <input type="hidden" name="resultsFolder" value="<?=$resultsFolder; ?>">
 
         <legend><?php echo t('Results'); ?></legend>
-        <p><?=t('Store results in a folder:'); ?></p>
 
-        <?php if (is_object($tree)) {
-        ?>
-        <div data-root-tree-node-id="<?=$formResultsRootFolderNodeID; ?>" data-tree="<?=$tree->getTreeID(); ?>">
+        <div class="form-group">
+            <div class="checkbox"><label>
+                    <?=$form->checkbox('storeFormSubmission', 1, $storeFormSubmission); ?>
+                    <?=t('Store submitted results of form.'); ?>
+                </label></div>
+            <div class="alert alert-warning"><?=t('<strong>Warning!</strong> If not checked submitted data will be only sent by email. You must set a valid email in the Options tab.'); ?></div>
         </div>
-        <?php
-    } ?>
 
+        <div class="form-group" data-section="form-results-folder">
+            <label class="control-label"><?=t('Express Folder to Receive Form Results')?></label>
+            <?php if ($tree) { ?>
+                <div data-root-tree-node-id="<?=$formResultsRootFolderNodeID; ?>" data-tree="<?=$tree->getTreeID(); ?>">
+
+                </div>
+            <?php } ?>
+        </div>
 
     </fieldset>
 
@@ -144,13 +152,6 @@
         <div class="form-group">
             <?=$form->label('submitLabel', t('Submit Button Label')); ?>
             <?=$form->text('submitLabel', $submitLabel); ?>
-        </div>
-        <div class="form-group">
-            <div class="checkbox"><label>
-                <?=$form->checkbox('storeFormSubmission', 1, $storeFormSubmission); ?>
-                <?=t('Store Form Submission.'); ?>
-            </label></div>
-            <span class="text-muted"><?=t('If not checked submitted data will be only sent by Email.'); ?></span>
         </div>
         <div class="form-group">
             <label class="control-label"><?=t('Solving a <a href="%s" target="_blank">CAPTCHA</a> Required to Post?', t('http://en.wikipedia.org/wiki/Captcha')); ?></label>
