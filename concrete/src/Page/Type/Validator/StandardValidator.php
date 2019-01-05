@@ -4,6 +4,7 @@ namespace Concrete\Core\Page\Type\Validator;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Type\Composer\Control\Control;
+use Concrete\Core\Page\Type\Composer\Control\CorePageProperty\CorePageProperty;
 use Concrete\Core\Page\Type\Type;
 use Core;
 
@@ -59,10 +60,25 @@ class StandardValidator implements ValidatorInterface
         $e = Core::make('error');
         $controls = Control::getList($this->type);
         foreach ($controls as $oc) {
+            $validate = false;
+            $r = null;
             if (is_object($page)) {
                 $oc->setPageObject($page);
             }
-            $r = $oc->validate();
+            if ($oc instanceof CorePageProperty) {
+                if ($oc->isPageTypeComposerFormControlRequiredOnThisRequest()) {
+                    $validate = true;
+                } else {
+                    $validate = false;
+                }
+            } else {
+                $validate = true;
+            }
+
+            if ($validate) {
+                $r = $oc->validate();
+            }
+
             if ($r instanceof ErrorList) {
                 $e->add($r);
             }
