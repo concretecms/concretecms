@@ -5,7 +5,7 @@ namespace Concrete\Core\Updater\Migrations\Migrations;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
-class Version20181213000000 extends AbstractMigration implements RepeatableMigrationInterface
+class Version20190106000000 extends AbstractMigration implements RepeatableMigrationInterface
 {
 
     public function upgradeDatabase()
