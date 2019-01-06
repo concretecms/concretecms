@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Logging;
 
 use Concrete\Core\Application\Application;
@@ -9,19 +10,18 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class LoggerFactory
 {
-
     /**
-     * @var EventDispatcher
+     * @var \Symfony\Component\EventDispatcher\EventDispatcher
      */
     protected $dispatcher;
 
     /**
-     * @var ConfigurationFactory
+     * @var \Concrete\Core\Logging\Configuration\ConfigurationFactory
      */
     protected $configurationFactory;
 
     /**
-     * @var ConfigurationInterface
+     * @var \Concrete\Core\Logging\Configuration\ConfigurationInterface
      */
     protected $config;
 
@@ -38,6 +38,13 @@ class LoggerFactory
         $this->app = $app;
     }
 
+    /**
+     * Create a new logger instance.
+     *
+     * @param string $channel
+     *
+     * @return \Psr\Log\LoggerInterface
+     */
     public function createLogger($channel)
     {
         if (!$this->app->isInstalled()) {
@@ -46,10 +53,7 @@ class LoggerFactory
         $logger = $this->config->createLogger($channel);
         $event = new Event($logger);
         $this->dispatcher->dispatch('on_logger_create', $event);
+
         return $logger;
     }
-
 }
-
-
-
