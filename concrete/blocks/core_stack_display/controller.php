@@ -217,6 +217,13 @@ class Controller extends BlockController implements TrackableInterface
         if ($p->canViewPage()) {
             $blocks = $stack->getBlocks();
             foreach ($blocks as $b) {
+                if ($b->overrideAreaPermissions()) {
+                    $btCacheBlockOutput = false;
+                    $btCacheBlockOutputOnPost = false;
+                    $btCacheBlockOutputLifetime = 0;
+                    break;
+                }
+
                 $btCacheBlockOutput = $btCacheBlockOutput && $b->cacheBlockOutput();
                 $btCacheBlockOutputOnPost = $btCacheBlockOutputOnPost && $b->cacheBlockOutputOnPost();
 
