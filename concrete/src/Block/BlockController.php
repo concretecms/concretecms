@@ -426,6 +426,12 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
         // we have to do this this way because we need a bID
         $this->importAdditionalData($b, $blockNode);
 
+        // now we handle container settings
+        $bCustomContainerSettings = (string) $blockNode['custom-container-settings'];
+        if ($bCustomContainerSettings === '0' || $bCustomContainerSettings === '1') {
+            $b->setCustomContainerSettings($bCustomContainerSettings);
+        }
+
         // now we handle the styles
         if (isset($blockNode->style)) {
             $set = StyleSet::import($blockNode->style);
