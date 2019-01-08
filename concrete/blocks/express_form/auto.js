@@ -90,7 +90,10 @@ $(function() {
         var my = this,
             $tabAdd = $('#ccm-tab-content-form-add'),
             $tabEdit = $('#ccm-tab-content-form-edit'),
+            $tabResults = $('#ccm-tab-content-form-results'),
             $tabOptions = $('#ccm-tab-content-form-options'),
+            $storeFormSubmission = $tabResults.find('input[name=storeFormSubmission]'),
+            $formResultsFolderSection = $tabResults.find('div[data-section=form-results-folder]'),
             controlTemplate = _.template($('script[data-template=express-form-form-control]').html()),
             questionTemplate = _.template($('script[data-template=express-form-form-question]').html());
 
@@ -103,6 +106,18 @@ $(function() {
                 $emailReplyToView.hide();
             }
         }).trigger('change');
+
+        $storeFormSubmission.on('change', function() {
+            var $submissionAlert = $tabResults.find('div.alert');
+            if (!$(this).is(':checked')) {
+                $submissionAlert.show();
+                $formResultsFolderSection.hide();
+            } else {
+                $submissionAlert.hide();
+                $formResultsFolderSection.show();
+            }
+        }).trigger('change');
+
 
         $tabAdd.find('div[data-view=add-question-inner]').html(questionTemplate({
             'question': '',

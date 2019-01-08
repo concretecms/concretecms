@@ -3,39 +3,39 @@
 namespace Concrete\Core\Error\ErrorList\Error;
 
 use Concrete\Core\Error\ErrorList\Field\FieldInterface;
-use Exception;
+use Throwable;
 
-class ExceptionError extends AbstractError
+class ThrowableError extends AbstractError
 {
     /**
-     * The associated Exception.
+     * The associated Throwable.
      *
-     * @var \Exception
+     * @var \Throwable
      */
-    protected $exception;
+    protected $throwable;
 
     /**
      * Class constructor.
      *
-     * @param \Exception $exception
+     * @param \Throwable $throwable
      * @param \Concrete\Core\Error\ErrorList\Field\FieldInterface|null $field
      */
-    public function __construct(Exception $exception, FieldInterface $field = null)
+    public function __construct(Throwable $throwable, FieldInterface $field = null)
     {
-        $this->exception = $exception;
+        $this->throwable = $throwable;
         if ($field) {
             $this->setField($field);
         }
     }
 
     /**
-     * Get the associated Exception.
+     * Get the associated Throwable.
      *
-     * @return \Exception
+     * @return \Throwable
      */
-    public function getException()
+    public function getThrowable()
     {
-        return $this->exception;
+        return $this->throwable;
     }
 
     /**
@@ -45,6 +45,6 @@ class ExceptionError extends AbstractError
      */
     public function getMessage()
     {
-        return $this->getException()->getMessage();
+        return $this->getThrowable()->getMessage();
     }
 }

@@ -233,6 +233,10 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
         $this->connection->executeQuery('DELETE FROM PermissionAccessEntityUsers WHERE uID = ?', [(int) $this->getUserID()]);
         $this->connection->executeQuery('DELETE FROM authTypeConcreteCookieMap WHERE uID = ?', [(int) $this->getUserID()]);
 
+        // Conversation messages and ratings should be detached from the user
+        $this->connection->executeQuery('UPDATE ConversationMessages SET uID = 0, cnvMessageAuthorName = NULL, cnvMessageAuthorEmail = NULL, cnvMessageAuthorWebsite = NULL, cnvMessageSubmitIP = NULL, cnvMessageSubmitUserAgent = NULL WHERE uID = ?', [(int) $this->getUserID()]);
+        $this->connection->executeQuery('UPDATE ConversationMessageRatings SET cnvMessageRatingIP = NULL, uID = 0 WHERE uID = ?', [(int) $this->getUserID()]);
+
         // Public file sets should be detached from the user
         $this->connection->executeQuery('UPDATE FileSets SET uID = 0 WHERE uID = ? AND fsType = ?', [
             (int) $this->getUserID(),

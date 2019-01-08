@@ -8,8 +8,6 @@ use Concrete\Block\ExpressForm\Controller as ExpressFormBlockController;
 
 class FormBlockSubmissionNotification extends AbstractFormBlockSubmissionNotification
 {
-
-
     public function notify(Entry $entry, $updateType)
     {
         $subject = new EntrySubject($entry);
@@ -20,5 +18,4 @@ class FormBlockSubmissionNotification extends AbstractFormBlockSubmissionNotific
         $notification = $type->createNotification($subject);
         $notifier->notify($notified, $notification);
     }
-
 }

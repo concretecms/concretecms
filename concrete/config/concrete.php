@@ -6,9 +6,9 @@ return [
      *
      * @var string
      */
-    'version' => '8.4.3',
-    'version_installed' => '8.4.3',
-    'version_db' => '20180716000000', // the key of the latest database migration
+    'version' => '8.4.4',
+    'version_installed' => '8.4.4',
+    'version_db' => '20180717000000', // the key of the latest database migration
 
     /*
      * Installation status
@@ -354,6 +354,23 @@ return [
             'address' => null,
             'name' => null,
         ],
+    ],
+
+    /*
+     * ------------------------------------------------------------------------
+     * Form settings
+     * ------------------------------------------------------------------------
+     */
+    'form' => [
+        /*
+         * Whether to store form submissions. Auto means form submissions will be stored, but the block
+         * will offer an option to disable on a per-block basis. True means they will always be stored,
+         * and false means they will never be stored.
+         *
+         * @var string "auto", true or false
+         */
+        'store_form_submissions' => 'auto',
+
     ],
 
     /*

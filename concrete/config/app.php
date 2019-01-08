@@ -577,6 +577,7 @@ return [
          * Panels - top level
          */
         '/ccm/system/panels/add' => ['\Concrete\Controller\Panel\Add::view'],
+        '/ccm/system/panels/add/get_stack_contents' => ['\Concrete\Controller\Panel\Add::getStackContents'],
         '/ccm/system/panels/dashboard' => ['\Concrete\Controller\Panel\Dashboard::view'],
         '/ccm/system/panels/dashboard/add_favorite' => ['\Concrete\Controller\Panel\Dashboard::addFavorite'],
         '/ccm/system/panels/dashboard/remove_favorite' => ['\Concrete\Controller\Panel\Dashboard::removeFavorite'],

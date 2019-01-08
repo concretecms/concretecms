@@ -7,12 +7,10 @@ use Concrete\Core\Entity\Express\Form;
 
 interface NotificationListInterface
 {
-
-    function addNotification(NotificationInterface $notification);
+    public function addNotification(NotificationInterface $notification);
 
     /**
      * @return NotificationInterface[]
      */
-    function getNotifications();
-
+    public function getNotifications();
 }

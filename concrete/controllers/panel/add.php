@@ -7,7 +7,9 @@ use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Block\BlockType\BlockTypeList;
 use Concrete\Core\Block\BlockType\Set as BlockTypeSet;
 use Concrete\Core\Page\Stack\Pile\Pile;
+use Concrete\Core\Page\Stack\Stack;
 use Concrete\Core\Page\Stack\StackList;
+use Concrete\Core\View\View;
 
 class Add extends BackendInterfacePageController
 {
@@ -36,6 +38,23 @@ class Add extends BackendInterfacePageController
         }
         $this->set('tab', $tab);
         $this->set('ci', $this->app->make('helper/concrete/urls'));
+    }
+
+    public function getStackContents()
+    {
+        $this->set('ci', $this->app->make('helper/concrete/urls'));
+        $stack = Stack::getByID($this->request->request->get('stackID'));
+        if ($stack && !$stack->isError()) {
+            $sp = new \Permissions($stack);
+            if ($sp->canViewPage()) {
+                $blocks = $stack->getBlocks();
+                $this->set('blocks', $blocks);
+                $this->set('stack', $stack);
+                $this->setViewObject(new View('/panels/add/get_stack_contents'));
+                return;
+            }
+        }
+        throw new \Exception(t('Access Denied.'));
     }
 
     protected function getSelectedTab()
