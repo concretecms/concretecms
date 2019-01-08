@@ -4,7 +4,6 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Basics;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Permission\Checker;
-use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Config;
 use Loader;
 use Localization;

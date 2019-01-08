@@ -7,7 +7,6 @@ use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Template;
 use Concrete\Core\Permission\Checker;
-use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\User\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Events;
