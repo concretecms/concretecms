@@ -36,9 +36,8 @@ abstract class ItemListBlockController extends BlockController
      */
     private function getItemListTableProps($prop = '')
     {
-        $cache = $this->app->make('cache/request');
-
         if (empty($this->itemListTableFields)) {
+            $cache = $this->app->make('cache/request');
             $item = $cache->getItem(sprintf('block/%s/2nd-table-cols', $this->btHandle));
             if (!$item->isMiss()) {
                 $this->itemListTableFields = $item->get();
@@ -229,8 +228,8 @@ abstract class ItemListBlockController extends BlockController
     /**
      * Prepare Items Table Field Value before saving it to database.
      *
-     * @param String $field field name
-     * @param String $type field type
+     * @param string $field field name
+     * @param string $type field type
      * @param mixed $value field value
      *
      * @return mixed sanitized value
