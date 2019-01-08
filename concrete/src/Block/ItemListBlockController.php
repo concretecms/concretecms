@@ -156,12 +156,13 @@ abstract class ItemListBlockController extends BlockController
     {
         parent::save($args);
 
+        $this->deleteItems();
+
         $sanitizedData = $this->sanitizeData($args);
         if (empty($sanitizedData)) {
             return;
         }
 
-        $this->deleteItems();
         $insertFields = $this->getItemListTableProps('QUERY_PLACE_HOLDER');
 
         $this->db->transactional(function (Connection $db) use ($sanitizedData, $insertFields) {
