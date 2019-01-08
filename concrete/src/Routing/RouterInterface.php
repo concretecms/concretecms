@@ -1,86 +1,54 @@
 <?php
+
 namespace Concrete\Core\Routing;
 
-use Request;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RequestContext;
 
 interface RouterInterface
 {
     /**
-     * Get the context that the router is running in.
+     * @param \Concrete\Core\Routing\Route $route
      *
-     * @return RequestContext
+     * @return \Concrete\Core\Routing\RouteActionInterface
      */
-    public function getContext();
+    public function resolveAction(Route $route);
 
     /**
-     * @param RequestContext $context
+     * @return \Symfony\Component\Routing\RouteCollection[]
      */
-    public function setContext(RequestContext $context);
+    public function getRoutes();
 
     /**
-     * @return UrlGeneratorInterface
+     * @param \Concrete\Core\Routing\Route $route
      */
-    public function getGenerator();
+    public function addRoute(Route $route);
 
     /**
-     * @param $generator
+     * Get a route given its path.
+     *
+     * @param string $path the path to be looked for
+     * @param \Symfony\Component\Routing\RequestContext $context the context to be used to match the routes
+     * @param array $routeAttributes [output] if specified, this argument will contain the route attributes
+     *
+     * @throws \Symfony\Component\Routing\Exception\NoConfigurationException If no routing configuration could be found
+     * @throws \Symfony\Component\Routing\Exception\ResourceNotFoundException If the resource could not be found
+     * @throws \Symfony\Component\Routing\Exception\MethodNotAllowedException If the resource was found but the request method is not allowed
+     *
+     * @return \Concrete\Core\Routing\Route
      */
-    public function setGenerator(UrlGeneratorInterface $generator);
-
-    public function getList();
-
-    public function setRequest(Request $req);
+    public function getRouteByPath($path, RequestContext $context, array &$routeAttributes = []);
 
     /**
-     * Register a symfony route with as little as a path and a callback.
+     * @param \Symfony\Component\HttpFoundation\Request $request
      *
-     * @param string $path The full path for the route
-     * @param \Closure|string $callback `\Closure` or "dispatcher" or "\Namespace\Controller::action_method"
-     * @param string|null $handle The route handle, if one is not provided the handle is generated from the path "/" => "_"
-     * @param array $requirements The Parameter requirements, see Symfony Route constructor
-     * @param array $options The route options, see Symfony Route constructor
-     * @param string $host The host pattern this route requires, see Symfony Route constructor
-     * @param array|string $schemes The schemes or scheme this route requires, see Symfony Route constructor
-     * @param array|string $methods The HTTP methods this route requires, see see Symfony Route constructor
-     * @param string $condition see Symfony Route constructor
+     * @throws \Symfony\Component\Routing\Exception\NoConfigurationException If no routing configuration could be found
+     * @throws \Symfony\Component\Routing\Exception\ResourceNotFoundException If the resource could not be found
+     * @throws \Symfony\Component\Routing\Exception\MethodNotAllowedException If the resource was found but the request method is not allowed
      *
-     * @return \Symfony\Component\Routing\Route
+     * @return \Concrete\Core\Routing\MatchedRoute
      */
-    public function register(
-        $path,
-        $callback,
-        $handle = null,
-        array $requirements = array(),
-        array $options = array(),
-        $host = '',
-        $schemes = array(),
-        $methods = array(),
-        $condition = null);
+    public function matchRoute(Request $request);
 
-    public function registerMultiple(array $routes);
-
-    public function execute(Route $route, $parameters);
-
-    /**
-     * Used by the theme_paths and site_theme_paths files in config/ to hard coded certain paths to various themes.
-     *
-     * @param $path string
-     * @param $theme object, if null site theme is default
-     */
-    public function setThemeByRoute($path, $theme = null, $wrapper = FILENAME_THEMES_VIEW);
-
-    public function setThemesbyRoutes(array $routes);
-
-    /**
-     * This grabs the theme for a particular path, if one exists in the themePaths array.
-     *
-     * @param string $path
-     *
-     * @return string|bool
-     */
-    public function getThemeByRoute($path);
-
-    public function route($data);
+    public function loadRouteList(RouteListInterface $list);
 }

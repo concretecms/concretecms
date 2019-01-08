@@ -107,21 +107,26 @@ foreach ($filters as $filter) {
         "selector" => ".filter.filter-{$filter_handle}",
     );
 }
+$url = $fv->getRelativePath();
 ?>
     <script>
         $(function () {
             _.defer(function () {
                 var defaults = {
-                        saveUrl: CCM_DISPATCHER_FILENAME + '/tools/required/files/importers/imageeditor',
-                        src: '<?=$fv->getURL()?>',
-                        fID: <?= $fv->getFileID() ?>,
-                        token: '<?= $token ?>',
-                        controlsets: {},
-                        filters: {},
-                        debug: false,
-                        jpegCompression: <?= Core::make(BitmapFormat::class)->getDefaultJpegQuality() / 100 ?>,
-                        mime: '<?= $fv->getMimeType() ?>'
-                    },
+                    saveUrl: CCM_DISPATCHER_FILENAME + '/tools/required/files/importers/imageeditor',
+                    src: '<?=$url?>',
+                    fID: <?= $fv->getFileID() ?>,
+                    token: '<?= $token ?>',
+                    controlsets: {},
+                    filters: {},
+                    debug: false,
+                    jpegCompression: <?= Core::make(BitmapFormat::class)->getDefaultJpegQuality() / 100 ?>,
+                    mime: '<?= $fv->getMimeType() ?>'<?php
+                    if (\Core::make('config')->get('concrete.misc.image_editor_cors_policy.enable_cross_origin', false) && preg_match('/^http[s]?:\/\/.*$/', $url)) {
+                        echo ",\n                    crossOrigin: '" . (\Core::make('config')->get('concrete.misc.image_editor_cors_policy.anonymous_request', true) ? 'anonymous' : 'use-credentials') . "'";
+                    }
+                    ?>
+                },
                     settings = _.extend(defaults, <?= json_encode($settings) ?>);
                 $('div.controlset', 'div.controls').each(function () {
                     settings.controlsets[$(this).attr('data-namespace')] = {

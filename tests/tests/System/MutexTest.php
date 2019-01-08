@@ -67,6 +67,9 @@ class MutexTest extends PHPUnit_Framework_TestCase
             $mutex->release($key2);
             foreach ([$key1 => 'Mutex busy', $key2 => 'Mutex acquired'] as $key => $result) {
                 $cmd = escapeshellarg(PHP_BINARY);
+                if (PHP_SAPI === 'phpdbg') {
+                    $cmd .= ' -qrr';
+                }
                 $cmd .= ' ' . escapeshellarg(str_replace('/', DIRECTORY_SEPARATOR, DIR_BASE_CORE . '/bin/concrete5'));
                 $cmd .= ' c5:exec';
                 $cmd .= ' --no-interaction --ansi';

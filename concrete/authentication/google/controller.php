@@ -95,7 +95,7 @@ class Controller extends GenericOauth2TypeController
                 $image = \Image::open($this->getExtractor()->getImageURL());
                 $ui->updateUserAvatar($image);
             } catch (\Imagine\Exception\InvalidArgumentException $e) {
-                \Log::addNotice("Unable to fetch user images in Google Authentication Type, is allow_url_fopen disabled?");
+                $this->logger->notice("Unable to fetch user images in Google Authentication Type, is allow_url_fopen disabled?");
             } catch (\Exception $e) {
             }
         }

@@ -15,6 +15,7 @@ use Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVe
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Foundation\Queue\Queue;
 use Concrete\Core\Package\PackageList;
+use Concrete\Core\Page\Cloner;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 use Concrete\Core\Support\Facade\Application;
@@ -207,15 +208,29 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         if (!$blockName) {
             return;
         }
+        $app = Application::getFacadeApplication();
+        $now = $app->make('date')->getOverridableNow();
         $db = Loader::db();
-        $sql = 'SELECT b.bID, cvb.arHandle, cvb.cID'
-            . ' FROM Blocks AS b'
-                . ' INNER JOIN CollectionVersionBlocks AS cvb ON b.bID = cvb.bID'
-                    . ' INNER JOIN CollectionVersions AS cv ON cvb.cID = cv.cID AND cvb.cvID = cv.cvID'
-                        . ' WHERE b.bName = ? AND cv.cvIsApproved = 1'
-                            . ' ORDER BY cvb.cvID DESC'
-                                . ' LIMIT 1';
-        $vals = [$blockName];
+        $sql = <<<'EOT'
+SELECT
+    b.bID,
+    cvb.arHandle,
+    cvb.cID
+FROM
+    Blocks AS b
+    INNER JOIN CollectionVersionBlocks AS cvb
+        ON b.bID = cvb.bID
+    INNER JOIN CollectionVersions AS cv
+        ON cvb.cID = cv.cID AND cvb.cvID = cv.cvID
+WHERE
+    b.bName = ?
+    AND cv.cvIsApproved = 1 AND (cv.cvPublishDate IS NULL or cv.cvPublishDate <= ?) AND (cv.cvPublishEndDate IS NULL or cv.cvPublishEndDate >= ?)
+ORDER BY
+    cvb.cvID DESC
+LIMIT 1
+EOT
+        ;
+        $vals = [$blockName, $now, $now];
         $row = $db->getRow($sql, $vals);
         if ($row != false && isset($row['bID']) && $row['bID'] > 0) {
             return self::getByID($row['bID'], Page::getByID($row['cID']), $row['arHandle']);
@@ -256,11 +271,14 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     /**
      * Returns the block identifier (if available).
      *
+     * @version <= 8.4.2 Method returns string|null
+     * @version 8.4.3 Method returns int|null
+     *
      * @return int|null
      */
     public function getBlockID()
     {
-        return isset($this->bID) ? $this->bID : null;
+        return isset($this->bID) ? (int) $this->bID : null;
     }
 
     /**
@@ -1685,112 +1703,9 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
      */
     public function alias($c)
     {
-        $db = Loader::db();
-        $bID = $this->getBlockID();
-        $newBlockDisplayOrder = $c->getCollectionAreaDisplayOrder($this->getAreaHandle());
-        $cvID = $c->getVersionID();
-        $cID = $c->getCollectionID();
-        $v = [$cID, $cvID, $bID, $this->getAreaHandle()];
-
-        $q = 'select count(bID) from CollectionVersionBlocks where cID = ? and cvID = ? and bID = ? and arHandle = ?';
-        $total = $db->getOne($q, $v);
-        if ($total == 0) {
-            // I don't like this -AE. Let's see what happens when we don't do this.
-            /*
-            if ($this->a && $this->a instanceof SubArea) {
-                // hackish - we do this because if we don't do it now, it'll automatically get created with no arParentID.
-                $db->Execute('insert into Areas (cID, arHandle, arParentID) values (?, ?, ?)', array(
-                    $c->getCollectionID(),
-                    $this->a->getAreaHandle(),
-                    $this->a->getAreaParentID()
-                ));
-            }
-            */
-            array_push($v, $this->getBlockRelationID(), $newBlockDisplayOrder, 0, $this->overrideAreaPermissions(), $this->overrideBlockTypeCacheSettings(), $this->overrideBlockTypeContainerSettings(), $this->enableBlockContainer() ? 1 : 0);
-            $q = 'insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbRelationID, cbDisplayOrder, isOriginal, cbOverrideAreaPermissions, cbOverrideBlockTypeCacheSettings, cbOverrideBlockTypeContainerSettings, cbEnableBlockContainer) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-            $r = $db->prepare($q);
-            $res = $db->execute($r, $v);
-
-            // styles
-            $issID = $this->getCustomStyleSetID();
-            if ($issID > 0) {
-                $db->Execute(
-                    'insert into CollectionVersionBlockStyles (cID, cvID, bID, arHandle, issID) values (?, ?, ?, ?, ?)',
-                    [
-                        $cID,
-                        $cvID,
-                        $bID,
-                        $this->getAreaHandle(),
-                        $issID,
-                    ]
-                    );
-            }
-
-            // custom cache
-            if ($this->overrideBlockTypeCacheSettings()) {
-                $db->Execute(
-                    'insert into CollectionVersionBlocksCacheSettings (cID, cvID, bID, arHandle, btCacheBlockOutput, btCacheBlockOutputOnPost, btCacheBlockOutputForRegisteredUsers, btCacheBlockOutputLifetime) values (?, ?, ?, ?, ?, ?, ?, ?)',
-                    [
-                        $cID,
-                        $cvID,
-                        $bID,
-                        $this->getAreaHandle(),
-                        (int) ($this->cacheBlockOutput()),
-                        (int) ($this->cacheBlockOutputOnPost()),
-                        (int) ($this->cacheBlockOutputForRegisteredUsers()),
-                        (int) ($this->getBlockOutputCacheLifetime()),
-                    ]
-                    );
-            }
-            if ($res) {
-                // now we grab the permissions from the block we're aliasing from
-                $oc = $this->getBlockCollectionObject();
-                $ocID = $oc->getCollectionID();
-                $ocvID = $oc->getVersionID();
-
-                $qf = 'select faID from BlockFeatureAssignments where bID = ? and cID = ? and cvID = ?';
-                $rf = $db->query($qf, [$bID, $ocID, $ocvID]);
-
-                if ($rf) {
-                    while ($rowf = $rf->fetchRow()) {
-                        $db->Replace(
-                            'BlockFeatureAssignments',
-                            ['cID' => $cID, 'cvID' => $cvID, 'bID' => $bID, 'faID' => $rowf['faID']],
-                            ['cID', 'cvID', 'bID', 'faID'],
-                            true
-                            );
-                    }
-                    $rf->free();
-                }
-
-                $qa = 'select paID, pkID from BlockPermissionAssignments where bID = ? and cID = ? and cvID = ?';
-                $ra = $db->query($qa, [$bID, $ocID, $ocvID]);
-
-                if ($ra) {
-                    while ($row_a = $ra->fetchRow()) {
-                        $db->Replace(
-                            'BlockPermissionAssignments',
-                            [
-                                'cID' => $cID,
-                                'cvID' => $cvID,
-                                'bID' => $bID,
-                                'paID' => $row_a['paID'],
-                                'pkID' => $row_a['pkID'],
-                            ],
-                            [
-                                'cID',
-                                'cvID',
-                                'bID',
-                                'paID',
-                                'pkID',
-                            ],
-                            true
-                            );
-                    }
-                    $ra->free();
-                }
-            }
-        }
+        $app = Application::getFacadeApplication();
+        $cloner = $app->make(Cloner::class);
+        $cloner->cloneBlock($this, $c);
     }
 
     /**
@@ -1911,6 +1826,9 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
             $blockNode->addAttribute('name', $this->getBlockName());
             if ($this->getBlockFilename() != '') {
                 $blockNode->addAttribute('custom-template', $this->getBlockFilename());
+            }
+            if ($this->overrideBlockTypeContainerSettings()) {
+                $blockNode->addAttribute('custom-container-settings', $this->enableBlockContainer() ? 1 : 0);
             }
             if (($this->c instanceof Page) && $this->c->isMasterCollection()) {
                 $mcBlockID = Loader::helper('validation/identifier')->getString(8);

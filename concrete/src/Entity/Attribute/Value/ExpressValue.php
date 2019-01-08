@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(
  *     name="ExpressEntityEntryAttributeValues"
  * )
+ * @ORM\HasLifecycleCallbacks
  */
 class ExpressValue extends AbstractValue
 {
@@ -32,6 +33,13 @@ class ExpressValue extends AbstractValue
     public function setEntry($entry)
     {
         $this->entry = $entry;
+    }
+
+    /** @ORM\PreUpdate */
+    public function updateEntryDateModified() {
+        if ($this->getEntry() instanceof \Concrete\Core\Entity\Express\Entry) {
+            $this->getEntry()->updateDateModified();
+        }
     }
 
 

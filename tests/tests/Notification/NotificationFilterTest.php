@@ -33,7 +33,7 @@ class NotificationFilterTest extends ConcreteDatabaseTestCase
     {
         $filters = $this->getFilters();
         $this->assertTrue(is_array($filters));
-        $this->assertCount(5, $filters);
+        $this->assertCount(6, $filters);
         $filter = $filters[0];
         $this->assertInstanceOf(FilterInterface::class, $filter);
         $this->assertEquals('concrete5 Updates', $filter->getName());
@@ -44,11 +44,11 @@ class NotificationFilterTest extends ConcreteDatabaseTestCase
         $type = Type::add('basic', 'Basic Workflow');
         Workflow::add($type, 'Page Approval');
         $filters = $this->getFilters();
-        $this->assertCount(6, $filters);
+        $this->assertCount(7, $filters);
         Workflow::add($type, 'Calendar Approval');
         $filters = $this->getFilters();
-        $this->assertCount(7, $filters);
-        $this->assertEquals('Workflow: Page Approval', $filters[6]->getName());
+        $this->assertCount(8, $filters);
+        $this->assertEquals('Workflow: Page Approval', $filters[7]->getName());
 
     }
 

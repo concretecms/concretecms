@@ -23,7 +23,7 @@
 	ConcretePageMenu.prototype = Object.create(ConcreteMenu.prototype);
 
 	ConcretePageMenu.prototype.setupMenuOptions = function($menu) {
-		var my = this, 
+		var my = this,
 			parent = ConcreteMenu.prototype,
 			cID = $menu.attr('data-search-page-menu');
 
@@ -33,13 +33,13 @@
 		}
 		$menu.find('a[data-action=delete-forever]').on('click', function() {
 			ccm_triggerProgressiveOperation(
-				CCM_TOOLS_PATH + '/dashboard/sitemap_delete_forever', 
+				CCM_TOOLS_PATH + '/dashboard/sitemap_delete_forever',
 				[{'name': 'cID', 'value': cID}],
 				ccmi18n_sitemap.deletePages,
 				function() {
 					if (my.options.sitemap) {
 						var tree = my.options.sitemap.getTree(),
-							node = tree.getNodeByKey(cID);
+							node = tree.getNodeByKey(String(cID));
 
 						node.remove();
 					}
@@ -52,13 +52,13 @@
 		});
 		$menu.find('a[data-action=empty-trash]').on('click', function() {
 			ccm_triggerProgressiveOperation(
-				CCM_TOOLS_PATH + '/dashboard/sitemap_delete_forever', 
+				CCM_TOOLS_PATH + '/dashboard/sitemap_delete_forever',
 				[{'name': 'cID', 'value': cID}],
 				ccmi18n_sitemap.deletePages,
 				function() {
 					if (my.options.sitemap) {
 						var tree = my.options.sitemap.getTree(),
-							node = tree.getNodeByKey(cID);
+							node = tree.getNodeByKey(String(cID));
 
 						node.removeChildren();
 					}

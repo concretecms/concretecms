@@ -52,7 +52,7 @@ abstract class GenericOauth2TypeController extends GenericOauthTypeController
             } catch (Exception $e) {
                 $this->showError($e->getMessage());
             } catch (\Exception $e) {
-                \Log::addError($e->getMessage(), array($e));
+                $this->logger->error($e->getMessage(), ['exception' => $e]);
                 $this->showError(t('An unexpected error occurred.'));
             }
         } else {

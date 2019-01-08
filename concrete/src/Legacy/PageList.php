@@ -8,6 +8,8 @@ use PermissionKey;
 use Permissions;
 use CollectionAttributeKey;
 use Concrete\Core\Permission\Duration as PermissionDuration;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Database\Connection\Connection;
 
 /**
  * An object that allows a filtered list of pages to be returned.
@@ -138,7 +140,8 @@ class PageList extends DatabaseItemList
      */
     public function setupPermissions()
     {
-        $u = new User();
+        $app = Application::getFacadeApplication();
+        $u = $app->make(\Concrete\Core\User\User::class);
         if ($u->isSuperUser() || ($this->ignorePermissions)) {
             return; // super user always sees everything. no need to limit
         }
@@ -152,7 +155,7 @@ class PageList extends DatabaseItemList
         $owpae = PageOwnerPermissionAccessEntity::getOrCreate();
         // now we retrieve a list of permission duration object IDs that are attached view_page or view_page_version
         // against any of these access entity objects. We just get'em all.
-        $db = Loader::db();
+        $db = $app->make(Connection::class);
         $activePDIDs = [];
         $vpPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = ?', [$this->viewPagePermissionKeyHandle]);
         /*
@@ -178,7 +181,9 @@ class PageList extends DatabaseItemList
         }
 
         if ($this->displayOnlyApprovedPages) {
-            $cvIsApproved = ' and cv.cvIsApproved = 1';
+            $now = $app->make('date')->getOverridableNow();
+            $nowSql = $db->quote($now);
+            $cvIsApproved = " and cv.cvIsApproved = 1 and (cv.cvPublishDate is null or cv.cvPublishDate <= {$nowSql}) and (cv.cvPublishEndDate is null or cv.cvPublishEndDate >= {$nowSql})";
         } else {
             $cvIsApproved = '';
         }
@@ -337,7 +342,15 @@ class PageList extends DatabaseItemList
 
     public function filterByIsApproved($cvIsApproved)
     {
-        $this->filter('cv.cvIsApproved', $cvIsApproved);
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $now = $app->make('date')->getOverridableNow();
+        $nowSql = $db->quote($now);
+        if ($cvIsApproved) {
+            $this->filter(false, "cv.cvIsApproved = 1 AND (cv.cvPublishDate IS NULL OR cv.cvPublishDate <= {$nowSql}) AND (cv.cvPublishEndDate IS NULL OR cv.cvPublishEndDate >= {$nowSql})");
+        } else {
+            $this->filter(false, "(cv.cvIsApproved = 0 OR (cv.cvPublishDate IS NOT NULL AND cv.cvPublishDate > {$nowSql}) OR (cv.cvPublishEndDate IS NOT NULL AND cv.cvPublishEndDate < {$nowSql}))");
+        }
     }
 
     public function filterByIsAlias($ia)
@@ -482,8 +495,9 @@ class PageList extends DatabaseItemList
 
     protected function setBaseQuery($additionalFields = '')
     {
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
         if ($this->isIndexedSearch()) {
-            $db = Loader::db();
             $ik = ', match(psi.cName, psi.cDescription, psi.content) against (' . $db->quote($this->indexedKeywords) . ') as cIndexScore ';
         } else {
             $ik = '';
@@ -495,8 +509,10 @@ class PageList extends DatabaseItemList
 
         $cvID = '(select max(cvID) from CollectionVersions where cID = cv.cID)';
         if ($this->displayOnlyApprovedPages) {
-            $cvID = '(select cvID from CollectionVersions where cvIsApproved = 1 and cID = cv.cID)';
-            $this->filter('cvIsApproved', 1);
+            $now = $app->make('date')->getOverridableNow();
+            $nowSql = $db->quote($now);
+            $cvID = "(select cvID from CollectionVersions where cvIsApproved = 1 and (cvPublishDate IS NULL OR cvPublishDate <= {$nowSql}) and (cvPublishEndDate IS NULL OR cvPublishEndDate >= {$nowSql}) and cID = cv.cID)";
+            $this->filterByIsApproved(true);
         }
 
         if ($this->includeAliases) {

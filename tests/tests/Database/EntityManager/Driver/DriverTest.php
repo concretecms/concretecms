@@ -22,7 +22,7 @@ class DriverTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Driver::getDriver
+     * @covers \Concrete\Core\Database\EntityManager\Driver\Driver::getDriver
      */
     public function testGetDriver()
     {
@@ -30,7 +30,7 @@ class DriverTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Driver::getNamespace
+     * @covers \Concrete\Core\Database\EntityManager\Driver\Driver::getNamespace
      */
     public function testGetNamespace()
     {

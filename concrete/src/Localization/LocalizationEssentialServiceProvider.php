@@ -5,9 +5,12 @@ use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 use Concrete\Core\Localization\Translator\Adapter\Core\TranslatorAdapterFactory as CoreTranslatorAdapterFactory;
 use Concrete\Core\Localization\Translator\Adapter\Plain\TranslatorAdapterFactory as PlainTranslatorAdapterFactory;
 use Concrete\Core\Localization\Translator\Adapter\Zend\TranslatorAdapterFactory as ZendTranslatorAdapterFactory;
+use Concrete\Core\Localization\Translator\Loader\Gettext as GettextLoader;
 use Concrete\Core\Localization\Translator\Translation\TranslationLoaderRepository;
 use Concrete\Core\Localization\Translator\TranslatorAdapterFactoryInterface;
 use Concrete\Core\Localization\Translator\TranslatorAdapterRepository;
+use Zend\I18n\Translator\LoaderPluginManager;
+use Zend\ServiceManager\ServiceManager;
 
 class LocalizationEssentialServiceProvider extends ServiceProvider
 {
@@ -28,7 +31,21 @@ class LocalizationEssentialServiceProvider extends ServiceProvider
                     $loaderRepository->registerTranslationLoader($key, $loader);
                 }
 
-                $zendFactory = new ZendTranslatorAdapterFactory($loaderRepository);
+                $serviceManager = new ServiceManager();
+                $loaderPluginManager = new LoaderPluginManager(
+                    $serviceManager,
+                    [
+                        'factories' => [
+                            GettextLoader::class => function($creationContext, $resolvedName, $options) {
+                                return $this->app->build(GettextLoader::class, ['webrootDirectory' => DIR_BASE]);
+                            }
+                        ],
+                        'aliases' => [
+                            'gettext' => GettextLoader::class,
+                        ],
+                    ]
+                );
+                $zendFactory = new ZendTranslatorAdapterFactory($loaderRepository, $loaderPluginManager);
                 $plainFactory = new PlainTranslatorAdapterFactory();
 
                 return new CoreTranslatorAdapterFactory($config, $plainFactory, $zendFactory);

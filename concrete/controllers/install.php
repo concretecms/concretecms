@@ -314,7 +314,8 @@ class Install extends Controller
                             'database' => $post->get('DB_DATABASE'),
                             'username' => $post->get('DB_USERNAME'),
                             'password' => $post->get('DB_PASSWORD'),
-                            'charset' => 'utf8',
+                            'character_set' => Installer::DEFAULT_DATABASE_CHARSET,
+                            'collation' => Installer::DEFAULT_DATABASE_COLLATION,
                         ],
                     ],
                 ];

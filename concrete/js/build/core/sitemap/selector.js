@@ -42,7 +42,7 @@
         pageLoadedTemplate: '<div class="ccm-item-selector"><div class="ccm-item-selector-item-selected">' +
             '<input type="hidden" name="<%=inputName%>" value="<%=page.cID%>" />' +
             '<a data-page-selector-action="clear" href="#" class="ccm-item-selector-clear"><i class="fa fa-close"></i></a>' +
-            '<div class="ccm-item-selector-item-selected-title"><%=page.name%></div>' +
+            '<div class="ccm-item-selector-item-selected-title launch-tooltip" title="<%- page.url %>"><%=page.name%></div>' +
             '</div></div>',
 
         loadPage: function(cID) {
@@ -51,6 +51,15 @@
             ConcretePageAjaxSearch.getPageDetails(cID, function(r) {
                 var page = r.pages[0];
                 my.$element.html(my._pageLoadedTemplate({'inputName': my.options.inputName, 'page': page}));
+                var tooltips = my.$element.find('.launch-tooltip');
+                if (tooltips.length && tooltips.tooltip) {
+                    var ttOptions = {},
+                        $ttHolder = $('#ccm-tooltip-holder');
+                    if ($ttHolder.length) {
+                        ttOptions.container = $ttHolder;
+                    }
+                    tooltips.tooltip(ttOptions);
+                }
                 my.$element.on('click', 'a[data-page-selector-action=clear]', function(e) {
                     e.preventDefault();
                     my.$element.html(my._chooseTemplate);

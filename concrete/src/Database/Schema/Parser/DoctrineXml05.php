@@ -1,18 +1,23 @@
 <?php
+
 namespace Concrete\Core\Database\Schema\Parser;
+
+use Concrete\Core\Database\Connection\Connection;
 
 class DoctrineXml05 extends XmlParser
 {
     /**
      * Transforms the XML from Adodb XML into
      * Doctrine DBAL Schema.
+     *
+     * @param \Concrete\Core\Database\Connection\Connection $db
      */
-    public function parse(\Concrete\Core\Database\Connection\Connection $db)
+    public function parse(Connection $db)
     {
         $filter = null;
         if ($this->ignoreExistingTables) {
             $filter = function ($tableName) use ($db) {
-              return $db->tableExists($tableName) ? false : true;
+                return $db->tableExists($tableName) ? false : true;
             };
         }
 
@@ -21,7 +26,9 @@ class DoctrineXml05 extends XmlParser
             $db->getDatabasePlatform(),
             true,
             false,
-            $filter
+            $filter,
+            $this->getDatabaseVersion($db),
+            $db->getSchemaManager()->createSchemaConfig()
         );
     }
 }

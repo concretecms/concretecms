@@ -74,7 +74,7 @@ class LinkFormatter implements LinkFormatterInterface
         $background = $this->getEventOccurrenceBackgroundColor($occurrence);
         $text = $this->getEventOccurrenceTextColor($occurrence);
 
-        $link = new Link($href, $value);
+        $link = new Link($href, h($value));
         $link->setAttribute('style', sprintf('background-color: %s; color: %s', $background, $text));
 
         if ($occurrence->isCancelled()) {

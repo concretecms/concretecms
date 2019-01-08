@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Antispam;
 
+use Concrete\Core\Logging\Channels;
 use Config;
 use Core;
 use Group;
@@ -127,7 +128,8 @@ class Service
                 }
 
                 if (Config::get('concrete.log.spam')) {
-                    Log::addEntry($logText, t('spam'));
+                    $logger = \Core::make('log/factory')->createLogger(Channels::CHANNEL_SPAM);
+                    $logger->warning($logText);
                 }
                 if (Config::get('concrete.spam.notify_email') != '') {
                     $mh = Loader::helper('mail');

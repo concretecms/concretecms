@@ -3,7 +3,6 @@ namespace Concrete\Controller\Element\Search\Files;
 
 use Concrete\Core\Controller\ElementController;
 use Concrete\Core\Entity\Search\Query;
-use Concrete\Core\Search\ProviderInterface;
 
 class Header extends ElementController
 {

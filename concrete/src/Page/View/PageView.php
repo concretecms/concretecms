@@ -163,7 +163,7 @@ class PageView extends View
         if ($this->c->hasPageThemeCustomizations()) {
             // page has theme customizations, check if we need to serve an uncached version of the style sheet,
             // either because caching is deactivated or because the version is not approved yet
-            if ($this->c->getVersionObject()->isApproved()) {
+            if ($this->c->getVersionObject()->isApprovedNow()) {
                 // approved page, return handler script if caching is deactivated
                 if (!Config::get('concrete.cache.theme_css')) {
                     return URL::to('/ccm/system/css/page', $this->c->getCollectionID(), $stylesheet);
@@ -292,7 +292,7 @@ class PageView extends View
             }
         }
         if (!isset($this->pThemeID)) {
-            $this->pThemeID = $this->c->getPageTemplateID();
+            $this->pThemeID = $this->c->getPageTemplateID(); // @TODO kill this code? It looks completely wrong.
         }
     }
 }

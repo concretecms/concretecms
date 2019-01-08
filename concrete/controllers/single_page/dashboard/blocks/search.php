@@ -17,7 +17,7 @@ class Search extends DashboardPageController
     {
 
         /*
-        $header = new Header();
+        $header = $this->app->build(Header::class);
         $this->set('headerMenu', $header);
         $this->requireAsset('core/file-manager');
         $this->requireAsset('core/imageeditor');

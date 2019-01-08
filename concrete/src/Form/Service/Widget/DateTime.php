@@ -309,8 +309,8 @@ $(function() {
         $(inst.settings.altField).val('');
       }
     }
-  },{$datePickerOptionsAsJSON})).datepicker('setDate', $defaultDateJs);
-})
+  },{$datePickerOptionsAsJSON})).datepicker('setDate', $defaultDateJs).attr('autocomplete', 'nope');
+});
 </script>
 EOT;
         }
@@ -409,7 +409,7 @@ $(function() {
         $(inst.settings.altField).val('');
       }
     }
-  },{$datePickerOptionsAsJSON})).datepicker('setDate', $defaultDateJs);
+  },{$datePickerOptionsAsJSON})).datepicker('setDate', $defaultDateJs).attr('autocomplete', 'nope');
 });
 </script>
 EOT;

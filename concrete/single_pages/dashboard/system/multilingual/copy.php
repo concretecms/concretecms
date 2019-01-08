@@ -56,19 +56,21 @@ use Concrete\Core\Multilingual\Page\Section\Section as MultilingualSection;
                             var ctt = $('select[name=copyTreeTo]').val();
                             if (ctt > 0 && ctf > 0 && ctt != ctf) {
                                 ccm_triggerProgressiveOperation(
-                                    CCM_TOOLS_PATH + '/dashboard/sitemap_copy_all',
+                                    CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/drag_request/copy_all',
                                     [
                                         {'name': 'origCID', 'value': ctf},
                                         {'name': 'destCID', 'value': ctt},
                                         {'name': 'copyChildrenOnly', 'value': true},
-                                        {'name': 'multilingual', 'value': true}
+                                        {'name': 'multilingual', 'value': true},
+                                        {name: <?= json_encode($token::DEFAULT_TOKEN_NAME) ?>, value: <?= json_encode($token->generate('/dialogs/page/drag_request'))?>}
                                     ],
-                                    "<?=t('Copy Locale Tree')?>", function () {
-                                        window.location.href = "<?=$this->action('tree_copied')?>";
+                                    <?= json_encode(t('Copy Locale Tree')) ?>,
+                                    function () {
+                                        window.location.href = <?=json_encode((string) $this->action('tree_copied')) ?>;
                                     }
                                 );
                             } else {
-                                alert("<?=t('You must choose two separate multilingual sections to copy from/to')?>");
+                                alert(<?= json_encode(t('You must choose two separate multilingual sections to copy from/to')) ?>);
                             }
                             return false;
                         });

@@ -96,7 +96,9 @@ if ($pageMetaKeywords) {
 if ($c !== null && $c->getAttribute('exclude_search_index')) {
     $metaTags['robots'] = sprintf('<meta name="robots" content="%s"/>', 'noindex');
 }
-$metaTags['generator'] = sprintf('<meta name="generator" content="%s"/>', 'concrete5' . ($appConfig->get('concrete.misc.app_version_display_in_header') ? ' - ' . APP_VERSION : null));
+if ($appConfig->get('concrete.misc.generator_tag_display_in_header')) {
+    $metaTags['generator'] = sprintf('<meta name="generator" content="%s"/>', 'concrete5' . ($appConfig->get('concrete.misc.app_version_display_in_header') ? ' - ' . APP_VERSION : null));
+}
 if (($modernIconFID = (int) $config->get('misc.modern_tile_thumbnail_fid')) && ($modernIconFile = File::getByID($modernIconFID))) {
     $metaTags['msapplication-TileImage'] = sprintf('<meta name="msapplication-TileImage" content="%s"/>', $modernIconFile->getURL());
     $modernIconBGColor = (string) $config->get('misc.modern_tile_thumbnail_bgcolor');
@@ -117,7 +119,7 @@ $browserToolbarColor = (string) $config->get('misc.browser_toolbar_color');
 if ($browserToolbarColor !== '') {
     $metaTags['browserToolbarColor'] = sprintf('<meta name="theme-color" content="%s"/>', h($browserToolbarColor));
 }
-if ($config->get('seo.canonical_tag')) {
+if ($config->get('seo.canonical_tag.enabled')) {
     if (($canonicalLink = $app->make(SeoCanonical::class)->getPageCanonicalURLTag($c, Request::getInstance())) !== null) {
         $linkTags['canonical'] = (string) $canonicalLink;
     }
