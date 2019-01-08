@@ -53,6 +53,8 @@ class DatabaseHandler extends AbstractProcessingHandler
 
     /**
      * Clears log entries by channel. Requires the database handler.
+     *
+     * @param $channel string
      */
     public static function clearByChannel($channel)
     {

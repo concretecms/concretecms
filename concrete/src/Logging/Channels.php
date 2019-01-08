@@ -94,9 +94,9 @@ class Channels
      * Get the list of channels that have been used.
      * Requires the database handler.
      *
-     * @return string
+     * @return string[]
      */
-    public function getChannels()
+    public static function getChannels()
     {
         $app = Facade::getFacadeApplication();
         $db = $app->make(Connection::class);
