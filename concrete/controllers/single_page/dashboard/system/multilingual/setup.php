@@ -54,7 +54,7 @@ class Setup extends DashboardSitePageController
             if ($cp->canViewPage()) {
                 $mlLink = [
                     t($mlPage->getCollectionName()),
-                    $this->app->make(ResolverManagerInterface::class)->resolve([$mlPage]),
+                    $mlPage->getCollectionLink(),
                 ];
             }
         }
