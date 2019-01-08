@@ -31,7 +31,7 @@
     "php": ">=5.5.9",
     "doctrine/dbal": "~2.5",
     "symfony/class-loader": "3.*",
-    "symfony/http-foundation": "3.*",
+    "symfony/http-foundation": "^3.4.17",
     "symfony/routing": "3.*",
     "symfony/http-kernel": "3.4.*",
     "doctrine/orm": "~2.5",
