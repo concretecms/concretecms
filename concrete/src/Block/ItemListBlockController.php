@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Block;
 
 use Concrete\Core\Application\Application;
@@ -9,46 +8,49 @@ use Doctrine\DBAL\Types\Type;
 
 abstract class ItemListBlockController extends BlockController
 {
-
     /**
      * @var Connection
      */
     protected $db;
 
     /**
-     * Item List table: list of fields and other list prepared of insert query
+     * Item List table: list of fields and other list prepared of insert query.
+     *
      * @var array
      */
     private $itemListTableFields = [];
 
     /**
-     * Return Items table name
+     * Return Items table name.
+     *
      * @return string
      */
-    protected abstract function getItemListTable();
+    abstract protected function getItemListTable();
 
     /**
-     * Items table: load and get list of fields and other list prepared of insert query
+     * Items table: load and get list of fields and other list prepared of insert query.
+     *
      * @param string $prop (optional) can be FIELD_TYPE, DEFAULT, NOTNULL, QUERY_PLACE_HOLDER,
+     *
      * @return array
      */
     private function getItemListTableProps($prop = '')
     {
         $cache = $this->app->make('cache/request');
 
-        if(empty($this->itemListTableFields)) {
+        if (empty($this->itemListTableFields)) {
             $item = $cache->getItem(sprintf('block/%s/2nd-table-cols', $this->btHandle));
             if (!$item->isMiss()) {
                 $this->itemListTableFields = $item->get();
             } else {
                 $columns = $this->db->getSchemaManager()->listTableColumns($this->getItemListTable());
                 foreach ($columns as $column) {
-                    if(!$column->getAutoincrement()) {
+                    if (!$column->getAutoincrement()) {
                         $this->itemListTableFields[$column->getName()] = [
                             'FIELD_TYPE' => $column->getType()->getName(),
                             'DEFAULT' => $column->getDefault(),
                             'NOTNULL' => $column->getNotnull(),
-                            'QUERY_PLACE_HOLDER' => ":{$column->getName()}"
+                            'QUERY_PLACE_HOLDER' => ":{$column->getName()}",
                         ];
                     }
                 }
@@ -56,7 +58,7 @@ abstract class ItemListBlockController extends BlockController
             }
         }
 
-        if(!empty($prop)) {
+        if (!empty($prop)) {
             return array_combine(
                 array_keys($this->itemListTableFields),
                 array_column($this->itemListTableFields, $prop)
@@ -100,7 +102,7 @@ abstract class ItemListBlockController extends BlockController
     }
 
     /**
-     * Delete second table items
+     * Delete second table items.
      */
     private function deleteItems()
     {
@@ -111,8 +113,42 @@ abstract class ItemListBlockController extends BlockController
     }
 
     /**
+     * Validate Items.
+     *
+     * @param array $args
+     * @param \Concrete\Core\Error\ErrorList\ErrorList $e
+     *
+     * @return \Concrete\Core\Error\ErrorList\ErrorList|bool
+     */
+    protected function validateItems($args, $e = null)
+    {
+        $error = is_object($e) ? $e : $this->app->make('helper/validation/error');
+        $sanitizedData = $this->sanitizeData($args);
+
+        foreach ($sanitizedData as $i => $item) {
+            $this->validateItem($i, $item, $error);
+        }
+
+        return $error;
+    }
+
+    /**
+     * Check if an item is valid.
+     *
+     * @param int $index
+     * @param array $item
+     * @param \Concrete\Core\Error\ErrorList\ErrorList $e
+     *
+     * @return bool
+     */
+    protected function validateItem($index, $item, $e)
+    {
+        return true;
+    }
+
+    /**
      * {@inheritdoc}
-     * Automatically save Item List table data
+     * Automatically save Item List table data.
      *
      * @see BlockController::save()
      */
@@ -121,28 +157,27 @@ abstract class ItemListBlockController extends BlockController
         parent::save($args);
 
         $sanitizedData = $this->sanitizeData($args);
-        if(empty($sanitizedData)) {
+        if (empty($sanitizedData)) {
             return;
         }
 
         $this->deleteItems();
         $insertFields = $this->getItemListTableProps('QUERY_PLACE_HOLDER');
 
-        $this->db->transactional(function (Connection $db) use ($sanitizedData, $insertFields){
+        $this->db->transactional(function (Connection $db) use ($sanitizedData, $insertFields) {
             $qb = $db->createQueryBuilder()
                 ->insert($this->getItemListTable())
                 ->values($insertFields);
 
             foreach ($sanitizedData as $item) {
-                if(!$this->isEmptyItem($item)) {
-                    id(clone $qb)->setParameters($item)->execute();
-                }
+                id(clone $qb)->setParameters($item)->execute();
             }
         });
     }
 
     /**
-     * Prepare Second Table Fields Data before saving them to database
+     * Prepare Second Table Fields Data before saving them to database.
+     *
      * @param $data
      *
      * @return array sanitized array
@@ -154,13 +189,11 @@ abstract class ItemListBlockController extends BlockController
         $fieldsTypes = $this->getItemListTableProps('FIELD_TYPE');
 
         foreach ($fieldsTypes as $field => $type) {
-
-            if($field == 'bID' || !isset($data[$field])) {
+            if ($field == 'bID' || !isset($data[$field])) {
                 continue;
             }
 
             foreach ($data[$field] as $i => $v) {
-
                 if (!isset($sanitizedData[$i])) {
                     // Init Row with defaults data
                     $sanitizedData[$i] = $itemDefaults;
@@ -174,14 +207,15 @@ abstract class ItemListBlockController extends BlockController
     }
 
     /**
-     * Get Row default Values from Table Schema
+     * Get Row default Values from Table Schema.
+     *
      * @return array
      */
     private function getItemDefaults()
     {
         $itemDefaults = ['bID' => $this->bID];
         foreach ($this->getItemListTableProps() as $field => $properties) {
-            if($field == 'bID') {
+            if ($field == 'bID') {
                 continue;
             }
 
@@ -192,11 +226,12 @@ abstract class ItemListBlockController extends BlockController
     }
 
     /**
-     * Prepare Items Table Field Value before saving it to database
+     * Prepare Items Table Field Value before saving it to database.
      *
-     * @param $field
-     * @param $type
-     * @param $value
+     * @param String $field field name
+     * @param String $type field type
+     * @param mixed $value field value
+     *
      * @return mixed sanitized value
      */
     protected function sanitizeVal($field, $type, $value)
@@ -212,7 +247,7 @@ abstract class ItemListBlockController extends BlockController
             case Type::TEXT:
                 $sanitizedVal = (string) $value;
                 // Check if is Html
-                if($sanitizedVal != strip_tags($sanitizedVal)) {
+                if ($sanitizedVal != strip_tags($sanitizedVal)) {
                     $sanitizedVal = LinkAbstractor::translateTo($sanitizedVal);
                 }
                 break;
@@ -227,20 +262,10 @@ abstract class ItemListBlockController extends BlockController
     }
 
     /**
-     * Check whether the item is empty.
-     * if so, the item will be ignored
+     * Get list of Item List table items.
      *
-     * @param array $item
-     * @return bool
-     */
-    protected function isEmptyItem(array $item)
-    {
-        return false;
-    }
-
-    /**
-     * Get list of Item List table items
      * @param array $sort
+     *
      * @return array
      */
     public function getItems($sort = [])
