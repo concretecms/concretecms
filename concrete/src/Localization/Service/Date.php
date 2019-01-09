@@ -391,7 +391,7 @@ class Date
             $chunks[] = t2('%d second', '%d seconds', $seconds, $seconds);
         }
 
-        return Misc::joinAnd($chunks);
+        return Misc::join($chunks);
     }
 
     /**
