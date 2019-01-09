@@ -55,6 +55,7 @@ class PageView extends View
 
     public function renderSinglePageByFilename($cFilename, $pkgHandle = null)
     {
+        $this->loadViewThemeObject();
         $env = Environment::get();
         $cFilename = trim($cFilename, '/');
 
@@ -106,7 +107,6 @@ class PageView extends View
 
     public function setupRender()
     {
-        $this->loadViewThemeObject();
         $env = Environment::get();
 
         if (isset($this->innerContentFile)) {
@@ -118,6 +118,7 @@ class PageView extends View
         if ($this->c->getPageTypeID() == 0 && $this->c->getCollectionFilename()) {
             $this->renderSinglePageByFilename($this->c->getCollectionFilename());
         } else {
+            $this->loadViewThemeObject();
             $pt = $this->getPageTemplate();
             $rec = null;
             if ($pt) {
