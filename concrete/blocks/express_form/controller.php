@@ -861,9 +861,6 @@ class Controller extends BlockController implements NotificationProviderInterfac
     protected function getFormEntity()
     {
         $entityManager = $this->app->make(EntityManagerInterface::class);
-
-
-
         return $entityManager->getRepository(\Concrete\Core\Entity\Express\Form::class)
             ->findOneById($this->exFormID);
     }
