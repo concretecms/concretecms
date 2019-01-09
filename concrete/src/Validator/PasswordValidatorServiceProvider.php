@@ -145,21 +145,21 @@ class PasswordValidatorServiceProvider extends Provider
 
         if ($specialCharacters) {
             $regex = "/([^a-zA-Z0-9].*){{$specialCharacters},}/";
-            $requirement = t2('Must contain at least one special character.', 'Must contain at least %d special characters.', $specialCharacters);
+            $requirement = t2('Must contain at least %d special character.', 'Must contain at least %d special characters.', $specialCharacters);
 
             $manager->setValidator('required_special_characters', $this->regexValidator($regex, $requirement));
         }
 
         if ($lowerCase) {
             $regex = "/([a-z].*){{$lowerCase},}/";
-            $requirement = t2('Must contain at least one lowercase character.', 'Must contain at least %d lowercase characters.', $lowerCase);
+            $requirement = t2('Must contain at least %d lowercase character.', 'Must contain at least %d lowercase characters.', $lowerCase);
 
             $manager->setValidator('required_lower_case', $this->regexValidator($regex, $requirement));
         }
 
         if ($upperCase) {
             $regex = "/([A-Z].*){{$upperCase},}/";
-            $requirement = t2('Must contain at least one uppercase character.', 'Must contain at least %d uppercase characters.', $upperCase);
+            $requirement = t2('Must contain at least %d uppercase character.', 'Must contain at least %d uppercase characters.', $upperCase);
 
             $manager->setValidator('required_upper_case', $this->regexValidator($regex, $requirement));
         }
