@@ -29,7 +29,7 @@ class LogAssignmentTest extends \PHPUnit_Framework_TestCase
         $assignment = M::mock(Assignment::class);
         $factory = M::mock(LoggerFactory::class);
         $configuration = M::mock(SimpleFileConfiguration::class);
-        $configuration->shouldReceive('getCoreLevel')->andReturn(\Monolog\Logger::INFO);
+        $configuration->shouldReceive('getCoreLevel')->andReturn(\Monolog\Logger::NOTICE);
         $factory->shouldReceive('getConfiguration')->andReturn($configuration);
         $logger = new Logger($factory);
         $this->assertFalse($logger->shouldLogAssignment($assignment));
@@ -38,7 +38,7 @@ class LogAssignmentTest extends \PHPUnit_Framework_TestCase
         $assignment = M::mock(Assignment::class);
         $factory = M::mock(LoggerFactory::class);
         $configuration = M::mock(SimpleDatabaseConfiguration::class);
-        $configuration->shouldReceive('getCoreLevel')->andReturn(\Monolog\Logger::DEBUG);
+        $configuration->shouldReceive('getCoreLevel')->andReturn(\Monolog\Logger::INFO);
         $factory->shouldReceive('getConfiguration')->andReturn($configuration);
         $logger = new Logger($factory);
         $this->assertTrue($logger->shouldLogAssignment($assignment));
@@ -69,7 +69,7 @@ class LogAssignmentTest extends \PHPUnit_Framework_TestCase
         $access = M::mock(Access::class);
         $loggerInterface = M::mock(LoggerInterface::class);
 
-        $configuration->shouldReceive('getCoreLevel')->andReturn(\Monolog\Logger::DEBUG);
+        $configuration->shouldReceive('getCoreLevel')->andReturn(\Monolog\Logger::NOTICE);
         $factory->shouldReceive('getConfiguration')->andReturn($configuration);
         $factory->shouldReceive('createLogger')
             ->once()
@@ -94,7 +94,7 @@ class LogAssignmentTest extends \PHPUnit_Framework_TestCase
 
         $access->shouldReceive('getAccessListItems')->with(Key::ACCESS_TYPE_ALL)->andReturn([$listItem1, $listItem2]);
 
-        $loggerInterface->shouldReceive('debug')->once()
+        $loggerInterface->shouldReceive('info')->once()
             ->withArgs(['Permission assignment applied for permission view_page_versions on object 4 by user andrew', [
                 'applier' => 'andrew',
                 'handle' => 'view_page_versions',

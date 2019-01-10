@@ -4,10 +4,8 @@ namespace Concrete\Core\Permission\Assignment;
 
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Permission\Access\Access;
-use Concrete\Core\Permission\Logger;
 use Concrete\Core\Support\Facade\Application;
 use PermissionKeyCategory;
-use Concrete\Core\Logging\Entry\Permission\Assignment\Assignment as AssignmentLogEntry;
 
 class Assignment
 {
@@ -98,10 +96,6 @@ class Assignment
             true
         );
         $pa->markAsInUse();
-
-        $logger = $app->make(Logger::class);
-        $entry = new AssignmentLogEntry(new \User(), $this->pk, $pa);
-        $logger->log($entry);
     }
 
     /**

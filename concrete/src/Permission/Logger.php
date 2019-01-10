@@ -23,8 +23,8 @@ class Logger
         $configuration = $this->loggerFactory->getConfiguration();
         if ($configuration instanceof SimpleConfiguration) {
             $level = Monolog::toMonologLevel($configuration->getCoreLevel());
-            if ($level <= Monolog::DEBUG) {
-                // only log this if the level is set to debug.
+            if ($level <= Monolog::INFO) {
+                // only log this if the level is set to info or lower.
                 return true;
             } else {
                 return false;
@@ -37,7 +37,7 @@ class Logger
     {
         if ($this->shouldLogAssignment()) {
             $logger = $this->loggerFactory->createLogger(Channels::CHANNEL_PERMISSIONS);
-            $logger->debug($assignment->getMessage(), $assignment->getContext());
+            $logger->info($assignment->getMessage(), $assignment->getContext());
         }
     }
 }
