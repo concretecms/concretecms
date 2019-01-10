@@ -76,7 +76,7 @@ class Assignment implements EntryInterface
     {
         $listItems = $this->access->getAccessListItems(Key::ACCESS_TYPE_ALL);
         $loggedItems = [];
-        foreach($listItems as $listItem) {
+        foreach ($listItems as $listItem) {
             $type = $listItem->getAccessType();
             $entity = $listItem->getAccessEntityObject();
             $loggedItems[] = [
@@ -85,11 +85,15 @@ class Assignment implements EntryInterface
                 'entity_name' => $entity->getAccessEntityLabel()
             ];
         }
-        return [
-            'applier' => $this->applier->getUserName(),
-            'handle' => $this->key->getPermissionKeyHandle(),
-            'category' => $this->key->getPermissionKeyCategoryHandle(),
-            'entities' => $loggedItems,
-        ];
+        $object = $this->key->getPermissionObject();
+        $return = [];
+        $return['applier'] = $this->applier->getUserName();
+        $return['handle'] = $this->key->getPermissionKeyHandle();
+        $return['category'] = $this->key->getPermissionKeyCategoryHandle();
+        if ($object) {
+            $return['object_id'] = $object->getPermissionObjectIdentifier();
+        }
+        $return['entities'] = $loggedItems;
+        return $return;
     }
 }
