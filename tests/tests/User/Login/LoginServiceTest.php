@@ -2,7 +2,10 @@
 
 namespace User\Login;
 
+use Concrete\Core\Application\Application;
 use Concrete\Core\Config\Repository\Repository;
+use Concrete\Core\Http\Request;
+use Concrete\Core\Logging\Entry\User\LoginAttempt;
 use Concrete\Core\Permission\IPService;
 use Concrete\Core\User\Exception\FailedLoginThresholdExceededException;
 use Concrete\Core\User\Exception\InvalidCredentialsException;
@@ -13,9 +16,11 @@ use Concrete\Core\User\Exception\UserDeactivatedException;
 use Concrete\Core\User\Login\LoginAttemptService;
 use Concrete\Core\User\Login\LoginService;
 use Concrete\Tests\User\Login\MockUser;
+use Doctrine\ORM\EntityManagerInterface;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit_Framework_TestCase;
+use Psr\Log\LoggerInterface;
 
 class LoginServiceTest extends PHPUnit_Framework_TestCase
 {
@@ -23,6 +28,55 @@ class LoginServiceTest extends PHPUnit_Framework_TestCase
     use MockeryPHPUnitIntegration;
 
     protected $config;
+
+    public function testLoggingLoginAttempt()
+    {
+        // Setup mocks
+        $app = M::mock(Application::class);
+        $config = M::mock(Repository::class);
+        $attemptService = M::mock(LoginAttemptService::class);
+        $ipService = M::mock(IPService::class);
+        $entityManager = M::mock(EntityManagerInterface::class);
+        $entityManager->shouldIgnoreMissing($entityManager);
+
+        $request = M::mock(Request::class);
+        $request->shouldReceive('getPath')->andReturn('/foo/bar');
+
+        $logger = M::mock(LoggerInterface::class);
+
+        $attempt = M::mock(LoginAttempt::class);
+
+        $service = new LoginService($config, $attemptService, $ipService, $entityManager, $request);
+        $service->setLogger($logger);
+        $service->setApplication($app);
+
+        // Fake mocked methods
+        $app->shouldReceive('make')
+            ->withArgs([
+                LoginAttempt::class,
+                [
+                    'foo',
+                    '/foo/bar',
+                    ['baz'],
+                    ['Something went wrong']
+                ]
+            ])
+            ->andReturn($attempt);
+
+        $entityManager->shouldReceive('execute')->andReturn([['gName' => 'baz', 'uID' => 5]]);
+
+        $attempt->shouldReceive('getMessage')->andReturn('Foo did login!');
+        $attempt->shouldReceive('getContext')->andReturn([1,2,3]);
+
+        // Set the real expectation we care about
+        $logger->shouldReceive('info')->once()->withArgs([
+            'Foo did login!',
+            [1,2,3]
+        ]);
+
+        // Run the test
+        $service->logLoginAttempt('foo', ['Something went wrong']);
+    }
 
     public function testLogin()
     {

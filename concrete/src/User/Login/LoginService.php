@@ -2,7 +2,14 @@
 
 namespace Concrete\Core\User\Login;
 
+use Concrete\Core\Application\ApplicationAwareInterface;
+use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Config\Repository\Repository;
+use Concrete\Core\Http\Request;
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\Entry\User\LoginAttempt;
+use Concrete\Core\Logging\LoggerAwareInterface;
+use Concrete\Core\Logging\LoggerAwareTrait;
 use Concrete\Core\Permission\IPService;
 use Concrete\Core\User\Exception\FailedLoginThresholdExceededException;
 use Concrete\Core\User\Exception\InvalidCredentialsException;
@@ -11,9 +18,13 @@ use Concrete\Core\User\Exception\NotValidatedException;
 use Concrete\Core\User\Exception\SessionExpiredException;
 use Concrete\Core\User\Exception\UserDeactivatedException;
 use Concrete\Core\User\User;
+use Doctrine\ORM\EntityManagerInterface;
 
-class LoginService
+class LoginService implements LoggerAwareInterface, ApplicationAwareInterface
 {
+
+    use LoggerAwareTrait;
+    use ApplicationAwareTrait;
 
     /**
      * The config repository we use to format errors appropriately
@@ -45,14 +56,32 @@ class LoginService
      */
     protected $ipService;
 
+    /**
+     * The entity manager to use to find out more information about a login attempt
+     *
+     * @var EntityManagerInterface|null
+     */
+    protected $entityManager;
+
+    /**
+     * The request instance
+     *
+     * @var \Concrete\Core\Http\Request|null
+     */
+    protected $request;
+
     public function __construct(
         Repository $config,
         LoginAttemptService $loginAttemptService,
-        IPService $IPService)
+        IPService $IPService,
+        EntityManagerInterface $entityManager = null,
+        Request $request = null)
     {
         $this->config = $config;
         $this->loginAttemptService = $loginAttemptService;
         $this->ipService = $IPService;
+        $this->entityManager = $entityManager;
+        $this->request = $request;
     }
 
     /**
@@ -132,13 +161,69 @@ class LoginService
 
         // Throw the IP ban error if we hit both ip limit and user limit at the same time
         if ($ipFailed) {
-            throw new FailedLoginThresholdExceededException($this->ipService->getErrorMessage());
+            $message = $this->ipService->getErrorMessage();
+            throw new FailedLoginThresholdExceededException($message);
         }
 
         // If the user has been automatically deactivated and the IP has not been banned
         if ($userFailed) {
             throw new UserDeactivatedException($this->config->get('concrete.user.deactivation.message'));
         }
+    }
+
+    /**
+     * Add a log entry for this login attempt
+     *
+     * @param $username
+     * @param array $errors
+     */
+    public function logLoginAttempt($username, array $errors = [])
+    {
+        if ($this->app) {
+            $entry = $this->app->make(LoginAttempt::class, [
+                $username,
+                $this->request ? $this->request->getPath() : '',
+                $this->getGroups($username),
+                $errors
+            ]);
+
+            $this->logger->info($entry->getMessage(), $entry->getContext());
+        }
+    }
+
+    /**
+     * Aggregate a list of groups to report
+     *
+     * @param $username
+     * @return array
+     */
+    private function getGroups($username)
+    {
+        if (!$this->entityManager) {
+            return [];
+        }
+
+        $queryBuilder = $this->entityManager->getConnection()->createQueryBuilder();
+
+        $rows = $queryBuilder
+            ->select('g.gName', 'u.uID')->from('Groups', 'g')
+            ->leftJoin('g', 'UserGroups', 'ug', 'ug.gID=g.gID')
+            ->innerJoin('ug', 'Users', 'u', 'ug.uID=u.uID AND (u.uName=? OR u.uEmail=?)')
+            ->setParameters([$username, $username])
+            ->execute();
+
+        $groups = [];
+        $uID = 0;
+        foreach ($rows as $row) {
+            $uID = (int) $row['uID'];
+            $groups[] = $row['gName'];
+        }
+
+        if ($uID === 1) {
+            $groups[] = 'SUPER';
+        }
+
+        return $groups;
     }
 
     /**
@@ -189,5 +274,16 @@ class LoginService
     public function setUserClass($userClass)
     {
         $this->userClass = $userClass;
+    }
+
+    /**
+     * Get the logger channel expected by this LoggerAwareTrait implementation
+     * The user is expected to declare this method and return a valid channel name.
+     *
+     * @return string One of \Concrete\Core\Logging\Channels::CHANNEL_*
+     */
+    public function getLoggerChannel()
+    {
+        return Channels::CHANNEL_AUTHENTICATION;
     }
 }
