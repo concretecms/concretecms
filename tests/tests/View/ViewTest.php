@@ -9,6 +9,7 @@ use Concrete\Core\Page\Template;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Page\Theme\ThemeRouteCollection;
 use Concrete\Core\Support\Facade\Facade;
+use Concrete\Core\View\DialogView;
 use Concrete\Core\View\View;
 use Mockery;
 use PHPUnit_Framework_TestCase;
@@ -71,5 +72,15 @@ class ViewTest extends PHPUnit_Framework_TestCase
         $collection->setThemesByRoutes($app->make('config')->get('app.theme_paths'));
     }
 
+    public function testLegacyToolsUrlDoesNotMatchDashboardTheme()
+    {
+        $view = new DialogView('/dashboard/get_image_data');
+        $view->setViewRootDirectoryName(DIRNAME_TOOLS);
+        $view->setupRender();
+        $template = $view->getViewTemplate();
+        $file = $view->getInnerContentFile();
+        $this->assertNull($template);
+        $this->assertEquals(DIR_BASE_CORE . '/tools/dashboard/get_image_data.php', $file);
+    }
 
 }
