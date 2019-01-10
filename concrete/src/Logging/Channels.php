@@ -72,6 +72,13 @@ class Channels
     const CHANNEL_USERS = 'users';
 
     /**
+     * Channel identifier: permissions.
+     *
+     * @var string
+     */
+    const CHANNEL_PERMISSIONS = 'permissions';
+
+    /**
      * Get the list of the core channel.
      *
      * @return string[]
@@ -84,6 +91,7 @@ class Channels
             self::CHANNEL_PACKAGES,
             self::CHANNEL_SECURITY,
             self::CHANNEL_AUTHENTICATION,
+            self::CHANNEL_PERMISSIONS,
             self::CHANNEL_SPAM,
             self::CHANNEL_SITE_ORGANIZATION,
             self::CHANNEL_USERS,
