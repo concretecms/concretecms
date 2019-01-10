@@ -345,6 +345,8 @@ class Controller extends AuthenticationTypeController
             $user->setAuthTypeCookie('concrete');
         }
 
+        $loginService->logLoginAttempt($uName);
+
         return $user;
     }
 
@@ -355,9 +357,13 @@ class Controller extends AuthenticationTypeController
             try {
                 $loginService->failLogin($uName, $uPassword);
             } catch (FailedLoginThresholdExceededException $e) {
+                $loginService->logLoginAttempt($uName, ['Failed Login Threshold Exceeded', $e->getMessage()]);
+
                 // Rethrow the failed threshold error
                 throw $e;
             } catch (UserDeactivatedException $e) {
+                $loginService->logLoginAttempt($uName, ['User Deactivated', $e->getMessage()]);
+
                 // Rethrow the user deactivated exception
                 throw $e;
             }
@@ -368,6 +374,8 @@ class Controller extends AuthenticationTypeController
                 $this->redirect('/login/', $this->getAuthenticationType()->getAuthenticationTypeHandle(), 'required_password_upgrade');
             }
         }
+
+        $loginService->logLoginAttempt($uName, ['Invalid Credentials', $e->getMessage()]);
 
         // Rethrow the exception
         throw $e;
