@@ -99,6 +99,7 @@ class LogAssignmentTest extends \PHPUnit_Framework_TestCase
                 'applier' => 'andrew',
                 'handle' => 'view_page_versions',
                 'category' => 'page',
+                'id' => 1,
                 'entities' => [[
                     'access_type' => 10,
                     'entity_type' => 'user',

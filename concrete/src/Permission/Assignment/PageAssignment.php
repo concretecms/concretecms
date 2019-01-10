@@ -5,6 +5,7 @@ namespace Concrete\Core\Permission\Assignment;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Permission\Key\Key;
+use Concrete\Core\Permission\Logger;
 use Concrete\Core\Support\Facade\Application;
 
 /**
@@ -106,6 +107,10 @@ class PageAssignment extends Assignment
             true
         );
         $pa->markAsInUse();
+
+        $logger = $app->make(Logger::class);
+        $entry = new \Concrete\Core\Logging\Entry\Permission\Assignment\Assignment(new \User(), $this->pk, $pa);
+        $logger->log($entry);
 
         $cache = $app->make('cache/request');
         $identifier = sprintf(
