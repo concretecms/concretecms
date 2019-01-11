@@ -23,6 +23,9 @@ use Psr\Log\LoggerInterface;
 
 class LogAssignmentTest extends \PHPUnit_Framework_TestCase
 {
+
+    use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     public function testShouldLogPermissionAssignment()
     {
         // Do not log if the level is higher than debug.
@@ -69,7 +72,7 @@ class LogAssignmentTest extends \PHPUnit_Framework_TestCase
         $access = M::mock(Access::class);
         $loggerInterface = M::mock(LoggerInterface::class);
 
-        $configuration->shouldReceive('getCoreLevel')->andReturn(\Monolog\Logger::NOTICE);
+        $configuration->shouldReceive('getCoreLevel')->andReturn(\Monolog\Logger::INFO);
         $factory->shouldReceive('getConfiguration')->andReturn($configuration);
         $factory->shouldReceive('createLogger')
             ->once()
