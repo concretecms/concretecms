@@ -5,27 +5,26 @@ namespace Concrete\Core\Logging\Entry\User;
 class AddUser extends User
 {
 
-    public function getMessage()
+    public function getEntryMessage()
     {
-        if ($this->applier && $this->applier->isRegistered()) {
-            return t('User %s (ID %s) was added by %s (ID %s).',
-                $this->user->getUserName(),
-                $this->user->getUserID(),
-                $this->applier->getUserName(),
-                $this->applier->getUserID()
-            );
-        } else {
-            return t('User %s (ID %s) was added by code or an automated process.',
-                $this->user->getUserName(),
-                $this->user->getUserID()
-            );
-        }
+        return t('User %s (ID %s) was added by code or an automated process.',
+            $this->user->getUserName(),
+            $this->user->getUserID()
+        );
     }
 
-    public function getContext()
+    public function getEntryMessageWithApplier()
     {
-        $context = parent::getContext();
-        $context['operation'] = 'add_user';
-        return $context;
+        return t('User %s (ID %s) was added by %s (ID %s).',
+            $this->user->getUserName(),
+            $this->user->getUserID(),
+            $this->applier->getUserName(),
+            $this->applier->getUserID()
+        );
+    }
+
+    public function getEntryOperation()
+    {
+        return 'add_user';
     }
 }

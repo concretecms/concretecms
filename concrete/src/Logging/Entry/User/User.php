@@ -2,13 +2,13 @@
 
 namespace Concrete\Core\Logging\Entry\User;
 
-use Concrete\Core\Logging\Entry\EntryInterface;
+use Concrete\Core\Logging\Entry\ApplierEntry;
 use Concrete\Core\User\User as CoreUser;
 
 /**
  * Log entry for user actions
  */
-abstract class User implements EntryInterface
+abstract class User extends ApplierEntry
 {
 
     /**
@@ -18,20 +18,13 @@ abstract class User implements EntryInterface
      */
     protected $user;
 
-    /**
-     * The user performing the operation
-     *
-     * @var User | null
-     */
-    protected $applier;
-
     public function __construct(CoreUser $user, CoreUser $applier = null)
     {
         $this->user = $user;
-        $this->applier = $applier;
+        parent::__construct($applier);
     }
 
-    public function getContext()
+    public function getEntryContext()
     {
         $context = [];
         $context['user_id'] = $this->user->getUserID();

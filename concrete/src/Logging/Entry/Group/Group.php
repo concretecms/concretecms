@@ -26,13 +26,9 @@ abstract class Group extends ApplierEntry
 
     public function getEntryContext()
     {
-        $context = [];
+        $context = parent::getEntryContext();
         $context['group_id'] = $this->group->getGroupID();
         $context['group_name'] = $this->group->getGroupName();
-        if ($this->applier) {
-            $context['applier_id'] = $this->applier->getUserID();
-            $context['applier_name'] = $this->applier->getUserName();
-        }
         return $context;
     }
 

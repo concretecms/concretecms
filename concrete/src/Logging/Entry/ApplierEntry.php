@@ -31,7 +31,16 @@ abstract class ApplierEntry implements EntryInterface
     abstract public function getEntryMessage();
     abstract public function getEntryMessageWithApplier();
     abstract public function getEntryOperation();
-    abstract public function getEntryContext();
+
+    public function getEntryContext()
+    {
+        $context = [];
+        if ($this->applier && $this->applier->isRegistered()) {
+            $context['applier_id'] = $this->applier->getUserID();
+            $context['applier_name'] = $this->applier->getUserName();
+        }
+        return $context;
+    }
 
     final public function getContext()
     {

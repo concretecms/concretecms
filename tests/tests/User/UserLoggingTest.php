@@ -29,7 +29,7 @@ class UserLoggingTest extends \PHPUnit_Framework_TestCase
         return $applier;
     }
 
-    protected function testLogger($loggerArgs, $operation, $operationArgs)
+    protected function doTestLogger($loggerArgs, $operation, $operationArgs)
     {
         $loggerInterface = M::mock(LoggerInterface::class);
         $loggerInterface->shouldReceive('info')->once()->withArgs($loggerArgs);
@@ -40,7 +40,7 @@ class UserLoggingTest extends \PHPUnit_Framework_TestCase
 
     public function testAddUserLoggingEmpty()
     {
-        $this->testLogger([
+        $this->doTestLogger([
             'User andrew (ID 33) was added by code or an automated process.',
             [
                 'user_id' => 33,
@@ -52,7 +52,7 @@ class UserLoggingTest extends \PHPUnit_Framework_TestCase
 
     public function testAddUserLoggingApplier()
     {
-        $this->testLogger([
+        $this->doTestLogger([
             'User andrew (ID 33) was added by admin (ID 1).',
             [
                 'user_id' => 33,
@@ -66,7 +66,7 @@ class UserLoggingTest extends \PHPUnit_Framework_TestCase
 
     public function testChangePasswordLoggingEmpty()
     {
-        $this->testLogger([
+        $this->doTestLogger([
             'Password for user andrew (ID 33) was changed by code or an automated process.',
             [
                 'user_id' => 33,
@@ -78,7 +78,7 @@ class UserLoggingTest extends \PHPUnit_Framework_TestCase
 
     public function testChangePasswordLoggingApplier()
     {
-        $this->testLogger([
+        $this->doTestLogger([
             'Password for user andrew (ID 33) was changed by admin (ID 1).',
             [
                 'user_id' => 33,
@@ -92,7 +92,7 @@ class UserLoggingTest extends \PHPUnit_Framework_TestCase
 
     public function testResetPasswordEmpty()
     {
-        $this->testLogger([
+        $this->doTestLogger([
             'Password for user andrew (ID 33) was reset by code or an automated process.',
             [
                 'user_id' => 33,
@@ -104,7 +104,7 @@ class UserLoggingTest extends \PHPUnit_Framework_TestCase
 
     public function testResetPasswordApplier()
     {
-        $this->testLogger([
+        $this->doTestLogger([
             'Password for user andrew (ID 33) was reset by admin (ID 1).',
             [
                 'user_id' => 33,
@@ -118,7 +118,7 @@ class UserLoggingTest extends \PHPUnit_Framework_TestCase
 
     public function testUpdateUserEmpty()
     {
-        $this->testLogger([
+        $this->doTestLogger([
             'User andrew (ID 33) was updated by code or an automated process.',
             [
                 'user_id' => 33,
@@ -130,7 +130,7 @@ class UserLoggingTest extends \PHPUnit_Framework_TestCase
 
     public function testUpdateUserApplier()
     {
-        $this->testLogger([
+        $this->doTestLogger([
             'User andrew (ID 33) was updated by admin (ID 1).',
             [
                 'user_id' => 33,
@@ -144,7 +144,7 @@ class UserLoggingTest extends \PHPUnit_Framework_TestCase
 
     public function testActivateUserEmpty()
     {
-        $this->testLogger([
+        $this->doTestLogger([
             'User andrew (ID 33) was activated by code or an automated process.',
             [
                 'user_id' => 33,
@@ -156,7 +156,7 @@ class UserLoggingTest extends \PHPUnit_Framework_TestCase
 
     public function testActivateUserApplier()
     {
-        $this->testLogger([
+        $this->doTestLogger([
             'User andrew (ID 33) was activated by admin (ID 1).',
             [
                 'user_id' => 33,
@@ -170,7 +170,7 @@ class UserLoggingTest extends \PHPUnit_Framework_TestCase
 
     public function testDeactivateUserEmpty()
     {
-        $this->testLogger([
+        $this->doTestLogger([
             'User andrew (ID 33) was deactivated by code or an automated process.',
             [
                 'user_id' => 33,
@@ -182,7 +182,7 @@ class UserLoggingTest extends \PHPUnit_Framework_TestCase
 
     public function testDeactivateUserApplier()
     {
-        $this->testLogger([
+        $this->doTestLogger([
             'User andrew (ID 33) was deactivated by admin (ID 1).',
             [
                 'user_id' => 33,
@@ -196,7 +196,7 @@ class UserLoggingTest extends \PHPUnit_Framework_TestCase
 
     public function testDeleteUserEmpty()
     {
-        $this->testLogger([
+        $this->doTestLogger([
             'User andrew (ID 33) was deleted by code or an automated process.',
             [
                 'user_id' => 33,
@@ -208,7 +208,7 @@ class UserLoggingTest extends \PHPUnit_Framework_TestCase
 
     public function testDeleteUserApplier()
     {
-        $this->testLogger([
+        $this->doTestLogger([
             'User andrew (ID 33) was deleted by admin (ID 1).',
             [
                 'user_id' => 33,
