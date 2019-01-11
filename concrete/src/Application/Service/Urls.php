@@ -114,15 +114,29 @@ class Urls
     }
 
     /**
-     * Gets a full URL to a block's JavaScript file (if one exists).
+     * Get the URL of the "auto.js" file of a block type, to be loaded when adding/editing a block.
      *
      * @param \BlockType $bt
      *
-     * @return string $url
+     * @return string $url Empty string if the auto.js file doesn't exist
      */
     public function getBlockTypeJavaScriptURL($bt)
     {
         return $this->getBlockTypeAssetsURL($bt, 'auto.js');
+    }
+
+    /**
+     * Get the URL of the "auto.css" file of a block type, to be loaded when adding/editing a block.
+     *
+     * @param \BlockType $bt
+     *
+     * @return string $url Empty string if the auto.css file doesn't exist
+     *
+     * @since concrete5 8.5.0a3
+     */
+    public function getBlockTypeCssURL($bt)
+    {
+        return $this->getBlockTypeAssetsURL($bt, 'auto.css');
     }
 
     /**
