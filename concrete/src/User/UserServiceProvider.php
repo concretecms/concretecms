@@ -5,6 +5,9 @@ namespace Concrete\Core\User;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\Entry\Group\AddGroup;
+use Concrete\Core\Logging\Entry\Group\DeleteGroup;
+use Concrete\Core\Logging\Entry\Group\UpdateGroup;
 use Concrete\Core\Logging\Entry\User\UpdateUser;
 use Concrete\Core\Logging\LoggerFactory;
 use Concrete\Core\User\Event\DeactivateUser;
@@ -82,6 +85,40 @@ class UserServiceProvider extends ServiceProvider
             $logger = $this->app->make(Logger::class);
             $logger->logUpdateUser($event->getUserInfoObject()->getUserObject(), $u);
         });
+
+
+        $dispatcher->addListener('on_group_add', function ($event) {
+            /**
+             * @var $event \Concrete\Core\User\Group\Event
+             */
+            $applier = new User();
+            $entry = new AddGroup($event->getGroupObject(), $applier);
+            $logger = $this->app->make(LoggerFactory::class)->createLogger(Channels::CHANNEL_USERS);
+            $logger->info($entry->getMessage(), $entry->getContext());
+        });
+
+        $dispatcher->addListener('on_group_update', function ($event) {
+            /**
+             * @var $event \Concrete\Core\User\Group\Event
+             */
+            $applier = new User();
+            $entry = new UpdateGroup($event->getGroupObject(), $applier);
+            $logger = $this->app->make(LoggerFactory::class)->createLogger(Channels::CHANNEL_USERS);
+            $logger->info($entry->getMessage(), $entry->getContext());
+        });
+
+        $dispatcher->addListener('on_group_delete', function ($event) {
+            /**
+             * @var $event \Concrete\Core\User\Group\Event
+             */
+            $applier = new User();
+            $entry = new DeleteGroup($event->getGroupObject(), $applier);
+            $logger = $this->app->make(LoggerFactory::class)->createLogger(Channels::CHANNEL_USERS);
+            $logger->info($entry->getMessage(), $entry->getContext());
+        });
+
+
+
     }
 
     /**
