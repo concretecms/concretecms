@@ -5,7 +5,10 @@ namespace Concrete\Core\User;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Entity\User\User as UserEntity;
 use Concrete\Core\Entity\User\UserSignup;
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\LoggerFactory;
 use Concrete\Core\Notification\Type\UserSignupType;
+use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\User\Event\AddUser;
 use Concrete\Core\User\Event\UserInfoWithPassword;
 use Doctrine\ORM\EntityManagerInterface;
@@ -124,6 +127,11 @@ class RegistrationService implements RegistrationServiceInterface
             $ue = new UserInfoWithPassword($ui);
             $ue->setUserPassword($password_to_insert);
             \Events::dispatch('on_user_add', $ue);
+
+            $applier = new User();
+            $app = Facade::getFacadeApplication();
+            $logger = $app->make(Logger::class);
+            $logger->logAdd($ui->getUserObject(), $applier);
 
             // Now we notify any relevant users.
             $type = $this->application->make('manager/notification/types')->driver('user_signup');

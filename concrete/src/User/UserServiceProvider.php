@@ -4,6 +4,9 @@ namespace Concrete\Core\User;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\Entry\User\UpdateUser;
+use Concrete\Core\Logging\LoggerFactory;
 use Concrete\Core\User\Event\DeactivateUser;
 use Concrete\Core\User\Notification\UserNotificationEventHandler;
 use Concrete\Core\User\Password\PasswordChangeEventHandler;
@@ -11,6 +14,7 @@ use Concrete\Core\User\Password\PasswordUsageTracker;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Concrete\Core\User\Event\UserInfo as UserInfoEvent;
 
 class UserServiceProvider extends ServiceProvider
 {
@@ -58,16 +62,6 @@ class UserServiceProvider extends ServiceProvider
         $this->app->bind('Concrete\Core\User\Avatar\AvatarServiceInterface', function () use ($app) {
             return $app->make('user/avatar');
         });
-
-        // Handle binding events
-        if ($this->app->resolved(EventDispatcher::class)) {
-            $this->bindEvents($this->app->make(EventDispatcher::class));
-        } else {
-            $this->app->extend(EventDispatcher::class, function (EventDispatcher $director) {
-                $this->bindEvents($director);
-                return $director;
-            });
-        }
     }
 
     protected function bindEvents(EventDispatcherInterface $dispatcher)
@@ -78,6 +72,15 @@ class UserServiceProvider extends ServiceProvider
 
         $dispatcher->addListener('on_user_change_password', function ($event) {
             $this->app->make(PasswordChangeEventHandler::class)->handleEvent($event);
+        });
+
+        $dispatcher->addListener('on_user_update', function ($event) {
+            /**
+             * @var $event UserInfoEvent
+             */
+            $u = new User();
+            $logger = $this->app->make(Logger::class);
+            $logger->logUpdateUser($event->getUserInfoObject()->getUserObject(), $u);
         });
     }
 

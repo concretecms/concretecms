@@ -14,7 +14,9 @@ use Concrete\Core\Entity\User\User as UserEntity;
 use Concrete\Core\Export\ExportableInterface;
 use Concrete\Core\File\StorageLocation\StorageLocationFactory;
 use Concrete\Core\Foundation\ConcreteObject;
+use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\Entry\Group\ExitGroup;
+use Concrete\Core\Logging\Entry\User\ResetUserPassword;
 use Concrete\Core\Logging\LoggerFactory;
 use Concrete\Core\Mail\Importer\MailImporter;
 use Concrete\Core\Permission\ObjectInterface as PermissionObjectInterface;
@@ -325,10 +327,11 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
      */
     public function markAsPasswordReset()
     {
-        $this->connection->executeQuery('UPDATE Users SET uIsPasswordReset = 1 WHERE uID = ? limit 1', [$this->getUserID()]);
+        $applier = new User();
+        $logger = $this->application->make(Logger::class);
+        $logger->logResetPassword($this->getUserObject(), $applier);
 
-        $updateEventData = new UserInfoEvent($this);
-        $this->getDirector()->dispatch('on_user_update', $updateEventData);
+        $this->connection->executeQuery('UPDATE Users SET uIsPasswordReset = 1 WHERE uID = ? limit 1', [$this->getUserID()]);
     }
 
     /**
@@ -585,7 +588,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
                 );
                 $userObject = $this->getUserObject();
                 $app = Facade::getFacadeApplication();
-                $logger = $app->make(LoggerFactory::class)->createLogger(Channels::CHANNEL_USERS);
+                $logger = $this->application->make(LoggerFactory::class)->createLogger(Channels::CHANNEL_USERS);
                 foreach ($groupObjects as $group) {
                     $ue = new UserGroupEvent($userObject);
                     $ue->setGroupObject($group);
