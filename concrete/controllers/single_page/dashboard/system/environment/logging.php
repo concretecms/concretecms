@@ -65,8 +65,11 @@ class Logging extends DashboardPageController
             $logFile = $this->request->request->get('logFile');
             $filesystem = new Filesystem();
             $directory = dirname($logFile);
-            if (!$filesystem->isDirectory($directory) || !$filesystem->isWritable($directory)) {
-                $this->error->add(t('The directory of the file provided must exist and be writable on the web server.'));
+            if ($filesystem->isFile($logFile) && !$filesystem->isWritable($logFile)) {
+                $this->error->add(t('Log file exists but is not writable by the web server.'));
+            }
+            if (!$filesystem->isFile($logFile) && (!$filesystem->isDirectory($directory) || !$filesystem->isWritable($directory))) {
+                $this->error->add(t('Log file does not exist on the server. The directory of the file provided must exist and be writable on the web server.'));
             }
             $filename = basename($logFile);
             if (!$filename || substr($filename, -4) != '.log') {
