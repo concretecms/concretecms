@@ -86,9 +86,11 @@ class LogAssignmentTest extends \PHPUnit_Framework_TestCase
 
         $page->shouldReceive('getPermissionObjectIdentifier')->andReturn(4); // page ID 4
 
+        $groupAccessEntity->shouldReceive('getAccessEntityID')->andReturn(10);
         $groupAccessEntity->shouldReceive('getAccessEntityLabel')->andReturn('Administrators');
-        $userAccessEntity->shouldReceive('getAccessEntityLabel')->andReturn('testuser');
         $groupAccessEntity->shouldReceive('getAccessEntityTypeHandle')->andReturn('group');
+        $userAccessEntity->shouldReceive('getAccessEntityLabel')->andReturn('testuser');
+        $userAccessEntity->shouldReceive('getAccessEntityID')->andReturn(20);
         $userAccessEntity->shouldReceive('getAccessEntityTypeHandle')->andReturn('user');
         $listItem1->shouldReceive('getAccessEntityObject')->andReturn($userAccessEntity);
         $listItem2->shouldReceive('getAccessEntityObject')->andReturn($groupAccessEntity);
@@ -104,10 +106,12 @@ class LogAssignmentTest extends \PHPUnit_Framework_TestCase
                 'category' => 'page',
                 'object_id' => 4,
                 'entities' => [[
+                    'id' => 20,
                     'access_type' => 10,
                     'entity_type' => 'user',
                     'entity_name' => 'testuser',
                 ], [
+                    'id' => 10,
                     'access_type' => 10,
                     'entity_type' => 'group',
                     'entity_name' => 'Administrators',

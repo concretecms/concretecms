@@ -80,6 +80,7 @@ class Assignment implements EntryInterface
             $type = $listItem->getAccessType();
             $entity = $listItem->getAccessEntityObject();
             $loggedItems[] = [
+                'id' => $entity->getAccessEntityID(),
                 'access_type' => $type,
                 'entity_type' => $entity->getAccessEntityTypeHandle(),
                 'entity_name' => $entity->getAccessEntityLabel()
