@@ -14,8 +14,11 @@ use Concrete\Core\Entity\User\User as UserEntity;
 use Concrete\Core\Export\ExportableInterface;
 use Concrete\Core\File\StorageLocation\StorageLocationFactory;
 use Concrete\Core\Foundation\ConcreteObject;
+use Concrete\Core\Logging\Entry\Group\ExitGroup;
+use Concrete\Core\Logging\LoggerFactory;
 use Concrete\Core\Mail\Importer\MailImporter;
 use Concrete\Core\Permission\ObjectInterface as PermissionObjectInterface;
+use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\User\Avatar\AvatarServiceInterface;
 use Concrete\Core\User\Event\DeleteUser as DeleteUserEvent;
 use Concrete\Core\User\Event\UserGroup as UserGroupEvent;
@@ -581,10 +584,17 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
                     [$this->getUserID()]
                 );
                 $userObject = $this->getUserObject();
+                $app = Facade::getFacadeApplication();
+                $logger = $app->make(LoggerFactory::class)->createLogger(Channels::CHANNEL_USERS);
                 foreach ($groupObjects as $group) {
                     $ue = new UserGroupEvent($userObject);
                     $ue->setGroupObject($group);
                     $this->getDirector()->dispatch('on_user_exit_group', $ue);
+
+                    $applier = new User();
+                    $entry = new ExitGroup($this, $group, $applier);
+                    $logger->info($entry->getMessage(), $entry->getContext());
+
                 }
             }
         }

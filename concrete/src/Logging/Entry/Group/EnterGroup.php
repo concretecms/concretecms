@@ -10,7 +10,7 @@ class EnterGroup extends Group
 
     public function getMessage()
     {
-        if ($this->applier) {
+        if ($this->applier && $this->applier->isRegistered()) {
             return t('User %s (ID %s) was added to group %s (ID %s) by %s (ID %s).',
                 $this->user->getUserName(),
                 $this->user->getUserID(),
