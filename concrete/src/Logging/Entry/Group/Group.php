@@ -2,21 +2,14 @@
 
 namespace Concrete\Core\Logging\Entry\Group;
 
-use Concrete\Core\Logging\Entry\EntryInterface;
+use Concrete\Core\Logging\Entry\ApplierEntry;
 use Concrete\Core\User\User;
 
 /**
  * Log entry for group actions
  */
-abstract class Group implements EntryInterface
+abstract class Group extends ApplierEntry
 {
-
-    /**
-     * The user having the group added or removed
-     *
-     * @var User
-     */
-    protected $user;
 
     /**
      * The group being added or removed
@@ -25,25 +18,15 @@ abstract class Group implements EntryInterface
      */
     protected $group;
 
-    /**
-     * The user performing the operation
-     *
-     * @var User | null
-     */
-    protected $applier;
-
-    public function __construct(User $user, \Concrete\Core\User\Group\Group $group, User $applier = null)
+    public function __construct(\Concrete\Core\User\Group\Group $group, User $applier = null)
     {
-        $this->user = $user;
         $this->group = $group;
-        $this->applier = $applier;
+        parent::__construct($applier);
     }
 
-    public function getContext()
+    public function getEntryContext()
     {
         $context = [];
-        $context['user_id'] = $this->user->getUserID();
-        $context['user_name'] = $this->user->getUserName();
         $context['group_id'] = $this->group->getGroupID();
         $context['group_name'] = $this->group->getGroupName();
         if ($this->applier) {

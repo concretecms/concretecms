@@ -75,6 +75,7 @@ class GroupLoggingTest extends \PHPUnit_Framework_TestCase
 
         $applier->shouldReceive('getUserName')->andReturn('admin');
         $applier->shouldReceive('getUserID')->andReturn(1);
+        $applier->shouldReceive('isRegistered')->andReturn(true);
 
         $entry = new ExitGroup($user, $group, $applier);
         $this->assertEquals('User andrew (ID 33) was removed from group Editors (ID 5) by admin (ID 1).',
