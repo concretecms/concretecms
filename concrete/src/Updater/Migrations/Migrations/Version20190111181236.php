@@ -2,6 +2,8 @@
 
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
+use Concrete\Core\Entity\OAuth\AccessToken;
+use Concrete\Core\Entity\OAuth\RefreshToken;
 use Concrete\Core\Entity\OAuth\Scope;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 
@@ -40,6 +42,9 @@ class Version20190111181236 extends AbstractMigration
         }
 
         $entityManager->flush();
+
+        // Refresh the access token entity
+        $this->refreshEntities([AccessToken::class]);
 
         // Update all access tokens to be associated with their refresh tokens
         $tokens = $entityManager->createQueryBuilder()
