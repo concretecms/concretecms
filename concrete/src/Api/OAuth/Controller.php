@@ -250,7 +250,7 @@ final class Controller
     /**
      * Prune old authentication tokens
      */
-    public function pruneTokens()
+    private function pruneTokens()
     {
         $now = new \DateTime('now');
         // Delete access tokens that have no refresh token associated
