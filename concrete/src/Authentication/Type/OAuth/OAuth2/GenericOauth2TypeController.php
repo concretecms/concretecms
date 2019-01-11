@@ -84,6 +84,7 @@ abstract class GenericOauth2TypeController extends GenericOauthTypeController
             $this->showError(t('Failed authentication: %s', $e->getMessage()));
             exit;
         }
+
         if ($token) {
             if ($this->bindUser($user, $this->getExtractor(true)->getUniqueId())) {
                 $this->showSuccess(t('Successfully attached.'));
