@@ -217,6 +217,11 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
         if (!$ue->proceed()) {
             return false;
         }
+
+        $logger = $this->application->make(Logger::class);
+        $applier = new User();
+        $logger->logDeleteUser($this->getUserObject(), $applier);
+
         // Dispatch an on_user_deleted event: subscribers can't cancel this event.
         // This event could be at the end of this method, but let's keep it here so that subscribers
         // can get all the details of the user being deleted.

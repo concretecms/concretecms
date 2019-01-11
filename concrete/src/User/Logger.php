@@ -7,6 +7,7 @@ use Concrete\Core\Logging\Entry\User\ActivateUser;
 use Concrete\Core\Logging\Entry\User\AddUser;
 use Concrete\Core\Logging\Entry\User\ChangeUserPassword;
 use Concrete\Core\Logging\Entry\User\DeactivateUser;
+use Concrete\Core\Logging\Entry\User\DeleteUser;
 use Concrete\Core\Logging\Entry\User\ResetUserPassword;
 use Concrete\Core\Logging\Entry\User\UpdateUser;
 use Concrete\Core\Logging\LoggerAwareInterface;
@@ -63,5 +64,12 @@ class Logger implements LoggerAwareInterface
         $entry = new DeactivateUser($user, $applier);
         $this->log($entry);
     }
+
+    public function logDeleteUser(User $user, User $applier = null)
+    {
+        $entry = new DeleteUser($user, $applier);
+        $this->log($entry);
+    }
+
 
 }

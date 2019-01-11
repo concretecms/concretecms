@@ -194,6 +194,33 @@ class UserLoggingTest extends \PHPUnit_Framework_TestCase
         ], 'logDeactivateUser', [$this->getUser(), $this->getApplier()]);
     }
 
+    public function testDeleteUserEmpty()
+    {
+        $this->testLogger([
+            'User andrew (ID 33) was deleted by code or an automated process.',
+            [
+                'user_id' => 33,
+                'user_name' => 'andrew',
+                'operation' => 'delete_user'
+            ]
+        ], 'logDeleteUser', [$this->getUser()]);
+    }
+
+    public function testDeleteUserApplier()
+    {
+        $this->testLogger([
+            'User andrew (ID 33) was deleted by admin (ID 1).',
+            [
+                'user_id' => 33,
+                'user_name' => 'andrew',
+                'applier_id' => 1,
+                'applier_name' => 'admin',
+                'operation' => 'delete_user'
+            ]
+        ], 'logDeleteUser', [$this->getUser(), $this->getApplier()]);
+    }
+
+
 
 
 
