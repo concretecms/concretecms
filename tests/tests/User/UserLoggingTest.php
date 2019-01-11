@@ -142,6 +142,60 @@ class UserLoggingTest extends \PHPUnit_Framework_TestCase
         ], 'logUpdateUser', [$this->getUser(), $this->getApplier()]);
     }
 
+    public function testActivateUserEmpty()
+    {
+        $this->testLogger([
+            'User andrew (ID 33) was activated by code or an automated process.',
+            [
+                'user_id' => 33,
+                'user_name' => 'andrew',
+                'operation' => 'activate_user'
+            ]
+        ], 'logActivateUser', [$this->getUser()]);
+    }
+
+    public function testActivateUserApplier()
+    {
+        $this->testLogger([
+            'User andrew (ID 33) was activated by admin (ID 1).',
+            [
+                'user_id' => 33,
+                'user_name' => 'andrew',
+                'applier_id' => 1,
+                'applier_name' => 'admin',
+                'operation' => 'activate_user'
+            ]
+        ], 'logActivateUser', [$this->getUser(), $this->getApplier()]);
+    }
+
+    public function testDeactivateUserEmpty()
+    {
+        $this->testLogger([
+            'User andrew (ID 33) was deactivated by code or an automated process.',
+            [
+                'user_id' => 33,
+                'user_name' => 'andrew',
+                'operation' => 'deactivate_user'
+            ]
+        ], 'logDeactivateUser', [$this->getUser()]);
+    }
+
+    public function testDeactivateUserApplier()
+    {
+        $this->testLogger([
+            'User andrew (ID 33) was deactivated by admin (ID 1).',
+            [
+                'user_id' => 33,
+                'user_name' => 'andrew',
+                'applier_id' => 1,
+                'applier_name' => 'admin',
+                'operation' => 'deactivate_user'
+            ]
+        ], 'logDeactivateUser', [$this->getUser(), $this->getApplier()]);
+    }
+
+
+
 
 
 

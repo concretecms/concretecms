@@ -3,8 +3,10 @@ namespace Concrete\Core\User;
 
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\Entry\EntryInterface;
+use Concrete\Core\Logging\Entry\User\ActivateUser;
 use Concrete\Core\Logging\Entry\User\AddUser;
 use Concrete\Core\Logging\Entry\User\ChangeUserPassword;
+use Concrete\Core\Logging\Entry\User\DeactivateUser;
 use Concrete\Core\Logging\Entry\User\ResetUserPassword;
 use Concrete\Core\Logging\Entry\User\UpdateUser;
 use Concrete\Core\Logging\LoggerAwareInterface;
@@ -49,7 +51,17 @@ class Logger implements LoggerAwareInterface
         $this->log($entry);
     }
 
+    public function logActivateUser(User $user, User $applier = null)
+    {
+        $entry = new ActivateUser($user, $applier);
+        $this->log($entry);
+    }
 
 
+    public function logDeactivateUser(User $user, User $applier = null)
+    {
+        $entry = new DeactivateUser($user, $applier);
+        $this->log($entry);
+    }
 
 }

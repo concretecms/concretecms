@@ -693,6 +693,10 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
         );
         $ue = new UserInfoEvent($this);
         $this->getDirector()->dispatch('on_user_activate', $ue);
+
+        $applier = new User();
+        $logger = $this->application->make(Logger::class);
+        $logger->logActivateUser($this->getUserObject(), $applier);
     }
 
     /**
@@ -731,6 +735,11 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
         );
         $ue = new UserInfoEvent($this);
         $this->getDirector()->dispatch('on_user_deactivate', $ue);
+
+        $applier = new User();
+        $logger = $this->application->make(Logger::class);
+        $logger->logDeactivateUser($this->getUserObject(), $applier);
+
     }
 
     /**
