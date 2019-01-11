@@ -1,6 +1,12 @@
 <?php
 namespace Concrete\Core\Application\Service;
 
+use Concrete\Core\Asset\CssAsset;
+use Concrete\Core\Asset\JavascriptAsset;
+use Concrete\Core\Entity\Package;
+use Concrete\Core\Support\Facade\Application;
+use Doctrine\ORM\EntityManagerInterface;
+
 /**
  * \@package Helpers
  *
@@ -96,18 +102,38 @@ class Urls
             $ff = '/' . $file;
         }
         $url = '';
+        $packageHandle = null;
 
         if (file_exists(DIR_FILES_BLOCK_TYPES . '/' . $bt->getBlockTypeHandle() . $ff)) {
             $url = REL_DIR_APPLICATION . '/' . DIRNAME_BLOCKS . '/' . $bt->getBlockTypeHandle() . $ff;
         } elseif ($bt->getPackageID() > 0) {
-            $h = $bt->getPackageHandle();
-            $dirp = (is_dir(DIR_PACKAGES . '/' . $h)) ? DIR_PACKAGES . '/' . $h : DIR_PACKAGES_CORE . '/' . $h;
+            $packageHandle = $bt->getPackageHandle();
+            $dirp = (is_dir(DIR_PACKAGES . '/' . $packageHandle)) ? DIR_PACKAGES . '/' . $packageHandle : DIR_PACKAGES_CORE . '/' . $packageHandle;
             if (file_exists($dirp . '/' . DIRNAME_BLOCKS . '/' . $bt->getBlockTypeHandle() . $ff)) {
-                $url = (is_dir(DIR_PACKAGES . '/' . $h)) ? DIR_REL : ASSETS_URL;
-                $url = $url . '/' . DIRNAME_PACKAGES . '/' . $h . '/' . DIRNAME_BLOCKS . '/' . $bt->getBlockTypeHandle() . $ff;
+                $url = (is_dir(DIR_PACKAGES . '/' . $packageHandle)) ? DIR_REL : ASSETS_URL;
+                $url = $url . '/' . DIRNAME_PACKAGES . '/' . $packageHandle . '/' . DIRNAME_BLOCKS . '/' . $bt->getBlockTypeHandle() . $ff;
             }
         } elseif (file_exists(DIR_FILES_BLOCK_TYPES_CORE . '/' . $bt->getBlockTypeHandle() . $ff)) {
             $url = ASSETS_URL . '/' . DIRNAME_BLOCKS . '/' . $bt->getBlockTypeHandle() . $ff;
+        }
+        if ($url && $file) {
+            $asset = null;
+            if (substr($file, -3) === '.js') {
+                $asset = new JavascriptAsset('');
+            } elseif (substr($file, -3) === '.css') {
+                $asset = new CssAsset('');
+            }
+            if ($asset !== null) {
+                $asset->setAssetIsLocal(true);
+                $asset->setAssetURL($url);
+                if ($packageHandle) {
+                    $app = Application::getFacadeApplication();
+                    $em = $app->make(EntityManagerInterface::class);
+                    $repo = $em->getRepository(Package::class);
+                    $asset->setPackageObject($repo->findOneBy(['pkgHandle' => $packageHandle]));
+                }
+            }
+            $url = $asset->getAssetURL();
         }
 
         return $url;
