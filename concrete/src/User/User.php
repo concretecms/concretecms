@@ -691,11 +691,6 @@ class User extends ConcreteObject
                 $ue->setGroupObject($g);
 
                 $app['director']->dispatch('on_user_enter_group', $ue);
-
-                $applier = new User();
-                $entry = new EnterGroup($this, $g, $applier);
-                $logger = $app->make(LoggerFactory::class)->createLogger(Channels::CHANNEL_USERS);
-                $logger->info($entry->getMessage(), $entry->getContext());
             }
         }
     }
@@ -719,11 +714,6 @@ class User extends ConcreteObject
 
             $q = 'delete from UserGroups where uID = ? and gID = ?';
             $r = $db->executeQuery($q, array($this->uID, $gID));
-
-            $applier = new User();
-            $entry = new ExitGroup($this, $g, $applier);
-            $logger = $app->make(LoggerFactory::class)->createLogger(Channels::CHANNEL_USERS);
-            $logger->info($entry->getMessage(), $entry->getContext());
         }
     }
 

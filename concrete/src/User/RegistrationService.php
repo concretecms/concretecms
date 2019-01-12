@@ -128,11 +128,6 @@ class RegistrationService implements RegistrationServiceInterface
             $ue->setUserPassword($password_to_insert);
             \Events::dispatch('on_user_add', $ue);
 
-            $applier = new User();
-            $app = Facade::getFacadeApplication();
-            $logger = $app->make(Logger::class);
-            $logger->logAdd($ui->getUserObject(), $applier);
-
             // Now we notify any relevant users.
             $type = $this->application->make('manager/notification/types')->driver('user_signup');
             /* @var UserSignupType $type */

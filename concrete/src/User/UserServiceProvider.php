@@ -4,12 +4,6 @@ namespace Concrete\Core\User;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
-use Concrete\Core\Logging\Channels;
-use Concrete\Core\Logging\Entry\Group\AddGroup;
-use Concrete\Core\Logging\Entry\Group\DeleteGroup;
-use Concrete\Core\Logging\Entry\Group\UpdateGroup;
-use Concrete\Core\Logging\Entry\User\UpdateUser;
-use Concrete\Core\Logging\LoggerFactory;
 use Concrete\Core\User\Event\DeactivateUser;
 use Concrete\Core\User\Notification\UserNotificationEventHandler;
 use Concrete\Core\User\Password\PasswordChangeEventHandler;
@@ -17,7 +11,8 @@ use Concrete\Core\User\Password\PasswordUsageTracker;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Concrete\Core\User\Event\UserInfo as UserInfoEvent;
+use Concrete\Core\User\LogSubscriber as UserLogSubscriber;
+use Concrete\Core\User\Group\LogSubscriber as GroupLogSubscriber;
 
 class UserServiceProvider extends ServiceProvider
 {
@@ -26,14 +21,20 @@ class UserServiceProvider extends ServiceProvider
         $this->bindContainer($this->app);
 
         // Handle binding events
+        $subscribers = [
+            $this->app->make(UserLogSubscriber::class),
+            $this->app->make(GroupLogSubscriber::class),
+        ];
         if ($this->app->resolved(EventDispatcher::class)) {
-            $this->bindEvents($this->app->make(EventDispatcher::class));
+            $this->bindEvents($this->app->make(EventDispatcher::class), $subscribers);
         } else {
             $this->app->extend(EventDispatcher::class, function (EventDispatcher $director) {
-                $this->bindEvents($director);
+                $this->bindEvents($director, $subscribers);
                 return $director;
             });
         }
+
+
     }
 
     /**
@@ -43,7 +44,7 @@ class UserServiceProvider extends ServiceProvider
      */
     protected function bindContainer(Application $app)
     {
-        $this->app->when(PasswordUsageTracker::class)->needs('$maxReuse')->give(function() {
+        $this->app->when(PasswordUsageTracker::class)->needs('$maxReuse')->give(function () {
             return $this->app['config']->get('concrete.user.password.reuse.track', 5);
         });
 
@@ -67,8 +68,9 @@ class UserServiceProvider extends ServiceProvider
         });
     }
 
-    protected function bindEvents(EventDispatcherInterface $dispatcher)
+    protected function bindEvents(EventDispatcherInterface $dispatcher, $subscribers)
     {
+
         $dispatcher->addListener('on_after_user_deactivate', function ($e) {
             $this->app->call([$this, 'handleEvent'], ['event' => $e]);
         });
@@ -77,47 +79,9 @@ class UserServiceProvider extends ServiceProvider
             $this->app->make(PasswordChangeEventHandler::class)->handleEvent($event);
         });
 
-        $dispatcher->addListener('on_user_update', function ($event) {
-            /**
-             * @var $event UserInfoEvent
-             */
-            $u = new User();
-            $logger = $this->app->make(Logger::class);
-            $logger->logUpdateUser($event->getUserInfoObject()->getUserObject(), $u);
-        });
-
-
-        $dispatcher->addListener('on_group_add', function ($event) {
-            /**
-             * @var $event \Concrete\Core\User\Group\Event
-             */
-            $applier = new User();
-            $entry = new AddGroup($event->getGroupObject(), $applier);
-            $logger = $this->app->make(LoggerFactory::class)->createLogger(Channels::CHANNEL_USERS);
-            $logger->info($entry->getMessage(), $entry->getContext());
-        });
-
-        $dispatcher->addListener('on_group_update', function ($event) {
-            /**
-             * @var $event \Concrete\Core\User\Group\Event
-             */
-            $applier = new User();
-            $entry = new UpdateGroup($event->getGroupObject(), $applier);
-            $logger = $this->app->make(LoggerFactory::class)->createLogger(Channels::CHANNEL_USERS);
-            $logger->info($entry->getMessage(), $entry->getContext());
-        });
-
-        $dispatcher->addListener('on_group_delete', function ($event) {
-            /**
-             * @var $event \Concrete\Core\User\Group\Event
-             */
-            $applier = new User();
-            $entry = new DeleteGroup($event->getGroupObject(), $applier);
-            $logger = $this->app->make(LoggerFactory::class)->createLogger(Channels::CHANNEL_USERS);
-            $logger->info($entry->getMessage(), $entry->getContext());
-        });
-
-
+        foreach($subscribers as $subscriber) {
+            $dispatcher->addSubscriber($subscriber);
+        }
 
     }
 

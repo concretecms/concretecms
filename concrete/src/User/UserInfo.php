@@ -40,7 +40,7 @@ use Group;
 use Imagine\Image\ImageInterface;
 use League\Flysystem\AdapterInterface;
 use stdClass;
-use User as ConcreteUser;
+use Concrete\Core\User\User as ConcreteUser;
 use View;
 use Concrete\Core\Export\Item\User as UserExporter;
 use Concrete\Core\File\Image\BitmapFormat;
@@ -218,10 +218,6 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
             return false;
         }
 
-        $logger = $this->application->make(Logger::class);
-        $applier = new User();
-        $logger->logDeleteUser($this->getUserObject(), $applier);
-
         // Dispatch an on_user_deleted event: subscribers can't cancel this event.
         // This event could be at the end of this method, but let's keep it here so that subscribers
         // can get all the details of the user being deleted.
@@ -332,10 +328,6 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
      */
     public function markAsPasswordReset()
     {
-        $applier = new User();
-        $logger = $this->application->make(Logger::class);
-        $logger->logResetPassword($this->getUserObject(), $applier);
-
         $this->connection->executeQuery('UPDATE Users SET uIsPasswordReset = 1 WHERE uID = ? limit 1', [$this->getUserID()]);
     }
 
@@ -598,11 +590,6 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
                     $ue = new UserGroupEvent($userObject);
                     $ue->setGroupObject($group);
                     $this->getDirector()->dispatch('on_user_exit_group', $ue);
-
-                    $applier = new User();
-                    $entry = new ExitGroup($this, $group, $applier);
-                    $logger->info($entry->getMessage(), $entry->getContext());
-
                 }
             }
         }
@@ -698,10 +685,6 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
         );
         $ue = new UserInfoEvent($this);
         $this->getDirector()->dispatch('on_user_activate', $ue);
-
-        $applier = new User();
-        $logger = $this->application->make(Logger::class);
-        $logger->logActivateUser($this->getUserObject(), $applier);
     }
 
     /**
@@ -740,11 +723,6 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
         );
         $ue = new UserInfoEvent($this);
         $this->getDirector()->dispatch('on_user_deactivate', $ue);
-
-        $applier = new User();
-        $logger = $this->application->make(Logger::class);
-        $logger->logDeactivateUser($this->getUserObject(), $applier);
-
     }
 
     /**
@@ -759,6 +737,9 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
             $id = $this->application->make(Identifier::class);
             $newPassword = $id->getString($length);
             $this->changePassword($newPassword);
+
+            $ue = new UserInfoEvent($this);
+            $this->getDirector()->dispatch('on_user_reset_password', $ue);
 
             return $newPassword;
         }

@@ -25,8 +25,6 @@ class PasswordChangeEventHandlerTest extends PHPUnit_Framework_TestCase
         $user = M::mock(User::class);
         $userinfo = M::mock(UserInfo::class);
         $tracker = M::mock(PasswordUsageTracker::class);
-        $logger = M::mock(Logger::class);
-        $logger->shouldReceive('logChangePassword');
         $tracker->shouldReceive('trackUse')->once()->with($password, $userinfo);
 
         $userinfo->shouldReceive('getUserObject')->andReturn($user);
@@ -37,7 +35,7 @@ class PasswordChangeEventHandlerTest extends PHPUnit_Framework_TestCase
             'getUserInfoObject' => $userinfo
         ]);
 
-        $handler = new PasswordChangeEventHandler($logger, $tracker);
+        $handler = new PasswordChangeEventHandler($tracker);
         $handler->handleEvent($event);
     }
 
@@ -48,10 +46,9 @@ class PasswordChangeEventHandlerTest extends PHPUnit_Framework_TestCase
     public function testInvalidEventType()
     {
         $tracker = M::mock(PasswordUsageTracker::class);
-        $logger = M::mock(Logger::class);
         $event = M::mock(Event::class);
 
-        $handler = new PasswordChangeEventHandler($logger, $tracker);
+        $handler = new PasswordChangeEventHandler($tracker);
         $handler->handleEvent($event);
     }
 
