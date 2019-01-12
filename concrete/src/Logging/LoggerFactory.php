@@ -39,6 +39,14 @@ class LoggerFactory
     }
 
     /**
+     * @return ConfigurationInterface
+     */
+    public function getConfiguration()
+    {
+        return $this->config;
+    }
+
+    /**
      * Create a new logger instance.
      *
      * @param string $channel

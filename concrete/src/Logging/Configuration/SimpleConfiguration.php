@@ -25,6 +25,14 @@ abstract class SimpleConfiguration implements ConfigurationInterface
     }
 
     /**
+     * @return int
+     */
+    public function getCoreLevel()
+    {
+        return $this->coreLevel;
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Logging\Configuration\ConfigurationInterface::createLogger()
