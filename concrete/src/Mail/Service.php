@@ -9,6 +9,7 @@ use Concrete\Core\Support\Facade\Application as ApplicationFacade;
 use Exception;
 use Monolog\Logger;
 use Throwable;
+use Zend\Mail\Address\AddressInterface;
 use Zend\Mail\Header\MessageId as MessageIdHeader;
 use Zend\Mail\Message;
 use Zend\Mail\Transport\TransportInterface;
@@ -131,6 +132,12 @@ class Service
     protected $throwOnFailure;
 
     /**
+     * Return path address (bounce back email)
+     * @var AddressInterface
+     */
+    private $bounceBackEmail;
+
+    /**
      * Initialize the instance.
      *
      * @param Application $app the application instance
@@ -162,6 +169,7 @@ class Service
         $this->bodyHTML = false;
         $this->testing = false;
         $this->throwOnFailure = false;
+        $this->bounceBackEmail=null;
     }
 
     /**
@@ -545,7 +553,11 @@ class Service
         $replyStr = $this->generateEmailStrings($this->replyto);
 
         $mail = (new Message())->setEncoding(APP_CHARSET);
-
+        //set bounce back email
+        if(!empty($this->bounceBackEmail))
+        {
+            $mail->setSender($this->bounceBackEmail);
+        }
         if (is_array($this->from) && count($this->from)) {
             if ($this->from[0] != '') {
                 $from = $this->from;
@@ -794,5 +806,10 @@ class Service
         }
 
         return $result;
+    }
+
+    public function setBounceBackEmail(AddressInterface $bounceBackEmail)
+    {
+        $this->bounceBackEmail=$bounceBackEmail;
     }
 }
