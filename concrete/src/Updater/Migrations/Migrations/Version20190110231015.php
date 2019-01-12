@@ -4,6 +4,7 @@ namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Entity\OAuth\Client;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
+use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
 /**
  * Update all oauth2 clients to have a consent type of CONSENT_SIMPLE

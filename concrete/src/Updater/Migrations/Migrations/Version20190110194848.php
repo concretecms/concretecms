@@ -4,6 +4,7 @@ namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Entity\OAuth\Scope;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
+use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
 /**
  * Install OIDC scope

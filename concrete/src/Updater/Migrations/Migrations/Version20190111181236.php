@@ -6,6 +6,7 @@ use Concrete\Core\Entity\OAuth\AccessToken;
 use Concrete\Core\Entity\OAuth\RefreshToken;
 use Concrete\Core\Entity\OAuth\Scope;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
+use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
 /**
  * Update scope descriptions and connect access tokens to refresh tokens
