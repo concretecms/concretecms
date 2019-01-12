@@ -32,6 +32,10 @@ class UserInfo extends AbstractEvent
     public function __construct(ConcreteUserInfo $ui)
     {
         $this->ui = $ui;
+        $u = new \Concrete\Core\User\User();
+        if ($u->isRegistered()) {
+            $this->applier = $u;
+        }
     }
 
     public function getUserInfoObject()
