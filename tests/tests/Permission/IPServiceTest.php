@@ -13,6 +13,7 @@ class IPServiceTest extends ConcreteDatabaseTestCase
     protected $tables = [
         'FailedLoginAttempts',
         'LoginControlIpRanges',
+        'Logs',
     ];
 
     /**
