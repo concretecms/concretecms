@@ -20,6 +20,7 @@ use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Support\Facade\Log;
 use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 use Illuminate\Filesystem\Filesystem;
+use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
@@ -291,6 +292,48 @@ class LogTest extends ConcreteDatabaseTestCase
 
         $this->assertCount(2, $logger->getHandlers());
     }
+
+    public function testAdvancedLoggingConfigurationAllChannels()
+    {
+        $config = array(
+            'formatters' => array(
+                'dashed' => array(
+                    'format' => "%datetime%-%channel%.%level_name% - %message%\n"
+                ),
+            ),
+            'handlers' => array(
+                'info_file_handler' => array(
+                    'class' => 'Monolog\Handler\StreamHandler',
+                    'level' => 'INFO',
+                    'formatter' => 'dashed',
+                    'stream' => './demo_info.log'
+                ),
+            ),
+            'loggers' => array(
+                Channels::META_CHANNEL_ALL => array(
+                    'handlers' => array('info_file_handler')
+                )
+            )
+        );
+
+        $configuration = new AdvancedConfiguration($config);
+
+        $factory = $this->getMockBuilder(ConfigurationFactory::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $factory->expects($this->once())
+            ->method('createConfiguration')
+            ->willReturn($configuration);
+
+        $factory = $this->app->build(LoggerFactory::class, ['configurationFactory' => $factory]);
+        $logger = $factory->createLogger(Channels::CHANNEL_SECURITY);
+        $this->assertInstanceOf(Logger::class, $logger);
+        $this->assertCount(1, $logger->getHandlers());
+        $handlers = $logger->getHandlers();
+        $formatter = $handlers[0]->getFormatter();
+        $this->assertInstanceOf(LineFormatter::class, $formatter);
+    }
+
 
     public function testLegacyLogSupport()
     {
