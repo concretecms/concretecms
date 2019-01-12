@@ -8,7 +8,7 @@ use Concrete\Core\Updater\Migrations\AbstractMigration;
 /**
  * Update all oauth2 clients to have a consent type of CONSENT_SIMPLE
  */
-class Version20190110231015 extends AbstractMigration
+class Version20190110231015 extends AbstractMigration implements RepeatableMigrationInterface
 {
 
     public function upgradeDatabase()

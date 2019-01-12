@@ -8,9 +8,9 @@ use Concrete\Core\Entity\OAuth\Scope;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 
 /**
- * Update scope descriptions
+ * Update scope descriptions and connect access tokens to refresh tokens
  */
-class Version20190111181236 extends AbstractMigration
+class Version20190111181236 extends AbstractMigration implements RepeatableMigrationInterface
 {
 
     private function getScopeDescription($key)

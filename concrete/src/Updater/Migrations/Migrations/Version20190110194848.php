@@ -6,9 +6,9 @@ use Concrete\Core\Entity\OAuth\Scope;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 
 /**
- * Auto-generated Migration: Please modify to your needs!
+ * Install OIDC scope
  */
-class Version20190110194848 extends AbstractMigration
+class Version20190110194848 extends AbstractMigration implements RepeatableMigrationInterface
 {
 
     public function upgradeDatabase()
