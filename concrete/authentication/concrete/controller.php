@@ -8,6 +8,7 @@ use Concrete\Core\User\Exception\FailedLoginThresholdExceededException;
 use Concrete\Core\User\Exception\InvalidCredentialsException;
 use Concrete\Core\User\Exception\UserDeactivatedException;
 use Concrete\Core\User\Exception\UserException;
+use Concrete\Core\User\Exception\UserPasswordResetException;
 use Concrete\Core\User\Login\LoginService;
 use Concrete\Core\User\User;
 use Concrete\Core\User\ValidationHash;
@@ -333,6 +334,9 @@ class Controller extends AuthenticationTypeController
 
         try {
             $user = $loginService->login($uName, $uPassword);
+        } catch (UserPasswordResetException $e) {
+            Session::set('uPasswordResetUserName', $this->post('uName'));
+            $this->redirect('/login/', $this->getAuthenticationType()->getAuthenticationTypeHandle(), 'required_password_upgrade');
         } catch (UserException $e) {
             $this->handleFailedLogin($loginService, $uName, $uPassword, $e);
         }
@@ -366,12 +370,6 @@ class Controller extends AuthenticationTypeController
 
                 // Rethrow the user deactivated exception
                 throw $e;
-            }
-
-            // If we're dealing with an invalidated password, redirect to passwordreset view
-            if ($this->isPasswordReset()) {
-                Session::set('uPasswordResetUserName', $this->post('uName'));
-                $this->redirect('/login/', $this->getAuthenticationType()->getAuthenticationTypeHandle(), 'required_password_upgrade');
             }
         }
 

@@ -11,6 +11,8 @@ use Concrete\Core\User\Password\PasswordUsageTracker;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Concrete\Core\User\LogSubscriber as UserLogSubscriber;
+use Concrete\Core\User\Group\LogSubscriber as GroupLogSubscriber;
 
 class UserServiceProvider extends ServiceProvider
 {
@@ -19,14 +21,20 @@ class UserServiceProvider extends ServiceProvider
         $this->bindContainer($this->app);
 
         // Handle binding events
+        $subscribers = [
+            $this->app->make(UserLogSubscriber::class),
+            $this->app->make(GroupLogSubscriber::class),
+        ];
         if ($this->app->resolved(EventDispatcher::class)) {
-            $this->bindEvents($this->app->make(EventDispatcher::class));
+            $this->bindEvents($this->app->make(EventDispatcher::class), $subscribers);
         } else {
             $this->app->extend(EventDispatcher::class, function (EventDispatcher $director) {
-                $this->bindEvents($director);
+                $this->bindEvents($director, $subscribers);
                 return $director;
             });
         }
+
+
     }
 
     /**
@@ -36,7 +44,7 @@ class UserServiceProvider extends ServiceProvider
      */
     protected function bindContainer(Application $app)
     {
-        $this->app->when(PasswordUsageTracker::class)->needs('$maxReuse')->give(function() {
+        $this->app->when(PasswordUsageTracker::class)->needs('$maxReuse')->give(function () {
             return $this->app['config']->get('concrete.user.password.reuse.track', 5);
         });
 
@@ -58,20 +66,11 @@ class UserServiceProvider extends ServiceProvider
         $this->app->bind('Concrete\Core\User\Avatar\AvatarServiceInterface', function () use ($app) {
             return $app->make('user/avatar');
         });
-
-        // Handle binding events
-        if ($this->app->resolved(EventDispatcher::class)) {
-            $this->bindEvents($this->app->make(EventDispatcher::class));
-        } else {
-            $this->app->extend(EventDispatcher::class, function (EventDispatcher $director) {
-                $this->bindEvents($director);
-                return $director;
-            });
-        }
     }
 
-    protected function bindEvents(EventDispatcherInterface $dispatcher)
+    protected function bindEvents(EventDispatcherInterface $dispatcher, $subscribers)
     {
+
         $dispatcher->addListener('on_after_user_deactivate', function ($e) {
             $this->app->call([$this, 'handleEvent'], ['event' => $e]);
         });
@@ -79,6 +78,11 @@ class UserServiceProvider extends ServiceProvider
         $dispatcher->addListener('on_user_change_password', function ($event) {
             $this->app->make(PasswordChangeEventHandler::class)->handleEvent($event);
         });
+
+        foreach($subscribers as $subscriber) {
+            $dispatcher->addSubscriber($subscriber);
+        }
+
     }
 
     /**

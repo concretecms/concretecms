@@ -79,6 +79,14 @@ class Channels
     const CHANNEL_PERMISSIONS = 'permissions';
 
     /**
+     * Channel identifier: all – Do NOT use this to log to. This is a separate system channel that tells configuration
+     * that you want to apply all configuration options to all channels, and listen to all of them.
+     *
+     * @var string
+     */
+    const META_CHANNEL_ALL = 'all';
+
+    /**
      * Get the list of the core channel.
      *
      * @return string[]

@@ -9,6 +9,7 @@ use Symfony\Component\EventDispatcher\Event;
 class PasswordChangeEventHandler
 {
 
+
     /**
      * The usage tracker we're using to track passwords
      *

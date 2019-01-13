@@ -14,8 +14,13 @@ use Concrete\Core\Entity\User\User as UserEntity;
 use Concrete\Core\Export\ExportableInterface;
 use Concrete\Core\File\StorageLocation\StorageLocationFactory;
 use Concrete\Core\Foundation\ConcreteObject;
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\Entry\Group\ExitGroup;
+use Concrete\Core\Logging\Entry\User\ResetUserPassword;
+use Concrete\Core\Logging\LoggerFactory;
 use Concrete\Core\Mail\Importer\MailImporter;
 use Concrete\Core\Permission\ObjectInterface as PermissionObjectInterface;
+use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\User\Avatar\AvatarServiceInterface;
 use Concrete\Core\User\Event\DeleteUser as DeleteUserEvent;
 use Concrete\Core\User\Event\UserGroup as UserGroupEvent;
@@ -35,7 +40,7 @@ use Group;
 use Imagine\Image\ImageInterface;
 use League\Flysystem\AdapterInterface;
 use stdClass;
-use User as ConcreteUser;
+use Concrete\Core\User\User as ConcreteUser;
 use View;
 use Concrete\Core\Export\Item\User as UserExporter;
 use Concrete\Core\File\Image\BitmapFormat;
@@ -212,6 +217,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
         if (!$ue->proceed()) {
             return false;
         }
+
         // Dispatch an on_user_deleted event: subscribers can't cancel this event.
         // This event could be at the end of this method, but let's keep it here so that subscribers
         // can get all the details of the user being deleted.
@@ -323,9 +329,6 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     public function markAsPasswordReset()
     {
         $this->connection->executeQuery('UPDATE Users SET uIsPasswordReset = 1 WHERE uID = ? limit 1', [$this->getUserID()]);
-
-        $updateEventData = new UserInfoEvent($this);
-        $this->getDirector()->dispatch('on_user_update', $updateEventData);
     }
 
     /**
@@ -581,6 +584,8 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
                     [$this->getUserID()]
                 );
                 $userObject = $this->getUserObject();
+                $app = Facade::getFacadeApplication();
+                $logger = $this->application->make(LoggerFactory::class)->createLogger(Channels::CHANNEL_USERS);
                 foreach ($groupObjects as $group) {
                     $ue = new UserGroupEvent($userObject);
                     $ue->setGroupObject($group);
@@ -732,6 +737,9 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
             $id = $this->application->make(Identifier::class);
             $newPassword = $id->getString($length);
             $this->changePassword($newPassword);
+
+            $ue = new UserInfoEvent($this);
+            $this->getDirector()->dispatch('on_user_reset_password', $ue);
 
             return $newPassword;
         }

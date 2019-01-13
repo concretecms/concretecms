@@ -3,6 +3,10 @@ namespace Concrete\Core\User;
 
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Http\Request;
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\Entry\Group\EnterGroup;
+use Concrete\Core\Logging\Entry\Group\ExitGroup;
+use Concrete\Core\Logging\LoggerFactory;
 use Concrete\Core\Permission\Access\Entity\GroupEntity;
 use Concrete\Core\Session\SessionValidator;
 use Concrete\Core\Support\Facade\Application;
@@ -165,9 +169,9 @@ class User extends ConcreteObject
             }
             $v = array($username);
             if ($config->get('concrete.user.registration.email_registration')) {
-                $q = "select uID, uName, uIsActive, uIsValidated, uTimezone, uDefaultLanguage, uPassword, uLastPasswordChange from Users where uEmail = ?";
+                $q = "select uID, uName, uIsActive, uIsValidated, uTimezone, uDefaultLanguage, uPassword, uLastPasswordChange, uIsPasswordReset from Users where uEmail = ?";
             } else {
-                $q = "select uID, uName, uIsActive, uIsValidated, uTimezone, uDefaultLanguage, uPassword, uLastPasswordChange from Users where uName = ?";
+                $q = "select uID, uName, uIsActive, uIsValidated, uTimezone, uDefaultLanguage, uPassword, uLastPasswordChange, uIsPasswordReset from Users where uName = ?";
             }
 
             $db = $app->make('Concrete\Core\Database\Connection\Connection');
@@ -179,21 +183,25 @@ class User extends ConcreteObject
                 if ($row['uID'] && $row['uIsValidated'] === '0' && $config->get('concrete.user.registration.validate_email')) {
                     $this->loadError(USER_NON_VALIDATED);
                 } elseif ($row['uID'] && $row['uIsActive'] && $pw_is_valid) {
-                    $this->uID = $row['uID'];
-                    $this->uName = $row['uName'];
-                    $this->uIsActive = $row['uIsActive'];
-                    $this->uTimezone = $row['uTimezone'];
-                    $this->uDefaultLanguage = $row['uDefaultLanguage'];
-                    $this->uLastPasswordChange = $row['uLastPasswordChange'];
-                    $this->uGroups = $this->_getUserGroups($disableLogin);
-                    if ($row['uID'] == USER_SUPER_ID) {
-                        $this->superUser = true;
+                    if ($row['uIsPasswordReset']) {
+                        $this->loadError(USER_PASSWORD_RESET);
                     } else {
-                        $this->superUser = false;
-                    }
-                    $this->recordLogin();
-                    if (!$disableLogin) {
-                        $this->persist();
+                        $this->uID = $row['uID'];
+                        $this->uName = $row['uName'];
+                        $this->uIsActive = $row['uIsActive'];
+                        $this->uTimezone = $row['uTimezone'];
+                        $this->uDefaultLanguage = $row['uDefaultLanguage'];
+                        $this->uLastPasswordChange = $row['uLastPasswordChange'];
+                        $this->uGroups = $this->_getUserGroups($disableLogin);
+                        if ($row['uID'] == USER_SUPER_ID) {
+                            $this->superUser = true;
+                        } else {
+                            $this->superUser = false;
+                        }
+                        $this->recordLogin();
+                        if (!$disableLogin) {
+                            $this->persist();
+                        }
                     }
                 } elseif ($row['uID'] && !$row['uIsActive']) {
                     $this->loadError(USER_INACTIVE);
