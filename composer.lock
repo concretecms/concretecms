@@ -5103,37 +5103,37 @@
         },
         {
             "name": "theorchard/monolog-cascade",
-            "version": "0.5.0",
+            "version": "0.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/theorchard/monolog-cascade.git",
-                "reference": "c40260db7e219dbf5c86dcda24bf245b2666da27"
+                "reference": "5353e00824da0b6073668523b5cdc8e84629f108"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/theorchard/monolog-cascade/zipball/c40260db7e219dbf5c86dcda24bf245b2666da27",
-                "reference": "c40260db7e219dbf5c86dcda24bf245b2666da27",
+                "url": "https://api.github.com/repos/theorchard/monolog-cascade/zipball/5353e00824da0b6073668523b5cdc8e84629f108",
+                "reference": "5353e00824da0b6073668523b5cdc8e84629f108",
                 "shasum": ""
             },
             "require": {
-                "monolog/monolog": "~1.13",
-                "php": ">=5.3.9",
-                "symfony/config": "~2.7|~3.0",
-                "symfony/options-resolver": "~2.7|~3.0",
-                "symfony/serializer": "~2.7|~3.0",
-                "symfony/yaml": "~2.7|~3.0"
+                "monolog/monolog": "^1.13",
+                "php": "^5.3.9 || ^7.0",
+                "symfony/config": "^2.7 || ^3.0 || ^4.0",
+                "symfony/options-resolver": "^2.7 || ^3.0 || ^4.0",
+                "symfony/serializer": "^2.7 || ^3.0 || ^4.0",
+                "symfony/yaml": "^2.7 || ^3.0 || ^4.0"
             },
             "require-dev": {
-                "mikey179/vfsstream": "~1.6",
-                "phpunit/phpcov": "~2.0",
-                "phpunit/phpunit": "~4.8",
-                "satooshi/php-coveralls": "~1.0",
-                "squizlabs/php_codesniffer": "~2.5"
+                "mikey179/vfsstream": "^1.6",
+                "phpunit/phpcov": "^2.0",
+                "phpunit/phpunit": "^4.8",
+                "satooshi/php-coveralls": "^1.0",
+                "squizlabs/php_codesniffer": "^2.5"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.4.x-dev"
+                    "dev-master": "0.5.x-dev"
                 }
             },
             "autoload": {
@@ -5163,7 +5163,7 @@
                 "monolog plugin",
                 "monolog utils"
             ],
-            "time": "2017-08-18T13:37:57+00:00"
+            "time": "2019-01-10T20:41:57+00:00"
         },
         {
             "name": "true/punycode",
@@ -6683,6 +6683,7 @@
                 "testing",
                 "xunit"
             ],
+            "abandoned": true,
             "time": "2016-12-02T14:39:14+00:00"
         },
         {
