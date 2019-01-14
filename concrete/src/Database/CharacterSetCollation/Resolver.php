@@ -168,8 +168,8 @@ class Resolver
                 throw new Exception\UnsupportedCollationException($collation);
             }
             if ($characterSet === '') {
-                $characterSet = $collations[$characterSet];
-            } elseif ($characterSet !== $collations[$characterSet]) {
+                $characterSet = $collations[$collation];
+            } elseif ($characterSet !== $collations[$collation]) {
                 throw new Exception\InvalidCharacterSetCollationCombination($characterSet, $collation, $collations[$characterSet]);
             }
         } elseif ($characterSet !== '') {
