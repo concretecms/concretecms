@@ -4,7 +4,9 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Multilingual;
 use Concrete\Core\Localization\Locale\Service;
 use Concrete\Core\Multilingual\Service\UserInterface\Flag;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Template;
+use Concrete\Core\Permission\Checker;
 use Concrete\Core\User\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Events;
@@ -45,6 +47,17 @@ class Setup extends DashboardSitePageController
         $this->set('redirectHomeToDefaultLocale', $siteConfig->get('multilingual.redirect_home_to_default_locale'));
         $this->set('useBrowserDetectedLocale', $siteConfig->get('multilingual.use_browser_detected_locale'));
         $this->set('alwaysTrackUserLocale', $siteConfig->get('multilingual.always_track_user_locale'));
+        $mlPage = Page::getByPath('/dashboard/system/basics/multilingual');
+        if ($mlPage && !$mlPage->isError()) {
+            $cp = new Checker($mlPage);
+            if ($cp->canViewPage()) {
+                $mlLink = [
+                    t($mlPage->getCollectionName()),
+                    $mlPage->getCollectionLink(),
+                ];
+            }
+        }
+        $this->set('mlLink', $mlLink);
     }
 
     public function get_countries_for_language()
