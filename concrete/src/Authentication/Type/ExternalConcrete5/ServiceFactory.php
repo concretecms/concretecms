@@ -84,9 +84,7 @@ class ServiceFactory
 
         // Create the service using the oauth service factory
         return $factory->createService('external_concrete5', $credentials, $storage, [
-            ExternalConcrete5Service::SCOPE_SYSTEM,
-            ExternalConcrete5Service::SCOPE_SITE,
-            ExternalConcrete5Service::SCOPE_ACCOUNT,
+            ExternalConcrete5Service::SCOPE_OPENID,
         ], $baseApiUrl);
     }
 

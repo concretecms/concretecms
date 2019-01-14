@@ -1179,6 +1179,9 @@ return [
             'system',
             'site',
             'account',
+
+            // For OIDC authentication
+            'openid',
         ],
     ],
 

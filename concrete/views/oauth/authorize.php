@@ -8,6 +8,7 @@ defined('C5_EXECUTE') or die('Access denied.');
 /* @var \League\OAuth2\Server\RequestTypes\AuthorizationRequest $auth */
 /* @var \Concrete\Core\Http\Request $request */
 /* @var \Concrete\Core\Entity\OAuth\Client $client */
+/* @var \Concrete\Core\View\View $consentView */
 
 $r = ResponseAssetGroup::get();
 $r->requireAsset('javascript', 'underscore');
@@ -41,7 +42,7 @@ $image = (date('Ymd') - 7) . '.jpg';
     </div>
     <div class="col-sm-6 col-sm-offset-3 login-form">
         <div class="row login-row">
-            <div class="controls col-sm-12 col-xs-12">
+            <div class="controls col-sm-12 col-xs-12" style="display:flex; flex-direction: column; overflow: auto">
                 <?php
                 if (!$authorize) {
                     ?>
@@ -50,7 +51,7 @@ $image = (date('Ymd') - 7) . '.jpg';
                 }
                 ?>
 
-                <form method="post" action="<?= $request->getUri() ?>">
+                <form style="display:flex; flex-direction: column; flex: 1" method="post" action="<?= $request->getUri() ?>">
                     <?php
                     if (!$authorize) {
                         ?>
@@ -91,38 +92,9 @@ $image = (date('Ymd') - 7) . '.jpg';
                         } ?>
 
                         <?php
-                    } else {
-                        ?>
-                        <h3 class="scope-title text-center"><strong><?= h($client->getName()) ?></strong></h3>
-                        <h4 class="scope-description text-center">
-                            <?= t('is requesting access to the following scopes') ?>
-                        </h4>
-
-                        <div class="scopes">
-                            <ul>
-                                <?php
-                                foreach ($auth->getScopes() as $scope) {
-                                    ?>
-                                    <li><strong><?= h(ucwords($scope->getIdentifier())) ?></strong>: <?= h($scope->getDescription()) ?></li>
-                                    <?php
-                                }
-                                ?>
-                            </ul>
-                        </div>
-
-                        <?php $token->output('oauth_authorize_' . $client->getClientKey()); ?>
-
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" name="authorize_client" value="1" />
-                                <?= t('Authorize %s', '<strong>' . h($client->getName()) . '</strong>') ?>
-                            </label>
-                        </div>
-
-                        <div class="form-group">
-                            <button class="btn btn-success pull-right"><?= t('Authorize') ?></button>
-                        </div>
-                        <?php
+                    } elseif ($consentView) {
+                        $consentView->addScopeItems($view->getScopeItems());
+                        echo $consentView->render();
                     }
                     ?>
 

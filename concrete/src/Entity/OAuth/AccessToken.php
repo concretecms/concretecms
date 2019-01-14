@@ -25,6 +25,13 @@ class AccessToken implements AccessTokenEntityInterface
     protected $identifier;
 
     /**
+     * @var \League\OAuth2\Server\Entities\RefreshTokenEntityInterface
+     * @ORM\OneToOne(targetEntity="RefreshToken", cascade={"remove"})
+     * @ORM\JoinColumn(name="refreshToken", referencedColumnName="identifier")
+     */
+    protected $refreshToken;
+
+    /**
      * @var \DateTime
      * @ORM\Column(type="datetime")
      */
@@ -145,5 +152,21 @@ class AccessToken implements AccessTokenEntityInterface
     public function setClient(ClientEntityInterface $client)
     {
         $this->client = $client;
+    }
+
+    /**
+     * @return \League\OAuth2\Server\Entities\RefreshTokenEntityInterface
+     */
+    public function getRefreshToken()
+    {
+        return $this->refreshToken;
+    }
+
+    /**
+     * @param \Concrete\Core\Entity\OAuth\RefreshToken $refreshToken
+     */
+    public function setRefreshToken(RefreshToken $refreshToken)
+    {
+        $this->refreshToken = $refreshToken;
     }
 }
