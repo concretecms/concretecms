@@ -65,7 +65,7 @@ class Client extends ZendClient implements LoggerAwareInterface
                 $shortBody = mb_substr($body, 0, 197) . '...';
             }
             $logger->debug(
-                "The response code was {$statusCode} and the body was {$shortBody}",
+                'The response code was {statusCode} and the body was {shortBody}',
                 [
                     'statusCode' => $statusCode,
                     'headers' => $response->getHeaders()->toArray(),
@@ -94,7 +94,7 @@ class Client extends ZendClient implements LoggerAwareInterface
                 $shortBody = mb_substr($body, 0, 197) . '...';
             }
             $logger->debug(
-                "Sending {$method} request to {$uri} with body {$shortBody}",
+                'Sending {method} request to {uri} with body {shortBody}',
                 [
                     'uri' => $uriString,
                     'method' => $method,

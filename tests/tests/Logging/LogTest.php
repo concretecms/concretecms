@@ -287,10 +287,12 @@ class LogTest extends ConcreteDatabaseTestCase
         $logger = $factory->createLogger(Channels::CHANNEL_SECURITY);
         $this->assertInstanceOf(Logger::class, $logger);
         $this->assertCount(0, $logger->getHandlers());
+        $this->assertCount(1, $logger->getProcessors()); // needs to have psr processor.
 
         $logger = $factory->createLogger('my_logger');
 
         $this->assertCount(2, $logger->getHandlers());
+        $this->assertCount(1, $logger->getProcessors());
     }
 
     public function testAdvancedLoggingConfigurationAllChannels()
