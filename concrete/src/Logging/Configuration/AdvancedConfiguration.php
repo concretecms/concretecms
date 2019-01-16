@@ -4,6 +4,7 @@ namespace Concrete\Core\Logging\Configuration;
 
 use Cascade\Cascade;
 use Concrete\Core\Logging\Channels;
+use Monolog\Processor\PsrLogMessageProcessor;
 
 class AdvancedConfiguration implements ConfigurationInterface
 {
@@ -45,7 +46,7 @@ class AdvancedConfiguration implements ConfigurationInterface
     {
         Cascade::loadConfigFromArray($this->config);
         $logger = Cascade::getLogger($channel);
-
+        $logger->pushProcessor(new PsrLogMessageProcessor());
         return $logger;
     }
 }
