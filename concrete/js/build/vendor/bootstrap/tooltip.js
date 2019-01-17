@@ -1,38 +1,15 @@
 /* ========================================================================
- * Bootstrap: tooltip.js v3.3.7
- * http://getbootstrap.com/javascript/#tooltip
+ * Bootstrap: tooltip.js v3.4.0
+ * https://getbootstrap.com/docs/3.4/javascript/#tooltip
  * Inspired by the original jQuery.tipsy by Jason Frame
  * ========================================================================
- * Copyright 2011-2016 Twitter, Inc.
+ * Copyright 2011-2018 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * ======================================================================== */
 
 
 +function ($) {
   'use strict';
-
-  /* concrete5 START */
-  function getParentZIndex($e) {
-    var position, value;
-    if (typeof $e === 'string') {
-        $e = $($e);
-    }
-    while ($e.length && $e[0] !== document) {
-      switch ($e.css('position')) {
-        case 'absolute':
-        case 'relative':
-        case 'fixed':
-          value = parseInt($e.css('zIndex'), 10);
-          if (!isNaN(value) && value !== 0) {
-            return value;
-          }
-          break;
-      }
-      $e = $e.parent();
-    }
-    return 0;
-  }
-  /* concrete5 END */
 
   // TOOLTIP PUBLIC CLASS DEFINITION
   // ===============================
@@ -49,7 +26,7 @@
     this.init('tooltip', element, options)
   }
 
-  Tooltip.VERSION  = '3.3.7'
+  Tooltip.VERSION  = '3.4.0'
 
   Tooltip.TRANSITION_DURATION = 150
 
@@ -74,7 +51,7 @@
     this.type      = type
     this.$element  = $(element)
     this.options   = this.getOptions(options)
-    this.$viewport = this.options.viewport && $($.isFunction(this.options.viewport) ? this.options.viewport.call(this, this.$element) : (this.options.viewport.selector || this.options.viewport))
+    this.$viewport = this.options.viewport && $(document).find($.isFunction(this.options.viewport) ? this.options.viewport.call(this, this.$element) : (this.options.viewport.selector || this.options.viewport))
     this.inState   = { click: false, hover: false, focus: false }
 
     if (this.$element[0] instanceof document.constructor && !this.options.selector) {
@@ -227,13 +204,7 @@
         .addClass(placement)
         .data('bs.' + this.type, this)
 
-      this.options.container ? $tip.appendTo(this.options.container) : $tip.insertAfter(this.$element)
-      /* concrete5 START */
-      var zIndex = getParentZIndex(this.options.container || this.$element);
-      if (zIndex && zIndex >= parseInt($tip.css('z-index'), 10)) {
-        $tip.css('z-index', zIndex + 1);
-      }
-      /* concrete5 END */
+      this.options.container ? $tip.appendTo($(document).find(this.options.container)) : $tip.insertAfter(this.$element)
       this.$element.trigger('inserted.bs.' + this.type)
 
       var pos          = this.getPosition()
