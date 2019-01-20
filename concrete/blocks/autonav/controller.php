@@ -187,7 +187,7 @@ class Controller extends BlockController
                 if ($cParentID != $this->homePageID) {
                     $selectedPathCIDs[] = $cParentID; //Don't want home page in nav-path-selected
                 }
-                $inspectC = Page::getById($cParentID, 'ACTIVE');
+                $inspectC = Page::getByID($cParentID, 'ACTIVE');
             }
         }
 
