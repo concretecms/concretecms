@@ -117,7 +117,7 @@ if (count($navItems) > 0) {
         if ($ni->hasSubmenu) {
             echo '<ul>'; //opens a dropdown sub-menu
         } else {
-            echo '</li>'; //closes a nav item" onfocus="alert('Stored XSS in SEO Name field')"  autofocus="true"
+            echo '</li>'; //closes a nav item
 
             echo str_repeat('</ul></li>', $ni->subDepth); //closes dropdown sub-menu(s) and their top-level nav item(s)
         }
