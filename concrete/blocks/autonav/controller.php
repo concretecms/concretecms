@@ -48,6 +48,7 @@ class Controller extends BlockController
     protected $btCacheBlockOutputLifetime = 300;
     protected $btWrapperClass = 'ccm-ui';
     protected $btExportPageColumns = array('displayPagesCID');
+    protected $includeParentItem;
 
     public function __construct($obj = null)
     {
@@ -367,7 +368,6 @@ class Controller extends BlockController
                 break;
         }
         $level = 0;
-        $cParentID = 0;
         switch ($this->displayPages) {
             case 'current':
                 $cParentID = $this->cParentID;
@@ -434,8 +434,12 @@ class Controller extends BlockController
 
             $this->getNavigationArray($cParentID, $orderBy, $level);
 
-            // if we're at the top level we add home to the beginning
-            if ($cParentID == Page::getHomePageID($cParentID)) {
+            $shouldIncludeParentItem = $this->shouldIncludeParentItem();
+            if ($shouldIncludeParentItem === null) {
+                // if we're at the top level we add home to the beginning
+                $shouldIncludeParentItem = ($cParentID == Page::getHomePageID($cParentID));
+            }
+            if ($shouldIncludeParentItem) {
                 if ($this->displayUnapproved) {
                     $tc1 = Page::getByID($cParentID, "RECENT");
                 } else {
@@ -802,5 +806,21 @@ class Controller extends BlockController
         ob_end_clean();
 
         return $this->app->make(ResponseFactoryInterface::class)->create($content);
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function shouldIncludeParentItem()
+    {
+        return $this->includeParentItem;
+    }
+
+    /**
+     * @param bool $includeParentItem
+     */
+    public function setIncludeParentItem($includeParentItem)
+    {
+        $this->includeParentItem = $includeParentItem;
     }
 }

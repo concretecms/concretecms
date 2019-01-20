@@ -1,5 +1,23 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
+/**
+ * DISPLAY PARENT PAGE OPTION
+ *
+ * If you always want to add a parent page:
+ * $controller->setIncludeParentItem(true);
+ *
+ * If you want never to add a parent page:
+ * $controller->setIncludeParentItem(false);
+ *
+ * By default, the parent page will be added if it is the home page.
+ */
+
+/**
+ * First, let's get navigation items.
+ * If you don't want to exclude any pages, you can ignore "exclude_nav" attribute by passing true.
+ * This option is useful for breadcrumbs navigation.
+ * E.g. $navItems = $controller->getNavItems(true);
+ */
 $navItems = $controller->getNavItems();
 $c = Page::getCurrentPage();
 
