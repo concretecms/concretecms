@@ -240,7 +240,7 @@ abstract class Key extends ConcreteObject
         $permissionkeys = [];
         $txt = $app->make('helper/text');
         $e = $db->executeQuery(<<<'EOT'
-select pkID, pkName, pkDescription, pkHandle, pkCategoryHandle, pkCanTriggerWorkflow, pkHasCustomClass, PermissionKeys.pkCategoryID, PermissionKeys.pkgID
+select pkID, pkName, pkDescription, pkHandle, pkCategoryHandle, pkCanTriggerWorkflow, pkHasCustomClass, PermissionKeys.pkCategoryID, PermissionKeyCategories.pkgID
 from PermissionKeys
 inner join PermissionKeyCategories on PermissionKeyCategories.pkCategoryID = PermissionKeys.pkCategoryID
 EOT
