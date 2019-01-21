@@ -117,6 +117,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
         $this->set('addFilesToFolder', (new Filesystem())->getRootFolder());
         $this->set('storeFormSubmission', $this->areFormSubmissionsStored());
         $this->set('formSubmissionConfig', $this->getFormSubmissionConfigValue());
+        $this->set('displayCaptcha', 1);
     }
 
     protected function areFormSubmissionsStored()

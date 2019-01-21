@@ -361,12 +361,7 @@ class File extends Controller
 
     public function download()
     {
-        $fp = FilePermissions::getGlobal();
-        if (!$fp->canSearchFiles()) {
-            throw new UserMessageException(t('Unable to search file sets.'));
-        }
-
-        $files = $this->getRequestFiles('canViewFile');
+        $files = $this->getRequestFiles('canViewFileInFileManager');
         if (count($files) > 1) {
             $fh = $this->app->make('helper/file');
             $vh = $this->app->make('helper/validation/identifier');
