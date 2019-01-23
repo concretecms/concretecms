@@ -21,8 +21,14 @@ class LoggingServiceProvider extends ServiceProvider
             }
         });
 
+
         // Bind the PSR-3 logger interface against the singleton
         $this->app->bind('Psr\Log\LoggerInterface', 'log/application');
+
+        /**
+         * @deprecated
+         */
+        $this->app->bind('log', 'log/application');
 
         $this->app->singleton('log/exceptions', function($app) {
             $factory = $app->make(LoggerFactory::class);
